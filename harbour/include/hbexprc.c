@@ -482,6 +482,7 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
    pLeft->value.asString.dealloc = TRUE;
    hb_compExprFree( pRight, HB_MACRO_PARAM );
 
+   HB_SYMBOL_UNUSED( HB_MACRO_PARAM );    /* to suppress BCC warning */
    return pLeft;
 }
 #endif

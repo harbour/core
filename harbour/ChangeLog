@@ -1,3 +1,14 @@
+2000-08-15 20:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexprc.c
+    *source/compiler/exproptc.c
+        *fixed unused variable warning
+        
+    source/compiler/harbour.l
+        *fixed some warnings reported by BCC
+        *some final optimization
+
+
 2000-08-15 14:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * doc/en/cmdline.txt
      * Formated text added by Victor

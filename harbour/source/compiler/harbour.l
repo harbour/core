@@ -169,12 +169,14 @@ Separator     {SpaceTab}
     from direct calls for qout function
     QOUT([some string]) ; QOUT([some more])
     */
-    if( 0 /* TODO: hb_ppInsideTextBlock */ )
+/* TODO: implement hb_ppInsideTextBlock it is PP 
+    if( hb_ppInsideTextBlock )   
     {
         BEGIN STRING4START;
         unput( '(' );
     }
     else
+*/    
         yyless( 4 );    /* len of QOUT */
         
     yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
@@ -236,7 +238,7 @@ Separator     {SpaceTab}
     
     if( (StopChar == '"') || (StopChar == '\'')  || (StopChar == '[') )
     {
-       int i = 0;
+       int i;
        if( StopChar == '[' )
            StopChar = ']';
        for( i = 0; i < yyleng-1; ++i )
@@ -353,7 +355,8 @@ Separator     {SpaceTab}
                     return IDENTIFIER;
                  }
                }
-<BREAK_>{Separator}*[\n;] { /* at the end of line */
+<BREAK_>{Separator}*    ;
+<BREAK_>[\n;] { /* at the end of line */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                return BREAK;
@@ -363,13 +366,13 @@ Separator     {SpaceTab}
  *       There are no resons to limit this use in Harbour.
  */
 /*
-<BREAK_>{Separator}*[\[] {  BEGIN 0;
+<BREAK_>[\[] {  BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
              }
 */
 %}
-<BREAK_>{Separator}*(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
+<BREAK_>(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "BREAK", TRUE );
                unput( yytext[ yyleng-1 ] );
@@ -377,7 +380,7 @@ Separator     {SpaceTab}
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
              }
-<BREAK_>{Separator}*("++"|"--") { /* operators */
+<BREAK_>("++"|"--") { /* operators */
                /* NOTE: It is not possible to distinguish between
                 * break++ and break ++i
                 * For this reason we are allowing the BREAK statement only
@@ -389,14 +392,14 @@ Separator     {SpaceTab}
                hb_comp_iState =BREAK;
                return BREAK;
              }
-<BREAK_>{Separator}*[\=\(] { /* operators = ( */
+<BREAK_>[\=\(] { /* operators = ( */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "BREAK", TRUE );
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
              }
-<BREAK_>{Separator}*. { /* all other cases */
+<BREAK_>. { /* all other cases */
                /* NOTE: This state includes break&var
                 */
                BEGIN 0;
@@ -408,14 +411,15 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "case"         BEGIN CASE_;
-<CASE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
+<CASE_>{Separator}*    ;
+<CASE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "CASE", TRUE );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<CASE_>{Separator}*("+="|"-="|"->") { /* operators */
+<CASE_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "CASE", TRUE );
                hb_comp_iState =IDENTIFIER;
@@ -423,7 +427,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
-<CASE_>{Separator}*("::") { /* send operators */
+<CASE_>("::") { /* send operators */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -432,7 +436,7 @@ Separator     {SpaceTab}
                hb_comp_iState =CASE;
                return CASE;
              }
-<CASE_>{Separator}*(\n|.) { /* not operator */
+<CASE_>(\n|.) { /* not operator */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
@@ -605,7 +609,8 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "end"          { BEGIN END_; }
-<END_>{Separator}*[\[\(] { /* array, function call */
+<END_>{Separator}*    ;
+<END_>[\[\(] { /* array, function call */
                BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like end[] & end() at the begining of line */
@@ -616,7 +621,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<END_>{Separator}*("->"|"++"|"--") { /* operators */
+<END_>("->"|"++"|"--") { /* operators */
                BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like end-> & end++ at the begining of line */
@@ -628,14 +633,14 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
-<END_>{Separator}*[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
+<END_>[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "END", TRUE );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<END_>{Separator}*(.|\n) { /* not operator */
+<END_>(.|\n) { /* not operator */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
@@ -774,13 +779,14 @@ Separator     {SpaceTab}
                  IF and IIF
                */
             }
-<IIF_>{Separator}*"(" {
+<IIF_>{Separator}*   ;
+<IIF_>"(" {
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState=IIF;
                return IIF;
              }
-<IIF_>{Separator}*[^\(] {
+<IIF_>[^\(] {
                BEGIN 0;
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"IIF":yytext), NULL );
              }
@@ -793,7 +799,8 @@ Separator     {SpaceTab}
                  else
                    BEGIN IF_;
               }
-<IF_>{Separator}*"(" { BEGIN 0;
+<IF_>{Separator}*    ;
+<IF_>"(" { BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
                  hb_comp_iState =IF;
@@ -801,19 +808,19 @@ Separator     {SpaceTab}
                  hb_comp_iState =IIF;
                return hb_comp_iState;
              }
-<IF_>{Separator}*[\)\]\/\^\*\%\=\$\@] { BEGIN 0;
+<IF_>[\)\]\/\^\*\%\=\$\@] { BEGIN 0;
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX2, yytext, "IF" );
              }
-<IF_>{Separator}*"->" { BEGIN 0;
+<IF_>"->" { BEGIN 0;
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX2, yytext, "IF" );
              }
-<IF_>{Separator}*[\n] { BEGIN 0;
+<IF_>\n { BEGIN 0;
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, "IF", NULL );
              }
-<IF_>{Separator}*("++"|"--")/[\n] { BEGIN 0;
+<IF_>("++"|"--")/[\n] { BEGIN 0;
                hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX2, yytext, "IF" );
              }
-<IF_>{Separator}*. { BEGIN 0;
+<IF_>. { BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IF;
                return IF;
@@ -876,7 +883,8 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "next"         BEGIN NEXT_;
-<NEXT_>{Separator}*[\n\;] { /* at the end of line */
+<NEXT_>{Separator}*        ;
+<NEXT_>[\n\;] { /* at the end of line */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
@@ -893,7 +901,7 @@ Separator     {SpaceTab}
                  return IDENTIFIER;
                }
              }
-<NEXT_>{Separator}*[\[\(] { /* array, function call */
+<NEXT_>[\[\(] { /* array, function call */
                BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
@@ -904,7 +912,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<NEXT_>{Separator}*("->"|"++"|"--") { /* operators */
+<NEXT_>("->"|"++"|"--") { /* operators */
                BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like next-> & next++ at the begining of line */
@@ -916,13 +924,13 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
-<NEXT_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "next" */
+<NEXT_>[^_a-zA-Z] { /* there is no identifier after "next" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "NEXT", TRUE );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
+<NEXT_>. { /* an identifier follows NEXT statement */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
@@ -950,7 +958,8 @@ Separator     {SpaceTab}
                   yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   BEGIN OTHERWISE_;
                }
-<OTHERWISE_>{Separator}*[\n\;]     { /* end of line */
+<OTHERWISE_>{Separator}*   ;
+<OTHERWISE_>[\n\;]     { /* end of line */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
                  if( hb_comp_iState == LOOKUP )
@@ -966,7 +975,7 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<OTHERWISE_>{Separator}*.     {
+<OTHERWISE_>.     {
                    BEGIN 0;
                    unput( yytext[ yyleng-1 ] );
                    hb_comp_iState = IDENTIFIER;
@@ -1021,7 +1030,8 @@ Separator     {SpaceTab}
                   yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   BEGIN RECOVER_;
                 }
-<RECOVER_>{Separator}*[\n]    { /* end of line */
+<RECOVER_>{Separator}*    ;
+<RECOVER_>\n    { /* end of line */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
                  if( hb_comp_iState == LOOKUP )
@@ -1035,12 +1045,12 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RECOVER_>{Separator}+("using"|"usin")    { /* USING */
+<RECOVER_>("using"|"usin")    { /* USING */
                    BEGIN 0;
                    hb_comp_iState = RECOVERUSING;
                    return RECOVERUSING;
                  }
-<RECOVER_>{Separator}*.            { /* all other cases */
+<RECOVER_>.            { /* all other cases */
                    BEGIN 0;
                    unput( yytext[ yyleng-1 ] );
                    hb_comp_iState =IDENTIFIER;
@@ -1053,7 +1063,8 @@ Separator     {SpaceTab}
                   yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   BEGIN RETURN_;
                 }
-<RETURN_>{Separator}+[\&_a-zA-Z0-9]   { /* an identifier, numbers or macro */
+<RETURN_>{Separator}*                
+<RETURN_>[\&_a-zA-Z0-9]   { /* an identifier, numbers or macro */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
                  if( hb_comp_iState == LOOKUP )
@@ -1067,14 +1078,14 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RETURN_>{Separator}*("+="|"-="|"->") { /* operators */
+<RETURN_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
-<RETURN_>{Separator}*("++"|"--") { /* operators */
+<RETURN_>("++"|"--") { /* operators */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -1089,14 +1100,14 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
              }
-<RETURN_>{Separator}*("::") { /* SELF operator */
+<RETURN_>"::" { /* SELF operator */
                BEGIN 0;
                hb_comp_iState = RETURN;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return RETURN;
              }
-<RETURN_>{Separator}*[\n\;\(\[\{\"\'\.\-\+\!]   {
+<RETURN_>[\n\;\(\[\{\"\'\.\-\+\!]   {
                  /* EOL or '()', '[]', '{}', '""', "''" , '.T.', '-', '+', '!' */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
@@ -1111,7 +1122,7 @@ Separator     {SpaceTab}
                    return IDENTIFIER;
                  }
                }
-<RETURN_>{Separator}*. { /* any other character after RETURN */
+<RETURN_>. { /* any other character after RETURN */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
                  hb_comp_iState =IDENTIFIER;
@@ -1134,7 +1145,8 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "while"|"whil"  BEGIN WHILE_;
-<WHILE_>{Separator}*\n      { /* end of line */
+<WHILE_>{Separator}*        ;
+<WHILE_>\n      { /* end of line */
                 BEGIN 0;
                 unput( '\n' );
                 if( hb_comp_iState == DO )
@@ -1144,27 +1156,27 @@ Separator     {SpaceTab}
                 yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
                 return IDENTIFIER;
               }
-<WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
+<WHILE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<WHILE_>{Separator}*("+="|"-="|"->") { /* operators */
+<WHILE_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
-<WHILE_>{Separator}*("::") { /* send operators */
+<WHILE_>"::" { /* send operators */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                hb_comp_iState =WHILE;
                return WHILE;
              }
-<WHILE_>{Separator}*.      { /* identifiers and literals */
+<WHILE_>.      { /* identifiers and literals */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( hb_comp_iState == LOOKUP || hb_comp_iState == DO )
@@ -1183,13 +1195,14 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "with"        BEGIN WITH_;
-<WITH_>{Separator}*\n           { /* at the end of line */
+<WITH_>{Separator}*            ;
+<WITH_>\n           { /* at the end of line */
                 BEGIN 0;
                 unput( '\n' );
                 yylval.string = hb_compIdentifierNew( "WITH", TRUE );
                 return IDENTIFIER;
               }
-<WITH_>{Separator}*"with"       {
+<WITH_>"with"       {
                 BEGIN 0;
                 yyless( yyleng-4 );
                 if( hb_comp_iState == DO )
@@ -1204,14 +1217,14 @@ Separator     {SpaceTab}
                   return WITH;
                 }
               }
-<WITH_>{Separator}*[\)] { /* ( with ) or with() */
+<WITH_>[\)] { /* ( with ) or with() */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 hb_comp_iState =IDENTIFIER;
                 yylval.string = hb_compIdentifierNew( "WITH", TRUE );
                 return IDENTIFIER;
               }
-<WITH_>{Separator}*.            {
+<WITH_>.            {
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( hb_comp_iState == WHILE ||
