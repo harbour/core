@@ -1,3 +1,17 @@
+2000-01-10 16:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/ft_helpc.prg
+     ! Renamed to lower case for Linux compatibility.
+
+   * ngdoc/ha.lnk
+     ! Renamed to lower case for Linux compatibility.
+
+   * source/tools/Makefile
+     + Added rtf.prg to list of PRG files.
+
+   * source/tools/rtf.prg
+     ! Renamed to lower case for Linux compatibility.
+
 2000-01-10 15:50 GMT-5 David G. Holm <dholm@jsd-llc.com>
 
    * ngdoc/ft_helpc.prg
