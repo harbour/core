@@ -64,9 +64,11 @@ CLASS TBrowse
    DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
    DATA RelativePos   // Indicates record position relatively position of first record on the screen
    DATA lHeaders      // Internal variable, indicate, are there column headers to paint
+   DATA aRect         // The rectangle specified with ColorRect()
+   DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
 
-   METHOD New()            // Constructor
-   METHOD Down()           // Moves the cursor down one row
+   METHOD New()                    // Constructor
+   METHOD Down()                   // Moves the cursor down one row
    METHOD End()                    // Moves the cursor to the rightmost visible data column
    METHOD GoBottom()               // Repositions the data source to the bottom of file
    METHOD GoTop()                  // Repositions the data source to the top of file
@@ -82,10 +84,10 @@ CLASS TBrowse
    METHOD Up()                     // Moves the cursor up one row
 
    METHOD AddColumn( oCol ) INLINE ;
-      AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
+      AAdd( ::aColumns, oCol ), ::Configure(), Self // Adds a TBColumn object to the TBrowse object
 
-   METHOD ColCount()       INLINE Len( ::aColumns )
-   METHOD ColorRect()      VIRTUAL // Alters the color of a rectangular group of cells
+   METHOD ColCount() INLINE Len( ::aColumns )
+   METHOD ColorRect()              // Alters the color of a rectangular group of cells
                                    // Returns the display width of a particular column
    METHOD ColWidth( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ]:Width, nil )
@@ -104,7 +106,7 @@ CLASS TBrowse
 
    METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
                                   AIns( ::aColumns, nPos ),;
-                                  ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
+                                  ::aColumns[ nPos ] := oCol, ::Configure(), oCol
                                   // Insert a column object in a browse
 
    METHOD Invalidate()     // Forces entire redraw during next stabilization
@@ -140,6 +142,8 @@ METHOD New() CLASS TBrowse
    ::RelativePos = 1
    ::aRedraw     = nil
    ::lHeaders    = .f.
+   ::aRect       = nil
+   ::aRectColor  = nil
 
 return Self
 
@@ -149,7 +153,7 @@ METHOD DelColumn( nPos ) CLASS TBrowse
 
    ADel( ::aColumns, nPos )
    ASize( ::aColumns, Len( ::aColumns ) - 1 )
-   ::Configure( 2 )
+   ::Configure()
 
 return oCol
 
@@ -530,7 +534,7 @@ METHOD Stabilize() CLASS TBrowse
          DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       endif
       if ! Empty( ::HeadSep )  //Drawing heading separator
-         DispOutAt( ::nTop + If( ::lHeaders, 1, 0 ), ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOutAt( ::nTop + If( ::lHeaders, 1, 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
          if Len( ::HeadSep ) > 1
             iW = 0
             for n = If( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -547,10 +551,10 @@ METHOD Stabilize() CLASS TBrowse
          else
             DispOut( Replicate( ::HeadSep, nColsWidth ), ::ColorSpec )
          endif
-         DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOut( Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       endif
       if ! Empty( ::FootSep ) // Drawing footing separator
-         DispOutAt( ::nBottom - If( lFooters, 1, 0 ), ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOutAt( ::nBottom - If( lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
          if Len( ::FootSep ) > 1
             iW = 0
             for n = If( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -567,7 +571,7 @@ METHOD Stabilize() CLASS TBrowse
          else
             DispOut( Replicate( ::FootSep, nColsWidth ), ::ColorSpec )
          endif
-         DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOut( Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       endif
       if lFooters                // Drawing footers
          DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
@@ -670,6 +674,13 @@ METHOD Up() CLASS TBrowse
          ::HitTop = .t.
       endif
    endif
+
+return Self
+
+METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
+
+   ::aRect       = aRect
+   ::aRectColor  = aRectColor
 
 return Self
 

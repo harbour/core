@@ -1,3 +1,17 @@
+19991019-11:55 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/tbrowse.prg
+     ! Fixed the header/footer separator to be drawn until the border.
+     + ColorRect() support started.
+     - Removed the parameter from ::Configure() calls, it was not
+       used, and Clipper don't have such parameter.
+   * source/rtl/browse.prg
+     + Enhanced speed and compatibility.
+       - Incremental refreshing.
+       - Missing keys added.
+       - Status line added.
+       - Border fixed.
+       - Setkey support added.
+
 19991019-10:24 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/gt/gtwin.c
      * Windows apps only create a console when the debugger is linked.

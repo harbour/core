@@ -43,68 +43,129 @@ function Browse( nTop, nLeft, nBottom, nRight )
    local cOldScreen
    local n, nKey, nOldCursor
    local lExit := .f.
+   local lGotKey := .f.
+   local bAction
 
    if ! Used()
       return .f.
-	end
+   end
 
-   DEFAULT nTop TO 1, nLeft TO 0, nBottom TO MaxRow(), nRight TO MaxCol()
+   if PCount() < 4
+      nTop    := 1
+      nLeft   := 0
+      nBottom := MaxRow()
+      nRight  := MaxCol()
+   endif
 
    nOldCursor = SetCursor( 0 )
    cOldScreen = SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   @ nTop, nLeft, nBottom, nRight BOX B_DOUBLE
+   @ nTop, nLeft TO nBottom, nRight
+   @ nTop + 3, nLeft SAY Chr( 198 )
+   @ nTop + 3, nRight SAY Chr( 181 )
+   @ nTop + 1, nLeft + 1 SAY Space( nRight - nLeft - 1 )
 
-   oBrw = TBrowseDb( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
-   oBrw:HeadSep = Chr( 205 )
+   oBrw = TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
+   oBrw:HeadSep = " " + Chr( 205 )
 
    for n = 1 to FCount()
-      oBrw:AddColumn( TbColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
+      oBrw:AddColumn( TBColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
    next
+
+   oBrw:ForceStable()
 
    while ! lExit
 
-       oBrw:ForceStable()
+      while !oBrw:stabilize() .and. NextKey() == 0
+      enddo
 
-       nKey = InKey( 0 )
+      if NextKey() == 0
 
-       do case
-          case nKey == K_ESC
-               lExit = .t.
+         Statline( oBrw )
+         oBrw:forceStable()
 
-           case nKey == K_UP
-                oBrw:Up()
+         nKey := Inkey( 0 )
 
-           case nKey == K_DOWN
-                oBrw:Down()
+         if ( bAction := SetKey( nKey ) ) != nil
+            Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
+            loop
+         endif
+      else
+         nKey := Inkey()
+      endif
 
-           case nKey == K_END
-                oBrw:End()
+      do case
+         case nKey == K_ESC
+            lExit = .t.
 
-           case nKey == K_HOME
-                oBrw:Home()
+         case nKey == K_UP
+            oBrw:Up()
 
-           case nKey == K_LEFT
-                oBrw:Left()
+         case nKey == K_DOWN
+            oBrw:Down()
 
-           case nKey == K_RIGHT
-                oBrw:Right()
+         case nKey == K_END
+            oBrw:End()
 
-           case nKey == K_PGUP
-                oBrw:PageUp()
+         case nKey == K_HOME
+            oBrw:Home()
 
-           case nKey == K_PGDN
-                oBrw:PageDown()
+         case nKey == K_LEFT
+            oBrw:Left()
 
-           case nKey == K_CTRL_PGUP
-                oBrw:GoTop()
+         case nKey == K_RIGHT
+            oBrw:Right()
 
-           case nKey == K_CTRL_PGDN
-                oBrw:GoBottom()
-       endcase
+         case nKey == K_PGUP
+            oBrw:PageUp()
+
+         case nKey == K_PGDN
+            oBrw:PageDown()
+
+         case nKey == K_CTRL_PGUP
+            oBrw:GoTop()
+
+         case nKey == K_CTRL_PGDN
+            oBrw:GoBottom()
+
+         case nKey == K_CTRL_LEFT
+            oBrw:panLeft()
+
+         case nKey == K_CTRL_RIGHT
+            oBrw:panRight()
+
+         case nKey == K_CTRL_HOME
+            oBrw:panHome()
+
+         case nKey == K_CTRL_END
+            oBrw:panEnd()
+
+      endcase
    end
 
    RestScreen( nTop, nLeft, nBottom, nRight, cOldScreen )
    SetCursor( nOldCursor )
 
 return .t.
+
+static function Statline( oBrw )
+
+   local nTop   := oBrw:nTop - 1
+   local nRight := oBrw:nRight
+
+   @ nTop, nRight - 27 SAY "Record "
+
+   if LastRec() == 0
+      @ nTop, nRight - 20 say "<none>               "
+   elseif RecNo() == LastRec() + 1
+      @ nTop, nRight - 40 SAY "         "
+      @ nTop, nRight - 20 SAY "                <new>"
+   else
+      @ nTop, nRight - 40 SAY iif( Deleted(), "<Deleted>", "         " )
+      @ nTop, nRight - 20 SAY PadR( LTrim( Str( RecNo() ) ) + "/" +;
+                                    Ltrim( Str( LastRec() ) ), 16 ) +;
+                                    iif( oBrw:hitTop, "<bof>", "     " )
+   endif
+
+return nil
+
