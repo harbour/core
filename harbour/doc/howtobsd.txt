@@ -1,0 +1,37 @@
+/*
+ * $Id$
+ */
+
+HOW TO CONFIGURE BSD TO BUILD HARBOUR
+-------------------------------------
+
+First, you'll need a FreeBSD 4.4 developer installation. Then you'll need
+to install bison and gmake. If you installed the ports collection, then all
+you need to do to install bison and gmake is to run the following commands,
+which may require that you run su first to get the correct permissions.
+
+   cd /usr/ports/devel/bison
+   make
+   make install
+   make clean
+   cd /usr/ports/devel/gmake
+   make
+   make install
+   make clean
+
+If you want to use the GTSLN library instead of GTSTD or GTCRS, then you
+also need to install libslang. If you installed the ports collection, then
+all you need to do to install libslang is to run the following commands,
+which may require that you run su first to get the correct permissions.
+
+   cd /usr/ports/devel/libslang
+   make
+   make install
+   make clean
+
+Then read the doc/gmake.txt file for generic GNU make instructions and the
+specific Harbour settings needed for BSD. When you want to build Harbour,
+be sure to run 'gmake -r' at the command line instead of 'make -r'.
+
+David G. Holm <dholm@jsd-llc.com>
+

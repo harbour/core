@@ -164,6 +164,22 @@ For MSVC on Win95/WinNT:
   HB_COMPILER       msvc
   HB_GT_LIB         gtwin
 
+For GCC on BSD:
+  HB_ARCHITECTURE   bsd
+  HB_COMPILER       gcc
+  HB_GT_LIB         gtstd
+  Notes:
+    1)  You have to have bison and gmake installed in order to build
+        Harbour for BSD. The file doc/howtobsd.txt gives an overview
+        of what is required.
+    2)  If you have an ncurses library or a slang library, you may
+        want to try one of the following two values for HB_GT_LIB:
+              gtcrs
+              gtsln
+        In which case you'll also need to export HB_SCREEN_LIB with
+        the name of the appropriate screen library, if it doesn't
+        match the default value in config/bsd/gcc.cf
+
 For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
@@ -173,7 +189,8 @@ For GCC on Linux:
               gtcrs
               gtsln
         In which case you'll also need to export HB_SCREEN_LIB with
-        the name of the appropriate screen library.
+        the name of the appropriate screen library, if it doesn't
+        match the default value in config/linux/gcc.cf.
 
 For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
@@ -271,3 +288,5 @@ can also be used for modules that aren't in the Makefile. You can also
 pass parameters to the program. For example, 'build readfile harbour.ini'
 will rebuild the readfile.prg program and run it with 'harbour.ini' as a
 command line parameter.
+
+
