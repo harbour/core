@@ -39,8 +39,12 @@
 #include "hbapierr.h"
 
 /* ------------------------------- */
-#define STACK_INITHB_ITEMS      2000
-#define STACK_EXPANDHB_ITEMS    200
+#if !defined( STACK_INITHB_ITEMS )
+#define STACK_INITHB_ITEMS      200
+#endif
+#if !defined( STACK_EXPANDHB_ITEMS )
+#define STACK_EXPANDHB_ITEMS    20
+#endif
 
 HB_STACK hb_stack;
 /* ------------------------------- */
@@ -103,7 +107,7 @@ void hb_stackPush( void )
       hb_stack.pPos = hb_stack.pItems + CurrIndex;
       hb_stack.pBase = hb_stack.pItems + BaseIndex;
       hb_stack.wItems += STACK_EXPANDHB_ITEMS;
-      for( i=CurrIndex; i < hb_stack.wItems; ++i )
+      for( i=CurrIndex + 1; i < hb_stack.wItems; ++i )
          hb_stack.pItems[ i ] = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
       /* hb_stackDispLocal(); */
    }
