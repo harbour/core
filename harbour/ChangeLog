@@ -1,3 +1,6 @@
+19990807-10:17 CET Patrick Mast <harbour@PatrickMast.com>
+   * removed debugger.prg from /tests/working
+
 199908.07-12:03 GMT+3 Alexander Kresin
   * makefile.b32
     * added 'source\debug' to .prg path for build32.bat to work
