@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-08-21 11:29 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * contrib/samples/environ.c
+     ! Fixed GPF on missing dot for FileExt() use
+
+   Bug described by David Macias, and he confirmed the fix too, with this change.
+
 2003-08-19 23:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + harbour.spec
     spec file to build rpm is added.
@@ -48,7 +54,7 @@
 
 2003-07-21 11:10 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/transfrm.c
-    ! Fixed the problem with @E and negative numbers. 
+    ! Fixed the problem with @E and negative numbers.
 
       local nValue := -134.24
       msginfo( Val( AllTrim( Transform( nValue, "@E 99,999.99" ) ) ) )
@@ -73,13 +79,13 @@
 
 2003-07-17 17:43 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/en/memo.txt
-    + Added MEMOREAD(), MEMOWRIT() documentation 
+    + Added MEMOREAD(), MEMOWRIT() documentation
   * doc/es/memo.txt
-    + Added MEMOREAD(), MEMOWRIT() documentation 
+    + Added MEMOREAD(), MEMOWRIT() documentation
 
 2003-07-17 17:34 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * source/rtl/memofile.c
-    + Added an optional 3rd parameter to MEMOWRIT(), <lWriteEof>, to decide 
+    + Added an optional 3rd parameter to MEMOWRIT(), <lWriteEof>, to decide
       at run-time if EOF char should be written.
 
 2003-07-16 13:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
