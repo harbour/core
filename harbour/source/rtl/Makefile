@@ -23,10 +23,10 @@ C_SOURCES=\
 	transfrm.c \
 
 PRG_SOURCES=\
-        asort.prg \
+	asort.prg \
 	error.prg \
 	errorsys.prg \
-        objfunc.prg \
+	objfunc.prg \
 	tclass.prg \
 
 LIB=rtl

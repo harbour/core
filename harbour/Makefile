@@ -5,6 +5,7 @@
 ROOT = ./
 
 DIRS=\
+	include \
 	source \
 	obj \
 	tests \

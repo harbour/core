@@ -8,13 +8,12 @@ C_SOURCES=\
 	datesx.c \
 	debug.c \
 	genobj.c \
+	io.c \
 	mathx.c \
 	stringsx.c \
 
 PRG_SOURCES=\
-        stringp.prg \
-
-# io.c should be in the list, but it is DOS-specific.
+	stringp.prg \
 
 LIB=tools
 

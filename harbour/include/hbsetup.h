@@ -28,7 +28,6 @@
 
 /* Operating system specific definitions
  */
-#define OS_PATH_DELIMITER        '\\'
 #define OS_PATH_LIST_SEPARATOR   ';'
 
 #endif

@@ -2,19 +2,25 @@
  *  WARNING !!! DOS specific
  */
 
+#ifdef __DOS__
 #include <dos.h>
+#endif
+
 #include <gtapi.h>
 
 #define VIDEO_INT 0x10
 
+#ifdef __DOS__
 static WORD  suiRow        = 0;
 static WORD  suiCol        = 0;
-static WORD  suiDispCount  = 0;
-static WORD  suiMaxRow     = 24;
-static WORD  suiMaxCol     = 79;
 static BYTE *sfpScreenBuffer;
 static WORD  suiAttribs[ 5 ] = { 0x07, 0x70, 0x00, 0x00, 0x07 };
 static WORD  suiAttrIndex = 0;
+#endif
+
+static WORD  suiDispCount  = 0;
+static WORD  suiMaxRow     = 24;
+static WORD  suiMaxCol     = 79;
 
 HARBOUR TERMINIT( void )
 {

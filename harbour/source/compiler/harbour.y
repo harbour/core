@@ -30,7 +30,8 @@
 #endif
 
 /* TODO: #define this for various platforms */
-#define IS_PATH_SEP( c ) ( (c) == OS_PATH_DELIMITER )
+#define PATH_DELIMITER "/\\"
+#define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
 
 #define OPT_DELIMITER  "/-"
 #define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
@@ -1295,7 +1296,7 @@ FILENAME *SplitFilename( char *szFilename )
   if( iSlashPos == 0 )
   {
     /* root path ->  \filename */
-    pName->_buffer[ 0 ] =OS_PATH_DELIMITER;
+    pName->_buffer[ 0 ] =PATH_DELIMITER[0];
     pName->_buffer[ 1 ] ='\x0';
     pName->path =pName->_buffer;
     iPos =2;  /* first free position after the slash */
@@ -1369,7 +1370,7 @@ char *MakeFilename( char *szFileName, FILENAME *pFileName )
        */
       if( !( IS_PATH_SEP(pFileName->name[ 0 ]) || IS_PATH_SEP(pFileName->path[ iLen-1 ]) ) )
       {
-        szFileName[ iLen++ ] =OS_PATH_DELIMITER;
+        szFileName[ iLen++ ] =PATH_DELIMITER[0];
         szFileName[ iLen ] ='\x0';
       }
     }
@@ -1646,7 +1647,8 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       fclose( files.pLast->handle );
       files.pLast = ( PFILE ) ( ( PFILE ) files.pLast )->pPrev;
       iLine = files.pLast->iLine;
-      printf( "\nparsing file %s\n", files.pLast->szFileName );
+      if( ! _iQuiet )
+         printf( "\nparsing file %s\n", files.pLast->szFileName );
 #ifdef __cplusplus
       yy_delete_buffer( (YY_BUFFER_STATE) ( ( PFILE ) pLast )->pBuffer );
 #else

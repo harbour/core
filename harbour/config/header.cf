@@ -1,0 +1,17 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/global.cf
+
+EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
+EXE_ARCH = $(ARCH_DIR)$(EXE_NAME)
+
+ALL_HEADERS = $(C_HEADERS) $(PRG_HEADERS) $(API_HEADERS)
+
+first :
+
+INSTALL_OBJS = $(ALL_HEADERS)
+INSTALL_DIR = $(INC_DIR)
+
+include $(TOP)$(ROOT)config/install.cf

@@ -1832,7 +1832,7 @@ void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimen
       hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + wStatics );
    }
 
-   HBDEBUG2( "Statics %i\n", hb_arrayLen( &aStatics ) );
+   HBDEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
 void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */

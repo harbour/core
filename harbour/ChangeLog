@@ -1,3 +1,43 @@
+Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/dates.c: 
+	Nasty bug: using '&' instead of '&&'.
+	
+	* config/header.cf: 
+	* include/Makefile: 
+	* Makefile: 
+	Added rules to deal with include files (they are just installed
+	into INC_DIR). Now the top level Makefile traverses include before
+	source.
+	
+	* config/win32/gcc.cf: 
+	* config/win32/msvc.cf: 
+	* config/win32/global.cf: 
+	The include directory is now given by INC_DIR.
+	
+	* config/win32/rules.cf: 
+	Harbour now uses -I to find include files.
+	
+	* include/hbsetup.h: 
+	Moved OS_PATH_DELIMITER back to harbour.y, as PATH_DELIMITER; it
+	is now a string that contains "/\\".
+	
+	* source/compiler/harbour.y: 
+	Deal with '/' as path separator ('\\' still works).
+	Make sure -q is really quiet.
+	
+	* source/rtl/Makefile: 
+	* source/tools/Makefile: 
+	Used tabs instead of spaces.
+	
+	* source/rtl/gtapi.c: 
+	* source/tools/io.c: 
+	Made sure these two compile in non-DOS platforms (don't do much
+	though).
+	
+	* source/vm/hvm.c: 
+	Fixed a warning about using %i instead of %li.
+
 19990520-07:10 MST Bil Simser (bsimser@home.com)
   * makefile.vc
     Updated makefile to include new changes to RTL

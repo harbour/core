@@ -11,7 +11,7 @@ LIB_EXT = .a
 
 CC = gcc
 CC_OUT = -o
-CPPFLAGS = -DDEBUG -I. -I$(INCLUDE_DIR)
+CPPFLAGS = -DDEBUG -I. -I$(INC_DIR)
 CFLAGS = -Wall -g
 
 LD = gcc

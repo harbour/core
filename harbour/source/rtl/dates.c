@@ -20,7 +20,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
 
    /* Perform date validation */
    if (lMonth >= 1 && lMonth <= 12 && lDay >= 1
-   && lYear >= 1 & lYear <= 2999)
+   && lYear >= 1 && lYear <= 2999)
    {
       /* Month, year, and lower day limits are simple, 
          but upper day limit is dependent upon month and leap year */
