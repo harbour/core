@@ -57,9 +57,14 @@
 
 HB_FILE_VER( "$Id$" )
 
-#define AppendEOL( handle ) FWRITE( handle, CHR( 13 ) + CHR( 10 ) )
+#ifdef HB_LINUX
+    #define SkipEOL( handle )   FSEEK( handle, 1, FS_RELATIVE )
+#else
+    #define SkipEOL( handle )   FSEEK( handle, 2, FS_RELATIVE )
+#endif
+
+#define AppendEOL( handle ) FWRITE( handle, HB_OSNewLine() )
 #define AppendEOF( handle ) FWRITE( handle, CHR( 26 ) )
-#define SkipEOL( handle ) FSEEK( handle, 2, FS_RELATIVE )
 
 PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr, nFileLen, aStruct
@@ -225,6 +230,7 @@ STATIC FUNCTION ImportFixed( handle, index, aStruct )
    LOCAL vres
 
    nRead := FREAD( handle, @cBuffer, aStruct[ index,3 ] )
+   #ifndef HB_LINUX
    IF ( pos := At( CHR(13),cBuffer ) ) > 0 .AND. pos <= nRead
       res := .F.
       FSEEK( handle, -( nRead - pos + 1 ), FS_RELATIVE )
@@ -234,6 +240,18 @@ STATIC FUNCTION ImportFixed( handle, index, aStruct )
          RETURN res
       ENDIF
    ENDIF
+    #else
+   IF ( pos := At( CHR(10),cBuffer ) ) > 0 .AND. pos <= nRead
+      res := .F.
+      FSEEK( handle, -( nRead - pos + 1 ), FS_RELATIVE )
+      IF pos > 1
+         cBuffer := Left( cBuffer,pos-1 )
+      ELSE
+         RETURN res
+      ENDIF
+   ENDIF
+#endif
+
    DO CASE
       CASE aStruct[ index,2 ] == "D"
          vres := HB_STOD( cBuffer )

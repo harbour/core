@@ -18,6 +18,8 @@ endif
 ARCH_DIR = $(ARCH)/
 MK = $(MAKE)
 
+PRG_USR = -DHB_LINUX
+
 RM = rm -f
 RD = rm -f -r
 CP = cp -f
