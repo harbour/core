@@ -7,7 +7,7 @@
 
 .path.lib = ..\..\lib\b32
 
-lib\b32\rddasd.lib : ads0.obj ads1.obj adsfunc.obj
+lib\b32\rddads.lib : ads0.obj ads1.obj adsfunc.obj
 
 ads0.c    : ads0.prg
 

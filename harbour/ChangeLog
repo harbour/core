@@ -1,3 +1,17 @@
+20000215-20:53 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/tgetlist.prg
+     source/rtl/dummy.prg
+     doc/funclist.txt
+     + __SETFORMAT() added
+     + GETAPPLYKEY() added
+     + GETREADER() added
+     + __KILLREAD() added
+   * config/header.cf
+     ! Checks if the HB_ARCHITECTURE and HB_PLATFORM envvars are set, if
+       not it simply does nothing instead of going into an infinite loop.
+   * contrib/rdd_ads/rddads.b32
+     ! Fixed a typo (rddasd -> rddads).
+
 20000215-13:22 GMT+1 Philip Joseph <philjo@writeme.com>
    * contrib/rdd_ads/ads1.c
      + added DbrLockList() functionality.

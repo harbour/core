@@ -2,6 +2,9 @@
 # $Id$
 #
 
+ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_COMPILER),)
+
 include $(TOP)$(ROOT)config/global.cf
 
 #EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
@@ -15,3 +18,6 @@ INSTALL_OBJS = $(ALL_HEADERS)
 INSTALL_DIR = $(HB_INC_INSTALL)
 
 include $(TOP)$(ROOT)config/install.cf
+
+endif
+endif
