@@ -702,7 +702,9 @@ void Div( void )
    double d2 = PopDouble( &wDec2 );
    double d1 = PopDouble( &wDec1 );
 
-   PushNumber( d1 / d2, (wDec1>wDec2) ? wDec1 : wDec2 );
+   /* NOTE: Clipper always returns the result of a division
+            with the SET number of decimal places. */
+   PushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
 }
 
 void Do( WORD wParams )
@@ -1346,7 +1348,9 @@ void Modulus( void )
    double d2 = PopDouble( &wDec2 );
    double d1 = PopDouble( &wDec1 );
 
-   PushNumber( ( long ) d1 % ( long ) d2, (wDec1>wDec2) ? wDec1 : wDec2 );
+   /* NOTE: Clipper always returns the result of modulus
+            with the SET number of decimal places. */
+   PushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
 }
 
 void Mult( void )

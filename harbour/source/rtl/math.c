@@ -244,9 +244,15 @@ FUNCTION MOD(cl_num, cl_base)
             hb_retnd(dResult + dBase);
          else
             hb_retnd(dResult);
+         /* Always set default number of decimals after computing mod */
+         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
+      {
          hb_retnd(dNumber);
+         /* Set the correct number of decimals */
+         stack.Return.item.asDouble.decimal = (pNumber->item.asDouble.decimal);
+      }
    }
    else
    {

@@ -1,3 +1,11 @@
+19990804-00:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/math.c
+    ! Corrected MOD() to set the correct number of decimal points.
+  * source/vm/hvm.c
+    ! Corrected Div() to set the correct number of decimal points.
+    ! Corrected Modulus() to use fmod() instead of the % operator.
+    ! Corrected Modulus() to set the correct number of decimal points.
+
 19990803-22:10 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/setcolor.c
     + Added missing '#ifdef HARBOUR_USE_GTAPI'.
