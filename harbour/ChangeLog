@@ -1,3 +1,9 @@
+2001-06-26 00:40 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     - Hb_ClsScope() deleted (to avoid warning) till after 0.37
+     - Hb_ObjGetpMethod() deleted (to avoid warning) till after 0.37
+     ! Misc reformating and some braces added 
+
 2001-06-25 14:51 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * contrib/tprepro/tprepro.prg
      * Bug fix in TranslateFile() method
