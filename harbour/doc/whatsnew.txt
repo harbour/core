@@ -1,12 +1,12 @@
 Build #28 18 July 1999
 
 - Added support for MS Visual C++
+- First support for Apple Macintosh
 - Almost complete preprocessor
 - Error handling improved
 - Extend Library complete
 - First version of OOPS syntax added.
-- First version of RDD added
-- MEMVAR support
+- MEMVAR support started
 - Pre processor available as a run-time function
 - Rich Text Format Class added
 - Many Terminal functions created
