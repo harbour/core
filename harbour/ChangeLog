@@ -1,3 +1,7 @@
+2001-06-26 20:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * /include/hbver.h
+     * Changed build number to 0.37, build month and day
+
 2001-06-26 08:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +utils/hbmake/Makefile
       *Readded this file after CVS repository clean up
