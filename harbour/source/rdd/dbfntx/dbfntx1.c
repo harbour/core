@@ -1680,16 +1680,41 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
       pTag->RootBlock = 1024;
 }
 
-static void hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf )
+static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf, LPDBORDERCONDINFO lpdbOrdCondInfo )
 {
-   if( *numRecinBuf == 10 )
-      *numRecinBuf = 0;
-   if( *numRecinBuf == 0 )
-      hb_fsReadLarge( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
+   if( !lpdbOrdCondInfo || lpdbOrdCondInfo->fAll )
+   {
+      if( *numRecinBuf == 10 )
+         *numRecinBuf = 0;
+      if( *numRecinBuf == 0 )
+         hb_fsReadLarge( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
 
-   pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
-   pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
-   (*numRecinBuf) ++;
+      pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
+      pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
+      (*numRecinBuf) ++;
+      return TRUE;
+   }
+   else
+   {
+      if( lpdbOrdCondInfo->lNextCount < 0 )
+         return FALSE;
+      if( lpdbOrdCondInfo->lRecno )
+      {
+         SELF_GOTO( ( AREAP ) pArea, (ULONG)lpdbOrdCondInfo->lRecno );
+         lpdbOrdCondInfo->lNextCount = -1;
+         return TRUE;
+      }
+      if( lpdbOrdCondInfo->lNextCount > 0 )
+      {
+         lpdbOrdCondInfo->lNextCount --;
+         if( !lpdbOrdCondInfo->lNextCount )
+            lpdbOrdCondInfo->lNextCount --;
+         return TRUE;
+      }
+      if( lpdbOrdCondInfo->itmCobWhile )
+         return checkLogicalExpr( lpdbOrdCondInfo->itmCobWhile, NULL );
+      return TRUE;
+   }
 }
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
@@ -1735,14 +1760,19 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    else
       sortInfo.sortBuffer = NULL;
 
-   pRecordTmp = pArea->pRecord;
-   fValidBuffer = pArea->fValidBuffer;
-   pArea->fValidBuffer = TRUE;
-   hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
+   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+   {
+      pRecordTmp = pArea->pRecord;
+      fValidBuffer = pArea->fValidBuffer;
+      pArea->fValidBuffer = TRUE;
+      hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
+   }
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
-      hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf );
-      pArea->ulRecNo = ulRecNo;
+      if( !hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf, pArea->lpdbOrdCondInfo ) )
+         break;
+      if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+         pArea->ulRecNo = ulRecNo;
       if( pTag->pForItem != NULL )
          bWhileOk = checkLogicalExpr( pTag->pForItem, pItem );
       else
@@ -1796,11 +1826,16 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                printf( "ntxCreateOrder" );
          }
       }
+      if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll )
+         SELF_SKIP( ( AREAP ) pArea, 1 );
    }
    if( ulKeyNo < ulRecCount && ulKeyNo%2 )
       hb_ntxSortKeyAdd( pTag, &sortInfo, NULL, ulKeyNo );
-   pArea->pRecord = pRecordTmp;
-   pArea->fValidBuffer = fValidBuffer;
+   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+   {
+      pArea->pRecord = pRecordTmp;
+      pArea->fValidBuffer = fValidBuffer;
+   }
    hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
    hb_ntxBufferSave( pTag, &sortInfo );
    if( sortInfo.sortBuffer )
@@ -2462,9 +2497,10 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
+   /* printf( "\nntxOrderCreate - 0\n" ); */
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
-   if( !pArea->lpdbOrdCondInfo->fAll )
+   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
    /* If we have a codeblock for the expression, use it */
@@ -2482,8 +2518,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    hb_itemCopy( pKeyExp, pExpr );
 
    /* Get a blank record before testing expression */
-   SELF_GOBOTTOM( ( AREAP ) pArea );
-   SELF_SKIP( ( AREAP ) pArea, 1 );
+   // SELF_GOBOTTOM( ( AREAP ) pArea );
+   // SELF_SKIP( ( AREAP ) pArea, 1 );
    pExpMacro = pForMacro = NULL;
    if( hb_itemType( pExpr ) == HB_IT_BLOCK )
    {
@@ -2552,7 +2588,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    /* Check conditional expression */
    pExpr = pForExp = NULL;
-   if( pArea->lpdbOrdCondInfo )
+   if( pArea->lpdbOrdCondInfo && ( pArea->lpdbOrdCondInfo->itmCobFor || pArea->lpdbOrdCondInfo->abFor ) )
    {
       /* If we have a codeblock for the conditional expression, use it */
       if( pArea->lpdbOrdCondInfo->itmCobFor )
@@ -2662,7 +2698,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       return FAILURE;
    }
-   if( pArea->lpdbOrdCondInfo->fAll )
+   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
    pArea->lpNtxIndex = pIndex;
    pArea->lpCurIndex = pIndex;
