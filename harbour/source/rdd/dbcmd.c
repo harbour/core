@@ -1909,10 +1909,16 @@ HB_FUNC( DBUSEAREA )
 
    pFileName = hb_fsFNameSplit( szFileName );
    strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
-   uiLen = strlen( szAlias );
-   if( uiLen == 0 )
+   if( strlen( szAlias ) == 0 )
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
-   else if( uiLen == 1 )
+   uiLen = strlen( szAlias );
+   if( szAlias[ 0 ] >= '0' && szAlias[ 0 ] <= '9' )
+   {
+      hb_xfree( pFileName );
+      hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, "DBUSEAREA" );
+      return;
+   }
+   if( uiLen == 1 )
    {
       /* Alias with a single letter. Only are valid 'L' and > 'M' */
       if( toupper( szAlias[ 0 ] ) < 'N' && toupper( szAlias[ 0 ] ) != 'L' )

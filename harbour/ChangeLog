@@ -1,3 +1,7 @@
+2001-10-31 11:48 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbcmd.c
+     ! fixed alias name checking in dbUseArea()
+
 2001-10-30 21:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * bin/bld.bat
       * Added Required winspool.lib for msvc builds
