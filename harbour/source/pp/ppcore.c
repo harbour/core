@@ -140,6 +140,23 @@ void          CloseInclude( void );
 
 #define HB_PP_MAX_INCLUDES FOPEN_MAX - 5 - 1
 
+/* Ron Pinkas added 2000-01-24 */
+#define IS_2CHAR_OPERATOR( p ) ( p[0] && p[1] && ( strncmp( p, ":=", 2 ) == 0 || \
+                                                   strncmp( p, "+=", 2 ) == 0 || \
+                                                   strncmp( p, "-=", 2 ) == 0 || \
+                                                   strncmp( p, "*=", 2 ) == 0 || \
+                                                   strncmp( p, "/=", 2 ) == 0 || \
+                                                   strncmp( p, "^=", 2 ) == 0 || \
+                                                   strncmp( p, "==", 2 ) == 0 || \
+                                                   strncmp( p, "<>", 2 ) == 0 || \
+                                                   strncmp( p, "<=", 2 ) == 0 || \
+                                                   strncmp( p, ">=", 2 ) == 0 || \
+                                                   strncmp( p, "++", 2 ) == 0 || \
+                                                   strncmp( p, "--", 2 ) == 0 || \
+                                                   strncmp( p, "->", 2 ) == 0      ) )
+/* END, Ron Pinkas added 2000-01-24 */
+
+
 static int  s_kolAddDefs = 0;
 static int  s_kolAddComs = 0;
 static int  s_kolAddTras = 0;
@@ -718,10 +735,32 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   /* I changed it to the following to allow < and = to be the first char within a translate or xtranslate */
   while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 ) && ( *sLine != '(' || ipos == 0 ) )
   {
+     /* Ron Pinkas added 2000-01-24 */
+     if( ! ISNAME( *sLine ) )
+     {
+        if( IS_2CHAR_OPERATOR( sLine ) )
+        {
+           *(cmdname+ipos++) = *sLine++;
+           *(cmdname+ipos++) = *sLine++;
+           break;
+        }
+        else
+        {
+           *(cmdname+ipos++) = *sLine++;
+           break;
+        }
+     }
+     /* END, Ron Pinkas added 2000-01-24 */
+
      *(cmdname+ipos++) = *sLine++;
   }
   *(cmdname+ipos) = '\0';
-  if( !ipos ) return;
+
+  if( !ipos )
+  {
+     return;
+  }
+
   hb_strupr( cmdname );
   HB_SKIPTABSPACES(sLine);
 
@@ -1077,17 +1116,36 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               }
               else
               {
+                 /* Ron Pinkas commented 2000-01-24
                  i = 0;
-                 while( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && *ptri != '\"' && *ptri != '\'' && *ptri != '(' && !ISNAME(*ptri) )
+                 while( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && *ptri != '\"' && *ptri != '\'' && *ptri != '('  && !ISNAME(*ptri) )
                  {
                     *(sToken+i) = *ptri++;
                     i++;
                  }
-
                  *(sToken+i) = '\0';
+                 */
+
+                 /* Ron Pinkas added 2000-01-24 */
+                 if( IS_2CHAR_OPERATOR( ptri ) )
+                 {
+                    sToken[0] = *ptri++;
+                    sToken[1] = *ptri++;
+                    sToken[2] = '\0';
+                 }
+                 else
+                 {
+                    sToken[0] = *ptri++;
+                    sToken[1] = '\0';
+                 }
+                 /* END, Ron Pinkas added 2000-01-24 */
               }
 
               HB_SKIPTABSPACES( ptri );
+
+              #if 0
+                 printf( "Token: %s\n", sToken );
+              #endif
 
               if( ( *ptri == '\0' || ( *ptri != '=' && (!IsInStr(*ptri,":/+*-%^") || *(ptri+1) != '=') &&
                   ( *ptri != '-' || *(ptri+1) != '>' ) ) ) && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
@@ -2669,9 +2727,11 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
 
+  #if 0
   /* Ron Pinkas added 2000-06-04 */
   BOOL bNewLine = TRUE;
   /* Ron Pinkas end 2000-06-04 */
+  #endif
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
@@ -2805,19 +2865,21 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               }
               break;
 
+            #if 0
             /* Ron Pinkas added 2000-06-01 */
             case ';':
               bNewLine = TRUE;
               break;
 
             case '@':
-              if( bNewLine && ( sBuffer[ *iBuffer ] == '&' || sBuffer[ *iBuffer ] == '-' ) )
+              if( bNewLine && ( sBuffer[ *iBuffer ] == '&' || sBuffer[ *iBuffer ] == '.' || sBuffer[ *iBuffer ] == '-' ) )
               {
                 buffer[readed++] = cha;
                 s_prevchar = cha;
                 cha = ' ';
               }
               break;
+            #endif
             /* Ron Pinkas end 2000-06-01 */
           }
 
@@ -2826,12 +2888,14 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             s_prevchar = cha;
           }
 
+          #if 0
           /* Ron Pinkas added 2000-06-04 */
           if( cha != ' ' && cha != '\t' && cha != ';' )
           {
             bNewLine = FALSE;
           }
           /* Ron Pinkas end 2000-06-04 */
+          #endif
       }
 
       if( cha != ' ' && cha != '\t' )

@@ -1,3 +1,13 @@
+2001-01-24 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     ! Fixed compilation and parsing of #command of single and bi-char operators
+     ! Removed prior hack in hb_pp_RdStr() related to @[&-].
+
+   * source/pp/pptable.c
+     ! Fixed compilation of #command ?? [ <list,...> ] => QQOut( <list> )
+
+   /* This [should] finally resolve all prior issues regarding @ and many other problems, of operators as command keys. */
+
 2000-01-22 19:10 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * harbour/include/hbsetup.h
       + added #define OS_EOL_LEN  /* # of bytes in End of Line marker */

@@ -169,7 +169,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___62 = {0,"SET","CURSOR \1A20ON,OFF,&>","SetCursor( if(Upper(\1A30) == 'ON', 1, 0) )",&sC___61 };
    static COMMANDS sC___63 = {0,"SET","CURSOR (\1A00)","SetCursor( if(\1A00, 1, 0) )",&sC___62 };
    static COMMANDS sC___64 = {0,"?","[ \1A10]","QOut( \1A00 )",&sC___63 };
-   static COMMANDS sC___65 = {0,"??","[ \1A10]","QQOut( \1A00 )",&sC___64 };
+   static COMMANDS sC___65 = {0,"?","? [ \1A10]","QQOut( \1A00 )",&sC___64 };
    static COMMANDS sC___66 = {0,"EJECT","","__Eject()",&sC___65 };
    static COMMANDS sC___67 = {0,"TEXT","","text QOut, QQOut",&sC___66 };
    static COMMANDS sC___68 = {0,"TEXT","TO FILE \1A40","__TextSave( \1A30 ) ; text QOut, __TextRestore",&sC___67 };
