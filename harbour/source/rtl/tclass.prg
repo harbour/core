@@ -376,7 +376,12 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
-   LOCAL Self := QSelf()
+   LOCAL Self := QSelf(), nAt
+
+   /* Remove possible ( <x,...> )*/
+   IF ( nAt := At( "(", cMethod ) ) > 0
+      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
+   ENDIF
 
    AAdd( ::aMethods, { cMethod, nFuncPtr, nScope } )
 
@@ -386,7 +391,12 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
-   LOCAL Self := QSelf()
+   LOCAL Self := QSelf(), nAt
+
+   /* Remove possible ( <x,...> )*/
+   IF ( nAt := At( "(", cMethod ) ) > 0
+      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
+   ENDIF
 
    AAdd( ::aClsMethods, { cMethod, nFuncPtr, nScope } )
 
@@ -395,7 +405,12 @@ STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 //----------------------------------------------------------------------------//
 STATIC PROCEDURE AddVirtual( cMethod )
 
-   LOCAL Self := QSelf()
+   LOCAL Self := QSelf(), nAt
+
+   /* Remove possible ( <x,...> )*/
+   IF ( nAt := At( "(", cMethod ) ) > 0
+      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
+   ENDIF
 
    AAdd( ::aVirtuals, cMethod )
 

@@ -1,3 +1,11 @@
+2001-05-08 14:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     % Removed numerous redundant rules.
+     + Added logic to detect and raise #error on implementation of NON Declared method.
+
+   * source/rtl/tclass.prg
+     + Added logic to dispose of posibble "(...)" suffix to Method Name in AddVirtual(), AddMethod(), and AddClsMethod().
+
 2001-05-07 11:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      ! Added missing parameter to declaration of AddMultiData()
@@ -6,7 +14,7 @@
      ! Corrected broken Linked-List links in hb_compDeclaredInit()
 
    * source/compiler/hbpcode.c
-     * Minor correction declared parameters checking.
+     * Minor correction in declared parameters checking.
 
    * source/vm/hvm.c
      + Added complete call stack display to hb_vmRequestCancel()
