@@ -1,3 +1,15 @@
+2001-12-09 20:11 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/common/hbtrace.c
+   * harbour/source/compiler/cmdcheck.c
+   * harbour/source/compiler/gencobj.c
+   * harbour/source/rtl/gete.c
+   * harbour/source/rtl/gtcrs/gtcrs.c
+   * harbour/source/rtl/gtcrs/kbdcrs.c
+   * harbour/source/rtl/gtsln/gtsln.c
+   * harbour/source/rtl/gtsln/kbsln.c
+   * harbour/source/vm/cmdarg.c
+     ! hb_getenv() used instead of getenv()
+
 2001-12-09 19:46 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * A minor fix required for Harbour DLLs
