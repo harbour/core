@@ -2322,7 +2322,8 @@ HB_FUNC( ORDCONDSET )
 
       if( lpdbOrdCondInfo->itmCobWhile )
          lpdbOrdCondInfo->fRest = TRUE;
-      if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno || lpdbOrdCondInfo->fRest )
+      if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno || 
+               lpdbOrdCondInfo->fRest || lpdbOrdCondInfo->fUseCurrent )
          lpdbOrdCondInfo->fAll = FALSE;
 
       hb_retl( SELF_ORDSETCOND( ( AREAP ) s_pCurrArea->pArea, lpdbOrdCondInfo ) == SUCCESS );

@@ -2356,6 +2356,9 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
       }
       if( lpdbOrdCondInfo->itmCobWhile )
          return checkLogicalExpr( lpdbOrdCondInfo->itmCobWhile, NULL );
+      if( lpdbOrdCondInfo->fUseCurrent && pArea->fEof )
+         return FALSE;
+
       return TRUE;
    }
 }
@@ -2433,6 +2436,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
       pArea->fValidBuffer = TRUE;
       hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
    }
+   else if( pArea->lpdbOrdCondInfo->fUseCurrent )
+      SELF_GOTOP( ( AREAP ) pArea );
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
       if( !hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf, pArea->lpdbOrdCondInfo ) )
@@ -2665,7 +2670,8 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
       hb_itemRelease( pTag->pForItem );
    }
    hb_ntxKeyFree( pTag->CurKeyInfo );
-   SELF_CLEARSCOPE( (AREAP) pIndex->Owner );
+   hb_ntxClearScope( pTag,0 );
+   hb_ntxClearScope( pTag,1 );
    hb_xfree( pTag->stack );
    hb_xfree( pTag );
    hb_xfree( pIndex->IndexName );
@@ -3267,7 +3273,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* printf( "\nntxOrderCreate - 0\n" ); */
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
-   if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll && 
+                                    !pArea->lpdbOrdCondInfo->fAdditive ) )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
    /* If we have a codeblock for the expression, use it */
@@ -3459,9 +3466,26 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       return FAILURE;
    }
-   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll )
+   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll && 
+                                 !pArea->lpdbOrdCondInfo->fAdditive )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
-   pArea->lpNtxIndex = pIndex;
+   if( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fAdditive )
+   {
+      if( pArea->lpNtxIndex )
+      {
+         LPNTXINDEX pIndexNext = pArea->lpNtxIndex;
+
+         pIndex->TagRoot++;
+         while( pIndexNext->pNext )
+         {
+            pIndex->TagRoot++;
+            pIndexNext = pIndexNext->pNext;
+         }
+         pIndexNext->pNext = pIndex;
+      }
+   }
+   else
+      pArea->lpNtxIndex = pIndex;
    pArea->lpCurIndex = pIndex;
    hb_ntxHeaderSave( pIndex, TRUE );
    {

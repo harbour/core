@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       DBOI_ORDERCOUNT, DBOI_UNIQUE, ordName, ordBagName.
+     ! fixed a bug in: gotop, gobbotom, skip
+     + begin of hb_cdxZap
+     + added support for: DBOI_ISCOND, DBOI_ISDESC, DBOI_FILEHANDLE
+     + added index locking routines
+     ! fixed some structures definitions for gcc/vc/...
      ! fixed autopen bug on Linux
      ! fixed recno() while indexing
 
