@@ -8,7 +8,7 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
   * doc/en/string.txt
-2002-01-31 08:40 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+    * Two new parameters nStart & nEnd of At() function when
       no HB_C52_STRICT used.
   * source/rtl/Tget.prg
     * Minor modification on VarPut() method proposed by Walter Negro
