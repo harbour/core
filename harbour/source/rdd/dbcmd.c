@@ -149,6 +149,8 @@ static ERRCODE defAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    LPFIELD pField;
 
+   HB_TRACE(("defAddField(%p, %p)", pArea, pFieldInfo));
+
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )
    {
@@ -175,6 +177,8 @@ static ERRCODE defAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 
 static ERRCODE defAlias( AREAP pArea, BYTE * szAlias )
 {
+   HB_TRACE(("defAlias(%p, %p)", pArea, szAlias));
+
    strncpy( ( char * ) szAlias,
             ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
             HARBOUR_MAX_RDD_ALIAS_LENGTH );
@@ -183,12 +187,16 @@ static ERRCODE defAlias( AREAP pArea, BYTE * szAlias )
 
 static ERRCODE defBof( AREAP pArea, BOOL * pBof )
 {
+   HB_TRACE(("defBof(%p, %p)", pArea, pBof));
+
    * pBof = pArea->fBof;
    return SUCCESS;
 }
 
 static ERRCODE defClearFilter( AREAP pArea )
 {
+   HB_TRACE(("defClearFilter(%p)", pArea));
+
    if( pArea->dbfi.fFilter )
    {
       hb_itemRelease( pArea->dbfi.itmCobExpr );
@@ -200,6 +208,8 @@ static ERRCODE defClearFilter( AREAP pArea )
 
 static ERRCODE defClearLocate( AREAP pArea )
 {
+   HB_TRACE(("defClearLocate(%p)", pArea));
+
    if( pArea->dbsi.itmCobFor )
    {
       hb_itemRelease( pArea->dbsi.itmCobFor );
@@ -240,6 +250,8 @@ static ERRCODE defClearLocate( AREAP pArea )
 
 static ERRCODE defClose( AREAP pArea )
 {
+   HB_TRACE(("defClose(%p)", pArea));
+
    SELF_CLEARFILTER( pArea );
    SELF_CLEARLOCATE( pArea );
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
@@ -251,6 +263,8 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
    USHORT uiCount, uiItems;
    PHB_ITEM pFieldDesc;
    DBFIELDINFO pFieldInfo;
+
+   HB_TRACE(("defCreateFields(%p, %p)", pArea, pStruct));
 
    uiItems = hb_arrayLen( pStruct );
    SELF_SETFIELDEXTENT( pArea, uiItems );
@@ -269,6 +283,8 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
 static ERRCODE defEof( AREAP pArea, BOOL * pEof )
 {
+   HB_TRACE(("defEof(%p, %p)", pArea, pEof));
+
    * pEof = pArea->fEof;
    return SUCCESS;
 }
@@ -276,6 +292,8 @@ static ERRCODE defEof( AREAP pArea, BOOL * pEof )
 static ERRCODE defError( AREAP pArea, PHB_ITEM pError )
 {
    char * szRddName;
+
+   HB_TRACE(("defError(%p, %p)", pArea, pError));
 
    szRddName = ( char * ) hb_xgrab( HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 );
    SELF_SYSNAME( pArea, ( BYTE * ) szRddName );
@@ -287,6 +305,8 @@ static ERRCODE defError( AREAP pArea, PHB_ITEM pError )
 
 static ERRCODE defFieldCount( AREAP pArea, USHORT * uiFields )
 {
+   HB_TRACE(("defFieldCount(%p, %p)", pArea, uiFields));
+
    * uiFields = pArea->uiFieldCount;
    return SUCCESS;
 }
@@ -295,6 +315,8 @@ static ERRCODE defFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITE
 {
    LPFIELD pField;
    char szType[ 2 ];
+
+   HB_TRACE(("defFieldInfo(%p, %hu, %hu, %p)", pArea, uiIndex, uiType, pItem));
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
@@ -332,6 +354,8 @@ static ERRCODE defFieldName( AREAP pArea, USHORT uiIndex, void * szName )
 {
    LPFIELD pField;
 
+   HB_TRACE(("defFieldName(%p, %hu, %p)", pArea, uiIndex, szName));
+
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
@@ -343,6 +367,8 @@ static ERRCODE defFieldName( AREAP pArea, USHORT uiIndex, void * szName )
 
 static ERRCODE defFilterText( AREAP pArea, PHB_ITEM pFilter )
 {
+   HB_TRACE(("defFilterText(%p, %p)", pArea, pFilter));
+
    if( pArea->dbfi.fFilter )
       hb_itemCopy( pFilter, pArea->dbfi.abFilterText );
    return SUCCESS;
@@ -350,18 +376,24 @@ static ERRCODE defFilterText( AREAP pArea, PHB_ITEM pFilter )
 
 static ERRCODE defFound( AREAP pArea, BOOL * pFound )
 {
+   HB_TRACE(("defFound(%p, %p)", pArea, pFound));
+
    * pFound = pArea->fFound;
    return SUCCESS;
 }
 
 static ERRCODE defGetRec( AREAP pArea, BYTE ** pBuffer )
 {
+   HB_TRACE(("defGetRec(%p, %p)", pArea, pBuffer));
+
    * pBuffer = pArea->lpExtendInfo->bRecord;
    return SUCCESS;
 }
 
 static ERRCODE defNewArea( AREAP pArea )
 {
+   HB_TRACE(("defNewArea(%p)", pArea));
+
    pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
    memset( pArea->lpFileInfo, 0, sizeof( FILEINFO ) );
    pArea->lpFileInfo->hFile = FS_ERROR;
@@ -372,6 +404,8 @@ static ERRCODE defNewArea( AREAP pArea )
 
 static ERRCODE defOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
+   HB_TRACE(("defOpen(%p, %p)", pArea, pOpenInfo));
+
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
@@ -389,6 +423,8 @@ static ERRCODE defOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
 static ERRCODE defRelease( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
+
+   HB_TRACE(("defRelease(%p)", pArea));
 
    if( pArea->lpFields )
    {
@@ -417,6 +453,8 @@ static ERRCODE defRelease( AREAP pArea )
 
 static ERRCODE defSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
 {
+   HB_TRACE(("defSetFieldExtent(%p, %hu)", pArea, uiFieldExtent));
+
    pArea->uiFieldExtent = uiFieldExtent;
    pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
    memset( pArea->lpFields, 0, uiFieldExtent * sizeof( FIELD ) );
@@ -425,6 +463,8 @@ static ERRCODE defSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
 
 static ERRCODE defSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
+   HB_TRACE(("defSetFilter(%p, %p)", pArea, pFilterInfo));
+
    if( pArea->dbfi.fFilter )
    {
       hb_itemCopy( pArea->dbfi.itmCobExpr, pFilterInfo->itmCobExpr );
@@ -443,6 +483,8 @@ static ERRCODE defSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 
 static ERRCODE defSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
 {
+   HB_TRACE(("defSetLocate(%p, %p)", pArea, pScopeInfo));
+
    if( pArea->dbsi.itmCobFor )
       hb_itemRelease( pArea->dbsi.itmCobFor );
    pArea->dbsi.itmCobFor = pScopeInfo->itmCobFor;
@@ -464,6 +506,8 @@ static ERRCODE defSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
 static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
 {
    BOOL bExit;
+
+   HB_TRACE(("defSkip(%p, %ld)", pArea, lToSkip));
 
    if( pArea->dbfi.fFilter || hb_set.HB_SET_DELETED )
    {
@@ -511,6 +555,8 @@ static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
 static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
 {
    BOOL bExit, bDeleted;
+
+   HB_TRACE(("defSkipFilter(%p, %ld)", pArea, lUpDown));
 
    if( lUpDown > 0 )
    {
@@ -587,11 +633,15 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
 
 static ERRCODE defSkipRaw( AREAP pArea, LONG lToSkip )
 {
+   HB_TRACE(("defSkipRaw(%p, %ld)", pArea, lToSkip));
+
    return SELF_GOTO( pArea, pArea->lpExtendInfo->lRecNo + lToSkip );
 }
 
 static ERRCODE defStructSize( AREAP pArea, USHORT * uiSize )
 {
+   HB_TRACE(("defStrucSize(%p, %p)", pArea, uiSize));
+
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiSize );
 
@@ -603,6 +653,8 @@ static ERRCODE defSysName( AREAP pArea, BYTE * pBuffer )
    USHORT uiCount;
    LPRDDNODE pRddNode;
 
+   HB_TRACE(("defSysName(%p, %p)", pArea, pBuffer));
+
    pRddNode = pRddList;
    for( uiCount = 0; uiCount < pArea->rddID; uiCount++ )
       pRddNode = pRddNode->pNext;
@@ -613,6 +665,8 @@ static ERRCODE defSysName( AREAP pArea, BYTE * pBuffer )
 static ERRCODE defUnSupported( AREAP pArea )
 {
    PHB_ITEM pError;
+
+   HB_TRACE(("defUnSupported(%p)", pArea));
 
    HB_SYMBOL_UNUSED( pArea );
 
@@ -688,6 +742,8 @@ static RDDFUNCS defTable = { defBof,
 
 static void hb_rddCheck( void )
 {
+   HB_TRACE(("hb_rddCheck()"));
+
    if( !szDefDriver )
    {
       szDefDriver = ( char * ) hb_xgrab( 1 );
@@ -703,6 +759,8 @@ static void hb_rddCheck( void )
 
 static void hb_rddCloseAll( void )
 {
+   HB_TRACE(("hb_rddCloseAll()"));
+
    pCurrArea = pWorkAreas;
    while( pWorkAreas )
    {
@@ -722,6 +780,8 @@ static LPRDDNODE hb_rddFindNode( char * szDriver, USHORT * uiIndex )
 {
    LPRDDNODE pRddNode;
    USHORT uiCount;
+
+   HB_TRACE(("hb_rddFindNode(%s, %p)", szDriver, uiIndex));
 
    uiCount = 0;
    pRddNode = pRddList;
@@ -747,6 +807,8 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    PHB_DYNS pGetFuncTable;
    char * szGetFuncTable;
    USHORT uiFunctions;
+
+   HB_TRACE(("hb_rddRegister(%s, %hu)", szDriver, uiType));
 
    if( hb_rddFindNode( szDriver, 0 ) )    /* Duplicated RDD */
       return 1;
@@ -795,6 +857,8 @@ static USHORT hb_rddSelect( char * szAlias )
 {
    PHB_DYNS pSymAlias;
 
+   HB_TRACE(("hb_rddSelect(%s)", szAlias));
+
    pSymAlias = hb_dynsymFindName( szAlias );
    if( pSymAlias && pSymAlias->hArea )
       return pSymAlias->hArea;
@@ -805,6 +869,8 @@ static USHORT hb_rddSelect( char * szAlias )
 static void hb_rddSelectFirstAvailable( void )
 {
    LPAREANODE pAreaNode;
+
+   HB_TRACE(("hb_rddSelectFirstAvailable()"));
 
    uiCurrArea = 1;
    pAreaNode = pWorkAreas;
@@ -825,6 +891,8 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    LPRDDNODE pRddNode;
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
+
+   HB_TRACE(("hb_rddInherit(%p, %p, %p, %s)", pTable, pSubTable, pSuperTable, szDrvName));
 
    if( !pTable )
       return FAILURE;
@@ -868,12 +936,16 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
 
 int  hb_rddGetCurrentWorkAreaNumber( void )
 {
+   HB_TRACE(("hb_rddGetCurrentWorkAreaNumber()"));
+
    return uiCurrArea;
 }
 
 ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    LPAREANODE pAreaNode;
+
+   HB_TRACE(("hb_rddSelectWorkAreaNumber(%d)", iArea));
 
    uiCurrArea = iArea;
 
@@ -894,6 +966,8 @@ ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
    ERRCODE bResult;
+
+   HB_TRACE(("hb_rddSelectWorkAreaSymbol(%p)", pSymAlias));
 
    if( pSymAlias->pDynSym->hArea )
       bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
@@ -934,8 +1008,11 @@ ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 {
    ERRCODE bResult;
-   ULONG ulLen = strlen( szName );
+   ULONG ulLen;
 
+   HB_TRACE(("hb_rddSelectWorkAreaAlias(%s)", szName));
+
+   ulLen = strlen( szName );
    if( ulLen >= 1 && toupper( szName[ 0 ] ) > '0' && toupper( szName[ 0 ] ) <= '9' )
       bResult = hb_rddSelectWorkAreaNumber( atoi( szName ) );
    else if( ulLen == 1 && toupper( szName[ 0 ] ) >= 'A' && toupper( szName[ 0 ] ) <= 'K' )
@@ -981,8 +1058,11 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 
 ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
-   ERRCODE bSuccess = hb_rddFieldGet( pItem, pFieldSymbol );
+   ERRCODE bSuccess;
 
+   HB_TRACE(("hb_rddGetFieldValue(%p, %p)", pItem, pFieldSymbol));
+
+   bSuccess = hb_rddFieldGet( pItem, pFieldSymbol );
    if( bSuccess == FAILURE )
    {
       /* generate an error with retry possibility
@@ -1011,8 +1091,11 @@ ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 
 ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
-   ERRCODE bSuccess = hb_rddFieldPut( pItem, pFieldSymbol );
+   ERRCODE bSuccess;
 
+   HB_TRACE(("hb_rddPutFieldValue(%p, %p)", pItem, pFieldSymbol));
+
+   bSuccess = hb_rddFieldPut( pItem, pFieldSymbol );
    if( bSuccess == FAILURE )
    {
       /* generate an error with retry possibility
@@ -1044,6 +1127,8 @@ ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    LPFIELD pField;
    USHORT uiField;
 
+   HB_TRACE(("hb_rddFieldPut(%p, %p)", pItem, pFieldSymbol));
+
    if( pCurrArea )
    {
       uiField = 1;
@@ -1067,6 +1152,8 @@ ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    LPFIELD pField;
    USHORT uiField;
 
+   HB_TRACE(("hb_rddFieldGet(%p, %p)", pItem, pFieldSymbol));
+
    if( pCurrArea )
    {
       uiField = 1;
@@ -1088,6 +1175,8 @@ ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 void hb_rddShutDown( void )
 {
    LPRDDNODE pRddNode;
+
+   HB_TRACE(("hb_rddShutDown()"));
 
    hb_rddCloseAll();
    if( szDefDriver )
