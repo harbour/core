@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifdef __IBMCPP__
+  #define INCL_DOSMISC
+#endif
+
 #include <extend.h>
 
 #ifdef __WATCOMC__
@@ -10,6 +14,24 @@
 
 HARBOUR OS()
 {
+#ifdef __IBMCPP__
+
+   char buffer [256];
+   unsigned long aulQSV [QSV_MAX] = {0};
+   APIRET rc= DosQuerySysInfo (1L, QSV_MAX, (PVOID) aulQSV, sizeof (ULONG) * QSV_MAX);
+   if (rc)
+      _retc("OS/2");
+   else
+   {
+      sprintf(buffer, "OS/2 %lu.%lu%c", aulQSV [QSV_VERSION_MAJOR] / 10,
+      aulQSV [QSV_VERSION_MINOR],
+         (aulQSV [QSV_VERSION_REVISION] > 0 && aulQSV [QSV_VERSION_REVISION] < 26)
+         ? '@' + aulQSV [QSV_VERSION_REVISION] : 0);
+      _retc(buffer);
+   }
+
+#else
+
 #ifdef __GNUC__
 
   _retc("UNKNOWN");
@@ -110,6 +132,7 @@ HARBOUR OS()
   _retc("MS-DOS");
 
 #endif /* __GNUC__ */
+#endif /* __IBMCPP__ */
 }
 
 HARBOUR VERSION()
@@ -141,4 +164,3 @@ HARBOUR GETENV()
    else
       _retc("");
 }
-

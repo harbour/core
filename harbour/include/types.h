@@ -5,6 +5,14 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#ifdef __IBMCPP__
+  #define INCL_TYPES
+  #include <os2.h>
+  typedef unsigned short int WORD;
+  #undef INT
+  #undef UINT
+#else
+
 #undef BYTE
 typedef unsigned char BYTE, * PBYTE;   /* 1 byte */
 
@@ -36,6 +44,8 @@ typedef void * PVOID;
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))
+
+#endif /* __IBMCPP__ */
 
 #ifdef __GNUC__
    #define pascal __attribute__ ((stdcall))

@@ -1,3 +1,19 @@
+19990518-18:00 David G. Holm <dholm@jsd-llc.com>
+  + buildicc.cmd
+    - New file for IBM C++ 3.0 for OS/2
+  + makefile.icc
+    - New file for IBM C++ 3.0 for OS/2
+  * include/types.h
+    - Added #ifdef for IBM C++ 3.0 for OS/2
+  * source/compiler/harbour.c
+    - Added #ifdef and isatty() for IBM C++ 3.0 for OS/2
+  * source/rtl/environ.c
+    - Added #ifdef for IBM C++ 3.0 for OS/2
+  + tests/working/biccexe.cmd
+    - New file for IBM C++ 3.0 for OS/2
+  + tests/working/hbicc.cmd
+    - New file for IBM C++ 3.0 for OS/2
+
 19990518-23:40 CET Eddie Runia
   * source/compiler/harbour.y
     GenPortObj added. Can be accessed through /gHRB
@@ -39,27 +55,27 @@
 19990518-03:05 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.l
-	-corrected misspelled wCaseCounter
-	
+        -corrected misspelled wCaseCounter
+
     * include/hberrors.h
-	-new errors definition added (it should be uploaded in previous
-	commit -sorry my fault
-	
+        -new errors definition added (it should be uploaded in previous
+        commit -sorry my fault
+
 19990518-01:45 Ryszard Glab <rglab@imid.med.pl>
 
-	* source/compiler/harbour.l, source/compiler/harbour.y
-	-added support for '-i' option (#include file search path)
-	however it doesn't use SET INCLUDE environment variable yet
-	-added error messages if unmatched ENDDO, ENDCASE, ENDIF, NEXT
-	is found
+        * source/compiler/harbour.l, source/compiler/harbour.y
+        -added support for '-i' option (#include file search path)
+        however it doesn't use SET INCLUDE environment variable yet
+        -added error messages if unmatched ENDDO, ENDCASE, ENDIF, NEXT
+        is found
 
-	* include/extend.h
-	-added forward declaration of CODEBLOCK structure and added
-	the proper type for pCodeblock member of ITEM structure
+        * include/extend.h
+        -added forward declaration of CODEBLOCK structure and added
+        the proper type for pCodeblock member of ITEM structure
 
-	* source/vm/hvm.c
-	-corrected pCodeblock type casting
-	-added C++ style declaration of HB_FIRSTSYMBOL and HB_LASTSYMBOL
+        * source/vm/hvm.c
+        -corrected pCodeblock type casting
+        -added C++ style declaration of HB_FIRSTSYMBOL and HB_LASTSYMBOL
 
 19990517-16:05 CET Eddie Runia
   * source/rtl/classes.c, source/rtl/tclass.prg, include/extend.h
@@ -90,48 +106,48 @@
 19990516-07:04 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.l, source/compiler/harbour.y
-	-cleaned rules for NEXT, BREAK, WHILE, BEGIN, DO to be 100%
-	Clipper compatible (mainly keyword[] use);
-	-corrected support for END keyword;
-	-added include files: hbsetup.h and hberrors.h;
-	-code for OBJ generation is now linked optionally -it is linked if
-	the symbol OBJ_GENERATION is defined in hbsetup.h file;
-	-corrected the generation of EXTERNAL symbols
+        -cleaned rules for NEXT, BREAK, WHILE, BEGIN, DO to be 100%
+        Clipper compatible (mainly keyword[] use);
+        -corrected support for END keyword;
+        -added include files: hbsetup.h and hberrors.h;
+        -code for OBJ generation is now linked optionally -it is linked if
+        the symbol OBJ_GENERATION is defined in hbsetup.h file;
+        -corrected the generation of EXTERNAL symbols
 
     * source/vm/hvm.c
-	-code with support for symbols defined in OBJ files is now linked 
-	optionally -it is linked if the symbol OBJ_GENERATION is defined 
-	in hbsetup.h file
-	-added support for optional definition of the starting procedure
-	(in case when automatic lookup for it doesn't work (Watcom C/C++))
+        -code with support for symbols defined in OBJ files is now linked
+        optionally -it is linked if the symbol OBJ_GENERATION is defined
+        in hbsetup.h file
+        -added support for optional definition of the starting procedure
+        (in case when automatic lookup for it doesn't work (Watcom C/C++))
 
     * include/hbsetup.h
-	-new file with Harbour configuration options (see this file for 
-	available options)
+        -new file with Harbour configuration options (see this file for
+        available options)
 
     * include/hberrors.h
-	-new file with error constants definition shared by 
-	harbour.y and harbour.l
+        -new file with error constants definition shared by
+        harbour.y and harbour.l
 
     * include/extend.h
-	-added declaration of FindDynSym() function used in hvm.c
+        -added declaration of FindDynSym() function used in hvm.c
 
     * source/rtl/environ.c
-	-added correct #include for Watcom C/C++ to use REGS union
-	(although I am not sure if OS function should be placed here)
+        -added correct #include for Watcom C/C++ to use REGS union
+        (although I am not sure if OS function should be placed here)
 
     * source/rtl/itemapi.c
-	-corrected wrog declaration of symEval variable
-	(it is SYMBOL structure instead of PSYMBOL pointer)
+        -corrected wrog declaration of symEval variable
+        (it is SYMBOL structure instead of PSYMBOL pointer)
 
     * tests/working/keywords.prg
-	-added test code for END keyword
+        -added test code for END keyword
 
     * makewat.env, makefile.wat
-	-added/corrected makefiles for Watcom C/C++ compiler
+        -added/corrected makefiles for Watcom C/C++ compiler
 
     * makedos.env, makefile.dos
-	-added/corrected makefiles for pure DOS DJGPP compiler
+        -added/corrected makefiles for pure DOS DJGPP compiler
 
 19990516-06:30 CET Eddie Runia
   * tests/working/bld32exe.bat
@@ -291,33 +307,33 @@
 
 Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* Makefile: 
-	Added obj to the list of directories.
-	
-	* source/Makefile: 
-	Added rdd to the list of directories.
+        * Makefile:
+        Added obj to the list of directories.
 
-	* source/rtl/Makefile: 
-	Added gtapi.c to the list of C sources.
-	
-	* source/rtl/gtapi.c: 
-	Got rid of two warnings with gcc.
-	
-	* source/rtl/environ.c: 
-	Made sure it compiles with gcc.
-	There was a missing #endif.
-	
-	* source/tools/stringp.prg: 
-	* tests/working/debugtst.prg: 
-	Replaced Debug() with HBDebug(), otherwise the generated C source
-	collides with the macro DEBUG.
-	
- 	* source/vm/hvm.c:
-	Corrected a comment.
-	
-	* source/rdd/Makefile: 
-	* obj/Makefile: 
-	Added these two Makefiles.
+        * source/Makefile:
+        Added rdd to the list of directories.
+
+        * source/rtl/Makefile:
+        Added gtapi.c to the list of C sources.
+
+        * source/rtl/gtapi.c:
+        Got rid of two warnings with gcc.
+
+        * source/rtl/environ.c:
+        Made sure it compiles with gcc.
+        There was a missing #endif.
+
+        * source/tools/stringp.prg:
+        * tests/working/debugtst.prg:
+        Replaced Debug() with HBDebug(), otherwise the generated C source
+        collides with the macro DEBUG.
+
+        * source/vm/hvm.c:
+        Corrected a comment.
+
+        * source/rdd/Makefile:
+        * obj/Makefile:
+        Added these two Makefiles.
 
 19990511-19:20 Eddie Runia
   * source/rtl/classes.c
@@ -356,17 +372,17 @@ Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon May 10 19:32:34 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* makefile.b32: 
-	Added source/compiler/harbour.c to this makefile.
-	
-	* source/compiler/Makefile: 
-	Added genobj32.c.
-	
-	* source/compiler/genobj32.c: 
-	Got rid of warnings.
-	
-	* source/compiler/harbour.y: 
-	Added '/' as path separator.
+        * makefile.b32:
+        Added source/compiler/harbour.c to this makefile.
+
+        * source/compiler/Makefile:
+        Added genobj32.c.
+
+        * source/compiler/genobj32.c:
+        Got rid of warnings.
+
+        * source/compiler/harbour.y:
+        Added '/' as path separator.
 
 19990510-11:30 Eddie Runia
     * source/rtl/classes.c
@@ -392,13 +408,13 @@ Mon May 10 19:32:34 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990510-01:19 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.l, source/compiler/harbour.y
-	- corrected syntax check for:  case->  case+=   case-=
-	- DO/WHILE/CASE/WITH is now 100% compatible with Clipper
-	- there is still problem with comments that ends with **/
-	(exactly two asterix and slash)
+        - corrected syntax check for:  case->  case+=   case-=
+        - DO/WHILE/CASE/WITH is now 100% compatible with Clipper
+        - there is still problem with comments that ends with **/
+        (exactly two asterix and slash)
 
     * tests/working/keywords.prg
-	- added code to test DO/WHILE/CASE/WITH
+        - added code to test DO/WHILE/CASE/WITH
 
 19900509-23:30 Eddie Runia
    * source/working/mankala.prg
@@ -471,28 +487,28 @@ Mon May 10 19:32:34 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 Sat May  8 03:02:04 1999 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y, source/compiler/harbour.l
-	-static variables can be accessed in a codeblock even if this 
-	 codeblock is a return value (detached static variables)
-	-Harbour finds now illegal initializations of static variables
-	 (static variables can be initialized using literals only)
-	-there is no 'redefinition of predefined function' error when the name
-	 of compiled source code is the same as reserved function
-	-corrected support for /*******/ comments
-	-Harbour distinguish now 'CASE' variable, 'CASE()' function and
-	 CASE statement (see tests/working/keywords.prg)
+        -static variables can be accessed in a codeblock even if this
+         codeblock is a return value (detached static variables)
+        -Harbour finds now illegal initializations of static variables
+         (static variables can be initialized using literals only)
+        -there is no 'redefinition of predefined function' error when the name
+         of compiled source code is the same as reserved function
+        -corrected support for /*******/ comments
+        -Harbour distinguish now 'CASE' variable, 'CASE()' function and
+         CASE statement (see tests/working/keywords.prg)
 
     * tests/working/keywords.prg
-	-added many more wild statements to test Harbour compiler
+        -added many more wild statements to test Harbour compiler
 
     * test/working/statics.prg
-	-added code to test access of static variables from a codeblock
+        -added code to test access of static variables from a codeblock
 
     * source/rtl/extend.c
-	-added brackets to avoid ambiguous if/else
+        -added brackets to avoid ambiguous if/else
 
     * source/include/extend.h
     * source/rtl/codebloc.c
-	- added support for static variables in a codeblock
+        - added support for static variables in a codeblock
 
 
 19990507-20:15 EDT David G. Holm <dholm@jsd-llc.com>
@@ -534,10 +550,10 @@ Thu May 07 17:00:00 1999  Victor Szel <info@szelvesz.hu>
 19990507-07:25 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y, source/compiler/harbour.l
-	-improoved support for BEGIN SEGEUENCE
-	-added distinction between BEGIN command and begin variable
-	-added distinction between BREAK command and break variable
-	
+        -improoved support for BEGIN SEGEUENCE
+        -added distinction between BEGIN command and begin variable
+        -added distinction between BREAK command and break variable
+
     * tests/working/keywords.prg
         -new file to test if we are 100% compatible with Clipper
 

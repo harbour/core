@@ -1,0 +1,109 @@
+# makefile for IBM C Compiler (32 bits)
+
+.SUFFIXES : .prg .c
+
+path_c   = source\compiler;source\vm;source\rtl;source\tools
+path_h   = include
+path_l   = source\compiler
+path_y   = source\compiler
+path_exe = bin
+path_lib = libs\icc
+path_obj = obj
+path_prg = source\rtl
+
+c_opt = /W2 /Se /Sd+ /I.\include /Ti+
+
+all: $(path_exe)\harbour.exe $(path_lib)\harbour.lib $(path_lib)\hbtools.lib $(path_lib)\terminal.lib
+
+$(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
+                $(path_obj)\classes.obj \
+                $(path_obj)\codebloc.obj \
+                $(path_obj)\console.obj \
+                $(path_obj)\dates.obj \
+                $(path_obj)\dynsym.obj \
+                $(path_obj)\environ.obj \
+                $(path_obj)\error.obj \
+                $(path_obj)\errorapi.obj \
+                $(path_obj)\errorsys.obj \
+                $(path_obj)\extend.obj \
+                $(path_obj)\itemapi.obj \
+                $(path_obj)\math.obj \
+                $(path_obj)\set.obj \
+                $(path_obj)\strings.obj \
+                $(path_obj)\strcmp.obj \
+                $(path_obj)\tclass.obj \
+                $(path_obj)\transfrm.obj
+        @echo Harbour.lib
+
+$(path_lib)\hbtools.lib: \
+                $(path_obj)\debug.obj \
+                $(path_obj)\genobj.obj \
+                $(path_obj)\mathx.obj \
+                $(path_obj)\stringsx.obj \
+                #(path_obj)\datesx.obj
+        @echo HBtools.lib
+
+$(path_lib)\terminal.lib :$(path_obj)\console.obj
+        @echo terminal.lib
+
+$(path_obj)\console.obj  : {$(path_c)}console.c  $(path_h)\extend.h $(path_h)\types.h
+  icc /C+ $(c_opt) /Fo$@ /Tpsource\rtl\console.c
+  ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+#$(path_obj)\files.obj    : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\itemapi.obj  : {$(path_c)}itemapi.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\math.obj     : {$(path_c)}math.c     $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\stringsx.obj : {$(path_c)}stringsx.c $(path_h)\extend.h $(path_h)\types.h
+$(path_obj)\transfrm.obj : {$(path_c)}transfrm.c $(path_h)\extend.h $(path_h)\types.h
+
+$(path_obj)\dynsym.obj   : source\vm\dynsym.c   $(path_h)\extend.h $(path_h)\types.h
+  icc /C+ $(c_opt) /Fo$@ /Tpsource\vm\dynsym.c
+  ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\error.obj    : $(path_prg)\error.prg $(path_h)\init.h $(path_h)\extend.h  $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour $(path_prg)\error /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\error.c
+ ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\errorsys.obj : $(path_prg)\errorsys.prg $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour $(path_prg)\errorsys /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\errorsys.c
+ ilib .\libs\icc\harbour.lib -+$@,,
+
+$(path_obj)\tclass.obj   : $(path_prg)\tclass.prg $(path_h)\init.h  $(path_h)\extend.h $(path_h)\types.h {$(path_exe)}harbour.exe
+ $(path_exe)\harbour $(path_prg)\tclass /n /osource\rtl
+ icc /C+ $(c_opt) /Fo$@ /Tp$(path_prg)\tclass.c
+ ilib .\libs\icc\harbour.lib -+$@,,
+
+{source\rtl}.c{$(path_obj)}.obj:
+  icc /C+ $(c_opt) /Fo$@ /Tp$<
+  ilib .\libs\icc\harbour.lib -+$@,,
+
+{source\tools}.c{$(path_obj)}.obj:
+  icc /C+ $(c_opt) /Fo$@ /Tp$<
+  ilib .\libs\icc\hbtools.lib -+$@,,
+
+$(path_exe)\harbour.exe : {$(path_c)}y_tab.c {$(path_c)}lexyy.c {$(path_c)}genobj32.c {$(path_c)}harbour.c
+ icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
+    /Fo$(path_obj)\y_tab.obj /Tpsource\compiler\y_tab.c \
+    /Fo$(path_obj)\lexyy.obj /Tpsource\compiler\lexyy.c \
+    /Fo$(path_obj)\genobj32.obj /Tpsource\compiler\genobj32.c \
+    /Fo$(path_obj)\harbour.obj /Tpsource\compiler\harbour.c
+
+y_tab.c : {$(path_y)}harbour.y
+#  bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
+
+lexyy.c : {$(path_l)}harbour.l
+#  flex -i -8 -osource\compiler\lexyy.c -Sd:\bin\emx\lib\flexskel.cc -Hd:\bin\emx\include\flexskel.h source\compiler\harbour.l
