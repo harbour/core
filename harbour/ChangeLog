@@ -1,3 +1,18 @@
+Thu Jul 15 17:32:29 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/rules.cf: 
+	Added support for a couple of environment variables for the user
+	to specify additional flags for compilation. They are C_USR and
+	PRG_USR. An example using bash:
+
+	  export C_USR='-DHARBOUR_USE_GTAPI -DHARBOUR_USE_WIN_GTAPI'
+	  make -w
+	
+	* include/hbdefs.h: 
+	* source/rtl/gt/gtwin.c: 
+	Modified these files to be able to compile gtwin.c with gcc. It
+	compiles and links, but it dumps core on execution...
+
 19990715-23:14 CET Patrick Mast <harbour@PatrickMast.com>
    All files for the Preprocessor lib from Felipe Coury <fcoury@flexsys-ci.com>
    + source/hbpp/preproc.c

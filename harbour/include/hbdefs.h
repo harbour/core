@@ -7,7 +7,7 @@
 
 #include <limits.h>
 
-#ifdef __IBMCPP__
+#if defined(__IBMCPP__)
   /* With the exception of WORD, the IBM Visual Age C++ compiler has
      its own definitions of the Harbour types defined in the #else
      section of this #ifdef block, most of which conflict with the
@@ -27,7 +27,10 @@
   typedef unsigned short int WORD;
   #undef INT
   #undef UINT
+
 #else
+
+#if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
 #undef BYTE
 typedef unsigned char BYTE, * PBYTE;   /* 1 byte unsigned */
@@ -61,6 +64,7 @@ typedef void * PVOID;
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))
 
+#endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
 
 #ifdef __GNUC__

@@ -14,16 +14,21 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#if defined(__GNUC__)
+#define HB_DONT_DEFINE_BASIC_TYPES
+#endif /* __GNUC__ */
+
 #include <windows.h>
 #include <gtapi.h>
 
+#if ! defined(__GNUC__)
 #ifdef __CYGWIN32__
 typedef WORD far *LPWORD;
 #endif
+#endif /* __GNUC__ */
 
 static HANDLE HInput = INVALID_HANDLE_VALUE;
 static HANDLE HOutput = INVALID_HANDLE_VALUE;
-static unsigned long key_hit = 0xFFFFFFFFUL;
 
 void gtInit(void)
 {

@@ -41,11 +41,11 @@ endif
 
 # Rule to generate an object file from a C source file in the parent.
 %$(OBJ_EXT) : $(SOURCE_DIR)%.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_IN) $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(SOURCE_DIR),,$?))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(subst .c,$(OBJ_EXT),$(subst $(SOURCE_DIR),,$?))
 
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_IN) $? $(CC_OUT)$(?:.c=$(OBJ_EXT))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?:.c=$(OBJ_EXT))
 
 # Rule to generate an executable file from an object file.
 %$(EXE_EXT) : %$(OBJ_EXT)
@@ -53,7 +53,7 @@ endif
 
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
-	$(HB) $? $(HB_FLAGS)
+	$(HB) $? $(PRG_USR) $(HB_FLAGS)
 
 # Generic rule to clean up.
 clean::
