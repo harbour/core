@@ -8,7 +8,7 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     * bug fixed, reported by Lorenzo Fiorini
-2002-02-21 18:10 UTC+0500 Jorge A. Giraldo <jorgeagiraldo@emtelsa.multi.net.co>
+2002-02-24 09:36 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Fixed bug when browsing vars
        reported by Jorge A. Giraldo
@@ -151,7 +151,7 @@
    * doc/en/treport.txt
      * Mostly line formating
 
-2002-02-16 20:25 UTC+0500 Jorge A. Giraldo <jgiraldo@col2.telecom.com.co>
+2002-02-17 20:30 UTC-0300 Walter Negro <anegro@overnet.com.ar>
    * source/vm/itemapi.c
      ! hb_itemStr() - Eliminated the limit of 9 decimals if not SET FIXED ON
      ! hb_itemStr() - Rounded starting from 17th less significant number.
