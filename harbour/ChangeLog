@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 13:14 UTC+0000 Dave Pearson <davep@davep.org>
+   * include/hbdefs.h
+     * Added "&& defined( HB_OS_WIN_32 )" to the #elif that tests for
+       __GNUC__ when deciding how to #define HB_EXPORT.
+	
 2001-12-20 13:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbdefs.h
      * HB_EXPORT definition for Borland C

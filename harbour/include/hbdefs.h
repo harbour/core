@@ -194,7 +194,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #if defined( __RSXNT__ )
    #define HB_EXPORT _export
 
-#elif defined( __GNUC__ )
+#elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
    #define HB_EXPORT __attribute__ (( dllexport ))
 
 #elif defined( __BORLANDC__ )
