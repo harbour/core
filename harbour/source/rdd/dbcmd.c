@@ -3043,12 +3043,12 @@ HB_FUNC( ORDSCOPE )
 
    if( s_pCurrArea )
    {
-      if( !ISNUM( 1 ) || (!ISNIL(2) && !( ISCHAR(2) || ISNUM(2) || ISDATE(2) || ISLOG(2) )))
+      if( (!ISNIL(2) && !( ISCHAR(2) || ISNUM(2) || ISDATE(2) || ISLOG(2) )))
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDSCOPE" );
          return;
       }
-      sInfo.nScope = hb_parni( 1 );
+      sInfo.nScope = (ISNUM(1))? hb_parni( 1 ) : 0;
 
       SELF_SCOPEINFO( ( AREAP ) s_pCurrArea->pArea, sInfo.nScope, pScopeValue );
 

@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-22 13:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+    * lang/msgsrwin.c and symbol.prg ( to makefile.nt only ) added.
+  * source/rdd/dbcmd.c
+    ! Ordscope() fixed - first parameter is TOPSCOPE by default now.
+
 2003-10-21 10:23 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
   * source/vm/codebloc.c
     ! Fixed detached local bug (borrowed from xharbour)
