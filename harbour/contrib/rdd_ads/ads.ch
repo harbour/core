@@ -56,6 +56,11 @@
 #define ADS_TOP                  1
 #define ADS_BOTTOM               2
 
+/* for calls that can optionally use filters */
+#define ADS_RESPECTFILTERS       1
+#define ADS_IGNOREFILTERS        2
+#define ADS_RESPECTSCOPES        3
+
 #command SET FILETYPE TO <x:NTX,CDX,ADT>                              ;
       => AdsSetFileType( if( upper( <(x)> ) == "NTX", 1,              ;
                          if( upper( <(x)> ) == "CDX", 2, 3 ) ) )

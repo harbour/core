@@ -1133,6 +1133,8 @@ static ERRCODE dbfGoTo( AREAP pArea, ULONG ulRecNo )
          return FAILURE;
       pArea->lpExtendInfo->ulRecCount = ulRecCount;
    }
+   else 
+      ulRecCount = pArea->lpExtendInfo->ulRecCount;
 
    if( ulRecCount < 1 )
    {

@@ -582,7 +582,14 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   HB_TRACE(HB_TR_DEBUG, ("ParseCommand(%s, %d, %d)", sLine, com_or_xcom, com_or_tra));
 
-  NextWord( &sLine, cmdname, FALSE );
+  HB_SKIPTABSPACES( sLine );
+  ipos = 0;
+  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<')
+  {
+     *(cmdname+ipos++) = *sLine++;
+  }
+  *(cmdname+ipos) = '\0';
+  if( !ipos ) return;
   hb_strupr( cmdname );
   HB_SKIPTABSPACES(sLine);
 
@@ -2171,7 +2178,7 @@ void hb_pp_Stuff(char *ptri, char * ptro, int len1, int len2, int lenres )
     {
       ptr1 = ptro + lenres;
       ptr2 = ptro + lenres + len1 - len2;
-      for( ; ptr1 >= ptro; ptr1--,ptr2-- ) *ptr2 = *ptr1;
+      for( i=0; i<=lenres; ptr1--,ptr2--,i++ ) *ptr2 = *ptr1;
     }
   else
     {

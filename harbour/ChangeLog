@@ -1,3 +1,15 @@
+20000328-23:10 GMT+3 Alexander Kresin
+  * source/pp/ppcore.c
+    * Bug fixed, reported by Luiz Rafael Culik
+    * Problem solved with 16-bit version
+  * source/pp/pplib.c
+    * hb_pp_init() call removed from __preprocess()
+  * source/rdd/dbf1.c
+    * bug fixed as proposed Janica Lubos
+  * contrib/rdd_ads/ads.ch
+  * contrib/rdd_ads/adsfunc.c
+    * Added third optional parameter to adsKeyCount() as proposed Brian Hays
+
 2000-03-28 13:40 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
 
    * include/hbdefs.h

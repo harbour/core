@@ -84,7 +84,7 @@ HB_FUNC( __PREPROCESS )
 
       int slen;
 
-      hb_pp_Init();
+      /*   hb_pp_Init();   */
 
       slen = HB_MIN( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
       memcpy( pText, hb_parc( 1 ), slen );

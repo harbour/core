@@ -220,6 +220,7 @@ HB_FUNC( ADSKEYCOUNT )
    UNSIGNED8 ordNum;
    UNSIGNED32 pulKey;
    ADSHANDLE hIndex;
+   UNSIGNED16 usFilterOption = ADS_IGNOREFILTERS;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -239,8 +240,19 @@ HB_FUNC( ADSKEYCOUNT )
       }
       else
          hIndex = (pArea->hOrdCurrent == 0)? pArea->hTable:pArea->hOrdCurrent;
+      if( hb_pcount() > 2 )
+      {
+         if( ISNUM( 3 ) )
+            usFilterOption = hb_parni( 3 );
+         else
+         {
+            hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYCOUNT" );
+            return;
+         }
 
-      AdsGetRecordCount  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
+      }
+
+      AdsGetRecordCount  ( hIndex, usFilterOption, &pulKey);
       hb_retnl( pulKey );
    }
    else
