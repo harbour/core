@@ -1147,6 +1147,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 if( ptr )
                     ptrmp = ptr;
                 /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
+                /*
                 else if( *ptrmp == '[' )
                 {
                   ptr = strtopti+ipos;
@@ -1165,9 +1166,11 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                     }
                   }
                 }
+                */
                 /* Ron Pinkas End */
               }
             /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
+            /*
             else if( ipos && *ptrmp == '[' )
               {
                 ptr = strtopti+ipos;
@@ -1186,6 +1189,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                   }
                 }
               }
+              */
               /* Ron Pinkas End */
           }
         switch( *ptrmp ) {

@@ -1,3 +1,7 @@
+2000-06-04 03:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     * Commented fix 2000-06-02 14:45 UTC-0800 Ron Pinkas <Ron@Profit-Master.com> until more complete solution
+
 2000-06-04 03:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      * Corrected error message in SetRules() to report filename with default extension.
