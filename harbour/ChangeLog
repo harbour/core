@@ -1,3 +1,8 @@
+19990812-14:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * funclist.txt
+    * Updated the status of several functions to S or R
+    * Updated the status of the errornew class and its members to R
+
 19990812-14:00 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/Makefile
     + Added tone.c
