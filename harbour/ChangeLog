@@ -1,3 +1,8 @@
+20000425-18:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *utils/hbdoc/Makefile
+	* added lang library
+
 20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/harbour.c
      * Resolved conflicts from my previous upload to dod witj change from JUMPSHORT TO JUMP*NEAR.

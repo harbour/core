@@ -37,6 +37,7 @@ LIBS=\
 	vm \
 	macro \
 	pp \
+	lang \
 	common \
 
 include $(TOP)$(ROOT)config/bin.cf
