@@ -1,3 +1,8 @@
+20000516-22:48 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/memoedit.prg
+     ! fixed call to StrTran passing K_TAB instead of Chr(K_TAB)
+
 20000516-03:55 GMT+4 April White <awhite@user.rose.com>
 
   * source\rtl\makefile
