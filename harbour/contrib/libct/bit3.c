@@ -545,7 +545,7 @@ long static __numnot( long lNum1, long lNum2 )
 
 long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOLP pbOk )
 {
-  long   lNumOp;
+  long   lNumOp = 0;
   long   lNum1, lNum2;
   long   lPattern, lTestMSB;
   USHORT usBytes;
