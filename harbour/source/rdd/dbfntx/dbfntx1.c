@@ -3131,15 +3131,20 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
            while( hb_ntxIsRecBad( pArea, pTag->CurKeyInfo->Xtra ) );
            retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
            pArea->fFound = TRUE;
-           return retvalue;
         }
         else
         {
            hb_ntxTagKeyGoTo( pTag, BTTM_RECORD, NULL );
            retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
            pArea->fFound = TRUE;
-           return retvalue;
         }
+        if( pArea->fShared && !pTag->Memory )
+        {
+           hb_ntxPageFree( pTag,FALSE );
+           hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
+           pArea->lpCurTag->Owner->Locked = FALSE;
+        }
+        return retvalue;
      }
      if( pArea->fShared && !pTag->Memory )
      {
