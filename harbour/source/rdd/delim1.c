@@ -47,8 +47,23 @@ HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
 { "_DELIMC",            HB_FS_PUBLIC, HB_FUNCNAME( _DELIMC ), NULL },
 { "DELIM_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DELIM_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup delim1__InitSymbols
+#if defined(_MSC_VER)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   #pragma warning( disable: 4152 )
+   static void *hb_vm_auto_delim1__InitSymbols = &delim1__InitSymbols;
+   #pragma warning( default: 4152 )
+   #pragma data_seg()
+
+#else
+
+   #if ! defined(__GNUC__)
+      #pragma startup delim1__InitSymbols
+   #endif
 #endif
 
 static RDDFUNCS delimSuper = { 0 };

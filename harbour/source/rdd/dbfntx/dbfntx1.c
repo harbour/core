@@ -48,8 +48,23 @@ HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
 { "_DBFNTX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFNTX ), NULL },
 { "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFNTX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup dbfntx1__InitSymbols
+#if defined(_MSC_VER)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   #pragma warning( disable: 4152 )
+   static void *hb_vm_auto_dbfntx1__InitSymbols = &dbfntx1__InitSymbols;
+   #pragma warning( default: 4152 )
+   #pragma data_seg()
+
+#else
+
+   #if ! defined(__GNUC__)
+      #pragma startup dbfntx1__InitSymbols
+   #endif
 #endif
 
 static RDDFUNCS ntxSuper = { 0 };

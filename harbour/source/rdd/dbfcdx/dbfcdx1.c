@@ -102,8 +102,23 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFCDX ), NULL },
 { "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup dbfcdx1__InitSymbols
+#if defined(_MSC_VER)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   #pragma warning( disable: 4152 )
+   static void *hb_vm_auto_dbfcdx1__InitSymbols = &dbfcdx1__InitSymbols;
+   #pragma warning( default: 4152 )
+   #pragma data_seg()
+
+#else
+
+   #if ! defined(__GNUC__)
+      #pragma startup dbfcdx1__InitSymbols
+   #endif
 #endif
 
 #define LOCK_START                          0x40000000L

@@ -1,3 +1,11 @@
+20000331-09:50 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbf1.c
+   * source/rdd/sdf1.c
+   * source/rdd/delim1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfntx/dbfntx1.c
+     * updated initSymbols handling
+
 20000331-06:40 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/diskspac.c
      * minor code opt.
