@@ -69,12 +69,16 @@ CVS IDs look like this:
 To add one to a file lacking it simply put as first lines:
 
 /*
- * $Id$
+ * Chr(36) + "Id" + Chr(36)
  */
 
-as soon as you commit this file your added string will be expanded
+I can't write it here because cvs server would change it as soon as I
+commit this file, but second line should not have Chr(36) but $ signs
+and no spaces between dollar sign and Id.
+
+as soon as you commit your file cvs ID string will be expanded
 by cvs server to full length.
 
-Note that last dollar sign ($Id$) is mandatory.
+Note that last dollar sign is mandatory.
 
 
