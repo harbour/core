@@ -45,6 +45,8 @@ extern void hb_consoleRelease( void );
 extern void InitSymbolTable( void );   /* initialization of runtime support symbols */
 extern int  hb_rddGetCurrentWorkAreaNumber( void );
 extern void hb_rddSelectWorkAreaNumber( int iArea );
+extern void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
 
 typedef struct _SYMBOLS
 {
@@ -1754,8 +1756,44 @@ long hb_vmPopDate( void )
 
 static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
-   HB_SYMBOL_UNUSED( pSym );
-   /* TODO: pop the proper value */
+   PHB_ITEM pAlias = stack.pPos - 1;
+   int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+
+   switch( pAlias->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmAliasPush()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         hb_rddSelectWorkAreaNumber( pAlias->item.asSymbol.value->pDynSym->hArea );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaAlias( pAlias->item.asString.value );
+         */
+         hb_itemClear( pAlias );
+         break;
+
+      default:
+         hb_itemClear( pAlias );
+         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         break;
+   }
+                    
+   hb_rddPutFieldValue( stack.pPos - 2, pSym );
+   hb_rddSelectWorkAreaNumber( iCurrArea );
    hb_stackPop();    /* field */
    hb_stackPop();    /* alias */
    HB_DEBUG( "hb_vmPopAliasedField\n" );
@@ -1798,8 +1836,7 @@ double hb_vmPopDouble( WORD *pwDec )
 
 static void hb_vmPopField( PHB_SYMB pSym )
 {
-   HB_SYMBOL_UNUSED( pSym );
-   /* TODO: pop the proper value */
+   hb_rddPutFieldValue( stack.pPos - 1, pSym );
    hb_stackPop();
    HB_DEBUG( "hb_vmPopField\n" );
 }
@@ -1921,12 +1958,44 @@ void hb_vmPower( void )
 
 static void hb_vmPushAliasedField( PHB_SYMB pSym )
 {
-   HB_SYMBOL_UNUSED( pSym );
-   /* TODO: push the proper value */
-   stack.pPos->type   = IT_INTEGER;
-   stack.pPos->item.asInteger.value = 0;
-   stack.pPos->item.asInteger.length  = 10;
-   hb_stackPush();
+   PHB_ITEM pAlias = stack.pPos - 1;
+   int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+
+   switch( pAlias->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmAliasPush()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         hb_rddSelectWorkAreaNumber( pAlias->item.asSymbol.value->pDynSym->hArea );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaAlias( pAlias->item.asString.value );
+         */
+         hb_itemClear( pAlias );
+         break;
+
+      default:
+         hb_itemClear( pAlias );
+         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         break;
+   }
+
+   hb_rddGetFieldValue( pAlias, pSym );
+   hb_rddSelectWorkAreaNumber( iCurrArea );
    HB_DEBUG( "hb_vmPushAliasedField\n" );
 }
 
@@ -1940,11 +2009,7 @@ void hb_vmPushLogical( BOOL bValue )
 
 static void hb_vmPushField( PHB_SYMB pSym )
 {
-   HB_SYMBOL_UNUSED( pSym );
-   /* TODO: push the proper value */
-   stack.pPos->type   = IT_INTEGER;
-   stack.pPos->item.asInteger.value = 0;
-   stack.pPos->item.asInteger.length  = 10;
+   hb_rddGetFieldValue( stack.pPos, pSym );
    hb_stackPush();
    HB_DEBUG( "hb_vmPushField\n" );
 }

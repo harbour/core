@@ -80,6 +80,79 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 #define LOCK_START   0x40000000L
 #define LOCK_FILE    0x3FFFFFFFL
 
+static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
+{
+   LONG lAbsNumber;
+   int iCount, iPos;
+
+   lAbsNumber = ( lValue > 0 ) ? lValue : - lValue;
+   iCount = iPos = uiLen;
+   while( iCount-- > 0 )
+   {
+      szBuffer[ iCount ] = ( '0' + lAbsNumber % 10 );
+      lAbsNumber /= 10;
+   }
+
+   if( lAbsNumber > 0 )
+   {
+      memset( szBuffer, ' ', uiLen );
+      return FALSE;
+   }   
+
+   uiLen--;
+   for( iCount= 0; iCount < uiLen; iCount++ )
+      if( szBuffer[ iCount ] == '0' )
+         szBuffer[ iCount ] = ' ';
+      else
+         break;
+
+   if( lValue < 0 )
+   {
+      if( szBuffer[ 0 ] != ' ' )
+      {
+         memset( szBuffer, ' ', iPos );
+         return FALSE;
+      }
+      for( iCount = uiLen; iCount >= 0; iCount-- )
+      {
+         if( szBuffer[ iCount ] == ' ' )
+         {
+            szBuffer[ iCount ] = '-';
+            break;
+         }
+      }
+   }
+   return TRUE;
+}
+
+static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec )
+{
+   double dAbsNumber;
+   int iCount;
+   char szEndChar;
+
+   if( uiLen > 19 )
+      uiLen = 19;
+   if( uiDec + 2 > uiLen )
+      uiDec = uiLen - 2 ;
+   if( uiDec > 15 )
+      uiDec = 15;
+   dAbsNumber = ( dValue > 0 ) ? dValue : - dValue;
+   iCount = uiLen - uiDec - 1;
+   while( iCount-- > 0 )
+      dAbsNumber /= 10;
+
+   if( dAbsNumber > 1 || dValue >= 10000000000000000000.0 )
+   {
+      memset( szBuffer, ' ', uiLen );
+      return FALSE;
+   }   
+   szEndChar = szBuffer[ uiLen ];
+   sprintf( szBuffer, "%*.*f", uiLen - uiDec - 1, uiDec, dValue );
+   szBuffer[ uiLen ] = szEndChar;
+   return TRUE;
+}
+
 static BOOL hb_rddIsLocked( AREAP pArea, LONG lLockPos )
 {
    LONG lNumLocksPos;
@@ -298,7 +371,7 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
    USHORT uiCount, uiOffset;
-   BYTE * szText, * szOldChar, szEndChar;
+   BYTE * szText, szEndChar;
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
@@ -323,22 +396,20 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'N':
-         szOldChar = szText + pField->uiLen;
-         szEndChar = * szOldChar;
-         * szOldChar = 0;
+         szEndChar = * ( szText + pField->uiLen );
+         * ( szText + pField->uiLen ) = 0;
          if( pField->uiDec )
             hb_itemPutND( pItem, atof( ( char * ) szText ) );
          else
-            hb_itemPutNL( pItem, atof( ( char * ) szText ) );
-         * szOldChar = szEndChar;
+            hb_itemPutNL( pItem, atol( ( char * ) szText ) );
+         * ( szText + pField->uiLen ) = szEndChar;
          break;
 
       case 'D':
-         szOldChar = szText + pField->uiLen;
-         szEndChar = * szOldChar;
-         * szOldChar = 0;
+         szEndChar = * ( szText + pField->uiLen );
+         * ( szText + pField->uiLen ) = 0;
          hb_itemPutDS( pItem, ( char * ) szText );
-         * szOldChar = szEndChar;
+         * ( szText + pField->uiLen ) = szEndChar;
          break;
 
       case 'L':
@@ -487,7 +558,7 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
    USHORT uiCount, uiOffset;
-   BYTE * szText, * szOldChar, szEndChar;
+   BYTE * szText, szEndChar;
    BOOL bError;
    long lDay, lMonth, lYear;
    PHB_ITEM pError;
@@ -519,42 +590,38 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    szText = pArea->lpExtendInfo->bRecord + uiOffset;
    bError = TRUE;
-   szOldChar = szText + pField->uiLen;
    switch( pField->uiType )
    {
       case 'C':
          if( pItem->type & IT_STRING )
          {
-            szOldChar = szText + pField->uiLen + ( ( USHORT ) pField->uiDec << 8 );
-            szEndChar = * szOldChar;
-            sprintf( ( char * ) szText, "%-*s", pField->uiLen, pItem->item.asString.value );
+            uiCount = pItem->item.asString.length;
+            if( uiCount > pField->uiLen )
+               uiCount = pField->uiLen;
+            memcpy( szText, pItem->item.asString.value, uiCount );
+            memset( szText + uiCount, ' ', pField->uiLen - uiCount );
             bError = FALSE;
          }
          break;
 
       case 'N':
-         if( pItem->type & IT_INTEGER )
+         if( pItem->type & IT_NUMERIC )
          {
             if( pField->uiDec )
-               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, ( double ) pItem->item.asInteger.value );
+               bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
+                                   pField->uiLen, pField->uiDec );
             else
-               sprintf( ( char * ) szText, "%*i", pField->uiLen, pItem->item.asInteger.value );
-            bError = FALSE;
-         }
-         else if( pItem->type & IT_LONG )
-         {
-            if( pField->uiDec )
-               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, ( double ) pItem->item.asLong.value );
-            else
-               sprintf( ( char * ) szText, "%*ld", pField->uiLen, pItem->item.asLong.value );
-            bError = FALSE;
-         }
-         else if( pItem->type & IT_DOUBLE )
-         {
-            if( pField->uiDec )
-               sprintf( ( char * ) szText, "%*.*f", pField->uiLen, pField->uiDec, pItem->item.asDouble.value );
-            else
-               sprintf( ( char * ) szText, "%*ld", pField->uiLen, ( long ) pItem->item.asDouble.value );
+               bError = !hb_nltoa( hb_itemGetNL( pItem ), ( char * ) szText,
+                                   pField->uiLen );
+            if( bError )
+            {
+               pError = hb_errNew();
+               hb_errPutGenCode( pError, EG_DATAWIDTH );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATAWIDTH ) );
+               hb_errPutSubCode( pError, 1021 );
+               SELF_ERROR( pArea, pError );
+               hb_errRelease( pError );
+            }
             bError = FALSE;
          }
          break;
@@ -562,8 +629,10 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case 'D':
          if( pItem->type & IT_DATE )
          {
+            szEndChar = * ( szText + pField->uiLen );
             hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
             hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
+            * ( szText + pField->uiLen ) = szEndChar;
             bError = FALSE;
          }
          break;
@@ -579,7 +648,6 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
    }
-   * szOldChar = szEndChar;
 
    if( bError )
    {
@@ -788,8 +856,8 @@ static ERRCODE WriteDBHeader( AREAP pArea )
    for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
    {
       memset( &pDBField, 0, sizeof( DBFFIELD ) );
-      strncpy( ( char * ) pDBField.bName, ( const char * ) pField->sym, sizeof( pDBField.bName ) );
-      hb_strUpper( ( char * ) pDBField.bName, strlen( ( char * ) pDBField.bName ) );
+      strncpy( ( char * ) pDBField.bName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+               sizeof( pDBField.bName ) );
       pDBField.bType = pField->uiType;
       switch( pDBField.bType )
       {

@@ -129,10 +129,7 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )
       ( ( LPFIELD ) ( pField - 1 ) )->lpfNext = pField;
-   pField->sym = ( void * ) hb_xgrab( HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
-   memset( pField->sym, 0, HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 );
-   strncpy( ( char * ) pField->sym, ( char * ) pFieldInfo->atomName,
-            HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
+   pField->sym = ( void * ) hb_dynsymGet( ( char * ) pFieldInfo->atomName );
    pField->uiType = pFieldInfo->uiType;
    pField->uiTypeExtended = pFieldInfo->typeExtended;
    pField->uiLen = pFieldInfo->uiLen;
@@ -216,8 +213,7 @@ static ERRCODE FieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM p
       switch( uiType )
       {
          case DBS_NAME:
-            hb_itemPutCL( pItem, ( char * ) pField->sym,
-                          HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
+            hb_itemPutC( pItem, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName );
             return SUCCESS;
 
          case DBS_TYPE:
@@ -251,7 +247,7 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
    }
    if( pField )
    {
-      strncpy( ( char * ) szName, ( char * ) pField->sym,
+      strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
                HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
       return SUCCESS;
    }
@@ -294,14 +290,14 @@ static ERRCODE NewArea( AREAP pArea )
 
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   pArea->atomAlias = hb_dynsymFind( ( char * ) pOpenInfo->atomAlias );
-   if( pArea->atomAlias && ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+   pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
+   if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
    {
       hb_errRT_DBCMD( EG_DUPALIAS, 1011, 0, ( char * ) pOpenInfo->atomAlias );
       return FAILURE;
    }
-   pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
-   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+   else
+      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    
    return SUCCESS;
 }
@@ -309,19 +305,9 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 static ERRCODE Release( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
-   LPFIELD pField;
 
    if( pArea->lpFields )
-   {
-      pField = pArea->lpFields;
-      while( pField )
-      {
-         if( pField->sym )
-            hb_xfree( pField->sym );
-         pField = pField->lpfNext;
-      }
       hb_xfree( pArea->lpFields );
-   }
 
    while( pArea->lpFileInfo )
    {
@@ -658,6 +644,52 @@ void hb_rddSelectWorkAreaAlias( char * szName )
       hb_errRT_BASE( EG_NOALIAS, 1002, 0, szAlias );
 
    hb_xfree( szAlias );
+}
+
+void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+{
+   LPFIELD pField;
+   USHORT uiField;
+
+   if( pCurrArea )
+   {
+      uiField = 1;
+      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      while( pField )
+      {
+         if( ( ( PHB_DYNS ) pField->sym )->pSymbol == pFieldSymbol )
+         {
+            SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+            return;
+         }
+         pField = pField->lpfNext;
+         uiField++;
+      }
+   }
+   hb_errRT_BASE( EG_NOVAR, 1003, 0, pFieldSymbol->szName );
+}
+
+void hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+{
+   LPFIELD pField;
+   USHORT uiField;
+
+   if( pCurrArea )
+   {
+      uiField = 1;
+      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      while( pField )
+      {
+         if( ( ( PHB_DYNS ) pField->sym )->pSymbol == pFieldSymbol )
+         {
+            SELF_PUTVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+            return;
+         }
+         pField = pField->lpfNext;
+         uiField++;
+      }
+   }
+   hb_errRT_BASE( EG_NOVAR, 1003, 0, pFieldSymbol->szName );
 }
 
 /*
@@ -1048,9 +1080,9 @@ HARBOUR HB_DBSTRUCT( void )
    {
       SELF_FIELDCOUNT( ( AREAP ) pCurrArea->pArea, &uiFields );
       pData = hb_itemNew( NULL );
+      pItem = hb_itemNew( NULL );
       for( uiCount = 1; uiCount <= uiFields; uiCount++ )
       {
-         pItem = hb_itemNew( NULL );
          hb_arrayNew( pItem, 4 );
          SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_NAME, pData );
          hb_arraySet( pItem, 1, pData );
@@ -1062,6 +1094,7 @@ HARBOUR HB_DBSTRUCT( void )
          hb_arraySet( pItem, 4, pData );
          hb_arrayAdd( &stack.Return, pItem );
       }
+      hb_itemRelease( pItem );
       hb_itemRelease( pData );
    }
 }
@@ -1214,7 +1247,7 @@ HARBOUR HB_DBUSEAREA( void )
       if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
          pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
 
-      pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
+      pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
    }
    else
    {
@@ -1364,7 +1397,7 @@ HARBOUR HB_FIELDPOS( void )
       pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
       while( pField )
       {
-         if( strcmp( szName, ( char * ) pField->sym ) == 0 )
+         if( strcmp( szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName ) == 0 )
          {
             hb_retni( uiCount + 1 );
             return;

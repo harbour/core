@@ -1,3 +1,12 @@
+19990825-17:22 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/vm/hvm.c
+     + Added support for FIELD symbols
+   * source/rdd/dbcmd.c
+     + Open function improved
+     + Added support for FIELD symbols
+   * source/rdd/dbf1.c
+     + PutValue function improved
+
 19990825-13:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
