@@ -90,7 +90,9 @@
    This has been corrected by ptucker
  */
 
-#define HB_OS_WIN_32_USED
+#ifndef HB_OS_WIN_32_USED
+   #define HB_OS_WIN_32_USED
+#endif
 
 #include <string.h>
 #include <ctype.h>
@@ -1446,12 +1448,12 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", (char*) pDirname));
 
-   pDirname = hb_strdup ( ( char * ) pDirname );
+   pDirname = ( BYTE * ) hb_strdup ( ( char * ) pDirname );
 
    if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
-      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strLower( ( char *) pDirname, strlen( ( char *) pDirname ) );
    else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
-      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strUpper( ( char *) pDirname, strlen( ( char *) pDirname ) );
 
 #if defined(HB_OS_WIN_32)
 
@@ -1488,12 +1490,12 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", (char*) pDirname));
 
-   pDirname = hb_strdup ( ( char * ) pDirname );
+   pDirname = ( BYTE *) hb_strdup ( ( char * ) pDirname );
 
    if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
-      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strLower( ( char *) pDirname, strlen( ( char *) pDirname ) );
    else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
-      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strUpper( ( char *) pDirname, strlen( ( char *) pDirname ) );
 
 #if defined(HB_OS_WIN_32)
 
@@ -1524,12 +1526,12 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", (char*) pDirname));
 
-   pDirname = hb_strdup ( ( char * ) pDirname );
+   pDirname = ( BYTE * ) hb_strdup ( ( char * ) pDirname );
 
    if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
-      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strLower( ( char *) pDirname, strlen( ( char *) pDirname ) );
    else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
-      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
+      pDirname = ( BYTE * ) hb_strUpper( ( char *) pDirname, strlen( ( char *) pDirname ) );
 
 #if defined(HB_OS_WIN_32)
 
