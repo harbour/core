@@ -190,7 +190,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    DoExitFunctions();      /* process defined EXIT functions */
 
    ItemRelease( &stack.Return );
-   ArrayRelease( &aStatics );
+   hb_arrayRelease( &aStatics );
    ItemRelease( &errorBlock );
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
@@ -552,7 +552,7 @@ void ArrayAt( void )
    PITEM pArray  = stack.pPos - 1;
    ITEM item;
 
-   ArrayGet( pArray, dIndex, &item );
+   hb_arrayGet( pArray, dIndex, &item );
    StackPop();
 
    ItemCopy( stack.pPos, &item );
@@ -579,7 +579,7 @@ void ArrayPut( void )
    else ;
       /* QUESTION: Should we raise an error here ? */
 
-   ArraySet( pArray, ulIndex, pValue );
+   hb_arraySet( pArray, ulIndex, pValue );
    ItemCopy( pArray, pValue );  /* places pValue at pArray position */
    StackPop();
    StackPop();
@@ -760,7 +760,7 @@ void Equal( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2 );
+      i = hb_itemStrCmp( pItem1, pItem2, TRUE );
       StackPop();
       StackPop();
       PushLogical( i == 0 );
@@ -850,7 +850,7 @@ void GenArray( WORD wElements ) /* generates a wElements Array and fills it from
    WORD w;
 
    itArray.wType = IT_NIL;
-   Array( &itArray, wElements );
+   hb_arrayNew( &itArray, wElements );
    for( w = 0; w < wElements; w++ )
       ItemCopy( ( ( PBASEARRAY ) itArray.value.pBaseArray )->pItems + w,
                 stack.pPos - wElements + w );
@@ -872,7 +872,7 @@ void Greater( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
       StackPop();
       StackPop();
       PushLogical( i > 0 );
@@ -915,7 +915,7 @@ void GreaterEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
       StackPop();
       StackPop();
       PushLogical( i >= 0 );
@@ -987,7 +987,7 @@ void ItemRelease( PITEM pItem )
    else if( IS_ARRAY( pItem ) )
    {
       if( --( ( PBASEARRAY ) pItem->value.pBaseArray )->wHolders == 0 )
-         ArrayRelease( pItem );
+         hb_arrayRelease( pItem );
    }
    else if( IS_BLOCK( pItem ) )
    {
@@ -1033,7 +1033,7 @@ void Less( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
       StackPop();
       StackPop();
       PushLogical( i < 0 );
@@ -1076,7 +1076,7 @@ void LessEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
       StackPop();
       StackPop();
       PushLogical( i <= 0 );
@@ -1171,7 +1171,7 @@ void NotEqual( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2 );
+      i = hb_itemStrCmp( pItem1, pItem2, TRUE );
       StackPop();
       StackPop();
       PushLogical( i != 0 );
@@ -1761,15 +1761,15 @@ void Statics( PSYMBOL pSym ) /* initializes the global aStatics array or redimen
    if( IS_NIL( &aStatics ) )
    {
       pSym->pFunPtr = 0;         /* statics frame for this PRG */
-      Array( &aStatics, wStatics );
+      hb_arrayNew( &aStatics, wStatics );
    }
    else
    {
-      pSym->pFunPtr = ( HARBOURFUNC ) ArrayLen( &aStatics );
-      ArraySize( &aStatics, ArrayLen( &aStatics ) + wStatics );
+      pSym->pFunPtr = ( HARBOURFUNC )hb_arrayLen( &aStatics );
+      hb_arraySize( &aStatics, hb_arrayLen( &aStatics ) + wStatics );
    }
 
-   HBDEBUG2( "Statics %i\n", ArrayLen( &aStatics ) );
+   HBDEBUG2( "Statics %i\n", hb_arrayLen( &aStatics ) );
 }
 
 void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */
