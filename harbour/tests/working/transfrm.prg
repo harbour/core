@@ -1,9 +1,12 @@
+#include "set.ch"
+
 //extern OutStd
 //extern Str
 
 function Main()
 
-   QOut("// PLEASE SET DATE TO BRITISH AND CENTURY ON")
+   HB_SetCentury(.T.)
+   Set(_SET_DATEFORMAT, "dd/mm/yyyy")
    QOut( "Hallo      ", "!!!!!       ", transform( "Hallo   ", "!!!!!"    ) )
    QOut( "Hallo      ", "!!A!!       ", transform( "Hallo   ", "!!A!!"    ) )
    QOut( "Hallo      ", "!!A9!       ", transform( "Hallo   ", "!!A9!"    ) )

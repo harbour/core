@@ -1,3 +1,7 @@
+19990520-13:50 CET Eddie Runia
+  * tests/working/transfrm.c
+    set date and century added.
+
 19990520-11:00 CET Eddie Runia
   * tests/working/runner.c
     simple file correctness checks added
