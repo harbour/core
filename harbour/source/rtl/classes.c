@@ -73,6 +73,7 @@ typedef struct
    USHORT   uiData;
    USHORT   uiScope;
    PHB_ITEM pInitValue;
+   /* BYTE     bClsDataInitiated; */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -128,6 +129,7 @@ static HARBOUR  hb___msgSetData( void );
  *
  * Realloc (widen) class
  */
+
 static void hb_clsDictRealloc( PCLASS pClass )
 {
    if( pClass )
@@ -501,6 +503,7 @@ HARBOUR HB___CLSNEW( void )
       pNewCls->uiMethods    = pSprCls->uiMethods;
 
       pNewCls->pClassDatas = hb_arrayClone( pSprCls->pClassDatas );
+
       pNewCls->pInlines    = hb_arrayClone( pSprCls->pInlines );
 
       pNewCls->uiHashKey    = pSprCls->uiHashKey;
@@ -613,7 +616,19 @@ HARBOUR HB___CLSINST( void )
             if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
                hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pMeth->pInitValue );
             else  /* it is a ClassData */
-               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+            {
+               HB_ITEM init;
+               hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
+               if( ( init.type == IT_NIL ) && ( pMeth->pInitValue ) ) /* && ! pMeth->bClsDataInitiated ) */
+               {
+                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
+                  hb_itemRelease( pMeth->pInitValue );
+                  /* pMeth->bClsDataInitiated = TRUE; */
+                  pMeth->pInitValue = 0;
+               }
+               else
+                  hb_itemRelease( &init );
+            }
          }
    }
 }
