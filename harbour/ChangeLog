@@ -1,3 +1,12 @@
+20000312-15:18 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * standardise compile for tone.c and oemansi.c
+     + add user32.lib to hbrun.exe and hbdoc.exe
+   * source/rtl/tone.c
+     * include hbdefs.h (for windows.h) for msvc
+   * bin\bld_vc.bat
+     + user32.lib
+
 20000312-16:24 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.bc
      ! "echo" commands changed to "echo.", to avoid conflict with an ECHO.EXE

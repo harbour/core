@@ -90,6 +90,14 @@ LIBS = \
     $(MACRO_LIB)
 
 #
+# programs that use OemToAnsi require user32.lib
+#
+
+LIBS2 = \
+    $(LIBS) \
+    user32.lib
+
+#
 # OBJ list for rtl.lib. Add new ones as needed
 #
 
@@ -343,7 +351,7 @@ $(PP_EXE) : \
 $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\hbrun.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg
-    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link  $(LIBS)
+    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link  $(LIBS2)
     -del hbrun.obj
 
 #
@@ -402,7 +410,7 @@ $(HBDOC_EXE) : \
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genrtf.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genhpc.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genasc.prg
-    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS)
+    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS2)
     -del hbdoc.obj
     -del genos2.obj
     -del gentrf.obj
@@ -738,7 +746,7 @@ $(OBJ_DIR)\objfunc.obj : $(OBJ_DIR)\objfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
-    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN -c -TP -Fo$@ $**
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -834,7 +842,7 @@ $(OBJ_DIR)\tlabel.obj : $(OBJ_DIR)\tlabel.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
-    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN -c -TP -Fo$@ $**
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\trace.obj : $(RTL_DIR)\trace.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
