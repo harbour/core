@@ -32,6 +32,7 @@
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
+static void hb_genNetFunctions( FILE * yyc );
 
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
@@ -315,6 +316,9 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
    {
       fprintf( yyc, "/* Empty source file */\n\n" );
    }
+
+   // Generate .NET support functions
+   hb_genNetFunctions( yyc );
 
    fclose( yyc );
 
@@ -1043,7 +1047,9 @@ static HB_GENC_FUNC( hb_p_plus )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_PLUS,\n" );
+   fprintf( cargo->yyc, "   call object AddObjects( object, object )\n" );
+   // fprintf( cargo->yyc, "\tHB_P_PLUS,\n" );
+
    return 1;
 }
 
@@ -2090,4 +2096,75 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
 
    if( nChar != 0)
       fprintf( yyc, "\n" );
+}
+
+static void hb_genNetFunctions( FILE * yyc )
+{
+   int i = 0;
+
+   // generated IL code for C# source code:
+   // public static object AddObjects( object a, object b )
+   // {
+   //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
+   //       return ( int ) a + ( int ) b;
+   //
+   //    if( a.GetType() == typeof( string ) && b.GetType() == typeof( string ) )
+   //       return a.ToString() + b.ToString();
+   //
+   //    return null;
+   // }
+   // VERY IMPORTANT: As AddObjects() is a public method, not specific to a Class,
+   // then arguments have to be decreased, as on a normal method, argument 0 is Self.
+
+   char * AddObjects[] = {
+"\n.method public static object AddObjects(object a, object b)",
+"{",
+"  .maxstack  2",
+"  .locals init (object V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0006:  ldtoken    [mscorlib]System.Int32",
+"  IL_000b:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0010:  bne.un.s   IL_003b",
+"  IL_0012:  ldarg.1",
+"  IL_0013:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0018:  ldtoken    [mscorlib]System.Int32",
+"  IL_001d:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0022:  bne.un.s   IL_003b",
+"  IL_0024:  ldarg.0",
+"  IL_0025:  unbox      [mscorlib]System.Int32",
+"  IL_002a:  ldind.i4",
+"  IL_002b:  ldarg.1",
+"  IL_002c:  unbox      [mscorlib]System.Int32",
+"  IL_0031:  ldind.i4",
+"  IL_0032:  add",
+"  IL_0033:  box        [mscorlib]System.Int32",
+"  IL_0038:  stloc.0",
+"  IL_0039:  br.s       IL_0077",
+"  IL_003b:  ldarg.0",
+"  IL_003c:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0041:  ldtoken    [mscorlib]System.String",
+"  IL_0046:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_004b:  bne.un.s   IL_0073",
+"  IL_004d:  ldarg.1",
+"  IL_004e:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0053:  ldtoken    [mscorlib]System.String",
+"  IL_0058:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_005d:  bne.un.s   IL_0073",
+"  IL_005f:  ldarg.0",
+"  IL_0060:  callvirt   instance string [mscorlib]System.Object::ToString()",
+"  IL_0065:  ldarg.1",
+"  IL_0066:  callvirt   instance string [mscorlib]System.Object::ToString()",
+"  IL_006b:  call       string [mscorlib]System.String::Concat(string,string)",
+"  IL_0070:  stloc.0",
+"  IL_0071:  br.s       IL_0077",
+"  IL_0073:  ldnull",
+"  IL_0074:  stloc.0",
+"  IL_0075:  br.s       IL_0077",
+"  IL_0077:  ldloc.0",
+"  IL_0078:  ret",
+"}", 0 };
+
+   while( AddObjects[ i ] != 0 )
+      fprintf( yyc, "%s\n", AddObjects[ i++ ] );
 }
