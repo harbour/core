@@ -158,6 +158,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       echo -ldbfnt >> build.tmp
       echo -ldbfcd >> build.tmp
       echo -lcommo >> build.tmp
+      echo -lm >> build.tmp
       gcc @build.tmp
       del build.tmp
       goto END
