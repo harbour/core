@@ -53,13 +53,13 @@ METHOD GotoLine( nLine ) CLASS TBrwText
    if nLine > ::nLine
       while ::nLine < nLine
          ::Down()
-         ::ForceStable()
       end
+      ::ForceStable()
    else
       while ::nLine > nLine
          ::Up()
-         ::ForceStable()
       end
+      ::ForceStable()
    endif
 
 return nil

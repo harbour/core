@@ -1,3 +1,7 @@
+19990823-02:00 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/debug/tbrwtext.prg
+    * GotoLine() only forceStable once after loop is done.
+
 19990823-01:11 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/debug/debugger.prg
     * ::Activate - fix for trashed screens
