@@ -118,42 +118,32 @@ FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 
 FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr )
 {
+   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
+
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreate(%p, %hu)", pFilename, uiAttr));
 
-   if( ISCHAR( 1 ) )
-   {
-      BYTE path[ _POSIX_PATH_MAX + 1 ];
-      PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
+   if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
+      pFilepath->szPath = hb_set.HB_SET_DEFAULT;
 
-      if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
-         pFilepath->szPath = hb_set.HB_SET_DEFAULT;
+   hb_fsFNameMerge( (char*) path, pFilepath );
+   hb_xfree( pFilepath );
 
-      hb_fsFNameMerge( (char*) path, pFilepath );
-      hb_xfree( pFilepath );
-
-      return hb_fsCreate( path, uiAttr );
-   }
-   else
-      return FS_ERROR;
+   return hb_fsCreate( path, uiAttr );
 }
 
 FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 {
+   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
+
    HB_TRACE(HB_TR_DEBUG, ("hb_spCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
 
-   if( ISCHAR( 1 ) )
-   {
-      BYTE path[ _POSIX_PATH_MAX + 1 ];
-      PHB_FNAME pFilepath = hb_fsFNameSplit( (char*) pFilename );
+   if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
+      pFilepath->szPath = hb_set.HB_SET_DEFAULT;
 
-      if( ! pFilepath->szPath && hb_set.HB_SET_DEFAULT )
-         pFilepath->szPath = hb_set.HB_SET_DEFAULT;
+   hb_fsFNameMerge( (char*) path, pFilepath );
+   hb_xfree( pFilepath );
 
-      hb_fsFNameMerge( (char*) path, pFilepath );
-      hb_xfree( pFilepath );
-
-      return hb_fsCreateEx( path, uiAttr, uiFlags );
-   }
-   else
-      return FS_ERROR;
+   return hb_fsCreateEx( path, uiAttr, uiFlags );
 }
