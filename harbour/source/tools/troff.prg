@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 /*
  * Harbour Project source code:
@@ -98,7 +101,7 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
    cWriteTemp := cTemp + CRLF + ;
                  '.in 0i' + CRLF + ;
                  '.br' + CRLF + ;
-                 '\l  6.24i  ' + CRLF + ;
+                 "\l'6.24i" + CRLF + ;
                  '.br' + CRLF
    FWRITE( Self:nHandle, cWriteTopic )
    FWRITE( Self:nHandle, cWriteTitle )
