@@ -595,7 +595,7 @@ static HB_FUNC( NEXTIDENTIFIER )
     }
 }
 
-#pragma STOPDUMP
+#pragma ENDDUMP
 
 //----------------------------------------------------------------------------//
 #ifdef WIN
@@ -609,7 +609,7 @@ static HB_FUNC( NEXTIDENTIFIER )
        hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
    }
 
-   #pragma STOPDUMP
+   #pragma ENDDUMP
 
 #endif
 

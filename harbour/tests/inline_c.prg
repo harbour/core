@@ -85,7 +85,7 @@ HB_FUNC( C_FUNC )
 {
    hb_retc( "returned from C_FUN\n" );
 }
-#pragma STOPDUMP
+#pragma ENDDUMP
 
 Function PostDumpTest()
 RETURN "Post Dump Test"

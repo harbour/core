@@ -239,8 +239,8 @@ void hb_pp_ParsePragma( char * szLine )
             {
                pBuffer++;
             }
-            hb_strupr( strncpy( sDirective, pBuffer, 8 ) );
-            if( memcmp( sDirective, "STOPDUMP", 8 ) == 0 )
+            hb_strupr( strncpy( sDirective, pBuffer, 7 ) );
+            if( memcmp( sDirective, "ENDDUMP", 7 ) == 0 )
             {
                hb_pp_bInline = FALSE;
                return;
@@ -389,4 +389,3 @@ static void DebugPragma( char * pszStr, int iValue, BOOL bValue )
          printf( "#pragma set to %s \'%s\'\n", bValue ? "ON" : "OFF", pszStr );
    }
 }
-
