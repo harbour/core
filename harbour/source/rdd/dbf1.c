@@ -593,6 +593,7 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfFound                                NULL
 #define dbfSkip                                 NULL
 #define dbfSkipFilter                           NULL
+#define dbfSkipRaw                              NULL
 #define dbfCreateFields                         NULL
 #define dbfFieldCount                           NULL
 #define dbfFieldDisplay                         NULL
@@ -628,6 +629,9 @@ static ERRCODE dbfAppend( AREAP pArea, BOOL bUnLockAll )
 {
    ULONG lRecCount, lRecNo;
    PHB_ITEM pError;
+
+   if( SELF_GOCOLD( pArea ) == FAILURE )
+      return FAILURE;
 
    if( pArea->lpExtendInfo->fReadOnly )
    {
@@ -947,7 +951,8 @@ static ERRCODE dbfGoBottom( AREAP pArea )
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FAILURE;
 
-   return SELF_GOTO( pArea, lRecCount );
+   SELF_GOTO( pArea, lRecCount );
+   return SELF_SKIPFILTER( pArea, -1 );
 }
 
 static ERRCODE dbfGoCold( AREAP pArea )
@@ -1016,6 +1021,7 @@ static ERRCODE dbfGoTo( AREAP pArea, ULONG lRecNo )
          pArea->fEof = 1;
       else
          pArea->fEof = 0;
+      pArea->fBof = ( lRecNo == 1 );
    }
 
    pArea->lpExtendInfo->lRecNo = lRecNo;
@@ -1051,7 +1057,8 @@ static ERRCODE dbfGoToId( AREAP pArea, PHB_ITEM pItem )
 
 static ERRCODE dbfGoTop( AREAP pArea )
 {
-   return SELF_GOTO( pArea, 1 );
+   SELF_GOTO( pArea, 1 );
+   return SELF_SKIPFILTER( pArea, 1 );
 }
 
 static ERRCODE dbfInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
@@ -1598,21 +1605,6 @@ static ERRCODE dbfRelease( AREAP pArea )
       }
    }
    return SUPER_RELEASE( pArea );
-}
-
-static ERRCODE dbfSkipRaw( AREAP pArea, LONG lToSkip )
-{
-   LONG lRecNo = pArea->lpExtendInfo->lRecNo + lToSkip;
-
-   if( lRecNo < 1 )
-   {
-      lRecNo = 1;
-      pArea->fBof = 1;
-   }
-   else
-      pArea->fBof = 0;
-
-   return SELF_GOTO( pArea, lRecNo );
 }
 
 static ERRCODE dbfUnLock( AREAP pArea, ULONG lRecNo )

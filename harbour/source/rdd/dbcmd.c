@@ -138,7 +138,7 @@ static LPAREANODE pCurrArea = NULL;  /* Pointer to a selectd and valid area */
  * -- BASIC RDD METHODS --
  */
 
-static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
+static ERRCODE defAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    LPFIELD pField;
 
@@ -166,7 +166,7 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    return SUCCESS;
 }
 
-static ERRCODE Alias( AREAP pArea, BYTE * szAlias )
+static ERRCODE defAlias( AREAP pArea, BYTE * szAlias )
 {
    strncpy( ( char * ) szAlias,
             ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
@@ -174,20 +174,20 @@ static ERRCODE Alias( AREAP pArea, BYTE * szAlias )
    return SUCCESS;
 }
 
-static ERRCODE Bof( AREAP pArea, BOOL * pBof )
+static ERRCODE defBof( AREAP pArea, BOOL * pBof )
 {
    * pBof = pArea->fBof;
    return SUCCESS;
 }
 
-static ERRCODE Close( AREAP pArea )
+static ERRCODE defClose( AREAP pArea )
 {
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
 
    return SUCCESS;
 }
 
-static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
+static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    USHORT uiCount;
    PHB_ITEM pFieldDesc;
@@ -208,13 +208,13 @@ static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
    return SUCCESS;
 }
 
-static ERRCODE Eof( AREAP pArea, BOOL * pEof )
+static ERRCODE defEof( AREAP pArea, BOOL * pEof )
 {
    * pEof = pArea->fEof;
    return SUCCESS;
 }
 
-static ERRCODE Error( AREAP pArea, PHB_ITEM pError )
+static ERRCODE defError( AREAP pArea, PHB_ITEM pError )
 {
    char * szRddName;
 
@@ -226,13 +226,13 @@ static ERRCODE Error( AREAP pArea, PHB_ITEM pError )
    return hb_errLaunch( pError );
 }
 
-static ERRCODE FieldCount( AREAP pArea, USHORT * uiFields )
+static ERRCODE defFieldCount( AREAP pArea, USHORT * uiFields )
 {
    * uiFields = pArea->uiFieldCount;
    return SUCCESS;
 }
 
-static ERRCODE FieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem )
+static ERRCODE defFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem )
 {
    LPFIELD pField;
    char szType[ 2 ];
@@ -269,7 +269,7 @@ static ERRCODE FieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM p
 }
 
 
-static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
+static ERRCODE defFieldName( AREAP pArea, USHORT uiIndex, void * szName )
 {
    LPFIELD pField;
 
@@ -282,29 +282,30 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
    return SUCCESS;
 }
 
-static ERRCODE Found( AREAP pArea, BOOL * pFound )
+static ERRCODE defFound( AREAP pArea, BOOL * pFound )
 {
    * pFound = pArea->fFound;
    return SUCCESS;
 }
 
-static ERRCODE GetRec( AREAP pArea, BYTE ** pBuffer )
+static ERRCODE defGetRec( AREAP pArea, BYTE ** pBuffer )
 {
    * pBuffer = pArea->lpExtendInfo->bRecord;
    return SUCCESS;
 }
 
-static ERRCODE NewArea( AREAP pArea )
+static ERRCODE defNewArea( AREAP pArea )
 {
    pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
    memset( pArea->lpFileInfo, 0, sizeof( FILEINFO ) );
    pArea->lpFileInfo->hFile = FS_ERROR;
    pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
    memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
+   pArea->dbsi.fIgnoreFilter = TRUE;
    return SUCCESS;
 }
 
-static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
+static ERRCODE defOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
@@ -320,7 +321,7 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    return SUCCESS;
 }
 
-static ERRCODE Release( AREAP pArea )
+static ERRCODE defRelease( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
 
@@ -344,7 +345,7 @@ static ERRCODE Release( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE SetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
+static ERRCODE defSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
 {
    pArea->uiFieldExtent = uiFieldExtent;
    pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
@@ -352,15 +353,106 @@ static ERRCODE SetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
    return SUCCESS;
 }
 
-static ERRCODE Skip( AREAP pArea, LONG lToSkip )
+static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
 {
-   if( pArea->dbfi.fFilter )
-      return SELF_SKIPFILTER( pArea, lToSkip );
-   else
-      return SELF_SKIPRAW( pArea, lToSkip );
+   BOOL bExit;
+
+   if( pArea->dbfi.fFilter || !pArea->dbsi.fIgnoreFilter || !hb_set.HB_SET_DELETED )
+   {
+      if( lToSkip > 0 )
+      {
+         while( lToSkip > 0 )
+         {
+            SELF_SKIPRAW( pArea, 1 );
+            SELF_SKIPFILTER( pArea, 1 );
+
+            SELF_EOF( pArea, &bExit );
+            if( bExit )
+               return SUCCESS;
+
+            lToSkip--;
+         }
+      }
+      else if( lToSkip < 0 )
+      {
+         while( lToSkip < 0 )
+         {
+            SELF_SKIPRAW( pArea, -1 );
+            SELF_SKIPFILTER( pArea, -1 );
+
+            SELF_BOF( pArea, &bExit );
+            if( bExit )
+               return SELF_SKIPFILTER( pArea, 1 );
+
+            lToSkip++;
+         }
+      }
+      else
+      {
+         SELF_SKIPRAW( pArea, 0 );
+         SELF_SKIPFILTER( pArea, 1 );
+
+         SELF_EOF( pArea, &bExit );
+         if( bExit )
+            return SUCCESS;
+      }
+   }
+   return SELF_SKIPRAW( pArea, lToSkip );
 }
 
-static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
+static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
+{
+   BOOL bExit, bDeleted;
+
+   if( lUpDown > 0 )
+   {
+      do
+      {
+         SELF_EOF( pArea, &bExit );
+         if( bExit )
+            return SUCCESS;
+
+         if( !hb_set.HB_SET_DELETED )                 /* Skip if deleted */
+         {
+            SELF_DELETED( pArea, &bDeleted );
+            if( !bDeleted )
+               return SUCCESS;
+
+            SELF_SKIPRAW( pArea, 1 );
+         }
+         else
+            return SUCCESS;
+      } while( 1 );
+   }
+   else if( lUpDown < 0 )
+   {
+      do
+      {
+         SELF_BOF( pArea, &bExit );
+         if( bExit )
+            return SELF_SKIPFILTER( pArea, 1 );
+
+         if( !hb_set.HB_SET_DELETED )                 /* Skip if deleted */
+         {
+            SELF_DELETED( pArea, &bDeleted );
+            if( !bDeleted )
+               return SUCCESS;
+
+            SELF_SKIPRAW( pArea, -1 );
+         }
+         else
+            return SUCCESS;
+      } while( 1 );
+   }
+   return SUCCESS;
+}
+
+static ERRCODE defSkipRaw( AREAP pArea, LONG lToSkip )
+{
+   return SELF_GOTO( pArea, pArea->lpExtendInfo->lRecNo + lToSkip );
+}
+
+static ERRCODE defStructSize( AREAP pArea, USHORT * uiSize )
 {
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiSize );
@@ -368,7 +460,7 @@ static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
    return SUCCESS;
 }
 
-static ERRCODE SysName( AREAP pArea, BYTE * pBuffer )
+static ERRCODE defSysName( AREAP pArea, BYTE * pBuffer )
 {
    USHORT uiCount;
    LPRDDNODE pRddNode;
@@ -380,7 +472,7 @@ static ERRCODE SysName( AREAP pArea, BYTE * pBuffer )
    return SUCCESS;
 }
 
-static ERRCODE UnSupported( AREAP pArea )
+static ERRCODE defUnSupported( AREAP pArea )
 {
    PHB_ITEM pError;
 
@@ -394,59 +486,59 @@ static ERRCODE UnSupported( AREAP pArea )
    return FAILURE;
 }
 
-static RDDFUNCS defTable = { Bof,
-                             Eof,
-                             Found,
-                             UnSupported,
-                             ( DBENTRYP_UL ) UnSupported,
-                             ( DBENTRYP_I ) UnSupported,
-                             UnSupported,
-                             Skip,
-                             ( DBENTRYP_L ) UnSupported,
-                             ( DBENTRYP_L ) UnSupported,
-                             AddField,
-                             ( DBENTRYP_B ) UnSupported,
-                             CreateFields,
-                             UnSupported,
-                             ( DBENTRYP_BP ) UnSupported,
-                             FieldCount,
-                             ( DBENTRYP_VF ) UnSupported,
-                             FieldInfo,
-                             FieldName,
-                             UnSupported,
-                             GetRec,
-                             ( DBENTRYP_SI ) UnSupported,
-                             ( DBENTRYP_SVL ) UnSupported,
-                             UnSupported,
-                             UnSupported,
-                             ( DBENTRYP_P ) UnSupported,
-                             ( DBENTRYP_SI ) UnSupported,
-                             UnSupported,
-                             ( DBENTRYP_ULP ) UnSupported,
-                             ( DBENTRYP_ISI ) UnSupported,
-                             ( DBENTRYP_I ) UnSupported,
-                             SetFieldExtent,
-                             Alias,
-                             Close,
-                             ( DBENTRYP_VP ) UnSupported,
-                             ( DBENTRYP_SI ) UnSupported,
-                             NewArea,
-                             Open,
-                             Release,
-                             StructSize,
-                             SysName,
-                             Error,
-                             ( DBENTRYP_VSP ) UnSupported,
-                             ( DBENTRYP_VL ) UnSupported,
-                             ( DBENTRYP_UL ) UnSupported,
-                             UnSupported,
-                             ( DBENTRYP_VP ) UnSupported,
-                             ( DBENTRYP_SVP ) UnSupported,
-                             ( DBENTRYP_VP ) UnSupported,
-                             ( DBENTRYP_SVP ) UnSupported,
-                             UnSupported,
-                             UnSupported,
-                             ( DBENTRYP_SVP ) UnSupported
+static RDDFUNCS defTable = { defBof,
+                             defEof,
+                             defFound,
+                             defUnSupported,
+                             ( DBENTRYP_UL ) defUnSupported,
+                             ( DBENTRYP_I ) defUnSupported,
+                             defUnSupported,
+                             defSkip,
+                             defSkipFilter,
+                             defSkipRaw,
+                             defAddField,
+                             ( DBENTRYP_B ) defUnSupported,
+                             defCreateFields,
+                             defUnSupported,
+                             ( DBENTRYP_BP ) defUnSupported,
+                             defFieldCount,
+                             ( DBENTRYP_VF ) defUnSupported,
+                             defFieldInfo,
+                             defFieldName,
+                             defUnSupported,
+                             defGetRec,
+                             ( DBENTRYP_SI ) defUnSupported,
+                             ( DBENTRYP_SVL ) defUnSupported,
+                             defUnSupported,
+                             defUnSupported,
+                             ( DBENTRYP_P ) defUnSupported,
+                             ( DBENTRYP_SI ) defUnSupported,
+                             defUnSupported,
+                             ( DBENTRYP_ULP ) defUnSupported,
+                             ( DBENTRYP_ISI ) defUnSupported,
+                             ( DBENTRYP_I ) defUnSupported,
+                             defSetFieldExtent,
+                             defAlias,
+                             defClose,
+                             ( DBENTRYP_VP ) defUnSupported,
+                             ( DBENTRYP_SI ) defUnSupported,
+                             defNewArea,
+                             defOpen,
+                             defRelease,
+                             defStructSize,
+                             defSysName,
+                             defError,
+                             ( DBENTRYP_VSP ) defUnSupported,
+                             ( DBENTRYP_VL ) defUnSupported,
+                             ( DBENTRYP_UL ) defUnSupported,
+                             defUnSupported,
+                             ( DBENTRYP_VP ) defUnSupported,
+                             ( DBENTRYP_SVP ) defUnSupported,
+                             ( DBENTRYP_VP ) defUnSupported,
+                             ( DBENTRYP_SVP ) defUnSupported,
+                             defUnSupported,
+                             defUnSupported,
+                             ( DBENTRYP_SVP ) defUnSupported
                            };
 
 
@@ -1261,7 +1353,7 @@ HARBOUR HB_DBGOTO( void )
 
    if( !pCurrArea )
    {
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOTOP" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOTO" );
       return;
    }
 
@@ -1394,7 +1486,6 @@ HARBOUR HB_DBSKIP( void )
    {
       if( ISNUM( 1 ) )
          lToSkip = hb_parnl( 1 );
-
       SELF_SKIP( ( AREAP ) pCurrArea->pArea, lToSkip );
    }
    else

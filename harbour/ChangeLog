@@ -1,3 +1,19 @@
+19991010-23:30 GMT+1 Bruno Cantero <bruno@issnet.net>
+
+   + source/rdd/dbcmd.c
+   + source/rdd/dbf1.c
+     + Added support for SET DELETED.
+     * Changed default extension from .DBF and .DBT to .dbf and .dbt
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     * Changed default extension from .FPT to .fpt
+
+   * tests/testdbf.prg
+     * Now test SET DELETED command too.
+
+   + source/rdd/dbfcdx/Makefile
+     + Added missing file.
+
 19991010-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/filesys.c
      + ISDISK() undocumented Clipper 5.3 function added.
