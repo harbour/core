@@ -428,7 +428,13 @@ METHOD SetFocus() CLASS Get
 
    if ::type == "N"
       ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )
-      ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
+
+      for nFor := 1 to ::nMaxLen
+         if ::IsEditable( nFor )
+            ::minus := ( Substr( ::buffer, nFor, 1 ) $ "-(" )
+         endif
+      next
+//      ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
    else
       ::decpos := NIL
       ::minus  := .f.
