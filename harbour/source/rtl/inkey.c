@@ -316,7 +316,15 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
       int ch = 0;
-#if defined(_Windows) || defined(WINNT)
+#if defined(HARBOUR_USE_CRS_GTAPI) || defined(HARBOUR_USE_SLN_GTAPI)
+#if 1
+      ch = hb_gtReadKey();
+#else
+      /* TODO: */
+      if( ! read( STDIN_FILENO, &ch, 1 ) )
+         ch = 0;
+#endif
+#elif defined(_Windows) || defined(WINNT)
       /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
       if( hb_gtBreak )
       {
@@ -817,14 +825,6 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          case 396:  /* Alt + F12 */
             ch = 349 - ch;
       }
-#elif defined(HARBOUR_USE_CRS_GTAPI)
-#if 1
-      ch = hb_gtReadKey();
-#else
-      /* TODO: */
-      if( ! read( STDIN_FILENO, &ch, 1 ) )
-         ch = 0;
-#endif
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif

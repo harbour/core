@@ -45,6 +45,8 @@
    #include "gt/gtwin.c"
 #elif defined(HARBOUR_USE_CRS_GTAPI)
    #include "gt/gtcrs.c"
+#elif defined(HARBOUR_USE_SLN_GTAPI)
+   #include "gt/gtsln.c"
 #else
    #include "gt/gtstd.c"
 #endif

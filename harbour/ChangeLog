@@ -1,3 +1,25 @@
+Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/hbsetup.h: 
+	* source/rtl/gt/gtsln.c: 
+	* source/rtl/gtxxx.c: 
+	* source/rtl/mousexxx.c: 
+	Added an initial implementation of GT over S-lang.
+	
+	* source/rtl/inkey.c: 
+	Changed the order in which the #ifdef/#endif checks are done, to
+	make sure the curses and S-lang implementations are picked up
+	correctly.
+	
+	* config/linux/gcc.cf: 
+	* config/w32/gcc.cf: 
+	* config/w32/mingw32.cf: 
+	Added initial support for easily switching between curses and
+	slang. This could be vastly improved.
+	
+	* tests/testbrw.prg: 
+	Added a piece of code bound to K_TAB, just for the fun of it...
+
 19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
   * samples/Makefile
     samples/cccppc/*.*

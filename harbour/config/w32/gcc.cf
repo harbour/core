@@ -38,6 +38,14 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+# HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
 # The -) option could be appropriate to link against libraries with
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.

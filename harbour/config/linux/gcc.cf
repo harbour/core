@@ -33,7 +33,16 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
-LINKLIBS += -lncurses -lm -Wl,--end-group
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
+LINKLIBS += -lm -Wl,--end-group
+
 LDFLAGS = $(LINKPATHS)
 
 AR = ar

@@ -43,6 +43,12 @@
    #include "mouse/mouseos2.c"
 #elif defined(HARBOUR_USE_WIN_GTAPI)
    #include "mouse/mousewin.c"
+/*
+#elif defined(HARBOUR_USE_CRS_GTAPI)
+   #include "mouse/mousecrs.c"
+#elif defined(HARBOUR_USE_SLN_GTAPI)
+   #include "mouse/mousesln.c"
+*/
 #else
    #include "mouse/mousestd.c"
 #endif

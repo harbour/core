@@ -157,13 +157,15 @@
 /*#define HARBOUR_USE_OS2_GTAPI*/
 /*#define HARBOUR_USE_WIN_GTAPI*/
 /*#define HARBOUR_USE_CRS_GTAPI*/
+/*#define HARBOUR_USE_SLN_GTAPI*/
 
 /* Indicate that one of the GTAPIs is defined */
 #if defined(HARBOUR_USE_STD_GTAPI) || \
     defined(HARBOUR_USE_DOS_GTAPI) || \
     defined(HARBOUR_USE_OS2_GTAPI) || \
     defined(HARBOUR_USE_WIN_GTAPI) || \
-    defined(HARBOUR_USE_CRS_GTAPI)
+    defined(HARBOUR_USE_CRS_GTAPI) || \
+    defined(HARBOUR_USE_SLN_GTAPI)
    #define HARBOUR_USE_GTAPI
 #endif
 

@@ -16,6 +16,7 @@ function Main()
    local nCursor
    local cColor
    local nRow, nCol
+   local nTmpRow, nTmpCol
 
    oBrowse:colorSpec     = "W+/B, N/BG"
    oBrowse:ColSep        = "³"
@@ -100,6 +101,12 @@ function Main()
 
          case nKey = K_CTRL_END
               oBrowse:panEnd()
+
+         case nKey = K_TAB
+              nTmpRow := ROW()
+              nTmpCol := COL()
+              @ 0, 0 SAY TIME()
+              DevPos( nTmpRow, nTmpCol )
 
       endcase
    end
