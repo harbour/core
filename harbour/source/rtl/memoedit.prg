@@ -74,7 +74,7 @@ FUNCTION MemoEdit(cString,;
       if oEd:lSaved
          cString := oEd:GetText()
          // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
-         KEYBOARD K_CTRL_END
+         KEYBOARD Chr(K_CTRL_END)
          Inkey()
       endif
    endif

@@ -247,14 +247,19 @@ METHOD EditField() CLASS TBrowseSQL
 		//@ 10,((76 - Len(::oCurRow:FieldName(oCol:nFieldNum)) / 2) SAY "  " + (::oCurRow:FieldName(oCol:nFieldNum)) + "  "
 
 		/* edit the memo field */
-		cMemo := MemoEdit(::oCurRow:FieldGet(oCol:nFieldNum), 11, 11, 21, 68, .T., "xmemo")
+		cMemo := MemoEdit(::oCurRow:FieldGet(oCol:nFieldNum), 11, 11, 21, 68, .T.)
 		
-		if Lastkey() == K_ALT_W
-         ::oCurRow:FieldPut(oCol:nFieldNum, cMemo)         					
+		if Lastkey() == K_CTRL_END
+         ::oCurRow:FieldPut(oCol:nFieldNum, cMemo)
+
+         /* NOTE: To do in a better way */
+         if !::oQuery:Update(::oCurRow)
+            Alert(Left(::oQuery:Error(), 60))
+         endif		                   					
       endif
 		
-		RestScreen(10, 10, 22, 69, cMemoBuff)				
-
+		RestScreen(10, 10, 22, 69, cMemoBuff)
+		
    else
       // Create a corresponding GET
       // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
@@ -269,20 +274,19 @@ METHOD EditField() CLASS TBrowseSQL
       //setcursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
       ReadModal(aGetList)
       //setcursor( SC_NONE )
-   endif
 
+      /* NOTE: To do in a better way */
+      if !::oQuery:Update(::oCurRow)
+         Alert(Left(::oQuery:Error(), 60))
+      endif
 
-   /* NOTE: To do in a better way */
-   if !::oQuery:Update(::oCurRow)
-      Alert(Left(::oQuery:Error(), 60))
    endif
 
    if !::oQuery:Refresh()
       Alert(::oQuery:Error())
    endif
 
-   ::inValidate()
-   ::refreshAll():forceStable()
+   ::RefreshAll()
 
    // Check exit key from get
    nKey := LastKey()
@@ -381,6 +385,7 @@ METHOD BrowseTable(lCanEdit, aExitKeys) CLASS TBrowseSQL
 
          otherwise
             ::KeyboardHook(nKey)
+
       endcase
    enddo
 

@@ -83,6 +83,7 @@ CLASS TEditor
               nTabSize)
 
    METHOD LoadFile(cFileName)                            // Load cFileName into active editor
+   METHOD LoadText(cString)                              // Load cString into active editor
    METHOD SaveFile()                                     // Save active file (not for MemoEdit() emulation)
 
    METHOD AddLine(cLine, lSoftCR)                        // Add a new Line of text at end of current text
@@ -326,6 +327,21 @@ METHOD LoadFile(cFileName) CLASS TEditor
       ::cFile := cFileName
       cString := MemoRead(cFileName)
    endif
+
+   ::aText := Text2Array(cString, iif(::lWordWrap, ::nNumCols, nil))
+   ::naTextLen := Len(::aText)
+
+   if ::naTextLen == 0
+      AAdd(::aText, TTextLine():New())
+      ::naTextLen++
+   endif
+
+   ::MoveCursor(K_CTRL_PGUP)
+
+return Self
+
+
+METHOD LoadText(cString) CLASS TEditor
 
    ::aText := Text2Array(cString, iif(::lWordWrap, ::nNumCols, nil))
    ::naTextLen := Len(::aText)
