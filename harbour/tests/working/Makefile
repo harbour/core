@@ -17,6 +17,7 @@ PRG_SOURCES=\
 	calling.prg \
 	cdow.prg \
 	clasinit.prg \
+	clasname.prg \
 	classch.prg \
 	classes.prg \
 	clsdata.prg \
@@ -28,6 +29,7 @@ PRG_SOURCES=\
 	dates.prg \
 	dates2.prg \
 	dates3.prg \
+	dates4.prg \
 	debugtst.prg \
 	descend.prg \
 	dirtest.prg \
@@ -84,12 +86,15 @@ PRG_SOURCES=\
 	set_test.prg \
 	statfun.prg \
 	statics.prg \
+	statics1.prg \
+	statics2.prg \
 	strcmp.prg \
 	strdelim.prg \
 	strings.prg \
 	strings2.prg \
 	strings3.prg \
 	strip.prg \
+	strsub.prg \
 	syserror.prg \
 	t1.prg \
 	test.prg \
@@ -103,6 +108,7 @@ PRG_SOURCES=\
 	testhtml.prg \
 	testinc.prg \
 	testmem.prg \
+	testpre.prg \
 	teststr.prg \
 	testtok.prg \
 	testvars.prg \

@@ -1065,7 +1065,6 @@ void Inc( void )
 {
    double dNumber;
    LONG lDate;
-   PHB_ITEM pError;
    WORD wDec;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
@@ -1471,7 +1470,6 @@ void Or( void )
 {
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
-   PHB_ITEM pError;
    int   iResult;
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )

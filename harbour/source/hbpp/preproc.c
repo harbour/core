@@ -1,6 +1,8 @@
 /*
  * $Id$
- *
+ */
+
+/*
    Harbour Project source code
 
    This file contains source for a run-time preprocessing function

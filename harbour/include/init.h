@@ -1,7 +1,9 @@
 /*
  * $Id$
- *
- * Harbour local symbols initialization
+ */
+
+/*
+   Harbour local symbols initialization
 
    Copyright(C) 1999 by Antonio Linares.
 

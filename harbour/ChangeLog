@@ -1,3 +1,22 @@
+Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/compiler/harbour.y: 
+	Moved printing the "build..." message after the command line
+	arguments have been checked, so that if the user specifies -q, it
+	is not shown.
+	
+	* source/vm/hvm.c: 
+	Got rid of a couple of warnings.
+
+	* include/Makefile: 
+	* tests/working/Makefile: 
+	Updates list of files.
+	
+	* include/init.h: 
+	* include/initsymb.h: 
+	* source/hbpp/preproc.c: 
+	Updated use of RCS Id keyword.
+	
 19990721-18:39 GMT+1 Paul Tucker / Bruno Cantero <bruno@issnet.net>
   * source/compiler/harbour.y
     Added support for empty arguments in functions.

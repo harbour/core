@@ -1175,10 +1175,6 @@ int harbour_main( int argc, char * argv[] )
    char *szOutPath ="";
    FILENAME *pFileName =NULL;
 
-   if( !_iQuiet )
-     printf( "Harbour compiler build %i (%04d.%02d.%02d)\n", hb_build,
-              hb_year, hb_month, hb_day );
-
    if( argc > 1 )
    {
       Hbpp_init();  /* Initialization of preprocessor arrays */
@@ -1852,6 +1848,10 @@ int Include( char * szFileName, PATHNAMES *pSearch )
     else
       return 0;
   }
+
+   if( !_iQuiet )
+     printf( "Harbour compiler build %i (%04d.%02d.%02d)\n", hb_build,
+              hb_year, hb_month, hb_day );
 
    if( ! _iQuiet )
       printf( "\nparsing file %s\n", szFileName );

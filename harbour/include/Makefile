@@ -20,6 +20,7 @@ C_HEADERS=\
 	hbpp.h \
 	hbsetup.h \
 	init.h \
+	initsymb.h \
 	itemapi.h \
 	pcode.h \
 	run_exp.h \
