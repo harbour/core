@@ -46,6 +46,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <malloc.h>     /* required for allocating and freeing memory */
+
 #include "hbpp.h"
 #include "hberrors.h"
 #include "hbver.h"

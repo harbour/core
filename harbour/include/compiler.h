@@ -40,9 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include <malloc.h>     /* required for allocating and freeing memory */
 #include <ctype.h>
-#include <time.h>
 
 #include "hbsetup.h"
 #include "extend.h"
@@ -53,99 +51,111 @@
 
 /* compiler related declarations */
 
-typedef struct          /* #include support */
+/* Output types */
+typedef enum
 {
-   FILE * handle;       /* handle of the opened file */
-   void * pBuffer;      /* buffer used by yacc */
-   char * szFileName;   /* name of the file */
-   void * pPrev;        /* pointer to the previous opened file */
-   void * pNext;        /* pointer to the next opened file */
-   int    iLine;        /* currently processed line number */
-} _FILE, * PFILE;       /* structure to hold an opened PRG or CH */
+   LANG_C,                      /* C language (by default) <file.c> */
+   LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
+   LANG_JAVA,                   /* Java <file.java> */
+   LANG_PASCAL,                 /* Pascal <file.pas> */
+   LANG_RESOURCES,              /* Resources <file.rc> */
+   LANG_PORT_OBJ                /* Portable objects <file.hrb> */
+} LANGUAGES;                    /* supported Harbour output languages */
 
+/* #include support */
 typedef struct
 {
-   PFILE pLast;         /* pointer to the last opened file */
-   int   iFiles;        /* number of files currently opened */
-} FILES;                /* structure to control several opened PRGs and CHs */
+   FILE * handle;               /* handle of the opened file */
+   void * pBuffer;              /* buffer used by yacc */
+   char * szFileName;           /* name of the file */
+   void * pPrev;                /* pointer to the previous opened file */
+   void * pNext;                /* pointer to the next opened file */
+   int    iLine;                /* currently processed line number */
+} _FILE, * PFILE;               /* structure to hold an opened PRG or CH */
 
+/* structure to control several opened PRGs and CHs */
+typedef struct
+{
+   PFILE pLast;                 /* pointer to the last opened file */
+   int   iFiles;                /* number of files currently opened */
+} FILES;
 
 /* locals, static, public variables support */
 typedef struct _VAR
 {
-   char * szName;          /* variable name */
-   char * szAlias;         /* variable alias namespace */
-   int    iUsed;           /* number of times used */
-   char   cType;           /* optional strong typing */
-   struct _VAR * pNext;    /* pointer to next defined variable */
+   char * szName;               /* variable name */
+   char * szAlias;              /* variable alias namespace */
+   int    iUsed;                /* number of times used */
+   char   cType;                /* optional strong typing */
+   struct _VAR * pNext;         /* pointer to next defined variable */
 } VAR, * PVAR;
 
 /* pcode chunks bytes size */
 #define PCODE_CHUNK   100
 
 /* structure to hold a Clipper defined function */
-typedef struct __FUNC      /* functions definition support */
+typedef struct __FUNC
 {
-   char * szName;          /* name of a defined Clipper function */
-   char   cScope;          /* scope of a defined Clipper function */
-   BYTE   bFlags;          /* some flags we may need */
-   USHORT wParamCount;     /* number of declared parameters */
-   USHORT wParamNum;       /* current parameter number */
-   PVAR   pLocals;         /* pointer to local variables list */
-   PVAR   pStatics;        /* pointer to static variables list */
-   PVAR   pFields;         /* pointer to fields variables list */
-   PVAR   pMemvars;        /* pointer to memvar variables list */
-   BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-   ULONG  lPCodeSize;      /* total memory size for pcode */
-   ULONG  lPCodePos;       /* actual pcode offset */
-   int    iStaticsBase;    /* base for this function statics */
-   struct __FUNC * pOwner; /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;  /* pointer to the next defined function */
+   char * szName;               /* name of a defined Clipper function */
+   char   cScope;               /* scope of a defined Clipper function */
+   BYTE   bFlags;               /* some flags we may need */
+   USHORT wParamCount;          /* number of declared parameters */
+   USHORT wParamNum;            /* current parameter number */
+   PVAR   pLocals;              /* pointer to local variables list */
+   PVAR   pStatics;             /* pointer to static variables list */
+   PVAR   pFields;              /* pointer to fields variables list */
+   PVAR   pMemvars;             /* pointer to memvar variables list */
+   BYTE * pCode;                /* pointer to a memory block where pcode is stored */
+   ULONG  lPCodeSize;           /* total memory size for pcode */
+   ULONG  lPCodePos;            /* actual pcode offset */
+   int    iStaticsBase;         /* base for this function statics */
+   struct __FUNC * pOwner;      /* pointer to the function/procedure that owns the codeblock */
+   struct __FUNC * pNext;       /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
 
 /* structure to control all Clipper defined functions */
 typedef struct
 {
-   PFUNCTION pFirst;       /* pointer to the first defined funtion */
-   PFUNCTION pLast;        /* pointer to the last defined function */
-   int       iCount;       /* number of defined functions */
+   PFUNCTION pFirst;            /* pointer to the first defined funtion */
+   PFUNCTION pLast;             /* pointer to the last defined function */
+   int       iCount;            /* number of defined functions */
 } FUNCTIONS;
 
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
-   char * szName;              /* the name of the symbol */
-   char   cScope;              /* the scope of the symbol */
+   char * szName;               /* the name of the symbol */
+   char   cScope;               /* the scope of the symbol */
    char   cType;
-   struct _COMSYMBOL * pNext;  /* pointer to the next defined symbol */
+   struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
 /* symbol table support structures */
 typedef struct
 {
-   PCOMSYMBOL pFirst;      /* pointer to the first defined symbol */
-   PCOMSYMBOL pLast;       /* pointer to the last defined symbol */
-   int        iCount;      /* number of defined symbols */
+   PCOMSYMBOL pFirst;           /* pointer to the first defined symbol */
+   PCOMSYMBOL pLast;            /* pointer to the last defined symbol */
+   int        iCount;           /* number of defined symbols */
 } SYMBOLS;
 
 typedef struct HB_EXPR_
 {
    union
    {
-      char *asString;      /* literal strings */
-      char *asSymbol;      /* variable name */
-      BOOL asLogical;      /* logical value */
+      char *asString;                   /* literal strings */
+      char *asSymbol;                   /* variable name */
+      BOOL asLogical;                   /* logical value */
       struct
       {
-         long lVal;           /* long value */
-         double dVal;         /* double value */
-         unsigned char bDec;  /* unsigned char used intentionally */
-         unsigned char NumType;    /* used to distinguish LONG and DOUBLE */
+         long lVal;                     /* long value */
+         double dVal;                   /* double value */
+         unsigned char bDec;            /* unsigned char used intentionally */
+         unsigned char NumType;         /* used to distinguish LONG and DOUBLE */
       } asNum;
       struct
       {
-         struct HB_EXPR_ *pVar;        /* macro variable */
-         char * szNameExt;             /* text after the macro terminator */
+         struct HB_EXPR_ *pVar;         /* macro variable */
+         char * szNameExt;              /* text after the macro terminator */
       } asMacro;
       struct
       {
@@ -154,25 +164,25 @@ typedef struct HB_EXPR_
       } asList;
       struct
       {
-         struct HB_EXPR_ *pAlias;      /* alias expression */
-         char * szVarName;             /* aliased variable */
-         struct HB_EXPR_ *pExpList;    /* aliased expression list */
+         struct HB_EXPR_ *pAlias;       /* alias expression */
+         char * szVarName;              /* aliased variable */
+         struct HB_EXPR_ *pExpList;     /* aliased expression list */
       } asAlias;
       struct
       {
-         char * szFunName;             /* function name */
+         char * szFunName;              /* function name */
          struct HB_EXPR_ *pParms;       /* function call parameters */
       } asFunCall;
       struct
       {
-         struct HB_EXPR_ *pObject;     /* object */
-         char * szMessage;             /* message */
-         struct HB_EXPR_ *pParms;      /* method parameters */
+         struct HB_EXPR_ *pObject;      /* object */
+         char * szMessage;              /* message */
+         struct HB_EXPR_ *pParms;       /* method parameters */
       } asMessage;
       struct
       {
-         struct HB_EXPR_ *pLeft;       /* object */
-         struct HB_EXPR_ *pRight;      /* object */
+         struct HB_EXPR_ *pLeft;        /* object */
+         struct HB_EXPR_ *pRight;       /* object */
       } asOperator;
    } value;
    ULONG ulLength;
@@ -193,11 +203,11 @@ typedef struct HB_EXPR_
 /*
  * flags for bFlags member
 */
-#define FUN_STATEMENTS        1 /* Function have at least one executable statement */
-#define FUN_USES_STATICS      2 /* Function uses static variables */
-#define FUN_PROCEDURE         4 /* This is a procedure that shouldn't return value */
-#define FUN_BREAK_CODE        8 /* last statement breaks execution flow */
-#define FUN_USES_LOCAL_PARAMS 16 /* parameters are declared using () */
+#define FUN_STATEMENTS        1   /* Function have at least one executable statement */
+#define FUN_USES_STATICS      2   /* Function uses static variables */
+#define FUN_PROCEDURE         4   /* This is a procedure that shouldn't return value */
+#define FUN_BREAK_CODE        8   /* last statement breaks execution flow */
+#define FUN_USES_LOCAL_PARAMS 16  /* parameters are declared using () */
 #define FUN_WITH_RETURN       32  /* there was RETURN statement in previous line */
 
 
@@ -316,6 +326,12 @@ extern FILES  hb_comp_files;
 extern int    hb_comp_iStaticCnt;
 extern int    hb_comp_iErrorCount;
 
+extern PHB_FNAME hb_comp_pOutPath;
+extern BOOL   hb_comp_bCredits;
+extern BOOL   hb_comp_bLogo;
+extern BOOL   hb_comp_bSyntaxCheckOnly;
+extern int    hb_comp_iLanguage;
+
 extern USHORT hb_comp_wSeqCounter;
 extern USHORT hb_comp_wForCounter;
 extern USHORT hb_comp_wIfCounter;
@@ -401,3 +417,4 @@ char * hb_compExprDescription( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 
 #endif /* HB_COMPILER_H_ */
+

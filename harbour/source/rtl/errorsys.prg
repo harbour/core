@@ -83,6 +83,7 @@ PROCEDURE ErrorSys
 
 STATIC FUNCTION DefError( oError )
    LOCAL cMessage
+   LOCAL cDOSError
 
    LOCAL aOptions
    LOCAL nChoice
@@ -110,6 +111,9 @@ STATIC FUNCTION DefError( oError )
    ENDIF
 
    cMessage := ErrorMessage( oError )
+   IF ! Empty( oError:osCode )
+      cDOSError := "(DOS Error " + LTrim( Str( oError:osCode ) ) + ")"
+   ENDIF
 
    // Build buttons
 
@@ -129,17 +133,17 @@ STATIC FUNCTION DefError( oError )
    // Show alert box
 
    nChoice := 0
-   DO WHILE nChoice == 0
+   WHILE nChoice == 0
 
       IF Empty( oError:osCode )
          nChoice := Alert( cMessage, aOptions )
       ELSE
-         nChoice := Alert( cMessage + ";(DOS Error " + LTrim( Str( oError:osCode ) ) + ")", aOptions)
+         nChoice := Alert( cMessage + ";" + cDOSError, aOptions)
       ENDIF
 
    ENDDO
 
-   IF !Empty( nChoice )
+   IF ! Empty( nChoice )
       DO CASE
       CASE aOptions[ nChoice ] == "Break"
          Break( oError )
@@ -153,13 +157,13 @@ STATIC FUNCTION DefError( oError )
    // "Quit" selected
 
    IF ! Empty( oError:osCode )
-      cMessage += " (DOS Error " + LTrim( Str( oError:osCode ) ) + ")"
+      cMessage += " " + cDOSError
    ENDIF
 
    QOut( cMessage )
 
    n := 2
-   DO WHILE ! Empty( ProcName( n ) )
+   WHILE ! Empty( ProcName( n ) )
       QOut("Called from " + ProcName( n ) + ;
                "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")
    ENDDO

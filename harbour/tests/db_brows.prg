@@ -602,7 +602,7 @@ MEMVAR x1, y1, x2, y2, firstfld, razmer
    ENDIF
    firstrec := RECNO()
    SETCOLOR( LI_CLR )
-   //    @ y1+1,x1+1 CLEAR TO y2-1,x2-1
+   @ y1+1,x1+1 CLEAR TO y2-1,x2-1
    @ y1, x1, y2, x2 BOX "ÚÄ¿³ÙÄÀ³ "
    IF title <> Nil
       @ y1, ( x2 - x1 - 1 - LEN( title ) ) / 2 + x1 SAY " " + title + " "

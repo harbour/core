@@ -1,3 +1,91 @@
+19991208-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
+  * bin/bld_tpl.bat
+    bin/bld_tpl.cmd
+    ! common lib moved to the end of the cmdline.
+  * tests/db_brows.prg
+    + @ CLEAR TO uncommented.
+  * source/rtl/errorsys.prg
+    % Some optimizations made.
+  * source/compiler/Makefile
+    * Updated for compiler source split.
+
+19991208-18:06 GMT+1 Jose Lalin <dezac@corevia.com>
+  * include/compiler.h
+    + typedef enum LANGUAGES
+
+  + source/compiler/hbusage.c
+    + void PrintUsage()
+    + void PrintCredits()
+    + New function added
+      void PrintLogo()
+    ! Typo at www.harbour-project.com changed
+      to www.harbour-project.org
+
+  + source/compiler/hbpcode.c
+    + void hb_compGenPCode1()
+    + void hb_compGenPCode3()
+    + void hb_compGenPCodeN()
+
+  + source/compiler/hbfunchk.c
+    + struct FUNCINFO -> HB_FUNCINFO
+    + static FUNCINFO _StdFun -> hb_StdFunc[]
+    + void hb_compFunCallCheck()
+      Added a #if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+      to use the Cl*pper way of showing errors or the Harbour's one.
+
+  ! source/compiler/harbour.c
+    - Moved PackDateTime() to hbcmdchk.c
+    - Removed SwitchCmp()
+    - Errors/Warnings tables moved to hbgenerr.c
+    - hb_compGenError/Warning() moved to hbgenerr.c
+    - moved all HB_EXPR_PTR hb_compError...()
+      and HB_EXPR_PTR hb_compWarn...() to hbgenerr.c
+    ! Changed prototypes of Print...() functions to extern
+    + Some blocks changed into new functions:
+      + hb_compInitVars()
+      + hb_compGenOutput()
+      + hb_compCheckPaths();
+      + hb_compOutputFile();
+    + Added prototypes for the new functions
+    ! Some local variables made global:
+      ! s_pOutPath -> hb_comp_pOutPath
+      ! s_bCredits -> hb_comp_bCredits
+      ! s_bLogo    -> hb_comp_bLogo
+      ! s_bSyntaxCheckOnly -> hb_comp_bSyntaxCheckOnly
+      ! s_iLanguage -> hb_comp_iLanguage
+      This change make them visible to the new
+      module hbcmdchk.c and pragma directive.
+    ! Minor formatting
+    ! Some typos fixed
+    + Optimized two functions:
+      % hb_compGenPushLogical() and
+      % hb_compGenPushFunCall (NOTE: Check them, please)
+      
+  + source/compiler/hbcmdchk.c
+    + Compiler command line checking
+      + hb_ChkCompilerSwitch()
+      + hb_ChkEnvironVar()
+      + hb_ChkCompileFileName()
+    + New HARBOURCMD/CLIPPERCMD environment support
+
+  + source/compiler/hbgenerr.c
+    + char * hb_comp_szErrors[]
+    + char * hb_comp_szWarnings[]
+    + void hb_compGenError()
+      void hb_compGenWarning()
+    + Added all HB_EXPR_PTR hb_compError...() functions
+    + Added all HB_EXPR_PTR hb_compWarn...() functions
+
+  * makefile.b32
+    + source/compiler/cmdcheck.c
+    + source/compiler/hbfunchk.c
+    + source/compiler/hbgenerr.c
+    + source/compiler/hbpcode.c
+    + source/compiler/hbusage.c
+    ! WARNING ! Update other makefiles and rebuild all
+
+    (Uploaded by Victor Szel)
+
 19991208-01:59 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     + Added C53 compatible error message to ASIZE()

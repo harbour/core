@@ -33,24 +33,14 @@
  *
  */
 
+#include <malloc.h>     /* required for allocating and freeing memory */
+
 #include "compiler.h"
 
 #if defined(DOS) && defined(__BORLANDC__)
    #include <limits.h>
    extern unsigned _stklen = UINT_MAX;
 #endif
-
-typedef enum
-{
-   LANG_C,                  /* C language (by default) <file.c> */
-   LANG_OBJ32,              /* DOS/Windows 32 bits <file.obj> */
-   LANG_JAVA,               /* Java <file.java> */
-   LANG_PASCAL,             /* Pascal <file.pas> */
-   LANG_RESOURCES,          /* Resources <file.rc> */
-   LANG_PORT_OBJ            /* Portable objects <file.hrb> */
-} LANGUAGES;                /* supported Harbour output languages */
-
-
 
 extern int harbour_main( char *szName );
 extern BOOL Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
@@ -65,11 +55,11 @@ extern void GenPortObj( PHB_FNAME );    /* generates the portable objects */
 extern void GenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 #endif
 
-static void PrintUsage( char * );
-static void PrintCredits( void );
-static BOOL SwitchCmp( char * szString, char * szSwitch );
-static ULONG PackDateTime( void );
-static void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
+extern void PrintUsage( char * );
+extern void PrintCredits( void );
+extern void PrintLogo( void );
+
+void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 static char * RESERVED_FUNC( char * );
 
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
@@ -82,7 +72,6 @@ static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name 
 static void hb_compMemvarGenPCode( BYTE , char * );      /* generates the pcode for memvar variable */
 static USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 static void hb_compVariableGenPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
-
 
 void EXTERNAL_LINKAGE close_on_exit( void );
 
@@ -123,11 +112,12 @@ int hb_comp_iVarScope = VS_LOCAL;   /* holds the scope for next variables to be 
                             /* different values for hb_comp_iVarScope */
 
 /* local variables */
-static PHB_FNAME s_pOutPath = NULL;
-static BOOL s_bCredits = FALSE;                  /* print credits */
-static BOOL s_bLogo = TRUE;                      /* print logo */
-static BOOL s_bSyntaxCheckOnly = FALSE;          /* syntax check only */
-static int  s_iLanguage = LANG_C;                /* default Harbour generated output language */
+/* CHANGED to global */
+PHB_FNAME hb_comp_pOutPath = NULL;
+BOOL hb_comp_bCredits = FALSE;                  /* print credits */
+BOOL hb_comp_bLogo = TRUE;                      /* print logo */
+BOOL hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
+int  hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
 
 typedef struct __EXTERN
 {
@@ -141,83 +131,14 @@ typedef struct __EXTERN
  */
 static BOOL hb_comp_bExternal   = FALSE;
 /* linked list with EXTERNAL symbols declarations
-*/
+ */
 static PEXTERN hb_comp_pExterns = NULL;
 
-/* Table with parse errors */
-char * hb_comp_szErrors[] =
-{
-   "Statement not allowed outside of procedure or function",
-   "Redefinition of procedure or function: \'%s\'",
-   "Duplicate variable declaration: \'%s\'",
-   "%s declaration follows executable statement",
-   "Outer codeblock variable is out of reach: \'%s\'",
-   "Invalid numeric format '.'",
-   "Unterminated string: \'%s\'",
-   "Redefinition of predefined function %s: \'%s\'",
-   "Illegal variable \'%s\' initializer: \'%s\'",
-   "ENDIF does not match IF",
-   "ENDDO does not match WHILE",
-   "ENDCASE does not match DO CASE",
-   "NEXT does not match FOR",
-   "ELSE does not match IF",
-   "ELSEIF does not match IF",
-   "Syntax error: \'%s\'",
-   "Unclosed control structures",
-   "%s statement with no loop in sight",
-   "Syntax error: \'%s\' in: \'%s\'",
-   "Incomplete statement: %s",
-   "Incorrect number of arguments: %s %s",
-   "Invalid lvalue: \'%s\'",
-   "Invalid use of \'@\' (pass by reference): \'%s\'",
-   "Formal parameters already declared",
-   "Invalid %s from within of SEQUENCE code",
-   "Unterminated array index",
-   "Memory allocation error",
-   "Memory reallocation error",
-   "Freeing a NULL memory pointer",
-   "Syntax error: \"%s at \'%s\'\"",
-   "Jump offset too long",
-   "Can't create output file: \'%s\'",
-   "Can't create preprocessed output file: \'%s\'",
-   "Bad command line option: \'%s\'",
-   "Bad command line parameter: \'%s\'",
-   "Invalid filename: \'%s\'",
-   "Mayhem in CASE handler",
-   "Operation not supported for this data type: \'%s\'",
-   "Invalid alias expression: \'%s\'",
-   "Invalid array index expression: \'%s\'",
-   "Bound error: \'%s\'"
-};
-
 /* Table with parse warnings */
-/* NOTE: The first character stores the warning's level that triggers this
- * warning. The warning's level is set by -w<n> command line option.
- */
-char * hb_comp_szWarnings[] =
-{
-   "1Ambiguous reference: \'%s\'",
-   "1Ambiguous reference, assuming memvar: \'%s\'",
-   "2Variable: \'%s\' declared but not used in function: \'%s\'",
-   "2CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
-   "1RETURN statement with no return value in function",
-   "1Procedure returns value",
-   "1Function \'%s\' does not end with RETURN statement",
-   "3Incompatible type in assignment to: \'%s\' expected: \'%s\'",
-   "3Incompatible operand type: \'%s\' expected: \'Logical\'",
-   "3Incompatible operand type: \'%s\' expected: \'Numeric\'",
-   "3Incompatible operand types: \'%s\' and: \'%s\'",
-   "3Suspicious type in assignment to: \'%s\' expected: \'%s\'",
-   "3Suspicious operand type: \'UnKnown\' expected: \'%s\'",
-   "3Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
-   "3Suspicious operand type: \'UnKnown\' expected: \'Numeric\'",
-   "0Meaningless use of expression: \'%s\'",
-   "1Unreachable code"
-};
 
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
-*/
+ */
 static const char * _szReservedFun[] = {
    "AADD"      ,
    "ABS"       ,
@@ -286,527 +207,137 @@ static const char * _szReservedFun[] = {
 };
 #define RESERVED_FUNCTIONS  sizeof( _szReservedFun ) / sizeof( char * )
 
+void hb_compInitVars( void );
+void hb_compGenOutput( int );
+void hb_compCheckPaths( void );
+void hb_compOutputFile( void );
+
+extern void hb_ChkCompilerSwitch( int, char * Args [] );
+extern void hb_ChkEnvironVar( char * );
+extern void hb_ChkCompileFileName( int, char * Args[] );
 
 int main( int argc, char * argv[] )
 {
    int iStatus = 0;
-   int iArg;
    BOOL bSkipGen;
 
-   /* Check for the nologo switch /q0 before everything else. */
+   char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+   char szPpoName[ _POSIX_PATH_MAX ];
 
-   for( iArg = 1; iArg < argc; iArg++ )
-   {
-      if( SwitchCmp( argv[ iArg ], "Q0" ) )
-         s_bLogo = FALSE;
+   hb_comp_pFileName = NULL;
+   hb_comp_pOutPath = NULL;
 
-      else if( SwitchCmp( argv[ iArg ], "CREDITS" ) ||
-               SwitchCmp( argv[ iArg ], "CREDIT" ) ||
-               SwitchCmp( argv[ iArg ], "CREDI" ) ||
-               SwitchCmp( argv[ iArg ], "CRED" ) )
-         s_bCredits = TRUE;
-   }
+   /* Initializes hb_comp_pFileName with file name to compile */
+   hb_ChkCompileFileName( argc, argv );
 
-   if( s_bLogo )
-   {
-      printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
-         hb_build, hb_revision, hb_year, hb_month, hb_day );
-      printf( "Copyright 1999, http://www.harbour-project.org\n" );
-   }
+   /* First check the environment variables */
+   hb_ChkCompilerSwitch( 0, NULL );
 
-   if( s_bCredits )
+   /* Then check command line arguments
+      This will override duplicated environment settings */
+   hb_ChkCompilerSwitch( argc, argv );
+
+   if( hb_comp_bLogo )
+      PrintLogo();
+
+   if( hb_comp_bCredits )
    {
       PrintCredits();
       return iStatus;
    }
 
-   if( argc > 1 )
+   if( hb_comp_pFileName )
    {
-      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-      char szPpoName[ _POSIX_PATH_MAX ];
-
-      hb_comp_pFileName = NULL;
-      s_pOutPath = NULL;
-
-      hb_pp_Init();  /* Initialization of preprocessor arrays */
-      /* Command line options */
-      for( iArg = 1; iArg < argc; iArg++ )
+      if( !hb_comp_pFileName->szExtension )
+         hb_comp_pFileName->szExtension = ".prg";
+      hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+      if( hb_comp_bPPO )
       {
-         if( HB_ISOPTSEP( argv[ iArg ][ 0 ] ) )
+         hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_yyppo = fopen( szPpoName, "w" );
+         if( ! hb_comp_yyppo )
          {
-            switch( argv[ iArg ][ 1 ] )
-            {
-               case '1':
-                  if( argv[ iArg ][ 2 ] == '0' )
-                     hb_comp_bRestrictSymbolLength = TRUE;
-                  break;
-
-               case 'a':
-               case 'A':
-                  /* variables declared by PRIVATE and PUBLIC statement are
-                   * automatically assumed as MEMVAR
-                   */
-                  hb_comp_bAutoMemvarAssume = TRUE;
-                  break;
-
-               case 'b':
-               case 'B':
-                  hb_comp_bDebugInfo = TRUE;
-                  hb_comp_bLineNumbers = TRUE;
-                  break;
-
-               case 'd':
-               case 'D':   /* defines a Lex #define from the command line */
-                  {
-                     unsigned int i = 0;
-                     char * szDefText = hb_strdup( argv[ iArg ] + 2 );
-                     while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
-                        i++;
-                     if( szDefText[ i ] != '=' )
-                        hb_pp_AddDefine( szDefText, 0 );
-                     else
-                     {
-                        szDefText[ i ] = '\0';
-                        hb_pp_AddDefine( szDefText, szDefText + i + 1 );
-                     }
-                     free( szDefText );
-                  }
-                  break;
-
-               case 'e':
-               case 'E':
-
-                  if( argv[ iArg ][ 2 ] == 's' ||
-                      argv[ iArg ][ 2 ] == 'S' )
-                  {
-                     switch( argv[ iArg ][ 3 ] )
-                     {
-                        case '\0':
-                        case '0':
-                           hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT;
-                           break;
-
-                        case '1':
-                           hb_comp_iExitLevel = HB_EXITLEVEL_SETEXIT;
-                           break;
-
-                        case '2':
-                           hb_comp_iExitLevel = HB_EXITLEVEL_DELTARGET;
-                           break;
-
-                        default:
-                           hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
-                     }
-                  }
-                  else
-                     hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
-
-                  break;
-               case 'g':
-               case 'G':
-                  switch( argv[ iArg ][ 2 ] )
-                  {
-                     case 'c':
-                     case 'C':
-                        s_iLanguage = LANG_C;
-
-                        switch( argv[ iArg ][ 3 ] )
-                        {
-                           case '\0':
-                           case '1':
-                              hb_comp_bGenCVerbose = TRUE;
-                              break;
-
-                           case '0':
-                              hb_comp_bGenCVerbose = FALSE;
-                              break;
-
-                           default:
-                              hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
-                        }
-                        break;
-
-                     case 'f':
-                     case 'F':
-                        s_iLanguage = LANG_OBJ32;
-                        break;
-
-                     case 'j':
-                     case 'J':
-                        s_iLanguage = LANG_JAVA;
-                        break;
-
-                     case 'p':
-                     case 'P':
-                        s_iLanguage = LANG_PASCAL;
-                        break;
-
-                     case 'r':
-                     case 'R':
-                        s_iLanguage = LANG_RESOURCES;
-                        break;
-
-                     case 'h':
-                     case 'H':
-                        s_iLanguage = LANG_PORT_OBJ;
-                        break;
-
-                     default:
-                        printf( "\nUnsupported output language option\n" );
-                        exit( EXIT_FAILURE );
-                  }
-                  break;
-
-               case 'i':
-               case 'I':
-                  {
-                     char * pPath;
-                     char * pDelim;
-                     char * szInclude;
-
-                     pPath = szInclude = hb_strdup( argv[ iArg ] + 2 );
-                     while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-                     {
-                        * pDelim = '\0';
-                        AddSearchPath( pPath, &hb_comp_pIncludePath );
-                        pPath = pDelim + 1;
-                     }
-                     AddSearchPath( pPath, &hb_comp_pIncludePath );
-                  }
-                  break;
-
-               case 'l':
-               case 'L':
-                  hb_comp_bLineNumbers = FALSE;
-                  break;
-
-               case 'm':
-               case 'M':
-                  /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
-                  break;
-
-               case 'n':
-               case 'N':
-                  hb_comp_bStartProc = FALSE;
-                  break;
-
-               case 'o':
-               case 'O':
-                  s_pOutPath = hb_fsFNameSplit( argv[ iArg ] + 2 );
-                  break;
-
-               /* Added for preprocessor needs */
-               case 'p':
-               case 'P':
-                  hb_comp_bPPO = TRUE;
-                  break;
-
-               case 'q':
-               case 'Q':
-                  hb_comp_bQuiet = TRUE;
-                  break;
-
-               case 'r':
-               case 'R':
-                  /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
-                  break;
-
-               case 's':
-               case 'S':
-                  s_bSyntaxCheckOnly = TRUE;
-                  break;
-
-               case 't':
-               case 'T':
-                  /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
-                  break;
-
-               case 'u':
-               case 'U':
-                  /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
-                  break;
-
-               case 'v':
-               case 'V':
-                  /* All undeclared variables are assumed MEMVAR variables
-                   */
-                  hb_comp_bForceMemvars = TRUE;
-                  break;
-
-               case 'w':
-               case 'W':
-                  hb_comp_iWarnings = 1;
-                  if( argv[ iArg ][ 2 ] )
-                  {  /*there is -w<0,1,2,3> probably */
-                     hb_comp_iWarnings = argv[ iArg ][ 2 ] - '0';
-                     if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-                        hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
-                  }
-                  break;
-
-               case 'x':
-               case 'X':
-                  {
-                     if( strlen( argv[ iArg ] + 2 ) == 0 )
-                        sprintf( hb_comp_szPrefix, "%08lX_", PackDateTime() );
-                     else
-                     {
-                        strncpy( hb_comp_szPrefix, argv[ iArg ] + 2, 16 );
-                        hb_comp_szPrefix[ 16 ] = '\0';
-                        strcat( hb_comp_szPrefix, "_" );
-                     }
-                  }
-                  break;
-
-#ifdef YYDEBUG
-               case 'y':
-               case 'Y':
-                  yydebug = TRUE;
-                  break;
-#endif
-
-               case 'z':
-               case 'Z':
-                  hb_comp_bShortCuts = FALSE;
-                  break;
-
-               default:
-                  hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
-                  break;
-            }
-         }
-         else if( argv[ iArg ][ 0 ] == '@' )
-            /* TODO: Implement this switch */
-            printf( "Not yet supported command line option: %s\n", argv[ iArg ] );
-         else
-         {
-            if( hb_comp_pFileName )
-               hb_compGenError( hb_comp_szErrors, 'F', ERR_BADPARAM, argv[ iArg ], NULL );
-            else
-            {
-               hb_comp_pFileName = hb_fsFNameSplit( argv[ iArg ] );
-
-               if( ! hb_comp_pFileName->szName )
-                  hb_compGenError( hb_comp_szErrors, 'F', ERR_BADFILENAME, argv[ iArg ], NULL );
-            }
+            hb_compGenError( hb_comp_szErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
+            return iStatus;
          }
       }
-
-      if( hb_comp_pFileName )
-      {
-         if( !hb_comp_pFileName->szExtension )
-            hb_comp_pFileName->szExtension = ".prg";
-         hb_fsFNameMerge( szFileName, hb_comp_pFileName );
-         if( hb_comp_bPPO )
-         {
-            hb_comp_pFileName->szExtension = ".ppo";
-            hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
-            hb_comp_yyppo = fopen( szPpoName, "w" );
-            if( ! hb_comp_yyppo )
-            {
-               hb_compGenError( hb_comp_szErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
-               return iStatus;
-            }
-         }
-      }
-      else
-      {
-         PrintUsage( argv[ 0 ] );
-         return iStatus;
-      }
-
-      atexit( close_on_exit );
-
-      hb_comp_files.iFiles     = 0;        /* initialize support variables */
-      hb_comp_files.pLast      = NULL;
-      hb_comp_functions.iCount = 0;
-      hb_comp_functions.pFirst = NULL;
-      hb_comp_functions.pLast  = NULL;
-      hb_comp_funcalls.iCount  = 0;
-      hb_comp_funcalls.pFirst  = NULL;
-      hb_comp_funcalls.pLast   = NULL;
-      hb_comp_symbols.iCount   = 0;
-      hb_comp_symbols.pFirst   = NULL;
-      hb_comp_symbols.pLast    = NULL;
-
-      hb_comp_pInitFunc = NULL;
-      hb_comp_bAnyWarning = FALSE;
-
-      if( Include( szFileName, NULL ) )
-      {
-         char * szInclude = getenv( "INCLUDE" );
-
-         if( szInclude )
-         {
-            char * pPath;
-            char * pDelim;
-
-            pPath = szInclude = hb_strdup( szInclude );
-            while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-            {
-               *pDelim = '\0';
-               AddSearchPath( pPath, &hb_comp_pIncludePath );
-               pPath = pDelim + 1;
-            }
-            AddSearchPath( pPath, &hb_comp_pIncludePath );
-         }
-
-         /*
-          * Start processing
-          */
-         harbour_main( hb_comp_pFileName->szName );
-
-         bSkipGen = FALSE;
-
-         if( hb_comp_bAnyWarning )
-         {
-            if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
-               iStatus = 1;
-            if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
-            {
-               iStatus = 1;
-               bSkipGen = TRUE;
-               printf( "\nNo code generated\n" );
-            }
-         }
-
-         if( ! s_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
-         {
-            hb_comp_pFileName->szPath = NULL;
-            hb_comp_pFileName->szExtension = NULL;
-
-            /* we create a the output file name */
-            if( s_pOutPath )
-            {
-               if( s_pOutPath->szPath )
-                  hb_comp_pFileName->szPath = s_pOutPath->szPath;
-
-               if( s_pOutPath->szName )
-               {
-                  hb_comp_pFileName->szName = s_pOutPath->szName;
-                  if( s_pOutPath->szExtension )
-                     hb_comp_pFileName->szExtension = s_pOutPath->szExtension;
-               }
-            }
-
-            hb_compFixReturns();       /* fix all previous function returns offsets */
-            if( ! hb_comp_bQuiet )
-            {
-               if( ! hb_comp_bStartProc )
-                  --hb_comp_iFunctionCnt;
-               printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
-            }
-
-            switch( s_iLanguage )
-            {
-               case LANG_C:
-                  GenCCode( hb_comp_pFileName );
-                  break;
-
-               case LANG_OBJ32:
-#ifdef HARBOUR_OBJ_GENERATION
-                  GenObj32( hb_comp_pFileName );
-#endif
-                  break;
-
-               case LANG_JAVA:
-                  GenJava( hb_comp_pFileName );
-                  break;
-
-               case LANG_PASCAL:
-                  GenPascal( hb_comp_pFileName );
-                  break;
-
-               case LANG_RESOURCES:
-                  GenRC( hb_comp_pFileName );
-                  break;
-
-               case LANG_PORT_OBJ:
-                  GenPortObj( hb_comp_pFileName );
-                  break;
-            }
-         }
-
-         if( hb_comp_bPPO )
-            fclose( hb_comp_yyppo );
-      }
-      else
-      {
-         printf( "Cannot open input file: %s\n", szFileName );
-         iStatus = 1;
-      }
-      hb_xfree( ( void * ) hb_comp_pFileName );
-      if( s_pOutPath )
-         hb_xfree( s_pOutPath );
-
-      if( hb_comp_iErrorCount > 0 )
-         iStatus = EXIT_FAILURE;
    }
    else
+   {
       PrintUsage( argv[ 0 ] );
+      return iStatus;
+   }
+
+   /* Initialization of preprocessor arrays */
+   hb_pp_Init();
+
+   /* Initialize support variables */
+   hb_compInitVars();
+
+   atexit( close_on_exit );
+
+   if( Include( szFileName, NULL ) )
+   {
+      hb_compCheckPaths();
+
+      /*
+       * Start processing
+       */
+      harbour_main( hb_comp_pFileName->szName );
+
+      bSkipGen = FALSE;
+
+      if( hb_comp_bAnyWarning )
+      {
+         if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+            iStatus = 1;
+         if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+         {
+            iStatus = 1;
+            bSkipGen = TRUE;
+            printf( "\nNo code generated\n" );
+         }
+      }
+
+      if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
+      {
+         /* we create the output file name */
+         hb_compOutputFile();
+
+         /* fix all previous function returns offsets */
+         hb_compFixReturns();
+
+         if( ! hb_comp_bQuiet )
+         {
+            if( ! hb_comp_bStartProc )
+               --hb_comp_iFunctionCnt;
+            printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
+         }
+
+         hb_compGenOutput( hb_comp_iLanguage );
+      }
+
+      if( hb_comp_bPPO )
+         fclose( hb_comp_yyppo );
+   }
+   else
+   {
+      printf( "Cannot open input file: %s\n", szFileName );
+      /* printf( "No code generated\n" ); */
+      iStatus = 1;
+   }
+
+   hb_xfree( ( void * ) hb_comp_pFileName );
+
+   if( hb_comp_pOutPath )
+      hb_xfree( hb_comp_pOutPath );
+
+   if( hb_comp_iErrorCount > 0 )
+      iStatus = EXIT_FAILURE;
 
    return iStatus;
 }
-
-/*
- * Prints available options
-*/
-static void PrintUsage( char * szSelf )
-{
-   printf( "\nSyntax:  %s <file[.prg]> [options]"
-           "\n"
-           "\nOptions:  /a               automatic memvar declaration"
-           "\n          /b               debug info"
-           "\n          /d<id>[=<val>]   #define <id>"
-           "\n          /es[<level>]     set exit severity"
-           "\n          /g<type>         output type generated is <type> (see below)"
-           "\n          /gc[<type>]      output type: C source (.c) (default)"
-           "\n                           <type>: 0=without comments, 1=normal (default)"
-#ifdef HARBOUR_OBJ_GENERATION
-           "\n          /gf              output type: Windows/DOS OBJ32 (.obj)"
-#endif
-           "\n          /gh              output type: Harbour Portable Object (.hrb)"
-           "\n          /gj              output type: Java source (.java)"
-           "\n          /gp              output type: Pascal source (.pas)"
-           "\n          /gr              output type: Windows resource (.rc)"
-           "\n          /i<path>         add #include file search path"
-           "\n          /l               suppress line number information"
-/* TODO:   "\n          /m               compile module only" */
-           "\n          /n               no implicit starting procedure"
-           "\n          /o<path>         object file drive and/or path"
-           "\n          /p               generate pre-processed output (.ppo) file"
-           "\n          /q               quiet"
-           "\n          /q0              quiet and don't display program header"
-/* TODO:   "\n          /r[<lib>]        request linker to search <lib> (or none)" */
-           "\n          /s               syntax check only"
-/* TODO:   "\n          /t<path>         path for temp file creation" */
-/* TODO:   "\n          /u[<file>]       use command def set in <file> (or none)" */
-           "\n          /v               variables are assumed M->"
-           "\n          /w[<level>]      set warning level number (0..3, default 1)"
-           "\n          /x[<prefix>]     set symbol init function name prefix (for .c only)"
-#ifdef YYDEBUG
-           "\n          /y               trace lex & yacc activity"
-#endif
-           "\n          /z               suppress shortcutting (.and. & .or.)"
-           "\n          /10              restrict symbol length to 10 characters"
-/* TODO:   "\n           @<file>         compile list of modules in <file>" */
-           "\n"
-           , szSelf );
-}
-
-/*
- * Prints credits
-*/
-static void PrintCredits( void )
-{
-   printf( "\nCredits:  The Harbour Team at www.harbour-project.com"
-           );
-}
-
 
 #if defined(__IBMCPP__) || defined(_MSC_VER)
 int isatty( int handle )
@@ -814,78 +345,6 @@ int isatty( int handle )
    return ( handle < 4 ) ? 1 : 0;
 }
 #endif
-
-static BOOL SwitchCmp( char * szString, char * szSwitch )
-{
-   if( HB_ISOPTSEP( *szString ) )
-   {
-      szString++;
-
-      if( strlen( szString ) == strlen( szSwitch ) )
-      {
-         while( *szString != '\0' )
-         {
-            if( toupper( *szString ) != *szSwitch )
-               return FALSE;
-
-            szString++;
-            szSwitch++;
-         }
-
-         return TRUE;
-      }
-   }
-
-   return FALSE;
-}
-
-/* NOTE: Making the date and time info to fit into 32 bits can only be done
-         in a "lossy" way, in practice that means it's not possible to unpack
-         the exact date/time info from the resulting ULONG. Since the year
-         is only stored in 6 bits, 1980 will result in the same bit pattern
-         as 2044. The purpose of this value is only used to *differenciate*
-         between the dates ( the exact dates are not significant ), so this can
-         be used here without problems. */
-
-/* 76543210765432107654321076543210
-   |.......|.......|.......|.......
-   |____|                               Year    6 bits
-         |__|                           Month   4 bits
-             |___|                      Day     5 bits
-                  |___|                 Hour    5 bits
-                       |____|           Minute  6 bits
-                             |____|     Second  6 bits */
-
-static ULONG PackDateTime( void )
-{
-   BYTE szString[ 4 ];
-   BYTE nValue;
-
-   time_t t;
-   struct tm * oTime;
-
-   time( &t );
-   oTime = localtime( &t );
-
-   nValue = ( BYTE ) ( ( ( oTime->tm_year + 1900 ) - 1980 ) & ( 2 ^ 6 ) ) ; /* 6 bits */
-   szString[ 0 ]  = nValue << 2;
-   nValue = ( BYTE ) ( oTime->tm_mon + 1 ); /* 4 bits */
-   szString[ 0 ] |= nValue >> 2;
-   szString[ 1 ]  = nValue << 6;
-   nValue = ( BYTE ) ( oTime->tm_mday ); /* 5 bits */
-   szString[ 1 ] |= nValue << 1;
-
-   nValue = ( BYTE ) oTime->tm_hour; /* 5 bits */
-   szString[ 1 ]  = nValue >> 4;
-   szString[ 2 ]  = nValue << 4;
-   nValue = ( BYTE ) oTime->tm_min; /* 6 bits */
-   szString[ 2 ] |= nValue >> 2;
-   szString[ 3 ]  = nValue << 6;
-   nValue = ( BYTE ) oTime->tm_sec; /* 6 bits */
-   szString[ 3 ] |= nValue;
-
-   return HB_MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
-}
 
 /*
  * Function that adds specified path to the list of pathnames to search
@@ -920,8 +379,6 @@ void EXTERNAL_LINKAGE close_on_exit( void )
    }
 }
 
-
-
 /* ------------------------------------------------------------------------- */
 
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
@@ -954,37 +411,6 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 
 /* ------------------------------------------------------------------------- */
 
-void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
-{
-   if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine );
-
-   printf( "Error %c%04i  ", cPrefix, iError );
-   printf( _szErrors[ iError - 1 ], szError1, szError2 );
-   printf( "\n" );
-
-   hb_comp_iErrorCount++;
-   if( cPrefix == 'F' )       /* fatal error - exit immediately */
-      exit( EXIT_FAILURE );
-}
-
-void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
-{
-   char *szText = _szWarnings[ iWarning - 1 ];
-
-   if( (szText[ 0 ] - '0') <= hb_comp_iWarnings )
-   {
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine );
-      printf( "Warning %c%04i  ", cPrefix, iWarning );
-      printf( szText + 1, szWarning1, szWarning2 );
-      printf( "\n" );
-
-      hb_comp_bAnyWarning = TRUE;    /* report warnings at exit */
-   }
-}
-
-/* ------------------------------------------------------------------------- */
-
 /* checks if passed string is a reserved function name
  */
 static char * RESERVED_FUNC( char * szName )
@@ -1008,129 +434,6 @@ static char * RESERVED_FUNC( char * szName )
       return NULL;
    else
       return (char *) _szReservedFun[ wNum - 1 ];
-}
-
-/* NOTE: iMinParam = -1, means no checking */
-/*       iMaxParam = -1, means no upper limit */
-
-typedef struct
-{
-   char * cFuncName;                /* function name              */
-   int    iMinParam;                /* min no of parms it needs   */
-   int    iMaxParam;                /* max no of parms need       */
-} FUNCINFO, * PFUNCINFO;
-
-static FUNCINFO _StdFun[] =
-{
-   { "AADD"      , 2,  2 },
-   { "ABS"       , 1,  1 },
-   { "ASC"       , 1,  1 },
-   { "AT"        , 2,  2 },
-   { "BOF"       , 0,  0 },
-   { "BREAK"     , 0,  1 },
-   { "CDOW"      , 1,  1 },
-   { "CHR"       , 1,  1 },
-   { "CMONTH"    , 1,  1 },
-   { "COL"       , 0,  0 },
-   { "CTOD"      , 1,  1 },
-   { "DATE"      , 0,  0 },
-   { "DAY"       , 1,  1 },
-   { "DELETED"   , 0,  0 },
-   { "DEVPOS"    , 2,  2 },
-   { "DOW"       , 1,  1 },
-   { "DTOC"      , 1,  1 },
-   { "DTOS"      , 1,  1 },
-   { "EMPTY"     , 1,  1 },
-   { "EOF"       , 0,  0 },
-   { "EVAL"      , 1, -1 },
-   { "EXP"       , 1,  1 },
-   { "FCOUNT"    , 0,  0 },
-   { "FIELDNAME" , 1,  1 },
-   { "FILE"      , 1,  1 },
-   { "FLOCK"     , 0,  0 },
-   { "FOUND"     , 0,  0 },
-   { "INKEY"     , 0,  2 },
-   { "INT"       , 1,  1 },
-   { "LASTREC"   , 0,  0 },
-   { "LEFT"      , 2,  2 },
-   { "LEN"       , 1,  1 },
-   { "LOCK"      , 0,  0 },
-   { "LOG"       , 1,  1 },
-   { "LOWER"     , 1,  1 },
-   { "LTRIM"     , 1,  1 },
-   { "MAX"       , 2,  2 },
-   { "MIN"       , 2,  2 },
-   { "MONTH"     , 1,  1 },
-   { "PCOL"      , 0,  0 },
-   { "PCOUNT"    , 0,  0 },
-   { "PROW"      , 0,  0 },
-   { "RECCOUNT"  , 0,  0 },
-   { "RECNO"     , 0,  0 },
-   { "REPLICATE" , 2,  2 },
-   { "RLOCK"     , 0,  0 },
-   { "ROUND"     , 2,  2 },
-   { "ROW"       , 0,  0 },
-   { "RTRIM"     , 1,  2 }, /* Second parameter is a Harbour extension */
-   { "SECONDS"   , 0,  0 },
-   { "SELECT"    , 0,  1 },
-   { "SETPOS"    , 2,  2 },
-   { "SETPOSBS"  , 0,  0 },
-   { "SPACE"     , 1,  1 },
-   { "SQRT"      , 1,  1 },
-   { "STR"       , 1,  3 },
-   { "SUBSTR"    , 2,  3 },
-   { "TIME"      , 0,  0 },
-   { "TRANSFORM" , 2,  2 },
-   { "TRIM"      , 1,  2 }, /* Second parameter is a Harbour extension */
-   { "TYPE"      , 1,  1 },
-   { "UPPER"     , 1,  1 },
-   { "VAL"       , 1,  1 },
-   { "VALTYPE"   , 1,  1 },
-   { "WORD"      , 1,  1 },
-   { "YEAR"      , 1,  1 },
-   { 0           , 0,  0 }
-};
-
-void hb_compFunCallCheck( char * szFuncCall, int iArgs )
-{
-   FUNCINFO * f = _StdFun;
-   int i = 0;
-   int iPos = -1;
-   int iCmp;
-
-   while( f[ i ].cFuncName )
-   {
-      iCmp = strncmp( szFuncCall, f[ i ].cFuncName, 4 );
-      if( iCmp == 0 )
-         iCmp = strncmp( szFuncCall, f[ i ].cFuncName, strlen( szFuncCall ) );
-      if( iCmp == 0 )
-      {
-         iPos = i;
-         break;
-      }
-      else
-         ++i;
-   }
-
-   if( iPos >= 0 && ( f[ iPos ].iMinParam != -1 ) )
-   {
-      if( iArgs < f[ iPos ].iMinParam || ( f[ iPos ].iMaxParam != -1 && iArgs > f[ iPos ].iMaxParam ) )
-      {
-         char szMsg[ 40 ];
-
-         if( f[ iPos ].iMaxParam == -1 )
-            sprintf( szMsg, "\nPassed: %i, expected: at least %i", iArgs, f[ iPos ].iMinParam );
-         else if( f[ iPos ].iMinParam == f[ iPos ].iMaxParam )
-            sprintf( szMsg, "\nPassed: %i, expected: %i", iArgs, f[ iPos ].iMinParam );
-         else
-            sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
-
-         hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, szMsg );
-
-         /* Clipper way */
-         /* hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, NULL ); */
-      }
-   }
 }
 
 /* ------------------------------------------------------------------------- */
@@ -2415,10 +1718,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
 
 void hb_compGenPushLogical( int iTrueFalse ) /* pushes a logical value on the virtual machine stack */
 {
-   if( iTrueFalse )
-      hb_compGenPCode1( HB_P_TRUE );
-   else
-      hb_compGenPCode1( HB_P_FALSE );
+   hb_compGenPCode1( iTrueFalse ? HB_P_TRUE : HB_P_FALSE );
 }
 
 void hb_compGenPushNil( void )
@@ -2436,17 +1736,10 @@ void hb_compGenPushDouble( double dNumber, BYTE bDec )
 
 void hb_compGenPushFunCall( char * szFunName )
 {
-   char * szFunction;
+   char * szFunction = RESERVED_FUNC( szFunName );
 
-   szFunction = RESERVED_FUNC( szFunName );
-   if( szFunction )
-   {
-      /* Abbreviated function name was used - change it for whole name
-       */
-      hb_compGenPushSymbol( hb_strdup( szFunction ), 1 );
-   }
-   else
-      hb_compGenPushSymbol( szFunName, 1 );
+   /* If an abbreviated function name was used - change it for whole name */
+   hb_compGenPushSymbol( ( szFunction ? hb_strdup( szFunction ) : szFunName ), 1 );
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */
@@ -2561,63 +1854,6 @@ static void hb_compFixReturns( void ) /* fixes all last defined function returns
          hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_FUN_WITH_NO_RETURN,
                      hb_comp_functions.pLast->szName, NULL );
    }
-}
-
-void hb_compGenPCode1( BYTE byte )
-{
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
-
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
-   {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
-   }
-   else
-      if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
-
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
-}
-
-void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
-{
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
-
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
-   {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
-      pFunc->lPCodeSize = PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
-   }
-   else
-      if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
-         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
-
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
-}
-
-void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize )
-{
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
-
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
-   {
-      pFunc->lPCodeSize = ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
-      pFunc->lPCodePos  = 0;
-   }
-   else if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
-   {
-      /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( ulSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK );
-      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
-   }
-
-   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
-   pFunc->lPCodePos += ulSize;
 }
 
 /* Generate the opcode to open BEGIN/END sequence
@@ -2785,7 +2021,7 @@ void hb_compCodeBlockEnd( void )
    /* generate a proper codeblock frame with a codeblock size and with
     * a number of expected parameters
     */
-   /*QUESTION: would be 64kB enough for a codeblock size?
+   /* QUESTION: would be 64kB enough for a codeblock size?
     * we are assuming now a USHORT for a size of codeblock
     */
 
@@ -2797,7 +2033,7 @@ void hb_compCodeBlockEnd( void )
       ++wLocals;
    }
 
-   /*NOTE:  8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
+   /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
    wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
 
    hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ) );
@@ -2840,66 +2076,96 @@ void hb_compCodeBlockEnd( void )
    hb_xfree( ( void * ) pCodeblock );
 }
 
-
 /* ************************************************************************* */
 
-HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR pExpr )
+/* initialize support variables */
+void hb_compInitVars( void )
 {
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_LVALUE, szDesc, NULL );
-   return pExpr;
+   hb_comp_files.iFiles     = 0;
+   hb_comp_files.pLast      = NULL;
+   hb_comp_functions.iCount = 0;
+   hb_comp_functions.pFirst = NULL;
+   hb_comp_functions.pLast  = NULL;
+   hb_comp_funcalls.iCount  = 0;
+   hb_comp_funcalls.pFirst  = NULL;
+   hb_comp_funcalls.pLast   = NULL;
+   hb_comp_symbols.iCount   = 0;
+   hb_comp_symbols.pFirst   = NULL;
+   hb_comp_symbols.pLast    = NULL;
+
+   hb_comp_pInitFunc = NULL;
+   hb_comp_bAnyWarning = FALSE;
 }
 
-HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR pExpr )
+void hb_compGenOutput( int iLanguage )
 {
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_TYPE, szDesc, NULL );
-   return pExpr;
+   switch( iLanguage )
+   {
+      case LANG_C:
+         GenCCode( hb_comp_pFileName );
+         break;
+
+      case LANG_OBJ32:
+#ifdef HARBOUR_OBJ_GENERATION
+         GenObj32( hb_comp_pFileName );
+#endif
+         break;
+
+      case LANG_JAVA:
+         GenJava( hb_comp_pFileName );
+         break;
+
+      case LANG_PASCAL:
+         GenPascal( hb_comp_pFileName );
+         break;
+
+      case LANG_RESOURCES:
+         GenRC( hb_comp_pFileName );
+         break;
+
+      case LANG_PORT_OBJ:
+         GenPortObj( hb_comp_pFileName );
+         break;
+   }
 }
 
-HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR pExpr )
+void hb_compCheckPaths( void )
 {
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_INDEX, szDesc, NULL );
-   return pExpr;
+   char * szInclude = getenv( "INCLUDE" );
+
+   if( szInclude )
+   {
+      char * pPath;
+      char * pDelim;
+
+      pPath = szInclude = hb_strdup( szInclude );
+      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+      {
+         *pDelim = '\0';
+         AddSearchPath( pPath, &hb_comp_pIncludePath );
+         pPath = pDelim + 1;
+      }
+      AddSearchPath( pPath, &hb_comp_pIncludePath );
+   }
 }
 
-HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR pExpr )
+void hb_compOutputFile( void )
 {
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_BOUND, szDesc, NULL );
-   return pExpr;
+   hb_comp_pFileName->szPath = NULL;
+   hb_comp_pFileName->szExtension = NULL;
+
+   /* we create the output file name */
+   if( hb_comp_pOutPath )
+   {
+      if( hb_comp_pOutPath->szPath )
+         hb_comp_pFileName->szPath = hb_comp_pOutPath->szPath;
+
+      if( hb_comp_pOutPath->szName )
+      {
+         hb_comp_pFileName->szName = hb_comp_pOutPath->szName;
+         if( hb_comp_pOutPath->szExtension )
+            hb_comp_pFileName->szExtension = hb_comp_pOutPath->szExtension;
+      }
+   }
 }
 
-HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR pExpr )
-{
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, szDesc, NULL );
-   return pExpr;
-}
-
-HB_EXPR_PTR hb_compErrorAlias(  HB_EXPR_PTR pExpr )
-{
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_ALIAS, szDesc, NULL );
-   return pExpr;
-}
-
-HB_EXPR_PTR hb_compErrorStatic( char * szVarName, HB_EXPR_PTR pExpr )
-{
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_ILLEGAL_INIT, szVarName, szDesc );
-   return pExpr;
-}
-
-void hb_compErrorDuplVar( char * szVarName )
-{
-   hb_compGenError( hb_comp_szErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
-}
-
-HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR pExpr )
-{
-   char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenWarning(  hb_comp_szWarnings, 'W', WARN_MEANINGLESS, szDesc, NULL );
-   return pExpr;
-}
