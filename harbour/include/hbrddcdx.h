@@ -157,11 +157,14 @@ typedef struct _CDXTAG
    char *     ForExpr;   /* a tag for expression as text */
    USHORT uiType;        /* a type of key expression value */
    USHORT uiLen;         /* length of the key expression value */
+   USHORT nField;
    struct _CDXINDEX * pIndex;    /* a parent index info */
    // review this ...
    struct    _CDXTAG * pNext;
    BOOL       AscendKey;        /* ascending/descending order flag */
    BOOL       UniqueKey;        /* unique order flag */
+   BOOL       Temporary;
+   BOOL       Custom;
    BOOL       TagChanged;
    BOOL       TagBOF;
    BOOL       TagEOF;

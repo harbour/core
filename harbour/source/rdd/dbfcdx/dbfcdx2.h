@@ -60,7 +60,7 @@ static LPCDXTAG hb_cdxTagNew( LPCDXINDEX PIF, char * ITN, LONG TagHdr );
 static void hb_cdxTagFree( LPCDXTAG pTag );
 static void hb_cdxTagIndexTagNew( LPCDXTAG pTag, char * KeyExp, PHB_ITEM pKeyItem,
                                   BYTE bType, USHORT uiLen, char * ForExp,
-                                  PHB_ITEM pForItem, BOOL Ascnd, BOOL Uniq );
+                                  PHB_ITEM pForItem, BOOL Ascnd, BOOL Uniq, BOOL bCustom );
 static void hb_cdxTagDoIndex( LPCDXTAG pTag );
 static void hb_cdxTagEmptyIndex( LPCDXTAG pTag );
 static void hb_cdxTagTagStore( LPCDXTAG pTag );
@@ -110,7 +110,7 @@ static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, U
 static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
 static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKeyExp,
                                PHB_ITEM pKeyItem, BYTE bType, USHORT uiLen, char * szForExp,
-                               PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique );
+                               PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique, BOOL bCustom );
 
 static LPSORTINFO hb_cdxSortNew( LPCDXTAG pTag, BOOL bUnique );
 static void hb_cdxSortFree( LPSORTINFO pSort );
@@ -159,5 +159,8 @@ static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
 static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro );
 static ERRCODE cdxError( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * filename, USHORT uiFlags );
 static void hb_cdxIndexReindex( LPCDXINDEX pIndex );
-static ERRCODE hb_cdxOrdListClear( CDXAREAP pArea, int iComplete );
+static ERRCODE hb_cdxOrdListClear( CDXAREAP pArea, int iComplete, LPCDXINDEX pKeepIndex );
+static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, char * szBagName );
+static LPCDXKEYINFO hb_cdxEvalKey( CDXAREAP pArea, LPCDXTAG pTag );
+static BOOL hb_cdxEvalCond ( CDXAREAP pArea, PHB_ITEM pCondItem, BOOL checkenv );
 
