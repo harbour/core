@@ -311,9 +311,7 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 
-#if defined(HB_PRAGMA_STARTUP)
-   #pragma startup dbfcdx1__InitSymbols
-#elif defined(_MSC_VER)
+#if defined(_MSC_VER)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -322,6 +320,8 @@ HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
    #endif
    static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
    #pragma data_seg()
+#elif ! defined(__GNUC__)
+   #pragma startup dbfcdx1__InitSymbols
 #endif
 
 #ifdef HB_CDX_DSPDBG_INFO

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-10 10:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! Initialization code fixed.
+
 2004-03-09 22:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * hrbdll.vc
     * file has been updated due to adding source/rtl/hbrandom.c.
