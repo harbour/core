@@ -1,3 +1,8 @@
+19991014-18:13 GMT+1 Bruno Cantero <bruno@issnet.net>
+
+  * source/rdd/dbcmd.c
+    * Removed some low level access to item.asArray
+
 19991014-16:18 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
   * source/pp/hbppint.c

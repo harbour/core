@@ -202,20 +202,20 @@ static ERRCODE defClose( AREAP pArea )
 
 static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
-   USHORT uiCount;
+   USHORT uiCount, uiItems;
    PHB_ITEM pFieldDesc;
    DBFIELDINFO pFieldInfo;
 
-   SELF_SETFIELDEXTENT( pArea, pStruct->item.asArray.value->ulLen );
+   uiItems = hb_arrayLen( pStruct );
+   SELF_SETFIELDEXTENT( pArea, uiItems );
    pFieldInfo.typeExtended = 0;
-   for( uiCount = 0; uiCount < pStruct->item.asArray.value->ulLen; uiCount++ )
+   for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
-      pFieldDesc = pStruct->item.asArray.value->pItems + uiCount;
+      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       pFieldInfo.uiType = toupper( hb_arrayGetCPtr( pFieldDesc, 2 )[ 0 ] );
       pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
       pFieldInfo.uiLen = ( USHORT ) hb_arrayGetND( pFieldDesc, 3 );
       pFieldInfo.uiDec = ( USHORT ) hb_arrayGetND( pFieldDesc, 4 );
-
       SELF_ADDFIELD( pArea, &pFieldInfo );
    }
    return SUCCESS;
@@ -838,7 +838,7 @@ ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
-                              NULL, pSymAlias->szName, 0, EF_CANRETRY );
+                             NULL, pSymAlias->szName, 0, EF_CANRETRY );
 
       bResult = FAILURE;
       while( uiAction == E_RETRY )
@@ -873,7 +873,7 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
-                              NULL, szName, 0, EF_CANRETRY );
+                             NULL, szName, 0, EF_CANRETRY );
 
       bResult = FAILURE;
       while( uiAction == E_RETRY )
@@ -908,7 +908,7 @@ ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                              NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+                             NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
 
       while( uiAction == E_RETRY )
       {
@@ -938,7 +938,7 @@ ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                              NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+                             NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
 
       while( uiAction == E_RETRY )
       {
@@ -1239,17 +1239,17 @@ HARBOUR HB_DBCREATE( void )
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
-   if( ( strlen( szFileName ) == 0 ) || !pStruct ||
-       !pStruct->item.asArray.value->ulLen )
+   uiLen = hb_arrayLen( pStruct );
+   if( ( strlen( szFileName ) == 0 ) || !pStruct || uiLen == 0 )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
       return;
    }
 
-   for( uiSize = 0; uiSize < pStruct->item.asArray.value->ulLen; uiSize++ )
+   for( uiSize = 0; uiSize < uiLen; uiSize++ )
    {
-      pFieldDesc = pStruct->item.asArray.value->pItems + uiSize;
-      if( pFieldDesc->item.asArray.value->ulLen != 4 )
+      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize + 1 );
+      if( hb_arrayLen( pFieldDesc ) != 4 )
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
          return;
