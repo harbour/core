@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-30 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/rtl/teditor.prg
+      * the current line is still visible after the window resizing
+      
+   * source/debug/debugger.prg
+      * fixed refreshing of variables' monitor window
+      * fixed some save/restore screen issues
+
 2004-01-29 20:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/ace.h
      + added missing definition for adsGetNumActiveLinks()

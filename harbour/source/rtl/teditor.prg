@@ -339,15 +339,17 @@ METHOD Resize(nTop, nLeft, nBottom, nRight) CLASS HBEditor
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
 
+   IF( (::nRow - ::nFirstRow) > ::nNumRows )
+      //current row is outide the editor window - display it at the top
+      ::nFirstRow := ::nRow
+   ENDIF
    // FirstCol/Row of current text visible inside editor window
    ::nFirstCol := 1
-   ::nFirstRow := 1
    // Cursor position inside aText (nRow) and inside current line of text (nCol)
-   ::nRow := 1
    ::nCol := 1
 
    // Set cursor upper left corner
-   ::SetPos(::nTop, ::nLeft)
+   ::SetPos(::nTop +::nRow-::nFirstRow, ::nLeft)
 
    ::RefreshWindow()
 

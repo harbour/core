@@ -507,17 +507,17 @@ return Self
 
 METHOD Activate() CLASS TDebugger
 
-   ::SaveAppStatus()
    IF( ! ::lActive )
       ::lActive := .T.
       ::Show()
       if ::lShowCallStack
          ::ShowCallStack()
       endif
-//   ::RestoreAppStatus()
+   ELSE
+      ::SaveAppStatus()
    ENDIF
-      ::loadVars()
-      ::ShowVars()
+   ::loadVars()
+   ::ShowVars()
    IF( ::oWndPnt != NIL )
       ::WatchpointsShow()
    ENDIF
@@ -532,7 +532,7 @@ METHOD All() CLASS TDebugger
    ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
    ::lShowLocals := ::lAll := ! ::lAll
 
-   iif( ::lAll, ::ShowVars(), ::HideVars() )
+   iif( ::lAll, (::LoadVars(),::ShowVars()), ::HideVars() )
 
 return nil
 
@@ -675,7 +675,11 @@ METHOD CallStackProcessKey( nKey ) CLASS TDebugger
    endcase
 
    if lUpdate
-      ::LoadVars()
+      if ::oWndVars != nil .AND. ::oWndVars:lVisible
+         ::LoadVars()
+         ::ShowVars()
+      endif
+
       // jump to source line for a function
       if ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] != nil
          ::ShowCodeLine( ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ], ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ] )
@@ -1443,15 +1447,16 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
    local nCount, n, m, xValue, cName
    local cStaticName, nStaticIndex, nStaticsBase
    LOCAL aVars
+   LOCAL aBVars
    
-   ::aVars := {}
+   aBVars := {}
 
    if ::lShowPublics
       nCount := __mvDbgInfo( HB_MV_PUBLIC )
       for n := nCount to 1 step -1
          xValue := __mvDbgInfo( HB_MV_PUBLIC, n, @cName )
          if cName != "__DBGSTATICS"  // reserved public used by the debugger
-            AAdd( ::aVars, { cName, xValue, "Public" } )
+            AAdd( aBVars, { cName, xValue, "Public" } )
          endif
       next
    endif
@@ -1460,7 +1465,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
       nCount := __mvDbgInfo( HB_MV_PRIVATE )
       for n := nCount to 1 step -1
          xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
-         AAdd( ::aVars, { cName, xValue, "Private" } )
+         AAdd( aBVars, { cName, xValue, "Private" } )
       next
    endif
 
@@ -1471,12 +1476,12 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
          IF( n > 0 )
             aVars := __DbgStatics[ n ][ 2 ]
             for m := 1 to Len( aVars )
-               AAdd( ::aVars, aVars[ m ] )
+               AAdd( aBVars, aVars[ m ] )
             next
          ENDIF
          aVars := ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_STATICS ]
          for n := 1 to Len( aVars )
-            AAdd( ::aVars, aVars[ n ] )
+            AAdd( aBVars, aVars[ n ] )
          next
       endif
    endif
@@ -1485,16 +1490,20 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
       aVars := ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LOCALS ]
       for n := 1 to Len( aVars )
          cName := aVars[ n ][ VAR_NAME ]
-         m := AScan( ::aVars,; // Is there another var with this name ?
+         m := AScan( aBVars,; // Is there another var with this name ?
                      { | aVar | aVar[ VAR_NAME ] == cName .AND. aVar[VAR_TYPE]=='S'} )
          IF( m > 0 )
-            ::aVars[ m ] := aVars[ n ]
+            aBVars[ m ] := aVars[ n ]
          ELSE
-            AAdd( ::aVars, aVars[ n ] )
+            AAdd( aBVars, aVars[ n ] )
          ENDIF
       next
    endif
 
+   IF( ::oBrwVars != NIL .AND. ::oBrwVars:cargo[1] > LEN(aBVars) )
+      ::oBrwVars:gotop()
+   ENDIF
+   ::aVars := aBVars
    if ::lSortVars
       ::Sort()
    endif
@@ -1516,6 +1525,7 @@ METHOD ShowVars() CLASS TDebugger
    Local oCol
    local lRepaint := .f.
    local nTop
+   LOCAL lFocused
 
    if ::lGo
       return nil
@@ -1528,7 +1538,6 @@ METHOD ShowVars() CLASS TDebugger
 
    if ::oWndVars == nil
 
-//      ::LoadVars()
       nTop := IIF(::oWndPnt!=NIL .AND. ::oWndPnt:lVisible,::oWndPnt:nBottom+1,1) 
 
       ::oWndVars := TDbWindow():New( nTop, 0, nTop+Min( 5, Len( ::aVars )+1 ),;
@@ -1585,31 +1594,31 @@ METHOD ShowVars() CLASS TDebugger
       , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
       , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
       , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), ::oBrwVars:ForceStable() ) }
-
-
    else
-//      ::LoadVars()
-
-      ::oBrwVars:cargo[1] :=1
       ::oWndVars:cCaption := "Monitor:" + ;
       iif( ::lShowLocals, " Local", "" ) + ;
       iif( ::lShowStatics, " Static", "" ) + ;
       iif( ::lShowPrivates, " Private", "" ) + ;
       iif( ::lShowPublics, " Public", "" )
 
+      lFocused := ::aWindows[ ::nCurrentWindow ] == ::oWndVars
+      DispBegin()
       if Len( ::aVars ) == 0
          if ::oWndVars:nBottom - ::oWndVars:nTop > 1
+            ::oWndVars:Hide()
             ::oWndVars:nBottom := ::oWndVars:nTop + 1
             lRepaint := .t.
          endif
       endif
       if Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
+         ::oWndVars:Hide()
          ::oWndVars:nBottom := ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 )
          ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
          ::oBrwVars:Configure()
          lRepaint := .t.
       endif
       if Len( ::aVars ) < ::oWndVars:nBottom - ::oWndVars:nTop - 1
+         ::oWndVars:Hide()
          ::oWndVars:nBottom := ::oWndVars:nTop + Len( ::aVars ) + 1
          ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
          ::oBrwVars:Configure()
@@ -1618,22 +1627,19 @@ METHOD ShowVars() CLASS TDebugger
       if ! ::oWndVars:lVisible
          ::oWndCode:nTop := ::oWndVars:nBottom + 1
          ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
-         ::oWndVars:Show()
+         ::oWndCode:Refresh()
+         ::oWndVars:Show(lFocused)
       else
          if lRepaint
             ::oWndCode:nTop := ::oWndVars:nBottom + 1
             ::oBrwText:Resize( ::oWndCode:nTop + 1 )
             ::oWndCode:Refresh()
-            ::oWndVars:Refresh()
+            ::oWndVars:Show(lFocused)
          endif
       endif
-      if lRepaint       //.AND. Len( ::aVars ) > 0
-         IF( ::oBrwVars:Cargo[1] > (::oBrwVars:nBottom - ::oBrwVars:nTop -1) )
-            ::oBrwVars:gotop()
-         ENDIF
-         ::oBrwVars:RefreshAll()
-         ::oBrwVars:ForceStable()
-      endif
+      ::oBrwVars:RefreshAll()
+      ::oBrwVars:ForceStable()
+      DispEnd()
    endif
 
 return nil
@@ -1988,11 +1994,11 @@ return AScan( ::aBreakPoints, { | aBreak | (aBreak[ 1 ] == nLine) .AND. (aBreak 
 METHOD GotoLine( nLine ) CLASS TDebugger
 
    local nRow, nCol
-
+/*
    if ::oBrwVars != nil
       ::ShowVars()
    endif
-
+*/
    ::oBrwText:GotoLine( nLine )
    nRow = Row()
    nCol = Col()
