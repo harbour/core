@@ -2959,7 +2959,6 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag )
    {
       LPPAGEINFO pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
-      pTag->stackLevel = 0;
       hb_ntxPageKeyDel( pTag, pPage, pPage->CurKey, 1 );
       if( pTag->stack[0].ikey < 0 )
          hb_ntxTagBalance( pTag,0 );
@@ -3324,7 +3323,6 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                      }
                      pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
                      pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
-                     pTag->stackLevel = 0;
                      hb_ntxPageKeyDel( pTag, pPage, pPage->CurKey, 1 );
                      if( pTag->stack[0].ikey < 0 )
                         hb_ntxTagBalance( pTag,0 );
