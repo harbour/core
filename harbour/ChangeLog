@@ -1,3 +1,24 @@
+19991025-18:15 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/hbwinapi.h
+     - Removed '#define HARBOUR_USE_WIN', because includinging windows.h
+       causes _Windows to be defined, so HARBOUR_USE_WIN is redundant.
+
+   * harbour/source/pp/hbpp.c
+     % Changed "non directive" warning to level 3.
+
+   * harbour/source/pp/hbppint.c
+     + Added include file and include file line number to warning messages.
+
+   * harbour/source/rtl/inkey.c
+     ! Moved HB_TRACE() call in hb_releaseCPU() to bottom of function,
+       because variables are declared in #if blocks.
+     - Changed '#ifdef HARBOUR_USE_WIN' to '#if defined(_Windows) ||
+       defined(WINNT)' (see include/hbwinapi.h for reason why).
+
+   * harbour/source/rtl/oemansi.c
+     ! Only include winuser.h when compiling for Windows.
+
 19991025-23:12 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/achoice.prg
     ! Fixed bound error on empty array.

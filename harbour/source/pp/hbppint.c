@@ -58,7 +58,7 @@
 
 void Hbpp_init ( void );
 int PreProcess( FILE *, FILE *, char * );
-int Hp_Parse( FILE *, FILE * );
+int Hp_Parse( FILE *, FILE *, char * );
 
 int iBuffer, lenBuffer;
 BOOL _bPPO = 0;
@@ -149,13 +149,14 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
   return lens;
 }
 
-int Hp_Parse( FILE * handl_i, FILE * handl_o )
+int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 {
   char * sBuffer = ( char * ) hb_xgrab( BUFF_SIZE );           /* File read buffer */
   char * ptr;
+  char szLine[ 16 ];
   int lContinue = 0;
   int iBuffer = 10, lenBuffer = 10;
-  int lens = 0, rdlen;
+  int lens = 0, rdlen, iLine = 0;
 
   HB_TRACE(("Hp_Parse(%p, %p)", handl_i, handl_o));
 
@@ -163,6 +164,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o )
                              sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
       lens += rdlen;
+      iLine++;
 
       if( sLine[ lens - 1 ] == ';' )
         {
@@ -191,7 +193,10 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o )
                   *sLine = '\0';
                 }
               else
-                GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, NULL, NULL );
+              {
+                sprintf( szLine, "%d", iLine );
+                GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, szSource, szLine );
+              }
             }
         }
     }

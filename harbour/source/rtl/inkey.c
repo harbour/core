@@ -86,7 +86,7 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#ifdef HARBOUR_USE_WIN
+#if defined(_Windows) || defined(WINNT)
    #define INPUT_BUFFER_LEN 128
    extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
@@ -180,8 +180,6 @@ static HB_inkey_enum s_eventmask;
 
 void hb_releaseCPU( void )
 {
-   HB_TRACE(("releaseCPU()"));
-
 /* TODO: Add code to release time slices on all platforms */
 #if defined(_Windows) || defined(__MINGW32__)
    /* according to ms docs, you should not do this in a Win app. dos only */
@@ -203,7 +201,7 @@ void hb_releaseCPU( void )
       geninterrupt( 0x2f );
       _AH = 0;
       _AL ^= 0x80;
-   #else
+   #elif ! defined(__DJGPP__)
       union REGS regs;
       regs.h.ah = 0x16;
       regs.h.al = 0x80;
@@ -218,6 +216,7 @@ void hb_releaseCPU( void )
 #elif defined(OS_UNIX_COMPATIBLE)
 #else
 #endif
+   HB_TRACE(("releaseCPU()"));
 }
 
 int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )

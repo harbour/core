@@ -40,7 +40,6 @@
 #define HB_WINAPI_H_
 
 #if defined(HARBOUR_USE_WIN_GTAPI) || defined(WINNT)
-   #define HARBOUR_USE_WIN
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
    #if defined(__GNUC__)

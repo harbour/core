@@ -57,7 +57,7 @@
 #include "hbpp.h"
 #include "hberrors.h"
 
-int Hp_Parse( FILE*, FILE* );
+int Hp_Parse( FILE*, FILE*, char * );
 int ParseDirective( char* );                    /* Parsing preprocessor directives ( #... ) */
 int ParseDefine( char* );                       /* Process #define directive */
 DEFINES* AddDefine ( char*, char* );            /* Add new #define to a linked list */
@@ -106,7 +106,7 @@ int NextWord ( char**, char*, int);
 int NextName ( char**, char* );
 int NextParm ( char**, char* );
 int Include( char *, PATHNAMES *, FILE** );
-BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly );
+BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly, char * );
 
 #define ISNAME(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define MAX_NAME 255
@@ -161,12 +161,13 @@ char * _szPErrors[] =
  */
 char * _szPWarnings[] =
 {
-  "1Non directive in include file"
+  "3Non directive in include file %s(%s)"
 };
 
 int ParseDirective( char* sLine )
 {
   char sDirective[MAX_NAME];
+  char szInclude[_POSIX_PATH_MAX];
   int i;
   FILE* handl_i;
 
@@ -218,10 +219,10 @@ int ParseDirective( char* sLine )
           *(sLine+i) = '\0';
 
           /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
-          if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>') ) )
+          if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>'), szInclude ) )
             GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
           lInclude++;
-          Hp_Parse(handl_i, 0 );
+          Hp_Parse(handl_i, 0, szInclude );
           lInclude--;
           fclose(handl_i);
         }
@@ -2217,23 +2218,23 @@ int NextParm ( char** sSource, char* sDest )
   return lenName;
 }
 
-BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStandardOnly )
+BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStandardOnly, char * szInclude )
 {
   PHB_FNAME pFileName;
-  char szFName[ _POSIX_PATH_MAX ]; /* filename to parse */
 
   HB_TRACE(("OpenInclude(%s, %p, %p, %d)", szFileName, pSearch, fptr, (int) bStandardOnly));
 
   if ( bStandardOnly )
     {
       *fptr = 0;
+      szInclude[ 0 ] = '\0';
     }
   else
     {
       pFileName = hb_fsFNameSplit( szFileName );
       pFileName->szPath = _pFileName->szPath;
-      hb_fsFNameMerge( szFName, pFileName );
-      *fptr = fopen( szFName, "r" );
+      hb_fsFNameMerge( szInclude, pFileName );
+      *fptr = fopen( szInclude, "r" );
       hb_xfree( pFileName );
     }
 
@@ -2245,8 +2246,8 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
       while ( pSearch && !*fptr )
         {
           pFileName->szPath = pSearch->szPath;
-          hb_fsFNameMerge( szFName, pFileName );
-          *fptr = fopen( szFName, "r" );
+          hb_fsFNameMerge( szInclude, pFileName );
+          *fptr = fopen( szInclude, "r" );
           pSearch = pSearch->pNext;
         }
       hb_xfree( pFileName );

@@ -39,7 +39,9 @@
 /* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
-#include <winuser.h>
+#if defined(_Windows) || defined(WINNT)
+   #include <winuser.h>
+#endif
 
 #include "extend.h"
 #include "itemapi.h"
