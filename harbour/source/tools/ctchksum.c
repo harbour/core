@@ -43,7 +43,10 @@ HARBOUR HB_CT_CHECKSUM( void )
    ULONG ulResult = 0;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
-     ulResult += ( ( ULONG ) ( pbyString[ ulPos ] + ( ULONG ) ( pbyString[ ulPos + 1 ] * 256 ) ) ) & 0xFFFF;
+      ulResult += ( ( ULONG ) ( pbyString[ ulPos ] + ( ULONG ) ( pbyString[ ulPos + 1 ] * 256 ) ) ) & 0xFFFF;
 
-   hb_retnl( ( ULONG ) ( ( ulResult & 0x00FFFFFF ) | ( ( ulLen & 0xFF ) << 24 ) ) );
+   /* NOTE: Using hb_retnd() instead of hb_retnl() to always return a 
+            positive value. */
+
+   hb_retnd( ( ULONG ) ( ( ulResult & 0x00FFFFFF ) | ( ( ulLen & 0xFF ) << 24 ) ) );
 }

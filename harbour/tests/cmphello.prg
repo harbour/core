@@ -20,9 +20,9 @@ function Main()
    QOut()
    if at( "WINDOWS", cOs ) != 0 .or. at( "DOS", cOs ) != 0 .or. ;
       at( "OS/2", cOs ) != 0                    // OS/2, DOS, Windows version
-      __Run( "..\..\bin\harbour.exe hello.prg /gHRB" )
+      __Run( "..\bin\harbour.exe hello.prg /gHRB" )
    else                                         // Unix / Linux version
-      __Run( "../../bin/harbour.exe hello.prg /gHRB" )
+      __Run( "../bin/harbour.exe hello.prg /gHRB" )
    endif
    QOut( "Finished compiling" )
 return nil

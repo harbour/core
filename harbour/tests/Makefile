@@ -49,7 +49,6 @@ PRG_SOURCES=\
         codebl.prg \
         codebloc.prg \
         comments.prg \
-        copyfile.prg \
         curdirt.prg \
         cursrtst.prg \
         dates.prg \
@@ -70,7 +69,6 @@ PRG_SOURCES=\
         fileio.prg \
         filexist.prg \
         fornext.prg \
-        fornext2.prg \
         fortest.prg \
         funcarr.prg \
         hardcr.prg \

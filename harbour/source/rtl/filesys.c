@@ -1381,14 +1381,16 @@ HARBOUR HB_FREADSTR( void )
 
       if( ulToRead > 0 )
       {
+         FHANDLE fhnd = ( FHANDLE ) hb_parni( 1 );
          BYTE * buffer = ( BYTE * ) hb_xgrab( ulToRead + 1 );
          ULONG ulRead;
 
-         ulRead = hb_fsReadLarge( ( FHANDLE ) hb_parni( 1 ), buffer, ulToRead );
-
+         ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
          buffer[ ulRead ] = '\0';
 
-         hb_retclen( ( char * ) buffer, ulRead );
+         /* NOTE: Clipper will not return zero chars from this functions. */
+
+         hb_retc( ( char * ) buffer );
 
          hb_xfree( buffer );
       }

@@ -1,3 +1,19 @@
+19991022-13:10 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     tests/fileio.prg
+     ! FREADSTR() zero byte bug fixed.
+       Reported by V.Kazimirchik <v_kazimirchik@yahoo.com>
+     + Some new tests cases added to the test program.
+   * source/tools/ctchksum.c
+     ! Fixed for large strings.
+   * tests/cmphello.prg
+     ! Path fixed.
+   - tests/copyfile.prg
+   - tests/fornext2.prg
+     tests/Makefile
+     - Some obsolete test files removed, they were moved to RTL_TEST
+       previously.
+
 19991022-10:53 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/hvm.c
      + //INFO now displays Clipper-like memory info.
