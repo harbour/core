@@ -1,3 +1,9 @@
+20000207-16:52 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/inkey.c
+     source/rtl/mouse/mousewin.c
+     * Win32 mouse related variables renamed and moved to mousewin.c
+       inkey.c is now accessing it as an extern.
+
 20000207-16:39 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbextern.ch
      source/runner/stdalone/external.prg

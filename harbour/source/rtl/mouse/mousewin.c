@@ -61,11 +61,17 @@ typedef WORD far * LPWORD;
 #endif
 #endif /* __GNUC__ */
 
+int hb_mouse_iCol;
+int hb_mouse_iRow;
+
 /* C callable low-level interface */
 
 void hb_mouse_Init( void )
 {
    /* TODO: */
+
+   hb_mouse_iCol = 0;
+   hb_mouse_iRow = 0;
 }
 
 void hb_mouse_Exit( void )
@@ -94,14 +100,14 @@ int hb_mouse_Col( void )
 {
    /* TODO: */
 
-   return hb_gt_iMouseCol;
+   return hb_mouse_iCol;
 }
 
 int hb_mouse_Row( void )
 {
    /* TODO: */
 
-   return hb_gt_iMouseRow;
+   return hb_mouse_iRow;
 }
 
 void hb_mouse_SetPos( int iRow, int iCol )

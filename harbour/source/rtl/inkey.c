@@ -99,8 +99,8 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   int hb_gt_iMouseCol = 0;
-   int hb_gt_iMouseRow = 0;
+   extern int hb_mouse_iCol;
+   extern int hb_mouse_iRow;
 #endif
 #endif
 
@@ -651,8 +651,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          }
          else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
          {
-            hb_gt_iMouseCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-            hb_gt_iMouseRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+            hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
             if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
                ch = K_MOUSEMOVE;
