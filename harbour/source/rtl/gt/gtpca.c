@@ -248,7 +248,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
          USHORT i;
          for( i = usTop; i <= usBottom; i++ )
          {
-            hb_gt_Puts( i, usLeft, s_iAttribute, s_szSpaces, (usRight - usLeft ) + 1 );
+            hb_gt_Puts( i, usLeft, s_iAttribute, ( BYTE * )s_szSpaces, (usRight - usLeft ) + 1 );
          }
       }
    }
@@ -303,7 +303,7 @@ void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
    str[ len ] = save;
    /* Update the cursor position */
    s_usRow = usRow;
-   s_usCol = usCol + len;
+   s_usCol = usCol + ( USHORT )len;
    if( s_usCol > s_usMaxCol ) s_usCol = s_usMaxCol;
 }
 
