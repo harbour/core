@@ -1,3 +1,7 @@
+19990824-17:57 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + Added support for Next Window (K_TAB) and Prev Window (K_SH_TAB)
+
 19990824-17:10 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      include/rddapi.h
