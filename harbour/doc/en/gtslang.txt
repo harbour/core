@@ -1,0 +1,136 @@
+/*
+ * $Id$
+ */
+
+   Marek Paliwoda 
+<paliwoda@inetia.pl>
+
+
+                        Gt slang driver
+                        
+
+A gt slang driver for Harbour (gtsln) is based on a S-Lang library written
+by John E. Davis. It was developed using Slang version 1.41, although prior
+versions of Slang up to 1.38 should also work. It was reported that even
+Slang 1.22 was succesfully used but I've not tested it.
+
+The main OS it is developed to be used on is Linux. Although Slang was
+ported to other OSes, my tests on SCO OpenServer 5.0.2 show that a library
+does not work perfectly on such systems. I've also successfully compiled and
+testd gtsln under DOS but I don't think it makes any sense to use it on that
+system instead of gtdos, due to its limitations and incompatibilities with 
+Clipper (see below).
+
+A gt slang driver is a second driver which can be used on Linux based OSes.
+The first one is a gt driver based on a curses library (gtcrs). Due to the
+fact that curses is a standard library on Unix like systems, gtcrs should 
+be considerd as a primary gt driver for such OSes.
+
+Compiling a gt slang driver ...
+
+The driver should be automaticly compiled when you build Harbour from 
+source, regardless of what gt driver you've chosen by setting HB_GT_LIB.
+Succesfull compilation requires Slang library and Slang header files 
+properly installed on your system.
+
+To build programs (by using a bld.sh script from Harbour sources), which 
+will use a gtsln, you need to :
+    - have a Slang library properly installed
+    - set an environment variable HB_GT_LIB set to gtsln
+    - modify bld.sh by adding -lslang to a link command
+
+Generally you always need to add -lgtsln -lslang to your link libraries to
+build programs which are supposed to use a gt slang driver.
+
+Limitations, incomatibilities with Clipper, errors ...
+
+The driver is rather limited in comparison to other Harbour gt drivers and has
+many incompatibilities with Clipper. Some of those limitations and incompati-
+bilities are caused by an Unix behavior, others are caused by a Slang imple-
+mentation. There are also some caused by a gt layer design. Not to mention
+that there are probably some caused by my lack of knowledge.
+
+Here is a (probably not complete) list of them :
+
+    - a driver allows only 126 combinations of FgBg colors. It means you can
+      use 16 colors for Fg, 8 colors for Bg. 16*8 gives 128 but last two (126 
+      and 127) are reserved by Slang
+
+    - you can't get intensity/blinking background mode working (this is in
+      fact the previous problem, just worded differently)
+
+    - you can't display characters with values below 32 (control characters).
+      It is a very important limitation because you can't use many usefull 
+      chars which you used under Clipper. This is an OS limitation which 
+      Slang also inherits
+
+    - displaying chars above 128 widely depends on terminal posibilities.
+      Because of this on xterm I set all frame chars to a single frame (this
+      means - double and mixed frames are shown as a single frame). You should
+      not expect to see chars above 128 shown properly in all cases.
+
+    - a screen is automaticly cleared on program's startup (you can't inherit
+      it from system) and a cursor is set at 0,0
+
+    - when you run external programs a screen is restored after execution so
+      there is no possibility to interact with screen handling between two 
+      programs
+
+    - you can't expect cursor hiding and cursor style changing to work at
+      all. Although on a textmode Linux console it works, this is a Linux
+      textmode hack only and it is hardcoded. For example on xterm only cur-
+      sor hiding works well.
+
+    - it is not guaranteed that programs which use DispBegin() and DispEnd()
+      will work well in all cases
+
+    - a screen size change does not work at all. There is a big problem on
+      an xterm where you can change a window's size at your request.  Doing
+      this confuses a Harbour program
+
+    - Clipper programs which utilized PC hardware specifications about screen
+      construction (an array of char+attr)  (for example to make quick shadow
+      on a screen) will not work, although this can be easily emulated if
+      required
+
+    - there is currently no support for Tone() function. This is a TODO item
+
+    - keyboard handling is VERY VERY LIMITED. Generally you should not expect
+      ALT+key, CTRL+F<n> and CTRL+<specialkeys> combinations to work at all 
+      although they work on a textmode Linux console. This is a VERY BIG 
+      PROBLEM and at least any solution should be developed to emulate this
+
+    - abort key is CTRL+C not ALT+C on Linux
+    
+    - to get an ESC key you have to press ESC twice. This is an issue related
+      to OS behavior where ESC begins a control sequence
+    
+    - currently there is no mouse support. This is a TODO item
+
+    - OutStd() does not work well. This is caused by a design of a gt layer
+      where writing directly to stdout is done outside Slang, so Slang can't
+      maintain screen changes properly. Also redirecting OutStd() to a file
+      results in writing control chars which were supposed to initialize a 
+      terminal, to that file
+
+Terminfo database ...
+
+Slang gt driver is based on a terminfo database so it is very important to
+have it properly set. Most problems are related to a broken terminfo file.
+I don't have general advice about that. You are supposed to help yourself.
+The only thing you should know is that you must not have sequences for F11
+and F12 function keys set in a terminfo file if you want to use SHFT+F<n>
+and CTRL+F<n> keys (of course they all should be defined there).
+
+Why use gt slang driver ...
+
+Well, personaly I find only two reasons. When Clipper compatibility and 
+current limitations are not a problem, gtsln is a little bit faster than
+gtcrs and my experiences show that sometimes it works a little bit better
+than gtcrs on real terminals (tested on wy60 where gtcrs did not handle the
+keyboard well).
+
+Marek Paliwoda
+
+PS. I want to appologize for any english errors and any technical errors in 
+this text.

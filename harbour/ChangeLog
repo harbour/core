@@ -1,3 +1,11 @@
+2001-01-22 13:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  + doc/en/gtslang.txt
+    + New file provided by Marek Paliwoda <paliwoda@inetia.pl>
+  * source/rtl/gtsln/gtsln.c
+    * Enhancements provided by Marek Paliwoda <paliwoda@inetia.pl>
+  * source/rtl/gtsln/kbsln.c
+    * Enhancements provided by Marek Paliwoda <paliwoda@inetia.pl>
+
 2001-01-22 00:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
    * source/pp/ppcore.c

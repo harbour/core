@@ -184,10 +184,7 @@ static void hb_gt_Init_KeyTranslat()
             keyname[ 1 ] = ch;
             keyseq = SLtt_tgetstr( keyname );
             if( ( keyseq != NULL ) && ( keyseq[ 0 ] != 0 ) )
-            {
-               if( ( keyseq != NULL ) && ( keyseq[ 0 ] != 0 ) )
                   SLkp_define_keysym( keyseq, SL_KEY_F( keynum ) );
-            }
             keynum++;
          }
       }
