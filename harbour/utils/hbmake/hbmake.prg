@@ -3595,7 +3595,6 @@ FUNCTION ProcessParameters( cParams )
 
         IF At( "-ELX", cParams ) > 0
 
-            lExtended := .T.
             cParams   := Strtran( cParams, "-ELX", "" )
 
         ELSE
@@ -3604,6 +3603,7 @@ FUNCTION ProcessParameters( cParams )
 
         ENDIF
 
+        lExtended := .T.
         lLibrary  := .T.
         lEditMode := .T.
 
