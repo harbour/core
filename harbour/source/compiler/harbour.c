@@ -78,46 +78,48 @@ static void hb_compPrepareOptimize( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
 
 /* global variables */
-FILES       hb_comp_files;
-FUNCTIONS   hb_comp_functions;
-FUNCTIONS   hb_comp_funcalls;
-SYMBOLS     hb_comp_symbols;
+FILES         hb_comp_files;
+FUNCTIONS     hb_comp_functions;
+FUNCTIONS     hb_comp_funcalls;
+SYMBOLS       hb_comp_symbols;
+PCOMDECLARED  hb_comp_pFirstDeclared;
+PCOMDECLARED  hb_comp_pLastDeclared;
 
-int         hb_comp_iLine;                             /* currently processed line number */
-PFUNCTION   hb_comp_pInitFunc;
-PHB_FNAME   hb_comp_pFileName = NULL;
+int           hb_comp_iLine;                             /* currently processed line number */
+PFUNCTION     hb_comp_pInitFunc;
+PHB_FNAME     hb_comp_pFileName = NULL;
 
-BOOL        hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
-FILE *      hb_comp_yyppo = NULL;                      /* output .ppo file */
-BOOL        hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
-BOOL        hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
-BOOL        hb_comp_bQuiet = FALSE;                    /* quiet mode */
-BOOL        hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
-int         hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL        hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
-BOOL        hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL        hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL        hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-char        hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
-int         hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE; /* C code generation should be verbose (use comments) or not */
-int         hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-PATHNAMES * hb_comp_pIncludePath = NULL;
-int         hb_comp_iFunctionCnt;
-int         hb_comp_iErrorCount;
-char        hb_comp_cVarType;                          /* current declared variable type */
-BOOL        hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
-ULONG       hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
-int         hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
-int         hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
-PHB_FNAME   hb_comp_pOutPath = NULL;
-BOOL        hb_comp_bCredits = FALSE;                  /* print credits */
-BOOL        hb_comp_bBuildInfo = FALSE;                /* print build info */
-BOOL        hb_comp_bLogo = TRUE;                      /* print logo */
-BOOL        hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
-int         hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
-int         hb_comp_iJumpOptimize = 1;
-BOOL        hb_comp_EOL;
-char *      hb_comp_szDeclaredFun = NULL;
+BOOL          hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
+FILE *        hb_comp_yyppo = NULL;                      /* output .ppo file */
+BOOL          hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
+BOOL          hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL          hb_comp_bQuiet = FALSE;                    /* quiet mode */
+BOOL          hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+int           hb_comp_iWarnings = 0;                     /* enable parse warnings */
+BOOL          hb_comp_bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
+BOOL          hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL          hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+BOOL          hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
+char          hb_comp_szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+int           hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE; /* C code generation should be verbose (use comments) or not */
+int           hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+PATHNAMES *   hb_comp_pIncludePath = NULL;
+int           hb_comp_iFunctionCnt;
+int           hb_comp_iErrorCount;
+char          hb_comp_cVarType;                          /* current declared variable type */
+BOOL          hb_comp_bDontGenLineNum = FALSE;           /* suppress line number generation */
+ULONG         hb_comp_ulLastLinePos;                     /* position of last opcode with line number */
+int           hb_comp_iStaticCnt;                        /* number of defined statics variables on the PRG */
+int           hb_comp_iVarScope;                         /* holds the scope for next variables to be defined */
+PHB_FNAME     hb_comp_pOutPath = NULL;
+BOOL          hb_comp_bCredits = FALSE;                  /* print credits */
+BOOL          hb_comp_bBuildInfo = FALSE;                /* print build info */
+BOOL          hb_comp_bLogo = TRUE;                      /* print logo */
+BOOL          hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
+int           hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
+int           hb_comp_iJumpOptimize = 1;
+BOOL          hb_comp_EOL;
+char *        hb_comp_szDeclaredFun = NULL;
 
 typedef struct __EXTERN
 {
@@ -461,19 +463,19 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
 
       {
          /* Find the Declared Function owner of this parameter. */
-         PCOMSYMBOL pSym = hb_compSymbolFind( hb_comp_szDeclaredFun, NULL );
+         PCOMDECLARED pDeclared = hb_compDeclaredFind( hb_comp_szDeclaredFun );
 
-         if ( pSym )
+         if ( pDeclared )
          {
-            pSym->iParamCount++;
+            pDeclared->iParamCount++;
 
-            if ( pSym->cParamTypes )
-               pSym->cParamTypes = ( BYTE * ) hb_xrealloc( pSym->cParamTypes, pSym->iParamCount );
+            if ( pDeclared->cParamTypes )
+               pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
             else
-               pSym->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+               pDeclared->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
 
             /* Store declared type of this parameter into the parameters type list. */
-            pSym->cParamTypes[ pSym->iParamCount - 1 ] = hb_comp_cVarType;
+            pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = hb_comp_cVarType;
 
             return;
          }
@@ -692,6 +694,39 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
    return bValid;
 }
 
+PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
+{
+   PCOMDECLARED pDeclared;
+
+   if ( hb_comp_iWarnings < 3 )
+      return NULL;
+
+   if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) )
+   {
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_DUP_DECLARATION, szDeclaredName, NULL );
+      return pDeclared;
+   }
+
+   pDeclared = ( PCOMDECLARED ) hb_xgrab( sizeof( COMDECLARED ) );
+
+   pDeclared->szName = szDeclaredName;
+   pDeclared->cType = ' '; /* Not known yet */
+   pDeclared->cParamTypes = NULL;
+   pDeclared->iParamCount = 0;
+   pDeclared->pNext = NULL;
+
+
+   /* First Declare */
+   if ( hb_comp_pFirstDeclared == NULL )
+      hb_comp_pFirstDeclared = pDeclared;
+   else
+      hb_comp_pLastDeclared->pNext = pDeclared;
+
+   hb_comp_pLastDeclared = pDeclared;
+
+   return pDeclared;
+}
+
 PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym;
@@ -707,8 +742,6 @@ PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
       pSym->szName = szSymbolName;
       pSym->cScope = 0;
       pSym->cType = hb_comp_cVarType;
-      pSym->cParamTypes = NULL;
-      pSym->iParamCount = 0;
       pSym->pNext = NULL;
 
       if( ! hb_comp_symbols.iCount )
@@ -759,6 +792,8 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    pFunc->iJumps         = 0;
    pFunc->pNOOPs         = NULL;
    pFunc->pJumps         = NULL;
+   pFunc->pStack         = NULL;
+   pFunc->iStackSize     = 0;
    pFunc->iStackIndex    = 0;
 
    return pFunc;
@@ -1291,6 +1326,25 @@ static int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
  * and sets its position in the symbol table.
  * NOTE: symbol's position number starts from 0
  */
+PCOMDECLARED hb_compDeclaredFind( char * szDeclaredName )
+{
+   PCOMDECLARED pSym = hb_comp_pFirstDeclared;
+
+   while( pSym )
+   {
+      if( ! strcmp( pSym->szName, szDeclaredName ) )
+         return pSym;
+      else
+      {
+         if( pSym->pNext )
+            pSym = pSym->pNext;
+         else
+            return NULL;
+      }
+   }
+   return NULL;
+}
+
 PCOMSYMBOL hb_compSymbolFind( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
@@ -2466,8 +2520,14 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
             (pFunc->bFlags & FUN_PROCEDURE) == 0 )
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                         pFunc->szName, NULL );
-      }
 
+         /* Compile Time Strong Type Checking is not needed any more. */
+         if ( pFunc->pStack )
+            hb_xfree( ( void * ) pFunc->pStack );
+
+         pFunc->iStackSize = 0;
+         pFunc->iStackIndex = 0;
+      }
    }
 }
 
@@ -2966,6 +3026,13 @@ void hb_compCodeBlockEnd( void )
    /* Release the Jumps array. */
    if( pCodeblock->pJumps )
       hb_xfree( ( void * ) pCodeblock->pJumps );
+
+   /* Compile Time Strong Type Checking Stack is not needed any more. */
+   if ( pCodeblock->pStack )
+      hb_xfree( ( void * ) pCodeblock->pStack );
+
+   pCodeblock->iStackSize = 0;
+   pCodeblock->iStackIndex = 0;
 
    hb_xfree( ( void * ) pCodeblock );
 }

@@ -11,17 +11,20 @@ DECLARE FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION cOtherFunc( ) AS CHAR
 
+DECLARE FUNCTION cOtherFunc( ) AS CHAR
+
 DECLARE FUNCTION seconds() AS NUM
 
 DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 Function Main()
-Local n As Numeric
+  Local n As Numeric, lVar AS LOGICAL
 
-    n := 2
-    n := 'a'
-    n := seconds() + 2
-    n := int( seconds() + 2 )
+  n := IIF( lVar, 'A', 3 )
+  n := 2
+  n := 'a'
+  n := seconds() + 2
+  n := int( seconds() + 2 )
 
 Return( NIL )
 

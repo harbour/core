@@ -260,7 +260,10 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IdentName { hb_compSymbolAdd( $3, NULL ); hb_comp_szDeclaredFun = $3 ; } Params AsType Crlf { hb_comp_symbols.pLast->cType = hb_comp_cVarType; hb_comp_szDeclaredFun = NULL; }
+           | FunScope DECLARE_FUN IdentName { hb_compDeclaredAdd( $3 ); hb_comp_szDeclaredFun = $3 ; } Params AsType Crlf { if( hb_comp_pLastDeclared )
+                                                                                                                              hb_comp_pLastDeclared->cType = hb_comp_cVarType;
+                                                                                                                            hb_comp_szDeclaredFun = NULL;
+                                                                                                                            hb_comp_cVarType = ' '; }
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }

@@ -117,8 +117,9 @@ typedef struct __FUNC
    ULONG  * pJumps;                 /* pointer to the Jumps array */
    ULONG  iNOOPs;                   /* NOOPs Counter */
    ULONG  iJumps;                   /* Jumps Counter */
-   BYTE   pStack[512];              /* Compile Time Stack */
-   SHORT  iStackIndex;              /* Compile Time Stack Index */
+   BYTE   * pStack;                 /* Compile Time Stack */
+   USHORT  iStackSize;              /* Compile Time Stack Index */
+   int    iStackIndex;              /* Compile Time Stack Index */
    struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;           /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
@@ -137,10 +138,18 @@ typedef struct _COMSYMBOL
    char * szName;               /* the name of the symbol */
    char   cScope;               /* the scope of the symbol */
    char   cType;
-   BYTE * cParamTypes;
-   int    iParamCount;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
+
+/* Declared Function support structure */
+typedef struct _COMDECLARED
+{
+   char * szName;               /* the name of the symbol */
+   char   cType;
+   BYTE * cParamTypes;
+   USHORT iParamCount;
+   struct _COMDECLARED * pNext;   /* pointer to the next declared function */
+} COMDECLARED, * PCOMDECLARED;
 
 /* symbol table support structures */
 typedef struct
@@ -194,6 +203,9 @@ extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT * );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 extern PCOMSYMBOL hb_compSymbolFind( char *, USHORT * ); /* returns a symbol pointer from the symbol table */
 extern PCOMSYMBOL hb_compSymbolGetPos( USHORT );   /* returns a symbol based on its index on the symbol table */
+
+extern PCOMDECLARED hb_compDeclaredAdd( char * );
+extern PCOMDECLARED hb_compDeclaredFind( char * );
 
 extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 
@@ -306,56 +318,58 @@ extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 
 /* variable used by compiler
  */
-extern int         hb_comp_iLine;
-extern FUNCTIONS   hb_comp_functions;
-extern FUNCTIONS   hb_comp_funcalls;
-extern SYMBOLS     hb_comp_symbols;
-extern PATHNAMES * hb_comp_pIncludePath;
-extern PFUNCTION   hb_comp_pInitFunc;
-extern PHB_FNAME   hb_comp_pFileName;
-extern BOOL        hb_comp_bPPO;
-extern FILE *      hb_comp_yyppo;
-extern BOOL        hb_comp_bStartProc;
-extern BOOL        hb_comp_bLineNumbers;
-extern BOOL        hb_comp_bQuiet;
-extern BOOL        hb_comp_bShortCuts;
-extern int         hb_comp_iWarnings;
-extern BOOL        hb_comp_bAnyWarning;
-extern BOOL        hb_comp_bAutoMemvarAssume;
-extern BOOL        hb_comp_bForceMemvars;
-extern BOOL        hb_comp_bDebugInfo;
-extern char        hb_comp_szPrefix[ 20 ];
-extern int         hb_comp_iGenCOutput;
-extern int         hb_comp_iExitLevel;
-extern int         hb_comp_iFunctionCnt;
-extern char        hb_comp_cVarType;
-extern int         hb_comp_iVarScope;
-extern BOOL        hb_comp_bDontGenLineNum;
-extern FILES       hb_comp_files;
-extern int         hb_comp_iStaticCnt;
-extern int         hb_comp_iErrorCount;
+extern int           hb_comp_iLine;
+extern FUNCTIONS     hb_comp_functions;
+extern FUNCTIONS     hb_comp_funcalls;
+extern SYMBOLS       hb_comp_symbols;
+extern PCOMDECLARED  hb_comp_pFirstDeclared;
+extern PCOMDECLARED  hb_comp_pLastDeclared;
+extern PATHNAMES *   hb_comp_pIncludePath;
+extern PFUNCTION     hb_comp_pInitFunc;
+extern PHB_FNAME     hb_comp_pFileName;
+extern BOOL          hb_comp_bPPO;
+extern FILE *        hb_comp_yyppo;
+extern BOOL          hb_comp_bStartProc;
+extern BOOL          hb_comp_bLineNumbers;
+extern BOOL          hb_comp_bQuiet;
+extern BOOL          hb_comp_bShortCuts;
+extern int           hb_comp_iWarnings;
+extern BOOL          hb_comp_bAnyWarning;
+extern BOOL          hb_comp_bAutoMemvarAssume;
+extern BOOL          hb_comp_bForceMemvars;
+extern BOOL          hb_comp_bDebugInfo;
+extern char          hb_comp_szPrefix[ 20 ];
+extern int           hb_comp_iGenCOutput;
+extern int           hb_comp_iExitLevel;
+extern int           hb_comp_iFunctionCnt;
+extern char          hb_comp_cVarType;
+extern int           hb_comp_iVarScope;
+extern BOOL          hb_comp_bDontGenLineNum;
+extern FILES         hb_comp_files;
+extern int           hb_comp_iStaticCnt;
+extern int           hb_comp_iErrorCount;
 
-extern char *      hb_comp_szAnnounce;
+extern char *        hb_comp_szAnnounce;
 
-extern PHB_FNAME   hb_comp_pOutPath;
-extern BOOL        hb_comp_bCredits;
-extern BOOL        hb_comp_bBuildInfo;
-extern BOOL        hb_comp_bLogo;
-extern BOOL        hb_comp_bSyntaxCheckOnly;
-extern int         hb_comp_iLanguage;
-extern int         hb_comp_iJumpOptimize;
+extern PHB_FNAME     hb_comp_pOutPath;
+extern BOOL          hb_comp_bCredits;
+extern BOOL          hb_comp_bBuildInfo;
+extern BOOL          hb_comp_bLogo;
+extern BOOL          hb_comp_bSyntaxCheckOnly;
+extern int           hb_comp_iLanguage;
+extern int           hb_comp_iJumpOptimize;
 
-extern USHORT      hb_comp_wSeqCounter;
-extern USHORT      hb_comp_wForCounter;
-extern USHORT      hb_comp_wIfCounter;
-extern USHORT      hb_comp_wWhileCounter;
-extern USHORT      hb_comp_wCaseCounter;
+extern USHORT        hb_comp_wSeqCounter;
+extern USHORT        hb_comp_wForCounter;
+extern USHORT        hb_comp_wIfCounter;
+extern USHORT        hb_comp_wWhileCounter;
+extern USHORT        hb_comp_wCaseCounter;
 
-extern BOOL        hb_comp_EOL;
-extern char *      hb_comp_szDeclaredFun;
+extern BOOL          hb_comp_EOL;
+extern char *        hb_comp_szDeclaredFun;
 
-extern char *      hb_comp_szErrors[];
-extern char *      hb_comp_szWarnings[];
+extern char *        hb_comp_szErrors[];
+extern char *        hb_comp_szWarnings[];
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

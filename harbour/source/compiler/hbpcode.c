@@ -171,8 +171,8 @@ static BYTE s_pcode_len[] = {
    1         /* HB_P_ONE,                  */
 };
 
-static BYTE * cParamTypes = NULL;
-static int iParamCount = -1;
+static BYTE * hb_comp_cParamTypes = NULL;
+static int    hb_comp_iParamCount = -1;
 
 void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
@@ -214,11 +214,18 @@ void hb_compStrongType( int iSize )
    PFUNCTION pFunc = hb_comp_functions.pLast, pTmp;
    PVAR pVar;
    PCOMSYMBOL pSym;
+   PCOMDECLARED pDeclared = NULL;
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar;
    int iVar;
    char szType1[32], szType2[32];
    BYTE bLast1, bLast2;
+
+   /* Make sure we have enough stack space. */
+   if ( pFunc->pStack == NULL )
+      pFunc->pStack = ( BYTE * ) hb_xgrab( pFunc->iStackSize += 16 );
+   else if ( pFunc->iStackSize - pFunc->iStackIndex < 4 )
+      pFunc->pStack = ( BYTE * ) hb_xrealloc( pFunc->pStack, pFunc->iStackSize += 16 );
 
    /* TODO Split under conitions for the different matching possible iSize. */
 
@@ -236,10 +243,13 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolFind( pFunc->szName, NULL );
 
+       if ( pSym && pSym->szName )
+          pDeclared = hb_compDeclaredFind( pSym->szName );
+
        /* The function was declared, but return value doesn't match the declaration */
-       if ( pSym && pSym->cType != ' ' && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+       if ( pDeclared && pDeclared->cType != ' ' && pDeclared->cType != pFunc->pStack[ pFunc->iStackIndex ] )
        {
-          sprintf( szType1, "%c", pSym->cType );
+          sprintf( szType1, "%c", pDeclared->cType );
           sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_RETURN_TYPE, szType2, szType1 );
@@ -250,19 +260,19 @@ void hb_compStrongType( int iSize )
      case HB_P_FUNCTIONSHORT :
        wVar = pFunc->pCode[ ulPos + 1 ];
 
-       if ( iParamCount > -1 )
+       if ( hb_comp_iParamCount > -1 )
        {
-         if( iParamCount == wVar )
+         if( hb_comp_iParamCount == wVar )
          {
             BYTE iOffset = 0;
 
-            while ( iParamCount-- > 0 )
+            while ( hb_comp_iParamCount-- > 0 )
             {
                iOffset++;
-               if ( pFunc->iStackIndex - iOffset && cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
+               if ( pFunc->iStackIndex - iOffset && hb_comp_cParamTypes[ hb_comp_iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
                {
-                  sprintf( szType1, "%i", iParamCount + 1 );
-                  sprintf( szType2, "%c", cParamTypes[ iParamCount ] );
+                  sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
+                  sprintf( szType2, "%c", hb_comp_cParamTypes[ hb_comp_iParamCount ] );
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
                }
             }
@@ -270,7 +280,7 @@ void hb_compStrongType( int iSize )
          else
          {
             sprintf( szType1, "%i", wVar );
-            sprintf( szType2, "%i", iParamCount );
+            sprintf( szType2, "%i", hb_comp_iParamCount );
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
          }
        }
@@ -282,8 +292,8 @@ void hb_compStrongType( int iSize )
        pFunc->iStackIndex--;
 
        /* Resetting */
-       cParamTypes = NULL;
-       iParamCount = -1;
+       hb_comp_cParamTypes = NULL;
+       hb_comp_iParamCount = -1;
 
        break;
 
@@ -291,19 +301,19 @@ void hb_compStrongType( int iSize )
      case HB_P_FUNCTION :
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
 
-       if ( iParamCount > -1 )
+       if ( hb_comp_iParamCount > -1 )
        {
-         if( iParamCount == wVar )
+         if( hb_comp_iParamCount == wVar )
          {
             BYTE iOffset = 0;
 
-            while ( iParamCount-- > 0 )
+            while ( hb_comp_iParamCount-- > 0 )
             {
                iOffset++;
-               if ( pFunc->iStackIndex - iOffset && cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
+               if ( pFunc->iStackIndex - iOffset && hb_comp_cParamTypes[ hb_comp_iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
                {
-                  sprintf( szType1, "%i", iParamCount + 1 );
-                  sprintf( szType2, "%c", cParamTypes[ iParamCount ] );
+                  sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
+                  sprintf( szType2, "%c", hb_comp_cParamTypes[ hb_comp_iParamCount ] );
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
                }
             }
@@ -311,7 +321,7 @@ void hb_compStrongType( int iSize )
          else
          {
             sprintf( szType1, "%i", wVar );
-            sprintf( szType2, "%i", iParamCount );
+            sprintf( szType2, "%i", hb_comp_iParamCount );
             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
          }
        }
@@ -323,8 +333,8 @@ void hb_compStrongType( int iSize )
        pFunc->iStackIndex--;
 
        /* Resetting */
-       cParamTypes = NULL;
-       iParamCount = -1;
+       hb_comp_cParamTypes = NULL;
+       hb_comp_iParamCount = -1;
        break;
 
      case HB_P_DEC :
@@ -576,13 +586,16 @@ void hb_compStrongType( int iSize )
      case HB_P_MPUSHSYM :
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-       if ( pSym && pSym->cType )
+       if ( pSym && pSym->szName )
+          pDeclared = hb_compDeclaredFind( pSym->szName );
+
+       if ( pDeclared )
        {
-          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
 
           /* Storing, will be checked by FUNCTION* */
-          cParamTypes = pSym->cParamTypes;
-          iParamCount = pSym->iParamCount;
+          hb_comp_cParamTypes = pDeclared->cParamTypes;
+          hb_comp_iParamCount = pDeclared->iParamCount;
        }
        else
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
@@ -592,13 +605,16 @@ void hb_compStrongType( int iSize )
      case HB_P_PUSHSYMNEAR :
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
-       if ( pSym && pSym->cType )
+       if ( pSym && pSym->szName )
+          pDeclared = hb_compDeclaredFind( pSym->szName );
+
+       if ( pDeclared )
        {
-          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
 
           /* Storing, will be checked by FUNCTION* */
-          cParamTypes = pSym->cParamTypes;
-          iParamCount = pSym->iParamCount;
+          hb_comp_cParamTypes = pDeclared->cParamTypes;
+          hb_comp_iParamCount = pDeclared->iParamCount;
        }
        else
           pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';

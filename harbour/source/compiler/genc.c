@@ -57,6 +57,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc = hb_comp_functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+   PCOMDECLARED pDeclared;
    FILE * yyc; /* file handle for C output */
 
    if( ! pFileName->szExtension )
@@ -232,6 +233,14 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       hb_comp_funcalls.pFirst = pFunc->pNext;
       hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pFunc = hb_comp_funcalls.pFirst;
+   }
+
+   pDeclared = hb_comp_pFirstDeclared;
+   while( pDeclared )
+   {
+      hb_comp_pFirstDeclared = pDeclared->pNext;
+      hb_xfree( ( void * ) pDeclared );
+      pDeclared = hb_comp_pFirstDeclared;
    }
 
    pSym = hb_comp_symbols.pFirst;

@@ -1,3 +1,40 @@
+20000502-23:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     - Removed members cParamTypes and iParamCount from COMSYMBOL
+     + Added member USHORT iStackSize to FUNCTION structure
+     * Modified member pStack of FUNCTION to not pre allocate any memory.
+     + Added new structure COMDECLARED
+     + Added: extern PCOMDECLARED hb_compDeclaredAdd( char * ) and extern PCOMDECLARED hb_compDeclaredFind( char * );
+     + Adede: extern PCOMDECLARED  hb_comp_pFirstDeclared and extern PCOMDECLARED  hb_comp_pLastDeclared
+
+   * include/hberrors.h
+     + Added:
+        #define HB_COMP_DUP_DECLARATION                 17
+        #define HB_COMP_DECLARATION_CONFLICT            18
+
+   * source/compiler/genc.c
+     * Modified hb_compGenCCode() to free the Declared Function linked list.
+
+   * source/compiler/harbour.c
+     + Added: PCOMDECLARED hb_compDeclaredAdd( char * ) and PCOMDECLARED hb_compDeclaredFind( char * );
+     + Adede: PCOMDECLARED  hb_comp_pFirstDeclared and PCOMDECLARED  hb_comp_pLastDeclared
+
+   * source/compiler/harbour.y
+     * Modified parsing of DECLARE FUNCTION to use new PCOMDECLARED rather than PCOMSYMBOL
+
+   * source/compiler/hbgenerr.c
+     + Added:
+       "3Duplicate Declaration of Function %s"
+       "3Function \'%s\' conflicting with its declaration"
+
+   * source/compiler/hbpcode.c
+     * Modifief hb_compStrongType() to utilize PCOMDECLARED rather than PCOMSYMBOL
+     * Modifief hb_compStrongType() to increase the pFunc->pStack as needed.
+
+   * tests/testwarn.prg
+     + Added code to demonstrate more warnings.
+
 20000503-01:13 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/hbgenerr.c
