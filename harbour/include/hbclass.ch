@@ -65,17 +65,6 @@
  *
  */
 
-DECLARE TClass ;
-        New( cName AS String, OPTIONAL SuperParams ) AS CLASS TClass ;
-        Create() AS Object;
-        Instance() AS Object ;
-        AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric );
-        AddMultiClsData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
-        AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
-        AddMethod( cName AS String, @MethodName(), nScope AS Numeric );
-        AddInLine( cName AS String, bBlock AS CodeBlock, nScope AS Numeric );
-        AddVirtual( cName AS String )
-
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_
 
@@ -107,6 +96,17 @@ DECLARE TClass ;
 /* #define HB_CLS_NOTOBJECT  */ /* Should be included in some compatibility include files as needed */
 /* #define HB_CLS_NOAUTOINIT */ /* Idem */
 /* #define HB_CLS_ALLOWCLASS */ /* Work in progress, don't define it now */
+
+DECLARE TClass ;
+        New( cName AS String, OPTIONAL SuperParams ) AS CLASS TClass ;
+        Create() AS Object;
+        Instance() AS Object ;
+        AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric );
+        AddMultiClsData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
+        AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String );
+        AddMethod( cName AS String, @MethodName(), nScope AS Numeric );
+        AddInLine( cName AS String, bBlock AS CodeBlock, nScope AS Numeric );
+        AddVirtual( cName AS String )
 
 #ifdef HB_CLS_NOTOBJECT
  #define __HB_CLS_PAR  __CLS_PAR00
@@ -152,8 +152,10 @@ DECLARE TClass ;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := IIF(<.metaClass.>, <(metaClass)> ,TClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
-     #undef _CLASS_NAME_ ;;
+     #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
+     #undef  _CLASS_MODE_ ;;
+     #define _CLASS_MODE_ _CLASS_DECLARATION_ ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
      [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
@@ -170,8 +172,10 @@ DECLARE TClass ;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := IIF(<.metaClass.>,<(metaClass)>,TClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
-     #undef _CLASS_NAME_ ;;
+     #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
+     #undef  _CLASS_MODE_ ;;
+     #define _CLASS_MODE_ _CLASS_DECLARATION_ ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<MethodName>() ;
      [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
@@ -312,11 +316,11 @@ DECLARE TClass ;
 
 #xcommand CONSTRUCTOR New( [<params,...>] ) => METHOD New( [<params>] ) CONSTRUCTOR
 
-#xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+#xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [_CLASS_DECLARATION_] => ;
    _HB_MEMBER <MethodName>() [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;
    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) )
 
-#xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] [ <ctor: CONSTRUCTOR> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [ AS <type> ] => ;
+#xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] [ <ctor: CONSTRUCTOR> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [ AS <type> ] [_CLASS_DECLARATION_] => ;
    _HB_MEMBER <MethodName>([<params>]) [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;
    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) )
 
@@ -467,12 +471,16 @@ DECLARE TClass ;
                        s_oClass:Create(MetaClass) ;;
                        MetaClass:InitClass();;
                       endif ;;
-                      return s_oClass:Instance() AS CLASS _CLASS_NAME_
+                      return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
+                      #undef  _CLASS_MODE_ ;;
+                      #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
 #else
 #xcommand ENDCLASS => ;;
                       s_oClass:Create() ;;
                       endif ;;
-                      return s_oClass:Instance() AS CLASS _CLASS_NAME_
+                      return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
+                      #undef  _CLASS_MODE_ ;;
+                      #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
 #endif
 
 #xtranslate :Super( <SuperClass> ) : => :<SuperClass>:
@@ -481,6 +489,16 @@ DECLARE TClass ;
 
 
 #ifndef HB_SHORTNAMES
+
+#xcommand METHOD <MethodName>                   => METHOD <MethodName>()             _CLASS_MODE_
+#xcommand METHOD <MethodName>( [<params,...>] ) => METHOD <MethodName>( [<params>] ) _CLASS_MODE_
+
+#xcommand METHOD <MethodName>                   _CLASS_IMPLEMENTATION_ => METHOD <MethodName>()             CLASS _CLASS_NAME_
+#xcommand METHOD <MethodName>( [<params,...>] ) _CLASS_IMPLEMENTATION_ => METHOD <MethodName>( [<params>] ) CLASS _CLASS_NAME_
+
+#xcommand METHOD <MethodName> CLASS <ClassName> => ;
+          static function <ClassName>_<MethodName>() ;;
+          local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>_<MethodName>( [<params>] ) ;;

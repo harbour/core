@@ -1,3 +1,12 @@
+2001-05-04 17:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+   * contrib/dot/rp_run.ch
+     ! Few corrections to Pre Processor, and Interpreter.
+
+   * include/hbclass.ch
+     + Added support for METHOD implementations without requiring the CLASS Clause.
+     + Added support for METHOD implementations without requiring the "()" if no parameters needed.
+
 2001-05-03 17:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Corrected minor bug with test for valid string prefixs
