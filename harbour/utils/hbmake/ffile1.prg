@@ -362,6 +362,10 @@ METHOD goBottom() CLASS FileBase
    Returns: Self
    Purpose: To close the file
 */
+
+/* Should not any more exist here ... Not sure so I just keep it remed */
+/* JFL in all case it is not anymore declared from the Class */
+/*
 METHOD FCLOSE() CLASS FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
@@ -373,7 +377,7 @@ METHOD FCLOSE() CLASS FileBase
    ENDIF
 
    RETURN ( self )
-
+*/
    /* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
@@ -409,6 +413,13 @@ METHOD WRITE( cChar ) CLASS FileBase
             in a forward direction.  The default value is a logical true
             (.T.) value.
 */
+
+
+/* Should not any more exist here ... Not sure so I just keep it remed */
+/* JFL in all case it is not anymore declared from the Class */
+/*
+
+/* 
 METHOD Buffget( lForward ) CLASS FileBase
 
    LOCAL cBuffer       // as char
@@ -456,7 +467,7 @@ METHOD Buffget( lForward ) CLASS FileBase
    ENDIF
 
    RETURN ( nLocation )
-
+*/
    /* Method:  appendLine( <cLine )
    Params:  <cLine>         Character line to append
    Returns: Self
