@@ -1,3 +1,9 @@
+19990615-21:00 CET Jose Lalin / Eddie Runia
+  + source/rtl/natmsg/msgbas.c
+  * source/rtl/msgxxx.c
+  * source/compiler/harbour.y
+    VarId ArrayIndex ':' and ObjectData ArrayIndex ':' syntax was incorrect
+
 19990615-12:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/makefile.dos
     - Integrated preprocessor into compiler

@@ -611,20 +611,20 @@ MethParams : /* empty */                       { $$ = 0; }
            ;
 
 ObjectData : IdSend IDENTIFIER                     { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | VarId ArrayIndex ':' IDENTIFIER       { $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+           | VarId ArrayIndex ':' IDENTIFIER       { GenPCode1( _ARRAYAT ); $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
            | ObjFunCall IDENTIFIER                 { $$ = $2; _lMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectMethod ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectData   ':' IDENTIFIER           { $$ = $3; _lMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
-           | ObjectData ArrayIndex ':' IDENTIFIER  { $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
+           | ObjectData ArrayIndex ':' IDENTIFIER  { GenPCode1( _ARRAYAT ); $$ = $4; _lMessageFix = functions.pLast->lPCodePos; Message( $4 ); Function( 0 ); }
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
-           | VarId ArrayIndex ':' MethCall         { Function( $4 ); }
+           | VarId ArrayIndex ':' MethCall { Function( $4 ); GenPCode1( _ARRAYAT ); }
            | ObjFunCall MethCall                   { Function( $2 ); }
            | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
-           | ObjectData ArrayIndex ':' MethCall    { Function( $4 ); }
+           | ObjectData ArrayIndex ':' MethCall { Function( $4 ); { GenPCode1( _ARRAYAT ); } }
            | ObjectMethod ':' MethCall             { Function( $3 ); }
            ;
 

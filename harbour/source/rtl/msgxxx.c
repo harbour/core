@@ -6,7 +6,9 @@
 #define HB_LANGUAGE UK
 #endif
 
-#if (HB_LANGUAGE == DUT)
+#if (HB_LANGUAGE == BAS)
+#include "natmsg/msgbas.c"
+#elif (HB_LANGUAGE == DUT)
 #include "natmsg/msgdut.c"
 #elif (HB_LANGUAGE == GAL)
 #include "natmsg/msggal.c"
