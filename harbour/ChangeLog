@@ -1,3 +1,24 @@
+19990915-03:40 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/dir.c
+    * Now Clipper compatible results are returned.
+      definately with MSVC - most likely with compilers running under MS OS.
+      since I'm not familliar with any quirks with those compilers I made
+      almost no changes to compiler specific code.  I suspect though that
+      there may be problems when passing a full path with wildcard to
+      Directory() - please test.
+    + You can now get the 8.3 filename (msvc again) for true Clipper
+      compatibible return results by passing a logical as the new 3rd
+      parameter. The default is .f. which gives full long filenames
+    + Add a number of static funcs like HarbourMaskToAttributes() to
+      convert "DHS" to something the os understands.
+    ! Where this all falls apart is for OS_UNIX_COMPATIBLE.
+      I don't know what to do about translating Hidden or System files.
+      and not too sure how to handle Readonly.
+      Nobody commented when I posted the code - so here is what I came up
+      with.
+  * tests/working/dirtest.prg
+    + added 3rd parameter to indicate 'want 8.3 filenames'
+  
 19990915-03:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/do.c
     - Previous fix undone, since it was causing other problems.
