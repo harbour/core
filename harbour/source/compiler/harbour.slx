@@ -167,25 +167,19 @@ LANGUAGE_KEY_WORDS_ARE {
 #define _AS_        2007
 #define _ARRAY_     2008
 #define _BLOCK_     2009
-#define _CHARACTER_ 2010
-#define _STRING_    2011
-#define _CLASS_     2012
-#define _STRUCTURE_ 2013
-#define _DATE_      2014
-#define _LOGICAL_   2015
-#define _BOOL_      2016
-#define _NUMERIC_   2017
-#define _NUM_       2018
-#define _OBJECT_    2019
-#define _OBJ_       2020
-#define _VARIANT_   2021
-#define _VAR_       2022
-#define _FIELD_     2023
-#define _FIELD      2024
-#define _CASE_      2025
-#define _WHILE_     2026
-#define _WITH_      2027
-#define _SELF_      2028
+#define _STRING_    2010
+#define _CLASS_     2011
+#define _DATE_      2012
+#define _LOGICAL_   2013
+#define _NUMERIC_   2014
+#define _OBJECT_    2015
+#define _VARIANT_   2016
+#define _FIELD_     2017
+#define _FIELD      2018
+#define _CASE_      2019
+#define _WHILE_     2020
+#define _WITH_      2021
+#define _SELF_      2022
 
 /* Words. */
 LANGUAGE_WORDS_ARE {
@@ -209,23 +203,14 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "AS"        ) AS_TOKEN( _AS_        ),
                      LEX_WORD( "OF"        ) AS_TOKEN( _OF_        ),
                      LEX_WORD( "ARRAY"     ) AS_TOKEN( _ARRAY_     ),
-                     LEX_WORD( "BLOCK"     ) AS_TOKEN( _BLOCK_     ),
-                     LEX_WORD( "CHARACTER" ) AS_TOKEN( _CHARACTER_ ),
-              /*     LEX_WORD( "CHAR"      ) AS_TOKEN( _CHARACTER_ ),  */
+                     LEX_WORD( "CODEBLOCK" ) AS_TOKEN( _BLOCK_     ),
                      LEX_WORD( "STRING"    ) AS_TOKEN( _STRING_    ),
                      LEX_WORD( "CLASS"     ) AS_TOKEN( _CLASS_     ),
-                     LEX_WORD( "STRUCTURE" ) AS_TOKEN( _STRUCTURE_ ),
-              /*     LEX_WORD( "STRU"      ) AS_TOKEN( _STRUCTURE_ ),  */
                      LEX_WORD( "DATE"      ) AS_TOKEN( _DATE_      ),
                      LEX_WORD( "LOGICAL"   ) AS_TOKEN( _LOGICAL_   ),
-                     LEX_WORD( "BOOLEAN"   ) AS_TOKEN( _LOGICAL_   ),
-              /*     LEX_WORD( "BOOL"      ) AS_TOKEN( _BOOL_      ),  */
                      LEX_WORD( "NUMERIC"   ) AS_TOKEN( _NUMERIC_   ),
-                     LEX_WORD( "NUM"       ) AS_TOKEN( _NUM_       ),
                      LEX_WORD( "OBJECT"    ) AS_TOKEN( _OBJECT_    ),
-                     LEX_WORD( "OBJ"       ) AS_TOKEN( _OBJ_       ),
                      LEX_WORD( "VARIANT"   ) AS_TOKEN( _VARIANT_   ),
-                     LEX_WORD( "VAR"       ) AS_TOKEN( _VAR_       ),
                      LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
                      LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
                    };
@@ -236,58 +221,52 @@ LANGUAGE_WORDS_ARE {
 #define HB_OF_ID          -1004
 #define HB_ARRAY_ID       -1005
 #define HB_VARIANT_ID     -1006
-#define HB_VAR_ID         -1007
-#define HB_BLOCK_ID       -1008
-#define HB_CHARACTER_ID   -1009
-#define HB_STRING_ID      -1010
-#define HB_CLASS_ID       -1011
-#define HB_STRUCTURE_ID   -1012
-#define HB_DATE_ID        -1013
-#define HB_LOGICAL_ID     -1014
-#define HB_BOOL_ID        -1015
-#define HB_NUMEIC_ID      -1016
-#define HB_NUM_ID         -1017
-#define HB_OBJECT_ID      -1018
-#define HB_OBJ_ID         -1019
-#define HB_PUBLIC_ID      -1020
-#define HB_OTHERWISE_ID   -1021
-#define HB_MEMVAR_ID      -1022
-#define HB_WHILE_ID       -1023
-#define HB_LOOP_ID        -1024
-#define HB_FOR_ID         -1025
-#define HB_NEXT_ID        -1026
-#define HB_FIELD_ID       -1027
-#define HB_PARAMETERS_ID  -1028
-#define HB_PRIVATE_ID     -1029
-#define HB_EXIT_ID        -1030
-#define HB_BEGIN_ID       -1031
-#define HB_SEQUENCE_ID    -1032
-#define HB_BREAK_ID       -1033
-#define HB_RECOVER_ID     -1034
-#define HB_USING_ID       -1035
-#define HB_CASE_ID        -1036
-#define HB_DO_ID          -1037
-#define HB_WITH_ID        -1038
-#define HB_DECLARE_ID     -1039
-#define HB_PROCREQ_ID     -1040
-#define HB_SELF_ID        -1041
-#define HB_IF_ID          -1042
-#define HB_IIF_ID         -1043
-#define HB_OPTIONAL_ID    -1044
-#define HB_IN_ID          -1045
-#define HB__FIELD_ID      -1046
-#define HB_LINE_ID        -1047
-#define HB_INIT_ID        -1048
-#define HB_PROCEDURE_ID   -1049
-#define HB_FUNCTION_ID    -1050
-#define HB_STATIC_ID      -1051
-#define HB_LOCAL_ID       -1052
-#define HB_QSELF_ID       -1053
-#define HB_RETURN_ID      -1054
-#define HB_END_ID         -1055
+#define HB_BLOCK_ID       -1007
+#define HB_STRING_ID      -1008
+#define HB_CLASS_ID       -1009
+#define HB_DATE_ID        -1010
+#define HB_LOGICAL_ID     -1011
+#define HB_NUMEIC_ID      -1012
+#define HB_OBJECT_ID      -1013
+#define HB_PUBLIC_ID      -1014
+#define HB_OTHERWISE_ID   -1015
+#define HB_MEMVAR_ID      -1016
+#define HB_WHILE_ID       -1017
+#define HB_LOOP_ID        -1018
+#define HB_FOR_ID         -1019
+#define HB_NEXT_ID        -1020
+#define HB_FIELD_ID       -1021
+#define HB_PARAMETERS_ID  -1022
+#define HB_PRIVATE_ID     -1023
+#define HB_EXIT_ID        -1024
+#define HB_BEGIN_ID       -1025
+#define HB_SEQUENCE_ID    -1026
+#define HB_BREAK_ID       -1027
+#define HB_RECOVER_ID     -1028
+#define HB_USING_ID       -1029
+#define HB_CASE_ID        -1030
+#define HB_DO_ID          -1031
+#define HB_WITH_ID        -1032
+#define HB_DECLARE_ID     -1033
+#define HB_PROCREQ_ID     -1034
+#define HB_SELF_ID        -1035
+#define HB_IF_ID          -1036
+#define HB_IIF_ID         -1037
+#define HB_OPTIONAL_ID    -1038
+#define HB_IN_ID          -1039
+#define HB__FIELD_ID      -1040
+#define HB_LINE_ID        -1041
+#define HB_INIT_ID        -1042
+#define HB_PROCEDURE_ID   -1043
+#define HB_FUNCTION_ID    -1044
+#define HB_STATIC_ID      -1045
+#define HB_LOCAL_ID       -1046
+#define HB_QSELF_ID       -1047
+#define HB_RETURN_ID      -1048
+#define HB_END_ID         -1049
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
-#define HB_ID_ON_HOLD     -1056
+#define HB_ID_ON_HOLD     -1050
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
 #define _WHILE_WITH       3001
@@ -312,54 +291,36 @@ LANGUAGE_RULES_ARE {
 		    /* Strong Types */
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , 0      , 0          ) REDUCE_TO( AS_ARRAY          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _BLOCK_     , 0      , 0          ) REDUCE_TO( AS_BLOCK          , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _CHARACTER_ , 0      , 0          ) REDUCE_TO( AS_CHARACTER      , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _STRING_    , 0      , 0          ) REDUCE_TO( AS_CHARACTER      , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _CLASS_     , 0      , 0          ) REDUCE_TO( AS_CLASS          , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _STRUCTURE_ , 0      , 0          ) REDUCE_TO( AS_CLASS          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _DATE_      , 0      , 0          ) REDUCE_TO( AS_DATE           , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _LOGICAL_   , 0      , 0          ) REDUCE_TO( AS_LOGICAL        , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _BOOL_      , 0      , 0          ) REDUCE_TO( AS_LOGICAL        , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _NUMERIC_   , 0      , 0          ) REDUCE_TO( AS_NUMERIC        , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _NUM_       , 0      , 0          ) REDUCE_TO( AS_NUMERIC        , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _OBJECT_    , 0      , 0          ) REDUCE_TO( AS_OBJECT         , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _OBJ_       , 0      , 0          ) REDUCE_TO( AS_OBJECT         , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _VARIANT_   , 0      , 0          ) REDUCE_TO( AS_VARIANT        , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _VAR_       , 0      , 0          ) REDUCE_TO( AS_VARIANT        , 0             ),
 
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _ARRAY_    ) REDUCE_TO( AS_ARRAY_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _VARIANT_  ) REDUCE_TO( AS_ARRAY_ARRAY    , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _VAR_      ) REDUCE_TO( AS_ARRAY_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _BLOCK_    ) REDUCE_TO( AS_BLOCK_ARRAY    , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _CHARACTER_) REDUCE_TO( AS_CHARACTER_ARRAY, 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _STRING_   ) REDUCE_TO( AS_CHARACTER_ARRAY, 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _CLASS_    ) REDUCE_TO( AS_CLASS_ARRAY    , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _STRUCTURE_) REDUCE_TO( AS_CLASS_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _DATE_     ) REDUCE_TO( AS_DATE_ARRAY     , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _LOGICAL_  ) REDUCE_TO( AS_LOGICAL_ARRAY  , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _BOOL_     ) REDUCE_TO( AS_LOGICAL_ARRAY  , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _NUMERIC_  ) REDUCE_TO( AS_NUMERIC_ARRAY  , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _NUM_      ) REDUCE_TO( AS_NUMERIC_ARRAY  , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _OBJECT_   ) REDUCE_TO( AS_OBJECT_ARRAY   , 0             ),
-                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _OBJ_      ) REDUCE_TO( AS_OBJECT_ARRAY   , 0             ),
 
 		    /* Treat as Identifiers when not qualified with the AS qualifier. */
                     IF_SEQUENCE_IS( _AS_        , 0           , 0      , 0          ) REDUCE_TO( HB_AS_ID          , 0             ),
                     IF_SEQUENCE_IS( _OF_        , 0           , 0      , 0          ) REDUCE_TO( HB_OF_ID          , 0             ),
                     IF_SEQUENCE_IS( _ARRAY_     , 0           , 0      , 0          ) REDUCE_TO( HB_ARRAY_ID       , 0             ),
                     IF_SEQUENCE_IS( _VARIANT_   , 0           , 0      , 0          ) REDUCE_TO( HB_VARIANT_ID     , 0             ),
-                    IF_SEQUENCE_IS( _VAR_       , 0           , 0      , 0          ) REDUCE_TO( HB_VAR_ID         , 0             ),
                     IF_SEQUENCE_IS( _BLOCK_     , 0           , 0      , 0          ) REDUCE_TO( HB_BLOCK_ID       , 0             ),
-                    IF_SEQUENCE_IS( _CHARACTER_ , 0           , 0      , 0          ) REDUCE_TO( HB_CHARACTER_ID   , 0             ),
                     IF_SEQUENCE_IS( _STRING_    , 0           , 0      , 0          ) REDUCE_TO( HB_STRING_ID      , 0             ),
                     IF_SEQUENCE_IS( _CLASS_     , 0           , 0      , 0          ) REDUCE_TO( HB_CLASS_ID       , 0             ),
-                    IF_SEQUENCE_IS( _STRUCTURE_ , 0           , 0      , 0          ) REDUCE_TO( HB_STRUCTURE_ID   , 0             ),
                     IF_SEQUENCE_IS( _DATE_      , 0           , 0      , 0          ) REDUCE_TO( HB_DATE_ID        , 0             ),
                     IF_SEQUENCE_IS( _LOGICAL_   , 0           , 0      , 0          ) REDUCE_TO( HB_LOGICAL_ID     , 0             ),
-                    IF_SEQUENCE_IS( _BOOL_      , 0           , 0      , 0          ) REDUCE_TO( HB_BOOL_ID        , 0             ),
                     IF_SEQUENCE_IS( _NUMERIC_   , 0           , 0      , 0          ) REDUCE_TO( HB_NUMEIC_ID      , 0             ),
-                    IF_SEQUENCE_IS( _NUM_       , 0           , 0      , 0          ) REDUCE_TO( HB_NUM_ID         , 0             ),
                     IF_SEQUENCE_IS( _OBJECT_    , 0           , 0      , 0          ) REDUCE_TO( HB_OBJECT_ID      , 0             ),
-                    IF_SEQUENCE_IS( _OBJ_       , 0           , 0      , 0          ) REDUCE_TO( HB_OBJ_ID         , 0             ),
 
                     /* Commands and Statements (Key Words only match at <BOL> ). */
                     IF_SEQUENCE_IS( EXTERN      , TO          , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , TO            ),
@@ -1191,341 +1152,305 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
 
    switch ( x )
    {
-      case HB_ID_ON_HOLD :\
+      case HB_ID_ON_HOLD :
 	 bRestored = TRUE;
          yylval.string = sIdOnHold;
 	 iIdentifier++;
          x = IDENTIFIER;
          break;
 
-      case HB_LIT_ACT :\
+      case HB_LIT_ACT :
          yylval.string = hb_compIdentifierNew( sPair, TRUE );
          x = LITERAL;
          break;
 
-      case HB_EXTERN_ID :\
+      case HB_EXTERN_ID :
          strncpy( sIdentifier, "EXTERNAL", iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_WHILE_ID :\
+      case HB_WHILE_ID :
          strncpy( sIdentifier, "WHILE", iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_ARRAY_ID :\
+      case HB_ARRAY_ID :
          strncpy( sIdentifier, "ARRAY" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_AS_ID :\
+      case HB_AS_ID :
          strcpy( sIdentifier, "AS" );
 	 sIdentifier[2] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_OF_ID :\
+      case HB_OF_ID :
          strcpy( sIdentifier, "OF" );
 	 sIdentifier[2] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_VARIANT_ID :\
+      case HB_VARIANT_ID :
          strncpy( sIdentifier, "VARIANT" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_VAR_ID :\
-         strcpy( sIdentifier, "VAR" );
-	 sIdentifier[3] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_BLOCK_ID :\
+      case HB_BLOCK_ID :
          strncpy( sIdentifier, "BLOCK" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_CHARACTER_ID :\
-         strncpy( sIdentifier, "CHARACTER" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_STRING_ID :\
+      case HB_STRING_ID :
          strncpy( sIdentifier, "STRING" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_CLASS_ID :\
+      case HB_CLASS_ID :
          strncpy( sIdentifier, "CLASS" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_STRUCTURE_ID :\
-         strncpy( sIdentifier, "STRUCTURE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_DATE_ID :\
+      case HB_DATE_ID :
          strncpy( sIdentifier, "DATE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_LOGICAL_ID :\
+      case HB_LOGICAL_ID :
          strncpy( sIdentifier, "LOGICAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_BOOL_ID :\
-         strncpy( sIdentifier, "BOOLEAN" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_NUMEIC_ID :\
+      case HB_NUMEIC_ID :
          strncpy( sIdentifier, "NUMERIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_NUM_ID :\
-         strcpy( sIdentifier, "NUM");
-	 sIdentifier[3] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_OBJECT_ID :\
+      case HB_OBJECT_ID :
          strncpy( sIdentifier, "OBJECT" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_OBJ_ID :\
-         strcpy( sIdentifier, "OBJ");
-	 sIdentifier[3] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_PUBLIC_ID :\
+      case HB_PUBLIC_ID :
          strncpy( sIdentifier, "PUBLIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_OTHERWISE_ID :\
+      case HB_OTHERWISE_ID :
          strncpy( sIdentifier, "OTHERWISE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_MEMVAR_ID :\
+      case HB_MEMVAR_ID :
          strncpy( sIdentifier, "MEMVAR" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_LOOP_ID :\
+      case HB_LOOP_ID :
          strcpy( sIdentifier, "LOOP" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_FOR_ID :\
+      case HB_FOR_ID :
          strcpy( sIdentifier, "FOR" );
 	 sIdentifier[3] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_NEXT_ID :\
+      case HB_NEXT_ID :
          strcpy( sIdentifier, "NEXT" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_FIELD_ID :\
+      case HB_FIELD_ID :
          strncpy( sIdentifier, "FIELD" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB__FIELD_ID :\
+      case HB__FIELD_ID :
          strncpy( sIdentifier, "_FIELD" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_PARAMETERS_ID :\
+      case HB_PARAMETERS_ID :
          strncpy( sIdentifier, "PARAMETERS" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_PRIVATE_ID :\
+      case HB_PRIVATE_ID :
          strncpy( sIdentifier, "PRIVATE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_EXIT_ID :\
+      case HB_EXIT_ID :
          strcpy( sIdentifier, "EXIT" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_BEGIN_ID :\
+      case HB_BEGIN_ID :
          strncpy( sIdentifier, "BEGIN" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_SEQUENCE_ID :\
+      case HB_SEQUENCE_ID :
          strncpy( sIdentifier, "SEQUENCE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_BREAK_ID :\
+      case HB_BREAK_ID :
          strncpy( sIdentifier, "BREAK" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_RECOVER_ID :\
+      case HB_RECOVER_ID :
          strncpy( sIdentifier, "RECOVER" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_USING_ID :\
+      case HB_USING_ID :
          strncpy( sIdentifier, "USING" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_CASE_ID :\
+      case HB_CASE_ID :
          strcpy( sIdentifier, "CASE" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_DO_ID :\
+      case HB_DO_ID :
          strcpy( sIdentifier, "DO" );
 	 sIdentifier[2] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_WITH_ID :\
+      case HB_WITH_ID :
          strcpy( sIdentifier, "WITH" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_DECLARE_ID :\
+      case HB_DECLARE_ID :
          strncpy( sIdentifier, "DECLARE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_PROCREQ_ID :\
+      case HB_PROCREQ_ID :
          strncpy( sIdentifier, "PROCREQ" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_SELF_ID :\
+      case HB_SELF_ID :
          strcpy( sIdentifier, "SELF" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_IF_ID :\
+      case HB_IF_ID :
          strcpy( sIdentifier, "IF" );
 	 sIdentifier[2] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_IIF_ID :\
+      case HB_IIF_ID :
          strcpy( sIdentifier, "IIF" );
 	 sIdentifier[3] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_OPTIONAL_ID :\
+      case HB_OPTIONAL_ID :
          strncpy( sIdentifier, "OPTIONAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_IN_ID :\
+      case HB_IN_ID :
          strcpy( sIdentifier, "IN" );
 	 sIdentifier[2] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_LINE_ID :\
+      case HB_LINE_ID :
          strcpy( sIdentifier, "LINE" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_INIT_ID :\
+      case HB_INIT_ID :
          strcpy( sIdentifier, "INIT" );
 	 sIdentifier[4] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_PROCEDURE_ID :\
+      case HB_PROCEDURE_ID :
          strncpy( sIdentifier, "PROCEDURE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_FUNCTION_ID :\
+      case HB_FUNCTION_ID :
          strncpy( sIdentifier, "FUNCTION" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_STATIC_ID :\
+      case HB_STATIC_ID :
          strncpy( sIdentifier, "STATIC" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_LOCAL_ID :\
+      case HB_LOCAL_ID :
          strncpy( sIdentifier, "LOCAL" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_RETURN_ID :\
+      case HB_RETURN_ID :
          strncpy( sIdentifier, "RETURN" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;
 
-      case HB_END_ID :\
+      case HB_END_ID :
          strcpy( sIdentifier, "END" );
 	 sIdentifier[3] = '\0';
          x = IDENTIFIER;
          break;
 
-      default:\
+      default:
          printf( "No Handler for Custom Action %i\n", x );
    }
 
-   if( x == IDENTIFIER && ! bRestored )\
+   if( x == IDENTIFIER && ! bRestored )
    {
       yylval.string = hb_compIdentifierNew( sIdentifier, TRUE );
 

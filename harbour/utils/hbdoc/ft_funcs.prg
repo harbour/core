@@ -39,18 +39,18 @@
 #include 'common.ch'
 
 #define xReadBuffer 4096
-DECLARE  FT_FUSE(CFILE AS CHAR,NMODE AS NUMERIC) AS NUMERIC
+DECLARE  FT_FUSE(CFILE AS STRING,NMODE AS NUMERIC) AS NUMERIC
 DECLARE  ft_FEOF() AS LOGICAL
-DECLARE  FReadLn(  cLine ) AS CHARACTER
-DECLARE  FT_FReadLn() AS CHARACTER
+DECLARE  FReadLn(  cLine ) AS STRING
+DECLARE  FT_FReadLn() AS STRING
 DECLARE  FT_FGotop()  AS VARIANT
 DECLARE  FT_FSKIP(n AS NUMERIC) AS VARIANT
-DECLARE  FT_MKDIR( CDIR AS CHARACTER) AS VARIANT
-DECLARE  StrPos( cBuffer AS CHARACTER  ) AS NUMERIC
-DECLARE  GetNumberofTableItems( cBuffer AS CHARACTER) AS NUMERIC
-DECLARE  FREADline( nH AS NUMERIC, @cB AS char, nMaxLine AS NUMERIC)
+DECLARE  FT_MKDIR( CDIR AS STRING) AS VARIANT
+DECLARE  StrPos( cBuffer AS STRING  ) AS NUMERIC
+DECLARE  GetNumberofTableItems( cBuffer AS STRING) AS NUMERIC
+DECLARE  FREADline( nH AS NUMERIC, @cB AS STRING, nMaxLine AS NUMERIC)
 DECLARE  FILEBASE() AS OBJECT
-STATIC TheHandle As Object 
+STATIC TheHandle As Object
 /****
 *   FT_FUSE(cFile,nMode)   ---> nHandle
 *   Open a File
@@ -62,7 +62,7 @@ STATIC TheHandle As Object
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FT_FUSE( cFile as CHARACTER, nMode  AS NUMERIC)
+FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
    Local nHandle as numeric
    IF nMode == nil
       nMode := 2
@@ -100,7 +100,7 @@ RETURN lRETURN
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FReadLn(  cLine AS CHARACTER)
+FUNCTION FReadLn(  cLine AS STRING)
 
    cLine := theHandle:retrieve()
 RETURN cLine
@@ -115,7 +115,7 @@ RETURN cLine
 *+
 FUNCTION FT_FReadLn()
 
-   LOCAL cBuffer AS CHARACTER := ''
+   LOCAL cBuffer AS STRING := ''
 
    cBuffer := FReadLn( @cBuffer )
 
@@ -156,7 +156,7 @@ RETURN nil
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FT_MKDIR( CDIR AS CHARACTER)
+FUNCTION FT_MKDIR( CDIR AS STRING)
 
    MAKEDIR( cdir )
 
@@ -171,11 +171,11 @@ RETURN nil
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION StrPos( cBuffer as CHARACTER)
+FUNCTION StrPos( cBuffer AS STRING)
 
    LOCAL nPos AS NUMERIC :=0
    LOCAL x   AS NUMERIC
-   LOCAL cChar AS CHARACTER
+   LOCAL cChar AS STRING
    FOR x := 1 TO LEN( cBuffer )
       cChar := SUBSTR( cBuffer, x, 1 )
       IF cChar >= CHR( 64 ) .AND. cChar <= CHR( 90 ) .OR. cChar >= CHR( 97 ) ;
@@ -210,7 +210,7 @@ RETURN nPos
 *+
 FUNCTION GetNumberofTableItems( cBuffer )
 
-   LOCAL cItem AS CHARACTER
+   LOCAL cItem AS STRING
    LOCAL nItem AS NUMERIC := 0
 
    cBuffer := ALLTRIM( cBuffer )
@@ -238,9 +238,9 @@ FUNCTION GetNumberofTableItems( cBuffer )
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION FREADline( nH as Num, cB as Char, nMaxLine as Numeric)
+FUNCTION FREADline( nH as Numeric, cB AS STRING, nMaxLine as Numeric)
 
-   LOCAL cLine as CHARACTER
+   LOCAL cLine AS STRING
    LOCAL nSavePos AS NUMERIC
    LOCAL nEol AS NUMERIC
    LOCAL nNumRead AS NUMERIC
@@ -256,6 +256,6 @@ FUNCTION FREADline( nH as Num, cB as Char, nMaxLine as Numeric)
       FSEEK( nH, nSavePos + nEol + 1, FS_SET )
    ENDIF
     lReturn := (nNumRead != 0)
-RETURN lReturn 
+RETURN lReturn
 
 *+ EOF: FT_FUNCS.PRG

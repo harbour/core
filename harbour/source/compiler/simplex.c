@@ -801,7 +801,11 @@ int Reduce( int iToken, BOOL bReal );
    }\
 }
 
-int yylex( void )
+#ifndef YY_DECL
+   #define YY_DECL int yylex YY_PROTO(( void ))
+#endif
+
+YY_DECL
 {
  register char * szBuffer = s_szBuffer;
 

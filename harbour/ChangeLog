@@ -1,3 +1,14 @@
+2000-07-30 12:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source/compiler/harbour.slx
+    - Removed AS CHARACTER, AS BOOLEAN, AS OBJ, AS NUM
+      /* Left AS VARIANT and AS USUAL until vote results tabulated. */
+
+  * utils/hbdoc/ft_funcs.prg
+    * Changed AS CHAR -> AS STRING and AS NUM to AS NUMERIC
+
+  * source/compiler/simplex.c
+    * Changed to use YY_DECL macro in declaration of yylex()
+
 2000-07-30 14:32 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.l
@@ -5,7 +16,7 @@
    * tests/testdecl.prg
    * tests/testwarn.prg
    * contrib/hbclip/hbclip.ch
-     * Cleanup up the Strong Typing type keywords to more-or-less match 
+     * Cleanup up the Strong Typing type keywords to more-or-less match
        the VO syntax. Note that there's two TODOs according to this.
 
        These are the valid keywords now:
