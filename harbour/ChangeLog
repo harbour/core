@@ -1,3 +1,7 @@
+2001-06-30 08:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/hbvmpub.h
+     + Added profiler support to the dynamic symbol structure
+
 2001-06-29 18:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/Makefile
