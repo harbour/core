@@ -78,7 +78,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
       return pDynSym;                /* Return pointer to DynSym */
    }
 
-   if( ! wDynSymbols )      /* Do we have any symbols ? */
+   if( wDynSymbols == 0 )   /* Do we have any symbols ? */
       pDynSym = pDynItems[ 0 ].pDynSym;     /* Point to first symbol */
                             /* *<1>* Remember we already got this one */
    else

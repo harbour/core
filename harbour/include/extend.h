@@ -277,14 +277,14 @@ extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 #define HB_STRGREATER_RIGHT     2
 
 extern int      hb_stricmp( const char *s1, const char *s2 );
-extern BOOL     hb_strempty( char * szText, ULONG ulLen );
-extern char *   hb_strdescend( char * szText, ULONG ulLen );
-extern WORD     hb_strgreater( char * sz1, char * sz2 );
+extern int      hb_strgreater( char * sz1, char * sz2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
-extern ULONG    hb_strAt( char *, long, char *, long );
-extern char *   hb_strUpper( char * szText, long lLen );
-extern char *   hb_strLower( char * szText, long lLen );
+extern BOOL     hb_strEmpty( char * szText, ULONG ulLen );
+extern char *   hb_strDescend( char * szText, ULONG ulLen );
+extern ULONG    hb_strAt(char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen);
+extern char *   hb_strUpper( char * szText, ULONG ulLen );
+extern char *   hb_strLower( char * szText, ULONG ulLen );
 
 /* class management */
 extern void     hb_clsReleaseAll( void );    /* releases all defined classes */

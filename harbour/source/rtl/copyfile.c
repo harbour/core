@@ -41,47 +41,22 @@ HB_INIT_SYMBOLS_BEGIN( CopyFile__InitSymbols )
 { "__COPYFILE", FS_PUBLIC, HB___COPYFILE, 0 }
 HB_INIT_SYMBOLS_END( CopyFile__InitSymbols )
 #if ! defined(__GNUC__)
-   #pragma CopyFile__InitSymbols
+#pragma startup CopyFile__InitSymbols
 #endif
 
-static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal);
-
-/* INCOMPATIBILITY: Clipper returns .F. on failure and NIL on success */
-
-HARBOUR HB___COPYFILE( void )
-{
-   if ( ISCHAR(1) && ISCHAR(2) )
-   {
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-      if (!hb_fsCopy(hb_parc(1), hb_parc(2)))
-      {
-         hb_retl(FALSE);
-      }
-#else
-      ULONG ulWrittenTotal;
-      hb_fsCopy(hb_parc(1), hb_parc(2), &ulWrittenTotal);
-      hb_retnl(ulWrittenTotal);
-#endif
-   }
-   else
-   {
-      hb_errRT_BASE(EG_ARG, 2010, NULL, "__COPYFILE");
-   }
-}
-
-static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
+static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* pulWrittenTotal)
 {
    BOOL bRetVal = FALSE;
+   ULONG ulWrittenTotal = 0L;
+
    FHANDLE fhndSource;
    FHANDLE fhndDest;
-
-   *ulWrittenTotal = 0L;
 
    while ((fhndSource = hb_fsOpen(( BYTE * ) szSource, FO_READ)) == FS_ERROR)
    {
       if (hb_errRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
       {
-         *ulWrittenTotal = (ULONG)-1L;
+         ulWrittenTotal = (ULONG)-1L;
          break;
       }
    }
@@ -92,7 +67,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
       {
          if (hb_errRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
          {
-            *ulWrittenTotal = (ULONG)-2L;
+            ulWrittenTotal = (ULONG)-2L;
             break;
          }
       }
@@ -125,7 +100,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
                }
             }
 
-            *ulWrittenTotal += (ULONG)usWritten;
+            ulWrittenTotal += (ULONG)usWritten;
          }
 
          hb_xfree(buffer);
@@ -141,6 +116,31 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
       hb_fsClose(fhndSource);
    }
 
+   if ( pulWrittenTotal != NULL )
+      *pulWrittenTotal = ulWrittenTotal;
+
    return bRetVal;
 }
 
+/* Clipper returns .F. on failure and NIL on success */
+
+HARBOUR HB___COPYFILE( void )
+{
+   if ( ISCHAR(1) && ISCHAR(2) )
+   {
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      if (!hb_fsCopy( hb_parc(1), hb_parc(2), NULL ))
+      {
+         hb_retl( FALSE );
+      }
+#else
+      ULONG ulWrittenTotal;
+      hb_fsCopy( hb_parc(1), hb_parc(2), &ulWrittenTotal );
+      hb_retnl( ulWrittenTotal );
+#endif
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" );
+   }
+}

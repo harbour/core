@@ -115,7 +115,7 @@ HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 #endif
 #endif
 
-BOOL hb_strempty( char * szText, ULONG ulLen )
+BOOL hb_strEmpty( char * szText, ULONG ulLen )
 {
    BOOL bRetVal = TRUE;
 
@@ -143,7 +143,8 @@ BOOL hb_strempty( char * szText, ULONG ulLen )
 int hb_stricmp( const char *s1, const char *s2 )
 {
    int rc = 0, c1, c2;
-   USHORT l1, l2, count;
+   ULONG l1, l2, count;
+
    l1 = strlen( s1 );
    l2 = strlen( s2 );
    if( l1 < l2 ) count = l1;
@@ -318,7 +319,7 @@ HARBOUR HB_RTRIM( void )
       PHB_ITEM pText = hb_param(1, IT_STRING);
       if( pText )
       {
-         BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
+         BOOL bAnySpace = (hb_pcount() > 1 ? hb_parl(2) : FALSE);
          hb_retclen(pText->item.asString.value, hb_strRTrimLen(pText->item.asString.value, pText->item.asString.length, bAnySpace));
       }
       else
@@ -346,7 +347,7 @@ HARBOUR HB_TRIM( void )
       PHB_ITEM pText = hb_param(1, IT_STRING);
       if( pText )
       {
-         BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
+         BOOL bAnySpace = (hb_pcount() > 1 ? hb_parl(2) : FALSE);
          hb_retclen(pText->item.asString.value, hb_strRTrimLen(pText->item.asString.value, pText->item.asString.length, bAnySpace));
       }
       else
@@ -368,7 +369,7 @@ HARBOUR HB_ALLTRIM( void )
    if( hb_pcount() > 0 )
    {
       char *szText = hb_parc(1);
-      BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
+      BOOL bAnySpace = (hb_pcount() > 1 ? hb_parl(2) : FALSE);
       ULONG lLen;
 
       lLen = hb_strRTrimLen(szText, hb_parclen(1), bAnySpace);
@@ -385,25 +386,25 @@ HARBOUR HB_ALLTRIM( void )
 /* This function is used by all of the PAD functions to prepare the argument
    being padded. If date, convert to string using hb_dtoc(). If numeric,
    convert to unpadded string. Return pointer to string and set string length */
-static char * hb_pad_prep( PHB_ITEM pItem, char * buffer, WORD * pwSize )
+static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
-   char * szText = 0;
+   char * szText = NULL;
 
    if( pItem ) switch( pItem->type )
    {
       case IT_DATE:
          szText = hb_dtoc( hb_pards( 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
-         *pwSize = strlen( szText );
+         *pulSize = strlen( szText );
          break;
       case IT_INTEGER:
          sprintf( buffer, "%d", hb_parni( 1 ) );
          szText = buffer;
-         *pwSize = strlen( szText );
+         *pulSize = strlen( szText );
          break;
       case IT_LONG:
          sprintf( buffer, "%ld", hb_parnl( 1 ) );
          szText = buffer;
-         *pwSize = strlen( szText );
+         *pulSize = strlen( szText );
          break;
       case IT_DOUBLE:
          if( pItem->item.asDouble.decimal )
@@ -411,11 +412,11 @@ static char * hb_pad_prep( PHB_ITEM pItem, char * buffer, WORD * pwSize )
          else
             sprintf( buffer, "%ld", hb_parnl( 1 ) );
          szText = buffer;
-         *pwSize = strlen( szText );
+         *pulSize = strlen( szText );
          break;
       case IT_STRING:
          szText = hb_parc( 1 );
-         *pwSize = hb_parclen( 1 );
+         *pulSize = hb_parclen( 1 );
          break;
    }
    return szText;
@@ -425,26 +426,25 @@ static char * hb_pad_prep( PHB_ITEM pItem, char * buffer, WORD * pwSize )
 /* TEST: QOUT( "padr( 'hello', 10 ) = '" + padr( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADR( void )
 {
-   WORD wSize;
+   ULONG ulSize;
    char buffer[ 128 ];
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-   char *szText = hb_pad_prep( pItem, buffer, &wSize );
+   char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
    if( szText && hb_pcount() > 1 )
    {
-      long lLen = hb_parnl(2);
+      LONG lLen = hb_parnl(2);
 
-      if( lLen > wSize )
+      if( lLen > (LONG)ulSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
-         long lPos;
+         LONG lPos;
          char cPad;
 
-         memcpy(szResult, szText, wSize);
+         memcpy(szResult, szText, (LONG)ulSize);
 
          cPad = ( hb_pcount() > 2? *(hb_parc(3)): ' ' );
 
-         for( lPos = wSize; lPos < lLen; lPos++ )
+         for( lPos = (LONG)ulSize; lPos < lLen; lPos++ )
             szResult[lPos] = cPad;
 
          hb_retclen(szResult, lLen);
@@ -472,22 +472,21 @@ HARBOUR HB_PAD( void )
 /* TEST: QOUT( "padl( 'hello', 10 ) = '" + padl( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADL( void )
 {
-   WORD wSize;
+   ULONG ulSize;
    char buffer[ 128 ];
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-   char *szText = hb_pad_prep( pItem, buffer, &wSize );
+   char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
    if( szText && hb_pcount() > 1 )
    {
-      long lLen = hb_parnl(2);
+      LONG lLen = hb_parnl(2);
 
-      if( lLen > wSize )
+      if( lLen > (LONG)ulSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
-         long lPos = lLen - wSize;
+         LONG lPos = lLen - (LONG)ulSize;
          char cPad;
 
-         memcpy(szResult + lPos, szText, wSize);
+         memcpy(szResult + lPos, szText, (LONG)ulSize);
 
          cPad = (hb_pcount() > 2? *(hb_parc(3)): ' ');
 
@@ -515,32 +514,31 @@ HARBOUR HB_PADL( void )
 /* TEST: QOUT( "padc( 'hello', 10 ) = '" + padc( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADC( void )
 {
-   WORD wSize;
+   ULONG ulSize;
    char buffer[ 128 ];
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-   char *szText = hb_pad_prep( pItem, buffer, &wSize );
+   char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
    if( szText && hb_pcount() > 1 )
    {
-      long lLen = hb_parnl(2);
+      LONG lLen = hb_parnl(2);
 
-      if( lLen > wSize )
+      if( lLen > (LONG)ulSize )
       {
          char *szResult = (char *)hb_xgrab(lLen + 1);
          char cPad;
-         long w, lPos = (lLen - wSize) / 2;
+         LONG w, lPos = (lLen - (LONG)ulSize) / 2;
 
-         memcpy(szResult + lPos, szText, wSize + 1);
+         memcpy(szResult + lPos, szText, (LONG)ulSize + 1);
 
          cPad = ( hb_pcount() > 2? *hb_parc(3): ' ' );
 
          for( w = 0; w < lPos; w++ )
             szResult[w] = cPad;
 
-         for( w = wSize + lPos; w < lLen; w++ )
+         for( w = (LONG)ulSize + lPos; w < lLen; w++ )
             szResult[w] = cPad;
 
-         szResult[lLen] = 0;
+         szResult[lLen] = '\0';
 
          hb_retclen(szResult, lLen);
          hb_xfree(szResult);
@@ -557,27 +555,27 @@ HARBOUR HB_PADC( void )
       hb_retc("");
 }
 
-ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
+ULONG hb_strAt(char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen)
 {
-   if( lSubLen )
+   if( ulSubLen )
    {
-      if( lLen >= lSubLen )
+      if( ulLen >= ulSubLen )
       {
-         long lPos = 0, lSubPos = 0;
+         ULONG ulPos = 0, ulSubPos = 0;
 
-         while( lPos < lLen && lSubPos < lSubLen )
+         while( ulPos < ulLen && ulSubPos < ulSubLen )
          {
-            if( *(szText + lPos) == *(szSub + lSubPos) )
+            if( *(szText + ulPos) == *(szSub + ulSubPos) )
             {
-               lSubPos++;
-               lPos++;
+               ulSubPos++;
+               ulPos++;
             }
-            else if( lSubPos )
-               lSubPos = 0;
+            else if( ulSubPos )
+               ulSubPos = 0;
             else
-               lPos++;
+               ulPos++;
          }
-         return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);
+         return (ulSubPos < ulSubLen ? 0: ulPos - ulSubLen + 1);
       }
       else
          return 0;
@@ -615,26 +613,26 @@ HARBOUR HB_AT( void )
 /* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
 HARBOUR HB_RAT( void )
 {
-   long lSubLen = hb_parclen(1);
+   ULONG ulSubLen = hb_parclen(1);
 
-   if( lSubLen )
+   if( ulSubLen )
    {
-      long lPos = hb_parclen(2) - lSubLen;
+      long lPos = hb_parclen(2) - ulSubLen;
       if( lPos < 0 )
          hb_retni(0);
       else
       {
          char *szSub = hb_parc(1);
          char *szText = hb_parc(2);
-         int bFound = 0;
+         BOOL bFound = FALSE;
 
          while( lPos >= 0 && !bFound )
          {
             if( *(szText + lPos) == *szSub )
-               bFound = !memcmp(szSub, szText + lPos, lSubLen);
+               bFound = ( memcmp(szSub, szText + lPos, ulSubLen) == 0 );
             lPos--;
          }
-         hb_retnl( bFound? lPos + 2: 0 );
+         hb_retnl( bFound ? lPos + 2: 0 );
       }
    }
    else
@@ -655,7 +653,7 @@ HARBOUR HB_CHR( void )
 
          /* Believe it or not, clipper does this! */
          chr[0] = hb_parnl(1) % 256;
-         chr[1] = 0;
+         chr[1] = '\0';
          hb_retclen(chr, 1);
       }
       else
@@ -838,10 +836,10 @@ HARBOUR HB_SUBSTR( void )
 }
 
 /* converts szText to lower case. Does not create a new string! */
-char *hb_strLower(char *szText, long lLen)
+char *hb_strLower(char *szText, ULONG ulLen)
 {
-   long i;
-   for( i = 0; i < lLen; i++ )
+   ULONG i;
+   for( i = 0; i < ulLen; i++ )
       szText[i] = tolower(szText[i]);
    return szText;
 }
@@ -871,11 +869,19 @@ HARBOUR HB_LOWER( void )
    }
 }
 
-/* converts szText to upper case. Does not create a new string! */
-char *hb_strUpper(char *szText, long lLen)
+void hb_strupr( char * szText )
 {
-   long i;
-   for( i = 0; i < lLen; i++ )
+   char *p;
+
+   for( p = szText; *p; p++ )
+      *p = toupper( *p );
+}
+
+/* converts szText to upper case. Does not create a new string! */
+char *hb_strUpper(char *szText, ULONG ulLen)
+{
+   ULONG i;
+   for( i = 0; i < ulLen; i++ )
       szText[i] = toupper(szText[i]);
    return szText;
 }
@@ -911,32 +917,32 @@ HARBOUR HB_REPLICATE( void )
 {
    if( hb_pcount() == 2 )
    {
-      PHB_ITEM pText = hb_param(1, IT_STRING);
-      PHB_ITEM pTimes = hb_param(2, IT_NUMERIC);
-
-      if( pText && pTimes )
+      if( ISCHAR(1) && ISNUM(2) )
       {
-         long lTimes = hb_parnl(2);
+         LONG lTimes = hb_parnl(2);
 
          if( lTimes > 0 )
          {
-            char *szText = pText->item.asString.value;
-            long lLen = pText->item.asString.length;
-            char *szResult = (char *)hb_xgrab((lLen * lTimes) + 1);
-            char *szPtr = szResult;
-            long i;
+            ULONG ulLen = hb_parclen(1);
 
-            for( i = 0; i < lTimes; i++ )
+            if ( (double)((double)ulLen * (double)lTimes) < (double)ULONG_MAX )
             {
-               memcpy(szPtr, szText, lLen);
-               szPtr += lLen;
+               char *szText = hb_parc(1);
+               char *szResult = (char *)hb_xgrab((ulLen * lTimes) + 1);
+               char *szPtr = szResult;
+               LONG i;
+
+               for( i = 0; i < lTimes; i++ )
+               {
+                  memcpy(szPtr, szText, ulLen);
+                  szPtr += ulLen;
+               }
+
+               hb_retclen(szResult, ulLen * lTimes);
+               hb_xfree(szResult);
             }
-
-            /* TODO: Check for string overflow */
-            /* hb_errRT_BASE(EG_STROVERFLOW, 1234, NULL, "REPLICATE"); */
-
-            hb_retclen(szResult, lLen * lTimes);
-            hb_xfree(szResult);
+            else
+               hb_errRT_BASE(EG_STROVERFLOW, 1234, NULL, "REPLICATE");
          }
          else
             hb_retc("");
@@ -963,13 +969,15 @@ HARBOUR HB_SPACE( void )
 
       if( pLen )
       {
-         long lLen = hb_parnl(1);
+         LONG lLen = hb_parnl(1);
 
          if( lLen > 0 )
          {
             char *szResult = (char *)hb_xgrab(lLen + 1);
 
-            /* TODO: Check for string overflow */
+            /* NOTE: String overflow could never occure since a string can */
+            /*       be as large as ULONG_MAX, and the maximum length that */
+            /*       can be specified is LONG_MAX here.                    */
             /* hb_errRT_BASE(EG_STROVERFLOW, 1233, NULL, "SPACE"); */
 
             memset(szResult, ' ', lLen);
@@ -994,54 +1002,35 @@ HARBOUR HB_SPACE( void )
 /* replaces characters in a string */
 HARBOUR HB_STUFF( void )
 {
-   PHB_ITEM pText;
-
-   pText = hb_param(1, IT_STRING);
-   if( pText )
+   if ( ISCHAR(1) && ISNUM(2) && ISNUM(3) && ISCHAR(4) )
    {
-      char *szText = pText->item.asString.value;
-      PHB_ITEM pPos, pDel, pInsert;
-      ULONG lPos, lDel, lInsert, lTotalLen;
-      char *szInsert;
+      char *szText = hb_parc(1);
+      ULONG ulText = hb_parclen(1);
+      ULONG ulPos = hb_parnl(2);
+      ULONG ulDel = hb_parnl(3);
+      ULONG ulInsert = hb_parclen(4);
 
-      pPos = hb_param(2, IT_NUMERIC);
-      lPos = (pPos? hb_itemGetNL( pPos ) - 1: 0);
-      if( lPos > pText->item.asString.length )
-         lPos = pText->item.asString.length;
+      ULONG ulTotalLen;
 
-      pDel = hb_param(3, IT_NUMERIC);
-      if( pDel )
+      if( ulPos > 0)
+         ulPos--;
+
+      if( ulPos > ulText )
+         ulPos = ulText;
+
+      if( ulDel > ulText - ulPos )
+         ulDel = ulText - ulPos;
+
+      if( (ulTotalLen = ulText + ulInsert - ulDel) > 0 )
       {
-         lDel = hb_itemGetNL( pDel );
-         if( lDel > pText->item.asString.length - lPos )
-            lDel = pText->item.asString.length - lPos;
-      }
-      else
-         lDel = 0;
+         char *szResult = (char *)hb_xgrab(ulTotalLen + 1);
 
-      pInsert = hb_param(4, IT_STRING);
-      if( pInsert )
-      {
-         szInsert = pInsert->item.asString.value;
-         lInsert = pInsert->item.asString.length;
-      }
-      else
-      {
-         szInsert = ""; /* shouldn't matter that we don't allocate */
-         lInsert = 0;
-      }
+         memcpy(szResult, szText, ulPos);
+         memcpy(szResult + ulPos, hb_parc(4), ulInsert);
+         memcpy(szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - (ulPos + ulDel));
 
-      if( (lTotalLen = pText->item.asString.length + lInsert - lDel) > 0 )
-      {
-         char *szResult = (char *)hb_xgrab(lTotalLen + 1);
-
-         memcpy(szResult, szText, lPos);
-         memcpy(szResult + lPos, szInsert, lInsert);
-         memcpy(szResult + lPos + lInsert, szText + lPos + lDel,
-                pText->item.asString.length - (lPos + lDel));
-
-         szResult[lTotalLen] = 0;
-         hb_retclen(szResult, lTotalLen);
+         szResult[ulTotalLen] = '\0';
+         hb_retclen(szResult, ulTotalLen);
          hb_xfree(szResult);
       }
       else
@@ -1067,60 +1056,60 @@ HARBOUR HB_STRTRAN( void )
             char *szSeek = pSeek->item.asString.value;
             PHB_ITEM pStart = hb_param(4, IT_NUMERIC);
             char *szReplace;
-            ULONG iStart;
+            ULONG ulStart;
 
-            iStart = (pStart? hb_parnl(4): 1);
-            if( !iStart )
+            ulStart = (pStart? hb_parnl(4): 1);
+            if( !ulStart )
             {
                /* Clipper seems to work this way */
                hb_retc("");
             }
-            else if( iStart > 0 )
+            else if( ulStart > 0 )
             {
                PHB_ITEM pReplace = hb_param(3, IT_STRING);
                PHB_ITEM pCount = hb_param(5, IT_NUMERIC);
-               ULONG iReplace;
-               ULONG iCount;
-               long bAll;
+               ULONG ulReplace;
+               ULONG ulCount;
+               BOOL bAll;
 
                if( pReplace )
                {
                   szReplace = pReplace->item.asString.value;
-                  iReplace = pReplace->item.asString.length;
+                  ulReplace = pReplace->item.asString.length;
                }
                else
                {
                   szReplace = ""; /* shouldn't matter that we don't allocate */
-                  iReplace = 0;
+                  ulReplace = 0;
                }
 
                if( pCount )
                {
-                  iCount = hb_itemGetNL( pCount );
-                  bAll = 0;
+                  ulCount = hb_itemGetNL( pCount );
+                  bAll = FALSE;
                }
                else
                {
-                  iCount = 0;
-                  bAll = 1;
+                  ulCount = 0;
+                  bAll = TRUE;
                }
 
-               if( bAll || iCount > 0 )
+               if( bAll || ulCount > 0 )
                {
-                  long iFound = 0;
-                  long iReplaced = 0;
+                  LONG lFound = 0;
+                  LONG lReplaced = 0;
                   ULONG i = 0;
-                  ULONG iLength = pText->item.asString.length;
+                  ULONG ulLength = pText->item.asString.length;
 
                   while( i < pText->item.asString.length )
                   {
-                     if( (bAll || iReplaced < iCount) && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
+                     if( (bAll || lReplaced < ulCount) && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
                      {
-                        iFound++;
-                        if( iFound >= iStart )
+                        lFound++;
+                        if( lFound >= ulStart )
                         {
-                           iReplaced++;
-                           iLength = iLength - pSeek->item.asString.length + iReplace;
+                           lReplaced++;
+                           ulLength = ulLength - pSeek->item.asString.length + ulReplace;
                            i += pSeek->item.asString.length;
                         }
                         else
@@ -1130,23 +1119,23 @@ HARBOUR HB_STRTRAN( void )
                         i++;
                   }
 
-                  if( iFound )
+                  if( lFound )
                   {
-                     char *szResult = (char *)hb_xgrab(iLength + 1);
+                     char *szResult = (char *)hb_xgrab(ulLength + 1);
                      char *szPtr = szResult;
 
-                     iFound = 0;
+                     lFound = 0;
                      i = 0;
                      while( i < pText->item.asString.length )
                      {
-                        if( iReplaced && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
+                        if( lReplaced && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
                         {
-                           iFound++;
-                           if( iFound >= iStart )
+                           lFound++;
+                           if( lFound >= ulStart )
                            {
-                              iReplaced--;
-                              memcpy(szPtr, szReplace, iReplace);
-                              szPtr += iReplace;
+                              lReplaced--;
+                              memcpy(szPtr, szReplace, ulReplace);
+                              szPtr += ulReplace;
                               i += pSeek->item.asString.length;
                            }
                            else
@@ -1163,7 +1152,7 @@ HARBOUR HB_STRTRAN( void )
                            i++;
                         }
                      }
-                     hb_retclen(szResult, iLength);
+                     hb_retclen(szResult, ulLength);
                      hb_xfree(szResult);
                   }
                   else
@@ -1318,7 +1307,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                if( iDec > 0 )
                   iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
                else
-                  iBytes = sprintf( szResult, "%*ld", iWidth, (long)dNumber );
+                  iBytes = sprintf( szResult, "%*ld", iWidth, (LONG)dNumber );
             }
          }
          else switch( pNumber->type & ~IT_BYREF )
@@ -1333,7 +1322,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
             default:
                  iBytes = 0;
-                 *szResult = 0;
+                 *szResult = NULL;
                  break;
          }
          /* Set to asterisks in case of overflow */
@@ -1356,8 +1345,8 @@ HARBOUR HB_STR( void )
    {
       BOOL bValid = TRUE;
       PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
-      PHB_ITEM pWidth  = 0;
-      PHB_ITEM pDec    = 0;
+      PHB_ITEM pWidth  = NULL;
+      PHB_ITEM pDec    = NULL;
 
       if( !pNumber )
          bValid = FALSE;
@@ -1401,7 +1390,7 @@ HARBOUR HB_STR( void )
 
 /* Values returned : HB_STRGREATER_EQUAL, HB_STRGREATER_LEFT, HB_STRGREATER_RIGHT */
 
-WORD hb_strgreater( char * sz1, char * sz2 )
+int hb_strgreater( char * sz1, char * sz2 )
 {
 
    while( *( sz1 ) && *( sz2 ) && *( sz1 ) == *( sz2 ) )
@@ -1418,12 +1407,4 @@ WORD hb_strgreater( char * sz1, char * sz2 )
       return HB_STRGREATER_LEFT;
 
    return HB_STRGREATER_EQUAL;
-}
-
-void hb_strupr( char * szText )
-{
-   char *p;
-
-   for( p = szText; *p; p++ )
-      *p = toupper( *p );
 }

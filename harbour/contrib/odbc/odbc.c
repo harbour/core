@@ -71,7 +71,9 @@ HB_INIT_SYMBOLS_BEGIN( odbc__InitSymbols )
 { "SQLFETCH",       FS_PUBLIC, HB_SQLFETCH      , 0 },
 { "SQLGETDATA",     FS_PUBLIC, HB_SQLGETDATA    , 0 }
 HB_INIT_SYMBOLS_END( odbc__InitSymbols )
-#pragma odbc__InitSymbols
+#if ! defined(__GNUC__)
+#pragma startup odbc__InitSymbols
+#endif
 
 HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {

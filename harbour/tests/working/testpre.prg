@@ -15,27 +15,27 @@ FUNCTION Main()
 
    cString := "@ 10, 10 SAY 'Hello!'"
    qOut( cString )
-   qOut( Preprocess( cString ) )
+   qOut( __Preprocess( cString ) )
    qOut( "" )
 
    cString := "? 'Hello mom'"
    qOut( cString )
-   qOut( Preprocess( cString ) )
+   qOut( __Preprocess( cString ) )
    qOut( "" )
 
    cString := 'SET RELATION TO Something INTO MySelf'
    qOut( cString )
-   qOut( Preprocess( cString ) )
+   qOut( __Preprocess( cString ) )
    qOut( "" )
 
    cString := 'SET RELATION ADDITIVE TO Something INTO YourSelf'
    qOut( cString )
-   qOut( Preprocess( cString ) )
+   qOut( __Preprocess( cString ) )
    qOut( "" )
 
    cString := 'CLOSE ALL'
    qOut( cString )
-   qOut( Preprocess( cString ) )
+   qOut( __Preprocess( cString ) )
    qOut( "" )
 
    qOut( chr(13)+chr(10)+"Press <Enter>..." )
@@ -54,12 +54,12 @@ FUNCTION Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      qOut( if( j = 1, "Before", "After" ) + " Preprocess()" )
+      qOut( if( j = 1, "Before", "After" ) + " __Preprocess()" )
       qOut( "===================" )
       qOut( "" )
       FOR i := 1 TO len( aScript )
 
-         ? if( j = 1, aScript[i], Preprocess( aScript[i] ) )
+         ? if( j = 1, aScript[i], __Preprocess( aScript[i] ) )
 
       NEXT
       qOut( "" )

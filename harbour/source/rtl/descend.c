@@ -72,12 +72,12 @@ HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols )
 { "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
 HB_INIT_SYMBOLS_END( Descend__InitSymbols )
 #if ! defined(__GNUC__)
-#pragma Descend__InitSymbols
+#pragma startup Descend__InitSymbols
 #endif
 
-char * hb_strdescend( char * szText, ULONG ulLen )
+char * hb_strDescend( char * szText, ULONG ulLen )
 {
-   if (!(ulLen == 1 && szText[0] == 0))
+   if (!(ulLen == 1 && szText[0] == '\0'))
    {
       char *s;
 
@@ -97,7 +97,7 @@ HARBOUR HB_DESCEND( void )
       if( pItem )
       {
          if( IS_STRING( pItem ) )
-            hb_retclen( hb_strdescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
+            hb_retclen( hb_strDescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
          else if( IS_DATE( pItem ) )
             hb_retnl( 5231808 - pItem->item.asDate.value );
          else if( IS_NUMERIC( pItem ) )
@@ -116,7 +116,7 @@ HARBOUR HB_DESCEND( void )
             hb_itemReturn( pReturn );
             hb_itemRelease( pReturn );
 
-/* It is dengerous to operate on the stack directly
+/* It is dangerous to operate on the stack directly
             stack.Return.wDec = pItem->wDec;
 */
          }

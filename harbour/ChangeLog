@@ -1,3 +1,41 @@
+19990819-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + STUFF() and RAT() tests added, some more tests added to PAD*() family.
+  * include/extend.h
+    source/rtl/strings.c
+    source/rtl/descend.c
+    source/vm/hvm.c
+    ! hb_strUpper(), hb_strLower(), hb_strAt() uses ULONG instead of long
+      for string positions and lengths.
+    ! hb_pad_prep() uses ULONG instead of WORD
+    + REPLICATE() now checks for string overflow.
+    * REPLICATE() uses only standard Extend API calls now.
+    * STUFF() made completely Clipper compatible, it now uses only standard
+      Extend API calls.
+    * hb_stricmp() USHORT changed to ULONG.
+    * return type of hb_strgreater changed to int from WORD
+    ! Some types changed to BOOL, many "long"s changed to ULONG.
+    * long -> LONG, _retni() -> retnl() in one place.
+    * Some zeros changed to \0 and NULL.
+    * Small name changes:
+      hb_pad_prep() -> hb_itemPadConv()
+      hb_strempty   -> hb_strEmpty
+      hb_strdescend -> hb_strDescend
+  * source/rtl/copyfile.c
+    ! Fixed a bug when HB_STRICT_CLIPPER_COMPATBILITY was set.
+  * contrib/odbc/odbc.c
+    source/rtl/copyfile.c
+    source/rtl/descend.c
+    source/hbpp/hbpplib.c
+    ! Fixed #pragma startup directives. (missing "startup", missing
+      __GNUC__ guard.)
+  * source/hbpp/hbpplib.c
+    tests/working/testpre.prg
+    * HB_PREPROCESS -> HB___PREPROCESS, since this is an extension.
+      PREPROCESS -> __PREPROCESS
+  * source/vm/dynsym.c
+    * One small change.
+
 19990819-12:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/strings.c
     ! hb_itemStr() possible error fixed when item.asDouble was
@@ -60,7 +98,7 @@
     source/vm/hvm.c
     source/rtl/transfrm.c
     - Removed HB_ITEM/asLogical.length variable, since it was never
-      used, and has no sense anyway.   
+      used, and has no sense anyway.
     - Removed HB_ITEM/asDate.length variable, since it was never
       used, and has no sense anyway.
     - Removed HB_ITEM/asInteger.decimal variable, since it was never
@@ -78,7 +116,7 @@
   * source/tools/dates2.c
     * Some optimalizations, simplifications.
   * source/rtl/transfrm.c
-    ! Fixed handling of the case, when the second parameter was not a 
+    ! Fixed handling of the case, when the second parameter was not a
       string.
     * Some optimalizations, simplifications.
     ! Reenabled symbol registration, to avoid an empty initialization list.

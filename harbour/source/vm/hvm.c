@@ -109,7 +109,7 @@ HB_ITEM  aStatics;         /* Harbour array to hold all application statics vari
 HB_ITEM  errorBlock;       /* errorblock */
 PSYMBOLS pSymbols = 0;     /* to hold a linked list of all different modules symbol tables */
 BOOL     bQuit = FALSE;    /* inmediately exit the application */
-BYTE     bErrorLevel = 0;  /* application exit errorlevel */
+BYTE     byErrorLevel = 0; /* application exit errorlevel */
 
 #define HB_DEBUG( x )     if( bHB_DEBUG ) printf( x )
 #define HB_DEBUG2( x, y ) if( bHB_DEBUG ) printf( x, y )
@@ -212,7 +212,7 @@ int main( int argc, char * argv[] )
       printf( "memory size not released: %ld\n", ulMemoryConsumed );
    }
 
-   return bErrorLevel;
+   return byErrorLevel;
 }
 
 void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
@@ -2334,7 +2334,7 @@ HARBOUR HB_EMPTY(void)
               break;
 
          case IT_STRING:
-              hb_retl( hb_strempty( hb_parc( 1 ), hb_parclen( 1 ) ) );
+              hb_retl( hb_strEmpty( hb_parc( 1 ), hb_parclen( 1 ) ) );
               break;
 
          case IT_INTEGER:
@@ -2503,12 +2503,13 @@ HARBOUR HB___QUIT(void)
 
 HARBOUR HB_ERRORLEVEL(void)
 {
-   BYTE bPrevValue = bErrorLevel;
+   BYTE byPrevValue = byErrorLevel;
 
    if( hb_pcount() > 0 )
       /* Only replace the error level if a parameter was passed */
-      bErrorLevel = hb_parni( 1 );
-   hb_retni( bPrevValue );
+      byErrorLevel = hb_parni( 1 );
+
+   hb_retni( byPrevValue );
 }
 
 HARBOUR HB_PCOUNT(void)

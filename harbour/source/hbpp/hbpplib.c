@@ -34,8 +34,6 @@
 
 */
 
-/* TODO: Move this to source/tools */
-
 #include <stdio.h>
 #include "hbpp.h"
 #include "extend.h"
@@ -47,18 +45,18 @@ PATHNAMES *_pIncludePath = NULL;
 FILENAME *_pFileName = NULL;
 BOOL _bWarnings = FALSE;
 
-HARBOUR HB_PREPROCESS(void);
+HARBOUR HB___PREPROCESS(void);
 
 HB_INIT_SYMBOLS_BEGIN( Preprocess__InitSymbols )
-{ "PREPROCESS",     FS_PUBLIC, HB_PREPROCESS    , 0 }
+{ "__PREPROCESS",     FS_PUBLIC, HB___PREPROCESS    , 0 }
 HB_INIT_SYMBOLS_END( Preprocess__InitSymbols )
 #if ! defined(__GNUC__)
-#pragma Preprocess__InitSymbols
+#pragma startup Preprocess__InitSymbols
 #endif
 
 /* TODO: Extend the function to allow directives
          and external include files              */
-HARBOUR HB_PREPROCESS(void)
+HARBOUR HB___PREPROCESS(void)
 {
   if (ISCHAR(1))
   {

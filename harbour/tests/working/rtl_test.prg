@@ -64,6 +64,29 @@ FUNCTION Main()
      TEST_LINE( At("ABCDEFG", "ABCDEF")       , 0                )
      TEST_LINE( At("FI", "ABCDEF")            , 0                )
 
+     /* RAT() */
+
+     TEST_LINE( RAt("", "")                   , 0                )
+     TEST_LINE( RAt("", "ABCDEF")             , 0                )
+     TEST_LINE( RAt("ABCDEF", "")             , 0                )
+     TEST_LINE( RAt("AB", "AB")               , 1                )
+     TEST_LINE( RAt("AB", "AAB")              , 2                )
+     TEST_LINE( RAt("AB", "ABAB")             , 3                )
+     TEST_LINE( RAt("A", "ABCADEF")           , 4                )
+     TEST_LINE( RAt("A", "ABCADEFA")          , 8                )
+     TEST_LINE( RAt("A", "ABCDEFA")           , 7                )
+     TEST_LINE( RAt("A", "ABCDEF")            , 1                )
+     TEST_LINE( RAt("F", "ABCDEF")            , 6                )
+     TEST_LINE( RAt("D", "ABCDEF")            , 4                )
+     TEST_LINE( RAt("X", "ABCDEF")            , 0                )
+     TEST_LINE( RAt("AB", "ABCDEF")           , 1                )
+     TEST_LINE( RAt("AA", "ABCDEF")           , 0                )
+     TEST_LINE( RAt("ABCDEF", "ABCDEF")       , 1                )
+     TEST_LINE( RAt("BCDEF", "ABCDEF")        , 2                )
+     TEST_LINE( RAt("BCDEFG", "ABCDEF")       , 0                )
+     TEST_LINE( RAt("ABCDEFG", "ABCDEF")      , 0                )
+     TEST_LINE( RAt("FI", "ABCDEF")           , 0                )
+
      /* SUBSTR() */
 
      TEST_LINE( SubStr("abcdef", 0, -1)       , ""               )
@@ -114,6 +137,9 @@ FUNCTION Main()
 
      /* PADR() */
 
+     TEST_LINE( PadR(NIL, 5)                  , ""               )
+     TEST_LINE( PadR(.T., 5)                  , ""               )
+     TEST_LINE( PadR(10, 5)                   , "10   "          )
      TEST_LINE( PadR("abcdef", -5)            , ""               )
      TEST_LINE( PadR("abcdef", 0)             , ""               )
      TEST_LINE( PadR("abcdef", 5)             , "abcde"          )
@@ -123,6 +149,9 @@ FUNCTION Main()
 
      /* PADL() */
 
+     TEST_LINE( PadL(NIL, 5)                  , ""               )
+     TEST_LINE( PadL(.T., 5)                  , ""               )
+     TEST_LINE( PadL(10, 5)                   , "   10"          )
      TEST_LINE( PadL("abcdef", -5)            , ""               )
      TEST_LINE( PadL("abcdef", 0)             , ""               )
      TEST_LINE( PadL("abcdef", 5)             , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -132,6 +161,9 @@ FUNCTION Main()
 
      /* PADC() */
 
+     TEST_LINE( PadC(NIL, 5)                  , ""               )
+     TEST_LINE( PadC(.T., 5)                  , ""               )
+     TEST_LINE( PadC(10, 5)                   , " 10  "          )
      TEST_LINE( PadC("abcdef", -5)            , ""               )
      TEST_LINE( PadC("abcdef", 0)             , ""               )
      TEST_LINE( PadC("abcdef", 2)             , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
@@ -139,6 +171,18 @@ FUNCTION Main()
      TEST_LINE( PadC("abcdef", 10)            , "  abcdef  "     )
      TEST_LINE( PadC("abcdef", 10, "1")       , "11abcdef11"     )
      TEST_LINE( PadC("abcdef", 10, "12")      , "11abcdef11"     )
+
+     TEST_LINE( Stuff("ABCDEF", 0, 0, NIL)    , ""               )
+     TEST_LINE( Stuff("ABCDEF", 0, 0, "xyz")  , "xyzABCDEF"      )
+     TEST_LINE( Stuff("ABCDEF", 1, 0, "xyz")  , "xyzABCDEF"      )
+     TEST_LINE( Stuff("ABCDEF", 2, 0, "xyz")  , "AxyzBCDEF"      )
+     TEST_LINE( Stuff("ABCDEF", 2, 3, "xyz")  , "AxyzEF"         )
+     TEST_LINE( Stuff("ABCDEF", 2, 2, "")     , "ADEF"           )
+     TEST_LINE( Stuff("ABCDEF", 2, 1, "xyz")  , "AxyzCDEF"       )
+     TEST_LINE( Stuff("ABCDEF", 2, 4, "xyz")  , "AxyzF"          )
+     TEST_LINE( Stuff("ABCDEF", 2, 10, "xyz") , "Axyz"           )
+
+#ifdef __HARBOUR__
 
      /* __COLORINDEX() */
 
@@ -178,6 +222,8 @@ FUNCTION Main()
      TEST_LINE( __ColorIndex(",,", 1)           , ""               )
      TEST_LINE( __ColorIndex(",,", 2)           , ""               )
      TEST_LINE( __ColorIndex(",  ,", 2)         , ""               )
+
+#endif
 
      /* Show results, return ERRORLEVEL and exit */
 
