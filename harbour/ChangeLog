@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Fix bug in PICTURE '@S'
+
+2002-03-19 13:07 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/memvars.c
+     * __MVSAVE() saves all variables (publics and privates)
+
      Of course if a public variable is overriden by a private one,
      the private value it is saved. I have not compared the saved
      files with Cl*pper ones. Once this is checked, then we may

@@ -159,7 +159,7 @@ static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, cha
 
 static void hb_IncString( char* s, int slen )
 {
-   unsigned char *ptr;
+   char *ptr;
    unsigned int nsymb;
 
    for( ptr=s+slen-1;ptr>=s;ptr-- )
@@ -167,7 +167,7 @@ static void hb_IncString( char* s, int slen )
       nsymb = (unsigned int) *ptr;
       if( nsymb < 255 )
       {
-         *ptr = (unsigned char) ++nsymb;
+         *ptr = (char) ++nsymb;
          break;
       }
    }
