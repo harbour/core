@@ -32,7 +32,7 @@ set HB_INC_INSTALL=include\
 rem ---------------------------------------------------------------
 rem The following HB_ARCHITECTURE values are currently supported:
 rem  - dos
-rem  - win32
+rem  - w32
 rem  - linux
 rem  - os2
 
@@ -44,7 +44,7 @@ rem  - When HB_ARCHITECTURE=dos
 rem    - bcc31
 rem    - djgpp
 rem    - watcom
-rem  - When HB_ARCHITECTURE=win32
+rem  - When HB_ARCHITECTURE=w32
 rem    - bcc32
 rem    - gcc
 rem    - mingw32

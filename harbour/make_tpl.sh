@@ -32,7 +32,7 @@ export HB_INC_INSTALL=include/
 # ---------------------------------------------------------------
 # The following HB_ARCHITECTURE values are currently supported:
 #  - dos
-#  - win32
+#  - w32
 #  - linux
 #  - os2
 
@@ -44,7 +44,7 @@ export HB_ARCHITECTURE=linux
 #    - bcc31
 #    - djgpp
 #    - watcom
-#  - When HB_ARCHITECTURE=win32
+#  - When HB_ARCHITECTURE=w32
 #    - bcc32
 #    - gcc
 #    - mingw32

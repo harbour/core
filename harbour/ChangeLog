@@ -1,3 +1,19 @@
+19991005-14:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/run_tsta.bat
+    tests/test_all.prg
+    ! Fixed, HB32 changed to RUN_PRG, filename cases adjusted, using header
+      files, date format set to standard.
+  * .cvsignore
+    make_tpl.*
+    config/win32/* moved to config/w32/*
+    * The GNU platform name for Windows 32bit has changed to "w32" from
+      "win32", the only reason is that the new one is shorter. This way all the 
+      paths will be shorter, and the binary release filenames will be also 
+      shorter.
+
+      Please update your GNU make starter batch files to use w32 instead of 
+      win32 in HB_ARCHITECTURE.
+
 19991005-13:59 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     source/pp/stdalone/hbpp.c

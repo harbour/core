@@ -7,19 +7,23 @@
 // Patrick Mast and David G. Holm
 // Compiler independent, but not platform independent (creates a DOS style batch file).
 // Specify the hbxxx batch file name to use to build with on the command line.
-// Defaults to HB32.
-// The TESTALL.BAT batch file has restart capability. For example, if there is an error
-// in testgt.prg, find and fix the problem, then restart by running "TESTALL TESTGT".
+// Defaults to "run_prg".
+// The TEST_ALL.BAT batch file has restart capability. For example, if there is an error
+// in testgt.prg, find and fix the problem, then restart by running "TEST_ALL TESTGT".
+
+#include "directry.ch"
+#include "fileio.ch"
 
 Function Main( cOption, cCmd )
-LOCAL aDir,f,n,o,p,cRead
+   LOCAL aDir,f,n,o,p,cRead
 
-   aDir:=Directory("*.PRG")
-   o=fCreate("TestAll.Bat")
+   SET DATE ANSI
+   SET CENTURY ON
+
+   aDir := Directory("*.prg")
+   o := fCreate("test_all.bat")
    IF Empty( cOption )
-      cOption:="HB32"
-   ELSEIF Upper( cOption ) == "HRB"
-      fWrite(o,"del test_all.out"+chr(13)+chr(10))
+      cOption:="run_prg"
    ENDIF
    IF Empty( cCmd )
       cCmd := "call "
@@ -35,15 +39,8 @@ LOCAL aDir,f,n,o,p,cRead
          IF p > 1
             n := Left(aDir[f][1],p-1)
             fWrite(o,":" + n + Chr(13) + Chr(10))
-            IF !Empty( cOption ) .and. Upper( cOption ) == "HRB"
-               fWrite(o,;
-                  "..\bin\harbour "+aDir[f][1]+" /n /gHRB /i..\include >> test_all.out"+Chr(13)+Chr(10)+;
-                  "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
-                  "hbrun "+Left(aDir[f][1],Len(aDir[f][1])-4)+".hrb >> test_all.out"+Chr(13)+Chr(10) )
-            ELSE
-               fWrite(o,cCmd + cOption + " " + n + Chr(13) + Chr(10);
+            fWrite(o,cCmd + cOption + " " + n + Chr(13) + Chr(10);
                 + "if errorlevel 1 goto end" + Chr(13) + Chr(10) + Chr(13) + Chr(10))
-            ENDIF
          ENDIF
       ENDIF
    NEXT
@@ -62,11 +59,11 @@ LOCAL nH1,lRetu,nH2
 
    IF !lRetu
       IF !File("NotTestd.txt")
-         nH2=fCreate("NotTestd.txt")
+         nH2=fCreate("nottestd.txt")
       ELSE
-         nH2=fOpen("NotTestd.txt",1)
+         nH2=fOpen("nottestd.txt", FO_WRITE)
       ENDIF
-      fSeek(nH2,0,2)
+      fSeek(nH2, 0, FS_END)
       fWrite(nH2,DtoC(Date())+"  "+Time()+"  "+cFile+Chr(13)+Chr(10))
       fClose(nH2)
    ENDIF
