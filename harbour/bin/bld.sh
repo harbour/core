@@ -12,9 +12,9 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# if [ -z "$HB_ARCHITECTURE" ]; then export HB_ARCHITECTURE=linux; fi
-# if [ -z "$HB_COMPILER" ]; then export HB_COMPILER=gcc; fi
-# if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=; fi
+if [ -z "$HB_ARCHITECTURE" ]; then export HB_ARCHITECTURE=linux; fi
+if [ -z "$HB_COMPILER" ]; then export HB_COMPILER=gcc; fi
+if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=; fi
 
 if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=../bin/; fi
 if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=../lib/; fi
@@ -133,7 +133,7 @@ else
       if [ -z "$HB_GT_LIB" ]; then HB_GT_LIB=gtstd; fi
 
       if [ "$HB_COMPILER" = "gcc" ]; then
-         gcc $1.c $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c -o$1 $CFLAGS -I$HB_INC_INSTALL -L$HB_LIB_INSTALL -ldebug -lvm -lrtl -llang -lrdd -lrtl -lvm -lmacro -lpp -lcommon -lnulsys -ldbfntx -ldbfcdx -l$HB_GT_LIB -lm
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
