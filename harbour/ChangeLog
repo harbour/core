@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-24 16:15 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tgetlist.prg
+    ! Corrected minor bug in using Len() on oGet:Buffer,
+      where it might be NIL.
+    By Ron Pinkas in xHarbour.
+
+  * source/rtl/achoice.prg
+    * More compliant with Cli**er.
+    ! Fix minor bug when press CTRL_END and the quantity of items
+      is smaller to the long of the window.
+      This bug exist in previous versions of achoice().
+    Reported by Carlos Vargas.
+
+  * contrib/libct/datetime.prg
+    ! Fix, change NTOS() for STR() in EOQ() function.
+
 2002-05-24 13:20 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tget.prg
     ! Fix @R pictures with "-" or "(" characters
