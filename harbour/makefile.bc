@@ -1726,6 +1726,20 @@ $(OBJ_DIR)\dbgmenu.obj : $(OBJ_DIR)\dbgmenu.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) -+$@,,
 
+$(OBJ_DIR)\dbgtmenu.c : $(DEBUG_DIR)\dbgtmenu.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtmenu.obj : $(OBJ_DIR)\dbgtmenu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DEBUG_LIB) -+$@,,
+
+$(OBJ_DIR)\dbgtwin.c : $(DEBUG_DIR)\dbgtwin.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtwin.obj : $(OBJ_DIR)\dbgtwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DEBUG_LIB) -+$@,,
+
 $(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 

@@ -1,3 +1,9 @@
+20000331-21:35 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.bc
+    + Added dbgtmenu dbgtwin.c &.prg to the debug library rules.
+    * unlike makefile.vc, makefile.bc needs the source dependcies
+    * listed as well
+
 2000-03-31 18:30 GMT-5 David G. Holm <dholm@jsd-llc.com>
   * makefile.bc
   * makefile.vc
