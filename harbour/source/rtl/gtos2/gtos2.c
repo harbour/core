@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Video subsystem for OS/2 compilers
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 - 2001 Harbour Project
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,20 @@
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    hb_gt_Tone()
+ *    hb_gt_IsColor()
+ *    hb_gt_Scroll()
+ *    hb_gt_SetCursorSize()
+ *    hb_gt_GetCellSize()
+ *    hb_gt_GetCursorStyle()
+ *    hb_gt_SetCursorStyle()
+ *    hb_gt_SetAttribute()
+ *    hb_gt_GetBlink()
+ *    hb_gt_SetBlink()
+ *
+ * Copyright 2000 - 2001 Maurilio Longo <maurilio.longo@libero.it>
+ *    hb_gt_DispBegin() / hb_gt_DispEnd()
+ *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
+ *    16 bit KBD subsystem use inside hb_gt_ReadKey()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -56,9 +70,12 @@
 
 #define INCL_BASE
 #define INCL_VIO
+#define INCL_KBD
+#define INCL_DOSMEMMGR
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
+#include "hbapierr.h"
 #include "hbapigt.h"
 #include "inkey.ch"
 
@@ -116,6 +133,10 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
                happens by not setting the codepage. If somebody wants to
                change the codepage, there should be a separate function
                to do that. (David G. Holm <dholm@jsd-llc.com>)
+
+      ANSWER:  But I have a different code page than you and box drawing
+               chars are "wrong". So we need to set code page of
+               box drawing chars. (Maurilio Longo - maurilio.longo@libero.it)
    */
 }
 
@@ -145,56 +166,57 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
-   int ch;
+   int ch;              /* next char if any */
+
+   PKBDKEYINFO key;     /* keyboard event record */
+   PHKBD hk;            /* keyboard handle, 0 == default */
+   APIRET rc;           /* return code from DosXXX api call */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
-#if defined(HARBOUR_GCC_OS2)
-   /* 25/03/2000 - maurilio.longo@libero.it
-      kbhit() isn't available when using emx/gcc under OS/2,
-      there is _read_kbd(), instead, which can be used to fetch characters from
-      keyboard buffer.
-   */
-   ch = _read_kbd(0, 0, 0);   /* readkey without echoing, waiting or breaking */
-   if ((ch == 0) || (ch == 224)) {
-      ch = _read_kbd(0, 0, 0);
-      if (ch != EOF) {
-         ch += 256;
-      }
+   /* Alloc tileable memory for calling a 16 subsystem */
+   rc = DosAllocMem((void *) &hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   if (rc != NO_ERROR) {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
    }
+   memset(hk, 0, sizeof(HKBD));
 
-   /* TODO: Use KBDxxx subsystem to fetch keys */
-#else
-
-   if( kbhit() )
-   {
-      /* A key code is available in the BIOS keyboard buffer, so read it */
-      ch = getch();                  /* Get the key code */
-      if( ch == 0 && kbhit() )
-      {
-         /* It was a function key lead-in code, so read the actual
-            function key and then offset it by 256 */
-         ch = getch() + 256;
-      }
-      else if( ch == 224 && kbhit() )
-      {
-         /* It was an extended function key lead-in code, so read
-            the actual function key and then offset it by 256,
-            unless extended keyboard events are allowed, in which
-            case offset it by 512 */
-         if( eventmask & INKEY_RAW ) ch = getch() + 512;
-         else ch = getch() + 256;
-      }
+   rc = DosAllocMem((void *) &key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   if (rc != NO_ERROR) {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
    }
-   else
+   memset(key, 0, sizeof(KBDKEYINFO));
+
+   /* Get next character without wait */
+   KbdCharIn(key, IO_NOWAIT, (HKBD) * hk);
+
+   /* extended key codes have 00h or E0h as chChar */
+   if ((key->fbStatus & KBDTRF_EXTENDED_CODE) && (key->chChar == 0x00 || key->chChar == 0xE0))	{
+
+      /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
+         unless extended keyboard events are allowed, in which case offset it by 512 */
+      if ((key->chChar == 0xE0) && (eventmask & INKEY_RAW)) {
+         ch = (int) key->chScan + 512;
+
+      } else {
+         ch = (int) key->chScan + 256;
+
+      }
+
+   } else if (key->fbStatus & KBDTRF_FINAL_CHAR_IN) {
+      ch = (int) key->chChar;
+
+   } else {
       ch = 0;
-#endif
+
+   }
+
+   DosFreeMem(key);
+   DosFreeMem(hk);
 
    /* Perform key translations */
    switch( ch )
    {
-      case -1:  /* No key available */
-         return 0;
       case 328:  /* Up arrow */
          ch = K_UP;
          break;
@@ -306,7 +328,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 BOOL hb_gt_IsColor( void )
 {
-/* Chen Kedem <niki@actcom.co.il> */
    VIOMODEINFO vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
@@ -370,8 +391,6 @@ SHORT hb_gt_Col( void )
 
 void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
 {
-/* Chen Kedem <niki@actcom.co.il> */
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
 
    if(s_uiDispCount > 0)
@@ -480,7 +499,6 @@ static void hb_gt_GetCursorSize( char * start, char * end )
 
 static void hb_gt_SetCursorSize( char start, char end, int visible )
 {
-/* Chen Kedem <niki@actcom.co.il> */
    VIOCURSORINFO vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
@@ -494,7 +512,6 @@ static void hb_gt_SetCursorSize( char start, char end, int visible )
 
 static char hb_gt_GetCellSize()
 {
-/* Chen Kedem <niki@actcom.co.il> */
    char rc ;
    VIOMODEINFO vi;
 
@@ -508,7 +525,6 @@ static char hb_gt_GetCellSize()
 
 USHORT hb_gt_GetCursorStyle( void )
 {
-/* Chen Kedem <niki@actcom.co.il> */
    int rc;
    char cellsize;
    VIOCURSORINFO vi;
@@ -547,7 +563,6 @@ USHORT hb_gt_GetCursorStyle( void )
 
 void hb_gt_SetCursorStyle( USHORT style )
 {
-/* Chen Kedem <niki@actcom.co.il> */
    char cellsize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
@@ -686,11 +701,6 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
 void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
 {
-/* Chen Kedem <niki@actcom.co.il> */
-   /*
-      TODO: work with DispBegin DispEnd
-   */
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr));
 
    if(s_uiDispCount >0) {
@@ -762,7 +772,6 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
 BOOL hb_gt_GetBlink()
 {
-/* Chen Kedem <niki@actcom.co.il> */
    VIOINTENSITY vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
@@ -775,7 +784,6 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-/* Chen Kedem <niki@actcom.co.il> */
    VIOINTENSITY vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));

@@ -1,3 +1,9 @@
+2001-02-26 22:59 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/gtos2/gtos2.c
+     ! hb_gt_ReadKey() uses KBD subsystem of OS/2 instead of any compiler runtime
+       function to fetch characters from keyboard this way I can be sure that used memory
+       is tileable.
+
 2001-02-26 22:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * bugs fixed in ntxOrderListFocus() and ntxSeek(), which appeared after
