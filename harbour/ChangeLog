@@ -8,7 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2002-11-5 14:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+2002-11-05 19:01 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/strcase.c
+    ! Fix call to toupper(), tolower(), forcing unsigned char.
+      For the correct working with DJGPP compiler.
+  * source/rtl/is.c
+    ! Fix call to isdigit() and isalpha(), islower() and isupper(),
+      forcing unsigned char.
+      For the correct working with DJGPP compiler.
+
+2002-11-05 14:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * contrib/libct/setlast.prg
     + Init version of SETLASTKEY()
   * contrib/libct/screen1.c
