@@ -24,7 +24,7 @@
 
 2001-07-26 14:30 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
-      * Resorted Antonio's profile reporter due to copyright concerns.
+      * Restored Antonio's profile reporter due to copyright concerns.
 	
 2001-07-26 02:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbexpra.c
