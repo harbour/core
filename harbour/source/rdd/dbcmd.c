@@ -598,7 +598,6 @@ static ERRCODE defOrderCondition( AREAP pArea, LPDBORDERCONDINFO pOrderInfo )
 static ERRCODE defRelease( AREAP pArea )
 {
    LPFILEINFO pFileInfo;
-   HB_MACRO_PTR pMacro;
 
    HB_TRACE(HB_TR_DEBUG, ("defRelease(%p)", pArea));
 

@@ -1,3 +1,9 @@
+Mon Dec 20 13:49:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rdd/dbcmd.c: 
+	* source/rtl/classes.c: 
+	Fixed two minor warnings.
+
 19991219-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
