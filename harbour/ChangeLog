@@ -1,3 +1,7 @@
+2000-10-30 18:51 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/mysql/*
+      * little changes chasing a bug :-|
+
 2000-10-27 18:05 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/tmysql.prg
    * contrib/mysql/tsqlbrw.prg

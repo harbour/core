@@ -282,30 +282,45 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
 
    local nI, aField, rc
 
-   ::aFieldStruct := {}
    ::nSocket := nSocket
    ::cQuery := cQuery
-   ::nCurRow := 1
+
    ::lError := .F.
+   ::aFieldStruct := {}
+   ::nCurRow := 1
+   ::nResultHandle := nil
+   ::nNumFields := 0
+   ::nNumRows := 0
 
    if (rc := sqlQuery(nSocket, cQuery)) == 0
 
       // save result set
-      ::nResultHandle := sqlStoreR(nSocket)
-      ::nNumRows := sqlNRows(::nResultHandle)
-      ::nNumFields := sqlNumFi(::nResultHandle)
+      if (::nResultHandle := sqlStoreR(nSocket)) > 0
 
-      for nI := 1 to ::nNumFields
+         ::nNumRows := sqlNRows(::nResultHandle)
+         ::nNumFields := sqlNumFi(::nResultHandle)
 
-         aField := sqlFetchF(::nResultHandle)
-         AAdd(::aFieldStruct, aField)
+         for nI := 1 to ::nNumFields
 
-      next
+            aField := sqlFetchF(::nResultHandle)
+            AAdd(::aFieldStruct, aField)
 
+         next
+
+      else
+         // Should query have returned rows? (Was it a SELECT like query?)
+
+         if (::nNumFields := sqlNumFi(nSocket)) == 0
+
+            // Was not a SELECT so reset ResultHandle changed by previous sqlStoreR()
+            ::nResultHandle := nil
+
+         else
+            ::lError := .T.
+
+         endif
+      endif
    else
-      ::nResultHandle := nil
-      ::nNumFields := 0
-      ::nNumRows := 0
       ::lError := .T.
 
    endif

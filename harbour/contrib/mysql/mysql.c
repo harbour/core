@@ -55,6 +55,8 @@ HB_FUNC(SQLCONNECT) // MYSQL *mysql_real_connect(MYSQL*, char * host, char * use
 {
    MYSQL * mysql = NULL;
 
+   HB_TRACE(HB_TR_DEBUG, ("mysql_real_connect(%s, %s, %s)", _parc(1), _parc(2), _parc(3)));
+
 #if MYSQL_VERSION_ID > 32200
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
@@ -77,12 +79,16 @@ HB_FUNC(SQLCLOSE) // void mysql_close(MYSQL *mysql)
 
 HB_FUNC(SQLSELECTD) // int mysql_select_db(MYSQL *, char *)
 {
-   _retnl(mysql_select_db((MYSQL *)_parnl(1), _parc(2)));
+   HB_TRACE(HB_TR_DEBUG, ("mysql_select_db(%lu, %s)", _parnl(1), _parc(2)));
+
+   _retnl((long) mysql_select_db((MYSQL *)_parnl(1), _parc(2)));
 }
 
 
 HB_FUNC(SQLQUERY) // int mysql_query(MYSQL *, char *)
 {
+   HB_TRACE(HB_TR_DEBUG, ("mysql_query(%lu, %s)", _parnl(1), _parc(2)));
+
    _retnl((long) mysql_query((MYSQL *)_parnl(1), _parc(2)));
 }
 

@@ -148,8 +148,7 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
    ::oQuery := oQuery
 
    // Let's get a row to build needed columns
-   ::oCurRow := ::oQuery:GetRow()
-   ::oQuery:Skip(-1)
+   ::oCurRow := ::oQuery:GetRow(1)
 
    // positioning blocks
    ::SkipBlock := {|n| ::oCurRow := Skipper(@n, ::oQuery), n }
