@@ -3790,6 +3790,7 @@ FUNCTION BuildLangArray( cLang )
 #define HB_OS_WIN_32_USED
 #include <hbapi.h>
 #include <stdio.h>
+#include"windows.h"
 HB_FUNC(GETUSERLANG)
 {
    long lRet ;
