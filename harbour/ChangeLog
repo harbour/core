@@ -1,3 +1,21 @@
+19990819-00:15 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c
+    + hb_gtPreExt()
+    + hb_gtPostExt()
+      Like Clipper internals - these functions should be called as
+      bookends to printf if there is a possibility that a dispbegin
+      is in effect when the printf or fprintf(stderr) takes place.
+    * gtDispEnd();
+      decrement counter after restoring screen
+  * source/rtl/console.c
+    * added calls to above functions
+  * source/rtl/gt/gtdos.c
+    * account for dispCount change
+  * source/rtl/gt/gtwin.c
+    * If the Windows console handle is not the initial handle inherited
+      from stdin - printf fails to work.  Modified Dispbegin/end logic
+      to account for this.
+
 19990819-05:26 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/harbour.l

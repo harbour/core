@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.63   19990811   ptucker   Implimented gtPre and PostExt to be used when
+ *                             writing to screen via printf.
  * 1.58   19990811   ptucker   changes to gtWriteCon and gtWrite to improve
  *                             speed.
  * 1.56   19990811   ptucker   Corrected initial MaxRow/col
@@ -61,14 +63,10 @@
 #include "set.h"
 #include "gtapi.h"
 
-/* TODO: functions not implemented yet
-int hb_gtPostExt(void);
-int hb_gtPreExt(void);
-*/
-
 static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
+static USHORT s_uiPreCount   = 0;
 static USHORT s_uiColorIndex = 0;
 static USHORT s_uiMaxCol;
 static USHORT s_uiMaxRow;
@@ -244,9 +242,35 @@ USHORT hb_gtDispCount(void)
 int hb_gtDispEnd(void)
 {
 /* ptucker */
-    --s_uiDispCount;
     hb_gt_DispEnd();
+    --s_uiDispCount;
     return(0);
+}
+
+int hb_gtPreExt(void)
+{
+/* ptucker */
+   /* an external (printf...) write is about to take place */
+   USHORT uidc;
+
+   uidc = s_uiPreCount = s_uiDispCount;
+
+   while( uidc-- )
+     hb_gtDispEnd();
+
+   return 0;
+
+}
+
+int hb_gtPostExt(void)
+{
+/* ptucker */
+   USHORT uidc = s_uiPreCount;
+
+   while( uidc-- )
+     hb_gtDispBegin();
+
+   return 0;
 }
 
 int hb_gtGetColorStr(char * fpColorString)
@@ -519,16 +543,6 @@ USHORT hb_gtMaxRow(void)
     return(s_uiMaxRow = hb_gt_GetScreenHeight() - 1);
 }
 
-int hb_gtPostExt(void)
-{
-    return(0);
-}
-
-int hb_gtPreExt(void)
-{
-    return(0);
-}
-
 int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
     USHORT uiMRow = s_uiMaxRow;
@@ -709,8 +723,7 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
     #define STRNG_SIZE 500
     char strng[ STRNG_SIZE ];
 
-/*    hb_gtDispBegin(); */
-    while( length )
+    while( length-- )
     {
        ch = *fpPtr++;
        switch( ch )
@@ -719,6 +732,7 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
              break;
           case 8:
 /*
+             COMMENT: Clipper does not scroll backwards up the screen!
              if(uiCol > 0) uiCol--;
              else if(uiRow > 0)
              {
@@ -753,8 +767,6 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
           case 13:
              uiCol = 0;
              if( *fpPtr != '\n') ldisp=TRUE;
-           
-/*             hb_gtSetPos (uiRow, uiCol); */
              break;
 
           default:
@@ -767,14 +779,10 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
              strng[ nLen++ ] = ch;
              if( nLen >= STRNG_SIZE ) ldisp = TRUE;
        }
-       length--;
        if( ldisp || ! length )
        {
-          hb_gtSetPos( tmpRow, tmpCol );
           if( nLen )
              rc = hb_gtWrite( strng, nLen );
-/*          hb_gtDispEnd(); */
-/*          hb_gtDispBegin(); */
           nLen=0;
           if( uiRow > s_uiMaxRow )
           {
@@ -789,7 +797,6 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
        if( rc )
           break;
     }
-/*    hb_gtDispEnd(); */
     return rc;
 }
 

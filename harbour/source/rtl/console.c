@@ -297,6 +297,10 @@ static void hb_outstd( char * fpStr, ULONG len )
    ULONG count = len;
    char * fpPtr = fpStr;
 
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtPreExt();
+#endif
+
    if( strlen( fpStr ) != count )
       while( count-- ) printf( "%c", *fpPtr++ );
    else
@@ -311,6 +315,7 @@ static void hb_outstd( char * fpStr, ULONG len )
       dev_col = hb_gt_Col();
       hb_gtSetPos( dev_row, dev_col );
    }
+   hb_gtPostExt();
 #else
    adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
 #endif
@@ -321,6 +326,10 @@ static void hb_outerr( char * fpStr, ULONG len )
 {
    ULONG count = len;
    char * fpPtr = fpStr;
+
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtPreExt();
+#endif
 
    if( strlen( fpStr ) != count )
       while( count-- ) fprintf( stderr, "%c", *fpPtr++ );
@@ -336,6 +345,7 @@ static void hb_outerr( char * fpStr, ULONG len )
       dev_col = hb_gt_Col();
       hb_gtSetPos( dev_row, dev_col );
    }
+   hb_gtPostExt();
 #else
    adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
 #endif

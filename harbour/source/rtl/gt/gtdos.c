@@ -457,6 +457,7 @@ char hb_gt_Row(void)
 
 void hb_gt_DispBegin(void)
 {
+/* ptucker */
 #ifndef __DJGPP__
   if( hb_gtDispCount() == 1 )
   {
@@ -476,8 +477,9 @@ void hb_gt_DispBegin(void)
 
 void hb_gt_DispEnd(void)
 {
+/* ptucker */
 #ifndef __DJGPP__
-  if( hb_gtDispCount() == 0 )
+  if( hb_gtDispCount() == 1 )
   {
     char FAR *ptr;
     ULONG nSize;

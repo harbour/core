@@ -390,10 +390,8 @@ void hb_gt_DispBegin(void)
     SMALL_RECT srWin;                       /* source rectangle to read from */
     CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-    GetConsoleScreenBufferInfo(HOutput, &csbi);
+    GetConsoleScreenBufferInfo(HCursor, &csbi);
     srWin.Top    = srWin.Left = 0;
-//    srWin.Bottom = (cobuf.Y = hb_gt_GetScreenHeight()) -1;
-//    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
     srWin.Bottom = (coBuf.Y = csbi.dwSize.Y) -1;
     srWin.Right  = (coBuf.X = csbi.dwSize.X) -1;
 
@@ -405,7 +403,7 @@ void hb_gt_DispBegin(void)
                  pCharInfo,                        /* transfer area          */
                  coBuf,                        /* size of destination buffer */
                  coDest,               /* upper-left cell to write data to   */
-                 &csbi.srWindow);    /* screen buffer rectangle to read from */
+                 &srWin);            /* screen buffer rectangle to read from */
 
     if( HStealth == INVALID_HANDLE_VALUE )
     {
@@ -415,16 +413,17 @@ void hb_gt_DispBegin(void)
                   NULL,                               /* Security attribute  */
                   CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer      */
                   NULL);                              /* reserved            */
+
     }
 
     hb_gt_SetScreenBuffer( HStealth, HOutput );
+
     HOutput = HStealth;
     WriteConsoleOutput(HOutput,                             /* output handle */
                  pCharInfo,                                 /* data to write */
                  coBuf,                     /* col/row size of source buffer */
                  coDest,        /* upper-left cell to write data from in src */
-                 &csbi.srWindow);     /* screen buffer rect to write data to */
-    SetConsoleCursorPosition(HOutput, csbi.dwCursorPosition);
+                 &srWin);             /* screen buffer rect to write data to */
 
     hb_xfree(pCharInfo);
   }
@@ -434,18 +433,13 @@ void hb_gt_DispEnd(void)
 {
 /* ptucker */
 
-  if( hb_gtDispCount() == 0 )
+  if( hb_gtDispCount() == 1 )
   {
-    CONSOLE_CURSOR_INFO cci;
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleCursorInfo(HCursor, &cci);
-    GetConsoleScreenBufferInfo(HCursor, &csbi);
-    SetConsoleCursorInfo(HOutput, &cci);
-    SetConsoleCursorPosition(HOutput, csbi.dwCursorPosition);
-    SetConsoleActiveScreenBuffer(HOutput);
-    HStealth = HCursor;
-    HCursor  = HOutput;
+    HANDLE htmp = HStealth;
 
+    HStealth = HCursor;
+    hb_gt_DispBegin();
+    HStealth = htmp;
   }
 }
 
