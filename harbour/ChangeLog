@@ -1,3 +1,17 @@
+2001-05-10 11:30 GMT+0200 (MET DST) Martin Vogel <vogel@inttec.de>
+
+  * contrib/libct/token1.c
+    + added some documentation for the functions in token1.c
+
+  * contrib/libct/readme.txt
+    + added some information to the "enhancements" paragraph
+
+  + contrib/libct/tests/numtoken.prg
+  + contrib/libct/tests/tokenlow.prg
+  + contrib/libct/tests/tokenupp.prg
+  + contrib/libct/tests/tokensep.prg
+    ! small test programs for new functions 
+
 2001-05-10 09:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/en/objfunc.txt
      * update the doc for __objGetMsgList() to reflect

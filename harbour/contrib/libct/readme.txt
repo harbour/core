@@ -39,6 +39,9 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
-* TOKEN()      New 5th and 6th parameter there the function can store
+* TOKEN()      New 5th and 6th parameter where the function can store
                the tokenizer before and after the extracted token.
 
+* TOKENLOWER() New 4th parameter <nSkipWidth>
+
+* TOKENUPPER() New 4th parameter <nSkipWidth>

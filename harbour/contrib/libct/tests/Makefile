@@ -60,9 +60,9 @@ PRG_SOURCES=\
 	numtoken.prg \
 	setatlik.prg \
 	token.prg \
-	tokenlower.prg \
+	tokenlow.prg \
 	tokensep.prg \
-	tokenupper.prg \
+	tokenupp.prg \
 	valpos.prg \
 	
 

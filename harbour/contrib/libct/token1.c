@@ -84,6 +84,7 @@ static void do_token1 (int iSwitch)
 {
 
   int iParamCheck;
+  int iNoRef = ct_getref();
 
   switch (iSwitch)
   {
@@ -233,10 +234,18 @@ static void do_token1 (int iSwitch)
           case DO_TOKEN1_TOKENLOWER:
           case DO_TOKEN1_TOKENUPPER:
           {
-            if (!ct_getref())
+            if (!iNoRef)
+            {
               hb_retclen (pcRet, sRetStrLen);
+            }
+            else
+            {
+              hb_retl (0);
+            }
             if (ISBYREF (1))
+            {
               hb_storclen (pcRet, sRetStrLen, 1);
+            }
             hb_xfree (pcRet);
           }; break;
 
@@ -331,10 +340,18 @@ static void do_token1 (int iSwitch)
       case DO_TOKEN1_TOKENLOWER:
       case DO_TOKEN1_TOKENUPPER:
       {
-        if (!ct_getref())
+        if (!iNoRef)
+        {
           hb_retclen (pcRet, sRetStrLen);
+        }
+        else
+        {
+          hb_retl (0);
+        }
         if (ISBYREF (1))
+        {
           hb_storclen (pcRet, sRetStrLen, 1);
+        }
         hb_xfree (pcRet);
       }; break;
 
@@ -366,7 +383,14 @@ static void do_token1 (int iSwitch)
       case DO_TOKEN1_TOKENLOWER:
       case DO_TOKEN1_TOKENUPPER:
       {
-        hb_retc ("");
+        if (!iNoRef)
+        {
+          hb_retc ("");
+        }
+        else
+        {
+          hb_retl (0);
+        }
       }; break;
 
       case DO_TOKEN1_NUMTOKEN:
@@ -546,9 +570,13 @@ HB_FUNC (TOKEN)
  *  $DESCRIPTION$
  *  $EXAMPLES$
  *  $TESTS$
+ *      numtoken ("Hello, World!") ==  2 
+ *      numtoken ("This is good. See you! How do you do?",".!?") == 3
+ *      numtoken ("one,,three,four,,six",",",1) ==  6 
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
+ *      NUMTOKEN() is compatible with CT3's NUMTOKEN().
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -573,24 +601,59 @@ HB_FUNC (NUMTOKEN)
  *  $CATEGORY$
  *      CT3 string functions
  *  $ONELINER$
+ *      Change the first letter of tokens to lower case
  *  $SYNTAX$
  *      TOKENLOWER (<[@]cString>, [<cTokenizer>], [<nTokenCount>],
  *                  [<nSkipWidth>]) -> cString
  *  $ARGUMENTS$
+ *      <[@]cString>      is the processed string
+ *      [<cTokenizer>]    is a list of characters separating the tokens
+ *                        in <cString>
+ *                        Default: chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+
+ *                                 chr(32)+chr(32)+chr(138)+chr(141)+
+ *                                 ",.;:!\?/\\<>()#&%+-*"
+ *      [<nTokenCount>]   specifies the number of tokens that
+ *                        should be processed
+ *                        Default: all tokens
+ *      [<nSkipWidth>]    specifies the maximum number of successive
+ *                        tokenizing characters that are combined as
+ *                        ONE token stop, e.g. specifying 1 can
+ *                        yield to empty token
+ *                        Default: 0, any number of successive tokenizing
+ *                        characters are combined as ONE token stop
  *  $RETURNS$
+ *      <cString>         the string with the lowercased tokens
  *  $DESCRIPTION$
+ *      The TOKENLOWER() function changes the first letter of tokens in <cString>
+ *      to lower case. To do this, it uses the same tokenizing mechanism
+ *      as the token() function. If TOKENLOWER() extracts a token that starts
+ *      with a letter, this letter will be changed to lower case.
+ *      You can omit the return value of this function by setting the CSETREF()
+ *      switch to .T., but you must then pass <cString> by reference to get
+ *      the result.
  *  $EXAMPLES$
+ *      ? tokenlower("Hello, World, here I am!")       // "hello, world, here i am!"
+ *      ? tokenlower("Hello, World, here I am!",,3)    // "hello, world, here I am!" 
+ *      ? tokenlower("Hello, World, here I am!",",",3) // "hello, World, here I am!" 
+ *      ? tokenlower("Hello, World, here I am!"," W")  // "hello, World, here i am!"
  *  $TESTS$
+ *      tokenlower("Hello, World, here I am!") == "hello, world, here i am!"
+ *      tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" 
+ *      tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" 
+ *      tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
+ *      TOKENLOWER() is compatible with CT3's TOKENLOWER(),
+ *      but a new 4th parameter, <nSkipWidth> has been added for
+ *      synchronization with the the other token functions.
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
  *      TOKEN()   NUMTOKEN()   ATTOKEN()
- *      TOKENUPPER()   TOKENSEP()
+ *      TOKENUPPER()   TOKENSEP()  CSETREF()
  *  $END$
  */
 
@@ -609,24 +672,59 @@ HB_FUNC (TOKENLOWER)
  *  $CATEGORY$
  *      CT3 string functions
  *  $ONELINER$
+ *      Change the first letter of tokens to upper case
  *  $SYNTAX$
  *      TOKENUPPER (<[@]cString>, [<cTokenizer>], [<nTokenCount>],
  *                  [<nSkipWidth>]) -> cString
  *  $ARGUMENTS$
+ *      <[@]cString>      is the processed string
+ *      [<cTokenizer>]    is a list of characters separating the tokens
+ *                        in <cString>
+ *                        Default: chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+
+ *                                 chr(32)+chr(32)+chr(138)+chr(141)+
+ *                                 ",.;:!\?/\\<>()#&%+-*"
+ *      [<nTokenCount>]   specifies the number of tokens that
+ *                        should be processed
+ *                        Default: all tokens
+ *      [<nSkipWidth>]    specifies the maximum number of successive
+ *                        tokenizing characters that are combined as
+ *                        ONE token stop, e.g. specifying 1 can
+ *                        yield to empty token
+ *                        Default: 0, any number of successive tokenizing
+ *                        characters are combined as ONE token stop
  *  $RETURNS$
+ *      <cString>         the string with the uppercased tokens
  *  $DESCRIPTION$
+ *      The TOKENUPPER() function changes the first letter of tokens in <cString>
+ *      to upper case. To do this, it uses the same tokenizing mechanism
+ *      as the token() function. If TOKENUPPER() extracts a token that starts
+ *      with a letter, this letter will be changed to upper case.
+ *      You can omit the return value of this function by setting the CSETREF()
+ *      switch to .T., but you must then pass <cString> by reference to get
+ *      the result.
  *  $EXAMPLES$
+ *      ? tokenupper("Hello, world, here I am!")       // "Hello, World, Here I Am!"
+ *      ? tokenupper("Hello, world, here I am!",,3)    // "Hello, World, Here I am!"
+ *      ? tokenupper("Hello, world, here I am!",",",3) // "Hello, world, here I am!"
+ *      ? tokenupper("Hello, world, here I am!"," w")  // "Hello, wOrld, Here I Am!"
  *  $TESTS$
+ *      tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!"
+ *      tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!"
+ *      tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!"
+ *      tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
+ *      TOKENUPPER() is compatible with CT3's TOKENUPPER(),
+ *      but a new 4th parameter, <nSkipWidth> has been added for
+ *      synchronization with the the other token functions.
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Source is token1.c, library is ct3.
  *  $SEEALSO$
  *      TOKEN()   NUMTOKEN()   ATTOKEN()
- *      TOKENLOWER()   TOKENSEP()
+ *      TOKENLOWER()   TOKENSEP()   CSETREF()
  *  $END$
  */
 
@@ -645,16 +743,31 @@ HB_FUNC (TOKENUPPER)
  *  $CATEGORY$
  *      CT3 string functions
  *  $ONELINER$
+ *      Retrieves the token separators of the last token() call
  *  $SYNTAX$
  *      TOKENSEP ([<lMode>]) -> cSeparator
  *  $ARGUMENTS$
+ *      [<lMode>]   if set to .T., the token separator BEHIND the token
+ *                  retrieved from the token() call will be returned.
+ *                  Default: .F., returns the separator BEFORE the token
  *  $RETURNS$
+ *      Depending on the setting of <lMode>, the separating character of the
+ *      the token retrieved from the last token() call will be returned.
+ *      These separating characters can now also be retrieved with the token()
+ *      function.
  *  $DESCRIPTION$
+ *      When one does extract tokens from a string with the token() function,
+ *      one might be interested in the separator characters that have been
+ *      used to extract a specific token. To get this information you can
+ *      either use the TOKENSEP() function after each token() call, or
+ *      use the new 5th and 6th parameter of the token() function.
  *  $EXAMPLES$
+ *      see TOKEN() function
  *  $TESTS$
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
+ *      TOKENSEP() is compatible with CT3's TOKENSEP().
  *  $PLATFORMS$
  *      All
  *  $FILES$
