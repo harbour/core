@@ -1,3 +1,18 @@
+2001-07-18 11:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + Added (C level) hb_bProfiler (profiler activity as boolean. False by default)
+     + Added (PRG level) __SetProfiler( On | Off )
+
+   * source/vm/classes.c
+     + Added hb_bProfiler support.
+
+   * tests\TestProf.prg
+     + Added __SetProfiler() call sample.
+
+   * source/rtl/profiler.prg
+     - removed Patrick's copyright
+       (profiler.prg copyright is mine ;-)
+
 2001-07-18 09:06 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/tbrowse.prg
