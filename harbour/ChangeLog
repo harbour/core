@@ -1,7 +1,7 @@
-2000-12-09 14:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+2000-12-10 17:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbfntx/dbfntx1.c
       * More fixes by Alexander
-         Index creation works now
+         Now seek is added
 
 2000-12-10 15:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *makefile.bc
@@ -31,8 +31,8 @@
 
 2000-12-09 14:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbfntx/dbfntx1.c
-      * More fixes by Alexander
-         Index creation works now
+   * include/hbrddntx.h
+      Fixes by Alexander
 
 2000-12-08 18:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
