@@ -192,7 +192,12 @@ typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
 #if defined( __RSXNT__ )
-   #define HB_EXPORT _export
+   /* RSXNT does not support any type of export keyword.
+      Exported (i.e., public) names can be obtained via
+      the emxexp utility and the output can be used for
+      input to a module definition file. See emxdev.doc
+      in the RSXNT doc/ directory for more information. */
+   #define HB_EXPORT
 
 #elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
    #define HB_EXPORT __attribute__ (( dllexport ))

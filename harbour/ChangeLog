@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-20 15:40 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * include/hbdefs.h
+    ! RSXNT doesn't support any type of inline export declaration.
 
 2001-12-20 13:14 UTC+0000 Dave Pearson <davep@davep.org>
    * include/hbdefs.h
