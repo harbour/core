@@ -49,7 +49,6 @@ HB_FUNC( LEFT )
 
       if( lLen > ( long ) hb_itemGetCLen( pText ) )
          lLen = ( long ) hb_itemGetCLen( pText );
-
       else if( lLen < 0 )
          lLen = 0;
 

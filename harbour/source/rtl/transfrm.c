@@ -204,7 +204,8 @@ HB_FUNC( TRANSFORM )
                   /* Upper */
                   case '!':
                   {
-                     szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos++ ] );
+                     szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos ] );
+                     ulExpPos++;
                      bAnyPic = TRUE;
                      break;
                   }
@@ -221,7 +222,8 @@ HB_FUNC( TRANSFORM )
                   case 'x':
                   case 'X':
                   {
-                     szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( szExp[ ulExpPos++ ] ) : szExp[ ulExpPos++ ];
+                     szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
+                     ulExpPos++;
                      bAnyPic = TRUE;
                      break;
                   }
@@ -256,13 +258,19 @@ HB_FUNC( TRANSFORM )
          else
          {
             while( ulExpPos++ < ulExpLen )
-               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp++ ) : *szExp++;
+            {
+               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+               szExp++;
+            }
          }
 
          if( ( uiPicFlags & PF_REMAIN ) && ! bAnyPic )
          {
             while( ulExpPos++ < ulExpLen )
-               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp++ ) : *szExp++;
+            {
+               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+               szExp++;
+            }
          }
 
          /* Any chars left ? */

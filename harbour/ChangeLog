@@ -1,3 +1,15 @@
+2000-06-17 19:37 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/common/hbstr.c
+   * source/rtl/strings.c
+   * source/rtl/dir.c
+   * source/rtl/transfrm.c
+     ! Fixed unary increment/decrement operator usage in toupper()/tolower()
+       functions, since these may be macros on some systems.
+
+   * source/rtl/right.c
+     % Some optimization.
+
 2000-06-17 18:58 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.y

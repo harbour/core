@@ -117,8 +117,11 @@ int hb_stricmp( const char * s1, const char * s2 )
 
    while( rc == 0 && count > 0 )
    {
-      char c1 = toupper( *s1++ );
-      char c2 = toupper( *s2++ );
+      char c1 = toupper( *s1 );
+      char c2 = toupper( *s2 );
+
+      s1++;
+      s2++;
 
       if( c1 != c2 )
          rc = ( c1 < c2 ? -1 : 1 );

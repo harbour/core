@@ -256,7 +256,7 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
 
    HB_TRACE(HB_TR_DEBUG, ("HarbourAttributesToMask(%p)", byAttrib));
 
-   while( ( c = toupper( *pos++ ) ) != '\0' )
+   while( ( c = toupper( *pos ) ) != '\0' )
    {
       switch( c )
       {
@@ -278,6 +278,8 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
          case 'L': usMask |= FA_REPARSE;    break;
          case 'P': usMask |= FA_SPARSE;     break;
       }
+
+      pos++;
    }
 
    return usMask;
