@@ -33,11 +33,23 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    __SetFunction() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "inkey.ch"
 #include "common.ch"
+
 /*  $DOC$
  *  $FUNCNAME$
- *      __SetFunction() 
+ *      __SetFunction()
  *  $CATEGORY$
  *      Environment
  *  $ONELINER$
@@ -106,9 +118,10 @@ PROCEDURE __SetFunction( nFunctionKey, cString )
    ENDIF
 
    RETURN
+
 /*  $DOC$
  *  $FUNCNAME$
- *     SET FUNCTION 
+ *     SET FUNCTION
  *  $CATEGORY$
  *     Command
  *  $ONELINER$
@@ -141,7 +154,7 @@ PROCEDURE __SetFunction( nFunctionKey, cString )
  *  $EXAMPLES$
  *      // Set F1 with a string
  *      CLS
- *      Set Function  1 to  "I Am Lazy" + CHR( 13 ) 
+ *      Set Function  1 to  "I Am Lazy" + CHR( 13 )
  *      cTest := SPACE( 20 )
  *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
  *      READ

@@ -1,3 +1,12 @@
+20000220-12:22 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * doc/cvs_ssh.txt
+     + Add CVS ID
+   * doc/gnulice.txt
+     ! Fixed CVS ID
+   * source/rtl/setfunc.prg
+   * source/rtl/tgetlist.prg
+     + Add missing copyrigth for the docs
+
 20000219 11:10 Brian Hays
     * doc\gnulice.txt
        * Formatted to NG specs

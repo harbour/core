@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 This is how I got SSH and CVS to work together!
 The trick was in how to set up the CVSROOT variable.
 I did this on NT4, but it should be similar for 95/98 and OS/2.

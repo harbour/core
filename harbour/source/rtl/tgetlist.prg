@@ -33,6 +33,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    READVAR() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "hbclass.ch"
 #include "common.ch"
 #include "getexit.ch"
@@ -714,4 +725,3 @@ function GetApplyKey( oGet, nKey )
   endif
 
 return nil
-
