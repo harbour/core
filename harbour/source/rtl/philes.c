@@ -177,7 +177,7 @@ HB_FUNC( FSEEK )
 
 HB_FUNC( FILE )
 {
-   hb_retl( ISCHAR( 1 ) ? hb_spFile( hb_parc( 1 ) ) : FALSE );
+   hb_retl( ISCHAR( 1 ) ? hb_spFile( ( unsigned char * ) hb_parc( 1 ) ) : FALSE );
 }
 
 HB_FUNC( FREADSTR )
@@ -243,4 +243,3 @@ HB_FUNC( HB_F_EOF )
 }
 
 #endif
-
