@@ -1,3 +1,8 @@
+20000331-04:30 EST Paul Tucker <ptucker@sympatico.ca>
+   * include/hbvmpub.h
+     * put the #pragma pack in _MSC_VER gaurds which got missed in the
+       original upload
+
 20000331-01:02 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapilng.h
