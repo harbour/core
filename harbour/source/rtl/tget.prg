@@ -268,7 +268,7 @@ METHOD ParsePict( cPicture ) CLASS Get
 
       case ::type == "N"
 
-         cNum := Str( ::Original )
+         cNum := Str( ::VarGet() )
          if ( nAt := At( iif( ::lDecRev, ",", "." ), cNum ) ) > 0
             ::cPicMask := Replicate( '9', nAt - 1 ) + iif( ::lDecRev, ",", "." )
             ::cPicMask += Replicate( '9', Len( cNum ) - Len( ::cPicMask ) )
@@ -384,9 +384,8 @@ return Self
 METHOD Undo() CLASS Get
 
    if ::hasfocus
-      ::buffer := ::PutMask( ::original )
+      ::VarPut( ::Original, .t. )
       ::pos    := 1
-      ::VarPut( ::Original, .f.  )
    endif
 
 return Self
@@ -431,8 +430,8 @@ METHOD KillFocus() CLASS Get
 
    ::Assign()
 
-   ::buffer   := ::PutMask()
    ::hasfocus := .f.
+   ::buffer   := ::PutMask()
    ::pos      := NIL
 
    ::Display()
@@ -452,10 +451,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
             ::Original := xValue
          endif
          ::Type     := ValType( xValue )
-         ::nDispLen := NIL
-         if !Empty( ::cPicture )
-            ::Picture( ::cPicture )
-         endif
+         ::Picture( ::cPicture )
       endif
    endif
 
@@ -1192,6 +1188,8 @@ METHOD Picture( cPicture ) CLASS Get
 
    if cPicture != NIL
 
+      ::nDispLen := NIL
+
       ::cPicture := cPicture
       ::ParsePict( cPicture )
 
@@ -1225,9 +1223,9 @@ METHOD Block( bBlock ) CLASS Get
       ::Original := ::VarGet()
       ::Type     := ValType( ::Original )
 
-      ::nDispLen := NIL
       ::Picture( ::Picture )
 
    endif
 
 return ::bBlock
+
