@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2001-12-17 14:13 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     * ::DispCell() a little change on Logical values display
+
+
 2001-12-17 13:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * makefile.vc
@@ -19,30 +25,30 @@
        hb_fsFindFirst()
        hb_fsFindNext()
        hb_fsFindClose()
-       Note that currently only Win32 and DOS/DJGPP has been 
-       tested, all the other platform will require some more 
-       work. Also note that the attribute mask filtering may 
+       Note that currently only Win32 and DOS/DJGPP has been
+       tested, all the other platform will require some more
+       work. Also note that the attribute mask filtering may
        need more work and tweaking.
-     + New generic file attributes added, they are named 
-       HB_FA_*, they are almost the same as the FA_ ones in 
+     + New generic file attributes added, they are named
+       HB_FA_*, they are almost the same as the FA_ ones in
        dir.c, just a bit more Clipper like.
 
 2001-12-17 12:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * Makefile
    * tests/Makefile
-     - Inclusion of contrib in the core Harbour removed, 
-       because this made it impossible to build Harbour on some 
+     - Inclusion of contrib in the core Harbour removed,
+       because this made it impossible to build Harbour on some
        platforms (Linux).
 
 2001-12-17 10:31 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/gtapi.c
-     ! Modified hb_gtSetCursor() to allow cursor setting when 
+     ! Modified hb_gtSetCursor() to allow cursor setting when
        the cursor position is off by one from the screen.
        This fixes the disappearing cursor in TBROWSE()
-       Since I don't know why the bounds checking is there, 
-       I can't tell if this is the correct fix. If you have 
+       Since I don't know why the bounds checking is there,
+       I can't tell if this is the correct fix. If you have
        some idea, please tell.
 
    * TODO
@@ -97,15 +103,15 @@
    * source/rtl/gtsln/kbsln.c
    * source/vm/cmdarg.c
    * source/vm/hvm.c
-     * hb_getenv() now may return a NULL if the env.var 
+     * hb_getenv() now may return a NULL if the env.var
        getting process failed for some reason.
-     ! Reviewed, cleaned up and fixed all the hb_getenv() 
-       calls, considering that it now may return NULL, all 
+     ! Reviewed, cleaned up and fixed all the hb_getenv()
+       calls, considering that it now may return NULL, all
        caller now consistently check for env[ 0 ] != '\0'
      ! Fixed one leak in gtcrs.c
 
-     ; I'd ask everybody to test the new code, with special 
-       attention to the CLIPPER/HARBOUR/CLIPPERCMD/HARBOURCMD, 
+     ; I'd ask everybody to test the new code, with special
+       attention to the CLIPPER/HARBOUR/CLIPPERCMD/HARBOURCMD,
        Linux environment variables, HB_TRACE_* variables.
 
 2001-12-15 23:13 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -211,7 +217,7 @@
      + Added new version (no items yet)
 
    * source/vm/dynlibhb.c
-     ! Fixed for non Win32 platform to return 
+     ! Fixed for non Win32 platform to return
        compatible values.
 
    * doc/howtomak.txt
@@ -220,21 +226,21 @@
 2001-12-15 12:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbinkey.ch
-   * source/compiler/cmdcheck.c 
-   * source/compiler/harbour.c 
+   * source/compiler/cmdcheck.c
+   * source/compiler/harbour.c
    * source/compiler/hbpcode.c
      (I couldn't complete this one, since it's far too messy)
-   * source/debug/dbgtmenu.prg 
-   * source/debug/dbgtmitm.prg 
-   * source/debug/dbgtobj.prg 
-   * source/debug/dbgtwin.prg 
-   * source/debug/dbgwa.prg 
-   * source/debug/debugger.prg 
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtmitm.prg
+   * source/debug/dbgtobj.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/dbgwa.prg
+   * source/debug/debugger.prg
    * source/rtl/perfuncs.prg
-   * source/rtl/persist.prg 
+   * source/rtl/persist.prg
    * source/rtl/profiler.prg
-   * source/rtl/gtsln/gtsln.c 
-   * source/rtl/gtstd/gtstd.c 
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtstd/gtstd.c
      ! Basic cleanups "s_" prefix, tabs, = -> :=
 
 2001-12-15 11:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -248,7 +254,7 @@
 2001-12-15 10:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbcolumn.prg
-     ! Fixed case when heading parameter was NIL 
+     ! Fixed case when heading parameter was NIL
        in TBColumnNew() or TBColumn():New()
 
    * source/rtl/fstemp.c

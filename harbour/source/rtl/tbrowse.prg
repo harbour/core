@@ -1104,8 +1104,6 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
    LOCAL cType  := ValType( ftmp )
    LOCAL cPict  := iif(Empty(oCol:Picture), "", oCol:Picture)
 
-   LOCAL tmp
-
    // NOTE: When nColor is used as an array index we need to increment it by one since CLR_STANDARD is 0
    LOCAL cColor := iif(oCol:ColorBlock != NIL,;
                        hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor + 1] - 1),;
@@ -1123,10 +1121,7 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
       DispOut( PadR(Transform(ftmp, cPict), oCol:Width ), cColor )
 
    case cType == "L"
-      tmp := PadC( "X", oCol:Width )
-      DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ) )
-      DispOut( iif(ftmp, "T", "F"), cColor )
-      DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ) )
+      DispOut(PadC(iif(ftmp, "T", "F"), oCol:Width), cColor )
 
    otherwise
       DispOut( Space(oCol:Width), cColor )
