@@ -1,3 +1,8 @@
+19990724-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+   * tests/working/buildvc.bat
+     + added support for the rdd.
+
 19990725-01:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
         *source/rtl/memvars.c
