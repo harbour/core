@@ -534,7 +534,10 @@ static HB_GENC_FUNC( hb_p_fortest )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_FORTEST,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call bool ObjForTest( object, object, object )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_FORTEST,\n" );
    return 1;
 }
 
@@ -1499,13 +1502,18 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
 static HB_GENC_FUNC( hb_p_pushlong )
 {
-   fprintf( cargo->yyc, "\tHB_P_PUSHLONG, %i, %i, %i, %i,",
-            pFunc->pCode[ lPCodePos + 1 ],
-            pFunc->pCode[ lPCodePos + 2 ],
-            pFunc->pCode[ lPCodePos + 3 ],
-            pFunc->pCode[ lPCodePos + 4 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldc.i4 %li\n",
+            *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_PUSHLONG, %i, %i, %i, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ],
+   //          pFunc->pCode[ lPCodePos + 2 ],
+   //          pFunc->pCode[ lPCodePos + 3 ],
+   //          pFunc->pCode[ lPCodePos + 4 ] );
+   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+   // fprintf( cargo->yyc, "\n" );
 
    return 1 + sizeof( long );
 }
@@ -1881,9 +1889,10 @@ static HB_GENC_FUNC( hb_p_one )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "   ldc.i4.1\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldc.i4.1\n" );
    // turn the stack value into an object
-   fprintf( cargo->yyc, "   box [mscorlib]System.Int32\n" );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
 
    // fprintf( cargo->yyc, "\tHB_P_ONE,\n" );
 
@@ -1937,17 +1946,27 @@ static HB_GENC_FUNC( hb_p_macrolistend )
 #define HB_PCODE_MKSHORT( p )	( *( SHORT * )( p ) )
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
-   fprintf( cargo->yyc, "\tHB_P_LOCALNEARADDINT, %i, %i, %i,", pFunc->pCode[ lPCodePos + 1 ],
-                                                               pFunc->pCode[ lPCodePos + 2 ],
-                                                               pFunc->pCode[ lPCodePos + 3 ] );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "ldloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
+   fprintf( cargo->yyc, "            unbox [mscorlib]System.Int32\n" );
+   fprintf( cargo->yyc, "            ldind.i4\n" );
+   fprintf( cargo->yyc, "            ldc.i4.s %i\n", pFunc->pCode[ lPCodePos + 2 ] +
+                                          (  pFunc->pCode[ lPCodePos + 3 ] * 256 ) );
+   fprintf( cargo->yyc, "            add\n" );
+   fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
+   fprintf( cargo->yyc, "            stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
 
-   if( cargo->bVerbose )
-   {
-      fprintf( cargo->yyc, "\t/* %s %i*/", hb_compLocalVariableFind( pFunc, ( signed char ) pFunc->pCode[ lPCodePos + 1 ] )->szName,
-               HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 2 ] ) ) );
-   }
-
-   fprintf( cargo->yyc, "\n" );
+   // fprintf( cargo->yyc, "\tHB_P_LOCALNEARADDINT, %i, %i, %i,", pFunc->pCode[ lPCodePos + 1 ],
+   //                                                             pFunc->pCode[ lPCodePos + 2 ],
+   //                                                             pFunc->pCode[ lPCodePos + 3 ] );
+   //
+   // if( cargo->bVerbose )
+   // {
+   //    fprintf( cargo->yyc, "\t/* %s %i*/", hb_compLocalVariableFind( pFunc, ( signed char ) pFunc->pCode[ lPCodePos + 1 ] )->szName,
+   //             HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 2 ] ) ) );
+   // }
+   //
+   // fprintf( cargo->yyc, "\n" );
 
    return 4;
 }
@@ -2244,6 +2263,50 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_003f:  ret",
 "}", 0 };
 
+   // public static bool ObjForTest( object current, object end, object step )
+   // {
+   //    if( ( int ) step >= 0 )
+   //       return ( int ) current <= ( int ) end;
+   //    else
+   //       return ( int ) current >= ( int ) end;
+   // }
+
+   char * ObjForTest[] = {
+"\n.method public static bool ObjForTest(object current,object end,object step)",
+"{",
+"  .maxstack  2",
+"  .locals init (bool V_0)",
+"  IL_0000:  ldarg.2",
+"  IL_0001:  unbox      [mscorlib]System.Int32",
+"  IL_0006:  ldind.i4",
+"  IL_0007:  ldc.i4.0",
+"  IL_0008:  blt.s      IL_0020",
+"  IL_000a:  ldarg.0",
+"  IL_000b:  unbox      [mscorlib]System.Int32",
+"  IL_0010:  ldind.i4",
+"  IL_0011:  ldarg.1",
+"  IL_0012:  unbox      [mscorlib]System.Int32",
+"  IL_0017:  ldind.i4",
+"  IL_0018:  cgt",
+"  IL_001a:  ldc.i4.0",
+"  IL_001b:  ceq",
+"  IL_001d:  stloc.0",
+"  IL_001e:  br.s       IL_0036",
+"  IL_0020:  ldarg.0",
+"  IL_0021:  unbox      [mscorlib]System.Int32",
+"  IL_0026:  ldind.i4",
+"  IL_0027:  ldarg.1",
+"  IL_0028:  unbox      [mscorlib]System.Int32",
+"  IL_002d:  ldind.i4",
+"  IL_002e:  clt",
+"  IL_0030:  ldc.i4.0",
+"  IL_0031:  ceq",
+"  IL_0033:  stloc.0",
+"  IL_0034:  br.s       IL_0036",
+"  IL_0036:  ldloc.0",
+"  IL_0037:  ret",
+"}", 0 };
+
    i = 0;
    while( ObjAdd[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjAdd[ i++ ] );
@@ -2251,4 +2314,8 @@ static void hb_genNetFunctions( FILE * yyc )
    i = 0;
    while( ObjLessEqual[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjLessEqual[ i++ ] );
+
+   i = 0;
+   while( ObjForTest[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjForTest[ i++ ] );
 }
