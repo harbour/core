@@ -33,6 +33,7 @@
  *
  */
 
+
 #define SUPERTABLE ( &adsSuper )
 #define HB_OS_WIN_32_USED
 #define MAX_STR_LEN 255
@@ -227,6 +228,7 @@ static BOOL strcmpNoCase( char * s1, char * s2, int n )
 #define  adsEof                    NULL
 #define  adsFound                  NULL
 
+
 static ERRCODE adsGoBottom( ADSAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsGoBottom(%p)", pArea));
@@ -354,8 +356,12 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
 
    pArea->fTop = pArea->fBottom = FALSE;
    AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
+
    hb_adsCheckBofEof( pArea );
-   return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
+   if ( lToSkip==0 )
+      return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
+   else
+      return SUPER_SKIPFILTER( (AREAP)pArea, lToSkip>0 ? 1:-1 );
 }
 
 #define  adsSkipFilter            NULL

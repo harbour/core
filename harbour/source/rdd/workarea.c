@@ -659,7 +659,7 @@ ERRCODE hb_waClearRel( AREAP pArea )
  */
 ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pExpr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pRelArea));
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( uiRelNo );
    HB_SYMBOL_UNUSED( pRelArea );
@@ -795,7 +795,7 @@ ERRCODE hb_waFilterText( AREAP pArea, PHB_ITEM pFilter )
  */
 ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_wsSetFilter(%p, %p)", pArea, pFilterInfo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_waSetFilter(%p, %p)", pArea, pFilterInfo));
 
    /* Clear the active filter expression */
    SELF_CLEARFILTER( pArea );
@@ -825,19 +825,19 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
    if( pScopeInfo->lpstrFor )
       pArea->dbsi.lpstrFor = hb_itemNew( pScopeInfo->lpstrFor );
 
-   if( pScopeInfo->itmCobWhile )   
+   if( pScopeInfo->itmCobWhile )
       pArea->dbsi.itmCobWhile = hb_itemNew( pScopeInfo->itmCobWhile );
 
    if( pScopeInfo->lpstrWhile )
       pArea->dbsi.lpstrWhile = hb_itemNew( pScopeInfo->lpstrWhile );
 
-   if( pScopeInfo->lNext )   
+   if( pScopeInfo->lNext )
       pArea->dbsi.lNext = hb_itemNew( pScopeInfo->lNext );
 
    if( pScopeInfo->itmRecID )
       pArea->dbsi.itmRecID = hb_itemNew( pScopeInfo->itmRecID );
 
-   if( pScopeInfo->fRest )   
+   if( pScopeInfo->fRest )
       pArea->dbsi.fRest = hb_itemNew( pScopeInfo->fRest );
 
    return SUCCESS;
