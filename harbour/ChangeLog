@@ -14,6 +14,7 @@
   * harbour/source/rdd/workarea.c
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
    * foramting some // replaced by /*  */
+   * adding some missing extensions I haven't ported fully in xHarbour
 
   * harbour/source/vm/maindllp.c
    * fixed Windows compilation
