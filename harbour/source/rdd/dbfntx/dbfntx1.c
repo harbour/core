@@ -202,7 +202,7 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
 
 static ULONG* hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
 {
-  double dSum = 0, koeff, _maxkeys = (double) maxkeys, 
+  double dSum = 0, koeff, _maxkeys = (double) maxkeys,
          recCount = (double)ulRecCount, dMul = 1;
   int iLevel = 0, i, j;
   ULONG *lpArray;
@@ -1538,14 +1538,14 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
         else
         {
            pPagePair = hb_ntxPageLoad( pTag, KEYITEM( pPageParent, pairkey )->page );
-           if( pPageParent->uiKeys == 1 && 
+           if( pPageParent->uiKeys == 1 &&
                  ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
            {
               hb_ntxPageRelease( pTag,pPageParent );
               hb_ntxPageRelease( pTag,pPagePair );
               return;
            }
-             
+
            if( pPagePair->uiKeys <= pTag->MaxKeys/2 )
            {
               /* printf( "\nntxTagBalance - 10, %d %d",thiskey,pairkey ); */
@@ -1569,7 +1569,7 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
          else
          {
            pPagePair = hb_ntxPageLoad( pTag, KEYITEM( pPageParent, pairkey )->page );
-           if( pPageParent->uiKeys == 1 && 
+           if( pPageParent->uiKeys == 1 &&
                  ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
            {
               hb_ntxPageRelease( pTag,pPageParent );
@@ -1622,7 +1622,7 @@ static LPKEYINFO hb_ntxPageKeyDel( LPTAGINFO pTag, LPPAGEINFO pPage, SHORT pos, 
    {
       LPPAGEINFO pPageChild = hb_ntxPageLoad( pTag,KEYITEM( pPage, pos )->page );
       LPKEYINFO pKeyNew = NULL;
-      SHORT CurKey = ( KEYITEM( pPageChild, pPageChild->uiKeys )->page )? 
+      SHORT CurKey = ( KEYITEM( pPageChild, pPageChild->uiKeys )->page )?
                            pPageChild->uiKeys : pPageChild->uiKeys-1;
 
       /* printf( "\nhb_ntxPageKeyDel-1 %d %d %x",level,pos,pPage->Page ); */
@@ -1939,7 +1939,7 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
       }
       else if( pSortInfo->pKey1 )
       {
-         result = (s_cdpage->lSort)? 
+         result = (s_cdpage->lSort)?
               hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength, s_cdpage ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
@@ -1964,7 +1964,7 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
          pKey = *pKeyFirst;
       while( pKey )
       {
-         result = (s_cdpage->lSort)? 
+         result = (s_cdpage->lSort)?
               hb_cdpcmp( pKeyNew->key, pKey->key, KeyLength, s_cdpage ):memcmp( pKeyNew->key, pKey->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
@@ -2664,8 +2664,8 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
 }
 
 static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, BOOL fTagName, char *szKeyExpr,
-    PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, 
-    char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique, 
+    PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec,
+    char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique,
     BOOL fCustom, BOOL fMemory )
 {
    LPTAGINFO pTag;
@@ -2685,7 +2685,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, BOOL fTagName, char *
       pTag->ForExpr = (char *) hb_xgrab( NTX_MAX_KEY );
       strcpy( pTag->ForExpr, szForExp );
    }
-   pTag->nField = hb_rddFieldIndex( (AREAP) pTag->Owner->Owner, 
+   pTag->nField = hb_rddFieldIndex( (AREAP) pTag->Owner->Owner,
                            hb_strUpper(pTag->KeyExpr,strlen(pTag->KeyExpr)) );
    pTag->pKeyItem = pKeyExpr;
    pTag->pForItem = pForExp;
@@ -3457,7 +3457,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* printf( "\nntxOrderCreate - 0\n" ); */
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
-   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll && 
+   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll &&
                                     !pArea->lpdbOrdCondInfo->fAdditive ) )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
@@ -3632,11 +3632,11 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( pOrderInfo->atomBagName )
    {
-      int iTagNameLen = strlen( pOrderInfo->atomBagName );
+      int iTagNameLen = strlen( ( const char * ) pOrderInfo->atomBagName );
       if( iTagNameLen > 10 )
          iTagNameLen = 10;
       szTagName = ( char * ) hb_xgrab( iTagNameLen + 1 );
-      hb_strncpyUpper( szTagName, pOrderInfo->atomBagName, iTagNameLen );
+      hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, iTagNameLen );
    }
    else
    {
@@ -3673,7 +3673,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       return FAILURE;
    }
-   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll && 
+   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll &&
                                  !pArea->lpdbOrdCondInfo->fAdditive )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
    if( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fAdditive )
