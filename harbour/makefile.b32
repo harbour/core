@@ -14,21 +14,25 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
               debug.obj dynsym.obj environ.obj error.obj \
-              errorapi.obj errorsys.obj extend.obj files.obj gtdos.obj \
+              errorapi.obj errorsys.obj extend.obj files.obj \
               initsymb.obj itemapi.obj \
               math.obj mathx.obj objfunc.obj set.obj symbols.obj strings.obj \
               stringp.obj \
               stringsx.obj strcmp.obj tclass.obj transfrm.obj
 
-libs\b32\terminal.lib : console.obj
+libs\b32\terminal.lib : console.obj gtapi.obj gtdos.obj
 
-libs\win32\terminal.lib : console.obj
+libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
 
 console.obj  : console.c  extend.h types.h
   bcc32 -c -O2 -I.\include -o$@ source\rtl\console.c
   tlib .\libs\b32\terminal.lib -+$@,,
   bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
   tlib .\libs\win32\terminal.lib -+$@,,
+
+gtapi.obj    : extend.c   extend.h types.h
+gtdos.obj    : extend.c   extend.h types.h
+gtwin.obj    : extend.c   extend.h types.h
 
 symbols.obj  : symbols.asm
 
@@ -46,7 +50,6 @@ errorapi.obj : errorapi.c extend.h types.h
 errorsys.obj : errorsys.c extend.h types.h
 extend.obj   : extend.c   extend.h types.h
 files.obj    : extend.c   extend.h types.h
-gtdos.obj    : extend.c   extend.h types.h
 initsymb.obj : initsymb.c extend.h types.h
 itemapi.obj  : itemapi.c  extend.h types.h
 math.obj     : math.c     extend.h types.h

@@ -1,3 +1,12 @@
+19990527-19:50 CET Eddie Runia
+  * source/rtl/gt/gtdos.c, source/rtl/gt/gtwin.c, source/rtl/gtapi.c
+    minor changes
+  * makefile.b32
+    should be correct now. /* QUESTION : Can anybody do this more the others
+                                         as well */
+  * tests/working/runner.c run_exp.h
+    'DOW()' added to export list
+
 19990527-12:15 CET Eddie Runia
   * tests/working/strip.prg
     slight modification

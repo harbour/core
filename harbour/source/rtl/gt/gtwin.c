@@ -27,6 +27,11 @@ void gtInit(void)
     HOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
+HARBOUR GTINIT( void )
+{
+   gtInit();
+}
+
 void gtDone(void)
 {
     CloseHandle(HInput);

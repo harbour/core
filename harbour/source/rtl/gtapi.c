@@ -23,12 +23,12 @@ static char   s_szColorStr[CLR_STRLEN] = {"W/N, N/W, N/N, N/N, N/W"};
 
 HARBOUR ROW()
 {
-    _reti(s_uiCurrentRow);
+    _retni(s_uiCurrentRow);
 }
 
 HARBOUR COL()
 {
-    _reti(s_uiCurrentCol);
+    _retni(s_uiCurrentCol);
 }
 
 /* gt API functions */
