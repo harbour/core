@@ -1,3 +1,10 @@
+19991011-23:54 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/fm.c
+     + Newline readded to the closing //INFO message ;)
+   * source/rdd/dbfcdx/dbfcdx1.prg
+     - Removed the Inithandler/LockErrHandler since they are not there in
+       Clipper.
+
 19991011-14:20 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/set.c

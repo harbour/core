@@ -163,6 +163,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    {
       char buffer[ 100 ];
 
+      hb_outerr( hb_consoleGetNewLine(), 0 );
       hb_outerr( "----------------------------------------", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
       sprintf( buffer, "Total memory allocated: %ld bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
