@@ -1,3 +1,7 @@
+2001-03-02 23:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/macro/macroslx.c
+     + Added copyright notice with the Harbour Exception.
+
 2001-03-02 22:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Fixed handling of [Smart] Stringify of a period terminated macro.
@@ -12,7 +16,7 @@
 
 2001-02-28 22:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
-     * Improved managment of variable scoping.
+     * Improved management of variable scoping.
 
    /* Appears to work correctly when compiled with Clipper, but is incorrect under Harbour, because
       __MXRelease() is not releasing memvars as it should. */
