@@ -1,3 +1,9 @@
+2001-06-10 08:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   * source/rtl/net.c
+     + Support for DJGPP/RSXNT/GNUC compilers
+   * doc/funclist.txt
+     * Updated some function status
+
 2001-06-10 19:07 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * contrib/tprepro/tprepro.prg
      * SetIncludePath() method uses __PP_PATH now
