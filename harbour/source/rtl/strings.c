@@ -324,41 +324,43 @@ HARBOUR HB_ALLTRIM( void )
    convert to unpadded string. Return pointer to string and set string length */
 static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
-   char * szText = NULL;
+   char * szText;
 
-   if( pItem ) switch( pItem->type )
+   if( pItem )
    {
-      case IT_DATE:
+      if( IS_STRING( pItem ) )
+      {
+         szText = hb_itemGetCPtr( pItem );
+         *pulSize = hb_itemGetCLen( pItem );
+      }
+      else if( IS_DATE( pItem ) )
+      {
          szText = hb_dtoc( hb_pards( 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
          *pulSize = strlen( szText );
-         break;
-
-      case IT_INTEGER:
-         sprintf( buffer, "%d", hb_parni( 1 ) );
+      }
+      else if( IS_INTEGER( pItem ) )
+      {
+         sprintf( buffer, "%d", hb_itemGetNI( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
-         break;
-
-      case IT_LONG:
-         sprintf( buffer, "%ld", hb_parnl( 1 ) );
+      }
+      else if( IS_LONG( pItem ) )
+      {
+         sprintf( buffer, "%ld", hb_itemGetNL( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
-         break;
-
-      case IT_DOUBLE:
-         if( pItem->item.asDouble.decimal )
-            sprintf( buffer, "%.*f", pItem->item.asDouble.decimal, hb_parnd( 1 ) );
-         else
-            sprintf( buffer, "%ld", hb_parnl( 1 ) );
+      }
+      else if( IS_DOUBLE( pItem ) )
+      {
+         sprintf( buffer, "%.*f", pItem->item.asDouble.decimal, hb_itemGetND( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
-         break;
-
-      case IT_STRING:
-         szText = hb_parc( 1 );
-         *pulSize = hb_parclen( 1 );
-         break;
+      }
+      else
+         szText = NULL;
    }
+   else
+      szText = NULL;
 
    return szText;
 }
@@ -822,7 +824,15 @@ HARBOUR HB_REPLICATE( void )
                hb_xfree( szResult );
             }
             else
-               hb_errRT_BASE( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
+            {
+               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
+
+               if( pResult )
+               {
+                  hb_itemReturn( pResult );
+                  hb_itemRelease( pResult );
+               }
+            }
          }
          else
             hb_retc( "" );
@@ -1062,18 +1072,33 @@ HARBOUR HB_VAL( void )
 
       if( pText )
       {
-         int nWidth, nDec = 0;
+         int iWidth;
+         int iDec;
+         double dNumber = hb_strVal( pText->item.asString.value );
          char * ptr = strchr( pText->item.asString.value, '.' );
 
          if( ptr )
          {
-            nWidth = ptr - pText->item.asString.value;
-            nDec = strlen( ptr + 1 );
+            iWidth = ptr - pText->item.asString.value;
+            iDec = strlen( ptr + 1 );
          }
          else
-            nWidth = strlen( pText->item.asString.value );
+         {
+            iWidth = strlen( pText->item.asString.value );
+            iDec = 0;
+         }
 
-         hb_retndlen( hb_strVal( pText->item.asString.value ), nWidth, nDec );
+         if( iDec )
+            hb_retndlen( dNumber, iWidth, iDec );
+
+         else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
+            hb_retnilen( ( int ) dNumber, iWidth );
+
+         else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
+            hb_retnllen( ( long ) dNumber, iWidth );
+
+         else
+            hb_retndlen( dNumber, iWidth, ( WORD ) -1 );
       }
       else
          hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );
@@ -1460,19 +1485,19 @@ HARBOUR HB_STRZERO( void )
 
 /* Values returned : HB_STRGREATER_EQUAL, HB_STRGREATER_LEFT, HB_STRGREATER_RIGHT */
 
-int hb_strgreater( char * sz1, char * sz2 )
+int hb_strgreater( char * szText1, char * szText2 )
 {
-   while( *( sz1 ) && *( sz2 ) && *( sz1 ) == *( sz2 ) )
+   while( *( szText1 ) && *( szText2 ) && *( szText1 ) == *( szText2 ) )
    {
-     sz1++;
-     sz2++;
+     szText1++;
+     szText2++;
    }
-   if( ( *( sz1 ) == 0 && *( sz2 ) != 0 ) ||
-       ( *( sz2 ) > *( sz1 ) )               )
+   if( ( *( szText1 ) == '\0' && *( szText2 ) != '\0' ) ||
+       ( *( szText2 ) > *( szText1 ) )                  )
       return HB_STRGREATER_RIGHT;
 
-   if( ( *( sz1 ) != 0 && *( sz2 ) == 0 ) ||
-       ( *( sz1 ) > *( sz2 ) )               )
+   if( ( *( szText1 ) != '\0' && *( szText2 ) == '\0' ) ||
+       ( *( szText1 ) > *( szText2 ) )                  )
       return HB_STRGREATER_LEFT;
 
    return HB_STRGREATER_EQUAL;

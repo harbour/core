@@ -27,4 +27,10 @@ function main()
    ? "[" + FIELD->MEMO1 + "]"
    ? "[" + FIELD->MEMO2 + "]"
 
+   FIELD->NUMERIC := 90
+   FIELD->DOUBLE := 120.138
+
+   ? "[" + Str(FIELD->DOUBLE) + "]"
+   ? "[" + Str(FIELD->NUMERIC) + "]"
+
 return nil

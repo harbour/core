@@ -62,107 +62,55 @@ STATIC s_lShowAll
 STATIC s_lShortcut
 STATIC s_aSkipList
 
+STATIC scString
+STATIC scStringE
+STATIC scStringZ
+STATIC snIntZ
+STATIC snDoubleZ
+STATIC snIntP
+STATIC snLongP
+STATIC snDoubleP
+STATIC snIntN
+STATIC snLongN
+STATIC snDoubleN
+STATIC snDoubleI
+STATIC sdDate
+STATIC sdDateE
+STATIC slFalse
+STATIC slTrue
+STATIC soObject
+STATIC suNIL
+STATIC sbBlock
+STATIC sbBlockC
+STATIC saArray
+STATIC saAllTypes
+
+MEMVAR mxNotHere
+MEMVAR mcString
+MEMVAR mcStringE
+MEMVAR mcStringZ
+MEMVAR mnIntZ
+MEMVAR mnDoubleZ
+MEMVAR mnIntP
+MEMVAR mnLongP
+MEMVAR mnDoubleP
+MEMVAR mnDoubleI
+MEMVAR mnIntN
+MEMVAR mnLongN
+MEMVAR mnDoubleN
+MEMVAR mdDate
+MEMVAR mdDateE
+MEMVAR mlFalse
+MEMVAR mlTrue
+MEMVAR moObject
+MEMVAR muNIL
+MEMVAR mbBlock
+MEMVAR mbBlockC
+MEMVAR maArray
+
 FUNCTION Main( cPar1, cPar2 )
 
-   /* NOTE: Some basic values we may need for some tests.
-            ( passing by reference, avoid preprocessor bugs, etc. ) */
-
-   LOCAL lcString  := "HELLO"
-   LOCAL lcStringE := ""
-   LOCAL lcStringZ := "A" + Chr( 0 ) + "B"
-   LOCAL lnIntZ    := 0
-   LOCAL lnDoubleZ := 0.0
-   LOCAL lnIntP    := 10
-   LOCAL lnLongP   := 100000
-   LOCAL lnDoubleP := 10.567 /* Use different number of decimals than the default */
-   LOCAL lnIntN    := -10
-   LOCAL lnLongN   := -100000
-   LOCAL lnDoubleN := -10.567 /* Use different number of decimals than the default */
-   LOCAL lnDoubleI := Log( 0 )
-   LOCAL ldDateE   := SToD( "" )
-   LOCAL llFalse   := .F.
-   LOCAL llTrue    := .T.
-   LOCAL loObject  := ErrorNew()
-   LOCAL luNIL     := NIL
-   LOCAL lbBlock   := {|| NIL }
-   LOCAL lbBlockC  := {|| "(string)" }
-   LOCAL laArray   := { 9898 }
-
-   LOCAL laAllTypes := {;
-      lcString  ,;
-      lcStringE ,;
-      lcStringZ ,;
-      lnIntZ    ,;
-      lnDoubleZ ,;
-      lnIntP    ,;
-      lnLongP   ,;
-      lnDoubleP ,;
-      lnIntN    ,;
-      lnLongN   ,;
-      lnDoubleN ,;
-      lnDoubleI ,;
-      ldDateE   ,;
-      llFalse   ,;
-      llTrue    ,;
-      loObject  ,;
-      luNIL     ,;
-      lbBlock   ,;
-      lbBlockC  ,;
-      laArray   }
-
-   MEMVAR mxNotHere
-   MEMVAR mcString
-   MEMVAR mcStringE
-   MEMVAR mcStringZ
-   MEMVAR mnIntZ
-   MEMVAR mnDoubleZ
-   MEMVAR mnIntP
-   MEMVAR mnLongP
-   MEMVAR mnDoubleP
-   MEMVAR mnDoubleI
-   MEMVAR mnIntN
-   MEMVAR mnLongN
-   MEMVAR mnDoubleN
-   MEMVAR mdDateE
-   MEMVAR mlFalse
-   MEMVAR mlTrue
-   MEMVAR moObject
-   MEMVAR muNIL
-   MEMVAR mbBlock
-   MEMVAR mbBlockC
-   MEMVAR maArray
-
-   /* NOTE: mxNotHere intentionally not declared */
-   PRIVATE mcString  := "HELLO"
-   PRIVATE mcStringE := ""
-   PRIVATE mcStringZ := "A" + Chr( 0 ) + "B"
-   PRIVATE mnIntZ    := 0
-   PRIVATE mnDoubleZ := 0.0
-   PRIVATE mnIntP    := 10
-   PRIVATE mnLongP   := 100000
-   PRIVATE mnDoubleP := 10.567
-   PRIVATE mnIntN    := -10
-   PRIVATE mnLongN   := -100000
-   PRIVATE mnDoubleN := -10.567
-   PRIVATE mnDoubleI := Log( 0 )
-   PRIVATE mdDateE   := SToD( "" )
-   PRIVATE mlFalse   := .F.
-   PRIVATE mlTrue    := .T.
-   PRIVATE moObject  := ErrorNew()
-   PRIVATE muNIL     := NIL
-   PRIVATE mbBlock   := {|| NIL }
-   PRIVATE mbBlockC  := {|| "(string)" }
-   PRIVATE maArray   := { 9898 }
-
    /* Initialize test */
-
-/* TODO: Need to add this, when multi language support will be available
-         to make sure all error messages comes in the original English
-         language. */
-/* SET LANGID TO EN */
-   SET DATE ANSI
-   SET CENTURY ON
-   SET EXACT OFF
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -171,54 +119,67 @@ FUNCTION Main( cPar1, cPar2 )
       cPar2 := ""
    ENDIF
 
+   TEST_BEGIN( cPar1 + " " + cPar2 )
+
+   Main_HVM()
+   Main_MATH()
+   Main_STRINGS()
+   Main_MISC()
+
+   /* Show results, return ERRORLEVEL and exit */
+
+   TEST_END()
+
+   RETURN NIL
+
+STATIC FUNCTION Main_HVM()
+
 /* NOTE: CA-Cl*pper PP fails on these
    TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
    TEST_LINE( "1" .AND. .F.                   , .F.                                       )
    TEST_LINE( "A" > 1                         , "E BASE 1075 Argument error > F:S"                )
 */
 
-   TEST_BEGIN( cPar1 + " " + cPar2 )
-
    /* VALTYPE() */
 
-   TEST_LINE( ValType(  lcString  )           , "C"   )
-   TEST_LINE( ValType(  lcStringE )           , "C"   )
-   TEST_LINE( ValType(  lcStringZ )           , "C"   )
-   TEST_LINE( ValType(  lnIntZ    )           , "N"   )
-   TEST_LINE( ValType(  lnDoubleZ )           , "N"   )
-   TEST_LINE( ValType(  lnIntP    )           , "N"   )
-   TEST_LINE( ValType(  lnLongP   )           , "N"   )
-   TEST_LINE( ValType(  lnDoubleP )           , "N"   )
-   TEST_LINE( ValType(  lnIntN    )           , "N"   )
-   TEST_LINE( ValType(  lnLongN   )           , "N"   )
-   TEST_LINE( ValType(  lnDoubleN )           , "N"   )
-   TEST_LINE( ValType(  lnDoubleI )           , "N"   )
-   TEST_LINE( ValType(  ldDateE   )           , "D"   )
-   TEST_LINE( ValType(  llFalse   )           , "L"   )
-   TEST_LINE( ValType(  llTrue    )           , "L"   )
-   TEST_LINE( ValType(  loObject  )           , "O"   )
-   TEST_LINE( ValType(  luNIL     )           , "U"   )
-   TEST_LINE( ValType(  lbBlock   )           , "B"   )
-   TEST_LINE( ValType(  laArray   )           , "A"   )
-   TEST_LINE( ValType( @lcString  )           , "U"   )
-   TEST_LINE( ValType( @lcStringE )           , "U"   )
-   TEST_LINE( ValType( @lcStringZ )           , "U"   )
-   TEST_LINE( ValType( @lnIntZ    )           , "U"   )
-   TEST_LINE( ValType( @lnDoubleZ )           , "U"   )
-   TEST_LINE( ValType( @lnIntP    )           , "U"   )
-   TEST_LINE( ValType( @lnLongP   )           , "U"   )
-   TEST_LINE( ValType( @lnDoubleP )           , "U"   )
-   TEST_LINE( ValType( @lnIntN    )           , "U"   )
-   TEST_LINE( ValType( @lnLongN   )           , "U"   )
-   TEST_LINE( ValType( @lnDoubleN )           , "U"   )
-   TEST_LINE( ValType( @lnDoubleI )           , "U"   )
-   TEST_LINE( ValType( @ldDateE   )           , "U"   )
-   TEST_LINE( ValType( @llFalse   )           , "U"   )
-   TEST_LINE( ValType( @llTrue    )           , "U"   )
-   TEST_LINE( ValType( @loObject  )           , "U"   )
-   TEST_LINE( ValType( @luNIL     )           , "U"   )
-   TEST_LINE( ValType( @lbBlock   )           , "U"   )
-   TEST_LINE( ValType( @laArray   )           , "U"   )
+   TEST_LINE( ValType(  scString  )           , "C"   )
+   TEST_LINE( ValType(  scStringE )           , "C"   )
+   TEST_LINE( ValType(  scStringZ )           , "C"   )
+   TEST_LINE( ValType(  snIntZ    )           , "N"   )
+   TEST_LINE( ValType(  snDoubleZ )           , "N"   )
+   TEST_LINE( ValType(  snIntP    )           , "N"   )
+   TEST_LINE( ValType(  snLongP   )           , "N"   )
+   TEST_LINE( ValType(  snDoubleP )           , "N"   )
+   TEST_LINE( ValType(  snIntN    )           , "N"   )
+   TEST_LINE( ValType(  snLongN   )           , "N"   )
+   TEST_LINE( ValType(  snDoubleN )           , "N"   )
+   TEST_LINE( ValType(  snDoubleI )           , "N"   )
+   TEST_LINE( ValType(  sdDateE   )           , "D"   )
+   TEST_LINE( ValType(  slFalse   )           , "L"   )
+   TEST_LINE( ValType(  slTrue    )           , "L"   )
+   TEST_LINE( ValType(  soObject  )           , "O"   )
+   TEST_LINE( ValType(  suNIL     )           , "U"   )
+   TEST_LINE( ValType(  sbBlock   )           , "B"   )
+   TEST_LINE( ValType(  saArray   )           , "A"   )
+   TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @scStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snIntZ    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snDoubleZ )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snIntP    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snLongP   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snDoubleP )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snIntN    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snLongN   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snDoubleN )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @snDoubleI )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @sdDateE   )           , "D"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @slFalse   )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @slTrue    )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @soObject  )           , "O"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @suNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @sbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @saArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType(  mcString  )           , "C"   )
    TEST_LINE( ValType(  mcStringE )           , "C"   )
    TEST_LINE( ValType(  mcStringZ )           , "C"   )
@@ -238,25 +199,25 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( ValType(  muNIL     )           , "U"   )
    TEST_LINE( ValType(  mbBlock   )           , "B"   )
    TEST_LINE( ValType(  maArray   )           , "A"   )
-   TEST_LINE( ValType( @mcString  )           , "U"   )
-   TEST_LINE( ValType( @mcStringE )           , "U"   )
-   TEST_LINE( ValType( @mcStringZ )           , "U"   )
-   TEST_LINE( ValType( @mnIntZ    )           , "U"   )
-   TEST_LINE( ValType( @mnDoubleZ )           , "U"   )
-   TEST_LINE( ValType( @mnIntP    )           , "U"   )
-   TEST_LINE( ValType( @mnLongP   )           , "U"   )
-   TEST_LINE( ValType( @mnDoubleP )           , "U"   )
-   TEST_LINE( ValType( @mnIntN    )           , "U"   )
-   TEST_LINE( ValType( @mnLongN   )           , "U"   )
-   TEST_LINE( ValType( @mnDoubleN )           , "U"   )
-   TEST_LINE( ValType( @mnDoubleI )           , "U"   )
-   TEST_LINE( ValType( @mdDateE   )           , "U"   )
-   TEST_LINE( ValType( @mlFalse   )           , "U"   )
-   TEST_LINE( ValType( @mlTrue    )           , "U"   )
-   TEST_LINE( ValType( @moObject  )           , "U"   )
-   TEST_LINE( ValType( @muNIL     )           , "U"   )
-   TEST_LINE( ValType( @mbBlock   )           , "U"   )
-   TEST_LINE( ValType( @maArray   )           , "U"   )
+   TEST_LINE( ValType( @mcString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mcStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mcStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnIntZ    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnDoubleZ )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnIntP    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnLongP   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnDoubleP )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnIntN    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnLongN   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnDoubleN )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mnDoubleI )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mdDateE   )           , "D"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mlFalse   )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mlTrue    )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @moObject  )           , "O"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @muNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @mbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   TEST_LINE( ValType( @maArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
 
    /* Special internal messages */
 
@@ -282,121 +243,26 @@ FUNCTION Main( cPar1, cPar2 )
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
-   TEST_LINE( luNIL:className                 , "NIL"       )
+   TEST_LINE( suNIL:className                 , "NIL"       )
 #endif
-   TEST_LINE( lcString:className              , "CHARACTER" )
-   TEST_LINE( lnIntP:className                , "NUMERIC"   )
-   TEST_LINE( ldDateE:className               , "DATE"      )
-   TEST_LINE( llFalse:className               , "LOGICAL"   )
-   TEST_LINE( lbBlock:className               , "BLOCK"     )
-   TEST_LINE( laArray:className               , "ARRAY"     )
-   TEST_LINE( loObject:className              , "ERROR"     )
+   TEST_LINE( scString:className              , "CHARACTER" )
+   TEST_LINE( snIntP:className                , "NUMERIC"   )
+   TEST_LINE( sdDateE:className               , "DATE"      )
+   TEST_LINE( slFalse:className               , "LOGICAL"   )
+   TEST_LINE( sbBlock:className               , "BLOCK"     )
+   TEST_LINE( saArray:className               , "ARRAY"     )
+   TEST_LINE( soObject:className              , "ERROR"     )
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
-   TEST_LINE( luNIL:classH                    , 0           )
+   TEST_LINE( suNIL:classH                    , 0           )
 #endif
-   TEST_LINE( lcString:classH                 , 0           )
-   TEST_LINE( lnIntP:classH                   , 0           )
-   TEST_LINE( ldDateE:classH                  , 0           )
-   TEST_LINE( llFalse:classH                  , 0           )
-   TEST_LINE( lbBlock:classH                  , 0           )
-   TEST_LINE( laArray:classH                  , 0           )
-   TEST_LINE( loObject:classH > 0             , .T.         )
-
-   /* ASCAN() */
-
-   TEST_LINE( aScan()                         , 0           )
-   TEST_LINE( aScan( NIL )                    , 0           )
-   TEST_LINE( aScan( "A" )                    , 0           )
-   TEST_LINE( aScan( "A", "A" )               , 0           )
-   TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
-   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
-   TEST_LINE( aScan( laAllTypes, lcString   ) , 1           )
-   TEST_LINE( aScan( @laAllTypes, lcString )  , 0           )
-   TEST_LINE( aScan( laAllTypes, @lcString )  , 0           )
-   TEST_LINE( aScan( laAllTypes, lcStringE  ) , 1           )
-   TEST_LINE( aScan( laAllTypes, lcStringZ  ) , 3           )
-   TEST_LINE( aScan( laAllTypes, lnIntZ     ) , 4           )
-   TEST_LINE( aScan( laAllTypes, lnDoubleZ  ) , 4           )
-   TEST_LINE( aScan( laAllTypes, lnIntP     ) , 6           )
-   TEST_LINE( aScan( laAllTypes, lnLongP    ) , 7           )
-   TEST_LINE( aScan( laAllTypes, lnDoubleP  ) , 8           )
-   TEST_LINE( aScan( laAllTypes, lnIntN     ) , 9           )
-   TEST_LINE( aScan( laAllTypes, lnLongN    ) , 10          )
-   TEST_LINE( aScan( laAllTypes, lnDoubleN  ) , 11          )
-   TEST_LINE( aScan( laAllTypes, lnDoubleI  ) , 12          )
-   TEST_LINE( aScan( laAllTypes, ldDateE    ) , 13          )
-   TEST_LINE( aScan( laAllTypes, llFalse    ) , 14          )
-   TEST_LINE( aScan( laAllTypes, llTrue     ) , 15          )
-   TEST_LINE( aScan( laAllTypes, loObject   ) , 0           )
-   TEST_LINE( aScan( laAllTypes, luNIL      ) , 17          )
-   TEST_LINE( aScan( laAllTypes, lbBlock    ) , 0           )
-   TEST_LINE( aScan( laAllTypes, lbBlockC   ) , 0           )
-   TEST_LINE( aScan( laAllTypes, laArray    ) , 0           )
-   SET EXACT ON
-   TEST_LINE( aScan( laAllTypes, lcString   ) , 1           )
-   TEST_LINE( aScan( laAllTypes, lcStringE  ) , 2           )
-   TEST_LINE( aScan( laAllTypes, lcStringZ  ) , 3           )
-   SET EXACT OFF
-
-   /* EVAL(), :EVAL */
-
-   TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( Eval( @lbBlock )                , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
-   TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
-   TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
-/* Harbour compiler not yet handles these */
-#ifndef __HARBOUR__
-   TEST_LINE( luNIL:Eval                      , "E BASE 1004 No exported method EVAL F:S" )
-#endif
-   TEST_LINE( lcString:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( lnIntP:Eval                     , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( ldDateE:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( llFalse:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( lbBlock:Eval                    , NIL                                       )
-   TEST_LINE( laArray:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
-   TEST_LINE( loObject:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
-
-   /* STOD() */
-
-   /* For these tests in CA-Cl*pper 5.2e the following native STOD() has
-      been used ( not the emulated one written in Clipper ):
-
-      CLIPPER STOD( void )
-      {
-         // The length check is a fix to avoid buggy behaviour of _retds()
-         _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
-      }
-   */
-
-   TEST_LINE( SToD()                          , SToD("        ")             )
-   TEST_LINE( SToD(1)                         , SToD("        ")             )
-   TEST_LINE( SToD(NIL)                       , SToD("        ")             )
-   TEST_LINE( SToD("")                        , SToD("        ")             )
-   TEST_LINE( SToD("        ")                , SToD("        ")             )
-   TEST_LINE( SToD("       ")                 , SToD("        ")             )
-   TEST_LINE( SToD("         ")               , SToD("        ")             )
-   TEST_LINE( SToD(" 1234567")                , SToD("        ")             )
-   TEST_LINE( SToD("1999    ")                , SToD("        ")             )
-   TEST_LINE( SToD("99999999")                , SToD("        ")             )
-   TEST_LINE( SToD("99990101")                , SToD("        ")             )
-   TEST_LINE( SToD("19991301")                , SToD("        ")             )
-   TEST_LINE( SToD("19991241")                , SToD("        ")             )
-   TEST_LINE( SToD("01000101")                , SToD("01000101")             )
-   TEST_LINE( SToD("29991231")                , SToD("29991231")             )
-   TEST_LINE( SToD("19990905")                , SToD("19990905")             )
-   TEST_LINE( SToD(" 9990905")                , SToD("        ")             )
-   TEST_LINE( SToD("1 990905")                , SToD("        ")             )
-   TEST_LINE( SToD("19 90905")                , SToD("17490905")             )
-   TEST_LINE( SToD("199 0905")                , SToD("19740905")             )
-   TEST_LINE( SToD("1999 905")                , SToD("        ")             )
-   TEST_LINE( SToD("19990 05")                , SToD("        ")             )
-   TEST_LINE( SToD("199909 5")                , SToD("        ")             )
-   TEST_LINE( SToD("1999090 ")                , SToD("        ")             )
-   TEST_LINE( SToD("1999 9 5")                , SToD("        ")             )
-   TEST_LINE( SToD("1999090" + Chr(0))        , SToD("        ")             )
+   TEST_LINE( scString:classH                 , 0           )
+   TEST_LINE( snIntP:classH                   , 0           )
+   TEST_LINE( sdDateE:classH                  , 0           )
+   TEST_LINE( slFalse:classH                  , 0           )
+   TEST_LINE( sbBlock:classH                  , 0           )
+   TEST_LINE( saArray:classH                  , 0           )
+   TEST_LINE( soObject:classH > 0             , .T.         )
 
    /* (operators) */
 
@@ -467,6 +333,11 @@ FUNCTION Main( cPar1, cPar2 )
 #endif
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
 
+   TEST_LINE( -Month(sdDate)                  , -1                                 )
+   TEST_LINE( Str(-(Month(sdDate)))           , "        -1"                       )
+   TEST_LINE( Str(-(Val("10")))               , "       -10"                       )
+   TEST_LINE( Str(-(Val("100000")))           , "   -100000"                       )
+   TEST_LINE( Str(-(Val("20.876")))           , "       -20.876"                   )
    TEST_LINE( -(0)                            , 0                                  )
    TEST_LINE( -(10)                           , -10                                )
    TEST_LINE( -(10.505)                       , -10.505                            )
@@ -478,7 +349,7 @@ FUNCTION Main( cPar1, cPar2 )
 #ifndef __HARBOUR__
    TEST_LINE( "AA" $ 1                        , "E BASE 1109 Argument error $ F:S" )
 #endif
-   TEST_LINE( lcString $ 1                    , "E BASE 1109 Argument error $ F:S" )
+   TEST_LINE( scString $ 1                    , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
 
    IF TEST_OPT_Z()
@@ -487,71 +358,71 @@ FUNCTION Main( cPar1, cPar2 )
 
    TEST_LINE( 1 .AND. 2                       , "E BASE 1066 Argument error conditional " )
    TEST_LINE( NIL .AND. NIL                   , "E BASE 1066 Argument error conditional " )
-   TEST_LINE( lcString .AND. lcString         , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( scString .AND. scString         , "E BASE 1066 Argument error conditional " )
    TEST_LINE( .T. .AND. 1                     , 1                                         )
    TEST_LINE( .T. .AND. 1.567                 , 1.567                                     )
-   TEST_LINE( .T. .AND. lcString              , "HELLO"                                   )
+   TEST_LINE( .T. .AND. scString              , "HELLO"                                   )
    TEST_LINE( .T. .AND. SToD("")              , SToD("        ")                          )
    TEST_LINE( .T. .AND. NIL                   , NIL                                       )
    TEST_LINE( .T. .AND. {}                    , "{.[0].}"                                 )
    TEST_LINE( .T. .AND. {|| NIL }             , "{||...}"                                 )
    TEST_LINE( .F. .AND. 1                     , .F.                                       )
    TEST_LINE( .F. .AND. 1.567                 , .F.                                       )
-   TEST_LINE( .F. .AND. lcString              , .F.                                       )
+   TEST_LINE( .F. .AND. scString              , .F.                                       )
    TEST_LINE( .F. .AND. SToD("")              , .F.                                       )
    TEST_LINE( .F. .AND. NIL                   , .F.                                       )
    TEST_LINE( .F. .AND. {}                    , .F.                                       )
    TEST_LINE( .F. .AND. {|| NIL }             , .F.                                       )
    TEST_LINE( 1 .AND. .F.                     , .F.                                       )
    TEST_LINE( 1.567 .AND. .F.                 , .F.                                       )
-   TEST_LINE( lcString .AND. .F.              , .F.                                       )
+   TEST_LINE( scString .AND. .F.              , .F.                                       )
 
    /* With the shortcut optimalization *OFF* (/z switch) */
 
    TEST_LINE( 1 .OR. 2                        , "E BASE 1066 Argument error conditional " )
    TEST_LINE( .F. .OR. 2                      , 2                                         )
    TEST_LINE( .F. .OR. 1.678                  , 1.678                                     )
-   TEST_LINE( .F. .OR. lcString               , "HELLO"                                   )
+   TEST_LINE( .F. .OR. scString               , "HELLO"                                   )
    TEST_LINE( .T. .OR. 2                      , .T.                                       )
    TEST_LINE( .T. .OR. 1.678                  , .T.                                       )
-   TEST_LINE( .T. .OR. lcString               , .T.                                       )
+   TEST_LINE( .T. .OR. scString               , .T.                                       )
    TEST_LINE( 1 .OR. .F.                      , 1                                         )
    TEST_LINE( 1.0 .OR. .F.                    , 1.0                                       )
-   TEST_LINE( lcString .OR. .F.               , "HELLO"                                   )
+   TEST_LINE( scString .OR. .F.               , "HELLO"                                   )
 
    ELSE
 
    TEST_LINE( 1 .AND. 2                       , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( NIL .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
-   TEST_LINE( lcString .AND. lcString         , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( scString .AND. scString         , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. 1                     , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. 1.567                 , "E BASE 1078 Argument error .AND. F:S"    )
-   TEST_LINE( .T. .AND. lcString              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. scString              , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. SToD("")              , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. {}                    , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .T. .AND. {|| NIL }             , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. 1                     , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. 1.567                 , "E BASE 1078 Argument error .AND. F:S"    )
-   TEST_LINE( .F. .AND. lcString              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. scString              , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. SToD("")              , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. {}                    , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( .F. .AND. {|| NIL }             , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( 1 .AND. .F.                     , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( 1.567 .AND. .F.                 , "E BASE 1078 Argument error .AND. F:S"    )
-   TEST_LINE( lcString .AND. .F.              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( scString .AND. .F.              , "E BASE 1078 Argument error .AND. F:S"    )
 
    TEST_LINE( 1 .OR. 2                        , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( .F. .OR. 2                      , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( .F. .OR. 1.678                  , "E BASE 1079 Argument error .OR. F:S"     )
-   TEST_LINE( .F. .OR. lcString               , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .F. .OR. scString               , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( .T. .OR. 2                      , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( .T. .OR. 1.678                  , "E BASE 1079 Argument error .OR. F:S"     )
-   TEST_LINE( .T. .OR. lcString               , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .T. .OR. scString               , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( 1 .OR. .F.                      , "E BASE 1079 Argument error .OR. F:S"     )
    TEST_LINE( 1.0 .OR. .F.                    , "E BASE 1079 Argument error .OR. F:S"     )
-   TEST_LINE( lcString .OR. .F.               , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( scString .OR. .F.               , "E BASE 1079 Argument error .OR. F:S"     )
 
    ENDIF
 
@@ -563,33 +434,41 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( iif( .T., ":T:", ":F:" )        , ":T:"                                     )
    TEST_LINE( iif( .F., ":T:", ":F:" )        , ":F:"                                     )
 
-   TEST_LINE( lcString++                      , "E BASE 1086 Argument error ++ F:S"       )
-   TEST_LINE( lcString--                      , "E BASE 1087 Argument error -- F:S"       )
+   TEST_LINE( scString++                      , "E BASE 1086 Argument error ++ F:S"       )
+   TEST_LINE( scString--                      , "E BASE 1087 Argument error -- F:S"       )
 
    TEST_LINE( mxNotHere                       , "E BASE 1003 Variable does not exist MXNOTHERE F:R" )
 
-   TEST_LINE( laArray[ 0 ]                    , "E BASE 1132 Bound error array access "           )
-   TEST_LINE( laArray[ 0 ] := 1               , "E BASE 1133 Bound error array assign "           )
-   TEST_LINE( laArray[ 1000 ]                 , "E BASE 1132 Bound error array access "           )
-   TEST_LINE( laArray[ 1000 ] := 1            , "E BASE 1133 Bound error array assign "           )
-   TEST_LINE( laArray[ -1 ]                   , "E BASE 1132 Bound error array access "           )
-   TEST_LINE( laArray[ -1 ] := 1              , "E BASE 1133 Bound error array assign "           )
-   TEST_LINE( laArray[ "1" ]                  , "E BASE 1068 Argument error array access F:S"     )
-   TEST_LINE( laArray[ "1" ] := 1             , "E BASE 1069 Argument error array assign "        )
+   TEST_LINE( saArray[ 0 ]                    , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( saArray[ 0 ] := 1               , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( saArray[ 1000 ]                 , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( saArray[ 1000 ] := 1            , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( saArray[ -1 ]                   , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( saArray[ -1 ] := 1              , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( saArray[ "1" ]                  , "E BASE 1068 Argument error array access F:S"     )
+   TEST_LINE( saArray[ "1" ] := 1             , "E BASE 1069 Argument error array assign "        )
 
-   TEST_LINE( lcString > 1                    , "E BASE 1075 Argument error > F:S"                )
-   TEST_LINE( lcString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
-   TEST_LINE( lcString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
-   TEST_LINE( lcString == 1                   , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( loObject == loObject            , .T.                                               )
-   TEST_LINE( loObject == ErrorNew()          , .F.                                               )
-   TEST_LINE( loObject == TBColumnNew()       , .F.                                               )
-   TEST_LINE( laArray == laArray              , .T.                                               )
+   TEST_LINE( scString > 1                    , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( scString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( scString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( scString == 1                   , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( soObject == soObject            , .T.                                               )
+   TEST_LINE( soObject = soObject             , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject == ErrorNew()          , .F.                                               )
+   TEST_LINE( soObject = ErrorNew()           , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( ErrorNew() == ErrorNew()        , .F.                                               )
+   TEST_LINE( ErrorNew() = ErrorNew()         , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject == TBColumnNew()       , .F.                                               )
+   TEST_LINE( soObject = TBColumnNew()        , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( saArray == saArray              , .T.                                               )
+   TEST_LINE( saArray = saArray               , "E BASE 1071 Argument error = F:S"                )
    TEST_LINE( {} == {}                        , .F.                                               )
+   TEST_LINE( {} = {}                         , "E BASE 1071 Argument error = F:S"                )
    TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( lcString = 1                    , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( lcString < 1                    , "E BASE 1073 Argument error < F:S"                )
-   TEST_LINE( lcString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( {|| NIL } = {|| NIL }           , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( scString = 1                    , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( scString < 1                    , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( scString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
 
 /* NOTE: TEST_CALL() should be used here, since CA-Cl*pper can't preprocess
          the TEST_LINE() variation properly. */
@@ -611,7 +490,9 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_CALL( '(.T.)->(Eof())'      , {|| (.T.)->(Eof()) }      , .T.                                            )
    TEST_CALL( '(.F.)->(Eof())'      , {|| (.F.)->(Eof()) }      , .T.                                            )
    TEST_CALL( '(NIL)->(Eof())'      , {|| (NIL)->(Eof()) }      , .T.                                            )
+#ifndef __HARBOUR__
    TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+#endif
    TEST_LINE( 200->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
    TEST_LINE( 200->("NOFIELD")                , "NOFIELD"                                         )
    TEST_LINE( 200->(NIL)                      , NIL                                               )
@@ -621,8 +502,8 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( 200->({|| NIL })                , "{||...}"                                         )
    TEST_LINE( 200->(.T.)                      , .T.                                               )
 
-   TEST_LINE( loObject:hello                  , "E BASE 1004 No exported method HELLO F:S"        )
-   TEST_LINE( loObject:hello := 1             , "E BASE 1005 No exported variable HELLO F:S"      )
+   TEST_LINE( soObject:hello                  , "E BASE 1004 No exported method HELLO F:S"        )
+   TEST_LINE( soObject:hello := 1             , "E BASE 1005 No exported variable HELLO F:S"      )
 
    /* LEN() */
 
@@ -630,7 +511,7 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Len( 123 )                      , "E BASE 1111 Argument error LEN F:S"   )
    TEST_LINE( Len( "" )                       , 0                                      )
    TEST_LINE( Len( "123" )                    , 3                                      )
-   TEST_LINE( Len( laArray )                  , 1                                      )
+   TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
    TEST_LINE( Len( Space( 3000000000 ) )      , 3000000000                             )
 #else
@@ -639,10 +520,10 @@ FUNCTION Main( cPar1, cPar2 )
 
    /* EMPTY() */
 
-   TEST_LINE( Empty( @lcString              ) , .T.                                    ) /* Bug in CA-Cl*pper ? */
-   TEST_LINE( Empty( @lcStringE             ) , .T.                                    )
-   TEST_LINE( Empty( @lnIntP                ) , .T.                                    ) /* Bug in CA-Cl*pper ? */
-   TEST_LINE( Empty( @lnIntZ                ) , .T.                                    )
+   TEST_LINE( Empty( @scString              ) , .F.                                    ) /* Bug in CA-Cl*pper, it will return .T. */
+   TEST_LINE( Empty( @scStringE             ) , .T.                                    )
+   TEST_LINE( Empty( @snIntP                ) , .F.                                    ) /* Bug in CA-Cl*pper, it will return .T. */
+   TEST_LINE( Empty( @snIntZ                ) , .T.                                    )
    TEST_LINE( Empty( "Hallo"                ) , .F.                                    )
    TEST_LINE( Empty( ""                     ) , .T.                                    )
    TEST_LINE( Empty( "  "                   ) , .T.                                    )
@@ -674,15 +555,44 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Empty( {0}                    ) , .F.                                    )
    TEST_LINE( Empty( {|x|x+x}               ) , .F.                                    )
 
+   RETURN NIL
+
+STATIC FUNCTION Main_MATH()
+
+   /* LOG() */
+
+   TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
+
+   /* SQRT() */
+
+   TEST_LINE( SQrt("A")                       , "E BASE 1097 Argument error SQRT F:S"  )
+   TEST_LINE( SQrt(-1)                        , 0                                      )
+   TEST_LINE( SQrt(0)                         , 0                                      )
+   TEST_LINE( SQrt(4)                         , 2                                      )
+   TEST_LINE( Str(SQrt(4),21,18)              , " 2.000000000000000000"                )
+   TEST_LINE( Str(SQrt(3),21,18)              , " 1.732050807568877000"                )
+
    /* ABS() */
 
    TEST_LINE( Abs("A")                        , "E BASE 1089 Argument error ABS F:S"   )
    TEST_LINE( Abs(0)                          , 0                                      )
    TEST_LINE( Abs(10)                         , 10                                     )
    TEST_LINE( Abs(-10)                        , 10                                     )
+   TEST_LINE( Abs(Month(sdDate))              , 1                                      )
+   TEST_LINE( Abs(-Month(sdDate))             , 1                                      )
+   TEST_LINE( Str(Abs(Month(sdDate)))         , "  1"                                  )
+   TEST_LINE( Str(Abs(-Month(sdDate)))        , "         1"                           )
+   TEST_LINE( Str(Abs(Val("0")))              , "0"                                    )
+   TEST_LINE( Str(Abs(Val("-0")))             , " 0"                                    )
+   TEST_LINE( Str(Abs(Val("150")))            , "150"                                  )
+   TEST_LINE( Str(Abs(Val("-150")))           , "       150"                           )
+   TEST_LINE( Str(Abs(Val("150.245")))        , "       150.245"                       )
+   TEST_LINE( Str(Abs(Val("-150.245")))       , "       150.245"                       )
    TEST_LINE( Abs(0.1)                        , 0.1                                    )
    TEST_LINE( Abs(10.5)                       , 10.5                                   )
    TEST_LINE( Abs(-10.7)                      , 10.7                                   )
+   TEST_LINE( Abs(10.578)                     , 10.578                                 )
+   TEST_LINE( Abs(-10.578)                    , 10.578                                 )
    TEST_LINE( Abs(100000)                     , 100000                                 )
    TEST_LINE( Abs(-100000)                    , 100000                                 )
 
@@ -724,6 +634,110 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Round(50, -2)                   , 100              )
    TEST_LINE( Round(10.50, 0)                 , 11               )
    TEST_LINE( Round(10.50, -1)                , 10               )
+
+   /* INT() */
+
+   TEST_LINE( Int( NIL )                      , "E BASE 1090 Argument error INT F:S"  )
+   TEST_LINE( Int( "A" )                      , "E BASE 1090 Argument error INT F:S" )
+   TEST_LINE( Int( {} )                       , "E BASE 1090 Argument error INT F:S" )
+   TEST_LINE( Int( 0 )                        , 0                                    )
+   TEST_LINE( Int( 0.0 )                      , 0                                    )
+   TEST_LINE( Int( 10 )                       , 10                                   )
+   TEST_LINE( Int( -10 )                      , -10                                  )
+   TEST_LINE( Int( 100000 )                   , 100000                               )
+   TEST_LINE( Int( -100000 )                  , -100000                              )
+   TEST_LINE( Int( 10.5 )                     , 10                                   )
+   TEST_LINE( Int( -10.5 )                    , -10                                  )
+   TEST_LINE( Str(Int(Val("100.290")))        , "100"                                )
+   TEST_LINE( Str(Int(Val("  100.290")))      , "  100"                              )
+   TEST_LINE( Str(Int(Val(" 100")))           , " 100"                               )
+   TEST_LINE( Int(5000000000.90)              , 5000000000                           )
+   TEST_LINE( Int(-5000000000.90)             , -5000000000                          )
+   TEST_LINE( Int(5000000000)                 , 5000000000                           )
+   TEST_LINE( Int(-5000000000)                , -5000000000                          )
+   TEST_LINE( Int(5000000000) / 100000        , 50000                                )
+   TEST_LINE( Int(-5000000000) / 100000       , -50000                               )
+
+   /* MIN()/MAX() */
+
+   TEST_LINE( Max(NIL, NIL)                           , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(10, NIL)                            , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(SToD("19800101"), 10)               , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Max(SToD("19800102"), SToD("19800101")) , SToD("19800102")                     )
+   TEST_LINE( Max(SToD("19800101"), SToD("19800102")) , SToD("19800102")                     )
+   TEST_LINE( Max(snIntP, snLongP)                    , 100000                               )
+   TEST_LINE( Max(@snIntP, @snLongP)                  , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E BASE 1093 Argument error MAX F:S" */
+   TEST_LINE( Min(NIL, NIL)                           , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(10, NIL)                            , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(SToD("19800101"), 10)               , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Min(SToD("19800102"), SToD("19800101")) , SToD("19800101")                     )
+   TEST_LINE( Min(SToD("19800101"), SToD("19800102")) , SToD("19800101")                     )
+   TEST_LINE( Min(snIntP, snLongP)                    , 10                                   )
+   TEST_LINE( Min(@snIntP, @snLongP)                  , 10                                   ) /* Bug in CA-Cl*pper, it will return: "E BASE 1092 Argument error MIN F:S" */
+
+   /* Decimals handling */
+
+   TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
+   TEST_LINE( Str(Max(10.50, 10)          )   , "        10.50"                )
+   TEST_LINE( Str(Max(10, 9.50)           )   , "        10"                   )
+   TEST_LINE( Str(Max(100000, 10)         )   , "    100000"                   )
+   TEST_LINE( Str(Max(20.50, 20.670)      )   , "        20.670"               )
+   TEST_LINE( Str(Max(20.5125, 20.670)    )   , "        20.670"               )
+   TEST_LINE( Str(Min(10, 12)             )   , "        10"                   )
+   TEST_LINE( Str(Min(10.50, 10)          )   , "        10"                   )
+   TEST_LINE( Str(Min(10, 9.50)           )   , "         9.50"                )
+   TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
+   TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
+   TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
+   TEST_LINE( Str(Val("0")                )   , "0"                            )
+   TEST_LINE( Str(Val(" 0")               )   , " 0"                           )
+   TEST_LINE( Str(Val("-0")               )   , " 0"                           )
+   TEST_LINE( Str(Val("00")               )   , " 0"                           )
+   TEST_LINE( Str(Val("1")                )   , "1"                            )
+   TEST_LINE( Str(Val("15")               )   , "15"                           )
+   TEST_LINE( Str(Val("200")              )   , "200"                          )
+   TEST_LINE( Str(Val(" 200")             )   , " 200"                         )
+   TEST_LINE( Str(Val("200 ")             )   , " 200"                         )
+   TEST_LINE( Str(Val(" 200 ")            )   , "  200"                        )
+   TEST_LINE( Str(Val("-200")             )   , "-200"                         )
+   TEST_LINE( Str(Val(" -200")            )   , " -200"                        )
+   TEST_LINE( Str(Val("-200 ")            )   , " -200"                        )
+   TEST_LINE( Str(Val(" -200 ")           )   , "  -200"                       )
+   TEST_LINE( Str(Val("15.0")             )   , "15.0"                         )
+   TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
+   TEST_LINE( Str(Val("15.000")           )   , "15.000"                       )
+   TEST_LINE( Str(Val("15.001 ")          )   , "15.0010"                      )
+   TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
+   TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
+   TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
+   TEST_LINE( Str(10                      )   , "        10"                   )
+   TEST_LINE( Str(15.0                    )   , "        15.0"                 )
+   TEST_LINE( Str(10.1                    )   , "        10.1"                 )
+   TEST_LINE( Str(15.00                   )   , "        15.00"                )
+   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
+   TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
+   TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
+   TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
+   TEST_LINE( Str(100/1000                )   , "         0.10"                )
+   TEST_LINE( Str(100/100000              )   , "         0.00"                )
+   TEST_LINE( Str(10 * 10                 )   , "       100"                   )
+   TEST_LINE( Str(100 / 10                )   , "        10"                   )
+   TEST_LINE( Str(100 / 13                )   , "         7.69"                )
+   TEST_LINE( Str(100.0 / 10              )   , "        10.00"                )
+   TEST_LINE( Str(100.0 / 10.00           )   , "        10.00"                )
+   TEST_LINE( Str(100.0 / 10.000          )   , "        10.00"                )
+   TEST_LINE( Str(100 / 10.00             )   , "        10.00"                )
+   TEST_LINE( Str(100 / 10.000            )   , "        10.00"                )
+   TEST_LINE( Str(100.00 / 10.0           )   , "        10.00"                )
+   TEST_LINE( Str(sdDate - sdDateE        )   , "   2444240"                   )
+   TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
+   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         )
+
+   RETURN NIL
+
+STATIC FUNCTION Main_STRINGS()
 
    /* AT() */
 
@@ -832,11 +846,12 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Pad(100000, 8)                  , "100000  "       )
    TEST_LINE( Pad(100000, 8, "-")             , "100000--"       )
    TEST_LINE( Pad(-100000, 8, "-")            , "-100000-"       )
+   TEST_LINE( Pad(5000000000, 15)             , "5000000000     ")
    TEST_LINE( Pad(SToD("19800101"), 12)       , "1980.01.01  "   )
    TEST_LINE( Pad(Year(SToD("19800101")), 5)  , "1980 "          )
    TEST_LINE( Pad(Day(SToD("19800101")), 5)   , "1    "          )
-   TEST_LINE( Pad(@lcString, 10)              , ""               )
-   TEST_LINE( Pad(lcString, @lnIntP)          , ""               )
+   TEST_LINE( Pad(@scString, 10)              , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( Pad(scString, @snIntP)          , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( Pad("abcdef", -5)               , ""               )
    TEST_LINE( Pad("abcdef", 0)                , ""               )
    TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
@@ -856,8 +871,8 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( PadR(SToD("19800101"), 12)      , "1980.01.01  "   )
    TEST_LINE( PadR(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadR(Day(SToD("19800101")), 5)  , "1    "          )
-   TEST_LINE( PadR(@lcString, 10)             , ""               )
-   TEST_LINE( PadR(lcString, @lnIntP)         , ""               )
+   TEST_LINE( PadR(@scString, 10)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
+   TEST_LINE( PadR(scString, @snIntP)         , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadR("abcdef", -5)              , ""               )
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
@@ -877,8 +892,8 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( PadL(SToD("19800101"), 12)      , "  1980.01.01"   )
    TEST_LINE( PadL(Year(SToD("19800101")), 5) , " 1980"          )
    TEST_LINE( PadL(Day(SToD("19800101")), 5)  , "    1"          )
-   TEST_LINE( PadL(@lcString, 10)             , ""               )
-   TEST_LINE( PadL(lcString, @lnIntP)         , ""               )
+   TEST_LINE( PadL(@scString, 10)             , "     HELLO"     )
+   TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     )
    TEST_LINE( PadL("abcdef", -5)              , ""               )
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -898,8 +913,8 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( PadC(SToD("19800101"), 12)      , " 1980.01.01 "   )
    TEST_LINE( PadC(Year(SToD("19800101")), 5) , "1980 "          )
    TEST_LINE( PadC(Day(SToD("19800101")), 5)  , "  1  "          )
-   TEST_LINE( PadC(@lcString, 10)             , ""               )
-   TEST_LINE( PadC(lcString, @lnIntP)         , ""               )
+   TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     )
+   TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     )
    TEST_LINE( PadC("abcdef", -5)              , ""               )
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
@@ -919,49 +934,6 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Stuff("ABCDEF", 2, 1, "xyz")    , "AxyzCDEF"       )
    TEST_LINE( Stuff("ABCDEF", 2, 4, "xyz")    , "AxyzF"          )
    TEST_LINE( Stuff("ABCDEF", 2, 10, "xyz")   , "Axyz"           )
-
-#ifdef __HARBOUR__
-
-   /* __COLORINDEX() */
-
-   TEST_LINE( __ColorIndex()                  , ""               )
-   TEST_LINE( __ColorIndex("", -1)            , ""               )
-   TEST_LINE( __ColorIndex("", 0)             , ""               )
-   TEST_LINE( __ColorIndex("W/R", -1)         , ""               )
-   TEST_LINE( __ColorIndex("W/R", 0)          , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R", 1)          , ""               )
-   TEST_LINE( __ColorIndex("W/R", 2)          , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 0)     , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 2)     , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 3)     , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 0)    , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 2)    , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 3)    , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 2)    , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 2)   , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 2)  , ""               )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 2) , ""               )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 2), ""               )
-   TEST_LINE( __ColorIndex(" W/R ,   ,", 1)   , ""               )
-   TEST_LINE( __ColorIndex(" W/R ,,", 1)      , ""               )
-   TEST_LINE( __ColorIndex(",,", 0)           , ""               )
-   TEST_LINE( __ColorIndex(",,", 1)           , ""               )
-   TEST_LINE( __ColorIndex(",,", 2)           , ""               )
-   TEST_LINE( __ColorIndex(",  ,", 2)         , ""               )
-
-#endif
 
    /* STR() */
 
@@ -1029,61 +1001,6 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Str(-100000, 5, -1)             , "*****"          )
    TEST_LINE( Str(-100000, 6, -1)             , "******"         )
    TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
-
-   /* MIN()/MAX() */
-
-   TEST_LINE( Max(NIL, NIL)                           , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(10, NIL)                            , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(SToD("19800101"), 10)               , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Max(SToD("19800102"), SToD("19800101")) , SToD("19800102")                     )
-   TEST_LINE( Max(SToD("19800101"), SToD("19800102")) , SToD("19800102")                     )
-   TEST_LINE( Max(lnIntP, lnLongP)                    , 100000                               )
-   TEST_LINE( Max(@lnIntP, @lnLongP)                  , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Min(NIL, NIL)                           , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(10, NIL)                            , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(SToD("19800101"), 10)               , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(SToD("19800101"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Min(SToD("19800102"), SToD("19800101")) , SToD("19800101")                     )
-   TEST_LINE( Min(SToD("19800101"), SToD("19800102")) , SToD("19800101")                     )
-   TEST_LINE( Min(lnIntP, lnLongP)                    , 10                                   )
-   TEST_LINE( Min(@lnIntP, @lnLongP)                  , "E BASE 1092 Argument error MIN F:S" )
-
-   /* Decimals handling */
-
-   TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
-   TEST_LINE( Str(Max(10.50, 10)          )   , "        10.50"                )
-   TEST_LINE( Str(Max(10, 9.50)           )   , "        10"                   )
-   TEST_LINE( Str(Max(100000, 10)         )   , "    100000"                   )
-   TEST_LINE( Str(Max(20.50, 20.670)      )   , "        20.670"               )
-   TEST_LINE( Str(Max(20.5125, 20.670)    )   , "        20.670"               )
-   TEST_LINE( Str(Min(10, 12)             )   , "        10"                   )
-   TEST_LINE( Str(Min(10.50, 10)          )   , "        10"                   )
-   TEST_LINE( Str(Min(10, 9.50)           )   , "         9.50"                )
-   TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
-   TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
-   TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
-   TEST_LINE( Str(Val("1")                )   , "1"                            )
-   TEST_LINE( Str(Val("15")               )   , "15"                           )
-   TEST_LINE( Str(Val("200")              )   , "200"                          )
-   TEST_LINE( Str(Val("15.0")             )   , "15.0"                         )
-   TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
-   TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
-   TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
-   TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
-   TEST_LINE( Str(10                      )   , "        10"                   )
-   TEST_LINE( Str(15.0                    )   , "        15.0"                 )
-   TEST_LINE( Str(10.1                    )   , "        10.1"                 )
-   TEST_LINE( Str(15.00                   )   , "        15.00"                )
-   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
-   TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
-   TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
-   TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
-   TEST_LINE( Str(100/1000                )   , "         0.10"                )
-   TEST_LINE( Str(100/100000              )   , "         0.00"                )
-   TEST_LINE( Str(10 * 10                 )   , "       100"                   )
-   TEST_LINE( Str(100 / 10                )   , "        10"                   )
-   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         )
 
    /* STRZERO() */
 
@@ -1273,15 +1190,114 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Transform( 0         , "@BZ 9999"    )       , "    "                        )
    TEST_LINE( Transform( 2334      , "Xxxxx: #####")       , "Xxxxx:  2334"                )
 
+   RETURN NIL
+
+STATIC FUNCTION Main_MISC()
+
+   /* ASCAN() */
+
+   TEST_LINE( aScan()                         , 0           )
+   TEST_LINE( aScan( NIL )                    , 0           )
+   TEST_LINE( aScan( "A" )                    , 0           )
+   TEST_LINE( aScan( "A", "A" )               , 0           )
+   TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
+   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
+   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
+   TEST_LINE( aScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+   TEST_LINE( aScan( saAllTypes, @scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+   TEST_LINE( aScan( saAllTypes, scStringE  ) , 1           )
+   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
+   TEST_LINE( aScan( saAllTypes, snIntZ     ) , 4           )
+   TEST_LINE( aScan( saAllTypes, snDoubleZ  ) , 4           )
+   TEST_LINE( aScan( saAllTypes, snIntP     ) , 6           )
+   TEST_LINE( aScan( saAllTypes, snLongP    ) , 7           )
+   TEST_LINE( aScan( saAllTypes, snDoubleP  ) , 8           )
+   TEST_LINE( aScan( saAllTypes, snIntN     ) , 9           )
+   TEST_LINE( aScan( saAllTypes, snLongN    ) , 10          )
+   TEST_LINE( aScan( saAllTypes, snDoubleN  ) , 11          )
+   TEST_LINE( aScan( saAllTypes, snDoubleI  ) , 12          )
+   TEST_LINE( aScan( saAllTypes, sdDateE    ) , 13          )
+   TEST_LINE( aScan( saAllTypes, slFalse    ) , 14          )
+   TEST_LINE( aScan( saAllTypes, slTrue     ) , 15          )
+   TEST_LINE( aScan( saAllTypes, soObject   ) , 0           )
+   TEST_LINE( aScan( saAllTypes, suNIL      ) , 17          )
+   TEST_LINE( aScan( saAllTypes, sbBlock    ) , 0           )
+   TEST_LINE( aScan( saAllTypes, sbBlockC   ) , 0           )
+   TEST_LINE( aScan( saAllTypes, saArray    ) , 0           )
+   SET EXACT ON
+   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
+   TEST_LINE( aScan( saAllTypes, scStringE  ) , 2           )
+   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
+   SET EXACT OFF
+
+   /* EVAL(), :EVAL */
+
+   TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( @sbBlock )                , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
+   TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
+   TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
+   TEST_LINE( suNIL:Eval                      , "E BASE 1004 No exported method EVAL F:S" )
+#endif
+   TEST_LINE( scString:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( snIntP:Eval                     , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( sdDateE:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( slFalse:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( sbBlock:Eval                    , NIL                                       )
+   TEST_LINE( saArray:Eval                    , "E BASE 1004 No exported method EVAL F:S" )
+   TEST_LINE( soObject:Eval                   , "E BASE 1004 No exported method EVAL F:S" )
+
+   /* STOD() */
+
+   /* For these tests in CA-Cl*pper 5.2e the following native STOD() has
+      been used ( not the emulated one written in Clipper ):
+
+      CLIPPER STOD( void )
+      {
+         // The length check is a fix to avoid buggy behaviour of _retds()
+         _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
+      }
+   */
+
+   TEST_LINE( SToD()                          , SToD("        ")             )
+   TEST_LINE( SToD(1)                         , SToD("        ")             )
+   TEST_LINE( SToD(NIL)                       , SToD("        ")             )
+   TEST_LINE( SToD("")                        , SToD("        ")             )
+   TEST_LINE( SToD("        ")                , SToD("        ")             )
+   TEST_LINE( SToD("       ")                 , SToD("        ")             )
+   TEST_LINE( SToD("         ")               , SToD("        ")             )
+   TEST_LINE( SToD(" 1234567")                , SToD("        ")             )
+   TEST_LINE( SToD("1999    ")                , SToD("        ")             )
+   TEST_LINE( SToD("99999999")                , SToD("        ")             )
+   TEST_LINE( SToD("99990101")                , SToD("        ")             )
+   TEST_LINE( SToD("19991301")                , SToD("        ")             )
+   TEST_LINE( SToD("19991241")                , SToD("        ")             )
+   TEST_LINE( SToD("01000101")                , SToD("01000101")             )
+   TEST_LINE( SToD("29991231")                , SToD("29991231")             )
+   TEST_LINE( SToD("19990905")                , SToD("19990905")             )
+   TEST_LINE( SToD(" 9990905")                , SToD("        ")             )
+   TEST_LINE( SToD("1 990905")                , SToD("        ")             )
+   TEST_LINE( SToD("19 90905")                , SToD("17490905")             )
+   TEST_LINE( SToD("199 0905")                , SToD("19740905")             )
+   TEST_LINE( SToD("1999 905")                , SToD("        ")             )
+   TEST_LINE( SToD("19990 05")                , SToD("        ")             )
+   TEST_LINE( SToD("199909 5")                , SToD("        ")             )
+   TEST_LINE( SToD("1999090 ")                , SToD("        ")             )
+   TEST_LINE( SToD("1999 9 5")                , SToD("        ")             )
+   TEST_LINE( SToD("1999090" + Chr(0))        , SToD("        ")             )
+
    /* DESCEND() */
 
    TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
    TEST_LINE( Descend( NIL )                  , NIL                                                 )
    TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
-   TEST_LINE( Descend( @lcString )            , NIL                                                 )
-   TEST_LINE( Descend( lcString )             , "¸»´´±"                                             )
-   TEST_LINE( Descend( lcString )             , "¸»´´±"                                             )
-   TEST_LINE( Descend( Descend( lcString ) )  , "HELLO"                                             )
+   TEST_LINE( Descend( @scString )            , "¸»´´±"                                             ) /* Bug in CA-Cl*pper, it will return NIL */
+   TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
+   TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
+   TEST_LINE( Descend( Descend( scString ) )  , "HELLO"                                             )
    TEST_LINE( Descend( .F. )                  , .T.                                                 )
    TEST_LINE( Descend( .T. )                  , .F.                                                 )
    TEST_LINE( Descend( 0 )                    , 0.00                                                )
@@ -1305,9 +1321,48 @@ FUNCTION Main( cPar1, cPar2 )
    TEST_LINE( Descend( SToD( "01000101" ) )   , 3474223                                             )
    TEST_LINE( Descend( SToD( "19801220" ) )   , 2787214                                             )
 
-   /* Show results, return ERRORLEVEL and exit */
+#ifdef __HARBOUR__
 
-   TEST_END()
+   /* __COLORINDEX() */
+
+   TEST_LINE( __ColorIndex()                  , ""               )
+   TEST_LINE( __ColorIndex("", -1)            , ""               )
+   TEST_LINE( __ColorIndex("", 0)             , ""               )
+   TEST_LINE( __ColorIndex("W/R", -1)         , ""               )
+   TEST_LINE( __ColorIndex("W/R", 0)          , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R", 1)          , ""               )
+   TEST_LINE( __ColorIndex("W/R", 2)          , ""               )
+   TEST_LINE( __ColorIndex("W/R,GR/0", 0)     , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
+   TEST_LINE( __ColorIndex("W/R,GR/0", 2)     , ""               )
+   TEST_LINE( __ColorIndex("W/R,GR/0", 3)     , ""               )
+   TEST_LINE( __ColorIndex("W/R, GR/0", 0)    , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
+   TEST_LINE( __ColorIndex("W/R, GR/0", 2)    , ""               )
+   TEST_LINE( __ColorIndex("W/R, GR/0", 3)    , ""               )
+   TEST_LINE( __ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
+   TEST_LINE( __ColorIndex("W/R,GR/0 ", 2)    , ""               )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ", 2)   , ""               )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
+   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 2)  , ""               )
+   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
+   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
+   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 2) , ""               )
+   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
+   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
+   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 2), ""               )
+   TEST_LINE( __ColorIndex(" W/R ,   ,", 1)   , ""               )
+   TEST_LINE( __ColorIndex(" W/R ,,", 1)      , ""               )
+   TEST_LINE( __ColorIndex(",,", 0)           , ""               )
+   TEST_LINE( __ColorIndex(",,", 1)           , ""               )
+   TEST_LINE( __ColorIndex(",,", 2)           , ""               )
+   TEST_LINE( __ColorIndex(",  ,", 2)         , ""               )
+
+#endif
 
    RETURN NIL
 
@@ -1353,6 +1408,18 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    s_nPass := 0
    s_nFail := 0
 
+   /* Set up the initial state */
+
+/* TODO: Need to add this, when multi language support will be available
+         to make sure all error messages comes in the original English
+         language. */
+/* SET LANGID TO EN */
+   SET DATE ANSI
+   SET CENTURY ON
+   SET EXACT OFF
+
+   /* Feedback */
+
    fWrite( s_nFhnd, "      Version: " + Version() + s_cNewLine +;
                     "           OS: " + OS() + s_cNewLine +;
                     "   Date, Time: " + DToS( Date() ) + " " + Time() + s_cNewLine +;
@@ -1367,6 +1434,76 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
                     PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + s_cNewLine +;
                     "---------------------------------------------------------------------------" + s_cNewLine )
+
+   /* NOTE: Some basic values we may need for some tests.
+            ( passing by reference, avoid preprocessor bugs, etc. ) */
+
+   scString  := "HELLO"
+   scStringE := ""
+   scStringZ := "A" + Chr( 0 ) + "B"
+   snIntZ    := 0
+   snDoubleZ := 0.0
+   snIntP    := 10
+   snLongP   := 100000
+   snDoubleP := 10.567 /* Use different number of decimals than the default */
+   snIntN    := -10
+   snLongN   := -100000
+   snDoubleN := -10.567 /* Use different number of decimals than the default */
+   snDoubleI := Log( 0 )
+   sdDate    := SToD( "19800101" )
+   sdDateE   := SToD( "" )
+   slFalse   := .F.
+   slTrue    := .T.
+   soObject  := ErrorNew()
+   suNIL     := NIL
+   sbBlock   := {|| NIL }
+   sbBlockC  := {|| "(string)" }
+   saArray   := { 9898 }
+
+   saAllTypes := {;
+      scString  ,;
+      scStringE ,;
+      scStringZ ,;
+      snIntZ    ,;
+      snDoubleZ ,;
+      snIntP    ,;
+      snLongP   ,;
+      snDoubleP ,;
+      snIntN    ,;
+      snLongN   ,;
+      snDoubleN ,;
+      snDoubleI ,;
+      sdDateE   ,;
+      slFalse   ,;
+      slTrue    ,;
+      soObject  ,;
+      suNIL     ,;
+      sbBlock   ,;
+      sbBlockC  ,;
+      saArray   }
+
+   /* NOTE: mxNotHere intentionally not declared */
+   PUBLIC mcString  := "HELLO"
+   PUBLIC mcStringE := ""
+   PUBLIC mcStringZ := "A" + Chr( 0 ) + "B"
+   PUBLIC mnIntZ    := 0
+   PUBLIC mnDoubleZ := 0.0
+   PUBLIC mnIntP    := 10
+   PUBLIC mnLongP   := 100000
+   PUBLIC mnDoubleP := 10.567
+   PUBLIC mnIntN    := -10
+   PUBLIC mnLongN   := -100000
+   PUBLIC mnDoubleN := -10.567
+   PUBLIC mnDoubleI := Log( 0 )
+   PUBLIC mdDate    := SToD( "19800101" )
+   PUBLIC mdDateE   := SToD( "" )
+   PUBLIC mlFalse   := .F.
+   PUBLIC mlTrue    := .T.
+   PUBLIC moObject  := ErrorNew()
+   PUBLIC muNIL     := NIL
+   PUBLIC mbBlock   := {|| NIL }
+   PUBLIC mbBlockC  := {|| "(string)" }
+   PUBLIC maArray   := { 9898 }
 
    RETURN NIL
 

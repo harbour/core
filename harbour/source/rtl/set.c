@@ -250,7 +250,7 @@ static void close_text( FHANDLE handle )
          user file error value */
       int user_ferror = hb_fsError();
       #if ! defined(OS_UNIX_COMPATIBLE)
-         hb_fsWrite( handle, (BYTE *)"\x1A", 1 );
+         hb_fsWrite( handle, ( BYTE * ) "\x1A", 1 );
       #endif
       hb_fsClose( handle );
       hb_fsSetError( user_ferror );
@@ -289,10 +289,10 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
       if( bAppend )
       {  /* Append mode */
-	 if( hb_fsFile( (BYTE *)path ) )
+	 if( hb_fsFile( ( BYTE * ) path ) )
 	 {  /* If the file already exists, open it (in read-write mode, in
 	       case of non-Unix and text modes). */
-            handle = hb_fsOpen( (BYTE *)path, FO_READWRITE | FO_DENYWRITE );
+            handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
             if( handle != FS_ERROR )
             {  /* Position to EOF */
             #if ! defined(HB_OS_UNIX_COMPATIBLE)
@@ -308,11 +308,11 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
                      ('\x1A') character at the end (non-UNIX only). */
                   char cEOF = '\0';
                   hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
-                  hb_fsRead( handle, (BYTE *)&cEOF, 1 );   /* Read the last char. */
+                  hb_fsRead( handle, ( BYTE * ) &cEOF, 1 );   /* Read the last char. */
                   if( cEOF == '\x1A' )             /* If it's an EOF, */
                      hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
                }
-             #endif
+            #endif
             }
          }
          else bCreate = TRUE; /* Otherwise create a new file. */
@@ -320,7 +320,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       else bCreate = TRUE; /* Always create a new file for overwrite mode. */
 
       if( bCreate )
-         handle = hb_fsCreate( (BYTE *)path, FC_NORMAL );
+         handle = hb_fsCreate( ( BYTE * ) path, FC_NORMAL );
 
       if( handle == FS_ERROR )
       {

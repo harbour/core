@@ -10,7 +10,6 @@
 
 #include <math.h>
 #include "extend.h"
-#include "set.h"
 #include "itemapi.h"
 #include "errorapi.h"
 
@@ -20,30 +19,48 @@ HARBOUR HB_ABS( void )
    {
       PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
-      if( pNumber ) switch( pNumber->type )
+      if( pNumber )
       {
-         case IT_INTEGER:
-            if( pNumber->item.asInteger.value >= 0 )
-               hb_retni( pNumber->item.asInteger.value );
-            else
-               hb_retni( -pNumber->item.asInteger.value );
-            break;
+         WORD wWidth;
+         WORD wDec;
 
-         case IT_LONG:
-            if( pNumber->item.asLong.value >= 0 )
-               hb_retnl( pNumber->item.asLong.value );
-            else
-               hb_retnl( -pNumber->item.asLong.value );
-            break;
+         hb_itemGetNLen( pNumber, &wWidth, &wDec );
 
-         case IT_DOUBLE:
-            if( pNumber->item.asDouble.value >= 0.0 )
-               hb_retndlen( pNumber->item.asDouble.value, 0, pNumber->item.asDouble.decimal );
+         if( IS_INTEGER( pNumber ) )
+         {
+            int iNumber = hb_itemGetNI( pNumber );
+
+            if( iNumber >= 0 )
+               hb_retnilen( iNumber, wWidth );
             else
-               hb_retndlen( -pNumber->item.asDouble.value, 0, pNumber->item.asDouble.decimal );
+               hb_retni( -iNumber );
+         }
+         else if( IS_LONG( pNumber ) )
+         {
+            long lNumber = hb_itemGetNL( pNumber );
+
+            if( lNumber >= 0 )
+               hb_retnllen( lNumber, wWidth );
+            else
+               hb_retnl( -lNumber );
+         }
+         else if( IS_DOUBLE( pNumber ) )
+         {
+            double dNumber = hb_itemGetND( pNumber );
+
+            hb_retndlen( dNumber >= 0.0 ? dNumber : -dNumber, 0, wDec );
+         }
       }
       else
-         hb_errRT_BASE( EG_ARG, 1089, NULL, "ABS" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1089, NULL, "ABS" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ABS" ); /* NOTE: Clipper catches this at compile time! */
@@ -56,7 +73,15 @@ HARBOUR HB_EXP( void )
       if( ISNUM( 1 ) )
          hb_retnd( exp( hb_parnd( 1 ) ) );
       else
-         hb_errRT_BASE( EG_ARG, 1096, NULL, "EXP" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1096, NULL, "EXP" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EXP" ); /* NOTE: Clipper catches this at compile time! */
@@ -66,10 +91,26 @@ HARBOUR HB_INT( void )
 {
    if( hb_pcount() == 1 )
    {
-      if( ISNUM( 1 ) )
-         hb_retnl( hb_parnd( 1 ) );
+      PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+
+      if( pNumber )
+      {
+         WORD wWidth;
+
+         hb_itemGetNLen( pNumber, &wWidth, NULL );
+
+         hb_retndlen( ( long ) hb_parnd( 1 ), wWidth, 0 );
+      }
       else
-         hb_errRT_BASE( EG_ARG, 1090, NULL, "INT" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1090, NULL, "INT" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INT" ); /* NOTE: Clipper catches this at compile time! */
@@ -90,7 +131,15 @@ HARBOUR HB_LOG( void )
             hb_retnd( log( dNumber ) );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1095, NULL, "LOG" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1095, NULL, "LOG" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOG" ); /* NOTE: Clipper catches this at compile time! */
@@ -106,16 +155,13 @@ HARBOUR HB_MAX( void )
 
       if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
       {
-         WORD wType1 = p1->type;
-         WORD wType2 = p1->type;
-
          /* NOTE: The order of these if() branches is significant, */
-         /*       Don't change it */
+         /*       Please, don't change it. */
 
-         if( wType1 == IT_DOUBLE || wType2 == IT_DOUBLE )
+         if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
          {
-            double d1 = hb_parnd( 1 );
-            double d2 = hb_parnd( 2 );
+            double d1 = hb_itemGetND( p1 );
+            double d2 = hb_itemGetND( p2 );
 
             WORD wDec1;
             WORD wDec2;
@@ -125,30 +171,34 @@ HARBOUR HB_MAX( void )
 
             hb_retndlen( d1 >= d2 ? d1 : d2, 0, ( d1 >= d2 ? wDec1 : wDec2 ) );
          }
-         else if( wType1 == IT_LONG || wType2 == IT_LONG )
+         else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
          {
-            long l1 = hb_parnl( 1 );
-            long l2 = hb_parnl( 2 );
+            long l1 = hb_itemGetNL( p1 );
+            long l2 = hb_itemGetNL( p2 );
 
             hb_retnl( l1 >= l2 ? l1 : l2 );
          }
          else
          {
-            int i1 = hb_parni( 1 );
-            int i2 = hb_parni( 2 );
+            int i1 = hb_itemGetNI( p1 );
+            int i2 = hb_itemGetNI( p2 );
 
             hb_retni( i1 >= i2 ? i1 : i2 );
          }
       }
       else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
-      {
-         long l1 = p1->item.asDate.value;
-         long l2 = p2->item.asDate.value;
+         hb_retds( hb_itemGetNL( p1 ) >= hb_itemGetNL( p2 ) ? hb_pards( 1 ) : hb_pards( 2 ) );
 
-         hb_retds( l1 >= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
-      }
       else
-         hb_errRT_BASE( EG_ARG, 1093, NULL, "MAX" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1093, NULL, "MAX" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MAX" ); /* NOTE: Clipper catches this at compile time! */
@@ -164,16 +214,13 @@ HARBOUR HB_MIN( void )
 
       if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
       {
-         WORD wType1 = p1->type;
-         WORD wType2 = p1->type;
-
          /* NOTE: The order of these if() branches is significant, */
-         /*       Don't change it */
+         /*       Please, don't change it. */
 
-         if( wType1 == IT_DOUBLE || wType2 == IT_DOUBLE )
+         if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
          {
-            double d1 = hb_parnd( 1 );
-            double d2 = hb_parnd( 2 );
+            double d1 = hb_itemGetND( p1 );
+            double d2 = hb_itemGetND( p2 );
 
             WORD wDec1;
             WORD wDec2;
@@ -183,30 +230,34 @@ HARBOUR HB_MIN( void )
 
             hb_retndlen( d1 <= d2 ? d1 : d2, 0, ( d1 <= d2 ? wDec1 : wDec2 ) );
          }
-         else if( wType1 == IT_LONG || wType2 == IT_LONG )
+         else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
          {
-            long l1 = hb_parnl( 1 );
-            long l2 = hb_parnl( 2 );
+            long l1 = hb_itemGetNL( p1 );
+            long l2 = hb_itemGetNL( p2 );
 
             hb_retnl( l1 <= l2 ? l1 : l2 );
          }
          else
          {
-            int i1 = hb_parni( 1 );
-            int i2 = hb_parni( 2 );
+            int i1 = hb_itemGetNI( p1 );
+            int i2 = hb_itemGetNI( p2 );
 
             hb_retni( i1 <= i2 ? i1 : i2 );
          }
       }
       else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
-      {
-         long l1 = p1->item.asDate.value;
-         long l2 = p2->item.asDate.value;
+         hb_retds( hb_itemGetNL( p1 ) <= hb_itemGetNL( p2 ) ? hb_pards( 1 ) : hb_pards( 2 ) );
 
-         hb_retds( l1 <= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
-      }
       else
-         hb_errRT_BASE( EG_ARG, 1092, NULL, "MIN" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1092, NULL, "MIN" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MIN" ); /* NOTE: Clipper catches this at compile time! */
@@ -232,7 +283,7 @@ FUNCTION MOD(cl_num, cl_base)
 
    if( pNumber && ISNUM( 2 ) )
    {
-      double dNumber = hb_parnd( 1 );
+      double dNumber = hb_itemGetND( pNumber );
       double dBase = hb_parnd( 2 ); /* dBase! Cool! */
 
       if( dBase )
@@ -256,6 +307,9 @@ FUNCTION MOD(cl_num, cl_base)
    else
       hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
 }
+
+/* DJGPP can sprintf a float that is almost 320 digits long */
+#define HB_MAX_DOUBLE_LENGTH 320
 
 double hb_numRound( double dResult, int iDec )
 {
@@ -284,7 +338,11 @@ double hb_numRound( double dResult, int iDec )
       }
    }
 
-   szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
+   /* Be paranoid and use a large amount of padding */
+   /* NOTE: In Cygwin allocating a buffer with the size: iSize + iDec + 1
+            often caused random GPFs. I'm not exactly sure about this, but
+            it seems that enlarging the buffer seemed to solve to problem. */
+   szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
 
    if( szResult )
    {
@@ -307,7 +365,15 @@ HARBOUR HB_ROUND( void )
          hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, iDec );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1094, NULL, "ROUND" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1094, NULL, "ROUND" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROUND" ); /* NOTE: Clipper catches this at compile time! */
@@ -327,7 +393,15 @@ HARBOUR HB_SQRT( void )
             hb_retnd( 0 ); /* Clipper doesn't error! */
       }
       else
-         hb_errRT_BASE( EG_ARG, 1097, NULL, "SQRT" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1097, NULL, "SQRT" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SQRT" ); /* NOTE: Clipper catches this at compile time! */

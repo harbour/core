@@ -41,6 +41,13 @@
  *      __objSendMsg()
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb___msgEval()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "errorapi.h"
 #include "itemapi.h"
@@ -922,7 +929,15 @@ static HARBOUR hb___msgEval( void )
       hb_vmDo( hb_pcount() );                       /* Self is also an argument */
    }
    else
-      hb_errRT_BASE( EG_NOMETHOD, 1004, NULL, "EVAL" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 

@@ -605,7 +605,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, WORD wWidth, WORD wDec
    if( wWidth == 0 || wWidth > 99 )
       wWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
 
-   if( wDecimal == ( ( WORD ) -1 ) || ( wDecimal != 0 && wDecimal >= ( wWidth - 1 ) ) )
+   if( wDecimal == ( ( WORD ) -1 ) )
       wDecimal = hb_set.HB_SET_DECIMALS;
 
    pItem->type = IT_DOUBLE;
@@ -674,7 +674,6 @@ void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
          default:
             if( pwWidth ) *pwWidth = 0;
             if( pwDecimal ) *pwDecimal = 0;
-            break;
       }
    }
 }
@@ -698,7 +697,10 @@ ULONG hb_itemSize( PHB_ITEM pItem )
 
 WORD hb_itemType( PHB_ITEM pItem )
 {
-   return pItem->type;
+   if( pItem )
+      return pItem->type;
+   else
+      return IT_NIL;
 }
 
 /* Internal API, not standard Clipper */
@@ -801,28 +803,28 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
 int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
 {
-   char * szFirst   = pFirst->item.asString.value;
-   char * szSecond  = pSecond->item.asString.value;
-   ULONG lLenFirst  = pFirst->item.asString.length;
-   ULONG lLenSecond = pSecond->item.asString.length;
-   LONG  lMinLen;
-   LONG  lCounter;
+   char * szFirst = pFirst->item.asString.value;
+   char * szSecond = pSecond->item.asString.value;
+   ULONG ulLenFirst = pFirst->item.asString.length;
+   ULONG ulLenSecond = pSecond->item.asString.length;
+   ULONG ulMinLen;
+   ULONG ulCounter;
    int   iRet = 0; /* Current status */
 
    if( hb_set.HB_SET_EXACT && !bForceExact )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
-      while( lLenFirst > 0 && szFirst[ lLenFirst - 1 ] == ' ' ) lLenFirst--;
-      while( lLenSecond > 0 && szSecond[ lLenSecond - 1 ] == ' ' ) lLenSecond--;
+      while( ulLenFirst > 0 && szFirst[ ulLenFirst - 1 ] == ' ' ) ulLenFirst--;
+      while( ulLenSecond > 0 && szSecond[ ulLenSecond - 1 ] == ' ' ) ulLenSecond--;
    }
 
-   lMinLen = lLenFirst < lLenSecond ? lLenFirst : lLenSecond;
+   ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
 
    /* One of the strings is empty */
-   if( lMinLen )
+   if( ulMinLen )
    {
-      for( lCounter = 0; lCounter < lMinLen && !iRet; lCounter++ )
+      for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
       {
          /* Difference found */
          if( *szFirst != *szSecond )
@@ -833,23 +835,23 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
             szSecond++;
          }
       }
-      if( hb_set.HB_SET_EXACT || bForceExact || lLenSecond > lCounter )
+      if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulCounter )
       {
          /* Force an exact comparison */
-         if( !iRet && lLenFirst != lLenSecond )
+         if( !iRet && ulLenFirst != ulLenSecond )
             /* If length is different ! */
-            iRet = ( lLenFirst < lLenSecond ) ? -1 : 1;
+            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
       }
    }
    else
    {
       /* Both empty ? */
-      if( lLenFirst != lLenSecond )
+      if( ulLenFirst != ulLenSecond )
       {
          if( hb_set.HB_SET_EXACT || bForceExact )
-            iRet = ( lLenFirst < lLenSecond ) ? -1 : 1;
+            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          else
-            iRet = ( lLenSecond == 0 ) ? 0 : -1;
+            iRet = ( ulLenSecond == 0 ) ? 0 : -1;
       }
       else
          /* Both empty => Equal ! */

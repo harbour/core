@@ -1,3 +1,76 @@
+19990907-17:00 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    ! hb_vmEqual() is now Clipper compatible for ARRAY and BLOCK types.
+    ! hb_vmMinus() is now generating the result as LONG (instead of DOUBLE)
+      when the two operands are DATEs.
+    ! hb_vmDivide() fixed the decimal handling for integer operands with an
+      integer result.
+    ! hb_vmNegate() now handles the number width in a Clipper compatible way.
+    ! hb_vmEqual(), hb_vmNotEqual(), hb_vmLess*(), hb_vmGreater*(), hb_vmDo(),
+      hb_arrayAt() error handling now support value substitution.
+      hb_vmDo() and hb_vmArrayAt() should be tested, since I'm not exactly sure 
+      if they are correctly pushing the result.
+  * source/rtl/strings.c
+    ! VAL() fixed to return INTEGER/LONG if applicable, not always a DOUBLE.
+      Similar logic can be found in hb_vmPushNumber().
+    + REPLICATE() STROVERFLOW error now supports value substitution.
+    * hb_itemPadConv() now uses less internal, type checks reordered with the
+      most probable moved to the top. Some Extend API calls changed to Item API
+      ones, to make it faster.
+    ! hb_itemPadConv() was casting back DOUBLE value without decimals to LONG
+      to convert it to string. Corrected. There may be other places where 
+      DOUBLE is converted to LONG, these should be revised, since a DOUBLE is
+      also used when there are *no* decimal places, but the value is too big
+      to fit in a LONG (like: 5000000000), for example INT() is buggy because
+      of that right now.
+  * tests/working/rtl_test.prg
+    + Some new decimal handling and ABS() tests added.
+    + Some divide and date subtracion tests added to decimal handling section.
+    + Some negate tests added to the decimal handling section.
+    + INT() tests added.
+    * LOCAL test values converted to STATIC, PRIVATE test values converted
+      to PUBLIC.
+    * Split the tests into smaller functions, since the 64K function limit
+      has been reached.
+    ! Expected results changed where we consider Clipper to be buggy, mainly
+      for cases when the parameters is passed by reference.
+    + SQRT() tests added.
+  * source/rdd/dbf1.c
+    ! Fixed the passed parameters to hb_itemPutNDLen()
+  * tests/working/testdbf.prg
+    + Numeric value put/get tests added.
+  * source/rtl/itemapi.c
+    ! hb_itemType() now checks for NULL parameters, like in Clipper.
+    ! hb_itemPutNDLen() was handling the wDec parameter in a wrong way by
+      mistake. I assumed that the wDec value means the decimal places within
+      the full length, but that was wrong.
+    ! hb_itemStrCmp() two LONGs changed to ULONG.
+  * source/rtl/math.c
+    % MOD() one Extend API call changed to Item API to make it faster.
+    + MIN()/MAX() now uses Item API instead of accessing internals.
+    + ABS() uses Item API instead of internals.
+    ! ABS() now keeps the width of the positive integers.
+    ! hb_numRound() now uses a much larger buffer (like in hb_itemStr()), this
+      seem to have fixed the random GPFs in Cygwin when running RTL_TEST.
+      Same type of dangerous code can be found in RDD/DBF1.C, too. (Bruno!)
+    + ABS(), INT(), ROUND(), EXP(), LOG(), SQRT(), MIN(), MAX() value 
+      substitution added.
+  * source/rtl/descend.c
+    * Now using Item API only, internals totally eliminated. Simpler code,
+      some variables eliminated, some small optimalizations.
+  * source/rtl/do.c
+    * Value substitution added to EVAL(), DO()
+  * source/rtl/classes.c
+    * Value substitution added to :EVAL
+  * tests/working/descend.prg
+    tests/working/Makefile
+    - Removed since an automated version is already included in RTL_TEST.
+  * source/rtl/classes.c
+    source/rtl/arrays.c
+    + Copyright info added.
+  * source/rtl/set.c
+    ! Some minor formatting corrections.
+ 
 19990907-02:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/external.ch
     source/runner/stdalone/external.prg

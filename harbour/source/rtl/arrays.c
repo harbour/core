@@ -27,6 +27,8 @@
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       hb_arrayIsObject()
       hb_arrayError()
+      hb_arrayCopyC()
+      hb_arrayGetC()
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 

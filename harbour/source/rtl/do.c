@@ -128,7 +128,15 @@ HARBOUR HB_DO( void )
          hb_vmDo( uiPCount - 1 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DO" );
@@ -153,7 +161,15 @@ HARBOUR HB_EVAL( void )
          hb_vmDo( uiPCount - 1 );
       }
       else
-         hb_errRT_BASE( EG_NOMETHOD, 1004, NULL, "EVAL" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EVAL" ); /* NOTE: Clipper catches this at compile time! */

@@ -84,30 +84,17 @@ HARBOUR HB_DESCEND( void )
    {
       if( IS_STRING( pItem ) )
       {
-         char * szBuffer = ( char * ) hb_xgrab( pItem->item.asString.length );
-         hb_strDescend( szBuffer, pItem->item.asString.value, pItem->item.asString.length );
-         hb_retclen( szBuffer, pItem->item.asString.length );
+         ULONG ulLen = hb_itemGetCLen( pItem );
+         char * szBuffer = ( char * ) hb_xgrab( ulLen );
+         hb_strDescend( szBuffer, hb_itemGetCPtr( pItem ), ulLen );
+         hb_retclen( szBuffer, ulLen );
          hb_xfree( szBuffer );
       }
       else if( IS_DATE( pItem ) )
-         hb_retnl( 5231808 - pItem->item.asDate.value );
+         hb_retnl( 5231808 - hb_itemGetNL( pItem ) );
       else if( IS_NUMERIC( pItem ) )
-      {
-         PHB_ITEM pReturn;
-         double dValue;
-
-         if( IS_DOUBLE( pItem ) )
-            dValue = pItem->item.asDouble.value;
-         else if( IS_INTEGER( pItem ) )
-            dValue = ( double ) pItem->item.asInteger.value;
-         else if( IS_LONG( pItem ) )
-            dValue = ( double ) pItem->item.asLong.value;
-
-         pReturn = hb_itemPutND( NULL, -1 * dValue );
-         hb_itemReturn( pReturn );
-         hb_itemRelease( pReturn );
-      }
+         hb_retnd( -1 * hb_itemGetND( pItem ) );
       else if( IS_LOGICAL( pItem ) )
-         hb_retl( ! pItem->item.asLogical.value );
+         hb_retl( ! hb_itemGetL( pItem ) );
    }
 }

@@ -52,7 +52,6 @@ PRG_SOURCES=\
         dates3.prg \
         dates4.prg \
         debugtst.prg \
-        descend.prg \
         dirtest.prg \
         docase.prg \
         dosshell.prg \

@@ -311,7 +311,7 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 #define HB_STRGREATER_RIGHT     2
 
 extern int      hb_stricmp( const char * s1, const char * s2 );
-extern int      hb_strgreater( char * sz1, char * sz2 );
+extern int      hb_strgreater( char * szText1, char * szText2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
 extern BOOL     hb_strEmpty( char * szText, ULONG ulLen );
