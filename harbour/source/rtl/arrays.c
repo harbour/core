@@ -797,17 +797,17 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
  *  $SYNTAX$
  *      ARRAY(<nElements> [, <nElements>...]) --> aArray
  *  $ARGUMENTS$
- *      <nElements> is the number of elements in the specified dimension.       
+ *      <nElements> is the number of elements in the specified dimension.
  *  $RETURNS$
  *      ARRAY() returns an array of specified dimensions.
  *  $DESCRIPTION$
- *      This function returns an uninitialized array with the lenght of
- *      <nElements>.Nested arrays are uninitialized whitin the same array
+ *      This function returns an uninitialized array with the length of
+ *      <nElements>. Nested arrays are uninitialized within the same array
  *      pointer reference if additional parameters are specified.
  *      Establishing a memory variable with the same name as the array
  *      may destroy the original array and release the entire contents of
- *      the array.This is,of course, on the data storage type of either array
- *      or the variable with the same name as the array.
+ *      the array. This depends, of course, on the data storage type of
+ *      either the array or the variable with the same name as the array.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *        LOCAL aArray:=Array(10)
@@ -821,11 +821,11 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $COMPLIANCE$
- *      This Function is CA-CLIPPER Compilance in all Cases, except
+ *      This function is CA-CLIPPER Compliant in all Cases, except
  *      that arrays in Harbour can have an unlimited number of dimensions,
- *      while Clipper has a limmit of 4096 array elements.
+ *      while Clipper has a limit of 4096 array elements.
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -861,11 +861,11 @@ HARBOUR HB_ARRAY( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      AADD()   
+ *      AADD()
  *  $CATEGORY$
  *      ARRAY
  *  $ONELINER$
- *      Dinamically adda an element to an array  
+ *      Dynamically add an element to an array
  *  $SYNTAX$
  *      AADD(<aArray>[, <xValue>]) --> Value
  *  $ARGUMENTS$
@@ -873,11 +873,11 @@ HARBOUR HB_ARRAY( void )
  *
  *      <xValue> Element to add to array <aArray>
  *  $RETURNS$
- *      The value of <xValue> if specified,otherwise this function 
- *      returns a NIL value.  
+ *      The value of <xValue> if specified, otherwise this function
+ *      returns a NIL value.
  *  $DESCRIPTION$
- *      This function dinamically increase the lenght of the array
- *      named <aArray> by one element and stores the value of <xValue>to
+ *      This function dynamically increases the length of the array
+ *      named <aArray> by one element and stores the value of <xValue> to
  *      that newly created element.
  *      <xValue> may be an array reference pointer, which in turn may be
  *      stored to an array's subscript position.
@@ -888,11 +888,11 @@ HARBOUR HB_ARRAY( void )
  *          AADD(aArray,x)
  *      NEXT
  *  $STATUS$
- *      R   
+ *      R
  *  $SEEALSO$
  *      AINS(),ASIZE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -931,18 +931,18 @@ HARBOUR HB_AADD( void )
  *  $SYNTAX$
  *      ASIZE(<aArray>, <nLen>) --> aTarget
  *  $ARGUMENTS$
- *      <aArray> Name od array to be dinamically altered
+ *      <aArray> Name of array to be dynamically altered
  *
- *      <nLen> Numeric value representing the new size of <aArray>    
+ *      <nLen> Numeric value representing the new size of <aArray>
  *  $RETURNS$
  *      ASIZE() returns an array pointer reference to <aTarget>.
  *  $DESCRIPTION$
- *      This function will dinamically increase or decrease the size
- *      of <aArray> by ajusting the lenght of the array to <nLen> subscript
+ *      This function will dynamically increase or decrease the size
+ *      of <aArray> by adjusting the length of the array to <nLen> subscript
  *      positions.
- *      If the lenght of the array <aArray> is shortened,those former
- *      subscripts positions are lost.If the lenght of the array is lenghtened
- *      a NIL data value is assigned to the new subscript position.
+ *      If the length of the array <aArray> is shortened, those former
+ *      subscript positions are lost. If the length of the array is
+ *      lengthened a NIL value is assigned to the new subscript position.
  *  $EXAMPLES$
  *      aArray := { 1 }          // Result: aArray is { 1 }
  *      ASIZE(aArray, 3)         // Result: aArray is { 1, NIL, NIL }
@@ -956,7 +956,7 @@ HARBOUR HB_AADD( void )
  *  $SEEALSO$
  *      AADD(),ADEL(),AFILL(),AINS()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -996,11 +996,11 @@ HARBOUR HB_ASIZE( void )
  *      Atail() return the expression of the last element in the array.
  *  $DESCRIPTION$
  *      This function return the value of the last element in the array named
- *      <aArray>.This function does not alter the size of the array or any of
+ *      <aArray>. This function does not alter the size of the array or any of
  *      the subscript values.
  *  $EXAMPLES$
  *      LOCAL array:= {"Harbour", "is", "Supreme", "Power"}
- *      ? ATAIL(aArray)                   
+ *      ? ATAIL(aArray)
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -1008,7 +1008,7 @@ HARBOUR HB_ASIZE( void )
  *  $SEEALSO$
  *      LEN(),ARRAY(),ASIZE(),AADD()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1026,7 +1026,7 @@ HARBOUR HB_ATAIL( void )
  *  $CATEGORY$
  *      ARRAY
  *  $ONELINER$
- *      Insert a NIL valueat an array subscript position.
+ *      Insert a NIL value at an array subscript position.
  *  $SYNTAX$
  *      AINS(<aArray>, <nPos>) --> aTarget
  *  $ARGUMENTS$
@@ -1040,10 +1040,11 @@ HARBOUR HB_ATAIL( void )
  *      at the <nPos>th position.
  *      All array elements starting with the <nPos>th position will be
  *      shifted down one subscript position in the array list and the last
- *      item in the array will be removed completly.In other words,if an array
- *      element were to be inserted at the fifth subscript position, the element
- *      previosly in the fifth position would now be located at sixth position.
- *      The lenght of the array <aArray> will remain unchanged
+ *      item in the array will be removed completely. In other words, if an
+ *      array element were to be inserted at the fifth subscript position,
+ *      the element previously in the fifth position would now be located
+ *		  at the sixth position. The length of the array <aArray> will remain
+ *		  unchanged.
  *  $EXAMPLES$
  *      LOCAL aArray:={"Harbour","is","Power!","!!!"}
  *      AINS(aArray,4)
@@ -1054,7 +1055,7 @@ HARBOUR HB_ATAIL( void )
  *  $SEEALSO$
  *      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1083,30 +1084,30 @@ HARBOUR HB_AINS( void )
  *  $ARGUMENTS$
  *      <aArray> Name of array from which an element is to be removed.
  *
- *      <nPos>   Subcript of the element to be removed.
+ *      <nPos>   Subscript of the element to be removed.
  *  $RETURNS$
  *      ADEL() Returns an array pointer reference to <aTarget>.
  *  $DESCRIPTION$
  *      This function deletes the element found at <nPos> subscript
- *      position in the array <aArray>.All arrays elements in the array
+ *      position in the array <aArray>. All elements in the array
  *      <aArray> below the given subscript position <nPos> will move up
- *      one position in the array.In other words,what was formerly the
+ *      one position in the array. In other words, what was formerly the
  *      sixth subscript position will become the fifth subscript position.
- *      The lenght of the array <aArray> will remain unchanged,as the last
- *      element array become a NIL data type.
+ *      The length of the array <aArray> will remain unchanged,as the last
+ *      element in the array will become a NIL data type.
  *  $EXAMPLES$
  *     LOCAL aArray
  *      aArray := { "Harbour","is","Power" }      // Result: aArray is
- *               
+ *
  *      ADEL(aArray, 2)            // Result: aArray is
  *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *  $SEEALSO$
- *      ACOPY(),AINS(),AFILL() 
+ *      ACOPY(),AINS(),AFILL()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1140,20 +1141,20 @@ HARBOUR HB_ADEL( void )
  *
  *      <nStart> Subscript starting position
  *
- *      <nCount> Number of subscript to be filled    
+ *      <nCount> Number of subscript to be filled
  *  $RETURNS$
  *      AFILL() returns an array pointer  to <aTarget>.
  *  $DESCRIPTION$
- *      This function fill each element of a array named <aArray> with
- *      the value <xValue>.If specified,<nStart> denotes the beginning
+ *      This function will fill each element of an array named <aArray> with
+ *      the value <xValue>. If specified, <nStart> denotes the beginning
  *      element to be filled and the array elements will continue to be
  *      filled for <nCount> positions. If Not specified, the value of
  *      <nStart> will be 1, and the value of <nCount> will be the value
- *      of LEN(<aArray>);thus,all subscript positions in the array <aArray>
- *      will be filled with the value of <xValue>.
+ *      of LEN(<aArray>); thus, all subscript positions in the array
+ *      <aArray> will be filled with the value of <xValue>.
  *      This function will work on only a single dimension of <aArray>.
  *      If there are array pointer references within a subscript <aArray>,
- *      those value will be lost, since this function will overwrite those
+ *      those values will be lost, since this function will overwrite those
  *      values with new values.
  *  $EXAMPLES$
  *      LOCAL aTest:={Nil,0,1,2}
@@ -1165,7 +1166,7 @@ HARBOUR HB_ADEL( void )
  *  $SEEALSO$
  *      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1203,47 +1204,47 @@ HARBOUR HB_AFILL( void )
  *      ASCAN(<aTarget>, <xSearch>,
  *      [<nStart>], [<nCount>]) --> nStoppedAt
  *  $ARGUMENTS$
- *      <aTarget>   Name of array to be scaned.
+ *      <aTarget>   Name of array to be scanned.
  *
- *      <xSearch> Expression to search for withing <aTarget>
+ *      <xSearch>   Expression to search for in <aTarget>
  *
- *      <nStart>    Beggining subscript position at witch to start the
+ *      <nStart>    Beginning subscript position at which to start the
  *      search.
  *
- *      <nCount> Number of elements to scan with <aTarget>.
- *      position.  If this argument is not specified, all elements from the   
+ *      <nCount>    Number of elements to scan with <aTarget>.
+ *      position.  If this argument is not specified, all elements from the
  *  $RETURNS$
  *      <nStoppedAt> A numeric value of subscript position where <xSearch>
- *      was found.    
+ *      was found.
  *  $DESCRIPTION$
  *      This function scan the content of array named <aTarget> for the
  *      value of <xSearch>. The return value is the position in the
  *      array <aTarget> in which <xSearch> was found. If it was not
  *      found, the return value will be 0.
- *      If specified, the beginnig subscript position at which to start
+ *      If specified, the beginning subscript position at which to start
  *      scanning may be set with the value passed as <nStart>. The default
  *      is 1.
  *      If specified, the number of array elements to scan may be set with
  *      the value passed as <nCount>. The default is the number of elements
  *      in the array <aTarget>.
- *      If <xSearch> is a code block, the operation of the function is slighty
- *      different.Each array subscript pointer reference is passed to the
- *      code block to be evaluated.The scanning routine will continue until the
- *      value obtainded from the code block is a logical true (.T.) or until
- *      the end of the array has been reached.
+ *      If <xSearch> is a code block, the operation of the function is
+ *      slightly different. Each array subscript pointer reference is passed
+ *      to the code block to be evaluated. The scanning routine will
+ *      continue until the value obtained from the code block is a logical
+ *      true (.T.) or until the end of the array has been reached.
  *  $EXAMPLES$
  *      aDir:=Directory("*.prg")
  *      AScan(aDir,,,{|x,y| x[1]="Test.prg"})
  *  $TESTS$
  *  $STATUS$
- *      R 
+ *      R
  *  $COMPLIANCE$
  *      This function is not CA-Clipper compatible. Clipper ASCAN() is
  *      affected by the SET EXACT ON/OFF Condition
  *  $SEEALSO$
  *      ACOMP(),AEVAL()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1281,25 +1282,25 @@ HARBOUR HB_ASCAN( void )
  *
  *      <bBlock> Is a code block to evaluate for each element processed.
  *
- *      <nStart> The beggining array element to evaluate.
+ *      <nStart> The beginning  array element to evaluate.
  *
- *      <nCount> The number of elements to process.     
+ *      <nCount> The number of elements to process.
  *  $RETURNS$
- *      AEVAL() returns an array pointer reference.    
+ *      AEVAL() returns an array pointer reference.
  *  $DESCRIPTION$
  *      This function will evaluate and process the subscript elements
- *      in <aArray>. A code block passed as <bBlock> defines the 
+ *      in <aArray>. A code block passed as <bBlock> defines the
  *      operation to be executed on each element of the array. All
  *      elements in <aArray> will be evaluated unless specified by a
- *      beggining subscript position in <nStart> for <nCount> elements.
+ *      beginning subscript position in <nStart> for <nCount> elements.
  *
  *      Two parameters are passed to the code block <bBlock>. The
  *      individual elements in an array are the first parameter and the
  *      subscript position is the second.
  *
  *      AEVAL() does not replace a FOR...NEXT loop for processing arrays.
- *      If a array is an autonomous unit,AEVAL() is appropriate.If the
- *      array is to be altered or if elements are to be reevalueted, a
+ *      If an array is an autonomous unit, AEVAL() is appropriate. If the
+ *      array is to be altered or if elements are to be reevaluated, a
  *      FOR...NEXT loop is more appropriate.
  *  $EXAMPLES$
  *  $TESTS$
@@ -1309,7 +1310,7 @@ HARBOUR HB_ASCAN( void )
  *  $SEEALSO$
  *      EVAL(),DBEVAL()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1349,22 +1350,22 @@ HARBOUR HB_AEVAL( void )
  *
  *      <aTarget> is the array to copy elements to.
  *
- *      <nStart>  is the beggining subscript position to copy from <aSource>
+ *      <nStart>  is the beginning subscript position to copy from <aSource>
  *
  *      <nCount>  the number of subscript elements to copy from <aSource>.
  *
  *      <nTargetPos> the starting subscript position in <aTarget> to copy
- *      elements to.    
+ *      elements to.
  *  $RETURNS$
  *      ACOPY() returns an array pointer reference
  *  $DESCRIPTION$
  *      This function copies array elements from <aSource> to <aTarget>.
- *      <nStart> is the beggining element to be copied from <aSource>;the
+ *      <nStart> is the beginning element to be copied from <aSource>; the
  *      default is 1.
- *      <nCount> is the number of element to be copied from <aSource>;the
+ *      <nCount> is the number of elements to be copied from <aSource>; the
  *      default is the entire array.
  *      <nTargetPos> is the subscript number in the target array,<aTarget>,
- *      to witch array elements are to be copied;the default is 1
+ *      to which array elements are to be copied; the default is 1
  *      This function will copy all data types in <aSource> to <aTarget>.
  *      If an array element in <aSource> is a pointer reference to another
  *      array, that array pointer will be copied to <aTarget>; not all
@@ -1389,7 +1390,7 @@ HARBOUR HB_AEVAL( void )
  *  $SEEALSO$
  *      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 
@@ -1454,7 +1455,7 @@ HARBOUR HB_ACOPY( void )
  *  $SEEALSO$
  *      ACOPY(),ADEL(),AINS(),ASIZE()
  *  $INCLUDE$
- *     
+ *
  *  $END$
  */
 

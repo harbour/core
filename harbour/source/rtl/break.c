@@ -46,12 +46,12 @@
  *  $SYNTAX$
  *      BREAK( <xExp> ) --> NIL
  *  $ARGUMENTS$
- *      <xExp> is any valid expression. It is allways required.
+ *      <xExp> is any valid expression. It is always required.
  *      If do not want to pass any argument, just use NIL.
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
- *      This function pass the control to the RECOVER statement in a
+ *      This function passes control to the RECOVER statement in a
  *      BEGIN SEQUENCE block.
  *  $EXAMPLES$
  *      Break( NIL )
@@ -61,7 +61,7 @@
  *  $COMPLIANCE$
  *      BREAK() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *       BEGIN SEQUENCE 
+ *       BEGIN SEQUENCE
  *  $END$
  */
 

@@ -1140,14 +1140,14 @@ HARBOUR HB___ACCEPTSTR( void )
  *      The selected color string, or if anything goes wrong, and empty
  *      string
  *  $DESCRIPTION$
- *      Clipper has color spec string, which have more than one single
- *      colors in it, separated with commas. This function is able to extract
+ *      Clipper has a color spec string, which has more than one
+ *      color in it, separated with commas. This function is able to extract
  *      a given item from this list. You may use the manifest constants
  *      defined in color.ch to extract common Clipper colors.
  *  $EXAMPLES$
  *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *  $TESTS$
- *      see in rtl_test.prg for a comprehensive regression test suit.
+ *      see rtl_test.prg for a comprehensive regression test suite.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

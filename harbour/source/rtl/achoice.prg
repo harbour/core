@@ -52,19 +52,19 @@
  *                          (See previous argument: alSelectableItems)
  *                          Default .T.
  *      cUserFunction     - the name of a function to be called which may
- *                          effect special processing of keystrokes.  It is
+ *                          affect special processing of keystrokes.  It is
  *                          specified without parentheses or parameters.
  *                          When it is called, it will be supplied with the
  *                          parameters: nMode, nCurElement, and nRowPos.
  *                          Default NIL.
  *      bUserBlock     - a codeblock to be called which may
- *                          effect special processing of keystrokes. It
+ *                          affect special processing of keystrokes. It
  *                          should be specified in the form
  *                          {|nMode, nCurElemenet, nRowPos| ;
  *                                 MyFunc(nMode, nCurElemenet, nRowPos) }.
  *                          Default NIL.
  *      nInitialItem   - the number of the element to be highlighted as
- *                          the current item when the array is initally
+ *                          the current item when the array is initially
  *                          displayed.  1 origin.  Default 1.
  *      nWindowRow     - the number of the window row on which the initial
  *                          item is to be displayed. 0 origin.  Default 0.
@@ -89,7 +89,7 @@
  *      ENDIF
  *
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -126,7 +126,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    DEFAULT nTop    TO 0                    // The topmost row of the window
    DEFAULT nLeft   TO 0                    // The leftmost column of the window
-   DEFAULT nBottom TO MaxRow() + 1         // The bottommost row of the windows
+   DEFAULT nBottom TO MaxRow() + 1         // The bottommost row of the window
    DEFAULT nRight  TO MaxCol() + 1         // The rightmost column of the window
 
    DEFAULT acItems TO {}                   // The items from which to choose

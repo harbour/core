@@ -1,3 +1,16 @@
+20000227-00:39 GMT-8 Brian Hays <bhays@abacuslaw.com>
+     + doc for all function
+   * include/hbclass.ch
+     ! added Docs for all Class Commands
+   * source/rtl/tclass.prg
+     % Started docs for class creation
+   * source/rtl/achoice.prg
+   * source/rtl/alert.prg
+   * source/rtl/arrays.c
+   * source/rtl/break.c
+   * source/rtl/console.c
+     % misc. edits for docs
+
 20000227-10:58 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
      * Bug fixed in adsRawLock() ( code proposed by Sid Sailors )

@@ -59,9 +59,9 @@ STATIC s_lNoAlert := NIL
  *      <xMessage> Message to display in the dialog box. <xMessage> can be
  *      of any Harbour type.
  *      If <xMessage> is an array of Character strings, each element would
- *      be displayed in a new line. <xMessage> is converted to Character
+ *      be displayed in a new line. If <xMessage> is a Character
  *      string, you could split the message to several lines by placing
- *      semicolon (;) in the desired places.
+ *      a semicolon (;) in the desired places.
  *
  *      <aOptions> Array with available response. Each element should be
  *      Character string. If omitted, default is { "Ok" }.
@@ -429,7 +429,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
  *  $SYNTAX$
  *      __NONOALERT() --> NIL
  *  $ARGUMENTS$
- *      This function take no arguments.
+ *      This function takes no arguments.
  *  $RETURNS$
  *      __NONOALERT() always return NIL.
  *  $DESCRIPTION$
