@@ -2632,7 +2632,20 @@ static ERRCODE adsClearFilter( ADSAREAP pArea )
 }
 
 #define  adsClearLocate           NULL
-#define  adsClearScope            NULL
+
+static ERRCODE adsClearScope( ADSAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsClearScope(%p)", pArea));
+
+   if( pArea->hOrdCurrent )
+   {
+      AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) 1 );  /* ADS scopes are 1/2 instead of 0/1 */
+      AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) 2 );  /* ADS scopes are 1/2 instead of 0/1 */
+   }
+
+   return SUCCESS;
+}
+
 #define  adsCountScope            NULL
 #define  adsFilterText            NULL
 

@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-31 21:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * xharbour/source/rdd/workarea.c
+     + added scopped relations. Now OrdSetRelation() works with DBFCDX like it
+       does with Clipper 5.3b
+   * xharbour/contrib/rdd_ads/ads1.c
+     + adsClearScope() method added to avoid r/t error with ADS and scoped relations
+     Thanks to Przemyslaw Czerpak for the fix (borrowed from xHarbour)
+
 2004-03-30 16:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/vm/macro.c

@@ -821,7 +821,9 @@ ERRCODE hb_waClearRel( AREAP pArea )
    lpdbRelation = pArea->lpdbRelations;
    while( lpdbRelation )
    {
-      hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea);
+      hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
+      if ( lpdbRelation->isScoped )
+         SELF_CLEARSCOPE( lpdbRelation->lpaChild );
       SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
       hb_rddSelectWorkAreaNumber( iCurrArea );
 
@@ -896,6 +898,16 @@ ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 
    if( iOrder != 0 )
    {
+      if ( pRelInfo->isScoped )
+      {
+         DBORDSCOPEINFO sInfo;
+
+         sInfo.scopeValue = pResult;
+         sInfo.nScope = 0;
+         SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo );
+         sInfo.nScope = 1;
+         SELF_SETSCOPE( pArea, (LPDBORDSCOPEINFO) &sInfo );
+      }
       if( SELF_SEEK( pArea, 0, pResult, 0 ) == SUCCESS )
          return SUCCESS;
       else
@@ -966,10 +978,11 @@ ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
    lpdbRelations->lpaParent = pArea;
    lpdbRelations->lpaChild = lpdbRelInf->lpaChild;
    lpdbRelations->itmCobExpr = lpdbRelInf->itmCobExpr;
+   lpdbRelations->isScoped = lpdbRelInf->isScoped;
    lpdbRelations->abKey = lpdbRelInf->abKey;
    lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
 
-   SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild,lpdbRelations );
+   SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild, lpdbRelations );
 
    return SUCCESS;
 }
