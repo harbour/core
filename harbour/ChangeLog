@@ -1,4 +1,9 @@
 2000-01-22 18:00 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/adsfunc.c
+      + added ADSRegCallBack(cbBlock) and ADSClrCallBack() to register a callback function
+         during index creation.
+
+2000-01-22 18:00 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       ! integrated AOF creation into dbSetFilter if SET OPTIMIZE is on.
 
@@ -27,16 +32,18 @@
          I hope to remove this if we agree to make it an rdd func
 
    * harbour/contrib/rdd_ads/doc/en/adsfuncs.txt
+      *  documented ADSCustomizeAOF
 
-ord.ch and hbapirdd.h
-   added constants for DBOI_OPTLEVEL return values
-      #define DBOI_OPTIMIZED_NONE     0
-      #define DBOI_OPTIMIZED_PART     1
-      #define DBOI_OPTIMIZED_FULL     2
+   * harbour/include/ord.ch and hbapirdd.h
+      + added constants for DBOI_OPTLEVEL return values
+         #define DBOI_OPTIMIZED_NONE     0
+         #define DBOI_OPTIMIZED_PART     1
+         #define DBOI_OPTIMIZED_FULL     2
 
-hb_api.txt
-hb_apiit.txt
-   added text for hb_param and hb_itemParam
+   * harbour/doc/en/hb_api.txt
+      * added text for hb_param
+   * harbour/doc/en/hb_apiit.txt
+      * added text for hb_itemParam
 
 2001-01-22 13:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   + doc/en/gtslang.txt
