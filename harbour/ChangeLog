@@ -1,3 +1,10 @@
+2001-06-11 12:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/es/license.txt
+    * Spanish translation of Version 2 of the Harbour License, with the
+      mandatory FSF translation notice in both English and Spanish. The
+      translation is by Alejandro de Garate <alex_degarate@hotmail.com>.
+
 2001-06-11 14:16 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/net.c
      ! To compile under OS/2 EMX GCC compiler there were missing include files.

@@ -1,0 +1,95 @@
+
+   LICENCIA
+
+   Traducción: Alejandro de Gárate.    <alex_degarate@hotmail.com>
+
+   Nota del traductor:
+   Se encaró la traducción de la licencia de Harbour de su original
+   en inglés al español, debido a que su comprensión podría aportar
+   beneficios en los alcances del uso de Harbour y evitar algunos
+   malentendidos ya sea para uso personal ó comercial.
+
+   Soy conciente que la presente traducción puede contener algún
+   error u omisión, aunque he hecho los esfuerzos posibles para
+   que ello no ocurra.
+
+   Para mayor información sobre que opina la FSF acerca de las
+   traducciones de la GPL consulte:
+     <http://gnu.org/copyleft/copyleft.es.html>
+
+
+   Nota Previa al texto de la licencia: (requisito de la FSF)
+
+   This is an unofficial translation of the GNU General Public License
+   into spanish. It was not published by the Free Software Foundation,
+   and does not legally state the distribution terms for software that
+   uses the GNU GPL--only the original English text of the GNU GPL does
+   that. However, we hope that this translation will help spanish
+   speakers understand the GNU GPL better.
+
+   Esta es una traducción no oficial de la Licencia Publica General GNU
+   al español. No fue publicada por la Fundación de Software Libre, y
+   no establece legalmente los términos de distribución para software
+   que usa la GPL GNU--sólo el texto original en inglés de la GPL GNU
+   lo hace. Sin embargo, esperamos que esta traducción ayude a gente de
+   habla hispana a entender mejor la GNU GPL.
+
+
+
+   LICENCIA ACTUAL DEL PROYECTO HARBOUR
+   ====================================
+
+   (Actualizada al 10/06/2001)
+
+   "Este programa es software libre; Ud. puede redistribuirlo y/o
+   modificarlo bajo los términos de la Licencia Pública General GNU
+   como fué publicada por la Fundación de Software Libre; sea la
+   versión 2 de la Licencia, ó (a su elección) alguna versión posterior.
+
+   Este programa es distribuido con la esperanza que le pueda ser útil,
+   pero SIN NINGUNA GARANTIA;  aún sin la garantía implícita de
+   COMERCIALIZACION ó DESTINO PARA ALGÚN PROPÓSITO PARTICULAR.
+   Consulte la License Pública General GNU para mayores detalles.
+
+   Ud. debería haber recibido una copia de la Licencia Pública General
+   GNU junto con este programa; Vea el archivo COPYING. Si no, escriba
+   a la Fundación de Software Libre:
+
+      Free Software Foundation, Inc.,
+      59 Temple Place, Suite 330,
+      Boston, MA 02111-1307 USA
+   (ó visite su sitio Web en http://www.gnu.org/).
+
+   Como una especial excepción, el proyecto Harbour da permiso para
+   usos adicionales del texto contenido en esta liberación de Harbour.
+
+   La excepción es que, si Ud. enlaza (link) la Librerías de Harbour
+   con otros archivos para producir un ejecutable, esto por sí mismo
+   no causa que el ejecutable resultante sea cubierto por la Licencia
+   Pública General GNU.
+   El uso de ese ejecutable por parte suya no esta en ninguna forma
+   restringido, en cuenta del enlazado del código de librería de
+   Harbour dentro de él.
+
+   Esta excepción sin embargo, no invalida algunas otras razones por
+   las cuales el archivo ejecutable podría estar cubierto por la
+   Licencia Pública General GNU.
+
+   Esta excepción se aplica:  solamente al código liberado por el
+   Proyecto Harbour bajo el nombre "Harbour".  Si Ud. copia código
+   desde otro Proyecto Harbour ó desde alguna liberación de la
+   Fundación de Software Libre, dentro de una copia de Harbour, tal
+   como la Licencia Pública General lo permite, la excepción no se
+   aplica al código que Ud. agrega de esta forma.  Para evitar engaños
+   a alguien con el estado de estos archivos modificados, Ud. debe
+   borrar el aviso de excepción de ellos.
+
+   Si Ud. escribe modificaciones de su propia creación para Harbour,
+   es su elección, cuándo permitir que esta excepción se aplique a
+   sus modificaciones.
+   Si Ud. no desea eso, borre el aviso de excepción."
+
+
+fin del archivo es_licence.txt
+
+
