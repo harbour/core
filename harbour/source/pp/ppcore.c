@@ -109,7 +109,7 @@ static int    stroncpy( char *, char *, int );
 static int    strincpy( char *, char * );
 static BOOL   truncmp( char **, char **, BOOL );
 static BOOL   strincmp( char *, char **, BOOL );
-static int    strotrim( char * );
+static int    strotrim( char *, BOOL ); /* Ron Pinkas 2001-02-14 added 2nd parameter */
 static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
@@ -812,14 +812,14 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
     stroncpy( mpatt, sLine, ipos-1 ); */
 
     RemoveSlash( mpatt );
-    mlen = strotrim( mpatt );
+    mlen = strotrim( mpatt, TRUE );
 
     /* Ron Pinkas removed 2000-12-03
     sLine += ipos + 1; */
 
     HB_SKIPTABSPACES(sLine);
     hb_pp_strocpy( rpatt, sLine );
-    rlen = strotrim( rpatt );
+    rlen = strotrim( rpatt, TRUE );
 
     ConvertPatterns( mpatt, mlen, rpatt, rlen );
 
@@ -997,7 +997,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
   do
   {
-     strotrim( sLine );
+     strotrim( sLine, FALSE );
      rezDef = 0; rezTra = 0; rezCom = 0;
      isdvig = 0;
 
@@ -1214,6 +1214,11 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
      }
   }
   while( rezDef || rezTra || rezCom );
+
+  #if 0
+      printf( "*Line: >%s<\n", sLine );
+      printf( "*Out: >%s<\n", sOutLine );
+  #endif
 
   return 0;
 }
@@ -2943,6 +2948,10 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   readed++;
   buffer[readed]='\0';
 
+  #if 0
+     printf( "%s\n", buffer );
+  #endif
+
   return readed;
 }
 
@@ -3271,7 +3280,7 @@ static int strincpy( char * ptro, char * ptri )
   return lens;
 }
 
-static int strotrim( char * stroka )
+static int strotrim( char * stroka, BOOL bRule )
 {
   char *ptr = stroka, lastc = '0', curc, cLastChar = '\0';
   int lens = 0, State = STATE_NORMAL;
@@ -3312,7 +3321,8 @@ static int strotrim( char * stroka )
            State = STATE_QUOTE2;
         }
         /* Ron Pinkas added 2000-11-05 */
-        else if( curc == '[' && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )
+        /* Ron Pinkas 2001-02-14 added bRule logic  (removed array logic). */
+        else if( curc == '[' && bRule == FALSE ) /* && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) ) */
         {
            State = STATE_QUOTE3;
         }
