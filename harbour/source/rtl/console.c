@@ -69,6 +69,7 @@
 #include "dates.h"
 #include "set.h"
 #include "inkey.h"
+#include "inkey.ch"
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
 
@@ -104,13 +105,15 @@ static char   s_szAcceptResult[ ACCEPT_BUFFER_LEN ];
 void hb_consoleInitialize( void )
 {
 #if defined(OS_DOS_COMPATIBLE)
-   s_szCrLf[ 0 ] = '\r';
-   s_szCrLf[ 1 ] = '\n';
+   s_szCrLf[ 0 ] = HB_CHAR_CR;
+   s_szCrLf[ 1 ] = HB_CHAR_LF;
    s_szCrLf[ 2 ] = '\0';
 #else
-   s_szCrLf[ 0 ] = '\n';
+   s_szCrLf[ 0 ] = HB_CHAR_LF;
    s_szCrLf[ 1 ] = '\0';
 #endif
+
+   s_szAcceptResult[ 0 ] = '\0';
 
    s_uiPRow = s_uiPCol = 0;
 
@@ -149,8 +152,8 @@ USHORT hb_max_row( void )
 #ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxRow();
 #else
-   return 23; /* QUESTION: Shouldn't this be 24 ? info@szelvesz.hu */
-#endif        /* ANSWER  : No. ANSI terminals commonly only have 24 lines */
+   return 23; /* NOTE: Intentionally 23 to match Unix terminals */
+#endif
 }
 
 USHORT hb_max_col( void )
@@ -172,9 +175,10 @@ static void adjust_pos( BYTE * pStr, ULONG ulLen, USHORT * row, USHORT * col, US
    {
       switch( *pPtr++  )
       {
-         case 7:
+         case HB_CHAR_BEL:
             break;
-         case 8:
+
+         case HB_CHAR_BS:
             if( *col ) ( *col )--;
             else
             {
@@ -182,12 +186,15 @@ static void adjust_pos( BYTE * pStr, ULONG ulLen, USHORT * row, USHORT * col, US
                if( *row ) ( *row )--;
             }
             break;
-         case 10:
+
+         case HB_CHAR_LF:
             if( *row < max_row ) ( *row )++;
             break;
-         case 13:
+
+         case HB_CHAR_CR:
             *col = 0;
             break;
+
          default:
             if( *col < max_col ) ( *col )++;
             else
@@ -260,9 +267,9 @@ static void hb_outstd( BYTE * pStr, ULONG ulLen )
 #endif
 
    if( strlen( pStr ) != ulCount )
-      while( ulCount-- ) printf( "%c", *pPtr++ );
+      while( ulCount-- ) fputc( *pPtr++, stdout );
    else
-      printf( "%s", pStr );
+      fputs( ( char * ) pStr, stdout );
    fflush( stdout );
 #ifdef HARBOUR_USE_GTAPI
    #ifndef __CYGWIN__
@@ -290,9 +297,9 @@ static void hb_outerr( BYTE * pStr, ULONG ulLen )
 #endif
 
    if( strlen( pStr ) != ulCount )
-      while( ulCount-- ) fprintf( stderr, "%c", *pPtr++ );
+      while( ulCount-- ) fputc( *pPtr++, stderr );
    else
-      fprintf( stderr, "%s", pStr );
+      fputs( ( char * ) pStr, stderr );
    fflush( stderr );
 #ifdef HARBOUR_USE_GTAPI
    #ifndef __CYGWIN__
@@ -322,9 +329,9 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
 #else
       ULONG ulCount = ulLen;
       if( strlen( pStr ) != ulCount )
-         while( ulCount-- ) printf( "%c", *pPtr++ );
+         while( ulCount-- ) fputc( *pPtr++, stdout );
       else
-         printf( "%s", pStr );
+         fputs( ( char * ) pStr, stdout );
       adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
@@ -443,9 +450,9 @@ static void hb_devout( BYTE * pStr, ULONG ulLen )
       ULONG ulCount = ulLen;
       BYTE * pPtr = pStr;
       if( strlen( pStr ) != ulCount )
-         while( ulCount-- ) printf( "%c", *pPtr++ );
+         while( ulCount-- ) fputc( *pPtr++, stdout );
       else
-         printf( "%s", pStr );
+         fputs( ( char * ) pStr, stdout );
       adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
    }
@@ -462,9 +469,9 @@ static void hb_dispout( BYTE * pStr, ULONG ulLen )
    ULONG ulCount = ulLen;
    BYTE * pPtr = pStr;
    if( strlen( pStr ) != ulCount )
-      while( ulCount-- ) printf( "%c", *pPtr++ );
+      while( ulCount-- ) fputc( *pPtr++, stdout );
    else
-      printf( "%s", pStr );
+      fputs( ( char * ) pStr, stdout );
    adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
 #endif
 }
@@ -478,15 +485,15 @@ void hb_setpos( USHORT row, USHORT col )
 
       if( row < s_uiDevRow || col < s_uiDevCol )
       {
-         printf( s_szCrLf );
+         fputs( s_szCrLf, stdout );
          s_uiDevCol = 0;
          s_uiDevRow++;
       }
       else if( row > s_uiDevRow ) s_uiDevCol = 0;
       for( uiCount = s_uiDevRow; uiCount < row; uiCount++ )
-         printf( s_szCrLf );
+         fputs( s_szCrLf, stdout );
       for( uiCount = s_uiDevCol; uiCount < col; uiCount++ )
-         printf( " " );
+         fputs( " ", stdout );
 #endif
 
    s_uiDevRow = row;
@@ -783,7 +790,8 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    {
       USHORT uiCount;
       s_uiDevRow = iMR;
-      for( uiCount = 0; uiCount < s_uiDevRow ; uiCount++ ) printf( s_szCrLf );
+      for( uiCount = 0; uiCount < s_uiDevRow ; uiCount++ )
+         fputs( s_szCrLf, stdout );
       s_uiDevRow = s_uiDevCol = 0;
    }
 #endif
@@ -935,29 +943,29 @@ HARBOUR HB_DISPBOX( void )
       /* Draw the box */
       hb_setpos( top, left );
       if( height > 1 && width > 1 )
-         printf( "%c", Borders[ 0 ] );    /* Upper left corner */
+         fputc( Borders[ 0 ], stdout );   /* Upper left corner */
       for( col = ( height > 1 ? left + 1 : left ); col < ( height > 1 ? right : right + 1 ); col++ )
-         printf( "%c", Borders[ 1 ] );    /* Top line */
+         fputc( Borders[ 1 ], stdout );   /* Top line */
       if( height > 1 && width > 1 )
-         printf( "%c", Borders[ 2 ] );    /* Upper right corner */
+         fputc( Borders[ 2 ], stdout );   /* Upper right corner */
       for( row = ( height > 1 ? top + 1 : top ); row < ( width > 1 ? bottom : bottom + 1 ); row++ )
       {
          hb_setpos( row, left );
          if( height > 1 )
-            printf( "%c", Borders[ 3 ] ); /* Left side */
+            fputc( Borders[ 3 ], stdout ); /* Left side */
          if( height > 1 && width > 1 ) for( col = left + 1; col < right; col++ )
-            printf( "%c", Borders[ 8 ] ); /* Fill */
+            fputc( Borders[ 8 ], stdout ); /* Fill */
          if( height > 1 && width > 1 )
-            printf( "%c", Borders[ 7 ] ); /* Right side */
+            fputc( Borders[ 7 ], stdout ); /* Right side */
       }
       if( height > 1 && width > 1 )
       {
          hb_setpos( bottom, left );
          col = left;
-         printf( "%c", Borders[ 6 ] );    /* Bottom left corner */
+         fputc( Borders[ 6 ], stdout );    /* Bottom left corner */
          for( col = left + 1; col < right; col++ )
-            printf( "%c", Borders[ 5 ] ); /* Bottom line */
-         printf( "%c", Borders[ 4 ] );    /* Bottom right corner */
+            fputc( Borders[ 5 ], stdout ); /* Bottom line */
+         fputc( Borders[ 4 ], stdout );    /* Bottom right corner */
       }
       hb_setpos( bottom + 1, right + 1 );
    }
@@ -1044,10 +1052,10 @@ HARBOUR HB_SAVESCREEN( void )
          uiCoords[ uiX - 1 ] = hb_parni( uiX );
 
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
-   pBuffer = (char *) hb_xgrab( uiX );
+   pBuffer = hb_xgrab( uiX );
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( pBuffer, uiX );
-   hb_xfree( pBuffer );
+   hb_xfree( ( char * ) pBuffer );
 #else
    hb_retc( "" );
 #endif
@@ -1151,14 +1159,14 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 #else
    ulLen = 0;
    input = 0;
-   while( input != 13 )
+   while( input != K_ENTER )
    {
       /* Wait forever, for keyboard events only */
       input = hb_inkey( 0.0, INKEY_KEYBOARD, 1, 1 );
       switch( input )
       {
-         case 8:  /* Backspace */
-         case 19: /* Left arrow */
+         case K_BS:
+         case K_LEFT:
             if( ulLen > 0 )
             {
                ulLen--; /* Adjust input count to get rid of last character,
@@ -1166,12 +1174,11 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 #ifdef HARBOUR_USE_GTAPI
                hb_gtWriteCon( "\x8 \x8", 3L );
 #else
-               printf( "\x8 \x8" );
+               fputs( "\x8 \x8", stdout );
 #endif
             }
             break;
-         case 13:  /* Nothing to do. While loop will now exit. */
-            break;
+
          default:
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {

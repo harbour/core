@@ -71,11 +71,11 @@
 #include "extend.h"
 #include "itemapi.h"
 
-#define CHR_HARD1   ( ( char ) 13 )
-#define CHR_HARD2   ( ( char ) 10 )
+#define CHR_HARD1   ( ( char ) HB_CHAR_CR )
+#define CHR_HARD2   ( ( char ) HB_CHAR_LF )
 
 #define CHR_SOFT1   ( ( char ) 141 )
-#define CHR_SOFT2   ( ( char ) 10 )
+#define CHR_SOFT2   ( ( char ) HB_CHAR_LF )
 
 /* NOTE: pszResult must have an allocated buffer of at least */
 /*       ulStringLen */

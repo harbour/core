@@ -156,4 +156,17 @@ typedef PHB_FUNC HB_FUNC_PTR;
 typedef LONG HB_HANDLE;     /* handle to memvar value */
 typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 
+/* Some common character constants */
+
+#define HB_CHAR_NUL             '\0'    /*   0 - NUL */
+#define HB_CHAR_EOS             HB_CHAR_NUL
+#define HB_CHAR_BEL             '\a'    /*   7 - Bell */
+#define HB_CHAR_BS              '\b'    /*   8 - Backspace */
+#define HB_CHAR_HT              '\t'    /*   9 - Tab horizontal */
+#define HB_CHAR_LF              '\n'    /*  10 - Linefeed */
+#define HB_CHAR_VT              '\v'    /*  11 - Tab vertical */
+#define HB_CHAR_FF              '\f'    /*  12 - Formfeed */
+#define HB_CHAR_CR              '\r'    /*  13 - Carriage return */
+#define HB_CHAR_EOF             '\x1A'  /*  26 - End of file marker */
+
 #endif /* HB_DEFS_H_ */

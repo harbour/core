@@ -805,9 +805,10 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
       ch = *fpPtr++;
       switch( ch )
       {
-         case 7:
+         case HB_CHAR_BEL:
             break;
-         case 8:
+
+         case HB_CHAR_BS:
 /*
             COMMENT: Clipper does not scroll backwards up the screen!
             if( uiCol > 0 ) uiCol--;
@@ -836,7 +837,8 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
             }
 
             break;
-         case 10:
+
+         case HB_CHAR_LF:
 /*
             if( uiRow < uiMaxRow ) uiRow++;
             else
@@ -848,7 +850,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
             ldisp = TRUE;
             break;
 
-         case 13:
+         case HB_CHAR_CR:
             uiCol = 0;
             if( *fpPtr != '\n') ldisp = TRUE;
             break;

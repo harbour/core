@@ -58,7 +58,10 @@
 #include "errorapi.h"
 #include "set.h"
 
-#define HB_ISSPACE( c ) ( ( c ) == 9 || ( c ) == 10 || ( c ) == 13 || ( c ) == 32 )
+#define HB_ISSPACE( c ) ( ( c ) == HB_CHAR_HT || \
+                          ( c ) == HB_CHAR_LF || \
+                          ( c ) == HB_CHAR_CR || \
+                          ( c ) == ' ' )
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320

@@ -67,10 +67,10 @@
 #include "extend.h"
 #include "itemapi.h"
 
-#define CHR_HARD1   ( ( char ) 13 )
+#define CHR_HARD1   ( ( char ) HB_CHAR_CR )
 
 #define CHR_SOFT1   ( ( char ) 141 )
-#define CHR_SOFT2   ( ( char ) 10 )
+#define CHR_SOFT2   ( ( char ) HB_CHAR_LF )
 
 char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {

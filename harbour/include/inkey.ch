@@ -33,6 +33,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 /* NOTE: Keystroke descriptions marked with an asterisk (*) are only */
 /*       available on enhanced keyboards (those with more than 84 keys) */
 
