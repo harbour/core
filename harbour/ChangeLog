@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 12:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/extend.c
+     ! minor fix to hb_parc()
+
+   Notice: This change fixes the hb_parc() bug described by John Skelton
+
 2002-10-19 12:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/philes.c
      ! FRead() fix for dynamic strings use with more than one holder
