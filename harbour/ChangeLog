@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Fixed bug on numeric fields with picture clause
+
+2002-02-19 10:22 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/pp/ppcore.c
      * minor fix borrowed from [x]Harbour
        Many thanks to Ron
 
