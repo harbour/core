@@ -52,7 +52,8 @@
 
 //----------------------------------------------------------------------------//
 
-CLASS TGet
+
+CLASS Get
 
    // Exported
 
@@ -136,7 +137,7 @@ ENDCLASS
 
 //---------------------------------------------------------------------------//
 
-METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS TGet
+METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 
    local cChar
    local nAt
@@ -265,7 +266,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Assign() CLASS TGet
+METHOD Assign() CLASS Get
 
    ::VarPut( ::unTransform() )
 
@@ -273,7 +274,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Display( lForced ) CLASS TGet
+METHOD Display( lForced ) CLASS Get
 
    local nOldCursor := SetCursor( SC_NONE )
 
@@ -301,7 +302,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD End() CLASS TGet
+METHOD End() CLASS Get
 
    local nLastCharPos
 
@@ -320,7 +321,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Home() CLASS TGet
+METHOD Home() CLASS Get
 
    if ::HasFocus
       ::Pos := 1
@@ -332,7 +333,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Reset() CLASS TGet
+METHOD Reset() CLASS Get
 
    if ::hasfocus
       ::buffer := ::PutMask( ::VarGet(), .f. )
@@ -343,18 +344,19 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Undo() CLASS TGet
+METHOD Undo() CLASS Get
 
    if ::hasfocus
       ::buffer := ::PutMask( ::original )
       ::pos    := 1
+      ::VarPut( ::Original )
    endif
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD SetFocus() CLASS TGet
+METHOD SetFocus() CLASS Get
 
    ::hasfocus   := .t.
    ::rejected   := .f.
@@ -386,7 +388,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD KillFocus() CLASS TGet
+METHOD KillFocus() CLASS Get
 
    ::Assign()
    ::Display()
@@ -399,7 +401,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD VarPut( xValue ) CLASS TGet
+METHOD VarPut( xValue ) CLASS Get
 
    Eval( ::block, xValue )
 
@@ -407,13 +409,13 @@ return xValue
 
 //---------------------------------------------------------------------------//
 
-METHOD VarGet() CLASS TGet
+METHOD VarGet() CLASS Get
 
 return Eval( ::block )
 
 //---------------------------------------------------------------------------//
 
-METHOD Untransform( cBuffer ) CLASS TGet
+METHOD Untransform( cBuffer ) CLASS Get
 
    local xValue
    local cChar
@@ -470,7 +472,7 @@ return xValue
 
 //---------------------------------------------------------------------------//
 
-METHOD overstrike( cChar ) CLASS TGet
+METHOD overstrike( cChar ) CLASS Get
 
    if ::type == "N" .and. ! ::lEdit
       ::pos := 1
@@ -519,7 +521,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Insert( cChar ) CLASS TGet
+METHOD Insert( cChar ) CLASS Get
 
    local cOver
    local cTmp
@@ -586,7 +588,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Right( lDisplay ) CLASS TGet
+METHOD _Right( lDisplay ) CLASS Get
 
    local nPos
 
@@ -624,7 +626,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Left( lDisplay ) CLASS TGet
+METHOD _Left( lDisplay ) CLASS Get
 
    local nPos
 
@@ -662,7 +664,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD WordLeft() CLASS TGet
+METHOD WordLeft() CLASS Get
 
    local nPos
 
@@ -710,7 +712,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD WordRight() CLASS TGet
+METHOD WordRight() CLASS Get
 
    local nPos
 
@@ -752,7 +754,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD ToDecPos() CLASS TGet
+METHOD ToDecPos() CLASS Get
 
    if ! ::HasFocus .or. ::DecPos == NIL
       return .f.
@@ -772,7 +774,7 @@ return .t.
 
 //---------------------------------------------------------------------------//
 
-METHOD IsEditable( nPos ) CLASS TGet
+METHOD IsEditable( nPos ) CLASS Get
 
    local cChar
 
@@ -801,7 +803,7 @@ return .f.
 
 //---------------------------------------------------------------------------//
 
-METHOD Input( cChar ) CLASS TGet
+METHOD Input( cChar ) CLASS Get
 
    local cPic
 
@@ -870,7 +872,7 @@ return cChar
 
 //---------------------------------------------------------------------------//
 
-METHOD PutMask( xValue, lEdit ) CLASS TGet
+METHOD PutMask( xValue, lEdit ) CLASS Get
 
    local cChar, cMask
    local cBuffer
@@ -917,7 +919,7 @@ return cBuffer
 
 //---------------------------------------------------------------------------//
 
-METHOD BackSpace( lDisplay ) CLASS TGet
+METHOD BackSpace( lDisplay ) CLASS Get
 
    local nPos := ::Pos
 
@@ -933,7 +935,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD _Delete( lDisplay ) CLASS TGet
+METHOD _Delete( lDisplay ) CLASS Get
 
    DEFAULT lDisplay TO .t.
 
@@ -973,7 +975,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DeleteAll() CLASS TGet
+METHOD DeleteAll() CLASS Get
 
    local xValue
 
@@ -996,7 +998,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DelEnd() CLASS TGet
+METHOD DelEnd() CLASS Get
 
    local nPos := ::Pos
 
@@ -1016,7 +1018,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DelLeft() CLASS TGet
+METHOD DelLeft() CLASS Get
 
    ::Left( .f. )
    ::Delete( .f. )
@@ -1026,7 +1028,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DelRight() CLASS TGet
+METHOD DelRight() CLASS Get
 
    ::Right( .f. )
    ::Delete( .f. )
@@ -1036,7 +1038,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DelWordLeft() CLASS TGet
+METHOD DelWordLeft() CLASS Get
 
    if ! ::hasfocus
       return Self
@@ -1065,7 +1067,7 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD DelWordRight() CLASS TGet
+METHOD DelWordRight() CLASS Get
 
    if ! ::hasfocus
       return Self
@@ -1095,14 +1097,18 @@ return Self
 
 Function GetNew( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
-return TGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
+return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
+
+/* Huummm, why not using something like */
+/* Function __GET(...)                  */
+/* Return _GET_(...)                    */
 
 /* NOTE: Same as _GET_() */
 
 FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
-   LOCAL oGet := TGet():New(,, bSetGet, cVarName, cPicture )
+   LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
 
    uVar := uVar // Suppress unused variable warning
 
@@ -1114,7 +1120,7 @@ FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 /* NOTE: Same as __GET() */
 
 FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
-   LOCAL oGet := TGet():New(,, bSetGet, cVarName, cPicture )
+   LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
 
    uVar := uVar // Suppress unused variable warning
 
@@ -1122,3 +1128,10 @@ FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PostBlock := bValid
 
 RETURN oGet
+
+
+/* Here for compatibility reason with previous version   */
+/* Not sure it should be keeped here ... (JFL)           */
+/* But does'nt annoy me                                  */
+CLASS TGet Inherit GET
+ENDCLASS

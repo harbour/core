@@ -1,6 +1,14 @@
+2000-10-09 22:53 UTC+0200 JFL (mafact) <jfl@mafact.com>
+   * TGET.PRG Small improvement within :Undo() method
+     to allow update of the var (As John Skelton remark)
+     Also, the standart class name is now Get in place of Tget.
+     This is for compatibility with Cl*pper code where oGet:Classname()
+     should return Get and not Tget.
+     To insure full compatibility with other code relying on Tget,
+     I also maintain a TGet Subclass of Get.
+
 2000-10-09 22:15 UTC+0200 JFL (mafact) <jfl@mafact.com>
    * HBCLASS.CH corrected some tipo where accessName became accesName
-
 
 2000-10-09 2:01 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/adsfunc.c
