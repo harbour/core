@@ -114,6 +114,12 @@ HARBOUR HB_ADSSETDEFAULT( void )
    AdsSetDefault  ( (UNSIGNED8*) hb_parc( 1 ) );
 }
 
+HARBOUR HB_ADSSETDELETED( void )
+{
+   UNSIGNED16 usShowDeleted = hb_parl( 1 );
+   AdsShowDeleted( usShowDeleted );
+}
+
 HARBOUR HB_ADSBLOB2FILE( void )
 {
    char * szFileName, *szFieldName;

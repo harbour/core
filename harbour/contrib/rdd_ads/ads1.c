@@ -207,14 +207,7 @@ static ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
    return SUCCESS;
 }
 
-static ERRCODE adsFound( ADSAREAP pArea, BOOL * pFound )
-{
-   HB_TRACE(HB_TR_DEBUG, ("adsFound(%p, %p)", pArea, pFound));
-
-   AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
-   * pFound = pArea->fFound;
-   return SUCCESS;
-}
+#define  adsFound                  NULL
 
 static ERRCODE adsGoBottom( ADSAREAP pArea )
 {
@@ -289,6 +282,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
                    (UNSIGNED16) pKey->item.asString.length, ADS_STRINGKEY,
                    usSeekType, (UNSIGNED16*) &(pArea->fFound) );
    }
+   AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
 
    return SUCCESS;
 }
@@ -340,9 +334,14 @@ static ERRCODE adsDeleteRec( ADSAREAP pArea )
 static ERRCODE adsDeleted( ADSAREAP pArea, BOOL * pDeleted )
 {
 
+   UNSIGNED16  bDeleted;
+
+
    HB_TRACE(HB_TR_DEBUG, ("adsDeleted(%p, %p)", pArea, pDeleted));
 
-   AdsIsRecordDeleted  ( pArea->hTable, (UNSIGNED16*) pDeleted);
+   AdsIsRecordDeleted  ( pArea->hTable, &bDeleted);
+   *pDeleted = (BOOL) bDeleted;
+
    return SUCCESS;
 }
 

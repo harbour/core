@@ -55,3 +55,9 @@
       => Set( _SET_DEFAULT, <(path)> ); AdsSetDefault( <(path)> )
 #command SET DEFAULT TO                                               ;
       => Set( _SET_DEFAULT, "" ); AdsSetDefault( "" )
+
+#command SET DELETED <x:ON,OFF,&>                                     ;
+      =>  Set( _SET_DELETED, <(x)> )                                  ;
+          ;AdsSetDeleted( if( upper( <(x)> ) == "ON", .t., .f. ) )
+#command SET DELETED (<x>)                                            ;
+      =>  Set( _SET_DELETED, <x> ); AdsSetDeleted( <x> )

@@ -1,3 +1,12 @@
+20000209-13:35 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/adsfunc.c
+     + added new function:
+       HB_ADSETDELETED()
+   * contrib/rdd_ads/ads1.c
+     * some changes for deleted(), locate, continue right work
+   * contrib/rdd_ads/ads.ch
+     + added SET DELETED command
+
 20000209-08:15 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *utils/hbdoc/hbdoc.prg
         *Fixed /w1 warnign when hbdoc is compiled with this switch
