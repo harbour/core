@@ -41,7 +41,7 @@
  *    CURDIR()
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    HB_FEOF()
+ *    HB_F_EOF()
  *
  * See doc/license.txt for licensing terms.
  *

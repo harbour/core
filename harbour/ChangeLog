@@ -1,3 +1,16 @@
+2001-06-14 12:39 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rtl/philes.c
+      * changed comment re HB_FEOF TO HB_F_EOF
+   * contrib/libmisc/hb_f.c
+      * fixed several bugs, mostly EOF handling, and bumped
+         record size to 4096
+      + added HB_FINFO and HB_FREADANDSKIP, the functions I used to
+         test and debug. HB_FREADANDSKIP goes a bit beyond the bug-fix
+         category, but it's well tested. For reading comma-delimited
+         files, it does a single read to both skip a "record"
+         and return the buffer. It also recognizes hard-returns embedded
+         within quotes as data, not a record separator.
+
 2001-06-12 11:59 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * contrib/rdd_ads/ads1.c

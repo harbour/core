@@ -50,11 +50,11 @@
  *
  */
 
-/* please run $(HARBOUR)\tests\working\testhbf.prg for testing */
+/* please run $(HARBOUR)\tests\testhbf.prg for testing */
 
 #include "hbapifs.h"
 
-#define b_size     1024
+#define b_size     4096
 #define c_size     4096
 
 static long hb_hbfskip( int recs );
@@ -62,13 +62,13 @@ static long hb_hbfskip( int recs );
 static long last_rec[10];
 static long recno[10];
 static long offset[10];
-static int handles[10];
-static int area = 0;
+static int  handles[10];
+static int  area = 0;
 static char *b;
 static char *c;
 static long last_off[10];
 static long lastbyte[10];
-static int isEof[10];
+static int  isEof[10];
 
 HB_FUNC( HB_FUSE )
 {
@@ -90,6 +90,7 @@ HB_FUNC( HB_FUSE )
       b              = ( char * )hb_xgrab( b_size );
       c              = ( char * )hb_xgrab( c_size );
       lastbyte[area] = hb_fsSeek( handles[area], 0L, SEEK_END );
+      isEof[area] = (lastbyte[area] == 0);
       hb_retni( handles[area] );
    }
    else {
@@ -288,21 +289,25 @@ HB_FUNC( HB_FGOTOP )
 {
    offset[area] = 0L;
    recno[area] = 1L;
+   isEof[area] = (lastbyte[area] == 0);
 }
 
 HB_FUNC( HB_FLASTREC )
 {
    long old_rec;
    long old_offset;
+   int  bIsEof;
 
    old_rec = recno[area];
    old_offset = offset[area];
+   bIsEof  = isEof[area];
 
    HB_FUNCNAME( HB_FGOBOTTOM )();
    hb_retnl( last_rec[area] );
 
-   recno[area] = old_rec;
+   recno[area]  = old_rec;
    offset[area] = old_offset;
+   isEof[area]  = bIsEof  ;
 }
 
 HB_FUNC( HB_FSELECT )
@@ -312,3 +317,72 @@ HB_FUNC( HB_FSELECT )
    if ( ISNUM(1) )
       area = hb_parni(1) - 1;
 }
+
+HB_FUNC( HB_FINFO )                     /* used for debugging */
+{
+   hb_reta( 6 );
+   hb_storni( area+1,         -1, 1);
+   hb_storni( last_rec[area], -1, 2);
+   hb_storni( recno[area],    -1, 3);
+   hb_storni( offset[area],   -1, 4);
+   hb_storni( lastbyte[area], -1, 5);
+   hb_storl ( isEof[area],    -1, 6);
+
+}
+
+HB_FUNC( HB_FREADANDSKIP )
+{
+/* ------------------------------------------------
+   Warning: This is a rogue function! It is a first shot at adding the logic
+   to read .CSV records that respect CRLF embedded within quotes.
+   It is very common, especially with Microsoft products, for
+   comma-separated files to allow a field (usually an address field)
+   to have hard returns within it. These records appear corrupted to any
+   reader that presumes all hard returns are record separators.
+
+   This function is useful right now to loop through a CSV file
+   while !hb_feof(), but it does NOT recognize the same record count
+   and positioning that the other functions in this file use.
+   It does its own skip and read, so an entire file can be read
+   sequentially with just this function.
+   -BH
+ --------------------------------------------------*/
+   long x =  0;
+   long read;
+   BOOL bInField = 0, bHasCRLF = FALSE;
+
+   hb_fsSeek( handles[area], offset[area], SEEK_SET );
+   read = hb_fsRead( handles[area], ( BYTE * ) b, b_size );
+
+   while (  x < read )
+   {
+      if ( *(b + x) == '"' )
+      {
+         bInField = !bInField ;
+         x++;
+         continue;
+      }
+      if ( bInField )
+      {
+         x++;
+         continue;
+      }
+      if(  ((*(b + x) == 13) && x < read-1 && (*(b + x + 1) == 10)) ||
+           ((*(b + x) == 10) && x < read-1 && (*(b + x + 1) == 13)) )
+      {
+         x += 2;
+         break;
+      }
+      x++;
+   }
+
+   offset[area] = offset[area] + x;
+   recno[area] += 1;
+   // See if there's more to read
+   if ( !isEof[area] )
+      isEof[area] = (lastbyte[area] <= offset[area] + 1) ;
+
+   hb_retclen( b, x - (bHasCRLF ? 2 : 0) );
+
+}
+
