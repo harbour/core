@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-02-09 16:04 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/dbedit.prg
+     ! fixed acColumns handling
+
 2002-02-09 11:24 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/runner.c
      * Some MSVC castings required added

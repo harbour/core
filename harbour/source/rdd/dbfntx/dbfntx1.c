@@ -93,9 +93,7 @@ static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo );
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKey, BOOL bExact, BOOL lSeek, int level );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
-static BOOL hb_ntxFindNextKey( LPTAGINFO pTag, BOOL lContinue );
 static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue );
-static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag, BOOL lContinue );
 static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue );
 static BOOL hb_ntxPageReadTopKey( LPPAGEINFO pPage, ULONG ulOffset );
 static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset );
@@ -456,68 +454,6 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 
 }
 
-/*
-static BOOL hb_ntxFindNextKey( LPTAGINFO pTag, BOOL lContinue )
-{
-   int seekRes;
-   LPKEYINFO pKey;
-   LPPAGEINFO pPage;
-
-   pKey = hb_ntxKeyNew( NULL );
-   if( lContinue )
-   {
-      hb_itemCopy( pKey->pItem,pTag->CurKeyInfo->pItem );
-      pTag->Owner->Owner->ulRecNo = pTag->CurKeyInfo->Xtra;
-   }
-   else
-      hb_ntxGetCurrentKey( pTag,pKey );
-   pKey->Tag = NTX_IGNORE_REC_NUM;
-   pTag->blockNext = 0; pTag->keyNext = 0;
-   seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
-   hb_ntxKeyFree( pKey );
-   if( seekRes )
-      printf( "\n\rhb_ntxFindNextKey: Cannot find current key:" );
-   else
-   {
-      pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
-      pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->Owner->Owner->ulRecNo );
-      if( pPage->CurKey < pPage->uiKeys )
-      {
-         hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
-         pTag->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
-         pTag->CurKeyInfo->Tag = pPage->Page;
-         hb_ntxPageRelease( pPage );
-         return TRUE;
-      }
-      else
-      {
-         hb_ntxPageRelease( pPage );
-         if( pTag->blockNext )
-         {
-            pPage = hb_ntxPageLoad( pTag->blockNext );
-            pPage->CurKey =  pTag->keyNext;
-            if( pPage->CurKey < pPage->uiKeys )
-            {
-               hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
-               pTag->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
-               pTag->CurKeyInfo->Tag = pPage->Page;
-               hb_ntxPageRelease( pPage );
-               return TRUE;
-            }
-            else
-            {
-               hb_ntxPageRelease( pPage );
-               return FALSE;
-            }
-         }
-         else
-            return FALSE;
-      }
-   }
-   return FALSE;
-}
-*/
-
 static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
 {
    BOOL lCurrrentKey = FALSE;
@@ -612,83 +548,6 @@ static BOOL hb_ntxPageReadNextKey( LPTAGINFO pTag, BOOL lContinue )
          return FALSE;
    }
 }
-
-/*
-static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag, BOOL lContinue )
-{
-   int seekRes;
-   LPKEYINFO pKey;
-   LPPAGEINFO pPage, pChildPage;
-
-   pKey = hb_ntxKeyNew( NULL );
-   if( lContinue )
-   {
-      hb_itemCopy( pKey->pItem,pTag->CurKeyInfo->pItem );
-      pTag->Owner->Owner->ulRecNo = pTag->CurKeyInfo->Xtra;
-   }
-   else
-      hb_ntxGetCurrentKey( pTag, pKey );
-   pKey->Tag = NTX_IGNORE_REC_NUM;
-   pTag->blockPrev = 0; pTag->keyPrev = 0;
-   seekRes = hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKey->Tag, pKey, FALSE, FALSE, 1 );
-   hb_ntxKeyFree( pKey );
-   if( seekRes )
-      printf( "\n\rhb_ntxFindPrevKey: Cannot find current key: |%ld %s|",pTag->Owner->Owner->ulRecNo,pKey->pItem->item.asString.value );
-   else
-   {
-      pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
-      pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->Owner->Owner->ulRecNo );
-      pPage->CurKey--;
-      if( ( pPage->pKeys+pPage->CurKey )->Tag )
-      {
-         do
-         {
-            pChildPage = hb_ntxPageLoad( ( pPage->pKeys+pPage->CurKey )->Tag );
-            hb_ntxPageRelease( pPage );
-            pPage = pChildPage;
-            pPage->CurKey = pPage->uiKeys;
-         }
-         while( ( pPage->pKeys+pPage->CurKey )->Tag );
-         pPage->CurKey--;
-      }
-      else
-         pPage->CurKey--;
-      if( pPage->CurKey >= 0 )
-      {
-         hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
-         pTag->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
-         pTag->CurKeyInfo->Tag = pPage->Page;
-         hb_ntxPageRelease( pPage );
-         return TRUE;
-      }
-      else
-      {
-         hb_ntxPageRelease( pPage );
-         if( pTag->blockPrev )
-         {
-            pPage = hb_ntxPageLoad( pTag->blockPrev );
-            pPage->CurKey =  pTag->keyPrev;
-            if( pPage->CurKey < pPage->uiKeys )
-            {
-               hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
-               pTag->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
-               pTag->CurKeyInfo->Tag = pPage->Page;
-               hb_ntxPageRelease( pPage );
-               return TRUE;
-            }
-            else
-            {
-               hb_ntxPageRelease( pPage );
-               return FALSE;
-            }
-         }
-         else
-            return FALSE;
-      }
-   }
-   return FALSE;
-}
-*/
 
 static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag, BOOL lContinue )
 {
@@ -842,66 +701,32 @@ static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset )
 
 static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
 {
-/*
-   if( !pTag->AscendKey )
-   {
-      switch( bTypRead )
-      {
-         case TOP_RECORD:
-            bTypRead = BTTM_RECORD;
-            break;
 
-         case BTTM_RECORD:
-            bTypRead = TOP_RECORD;
-            break;
-
-         case NEXT_RECORD:
-            bTypRead = PREV_RECORD;
-            break;
-
-         case PREV_RECORD:
-            bTypRead = NEXT_RECORD;
-            break;
-      }
-   }
-*/
    pTag->TagBOF = pTag->TagEOF = FALSE;
    if( pTag->Owner->Owner->ulRecCount )
    {
       if( pTag->Owner->Owner->fShared )
          while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+
       switch( bTypRead )
       {
          case TOP_RECORD:
-               pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
-            /* if( pTag->TagEOF )
-               pTag->TagBOF = TRUE; */
+            pTag->TagBOF = !hb_ntxPageReadTopKey( NULL,0 );
             pTag->TagEOF = pTag->TagBOF;
             break;
 
          case BTTM_RECORD:
-               pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
-            /* if( pTag->TagBOF )
-               pTag->TagEOF = TRUE; */
+            pTag->TagEOF = !hb_ntxPageReadBottomKey( NULL,0 );
             pTag->TagBOF = pTag->TagEOF;
             break;
 
          case NEXT_RECORD:
-            while( TRUE )
-            {
-               pTag->TagEOF = !hb_ntxPageReadNextKey( pTag, *lContinue );
-                  break;             
-            }
+            pTag->TagEOF = !hb_ntxPageReadNextKey( pTag, *lContinue );
             break;
 
          case PREV_RECORD:
-            while( TRUE )
-            {
-               pTag->TagBOF = !hb_ntxPageReadPrevKey( pTag, *lContinue );
-                  break;
-            }
+            pTag->TagBOF = !hb_ntxPageReadPrevKey( pTag, *lContinue );
             break;
-
       }
       if( pTag->Owner->Owner->fShared )
       {
@@ -943,57 +768,36 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
    if( pKey1 == NULL || pKey1->item.asString.length == 0 )
       return ( pKey2->item.asString.length == 0 ) ? 0 : -1;
 
-   switch( hb_itemType( pKey1 ) )
+   iLimit = ( pKey1->item.asString.length >
+              pKey2->item.asString.length ) ?
+              pKey2->item.asString.length : pKey1->item.asString.length;
+   if( ( iResult = memcmp( pKey1->item.asString.value,
+                         pKey2->item.asString.value, iLimit ) ) == 0 )
    {
-      case HB_IT_STRING:
-         iLimit = ( pKey1->item.asString.length >
-                    pKey2->item.asString.length ) ?
-                    pKey2->item.asString.length : pKey1->item.asString.length;
-         if( ( iResult = memcmp( pKey1->item.asString.value,
-                               pKey2->item.asString.value, iLimit ) ) != 0 )
-            break;
+      if( ( iResult = pKey1->item.asString.length -
+                pKey2->item.asString.length ) != 0 )
+      {
+         if( iResult > 0 )
+         {
+            i = pKey1->item.asString.length;
+            while(  i > iLimit &&
+                   pKey1->item.asString.value[ i - 1 ] == ' ' )
+               i--;
+         }
          else
          {
-            if( ( iResult = pKey1->item.asString.length -
-                      pKey2->item.asString.length ) != 0 )
-            {
-               if( iResult > 0 )
-               {
-                  i = pKey1->item.asString.length;
-                  while(  i > iLimit &&
-                         pKey1->item.asString.value[ i - 1 ] == ' ' )
-                     i--;
-               }
-               else
-               {
-                  i = pKey2->item.asString.length;
-                  while(  i > iLimit &&
-                         pKey2->item.asString.value[ i - 1 ] == ' ' )
-                     i--;
-               }
-               if( i == iLimit )
-                  iResult = 0;
-            }
+            i = pKey2->item.asString.length;
+            while(  i > iLimit &&
+                   pKey2->item.asString.value[ i - 1 ] == ' ' )
+               i--;
          }
-         if( iResult < 0 && !Exact )
+         if( i == iLimit )
             iResult = 0;
-         break;
-/*
-      case HB_IT_INTEGER:
-      case HB_IT_LONG:
-      case HB_IT_DOUBLE:
-         iResult = hb_itemGetND( pKey1 ) - hb_itemGetND( pKey2 );
-         break;
-      case HB_IT_DATE:
-         iResult = hb_itemGetDL( pKey1 ) - hb_itemGetDL( pKey2 );
-         break;
-      case HB_IT_LOGICAL:
-         break;
-*/
-      default:
+      }
+      if( iResult < 0 && !Exact )
          iResult = 0;
-         printf( "hb_ntxKeyCompare()" );
    }
+
    if( iResult < 0 )
       return -1;
    else if( iResult > 0 )
