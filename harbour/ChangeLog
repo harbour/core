@@ -1,4 +1,8 @@
 2000-07-24 13:59 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+    * contrib/rdd_ads/adsfunc.c
+      * added full set of encryption/decryption functions
+
+2000-07-24 13:59 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
     * include/hbapirdd.h
       * uncommented relational methods in functions table
     * source/rdd/dbcmd.c

@@ -434,3 +434,147 @@ HB_FUNC( ADSGETRELKEYPOS )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
 }
+
+HB_FUNC( ADSENABLEENCRYPTION )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+   char *pucPassword = hb_parc( 1 );
+
+   if( strlen( pucPassword ) == 0 )
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSENABLEENCRYPTION" );
+      return;
+   }
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsEnableEncryption( pArea->hTable,pucPassword );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, " ADSENABLEENCRYPTION" );
+}
+
+HB_FUNC( ADSDISABLEENCRYPTION )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsDisableEncryption( pArea->hTable );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, " ADSDISABLEENCRYPTION" );
+}
+
+HB_FUNC( ADSENCRYPTTABLE )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsEncryptTable( pArea->hTable );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSENCRYPTTABLE" );
+}
+
+HB_FUNC( ADSDECRYPTTABLE )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsDecryptTable( pArea->hTable );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDECRYPTTABLE" );
+}
+
+HB_FUNC( ADSENCRYPTRECORD )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsEncryptRecord( pArea->hTable );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSENCRYPTRECORD" );
+}
+
+HB_FUNC( ADSDECRYPTRECORD )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      ulRetVal = AdsDecryptRecord( pArea->hTable );
+      hb_retni( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDECRYPTRECORD" );
+}
+
+HB_FUNC( ADSISENCRYPTIONENABLED )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usIsEnabled;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      AdsIsEncryptionEnabled( pArea->hTable, &usIsEnabled );
+      hb_retl( usIsEnabled );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, " ADSISENCRYPTIONENABLED" );
+}
+
+HB_FUNC( ADSISRECORDENCRYPTED )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usIsEnabled;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      AdsIsRecordEncrypted( pArea->hTable, &usIsEnabled );
+      hb_retl( usIsEnabled );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSISRECORDENCRYPTED" );
+}
+
+HB_FUNC( ADSISTABLEENCRYPTED )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usIsEnabled;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      AdsIsTableEncrypted( pArea->hTable, &usIsEnabled );
+      hb_retl( usIsEnabled );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSISTABLEENCRYPTED" );
+}
