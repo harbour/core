@@ -94,7 +94,7 @@ HARBOUR HB_DO( void )
 
       if( IS_STRING( pItem ) )
       {
-         PHB_DYNS pDynSym = hb_dynsymFind( hb_itemGetCPtr( pItem ) );
+         PHB_DYNS pDynSym = hb_dynsymGet( hb_itemGetCPtr( pItem ) );
 
          if( pDynSym )
          {
