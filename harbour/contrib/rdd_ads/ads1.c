@@ -94,6 +94,57 @@ static void commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, cha
    return;
 }
 
+static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads server settings to HB_TRACE. Currently in a quick-and-dirty state... */
+{
+   UNSIGNED8  pucTemp[1025];
+   UNSIGNED16 pusLen = 1024;
+   UNSIGNED32 ulRetVal = 0, ulRetAOF = 0, ulRetFilt = 0;
+   UNSIGNED8  pucFormat[16];
+   UNSIGNED8  pucFilter[1025];
+   UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
+   UNSIGNED8  pucIndexName[MAX_STR_LEN + 1];
+   UNSIGNED8  pucIndexExpr[MAX_STR_LEN + 1];
+   UNSIGNED8  pucIndexCond[MAX_STR_LEN + 1];
+
+   if( pArea )
+   {
+      pusLen = 15;
+      AdsGetDateFormat (pucFormat, &pusLen);
+      pusLen = 1024;
+      ulRetVal = AdsGetTableAlias( pArea->hTable, pucTemp, &pusLen );
+      AdsGetEpoch (&pusLen);
+      HB_TRACE(HB_TR_ALWAYS, ("DumpArea: \n    pArea: %p  hTable: %lu  Alias: %s (RetVal %lu)\n      Eof: %d  DateFormat: %s  Epoch: %d",
+         pArea, pArea->hTable, pucTemp, ulRetVal, pArea->fEof, pucFormat, pusLen));
+
+      pusLen = 1024;
+      ulRetAOF  = AdsGetAOF( pArea->hTable, pucTemp, &pusLen );
+      pusLen = 1024;
+      ulRetFilt = AdsGetFilter( pArea->hTable, pucFilter, &pusLen );
+      HB_TRACE(HB_TR_ALWAYS, ("DumpArea AOF: (RetVal %lu) %s \n     Filter: (RetVal %lu) %s", ulRetAOF, pucTemp, ulRetFilt, pucFilter));
+
+      if( pArea->hOrdCurrent )
+      {
+
+         pusLen = MAX_STR_LEN;
+         AdsGetIndexName( pArea->hOrdCurrent, pucIndexName, &pusLen);
+         pusLen = MAX_STR_LEN;
+         AdsGetIndexCondition( pArea->hOrdCurrent, pucIndexCond, &pusLen);
+         pusLen = MAX_STR_LEN;
+         AdsGetIndexExpr( pArea->hOrdCurrent, pucIndexExpr, &pusLen);
+
+         pusLen = 1024;   /*ADS top/bottom are 1,2 instead of 0,1*/
+         ulRetVal  = AdsGetScope( pArea->hOrdCurrent, 1, pucTemp, &pusLen );
+         pusLen = 1024;
+         ulRetFilt = AdsGetScope( pArea->hOrdCurrent, 2, pucFilter, &pusLen );
+
+         HB_TRACE(HB_TR_ALWAYS, ("DumpArea Index: %s   Expr: %s  Cond: %s\n        Scope: (RetVal %lu) %s  Bottom: (RetVal %lu) %s",
+               pucIndexName, pucIndexExpr, pucIndexCond, ulRetVal, pucTemp, ulRetFilt, pucFilter));
+
+      }
+   }
+}
+
+
 static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
 {
    LONG lAbsNumber;
@@ -407,11 +458,13 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 
 static ERRCODE adsGoTop( ADSAREAP pArea )
 {
+   UNSIGNED32 ulRetVal = 0;
    HB_TRACE(HB_TR_DEBUG, ("adsGoTop(%p)", pArea));
 
    pArea->fTop = TRUE;
    pArea->fBottom = FALSE;
-   AdsGotoTop  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
+   ulRetVal = AdsGotoTop  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
+
    hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
@@ -1144,8 +1197,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->hStatement = 0;
       pArea->hOrdCurrent = 0;
 
-
-      ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
+      ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, pOpenInfo->atomAlias,
                   adsFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
@@ -1881,15 +1933,20 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
    if (SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) == SUCCESS )
    {
       AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), (UNSIGNED16*) &bValidExpr );
+
       if ( bValidExpr )
       {
 
          if ( hb_set.HB_SET_OPTIMIZE )
          {
             ulRetVal = AdsSetAOF( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), usResolve );
-         }else
+         }
+         else
+         {
             ulRetVal = AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
-      }
+         }
+      }     /* else let SUPER handle filtering */
+
    }
    return ulRetVal == AE_SUCCESS ? SUCCESS : FAILURE ;
 }

@@ -44,6 +44,7 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 #include "rddads.h"
+#include "hbstack.h"
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
 extern ERRCODE adsCloseCursor( ADSAREAP pArea );
@@ -76,6 +77,35 @@ HB_FUNC( ADSSETSERVERTYPE )
       servType = hb_parni( 1 );
       if( servType>0 && servType<3 )
          AdsSetServerType( servType );
+   }
+}
+
+HB_FUNC( ADSSETDATEFORMAT  )
+{
+   UNSIGNED8  pucFormat[16];
+   UNSIGNED16 pusLen = 15;
+
+   hb_retc( "");
+   AdsGetDateFormat (pucFormat, &pusLen);
+   if ( pusLen > 0 )
+      hb_retc( pucFormat );
+
+   if( ISCHAR( 1 ))
+   {
+      AdsSetDateFormat ( (UCHAR*) hb_parc(1) );
+   }
+}
+
+HB_FUNC( ADSSETEPOCH )
+{
+   UNSIGNED16 pusEpoch = 1900;
+
+   if ( AdsGetEpoch ( &pusEpoch ) == AE_SUCCESS )
+      hb_retni( pusEpoch );
+
+   if( ISNUM( 1 ) )
+   {
+      AdsSetEpoch ( hb_parni(1) );
    }
 }
 
@@ -290,7 +320,7 @@ HB_FUNC( ADSKEYCOUNT )
       else
          hIndex = (pArea->hOrdCurrent == 0) ? pArea->hTable : pArea->hOrdCurrent;
 
-      if( hb_pcount() > 2 )
+      if( hb_pcount() > 2 )             /* 2nd parameter: unsupported Bag Name */
       {
          if( ISNUM( 3 ) )
             usFilterOption = hb_parni( 3 );
@@ -364,6 +394,26 @@ HB_FUNC( ADSEVALAOF )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSEVALAOF" );
 
+}
+
+
+HB_FUNC( ADSGETTABLEALIAS )
+{
+   ADSAREAP pArea;
+   UNSIGNED8  pucAlias[HARBOUR_MAX_RDD_ALIAS_LENGTH +1];
+   UNSIGNED16 pusLen = HARBOUR_MAX_RDD_ALIAS_LENGTH;
+   UNSIGNED32 ulRetVal = FAILURE;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      ulRetVal = AdsGetTableAlias( pArea->hTable, pucAlias, &pusLen );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETTABLEALIAS" );
+
+   if ( ulRetVal == AE_SUCCESS )
+      hb_retclen ( ( char * ) pucAlias, pusLen );
+   else
+      hb_retc( "" );
 }
 
 HB_FUNC( ADSGETAOF )
@@ -492,18 +542,29 @@ HB_FUNC( ADSGETFILTER )
    if( pArea )
    {
       ulRetVal = AdsGetFilter( pArea->hTable, pucFilter, &pusLen );
-      if ( ulRetVal == AE_SUCCESS )
+
+      if ( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
       {
-         if ( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
-         {
-            pucFilter2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
-            ulRetVal = AdsGetFilter( pArea->hTable, pucFilter2, &pusLen );
-            if ( ulRetVal == AE_SUCCESS )
-               hb_retc( pucFilter2 );
-            hb_xfree( pucFilter2 );
-         }
+         pucFilter2 = (UNSIGNED8*) hb_xgrab(pusLen + 1);
+         ulRetVal = AdsGetFilter( pArea->hTable, pucFilter2, &pusLen );
+         if ( ulRetVal == AE_SUCCESS )
+            hb_retc( pucFilter2 );
          else
-            hb_retc( pucFilter );
+         {
+            HB_TRACE(HB_TR_DEBUG, ("adsGetFilter Error %lu", ulRetVal));
+         }
+         hb_xfree( pucFilter2 );
+      }
+      else if ( ulRetVal == AE_SUCCESS )
+      {
+         hb_retc( pucFilter );
+      }
+      else
+      {
+         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter Error %lu", ulRetVal));
+/*         sprintf((char*)pucFilter,"Error in AdsGetFilter: %lu", ulRetVal );
+//         hb_retc( pucFilter );
+*/
       }
    }
 }
@@ -804,6 +865,11 @@ HB_FUNC( ADSEXECUTESQL )
       hb_retl( 0 );
 }
 
+HB_FUNC( ADSCLOSEALLTABLES )
+{
+   hb_retnl( AdsCloseAllTables() );
+}
+
 HB_FUNC( ADSCOPYTABLE )
 {
    ADSAREAP pArea;
@@ -857,15 +923,18 @@ HB_FUNC( ADSCONVERTTABLE )
 
 UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
 {
+   UNSIGNED32 bRet = 0;
    PHB_ITEM pPercentDone = hb_itemPutNI(NULL, usPercentDone);
 
    if ( itmCobCallBack )
    {
       hb_vmEvalBlockV( itmCobCallBack, 1, pPercentDone ) ;
+      bRet =  hb_itemGetL( &hb_stack.Return ) ;
    }
    else
    {
       HB_TRACE(HB_TR_DEBUG, ("ShowPercentage(%d) called with no codeblock set.\n", usPercentDone ));
+      /*bRet = 1;*/
    }
    hb_itemRelease( pPercentDone );
    return 0;

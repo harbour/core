@@ -1,3 +1,34 @@
+2001-05-13 07:55 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * dbAppend: set NetErr to True if SELF_APPEND fails
+
+   * contrib/rdd_ads/ads.ch
+      * added SET EPOCH TO and SET DATE FORMAT
+
+   * contrib/rdd_ads/adsfunc.c
+      + added AdsGetTableAlias() to confirm ADS's idea of the alias
+      + added AdsSetEpoch() and AdsSetDateFormat()
+         Done as get/set functions (returns previous setting)
+      + added AdsCloseAllTables()
+      * changed ShowPercentage for Indexing CallBacks to return
+         the value from the codeblock to the Server.
+         Pass 0 to continue, 1 (non-zero) to abort
+
+   * contrib/rdd_ads/ads1.c
+      * Fixed adsOpen() to pass along the correct alias to ADS
+      * added DumpArea()  for debugging: call this to dump ads server
+         settings to HB_TRACE. Currently in a quick-and-dirty state...
+
+   * source/vm/arrayshb.c
+      * added HB_ArrayID()
+         Useful for debugging: returns the array's "address" so dual
+         references to same array can be seen */
+
+   * source/vm/arrays.c
+      * in hb_arrayFromStack added missing ";" needed for debug build
+
+
 2001-05-13 22:10 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/include/hboo.ch
      + added #define to allow a better control of __objGetMsgList()

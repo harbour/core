@@ -78,6 +78,11 @@
  *      ALL workareas.  ADS does not have a "commit just this table" call.
  *      Use dbSkip(0) to commit changes to the current record.
 
+ *      Be sure to use the command SET DEFAULT TO (cDir) and not its
+ *      equivalent Set() function call. The Set() function will not make
+ *      the call to ADS to change its internal setting, but the command
+ *      will.
+
  *      For programmers who are already familiar with the
  *      ACE engine, this also means there are some differences
  *      between the RDDADS in Harbour and the parallel ACE documentation.

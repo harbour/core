@@ -86,4 +86,11 @@
       =>  Set( _SET_DELETED, <(x)> )                                  ;
           ;AdsSetDeleted( if( upper( <(x)> ) == "ON", .t., .f. ) )
 #command SET DELETED (<x>)                                            ;
-      =>  Set( _SET_DELETED, <x> ); AdsSetDeleted( <x> )
+      =>  Set( _SET_DELE, <x> ); AdsSetDeleted( <x> )
+
+#command SET EPOCH TO <year>                                          ;
+      => Set( _SET_EPOCH, <year> ); AdsSetEpoch( <year> )
+
+#command SET DATE FORMAT [TO] <c>                                     ;
+      => Set( _SET_DATEFORMAT, <c> ); AdsSetDateFormat( <c> )
+

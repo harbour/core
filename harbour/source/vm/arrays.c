@@ -833,7 +833,7 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 {
    PHB_ITEM pArray = hb_itemNew( NULL );
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
-   USHORT uiPos
+   USHORT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromStack(%iu)", uiLen));
 
