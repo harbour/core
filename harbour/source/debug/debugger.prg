@@ -38,12 +38,13 @@
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
 static oDebugger
+static lExit := .F.
 
 function __dbgEntry( uParam )  // debugger entry point
 
    do case
       case ValType( uParam ) == "C"   // called from hvm.c hb_vmModuleName()
-           if oDebugger == nil
+           if oDebugger == nil .and. !lExit
               oDebugger = TDebugger():New()
               oDebugger:Activate( uParam )
            endif
@@ -128,6 +129,11 @@ METHOD HandleEvent() CLASS TDebugger
               ::oPullDown:ProcessKey( nKey )
 
          case nKey == K_ESC
+              RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
+              SetPos( ::nAppRow, ::nAppCol )
+              SetColor( ::cAppColors )
+              oDebugger := nil
+              lExit := .T.
               ::Exit()
 
          case nKey == K_UP

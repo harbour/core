@@ -1,7 +1,7 @@
 19990823-01:11 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/debug/debugger.prg
     * ::Activate - fix for trashed screens
-      Escape key is still a problem for now.
+      Escape key will now exit the debugger, but the app will continue to run
 
 19990823-01:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/alert.prg
