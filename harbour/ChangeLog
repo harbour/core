@@ -1,3 +1,12 @@
+19991122-17:10 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * rt_misc.prg
+     + Added a comment that Nations functions don't exist in CA-Clipper 5.2e.
+     ! Added #infdef __CLIPPER__ around Nationmsg(200) test, which causes a
+       GPF with CA-Clipper 5.3b (with Exospace).
+     + Changed comments to indicate IsAffirm() and IsNegative() GPF with
+       CA-Clipper 5.3b (with Exospace) (they don't even exist in 5.2e).
+
 19991122-16:45 EDT David G. Holm <dholm@jsd-llc.com>
 
    * make_c5x.bat
