@@ -1748,13 +1748,18 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
    sortInfo.nItems = 0;
    sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = NULL;
-   sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
-   if( !sortInfo.sortBuffer )
+   if( ulRecCount )
    {
-      /* TODO: handling of few reduced buffers */
-      printf( "\r\nhb_ntxIndexCreate: Not enough room for index buffer !" );
-      return FAILURE;
+      sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
+      if( !sortInfo.sortBuffer )
+      {
+         /* TODO: handling of few reduced buffers */
+         printf( "\r\nhb_ntxIndexCreate: Not enough room for index buffer !" );
+         return FAILURE;
+      }
    }
+   else
+      sortInfo.sortBuffer = NULL;
 
    pRecordTmp = pArea->pRecord;
    fValidBuffer = pArea->fValidBuffer;
@@ -1823,7 +1828,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    pArea->fValidBuffer = fValidBuffer;
    hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
    hb_ntxBufferSave( pTag, &sortInfo );
-   hb_xfree( sortInfo.sortBuffer );
+   if( sortInfo.sortBuffer )
+      hb_xfree( sortInfo.sortBuffer );
    hb_xfree( readBuffer );
    hb_itemRelease( pItem );
    /* hb_ntxPageFree( pTag->RootPage,TRUE ); */
@@ -3075,6 +3081,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxWriteDBHeader,
                              ntxWhoCares
                            };
+
 
 HB_FUNC(_DBFNTX )
 {

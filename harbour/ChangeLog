@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    ! OS/2 IBM C++ fix.
+
+2002-01-16 05:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/rtl/typefile.prg
      * cBuffer not initialized, fixed.
 
 2002-01-16 00:44 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
