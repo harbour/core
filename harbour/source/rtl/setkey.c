@@ -189,7 +189,7 @@ HB_FUNC( SETKEY )
             if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
             {
 #endif
-               hb_itemRelease( hb_itemReturn( hb_itemNew( sk_list_tmp->pAction ) ) );
+               hb_itemReturn( sk_list_tmp->pAction );
 #if defined( HB_EXTENSION )
             }
 #endif

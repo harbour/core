@@ -1,3 +1,9 @@
+2000-07-25 00:33 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/setkey.c
+   * source/vm/memvars.c
+     % Minor optimization in Item returning.
+
 2000-07-25 00:23 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/abs.c

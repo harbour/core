@@ -1074,7 +1074,7 @@ HB_FUNC( __MVDBGINFO )
       }
       else
       {
-         hb_itemRelease( hb_itemReturn( hb_itemNew( NULL ) ) ); /* return NIL value */
+         hb_ret(); /* return NIL value */
 
          if( iCount >= 3 && ISBYREF( 3 ) )
          {
