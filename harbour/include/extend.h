@@ -322,6 +322,7 @@ extern void     hb_strDescend( char * szStringTo, char * szStringFrom, ULONG ulL
 extern ULONG    hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen );
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
+extern char *   hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen );
 
 extern double   hb_numRound( double dResult, int iDec );
 

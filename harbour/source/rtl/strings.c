@@ -810,6 +810,20 @@ char *hb_strUpper( char *szText, ULONG ulLen )
    return szText;
 }
 
+/* This function copies and converts szText to upper case.
+ */
+char *hb_strncpyUpper( char * pDest, char *pSource, ULONG ulLen )
+{
+   char *pStart = pDest;
+
+   pDest[ ulLen ] ='\0';
+   while( ulLen-- )
+      *pDest++ = toupper( *pSource++ );
+
+   return pStart;
+}
+
+
 /* converts string to upper case */
 HARBOUR HB_UPPER( void )
 {

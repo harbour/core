@@ -66,6 +66,7 @@ static void    hb_vmPushAlias( void );       /* pushes the current workarea numb
 static void    hb_vmPushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
 static void    hb_vmPushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
 static void    hb_vmSwapAlias( void );       /* swaps items on the eval stack and pops the workarea number */
+static BOOL    hb_vmSelectWorkarea( PHB_ITEM ); /* select the workarea using a given item or a substituted value */
 
 static void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
 static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
@@ -548,7 +549,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_PUSHNIL:
-              hb_vmPushNil();
+              stack.pPos->type = IT_NIL;
+              hb_stackPush();
               w++;
               break;
 
@@ -1930,86 +1932,25 @@ long hb_vmPopDate( void )
  */
 static void hb_vmPopAlias( void )
 {
-   PHB_ITEM pItem;
-
    hb_stackDec();
-   pItem = stack.pPos;
-   switch( pItem->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmPushAlias()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         hb_rddSelectWorkAreaNumber( pItem->item.asInteger.value );
-         pItem->type = IT_NIL;
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
-         pItem->type = IT_NIL;
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         hb_rddSelectWorkAreaAlias( pItem->item.asString.value );
-         hb_itemClear( pItem );
-         break;
-
-      default:
-         hb_itemClear( pItem );
-         hb_errRT_BASE( EG_BADALIAS, 9990, NULL, NULL );
-         break;
-   }
+   hb_vmSelectWorkarea( stack.pPos );
 
    HB_DEBUG( "hb_vmPopAlias\n" );
 }
 
+/* Pops the alias to use it to select a workarea and next pops a value 
+ * into given field
+ */
 static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
-   PHB_ITEM pAlias = stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   BOOL bSuccess;
 
-   switch( pAlias->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmPushAlias()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
-         pAlias->type = IT_NIL;
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         bSuccess = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
-         pAlias->type = IT_NIL;
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
-         hb_itemClear( pAlias );
-         break;
-
-      default:
-         hb_itemClear( pAlias );
-         hb_errRT_BASE( EG_BADALIAS, 9991, NULL, NULL );
-         return;
-   }
-
-   if( bSuccess == SUCCESS )
+   if( hb_vmSelectWorkarea( stack.pPos - 1 ) == SUCCESS )
       hb_rddPutFieldValue( stack.pPos - 2, pSym );
+
    hb_rddSelectWorkAreaNumber( iCurrArea );
-   hb_stackPop();    /* field */
-   hb_stackPop();    /* alias */
+   hb_stackDec();    /* alias - it was cleared in hb_vmSelectWorkarea */
+   hb_stackPop();    /* field value */
 
    HB_DEBUG( "hb_vmPopAliasedField\n" );
 }
@@ -2202,46 +2143,16 @@ static void hb_vmPushAlias( void )
    HB_DEBUG( "hb_vmPushAlias\n" );
 }
 
+/* It pops the last item from the stack to use it to select a workarea
+ * and next pushes the value of a given field
+ * (for performance reason it replaces alias value with field value)
+ */
 static void hb_vmPushAliasedField( PHB_SYMB pSym )
 {
    PHB_ITEM pAlias = stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   BOOL bSuccess;
 
-   switch( pAlias->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmPushAlias()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
-         pAlias->type = IT_NIL;
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         bSuccess = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
-         pAlias->type = IT_NIL;
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
-         hb_itemClear( pAlias );
-         break;
-
-      default:
-         hb_itemClear( pAlias );
-/* Clipper doesn't error in this case, just pass the failed value.
-         hb_errRT_BASE( EG_BADALIAS, 9992, NULL, NULL );
-*/
-         return;
-   }
-
-   if( bSuccess == SUCCESS )
+   if( hb_vmSelectWorkarea( pAlias ) == SUCCESS )
       hb_rddGetFieldValue( pAlias, pSym );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
@@ -2648,6 +2559,63 @@ void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or r
    HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
+static BOOL hb_vmSelectWorkarea( PHB_ITEM pAlias )
+{
+   BOOL bSuccess = SUCCESS;
+
+   switch( pAlias->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmPushAlias()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_LONG:
+         /* Alias was evaluated from an expression, (nWorkArea)->field
+          */
+         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asLong.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_DOUBLE:
+         /* Alias was evaluated from an expression, (nWorkArea)->field
+          */
+         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asDouble.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         bSuccess = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
+         pAlias->type = IT_NIL;
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         bSuccess = hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
+         hb_itemClear( pAlias );
+         break;
+
+      default:
+         {
+            PHB_ITEM pSubstVal = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&" );
+            if( pSubstVal )
+               bSuccess = hb_vmSelectWorkarea( pSubstVal );
+            else
+               bSuccess = FAILURE;
+            hb_itemClear( pAlias );
+         }
+         break;
+   }
+   return bSuccess;
+}
+
 /* Swaps two last items on the eval stack - the last item after swaping
  * is popped as current workarea number
  */
@@ -2656,33 +2624,7 @@ static void hb_vmSwapAlias( void )
    HB_ITEM_PTR pItem = stack.pPos - 1;
    HB_ITEM_PTR pWorkArea = stack.pPos - 2;
 
-   switch( pWorkArea->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmPushAlias()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         hb_rddSelectWorkAreaSymbol( pWorkArea->item.asSymbol.value );
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         hb_rddSelectWorkAreaAlias( pWorkArea->item.asString.value );
-         hb_itemClear( pWorkArea );
-         break;
-
-      default:
-         hb_itemClear( pWorkArea );
-         break;
-   }
+   hb_vmSelectWorkarea( pWorkArea );
 
    memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
    pItem->type = IT_NIL;

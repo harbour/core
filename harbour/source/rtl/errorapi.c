@@ -504,7 +504,7 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 /* Wrappers for hb_errLaunch() */
 
-static WORD hb_errRT_New(
+PHB_ITEM hb_errRT_New(
    USHORT uiSeverity,
    char * szSubSystem,
    ULONG  ulGenCode,
@@ -515,9 +515,9 @@ static WORD hb_errRT_New(
    USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
-   WORD wRetVal;
+
    hb_errPutSeverity( pError, uiSeverity );
-   hb_errPutSubSystem( pError, szSubSystem );
+   hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
@@ -525,14 +525,10 @@ static WORD hb_errRT_New(
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags );
 
-   wRetVal = hb_errLaunch( pError );
-
-   hb_errRelease( pError );
-
-   return wRetVal;
+   return pError;
 }
 
-static PHB_ITEM hb_errRT_New_Subst(
+PHB_ITEM hb_errRT_New_Subst(
    USHORT uiSeverity,
    char * szSubSystem,
    ULONG  ulGenCode,
@@ -543,10 +539,9 @@ static PHB_ITEM hb_errRT_New_Subst(
    USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
-   PHB_ITEM pRetVal;
 
    hb_errPutSeverity( pError, uiSeverity );
-   hb_errPutSubSystem( pError, szSubSystem );
+   hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
@@ -554,11 +549,7 @@ static PHB_ITEM hb_errRT_New_Subst(
    hb_errPutOsCode( pError, uiOsCode );
    hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
 
-   pRetVal = hb_errLaunchSubst( pError );
-
-   hb_errRelease( pError );
-
-   return pRetVal;
+   return( pError );
 }
 
 HARBOUR HB___ERRRT_BASE( void )
@@ -569,34 +560,82 @@ HARBOUR HB___ERRRT_BASE( void )
                   hb_parc( 4 ) );
 }
 
-void hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+WORD hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   WORD wRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
 WORD hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags )
 {
-   return hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+   WORD wRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
 PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   return hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   PHB_ITEM pRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   pRetVal = hb_errLaunchSubst( pError );
+
+   hb_errRelease( pError );
+
+   return pRetVal;
 }
 
 WORD hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags )
 {
-   return hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, uiOSCode, uiFlags );
+   WORD wRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_TERMINAL, ulGenCode, ulSubCode, szDescription, szOperation, uiOSCode, uiFlags );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
-void hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+WORD hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   WORD wRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
-void hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+WORD hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
 {
-   hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   WORD wRetVal;
+   PHB_ITEM pError =
+      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
 }
 
 /* NOTE: Use as minimal calls from here, as possible. */

@@ -107,12 +107,28 @@ extern void     hb_errExit              ( void );
 
 extern PHB_ITEM hb_errLaunchSubst       ( PHB_ITEM pError );
 
-extern void     hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern PHB_ITEM hb_errRT_New( USHORT uiSeverity, char * szSubSystem,
+   ULONG  ulGenCode,
+   ULONG  ulSubCode,
+   char * szDescription,
+   char * szOperation,
+   USHORT uiOsCode,
+   USHORT uiFlags );
+
+extern PHB_ITEM hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem,
+   ULONG  ulGenCode,
+   ULONG  ulSubCode,
+   char * szDescription,
+   char * szOperation,
+   USHORT uiOsCode,
+   USHORT uiFlags );
+
+extern WORD     hb_errRT_BASE           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern WORD     hb_errRT_BASE_Ext1      ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags );
 extern PHB_ITEM hb_errRT_BASE_Subst     ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 extern WORD     hb_errRT_TERM           ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags );
-extern void     hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
-extern void     hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD     hb_errRT_DBCMD          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+extern WORD     hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 
 extern void     hb_errInternal          ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 );
 

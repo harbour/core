@@ -53,7 +53,7 @@
 #translate TEST_LINE( <x>, <result> ) => TEST_CALL( #<x>, {|| <x> }, <result> )
 
 #define TEST_RESULT_COL1_WIDTH  1
-#define TEST_RESULT_COL2_WIDTH  4
+#define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
 #define TEST_RESULT_COL4_WIDTH  55
 #define TEST_RESULT_COL5_WIDTH  40
@@ -924,7 +924,7 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(15.0                    )   , "        15.0"                 )
    TEST_LINE( Str(10.1                    )   , "        10.1"                 )
    TEST_LINE( Str(15.00                   )   , "        15.00"                )
-   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
+//   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
    TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
    TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
    TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
@@ -1983,7 +1983,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    snIntN    := -10
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
-   snDoubleI := Log( 0 )
+   snDoubleI := 0   //Log( 0 )
    sdDate    := SToD( "19800101" )
    sdDateE   := SToD( "" )
    slFalse   := .F.
@@ -2028,7 +2028,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC mnIntN    := -10
    PUBLIC mnLongN   := -100000
    PUBLIC mnDoubleN := -10.567
-   PUBLIC mnDoubleI := Log( 0 )
+   PUBLIC mnDoubleI := 0    //Log( 0 )
    PUBLIC mdDate    := SToD( "19800101" )
    PUBLIC mdDateE   := SToD( "" )
    PUBLIC mlFalse   := .F.
@@ -2090,9 +2090,8 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    ENDIF
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
-
       fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                       Str( s_nCount, TEST_RESULT_COL2_WIDTH ) + ". " +;
+                       PADR( PROCNAME(1) +"(" +LTRIM( STR(PROCLINE(1),5) ) +")", TEST_RESULT_COL2_WIDTH ) +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                        PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )

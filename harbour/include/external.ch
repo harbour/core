@@ -248,6 +248,10 @@ EXTERNAL MOD
 EXTERNAL ROUND
 EXTERNAL SQRT
 //
+//symbols from file: rtl\memvarbl.prg
+//
+EXTERNAL MEMVARBLOCK
+//
 //symbols from file: rtl\memvars.c
 //
 EXTERNAL __MVPUBLIC
@@ -257,6 +261,8 @@ EXTERNAL __MVRELEASE
 EXTERNAL __MVSCOPE
 EXTERNAL __MVCLEAR
 EXTERNAL __MVDBGINFO
+EXTERNAL __MVGET
+EXTERNAL __MVPUT
 //
 //symbols from file: rtl\mouseapi.c
 //

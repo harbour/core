@@ -1,3 +1,31 @@
+19990912-15:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/errorapi.h
+    *source/rtl/errorapi.c
+        * all hb_errRT*() functions return error code returned by
+        hb_errLaunch
+        * separated generic runtime error creation from error launching
+
+    *include/extend.h
+    *source/rtl/strings.c
+        + added hb_strncpyUpper( char *pDest, char *pSource, ULONG ulLen )
+        function to copy and convert to uppercase in one operation
+
+    *source/rdd/dbcmd.c
+        * functions that select workarea can now retry the select operation
+        in case of error (the user code can open a missing database in a
+        custom error handler)
+
+    *source/vm/hvm.c
+	*added substitution possibility in case of invalid alias value
+    
+    *tests/working/rtl_test.prg
+        * failure description shows now function name and line number where
+        failed code was used
+
+    *include/external.ch
+        * added declaration of MEMVARBLOCK, __MVGET, __MVPUT
+
 19990912-07:43 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     ! hb_vmSwapAlias() removed the RT error 9993, now it works like Clipper.

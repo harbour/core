@@ -661,34 +661,81 @@ BOOL hb_rddSelectWorkAreaNumber( int iArea )
 
 BOOL hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
+   BOOL bResult;
+
    if( pSymAlias->pDynSym->hArea )
-      return hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
+      bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
    else
-      hb_errRT_BASE( EG_NOALIAS, 1002, 0, pSymAlias->szName );
-   return FAILURE;
+   {
+      /* generate an error with retry possibility
+       * (user created error handler can open a missing database)
+       */
+      WORD wAction = E_RETRY;
+      HB_ITEM_PTR pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
+                              NULL, pSymAlias->szName, 0, EF_CANRETRY );
+
+      bResult = FAILURE;
+      while( wAction == E_RETRY )
+      {
+         wAction = hb_errLaunch( pError );
+         if( wAction == E_RETRY )
+            if( pSymAlias->pDynSym->hArea )
+            {
+               bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
+               wAction = E_DEFAULT;
+            }
+      }
+      hb_errRelease( pError );
+   }
+   return bResult;
 }
 
 BOOL hb_rddSelectWorkAreaAlias( char * szName )
 {
    PHB_DYNS pSymArea;
-   char * szAlias;
    WORD wLen;
    BOOL bResult;
+   /* NOTE: szAlias have to be allocated on the stack because hb_errLaunch
+    * doesn't return control to this function if QUIT action is requested
+    */
+   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH ];
 
    wLen = strlen( szName );
-   szAlias = ( char * ) hb_xgrab( wLen + 1 );
-   strcpy( szAlias, szName );
-   hb_strUpper( szAlias, wLen );
+   hb_strncpyUpper( szAlias, szName, wLen );
+
    pSymArea = hb_dynsymFind( szAlias );
    if( pSymArea && pSymArea->hArea )
       bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
    else
    {
-      hb_errRT_BASE( EG_NOALIAS, 1002, 0, szAlias );
+      /* generate an error with retry possibility
+       * (user created error handler can open a missing database)
+       */
+      WORD wAction = E_RETRY;
+      HB_ITEM_PTR pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
+                              NULL, szAlias, 0, EF_CANRETRY );
+
       bResult = FAILURE;
+      while( wAction == E_RETRY )
+      {
+         wAction = hb_errLaunch( pError );
+         if( wAction == E_RETRY )
+         {
+            pSymArea = hb_dynsymFind( szAlias );
+            if( pSymArea && pSymArea->hArea )
+            {
+               bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
+               wAction = E_DEFAULT;
+            }
+         }
+      }
+      hb_errRelease( pError );
    }
 
-   hb_xfree( szAlias );
    return bResult;
 }
 
