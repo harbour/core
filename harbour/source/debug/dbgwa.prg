@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The Debugger Array Inspector
+ * The Debugger Work Area Inspector
  *
  * Copyright 2001-2002 Ignacio Ortiz de Zuñiga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
@@ -58,21 +58,27 @@ function __dbgShowWorkAreas( oDebugger )
    local oDlg, oCol
    local aAlias, aBrw, aStruc, aInfo
    local cColor
-   local n1, n2, n3
+   local n1, n2, n3, cur_id
 
    aAlias := {}
    aBrw   := Array(3)
    n1     := 1
    n2     := 1
    n3     := 1
+   cur_id := 1
 
    cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
                  "N/W, N/BG, R/W, R/BG" )
 
-   do while !Empty( Alias( n1 ) )
-      Aadd(aAlias, Alias( n1 ))
-      n1++
-   enddo
+   /* We can't determine the last used area, so use 512 here */
+   for n1 := 1 to 512
+     if ( n1 )->( Used() )
+       AAdd(aAlias, { n1, Alias(n1) })
+       if n1 == Select()
+	 cur_id = Len(aAlias)
+       endif
+     endif
+   next
 
    if len( aAlias ) == 0
       Alert( "No workareas in use")
@@ -94,7 +100,7 @@ function __dbgShowWorkAreas( oDebugger )
 
    aBrw[1] := TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 11 )
 
-   aBrw[1]:Cargo         := ( n1 := Select() )
+   aBrw[1]:Cargo         := ( n1 := cur_id )
    aBrw[1]:ColorSpec     := oDlg:cColor
    aBrw[1]:GoTopBlock    := { || n1 := 1 }
    aBrw[1]:GoBottomBlock := { || n1 := Len( aAlias ) }
@@ -102,15 +108,15 @@ function __dbgShowWorkAreas( oDebugger )
                                  n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ),;
                                           Max( 1, n1 + nSkip ) ), n1 - nPos }
 
-   aBrw[1]:AddColumn( oCol := TBColumnNew( "", { || PadR( aAlias[ n1 ], 11 ) } ) )
+   aBrw[1]:AddColumn( oCol := TBColumnNew( "", { || PadR( aAlias[n1][2], 11 ) } ) )
 
-   oCol:ColorBlock := { || iif( aAlias[ n1 ] == Alias(), {3, 4}, {1, 2} ) }
+   oCol:ColorBlock := { || iif( aAlias[n1][1] == Select(), {3, 4}, {1, 2} ) }
 
    /*
    Info Browse
    */
 
-   aInfo := ( aAlias[n1] )->(DbfInfo())
+   aInfo := ( aAlias[n1][1] )->( DbfInfo() )
 
    aBrw[2] := TBrowseNew( oDlg:nTop + 7, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 50 )
 
@@ -124,13 +130,13 @@ function __dbgShowWorkAreas( oDebugger )
 
    aBrw[2]:AddColumn( oCol := TBColumnNew( "", { || Padr(aInfo[ n2 ], 38) } ) )
 
-   oCol:ColorBlock := { || iif( aAlias[ n1 ] == Alias() .and. n2 == 1, {3, 4}, {1, 2} ) }
+   oCol:ColorBlock := { || iif( aAlias[n1][1] == Select() .and. n2 == 1, {3, 4}, {1, 2} ) }
 
    /*
    Struc browse
    */
 
-   aStruc := ( aAlias[n1] )->(DbStruct())
+   aStruc := ( aAlias[n1][1] )->( DbStruct() )
 
    aBrw[3] := TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 52, oDlg:nBottom - 1, oDlg:nLeft + 70 )
 
@@ -241,7 +247,7 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[2]:GoTop()
          aBrw[2]:Invalidate()
          aBrw[2]:ForceStable()
-         aInfo := ( aAlias[aBrw[1]:Cargo] )->(DbfInfo( aInfo ))
+         aInfo := ( aAlias[aBrw[1]:Cargo][1] )->( DbfInfo(aInfo) )
          aBrw[3]:Configure()
          aBrw[2]:Invalidate()
          aBrw[2]:RefreshAll()
@@ -250,13 +256,13 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[3]:GoTop()
          aBrw[3]:Invalidate()
          aBrw[3]:ForceStable()
-         aStruc := ( aAlias[aBrw[1]:Cargo] )->(DbStruct())
+         aStruc := ( aAlias[aBrw[1]:Cargo][1] )->( DbStruct() )
          aBrw[3]:Configure()
          aBrw[3]:Invalidate()
          aBrw[3]:RefreshAll()
          aBrw[3]:ForceStable()
          aBrw[3]:Dehilite()
-         UpdateInfo( oDlg, aAlias[aBrw[1]:Cargo] )
+         UpdateInfo( oDlg, aAlias[aBrw[1]:Cargo][2] )
       endif
    case nFocus == 2
       WorkAreasKeyPressed( nKey, aBrw[2], oDlg, len( aInfo ) )
@@ -350,7 +356,13 @@ return aInfo
 
 static function UpdateInfo( oDlg, cAlias )
 
-   local cOldAlias := Alias()
+   local cOldAlias
+
+   if empty(cAlias)
+     return NIL
+   endif
+   
+   cOldAlias := Alias()
 
    SELECT (cAlias)
 

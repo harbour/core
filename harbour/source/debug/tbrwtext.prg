@@ -58,15 +58,15 @@
 
 // Color definitions and positions inside ::cColorSpec
 #define  CLR_CODE       0        // color of code
-#define  CLR_CURSOR     1        // color of hilighted line
+#define  CLR_CURSOR     1        // color of highlighted line (the line to be executed)
 #define  CLR_BKPT       2        // color of breakpoint line
-#define  CLR_HIBKPT     3        // color of hilighted breakpoint line
+#define  CLR_HIBKPT     3        // color of highlighted breakpoint line
 
 
 CLASS TBrwText FROM HBEditor
 
    DATA  cFileName      // the name of the browsed file
-   DATA  nActiveLine    // Active line inside Code Window (last executed one)
+   DATA  nActiveLine    // Active line inside Code Window (the line to be executed)
 
    DATA  aBreakPoints   // Array with line numbers of active Break Points
 
@@ -89,7 +89,8 @@ CLASS TBrwText FROM HBEditor
    METHOD   RefreshCurrent()
    METHOD   ForceStable() INLINE NIL
 
-   METHOD   GotoLine(n)                      // Moves active line cursor, that is it hilights last executed line of code
+   METHOD   GotoLine(n)                      // Moves active line cursor
+   METHOD   SetActiveLine( n )               // Sets the line to be executed
 
    METHOD   GetLine(nRow)                    // Redefine HBEditor method to add line number
    METHOD   LineColor(nRow)                  // Redefine HBEditor method to handle line coloring
@@ -98,22 +99,32 @@ CLASS TBrwText FROM HBEditor
                                              // if lSet is .F. BreakPoint at nRow has to be removed
    METHOD   Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
 
+   METHOD   LoadFile(cFileName)
+
 ENDCLASS
 
 
-METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColor) CLASS TBrwText
+METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers) CLASS TBrwText
 
    DEFAULT cColor TO SetColor()
+   DEFAULT lLineNumbers TO .T.
 
    ::cFileName := cFileName
    ::nActiveLine := 1
 
    ::aBreakPoints := {}
 
-   ::lLineNumbers := .T.
+   ::lLineNumbers := lLineNumbers
 
    Super:New("", nTop, nLeft, nBottom, nRight, .T.)
    Super:SetColor(cColor)
+
+   Super:LoadFile(cFileName)
+
+return Self
+
+
+METHOD LoadFile(cFileName) CLASS TBrwText
 
    Super:LoadFile(cFileName)
 
@@ -170,17 +181,15 @@ METHOD RefreshCurrent() CLASS TBrwText
 return Self
 
 
+METHOD SetActiveLine( n ) CLASS TBrwText
+   ::nActiveLine := n
+   ::RefreshWindow()
+return Self
+
+
 METHOD GotoLine(n) CLASS TBrwText
 
-   // We need to set active line before calling ::RefreshLine() since ::LineColor()
-   // uses nActiveLine to decide which color to use to paint line
-   ::nActiveLine := n
-   ::RefreshLine()
-
    Super:GotoLine(n)
-   // I need to call ::RefreshLine() here because HBEditor does not repaint current line
-   // if it needs not to and without this explicit call I don't see ActiveLine cursor movement
-   ::RefreshLine()
 
 return Self
 
@@ -192,24 +201,19 @@ return iif(::lLineNumbers, AllTrim(Str(nRow)) + ": ", "") + Super:GetLine(nRow)
 
 METHOD LineColor(nRow) CLASS TBrwText
 
-   local cColor, lHilited, lBreak
+   local cColor, lHilited, lBreak, nIndex := CLR_CODE
 
    lHilited := (nRow == ::nActiveLine)
    lBreak := AScan(::aBreakPoints, nRow) > 0
 
-   if lHilited .AND. lBreak
-      cColor := hb_ColorIndex(::cColorSpec, CLR_HIBKPT)
-
-   elseif lHilited
-      cColor := hb_ColorIndex(::cColorSpec, CLR_CURSOR)
-
-   elseif lBreak
-      cColor := hb_ColorIndex(::cColorSpec, CLR_BKPT)
-
-   else
-      cColor := hb_ColorIndex(::cColorSpec, CLR_CODE)
-
+   if lHilited
+     nIndex += CLR_CURSOR
    endif
+   if lBreak
+     nIndex += CLR_BKPT
+   endif
+
+   cColor := hb_ColorIndex(::cColorSpec, nIndex)
 
 return cColor
 

@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-07 13:45 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  * source/debug/dbgwa.prg
+  * source/debug/dbgtarr.prg
+  * source/debug/tbrwtext.prg
+  * source/debug/debugger.prg
+    ! Miscellaneous fixes borrowed from xHarbour:
+    ! Fixed support for monitoring work areas with non-contigous numbers.
+    ! Fixed monitoring empty subarrays.
+    ! Maintain separate "active" line and cursor line in the code window.
+      Support external initialization of TBrwText():lLineNumbers.
+    ! Fixed problems with breakpoints and source files stored in multiple
+      directories. The environment variable HB_DBG_PATH takes precedence
+      over PATH to search for source files.
+
 2004-06-03 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    
    * source/compiler/harbour.c

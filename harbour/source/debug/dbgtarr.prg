@@ -158,6 +158,9 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
 
       Case nKey == K_ENTER
            if valtype(aArray[nSet])=="A"
+            if Len( aArray[ nSet ] ) == 0
+               Alert( "Array is empty" )
+            else
                   SetPos(ownd:nBottom,ownd:nLeft)
                   ::aWindows[::nCurwindow]:lFocused:=.f.
                   ::arrayname:= ::arrayname+"["+alltrim(cTemp)+"]"
@@ -171,6 +174,7 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
                   else
                   ::ncurwindow--
                   endif
+            endif
            elseif valtype(aArray[nSet])=="B"
                   Alert("Value cannot be edited")
            else

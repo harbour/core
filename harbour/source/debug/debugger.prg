@@ -206,13 +206,13 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          s_oDebugger:Activate()
       endif
 
-   case nMode == HB_DBG_MODULENAME
+   case nMode == HB_DBG_MODULENAME  // called from hvm.c hb_vmModuleName()
       // add a call to the stack but don't try to show the code yet
       cProcName := ProcName( 1 )
 
       if cProcName == "(_INITSTATICS)"
          //module wide static variable
-         AADD( __dbgStatics, { uParam1, {} } )
+         AADD( __dbgStatics, { strip_path( uParam1 ), {} } )
          return  // We can not use s_oDebugger yet, so we return
       endif
 
@@ -282,7 +282,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
 
       if s_oDebugger:lShowStatics
          if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
-                             { | aVar | aVar[ VAR_NAME ] == cVarName } ) ) != 0
+                            { | aVar | aVar[ VAR_NAME ] == cVarName } ) ) != 0
             s_oDebugger:aVars[ nAt ] := ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ] )
          else
             AAdd( s_oDebugger:aVars, ATAIL( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ] ) )
@@ -325,6 +325,7 @@ CLASS TDebugger
    DATA   oBrwPnt, oWndPnt
    DATA   lppo INIT .F.    //view preprocessed output
    DATA   lRunAtStartup
+   DATA   lLineNumbers INIT .T.
 
    METHOD New()
    METHOD Activate()
@@ -470,7 +471,10 @@ METHOD New() CLASS TDebugger
    // default the search path for files to the current directory
    // that way if the source is in the same directory it will still be found even if the application
    // changes the current directory with the SET DEFAULT command
-   ::cPathForFiles     := getenv( "PATH" )
+   ::cPathForFiles     := getenv( "HB_DBG_PATH" )
+   if empty( ::cPathForFiles )
+      ::cPathForFiles     := getenv( "PATH" )
+   endif
    ::nTabWidth         := 4
    ::nSpeed            := 0
    ::lShowCallStack    := .f.
@@ -506,14 +510,6 @@ METHOD New() CLASS TDebugger
 
 return Self
 
-METHOD PathForFiles() CLASS TDebugger
-
-   ::cPathForFiles := ::InputBox( "Search path for source files:", ::cPathForFiles )
-   IF ! RIGHT(::cPathForFiles,1) $ HB_OSPATHDELIMITERS()
-     ::cPathForFiles:=::cPathForFiles + HB_OSPATHSEPARATOR()
-   ENDIF
-
-return Self
 
 METHOD Activate() CLASS TDebugger
 
@@ -1273,6 +1269,20 @@ METHOD NextWindow() CLASS TDebugger
 
 return nil
 
+
+METHOD PathForFiles( cPathForFiles ) CLASS TDebugger
+
+   IF cPathForFiles == NIL  
+      cPathForFiles := ::InputBox( "Search path for source files:", ::cPathForFiles )
+   ENDIF
+   IF ! RIGHT(cPathForFiles, 1) $ HB_OSPATHDELIMITERS()
+     cPathForFiles += HB_OSPATHSEPARATOR()
+   ENDIF
+   ::cPathForFiles := cPathForFiles
+
+RETURN Self
+
+
 METHOD PrevWindow() CLASS TDebugger
 
    local oWnd
@@ -1685,18 +1695,19 @@ return { | a | a[ 1 ] == Self:oBrwText:nRow }  // it was nLine
 METHOD StackProc( cModuleName, nProcLevel ) CLASS TDebugger
    // always treat filename as lower case - we need it consistent for comparisons   
    LOCAL nPos:=RAT( ":", cModuleName )
+   LOCAL aEntry := { ;
+     IIF(::lCodeBlock,"(b)","")+SubStr( cModuleName, nPos + 1 ),;    //function name
+     {},;   //local vars
+     nil,;  //line no, nil means that no line number is stored yet
+     lower( strip_path( LEFT( cModuleName, nPos - 1 ) ) ),; // and the module name
+     {}, ;  // static vars
+     nProcLevel }
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
-   
-   // nil means that no line number is stored yet
-   ::aCallStack[1]:= { IIF(::lCodeBlock,"(b)","")+SubStr( cModuleName, nPos + 1 ),;    //function name
-                       {},;   //local vars
-                       nil,;  //line no
-                       lower(LEFT( cModuleName, nPos - 1 )),; // and the module name
-                       {},;   // static vars
-                       nProcLevel }
+   ::aCallStack[ 1 ] := aEntry
 return nil
+
 
 //METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
 METHOD ShowCodeLine( nProc ) CLASS TDebugger
@@ -1730,36 +1741,56 @@ LOCAL nLine, cPrgName
             cPrgName += cPrgName +".ppo"
          ENDIF
       endif
-      if( cPrgName != ::cPrgName .OR. ::oBrwText == NIL )
-         if ! File( cPrgName ) .and. ! Empty( ::cPathForFiles )
-            cPrgName := ::LocatePrgPath( cPrgName )
+
+      if ! empty( cPrgName )
+
+         if ( strip_path( cPrgName ) != strip_path( ::cPrgName ) .OR. ::oBrwText == NIL )
+
+            if ! File( cPrgName ) .and. !Empty( ::cPathForFiles )
+               cPrgName := ::LocatePrgPath( cPrgName )
+            endif
+
+            ::cPrgName := cPrgName
+
+            if ::oBrwText == nil
+               ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
+                                             ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cPrgName,;
+                                             __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
+                                             __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ], ;
+                                             ::lLineNumbers )
+
+               ::oWndCode:Browser := ::oBrwText
+
+            else
+               ::oBrwText:LoadFile(cPrgName)
+            endif
+
+            ::oWndCode:bPainted := {|| IIF( ::oBrwText != nil, ::oBrwText:RefreshAll():ForceStable(), ::oWndCode:Clear() ) }
+            ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
+            ::oWndCode:SetCaption( ::cPrgName )
+            ::oWndCode:Refresh()       // to force the window caption to update
          endif
-         ::cPrgName := cPrgName
-         ::oBrwText := nil
-         ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                      ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cPrgName,;
-                      __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
-                      __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
-         
-         ::oWndCode:Browser := ::oBrwText
-         ::oWndCode:bPainted :={|| IIF(::oBrwText!=nil,::oBrwText:refreshAll():forceStable(),::oWndCode:Clear()) }
-         ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
-         ::oWndCode:SetCaption( ::cPrgName )
-         ::oWndCode:Refresh()			// to force the window caption to update
+         ::oBrwText:SetActiveLine( nLine )
+         ::GotoLine( nLine )
       endif
-      ::GoToLine( nLine )
    endif
    
 return nil
 
-METHOD Open() CLASS TDebugger
-LOCAL cFileName := ::InputBox( "Please enter the filename", Space( 255 ) )
-LOCAL cPrgName
 
-  cFileName:= ALLTRIM( cFileName )
-  if !EMPTY(cFileName) .AND. (cFileName != ::cPrgName .OR. valtype(::cPrgName)=='U')
+METHOD Open() CLASS TDebugger
+   LOCAL cFileName := ::InputBox( "Please enter the filename", Space( 255 ) )
+   LOCAL cPrgName
+
+   cFileName:= ALLTRIM( cFileName )
+
+   if !EMPTY(cFileName) .AND. (cFileName != ::cPrgName .OR. valtype(::cPrgName)=='U')
       if ! File( cFileName ) .and. ! Empty( ::cPathForFiles )
-          cFileName := ::LocatePrgPath( cFileName )
+         cFileName := ::LocatePrgPath( cFileName )
+         if Empty( cFileName )
+           Alert( "File not found!" )
+           return NIL
+         endif
       endif
       ::cPrgName := cFileName
       ::lppo := RAT(".PPO", UPPER(cFileName)) > 0
@@ -1768,14 +1799,15 @@ LOCAL cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cFileName,;
                    __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
-                   __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
+                   __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ], ;
+                   ::lLineNumbers )
       ::oWndCode:Browser := ::oBrwText
       ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
       ::oWndCode:SetCaption( ::cPrgName )
-      ::oWndCode:Refresh()			// to force the window caption to update
+      ::oWndCode:Refresh()       // to force the window caption to update
    endif
-   
 return nil
+
 
 METHOD OpenPPO() CLASS TDebugger
 LOCAL nPos
@@ -1816,7 +1848,7 @@ METHOD RedisplayBreakPoints() CLASS TDebugger
 
    local n
    for n := 1 to Len( ::aBreakpoints )
-      if ::aBreakpoints[ n ] [ 2 ] == ::cPrgName
+      if ::aBreakpoints[ n ] [ 2 ] == strip_path( ::cPrgName )
         ::oBrwText:ToggleBreakPoint(::aBreakpoints[ n ] [ 1 ], .T.)
       Endif
    next
@@ -2214,35 +2246,43 @@ METHOD Static() CLASS TDebugger
 
 return nil
 
+
 // Toggle a breakpoint at the cursor position in the currently viewed file
 // which may be different from the file in which execution was broken
 METHOD ToggleBreakPoint() CLASS TDebugger
-   // look for a breakpoint which matches both line number and program name
-   local nAt
-   LOCAL cLine
-   
-   cLine := ::oBrwText:GetLine( ::oBrwText:nRow )
-   IF( ::oBrwText:lLineNumbers )
-      cLine := SUBSTR( cLine, AT(":",cLine)+1 )
-   ENDIF
-   IF( IsValidStopLine( cLine ) )
-      nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == ;
-                       ::oBrwText:nRow ;
-                       .AND. aBreak [ 2 ] == ::cPrgName} ) // it was nLine
+  // look for a breakpoint which matches both line number and program name
+  local nAt
+  LOCAL cLine
+  local cFileName
 
-      if nAt == 0
-         AAdd( ::aBreakPoints, { ::oBrwText:nRow, ::cPrgName } )     // it was nLine
-         ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .T.)
-      else
-         ADel( ::aBreakPoints, nAt )
-         ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
-         ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .F.)
-      endif
+  IF !::lActive
+    RETURN NIL
+  ENDIF
 
-      ::oBrwText:RefreshCurrent()
-   ENDIF
+  cLine := ::oBrwText:GetLine( ::oBrwText:nRow )
+  IF ::oBrwText:lLineNumbers
+    cLine := SUBSTR( cLine, AT(":",cLine)+1 )
+  ENDIF
+  IF IsValidStopLine( cLine )
+    cFileName := strip_path( ::cPrgName )
+
+    nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == ::oBrwText:nRow ;
+                                    .AND. aBreak[ 2 ] == cFileName } ) // it was nLine
+
+    if nAt == 0
+      AAdd( ::aBreakPoints, { ::oBrwText:nRow, cFileName } )     // it was nLine
+      ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .T.)
+    else
+      ADel( ::aBreakPoints, nAt )
+      ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+      ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .F.)
+    endif
+
+    ::oBrwText:RefreshCurrent()
+  ENDIF
 
 return nil
+
 
 METHOD ViewSets() CLASS TDebugger
 
@@ -2519,7 +2559,7 @@ LOCAL cLine
       cLine := SUBSTR( cLine, AT(":",cLine)+1 )
    ENDIF
    IF( IsValidStopLine( cLine ) )
-      ::aToCursor := { ::oBrwText:nRow, ::cPrgName }
+      ::aToCursor := { ::oBrwText:nRow, strip_path( ::cPrgName ) }
       ::RestoreAppStatus()
       ::lToCursor := .t.
       ::Exit()
@@ -3162,8 +3202,11 @@ static function PathToArray( cList )
    local nPos
    local aList := {}
    local cSep
+   local cDirSep
 
    cSep := HB_OsPathListSeparator()
+   cDirSep := HB_OsPathDelimiters()
+
    if ( cList <> NIL )
 
       do while ( nPos := at( cSep, cList ) ) <> 0
@@ -3173,6 +3216,19 @@ static function PathToArray( cList )
 
       aadd( aList, cList )              // Add final element
 
+      /* Strip ending delimiters */
+      AEval(aList, {|x, i| if( Right( x, 1 ) $ cDirSep,  aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
    endif
 
-   return aList 
+return aList
+
+
+/* Strip path from filename */
+STATIC FUNCTION strip_path( cFileName )
+  LOCAL cName := "", cExt := ""
+  DEFAULT cFileName TO ""
+
+  HB_FNAMESPLIT( cFileName, NIL, @cName, @cExt )
+RETURN cName + cExt
+
+
