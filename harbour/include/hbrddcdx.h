@@ -186,12 +186,23 @@ typedef struct _CDXINDEX
    // review this...
    LPCDXTAG  TagList;
    struct   _CDXINDEX * pNext;   /* The next index in the list */
-   USHORT    uiTag;              /* current tag focus          */
+   /* USHORT    uiTag;      */        /* current tag focus          */
+   BOOL fShared;                 /* Shared file */
+   int       lockWrite;
+   int       lockRead;
+   int       changesWritten;
+   ULONG     ulVersion;
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a1 /* byte alignment */
+#elif defined(__GNUC__)
+   #pragma pack(1)
+#elif defined(__WATCOMC__)
+   #pragma pack(push, 1);
+#elif defined(__cplusplus)
+   #pragma pack(1)
 #endif
 
 /* ----
@@ -263,6 +274,12 @@ typedef struct _CDXLEAFHEADER
 typedef CDXLEAFHEADER * LPCDXLEAFHEADER;
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a /* default alignment */
+#elif defined(__GNUC__)
+   #pragma pack()
+#elif defined(__WATCOMC__)
+   #pragma pack(pop);
+#elif defined(__cplusplus)
+   #pragma pack()
 #endif
 
 
@@ -345,6 +362,7 @@ typedef struct _CDXAREA
    LPMEMOROOT pMemoRoot;         /* Array of free memo blocks */
    //LPCDXTAG * lpIndexes;         /* Pointer to indexes array */
    LPCDXINDEX lpIndexes;         /* Pointer to indexes array */
+   USHORT    uiTag;              /* current tag focus          */
 
 } CDXAREA;
 
@@ -407,13 +425,13 @@ extern ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 extern ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
 extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxEval                                 NULL
-/* #define hb_cdxPack                                 NULL */
 extern ERRCODE hb_cdxPack ( CDXAREAP pArea );
 #define hb_cdxPackRec                              NULL
 #define hb_cdxSort                                 NULL
 #define hb_cdxTrans                                NULL
 #define hb_cdxTransRec                             NULL
-#define hb_cdxZap                                  NULL
+/* #define hb_cdxZap                                  NULL */
+extern ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxChildEnd                             NULL
 #define hb_cdxChildStart                           NULL
 #define hb_cdxChildSync                            NULL
