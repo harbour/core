@@ -472,13 +472,13 @@ return nHowMany
 METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
    LOCAL xRes, cType, nTokenPos := 0, nL, cHeading
-   LOCAL nWidthMax := ::nRight - ::nLeft + 1   // Visible width of TBrowse
-   LOCAL nWidth := 0
+   LOCAL nWidthMax := ::nRight - ::nLeft+1    // Visible width of TBrowse
+   LOCAL nWidth := 0,nColWidth:=0
 
    // if oCol has :Width property set I use it
    if oCol:Width <> nil .AND. oCol:Width < (nWidthMax - 4)
       nWidth := oCol:Width
-   
+
    else
       if ISBLOCK( oCol:block )
 
@@ -504,9 +504,12 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
          cHeading := oCol:Heading + ";"
          while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
             if nL > nWidth
-               nWidth := nL
+               nColWidth := nL
             endif
          enddo
+       if nColWidth> nWidth
+          nColWidth:=nWidth
+       endif
 
          if nWidth > nWidthMax
             // with values lower than -4 it SIGSEVs here and there :-(
