@@ -425,3 +425,26 @@ oTime->tm_sec);
    }
 }
 
+HARBOUR DATE( void )
+{
+   if( _pcount() == 0 )
+   {
+      time_t t;
+      struct tm *oTime;
+      char szTime[9];
+
+      time(&t);
+      oTime = localtime(&t);
+      sprintf(szTime, "%04d%02d%02d", oTime->tm_year, oTime->tm_mon + 1,
+oTime->tm_mday);
+      _retds(szTime);
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: DATE");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}

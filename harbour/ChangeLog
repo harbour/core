@@ -1,3 +1,9 @@
+19990524-19:20 EST David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dates.c
+    - Added HARBOUR DATE() function.
+  * tests/working/dates.prg
+    - Added use of DATE() function in first OUTSTD call.
+
 19990524-21:05 CET Eddie Runia
   * source/rtl/strings.c
     PAD* didn't work correctly with negative numbers

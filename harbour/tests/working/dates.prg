@@ -7,7 +7,7 @@ local cNewLine := CHR( 10 )
 
    local dDate, dDate2, cMask, cDate
 
-   OUTSTD (cNewLine,  "Testing Harbour dates management", cNewLine)
+   OUTSTD (cNewLine,  "Testing Harbour dates management on", DATE(), cNewLine)
    
    OUTSTD (cNewLine, HB_SETCENTURY ())
    HB_SETCENTURY ("ON")
