@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * HB_FNAMESPLIT(), HB_FNAMEMERGE() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,34 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapifs.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_HB_FNAMESPLIT( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   if( ISCHAR( 1 ) )
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+      hb_storc( pFileName->szPath, 2 );
+      hb_storc( pFileName->szName, 3 );
+      hb_storc( pFileName->szExtension, 4 );
+      hb_storc( pFileName->szDrive, 5 );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+      hb_xfree( pFileName );
+   }
 }
 
-#endif
+HARBOUR HB_HB_FNAMEMERGE( void )
+{
+   HB_FNAME pFileName;
+   char szFileName[ _POSIX_PATH_MAX ];
+
+   pFileName.szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
+   pFileName.szName = ISCHAR( 2 ) ? hb_parc( 2 ) : NULL;
+   pFileName.szExtension = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
+   pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL;
+
+   hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
+}
 

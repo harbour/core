@@ -34,7 +34,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 
 /* NOTE: szTime must be 9 chars large. */
 
@@ -81,49 +80,6 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    return ulTime;
 }
 
-HARBOUR HB_AMPM( void )
-{
-   char * pszTime = hb_parc( 1 );
-   ULONG  ulTimeLen = hb_parclen( 1 );
-   char * pszResult = ( char * ) hb_xgrab( HB_MAX_( ulTimeLen, 2 ) + 3 + 1 );
-   USHORT uiHour = ( USHORT ) hb_strVal( pszTime );
-   BOOL   bAM;
-
-   memset( pszResult, '\0', 3 );
-   memcpy( pszResult, pszTime, ulTimeLen );
-
-   if( uiHour == 0 || uiHour == 24 )
-   {
-      if( ulTimeLen < 2 )
-         ulTimeLen = 2;
-
-      pszResult[ 0 ] = '1';
-      pszResult[ 1 ] = '2';
-      bAM = TRUE;
-   }
-   else if( uiHour > 12 )
-   {
-      if( ulTimeLen < 2 )
-         ulTimeLen = 2;
-
-      uiHour -= 12;
-      pszResult[ 0 ] = ( char ) ( uiHour / 10 ) + '0';
-      pszResult[ 1 ] = ( char ) ( uiHour % 10 ) + '0';
-
-      if( pszResult[ 0 ] == '0' )
-         pszResult[ 0 ] = ' ';
-
-      bAM = FALSE;
-   }
-   else
-      bAM = ( uiHour != 12 );
-
-   strcpy( pszResult + ulTimeLen, bAM ? " am" : " pm" );
-
-   hb_retclen( pszResult, ulTimeLen + 3 );
-   hb_xfree( pszResult );
-}
-
 HARBOUR HB_DAYS( void )
 {
    hb_retnl( hb_parnl( 1 ) / 86400 );
@@ -136,26 +92,6 @@ HARBOUR HB_ELAPTIME( void )
    char szTime[ 9 ];
 
    hb_retc( hb_SecToTimeStr( szTime, ( ulEnd < ulStart ? 86400 : 0 ) + ulEnd - ulStart ) );
-}
-
-HARBOUR HB_LENNUM( void )
-{
-   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
-   ULONG ulLen = 0;
-
-   if( pNumber )
-   {
-      char * pszString = hb_itemStr( pNumber, NULL, NULL );
-
-      if( pszString )
-      {
-         ulLen = strlen( pszString );
-         hb_strLTrim( pszString, &ulLen );
-         hb_xfree( pszString );
-      }
-   }
-
-   hb_retnl( ulLen );
 }
 
 HARBOUR HB_SECS( void )

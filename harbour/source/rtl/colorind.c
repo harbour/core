@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Color functions
+ * HB_COLORINDEX() function
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,40 +34,52 @@
  */
 
 #include "hbapi.h"
-#include "hbapigt.h"
-#include "hbset.h"
 
-char * hb_setColor( char * szColor )
+HARBOUR HB_HB_COLORINDEX( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setColor(%s)", sColor));
+   if( ISCHAR( 1 ) && ISNUM( 2 ) )
+   {
+      char * pszColor = hb_parc( 1 );
+      ULONG ulColorPos;
+      ULONG ulColorLen;
+      USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
 
-   hb_gtGetColorStr( hb_set.HB_SET_COLOR );
+      /* Skip the given number of commas */
 
-   if( szColor != ( char * ) NULL )
-      hb_gtSetColorStr( szColor );
+      for( ulColorPos = 0 ; pszColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
+      {
+         if( pszColor[ ulColorPos ] == ',' )
+            uiColorIndex--;
+      }
 
-   return hb_set.HB_SET_COLOR;
-}
+      /* if found, continue */
 
-HARBOUR HB_SETCOLOR( void )
-{
-   hb_retc( hb_setColor( ISCHAR( 1 ) ? hb_parc( 1 ) : NULL ) );
-}
+      if( uiColorIndex == 0 )
+      {
+         /* Skip the spaces after the comma */
 
-HARBOUR HB_COLORSELECT( void )
-{
-   if( ISNUM( 1 ) )
-      hb_gtColorSelect( hb_parni( 1 ) );
-}
+         while( pszColor[ ulColorPos ] == ' ' ) ulColorPos++;
 
-HARBOUR HB_SETBLINK( void )
-{
-   BOOL bPreviousBlink;
+         /* Search for next comma or end of string */
 
-   hb_gtGetBlink( &bPreviousBlink );
-   if( ISLOG( 1 ) )
-      hb_gtSetBlink( hb_parl( 1 ) );
+         ulColorLen = 0;
 
-   hb_retl( bPreviousBlink );
+         while( pszColor[ ulColorPos + ulColorLen ] != '\0' &&
+                pszColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
+
+         /* Skip the trailing spaces */
+
+         while( ulColorLen > 0 &&
+                pszColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
+
+         /* Return the string */
+
+         hb_retclen( pszColor + ulColorPos, ulColorLen );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
 }
 

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Environment functions (OS(), VERSION(), __RUN(), GETENV(), etc.)
+ * OS(), VERSION() functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
@@ -36,12 +36,6 @@
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    HB___RUN()
- *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_GETE()
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    Support for determining the window version by
@@ -500,50 +494,5 @@ HARBOUR HB_VERSION( void )
    char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
    hb_retc( pszVersion );
    hb_xfree( pszVersion );
-}
-
-HARBOUR HB_GETENV( void )
-{
-   if( hb_pcount() == 1 )
-   {
-      char * szName = hb_parc( 1 );
-      ULONG ulName = hb_parclen( 1 );
-
-      while( ulName && szName[ ulName - 1 ] == '=' )
-      {
-         /* strip the '=' or else it will clear the variable! */
-         szName[ ulName - 1 ] = '\0';
-         ulName--;
-      }
-
-      if( ulName )
-      {
-         char * szValue = getenv( szName );
-         char * szDefault = hb_parc( 2 ) ? hb_parc( 2 ) : "";
-
-         hb_retc( szValue ? szValue : szDefault );
-      }
-      else
-         hb_retc( "" );
-   }
-   else
-      hb_retc( "" );
-}
-
-/* NOTE: Undocumented Clipper function. [vszakats] */
-
-HARBOUR HB_GETE( void )
-{
-   HB_GETENV();
-}
-
-HARBOUR HB___RUN( void )
-{
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
-   if( ISCHAR( 1 ) )
-      system( hb_parc( 1 ) );
-#else
-   hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
-#endif
 }
 

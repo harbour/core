@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * NOSNOW(), SETMODE(), ISCOLOR() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,34 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ *    HB_SETMODE()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
-#include <windows.h>
-#include "hbvm.h"
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_ISCOLOR( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   hb_retl( hb_gtIsColor() );
 }
 
-#endif
+HARBOUR HB_NOSNOW( void )
+{
+   if( ISLOG( 1 ) )
+      hb_gtSetSnowFlag( hb_parl( 1 ) );
+}
+
+HARBOUR HB_SETMODE( void )
+{
+   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
+                          ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
+}
 

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * HB_SHADOW(), DBGSHADOW() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -33,29 +33,21 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_HB_SHADOW( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   if( hb_pcount() >= 4 )
+      hb_gtDrawShadow( hb_parni( 1 ),
+                       hb_parni( 2 ),
+                       hb_parni( 3 ),
+                       hb_parni( 4 ),
+                       ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
 }
 
-#endif
+HARBOUR HB_DBGSHADOW( void )
+{
+   HB_HB_SHADOW();
+}
 

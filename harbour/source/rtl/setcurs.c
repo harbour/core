@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * SETCURSOR() function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,23 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   USHORT usPreviousCursor;
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   HB_TRACE(HB_TR_DEBUG, ("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+   hb_gtGetCursor( &usPreviousCursor );
+   if( bSetCursor )
+      hb_gtSetCursor( usNewCursor );
 
-   return TRUE;
+   return usPreviousCursor;
 }
 
-#endif
-
+HARBOUR HB_SETCURSOR( void )
+{
+   hb_retni( hb_setCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
+}

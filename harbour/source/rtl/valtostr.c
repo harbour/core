@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * HB_VALTOSTR() function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,18 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_HB_VALTOSTR( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   ULONG ulLen;
+   BOOL bFreeReq;
+   char * buffer = hb_itemString( hb_param( 1, IT_ANY ), &ulLen, &bFreeReq );
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   hb_retclen( buffer, ulLen );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   if( bFreeReq )
+      hb_xfree( buffer );
 }
-
-#endif
 

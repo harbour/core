@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * CHR(), ASC() functions
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,56 +33,57 @@
  *
  */
 
+#include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+/* converts an ASCII code to a character value */
+HARBOUR HB_CHR( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   if( IS_STRING( pItem ) )
+   if( ISNUM( 1 ) )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      char szChar[ 2 ];
 
-      if( pDynSym )
-      {
-         USHORT uiParam;
+      /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+               CHR() cases where the passed parameter is a constant which
+               can be divided by 256 but it's not zero, in this case it
+               will return an empty string instead of a Chr(0). [vszakats] */
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
+      /* Believe it or not, clipper does this! */
+      szChar[ 0 ] = hb_parnl( 1 ) % 256;
+      szChar[ 1 ] = '\0';
 
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+      hb_retclen( szChar, 1 );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
+}
+
+/* converts a character value to an ASCII code */
+HARBOUR HB_ASC( void )
+{
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText )
+   {
+      if( hb_itemGetCLen( pText ) > 0 )
+         hb_retni( ( BYTE ) * ( hb_itemGetCPtr( pText ) ) );
+      else
+         hb_retni( 0 );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
 
       if( pResult )
       {

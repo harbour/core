@@ -52,8 +52,6 @@
  *    HB_DISKCHANGE()
  *    HB_DISKNAME()
  *    HB_DISKSPACE() (parts by Luiz Rafael Culik <culik@sl.conex.net>)
- *    HB_HB_FNAMESPLIT()
- *    HB_HB_FNAMEMERGE()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -1668,34 +1666,6 @@ HARBOUR HB_CURDRIVE( void )
 }
 
 #endif
-
-HARBOUR HB_HB_FNAMESPLIT( void )
-{
-   if( ISCHAR( 1 ) )
-   {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
-
-      hb_storc( pFileName->szPath, 2 );
-      hb_storc( pFileName->szName, 3 );
-      hb_storc( pFileName->szExtension, 4 );
-      hb_storc( pFileName->szDrive, 5 );
-
-      hb_xfree( pFileName );
-   }
-}
-
-HARBOUR HB_HB_FNAMEMERGE( void )
-{
-   HB_FNAME pFileName;
-   char szFileName[ _POSIX_PATH_MAX ];
-
-   pFileName.szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
-   pFileName.szName = ISCHAR( 2 ) ? hb_parc( 2 ) : NULL;
-   pFileName.szExtension = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
-   pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL;
-
-   hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
-}
 
 #ifdef HB_COMPAT_C53
 

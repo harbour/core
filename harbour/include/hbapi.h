@@ -343,6 +343,11 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 
 /* string management */
 
+#define HB_ISSPACE( c ) ( ( c ) == ' ' || \
+                          ( c ) == HB_CHAR_HT || \
+                          ( c ) == HB_CHAR_LF || \
+                          ( c ) == HB_CHAR_CR )
+
 extern int      hb_stricmp( const char * s1, const char * s2 );
 extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
 extern char *   hb_strupr( char * pszText );

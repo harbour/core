@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * GETENV(), GETE() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,54 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ *    HB_GETE()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
-#include <windows.h>
-#include "hbvm.h"
+#include "hbapi.h"
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+/* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the 
+         function will return an empty string if called with more than one
+         parameter. [vszakats] */
+
+HARBOUR HB_GETENV( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   if( ISCHAR( 1 ) )
+   {
+      char * szName = hb_parc( 1 );
+      ULONG ulName = hb_parclen( 1 );
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+      while( ulName && szName[ ulName - 1 ] == '=' )
+      {
+         /* strip the '=' or else it will clear the variable! */
+         szName[ ulName - 1 ] = '\0';
+         ulName--;
+      }
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+      if( ulName )
+      {
+         char * szValue = getenv( szName );
 
-   return TRUE;
+         hb_retc( szValue ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
 }
 
-#endif
+/* NOTE: Undocumented Clipper function. [vszakats] */
+
+HARBOUR HB_GETE( void )
+{
+   HB_GETENV();
+}
 

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * LEFT() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -33,29 +33,32 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-#include <windows.h>
-#include "hbvm.h"
+/* returns the right-most n characters in string */
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_RIGHT( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   if( pText && ISNUM( 2 ) )
+   {
+      long lLen = hb_parnl( 2 );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+      if( lLen > ( long ) hb_itemGetCLen( pText ) )
+         lLen = ( long ) hb_itemGetCLen( pText );
 
-   return TRUE;
+      else if( lLen < 0 )
+         lLen = 0;
+
+      hb_retclen( hb_itemGetCPtr( pText ) + hb_itemGetCLen( pText ) - lLen, lLen );
+   }
+   else
+   {
+      /* Clipper doesn't error */
+      hb_retc( "" );
+   }
 }
-
-#endif
 

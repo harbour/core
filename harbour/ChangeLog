@@ -1,3 +1,78 @@
+20000317-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/vm/maindll.c
+     ! __BORLAND__ -> __BORLANDC__
+   * source/rtl/environ.c
+     ! GETENV() - Fixed handling of the second parameter.
+   * include/hbapi.h
+     source/rtl/strings.c
+     * HB_ISSPACE() macro moved to the central header.
+   * utils/hbtest/hbtest.prg
+     * DTOS() -> DTOC() in header.
+   + source/vm/arrayshb.c
+     source/vm/arrays.c
+     source/vm/Makefile
+     makefile.bc
+     makefile.vc
+     + Separated the Harbour and C array API level.
+   + source/rtl/abs.c
+   + source/rtl/accept.c
+   + source/rtl/ampm.c
+   + source/rtl/at.c
+   + source/rtl/chrasc.c
+   + source/rtl/colorind.c
+   + source/rtl/datec.c
+   + source/rtl/dateshb.c
+   + source/rtl/defpath.c
+   + source/rtl/eval.c
+   + source/rtl/fkmax.c
+   + source/rtl/fnsplit.c
+   + source/rtl/getenv.c
+   + source/rtl/gx.c
+   + source/rtl/left.c
+   + source/rtl/lennum.c
+   + source/rtl/maxrow.c
+   + source/rtl/minmax.c
+   + source/rtl/mod.c
+   + source/rtl/pad.c
+   + source/rtl/replic.c
+   + source/rtl/right.c
+   + source/rtl/round.c
+   + source/rtl/run.c
+   + source/rtl/saverest.c
+   + source/rtl/seconds.c
+   + source/rtl/setcurs.c
+   + source/rtl/setpos.c
+   + source/rtl/shadow.c
+   + source/rtl/space.c
+   + source/rtl/str.c
+   + source/rtl/strcase.c
+   + source/rtl/stris.c
+   + source/rtl/strmatch.c
+   + source/rtl/strtran.c
+   + source/rtl/strzero.c
+   + source/rtl/stuff.c
+   + source/rtl/substr.c
+   + source/rtl/trim.c
+   + source/rtl/val.c
+   + source/rtl/valtostr.c
+     source/rtl/strings.c
+     source/rtl/console.c
+     source/rtl/dates.c
+     source/rtl/math.c
+     source/rtl/inkey.c
+     source/rtl/samples.c
+     source/rtl/do.c
+     source/rtl/environ.c
+     source/rtl/set.c
+     source/rtl/setcolor.c
+     source/rtl/filesys.c
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     + Separated almost all RTL source files into smaller pieces.
+       There are 41 new files now. The original CA-Cl*pper source filenames
+       were used where possible.
+
 20000317-10:53 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbclass.ch
      ! To avoid warning _CLASS_NAME_ is #undef-ed before #define-ed.

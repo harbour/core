@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * REPLICATE() function
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,53 +36,52 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+/* returns n copies of given string */
+/* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
+HARBOUR HB_REPLICATE( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   if( IS_STRING( pItem ) )
+   if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      long lTimes = hb_parnl( 2 );
 
-      if( pDynSym )
+      if( lTimes > 0 )
       {
-         USHORT uiParam;
+         ULONG ulLen = hb_parclen( 1 );
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
+         if( ( double ) ( ( double ) ulLen * ( double ) lTimes ) < ( double ) ULONG_MAX )
+         {
+            char * szText = hb_parc( 1 );
+            char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
+            char * szPtr = szResult;
+            long i;
+
+            for( i = 0; i < lTimes; i++ )
+            {
+               hb_xmemcpy( szPtr, szText, ulLen );
+               szPtr += ulLen;
+            }
+
+            hb_retclen( szResult, ulLen * lTimes );
+            hb_xfree( szResult );
+         }
+         else
+         {
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_STROVERFLOW, 1234, NULL, "REPLICATE" );
+
+            if( pResult )
+            {
+               hb_itemReturn( pResult );
+               hb_itemRelease( pResult );
+            }
+         }
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+         hb_retc( "" );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1106, NULL, "REPLICATE" );
 
       if( pResult )
       {

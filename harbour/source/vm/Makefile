@@ -6,6 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
         arrays.c     \
+        arrayshb.c   \
         break.c      \
         classes.c    \
         cmdarg.c     \

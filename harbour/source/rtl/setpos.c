@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * SETPOS(), SETPOSBS() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,56 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    HB_SETPOS()
+ *
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ *    HB_SETPOSBS()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
-#include <windows.h>
-#include "hbvm.h"
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-#endif
+/* Move the screen position to the right by one column */
+HARBOUR HB_SETPOSBS( void )
+{
+   SHORT iRow, iCol;
 
+   /* NOTE: Clipper does no checks about reaching the border or anything.
+            [vszakats] */
+   hb_gtGetPos( &iRow, &iCol );
+   hb_gtSetPos( iRow, iCol + 1 );
+}
+
+HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
+{
+   SHORT iRow;
+   SHORT iCol;
+
+   hb_gtGetPos( &iRow, &iCol );
+
+   hb_retni( iRow );
+}
+
+HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
+{
+   SHORT iRow;
+   SHORT iCol;
+
+   hb_gtGetPos( &iRow, &iCol );
+
+   hb_retni( iCol );
+}

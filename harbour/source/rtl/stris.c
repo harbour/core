@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * IS*() string functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -33,29 +33,43 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include <ctype.h>
 
-#include <windows.h>
-#include "hbvm.h"
+#include "hbapi.h"
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+/* determines if first char of string is letter */
+/* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
+/* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
+
+HARBOUR HB_ISALPHA( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   hb_retl( isalpha( *hb_parc( 1 ) ) );
 }
 
-#endif
+/* determines if first char of string is digit */
+/* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
+/* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
+
+HARBOUR HB_ISDIGIT( void )
+{
+   hb_retl( isdigit( *hb_parc( 1 ) ) );
+}
+
+/* determines if first char of string is upper-case */
+/* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
+/* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
+
+HARBOUR HB_ISUPPER( void )
+{
+   hb_retl( isupper( *hb_parc( 1 ) ) );
+}
+
+/* determines if first char of string is lower-case */
+/* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
+/* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
+
+HARBOUR HB_ISLOWER( void )
+{
+   hb_retl( islower( *hb_parc( 1 ) ) );
+}
 

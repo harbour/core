@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * SAVESCREEN(), RESTSCREEN() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,34 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapigt.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_SAVESCREEN( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   USHORT uiX;
+   USHORT uiCoords[ 4 ];
+   void * pBuffer;
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   uiCoords[ 0 ] = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+   uiCoords[ 1 ] = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
+   uiCoords[ 2 ] = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
+   uiCoords[ 3 ] = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
+   pBuffer = hb_xgrab( uiX );
+   hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
+   hb_retclen( ( char * ) pBuffer, uiX );
+   hb_xfree( ( char * ) pBuffer );
 }
 
-#endif
+HARBOUR HB_RESTSCREEN( void )
+{
+   if( ISCHAR( 5 ) )
+      hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            
+                 ISNUM( 2 ) ? hb_parni( 2 ) : 0,            
+                 ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
+                 ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
+                 ( void * ) hb_parc( 5 ) );
+}
 

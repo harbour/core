@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * AT(), RAT() functions
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,53 +36,23 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+/* locates a substring in a string */
+/* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
+
+HARBOUR HB_AT( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pSub = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 2, IT_STRING );
 
-   if( IS_STRING( pItem ) )
+   if( pText && pSub )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
-
-      if( pDynSym )
-      {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1108, NULL, "AT" );
 
       if( pResult )
       {
@@ -90,5 +60,40 @@ HARBOUR HB_DO( void )
          hb_itemRelease( pResult );
       }
    }
+}
+
+/* locates a substring in a string starting at the end */
+/* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
+/* TOFIX: Will not work with a search string > 64 KB on some platforms */
+
+HARBOUR HB_RAT( void )
+{
+   ULONG ulSubLen = hb_parclen( 1 );
+
+   if( ulSubLen )
+   {
+      long lPos = hb_parclen( 2 ) - ulSubLen;
+
+      if( lPos >= 0 )
+      {
+         char * szSub = hb_parc( 1 );
+         char * szText = hb_parc( 2 );
+         BOOL bFound = FALSE;
+
+         while( lPos >= 0 && !bFound )
+         {
+            if( *( szText + lPos ) == *szSub )
+               bFound = ( memcmp( szSub, szText + lPos, ulSubLen ) == 0 );
+            lPos--;
+         }
+
+         hb_retnl( bFound ? lPos + 2 : 0 );
+      }
+      else
+         hb_retni( 0 );
+   }
+   else
+      /* This function never seems to raise an error */
+      hb_retni( 0 );
 }
 

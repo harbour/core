@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * VAL() function
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,53 +36,34 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+/* returns the numeric value of a character string representation of a number  */
+HARBOUR HB_VAL( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
 
-   if( IS_STRING( pItem ) )
+   if( pText )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      int iWidth;
+      int iDec;
+      char * ptr = strchr( hb_itemGetCPtr( pText ), '.' );
 
-      if( pDynSym )
+      if( ptr )
       {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
+         iWidth = ptr - hb_itemGetCPtr( pText );
+         iDec = strlen( ptr + 1 );
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
+      {
+         iWidth = strlen( hb_itemGetCPtr( pText ) );
+         iDec = 0;
+      }
 
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+      hb_retndlen( hb_strVal( hb_itemGetCPtr( pText ) ), iWidth, iDec );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1098, NULL, "VAL" );
 
       if( pResult )
       {

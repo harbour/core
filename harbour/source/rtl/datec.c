@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * CMONTH(), CDOW() functions
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,55 +34,68 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
+#include "hbapiitm.h"
+#include "hbdate.h"
 
-HARBOUR HB_DO( void )
+char * hb_cmonth( int iMonth )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   HB_TRACE(HB_TR_DEBUG, ("hb_cmonth(%d)", iMonth));
 
-   if( IS_STRING( pItem ) )
+   return ( iMonth >= 1 && iMonth <= 12 ) ? hb_monthsname[ iMonth - 1 ] : "";
+}
+
+HARBOUR HB_CMONTH( void )
+{
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+
+   if( pDate )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      long lDay, lMonth, lYear;
 
-      if( pDynSym )
-      {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_retc( hb_cmonth( lMonth ) );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1116, NULL, "CMONTH" );
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
+}
+
+char * hb_cdow( int iDay )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
+
+   return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
+}
+
+HARBOUR HB_CDOW( void )
+{
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+
+   if( pDate )
+   {
+      long lDate = hb_itemGetDL( pDate );
+
+      if( lDate )
+      {
+         long lDay, lMonth, lYear;
+
+         hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
+         hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1117, NULL, "CDOW" );
 
       if( pResult )
       {

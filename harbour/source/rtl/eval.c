@@ -38,29 +38,12 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-HARBOUR HB_DO( void )
+HARBOUR HB_EVAL( void )
 {
    USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
 
-   if( IS_STRING( pItem ) )
-   {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
-
-      if( pDynSym )
-      {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
-      }
-      else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
+   if( pItem )
    {
       USHORT uiParam;
 
@@ -70,19 +53,9 @@ HARBOUR HB_DO( void )
          hb_vmPush( hb_param( uiParam, IT_ANY ) );
       hb_vmDo( uiPCount - 1 );
    }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, "EVAL" );
 
       if( pResult )
       {

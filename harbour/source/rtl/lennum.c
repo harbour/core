@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * LENNUM() compatibility function from the SAMPLES directory of Clipper.
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,26 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_LENNUM( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+   ULONG ulLen = 0;
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   if( pNumber )
+   {
+      char * pszString = hb_itemStr( pNumber, NULL, NULL );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+      if( pszString )
+      {
+         ulLen = strlen( pszString );
+         hb_strLTrim( pszString, &ulLen );
+         hb_xfree( pszString );
+      }
+   }
 
-   return TRUE;
+   hb_retnl( ulLen );
 }
-
-#endif
 

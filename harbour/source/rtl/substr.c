@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * LEFT() function
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,53 +36,69 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+/* returns l characters from n characters into string */
+
+HARBOUR HB_SUBSTR( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
 
-   if( IS_STRING( pItem ) )
+   if( pText && ISNUM( 2 ) )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      long lPos = hb_parnl( 2 );
 
-      if( pDynSym )
+      if( lPos < 0 )
       {
-         USHORT uiParam;
+         lPos += ( long ) hb_itemGetCLen( pText );
+         if( lPos < 0 )
+            lPos = 0;
+      }
+      else if( lPos )
+      {
+         lPos--;
+      }
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
+      if( lPos < ( long ) hb_itemGetCLen( pText ) )
+      {
+         long lLen;
+
+         if( hb_pcount() >= 3 )
+         {
+            if( ISNUM( 3 ) )
+            {
+               lLen = hb_parnl( 3 );
+
+               if( lLen > ( long ) hb_itemGetCLen( pText ) - lPos )
+                  lLen = ( long ) hb_itemGetCLen( pText ) - lPos;
+            }
+            else
+            {
+               PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
+
+               if( pResult )
+               {
+                  hb_itemReturn( pResult );
+                  hb_itemRelease( pResult );
+               }
+
+               /* NOTE: Exit from inside [vszakats] */
+               return;
+            }
+         }
+         else
+            lLen = ( long ) hb_itemGetCLen( pText ) - lPos;
+
+         if( lLen > 0 )
+            hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
+         else
+            hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+         hb_retc( "" );
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
 
       if( pResult )
       {
@@ -91,4 +107,3 @@ HARBOUR HB_DO( void )
       }
    }
 }
-

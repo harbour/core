@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * AMPM() compatibility function from the SAMPLES directory of Clipper.
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,48 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_AMPM( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   char * pszTime = hb_parc( 1 );
+   ULONG  ulTimeLen = hb_parclen( 1 );
+   char * pszResult = ( char * ) hb_xgrab( HB_MAX_( ulTimeLen, 2 ) + 3 + 1 );
+   USHORT uiHour = ( USHORT ) hb_strVal( pszTime );
+   BOOL   bAM;
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   memset( pszResult, '\0', 3 );
+   memcpy( pszResult, pszTime, ulTimeLen );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+   if( uiHour == 0 || uiHour == 24 )
+   {
+      if( ulTimeLen < 2 )
+         ulTimeLen = 2;
 
-   return TRUE;
+      pszResult[ 0 ] = '1';
+      pszResult[ 1 ] = '2';
+      bAM = TRUE;
+   }
+   else if( uiHour > 12 )
+   {
+      if( ulTimeLen < 2 )
+         ulTimeLen = 2;
+
+      uiHour -= 12;
+      pszResult[ 0 ] = ( char ) ( uiHour / 10 ) + '0';
+      pszResult[ 1 ] = ( char ) ( uiHour % 10 ) + '0';
+
+      if( pszResult[ 0 ] == '0' )
+         pszResult[ 0 ] = ' ';
+
+      bAM = FALSE;
+   }
+   else
+      bAM = ( uiHour != 12 );
+
+   strcpy( pszResult + ulTimeLen, bAM ? " am" : " pm" );
+
+   hb_retclen( pszResult, ulTimeLen + 3 );
+   hb_xfree( pszResult );
 }
-
-#endif
 

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * SECONDS() function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,40 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
+#include <time.h>
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/timeb.h>
 #else
-__declspec(dllexport) BOOL
+   #include <sys\timeb.h>
 #endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+   #include <dos.h>
+#endif
+
+double hb_secondsToday( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+#if defined(_MSC_VER)
+   #define timeb _timeb
+   #define ftime _ftime
+#endif
+   struct timeb tb;
+   struct tm * oTime;
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+   HB_TRACE(HB_TR_DEBUG, ("hb_secondsToday()"));
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+   ftime( &tb );
+   oTime = localtime( &tb.time );
 
-   return TRUE;
+   return ( oTime->tm_hour * 3600 ) +
+          ( oTime->tm_min * 60 ) +
+            oTime->tm_sec +
+          ( ( double ) tb.millitm / 1000 );
 }
 
-#endif
+HARBOUR HB_SECONDS( void )
+{
+   hb_retnd( hb_secondsToday() );
+}
 

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * FKMAX(), FKLABEL() functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,29 +33,38 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include <windows.h>
-#include "hbvm.h"
+/* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
 
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HARBOUR HB_FKMAX( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
-
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
-
-   return TRUE;
+   hb_retni( 40 ); /* IBM specific */
 }
 
-#endif
+/* Dumb function to maintain dBase III+ and CA-Cl*pper compatibility */
+
+HARBOUR HB_FKLABEL( void )
+{
+   PHB_ITEM pPar1 = hb_param( 1, IT_NUMERIC );
+
+   if( pPar1 != NULL )
+   {
+      USHORT uiFKey = hb_itemGetNI( pPar1 );
+
+      if( uiFKey > 0 && uiFKey <= 40 )
+      {
+         char szName[ 4 ];
+
+         sprintf( szName, "F%i", uiFKey );
+
+         hb_retc( szName );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
+}
 

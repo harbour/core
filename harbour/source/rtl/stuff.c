@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows DLL entry point
+ * STUFF() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -33,29 +33,47 @@
  *
  */
 
-#if defined(_Windows) || defined(_WIN32)
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include <windows.h>
-#include "hbvm.h"
-
-#if defined(__BORLANDC__)
-BOOL WINAPI _export
-#else
-__declspec(dllexport) BOOL
-#endif
-WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+/* replaces characters in a string */
+HARBOUR HB_STUFF( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
-             pvReserved ) );
+   if( ISCHAR( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISCHAR( 4 ) )
+   {
+      char * szText = hb_parc( 1 );
+      ULONG ulText = hb_parclen( 1 );
+      ULONG ulPos = hb_parnl( 2 );
+      ULONG ulDel = hb_parnl( 3 );
+      ULONG ulInsert = hb_parclen( 4 );
 
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( fdwReason );
-   HB_SYMBOL_UNUSED( pvReserved );
+      ULONG ulTotalLen;
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+      if( ulPos > 0 )
+         ulPos--;
 
-   return TRUE;
+      if( ulPos > ulText )
+         ulPos = ulText;
+
+      if( ulDel > ulText - ulPos )
+         ulDel = ulText - ulPos;
+
+      if( ( ulTotalLen = ulText + ulInsert - ulDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( ulTotalLen + 1 );
+
+         hb_xmemcpy( szResult, szText, ulPos );
+         hb_xmemcpy( szResult + ulPos, hb_parc( 4 ), ulInsert );
+         hb_xmemcpy( szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - ( ulPos + ulDel ) );
+
+         szResult[ ulTotalLen ] = '\0';
+         hb_retclen( szResult, ulTotalLen );
+         hb_xfree( szResult );
+      }
+      else
+         hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
 }
-
-#endif
 

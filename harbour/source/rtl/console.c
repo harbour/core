@@ -37,28 +37,20 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    HB___ACCEPT()
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_altout(), hb_devout(), HB_DEVOUT(), hb_devpos(),
- *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), HB_MAXCOL(),
- *    HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
+ *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), 
+ *    hb_out(), hb_outerr(), HB_OUTERR(),
  *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(),
- *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
+ *    HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
  *    HB_DISPOUTAT()
- *    HB_SETPOSBS()
  *    HB_DISPBOX() (GT version)
  *    HB_DISPBEGIN()
  *    HB_DISPEND()
  *    HB_DISPCOUNT()
- *    HB_ISCOLOR()
- *    HB_NOSNOW()
- *    HB___ACCEPTSTR()
- *    HB_HB_COLORINDEX()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -71,7 +63,6 @@
 #include "hbapigt.h"
 #include "hbdate.h"
 #include "hbset.h"
-#include "inkey.ch"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
@@ -87,8 +78,6 @@
    #include <termios.h>
 #endif
 
-#define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
-
 #if defined(OS_UNIX_COMPATIBLE)
    #define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
 #else
@@ -99,7 +88,6 @@ static BOOL   s_bInit = FALSE;
 static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
-static char   s_szAcceptResult[ ACCEPT_BUFFER_LEN ];
 static int    s_iFilenoStdin;
 static int    s_iFilenoStdout;
 static int    s_iFilenoStderr;
@@ -118,8 +106,6 @@ void hb_consoleInitialize( void )
    s_szCrLf[ 1 ] = HB_CHAR_LF;
    s_szCrLf[ 2 ] = '\0';
 #endif
-
-   s_szAcceptResult[ 0 ] = '\0';
 
    s_uiPRow = s_uiPCol = 0;
 
@@ -348,12 +334,6 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
       hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-HARBOUR HB_SETPOS( void ) /* Sets the screen position */
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
-}
-
 HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output device */
 {
    USHORT uiPCount = hb_pcount();
@@ -413,17 +393,6 @@ HARBOUR HB_QOUT( void )
    HB_QQOUT();
 }
 
-/* Move the screen position to the right by one column */
-HARBOUR HB_SETPOSBS( void )
-{
-   SHORT iRow, iCol;
-
-   /* NOTE: Clipper does no checks about reaching the border or anything.
-            [vszakats] */
-   hb_gtGetPos( &iRow, &iCol );
-   hb_gtSetPos( iRow, iCol + 1 );
-}
-
 HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
    if( hb_pcount() >= 1 )
@@ -441,51 +410,6 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
       }
       else
          hb_out( 1, hb_devout );
-   }
-}
-
-HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
-{
-   if( hb_pcount() >= 1 )
-   {
-      if( ISCHAR( 2 ) )
-      {
-         char szOldColor[ CLR_STRLEN ];
-
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 2 ) );
-
-         hb_out( 1, hb_dispout );
-
-         hb_gtSetColorStr( szOldColor );
-      }
-      else
-         hb_out( 1, hb_dispout );
-   }
-}
-
-/* Undocumented Clipper function */
-
-HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
-{
-   if( hb_pcount() >= 3 )
-   {
-      /* NOTE: Clipper does no checks here. [vszakats] */
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
-
-      if( ISCHAR( 4 ) )
-      {
-         char szOldColor[ CLR_STRLEN ];
-
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 4 ) );
-
-         hb_out( 3, hb_dispout );
-
-         hb_gtSetColorStr( szOldColor );
-      }
-      else
-         hb_out( 3, hb_dispout );
    }
 }
 
@@ -551,36 +475,6 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region */
    else right = i_right;
 
    hb_gtScroll( top, left, bottom, right, v_scroll, h_scroll );
-}
-
-HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
-{
-   hb_retni( hb_gtMaxRow() );
-}
-
-HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
-{
-   hb_retni( hb_gtMaxCol() );
-}
-
-HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
-{
-   SHORT iRow;
-   SHORT iCol;
-
-   hb_gtGetPos( &iRow, &iCol );
-
-   hb_retni( iRow );
-}
-
-HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
-{
-   SHORT iRow;
-   SHORT iCol;
-
-   hb_gtGetPos( &iRow, &iCol );
-
-   hb_retni( iCol );
 }
 
 HARBOUR HB_DISPBOX( void )
@@ -735,190 +629,48 @@ HARBOUR HB_DISPCOUNT( void )
    hb_retni( hb_gtDispCount() );
 }
 
-HARBOUR HB_ISCOLOR( void )
+HARBOUR HB_DISPOUT( void ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
 {
-   hb_retl( hb_gtIsColor() );
-}
-
-HARBOUR HB_NOSNOW( void )
-{
-   if( ISLOG( 1 ) )
-      hb_gtSetSnowFlag( hb_parl( 1 ) );
-}
-
-HARBOUR HB_HB_SHADOW( void )
-{
-   if( hb_pcount() >= 4 )
-      hb_gtDrawShadow( hb_parni( 1 ),
-                       hb_parni( 2 ),
-                       hb_parni( 3 ),
-                       hb_parni( 4 ),
-                       ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
-}
-
-HARBOUR HB_DBGSHADOW( void )
-{
-   HB_HB_SHADOW();
-}
-
-HARBOUR HB_SAVESCREEN( void )
-{
-   USHORT uiX;
-   USHORT uiCoords[ 4 ];
-   void * pBuffer;
-
-   uiCoords[ 0 ] = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-   uiCoords[ 1 ] = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
-   uiCoords[ 2 ] = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-   uiCoords[ 3 ] = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
-
-   hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
-   pBuffer = hb_xgrab( uiX );
-   hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
-   hb_retclen( ( char * ) pBuffer, uiX );
-   hb_xfree( ( char * ) pBuffer );
-}
-
-HARBOUR HB_RESTSCREEN( void )
-{
-   if( ISCHAR( 5 ) )
-      hb_gtRest( ISNUM( 1 ) ? hb_parni( 1 ) : 0,            
-                 ISNUM( 2 ) ? hb_parni( 2 ) : 0,            
-                 ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
-                 ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
-                 ( void * ) hb_parc( 5 ) );
-}
-
-USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
-{
-   USHORT usPreviousCursor;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
-
-   hb_gtGetCursor( &usPreviousCursor );
-   if( bSetCursor )
-      hb_gtSetCursor( usNewCursor );
-
-   return usPreviousCursor;
-}
-
-HARBOUR HB_SETCURSOR( void )
-{
-   hb_retni( hb_setCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
-}
-
-HARBOUR HB_SETBLINK( void )
-{
-   BOOL bPreviousBlink;
-
-   hb_gtGetBlink( &bPreviousBlink );
-   if( ISLOG( 1 ) )
-      hb_gtSetBlink( hb_parl( 1 ) );
-
-   hb_retl( bPreviousBlink );
-}
-
-HARBOUR HB_SETMODE( void )
-{
-   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
-                          ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
-}
-
-/* Internal Clipper function used in ACCEPT command  */
-/* Basically the simplest Clipper function to        */
-/* receive data. Parameter : cPrompt. Returns : cRet */
-
-HARBOUR HB___ACCEPT( void )
-{
-   int input;
-   ULONG ulLen;
-
-   if( hb_pcount() >= 1 )          /* cPrompt passed */
-      HB_QOUT();
-
-   ulLen = 0;
-   input = 0;
-
-   while( input != K_ENTER )
+   if( hb_pcount() >= 1 )
    {
-      /* Wait forever, for keyboard events only */
-      input = hb_inkey( 0.0, ( HB_inkey_enum ) INKEY_KEYBOARD, 1, 1 );
-      switch( input )
+      if( ISCHAR( 2 ) )
       {
-         case K_BS:
-         case K_LEFT:
-            if( ulLen > 0 )
-            {
-               hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3 ); /* Erase it from the screen. */
-               ulLen--; /* Adjust input count to get rid of last character */
-            }
-            break;
+         char szOldColor[ CLR_STRLEN ];
 
-         default:
-            if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
-            {
-               s_szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_gtWriteCon( ( BYTE * ) &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
-               ulLen++;  /* Then adjust the input count */
-            }
-      }
-   }
+         hb_gtGetColorStr( szOldColor );
+         hb_gtSetColorStr( hb_parc( 2 ) );
 
-   s_szAcceptResult[ ulLen ] = '\0';
+         hb_out( 1, hb_dispout );
 
-   hb_retc( s_szAcceptResult );
-}
-
-HARBOUR HB___ACCEPTSTR( void )
-{
-   hb_retc( s_szAcceptResult );
-}
-
-HARBOUR HB_HB_COLORINDEX( void )
-{
-   if( ISCHAR( 1 ) && ISNUM( 2 ) )
-   {
-      char * pszColor = hb_parc( 1 );
-      ULONG ulColorPos;
-      ULONG ulColorLen;
-      USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
-
-      /* Skip the given number of commas */
-
-      for( ulColorPos = 0 ; pszColor[ ulColorPos ] != '\0' && uiColorIndex > 0 ; ulColorPos++ )
-      {
-         if( pszColor[ ulColorPos ] == ',' )
-            uiColorIndex--;
-      }
-
-      /* if found, continue */
-
-      if( uiColorIndex == 0 )
-      {
-         /* Skip the spaces after the comma */
-
-         while( pszColor[ ulColorPos ] == ' ' ) ulColorPos++;
-
-         /* Search for next comma or end of string */
-
-         ulColorLen = 0;
-
-         while( pszColor[ ulColorPos + ulColorLen ] != '\0' &&
-                pszColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
-
-         /* Skip the trailing spaces */
-
-         while( ulColorLen > 0 &&
-                pszColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
-
-         /* Return the string */
-
-         hb_retclen( pszColor + ulColorPos, ulColorLen );
+         hb_gtSetColorStr( szOldColor );
       }
       else
-         hb_retc( "" );
+         hb_out( 1, hb_dispout );
    }
-   else
-      hb_retc( "" );
+}
+
+/* Undocumented Clipper function */
+
+HARBOUR HB_DISPOUTAT( void ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+{
+   if( hb_pcount() >= 3 )
+   {
+      /* NOTE: Clipper does no checks here. [vszakats] */
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+
+      if( ISCHAR( 4 ) )
+      {
+         char szOldColor[ CLR_STRLEN ];
+
+         hb_gtGetColorStr( szOldColor );
+         hb_gtSetColorStr( hb_parc( 4 ) );
+
+         hb_out( 3, hb_dispout );
+
+         hb_gtSetColorStr( szOldColor );
+      }
+      else
+         hb_out( 3, hb_dispout );
+   }
 }
 

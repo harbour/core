@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * ABS() function
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,53 +36,46 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbvm.h"
 
-HARBOUR HB_DO( void )
+HARBOUR HB_ABS( void )
 {
-   USHORT uiPCount = hb_pcount();
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
-   if( IS_STRING( pItem ) )
+   if( pNumber )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      int iWidth;
+      int iDec;
 
-      if( pDynSym )
+      hb_itemGetNLen( pNumber, &iWidth, &iDec );
+
+      if( IS_INTEGER( pNumber ) )
       {
-         USHORT uiParam;
+         int iNumber = hb_itemGetNI( pNumber );
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
+         if( iNumber >= 0 )
+            hb_retnilen( iNumber, iWidth );
+         else
+            hb_retni( -iNumber );
       }
-      else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      USHORT uiParam;
+      else if( IS_LONG( pNumber ) )
+      {
+         long lNumber = hb_itemGetNL( pNumber );
 
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      USHORT uiParam;
+         if( lNumber >= 0 )
+            hb_retnllen( lNumber, iWidth );
+         else
+            hb_retnl( -lNumber );
+      }
+      else if( IS_DOUBLE( pNumber ) )
+      {
+         double dNumber = hb_itemGetND( pNumber );
 
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
+         hb_retndlen( dNumber >= 0.0 ? dNumber : -dNumber, 0, iDec );
+      }
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3012, NULL, "DO" );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1089, NULL, "ABS" );
 
       if( pResult )
       {

@@ -200,7 +200,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    FWrite( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
                     "      Version: " + Version( 0 ) + HB_OSNewLine() +;
                     "           OS: " + OS() + HB_OSNewLine() +;
-                    "   Date, Time: " + DToS( Date() ) + " " + Time() + HB_OSNewLine() +;
+                    "   Date, Time: " + DToC( Date() ) + " " + Time() + HB_OSNewLine() +;
                     "       Output: " + s_cFileName + HB_OSNewLine() +;
                     "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;
                     "     Switches: " + cParam + HB_OSNewLine() +;

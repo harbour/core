@@ -5,44 +5,88 @@
 ROOT = ../../
 
 C_SOURCES=\
+        abs.c        \
+        accept.c     \
+        ampm.c       \
+        at.c         \
         binnum.c     \
+        chrasc.c     \
+        colorind.c   \
         console.c    \
         copyfile.c   \
+        datec.c      \
         dates.c      \
+        dateshb.c    \
+        defpath.c    \
         descend.c    \
         dir.c        \
         do.c         \
         empty.c      \
         environ.c    \
         errorapi.c   \
+        eval.c       \
         filesys.c    \
+        fkmax.c      \
+        fnsplit.c    \
+        getenv.c     \
         gtapi.c      \
+        gtxxx.c      \
+        gx.c         \
         hardcr.c     \
         inkey.c      \
         isprint.c    \
         langapi.c    \
+        left.c       \
         len.c        \
+        lennum.c     \
         math.c       \
+        maxrow.c     \
         memofile.c   \
         memoline.c   \
+        minmax.c     \
         mlcount.c    \
         mlpos.c      \
+        mod.c        \
         mouseapi.c   \
+        mousexxx.c   \
+        msgxxx.c     \
         mtran.c      \
         natmsg.c     \
         net.c        \
         oemansi.c    \
         oldbox.c     \
         oldclear.c   \
+        pad.c        \
+        replic.c     \
+        right.c      \
+        round.c      \
+        run.c        \
         samples.c    \
+        saverest.c   \
+        seconds.c    \
         set.c        \
         setcolor.c   \
+        setcurs.c    \
+        setpos.c     \
+        shadow.c     \
         soundex.c    \
+        space.c      \
+        str.c        \
+        strcase.c    \
         strings.c    \
+        stris.c      \
+        strmatch.c   \
+        strtran.c    \
+        strzero.c    \
+        stuff.c      \
+        substr.c     \
         tone.c       \
         trace.c      \
         transfrm.c   \
+        trim.c       \
         type.c       \
+        val.c        \
+        valtostr.c   \
         valtype.c    \
         word.c       \
         xhelp.c      \

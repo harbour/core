@@ -34,17 +34,6 @@
  */
 
 /*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    HB_DEFPATH() and HB___DEFPATH()
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
-/*
  * ChangeLog:
  *
  * V 1.86   David G. Holm               Added missing Clipper 5.3 SETs.
@@ -191,6 +180,7 @@
  */
 
 #include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -851,43 +841,5 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
-}
-
-HARBOUR HB_DEFPATH( void )
-{
-   char buffer[ _POSIX_PATH_MAX ];
-   char delimiter[ 2 ] = ":";
-   int size = 0;
-
-   if( hb_set.HB_SET_DEFAULT )
-   {
-      /* Leave enough space to append a path delimiter */
-      strncpy( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
-      size = sizeof( buffer ) - 2;
-   }
-   buffer[ size ] = '\0';
-   size = strlen( buffer );
-
-   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
-   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
-
-   /* If the path is not empty and it doesn't end with a drive or path
-      delimiter, then add the appropriate separator. Use ':' if the size
-      of the path is 1 and the list separator is not ':', otherwise use
-      the path delimiter. This allows the use of a drive letter delimiter
-      for DOS compatible operating systems while preventing it from being
-      with a Unix compatible OS. */
-   if( size && buffer[ size - 1 ] != ':' && buffer[ size - 1 ] != OS_PATH_DELIMITER )
-   {
-      if( size > 1 || OS_PATH_LIST_SEPARATOR == ':' )
-         delimiter[ 0 ] = OS_PATH_DELIMITER;
-      strcat( buffer, delimiter );
-   }
-   hb_retc( buffer );
-}
-
-HARBOUR HB___DEFPATH( void )
-{
-   HB_DEFPATH();
 }
 
