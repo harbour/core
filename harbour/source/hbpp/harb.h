@@ -21,6 +21,21 @@ typedef unsigned long ULONG;
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
 #define OPT_DELIMITER  "/-"
 #define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
+#ifdef __GNUC__
+  /* The GNU C compiler is used */
+  #ifdef __DJGPP__
+    /* The DJGPP port of GNU C is used - for DOS platform */
+    #define OS_PATH_LIST_SEPARATOR   ';'
+    #define OS_PATH_DELIMITER '\\'
+  #else
+    #define OS_PATH_LIST_SEPARATOR   ':'
+    #define OS_PATH_DELIMITER '/'
+  #endif
+#else
+  /* we are assuming here the DOS compatible OS */
+  #define OS_PATH_LIST_SEPARATOR    ';'
+  #define OS_PATH_DELIMITER '\\'
+#endif
 typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
   char *szPath;
   struct _PATHNAMES *pNext;
@@ -43,6 +58,7 @@ void * _xgrab( ULONG );         /* allocates fixed memory */
 void * _xrealloc( void *, ULONG );       /* reallocates memory */
 void _xfree( void * );            /* frees fixed memory */
 
+/* ------------------------------------------ */
 /* includes common definitions shared by preprocessor and harbour.y */
 #include "hbpp.h"
 

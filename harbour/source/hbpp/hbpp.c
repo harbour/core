@@ -526,7 +526,9 @@ int ParseExpression( char* sLine, char* sOutLine )
         lenToken = NextName( &ptri, sToken, NULL);
      else
         { *sToken = *ptri++; *(sToken+1) = '\0'; lenToken = 1; }
-     if ( (ndef=ComSearch(sToken,0)) >= 0 )
+     SKIPTABSPACES( ptri );
+
+     if ( *ptri != ':' && *ptri != '=' && (ndef=ComSearch(sToken,0)) >= 0 )
      {
        ptro = sOutLine;
        i = WorkCommand( sToken, ptri, ptro, ndef );
@@ -711,7 +713,9 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
      SKIPTABSPACES( ptri );
      switch ( *ptrmp ) {
       case '[':
-       nbr++; ptrmp++; lastopti[Repeate] = ptrmp;
+       nbr++;
+       ptrmp++;
+       lastopti[Repeate] = ptrmp;
        break;
       case ']':
         if ( Repeate ) { Repeate--; ptrmp = lastopti[Repeate]; }
@@ -1252,6 +1256,10 @@ int md_strAt(char *szSub, int lSubLen, char *szText)
        {
          lSubPos++;
          lPos++;
+         if ( lSubPos >= lSubLen  &&
+          ( ( isname(*szSub) && lPos>lSubPos && isname(*(szText+lPos-lSubPos-1)) ) ||
+            ( isname(*(szSub+lSubLen-1)) && isname(*(szText+lPos)) ) ) )
+          lSubPos = 0;
        }
        else if( lSubPos )  lSubPos = 0;
        else  lPos++;
@@ -1392,17 +1400,28 @@ int NextWord ( char** sSource, char* sDest, int lLower )
 
 int NextName ( char** sSource, char* sDest, char **sOut )
 {
- int i = 0;
- while ( **sSource != '\0' && !isname(**sSource) )
-  { if ( sOut !=NULL ) *(*sOut)++ = **sSource; (*sSource)++; }
+ int lenName = 0, State = STATE_NORMAL;
+ while ( **sSource != '\0' && ( !isname(**sSource) || State != STATE_NORMAL ) )
+ {
+  if ( State == STATE_QUOTE1 )
+   { if ( **sSource == '\'' ) State = STATE_NORMAL; }
+  else if ( State == STATE_QUOTE2 )
+   { if ( **sSource == '\"' ) State = STATE_NORMAL; }
+  else if ( **sSource == '\"' ) State = STATE_QUOTE2;
+  else if ( **sSource == '\'' ) State = STATE_QUOTE1;
+
+  if ( sOut !=NULL ) *(*sOut)++ = **sSource;
+  (*sSource)++;
+ }
 
  while ( **sSource != '\0' && isname(**sSource) )
   {
    if ( sOut !=NULL ) *(*sOut)++ = **sSource;
-   *sDest++ = *(*sSource)++; i++;
+   *sDest++ = *(*sSource)++;
+   lenName++;
   }
  *sDest = '\0';
- return i;
+ return lenName;
 }
 
 int OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr )

@@ -4,12 +4,12 @@
 
 #if defined(__DJGPP__) || defined(__GNUC__)
  #include <string.h>
- #include <stdlib.h>
 #else
  #include <alloc.h>
  #include <mem.h>
 #endif
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "harb.h"
 
@@ -18,6 +18,7 @@ extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
 extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
 extern int WrStr(FILE*,char *);
+extern char* strodup ( char * );
 
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 
@@ -40,8 +41,11 @@ int main (int argc,char* argv[])
 {
 FILE *handl_i,*handl_o;
 char szFileName[ _POSIX_PATH_MAX ];
+char * szDefText;
 FILENAME *pFileName =NULL;
-int iArg = 1;
+int iArg = 1, i;
+
+   aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
 
    while( iArg < argc )
    {
@@ -52,12 +56,12 @@ int iArg = 1;
          case 'd':
          case 'D':   /* defines a Lex #define from the command line */
            {
-             unsigned int i = 0;
-             char * szDefText = strdup( argv[ iArg ] + 2 );
+             i = 0;
+             szDefText = strodup( argv[ iArg ] + 2 );
              while( i < strolen( szDefText ) && szDefText[ i ] != '=' )
-             i++;
+               i++;
              if( szDefText[ i ] != '=' )
-             AddDefine( szDefText, 0 );
+               AddDefine( szDefText, 0 );
              else
              {
                szDefText[ i ] = 0;
@@ -94,8 +98,26 @@ int iArg = 1;
    if ((handl_o = fopen(szFileName, "wt" )) == NULL)
         { printf("\nCan't open %s\n",szFileName); return 1; }
 
+   {
+       char * szInclude = getenv( "INCLUDE" );
+
+       if( szInclude )
+       {
+        char * pPath;
+        char * pDelim;
+
+        pPath = szInclude = strodup( szInclude );
+        while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
+        {
+          *pDelim = '\0';
+          AddSearchPath( pPath, &_pIncludePath );
+          pPath = pDelim + 1;
+        }
+        AddSearchPath( pPath, &_pIncludePath );
+       }
+    }
+
     aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
-    aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
     aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
     aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
 

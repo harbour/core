@@ -1,3 +1,10 @@
+19990620-22:29 Alexander Kresin
+ updated:
+ * source\hbpp\hbppmain.c
+ * source\hbpp\hbpp.c
+ * source\hbpp\harb.h
+  Fixed some problems with preprocessor
+  
 19990620-15:50 CET Victor Szel <info@szelvesz.hu>
   * hb_gtBox() rewritten.
     It's now 100% Clipper compatible, fill character
@@ -23,7 +30,7 @@
  * added support for other compilers not compatible with gcc
    (there were gcc switches hardcoded into common rules)
    New compiler: Watcom C/C++ 10.0
- * changed rules for DJGPP - the Makefile can be used now to 
+ * changed rules for DJGPP - the Makefile can be used now to
    create harbour with DJGPP. The makedos.env and makefile.dos
    are obsolete now.
  * cleared the use of '\' and '/' in make rules for DOS environment
@@ -32,25 +39,25 @@
  * changed the rule for creating DJGPP library (archive) to use
    script file instead of command line - there is a limit of 128
    characters that can be placed into command line in DOS
-   
+
 + include/hbpp.h
  + new file with definition shared by the preprocessor and  harbour.y
    (needed to match the declaration of AddDefine function)
-   
+
 * source/hbpp/harb.h
  * changed to include the new hbpp.h file
- 
+
 * source/compiler/harbour.y
  * changed the declaration of yy_create_buffer to make it compatible
    with C++ compilers
- * added inclusion of hbpp.h (to keep C++ compilers happy with 
+ * added inclusion of hbpp.h (to keep C++ compilers happy with
    AaddDefine function)
-   
+
 * source/compiler/harbour.l
  + added #pragma to suppress warnings of unreachable code when
    compiled with Watcom C++ compiler
-   
- 
+
+
 19990619-14:35 CET Matteo Baccan
    * makefile.vc, source/hbpp/hbpp.c, source/hbpp/hbppint.c,
      source/rtl/environ.c, source/rtl/files.c, source/rtl/gt/gtwin.c,
@@ -62,44 +69,44 @@
 * tests/working/testcgi.prg
 * tests/working/testinc.prg
  * changed the names of included files into lowercase
- 
+
 * include/extend.h
  + added include <hbsetup.h>
- 
+
 * source/rtl/set.c
- + files created by SET PRINTER TO or SET ALTERNATE TO have now 
+ + files created by SET PRINTER TO or SET ALTERNATE TO have now
    changed permissions to write/read by user on UNIX like OS
-  
+
 19990619-12:22 Ryszard Glab <rglab@imid.med.pl>
 
 * include/hbsetup.h
  + added automatic definition of settings that can be used for OS specific code
    OS_UNIX_COMPATIBLE  -for UNIX like systems
    OS_DOS_COMPATIBLE -for DOS like systems
-   
+
 * source/rtl/console.c
- + added calls for fgets instead of gets for GCC on UNIX-es   
+ + added calls for fgets instead of gets for GCC on UNIX-es
    TODO: check if this change can be applied on DOS also
  * changed CR/LF use to LF for GCC on UNIX-es
- 
+
 * source/rtl/dir.c
  * changed to use OS_UNIX_COMPATIBLE/OS_DOS_COMPATIBLE settings
- 
+
 19990619-10:42 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/Makefile
  * moved some files into BAD_PRG_SOURCES
- 
+
 * tests/working/testid.prg
  + added TODO comment because it core dumps if /dTEST is not passed
- 
+
 19990619-09:49 CET Patrick Mast
   * Updated build numbers
 
 19990619-09:40 CET Patrick Mast
   * tests\working\hscript\hscript.prg
     removed line 150
-    
+
 19990618-21:50 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     - genobj.c was moved to source/contrib
@@ -118,18 +125,18 @@
 * config/linux/gcc.cf
  * added default gcc library libm
  * added location of libm library (I have assumed /usr/lib)
- 
+
 * source/include/hbsetup.h
- + the order of static variables initialisation is not determined in 
+ + the order of static variables initialisation is not determined in
    gcc on Linux. This requires the definition of HARBOUR_START_PROCEDURE
    The dafault is 'MAIN'
 
-- tests/working/next.prg 
+- tests/working/next.prg
  - removed because it is contained in keywords.prg
- 
+
 * tests/working/Makefile
  -removed reference to next.prg
- 
+
 
 19990618-23:17 CET Patrick Mast
   * Release of Build #27
@@ -268,77 +275,77 @@
 
 Thu Jun 17 11:34:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile:
-	* source/compiler/Makefile:
-	* source/hbpp/Makefile:
-	Now the hbpp preprocessor is compiled before the compiler, and it
-	generates a library. No stand-alone preprocessor is generated. The
-	compiler links against the new preprocessor library.
+        * source/Makefile:
+        * source/compiler/Makefile:
+        * source/hbpp/Makefile:
+        Now the hbpp preprocessor is compiled before the compiler, and it
+        generates a library. No stand-alone preprocessor is generated. The
+        compiler links against the new preprocessor library.
 
-	* include/Makefile:
-	* tests/working/Makefile:
-	Updated the list of files.
+        * include/Makefile:
+        * tests/working/Makefile:
+        Updated the list of files.
 
-	* include/compiler.h:
-	* include/ctoharb.h:
-	* include/dates.h:
-	* include/error.api:
-	* include/errorapi.h:
-	* include/extend.h:
-	* include/filesys.h:
-	* include/gtapi.h:
-	* include/hberrors.h:
-	* include/hbsetup.h:
-	* include/init.h:
-	* include/itemapi.h:
-	* include/pcode.h:
-	* include/set.h:
-	* include/types.h:
-	* include/version.h:
-	* source/compiler/fixflex.c:
-	* source/compiler/genobj32.c:
-	* source/compiler/harbour.l:
-	* source/compiler/harbour.y:
-	* source/hbpp/harb.h:
-	* source/hbpp/hbpp.c:
-	* source/rtl/asort.prg:
-	* source/rtl/descend.c:
-	* source/rtl/error.prg:
-	* source/rtl/errorsys.prg:
-	* source/rtl/hardcr.c:
-	* source/rtl/itemapi.c:
-	* source/rtl/mtran.c:
-	* source/rtl/objfunc.prg:
-	* source/rtl/tclass.prg:
-	* source/tools/asciisum.c:
-	* source/tools/ascpos.c:
-	* source/tools/atdiff.c:
-	* source/tools/chareven.c:
-	* source/tools/charmix.c:
-	* source/tools/charodd.c:
-	* source/tools/chrcount.c:
-	* source/tools/chrfirst.c:
-	* source/tools/chrtotal.c:
-	* source/tools/debug.c:
-	* source/tools/hb_f.c:
-	* source/tools/strasint.c:
-	* source/tools/strcount.c:
-	* source/tools/strcspn.c:
-	* source/tools/strdiff.c:
-	* source/tools/strexpan.c:
-	* source/tools/stringp.prg:
-	* source/tools/strleft.c:
-	* source/tools/strpbrk.c:
-	* source/tools/strright.c:
-	* source/vm/hvm.c:
-	* source/vm/initsymb.c:
-	Made sure all *.{h,c,ch,api,prg,l,y} files under include/ and
-	source/ have an RCS Id keyword.
-	Got rid of the RCS Log keyword on several files; this keyword
-	should never be placed in a source file.
-	Made sure all *.h files have a proper include guard. If the file
-	name is foo.h, the include guard is called FOO_H_, without a
-	leading underscore, to comply with ANSI rules.
+        * include/compiler.h:
+        * include/ctoharb.h:
+        * include/dates.h:
+        * include/error.api:
+        * include/errorapi.h:
+        * include/extend.h:
+        * include/filesys.h:
+        * include/gtapi.h:
+        * include/hberrors.h:
+        * include/hbsetup.h:
+        * include/init.h:
+        * include/itemapi.h:
+        * include/pcode.h:
+        * include/set.h:
+        * include/types.h:
+        * include/version.h:
+        * source/compiler/fixflex.c:
+        * source/compiler/genobj32.c:
+        * source/compiler/harbour.l:
+        * source/compiler/harbour.y:
+        * source/hbpp/harb.h:
+        * source/hbpp/hbpp.c:
+        * source/rtl/asort.prg:
+        * source/rtl/descend.c:
+        * source/rtl/error.prg:
+        * source/rtl/errorsys.prg:
+        * source/rtl/hardcr.c:
+        * source/rtl/itemapi.c:
+        * source/rtl/mtran.c:
+        * source/rtl/objfunc.prg:
+        * source/rtl/tclass.prg:
+        * source/tools/asciisum.c:
+        * source/tools/ascpos.c:
+        * source/tools/atdiff.c:
+        * source/tools/chareven.c:
+        * source/tools/charmix.c:
+        * source/tools/charodd.c:
+        * source/tools/chrcount.c:
+        * source/tools/chrfirst.c:
+        * source/tools/chrtotal.c:
+        * source/tools/debug.c:
+        * source/tools/hb_f.c:
+        * source/tools/strasint.c:
+        * source/tools/strcount.c:
+        * source/tools/strcspn.c:
+        * source/tools/strdiff.c:
+        * source/tools/strexpan.c:
+        * source/tools/stringp.prg:
+        * source/tools/strleft.c:
+        * source/tools/strpbrk.c:
+        * source/tools/strright.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        Made sure all *.{h,c,ch,api,prg,l,y} files under include/ and
+        source/ have an RCS Id keyword.
+        Got rid of the RCS Log keyword on several files; this keyword
+        should never be placed in a source file.
+        Made sure all *.h files have a proper include guard. If the file
+        name is foo.h, the include guard is called FOO_H_, without a
+        leading underscore, to comply with ANSI rules.
 
 19990617-12:40 CET Eddie Runia
   * source/rtl/dir.c
