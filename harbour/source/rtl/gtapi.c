@@ -6,7 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
- * 1.31   19990719   ptucker   Implimented color selection in gtWrite and
+ * 1.32   19990721   ptucker   Improved Clipper color compatibility
+ * 1.31   19990720   ptucker   Implimented color selection in gtWrite and
  *                             gtScroll
  * 1.30   19990719   ptucker   Removed temp init hack
  *                             call gtDone from hb_gtExit
@@ -45,8 +46,14 @@ static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
 
-int *_Color;
-int _ColorCount;
+int *_Color;           /* masks: 0x0007     Foreground
+                                 0x0070     Background
+                                 0x0008     Bright
+                                 0x0080     Blink
+                                 0x0800     Underline foreground
+                                 0x8000     Underline background
+                        */
+int _ColorCount; 
 
 /* gt API functions */
 
@@ -193,8 +200,15 @@ int hb_gtDispEnd(void)
 int hb_gtSetColorStr(char * fpColorString)
 {
     char c, buff[6];
-    int nPos = 0, nSkip = 0, nCount=-1, i=0, y;
-    int nBack = 0, nColor = 0, nHasX=0;
+    int nPos   = 0,
+        nFore  = 0,
+        nHasI  = 0,
+        nHasU  = 0,
+        nHasX  = 0,
+        nColor = 0,
+        nSlash = 0,
+        nCount =-1,
+        i=0, y;
 
     do
     {
@@ -220,71 +234,100 @@ int hb_gtSetColorStr(char * fpColorString)
                 if( buff[ i ] )
                     nColor += ( ( buff[i] - '0' ) * y );
             }
-        
+            nColor &= 0xf;
             i=0;
         }
 
-        if( nSkip && !( c=='\0' || c==','  ))
-            continue;
-
-        nSkip = 0;
         ++nCount;
         switch (c) {
-            case '/':
-                nBack  |= nColor;
-            case 'N':
-                nColor  = 0;
-                break;
             case 'B':
-            case 'U':
                 nColor |= 1;
                 break;
             case 'G':
                 nColor |= 2;
                 break;
+            case 'I':
+                nHasI   = 1;
+                break;
+            case 'N':
+                nColor  = 0;
+                break;
             case 'R':
                 nColor |= 4;
                 break;
+            case 'U':
+                nHasU   = 1;
+                break;
             case 'W':
-                nColor |= 7;
-                break;
-            case '+':
-                nBack  |= 8;
-                break;
-            case '*':
-                nBack  |= 128;
-                break;
-            case 'I':			/* =N/W */
-                if( nPos == _ColorCount )
-                {
-                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
-                   ++ _ColorCount;
-                }
-                _Color[nPos++] = ( 112 | ( nBack & 136 ));
-                nBack = nColor = 0;
-                nSkip = 1;
+                nColor  = 7;
                 break;
             case 'X':			/* always sets forground to 'N' */
-                nHasX = 1;
+                nHasX   = 1;
+                break;
+            case '*':
+                nFore  |= 128;
+                break;
+            case '+':
+                nFore  |= 8;
+                break;
+            case '/':
+                if( nHasU )
+                {
+                   nHasU  = 0;
+                   nFore |= 0x800;
+//                   if( !nColor )
+//                       nColor = 1;
+                }
+                else if( nHasX )
+                {
+                   nColor = 0;
+                   nHasX = 0;
+                }
+                else if( nHasI )
+                {
+                   nColor = 7;
+                   nHasI = 0;
+                }
+
+                nFore |= nColor;
+                nColor = 0;
+                nSlash = 1;
                 break;
             case ',':
             case '\0':
                 if(!nCount)
-                   nBack = _Color[nPos];
+                   nFore = _Color[nPos];
                 nCount = -1;
                 if( nPos == _ColorCount )
                 {
-                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
-                   ++ _ColorCount;
+                    _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(nPos +1) );
+                    ++ _ColorCount;
                 }
                 if( nHasX )
+                    nFore &= 0x88F8;
+
+                if( nHasU )
                 {
-                   nBack &= 136;
-                   nHasX = 0;
+                    nFore |= ( nSlash ? 0x8000 : 0x800 );
+                    if( nFore &0xff00 && ! ( nFore | nColor ) & 0x77 )
+                       nColor = 1;
                 }
 
-                _Color[nPos++] = ( nColor << 4 ) | nBack;
-                nColor=nBack=0;
+                if( nHasI )
+                {
+                    if( nSlash )
+                    {
+                       nColor = 7;
+                       nFore &= 0x88F8;
+                    }
+                    else
+                    {
+                       nColor = 112;
+                       nFore &= 0x888F;
+                    }
+                }
+                _Color[nPos++] = ( nColor << (nSlash? 4:0) ) | nFore;
+                nColor=nFore=nSlash=nHasX=nHasU=nHasI=0;
         }
     }
     while( c );
@@ -308,22 +351,27 @@ int hb_gtGetColorStr(char * fpColorString)
         nColor = _Color[i] & 7;
         do
         {
-            if( nColor == 7 )
-                sColors[k++] = 'W';
+            if( _Color[i] & (j ? 0x8000 : 0x800) )
+                sColors[k++] = 'U';
             else
             {
-                if( nColor == 0 )
-                    sColors[k++] = 'N';
+                if( nColor == 7 )
+                    sColors[k++] = 'W';
                 else
                 {
-                    if( nColor & 1 )
-                        sColors[k++] = 'B';
-
-                    if( nColor & 2 )
-                        sColors[k++] = 'G';
-
-                    if( nColor & 4 )
-                        sColors[k++] = 'R';
+                    if( nColor == 0 )
+                        sColors[k++] = 'N';
+                    else
+                    {
+                        if( nColor & 1 )
+                            sColors[k++] = 'B';
+    
+                        if( nColor & 2 )
+                            sColors[k++] = 'G';
+    
+                        if( nColor & 4 )
+                            sColors[k++] = 'R';
+                    }
                 }
             }
             if( j == 0 )
@@ -340,7 +388,7 @@ int hb_gtGetColorStr(char * fpColorString)
         }
         while( ++j < 2 );
         if( i+1 < _ColorCount )
-           sColors[k++] = ',';
+            sColors[k++] = ',';
     }
     sColors[k++] = '\0';
 
@@ -502,7 +550,8 @@ int hb_gtWrite(char * fpStr, ULONG length)
 {
     int iRow, iCol, iMaxCol, iMaxRow, iTemp;
     ULONG size;
-    char attr=_Color[s_uiColorIndex], *fpPointer = fpStr;
+    char attr=_Color[s_uiColorIndex] & 0xff,
+         *fpPointer = fpStr;
 
     /* Determine where the cursor is going to end up */
     iRow = s_uiCurrentRow;
@@ -653,7 +702,7 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
               (iRows >= 0 ? iCount++ : iCount--))
          {
             int iRowPos = iCount + iRows;
-            char attr=_Color[s_uiColorIndex];
+            char attr=_Color[s_uiColorIndex] & 0xff;
             /* Blank the scroll region in the current row */
             gtPuts (uiLeft, iCount, attr, fpBlank, iLength);
 

@@ -1,3 +1,14 @@
+19990721-04:12 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c
+    * corrected color string Underline handling.
+    * Much more color compatibility even for some undocumented
+      behaviour.
+      The only inconsistancy is for ie: ("w+/n*")  Clipper returns
+      "w+*/n" - Harbour returns "w+/n*" This is on purpose, as it
+      agrees with the documentation instead of observed behaviour.
+      AFAIK, the only thing that may need change is for mono monitors.
+      Is anyone using one?
+
 19990721-09:30 CET Eddie Runia <eddie@runia>
   * source/vm/hvm.c
     Copy & Paste error
