@@ -1,3 +1,11 @@
+Wed Aug 04 10:12:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/win32/gcc.cf: 
+	Got rid of -( and -).
+
+	* tests/working/Makefile: 
+	Corrected the order of the libraries to link against.
+
 199908.04-16:32 GMT+3 Alexander Kresin
   * source/hbpp/table.c
     * change in @ y,x GET ...

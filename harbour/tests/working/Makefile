@@ -1,4 +1,4 @@
-
+#
 # $Id$
 #
 
@@ -6,9 +6,9 @@ ROOT = ../../
 
 LIBS=\
 	tools \
+	rdd \
 	vm \
 	rtl \
-	rdd \
 	hbpp \
 
 ifeq ($(PM),)
