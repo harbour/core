@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      * minor cleanup of paths.
+
+   * source/rtl/persist.prg
+      * added 254 as linelength arg for memoline parsing in
          LoadFromText()
 
  2002-01-28 21:30 UTC+0100 Patrick Mast <email@patrickmast.com>
