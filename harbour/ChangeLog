@@ -1,3 +1,60 @@
+19990825-12:50 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rdd/dbcmd.c
+    - Removed symbol init code.
+  * source/tools/io.c
+    ! Modified so that it defines each function everytime, not just when
+      __DOS__ constant is defined. __DOS__ guard was moved around the function
+      bodies.
+    ! Removed FILE() function from here, since it's already declared in 
+      Harbour RTL/filesys.c
+  * include/external.ch
+    source/runner/stdalone/external.prg
+    + Updated list of EXTERNAL, now including RDD and HBPP functions.
+  * source/compiler/harbour.y
+    ! Compile time parameter checking modified for RTRIM(), TRIM() since we
+      have a Harbour extension here, which should be allowed, added missing
+      LEFT() from the compile-time parameter checking list.
+  * source/rtl/filesys.c
+    + Added parameter count checking to FILE()
+  * source/rtl/transfrm.c
+    + Added parameter count checking to TRANSFORM()
+  * source/rtl/dates.c
+    + Added parameter count checking to CTOD(), DTOC(), DAY(), MONTH(), YEAR(),
+      DOW().
+    * Code reformatting, variable scoping, some small optimalizations.
+  * source/rtl/strings.c
+    doc/subcodes.txt
+    * Some pcount() checkings converted to IS*() macros in PAD*(), *TRIM().
+    * RTRIM(), TRIM() will now consider more than two parameters as an error.
+    - Removed parameter count checking from RIGHT().
+    + NOTE: added about RTRIM(), TRIM(), ALLTRIM() Harbour extension.
+    % Simplified checking code for LEFT() and RIGHT()
+    ! LEFT(),STRTRAN() are no longer launching custom Harbour error codes
+      3009/3010, this was not compatible, Clipper launches a standard error
+      code here.
+    * AT() parameter checking standardized.
+  * source/rtl/itemapi.c
+    * hb_itemGetL() and hb_itemGetNL() made consistent with the recent changes
+      in hb_parl() and hb_parnl().
+    * Some code reformatting, some casts added, some branch and retval
+      optimalization. 0 -> NULL, '\0'
+  * source/debug/debugger.prg
+    * SHADOW() -> __SHADOW()
+  * source/rtl/console.c
+    - SHADOW() changed to __SHADOW() since it's not a std Clipper function.
+    ! SETCURSOR() is returning SC_NORMAL if there's no GT API.
+    * Some reformatting, some small optimalizations, added some copyright
+      info.
+    + Parameter count error added to DEVPOS(), SETPOS(), PROW(), PCOL(),
+      COL(), ROW()
+  * source/rtl/copyfile.c ( #include "itemapi.h" removed )
+    source/rtl/hardcr.c
+    source/rtl/mtran.c
+    source/rtl/arrays.c ( 0 -> NULL )
+    source/rtl/descend.c ( hb_pcount() call removed )
+    * Reformatting. Small cleanup. Some small optimalizations.
+
 19990825-09:02 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/tbrwtext.prg
      * Improved display functionality.
@@ -73,6 +130,7 @@
         WITH PARAMETERS PASSED BY REFERENCE, PLEASE ALSO NOTE THAT
         FRead() IS NOT WORKING RIGHT NOW )
 
+  * source/rtl/filesys.c
     doc/subcodes.txt
     * Huge cleanup, reformatted, eliminated usage of internal structures,
       fixed types, standardized variable names, explicit constants changed
@@ -111,7 +169,7 @@
       decimals now are only accessed for DOUBLE types (and of course only set
       for DOUBLE return types). The bug could be observed by running AC_TEST
       pressing PgDn at the bottom of the list then pressing Up button, the
-      index display was shown with decimals in it.
+      index display was shown with decimals in it (DOS/DJGPP).
     % MIN(), MAX() code optimalized.
     * Some direct hb_param() calls changed to macros.
 

@@ -80,38 +80,35 @@ char * hb_strDescend( char * szText, ULONG ulLen )
 
 HARBOUR HB_DESCEND( void )
 {
-   if( hb_pcount() == 1 )
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+
+   if( pItem )
    {
-      PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-      if( pItem )
+      if( IS_STRING( pItem ) )
+         hb_retclen( hb_strDescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
+      else if( IS_DATE( pItem ) )
+         hb_retnl( 5231808 - pItem->item.asDate.value );
+      else if( IS_NUMERIC( pItem ) )
       {
-         if( IS_STRING( pItem ) )
-            hb_retclen( hb_strDescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
-         else if( IS_DATE( pItem ) )
-            hb_retnl( 5231808 - pItem->item.asDate.value );
-         else if( IS_NUMERIC( pItem ) )
-         {
-            PHB_ITEM pReturn;
-            double dValue;
+         PHB_ITEM pReturn;
+         double dValue;
 
-            if( IS_DOUBLE( pItem ) )
-               dValue = pItem->item.asDouble.value;
-            else if( IS_INTEGER( pItem ) )
-               dValue = ( double ) pItem->item.asInteger.value;
-            else if( IS_LONG( pItem ) )
-               dValue = ( double ) pItem->item.asLong.value;
+         if( IS_DOUBLE( pItem ) )
+            dValue = pItem->item.asDouble.value;
+         else if( IS_INTEGER( pItem ) )
+            dValue = ( double ) pItem->item.asInteger.value;
+         else if( IS_LONG( pItem ) )
+            dValue = ( double ) pItem->item.asLong.value;
 
-            pReturn = hb_itemPutND( NULL, -1 * dValue );
-            hb_itemReturn( pReturn );
-            hb_itemRelease( pReturn );
+         pReturn = hb_itemPutND( NULL, -1 * dValue );
+         hb_itemReturn( pReturn );
+         hb_itemRelease( pReturn );
 
 /* It is dangerous to operate on the stack directly
-            stack.Return.wDec = pItem->wDec;
+         stack.Return.wDec = pItem->wDec;
 */
-         }
-         else if( IS_LOGICAL( pItem ) )
-            hb_retl( ! pItem->item.asLogical.value );
       }
+      else if( IS_LOGICAL( pItem ) )
+         hb_retl( ! pItem->item.asLogical.value );
    }
 }

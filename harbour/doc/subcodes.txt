@@ -684,7 +684,6 @@ start from 3000
  *  $STATUS$
  *      Clipper
  *  $SEEALSO$
- *      BASE/3009
  *  $END$
  */
 
@@ -1212,7 +1211,6 @@ start from 3000
  *  $STATUS$
  *      Harbour specific
  *  $SEEALSO$
- *
  *  $END$
  */
 
@@ -1220,17 +1218,12 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3009
  *  $CATEGORY$
- *      arguments
+ *      (not used yet)
  *  $ONELINER$
- *      Incorrect type of argument
  *  $DESCRIPTION$
- *      The second argument is not a numeric value.
  *  $FUNCTION$
- *      LEFT
  *  $STATUS$
- *      Harbour specific
  *  $SEEALSO$
- *
  *  $END$
  */
 
@@ -1238,15 +1231,11 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3010
  *  $CATEGORY$
- *      arguments
+ *      (not used yet)
  *  $ONELINER$
- *      Invalid argument passed to a function
  *  $DESCRIPTION$
- *      The second arguments passed to a function is not a string.
  *  $FUNCTION$
- *      STRTRAN
  *  $STATUS$
- *      Harbour specific
  *  $SEEALSO$
  *
  *  $END$
@@ -1254,7 +1243,7 @@ start from 3000
 
 /*  $DOC$
  *  $SUBCODE$
- *      BASE/3010
+ *      BASE/3011
  *  $CATEGORY$
  *      arguments
  *  $ONELINER$

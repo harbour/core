@@ -23,7 +23,6 @@
 */
 
 #include "extend.h"
-#include "itemapi.h"
 #include "errorapi.h"
 #include "filesys.h"
 
@@ -34,7 +33,7 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* pulWrittenTotal)
+static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
 {
    BOOL bRetVal = FALSE;
    ULONG ulWrittenTotal = 0L;
@@ -42,27 +41,27 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* pulWrittenTotal)
    FHANDLE fhndSource;
    FHANDLE fhndDest;
 
-   while ((fhndSource = hb_fsOpen(( BYTE * ) szSource, FO_READ)) == FS_ERROR)
+   while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == FS_ERROR )
    {
-      if (hb_errRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+      if( hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
       {
-         ulWrittenTotal = (ULONG)-1L;
+         ulWrittenTotal = ( ULONG ) -1L;
          break;
       }
    }
 
-   if (fhndSource != FS_ERROR)
+   if( fhndSource != FS_ERROR )
    {
-      while ((fhndDest = hb_fsCreate(( BYTE * ) szDest, FC_NORMAL)) == FS_ERROR)
+      while( ( fhndDest = hb_fsCreate( ( BYTE * ) szDest, FC_NORMAL ) ) == FS_ERROR )
       {
-         if (hb_errRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+         if( hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
          {
-            ulWrittenTotal = (ULONG)-2L;
+            ulWrittenTotal = ( ULONG ) -2L;
             break;
          }
       }
 
-      if (fhndDest != FS_ERROR)
+      if( fhndDest != FS_ERROR )
       {
 #ifdef OS_UNIX_COMPATIBLE
          struct stat struFileInfo;
@@ -72,41 +71,41 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* pulWrittenTotal)
          USHORT usRead;
          USHORT usWritten;
 
-         buffer = (BYTE * ) hb_xgrab( BUFFER_SIZE );
+         buffer = ( BYTE * ) hb_xgrab( BUFFER_SIZE );
 
          /* QUESTION: Does Clipper throw an error on read or write operation ? */
          /* QUESTION: What is the E_DEFAULT behaviour on that error ? */
 
          bRetVal = TRUE;
 
-         while ((usRead = hb_fsRead(fhndSource, buffer, BUFFER_SIZE)) != 0)
+         while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
-            while ((usWritten = hb_fsWrite(fhndDest, buffer, usRead)) != usRead)
+            while( ( usWritten = hb_fsWrite( fhndDest, buffer, usRead ) ) != usRead )
             {
-               if (hb_errRT_BASE_Ext1(EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
+               if( hb_errRT_BASE_Ext1( EG_WRITE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
                {
                   bRetVal = FALSE;
                   break;
                }
             }
 
-            ulWrittenTotal += (ULONG)usWritten;
+            ulWrittenTotal += ( ULONG ) usWritten;
          }
 
-         hb_xfree(buffer);
+         hb_xfree( buffer );
 
 #ifdef OS_UNIX_COMPATIBLE
          if( iSuccess == 0 )
             fchmod( fhndDest, struFileInfo.st_mode );
 #endif
 
-         hb_fsClose(fhndDest);
+         hb_fsClose( fhndDest );
       }
 
-      hb_fsClose(fhndSource);
+      hb_fsClose( fhndSource );
    }
 
-   if ( pulWrittenTotal != NULL )
+   if( pulWrittenTotal != NULL )
       *pulWrittenTotal = ulWrittenTotal;
 
    return bRetVal;
@@ -116,21 +115,17 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* pulWrittenTotal)
 
 HARBOUR HB___COPYFILE( void )
 {
-   if ( ISCHAR(1) && ISCHAR(2) )
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-      if (!hb_fsCopy( hb_parc(1), hb_parc(2), NULL ))
-      {
+      if( ! hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ), NULL ) )
          hb_retl( FALSE );
-      }
 #else
       ULONG ulWrittenTotal;
-      hb_fsCopy( hb_parc(1), hb_parc(2), &ulWrittenTotal );
+      hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ), &ulWrittenTotal );
       hb_retnl( ulWrittenTotal );
 #endif
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" );
-   }
 }

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will 
+/* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
          the pointer will not be moved, and thus the hb_fsWrite() call will
@@ -698,7 +698,7 @@ HARBOUR HB_FOPEN( void )
 {
    if( ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ), 
+      hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
                            ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ ) );
    }
    else
@@ -713,7 +713,7 @@ HARBOUR HB_FCREATE( void )
    FHANDLE hFileHandle;
 
    if( ISCHAR( 1 ) )
-      hFileHandle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ), 
+      hFileHandle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
                                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL );
    else
       hFileHandle = FS_ERROR;
@@ -756,8 +756,8 @@ HARBOUR HB_FWRITE( void )
    ULONG ulWritten;
 
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
-      ulWritten = hb_fsWrite( hb_parni( 1 ), 
-                              ( BYTE * ) hb_parc( 2 ), 
+      ulWritten = hb_fsWrite( hb_parni( 1 ),
+                              ( BYTE * ) hb_parc( 2 ),
                               ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) );
    else
       ulWritten = 0;
@@ -797,7 +797,7 @@ HARBOUR HB_FRENAME( void )
 {
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
-      hb_fsRename( ( BYTE * ) hb_parc( 1 ), 
+      hb_fsRename( ( BYTE * ) hb_parc( 1 ),
                    ( BYTE * ) hb_parc( 2 ) );
    }
 
@@ -809,8 +809,8 @@ HARBOUR HB_FSEEK( void )
    ULONG ulPos;
 
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      ulPos = hb_fsSeek( hb_parni( 1 ), 
-                         hb_parnl( 2 ), 
+      ulPos = hb_fsSeek( hb_parni( 1 ),
+                         hb_parnl( 2 ),
                          ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET );
    else
       ulPos = 0;
@@ -820,39 +820,44 @@ HARBOUR HB_FSEEK( void )
 
 HARBOUR HB_FILE( void )
 {
-   if( ISCHAR( 1 ) )
+   if( hb_pcount() == 1 )
    {
+      if( ISCHAR( 1 ) )
+      {
 
 /* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
 
-      hb_retl( access( hb_parc( 1 ), F_OK ) == 0 );
+         hb_retl( access( hb_parc( 1 ), F_OK ) == 0 );
 
 #else
 
    #ifdef __MPW__
 
-      int hFileHandle;
+         int hFileHandle;
 
-      if( ( hFileHandle = open( hb_parc( 1 ), O_RDONLY ) ) >= 0 )
-      {
-         close( hFileHandle );
-         hb_retl( TRUE );
-      }
-      else
-         hb_retl( FALSE );
+         if( ( hFileHandle = open( hb_parc( 1 ), O_RDONLY ) ) >= 0 )
+         {
+            close( hFileHandle );
+            hb_retl( TRUE );
+         }
+         else
+            hb_retl( FALSE );
 
    #else
 
-      hb_retl( access( hb_parc( 1 ), 0 ) == 0 );
+         hb_retl( access( hb_parc( 1 ), 0 ) == 0 );
 
    #endif
 
 #endif
 
+      }
+      else
+         hb_retl( FALSE );
    }
    else
-      hb_retl( FALSE );
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "FILE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_FREADSTR( void )
@@ -887,7 +892,7 @@ HARBOUR HB_FREADSTR( void )
 
 HARBOUR HB_CURDIR( void )
 {
-   hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ? 
+   hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
       ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
 }
 

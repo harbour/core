@@ -25,7 +25,6 @@
 #include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
-#include "init.h"
 #include "errorapi.h"
 #include "rddapi.h"
 #include "set.h"
@@ -109,59 +108,6 @@ HARBOUR HB_RECSIZE( void );
 HARBOUR HB_RLOCK( void );
 HARBOUR HB_SELECT( void );
 HARBOUR HB_USED( void );
-
-HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
-{ "AFIELDS",       FS_PUBLIC, HB_AFIELDS,       0 },
-{ "ALIAS",         FS_PUBLIC, HB_ALIAS,         0 },
-{ "BOF",           FS_PUBLIC, HB_BOF,           0 },
-{ "DBCLOSEALL",    FS_PUBLIC, HB_DBCLOSEALL,    0 },
-{ "DBCLOSEAREA",   FS_PUBLIC, HB_DBCLOSEAREA,   0 },
-{ "DBCOMMIT",      FS_PUBLIC, HB_DBCOMMIT,      0 },
-{ "DBCREATE",      FS_PUBLIC, HB_DBCREATE,      0 },
-{ "DBDELETE",      FS_PUBLIC, HB_DBDELETE,      0 },
-{ "DBGOBOTTOM",    FS_PUBLIC, HB_DBGOBOTTOM,    0 },
-{ "DBGOTO",        FS_PUBLIC, HB_DBGOTO,        0 },
-{ "DBGOTOP",       FS_PUBLIC, HB_DBGOTOP,       0 },
-{ "DBRECALL",      FS_PUBLIC, HB_DBRECALL,      0 },
-{ "DBRLOCK",       FS_PUBLIC, HB_DBRLOCK,       0 },
-{ "DBRLOCKLIST",   FS_PUBLIC, HB_DBRLOCKLIST,   0 },
-{ "DBRUNLOCK",     FS_PUBLIC, HB_DBRUNLOCK,     0 },
-{ "DBSELECTAREA",  FS_PUBLIC, HB_DBSELECTAREA,  0 },
-{ "DBSETDRIVER",   FS_PUBLIC, HB_DBSETDRIVER,   0 },
-{ "DBSKIP",        FS_PUBLIC, HB_DBSKIP,        0 },
-{ "DBSTRUCT",      FS_PUBLIC, HB_DBSTRUCT,      0 },
-{ "DBTABLEEXT",    FS_PUBLIC, HB_DBTABLEEXT,    0 },
-{ "DBUNLOCK",      FS_PUBLIC, HB_DBUNLOCK,      0 },
-{ "DBUNLOCKALL",   FS_PUBLIC, HB_DBUNLOCKALL,   0 },
-{ "DBUSEAREA",     FS_PUBLIC, HB_DBUSEAREA,     0 },
-{ "DELETED",       FS_PUBLIC, HB_DELETED,       0 },
-{ "EOF",           FS_PUBLIC, HB_EOF,           0 },
-{ "FCOUNT",        FS_PUBLIC, HB_FCOUNT,        0 },
-{ "FIELDGET",      FS_PUBLIC, HB_FIELDGET,      0 },
-{ "FIELDNAME",     FS_PUBLIC, HB_FIELDNAME,     0 },
-{ "FIELDPOS",      FS_PUBLIC, HB_FIELDPOS,      0 },
-{ "FIELDPUT",      FS_PUBLIC, HB_FIELDPUT,      0 },
-{ "FLOCK",         FS_PUBLIC, HB_FLOCK,         0 },
-{ "FOUND",         FS_PUBLIC, HB_FOUND,         0 },
-{ "HEADER",        FS_PUBLIC, HB_HEADER,        0 },
-{ "LASTREC",       FS_PUBLIC, HB_LASTREC,       0 },
-{ "LUPDATE",       FS_PUBLIC, HB_LUPDATE,       0 },
-{ "NETERR",        FS_PUBLIC, HB_NETERR,        0 },
-{ "RDDLIST",       FS_PUBLIC, HB_RDDLIST,       0 },
-{ "RDDNAME",       FS_PUBLIC, HB_RDDNAME,       0 },
-{ "RDDREGISTER",   FS_PUBLIC, HB_RDDREGISTER,   0 },
-{ "RDDSETDEFAULT", FS_PUBLIC, HB_RDDSETDEFAULT, 0 },
-{ "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 },
-{ "RECCOUNT",      FS_PUBLIC, HB_RECCOUNT,      0 },
-{ "RECNO",         FS_PUBLIC, HB_RECNO,         0 },
-{ "RECSIZE",       FS_PUBLIC, HB_RECSIZE,       0 },
-{ "RLOCK",         FS_PUBLIC, HB_RLOCK,         0 },
-{ "SELECT",        FS_PUBLIC, HB_SELECT,        0 },
-{ "USED",          FS_PUBLIC, HB_USED,          0 }
-HB_INIT_SYMBOLS_END( dbCmd__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup dbCmd__InitSymbols
-#endif
 
 static char * szDefDriver = 0;      /* Default RDD name */
 static USHORT uiCurrArea = 1;       /* Selectd area */

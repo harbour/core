@@ -67,30 +67,30 @@
 
 #include "extend.h"
 
-#define CHR_HARD1   ((char)13)
-#define CHR_HARD2   ((char)10)
+#define CHR_HARD1   ( ( char ) 13 )
+#define CHR_HARD2   ( ( char ) 10 )
 
-#define CHR_SOFT1   ((char)141)
-#define CHR_SOFT2   ((char)10)
+#define CHR_SOFT1   ( ( char ) 141 )
+#define CHR_SOFT2   ( ( char ) 10 )
 
 /* NOTE: pszResult must have an allocated buffer of at least */
 /*       ulStringLen */
 
-char * hb_strMemotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
+char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, char * pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
 {
    ULONG ulStringPos = 0;
    ULONG ulResultPos = 0;
 
-   while ( ulStringPos < ulStringLen )
+   while( ulStringPos < ulStringLen )
    {
-      if      ( pszString[ ulStringPos     ] == CHR_HARD1 &&
-                pszString[ ulStringPos + 1 ] == CHR_HARD2 )
+      if(      pszString[ ulStringPos ]     == CHR_HARD1 &&
+               pszString[ ulStringPos + 1 ] == CHR_HARD2 )
       {
          pszResult[ ulResultPos++ ] = cHardcr;
          ulStringPos += 2;
       }
-      else if ( pszString[ ulStringPos     ] == CHR_SOFT1 &&
-                pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      else if( pszString[ ulStringPos ]     == CHR_SOFT1 &&
+               pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
       {
          pszResult[ ulResultPos++ ] = cSoftcr;
          ulStringPos += 2;
@@ -112,7 +112,7 @@ HARBOUR HB_MEMOTRAN( void )
 {
    if( ISCHAR( 1 ) )
    {
-      char *pszResult = (char *) hb_xgrab ( hb_parclen( 1 ) + 1 );
+      char * pszResult = ( char * ) hb_xgrab ( hb_parclen( 1 ) + 1 );
       char cHardcr = ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
       char cSoftcr = ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
       ULONG ulResultLen;

@@ -5843,6 +5843,7 @@ static FUNCINFO _StdFun[] = {
 { "INKEY"     , 0, 2 },
 { "INT"       , 1, 1 },
 { "LASTREC"   , 0, 0 },
+{ "LEFT"      , 2, 2 },
 { "LEN"       , 1, 1 },
 { "LOG"       , 1, 1 },
 { "LOWER"     , 1, 1 },
@@ -5859,7 +5860,7 @@ static FUNCINFO _StdFun[] = {
 { "RLOCK"     , 0, 0 },
 { "ROUND"     , 2, 2 },
 { "ROW"       , 0, 0 },
-{ "RTRIM"     , 1, 1 },
+{ "RTRIM"     , 1, 2 }, /* Second parameter is a Harbour extension */
 { "SECONDS"   , 0, 0 },
 { "SELECT"    , 0, 1 },
 { "SETPOS"    , 2, 2 },
@@ -5869,7 +5870,7 @@ static FUNCINFO _StdFun[] = {
 { "SUBSTR"    , 2, 3 },
 { "TIME"      , 0, 0 },
 { "TRANSFORM" , 2, 2 },
-{ "TRIM"      , 1, 1 },
+{ "TRIM"      , 1, 2 }, /* Second parameter is a Harbour extension */
 { "TYPE"      , 1, 1 },
 { "UPPER"     , 1, 1 },
 { "VAL"       , 1, 1 },

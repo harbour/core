@@ -34,22 +34,31 @@
       HB_DEVPOS(), hb_dispout(), HB___EJECT(), hb_max_col(), HB_MAXCOL(),
       hb_max_row(), HB_MAXROW(), hb_out(), hb_outerr(), HB_OUTERR(),
       hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
-      HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and InitializeConsole().
+      HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize().
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB_DISPBOX() GT version.
+      HB_DISPBEGIN()
+      HB_DISPEND()
+      HB_DISPCOUNT()
+      HB_ISCOLOR()
+      HB_NOSNOW()
       HB___COLORINDEX().
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
 #include "extend.h"
 #include "itemapi.h"
+#include "errorapi.h"
 #include "dates.h"
 #include "set.h"
 #include "inkey.h"
+#include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
+                                 we can always get the border styles */
 
 #if defined(__GNUC__)
   #include <unistd.h>
@@ -60,8 +69,6 @@
   #include <io.h>
 #endif
 #include <fcntl.h>
-#include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
-                                 we can always get the border styles */
 
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
 
@@ -72,24 +79,24 @@
 #endif
 
 static USHORT dev_row, dev_col, p_row, p_col;
-static char CrLf [ CRLF_BUFFER_LEN ];
+static char CrLf[ CRLF_BUFFER_LEN ];
 
 void hb_consoleRelease( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtExit ();
+   hb_gtExit();
 #endif
 }
 
 void hb_consoleInitialize( void )
 {
 #if defined(OS_DOS_COMPATIBLE)
-   CrLf [0] = 13;
-   CrLf [1] = 10;
-   CrLf [2] = 0;
+   CrLf[ 0 ] = 13;
+   CrLf[ 1 ] = 10;
+   CrLf[ 2 ] = 0;
 #else
-   CrLf [0] = 10;
-   CrLf [1] = 0;
+   CrLf[ 0 ] = 10;
+   CrLf[ 1 ] = 0;
 #endif
 
    p_row = p_col = 0;
@@ -116,7 +123,7 @@ void hb_consoleInitialize( void )
 WORD hb_max_row( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-   return hb_gtMaxRow ();
+   return hb_gtMaxRow();
 #else
    return 23; /* QUESTION: Shouldn't this be 24 ? info@szelvesz.hu */
 #endif        /* ANSWER  : No. ANSI terminals commonly only have 24 lines */
@@ -125,7 +132,7 @@ WORD hb_max_row( void )
 WORD hb_max_col( void )
 {
 #ifdef HARBOUR_USE_GTAPI
-   return hb_gtMaxCol ();
+   return hb_gtMaxCol();
 #else
    return 79;
 #endif
@@ -144,76 +151,76 @@ static void adjust_pos( char * fpStr, ULONG len, WORD * row, WORD * col, WORD ma
          case 7:
             break;
          case 8:
-            if( *col ) (*col)--;
+            if( *col ) ( *col )--;
             else
             {
                *col = max_col;
-               if( *row ) (*row)--;
+               if( *row ) ( *row )--;
             }
             break;
          case 10:
-            if( *row < max_row ) (*row)++;
+            if( *row < max_row ) ( *row )++;
             break;
          case 13:
             *col = 0;
             break;
          default:
-            if( *col < max_col ) (*col)++;
+            if( *col < max_col ) ( *col )++;
             else
             {
                *col = 0;
-               if( *row < max_row ) (*row)++;
+               if( *row < max_row ) ( *row )++;
             }
       }
    }
 }
 #endif
 
-typedef void hb_out_func_typedef (char *, ULONG);
+typedef void hb_out_func_typedef( char *, ULONG );
 
 /* Format items for output, then call specified output function */
 static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
 {
    char * szText;
    PHB_ITEM pItem = hb_param( wParam, IT_ANY );
-   char szBuffer [ 11 ];
+   char szBuffer[ 11 ];
 
    switch( hb_parinfo( wParam ) )
    {
       case IT_STRING:
-           hb_out_func( hb_parc( wParam ), hb_parclen( wParam ) );
-           break;
+         hb_out_func( hb_parc( wParam ), hb_parclen( wParam ) );
+         break;
 
       case IT_DATE:
-           szText = hb_dtoc( hb_pards( wParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
-           if( szText )
-                 hb_out_func( szText, strlen( szText ) );
-           break;
+         szText = hb_dtoc( hb_pards( wParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
+         if( szText )
+             hb_out_func( szText, strlen( szText ) );
+         break;
 
       case IT_DOUBLE:
       case IT_INTEGER:
       case IT_LONG:
-           szText = hb_itemStr( pItem, 0, 0 ); /* Let hb_itemStr() do the hard work */
-           if( szText )
-           {
-              hb_out_func( szText, strlen( szText ) );
-              hb_xfree( szText );
-           }
-           break;
+         szText = hb_itemStr( pItem, 0, 0 ); /* Let hb_itemStr() do the hard work */
+         if( szText )
+         {
+            hb_out_func( szText, strlen( szText ) );
+            hb_xfree( szText );
+         }
+         break;
 
       case IT_NIL:
-           hb_out_func( "NIL", 3 );
-           break;
+         hb_out_func( "NIL", 3 );
+         break;
 
       case IT_LOGICAL:
-           if( hb_parl( wParam ) )
-              hb_out_func( ".T.", 3 );
-           else
-              hb_out_func( ".F.", 3 );
-           break;
+         if( hb_parl( wParam ) )
+            hb_out_func( ".T.", 3 );
+         else
+            hb_out_func( ".F.", 3 );
+         break;
 
       default:
-           break;
+         break;
    }
 }
 
@@ -233,9 +240,9 @@ static void hb_outstd( char * fpStr, ULONG len )
       printf( "%s", fpStr );
    fflush( stdout );
 #ifdef HARBOUR_USE_GTAPI
- #ifndef __CYGWIN__
+   #ifndef __CYGWIN__
    if( isatty( fileno( stdout ) ) )
- #endif
+   #endif
    {
       dev_row = hb_gt_Row();
       dev_col = hb_gt_Col();
@@ -263,9 +270,9 @@ static void hb_outerr( char * fpStr, ULONG len )
       fprintf( stderr, "%s", fpStr );
    fflush( stderr );
 #ifdef HARBOUR_USE_GTAPI
- #ifndef __CYGWIN__
+   #ifndef __CYGWIN__
    if( isatty( fileno( stderr ) ) )
- #endif
+   #endif
    {
       dev_row = hb_gt_Row();
       dev_col = hb_gt_Col();
@@ -284,17 +291,17 @@ static void hb_altout( char * fpStr, ULONG len )
 
    if( hb_set.HB_SET_CONSOLE )
    {
-   #ifdef HARBOUR_USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       hb_gtWriteCon( fpStr, len );
       hb_gtGetPos( &dev_row, &dev_col );
-   #else
+#else
       ULONG count = len;
       if( strlen( fpStr ) != count )
          while( count-- ) printf( "%c", *fpPtr++ );
       else
          printf( "%s", fpStr );
       adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
-   #endif
+#endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
    {
@@ -395,11 +402,11 @@ static void hb_devout( char * fpStr, ULONG len )
    }
    else
    {
-   #ifdef HARBOUR_USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
       hb_gtWrite( fpStr, len );
       hb_gtGetPos( &dev_row, &dev_col );
-   #else
+#else
       ULONG count = len;
       char * fpPtr = fpStr;
       if( strlen( fpStr ) != count )
@@ -407,33 +414,33 @@ static void hb_devout( char * fpStr, ULONG len )
       else
          printf( "%s", fpStr );
       adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
-   #endif
+#endif
    }
 }
 
 /* Output an item to the screen */
 static void hb_dispout( char * fpStr, ULONG len )
 {
-   #ifdef HARBOUR_USE_GTAPI
-      /* Display to console */
-      hb_gtWrite( fpStr, len );
-      hb_gtGetPos( &dev_row, &dev_col );
-   #else
-      ULONG count = len;
-      char * fpPtr = fpStr;
-      if( strlen( fpStr ) != count )
-         while( count-- ) printf( "%c", *fpPtr++ );
-      else
-         printf( "%s", fpStr );
-      adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
-   #endif
+#ifdef HARBOUR_USE_GTAPI
+   /* Display to console */
+   hb_gtWrite( fpStr, len );
+   hb_gtGetPos( &dev_row, &dev_col );
+#else
+   ULONG count = len;
+   char * fpPtr = fpStr;
+   if( strlen( fpStr ) != count )
+      while( count-- ) printf( "%c", *fpPtr++ );
+   else
+      printf( "%s", fpStr );
+   adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
+#endif
 }
 
 void hb_setpos( WORD row, WORD col )
 {
-   #ifdef HARBOUR_USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       hb_gtSetPos( row, col );
-   #else
+#else
       WORD count;
 
       if( row < dev_row || col < dev_col )
@@ -445,9 +452,10 @@ void hb_setpos( WORD row, WORD col )
       else if( row > dev_row ) dev_col = 0;
       for( count = dev_row; count < row; count++ ) printf("\n");
       for( count = dev_col; count < col; count++ ) printf(" ");
-   #endif
-      dev_row = row;
-      dev_col = col;
+#endif
+
+   dev_row = row;
+   dev_col = col;
 }
 
 void hb_devpos( WORD row, WORD col )
@@ -511,7 +519,9 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
 HARBOUR HB_QOUT( void )
 {
    WORD count;
-   hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
+
+   hb_altout( CrLf, CRLF_BUFFER_LEN - 1 );
+
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
       p_row++;
@@ -519,12 +529,13 @@ HARBOUR HB_QOUT( void )
       count = p_col;
       while( count-- > 0 ) write( hb_set_printhan, " ", 1 );
    }
+
    HB_QQOUT();
 }
 
 HARBOUR HB_SETPOS( void ) /* Sets the screen position */
 {
-   if( hb_pcount() > 1 )
+   if( hb_pcount() == 2 )
    {
       if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
@@ -536,6 +547,7 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
          if( i_row < 0 ) row = 0;
          else if( i_row > hb_max_row() ) row = hb_max_row();
          else row = i_row;
+
          if( i_col < 0 ) col = 0;
          else if( i_col > hb_max_col() ) col = hb_max_col();
          else col = i_col;
@@ -544,11 +556,13 @@ HARBOUR HB_SETPOS( void ) /* Sets the screen position */
          hb_setpos( row, col );
       }
    }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOS" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
 {
-   if( hb_pcount() > 1 )
+   if( hb_pcount() == 2 )
    {
       if( ISNUM( 1 ) && ISNUM( 2 ) )
       {
@@ -560,6 +574,7 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
          if( l_row < 0 ) row = 0;
          else if( l_row > USHRT_MAX ) row = USHRT_MAX;
          else row = l_row;
+
          if( l_col < 0 ) col = 0;
          else if( l_col > USHRT_MAX ) col = USHRT_MAX;
          else col = l_col;
@@ -568,6 +583,8 @@ HARBOUR HB_DEVPOS( void ) /* Sets the screen and/or printer position */
          hb_devpos( row, col );
       }
    }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DEVPOS" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
@@ -576,10 +593,11 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
    {
 #ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
+
       if( ISCHAR( 2 ) )
       {
          hb_gtGetColorStr( fpOldColor );
-         hb_gtSetColorStr( hb_parc(2) );
+         hb_gtSetColorStr( hb_parc( 2 ) );
       }
 #endif
 
@@ -604,7 +622,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
       if( ISCHAR( 2 ) )
       {
          hb_gtGetColorStr( fpOldColor );
-         hb_gtSetColorStr( hb_parc(2) );
+         hb_gtSetColorStr( hb_parc( 2 ) );
       }
 #endif
 
@@ -630,31 +648,36 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 
 HARBOUR HB_PROW( void ) /* Returns the current printer row position */
 {
-   hb_retni( p_row );
+   if( hb_pcount() == 0 )
+      hb_retni( p_row );
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PROW" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_PCOL( void ) /* Returns the current printer row position */
 {
-   hb_retni( p_col );
+   if( hb_pcount() == 0 )
+      hb_retni( p_col );
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOL" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions */
 {
-   if( hb_pcount() > 1 )
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      if( ISNUM( 1 ) && ISNUM( 2 ) )
-      {
-         long l_row = hb_parnl( 1 );
-         long l_col = hb_parnl( 2 );
+      long l_row = hb_parnl( 1 );
+      long l_col = hb_parnl( 2 );
 
-         /* Limit the new position to the range (0,0) to (65535,65535) */
-         if( l_row < 0 ) p_row = 0;
-         else if( l_row > USHRT_MAX ) p_row = USHRT_MAX;
-         else p_row = l_row;
-         if( l_col < 0 ) p_col = 0;
-         else if( l_col > USHRT_MAX ) p_col = USHRT_MAX;
-         else p_col = l_col;
-      }
+      /* Limit the new position to the range (0,0) to (65535,65535) */
+
+      if( l_row < 0 ) p_row = 0;
+      else if( l_row > USHRT_MAX ) p_row = USHRT_MAX;
+      else p_row = l_row;
+
+      if( l_col < 0 ) p_col = 0;
+      else if( l_col > USHRT_MAX ) p_col = USHRT_MAX;
+      else p_col = l_col;
    }
 }
 
@@ -708,28 +731,38 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 
 HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
-   hb_retni( hb_max_row () );
+   hb_retni( hb_max_row() );
 }
 
 HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
-   hb_retni( hb_max_col () );
+   hb_retni( hb_max_col() );
 }
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
+   if( hb_pcount() == 0 )
+   {
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtGetPos( &dev_row, & dev_col);
+      hb_gtGetPos( &dev_row, & dev_col);
 #endif
-   hb_retni( dev_row );
+      hb_retni( dev_row );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROW" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
+   if( hb_pcount() == 0 )
+   {
 #ifdef HARBOUR_USE_GTAPI
-   hb_gtGetPos( &dev_row, & dev_col);
+      hb_gtGetPos( &dev_row, &dev_col);
 #endif
-   hb_retni( dev_col );
+      hb_retni( dev_col );
+   }
+   else
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "COL" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_DISPBOX (void)
@@ -737,30 +770,30 @@ HARBOUR HB_DISPBOX (void)
 #ifdef HARBOUR_USE_GTAPI
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
-      char szOldColor [CLR_STRLEN];
+      char szOldColor[ CLR_STRLEN ];
 
       if( ISCHAR( 6 ) )
       {
-         hb_gtGetColorStr(szOldColor);
-         hb_gtSetColorStr(hb_parc(6));
+         hb_gtGetColorStr( szOldColor );
+         hb_gtSetColorStr( hb_parc( 6 ) );
       }
 
       if( ISCHAR( 5 ) )
       {
-         hb_gtBox(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4), hb_parc(5));
+         hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parc( 5 ));
       }
       else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
       {
-         hb_gtBoxD(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
+         hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
       }
       else
       {
-         hb_gtBoxS(hb_parni(1), hb_parni(2), hb_parni(3), hb_parni(4));
+         hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
       }
 
       if( ISCHAR( 6 ) )
       {
-         hb_gtSetColorStr(szOldColor);
+         hb_gtSetColorStr( szOldColor );
       }
    }
 #else
@@ -774,10 +807,10 @@ HARBOUR HB_DISPBOX (void)
       char Borders[ 9 ];
 
       /* Set limits on the box coordinates to (0,0) and (max_row(),max_col()) */
-      if( i_top < 0 ) top = 0; else top = (WORD)i_top;
-      if( i_left < 0 ) left = 0; else left = (WORD)i_left;
-      if( i_bottom < 0 ) bottom  = 0; else bottom = (WORD)i_bottom;
-      if( i_right < 0 ) right = 0; else right = (WORD)i_right;
+      if( i_top < 0 ) top = 0; else top = ( WORD ) i_top;
+      if( i_left < 0 ) left = 0; else left = ( WORD ) i_left;
+      if( i_bottom < 0 ) bottom  = 0; else bottom = ( WORD ) i_bottom;
+      if( i_right < 0 ) right = 0; else right = ( WORD ) i_right;
       if( top > hb_max_row() ) top = hb_max_row();
       if( left > hb_max_col() ) left = hb_max_col();
       if( bottom > hb_max_row() ) bottom  = hb_max_row();
@@ -849,11 +882,11 @@ HARBOUR HB_DISPBOX (void)
       hb_setpos( top, left );
       if( height > 1 && width > 1 )
          printf( "%c", Borders[ 0 ] );    /* Upper left corner */
-      for( col = (height > 1 ? left + 1 : left ); col < (height > 1 ? right : right + 1); col++ )
+      for( col = ( height > 1 ? left + 1 : left ); col < ( height > 1 ? right : right + 1 ); col++ )
          printf( "%c", Borders[ 1 ] );    /* Top line */
       if( height > 1 && width > 1 )
          printf( "%c", Borders[ 2 ] );    /* Upper right corner */
-      for( row = (height > 1 ? top + 1 : top); row < (width > 1 ? bottom : bottom + 1); row++ )
+      for( row = ( height > 1 ? top + 1 : top ); row < ( width > 1 ? bottom : bottom + 1 ); row++ )
       {
          hb_setpos( row, left );
          if( height > 1 )
@@ -894,18 +927,18 @@ HARBOUR HB_DISPEND (void)
 HARBOUR HB_DISPCOUNT (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   hb_retni(hb_gtDispCount());
+   hb_retni( hb_gtDispCount() );
 #else
-   hb_retni(0);
+   hb_retni( 0 );
 #endif
 }
 
 HARBOUR HB_ISCOLOR (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   hb_retl(hb_gtIsColor());
+   hb_retl( hb_gtIsColor() );
 #else
-   hb_retl(FALSE);
+   hb_retl( FALSE );
 #endif
 }
 
@@ -914,29 +947,32 @@ HARBOUR HB_NOSNOW (void)
 #ifdef HARBOUR_USE_GTAPI
    if( ISLOG( 1 ) )
    {
-      hb_gtSetSnowFlag(hb_parl(1));
+      hb_gtSetSnowFlag( hb_parl( 1 ) );
    }
 #endif
 }
 
-HARBOUR HB_SHADOW (void)
+HARBOUR HB___SHADOW (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-  USHORT uiAttr;
+   USHORT uiAttr;
 
    if( hb_pcount() == 4 )
       uiAttr = 7;
    else if( hb_pcount() == 5 )
-      uiAttr = hb_parni(5);
+      uiAttr = hb_parni( 5 );
 
    if( hb_pcount() > 3 )
-      hb_gt_DrawShadow(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
+      hb_gt_DrawShadow( hb_parni( 1 ) + 1,
+                        hb_parni( 2 ) + 1,
+                        hb_parni( 3 ) + 1,
+                        hb_parni( 4 ) + 1, uiAttr);
 #endif
 }
 
 HARBOUR HB_DBGSHADOW (void)
 {
-   HB_SHADOW();
+   HB___SHADOW();
 }
 
 HARBOUR HB_SAVESCREEN (void)
@@ -955,9 +991,9 @@ HARBOUR HB_SAVESCREEN (void)
       if( ISNUM( uiX ) )
          uiCoords[uiX - 1 ] = hb_parni( uiX );
 
-   hb_gtRectSize( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3], &uiX );
+   hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
    pBuffer = ( char * ) hb_xgrab( uiX );
-   hb_gtSave( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3], pBuffer );
+   hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
    hb_retclen( pBuffer, uiX );
    hb_xfree( ( void * ) pBuffer );
 #endif
@@ -966,21 +1002,21 @@ HARBOUR HB_SAVESCREEN (void)
 HARBOUR HB_RESTSCREEN (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   USHORT uiX;
-   USHORT uiCoords[ 4 ];
-
-   uiCoords[ 0 ] = 0;
-   uiCoords[ 1 ] = 0;
-   uiCoords[ 2 ] = hb_gtMaxRow();
-   uiCoords[ 3 ] = hb_gtMaxCol();
-
    if( hb_pcount() == 5 )
    {
+      USHORT uiX;
+      USHORT uiCoords[ 4 ];
+
+      uiCoords[ 0 ] = 0;
+      uiCoords[ 1 ] = 0;
+      uiCoords[ 2 ] = hb_gtMaxRow();
+      uiCoords[ 3 ] = hb_gtMaxCol();
+
       for( uiX = 1; uiX < 5; uiX++ )
          if( ISNUM( uiX ) )
             uiCoords[uiX - 1 ] = hb_parni( uiX );
 
-      hb_gtRest( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3],
+      hb_gtRest( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ],
                  hb_parc( 5 ) );
    }
 #endif
@@ -996,6 +1032,8 @@ HARBOUR HB_SETCURSOR( void )
       hb_gtSetCursor( hb_parni( 1 ) );
 
    hb_retni( usPreviousCursor );
+#else
+   hb_retni( SC_NORMAL );
 #endif
 }
 
@@ -1015,26 +1053,26 @@ HARBOUR HB_SETBLINK( void )
 }
 
 HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
-                         /* Basically the simplest Clipper function to        */
-                         /* receive data. Parameter : cPrompt. Returns : cRet */
+                            /* Basically the simplest Clipper function to        */
+                            /* receive data. Parameter : cPrompt. Returns : cRet */
 {
-   char *szResult = ( char * ) hb_xgrab(ACCEPT_BUFFER_LEN); /* Return parameter. */
-   char *szPrompt = hb_parc(1);    /* Pass prompt                            */
-   ULONG len      = hb_parclen(1);
+   char * szResult = ( char * ) hb_xgrab( ACCEPT_BUFFER_LEN ); /* Return parameter. */
+   char * szPrompt = hb_parc( 1 );    /* Pass prompt                          */
+   ULONG len       = hb_parclen( 1 );
    int input;
 
    if( hb_pcount() == 1 )          /* cPrompt passed                         */
    {
-      hb_altout( CrLf, CRLF_BUFFER_LEN-1 );
+      hb_altout( CrLf, CRLF_BUFFER_LEN - 1 );
       hb_altout( szPrompt, len );
    }
 #ifdef OS_UNIX_COMPATIBLE
    /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
        Unix compatible operating systems yet. */
-   szResult[0] = '\x0';             /* start with something defined */
+   szResult[ 0 ] = '\0';          /* start with something defined */
    if( fgets( szResult, ACCEPT_BUFFER_LEN, stdin ) )
    {
-      strtok(szResult, "\n");     /* strip off the trailing newline
+      strtok( szResult, "\n" );   /* strip off the trailing newline
                                      if it exists */
    }
 #else

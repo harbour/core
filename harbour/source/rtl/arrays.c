@@ -582,7 +582,7 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 {
-   PHB_ITEM pDstArray = hb_itemNew( 0 );
+   PHB_ITEM pDstArray = hb_itemNew( NULL );
 
    if( IS_ARRAY( pSrcArray ) )
    {
@@ -671,8 +671,7 @@ HARBOUR HB_AADD( void )
          hb_errRT_BASE( EG_ARG, 1123, NULL, "AADD" );
    }
    else
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" );
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_ASIZE( void )

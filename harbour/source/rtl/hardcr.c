@@ -64,19 +64,19 @@
 
 #include "extend.h"
 
-#define CHR_HARD1   ((char)13)
+#define CHR_HARD1   ( ( char ) 13 )
 
-#define CHR_SOFT1   ((char)141)
-#define CHR_SOFT2   ((char)10)
+#define CHR_SOFT1   ( ( char ) 141 )
+#define CHR_SOFT2   ( ( char ) 10 )
 
 char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {
    ULONG ulStringPos;
 
-   for ( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
+   for( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
    {
-      if ( pszString[ ulStringPos     ] == CHR_SOFT1 &&
-           pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      if( pszString[ ulStringPos ]     == CHR_SOFT1 &&
+          pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
       {
          pszString[ ulStringPos ] = CHR_HARD1;
       }
@@ -87,7 +87,7 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 
 HARBOUR HB_HARDCR( void )
 {
-   if ( ISCHAR( 1 ) )
+   if( ISCHAR( 1 ) )
    {
       ULONG ulStringLen = hb_parclen( 1 );
 

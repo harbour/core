@@ -327,7 +327,7 @@ METHOD InputBox( cMsg, uValue ) CLASS TDebugger
    @ nTop, nLeft, nBottom, nRight BOX B_SINGLE COLOR ::oPullDown:cClrPopup
    @ nTop, nLeft + ( ( nRight - nLeft ) ) / 2 - Len( cMsg ) / 2 SAY ;
       cMsg COLOR ::oPullDown:cClrPopup
-   Shadow( nTop, nLeft, nBottom, nRight )
+   __Shadow( nTop, nLeft, nBottom, nRight )
 
    @ nTop + 1, nLeft + 1 GET uTemp
    nOldCursor = SetCursor( 1 )
@@ -653,7 +653,7 @@ METHOD Display() CLASS TDbMenu
    else
       ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 1 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
-      Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
+      __Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
    for n = 1 to Len( ::aItems )

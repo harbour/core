@@ -222,15 +222,10 @@ HARBOUR HB_LTRIM( void )
          hb_retclen( szText, lLen );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1101, NULL, "LTRIM" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LTRIM" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LTRIM" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns szText and the new length in lLen */
@@ -250,67 +245,64 @@ ULONG hb_strRTrimLen( char *szText, ULONG lLen, BOOL bAnySpace )
    return lLen;
 }
 
+/* NOTE: The second parameter is a Harbour extension */
 
 /* trims trailing spaces from a string */
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_RTRIM( void )
 {
-   if( hb_pcount() > 0 )
+   if( hb_pcount() >= 1 && hb_pcount() <= 2 )
    {
       PHB_ITEM pText = hb_param( 1, IT_STRING );
+
       if( pText )
       {
-         BOOL bAnySpace = ( hb_pcount() > 1 ? hb_parl( 2 ) : FALSE );
+         BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
          hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
       }
       else
-      {
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
          /* Clipper doesn't error, but only in RTRIM. TRIM() throws an error, though */
          hb_retc( "" );
 #else
          hb_errRT_BASE( EG_ARG, 1100, NULL, "RTRIM" );
 #endif
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "RTRIM" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "RTRIM" ); /* NOTE: Clipper catches this at compile time! */
 }
+
+/* NOTE: The second parameter is a Harbour extension */
 
 /* synonymn for RTRIM */
 HARBOUR HB_TRIM( void )
 {
-   if( hb_pcount() > 0 )
+   if( hb_pcount() >= 1 && hb_pcount() <= 2 )
    {
       PHB_ITEM pText = hb_param( 1, IT_STRING );
+
       if( pText )
       {
-         BOOL bAnySpace = ( hb_pcount() > 1 ? hb_parl( 2 ) : FALSE );
+         BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
          hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1100, NULL, "TRIM" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRIM" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRIM" ); /* NOTE: Clipper catches this at compile time! */
 }
+
+/* NOTE: The second parameter is a Harbour extension */
 
 /* trims leading and trailing spaces from a string */
 /* TEST: QOUT( "alltrim( '  hello world  ' ) = '" + alltrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_ALLTRIM( void )
 {
-   if( hb_pcount() > 0 )
+   if( ISCHAR( 1 ) )
    {
       char *szText = hb_parc( 1 );
-      BOOL bAnySpace = ( hb_pcount() > 1 ? hb_parl( 2 ) : FALSE );
+      BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
       ULONG lLen;
 
       lLen = hb_strRTrimLen( szText, hb_parclen( 1 ), bAnySpace );
@@ -379,7 +371,7 @@ HARBOUR HB_PADR( void )
    char buffer[ 128 ];
    char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
-   if( szText && hb_pcount() > 1 )
+   if( szText && ISNUM( 2 ) )
    {
       LONG lLen = hb_parnl( 2 );
 
@@ -391,7 +383,7 @@ HARBOUR HB_PADR( void )
 
          memcpy( szResult, szText, ( LONG ) ulSize );
 
-         cPad = ( hb_pcount() > 2 ? *( hb_parc( 3 ) ) : ' ' );
+         cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
 
          for( lPos = ( LONG ) ulSize; lPos < lLen; lPos++ )
             szResult[ lPos ] = cPad;
@@ -425,7 +417,7 @@ HARBOUR HB_PADL( void )
    char buffer[ 128 ];
    char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
-   if( szText && hb_pcount() > 1 )
+   if( szText && ISNUM( 2 ) )
    {
       LONG lLen = hb_parnl( 2 );
 
@@ -437,7 +429,7 @@ HARBOUR HB_PADL( void )
 
          memcpy( szResult + lPos, szText, ( LONG ) ulSize );
 
-         cPad = ( hb_pcount() > 2 ? *( hb_parc( 3 ) ) : ' ');
+         cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ');
 
          for(; lPos > 0; lPos--)
          {
@@ -467,7 +459,7 @@ HARBOUR HB_PADC( void )
    char buffer[ 128 ];
    char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
-   if( szText && hb_pcount() > 1 )
+   if( szText && ISNUM( 2 ) )
    {
       LONG lLen = hb_parnl( 2 );
 
@@ -479,7 +471,7 @@ HARBOUR HB_PADC( void )
 
          memcpy( szResult + lPos, szText, ( LONG ) ulSize + 1 );
 
-         cPad = ( hb_pcount() > 2 ? *hb_parc( 3 ) : ' ' );
+         cPad = ( ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ' );
 
          for( w = 0; w < lPos; w++ )
             szResult[ w ] = cPad;
@@ -537,25 +529,20 @@ ULONG hb_strAt( char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen )
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 HARBOUR HB_AT( void )
 {
-   PHB_ITEM pSub = hb_param( 1, IT_ANY );
-   PHB_ITEM pText = hb_param( 2, IT_ANY );
-
-   if( pText && pSub )
+   if( hb_pcount() == 2 )
    {
+      PHB_ITEM pSub = hb_param( 1, IT_STRING );
+      PHB_ITEM pText = hb_param( 2, IT_STRING );
+
       if( IS_STRING( pText ) && IS_STRING( pSub ) )
       {
          hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length, pText->item.asString.value, pText->item.asString.length ) );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1108, NULL, "AT" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AT" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AT" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* locates a substring in a string starting at the end */
@@ -567,9 +554,8 @@ HARBOUR HB_RAT( void )
    if( ulSubLen )
    {
       long lPos = hb_parclen( 2 ) - ulSubLen;
-      if( lPos < 0 )
-         hb_retni( 0 );
-      else
+
+      if( lPos >= 0 )
       {
          char *szSub = hb_parc( 1 );
          char *szText = hb_parc( 2 );
@@ -581,8 +567,11 @@ HARBOUR HB_RAT( void )
                bFound = ( memcmp( szSub, szText + lPos, ulSubLen ) == 0 );
             lPos--;
          }
+
          hb_retnl( bFound ? lPos + 2 : 0 );
       }
+      else
+         hb_retni( 0 );
    }
    else
       /* This function never seems to raise an error */
@@ -604,15 +593,10 @@ HARBOUR HB_CHR( void )
          hb_retclen( chr, 1 );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1104, NULL, "CHR" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CHR" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CHR" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* converts a character value to an ASCII code */
@@ -630,15 +614,10 @@ HARBOUR HB_ASC( void )
             hb_retni( 0 );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1107, NULL, "ASC" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ASC" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ASC" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns the left-most n characters in string */
@@ -648,73 +627,44 @@ HARBOUR HB_LEFT( void )
    {
       PHB_ITEM pText = hb_param( 1, IT_STRING );
 
-      if( pText )
+      if( pText && ISNUM( 2 ) )
       {
-         if( ISNUM( 2 ) )
-         {
-            LONG lLen = hb_parnl( 2 );
+         LONG lLen = hb_parnl( 2 );
 
-            if( lLen > ( LONG ) pText->item.asString.length )
-               lLen = ( LONG ) pText->item.asString.length;
+         if( lLen > ( LONG ) pText->item.asString.length )
+            lLen = ( LONG ) pText->item.asString.length;
 
-            else if( lLen < 0 )
-               lLen = 0;
+         else if( lLen < 0 )
+            lLen = 0;
 
-            hb_retclen( pText->item.asString.value, lLen );
-         }
-         else
-         {
-            hb_errRT_BASE( EG_ARG, 3009, NULL, "LEFT" );
-         }
+         hb_retclen( pText->item.asString.value, lLen );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1124, NULL, "LEFT" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEFT" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEFT" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns the right-most n characters in string */
 HARBOUR HB_RIGHT( void )
 {
-   if( hb_pcount() == 2 )
+   PHB_ITEM pText = hb_param( 1, IT_STRING );
+
+   if( pText && ISNUM( 2 ) )
    {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
+      LONG lLen = hb_parnl( 2 );
 
-      if( pText )
-      {
-         if( ISNUM( 2 ) )
-         {
-            LONG lLen = hb_parnl( 2 );
+      if( lLen > ( LONG ) pText->item.asString.length )
+         lLen = ( LONG ) pText->item.asString.length;
 
-            if( lLen > ( LONG ) pText->item.asString.length )
-               lLen = ( LONG ) pText->item.asString.length;
+      else if( lLen < 0 )
+         lLen = 0;
 
-            else if( lLen < 0 )
-               lLen = 0;
-
-            hb_retclen( pText->item.asString.value + pText->item.asString.length - lLen, lLen );
-         }
-         else
-         {
-            /* Clipper doesn't error */
-            hb_retc( "" );
-         }
-      }
-      else
-      {
-         /* Clipper doesn't error */
-         hb_retc( "" );
-      }
+      hb_retclen( pText->item.asString.value + pText->item.asString.length - lLen, lLen );
    }
    else
    {
-      /* NOTE: Clipper catches this at compile time! */
       /* Clipper doesn't error */
       hb_retc( "" );
    }
@@ -723,7 +673,7 @@ HARBOUR HB_RIGHT( void )
 /* returns l characters from n characters into string */
 HARBOUR HB_SUBSTR( void )
 {
-   if( hb_pcount() > 1 && hb_pcount() < 4 )
+   if( hb_pcount() >= 2 && hb_pcount() <= 3 )
    {
       PHB_ITEM pText = hb_param( 1, IT_STRING );
 
@@ -765,15 +715,10 @@ HARBOUR HB_SUBSTR( void )
             hb_retc( "" );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1110, NULL, "SUBSTR" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SUBSTR" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SUBSTR" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* converts szText to lower case. Does not create a new string! */
@@ -801,15 +746,10 @@ HARBOUR HB_LOWER( void )
          hb_retclen( hb_strLower( pText->item.asString.value, ulLen ), ulLen );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1103, NULL, "LOWER" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOWER" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOWER" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 void hb_strupr( char * szText )
@@ -845,15 +785,10 @@ HARBOUR HB_UPPER( void )
          hb_retclen( hb_strUpper( pText->item.asString.value, ulLen ), ulLen );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1102, NULL, "UPPER" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "UPPER" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "UPPER" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns n copies of given string */
@@ -893,15 +828,10 @@ HARBOUR HB_REPLICATE( void )
             hb_retc( "" );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1106, NULL, "REPLICATE" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "REPLICATE" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "REPLICATE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns n copies of a single space */
@@ -931,15 +861,10 @@ HARBOUR HB_SPACE( void )
             hb_retc( "" );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1105, NULL, "SPACE" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SPACE" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SPACE" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* replaces characters in a string */
@@ -1112,7 +1037,7 @@ HARBOUR HB_STRTRAN( void )
             hb_retclen( szText, pText->item.asString.length );
       }
       else
-         hb_errRT_BASE( EG_ARG, 3010, NULL, "STRTRAN" );
+         hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" );
    }
    else
       hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" );
@@ -1149,15 +1074,10 @@ HARBOUR HB_VAL( void )
          stack.Return.item.asDouble.decimal = nDec;
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VAL" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VAL" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* converts a numeric to a string with optional width & precision.
@@ -1357,7 +1277,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
 HARBOUR HB_STR( void )
 {
-   if( hb_pcount() > 0 && hb_pcount() < 4 )
+   if( hb_pcount() >= 1 && hb_pcount() <= 3 )
    {
       BOOL bValid = TRUE;
       PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
@@ -1394,15 +1314,10 @@ HARBOUR HB_STR( void )
             hb_retc( "" );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1099, NULL, "STR" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "STR" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "STR" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* ------------------------------------------------- */
@@ -1479,7 +1394,7 @@ HARBOUR HB_STR( void )
 
 HARBOUR HB_STRZERO( void )
 {
-   if( hb_pcount() > 0 && hb_pcount() < 4 )
+   if( hb_pcount() >= 1 && hb_pcount() <= 3 )
    {
       BOOL bValid = TRUE;
       PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
@@ -1549,9 +1464,7 @@ HARBOUR HB_STRZERO( void )
             hb_retc( "" );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 9999, NULL, "STRZERO" );
-      }
    }
 }
 

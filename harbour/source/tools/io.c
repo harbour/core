@@ -2,23 +2,18 @@
  * $Id$
  */
 
-#include "extend.h"
 #include <ctype.h>
+#include "extend.h"
 
 #ifdef __DOS__
 #include <dos.h>
-#include  <dir.h>
-#include  <bios.h>
+#include <dir.h>
+#include <bios.h>
 #endif
-
-#define TRUE 1
-#define FALSE 0
-
-
-#ifdef __DOS__
 
 HARBOUR HB_RENFILE(void)
 {
+#ifdef __DOS__
   int ok;
   PHB_ITEM arg1 = hb_param(1,IT_STRING);
   PHB_ITEM arg2 = hb_param(2,IT_STRING);
@@ -30,6 +25,7 @@ HARBOUR HB_RENFILE(void)
       else
 	_retl(FALSE);
     }
+#endif
 }
 
 /*  $DOC$
@@ -129,88 +125,43 @@ HARBOUR HB_RENFILE(void)
 
 
 HARBOUR HB_CD(void)
-
 {
+#ifdef __DOS__
   PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
       hb_retni(chdir(hb_parc(1)));
     }
+#endif
 }
 
 HARBOUR HB_MD(void)
 {
-
+#ifdef __DOS__
   PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
 
       hb_retni(mkdir(hb_parc(1)));
     }
+#endif
 }
 
 HARBOUR HB_RD(void)
 {
+#ifdef __DOS__
   PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
 
       hb_retni(chdir(hb_parc(1)));
     }
+#endif
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FILE()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *
- *  $SYNTAX$
- *     RD(<NDIR>)
- *  $ARGUMENTS$
- *    <NDIR> FILE TO BE CHECKED
- *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
- *
- *  $DESCRIPTION$
- *    VERIFY IF A FILE EXISTS
- *  $EXAMPLES$
- *  IF FILE("OLA.PRG")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
- *
- *  $SEEALSO$
- *
- *  $INCLUDE$
- * extend.h dos.h dir.h bios.h internal.h
- *  $END$
- */
-
-HARBOUR HB_FILE(void)
-{
-  PHB_ITEM arg1 = hb_param(1,IT_STRING);
-  char *arquivos;
-  int achou;
-  struct ffblk arquivo;
-  if (arg1)             {
-    arquivos=hb_parc(1);
-    achou=findfirst(arquivos,&arquivo,FA_ARCH);
-    if (achou)
-      {
-	_retl(TRUE);
-      }
-    else
-      {
-	_retl(FALSE);
-      }
-  }
-}
 HARBOUR HB_DISKUSED(void)
 {
+#ifdef __DOS__
   long bytsfree,bytsfull;
   struct diskfree_t disk;
   _dos_getdiskfree(0,&disk);
@@ -221,10 +172,12 @@ HARBOUR HB_DISKUSED(void)
 	      (long) disk.sectors_per_cluster *
 	      (long ) disk.bytes_per_sector);
   hb_retnl(bytsfull-bytsfree);
+#endif
 }
 
 HARBOUR HB_DISKFREE(void)
 {
+#ifdef __DOS__
   long bytsfree;
   struct diskfree_t disk;
   _dos_getdiskfree(0,&disk);
@@ -233,10 +186,12 @@ HARBOUR HB_DISKFREE(void)
 	      (long ) disk.bytes_per_sector);
 
   hb_retnl(bytsfree);
+#endif
 }
 
 HARBOUR HB_DISKFULL(void)
 {
+#ifdef __DOS__
   long bytsfull;
   struct diskfree_t disk;
   _dos_getdiskfree(0,&disk);
@@ -245,6 +200,5 @@ HARBOUR HB_DISKFULL(void)
 	      (long) disk.sectors_per_cluster *
 	      (long ) disk.bytes_per_sector);
   hb_retnl(bytsfull);
-}
-
 #endif
+}
