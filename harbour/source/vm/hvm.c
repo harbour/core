@@ -1195,7 +1195,7 @@ static void hb_vmNegate( void )
    else if( HB_IS_DOUBLE( pItem ) )
    {
       pItem->item.asDouble.value = -pItem->item.asDouble.value;
-      /* NOTE: Yes, -999999999.0 is right instead of-1000000000.0 [vszakats] */
+      /* NOTE: Yes, -999999999.0 is right instead of -1000000000.0 [vszakats] */
       pItem->item.asDouble.length = ( pItem->item.asDouble.value >= 10000000000.0 || pItem->item.asDouble.value <= -999999999.0 ) ? 20 : 10;
    }
    else
