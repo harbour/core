@@ -71,6 +71,8 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
    #define _POSIX_PATH_MAX    255
 #endif
 
+#define SYMBOL_UNUSED(symbol)   (void)symbol
+
 #define IS_BYREF( p )      ( ( p )->wType & IT_BYREF )
 #define IS_OF_TYPE( p, t ) ( ( ( p )->wType & ~IT_BYREF ) == t )
 #define IS_ARRAY( p )      IS_OF_TYPE( p, IT_ARRAY )
