@@ -1,3 +1,7 @@
+2001-11-16 05:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/samples/gauge.c
+     ! correct typo on formating %, \% => %%
+
 2001-11-15 14:06 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed bug: value of empty memo was NIL instead of ""
