@@ -141,7 +141,7 @@ HB_FUNC(FT_GETE)
         buffsize++;
 
         //  now allocate that much memory and make sure 1st byte is a nul
-        buffer = hb_xalloc(buffsize);
+        buffer = ( char * ) hb_xalloc(buffsize);
         strcpy(buffer,"\0");
         }
 

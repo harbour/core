@@ -77,7 +77,7 @@ HB_FUNC( FT_DESCEND)
       {
          uiLen = hb_itemSize( iP );
 
-         pDescend = hb_xgrab( uiLen );
+         pDescend = ( char *) hb_xgrab( uiLen );
 
          hb_itemCopyC( iP, pDescend, uiLen );
 
