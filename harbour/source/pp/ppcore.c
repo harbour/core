@@ -3240,6 +3240,12 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
               lPos++;
               continue;
            }
+           else if( *(szText+lPos) == ',' )
+           {
+              cLastChar = ',';
+              lPos++;
+              continue;
+           }
         }
         else
         {
