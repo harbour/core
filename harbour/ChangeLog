@@ -1,3 +1,7 @@
+19991115-12:02 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+   + define COMMON_DIR
+
 19991115-17:21 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/transfrm.c
     ! Direct item access changed to Item API calls.

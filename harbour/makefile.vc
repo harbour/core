@@ -29,6 +29,7 @@ BIN_DIR=bin
 LIB_DIR=lib\vc
 OBJ_DIR=obj
 RUNNER_DIR=source\runner
+COMMON_DIR=source\common
 #MACOMP_DIR=source\macro
 
 #
