@@ -60,6 +60,11 @@
 
 #include "hbapi.h"
 
+/* NOTE: Warning, this function _may_ return NULL as a result if 
+         the environment variable reading fails form some reason.
+         If the return value is not NULL, the caller must free 
+         the pointer. [vszakats] */
+
 char * hb_getenv( const char * szName )
 {
    char * pszBuffer = NULL;
@@ -101,14 +106,6 @@ char * hb_getenv( const char * szName )
    }
 
 #endif
-
-   /* Return an empty string if some error occured. */
-
-   if( pszBuffer == NULL )
-   {
-      pszBuffer = ( char * ) hb_xgrab( 1 );
-      pszBuffer[ 0 ] = '\0';
-   }
 
    return pszBuffer;
 }

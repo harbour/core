@@ -126,7 +126,13 @@ static void hb_gt_terminal_Init( void )
    nodelay( stdscr, TRUE );
    keypad( stdscr, FALSE );
 
-   s_under_xterm = ( strncmp( hb_getenv( "TERM" ), "xterm", 5 ) == 0 );
+   {
+      char * tmp = hb_getenv( "TERM" );
+      s_under_xterm = tmp && tmp[ 0 ] != '\0' && ( strncmp( tmp, "xterm", 5 ) == 0 );
+      if( tmp )
+         hb_xfree( ( void * ) tmp );
+   }
+
    if( s_under_xterm )
    {
      /* Alternate characters set will be enabled only by request because

@@ -72,11 +72,14 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    pszEnv = hb_getenv( "PATH" );
 #elif defined( OS_UNIX_COMPATIBLE )
    pszEnv = szDefaultUnixPath;
+#else
+   pszEnv = NULL;
 #endif
 
    /* Grab space */
    pszCfg = ( char * ) hb_xgrab( /*strlen( pszEnv )*/ _POSIX_PATH_MAX );
-   if ( *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg ) )
+
+   if( pszEnv && pszEnv[ 0 ] != '\0' && *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg ) )
    {
 
       yyc = fopen( pszCfg, "rt" );
@@ -151,13 +154,16 @@ void hb_compGenCObj( PHB_FNAME pFileName )
             }
          }
       }
-      #ifndef OS_UNIX_COMPATIBLE
-         hb_xfree( ( void * ) pszEnv );
-      #endif
 
       fclose( yyc );
    }
 
+   #if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
+   {
+      if( pszEnv )
+         hb_xfree( ( void * ) pszEnv );
+   }
+   #endif
 
 
    if( ! hb_comp_bQuiet )

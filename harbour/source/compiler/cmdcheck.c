@@ -386,13 +386,15 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
       */
       char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( szStrEnv[ 0 ] == '\0' )
+      if( !szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
-         hb_xfree( ( void * ) szStrEnv );
+         if( szStrEnv )
+            hb_xfree( ( void * ) szStrEnv );
+
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
 
-      if( szStrEnv[ 0 ] != '\0' )
+      if( szStrEnv && szStrEnv[ 0 ] != '\0' )
       {
          char * szSwitch = strtok( szStrEnv, " " );
 
@@ -405,7 +407,9 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
             szSwitch = strtok( NULL, " " );
          }
       }
-      hb_xfree( ( void * ) szStrEnv );
+
+      if( szStrEnv )
+         hb_xfree( ( void * ) szStrEnv );
    }
 }
 
@@ -780,11 +784,11 @@ void hb_compChkPaths( void )
 {
    char * szInclude = hb_getenv( "INCLUDE" );
 
-   if( szInclude )
-   {
+   if( szInclude && szInclude[ 0 ] != '\0' )
       hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
-   }
-   hb_xfree( ( void * ) szInclude );
+
+   if( szInclude )
+      hb_xfree( ( void * ) szInclude );
 }
 
 static void hb_compChkDefineSwitch( char * pszSwitch )
@@ -829,13 +833,15 @@ void hb_compChkDefines( int iArg, char * Args[] )
                if HARBOURCMD exists */
       char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( szStrEnv[ 0 ] == '\0' )
+      if( !szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
-         hb_xfree( ( void * ) szStrEnv );
+         if( szStrEnv )
+            hb_xfree( ( void * ) szStrEnv );
+
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
 
-      if( szStrEnv[ 0 ] != '\0' )
+      if( szStrEnv && szStrEnv[ 0 ] != '\0' )
       {
          char * szSwitch = strtok( szStrEnv, " " );
 
@@ -846,7 +852,9 @@ void hb_compChkDefines( int iArg, char * Args[] )
             szSwitch = strtok( NULL, " " );
          }
       }
-      hb_xfree( ( void * ) szStrEnv );
+
+      if( szStrEnv )
+         hb_xfree( ( void * ) szStrEnv );
    }
 
    /* Check the command line options */

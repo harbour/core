@@ -123,14 +123,17 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
    pszEnvVar = hb_getenv( "HARBOUR" );
 
-   if( pszEnvVar[ 0 ] == '\0' )
+   if( !pszEnvVar || pszEnvVar[ 0 ] == '\0' )
    {
-      hb_xfree( ( void * ) pszEnvVar );
+      if( pszEnvVar )
+         hb_xfree( ( void * ) pszEnvVar );
+
       pszEnvVar = hb_getenv( "CLIPPER" );
    }
+
    tmp = pszEnvVar;
 
-   if( pszEnvVar != NULL && pszEnvVar[ 0 ] != '\0' )
+   if( pszEnvVar && pszEnvVar[ 0 ] != '\0' )
    {
       char * pszNext;
 
@@ -193,7 +196,8 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
       }
    }
 
-   hb_xfree( ( void * ) tmp );
+   if( tmp )
+      hb_xfree( ( void * ) tmp );
 
    return NULL;
 }

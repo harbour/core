@@ -106,15 +106,16 @@ int hb_tr_level( void )
 
    if( s_level == -1 )
    {
-      char * out;
       char * env;
 
       s_level = HB_TR_DEFAULT;
 
-      out = hb_getenv( "HB_TR_OUTPUT" );
-      if( out != NULL && out[ 0 ] != '\0' )
+      /* ; */
+
+      env = hb_getenv( "HB_TR_OUTPUT" );
+      if( env != NULL && env[ 0 ] != '\0' )
       {
-         s_fp = fopen( out, "w" );
+         s_fp = fopen( env, "w" );
 
          if( s_fp == NULL )
             s_fp = stderr;
@@ -122,7 +123,10 @@ int hb_tr_level( void )
       else
          s_fp = stderr;
 
-      hb_xfree( ( void * ) out );
+      if( env )
+         hb_xfree( ( void * ) env );
+
+      /* ; */
 
       env = hb_getenv( "HB_TR_LEVEL" );
       if( env != NULL && env[ 0 ] != '\0' )
@@ -140,7 +144,11 @@ int hb_tr_level( void )
             }
          }
       }
-      hb_xfree( ( void * ) env );
+
+      if( env )
+         hb_xfree( ( void * ) env );
+
+      /* ; */
 
       env = hb_getenv( "HB_TR_FLUSH" );
       if( env != NULL && env[ 0 ] != '\0' )
@@ -148,8 +156,8 @@ int hb_tr_level( void )
       else
          s_flush = 0;
 
-      hb_xfree( ( void * ) env );
-
+      if( env )
+         hb_xfree( ( void * ) env );
    }
 
    return s_level;
@@ -213,11 +221,11 @@ void hb_tr_trace( char * fmt, ... )
          hb_tr_file_ = "";
          hb_tr_line_ = -1;
       }
+
       if ( s_flush )
       {
          fflush( s_fp ) ;
          close( dup( fileno( s_fp ))) ;
       }
-
    }
 }

@@ -8,6 +8,30 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-16 12:07 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbgete.c
+   * source/common/hbtrace.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/gencobj.c
+   * source/rtl/gete.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtcrs/kbdcrs.c
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtsln/kbsln.c
+   * source/vm/cmdarg.c
+   * source/vm/hvm.c
+     * hb_getenv() now may return a NULL if the env.var 
+       getting process failed for some reason.
+     ! Reviewed, cleaned up and fixed all the hb_getenv() 
+       calls, considering that it now may return NULL, all 
+       caller now consistently check for env[ 0 ] != '\0'
+     ! Fixed one leak in gtcrs.c
+
+     ; I'd ask everybody to test the new code, with special 
+       attention to the CLIPPER/HARBOUR/CLIPPERCMD/HARBOURCMD, 
+       Linux environment variables, HB_TRACE_* variables.
+
 2001-12-15 23:13 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/debug/dbgwa.prg

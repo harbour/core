@@ -102,8 +102,10 @@ HB_FUNC( GETENV )
 
          szValue = hb_getenv( pszName );
 
-         hb_retc( szValue ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
-         hb_xfree( ( void * ) szValue );
+         hb_retc( szValue && szValue[ 0 ] != '\0' ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
+         
+         if( szValue )
+            hb_xfree( ( void * ) szValue );
       }
       else
          hb_retc( "" );

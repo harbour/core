@@ -201,21 +201,28 @@ static void hb_gt_Init_KeyTranslations()
 int hb_gt_Init_Terminal( int phase )
 {
    struct termios newTTY;
-   unsigned char *p;
+   unsigned char * p;
    int ret = 0;
-   char * tmp;
 
    /* first time init phase - we don't want this after
       return from system command ( see run.c )      */
    if( phase == 0 )
    {
       /* an uncertain way to check if we run under linux console */
-      s_linuxConsole = ( ! strncmp( ( tmp = hb_getenv( "TERM" ) ), "linux", 5 ) );
-      hb_xfree( ( void * ) tmp );
+      {
+         char * tmp = hb_getenv( "TERM" );
+         s_linuxConsole = tmp && tmp[ 0 ] != '\0' && ( strncmp( tmp, "linux", 5 ) == 0 );
+         if( tmp )
+            hb_xfree( ( void * ) tmp );
+      }
 
       /* an uncertain way to check if we run under linux xterm */
-      s_underXTerm = ( strstr( ( tmp = hb_getenv( "TERM" ) ), "xterm" ) != NULL );
-      hb_xfree( ( void * ) tmp );
+      {
+         char * tmp = hb_getenv( "TERM" );
+         s_underXTerm = tmp && tmp[ 0 ] != '\0' && ( strncmp( tmp, "xterm", 5 ) == 0 );
+         if( tmp )
+            hb_xfree( ( void * ) tmp );
+      }
 
 #ifdef __linux__
       /* for Linux console */
@@ -224,13 +231,18 @@ int hb_gt_Init_Terminal( int phase )
 #endif
 
       /* get Dead key definition */
-      if( ( p = hb_getenv( hb_DeadKeyEnvName ) ) && p[ 0 ] != '\0' )
+
+      p = hb_getenv( hb_DeadKeyEnvName );
+
+      if( p && p[ 0 ] != '\0' )
       {
-        int len = strlen( p );
-        if( len > 0 )
-           hb_DeadKey = ( int ) *p;
+         int len = strlen( p );
+         if( len > 0 )
+            hb_DeadKey = ( int ) *p;
       }
-      hb_xfree( ( void * ) p );
+
+      if( p )
+         hb_xfree( ( void * ) p );
 
       /* number of keys dealing with a Dead key */
       s_convKDeadKeys[ 0 ] = 0;
