@@ -136,7 +136,7 @@ DECLARE TClass ;
          s_oClass := TClass():New( <(ClassName)>, __HB_CLS_PAR ([ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
-     #translate CLSMETH <ClassName> \<MethodName>() => @<ClassName>_\<MethodName>() ;
+     #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
      [ ; #translate Super( <SuperClassN> ) : => ::<SuperClassN>: ] ;
      [ ; #translate Super( <SuperClass1> ) : => ::<SuperClass1>: ] ;
      [ ; #translate Super() : => ::<SuperClass1>: ] ;

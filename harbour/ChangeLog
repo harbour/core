@@ -1,3 +1,13 @@
+2000-10-19 19:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Added logic to support multi-word stoppers needed by multi-word restricted list, like
+      [ <lClick: ON CLICK, ON LEFT CLICK> <uLClick> ]
+      /* Only 1 known error remains in processing of fwh/samples/fwbrow.prg */
+
+   * include/hbclass.ch
+     * Temprarily removed \ preceding < of not existing match markers, in nested # directive in result.
+       /* Need to be readded once PP is fixed. */
+
 2000-10-19 16:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/gtwin.gtwin.c
      ! Fixed bug in if test for discarding accent key strokes.
