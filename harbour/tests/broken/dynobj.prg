@@ -78,9 +78,8 @@ function Main()
 
    QOut( "And CalcArea() will now give a result in square inches" )
 
-   ClassAdd( oForm:ClassH, "CalcArea", ;
-      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) },;
-      MET_INLINE )
+   ClassMod( oForm:ClassH, "CalcArea", ;
+      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) } )
 
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
