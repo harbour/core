@@ -43,7 +43,6 @@
 #include "hbapigt.h"
 #include "hbvmpub.h"
 #include "hbvm.h"
-#define WIN32
 #include "zip.h"
 #include "unzip.h"
 #if defined(HB_EXTERN_C)

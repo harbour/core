@@ -40,9 +40,15 @@
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
-
+#ifdef HB_OS_UNIX
+# include <unistd.h>
+# include <utime.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+#else
 # include <direct.h>
 # include <io.h>
+#endif
 
 #define CASESENSITIVITY (0)
 #define WRITEBUFFERSIZE (8192)
@@ -50,7 +56,7 @@ extern int err;
 
 void hb____ChangeFileDate(const char *filename,uLong dosdate,tm_unz tmu_date)
 {
-#ifdef WIN32
+#ifdef defined(HB_OS_WIN_32)
   HANDLE hFile;
   FILETIME ftm,ftLocal,ftCreate,ftLastAcc,ftLastWrite;
   HB_SYMBOL_UNUSED(tmu_date);        
@@ -61,7 +67,24 @@ void hb____ChangeFileDate(const char *filename,uLong dosdate,tm_unz tmu_date)
   LocalFileTimeToFileTime(&ftLocal,&ftm);
   SetFileTime(hFile,&ftm,&ftLastAcc,&ftm);
   CloseHandle(hFile);
+#elif defined(HB_OS_UNIX)
+  struct utimbuf ut;
+  struct tm newdate;
+  newdate.tm_sec = tmu_date.tm_sec;
+  newdate.tm_min=tmu_date.tm_min;
+  newdate.tm_hour=tmu_date.tm_hour;
+  newdate.tm_mday=tmu_date.tm_mday;
+  newdate.tm_mon=tmu_date.tm_mon;
+  if (tmu_date.tm_year > 1900)
+      newdate.tm_year=tmu_date.tm_year - 1900;
+  else
+      newdate.tm_year=tmu_date.tm_year ;
+  newdate.tm_isdst=-1;
+  ut.actime=ut.modtime=mktime(&newdate);
+  utime(filename,&ut);
+
 #endif
+
 }
 
 
