@@ -1,3 +1,7 @@
+199908.01-16:30 GMT+3 Alexander Kresin
+  * hbpplib.b32
+    * it works now
+
 19990801-13:14 GMT+1 Antonio Linares <alinares@fivetech.com>
    * tests/working/debugger.prg
      * pulldown menu already functional.

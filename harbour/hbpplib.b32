@@ -2,16 +2,16 @@
 # Preprocessor Library makefile
 
 .path.c   = source\hbpp
-.path.h   = include;source\hbpp
+.path.h   = include
 .path.lib = libs\b32
 .path.obj = obj
 
-libs\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj preproc.obj
+libs\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj hbpplib.obj
 
-hbppint.obj : hbppint.c harb.h
+hbppint.obj : hbppint.c
 hbpp.obj    : hbpp.c
 table.obj   : table.c
-preproc.obj : preproc.c
+hbpplib.obj : hbpplib.c
 
 .c.obj :
   bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ $<
