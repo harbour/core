@@ -1,3 +1,9 @@
+19990808-09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * improved
+   * tests/working/TestBrw.prg
+     * improved
+
 19990808-23:33 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtwin.c
      + add missing =
@@ -147,6 +153,14 @@
      * corrected parameter order as reported by Davig G. Holme
        NOTE: cursor sizes are not correct in this version.
 
+19990808-01:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tbrowse.prg
+     * tag added
+   * source/rtl/tbcolumn.prg
+     * tag added
+   * tests/working/TestBrw.prg
+     * tag added
+
 19990807-19:34 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
      * improved
@@ -228,12 +242,12 @@
 
 Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-        * config/rules.cf:
-        Added the removal of *.core to the clean target.
+	* config/rules.cf:
+	Added the removal of *.core to the clean target.
 
-        * source/hbpp/hbpp.c:
-        * source/hbpp/stdalone/hbpp.c:
-        Fixed two unused variable warnings.
+	* source/hbpp/hbpp.c:
+	* source/hbpp/stdalone/hbpp.c:
+	Fixed two unused variable warnings.
 
 199908.06-22:12 GMT+3 Alexander Kresin
   * include/hbpp.h
@@ -263,6 +277,96 @@ Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + Added support for HB_P_LOCALNAME opcode
    * source/vm/hvm.c
      + Added support for HB_P_LOCALNAME opcode
+
+19990806-18:43 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/pcode.h
+     + Added new HB_P_MODULENAME opcode
+   * source/compiler/harbour.y
+     + Added support for /b compiler flag
+     + Added support for HB_P_MODULENAME opcode
+   * source/vm/hvm.c
+     + Added support for HB_P_MODULENAME opcode
+
+19990806-10:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * makefile.b32
+     * updated with latest modules
+
+19990806-01:40 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + readvar.prg
+
+19990806-05:31 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/menuto.prg
+     ! MENU TO made highly Clipper compatible (100%), with the addition of
+       the nesting capability.
+       (only BEGIN/END SEQUENCE and Break() support is missing)
+   * make_tpl.bat
+     make_tpl.cmd (added)
+     make_tpl.sh
+     * Updated and extended make starter files.
+   * source/rtl/readvar.prg
+     source/rtl/Makefile
+     funclist.txt
+     + Added: READVAR() (used in MENU TO)
+      (*** Please update other makefiles accordingly ***)
+   * include/Makefile
+     ! hb_vmpub.h added
+   * source/rtl/achoice.prg
+     ! Fixed handling of Ctrl+PgUp/PgDn/Home/End when a user func was passed.
+   * source/rdd/dbcmd.c
+     source/rtl/classes.c
+     source/rtl/do.c
+     source/rtl/memvars.c
+     source/runner/runner.c
+     source/vm/dynsym.c
+     source/vm/hvm.c
+     include/extend.h
+     include/hb_vmpub.h
+     * DYNSYM -> HB_DYNS
+       PDYNSYM -> PHB_DYNS
+   * include/*.* - More small cleanups
+
+19990805-17:10 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/setcolor.c
+     ! #includes "extend.h" instead of "pcode.h"
+   * source/compiler/harbour.y
+     include/hb_vmpub.c
+     % New header file which contains only those definitions which are
+       a must to compile a Harbour generated C file.
+   * source/rtl/natmsg/msghe862.c
+     source/rtl/natmsg/msghewin.c
+     source/rtl/msgxxx.c
+     + Hebrew language files added
+       (Posted by Chen Kedem <niki@synel.co.il>)
+   * source/rtl/Makefile
+     source/rtl/menu.prg (removed)
+     source/rtl/menuto.prg (added)
+     tests/working/testmenu.prg (removed)
+     tests/working/menutest.prg (added)
+     tests/working/Makefile
+     + New MENU TO implementation (Phil Barnett)
+       which is highly Clipper compatible. (nesting, color and setting
+       buffering, setkey, some side effects simulated, output redir behav.)
+       "~" hotkey char support removed, since there's no such in Clipper.
+     + Test includes recursive capability
+     ! Test added to Makefile
+      (Please update other makefiles accordingly)
+   * source/rtl/achoice.prg
+     + Added SETKEY() handling.
+   * source/rtl/alert.prg
+     ! HARBOUR_STRICT_CLIPPER_COMPATIBILITY mode bug fixed.
+   * include/extend.h
+     - Removed obsolete SYMBOL type.
+   * include/pcode.h
+     source/compiler/harbour.y
+     - #include "extend.h" removed from pcode.h
+   * include/hbdefs.h
+     include/extend.h
+     include/filesys.h
+     include/rddapi.h
+     include/rddapi.h
+     source/rdd/dbf1.c
+_LOCALNAME opcode
 
 19990806-18:43 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/pcode.h
