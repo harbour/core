@@ -1092,6 +1092,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
    local cStaticName, nStaticIndex, nStaticsBase
 
    ::aVars := {}
+   // asize( ::aVars,0 )
 
    if ::lShowPublics
       nCount := __mvDbgInfo( HB_MV_PUBLIC )
@@ -1146,8 +1147,7 @@ return nil
 
 METHOD ShowVars() CLASS TDebugger
 
-   local n
-   local nWidth
+   local nWidth, n := 1
    Local oCol
    local lRepaint := .f.
 
@@ -1157,9 +1157,6 @@ METHOD ShowVars() CLASS TDebugger
 
    if ::oWndVars == nil
 
-      n := 1
-
-      ::LoadVars()
       ::oWndVars := TDbWindow():New( 1, 0, Min( 7, Len( ::aVars ) + 2 ),;
          MaxCol() - iif( ::oWndStack != nil, ::oWndStack:nWidth(), 0 ),;
          "Monitor:" + iif( ::lShowLocals, " Local", "" ) + ;
@@ -1176,80 +1173,81 @@ METHOD ShowVars() CLASS TDebugger
       ::oWndVars:bLButtonDown := { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick   := { | nMRow, nMCol | ::EditVar( n ) }
       ::oWndVars:bPainted     := { || if(Len( ::aVars ) > 0, ( ::obrwVars:ForceStable(),RefreshVarsS(::oBrwVars) ),) }
-
-      ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
-                               ::oWndStack:nWidth(), 0 ) - 1 )
-      ::oBrwVars:Cargo :={ 1,{}} // Actual highligthed row
-      ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
-      ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
-      ::oBrwVars:GoBottomBlock := { || ::oBrwVars:cargo[ 1 ] := Len( ::aVars ) }
-      ::oBrwVars:SkipBlock = { | nSkip, nOld | nOld := ::oBrwVars:Cargo[ 1 ],;
-                               ::oBrwVars:Cargo[ 1 ] += nSkip,;
-                               ::oBrwVars:Cargo[ 1 ] := Min( Max( ::oBrwVars:Cargo[ 1 ], 1 ),;
-                                                             Len( ::aVars ) ),;
-                               If( Len( ::aVars ) > 0, ::oBrwVars:Cargo[ 1 ] - nOld, 0 ) }
-
-
-      ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
-      , ::oBrwVars:Down(), nil ), iif( nKey == K_UP, ::oBrwVars:Up(), nil ) ;
-      , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), nil ) ;
-      , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), nil ) ;
-      , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
-      , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
-      , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), ::oBrwVars:ForceStable() ) }
-
-      nWidth := ::oWndVars:nWidth() - 1
-      ::oBrwVars:AddColumn( oCol:=TBColumnNew( "",  { || If( Len( ::aVars ) > 0, AllTrim( Str( ::oBrwVars:Cargo[1] -1 ) ) + ") " + ;
-         PadR( GetVarInfo( ::aVars[ Max( ::oBrwVars:Cargo[1], 1 ) ] ),;
-         ::oWndVars:nWidth() - 5 ), "" ) } ) )
-      AAdd(::oBrwVars:Cargo[2],::avars)
-      oCol:DefColor:={2,1}
-      if Len( ::aVars ) > 0
-         ::oBrwVars:ForceStable()
-      endif
    else
-      ::LoadVars()
 
       ::oWndVars:cCaption := "Monitor:" + ;
       iif( ::lShowLocals, " Local", "" ) + ;
       iif( ::lShowStatics, " Static", "" ) + ;
       iif( ::lShowPrivates, " Private", "" ) + ;
       iif( ::lShowPublics, " Public", "" )
+   endif
 
-      if Len( ::aVars ) == 0
-         if ::oWndVars:nBottom - ::oWndVars:nTop > 1
-            ::oWndVars:nBottom := ::oWndVars:nTop + 1
-            lRepaint := .t.
-         endif
-      endif
-      if Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
-         ::oWndVars:nBottom := ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 )
-         ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
-         ::oBrwVars:Configure()
+   ::LoadVars()
+
+   ::oBrwVars := TBrowseNew( 2, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
+                            ::oWndStack:nWidth(), 0 ) - 1 )
+   ::oBrwVars:Cargo :={ 1,{}} // Actual highligthed row
+   ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
+   ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
+   ::oBrwVars:GoBottomBlock := { || ::oBrwVars:cargo[ 1 ] := Len( ::aVars ) }
+   ::oBrwVars:SkipBlock = { | nSkip, nOld | nOld := ::oBrwVars:Cargo[ 1 ],;
+                            ::oBrwVars:Cargo[ 1 ] += nSkip,;
+                            ::oBrwVars:Cargo[ 1 ] := Min( Max( ::oBrwVars:Cargo[ 1 ], 1 ),;
+                                                          Len( ::aVars ) ),;
+                            If( Len( ::aVars ) > 0, ::oBrwVars:Cargo[ 1 ] - nOld, 0 ) }
+
+
+   ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
+   , ::oBrwVars:Down(), nil ), iif( nKey == K_UP, ::oBrwVars:Up(), nil ) ;
+   , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), nil ) ;
+   , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), nil ) ;
+   , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
+   , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
+   , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), ::oBrwVars:ForceStable() ) }
+
+   nWidth := ::oWndVars:nWidth() - 1
+   ::oBrwVars:AddColumn( oCol:=TBColumnNew( "",  { || If( Len( ::aVars ) > 0, AllTrim( Str( ::oBrwVars:Cargo[1] -1 ) ) + ") " + ;
+      PadR( GetVarInfo( ::aVars[ Max( ::oBrwVars:Cargo[1], 1 ) ] ),;
+      ::oWndVars:nWidth() - 5 ), "" ) } ) )
+
+   oCol:DefColor:={2,1}
+   AAdd(::oBrwVars:Cargo[2],::aVars)
+   // ::oBrwVars:ForceStable()
+
+   if Len( ::aVars ) == 0
+      if ::oWndVars:nBottom - ::oWndVars:nTop > 1
+         ::oWndVars:nBottom := ::oWndVars:nTop + 1
          lRepaint := .t.
       endif
-      if Len( ::aVars ) < ::oWndVars:nBottom - ::oWndVars:nTop - 1
-         ::oWndVars:nBottom := ::oWndVars:nTop + Len( ::aVars ) + 1
-         ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
-         ::oBrwVars:Configure()
-         lRepaint := .t.
-      endif
-      if ! ::oWndVars:lVisible
+   endif
+   if Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
+      ::oWndVars:nBottom := ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 )
+      ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
+      ::oBrwVars:Configure()
+      lRepaint := .t.
+   endif
+   if Len( ::aVars ) < ::oWndVars:nBottom - ::oWndVars:nTop - 1
+      ::oWndVars:nBottom := ::oWndVars:nTop + Len( ::aVars ) + 1
+      ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
+      ::oBrwVars:Configure()
+      lRepaint := .t.
+   endif
+   if ! ::oWndVars:lVisible
+      ::oWndCode:nTop := ::oWndVars:nBottom + 1
+      ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
+      ::oWndVars:Show()
+   else
+      if lRepaint
          ::oWndCode:nTop := ::oWndVars:nBottom + 1
-         ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
-         ::oWndVars:Show()
-      else
-         if lRepaint
-            ::oWndCode:nTop := ::oWndVars:nBottom + 1
-            ::oBrwText:Resize( ::oWndCode:nTop + 1 )
-            ::oWndCode:Refresh()
-            ::oWndVars:Refresh()
-         endif
+         ::oBrwText:Resize( ::oWndCode:nTop + 1 )
+         ::oWndCode:Refresh()
+         ::oWndVars:Refresh()
       endif
-      if Len( ::aVars ) > 0
-         ::oBrwVars:RefreshAll()
-         ::oBrwVars:ForceStable()
-      endif
+   endif
+
+   if Len( ::aVars ) > 0
+      ::oBrwVars:RefreshAll()
+      ::oBrwVars:ForceStable()
    endif
 
 return nil

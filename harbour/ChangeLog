@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-10 12:02 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/debug/debugger.prg
+    * variables window works now.
+
 2002-07-10 10:43 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
     * now it is possible to inspect local variables in debugger command window
