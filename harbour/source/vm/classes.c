@@ -736,25 +736,43 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
 
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetMthd(%p, %p)", pObject, pMessage));
 
-   pMethod = hb_objGetpMethod( pObject, pMessage );
+   if( pObject->type == HB_IT_ARRAY )
+      uiClass = pObject->item.asArray.value->uiClass;
+   else
+      uiClass = 0;
 
-   if ( pMethod )
-    {
-      pFunction = pMethod->pFunction;
-      hb_clsScope( pObject, pMethod );
-      s_pMethod = pMethod ;
-      return pFunction;
-    }
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass  = s_pClasses + ( uiClass - 1 );
+      USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+      USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+      USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+
+      while( uiAt != uiLimit )
+      {
+         if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+         {
+            pMethod = pClass->pMethods + uiAt;
+            pFunction = pMethod->pFunction;
+            hb_clsScope( pObject, pMethod );
+            s_pMethod = pMethod ;
+            return pFunction;
+         }
+         uiAt++;
+         if( uiAt == uiMask )
+            uiAt = 0;
+      }
+   }
 
    /* Default message here */
 
    if( s_msgClassName == NULL )
    {
-      s_msgClassName   = hb_dynsymGet( "CLASSNAME" );  /* Standard messages        */
-      s_msgClassH      = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
-      s_msgClassSel    = hb_dynsymGet( "CLASSSEL" );
-      s_msgEval        = hb_dynsymGet( "EVAL" );
-      s_msgClsParent   = hb_dynsymGet( "ISDERIVEDFROM" );
+      s_msgClassName = hb_dynsymGet( "CLASSNAME" );  /* Standard messages        */
+      s_msgClassH    = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
+      s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
+      s_msgEval      = hb_dynsymGet( "EVAL" );
+      s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );
       /*s_msgClass     = hb_dynsymGet( "CLASS" );*/
    }
 

@@ -1,3 +1,7 @@
+2001-06-12 09:20 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     * OnError error corrected (Tkx Brian)
+
 2001-06-11 12:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/es/license.txt
