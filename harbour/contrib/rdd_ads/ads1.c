@@ -989,6 +989,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       if( ulRetVal != AE_SUCCESS )
          return FAILURE;
    }
+   else
+      phIndex = pArea->hOrdCurrent;
    switch( uiIndex )
    {
       case DBOI_BAGEXT:
@@ -999,18 +1001,25 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
          hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
          break;
+      case DBOI_CONDITION:
+         AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
+         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         break;
+      case DBOI_NAME:
+         AdsGetIndexName( phIndex, aucBuffer, &pusLen);
+         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         break;
+      case DBOI_BAGNAME:
+         AdsGetIndexFilename  ( phIndex,ADS_BASENAME , aucBuffer, &pusLen);
+         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         break;
       case DBOI_NUMBER :
       {
          UNSIGNED16 usOrder = 0;
-         if( IS_STRING( pOrderInfo->itmOrder ) )
+         if( phIndex )
             AdsGetIndexOrderByHandle(phIndex, &usOrder);
-         else if( IS_STRING( pOrderInfo->itmOrder ) )
-            usOrder = hb_itemGetNI( pOrderInfo->itmOrder );
          else
-         {
-            if(pArea->hOrdCurrent)  /* Take the active index when no index specified*/
-                AdsGetIndexOrderByHandle(pArea->hOrdCurrent, &usOrder);
-         }
+            usOrder = 0;
          hb_itemPutNI(pOrderInfo->itmResult, usOrder);
          break;
       }
@@ -1035,12 +1044,16 @@ static ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG lRecNo )
    switch( uiAction )
    {
       case REC_LOCK:
+         if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
+            return SUCCESS;
          ulRetVal = AdsLockRecord( pArea->hTable, lRecNo );
          if ( ulRetVal != AE_SUCCESS )
             return FAILURE;
          break;
 
       case REC_UNLOCK:
+         if( pArea->lpExtendInfo->fExclusive || pArea->lpDataInfo->fFileLocked )
+            return SUCCESS;
          ulRetVal = AdsUnlockRecord( pArea->hTable, lRecNo );
          if ( ulRetVal != AE_SUCCESS )
             return FAILURE;

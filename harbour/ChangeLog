@@ -1,3 +1,11 @@
+20000227-10:58 GMT+3 Alexander Kresin
+   * contrib/rdd_ads/ads1.c
+     * Bug fixed in adsRawLock() ( code proposed by Sid Sailors )
+     * adsOrderInfo() corrected, added support for ORDFOR(), ORDBAGNAME(), ORDNAME()
+   * source/rdd/dbcmd.c
+     * pInfo.ItmOrder initialized with NULL, where it is necessary
+       ( Victor Szel proposal )
+
 20000227-08:59 GMT+2 Chen Kedem <niki@actcom.co.il>
    * source/rtl/binnum.c
      + doc for all function
