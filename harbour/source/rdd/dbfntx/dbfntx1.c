@@ -1169,7 +1169,7 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
       return -1;
 
    iLimit = ( ilen1 > ilen2 ) ? ilen2 : ilen1;
-   iResult = (cdpage->lSort)? hb_cdpcmp( s1, s2, iLimit, cdpage ):memcmp( s1, s2, iLimit );
+   iResult = (cdpage->lSort)? hb_cdpcmp( s1, s2, (ULONG)iLimit, cdpage, NULL ):memcmp( s1, s2, iLimit );
    if( !iResult )
    {
       if( ( iResult = ilen1 - ilen2 ) != 0 )
@@ -1940,7 +1940,7 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
       else if( pSortInfo->pKey1 )
       {
          result = (s_cdpage->lSort)?
-              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength, s_cdpage ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
+              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, (ULONG)KeyLength, s_cdpage, NULL ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result >= 0 )
@@ -1965,7 +1965,7 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
       while( pKey )
       {
          result = (s_cdpage->lSort)?
-              hb_cdpcmp( pKeyNew->key, pKey->key, KeyLength, s_cdpage ):memcmp( pKeyNew->key, pKey->key, KeyLength );
+              hb_cdpcmp( pKeyNew->key, pKey->key, (ULONG)KeyLength, s_cdpage, NULL ):memcmp( pKeyNew->key, pKey->key, KeyLength );
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result < 0 )

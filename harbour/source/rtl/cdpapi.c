@@ -295,12 +295,13 @@ void hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsig
       }
 }
 
-int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
+int hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAGE cdpage, ULONG* piCounter )
 {
-   int i, iRet = 0, n1, n2;
+   ULONG ul;
+   int iRet = 0, n1, n2;
    int lAcc1 = 0, lAcc2 = 0;
    /* printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond ); */
-   for( i=0; i<iLen; i++,szFirst++,szSecond++ )
+   for( ul=0; ul<ulLen; ul++,szFirst++,szSecond++ )
       if( *szFirst != *szSecond )
       {
          if( ( n1 = (int)cdpage->s_chars[ ((int)*szFirst)&255 ] ) == 0 ||
@@ -311,7 +312,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
             /* printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet ); */
             break;
          }
-         if( cdpage->nMulti && i )
+         if( cdpage->nMulti && ul )
          {
             int j, nd1 = 0, nd2 = 0;
             PHB_MULTICHAR pmulti = cdpage->multi;
@@ -369,6 +370,8 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
       }
    /* printf( " : %d",iRet ); */
 
+   if( piCounter )
+      *piCounter = ul;
    if( !iRet && lAcc1 )
       return 1;
    else if( !iRet && lAcc2 )

@@ -1061,7 +1061,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    if( ulMinLen )
    {
       if( s_cdpage->lSort )
-         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,s_cdpage );
+         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,s_cdpage, &ulCounter );
       else
          for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
          {
