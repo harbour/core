@@ -820,7 +820,6 @@ void hb_vmDo( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
-   WORD wLineNo = stack.pBase->item.asSymbol.lineno;
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -852,8 +851,9 @@ void hb_vmDo( WORD wParams )
 
       if( ! pFunc )
       {
-         printf( "error: message %s not implemented for class %s in line %i\n",
-         pSym->szName, hb_objGetClsName( pSelf ), wLineNo );
+         printf( "internal error: message %s not implemented for class %s\n",
+         pSym->szName, hb_objGetClsName( pSelf ) );
+         hb_callStackShow();
          exit( 1 );
       }
       pFunc();
@@ -863,7 +863,8 @@ void hb_vmDo( WORD wParams )
       pFunc = pSym->pFunPtr;
       if( ! pFunc )
       {
-         printf( "error: invalid function pointer (%s) from Do() in line %i\n", pSym->szName, stack.pBase->item.asSymbol.lineno );
+         printf( "internal error: invalid function pointer (%s) from Do()\n", pSym->szName );
+         hb_callStackShow();
          exit( 1 );
       }
       pFunc();
@@ -884,7 +885,8 @@ HARBOUR hb_vmDoBlock( void )
 
    if( ! IS_BLOCK( pBlock ) )
    {
-      printf( "error: codeblock expected from DoBlock() in line %i\n", stack.pBase->item.asSymbol.lineno );
+      printf( "internal error: codeblock expected from DoBlock()\n" );
+      hb_callStackShow();
       exit( 1 );
    }
 
@@ -1974,7 +1976,8 @@ void hb_stackPop( void )
 {
    if( --stack.pPos < stack.pItems )
    {
-      printf( "runtime error: stack underflow\n" );
+      printf( "internal error: stack underflow\n" );
+      hb_callStackShow();
       exit( 1 );
    }
    if( stack.pPos->type != IT_NIL )
@@ -1985,7 +1988,8 @@ void hb_stackDec( void )
 {
    if( --stack.pPos < stack.pItems )
    {
-      printf( "runtime error: stack underflow\n" );
+      printf( "internal error: stack underflow\n" );
+      hb_callStackShow();
       exit( 1 );
    }
 }
@@ -2438,16 +2442,47 @@ HARBOUR HB_ERRORBLOCK(void)
    hb_itemClear( &oldError );
 }
 
+void hb_callStackShow( void )
+{
+   PHB_ITEM pBase = stack.pBase;
+
+   while( pBase != stack.pItems )
+   {
+      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+      if( ( pBase + 1 )->type == IT_ARRAY )
+         printf( "%s:%s (%i)\n", hb_objGetClsName( pBase + 1 ),
+                 pBase->item.asSymbol.value->szName,
+                 pBase->item.asSymbol.lineno  );
+      else
+         printf( "%s (%i)\n", pBase->item.asSymbol.value->szName,
+                 pBase->item.asSymbol.lineno  );
+   }
+}
+
 HARBOUR HB_PROCNAME(void)
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
+   char * szProcName;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
       pBase = stack.pItems + pBase->item.asSymbol.stackbase;
 
    if( ( iLevel == -1 ) )
-      hb_retc( pBase->item.asSymbol.value->szName );
+   {
+      if( ( pBase + 1 )->type == IT_ARRAY )  /* it is a method name */
+      {
+         szProcName = ( char * ) hb_xgrab( strlen( hb_objGetClsName( pBase + 1 ) ) + 1 +
+                                strlen( pBase->item.asSymbol.value->szName ) + 1 );
+         strcpy( szProcName, hb_objGetClsName( pBase + 1 ) );
+         strcat( szProcName, ":" );
+         strcat( szProcName, pBase->item.asSymbol.value->szName );
+         hb_retc( szProcName );
+         hb_xfree( ( void * ) szProcName );
+      }
+      else
+         hb_retc( pBase->item.asSymbol.value->szName );
+   }
    else
       hb_retc( "" );
 }
