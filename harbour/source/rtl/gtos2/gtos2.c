@@ -105,6 +105,9 @@
    #include <stdlib.h>
 #else
    #include <bsedos.h>
+   #ifndef KBDTRF_EXTENDED_CODE
+      #define KBDTRF_EXTENDED_CODE 0x02
+   #endif
 #endif
 #include <conio.h>
 
@@ -149,14 +152,14 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    }
 
    /* Alloc tileable memory for calling a 16 subsystem */
-   rc = DosAllocMem((void *) &s_hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   rc = DosAllocMem((PPVOID) &s_hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
    if (rc != NO_ERROR) {
       hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
    }
    /* it is a long after all, so I set it to zero only one time since it never changes */
    memset(s_hk, 0, sizeof(HKBD));
 
-   rc = DosAllocMem((void *) &s_key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   rc = DosAllocMem((PPVOID) &s_key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
    if (rc != NO_ERROR) {
       hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
    }

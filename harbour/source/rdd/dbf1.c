@@ -2480,7 +2480,7 @@ ERRCODE hb_dbfDrop( PHB_ITEM pItemTable )
   strcpy( (char *) szFileName, (char *) pBuffer );
   if ( !strchr( szFileName, '.' ))
     strcat( szFileName, DBF_TABLEEXT );
-  return hb_fsDelete( (unsigned char *) szFileName );
+  return hb_fsDelete( (BYTE *) szFileName );
 }
 
 /* returns 1 if exists, 0 else */
@@ -2493,7 +2493,7 @@ BOOL hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
   strcpy( (char *) szFileName, (char *) pBuffer );
   if ( pItemTable && !strchr( szFileName, '.' ))
     strcat( szFileName, DBF_TABLEEXT );
-  return hb_fsFile( (unsigned char *) szFileName );
+  return hb_fsFile( (BYTE *) szFileName );
 }
 
 

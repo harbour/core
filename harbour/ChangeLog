@@ -1,3 +1,16 @@
+2001-04-18 17:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rdd/dbf1.c
+    % Changed two (unsigned chr *) type overrides to (BYTE *),
+      because the function called requires a BYTE * parameter
+      when used with C++.
+
+  * source/rtl/gtos2/gtos2.c
+    % Changed two (void *) type overrides to (PPVOID), because
+      the function called requires a PPVOID parameter when used
+      with C++.
+    % Added definition for KBDTRF_EXTENDED_CODE when using VAC++.
+
 2001-04-18 22:30 CET Martin Vogel <vogel@inttec.de>
    + contrib/libct/ctflist.txt
      ! function status list, only functions in the CVS are marked 'R' or 'S' !
