@@ -123,9 +123,17 @@ METHOD WriteLink( cLink, cName ) CLASS THTML
 
    nPos := AT( "()", cLink )
    IF nPos > 0
+      if AT(".htm",cLink)=0
       cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
    ELSE
+         if AT(".htm",cLink)=0
       cTemp := ALLTRIM( cLink ) + '.htm'
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
    ENDIF
    IF cName != Nil
       cLink := cName

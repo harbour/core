@@ -142,6 +142,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL j
    LOCAL nItem
    LOCAL nHpj
+   LOCAL cItem:=''
    LOCAL nPos
    LOCAL cCompiler     // Compiler type
    // Include norton compatable switch for EH
@@ -152,6 +153,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL aName         // Tokenized name
    LOCAL nLen          // Length of the token array
    LOCAL oHtm
+   LOCAL ppp
    LOCAL cTemp
    PUBLIC theHandle
    PUBLIC aDirList
@@ -432,8 +434,34 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f3' + CRLF )
       FCLOSE( nHpj )
    ELSEIF lWWW
-      oHtm := THTML():New( "htm\harbour.htm" )
+
+//      oHtm := THTML():New( "htm\harbour.htm" )
+      asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
+            do while .t.
+          citem:=adocinfo[1,1]
+          ohtm:=THTML():new('htm\hb'+citem+'.htm')
+          ohtm:WriteText("<ul><center>")
+      for ppp:=1 to len(adocinfo)
+      
+           if citem ==adocinfo[ppp,1] 
+               oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
+           else
+           ohtm:WriteText("</ul></center>")
+           ohtm:close()
+              citem:=adocinfo[ppp,1]
+            ohtm:=THTML():new('htm\hb'+citem+'.htm')
+           ohtm:WriteText("<ul><center>")
+           oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
+           endif
+           next
+        if ppp>len(adocinfo)
+        exit
+        endif
+      enddo
+        ohtm:close()
+  /*
       oHtm:WriteTitle( "Harbour Reference Guide" )
+
       oHtm:WriteText( "<H1>Harbour Reference Guide</H1>" )
       oHtm:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
       oHtm:WriteLink( "overview", UpperLower( "Harbour Read me" ) )
@@ -478,6 +506,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          ENDIF
       NEXT
       oHtm:WriteText( "</ul>" )
+      */
       oHtm:Close()
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE
