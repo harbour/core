@@ -95,6 +95,7 @@ extern "C" {
 #define HB_COMP_ERR_GET_COMPLEX_MACRO           48
 #define HB_COMP_ERR_INVALID_INLINE              49
 #define HB_COMP_ERR_TOOMANY_INLINE              50
+#define HB_COMP_ERR_REQUIRES_C                  51
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

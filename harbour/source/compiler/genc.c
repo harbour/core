@@ -237,6 +237,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          pInline = hb_comp_inlines.pFirst;
          while( pInline )
          {
+            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
             fprintf( yyc, "static HB_FUNC( %s )\n", pInline->szName );
             fprintf( yyc, "%s", pInline->pCode );
             pInline = pInline->pNext;
@@ -265,6 +266,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    {
       hb_comp_inlines.pFirst = pInline->pNext;
       hb_xfree( ( void * ) pInline->pCode );
+      hb_xfree( ( void * ) pInline->szFileName );
       hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pInline = hb_comp_inlines.pFirst;
    }

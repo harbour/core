@@ -1,3 +1,21 @@
+2001-01-10 18:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+     + Added members szFileName and iLine to structure INLINE, set to originating PRG name and line number.
+
+   * source/compiler/genc.c
+     + Added #line directive to INLINE generations, so C compile warnings/errors will report source file and line number in PRG.
+
+   * source/compiler/harbour.l
+   * source/compiler/harbour.slx
+     + Added Error message if inline C is used with non C output.
+     + Added support for {} on same line
+     * Minor optimization
+
+   * include/hberrors.h
+   * source/compiler/hbgenerr.c
+     + Added: "Inline C requires C output generartion, use -gc[n]"
+
 2001-01-10 22:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *utils/hbmake/hbmake.prg
    *Fixed an typo on an fwh lib name

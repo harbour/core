@@ -794,57 +794,53 @@ Separator     {SpaceTab}
             }
             pBuffer = (char*) sBuffer;
 
-            while( *pBuffer && ( *pBuffer == ' ' || *pBuffer == '\t' ) )
-            {
+	    while( *pBuffer /* && ( *pBuffer == ' ' || *pBuffer == '\t' ) */ )
+	    {
+	       if( *pBuffer == '{' )
+	       {
+	          iBraces++;
+	       }
+	       else if( *pBuffer == '}' && iBraces > 1 )
+	       {
+	          iBraces--;
+	       }
+	       else if( *pBuffer == '}' )
+	       {
+	          hb_pp_bInline = FALSE;
+	       }
+
                pBuffer++;
-            }
+	    }
 
-            if( *pBuffer == '\0' )
-            {
-               goto DigestInline;
-            }
-            else if( *pBuffer == '{' )
-            {
-               iBraces++;
-            }
-            else if( *pBuffer == '}' && iBraces > 1 )
-            {
-               iBraces--;
-            }
-            else if( *pBuffer == '}' )
-            {
-               if( pInline->pCode == NULL )
-               {
-                  pInline->pCode = (unsigned char *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-                  strcpy( (char *) pInline->pCode, (char *) sBuffer );
-               }
-               else
-               {
-                  pInline->pCode = (unsigned char *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-                  strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char *) sBuffer );
-               }
+	    if( pInline->pCode == NULL )
+	    {
+	       pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode, (char*) sBuffer );
+	    }
+	    else
+	    {
+	       pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+	       strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+	    }
+	    pInline->lPCodeSize += iSize;
 
-               pInline->lPCodeSize += iSize;
+	    if( hb_pp_bInline )
+	    {
+	       goto DigestInline;
+	    }
+	    else
+	    {
+	       if( hb_comp_iLanguage != LANG_C )
+	       {
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+                  hb_xfree( ( void * ) pInline->pCode );
+                  hb_xfree( ( void * ) pInline->szFileName );
+                  hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
+	       }
 
-               hb_pp_bInline = FALSE;
                yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
                return IDENTIFIER;
-            }
-
-            if( pInline->pCode == NULL )
-            {
-               pInline->pCode = (unsigned char *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-               strcpy( (char *) pInline->pCode, (char *) sBuffer );
-            }
-            else
-            {
-               pInline->pCode = (unsigned char *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-               strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char *) sBuffer );
-            }
-
-            pInline->lPCodeSize += iSize;
-
-            goto DigestInline;
+	    }
          }
 
 %{

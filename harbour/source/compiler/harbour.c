@@ -990,6 +990,8 @@ static PINLINE hb_compInlineNew( char * szName )
    pInline->pCode      = NULL;
    pInline->lPCodeSize = 0;
    pInline->pNext      = NULL;
+   pInline->szFileName = hb_strdup( hb_comp_files.pLast->szFileName );
+   pInline->iLine      = hb_comp_iLine - 1;
 
    return pInline;
 }
