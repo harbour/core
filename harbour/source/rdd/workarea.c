@@ -204,9 +204,9 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
          uiError = SELF_GOTO( pArea, 0 );
       else if( lUpDown < 0 )
       {
+         pArea->fEof = FALSE;
          uiError = SELF_GOTOP( pArea );
          pArea->fBof = TRUE;
-         pArea->fEof = FALSE;
       }
       else
       {
