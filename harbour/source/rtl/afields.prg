@@ -33,6 +33,7 @@
  *
  */
 
+#include "common.ch"
 #include "dbstruct.ch"
 
 FUNCTION AFields( aFieldNames, aTypes, aWidths, aDecimals )
