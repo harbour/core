@@ -1,3 +1,22 @@
+2000-05-28 23:00 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
+  *contrib/hbzlib/zlibapi.c
+   contrib/hbzlib/zipfile1.c
+    *Fixed unrelease memory Block
+  *utils/hbdoc/html.prg
+    *added WriteMetaTag() method
+    *Enhached the New method to also accept a array contain meta Tags
+  *utils/hbdoc/hbdoc.prg
+    *some changes on the harbour.htm generation
+  *utils/hbdoc/genhtm.prg
+   utils/hbdoc/genng.prg
+       *small Changes
+
+2000-05-28 21:55 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
+  *include/hbapifs.h
+    +hb_fsEof() declaration added
+  *source/rtl/filesys.c
+    +hb_fsEof() function added
+
 2000-05-29 02:47 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * doc/whatsnew.txt
