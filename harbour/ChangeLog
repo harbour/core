@@ -1,3 +1,14 @@
+2001-02-20 23:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * make_gnu.bat
+     ! Fixed maker to make -r
+     * Added %HARBOURDIR% and removed trailing slash from HB_BIN_INSTALL, HB_LIB_INSTALL and HB_INC_INSTALL
+
+   * contrib/dot/pp.prg
+     * Minor corrections to stringifys
+
+   * utils/hbtest/hbtest.prg
+     * Commented out RddSetDefault( "DBFCDX" )
+
 2001-02-20 13:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/include/hbver.h
      * Changed release info to 0.36, etc.

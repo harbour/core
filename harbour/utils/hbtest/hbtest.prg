@@ -265,7 +265,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC maArray   := { 9898 }
 
 #ifndef __XPP__
-   rddSetDefault( "DBFCDX" )
+   //rddSetDefault( "DBFCDX" )
 #endif
 
    dbCreate( "!TEMP!.DBF",;

@@ -24,9 +24,9 @@ rem set L_USR=
 
 rem Set to constant value to be consistent with the non-GNU make files.
 
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=bin\
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=lib\
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=include\
+if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HARBOURDIR%/bin
+if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HARBOURDIR%/lib
+if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HARBOURDIR%/include
 
 :START
 
@@ -109,7 +109,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=include\
    rem ---------------------------------------------------------------
    rem Start the GNU make system
 
-   maker %1 %2 %3 %4 %5 %6 %7 %8 %9
+   make -r %1 %2 %3 %4 %5 %6 %7 %8 %9 > make_gnu.log
    goto END
 
 :END

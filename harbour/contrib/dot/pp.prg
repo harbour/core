@@ -1966,7 +1966,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      nClose := AT( ']]', sLine )
      IF nClose == 0
         Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine )
-        RETURN NIL
+        sReturn := "[["
      ELSE
         sReturn := Left( sLine, nClose + 1 )
      ENDIF
@@ -1976,7 +1976,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      nClose := AT( '"', SubStr( sLine, 2 ) )
      IF nClose == 0
         Alert( 'ERROR! [NextToken()] Unterminated ["] at: ' + sLine )
-        RETURN NIL
+        sReturn := '"'
      ELSE
         sReturn := Left( sLine, nClose + 1 )
      ENDIF
@@ -1986,7 +1986,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      nClose := AT( "'", SubStr( sLine, 2 ) )
      IF nClose == 0
         Alert( "ERROR! [NextToken()] Unterminated ['] at: " + sLine )
-        RETURN NIL
+        sReturn := "'"
      ELSE
         sReturn := SubStr( sLine, 2, nClose - 1 )
 
@@ -2008,7 +2008,7 @@ FUNCTION NextToken( sLine, bCheckRules )
         nClose := AT( ']', sLine )
         IF nClose == 0
            Alert( "ERROR! [NextToken()] Unterminated ']' at: " + sLine )
-           RETURN NIL
+           sReturn := '['
         ELSE
            sReturn := SubStr( sLine, 2, nClose - 2 )
 
@@ -2637,7 +2637,7 @@ RETURN IIF( cType == 'A', aExp, sExp )
 FUNCTION PPOut( aResults, aMarkers )
 
   LOCAL Counter, nResults, sResult := "", nMarker, nMatches, nMatch//, aMarkers := aResults[3]
-  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart
+  LOCAL xValue, nRepeats := 0, nDependee, nGroupStart, sDumb
 
   IF aResults[1] == NIL
      nResults := 0
@@ -2777,21 +2777,33 @@ FUNCTION PPOut( aResults, aMarkers )
         /* #<x> Dumb Stringify */
         CASE aResults[2][Counter] == 2
            IF ValType( xValue ) == 'A'
-              sResult += '"'
+              sDumb := ""
               nMatches := Len( xValue )
               FOR nMatch := 1 TO nMatches
-                 sResult += xValue[nMatch]
+                 sDumb += xValue[nMatch]
                  IF nMatch < nMatches
-                    sResult += ', '
+                    sDumb += ", "
                  ENDIF
               NEXT
-              sResult += '"'
+              IF '"' $ sDumb .AND. ['] $ sDumb .AND. ']' $ sDumb .AND. Left( sDumb, 1 ) != '['
+                 sResult += '[[' + sDumb + ']]'
+              ELSEIF '"' $ sDumb .AND. ['] $ sDumb
+                 sResult += '[' + sDumb + ']'
+              ELSEIF '"' $ sDumb
+                 sResult += ['] + sDumb + [']
+              ELSE
+                 sResult += '"' + sDumb + '"'
+              ENDIF
            ELSE
               IF xValue == NIL
                  sResult += '""'
               ELSE
-                 IF Left( xValue, 1 ) $ '"['
+                 IF '"' $ xValue .AND. ['] $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
+                    sResult += "[[" + xValue + "]]"
+                 ELSEIF '"' $ xValue .AND. ['] $ xValue
                     sResult += '[' + xValue + ']'
+                 ELSEIF '"' $ xValue
+                    sResult += ['] + xValue + [']
                  ELSE
                     sResult += '"' + xValue + '"'
                  ENDIF
@@ -2803,10 +2815,14 @@ FUNCTION PPOut( aResults, aMarkers )
            IF ValType( xValue ) == 'A'
               nMatches := Len( xValue )
               FOR nMatch := 1 TO nMatches
-                 IF Left( xValue[nMatch], 1 ) $ '"['
-                    sResult += '[' + RTrim( xValue[nMatch] ) + ']'
-                 ELSEIF Left( xValue[nMatch], 1 ) == '&'
+                 IF Left( xValue[nMatch], 1 ) == '&'
                     sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
+                 ELSEIF '"' $ xValue[nMatch] .AND. ['] $ xValue[nMatch] .AND. ']' $ xValue[nMatch] .AND. Left( xValue[nMatch], 1 ) != '['
+                    sResult += "[[" + RTrim( xValue[nMatch] ) + "]]"
+                 ELSEIF '"' $ xValue[nMatch] .AND. ['] $ xValue[nMatch]
+                    sResult += '[' + RTrim( xValue[nMatch] ) + ']'
+                 ELSEIF '"' $ xValue[nMatch]
+                    sResult += ['] + RTrim( xValue[nMatch] ) + [']
                  ELSE
                     sResult += '"' + RTrim( xValue[nMatch] ) + '"'
                  ENDIF
@@ -2817,12 +2833,16 @@ FUNCTION PPOut( aResults, aMarkers )
               NEXT
            ELSE
               IF ! ( xValue == NIL )
-                 IF Left( xValue, 1 ) $ '"['
-                    sResult += '[' + RTrim( xValue ) + ']'
-                 ELSEIF Left( xValue, 1 ) == '&'
+                 IF Left( xValue, 1 ) == '&'
                     sResult += RTrim( SubStr( xValue, 2 ) )
+                 ELSEIF '"' $ xValue .AND. ['] $ xValue .AND. ']' $ xValue .AND. Left( xValue, 1 ) != '['
+                    sResult += "[[" + xValue + "]]"
+                 ELSEIF '"' $ xValue .AND. ['] $ xValue
+                    sResult += '[' + xValue + ']'
+                 ELSEIF '"' $ xValue
+                    sResult += ['] + xValue + [']
                  ELSE
-                    sResult += '"' + RTrim( xValue ) + '"'
+                    sResult += '"' + xValue + '"'
                  ENDIF
               ENDIF
            ENDIF
@@ -2832,12 +2852,10 @@ FUNCTION PPOut( aResults, aMarkers )
            IF ValType( xValue ) == 'A'
               nMatches := Len( xValue )
               FOR nMatch := 1 TO nMatches
-                 IF Left( xValue[nMatch], 1 ) == '('
+                 IF Left( xValue[nMatch], 1 ) $ "('[" + '"'
                     sResult += xValue[nMatch]
                  ELSE
-                    IF Left( xValue[nMatch], 1 ) $ '"['
-                       sResult += '[' + RTrim( xValue[nMatch] ) + ']'
-                    ELSEIF Left( xValue[nMatch], 1 ) == '&'
+                    IF Left( xValue[nMatch], 1 ) == '&'
                        sResult += RTrim( SubStr( xValue[nMatch], 2 ) )
                     ELSE
                        sResult += '"' + RTrim( xValue[nMatch] ) + '"'
@@ -2850,12 +2868,10 @@ FUNCTION PPOut( aResults, aMarkers )
               NEXT
            ELSE
               IF xValue != NIL
-                 IF Left( xValue, 1 ) == '('
+                 IF Left( xValue, 1 ) $ "('[" + '"'
                     sResult += xValue
                  ELSE
-                    IF Left( xValue, 1 ) $ '"['
-                       sResult += '[' + RTrim( xValue ) + ']'
-                    ELSEIF Left( xValue, 1 ) == '&'
+                    IF Left( xValue, 1 ) == '&'
                        sResult += RTrim( SubStr( xValue, 2 ) )
                     ELSE
                        sResult += '"' + RTrim( xValue ) + '"'
