@@ -11,12 +11,14 @@
 #include <ctoharb.h>
 #include <dates.h>
 #include <set.h>
+#ifdef __DJGPP__
+   #include <unistd.h>
+#endif
 #ifdef USE_GTAPI
    #include <gtapi.h>
 #endif
 
-static unsigned short dev_row;
-static unsigned short dev_col;
+static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [3];
 
 void InitializeConsole( void )
@@ -31,6 +33,25 @@ void InitializeConsole( void )
 #else
    dev_row = 0;
    dev_col = 0;
+#endif
+   p_row = p_col = 0;
+}
+
+USHORT hb_maxrow( void )
+{
+#ifdef USE_GTAPI
+   return _gtMaxRow ();
+#else
+   return 23;
+#endif
+}
+
+USHORT hb_maxcol( void )
+{
+#ifdef USE_GTAPI
+   return _gtMaxCol ();
+#else
+   return 79;
 #endif
 }
 
@@ -62,7 +83,6 @@ static void hb_out( WORD wParam, void_func_int * hb_out_func )
 {
    char * szText;
    PHB_ITEM pItem = _param( wParam, IT_ANY );
-   ULONG ulLenText;
    char szBuffer [11];
 
    switch( _parinfo( wParam ) )
@@ -153,6 +173,12 @@ static void hb_altout( char * fpStr, WORD uiLen )
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
          printf( "%c", fpStr[ uiCount ] );
+      dev_col += uiLen;
+      if( dev_col > hb_maxcol() )
+      {
+         dev_row += (uiLen / (hb_maxcol() + 1));
+         dev_col -= (uiLen % (hb_maxcol() + 1));
+      }
    #endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
@@ -170,7 +196,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
-      dev_col += uiLen;
+      p_col += uiLen;
    }
    else
    {
@@ -182,32 +208,46 @@ static void hb_devout( char * fpStr, WORD uiLen )
       WORD uiCount;
       for( uiCount = 0; uiCount < uiLen; uiCount++ )
          printf( "%c", fpStr[ uiCount ] );
+      dev_col += uiLen;
+      if( dev_col > hb_maxcol() )
+      {
+         dev_row += (uiLen / (hb_maxcol() + 1));
+         dev_col -= (uiLen % (hb_maxcol() + 1));
+      }
    #endif
    }
 }
 
-void hb_devpos( int row, int col )
+void hb_devpos( USHORT row, USHORT col )
 {
    int count;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
    if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
-      if( row < dev_row )
+      if( row < p_row )
       {
          write( hb_set_printhan, "\x0C", 1 );
-         dev_row = dev_col = 0;
+         p_row = p_col = 0;
       }
-      for( count = dev_row; count < row; count++ ) write( hb_set_printhan, CrLf, strlen (CrLf) );
+      for( count = p_row; count < row; count++ ) write( hb_set_printhan, CrLf, strlen (CrLf) );
+      if( row > p_row ) p_col = 0;
+      for( count = p_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
+      p_row = row;
+      p_col = col;
+   }
+   else
+   {
+   #ifdef USE_GTAPI
+      _gtSetPos( row, col );
+   #else
+      for( count = dev_row; count < row; count++ ) printf("\n");
       if( row > dev_row ) dev_col = 0;
-      for( count = dev_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
+      for( count = dev_col; count < col; count++ ) printf(" ");
+   #endif
       dev_row = row;
       dev_col = col;
    }
-   #ifdef USE_GTAPI
-   else
-      _gtSetPos( row, col );
-   #endif
 }
 
 HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */
@@ -234,7 +274,6 @@ HARBOUR OUTERR( void ) /* writes a list of values to the standard error device *
 
 HARBOUR QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
 {
-   BOOL bScreen;
    WORD w;
 
    for( w = 0; w < _pcount(); w++ )
@@ -268,7 +307,6 @@ HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
 
 HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen or printer), but is not affected by SET ALTERNATE */
 {
-   BOOL bScreen;
    if( _pcount() > 0 )
    {
       char fpOldColor[ 64 ];
@@ -296,18 +334,18 @@ HARBOUR EJECT( void ) /* Ejects the current page from the printer */
    if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       write( hb_set_printhan, "\x0C", 1 );
-      dev_row = dev_col = 0;
+      p_row = p_col = 0;
    }
 }
 
 HARBOUR PROW( void ) /* Returns the current printer row position */
 {
-   _retni( dev_row );
+   _retni( p_row );
 }
 
 HARBOUR PCOL( void ) /* Returns the current printer row position */
 {
-   _retni( dev_col );
+   _retni( p_col );
 }
 
 HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
@@ -318,48 +356,61 @@ HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
       PHB_ITEM pCol = _param( 1, IT_NUMERIC );
       if( pRow && pCol )
       {
-         dev_row = _parni( 1 );
-         dev_col = _parni( 2 );
+         p_row = _parni( 1 );
+         p_col = _parni( 2 );
       }
    }
 }
 
 HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
-#ifdef USE_GTAPI
-    int top = 0, left = 0, bottom = _gtMaxRow(), right = _gtMaxCol(),
-        v_scroll = 0, h_scroll = 0;
+   int top = 0, left = 0, bottom = hb_maxrow(), right = hb_maxcol(),
+       v_scroll = 0, h_scroll = 0;
 
-    if( _pcount() > 0 && _param( 1, IT_NUMERIC ) )
-       top = _parni( 1 );
-    if( _pcount() > 1 && _param( 2, IT_NUMERIC ) )
-       left = _parni( 2 );
-    if( _pcount() > 2 && _param( 3, IT_NUMERIC ) )
-       bottom = _parni( 3 );
-    if( _pcount() > 3 && _param( 4, IT_NUMERIC ) )
-       right = _parni( 4 );
-    if( _pcount() > 4 && _param( 5, IT_NUMERIC ) )
-       v_scroll = _parni( 5 );
-    if( _pcount() > 5 && _param( 6, IT_NUMERIC ) )
-       h_scroll = _parni( 6 );
-    _gtScroll( top, left, bottom, right, v_scroll, h_scroll );
+   if( _pcount() > 0 && _param( 1, IT_NUMERIC ) )
+      top = _parni( 1 );
+   if( _pcount() > 1 && _param( 2, IT_NUMERIC ) )
+      left = _parni( 2 );
+   if( _pcount() > 2 && _param( 3, IT_NUMERIC ) )
+      bottom = _parni( 3 );
+   if( _pcount() > 3 && _param( 4, IT_NUMERIC ) )
+      right = _parni( 4 );
+   if( _pcount() > 4 && _param( 5, IT_NUMERIC ) )
+      v_scroll = _parni( 5 );
+   if( _pcount() > 5 && _param( 6, IT_NUMERIC ) )
+      h_scroll = _parni( 6 );
+
+#ifdef USE_GTAPI
+   _gtScroll( top, left, bottom, right, v_scroll, h_scroll );
+#else
+   if( top == 0 && bottom == hb_maxrow()
+   && left == 0 && right == hb_maxcol()
+   && v_scroll == 0 && h_scroll == 0 )
+   {
+      int count;
+      dev_row = hb_maxrow();
+      for( count = 0; count < dev_row ; count++ ) printf( "\n" );
+      dev_row = dev_col = 0;
+   }
 #endif
 }
 
 HARBOUR MAXROW( void ) /* Return the maximum screen row number (zero origin) */
 {
-#ifdef USE_GTAPI
-   _retni( _gtMaxRow () );
-#else
-   _retni( 23 );
-#endif
+   _retni( hb_maxrow () );
 }
 
 HARBOUR MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
 {
-#ifdef USE_GTAPI
-   _retni( _gtMaxCol () );
-#else
-   _retni( 79 );
-#endif
+   _retni( hb_maxcol () );
+}
+
+HARBOUR ROW( void ) /* Return the current screen row position (zero origin) */
+{
+   _retni( dev_row );
+}
+
+HARBOUR COL( void ) /* Return the current screen column position (zero origin) */
+{
+   _retni( dev_col );
 }

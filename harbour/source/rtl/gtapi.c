@@ -23,18 +23,6 @@ static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
 static char   s_szColorStr[CLR_STRLEN] = {"W/N, N/W, N/N, N/N, N/W"};
 
-/* Harbour functions */
-
-HARBOUR ROW()
-{
-    _retni(s_uiCurrentRow);
-}
-
-HARBOUR COL()
-{
-    _retni(s_uiCurrentCol);
-}
-
 /* gt API functions */
 
 void _gtInit(void)

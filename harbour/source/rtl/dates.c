@@ -18,6 +18,26 @@ ADJ is 7 for ISO, 6 for no ISO
 
 extern STACK stack;
 
+/* In msgxxx.c modules */
+extern char *hb_monthsname[];
+extern char *hb_daysname[];
+
+char *hb_cmonth( month )
+{
+   if( month >= 1 && month <= 12 )
+      return hb_monthsname[ month - 1 ];
+
+   return "";
+}
+
+char *hb_cdow( day )
+{
+   if( day >= 1 && day <= 7 )
+      return hb_daysname[ day - 1 ];
+
+   return "";
+}
+
 long hb_dateEncode( long lDay, long lMonth, long lYear )
 {
    BOOL bValid = FALSE;
@@ -482,6 +502,66 @@ HARBOUR DOW( void )
    {
       PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Error BASE/1115  Argument error: DOW");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}
+
+HARBOUR CMONTH( void )
+{
+   PHB_ITEM pDate = _param( 1, IT_DATE );
+   long lDay, lMonth, lYear;
+
+   if( _pcount() )
+   {
+     if( pDate )
+     {
+        hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+        _retc( hb_cmonth( lMonth ) );
+     }
+     else
+     {
+        PHB_ITEM pError = _errNew();
+        _errPutDescription(pError, "Error BASE/1116  Argument error: CMONTH");
+        _errLaunch(pError);
+        _errRelease(pError);
+     }
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PHB_ITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: CMONTH");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}
+
+HARBOUR CDOW( void )
+{
+   PHB_ITEM pDate = _param( 1, IT_DATE );
+   long lDay, lMonth, lYear;
+
+   if( _pcount() )
+   {
+     if( pDate )
+     {
+        hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+        _retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+     }
+     else
+     {
+        PHB_ITEM pError = _errNew();
+        _errPutDescription(pError, "Error BASE/1117  Argument error: CDOW");
+        _errLaunch(pError);
+        _errRelease(pError);
+     }
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PHB_ITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: CDOW");
       _errLaunch(pError);
       _errRelease(pError);
    }

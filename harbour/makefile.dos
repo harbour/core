@@ -3,7 +3,7 @@
 
 .phony: compiler vm rtl tests
 
-all: compiler vm rtl tools
+all: compiler nat vm rtl tools
 
 compiler:
 	make -r -w --directory=source/compiler -f makefile.dos
@@ -13,6 +13,9 @@ vm:
 
 rtl:
 	make -w --directory=source/rtl -f makefile.dos
+
+nat:
+	make -w --directory=source/rtl/natmsg -f makefile.dos
 
 tools:
 	make -w --directory=source/tools -f makefile.dos
@@ -25,5 +28,6 @@ clean:
 	make -r -w --directory=source/compiler -f makefile.dos clean
 	make -w --directory=source/vm -f makefile.dos clean
 	make -w --directory=source/rtl -f makefile.dos clean
+	make -w --directory=source/rtl/natmsg -f makefile.dos clean
 	make -w --directory=source/tools -f makefile.dos clean
 #  make -w --directory=tests -f makefile.dos clean
