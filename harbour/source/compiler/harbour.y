@@ -1062,27 +1062,22 @@ PareExpList : PareExpList1        { $$ = $1; }
 PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
 ;
 
-ExpList1   : '(' EmptyExpression    { $$ = hb_compExprNewList( $2 ); }
+ExpList1   : '(' Argument             { $$ = hb_compExprNewList( $2 ); }
 ;
 
-ExpList2   : ExpList1 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList2   : ExpList1 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
 ;
 
-ExpList3   : ExpList2 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList3   : ExpList2 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
 ;
 
-ExpList    : ExpList3 ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           | ExpList  ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList    : ExpList3 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           | ExpList  ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-IfInline   : IIF PareExpList3          { $$ = hb_compExprNewIIF( $2 ); }
-           | IF ExpList1 ',' EmptyExpression ','
-             { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
-             EmptyExpression ')'
-             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ) ); }
-           ;
+IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2 ); }
 
-IfInlineAlias : IfInline ALIASOP       { $$ = $1; }
+IfInlineAlias : IfInline ALIASOP      { $$ = $1; }
 ;
 
 VarDefs    : LOCAL { hb_comp_iVarScope = VS_LOCAL; hb_compLinePush(); } VarList Crlf { hb_comp_cVarType = ' '; }
