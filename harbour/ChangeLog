@@ -1,3 +1,11 @@
+19990731-20:16 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * tests\working\debugger.prg
+     * improved sample.
+   * rdd.b32
+     * added delim... and sdf... modules
+   * makefile.b32
+     * little fixes
+
 19990731-17:51 Alexander Kresin
   * source\hbpp\hbpp.c
     * Fixed problem with @ ::nTOP,... SAY ...
@@ -7,7 +15,7 @@
   * source\rdd\delim0.prg
   * source\rdd\dbfntx\dbfntx0.prg
      * Uncommented 'ANNOUNCE' - now it can be used
-  
+
 19990731-14:44 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/alert.prg - Handling of "*" in color string is
      made compatible with Clipper.
