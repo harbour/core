@@ -55,7 +55,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %ci<path>         add #include file search path",
            "\n          %cj[0|1]          Jump optimizer 0=disabled 1=enabled (default)",
            "\n          %cl               suppress line number information",
-/* TODO:   "\n          %cm               compile module only", */
+           "\n          %cm               compile module only",
            "\n          %cn               no implicit starting procedure",
            "\n          %co<path>         object file drive and/or path",
            "\n          %cp               generate pre-processed output (.ppo) file",

@@ -365,8 +365,7 @@ void hb_compChkEnvironVar( char * szSwitch )
 
              case 'm':
              case 'M':
-                /* TODO: Implement this switch */
-                printf( "Not yet supported command line option: %s\n", s );
+                hb_comp_bAutoOpen = FALSE;
                 break;
 
              case 'n':

@@ -1,3 +1,54 @@
+2000-06-06 20:10 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+    * source/compiler/cmdcheck.c
+      + Implemented support for -m
+
+    * include/hbcomp.h
+      + Added structure _HARBVARS to hold Harbour Session Variables
+      + Added structure +AUTOOPEN to hold names of external modules already compiled.
+
+    * source/compiler/harbour.c
+      + Moved the parsing/compiling logic into new hb_compCompile()
+      + Added:
+		static void hb_compAutoOpenAdd( char * szName );
+		static BOOL hb_compAutoOpenFind( char * szName );
+		static void hb_compSaveVars( PHARBVARS, int );
+		static void hb_compRestoreVars( PHARBVARS, int );
+
+    * source/compiler/harbour.l
+      + Added:
+		void * hb_compGet_YY_CURRENT_BUFFER()
+		void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer )
+		int hb_compGet_yy_init( void )
+		void hb_compSet_yy_init( int i )
+		int hb_compGet_yy_start( void )
+		void hb_compSet_yy_start( int i )
+		int hb_compGet_yy_did_buffer_switch_on_eof( void )
+		void hb_compSet_yy_did_buffer_switch_on_eof( int i )
+
+     * source/compiler/harbour.y
+       + Added logic to call hb_compCompile() when DO ... or DO ... WITH
+       + Added:
+		void * hb_compGet_pLoops( void )
+		void hb_compSet_pLoops( void * pLoops )
+		void * hb_compGet_rtvars( void )
+		void hb_compSet_rtvars( void * rtvars )
+
+      *	source/compiler/hbusage.c
+	+ Added display of -m compiler switch
+
+Please note:
+
+1. Implementation is practicaly completed, but there is one known issue to be resolved: Once we open and compile
+   an external module, the very next prg line in the parent prg is not processed, I would love to get some assistance
+   with this - Ryszard, Antonio, Victor, Paul? as I am seriously limited with time over this week.
+   It seems I am not saving one of Bison/Flex vars, so my restore of the previous session is not complete :-(
+
+2. Clipper seem to have a bug, on the following code:
+   DO WHILE WITH ...
+   Clipper will attempt to compile external "WITH.PRG" instead of "WHILE.PRG", can any one advise if I am missing something here...
+   In our implementation the above line will attemp to compile "WHILE.PRG"
+
 2000-06-05 19:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/pp/ppcore.c

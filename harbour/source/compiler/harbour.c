@@ -125,12 +125,7 @@ int           hb_comp_iJumpOptimize = 1;
 BOOL          hb_comp_EOL;
 char *        hb_comp_szDeclaredFun = NULL;
 
-typedef struct __EXTERN
-{
-   char * szName;
-   struct __EXTERN * pNext;
-} _EXTERN, * PEXTERN;      /* support structure for extern symbols */
-/* as they have to be placed on the symbol table later than the first public symbol */
+BOOL          hb_comp_bAutoOpen = TRUE;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -139,8 +134,47 @@ static BOOL hb_comp_bExternal   = FALSE;
 /* linked list with EXTERNAL symbols declarations
  */
 static PEXTERN hb_comp_pExterns = NULL;
+static PAUTOOPEN hb_comp_pAutoOpen = NULL;
+
+/* -m Support */
+static void hb_compAutoOpenAdd( char * szName );
+static BOOL hb_compAutoOpenFind( char * szName );
+static void hb_compSaveVars( PHARBVARS, int );
+static void hb_compRestoreVars( PHARBVARS, int );
+
+/* In Harbour.l */
+void * hb_compGet_YY_CURRENT_BUFFER( void );
+void hb_compSet_YY_CURRENT_BUFFER( void * );
+int hb_compGet_yy_init( void );
+void hb_compSet_yy_init( int i );
+int hb_compGet_yy_start( void );
+void hb_compSet_yy_start( int i );
+int hb_compGet_yy_did_buffer_switch_on_eof( void );
+void hb_compSet_yy_did_buffer_switch_on_eof( int );
+
+/* In Harbour.y */
+void * hb_compGet_pLoops( void );
+void hb_compSet_pLoops( void * pLoops );
+void * hb_compGet_rtvars( void );
+void hb_compSet_rtvars( void * rtvars );
 
 extern int yyparse( void );    /* main yacc parsing function */
+
+extern FILE    *yyin   ;
+extern FILE    *yyout  ;
+extern char    *yytext ;
+extern int     yyleng  ;
+extern int     yychar  ;
+extern void *  yylval  ;
+#ifdef YYLSP_NEEDED
+   extern void *  yylloc  ;
+#endif
+extern int     yynerrs ;
+
+extern char * hb_comp_buffer;
+extern char * hb_comp_szAnnounce;
+
+extern void yyrestart( FILE * );
 
 /* ************************************************************************* */
 
@@ -194,162 +228,7 @@ int main( int argc, char * argv[] )
             bAnyFiles = TRUE;
          }
 
-         hb_comp_pFileName = hb_fsFNameSplit( argv[ i ] );
-
-         if( hb_comp_pFileName->szName )
-         {
-            char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-            char szPpoName[ _POSIX_PATH_MAX ];
-
-            if( !hb_comp_pFileName->szExtension )
-               hb_comp_pFileName->szExtension = ".prg";
-
-            hb_fsFNameMerge( szFileName, hb_comp_pFileName );
-
-            if( hb_comp_bPPO )
-            {
-               hb_comp_pFileName->szExtension = ".ppo";
-               hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
-               hb_comp_yyppo = fopen( szPpoName, "w" );
-               if( ! hb_comp_yyppo )
-               {
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
-                  iStatus = EXIT_FAILURE;
-               }
-            }
-
-            if( iStatus == EXIT_SUCCESS )
-            {
-               /* Initialization of preprocessor arrays */
-               hb_pp_Init();
-
-               /* Add /D command line or envvar defines */
-               hb_compChkDefines( argc, argv );
-
-               /* Initialize support variables */
-               hb_compInitVars();
-
-               if( hb_compInclude( szFileName, NULL ) )
-               {
-                  BOOL bSkipGen;
-
-                  if( ! hb_comp_bQuiet )
-                  {
-                     if( hb_comp_bPPO )
-                        printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-                     else
-                        printf( "Compiling '%s'...\n", szFileName );
-                  }
-
-                  /* Start processing */
-                  hb_compYACCMain( hb_comp_pFileName->szName );
-
-                  bSkipGen = FALSE;
-
-                  if( hb_comp_bAnyWarning )
-                  {
-                     if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
-                     {
-                        iStatus = EXIT_FAILURE;
-                     }
-                     else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
-                     {
-                        iStatus = EXIT_FAILURE;
-                        bSkipGen = TRUE;
-                        printf( "\nNo code generated.\n" );
-                     }
-                  }
-
-                  if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
-                  {
-                     PFUNCTION pFunc;
-
-                     /* we create the output file name */
-                     hb_compOutputFile();
-
-                     if( ! hb_comp_bStartProc )
-                        --hb_comp_iFunctionCnt;
-
-                     pFunc = hb_comp_functions.pFirst;
-                     while( pFunc )
-                     {
-                        hb_compOptimizeFrames( pFunc );
-                        pFunc = pFunc->pNext;
-                     }
-
-                     {
-                        PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-                        char * szFirstFunction;
-
-                        if( hb_comp_bStartProc )
-                           szFirstFunction = hb_comp_functions.pFirst->szName;
-                        else if( hb_comp_functions.pFirst->pNext )
-                           szFirstFunction = hb_comp_functions.pFirst->pNext->szName;
-                        else
-                           szFirstFunction = NULL;
-
-                        while( pSym )
-                        {
-                           if( strcmp( pSym->szName, szFirstFunction ) == 0 )
-                           {
-                              pSym->cScope |= HB_FS_FIRST;
-                              break;
-                           }
-                           pSym = pSym->pNext;
-                        }
-                     }
-
-                     if( ! hb_comp_bQuiet )
-                        printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
-
-                     hb_compGenOutput( hb_comp_iLanguage );
-                  }
-               }
-               else
-               {
-                  printf( "Cannot open input file: %s\n", szFileName );
-                  /* printf( "No code generated\n" ); */
-                  iStatus = EXIT_FAILURE;
-               }
-
-               if( hb_comp_bPPO && hb_comp_yyppo )
-               {
-                  fclose( hb_comp_yyppo );
-                  hb_comp_yyppo = NULL;
-               }
-
-               {
-                  PFILE pFile = hb_comp_files.pLast;
-
-                  while( pFile )
-                  {
-                     fclose( pFile->handle );
-                     pFile = ( PFILE ) pFile->pPrev;
-                  }
-               }
-
-/*
-               while( hb_comp_pExterns )
-               {
-                  PEXTERN pExtern = hb_comp_pExterns;
-
-                  hb_comp_pExterns = hb_comp_pExterns->pNext;
-
-                  hb_xfree( pExtern->szName );
-                  hb_xfree( pExtern );
-               }
-*/
-
-               hb_comp_bExternal = FALSE;
-            }
-         }
-         else
-         {
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, argv[ argc ], NULL );
-            iStatus = EXIT_FAILURE;
-         }
-
-         hb_xfree( ( void * ) hb_comp_pFileName );
+         hb_compCompile( argv[i], argc, argv );
 
          if( iStatus != EXIT_SUCCESS )
             break;
@@ -3467,3 +3346,398 @@ static void hb_compOutputFile( void )
    }
 }
 
+int hb_compCompile( char * szPrg, int argc, char * argv[] )
+{
+   BOOL bAutoOpen = ( argc == 0 );
+   int iStatus = EXIT_SUCCESS;
+   HARBVARS HarbourVars ;
+   PHB_FNAME pFileName = NULL;
+
+   if( bAutoOpen )
+   {
+      printf( "Auto: %s\n", szPrg );
+
+      if( hb_compAutoOpenFind( szPrg ) )
+      {
+         return iStatus;
+      }
+      else
+      {
+         pFileName = hb_comp_pFileName;
+         printf( "%i\n", hb_compGet_yy_did_buffer_switch_on_eof() );
+      }
+   }
+
+   hb_comp_pFileName = hb_fsFNameSplit( szPrg );
+
+   if( hb_comp_pFileName->szName )
+   {
+      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+      char szPpoName[ _POSIX_PATH_MAX ];
+
+      if( !hb_comp_pFileName->szExtension )
+         hb_comp_pFileName->szExtension = ".prg";
+
+      hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+
+      if( hb_comp_bPPO )
+      {
+         hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_yyppo = fopen( szPpoName, "w" );
+         if( ! hb_comp_yyppo )
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
+            iStatus = EXIT_FAILURE;
+         }
+      }
+
+      if( iStatus == EXIT_SUCCESS )
+      {
+         if( bAutoOpen )
+         {
+            /* Minimal Save. */
+            hb_compSaveVars( &HarbourVars, 1 );
+
+            /* Minimal Init for hb_compInclude() */
+            hb_comp_files.pLast  = NULL           ;
+            hb_comp_files.iFiles = 0              ;
+            hb_comp_iLine        = 1              ;
+         }
+         else
+         {
+            /* Initialization of preprocessor arrays */
+            hb_pp_Init();
+
+            /* Add /D command line or envvar defines */
+            hb_compChkDefines( argc, argv );
+
+            /* Initialize support variables */
+            hb_compInitVars();
+         }
+
+         if( hb_compInclude( szFileName, NULL ) )
+         {
+            BOOL bSkipGen  ;
+            FILES tmpFiles ;
+
+            /* Complementary Save */
+            hb_compSaveVars( &HarbourVars, 2 );
+
+            tmpFiles = hb_comp_files ;
+
+            /* Full init. */
+            hb_compInitVars();
+
+            /* Must restore the recently opened file*/
+            hb_comp_files = tmpFiles ;
+
+            hb_comp_pExterns = NULL;
+            hb_comp_bExternal = FALSE;
+
+            if( ! hb_comp_bQuiet )
+            {
+               if( hb_comp_bPPO )
+                  printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+               else
+                  printf( "Compiling '%s'...\n", szFileName );
+            }
+
+            if( bAutoOpen )
+            {
+               hb_compAutoOpenAdd( hb_strdup( hb_comp_pFileName->szName ) );
+               yyrestart( yyin );
+            }
+
+            /* Start processing */
+            hb_compYACCMain( hb_comp_pFileName->szName );
+
+            bSkipGen = FALSE;
+
+            if( hb_comp_bAnyWarning )
+            {
+               if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+               {
+                  iStatus = EXIT_FAILURE;
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+               {
+                  iStatus = EXIT_FAILURE;
+                  bSkipGen = TRUE;
+                  printf( "\nNo code generated.\n" );
+               }
+            }
+
+            if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
+            {
+               PFUNCTION pFunc;
+
+               /* we create the output file name */
+               hb_compOutputFile();
+
+               if( ! hb_comp_bStartProc )
+                  --hb_comp_iFunctionCnt;
+
+               pFunc = hb_comp_functions.pFirst;
+               while( pFunc )
+               {
+                  hb_compOptimizeFrames( pFunc );
+                  pFunc = pFunc->pNext;
+               }
+
+               {
+                  PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+                  char * szFirstFunction;
+
+                  if( hb_comp_bStartProc )
+                     szFirstFunction = hb_comp_functions.pFirst->szName;
+                  else if( hb_comp_functions.pFirst->pNext )
+                     szFirstFunction = hb_comp_functions.pFirst->pNext->szName;
+                  else
+                     szFirstFunction = NULL;
+
+                  while( pSym )
+                  {
+                     if( strcmp( pSym->szName, szFirstFunction ) == 0 )
+                     {
+                        pSym->cScope |= HB_FS_FIRST;
+                        break;
+                     }
+                     pSym = pSym->pNext;
+                  }
+               }
+
+               if( ! hb_comp_bQuiet )
+                  printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
+
+               hb_compGenOutput( hb_comp_iLanguage );
+            }
+         }
+         else
+         {
+            if( bAutoOpen )
+            {
+               printf( "Cannot open %s, assumed external\n", szFileName );
+               getchar();
+
+               /* Minimal Restore. */
+               hb_compRestoreVars( &HarbourVars, 1 );
+
+               /* To avoid full restore down below. */
+               HarbourVars.yyin  = NULL;
+            }
+            else
+            {
+               printf( "Cannot open input file: %s\n", szFileName );
+            }
+
+            /* printf( "No code generated\n" ); */
+            iStatus = EXIT_FAILURE;
+         }
+
+         if( hb_comp_bPPO && hb_comp_yyppo )
+         {
+            fclose( hb_comp_yyppo );
+            hb_comp_yyppo = NULL;
+         }
+
+         {
+            PFILE pFile = hb_comp_files.pLast;
+
+            while( pFile )
+            {
+               fclose( pFile->handle );
+               pFile = ( PFILE ) pFile->pPrev;
+            }
+         }
+
+/*
+         while( hb_comp_pExterns )
+         {
+            PEXTERN pExtern = hb_comp_pExterns;
+
+            hb_comp_pExterns = hb_comp_pExterns->pNext;
+
+            hb_xfree( pExtern->szName );
+            hb_xfree( pExtern );
+         }
+*/
+
+         hb_comp_bExternal = FALSE;
+      }
+   }
+   else
+   {
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
+      iStatus = EXIT_FAILURE;
+   }
+
+   if( bAutoOpen )
+   {
+      /* Only if needed. */
+      if( HarbourVars.yyin )
+      {
+         yyrestart( HarbourVars.yyin );
+
+         /* Full Restore */
+         hb_compRestoreVars( &HarbourVars, 3 );
+
+         /*
+         hb_compSet_yy_did_buffer_switch_on_eof(1);
+         printf( "After Restore: %i\n", hb_compGet_yy_did_buffer_switch_on_eof() );
+         */
+      }
+
+      if( pFileName )
+      {
+         hb_xfree( ( void * ) hb_comp_pFileName );
+         hb_comp_pFileName = pFileName;
+      }
+   }
+
+   return iStatus;
+}
+
+void hb_compSaveVars( PHARBVARS pHarbourVars, int iScope )
+{
+   if( iScope == 1 || iScope == 3 )
+   {
+      pHarbourVars->Files         = hb_comp_files                 ;
+      pHarbourVars->iLine         = hb_comp_iLine                 ;
+      pHarbourVars->yyin          = yyin                          ;
+   }
+
+   if( iScope == 2 || iScope == 3 )
+   {
+      pHarbourVars->Functions     = hb_comp_functions             ;
+      pHarbourVars->Funcalls      = hb_comp_funcalls              ;
+      pHarbourVars->Symbols       = hb_comp_symbols               ;
+      pHarbourVars->pInitFunc     = hb_comp_pInitFunc             ;
+      pHarbourVars->pExterns      = hb_comp_pExterns              ;
+
+      pHarbourVars->bExternal     = hb_comp_bExternal             ;
+      pHarbourVars->szAnnounce    = hb_comp_szAnnounce            ;
+      pHarbourVars->bAnyWarning   = hb_comp_bAnyWarning           ;
+
+      pHarbourVars->iFunctionCnt  = hb_comp_iFunctionCnt          ;
+      pHarbourVars->iErrorCount   = hb_comp_iErrorCount           ;
+      pHarbourVars->cVarType      = hb_comp_cVarType              ;
+      pHarbourVars->ulLastLinePos = hb_comp_ulLastLinePos         ;
+      pHarbourVars->iStaticCnt    = hb_comp_iStaticCnt            ;
+      pHarbourVars->iVarScope     = hb_comp_iVarScope             ;
+      pHarbourVars->EOL           = hb_comp_EOL                   ;
+      pHarbourVars->pFileName     = hb_comp_pFileName             ;
+      pHarbourVars->buffer        = hb_comp_buffer                ;
+
+      pHarbourVars->yyout         = yyout                         ;
+      pHarbourVars->yytext        = yytext                        ;
+      pHarbourVars->yyleng        = yyleng                        ;
+
+      pHarbourVars->yychar        = yychar                        ;
+      pHarbourVars->yylval        = yylval                        ;
+   #ifdef YYLSP_NEEDED
+      pHarbourVars->yylloc        = yylloc                        ;
+   #endif
+      pHarbourVars->yynerrs       = yynerrs                       ;
+
+      pHarbourVars->yy_buffer     = hb_compGet_YY_CURRENT_BUFFER();
+      pHarbourVars->yy_start      = hb_compGet_yy_start()         ;
+      pHarbourVars->yy_init       = hb_compGet_yy_init()          ;
+
+      pHarbourVars->pLoops        = hb_compGet_pLoops()           ;
+      pHarbourVars->rtvars        = hb_compGet_rtvars()           ;
+   }
+}
+
+void hb_compRestoreVars( PHARBVARS pHarbourVars, int iScope )
+{
+   if( iScope == 1 || iScope == 3 )
+   {
+      hb_comp_files         = pHarbourVars->Files         ;
+      hb_comp_iLine         = pHarbourVars->iLine         ;
+      yyin                  = pHarbourVars->yyin          ;
+   }
+
+   if( iScope == 2 || iScope == 3 )
+   {
+      hb_comp_functions     = pHarbourVars->Functions     ;
+      hb_comp_funcalls      = pHarbourVars->Funcalls      ;
+      hb_comp_symbols       = pHarbourVars->Symbols       ;
+      hb_comp_pExterns      = pHarbourVars->pExterns      ;
+      hb_comp_pInitFunc     = pHarbourVars->pInitFunc     ;
+      hb_comp_bExternal     = pHarbourVars->bExternal     ;
+
+      hb_comp_szAnnounce    = pHarbourVars->szAnnounce    ;
+      hb_comp_bAnyWarning   = pHarbourVars->bAnyWarning   ;
+      hb_comp_iFunctionCnt  = pHarbourVars->iFunctionCnt  ;
+      hb_comp_iErrorCount   = pHarbourVars->iErrorCount   ;
+      hb_comp_cVarType      = pHarbourVars->cVarType      ;
+      hb_comp_ulLastLinePos = pHarbourVars->ulLastLinePos ;
+      hb_comp_iStaticCnt    = pHarbourVars->iStaticCnt    ;
+      hb_comp_iVarScope     = pHarbourVars->iVarScope     ;
+      hb_comp_EOL           = pHarbourVars->EOL           ;
+      hb_comp_pFileName     = pHarbourVars->pFileName     ;
+      hb_comp_buffer        = pHarbourVars->buffer        ;
+
+      yyout                 = pHarbourVars->yyout         ;
+      yytext                = pHarbourVars->yytext        ;
+      yyleng                = pHarbourVars->yyleng        ;
+
+      yychar                = pHarbourVars->yychar        ;
+      yylval                = pHarbourVars->yylval        ;
+   #ifdef YYLSP_NEEDED
+      yylloc                = pHarbourVars->yylloc        ;
+   #endif
+      yynerrs               = pHarbourVars->yynerrs       ;
+
+      hb_compSet_YY_CURRENT_BUFFER( pHarbourVars->yy_buffer  ) ;
+      hb_compSet_yy_start( pHarbourVars->yy_start )            ;
+      hb_compSet_yy_init( pHarbourVars->yy_init )              ;
+
+      hb_compSet_pLoops( pHarbourVars->pLoops )                ;
+      hb_compSet_rtvars( pHarbourVars->rtvars )                ;
+   }
+}
+
+void hb_compAutoOpenAdd( char * szName )
+{
+   PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
+
+   pAutoOpen->szName = szName;
+   pAutoOpen->pNext  = NULL;
+
+   if( hb_comp_pAutoOpen == NULL )
+      hb_comp_pAutoOpen = pAutoOpen;
+   else
+   {
+      pLast = hb_comp_pAutoOpen;
+      while( pLast->pNext )
+         pLast = pLast->pNext;
+
+      pLast->pNext = pAutoOpen;
+   }
+}
+
+BOOL hb_compAutoOpenFind( char * szName )
+{
+   PAUTOOPEN pLast;
+
+   if( hb_comp_pAutoOpen )
+   {
+      pLast = hb_comp_pAutoOpen;
+
+      if( strcmp( pLast->szName, szName ) == 0 )
+         return TRUE;
+      else
+      {
+         while( pLast->pNext )
+         {
+            pLast = pLast->pNext;
+
+            if( strcmp( pLast->szName, szName ) == 0 )
+               return TRUE;
+         }
+      }
+   }
+   return FALSE;
+}

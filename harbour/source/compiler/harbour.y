@@ -1137,8 +1137,8 @@ MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_c
            | MemvarList ',' IdentName AsType      { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            ;
 
-Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf 
-             { 
+Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf
+             {
                if( hb_comp_pLastDeclared )
                  hb_comp_pLastDeclared->cType = hb_comp_cVarType;
 
@@ -1156,7 +1156,7 @@ ClassInfo  : DecMethod
            ;
 
 DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType
-             { 
+             {
                if( hb_comp_pLastMethod )
                {
                  hb_comp_pLastMethod->cType = hb_comp_cVarType;
@@ -1228,7 +1228,7 @@ DecList    :                  {}
            | FormalList
            | FormalList OptList
            ;
-           
+
 FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_comp_cVarType ); }
            | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            | FormalList ',' IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType ); }
@@ -1524,11 +1524,11 @@ DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); }
            ;
 
 DoProc     : DO DoName
-               { $$ = hb_compExprNewFunCall( $2, NULL ); }
+               { $$ = hb_compExprNewFunCall( $2, NULL );  if( hb_comp_bAutoOpen ) hb_compCompile( $2->value.asSymbol, 0, NULL ); }
            | DO DoName WITH DoArgList
-               { $$ = hb_compExprNewFunCall( $2, $4 ); }
+               { $$ = hb_compExprNewFunCall( $2, $4 ); hb_compCompile( $2->value.asSymbol, 0, NULL ); }
            | WHILE WITH DoArgList
-               { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); }
+               { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); hb_compCompile( "WHILE", 0, NULL );}
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
@@ -2020,3 +2020,22 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
   }
 }
 
+void * hb_compGet_pLoops( void )
+{
+   return (void *) hb_comp_pLoops;
+}
+
+void hb_compSet_pLoops( void * pLoops )
+{
+   hb_comp_pLoops = (PTR_LOOPEXIT) pLoops;
+}
+
+void * hb_compGet_rtvars( void )
+{
+   return (void *) hb_comp_rtvars;
+}
+
+void hb_compSet_rtvars( void * rtvars )
+{
+   hb_comp_rtvars = (HB_RTVAR_PTR) rtvars;
+}

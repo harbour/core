@@ -179,6 +179,57 @@ typedef struct
    int        iCount;           /* number of defined symbols */
 } SYMBOLS;
 
+typedef struct __EXTERN
+{
+   char * szName;
+   struct __EXTERN * pNext;
+} _EXTERN, * PEXTERN;      /* support structure for extern symbols */
+/* as they have to be placed on the symbol table later than the first public symbol */
+
+typedef struct _AUTOOPEN
+{
+   char * szName;
+   struct _AUTOOPEN * pNext;
+} AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
+
+typedef struct _HARBVARS
+{
+   FILES        Files            ;
+   FUNCTIONS    Functions        ;
+   FUNCTIONS    Funcalls         ;
+   SYMBOLS      Symbols          ;
+   PFUNCTION    pInitFunc        ;
+   PEXTERN      pExterns         ;
+   BOOL         bExternal        ;
+   char *       szAnnounce       ;
+   BOOL         bAnyWarning      ;
+   int          iLine            ;
+   int          iFunctionCnt     ;
+   int          iErrorCount      ;
+   char         cVarType         ;
+   ULONG        ulLastLinePos    ;
+   int          iStaticCnt       ;
+   int          iVarScope        ;
+   BOOL         EOL              ;
+   PHB_FNAME    pFileName        ;
+   char *       buffer           ;
+   FILE *       yyin             ;
+   FILE *       yyout            ;
+   char *       yytext           ;
+   int          yyleng           ;
+   void *       yy_buffer        ;
+   int          yy_init          ;
+   int          yy_start         ;
+   int          yychar           ;
+   void *       yylval           ;
+#ifdef YYLSP_   NEEDED
+   void *       yylloc           ;
+#endif
+   int          yynerrs          ;
+   void *       pLoops           ;
+   void *       rtvars           ;
+} HARBVARS, * PHARBVARS;
+
 /* definitions for hb_compPCodeEval() support */
 typedef void *HB_VOID_PTR;
 #define HB_PCODE_FUNC( func, type ) USHORT func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
@@ -330,6 +381,8 @@ extern void hb_compPrintUsage( char * );
 extern void hb_compPrintCredits( void );
 extern void hb_compPrintLogo( void );
 
+extern int hb_compCompile( char * szPrg, int argc, char * argv[] );
+
 #endif    /* HB_MACRO_SUPPORT */
 
 /* Misc functions defined in harbour.c */
@@ -413,6 +466,7 @@ extern char *        hb_comp_szErrors[];
 extern char *        hb_comp_szWarnings[];
 
 extern char *        hb_pp_STD_CH;
+extern BOOL          hb_comp_bAutoOpen;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

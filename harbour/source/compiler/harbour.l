@@ -1774,3 +1774,45 @@ static int yy_ConvertNumber( char * szBuffer )
       }
    }
 }
+
+void * hb_compGet_YY_CURRENT_BUFFER()
+{
+   return YY_CURRENT_BUFFER;
+}
+
+void hb_compSet_YY_CURRENT_BUFFER( void * pBuffer )
+{
+   YY_CURRENT_BUFFER = pBuffer;
+   yy_load_buffer_state();
+}
+
+int hb_compGet_yy_init( void )
+{
+   return yy_init;
+}
+
+void hb_compSet_yy_init( int i )
+{
+   yy_init = i;
+}
+
+int hb_compGet_yy_start( void )
+{
+   return yy_start;
+}
+
+void hb_compSet_yy_start( int i )
+{
+   yy_start = i;
+}
+
+int hb_compGet_yy_did_buffer_switch_on_eof( void )
+{
+   return yy_did_buffer_switch_on_eof;
+}
+
+void hb_compSet_yy_did_buffer_switch_on_eof( int i )
+{
+   yy_did_buffer_switch_on_eof = i;
+}
+
