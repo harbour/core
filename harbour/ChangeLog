@@ -1,3 +1,12 @@
+19991003-09:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/classes.ch
+     + Support for INIT and AS clauses.
+   * source/rtl/tclass.prg
+     + New DATAS uInit and cType added.
+     + New SetInit() and SetType() methods added.
+     (Notice that SetInit() is already working, though SetType()
+      does nothing yet).
+
 19991003-03:52 GMT+1 Victor Szel <info@szelvesz.hu>
   ; Modifications after a test build with the harbour /w2 switch:
   * tests/working/rtl_test.prg
@@ -36,7 +45,7 @@
 
 19991002-18:10 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
-    * Fixed some bugs, reported by Victor Szel, Ryszard Glab, Jose Lalin and 
+    * Fixed some bugs, reported by Victor Szel, Ryszard Glab, Jose Lalin and
     * Robert Arseniuk
   * tests/working/db_browse.ch renamed to db_brows.ch
   * tests/working/db_browse.prg renamed to db_brows.prg
@@ -103,7 +112,7 @@ NOTE: You have to recompile all PRG sources!
         * added warnings when a procedure returns a value or a function
         with no return value
         * replaced the WORD type with USHORT
-        * corrected (and simplified) handling of parameters of 
+        * corrected (and simplified) handling of parameters of
         DO <proc> WITH <parms> statements (passing by reference
         works correctly now)
         * corrected the rule for declaration of multidimensioned arrays
@@ -149,7 +158,7 @@ NOTE: You have to recompile all PRG sources!
 
     *source/rtl/console.c
 	* hb_cursor_enum -> HB_cursor_enum
-	
+
 19991001-00:25 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/rtl/dircmd.prg
