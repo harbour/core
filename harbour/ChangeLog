@@ -1,3 +1,9 @@
+2001-01-18 22:41 GMT+1 JFL (Mafact) <jfl@mafact.com>
+   *harbour/hb_slex.vc
+    * added HBMAKE 
+   harbour/makefile.vc
+    * added HBMAKE 
+
 2001-01-18 00:18 GMT+1 JFL (Mafact) <jfl@mafact.com>
    *harbour/makefile.vc
     * minor form adjustement

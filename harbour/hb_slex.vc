@@ -74,6 +74,10 @@ HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
+HBMAKE_DIR   = utils\hbmake
+!ifdef PDF
+HBPDF_DIR   = contrib\pdflib
+!endif
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -83,8 +87,11 @@ AS             = masm
 CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
-#HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+!ifdef PDF
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
+!else
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+!endif
 LDFLAGS        = $(LDFLAGS)
 
 #
@@ -104,6 +111,7 @@ RTL_LIB      = $(LIB_DIR)\rtl.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
 GTCGI_LIB    = $(LIB_DIR)\gtcgi.lib
+GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
@@ -113,6 +121,18 @@ HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
+HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+#
+# GT driver list
+#
+
+# TODO: Add GTSLN and GTCRS
+
+HB_GT_LIBS = \
+   $(GTCGI_LIB) \
+   $(GTPCA_LIB) \
+   $(GTSTD_LIB) \
+   $(GTWIN_LIB)
 
 !ifndef HB_GT_LIB
 HB_GT_LIB = $(GTWIN_LIB)
@@ -422,7 +442,6 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\rddsys.obj \
    $(OBJ_DIR)\sdf0.obj
 
-
 #
 # NULSYS.LIB rules
 #
@@ -437,7 +456,6 @@ RDD_LIB_OBJS = \
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
-
 #
 # DBFNTX.LIB rules
 #
@@ -449,12 +467,12 @@ NULSYS_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFNTX_LIB)2
 
-#DBFNTX_LIB_OBJS = \
-#   $(OBJ_DIR)\dbfntx1.obj \
-#   \
-#   $(OBJ_DIR)\dbfntx0.obj
 DBFNTX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfntx1.obj \
+   \
    $(OBJ_DIR)\dbfntx0.obj
+#DBFNTX_LIB_OBJS = \
+#   $(OBJ_DIR)\dbfntx0.obj
 
 #
 # DBFCDX.LIB rules
@@ -567,9 +585,16 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pvalue.obj \
    $(OBJ_DIR)\runner.obj \
    \
+   \
+   \
    $(OBJ_DIR)\symbols.obj \
    \
    $(OBJ_DIR)\harbinit.obj
+
+
+
+
+
 
 #
 # GTCGI.LIB rules
@@ -581,6 +606,17 @@ VM_LIB_OBJS = \
 GTCGI_LIB_OBJS = \
    $(OBJ_DIR)\gtcgi.obj \
    $(OBJ_DIR)\mousecgi.obj
+
+#
+# GTDOS.LIB rules
+#
+
+{$(RTL_DIR)\gtdos}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
+
+GTDOS_LIB_OBJS = \
+   $(OBJ_DIR)\gtdos.obj \
+   $(OBJ_DIR)\mousedos.obj
 
 #
 # GTPCA.LIB rules
@@ -635,14 +671,12 @@ all: zot \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
-   $(GTCGI_LIB) \
-   $(GTPCA_LIB) \
-   $(GTSTD_LIB) \
-   $(GTWIN_LIB) \
+   $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
-   $(HBDOC_EXE)
+   $(HBDOC_EXE) \
+   $(HBMAKE_EXE)
 
 MK_FLAGS = $(MK_FLAGS:A=)
 
@@ -668,14 +702,12 @@ all: \
    $(NULSYS_LIB) \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
-   $(GTCGI_LIB) \
-   $(GTPCA_LIB) \
-   $(GTSTD_LIB) \
-   $(GTWIN_LIB) \
+   $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
-   $(HBDOC_EXE)
+   $(HBDOC_EXE) \
+   $(HBMAKE_EXE)
 
 !endif
 
@@ -766,6 +798,32 @@ $(HBDOC_EXE) : \
                    -o $(HBDOC_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
+# HBMAKE.EXE rules
+#
+
+$(HBMAKE_EXE) : \
+   $(HBMAKE_DIR)\hbmake.prg \
+   $(HBMAKE_DIR)\radios.prg \
+   $(HBMAKE_DIR)\checks.prg \
+   $(HBMAKE_DIR)\fclass1.prg \
+   $(HBMAKE_DIR)\ffile1.prg  \
+   $(HBMAKE_DIR)\ft_funcs.prg \
+   $(HBMAKE_DIR)\pickarry.prg \
+   $(HBMAKE_DIR)\pickfile.prg \
+   $(HBMAKE_DIR)\prb_stak.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbmake.c \
+                                   $(OBJ_DIR)\radios.c \
+                                   $(OBJ_DIR)\checks.c \
+                                   $(OBJ_DIR)\fclass1.c \
+                                   $(OBJ_DIR)\ffile1.c \
+                                   $(OBJ_DIR)\ft_funcs.c \
+                                   $(OBJ_DIR)\pickarry.c \
+                                   $(OBJ_DIR)\pickfile.c \
+                                   $(OBJ_DIR)\prb_stak.c \
+                   -o $(HBMAKE_EXE) /link $(LDFLAGS) $(LIBS2)
+
+#
 # HARBOUR.EXE rules
 #
 
@@ -776,17 +834,18 @@ HARBOUR_EXE_OBJ = \
    $(OBJ_DIR)\cmdcheck.obj \
    $(OBJ_DIR)\hbusage.obj \
    $(OBJ_DIR)\hbident.obj \
+   $(OBJ_DIR)\hbgenerr.obj \
    $(OBJ_DIR)\hbpcode.obj \
    $(OBJ_DIR)\hbfix.obj \
-   $(OBJ_DIR)\hbfunchk.obj \
-   $(OBJ_DIR)\hbgenerr.obj \
-   $(OBJ_DIR)\genobj32.obj \
    $(OBJ_DIR)\genc.obj \
-   $(OBJ_DIR)\genhrb.obj \
+   $(OBJ_DIR)\genobj32.obj \
    $(OBJ_DIR)\genjava.obj \
+   $(OBJ_DIR)\genhrb.obj \
    $(OBJ_DIR)\expropta.obj \
    $(OBJ_DIR)\exproptb.obj \
-   $(OBJ_DIR)\exproptc.obj
+   $(OBJ_DIR)\exproptc.obj \
+   $(OBJ_DIR)\hbfunchk.obj \
+   $(PP_LIB)
 
 #$(HARBOUR_EXE) : $(HARBOUR_EXE_OBJ) \
 $(HARBOUR_EXE) : \
@@ -866,6 +925,9 @@ $(GTSTD_LIB) : $(GTSTD_LIB_OBJS)
    lib /out:$@ $**
 
 $(GTWIN_LIB) : $(GTWIN_LIB_OBJS)
+   lib /out:$@ $**
+
+$(GTDOS_LIB) : $(GTDOS_LIB_OBJS)
    lib /out:$@ $**
 
 #
