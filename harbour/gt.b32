@@ -16,7 +16,7 @@ lib\b32\hbgt.lib : \
    ascpos.obj atdiff.obj chareven.obj charodd.obj chrcount.obj \
    chrtotal.obj charmix.obj asciisum.obj chrfirst.obj io.obj numtxthu.obj numtxten.obj nconvert.obj \
    rtf.obj strasint.obj strcount.obj strcspn.obj strdiff.obj strexpan.obj html.obj \
-   strleft.obj strpbrk.obj strright.obj 
+   strleft.obj strpbrk.obj strright.obj ng.obj os2.obj troff.obj
 
 ascpos.obj   : ascpos.c    extend.h hbdefs.h
 atdiff.obj   : atdiff.c    extend.h hbdefs.h
@@ -41,11 +41,19 @@ nconvert.obj : nconvert.c  extend.h hbdefs.h
 io.obj       : io.c        extend.h hbdefs.h
 rtf.obj      : rtf.c       extend.h hbdefs.h
 html.obj     : html.c      extend.h hbdefs.h
+os2.obj      : os2.c       extend.h hbdefs.h
+ng.obj       : ng.c      extend.h hbdefs.h
+troff.obj    : troff.c       extend.h hbdefs.h
+
 
 numtxthu.c   : numtxthu.prg harbour.exe
 numtxten.c   : numtxten.prg harbour.exe
 rtf.c        : rtf.prg      harbour.exe  
-html.c       : html.prg     harbour.exe  
+html.c       : html.prg     harbour.exe
+os2.c        : os2.prg      harbour.exe
+ng.c         : ng.prg       harbour.exe
+troff.c      : troff.rpg    harbour.exe
+
 .prg.c:
   bin\harbour $< /n /osource\tools\ /iinclude
 

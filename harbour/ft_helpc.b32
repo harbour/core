@@ -1,3 +1,7 @@
+#
+# $Id:
+#
+
 .path.c   = ngdoc
 .path.h   = include
 .path.exe = bin
@@ -14,7 +18,7 @@ ft_helpc.c   :   ft_helpc.prg
   bin\harbour $< /n /ongdoc\ /iinclude /p /DNANFOR
 
 ft_helpc.exe: ft_helpc.obj
-   echo  -O2 > bld.32
+   echo -O2 > bld.32
    echo -engdoc\ft_helpc.exe >> bld.32
    echo -Iinclude >> bld.32
    echo ngdoc\ft_helpc.c >> bld.32
