@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2001-12-29 19:44 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/clipdefs.h
+     ! Changed
+       #ifndef HB_OS_WIN_32 to
+       #ifdef !(defined(HB_OS_WIN_32) && defined(HB_OS_WIN_32_USED))
        Because the previous method was breaking legacy code.
        IMPORTANT: For those who get duplicate defines when compiling
        Win32 code, the #define HB_OS_WIN_32_USED should be defined
