@@ -1,3 +1,10 @@
+Thu May 07 17:00:00 1999  Victor Szel <info@szelvesz.hu>
+
+   * source/rtl/strings.c:
+     Adapted changes by "Matthew Hamilton" <MHamilton@bunge.com.au>
+     Some internal functions renamed
+     long type changed to ULONG.
+
 19990507-11:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - added hbtools.lib
@@ -13,227 +20,227 @@
     * source/rtl/set.c
     * source/rtl/transfrm.c
     * source/tools/stringsx.c
-	-added compatibility with Watcom C/C++ compiler
-	 (char *) type castings
+        -added compatibility with Watcom C/C++ compiler
+         (char *) type castings
 
 19990507-07:25 Ryszard Glab <rglab@imid.med.pl>
 
     * source/compiler/harbour.y, source/compiler/harbour.l
-	-improoved support for BEGIN SEGEUENCE
-	-added distinction between BEGIN comannd and begin variable
-	-added distinction between BREAK command and break variable
+        -improoved support for BEGIN SEGEUENCE
+        -added distinction between BEGIN comannd and begin variable
+        -added distinction between BREAK command and break variable
     * tests/working/keywords.prg
-	-new file to test if we are 100% compatible with Clipper
-	
+        -new file to test if we are 100% compatible with Clipper
+
 Thu May 06 18:12:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/win32/gcc.cf: 
-	Added (commented by now) linking agains the math library.
-	
-	* source/compiler/harbour.y: 
-	Now the -q option is REALLY quiet.
-	
-	* tests/working/Makefile: 
-	Added all of the tests to the Makefile.
-	
+        * config/win32/gcc.cf:
+        Added (commented by now) linking agains the math library.
+
+        * source/compiler/harbour.y:
+        Now the -q option is REALLY quiet.
+
+        * tests/working/Makefile:
+        Added all of the tests to the Makefile.
+
 Thu May 06 22:45:00 1999  Victor Szel <info@szelvesz.hu>
 
-	* source/rtl/dates.c:
-	  Fix to STOD(), added error checking to DTOS(), the later can be 
-	  disabled to make it faster.
-	* source/vm/hvm.c, include/extend.h:
-	  strempty() -> hb_strempty(), declaration moved to .h
-	* source/rtl/strings.c:
-	  hb_strempty() speed optimalization, cleanup.
-	* source/vm/dynsym.c:
-	  OurStrUpr() -> hb_strupr()
-	  _strgreater -> hb_strgreater()
-	* source/rtl/console.c:
-	  _outstd() -> hb_outstd()
-	* source/tools/stringsx.c:
-	  StrToken() -> hb_strtoken()
-	* source/rtl/strings.c:
-	  LTrim() -> hb_LTrim()
-	  RTrimLen() -> hb_RTrimLen()
-	  Lower() -> hb_Lower()
-	  Upper() -> hb_Upper()
-	  At() -> hb_At()
-	  Val() -> hb_Val()
-	* source/vm/hvm.c, source/rtl/array.c, source/rtl/strcmp.c,
-	  include/extend.h
-	  OurStrCmp() -> hb_itemStrCmp()
-	* source/rtl/*.c, source/include/extend.h
-	  julian2greg() -> hb_julian2greg()
-	  greg2julian() -> hb_greg2julian()
-	  Declaration moved to extend.h
+        * source/rtl/dates.c:
+          Fix to STOD(), added error checking to DTOS(), the later can be
+          disabled to make it faster.
+        * source/vm/hvm.c, include/extend.h:
+          strempty() -> hb_strempty(), declaration moved to .h
+        * source/rtl/strings.c:
+          hb_strempty() speed optimalization, cleanup.
+        * source/vm/dynsym.c:
+          OurStrUpr() -> hb_strupr()
+          _strgreater -> hb_strgreater()
+        * source/rtl/console.c:
+          _outstd() -> hb_outstd()
+        * source/tools/stringsx.c:
+          StrToken() -> hb_strtoken()
+        * source/rtl/strings.c:
+          LTrim() -> hb_LTrim()
+          RTrimLen() -> hb_RTrimLen()
+          Lower() -> hb_Lower()
+          Upper() -> hb_Upper()
+          At() -> hb_At()
+          Val() -> hb_Val()
+        * source/vm/hvm.c, source/rtl/array.c, source/rtl/strcmp.c,
+          include/extend.h
+          OurStrCmp() -> hb_itemStrCmp()
+        * source/rtl/*.c, source/include/extend.h
+          julian2greg() -> hb_julian2greg()
+          greg2julian() -> hb_greg2julian()
+          Declaration moved to extend.h
 
 Thu May 06 13:58:48 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/vm/hvm.c: 
-	Changed the prototype for ForceLink so that it is declared and
-	defined as a static function.
-	
+        * source/vm/hvm.c:
+        Changed the prototype for ForceLink so that it is declared and
+        defined as a static function.
+
 Thu May 06 13:09:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/bin.cf: 
-	* config/c.cf: 
-	* config/lib.cf: 
-	* config/prg.cf: 
-	* config/test.cf: 
-	* source/rtl/Makefile: 
-	By mistake, we were not compiling the PRG files into OBJS for the
-	rtl library.
-	
-	* source/rtl/dates.c: 
-	Changed the use of min with explicit code. min and max are macros
-	in some platforms, functions in others, and it is usually a mess
-	to link against them.
+        * config/bin.cf:
+        * config/c.cf:
+        * config/lib.cf:
+        * config/prg.cf:
+        * config/test.cf:
+        * source/rtl/Makefile:
+        By mistake, we were not compiling the PRG files into OBJS for the
+        rtl library.
 
-	* source/Makefile: 
-	* source/tools/Makefile: 
-	This directory was not being compiled.
-	
-	* source/tools/genobj.c: 
-	Got rid of most (all?) the warnings.
-	
-	* tests/working/Makefile: 
-	Now the libs to link against are explicitly specified in the
-	Makefile.
-	
-	* tests/working/statics.prg: 
-	Cleaned up all ^M characters.
-	
+        * source/rtl/dates.c:
+        Changed the use of min with explicit code. min and max are macros
+        in some platforms, functions in others, and it is usually a mess
+        to link against them.
+
+        * source/Makefile:
+        * source/tools/Makefile:
+        This directory was not being compiled.
+
+        * source/tools/genobj.c:
+        Got rid of most (all?) the warnings.
+
+        * tests/working/Makefile:
+        Now the libs to link against are explicitly specified in the
+        Makefile.
+
+        * tests/working/statics.prg:
+        Cleaned up all ^M characters.
+
 Thu May 06 12:34:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/compiler/harbour.l: 
-	* source/compiler/harbour.y: 
-	* source/rtl/set.c: 
-	Again, I renamed _AND and _OR to AND_ and OR_, and cleaned up a
-	few warnings.
+        * source/compiler/harbour.l:
+        * source/compiler/harbour.y:
+        * source/rtl/set.c:
+        Again, I renamed _AND and _OR to AND_ and OR_, and cleaned up a
+        few warnings.
 
 Wed May 05 18:51:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/ctoharb.h: 
-	* source/rtl/arrays.c: 
-	* source/rtl/files.c: 
-	* source/rtl/transfrm.c: 
-	* source/vm/dynsym.c: 
-	Replaced C++-style comments (//) with C-style commens (/* */).
+        * include/ctoharb.h:
+        * source/rtl/arrays.c:
+        * source/rtl/files.c:
+        * source/rtl/transfrm.c:
+        * source/vm/dynsym.c:
+        Replaced C++-style comments (//) with C-style commens (/* */).
 
 Wed May 05 18:36:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/ctoharb.h: 
-	* include/dates.h: 
-	* include/extend.h: 
-	* include/init.h: 
-	* include/itemapi.h: 
-	* include/pcode.h: 
-	* include/set.h: 
-	* include/setcurs.ch: 
-	* include/types.h: 
-	* source/compiler/harbour.c: 
-	* source/compiler/harbour.l: 
-	* source/compiler/harbour.y: 
-	* source/rtl/arrays.c: 
-	* source/rtl/classes.c: 
-	* source/rtl/codebloc.c: 
-	* source/rtl/console.c: 
-	* source/rtl/dates.c: 
-	* source/rtl/environ.c: 
-	* source/rtl/errorapi.c: 
-	* source/rtl/extend.c: 
-	* source/rtl/files.c: 
-	* source/rtl/itemapi.c: 
-	* source/rtl/math.c: 
-	* source/rtl/set.c: 
-	* source/rtl/strcmp.c: 
-	* source/rtl/strings.c: 
-	* source/rtl/transfrm.c: 
-	* source/tools/datesx.c: 
-	* source/tools/genobj.c: 
-	* source/tools/io.c: 
-	* source/tools/mathx.c: 
-	* source/tools/stringsx.c: 
-	* source/vm/dynsym.c: 
-	* source/vm/hvm.c: 
-	Added a comment with the CVS Id keyword.
+        * include/ctoharb.h:
+        * include/dates.h:
+        * include/extend.h:
+        * include/init.h:
+        * include/itemapi.h:
+        * include/pcode.h:
+        * include/set.h:
+        * include/setcurs.ch:
+        * include/types.h:
+        * source/compiler/harbour.c:
+        * source/compiler/harbour.l:
+        * source/compiler/harbour.y:
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/codebloc.c:
+        * source/rtl/console.c:
+        * source/rtl/dates.c:
+        * source/rtl/environ.c:
+        * source/rtl/errorapi.c:
+        * source/rtl/extend.c:
+        * source/rtl/files.c:
+        * source/rtl/itemapi.c:
+        * source/rtl/math.c:
+        * source/rtl/set.c:
+        * source/rtl/strcmp.c:
+        * source/rtl/strings.c:
+        * source/rtl/transfrm.c:
+        * source/tools/datesx.c:
+        * source/tools/genobj.c:
+        * source/tools/io.c:
+        * source/tools/mathx.c:
+        * source/tools/stringsx.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        Added a comment with the CVS Id keyword.
 
 Wed May 05 18:28:28 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* makefile.b16: 
-	* makefile.b32: 
-	Added explicit rules to compile harbour.o from harbour.c.
-	Don' know why these were necessary, but it seems people had
-	problems without them.
+        * makefile.b16:
+        * makefile.b32:
+        Added explicit rules to compile harbour.o from harbour.c.
+        Don' know why these were necessary, but it seems people had
+        problems without them.
 
 Wed May 05 16:29:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/pcode.h: 
-	* source/vm/hvm.c: 
-	* source/compiler/harbour.y: 
-	Replaced _AND and _OR with AND_ and OR_.
-	Under gcc, these two identifiers are defined out.
-	Also, got rid of a few warnings.
-	
-	* source/rtl/files.c: 
-	Implemented a macro trick to allow compilation of
-	FOPEN, FREAD and FWRITE.
-	Turned off HAVE_POSIX_IO for gcc; it doesn't seem to work.
-	Restructured the code so that when HAVE_POSIX_IO is not defined,
-	there are no warnings.
-	
+        * include/pcode.h:
+        * source/vm/hvm.c:
+        * source/compiler/harbour.y:
+        Replaced _AND and _OR with AND_ and OR_.
+        Under gcc, these two identifiers are defined out.
+        Also, got rid of a few warnings.
+
+        * source/rtl/files.c:
+        Implemented a macro trick to allow compilation of
+        FOPEN, FREAD and FWRITE.
+        Turned off HAVE_POSIX_IO for gcc; it doesn't seem to work.
+        Restructured the code so that when HAVE_POSIX_IO is not defined,
+        there are no warnings.
+
 Wed May 05 15:30:49 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/harbour.y:
-	* source/compiler/harbour.c: 
-	Replaced main() with harbour_main(), and added a separate
-	harbour.c with just the main() function.
+        * source/harbour.y:
+        * source/compiler/harbour.c:
+        Replaced main() with harbour_main(), and added a separate
+        harbour.c with just the main() function.
 
-	* makefile.b16: 
-	* makefile.b32: 
-	* makefile.vc: 
-	Updated these files to reflect the new source/compiler/harbour.c
-	file.
+        * makefile.b16:
+        * makefile.b32:
+        * makefile.vc:
+        Updated these files to reflect the new source/compiler/harbour.c
+        file.
 
-	* .cvsignore: 
-	Added this file with the patterns CVS will ignore while
-	processing.
-	
-	* config/bin.cf: 
-	* config/c.cf: 
-	* config/dir.cf: 
-	* config/global.cf: 
-	* config/install.cf: 
-	* config/lib.cf: 
-	* config/prg.cf: 
-	* config/test.cf: 
-	* config/win32/gcc.cf: 
-	* config/win32/global.cf: 
-	* config/win32/msvc.cf: 
-	* config/win32/rules.cf: 
-	* Makefile: 
-	* source/Makefile: 
-	* source/compiler/Makefile: 
-	* source/rtl/Makefile: 
-	* source/vm/Makefile: 
-	* tests/Makefile: 
-	This is the GNU-make based build system.
+        * .cvsignore:
+        Added this file with the patterns CVS will ignore while
+        processing.
+
+        * config/bin.cf:
+        * config/c.cf:
+        * config/dir.cf:
+        * config/global.cf:
+        * config/install.cf:
+        * config/lib.cf:
+        * config/prg.cf:
+        * config/test.cf:
+        * config/win32/gcc.cf:
+        * config/win32/global.cf:
+        * config/win32/msvc.cf:
+        * config/win32/rules.cf:
+        * Makefile:
+        * source/Makefile:
+        * source/compiler/Makefile:
+        * source/rtl/Makefile:
+        * source/vm/Makefile:
+        * tests/Makefile:
+        This is the GNU-make based build system.
 
 Wed May 05 09:24:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Set.ch: 
-	* tests/working/block2.PRG: 
-	Added back these files. They can't be renamed through CVS on NT,
-	and the repository will have to be updated by some other means.
+        * include/Set.ch:
+        * tests/working/block2.PRG:
+        Added back these files. They can't be renamed through CVS on NT,
+        and the repository will have to be updated by some other means.
 
 Wed May 05 09:19:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Set.ch: 
-	* tests/working/block2.PRG: 
-	Removed these files in preparation to move them to lowercase.
-	
-	* ChangeLog: 
-	Added this file.
+        * include/Set.ch:
+        * tests/working/block2.PRG:
+        Removed these files in preparation to move them to lowercase.
+
+        * ChangeLog:
+        Added this file.
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg

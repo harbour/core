@@ -61,7 +61,7 @@ HARBOUR ISLOWER( void )
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-char *hb_LTrim( char *szText, long *lLen )
+char *hb_strLTrim( char *szText, ULONG *lLen )
 {
    while( *lLen && HB_ISSPACE(*szText) )
    {
@@ -81,8 +81,8 @@ HARBOUR LTRIM( void )
 
       if( pText )
       {
-         long lLen = pText->wLength;
-         char *szText = hb_LTrim(pText->value.szText, &lLen);
+         ULONG lLen = pText->wLength;
+         char *szText = hb_strLTrim(pText->value.szText, &lLen);
 
          _retclen(szText, lLen);
       }
@@ -105,7 +105,7 @@ HARBOUR LTRIM( void )
 }
 
 /* returns szText and the new length in lLen */
-long hb_RTrimLen( char *szText, long lLen )
+ULONG hb_strRTrimLen( char *szText, ULONG lLen )
 {
    while( lLen && szText[lLen - 1] == ' ' )
       lLen--;
@@ -120,7 +120,7 @@ HARBOUR RTRIM( void )
    {
       PITEM pText = _param(1, IT_STRING);
       if( pText )
-         _retclen(pText->value.szText, hb_RTrimLen(pText->value.szText, pText->wLength));
+         _retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength));
       else
          /* Clipper doesn't error */
          _retc("");
@@ -148,9 +148,9 @@ HARBOUR ALLTRIM( void )
    if( _pcount() > 0 )
    {
       char *szText = _parc(1);
-      long lLen = hb_RTrimLen(szText, _parclen(1));
+      ULONG lLen = hb_strRTrimLen(szText, _parclen(1));
 
-      szText = hb_LTrim(szText, &lLen);
+      szText = hb_strLTrim(szText, &lLen);
 
       _retclen(szText, lLen);
    }
@@ -166,12 +166,12 @@ HARBOUR PADR( void )
    char *szText = _parc(1);
    if( _pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      ULONG lLen = _parnl(2);
 
-      if( lLen >= (long)_parclen(1) )
+      if( lLen >= (ULONG)_parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
-         long lPos;
+         ULONG lPos;
          char cPad;
 
          memcpy(szResult, szText, _parclen(1));
@@ -207,12 +207,12 @@ HARBOUR PADL( void )
 
    if( _pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      ULONG lLen = _parnl(2);
 
-      if( lLen > (long)_parclen(1) )
+      if( lLen > (ULONG)_parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
-         long lPos = lLen - _parclen(1);
+         ULONG lPos = lLen - _parclen(1);
          char cPad;
 
          memcpy(szResult + lPos, szText, _parclen(1));
@@ -244,13 +244,13 @@ HARBOUR PADC( void )
 
    if( _pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      ULONG lLen = _parnl(2);
 
-      if( lLen > (long)_parclen(1) )
+      if( lLen > (ULONG)_parclen(1) )
       {
          char *szResult = (char *)_xgrab(lLen + 1);
          char cPad;
-         long w, lPos = (lLen - _parclen(1)) / 2;
+         ULONG w, lPos = (lLen - _parclen(1)) / 2;
 
          memcpy(szResult + lPos, szText, _parclen(1) + 1);
 
@@ -596,7 +596,7 @@ HARBOUR SUBSTR( void )
 }
 
 /* converts szText to lower case. Does not create a new string! */
-char *hb_Lower(char *szText, long lLen)
+char *hb_strLower(char *szText, long lLen)
 {
    long i;
    for( i = 0; i < lLen; i++ )
@@ -615,7 +615,7 @@ HARBOUR LOWER( void )
       {
          long lLen = pText->wLength;
 
-         _retclen(hb_Lower(pText->value.szText, lLen), lLen);
+         _retclen(hb_strLower(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -636,7 +636,7 @@ HARBOUR LOWER( void )
 }
 
 /* converts szText to upper case. Does not create a new string! */
-char *hb_Upper(char *szText, long lLen)
+char *hb_strUpper(char *szText, long lLen)
 {
    long i;
    for( i = 0; i < lLen; i++ )
@@ -655,7 +655,7 @@ HARBOUR UPPER( void )
       {
          long lLen = pText->wLength;
 
-         _retclen(hb_Upper(pText->value.szText, lLen), lLen);
+         _retclen(hb_strUpper(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -960,7 +960,7 @@ HARBOUR STRTRAN( void )
 }
 
 /* returns an integer value of "numerical string"   */
-double hb_Val( char *szText )
+double hb_strVal( char *szText )
 {
    return atof(szText);
 }
@@ -973,7 +973,7 @@ HARBOUR VAL( void )
       PITEM pText = _param(1, IT_STRING);
 
       if( pText )
-         _retnd(hb_Val(pText->value.szText));
+         _retnd(hb_strVal(pText->value.szText));
       else
       {
          PITEM pError = _errNew();
