@@ -998,7 +998,7 @@ static LPPAGEINFO hb_ntxPageNew(LPTAGINFO pParentTag )
          pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
       }
       memset( pPage->pKeys, 0, sizeof( KEYINFO ) * ( pParentTag->MaxKeys + 1 ) );
-      pParentTag->TagBlock = pParentTag->TagBlock + 1024;
+      pParentTag->TagBlock += 1024;
       pPage->Page = pParentTag->TagBlock;
       pPage->CurKey = -1;
       pPage->lBusy = TRUE;
@@ -2215,7 +2215,7 @@ static ERRCODE ntxZap( NTXAREAP pArea )
       }
       pArea->lpCurIndex = lpIndexTmp;
       hb_xfree( buffer );
-      return SUCCESS;
+      return SELF_GOTOP( ( AREAP ) pArea );
    }
    else
      return FAILURE;
@@ -2654,12 +2654,21 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
 
    lpIndex = pArea->lpNtxIndex;
    lpIndexTmp = pArea->lpCurIndex;
+   pArea->fValidBuffer = TRUE;
    while( lpIndex )
    {
+      hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
+      hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+      hb_ntxIndexCreate( lpIndex );
+
+      hb_fsSeek( lpIndex->DiskFile , 0 , 0 );
+      lpIndex->CompoundTag->TagBlock = 
+              hb_fsSeek( lpIndex->DiskFile, 0, SEEK_END ) - 1024;
+
       lpIndex = lpIndex->pNext;
    }
    pArea->lpCurIndex = lpIndexTmp;
-   return SUCCESS;
+   return SELF_GOTOP( ( AREAP ) pArea );
 }
 
 static ERRCODE ntxClose( NTXAREAP pArea )
