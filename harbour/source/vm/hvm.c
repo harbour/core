@@ -1392,7 +1392,10 @@ void Minus( void )
 
 void ModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
 {
-
+   PushSymbol( hb_FindDynSym( "DEBUGGER" )->pSymbol );
+   PushNil();
+   PushString( szModuleName, strlen( szModuleName ) );
+   Do( 1 );
 }
 
 void Modulus( void )
