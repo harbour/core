@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-29 15:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/pp/ppcore.c
+    ! Added missing type conversions on calls to hb_xgrab
+      and hb_xrealloc.
+  * source/rtl/memoline.c
+    ! Convert CR to space for Clipper compatibility.
+
 2004-03-25 09:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfcdx/dbfcdx1.c
     ! minor fix

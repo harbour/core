@@ -175,7 +175,7 @@ HB_FUNC( MEMOLINE )
             if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
                ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 2;
             else
-               if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_SOFT1 || pszString[ ulLineBegin + ulPos ] == HB_CHAR_LF )
+               if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_SOFT1 || pszString[ ulLineBegin + ulPos ] == HB_CHAR_CR || pszString[ ulLineBegin + ulPos ] == HB_CHAR_LF )
                  ulSpAdded--;
                else
                   * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );

@@ -569,7 +569,7 @@ int hb_pp_ParseDefine( char * sLine )
                  if( cParams == NULL )
                  {
                     /* 'xy0' -> '~xy0' */
-                    cParams = hb_xgrab( iLen+2 );
+                    cParams = ( char * ) hb_xgrab( iLen+2 );
                  }
                  else
                  {
@@ -582,7 +582,7 @@ int hb_pp_ParseDefine( char * sLine )
                        if( *cPos == '\001' )
                            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_DUPL_IN_DEFINE, defname, pars );
                     }
-                    cParams = hb_xrealloc( cParams, iParLen+iLen+3 );
+                    cParams = ( char * ) hb_xrealloc( cParams, iParLen+iLen+3 );
                     cParams[iParLen++] = ',';
                     cParams[iParLen]   = '\0';
                  }
