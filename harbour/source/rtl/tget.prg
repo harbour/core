@@ -583,7 +583,7 @@ METHOD Untransform( cBuffer ) CLASS Get
                cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
             endif
          next
-         cBuffer := StrTran( cBuffer, Chr( 1 ), "" )
+         cBuffer := PadR( StrTran( cBuffer, Chr( 1 ), "" ), Len( ::Original ) )
       endif
 
       xValue := cBuffer

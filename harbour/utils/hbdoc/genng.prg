@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GENNG support module for hbdoc document Extractor 
+ * GENNG support module for hbdoc document Extractor
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -178,8 +178,8 @@ FUNCTION ProcessiNg()
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -190,16 +190,16 @@ FUNCTION ProcessiNg()
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -214,7 +214,7 @@ FUNCTION ProcessiNg()
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -277,9 +277,9 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -345,9 +345,9 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
-               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cFuncName :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
                //          endif
@@ -355,7 +355,7 @@ FUNCTION ProcessiNg()
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  get the category
-               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) 
+               cCategory :=  ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
 
                //  3) One line description
 
@@ -733,12 +733,12 @@ FUNCTION ProcNgiInput()
       FT_FUSE()
    NEXT
 
-   @ INFILELINE, 21 SAY "Extracting: "         
+   @ INFILELINE, 21 SAY "Extracting: "
 
    FOR x := 1 TO LEN( afuncsam )
       cFile := afuncsam[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       FT_FUSE( "ngi\" + cFile )
       aAlso := {}
@@ -779,7 +779,7 @@ FUNCTION ProcNgiInput()
    FOR x := 1 TO LEN( AFUNCSN_ )
       cFile := afuncsn_[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       FT_FUSE( "ngi\" + cFile )
       aAlso := {}
@@ -838,7 +838,7 @@ FUNCTION ProcNgiInput()
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "STRONGTYPING";
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEGARBAGECOLLECTOR" ;
                 .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEIDLESTATES"
-         @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+         @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
          FT_FUSE( "ngi\" + acfiles[ x ] )
          aAlso := {}
@@ -1034,25 +1034,25 @@ FUNCTION GenNgTable( oNgi )
    nPos  := maxelem( afitable )
    nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
    IF nNumTableItems == 2
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
+      cMaxItem := '      ' + "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
       IF LEN( cMaxItem ) < 76
-         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )          //-4
+         oNgi:WritePar( "      É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )          //-4
       ELSE
-         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+         oNgi:WritePar( "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
       ENDIF
    ELSEIF nNumTableItems == 3
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
+      cMaxItem := '      ' + "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
       IF LEN( cMaxItem ) < 76
-         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )     //-4
+         oNgi:WritePar( "      É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )     //-4
       ELSE
-         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
+         oNgi:WritePar( "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
       ENDIF
    ELSEIF nNumTableItems == 4
-      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
+      cMaxItem := '      ' + "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
       IF LEN( cMaxItem ) < 76
-         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )                   //-4
+         oNgi:WritePar( "      É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )                   //-4
       ELSE
-         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
+         oNgi:WritePar( "É" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
       ENDIF
    ENDIF
    FOR x := 1 TO LEN( asitable )
@@ -1085,22 +1085,22 @@ FUNCTION GenNgTable( oNgi )
       ELSE
          IF nNumTableItems == 2
             IF LEN( cMaxItem ) < 76
-               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+               oNgi:WritePar( "      Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
             ELSE
-               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+               oNgi:WritePar( "Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
             ENDIF
          ELSEIF nNumTableItems == 3
             IF LEN( cMaxItem ) < 76
-               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )                   //-4
+               oNgi:WritePar( "      Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )                   //-4
             ELSE
-               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )     //-4
+               oNgi:WritePar( "Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )     //-4
             ENDIF
 
          ELSEIF nNumTableItems == 4
             IF LEN( cMaxItem ) < 76
-               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )             //-4
+               oNgi:WritePar( "      Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )             //-4
             ELSE
-               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )                   //-4
+               oNgi:WritePar( "Ì" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )                   //-4
             ENDIF
 
          ENDIF
@@ -1110,24 +1110,24 @@ FUNCTION GenNgTable( oNgi )
 
    IF nNumTableItems == 2
       IF LEN( cMaxItem ) < 76
-         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )          //-4
+         oNgi:WritePar( "      È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )          //-4
       ELSE
-         oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
+         oNgi:WritePar( "È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
       ENDIF
 
    ELSEIF nNumTableItems == 3
       IF LEN( cMaxItem ) < 76
 
-         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
+         oNgi:WritePar( "      È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
       ELSE
-         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
+         oNgi:WritePar( "      È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
       ENDIF
 
    ELSEIF nNumTableItems == 4
       IF LEN( cMaxItem ) < 76
-         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )                   //-4
+         oNgi:WritePar( "      È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )                   //-4
       ELSE
-         oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
+         oNgi:WritePar( "È" + Replicate(( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + Replicate(( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + Replicate(( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + Replicate(( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
       ENDIF
    ENDIF
 

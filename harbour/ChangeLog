@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+  * harbour/source/ftl/tget.prg
+    ! Fixed bug in unTransform() method that truncated
+      trailing spaces in variable when using "@R" template
+  Borrowed from xharbour by Andi Jahja:
+  * harbour/source/common/reserved.c
+  * harbour/utils/hbdoc/genrtf.prg
+  * harbour/utils/hbdoc/genng.prg
+     + Add option to omit reserved words by adding -DHB_RESERVED_OFF (default is ON)
+
+     /*
+     This may be useful when one is working with pCode DLL where he must redefine
+     reserved words as dummy functions in the DLL.
+     */
+
 2003-09-15 12:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbf1.c
    * source/rdd/dbfntx/dbfntx1.c
