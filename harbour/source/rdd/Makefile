@@ -7,9 +7,13 @@ ROOT = ../../
 C_SOURCES=\
 	dbcmd.c \
         dbf1.c \
+        sdf1.c \
+        delim1.c \
 
 PRG_SOURCES=\
         dbf0.prg \
+        sdf0.prg \
+        delim0.prg \
 	rddsys.prg \
 
 LIB=rdd

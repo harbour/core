@@ -1,4 +1,18 @@
-Func Alert(cMessage, aOptions, nDelay)
+/* $Id$
+
+   Harbour Project source code
+   www - http://www.Harbour-Project.org
+
+   Written by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
+   http://i.am/kzm
+
+   Released into public domain.
+*/
+
+#include "box.ch"
+#include "inkey.ch"
+
+Function Alert(cMessage, aOptions, nDelay)
 
    Local nRet := 0
    Local aSay, nPos, nWidth, nOpWidth, nInitRow, nInitCol, iEval, nChoice

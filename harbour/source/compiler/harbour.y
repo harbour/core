@@ -81,11 +81,6 @@ typedef struct
    int   iFiles;        /* number of files currently opened */
 } FILES;                /* structure to control several opened PRGs and CHs */
 
-typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
-  char *szPath;
-  struct _PATHNAMES *pNext;
-} PATHNAMES;
-
 int Include( char * szFileName, PATHNAMES *pSearchPath );  /* end #include support */
 
 /*
@@ -125,14 +120,6 @@ static void LoopLoop( void );
 static void LoopExit( void );
 static void LoopHere( void );
 
-typedef struct             /* support for filenames */
-{
-  char _buffer[ _POSIX_PATH_MAX+3 ];
-  char *path;
-  char *name;
-  char *extension;
-} FILENAME;
-
 typedef struct __EXTERN
 {
    char * szName;
@@ -152,7 +139,6 @@ extern "C" int yywrap( void );
 #else
 int yywrap( void );     /* manages the EOF of current processed file */
 #endif
-DEFINES *AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
   /* Following line added for preprocessor */
 void Hbpp_init ( void );
 

@@ -45,31 +45,11 @@
  #endif
 #endif
 #include <stdio.h>
-#include "harb.h"
-
-extern int ParseDirective( char* );
-extern int ParseExpression( char*, char* );
-extern int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
-extern int pp_WrStr(FILE*,char *);
-extern int strolen ( char* );
-extern int strocpy (char*, char* );
+#include "hbpp.h"
 
 void Hbpp_init ( void );
 int PreProcess( FILE*, FILE*, char *);
 int Hp_Parse( FILE*, FILE* );
-
-#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
-
-extern int lInclude;
-extern int *aCondCompile, nCondCompile;
-extern int nline;
-
-#define BUFF_SIZE 2048
-#define STR_SIZE 8192
-#define INITIAL_ACOM_SIZE 200
-
-extern COMMANDS *aCommnew ;
-extern TRANSLATES *aTranslates ;
 
 int iBuffer, lenBuffer;
 int lPpo = 0;

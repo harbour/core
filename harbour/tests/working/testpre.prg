@@ -1,6 +1,6 @@
 FUNCTION Main()
 
-   LOCAL cString := "@ 10, 10 SAY 'Hello!'"
+   LOCAL cString
    LOCAL i, j, aScript
 
    CLS
@@ -9,10 +9,9 @@ FUNCTION Main()
    qOut( "======================================" )
    qOut( "" )
 
+   cString := "@ 10, 10 SAY 'Hello!'"
    qOut( cString )
-
-   cString := Preprocess( cString )
-   qOut( cString )
+   qOut( Preprocess( cString ) )
    qOut( "" )
 
    cString := "? 'Hello mom'"

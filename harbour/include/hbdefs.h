@@ -60,6 +60,13 @@ typedef int BOOL;
 #undef PVOID
 typedef void * PVOID;
 
+#ifndef MAX
+#define MAX(a,b)                (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef MIN
+#define MIN(a,b)                (((a) < (b)) ? (a) : (b))
+#endif
+
 #define LOBYTE(w)           ((BYTE)(w))
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #define LOWORD(l)           ((WORD)(l))

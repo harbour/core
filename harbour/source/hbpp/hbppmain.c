@@ -34,41 +34,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "harb.h"
+#include "hbpp.h"
 
 int Hp_Parse( FILE*, FILE* );
-extern int ParseDirective( char* );
-extern int ParseExpression( char*, char* );
-extern int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
-extern int pp_WrStr(FILE*,char *);
-extern DEFINES* AddDefine ( char*, char* );
-extern int strolen ( char* );
-extern char* strodup ( char * );
+void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 
-#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
-
-extern int lInclude;
-extern int *aCondCompile, nCondCompile;
-extern int nline;
-
-#define BUFF_SIZE 2048
-#define STR_SIZE 8192
-
-#define INITIAL_ACOM_SIZE 200
-extern COMMANDS *aCommnew ;
-extern TRANSLATES *aTranslates ;
 char sLine[STR_SIZE], sOutLine[STR_SIZE];
 
 PATHNAMES *_pIncludePath = NULL;
-void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
+FILENAME *_pFileName = NULL;
 
 int main (int argc,char* argv[])
 {
-FILE *handl_i,*handl_o;
-char szFileName[ _POSIX_PATH_MAX ];
-char * szDefText;
-FILENAME *pFileName =NULL;
-int iArg = 1, i;
+   FILE *handl_i,*handl_o;
+   char szFileName[ _POSIX_PATH_MAX ];
+   char * szDefText;
+   int iArg = 1, i;
 
    while( iArg < argc )
    {
@@ -102,21 +83,21 @@ int iArg = 1, i;
             break;
        }
      }
-     else  pFileName =SplitFilename( argv[ iArg ] );
+     else  _pFileName =SplitFilename( argv[ iArg ] );
      iArg++;
    }
-   if( pFileName )
+   if( _pFileName )
    {
-     if( !pFileName->extension )   pFileName->extension =".prg";
-      MakeFilename( szFileName, pFileName );
+     if( !_pFileName->extension )   _pFileName->extension =".prg";
+      MakeFilename( szFileName, _pFileName );
 
       if ((handl_i = fopen(szFileName, "r")) == NULL)
          { printf("\nCan't open %s\n",szFileName); return 1; }
    }
    else { printf("\nFile name absent\n"); return 1; }
 
-   pFileName->extension =".ppo";
-   MakeFilename( szFileName, pFileName );
+   _pFileName->extension =".ppo";
+   MakeFilename( szFileName, _pFileName );
 
    if ((handl_o = fopen(szFileName, "wt" )) == NULL)
         { printf("\nCan't open %s\n",szFileName); return 1; }

@@ -45,7 +45,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include "harb.h"
+#include "hbpp.h"
 #include "hberrors.h"
 
 int Hp_Parse( FILE*, FILE* );
@@ -96,14 +96,9 @@ int NextParm ( char**, char* );
 int Include( char *, PATHNAMES *, FILE** );
 BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly );
 
-#define isname(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
-#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
+#define ISNAME(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define MAX_NAME 255
-#define BUFF_SIZE 2048
-#define STR_SIZE 8192
 #define PATTERN_SIZE 2048
-#define FALSE               0
-#define TRUE                1
 
 #define STATE_INIT 0
 #define STATE_NORMAL 1
@@ -128,12 +123,6 @@ int nline=0;
 int Repeate;
 char groupchar;
 
-extern PATHNAMES *_pIncludePath;
-extern FILENAME *_pFileName;
-
-extern DEFINES *topDefine;
-
-#define INITIAL_ACOM_SIZE 200
 extern COMMANDS aCommands[] ;
 extern int kolcomm;
 COMMANDS *aCommnew ;
@@ -355,7 +344,7 @@ int ComSearch(char *cmdname, int ncmd)
   {
    for ( j=0; (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) &&
              (*(aCommnew[i].name+j)!='\0') &&
-             ((aCommnew[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
+             ((aCommnew[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
    if ( (*(aCommnew[i].name+j)==toupper(*(cmdname+j))) ||
        ( !aCommnew[i].com_or_xcom && j >= 4 && *(aCommnew[i].name+j)!='\0') )
    return kolcomm+i;
@@ -365,7 +354,7 @@ int ComSearch(char *cmdname, int ncmd)
  {
   for ( j=0; (*(aCommands[i].name+j)==toupper(*(cmdname+j))) &&
              (*(aCommands[i].name+j)!='\0') &&
-             ((aCommands[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
+             ((aCommands[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
   if ( (*(aCommands[i].name+j)==toupper(*(cmdname+j))) ||
        ( !aCommands[i].com_or_xcom && j >= 4 && *(aCommands[i].name+j)!='\0'
                                              && *(cmdname+j) == '\0' ) )
@@ -382,7 +371,7 @@ int TraSearch(char *cmdname, int ncmd)
  {
   for ( j=0; *(aTranslates[i].name+j)==toupper(*(cmdname+j)) &&
              *(aTranslates[i].name+j)!='\0' &&
-             ((aTranslates[i].com_or_xcom)? 1:(j<4 || isname(*(cmdname+j+1)))); j++ );
+             ((aTranslates[i].com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
   if ( *(aTranslates[i].name+j)==toupper(*(cmdname+j)) ||
        ( !aTranslates[i].com_or_xcom && j >= 4 &&
           *(aTranslates[i].name+j)!='\0' && *(cmdname+j) == '\0' ) )
@@ -628,12 +617,12 @@ int ParseExpression( char* sLine, char* sOutLine )
         if ( kolpass < 3 )
         {
           ptri = sLine + isdvig;
-          if ( isname(*ptri) )
+          if ( ISNAME(*ptri) )
             NextName( &ptri, sToken, NULL);
           else
           {
             i = 0;
-            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
+            while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !ISNAME(*ptri) )
             {
               *(sToken+i) = *ptri++;
               i++;
@@ -642,7 +631,7 @@ int ParseExpression( char* sLine, char* sOutLine )
           }
           SKIPTABSPACES( ptri );
 
-          if ( *ptri != ':' && *ptri != '=' && (isname(*ptri) || *(ptri+1) != '=')
+          if ( *ptri != ':' && *ptri != '=' && (ISNAME(*ptri) || *(ptri+1) != '=')
               && (ndef=ComSearch(sToken,0)) >= 0 )
           {
             ptro = sOutLine;
@@ -745,7 +734,7 @@ void WorkPseudoF ( char** ptri, char** ptro, DEFINES *stdef )
            while ( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-*ptro) )) > 0 )
            {
              ptrb = ptrb+ifou-1;
-             if ( !isname(*(ptrb-1)) && !isname(*(ptrb+lenfict)) )
+             if ( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
              {
                pp_Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
                lenres += lenreal - lenfict;
@@ -1085,7 +1074,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
      break;
     case STATE_ID:
     case STATE_ID_END:
-     if ( ( (isname(**ptri) || **ptri=='\\') && State == STATE_ID_END ) ||
+     if ( ( (ISNAME(**ptri) || **ptri=='\\') && State == STATE_ID_END ) ||
           **ptri==',' || **ptri=='\'' || **ptri=='\"')
      {
       if ( **ptri == ',' )
@@ -1120,7 +1109,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
     case STATE_EXPRES_ID:
      if ( **ptri == '\'' ) State = STATE_QUOTE1;
      else if ( **ptri == '\"' ) State = STATE_QUOTE2;
-     else if ( isname(**ptri) ) State = STATE_EXPRES_ID;
+     else if ( ISNAME(**ptri) ) State = STATE_EXPRES_ID;
      else if ( **ptri == ' ' && State == STATE_EXPRES_ID ) State = STATE_ID_END;
      else if ( **ptri == '(' ) { StBr1++; State = STATE_BRACKET; }
      else if ( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
@@ -1158,7 +1147,7 @@ void SkipOptional( char** ptri, char *ptro, int* lenres, int* pnbr)
  char exppatt[MAX_NAME];
  int lenpatt;
 
- while ( isname(**ptri) ) (*ptri)++;
+ while ( ISNAME(**ptri) ) (*ptri)++;
  SKIPTABSPACES( *ptri );
  while ( **ptri != ']' || nbr )
  {
@@ -1505,8 +1494,8 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkPrth)
          lSubPos++;
          lPos++;
          if ( lSubPos >= lSubLen  &&
-          ( ( isname(*szSub) && lPos>lSubPos && isname(*(szText+lPos-lSubPos-1)) ) ||
-            ( isname(*(szSub+lSubLen-1)) && isname(*(szText+lPos)) ) ) )
+          ( ( ISNAME(*szSub) && lPos>lSubPos && ISNAME(*(szText+lPos-lSubPos-1)) ) ||
+            ( ISNAME(*(szSub+lSubLen-1)) && ISNAME(*(szText+lPos)) ) ) )
           lSubPos = 0;
        }
        else if( lSubPos )  lSubPos = 0;
@@ -1626,7 +1615,7 @@ int strotrim ( char *stroka )
    else if ( *stroka == '\"' ) State = STATE_QUOTE2;
   }
 /*  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
-      ( (isname(lastc) || lastc=='>') && (isname(*(stroka+1)) || *(stroka+1)=='<') ) )
+      ( (ISNAME(lastc) || lastc=='>') && (ISNAME(*(stroka+1)) || *(stroka+1)=='<') ) )
 */
   if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
       ( *stroka==' ' && lastc != ' ' && lastc != ',' && lastc != '(' && *(stroka+1)!=',') )
@@ -1658,7 +1647,7 @@ int NextWord ( char** sSource, char* sDest, int lLower )
 int NextName ( char** sSource, char* sDest, char **sOut )
 {
  int lenName = 0, State = STATE_NORMAL;
- while ( **sSource != '\0' && ( !isname(**sSource) || State != STATE_NORMAL ) )
+ while ( **sSource != '\0' && ( !ISNAME(**sSource) || State != STATE_NORMAL ) )
  {
   if ( State == STATE_QUOTE1 )
    { if ( **sSource == '\'' ) State = STATE_NORMAL; }
@@ -1671,7 +1660,7 @@ int NextName ( char** sSource, char* sDest, char **sOut )
   (*sSource)++;
  }
 
- while ( **sSource != '\0' && isname(**sSource) )
+ while ( **sSource != '\0' && ISNAME(**sSource) )
   {
    if ( sOut !=NULL ) *(*sOut)++ = **sSource;
    *sDest++ = *(*sSource)++;

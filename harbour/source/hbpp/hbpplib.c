@@ -35,18 +35,14 @@
 */
 
 #include <ctype.h>
-#include "hbsetup.h"
+#include <stdio.h>
+#include "hbpp.h"
 #include "extend.h"
 #include "itemapi.h"
 #include "init.h"
-#include "harb.h"
-
-#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
-#define STR_SIZE 8192
-
-extern int ParseExpression( char*, char* );
 
 PATHNAMES *_pIncludePath = NULL;
+FILENAME *_pFileName = NULL;
 
 HARBOUR HB_PREPROCESS(void);
 
@@ -61,29 +57,31 @@ HB_INIT_SYMBOLS_END( Preprocess__InitSymbols );
          and external include files              */
 HARBOUR HB_PREPROCESS(void)
 {
+  if (ISCHAR(1))
+  {
+    char *pText = hb_xgrab(STR_SIZE);
+    char *pOut = hb_xgrab(STR_SIZE);
+    char *ptr = pText;
+
     int resParse;
 
-    if( hb_pcount() == 1 )
+    memcpy(pText, hb_parc(1), MIN(hb_parclen(1), STR_SIZE));
+    memset(pOut, 0, STR_SIZE);
+
+    SKIPTABSPACES( ptr );
+
+    if ( (resParse = ParseExpression( ptr, pOut )) > 0 )
     {
-        PHB_ITEM pItem = hb_param( 1, IT_STRING );
-
-        extern int strolen( char* );
-        char szText[STR_SIZE];
-        char szOut[STR_SIZE];
-        memcpy(szText, pItem->item.asString.value, strolen(pItem->item.asString.value)+1);
-
-        if(pItem)
-        {
-            char *ptr = szText;
-            SKIPTABSPACES( ptr );
-            if ( (resParse = ParseExpression( ptr, szOut )) > 0 )
-            {
-                // Some error here?
-            }
-        }
-
-        hb_retc( szOut );
+        // Some error here?
     }
+
+    hb_retc(pOut);
+
+    hb_xfree(pText);
+    hb_xfree(pOut);
+  }
+  else
+    hb_retc("");
 }
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
