@@ -377,8 +377,6 @@ void hb_clsIsClassRef( void )
 
    while( uiClass-- )
    {
-      printf("isClassRef %i\n",uiClass );
-
       if( pClass->pInlines )
          hb_gcItemRef( pClass->pInlines );
 
@@ -951,6 +949,8 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
  *             HB_OO_CLSTP_SHARED         32 : (method or) data shared
  *             HB_OO_CLSTP_CLASS          64 : message is the name of a superclass
  *             HB_OO_CLSTP_SUPER         128 : message is herited
+ *             HB_OO_CLSTP_CLASSCTOR     256 : Class method constructor
+ *             HB_OO_CLSTP_CLASSMETH     512 : Class method
  */
 
 
