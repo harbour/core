@@ -1,3 +1,7 @@
+19990530-13:15 CET Eddie Runia
+  * source/rtl/classes.c
+    message <> not found bug finally removed
+
 19990530-00:25 EST Les. Griffith
    * add logic for _fslock in files.c
 

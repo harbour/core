@@ -33,9 +33,9 @@ typedef struct
    PMETHOD pMethods;
    WORD    wMethods;
    WORD    wHashKey;
-   ITEM    aClassDatas;  /* Array for ClassDatas */
-   ITEM    aInlines;     /* Array for inline codeblocks */
-/*   ITEM    aInitValues;  */ /* Array for Datas init values */
+   PITEM   pClassDatas;  /* Array for ClassDatas */
+   PITEM   pInlines;     /* Array for inline codeblocks */
+/*   PITEM    pInitValues;  */ /* Array for Datas init values */
 } CLASS, * PCLASS;
 
 #define BUCKET 4
@@ -48,8 +48,10 @@ WORD    wClasses = 0;
 PMETHOD pMethod = 0;
 PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
-HARBOUR CLASSCREATE() /* cClassName, nDatas --> hClass */
+HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
 {
+   WORD hSuper = _parni( 3 );                   /* Super class present      */
+
    if( ! pClasses )
       pClasses = ( PCLASS ) _xgrab( sizeof( CLASS ) );
    else
@@ -58,21 +60,38 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas --> hClass */
    pClasses[ wClasses ].szName = ( char * ) _xgrab( _parclen( 1 ) + 1 );
    strcpy( pClasses[ wClasses ].szName, _parc( 1 ) );
 
-   pClasses[ wClasses ].wDatas   = _parni( 2 );
-   pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab( 100 * sizeof( METHOD ) );
-   pClasses[ wClasses ].wHashKey = 25; /* BUCKET = 4 repetitions */
-   pClasses[ wClasses ].wMethods = 0;
 
-   pClasses[ wClasses ].aClassDatas.wType = IT_NIL;
-   pClasses[ wClasses ].aInlines.wType = IT_NIL;
-/*   pClasses[ wClasses ].aInitValues.wType = IT_NIL; */
+   if( hSuper )
+   {
+      pClasses[ wClasses ].wDatas   += pClasses[ hSuper ].wDatas;
+      pClasses[ wClasses ].wMethods =  pClasses[ hSuper ].wMethods;
+      pClasses[ wClasses ].pClassDatas =
+         hb_arrayClone( pClasses[ hSuper ].pClassDatas );
+      pClasses[ wClasses ].pInlines =
+         hb_arrayClone( pClasses[ hSuper ].pInlines );
+      pClasses[ wClasses ].wHashKey = pClasses[ hSuper ].wHashKey;
+      pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab(
+         pClasses[ hSuper ].wHashKey * BUCKET * sizeof( METHOD ) );
+      memcpy( pClasses[ wClasses ].pMethods,
+              pClasses[ hSuper ].pMethods,
+              pClasses[ hSuper ].wHashKey * BUCKET * sizeof( METHOD ) );
+   }
+   else
+   {
+      pClasses[ wClasses ].wDatas   = _parni( 2 );
+      pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab( 100 * sizeof( METHOD ) );
+      pClasses[ wClasses ].wMethods = 0;
+      pClasses[ wClasses ].wHashKey = 25; /* BUCKET = 4 repetitions */
+      pClasses[ wClasses ].pClassDatas = hb_itemNew( 0 );
+      pClasses[ wClasses ].pInlines    = hb_itemNew( 0 );
+/*   pClasses[ wClasses ].pInitValues = hb_itemNew( 0 ); */
 
-   hb_arrayNew( &pClasses[ wClasses ].aClassDatas, 0 );
-   hb_arrayNew( &pClasses[ wClasses ].aInlines,    0 );
-   /* hb_arrayNew( &pClasses[ wClasses ].aInitValues,    0 ); */
+      hb_arrayNew( pClasses[ wClasses ].pClassDatas, 0 );
+      hb_arrayNew( pClasses[ wClasses ].pInlines,    0 );
+   /* hb_arrayNew( pClasses[ wClasses ].pInitValues,    0 ); */
 
-   memset( pClasses[ wClasses ].pMethods, 0, 100 * sizeof( METHOD ) );
-
+      memset( pClasses[ wClasses ].pMethods, 0, 100 * sizeof( METHOD ) );
+   }
    _retni( ++wClasses );
 }
 
@@ -161,7 +180,7 @@ static HARBOUR GetClassData( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
 
    if( wClass && wClass <= wClasses )
-      hb_arrayGet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, &stack.Return );
+      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, pMethod->wData, &stack.Return );
 }
 
 static HARBOUR SetClassData( void )
@@ -169,7 +188,7 @@ static HARBOUR SetClassData( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
 
    if( wClass && wClass <= wClasses )
-      hb_arraySet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, stack.pBase + 2 );
+      hb_arraySet( pClasses[ wClass - 1 ].pClassDatas, pMethod->wData, stack.pBase + 2 );
 }
 
 static HARBOUR EvalInline( void )
@@ -178,7 +197,7 @@ static HARBOUR EvalInline( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
    WORD w;
 
-   hb_arrayGet( &pClasses[ wClass - 1 ].aInlines, pMethod->wData, &block );
+   hb_arrayGet( pClasses[ wClass - 1 ].pInlines, pMethod->wData, &block );
 
    PushSymbol( &symEval );
    Push( &block );
@@ -320,7 +339,7 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
       pClass   = &pClasses[ wClass - 1 ];
       pMessage = GetDynSym( _parc( 2 ) );
       wAt      = ( ( ( unsigned ) pMessage ) % pClass->wHashKey ) * BUCKET;
-      wLimit   = wAt + BUCKET;
+      wLimit   = pClass->wHashKey * BUCKET;
 
       if( pClass->wMethods > ( pClass->wHashKey * BUCKET * 2/3 ) )
          DictRealloc( pClass );
@@ -330,7 +349,7 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
              ( pClass->pMethods[ wAt ].pMessage != pMessage ) ) )
          wAt++;
 
-      if( wAt <= wLimit )
+      if( wAt < wLimit )
       {
          pClass->pMethods[ wAt ].pMessage = pMessage;
          switch( wType )
@@ -356,8 +375,8 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
 
             case MET_CLASSDATA:
                  pClass->pMethods[ wAt ].wData = _parnl( 3 );
-                 if( ( WORD ) hb_arrayLen( &pClass->aClassDatas ) < _parnl( 3 ) )
-                    hb_arraySize( &pClass->aClassDatas, _parnl( 3 ) );
+                 if( ( WORD ) hb_arrayLen( pClass->pClassDatas ) < _parnl( 3 ) )
+                    hb_arraySize( pClass->pClassDatas, _parnl( 3 ) );
 
                  if( pMessage->pSymbol->szName[ 0 ] == '_' )
                     pClass->pMethods[ wAt ].pFunction = SetClassData;
@@ -366,9 +385,9 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
                  break;
 
             case MET_INLINE:
-                 pClass->pMethods[ wAt ].wData = hb_arrayLen( &pClass->aInlines ) + 1;
-                 hb_arraySize( &pClass->aInlines, pClass->pMethods[ wAt ].wData );
-                 hb_arraySet( &pClass->aInlines, pClass->pMethods[ wAt ].wData,
+                 pClass->pMethods[ wAt ].wData = hb_arrayLen( pClass->pInlines ) + 1;
+                 hb_arraySize( pClass->pInlines, pClass->pMethods[ wAt ].wData );
+                 hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData,
                            _param( 3, IT_BLOCK ) );
                  pClass->pMethods[ wAt ].pFunction = EvalInline;
                  break;
@@ -454,7 +473,7 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
    {
       pClass = &pClasses[ wClass - 1 ];
       wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
-      wLimit = wAt + BUCKET;
+      wLimit = pClass->wHashKey * BUCKET;
 
       pMethod = 0;
 
@@ -464,22 +483,6 @@ HARBOURFUNC GetMethod( PITEM pObject, PSYMBOL pMessage )
          {
             pMethod = &pClass->pMethods[ wAt ];
             return pClass->pMethods[ wAt ].pFunction;
-         }
-         wAt++;
-      }
-
-      wAt = 0;                                  /* 'Quick' Dynsym patch     */
-      wLimit = pClass->wHashKey * BUCKET;
-      while( wAt < wLimit )
-      {
-         if( pClass->pMethods[ wAt ].pMessage )
-         {
-            if( !strcmp( ( ( PDYNSYM )pClass->pMethods[ wAt ].pMessage)->pSymbol->szName,
-                         pMsg->pSymbol->szName ) )
-            {
-               pMethod = &pClass->pMethods[ wAt ];
-               return pClass->pMethods[ wAt ].pFunction;
-            }
          }
          wAt++;
       }
@@ -538,9 +541,11 @@ void ReleaseClass( PCLASS pClass )
    _xfree( pClass->szName );
    _xfree( pClass->pMethods );
 
-   hb_arrayRelease( &pClass->aClassDatas );
-   hb_arrayRelease( &pClass->aInlines );
-   /* hb_arrayRelease( &pClass->aInitValues ); */
+   hb_arrayRelease( pClass->pClassDatas );
+   hb_arrayRelease( pClass->pInlines );
+   /* hb_arrayRelease( pClass->pInitValues ); */
+   _xfree( pClass->pClassDatas );
+   _xfree( pClass->pInlines );
 }
 
 void ReleaseClasses( void )
@@ -616,19 +621,19 @@ HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
    {
       pClass = &pClasses[ wClass - 1 ];
       wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
-      wLimit = wAt + BUCKET;
+      wLimit = pClass->wHashKey * BUCKET;
 
       while( ( wAt < wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
          wAt++;
 
-      if( wAt <= wLimit )
+      if( wAt < wLimit )
       {                                         /* Requested method found   */
          pFunc = pClass->pMethods[ wAt ].pFunction;
          if( pFunc == EvalInline )              /* INLINE method changed    */
          {
-            hb_arraySet(  &pClass->aInlines, pClass->pMethods[ wAt ].wData,
+            hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData,
                        _param( 3, IT_BLOCK ) );
          }
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
@@ -662,19 +667,19 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
    {
       pClass = &pClasses[ wClass - 1 ];
       wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
-      wLimit = wAt + BUCKET;
+      wLimit = pClass->wHashKey * BUCKET;
 
       while( ( wAt < wLimit ) &&
              ( pClass->pMethods[ wAt ].pMessage &&
              ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
          wAt++;
 
-      if( wAt <= wLimit )
+      if( wAt < wLimit )
       {                                         /* Requested method found   */
          pFunc = pClass->pMethods[ wAt ].pFunction;
          if( pFunc == EvalInline )              /* INLINE method deleted    */
          {
-            hb_arrayDel(  &pClass->aInlines, pClass->pMethods[ wAt ].wData );
+            hb_arrayDel( pClass->pInlines, pClass->pMethods[ wAt ].wData );
                                                 /* Delete INLINE block      */
          }                                      /* Move messages            */
          for( ; pClass->pMethods[ wAt ].pMessage && wAt < wLimit; wAt ++ )
