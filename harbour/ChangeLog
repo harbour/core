@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-06 15:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/is.c
+    ! Bug fixed: ISUPPER, ISLOWER and ISALPHA with chr(0) argument
+      returned TRUE.
+      Patch provided by Przemyslaw Czerpak
+
 2003-05-06 12:55 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * source/rtl/set.c
     ! Fixed very serious bug in set(_SET_ALTFILE, "") and
