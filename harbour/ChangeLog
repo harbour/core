@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * METHOD ::Picture() - Add ::nDispLen := NIL line, reset the variable.
+          Only ::ParsePict() can load a value that can differ of
+          nMaxLen.
+
     ! METHOD ::KillFocus() - Change position of lines, hasfocus should be
           before the call to Putmask.
           This makes that in numeric fields, points or comas are not
