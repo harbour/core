@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTDOS.C: Video subsystem for DOS compilers.
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
@@ -112,15 +116,15 @@ void gtGotoXY(char x, char y)
 #if defined(__TURBOC__)
     _AH = 0x02;
     _BH = 0;
-    _DH = y - 1;
-    _DL = x - 1;
+    _DH = y;
+    _DL = x;
     geninterrupt(0x10);
 #else
     union REGS regs;
     regs.h.ah = 0x02;
     regs.h.bh = 0;
-    regs.h.dh = (unsigned char)(y - 1);
-    regs.h.dl = (unsigned char)(x - 1);
+    regs.h.dh = (unsigned char)(y);
+    regs.h.dl = (unsigned char)(x);
 #if defined(__WATCOMC__) && defined(__386__)
     int386(0x10, &regs, &regs);
 #else
@@ -238,7 +242,7 @@ void gtSetCursorStyle(int style)
 static void gtxGetXY(char x, char y, char *attr, char *ch)
 {
     char FAR *p;
-    p = gtScreenPtr((char)(x - 1), (char)(y - 1));
+    p = gtScreenPtr((char)(x), (char)(y));
     *ch = *p;
     *attr = *(p + 1);
 }
@@ -246,7 +250,7 @@ static void gtxGetXY(char x, char y, char *attr, char *ch)
 void gtxPutch(char x, char y, char attr, char ch)
 {
     char FAR *p;
-    p = gtScreenPtr((char)(x - 1), (char)(y - 1));
+    p = gtScreenPtr((char)(x), (char)(y));
     *p = ch;
     *(p + 1) = attr;
 }
@@ -256,7 +260,7 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     char FAR *p;
     int i;
 
-    p = gtScreenPtr((char)(x - 1), (char)(y - 1));
+    p = gtScreenPtr((char)(x), (char)(y));
     for(i=0; i<len; i++)
     {
         *p++ = *str++;
@@ -288,4 +292,44 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
             srce += 2;
         }
     }
+}
+
+char gtWhereX(void)
+{
+#if defined(__TURBOC__)
+    _AH = 0x03;
+    _BH = 0;
+    geninterrupt(0x10);
+    return _DH;
+#else
+    union REGS regs;
+    regs.h.ah = 0x02;
+    regs.h.bh = 0;
+#if defined(__WATCOMC__) && defined(__386__)
+    int386(0x10, &regs, &regs);
+#else
+    int86(0x10, &regs, &regs);
+#endif
+    return regs.h.dh;
+#endif
+}
+
+char gtWhereY(void)
+{
+#if defined(__TURBOC__)
+    _AH = 0x03;
+    _BH = 0;
+    geninterrupt(0x10);
+    return _DL;
+#else
+    union REGS regs;
+    regs.h.ah = 0x02;
+    regs.h.bh = 0;
+#if defined(__WATCOMC__) && defined(__386__)
+    int386(0x10, &regs, &regs);
+#else
+    int86(0x10, &regs, &regs);
+#endif
+    return regs.h.dl;
+#endif
 }

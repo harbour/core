@@ -1,3 +1,57 @@
+19990527-14:15 EST David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added gtdos to terminal library
+  * include/ctoharb.h
+    - Added word wDec parameter to PushDouble prototype (needed by C++ compilers)
+  * include/gtapi.h
+    - Added $Id$ block at top
+    - Added gtWhereX()
+    - Added gtWhereY()
+  * source/rtl/console.c
+    - Added GT API support
+    - Added InitializeConsole() to initialize GT API and device screen position
+    - Added HARBOUR PROW(), PCOL(), and SETPRC()
+    - Synchronize dev_row and dev_col with GT API screen position
+  * source/rtl/files.c
+    - Borland support now takes into account that older compiler versions
+      don't have the POSIX S_ flags.
+  * source/rtl/gtapi.c
+    - Added $Id$ block at top
+    - Changed #include <types.h> to #include <extend.h>
+    - Modified _gtWriteCon() to process control characters
+  * source/rtl/set.c
+    - Added default of "PRN" for HB_SET_PRINTFILE
+    - If SET (_SET_DEVCE, "PRINTER") and printer file not open, then open it
+  * source/rtl/transfrm.c
+    - Added use of wDec parameter in calls to PushDouble()
+  * source/rtl/gt/gtdos.c
+    - Added $Id$ block at top
+    - Added gtWhereX()
+    - Added gtWhereY()
+    - Removed screen coordinate adjustments (i.e., - 1), because
+      Clipper (and therefore Harbour) screen origin is (0,0)
+  * source/rtl/gt/gtos2.c
+    - Added $Id$ block at top
+    - Added gtWhereX()
+    - Added gtWhereY()
+    - Removed screen coordinate adjustments (i.e., - 1), because
+      Clipper (and therefore Harbour) screen origin is (0,0)
+    - Note: Still needs some work - doesn't match output from gtdos.c
+  * source/rtl/gt/gtwin.c
+    - Added $Id$ block at top
+    - Added gtWhereX()
+    - Added gtWhereY()
+    - Removed screen coordinate adjustments (i.e., - 1), because
+      Clipper (and therefore Harbour) screen origin is (0,0)
+    - Note: Needs to be tested, because I don't have a Windows compiler
+  * source/rtl/gt/gtxxx.c
+    - Added $Id$ block at top
+    - Added gtWhereX()
+    - Added gtWhereY()
+  * source/vm/hvm.c
+    - Added call to InitializeConsole()
+    - Added prototypes for InitializeConsole() and InitSymbolTable() for C++ compilers
+
 19990527-19:50 CET Eddie Runia
   * source/rtl/gt/gtdos.c, source/rtl/gt/gtwin.c, source/rtl/gtapi.c
     minor changes

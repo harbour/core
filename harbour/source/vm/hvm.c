@@ -31,6 +31,9 @@ HARBOUR EVAL( void );         /* Evaluates a codeblock from Harbour */
 HARBOUR MAIN( void );         /* fixed entry point by now */
 HARBOUR VALTYPE( void );      /* returns a string description of a value */
 
+extern void InitializeConsole(void); /* This prototype is needed by C++ compilers */
+extern void InitSymbolTable(void);   /* This prototype is needed by C++ compilers */
+
 /* currently supported virtual machine actions */
 void And( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */
 void ArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
@@ -189,7 +192,8 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    stack.Return.wType = IT_NIL;
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
-   InitializeSets(); /* initialize Sets */
+   InitializeSets();       /* initialize Sets */
+   InitializeConsole();    /* initialize Console */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif

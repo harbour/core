@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTOS2.C: Video subsystem for OS/2 compilers.
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
@@ -46,7 +50,21 @@ char gtGetScreenHeight(void)
 
 void gtGotoXY(char x, char y)
 {
-    VioSetCurPos((USHORT) (y - 1), (USHORT) (x - 1), 0);
+    VioSetCurPos((USHORT) y, (USHORT) x, 0);
+}
+
+char gtWhereX(void)
+{
+    USHORT x, y;
+    VioGetCurPos(&y, &x, 0);
+    return x;
+}
+
+char gtWhereY()
+{
+    USHORT x, y;
+    VioGetCurPos(&y, &x, 0);
+    return y;
 }
 
 static void gtSetCursorSize(char start, char end)
@@ -80,9 +98,9 @@ int gtGetCursorStyle(void)
     return(rc);
 }
 
-void gtPuts(char x, char y, char attr, char *str)
+void gtPuts(char x, char y, char attr, char *str, int len)
 {
-    VioWrtCharStrAtt(str, (USHORT) strlen(str), (USHORT) (y - 1), (USHORT) (x - 1), (PBYTE) &attr, 0);
+    VioWrtCharStrAtt(str, (USHORT) strlen(str), (USHORT) y, (USHORT) x, (PBYTE) &attr, 0);
 }
 
 void gtGetText(char x1, char y1, char x2, char y2, char *dest)
@@ -92,7 +110,7 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
     width = (USHORT) ((x2 - x1 + 1) * 2);
     for (y = y1; y <= y2; y++)
     {
-        VioReadCellStr((PBYTE) dest, &width, (USHORT) (y - 1), (USHORT) (x1 - 1), 0);
+        VioReadCellStr((PBYTE) dest, &width, (USHORT) y, (USHORT) x1, 0);
         dest += width;
     }
 }
@@ -104,7 +122,7 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     width = (USHORT) ((x2 - x1 + 1) * 2);
     for (y = y1; y <= y2; y++)
     {
-        VioWrtCellStr((PBYTE) srce, width, (USHORT) (y - 1), (USHORT) (x1 - 1), 0);
+        VioWrtCellStr((PBYTE) srce, width, (USHORT) y, (USHORT) x1, 0);
         srce += width;
     }
 }

@@ -24,7 +24,7 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
 hbtools.lib : datesx.obj debug.obj genobj.obj io.obj mathx.obj \
               stringp.obj stringsx.obj
 
-terminal.lib : console.obj
+terminal.lib : console.obj gtdos.obj
 
 libs\win16\terminal.lib : console.obj
 
@@ -49,7 +49,8 @@ errorsys.obj : errorsys.prg extend.h types.h init.h harbour.exe
 extend.obj   : extend.c   extend.h types.h
 files.obj    : extend.c   extend.h types.h
 genobj.obj   : source\tools\genobj.c   extend.h types.h
-gtapi.obj    : gtapi.c    extend.h types.h
+gtapi.obj    : gtapi.c    extend.h types.h gtapi.h
+gtdos.obj    : source\rtl\gt\gtdos.c extend.h types.h gtapi.h
 io.obj       : source\tools\io.c   extend.h types.h
 initsymb.obj : source\vm\initsymb.c extend.h types.h
 itemapi.obj  : itemapi.c  extend.h types.h
@@ -82,6 +83,10 @@ transfrm.obj : transfrm.c extend.h types.h
 {source\tools}.c{obj}.obj:
   bcc -c $(c_opt) -o$@ $<
   tlib .\libs\b16\hbtools.lib -+$@,,
+
+{source\rtl\gt}.c{obj}.obj:
+  bcc -c $(c_opt) -o$@ $<
+  tlib .\libs\b16\terminal.lib -+$@,,
 
 {source\compiler}.c{obj}.obj:
   bcc -c $(c_opt) -Isource\compiler -o$@ $<

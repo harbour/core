@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTWIN.C: Video subsystem for Windows 95/NT compilers.
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
@@ -57,8 +61,8 @@ char gtGetScreenHeight(void)
 void gtGotoXY(char x, char y)
 {
     COORD dwCursorPosition;
-    dwCursorPosition.X = (SHORT) (x - 1);
-    dwCursorPosition.Y = (SHORT) (y - 1);
+    dwCursorPosition.X = (SHORT) (x);
+    dwCursorPosition.Y = (SHORT) (y);
     SetConsoleCursorPosition(HOutput, dwCursorPosition);
 }
 
@@ -143,8 +147,8 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     {
         return;
     }
-    coord.X = (DWORD) (x - 1);
-    coord.Y = (DWORD) (y - 1);
+    coord.X = (DWORD) (x);
+    coord.Y = (DWORD) (y);
     for (i = 0; i < strlen(str); i++)
     {
         *(pwattr + i) = attr;
@@ -174,8 +178,8 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
     }
     for (y = y1; y <= y2; y++)
     {
-        coord.X = (DWORD) (x1 - 1);
-        coord.Y = (DWORD) (y - 1);
+        coord.X = (DWORD) (x1);
+        coord.Y = (DWORD) (y);
         ReadConsoleOutputCharacterA(HOutput, pstr, width, coord, &len);
         ReadConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
         for (i = 0; i < width; i++)
@@ -217,8 +221,8 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
             *(pwattr + i) = *srce;
             srce++;
         }
-        coord.X = (DWORD) (x1 - 1);
-        coord.Y = (DWORD) (y - 1);
+        coord.X = (DWORD) (x1);
+        coord.Y = (DWORD) (y);
         WriteConsoleOutputCharacterA(HOutput, pstr, width, coord, &len);
         WriteConsoleOutputAttribute(HOutput, pwattr, width, coord, &len);
     }
@@ -226,3 +230,16 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     free(pstr);
 }
 
+char gtWhereX(void)
+{
+    COORD dwCursorPosition;
+    GetConsoleCursorPosition(HOutput, &dwCursorPosition);
+    return dwCursorPosition.X;
+}
+
+char gtWhereX(void)
+{
+    COORD dwCursorPosition;
+    GetConsoleCursorPosition(HOutput, &dwCursorPosition);
+    return dwCursorPosition.Y;
+}

@@ -5,6 +5,7 @@
 #include <extend.h>
 #include <ctoharb.h>
 #include <ctype.h>
+#include <set.h>
 
 /*                                                                          */
 /*  Transform( xValue, cPicture )                                           */
@@ -182,7 +183,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
-   PushDouble ( dPush );                        /* Push value to transform  */
+   PushDouble ( dPush, iDecimals );             /* Push value to transform  */
    PushInteger( iWidth );                       /* Push numbers width       */
    PushInteger( iDecimals );                    /* Push decimals            */
    Function( 3 );                               /* 3 Parameters             */
@@ -312,7 +313,7 @@ PITEM NumDefault( double dValue )
    PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function         */
    PushNil    ();                               /* Function call. No object  */
 
-   PushDouble ( dValue );                       /* Push value to transform   */
+   PushDouble ( dValue, hb_set.HB_SET_DECIMALS );  /* Push value to transform   */
    Function   ( 1 );                            /* 1 Parameter               */
    StackPop   ();                               /* Pop return value          */
    if( stack.pPos->wType != IT_STRING )         /* Is it a string            */

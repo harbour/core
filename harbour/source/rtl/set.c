@@ -293,7 +293,14 @@ HARBOUR SET (void)
       case HB_SET_DEVICE     :
          if (hb_set.HB_SET_DEVICE) _retc (hb_set.HB_SET_DEVICE);
          else _retc ("");
-         if (args > 1) hb_set.HB_SET_DEVICE = set_string (pArg2, hb_set.HB_SET_DEVICE);
+         if (args > 1)
+         {
+            /* If the print file is not already open, open it. */
+            hb_set.HB_SET_DEVICE = set_string (pArg2, hb_set.HB_SET_DEVICE);
+            if (stricmp (hb_set.HB_SET_DEVICE, "PRINTER") == 0 && hb_set_printhan < 0
+            && hb_set.HB_SET_PRINTFILE && strlen (hb_set.HB_SET_PRINTFILE) > 0)
+               hb_set_printhan = open_handle (hb_set.HB_SET_PRINTFILE, bFlag, ".prn");
+         }
          break;
       case HB_SET_EPOCH      :
          _retni (hb_set.HB_SET_EPOCH);
@@ -445,7 +452,8 @@ void InitializeSets (void)
    hb_set.HB_SET_PATH = (char*)_xgrab (1);
    *hb_set.HB_SET_PATH = 0;
    hb_set.HB_SET_PRINTER = FALSE;
-   hb_set.HB_SET_PRINTFILE = 0;    /* NULL pointer */
+   hb_set.HB_SET_PRINTFILE = (char*)_xgrab (4);
+   memcpy (hb_set.HB_SET_PRINTFILE, "PRN", 4);	/* Default printer device */
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;

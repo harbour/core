@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTAPI.H; Screen drawing, cursor and keyboard routines for text mode
  *           16-bit and 32-bit MS-DOS, 16-bit and 32-bit OS/2, and 32-bit
  *           Windows 95/NT applications.
@@ -126,6 +130,8 @@ void gtDone(void);
 char gtGetScreenWidth(void);
 char gtGetScreenHeight(void);
 void gtGotoXY(char x, char y);
+char gtWhereX(void);
+char gtWhereY(void);
 void gtSetCursorStyle(int style);
 int  gtGetCursorStyle(void);
 void gtPuts(char x, char y, char attr, char *str, int len);

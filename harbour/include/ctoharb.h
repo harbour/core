@@ -11,7 +11,7 @@ void PushNil( void );            /* in this case it places nil at self */
 /* parameters should come here using Push...() */
 void PushInteger( int iNumber );
 void PushLong( long lNumber );
-void PushDouble( double dNumber );
+void PushDouble( double dNumber, WORD wDec );
 void PushString( char * szText, WORD wLength );  /* pushes a string on to the stack */
 void Do( WORD wParams );         /* invokes the virtual machine */
 void Function( WORD wParams );         /* invokes the virtual machine */

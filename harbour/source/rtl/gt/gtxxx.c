@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTXXX.C: Video subsystem template.
  *
  *  This module is based on VIDMGR by Andrew Clarke and modified for
@@ -28,6 +32,14 @@ char gtGetScreenHeight(void)
 }
 
 void gtGotoXY(char x, char y)
+{
+}
+
+char gtWhereX(void)
+{
+}
+
+char gtWhereY(void)
 {
 }
 

@@ -4,17 +4,6 @@
 
 #ifdef WINDOWS
    #include <windows.h>
-#else
-   /* TODO: Remove once the GT API works */
-   #if defined(__BORLANDC__) || defined(__TURBOC__)
-      #include <conio.h>
-      #define console_printf cprintf
-      #define console_gotoxy gotoxy
-   #endif
-   #if defined(__MSC__) || defined(__MSVC__)
-      #include <conio.h>
-      #define console_printf _cprintf
-   #endif
 #endif
 
 #include <io.h>
@@ -24,7 +13,15 @@
 #include <gtapi.h>
 #include <set.h>
 
-static int dev_row = 0, dev_col = 0;
+static unsigned short dev_row = 0;
+static unsigned short dev_col = 0;
+
+void InitializeConsole( void )
+{
+   dev_row = gtWhereX();
+   dev_col = gtWhereY();
+   _gtSetPos( dev_row, dev_col );
+}
 
 HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
                          /* Basically the simplest Clipper function to        */
@@ -116,17 +113,12 @@ static void hb_outerr( char * fpStr, WORD uiLen )
 /* Output an item to the screen and/or printer and/or alternate */
 static void hb_altout( char * fpStr, WORD uiLen )
 {
-   WORD uiCount = uiLen;
-   char * fpPtr = fpStr; /* TODO: delete fpPtr once the GT API works */
    if( hb_set.HB_SET_CONSOLE )
-      /* TODO: Replace with _gtWriteCon( fpStr, uiLen ) once the GT API works */
-      while( uiCount-- )
-         /* Display to console unless SET CONSOLE OFF */
-         #ifdef console_printf
-            console_printf( "%c", *fpPtr++ );
-         #else
-            printf( "%c", *fpPtr++ );
-         #endif
+   {
+      _gtWriteCon( fpStr, uiLen );
+      if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
+         _gtGetPos( &dev_row, &dev_col );
+   }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
       write( hb_set_althan, fpStr, uiLen );
@@ -138,21 +130,19 @@ static void hb_altout( char * fpStr, WORD uiLen )
 /* Output an item to the screen and/or printer */
 static void hb_devout( char * fpStr, WORD uiLen )
 {
-   WORD uiCount = uiLen;
-   char * fpPtr = fpStr; /* TODO: Delete fpPtr once the GT API works */
    if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
       dev_col += uiLen;
    }
-   #ifdef console_printf
    else
+   {
       /* Otherwise, display to console */
-      /* TODO: Replace with _gtWrite( fpStr, uiLen ) once the GT API works */
-      while( uiCount-- )
-      console_printf( "%c", *fpPtr++ );
-   #endif
+      _gtWrite( fpStr, uiLen );
+      if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
+         _gtGetPos( &dev_row, &dev_col );
+   }
 }
 
 void hb_devpos( int row, int col )
@@ -174,14 +164,7 @@ void hb_devpos( int row, int col )
       dev_col = col;
    }
    else
-   {
-      /*TODO: Replace with _gtSetPos( row, col ) once the GT API works */
-      #ifdef console_gotoxy
-         console_gotoxy( col + 1, row + 1);
-      #else
-         ;
-      #endif
-   }
+      _gtSetPos( row, col );
 }
 
 HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */
@@ -236,9 +219,7 @@ HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
       pRow = _param( 1, IT_NUMERIC );
       pCol = _param( 2, IT_NUMERIC );
       if( pRow && pCol )
-      {
          hb_devpos( _parni( 1 ), _parni( 2 ) );
-      }
    }
 }
 
@@ -265,9 +246,33 @@ HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen o
 
 HARBOUR EJECT( void ) /* Ejects the current page from the printer */
 {
-   if( hb_set_printhan )
+   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       write( hb_set_printhan, "\x0C", 1 );
       dev_row = dev_col = 0;
+   }
+}
+
+HARBOUR PROW( void ) /* Returns the current printer row position */
+{
+   _retni( dev_row );
+}
+
+HARBOUR PCOL( void ) /* Returns the current printer row position */
+{
+   _retni( dev_col );
+}
+
+HARBOUR SETPRC( void ) /* Sets the current printer row and column positions */
+{
+   if( _pcount() > 1 )
+   {
+      PITEM pRow = _param( 1, IT_NUMERIC );
+      PITEM pCol = _param( 1, IT_NUMERIC );
+      if( pRow && pCol )
+      {
+         dev_row = _parni( 1 );
+         dev_col = _parni( 2 );
+      }
    }
 }

@@ -45,6 +45,21 @@
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
+    #ifndef S_IEXEC
+      #define S_IEXEC  0x0040 /* owner may execute <directory search> */
+    #endif
+    #ifndef S_IRWXU
+      #define S_IRWXU  0x01c0 /* RWE permissions mask for owner */
+    #endif
+    #ifndef S_IRUSR
+      #define S_IRUSR  0x0100 /* owner may read */
+    #endif
+    #ifndef S_IWUSR
+      #define S_IWUSR  0x0080 /* owner may write */
+    #endif
+    #ifndef S_IXUSR
+      #define S_IXUSR  0x0040 /* owner may execute <directory search> */
+    #endif
   #endif
 
   #define PATH_SEPARATOR '\\'
@@ -151,14 +166,10 @@ static int convert_seek_flags( int flags )
 static int convert_create_flags( int flags )
 {
         /* by default FC_NORMAL is set */
-  	#if ! defined( __WATCOMC__ ) && ! defined( __BORLANDC__ )
         int result_flags=S_IWUSR;
 
         if( flags & FC_READONLY )
                 result_flags = result_flags & ~(S_IWUSR);
-        #else
-        int result_flags=0;
-        #endif
 
         if( flags & FC_HIDDEN )
                 result_flags |= 0;

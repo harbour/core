@@ -1,8 +1,12 @@
 /*
+ * $Id$
+ */
+
+/*
  *  GTAPI.C: Generic Terminal for Harbour
  */
 
-#include <types.h>
+#include <extend.h>
 #include <gtapi.h>
 
 /* TODO: functions not implemented yet
@@ -358,10 +362,46 @@ int _gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen)
 int _gtWriteCon(char * fpStr, USHORT uiLen)
 {
     int rc;
+    USHORT count;
+    char ch[2];
 
-    if((rc=_gtWrite(fpStr, uiLen)) != 0)
-	return(rc);
-
+    ch[1] = 0;
+    for(count = 0; count < uiLen; count++)
+    {
+       *ch = fpStr[count];
+       switch(*ch)
+       {
+          case 7:
+             break;
+          case 8:
+             if(s_uiCurrentCol > 0) s_uiCurrentCol--;
+             else if(s_uiCurrentRow > 0)
+             {
+                s_uiCurrentRow--;
+                s_uiCurrentCol=_gtMaxCol();
+             }
+             else
+             {
+                _gtScroll(0, 0, _gtMaxRow(), _gtMaxCol(), -1, 0);
+                s_uiCurrentCol=_gtMaxCol();
+             }
+             break;
+          case 10:
+             if(s_uiCurrentRow < _gtMaxRow()) s_uiCurrentRow++;
+             else
+             {
+                _gtScroll(0, 0, _gtMaxRow(), _gtMaxCol(), 1, 0);
+             }
+             break;
+          case 13:
+             s_uiCurrentCol = 0;
+             break;
+          default:
+             rc = _gtWrite(ch, 1);
+       }
+       if(rc)
+          return(rc);
+    }
     return(0);
 }
 
