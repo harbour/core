@@ -7,7 +7,7 @@
  * DBFCDX RDD
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
- * Copyright 2000 Horacio Roldán <horacioroldan@usa.net> (portions)
+ * Copyright 2000-2002 Horacio Roldan <harbour_ar@yahoo.com.ar> (portions)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -157,4 +157,6 @@ static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName );
 static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
       char * pKeyVal2, BYTE keyLen2, USHORT * pEndPos, BOOL Exact );
 static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro );
+static ERRCODE cdxError( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * filename, USHORT uiFlags );
+static void hb_cdxIndexReindex( LPCDXINDEX pIndex );
 

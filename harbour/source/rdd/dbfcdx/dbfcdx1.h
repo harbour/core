@@ -7,7 +7,7 @@
  * DBFCDX RDD
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
- * Copyright 2000 Horacio Roldán <horacioroldan@usa.net> (portions)
+ * Copyright 2000-2002 Horacio Roldan <harbour_ar@yahoo.com.ar> (portions)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
