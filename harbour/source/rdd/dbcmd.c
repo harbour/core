@@ -2178,13 +2178,21 @@ HB_FUNC( ORDBAGNAME )
 
    if( s_pCurrArea )
    {
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
-      if( !pOrderInfo.itmOrder )
+      if ( ISNUM(1) || ISNIL(1) )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDBAGNAME" );
-         return;
+         if ( hb_parnl(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
+            pOrderInfo.itmOrder  = NULL;
+         else
+            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+
+      }else
+      {
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+         if( !pOrderInfo.itmOrder )
+         {
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDBAGNAME" );
+            return;
+         }
       }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_BAGNAME, &pOrderInfo );
@@ -2318,15 +2326,24 @@ HB_FUNC( ORDFOR )
 
    if( s_pCurrArea )
    {
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
-      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if ( ISNUM(1) || ISNIL(1) )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDFOR" );
-         return;
+         if ( hb_parnl(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
+            pOrderInfo.itmOrder  = NULL;
+         else
+            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+
+      }else
+      {
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+         if( !pOrderInfo.itmOrder )
+         {
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDFOR" );
+            return;
+         }
       }
+
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_CONDITION, &pOrderInfo );
       hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
@@ -2342,29 +2359,24 @@ HB_FUNC( ORDKEY )
 
    if( s_pCurrArea )
    {
-      if ( ISNUM(1) )
+      if ( ISNUM(1) || ISNIL(1) )
       {
-         if ( hb_parnl(1) == 0 )          /* if ask for 0, get current order  */
-         {
-            pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
-            pOrderInfo.itmOrder  = NULL;  /* This is necessary to get the NUMBER back */
-            SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NUMBER, &pOrderInfo );
-            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
-            hb_itemPutNI( pOrderInfo.itmOrder, hb_itemGetNI( pOrderInfo.itmResult ) );
-            hb_itemRelease( pOrderInfo.itmResult );
-         }
+         if ( hb_parnl(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
+            pOrderInfo.itmOrder  = NULL;
          else
             pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
 
       }else
+      {
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+         if( !pOrderInfo.itmOrder )
+         {
+            hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDKEY" );
+            return;
+         }
+      }
 
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
-      {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDKEY" );
-         return;
-      }
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_EXPRESSION, &pOrderInfo );
       hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
@@ -2439,13 +2451,20 @@ HB_FUNC( ORDNAME )
 
    if( s_pCurrArea )
    {
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
-      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if ( ISNUM(1) || ISNIL(1) )
+      {
+         if ( hb_parnl(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
+            pOrderInfo.itmOrder  = NULL;
+         else
+            pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+
+      }else
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDNAME" );
          return;
       }
+
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       pOrderInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_NAME, &pOrderInfo );
       hb_retc( hb_itemGetCPtr( pOrderInfo.itmResult ) );
@@ -2463,7 +2482,7 @@ HB_FUNC( ORDNUMBER )
    {
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( !pOrderInfo.itmOrder && ! ISNIL(1))
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDNUMBER" );
          return;

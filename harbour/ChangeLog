@@ -1,4 +1,13 @@
-2000-10-25 23:30 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+2000-10-26 01:08 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rdd/dbcmd.c
+      * fixed these functions to accept 0 or NIL to access current order
+         ordKey
+         ordFor
+         ordBagName
+         ordName
+         ordNumber
+
+2000-10-25 23:55 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbcmd.c
       *
    * contrib/rdd_ads/ads1.c
@@ -10,12 +19,6 @@
       * fixed hb_waSkipFilter to limit lToSkip to 1 when passed to SkipRaw
    *  doc\en\rdddb.txt
       * fixed dbCreate() 4th parameter docs
-
- *      The <lOpen> parameter specifies if the already created database is
- *      to be opened, and where.  If NIL, the file is not opened. If True,
- *      it is opened in a New area, and if False it is opened in the current
- *      area (closing any file already occupying that area).
-
 
 2000-10-25 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/pp/ppcore.c
