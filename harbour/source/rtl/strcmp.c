@@ -9,12 +9,6 @@
 
 int hb_stricmp( const char *s1, const char *s2 )
 {
-#ifdef HB_USE_STRICMP
-   return( stricmp( s1, s2 ) );
-#else
-#ifdef HB_USE_STRCASECMP
-   return( strcasecmp( s1, s2 ) );
-#else
    int rc = 0, c1, c2;
    USHORT l1, l2, count;
    l1 = strlen( s1 );
@@ -34,8 +28,6 @@ int hb_stricmp( const char *s1, const char *s2 )
       else rc = 1;
    }
    return rc;
-#endif
-#endif
 }
 
 /* Check whether two strings are equal (0), smaller (-1), or greater (1) */
@@ -89,4 +81,3 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    }
    return(iRet);
 }
-
