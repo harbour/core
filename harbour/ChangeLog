@@ -1,3 +1,9 @@
+19990805-04:47 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/console.c - Small var naming change.
+   * source/rtl/achoice.prg
+     ! Fixed: SET DEVICE is no longer redirecting it's output.
+     % Optimialized color handling. (Thanks to Paul Tucker)
+
 19990804-14:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
      * added a cast (reported by Matteo)

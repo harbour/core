@@ -1120,16 +1120,16 @@ HARBOUR HB___COLORINDEX( void )
 {
    if ( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      char * szColorSpec = hb_parc( 1 );
-      ULONG  ulColorSpecPos;
-      ULONG  ulColorSpecLen;
+      char * szColor = hb_parc( 1 );
+      ULONG  ulColorPos;
+      ULONG  ulColorLen;
       USHORT uiColorIndex = hb_parni( 2 );
 
       /* Skip the given number of commas */
 
-      for ( ulColorSpecPos = 0; szColorSpec[ ulColorSpecPos ] && uiColorIndex > 0 ; ulColorSpecPos++ )
+      for ( ulColorPos = 0 ; szColor[ ulColorPos ] && uiColorIndex > 0 ; ulColorPos++ )
       {
-         if ( szColorSpec[ ulColorSpecPos ] == ',' )
+         if ( szColor[ ulColorPos ] == ',' )
             uiColorIndex--;
       }
 
@@ -1139,23 +1139,23 @@ HARBOUR HB___COLORINDEX( void )
       {
          /* Skip the spaces after the comma */
 
-         while ( szColorSpec[ ulColorSpecPos ] == ' ' ) ulColorSpecPos++;
+         while ( szColor[ ulColorPos ] == ' ' ) ulColorPos++;
 
          /* Search for next comma or end of string */
 
-         ulColorSpecLen = 0;
+         ulColorLen = 0;
 
-         while ( szColorSpec[ ulColorSpecPos + ulColorSpecLen ] &&
-                 szColorSpec[ ulColorSpecPos + ulColorSpecLen ] != ',' ) ulColorSpecLen++;
+         while ( szColor[ ulColorPos + ulColorLen ] &&
+                 szColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
 
          /* Skip the trailing spaces */
 
-         while ( ulColorSpecLen &&
-                 szColorSpec[ ulColorSpecPos + ulColorSpecLen - 1 ] == ' ' ) ulColorSpecLen--;
+         while ( ulColorLen &&
+                 szColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
 
          /* Return the string */
 
-         hb_retclen( szColorSpec + ulColorSpecPos, ulColorSpecLen );
+         hb_retclen( szColor + ulColorPos, ulColorLen );
       }
       else
          hb_retc( "" );

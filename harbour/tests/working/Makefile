@@ -17,6 +17,27 @@ endif
 ifeq ($(PM),)	# PM not defined = build all files
 PRG_SOURCES=\
         ac_test.prg \
+        adirtest.prg \
+	ainstest.prg \
+	and_or.prg \
+	array16.prg \
+	arrayidx.prg \
+	arrays.prg \
+        arreval.prg \
+	arrindex.prg \
+	atest.prg \
+	box.prg \
+	byref.prg \
+	calling.prg \
+	cdow.prg \
+	clasinit.prg \
+	clasname.prg \
+	classch.prg \
+	classes.prg \
+	clsdata.prg \
+	cmphello.prg \
+	codebl.prg \
+	codebloc.prg \
         colorind.prg \
 	comments.prg \
 	copyfile.prg \
