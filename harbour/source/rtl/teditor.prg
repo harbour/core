@@ -43,38 +43,40 @@
 
 CLASS TEditor
 
-   DATA  cFile INIT ""        // name of file being edited
+   DATA  cFile       INIT ""     // name of file being edited
 
-   DATA  aText INIT {}        // array with lines of text being edited
-   DATA  naTextLen INIT 0     // number of lines of text inside aText. Len function is not OK since deleting elements from
-                              // array creates NIL elements at array end which kill every text funcion (like substr) used on
-                              // array elements
+   DATA  aText       INIT {}     // array with lines of text being edited
+   DATA  naTextLen   INIT 0      // number of lines of text inside aText. Len function is not OK since deleting elements from
+                                 // array creates NIL elements at array end which kill every text funcion (like substr) used on
+                                 // array elements
 
-   DATA  nTop                 // boundaries of editor window, without box around
+   DATA  nTop                    // boundaries of editor window, without box around
    DATA  nLeft
    DATA  nBottom
    DATA  nRight
 
-   DATA  nFirstCol INIT 1     // FirstCol/Row of current text visible inside editor window
-   DATA  nFirstRow INIT 1
-   DATA  nRow INIT 1          // Cursor position inside aText (nRow) and inside current line of text (nCol)
-   DATA  nCol INIT 1
-   DATA  nNumCols INIT 1      // How many columns / rows can be displayed inside editor window
-   DATA  nNumRows INIT 1
+   DATA  nFirstCol   INIT 1      // FirstCol/Row of current text visible inside editor window
+   DATA  nFirstRow   INIT 1
+   DATA  nRow        INIT 1      // Cursor position inside aText (nRow) and inside current line of text (nCol)
+   DATA  nCol        INIT 1
+   DATA  nNumCols    INIT 1      // How many columns / rows can be displayed inside editor window
+   DATA  nNumRows    INIT 1
 
-   DATA  lInsert   INIT .F.   // Is editor in Insert mode or in Overstrike one?
-   DATA  nTabWidth INIT 8     // Size of Tab chars
-   DATA  lEditAllow INIT .T.  // Are changes to text allowed?
-   DATA  lSaved INIT .F.      // True if user exited editor with K_CTRL_W
+   DATA  lInsert        INIT .F.    // Is editor in Insert mode or in Overstrike one?
+   DATA  nTabWidth      INIT  8     // Size of Tab chars
+   DATA  lEditAllow     INIT .T.    // Are changes to text allowed?
+   DATA  lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
+   DATA  lWordWrap      INIT .F.    // True if word wrapping is active
+   DATA  nWordWrapCol   INIT  0     // At which column word wrapping occurs
 
-   METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode)
+   METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize)
    METHOD GetText()                 // Returns aText as a string (for MemoEdit())
    METHOD RefreshWindow()
    METHOD RefreshLine()
    METHOD RefreshColumn()
    METHOD MoveCursor(nKey)
    METHOD InsertState(lInsState)    // Changes lInsert value and insertion / overstrike mode of editor
-   METHOD Edit()
+   METHOD Edit(nPassedKey)
 
 ENDCLASS
 
@@ -125,7 +127,7 @@ METHOD GetText() CLASS TEditor
 return cString
 
 
-METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode) CLASS TEditor
+METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize) CLASS TEditor
 
    ::aText := Text2Array(cString)
    ::naTextLen := Len(::aText)
@@ -147,6 +149,17 @@ METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode) CLASS TEditor
    // set correct insert state
    if ::lEditAllow
       ::InsertState(::lInsert)
+   endif
+
+   // is word wrap required?
+   if !nLineLength == NIL
+      ::lWordWrap := .T.
+      ::nWordWrapCol := nLineLength
+   endif
+
+   // how many spaces for each tab?
+   if !nTabSize == NIL
+      ::nTabWidth := nTabSize
    endif
 
    // Empty area of screen which will hold editor window
@@ -392,117 +405,145 @@ METHOD InsertState(lInsState) CLASS TEditor
 return Self
 
 
+// if editing isn't allowed we enter this loop which
+// handles only movement keys and discards all the others
+STATIC procedure BrowseText(oSelf)
+
+   LOCAL nKey
+
+   while (nKey := InKey(0)) <> K_ESC
+      oSelf:MoveCursor(nKey)
+   enddo
+
+return
+
+
 // Edits text
-METHOD Edit() CLASS TEditor
+METHOD Edit(nPassedKey) CLASS TEditor
 
-   LOCAL i, nKey
+   LOCAL i, nKey, lOldInsert
+   LOCAL lKeepGoing := .T.
 
-   /* NOTE: changing EditMode SHOULD NOT be allowed from inside editor. Edit() method relies upon lEditAllow
-      being fixed for current editing session */
-   while ::lEditAllow
+   if !::lEditAllow
+      BrowseText(Self)
 
-      nKey := InKey(0)
-      do case
-         case (nKey >= 32 .AND. nKey < 256)
-            // insert char if in insert mode or at end of current line
-            if ::lInsert .OR. (::nCol > Len(::aText[::nRow]))
-               ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Chr(nKey))
-            else
-               ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, Chr(nKey))
-            endif
-            ::MoveCursor(K_RIGHT)
-            ::RefreshLine()
+   else
 
-         case (nKey == K_RETURN)
-            if ::lInsert .OR. ::nRow == ::naTextLen
-               AAdd(::aText, "")
-               if ::nRow < ::naTextLen
-                  AIns(::aText, ::nRow + 1)
-                  if Len(::aText[::nRow]) > 0
-                     // Split current line at cursor position
-                     ::aText[::nRow + 1] := Right(::aText[::nRow], Len(::aText[::nRow]) - ::nCol + 1)
-                     ::aText[::nRow] := Left(::aText[::nRow], ::nCol - 1)
-                  else
-                     ::aText[::nRow + 1] := ""
-                  endif
+      while lKeepGoing
+
+         // If I've been called with a key already preset, evaluate this key and then exit
+         if nPassedKey == NIL
+            nKey := InKey(0)
+         else
+            lKeepGoing := .F.
+            nKey := nPassedKey
+         endif
+
+         do case
+            case (nKey >= 32 .AND. nKey <= 255)
+               // insert char if in insert mode or at end of current line
+               if ::lInsert .OR. (::nCol > Len(::aText[::nRow]))
+                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Chr(nKey))
+               else
+                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, Chr(nKey))
                endif
-               ::naTextLen++
-            endif
-            ::MoveCursor(K_DOWN)
-            ::MoveCursor(K_HOME)
-
-         case (nKey == K_INS)
-            ::InsertState(!::lInsert)
-
-         case (nKey == K_DEL)
-            ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, "")
-            ::RefreshLine()
-            if Len(::aText[::nRow]) == 0
-               KEYBOARD Chr(K_CTRL_Y)
-            endif
-
-         case (nKey == K_TAB)
-            // insert char if in insert mode or at end of current line
-            if ::lInsert .OR. (::nCol == Len(::aText[::nRow]))
-               ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Space(::nTabWidth))
-            endif
-            for i := 1 to ::nTabWidth
                ::MoveCursor(K_RIGHT)
-            next
-            ::RefreshLine()
-
-         case (nKey == K_BS)
-            // delete previous character
-            ::aText[::nRow] := Stuff(::aText[::nRow], --::nCol, 1, "")
-            // correct column position for next call to MoveCursor()
-            ::nCol++
-            ::MoveCursor(K_LEFT)
-            ::RefreshLine()
-
-         case (nKey == K_CTRL_Y)
-            if ::naTextLen > 1
-               // delete current line of text
-               ADel(::aText, ::nRow)
-               ASize(::aText, --::naTextLen)
-               // if we now have less than a screen full of text, adjust nFirstRow position
-               if ::nFirstRow + ::nNumRows > ::naTextLen
-                  ::nFirstRow := Max(::nFirstRow - 1, 1)
-                  // if we have less lines of text than our current position on scree, up one line
-                  if ::nRow > ::naTextLen
-                     ::nRow := Max(::nRow - 1, 1)
-                     SetPos(Max(Row() -1, ::nTop), Col())
-                  endif
-               endif
-               ::RefreshWindow()
-            else
-               ::aText[::nRow] := ""
                ::RefreshLine()
-            endif
 
-         case (::MoveCursor(nKey))
-            // if it's a movement key ::MoveCursor() handles it
+               // if we need to word wrap a word we simulate a word left + return
+               if ::lWordWrap .AND. (::nCol > ::nWordWrapCol)
+                  ::MoveCursor(K_CTRL_LEFT)
+                  ::MoveCursor(K_CTRL_RIGHT)
+                  lOldInsert := ::lInsert
+                  ::lInsert := .T.
+                  ::Edit(K_RETURN)
+                  ::lInsert := lOldInsert
+                  ::MoveCursor(K_CTRL_RIGHT)
+               endif
 
-         case (nKey == K_CTRL_W)
-            ::lSaved := .T.
-            exit
+            case (nKey == K_RETURN)
+               if ::lInsert .OR. ::nRow == ::naTextLen
+                  AAdd(::aText, "")
+                  if ::nRow <= ::naTextLen
+                     AIns(::aText, ::nRow + 1)
+                     if Len(::aText[::nRow]) > 0
+                        // Split current line at cursor position
+                        ::aText[::nRow + 1] := Right(::aText[::nRow], Len(::aText[::nRow]) - ::nCol + 1)
+                        ::aText[::nRow] := Left(::aText[::nRow], ::nCol - 1)
+                     else
+                        ::aText[::nRow + 1] := ""
+                     endif
+                  endif
+                  // I increment naTextLen only here because now there is a "real" line of text, before
+                  // this point we have only added some "space" to split current line
+                  ::naTextLen++
+               endif
+               ::MoveCursor(K_DOWN)
+               ::MoveCursor(K_HOME)
 
-         case (nKey == K_ESC)
-            exit
+            case (nKey == K_INS)
+               ::InsertState(!::lInsert)
 
-         otherwise
-            /* TODO: Here we should call an user defined function (to match memoedit() behaviour) */
+            case (nKey == K_DEL)
+               ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, "")
+               ::RefreshLine()
+               if Len(::aText[::nRow]) == 0
+                  KEYBOARD Chr(K_CTRL_Y)
+               endif
+
+            case (nKey == K_TAB)
+               // insert char if in insert mode or at end of current line
+               if ::lInsert .OR. (::nCol == Len(::aText[::nRow]))
+                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Space(::nTabWidth))
+               endif
+               for i := 1 to ::nTabWidth
+                  ::MoveCursor(K_RIGHT)
+               next
+               ::RefreshLine()
+
+            case (nKey == K_BS)
+               // delete previous character
+               ::aText[::nRow] := Stuff(::aText[::nRow], --::nCol, 1, "")
+               // correct column position for next call to MoveCursor()
+               ::nCol++
+               ::MoveCursor(K_LEFT)
+               ::RefreshLine()
+
+            case (nKey == K_CTRL_Y)
+               if ::naTextLen > 1
+                  // delete current line of text
+                  ADel(::aText, ::nRow)
+                  ASize(::aText, --::naTextLen)
+                  // if we now have less than a screen full of text, adjust nFirstRow position
+                  if ::nFirstRow + ::nNumRows > ::naTextLen
+                     ::nFirstRow := Max(::nFirstRow - 1, 1)
+                     // if we have less lines of text than our current position on scree, up one line
+                     if ::nRow > ::naTextLen
+                        ::nRow := Max(::nRow - 1, 1)
+                        SetPos(Max(Row() -1, ::nTop), Col())
+                     endif
+                  endif
+                  ::RefreshWindow()
+               else
+                  ::aText[::nRow] := ""
+                  ::RefreshLine()
+               endif
+
+            case (::MoveCursor(nKey))
+               // if it's a movement key ::MoveCursor() handles it
+
+            case (nKey == K_ALT_W)
+               /* TOFIX: Not clipper compatible */
+               ::lSaved := .T.
+               lKeepGoing := .F.
+
+            case (nKey == K_ESC)
+               lKeepGoing := .F.
+
+            otherwise
+               /* TODO: Here we should call an user defined function (to match memoedit() behaviour) */
          endcase
-   enddo
-
-   // if editing isn't allowed we enter this loop (instead of the previous one), this loop
-   // handles only movement keys and discards all the others
-   while !::lEditAllow
-      nKey := InKey(0)
-      if nKey <> K_ESC
-         ::MoveCursor(nKey)
-      else
-         exit
-      endif
-   enddo
+      enddo
+   endif
 
 return Self

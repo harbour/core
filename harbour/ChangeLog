@@ -1,13 +1,24 @@
+20000503-00:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     + added word wrapping capabilities
+     * text is saved if user presses K_ALT_W (sorry) this deviates from clipper
+       but until we find a way to detect real K_CTRL_W it's better than nothing.
+     ! fixed a bug in text splitting when on last line of text
+   * source/rtl/memoedit.prg
+     * changed to match new TEditor capabilities
+
 20000502-22:04 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/lang/msges.c
      ! Updated by Jose Lalin
 
+
 20000502-19:28 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/hvm.c
      % hb_vmFunction() and hb_vmSendFunc() "inlined".
-       Note that hb_vmFunction() is still there since it's used from one 
+       Note that hb_vmFunction() is still there since it's used from one
        places in classes.c.
      - Redundant declaration removed.
 
@@ -24,8 +35,8 @@
      ! Typo.
 
    * make_gnu.cmd
-     + Error output redirection readded to be in sync with the other make 
-       files. If you need to customize this for your own taste, please make 
+     + Error output redirection readded to be in sync with the other make
+       files. If you need to customize this for your own taste, please make
        a local copy of it before.
 
 20000502-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
@@ -35,29 +46,29 @@
     *source/vm/Makefile
     -source/rtl/eval.c
     +source/vm/eval.c
-	* fixed bug in EVAL function when a parameter was passed using
-	the reference
-	* since the EVAL function is using a direct stack access instead
-	of hb_param() function the file eval.c is now moved into 
-	VM directory
-	
+   * fixed bug in EVAL function when a parameter was passed using
+   the reference
+   * since the EVAL function is using a direct stack access instead
+   of hb_param() function the file eval.c is now moved into
+   VM directory
+
 
 20000502-16:22 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-	* fixed syntax:
-	RETURN ++variable
+   * fixed syntax:
+   RETURN ++variable
 
 20000502-16:07 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbpcode.c
-	* increased buffers size used by sprintf to avoid GPF/code dumps
-    
+   * increased buffers size used by sprintf to avoid GPF/code dumps
+
 20000502-14:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
-	* fixed bug during accessing a constant arrays caused by
-	the optimization - { 1, 2, 3 }[ n ]
+   * fixed bug during accessing a constant arrays caused by
+   the optimization - { 1, 2, 3 }[ n ]
 
 20000502-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
@@ -75,8 +86,8 @@
    * source/compiler/hbfix.c
    * source/compiler/genc.c
    * source/vm/hvm.c
-     + HB_P_SEND and HB_P_SENDSHORT pcodes added. At this moment they are 
-       exactly the same as HB_P_FUNCTION[SHORT]. More work is needed to 
+     + HB_P_SEND and HB_P_SENDSHORT pcodes added. At this moment they are
+       exactly the same as HB_P_FUNCTION[SHORT]. More work is needed to
        optimize the stack usage for SEND/DO/FUNCTION.
      + hb_vmSend() function added.
 

@@ -38,17 +38,17 @@
 
 #include "common.ch"
 
-FUNCTION MemoEdit( cString,;
-                   nTop, nLeft,;
-                   nBottom, nRight,;
-                   lEditMode,;
-                   cUserFunction,;
-                   nLineLength,;
-                   nTabSize,;
-                   nTextBuffRow,;
-                   nTextBuffColumn,;
-                   nWindowRow,;
-                   nWindowColumn )
+FUNCTION MemoEdit(cString,;
+                  nTop, nLeft,;
+                  nBottom, nRight,;
+                  lEditMode,;
+                  cUserFunction,;
+                  nLineLength,;
+                  nTabSize,;
+                  nTextBuffRow,;
+                  nTextBuffColumn,;
+                  nWindowRow,;
+                  nWindowColumn)
 
    LOCAL oEd
 
@@ -64,10 +64,10 @@ FUNCTION MemoEdit( cString,;
    DEFAULT nWindowRow      TO 0
    DEFAULT nWindowColumn   TO nTextBuffColumn
 
-   oEd := TEditor():New( cString, nTop, nLeft, nBottom, nRight, lEditMode )
+   oEd := TEditor():New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nil, nLineLength, nTabSize)
    oEd:RefreshWindow()
 
-   if ! ISLOGICAL( cUserFunction ) .OR. cUserFunction == .T.
+   if ! ISLOGICAL(cUserFunction) .OR. cUserFunction == .T.
       oEd:Edit()
       if oEd:lSaved
          cString := oEd:GetText()
