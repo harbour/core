@@ -375,30 +375,6 @@ long _fsIsDrv( int driver )
 #endif
 }
 
-struct my_dir_list
-{
-   char               * fname;
-   struct my_dir_list * next;
-};
-
-#if !defined(__FULL_CLIPPER_COMPLIANT__)
-int _fsDirectory( char * dir, struct dirent *** nlist )
-#else
-static int _fsDirectory(char * dirname, struct dirent *** nlist)
-#endif
-{
-   int result=-1;
-#if defined(HAVE_POSIX_IO)
-   #if defined(__BORLANDC__) || defined(__DJGPP__)
-       /* TODO borland does not scandir() in it's dirent.h what
-          needs to be done here??  */
-   #else
-      result = scandir(dir,nlist,0,alphasort);
-   #endif
-#endif
-   return result;
-}
-
 #ifdef NOT_IMPLEMENTED_YET
 
 /* Unknow that it make :( if anyone can say me !! */
@@ -744,92 +720,5 @@ HARBOUR L2BIN()
 HARBOUR W2BIN()
 {
         I2BIN();
-}
-
-#define MAX_FNAME 64
-
-static int strcmp_wildcard( const char * pattern, const char * filename )
-{
-   /* TODO: write widcards comparison */
-   return 1;
-}
-
-#ifdef __BORLANDC__
-   #undef DIRECTORY
-#endif
-
-HARBOUR DIRECTORY( void )
-{
-#if defined(HAVE_POSIX_IO)
-   PHB_ITEM arg1_it = _param(1,IT_STRING);
-
-   struct dirent ** nlist;
-   char * string;
-   char * pos;
-   char   pattern[MAX_FNAME];
-   char   dirname[PATH_MAX];
-   int    have_wildcards = 0;
-   int    i;
-   int    result;
-   int    (*compare_me)(const char *, const char*);
-
-   if( arg1_it )
-   {
-      string = _parc(1);
-      pos = strrchr(string,PATH_SEPARATOR);
-      if( pos )
-      {
-         strcpy(pattern,(pos+1));
-         pos=0;
-         strcpy(dirname,string);
-         *pos = PATH_SEPARATOR;
-      }
-      else
-      {
-         strcpy(pattern,string);
-         strcpy(dirname,".X");
-         dirname[1] = PATH_SEPARATOR;
-      }
-   }
-   else
-   {
-      strcpy(pattern,"*");
-      strcpy(dirname,".X");
-      dirname[1]=PATH_SEPARATOR;
-   }
-
-   /* have we wilcards in pattern ?? */
-   pos = strchr(pattern, '*' );
-   have_wildcards = ( pos ? 1 : 0 );
-   if( !pos )
-   {
-     pos = strchr(pattern, '?' );
-     have_wildcards = ( pos ? 1 : 0 );
-   }
-
-   result = _fsDirectory(dirname,&nlist);
-   if( result < 0 )
-   {
-      /* TODO: return nill or empty array */
-      return;
-   }
-
-   compare_me = have_wildcards ? strcmp_wildcard : strcmp;
-
-   /* TODO: create an harbour array and return it */
-
-   for(i=0; i<result; i++)
-   {
-      /* only can use nlist[i]->d_name */
-      if( compare_me(pattern,nlist[i]->d_name) )
-      {
-         /* TODO: add this entry to returned array */
-      }
-   }
-
-   free(nlist);
-
-#endif
-   return;
 }
 
