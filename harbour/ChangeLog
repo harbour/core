@@ -1,3 +1,8 @@
+2000-06-15 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+   * source/rtl/gtwin/gtwin.c
+     ! Added '#include <ctype.h>' for the tolower() prototype.
+
 2000-06-14 22:37 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcomp.c
      ! Fixed missing CR at EOF of #include file, causing #line directive to be on same line with the next line in parrent file.
