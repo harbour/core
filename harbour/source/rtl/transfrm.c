@@ -368,7 +368,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_STRING )
          {
             char * szPic2 = hb_itemGetCPtr( pPic );
-            int ulLen = atol( szPic2 + 2 );
+            ULONG ulLen = ( ULONG ) atol( szPic2 + 2 );
 
             if( ulLen & ( ulLen <= ulExpLen ) )
             {
