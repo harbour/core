@@ -42,21 +42,29 @@ function aSort( aIn, nStart, nCount, bBlock )
       RETURN NIL
    ENDIF
 
+   IF Len( aIn ) == 0
+      RETURN aIn
+   ENDIF
+
    IF !( ValType( nStart ) == "N" )
       nStart := 1
    ENDIF
 
+   IF nStart > Len( aIn )
+      nStart := Len( aIn )
+   ENDIF
+
    IF !( ValType( nCount ) == "N" )
       nCount := Len( aIn ) - nStart + 1
+   ELSEIF nCount > Len( aIn ) - nStart
+      nCount := Len( aIn ) - nStart
    ENDIF
 
    IF !( ValType( bBlock ) == "B" )
       bBlock := {| x, y | x < y }
    ENDIF
 
-   IF len( aIn ) > 0
-      QuickSort( aIn, nStart, nCount, bBlock )
-   ENDIF
+   QuickSort( aIn, nStart, nCount, bBlock )
 
 return aIn
 

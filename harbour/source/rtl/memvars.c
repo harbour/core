@@ -1504,7 +1504,8 @@ HARBOUR HB___MVPUT( void )
 
 HARBOUR HB___MVSAVE( void )
 {
-   if( ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
+   /* Clipper also check for the number of arguments here */
+   if( hb_pcount() == 3 && ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
    {
       PHB_FNAME pFileName;
       char szFileName[ _POSIX_PATH_MAX + 1 ];
@@ -1548,7 +1549,7 @@ HARBOUR HB___MVSAVE( void )
 
             /* Save memvars with a maximum name length of 10 characters */
             /* NOTE: Harbour name lengths are not limited, but the .MEM file
-                     structure is not flexible enough to allow for it. 
+                     structure is not flexible enough to allow for it.
                      So we are ignoring any variables with more then 10 chars
                      long name. */
             if( pDynVar->hMemvar && strlen( pDynVar->pSymbol->szName ) <= 10 )
@@ -1561,7 +1562,7 @@ HARBOUR HB___MVSAVE( void )
                   PHB_ITEM pItem = &s_globalTable[ pDynVar->hMemvar ].item;
 
                   memset( buffer, 0, HB_MEM_REC_LEN );
-                  strcpy( (char *)buffer, pDynVar->pSymbol->szName );
+                  strcpy( ( char * ) buffer, pDynVar->pSymbol->szName );
 
                   if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
                   {
@@ -1573,7 +1574,7 @@ HARBOUR HB___MVSAVE( void )
                      buffer[ 17 ] = HIBYTE( uiLength );
 
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-                     hb_fsWrite( fhnd, (BYTE *)hb_itemGetCPtr( pItem ), uiLength );
+                     hb_fsWrite( fhnd, ( BYTE * ) hb_itemGetCPtr( pItem ), uiLength );
                   }
                   else if( IS_NUMERIC( pItem ) )
                   {
@@ -1584,7 +1585,13 @@ HARBOUR HB___MVSAVE( void )
                      hb_itemGetNLen( pItem, &iWidth, &iDec );
 
                      buffer[ 11 ] = 'N' + 128;
-                     buffer[ 16 ] = ( BYTE ) iWidth + ( iDec ? iDec + 1 : 0 );
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+/* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. */
+                     buffer[ 16 ] = ( BYTE ) iWidth + ( IS_DOUBLE( pItem ) ? iDec + 1 : 0 );
+#else
+/* NOTE: This would be the correct method, but Clipper is buggy here. */
+                     buffer[ 16 ] = ( BYTE ) iWidth + ( iDec == 0 ? 0 : iDec + 1 );
+#endif
                      buffer[ 17 ] = ( BYTE ) iDec;
 
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
@@ -1595,7 +1602,7 @@ HARBOUR HB___MVSAVE( void )
                      double dNumber = ( double ) hb_itemGetNL( pItem );
 
                      buffer[ 11 ] = 'D' + 128;
-                     buffer[ 16 ] = sizeof( dNumber );
+                     buffer[ 16 ] = 1;
                      buffer[ 17 ] = 0;
 
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
@@ -1633,6 +1640,8 @@ HARBOUR HB___MVSAVE( void )
 
 HARBOUR HB___MVRESTORE( void )
 {
+   /* Clipper check for the number of arguments here here, but we cannot
+      in Harbour since we have two optional parameters as an extension. */
    if( ISCHAR( 1 ) && ISLOG( 2 ) )
    {
       PHB_FNAME pFileName;
@@ -1690,7 +1699,7 @@ HARBOUR HB___MVRESTORE( void )
                   pbyString = ( BYTE * ) hb_xgrab( uiWidth );
 
                   if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
-                     pItem = hb_itemPutCL( NULL, (char *)pbyString, uiWidth - 1 );
+                     pItem = hb_itemPutCL( NULL, ( char * ) pbyString, uiWidth - 1 );
 
                   hb_xfree( pbyString );
 
@@ -1706,7 +1715,7 @@ HARBOUR HB___MVRESTORE( void )
                      double dNumber = * ( double * ) &pbyNumber;
 
                      if( uiWidth >= 1 && uiDec )
-                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth - ( uiDec + 1 ), uiDec );
+                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth - uiDec - 1, uiDec );
 
                      else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
                         pItem = hb_itemPutNILen( NULL, ( int ) dNumber, uiWidth );

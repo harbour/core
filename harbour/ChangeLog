@@ -1,3 +1,21 @@
+19990913-01:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/memvars.c
+    ! __MVSAVE() - Pedantic fix to the saved format of DATE type.
+    ! __MVSAVE() - Made it bug compatible with Clipper, for DOUBLE numeric
+      types with no decimals, Clipper adds one to the saved width, which is
+      wrong, since at restore the width will be incorrect (one more than it
+      should be), you can check this with the value 5000000000 for example.
+      HARBOUR_STRICT_CLIPPER_COMPATIBILITY added here, right now the bug fix
+      in enabled.
+  * source/rtl/asort.prg
+    ! More parameter checkings added.
+  * tests/broken/numform.prg
+    + Added test to demonstrate a bug in the compiler. (a==22.and.b==10)
+  * tests/working/memfile.prg
+    ! Fixed faulty RESTORE command.
+  * source/compiler/harbour.y
+
 19990912-17:11 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/memvars.c
     * added a few casts
@@ -6,7 +24,7 @@
 
   * source/rtl/memvars.c
     ! __MVSAVE() will no longer try to save memvars with longer filename than
-      10 character, the Clipper maximum.
+      10 characters, the Clipper maximum.
 
   * tests/working/memfile.prg
     tests/working/Makefile
