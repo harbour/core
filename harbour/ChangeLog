@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-09 00:38 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/debug/debugger.prg
+    + CallStack navigation support.
+    ! Improved variables editing.
+
 2003-06-06 15:53 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * source/rtl/console.c
     + Added a PRG-callable functions HB_GETSTDIN and HB_GETSTDOUT,
