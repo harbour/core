@@ -219,6 +219,7 @@ void MessageFix( char * szMsgName );    /* fix a generated message to an object 
 void MessageDupl( char * szMsgName );   /* fix a one generated message to an object and duplicate */
 void PopId( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 void PushDouble( double fNumber, BYTE bDec ); /* Pushes a number on the virtual machine stack */
+void PushFunCall( char * );		/* generates the pcode to push function's call */
 void PushId( char * szVarName );        /* generates the pcode to push a variable value to the virtual machine stack */
 void PushIdByRef( char * szVarName );   /* generates the pcode to push a variable by reference to the virtual machine stack */
 void PushInteger( int iNumber );        /* Pushes a integer number on the virtual machine stack */
@@ -607,7 +608,7 @@ FunCall    : FunStart ')'                { $$=0; CheckArgs( $1, $$ ); }
            | FunStart ArgList ')'        { $$=$2; CheckArgs( $1, $$ ); }
            ;
 
-FunStart   : IDENTIFIER '('              { StaticAssign(); PushSymbol( $1, 1 ); PushNil(); $$ = $1; }
+FunStart   : IDENTIFIER '('              { StaticAssign(); PushFunCall( $1 ); $$ = $1; }
            ;
 
 MethCall   : MethStart ')'               { $$ = 0; }
@@ -3559,6 +3560,22 @@ void PushDouble( double dNumber, BYTE bDec )
       pStackValType = pNewStackType;
       debug_msg( "\n***PushDouble()\n", NULL );
    }
+}
+
+void PushFunCall( char *szFunName )
+{
+   char * *pFunction;
+   
+   pFunction = (char * *)RESERVED_FUNC( szFunName );
+   if( pFunction )
+   {
+      /* Abbreviated function name was used - change it for whole name
+       */
+       PushSymbol( yy_strdup( *pFunction ), 1 );
+   }
+   else
+       PushSymbol( szFunName, 1 );
+   PushNil();
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */
