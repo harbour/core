@@ -841,7 +841,6 @@ return .f.
 METHOD Input( cChar ) CLASS Get
 
    local cPic
-   local xVal
 
    do case
    case ::type == "N"
@@ -1135,3 +1134,4 @@ return Self
 /* But does'nt annoy me                                  */
 CLASS TGet Inherit GET
 ENDCLASS
+
