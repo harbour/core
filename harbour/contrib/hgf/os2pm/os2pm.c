@@ -59,29 +59,50 @@
 #include <os2.h>
 
 #include "hbapi.h"
+#include "hbvm.h"
+#include "hbstack.h"
 
+#define  LOWORD(l)   ((USHORT)l)
+#define  HIWORD(l)   ((USHORT)((ULONG)l >> 16))
 
 HAB hb_pm_GetHab( void );
+MRESULT EXPENTRY WndProc( HWND, ULONG, MPARAM, MPARAM );
 
 
-MRESULT EXPENTRY WindowProc( HWND hwnd, USHORT msg, MPARAM mp1, MPARAM mp2 )
+MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 {
+   static PHB_DYNS pDynSym = 0;
    HPS hps;
 
-   switch( msg )
-   {
-      case WM_ERASEBACKGROUND:
-           return FALSE;
+   if( ! pDynSym )
+      pDynSym = hb_dynsymFind( "HB_GUI" );
 
+   switch (Msg) {
       case WM_PAINT:
-           hps = WinBeginPaint( hwnd, 0L, NULL );
-           GpiErase( hps );
-           WinEndPaint( hps );
-           return 0;
+         {
+         hps = WinBeginPaint( hWnd, 0L, NULL );
+         GpiErase( hps );
+         WinEndPaint( hps );
+         return 0;
+         }
 
-    }
+      default:
+         {
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
+         hb_vmPushLong( (LONG) hWnd );
+         hb_vmPushLong( (LONG) Msg );
+         hb_vmPushLong( (LONG) mp1 );
+         hb_vmPushLong( (LONG) mp2 );
+         hb_vmDo( 4 );
 
-    return WinDefWindowProc( hwnd, msg, mp1, mp2 );
+         if( hb_arrayGetType( &hb_stack.Return, 1 ) == HB_IT_NIL )
+            return WinDefWindowProc( hWnd, Msg, mp1, mp2 );
+         else
+            return (MRESULT) hb_parnl( -1, 1 );
+          }
+   }
+
 }
 
 
@@ -90,7 +111,7 @@ HB_FUNC( WINREGISTERCLASS )
 
    hb_retl( WinRegisterClass( hb_pm_GetHab(),               /* anchor block handle */
                               hb_parc( 1 ),                 /* Class Name */
-                              ( PFNWP ) WindowProc,         /* default Class procedure */
+                              ( PFNWP ) WndProc,            /* default Class procedure */
                               hb_parnl( 2 ),                /* style */
                               hb_parnl( 3 ) ) );            /* extra bytes */
 }
@@ -98,47 +119,52 @@ HB_FUNC( WINREGISTERCLASS )
 
 HB_FUNC(WINCREATEWINDOW)
 {
-   hb_retnl((LONG) WinCreateWindow( (HWND) hb_parnl(1),               /* hWnd parent  */
-                                    (PCSZ) hb_parc(2),                /* pszClass     */
-                                    (PCSZ) hb_parc(3),                /* pszName      */
-                                    (ULONG) hb_parnl(4),              /* flStyle      */
-                                    (LONG) hb_parnl(5),               /* x            */
-                                    (LONG) hb_parnl(6),               /* y            */
-                                    (LONG) hb_parnl(7),               /* cx           */
-                                    (LONG) hb_parnl(8),               /* cy           */
-                                    (HWND) hb_parnl(9),               /* hwndOwner    */
-                                    (HWND) hb_parnl(10),              /* hwndInsertBehind */
-                                    (ULONG) hb_parnl(11),             /* id           */
-                                    (PVOID) hb_parnl(12),              /* pCtlData,    */
-                                    (PVOID) hb_parnl(13)));            /* pPresParams  */
+   HWND hwnd;
 
+   hwnd =  WinCreateWindow( (HWND) hb_parnl(1),             /* hWnd parent  */
+                            (PCSZ) hb_parc(2),              /* pszClass     */
+                            (PCSZ) hb_parc(3),              /* pszName      */
+                            (ULONG) hb_parnl(4),            /* flStyle      */
+                            (LONG) hb_parnl(5),             /* x            */
+                            (LONG) hb_parnl(6),             /* y            */
+                            (LONG) hb_parnl(7),             /* cx           */
+                            (LONG) hb_parnl(8),             /* cy           */
+                            (HWND) hb_parnl(9),             /* hwndOwner    */
+                            (HWND) hb_parnl(10),            /* hwndInsertBehind */
+                            (ULONG) hb_parnl(11),           /* id           */
+                            (PVOID) hb_parnl(12),           /* pCtlData,    */
+                            (PVOID) hb_parnl(13));          /* pPresParams  */
+
+   hb_retnl((LONG) hwnd);
 }
 
 
 HB_FUNC( WINCREATESTDWINDOW )
 {
    ULONG lFrame = hb_parnl( 3 );
-   HWND hWndClient;
+   HWND hWndClient, hWndFrame;
 
-   hb_retnl( ( LONG ) WinCreateStdWindow( ( HWND ) hb_parnl( 1 ), /* hWndParent */
-                                 hb_parnl( 2 ),          /* style */
-                                 &lFrame,                /* lFrame */
-                                 hb_parc( 4 ),           /* cClassName */
-                                 hb_parc( 5 ),           /* cCaption */
-                                 hb_parnl( 6 ),          /* lStyleClient */
-                                 hb_parnl( 7 ),          /* hModule */
-                                 hb_parnl( 8 ),          /* nId */
-                       ( PHWND ) &hWndClient ) );        /* Window client handle */
+   hWndFrame = WinCreateStdWindow( ( HWND ) hb_parnl( 1 ),              /* hWndParent */
+                                    hb_parnl( 2 ),                      /* style */
+                                    &lFrame,                            /* lFrame */
+                                    hb_parc( 4 ),                       /* cClassName */
+                                    hb_parc( 5 ),                       /* cCaption */
+                                    hb_parnl( 6 ),                      /* lStyleClient */
+                                    hb_parnl( 7 ),                      /* hModule */
+                                    hb_parnl( 8 ),                      /* nId */
+                                    ( PHWND ) &hWndClient );            /* Window client handle */
 
+   hb_retnl( (LONG) hWndFrame);
    hb_stornl( ( LONG ) hWndClient, 9 );
 }
 
 
-HB_FUNC( HB_PM_SHOWMODAL )
+HB_FUNC( HB_FORMSHOWMODAL )
 {
    QMSG qmsg;
    HAB  hab = hb_pm_GetHab();
 
+   WinShowWindow( ( HWND ) hb_parnl( 1 ), 1 );
    while( WinGetMsg( hab, &qmsg, 0, 0, 0 ) )
    {
       WinDispatchMsg( hab, &qmsg );
@@ -200,8 +226,7 @@ HB_FUNC( GETHAB )
 
 HB_FUNC( WINCREATEMENU )
 {
-   hb_retnl( ( LONG ) WinCreateMenu( ( HWND ) hb_parnl( 1 ),
-             (PVOID) NULL /*( PVOID ) hb_parnl( 2 )*/ ) );
+   hb_retnl( (LONG) WinCreateMenu((HWND) hb_parnl(1), (PVOID) NULL));
 
 }
 
@@ -265,7 +290,7 @@ HB_FUNC( WINSETOWNER )
 
 HB_FUNC( WINSENDMSG )
 {
-   hb_retnl( ( LONG ) WinSendMsg( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ),
+   hb_retnl( ( LONG ) WinSendMsg( ( HWND ) hb_parnl( 1 ), hb_parnl( 2 ),
              ( MPARAM ) IF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), hb_parnl( 3 ) ),
              ( MPARAM ) IF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), hb_parnl( 4 ) ) ) );
 }
@@ -290,4 +315,115 @@ HB_FUNC( WINSETWIDTH )
    WinSetWindowPos( hWnd, HWND_TOP, swp.x,
                     swp.y, (LONG) hb_parnl( 2 ), swp.cy,
                     SWP_MOVE | SWP_SIZE | SWP_SHOW | SWP_ZORDER );
+}
+
+
+HB_FUNC( SENDMESSAGE )
+{
+   hb_retnl( (LONG) WinSendMsg(
+                       (HWND) hb_parnl( 1 ), // handle of destination window
+                       (ULONG) hb_parnl( 2 ), // message to send
+                       (MPARAM) hb_parnl( 3 ),  // first message parameter
+                       (MPARAM) hb_parnl( 4 )   // second message parameter
+                     ) );
+}
+
+
+HB_FUNC( NLOWORD )
+{
+   hb_retnl( LOWORD( hb_parnl( 1 ) ) );
+}
+
+
+HB_FUNC( NHIWORD )
+{
+   hb_retnl( HIWORD( hb_parnl( 1 ) ) );
+}
+
+
+HB_FUNC( WINGETHEIGHT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECTL rct;
+
+   WinQueryWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.yBottom - rct.yTop );
+}
+
+
+HB_FUNC( WINSETHEIGHT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   SWP swp;
+
+   WinQueryWindowPos( hWnd, &swp );
+   WinSetWindowPos( hWnd, HWND_TOP, swp.x,
+                    swp.y, swp.cx, hb_parnl( 2 ),
+                    SWP_MOVE | SWP_SIZE | SWP_SHOW | SWP_ZORDER );
+}
+
+
+HB_FUNC( WINGETTOP )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECTL rct;
+
+   WinQueryWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.yTop );
+}
+
+
+HB_FUNC( WINSETTOP )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   SWP swp;
+
+   WinQueryWindowPos( hWnd, &swp );
+   WinSetWindowPos( hWnd, HWND_TOP, hb_parnl( 2 ),
+                    swp.y, swp.cx, swp.cy,
+                    SWP_MOVE | SWP_SIZE | SWP_SHOW | SWP_ZORDER );
+}
+
+
+HB_FUNC( WINGETLEFT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECTL rct;
+
+   WinQueryWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.xLeft );
+}
+
+
+HB_FUNC( WINSETLEFT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   SWP swp;
+
+   WinQueryWindowPos( hWnd, &swp );
+   WinSetWindowPos( hWnd, HWND_TOP, swp.x,
+                    hb_parnl( 2 ), swp.cx, swp.cy,
+                    SWP_MOVE | SWP_SIZE | SWP_SHOW | SWP_ZORDER );
+}
+
+
+HB_FUNC( POSTQUITMESSAGE )
+{
+   WinPostMsg((HWND) hb_parnl( 1 ), WM_QUIT, 0L, 0L);
+   //PostQuitMessage( hb_parnl( 1 ) );
+}
+
+
+HB_FUNC( SHOWWINDOW )
+{
+   hb_retl( WinShowWindow( ( HWND ) hb_parnl( 1 ), hb_parl( 2 ) ) );
+}
+
+
+HB_FUNC( WINGETLASTERROR )
+{
+   hb_retnl((LONG) WinGetLastError( hb_pm_GetHab() ) );
 }

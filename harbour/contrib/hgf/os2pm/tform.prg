@@ -57,69 +57,158 @@
 #include "hbclass.ch"
 #include "os2pm.ch"   // Needed to store some OS/2 PM constant values
 
-CLASS TForm
 
-   DATA      hWnd
-   DATA      oMainMenu
+// Win32 compatibility Message redefinition
+#define WM_LBUTTONDOWN  WM_BUTTON1DOWN
+
+
+static aForms := {}
+
+
+CLASS HBForm FROM HBWinControl
+
+   DATA     oMainMenu
+   DATA     OnClick     PROPERTY
+   DATA     aControls   PROPERTY
 
    CLASSDATA lRegistered
 
    METHOD   New()
+   METHOD   Close() INLINE SendMessage( ::hWnd, WM_CLOSE )
+   METHOD   Command( nNotifyCode, nId, hWndCtl )
+   METHOD   HandleEvent( nMsg, nParam1, nParam2 )
+   METHOD   InsertControl( oControl )
+   METHOD   LButtonDown( nKeyFlags, nXPos, nYPos )
    METHOD   ShowModal()
 
-   ACCESS   cCaption() INLINE WinGetText( ::hWnd )
-   ASSIGN   cCaption( cNewCaption ) INLINE ;
-               WinSetWindowText( ::hWnd, cNewCaption )
-
-   ACCESS   oMenu() INLINE ::oMainMenu
-   ASSIGN   oMenu( oNewMenu )
-
-   ACCESS   nWidth() INLINE WinGetWidth( ::hWnd )
-   ASSIGN   nWidth( nNewWidth ) INLINE ;
-               WinSetWidth( ::hWnd, nNewWidth )
+   ACCESS   Menu() INLINE ::oMainMenu PROPERTY
+   ASSIGN   Menu( oNewMenu )
 
 ENDCLASS
 
 
-METHOD New() CLASS TForm
+METHOD New() CLASS HBForm
 
-   local hWndClient
+   local hWC
 
    DEFAULT ::lRegistered TO .f.
 
-   if ! ::lRegistered
 
+   if ! ::lRegistered
       // Notice that this code may be moved to a method Register()
       // so we hide again the OS API details
-
-      WinRegisterClass( "HB_TFORM",;
-                        (CS_SIZEREDRAW + 0x2000001), 0 )
+      WinRegisterClass("HB_HBForm", CS_SIZEREDRAW, 0, 0 )
       ::lRegistered = .t.
    endif
 
    // Again this code may be moved to a method Create() to hide the
    // OS API details
-
    ::hWnd = WinCreateStdWindow( HWND_DESKTOP,;
                                 WS_VISIBLE,;
                                 (FCF_TITLEBAR + FCF_SYSMENU +;
                                 FCF_SIZEBORDER + FCF_TASKLIST +;
                                 FCF_MINMAX + FCF_SHELLPOSITION ),;
-                                "HB_TFORM", "Harbour TForm",;
+                                "HB_HBForm", "Harbour HBForm",;
                                 (WS_SYNCPAINT + WS_VISIBLE ),,,;
-                                @hWndClient ) // Not used yet
+                                @hWC )
 
+   ::hWndClient := hWC
+
+   AAdd(aForms, Self)
 return Self
 
 
-METHOD ShowModal() CLASS TForm
+METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
 
-   HB_PM_ShowModal()
+   local oMenuItem, nAt, oControl
+
+   do case
+      case nNotifyCode == CMDSRC_MENU   // Menu command
+         if ::Menu != nil
+            if( oMenuItem := ::Menu:FindItem( nId ) ) != nil
+               if oMenuItem:OnClick != nil
+                  __ObjSendMsg( Self, oMenuItem:OnClick, oMenuItem )
+               endif
+            endif
+         endif
+
+      case nNotifyCode == CMDSRC_PUSHBUTTON
+         nAt = AScan( ::aControls, { | o | o:nId == nId } )
+         if nAt != 0
+            oControl = ::aControls[ nAt ]
+            if oControl:OnClick != nil
+               __ObjSendMsg( Self, oControl:OnClick, oControl )
+            endif
+         endif
+
+      otherwise
+   endcase
 
 return nil
 
 
-ASSIGN oMenu( oNewMenu ) CLASS TForm
+METHOD InsertControl( oControl ) CLASS HBForm
+
+   DEFAULT ::aControls TO {}
+
+   AAdd( ::aControls, oControl )
+   oControl:Show()
+
+return nil
+
+
+METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS HBForm
+
+   if ::OnClick != nil
+      return __ObjSendMsg( Self, ::OnClick, Self, nXPos, nYPos )
+   endif
+
+return nil
+
+
+METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS HBForm
+
+   do case
+      case nMsg == WM_COMMAND
+         /*
+         param1
+            USHORT  uscmd       //  Command value.
+         param2
+            USHORT  ussource    //  Source type.
+            USHORT  uspointer   //  Pointer-device indicator.
+         returns
+            ULONG   ulReserved  //  Reserved value, should be 0.
+         */
+         ::Command( nLoWord( nParam2 ), nLoWord( nParam1 ), nil )
+         return 0
+
+      case nMsg == WM_LBUTTONDOWN
+         /*
+         param1
+            POINTS  ptspointerpos  //  Pointer position.
+         param2
+            USHORT  fsHitTestres   //  Hit-test result.
+            USHORT  fsflags        //  Keyboard control codes.
+         returns
+            BOOL    rc             //  Processed indicator.
+         */
+         return ::LButtonDown( nHiWord(nParam2), nLoWord( nParam1 ), nHiWord( nParam1 ) )
+
+      case nMsg == WM_DESTROY
+         PostQuitMessage( 0 )
+         return 0
+   endcase
+
+return nil
+
+METHOD ShowModal() CLASS HBForm
+
+   HB_FormShowModal(::hWnd)
+
+return nil
+
+
+ASSIGN Menu( oNewMenu ) CLASS HBForm
 
    ::oMainMenu := oNewMenu
 
@@ -128,3 +217,16 @@ ASSIGN oMenu( oNewMenu ) CLASS TForm
    WinSendMsg( ::hWnd, WM_UPDATEFRAME, FCF_MENU, 0 )
 
 return nil
+
+
+function HB_GUI( hWnd, nMsg, nParam1, nParam2 ) // messages entry point
+
+   static aReturn := { nil, nil }
+
+   local nForm := AScan( aForms, { | oForm | oForm:hWndClient == hWnd } )
+
+   if nForm != 0
+      aReturn[ 1 ] = aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
+   endif
+
+return aReturn

@@ -1,3 +1,18 @@
+2001-09-09 15:48 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   + contrib/hgf/os2pm/winctrl.prg
+     + added
+   + contrib/hgf/os2pm/button.prg
+     + added
+   + contrib/hgf/os2pm/edit.prg
+     + added
+   * contrib/hgf/os2pm/Makefile
+     + added new files
+   * contrib/hgf/os2pm/os2pm.c
+     * modified and added new functions already added to win32.c
+   * contrib/hgf/os2pm/os2pm.ch
+     - removed all defines which are not currently needed, this makes
+       os2pm.ch smaller and faster to compile.
+
 2001-09-08 12:01 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    - hb_slex.bc
       Removed unneeded file since Simplex uses makefile.bc now

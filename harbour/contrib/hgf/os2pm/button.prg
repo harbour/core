@@ -2,10 +2,10 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * Harbour GUI framework for IBM OS/2 Presentation Manager
+ * Class HBButton
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
@@ -52,82 +52,42 @@
  *
  */
 
-
 #include "common.ch"
 #include "hbclass.ch"
 #include "os2pm.ch"
 
 
+// NOTE: Be sure they are the same
+#define WS_CHILD     WS_DISABLED //0x40000000
 
-CLASS HBMenuItem FROM HBPersistent
 
-   DATA   Caption  PROPERTY // Specifies the text of the menu item
-   DATA   Name     PROPERTY // The name of this component
-   DATA   OnClick  PROPERTY // A character description of the method to invoke
-   DATA   Enabled  PROPERTY // Specifies whether the menu item is enabled
-   DATA   Items    PROPERTY // Contains the menu items in the submenu of the menu item
+CLASS HBButton FROM HBWinControl
 
-   DATA   nId               // Command value to send to the container form
-   DATA   oParent           // Identifies the parent menu item of this menu item
-   DATA   nHandle           // The handle of the submenu of this menu item
+   DATA      OnClick   PROPERTY
 
-   CLASSDATA nIdStart   // start value for commands value to assign to menu items
-
-   METHOD New( oOwner ) // Creates a new menu item
-   METHOD Add( oMenuItem ) // Adds a new drop down menu item
-   METHOD FindItem( nId ) // Searches for a sub menuitem given its id
+   METHOD    New( oContainer )
 
 ENDCLASS
 
 
-METHOD New( oOwner ) CLASS HBMenuItem
+METHOD New( oContainer ) CLASS HBButton
 
-   DEFAULT ::nIdStart TO 110
+   ::hWnd = WinCreateWindow(oContainer:hWndClient,;         /* Parent window  */
+                            WC_BUTTON,;                     /* Class window   */
+                            "",;                            /* Button text    */
+                            WS_VISIBLE + WS_TABSTOP+;       /* Visible style  */
+                            BS_PUSHBUTTON + BS_AUTOSIZE,;   /* Button style   */
+                            0, 0,;                          /* x, y           */
+                            80, 30,;                        /* cx, cy         */
+                            oContainer:hWndClient,;         /* Owner window   */
+                            HWND_TOP,;                      /* Top of z-order */
+                            ::GetNewId(),;                  /* Identifier     */
+                            nil,;                           /* Control data   */
+                            nil)                            /* parameters     */
 
-   ::Caption = ""
-   ::nId     = ::nIdStart++
-   ::Enabled = .t.
-   ::oParent = oOwner
-   ::nHandle = nil
+   // NOTE: There is no need to modify it later since I can give it an initial
+   //       size during window creartion
+   //::Width  = 80
+   //::Height = 25
 
 return Self
-
-
-METHOD Add( oMenuItem ) CLASS HBMenuItem
-
-   DEFAULT ::Items TO {}
-
-   if ::nHandle == nil
-      ::nHandle := WinCreateMenu( ::oParent:nHandle )
-      WinMakeSubMenuItem(::oParent:nHandle, ::nId, ::nHandle)
-
-   endif
-
-   WinAddMenuItem(::nHandle, oMenuItem:Caption, MIT_END,;
-                   nil, oMenuItem:nId, oMenuItem:Enabled )
-
-   AAdd( ::Items, oMenuItem )
-
-return nil
-
-
-METHOD FindItem( nId ) CLASS HBMenuItem
-
-   local oMenuItem, n
-
-   for n = 1 to Len( ::Items )
-      if ( oMenuItem := ::Items[ n ] ):nId == nId
-         return oMenuItem
-      else
-         if oMenuItem:Items != nil
-            if ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
-               return oMenuItem
-            endif
-         endif
-      endif
-   next
-
-return oMenuItem
-
-
-

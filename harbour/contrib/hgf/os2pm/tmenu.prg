@@ -57,34 +57,55 @@
 #include "os2pm.ch"
 
 
-CLASS TMenu
+CLASS HBMenu FROM HBPersistent
 
-   DATA   nHandle          // Handle of MIS_ACTIONBAR
-   DATA   aItems           // Items inside this menu
-   DATA   oParent          // Parent/Owner of menu
+   DATA   nHandle                   // Handle of MIS_ACTIONBAR
+   DATA   Items    PROPERTY         // Items inside this menu
 
    METHOD   New(oForm)
    METHOD   Add(oMenuItem)
+   METHOD   FindItem( nId )         // Searches for a sub menuitem given its id
 
 ENDCLASS
 
 
-METHOD New( oForm ) CLASS TMenu
+METHOD New( oForm ) CLASS HBMenu
 
-   ::aItems  := {}
-   ::oParent := oForm
-   ::nHandle := WinCreateMenu( oForm:hWnd )
+   ::Items  := {}
+
+   if oForm != nil
+      ::nHandle = WinCreateMenu( oForm:hWnd )
+   endif
 
 return Self
 
 
-METHOD Add( oMenuItem ) CLASS TMenu
+METHOD Add( oMenuItem ) CLASS HBMenu
 
-   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, MIT_END,;
-                   nil, oMenuItem:nId, oMenuItem:lEnabled )
+   WinAddMenuItem( ::nHandle, oMenuItem:Caption, MIT_END,;
+                   nil, oMenuItem:nId, oMenuItem:Enabled )
 
-   AAdd( ::aItems, oMenuItem )
+   AAdd( ::Items, oMenuItem )
 
 return nil
+
+
+METHOD FindItem( nId ) CLASS HBMenu
+
+   local oMenuItem, n
+
+   for n = 1 to Len( ::Items )
+      if ( oMenuItem := ::Items[ n ] ):nId == nId
+         return oMenuItem
+      else
+         if oMenuItem:Items != nil
+            if ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
+               return oMenuItem
+            endif
+         endif
+      endif
+   next
+
+return oMenuItem
 
 
