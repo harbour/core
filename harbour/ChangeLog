@@ -1,3 +1,15 @@
+2001-05-13 09:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     % Removed many redundant rules (recently added for OO integrity checks).
+
+     /* Found the PP problem that stopped me from implementing this optimized form before.
+        It seems the PP has a problem with "[" follwing a an identifier without a space prefix like:
+        #command TEST[([<param,...>])]
+
+        It seems to work OK like this:
+        #command TEST [([<param,...>])]
+     */
+
 2001-05-12 18:30 GMT+0200 Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/charmix.c
