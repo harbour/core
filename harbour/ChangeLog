@@ -1,3 +1,7 @@
+19990730-11:05 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/inkey.ch
+     + More defines added
+
 19990730-10:21 GMT+1 Antonio Linares <alinares@fivetech.com>
    * buildrdd.bat
      * removed PRGs building from there
