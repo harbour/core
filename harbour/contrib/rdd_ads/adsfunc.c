@@ -117,7 +117,7 @@ HARBOUR HB_ADSSETDEFAULT( void )
 HARBOUR HB_ADSSETDELETED( void )
 {
    UNSIGNED16 usShowDeleted = hb_parl( 1 );
-   AdsShowDeleted( usShowDeleted );
+   AdsShowDeleted( usShowDeleted ? 0 : 1 );
 }
 
 HARBOUR HB_ADSBLOB2FILE( void )

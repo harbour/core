@@ -697,17 +697,32 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ".dbf" );
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".ADT" : ".DBF") );
          break;
 
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ".dbt" );
+         hb_itemPutC( pItem, ((adsFileType==ADS_ADT) ? ".ADM" :
+                                (adsFileType==ADS_CDX) ? ".FPT" : ".DBT") );
          break;
 
       case DBI_GETLOCKARRAY:
-//         hb_dbfGetLockArray( pArea, pItem );
-         break;
+      {
+         USHORT uiCount;
+         AdsGetNumLocks(pArea->hTable, &uiIndex);
+         if(uiIndex)
+         {
+           UNSIGNED32 *puLocks;
+           puLocks = (UNSIGNED32 *) hb_xgrab( (uiIndex + 1) * sizeof( UNSIGNED32 ) );
+           AdsGetAllLocks(pArea->hTable, puLocks, &uiIndex);
 
+           if(uiIndex)
+             for(uiCount=0; uiCount < uiIndex; uiCount++)
+                hb_arrayAdd( pItem, hb_itemPutNL( NULL, puLocks[ uiCount ] ) );
+
+           hb_xfree(puLocks);
+         }
+         break;
+      }
       case DBI_LASTUPDATE:
          hb_itemClear( pItem );
          pItem->type = IT_DATE;
@@ -805,9 +820,10 @@ static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    ulRetVal = AdsOpenIndex( pArea->hTable,
      (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ), ahIndex, &pusArrayLen );
-   if( ulRetVal != AE_SUCCESS )
+   if( ulRetVal != AE_SUCCESS  && ulRetVal != AE_INDEX_ALREADY_OPEN)
        return FAILURE;
-   pArea->hOrdCurrent = ahIndex[0];
+   if(!pArea->hOrdCurrent)
+       pArea->hOrdCurrent = ahIndex[0];
 
    return SUCCESS;
 }
@@ -917,13 +933,13 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
    ADSHANDLE phIndex;
-   UNSIGNED32 ulRetVal;
+   UNSIGNED32 ulRetVal = AE_SUCCESS;
    UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
    UNSIGNED16 pusLen = MAX_STR_LEN;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
 
-   if( pOrderInfo->itmOrder )
+   if( !IS_NIL(pOrderInfo->itmOrder) )
    {
       if( IS_NUMERIC( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandleByOrder( pArea->hTable,
@@ -937,12 +953,28 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    switch( uiIndex )
    {
       case DBOI_BAGEXT:
-         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, ".cdx" );
+         pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult,
+                ((adsFileType==ADS_ADT) ? ".ADI" : (adsFileType==ADS_CDX)? ".CDX" : ".NTX") );
          break;
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
          hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
          break;
+      case DBOI_NUMBER :
+      {
+         UNSIGNED16 usOrder = 0;
+         if( IS_STRING( pOrderInfo->itmOrder ) )
+            AdsGetIndexOrderByHandle(phIndex, &usOrder);
+         else if( IS_STRING( pOrderInfo->itmOrder ) )
+            usOrder = hb_itemGetNI( pOrderInfo->itmOrder );
+         else
+         {
+            if(pArea->hOrdCurrent)  /* Take the active index when no index specified*/
+                AdsGetIndexOrderByHandle(pArea->hOrdCurrent, &usOrder);
+         }
+         hb_itemPutNI(pOrderInfo->itmResult, usOrder);
+         break;
+      }
    }
    return SUCCESS;
 }
