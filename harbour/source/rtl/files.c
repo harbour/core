@@ -362,7 +362,7 @@ static int _fsDirectory(char * dirname, struct dirent *** nlist)
 {
    int result=-1;
 #if defined(HAVE_POSIX_IO)
-   #if defined(__BORLANDC__)
+   #if defined(__BORLANDC__) || defined(__DJGPP__)
        /* TODO borland does not scandir() in it's dirent.h what
           needs to be done here??  */
    #else
