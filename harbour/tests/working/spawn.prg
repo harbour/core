@@ -8,6 +8,11 @@
 //
 // Should be compiled using /gHRB or stub.
 //
+// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// www - http://www.harbour-project.org
+//
+// Placed in the public domain
+//
 function Main( cRun )
 
    cRun := Default( cRun, "Spawn2.hrb" )

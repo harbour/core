@@ -5,6 +5,11 @@
 //
 // Date : 1999/05/24
 //
+// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// www - http://www.harbour-project.org
+//
+// Placed in the public domain
+//
 function Main()
 
    ShoutArg( 1, "1", 2.5, .T. )

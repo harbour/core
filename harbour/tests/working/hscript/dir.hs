@@ -1,4 +1,9 @@
 <%
+/*
+* Copyright (C) 1999  Felipe Coury <fcoury@flexsys-ci.com>
+* www - http://www.harbour-project.org
+*
+*/
 FUNCTION Main()
 
    LOCAL aDir := directory( "c:\*.*" )

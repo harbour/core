@@ -3,7 +3,10 @@
 //
 // Date : 24/4/99 Time : 17:50
 //
-// Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// www - http://www.harbour-project.org
+//
+// Placed in the public domain
 //
 
 procedure main()

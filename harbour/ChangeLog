@@ -1,3 +1,12 @@
+19990709-10:50 CET Eddie Runia <eddie@runia.com>
+  * tests/working/*.prg
+    identified my tests and moved them to the PD
+
+19990709-10:30 CET Felipe Coury
+  * tests/working/hscript/hscript.prg; tests/working/hscript/*.hs
+    Copyright & GPL inserted
+
+
 19990708-20:05 EDT David G. Holm <dholm@jsd-llc.com>
  + Added my email address to my Coypright notice in each of the following:
   * include/fileio.ch

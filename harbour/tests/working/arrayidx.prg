@@ -3,6 +3,11 @@
 //
 // Date : 1999/05/14
 //
+// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// www - http://www.harbour-project.org
+//
+// Placed in the public domain
+//
 function Main()
 
    local aList := { 1, 2, 3, 4, 5, 6 }

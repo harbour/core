@@ -1,10 +1,14 @@
 //
 // Guess a number
 //
-// Copyright (C) 1999 Eddie Runia <eddie@runia.com>
 // Date       : 1999/04/22
 //
 // My first application (big word) written in Harbour
+//
+// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// www - http://www.harbour-project.org
+//
+// Placed in the public domain
 //
 
 extern OutStd
