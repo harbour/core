@@ -261,29 +261,36 @@ static void hb_rddCheck( void )
  */
 static void hb_rddCloseAll( void )
 {
-   int nCycl = 0;
-   LPAREANODE pAreaNode;
+   BOOL isParents = TRUE, isFinish = FALSE;
+   LPAREANODE pAreaNode,pCurrArea;
    HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAll()"));
 
-   while( nCycl < 2 )
+   while( isParents )
    {
       pAreaNode = s_pWorkAreas;
+      isParents = FALSE;
       while( pAreaNode )
       {
-         s_pCurrArea = pAreaNode;
+         pCurrArea = pAreaNode;
          pAreaNode = pAreaNode->pNext;
-         if( ( !nCycl && ( ( AREAP ) s_pCurrArea->pArea )->lpdbRelations ) ||
-             (  nCycl && s_pCurrArea->pArea ) )
+         if ( isFinish )
          {
-            SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
-            SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
-            // hb_xfree( s_pCurrArea->pArea );
-            s_pCurrArea->pArea = NULL;
+            SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+            pCurrArea->pArea = NULL;
+            hb_xfree( pCurrArea );
          }
-         if( nCycl == 1 )
-            hb_xfree( s_pCurrArea );
+         else if( pCurrArea->pArea )
+         {
+            if( ( ( AREAP ) pCurrArea->pArea )->uiParents )
+               isParents = TRUE;
+            else
+            {
+               SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
+            }
+         }
       }
-      nCycl ++;
+      if( !isParents && !isFinish )
+         isParents = isFinish = TRUE;
    }
 
    s_uiCurrArea = 1;
