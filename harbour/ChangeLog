@@ -8,7 +8,12 @@
        setget block bug.
 
    * source/rtl/filesys.c 
+     ! Fixed bug in hb_fsCurDir[Buff](), it's now stripping the 
+       leading "/" path delimiter.
+
    * source/rtl/memoline.c
+     % Minor opt.
+
    * source/rtl/gtsln/kbsln.c 
    * source/rtl/gtsln/keytrans.c 
    * source/vm/classes.c 
