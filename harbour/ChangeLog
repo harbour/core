@@ -1,3 +1,18 @@
+19990902-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + <=, >=, >, < operator tests added.
+  * source/rtl/hvm.c
+    % Variable scope optimalization, variables accessed only once eliminated,
+      formatting errors corrected.
+    + Error value substitution support added to:
+      hb_vmNot(), hb_vmNegate(), hb_vmInString(), hb_vmInc(), hb_vmDec().
+    ! hb_vmEqual(), hb_vmNotEqual() fixed for those where it returned 
+      a constant FALSE, blocks, arrays, etc. It confused the stack.
+    ! Fixed all hb_vmOperatorCall() calls since they were not popping the
+      values from the stack. ( did not test this )
+    ! hb_vmGreater*(), hb_vmLess*() functions pushed inverse results for
+      logical types.
+
 19990902-12:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + STOD() tests added.
