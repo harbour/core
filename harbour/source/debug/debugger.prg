@@ -1364,7 +1364,7 @@ METHOD HandleEvent() CLASS TDebugger
    end
 
    /* Restore LastKey() */   
-   SetLastKey( nLastKey )
+   HB_SetLastKey( nLastKey )
 return nil
 
 METHOD Hide() CLASS TDebugger

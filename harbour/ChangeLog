@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-08 22:50 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  * source/rtl/inkey.c
+    ! Renamed SETLASTKEY() to HB_SETLASTKEY().
+  * source/debug/debugger.prg
+    ! Changed SETLASTKEY() to HB_SETLASTKEY().
+  + contrib/libct/setlast.prg
+  * contrib/libct/Makefile
+  * contrib/libct/ctflist.txt
+  * contrib/libct/makefile.bc
+  * contrib/libct/makefile.vc
+    + Reimplemented SETLASTKEY() through HB_SETLASTKEY()
+    
 2004-06-08 22:10 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   - contrib/libct/setlast.prg
   * contrib/libct/Makefile
