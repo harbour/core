@@ -443,20 +443,24 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
      if ( *(mpatt+i) == '<' )
      {  /* Drag match marker, determine it type */
        explen = 0; ipos = i; i++; exptype = '0';
-       if ( *(mpatt+i) == '*' )
+       if ( *(mpatt+i) == '*' )        /* Wild match marker */
          { exptype = '3'; i++; }
-       else if ( *(mpatt+i) == '(' )
+       else if ( *(mpatt+i) == '(' )   /* Extended expression match marker */
          { exptype = '4'; i++; }
        while ( *(mpatt+i) != '>' )
        {
-         if ( *(mpatt+i) == ',' )
+         if ( *(mpatt+i) == ',' )      /* List match marker */
          {
            exptype = '1';
            while ( *(mpatt+i) != '>' ) i++;
            break;
          }
-         else if ( *(mpatt+i) == ':' )
-           { exptype = '2'; break; }
+         else if ( *(mpatt+i) == ':' ) /* Restricted match marker */
+         {
+            exptype = '2';
+            *(mpatt+i--) = ' ';
+            break;
+         }
          *(exppatt+explen++) = *(mpatt+i++);
        }
        if ( exptype == '3' )
@@ -988,10 +992,11 @@ int RemoveSlash( char *stroka )
         {
           if( *ptr == '\\' && ( *(ptr+1) == '[' || *(ptr+1) == ']' ||
                *(ptr+1) == '{' || *(ptr+1) == '}' || *(ptr+1) == '<' ||
-               *(ptr+1) == '>' ) )
+               *(ptr+1) == '>' || *(ptr+1) == '\'' || *(ptr+1) == '\"' ) )
           {
             pp_Stuff ( "", ptr, 0, 1, lenres - (ptr - stroka) );
             lenres--;
+            ptr++;
           }
         }
         break;
@@ -1022,7 +1027,6 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
   {
     if ( numBrackets )
     {
-/*      SearnRep( exppatt,"",0,ptro,lenres); */
       return 0;
     }
   }
@@ -1044,7 +1048,6 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-/*          SearnRep( exppatt,"",0,ptro,lenres); */
           return 0;
         }
       }
@@ -1063,7 +1066,6 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-/*          SearnRep( exppatt,"",0,ptro,lenres); */
           return 0;
         }
       }
@@ -1073,7 +1075,6 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {
      if ( numBrackets )
      {
-/*       SearnRep( exppatt,"",0,ptro,lenres); */
        return 0;
      }
      else lenreal = 0;
@@ -1137,7 +1138,6 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {  /* If restricted match marker doesn't correspond to real parameter */
       if ( numBrackets )
       {
-/*        SearnRep( exppatt,"",0,ptro,lenres); */
         return 0;
       }
       else return 0;
@@ -1716,23 +1716,25 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
    {
      if( State == STATE_QUOTE1 )
      {
-       if ( *(szText+lPos) == '\'' ) State = STATE_NORMAL;
+       if ( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+          State = STATE_NORMAL;
        lPos++;
      }
      else if( State == STATE_QUOTE2 )
      {
-       if ( *(szText+lPos) == '\"' ) State = STATE_NORMAL;
+       if ( *(szText+lPos) == '\"' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+          State = STATE_NORMAL;
        lPos++;
      }
      else
      {
-       if ( *(szText+lPos) == '\"' )
+       if ( *(szText+lPos) == '\"' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
        {
          State = STATE_QUOTE2;
          lPos++;
          continue;
        }
-       else if ( *(szText+lPos) == '\'' )
+       else if ( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
        {
          State = STATE_QUOTE1;
          lPos++;
