@@ -4,6 +4,7 @@
      % hb_vmFunction() and hb_vmSendFunc() "inlined".
        Note that hb_vmFunction() is still there since it's used from one 
        places in classes.c.
+     - Redundant declaration removed.
 
    * source/rtl/do.c
      ! Typo
