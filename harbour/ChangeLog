@@ -1,3 +1,8 @@
+19990620-23:40 CET Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    Finished the required modifications for the PCODE
+    name change.
+
 19990620-21:40 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     source/compiler/genobj32.c

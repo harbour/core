@@ -2030,97 +2030,97 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
          switch( pFunc->pCode[ lPCodePos ] )
          {
             case HB_P_AND:
-                 fprintf( yyc, "                _AND,\n" );
+                 fprintf( yyc, "                HB_P_AND,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_ARRAYAT:
-                 fprintf( yyc, "                _ARRAYAT,\n" );
+                 fprintf( yyc, "                HB_P_ARRAYAT,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_ARRAYPUT:
-                 fprintf( yyc, "                _ARRAYPUT,\n" );
+                 fprintf( yyc, "                HB_P_ARRAYPUT,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_DEC:
-                 fprintf( yyc, "                _DEC,\n" );
+                 fprintf( yyc, "                HB_P_DEC,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_DIMARRAY:
                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _DIMARRAY, %i, %i,\t/* %i */\n",
+                 fprintf( yyc, "                HB_P_DIMARRAY, %i, %i,\t/* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w );
                  lPCodePos += 3;
                  break;
 
             case HB_P_DIVIDE:
-                 fprintf( yyc, "                _DIVIDE,\n" );
+                 fprintf( yyc, "                HB_P_DIVIDE,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_DO:
-                 fprintf( yyc, "                _DO, %i, %i,\n",
+                 fprintf( yyc, "                HB_P_DO, %i, %i,\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ] );
                  lPCodePos += 3;
                  break;
 
             case HB_P_DUPLICATE:
-                 fprintf( yyc, "                _DUPLICATE,\n" );
+                 fprintf( yyc, "                HB_P_DUPLICATE,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_DUPLTWO:
-                 fprintf( yyc, "                _DUPLTWO,\n" );
+                 fprintf( yyc, "                HB_P_DUPLTWO,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_EQUAL:
-                 fprintf( yyc, "                _EQUAL,\n" );
+                 fprintf( yyc, "                HB_P_EQUAL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_EXACTLYEQUAL:
-                 fprintf( yyc, "                _EXACTLYEQUAL,\n" );
+                 fprintf( yyc, "                HB_P_EXACTLYEQUAL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_ENDBLOCK:
                  --iNestedCodeblock;
-                 fprintf( yyc, "                _ENDBLOCK,\n" );
+                 fprintf( yyc, "                HB_P_ENDBLOCK,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_FALSE:
-                 fprintf( yyc, "                _FALSE,\n" );
+                 fprintf( yyc, "                HB_P_FALSE,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_FORTEST:                    /* ER For tests. Step > 0 LESS */
                                               /* Step < 0 GREATER */
-                 fprintf( yyc, "                _FORTEST,\n" );
+                 fprintf( yyc, "                HB_P_FORTEST,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_FRAME:
                  if( pFunc->pCode[ lPCodePos + 1 ] || pFunc->pCode[ lPCodePos + 2 ] )
-                    fprintf( yyc, "                _FRAME, %i, %i,\t\t/* locals, params */\n",
+                    fprintf( yyc, "                HB_P_FRAME, %i, %i,\t\t/* locals, params */\n",
                              pFunc->pCode[ lPCodePos + 1 ],
                              pFunc->pCode[ lPCodePos + 2 ] );
                  lPCodePos += 3;
                  break;
 
             case HB_P_FUNCPTR:
-                 fprintf( yyc, "                _FUNCPTR,\n" );
+                 fprintf( yyc, "                HB_P_FUNCPTR,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_FUNCTION:
-                 fprintf( yyc, "                _FUNCTION, %i, %i,\n",
+                 fprintf( yyc, "                HB_P_FUNCTION, %i, %i,\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ] );
                  lPCodePos += 3;
@@ -2128,29 +2128,29 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_GENARRAY:
                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _GENARRAY, %i, %i,\t/* %i */\n",
+                 fprintf( yyc, "                HB_P_GENARRAY, %i, %i,\t/* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w );
                  lPCodePos += 3;
                  break;
 
             case HB_P_GREATER:
-                 fprintf( yyc, "                _GREATER,\n" );
+                 fprintf( yyc, "                HB_P_GREATER,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_GREATEREQUAL:
-                 fprintf( yyc, "                _GREATEREQUAL,\n" );
+                 fprintf( yyc, "                HB_P_GREATEREQUAL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_INC:
-                 fprintf( yyc, "                _INC,\n" );
+                 fprintf( yyc, "                HB_P_INC,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_INSTRING:
-                 fprintf( yyc, "                _INSTRING,\n" );
+                 fprintf( yyc, "                HB_P_INSTRING,\n" );
                  lPCodePos++;
                  break;
 
@@ -2158,7 +2158,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  if( 1 ) /* (lPCodePos + 3) < pFunc->lPCodePos ) */
                  {
                     w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                    fprintf( yyc, "                _JUMP, %i, %i,\t/* %i (abs: %05li) */\n",
+                    fprintf( yyc, "                HB_P_JUMP, %i, %i,\t/* %i (abs: %05li) */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ], w, lPCodePos + ( w ? w: 3 ) );
                  }
@@ -2167,7 +2167,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_JUMPFALSE:
                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _JUMPFALSE, %i, %i,\t/* %i (abs: %05li) */\n",
+                 fprintf( yyc, "                HB_P_JUMPFALSE, %i, %i,\t/* %i (abs: %05li) */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w, lPCodePos + ( w ? w: 3 ) );
                  lPCodePos += 3;
@@ -2175,26 +2175,26 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_JUMPTRUE:
                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _JUMPTRUE, %i, %i,\t/* %i (abs: %05li) */\n",
+                 fprintf( yyc, "                HB_P_JUMPTRUE, %i, %i,\t/* %i (abs: %05li) */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w, lPCodePos + ( w ? w: 3 ) );
                  lPCodePos += 3;
                  break;
 
             case HB_P_LESS:
-                 fprintf( yyc, "                _LESS,\n" );
+                 fprintf( yyc, "                HB_P_LESS,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_LESSEQUAL:
-                 fprintf( yyc, "                _LESSEQUAL,\n" );
+                 fprintf( yyc, "                HB_P_LESSEQUAL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_LINE:
                  fprintf( yyc, "/* %05li */", lPCodePos );
                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "  _LINE, %i, %i,\t\t/* %i */\n",
+                 fprintf( yyc, "  HB_P_LINE, %i, %i,\t\t/* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], w );
                  lPCodePos += 3;
@@ -2202,7 +2202,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_MESSAGE:
                  wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _MESSAGE, %i, %i,      /* %s */\n",
+                 fprintf( yyc, "                HB_P_MESSAGE, %i, %i,      /* %s */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           GetSymbolOrd( wSym + ! _iStartProc )->szName );
@@ -2210,47 +2210,47 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_MINUS:
-                 fprintf( yyc, "                _MINUS,\n" );
+                 fprintf( yyc, "                HB_P_MINUS,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_MODULUS:
-                 fprintf( yyc, "                _MODULUS,\n" );
+                 fprintf( yyc, "                HB_P_MODULUS,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_MULT:
-                 fprintf( yyc, "                _MULT,\n" );
+                 fprintf( yyc, "                HB_P_MULT,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_NEGATE:
-                 fprintf( yyc, "                _NEGATE,\n" );
+                 fprintf( yyc, "                HB_P_NEGATE,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_NOT:
-                 fprintf( yyc, "                _NOT,\n" );
+                 fprintf( yyc, "                HB_P_NOT,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_NOTEQUAL:
-                 fprintf( yyc, "                _NOTEQUAL,\n" );
+                 fprintf( yyc, "                HB_P_NOTEQUAL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_OR:
-                 fprintf( yyc, "                _OR,\n" );
+                 fprintf( yyc, "                HB_P_OR,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_PLUS:
-                 fprintf( yyc, "                _PLUS,\n" );
+                 fprintf( yyc, "                HB_P_PLUS,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_POP:
-                 fprintf( yyc, "                _POP,\n" );
+                 fprintf( yyc, "                HB_P_POP,\n" );
                  lPCodePos++;
                  break;
 
@@ -2265,18 +2265,18 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                      /* we are accesing variables within a codeblock */
                      /* the names of codeblock variable are lost     */
                      if( wVar < 0 )
-                       fprintf( yyc, "                _POPLOCAL, %i, %i,\t/* localvar%i */\n",
+                       fprintf( yyc, "                HB_P_POPLOCAL, %i, %i,\t/* localvar%i */\n",
                                 pFunc->pCode[ lPCodePos + 1 ],
                                 pFunc->pCode[ lPCodePos + 2 ],
                                 -wVar );
                        else
-                         fprintf( yyc, "                _POPLOCAL, %i, %i,\t/* codeblockvar%i */\n",
+                         fprintf( yyc, "                HB_P_POPLOCAL, %i, %i,\t/* codeblockvar%i */\n",
                                   pFunc->pCode[ lPCodePos + 1 ],
                                   pFunc->pCode[ lPCodePos + 2 ],
                                   wVar );
                    }
                    else
-                     fprintf( yyc, "                _POPLOCAL, %i, %i,\t/* %s */\n",
+                     fprintf( yyc, "                HB_P_POPLOCAL, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               GetVar( pFunc->pLocals, wVar )->szName );
@@ -2286,7 +2286,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_POPMEMVAR:
                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _POPMEMVAR, %i, %i,\t/* %s */\n",
+                 fprintf( yyc, "                HB_P_POPMEMVAR, %i, %i,\t/* %s */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           GetSymbolOrd( wVar + ! _iStartProc )->szName );
@@ -2302,7 +2302,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                     while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
                         pTmp =pTmp->pNext;
                     pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
-                    fprintf( yyc, "                _POPSTATIC, %i, %i,\t/* %s */\n",
+                    fprintf( yyc, "                HB_P_POPSTATIC, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               pVar->szName );
@@ -2311,13 +2311,13 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_POWER:
-                 fprintf( yyc, "                _POWER,\n" );
+                 fprintf( yyc, "                HB_P_POWER,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_PUSHBLOCK:
                  ++iNestedCodeblock;
-                 fprintf( yyc, "                _PUSHBLOCK, %i, %i,\t/* %i */\n",
+                 fprintf( yyc, "                HB_P_PUSHBLOCK, %i, %i,\t/* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           pFunc->pCode[ lPCodePos + 1 ] +
@@ -2347,7 +2347,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  {
                     int i;
                     ++lPCodePos;
-                    fprintf( yyc, "                _PUSHDOUBLE, " );
+                    fprintf( yyc, "                HB_P_PUSHDOUBLE, " );
                     for( i = 0; i < sizeof( double ) + sizeof( BYTE ); ++i )
                        fprintf( yyc, "%i, ", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
                     fprintf( yyc, "/* %.*f, %d */\n",
@@ -2359,7 +2359,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PUSHINT:
-                 fprintf( yyc, "                _PUSHINT, %i, %i,     /* %i */\n",
+                 fprintf( yyc, "                HB_P_PUSHINT, %i, %i,     /* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           pFunc->pCode[ lPCodePos + 1 ] +
@@ -2378,18 +2378,18 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                      /* we are accesing variables within a codeblock */
                      /* the names of codeblock variable are lost     */
                      if( wVar < 0 )
-                       fprintf( yyc, "                _PUSHLOCAL, %i, %i,\t/* localvar%i */\n",
+                       fprintf( yyc, "                HB_P_PUSHLOCAL, %i, %i,\t/* localvar%i */\n",
                                 pFunc->pCode[ lPCodePos + 1 ],
                                 pFunc->pCode[ lPCodePos + 2 ],
                                 -wVar );
                        else
-                         fprintf( yyc, "                _PUSHLOCAL, %i, %i,\t/* codeblockvar%i */\n",
+                         fprintf( yyc, "                HB_P_PUSHLOCAL, %i, %i,\t/* codeblockvar%i */\n",
                                   pFunc->pCode[ lPCodePos + 1 ],
                                   pFunc->pCode[ lPCodePos + 2 ],
                                   wVar );
                    }
                    else
-                     fprintf( yyc, "                _PUSHLOCAL, %i, %i,\t/* %s */\n",
+                     fprintf( yyc, "                HB_P_PUSHLOCAL, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               GetVar( pFunc->pLocals, wVar )->szName );
@@ -2408,18 +2408,18 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                      /* we are accesing variables within a codeblock */
                      /* the names of codeblock variable are lost     */
                      if( wVar < 0 )
-                       fprintf( yyc, "                _PUSHLOCALREF, %i, %i,\t/* localvar%i */\n",
+                       fprintf( yyc, "                HB_P_PUSHLOCALREF, %i, %i,\t/* localvar%i */\n",
                                 pFunc->pCode[ lPCodePos + 1 ],
                                 pFunc->pCode[ lPCodePos + 2 ],
                                 -wVar );
                        else
-                         fprintf( yyc, "                _PUSHLOCALREF, %i, %i,\t/* codeblockvar%i */\n",
+                         fprintf( yyc, "                HB_P_PUSHLOCALREF, %i, %i,\t/* codeblockvar%i */\n",
                                   pFunc->pCode[ lPCodePos + 1 ],
                                   pFunc->pCode[ lPCodePos + 2 ],
                                   wVar );
                    }
                    else
-                     fprintf( yyc, "                _PUSHLOCALREF, %i, %i,\t/* %s */\n",
+                     fprintf( yyc, "                HB_P_PUSHLOCALREF, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               GetVar( pFunc->pLocals, wVar )->szName );
@@ -2428,7 +2428,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PUSHLONG:
-                 fprintf( yyc, "                _PUSHLONG, %i, %i, %i, %i,  /* %li */\n",
+                 fprintf( yyc, "                HB_P_PUSHLONG, %i, %i, %i, %i,  /* %li */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           pFunc->pCode[ lPCodePos + 3 ],
@@ -2440,7 +2440,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_PUSHMEMVAR:
                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
                         pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _PUSHMEMVAR, %i, %i,\t/* %s */\n",
+                 fprintf( yyc, "                HB_P_PUSHMEMVAR, %i, %i,\t/* %s */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           GetSymbolOrd( wVar + ! _iStartProc )->szName );
@@ -2450,7 +2450,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_PUSHMEMVARREF:
                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
                         pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _PUSHMEMVARREF, %i, %i,\t/* %s */\n",
+                 fprintf( yyc, "                HB_P_PUSHMEMVARREF, %i, %i,\t/* %s */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           GetSymbolOrd( wVar + ! _iStartProc )->szName );
@@ -2458,12 +2458,12 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PUSHNIL:
-                 fprintf( yyc, "                _PUSHNIL,\n" );
+                 fprintf( yyc, "                HB_P_PUSHNIL,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_PUSHSELF:
-                 fprintf( yyc, "                _PUSHSELF,\n" );
+                 fprintf( yyc, "                HB_P_PUSHSELF,\n" );
                  lPCodePos++;
                  break;
 
@@ -2476,7 +2476,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                     while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
                         pTmp =pTmp->pNext;
                     pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
-                    fprintf( yyc, "                _PUSHSTATIC, %i, %i,\t/* %s */\n",
+                    fprintf( yyc, "                HB_P_PUSHSTATIC, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               pVar->szName );
@@ -2493,7 +2493,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                     while( pTmp->pNext && pTmp->pNext->wStaticsBase < wVar )
                         pTmp =pTmp->pNext;
                     pVar = GetVar( pTmp->pStatics, wVar - pTmp->wStaticsBase );
-                    fprintf( yyc, "                _PUSHSTATICREF, %i, %i,\t/* %s */\n",
+                    fprintf( yyc, "                HB_P_PUSHSTATICREF, %i, %i,\t/* %s */\n",
                               pFunc->pCode[ lPCodePos + 1 ],
                               pFunc->pCode[ lPCodePos + 2 ],
                               pVar->szName );
@@ -2504,7 +2504,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_PUSHSTR:
                  wLen = pFunc->pCode[ lPCodePos + 1 ] +
                         pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _PUSHSTR, %i, %i,     /* %i */\n",
+                 fprintf( yyc, "                HB_P_PUSHSTR, %i, %i,     /* %i */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ], wLen );
                  lPCodePos +=3;
@@ -2522,7 +2522,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_PUSHSYM:
                  wSym = pFunc->pCode[ lPCodePos + 1 ] +
                         pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                _PUSHSYM, %i, %i,      /* %s */\n",
+                 fprintf( yyc, "                HB_P_PUSHSYM, %i, %i,      /* %s */\n",
                           pFunc->pCode[ lPCodePos + 1 ],
                           pFunc->pCode[ lPCodePos + 2 ],
                           GetSymbolOrd( wSym + ! _iStartProc )->szName );
@@ -2530,7 +2530,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_RETVALUE:
-                 fprintf( yyc, "                _RETVALUE,\n" );
+                 fprintf( yyc, "                HB_P_RETVALUE,\n" );
                  lPCodePos++;
                  break;
 
@@ -2539,7 +2539,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  if( pFunc->bFlags & FUN_USES_STATICS )
                  {
                     w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
-                    fprintf( yyc, "                _SFRAME, %i, %i,\t\t/* symbol _INITSTATICS */\n",
+                    fprintf( yyc, "                HB_P_SFRAME, %i, %i,\t\t/* symbol _INITSTATICS */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                  }
                  lPCodePos += 3;
@@ -2548,19 +2548,19 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_STATICS:
                  {
                     w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
-                    fprintf( yyc, "                _STATICS, %i, %i,\t\t/* symbol _INITSTATICS */\n",
+                    fprintf( yyc, "                HB_P_STATICS, %i, %i,\t\t/* symbol _INITSTATICS */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                     lPCodePos += 3;
                  }
                  break;
 
             case HB_P_TRUE:
-                 fprintf( yyc, "                _TRUE,\n" );
+                 fprintf( yyc, "                HB_P_TRUE,\n" );
                  lPCodePos++;
                  break;
 
             case HB_P_ZERO:
-                 fprintf( yyc, "                _ZERO,\n" );
+                 fprintf( yyc, "                HB_P_ZERO,\n" );
                  lPCodePos++;
                  break;
 
@@ -2572,7 +2572,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       }
 
       fprintf( yyc, "/* %05li */", lPCodePos );
-      fprintf( yyc, "  _ENDPROC };\n\n" );
+      fprintf( yyc, "  HB_P_ENDPROC };\n\n" );
       fprintf( yyc, "   VirtualMachine( pcode, symbols );\n}\n\n" );
       pFunc = pFunc->pNext;
    }
@@ -3576,7 +3576,7 @@ char * SetData( char * szMsg ) /* generates an underscore-symbol name for a data
    return szResult;
 }
 
-void SetFrame( void ) /* generates the proper _FRAME values */
+void SetFrame( void ) /* generates the proper HB_P_FRAME values */
 {
    BYTE * pCode = functions.pLast->pCode;
    PVAR pLocal  = functions.pLast->pLocals;
