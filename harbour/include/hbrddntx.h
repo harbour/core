@@ -132,6 +132,10 @@ typedef struct _TAGINFO
    USHORT     uiPages;
    USHORT     KeyLength;
    USHORT     MaxKeys;
+   LONG       blockPrev;
+   LONG       blockNext;
+   USHORT     keyPrev;
+   USHORT     keyNext;
    LPKEYINFO  CurKeyInfo;
    LPPAGEINFO RootPage;
    struct    _NTXINDEX * Owner;
