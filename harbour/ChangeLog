@@ -2,7 +2,8 @@
    * makefile.bc
      ! Fixed.
    * ChangeLog.006
-     ! Corrected the case.
+     ! Corrected the case. (Temporarily removed, until someone at
+       SourceForge will remove the old repository entry)
 
 20000326-03:42 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtwin/gtwin.c
