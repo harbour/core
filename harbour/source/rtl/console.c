@@ -4,12 +4,27 @@
 
 #ifdef WINDOWS
    #include <windows.h>
+#else
+   /* TODO: Remove once the GT API works */
+   #if defined(__BORLANDC__) || defined(__TURBOC__)
+      #include <conio.h>
+      #define console_printf cprintf
+      #define console_gotoxy gotoxy
+   #endif
+   #if defined(__MSC__) || defined(__MSVC__)
+      #include <conio.h>
+      #define console_printf _cprintf
+   #endif
 #endif
 
-#include <stdio.h>
+#include <io.h>
 #include <extend.h>
 #include <ctoharb.h>
 #include <dates.h>
+#include <gtapi.h>
+#include <set.h>
+
+static int dev_row = 0, dev_col = 0;
 
 HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
                          /* Basically the simplest Clipper function to        */
@@ -32,7 +47,10 @@ HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
    _xfree( szResult );
 }
 
-static void hb_outstd( WORD wParam )
+typedef void void_func_int (char *, WORD);
+
+/* Format items for output, then call specified output function */
+static void hb_out( WORD wParam, void_func_int * hb_out_func )
 {
    char * szText;
    PITEM pItem = _param( wParam, IT_ANY );
@@ -42,7 +60,9 @@ static void hb_outstd( WORD wParam )
    switch( _parinfo( wParam ) )
    {
       case IT_DATE:
-           printf ("%s", hb_dtoc (_pards (wParam), szBuffer));
+           szText = hb_dtoc( _pards( wParam ), szBuffer );
+           if( szText )
+                 hb_out_func( szText, strlen( szText ) );
            break;
 
       case IT_DOUBLE:
@@ -51,7 +71,7 @@ static void hb_outstd( WORD wParam )
            szText = hb_str( pItem, 0, 0 ); /* Let hb_str() do the hard work */
            if( szText )
            {
-              printf( "%s", szText );
+              hb_out_func( szText, strlen( szText ) );
               _xfree( szText );
            }
            break;
@@ -61,25 +81,103 @@ static void hb_outstd( WORD wParam )
 
       case IT_LOGICAL:
            if( _parl( wParam ) )
-              printf( ".T." );
+              hb_out_func( ".T.", 3 );
            else
-              printf( ".F." );
+              hb_out_func( ".F.", 3 );
            break;
 
       case IT_STRING:
-           szText   = _parc( wParam );
-           ulLenText = _parclen( wParam );
-           while( ulLenText )
-           {
-              printf( "%c", *szText );
-              szText++;
-              ulLenText--;
-           }
+           hb_out_func( _parc( wParam ), _parclen( wParam ) );
            break;
 
       default:
            break;
    }
+}
+
+/* Output an item to STDOUT */
+static void hb_outstd( char * fpStr, WORD uiLen )
+{
+   WORD uiCount = uiLen;
+   char * fpPtr = fpStr;
+   while( uiCount-- )
+      printf( "%c", *fpPtr++ );
+}
+
+/* Output an item to STDERR */
+static void hb_outerr( char * fpStr, WORD uiLen )
+{
+   WORD uiCount = uiLen;
+   char * fpPtr = fpStr;
+   while( uiCount-- )
+      fprintf( stderr, "%c", *fpPtr++ );
+}
+
+/* Output an item to the screen and/or printer and/or alternate */
+static void hb_altout( char * fpStr, WORD uiLen )
+{
+   WORD uiCount = uiLen;
+   char * fpPtr = fpStr; /* TODO: delete fpPtr once the GT API works */
+   if( hb_set.HB_SET_CONSOLE )
+      /* TODO: Replace with _gtWriteCon( fpStr, uiLen ) once the GT API works */
+      while( uiCount-- )
+         /* Display to console unless SET CONSOLE OFF */
+         #ifdef console_printf
+            console_printf( "%c", *fpPtr++ );
+         #else
+            printf( "%c", *fpPtr++ );
+         #endif
+   if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
+      /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
+      write( hb_set_althan, fpStr, uiLen );
+   if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
+      /* Print to printer if SET PRINTER ON and valid printer file */
+      write( hb_set_printhan, fpStr, uiLen );
+}
+
+/* Output an item to the screen and/or printer */
+static void hb_devout( char * fpStr, WORD uiLen )
+{
+   WORD uiCount = uiLen;
+   char * fpPtr = fpStr; /* TODO: Delete fpPtr once the GT API works */
+   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   {
+      /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
+      write( hb_set_printhan, fpStr, uiLen );
+      dev_col += uiLen;
+   }
+   #ifdef console_printf
+   else
+      /* Otherwise, display to console */
+      /* TODO: Replace with _gtWrite( fpStr, uiLen ) once the GT API works */
+      while( uiCount-- )
+      console_printf( "%c", *fpPtr++ );
+   #endif
+}
+
+void hb_devpos( int row, int col )
+{
+   int count;
+   /* Position printer if SET DEVICE TO PRINTER and valid printer file
+      otherwise position console */
+   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   {
+      if( row < dev_row )
+      {
+         write( hb_set_printhan, "\x0C", 1 );
+         dev_row = dev_col = 0;
+      }
+      for( count = dev_row; count < row; count++ ) write( hb_set_printhan, "\r\n", 2 );
+      if( row > dev_row ) dev_col = 0;
+      for( count = dev_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
+      dev_row = row;
+      dev_col = col;
+   }
+   else
+      /*TODO: Replace with _gtSetPos( row, col ) once the GT API works */
+      #ifdef console_gotoxy
+         console_gotoxy( col + 1, row + 1);
+      #endif
 }
 
 HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device */
@@ -88,19 +186,31 @@ HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device 
 
    for( w = 0; w < _pcount(); w++ )
    {
-      hb_outstd( w + 1 );
-      if( w < _pcount() - 1) printf( " " );
+      hb_out( w + 1, hb_outstd );
+      if( w < _pcount() - 1) hb_outstd( " ", 1 );
    }
 }
 
-HARBOUR QQOUT( void )
+HARBOUR OUTERR( void ) /* writes a list of values to the standard error device */
 {
    WORD w;
 
    for( w = 0; w < _pcount(); w++ )
    {
-      hb_outstd( w + 1 );
-      if( w < _pcount() - 1) printf( " " );
+      hb_out( w + 1, hb_outerr );
+      if( w < _pcount() - 1) hb_outerr( " ", 1 );
+   }
+}
+
+HARBOUR QQOUT( void ) /* writes a list of values to the current device (screen or printer) and is affected by SET ALTERNATE */
+{
+   BOOL bScreen;
+   WORD w;
+
+   for( w = 0; w < _pcount(); w++ )
+   {
+      hb_out( w + 1, hb_altout );
+      if( w < _pcount() - 1) hb_altout( " ", 1 );
    }
 }
 
@@ -109,7 +219,51 @@ HARBOUR QOUT( void )
    #ifdef WINDOWS
       MessageBox( 0, _parc( 1 ), "Harbour", 0 );
    #else
-      printf( "\n" );
+      hb_altout( "\r\n", 2 );
       QQOUT();
    #endif
+}
+
+HARBOUR DEVPOS( void ) /* Sets the screen and/or printer position */
+{
+   PITEM pRow, pCol;
+   if( _pcount() > 1 )
+   {
+      pRow = _param( 1, IT_NUMERIC );
+      pCol = _param( 2, IT_NUMERIC );
+      if( pRow && pCol )
+      {
+         hb_devpos( _parni( 1 ), _parni( 2 ) );
+      }
+   }
+}
+
+HARBOUR DEVOUT( void ) /* writes a single values to the current device (screen or printer), but is not affected by SET ALTERNATE */
+{
+   BOOL bScreen;
+   if( _pcount() > 0 )
+   {
+      char fpOldColor[ 64 ];
+      fpOldColor[ 0 ] = 0;
+      if( _pcount() > 1 )
+      {
+         PITEM pColor = _param( 2, IT_STRING );
+         if( pColor )
+         {
+            _gtGetColorStr( fpOldColor );
+            _gtSetColorStr( pColor->value.szText );
+         }
+      }
+      hb_out( 1, hb_devout );
+      if( fpOldColor[ 0 ] ) _gtSetColorStr( fpOldColor );
+   }
+}
+
+HARBOUR EJECT( void ) /* Ejects the current page from the printer */
+{
+   if( hb_set_printhan )
+   {
+      write( hb_set_printhan, "\x0C", 1 );
+      dev_row = dev_col = 0;
+   }
 }

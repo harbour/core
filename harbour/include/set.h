@@ -122,5 +122,7 @@ typedef struct
 extern HB_set_struct hb_set;
 extern BOOL hb_set_century;
 extern BOOL hb_set_fixed;
+extern int hb_set_althan;
+extern int hb_set_printhan;
 
 #endif

@@ -151,10 +151,14 @@ static int convert_seek_flags( int flags )
 static int convert_create_flags( int flags )
 {
         /* by default FC_NORMAL is set */
+  	#if ! defined( __WATCOMC__ ) && ! defined( __BORLANDC__ )
         int result_flags=S_IWUSR;
 
         if( flags & FC_READONLY )
                 result_flags = result_flags & ~(S_IWUSR);
+        #else
+        int result_flags=0;
+        #endif
 
         if( flags & FC_HIDDEN )
                 result_flags |= 0;
@@ -450,7 +454,7 @@ HARBOUR FREAD()
         if( arg1_it && arg2_it && arg3_it )
         {
             last_error = 0;
-            bytes = _fsRead(_parni(1),arg2_it->value.szText,_parnl(3));
+            bytes = _fsRead(_parni(1),_parc(2),_parnl(3));
             last_error = errno;
         }
 
@@ -562,7 +566,7 @@ HARBOUR FSEEK()
         return;
 }
 
-HARBOUR FILE()
+HARBOUR HB_FILE()
 {
         PITEM arg1_it = _param( 1, IT_STRING );
 
@@ -595,9 +599,7 @@ HARBOUR FREADSTR()
            readed=0; ch[0]=1;
            while( readed < bytes )
            {
-                 last_error = 0;
                  nRead = read(handle,ch,1);
-                 last_error = errno;
                  if( nRead < 1 || ch[0] == 0 )
                         break;
                  buffer[readed]=ch[0];

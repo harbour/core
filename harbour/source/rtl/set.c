@@ -4,11 +4,17 @@
 
 #include <ctype.h>
 #include <extend.h>
+#include <fcntl.h>
+#include <io.h>
+#include <sys/stat.h>
 #include <set.h>
 
 HB_set_struct hb_set;
+
 BOOL hb_set_century;
 BOOL hb_set_fixed;
+int hb_set_althan;
+int hb_set_printhan;
 
 static BOOL set_logical (PITEM pItem)
 {
@@ -41,6 +47,70 @@ static char * set_string (PITEM pItem, char * old_str)
    }
    else string = old_str;
    return (string);
+}
+
+static void close_text (int handle)
+{
+   write (handle, "\x1A", 1);
+   close (handle);
+}
+
+static int open_handle (char * file_name, BOOL bMode, char * def_ext)
+{
+   int handle;
+   BOOL bExt = FALSE, bSep = FALSE;
+   long index;
+   char path [_POSIX_PATH_MAX + 1];
+   
+   /* Check to see if the file name has an extension? */
+   for (index = strlen (file_name); index; index--)
+   {
+      switch (file_name [index])
+      {
+         case '.':
+            if (!bSep) bExt = TRUE; /* Extension found before separator */
+            break;
+         case '\\':
+         case '/':
+         case ':':
+            bSep = TRUE;            /* Path or drive separator found */
+      }
+   }
+   if (bSep) *path = 0;             /* File name includes a drive letter or path */
+   else if (hb_set.HB_SET_DEFAULT)
+   {
+      /* If no path in file name, use default path */
+      strncpy (path, hb_set.HB_SET_DEFAULT, _POSIX_PATH_MAX);
+      path [_POSIX_PATH_MAX] = 0;
+   }
+   /* Save or add the file name */
+   index = strlen (file_name) + strlen (path);
+   if (index > _POSIX_PATH_MAX) index = _POSIX_PATH_MAX;
+   index -= strlen (path);
+   if (index > 0) strncat (path, file_name, index);
+   if (def_ext && !bExt)
+   {
+      /* If the file name does not have an extension (no period following the last
+         path or drive separator), add the default file extension */
+      index = strlen (path) + strlen (def_ext);
+      if (index > _POSIX_PATH_MAX) index = _POSIX_PATH_MAX;
+      index -= strlen (path);
+      if (index > 0) strncat (path, def_ext, index);
+   }
+   /* Open the file either in append (bMode) or truncate mode (!bMode), but
+      always use binary mode */
+   handle = open (path, O_BINARY | O_WRONLY | O_CREAT | (bMode ? O_APPEND : O_TRUNC ), S_IWRITE);
+if (handle < 0) printf("\nError %d creating %s (DOS error %02x)", errno, path, _doserrno);
+   if (handle < 0)
+   {
+      char error_message [32];
+      PITEM pError = _errNew();
+      sprintf( error_message, "create error %d: SET", errno );
+      _errPutDescription(pError, error_message);
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+   return handle;
 }
 
 HARBOUR HB_SETCENTURY (void)
@@ -137,11 +207,13 @@ HARBOUR HB_SETFIXED (void)
 
 HARBOUR SET (void)
 {
+   BOOL bFlag;
    int args = _pcount();
-   PITEM pArg2;
+   PITEM pArg2, pArg3;
 
    HB_set_enum set_specifier = (HB_set_enum)_parni(1);
    if (args > 1) pArg2 = _param (2, IT_ANY);
+   if (args > 2) pArg3 = _param (3, IT_ANY);
 
    switch (set_specifier)
    {
@@ -153,6 +225,14 @@ HARBOUR SET (void)
          if (hb_set.HB_SET_ALTFILE) _retc (hb_set.HB_SET_ALTFILE);
          else _retc ("");
          if (args > 1) hb_set.HB_SET_ALTFILE = set_string (pArg2, hb_set.HB_SET_ALTFILE);
+         if (args > 2) bFlag = set_logical (pArg3);
+         else bFlag = FALSE;
+         if (args > 1)
+         {
+            if (hb_set_althan >= 0) close_text (hb_set_althan);
+            if (hb_set.HB_SET_ALTFILE && strlen (hb_set.HB_SET_ALTFILE) > 0)
+               hb_set_althan = open_handle (hb_set.HB_SET_ALTFILE, bFlag, ".txt");
+         }
          break;
       case HB_SET_BELL       :
          _retl (hb_set.HB_SET_BELL);
@@ -285,6 +365,14 @@ HARBOUR SET (void)
          if (hb_set.HB_SET_PRINTFILE) _retc (hb_set.HB_SET_PRINTFILE);
          else _retc ("");
          if (args > 1) hb_set.HB_SET_PRINTFILE = set_string (pArg2, hb_set.HB_SET_PRINTFILE);
+         if (args > 2) bFlag = set_logical (pArg3);
+         else bFlag = FALSE;
+         if (args > 1)
+         {
+            if (hb_set_printhan >= 0) close (hb_set_printhan);
+            if (hb_set.HB_SET_PRINTFILE && strlen (hb_set.HB_SET_PRINTFILE) > 0)
+               hb_set_printhan = open_handle (hb_set.HB_SET_PRINTFILE, bFlag, ".prn");
+         }
          break;
       case HB_SET_SCOREBOARD :
          _retl (hb_set.HB_SET_SCOREBOARD);
@@ -315,8 +403,10 @@ HARBOUR SET (void)
 
 void InitializeSets (void)
 {
-   hb_set_century = FALSE;
-   hb_set_fixed   = FALSE;
+   hb_set_century  = FALSE;
+   hb_set_fixed    = FALSE;
+   hb_set_althan   = -1;
+   hb_set_printhan = -1;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
    hb_set.HB_SET_BELL = FALSE;
@@ -366,6 +456,11 @@ void InitializeSets (void)
 
 void ReleaseSets (void)
 {
+   if (hb_set_althan) close_text (hb_set_althan);
+   if (hb_set_printhan) close (hb_set_printhan);
+
+   if (hb_set.HB_SET_ALTFILE)
+      _xfree (hb_set.HB_SET_ALTFILE);
    if (hb_set.HB_SET_COLOR)
       _xfree (hb_set.HB_SET_COLOR);
    if (hb_set.HB_SET_DATEFORMAT)
@@ -377,5 +472,7 @@ void ReleaseSets (void)
    if (hb_set.HB_SET_DEVICE)
       _xfree (hb_set.HB_SET_DEVICE);
    if (hb_set.HB_SET_PATH)
+      _xfree (hb_set.HB_SET_PATH);
+   if (hb_set.HB_SET_PRINTFILE)
       _xfree (hb_set.HB_SET_PATH);
 }
