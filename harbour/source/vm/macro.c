@@ -140,7 +140,7 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
    if( ! HB_IS_STRING(pItem) )
    {
-      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1080, NULL, "&", 0 );
+      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 0 );
 
       bValid = FALSE;
       if( pResult )
@@ -1550,5 +1550,3 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
    hb_xfree( ( void * ) pCodeblock->pCode );
    hb_xfree( ( void * ) pCodeblock );
 }
-
-

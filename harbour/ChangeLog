@@ -7,6 +7,24 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-01-30 11:30 UTC+0100 Antonio Linares <alinares@fivetech.com>
+
+   * include/hbpcode.h
+   * source/compiler/genc.c
+   * source/compiler/hbfix.c
+   * source/compiler/hbpcode.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+     + Added support for HB_P_MPUSHSTR
+
+   Notice: These changes have been borrowed from xHarbour,
+   as they fix the bug that xHarbour strings sharing introduced
+   in Harbour (for macro strings).
+   Copyright of this xHarbour bug and bug fix: Ron Pinkas.
+
+   * source/vm/classes.c
+     * source change re-implemented, that was lost cause using
        Viktor classes.c
 
 2002-01-30 12:30 UTC+0200 Chen Kedem <niki@actcom.co.il>

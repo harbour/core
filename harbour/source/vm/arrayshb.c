@@ -323,7 +323,7 @@ HB_FUNC( HB_AEXPRESSIONS )
 
    if( pLine == NULL )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "HB_AEXPRESSIONS", 1, hb_paramError(1) );
+      hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "HB_AEXPRESSIONS", 1, hb_paramError(1) );
       return;
    }
 
@@ -408,4 +408,3 @@ HB_FUNC( HB_AEXPRESSIONS )
       hb_itemRelease( pExp );
    }
 }
-
