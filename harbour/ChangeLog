@@ -1,3 +1,7 @@
+2001-09-02 13:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+    * source/rtl/isprint.c
+      * Added code for win32 platform
+
 2001-09-02 14:20 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/source/vm/classes.c
     Added BOOL bIsPersistent to the METHOD structure
