@@ -1,3 +1,7 @@
+2000-10-11 13:40 GMT -0300 Horacio D. Roldan <horacioroldan@usa.net>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     Fixed a bug in ordCreate that corrupted the dbf
+
 2000-10-10 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rtl/dummy.prg
       Removed __DBAPP() function
@@ -40,6 +44,13 @@
    * source/rdd/dbfcdx/dbfcdx1.h
      * added #pragma pack(1) and #pragma pack() for structure alignment
        with GNU C compiler
+
+2000-10-10 00:37 GMT -0300 Horacio D. Roldan <horacioroldan@usa.net>
+   * source/include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+   + source/rdd/dbfcdx/dbfcdx1.h
+   + source/rdd/dbfcdx/dbfcdx2.h
+     added support for ordlistadd, gotop/bottom/skip/seek.
 
 2000-10-09 22:53 UTC+0200 JFL (mafact) <jfl@mafact.com>
    * TGET.PRG Small improvement within :Undo() method
