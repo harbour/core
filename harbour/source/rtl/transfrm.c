@@ -1,4 +1,4 @@
-/*
+/* 
  * $Id$
  */
 
@@ -87,7 +87,7 @@
 #define PF_PARNEGWOS  0x1000   /* @) Similar to PF_PARNEG but without leading spaces */
 
 extern PHB_CODEPAGE s_cdpage;
-#define TOUPPER(c)    ((s_cdpage->nChars)? (char)s_cdpage->s_upper[c&255] : toupper(c))
+#define TOUPPER(c)    ((s_cdpage->nChars)? (char)s_cdpage->s_upper[c&255] : (char)toupper(c))
 
 HB_FUNC( TRANSFORM )
 {
@@ -135,6 +135,7 @@ HB_FUNC( TRANSFORM )
             switch( toupper( *szPic ) )
             {
                case HB_CHAR_HT:
+               case '9':
                case ' ':
                   bDone = TRUE;      /* End of function string */
                   break;
@@ -265,7 +266,7 @@ HB_FUNC( TRANSFORM )
                         szResult[ ulResultPos++ ] = ( szExp[ ulExpPos ] == 't' ||
                                                       szExp[ ulExpPos ] == 'T' ||
                                                       szExp[ ulExpPos ] == 'y' ||
-                                                      szExp[ ulExpPos ] == 'Y' ) ? 'Y' : 'N';
+                                                      szExp[ ulExpPos ] == 'Y' ) ? ( char ) 'Y' : ( char ) 'N';
                         ulExpPos++;
                         bAnyPic = TRUE;
                         break;
@@ -553,6 +554,12 @@ HB_FUNC( TRANSFORM )
                            szResult[ i ] = '*';
                         else
                            szResult[ i ] = ' ';
+
+                           if ( i && szResult[ i - 1 ] == '-' )
+                           {
+                               szResult[ i -1 ] = ' ';
+                               szResult[ i ] = '-';
+                           }
                      }
                   }
                   else
@@ -739,7 +746,7 @@ HB_FUNC( TRANSFORM )
                {
                   if( !bDone )
                   {
-                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? ( char ) 'Y' : ( char ) 'N';
                      bDone = TRUE;           /* Logical written          */
                   }
                   else
@@ -754,7 +761,7 @@ HB_FUNC( TRANSFORM )
                {
                   if( !bDone )
                   {
-                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'T' : 'F';
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? ( char ) 'T' : ( char ) 'F';
                      bDone = TRUE;
                   }
                   else

@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-21 11:10 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/rtl/transfrm.c
+    ! Fixed the problem with @E and negative numbers. 
+
+      local nValue := -134.24
+      msginfo( Val( AllTrim( Transform( nValue, "@E 99,999.99" ) ) ) )
+      msginfo( Val( AllTrim( Transform( nValue, "@E99,999.99" ) ) ) )
+
+      Thanks to Enrico Maria Giordano for this fix.
+
 2003-07-17 23:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/transfrm.c
     ! Removed some old commented lines
