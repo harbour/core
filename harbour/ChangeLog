@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-31 11:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * include/hbver.h
+    * Updated the build number and the ChangeLog information.
+
 2002-12-30 16:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
         ! fixed scope related bug, reported by Blue Face
