@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/menuto.prg
+     * Added mouse capabilities
+
+2002-03-17 20:25 UTC-0300 Luiz Rafael Culik<culikr@uol.com.br>
+  * source/rtl/listbox.org
+    source/rtl/radiobtn.prg
+    source/rtl/radiogpr.prg
+    source/rtl/checkbox.prg
     source/rtl/tget.prg
     source/rtl/pushbtn.prg
     source/rtl/tbrowse.prg
