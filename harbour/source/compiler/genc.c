@@ -282,7 +282,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       pInline = hb_comp_inlines.pFirst;
    }
 
-   pDeclared = hb_comp_pReleaseDeclared->pNext;
+   if ( hb_comp_pReleaseDeclared )
+      pDeclared = hb_comp_pReleaseDeclared->pNext;
+   else
+      pDeclared = NULL;
+
    while( pDeclared )
    {
       hb_comp_pFirstDeclared = pDeclared->pNext;

@@ -1,3 +1,7 @@
+2001-04-09 02:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/compiler/genc.c
+     * Posted a fix from Ron to pDeclared handling
+
 2001-04-09 12:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       * added scope optimization to DBOI_KEYCOUNT
