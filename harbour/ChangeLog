@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-02-10 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/filesys.c
+  	! I missed one place where the X__WIN32__ guard needs to be used
+  	  (in the hb_fsRename function).
+
 2003-02-05 23:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * contrib/libct/makefile.bc
     ! Added a rule to compile setlast.prg

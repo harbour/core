@@ -1254,7 +1254,7 @@ BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRename(%s, %s)", (char*) pOldName, (char*) pNewName));
 
-#if defined(HB_OS_WIN_32)
+#if defined(X__WIN32__)
 
    errno=0;
    if ((bResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName ))==0)
