@@ -202,6 +202,7 @@ extern void      hb_compFunCallCheck( char *, int );
 extern void hb_compVariableAdd( char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
+extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 
 extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT * );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */

@@ -63,7 +63,6 @@ static int hb_compFieldGetPos( char *, PFUNCTION );   /* return if passed name i
 static int hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
 static int hb_compMemvarGetPos( char *, PFUNCTION );   /* return if passed name is a memvar variable */
 static int hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
-USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 
 static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* generates the pcode for database field */
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
@@ -882,6 +881,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 
       hb_xfree( pBuffer );
    }
+   hb_comp_bDontGenLineNum = FALSE;	/* reset the flag */
 }
 
 /* create an ANNOUNCEd procedure

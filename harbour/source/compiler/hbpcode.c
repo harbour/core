@@ -259,9 +259,9 @@ void hb_compStrongType( int iSize )
           sprintf( szType1, "%c", pDeclared->cType );
 
           if ( cSubType1 && cSubType1 == '-' )
-             strcpy( szType2, "Variant.SubType\[NIL\]" );
+             strcpy( szType2, "Variant.SubType\[NIL]" );
           else if ( cSubType1 )
-             sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+             sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
           else
              sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
@@ -364,9 +364,9 @@ void hb_compStrongType( int iSize )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          strcpy( szType1, "Variant.SubType\[NIL\]" );
+          strcpy( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL" );
        else
@@ -397,9 +397,9 @@ void hb_compStrongType( int iSize )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          strcpy( szType1, "Variant.SubType\[NIL\]" );
+          strcpy( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType1, "NIL" );
        else
@@ -429,18 +429,18 @@ void hb_compStrongType( int iSize )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          strcpy( szType1, "Variant.SubType\[NIL\]" );
+          strcpy( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL");
        else
           sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
 
        if ( cSubType2 && cSubType2 == '-' )
-          strcpy( szType2, "Variant.SubType\[NIL\]" );
+          strcpy( szType2, "Variant.SubType\[NIL]" );
        else if ( cSubType2 )
-          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType2, "NIL" );
        else
@@ -501,18 +501,18 @@ void hb_compStrongType( int iSize )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          strcpy( szType1, "Variant.SubType\[NIL\]" );
+          strcpy( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL");
        else
           sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
 
        if ( cSubType2 && cSubType2 == '-' )
-          strcpy( szType2, "Variant.SubType\[NIL\]" );
+          strcpy( szType2, "Variant.SubType\[NIL]" );
        else if ( cSubType2 )
-          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType2, "NIL" );
        else
@@ -585,7 +585,7 @@ void hb_compStrongType( int iSize )
        if ( cSubType1 && cSubType1 == '-' )
           sprintf( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL" );
        else
@@ -594,7 +594,7 @@ void hb_compStrongType( int iSize )
        if ( cSubType2 && cSubType2 == '-' )
           strcpy( szType2, "Variant.SubType\[NIL]" );
        else if ( cSubType2 )
-          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType2, "NIL" );
        else
@@ -657,18 +657,18 @@ void hb_compStrongType( int iSize )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          sprintf( szType1, "Variant.SubType\[NIL\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL");
        else
           sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
 
        if ( cSubType2 && cSubType2 == '-' )
-          strcpy( szType2, "Variant.SubType\[NIL\]" );
+          strcpy( szType2, "Variant.SubType\[NIL]" );
        else if ( cSubType2 )
-          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType2, "NIL" );
        else
@@ -728,18 +728,18 @@ void hb_compStrongType( int iSize )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= 100 );
 
        if ( cSubType1 && cSubType1 == '-' )
-          sprintf( szType1, "Variant.SubType\[NIL\]" );
+          sprintf( szType1, "Variant.SubType\[NIL]" );
        else if ( cSubType1 )
-          sprintf( szType1, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
           strcpy( szType1, "NIL");
        else
           sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
 
        if ( cSubType2 && cSubType2 == '-' )
-          strcpy( szType2, "Variant.SubType\[NIL\]" );
+          strcpy( szType2, "Variant.SubType\[NIL]" );
        else if ( cSubType2 )
-          sprintf( szType2, "Variant.SubType\[%c\]", pFunc->pStack[ pFunc->iStackIndex ] );
+          sprintf( szType2, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex ] );
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
           strcpy( szType2, "NIL" );
        else

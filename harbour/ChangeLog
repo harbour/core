@@ -1,3 +1,17 @@
+20000505-17:53 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+    *source/compiler/harbour.c
+	*moved declaration of hb_compVariableGetPos into the header file
+	
+    *source/compiler/harbour.c
+	* fixed generation of line number pcode at the beginning of
+	a function
+	
+    *source/compiler/hbpcode.c
+	* fixed non-standard escape sequence "\]" (gcc warnings)
+	* fixed incorrect number of parameters passed to sprintf
+
 20000505-10:47 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/teditor.prg
