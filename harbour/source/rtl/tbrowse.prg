@@ -633,7 +633,7 @@ METHOD Hilite() CLASS TBrowse
    local nRow
    local cType
 
-   nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 1) + iif(Empty(::HeadSep), 0, 1) - 1
+   nRow := ::nTop + ::RowPos + iif(::lHeaders, ::nHeaderHeight, 0) + iif(Empty(::HeadSep), 0, 1) - 1
 
    // Start of cell
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
