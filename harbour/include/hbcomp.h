@@ -175,6 +175,10 @@ void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 #define VS_PUBLIC     128
 #define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
 
+#define VU_NOT_USED    0
+#define VU_INITIALIZED 1
+#define VU_USED        2
+
 /*
  * flags for bFlags member
 */

@@ -522,12 +522,15 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
    pVar->cType = hb_comp_cVarType;
-   pVar->iUsed = 0;
+   pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
 
    /* Correct Type was previously stored in the CodeBlock. */
    if( ! pFunc->szName )
      pVar->cType = cValueType;
+
+   if ( hb_comp_iVarScope & VS_PARAMETER )
+      pVar->iUsed = VU_INITIALIZED;
 
    if( hb_comp_iVarScope & VS_MEMVAR )
    {
@@ -1099,8 +1102,10 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
-         /* Might be set to -1 by StrongType if so leave without change, otherwise set to 1. */
-         pVars->iUsed |= 1;
+         /* Might be set to -1 by StrongType if so leave without change, otherwise set to 1.
+         Handled by hb_compStrongType()
+         pVars->iUsed |= VU_USED;
+         */
          return wVar;
       }
       else
@@ -1212,7 +1217,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                      pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
                      pVar->szName = szVarName;
                      pVar->cType = ' ';
-                     pVar->iUsed = 0;
+                     pVar->iUsed = VU_NOT_USED;
                      pVar->pNext  = NULL;
 
                      /* Use negative order to signal that we are accessing a local
@@ -2497,7 +2502,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          pVar = pFunc->pLocals;
          while( pVar )
          {
-            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! pVar->iUsed )
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
 
             pVar = pVar->pNext;
@@ -2506,7 +2511,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
          pVar = pFunc->pStatics;
          while( pVar )
          {
-            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! pVar->iUsed )
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, pFunc->szName );
 
             pVar = pVar->pNext;
@@ -3007,7 +3012,7 @@ void hb_compCodeBlockEnd( void )
    pVar = pCodeblock->pLocals;
    while( pVar )
    {
-      if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
+      if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */

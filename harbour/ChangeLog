@@ -1,3 +1,17 @@
+20000503-21:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     + Added:
+	#define VU_NOT_USED    0
+	#define VU_INITIALIZED 1
+	#define VU_USED        2
+
+   * source/compiler/harbour.c
+      * Modified refrences to pVar->iUsed to use new VU_* constants.
+
+   * source/compiler/hbpcode.c
+     * Enhanced hb_compStrongType() to check and set pVar->iUsed with new VU_*constants.
+
 20000503-19:25 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c

@@ -653,8 +653,11 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          if ( pVar->iUsed >= 0 )
+          if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
              hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+          /* Mark as used */
+          pVar->iUsed |= VU_USED;
 
           /* Review with Ryszard. */
           if ( pVar->cType == 'U' )
@@ -692,8 +695,11 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          if ( pVar->iUsed >= 0 )
+          if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
              hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+          /* Mark as used */
+          pVar->iUsed |= VU_USED;
 
           pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
@@ -715,8 +721,11 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          if ( pVar->iUsed >= 0 )
+          if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
              hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+          /* Mark as used */
+          pVar->iUsed |= VU_USED;
 
           pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
@@ -919,7 +928,7 @@ void hb_compStrongType( int iSize )
          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
 
        if ( pVar )
-          pVar->iUsed = -1;
+          pVar->iUsed |= VU_INITIALIZED;
 
        if ( pVar && pVar->cType != ' ' )
        {
@@ -959,7 +968,7 @@ void hb_compStrongType( int iSize )
          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
        if ( pVar )
-          pVar->iUsed = -1;
+          pVar->iUsed |= VU_INITIALIZED;
 
        if ( pVar && pVar->cType != ' ' )
        {
@@ -990,7 +999,7 @@ void hb_compStrongType( int iSize )
        pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
        if ( pVar )
-          pVar->iUsed = -1;
+          pVar->iUsed |= VU_INITIALIZED;
 
        if ( pVar && pVar->cType != ' '  )
        {
