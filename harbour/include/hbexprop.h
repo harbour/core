@@ -329,6 +329,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR );
 ULONG hb_compExprListLen( HB_EXPR_PTR );
 void hb_compExprClear( HB_EXPR_PTR );
 char * hb_compExprDescription( HB_EXPR_PTR );
+int hb_compExprType( HB_EXPR_PTR );
 
 void hb_compExprFree( HB_EXPR_PTR, HB_MACRO_DECL );
 void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );

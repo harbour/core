@@ -74,6 +74,11 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->pCodeInfo->pPrev      = NULL;
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s)", pMacro, szString));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
+   
+   /* reset the type of compiled expression - this should be filled after
+    * successfully compilation
+    */ 
+   pMacro->exprType = HB_ET_NONE;
 
    return hb_compParse( pMacro );
 }
@@ -661,7 +666,14 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       {
          /* passed string was successfully compiled
           */
-         if( struMacro.status & HB_MACRO_UNKN_SYM )
+	 if( struMacro.exprType == HB_ET_CODEBLOCK )
+	 {
+	     /* Clipper ignores any undeclared symbols or UDFs if the
+	      * compiled expression is a valid codeblock
+	     */
+	     szType ="B";
+	 }
+         else if( struMacro.status & HB_MACRO_UNKN_SYM )
          {
             /* request for a symbol that is not in a symbol table
              */

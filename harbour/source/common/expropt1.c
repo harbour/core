@@ -33,8 +33,6 @@
  *
  */
 
-/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
-
 /* TODO:
  *    - Correct post- and pre- operations to correctly handle the following code
  *    a[ i++ ]++
@@ -142,6 +140,11 @@ char * hb_compExprDescription( HB_EXPR_PTR pExpr )
       return s_OperTable[ pExpr->ExprType ];
    else
       return s_OperTable[ 0 ];
+}
+
+int hb_compExprType( HB_EXPR_PTR pExpr )
+{
+   return ( int ) pExpr->ExprType;
 }
 
 /* ************************************************************************* */

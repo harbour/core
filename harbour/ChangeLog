@@ -1,3 +1,14 @@
+20000505-19:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+    *include/hbexprop.h
+    *source/common/expropt1.c
+    *source/macro/macro.y
+    *source/vm/macro.c
+	* added int exprType for HB_MACRO structure
+	* TYPE( "{|| NotLinked()}" ) returns now 'B' instead of 'UI'
+
+
 20000505-17:53 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h
