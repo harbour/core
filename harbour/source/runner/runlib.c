@@ -235,7 +235,7 @@ HARBOUR HB___HRBRUN( void )
          {
             PHB_ITEM pRetVal;
 
-            hb_vmProcessSymbols( pSymRead, ulSymbols );
+            hb_vmProcessSymbols( pSymRead, ( USHORT ) ulSymbols );
 
             /* Initialize static variables first
              */
@@ -462,7 +462,7 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 
    hb_hrbAsmPatch( asmRet->pAsmData, 1, pSymbols );   /* Insert pointer to testsym */
    hb_hrbAsmPatch( asmRet->pAsmData, 6, pCode );      /* Insert pointer to testcode */
-   hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, &hb_vmExecute, 15 );
+   hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, hb_vmExecute, 15 );
                                       /* Insert pointer to hb_vmExecute() */
 
 /* #elseif INTEL16 */
@@ -479,10 +479,10 @@ static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address )
    
 /* #if 32 bits and low byte first */
 
-   pCode[ ulOffset     ] = ( ( ULONG ) Address       ) & 0xFF;
-   pCode[ ulOffset + 1 ] = ( ( ULONG ) Address >>  8 ) & 0xFF;
-   pCode[ ulOffset + 2 ] = ( ( ULONG ) Address >> 16 ) & 0xFF;
-   pCode[ ulOffset + 3 ] = ( ( ULONG ) Address >> 24 ) & 0xFF;
+   pCode[ ulOffset     ] = ( BYTE ) ( ( ( ULONG ) Address       ) & 0xFF );
+   pCode[ ulOffset + 1 ] = ( BYTE ) ( ( ( ULONG ) Address >>  8 ) & 0xFF );
+   pCode[ ulOffset + 2 ] = ( BYTE ) ( ( ( ULONG ) Address >> 16 ) & 0xFF );
+   pCode[ ulOffset + 3 ] = ( BYTE ) ( ( ( ULONG ) Address >> 24 ) & 0xFF );
 
 /* #elseif 16 bits and low byte first */
 /* #elseif 32 bits and high byte first */
@@ -505,10 +505,10 @@ static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
                                 /* Relative to next instruction */
    ulRelative = ( ULONG ) Address - ulBase;
 
-   pCode[ ulOffset     ] = ( ulRelative       ) & 0xFF;
-   pCode[ ulOffset + 1 ] = ( ulRelative >>  8 ) & 0xFF;
-   pCode[ ulOffset + 2 ] = ( ulRelative >> 16 ) & 0xFF;
-   pCode[ ulOffset + 3 ] = ( ulRelative >> 24 ) & 0xFF;
+   pCode[ ulOffset     ] = ( BYTE ) ( ( ulRelative       ) & 0xFF );
+   pCode[ ulOffset + 1 ] = ( BYTE ) ( ( ulRelative >>  8 ) & 0xFF );
+   pCode[ ulOffset + 2 ] = ( BYTE ) ( ( ulRelative >> 16 ) & 0xFF );
+   pCode[ ulOffset + 3 ] = ( BYTE ) ( ( ulRelative >> 24 ) & 0xFF );
 
 /* #elseif 16 bits and low byte first */
 /* #elseif 32 bits and high byte first */

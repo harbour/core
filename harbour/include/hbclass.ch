@@ -57,23 +57,26 @@
      [ ; #translate Super : => ::<SuperClass>: ] ;
      [ ; extern <SuperClass> ]
 
+
+/* Note the use of commas ',' on the following rule to avoid their call
+   if there are no AS ... or INIT clauses specified. As we just use
+   those methods first parameter, the second one supplied acts as a dummy one */
+
 #xcommand DATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ] => ;
    [ oClass:SetType( <(type)> ) ; ][ oClass:SetInit( <uValue> ) ; ] ;
      oClass:AddData( <(DataName1)> ) ;
    [; oClass:AddData( <(DataNameN)> ) ] ;
    [; oClass:SetInit(,<uValue>) ] [ ; oClass:SetType(,<(type)>) ]
-   // Note the use of commas ',' on the above two rules to avoid their call
-   // if there are no AS ... or INIT clauses specified. As we just use
-   // those methods first parameter, the second one supplied acts as a dummy one
+
+/* Note the use of commas ',' on the following rule to avoid their call
+   if there are no AS ... or INIT clauses specified. As we just use
+   those methods first parameter, the second one supplied acts as a dummy one */
 
 #xcommand CLASSDATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ] => ;
    [ oClass:SetType( <(type)> ) ; ][ oClass:SetInit( <uValue> ) ; ] ;
      oClass:AddClassData( <(DataName1)> ) ;
    [; oClass:AddClassData( <(DataNameN)> ) ] ;
    [; oClass:SetInit(,<uValue>) ] [ ; oClass:SetType(,<(type)>) ]
-   // Note the use of commas ',' on the above two rules to avoid their call
-   // if there are no AS ... or INIT clauses specified. As we just use
-   // those methods first parameter, the second one supplied acts as a dummy one
 
 #xcommand METHOD <MethodName>( [<params,...>] ) [ CONSTRUCTOR ] => ;
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )

@@ -1178,7 +1178,9 @@ static int RemoveSlash( char * stroka )
               {
                 hb_pp_Stuff( "", ptr, 0, 1, lenres - (ptr - stroka) );
                 lenres--;
-//                ptr++;
+/*
+                ptr++;
+*/
               }
           }
         break;

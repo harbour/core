@@ -16,7 +16,7 @@ BIN_DIR     = ..\..\bin\vc
 #
 
 CC = cl
-CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR)
+CFLAGS = -TP -W3 -nologo -I$(INCLUDE_DIR)
 CLIBFLAGS = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 

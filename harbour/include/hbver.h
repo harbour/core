@@ -81,6 +81,6 @@
 #define HB_VER_BUILD    32      /* Build number */
 #define HB_VER_YEAR     2000    /* Build year */
 #define HB_VER_MONTH    03      /* Build month */
-#define HB_VER_DAY      07      /* Build day */
+#define HB_VER_DAY      14      /* Build day */
 
 #endif /* HB_VER_H_ */

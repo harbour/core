@@ -78,24 +78,22 @@ HARBOUR HB_ADSSETSERVERTYPE( void )
 
 HARBOUR HB_ADSLOCKING( void )
 {
-   int lockType, oldType = adsLockType;
+   int oldType = adsLockType;
+
    if( hb_pcount() > 0 )
-   {
       adsLockType = hb_parl( 1 );
-   }
+
    hb_retl( oldType );
-   return;
 }
 
 HARBOUR HB_ADSRIGHTSCHECK( void )
 {
-   int lockType, oldType = (adsRights==1)? 1:0;
+   int oldType = (adsRights==1)? 1:0;
+
    if( hb_pcount() > 0 )
-   {
       adsRights = ( hb_parl( 1 ) )? 1:2;
-   }
+
    hb_retl( oldType );
-   return;
 }
 
 HARBOUR HB_ADSSETCHARTYPE( void )

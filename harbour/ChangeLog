@@ -1,3 +1,20 @@
+20000316-02:04 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/pp/ppcore.c
+     ! C++ comment changed to ANSI C
+   * source/runner/runlib.c
+     ! Fixed MSVC /W3 warnings.
+     ! Fixed one BCC55 -w warning (the only -w warning which really made sense.)
+   * include/hbclass.ch
+     include/assert.ch
+     * Some // comments changed to /**/. Cosmetics only.
+   * contrib/rdd_ads/makefile.vc
+     contrib/rdd_ads/ads1.c
+     contrib/rdd_ads/adsfunc.c
+     + MSVC warning level raised to /W3
+     ! MSVC /W3 warnings fixed.
+   * include/hbver.h
+     * Date updated.
+
 20000315-18:00 EST Paul Tucker <ptucker@sympatico.ca>
    * source/tools/hb_f.c
    * source/rtl/gt/gtwin.c

@@ -515,10 +515,9 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
    USHORT uiCount;
-   BYTE * pBuffer, * szText, szEndChar;
+   BYTE * szText, szEndChar;
    BOOL bError;
    long lDay, lMonth, lYear;
-   UNSIGNED32 res;
    UNSIGNED8 szName[HARBOUR_MAX_RDD_FIELDNAME_LENGTH+1];
    UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
    UNSIGNED8 pucFormat[11];
@@ -538,7 +537,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case 'C':
          if( IS_STRING( pItem ) )
          {
-            uiCount = hb_itemGetCLen( pItem );
+            uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
             memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
@@ -595,7 +594,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case 'M':
          if( IS_STRING( pItem ) )
          {
-            uiCount = hb_itemGetCLen( pItem );
+            uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             AdsSetString( pArea->hTable, szName,
                (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
@@ -936,7 +935,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
            ulOptions, &phIndex);
    if ( ulRetVal != AE_SUCCESS )
    {
-      commonError( pArea, EG_CREATE, ulRetVal, (char*) pOrderInfo->abBagName );
+      commonError( pArea, EG_CREATE, ( USHORT ) ulRetVal, (char*) pOrderInfo->abBagName );
       return FAILURE;
    }
    return adsGoTop( pArea );
@@ -1154,7 +1153,7 @@ static ERRCODE adsReadDBHeader( ADSAREAP pArea )
 
    adsFieldCount( pArea, &uiFields );
    AdsGetRecordLength( pArea->hTable, &pulLength );
-   pArea->lpExtendInfo->uiRecordLen = pulLength;
+   pArea->lpExtendInfo->uiRecordLen = ( USHORT ) pulLength;
 
    SUPER_SETFIELDEXTENT( (AREAP)pArea, uiFields );
    pFieldInfo.typeExtended = 0;

@@ -119,7 +119,7 @@ struct hb_struBlock
 
 struct hb_struDate
 {
-   LONG value;
+   long value;
 };
 
 /* this definition signals that number of decimal places for double value
