@@ -1,3 +1,8 @@
+2001-01-30 10:10 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtwin/gtwin.c
+    * Changed code that determines whether or not a key stroke is for
+      an extended key, so that Alt+[alpha/numeric key] works properly.
+
 2001-01-26 16:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.vc
      + Added -DSIMPLEX to production of HARBOUR_EXE_OBJs.

@@ -387,34 +387,57 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
             WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
-            /* fprintf( stdout, "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch ); */
+            /*
+               fprintf( stdout, "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch );
+               if( dwState & CAPSLOCK_ON ) fprintf( stdout, " CL" hb_kb_tr_stop
+               if( dwState & ENHANCED_KEY ) fprintf( stdout, " EK" hb_kb_tr_stop
+               if( dwState & LEFT_ALT_PRESSED ) fprintf( stdout, " LA" );
+               if( dwState & RIGHT_ALT_PRESSED ) fprintf( stdout, " RA" );
+               if( dwState & LEFT_CTRL_PRESSED ) fprintf( stdout, " LC" );
+               if( dwState & RIGHT_CTRL_PRESSED ) fprintf( stdout, " RC" );
+               if( dwState & NUMLOCK_ON ) fprintf( stdout, " NL" );
+               if( dwState & SCROLLLOCK_ON ) fprintf( stdout, " SL" );
+               if( dwState & SHIFT_PRESSED ) fprintf( stdout, " SH" );
+               fprintf( stdout, " " );
+            */
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
                ch = 0;
+               /* fprintf( stdout, "-" ); */
             }
-            /* && ( ch != -32  || wChar > 50 ) added for 
-               international keyboard support ( Alexander Kresin ) */
             else if( ch < 0  && ( ch != -32  || wChar > 50 ) )
             {
                /* Process international key codes */
                ch += 256;
+               /* fprintf( stdout, "+" ); */
             }
-            /* && ch == -32 added for international keyboard support ( Alexander Kresin ) */
             else
             {
-               if( ( ch == 0 || ch == -32 ) && ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
+               /* fprintf( stdout, "0" ); */
+               if( ( ( ch == 0 || ch == -32 ) && ( dwState & ( SHIFT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
+               || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) ) )
+               {
                   extended = 1;
+                  /* fprintf( stdout, "1" ); */
+               }
                else if( ch == 0 )
                {
                   if( eventmask & INKEY_RAW )
+                  {
                      extended = 1;
+                     /* fprintf( stdout, "2" ); */
+                  }
                   else
+                  {
                      ch = StdFnKeys( wKey, 0 );
+                     /* fprintf( stdout, "3" ); */
+                  }
                }
             }
             if( extended )
             {
+               /* fprintf( stdout, "4" ); */
                /* Process non-ASCII key codes */
                if( eventmask & INKEY_RAW ) wKey = wChar;
                /* Discard standalone state key presses for normal mode only */
@@ -432,10 +455,12 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   case 69: /* Num Lock */
                   case 70: /* Pause or Scroll Lock */
                      wKey = 0;
+                     /* fprintf( stdout, "5" );  */
                }
                if( wKey == 0 ) ch = 0;
                else
                {
+                  /* fprintf( stdout, "6" ); */
                   if( eventmask & INKEY_RAW )
                   {
                      /* Pass along all virtual key codes with all
@@ -448,6 +473,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      if( dwState & LEFT_ALT_PRESSED ) wKey += 8192;
                      if( dwState & RIGHT_ALT_PRESSED ) wKey += 16384;
                      ch = wKey;
+                     /* fprintf( stdout, "7" ); */
                   }
                   else
                   {
@@ -456,14 +482,17 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      BOOL bCtrl = dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED );
                      BOOL bShift = dwState & SHIFT_PRESSED;
                      BOOL bEnhanced = dwState & ENHANCED_KEY;
+                     /* fprintf( stdout, "8" ); */
 
                      HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
 
                      if( bAlt )
                      {
+                        /* fprintf( stdout, "9" ); /*
                         /* Alt key held */
                         if( ch == 0 || ch == wChar || tolower( ch ) == tolower( wChar ) )
                         {
+                           /* fprintf( stdout, "a" ); */
                            /* Only translate if not AltGr */
                            if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
                            else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
@@ -484,6 +513,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else if( bCtrl )
                      {
+                        /* fprintf( stdout, "b" ); */
                         /* Ctrl key held */
                         if( wKey == 53 && bEnhanced ) ch = KP_CTRL_SLASH; /* Num Pad / */
                         else switch( wKey )
@@ -585,6 +615,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else if( bShift )
                      {
+                        /* fprintf( stdout, "c" ); */
                         /* Shift key held */
                         if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
                         else switch( wKey )
@@ -656,6 +687,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else
                      {
+                        /* fprintf( stdout, "d" ); */
                         ch = StdFnKeys( wKey, bEnhanced );
                      }
                   }
