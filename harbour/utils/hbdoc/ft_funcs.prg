@@ -48,11 +48,11 @@ STATIC TheHandle
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function ft_fuse()
+*+    Function FT_FUSE()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION ft_fuse( cFile, nMode )
+FUNCTION FT_FUSE( cFile, nMode )
 
    IF nMode == nil
       nMode := 2
@@ -76,6 +76,7 @@ RETURN theHandle:nHan
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 FUNCTION ft_FEOF()
+
    LOCAL lRETURN := theHandle:lAtBottom
 RETURN lRETURN
 
@@ -83,11 +84,13 @@ RETURN lRETURN
 *+
 *+    Function FReadLn()
 *+
+*+    Called from ( ft_funcs.prg )   1 - function ft_freadln()
+*+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 FUNCTION FReadLn( nH, cLine )
 
-      cLine := theHandle:retrieve()
+   cLine := theHandle:retrieve()
 RETURN cLine
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -102,7 +105,7 @@ FUNCTION FT_FReadLn()
 
    cBuffer := FReadLn( theHandle:nHan, @cBuffer )
 
- cBuffer:=STRTRAN(cBuffer,chr(13),'')
+   cBuffer := STRTRAN( cBuffer, CHR( 13 ), '' )
 
 RETURN cBuffer
 
@@ -114,17 +117,18 @@ RETURN cBuffer
 *+
 FUNCTION FT_FGotop()
 
-    theHandle:Gotop()
-RETURN        NIL
+   theHandle:Gotop()
+RETURN NIL
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-*+    Function ft_fskip()
+*+    Function FT_FSKIP()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION ft_fskip( n)
-    TheHandle:Skip(n)
+FUNCTION FT_FSKIP( n )
+
+   TheHandle:Skip( n )
 RETURN nil
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -139,28 +143,63 @@ FUNCTION FT_MKDIR( CDIR )
 
 RETURN nil
 
-FUNCTION StrPos(cBuffer)
-LOCAL nPos,x,cChar
-default nPos to 0
-      FOR x:=1 to LEN(cBuffer)
-          cChar:=SubStr(cBuffer,x,1)
-          if cChar>=chr(64) .and. cChar <=Chr(90) .or. cChar>=chr(97) ;
-          .and. cChar <=Chr(122) .or. cChar>=Chr(48)  .and. cChar <=chr(57) ;
-          .or. cChar==chr(60) .or. cchar==CHR(ASC("-")) ;
-          .or. cchar==CHR(ASC("(")) .or. cchar=chr(asc("|")) .or. ;
-          cchar==chr(asc('.')) .or. cchar==chr(asc('*')) .or. ;
-          cchar==chr(asc('#')) .or. cchar==chr(asc('"')) .or. ;
-          cchar==chr(asc('/')) .or. cchar==chr(asc("@")) ;
-          .or. cchar==chr(asc("=")) .or. cchar==chr(asc('Ä')) ;
-          .or. cchar==chr(asc('?')) .or. cchar==chr(asc('!')) ;
-          .or. cchar==chr(asc("<")) .or. cchar==chr(asc('>')) ;
-          .or. cchar==chr(asc('!')) .or. cchar==chr(asc('+'))
-          
-             nPos=x
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function StrPos()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION StrPos( cBuffer )
 
-             Exit
-          ENDIF
-      NEXT
+   LOCAL nPos
+   LOCAL x
+   LOCAL cChar
+   DEFAULT nPos TO 0
+   FOR x := 1 TO LEN( cBuffer )
+      cChar := SUBSTR( cBuffer, x, 1 )
+      IF cChar >= CHR( 64 ) .AND. cChar <= CHR( 90 ) .OR. cChar >= CHR( 97 ) ;
+                 .AND. cChar <= CHR( 122 ) .OR. cChar >= CHR( 48 ) .AND. cChar <= CHR( 57 ) ;
+                 .OR. cChar == CHR( 60 ) .OR. cchar == CHR( ASC( "-" ) ) ;
+                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar = CHR( ASC( "|" ) ) .OR. ;
+                 cchar == CHR( ASC( '.' ) ) .OR. cchar == CHR( ASC( '*' ) ) .OR. ;
+                 cchar == CHR( ASC( '#' ) ) .OR. cchar == CHR( ASC( '"' ) ) .OR. ;
+                 cchar == CHR( ASC( '/' ) ) .OR. cchar == CHR( ASC( "@" ) ) ;
+                 .OR. cchar == CHR( ASC( "=" ) ) .OR. cchar == CHR( ASC( 'Ä' ) ) ;
+                 .OR. cchar == CHR( ASC( '?' ) ) .OR. cchar == CHR( ASC( '!' ) ) ;
+                 .OR. cchar == CHR( ASC( "<" ) ) .OR. cchar == CHR( ASC( '>' ) ) ;
+                 .OR. cchar == CHR( ASC( '!' ) ) .OR. cchar == CHR( ASC( '+' ) )
 
-Return nPos
+         nPos := x
 
+         EXIT
+      ENDIF
+   NEXT
+
+RETURN nPos
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function GetNumberofTableItems()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+FUNCTION GetNumberofTableItems( cBuffer )
+
+   LOCAL cItem
+   LOCAL nItem  := 0
+   
+   cBuffer := ALLTRIM( cBuffer )
+
+   DO WHILE AT( SPACE( 3 ), cBuffer ) > 0
+      cItem := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+      IF AT( SPACE( 3 ), cBuffer ) == 0
+         nItem ++
+      ELSE
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, '' ) )
+         nItem ++
+      ENDIF
+   ENDDO
+   nItem ++
+RETURN nItem
+
+*+ EOF: FT_FUNCS.PRG

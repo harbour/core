@@ -58,6 +58,9 @@ STATIC aSiTable := {}
 STATIC lIsTable :=.F.
 STATIC nCommentLen
 STATIC lEof
+STATIC aFoiTable      := {}
+STATIC atiTable       := {}
+STATIC nNumTableItems := 0
 
 STATIC aColorTable:={'aqua','black','fuchia','grey','green','lime','maroon','navy','olive','purple','red','silver','teal','white','yellow'}
 
@@ -902,9 +905,10 @@ local cOldLine:=''
 Local npos,CurPos:=0
 LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel
 LOCAL lEndPar:= .F.
-
+LOCAL cLine:=''
 LOCAL lEndFixed:=.F.
 LOCAL lArgBold:=.f.
+LOCAL LFstTableItem := .T.
 LOCAL lEndTable:=.F.
 LOCAL lEndBuffer :=.f.
 Default cStyle to "Default"
@@ -1032,11 +1036,18 @@ If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
 end
 if AT('<table>',cBuffer)>0
     do while !lendTable
-        cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-        if  at("</table>",cBuffer)>0
+        cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+        if  at("</table>",cLine)>0
           lendTable:=.t.
         else
-          prochtmtable(cBuffer)
+            IF LFstTableItem
+               nNumTableItems := GetNumberofTableItems( cLine )
+               prochtmtable( cline, nNumTableItems )
+               LFstTableItem := .f.
+            ELSE
+               prochtmtable( cline, nNumTableItems )
+            ENDIF
+          
     endif
     enddo
 
@@ -1045,9 +1056,11 @@ if lEndTable
 endif
 endif
 return nil
-Function ProchtmTable(cBuffer)
+Function ProchtmTable(cBuffer,nNum)
 
-Local nPos,cItem,cItem2,cItem3,nColorpos,cColor
+Local nPos,cItem,cItem2,cItem3,nColorpos,cColor,cItem4
+
+      cBuffer:=alltrim(cBuffer)           
       if AT("<color:",cBuffer)>0
          nColorPos:=AT(":",cBuffer)
          cColor:=SubStr(cBuffer,nColorpos+1)
@@ -1061,12 +1074,23 @@ Local nPos,cItem,cItem2,cItem3,nColorpos,cColor
          nColorpos:=ASCAn(aColorTable,{|x,y| upper(x)==upper(ccolor)})
          cColor:=aColortable[nColorPos]
       Endif
-      cItem:=SubStr(cBuffer,1,22)
-      cBuffer:=StrTran(cBuffer,cItem,Space(len(cItem)))
-      nPos:=STRPos(cBuffer)
-      IF nPos=23
-          cItem2:=SubStr(cBuffer,nPos)
-      Endif
+   cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+   if nNum==2
+       cItem2 := SUBSTR( cBuffer, 1 )
+   else       
+   cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+    endif
+
+   IF nNum == 3
+      cItem3 := SUBSTR( cBuffer, 1 )
+   ELSEIF nNum > 3
+      cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+      cItem4  := SUBSTR( cBuffer, 1 )
+   ENDIF
+
         if cColor<>NIL
         AADD(afiTable,"<Font color="+ccolor+">"+rtrim(ltrim(cItem))+'</font>')
         AADD(asiTable,"<Font color="+ccolor+">"+cItem2+'</font>')
@@ -1074,15 +1098,38 @@ Local nPos,cItem,cItem2,cItem3,nColorpos,cColor
         AADD(afiTable,rtrim(ltrim(cItem)))
         AADD(asiTable,cItem2)
         endif
+
+   IF !EMPTY( cItem3 )
+      if cColor <>NIL
+          AADD(atiTable,"<Font color="+ccolor+">"+cItem3+'</font>')
+      ELSE  
+      AADD( atiTable, cItem3 )
+      Endif
+   ENDIF
+   IF !EMPTY( cItem4 )
+         if cColor <>NIL
+                AADD(afoiTable,"<Font color="+ccolor+">"+cItem4+'</font>')
+         ELSE
+          AADD( afoiTable, cItem4 )
+      Endif
+
+   ENDIF
+
 Return Nil
 Function GenhtmTable(oHtm)
-LOCAL y,nLen2,x,nMax,nSpace,lCar:=.f.,nMax2,nSpace2,nPos1,nPos2,LColor,npos
+LOCAL x
         oHtm:WriteText("<br>")
         oHtm:WriteText("<br>")
         oHtm:WriteText('<table border=1>') //-4
 
 FOR x:=1 to len(asitable)
+        if nNumTableItems ==2
         oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td></tr> ')
+        elseif nNumTableItems ==3
+       oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td><td><pre>'+atitable[x]+'</td></tr> ')
+                elseif nNumTableItems ==4
+       oHtm:WriteText('<tr><td><pre>'+afitable[x]+'</td><td><pre>' +asitable[x]+'</td><td><pre>'+atitable[x]+'</td><td><pre>'+afoitable[x]+'</td></tr> ')
+        Endif
 Next
 
   oHtm:Writetext("</table>")

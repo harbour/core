@@ -49,13 +49,15 @@
 MEMVAR aDirlist
 MEMVAR aDocInfo
 STATIC aAlso
-STATIC aFiTable    := {}
-STATIC aSiTable    := {}
-STATIC lIsTable    := .F.
+STATIC aFiTable       := {}
+STATIC aSiTable       := {}
+STATIC lIsTable       := .F.
 STATIC nCommentLen
 STATIC lEof
-STATIC TheHan
-STATIC TheBlank    := .f.
+STATIC aFoiTable      := {}
+STATIC atiTable       := {}
+STATIC nNumTableItems := 0
+
 STATIC aColorTable := { { 'aqua', '1B' }, { 'black', '10' }, { 'fuchia', '1D' }, { 'grey', '18' }, { 'green', '12' }, { 'lime', '1A' }, { 'maroon', '16' }, { 'navy', '19' }, { 'olive', '12' }, { 'purple', '15' }, { 'red', '1C' }, { 'silver', '17' }, { 'teal', '13 ' }, { 'white', '1F' }, { 'yellow', '1E' } }
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
@@ -187,7 +189,7 @@ FUNCTION ProcessiNg()
          //  Read a line
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         cBuffer := STRTRAN(cBuffer,chr(10),"")
+         cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          nLineCnt ++
          IF nLineCnt % 10 = 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
@@ -516,7 +518,7 @@ FUNCTION ProcessiNg()
                      IF AT( "<par>", cBuffer ) > 0
                         STRTRAN( cBuffer, "<par>", '' )
                         STRTRAN( cBuffer, "</par>", '' )
-                        cBuffer := ALLTRIM( cBuffer )
+                        cBuffer := strtran(cBuffer,space(6),"")
                         cbuFfer := '<par><b>' + cBuffer + '</b></par>'
                      ENDIF
                      procngdesc( cbuffer, oNgi, "Syntax" )
@@ -642,7 +644,7 @@ FUNCTION ProcNgiInput()
       FT_FUSE( "ngi\" + aFiles[ x, 1 ] )
       WHILE !lEof
          cBuffer := ReadLn( @lEof )
-         cBuffer:=strtran(cBuffer,chr(10),"")
+         cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          cT      := LEFT( cBuffer, 7 )
 
          IF xY == cT
@@ -678,13 +680,13 @@ FUNCTION ProcNgiInput()
       aAlso := {}
       WHILE !lEof
          cBuffer := ReadLn( @lEof )
-         cBuffer:=Strtran(cbuffer,chr(10),'')
+         cBuffer := STRTRAN( cbuffer, CHR( 10 ), '' )
          cT      := LEFT( cBuffer, 7 )
          IF xY == cT
             cName := SUBSTR( cBuffer, 9 )
             cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
          ENDIF
-         cTs := SUBSTR( cBuffer, 1, 9)
+         cTs := SUBSTR( cBuffer, 1, 9 )
 
          IF UPPER( cSee ) == UPPER( cTs )
             cTs := SUBSTR( cBuffer, 11 )
@@ -702,7 +704,7 @@ FUNCTION ProcNgiInput()
             cBuffer += aAlso[ nalso ] + " "
          NEXT
       ENDIF
-//    cBuffer:=strtran(cBuffer,chr(10),"")
+      //    cBuffer:=strtran(cBuffer,chr(10),"")
       FWRITE( nXhandle, cBuffer + pCRLF )
 
       lEof  := .f.
@@ -719,24 +721,24 @@ FUNCTION ProcNgiInput()
       aAlso := {}
       WHILE !lEof
          cBuffer := ReadLn( @lEof )
-           cBuffer:=Strtran(cbuffer,chr(10),'')
+         cBuffer := STRTRAN( cbuffer, CHR( 10 ), '' )
          cT      := LEFT( cBuffer, 7 )
          IF xY == cT
             cName := SUBSTR( cBuffer, 9 )
             cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
          ENDIF
-//         if at(chr(10),cBuffer)>0
-//            cBuffer:=Strtran(cbuffer,chr(10),'')
-//        endif
+         //         if at(chr(10),cBuffer)>0
+         //            cBuffer:=Strtran(cbuffer,chr(10),'')
+         //        endif
 
-         cTs := SUBSTR( cBuffer, 1,9 )
+         cTs := SUBSTR( cBuffer, 1, 9 )
          IF UPPER( cSee ) == UPPER( cTs )
             cTs := SUBSTR( cBuffer, 11 )
 
             aAlso   := procngialso2( cTs )
             cBuffer := ''
          ENDIF
-//    cBuffer:=strtran(cBuffer,chr(10),"")
+         //    cBuffer:=strtran(cBuffer,chr(10),"")
          FWRITE( nYhandle, cBuffer + pCRLF )
 
       ENDDO
@@ -747,7 +749,7 @@ FUNCTION ProcNgiInput()
             cBuffer += aAlso[ nalso ] + " "
          NEXT
       ENDIF
-//    cBuffer:=strtran(cBuffer,chr(10),"")
+      //    cBuffer:=strtran(cBuffer,chr(10),"")
       FWRITE( nYhandle, cBuffer + pCRLF )
 
       lEof  := .f.
@@ -777,16 +779,15 @@ FUNCTION ProcNgiInput()
          WHILE !lEof
             cBuffer := ReadLn( @lEof )
             cT      := LEFT( cBuffer, 7 )
-                        cBuffer:=Strtran(cbuffer,chr(10),'')
+            cBuffer := STRTRAN( cbuffer, CHR( 10 ), '' )
             IF xY == cT
                cName := SUBSTR( cBuffer, 9 )
                cName := SUBSTR( cName, 1, AT( ' ', cName ) - 1 )
             ENDIF
             cTs := SUBSTR( cBuffer, 1, 9 )
-//             if at(chr(10),cBuffer)>0
-//                cBuffer:=Strtran(cbuffer,chr(10),'')
-//            endif
-
+            //             if at(chr(10),cBuffer)>0
+            //                cBuffer:=Strtran(cbuffer,chr(10),'')
+            //            endif
 
             IF UPPER( cSee ) == UPPER( cTs )
                cTs := SUBSTR( cBuffer, 11 )
@@ -794,7 +795,7 @@ FUNCTION ProcNgiInput()
                aAlso   := procngialso2( cTs )
                cBuffer := ''
             ENDIF
-//            cBuffer:=strtran(cBuffer,chr(10),"")
+            //            cBuffer:=strtran(cBuffer,chr(10),"")
             FWRITE( y, cBuffer + pCRLF )
 
          ENDDO
@@ -841,13 +842,18 @@ FUNCTION procngialso2( cSeealso )
          nPos := AT( "()", xAlso[ hPos ] )
          IF nPos > 0
             AADD( aAlso, "funcam.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. UPPER(xAlso[ hPos ]) <> "LICENSE" .AND. UPPER(xAlso[ hPos ]) <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
+         ELSEIF nPos = 0 .AND. UPPER( xAlso[ hPos ] ) <> "LICENSE" .AND. UPPER( xAlso[ hPos ] ) <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
             AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
          ENDIF
       ENDIF
    NEXT
 RETURN aAlso
 
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function ProcStatusng()
+*+
+*+    Called from ( genng.prg    )   1 - function processing()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -856,13 +862,13 @@ FUNCTION ProcStatusng( nWriteHandle, cBuffer )
    IF LEN( ALLTRIM( cBuffer ) ) > 1
       nWriteHandle:WritePar( cBuffer )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WritePar( "   Ready" )
+      nWriteHandle:WritePar( "      Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WritePar( "   Started" )
+      nWriteHandle:WritePar( "      Started" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
-      nWriteHandle:WritePar( "   Clipper" )
+      nWriteHandle:WritePar( "      Clipper" )
    ELSE
-      nWriteHandle:WritePar( "   Not Started" )
+      nWriteHandle:WritePar( "      Not Started" )
    ENDIF
 
 RETURN nil
@@ -882,15 +888,23 @@ FUNCTION GenNgTable( oNgi )
    LOCAL x
    LOCAL nMax
    LOCAL nSpace
-   LOCAL lCar       := .f.
+   LOCAL lCar        := .f.
    LOCAL nMax2
    LOCAL nSpace2
    LOCAL nPos1
    LOCAL nPos2
    LOCAL LColor
    LOCAL nPos
-   LOCAL aLensFItem := {}
-   LOCAL aLensSItem := {}
+   LOCAL aLensFItem  := {}
+   LOCAL aLensSItem  := {}
+   LOCAL nmax3
+   LOCAL nmax4
+   LOCAL npos3
+   LOCAL npos4
+   LOCAL nSpace3
+   LOCAL nSpace4
+   LOCAL aLensTItem  := {}
+   LOCAL aLensfoItem := {}
 
    FOR X := 1 TO LEN( afitable )
       IF AT( "^", afitable[ x ] ) > 0
@@ -906,8 +920,40 @@ FUNCTION GenNgTable( oNgi )
          AADD( aLensSItem, LEN( asiTable[ x ] ) )
       ENDIF
    NEXT
+   IF LEN( afoitable ) > 0
+      FOR X := 1 TO LEN( afoitable )
+         IF AT( "^", afoitable[ x ] ) > 0
+            AADD( aLensfoItem, LEN( SUBSTR( STRTRAN( afoitable[ x ], "^n", "" ), 5 ) ) )
+         ELSE
+            AADD( aLensfoItem, LEN( afoiTable[ x ] ) )
+         ENDIF
+      NEXT
+   ENDIF
+   IF LEN( atitable ) > 0
+      FOR X := 1 TO LEN( atitable )
+         IF AT( "^", atitable[ x ] ) > 0
+            AADD( aLenstItem, LEN( SUBSTR( STRTRAN( atitable[ x ], "^n", "" ), 5 ) ) )
+         ELSE
+            AADD( aLenstItem, LEN( atiTable[ x ] ) )
+         ENDIF
+      NEXT
+   ENDIF
+
    ASORT( aLensFItem,,, { | x, y | x > y } )
    ASORT( aLensSItem,,, { | x, y | x > y } )
+   IF LEN( afoitable ) > 0
+      ASORT( aLensFoItem,,, { | x, y | x > y } )
+      nmax4 := alensfoitem[ 1 ]
+      nPos  := maxelem( afoitable )
+      nPos4 := ASCAN( alensfoitem, { | x | x == nPos } )
+   ENDIF
+   IF LEN( atitable ) > 0
+      ASORT( alenstitem,,, { | x, y | x > y } )
+      nmax3 := alenstitem[ 1 ]
+      npos  := maxelem( atitable )
+      nPos3 := ASCAN( alenstitem, { | x | x == nPos } )
+
+   ENDIF
 
    nMax  := alenssitem[ 1 ]
    nPos  := maxelem( asitable )
@@ -918,38 +964,73 @@ FUNCTION GenNgTable( oNgi )
    nPos  := maxelem( afitable )
    nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
 
-   oNgi:WritePar( "   É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                   //-4
-
+   IF nNumTableItems == 2
+      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+   ELSEIF nNumTableItems == 3
+      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
+   ELSEIF nNumTableItems == 4
+      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
+   ENDIF
    FOR x := 1 TO LEN( asitable )
       nSpace  := nMax - LEN( asitable[ x ] )
       nSpace2 := nMax2 - LEN( afitable[ x ] )
-      oNgi:WriteParBox( "   º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OsNEWLINE() )
+      IF nNumTableItems == 2
+         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
+         if x<> len(aSiTable)
+             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹")
+         Endif
+      ELSEIF nNumTableItems == 3
+         nSpace3 := nMax3 - LEN( atitable[ x ] )
+         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
+         if x<> len(aSiTable)
+             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
+         endif
+      ELSEIF nNumTableItems == 4
+         nSpace3 := nMax3 - LEN( atitable[ x ] )
+         nSpace4 := nMax4 - LEN( afoitable[ x ] )
+         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
+         if x<> len(aSiTable)    
+              oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
+         endif
+      ENDIF
    NEXT
 
-   oNgi:WritePar( "   È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", aLenssitem[ nPos1 ] + 2 ) + "¼", .F. )                   // -4
+   IF nNumTableItems == 2
+      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
+   ELSEIF nNumTableItems == 3
+      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )           //-4
+   ELSEIF nNumTableItems == 4
+      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
+   ENDIF
 
    oNgi:WritePar( "" )
-   afiTable := {}
-   asitable := {}
+   afiTable  := {}
+   asitable  := {}
+   atitable  := {}
+   afoitable := {}
+
 RETURN Nil
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcNgTable()
 *+
-*+    Called from ( genng.prg    )   1 - function procngdesc()
+*+    Called from ( genng.prg    )   2 - function procngdesc()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION ProcNgTable( cBuffer )
+FUNCTION ProcNgTable( cBuffer, nNum )
 
    LOCAL nPos
-   LOCAL cItem
-   LOCAL cItem2
-   LOCAL cItem3
+   LOCAL cItem:=''
+   LOCAL cItem2:=''
+   LOCAL cItem3:=''
+   LOCAL cItem4:=''
    LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
+   cBuffer := ALLTRIM( cBuffer )
+
    IF AT( "<color:", cBuffer ) > 0
       nColorPos := AT( ":", cBuffer )
       cColor    := SUBSTR( cBuffer, nColorpos + 1 )
@@ -963,15 +1044,34 @@ FUNCTION ProcNgTable( cBuffer )
       nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
-   cItem   := SUBSTR( cBuffer, 1, 22 )
-   xtype   := VALTYPE( citem )
-   cBuffer := STRTRAN( cBuffer, cItem, SPACE( LEN( cItem ) ) )
-   nPos    := STRPos( cBuffer )
-   IF nPos = 23
-      cItem2 := SUBSTR( cBuffer, nPos )
+   cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+
+   if nNum==2
+       cItem2 := SUBSTR( cBuffer, 1 )
+   elseif nNum ==3
+        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+        cItem3 := SUBSTR( cBuffer, 1 )
+  ELSEIF nNum > 3
+        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+
+        cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+        
+        cItem4  := SUBSTR( cBuffer, 1 )
+        
    ENDIF
+
    AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
    AADD( asiTable, cItem2 )
+   IF !EMPTY( cItem3 )
+      AADD( atiTable, cItem3 )
+   ENDIF
+   IF !EMPTY( cItem4 )
+      AADD( afoiTable, cItem4 )
+   ENDIF
 
 RETURN Nil
 
@@ -998,7 +1098,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
 
    LOCAL lEndFixed := .F.
    LOCAL lEndTable := .F.
-   LOCAL cOLine:=''
+   LOCAL LFstTableItem := .T.
    LOCAL lArgBold  := .F.
    DEFAULT cStyle TO "Default"
 
@@ -1006,9 +1106,9 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
       cBuffer := '<par>' + cBuffer
    ENDIF
 
-   IF EMPTY( cBuffer ) .OR. TheBlank
+   IF EMPTY( cBuffer )
       oNgi:WritePar( "" )
-      TheBlank := .f.
+
    ENDIF
 
    IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
@@ -1024,18 +1124,18 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
                nPos     := AT( " ", cReturn )
                cOldLine := LEFT( cReturn, nPos - 1 )
                cReturn  := STRTRAN( cReturn, cOldLine, "" )
-            if at("@",cOldLine)>0 .or. at("()",cOldLine)>0 .or. at("<",cOldLine)>0 .or. at("_",cOldLine)>0
-             lArgBold:=.T.
-            else
-            lArgBold:= .f.
-           endif
+               IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+                  lArgBold := .T.
+               ELSE
+                  lArgBold := .f.
+               ENDIF
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-    if lArgBold
-        cReturn:='       <par><b>'+cOldLine+'</b> '+cReturn+'    </par>'
-      else
-            cReturn:='       <par>'+cOldLine+' '+cReturn+'    </par>'
-      endif
+               IF lArgBold
+                  cReturn := '       <par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
+               ELSE
+                  cReturn := '       <par>' + cOldLine + ' ' + cReturn + '    </par>'
+               ENDIF
 
                cbuffer := cReturn
             ENDIF
@@ -1150,7 +1250,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
                ENDIF
 
             ELSE
-               cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 69 )
+               cLine := SPACE( nidentLevel ) + SUBSTR( ALLTRIM(cBuffer), curPos, 69 )
 
                IF AT( '</par>', cLine ) > 0
                   lEndPar := .T.
@@ -1242,7 +1342,15 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
          IF AT( "</table>", cLine ) > 0
             lendTable := .t.
          ELSE
-            procngtable( cLine )
+            IF LFstTableItem
+               nNumTableItems := GetNumberofTableItems( cLine )
+               
+               procngtable( cline, nNumTableItems )
+               LFstTableItem := .f.
+            ELSE
+               procngtable( cline, nNumTableItems )
+            ENDIF
+
          ENDIF
       ENDDO
       IF lEndTable
@@ -1290,7 +1398,7 @@ RETURN cbuffer
 *+
 *+    Function maxelem()
 *+
-*+    Called from ( genng.prg    )   2 - function genngtable()
+*+    Called from ( genng.prg    )   4 - function genngtable()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -1321,14 +1429,15 @@ RETURN max
 *+
 FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
 
-   LOCAL cReturn    := ''
-   LOCAL cLine      := ''
-   LOCAL cOldLine   := ''
-   LOCAL cBuffEnd   := ''
-   LOCAL lEndBuffer := .f.
+   LOCAL cReturn       := ''
+   LOCAL cLine         := ''
+   LOCAL cOldLine      := ''
+   LOCAL cBuffEnd      := ''
+   LOCAL lEndBuffer    := .f.
    LOCAL nPos
    LOCAL nPosend
-   LOCAL lArgBold   := .f.
+   LOCAL lArgBold      := .f.
+   LOCAL LFstTableItem := .t.
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1345,7 +1454,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
 
          IF EMPTY( cLine )
             lEndBuffer := .t.
-            TheBlank   := .t.
+
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cLine ) > 0
@@ -1362,7 +1471,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
 
       cReturn := '<par>' + cReturn + '    </par>'
    ELSEIF cStyle == 'Syntax'
-
+      cReturn := strtran(cReturn,space(6),"")
       cReturn := '<par><b>' + cReturn + ' </b></par>'
 
    ELSEIF cStyle == 'Arguments' .OR. cStyle == "Return"
@@ -1388,7 +1497,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
          ENDIF
          IF EMPTY( cLine )
             lEndBuffer := .t.
-            TheBlank   := .t.
+
             FT_FSKIP( - 1 )
 
          ENDIF
@@ -1408,7 +1517,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
          cReturn := '       <par>' + cOldLine + ' ' + cReturn + '    </par>'
       ENDIF
    ENDIF
-    lArgBold:=.F.
+   lArgBold := .F.
    //   endif
 RETURN cReturn
 
