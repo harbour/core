@@ -254,6 +254,10 @@ While !leof
      lBuildSec := .f.
      lComSec   := .t.
      lMacroSec := .f.
+  Else
+   ? "Invalid Make File"
+   fclose(nHandle)
+   Return Nil
   Endif
 
   cTemp := Trim( Substr( ReadLN( @lEof ), 1 ) )
