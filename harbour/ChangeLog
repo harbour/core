@@ -1,3 +1,9 @@
+2001-07-05 22:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+      *Fixed an Bug related to creation of makefile when filename and extension
+       is all upper cased
+   +Support for ! command and !iffile
+
 2001-07-05 01:29 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rtl/memoline.c

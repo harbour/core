@@ -65,7 +65,11 @@
 #define CRLF hb_osnewline()
 #endif
 #xtranslate timetosec(<x>) => ((val(substr(<x>,1,2))*3600)+(val(substr(<x>,4,2))*60)+(val(substr(<x>,7,2))))
+#ifdef __HARBOUR__
 #define datediff(<x>,<y>) (<x>-<y>)
+#else
+#translate datediff(<x>,<y>) => (<x>-<y>)
+#endif
 Static lPrint      := .f.
 Static nHandle
 Static aDefines    := {}
@@ -360,7 +364,7 @@ While !leof
 
   aTemp := listasArray2( Alltrim( cTemp ), "=" )
   If lmacrosec
-     If Alltrim( Left( ctemp, 7 ) ) <> '!ifndef' .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif"
+     If Alltrim( Left( ctemp, 7 ) ) <> '!ifndef' .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> '!iffile'
 
         If Len( atemp ) > 1
            If At( "$", atemp[ 2 ] ) > 0
@@ -414,7 +418,11 @@ While !leof
 
      Else
         //           cTemp1:=TRIM( SUBSTR( ReadLN( @lEof ),1 ) )
+        if at('!ifndef',cTemp)>0
         checkDefine( cTemp )
+        elseif at('!iffile',cTemp)>0
+            checkiffile(cTemp)
+        endif
         //   endif
      Endif
   Endif
@@ -1163,7 +1171,10 @@ aCs   := aclone(aout)
 
 For x := 1 To Len( aCs )
        cItem:= aCs[ x ]
-       aCs[ x ]:=strtran( cItem, ".prg", ".c" )
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+
+       aCs[ x ]:=cTest+"."+exte( cExt,1)
 Next
 aObjs := aClone(aout)
 For x := 1 To Len( aObjs )
@@ -1171,11 +1182,11 @@ For x := 1 To Len( aObjs )
       hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
       cExt:=substr(cExt,2)
    If !lGcc
-      aObjs[ x ]:=cTest+"."+strtran( cExt, "prg", "obj" )
+      aObjs[ x ]:=cTest+"."+exte( cExt,2)
    Else
-      aObjs[ x ]:=cTest+"."+strtran( cExt, "prg", "o" )
+      aObjs[ x ]:=cTest+"."+exte( cExt,3)
    Endif
-Next
+   Next
 
 
 
@@ -1207,7 +1218,8 @@ endif
  hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
   cExt:=substr(cExt,2)
 //Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) )
-  Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "OBJ" ),cTest+"."+Strtran( cExt, "prg", "obj" ))  )
+//  Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "OBJ" ),cTest+"."+Strtran( cExt, "prg", "obj" ))  )
+    Fwrite( nLinkHandle, "OBJFILES = " + cTest+'.'+exte(cExt,2)    )
 if len(aObjs)<1
 
 Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
@@ -1547,6 +1559,11 @@ Local getlist      := {}
 Local cTopFile     := ""
 Local cscreen      := Savescreen( 0, 0, Maxrow(), Maxcol() )
 local citem:=""
+Local cExt:=""
+Local cDrive:=""
+local cPath:=""
+Local cTest:=""
+
 nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
@@ -1655,7 +1672,7 @@ pickarry( 10, 15, 19, 64, aIn, aOut )
 nLenaOut := Len( aOut )
 
 For x := 1 To nLenaOut
-   aOut[ x ] := lower(Trim( Left( aOut[ x ], 12 ) ))
+   aOut[ x ] := Trim( Left( aOut[ x ], 12 ) )
 Next
 
 aOut := Asort( aOut )
@@ -1677,16 +1694,30 @@ aCs   := aclone(aout)
 
 For x := 1 To Len( aCs )
        cItem:= aCs[ x ]
-       aCs[ x ]:=strtran( cItem, ".prg", ".c" )
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+
+       aCs[ x ]:=cTest+"."+exte( cExt,1)
+
 Next
 aObjs := aClone(aout)
 For x := 1 To Len( aObjs )
       cItem:=aObjs[ x ]
+      /*
    If !lGcc
       aObjs[ x ]:=strtran( cItem, ".prg", ".obj" )
    Else
       aObjs[ x ]:=strtran( cItem, ".prg", ".o" )
    Endif
+   */
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+   If !lGcc
+      aObjs[ x ]:=cTest+"."+exte( cExt,2)
+   Else
+      aObjs[ x ]:=cTest+"."+exte( cExt,3)
+   Endif
+
 Next
 
 for nPos:=1 to Len(aCs)
@@ -1704,8 +1735,8 @@ nLenaSrcc:=Len(aSrcc)
 Asize( aInC, nLenaSrcC )
 For x := 1 To nLenaSrcC
    aInC[ x ] := Pad( aSrcC[ x, 1 ], 13 ) + ;
-                    Str( aSrcC[ x, 2 ], 8 ) + '  ' + ;
-                    Dtoc( aSrcC[ x, 3 ] ) + '  ' + ;
+                    Str( aSrcC[ x, 2 ], 8 ) + ' ' + ;
+                    Dtoc( aSrcC[ x, 3 ] ) + ' ' + ;
                     aSrcc[ x, 4 ]
 Next
 
@@ -1716,20 +1747,34 @@ pickarry( 10, 15, 19, 64, aInC, aOutC )
 nLenaOutC := Len( aOutC )
 
 For x := 1 To nLenaOutC
-   aOutC[x ] := lower(Trim( Left( aOutC[ x ], 12 ) ))
+   aOutC[x ] := Trim( Left( aOutC[ x ], 12 ) )
 Next
 For x := 1 To Len( aOutC )
        cItem:= aOutC[ x ]
-       aadd(aCs,cItem)
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+
+       aadd(acs,cTest+"."+exte( cExt,1))
+
+//       aadd(aCs,cItem)*/
 Next
 //aObjs := aClone(aout)
 For x := 1 To Len( aoutC )
       cItem:=aOutc[ x ]
-   If !lGcc
+/*   If !lGcc
       aadd(aObjs, strtran(cItem,".c",".obj"))
    Else
       aadd(aObjs, strtran(cItem,".c",".o"))
    Endif
+   */
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
+   If !lGcc
+      aObjs[ x ]:=cTest+"."+exte( cExt,2)
+   Else
+      aObjs[ x ]:=cTest+"."+exte( cExt,3)
+   Endif
+
 Next
 
 
@@ -1745,23 +1790,23 @@ else
 
 endif
 
-Fwrite( nLinkHandle, "OBJFILES =  " )
+Fwrite( nLinkHandle, "OBJFILES = " )
 if len(aObjs)<1
 
 Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
 else
 
-//Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
+//Fwrite( nLinkHandle, "OBJFILES =" + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
 
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) 
-      Fwrite( nLinkHandle, " " + alltrim(aobjs[ x ]) )
+      Fwrite( nLinkHandle,  alltrim(aobjs[ x ]) )
    Else
-      Fwrite( nLinkHandle, " " +  alltrim(aobjs[ x ]) +" $(OB) "+ CRLF )
+      Fwrite( nLinkHandle," " +  alltrim(aobjs[ x ]) +" $(OB) "+ CRLF )
    Endif
 Next
 endif
-Fwrite( nLinkHandle, "CFILES = " )
+Fwrite( nLinkHandle, "CFILES =" )
 if len(aCs)<1
 Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
 //
@@ -2038,3 +2083,35 @@ if NEGATIVE
 endif
 
 return val( SOMESTRING )
+function HB_OSNEWLINE()
+RETURn CHR(13)+CHR(10)
+function checkiffile(cFile)
+Local cNextLine:=''
+Local cCommand:=''
+Local cTemp
+cTemp:=substr(cFile,at(" ",cFile)+1)
+if file(cTemp)
+    cNextLine := Trim( Substr( ReadLN( @lEof ), 1 ) )
+    if at("! ",cNextLine)>0
+        cCommand:=substr(cNextLine,at(' ',cNextLine)+1)
+        run (ccommand)
+    endif
+    return .t.
+endif
+return .f.
+function exte(cExt,nType)
+Local aext:={'prg', 'prG', 'pRg', 'Prg', 'PRg', 'PrG', 'PRG'}
+Local nPos
+Local cTemp :=""
+nPos:=ascan(aext,{|a| a==cExt})
+if nPos>0
+   if nTYpe==1
+    cTemp:=strtran(cExt,aExt[nPos],'c')
+    elseif ntype==2
+        cTemp:=strtran(cExt,aExt[nPos],'obj')
+    elseif ntype==3
+        cTemp:=strtran(cExt,aExt[nPos],'o')
+
+    endif
+endif
+return ctemp
