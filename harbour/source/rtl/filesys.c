@@ -246,7 +246,7 @@ static USHORT s_uiErrorLast = 0;
    #define LARGE_MAX ( UINT_MAX - 1L )
 #endif
 
-#ifdef __WIN32__
+#if defined(X__WIN32__)
    #if !defined(__BORLANDC__)
       extern int WintoDosError(DWORD dwError);
    #else
@@ -1216,7 +1216,7 @@ BOOL hb_fsDelete( BYTE * pFilename )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsDelete(%s)", (char*) pFilename));
 
-#if defined(HB_OS_WIN_32)
+#if defined(X__WIN32__)
 
    if ((bResult = DeleteFile( ( char * ) pFilename ))==0)
       #if !defined(__BORLANDC__)
@@ -1464,7 +1464,7 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
-#if defined(HB_OS_WIN_32)
+#if defined(X__WIN32__)
 
    FlushFileBuffers( ( HANDLE ) DostoWinHandle(hFileHandle) );
    s_uiErrorLast = ( USHORT ) GetLastError();
@@ -1961,7 +1961,7 @@ BOOL hb_fsEof( FHANDLE hFileHandle )
    return eof( hFileHandle ) != 0;
 #endif
 }
-#ifdef __WIN32__
+#if defined(X__WIN32__)
 HANDLE DostoWinHandle( FHANDLE fHandle)
 {
    HANDLE hHandle=LongToHandle(fHandle);

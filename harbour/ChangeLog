@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-03 23:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * contrib/libct/makefile.bc
+    ! Added a rule to compile setlast.prg
+  * source/rtl/filesys.c
+  	! Always use X__WIN32__ when testing to see if the extended
+  	  Windows file handle conversion utilities should be used.
+
 2003-01-30 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/vm/asort.c
     ! Some fixes, which became necessary after optimization of string operations.
@@ -1143,6 +1150,13 @@
   * source/rtl/dbdelim.prg
     ! Code fix to handle the field delimiters, provided by the
       APPEND FROM code author, Marco Braida <marcobra@elart.it>.
+
+
+
+
+
+
+
 2006-02-15 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! fixed memory leak I introduced changing Ryszard modifications
