@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-28 05:15 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * utils/hbmake/hbmutils.prg
+     ! function renaming: filedate() => hbmake_filedate()
+     ! function renaming: filetime() => hbmake_filetime()
+   * utils/hbmake/ft_funcs.prg
+     ! function renaming: filebase() => hbmake_filebase()
+   * utils/hbmake/ffile1.prg
      ! function renaming: filebase() => hbmake_filebase()
 
 2001-12-28 05:15 UTC+0700 Andi Jahja <harbour@cbn.net.id>
