@@ -1,3 +1,10 @@
+2001-07-17 21:50 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     ! Fixed Scoping where a protected var could be
+       exported to some code block evaluated within
+       a valid method from the scoping point of view.
+
+
 2001-07-17 20:00 MEST Martin Vogel <vogel@inttec.de>
 
    * source/rtl/math.c

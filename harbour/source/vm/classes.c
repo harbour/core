@@ -387,13 +387,27 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       if ( ( strcmp( szCallerNameMsg, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
        {
         pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
+       }
+
+      /* Is it an eval ? if so back another one more ... */
+      if ( ( strcmp( szCallerNameMsg, "EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
+       {
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
+       }
+
+      /* Is it an Aeval ? if so back another one more ... */
+      if ( ( strcmp( szCallerNameMsg, "AEVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
+       {
+        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
        }
 
       if( iLevel == -1 )
        {
         /* Now get the callers ...  */
         pCaller = * (pBase+1 ) ;
-        szCallerNameMsg       = ( *pBase )->item.asSymbol.value->szName ;
         szCallerNameObject    = hb_objGetRealClsName( pCaller, szCallerNameMsg ) ;
 
         /*strcpy( szName, szCallerNameObject ); */
