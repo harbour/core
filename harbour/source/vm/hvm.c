@@ -231,6 +231,7 @@ void hb_vmInit( void )
 
    /* initialize internal data structures */
    s_aStatics.type = IT_NIL;
+   hb_stack.pItems = NULL; /* keep this here as it is used by fm.c */
    hb_stack.Return.type = IT_NIL;
 
    hb_xinit();
