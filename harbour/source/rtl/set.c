@@ -105,7 +105,9 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    }
    /* Open the file either in append (bMode) or truncate mode (!bMode), but
       always use binary mode */
-   handle = open (path, O_BINARY | O_WRONLY | O_CREAT | (bMode ? O_APPEND : O_TRUNC, S_IWRITE ));
+   handle = open (path,
+		  O_BINARY|O_WRONLY|O_CREAT|(bMode?O_APPEND:O_TRUNC),
+		  S_IWRITE );
    if (handle < 0)
      {
        printf("\nError %d creating %s", errno, path);

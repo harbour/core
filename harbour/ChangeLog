@@ -1,3 +1,9 @@
+Tue Jun 08 09:22:40 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/set.c (open_handle): 
+	Misplaced parenthesis when callin open() caused S_IWRITE to never
+	be seen by open().
+
 19990608-13:25 CET Eddie Runia
    * source/vm/initsymb.c
      SECONDS added
