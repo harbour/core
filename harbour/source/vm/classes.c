@@ -1764,9 +1764,8 @@ HB_FUNC( __OBJSENDMSG )
       {
          USHORT uiParam;
 
+         hb_vmPushSymbol( pMsg->pSymbol );   /* Push char symbol as message  */
          hb_vmPush( pObject );               /* Push object */
-
-         hb_vmMessage( pMsg->pSymbol );      /* Push char symbol as message  */
 
          for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack */
             hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
