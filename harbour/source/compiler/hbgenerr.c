@@ -127,8 +127,11 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
    if( cPrefix != 'F' && hb_comp_bError )
       return;
 
-   if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName )
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_files.pLast->iLine - 1 );
+   /*
+   printf( "Eol: %i >%s<\n", hb_comp_EOL, yytext );
+   */
+
+   printf( "\r%s(%i) ", hb_comp_szFile, hb_comp_iCompiled + ( yytext[0] == '\n' ? 1: 0 ) );
 
    printf( "Error %c%04i  ", cPrefix, iError );
    printf( szErrors[ iError - 1 ], szError1, szError2 );
