@@ -50,10 +50,10 @@ HARBOUR HB_MEMOLINE( void )
    ULONG  ulLineBegin;
    ULONG  ulLineEnd;
 
-   if ( uiLineLength < 4 || uiLineLength > 254 )
+   if( uiLineLength < 4 || uiLineLength > 254 )
       uiLineLength = 79;
 
-   if ( uiTabLength >  uiLineLength )
+   if( uiTabLength >  uiLineLength )
       uiTabLength = uiLineLength - 1;
 
    ulLineBegin = ulPos;
