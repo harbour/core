@@ -1,3 +1,28 @@
+2001-12-11 20:00 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/rdd_ads/ads1.c
+     ! added type casts for MsVC (but still got warning on line 2086)
+
+   * contrib/samples
+     + add contrib/samples/makefile.vc
+     + add contrib/samples/makevc.bat
+   * contrib/samples/status.c
+     ! added type casts for MsVC
+   * contrib/samples/num.c
+     ! added type casts for MsVC
+   * contrib/samples/gauge.c
+     ! added type casts for MsVC
+
+   * contrib/libct/trig.c
+     ! HB_FUNC( ASIN ), replaced abs() with fabs()
+     ! HB_FUNC( ACOS ), replaced abs() with fabs()
+
+2001-11-11 15:40 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * contrib/hgf/win32
+     + add makefile.vc
+     + add makevc.bat
+   * contrib/hgf/win32/win32.c
+     ! add type casts for MsVC
+
 2001-11-11 23:35 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * include/hbapirdd.h
       * DBORDSCOPEINFO.scopeValue was changed from BYTE* to PHB_ITEM
@@ -9,7 +34,6 @@
       * adsScopeInfo and adsSetScope: fixed to handle all indexkey types
         This is a work in progress. Character and Numeric scopes
         should work fine. Some more needs to be done for Date and Logical
-
 
 2001-11-11 20:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * utils/hbmake/hbmake.prg
