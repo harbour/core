@@ -192,13 +192,13 @@ PHB_DYNS hb_dynsymFind( char * szName )
    return NULL;
 }
 
-void hb_dynsymEval( PHB_DYNS_FUNC pFunction )
+void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    BOOL bCont = TRUE;
    WORD i;
 
    for( i = 0; i < s_wDynSymbols && bCont; i++ )
-      bCont = ( pFunction )( s_pDynItems[ i ].pDynSym );
+      bCont = ( pFunction )( s_pDynItems[ i ].pDynSym, Cargo );
 }
 
 

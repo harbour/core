@@ -221,7 +221,7 @@ HARBOUR MSAVESTATE( void )
    uiPos += sizeof( int );
    *( pBuffer + uiPos ) = iRight;
 
-   hb_retclen( pBuffer, uiLen );
+   hb_retclen( (char *) pBuffer, uiLen );
 
    hb_xfree( pBuffer );
 }

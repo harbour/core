@@ -60,7 +60,7 @@ typedef struct _HB_DYNS
    PHB_FUNC  pFunPtr;     /* Pointer to the function address */
 } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
-#define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol )
+#define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 /* Harbour Functions scope ( SYMBOLSCOPE ) */

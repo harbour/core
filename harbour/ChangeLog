@@ -1,3 +1,22 @@
+19990903-14:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hb_vmpub.h
+        * added a second parameter for HB_DYNS_FUNC 
+
+    *source/vm/dynsym.c
+    *include/extend.h
+        * added a second parameter for hb_dynsymEval() function
+
+    *source/rtl/memvars.c
+	* new function __mvDBGINFO() for memvars debugging
+	(documentation included in memvars.c)
+
+    *include/memvars.ch
+	* new MV_PRIVATE definition
+
+    *source/rtl/mouseapi.c
+	* added (char*) type cast to make C++ compilers happy
+	
 19990903-08:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbdefs.h
     include/extend.h

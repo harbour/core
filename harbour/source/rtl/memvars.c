@@ -56,6 +56,13 @@ static HB_VALUE_PTR s_globalTable = NULL;
 #define TABLE_INITHB_VALUE   100
 #define TABLE_EXPANDHB_VALUE  50
 
+struct mv_PUBLIC_var_info {
+   int iPos;
+   BOOL bFound;
+   HB_DYNS_PTR pDynSym;
+};
+
+
 /* Uncomment this to trace memvars activity
 #define MEMVARDEBUG
 */
@@ -554,7 +561,34 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
    }
 }
 
-/* This function checks the scope of passed variable
+/* Checks if passed dynamic symbol is a variable and returns its scope
+ */
+static int hb_memvarScopeGet( PHB_DYNS pDynVar )
+{
+   if( pDynVar->hMemvar == 0 )
+      return MV_UNKNOWN;
+   else
+   {
+      ULONG ulBase = s_privateStackCnt;    /* start from the top of the stack */
+      int iMemvar = MV_PUBLIC;
+
+      while( ulBase )
+      {
+         --ulBase;
+         if( pDynVar == s_privateStack[ ulBase ] )
+         {
+            if( ulBase >= s_privateStackBase )
+               iMemvar = MV_PRIVATE_LOCAL;
+            else
+               iMemvar = MV_PRIVATE_GLOBAL;
+            ulBase = 0;
+         }
+      }
+      return iMemvar;
+   }
+}
+
+/* This function checks the scope of passed variable name
  */
 static int hb_memvarScope( char * szVarName, ULONG ulLength )
 {
@@ -569,28 +603,7 @@ static int hb_memvarScope( char * szVarName, ULONG ulLength )
       memcpy( szName, szVarName, ulLength );
       pDynVar = hb_dynsymFind( hb_strUpper( szName, ulLength - 1 ) );
       if( pDynVar )
-      {
-         if( pDynVar->hMemvar == 0 )
-            iMemvar = MV_UNKNOWN;
-         else
-         {
-            ULONG ulBase = s_privateStackCnt;    /* start from the top of the stack */
-
-            iMemvar = MV_PUBLIC;
-            while( ulBase )
-            {
-               --ulBase;
-               if( pDynVar == s_privateStack[ ulBase ] )
-               {
-                  if( ulBase >= s_privateStackBase )
-                     iMemvar = MV_PRIVATE_LOCAL;
-                  else
-                     iMemvar = MV_PRIVATE_GLOBAL;
-                  ulBase = 0;
-               }
-            }
-         }
-      }
+         iMemvar =hb_memvarScopeGet( pDynVar );
       else
          iMemvar = MV_NOT_FOUND;
       hb_xfree( szName );
@@ -599,8 +612,12 @@ static int hb_memvarScope( char * szVarName, ULONG ulLength )
    return iMemvar;
 }
 
+/* Releases memory occupied by a variable
+ */
 static HB_DYNS_FUNC( hb_memvarClear )
 {
+   HB_SYMBOL_UNUSED( Cargo );
+
    if( pDynSymbol->hMemvar )
    {
       s_globalTable[ pDynSymbol->hMemvar ].counter = 1;
@@ -611,9 +628,101 @@ static HB_DYNS_FUNC( hb_memvarClear )
    return TRUE;
 }
 
+/* Checks passed dynamic symbol if it is a PUBLIC variable and
+ * increments the counter eventually
+ */
+static HB_DYNS_FUNC( hb_memvarCountPublics )
+{
+   if( hb_memvarScopeGet( pDynSymbol ) == MV_PUBLIC )
+      ( * ( ( int * )Cargo ) )++;
+
+   return TRUE;
+}
+
+/* Count the number of variables with given scope
+ */
+static int hb_memvarCount( int iScope )
+{
+   if( iScope == MV_PUBLIC )
+   {
+      int iPublicCnt = 0;
+
+      hb_dynsymEval( hb_memvarCountPublics, (void *) &iPublicCnt );
+      return iPublicCnt;
+   }
+   else
+      return s_privateStackCnt;  /* number of PRIVATE variables */
+}
+
+/* Checks passed dynamic symbol if it is a PUBLIC variable and returns
+ * a pointer to its dynamic symbol
+ */
+static HB_DYNS_FUNC( hb_memvarFindPublicByPos )
+{
+   BOOL bCont = TRUE;
+
+   if( hb_memvarScopeGet( pDynSymbol ) == MV_PUBLIC )
+   {
+      struct mv_PUBLIC_var_info *pStruPub = (struct mv_PUBLIC_var_info *) Cargo;
+      if( pStruPub->iPos-- == 0 )
+      {
+         pStruPub->bFound  = TRUE;
+         pStruPub->pDynSym = pDynSymbol;
+         bCont =FALSE;
+      }
+   }
+
+   return bCont;
+}
+
+/* Returns the pointer to item that holds a value of variable (or NULL if
+ * not found). It fills also the pointer to the variable name
+ * Both pointers points to existing and used data - they shouldn't be
+ * deallocated.
+ */
+static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName )
+{
+   HB_ITEM_PTR pValue = NULL;
+   *pszName = NULL;
+
+   if( iPos > 0 )
+   {
+      --iPos;
+      if( iScope == MV_PUBLIC )
+      {
+         struct mv_PUBLIC_var_info struPub;
+
+         struPub.iPos   = iPos;
+         struPub.bFound = FALSE;
+         /* enumerate existing dynamic symbols and fill this structure
+          * with info for requested PUBLIC variable
+          */
+         hb_dynsymEval( hb_memvarFindPublicByPos, (void *) &struPub );
+         if( struPub.bFound )
+         {
+            pValue =&s_globalTable[ struPub.pDynSym->hMemvar ].item;
+            *pszName =struPub.pDynSym->pSymbol->szName;
+         }
+      }
+      else
+      {
+         if( iPos < s_privateStackCnt )
+         {
+            HB_DYNS_PTR pDynSym = s_privateStack[ iPos ];
+
+            pValue =&s_globalTable[ pDynSym->hMemvar ].item;
+            *pszName =pDynSym->pSymbol->szName;
+         }
+      }
+   }
+
+   return pValue;
+}
+
 
 /* ************************************************************************** */
 
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVPUBLIC()
@@ -683,6 +792,7 @@ HARBOUR HB___MVPUBLIC( void )
    }
 }
 
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVPRIVATE()
@@ -751,6 +861,7 @@ HARBOUR HB___MVPRIVATE( void )
    }
 }
 
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVXRELEASE()
@@ -844,7 +955,7 @@ HARBOUR HB___MVXRELEASE( void )
    }
 }
 
-
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVRELEASE()
@@ -908,6 +1019,7 @@ HARBOUR HB___MVRELEASE( void )
    }
 }
 
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVSCOPE()
@@ -983,7 +1095,7 @@ HARBOUR HB___MVSCOPE( void )
    hb_retni( iMemvar );
 }
 
-
+/* -------------------------------------------------------------------------- */
 /*  $DOC$
  *  $FUNCNAME$
  *    __MVCLEAR()
@@ -1014,5 +1126,172 @@ HARBOUR HB___MVSCOPE( void )
  */
 HARBOUR HB___MVCLEAR( void )
 {
-   hb_dynsymEval( hb_memvarClear );
+   hb_dynsymEval( hb_memvarClear, NULL );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVDBGINFO()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function returns the information about the variables for debugger
+ *  $SYNTAX$
+ *    __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
+ *  $ARGUMENTS$
+ *     <nScope> = the scope of variables for which an information is asked
+ *           Supported values (defined in memvars.ch)
+ *           MV_PUBLIC
+ *           MV_PRIVATE (or any other value)
+ *     <nPosition> = the position of asked variable on the list of variables
+ *        with specified scope - it should start from position 1
+ *     <cVarName> = the value is filled with a variable name if passed by
+ *        reference and <nPosition> is specified
+ *  $RETURNS$
+ *     The return value depends on the number of arguments passed
+ *  $DESCRIPTION$
+ *      This function retrieves the information about memvar variables.
+ *      It returns either the number of variables with given scope (when the
+ *    first argument is passed only) or a value of variable identified by its
+ *    position in the variables' list (when second argument is passed).
+ *      It also returns the name of a variable if optional third argument
+ *    is passed by reference.
+ *
+ *      If requested variable doesn't exist (requested position is greater
+ *    then the number of defined variables) then NIL value is returned
+ *    and variable name is set to "?"
+ *
+ *      The dynamic symbols table is used to find a PUBLIC variable then
+ *    the PUBLIC variables are always sorted alphabetically. The PRIVATE 
+ *    variables are sorted in the creation order.
+ * 
+ *    Note:
+ *    Due to dynamic nature of memvar variables there is no guarantee that
+ *    successive calls to retrieve the value of <Nth> PUBLIC variable will
+ *    return the value of the same variable.
+ *  $EXAMPLES$
+ *
+ *  #include <memvars.ch>
+ *
+ *  LOCAL nCount, i, xValue, cName
+ *
+ *  nCount =_mvDBGINFO( MV_PUBLIC )
+ *  FOR i:=1 TO nCount
+ *     xValue =__mvDBGINFO( MV_PUBLIC, i, @cName )
+ *     ? i, cName, xValue
+ *  NEXT
+ *
+ *  $TESTS$
+ *
+ *  #include <memvars.ch>
+ *  PROCEDURE MAIN()
+ *  
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *    PUBLIC cPublic:='cPublic in MAIN'
+ *  
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *    PRIVATE cPrivate:='cPrivate in MAIN'
+ *  
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *    CountMemvars()
+ *  
+ *    ? 'Back in Main'
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *  
+ *  RETURN
+ *  
+ *  PROCEDURE CountMemvars()
+ *  LOCAL i, nCnt, xVal, cName
+ *  PUBLIC ccPublic:='ccPublic'
+ *  PRIVATE ccPrivate:='ccPrivate'
+ *  
+ *    ? 'In CountMemvars'
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *    PRIVATE cPublic:='cPublic'
+ *  
+ *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *  
+ *    nCnt =__mvDBGINFO( MV_PRIVATE ) +1
+ *    FOR i:=1 TO nCnt
+ *        xVal =__mvDBGINFO( MV_PRIVATE, i, @cName )
+ *        ? i, '=', cName, xVal
+ *    NEXT
+ *  
+ *    nCnt =__mvDBGINFO( MV_PUBLIC ) +1
+ *    FOR i:=1 TO nCnt
+ *        xVal =__mvDBGINFO( MV_PUBLIC, i, @cName )
+ *        ? i, '=', cName, xVal
+ *    NEXT
+ *  
+ *  RETURN
+ * 
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *     This function should be called from the debugger only.
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+HARBOUR HB___MVDBGINFO( void )
+{
+   int iCount = hb_pcount();
+
+   if( iCount == 1 )          /* request for a number of variables */
+      hb_retni( hb_memvarCount( hb_parni( 1 ) ) );
+
+   else if( iCount >= 2 )     /* request for a value of variable */
+   {
+      HB_ITEM_PTR pValue;
+      char * szName;
+
+      pValue = hb_memvarDebugVariable( hb_parni( 1 ), hb_parni( 2 ), &szName );
+
+      if( pValue )
+      {
+         /*the requested variable was found
+          */
+         if( iCount >= 3 && ISBYREF( 3 ) )
+         {
+            /* we have to use this variable regardless of its current value
+             */
+            HB_ITEM_PTR pName = hb_param( 3, IT_ANY );
+
+            hb_itemPutC( pName, szName ); /* clear an old value and copy a new one */
+            /* szName points directly to a symbol name - it cannot be released
+             */
+         }
+         hb_itemReturn( pValue );
+         /* pValue points directly to the item structure used by this variable
+          * this item cannot be released
+          */
+      }
+      else
+      {
+         pValue =hb_itemNew( NULL );
+         hb_itemReturn( pValue );      /* return NIL value */
+         hb_itemRelease( pValue );
+
+         if( iCount >= 3 && ISBYREF( 3 ) )
+         {
+            /* we have to use this variable regardless of its current value
+             */
+            HB_ITEM_PTR pName = hb_param( 3, IT_ANY );
+
+            hb_itemPutC( pName, "?" ); /* clear an old value and copy a new one */
+         }
+      }
+   }
 }
