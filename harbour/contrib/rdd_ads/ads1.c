@@ -217,9 +217,9 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
    if( pArea->hTable )
    {
       AdsCloseTable  ( pArea->hTable );
-      uiError = SUPER_CLOSE( (AREAP)pArea );
       pArea->hTable = 0;
    }
+   uiError = SUPER_CLOSE( (AREAP)pArea );  // dbCreate needs this even if
 
    /* Free field offset array */
    if( pArea->pFieldOffset )
@@ -433,10 +433,13 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
 {
    ERRCODE uiError;
+   LONG lUnit  = 1;
+   LONG lCount = lToSkip;
+   LONG lReturn ;
 
    HB_TRACE(HB_TR_DEBUG, ("adsSkip(%p, %ld)", pArea, lToSkip));
 
-/* -----------------10/11/00 Brian Hays ------------------
+/* ----------------- Brian Hays ------------------
 
    In ADS, if you GO 0 (as opposed to skipping past lastrec),
    it considers the record pointer "unpositioned".
@@ -447,31 +450,57 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    testing for BOF.  We need to avoid our GoBottom hack as much as
    possible because with a filter set it could be quite slow.
 
+   In addition, if lToSkip > 1 we need to iterate calls to AdsSkip(1) and
+   test the filter each time since, even if the server has a filter set,
+   AdsSkip(5) may only test the filter after 5 raw skips (according to the
+   Extended Systems developers.)
+
  --------------------------------------------------*/
 
-   pArea->fTop = pArea->fBottom = FALSE;
-   AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
 
    if ( lToSkip==0 )
-      return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
-   else
 	{
-      if ( lToSkip < 0 && pArea->fEof ) /* skipped -1 or more from EOF will NOT go to bottom in ads if we went straight to 0! It sets BOF in this case. */
+      AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
+      return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
+   }else
+	{
+      if ( lToSkip < 0 )
       {
+         lCount = ( 0 - lToSkip);    /* abs(lToSkip) for   the for loop */
+         lUnit  = -1;                /* arg for AdsSkip in the for loop*/
+      }
+
+      pArea->fTop = pArea->fBottom = FALSE;
+      if ( lToSkip < 0 && pArea->fEof ) /* skip -1 or more from EOF will NOT go to bottom in ads if we went straight to 0! It sets BOF in this case. */
+      {
+         AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lUnit );
          AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
-         if ( pArea->fBof )             /* might also be true in and empty data set, but this is probably our problem situation so move again */
+         if ( pArea->fBof )             /* might also be true in an empty data set, but this is probably our problem situation so move again */
          {
             //pArea->fTop = FALSE;
             pArea->fBottom = TRUE;
             AdsGotoBottom  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
-            if ( lToSkip < -1 )
-            {
-               AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, (lToSkip + 1) );
-            }
+//            if ( lToSkip < -1 )
+//            {
+//               AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, (lToSkip + 1) );
+//            }
          }
+      }else
+         AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lUnit );
+
+      hb_adsCheckBofEof( pArea );
+      lReturn = SUPER_SKIPFILTER( (AREAP)pArea, lUnit );
+
+      // now handle non-1 values
+      while( lCount > 1 && lReturn == SUCCESS && !pArea->fBof && !pArea->fEof)
+      {
+         AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lUnit );
+         hb_adsCheckBofEof( pArea );
+         lReturn = SUPER_SKIPFILTER( (AREAP)pArea, lUnit );
+         lCount--;
       }
-   	hb_adsCheckBofEof( pArea );
-      return SUPER_SKIPFILTER( (AREAP)pArea, lToSkip>0 ? 1 : -1 );
+
+      return lReturn;
 	}
 }
 
@@ -875,6 +904,12 @@ static ERRCODE adsClose( ADSAREAP pArea )
    if( pArea->hStatement )
       AdsCloseSQLStatement( pArea->hStatement );
 
+   if( pArea->szDataFileName )
+   {
+      hb_xfree( pArea->szDataFileName );
+      pArea->szDataFileName = NULL;
+   }
+
    return uiError;
 }
 
@@ -890,6 +925,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
+   pArea->szDataFileName = ( char * ) pCreateInfo->abName;
    uiLen = (pArea->uiFieldCount * 22) + 1;
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
    ucfieldDefs[0]='\0';
@@ -952,7 +988,8 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
       AdsShowError( "Error" );
       return FAILURE;
    }
-   // AdsCloseTable(hTable);
+   AdsCloseTable(hTable);  // TODO: it would be nice if a parameter could be passed in to allow this to stay open to support the 4th parameter of dbCreate. As is, we have to close it here, then re-open it.
+
    return SUCCESS;
 }
 
@@ -1041,6 +1078,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pOpenInfo->atomAlias )
    {
+      pArea->szDataFileName = ( char * ) pOpenInfo->abName;
       pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
       if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
       {
@@ -1048,9 +1086,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          return FAILURE;
       }
       ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
-      pArea->szDataFileName = ( char * ) pOpenInfo->abName;
       pArea->hStatement = 0;
       pArea->hOrdCurrent = 0;
+
+
+//HB_TRACE(HB_TR_ALWAYS, ("\n\nadsOpen(%p) pOpenInfo->abName(%s) pOpenInfo->fShared(%d) pOpenInfo->fReadonly(%d)",
+//         pArea, pOpenInfo->abName, (int)pOpenInfo->fShared, (int)pOpenInfo->fReadonly  ));
 
       ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
                   adsFileType, adsCharType, adsLockType, adsRights,
@@ -1062,7 +1103,10 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
          return FAILURE;
       }
-      pArea->hTable = hTable;
+      pArea->hTable    = hTable;
+      pArea->fShared   = pOpenInfo->fShared;
+      // bh: why can't the compiler see this??
+      // pArea->fReadOnly = pOpenInfo->fReadOnly;
    }
 
    SELF_FIELDCOUNT( ( AREAP ) pArea, &uiFields );
@@ -1081,8 +1125,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       AdsGetFieldType  ( pArea->hTable, szName, &pusType );
       AdsGetFieldLength( pArea->hTable, szName, &pulLength );
       dbFieldInfo.uiLen = ( USHORT ) pulLength;
-      if( pulLength > pArea->maxFieldLen ) pArea->maxFieldLen = pulLength;
       dbFieldInfo.uiDec = 0;
+      if( pulLength > pArea->maxFieldLen ) pArea->maxFieldLen = pulLength;
+
       switch( pusType )
       {
          case ADS_STRING:
@@ -1118,6 +1163,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
       return FAILURE;
    pArea->ulRecCount = ulRecCount;
+
    return SELF_GOTOP( ( AREAP ) pArea );
 }
 
@@ -1453,7 +1499,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
    BOOL bValidExpr = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
 
-   /* ----------------- Brian Hays ------------------
+   /* ----------------- BH ------------------
       See if the server can evaluate the filter.
       If not, don't pass it to the server; let the super level
       filter the records locally.

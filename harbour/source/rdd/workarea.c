@@ -133,6 +133,13 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    if( !hb_set.HB_SET_DELETED && pArea->dbfi.itmCobExpr == NULL )
       return SUCCESS;
 
+   lUpDown = ( lUpDown > 0  ?  1 : -1 );
+      /* Since lToSkip is passed to SkipRaw, it should never request more than
+         a single skip.
+         The implied purpose of hb_waSkipFilter is to get off of a "bad" record
+         after a skip was performed, NOT to skip lToSkip filtered records.
+      */
+
    bTop = pArea->fTop;
    bBottom = pArea->fBottom;
    bOutOfRange = FALSE;

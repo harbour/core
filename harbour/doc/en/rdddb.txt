@@ -457,8 +457,12 @@
  *
  *      <cDriver>   Name of the RDD
  *
- *      <lOpen>     Toggle to Open the create File
- *
+ *      <lOpenNew>  3-way toggle to Open the file in New or Current workarea:
+ *                       <table>
+ *                       NIL    The file is not opened.
+ *                       True   It is opened in a New area.
+ *                       False  It is opened in the current area.
+ *                  </table>
  *      <cAlias>    Name of database Alias
  *  $RETURNS$
  *      DBCREATE() always returns NIL.
@@ -490,7 +494,10 @@
  *      The <cDriver> parameter specifies the name of the Replaceable Da-
  *      tabase Driver to use to create the database. If it is not specified, then the
  *      Replaceable Database Driver in the current work area is tised.
- *      The <lOpen> parameter specifies if the already created database is to be opened,
+ *      The <lOpenNew> parameter specifies if the already created database is
+ *      to be opened, and where.  If NIL, the file is not opened. If True,
+ *      it is opened in a New area, and if False it is opened in the current
+ *      area (closing any file already occupying that area).
  *      The <cAlias> parameter specifies the alias name for the new opened database
  *  $EXAMPLES$
  *      function main()
