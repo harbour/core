@@ -1,8 +1,6 @@
  ;
  ; $Id$
  ;
-
- ;
  ; Harbour Project source code:
  ; Symbol Initialization Support
  ;

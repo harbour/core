@@ -41,7 +41,7 @@ _INIT_ ends
 HB_ENDBORSYMBOLS segment dword use32 public 'INITDATA'
 HB_ENDBORSYMBOLS ends
 
-DGROUP  group HB_STARTBORSYMBOLS, _INIT_, HB_ENDBORSYMBOLS
+BORLAND group HB_STARTBORSYMBOLS, _INIT_, HB_ENDBORSYMBOLS
 
     public  _hb_BorFirstSymbol, _hb_BorLastSymbol
 
