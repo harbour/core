@@ -1,3 +1,7 @@
+2000-07-06 14:10 GMT+0100 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/tget.prg
+     * Fixed minor bugs in numbers with decimals and when clause @E was used with numbers
+
 2000-07-05 23:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
    + source\include\harbourl.slx
    + source\compiler\harbourl.c
@@ -151,8 +155,7 @@
    contrib/hbzlib/zlibapi.c
      *Added code to be used by other platforms
   +contrib/hbzlib/makefile
-     *makefile for gnu compiler
-   * source/pp/pragma.c
+     *makefile for gnu compiler   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
