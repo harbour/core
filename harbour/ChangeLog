@@ -7,6 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+        the characters until the first non editable character.
+  * source\rtl\tgetlist.prg
+    * METHOD GetPostValidate()
+     * modification to be more Clip*r compliant and behaviour.
+      - eliminate call to SetFocus() when BadDate = .T., this fix makes
+        that the buffer is not erased if the date is incorrect.
+
+2002-03-02 13:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source\vm\classes.c
+    * __objClone()
     * comment this line pDstObject->item.asArray.value->puiClsTree = NULL;
       because it's redundant with arrayClone().
       see Changelog below.
