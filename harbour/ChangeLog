@@ -1,3 +1,16 @@
+2001-11-19 17:20 GMT+1 Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/bit2.c
+     + number and bit manipulation functions CLEARBIT, SETBIT, ISBIT
+
+     all provided by Walter Negro - FOEESITRA <waltern@foeesitra.org.ar>
+
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+   * contrib/libct/ctflist.txt
+     * changes according to the above
+
 2001-11-19 xx:xx GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/harbour.y
      ! add type casts for MsVC

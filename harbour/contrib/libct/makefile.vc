@@ -116,6 +116,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
    $(OBJ_DIR)\atrepl.obj \
+   $(OBJ_DIR)\bit2.obj \
    $(OBJ_DIR)\charevod.obj \
    $(OBJ_DIR)\charlist.obj \
    $(OBJ_DIR)\charmirr.obj \
@@ -176,6 +177,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\atadjust.* del $(OBJ_DIR)\atadjust.*
    -@if exist $(OBJ_DIR)\atnum.* del $(OBJ_DIR)\atnum.*
    -@if exist $(OBJ_DIR)\atrepl.* del $(OBJ_DIR)\atrepl.*
+   -@if exist $(OBJ_DIR)\bit2.* del $(OBJ_DIR)\bit2.*
    -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*
    -@if exist $(OBJ_DIR)\charlist.* del $(OBJ_DIR)\charlist.*
    -@if exist $(OBJ_DIR)\charmirr.* del $(OBJ_DIR)\charmirr.*

@@ -11,6 +11,7 @@ C_SOURCES = \
         atadjust.c \
         atnum.c \
         atrepl.c \
+	bit2.c \
         charevod.c \
         charlist.c \
         charmirr.c \
