@@ -19,7 +19,7 @@ nanforum ft_f*() clones
 #define c_size     4096
 #define IT_NUMBER  (IT_INTEGER|IT_LONG|IT_DOUBLE)
 
-static long _hbfskip( int recs );
+static long hb_hbfskip( int recs );
 
 static long last_rec[10];
 static long recno[10];
@@ -36,30 +36,30 @@ HARBOUR HB_HB_FUSE( void )
 
 {
 
-   PHB_ITEM arg1_it = _param(1,IT_STRING);
-   PHB_ITEM arg2_it = _param(2,IT_NUMBER);
+   PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+   PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
    int open_flags;
 
    if ( arg1_it ) {
 
      if( arg2_it )
-         open_flags = _parni(2);
+         open_flags = hb_parni(2);
      else
          open_flags = 0;
 
-      handles[area]  = _fsOpen( _parc(1), open_flags );
+      handles[area]  = hb_fsOpen( hb_parc(1), open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
-      b              = ( char * )_xgrab( b_size );
-      c              = ( char * )_xgrab( c_size );
-      lastbyte[area] = _fsSeek( handles[area], 0L, SEEK_END );
-      _retni( handles[area] );
+      b              = ( char * )hb_xgrab( b_size );
+      c              = ( char * )hb_xgrab( c_size );
+      lastbyte[area] = hb_fsSeek( handles[area], 0L, SEEK_END );
+      hb_retni( handles[area] );
    }
    else {
-      _fsClose( handles[area] );
-      _xfree( b )         ;
-      _xfree( c )         ;
-      _retni( 1 )         ;
+      hb_fsClose( handles[area] );
+      hb_xfree( b )         ;
+      hb_xfree( c )         ;
+      hb_retni( 1 )         ;
       recno[area]    = 0L ;
       offset[area]   = 0L ;
       handles[area]  = 0  ;
@@ -74,7 +74,7 @@ HARBOUR HB_HB_FUSE( void )
 HARBOUR HB_HB_FRECNO( void )
 
 {
-   _retnl( recno[area] );
+   hb_retnl( recno[area] );
 }
 
 
@@ -82,19 +82,19 @@ HARBOUR HB_HB_FSKIP( void )
 
 {
 
-   PHB_ITEM arg1_it = _param(1,IT_NUMBER);
+   PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
    int nskip;
 
    if( arg1_it )
-       nskip = _parni(1);
+       nskip = hb_parni(1);
    else
        nskip = 1;
 
-   _hbfskip(nskip);
+   hb_hbfskip(nskip);
 
 }
 
-long _hbfskip( int recs )
+long hb_hbfskip( int recs )
 
 {
 
@@ -106,8 +106,8 @@ long _hbfskip( int recs )
 
    if ( recs > 0 ) {
       for (y = 0; y < recs; y++ ) {
-         _fsSeek( handles[area], offset[area], SEEK_SET );
-         read_len = _fsRead( handles[area], b, b_size );
+         hb_fsSeek( handles[area], offset[area], SEEK_SET );
+         read_len = hb_fsRead( handles[area], b, b_size );
          for (x = 0; x < read_len; x++ ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
                  ((*(b + x) == 10) && (*(b + x + 1) == 13)) ) {
@@ -140,8 +140,8 @@ long _hbfskip( int recs )
             read_len = b_size;
          }
 
-         _fsSeek( handles[area], read_pos, SEEK_SET );
-         read_len = _fsRead( handles[area], b, read_len );
+         hb_fsSeek( handles[area], read_pos, SEEK_SET );
+         read_len = hb_fsRead( handles[area], b, read_len );
 
          for (x = read_len - 4; x >= 0; x-- ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -170,8 +170,8 @@ HARBOUR HB_HB_FREADLN( void )
    int x;
    long read;
 
-   _fsSeek( handles[area], offset[area], SEEK_SET );
-   read = _fsRead( handles[area], b, b_size );
+   hb_fsSeek( handles[area], offset[area], SEEK_SET );
+   read = hb_fsRead( handles[area], b, b_size );
 
    for ( x = 0; x < b_size; x++ ) {
       if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -180,7 +180,7 @@ HARBOUR HB_HB_FREADLN( void )
          break;
       }
    }
-   _retclen( b, x );
+   hb_retclen( b, x );
 
 }
 
@@ -188,7 +188,7 @@ HARBOUR HB_HB_FEOF( void )
 
 {
 
-   _retl( isEof[area] );
+   hb_retl( isEof[area] );
 
 }
 
@@ -199,13 +199,13 @@ HARBOUR HB_HB_FGOTO( void )
    long target;
    long last;
 
-   target = _parnl(1);
+   target = hb_parnl(1);
    last = 0;
 
    if ( recno[area] > target ) {
       while ( recno[area] != target )   {
          last = recno[area];
-         _hbfskip(-1);
+         hb_hbfskip(-1);
          if ( recno[area] == last )
             break;
       }
@@ -213,7 +213,7 @@ HARBOUR HB_HB_FGOTO( void )
    else {
       while ( recno[area] != target ) {
          last = recno[area];
-         _hbfskip(1);
+         hb_hbfskip(1);
          if ( recno[area] == last )
             break;
       }
@@ -238,8 +238,8 @@ HARBOUR HB_HB_FGOBOTTOM(void)
 
       do {
 
-         _fsSeek( handles[area], offset[area], SEEK_SET );
-         len = _fsRead(  handles[area], c, c_size );
+         hb_fsSeek( handles[area], offset[area], SEEK_SET );
+         len = hb_fsRead(  handles[area], c, c_size );
          for ( x = 0; x < len; x++ ) {
             if ( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
                  ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
@@ -277,7 +277,7 @@ HARBOUR HB_HB_FLASTREC( void )
    old_offset = offset[area];
 
    HB_HB_FGOBOTTOM();
-   _retnl( last_rec[area] );
+   hb_retnl( last_rec[area] );
 
    recno[area] = old_rec;
    offset[area] = old_offset;
@@ -289,9 +289,9 @@ HARBOUR HB_HB_FSELECT( void )
 
 {
 
-   _retni( area + 1 );
+   hb_retni( area + 1 );
 
    if ( ISNUM(1) )
-      area = _parni(1) - 1;
+      area = hb_parni(1) - 1;
 
 }

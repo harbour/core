@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.5  1999/06/17 07:09:25  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.4  1999/06/12 00:21:55  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -70,13 +73,13 @@ HARBOUR HB_GT_CHARMIX( void )
   int l1, l2, i, pos;
 
   if (ISCHAR(1) && ISCHAR(2)) {
-    s1  = _parc(1);
-    s2  = _parc(2);
-    l1  = _parclen(1);
-    l2  = _parclen(2);
+    s1  = hb_parc(1);
+    s2  = hb_parc(2);
+    l1  = hb_parclen(1);
+    l2  = hb_parclen(2);
     pos = 0;
 
-    s3  = (char*)_xgrab(l1 + l2);   // grab us some mem to work with
+    s3  = (char*)hb_xgrab(l1 + l2);   // grab us some mem to work with
 
     for (i = 0; i < l1; i++) {
       s3[pos++] = s1[i];
@@ -90,9 +93,9 @@ HARBOUR HB_GT_CHARMIX( void )
         s3[pos++] = s2[i];
 
     s3[pos] = '\0';
-    _retc(s3);
-    _xfree(s3);                     // free alloc'ed mem
+    hb_retc(s3);
+    hb_xfree(s3);                     // free alloc'ed mem
   } else {
-    _retc((char *) NULL);           // parameter mismatch - error NullStr
+    hb_retc((char *) NULL);           // parameter mismatch - error NullStr
   }
 }

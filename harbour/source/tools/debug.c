@@ -38,7 +38,7 @@ HARBOUR HB___STATIC(void)
    PHB_ITEM pStatic;
    WORD  wStatic;
 
-   wStatic = _parni(1);
+   wStatic = hb_parni(1);
    pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
              stack.iStatics + wStatic - 1;
    hb_itemReturn( pStatic );
@@ -58,13 +58,13 @@ void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
       pTemp = hb_itemNew(NULL);                 /* Create temporary string  */
       pTemp->wType   = IT_STRING;
       pTemp->wLength = strlen( pItem->value.pSymbol->szName )+2;
-      pTemp->value.szText = (char *) _xgrab( pTemp->wLength+1 );
+      pTemp->value.szText = (char *) hb_xgrab( pTemp->wLength+1 );
 
       sprintf( pTemp->value.szText, "[%s]", pItem->value.pSymbol->szName );
 
       hb_itemArrayPut( pReturn, wPos, pTemp );
       ItemRelease( pTemp );                     /* Get rid of temporary str.*/
-      _xfree( pTemp );
+      hb_xfree( pTemp );
    }
    else                                         /* Normal types             */
       hb_itemArrayPut( pReturn, wPos, pItem );
@@ -85,7 +85,7 @@ WORD GlobalStackLen( void )
 }
 HARBOUR HB___GLOBALSTACKLEN(void)
 {
-   _retni( GlobalStackLen() );
+   hb_retni( GlobalStackLen() );
 }
 
 
@@ -106,7 +106,7 @@ HARBOUR HB___AGLOBALSTACK(void)
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
    ItemRelease( pReturn );
-   _xfree( pReturn );
+   hb_xfree( pReturn );
 }
 
 
@@ -126,7 +126,7 @@ WORD StackLen( void )
 }
 HARBOUR HB___STACKLEN(void)
 {
-   _retni( StackLen() );
+   hb_retni( StackLen() );
 }
 
 
@@ -155,7 +155,7 @@ HARBOUR HB___ASTACK(void)
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
    ItemRelease( pReturn );
-   _xfree( pReturn );
+   hb_xfree( pReturn );
 }
 
 
@@ -180,7 +180,7 @@ HARBOUR HB___APARAM(void)
       AddToArray( pItem, pReturn, wPos++ );
    hb_itemReturn( pReturn );
    ItemRelease( pReturn );
-   _xfree( pReturn );
+   hb_xfree( pReturn );
 }
 
 

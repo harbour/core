@@ -1,0 +1,42 @@
+/*
+ * $Id$
+ */
+
+#ifndef _GT_API
+#define _GT_API
+
+#include <gtapi.h>
+
+#define _gtInit         hb_gtInit
+#define _gtBox	         hb_gtBox
+#define _gtBoxD	      hb_gtBoxD
+#define _gtBox          hb_gtBoxS
+#define _gtColorSelect  hb_gtColorSelect
+#define _gtDispBegin    hb_gtDispBegin
+#define _gtDispCount    hb_gtDispCount
+#define _gtDispEnd      hb_gtDispEnd
+#define _gtGetColorStr  hb_gtGetColorStr
+#define _gtGetCursor    hb_gtGetCursor
+#define _gtGetPos       hb_gtGetPos
+#define _gtIsColor      hb_gtIsColor
+#define _gtMaxCol       hb_gtMaxCol
+#define _gtMaxRow       hb_gtMaxRow
+#define _gtPostExt      hb_gtPostExt
+#define _gtPreExt       hb_gtPreExt
+#define _gtRectSize     hb_gtRectSize
+#define _gtRepChar      hb_gtRepChar
+#define _gtRest         hb_gtRest
+#define _gtSave         hb_gtSave
+#define _gtScrDim       hb_gtScrDim
+#define _gtScroll       hb_gtScroll
+#define _gtSetBlink     hb_gtSetBlink
+#define _gtSetColorStr  hb_gtSetColorStr
+#define _gtSetCursor    hb_gtSetCursor
+#define _gtSetMode      hb_gtSetMode
+#define _gtSetPos       hb_gtSetPos
+#define _gtSetSnowFlag  hb_gtSetSnowFlag
+#define _gtWrite        hb_gtWrite
+#define _gtWriteAt      hb_gtWriteAt
+#define _gtWriteCon     hb_gtWriteCon
+
+#endif /* _GT_API */

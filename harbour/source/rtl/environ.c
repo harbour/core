@@ -182,7 +182,7 @@ HARBOUR HB_OS(void)
    if (!hb_os) strcpy (version, "Unknown");
    else if (hb_osmajor == -1) strcpy (version, hb_os);
    else sprintf (version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter);
-   _retc (version);
+   hb_retc (version);
 }
 
 HARBOUR HB_VERSION(void)
@@ -190,15 +190,15 @@ HARBOUR HB_VERSION(void)
    char hb_ver[ 80 ];
    sprintf( hb_ver, "Harbour %d.%d%s Intl. (Build %d)  (%04d.%02d.%02d)",
       hb_major, hb_minor, hb_revision, hb_build, hb_year, hb_month, hb_day );
-   _retc( hb_ver );
+   hb_retc( hb_ver );
 }
 
 HARBOUR HB_GETENV(void)
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      char *szName = _parc(1);
-      long lName = _parclen(1);
+      char *szName = hb_parc(1);
+      long lName = hb_parclen(1);
 
       while( lName && szName[lName - 1] == '=' )
       {
@@ -209,13 +209,13 @@ HARBOUR HB_GETENV(void)
       if( lName )
       {
          char *Value = getenv(szName);
-         _retc(Value? Value: "");
+         hb_retc(Value? Value: "");
       }
       else
-         _retc("");
+         hb_retc("");
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 /*
@@ -242,9 +242,9 @@ HARBOUR HB_GETENV(void)
 HARBOUR HB___RUN( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
-   if( _pcount() == 1 )                         /* Parameter passed         */
+   if( hb_pcount() == 1 )                         /* Parameter passed         */
    {
-      system( _parc( 1 ) );
+      system( hb_parc( 1 ) );
    }
    else
    {

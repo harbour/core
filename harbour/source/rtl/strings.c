@@ -96,7 +96,7 @@ BOOL hb_strempty( char * szText, ULONG ulLen )
 /* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
 HARBOUR HB_ISALPHA( void )
 {
-   _retl(isalpha(*_parc(1)));
+   hb_retl(isalpha(*hb_parc(1)));
 }
 
 /* determines if first char of string is digit */
@@ -104,7 +104,7 @@ HARBOUR HB_ISALPHA( void )
 /* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
 HARBOUR HB_ISDIGIT( void )
 {
-   _retl(isdigit(*_parc(1)));
+   hb_retl(isdigit(*hb_parc(1)));
 }
 
 /* determines if first char of string is upper-case */
@@ -112,7 +112,7 @@ HARBOUR HB_ISDIGIT( void )
 /* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
 HARBOUR HB_ISUPPER( void )
 {
-   _retl(isupper(*_parc(1)));
+   hb_retl(isupper(*hb_parc(1)));
 }
 
 /* determines if first char of string is lower-case */
@@ -120,7 +120,7 @@ HARBOUR HB_ISUPPER( void )
 /* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
 HARBOUR HB_ISLOWER( void )
 {
-   _retl(islower(*_parc(1)));
+   hb_retl(islower(*hb_parc(1)));
 }
 
 /* trims from the left, and returns a new pointer to szText */
@@ -139,16 +139,16 @@ char *hb_strLTrim( char *szText, ULONG *lLen )
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_LTRIM( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
          ULONG lLen = pText->wLength;
          char *szText = hb_strLTrim(pText->value.szText, &lLen);
 
-         _retclen(szText, lLen);
+         hb_retclen(szText, lLen);
       }
       else
       {
@@ -189,17 +189,17 @@ ULONG hb_strRTrimLen( char *szText, ULONG lLen, BOOL bAnySpace )
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_RTRIM( void )
 {
-   if( _pcount() > 0 )
+   if( hb_pcount() > 0 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
       if( pText )
       {
-         BOOL bAnySpace = (_pcount() > 1? _parl(2): 0);
-         _retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
+         BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
+         hb_retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
       }
       else
          /* Clipper doesn't error */
-         _retc("");
+         hb_retc("");
    }
    else
    {
@@ -221,54 +221,54 @@ HARBOUR HB_TRIM( void )
 /* TEST: QOUT( "alltrim( '  hello world  ' ) = '" + alltrim( '  hello world  ' ) + "'" ) */
 HARBOUR HB_ALLTRIM( void )
 {
-   if( _pcount() > 0 )
+   if( hb_pcount() > 0 )
    {
-      char *szText = _parc(1);
-      BOOL bAnySpace = (_pcount() > 1? _parl(2): 0);
+      char *szText = hb_parc(1);
+      BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
       ULONG lLen;
 
-      lLen = hb_strRTrimLen(szText, _parclen(1), bAnySpace);
+      lLen = hb_strRTrimLen(szText, hb_parclen(1), bAnySpace);
 
       szText = hb_strLTrim(szText, &lLen);
 
-      _retclen(szText, lLen);
+      hb_retclen(szText, lLen);
    }
    else
       /* Clipper doesn't error */
-      _retc("");
+      hb_retc("");
 }
 
 /* right-pads a string with spaces or supplied character */
 /* TEST: QOUT( "padr( 'hello', 10 ) = '" + padr( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADR( void )
 {
-   char *szText = _parc(1);
+   char *szText = hb_parc(1);
 
-   if( _pcount() > 1 )
+   if( hb_pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      long lLen = hb_parnl(2);
 
-      if( lLen > (long)_parclen(1) )
+      if( lLen > (long)hb_parclen(1) )
       {
-         char *szResult = (char *)_xgrab(lLen + 1);
+         char *szResult = (char *)hb_xgrab(lLen + 1);
          long lPos;
          char cPad;
 
-         memcpy(szResult, szText, _parclen(1));
+         memcpy(szResult, szText, hb_parclen(1));
 
-         cPad = ( _pcount() > 2? *(_parc(3)): ' ' );
+         cPad = ( hb_pcount() > 2? *(hb_parc(3)): ' ' );
 
-         for( lPos = _parclen(1); lPos < lLen; lPos++ )
+         for( lPos = hb_parclen(1); lPos < lLen; lPos++ )
             szResult[lPos] = cPad;
 
-         _retclen(szResult, lLen);
-         _xfree(szResult);
+         hb_retclen(szResult, lLen);
+         hb_xfree(szResult);
       }
       else
-         _retclen(szText, (long)_parclen(1) );
+         hb_retclen(szText, (long)hb_parclen(1) );
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 /* synonymn for PADR */
@@ -281,73 +281,73 @@ HARBOUR HB_PAD( void )
 /* TEST: QOUT( "padl( 'hello', 10 ) = '" + padl( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADL( void )
 {
-   char *szText = _parc(1);
+   char *szText = hb_parc(1);
 
-   if( _pcount() > 1 )
+   if( hb_pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      long lLen = hb_parnl(2);
 
-      if( lLen > (long) _parclen(1) )
+      if( lLen > (long) hb_parclen(1) )
       {
-         char *szResult = (char *)_xgrab(lLen + 1);
-         long lPos = lLen - _parclen(1);
+         char *szResult = (char *)hb_xgrab(lLen + 1);
+         long lPos = lLen - hb_parclen(1);
          char cPad;
 
-         memcpy(szResult + lPos, szText, _parclen(1));
+         memcpy(szResult + lPos, szText, hb_parclen(1));
 
-         cPad = (_pcount() > 2? *(_parc(3)): ' ');
+         cPad = (hb_pcount() > 2? *(hb_parc(3)): ' ');
 
          for(; lPos > 0; lPos--)
          {
             szResult[lPos - 1] = cPad;
          }
 
-         _retclen(szResult, lLen);
-         _xfree(szResult);
+         hb_retclen(szResult, lLen);
+         hb_xfree(szResult);
       }
       else
-         _retclen(szText, (long)_parclen(1) );
+         hb_retclen(szText, (long)hb_parclen(1) );
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 /* centre-pads a string with spaces or supplied character */
 /* TEST: QOUT( "padc( 'hello', 10 ) = '" + padc( 'hello', 10 ) + "'" ) */
 HARBOUR HB_PADC( void )
 {
-   char *szText = _parc(1);
+   char *szText = hb_parc(1);
 
-   if( _pcount() > 1 )
+   if( hb_pcount() > 1 )
    {
-      long lLen = _parnl(2);
+      long lLen = hb_parnl(2);
 
-      if( lLen > (long) _parclen(1) )
+      if( lLen > (long) hb_parclen(1) )
       {
-         char *szResult = (char *)_xgrab(lLen + 1);
+         char *szResult = (char *)hb_xgrab(lLen + 1);
          char cPad;
-         long w, lPos = (lLen - _parclen(1)) / 2;
+         long w, lPos = (lLen - hb_parclen(1)) / 2;
 
-         memcpy(szResult + lPos, szText, _parclen(1) + 1);
+         memcpy(szResult + lPos, szText, hb_parclen(1) + 1);
 
-         cPad = ( _pcount() > 2? *_parc(3): ' ' );
+         cPad = ( hb_pcount() > 2? *hb_parc(3): ' ' );
 
          for( w = 0; w < lPos; w++ )
             szResult[w] = cPad;
 
-         for( w = _parclen(1) + lPos; w < lLen; w++ )
+         for( w = hb_parclen(1) + lPos; w < lLen; w++ )
             szResult[w] = cPad;
 
          szResult[lLen] = 0;
 
-         _retclen(szResult, lLen);
-         _xfree(szResult);
+         hb_retclen(szResult, lLen);
+         hb_xfree(szResult);
       }
       else
-         _retclen(szText, (long)_parclen(1) );
+         hb_retclen(szText, (long)hb_parclen(1) );
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
@@ -383,14 +383,14 @@ ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 HARBOUR HB_AT( void )
 {
-   PHB_ITEM pSub = _param(1, IT_ANY);
-   PHB_ITEM pText = _param(2, IT_ANY);
+   PHB_ITEM pSub = hb_param(1, IT_ANY);
+   PHB_ITEM pText = hb_param(2, IT_ANY);
 
    if( pText && pSub )
    {
       if( IS_STRING( pText ) && IS_STRING( pSub ) )
       {
-         _retnl( hb_strAt(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
+         hb_retnl( hb_strAt(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
       }
       else
       {
@@ -414,17 +414,17 @@ HARBOUR HB_AT( void )
 /* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
 HARBOUR HB_RAT( void )
 {
-   long lSubLen = _parclen(1);
+   long lSubLen = hb_parclen(1);
 
    if( lSubLen )
    {
-      long lPos = _parclen(2) - lSubLen;
+      long lPos = hb_parclen(2) - lSubLen;
       if( lPos < 0 )
-         _retni(0);
+         hb_retni(0);
       else
       {
-         char *szSub = _parc(1);
-         char *szText = _parc(2);
+         char *szSub = hb_parc(1);
+         char *szText = hb_parc(2);
          int bFound = 0;
 
          while( lPos >= 0 && !bFound )
@@ -433,29 +433,29 @@ HARBOUR HB_RAT( void )
                bFound = !memcmp(szSub, szText + lPos, lSubLen);
             lPos--;
          }
-         _retnl( bFound? lPos + 2: 0 );
+         hb_retnl( bFound? lPos + 2: 0 );
       }
    }
    else
       /* This function never seems to raise an error */
-      _retni(0);
+      hb_retni(0);
 }
 
 /* converts an ASCII code to a character value */
 HARBOUR HB_CHR( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pAsc = _param(1, IT_NUMERIC);
+      PHB_ITEM pAsc = hb_param(1, IT_NUMERIC);
 
       if( pAsc )
       {
          char chr[2];
 
          /* Believe it or not, clipper does this! */
-         chr[0] = _parnl(1) % 256;
+         chr[0] = hb_parnl(1) % 256;
          chr[1] = 0;
-         _retclen(chr, 1);
+         hb_retclen(chr, 1);
       }
       else
       {
@@ -478,16 +478,16 @@ HARBOUR HB_CHR( void )
 /* converts a character value to an ASCII code */
 HARBOUR HB_ASC(void)
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
          if( pText->wLength > 0 )
-            _retni(*(pText->value.szText));
+            hb_retni(*(pText->value.szText));
          else
-            _retni(0);
+            hb_retni(0);
       }
       else
       {
@@ -510,17 +510,17 @@ HARBOUR HB_ASC(void)
 /* returns the left-most n characters in string */
 HARBOUR HB_LEFT( void )
 {
-   if( _pcount() == 2 )
+   if( hb_pcount() == 2 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
-         PHB_ITEM pLen = _param(2, IT_NUMERIC);
+         PHB_ITEM pLen = hb_param(2, IT_NUMERIC);
 
          if( pLen )
          {
-            long lLen = _parnl(2);
+            long lLen = hb_parnl(2);
 
             if( lLen > pText->wLength )
                lLen = pText->wLength;
@@ -528,7 +528,7 @@ HARBOUR HB_LEFT( void )
             else if( lLen < 0 )
                lLen = 0;
 
-            _retclen(pText->value.szText, lLen);
+            hb_retclen(pText->value.szText, lLen);
          }
          else
          {
@@ -559,17 +559,17 @@ HARBOUR HB_LEFT( void )
 /* returns the right-most n characters in string */
 HARBOUR HB_RIGHT( void )
 {
-   if( _pcount() == 2 )
+   if( hb_pcount() == 2 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
-         PHB_ITEM pLen = _param(2, IT_NUMERIC);
+         PHB_ITEM pLen = hb_param(2, IT_NUMERIC);
 
          if( pLen )
          {
-            long lLen = _parnl(2);
+            long lLen = hb_parnl(2);
 
             if( lLen > pText->wLength )
                lLen = pText->wLength;
@@ -577,7 +577,7 @@ HARBOUR HB_RIGHT( void )
             else if( lLen < 0 )
                lLen = 0;
 
-            _retclen(pText->value.szText + pText->wLength - lLen, lLen);
+            hb_retclen(pText->value.szText + pText->wLength - lLen, lLen);
          }
          else
          {
@@ -608,14 +608,14 @@ HARBOUR HB_RIGHT( void )
 /* returns l characters from n characters into string */
 HARBOUR HB_SUBSTR( void )
 {
-   if( _pcount() > 1 && _pcount() < 4 )
+   if( hb_pcount() > 1 && hb_pcount() < 4 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
-      PHB_ITEM pPos = _param(2, IT_NUMERIC);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
+      PHB_ITEM pPos = hb_param(2, IT_NUMERIC);
 
       if( pText && pPos )
       {
-         long lPos = _parnl(2);
+         long lPos = hb_parnl(2);
 
          if( lPos < 0 )
          {
@@ -630,12 +630,12 @@ HARBOUR HB_SUBSTR( void )
 
          if( lPos < pText->wLength )
          {
-            PHB_ITEM pLen = _param(3, IT_NUMERIC);
+            PHB_ITEM pLen = hb_param(3, IT_NUMERIC);
             long lLen;
 
             if( pLen )
             {
-               lLen = _parnl(3);
+               lLen = hb_parnl(3);
 
                if( lLen > pText->wLength - lPos )
                   lLen = pText->wLength - lPos;
@@ -644,12 +644,12 @@ HARBOUR HB_SUBSTR( void )
                lLen = pText->wLength - lPos;
 
             if( lLen > 0 )
-               _retclen(pText->value.szText + lPos, lLen);
+               hb_retclen(pText->value.szText + lPos, lLen);
             else
-               _retc("");
+               hb_retc("");
          }
          else
-            _retc("");
+            hb_retc("");
       }
       else
       {
@@ -681,15 +681,15 @@ char *hb_strLower(char *szText, long lLen)
 /* converts string to lower case */
 HARBOUR HB_LOWER( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
          long lLen = pText->wLength;
 
-         _retclen(hb_strLower(pText->value.szText, lLen), lLen);
+         hb_retclen(hb_strLower(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -721,15 +721,15 @@ char *hb_strUpper(char *szText, long lLen)
 /* converts string to upper case */
 HARBOUR HB_UPPER( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
          long lLen = pText->wLength;
 
-         _retclen(hb_strUpper(pText->value.szText, lLen), lLen);
+         hb_retclen(hb_strUpper(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -753,20 +753,20 @@ HARBOUR HB_UPPER( void )
 /* TEST: QOUT( "replicate( 'abc', 5 ) = " + replicate( 'abc', 5 ) ) */
 HARBOUR HB_REPLICATE( void )
 {
-   if( _pcount() == 2 )
+   if( hb_pcount() == 2 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
-      PHB_ITEM pTimes = _param(2, IT_NUMERIC);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
+      PHB_ITEM pTimes = hb_param(2, IT_NUMERIC);
 
       if( pText && pTimes )
       {
-         long lTimes = _parnl(2);
+         long lTimes = hb_parnl(2);
 
          if( lTimes > 0 )
          {
             char *szText = pText->value.szText;
             long lLen = pText->wLength;
-            char *szResult = (char *)_xgrab((lLen * lTimes) + 1);
+            char *szResult = (char *)hb_xgrab((lLen * lTimes) + 1);
             char *szPtr = szResult;
             long i;
 
@@ -775,11 +775,11 @@ HARBOUR HB_REPLICATE( void )
                memcpy(szPtr, szText, lLen);
                szPtr += lLen;
             }
-            _retclen(szResult, lLen * lTimes);
-            _xfree(szResult);
+            hb_retclen(szResult, lLen * lTimes);
+            hb_xfree(szResult);
          }
          else
-            _retc("");
+            hb_retc("");
       }
       else
       {
@@ -803,24 +803,24 @@ HARBOUR HB_REPLICATE( void )
 /* TEST: QOUT( "space( 5 ) = '" + space( 5 ) + "'" ) */
 HARBOUR HB_SPACE( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pLen = _param(1, IT_NUMERIC);
+      PHB_ITEM pLen = hb_param(1, IT_NUMERIC);
 
       if( pLen )
       {
-         long lLen = _parnl(1);
+         long lLen = hb_parnl(1);
 
          if( lLen > 0 )
          {
-            char *szResult = (char *)_xgrab(lLen + 1);
+            char *szResult = (char *)hb_xgrab(lLen + 1);
 
             memset(szResult, ' ', lLen);
-            _retclen(szResult, lLen);
-            _xfree(szResult);
+            hb_retclen(szResult, lLen);
+            hb_xfree(szResult);
          }
          else
-            _retc("");
+            hb_retc("");
       }
       else
       {
@@ -845,7 +845,7 @@ HARBOUR HB_STUFF( void )
 {
    PHB_ITEM pText;
 
-   pText = _param(1, IT_STRING);
+   pText = hb_param(1, IT_STRING);
    if( pText )
    {
       char *szText = pText->value.szText;
@@ -853,12 +853,12 @@ HARBOUR HB_STUFF( void )
       long lPos, lDel, lInsert, lTotalLen;
       char *szInsert;
 
-      pPos = _param(2, IT_NUMERIC);
+      pPos = hb_param(2, IT_NUMERIC);
       lPos = (pPos? pPos->value.lNumber - 1: 0);
       if( lPos > pText->wLength )
          lPos = pText->wLength;
 
-      pDel = _param(3, IT_NUMERIC);
+      pDel = hb_param(3, IT_NUMERIC);
       if( pDel )
       {
          lDel = pDel->value.lNumber;
@@ -868,7 +868,7 @@ HARBOUR HB_STUFF( void )
       else
          lDel = 0;
 
-      pInsert = _param(4, IT_STRING);
+      pInsert = hb_param(4, IT_STRING);
       if( pInsert )
       {
          szInsert = pInsert->value.szText;
@@ -882,7 +882,7 @@ HARBOUR HB_STUFF( void )
 
       if( (lTotalLen = pText->wLength + lInsert - lDel) > 0 )
       {
-         char *szResult = (char *)_xgrab(lTotalLen + 1);
+         char *szResult = (char *)hb_xgrab(lTotalLen + 1);
 
          memcpy(szResult, szText, lPos);
          memcpy(szResult + lPos, szInsert, lInsert);
@@ -890,44 +890,44 @@ HARBOUR HB_STUFF( void )
                 pText->wLength - (lPos + lDel));
 
          szResult[lTotalLen] = 0;
-         _retclen(szResult, lTotalLen);
-         _xfree(szResult);
+         hb_retclen(szResult, lTotalLen);
+         hb_xfree(szResult);
       }
       else
-         _retc("");
+         hb_retc("");
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 /* replaces lots of characters in a string */
 HARBOUR HB_STRTRAN( void )
 {
-   PHB_ITEM pText = _param(1, IT_STRING);
+   PHB_ITEM pText = hb_param(1, IT_STRING);
 
    if( pText )
    {
-      PHB_ITEM pSeek = _param(2, IT_STRING);
+      PHB_ITEM pSeek = hb_param(2, IT_STRING);
       if( pSeek )
       {
          char *szText = pText->value.szText;
          if( pSeek->wLength && pSeek->wLength <= pText->wLength )
          {
             char *szSeek = pSeek->value.szText;
-            PHB_ITEM pStart = _param(4, IT_NUMERIC);
+            PHB_ITEM pStart = hb_param(4, IT_NUMERIC);
             char *szReplace;
             long iStart;
 
-            iStart = (pStart? _parnl(4): 1);
+            iStart = (pStart? hb_parnl(4): 1);
             if( !iStart )
             {
                /* Clipper seems to work this way */
-               _retc("");
+               hb_retc("");
             }
             else if( iStart > 0 )
             {
-               PHB_ITEM pReplace = _param(3, IT_STRING);
-               PHB_ITEM pCount = _param(5, IT_NUMERIC);
+               PHB_ITEM pReplace = hb_param(3, IT_STRING);
+               PHB_ITEM pCount = hb_param(5, IT_NUMERIC);
                long iReplace;
                long iCount, bAll;
 
@@ -980,7 +980,7 @@ HARBOUR HB_STRTRAN( void )
 
                   if( iFound )
                   {
-                     char *szResult = (char *)_xgrab(iLength + 1);
+                     char *szResult = (char *)hb_xgrab(iLength + 1);
                      char *szPtr = szResult;
 
                      iFound = 0;
@@ -1011,26 +1011,26 @@ HARBOUR HB_STRTRAN( void )
                            i++;
                         }
                      }
-                     _retclen(szResult, iLength);
-                     _xfree(szResult);
+                     hb_retclen(szResult, iLength);
+                     hb_xfree(szResult);
                   }
                   else
-                     _retclen(szText, pText->wLength);
+                     hb_retclen(szText, pText->wLength);
                }
                 else
-                  _retclen(szText, pText->wLength);
+                  hb_retclen(szText, pText->wLength);
             }
             else
-               _retclen(szText, pText->wLength);
+               hb_retclen(szText, pText->wLength);
          }
          else
-            _retclen(szText, pText->wLength);
+            hb_retclen(szText, pText->wLength);
       }
       else
-         _retc("");
+         hb_retc("");
    }
    else
-      _retc("");
+      hb_retc("");
 }
 
 /* returns the numeric value of a character string representation of a number  */
@@ -1042,9 +1042,9 @@ double hb_strVal( char *szText )
 /* returns the numeric value of a character string representation of a number  */
 HARBOUR HB_VAL( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pText = _param(1, IT_STRING);
+      PHB_ITEM pText = hb_param(1, IT_STRING);
 
       if( pText )
       {
@@ -1056,7 +1056,7 @@ HARBOUR HB_VAL( void )
             nDec = strlen( ptr + 1 );
          }
          else nWidth = strlen( pText->value.szText );
-         _retnd(hb_strVal(pText->value.szText));
+         hb_retnd(hb_strVal(pText->value.szText));
          stack.Return.wLength = nWidth;
          stack.Return.wDec    = nDec;
       }
@@ -1082,7 +1082,7 @@ HARBOUR HB_VAL( void )
    This function should be used by any function that wants to format numeric
    data for displaying, printing, or putting in a database.
 
-   Note: The caller is responsible for calling _xfree to free the results buffer,
+   Note: The caller is responsible for calling hb_xfree to free the results buffer,
          but ONLY if the return value is not a NULL pointer!
 */
 char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
@@ -1142,7 +1142,7 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          int iSize = (iDec ? iWidth + 1 + iDec : iWidth);
 
          /* Be paranoid and use a large amount of padding */
-         szResult = (char *)_xgrab( iWidth + iDec + 64 );
+         szResult = (char *)hb_xgrab( iWidth + iDec + 64 );
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
@@ -1191,10 +1191,10 @@ char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 */
 HARBOUR HB_STR( void )
 {
-   if( _pcount() > 0 && _pcount() < 4 )
+   if( hb_pcount() > 0 && hb_pcount() < 4 )
    {
       BOOL bValid = TRUE;
-      PHB_ITEM pNumber = _param( 1, IT_NUMERIC );
+      PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
       PHB_ITEM pWidth  = 0;
       PHB_ITEM pDec    = 0;
 
@@ -1202,15 +1202,15 @@ HARBOUR HB_STR( void )
          bValid = FALSE;
       else
       {
-         if( _pcount() > 1 )
+         if( hb_pcount() > 1 )
          {
-            pWidth = _param( 2, IT_NUMERIC );
+            pWidth = hb_param( 2, IT_NUMERIC );
             if( !pWidth)
                bValid = FALSE;
          }
-         if( _pcount() > 2 )
+         if( hb_pcount() > 2 )
          {
-            pDec = _param( 3, IT_NUMERIC );
+            pDec = hb_param( 3, IT_NUMERIC );
             if( !pDec )
                bValid = FALSE;
          }
@@ -1221,10 +1221,10 @@ HARBOUR HB_STR( void )
 
          if( szResult )
          {
-            _retc( szResult );
-            _xfree( szResult );
+            hb_retc( szResult );
+            hb_xfree( szResult );
          }
-         else _retc( "" );
+         else hb_retc( "" );
       }
       else
       {

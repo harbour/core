@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:24  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:55  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -69,17 +72,17 @@ HARBOUR HB_GT_ASCPOS( void )
   int  p;
 
   if (ISCHAR(1) && ISNUM(2)) {
-    s = _parc(1);
-    p = _parni(2);
+    s = hb_parc(1);
+    p = hb_parni(2);
     p--;                            // decrement p to adjust for c strings
                                     // starting at position 0
 
-    if (p > _parclen(1))            // oh oh p > length of passed string
-      _retni(-2);                   // error -2
+    if (p > hb_parclen(1))            // oh oh p > length of passed string
+      hb_retni(-2);                   // error -2
     else
-      _retni((int) s[p]);           // return ascii code of appropriate
+      hb_retni((int) s[p]);           // return ascii code of appropriate
                                     // character in string
   } else {
-    _retni(-1);                     // parameter mismatch - error -1
+    hb_retni(-1);                     // parameter mismatch - error -1
   }
 }

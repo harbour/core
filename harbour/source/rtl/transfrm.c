@@ -156,7 +156,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    iCount = 0;
 
-   szRet  = (char *) _xgrab( lPic+4 );          /* Grab enough              */
+   szRet  = (char *) hb_xgrab( lPic+4 );          /* Grab enough              */
    *szRet = 0;
    for( i=0; i<lPic && !bFound; i++ )           /* Count number in front    */
    {
@@ -395,7 +395,7 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
                                                 /* Calculate d/m/y          */
    }
    iLenPic = strlen( szDateFormat );
-   szIntPicture = (char *) _xgrab( iLenPic+1 );
+   szIntPicture = (char *) hb_xgrab( iLenPic+1 );
    for( n = 0; n < iLenPic; n++ )               /* Create internal picture  */
    {
       c = toupper(szDateFormat[n]);
@@ -429,7 +429,7 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
 
    szResult = NumPicture( szIntPicture, iLenPic, iPicFlags, dIn, lRetSize );
                                                 /* And give to NumPicture   */
-   _xfree( szIntPicture );
+   hb_xfree( szIntPicture );
 
    return( szResult );
 }
@@ -437,8 +437,8 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
 
 HARBOUR HB_TRANSFORM( void )
 {
-   PHB_ITEM pPic       = _param( 2, IT_STRING);    /* Picture string           */
-   PHB_ITEM pExp       = _param( 1, IT_ANY );      /* Input parameter          */
+   PHB_ITEM pPic       = hb_param( 2, IT_STRING);    /* Picture string           */
+   PHB_ITEM pExp       = hb_param( 1, IT_ANY );      /* Input parameter          */
 
    char *szPic      = pPic->value.szText;
    char *szTemp;
@@ -472,7 +472,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_STRING:
             {
                szExp = pExp->value.szText;
-               szResult = (char *)_xgrab( ( (lPic-lPicStart) > pExp->wLength) ?
+               szResult = (char *)hb_xgrab( ( (lPic-lPicStart) > pExp->wLength) ?
                              (lPic-lPicStart) + 1 : pExp->wLength + 1 );
                                                 /* Grab enough              */
                szPic += lPicStart;              /* Skip functions           */
@@ -538,14 +538,14 @@ HARBOUR HB_TRANSFORM( void )
                   for( n = lPic; n; n--)
                      szResult[lResultPos++] = *szPic; /* Export remainder   */
                }
-               _retclen(szResult, lResultPos);
-               _xfree(szResult);
+               hb_retclen(szResult, lResultPos);
+               hb_xfree(szResult);
                break;
             }
 
             case IT_LOGICAL:
             {
-               szResult   =  (char *) _xgrab( lPic + 1 );
+               szResult   =  (char *) hb_xgrab( lPic + 1 );
                                                 /* That's all folks        */
                szPic      += lPicStart;         /* Skip functions           */
                lResultPos =  1;
@@ -587,39 +587,39 @@ HARBOUR HB_TRANSFORM( void )
                   if( !bDone )                  /* Logical written ?        */
                      szResult[lResultPos++] = pExp->value.iLogical ? 'T' : 'F';
                }
-               _retclen( szResult, lResultPos );
-               _xfree( szResult );
+               hb_retclen( szResult, lResultPos );
+               hb_xfree( szResult );
                break;
             }
             case IT_INTEGER:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
                        (double) pExp->value.iNumber, &lResultPos );
-               _retclen( szResult, lResultPos );
-               _xfree( szResult );
+               hb_retclen( szResult, lResultPos );
+               hb_xfree( szResult );
                break;
             }
             case IT_LONG:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
                        (double) pExp->value.lNumber, &lResultPos );
-               _retclen( szResult, lResultPos );
-               _xfree( szResult );
+               hb_retclen( szResult, lResultPos );
+               hb_xfree( szResult );
                break;
             }
             case IT_DOUBLE:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
                        (double) pExp->value.dNumber, &lResultPos );
-               _retclen( szResult, lResultPos);
-               _xfree( szResult );
+               hb_retclen( szResult, lResultPos);
+               hb_xfree( szResult );
                break;
             }
             case IT_DATE:
             {                   /* Date is currently British; Century is on */
                szResult = DatePicture( pExp->value.lDate, iPicFlags, &lResultPos );
-               _retclen( szResult, lResultPos );
-               _xfree( szResult );
+               hb_retclen( szResult, lResultPos );
+               hb_xfree( szResult );
                break;
             }
             default:
@@ -629,7 +629,7 @@ HARBOUR HB_TRANSFORM( void )
                hb_errPutDescription(pError, "Argument error: TRANSFORM");
                hb_errLaunch(pError);
                hb_errRelease(pError);
-               _retc("");
+               hb_retc("");
             }
          }
       }
@@ -640,7 +640,7 @@ HARBOUR HB_TRANSFORM( void )
          hb_errPutDescription(pError, "Argument error: TRANSFORM");
          hb_errLaunch(pError);
          hb_errRelease(pError);
-         _retc("");
+         hb_retc("");
       }
    }
    else                                         /* No picture supplied      */
@@ -649,40 +649,40 @@ HARBOUR HB_TRANSFORM( void )
       {
          case IT_STRING:
          {
-            _retclen( pExp->value.szText, pExp->wLength);
+            hb_retclen( pExp->value.szText, pExp->wLength);
             break;
          }
          case IT_LOGICAL:
          {
-            _retclen( pExp->value.iLogical ? "T" : "F", 1);
+            hb_retclen( pExp->value.iLogical ? "T" : "F", 1);
             break;
          }
          case IT_INTEGER:
          {
             pItem = NumDefault( (double) pExp->value.iNumber );
-            _retclen( pItem->value.szText, pItem->wLength );
+            hb_retclen( pItem->value.szText, pItem->wLength );
             ItemRelease( pItem );
             break;
          }
          case IT_LONG:
          {
             pItem = NumDefault( (double) pExp->value.lNumber );
-            _retclen( pItem->value.szText, pItem->wLength );
+            hb_retclen( pItem->value.szText, pItem->wLength );
             ItemRelease( pItem );
             break;
          }
          case IT_DOUBLE:
          {
             pItem = NumDefault( (double) pExp->value.dNumber );
-            _retclen( pItem->value.szText, pItem->wLength );
+            hb_retclen( pItem->value.szText, pItem->wLength );
             ItemRelease( pItem );
             break;
          }
          case IT_DATE:
          {
             szResult = DatePicture( pExp->value.lDate, iPicFlags, &lResultPos );
-            _retclen( szResult, lResultPos );
-            _xfree( szResult );
+            hb_retclen( szResult, lResultPos );
+            hb_xfree( szResult );
             break;
          }
          default:
@@ -692,7 +692,7 @@ HARBOUR HB_TRANSFORM( void )
            hb_errPutDescription(pError, "Argument error: TRANSFORM");
            hb_errLaunch(pError);
            hb_errRelease(pError);
-           _retc("");
+           hb_retc("");
          }
       }
    }

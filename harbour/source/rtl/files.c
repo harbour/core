@@ -505,8 +505,8 @@ FHANDLE hb_fsExtOpen( BYTEP fpFilename, BYTEP fpDefExt,
 
 HARBOUR HB_FOPEN( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_STRING);
-        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
 
         int open_flags;
         int file_handle = -1;
@@ -514,21 +514,21 @@ HARBOUR HB_FOPEN( void )
         if( arg1_it )
         {
             if( arg2_it )
-                open_flags = _parni(2);
+                open_flags = hb_parni(2);
             else
                 open_flags = 0;
 
-            file_handle = hb_fsOpen(_parc(1),open_flags);
+            file_handle = hb_fsOpen(hb_parc(1),open_flags);
         }
 
-        _retni(file_handle);
+        hb_retni(file_handle);
         return;
 }
 
 HARBOUR HB_FCREATE( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_STRING);
-        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
 
         int create_flags;
         int file_handle = -1;
@@ -536,133 +536,133 @@ HARBOUR HB_FCREATE( void )
         if( arg1_it )
         {
             if( arg2_it )
-                create_flags = _parni(2);
+                create_flags = hb_parni(2);
             else
                 create_flags = 0;
 
-            file_handle = hb_fsCreate(_parc(1),create_flags);
+            file_handle = hb_fsCreate(hb_parc(1),create_flags);
         }
 
-        _retni(file_handle);
+        hb_retni(file_handle);
         return;
 }
 
 HARBOUR HB_FREAD( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = _param(2,IT_STRING+IT_BYREF);
-        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = hb_param(2,IT_STRING+IT_BYREF);
+        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
 
         long   bytes=0;
 
         if( arg1_it && arg2_it && arg3_it )
         {
-            bytes = hb_fsRead(_parni(1),_parc(2),_parnl(3));
+            bytes = hb_fsRead(hb_parni(1),hb_parc(2),hb_parnl(3));
         }
 
-        _retnl(bytes);
+        hb_retnl(bytes);
         return;
 }
 
 HARBOUR HB_FWRITE( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = _param(2,IT_STRING);
-        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = hb_param(2,IT_STRING);
+        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
 
         long   bytes=0;
 
         if( arg1_it && arg2_it )
         {
-            bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );
-            bytes = hb_fsWrite(_parni(1),_parc(2),bytes);
+            bytes = (arg3_it ? hb_parnl(3) : arg2_it->wLength );
+            bytes = hb_fsWrite(hb_parni(1),hb_parc(2),bytes);
         }
 
-        _retnl(bytes);
+        hb_retnl(bytes);
         return;
 }
 
 HARBOUR HB_FERROR( void )
 {
-        _retni(hb_fsError());
+        hb_retni(hb_fsError());
         return;
 }
 
 HARBOUR HB_FCLOSE( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
 
         last_error = 0;
         if( arg1_it )
         {
-            hb_fsClose(_parni(1));
+            hb_fsClose(hb_parni(1));
         }
-        _retl( last_error == 0 );
+        hb_retl( last_error == 0 );
         return;
 }
 
 HARBOUR HB_FERASE( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_STRING);
+        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
 
         if( arg1_it )
         {
-           hb_fsDelete(_parc(1));
+           hb_fsDelete(hb_parc(1));
         }
 
-        _retni(last_error=0);
+        hb_retni(last_error=0);
         return;
 }
 
 HARBOUR HB_FRENAME( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_STRING);
-        PHB_ITEM arg2_it = _param(2,IT_STRING);
+        PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+        PHB_ITEM arg2_it = hb_param(2,IT_STRING);
 
         if( arg1_it && arg2_it )
         {
-            hb_fsRename(_parc(1),_parc(2));
+            hb_fsRename(hb_parc(1),hb_parc(2));
         }
 
-        _retni(last_error);
+        hb_retni(last_error);
         return;
 }
 
 HARBOUR HB_FSEEK( void )
 {
-        PHB_ITEM arg1_it = _param(1,IT_NUMBER);
-        PHB_ITEM arg2_it = _param(2,IT_NUMBER);
-        PHB_ITEM arg3_it = _param(3,IT_NUMBER);
+        PHB_ITEM arg1_it = hb_param(1,IT_NUMBER);
+        PHB_ITEM arg2_it = hb_param(2,IT_NUMBER);
+        PHB_ITEM arg3_it = hb_param(3,IT_NUMBER);
 
         long bytes=0;
         int  pos;
 
         if( arg1_it && arg2_it )
         {
-            pos = (arg3_it ? _parni(3) : FS_SET);
-            bytes = hb_fsSeek(_parni(1),_parnl(2),pos);
+            pos = (arg3_it ? hb_parni(3) : FS_SET);
+            bytes = hb_fsSeek(hb_parni(1),hb_parnl(2),pos);
         }
 
-        _retnl(bytes);
+        hb_retnl(bytes);
         return;
 }
 
 HARBOUR HB_FILE( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
 
         if( arg1_it )
         {
-           _retl( access(_parc(1), 0) == 0 );
+           hb_retl( access(hb_parc(1), 0) == 0 );
         }
-        else _retl(0);
+        else hb_retl(0);
         return;
 }
 
 HARBOUR HB_FREADSTR( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_NUMBER );
-        PHB_ITEM arg2_it = _param( 2, IT_NUMBER );
+        PHB_ITEM arg1_it = hb_param( 1, IT_NUMBER );
+        PHB_ITEM arg2_it = hb_param( 2, IT_NUMBER );
 
         int    handle;
         long   bytes;
@@ -673,9 +673,9 @@ HARBOUR HB_FREADSTR( void )
 
         if( arg1_it )
         {
-           handle = _parni(1);
-           bytes  = (arg2_it ? _parnl(2) : 0);
-           buffer = ( char * ) _xgrab(bytes + 1);
+           handle = hb_parni(1);
+           bytes  = (arg2_it ? hb_parnl(2) : 0);
+           buffer = ( char * ) hb_xgrab(bytes + 1);
 
            readed=0; ch[0]=1;
            while( readed < bytes )
@@ -688,50 +688,50 @@ HARBOUR HB_FREADSTR( void )
            }
 
            buffer[readed]=0;
-           _retc(buffer);
-           _xfree(buffer);
+           hb_retc(buffer);
+           hb_xfree(buffer);
         }
         else
-           _retc("");
+           hb_retc("");
 
         return;
 }
 
 HARBOUR HB_BIN2I( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
         char * s;
         int    result=0;
 
         if( arg1_it )
         {
-           s = _parc(1);
-           if( _parclen(1) >= 2 )
+           s = hb_parc(1);
+           if( hb_parclen(1) >= 2 )
                 result = MKINT(s[0],s[1]);
            else
               result = 0;
         }
 
-        _retni(result);
+        hb_retni(result);
         return;
 }
 
 HARBOUR HB_BIN2L( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_STRING );
+        PHB_ITEM arg1_it = hb_param( 1, IT_STRING );
         char * s;
         long   result=0;
 
         if( arg1_it )
         {
-           s = _parc(1);
-           if( _parclen(1) >= 4 )
+           s = hb_parc(1);
+           if( hb_parclen(1) >= 4 )
               result = MKLONG(s[0],s[1],s[2],s[3]);
            else
               result = 0;
         }
 
-        _retni(result);
+        hb_retni(result);
         return;
 }
 
@@ -742,42 +742,42 @@ HARBOUR HB_BIN2W( void )
 
 HARBOUR HB_I2BIN( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_INTEGER );
+        PHB_ITEM arg1_it = hb_param( 1, IT_INTEGER );
         int n;
         char s[3];
 
         if( arg1_it )
         {
-           n = _parni(1);
+           n = hb_parni(1);
            s[0] = n & 0xFF;
            s[1] = (n & 0xFF00)>>8;
            s[2] = 0;
-           _retclen(s,3);
+           hb_retclen(s,3);
         }
         else
-           _retclen("\0\0",2);
+           hb_retclen("\0\0",2);
 
         return;
 }
 
 HARBOUR HB_L2BIN( void )
 {
-        PHB_ITEM arg1_it = _param( 1, IT_LONG );
+        PHB_ITEM arg1_it = hb_param( 1, IT_LONG );
         long  n;
         char  s[5];
 
         if( arg1_it )
         {
-           n = _parnl(1);
+           n = hb_parnl(1);
            s[0] =  n & 0x000000FF;
            s[1] = (n & 0x0000FF00)>>8;
            s[2] = (n & 0x00FF0000)>>16;
            s[3] = (n & 0xFF000000)>>24;
            s[4] = 0;
-           _retclen(s,5);
+           hb_retclen(s,5);
         }
         else
-           _retclen("\0\0\0\0",4);
+           hb_retclen("\0\0\0\0",4);
 
         return;
 }

@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 #include <extend.h>
 #include <ctype.h>
 
@@ -26,26 +29,26 @@ char *hb_strdescend( char *string )
 
 HARBOUR HB_DESCEND( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pItem = _param(1, IT_ANY );
+      PHB_ITEM pItem = hb_param(1, IT_ANY );
 
       if( pItem )
       {
          if( IS_STRING( pItem ) )
-            _retc( hb_strdescend( pItem->value.szText ) );
+            hb_retc( hb_strdescend( pItem->value.szText ) );
          else if( IS_DATE( pItem ) )
-            _retnl( 5231808 - pItem->value.lDate );
+            hb_retnl( 5231808 - pItem->value.lDate );
          else if( IS_INTEGER( pItem ) )
-            _retnd( -1 * pItem->value.iNumber );
+            hb_retnd( -1 * pItem->value.iNumber );
          else if( IS_LONG( pItem ) )
-            _retnd( -1 * pItem->value.lNumber );
+            hb_retnd( -1 * pItem->value.lNumber );
          else if( IS_DOUBLE( pItem ) )
-            _retnd( -1 * pItem->value.dNumber );
+            hb_retnd( -1 * pItem->value.dNumber );
          else if( IS_LOGICAL( pItem ) )
-            _retl( !pItem->value.iLogical );
+            hb_retl( !pItem->value.iLogical );
          else
-            _retc( "NIL" );
+            hb_retc( "NIL" );
       }
    }
 }

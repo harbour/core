@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 #include <extend.h>
 #include <ctype.h>
 
@@ -38,21 +41,21 @@ char *hb_memotran( char *string, char *hardcr, char *softcr )
 
 HARBOUR HB_MEMOTRAN( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pItem = _param(1, IT_STRING );
+      PHB_ITEM pItem = hb_param(1, IT_STRING );
 
       if( pItem )
       {
          if( IS_STRING( pItem ) )
          {
-            PHB_ITEM pItem2 = _param(2, IT_STRING );
-            PHB_ITEM pItem3 = _param(3, IT_STRING );
+            PHB_ITEM pItem2 = hb_param(2, IT_STRING );
+            PHB_ITEM pItem3 = hb_param(3, IT_STRING );
 
             char *hardcr  = ( pItem2 ) ? pItem2->value.szText:";";
             char *softcr  = ( pItem3 ) ? pItem3->value.szText:" ";
 
-            _retc( hb_memotran( pItem->value.szText, hardcr, softcr ) );
+            hb_retc( hb_memotran( pItem->value.szText, hardcr, softcr ) );
          }
       }
    }

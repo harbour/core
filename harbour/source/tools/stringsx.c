@@ -10,8 +10,8 @@
 /* debug function to dump the ASCII values of an entire string */
 HARBOUR HB_STRDUMP( void )
 {
-   char *szText = _parc(1);
-   long i, lLength = _parclen(1);
+   char *szText = hb_parc(1);
+   long i, lLength = hb_parclen(1);
    for( i = 0; i < lLength; i++ )
       printf("%d ", szText[i]);
    printf("\n");
@@ -63,28 +63,28 @@ char *hb_strtoken(char *szText, long lText, long lIndex, char cDelimiter, long *
 HARBOUR HB_STRTOKEN( void )
 {
    char *szText;
-   long lIndex = _parnl(2);
-   char cDelimiter = *_parc(3);
+   long lIndex = hb_parnl(2);
+   char cDelimiter = *hb_parc(3);
    long lLen;
 
    if( !cDelimiter )
      cDelimiter = ' ';
 
-   szText = hb_strtoken(_parc(1), _parclen(1), lIndex, cDelimiter, &lLen);
+   szText = hb_strtoken(hb_parc(1), hb_parclen(1), lIndex, cDelimiter, &lLen);
 
-   _stornl(lLen, 4);
-   _retclen(szText, lLen);
+   hb_stornl(lLen, 4);
+   hb_retclen(szText, lLen);
 }
 
 HARBOUR HB_ROT13( void )
 {
-   PHB_ITEM pText = _param(1, IT_STRING);
+   PHB_ITEM pText = hb_param(1, IT_STRING);
 
    if( pText )
    {
       char *szText = pText->value.szText;
       long i, lLen = pText->wLength;
-      char *szResult = (char*)_xgrab(lLen + 1);
+      char *szResult = (char*)hb_xgrab(lLen + 1);
 
       for( i = 0; i < lLen; i++ )
       {
@@ -96,10 +96,10 @@ HARBOUR HB_ROT13( void )
 
          szResult[i] = c;
       }
-      _retclen(szResult, lLen);
-      _xfree(szResult);
+      hb_retclen(szResult, lLen);
+      hb_xfree(szResult);
    }
    else
-      _retc("");
+      hb_retc("");
 }
 

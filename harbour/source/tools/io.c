@@ -23,11 +23,11 @@
 HARBOUR HB_RENFILE(void)
 {
   int ok;
-  PHB_ITEM arg1 = _param(1,IT_STRING);
-  PHB_ITEM arg2 = _param(2,IT_STRING);
+  PHB_ITEM arg1 = hb_param(1,IT_STRING);
+  PHB_ITEM arg2 = hb_param(2,IT_STRING);
   if( arg1 && arg2)
     {
-      ok=rename(_parc(1),_parc(2));
+      ok=rename(hb_parc(1),hb_parc(2));
       if(!ok)
 	_retl(TRUE);
       else
@@ -134,31 +134,31 @@ HARBOUR HB_RENFILE(void)
 HARBOUR HB_CD(void)
 
 {
-  PHB_ITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
-      _retni(chdir(_parc(1)));
+      hb_retni(chdir(hb_parc(1)));
     }
 }
 
 HARBOUR HB_MD(void)
 {
 
-  PHB_ITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
 
-      _retni(mkdir(_parc(1)));
+      hb_retni(mkdir(hb_parc(1)));
     }
 }
 
 HARBOUR HB_RD(void)
 {
-  PHB_ITEM MEUDIR = _param(1,IT_STRING);
+  PHB_ITEM MEUDIR = hb_param(1,IT_STRING);
   if(MEUDIR)
     {
 
-      _retni(chdir(_parc(1)));
+      hb_retni(chdir(hb_parc(1)));
     }
 }
 
@@ -195,12 +195,12 @@ HARBOUR HB_RD(void)
 
 HARBOUR HB_FILE(void)
 {
-  PHB_ITEM arg1 = _param(1,IT_STRING);
+  PHB_ITEM arg1 = hb_param(1,IT_STRING);
   char *arquivos;
   int achou;
   struct ffblk arquivo;
   if (arg1)             {
-    arquivos=_parc(1);
+    arquivos=hb_parc(1);
     achou=findfirst(arquivos,&arquivo,FA_ARCH);
     if (achou)
       {
@@ -223,7 +223,7 @@ HARBOUR HB_DISKUSED(void)
   bytsfull = ((long) disk.total_clusters *
 	      (long) disk.sectors_per_cluster *
 	      (long ) disk.bytes_per_sector);
-  _retnl(bytsfull-bytsfree);
+  hb_retnl(bytsfull-bytsfree);
 }
 
 HARBOUR HB_DISKFREE(void)
@@ -235,7 +235,7 @@ HARBOUR HB_DISKFREE(void)
 	      (long) disk.sectors_per_cluster *
 	      (long ) disk.bytes_per_sector);
 
-  _retnl(bytsfree);
+  hb_retnl(bytsfree);
 }
 
 HARBOUR HB_DISKFULL(void)
@@ -247,7 +247,7 @@ HARBOUR HB_DISKFULL(void)
   bytsfull = ((long) disk.total_clusters *
 	      (long) disk.sectors_per_cluster *
 	      (long ) disk.bytes_per_sector);
-  _retnl(bytsfull);
+  hb_retnl(bytsfull);
 }
 
 #endif

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.5  1999/06/17 07:09:25  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.4  1999/06/12 00:21:55  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -66,17 +69,17 @@ HARBOUR HB_GT_CHAREVEN( void )
   int len, i;
 
   if (ISCHAR(1)) {
-    s1  = _parc(1);
-    len = _parclen(1);
+    s1  = hb_parc(1);
+    len = hb_parclen(1);
 
-    s2  = (char *)_xgrab(len / 2);  // grab us some mem to work with
+    s2  = (char *)hb_xgrab(len / 2);  // grab us some mem to work with
 
     for (i = 1; i <= len; i += 2)
       s2[(i - 1)/2] = s1[i] & 0x7f;
 
-    _retc(s2);
-    _xfree(s2);                     // free alloc'ed mem
+    hb_retc(s2);
+    hb_xfree(s2);                     // free alloc'ed mem
   } else {
-    _retc((char *) NULL);           // parameter mismatch - error NullStr
+    hb_retc((char *) NULL);           // parameter mismatch - error NullStr
   }
 }

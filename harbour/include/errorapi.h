@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 //      error.api
 //
 #ifndef _ERROR_H

@@ -14,12 +14,12 @@ ULONG ulMemoryMaxBlocks = 0;
 ULONG ulMemoryMaxConsumed = 0;
 ULONG ulMemoryConsumed = 0;
 
-PHB_ITEM _param( WORD wParam, WORD wMask )
+PHB_ITEM hb_param( WORD wParam, WORD wMask )
 {
    WORD wType;
    PHB_ITEM pLocal;
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       wType = ( stack.pBase + 1 + wParam )->wType;
 
@@ -37,7 +37,7 @@ PHB_ITEM _param( WORD wParam, WORD wMask )
    return 0;
 }
 
-char * _parc( WORD wParam, ... )
+char * hb_parc( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -47,7 +47,7 @@ char * _parc( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -69,7 +69,7 @@ char * _parc( WORD wParam, ... )
    return "";
 }
 
-ULONG _parclen( WORD wParam, ... )
+ULONG hb_parclen( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -79,7 +79,7 @@ ULONG _parclen( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -101,7 +101,7 @@ ULONG _parclen( WORD wParam, ... )
    return 0;
 }
 
-char * _pards( WORD wParam, ... )
+char * hb_pards( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -112,7 +112,7 @@ char * _pards( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -146,7 +146,7 @@ char * _pards( WORD wParam, ... )
    return "        ";
 }
 
-int _parl( WORD wParam, ... )
+int hb_parl( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -156,7 +156,7 @@ int _parl( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -175,7 +175,7 @@ int _parl( WORD wParam, ... )
    return 0;
 }
 
-double _parnd( WORD wParam, ... )
+double hb_parnd( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -185,7 +185,7 @@ double _parnd( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -210,7 +210,7 @@ double _parnd( WORD wParam, ... )
    return 0;
 }
 
-int _parni( WORD wParam, ... )
+int hb_parni( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -220,7 +220,7 @@ int _parni( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -245,7 +245,7 @@ int _parni( WORD wParam, ... )
    return 0;
 }
 
-long _parnl( WORD wParam, ... )
+long hb_parnl( WORD wParam, ... )
 {
    PHB_ITEM pItem;
    va_list va;
@@ -255,7 +255,7 @@ long _parnl( WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
       if( pItem->wType & IT_BYREF )
@@ -280,9 +280,9 @@ long _parnl( WORD wParam, ... )
    return 0;
 }
 
-int _parinfa( int iParamNum, ULONG uiArrayIndex )
+int hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
-   PHB_ITEM pArray = _param( iParamNum, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( iParamNum, IT_ARRAY );
 
    if( pArray )
    {
@@ -295,56 +295,56 @@ int _parinfa( int iParamNum, ULONG uiArrayIndex )
       return 0; /* QUESTION: should we raise an error here ? */
 }
 
-WORD _parinfo( WORD wParam )
+WORD hb_parinfo( WORD wParam )
 {
    if( ! wParam )
       return stack.pBase->wParams;
    else
    {
-      if( wParam <= _pcount() )
+      if( wParam <= hb_pcount() )
          return ( stack.pBase + 1 + wParam )->wType;
       else
          return 0;
    }
 }
 
-WORD _pcount( void )
+WORD hb_pcount( void )
 {
    return stack.pBase->wParams;
 }
 
-void _ret( void )
+void hb_ret( void )
 {
    ItemRelease( &stack.Return );
 }
 
-void _reta( ULONG ulLen )  /* undocumented _reta() */
+void hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
 {
    hb_arrayNew( &stack.Return, ulLen );
 }
 
-void _retc( char * szText )
+void hb_retc( char * szText )
 {
    ULONG ulLen = strlen( szText );
 
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_STRING;
    stack.Return.wLength = ulLen;
-   stack.Return.value.szText = ( char * ) _xgrab( ulLen + 1 );
+   stack.Return.value.szText = ( char * ) hb_xgrab( ulLen + 1 );
    strcpy( stack.Return.value.szText, szText );
 }
 
-void _retclen( char * szText, ULONG ulLen )
+void hb_retclen( char * szText, ULONG ulLen )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_STRING;
    stack.Return.wLength = ulLen;
-   stack.Return.value.szText = ( char * ) _xgrab( ulLen + 1 );
+   stack.Return.value.szText = ( char * ) hb_xgrab( ulLen + 1 );
    memcpy( stack.Return.value.szText, szText, ulLen );
    stack.Return.value.szText[ ulLen ] = 0;
 }
 
-void _retds( char * szDate ) /* szDate must have yyyymmdd format */
+void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
 {
    long lDay, lMonth, lYear;
 
@@ -369,7 +369,7 @@ void _retds( char * szDate ) /* szDate must have yyyymmdd format */
    stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
 }
 
-void _retnd( double dNumber )
+void hb_retnd( double dNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_DOUBLE;
@@ -379,7 +379,7 @@ void _retnd( double dNumber )
    stack.Return.value.dNumber = dNumber;
 }
 
-void _retni( int iNumber )
+void hb_retni( int iNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_INTEGER;
@@ -388,7 +388,7 @@ void _retni( int iNumber )
    stack.Return.value.iNumber = iNumber;
 }
 
-void _retl( int iTrueFalse )
+void hb_retl( int iTrueFalse )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_LOGICAL;
@@ -396,7 +396,7 @@ void _retl( int iTrueFalse )
    stack.Return.value.iLogical = iTrueFalse;
 }
 
-void _retnl( long lNumber )
+void hb_retnl( long lNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_LONG;
@@ -405,7 +405,7 @@ void _retnl( long lNumber )
    stack.Return.value.lNumber = lNumber;
 }
 
-void _storc( char * szText, WORD wParam, ... )
+void hb_storc( char * szText, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -416,7 +416,7 @@ void _storc( char * szText, WORD wParam, ... )
    wArrayIndex = va_arg( va, long );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -431,13 +431,13 @@ void _storc( char * szText, WORD wParam, ... )
          ItemRelease( pItemRef );
          pItemRef->wType = IT_STRING;
          pItemRef->wLength = ulLen;
-         pItemRef->value.szText = ( char * ) _xgrab( ulLen + 1 );
+         pItemRef->value.szText = ( char * ) hb_xgrab( ulLen + 1 );
          strcpy( pItemRef->value.szText, szText );
       }
    }
 }
 
-void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
+void hb_storclen( char * fixText, WORD wLength, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -447,7 +447,7 @@ void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
    wArrayIndex = va_arg( va, long );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -461,14 +461,14 @@ void _storclen( char * fixText, WORD wLength, WORD wParam, ... )
          ItemRelease( pItemRef );
          pItemRef->wType = IT_STRING;
          pItemRef->wLength = wLength;
-         pItemRef->value.szText = ( char * ) _xgrab( wLength + 1 );
+         pItemRef->value.szText = ( char * ) hb_xgrab( wLength + 1 );
          memcpy( pItemRef->value.szText, fixText, wLength );
          pItemRef->value.szText[ wLength ] = '\0';
       }
    }
 }
 
-void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd format */
+void hb_stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd format */
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -490,7 +490,7 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -509,7 +509,7 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
    }
 }
 
-void _storl( int iLogical, WORD wParam, ... )
+void hb_storl( int iLogical, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -519,7 +519,7 @@ void _storl( int iLogical, WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -538,7 +538,7 @@ void _storl( int iLogical, WORD wParam, ... )
    }
 }
 
-void _storni( int iValue, WORD wParam, ... )
+void hb_storni( int iValue, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -548,7 +548,7 @@ void _storni( int iValue, WORD wParam, ... )
    wArrayIndex = va_arg( va, int );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -568,7 +568,7 @@ void _storni( int iValue, WORD wParam, ... )
    }
 }
 
-void _stornl( long lValue, WORD wParam, ... )
+void hb_stornl( long lValue, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -578,7 +578,7 @@ void _stornl( long lValue, WORD wParam, ... )
    wArrayIndex = va_arg( va, long );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -598,7 +598,7 @@ void _stornl( long lValue, WORD wParam, ... )
    }
 }
 
-void _stornd( double dValue, WORD wParam, ... )
+void hb_stornd( double dValue, WORD wParam, ... )
 {
    PHB_ITEM pItem, pItemRef;
    va_list va;
@@ -608,7 +608,7 @@ void _stornd( double dValue, WORD wParam, ... )
    wArrayIndex = va_arg( va, long );
    va_end( va );
 
-   if( wParam <= _pcount() )
+   if( wParam <= hb_pcount() )
    {
       pItem = ( stack.pBase + 1 + wParam );
 
@@ -629,7 +629,7 @@ void _stornd( double dValue, WORD wParam, ... )
    }
 }
 
-void * _xgrab( ULONG ulSize )         /* allocates fixed memory */
+void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory */
 {
    void * pMem = malloc( ulSize + sizeof( ULONG ) );
 
@@ -649,7 +649,7 @@ void * _xgrab( ULONG ulSize )         /* allocates fixed memory */
    return ( char * ) pMem + sizeof( ULONG );
 }
 
-void * _xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
    ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
    void * pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
@@ -672,14 +672,14 @@ void * _xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    return ( char * ) pResult + sizeof( ULONG );
 }
 
-void _xfree( void * pMem )            /* frees fixed memory */
+void hb_xfree( void * pMem )            /* frees fixed memory */
 {
    ULONG ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
 
    if( pMem )
       free( ( char * ) pMem - sizeof( ULONG ) );
    else
-      printf( "\nCalling _xfree() with a null pointer!\n" );
+      printf( "\nCalling hb_xfree() with a null pointer!\n" );
 
    ulMemoryConsumed -= ulMemSize;
    ulMemoryBlocks--;

@@ -706,7 +706,7 @@ void Do( WORD wParams )
       if( ! pFunc )
       {
          printf( "error: message %s not implemented for class %s\n", pSym->szName,
-                 _GetClassName( pSelf ) );
+                 hb_GetClassName( pSelf ) );
          exit( 1 );
       }
       pFunc();
@@ -742,7 +742,7 @@ HARBOUR DoBlock( void )
    }
 
    /* Check for valid count of parameters */
-   iParam =pBlock->wParams -_pcount();
+   iParam =pBlock->wParams -hb_pcount();
    /* add missing parameters */
    while( iParam-- > 0 )
      PushNil();
@@ -776,7 +776,7 @@ void DuplTwo( void )
 
 HARBOUR HB_EVAL( void )
 {
-   PHB_ITEM pBlock = _param( 1, IT_BLOCK );
+   PHB_ITEM pBlock = hb_param( 1, IT_BLOCK );
 
    if( pBlock )
    {
@@ -785,10 +785,10 @@ HARBOUR HB_EVAL( void )
       PushSymbol( &symEval );
       Push( pBlock );
 
-      for( w = 2; w <= _pcount(); w++ )
-         Push( _param( w, IT_ANY ) );
+      for( w = 2; w <= hb_pcount(); w++ )
+         Push( hb_param( w, IT_ANY ) );
 
-      Do( _pcount() - 1 );
+      Do( hb_pcount() - 1 );
    }
    else
    {
@@ -1058,7 +1058,7 @@ void ItemRelease( PHB_ITEM pItem )
    {
       if( pItem->value.szText )
       {
-         _xfree( pItem->value.szText );
+         hb_xfree( pItem->value.szText );
          pItem->value.szText = 0;
       }
       pItem->wLength = 0;
@@ -1115,7 +1115,7 @@ void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    if( IS_STRING( pSource ) )
    {
-      pDest->value.szText = ( char * ) _xgrab( pSource->wLength + 1 );
+      pDest->value.szText = ( char * ) hb_xgrab( pSource->wLength + 1 );
       memcpy( pDest->value.szText, pSource->value.szText, pSource->wLength );
       pDest->value.szText[ pSource->wLength ] = 0;
    }
@@ -1401,14 +1401,14 @@ void Plus( void )
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      pItem1->value.szText = (char*)_xrealloc( pItem1->value.szText, pItem1->wLength + pItem2->wLength + 1 );
+      pItem1->value.szText = (char*)hb_xrealloc( pItem1->value.szText, pItem1->wLength + pItem2->wLength + 1 );
       memcpy( pItem1->value.szText + pItem1->wLength,
               pItem2->value.szText, pItem2->wLength );
       pItem1->wLength += pItem2->wLength;
       pItem1->value.szText[ pItem1->wLength ] = 0;
       if( pItem2->value.szText )
       {
-         _xfree( pItem2->value.szText );
+         hb_xfree( pItem2->value.szText );
          pItem2->value.szText = 0;
       }
       StackPop();
@@ -1699,7 +1699,7 @@ void PushStatic( WORD wStatic )
 
 void PushString( char * szText, WORD wLength )
 {
-   char * szTemp = ( char * ) _xgrab( wLength + 1 );
+   char * szTemp = ( char * ) hb_xgrab( wLength + 1 );
 
    memcpy (szTemp, szText, wLength);
    szTemp[ wLength ] = 0;
@@ -1810,7 +1810,7 @@ void StackPop( void )
 
 void StackFree( void )
 {
-   _xfree( stack.pItems );
+   hb_xfree( stack.pItems );
    HB_DEBUG( "StackFree\n" );
 }
 
@@ -1831,7 +1831,7 @@ void StackPush( void )
 
       /* no, make more headroom: */
       /* StackShow(); */
-      stack.pItems = (PHB_ITEM)_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
+      stack.pItems = (PHB_ITEM)hb_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
                                 ( stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
       /* fix possibly invalid pointers: */
@@ -1849,7 +1849,7 @@ void StackPush( void )
 
 void StackInit( void )
 {
-   stack.pItems = ( PHB_ITEM ) _xgrab( sizeof( HB_ITEM ) * STACK_INITHB_ITEMS );
+   stack.pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * STACK_INITHB_ITEMS );
    stack.pBase  = stack.pItems;
    stack.pPos   = stack.pItems;     /* points to the first stack item */
    stack.wItems = STACK_INITHB_ITEMS;
@@ -1953,7 +1953,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
    }
 #endif
 
-   pNewSymbols = ( PSYMBOLS ) _xgrab( sizeof( SYMBOLS ) );
+   pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
    pNewSymbols->pModuleSymbols = pModuleSymbols;
    pNewSymbols->wModuleSymbols = wModuleSymbols;
    pNewSymbols->pNext = 0;
@@ -2006,7 +2006,7 @@ void ReleaseLocalSymbols( void )
    {
       pDestroy = pSymbols;
       pSymbols = pSymbols->pNext;
-      _xfree( pDestroy );
+      hb_xfree( pDestroy );
    }
 }
 
@@ -2058,76 +2058,76 @@ HARBOUR HB_LEN( void )
 {
    PHB_ITEM pItem;
 
-   if( _pcount() )
+   if( hb_pcount() )
    {
-      pItem = _param( 1, IT_ANY );
+      pItem = hb_param( 1, IT_ANY );
 
       switch( pItem->wType )
       {
          case IT_ARRAY:
-              _retnl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen );
+              hb_retnl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen );
               break;
 
          case IT_STRING:
-              _retnl( pItem->wLength );
+              hb_retnl( pItem->wLength );
               break;
 
          default:
-              _retni( 0 );  /* QUESTION: Should we raise an error here ? */
+              hb_retni( 0 );  /* QUESTION: Should we raise an error here ? */
               break;
       }
    }
    else
-      _retni( 0 );  /* QUESTION: Should we raise an error here ? */
+      hb_retni( 0 );  /* QUESTION: Should we raise an error here ? */
 }
 
 HARBOUR HB_EMPTY(void)
 {
-   PHB_ITEM pItem = _param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
    if( pItem )
    {
       switch( pItem->wType & ~IT_BYREF )
       {
          case IT_ARRAY:
-              _retl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen == 0 );
+              hb_retl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen == 0 );
               break;
 
          case IT_STRING:
-              _retl( hb_strempty( _parc( 1 ), _parclen( 1 ) ) );
+              hb_retl( hb_strempty( hb_parc( 1 ), hb_parclen( 1 ) ) );
               break;
 
          case IT_INTEGER:
-              _retl( ! _parni( 1 ) );
+              hb_retl( ! hb_parni( 1 ) );
               break;
 
          case IT_LONG:
-              _retl( ! _parnl( 1 ) );
+              hb_retl( ! hb_parnl( 1 ) );
               break;
 
          case IT_DOUBLE:
-              _retl( ! _parnd( 1 ) );
+              hb_retl( ! hb_parnd( 1 ) );
               break;
 
          case IT_DATE:
-             _retl( atol( _pards( 1 ) ) == 0 );  /* Convert to long */
+             hb_retl( atol( hb_pards( 1 ) ) == 0 );  /* Convert to long */
               break;
 
          case IT_LOGICAL:
-              _retl( ! _parl( 1 ) );
+              hb_retl( ! hb_parl( 1 ) );
               break;
 
          case IT_BLOCK:
-              _retl( FALSE );
+              hb_retl( FALSE );
               break;
 
          default:
-              _retl( TRUE );
+              hb_retl( TRUE );
               break;
       }
    }
    else
-      _retl( TRUE );
+      hb_retl( TRUE );
 }
 
 
@@ -2135,55 +2135,55 @@ HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem;
 
-   if( _pcount() )
+   if( hb_pcount() )
    {
-      pItem = _param( 1, IT_ANY );
+      pItem = hb_param( 1, IT_ANY );
 
       switch( pItem->wType & ~IT_BYREF )
       {
          case IT_ARRAY:
               if( ( ( PBASEARRAY ) pItem->value.pBaseArray )->wClass )
-                 _retc( "O" );  /* it is an object */
+                 hb_retc( "O" );  /* it is an object */
               else
-                 _retc( "A" );
+                 hb_retc( "A" );
               break;
 
          case IT_BLOCK:
-              _retc( "B" );
+              hb_retc( "B" );
               break;
 
          case IT_DATE:
-              _retc( "D" );
+              hb_retc( "D" );
               break;
 
          case IT_LOGICAL:
-              _retc( "L" );
+              hb_retc( "L" );
               break;
 
          case IT_INTEGER:
          case IT_LONG:
          case IT_DOUBLE:
-              _retc( "N" );
+              hb_retc( "N" );
               break;
 
          case IT_STRING:
-              _retc( "C" );
+              hb_retc( "C" );
               break;
 
          case IT_NIL:
          default:
-              _retc( "U" );
+              hb_retc( "U" );
               break;
       }
    }
    else
-      _retc( "U" );
+      hb_retc( "U" );
 }
 
 HARBOUR HB_ERRORBLOCK(void)
 {
    HB_ITEM oldError;
-   PHB_ITEM pNewErrorBlock = _param( 1, IT_BLOCK );
+   PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
 
    oldError.wType = IT_NIL;
    ItemCopy( &oldError, &errorBlock );
@@ -2197,30 +2197,30 @@ HARBOUR HB_ERRORBLOCK(void)
 
 HARBOUR HB_PROCNAME(void)
 {
-   int iLevel = _parni( 1 ) + 1;  /* we are already inside ProcName() */
+   int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
       pBase = stack.pItems + pBase->wBase;
 
    if( ( iLevel == -1 ) )
-      _retc( pBase->value.pSymbol->szName );
+      hb_retc( pBase->value.pSymbol->szName );
    else
-      _retc( "" );
+      hb_retc( "" );
 }
 
 HARBOUR HB_PROCLINE(void)
 {
-   int iLevel  = _parni( 1 ) + 1;  /* we are already inside ProcName() */
+   int iLevel  = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
       pBase = stack.pItems + pBase->wBase;
 
    if( iLevel == -1 )
-      _retni( pBase->wLine );
+      hb_retni( pBase->wLine );
    else
-      _retni( 0 );
+      hb_retni( 0 );
 }
 
 HARBOUR HB___QUIT(void)
@@ -2232,10 +2232,10 @@ HARBOUR HB_ERRORLEVEL(void)
 {
    BYTE bPrevValue = bErrorLevel;
 
-   if( _pcount() > 0 )
+   if( hb_pcount() > 0 )
       /* Only replace the error level if a parameter was passed */
-      bErrorLevel = _parni( 1 );
-   _retni( bPrevValue );
+      bErrorLevel = hb_parni( 1 );
+   hb_retni( bPrevValue );
 }
 
 HARBOUR HB_PCOUNT(void)
@@ -2243,12 +2243,12 @@ HARBOUR HB_PCOUNT(void)
    PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
    WORD  wRet  = pBase->wParams;                /* Skip current function     */
 
-   _retni( wRet );
+   hb_retni( wRet );
 }
 
 HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )         */
 {
-   WORD  wParam = _parni( 1 );                  /* Get parameter            */
+   WORD  wParam = hb_parni( 1 );                  /* Get parameter            */
    PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
                                                 /* Skip function + self     */
 
@@ -2261,6 +2261,6 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_errPutDescription(pError, "Argument error: PVALUE");
       hb_errLaunch(pError);
       hb_errRelease(pError);
-      _ret();
+      hb_ret();
    }
 }

@@ -112,35 +112,35 @@ typedef struct _CODEBLOCK
   long lCounter;      /* numer of references to this codeblock */
 } CODEBLOCK, * PCODEBLOCK;
 
-PHB_ITEM _param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
-char * _parc( WORD wParam, ... );  /* retrieve a string parameter */
-ULONG _parclen( WORD wParam, ... );  /* retrieve a string parameter length */
-char * _pards( WORD wParam, ... ); /* retrieve a date as a string yyyymmdd */
-int _parl( WORD wParam, ... );     /* retrieve a logical parameter as an int */
-double _parnd( WORD wParam, ... ); /* retrieve a numeric parameter as a double */
-int _parni( WORD wParam, ... );    /* retrieve a numeric parameter as a integer */
-long _parnl( WORD wParam, ... );   /* retrieve a numeric parameter as a long */
-WORD _parinfo( WORD wParam );  /* Determine the param count or data type */
-WORD _pcount( void );          /* returns the number of suplied parameters */
-void _ret( void );             /* post a NIL return value */
-void _retc( char * szText );   /* returns a string */
-void _retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
-void _retds( char * szDate );  /* returns a date, must use yyyymmdd format */
-void _retl( int iTrueFalse );  /* returns a logical integer */
-void _retni( int iNumber );    /* returns a integer number */
-void _retnl( long lNumber );   /* returns a long number */
-void _retnd( double dNumber ); /* returns a double */
-void _storc( char * szText, WORD wParam, ... ); /* stores a szString on a variable by reference */
-void _storclen( char * fixText, WORD wLength, WORD wParam, ... ); /* stores a fixed length string on a variable by reference */
-void _stords( char * szDate, WORD wParam, ... ); /* szDate must have yyyymmdd format */
-void _storl( int iLogical, WORD wParam, ... ); /* stores a logical integer on a variable by reference */
-void _storni( int iValue, WORD wParam, ... ); /* stores an integer on a variable by reference */
-void _stornd( double dValue, WORD wParam, ... ); /* stores a double on a variable by reference */
-void _stornl( long lValue, WORD wParam, ... ); /* stores a long on a variable by reference */
+PHB_ITEM hb_param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
+char * hb_parc( WORD wParam, ... );  /* retrieve a string parameter */
+ULONG hb_parclen( WORD wParam, ... );  /* retrieve a string parameter length */
+char * hb_pards( WORD wParam, ... ); /* retrieve a date as a string yyyymmdd */
+int hb_parl( WORD wParam, ... );     /* retrieve a logical parameter as an int */
+double hb_parnd( WORD wParam, ... ); /* retrieve a numeric parameter as a double */
+int hb_parni( WORD wParam, ... );    /* retrieve a numeric parameter as a integer */
+long hb_parnl( WORD wParam, ... );   /* retrieve a numeric parameter as a long */
+WORD hb_parinfo( WORD wParam );  /* Determine the param count or data type */
+WORD hb_pcount( void );          /* returns the number of suplied parameters */
+void hb_ret( void );             /* post a NIL return value */
+void hb_retc( char * szText );   /* returns a string */
+void hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
+void hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
+void hb_retl( int iTrueFalse );  /* returns a logical integer */
+void hb_retni( int iNumber );    /* returns a integer number */
+void hb_retnl( long lNumber );   /* returns a long number */
+void hb_retnd( double dNumber ); /* returns a double */
+void hb_storc( char * szText, WORD wParam, ... ); /* stores a szString on a variable by reference */
+void hb_storclen( char * fixText, WORD wLength, WORD wParam, ... ); /* stores a fixed length string on a variable by reference */
+void hb_stords( char * szDate, WORD wParam, ... ); /* szDate must have yyyymmdd format */
+void hb_storl( int iLogical, WORD wParam, ... ); /* stores a logical integer on a variable by reference */
+void hb_storni( int iValue, WORD wParam, ... ); /* stores an integer on a variable by reference */
+void hb_stornd( double dValue, WORD wParam, ... ); /* stores a double on a variable by reference */
+void hb_stornl( long lValue, WORD wParam, ... ); /* stores a long on a variable by reference */
 
-void * _xgrab( ULONG lSize );   /* allocates memory */
-void * _xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
-void _xfree( void * pMem );    /* frees memory */
+void * hb_xgrab( ULONG lSize );   /* allocates memory */
+void * hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
+void hb_xfree( void * pMem );    /* frees memory */
 void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 void ItemRelease( PHB_ITEM pItem );
 
@@ -165,7 +165,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear );
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
-char * _GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
+char * hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
 
 /* dynamic symbol table management */
 PDYNSYM GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */

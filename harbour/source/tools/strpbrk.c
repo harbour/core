@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:28  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:58  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -67,26 +70,26 @@ HARBOUR HB_GT_STRPBRK( void )
   int p1, p2;
 
   if (ISCHAR(1) && ISCHAR(2)) {
-    string = _parc(1);
-    cset   = _parc(2);
-    l1     = _parclen(1);
-    l2     = _parclen(2);
+    string = hb_parc(1);
+    cset   = hb_parc(2);
+    l1     = hb_parclen(1);
+    l2     = hb_parclen(2);
     p1     = p2 = 0;
 
     do {
       for (p2 = 0; (p2 < l2) && (cset[p2] != string[p1]); ++p2)
          ;
       if (p2 < l2) {
-         _retc(string + p1);
+         hb_retc(string + p1);
          break;
       }
     } while (p1++ < l1);
 
     if (p2 >= l2)
-      _retc((char *) NULL);
+      hb_retc((char *) NULL);
 
   } else {
-    _retc((char *) NULL);               // parameter mismatch - error NullStr
+    hb_retc((char *) NULL);               // parameter mismatch - error NullStr
   }
 }
 

@@ -1,0 +1,38 @@
+#ifndef __EXTEND_API
+#define __EXTEND_API
+
+#include <extend.h>
+
+#define _param    hb_param
+#define _parc     hb_parc
+#define _parclen  hb_parclen
+#define _pards    hb_pards
+#define _parl     hb_parl
+#define _parnd    hb_parnd
+#define _parni    hb_parni
+#define _parnl    hb_parnl
+#define _parinfo  hb_parinfo
+#define _pcount   hb_pcount
+
+#define _ret      hb_ret
+#define _retc     hb_retc
+#define _retclen  hb_retclen
+#define _retds    hb_retds
+#define _retl     hb_retl
+#define _retnd    hb_retnd
+#define _retni    hb_retni
+#define _retnl    hb_retnl
+
+#define _storc    hb_storc
+#define _storlen  hb_storlen
+#define _stords   hb_stords
+#define _storl    hb_storl
+#define _stornd   hb_stornd
+#define _storni   hb_storni
+#define _stornl   hb_stornl
+
+#define _xgrab    hb_xgrab
+#define _xrealloc hb_xrealloc
+#define _xfree    hb_xfree
+
+#endif

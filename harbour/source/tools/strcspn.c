@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:27  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:58  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -65,10 +68,10 @@ HARBOUR HB_GT_STRCSPN( void )
   int  p1, p2;
 
   if (ISCHAR(1) && ISCHAR(2)) {
-    string = _parc(1);
-    cset   = _parc(2);
-    l1     = _parclen(1);
-    l2     = _parclen(2);
+    string = hb_parc(1);
+    cset   = hb_parc(2);
+    l1     = hb_parclen(1);
+    l2     = hb_parclen(2);
 
     for (p1 = 0; p1 < l1; ++p1) {
       for (p2 = 0; (p2 < l2) && (string[p1] != cset[p2]); ++p2)
@@ -77,9 +80,9 @@ HARBOUR HB_GT_STRCSPN( void )
       if (p2 < l2)
          break;
     }
-    _retni(p1);
+    hb_retni(p1);
   } else {
-    _retni(-1);                     // parameter mismatch - error -1
+    hb_retni(-1);                     // parameter mismatch - error -1
   }
 }
 

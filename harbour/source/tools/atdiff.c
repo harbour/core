@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:24  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:55  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -67,9 +70,9 @@ HARBOUR HB_GT_ATDIFF( void )
   int pos, len;
 
   if (ISCHAR(1) && ISCHAR(2)) {
-    s1  = _parc(1);
-    s2  = _parc(2);
-    len = _parclen(2);
+    s1  = hb_parc(1);
+    s2  = hb_parc(2);
+    len = hb_parclen(2);
 
     /*
        loop through comparing both strings
@@ -82,10 +85,10 @@ HARBOUR HB_GT_ATDIFF( void )
       pos++;
 
     if (pos > len)                  // strings match exactly!!!
-      _retni(0);
+      hb_retni(0);
     else
-      _retni(pos);
+      hb_retni(pos);
   } else {
-    _retni(-1);                     // parameter mismatch - error -1
+    hb_retni(-1);                     // parameter mismatch - error -1
   }
 }

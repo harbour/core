@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:25  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:56  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -64,9 +67,9 @@ HARBOUR HB_GT_CHRCOUNT( void )
   int count, pos2, len;
 
   if (ISCHAR(1) && ISCHAR(2)) {
-    s1  = _parc(1);
-    s2  = _parc(2);
-    len = _parclen(2);
+    s1  = hb_parc(1);
+    s2  = hb_parc(2);
+    len = hb_parclen(2);
 
     /* loop through s2 matching passed character (s1) with
        each character of s1 */
@@ -74,8 +77,8 @@ HARBOUR HB_GT_CHRCOUNT( void )
       if (*s1 == *s2)               // character matches s1
         count++;                    // increment counter
 
-    _retni(count);                  // return result
+    hb_retni(count);                  // return result
   } else {
-    _retni(-1);                     // parameter mismatch - error -1
+    hb_retni(-1);                     // parameter mismatch - error -1
   }
 }

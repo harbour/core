@@ -86,14 +86,14 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
 
-#define _PCOUNT            _parinfo( 0 )
-#define ISCHAR( n )        _param( n, IT_STRING )
-#define ISNUM( n )         _param( n, IT_NUMERIC )
-#define ISLOG( n )         _param( n, IT_LOGICAL )
-#define ISDATE( n )        _param( n, IT_DATE )
-/* #define ISMEMO( n )     _param( n, IT_MEMO ) TODO */
-#define ISBYREF( n )       _param( n, IT_BYREF )
-#define ISARRAY( n )       _param( n, IT_ARRAY )
-#define ALENGTH( n )       _parinfa( n, 0 ) /* TODO! */
+#define _PCOUNT            hb_parinfo( 0 )
+#define ISCHAR( n )        hb_param( n, IT_STRING )
+#define ISNUM( n )         hb_param( n, IT_NUMERIC )
+#define ISLOG( n )         hb_param( n, IT_LOGICAL )
+#define ISDATE( n )        hb_param( n, IT_DATE )
+/* #define ISMEMO( n )     hb_param( n, IT_MEMO ) TODO */
+#define ISBYREF( n )       hb_param( n, IT_BYREF )
+#define ISARRAY( n )       hb_param( n, IT_ARRAY )
+#define ALENGTH( n )       hb_parinfa( n, 0 ) /* TODO! */
 
 #endif

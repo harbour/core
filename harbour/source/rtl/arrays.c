@@ -57,7 +57,7 @@ void Arrays__InitSymbols( void )
 
 void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
-   PBASEARRAY pBaseArray = ( PBASEARRAY ) _xgrab( sizeof( BASEARRAY ) );
+   PBASEARRAY pBaseArray = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
    ULONG ul;
 
    ItemRelease( pItem );
@@ -65,7 +65,7 @@ void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
    pItem->wType = IT_ARRAY;
 
    if( ulLen )
-          pBaseArray->pItems = ( PHB_ITEM ) _xgrab( sizeof( HB_ITEM ) * ulLen );
+          pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * ulLen );
    else
           pBaseArray->pItems = 0;
 
@@ -248,7 +248,7 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
 
       if( ! pBaseArray->ulLen )
         {
-          pBaseArray->pItems = ( PHB_ITEM ) _xgrab( ulLen * sizeof( HB_ITEM ) );
+          pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
           for ( ul = 0; ul < ulLen; ul ++ )
             ( pBaseArray->pItems + ul )->wType = IT_NIL;
         }
@@ -256,7 +256,7 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
         {
           if( pBaseArray->ulLen < ulLen )
             {
-              pBaseArray->pItems = ( PHB_ITEM )_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+              pBaseArray->pItems = ( PHB_ITEM )hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
 
               /* set value for new items */
               for( ul = pBaseArray->ulLen; ul < ulLen; ul++ )
@@ -268,7 +268,7 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
               for( ul = ulLen; ul < pBaseArray->ulLen; ul++ )
                 ItemRelease( pBaseArray->pItems + ul );
 
-              pBaseArray->pItems = ( PHB_ITEM )_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+              pBaseArray->pItems = ( PHB_ITEM )hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
             }
         }
       pBaseArray->ulLen = ulLen;
@@ -508,9 +508,9 @@ void hb_arrayRelease( PHB_ITEM pArray )
             ItemRelease( pBaseArray->pItems + ul );
 
          if( pBaseArray->pItems )
-            _xfree( pBaseArray->pItems );
+            hb_xfree( pBaseArray->pItems );
       }
-      _xfree( pBaseArray );
+      hb_xfree( pBaseArray );
 
       pArray->wType = IT_NIL;
       pArray->value.pBaseArray = NULL;
@@ -611,13 +611,13 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
  */
 HARBOUR HB_ARRAY( void )
 {
-  hb_arrayNew( &stack.Return, _parnl( 1 ) );
+  hb_arrayNew( &stack.Return, hb_parnl( 1 ) );
 }
 
 HARBOUR HB_AADD( void )
 {
-  PHB_ITEM pArray = _param( 1, IT_ARRAY );
-  PHB_ITEM pValue = _param( 2, IT_ANY );
+  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+  PHB_ITEM pValue = hb_param( 2, IT_ANY );
 
   if ( pArray )
     hb_arrayAdd( pArray, pValue );
@@ -627,116 +627,116 @@ HARBOUR HB_AADD( void )
 
 HARBOUR HB_ASIZE( void )
 {
-  PHB_ITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
     {
-      hb_arraySize( pArray, _parnl( 2 ) );
+      hb_arraySize( pArray, hb_parnl( 2 ) );
       ItemCopy( &stack.Return, pArray );  /* ASize() returns the array itself */
     }
   else
-    _ret();    /* QUESTION: Should we raise an error here ? */
+    hb_ret();    /* QUESTION: Should we raise an error here ? */
 }
 
 HARBOUR HB_ATAIL( void )
 {
-  PHB_ITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
     hb_arrayLast( pArray, &stack.Return );
   else
-    _ret();  /* QUESTION: Should we raise an error here ? */
+    hb_ret();  /* QUESTION: Should we raise an error here ? */
 }
 
 HARBOUR HB_AINS( void )
 {
-  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
     {
-      hb_arrayIns( pArray, _parnl( 2 ) );
+      hb_arrayIns( pArray, hb_parnl( 2 ) );
       ItemCopy( &stack.Return, pArray );  /* AIns() returns the array itself */
     }
   else
-    _ret();
+    hb_ret();
 }
 
 HARBOUR HB_ADEL( void )
 {
-  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
     {
-      hb_arrayDel( pArray, _parnl( 2 ) );
+      hb_arrayDel( pArray, hb_parnl( 2 ) );
       ItemCopy( &stack.Return, pArray ); /* ADel() returns the array itself */
     }
   else
-    _ret();
+    hb_ret();
 }
 
 HARBOUR HB_AFILL( void )
 {
-  PHB_ITEM pArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray  = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
     {
-      hb_arrayFill( pArray, _param( 2, IT_ANY ), _parnl( 3 ), _parnl( 4 ) );
+      hb_arrayFill( pArray, hb_param( 2, IT_ANY ), hb_parnl( 3 ), hb_parnl( 4 ) );
       ItemCopy( &stack.Return, pArray ); /* AFill() returns the array itself */
     }
   else
-    _ret();
+    hb_ret();
 }
 
 HARBOUR HB_ASCAN( void )
 {
-  PHB_ITEM pArray = _param( 1, IT_ARRAY );
+  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
   if ( pArray )
-    _retnl( hb_arrayScan( pArray, _param( 2, IT_ANY ), _parnl( 3 ), _parnl( 4 ) ) );
+    hb_retnl( hb_arrayScan( pArray, hb_param( 2, IT_ANY ), hb_parnl( 3 ), hb_parnl( 4 ) ) );
   else
-    _retnl( 0 );
+    hb_retnl( 0 );
 }
 
 HARBOUR HB_AEVAL( void )
 {
-  PHB_ITEM pArray = _param( 1, IT_ARRAY );
-  PHB_ITEM bBlock = _param( 2, IT_BLOCK );
+  PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+  PHB_ITEM bBlock = hb_param( 2, IT_BLOCK );
 
   if ( pArray )
     {
-      hb_arrayEval( pArray, bBlock, _parnl( 3 ), _parnl( 4 ) );
+      hb_arrayEval( pArray, bBlock, hb_parnl( 3 ), hb_parnl( 4 ) );
       ItemCopy( &stack.Return, pArray ); /* AEval() returns the array itself */
     }
   else
-    _ret();
+    hb_ret();
 }
 
 HARBOUR HB_ACOPY( void )
 {
-  PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
-  PHB_ITEM pDstArray  = _param( 2, IT_ARRAY );
+  PHB_ITEM pSrcArray  = hb_param( 1, IT_ARRAY );
+  PHB_ITEM pDstArray  = hb_param( 2, IT_ARRAY );
 
   if ( pSrcArray && pDstArray )
     {
-      hb_arrayCopy( pSrcArray, pDstArray, _parnl( 3 ), _parnl( 4 ), _parnl( 5 ) );
+      hb_arrayCopy( pSrcArray, pDstArray, hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ) );
       ItemCopy( &stack.Return, pDstArray ); /* ACopy() returns the target array */
     }
   else
-    _ret();
+    hb_ret();
 }
 
 HARBOUR HB_ACLONE( void )
 {
-  PHB_ITEM pSrcArray  = _param( 1, IT_ARRAY );
+  PHB_ITEM pSrcArray  = hb_param( 1, IT_ARRAY );
 
   if ( pSrcArray )
     {
       PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
       ItemCopy( &stack.Return, pDstArray ); /* AClone() returns the new array */
       ItemRelease( pDstArray );
-      _xfree( pDstArray );
+      hb_xfree( pDstArray );
     }
   else
-    _ret();
+    hb_ret();
 }
 

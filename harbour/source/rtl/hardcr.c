@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 #include <extend.h>
 #include <ctype.h>
 
@@ -32,14 +35,14 @@ char *hb_hardcr( char *string )
 
 HARBOUR HB_HARDCR( void )
 {
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
-      PHB_ITEM pItem = _param(1, IT_STRING );
+      PHB_ITEM pItem = hb_param(1, IT_STRING );
 
       if( pItem )
       {
          if( IS_STRING( pItem ) )
-            _retc( hb_hardcr( pItem->value.szText ) );
+            hb_retc( hb_hardcr( pItem->value.szText ) );
       }
    }
 }

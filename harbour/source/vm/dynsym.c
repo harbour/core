@@ -57,9 +57,9 @@ static WORD hb_strgreater( char * sz1, char * sz2 )
 
 PSYMBOL NewSymbol( char * szName )      /* Create a new symbol */
 {
-   PSYMBOL pSymbol = ( PSYMBOL ) _xgrab( sizeof( SYMBOL ) );
+   PSYMBOL pSymbol = ( PSYMBOL ) hb_xgrab( sizeof( SYMBOL ) );
 
-   pSymbol->szName = ( char * ) _xgrab( strlen( szName ) + 1 );
+   pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
    pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
    strcpy( pSymbol->szName, szName );
    pSymbol->pFunPtr = NULL;
@@ -89,7 +89,7 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
                             /* *<1>* Remember we already got this one */
    else
    {                        /* We want more symbols ! */
-      pDynItems = ( PDYNHB_ITEM ) _xrealloc( pDynItems, ( wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
+      pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( pDynItems, ( wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
 
       if( wClosestDynSym <= wDynSymbols )   /* Closest < current !! */
       {                                     /* Here it goes :-) */
@@ -97,7 +97,7 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
             memcpy( &pDynItems[ wDynSymbols - w ],
                     &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
       }                                     /* Insert element in array */
-      pDynSym = ( PDYNSYM ) _xgrab( sizeof( DYNSYM ) );
+      pDynSym = ( PDYNSYM ) hb_xgrab( sizeof( DYNSYM ) );
       pDynItems[ wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }
 
@@ -125,7 +125,7 @@ static void hb_strupr( char * szText )
 PDYNSYM GetDynSym( char * szName )  /* finds and creates a symbol if not found */
 {
    PDYNSYM pDynSym;
-   char * szUprName = ( char * ) _xgrab( strlen( szName ) + 1 );
+   char * szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
 
    strcpy( szUprName, szName ); /* make a copy as we may get a const string */
    hb_strupr( szUprName );      /* turn it uppercase */
@@ -137,7 +137,7 @@ PDYNSYM GetDynSym( char * szName )  /* finds and creates a symbol if not found *
    if( ! pDynSym )       /* Does it exists ? */
       pDynSym = NewDynSym( NewSymbol( szUprName ) );   /* Make new symbol */
 
-   _xfree( szUprName );                                /* release memory */
+   hb_xfree( szUprName );                                /* release memory */
 
    return pDynSym;
 }
@@ -148,8 +148,8 @@ PDYNSYM FindDynSym( char * szName )
 
    if( ! pDynItems )
    {
-      pDynItems = ( PDYNHB_ITEM ) _xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
-      pDynItems->pDynSym = ( PDYNSYM ) _xgrab( sizeof( DYNSYM ) );
+      pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
+      pDynItems->pDynSym = ( PDYNSYM ) hb_xgrab( sizeof( DYNSYM ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
       pDynItems->pDynSym->wMemvar = 0;
       pDynItems->pDynSym->pSymbol = 0;
@@ -208,29 +208,29 @@ void ReleaseDynamicSymbols( void )
       /* it is a allocated symbol ? */
       if( ( pDynItems + w )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
       {
-         _xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
-         _xfree( ( pDynItems + w )->pDynSym->pSymbol );
+         hb_xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
+         hb_xfree( ( pDynItems + w )->pDynSym->pSymbol );
       }
 
-      _xfree( ( pDynItems + w )->pDynSym );
+      hb_xfree( ( pDynItems + w )->pDynSym );
    }
 
-   _xfree( pDynItems );
+   hb_xfree( pDynItems );
 }
 
 HARBOUR HB_DYNSYMNAME(void)            /* Get name of symbol */
 {                               /* cSymbol = DynSymName( dsIndex ) */
-   _retc( pDynItems[ _parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
+   hb_retc( pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
 }
 
 HARBOUR HB_DYNSYMBOLS(void)            /* How much symbols do we have */
 {                               /* dsCount = DynSymbols() */
-   _retnl( wDynSymbols );
+   hb_retnl( wDynSymbols );
 }
 
 HARBOUR HB_GETDYNSYM(void)         /* Gimme index number of symbol */
                             /* dsIndex = GetDynSym( cSymbol ) */
 {
-   _retnl( ( LONG ) GetDynSym( _parc( 1 ) ) );
+   hb_retnl( ( LONG ) GetDynSym( hb_parc( 1 ) ) );
 }
 

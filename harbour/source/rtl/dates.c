@@ -140,7 +140,7 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 
 HARBOUR HB_CTOD( void )
 {
-   char * szDate = _parc( 1 );
+   char * szDate = hb_parc( 1 );
    int d_value = 0, m_value = 0, y_value = 0;
    int d_pos = 0, m_pos = 0, y_pos = 0;
    int count, digit, size = strlen (hb_set.HB_SET_DATEFORMAT);
@@ -215,7 +215,7 @@ HARBOUR HB_CTOD( void )
       }
    }
    sprintf (szDateFormat, "%04i%02i%02i", y_value, m_value, d_value);
-   _retds( szDateFormat );
+   hb_retds( szDateFormat );
 }
 
 char * hb_dtoc (char * szDate, char * szDateFormat)
@@ -371,9 +371,9 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
 
 HARBOUR HB_DTOC( void )
 {
-   char * szDate = _pards( 1 );
+   char * szDate = hb_pards( 1 );
    char szDateFormat[ 11 ];
-   _retc( hb_dtoc (szDate, szDateFormat) );
+   hb_retc( hb_dtoc (szDate, szDateFormat) );
 }
 
 /* QUESTION: Should we drop error checkings to make it faster ? */
@@ -383,12 +383,12 @@ HARBOUR HB_DTOC( void )
 HARBOUR HB_DTOS( void )
 {
 #ifndef _OPTIMIZE_DTOS
-   if( _pcount() == 1 )
+   if( hb_pcount() == 1 )
    {
       if( ISDATE( 1 ) )
       {
 #endif
-         _retc( _pards( 1 ) );
+         hb_retc( hb_pards( 1 ) );
 #ifndef _OPTIMIZE_DTOS
       }
       else
@@ -412,18 +412,18 @@ HARBOUR HB_DTOS( void )
 
 HARBOUR HB_STOD( void )
 {
-   _retds((ISCHAR(1) && _parclen(1) == 8) ? _parc(1) : "        ");
+   hb_retds((ISCHAR(1) && hb_parclen(1) == 8) ? hb_parc(1) : "        ");
 }
 
 HARBOUR HB_DAY( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-      _retni( lDay );
+      hb_retni( lDay );
       stack.Return.wLength = 3;
    }
    else
@@ -437,13 +437,13 @@ HARBOUR HB_DAY( void )
 
 HARBOUR HB_MONTH( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-      _retni( lMonth );
+      hb_retni( lMonth );
       stack.Return.wLength = 3;
    }
    else
@@ -457,13 +457,13 @@ HARBOUR HB_MONTH( void )
 
 HARBOUR HB_YEAR( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-      _retni( lYear );
+      hb_retni( lYear );
       stack.Return.wLength = 5;
    }
    else
@@ -477,7 +477,7 @@ HARBOUR HB_YEAR( void )
 
 HARBOUR HB_TIME( void )
 {
-   if( _pcount() == 0 )
+   if( hb_pcount() == 0 )
    {
       time_t t;
       struct tm *oTime;
@@ -487,7 +487,7 @@ HARBOUR HB_TIME( void )
       oTime = localtime(&t);
       sprintf(szTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min,
 oTime->tm_sec);
-      _retclen(szTime, 8);
+      hb_retclen(szTime, 8);
    }
    else
    {
@@ -501,7 +501,7 @@ oTime->tm_sec);
 
 HARBOUR HB_DATE( void )
 {
-   if( _pcount() == 0 )
+   if( hb_pcount() == 0 )
    {
       time_t t;
       struct tm *oTime;
@@ -511,7 +511,7 @@ HARBOUR HB_DATE( void )
       oTime = localtime(&t);
       sprintf(szTime, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1,
 oTime->tm_mday);
-      _retds(szTime);
+      hb_retds(szTime);
    }
    else
    {
@@ -538,7 +538,7 @@ long hb_dow( long d, long m, long y )
 
 HARBOUR HB_DOW( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
    if( pDate )
@@ -546,10 +546,10 @@ HARBOUR HB_DOW( void )
       if( pDate->value.lDate )
       {
          hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-         _retni( hb_dow( lDay, lMonth, lYear ) );
+         hb_retni( hb_dow( lDay, lMonth, lYear ) );
       }
       else
-         _retni( 0 );
+         hb_retni( 0 );
       stack.Return.wLength = 3;
    }
    else
@@ -563,15 +563,15 @@ HARBOUR HB_DOW( void )
 
 HARBOUR HB_CMONTH( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
-   if( _pcount() )
+   if( hb_pcount() )
    {
      if( pDate )
      {
         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-        _retc( hb_cmonth( lMonth ) );
+        hb_retc( hb_cmonth( lMonth ) );
      }
      else
      {
@@ -593,15 +593,15 @@ HARBOUR HB_CMONTH( void )
 
 HARBOUR HB_CDOW( void )
 {
-   PHB_ITEM pDate = _param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;
 
-   if( _pcount() )
+   if( hb_pcount() )
    {
      if( pDate )
      {
         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-        _retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+        hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
      }
      else
      {
@@ -623,8 +623,8 @@ HARBOUR HB_CDOW( void )
 
 HARBOUR HB_SECONDS( void )
 {
-   if( _pcount() == 0 )
-      _retnd( hb__seconds() );
+   if( hb_pcount() == 0 )
+      hb_retnd( hb__seconds() );
    else
    {
       /* QUESTION: Clipper catches this at compile time! */

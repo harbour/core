@@ -156,7 +156,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
    Push( pError );
    Do( 1 );
 
-   return stack.Return.value.iNumber;  /* TODO: _parnl( -1 ) */
+   return stack.Return.value.iNumber;  /* TODO: hb_parnl( -1 ) */
 }
 
 void hb_errRelease( PHB_ITEM pError )

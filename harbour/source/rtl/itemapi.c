@@ -7,11 +7,6 @@
 #include <ctoharb.h>
 #include <set.h>
 
-/* TODO: Remove these when the extend system has been modified */
-#define hb_xgrab _xgrab
-#define hb_xfree _xfree
-#define hb_param _param
-
 extern STACK stack;
 extern SYMBOL symEval;
 
@@ -193,7 +188,7 @@ char *hb_itemGetC( PHB_ITEM pItem )
 {
    if( pItem && IS_STRING( pItem ) )
    {
-      char *szResult = (char *)_xgrab(pItem->wLength + 1);
+      char *szResult = (char *) hb_xgrab(pItem->wLength + 1);
       memcpy(szResult, pItem->value.szText, pItem->wLength);
       szResult[pItem->wLength] = 0;
 

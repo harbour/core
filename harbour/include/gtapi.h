@@ -34,44 +34,44 @@
  *    - Zortech C/C++ (16-bit) for DOS 3.0r4
 */
 
-#include "types.h"
+#ifndef _GTAPI_H
+#define _GTAPI_H
 
-#ifndef _GT_API
-#define _GT_API
+#include <extend.h>
 
 /* Public interface. These should never change, only be added to. */
 
-void _gtInit(void);
-int _gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
-int _gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int _gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
-int _gtColorSelect(USHORT uiColorIndex);
-int _gtDispBegin(void);
-USHORT _gtDispCount(void);
-int _gtDispEnd(void);
-int _gtGetColorStr(char * fpColorString);
-int _gtGetCursor(USHORT * uipCursorShape);
-int _gtGetPos(USHORT * uipRow, USHORT * uipCol);
-BOOL _gtIsColor(void);
-USHORT _gtMaxCol(void);
-USHORT _gtMaxRow(void);
-int _gtPostExt(void);
-int _gtPreExt(void);
-int _gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
-int _gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
-int _gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int _gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
-int _gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
-int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
-int _gtSetBlink(BOOL bBlink);
-int _gtSetColorStr(char * fpColorString);
-int _gtSetCursor(USHORT uiCursorShape);
-int _gtSetMode(USHORT uiRows, USHORT uiCols);
-int _gtSetPos(USHORT uiRow, USHORT uiCol);
-int _gtSetSnowFlag(BOOL bNoSnow);
-int _gtWrite(char * fpStr, USHORT uiLen);
-int _gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
-int _gtWriteCon(char * fpStr, USHORT uiLen);
+void hb_gtInit(void);
+int hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
+int hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+int hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
+int hb_gtColorSelect(USHORT uiColorIndex);
+int hb_gtDispBegin(void);
+USHORT hb_gtDispCount(void);
+int hb_gtDispEnd(void);
+int hb_gtGetColorStr(char * fpColorString);
+int hb_gtGetCursor(USHORT * uipCursorShape);
+int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol);
+BOOL hb_gtIsColor(void);
+USHORT hb_gtMaxCol(void);
+USHORT hb_gtMaxRow(void);
+int hb_gtPostExt(void);
+int hb_gtPreExt(void);
+int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize);
+int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount);
+int hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff);
+int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth);
+int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
+int hb_gtSetBlink(BOOL bBlink);
+int hb_gtSetColorStr(char * fpColorString);
+int hb_gtSetCursor(USHORT uiCursorShape);
+int hb_gtSetMode(USHORT uiRows, USHORT uiCols);
+int hb_gtSetPos(USHORT uiRow, USHORT uiCol);
+int hb_gtSetSnowFlag(BOOL bNoSnow);
+int hb_gtWrite(char * fpStr, USHORT uiLen);
+int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen);
+int hb_gtWriteCon(char * fpStr, USHORT uiLen);
 
 /* maximum length of color string */
 #define CLR_STRLEN      64
@@ -138,4 +138,4 @@ void gtPuts(char x, char y, char attr, char *str, int len);
 void gtGetText(char x1, char y1, char x2, char y2, char *dest);
 void gtPutText(char x1, char y1, char x2, char y2, char *srce);
 
-#endif /* _GT_API */
+#endif /* _GTAPI_H */

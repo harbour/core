@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.4  1999/06/17 07:09:24  dholm
+ * See ChangeLog entry 19990617-02:00 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.3  1999/06/12 00:21:54  gdiet
  * ChangeLogTag:Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  *
@@ -57,12 +60,12 @@ HARBOUR HB_GT_ASCIISUM( void )
    int  len, i;
 	long ascSum = 0;
 
-	str = _parc(1);
-   len = _parclen(1);
+	str = hb_parc(1);
+   len = hb_parclen(1);
 
    for (i = 0; i <= len; i++,str++) {
       ascSum += *str;
 	}
 
-   _retnl(ascSum);
+   hb_retnl(ascSum);
 }

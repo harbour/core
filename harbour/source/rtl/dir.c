@@ -98,8 +98,8 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 HARBOUR HB_DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
-   PHB_ITEM arg1_it = _param(1,IT_STRING);
-   PHB_ITEM arg2_it = _param(2,IT_STRING);
+   PHB_ITEM arg1_it = hb_param(1,IT_STRING);
+   PHB_ITEM arg2_it = hb_param(2,IT_STRING);
 
    extern STACK  stack;
 
@@ -140,7 +140,7 @@ HARBOUR HB_DIRECTORY( void )
 
    if( arg1_it )
    {
-      strcpy(string, _parc(1));
+      strcpy(string, hb_parc(1));
       pos = strrchr(string,PATH_SEPARATOR);
       if( pos )
       {
@@ -263,7 +263,7 @@ HARBOUR HB_DIRECTORY( void )
 	 aatrib[0] = '\0';
 #else
          /* TODO: seems to not clear on root entries ? */
-         attrib = _chmod(fullfile,0);
+         attrib = hb_chmod(fullfile,0);
          if (attrib & FA_ARCH)
             strcat(aatrib,"A");
          if (attrib & FA_DIREC)
@@ -280,9 +280,9 @@ HARBOUR HB_DIRECTORY( void )
 
          /* TODO: attribute match rtn */
          pos = string;
-         if( arg2_it && _parclen(2) >= 1)
+         if( arg2_it && hb_parclen(2) >= 1)
          {
-            strcpy(string, _parc(2));
+            strcpy(string, hb_parc(2));
             while (*pos != '\0') *pos = toupper(*pos);
             pos = strchr(string,*aatrib);
          }

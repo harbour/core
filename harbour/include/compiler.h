@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 /* compiler related declarations */
 
 typedef struct _VAR        /* locals, static, public variables support */

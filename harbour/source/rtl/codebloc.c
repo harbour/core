@@ -29,7 +29,7 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
   PCODEBLOCK pCBlock;
   WORD wVars;
 
-  pCBlock =( PCODEBLOCK ) _xgrab( sizeof(CODEBLOCK) );
+  pCBlock =( PCODEBLOCK ) hb_xgrab( sizeof(CODEBLOCK) );
 
   /* Check the number of referenced local variables
    */
@@ -46,7 +46,7 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
      * all references will be replaced with current values of
      * these variables
      */
-    pCBlock->pItems =(PHB_ITEM) _xgrab( sizeof(HB_ITEM) * wVars );
+    pCBlock->pItems =(PHB_ITEM) hb_xgrab( sizeof(HB_ITEM) * wVars );
 
     while( wVars-- )
     {
@@ -103,12 +103,12 @@ void  CodeblockDelete( PCODEBLOCK pCBlock )
     {
       while( w < pCBlock->wLocals )
         ItemRelease( &pCBlock->pItems[ w++ ] );
-      _xfree( pCBlock->pItems );
+      hb_xfree( pCBlock->pItems );
     }
 
     /* free space allocated for a CODEBLOCK structure
     */
-    _xfree( pCBlock );
+    hb_xfree( pCBlock );
     #ifdef CODEBLOCKDEBUG
       printf( "codeblock deleted (%li) %lx\n", pCBlock->lCounter, pCBlock );
     #endif

@@ -6,15 +6,13 @@
  *  GTAPI.C: Generic Terminal for Harbour
  */
 
-#include <extend.h>
 #include <gtapi.h>
 
 /* TODO: functions not implemented yet
-int _gtPostExt(void);
-int _gtPreExt(void);
-int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols);
-int _gtSetBlink(BOOL bBlink);
-int _gtSetMode(USHORT uiRows, USHORT uiCols);
+int hb_gtPostExt(void);
+int hb_gtPreExt(void);
+int hb_gtSetBlink(BOOL bBlink);
+int hb_gtSetMode(USHORT uiRows, USHORT uiCols);
 */
 
 static USHORT s_uiCurrentRow = 0;
@@ -25,72 +23,72 @@ static char   s_szColorStr[CLR_STRLEN] = {"W/N, N/W, N/N, N/N, N/W"};
 
 /* gt API functions */
 
-void _gtInit(void)
+void hb_gtInit(void)
 {
     gtInit();
 }
 
-int _gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString)
+int hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString)
 {
     int iCount;
 
-    if(uiTop > _gtMaxRow() || uiBottom > _gtMaxRow() ||
-        uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
+    if(uiTop > hb_gtMaxRow() || uiBottom > hb_gtMaxRow() ||
+        uiLeft > hb_gtMaxCol() || uiRight > hb_gtMaxCol() ||
         uiTop > uiBottom || uiLeft > uiRight)
     {
         return(1);
     }
 
-    _gtDispBegin();
+    hb_gtDispBegin();
 
     /* upper left corner */
-    _gtSetPos(uiTop, uiLeft);
-    _gtWrite(&fpBoxString[0], 1);
+    hb_gtSetPos(uiTop, uiLeft);
+    hb_gtWrite(&fpBoxString[0], 1);
 
     /* top line */
-    _gtRepChar(uiTop, uiLeft+1, fpBoxString[1], uiRight-uiLeft-1);
+    hb_gtRepChar(uiTop, uiLeft+1, fpBoxString[1], uiRight-uiLeft-1);
 
     /* upper right corner */
-    _gtSetPos(uiTop, uiRight);
-    _gtWrite(&fpBoxString[2], 1);
+    hb_gtSetPos(uiTop, uiRight);
+    hb_gtWrite(&fpBoxString[2], 1);
 
     /* left and right sides */
     for(iCount = uiTop + 1; iCount<uiBottom; iCount++)
     {
-        _gtSetPos(iCount, uiLeft);
-        _gtWrite(&fpBoxString[3], 1);
+        hb_gtSetPos(iCount, uiLeft);
+        hb_gtWrite(&fpBoxString[3], 1);
 
-        _gtSetPos(iCount, uiRight);
-        _gtWrite(&fpBoxString[3], 1);
+        hb_gtSetPos(iCount, uiRight);
+        hb_gtWrite(&fpBoxString[3], 1);
     }
 
     /* left bottom corner */
-    _gtSetPos(uiBottom, uiLeft);
-    _gtWrite(&fpBoxString[6], 1);
+    hb_gtSetPos(uiBottom, uiLeft);
+    hb_gtWrite(&fpBoxString[6], 1);
 
     /* bottom line */
-    _gtRepChar(uiBottom, uiLeft+1, fpBoxString[5], uiRight-uiLeft-1);
+    hb_gtRepChar(uiBottom, uiLeft+1, fpBoxString[5], uiRight-uiLeft-1);
 
     /* right bottom corner */
-    _gtSetPos(uiBottom, uiRight);
-    _gtWrite(&fpBoxString[4], 1);
+    hb_gtSetPos(uiBottom, uiRight);
+    hb_gtWrite(&fpBoxString[4], 1);
 
-    _gtDispEnd();
+    hb_gtDispEnd();
 
     return(0);
 }
 
-int _gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
+int hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
 {
-    return(_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_DOUBLE));
+    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_DOUBLE));
 }
 
-int _gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
+int hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
 {
-    return(_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_SINGLE));
+    return(hb_gtBox(uiTop, uiLeft, uiBottom, uiRight, _B_SINGLE));
 }
 
-int _gtColorSelect(USHORT uiColorIndex)
+int hb_gtColorSelect(USHORT uiColorIndex)
 {
     if(uiColorIndex > _CLR_LASTCOLOR)
     {
@@ -104,26 +102,26 @@ int _gtColorSelect(USHORT uiColorIndex)
     return(0);
 }
 
-int _gtDispBegin(void)
+int hb_gtDispBegin(void)
 {
     /* TODO: need to add buffering here */
     s_uiDispCount++;
     return(0);
 }
 
-USHORT _gtDispCount(void)
+USHORT hb_gtDispCount(void)
 {
     return(s_uiDispCount);
 }
 
-int _gtDispEnd(void)
+int hb_gtDispEnd(void)
 {
     /* TODO: need to add buffering here */
     s_uiDispCount--;
     return(0);
 }
 
-int _gtGetColorStr(char * fpColorString)
+int hb_gtGetColorStr(char * fpColorString)
 {
     int iDestLen = strlen(fpColorString);
     int iSrcLen = strlen(s_szColorStr);
@@ -140,7 +138,7 @@ int _gtGetColorStr(char * fpColorString)
     return(0);
 }
 
-int _gtGetCursor(USHORT * uipCursorShape)
+int hb_gtGetCursor(USHORT * uipCursorShape)
 {
     int i=gtGetCursorStyle();
     int rc=0;
@@ -157,7 +155,7 @@ int _gtGetCursor(USHORT * uipCursorShape)
     return(rc);
 }
 
-int _gtGetPos(USHORT * uipRow, USHORT * uipCol)
+int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol)
 {
     *uipRow = s_uiCurrentRow;
     *uipCol = s_uiCurrentCol;
@@ -165,36 +163,36 @@ int _gtGetPos(USHORT * uipRow, USHORT * uipCol)
     return(0);
 }
 
-BOOL _gtIsColor(void)
+BOOL hb_gtIsColor(void)
 {
     /* TODO: need to call something to do this instead of returning TRUE */
     return(TRUE);
 }
 
-USHORT _gtMaxCol(void)
+USHORT hb_gtMaxCol(void)
 {
     return(gtGetScreenWidth() - 1);
 }
 
-USHORT _gtMaxRow(void)
+USHORT hb_gtMaxRow(void)
 {
     return(gtGetScreenHeight() - 1);
 }
 
-int _gtPostExt(void)
+int hb_gtPostExt(void)
 {
     return(0);
 }
 
-int _gtPreExt(void)
+int hb_gtPreExt(void)
 {
     return(0);
 }
 
-int _gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
+int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
-    if(uiTop > _gtMaxRow() || uiBottom > _gtMaxRow() ||
-        uiLeft > _gtMaxCol() || uiRight > _gtMaxCol() ||
+    if(uiTop > hb_gtMaxRow() || uiBottom > hb_gtMaxRow() ||
+        uiLeft > hb_gtMaxCol() || uiRight > hb_gtMaxCol() ||
         uiTop > uiBottom || uiLeft > uiRight)
     {
         return(1);
@@ -205,33 +203,33 @@ int _gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, US
     return(0);
 }
 
-int _gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
+int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
 {
     int rc;
     char buff[255];
 
     memset(buff, uiChar, uiCount);
     buff[uiCount] = 0x0;
-    rc=_gtSetPos(uiRow, uiCol);
+    rc=hb_gtSetPos(uiRow, uiCol);
     if(rc != 0)
         return(rc);
-    rc=_gtWrite(buff, uiCount);
+    rc=hb_gtWrite(buff, uiCount);
 
     return(rc);
 }
 
-int _gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
+int hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
     gtPutText(uiLeft, uiTop, uiRight, uiBottom, vlpScrBuff);
     return(0);
 }
 
-int _gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
+int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
     USHORT bufsiz;
     int rc;
 
-    rc=_gtRectSize(uiTop, uiLeft, uiBottom, uiRight, &bufsiz);
+    rc=hb_gtRectSize(uiTop, uiLeft, uiBottom, uiRight, &bufsiz);
     if(rc != 0)
     {
         return(rc);
@@ -242,20 +240,20 @@ int _gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char *
     return(0);
 }
 
-int _gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
+int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
 {
-    *uipHeight = _gtMaxRow();
-    *uipWidth = _gtMaxCol();
+    *uipHeight = hb_gtMaxRow();
+    *uipWidth = hb_gtMaxCol();
 
     return(0);
 }
 
-int _gtSetBlink(BOOL bBlink)
+int hb_gtSetBlink(BOOL bBlink)
 {
     return(0);
 }
 
-int _gtSetColorStr(char * fpColorString)
+int hb_gtSetColorStr(char * fpColorString)
 {
     int iLength = strlen(fpColorString);
 
@@ -271,20 +269,20 @@ int _gtSetColorStr(char * fpColorString)
     return(0);
 }
 
-int _gtSetCursor(USHORT uiCursorShape)
+int hb_gtSetCursor(USHORT uiCursorShape)
 {
     gtSetCursorStyle(uiCursorShape);
     return(0);
 }
 
-int _gtSetMode(USHORT uiRows, USHORT uiCols)
+int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
     return(0);
 }
 
-int _gtSetPos(USHORT uiRow, USHORT uiCol)
+int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
 {
-    if(uiRow > _gtMaxRow() || uiCol > _gtMaxCol())
+    if(uiRow > hb_gtMaxRow() || uiCol > hb_gtMaxCol())
         return(1);
 
     s_uiCurrentRow = uiRow;
@@ -295,12 +293,12 @@ int _gtSetPos(USHORT uiRow, USHORT uiCol)
     return(0);
 }
 
-int _gtSetSnowFlag(BOOL bNoSnow)
+int hb_gtSetSnowFlag(BOOL bNoSnow)
 {
     return(0);
 }
 
-int _gtWrite(char * fpStr, USHORT uiLen)
+int hb_gtWrite(char * fpStr, USHORT uiLen)
 {
     /* TODO: need to get current color setting from s_szColorString and
              s_uiColorIndex
@@ -311,8 +309,8 @@ int _gtWrite(char * fpStr, USHORT uiLen)
     /* Determine where the cursor is going to end up */
     iRow = s_uiCurrentRow;
     iCol = s_uiCurrentCol;
-    iMaxCol = _gtMaxCol();
-    iMaxRow = _gtMaxRow();
+    iMaxCol = hb_gtMaxCol();
+    iMaxRow = hb_gtMaxRow();
     iSize = uiLen;
     if (iCol + iSize > iMaxCol)
     {
@@ -331,7 +329,7 @@ int _gtWrite(char * fpStr, USHORT uiLen)
        position to account for the prescroll */
     if (iRow > iMaxRow)
     {
-       _gtScroll(0, 0, iMaxRow, iMaxCol, iRow - iMaxRow, 0);
+       hb_gtScroll(0, 0, iMaxRow, iMaxCol, iRow - iMaxRow, 0);
        iTemp = s_uiCurrentRow - (iRow - iMaxRow);
        if (iTemp < 0)
        {
@@ -357,22 +355,22 @@ int _gtWrite(char * fpStr, USHORT uiLen)
     gtPuts(s_uiCurrentCol, s_uiCurrentRow, attr, fpPointer, iSize);
 
     /* Finally, save the new cursor position */
-    _gtSetPos (iRow, iCol);
+    hb_gtSetPos (iRow, iCol);
 
     return(0);
 }
 
-int _gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen)
+int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, USHORT uiLen)
 {
     int rc;
 
-    if((rc=_gtSetPos(uiRow, uiCol)) != 0)
+    if((rc=hb_gtSetPos(uiRow, uiCol)) != 0)
         return(rc);
 
-    return(_gtWrite(fpStr, uiLen));
+    return(hb_gtWrite(fpStr, uiLen));
 }
 
-int _gtWriteCon(char * fpStr, USHORT uiLen)
+int hb_gtWriteCon(char * fpStr, USHORT uiLen)
 {
     int rc = 0;
     USHORT uiCount, uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
@@ -391,30 +389,30 @@ int _gtWriteCon(char * fpStr, USHORT uiLen)
              else if(uiRow > 0)
              {
                 uiRow--;
-                uiCol=_gtMaxCol();
+                uiCol=hb_gtMaxCol();
              }
              else
              {
-                _gtScroll(0, 0, _gtMaxRow(), _gtMaxCol(), -1, 0);
-                uiCol=_gtMaxCol();
+                hb_gtScroll(0, 0, hb_gtMaxRow(), hb_gtMaxCol(), -1, 0);
+                uiCol=hb_gtMaxCol();
              }
-             _gtSetPos (uiRow, uiCol);
+             hb_gtSetPos (uiRow, uiCol);
              break;
           case 10:
-             if(uiRow < _gtMaxRow()) uiRow++;
+             if(uiRow < hb_gtMaxRow()) uiRow++;
              else
              {
-                _gtScroll(0, 0, _gtMaxRow(), _gtMaxCol(), 1, 0);
+                hb_gtScroll(0, 0, hb_gtMaxRow(), hb_gtMaxCol(), 1, 0);
              }
-             _gtSetPos (uiRow, uiCol);
+             hb_gtSetPos (uiRow, uiCol);
              break;
           case 13:
              uiCol = 0;
-             _gtSetPos (uiRow, uiCol);
+             hb_gtSetPos (uiRow, uiCol);
              break;
           default:
-             rc = _gtWrite(ch, 1);
-             _gtGetPos (&uiRow, &uiCol);
+             rc = hb_gtWrite(ch, 1);
+             hb_gtGetPos (&uiRow, &uiCol);
        }
        if(rc)
           return(rc);
@@ -422,16 +420,16 @@ int _gtWriteCon(char * fpStr, USHORT uiLen)
     return(0);
 }
 
-int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols)
+int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols)
 {
    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol, uiSize;
    int iLength = (uiRight - uiLeft) + 1;
    int iCount, iColOld, iColNew, iColSize;
 
-   if (_gtRectSize (uiTop, uiLeft, uiBottom, uiRight, &uiSize) == 0)
+   if (hb_gtRectSize (uiTop, uiLeft, uiBottom, uiRight, &uiSize) == 0)
    {
-      char * fpBlank = (char *)_xgrab (iLength);
-      char * fpBuff = (char *)_xgrab (iLength * 2);
+      char * fpBlank = (char *)hb_xgrab (iLength);
+      char * fpBuff = (char *)hb_xgrab (iLength * 2);
       if (fpBlank && fpBuff)
       {
          for (iCount = 0; iCount < iLength; iCount++)
@@ -472,8 +470,8 @@ int _gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHOR
             }
          }
       }
-      if (fpBlank) _xfree (fpBlank);
-      if (fpBuff) _xfree (fpBuff);
+      if (fpBlank) hb_xfree (fpBlank);
+      if (fpBuff) hb_xfree (fpBuff);
    }
    s_uiCurrentRow = uiRow;
    s_uiCurrentCol = uiCol;
@@ -495,61 +493,61 @@ void main(void)
     char *scr;
     USHORT size;
 
-    _gtRectSize(1, 1, _gtMaxRow(), _gtMaxCol(), &size);
+    hb_gtRectSize(1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size);
     scr=(char *)malloc(size);
-    _gtSave(1, 1, _gtMaxRow()-1, _gtMaxCol()-1, scr);
+    hb_gtSave(1, 1, hb_gtMaxRow()-1, hb_gtMaxCol()-1, scr);
     */
 
     /* writing text */
-    _gtSetPos(3, 3);
-    _gtWrite(test, strlen(test));
-    _gtSetPos(12, 42);
-    _gtWrite(test, strlen(test));
+    hb_gtSetPos(3, 3);
+    hb_gtWrite(test, strlen(test));
+    hb_gtSetPos(12, 42);
+    hb_gtWrite(test, strlen(test));
 
     /* wrapping text */
-    _gtSetPos(7, 70);
-    _gtWrite(test2, strlen(test2));
+    hb_gtSetPos(7, 70);
+    hb_gtWrite(test2, strlen(test2));
 
     /* writing color text (not implemented yet) */
     /*
-    _gtSetColorStr( "W+/B, B/W" );
-    _gtColorSelect(_CLR_STANDARD);
-    _gtWrite( "Enhanced color (B/W)", 20 );
-    _gtSetPos(22, 62);
-    _gtColorSelect(_CLR_ENHANCED);
-    _gtWrite( "Standard Color (W+/B)", 21 );
+    hb_gtSetColorStr( "W+/B, B/W" );
+    hb_gtColorSelect(_CLR_STANDARD);
+    hb_gtWrite( "Enhanced color (B/W)", 20 );
+    hb_gtSetPos(22, 62);
+    hb_gtColorSelect(_CLR_ENHANCED);
+    hb_gtWrite( "Standard Color (W+/B)", 21 );
     */
 
     /* boxes */
-    _gtBoxS(10, 10, 20, 20);
-    _gtBoxD(10, 40, 15, 45);
+    hb_gtBoxS(10, 10, 20, 20);
+    hb_gtBoxD(10, 40, 15, 45);
 
     /* cursor functions */
-    _gtSetPos(12, 1);
+    hb_gtSetPos(12, 1);
 
     /* none */
-    _gtSetCursor(_SC_NONE);
+    hb_gtSetCursor(_SC_NONE);
     getch();
 
     /* underline */
-    _gtSetCursor(_SC_NORMAL);
+    hb_gtSetCursor(_SC_NORMAL);
     getch();
 
     /* lower half block */
-    _gtSetCursor(_SC_INSERT);
+    hb_gtSetCursor(_SC_INSERT);
     getch();
 
     /* full block */
-    _gtSetCursor(_SC_SPECIAL1);
+    hb_gtSetCursor(_SC_SPECIAL1);
     getch();
 
     /* upper half block */
-    _gtSetCursor(_SC_SPECIAL2);
+    hb_gtSetCursor(_SC_SPECIAL2);
     getch();
 
     /* restore screen (doesn't work under DOS) */
     /*
-    _gtRest(1, 1, _gtMaxRow()-1, _gtMaxCol()-1, scr);
+    hb_gtRest(1, 1, hb_gtMaxRow()-1, hb_gtMaxCol()-1, scr);
     free(scr);
     */
 }
