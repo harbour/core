@@ -170,17 +170,12 @@ CLASS TDebugger
    DATA   oWndCode, oWndCommand, oWndStack, oWndVars
    DATA   oBar, oBrwText, cPrgName, oBrwStack, oBrwVars, aVars
    DATA   cImage
-   DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
-   DATA   aBreakPoints, aCallStack
+   DATA   aBreakPoints, aCallStack, aColors
    DATA   aLastCommands, nCommand, oGetListCommand
-   DATA   lGo
-   DATA   aColors
-   DATA   lCaseSensitive
-   DATA   cSearchString
-   DATA   cPathForFiles
-   DATA   nTabWidth
-   DATA   lMonoDisplay
+   DATA   lEnd, lGo, lCaseSensitive, lMonoDisplay
+   DATA   cSearchString, cPathForFiles, cSettingsFileName
+   DATA   nTabWidth, nSpeed
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -203,6 +198,7 @@ CLASS TDebugger
    METHOD Hide()
    METHOD InputBox( cMsg, uValue, bValid )
    METHOD IsBreakPoint( nLine )
+   METHOD LoadSettings()
    METHOD LoadVars()
    METHOD MonoDisplay()
    METHOD NextWindow()
@@ -215,12 +211,18 @@ CLASS TDebugger
 
    METHOD PrevWindow()
    METHOD RestoreAppStatus()
+   METHOD RestoreSettings()
    METHOD SaveAppStatus()
+   METHOD SaveSettings()
    METHOD Show()
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCode( cModuleName )
    METHOD ShowVars()
+
+   METHOD Speed() INLINE ;
+          ::nSpeed := ::InputBox( "Step delay (in tenths of a second)",;
+                                  ::nSpeed )
 
    METHOD Step() INLINE ::RestoreAppStatus(), ::Exit()
 
@@ -248,6 +250,11 @@ METHOD New() CLASS TDebugger
    ::lMonoDisplay   := .f.
    s_oDebugger := Self
 
+   ::cSettingsFileName := "hbd.cfg"  // Is easier to have a default settings filename
+   if File( "hbd.cfg" )
+      ::LoadSettings()
+   endif
+
    ::aWindows       := {}
    ::nCurrentWindow := 1
    ::oPullDown      := __dbgBuildMenu( Self )
@@ -264,15 +271,16 @@ METHOD New() CLASS TDebugger
 
    ::BuildCommandWindow()
 
-   ::lEnd           := .f.
-   ::aBreakPoints   := {}
-   ::aCallStack     := {}
-   ::lGo            := .f.
-   ::aVars          := {}
-   ::lCaseSensitive := .f.
-   ::cSearchString  := ""
-   ::cPathForFiles  := ""
-   ::nTabWidth      := 4
+   ::lEnd              := .f.
+   ::aBreakPoints      := {}
+   ::aCallStack        := {}
+   ::lGo               := .f.
+   ::aVars             := {}
+   ::lCaseSensitive    := .f.
+   ::cSearchString     := ""
+   ::cPathForFiles     := ""
+   ::nTabWidth         := 4
+   ::nSpeed            := 0
 
 return Self
 
@@ -842,6 +850,33 @@ METHOD ShowCallStack() CLASS TDebugger
 
 return nil
 
+METHOD LoadSettings() CLASS TDebugger
+
+   local cInfo := MemoRead( ::cSettingsFileName )
+   local n, cLine, nColor
+
+   for n = 1 to MLCount( cInfo )
+      cLine = MemoLine( cInfo, 120, n )
+      do case
+         case Upper( SubStr( cLine, 1, 14 ) ) == "OPTIONS COLORS"
+            cLine = SubStr( cLine, At( "{", cLine ) + 1 )
+            nColor = 1
+            while nColor < 12
+               if At( ",", cLine ) != 0
+                  ::aColors[ nColor ] = ;
+                     StrTran( SubStr( cLine, 1, At( ",", cLine ) - 1 ), '"', "" )
+                  cLine = SubStr( cLine, At( ",", cLine ) + 1 )
+               else
+                  ::aColors[ nColor ] = ;
+                     StrTran( SubStr( cLine, 1, At( "}", cLine ) - 1 ), '"', "" )
+               endif
+               nColor++
+            end
+      endcase
+   next
+
+return nil
+
 METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
    local nCount, n, m, xValue, cName
@@ -971,7 +1006,9 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
    if cPrgName != ::cPrgName
       ::cPrgName := cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
+                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;
+                   __DbgColors()[ 2 ] + "," + __DbgColors()[ 3 ] + "," + ;
+                   __DbgColors()[ 4 ] + "," + __DbgColors()[ 5 ] )
 
       ::oWndCode:SetCaption( ::cPrgName )
    endif
@@ -1022,9 +1059,9 @@ return nil
 METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
 
    local nTop    := ( MaxRow() / 2 ) - 5
-   local nLeft   := ( MaxCol() / 2 ) - 20
+   local nLeft   := ( MaxCol() / 2 ) - 25
    local nBottom := ( MaxRow() / 2 ) - 3
-   local nRight  := ( MaxCol() / 2 ) + 20
+   local nRight  := ( MaxCol() / 2 ) + 25
    local uTemp   := PadR( uValue, nRight - nLeft - 1 )
    local GetList := {}
    local nOldCursor
@@ -1082,6 +1119,25 @@ METHOD RestoreAppStatus() CLASS TDebugger
 
 return nil
 
+METHOD RestoreSettings() CLASS TDebugger
+
+   ::cSettingsFileName = ::InputBox( "File name", ::cSettingsFileName )
+
+   if LastKey() != K_ESC
+      ::LoadSettings()
+
+      ::oPullDown:LoadColors()
+      ::oPullDown:Refresh()
+      ::BarDisplay()
+
+      for n = 1 to Len( ::aWindows )
+        ::aWindows[ n ]:LoadColors()
+        ::aWindows[ n ]:Refresh()
+      next
+   endif
+
+return nil
+
 METHOD SaveAppStatus() CLASS TDebugger
 
    ::cAppImage  := SaveScreen()
@@ -1092,6 +1148,53 @@ METHOD SaveAppStatus() CLASS TDebugger
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
    SetCursor( SC_NONE )
    DispEnd()
+
+return nil
+
+METHOD SaveSettings() CLASS TDebugger
+
+   local cInfo := "", n, oWnd
+
+   ::cSettingsFileName = ::InputBox( "File name", ::cSettingsFileName )
+
+   if LastKey() != K_ESC
+
+      if ! Empty( ::cPathForFiles )
+         cInfo += "Options Path " + ::cPathForFiles + Chr( 13 ) + Chr( 10 )
+      endif
+
+      cInfo += "Options Colors {"
+      for n = 1 to Len( ::aColors )
+         cInfo += '"' + ::aColors[ n ] + '"'
+         if n < Len( ::aColors )
+            cInfo += ","
+         endif
+      next
+      cInfo += "}" + Chr( 13 ) + Chr( 10 )
+
+      if ::lMonoDisplay
+         cInfo += "Options mono " + Chr( 13 ) + Chr( 10 )
+      endif
+
+      if ::nSpeed != 0
+         cInfo += "Run Speed " + AllTrim( Str( ::nSpeed ) ) + Chr( 13 ) + Chr( 10 )
+      endif
+
+      for n = 1 to Len( ::aWindows )
+         oWnd = ::aWindows[ n ]
+         cInfo += "Window Size " + AllTrim( Str( oWnd:nBottom - oWnd:nTop + 1 ) ) + " "
+         cInfo += AllTrim( Str( oWnd:nRight - oWnd:nLeft + 1 ) ) + Chr( 13 ) + Chr( 10 )
+         cInfo += "Window Move " + AllTrim( Str( oWnd:nTop ) ) + " "
+         cInfo += AllTrim( Str( oWnd:nLeft ) ) + Chr( 13 ) + Chr( 10 )
+         cInfo += "Window Next" + Chr( 13 ) + Chr( 10 )
+      next
+
+      if ::nTabWidth != 4
+         cInfo += "Options Tab " + AllTrim( Str( ::nTabWidth ) ) + Chr( 13 ) + Chr( 10 )
+      endif
+
+      MemoWrit( ::cSettingsFileName, cInfo )
+   endif
 
 return nil
 
@@ -1331,7 +1434,7 @@ return nil
 function __DbgColors()
 
 return If( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
-           { "W+/N", "W+/N", "W+/N", "N/W", "W/N", "N/W", "W+/N",;
+           { "W+/N", "W+/N", "N/W", "N/W", "W/N", "N/W", "W+/N",;
              "N/W", "W+/W", "W/N", "W+/N" } )
 
 function __Dbg()
