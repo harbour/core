@@ -1,0 +1,25 @@
+# $ID$
+# Makefile for DOS DJGPP
+#
+# NOTE: use it with -r option
+#
+include ..\..\makedos.env
+
+TARGET=$(HARBOURDIR)/bin/harbour.exe
+
+all: $(TARGET)
+
+$(TARGET): y_tab.c harbour.c lexyy.c
+	$(CC) $(CFLAGS) y_tab.c harbour.c lexyy.c -o $(TARGET)
+
+y_tab.c : harbour.y
+	bison -d -v harbour.y -o y_tab.c
+
+lexyy.c : harbour.l
+	flex -i -8 -olexyy.c harbour.l
+
+clean:
+	-del *.o 
+	-del y_tab.*
+	-del lexyy.c
+	-del *.out

@@ -1,0 +1,20 @@
+# $Id$
+# Make file for DOS DJGPP
+#
+include ../../makedos.env
+
+SRCC:= $(wildcard *.c)
+OBJC=$(SRCC:.c=.o)
+
+all:	$(HARBOURLIB) 
+
+$(HARBOURLIB): ${OBJC} ${OBJPRG}
+	ar r $(HARBOURLIB) ${OBJC}
+
+prg:
+	../../bin/harbour -n error.prg
+	../../bin/harbour -n errorsys.prg
+	../../bin/harbour -n tclass.prg
+
+clean:
+	-del *.o

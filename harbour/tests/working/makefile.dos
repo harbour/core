@@ -1,0 +1,21 @@
+# $Id$
+# Makefile for DOS DJGPP
+# Usage:
+# make -r -f makefile.dos <target>
+# where <target> is the name of compiled file without extension
+#
+include ..\..\makedos.env
+
+TARGET=$(MAKECMDGOALS)
+
+$(TARGET): $(TARGET).exe
+
+$(TARGET).exe: $(TARGET).o
+	$(CC) $? -L$(HARBOURDIR)/libs -lharb -o $@ 
+
+$(TARGET).c: $(TARGET).prg
+	$(HARBOURDIR)/bin/harbour $(TARGET).prg -n
+
+$(TARGET).o: $(TARGET).c
+	$(CC) $(CFLAGS) -c -o $@ $?
+

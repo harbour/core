@@ -1,0 +1,20 @@
+# $Id$
+# Makefile for DOS DJGPP
+#
+.PHONY: compiler vm rtl
+
+all: compiler vm rtl
+
+compiler:
+	make --directory=./compiler -r -f makefile.dos
+
+vm:
+	make --directory=./vm -f makefile.dos
+
+rtl:
+	make --directory=./rtl -f makefile.dos
+
+clean:
+	make --directory=./compiler -f makefile.dos clean
+	make --directory=./vm -f makefile.dos clean
+	make --directory=./rtl -f makefile.dos clean

@@ -163,6 +163,7 @@ char * _GetClassName( PITEM pObject ); /* retrieves an object class name */
 /* dynamic symbol table management */
 PDYNSYM GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
 PDYNSYM NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
+PDYNSYM FindDynSym( char * szName );  /* finds a dynamic symbol */
 
 /* error API */
 PITEM _errNew( void );

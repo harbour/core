@@ -4,6 +4,10 @@
 
 #include <extend.h>
 
+#ifdef __WATCOMC__
+  #include <i86.h>
+#endif
+
 HARBOUR OS()
 {
 #ifdef __GNUC__

@@ -1,3 +1,49 @@
+19990516-07:04 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.l, source/compiler/harbour.y
+	-cleaned rules for NEXT, BREAK, WHILE, BEGIN, DO to be 100%
+	Clipper compatible (mainly keyword[] use);
+	-corrected support for END keyword;
+	-added include files: hbsetup.h and hberrors.h;
+	-code for OBJ generation is now linked optionally -it is linked if
+	the symbol OBJ_GENERATION is defined in hbsetup.h file;
+	-corrected the generation of EXTERNAL symbols
+
+    * source/vm/hvm.c
+	-code with support for symbols defined in OBJ files is now linked 
+	optionally -it is linked if the symbol OBJ_GENERATION is defined 
+	in hbsetup.h file
+	-added support for optional definition of the starting procedure
+	(in case when automatic lookup for it doesn't work (Watcom C/C++))
+
+    * include/hbsetup.h
+	-new file with Harbour configuration options (see this file for 
+	available options)
+
+    * include/hberrors.h
+	-new file with error constants definition shared by 
+	harbour.y and harbour.l
+
+    * include/extend.h
+	-added declaration of FindDynSym() function used in hvm.c
+
+    * source/rtl/environ.c
+	-added correct #include for Watcom C/C++ to use REGS union
+	(although I am not sure if OS function should be placed here)
+
+    * source/rtl/itemapi.c
+	-corrected wrog declaration of symEval variable
+	(it is SYMBOL structure instead of PSYMBOL pointer)
+
+    * tests/working/keywords.prg
+	-added test code for END keyword
+
+    * makewat.env, makefile.wat
+	-added/corrected makefiles for Watcom C/C++ compiler
+
+    * makedos.env, makefile.dos
+	-added/corrected makefiles for pure DOS DJGPP compiler
+
 19990516-06:30 CET Eddie Runia
   * tests/working/bld32exe.bat
     Correct version added

@@ -12,7 +12,7 @@
 #define hb_param _param
 
 extern STACK stack;
-extern PSYMBOL symEval;
+extern SYMBOL symEval;
 
 /* TODO: Someone make a dates.h so this isn't necessary! */
 //long greg2julian( long lDay, long lMonth, long lYear );
@@ -86,7 +86,7 @@ PITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
-         PushSymbol( symEval );
+         PushSymbol( &symEval );
          Push( pEvalInfo->pItems[ 0 ] );
          while( w < 10 && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );

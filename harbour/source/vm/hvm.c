@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "hbsetup.h"    /* main configuration file */
 #include <extend.h>
 #include <pcode.h>
 #include <set.h>
@@ -94,7 +95,6 @@ typedef struct _SYMBOLS
 } SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
 
 void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
-void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 void DoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
 void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 void LogSymbols( void );         /* displays all dynamic symbols */
@@ -129,13 +129,15 @@ extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
 extern ULONG ulMemoryConsumed;    /* memory size consumed */
 extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
 
+#ifdef OBJ_GENERATION
+void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
+
 typedef struct
 {
    WORD wSymbols;                 /* module local symbol table symbols amount */
    PSYMBOL pSymbols;              /* module local symbol table address */
 } OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
 
-#ifndef NO_OBJ
 extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 #endif
 
@@ -176,10 +178,23 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    InitializeSets(); /* initialize Sets */
-#ifndef NO_OBJ
+#ifdef OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
+
+#ifdef HARBOUR_MAIN
+   {
+     PDYNSYM pDynSym =FindDynSym( HARBOUR_MAIN );
+     if( pDynSym )
+       pSymStart =pDynSym->pSymbol;
+     else
+     {
+       printf( "Can\'t locate the starting procedure: \'%s\'", HARBOUR_MAIN );
+       exit(1);
+    }
+   }
+#endif
 
    PushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
 
@@ -1798,9 +1813,9 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
    WORD w;
+#ifdef OBJ_GENERATION
    static int iObjChecked = 0;
 
-#ifndef NO_OBJ
    if( ! iObjChecked )
    {
       iObjChecked = 1;
@@ -1834,9 +1849,9 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
    }
 }
 
+#ifdef OBJ_GENERATION
 void ProcessObjSymbols( void )
 {
-#ifndef NO_OBJ
    POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
 
    static int iDone = 0;
@@ -1850,8 +1865,8 @@ void ProcessObjSymbols( void )
          pObjSymbols++;
       }
    }
-#endif
 }
+#endif
 
 void ReleaseLocalSymbols( void )
 {

@@ -14,9 +14,11 @@
 #include <string.h>
 #include <limits.h>
 #include <malloc.h>     /* required for allocating and freeing memory */
+#include "hbsetup.h"    /* main configuration file */
 #include "pcode.h"      /* pcode values */
 #include "types.h"      /* our defined types */
 #include "compiler.h"
+#include "hberrors.h"
 
 #ifdef __BORLANDC__
    #define HAVE_STRUPR
@@ -139,7 +141,6 @@ PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC str
 void FunDef( char * szFunName, char cScope, int iType ); /* starts a new Clipper language function definition */
 void GenArray( WORD wElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
-void GenError( int, char*, char * );      /* generic parsing error management function */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 void GenReturn( WORD wOffset );  /* generates a return offset to later on fill it with the proper exiting pcode address */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
@@ -192,7 +193,9 @@ void GenCCode( char *, char * );      /* generates the C language output */
 void GenJava( char *, char * );       /* generates the Java language output */
 void GenPascal( char *, char * );     /* generates the Pascal language output */
 void GenRC( char *, char * );         /* generates the RC language output */
+#ifdef OBJ_GENERATION
 void GenObj32( char *, char * );      /* generates OBJ 32 bits */
+#endif
 
 void PrintUsage( char * );
 
@@ -215,17 +218,6 @@ int iVarScope = 0;          /* holds the scope for next variables to be defined 
 #define VS_FIELD      3
 #define VS_MEMVAR     4
 
-#define ERR_OUTSIDE             1
-#define ERR_FUNC_DUPL           2
-#define ERR_VAR_DUPL            3
-#define ERR_FOLLOWS_EXEC        4
-#define ERR_OUTER_VAR           5
-#define ERR_NUMERIC_FORMAT      6
-#define ERR_STRING_TERMINATOR   7
-#define ERR_FUNC_RESERVED       8
-#define ERR_ILLEGAL_INIT        9
-#define ERR_CANT_OPEN_INCLUDE   10
-
 /* Table with parse errors */
 char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Redefinition of procedure or function: \'%s\'",
@@ -236,7 +228,12 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Unterminated string: \'%s\'",
                        "Redefinition of predefined function %s: \'%s\'",
                        "Illegal initializer: \'%s\'",
-                       "Can't open #include file: \'%s\'"
+                       "Can\'t open #include file: \'%s\'",
+                       "ENDIF does not match IF",
+                       "ENDDO does not match WHILE",
+                       "ENDCASE does not match DO CASE",
+                       "NEXT does not match FOR",
+                       "Syntax error: \'%s\'"
                      };
 
 /* Table with reserved functions names
@@ -344,7 +341,9 @@ int _iSyntaxCheckOnly = 0; /* syntax check only */
 int _iLanguage = LANG_C;   /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;       /* .and. & .or. expressions shortcuts */
+#ifdef OBJ_GENERATION
 int _iObj32 = 0;           /* generate OBJ 32 bits */
+#endif
 WORD _wStatics = 0;        /* number of defined statics variables on the PRG */
 PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
@@ -990,7 +989,7 @@ int harbour_main( int argc, char * argv[] )
                        free( szDefText );
                     }
                     break;
-
+#ifdef OBJ_GENERATION
                case 'f':
                case 'F':
                     {
@@ -1000,7 +999,7 @@ int harbour_main( int argc, char * argv[] )
                        free( szUpper );
                     }
                     break;
-
+#endif
                case 'g':
                case 'G':
                     switch( argv[ iArg ][ 2 ] )
@@ -1113,10 +1112,15 @@ int harbour_main( int argc, char * argv[] )
          FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
          FixReturns();       /* fix all previous function returns offsets */
+         GenExterns();       /* generates EXTERN symbols names */
          fclose( yyin );
          files.pLast =NULL;
 
+#ifdef OBJ_GENERATION
          if( ! _iSyntaxCheckOnly && ! _iObj32 )
+#else
+         if( ! _iSyntaxCheckOnly )
+#endif	 
          {
             if( _pInitFunc )
             {
@@ -1162,12 +1166,14 @@ int harbour_main( int argc, char * argv[] )
                     break;
             }
          }
+#ifdef OBJ_GENERATION
          if( _iObj32 )
          {
             pFileName->extension = ".obj";
             MakeFilename( szFileName, pFileName );
             GenObj32( szFileName, pFileName->name );
          }
+#endif
       }
       else
       {
@@ -1190,8 +1196,10 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/d<id>[=<val>]\t#define <id>\n"
+#ifdef OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
           "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
+#endif
           "\t/g\t\tgenerated output language\n"
           "\t\t\t /gc (C default) --> <file.c>\n"
           "\t\t\t /gj (Java)      --> <file.java>\n"
@@ -1622,8 +1630,6 @@ void FunDef( char * szFunName, char cScope, int iType )
    if( !( pSym = GetSymbol( szFunName ) ) )
       /* there is not a symbol on the symbol table for this function name */
       pSym = AddSymbol( szFunName );
-
-   GenExterns();    /* generates EXTERN symbols names */
 
    if( cScope == FS_PUBLIC )
       pSym->cScope = FS_PUBLIC;
@@ -2324,25 +2330,24 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
 void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
-   PEXTERN pLast = pExterns, pDelete;
+  PEXTERN pDelete;
 
-   if( pExterns )
-   {
-      while( pLast )
-      {
-         PushSymbol( pLast->szName, 1 );
-         pLast = pLast->pNext;
-      }
-      pLast   = pExterns;
-      pDelete = pExterns;
-      while( pLast )
-      {
-         pLast = pLast->pNext;
-         OurFree( pDelete );
-         pDelete = pLast;
-      }
-      pExterns = 0;
-   }
+  while( pExterns )
+  {
+    if( GetSymbolPos( pExterns->szName ) )
+    {
+      if( ! GetFuncall( pExterns->szName ) )
+        AddFunCall( pExterns->szName );
+    }
+    else
+    {
+      AddSymbol( pExterns->szName );
+      AddFunCall( pExterns->szName );
+    }
+    pDelete  = pExterns;
+    pExterns = pExterns->pNext;
+    OurFree( pDelete );
+  }
 }
 
 void GenReturn( WORD wOffset ) /* generates a return offset to later on fill it with the proper exiting pcode address */

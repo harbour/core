@@ -1,0 +1,14 @@
+# $Id$
+# Makefile for DJGPP DOS version
+#
+include ..\..\makedos.env
+
+OBJECTS=hvm.o dynsym.o
+
+all:	$(HARBOURLIB)
+
+$(HARBOURLIB): ${OBJECTS}
+	ar r $(HARBOURLIB) ${OBJECTS}
+
+clean:
+	-del *.o
