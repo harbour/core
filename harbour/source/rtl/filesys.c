@@ -87,7 +87,9 @@
    #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
+#if !defined( OS_UNIX_COMPATIBLE )   
    #include <io.h>
+#endif
 
    #if defined(__DJGPP__)
       #include <dir.h>

@@ -1247,13 +1247,4 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
    hb_xfree( ( void * ) pCodeblock );
 }
 
-/* ************************************************************************ */
-
-/* Include the common part of expression optimalizer
- * NOTE: It cannot be compiled into a single library because the code
- * required for macro compiler differs a little - we are passing additional
- * parameter that holds macro compiler internal data
- * 3 - ignore this magic number - it forces the compilation of this file
- */
-#include "hbexpr.c"
 

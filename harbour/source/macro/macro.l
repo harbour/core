@@ -47,6 +47,8 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 -Cem  = slowest/smallest
 */
 
+#define HB_MACRO_SUPPORT
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

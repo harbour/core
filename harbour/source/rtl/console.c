@@ -67,7 +67,9 @@
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
 #endif
-#include <io.h>
+#if !defined( OS_UNIX_COMPATIBLE )
+    #include <io.h>
+#endif
 
 #if defined(OS_UNIX_COMPATIBLE)
    #define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */

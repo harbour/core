@@ -34,15 +34,15 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapifs.h"
+
 #include <errno.h>
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/stat.h>
 #else
    #include <sys\stat.h>
 #endif
-
-#include "hbapi.h"
-#include "hbapifs.h"
 
 ULONG hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {

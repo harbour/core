@@ -55,10 +55,13 @@
  *
  */
 
+#include "hbsetup.h"	/* this have to be included to get OS_xxx defined */
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
 #endif
-#include <io.h>
+#if !defined( OS_UNIX_COMPATIBLE )
+    #include <io.h>
+#endif
 
 #include <ctype.h>
 

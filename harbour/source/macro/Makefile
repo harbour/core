@@ -34,6 +34,9 @@ LEX_HEADERS=\
 	hbmacro.h \
 
 C_SOURCES=macro.c \
+	macroa.c \
+	macrob.c \
+	macroc.c \
 
 LIBNAME=macro
 
