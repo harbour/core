@@ -195,7 +195,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
        iCols == 0 )
    {
       for( ; uiBottom; uiBottom-- )
-         fputs( s_szCrLf, stdout );
+	fputs( hb_consoleGetNewLine(), stdout );
 
       fflush( stdout );
 
