@@ -100,6 +100,7 @@ CLASS Get
    DATA Control
    DATA Message
    DATA Caption
+   DATA nLastExitState
    #endif
 
    DATA cColorSpec   HIDDEN   // Used only for METHOD ColorSpec
@@ -188,6 +189,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::ColorSpec  := cColorSpec
    ::DecPos     := NIL
    ::ExitState  := 0
+   ::nLastExitState := 0
    ::Minus      := .f.
    ::Name       := cVarName
    ::Original   := ::VarGet()

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-05 23:00 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/tget.prg
+    * Fixed small problem when using Mouse to select the editing get
+
 2002-10-04 15:552 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Bug fixed in key appending with few open indexes
