@@ -1,3 +1,7 @@
+19900509-23:30 Eddie Runia
+   * source/working/mankala.prg
+     Instructions added
+
 19990509-21:00 Eddie Runia
    * hvm.c
      Logical equivalence tests added ( ==, !=, >, <, >=, <= )

@@ -4,38 +4,6 @@
 // Date : 30/04/1999
 // Time : 14:00
 //
-// It is just you against the computer. The board is as follows :
-//
-//   Computer
-//  ÚÄÄÄÂÄÄÄ¿
-//  ³X X³X X³
-//  ÃÄÄÄÅÄÄÄ´
-//  ³X X³X X³
-//  ÀÄÄÄÁÄÄÄÙ
-//     You
-//
-// The game begins with two stones in each square.
-//
-// You can choose to play either the left or the right (L/R) square.
-//
-// If you select a square, the stones are moved anti-clockwise through the
-// squares.
-//
-// Example : You select Left. The board will now become :
-//
-//   Computer
-//  ÚÄÄÄÂÄÄÄ¿
-//  ³X X³XXX³
-//  ÃÄÄÄÅÄÄÄ´
-//  ³   ³XXX³
-//  ÀÄÄÄÁÄÄÄÙ
-//     You
-//
-// The person which gets all the stones has won the game
-//
-// Just try to beat the computer :-)
-//
-//
 
 function Main()
 
@@ -50,6 +18,52 @@ function Main()
 
    QOut( "Mankala. Another Harbour Game Production")
    QOut()
+
+   if Upper( Read( "Do you want instructions ? " ) ) == "Y"
+
+      aEval ( { ;
+         " Mankala. The first Harbour board game.                                   " , ;
+         "                                                                          " , ;
+         " It is just you against the computer. The board is as follows :           " , ;
+         "                                                                          " , ;
+         "   Computer                                                               " , ;
+         "  ÚÄÄÄÂÄÄÄ¿                                                               " , ;
+         "  ³X X³X X³                                                               " , ;
+         "  ÃÄÄÄÅÄÄÄ´                                                               " , ;
+         "  ³X X³X X³                                                               " , ;
+         "  ÀÄÄÄÁÄÄÄÙ                                                               " , ;
+         "     You                                                                  " , ;
+         "                                                                          " , ;
+         " The game begins with two stones in each square.                          " , ;
+         "                                                                          " }, ;
+         {| cItem | QOut( cItem )} )
+
+      Read( "Pause : ")
+
+      aEval ( { ;
+         " You can choose to play either the left or the right (L/R) square.        " , ;
+         "                                                                          " , ;
+         " If you select a square, the stones are moved anti-clockwise through the  " , ;
+         " squares.                                                                 " , ;
+         "                                                                          " , ;
+         " Example : You select Left. The board will now become :                   " , ;
+         "                                                                          " , ;
+         "   Computer                                                               " , ;
+         "  ÚÄÄÄÂÄÄÄ¿                                                               " , ;
+         "  ³X X³XXX³                                                               " , ;
+         "  ÃÄÄÄÅÄÄÄ´                                                               " , ;
+         "  ³   ³XXX³                                                               " , ;
+         "  ÀÄÄÄÁÄÄÄÙ                                                               " , ;
+         "     You                                                                  " , ;
+         "                                                                          " , ;
+         " The person which gets all the stones has won the game                    " , ;
+         "                                                                          " , ;
+         " Just try to beat the computer :-)                                        " }, ;
+         {| cItem | QOut( cItem )} )
+
+      Read( "Pause:" )
+
+   endif
 
    do while cAnswer != "Y" .and. cAnswer != "N"
       cAnswer := Read( "Would you like to play first ?" )
