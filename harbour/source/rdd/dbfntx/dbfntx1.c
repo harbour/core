@@ -308,7 +308,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
          if( ( k == 0 && !lSeek && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
              || ( lSeek && ntxIsRecBad( pPage->TagParent->Owner->Owner, p->Xtra ) ) )
             k = 1;
-         if( k <= 0 )
+         if( k <= 0 && pPage->CurKey < pPage->uiKeys )
          {
             pKey->Xtra = p->Xtra;
             pPage->TagParent->CurKeyInfo->Xtra = pKey->Xtra;

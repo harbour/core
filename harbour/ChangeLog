@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added compatibility with Clipper 5.3 (FlexFile) memo headers
+     bug reported by Walter Negro.
+
 2002-03-16 19:31 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed bug with keys updating
