@@ -6,7 +6,9 @@
  * Harbour Project source code:
  * Video subsystem for Win32 compilers
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Functions marked ptucker are
+ * Copyright 1999 Paul Tucker - <ptucker@sympatico.ca>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -109,7 +111,13 @@ void hb_gt_Init( void )
 {
    LOG( "Initializing" );
    HInput = GetStdHandle( STD_INPUT_HANDLE );
-   HOriginal = HOutput = HCursor = GetStdHandle( STD_OUTPUT_HANDLE );
+   /* ptucker */
+   HOriginal = HOutput = HCursor = CreateFile( "CONOUT$",     /* filename    */
+                       GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
+                       FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
+                       NULL,                          /* security attributes */
+                       OPEN_EXISTING,                         /* create mode */
+                       0, 0 );
 }
 
 void hb_gt_Done( void )
@@ -125,7 +133,7 @@ void hb_gt_Done( void )
       hb_gtDispBegin();  /* must use these versions ! */
       hb_gtDispEnd();
    }
-/* NOTE: There's not need to close these explicitly, moreover if we close them
+/* NOTE: There's no need to close these explicitly, moreover if we close them
          functions using stdout will not show anything.
    CloseHandle( HInput );
    HInput = INVALID_HANDLE_VALUE;
@@ -262,8 +270,8 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
    LOG( "Puts" );
    coord.X = ( DWORD ) cCol;
    coord.Y = ( DWORD ) cRow;
-   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwlen );
    FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwlen );
+   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwlen );
 }
 
 void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * dest )
@@ -423,9 +431,9 @@ void hb_gt_DispBegin( void )
    if( hb_gtDispCount() == 1 )
    {
       COORD coDest = { 0, 0 };
-      COORD coBuf;                      /* the size of the buffer to read into */
-      CHAR_INFO * pCharInfo;     /* buffer to store info from ReadConsoleOutput */
-      SMALL_RECT srWin;                       /* source rectangle to read from */
+      COORD coBuf;                    /* the size of the buffer to read into */
+      CHAR_INFO * pCharInfo;  /* buffer to store info from ReadConsoleOutput */
+      SMALL_RECT srWin;                     /* source rectangle to read from */
       CONSOLE_SCREEN_BUFFER_INFO csbi;
 
       GetConsoleScreenBufferInfo( HCursor, &csbi );
@@ -437,31 +445,31 @@ void hb_gt_DispBegin( void )
       pCharInfo = ( CHAR_INFO * ) hb_xgrab( coBuf.Y * coBuf.X * sizeof( CHAR_INFO ) );
 
       /* read the screen rectangle into the buffer */
-      ReadConsoleOutput( HOutput,       /* current screen handle  */
-                   pCharInfo,           /* transfer area          */
-                   coBuf,               /* size of destination buffer */
-                   coDest,              /* upper-left cell to write data to   */
-                   &srWin );            /* screen buffer rectangle to read from */
+      ReadConsoleOutput( HOutput,    /* current screen handle  */
+                   pCharInfo,        /* transfer area          */
+                   coBuf,            /* size of destination buffer */
+                   coDest,           /* upper-left cell to write data to   */
+                   &srWin );         /* screen buffer rectangle to read from */
 
       if( HStealth == INVALID_HANDLE_VALUE )
       {
          HStealth = CreateConsoleScreenBuffer(
-                    GENERIC_READ    | GENERIC_WRITE,    /* Access flag         */
-                    FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode   */
-                    NULL,                               /* Security attribute  */
-                    CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer      */
-                    NULL );                             /* reserved            */
+                    GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
+                    FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode  */
+                    NULL,                               /* Security attribute */
+                    CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
+                    NULL );                             /* reserved           */
 
       }
 
       hb_gt_SetScreenBuffer( HStealth, HOutput );
 
       HOutput = HStealth;
-      WriteConsoleOutput( HOutput,        /* output handle */
-                   pCharInfo,             /* data to write */
-                   coBuf,                 /* col/row size of source buffer */
-                   coDest,                /* upper-left cell to write data from in src */
-                   &srWin );              /* screen buffer rect to write data to */
+      WriteConsoleOutput( HOutput,    /* output handle */
+                   pCharInfo,         /* data to write */
+                   coBuf,             /* col/row size of source buffer */
+                   coDest,            /* upper-left cell to write data from in src */
+                   &srWin );          /* screen buffer rect to write data to */
 
       hb_xfree( pCharInfo );
    }
@@ -544,7 +552,7 @@ void hb_gt_Replicate( BYTE c, ULONG ulLength )
    COORD coBuf = { 0, 0 };
    DWORD dwWritten;
 
-/* TODO: later... */
+/* TODO: This is not used and may be eliminated after further review */
    FillConsoleOutputCharacter(
            HOutput,                      /* handle to screen buffer        */
            c,                            /* character to write             */
@@ -567,16 +575,18 @@ void hb_gt_SetBlink( BOOL bBlink )
 
 void hb_gt_DebugScreen( BOOL activate )
 {
+   /* ptucker */
+   /* TODO: This is not used and is still a work in progress */
    if( activate )
    {
       if( HDOutput == INVALID_HANDLE_VALUE )
       {
          HDOutput = CreateConsoleScreenBuffer(
-                    GENERIC_READ    | GENERIC_WRITE,    /* Access flag         */
-                    FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode   */
-                    NULL,                               /* Security attribute  */
-                    CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer      */
-                    NULL );                             /* reserved            */
+                    GENERIC_READ    | GENERIC_WRITE,    /* Access flag        */
+                    FILE_SHARE_READ | FILE_SHARE_WRITE, /* Buffer share mode  */
+                    NULL,                               /* Security attribute */
+                    CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer     */
+                    NULL );                             /* reserved           */
 
          hb_gt_SetScreenBuffer( HDOutput, HOutput );
       }
@@ -592,4 +602,3 @@ void hb_gt_DebugScreen( BOOL activate )
    }
    SetConsoleActiveScreenBuffer( HOutput );
 }
-
