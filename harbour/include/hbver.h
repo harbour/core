@@ -65,8 +65,8 @@
 /* TOFIX: Ideally these should be generated dynamically, until 
           then, they should be updated by the builder. [vszakats] */
 
-#define HB_VER_LENTRY   "2002-12-30 16:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.4288 2002/12/30 19:57:17 horacioroldan"
+#define HB_VER_LENTRY   "2002-12-31 11:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.4289 2002/12/31 16:47:43 dholm"
 #define HB_VER_C_USR    ""
 #define HB_VER_L_USR    ""
 #define HB_VER_PRG_USR  ""
