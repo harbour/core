@@ -100,6 +100,16 @@ $hb_collect source/rdd/Makefile
 $hb_collect source/rdd/*.[ch]
 $hb_collect source/rdd/*.prg
 
+# SOURCE\RDD\DBFDBT
+$hb_collect source/rdd/dbfdbt/Makefile
+$hb_collect source/rdd/dbfdbt/*.[ch]
+$hb_collect source/rdd/dbfdbt/*.prg
+
+# SOURCE\RDD\DBFFPT
+$hb_collect source/rdd/dbffpt/Makefile
+$hb_collect source/rdd/dbffpt/*.[ch]
+$hb_collect source/rdd/dbffpt/*.prg
+
 # SOURCE\RDD\DBFCDX
 $hb_collect source/rdd/dbfcdx/Makefile
 $hb_collect source/rdd/dbfcdx/*.[ch]
@@ -135,6 +145,8 @@ $hb_collect source/rtl/gtcgi/*.[ch]
 $hb_collect source/rtl/gtcrs/Makefile
 $hb_collect source/rtl/gtcrs/*.[ch]
 $hb_collect source/rtl/gtcrs/*.def
+$hb_collect source/rtl/gtcrs/*.map
+$hb_collect source/rtl/gtcrs/*.prg
 
 # SOURCE\RTL\GTDOS
 $hb_collect source/rtl/gtdos/Makefile
@@ -207,6 +219,9 @@ $hb_collect utils/hbtest/*.ch
 $hb_collect utils/hbtest/*.cmd
 $hb_collect utils/hbtest/*.prg
 
+# CONTRIB
+$hb_collect contrib/Makefile
+
 # CONTRIB\LIBCT
 $hb_collect contrib/libct/Makefile
 $hb_collect contrib/libct/*.[ch]
@@ -217,6 +232,36 @@ $hb_collect contrib/libct/*.ch
 $hb_collect contrib/dot/*.prg
 $hb_collect contrib/dot/*.ch
 $hb_collect contrib/dot/*.txt
+
+# CONTRIB\ODBC
+$hb_collect contrib/odbc/Makefile
+$hb_collect contrib/odbc/*.c
+$hb_collect contrib/odbc/*.ch
+$hb_collect contrib/odbc/*.prg
+
+# CONTRIB\HTMLLIB
+$hb_collect contrib/htmllib/[mM]akefile*
+$hb_collect contrib/htmllib/*.ch
+$hb_collect contrib/htmllib/*.prg
+$hb_collect contrib/htmllib/*.bat
+
+# CONTRIB\LIBGT
+$hb_collect contrib/libgt/[Mm]akefile*
+$hb_collect contrib/libgt/*.[ch]
+$hb_collect contrib/libgt/*.bat
+
+# CONTRIB\LIBGT\DOC
+$hb_collect contrib/libgt/doc/gen*
+$hb_collect contrib/libgt/doc/lib*
+
+# CONTRIB\LIBGT\DOC\EN
+$hb_collect contrib/libgt/doc/*.txt
+
+# CONTRIB\LIBMISC
+$hb_collect contrib/odbc/[mM]akefile*
+$hb_collect contrib/odbc/*.c
+$hb_collect contrib/odbc/*.ch
+$hb_collect contrib/odbc/*.prg
 
 }
 

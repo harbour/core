@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-12-02 15:57 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * bin/pack_src.sh
+    + Added missing directories to script
+
 2003-12-02 15:23 UTC+0100 Lorenzo Fiorini <lorenzo_fiorini@tin.it>
   * source/vm/hvm.c
   * source/vm/mainwin.c
