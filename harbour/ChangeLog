@@ -8,6 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-23 02:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/postinst.sh
+   * changed install command syntax for Solaris compatibility
+
+  * harbour/include/hbdefs.h
+   * minor formating
+
+  * harbour/source/vm/fm.c
+   + overwrite HB_MEMINFO_SIGNATURE with 0 in hb_xfree() for detection
+     redundant hb_xfree() call with the same pointer
+
+  * harbour/source/rtl/spfiles.c
+   * set the real path in second parameter of RetPath even when
+     hb_spFiles fails to avoid race condition
+
+  * harbour/source/vm/hvm.c
+   ! set proper decimal value in hb_vmDivide when the integer results
+     is converted into double
+   ! commented out integer division optimization at runtime for Clipper
+     compatibility
+
 2004-10-20 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     + added predefined macro __PLATFORM__UNIX for all *nix compatible

@@ -2039,7 +2039,11 @@ static void hb_vmDivide( void )
    pItem1 = hb_stackItemFromTop( -2 );
    pItem2 = hb_stackItemFromTop( -1 );
 
-   if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+   /*
+    * This code is commented out for Clipper compatibility.
+    * See David's note below, Druzus.
+    */   
+   /* if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
    {
       HB_LONG lNumber2 = hb_vmPopHBLong();
       HB_LONG lNumber1 = hb_vmPopHBLong();
@@ -2057,9 +2061,9 @@ static void hb_vmDivide( void )
       else if ( lNumber1 % lNumber2 == 0 )
          hb_vmPushNumInt( lNumber1 / lNumber2 );
       else
-         hb_vmPushDouble( ( double ) lNumber1 / ( double ) lNumber2, 0 );
+         hb_vmPushDouble( ( ( double ) lNumber1 ) / ( double ) lNumber2, hb_set.HB_SET_DECIMALS );
    }
-   else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
+   else */ if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
       double d2 = hb_vmPopNumber();
       double d1 = hb_vmPopNumber();

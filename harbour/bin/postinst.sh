@@ -46,7 +46,9 @@ then
         # We must build an archive index on Darwin
         AR="ar -crs"
     fi
-    if [ "${HB_ARCHITECTURE}" != "dos" ]; then
+    if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
+        install -m 755 -f "${HB_BIN_INSTALL}" "${hb_root}/bin/hb-mkslib.sh"
+    elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
         install -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"

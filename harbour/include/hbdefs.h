@@ -67,7 +67,7 @@
 */
 
 #if defined( HB_OS_WIN_32 )
-   #if !defined( HB_WIN32_IO_OFF ) 
+   #if !defined( HB_WIN32_IO_OFF )
       #define HB_WIN32_IO
    #endif
    #if defined( HB_WIN32_IO ) && !defined( HB_OS_WIN_32_USED )
@@ -88,15 +88,15 @@
 #endif
 
 /* Include windows.h if applicable and requested */
-#if defined(HB_OS_WIN_32_USED) && defined(HB_OS_WIN_32)
+#if defined( HB_OS_WIN_32_USED ) && defined( HB_OS_WIN_32 )
 
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
-   #if defined(__GNUC__)
+   #if defined( __GNUC__ )
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 
-#elif defined(HB_OS_OS2)
+#elif defined( HB_OS_OS2 )
 
    /* With the exception of WORD, the IBM Visual Age C++ compiler has
       its own definitions of the Harbour types most of which conflict with the
@@ -123,7 +123,7 @@
    #undef UINT
    #define HB_DONT_DEFINE_BASIC_TYPES
 
-#elif defined(HB_OS_DOS)
+#elif defined( HB_OS_DOS )
 
    #include <dos.h>
 
@@ -147,7 +147,7 @@
 
 #endif
 
-#if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
+#if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
    #undef BOOL                            /* boolean */
    typedef int BOOL;
@@ -525,6 +525,7 @@ typedef long HB_PTRDIFF;
 #  define PFHL    PFLL
 #endif
 
+
 #define HB_SWAP_UINT64( w )      ( ( UINT64 ) ( ( ( ( UINT64 ) ( w ) & HB_LL( 0x00000000000000FF ) ) << 56 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x000000000000FF00 ) ) << 40 ) | \
                                                 ( ( ( UINT64 ) ( w ) & HB_LL( 0x0000000000FF0000 ) ) >> 24 ) | \
@@ -891,7 +892,7 @@ typedef long HB_PTRDIFF;
  * when INT64 is not supported - they are necessary for PCODE and
  * database access
  */
-#if defined( HB_LONG_LONG_OFF ) && !defined( UINT64_MAX )
+#if defined( HB_LONG_LONG_OFF ) && !defined( HB_ARCH_64BIT )
    #undef HB_GET_LE_INT64
    #undef HB_GET_LE_UINT64
    #undef HB_PUT_LE_UINT64
@@ -965,11 +966,11 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #elif defined( __WATCOMC__ )
       #define HB_EXPORT __declspec( dllexport )
 
-   #elif defined( WIN32 ) && !defined( ASANT )
-      #define HB_EXPORT _declspec( dllexport )
-
    #elif defined( ASANLM ) || defined( ASANT )
       #define HB_EXPORT
+
+   #elif defined( WIN32 )
+      #define HB_EXPORT _declspec( dllexport )
 
    #else
       #define HB_EXPORT

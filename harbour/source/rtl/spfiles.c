@@ -53,21 +53,21 @@
 #include "hbapifs.h"
 #include "hbset.h"
 
-BOOL hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] )
+BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
 {
    BYTE *Path;
    BOOL bIsFile = FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, RetPath));
+   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, pRetPath));
 
-   if( RetPath )
+   if( pRetPath )
    {
-      Path = RetPath;
+      Path = pRetPath;
    }
    else
    {
-      Path = (BYTE *) hb_xgrab( _POSIX_PATH_MAX + 3 + 10 );
+      Path = (BYTE *) hb_xgrab( _POSIX_PATH_MAX + 1 );
    }
 
    pFilepath = hb_fsFNameSplit( (char*) pFilename );
@@ -98,16 +98,23 @@ BOOL hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] )
             NextPath = NextPath->pNext;
          }
       }
+
+      /*
+       * This code is intentional. To eliminate race condition,
+       * in pending hb_spCreate()/hb_spOpen() call when we have to know
+       * real path and file name we have to set its deterministic value
+       * here. If it's not necessary the caller may drop this value.
+       */
+      if( ! bIsFile )
+      {
+         pFilepath->szPath = hb_set.HB_SET_DEFAULT ? hb_set.HB_SET_DEFAULT : ".";
+         hb_fsFNameMerge( (char*) Path, pFilepath );
+      }
    }
 
    hb_xfree( pFilepath );
 
-   if( bIsFile == FALSE )
-   {
-      Path[0] = '\0';
-   }
-
-   if( RetPath == NULL )
+   if( pRetPath == NULL )
    {
       hb_xfree( Path );
    }
@@ -117,7 +124,7 @@ BOOL hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] )
 
 FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 {
-   BYTE path[ _POSIX_PATH_MAX + 3 + 10 ];
+   BYTE path[ _POSIX_PATH_MAX + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spOpen(%p, %hu)", pFilename, uiFlags));
 
