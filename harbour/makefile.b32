@@ -39,7 +39,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               macroy.obj macrol.obj macro.obj \
               maindll.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
-              memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
+              memvarbl.obj menuto.obj mlcount.obj mlpos.obj mtran.obj msgen.obj \
               natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj oemansi.obj\
               pcount.obj proc.obj pvalue.obj readvar.obj readkey.obj \
               samples.obj set.obj setta.obj setcolor.obj \
@@ -113,6 +113,7 @@ macro.obj    : macro.c    extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
 mathx.obj    : mathx.c    extend.h hbdefs.h
 mlcount.obj  : mlcount.c  extend.h hbdefs.h
+mlpos.obj    : mlpos.c    extend.h hbdefs.h
 memofile.obj : memofile.c extend.h hbdefs.h
 memoline.obj : memoline.c extend.h hbdefs.h
 memvarbl.obj : memvarbl.c extend.h hbdefs.h

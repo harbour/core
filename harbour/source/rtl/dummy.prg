@@ -59,7 +59,6 @@ FUNCTION dbFieldInfo()     ; RETURN NIL /* 5.3 */
 
 FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0
-FUNCTION MLPos()           ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 
 FUNCTION __dbApp()         ; RETURN NIL
@@ -94,4 +93,3 @@ FUNCTION ReadKill()        ; RETURN .F.
 FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL
-
