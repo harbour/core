@@ -1,0 +1,87 @@
+/*
+ * $Id$
+ */
+
+/* Use this format for the entry headers:
+   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+   For example:
+   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+*/
+
+
+2002-01-20 13:29 UTC+0100 Patrick Mast <email@patrickmast.com>
+   + Added ChangeLog to the /contrib/apollo dir
+   + contrib/apollo/test/apollo.ch
+     + defines for function sx_SysProp
+   * contrib/apollo/test/apollo.prg
+     Added define "Apollo.ch"
+   * contrib/apollo/apollo1.prg
+     + Added function sx_GetVal()
+   * contrib/apollo/apollo.c
+     + Added function sx_SetOrder()
+     + Added function sx_Select()
+     + Added function sx_SysProp()
+
+2001-12-30 13:47 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo/apollo.c
+     + Added function sx_GetDateJulian()
+     + Added function sx_GetVariant()
+     + Added function sx_SetCentury()
+     + Added function sx_SetDateFormat()
+     + Added function sx_GetLogical()
+     * modified function sx_Replace()
+   Note: Replace a logical value with sx_Replace() does not work yet.
+   * contrib/apollo/test/apollo.prg
+     * Added added functions in the test application.
+     * enhanced code
+     * Added and changed defines
+
+
+2001-12-28 22:53 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + Added function sx_GoBottom()
+     + Added function sx_Go()
+     + Added function sx_Seek()
+     + Added function sx_SetSoftSeek()
+     + Added function sx_RLock()
+     + Added function sx_Reindex()
+     + Added function sx_RecCount()
+     + Added function sx_SetMemoBlockSize()
+     + Added function sx_CreateNew()
+     + Added function sx_CreateField()
+     + Added function sx_CreateExec()
+   * contrib/apollo/test
+     * Added added functions in the test application.
+
+
+2001-12-28 20:39 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + Added function sx_AppendBlank()
+     + Added function sx_Close()
+     + Added function sx_Commit()
+     + Added function sx_CreateField()
+     + Added function sx_Eof()
+     + Added function sx_GetString()
+     + Added function sx_GoTop()
+     + Added function sx_IndexTag()
+     + Added function sx_RecNo()
+     + Added function sx_Replace()
+     + Added function sx_Skip()
+     + Added function sx_Use()
+     + Added function sx_Zap()
+   * contrib/apollo/test
+     * Added functions in a test application.
+
+2001-12-28 18:54 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + added readme.txt
+   * contrib/apollo/test
+     + bld.bat
+     + bld_b32.bat
+     * updated apollo.prg
+
+2001-12-28 13:28 UTC+0100 Patrick Mast <email@patrickmast.com>
+   + contrib/apollo
+     * Started Apollo SDE60.DLL connection for accessing
+       SIXNSX database files
+       Note: This is only the start.

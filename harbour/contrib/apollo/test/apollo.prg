@@ -50,40 +50,8 @@
  *
  */
 
-/* ************* */
-/*   date types  */
-/* ************* */
-#define SX_AMERICAN      0
-#define SX_ANSI          1
-#define SX_BRITISH       2
-#define SX_FRENCH        3
-#define SX_GERMAN        4
-#define SX_ITALIAN       5
-#define SX_SPANISH       6
+#include "Apollo.ch"
 
-/* ************************************ */
-/* Data type identifiers for sx_Replace */
-/* ************************************ */
-#define SX_R_INTEGER     1
-#define SX_R_LONG        2
-#define SX_R_DOUBLE      8
-#define SX_R_JULIAN     32
-#define SX_R_LOGICAL   128
-#define SX_R_CHAR     1024
-#define SX_R_DATESTR  1056
-#define SX_R_MEMO     3072
-#define SX_R_BITMAP   4096
-#define SX_R_BLOBFILE 8192
-#define SX_R_BLOBPTR  8193
-#define SX_R_GENERAL  8195
-
-#define SX_SDENTX        1   // CA-Clipper compatible DBF-NTX driver
-#define SX_SDEFOX        2   // FoxPro compatible DBF-IDX/CDX driver
-#define SX_SDENSX        3   // Vista DBF-NSX driver
-
-#define SX_READWRITE     0
-#define SX_READONLY      1
-#define SX_EXCLUSIVE     2
 
 Function Main()
 LOCAL nAlias,f

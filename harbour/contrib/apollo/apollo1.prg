@@ -64,3 +64,19 @@ init procedure ApolloInit
 */
 
 return
+
+
+
+/* -----------------20/01/2002 13:25-----------------
+ * sx_GetVal()
+ * --------------------------------------------------*/
+Function sx_GetVal( x )
+RETURN Val( sx_Getvariant( x ) )
+
+
+
+
+/*
+sx_GetVal()
+
+*/

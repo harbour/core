@@ -275,10 +275,6 @@ switch ( hb_parni( 2 ) )
  default:         sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  );
 }
 
-//    sx_Replace( hb_parc( 1 ),              /* Field name */
-//                hb_parni( 2 ),             /* Data type */
-//                hb_parc( 3) );             /* Data */
-
 }
 
 
@@ -298,6 +294,17 @@ HB_FUNC( SX_SEEK )
 {
     hb_retl(
      sx_Seek( hb_parc( 1 ) ) );            /* The value to search for as a string */
+}
+
+
+/* -----------------20/01/2002 13:36-----------------
+ * sx_Select() => The previous select area is returned.
+ *                If there was no previous area active, zero is returned.
+ * --------------------------------------------------*/
+HB_FUNC( SX_SELECT )
+{
+    hb_retni(
+     sx_Seek( hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
 }
 
 
@@ -334,6 +341,16 @@ HB_FUNC( SX_SETMEMOBLOCKSIZE )
                                             * The size must be a value from 1 through 1024. */
 }
 
+/* -----------------20/01/2002 13:33-----------------
+ * sx_SetOrder() => The previous index order identifier in use is returned.
+ *                  If zero, there was no previous index order in use.
+ * --------------------------------------------------*/
+HB_FUNC( SX_SETORDER )
+{
+    hb_retni(
+     sx_SetOrder( hb_parni( 1 ) ) );       /* Selects an existing order as the controlling index order. */
+}
+
 
 /* -----------------29/12/2001 19:59-----------------
  * sx_SetSoftSeek()
@@ -351,6 +368,27 @@ HB_FUNC( SX_SKIP )
 {
     sx_Skip( hb_parni( 1 ) );              /* Number of records to skip */
 }
+
+
+/* -----------------20/01/2002 14:2-----------------
+ * sx_SysProp() => Varies depending on the type of data being requested.
+ * LONG  SDEAPI WINAPI sx_SysProp (WORD uiSysItem, PVOID vpData);
+ * --------------------------------------------------*/
+HB_FUNC( SX_SYSPROP )
+{
+    int i = hb_parni( 2 );
+    hb_retni(
+     sx_SysProp( hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
+                 ( void * ) &i ));
+}
+/*
+HB_FUNC( SX_DISABLEAUTOOPEN )
+{
+    int i = 1;
+    sx_SysProp( 1013, ( void * ) &i );
+}
+*/
+
 
 
 /* -----------------29/12/2001 19:17-----------------
@@ -387,24 +425,6 @@ HB_FUNC( SX_ZAP )
 
 
 /*
-2001-12-30 13:47 UTC+0100 Patrick Mast <email@patrickmast.com>
-   * contrib/apollo/apollo.c
-     + Added function sx_GetDateJulian()
-     + Added function sx_GetVariant()
-     + Added function sx_SetCentury()
-     + Added function sx_SetDateFormat()
-     + Added function sx_GetLogical()
-     * modified function sx_Replace()
-   Note: Replace a logical value with sx_Replace() does not work yet.
-   * contrib/apollo/test/apollo.prg
-     * Added added functions in the test application.
-     * enhanced code
-     * Added and changed defines
-
-*/
-
-
-/*
 sx_AppendBlank()
 sx_Close()
 sx_Commit()
@@ -420,17 +440,20 @@ sx_Go()
 sx_GoBottom()
 sx_GoTop()
 sx_IndexTag()
-sx_RecCOunt()
+sx_RecCount()
 sx_RecNo()
 sx_Reindex()
 sx_Replace()
 sx_RLock()
 sx_Seek()
+sx_Select()
 sx_SetDateFormat()
 sx_SetCentury()
 sx_SetMemoBlockSize()
+sx_SetOrder()
 sx_SetSoftSeek()
 sx_Skip()
+sx_SysProp
 sx_Use()
 sx_Version()
 sx_Zap()
