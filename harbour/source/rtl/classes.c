@@ -242,7 +242,7 @@ static void DictRealloc( PCLASS pClass )
    }
 }
 
-static HARBOUR ClassSel() /* hClass */
+static HARBOUR ClassSel()
 {
    WORD    wClass = IS_ARRAY( stack.pBase + 1 ) ?
         ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass: 0;
@@ -268,6 +268,8 @@ static HARBOUR ClassSel() /* hClass */
    {
       pClass   = &pClasses[ wClass - 1 ];
       wLimit   = pClass->wHashKey * BUCKET;
+      ItemRelease( pReturn );
+      _xfree( pReturn );
       pReturn = _itemArrayNew( pClass->wMethods );
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
@@ -279,10 +281,12 @@ static HARBOUR ClassSel() /* hClass */
             pItem  = _itemPutC( pItem, pMessage->pSymbol->szName );
             _itemArrayPut( pReturn, ++wPos, pItem );
             ItemRelease( pItem );
+            _xfree( pItem );
          }
       }
    }
    _itemReturn( pReturn );
+   ItemRelease( pReturn );
    _xfree( pReturn );
 }
 
