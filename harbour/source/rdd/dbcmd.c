@@ -71,6 +71,9 @@
 #include "hbrddwrk.h"
 #include "hbapicdp.h"
 
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
 
 typedef struct _AREANODE
 {
@@ -80,8 +83,6 @@ typedef struct _AREANODE
 } AREANODE;
 
 typedef AREANODE * LPAREANODE;
-
-
 
 extern HB_FUNC( _DBF );
 extern HB_FUNC( _SDF );
