@@ -1162,7 +1162,7 @@ METHOD TBReader( oGet,oGetsys,  aMsg ) Class HBGETLIST
                // nRow := ROW()  // Commented out.
                // nCol := COL()  // Commented out.
                // ShowGetMsg( oGet, aMsg )
-               // DevPos( nRow, nCol )  // Commented out.
+               // SetPos( nRow, nCol )  // Commented out.
 
             endif
 

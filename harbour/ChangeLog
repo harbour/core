@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-15 05:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     ! Fixed color handling to take into account ::defcolor 
+       of TBColumn. Now TBrowse coloring is C52 compatible. 
+       For speed wierd cases are not handled like if the value 
+       of ::defcolor is improper.
+
+   * source/rtl/tgetlist.prg
+   * source/rtl/ttopbar.prg
+   * source/rtl/tbrowse.prg
+     ! DevPos() -> SetPos() (TBrowse() had plenty of them)
+     ! Few missing color params added to DispOut*()
+
 2004-02-15 04:20 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg

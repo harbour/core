@@ -429,7 +429,7 @@ METHOD Display() CLASS TopBarMenu
       endif
    endif
 
-   DevPos( nOldRow, nOldCol )
+   SetPos( nOldRow, nOldCol )
    MSetCursor( lOldCur )
 
    DispEnd()

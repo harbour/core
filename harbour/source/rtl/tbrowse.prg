@@ -67,7 +67,9 @@
 
 
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
-         otherwise it will not be CA-Cl*pper compatible. [vszakats] */
+         otherwise it will not be CA-Cl*pper compatible.
+         ADDITION: Same goes for DevPos(), always use SetPod() instead.
+         [vszakats] */
 
 /* TODO: :firstScrCol() --> nScreenCol
          Determines screen column where the first table column is displayed.
@@ -84,6 +86,9 @@
 #include "setcurs.ch"
 #include "button.ch"
 #include "tbrowse.ch"
+
+#define _DISPCELL_CLR_UNSELECTED        1
+#define _DISPCELL_CLR_SELECTED          2
 
 CLASS TBrowse
 
@@ -173,7 +178,7 @@ CLASS TBrowse
 
    METHOD PosCursor()                     // Positions the cursor to the beginning of the call, used only when autolite==.F.
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
-   METHOD DispCell(nColumn, nColor)       // Displays a single cell and returns cell type as a single letter like Valtype()
+   METHOD DispCell(nColumn, nMode)        // Displays a single cell and returns cell type as a single letter like Valtype()
    METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
    METHOD RedrawHeaders(nWidth)           // Repaints TBrowse Headers
    METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
@@ -777,7 +782,7 @@ METHOD DeHilite() CLASS TBrowse
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
-   cType := ::DispCell(::ColPos, CLR_STANDARD)
+   cType := ::DispCell(::ColPos, _DISPCELL_CLR_UNSELECTED)
 
    SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
 
@@ -803,7 +808,7 @@ METHOD Hilite() CLASS TBrowse
    // Start of cell
    SetPos( nRow, nCol)
 
-   cType := ::DispCell(::ColPos, CLR_ENHANCED)
+   cType := ::DispCell(::ColPos, _DISPCELL_CLR_SELECTED)
    nCol  += iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 )
 
    // Put cursor back on first char of cell value
@@ -916,19 +921,18 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       DispBox(::nTop, ::nLeft, ::nTop + ::nHeaderHeight - 1, ::nRight, cBlankBox, ::ColorSpec)
 
       // Set cursor at first field start of description
-      DevPos(::nTop, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
+      SetPos(::nTop, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
 
       for n := iif(::nFrozenCols > 0, 1, ::leftVisible) to ::rightVisible
          if ::nFrozenCols > 0 .and. n == ::nFrozenCols + 1
             n := ::leftVisible
          endif
 
-         ::WriteMLineText(::aColumns[ n ]:Heading, ::aColsWidth[ n ], .T., ::ColorSpec)
+         ::WriteMLineText(::aColumns[ n ]:Heading, ::aColsWidth[ n ], .T., hb_ColorIndex(::ColorSpec, ::aColumns[ n ]:defColor[ _DISPCELL_CLR_UNSELECTED ] - 1))
 
          if n < ::rightVisible
             // Set cursor at start of next field description
-            DevPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
-
+            SetPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
          endif
       next
    endif
@@ -973,18 +977,18 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
       DispBox(::nBottom - ::nFooterHeight + 1, ::nLeft, ::nBottom, ::nRight, cBlankBox, ::ColorSpec)
 
       // Set cursor at first field start of description
-      DevPos(::nBottom, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
+      SetPos(::nBottom, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
 
       for n := iif( ::nFrozenCols > 0, 1, ::leftVisible ) to ::rightVisible
          if ::nFrozenCols > 0 .and. n == ::nFrozenCols + 1
             n := ::leftVisible
          endif
 
-         ::WriteMLineText(::aColumns[ n ]:Footing, ::aColsWidth[ n ], .F., ::ColorSpec)
+         ::WriteMLineText(::aColumns[ n ]:Footing, ::aColsWidth[ n ], .F., hb_ColorIndex(::ColorSpec, ::aColumns[ n ]:defColor[ _DISPCELL_CLR_UNSELECTED ] - 1))
 
          if n < ::rightVisible
             // Set cursor at start of next field description
-            DevPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
+            SetPos(Row(), Col() + iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep)))
 
          endif
       next
@@ -1189,12 +1193,10 @@ METHOD Stabilize() CLASS TBrowse
                endif
 
                if lDisplay
-                  ::DispCell(n, CLR_STANDARD)
-
+                  ::DispCell(n, _DISPCELL_CLR_UNSELECTED)
                else
                   // Clear cell
-                  DispOut( Space( ::aColsWidth[ n ] ), ::ColorSpec )
-
+                  DispOut( Space( ::aColsWidth[ n ] ), hb_ColorIndex(::ColorSpec, ::aColumns[ n ]:defColor[ _DISPCELL_CLR_UNSELECTED ] - 1) )
                endif
 
                if n < ::rightVisible
@@ -1295,7 +1297,7 @@ METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 return Self
 
 
-METHOD DispCell( nColumn, nColor ) CLASS TBrowse
+METHOD DispCell( nColumn, nMode ) CLASS TBrowse
 
    LOCAL oCol   := ::aColumns[nColumn]
    LOCAL nWidth := ::aColsWidth[nColumn]
@@ -1305,10 +1307,7 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    LOCAL tmp
 
-   // NOTE: When nColor is used as an array index we need to increment it by one since CLR_STANDARD is 0
-   LOCAL cColor := iif(oCol:ColorBlock != NIL,;
-                       hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor + 1] - 1),;
-                       hb_ColorIndex(::ColorSpec, nColor))
+   LOCAL cColor := hb_ColorIndex(::ColorSpec, iif( oCol:ColorBlock == NIL, oCol:defColor[ nMode ], Eval(oCol:ColorBlock, ftmp)[ nMode ]) - 1)
 
    do case
    case cType $ "CM"
@@ -1323,9 +1322,9 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    case cType == "L"
       tmp := PadC( "X", nWidth )
-      DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ) )
+      DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ), cColor )
       DispOut( iif(ftmp, "T", "F"), cColor )
-      DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ) )
+      DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ), cColor )
 
    otherwise
       DispOut( Space(nWidth), cColor )
@@ -1479,12 +1478,12 @@ METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) CLASS TBrowse
          cS := cStr + ";"
 
          for n := ::nHeaderHeight to 1 step -1
-            DevPos(nRow + n - 1, nCol)
+            SetPos(nRow + n - 1, nCol)
             DispOut(PadR(__StrToken(@cS, n, ";"), nPadLen), cColor)
 
          next
 
-         DevPos(nRow, nCol + nPadLen)
+         SetPos(nRow, nCol + nPadLen)
 
       endif
 
@@ -1500,11 +1499,11 @@ METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) CLASS TBrowse
          cS := cStr + ";"
 
          for n := 0 to (::nFooterHeight - 1)
-            DevPos(nRow - n, nCol)
+            SetPos(nRow - n, nCol)
             DispOut(PadR(__StrToken(@cS, ::nFooterHeight - n, ";"), nPadLen), cColor)
          next
 
-         DevPos(nRow, nCol + nPadLen)
+         SetPos(nRow, nCol + nPadLen)
 
       endif
 
