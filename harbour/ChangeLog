@@ -1,3 +1,7 @@
+19990807-22:00 WIB Andi Jahja
+  * source/rtl/asort.prg
+    bug fix when sorting an empty array
+
 19990807-12:54 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
      * improved
