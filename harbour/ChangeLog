@@ -1,3 +1,16 @@
+20000308-00:40 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * samples/Makefile
+     samples/cccppc/* (scheduled for removal, since it's huge)
+     samples/guestbk/Makefile
+     samples/hscript/Makefile
+     samples/misc/Makefile
+     samples/pe/Makefile
+     samples/guestbk/bld_b32.bat
+     samples/hscript/bld_b32.bat
+     * Updated. (not tested)
+   * samples/Makefile
+     - cccppc removed from the list.
+
 20000308-00:14 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbver.h
      * Version bumped to 0.32 2000-03-07

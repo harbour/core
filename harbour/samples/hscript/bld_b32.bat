@@ -4,5 +4,5 @@ rem $Id$
 rem
 
 ..\..\bin\harbour hscript /n /i..\..\include
-bcc32 -ehscript.exe -O2 -I..\..\include -L..\..\lib\b32 -v harbour.lib terminal.lib hbpp.lib hbgt.lib rdd.lib hscript.c
+bcc32 -O2 -I..\..\include -L..\..\lib -ehscript.exe %hscript.c tools.lib debug.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
 rem del hscript.c

@@ -5,7 +5,6 @@
 ROOT = ../
 
 DIRS=\
-        cccppc \
 	guestbk \
 	hscript \
 	misc \

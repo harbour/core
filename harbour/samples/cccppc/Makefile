@@ -52,15 +52,16 @@ PRG_SOURCES=\
 PRG_MAIN=cccppc.prg
 
 LIBS=\
-        runner \
         tools \
         debug \
-        rdd \
         vm \
+        rtl \
         rdd \
         rtl \
-        pp \
-	common \
+        vm \
 	macro \
+        pp \
+        runner \
+        common \
 
 include $(TOP)$(ROOT)config/bin.cf

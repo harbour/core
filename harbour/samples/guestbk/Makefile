@@ -12,15 +12,16 @@ PRG_SOURCES=\
 PRG_MAIN=guestbk.prg
 
 LIBS=\
-        runner \
-	tools \
+        tools \
         debug \
-	rdd \
-	vm \
-	rdd \
-	rtl \
-	pp \
-	common \
+        vm \
+        rtl \
+        rdd \
+        rtl \
+        vm \
 	macro \
+        pp \
+        runner \
+        common \
 
 include $(TOP)$(ROOT)config/bin.cf

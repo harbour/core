@@ -7,15 +7,15 @@ ROOT = ../../
 LIBS=\
         tools \
         debug \
-        rtl \
-        rdd \
         vm \
+        rtl \
         rdd \
         rtl \
+        vm \
+	macro \
         pp \
         runner \
-	common \
-	macro \
+        common \
 
 ifeq ($(PM),)
   PM := $(pm)
