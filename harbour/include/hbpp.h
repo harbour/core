@@ -88,7 +88,7 @@ extern DEFINES * hb_pp_AddDefine( char *, char * );         /* Add new #define t
 /* HBPPINT.C exported functions */
 
 extern void   hb_pp_Init( void );
-extern int    hb_pp_Internal( FILE *, FILE *, char * );
+extern int    hb_pp_Internal( FILE *, char * );
 
 /* HBPP.C exported variables */
 

@@ -47,6 +47,9 @@
 #include <string.h>
 #include "hbpp.h"
 #include "hberrors.h"
+#include "compiler.h"
+
+extern FILES       hb_comp_files;
 
 static int  s_iBuffer;
 static int  s_lenBuffer;
@@ -62,7 +65,7 @@ void hb_pp_Init( void )
   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 }
 
-int hb_pp_Internal( FILE * handl_i, FILE * handl_o, char * sOut )
+int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
   static char sBuffer[ HB_PP_BUFF_SIZE ];           /* File read buffer */
   char * ptr, * ptrOut = sOut;
@@ -70,6 +73,7 @@ int hb_pp_Internal( FILE * handl_i, FILE * handl_o, char * sOut )
   int lens = 0, rdlen;
   int rezParse;
   int nline = 0;
+  FILE * handl_i = hb_comp_files.pLast->handle;
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 

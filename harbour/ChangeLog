@@ -1,3 +1,11 @@
+20000216-23:05 GMT+3 Alexander Kresin
+   * source/pp/hbppint.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+   * include/hbpp.h
+     * some changes needed for implementation of pp feature ( accepting of
+       statements in include files )
+
 20000216-13:12 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/typefile.prg
