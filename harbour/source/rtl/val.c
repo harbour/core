@@ -38,6 +38,14 @@
 #include "hbapierr.h"
 
 /* returns the numeric value of a character string representation of a number  */
+double hb_strVal( const char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s)", szText));
+
+   return atof( szText );
+}
+
+/* returns the numeric value of a character string representation of a number  */
 HARBOUR HB_VAL( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );

@@ -111,6 +111,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\defpath.obj \
    $(OBJ_DIR)\descend.obj \
    $(OBJ_DIR)\dir.obj \
+   $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
    $(OBJ_DIR)\environ.obj \
@@ -147,12 +148,14 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\rat.obj \
    $(OBJ_DIR)\replic.obj \
    $(OBJ_DIR)\right.obj \
    $(OBJ_DIR)\round.obj \
    $(OBJ_DIR)\run.obj \
    $(OBJ_DIR)\samples.obj \
    $(OBJ_DIR)\saverest.obj \
+   $(OBJ_DIR)\scroll.obj \
    $(OBJ_DIR)\seconds.obj \
    $(OBJ_DIR)\set.obj \
    $(OBJ_DIR)\setcolor.obj \
@@ -270,6 +273,9 @@ TOOLS_LIB_OBJS = \
 MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macroy.obj \
    $(OBJ_DIR)\macrol.obj \
+   $(OBJ_DIR)\macroa.obj \
+   $(OBJ_DIR)\macrob.obj \
+   $(OBJ_DIR)\macroc.obj \
    $(OBJ_DIR)\macro.obj
 
 #
@@ -390,7 +396,6 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\genpas.obj \
    $(OBJ_DIR)\genrc.obj \
    $(OBJ_DIR)\genhrb.obj \
-   $(OBJ_DIR)\expropt.obj \
    $(OBJ_DIR)\expropta.obj \
    $(OBJ_DIR)\exproptb.obj \
    $(OBJ_DIR)\exproptc.obj \
@@ -548,11 +553,11 @@ $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d $** -o$@
 
-$(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$@ $**
+
+$(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
@@ -888,6 +893,10 @@ $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\diskspac.obj : $(RTL_DIR)\diskspac.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1100,6 +1109,10 @@ $(OBJ_DIR)\pad.obj : $(RTL_DIR)\pad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
+$(OBJ_DIR)\rat.obj : $(RTL_DIR)\rat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
 $(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1128,6 +1141,10 @@ $(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\saverest.obj : $(RTL_DIR)\saverest.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\scroll.obj : $(RTL_DIR)\scroll.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 
@@ -1537,12 +1554,12 @@ $(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -d $** -o$@
 
+$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
+   flex -i -8 -o$@ $**
+
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) -+$@,,
-
-$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-   flex -i -8 -o$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**

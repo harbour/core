@@ -51,7 +51,6 @@
  *    HB_ISDISK()
  *    HB_DISKCHANGE()
  *    HB_DISKNAME()
- *    HB_DISKSPACE() (parts by Luiz Rafael Culik <culik@sl.conex.net>)
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -73,9 +72,8 @@
    This has been corrected by ptucker
  */
 
-#define HB_OS_WIN_32_USED
-
 #include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
@@ -87,10 +85,10 @@
    #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
-#if !defined( OS_UNIX_COMPATIBLE )   
-   #include <io.h>
-#endif
 
+   #if !defined(OS_UNIX_COMPATIBLE) 
+      #include <io.h>
+   #endif
    #if defined(__DJGPP__)
       #include <dir.h>
       #define _getdrive getdisk
@@ -1531,66 +1529,6 @@ HARBOUR HB_DIRREMOVE( void )
 }
 
 #endif
-
-HARBOUR HB_DISKSPACE( void )
-{
-   ULONG ulSpaceFree = 0;
-   USHORT uiDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-                     ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
-
-#if defined( DOS ) || defined( __WATCOMC__ )
-
-   struct diskfree_t disk;
-   unsigned uiResult;
-
-   while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
-   {
-      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
-
-      if( uiAction == E_DEFAULT || uiAction == E_BREAK )
-         break;
-   }
-
-   if( uiResult != 0 )
-      ulSpaceFree = ( ULONG ) disk.avail_clusters *
-                    ( ULONG ) disk.sectors_per_cluster *
-                    ( ULONG ) disk.bytes_per_sector;
-
-#elif defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
-
-   {
-      char szPath[ 4 ];
-
-      DWORD dwSectorsPerCluster;
-      DWORD dwBytesPerSector;
-      DWORD dwNumberOfFreeClusters;
-      DWORD dwTotalNumberOfClusters;
-
-      szPath[ 0 ] = uiDrive + 'A' - 1;
-      szPath[ 1 ] = ':';
-      szPath[ 2 ] = '\\';
-      szPath[ 3 ] = '\0';
-
-      if( GetDiskFreeSpace( szPath,
-                            &dwSectorsPerCluster,
-                            &dwBytesPerSector,
-                            &dwNumberOfFreeClusters,
-                            &dwTotalNumberOfClusters ) )
-      {
-         ulSpaceFree = dwNumberOfFreeClusters *
-                       dwSectorsPerCluster *
-                       dwBytesPerSector;
-      }
-   }
-
-#else
-
-   HB_SYMBOL_UNUSED( uiDrive );
-
-#endif
-
-   hb_retnl( ( long ) ulSpaceFree );
-}
 
 #ifdef HB_COMPAT_C53
 

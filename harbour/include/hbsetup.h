@@ -147,7 +147,7 @@
 /*#define HARBOUR_USE_CRS_GTAPI*/
 /*#define HARBOUR_USE_SLN_GTAPI*/
 
-/* Short version are also good */
+/* Short versions are also good */
 
 #ifdef HB_GT_PCA
    #define HARBOUR_USE_PCA_GTAPI
@@ -169,17 +169,6 @@
 #endif
 #ifdef HB_GT_SLN
    #define HARBOUR_USE_SLN_GTAPI
-#endif
-
-/* Indicate that one of the GTAPIs is defined */
-#if defined(HARBOUR_USE_STD_GTAPI) || \
-    defined(HARBOUR_USE_DOS_GTAPI) || \
-    defined(HARBOUR_USE_OS2_GTAPI) || \
-    defined(HARBOUR_USE_WIN_GTAPI) || \
-    defined(HARBOUR_USE_CRS_GTAPI) || \
-    defined(HARBOUR_USE_SLN_GTAPI) || \
-    defined(HARBOUR_USE_PCA_GTAPI)
-   #define HARBOUR_USE_GTAPI
 #endif
 
 /* ***********************************************************************
@@ -263,7 +252,7 @@
 #endif
 
 #ifndef HB_OS_WIN_32
-   #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(__WINDOWS__) || defined(__WINDOWS_386__)
+   #if defined(WINNT) || defined(_Windows) || defined(__NT__) || defined(_WIN32) || defined(_WINDOWS_) || defined(__WINDOWS_386__)
       #define HB_OS_WIN_32
    #endif
 #endif

@@ -1,3 +1,69 @@
+20000319-17:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbsetup.h
+     ! __WINDOWS__ -> _WINDOWS_
+   * include/hbdefs.h
+     * The #ifdef structure cleaned up.
+   * source/rtl/gt/gtwin.c
+     % hb_gt_Tone() simplified.
+   * source/pp/ppcore.c
+     ! __HARBOUR__ is now zero padded, because it's better to avoid spaces
+       in a macro value.
+   * source/rtl/console.c
+     source/rtl/gt/gtstd.c
+     source/rtl/gtapi.c
+     include/hbsetup.h
+     - Removed the non-GTAPI branch. Last one.
+       Now the box drawing in GTSTD is probably flawed. The non-GT code snipped 
+       from console.c has moved to gtstd.c
+     + hb_gtBox() modified to draw the box from top to bottom and left to
+       right to better support GTSTD. Tested all weirt combination to be
+       CA-Cl*pper compatible.
+   * source/rtl/fstemp.c
+     ! Type fixed.
+   * source/vm/fm.c
+     source/rtl/net.c
+     source/rtl/oemansi.c
+     source/rtl/dateshb.c
+     % Using HB_OS_WIN_32
+   + source/rtl/diskspac.c
+   + source/rtl/scroll.c
+   + source/rtl/rat.c
+     source/rtl/filesys.c
+     source/rtl/console.c
+     source/rtl/at.c
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     * DISKSPACE() function moved into separate file.
+     * DISKSPACE() using HB_OS_WIN_32
+     * SCROLL() function moved into separate file.
+     % SCROLL() function variable usage optimized (got rid of six variables).
+     * RAT() function moved into separate file.
+   * source/rtl/saverest.c
+     % SAVESCREEN() optimized.
+   * source/rtl/str.c
+     source/rtl/val.c
+     * hb_strVal() moved to val.c, where it belongs.
+   * source/compiler/harbour.c
+     include/hbcomp.h
+     ! extern moved to the header file.
+   * source/rtl/console.c
+     source/rtl/filesys.c
+     source/rtl/gtapi.c
+     source/rtl/gt/gtpca.c
+     source/rtl/dir.c
+     ! Fixed the <io.h> file issue for Linux.
+   * source/rtl/do.c
+     source/rtl/eval.c
+     % Minor optimization.
+   * make_vc.bat
+     include/hbinit.h
+     include/hbapigt.h
+     source/rtl/datec.c
+     * Minor change.
+   * makefile.bc
+     ! Fixed for the latest compiler/macro file splits.
+
 20000319-01:35 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * enable 'batch' mode for rdd.lib

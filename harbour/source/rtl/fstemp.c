@@ -47,7 +47,7 @@ void hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefi
    HB_SYMBOL_UNUSED( pszDir );
    HB_SYMBOL_UNUSED( pszPrefix );
 
-   /* NOFIX: The spec says to reserve L_tmpnam number of characters for the
+   /* TOFIX: The spec says to reserve L_tmpnam number of characters for the
              passed buffer. It will be needed to fix _POSIX_PATH_MAX to be
              at least this large. */
 

@@ -84,7 +84,7 @@ typedef enum
 extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
 extern int    hb_gtReadKey( void );
-extern void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
+extern void   hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
 extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBoxString );
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );

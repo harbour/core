@@ -34,8 +34,8 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbdate.h"
 
 char * hb_cmonth( int iMonth )
@@ -43,6 +43,13 @@ char * hb_cmonth( int iMonth )
    HB_TRACE(HB_TR_DEBUG, ("hb_cmonth(%d)", iMonth));
 
    return ( iMonth >= 1 && iMonth <= 12 ) ? hb_monthsname[ iMonth - 1 ] : "";
+}
+
+char * hb_cdow( int iDay )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
+
+   return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
 }
 
 HARBOUR HB_CMONTH( void )
@@ -66,13 +73,6 @@ HARBOUR HB_CMONTH( void )
          hb_itemRelease( pResult );
       }
    }
-}
-
-char * hb_cdow( int iDay )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
-
-   return ( iDay >= 1 && iDay <= 7 ) ? hb_daysname[ iDay - 1 ] : "";
 }
 
 HARBOUR HB_CDOW( void )

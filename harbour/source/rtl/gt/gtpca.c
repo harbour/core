@@ -40,15 +40,18 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-#endif
-#include <io.h>
 #include <ctype.h>
 #include <string.h>
 
 #include "hbapigt.h"
 #include "hbset.h"
+
+#if defined(__GNUC__) && ! defined(__MINGW32__)
+   #include <unistd.h>
+#endif
+#if !defined(OS_UNIX_COMPATIBLE)
+   #include <io.h>
+#endif
 
 static USHORT s_usRow, s_usCol, s_usMaxRow, s_usMaxCol;
 static int s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr;

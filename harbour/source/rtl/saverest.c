@@ -38,19 +38,20 @@
 
 HARBOUR HB_SAVESCREEN( void )
 {
-   USHORT uiX;
-   USHORT uiCoords[ 4 ];
+   USHORT uiTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;      
+   USHORT uiLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;      
+   USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
+   USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
+
+   USHORT uiSize;
    void * pBuffer;
 
-   uiCoords[ 0 ] = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-   uiCoords[ 1 ] = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
-   uiCoords[ 2 ] = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-   uiCoords[ 3 ] = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
+   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );
+   pBuffer = hb_xgrab( uiSize );
 
-   hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
-   pBuffer = hb_xgrab( uiX );
-   hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
-   hb_retclen( ( char * ) pBuffer, uiX );
+   hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
+   hb_retclen( ( char * ) pBuffer, uiSize );
+
    hb_xfree( ( char * ) pBuffer );
 }
 

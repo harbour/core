@@ -13,7 +13,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD_OK
 
-   if exist bin\vc\*.dll copy bin\vc\*.dll bin\*.* >nul
+   if exist bin\vc\*.dll copy bin\vc\*.dll bin\*.* > nul
    copy bin\vc\*.exe bin\*.* > nul
    copy lib\vc\*.lib lib\*.* > nul
    goto EXIT

@@ -329,6 +329,8 @@ extern FILES       hb_comp_files;
 extern int         hb_comp_iStaticCnt;
 extern int         hb_comp_iErrorCount;
 
+extern char *      hb_comp_szAnnounce;
+
 extern PHB_FNAME   hb_comp_pOutPath;
 extern BOOL        hb_comp_bCredits;
 extern BOOL        hb_comp_bLogo;

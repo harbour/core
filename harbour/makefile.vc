@@ -175,6 +175,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\defpath.obj \
    $(OBJ_DIR)\descend.obj \
    $(OBJ_DIR)\dir.obj \
+   $(OBJ_DIR)\diskspac.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
    $(OBJ_DIR)\environ.obj \
@@ -211,12 +212,14 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\oldbox.obj \
    $(OBJ_DIR)\oldclear.obj \
    $(OBJ_DIR)\pad.obj \
+   $(OBJ_DIR)\rat.obj \
    $(OBJ_DIR)\replic.obj \
    $(OBJ_DIR)\right.obj \
    $(OBJ_DIR)\round.obj \
    $(OBJ_DIR)\run.obj \
    $(OBJ_DIR)\samples.obj \
    $(OBJ_DIR)\saverest.obj \
+   $(OBJ_DIR)\scroll.obj \
    $(OBJ_DIR)\seconds.obj \
    $(OBJ_DIR)\set.obj \
    $(OBJ_DIR)\setcolor.obj \

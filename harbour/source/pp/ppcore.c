@@ -233,7 +233,7 @@ void hb_pp_Init( void )
    hb_pp_nCondCompile = 0;
 
    {
-      char szResult[ 5 ];
+      char szResult[ 6 ];
       USHORT usHarbour = ( 256 * HB_VER_MAJOR ) + HB_VER_MINOR;
 
       /*
@@ -243,7 +243,7 @@ void hb_pp_Init( void )
         The check below is to ensure that __HARBOUR__ gets the
         value of 1 by default
       */
-      sprintf( szResult, "%4d", ( usHarbour ? usHarbour : 1 ) );
+      sprintf( szResult, "%05d", ( usHarbour ? usHarbour : 1 ) );
       hb_pp_AddDefine( "__HARBOUR__", szResult );
    }
 

@@ -113,23 +113,22 @@
 #include "hbapiitm.h"
 #include "directry.ch"
 
-#if defined(__GNUC__) && ! defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
+   #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
 
-   #include <unistd.h>
-   #if defined(__DJGPP__)
+   #if !defined(OS_UNIX_COMPATIBLE)
       #include <io.h>
    #endif
 
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
    #endif
-
 #endif
 
 #if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__MINGW32__)

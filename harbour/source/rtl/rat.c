@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * NETNAME() function
+ * RAT() function
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,36 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include "hbapi.h"
 
-/* TODO: Implement NETNAME() for other platforms */
-/* NOTE: Clipper will only return a maximum of 15 bytes from this function.
-         [vszakats] */
-
-/* NOTE: DOS instructions:
-
-       On entry:      AH         5Eh
-                      AL         00h
-                      DS:DX      Pointer to a memory buffer (16 bytes) where
-                                 computer name will be returned
-
-       Returns:       CH         0        name not defined
-                                 not 0    name is defined
-                      CL         NETBIOS name number (if CH not 0)
-                      DS:DX      Pointer to computer name (ASCIIZ string)
-                      AX         Error code, if CF is set
-*/
-
-HARBOUR HB_NETNAME( void )
+HARBOUR HB_RAT( void )
 {
-#if defined(HB_OS_WIN_32)
+   ULONG ulSubLen = hb_parclen( 1 );
+
+   if( ulSubLen )
    {
-      DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-      char * pszValue = ( char * ) hb_xgrab( ulLen );
+      long lPos = hb_parclen( 2 ) - ulSubLen;
 
-      pszValue[ 0 ] = '\0';
+      if( lPos >= 0 )
+      {
+         char * pszSub = hb_parc( 1 );
+         char * pszText = hb_parc( 2 );
+         BOOL bFound = FALSE;
 
-      GetComputerName( pszValue, &ulLen );
+         while( lPos >= 0 && !bFound )
+         {
+            if( *( pszText + lPos ) == *pszSub )
+               bFound = ( memcmp( pszSub, pszText + lPos, ulSubLen ) == 0 );
+            lPos--;
+         }
 
-      hb_retc( pszValue );
-      hb_xfree( pszValue );
+         hb_retnl( bFound ? lPos + 2 : 0 );
+      }
+      else
+         hb_retni( 0 );
    }
-#else
-   hb_retc( "" );
-#endif
+   else
+      /* This function never seems to raise an error */
+      hb_retni( 0 );
 }
 

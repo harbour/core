@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * AT(), RAT() functions
+ * AT() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -60,40 +60,5 @@ HARBOUR HB_AT( void )
          hb_itemRelease( pResult );
       }
    }
-}
-
-/* locates a substring in a string starting at the end */
-/* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
-/* TOFIX: Will not work with a search string > 64 KB on some platforms */
-
-HARBOUR HB_RAT( void )
-{
-   ULONG ulSubLen = hb_parclen( 1 );
-
-   if( ulSubLen )
-   {
-      long lPos = hb_parclen( 2 ) - ulSubLen;
-
-      if( lPos >= 0 )
-      {
-         char * szSub = hb_parc( 1 );
-         char * szText = hb_parc( 2 );
-         BOOL bFound = FALSE;
-
-         while( lPos >= 0 && !bFound )
-         {
-            if( *( szText + lPos ) == *szSub )
-               bFound = ( memcmp( szSub, szText + lPos, ulSubLen ) == 0 );
-            lPos--;
-         }
-
-         hb_retnl( bFound ? lPos + 2 : 0 );
-      }
-      else
-         hb_retni( 0 );
-   }
-   else
-      /* This function never seems to raise an error */
-      hb_retni( 0 );
 }
 

@@ -20,6 +20,7 @@ C_SOURCES=\
         defpath.c    \
         descend.c    \
         dir.c        \
+        diskspac.c   \
         do.c         \
         empty.c      \
         environ.c    \
@@ -59,12 +60,14 @@ C_SOURCES=\
         oldbox.c     \
         oldclear.c   \
         pad.c        \
+        rat.c        \
         replic.c     \
         right.c      \
         round.c      \
         run.c        \
         samples.c    \
         saverest.c   \
+        scroll.c     \
         seconds.c    \
         set.c        \
         setcolor.c   \

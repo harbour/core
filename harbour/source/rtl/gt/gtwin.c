@@ -748,27 +748,11 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
 
-   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
+   dDuration = HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
 
-   while( dDuration > 0.0 )
-   {
-      ULONG temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
-
-      dDuration -= temp;
-      if( temp <= 0 )
-      {
-         /* Ensure that the loop gets terminated when
-            only a fraction of the delay time remains. */
-         dDuration = -1.0;
-      }
-      else
-      {
-         /* Bad news for non-NT Windows platforms: Beep() ignores
-            both parameters and either generates the default sound
-            event or the standard system beep. */
-         Beep( ( ULONG ) dFrequency, temp );
-      }
-   }
+   if( dDuration > 0.0 )
+      Beep( ( ULONG ) HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 ),
+            ( ULONG ) dDuration );
 }
 

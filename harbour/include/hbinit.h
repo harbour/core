@@ -88,7 +88,7 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
 
-#if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MPW__))
+#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MPW__)
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
    static HB_SYMB symbols[] = {
 

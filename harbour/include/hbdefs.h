@@ -46,20 +46,17 @@
 
 /* Include windows.h if applicable and requested */
 
-#ifdef HB_OS_WIN_32_USED
-   #if defined(_WINDOWS_) || defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
-      #define WIN32_LEAN_AND_MEAN
-      #include <windows.h>
-      #if defined(__GNUC__)
-         #define HB_DONT_DEFINE_BASIC_TYPES
-      #endif
+#if defined(HB_OS_WIN_32_USED) && defined(HB_OS_WIN_32)
+   #define WIN32_LEAN_AND_MEAN
+   #include <windows.h>
+   #if defined(__GNUC__)
+      #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 #endif
 
 #if defined(__IBMCPP__)
    /* With the exception of WORD, the IBM Visual Age C++ compiler has
-      its own definitions of the Harbour types defined in the #else
-      section of this #ifdef block, most of which conflict with the
+      its own definitions of the Harbour types most of which conflict with the
       Harbour #undefs, due to typedef being the prevalent method of
       defining the types in IBMCPP, whereas Harbour assumes that the
       definitions that it is replacing have been defined using
@@ -75,36 +72,35 @@
    #include <os2.h>
    #undef INT
    #undef UINT
-
-#else
+   #define HB_DONT_DEFINE_BASIC_TYPES
+#endif /* __IBMCPP__ */
 
 #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
-#undef BOOL                            /* boolean */
-typedef int BOOL;
+   #undef BOOL                            /* boolean */
+   typedef int BOOL;
 
-#undef BYTE
-typedef unsigned char BYTE;            /* 1 byte unsigned */
+   #undef BYTE
+   typedef unsigned char BYTE;            /* 1 byte unsigned */
 
-#undef SHORT                           /* 2 bytes signed */
-typedef short int SHORT;
+   #undef SHORT                           /* 2 bytes signed */
+   typedef short int SHORT;
 
-#undef USHORT                          /* 2 bytes unsigned */
-typedef unsigned short int USHORT;
+   #undef USHORT                          /* 2 bytes unsigned */
+   typedef unsigned short int USHORT;
 
-#undef LONG                            /* 4 bytes signed */
-typedef long LONG;
+   #undef LONG                            /* 4 bytes signed */
+   typedef long LONG;
 
-#undef ULONG                           /* 4 bytes unsigned */
-typedef unsigned long ULONG;
+   #undef ULONG                           /* 4 bytes unsigned */
+   typedef unsigned long ULONG;
 
-#undef FALSE
-#undef TRUE
-#define FALSE  0
-#define TRUE   1
+   #undef FALSE
+   #define FALSE  0
+   #undef TRUE
+   #define TRUE   1
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
-#endif /* __IBMCPP__ */
 
 /* NOTE: Underscore postfix needed to avoid conflict with the functions
          named HB_MIN() and HB_MAX() [vszakats] */

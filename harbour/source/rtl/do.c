@@ -40,7 +40,6 @@
 
 HARBOUR HB_DO( void )
 {
-   USHORT uiPCount = hb_pcount();
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
    if( IS_STRING( pItem ) )
@@ -49,6 +48,7 @@ HARBOUR HB_DO( void )
 
       if( pDynSym )
       {
+         USHORT uiPCount = hb_pcount();
          USHORT uiParam;
 
          hb_vmPushSymbol( pDynSym->pSymbol );
@@ -62,6 +62,7 @@ HARBOUR HB_DO( void )
    }
    else if( IS_BLOCK( pItem ) )
    {
+      USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
@@ -72,6 +73,7 @@ HARBOUR HB_DO( void )
    }
    else if( IS_SYMBOL( pItem ) )
    {
+      USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
       hb_vmPushSymbol( pItem->item.asSymbol.value );

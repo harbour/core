@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * NETNAME() function
+ * SCROLL() function
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,40 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include "hbapi.h"
+#include "hbapigt.h"
 
-/* TODO: Implement NETNAME() for other platforms */
-/* NOTE: Clipper will only return a maximum of 15 bytes from this function.
-         [vszakats] */
+/* Scrolls a screen region */
 
-/* NOTE: DOS instructions:
-
-       On entry:      AH         5Eh
-                      AL         00h
-                      DS:DX      Pointer to a memory buffer (16 bytes) where
-                                 computer name will be returned
-
-       Returns:       CH         0        name not defined
-                                 not 0    name is defined
-                      CL         NETBIOS name number (if CH not 0)
-                      DS:DX      Pointer to computer name (ASCIIZ string)
-                      AX         Error code, if CF is set
-*/
-
-HARBOUR HB_NETNAME( void )
+HARBOUR HB_SCROLL( void )
 {
-#if defined(HB_OS_WIN_32)
-   {
-      DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-      char * pszValue = ( char * ) hb_xgrab( ulLen );
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
 
-      pszValue[ 0 ] = '\0';
+   int iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;      
+   int iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;      
+   int iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
+   int iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : iMaxCol;
 
-      GetComputerName( pszValue, &ulLen );
+   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
 
-      hb_retc( pszValue );
-      hb_xfree( pszValue );
-   }
-#else
-   hb_retc( "" );
-#endif
+   if( iTop < 0 ) iTop = 0;
+   else if( iTop > iMaxRow ) iTop = iMaxRow;
+
+   if( iLeft < 0 ) iLeft = 0;
+   else if( iLeft > iMaxCol ) iLeft = iMaxCol;
+
+   if( iBottom < 0 ) iBottom = 0;
+   else if( iBottom > iMaxRow ) iBottom = iMaxRow;
+
+   if( iRight < 0 ) iRight = 0;
+   else if( iRight > iMaxCol ) iRight = iMaxCol;
+
+   hb_gtScroll( ( USHORT ) iTop, 
+                ( USHORT ) iLeft, 
+                ( USHORT ) iBottom, 
+                ( USHORT ) iRight, 
+                ISNUM( 5 ) ? hb_parni( 5 ) : 0, 
+                ISNUM( 6 ) ? hb_parni( 6 ) : 0 );
 }
 

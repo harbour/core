@@ -306,7 +306,7 @@ HARBOUR HB_TIME( void )
 {
    char szResult[ 9 ];
 
-   #if defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
+   #if defined(HB_OS_WIN_32)
       SYSTEMTIME st;
       GetLocalTime( &st );
       sprintf( szResult, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
@@ -326,7 +326,7 @@ HARBOUR HB_DATE( void )
 {
    char szResult[ 9 ];
 
-   #if defined(_Windows) || defined(__NT__) || defined(WINNT) || defined(_WIN32)
+   #if defined(HB_OS_WIN_32)
       SYSTEMTIME st;
       GetLocalTime( &st );
       sprintf( szResult, "%04d%02d%02d", st.wYear, st.wMonth, st.wDay );

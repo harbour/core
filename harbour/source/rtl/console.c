@@ -42,12 +42,12 @@
  *    HB_DEVPOS(), hb_dispout(), HB___EJECT(), 
  *    hb_out(), hb_outerr(), HB_OUTERR(),
  *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(),
- *    HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
+ *    HB_SETPRC(), and hb_consoleInitialize()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
  *    HB_DISPOUTAT()
- *    HB_DISPBOX() (GT version)
+ *    HB_DISPBOX()
  *    HB_DISPBEGIN()
  *    HB_DISPEND()
  *    HB_DISPCOUNT()
@@ -67,14 +67,15 @@
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
 #endif
-#if !defined( OS_UNIX_COMPATIBLE )
-    #include <io.h>
+#if !defined(OS_UNIX_COMPATIBLE)
+   #include <io.h>
 #endif
 
+/* length of buffer for CR/LF characters */
 #if defined(OS_UNIX_COMPATIBLE)
-   #define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
+   #define CRLF_BUFFER_LEN 2
 #else
-   #define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
+   #define CRLF_BUFFER_LEN 3
 #endif
 
 static BOOL   s_bInit = FALSE;
@@ -439,42 +440,10 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
    }
 }
 
-HARBOUR HB_SCROLL( void ) /* Scrolls a screen region */
-{
-   USHORT top, left, bottom, right;
-
-   int iMR      = hb_gtMaxRow();
-   int iMC      = hb_gtMaxCol();
-
-   int i_top    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-   int i_left   = ISNUM( 2 ) ? hb_parni( 2 ) : 0;
-   int i_bottom = ISNUM( 3 ) ? hb_parni( 3 ) : iMR;
-   int i_right  = ISNUM( 4 ) ? hb_parni( 4 ) : iMC;
-   int v_scroll = ISNUM( 5 ) ? hb_parni( 5 ) : 0;
-   int h_scroll = ISNUM( 6 ) ? hb_parni( 6 ) : 0;
-
-   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
-   if( i_top < 0 ) top = 0;
-   else if( i_top > iMR ) top = iMR;
-   else top = i_top;
-   if( i_left < 0 ) left = 0;
-   else if( i_left > iMC ) left = iMC;
-   else left = i_left;
-   if( i_bottom < 0 ) bottom = 0;
-   else if( i_bottom > iMR ) bottom = iMR;
-   else bottom = i_bottom;
-   if( i_right < 0 ) right = 0;
-   else if( i_right > iMC ) right = iMC;
-   else right = i_right;
-
-   hb_gtScroll( top, left, bottom, right, v_scroll, h_scroll );
-}
-
 HARBOUR HB_DISPBOX( void )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
    {
-#ifdef HARBOUR_USE_GTAPI
       char szOldColor[ CLR_STRLEN ];
 
       if( ISCHAR( 6 ) )
@@ -492,118 +461,6 @@ HARBOUR HB_DISPBOX( void )
 
       if( ISCHAR( 6 ) )
          hb_gtSetColorStr( szOldColor );
-#else
-      char * szBorderStyle = _B_SINGLE;
-      int i_top = hb_parni( 1 );
-      int i_left = hb_parni( 2 );
-      int i_bottom = hb_parni( 3 );
-      int i_right = hb_parni( 4 );
-      USHORT top, left, bottom, right, size = strlen( _B_SINGLE );
-      USHORT row, col, width, height;
-      char Borders[ 9 ];
-
-      /* Set limits on the box coordinates to (0,0) and (max_row(),max_col()) */
-      if( i_top < 0 ) top = 0; else top = ( USHORT ) i_top;
-      if( i_left < 0 ) left = 0; else left = ( USHORT ) i_left;
-      if( i_bottom < 0 ) bottom = 0; else bottom = ( USHORT ) i_bottom;
-      if( i_right < 0 ) right = 0; else right = ( USHORT ) i_right;
-      if( top > hb_gtMaxRow() ) top = hb_gtMaxRow();
-      if( left > hb_gtMaxCol() ) left = hb_gtMaxCol();
-      if( bottom > hb_gtMaxRow() ) bottom = hb_gtMaxRow();
-      if( right > hb_gtMaxCol() ) right = hb_gtMaxCol();
-
-      /* Force the box to be drawn from top left to bottom right */
-      if( top > bottom )
-      {
-         int temp;
-         temp = top;
-         top = bottom;
-         bottom = temp;
-      }
-      if( left > right )
-      {
-         int temp;
-         temp = right;
-         right = left;
-         left = temp;
-      }
-      width = right - left + 1;
-      height = bottom - top + 1;
-
-      /* Determine the box style */
-      if( ISCHAR( 5 ) )
-      {
-         szBorderStyle = hb_parc( 5 );
-         size = hb_parclen( 5 );
-      }
-      else if( ISNUM( 5 ) )
-      {
-         switch( hb_parni( 5 ) )
-         {
-            case 2:
-               szBorderStyle = _B_DOUBLE;
-               break;
-            case 3:
-               szBorderStyle = _B_SINGLE_DOUBLE;
-               break;
-            case 4:
-               szBorderStyle = _B_DOUBLE_SINGLE;
-               break;
-            default:
-               szBorderStyle = _B_SINGLE;
-         }
-          size = strlen( szBorderStyle );
-      }
-      /* We only need 9 characters from the source string */
-      if( size > 9 ) size = 9;
-      /* If we have at least one character... */
-      if( size )
-         /* ...copy the source string */
-         memcpy( Borders, szBorderStyle, size );
-      else
-         /* If not, set the first character to a space */
-         Borders[ size++ ] = ' ';
-      /* If there were less than 8 characters in the source... */
-      for( ; size < 8; size++ )
-      {
-         /* ...copy the last character into the remaining 8 border positions */
-         Borders[ size ] = Borders[ size - 1 ];
-      }
-      /* If there were less than 9 characters in the source... */
-      if( size < 9 )
-         /* ...set the fill character to space */
-         Borders[ 8 ] = ' ';
-
-      /* Draw the box */
-      hb_gtSetPos( top, left );
-      if( height > 1 && width > 1 )
-         fputc( Borders[ 0 ], stdout );   /* Upper left corner */
-      for( col = ( height > 1 ? left + 1 : left ); col < ( height > 1 ? right : right + 1 ); col++ )
-         fputc( Borders[ 1 ], stdout );   /* Top line */
-      if( height > 1 && width > 1 )
-         fputc( Borders[ 2 ], stdout );   /* Upper right corner */
-      for( row = ( height > 1 ? top + 1 : top ); row < ( width > 1 ? bottom : bottom + 1 ); row++ )
-      {
-         hb_gtSetPos( row, left );
-         if( height > 1 )
-            fputc( Borders[ 3 ], stdout ); /* Left side */
-         if( height > 1 && width > 1 ) for( col = left + 1; col < right; col++ )
-            fputc( Borders[ 8 ], stdout ); /* Fill */
-         if( height > 1 && width > 1 )
-            fputc( Borders[ 7 ], stdout ); /* Right side */
-      }
-      if( height > 1 && width > 1 )
-      {
-         hb_gtSetPos( bottom, left );
-         col = left;
-         fputc( Borders[ 6 ], stdout );    /* Bottom left corner */
-         for( col = left + 1; col < right; col++ )
-            fputc( Borders[ 5 ], stdout ); /* Bottom line */
-         fputc( Borders[ 4 ], stdout );    /* Bottom right corner */
-      }
-      fflush( stdout );
-      hb_gtSetPos( bottom + 1, right + 1 );
-#endif
    }
 }
 

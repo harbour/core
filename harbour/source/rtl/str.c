@@ -37,14 +37,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* returns the numeric value of a character string representation of a number  */
-double hb_strVal( const char * szText )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s)", szText));
-
-   return atof( szText );
-}
-
 HARBOUR HB_STR( void )
 {
    BOOL bValid;

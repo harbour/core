@@ -40,11 +40,11 @@
 
 HARBOUR HB_EVAL( void )
 {
-   USHORT uiPCount = hb_pcount();
    PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
 
    if( pItem )
    {
+      USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
