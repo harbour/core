@@ -1,4 +1,24 @@
 20000207-12:22 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbextern.ch
+     source/runner/stdalone/external.prg
+     ! Added #include "hbsetup.ch"
+     + Added mouse functions.
+     + TOFIX: added about missing #ifdefs.
+   * source/rtl/harbinit.prg
+     ! Added #include "hbsetup.ch"
+   * source/rtl/mouseapi.c
+     ! Added HB_ prefix to all HARBOUR functions.
+   * source/rtl/console.c
+     + Calling hb_mouseInit() on startup.
+   * source/rtl/inkey.c
+     source/rtl/mouse/mousewin.c
+     * MCOL()/MROW() removed from inkey.c
+     * MCOL()/MROW() docs moved to mouseapi.c
+     * Mouse coordinate variables renamed and exported.
+     * MCOL()/MROW() in mousewin.c modified to use the exported coordinate
+       variables.
+
+20000207-12:22 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/math.c
      ! MOD(): Added value substitution on error.
      ! MOD(): Made completely CA-Cl*pper compatible including 

@@ -45,6 +45,7 @@
  *
  */
 
+#include "hbsetup.ch"
 #include "inkey.ch"
 
 ANNOUNCE SysInit

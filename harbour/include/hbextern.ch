@@ -36,6 +36,10 @@
 #ifndef HB_EXTERN_CH_
 #define HB_EXTERN_CH_
 
+#include "hbsetup.ch"
+
+/* TOFIX: Add #ifdefs for the Xbase++/VO/C5.3 extension parts [vszakats] */
+
 EXTERNAL __PREPROCESS
 
 // Files from: vm
@@ -335,6 +339,25 @@ EXTERNAL MLCOUNT
 //
 //symbols from file: rtl\mouseapi.c
 //
+#ifdef HB_COMPAT_C53
+EXTERNAL MPRESENT
+EXTERNAL MHIDE
+EXTERNAL MSHOW
+EXTERNAL MSETCURSOR
+EXTERNAL MROW
+EXTERNAL MCOL
+EXTERNAL MSETPOS
+EXTERNAL MRIGHTDOWN
+EXTERNAL MLEFTDOWN
+EXTERNAL MDBLCLK
+EXTERNAL MSAVESTATE
+EXTERNAL MRESTSTATE
+EXTERNAL MSETBOUNDS
+#endif
+#ifdef HB_COMPAT_XPP
+EXTERNAL NUMBUTTONS
+EXTERNAL SETMOUSE
+#endif
 //
 //symbols from file: rtl\mousexxx.c
 //

@@ -99,7 +99,8 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   static int s_iMouseCol = 0, s_iMouseRow = 0;
+   int hb_gt_iMouseCol = 0;
+   int hb_gt_iMouseRow = 0;
 #endif
 #endif
 
@@ -650,8 +651,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          }
          else if( s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT )
          {
-            s_iMouseCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-            s_iMouseRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+            hb_gt_iMouseCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            hb_gt_iMouseRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
             if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
                ch = K_MOUSEMOVE;
@@ -1120,95 +1121,6 @@ HARBOUR HB___KEYPUT( void )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
-}
-
-/*  $DOC$
- *  $FUNCNAME$
- *      MCOL()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *       Returns the mouse cursor column position
- *  $SYNTAX$
- *      MCol() --> nMouseColumn
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      The mouse cursor column position
- *  $DESCRIPTION$
- *  $EXAMPLES$
- *     local nKey
- *     nKey = InKey( 0 )
- *     do case
- *        case nKey ==
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour Specific
- *  $PLATFORMS$
- *      This function is Windows Specific
- *  $SEEALSO$
- *      MROW()
- *  $END$
- */
-
-
-HARBOUR HB_MCOL( void )
-{
-#if defined(_WINDOWS_) || defined(WINNT)
-   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-      hb_retnl( s_iMouseCol );
-   #else
-      hb_retnl( 0 );
-   #endif
-#else
-   hb_retnl( 0 );
-#endif
-}
-
-/*  $DOC$
- *  $FUNCNAME$
- *      MROW()
- *  $CATEGORY$
- *      Console input
- *  $ONELINER$
- *       Returns the mouse cursor row position
- *  $SYNTAX$
- *      MRow() --> nMouseColumn
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      The mouse cursor column position
- *  $DESCRIPTION$
- *  $EXAMPLES$
- *     local nKey
- *     nKey = InKey( 0 )
- *     do case
- *        case nKey ==
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is a Harbour Specific
- *  $PLATFORMS$
- *      This function is Windows Specific
- *  $SEEALSO$
- *      MCOL()
- *  $END$
- */
-
-HARBOUR HB_MROW( void )
-{
-#if defined(_WINDOWS_) || defined(WINNT)
-   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-      hb_retnl( s_iMouseRow );
-   #else
-      hb_retnl( 0 );
-   #endif
-#else
-   hb_retnl( 0 );
-#endif
 }
 
 /*  $DOC$

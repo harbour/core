@@ -74,6 +74,7 @@
 #include "inkey.ch"
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
+#include "mouseapi.h"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
@@ -144,6 +145,7 @@ void hb_consoleInitialize( void )
    hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
+   hb_mouseInit();
    hb_gtInit();
    hb_gtGetPos( &s_iDevRow, &s_iDevCol );
    hb_gtSetCursor( SC_NORMAL );

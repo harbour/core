@@ -77,7 +77,7 @@ BOOL hb_mouse_IsPresent( void )
 {
    /* TODO: */
 
-   return 0;
+   return TRUE;
 }
 
 void hb_mouse_Show( void )
@@ -94,14 +94,14 @@ int hb_mouse_Col( void )
 {
    /* TODO: */
 
-   return 0;
+   return hb_gt_iMouseCol;
 }
 
 int hb_mouse_Row( void )
 {
    /* TODO: */
 
-   return 0;
+   return hb_gt_iMouseRow;
 }
 
 void hb_mouse_SetPos( int iRow, int iCol )

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Mouse API
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@
 
 /* TODO: This level should make sure that if there's no mouse present 
          the functions don't call the low level function, but return some
-         default values. */
+         default values. [vszakats] */
 
 static BOOL   s_bPresent;
 static BOOL   s_bVisible;
@@ -166,22 +166,22 @@ void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight
 
 #ifdef HB_COMPAT_C53
 
-HARBOUR MPRESENT( void )
+HARBOUR HB_MPRESENT( void )
 {
    hb_retl( hb_mouseIsPresent() );
 }
 
-HARBOUR MHIDE( void )
+HARBOUR HB_MHIDE( void )
 {
    hb_mouseSetCursor( FALSE );
 }
 
-HARBOUR MSHOW( void )
+HARBOUR HB_MSHOW( void )
 {
    hb_mouseSetCursor( TRUE );
 }
 
-HARBOUR MSETCURSOR( void )
+HARBOUR HB_MSETCURSOR( void )
 {
    hb_retl( hb_mouseGetCursor() );
 
@@ -189,33 +189,95 @@ HARBOUR MSETCURSOR( void )
       hb_mouseSetCursor( hb_parl( 1 ) );
 }
 
-HARBOUR MROW( void )
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MROW()
+ *  $CATEGORY$
+ *      Console input
+ *  $ONELINER$
+ *      Returns the mouse cursor row position
+ *  $SYNTAX$
+ *      MRow() --> nMouseColumn
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      The mouse cursor column position
+ *  $DESCRIPTION$
+ *  $EXAMPLES$
+ *      local nKey
+ *      nKey = InKey( 0 )
+ *      do case
+ *         case nKey ==
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Specific
+ *  $PLATFORMS$
+ *      This function is Windows Specific
+ *  $SEEALSO$
+ *      MCOL()
+ *  $END$
+ */
+
+HARBOUR HB_MROW( void )
 {
    hb_retni( hb_mouseRow() );   
 }
 
-HARBOUR MCOL( void )
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MCOL()
+ *  $CATEGORY$
+ *      Console input
+ *  $ONELINER$
+ *      Returns the mouse cursor column position
+ *  $SYNTAX$
+ *      MCol() --> nMouseColumn
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      The mouse cursor column position
+ *  $DESCRIPTION$
+ *  $EXAMPLES$
+ *      local nKey
+ *      nKey = InKey( 0 )
+ *      do case
+ *         case nKey ==
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is a Harbour Specific
+ *  $PLATFORMS$
+ *      This function is Windows Specific
+ *  $SEEALSO$
+ *      MROW()
+ *  $END$
+ */
+
+HARBOUR HB_MCOL( void )
 {
    hb_retni( hb_mouseCol() );   
 }
 
-HARBOUR MSETPOS( void )
+HARBOUR HB_MSETPOS( void )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_mouseSetPos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
-HARBOUR MRIGHTDOWN( void )
+HARBOUR HB_MRIGHTDOWN( void )
 {
    hb_retl( hb_mouseIsButtonPressed( s_iRightButton ) );
 }
 
-HARBOUR MLEFTDOWN( void )
+HARBOUR HB_MLEFTDOWN( void )
 {
    hb_retl( hb_mouseIsButtonPressed( s_iLeftButton ) );
 }
 
-HARBOUR MDBLCLK( void )
+HARBOUR HB_MDBLCLK( void )
 {
    hb_retni( s_uiDoubleClickSpeed );
 
@@ -228,7 +290,7 @@ HARBOUR MDBLCLK( void )
    }
 }
 
-HARBOUR MSAVESTATE( void )
+HARBOUR HB_MSAVESTATE( void )
 {
    int iTop, iLeft, iBottom, iRight;
 
@@ -261,7 +323,7 @@ HARBOUR MSAVESTATE( void )
    hb_xfree( pBuffer );
 }
 
-HARBOUR MRESTSTATE( void )
+HARBOUR HB_MRESTSTATE( void )
 {
    USHORT uiLen = sizeof( int ) * 2 + 
                   sizeof( BOOL ) +
@@ -298,7 +360,7 @@ HARBOUR MRESTSTATE( void )
    }
 }
 
-HARBOUR MSETBOUNDS( void )
+HARBOUR HB_MSETBOUNDS( void )
 {
    int iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
    int iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0; 
