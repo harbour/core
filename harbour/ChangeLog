@@ -1,3 +1,7 @@
+19990731-22:27 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * makefile.dos
+     Removed target 'nat'
+
 19990731-22:17 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
    * source/rdd/rddsys.prg

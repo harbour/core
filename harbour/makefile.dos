@@ -3,7 +3,7 @@
 
 .phony: compiler vm rtl tests rdd
 
-all: compiler nat vm rtl tools rdd
+all: compiler vm rtl tools rdd
 
 compiler:
 	make -r -w --directory=source/compiler -f makefile.dos
@@ -13,9 +13,6 @@ vm:
 
 rtl:
 	make -w --directory=source/rtl -f makefile.dos
-
-nat:
-	make -w --directory=source/rtl/natmsg -f makefile.dos
 
 tools:
 	make -w --directory=source/tools -f makefile.dos
