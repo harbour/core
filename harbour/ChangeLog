@@ -1,3 +1,7 @@
+19991212-13:25 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/macro/*
+
 19991212-16:28 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/runner/stdalone/Makefile
     ! Fixed lib order.

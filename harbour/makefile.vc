@@ -30,7 +30,7 @@ LIB_DIR=lib\vc
 OBJ_DIR=obj
 RUNNER_DIR=source\runner
 COMMON_DIR=source\common
-#MACOMP_DIR=source\macro
+MACOMP_DIR=source\macro
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -56,9 +56,11 @@ RUNNER_LIB=$(LIB_DIR)\runner.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\hbrun.exe
+RUNNER_DLL=$(BIN_DIR)\runjava.dll
+MACRO_LIB=$(LIB_DIR)\macro.lib
 HARBOURFLAGS=-iinclude -n -q
 
-LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB)
+LIBS=$(HARBOUR_LIB) $(MACRO_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB) $(MACRO_LIB)
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -134,6 +136,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\pvalue.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
+    $(OBJ_DIR)\reserved.obj \
     $(OBJ_DIR)\samples.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
@@ -194,6 +197,11 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\strleft.obj \
     $(OBJ_DIR)\strpbrk.obj \
     $(OBJ_DIR)\strright.obj
+
+MACRO_LIB_OBJS = \
+    $(OBJ_DIR)\macrol.obj \
+    $(OBJ_DIR)\macroy.obj \
+    $(OBJ_DIR)\macro.obj
 
 #
 # OBJ list for terminal.lib. Add new ones as needed
@@ -259,6 +267,7 @@ DEBUG_LIB_OBJS = \
 
 all: $(HARBOUR_EXE) \
      $(HARBOUR_LIB) \
+     $(MACRO_LIB) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
      $(PP_LIB) \
@@ -268,12 +277,12 @@ all: $(HARBOUR_EXE) \
      $(PP_EXE) \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
+#     $(RUNNER_DLL)
 
 $(PP_EXE) : \
     $(PP_DIR)\stdalone\hbpp.c \
     $(COMMON_DIR)\hbfsapi.c \
     $(COMMON_DIR)\hbstr.c
-    @if exist obj\hbpp.obj del obj\hbpp.obj
     $(CC) -TP $(CFLAGS) $** -o $(BIN_DIR)\hbpp /link $(PP_LIB)
     -del hbpp.obj
     -del hbfsapi.obj
@@ -288,10 +297,27 @@ $(RUNNER_EXE) : \
     -del external.obj
     -del hbrun.obj
 
+#
+# To compile this you must have a JDK installed
+#
+#$(RUNNER_DLL) : \
+#    $(RUNNER_DIR)\stdalone\external.prg
+#    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg
+#    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\runjava.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
+#    -del external.obj
+#    -del runjava.obj
+#    -del $(BIN_DIR)\runjava.exp
+#    -del $(BIN_DIR)\runjava.lib
+
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harbour.c \
     $(COMPILER_DIR)\harboury.c \
     $(COMPILER_DIR)\harbourl.c \
+    $(COMPILER_DIR)\hbusage.c \
+    $(COMPILER_DIR)\hbpcode.c \
+    $(COMPILER_DIR)\hbfunchk.c \
+    $(COMPILER_DIR)\cmdcheck.c \
+    $(COMPILER_DIR)\hbgenerr.c \
     $(COMPILER_DIR)\genobj32.c \
     $(COMPILER_DIR)\genc.c \
     $(COMPILER_DIR)\genhrb.c \
@@ -299,6 +325,7 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genjava.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\expropt.c \
+    $(COMMON_DIR)\reserved.c \
     $(COMMON_DIR)\hbfsapi.c \
     $(COMMON_DIR)\hbstr.c \
     $(PP_DIR)\hbpp.c \
@@ -308,6 +335,12 @@ $(HARBOUR_EXE) : \
     -del harbour.obj
     -del harboury.obj
     -del harbourl.obj
+    -del hbgenerr.obj
+    -del cmdcheck.obj
+    -del hbfunchk.obj
+    -del hbpcode.obj
+    -del hbusage.obj
+    -del reserved.obj
     -del genobj32.obj
     -del genc.obj
     -del genhrb.obj
@@ -349,6 +382,9 @@ $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
 $(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
     lib /OUT:$(RUNNER_LIB) $(RUNNER_LIB_OBJS)
 
+$(MACRO_LIB) : $(MACRO_LIB_OBJS)
+    lib /OUT:$(MACRO_LIB) $(MACRO_LIB_OBJS)
+
 #
 # Compiler source dependencies and build rules
 #
@@ -357,26 +393,26 @@ $(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
     bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
 
 $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
-    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
+    flex -iB8 -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
 # Macro compiler source dependencies and build rules
 #
 
-#$(MACOMP_DIR)\macroy.c : $(COMPILER_DIR)\harbour.y
-#    bison --debug --verbose -d -v --name-prefix=mc -o$(MACOMP_DIR)\macroy.c $(COMPILER_DIR)\harbour.y
-#
-#$(MACOMP_DIR)\macrol.c : $(MACOMP_DIR)\macroy.c $(COMPILER_DIR)\harbour.l
-#    flex -bdviB8 -Pmc -o$(MACOMP_DIR)\macrol.c $(COMPILER_DIR)\harbour.l
-#
-#$(OBJ_DIR)\macroy.obj : $(MACOMP_DIR)\macroy.c
-#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -DHB_MACRO_ENGINE -Fo$@ $**
-#
-#$(OBJ_DIR)\macrol.obj : $(MACOMP_DIR)\macrol.c
-#    $(CC) $(CLIBFLAGS) -DYY_NEVER_INTERACTIVE -DHB_MACRO_ENGINE -Fo$@ $**
-#
-#$(OBJ_DIR)\macro.obj : $(MACOMP_DIR)\macro.c
-#    $(CC) $(CLIBFLAGS) -Fo$@ $**
+$(MACOMP_DIR)\macroy.c : $(MACOMP_DIR)\macro.y
+    bison -d -v -p hb_comp -o$(MACOMP_DIR)\macroy.c $(MACOMP_DIR)\macro.y
+
+$(MACOMP_DIR)\macrol.c : $(MACOMP_DIR)\macroy.c $(MACOMP_DIR)\macro.l
+    flex -iB8 -Phb_comp -o$(MACOMP_DIR)\macrol.c $(MACOMP_DIR)\macro.l
+
+$(OBJ_DIR)\macroy.obj : $(MACOMP_DIR)\macroy.c
+    $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
+
+$(OBJ_DIR)\macrol.obj : $(MACOMP_DIR)\macrol.c
+    $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
+
+$(OBJ_DIR)\macro.obj : $(MACOMP_DIR)\macro.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
 # HBPP source dependencies below. Add as needed
@@ -643,6 +679,9 @@ $(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
