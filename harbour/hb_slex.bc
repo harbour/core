@@ -397,12 +397,9 @@ RDD_LIB_OBJS = \
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
-#DBFNTX_LIB_OBJS = \
-#   $(OBJ_DIR)\dbfntx1.obj \
-#   \
-#   $(OBJ_DIR)\dbfntx0.obj
-
 DBFNTX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfntx1.obj \
+   \
    $(OBJ_DIR)\dbfntx0.obj
 
 DBFCDX_LIB_OBJS = \
@@ -1927,9 +1924,9 @@ $(OBJ_DIR)\dbfntx0.obj : $(OBJ_DIR)\dbfntx0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
 
-#$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
-#   $(CC) $(CLIBFLAGS) -o$@ $**
-#   tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
+$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
 
 #
 # DBFCDX.LIB dependencies
