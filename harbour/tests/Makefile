@@ -66,7 +66,6 @@ PRG_SOURCES=\
         dynsym.prg \
         exittest.prg \
         fib.prg \
-        fileio.prg \
         filexist.prg \
         fornext.prg \
         fortest.prg \

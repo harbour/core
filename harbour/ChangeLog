@@ -1,3 +1,10 @@
+19991022-13:56 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/rtl_test.prg
+   - tests/fileio.prg
+     tests/Makefile
+     + Harbour level file API is now automatically tested in RTL_TEST.
+     - FILEIO.PRG removed.
+
 19991022-13:10 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/filesys.c
      tests/fileio.prg
