@@ -462,8 +462,38 @@ PATHNAMES *_pIncludePath = NULL;
 
 %%
 
-Main       : { Line(); } Source       { if( ! _iQuiet ) printf( "\nsyntax ok\n" ); }
-           ;
+Main       : { Line(); } Source       {
+                                        PDECLARED_VAR pVarDef, pRelease;
+
+                                        if ( _iWarnings )
+                                        {
+                                            pVarDef = &FunVars;
+                                            if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+                                               GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+                                            pVarDef = pVarDef->pNextVar;
+
+                                            FunVars.szVarName = "";
+                                            FunVars.cVarType = 'U';
+                                            FunVars.iVarUsed = 0;
+                                            FunVars.pNextVar = 0;
+
+                                            while ( pVarDef )
+                                            {
+
+                                               if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+                                                  GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+                                               pRelease = pVarDef;
+
+                                               pVarDef = pVarDef->pNextVar;
+
+                                               OurFree( pRelease );
+                                            }
+                                        }
+
+                                        if( ! _iQuiet ) printf( "\nsyntax ok\n" );
+                                      };
 
 Source     : Crlf
            | Extern
@@ -1039,6 +1069,7 @@ int harbour_main( int argc, char * argv[] )
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
    char *szOutPath ="";
    FILENAME *pFileName =NULL;
+   PDECLARED_VAR pVarDef, pRelease;
 
    if( argc > 1 )
    {
@@ -1227,7 +1258,6 @@ int harbour_main( int argc, char * argv[] )
           }
           AddSearchPath( pPath, &_pIncludePath );
          }
-
          FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
          FixReturns();       /* fix all previous function returns offsets */

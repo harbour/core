@@ -1,3 +1,7 @@
+19990612 10:57 PST Ron Pinkas
+   * source/compiler/harbour.y
+        Added check on non used variables to be done at the end of source file so last function will be tested too.
+
 19990612-18:55 CET Eddie Runia
   * source/rtl/files.c
     One byte more allocated for fReadStr()
