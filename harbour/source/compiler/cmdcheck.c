@@ -106,10 +106,6 @@ static ULONG PackDateTime( void )
 
 void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 {
-   /* Generates implicit startup procedure
-   */
-   hb_comp_bStartProc = TRUE;
-
    /* If iArg is passed check the command line options */
    if( iArg )
    {

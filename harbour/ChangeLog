@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! restore original copy as it caused memory leak in Windows OS
+       as reported by Sid 'Saylor'. Now hb_xgrab() problem when running
+       hbtest.exe which compiled with -DHB_FMSTATISTICS_OFF ( harbour.exe
+       and libraries were also compiled with the same switch ) remains
        open :(
 
 2002-01-03 00:40 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
