@@ -1,7 +1,7 @@
 //
 // $Id$
 //
-// Class TPersistent test
+// Class HBPersistent test
 
 #include "hbclass.ch"
 
@@ -25,7 +25,7 @@ function Main()
 
 return nil
 
-CLASS Test FROM TPersistent
+CLASS Test FROM HBPersistent
 
    DATA   One       PROPERTY
    DATA   Two       PROPERTY
@@ -37,7 +37,7 @@ CLASS Test FROM TPersistent
 
 ENDCLASS
 
-CLASS Test2 FROM TPersistent
+CLASS Test2 FROM HBPersistent
 
    DATA Five  PROPERTY
 
