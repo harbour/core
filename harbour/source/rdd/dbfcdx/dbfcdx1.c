@@ -1210,6 +1210,7 @@ ERRCODE hb_cdxOpenMemFile( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    BOOL bRetry;
    MEMOHEADER fptHeader;
    PHB_ITEM pError;
+   BYTE buffer[0x20];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOpenMemFile(%p, %p)", pArea, pOpenInfo));
 
@@ -1247,6 +1248,35 @@ ERRCODE hb_cdxOpenMemFile( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
        sizeof( MEMOHEADER ) )
       return FAILURE;
    pArea->uiMemoBlockSize = ( USHORT ) hb_cdxSwapBytes( fptHeader.ulBlockSize );
+   if ( pArea->uiMemoBlockSize == 0)
+   {
+      /* Check for compatibility with Clipper 5.3/FlexFile3 malformed memo headers*/
+      hb_fsSeek( pArea->hMemoFile, 0x200, FS_SET );
+      if( hb_fsRead( pArea->hMemoFile, buffer, sizeof( buffer ) ) != sizeof( buffer ) )
+         return FAILURE;
+      if ( memcmp( (char *) buffer, "FlexFile3\x03", 10) == 0 )
+      {
+         pArea->uiMemoBlockSize = ( USHORT ) buffer[0x1C];
+      }
+   }
+   if ( pArea->uiMemoBlockSize == 0)
+   {
+      if( !pError )
+      {
+         pError = hb_errNew();
+         hb_errPutGenCode( pError, EG_CORRUPTION );
+         hb_errPutSubCode( pError, EDBF_CORRUPT );
+         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CORRUPTION ) );
+         hb_errPutFileName( pError, (char *) pOpenInfo->abName );
+      }
+      /* bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY ); */
+      SELF_ERROR( ( AREAP ) pArea, pError );
+      if( pError )
+         hb_errRelease( pError );
+      return FAILURE;
+   }
+
+
    return SUCCESS;
 }
 
