@@ -1910,6 +1910,10 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
       }
       /* END - Added by Ron Pinkas 2000-11-05 */
 
+      #if 0
+         printf( "State: %i Char:%c\n", State, **ptri );
+      #endif
+
       switch( State )
       {
          case STATE_BRACKET:
@@ -1965,7 +1969,10 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                   {
                      rez = TRUE;
                   }
-                  State = STATE_EXPRES;
+                  else
+                  {
+                     State = STATE_EXPRES;
+                  }
                }
                else
                {
@@ -2001,6 +2008,11 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             {
                State = STATE_BRACKET;
                StBr3 = 1;
+            }
+            /* Ron Pinkas added 2001-01-08 */
+            else if( **ptri == ')' && StBr1 == 0 )
+            {
+               rez = TRUE;
             }
             /* Ron Pinkas added 2000-06-02 */
             else if( **ptri == '&' )

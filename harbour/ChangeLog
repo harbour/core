@@ -1,5 +1,9 @@
+2001-01-08 17:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     ! Fixed ')' as expression terminator in state STATE_ID_END
+
 2001-01-08 14:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
-   * harbour/source/vm/estack.c
+   * source/vm/estack.c
      * Corrected typo _HB_ITEM => HB_ITEM in type casting.
 
 2001-01-08 22:18 GMT+0100 JFL (mafact) <jfl@mafact.com>
