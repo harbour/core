@@ -433,7 +433,7 @@ void hb_gt_DispBegin(void)
                  &srWin);            /* screen buffer rectangle to read from */
 
     /* store current handle */
-    if( ( HStealth = INVALID_HANDLE_VALUE ) )
+    if( HStealth == INVALID_HANDLE_VALUE )
     {
        HStealth = CreateConsoleScreenBuffer(
                   GENERIC_READ    | GENERIC_WRITE,    /* Access flag         */

@@ -1,3 +1,7 @@
+19990808-23:33 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gt/gtwin.c
+     + add missing =
+
 19990808-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/codebloc.c
      source/rtl/itemapi.c
