@@ -305,12 +305,13 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemNew(%p)", pNull));
 
-   HB_SYMBOL_UNUSED( pNull );
-
    pItem = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 
-   memset( pItem, 0, sizeof( HB_ITEM ) );
    pItem->type = IT_NIL;
+   if( pNull )
+      hb_itemCopy( pItem, pNull );
+   else
+      memset( pItem, 0, sizeof( HB_ITEM ) );
 
    return pItem;
 }

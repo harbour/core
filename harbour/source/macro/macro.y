@@ -78,7 +78,7 @@ extern void yyerror( char * ); /* parsing error management function */
 /* Standard checking for valid expression creation
  */
 #define  HB_MACRO_CHECK( pExpr ) \
-   if( HB_MACRO_DATA->status != HB_MACRO_OK ) \
+   if( ! ( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) \
    { \
       hb_compExprDelete( pExpr, HB_MACRO_PARAM ); \
       YYABORT; \
@@ -185,13 +185,16 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 
 %%
 
-Main : Expression '\n' {   if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
+Main : Expression '\n' {
+                           if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            else
                               hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
-     | Expression      {   if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
+
+     | Expression      { 
+                           if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            else
                               hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
@@ -699,12 +702,12 @@ PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
 ;
 
 IfInline   : IIF '(' Expression ',' EmptyExpression ','
-             { $<asExpr>$ = hb_compExprAddListExpr( $3, $5 ); }
+             { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
              EmptyExpression ')'
              { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
 
            | IF '(' Expression ',' EmptyExpression ','
-             { $<asExpr>$ = hb_compExprAddListExpr( $3, $5 ); }
+             { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
              EmptyExpression ')'
              { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
            ;
@@ -722,7 +725,7 @@ int hb_compParse( HB_MACRO_PTR pMacro )
 
    lexBuffer = hb_compFlexNew( pMacro );
 
-   pMacro->status = HB_MACRO_OK;
+   pMacro->status = HB_MACRO_CONT;
    /* NOTE: bison requires (void *) pointer
     */
    iResult = yyparse( ( void * ) pMacro );

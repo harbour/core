@@ -246,7 +246,7 @@ SUBSTR                  ;R;
 TIME                    ;R;
 TONE                    ;S;
 TRANSFORM               ;R;
-TYPE                    ;N;
+TYPE                    ;R;
 UPDATED                 ;N;
 UPPER                   ;R;
 USED                    ;R;

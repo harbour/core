@@ -505,7 +505,6 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
       hb_macroRun( pMacro );
       hb_macroDelete( pMacro );
-      hb_xfree( pMacro );
       pResult = pExpr;
       hb_itemCopy( pResult, &hb_stack.Return );
    }
@@ -577,7 +576,6 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
          hb_macroRun( pMacro );
          hb_macroDelete( pMacro );
-         hb_xfree( pMacro );
          pResult = pExpr;
          hb_itemCopy( pResult, &hb_stack.Return );
       }

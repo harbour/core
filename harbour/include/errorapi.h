@@ -133,4 +133,22 @@ extern USHORT   hb_errRT_TOOLS          ( ULONG ulGenCode, ULONG ulSubCode, char
 
 extern void     hb_errInternal          ( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 );
 
+/* Low-level error handling */
+struct HB_ERROR_INFO_;   /* forward declaration */
+#define HB_ERROR_HANDLE( hbfunc )   HB_ITEM_PTR hbfunc( struct HB_ERROR_INFO_ * ErrorInfo )
+typedef HB_ERROR_HANDLE( HB_ERROR_HANDLER );
+typedef HB_ERROR_HANDLER *HB_ERROR_HANDLER_PTR;
+
+typedef struct HB_ERROR_INFO_
+{
+   HB_ERROR_HANDLER_PTR Func;
+   HB_ITEM_PTR Error;
+   void * Cargo;
+   struct HB_ERROR_INFO_ *Previous;
+   HB_ITEM_PTR ErrorBlock;
+} HB_ERROR_INFO, *HB_ERROR_INFO_PTR;
+
+/*  set/get current error handler */
+extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR );
+
 #endif /* HB_ERRORAPI_H_ */

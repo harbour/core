@@ -1,3 +1,50 @@
+20000119-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/macro/macro.y
+        * fixed GPF when IIF()/IF() was used in macro expression
+        * support for TYPE() function was added
+
+    *include/macro.h
+    *source/macro/macro.c
+        * support for TYPE() function was added
+        * memory allocated for macro evaluation is properly released
+        when a runtime error occurs during evaluation
+
+    *source/rtl/type.c
+        * full implementation of TYPE() function was added
+
+    *include/extend.h
+        * new declaration for hb_macroGetType - called from TYPE()
+        * new declaration for hb_valtypeGet shared by VALTYPE and TYPE
+
+    *source/rtl/valtype.c
+        * new function hb_valtypeGet() used internally in Harbour
+
+    *source/rtl/errorapi.c
+    *include/errorapi.h
+        * new structure HB_ERROR_INFO for catching errors at C level
+        * new function hb_errorHandler() that sets/gets low-level
+        error handler.
+
+    *include/ctoharb.h
+    *source/vm/hvm.c
+	* added HB_ENDPROC_REQUEST and hb_vmRequestEndProc() which are used
+	to request immediately return from currently evaluated pcode buffer.
+	This is used to stop processing of macro compiled code.
+
+    *source/rtl/itemapi.c
+        * if parameter passed to hb_itemNew is not NULL then it is used to
+        initialize the new item (in other words it creates a copy of
+        passed item)
+
+    *source/rdd/rddcdx/dbfcdx1.c
+        * The macro structure is now self deallocating if hb_macroDelete()
+        is called - it must not call hb_xfree() after hb_macroDelete()
+        was used.
+
+    *doc/funclist.txt
+	* marked TYPE() as Ready :)
+
 2000-01-19 08:28 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + fixed and improved to use Class TDbMenuItem METHOD Display

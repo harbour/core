@@ -1138,6 +1138,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          }
          else if( s_uiActionRequest & HB_QUIT_REQUESTED )
             break;
+         else if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
+	 {
+	     /* request to stop current procedure was issued 
+	      * (from macro evaluation)
+	      */
+	     s_uiActionRequest = 0;
+             break;
+	 }
       }
    }
    hb_memvarSetPrivatesBase( ulPrivateBase );
@@ -3748,6 +3756,13 @@ void hb_vmRequestQuit( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestQuit()"));
 
    s_uiActionRequest = HB_QUIT_REQUESTED;
+}
+
+void hb_vmRequestEndProc( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestEndProc()"));
+
+   s_uiActionRequest = HB_ENDPROC_REQUESTED;
 }
 
 void hb_vmRequestBreak( PHB_ITEM pItem )

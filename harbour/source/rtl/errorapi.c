@@ -68,6 +68,7 @@
    better shows what is really the problem */
 #define HB_ERROR_LAUNCH_MAX 8
 
+static HB_ERROR_INFO_PTR s_errorHandler = NULL;
 static HB_ITEM s_errorBlock;
 static int     s_iLaunchCount = 0;
 static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
@@ -84,7 +85,7 @@ void hb_errForceLink()
 }
 
 /* There's a similar undocumented, internal functions in CA-Cl*pper named
-   ErrorInHandler(). */ 
+   ErrorInHandler(). */
 
 HARBOUR HB___ERRINHANDLER( void )
 {
@@ -104,6 +105,20 @@ HARBOUR HB_ERRORBLOCK( void )
 
    hb_itemReturn( &oldError );
    hb_itemClear( &oldError );
+}
+
+/* set new low-level error launcher (C function) and return
+ * handler currently active
+ */
+HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
+{
+   HB_ERROR_INFO_PTR pOld = s_errorHandler;
+
+   if( pNewHandler )
+      pNewHandler->Previous = s_errorHandler;
+   s_errorHandler = pNewHandler;
+
+   return pOld;
 }
 
 /* TOFIX: Make it Clipper compatible */
@@ -150,6 +165,7 @@ PHB_ITEM hb_errNew( void )
 USHORT hb_errLaunch( PHB_ITEM pError )
 {
    USHORT uiAction;
+   USHORT usRequest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errLaunch(%p)", pError));
 
@@ -171,24 +187,38 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       s_iLaunchCount++;
 
-      pResult = hb_itemDo( &s_errorBlock, 1, pError );
+      if( s_errorHandler )
+      {
+         /* there is a low-level error handler defined - use it instead
+          * of normal Harbour-level one
+          */
+         s_errorHandler->Error = pError;
+         s_errorHandler->ErrorBlock = &s_errorBlock;
+         pResult = (s_errorHandler->Func)( s_errorHandler );
+         s_errorHandler->Error = NULL;
+      }
+      else
+         pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 
       /* Check results */
 
-      if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
+      usRequest = hb_vmRequestQuery();
+      if( usRequest == HB_QUIT_REQUESTED )
       {
-         hb_itemRelease( pResult );
+         if( pResult )
+             hb_itemRelease( pResult );
          hb_errRelease( pError );
          hb_vmQuit();
       }
-      else if( hb_vmRequestQuery() == HB_BREAK_REQUESTED )
+      else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
       {
-         hb_itemRelease( pResult );
+         if( pResult )
+             hb_itemRelease( pResult );
          uiAction = E_BREAK;
       }
-      else
+      else if( pResult )
       {
          BOOL bFailure = FALSE;
          USHORT uiFlags = hb_errGetFlags( pError );
@@ -217,6 +247,8 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          if( uiAction == E_RETRY )
             hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
+      else
+        hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
    }
    else
       uiAction = E_RETRY; /* Clipper does this, undocumented */
@@ -237,6 +269,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 {
    PHB_ITEM pResult;
+   USHORT usRequest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errLaunchSubst(%p)", pError));
 
@@ -256,21 +289,35 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       s_iLaunchCount++;
 
-      pResult = hb_itemDo( &s_errorBlock, 1, pError );
+      if( s_errorHandler )
+      {
+         /* there is a low-level error handler defined - use it instead
+          * of normal Harbour-level one
+          */
+         s_errorHandler->Error = pError;
+         s_errorHandler->ErrorBlock = &s_errorBlock;
+         pResult = (s_errorHandler->Func)( s_errorHandler );
+         s_errorHandler->Error = NULL;
+      }
+      else
+          pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 
       /* Check results */
 
-      if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
+      usRequest = hb_vmRequestQuery();
+      if( usRequest == HB_QUIT_REQUESTED )
       {
-         hb_itemRelease( pResult );
+         if( pResult )
+             hb_itemRelease( pResult );
          hb_errRelease( pError );
          hb_vmQuit();
       }
-      else if( hb_vmRequestQuery() == HB_BREAK_REQUESTED )
+      else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
       {
-         hb_itemRelease( pResult );
+         if( pResult )
+             hb_itemRelease( pResult );
          pResult = NULL;
       }
       else

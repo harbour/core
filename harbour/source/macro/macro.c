@@ -57,7 +57,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
  * 'iFlag' - specifies if compiled code should generate pcodes either for push
  *    operation (for example: var :=&macro) or for pop operation (&macro :=var)
  */
-static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
+static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
 {
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
@@ -75,11 +75,6 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s, %i)", pMacro, szString, iFlag));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
 
-   /* We have to specify if we want either a push or a pop operation because
-    * we are using different pcodes for these operations
-    */
-   pMacro->Flags = iFlag;
-
    return hb_compParse( pMacro );
 }
 
@@ -95,6 +90,8 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 
    hb_xfree( (void *) pMacro->pCodeInfo->pCode );
    hb_xfree( (void *) pMacro->pCodeInfo );
+   if( pMacro->Flags & HB_MACRO_DEALLOCATE )
+      hb_xfree( pMacro );
 }
 
 /* checks if a correct ITEM was passed from the virtual machine eval stack
@@ -121,6 +118,36 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
    return bValid;
 }
 
+/* It handles an error generated during macro evaluation
+ */
+static HB_ERROR_HANDLE( hb_macroErrorEvaluation )
+{
+   HB_ITEM_PTR pResult = hb_itemDo( ErrorInfo->ErrorBlock, 1, ErrorInfo->Error );
+
+   /* In a special case when QUIT is requested then there is no return
+    * to code where macro evaluation was called. We have to
+    * release all used memory here.
+    */
+   if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
+      hb_macroDelete( ( HB_MACRO_PTR ) ErrorInfo->Cargo );
+
+   return pResult;
+}
+
+/* It handles an error generated during checking of expression type
+ */
+static HB_ERROR_HANDLE( hb_macroErrorType )
+{
+   HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) ErrorInfo->Cargo;
+
+   pMacro->status &= ~HB_MACRO_CONT;
+   /* ignore rest of compiled code
+    */
+   hb_vmRequestEndProc();
+   return NULL;      /* ignore this error */
+}
+
+
 /* Executes pcode compiled by macro compiler
  *
  * pMacro is a pointer to HB_MACRO structure created by macro compiler
@@ -132,6 +159,22 @@ void hb_macroRun( HB_MACRO_PTR pMacro )
 
    hb_vmExecute( pMacro->pCodeInfo->pCode, NULL );
 }
+
+/* evaluate a macro-cmpiled code and discard it
+ */
+static void hb_macroEvaluate( HB_MACRO_PTR pMacro )
+{
+   HB_ERROR_INFO struErr;
+   HB_ERROR_INFO_PTR pOld;
+
+   struErr.Func  = hb_macroErrorEvaluation;
+   struErr.Cargo = ( void * ) pMacro;
+   pOld = hb_errorHandler( &struErr );
+   hb_macroRun( pMacro );
+   hb_errorHandler( pOld );
+   hb_macroDelete( pMacro );
+}
+
 
 static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 {
@@ -355,15 +398,15 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       int iStatus;
       char * szString = pItem->item.asString.value;
 
+      struMacro.Flags      = HB_MACRO_GEN_PUSH;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, HB_MACRO_GEN_PUSH );
+      iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
-      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
-         hb_macroRun( &struMacro );
-         hb_macroDelete( &struMacro );
+         hb_macroEvaluate( &struMacro );
       }
       else
          hb_macroSyntaxError( &struMacro );
@@ -385,15 +428,15 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
       HB_MACRO struMacro;
       int iStatus;
 
+      struMacro.Flags      = HB_MACRO_GEN_POP;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, HB_MACRO_GEN_POP );
+      iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
-      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
-         hb_macroRun( &struMacro );
-         hb_macroDelete( &struMacro );
+         hb_macroEvaluate( &struMacro );
       }
       else
          hb_macroSyntaxError( &struMacro );
@@ -454,19 +497,19 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       memcpy( szString + pAlias->item.asString.length + 2, pVar->item.asString.value, pVar->item.asString.length );
       szString[ pAlias->item.asString.length + 2 + pVar->item.asString.length ] = '\0';
 
+      struMacro.Flags      = iFlag;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, iFlag );
+      iStatus = hb_macroParse( &struMacro, szString );
       hb_xfree( szString );
       struMacro.string = NULL;
 
       hb_stackPop();    /* remove compiled variable name */
       hb_stackPop();    /* remove compiled alias */
 
-      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
-         hb_macroRun( &struMacro );
-         hb_macroDelete( &struMacro );
+         hb_macroEvaluate( &struMacro );
       }
       else
          hb_macroSyntaxError( &struMacro );
@@ -480,16 +523,16 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       int iStatus;
       char * szString = pVar->item.asString.value;
 
+      struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, iFlag | HB_MACRO_GEN_ALIASED );
+      iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
 
-      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
-         hb_macroRun( &struMacro );
-         hb_macroDelete( &struMacro );
+         hb_macroEvaluate( &struMacro );
       }
       else
          hb_macroSyntaxError( &struMacro );
@@ -508,10 +551,11 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCompile(%s)", szString));
 
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
+   pMacro->Flags = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH;
    pMacro->bShortCuts = hb_comp_bShortCuts;
    pMacro->bName10    = hb_comp_bUseName10;
-   iStatus = hb_macroParse( pMacro, szString, HB_P_MACROPUSH );
-   if( ! ( iStatus == HB_MACRO_OK && pMacro->status == HB_MACRO_OK ) )
+   iStatus = hb_macroParse( pMacro, szString );
+   if( ! ( iStatus == HB_MACRO_OK && ( pMacro->status & HB_MACRO_CONT ) ) )
    {
       hb_macroDelete( pMacro );
       hb_xfree( pMacro );
@@ -590,6 +634,86 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
        *    inside a string
        */
    }
+}
+
+char * hb_macroGetType( HB_ITEM_PTR pItem )
+{
+   char * szType;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroGetType(%p)", pItem));
+
+   if( hb_macroCheckParam( pItem ) )
+   {
+      HB_MACRO struMacro;
+      int iStatus;
+      char * szString = pItem->item.asString.value;
+
+      struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
+      struMacro.bShortCuts = hb_comp_bShortCuts;
+      struMacro.bName10    = hb_comp_bUseName10;
+      iStatus = hb_macroParse( &struMacro, szString );
+
+      if( iStatus == HB_MACRO_OK )
+      {
+         /* passed string was successfully compiled
+          */
+         if( struMacro.status & HB_MACRO_UNKN_SYM )
+         {
+            /* request for a symbol that is not in a symbol table
+             */
+            szType = "U";
+         }
+         else if( struMacro.status & HB_MACRO_UDF )
+         {
+            szType = "UI";  /* UDF function was used - cannot determine a type */
+         }
+         else if( struMacro.status & HB_MACRO_CONT )
+         {
+            /* OK - the pcode was generated and it can be evaluated
+            */
+            HB_ERROR_INFO struErr;
+            HB_ERROR_INFO_PTR pOld;
+
+            /* Set our temporary error handler. We do not need any error
+             * messages here - we need to know only if evaluation was
+             * successfull. If evaluation was successfull then the data type
+             * of expression can be determined.
+             */
+            struErr.Func  = hb_macroErrorType;
+            struErr.Cargo = ( void * ) &struMacro;
+            pOld = hb_errorHandler( &struErr );
+            hb_macroRun( &struMacro );
+            hb_errorHandler( pOld );
+
+            if( struMacro.status & HB_MACRO_CONT )
+            {
+               /* Evaluation was successfull
+                * Now the value of expression is placed on the eval stack -
+                * check its type and pop it from the stack
+                */
+               szType = hb_valtypeGet( hb_stack.pPos - 1 );
+               hb_stackPop();
+            }
+            else
+            {
+               /* something unpleasant happened during macro evaluation */
+               szType = "UE";
+            }
+         }
+         else
+         {
+            szType = "UE";
+         }
+      }
+      else
+         szType = "UE";  /* syntax error during compilation */
+
+      hb_macroDelete( &struMacro );
+   }
+   else
+      szType = "U";
+
+   return szType;
 }
 
 
@@ -682,9 +806,28 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_MACRO_DECL )
 {
    HB_DYNS_PTR pSym;
 
-   /* Find the address of passed symbol - create the symbol if doesn't exist
-    */
-   pSym = hb_dynsymGet( szVarName );
+   if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
+   {
+      /* we are determining the type of expression (called from TYPE() function)
+       * then we shouldn't create the requested variable if it doesn't exist
+       */
+      pSym = hb_dynsymFind( szVarName );
+      if( ! pSym )
+      {
+         HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
+         HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+         /*
+          * NOTE: the compiled pcode will be not executed then we can ignore
+          * NULL value for pSym
+          */
+      }
+   }
+   else
+   {
+      /* Find the address of passed symbol - create the symbol if doesn't exist
+       */
+      pSym = hb_dynsymGet( szVarName );
+   }
    hb_compGenPCode1( bPCode, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_MACRO_PARAM );
 }
@@ -694,7 +837,24 @@ void hb_compGenPushSymbol( char * szSymbolName, HB_MACRO_DECL )
 {
    HB_DYNS_PTR pSym;
 
-   pSym = hb_dynsymGet( szSymbolName );
+   if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
+   {
+      /* we are determining the type of expression (called from TYPE() function)
+       */
+      pSym = hb_dynsymFind( szSymbolName );
+      if( ! pSym )
+      {
+         HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
+         HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+         /*
+          * NOTE: the compiled pcode will be not executed then we can ignore
+          * NULL value for pSym
+          */
+      }
+   }
+   else
+      pSym = hb_dynsymGet( szSymbolName );
+
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
 }
@@ -834,7 +994,7 @@ void hb_compGenPushVar( char * szVarName, HB_MACRO_DECL )
    else
    {
       /* NOTE: In clipper all undeclared variables are assumed MEMVAR if
-       * they are popped however there is nno such assumption if avariable
+       * they are popped however there is no such assumption if a variable
        * is pushed on the eval stack
        */
       hb_compMemvarGenPCode( HB_P_MPUSHVARIABLE, szVarName, HB_MACRO_PARAM );
@@ -944,7 +1104,10 @@ void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL )
       hb_compGenPushSymbol( szFunction, HB_MACRO_PARAM );
    }
    else
+   {
+      HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
       hb_compGenPushSymbol( szFunName, HB_MACRO_PARAM );
+   }
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
@@ -996,7 +1159,8 @@ void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL )
 
 void hb_macroError( int iError, HB_MACRO_DECL )
 {
-   HB_MACRO_DATA->status = iError;
+   HB_MACRO_DATA->status |= iError;
+   HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* clear CONT bit */
 }
 
 /*

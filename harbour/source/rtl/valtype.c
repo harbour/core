@@ -73,6 +73,50 @@
  *  $END$
  */
 
+char * hb_valtypeGet( HB_ITEM_PTR pItem )
+{
+   char * szType;
+
+   switch( pItem->type & ~IT_BYREF )
+   {
+      case IT_ARRAY:
+         szType = ( hb_arrayIsObject( pItem ) ? "O" : "A" );
+         break;
+
+      case IT_BLOCK:
+         szType = "B";
+         break;
+
+      case IT_DATE:
+         szType = "D";
+         break;
+
+      case IT_LOGICAL:
+         szType = "L";
+         break;
+
+      case IT_INTEGER:
+      case IT_LONG:
+      case IT_DOUBLE:
+         szType = "N";
+         break;
+
+      case IT_STRING:
+         szType = "C";
+         break;
+
+      case IT_MEMO:
+         szType = "M";
+         break;
+
+      default:
+         szType = "U";
+         break;
+   }
+   return szType;
+}
+
+
 HARBOUR HB_VALTYPE( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
@@ -82,44 +126,7 @@ HARBOUR HB_VALTYPE( void )
             may not do so. [vszel] */
 
    if( pItem )
-   {
-      switch( pItem->type & ~IT_BYREF )
-      {
-         case IT_ARRAY:
-            hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
-            break;
-
-         case IT_BLOCK:
-            hb_retc( "B" );
-            break;
-
-         case IT_DATE:
-            hb_retc( "D" );
-            break;
-
-         case IT_LOGICAL:
-            hb_retc( "L" );
-            break;
-
-         case IT_INTEGER:
-         case IT_LONG:
-         case IT_DOUBLE:
-            hb_retc( "N" );
-            break;
-
-         case IT_STRING:
-            hb_retc( "C" );
-            break;
-
-         case IT_MEMO:
-            hb_retc( "M" );
-            break;
-
-         default:
-            hb_retc( "U" );
-            break;
-      }
-   }
+      hb_retc( hb_valtypeGet( pItem ) );
    else
       hb_retc( "U" );
 }

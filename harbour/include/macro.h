@@ -56,12 +56,26 @@
 #include "errorapi.h"
 #include "expropt.h"
 
+/* flags for compilation process
+ */
+#define HB_MACRO_GEN_PUSH     1   /* generate PUSH pcodes */
+#define HB_MACRO_GEN_POP      2   /* generate POP pcodes */
+#define HB_MACRO_GEN_ALIASED  4   /* force aliased variable */
+#define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from TYPE() function) */
+#define HB_MACRO_DEALLOCATE   128 /* macro structure is allocated on the heap */
+
+/* values returned from compilation process
+ */
 #define HB_MACRO_OK           0   /* macro compiled successfully */
 #define HB_MACRO_FAILURE      1   /* syntax error */
+
+/* additional status of compilation
+ */
+#define HB_MACRO_CONT         1   /* everything is OK so far */
 #define HB_MACRO_TOO_COMPLEX  2   /* compiled expression is too complex */
-#define HB_MACRO_GEN_PUSH     4   /* generate PUSH pcodes */
-#define HB_MACRO_GEN_POP      8   /* generate POP pcodes */
-#define HB_MACRO_GEN_ALIASED  16  /* force aliased variable */
+#define HB_MACRO_UDF          4   /* code uses UDF function (info used by TYPE function) */
+#define HB_MACRO_UNKN_SYM     8   /* requested symbol was not found in runtime symbol table */
+
 
 
 /* Global functions
@@ -72,6 +86,8 @@ int hb_compParse( HB_MACRO_PTR );
 void hb_compGenPCode1( BYTE, HB_MACRO_DECL );
 void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL );
 void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );
+
+void hb_compGenJumpHere( ULONG, HB_MACRO_DECL );
 
 /* Size of pcode buffer incrementation
  */

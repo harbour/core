@@ -451,7 +451,6 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
   void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
   BOOL bName10;           /* are we limiting identifier names to 10 chars ? */
   BOOL bShortCuts;        /* are we using logical shorcuts (in OR/AND)  */
-  PHB_SYMB pSymbols;      /* local symbol table */
 } HB_MACRO, * HB_MACRO_PTR;
 
 extern void hb_macroGetValue( HB_ITEM_PTR );
@@ -465,9 +464,12 @@ extern char * hb_macroTextSubst( char *, ULONG * );
 extern BOOL hb_macroIsIdent( char * );
 extern void hb_macroPopAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
 extern void hb_macroPushAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
+extern char * hb_macroGetType( HB_ITEM_PTR );
 
 /* misc */
 extern char *   hb_version( USHORT uiMode );
+extern char *   hb_valtypeGet( HB_ITEM_PTR );
+
 
 /* Please leave these at the bottom of this file */
 

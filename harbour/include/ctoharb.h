@@ -49,14 +49,16 @@ extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime suppor
 
 /* Harbour virtual machine escaping API */
 extern void    hb_vmRequestQuit( void );
+extern void    hb_vmRequestEndProc( void );
 extern void    hb_vmRequestCancel( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
 extern USHORT  hb_vmRequestQuery( void );
 extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
 /* Return values of hb_vmRequestQuery() */
-#define HB_QUIT_REQUESTED       1            /* immediately quit the application */
-#define HB_BREAK_REQUESTED      2            /* break to nearest RECOVER/END sequence */
+#define HB_QUIT_REQUESTED       1   /* immediately quit the application */
+#define HB_BREAK_REQUESTED      2   /* break to nearest RECOVER/END sequence */
+#define HB_ENDPROC_REQUESTED    4   /* immediately return from procedure (error handler in macro evaluation) */
 
 /* Public PCode functions */
 
