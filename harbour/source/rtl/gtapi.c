@@ -6,7 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
- * 1.38   19990726   ptucker   
+ * 1.39   19990726   ptucker   Position cursor inside top-left corner
+ *                             after drawing box - compatibility
  * 1.35   19990726   ptucker   Much improved box drawing speed
  *                             Modifed some if statments to test for != 0
  * 1.34   19990721   ptucker   Corrected _Color mask descriptions
@@ -160,7 +161,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
     hb_gtDispEnd();
 
-    hb_gtSetPos(uiBottom + 1, uiRight + 1);
+    hb_gtSetPos(uiTop + 1, uiLeft + 1);
 
     return 0;
 }

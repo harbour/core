@@ -769,11 +769,17 @@ HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origi
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtGetPos( &dev_row, & dev_col);
+#endif
    hb_retni( dev_row );
 }
 
 HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtGetPos( &dev_row, & dev_col);
+#endif
    hb_retni( dev_col );
 }
 

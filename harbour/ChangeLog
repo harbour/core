@@ -1,3 +1,9 @@
+19990726-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * position cursor inside top-left corner of box - compatibility
+   * source/rtl/console.c
+     * Row() and Col() - too passive when linked with gtapi.
+
 19990726-05:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * much improved box drawing speed.
