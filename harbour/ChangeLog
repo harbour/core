@@ -1,3 +1,13 @@
+20000209-21:10 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+    +utils/hbdoc/genos2.prg
+    +utils/hbdoc/gentrf.prg
+    +utils/hbdoc/genng.prg
+    +utils/hbdoc/genhtm.prg
+    +utils/hbdoc/genrtf.prg
+    +utils/hbdoc/genhpc.prg
+    +utils/hbdoc/genasc.prg
+
 20000209-20:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *utils/hbdoc/hbdoc.prg
          *Separated in several files

@@ -327,10 +327,31 @@ $(RUNNER_EXE) : \
 #    -del $(BIN_DIR)\runjava.lib
 
 $(HBDOC_EXE) : \
-    $(HBDOC_DIR)\hbdoc.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -w0 -o$(HBDOC_DIR)\ $(HBDOC_DIR)\hbdoc.prg
-    $(CC) -TP $(CFLAGS) $(HBDOC_DIR)\hbdoc.c -o $(HBDOC_DIR)\hbdoc.exe /link $(LIBS)
+    $(HBDOC_DIR)\hbdoc.prg \
+    $(HBDOC_DIR)\genos2.prg \
+    $(HBDOC_DIR)\gentrf.prg \
+    $(HBDOC_DIR)\genng.prg  \
+    $(HBDOC_DIR)\genhtm.prg \
+    $(HBDOC_DIR)\genrtf.prg \
+    $(HBDOC_DIR)\genhpc.prg \
+    $(HBDOC_DIR)\genasc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\hbdoc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genos2.prg 
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\gentrf.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genng.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genhtm.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genrtf.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genhpc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(HBDOC_DIR)\ $(HBDOC_DIR)\genasc.prg
+    $(CC) -TP $(CFLAGS) $(HBDOC_DIR)\hbdoc.c $(HBDOC_DIR)\genos2.c $(HBDOC_DIR)\gentrf.c $(HBDOC_DIR)\genng.c $(HBDOC_DIR)\genhtm.c $(HBDOC_DIR)\genrtf.c $(HBDOC_DIR)\genhpc.c $(HBDOC_DIR)\genasc.c -o $(HBDOC_DIR)\hbdoc /link $(LIBS)
     -del hbdoc.obj
+    -del genos2.obj
+    -del gentrf.obj
+    -del genng.obj
+    -del genhtm.obj
+    -del genrtf.obj
+    -del genhpc.obj
+    -del genasc.obj
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harbour.c \
