@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-10-17 15:00 UTC+0700 Andi Jahja <andijahja@cbn.net.id>
+   * source/compiler/harbour.sly
+   * source/compiler/harbour.y
+     ! Add missing third parameter on calls of hb_compGenPushSymbol()
 
 2002-10-16 1:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * include/dbInfo.ch
