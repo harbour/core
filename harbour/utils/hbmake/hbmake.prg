@@ -1001,8 +1001,10 @@ nPos := Ascan( adefines, { | x | x[ 1 ] == aset[ 1 ] } )
 If nPos = 0
    cRead    := Alltrim( Strtran( aset[ 2 ], "$(", "" ) )
    cRead    := Strtran( cRead, ")", "" )
+
    nMakePos := Ascan( aDefines, { | x | x[ 1 ] == cRead } )
    If nMakePos = 0
+      aset[2]:=strtran(aset[2],","," ")
       Aadd( aDefines, { aset[ 1 ], aset[ 2 ] } )
       Aadd( amacros, { aset[ 1 ], aset[ 2 ] } )
 
