@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 10:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbffind.c
+     ! Some fix (MSVC).
+
 2001-12-18 07:44 UTC+0000 Dave Pearson <davep@davep.org>
   * doc/howtocvs.txt
     * Updated the pointer to details about harbour's mailing lists.
