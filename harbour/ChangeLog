@@ -3,6 +3,8 @@
      * Version bumped to 0.32 2000-03-07
    * config/w32/gcc.cfg
      ! Added user32 to the library list to make OEMANSI.C link.
+   * doc/whatsnew.txt
+     + Date filled.
 
 20000307-23:26 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.vc
