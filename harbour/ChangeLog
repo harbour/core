@@ -1,3 +1,10 @@
+2001-05-10 15:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     + Added logic for NO Checking of OO Syntax (#ifdef NO_OO_ERR) - Use /dNO_OO_ERR to disable OO Syntax Checking.
+
+   * source/pp/ppcore.c
+     * Temporarily disabled support of #define expansion in #error directive.
+
 2001-05-10 14:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      - Removed 1 #translate that caused conflicts with FWH.

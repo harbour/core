@@ -498,6 +498,7 @@ int hb_pp_ParseDirective( char * sLine )
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
         /* --- #error  --- */
       {
+      #if 0
         DEFINES * stdef;
         int lenToken, i;
         char *ptri, *sToken, *ptrb, ptro[MAX_NAME];
@@ -518,9 +519,9 @@ int hb_pp_ParseDirective( char * sLine )
               }
            }
         }
+      #endif
 
         hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
-
       }
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
