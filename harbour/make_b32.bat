@@ -11,8 +11,6 @@ rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem ---------------------------------------------------------------
 
-set HB_LEX=FLEX
-
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 

@@ -12,14 +12,18 @@
 #
 #       CFLAGS       - Extra C compiler options for libraries and for
 #                      executables
+#       CLIBFLAGS    - Extra C compiler options for the libraries
 #       C_USR        - Extra C compiler options for libraries and for
 #                      executables (GNU make compatible envvar)
-#       CLIBFLAGS    - Extra C compiler options for the libraries
 #       HARBOURFLAGS - Extra Harbour compiler options
-#       PRG_USR      - Extra Harbour compiler options
-#                      (GNU make compatible envvar)
+#       HB_DOC_PDF   - Turns on the .PDF file support in the HBDOC utility.
+#                      Note that this will require the pdflib contrib.
 #       HB_GT_LIB    - To override the default GT driver
 #                      (search for HB_GT_LIBS for a list of values)
+#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be 
+#                      used instead of the Flex based one.
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
 #
 
 #
@@ -103,9 +107,10 @@ HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
 
 !if $(HB_LEX) == SIMPLEX
-   INCLUDE_DIR  = $(INCLUDE_DIR);source\compiler;source\macro
+   INCLUDE_DIR = $(INCLUDE_DIR);source\compiler;source\macro
 !endif
-!if $d(PDF)
+
+!if $d(HB_DOC_PDF)
    HBPDF_DIR   = contrib\pdflib
 !endif
 
@@ -120,10 +125,11 @@ HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 
 !if $(HB_LEX) == SIMPLEX
-   CLIBFLAGS   = $(CLIBFLAGS) -DSIMPLEX
+   CLIBFLAGS = $(CLIBFLAGS) -DSIMPLEX
 !endif
-!if $d(PDF)
-   HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
+
+!if $d(HB_DOC_PDF)
+   HARBOURFLAGS = $(HARBOURFLAGS) -dPDF
 !endif
 
 #
@@ -154,6 +160,7 @@ HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
+
 #
 # GT driver list
 #
@@ -167,9 +174,9 @@ HB_GT_LIBS = \
    $(GTSTD_LIB)
 
 !if !$d(HB_GT_LIB)
-HB_GT_LIB = $(GTDOS_LIB)
+   HB_GT_LIB = $(GTDOS_LIB)
 !else
-HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
+   HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 !endif
 
 !else
@@ -183,9 +190,9 @@ HB_GT_LIBS = \
    $(GTWIN_LIB)
 
 !if !$d(HB_GT_LIB)
-HB_GT_LIB = $(GTWIN_LIB)
+   HB_GT_LIB = $(GTWIN_LIB)
 !else
-HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
+   HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 !endif
 
 !endif
@@ -400,20 +407,20 @@ LANG_LIB_OBJS = \
 # MACRO.LIB rules
 #
 
-!if $(HB_LEX)==SIMPLEX
+MACRO_LIB_OBJS = \
+   $(OBJ_DIR)\macroy.obj \
+   $(OBJ_DIR)\macroa.obj \
+   $(OBJ_DIR)\macrob.obj \
+   $(OBJ_DIR)\macroc.obj
+
+!if $(HB_LEX) == SIMPLEX
     MACRO_LIB_OBJS = \
-       $(OBJ_DIR)\macroy.obj \
-       $(OBJ_DIR)\macroslx.obj \
-       $(OBJ_DIR)\macroa.obj \
-       $(OBJ_DIR)\macrob.obj \
-       $(OBJ_DIR)\macroc.obj
+       $(MACRO_LIB_OBJS) \
+       $(OBJ_DIR)\macroslx.obj
 !else
     MACRO_LIB_OBJS = \
-       $(OBJ_DIR)\macroy.obj \
-       $(OBJ_DIR)\macrol.obj \
-       $(OBJ_DIR)\macroa.obj \
-       $(OBJ_DIR)\macrob.obj \
-       $(OBJ_DIR)\macroc.obj
+       $(MACRO_LIB_OBJS) \
+       $(OBJ_DIR)\macrol.obj
 !endif
 
 #
@@ -583,48 +590,35 @@ GTWIN_LIB_OBJS = \
 # HARBOUR.EXE rules
 #
 
-!if $(HB_LEX)==SIMPLEX
+HARBOUR_EXE_OBJS = \
+   $(OBJ_DIR)\harbour.obj \
+   $(OBJ_DIR)\harboury.obj \
+   $(OBJ_DIR)\hbslex.obj \
+   $(OBJ_DIR)\cmdcheck.obj \
+   $(OBJ_DIR)\hbusage.obj \
+   $(OBJ_DIR)\hbident.obj \
+   $(OBJ_DIR)\hbgenerr.obj \
+   $(OBJ_DIR)\hbpcode.obj \
+   $(OBJ_DIR)\hbfix.obj \
+   $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\gencobj.obj \
+   $(OBJ_DIR)\genobj32.obj \
+   $(OBJ_DIR)\genjava.obj \
+   $(OBJ_DIR)\genhrb.obj \
+   $(OBJ_DIR)\expropta.obj \
+   $(OBJ_DIR)\exproptb.obj \
+   $(OBJ_DIR)\exproptc.obj \
+   $(OBJ_DIR)\hbfunchk.obj \
+   $(PP_LIB)
+
+!if $(HB_LEX) == SIMPLEX
    HARBOUR_EXE_OBJS = \
-      $(OBJ_DIR)\harbour.obj \
-      $(OBJ_DIR)\harboury.obj \
-      $(OBJ_DIR)\hbslex.obj \
-      $(OBJ_DIR)\cmdcheck.obj \
-      $(OBJ_DIR)\hbusage.obj \
-      $(OBJ_DIR)\hbident.obj \
-      $(OBJ_DIR)\hbgenerr.obj \
-      $(OBJ_DIR)\hbpcode.obj \
-      $(OBJ_DIR)\hbfix.obj \
-      $(OBJ_DIR)\genc.obj \
-      $(OBJ_DIR)\gencobj.obj \
-      $(OBJ_DIR)\genobj32.obj \
-      $(OBJ_DIR)\genjava.obj \
-      $(OBJ_DIR)\genhrb.obj \
-      $(OBJ_DIR)\expropta.obj \
-      $(OBJ_DIR)\exproptb.obj \
-      $(OBJ_DIR)\exproptc.obj \
-      $(OBJ_DIR)\hbfunchk.obj \
-      $(PP_LIB)
+      $(HARBOUR_EXE_OBJS) \
+      $(OBJ_DIR)\hbslex.obj
 !else
    HARBOUR_EXE_OBJS = \
-      $(OBJ_DIR)\harbour.obj \
-      $(OBJ_DIR)\harboury.obj \
-      $(OBJ_DIR)\harbourl.obj \
-      $(OBJ_DIR)\cmdcheck.obj \
-      $(OBJ_DIR)\hbusage.obj \
-      $(OBJ_DIR)\hbident.obj \
-      $(OBJ_DIR)\hbgenerr.obj \
-      $(OBJ_DIR)\hbpcode.obj \
-      $(OBJ_DIR)\hbfix.obj \
-      $(OBJ_DIR)\genc.obj \
-      $(OBJ_DIR)\gencobj.obj \
-      $(OBJ_DIR)\genobj32.obj \
-      $(OBJ_DIR)\genjava.obj \
-      $(OBJ_DIR)\genhrb.obj \
-      $(OBJ_DIR)\expropta.obj \
-      $(OBJ_DIR)\exproptb.obj \
-      $(OBJ_DIR)\exproptc.obj \
-      $(OBJ_DIR)\hbfunchk.obj \
-      $(PP_LIB)
+      $(HARBOUR_EXE_OBJS) \
+      $(OBJ_DIR)\harbourl.obj
 !endif
 
 #
@@ -674,10 +668,14 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\fclass1.obj \
    $(OBJ_DIR)\ffile1.obj \
    $(OBJ_DIR)\ft_funcs.obj
-!if $d(PDF)
-   HBDOC_EXE_OBJS = $(HBDOC_EXE_OBJS) \
-   $(OBJ_DIR)\pdfhbdoc.obj \
-   $(OBJ_DIR)\genpdf1.obj
+
+!if $d(HB_DOC_PDF)
+
+   HBDOC_EXE_OBJS = \
+      $(HBDOC_EXE_OBJS) \
+      $(OBJ_DIR)\pdfhbdoc.obj \
+      $(OBJ_DIR)\genpdf1.obj
+
 !endif
 
 HBMAKE_EXE_OBJS = \
@@ -802,7 +800,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    $(ECHO) -e$(HARBOUR_EXE) >> make.tmp
    $(ECHO) $(OBJ_DIR)\harbour.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\harboury.obj >> make.tmp
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
    $(ECHO) $(OBJ_DIR)\hbslex.obj >> make.tmp
 !else
    $(ECHO) $(OBJ_DIR)\harbourl.obj >> make.tmp
@@ -829,15 +827,19 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
+
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
    bison -d $** -o$@
+
 !else
+
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d $** -o$@
+
 !endif
 
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
    # Flex not needed in SimpLex build.
 !else
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
@@ -847,7 +849,7 @@ $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
 $(OBJ_DIR)\hbslex.obj : $(COMPILER_DIR)\hbslex.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
 !else
@@ -1223,7 +1225,6 @@ $(OBJ_DIR)\checkbox.c : $(RTL_DIR)\checkbox.prg
 $(OBJ_DIR)\checkbox.obj : $(OBJ_DIR)\checkbox.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
 
 $(OBJ_DIR)\chrasc.obj : $(RTL_DIR)\chrasc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -2077,7 +2078,7 @@ $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -p hb_comp -d $** -o$@
 
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
    # Flex not needed in SimpLex build.
 !else
 $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
@@ -2088,13 +2089,13 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
-!if $(HB_LEX)==SIMPLEX
+!if $(HB_LEX) == SIMPLEX
 $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 !else
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   -$(ECHO)  > $(OBJ_DIR)\unistd.h
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
@@ -2461,12 +2462,11 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    $(ECHO) $(MACRO_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
-!if $d(PDF)
+!if $d(HB_DOC_PDF)
    $(ECHO) $(OBJ_DIR)\genpdf1.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\pdfhbdoc.obj >> make.tmp
    $(ECHO) $(LIB_DIR)\pdflib.lib >> make.tmp
 !endif
-
    $(CC) @make.tmp
    $(DEL) make.tmp
 
@@ -2572,7 +2572,7 @@ $(OBJ_DIR)\ft_funcs.c : $(HBDOC_DIR)\ft_funcs.prg
 $(OBJ_DIR)\ft_funcs.obj : $(OBJ_DIR)\ft_funcs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-!if $d(PDF)
+!if $d(HB_DOC_PDF)
 $(OBJ_DIR)\genpdf1.c : $(HBDOC_DIR)\genpdf1.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 

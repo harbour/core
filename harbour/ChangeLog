@@ -1,3 +1,36 @@
+2001-11-07 01:17 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   - b16_slex.bat
+   - b32_slex.bat
+   - vc_slex.bat
+   - hb_slex.vc
+   * makefile.vc
+     - Removed the batch files which initated a Simplex based Harbour.
+       from now on you can simply set the environment variable 
+       HB_LEX=SIMPLEX and get the same result using the standard make files.
+
+       So if you're a Simplex user, please don't forget to put the following 
+       line into your configuration files:
+       set HB_LEX=SIMPLEX
+
+     * The Simplex specific parallel MSVC make file has been consolidated 
+       into the standard MSVC make file. Note that I couldn't test it, 
+       so please report any errors you find.
+
+   * make_b32.bat
+     ! Doesn't override the HB_LEX variable, so that it can be set by 
+       the caller.
+
+   * makefile.bc
+   * makefile.vc
+     * PDF environment variable changed to HB_DOC_PDF. Please change your 
+       settings according to this, if needed.
+     + Documented this switch.
+
+   - todo.txt
+   + TODO
+     * Standardized file name.
+
 2001-11-07 00:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapifs.h 

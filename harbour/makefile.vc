@@ -3,7 +3,7 @@
 #
 
 #
-# Makefile for Harbour Project for Microsoft Visual C (32 bits)
+# Makefile for Harbour Project for Microsoft Visual C (32 bit)
 #
 
 #
@@ -12,14 +12,18 @@
 #
 #       CFLAGS       - Extra C compiler options for libraries and for
 #                      executables
+#       CLIBFLAGS    - Extra C compiler options for the libraries
 #       C_USR        - Extra C compiler options for libraries and for
 #                      executables (GNU make compatible envvar)
-#       CLIBFLAGS    - Extra C compiler options for the libraries
 #       HARBOURFLAGS - Extra Harbour compiler options
-#       PRG_USR      - Extra Harbour compiler options
-#                      (GNU make compatible envvar)
+#       HB_DOC_PDF   - Turns on the .PDF file support in the HBDOC utility.
+#                      Note that this will require the pdflib contrib.
 #       HB_GT_LIB    - To override the default GT driver
 #                      (search for HB_GT_LIBS for a list of values)
+#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be 
+#                      used instead of the Flex based one.
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
 #
 
 #
@@ -97,8 +101,8 @@ HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
 
-!ifdef PDF
-HBPDF_DIR   = contrib\pdflib
+!ifdef HB_DOC_PDF
+   HBPDF_DIR   = contrib\pdflib
 !endif
 
 #
@@ -112,8 +116,13 @@ CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 
-!ifdef PDF
-HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
+!if $(HB_LEX) == SIMPLEX
+   CFLAGS = $(CFLAGS) -DSIMPLEX
+   CLIBFLAGS = $(CLIBFLAGS) -DSIMPLEX
+!endif
+
+!ifdef HB_DOC_PDF
+   HARBOURFLAGS = $(HARBOURFLAGS) -dPDF
 !endif
 
 #
@@ -444,10 +453,19 @@ LANG_LIB_OBJS = \
 
 MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macroy.obj \
-   $(OBJ_DIR)\macrol.obj \
    $(OBJ_DIR)\macroa.obj \
    $(OBJ_DIR)\macrob.obj \
    $(OBJ_DIR)\macroc.obj
+
+!if $(HB_LEX) == SIMPLEX
+    MACRO_LIB_OBJS = \
+       $(MACRO_LIB_OBJS) \
+       $(OBJ_DIR)\macroslx.obj
+!else
+    MACRO_LIB_OBJS = \
+       $(MACRO_LIB_OBJS) \
+       $(OBJ_DIR)\macrol.obj
+!endif
 
 #
 # RDD.LIB rules
@@ -869,28 +887,33 @@ $(HBMAKE_EXE) : \
 # HARBOUR.EXE rules
 #
 
-HARBOUR_EXE_OBJ = \
-   $(OBJ_DIR)\harbour.obj \
-   $(OBJ_DIR)\harboury.obj \
-   $(OBJ_DIR)\harbourl.obj \
-   $(OBJ_DIR)\cmdcheck.obj \
-   $(OBJ_DIR)\hbusage.obj \
-   $(OBJ_DIR)\hbident.obj \
-   $(OBJ_DIR)\hbgenerr.obj \
-   $(OBJ_DIR)\hbpcode.obj \
-   $(OBJ_DIR)\hbfix.obj \
-   $(OBJ_DIR)\genc.obj \
-   $(OBJ_DIR)\gencobj.obj \
-   $(OBJ_DIR)\genobj32.obj \
-   $(OBJ_DIR)\genjava.obj \
-   $(OBJ_DIR)\genhrb.obj \
-   $(OBJ_DIR)\expropta.obj \
-   $(OBJ_DIR)\exproptb.obj \
-   $(OBJ_DIR)\exproptc.obj \
-   $(OBJ_DIR)\hbfunchk.obj \
-   $(PP_LIB)
+!if $(HB_LEX) == SIMPLEX
 
-#$(HARBOUR_EXE) : $(HARBOUR_EXE_OBJ) \
+$(HARBOUR_EXE) : \
+   $(COMPILER_DIR)\harbour.c \
+   $(OBJ_DIR)\harboury.c \
+   $(COMPILER_DIR)\hbslex.c \
+   $(COMPILER_DIR)\cmdcheck.c \
+   $(COMPILER_DIR)\hbusage.c \
+   $(COMPILER_DIR)\hbident.c \
+   $(COMPILER_DIR)\hbpcode.c \
+   $(COMPILER_DIR)\hbfix.c \
+   $(COMPILER_DIR)\hbfunchk.c \
+   $(COMPILER_DIR)\hbgenerr.c \
+   $(COMPILER_DIR)\genobj32.c \
+   $(COMPILER_DIR)\genc.c \
+   $(COMPILER_DIR)\gencobj.c \
+   $(COMPILER_DIR)\genhrb.c \
+   $(COMPILER_DIR)\genjava.c \
+   $(COMPILER_DIR)\expropta.c \
+   $(COMPILER_DIR)\exproptb.c \
+   $(COMPILER_DIR)\exproptc.c
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   -$(DEL) $(OBJ_DIR)\unistd.h
+
+!else
+
 $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\harbour.c \
    $(OBJ_DIR)\harboury.c \
@@ -914,13 +937,7 @@ $(HARBOUR_EXE) : \
    $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -$(DEL) $(OBJ_DIR)\unistd.h
 
-
-
-
-
-
-
-
+!endif
 
 #
 # Library dependencies and build rules
@@ -978,16 +995,37 @@ $(GTDOS_LIB) : $(GTDOS_LIB_OBJS)
 # HARBOUR.EXE dependencies
 #
 
+!if $(HB_LEX) == SIMPLEX
+
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
+   bison -d -o$@ $**
+
+$(OBJ_DIR)\hbslex.obj : $(COMPILER_DIR)\hbslex.c
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+
+!else
+
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
    bison -d -o$(OBJ_DIR)\harboury.c $(COMPILER_DIR)\harbour.y
-
 
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$(OBJ_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
+!endif
+
 #
 # MACRO.LIB dependencies
 #
+
+!if $(HB_LEX) == SIMPLEX
+
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
+   bison -p hb_comp -d $** -o$@
+
+$(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
+   $(CC) $(CLIBFLAGS) -w -Fo$@  $**
+
+!else
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -d -p hb_comp -o$(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.y
@@ -995,14 +1033,26 @@ $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
 $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
    flex -i -8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
 
+!endif
+
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -Fo$@  $**
 
-$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+!if $(HB_LEX) == SIMPLEX
+
+$(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@  $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
    -$(DEL) $(OBJ_DIR)\unistd.h
 
+!else
+
+$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   -$(DEL) $(OBJ_DIR)\unistd.h
+
+!endif
 
 # dummy targets used for prg to c creation
 
