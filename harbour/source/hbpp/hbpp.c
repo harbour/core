@@ -270,10 +270,11 @@ int ParseDefine( char* sLine)
 
       lastdef->npars = npars;
       lastdef->pars = ( npars == 0 )? NULL : strodup ( pars );
-
-      return 0;
    }
-   else GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+   else
+      GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+
+   return 0;
 }
 
 DEFINES* AddDefine ( char* defname, char* value )

@@ -53,6 +53,9 @@
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    hb___msgEval()
  *
+ * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
+ *    hb_clsDictRealloc()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -127,9 +130,36 @@ static HARBOUR  hb___msgSetData( void );
  */
 static void hb_clsDictRealloc( PCLASS pClass )
 {
-   /* TODO: Implement it for very large classes */
    if( pClass )
-      hb_errInternal( 9999, "classes.c hb_clsDictRealloc() not implemented yet", NULL, NULL );
+   {
+      PMETHOD pNewMethods;
+      USHORT uiNewHashKey = pClass->uiHashKey + 20;
+      USHORT uiMask = uiNewHashKey * BUCKET;
+      USHORT ui;
+
+      pNewMethods = ( PMETHOD ) hb_xgrab( uiNewHashKey * BUCKET * sizeof( METHOD ) );
+      memset( pNewMethods, 0, uiNewHashKey * BUCKET * sizeof( METHOD ) );
+
+      for( ui = 0; ui < ( pClass->uiHashKey * BUCKET ); ui++ )
+      {
+         PHB_DYNS pMessage = pClass->pMethods[ ui ].pMessage;
+
+         if( pMessage )
+         {
+            USHORT uiAt = ( ( ( unsigned ) pMessage ) % uiNewHashKey ) * BUCKET;
+
+            while( pNewMethods[ uiAt ].pMessage &&
+               ( pNewMethods[ uiAt ].pMessage != pMessage ) )
+               uiAt = ( uiAt == uiMask ) ? 0 : uiAt + 1;
+
+            pNewMethods[ uiAt ] = pClass->pMethods[ ui ];
+         }
+      }
+
+      pClass->uiHashKey = uiNewHashKey;
+      hb_xfree( pClass->pMethods );
+      pClass->pMethods = pNewMethods;
+   }
 }
 
 

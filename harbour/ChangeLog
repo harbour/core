@@ -1,3 +1,11 @@
+19990924-07:18 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/hbpp/hbpp.c
+    ! Fixed warning about function not returning value (in ParseDefine())
+  * source/rtl/classes.c
+    + hb_clsDictRealloc() implemented.
+      By Janica Lubos <janica@fornax.elf.stuba.sk>
+
 19990923-20:55 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtwin.c
     * fix for redirected console output as reported by Victor
