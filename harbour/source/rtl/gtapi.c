@@ -30,8 +30,8 @@ void hb_gtInit(void)
 
 int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char* pbyFrame)
 {
-    BYTE pszBox [10];
-    BYTE cPadChar;
+    char pszBox [10];
+    char cPadChar;
 
     USHORT uiRow = uiTop;
     USHORT uiCol = uiLeft;
@@ -273,6 +273,7 @@ int hb_gtScrDim(USHORT * uipHeight, USHORT * uipWidth)
 
 int hb_gtSetBlink(BOOL bBlink)
 {
+   HB_SYMBOL_UNUSED( bBlink );
     return(0);
 }
 
@@ -284,6 +285,8 @@ int hb_gtSetCursor(USHORT uiCursorShape)
 
 int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
+   HB_SYMBOL_UNUSED( uiRows );
+   HB_SYMBOL_UNUSED( uiCols );
     return(0);
 }
 
@@ -302,6 +305,7 @@ int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
 
 int hb_gtSetSnowFlag(BOOL bNoSnow)
 {
+   HB_SYMBOL_UNUSED( bNoSnow );
     return(0);
 }
 

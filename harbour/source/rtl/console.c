@@ -9,8 +9,10 @@
 #include <hbsetup.h>
 #include <extend.h>
 #include <ctoharb.h>
+#include <init.h>
 #include <dates.h>
 #include <set.h>
+
 #if defined(__GNUC__)
   #include <unistd.h>
   #if defined(__DJGPP__)
@@ -19,7 +21,7 @@
 #else
    #include <io.h>
 #endif
-#include <gtapi.h>            /* USE_GTAPI is checked inside gtapi.h, so that
+#include <gtapi.h>            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
 
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
@@ -58,9 +60,7 @@ HARBOUR HB_QQOUT( void );
 static SYMBOL symbols[] = {
 { "__ACCEPT" , FS_PUBLIC, HB___ACCEPT , 0 },
 { "__EJECT"  , FS_PUBLIC, HB___EJECT  , 0 },
-{ "COL"      , FS_PUBLIC, HB_COL      , 0 },
 { "DEVOUT"   , FS_PUBLIC, HB_DEVOUT   , 0 },
-{ "DEVPOS"   , FS_PUBLIC, HB_DEVPOS   , 0 },
 { "DISPBEGIN", FS_PUBLIC, HB_DISPBEGIN, 0 },
 { "DISPBOX"  , FS_PUBLIC, HB_DISPBOX  , 0 },
 { "DISPCOUNT", FS_PUBLIC, HB_DISPCOUNT, 0 },
@@ -72,9 +72,6 @@ static SYMBOL symbols[] = {
 { "OUTERR"   , FS_PUBLIC, HB_OUTERR   , 0 },
 { "OUTSTD"   , FS_PUBLIC, HB_OUTSTD   , 0 },
 { "NOSNOW"   , FS_PUBLIC, HB_NOSNOW   , 0 },
-{ "PCOL"     , FS_PUBLIC, HB_PCOL     , 0 },
-{ "PROW"     , FS_PUBLIC, HB_PROW     , 0 },
-{ "ROW"      , FS_PUBLIC, HB_ROW      , 0 },
 { "SCROLL"   , FS_PUBLIC, HB_SCROLL   , 0 },
 { "SETPOS"   , FS_PUBLIC, HB_SETPOS   , 0 },
 { "SETPRC"   , FS_PUBLIC, HB_SETPRC   , 0 },
@@ -82,10 +79,14 @@ static SYMBOL symbols[] = {
 { "QQOUT"    , FS_PUBLIC, HB_QQOUT    , 0 }
 };
 
+
+HB_INIT_SYMBOLS( Console__InitSymbols );
+/*
 void Console__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
@@ -101,7 +102,7 @@ void InitializeConsole( void )
    CrLf [1] = 0;
 #endif
 
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    dev_row = gtWhereY();
    dev_col = gtWhereX();
    hb_gtSetPos( dev_row, dev_col );
@@ -114,7 +115,7 @@ void InitializeConsole( void )
 
 USHORT hb_max_row( void )
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxRow ();
 #else
    return 23; /* QUESTION: Shouldn't this be 24 ? info@szelvesz.hu */
@@ -123,14 +124,14 @@ USHORT hb_max_row( void )
 
 USHORT hb_max_col( void )
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxCol ();
 #else
    return 79;
 #endif
 }
 
-#ifndef USE_GTAPI
+#ifndef HARBOUR_USE_GTAPI
 static void adjust_pos( char * fpStr, WORD uiLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
 {
    WORD uiCount;
@@ -251,7 +252,7 @@ static void hb_outstd( char * fpStr, WORD uiLen )
    while( uiCount-- )
       printf( "%c", *fpPtr++ );
    fflush( stdout );
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
       dev_row = gtWhereY();
@@ -271,7 +272,7 @@ static void hb_outerr( char * fpStr, WORD uiLen )
    while( uiCount-- )
       fprintf( stderr, "%c", *fpPtr++ );
    fflush( stderr );
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
       dev_row = gtWhereY();
@@ -288,7 +289,7 @@ static void hb_altout( char * fpStr, WORD uiLen )
 {
    if( hb_set.HB_SET_CONSOLE )
    {
-   #ifdef USE_GTAPI
+   #ifdef HARBOUR_USE_GTAPI
       hb_gtWriteCon( fpStr, uiLen );
       hb_gtGetPos( &dev_row, &dev_col );
    #else
@@ -322,7 +323,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
    }
    else
    {
-   #ifdef USE_GTAPI
+   #ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
       hb_gtWrite( fpStr, uiLen );
       hb_gtGetPos( &dev_row, &dev_col );
@@ -338,7 +339,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
 /* Output an item to the screen */
 static void hb_dispout( char * fpStr, WORD uiLen )
 {
-   #ifdef USE_GTAPI
+   #ifdef HARBOUR_USE_GTAPI
       /* Display to console */
       hb_gtWrite( fpStr, uiLen );
       hb_gtGetPos( &dev_row, &dev_col );
@@ -352,7 +353,7 @@ static void hb_dispout( char * fpStr, WORD uiLen )
 
 void hb_setpos( USHORT row, USHORT col )
 {
-   #ifdef USE_GTAPI
+   #ifdef HARBOUR_USE_GTAPI
       hb_gtSetPos( row, col );
    #else
       USHORT count;
@@ -473,7 +474,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 {
    if( hb_pcount() > 0 )
    {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
 
       if( ISCHAR(2) )
@@ -485,7 +486,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
 
       hb_out( 1, hb_devout );
 
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       if( ISCHAR(2) )
       {
          hb_gtSetColorStr( fpOldColor );
@@ -498,7 +499,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
 {
    if( hb_pcount() > 0 )
    {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
 
       if( ISCHAR(2) )
@@ -510,7 +511,7 @@ HARBOUR HB_DISPOUT( void ) /* writes a single value to the current device (scree
 
       hb_out( 1, hb_dispout );
 
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
       if( ISCHAR(2) )
       {
          hb_gtSetColorStr( fpOldColor );
@@ -570,7 +571,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    if( hb_pcount() > 5 && hb_param( 6, IT_NUMERIC ) )
       h_scroll = hb_parni( 6 );
 
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    hb_gtScroll( top, left, bottom, right, v_scroll, h_scroll );
 #else
    if( top == 0 && bottom == hb_max_row()
@@ -607,7 +608,7 @@ HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin
 
 HARBOUR HB_DISPBOX (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    if (ISNUM(1) && ISNUM(2) && ISNUM(3) && ISNUM(4))
    {
       char szOldColor [CLR_STRLEN];
@@ -739,21 +740,21 @@ HARBOUR HB_DISPBOX (void)
 
 HARBOUR HB_DISPBEGIN (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    hb_gtDispBegin();
 #endif
 }
 
 HARBOUR HB_DISPEND (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    hb_gtDispBegin();
 #endif
 }
 
 HARBOUR HB_DISPCOUNT (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    hb_retni(hb_gtDispCount());
 #else
    hb_retni(0);
@@ -762,7 +763,7 @@ HARBOUR HB_DISPCOUNT (void)
 
 HARBOUR HB_ISCOLOR (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    hb_retl(hb_gtIsColor());
 #else
    hb_retl(FALSE);
@@ -771,7 +772,7 @@ HARBOUR HB_ISCOLOR (void)
 
 HARBOUR HB_NOSNOW (void)
 {
-#ifdef USE_GTAPI
+#ifdef HARBOUR_USE_GTAPI
    if (ISLOG(1))
    {
       hb_gtSetSnowFlag(hb_parl(1));

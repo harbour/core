@@ -56,8 +56,10 @@ HARBOUR HB_MONTH( void );
 HARBOUR HB_PCOUNT( void );
 HARBOUR HB_REPLICATE( void );
 HARBOUR HB_ROW( void );
+HARBOUR HB_ROUND( void );
 HARBOUR HB_RTRIM( void );
 HARBOUR HB_SECONDS( void );
+HARBOUR HB_SETPOS( void );
 HARBOUR HB_SPACE( void );
 HARBOUR HB_SQRT( void );
 HARBOUR HB_STOD( void );
@@ -117,12 +119,12 @@ static SYMBOL symbols[] = {
     { "RECNO"     , FS_PUBLIC, NULL            , 0 },
     { "REPLICATE" , FS_PUBLIC, HB_REPLICATE    , 0 },
     { "RLOCK"     , FS_PUBLIC, NULL            , 0 },
-    { "ROUND"     , FS_PUBLIC, NULL            , 0 },
+    { "ROUND"     , FS_PUBLIC, HB_ROUND        , 0 },
     { "ROW"       , FS_PUBLIC, HB_ROW          , 0 },
     { "RTRIM"     , FS_PUBLIC, HB_RTRIM        , 0 },
     { "SECONDS"   , FS_PUBLIC, HB_SECONDS      , 0 },
     { "SELECT"    , FS_PUBLIC, NULL            , 0 },
-    { "SETPOS"    , FS_PUBLIC, NULL            , 0 },
+    { "SETPOS"    , FS_PUBLIC, HB_SETPOS       , 0 },
     { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
     { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
     { "STOD"      , FS_PUBLIC, HB_STOD         , 0 },
@@ -144,8 +146,14 @@ static SYMBOL symbols[] = {
 void InitSymbolTable( void )
 {
   /*
-   * Place here your <modulename>__InitSymbols functions
+   * Place here your user defined <modulename>__InitSymbols functions
    */
+
+   
+  /* 
+   * The symbol tables from runtime support modules start here
+   */ 
+#ifdef HARBOUR_STRICT_ANSI_C   
   Arrays__InitSymbols();
   Classes__InitSymbols();
   Console__InitSymbols();
@@ -158,8 +166,12 @@ void InitSymbolTable( void )
   Math__InitSymbols();
   Memotran__InitSymbols();
   Set__InitSymbols();
-  Strings__InitSymbols();
+  Strings__InitSymbols(); 
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY  
+  Strings__InitInfinity
+#endif  
   Transfrm__InitSymbols();
+#endif
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

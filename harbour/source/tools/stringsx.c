@@ -78,12 +78,10 @@ HARBOUR HB_STRTOKEN( void )
 
 HARBOUR HB_ROT13( void )
 {
-   PHB_ITEM pText = hb_param(1, IT_STRING);
-
-   if( pText )
+   if( ISCHAR(1) )
    {
-      char *szText = pText->value.szText;
-      long i, lLen = pText->wLength;
+      char *szText = hb_parc( 1 );
+      ULONG i, lLen = hb_parclen( 1 );
       char *szResult = (char*)hb_xgrab(lLen + 1);
 
       for( i = 0; i < lLen; i++ )

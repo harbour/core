@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <init.h>
 #include <errorapi.h>
 #include <ctoharb.h>
 #include <ctype.h>
@@ -18,13 +19,16 @@
 HARBOUR HB_TRANSFORM( void );
 
 static SYMBOL symbols[] = {
-{ "HB_TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
+{ "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
 };
 
+HB_INIT_SYMBOLS( Transfrm__InitSymbols );
+/*
 void Transfrm__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 extern STACK stack;
 
@@ -203,7 +207,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
    pItem = &stack.Return;
    if( IS_STRING( pItem ) )                     /* Is it a string           */
    {
-      szStr  = pItem->value.szText;
+      szStr  = pItem->item.asString.value;
       iCount = 0;
 
       if( iPicFlags & PF_ZERO )                 /* Pad with Zero's          */
@@ -211,9 +215,9 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
          for( i=0; szStr[i] == ' ' && i < iWidth; i++ )
             szStr[i] = '0';
       }
-      if( bEmpty && pItem->wLength )            /* Suppress empty value     */
+      if( bEmpty && pItem->item.asString.length )            /* Suppress empty value     */
       {
-         szStr[pItem->wLength - 1] = ' ';
+         szStr[pItem->item.asString.length - 1] = ' ';
       }
 
       if( iPicFlags & PF_LEFT )                 /* Left align               */
@@ -329,7 +333,7 @@ PHB_ITEM NumDefault( double dValue )
    PushDouble ( dValue, hb_set.HB_SET_DECIMALS );  /* Push value to transform   */
    Function   ( 1 );                            /* 1 Parameter               */
    StackPop   ();                               /* Pop return value          */
-   if( stack.pPos->wType != IT_STRING )         /* Is it a string            */
+   if( stack.pPos->type != IT_STRING )         /* Is it a string            */
    {
       printf( "\nNUMDEFAULT: STR does not return string" );
       _exit(1);
@@ -441,14 +445,14 @@ HARBOUR HB_TRANSFORM( void )
    PHB_ITEM pPic       = hb_param( 2, IT_STRING);    /* Picture string           */
    PHB_ITEM pExp       = hb_param( 1, IT_ANY );      /* Input parameter          */
 
-   char *szPic      = pPic->value.szText;
+   char *szPic      = pPic->item.asString.value;
    char *szTemp;
    char *szResult;
    char *szExp;
 
    PHB_ITEM pItem;
 
-   long  lPic       = pPic->wLength;
+   long  lPic       = pPic->item.asString.length;
    long  lPicStart  = 0;                        /* Start of template        */
    long  lExpPos    = 0;
    long  lResultPos = 0;
@@ -460,28 +464,28 @@ HARBOUR HB_TRANSFORM( void )
 
    if( lPic )
    {
-      if( pPic->wLength )
+      if( pPic->item.asString.length )
       {
          if( *szPic == '@' )                    /* Function marker found    */
          {
             iPicFlags = PictFunc( &szPic, &lPic ); /* Get length of function*/
-            lPicStart = pPic->wLength - lPic;   /* Get start of template    */
+            lPicStart = pPic->item.asString.length - lPic;   /* Get start of template    */
          }
 
-         switch( pExp->wType & ~IT_BYREF )
+         switch( pExp->type & ~IT_BYREF )
          {
             case IT_STRING:
             {
-               szExp = pExp->value.szText;
-               szResult = (char *)hb_xgrab( ( (lPic-lPicStart) > pExp->wLength) ?
-                             (lPic-lPicStart) + 1 : pExp->wLength + 1 );
+               szExp = pExp->item.asString.value;
+               szResult = (char *)hb_xgrab( ( (lPic-lPicStart) > pExp->item.asString.length) ?
+                             (lPic-lPicStart) + 1 : pExp->item.asString.length + 1 );
                                                 /* Grab enough              */
                szPic += lPicStart;              /* Skip functions           */
 
                if( iPicFlags & PF_UPPER )       /* Function : @!            */
                {
                   szTemp = szExp;               /* Convert to upper         */
-                  for( n = pExp->wLength; n ; n--)
+                  for( n = pExp->item.asString.length; n ; n--)
                   {
                      *szTemp = toupper( *szTemp );
                      szTemp++;
@@ -490,7 +494,7 @@ HARBOUR HB_TRANSFORM( void )
 
                if( lPic )                       /* Template string          */
                {
-                  while( lPic && lExpPos < pExp->wLength )
+                  while( lPic && lExpPos < pExp->item.asString.length )
                   {                             /* Analyze picture mask     */
                      switch( *szPic )
                      {
@@ -530,7 +534,7 @@ HARBOUR HB_TRANSFORM( void )
                }
                else if( iPicFlags & (PF_UPPER + PF_REMAIN) )
                {                                /* Without template         */
-                  for( n = pExp->wLength; n; n--)
+                  for( n = pExp->item.asString.length; n; n--)
                     szResult[lResultPos++] = *szExp++;
                }
 
@@ -557,7 +561,7 @@ HARBOUR HB_TRANSFORM( void )
                   {
                      case 'Y':                  /* Yes/No                   */
                      {
-                        *szResult = pExp->value.iLogical ? 'Y' : 'N';
+                        *szResult = pExp->item.asLogical.value ? 'Y' : 'N';
                         szPic++;
                         lPic--;
                         bDone = TRUE;           /* Logical written          */
@@ -567,7 +571,7 @@ HARBOUR HB_TRANSFORM( void )
                      case '#':
                      case 'L':                  /* True/False               */
                      {
-                        *szResult = pExp->value.iLogical ? 'T' : 'F';
+                        *szResult = pExp->item.asLogical.value ? 'T' : 'F';
                         szPic++;
                         lPic--;
                         bDone = TRUE;
@@ -586,7 +590,7 @@ HARBOUR HB_TRANSFORM( void )
                   for( n = lPic; n; n--)        /* Copy remainder           */
                      szResult[lResultPos++] = *szPic++;
                   if( !bDone )                  /* Logical written ?        */
-                     szResult[lResultPos++] = pExp->value.iLogical ? 'T' : 'F';
+                     szResult[lResultPos++] = pExp->item.asLogical.value ? 'T' : 'F';
                }
                hb_retclen( szResult, lResultPos );
                hb_xfree( szResult );
@@ -595,7 +599,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_INTEGER:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                       (double) pExp->value.iNumber, &lResultPos );
+                       (double) pExp->item.asInteger.value, &lResultPos );
                hb_retclen( szResult, lResultPos );
                hb_xfree( szResult );
                break;
@@ -603,7 +607,7 @@ HARBOUR HB_TRANSFORM( void )
             case IT_LONG:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                       (double) pExp->value.lNumber, &lResultPos );
+                       (double) pExp->item.asLong.value, &lResultPos );
                hb_retclen( szResult, lResultPos );
                hb_xfree( szResult );
                break;
@@ -611,14 +615,14 @@ HARBOUR HB_TRANSFORM( void )
             case IT_DOUBLE:
             {
                szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
-                       (double) pExp->value.dNumber, &lResultPos );
+                       (double) pExp->item.asDouble.value, &lResultPos );
                hb_retclen( szResult, lResultPos);
                hb_xfree( szResult );
                break;
             }
             case IT_DATE:
             {                   /* Date is currently British; Century is on */
-               szResult = DatePicture( pExp->value.lDate, iPicFlags, &lResultPos );
+               szResult = DatePicture( pExp->item.asDate.value, iPicFlags, &lResultPos );
                hb_retclen( szResult, lResultPos );
                hb_xfree( szResult );
                break;
@@ -636,42 +640,42 @@ HARBOUR HB_TRANSFORM( void )
    }
    else                                         /* No picture supplied      */
    {
-      switch( pExp->wType & ~IT_BYREF )         /* Default behaviour        */
+      switch( pExp->type & ~IT_BYREF )         /* Default behaviour        */
       {
          case IT_STRING:
          {
-            hb_retclen( pExp->value.szText, pExp->wLength);
+            hb_retclen( pExp->item.asString.value, pExp->item.asString.length);
             break;
          }
          case IT_LOGICAL:
          {
-            hb_retclen( pExp->value.iLogical ? "T" : "F", 1);
+            hb_retclen( pExp->item.asLogical.value ? "T" : "F", 1);
             break;
          }
          case IT_INTEGER:
          {
-            pItem = NumDefault( (double) pExp->value.iNumber );
-            hb_retclen( pItem->value.szText, pItem->wLength );
+            pItem = NumDefault( (double) pExp->item.asInteger.value );
+            hb_retclen( pItem->item.asString.value, pItem->item.asInteger.length );
             ItemRelease( pItem );
             break;
          }
          case IT_LONG:
          {
-            pItem = NumDefault( (double) pExp->value.lNumber );
-            hb_retclen( pItem->value.szText, pItem->wLength );
+            pItem = NumDefault( (double) pExp->item.asLong.value );
+            hb_retclen( pItem->item.asString.value, pItem->item.asLong.length );
             ItemRelease( pItem );
             break;
          }
          case IT_DOUBLE:
          {
-            pItem = NumDefault( (double) pExp->value.dNumber );
-            hb_retclen( pItem->value.szText, pItem->wLength );
+            pItem = NumDefault( (double) pExp->item.asDouble.value );
+            hb_retclen( pItem->item.asString.value, pItem->item.asDouble.length );
             ItemRelease( pItem );
             break;
          }
          case IT_DATE:
          {
-            szResult = DatePicture( pExp->value.lDate, iPicFlags, &lResultPos );
+            szResult = DatePicture( pExp->item.asDate.value, iPicFlags, &lResultPos );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
             break;

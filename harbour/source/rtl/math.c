@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include <extend.h>
+#include <init.h>
 #include <set.h>
 #include <errorapi.h>
 #include <math.h>
@@ -19,21 +21,16 @@ HARBOUR HB_ROUND( void );
 HARBOUR HB_SQRT( void );
 
 static SYMBOL symbols[] = {
-{ "ABS"  , FS_PUBLIC, HB_ABS  , 0 },
-{ "EXP"  , FS_PUBLIC, HB_EXP  , 0 },
-{ "INT"  , FS_PUBLIC, HB_INT  , 0 },
-{ "LOG"  , FS_PUBLIC, HB_LOG  , 0 },
-{ "MAX"  , FS_PUBLIC, HB_MAX  , 0 },
-{ "MIN"  , FS_PUBLIC, HB_MIN  , 0 },
-{ "MOD"  , FS_PUBLIC, HB_MOD  , 0 },
-{ "ROUND", FS_PUBLIC, HB_ROUND, 0 },
-{ "SQRT" , FS_PUBLIC, HB_SQRT , 0 }
-};
+{ "MOD"  , FS_PUBLIC, HB_MOD  , 0 }
+}; /* The rest of functions is pulled automatically by initsymb.c */
 
+HB_INIT_SYMBOLS( Math__InitSymbols );
+/*
 void Math__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 HARBOUR HB_ABS( void )
 {
@@ -41,28 +38,28 @@ HARBOUR HB_ABS( void )
    {
       PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
 
-      if( pNumber ) switch( pNumber->wType )
+      if( pNumber ) switch( pNumber->type )
       {
          case IT_INTEGER:
-            if( pNumber->value.iNumber >= 0 )
-               hb_retni( pNumber->value.iNumber );
+            if( pNumber->item.asInteger.value >= 0 )
+               hb_retni( pNumber->item.asInteger.value );
             else
-               hb_retni( -pNumber->value.iNumber );
+               hb_retni( -pNumber->item.asInteger.value );
             break;
 
          case IT_LONG:
-            if( pNumber->value.lNumber >= 0 )
-               hb_retnl( pNumber->value.lNumber );
+            if( pNumber->item.asLong.value >= 0 )
+               hb_retnl( pNumber->item.asLong.value );
             else
-               hb_retnl( -pNumber->value.lNumber );
+               hb_retnl( -pNumber->item.asLong.value );
             break;
 
          case IT_DOUBLE:
-            if( pNumber->value.dNumber >= 0.0 )
-               hb_retnd( pNumber->value.dNumber );
+            if( pNumber->item.asDouble.value >= 0.0 )
+               hb_retnd( pNumber->item.asDouble.value );
             else
-               hb_retnd( -pNumber->value.dNumber );
-            stack.Return.wDec = pNumber->wDec;
+               hb_retnd( -pNumber->item.asDouble.value );
+            stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
       }
       else
       {
@@ -86,7 +83,7 @@ HARBOUR HB_EXP( void )
       {
          hb_retnd( exp( hb_parnd( 1 ) ) );
          /* Always set default number of decimals after EXP() */
-         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
+         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
       {
@@ -129,10 +126,10 @@ HARBOUR HB_LOG( void )
          double dNumber = hb_parnd( 1 );
          hb_retnd( log( dNumber ) );
          /* Always set default number of decimals after LOG() */
-         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
+         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
          if( dNumber <= 0.0 )
             /* Indicate overflow if called with an invalid argument */
-            stack.Return.wLength = 99;
+            stack.Return.item.asDouble.length = 99;
       }
       else
       {
@@ -153,18 +150,18 @@ HARBOUR HB_MAX( void )
    {
       PHB_ITEM p1 = hb_param(1, IT_NUMERIC + IT_DATE), p2 = hb_param(2, IT_NUMERIC + IT_DATE);
 
-      if( p1 && p2 && p1->wType == p2->wType )
+      if( p1 && p2 && p1->type == p2->type )
       {
-         if( p1->wType == IT_DATE )
+         if( p1->type == IT_DATE )
          {
-            long l1 = p1->value.lDate, l2 = p2->value.lDate;
+            long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
             hb_retds(l1 > l2? hb_pards(1): hb_pards(2));
          }
          else
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
             hb_retnd(d1 > d2? d1: d2);
-            stack.Return.wDec = (d1 > d2? p1->wDec : p2->wDec);
+            stack.Return.item.asDouble.decimal = (d1 > d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
          }
       }
       else
@@ -186,18 +183,18 @@ HARBOUR HB_MIN( void )
    {
       PHB_ITEM p1 = hb_param(1, IT_NUMERIC + IT_DATE), p2 = hb_param(2, IT_NUMERIC + IT_DATE);
 
-      if( p1 && p2 && p1->wType == p2->wType )
+      if( p1 && p2 && p1->type == p2->type )
       {
-         if( p1->wType == IT_DATE )
+         if( p1->type == IT_DATE )
          {
-            long l1 = p1->value.lDate, l2 = p2->value.lDate;
+            long l1 = p1->item.asDate.value, l2 = p2->item.asDate.value;
             hb_retds(l1 < l2? hb_pards(1): hb_pards(2));
          }
          else
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
             hb_retnd(d1 < d2? d1: d2);
-            stack.Return.wDec = (d1 < d2? p1->wDec : p2->wDec);
+            stack.Return.item.asDouble.decimal = (d1 < d2? p1->item.asDouble.decimal : p2->item.asDouble.decimal);
          }
       }
       else
@@ -280,7 +277,7 @@ HARBOUR HB_ROUND( void )
             hb_xfree( szResult );
          }
          hb_retnd( dResult );
-         stack.Return.wDec = iDec;
+         stack.Return.item.asDouble.decimal = iDec;
       }
       else
       {
@@ -312,7 +309,7 @@ HARBOUR HB_SQRT( void )
             /* Clipper doesn't error! */
             hb_retnd(0);
          /* Always set default number of decimals after SQRT() */
-         stack.Return.wDec = hb_set.HB_SET_DECIMALS;
+         stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
       {

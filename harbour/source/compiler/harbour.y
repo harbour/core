@@ -398,7 +398,6 @@ int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;            /* .and. & .or. expressions shortcuts */
 int _iWarnings = 0;             /* enable parse warnings */
 
-short int _iAltSymbolTableInit = 0; /* alternative method of symbol table initialization */
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
@@ -416,6 +415,9 @@ PATHNAMES *_pIncludePath = NULL;
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
+
+#define LOOKUP 0
+extern int _iState;     /* current parser state (defined in harbour.l */
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -501,10 +503,11 @@ Source     : Crlf
 
 Include    : NE1 INCLUDE LITERAL { if( ! Include( $3, _pIncludePath ) )
                                       GenError( ERR_CANT_OPEN_INCLUDE, $3, NULL );
+                                   _iState =LOOKUP;
                                  } Crlf
            ;
 
-Extern     : EXTERN ExtList Crlf
+Extern     : EXTERN ExtList { _iState =LOOKUP; } Crlf
            ;
 
 ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
@@ -529,52 +532,52 @@ FunScope   :                  { $$ = FS_PUBLIC; }
            | EXIT             { $$ = FS_EXIT; }
            ;
 
-Params     :                                               { $$ = 0; }
-           | '(' ')'                                       { $$ = 0; }
-           | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; }
+Params     :                                               { $$ = 0; _iState =LOOKUP; }
+           | '(' ')'                                       { $$ = 0; _iState =LOOKUP; }
+           | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; _iState =LOOKUP; }
            ;
 
-ParamList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
-           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
-           | ParamList ',' IDENTIFIER              { AddVar( $3 ); $$++; }
+ParamList  : IDENTIFIER                    { cVarType = ' '; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_NUMERIC         { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_CHARACTER       { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_DATE            { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_LOGICAL         { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_ARRAY           { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_BLOCK           { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_OBJECT          { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
+           | ParamList ',' IDENTIFIER      { AddVar( $3 ); $$++; }
            ;
 
 Statements : Statement
            | Statements { Line(); } Statement
            ;
 
-Statement  : ExecFlow Crlf                             {}
-           | FunCall Crlf                              { Do( $1 ); }
-           | AliasFunc Crlf                            {}
-           | IfInline Crlf                             { GenPCode1( HB_P_POP ); }
-           | ObjectMethod Crlf                         { GenPCode1( HB_P_POP ); }
-           | VarUnary Crlf                             { GenPCode1( HB_P_POP ); }
-           | VarAssign Crlf                            { GenPCode1( HB_P_POP ); }
+Statement  : ExecFlow { _iState =LOOKUP; } Crlf        {}
+           | FunCall { _iState =LOOKUP; } Crlf         { Do( $1 ); }
+           | AliasFunc { _iState =LOOKUP; } Crlf       {}
+           | IfInline { _iState =LOOKUP; } Crlf        { GenPCode1( HB_P_POP ); }
+           | ObjectMethod { _iState =LOOKUP; } Crlf    { GenPCode1( HB_P_POP ); }
+           | VarUnary { _iState =LOOKUP; } Crlf        { GenPCode1( HB_P_POP ); }
+           | VarAssign { _iState =LOOKUP; } Crlf       { GenPCode1( HB_P_POP ); }
 
-           | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
-           | AliasExp '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
-           | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
-           | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IDENTIFIER '=' Expression { _iState =LOOKUP; } Crlf            { PopId( $1 ); }
+           | AliasExp '=' Expression { _iState =LOOKUP; } Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | VarId ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | FunArrayCall '=' Expression { _iState =LOOKUP; } Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression { _iState =LOOKUP; } Crlf  { Function( 1 ); }
+           | ObjectData ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
+           | ObjectMethod ArrayIndex '=' Expression { _iState =LOOKUP; } Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
-           | BREAK Crlf
-           | BREAK Expression Crlf
-           | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
-           | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
-           | PUBLIC { iVarScope = VS_MEMVAR; } VarList Crlf
-           | PRIVATE { iVarScope = VS_MEMVAR; } VarList Crlf
-           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList Crlf
-           | EXITLOOP Crlf            { LoopExit(); }
-           | LOOP Crlf                { LoopLoop(); }
-           | DoProc Crlf
+           | BREAK { _iState =LOOKUP; } Crlf
+           | BREAK Expression { _iState =LOOKUP; } Crlf
+           | RETURN { _iState =LOOKUP; } Crlf              { GenReturn( Jump( 0 ) ); }
+           | RETURN Expression { _iState =LOOKUP; } Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
+           | PUBLIC { iVarScope = VS_MEMVAR; } VarList { _iState =LOOKUP; } Crlf
+           | PRIVATE { iVarScope = VS_MEMVAR; } VarList { _iState =LOOKUP; } Crlf
+           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList { _iState =LOOKUP; } Crlf
+           | EXITLOOP { _iState =LOOKUP; } Crlf            { LoopExit(); }
+           | LOOP { _iState =LOOKUP; } Crlf                { LoopLoop(); }
+           | DoProc { _iState =LOOKUP; } Crlf
            ;
 
 FunCall    : FunStart ')'                { $$ = 0; }
@@ -877,8 +880,8 @@ ExpList    : Expression %prec POST                    { $$ = 1; }
            | ExpList { GenPCode1( HB_P_POP ); } ',' Expression %prec POST  { $$++; }
            ;
 
-VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; SetFrame(); }
-           | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
+VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList { _iState =LOOKUP; } Crlf { cVarType = ' '; SetFrame(); }
+           | STATIC { StaticDefStart() } VarList { _iState =LOOKUP; } Crlf { StaticDefEnd( $<iNumber>3 ); }
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -905,7 +908,7 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); }
            ;
 
-FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf { LineBody(); }
+FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList { _iState =LOOKUP; } Crlf { LineBody(); }
            ;
 
 FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCount(); AddVar( $1 ); }
@@ -920,7 +923,7 @@ FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCo
            | FieldList IN IDENTIFIER { SetAlias( $3, $<iNumber>1 ); }
            ;
 
-MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf { LineBody(); }
+MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList { _iState =LOOKUP; } Crlf { LineBody(); }
            ;
 
 MemvarList : IDENTIFIER                            { AddVar( $1 ); }
@@ -944,23 +947,23 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); }
+IfBegin    : IF Expression { ++_wIfCounter; _iState =LOOKUP; } Crlf { $$ = JumpFalse( 0 ); }
                 IfStats
                 { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE Crlf IfStats
+IfElse     : ELSE {  _iState =LOOKUP; } Crlf IfStats
            ;
 
-IfElseIf   : ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+IfElseIf   : ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
                 IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
 
-           | IfElseIf ELSEIF Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); }
+           | IfElseIf ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
                 IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
            ;
 
-EndIf      : ENDIF                 { --_wIfCounter; }
-           | END                   { --_wIfCounter; }
+EndIf      : ENDIF                 { --_wIfCounter; _iState =LOOKUP; }
+           | END                   { --_wIfCounter; _iState =LOOKUP; }
            ;
 
 IfStats    : /* no statements */
@@ -984,29 +987,29 @@ DoCase     : DoCaseBegin
              EndCase                   { FixElseIfs( $2 ); }
            ;
 
-EndCase    : ENDCASE              { --_wCaseCounter; }
-           | END                  { --_wCaseCounter; }
+EndCase    : ENDCASE              { --_wCaseCounter; _iState =LOOKUP; }
+           | END                  { --_wCaseCounter; _iState =LOOKUP; }
            ;
 
-DoCaseBegin : DOCASE { ++_wCaseCounter; } Crlf
+DoCaseBegin : DOCASE { ++_wCaseCounter; _iState =LOOKUP; } Crlf
            ;
 
-Cases      : CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
-           | Cases CASE Expression Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
+Cases      : CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
+           | Cases CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
            ;
 
-Otherwise  : OTHERWISE Crlf CaseStmts
+Otherwise  : OTHERWISE { _iState =LOOKUP; } Crlf CaseStmts
            ;
 
 CaseStmts  : /* no statements */
            | Statements
            ;
 
-DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
+DoWhile    : WhileBegin WhileExpression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
                 { Jump( $1 - functions.pLast->lPCodePos ); }
              EndWhile { JumpHere( $<lNumber>4 ); --_wWhileCounter; }
 
-           | WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
+           | WhileBegin WhileExpression Crlf { $<lNumber>$ = JumpFalse( 0 ); Line(); }
                 WhileStatements { LoopHere(); Jump( $1 - functions.pLast->lPCodePos ); }
              EndWhile  { JumpHere( $<lNumber>4 ); --_wWhileCounter; LoopEnd(); }
            ;
@@ -1014,17 +1017,20 @@ DoWhile    : WhileBegin Expression Crlf { $<lNumber>$ = JumpFalse( 0 ); }
 WhileBegin : WHILE    { $$ = functions.pLast->lPCodePos; ++_wWhileCounter; LoopStart(); }
            ;
 
+WhileExpression : Expression      { _iState =LOOKUP; }
+           ;
+
 WhileStatements : Statement
            | WhileStatements Statement        { Line(); }
            ;
 
-EndWhile   : END
-           | ENDDO
+EndWhile   : END      { _iState =LOOKUP; }
+           | ENDDO    { _iState =LOOKUP; }
            ;
 
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
-             StepExpr Crlf                       { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
+             StepExpr { _iState =LOOKUP; } Crlf  { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
              ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); LoopEnd(); }
            ;
 
@@ -1036,16 +1042,16 @@ StepExpr   : /* default step expression */       { PushInteger( 1 ); }
            | STEP Expression
            ;
 
-ForStatements : ForStat NEXT                     { --_wForCounter; }
-           | ForStat NEXT IDENTIFIER             { --_wForCounter; }
-           | NEXT                                { --_wForCounter; }
-           | NEXT IDENTIFIER                     { --_wForCounter; }
+ForStatements : ForStat NEXT                     { --_wForCounter; _iState =LOOKUP; }
+           | ForStat NEXT IDENTIFIER             { --_wForCounter; _iState =LOOKUP; }
+           | NEXT                                { --_wForCounter; _iState =LOOKUP; }
+           | NEXT IDENTIFIER                     { --_wForCounter; _iState =LOOKUP; }
            ;
 
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ { ++_wSeqCounter; } Crlf
+BeginSeq   : BEGINSEQ { ++_wSeqCounter; _iState =LOOKUP; } Crlf
                 SeqStatms
                 RecoverSeq
              END           { --_wSeqCounter; }
@@ -1056,10 +1062,16 @@ SeqStatms  : /* empty */
            ;
 
 RecoverSeq : /* no recover */
-           | RECOVER Crlf
-           | RECOVER Crlf Statements
-           | RECOVER USING IDENTIFIER Crlf
-           | RECOVER USING IDENTIFIER Crlf Statements
+           | RecoverEmpty Crlf
+           | RecoverEmpty Crlf Statements
+           | RecoverUsing Crlf
+           | RecoverUsing Crlf Statements
+           ;
+
+RecoverEmpty : RECOVER        { _iState =LOOKUP; }
+           ;
+
+RecoverUsing : RECOVER USING IDENTIFIER      { _iState =LOOKUP; }
            ;
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
@@ -1258,11 +1270,6 @@ int harbour_main( int argc, char * argv[] )
                case 's':
                case 'S':
                     _iSyntaxCheckOnly = 1;
-                    break;
-
-               case 't':
-               case 'T':
-                    _iAltSymbolTableInit = 1;
                     break;
 
                case 'v':
@@ -1810,7 +1817,7 @@ int Include( char * szFileName, PATHNAMES *pSearch )
       {
         pFileName->path =pSearch->szPath;
         MakeFilename( szFName, pFileName );
-        yyin = fopen( szFName, "r" );
+	yyin = fopen( szFName, "r" );
         if( ! yyin )
         {
             pSearch = pSearch->pNext;
@@ -2037,7 +2044,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    if( ! _iQuiet )
       printf( "\nGenerating C language output...\n" );
 
-   fprintf( yyc, "#include \"pcode.h\"\n\n" );
+   fprintf( yyc, "#include \"pcode.h\"\n" );
+   fprintf( yyc, "#include <init.h>\n\n" );
 
    if( ! _iStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */
@@ -2095,7 +2103,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
         fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
       else
       {
-         pFTemp = GetFuncall( pSym->szName );
+	 pFTemp = GetFuncall( pSym->szName );
          if( pFTemp )
             fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
          else
@@ -2109,15 +2117,9 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
    fprintf( yyc, " };\n\n" );
 
-   if( _iAltSymbolTableInit )
-   {
-     fprintf( yyc, "void ProcessSymbols( SYMBOL *, WORD );\n" );
-     fprintf( yyc, "/* Add a local symbol table to the global one\n*/\n" );
-     fprintf( yyc, "void %s__InitSymbols( void )\n{\n"
-                   "  ProcessSymbols( symbols, %i );\n}\n\n", symbols.pFirst->szName, wSym );
-   }
-   else
-     fprintf( yyc, "#include <init.h>\n\n" );
+   /* Generate function that will initialize local symbol table
+    */
+   fprintf( yyc, "HB_INIT_SYMBOLS( %s__InitSymbols );\n\n", symbols.pFirst->szName );
 
    /* Generate functions data
     */
@@ -3142,9 +3144,9 @@ WORD JumpFalse( int iOffset )
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
+   	 GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
       else if( pStackValType && pStackValType->cType != 'L')
-         GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
+   	 GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
@@ -3196,9 +3198,9 @@ WORD JumpTrue( int iOffset )
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
-         GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
+   	 GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
       else if( pStackValType && pStackValType->cType != 'L')
-         GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
+   	 GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
@@ -3362,16 +3364,16 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          sType[0] = pVarType->cType;
          sType[1] = 0;
 
-         /* skip back to the assigned value */
-         pStackValType = pStackValType->pPrev;
+      	 /* skip back to the assigned value */
+      	 pStackValType = pStackValType->pPrev;
       }
       else
         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
 
       if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
-         GenWarning( WARN_ASSIGN_SUSPECT, szVarName, sType );
+   	 GenWarning( WARN_ASSIGN_SUSPECT, szVarName, sType );
       else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
-         GenWarning( WARN_ASSIGN_TYPE, szVarName, sType );
+   	 GenWarning( WARN_ASSIGN_TYPE, szVarName, sType );
 
       /* compile time variable has to be released */
       if( pVarType )
@@ -3716,7 +3718,7 @@ void Do( BYTE bParams )
          else
             debug_msg( "\n***Do() Compile time stack overflow\n", NULL );
 
-         if( pFree )
+      	 if( pFree )
          {
             OurFree( (void *) pFree );
          }
@@ -3853,7 +3855,7 @@ void Function( BYTE bParams )
          else
           debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
 
-         if( pFree )
+      	 if( pFree )
          {
             OurFree( (void *) pFree );
          }
@@ -3943,13 +3945,13 @@ void GenPCode1( BYTE byte )
       {
          PSTACK_VAL_TYPE pFree;
 
-         /* Releasing compile time assignment value */
+	 /* Releasing compile time assignment value */
          pFree = pStackValType;
          debug_msg( "\n***---ArrayPut()\n", NULL );
 
          if( pStackValType )
             pStackValType = pStackValType->pPrev;
-         else
+	 else
             debug_msg( "\n***HB_P_ARRAYPUT Compile time stack overflow\n", NULL );
 
          if( pFree )
@@ -3957,7 +3959,7 @@ void GenPCode1( BYTE byte )
             OurFree( (void *) pFree );
          }
 
-         /* Releasing compile time array element index value */
+	 /* Releasing compile time array element index value */
          pFree = pStackValType;
          debug_msg( "\n***---HB_P_ARRAYPUT\n", NULL );
 
@@ -4322,8 +4324,8 @@ void CodeBlockEnd()
   if( _iWarnings )
   {
      if( pStackValType )
-        /* reusing the place holder of the result value */
-        pStackValType->cType = 'B';
+     	/* reusing the place holder of the result value */
+     	pStackValType->cType = 'B';
      else
         debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
   }

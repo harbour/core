@@ -96,10 +96,10 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
    PHB_ITEM pItem = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 
    if( pNull )       /* keep the C compiler silent */
-      pNull->wType = 0;   /* keep the C compiler silent */
+      pNull->type = 0;   /* keep the C compiler silent */
 
    memset( pItem, 0, sizeof( HB_ITEM ) );
-   pItem->wType = IT_NIL;
+   pItem->type = IT_NIL;
 
    return pItem;
 }
@@ -158,10 +158,10 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew(0);
 
-   pItem->wType = IT_STRING;
-   pItem->wLength = strlen( szText );
-   pItem->value.szText = ( char * ) hb_xgrab( pItem->wLength + 1 );
-   strcpy( pItem->value.szText, szText );
+   pItem->type = IT_STRING;
+   pItem->item.asString.length = strlen( szText );
+   pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
+   strcpy( pItem->item.asString.value, szText );
    return pItem;
 }
 
@@ -172,11 +172,11 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * nszText, ULONG ulLen )
    else
       pItem = hb_itemNew(0);
 
-   pItem->wType = IT_STRING;
-   pItem->wLength = ulLen;
-   pItem->value.szText = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( pItem->value.szText, nszText, ulLen );
-   pItem->value.szText[ ulLen ] = 0;
+   pItem->type = IT_STRING;
+   pItem->item.asString.length = ulLen;
+   pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+   memcpy( pItem->item.asString.value, nszText, ulLen );
+   pItem->item.asString.value[ ulLen ] = 0;
 
    return pItem;
 }
@@ -185,9 +185,9 @@ char *hb_itemGetC( PHB_ITEM pItem )
 {
    if( pItem && IS_STRING( pItem ) )
    {
-      char *szResult = (char *) hb_xgrab(pItem->wLength + 1);
-      memcpy(szResult, pItem->value.szText, pItem->wLength);
-      szResult[pItem->wLength] = 0;
+      char *szResult = (char *) hb_xgrab(pItem->item.asString.length + 1);
+      memcpy(szResult, pItem->item.asString.value, pItem->item.asString.length);
+      szResult[ pItem->item.asString.length ] = 0;
 
       return szResult;
    }
@@ -200,9 +200,9 @@ ULONG hb_itemCopyC( PHB_ITEM pItem, char *szBuffer, ULONG ulLen )
    if( pItem && IS_STRING(pItem) )
    {
       if( !ulLen )
-         ulLen = pItem->wLength;
+         ulLen = pItem->item.asString.length;
 
-      memcpy(szBuffer, pItem->value.szText, ulLen);
+      memcpy(szBuffer, pItem->item.asString.value, ulLen);
       return ulLen;
    }
    else
@@ -226,7 +226,7 @@ char *hb_itemGetDS( PHB_ITEM pItem, char *szDate )
    if( pItem && IS_DATE(pItem) )
    {
       long lDay, lMonth, lYear;
-      hb_dateDecode(pItem->value.lDate, &lDay, &lMonth, &lYear);
+      hb_dateDecode(pItem->item.asDate.value, &lDay, &lMonth, &lYear);
 
       szDate[ 0 ] = ( lYear / 1000 ) + '0';
       szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
@@ -250,7 +250,7 @@ BOOL hb_itemGetL( PHB_ITEM pItem )
 {
    if( pItem && IS_LOGICAL(pItem) )
    {
-      return pItem->value.iLogical;
+      return pItem->item.asLogical.value;
    }
    else
       return FALSE;
@@ -260,11 +260,11 @@ double hb_itemGetND( PHB_ITEM pItem )
 {
    if( pItem )
    {
-      switch( pItem->wType )
+      switch( pItem->type )
       {
-         case IT_INTEGER:  return pItem->value.iNumber;
-         case IT_DOUBLE:   return pItem->value.dNumber;
-         case IT_LONG:     return pItem->value.lNumber;
+         case IT_INTEGER:  return pItem->item.asInteger.value;
+         case IT_DOUBLE:   return pItem->item.asDouble.value;
+         case IT_LONG:     return pItem->item.asLong.value;
          default:          return 0;
       }
    }
@@ -276,11 +276,11 @@ long hb_itemGetNL( PHB_ITEM pItem )
 {
    if( pItem )
    {
-      switch( pItem->wType )
+      switch( pItem->type )
       {
-         case IT_INTEGER:  return pItem->value.iNumber;
-         case IT_DOUBLE:   return pItem->value.dNumber;
-         case IT_LONG:     return pItem->value.lNumber;
+         case IT_INTEGER:  return pItem->item.asInteger.value;
+         case IT_DOUBLE:   return pItem->item.asDouble.value;
+         case IT_LONG:     return pItem->item.asLong.value;
          default:          return 0;
       }
    }
@@ -311,12 +311,12 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
       + ((szDate[ 2 ] - '0') * 10) + (szDate[ 3 ] - '0');
 
    ItemRelease( pItem );
-   pItem->wType   = IT_DATE;
-   pItem->wLength = 8;
+   pItem->type   = IT_DATE;
+   pItem->item.asDate.length = 8;
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   pItem->value.lDate = hb_dateEncode(lDay, lMonth, lYear);
+   pItem->item.asDate.value = hb_dateEncode(lDay, lMonth, lYear);
 
    return pItem;
 }
@@ -328,9 +328,9 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
    else
       pItem = hb_itemNew(0);
 
-   pItem->wType = IT_LOGICAL;
-   pItem->wLength = 3;
-   pItem->value.iLogical = bValue;
+   pItem->type = IT_LOGICAL;
+   pItem->item.asLogical.length = 3;
+   pItem->item.asLogical.value = bValue;
    return pItem;
 }
 
@@ -341,11 +341,11 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
    else
       pItem = hb_itemNew(0);
 
-   pItem->wType = IT_DOUBLE;
-   if( dNumber > 10000000000.0 ) pItem->wLength = 20;
-   else pItem->wLength = 10;
-   pItem->wDec    = hb_set.HB_SET_DECIMALS;
-   pItem->value.dNumber = dNumber;
+   pItem->type = IT_DOUBLE;
+   if( dNumber > 10000000000.0 ) pItem->item.asDouble.length = 20;
+   else pItem->item.asDouble.length = 10;
+   pItem->item.asDouble.decimal    = hb_set.HB_SET_DECIMALS;
+   pItem->item.asDouble.value = dNumber;
    return pItem;
 }
 
@@ -356,10 +356,9 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    else
       pItem = hb_itemNew(0);
 
-   pItem->wType = IT_DOUBLE;
-   pItem->wLength = 10;
-   pItem->wDec    = hb_set.HB_SET_DECIMALS;
-   pItem->value.lNumber = lNumber;
+   pItem->type = IT_LONG;
+   pItem->item.asLong.length = 10;
+   pItem->item.asLong.value  = lNumber;
    return pItem;
 }
 
@@ -367,10 +366,10 @@ ULONG hb_itemSize( PHB_ITEM pItem )
 {
    if( pItem )
    {
-      switch( pItem->wType )
+      switch( pItem->type )
       {
          case IT_ARRAY:    return hb_arrayLen(pItem);
-         case IT_STRING:   return pItem->wLength;
+         case IT_STRING:   return pItem->item.asString.length;
       }
    }
    return 0;
@@ -378,5 +377,5 @@ ULONG hb_itemSize( PHB_ITEM pItem )
 
 WORD hb_itemType( PHB_ITEM pItem )
 {
-   return pItem->wType;
+   return pItem->type;
 }

@@ -1,3 +1,45 @@
+19990629-05:55 Ryszard Glab <rglab@imid.med.pl>
+
+* Tagged all sources with the name 'release_old_item'
+ You can download old version by issuing tthe following command:
+ cvs checkout -r release_old_item harbour
+ (be sure to checkout into new directory)
+ To check tag names for file use:
+ cvs status -v <filename>
+
+* include/extend.h
+ * changed definition of HB_ITEM structure
+ 
+* include/init.h
+ * added HB_INIT_SYMBOLS and HB_CALL_ON_STARTUP macros
+
+* include/hbsetup.h
+ * renamed HB_STRICT_CLIPPER_COMPATIBILITY to
+   HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+ + added HARBOUR_STRICT_ANSI_C definition
+    
+* source/vm/hvm.c
+ * changed to use the new HB_ITEM   
+ 
+* source/initsymb.c
+ * changed to use HARBOUR_STRICT_ANSI_C
+
+* source/rtl/*.c
+ * changed to use the new HB_ITEM
+ * changed to automatically register symbol table
+ 
+*source/tools/stringsx.c
+ * removed direct access to Harbour internals HB_ITEM structure
+
+* source/compiler/harbour.l
+ * corrected line continuation bugs
+
+* source/compiler/harbour.y
+ * corrected line continuation bug
+
+* tests/working/linecont.prg
+ * added some more code for testing line continuation
+
 19990628-23:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/tools/hb_f.c
     * Undid previous type change for x in hb_hbfskip(), because it

@@ -49,31 +49,100 @@ void ProcessSymbols( SYMBOL *, WORD );
 #define IT_NUMERIC   ( IT_INTEGER | IT_LONG | IT_DOUBLE )
 #define IT_ANY       0xFFFF
 
-struct _CODEBLOCK;      /* forward declaration */
+struct _HB_CODEBLOCK;       /* forward declaration */
+struct _HB_BASEARRAY;       /* forward declaration */
 
-typedef struct     /* items hold at the virtual machine stack */
+struct hb_struArray
 {
-   WORD wType;     /* type of the item */
-   WORD wLength;   /* length of the item */
-   WORD wDec;      /* decimal places in a numeric double item */
-   union {         /* different things may be holded here */
-          char * szText;   /* string values */
-          int iNumber;     /* int values */
-          long lNumber;    /* long values */
-          double dNumber;  /* double values */
-          int iLogical;    /* logical values */
-          long lDate;      /* date values */
-          PSYMBOL pSymbol; /* functions call symbol */
-          struct _CODEBLOCK * pCodeblock;/* pointer to a codeblock structure */
-          WORD wItem;      /* variable by reference, stack offset */
-          void * pBaseArray; /* array base */
-   } value;
-   WORD wBase;     /* stack frame number of items position for a function call */
-   WORD wLine;     /* currently processed PRG line number */
-   WORD wParams;   /* number of received parameters for a function call */
-} HB_ITEM, * PHB_ITEM;
+  struct _HB_BASEARRAY * value;
+};
 
-typedef struct
+struct hb_struBlock
+{
+  LONG stackbase;
+  WORD lineno;
+  WORD paramcnt;
+  struct _HB_CODEBLOCK * value;
+};
+
+struct hb_struDate
+{
+  WORD length;
+  LONG value;
+};
+
+struct hb_struDouble
+{
+  WORD length;
+  WORD decimal;
+  double value;
+};
+
+struct hb_struInteger
+{
+  WORD length;
+  WORD decimal;
+  int value;
+};
+
+struct hb_struLogical
+{
+  WORD length;
+  WORD value;
+};
+
+struct hb_struLong
+{
+  WORD length;
+  WORD decimal;
+  long value;
+};
+
+struct hb_struPointer
+{
+  void *value;
+};
+
+struct hb_struRefer
+{
+  LONG stackbase;
+  LONG value;
+};
+
+struct hb_struString
+{
+  ULONG length;
+  char *value;
+};
+
+struct hb_struSymbol
+{
+  LONG stackbase;
+  WORD lineno;
+  WORD paramcnt;
+  PSYMBOL value;
+};
+
+typedef struct        /* items hold at the virtual machine stack */
+{
+  WORD type;
+  union {
+        struct hb_struArray   asArray;
+        struct hb_struBlock   asBlock;
+        struct hb_struDate    asDate;
+        struct hb_struDouble  asDouble;
+        struct hb_struInteger asInteger;
+        struct hb_struLogical asLogical;
+        struct hb_struLong    asLong;
+        struct hb_struPointer asPointer;
+        struct hb_struRefer   asRefer;
+        struct hb_struString  asString;
+        struct hb_struSymbol  asSymbol;
+  } item;
+}
+HB_ITEM, *PHB_ITEM;
+
+typedef struct _HB_BASEARRAY
 {
    PHB_ITEM pItems;               /* pointer to the array items */
    ULONG ulLen;                /* number of items in the array */
@@ -86,7 +155,7 @@ typedef struct     /* stack managed by the virtual machine */
 {
    PHB_ITEM pItems;   /* pointer to the stack items */
    PHB_ITEM pPos;     /* pointer to the latest used item */
-   LONG  wItems;   /* total items that may be holded on the stack */
+   LONG  wItems;      /* total items that may be holded on the stack */
    HB_ITEM  Return;   /* latest returned value */
    PHB_ITEM pBase;    /* stack frame position for the current function call */
    PHB_ITEM pEvalBase;/* stack frame position for the evaluated codeblock */
@@ -103,7 +172,7 @@ typedef struct
 } DYNSYM, * PDYNSYM;    /* dynamic symbol structure */
 
 /* internal structure for codeblocks */
-typedef struct _CODEBLOCK
+typedef struct _HB_CODEBLOCK
 {
   BYTE * pCode;       /* codeblock pcode */
   PHB_ITEM pItems;       /* table with referenced local variables */
@@ -113,7 +182,7 @@ typedef struct _CODEBLOCK
   WORD wRefBase;      /* stack frame position for referenced local variables */
   int iStatBase;      /* static base for function where CB was created */
   long lCounter;      /* numer of references to this codeblock */
-} CODEBLOCK, * PCODEBLOCK;
+} HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 PHB_ITEM hb_param( WORD wParam, WORD wType ); /* retrieve a generic parameter */
 char *   hb_parc( WORD wParam, ... );  /* retrieve a string parameter */

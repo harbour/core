@@ -7,6 +7,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <itemapi.h>
+#include <init.h>
 
 #if defined(__GNUC__)
   #include <sys/types.h>
@@ -90,10 +91,13 @@ static SYMBOL symbols[] = {
 { "DIRECTORY", FS_PUBLIC, HB_DIRECTORY, 0 }
 };
 
+HB_INIT_SYMBOLS( Dir__InitSymbols );
+/*
 void Dir__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 

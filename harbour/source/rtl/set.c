@@ -13,6 +13,7 @@
 
 #include <ctype.h>
 #include <extend.h>
+#include <init.h>
 #include <errorapi.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -38,28 +39,31 @@ static SYMBOL symbols[] = {
 { "SET"         , FS_PUBLIC, HB_SET       , 0   }
 };
 
+HB_INIT_SYMBOLS( Set__InitSymbols );
+/*
 void Set__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 static BOOL set_logical (PHB_ITEM pItem)
 {
    BOOL logical = FALSE;
-   if (IS_LOGICAL (pItem)) logical = pItem->value.iLogical;
+   if (IS_LOGICAL (pItem)) logical = pItem->item.asLogical.value;
    else if (IS_STRING (pItem))
    {
-      if (pItem->wLength == 2)
+      if (pItem->item.asString.length == 2)
       {
-         if (toupper (pItem->value.szText [0]) == 'O'
-         && toupper (pItem->value.szText [1]) == 'N')
+         if (toupper (pItem->item.asString.value [0]) == 'O'
+         && toupper (pItem->item.asString.value [1]) == 'N')
             logical = TRUE;
       }
-      else if (pItem->wLength == 3)
+      else if (pItem->item.asString.length == 3)
       {
-         if (toupper (pItem->value.szText [0]) == 'O'
-         && toupper (pItem->value.szText [1]) == 'F'
-         && toupper (pItem->value.szText [2]) == 'F')
+         if (toupper (pItem->item.asString.value [0]) == 'O'
+         && toupper (pItem->item.asString.value [1]) == 'F'
+         && toupper (pItem->item.asString.value [2]) == 'F')
             logical = FALSE;
       }
    }
@@ -69,9 +73,9 @@ static BOOL set_logical (PHB_ITEM pItem)
 static int set_number (PHB_ITEM pItem, int old_value)
 {
    int number;
-   if (IS_INTEGER (pItem)) number = pItem->value.iNumber;
-   else if (IS_LONG (pItem)) number = (int)pItem->value.lNumber;
-   else if (IS_DOUBLE (pItem)) number = (int)pItem->value.dNumber;
+   if (IS_INTEGER (pItem)) number = pItem->item.asInteger.value;
+   else if (IS_LONG (pItem)) number = (int)pItem->item.asLong.value;
+   else if (IS_DOUBLE (pItem)) number = (int)pItem->item.asDouble.value;
    else number = old_value;
    return (number);
 }
@@ -81,10 +85,10 @@ static char * set_string (PHB_ITEM pItem, char * old_str)
    char * string;
    if (IS_STRING (pItem))
    {
-      int size = pItem->wLength;
+      int size = pItem->item.asString.length;
       if (old_str) string = (char*)hb_xrealloc (old_str, size + 1);
       else string = (char*)hb_xgrab (size + 1);
-      memcpy (string, pItem->value.szText, size);
+      memcpy (string, pItem->item.asString.value, size);
       string [size] = 0;
    }
    else string = old_str;
@@ -92,7 +96,7 @@ static char * set_string (PHB_ITEM pItem, char * old_str)
 }
 
 static void close_binary( int handle )
-{   
+{
 #if defined(OS_UNIX_COMPATIBLE)
    fchmod( handle, S_IRUSR|S_IWUSR );
 #endif
@@ -105,7 +109,7 @@ static void close_text (int handle)
    fchmod( handle, S_IRUSR|S_IWUSR );
 #else
    write (handle, "\x1A", 1);
-#endif   
+#endif
    close( handle );
 }
 
@@ -190,20 +194,20 @@ HARBOUR HB___SETCENTURY (void)
     * Then change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
-   if ( pItem && IS_LOGICAL (pItem)) hb_set_century = pItem->value.iLogical;
+   if ( pItem && IS_LOGICAL (pItem)) hb_set_century = pItem->item.asLogical.value;
    else if ( pItem && IS_STRING (pItem))
    {
-      if (pItem->wLength == 2)
+      if (pItem->item.asString.length == 2)
       {
-         if (toupper (pItem->value.szText [0]) == 'O'
-         && toupper (pItem->value.szText [1]) == 'N')
+         if (toupper (pItem->item.asString.value [0]) == 'O'
+         && toupper (pItem->item.asString.value [1]) == 'N')
             hb_set_century = TRUE;
       }
-      else if (pItem->wLength == 3)
+      else if (pItem->item.asString.length == 3)
       {
-         if (toupper (pItem->value.szText [0]) == 'O'
-         && toupper (pItem->value.szText [1]) == 'F'
-         && toupper (pItem->value.szText [2]) == 'F')
+         if (toupper (pItem->item.asString.value [0]) == 'O'
+         && toupper (pItem->item.asString.value [1]) == 'F'
+         && toupper (pItem->item.asString.value [2]) == 'F')
             hb_set_century = FALSE;
       }
    }

@@ -22,10 +22,11 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal);
 /*       and canRetry/canDefault flags */
 
 HARBOUR HB___COPYFILE( void )
+
 {
    if ( ISCHAR(1) && ISCHAR(2) )
    {
-#ifdef HB_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
       if (!hb_fsCopy(hb_parc(1), hb_parc(2)))
       {
          hb_retl(FALSE);
@@ -43,6 +44,7 @@ HARBOUR HB___COPYFILE( void )
 }
 
 static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
+
 {
    BOOL bRetVal = FALSE;
    FHANDLE fhndSource;

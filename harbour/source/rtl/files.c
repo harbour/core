@@ -2,7 +2,8 @@
  * $Id$
  */
 
-#include <hbsetup.h>
+#include <extend.h>
+#include <init.h>
 #include <filesys.h>
 #include <string.h>
 
@@ -149,10 +150,13 @@ static SYMBOL symbols[] = {
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
 };
 
+HB_INIT_SYMBOLS( Files__InitSymbols );
+/*
 void Files__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 /* Convert HARBOUR flags to IO subsystem flags */
 
@@ -580,7 +584,7 @@ HARBOUR HB_FWRITE( void )
 
         if( arg1_it && arg2_it )
         {
-            bytes = (arg3_it ? hb_parnl(3) : arg2_it->wLength );
+            bytes = (arg3_it ? hb_parnl(3) : hb_parclen( 2 ) );
             bytes = hb_fsWrite( hb_parni(1), (BYTEP)hb_parc(2), bytes);
         }
 
@@ -659,12 +663,12 @@ HARBOUR HB_FILE( void )
 
         if( arg1_it )
         {
-/*TODO: Check if F_OK is defined in all compilers */	
+/*TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
            hb_retl( access(hb_parc(1), F_OK) == 0 );
-#else	
+#else
            hb_retl( access(hb_parc(1), 0) == 0 );
-#endif	   
+#endif
         }
         else hb_retl(0);
         return;

@@ -23,13 +23,13 @@ extern STACK stack;
  * +2 bytes -> table of referenced local variables
  * +2 + 2 *(number of referenced variables) -> codeblock pcode
  */
-PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
+HB_CODEBLOCK_PTR CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
             int iStaticsBase, WORD wStackBase )
 {
-  PCODEBLOCK pCBlock;
+  HB_CODEBLOCK_PTR pCBlock;
   WORD wVars;
 
-  pCBlock =( PCODEBLOCK ) hb_xgrab( sizeof(CODEBLOCK) );
+  pCBlock =( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof(HB_CODEBLOCK) );
 
   /* Check the number of referenced local variables
    */
@@ -50,8 +50,8 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
 
     while( wVars-- )
     {
-      pCBlock->pItems[ w ].wType =IT_INTEGER; /* not really integer  */
-      pCBlock->pItems[ w ].value.wItem = * ( (WORD*) pBuffer );
+      pCBlock->pItems[ w ].type =IT_BYREF; /* not really integer  */
+      pCBlock->pItems[ w ].item.asRefer.value = * ( (WORD*) pBuffer );
       ++w;
       pBuffer +=2;
     }
@@ -88,7 +88,7 @@ PCODEBLOCK CodeblockNew( BYTE * pBuffer, WORD wSize, PSYMBOL pSymbols,
 
 /* Delete a codeblock
  */
-void  CodeblockDelete( PCODEBLOCK pCBlock )
+void  CodeblockDelete( HB_CODEBLOCK_PTR pCBlock )
 {
 #ifdef CODEBLOCKDEBUG
   printf( "delete a codeblock (%li) %lx\n", pCBlock->lCounter, pCBlock );
@@ -118,7 +118,7 @@ void  CodeblockDelete( PCODEBLOCK pCBlock )
 /* Function to unlink variables referenced in a codeblock from a function
  * where this codeblock was created
  */
-void CodeblockDetach( PCODEBLOCK pCBlock )
+void CodeblockDetach( HB_CODEBLOCK_PTR pCBlock )
 {
   if( pCBlock->wLocals && !pCBlock->wDetached )
   {
@@ -134,9 +134,9 @@ void CodeblockDetach( PCODEBLOCK pCBlock )
        * where this codeblock was defined
        */
       pItem =pCBlock->pItems + w;
-      pItem =stack.pBase +pItem->value.wItem + 1;
+      pItem =stack.pBase +pItem->item.asRefer.value + 1;
       if( IS_BYREF( pItem ) )
-          pItem =stack.pItems +pItem->value.wItem;
+          pItem =stack.pItems +pItem->item.asRefer.value;
       ItemCopy( pCBlock->pItems + w, pItem );
       ++w;
     }
@@ -151,7 +151,7 @@ void CodeblockDetach( PCODEBLOCK pCBlock )
  * wStackBase is stack base of function where the codeblock was defined
  * We need it because stack.pBase points to a stack base of EVAL function
  */
-void CodeblockEvaluate( PCODEBLOCK pCBlock )
+void CodeblockEvaluate( HB_CODEBLOCK_PTR pCBlock )
 {
   int iStatics = stack.iStatics;
 
@@ -162,9 +162,9 @@ void CodeblockEvaluate( PCODEBLOCK pCBlock )
 
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, SHORT iItemPos )
+PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
-  PCODEBLOCK pCBlock = (PCODEBLOCK)pItem->value.pCodeblock;
+  HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
   PHB_ITEM pLocalVar;
 
   pLocalVar =&pCBlock->pItems[ -iItemPos -1 ];
@@ -174,7 +174,7 @@ PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, SHORT iItemPos )
     /* when variables are not detached then a codeblock stores the variable's
      * position on the stack
      */
-    pLocalVar =stack.pItems +pCBlock->wRefBase +pLocalVar->value.wItem + 1;
+    pLocalVar =stack.pItems +pCBlock->wRefBase +pLocalVar->item.asRefer.value + 1;
   }
 
   return pLocalVar;
@@ -186,9 +186,9 @@ PHB_ITEM  CodeblockGetVar( PHB_ITEM pItem, SHORT iItemPos )
  */
 void  CodeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-  pDest->value.pCodeblock =pSource->value.pCodeblock;
-  ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter++;
+  pDest->item.asBlock.value =pSource->item.asBlock.value;
+  pDest->item.asBlock.value->lCounter++;
   #ifdef CODEBLOCKDEBUG
-    printf( "copy a codeblock (%li) %lx\n", ((PCODEBLOCK) pDest->value.pCodeblock)->lCounter, pDest->value.pCodeblock);
+    printf( "copy a codeblock (%li) %lx\n", pDest->item.asBlock.valuevalue->lCounter, pDest->item.asBlock.valuevalue);
   #endif
 }

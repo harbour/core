@@ -3,7 +3,9 @@
  */
 
 #include <extend.h>
+#include <itemapi.h>
 #include <ctype.h>
+#include <init.h>
 
 extern STACK stack;
 
@@ -13,11 +15,13 @@ static SYMBOL symbols[] = {
 { "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
 };
 
+HB_INIT_SYMBOLS( Descend__InitSymbols );
+/*
 void Descend__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
-
+*/
 char *hb_strdescend( char *string )
 {
    char *s;
@@ -39,20 +43,27 @@ HARBOUR HB_DESCEND( void )
       if( pItem )
       {
          if( IS_STRING( pItem ) )
-            hb_retc( hb_strdescend( pItem->value.szText ) );
+            hb_retc( hb_strdescend( pItem->item.asString.value ) );
          else if( IS_DATE( pItem ) )
-            hb_retnl( 5231808 - pItem->value.lDate );
+            hb_retnl( 5231808 - pItem->item.asDate.value );
          else if( IS_INTEGER( pItem ) )
-            hb_retni( -1 * pItem->value.iNumber );
+            hb_retni( -1 * pItem->item.asInteger.value );
          else if( IS_LONG( pItem ) )
-            hb_retnl( -1 * pItem->value.lNumber );
+            hb_retnl( -1 * pItem->item.asLong.value );
          else if( IS_DOUBLE( pItem ) )
          {
-            hb_retnd( -1 * pItem->value.dNumber );
+            PHB_ITEM pReturn;
+
+            pReturn = hb_itemPutND( NULL, -1 * pItem->item.asDouble.value );
+            hb_itemReturn( pReturn );
+            hb_itemRelease( pReturn );
+
+/* It is dengerous to operate on the stack directly
             stack.Return.wDec = pItem->wDec;
+*/
          }
          else if( IS_LOGICAL( pItem ) )
-            hb_retl( !pItem->value.iLogical );
+            hb_retl( !pItem->item.asLogical.value );
          else
             hb_retc( "NIL" );
       }

@@ -6,6 +6,7 @@
 #include <errorapi.h>
 #include <itemapi.h>
 #include <ctoharb.h>
+#include <init.h>
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -121,11 +122,14 @@ static SYMBOL symbols[] = {
 { "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
 };
 
+
+HB_INIT_SYMBOLS( Classes__InitSymbols );
+/*
 void Classes__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
-
+*/
 
 /*
  * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )
@@ -303,7 +307,7 @@ HARBOUR HB_CLASSCREATE(void)
 HARBOUR HB_CLASSDEL(void)
 {
    PHB_ITEM   pString  = hb_param( 2, IT_STRING );
-   PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
+   PSYMBOL pMessage = GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS  pClass;
 
@@ -364,7 +368,7 @@ HARBOUR HB_CLASSDEL(void)
  */
 static HARBOUR ClassH( void )
 {
-   hb_retni( ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass );
+   hb_retni( ( stack.pBase + 1 )->item.asArray.value->wClass );
 }
 
 
@@ -384,7 +388,7 @@ HARBOUR HB_CLASSINSTANCE(void)
    {
       pClass = pClasses + ( wClass - 1 );
       hb_arrayNew( &stack.Return, pClass->wDatas );
-      ( ( PBASEARRAY ) stack.Return.value.pBaseArray )->wClass = wClass;
+      stack.Return.item.asArray.value->wClass = wClass;
 
       pMeth  = pClass->pMethods;                /* Initialize DATA          */
       wLimit = pClass->wHashKey * BUCKET;
@@ -404,7 +408,7 @@ HARBOUR HB_CLASSINSTANCE(void)
 HARBOUR HB_CLASSMOD(void)
 {
    PHB_ITEM   pString  = hb_param( 2, IT_STRING );
-   PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
+   PSYMBOL pMessage = GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS  pClass;
 
@@ -461,7 +465,7 @@ static HARBOUR ClassName( void )
    PHB_ITEM pItemRef;
 
    if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
+      pItemRef = stack.pItems + ( stack.pBase + 1 )->item.asRefer.value;
    else
       pItemRef = stack.pBase + 1;
 
@@ -479,9 +483,9 @@ HARBOUR HB_CLASSNAME(void)
    PHB_ITEM pObject = hb_param( 0, IT_OBJECT );
    WORD wClass;
 
-   if( pObject && ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass )
+   if( pObject && pObject->item.asArray.value->wClass )
    {
-      wClass = ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass;
+      wClass = pObject->item.asArray.value->wClass;
       hb_retc( pClasses[ wClass - 1 ].szName );
    }
    else
@@ -503,7 +507,7 @@ HARBOUR HB_CLASSNAME(void)
 static HARBOUR ClassSel(void)
 {
    WORD    wClass = IS_ARRAY( stack.pBase + 1 ) ?
-        ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass : 0;
+        ( stack.pBase + 1 )->item.asArray.value->wClass : 0;
                                                 /* Get class word           */
    WORD    wLimit;                              /* Number of Hash keys      */
    WORD    wAt;
@@ -517,9 +521,9 @@ static HARBOUR ClassSel(void)
    /* Variables by reference */
    if( ( ! wClass ) && IS_BYREF( stack.pBase + 1 ) )
    {
-      pItemRef = stack.pItems + ( stack.pBase + 1 )->value.wItem;
+      pItemRef = stack.pItems + ( stack.pBase + 1 )->item.asRefer.value;
       if( IS_ARRAY( pItemRef ) )
-         wClass = ( ( PBASEARRAY ) pItemRef->value.pBaseArray )->wClass;
+         wClass = pItemRef->item.asArray.value->wClass;
    }
 
    if( wClass && wClass <= wClasses )
@@ -570,7 +574,7 @@ static void DictRealloc( PCLASS pClass )
 static HARBOUR EvalInline( void )
 {
    HB_ITEM block;
-   WORD wClass = ( (PBASEARRAY) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
+   WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
    WORD w;
 
    hb_arrayGet( pClasses[ wClass - 1 ].pInlines, pMethod->wData, &block );
@@ -598,14 +602,14 @@ char * hb_GetClassName( PHB_ITEM pObject )
 
    if( IS_ARRAY( pObject ) )
    {
-      if( ! ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass )
+      if( ! pObject->item.asArray.value->wClass )
          szClassName = "ARRAY";
       else
-         szClassName = ( pClasses + ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass - 1 )->szName;
+         szClassName = ( pClasses + pObject->item.asArray.value->wClass - 1 )->szName;
    }
    else  /* built in types */
    {
-      switch( pObject->wType )
+      switch( pObject->type )
       {
          case IT_NIL:
               szClassName = "NIL";
@@ -652,7 +656,7 @@ char * hb_GetClassName( PHB_ITEM pObject )
  */
 static HARBOUR GetClassData( void )
 {
-   WORD wClass = ( (PBASEARRAY) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
+   WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
 
    if( wClass && wClass <= wClasses )
       hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, pMethod->wData,
@@ -685,7 +689,7 @@ static HARBOUR GetData( void )
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 {
    WORD    wAt, wLimit, wMask;
-   WORD    wClass = ( ( PBASEARRAY ) pObject->value.pBaseArray )->wClass;
+   WORD    wClass = pObject->item.asArray.value->wClass;
    PCLASS  pClass;
    PDYNSYM pMsg = ( PDYNSYM ) pMessage->pDynSym;
 
@@ -760,7 +764,7 @@ HARBOUR HB_ISMESSAGE(void)
    PHB_ITEM   pString  = hb_param( 2, IT_STRING );
 
    if( pObject && pString )
-      hb_retl( hb_isMessage( pObject, pString->value.szText ) != 0 );
+      hb_retl( hb_isMessage( pObject, pString->item.asString.value ) != 0 );
    else
    {
       PHB_ITEM pError = hb_errNew();
@@ -811,7 +815,7 @@ HARBOUR HB_OSEND(void)
    if( pMessage && pObject )                /* Object & message passed      */
    {
       Push( pObject );                      /* Push object                  */
-      Message( GetDynSym( pMessage->value.szText )->pSymbol );
+      Message( GetDynSym( pMessage->item.asString.value )->pSymbol );
                                             /* Push char symbol as message  */
       for( w = 3; w <= hb_pcount(); w++ )     /* Push arguments on stack      */
          Push( hb_param( w, IT_ANY ) );
@@ -882,9 +886,9 @@ static HARBOUR SelectSuper( void )
    WORD       wSuperCls = pMethod->wData;       /* Get handle of superclass */
 
    memcpy( pSuper,   pObject, sizeof( HB_ITEM ) ); /* Allocate new structures  */
-   memcpy( pNewBase, pObject->value.pBaseArray, sizeof( BASEARRAY ) );
+   memcpy( pNewBase, pObject->item.asArray.value, sizeof( BASEARRAY ) );
 
-   pSuper->value.pBaseArray = pNewBase;
+   pSuper->item.asArray.value = pNewBase;
 
    pNewBase->wClass     = wSuperCls;
    pNewBase->wHolders   = 1;                    /* New item is returned     */
@@ -902,7 +906,7 @@ static HARBOUR SelectSuper( void )
  */
 static HARBOUR SetClassData( void )
 {
-   WORD wClass = ( (PBASEARRAY) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
+   WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
    PHB_ITEM pReturn = stack.pBase + 2;
 
    if( wClass && wClass <= wClasses )
@@ -954,7 +958,7 @@ HARBOUR HB___INSTSUPER( void )
 
    if( pString )
    {
-      pDynSym = FindDynSym( pString->value.szText );
+      pDynSym = FindDynSym( pString->item.asString.value );
       if( pDynSym )                             /* Find function            */
       {
          PushSymbol( pDynSym->pSymbol );        /* Push function name       */
@@ -971,7 +975,7 @@ HARBOUR HB___INSTSUPER( void )
 
          for( w = 0; !bFound && w < wClasses; w++ )
          {                                      /* Locate the entry         */
-            if( !hb_stricmp( pString->value.szText, pClasses[ w ].szName ) )
+            if( !hb_stricmp( pString->item.asString.value, pClasses[ w ].szName ) )
             {
                hb_retni( w + 1 );                 /* Entry + 1 = ClassH       */
                bFound = TRUE;

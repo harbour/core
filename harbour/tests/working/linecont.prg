@@ -80,3 +80,9 @@ b ;
 
 RETURN nil
 
+FUNCTION TEST1() ; LOCAL n; IF n==5; n =4; END; RETURN n
+
+FUNCTION TEST2(); LOCAL n
+
+  WHILE n<5; n++; END
+RETURN n

@@ -58,7 +58,7 @@ long lNumber = 0;
 #define LOOKUP          0       /* scan from the begining of line */
 #define OPERATOR        -1
 #define SEPARATOR       -2
-static int _iState = LOOKUP;
+int _iState = LOOKUP;
 static int _iOpenBracket = 0;
 
 /* Support for Array Index */
@@ -200,13 +200,12 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                ++iLine;
                if( ! _iQuiet ) printf( "\rline: %i", iLine );
-               _iState=LINECONT_;
                return ';';
              }
 <LINECONT_>{Separator}*("("|")") {
                GenError( ERR_INCOMPLETE_STMT, yytext, NULL );
              }
-<LINECONT_>{Separator}*";"        ; /*Ignore any repeated ';' */
+<LINECONT_>";"        ; /*Ignore any repeated ';' */
 <LINECONT_>{Separator}*. {
                unput( yytext[ yyleng-1 ] );
                if( i_INDEX_STATE )

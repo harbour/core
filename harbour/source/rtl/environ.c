@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#include <extend.h>
+#include <init.h>
+
 #ifdef __IBMCPP__
   #define INCL_DOSMISC
 #endif
@@ -45,10 +48,13 @@ static SYMBOL symbols[] = {
 { "VERSION", FS_PUBLIC, HB_VERSION, 0 }
 };
 
+HB_INIT_SYMBOLS( Environ__InitSymbols );
+/*
 void Environ__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 HARBOUR HB_OS(void)
 {
@@ -81,10 +87,10 @@ HARBOUR HB_OS(void)
       system plays the major/minor version number game. Not all operating
       systems work like that. So, we do a little bit of mucking around
       because we've managed to work out version[] on our own. */
-      
+
    hb_os      = "";
    hb_osmajor = -2;
-   
+
 #else
 
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */

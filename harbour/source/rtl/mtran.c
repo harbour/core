@@ -3,6 +3,7 @@
  */
 
 #include <extend.h>
+#include <init.h>
 #include <ctype.h>
 
 #define CHR_HARD1   (char)141
@@ -17,11 +18,13 @@ static SYMBOL symbols[] = {
 { "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
 };
 
+HB_INIT_SYMBOLS( Memotran__InitSymbols );
+/*
 void Memotran__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
-
+*/
 
 char *hb_memotran( char *string, char *hardcr, char *softcr )
 {

@@ -22,13 +22,13 @@ PHB_ITEM hb_param( WORD wParam, WORD wMask )
 
    if( wParam <= hb_pcount() )
    {
-      wType = ( stack.pBase + 1 + wParam )->wType;
+      wType = ( stack.pBase + 1 + wParam )->type;
 
       if( ( wType & wMask ) || ( wType == IT_NIL && wMask == IT_ANY ) )
       {
          pLocal = stack.pBase + 1 + wParam;
          if( wType & IT_BYREF )
-            return stack.pItems + pLocal->value.wItem;
+            return stack.pItems + pLocal->item.asRefer.value;
          else
             return pLocal;
       }
@@ -51,8 +51,8 @@ char * hb_parc( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) )
       {
@@ -62,7 +62,7 @@ char * hb_parc( WORD wParam, ... )
             return "";
       }
       else if( IS_STRING( pItem ) )
-         return pItem->value.szText;
+         return pItem->item.asString.value;
 
       else
          return "";
@@ -83,8 +83,8 @@ ULONG hb_parclen( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) )
       {
@@ -94,7 +94,7 @@ ULONG hb_parclen( WORD wParam, ... )
             return 0;
       }
       else if( IS_STRING( pItem ) )
-         return pItem->wLength;
+         return pItem->item.asString.length;
 
       else
          return 0;
@@ -116,16 +116,16 @@ char * hb_pards( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return "        ";
 
-      else if( IS_DATE( pItem ) && pItem->value.lDate > 0 )
+      else if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
       {
-         hb_dateDecode( pItem->value.lDate, &lDay, &lMonth, &lYear );
+         hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
 
          stack.szDate[ 0 ] = ( lYear / 1000 ) + '0';
          stack.szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
@@ -160,15 +160,15 @@ int hb_parl( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return 0;
 
       else if( IS_LOGICAL( pItem ) )
-         return pItem->value.iLogical;
+         return pItem->item.asLogical.value;
 
       else
          return 0;
@@ -189,21 +189,21 @@ double hb_parnd( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return 0;
 
       else if( IS_INTEGER( pItem ) )
-         return pItem->value.iNumber;
+         return pItem->item.asInteger.value;
 
       else if( IS_LONG( pItem ) )
-         return pItem->value.lNumber;
+         return pItem->item.asLong.value;
 
       else if( IS_DOUBLE( pItem ) )
-         return pItem->value.dNumber;
+         return pItem->item.asDouble.value;
 
       else
          return 0;
@@ -224,21 +224,21 @@ int hb_parni( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return 0;
 
       else if( IS_INTEGER( pItem ) )
-         return pItem->value.iNumber;
+         return pItem->item.asInteger.value;
 
       else if( IS_LONG( pItem ) )
-         return pItem->value.lNumber;
+         return pItem->item.asLong.value;
 
       else if( IS_DOUBLE( pItem ) )
-         return pItem->value.dNumber;
+         return pItem->item.asDouble.value;
 
       else
          return 0;
@@ -259,21 +259,21 @@ long hb_parnl( WORD wParam, ... )
    if( wParam <= hb_pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
-      if( pItem->wType & IT_BYREF )
-         pItem = stack.pItems + pItem->value.wItem;
+      if( pItem->type & IT_BYREF )
+         pItem = stack.pItems + pItem->item.asRefer.value;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
          return 0;
 
       else if( IS_INTEGER( pItem ) )
-         return (long) pItem->value.iNumber;
+         return (long) pItem->item.asInteger.value;
 
       else if( IS_LONG( pItem ) )
-         return pItem->value.lNumber;
+         return pItem->item.asLong.value;
 
       else if( IS_DOUBLE( pItem ) )
-         return (long) pItem->value.dNumber;
+         return (long) pItem->item.asDouble.value;
 
       else
          return 0;
@@ -299,11 +299,11 @@ int hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 WORD hb_parinfo( WORD wParam )
 {
    if( ! wParam )
-      return stack.pBase->wParams;
+      return stack.pBase->item.asSymbol.paramcnt;
    else
    {
       if( wParam <= hb_pcount() )
-         return ( stack.pBase + 1 + wParam )->wType;
+         return ( stack.pBase + 1 + wParam )->type;
       else
          return 0;
    }
@@ -311,7 +311,7 @@ WORD hb_parinfo( WORD wParam )
 
 WORD hb_pcount( void )
 {
-   return stack.pBase->wParams;
+   return stack.pBase->item.asSymbol.paramcnt;
 }
 
 void hb_ret( void )
@@ -329,20 +329,20 @@ void hb_retc( char * szText )
    ULONG ulLen = strlen( szText );
 
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_STRING;
-   stack.Return.wLength = ulLen;
-   stack.Return.value.szText = ( char * ) hb_xgrab( ulLen + 1 );
-   strcpy( stack.Return.value.szText, szText );
+   stack.Return.type   = IT_STRING;
+   stack.Return.item.asString.length = ulLen;
+   stack.Return.item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+   strcpy( stack.Return.item.asString.value, szText );
 }
 
 void hb_retclen( char * szText, ULONG ulLen )
 {
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_STRING;
-   stack.Return.wLength = ulLen;
-   stack.Return.value.szText = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( stack.Return.value.szText, szText, ulLen );
-   stack.Return.value.szText[ ulLen ] = 0;
+   stack.Return.type   = IT_STRING;
+   stack.Return.item.asString.length = ulLen;
+   stack.Return.item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+   memcpy( stack.Return.item.asString.value, szText, ulLen );
+   stack.Return.item.asString.value[ ulLen ] = 0;
 }
 
 void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
@@ -362,48 +362,50 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
 
    ItemRelease( &stack.Return );
 
-   stack.Return.wType   = IT_DATE;
-   stack.Return.wLength = 8;
+   stack.Return.type   = IT_DATE;
+   stack.Return.item.asDate.length = 8;
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
+   stack.Return.item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
 }
 
 void hb_retnd( double dNumber )
 {
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_DOUBLE;
-   if( dNumber > 10000000000.0 ) stack.Return.wLength = 20;
-   else stack.Return.wLength = 10;
-   stack.Return.wDec    = hb_set.HB_SET_DECIMALS;
-   stack.Return.value.dNumber = dNumber;
+   stack.Return.type   = IT_DOUBLE;
+   if( dNumber > 10000000000.0 )
+      stack.Return.item.asDouble.length = 20;
+   else
+      stack.Return.item.asDouble.length = 10;
+   stack.Return.item.asDouble.decimal   = hb_set.HB_SET_DECIMALS;
+   stack.Return.item.asDouble.value     = dNumber;
 }
 
 void hb_retni( int iNumber )
 {
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_INTEGER;
-   stack.Return.wLength = 10;
-   stack.Return.wDec    = 0;
-   stack.Return.value.iNumber = iNumber;
+   stack.Return.type                   = IT_INTEGER;
+   stack.Return.item.asInteger.length  = 10;
+   stack.Return.item.asInteger.decimal = 0;
+   stack.Return.item.asInteger.value   = iNumber;
 }
 
 void hb_retl( int iTrueFalse )
 {
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_LOGICAL;
-   stack.Return.wLength = 3;
-   stack.Return.value.iLogical = iTrueFalse;
+   stack.Return.type                  = IT_LOGICAL;
+   stack.Return.item.asLogical.length = 3;
+   stack.Return.item.asLogical.value  = iTrueFalse;
 }
 
 void hb_retnl( long lNumber )
 {
    ItemRelease( &stack.Return );
-   stack.Return.wType   = IT_LONG;
-   stack.Return.wLength = 10;
-   stack.Return.wDec    = 0;
-   stack.Return.value.lNumber = lNumber;
+   stack.Return.type                = IT_LONG;
+   stack.Return.item.asLong.length  = 10;
+   stack.Return.item.asLong.decimal = 0;
+   stack.Return.item.asLong.value   = lNumber;
 }
 
 void hb_storc( char * szText, WORD wParam, ... )
@@ -428,12 +430,12 @@ void hb_storc( char * szText, WORD wParam, ... )
       if( IS_BYREF( pItem ) )
       {
          ulLen = strlen( szText );
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_STRING;
-         pItemRef->wLength = ulLen;
-         pItemRef->value.szText = ( char * ) hb_xgrab( ulLen + 1 );
-         strcpy( pItemRef->value.szText, szText );
+         pItemRef->type = IT_STRING;
+         pItemRef->item.asString.length = ulLen;
+         pItemRef->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
+         strcpy( pItemRef->item.asString.value, szText );
       }
    }
 }
@@ -458,13 +460,13 @@ void hb_storclen( char * fixText, WORD wLength, WORD wParam, ... )
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_STRING;
-         pItemRef->wLength = wLength;
-         pItemRef->value.szText = ( char * ) hb_xgrab( wLength + 1 );
-         memcpy( pItemRef->value.szText, fixText, wLength );
-         pItemRef->value.szText[ wLength ] = '\0';
+         pItemRef->type = IT_STRING;
+         pItemRef->item.asString.length = wLength;
+         pItemRef->item.asString.value = ( char * ) hb_xgrab( wLength + 1 );
+         memcpy( pItemRef->item.asString.value, fixText, wLength );
+         pItemRef->item.asString.value[ wLength ] = '\0';
       }
    }
 }
@@ -501,11 +503,11 @@ void hb_stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd f
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType   = IT_DATE;
-         pItemRef->wLength = 8;
-         pItemRef->value.lDate = hb_dateEncode( lDay, lMonth, lYear );
+         pItemRef->type               = IT_DATE;
+         pItemRef->item.asDate.length = 8;
+         pItemRef->item.asDate.value  = hb_dateEncode( lDay, lMonth, lYear );
       }
    }
 }
@@ -530,11 +532,11 @@ void hb_storl( int iLogical, WORD wParam, ... )
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_LOGICAL;
-         pItemRef->wLength = 3;
-         pItemRef->value.iLogical = iLogical;
+         pItemRef->type                  = IT_LOGICAL;
+         pItemRef->item.asLogical.length = 3;
+         pItemRef->item.asLogical.value  = iLogical;
       }
    }
 }
@@ -559,12 +561,12 @@ void hb_storni( int iValue, WORD wParam, ... )
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType   = IT_INTEGER;
-         pItemRef->wLength = 10;
-         pItemRef->wDec    = 0;
-         pItemRef->value.iNumber = iValue;
+         pItemRef->type                   = IT_INTEGER;
+         pItemRef->item.asInteger.length  = 10;
+         pItemRef->item.asInteger.decimal = 0;
+         pItemRef->item.asInteger.value   = iValue;
       }
    }
 }
@@ -589,12 +591,12 @@ void hb_stornl( long lValue, WORD wParam, ... )
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType   = IT_LONG;
-         pItemRef->wLength = 10;
-         pItemRef->wDec    = 0;
-         pItemRef->value.lNumber = lValue;
+         pItemRef->type                = IT_LONG;
+         pItemRef->item.asLong.length  = 10;
+         pItemRef->item.asLong.decimal = 0;
+         pItemRef->item.asLong.value   = lValue;
       }
    }
 }
@@ -619,13 +621,15 @@ void hb_stornd( double dValue, WORD wParam, ... )
 
       if( IS_BYREF( pItem ) )
       {
-         pItemRef = stack.pItems + pItem->value.wItem;
+         pItemRef = stack.pItems + pItem->item.asRefer.value;
          ItemRelease( pItemRef );
-         pItemRef->wType   = IT_DOUBLE;
-         if( dValue > 10000000000.0 ) pItemRef->wLength = 20;
-         else pItemRef->wLength = 10;
-         pItemRef->wDec    = hb_set.HB_SET_DECIMALS;
-         pItemRef->value.dNumber = dValue;
+         pItemRef->type   = IT_DOUBLE;
+         if( dValue > 10000000000.0 )
+            pItemRef->item.asDouble.length = 20;
+         else
+            pItemRef->item.asDouble.length = 10;
+         pItemRef->item.asDouble.decimal   = hb_set.HB_SET_DECIMALS;
+         pItemRef->item.asDouble.value     = dValue;
       }
    }
 }

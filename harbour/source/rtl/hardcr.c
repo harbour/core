@@ -4,21 +4,25 @@
 
 #include <extend.h>
 #include <ctype.h>
+#include <init.h>
 
 #define CHR_HARD1   (char)141
 #define CHR_HARD2   (char)10
 
 HARBOUR HB_HARDCR(void);
 
+
 static SYMBOL symbols[] = {
 { "HARDCR", FS_PUBLIC, HB_HARDCR, 0 }
 };
 
+HB_INIT_SYMBOLS( HardCR__InitSymbols );
+/*
 void HardCR__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
-
+*/
 
 char *hb_hardcr( char *string )
 {

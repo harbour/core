@@ -4,7 +4,9 @@
 
 #include <hbsetup.h>
 #include <extend.h>
+#include <init.h>
 #include <errorapi.h>
+#include <itemapi.h>
 #include <set.h>
 #include <dates.h>
 #include <ctype.h>
@@ -13,7 +15,7 @@
   #include <dos.h>
 #endif
 
-#ifndef HB_STRICT_CLIPPER_COMPATIBILITY
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS
 #endif
 
@@ -38,25 +40,17 @@ HARBOUR HB_TIME( void );
 HARBOUR HB_YEAR( void );
 
 static SYMBOL symbols[] = {
-{ "HB_CDOW",    FS_PUBLIC, HB_CDOW,    0 },
-{ "HB_CMONTH",  FS_PUBLIC, HB_CMONTH,  0 },
-{ "HB_CTOD",    FS_PUBLIC, HB_CTOD,    0 },
-{ "HB_DATE",    FS_PUBLIC, HB_DATE,    0 },
-{ "HB_DAY",     FS_PUBLIC, HB_DAY,     0 },
-{ "HB_DOW",     FS_PUBLIC, HB_DOW,     0 },
-{ "HB_DTOC",    FS_PUBLIC, HB_DTOC,    0 },
-{ "HB_DTOS",    FS_PUBLIC, HB_DTOS,    0 },
-{ "HB_MONTH",   FS_PUBLIC, HB_MONTH,   0 },
-{ "HB_SECONDS", FS_PUBLIC, HB_SECONDS, 0 },
-{ "HB_STOD",    FS_PUBLIC, HB_STOD,    0 },
-{ "HB_TIME",    FS_PUBLIC, HB_TIME,    0 },
-{ "HB_YEAR",    FS_PUBLIC, HB_YEAR,    0 }
-};
+{ "STOD",    FS_PUBLIC, HB_STOD,    0 }
+}; /* rest of the functions is pulled automatically in initsymb.c */
 
+
+HB_INIT_SYMBOLS( Dates__InitSymbols );
+/*
 void Dates__InitSymbols( void )
 {
    ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
 }
+*/
 
 double hb__seconds( void )
 {
@@ -418,9 +412,20 @@ HARBOUR HB_DAY( void )
 
    if( pDate )
    {
-      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      PHB_ITEM pReturn = hb_itemNew( NULL );
+
+      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+
+      pReturn->type = IT_LONG;
+      pReturn->item.asLong.value =lDay;
+      pReturn->item.asLong.length =3;
+      hb_itemReturn( pReturn );
+      hb_itemRelease( pReturn );
+/*
       hb_retni( lDay );
-      stack.Return.wLength = 3;
+ * It is dengerous to manipulate the stack return value directly!
+      stack.Return.item.asInteger.length = 3;
+ */
    }
    else
    {
@@ -435,9 +440,20 @@ HARBOUR HB_MONTH( void )
 
    if( pDate )
    {
-      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      PHB_ITEM pReturn = hb_itemNew( NULL );
+
+      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+
+      pReturn->type = IT_LONG;
+      pReturn->item.asLong.value =lMonth;
+      pReturn->item.asLong.length =3;
+      hb_itemReturn( pReturn );
+      hb_itemRelease( pReturn );
+/*
       hb_retni( lMonth );
-      stack.Return.wLength = 3;
+ * It is dengerous to manipulate the stack return value directly!
+      stack.Return.item.asInteger.length = 3;
+ */
    }
    else
    {
@@ -452,9 +468,20 @@ HARBOUR HB_YEAR( void )
 
    if( pDate )
    {
-      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      PHB_ITEM pReturn = hb_itemNew( NULL );
+
+      hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+
+      pReturn->type = IT_LONG;
+      pReturn->item.asLong.value =lYear;
+      pReturn->item.asLong.length =5;
+      hb_itemReturn( pReturn );
+      hb_itemRelease( pReturn );
+/*
       hb_retni( lYear );
-      stack.Return.wLength = 5;
+ * It is dengerous to manipulate the stack return value directly!
+      stack.Return.item.asInteger.length = 5;
+ */
    }
    else
    {
@@ -477,7 +504,6 @@ HARBOUR HB_TIME( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
       hb_errorRT_BASE(EG_ARG, 9999, "Incorrect number of arguments", "TIME");
    }
 }
@@ -522,14 +548,28 @@ HARBOUR HB_DOW( void )
 
    if( pDate )
    {
-      if( pDate->value.lDate )
+      PHB_ITEM pReturn = hb_itemNew( NULL );
+
+      pReturn->type = IT_LONG;
+
+      if( pDate->item.asDate.value )
       {
-         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-         hb_retni( hb_dow( lDay, lMonth, lYear ) );
+         hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+         pReturn->item.asLong.value =hb_dow( lDay, lMonth, lYear );
+	 /* hb_retni( hb_dow( lDay, lMonth, lYear ) );
+	 */
       }
       else
-         hb_retni( 0 );
-      stack.Return.wLength = 3;
+         pReturn->item.asLong.value =0;
+	 /* hb_retni( 0 );
+	 */
+
+      pReturn->item.asLong.length =3;
+      hb_itemReturn( pReturn );
+      hb_itemRelease( pReturn );
+/*
+      stack.Return.item.asInteger.length = 3;
+ */
    }
    else
    {
@@ -544,15 +584,15 @@ HARBOUR HB_CMONTH( void )
 
    if( hb_pcount() )
    {
-      if( pDate )
-      {
-         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-         hb_retc( hb_cmonth( lMonth ) );
-      }
-      else
-      {
-         hb_errorRT_BASE(EG_ARG, 1116, "Argument error", "CMONTH");
-      }
+     if( pDate )
+     {
+        hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+        hb_retc( hb_cmonth( lMonth ) );
+     }
+     else
+     {
+        hb_errorRT_BASE(EG_ARG, 1116, "Argument error", "CMONTH");
+     }
    }
    else
    {
@@ -570,7 +610,7 @@ HARBOUR HB_CDOW( void )
    {
       if( pDate )
       {
-         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+         hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
          hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
       }
       else

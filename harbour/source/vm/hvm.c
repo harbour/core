@@ -75,7 +75,7 @@ void Or( void );              /* performs the logical OR on the latest two value
 void Plus( void );            /* sums the latest two values on the stack, removes them and leaves the result */
 long PopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
 void PopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
-double PopDouble( void );     /* pops the stack latest value and returns its double numeric format value */
+double PopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
 void PopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
 int  PopLogical( void );           /* pops the stack latest value and returns its logical value */
 double PopNumber( void );          /* pops the stack latest value and returns its numeric value */
@@ -121,12 +121,12 @@ void StackPush( void );       /* pushes an item on to the stack */
 void StackInit( void );       /* initializes the stack */
 void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
 
-PCODEBLOCK CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
-void CodeblockDelete( PCODEBLOCK );
-PHB_ITEM CodeblockGetVar( PHB_ITEM, SHORT );
-void CodeblockEvaluate( PCODEBLOCK );
+HB_CODEBLOCK_PTR CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
+void CodeblockDelete( HB_CODEBLOCK_PTR );
+PHB_ITEM CodeblockGetVar( PHB_ITEM, LONG );
+void CodeblockEvaluate( HB_CODEBLOCK_PTR );
 void CodeblockCopy( PHB_ITEM, PHB_ITEM );
-void CodeblockDetach( PCODEBLOCK );
+void CodeblockDetach( HB_CODEBLOCK_PTR );
 
 void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
@@ -191,9 +191,9 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
       iHB_DEBUG += ( int ) DontDiscardForceLink; /* just to avoid warnings from the C compiler */
 
    HB_DEBUG( "main\n" );
-   aStatics.wType     = IT_NIL;
-   errorBlock.wType   = IT_NIL;
-   stack.Return.wType = IT_NIL;
+   aStatics.type     = IT_NIL;
+   errorBlock.type   = IT_NIL;
+   stack.Return.type = IT_NIL;
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();     /* initialize Sets */
@@ -577,7 +577,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          default:
               printf( "The Harbour virtual machine can't run yet this PRG\n(unsuported pcode opcode: %i)\n", bCode );
-              printf( "Line number %i in %s", stack.pBase->wLine, stack.pBase->value.pSymbol->szName );
+              printf( "Line number %i in %s", stack.pBase->item.asSymbol.lineno, stack.pBase->item.asSymbol.value->szName );
               exit( 1 );
               break;
       }
@@ -596,7 +596,7 @@ void And( void )
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
    {
-      iResult = pItem1->value.iLogical && pItem2->value.iLogical;
+      iResult = pItem1->item.asLogical.value && pItem2->item.asLogical.value;
       StackPop();
       StackPop();
       PushLogical( iResult );
@@ -632,13 +632,13 @@ void ArrayPut( void )
    ULONG ulIndex;
 
    if( IS_INTEGER( pIndex ) )
-      ulIndex = pIndex->value.iNumber;
+      ulIndex = pIndex->item.asInteger.value;
 
    else if( IS_LONG( pIndex ) )
-      ulIndex = pIndex->value.lNumber;
+      ulIndex = pIndex->item.asLong.value;
 
    else if( IS_DOUBLE( pIndex ) )
-      ulIndex = pIndex->value.dNumber;
+      ulIndex = pIndex->item.asDouble.value;
 
    else ;
       /* QUESTION: Should we raise an error here ? */
@@ -653,11 +653,12 @@ void Dec( void )
 {
    double dNumber;
    LONG lDate;
+   WORD wDec;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      dNumber = PopDouble();
-      PushNumber( --dNumber, stack.pPos->wDec );
+      dNumber = PopDouble( &wDec );
+      PushNumber( --dNumber, wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
@@ -669,19 +670,20 @@ void Dec( void )
 
 void Div( void )
 {
-   double d2 = PopDouble();
-   double d1 = PopDouble();
+   WORD wDec1, wDec2;
+   double d2 = PopDouble( &wDec2 );
+   double d1 = PopDouble( &wDec1 );
 
-   PushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
+   PushNumber( d1 / d2, (wDec1>wDec2) ? wDec1 : wDec2 );
 }
 
 void Do( WORD wParams )
 {
-   PHB_ITEM pItem = stack.pPos - wParams - 2;
-   PSYMBOL pSym = pItem->value.pSymbol;
-   WORD wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
-   WORD wItemIndex = pItem - stack.pItems;
-   PHB_ITEM pSelf = stack.pPos - wParams - 1;
+   PHB_ITEM pItem = stack.pPos - wParams - 2;   /* procedure name */
+   PSYMBOL pSym = pItem->item.asSymbol.value;
+   LONG wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
+   LONG wItemIndex = pItem - stack.pItems;
+   PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    HARBOURFUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
 
@@ -699,10 +701,10 @@ void Do( WORD wParams )
       exit( 1 );
    }
 
-   pItem->wLine   = 0;
-   pItem->wParams = wParams;
-   stack.pBase    = stack.pItems + pItem->wBase;
-   pItem->wBase   = wStackBase;
+   pItem->item.asSymbol.lineno   = 0;
+   pItem->item.asSymbol.paramcnt = wParams;
+   stack.pBase    = stack.pItems + pItem->item.asSymbol.stackbase;
+   pItem->item.asSymbol.stackbase = wStackBase;
 
    HB_DEBUG2( "Do with %i params\n", wParams );
 
@@ -748,7 +750,7 @@ HARBOUR DoBlock( void )
    }
 
    /* Check for valid count of parameters */
-   iParam =pBlock->wParams -hb_pcount();
+   iParam =pBlock->item.asBlock.paramcnt -hb_pcount();
    /* add missing parameters */
    while( iParam-- > 0 )
      PushNil();
@@ -756,9 +758,9 @@ HARBOUR DoBlock( void )
    /* set pBaseCB to point to local variables of a function where
     * the codeblock was defined
     */
-   stack.pBase->wLine =pBlock->wLine;
+   stack.pBase->item.asSymbol.lineno =pBlock->item.asBlock.lineno;
 
-   CodeblockEvaluate( (PCODEBLOCK)pBlock->value.pCodeblock );
+   CodeblockEvaluate( pBlock->item.asBlock.value );
 
    /* restore stack pointers */
    stack.pBase = stack.pItems + wStackBase;
@@ -815,6 +817,7 @@ void Equal( BOOL bExact )
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
    int i;
+   WORD wDec;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -842,12 +845,12 @@ void Equal( BOOL bExact )
       PushLogical( PopLogical() == PopLogical() );
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
-      PushLogical( PopDouble() == PopDouble() );
+      PushLogical( PopDouble(&wDec) == PopDouble(&wDec) );
 
    else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "==" ) )
       OperatorCall( pItem1, pItem2, "==" );
 
-   else if( pItem1->wType != pItem2->wType )
+   else if( pItem1->type != pItem2->type )
    {
       printf( "types not match on equal operation\n" );
       exit( 1 );
@@ -867,12 +870,13 @@ void ForTest( void )        /* Test to check the end point of the FOR */
 {
    double dStep;
    int    iEqual;
-   WORD   wDec;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-       dStep = PopNumber();
-       wDec = stack.pPos->wDec;
+       WORD   wDec;
+
+       dStep = PopDouble( &wDec );
+
        if( dStep > 0 )           /* Positive loop. Use LESS */
            Less();
        else if( dStep < 0 )      /* Negative loop. Use GREATER */
@@ -894,7 +898,7 @@ void Frame( BYTE bLocals, BYTE bParams )
 
    HB_DEBUG( "Frame\n" );
    if( iTotal )
-      for( i = 0; i < ( iTotal - stack.pBase->wParams ); i++ )
+      for( i = 0; i < ( iTotal - stack.pBase->item.asSymbol.paramcnt ); i++ )
          PushNil();
 }
 
@@ -905,7 +909,7 @@ void FuncPtr( void )  /* pushes a function address pointer. Removes the symbol f
    if( IS_SYMBOL( pItem ) )
    {
       StackPop();
-      PushLong( ( ULONG ) pItem->value.pSymbol->pFunPtr );
+      PushLong( ( ULONG ) pItem->item.asSymbol.value->pFunPtr );
    }
    else
    {
@@ -926,10 +930,10 @@ void GenArray( WORD wElements ) /* generates a wElements Array and fills it from
    HB_ITEM itArray;
    WORD w;
 
-   itArray.wType = IT_NIL;
+   itArray.type = IT_NIL;
    hb_arrayNew( &itArray, wElements );
    for( w = 0; w < wElements; w++ )
-      ItemCopy( ( ( PBASEARRAY ) itArray.value.pBaseArray )->pItems + w,
+      ItemCopy( itArray.item.asArray.value->pItems + w,
                 stack.pPos - wElements + w );
 
    for( w = 0; w < wElements; w++ )
@@ -980,7 +984,7 @@ void Greater( void )
             hb_isMessage( stack.pPos - 2, ">" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
 
-   else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
+   else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
       printf( "types not match on greater operation\n" );
       exit( 1 );
@@ -1027,7 +1031,7 @@ void GreaterEqual( void )
             hb_isMessage( stack.pPos - 2, ">=" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
 
-   else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
+   else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
       printf( "types not match on greaterequal operation\n" );
       exit( 1 );
@@ -1039,11 +1043,12 @@ void Inc( void )
    double dNumber;
    LONG lDate;
    PHB_ITEM pError;
+   WORD wDec;
 
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
-      dNumber = PopDouble();
-      PushNumber( ++dNumber, stack.pPos->wDec );
+      dNumber = PopDouble( &wDec );
+      PushNumber( ++dNumber, wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
@@ -1063,23 +1068,23 @@ void ItemRelease( PHB_ITEM pItem )
 {
    if( IS_STRING( pItem ) )
    {
-      if( pItem->value.szText )
+      if( pItem->item.asString.value )
       {
-         hb_xfree( pItem->value.szText );
-         pItem->value.szText = 0;
+         hb_xfree( pItem->item.asString.value );
+         pItem->item.asString.value = NULL;
       }
-      pItem->wLength = 0;
+      pItem->item.asString.length = 0;
    }
-   else if( IS_ARRAY( pItem ) && pItem->value.pBaseArray )
+   else if( IS_ARRAY( pItem ) && pItem->item.asArray.value )
    {
-      if( --( ( PBASEARRAY ) pItem->value.pBaseArray )->wHolders == 0 )
+      if( --( pItem->item.asArray.value )->wHolders == 0 )
          hb_arrayRelease( pItem );
    }
    else if( IS_BLOCK( pItem ) )
    {
-      CodeblockDelete( ( PCODEBLOCK ) pItem->value.pCodeblock );
+      CodeblockDelete( pItem->item.asBlock.value );
    }
-   pItem->wType = IT_NIL;
+   pItem->type = IT_NIL;
 }
 
 void Instring( void )
@@ -1091,9 +1096,9 @@ void Instring( void )
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      for( iResult = 0, ul = 0; !iResult && ul < (ULONG) pItem1->wLength; ul++ )
-         iResult = hb_strAt( pItem1->value.szText + ul, 1,
-                             pItem2->value.szText, pItem2->wLength );
+      for( iResult = 0, ul = 0; !iResult && ul < pItem1->item.asString.length; ul++ )
+         iResult = hb_strAt( pItem1->item.asString.value + ul, 1,
+                             pItem2->item.asString.value, pItem2->item.asString.length );
       StackPop();
       StackPop();
       PushLogical( iResult == 0 ? 0 : 1 );
@@ -1122,13 +1127,13 @@ void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    if( IS_STRING( pSource ) )
    {
-      pDest->value.szText = ( char * ) hb_xgrab( pSource->wLength + 1 );
-      memcpy( pDest->value.szText, pSource->value.szText, pSource->wLength );
-      pDest->value.szText[ pSource->wLength ] = 0;
+      pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
+      memcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
+      pDest->item.asString.value[ pSource->item.asString.length ] = 0;
    }
 
    else if( IS_ARRAY( pSource ) )
-      ( ( PBASEARRAY ) pSource->value.pBaseArray )->wHolders++;
+      ( pSource->item.asArray.value )->wHolders++;
 
    else if( IS_BLOCK( pSource ) )
    {
@@ -1176,7 +1181,7 @@ void Less( void )
             hb_isMessage( stack.pPos - 2, "<" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
 
-   else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
+   else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
       printf( "types not match on less operation\n" );
       exit( 1 );
@@ -1223,7 +1228,7 @@ void LessEqual( void )
             hb_isMessage( stack.pPos - 2, "<=" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
 
-   else if( ( stack.pPos - 2 )->wType != ( stack.pPos - 1 )->wType )
+   else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
       printf( "types not match on lessequal operation\n" );
       exit( 1 );
@@ -1234,29 +1239,29 @@ void Message( PSYMBOL pSymMsg ) /* sends a message to an object */
 {
    ItemCopy( stack.pPos, stack.pPos - 1 ); /* moves the object forward */
    ItemRelease( stack.pPos - 1 );
-   ( stack.pPos - 1 )->wType = IT_SYMBOL;
-   ( stack.pPos - 1 )->value.pSymbol = pSymMsg;
-   ( stack.pPos - 1 )->wBase = ( stack.pPos - 1 ) - stack.pItems;
+   ( stack.pPos - 1 )->type = IT_SYMBOL;
+   ( stack.pPos - 1 )->item.asSymbol.value = pSymMsg;
+   ( stack.pPos - 1 )->item.asSymbol.stackbase = ( stack.pPos - 1 ) - stack.pItems;
    StackPush();
    HB_DEBUG2( "Message: %s\n", pSymMsg->szName );
 }
 
 void Line( WORD wLine )
 {
-   stack.pBase->wLine = wLine;
+   stack.pBase->item.asSymbol.lineno = wLine;
    HB_DEBUG( "line\n" );
 }
 
 void Negate( void )
 {
    if( IS_INTEGER( stack.pPos - 1 ) )
-      ( stack.pPos - 1 )->value.iNumber = -( stack.pPos - 1 )->value.iNumber;
+      ( stack.pPos - 1 )->item.asInteger.value = -( stack.pPos - 1 )->item.asInteger.value;
 
    else if( IS_LONG( stack.pPos - 1 ) )
-      ( stack.pPos - 1 )->value.lNumber = -( stack.pPos - 1 )->value.lNumber;
+      ( stack.pPos - 1 )->item.asLong.value = -( stack.pPos - 1 )->item.asLong.value;
 
    else if( IS_DOUBLE( stack.pPos - 1 ) )
-      ( stack.pPos - 1 )->value.dNumber = -( stack.pPos - 1 )->value.dNumber;
+      ( stack.pPos - 1 )->item.asDouble.value = -( stack.pPos - 1 )->item.asDouble.value;
 }
 
 void Not( void )
@@ -1264,7 +1269,7 @@ void Not( void )
    PHB_ITEM pItem = stack.pPos - 1;
 
    if( IS_LOGICAL( pItem ) )
-      pItem->value.iLogical = ! pItem->value.iLogical;
+      pItem->item.asLogical.value = ! pItem->item.asLogical.value;
    else
       ; /* TODO: Raise an error here ? */
 }
@@ -1274,6 +1279,7 @@ void NotEqual( void )
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
    int i;
+   WORD wDec;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -1298,7 +1304,7 @@ void NotEqual( void )
    }
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
-      PushLogical( PopDouble() != PopDouble() );
+      PushLogical( PopDouble( &wDec ) != PopDouble( &wDec ) );
 
    else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
       PushLogical( PopLogical() != PopLogical() );
@@ -1306,7 +1312,7 @@ void NotEqual( void )
    else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "!=" ) )
       OperatorCall( pItem1, pItem2, "!=" );
 
-   else if( pItem1->wType != pItem2->wType )
+   else if( pItem1->type != pItem2->type )
    {
       printf( "types not match on equal operation\n" );
       exit( 1 );
@@ -1324,10 +1330,8 @@ void Minus( void )
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
       WORD wDec2, wDec1;
-      dNumber2 = PopNumber();
-      wDec2 = stack.pPos->wDec;
-      dNumber1 = PopNumber();
-      wDec1 = stack.pPos->wDec;
+      dNumber2 = PopDouble( &wDec2 );
+      dNumber1 = PopDouble( &wDec1 );
       PushNumber( dNumber1 - dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
    }
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
@@ -1351,19 +1355,18 @@ void Minus( void )
 
 void Modulus( void )
 {
-   double d2 = PopDouble();
-   double d1 = PopDouble();
+   WORD wDec1, wDec2;
+   double d2 = PopDouble( &wDec2 );
+   double d1 = PopDouble( &wDec1 );
 
-   PushNumber( ( long ) d1 % ( long ) d2, hb_set.HB_SET_DECIMALS );
+   PushNumber( ( long ) d1 % ( long ) d2, (wDec1>wDec2) ? wDec1 : wDec2 );
 }
 
 void Mult( void )
 {
    WORD wDec2, wDec1;
-   double d1, d2 = PopDouble();
-   wDec2 = stack.pPos->wDec;
-   d1 = PopDouble();
-   wDec1 = stack.pPos->wDec;
+   double d2 = PopDouble( &wDec2 );
+   double d1 = PopDouble( &wDec1 );
 
    PushNumber( d1 * d2, wDec1 + wDec2 );
 }
@@ -1385,7 +1388,7 @@ void Or( void )
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
    {
-      iResult = pItem1->value.iLogical || pItem2->value.iLogical;
+      iResult = pItem1->item.asLogical.value || pItem2->item.asLogical.value;
       StackPop();
       StackPop();
       PushLogical( iResult );
@@ -1408,15 +1411,15 @@ void Plus( void )
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      pItem1->value.szText = (char*)hb_xrealloc( pItem1->value.szText, pItem1->wLength + pItem2->wLength + 1 );
-      memcpy( pItem1->value.szText + pItem1->wLength,
-              pItem2->value.szText, pItem2->wLength );
-      pItem1->wLength += pItem2->wLength;
-      pItem1->value.szText[ pItem1->wLength ] = 0;
-      if( pItem2->value.szText )
+      pItem1->item.asString.value = (char*)hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
+      memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
+              pItem2->item.asString.value, pItem2->item.asString.length );
+      pItem1->item.asString.length += pItem2->item.asString.length;
+      pItem1->item.asString.value[ pItem1->item.asString.length ] = 0;
+      if( pItem2->item.asString.value )
       {
-         hb_xfree( pItem2->value.szText );
-         pItem2->value.szText = 0;
+         hb_xfree( pItem2->item.asString.value );
+         pItem2->item.asString.value = NULL;
       }
       StackPop();
       return;
@@ -1425,12 +1428,10 @@ void Plus( void )
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
       WORD wDec2, wDec1;
-      dNumber2 = PopDouble();
-      wDec2 = stack.pPos->wDec;
-      dNumber1 = PopDouble();
-      wDec1 = stack.pPos->wDec;
+      dNumber2 = PopDouble( &wDec2 );
+      dNumber1 = PopDouble( &wDec1 );
 
-      PushNumber( dNumber1 + dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
+      PushNumber( dNumber1 + dNumber2, (wDec1>wDec2) ? wDec1 : wDec2 );
    }
 
    else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
@@ -1442,7 +1443,8 @@ void Plus( void )
 
    else if( IS_DATE( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
-      dNumber2 = PopDouble();
+      WORD wDec;
+      dNumber2 = PopDouble( &wDec );
       lDate1 = PopDate();
       PushDate( lDate1 + dNumber2 );
    }
@@ -1459,7 +1461,7 @@ long PopDate( void )
    StackPop();
 
    if( IS_DATE( stack.pPos ) )
-      return stack.pPos->value.lDate;
+      return stack.pPos->item.asDate.value;
    else
    {
       printf( "incorrect item value trying to Pop a date value\n" );
@@ -1473,41 +1475,44 @@ void PopDefStat( WORD wStatic )     /* Pops a default value to a STATIC */
    PHB_ITEM pStatic;
 
    StackPop();
-   pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems + stack.iStatics +
+   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics +
              wStatic - 1;
 
    if( IS_BYREF( pStatic ) )
    {
-      if( ( stack.pItems + pStatic->value.wItem )->wType == IT_NIL )
+      if( ( stack.pItems + pStatic->item.asRefer.value )->type == IT_NIL )
                                     /* Only initialize when NIL */
-         ItemCopy( stack.pItems + pStatic->value.wItem, stack.pPos );
+         ItemCopy( stack.pItems + pStatic->item.asRefer.value, stack.pPos );
    }
    else
-      if( pStatic->wType == IT_NIL ) /* Only initialize when NIL */
+      if( pStatic->type == IT_NIL ) /* Only initialize when NIL */
          ItemCopy( pStatic, stack.pPos );
 
    ItemRelease( stack.pPos );
    HB_DEBUG( "PopDefStat\n" );
 }
 
-double PopDouble( void )
+double PopDouble( WORD *pwDec )
 {
    double d;
 
    StackPop();
 
-   switch( stack.pPos->wType & ~IT_BYREF )
+   switch( stack.pPos->type & ~IT_BYREF )
    {
       case IT_INTEGER:
-           d = stack.pPos->value.iNumber;
+           d = stack.pPos->item.asInteger.value;
+           *pwDec =0;
            break;
 
       case IT_LONG:
-           d = stack.pPos->value.lNumber;
+           d = stack.pPos->item.asLong.value;
+           *pwDec =0;
            break;
 
       case IT_DOUBLE:
-           d = stack.pPos->value.dNumber;
+           d = stack.pPos->item.asDouble.value;
+           *pwDec =stack.pPos->item.asDouble.decimal;
            break;
 
       default:
@@ -1531,11 +1536,11 @@ void PopLocal( SHORT iLocal )
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
       {
-        if( pLocal->value.iNumber >= 0)
-          ItemCopy( stack.pItems + pLocal->value.wItem, stack.pPos );
+        if( pLocal->item.asRefer.value >= 0)
+          ItemCopy( stack.pItems + pLocal->item.asRefer.value, stack.pPos );
         else
           /* local variable referenced in a codeblock */
-          ItemCopy( CodeblockGetVar( stack.pItems +pLocal->wBase +1, pLocal->value.wItem ), stack.pPos );
+          ItemCopy( CodeblockGetVar( stack.pItems +pLocal->item.asRefer.stackbase +1, pLocal->item.asRefer.value ), stack.pPos );
       }
       else
           ItemCopy( pLocal, stack.pPos );
@@ -1555,7 +1560,7 @@ int PopLogical( void )
    StackPop();
 
    if( IS_LOGICAL( stack.pPos ) )
-      return stack.pPos->value.iLogical;
+      return stack.pPos->item.asLogical.value;
    else
    {
       pError = hb_errNew();
@@ -1573,18 +1578,18 @@ double PopNumber( void )
 
    StackPop();
 
-   switch( pItem->wType & ~IT_BYREF )
+   switch( pItem->type & ~IT_BYREF )
    {
       case IT_INTEGER:
-           dNumber = ( double ) pItem->value.iNumber;
+           dNumber = ( double ) pItem->item.asInteger.value;
            break;
 
       case IT_LONG:
-           dNumber = ( double ) pItem->value.lNumber;
+           dNumber = ( double ) pItem->item.asLong.value;
            break;
 
       case IT_DOUBLE:
-           dNumber = pItem->value.dNumber;
+           dNumber = pItem->item.asDouble.value;
            break;
 
       default:
@@ -1600,11 +1605,11 @@ void PopStatic( WORD wStatic )
    PHB_ITEM pStatic;
 
    StackPop();
-   pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems + stack.iStatics +
+   pStatic = aStatics.item.asArray.value->pItems + stack.iStatics +
              wStatic - 1;
 
    if( IS_BYREF( pStatic ) )
-      ItemCopy( stack.pItems + pStatic->value.wItem, stack.pPos );
+      ItemCopy( stack.pItems + pStatic->item.asRefer.value, stack.pPos );
    else
       ItemCopy( pStatic, stack.pPos );
 
@@ -1614,17 +1619,18 @@ void PopStatic( WORD wStatic )
 
 void Power( void )
 {
-   double d2 = PopDouble();
-   double d1 = PopDouble();
+   WORD wDec1, wDec2;
+   double d2 = PopDouble( &wDec2 );
+   double d1 = PopDouble( &wDec1 );
 
-   PushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
+   PushNumber( pow( d1, d2 ), (wDec1>wDec2) ? wDec1 : wDec2 );
 }
 
 void PushLogical( int iTrueFalse )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType    = IT_LOGICAL;
-   stack.pPos->value.iLogical = iTrueFalse;
+   stack.pPos->type    = IT_LOGICAL;
+   stack.pPos->item.asLogical.value = iTrueFalse;
    StackPush();
    HB_DEBUG( "PushLogical\n" );
 }
@@ -1639,18 +1645,18 @@ void PushLocal( SHORT iLocal )
       pLocal = stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
       {
-        if( pLocal->value.iNumber >= 0 )
-         ItemCopy( stack.pPos, stack.pItems + pLocal->value.wItem );
+        if( pLocal->item.asRefer.value >= 0 )
+         ItemCopy( stack.pPos, stack.pItems + pLocal->item.asRefer.value );
         else
          /* local variable referenced in a codeblock */
-         ItemCopy( stack.pPos, CodeblockGetVar( stack.pItems + pLocal->wBase +1, pLocal->value.wItem ) );
+         ItemCopy( stack.pPos, CodeblockGetVar( stack.pItems + pLocal->item.asRefer.stackbase +1, pLocal->item.asRefer.value) );
       }
       else
          ItemCopy( stack.pPos, pLocal );
    }
    else
       /* local variable referenced in a codeblock */
-     ItemCopy( stack.pPos, CodeblockGetVar( stack.pBase + 1, iLocal ) );
+     ItemCopy( stack.pPos, CodeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
    StackPush();
    HB_DEBUG2( "PushLocal %i\n", iLocal );
 }
@@ -1658,16 +1664,17 @@ void PushLocal( SHORT iLocal )
 void PushLocalByRef( SHORT iLocal )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType = IT_BYREF;
+   stack.pPos->type = IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    if( iLocal >= 0 )
       /* local variable or local parameter */
-      stack.pPos->value.wItem = stack.pBase + 1 + iLocal - stack.pItems;
+      /* store the position of referenced local variable on the eval stack */
+      stack.pPos->item.asRefer.value = stack.pBase + 1 + iLocal - stack.pItems;
    else
    {
       /* local variable referenced in a codeblock */
-      stack.pPos->value.iNumber = iLocal;
-      stack.pPos->wBase = stack.pBase - stack.pItems;
+      stack.pPos->item.asRefer.value = iLocal;
+      stack.pPos->item.asRefer.stackbase = stack.pBase - stack.pItems;
    }
 
    StackPush();
@@ -1698,7 +1705,7 @@ void PushNumber( double dNumber, WORD wDec )
 
 void PushStatic( WORD wStatic )
 {
-   ItemCopy( stack.pPos, ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
+   ItemCopy( stack.pPos, aStatics.item.asArray.value->pItems +
              stack.iStatics + wStatic - 1 );
    StackPush();
    HB_DEBUG2( "PushStatic %i\n", wStatic );
@@ -1712,9 +1719,9 @@ void PushString( char * szText, WORD wLength )
    szTemp[ wLength ] = 0;
 
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_STRING;
-   stack.pPos->wLength = wLength;
-   stack.pPos->value.szText  = szTemp;
+   stack.pPos->type                 = IT_STRING;
+   stack.pPos->item.asString.length = wLength;
+   stack.pPos->item.asString.value  = szTemp;
    StackPush();
    HB_DEBUG( "PushString\n" );
 }
@@ -1722,9 +1729,9 @@ void PushString( char * szText, WORD wLength )
 void PushSymbol( PSYMBOL pSym )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_SYMBOL;
-   stack.pPos->value.pSymbol = pSym;
-   stack.pPos->wBase   = stack.pPos - stack.pItems;
+   stack.pPos->type   = IT_SYMBOL;
+   stack.pPos->item.asSymbol.value = pSym;
+   stack.pPos->item.asSymbol.stackbase   = stack.pPos - stack.pItems;
    StackPush();
    HB_DEBUG2( "PushSymbol: %s\n", pSym->szName );
 }
@@ -1739,15 +1746,15 @@ void Push( PHB_ITEM pItem )
 void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_BLOCK;
-   stack.pPos->value.pCodeblock = CodeblockNew( pCode, wSize, pSymbols,
+   stack.pPos->type   = IT_BLOCK;
+   stack.pPos->item.asBlock.value = CodeblockNew( pCode, wSize, pSymbols,
       stack.iStatics, stack.pBase - stack.pItems );
    /* store the stack base of function where the codeblock was defined */
-   stack.pPos->wBase   = stack.pBase - stack.pItems;
+   stack.pPos->item.asBlock.stackbase = stack.pBase - stack.pItems;
    /* store the number of expected parameters */
-   stack.pPos->wParams = wParam;
+   stack.pPos->item.asBlock.paramcnt = wParam;
    /* store the line number where the codeblock was defined */
-   stack.pPos->wLine   = stack.pBase->wLine;
+   stack.pPos->item.asBlock.lineno   = stack.pBase->item.asSymbol.lineno;
    StackPush();
    HB_DEBUG( "PushBlock\n" );
 }
@@ -1755,8 +1762,8 @@ void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols )
 void PushDate( LONG lDate )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_DATE;
-   stack.pPos->value.lDate = lDate;
+   stack.pPos->type   = IT_DATE;
+   stack.pPos->item.asDate.value = lDate;
    StackPush();
    HB_DEBUG( "PushDate\n" );
 }
@@ -1764,11 +1771,11 @@ void PushDate( LONG lDate )
 void PushDouble( double dNumber, WORD wDec )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_DOUBLE;
-   stack.pPos->value.dNumber = dNumber;
-   if( dNumber >= 10000000000.0 ) stack.pPos->wLength = 20;
-   else stack.pPos->wLength = 10;
-   stack.pPos->wDec = (wDec > 9) ? 9 : wDec;
+   stack.pPos->type   = IT_DOUBLE;
+   stack.pPos->item.asDouble.value = dNumber;
+   if( dNumber >= 10000000000.0 ) stack.pPos->item.asDouble.length = 20;
+   else stack.pPos->item.asDouble.length = 10;
+   stack.pPos->item.asDouble.decimal = (wDec > 9) ? 9 : wDec;
    StackPush();
    HB_DEBUG( "PushDouble\n" );
 }
@@ -1776,10 +1783,10 @@ void PushDouble( double dNumber, WORD wDec )
 void PushInteger( int iNumber )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType = IT_INTEGER;
-   stack.pPos->value.iNumber = iNumber;
-   stack.pPos->wLength = 10;
-   stack.pPos->wDec    = 0;
+   stack.pPos->type = IT_INTEGER;
+   stack.pPos->item.asInteger.value   = iNumber;
+   stack.pPos->item.asInteger.length  = 10;
+   stack.pPos->item.asInteger.decimal = 0;
    StackPush();
    HB_DEBUG( "PushInteger\n" );
 }
@@ -1787,10 +1794,10 @@ void PushInteger( int iNumber )
 void PushLong( long lNumber )
 {
    ItemRelease( stack.pPos );
-   stack.pPos->wType   = IT_LONG;
-   stack.pPos->value.lNumber = lNumber;
-   stack.pPos->wLength = 10;
-   stack.pPos->wDec    = 0;
+   stack.pPos->type   = IT_LONG;
+   stack.pPos->item.asLong.value   = lNumber;
+   stack.pPos->item.asLong.length  = 10;
+   stack.pPos->item.asLong.decimal = 0;
    StackPush();
    HB_DEBUG( "PushLong\n" );
 }
@@ -1799,8 +1806,8 @@ void RetValue( void )
 {
    StackPop();
    ItemCopy( &stack.Return, stack.pPos );
-   if( stack.Return.wType == IT_BLOCK )
-      CodeblockDetach( (PCODEBLOCK)stack.Return.value.pCodeblock );
+   if( stack.Return.type == IT_BLOCK )
+      CodeblockDetach( stack.Return.item.asBlock.value );
    HB_DEBUG( "RetValue\n" );
 }
 
@@ -1850,7 +1857,7 @@ void StackPush( void )
 
    /* now, push it: */
    stack.pPos++;
-   stack.pPos->wType = IT_NIL;
+   stack.pPos->type = IT_NIL;
    return;
 }
 
@@ -1869,14 +1876,14 @@ void StackInit( void )
 
    for( p = stack.pBase; p <= stack.pPos; p++ )
    {
-      switch( p->wType )
+      switch( p->type )
       {
          case IT_NIL:
               printf( "NIL " );
               break;
 
          case IT_ARRAY:
-              if( ( ( PBASEARRAY ) p->value.pBaseArray )->wClass )
+              if( p->item.asArray.value->wClass )
                  printf( "OBJECT " );
               else
                  printf( "ARRAY " );
@@ -1895,14 +1902,15 @@ void StackInit( void )
               break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL[%i] ", p->value.iLogical );
+              printf( "LOGICAL[%i] ", p->item.asLogical.value );
               break;
 
          case IT_LONG:
+              printf( "LONG" );
               break;
 
          case IT_INTEGER:
-              printf( "INTEGER[%i] ", p->value.iNumber );
+              printf( "INTEGER[%i] ", p->item.asInteger.value );
               break;
 
          case IT_STRING:
@@ -1910,11 +1918,11 @@ void StackInit( void )
               break;
 
          case IT_SYMBOL:
-              printf( "SYMBOL(%s) ", p->value.pSymbol->szName );
+              printf( "SYMBOL(%s) ", p->item.asSymbol.value->szName );
               break;
 
          default:
-              printf( "UNKNOWN[%i] ", p->wType );
+              printf( "UNKNOWN[%i] ", p->type );
               break;
       }
    }
@@ -2069,14 +2077,14 @@ HARBOUR HB_LEN( void )
    {
       pItem = hb_param( 1, IT_ANY );
 
-      switch( pItem->wType )
+      switch( pItem->type )
       {
          case IT_ARRAY:
-              hb_retnl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen );
+              hb_retnl( pItem->item.asArray.value->ulLen );
               break;
 
          case IT_STRING:
-              hb_retnl( pItem->wLength );
+              hb_retnl( pItem->item.asString.length );
               break;
 
          default:
@@ -2094,10 +2102,10 @@ HARBOUR HB_EMPTY(void)
 
    if( pItem )
    {
-      switch( pItem->wType & ~IT_BYREF )
+      switch( pItem->type & ~IT_BYREF )
       {
          case IT_ARRAY:
-              hb_retl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen == 0 );
+              hb_retl( pItem->item.asArray.value->ulLen == 0 );
               break;
 
          case IT_STRING:
@@ -2146,10 +2154,10 @@ HARBOUR HB_VALTYPE( void )
    {
       pItem = hb_param( 1, IT_ANY );
 
-      switch( pItem->wType & ~IT_BYREF )
+      switch( pItem->type & ~IT_BYREF )
       {
          case IT_ARRAY:
-              if( ( ( PBASEARRAY ) pItem->value.pBaseArray )->wClass )
+              if( pItem->item.asArray.value->wClass )
                  hb_retc( "O" );  /* it is an object */
               else
                  hb_retc( "A" );
@@ -2192,7 +2200,7 @@ HARBOUR HB_ERRORBLOCK(void)
    HB_ITEM oldError;
    PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
 
-   oldError.wType = IT_NIL;
+   oldError.type = IT_NIL;
    ItemCopy( &oldError, &errorBlock );
 
    if( pNewErrorBlock )
@@ -2208,10 +2216,10 @@ HARBOUR HB_PROCNAME(void)
    PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
-      pBase = stack.pItems + pBase->wBase;
+      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
 
    if( ( iLevel == -1 ) )
-      hb_retc( pBase->value.pSymbol->szName );
+      hb_retc( pBase->item.asSymbol.value->szName );
    else
       hb_retc( "" );
 }
@@ -2222,10 +2230,10 @@ HARBOUR HB_PROCLINE(void)
    PHB_ITEM pBase = stack.pBase;
 
    while( ( iLevel-- > 0 ) && pBase != stack.pItems )
-      pBase = stack.pItems + pBase->wBase;
+      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
 
    if( iLevel == -1 )
-      hb_retni( pBase->wLine );
+      hb_retni( pBase->item.asSymbol.lineno );
    else
       hb_retni( 0 );
 }
@@ -2247,8 +2255,8 @@ HARBOUR HB_ERRORLEVEL(void)
 
 HARBOUR HB_PCOUNT(void)
 {
-   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
-   WORD  wRet  = pBase->wParams;                /* Skip current function     */
+   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+   WORD  wRet  = pBase->item.asSymbol.paramcnt;                /* Skip current function     */
 
    hb_retni( wRet );
 }
@@ -2256,10 +2264,10 @@ HARBOUR HB_PCOUNT(void)
 HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )         */
 {
    WORD  wParam = hb_parni( 1 );                  /* Get parameter            */
-   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
 
-   if( wParam && wParam <= pBase->wParams )     /* Valid number             */
+   if( wParam && wParam <= pBase->item.asSymbol.paramcnt )     /* Valid number             */
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
