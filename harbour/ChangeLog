@@ -7,6 +7,33 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/common/hbfhnd.c
+     ! was not working for bcc32 since last change. fixed
+     Reported by Lorenzo Fiorini
+
+2002-01-21 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * config/dos/bcc16.cf
+    ! Force a minimum symbol length of 48 characters, due to the length
+      of some the class member function names in source/rtl/profiler.prg.
+    ! Added the library name conversion to remove the LIB prefix in one
+      spot that I had missed the first time around.
+    ! LINKLIB contents were being replaced instead of accumulating, with
+      the result that no CONTRIBS libraries were included.
+  * contrib/libgt/make_b32.bat
+  * contrib/libgt/make_vc.bat
+    ! Corrected batch files to move the library using the corrected name.
+
+2002-01-21 23:24 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbextern.ch
+     * minor fix, hbrun now works better ( thanks to Viktor Szakats ).
+
+2002-01-21 17:51 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+
+     * hb_stackTopItem() use execution speed optimizations on:
+
+       HB_P_TRUE
+       HB_P_FALSE
        HB_P_ONE
        HB_P_ZERO
        HB_P_PUSHBYTE
