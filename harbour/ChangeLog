@@ -31,6 +31,10 @@
    * source/rtl/gtapi.c
      * Cast
 
+   * source/common/hbver.h
+     % #include <os2.h> is always included by hbdefs.h, so it's not needed
+       to add it explicitly. Please test it anyway.
+
 20000402-21:40 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
 
    * utils/hbdoc/MakeFile

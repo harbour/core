@@ -34,6 +34,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 
 HB_FUNC( TYPE )
