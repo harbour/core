@@ -595,7 +595,9 @@ HARBOUR FREADSTR()
            readed=0; ch[0]=1;
            while( readed < bytes )
            {
+                 last_error = 0;
                  nRead = read(handle,ch,1);
+                 last_error = errno;
                  if( nRead < 1 || ch[0] == 0 )
                         break;
                  buffer[readed]=ch[0];
