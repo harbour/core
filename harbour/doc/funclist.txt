@@ -166,7 +166,7 @@ MEMOTRAN                ;R;
 MEMOWRIT                ;R;
 MEMVARBLOCK             ;R;
 MIN                     ;R;
-MLCOUNT                 ;N;
+MLCOUNT                 ;R;
 MLCTOPOS                ;N;
 MLPOS                   ;N;
 MOD                     ;R;

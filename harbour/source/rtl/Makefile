@@ -27,6 +27,7 @@ C_SOURCES=\
         math.c \
         memofile.c \
         memvars.c \
+        mlcount.c \
         mouseapi.c \
         mtran.c \
         set.c \

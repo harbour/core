@@ -1,3 +1,12 @@
+19991004-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
+  + source/rtl/mlcount.c
+    source/rtl/Makefile
+    doc/funclist.txt
+    + MLCOUNT() added 
+      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+  - source/runner/stdalone/runner.prg
+    - Removed (now for sure)
+
 19991004-16:25 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/runner/stdalone/runner.c -> hbrun.c
     source/runner/stdalone/Makefile
