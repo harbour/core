@@ -300,7 +300,11 @@ HARBOUR HB_DIRECTORY( void )
          if( arg2_it && hb_parclen(2) >= 1)
          {
             strcpy(string, hb_parc(2));
-            while (*pos != '\0') *pos = toupper(*pos);
+            while (*pos != '\0')
+            {
+               *pos = toupper(*pos);
+               pos++;
+            }
             pos = strchr(string,*aatrib);
          }
          else
