@@ -17,7 +17,7 @@
       pass.
     - Removed NIL:classname tests temporarily.
   * include/extend.h
-    ! IT_MEMO constand fixed (it was equal with IT_NIL).
+    ! IT_MEMO constant fixed (it was equal with IT_NIL).
     + IS_MEMO() macro added.
   * source/rtl/valtype.c
     source/rtl/len.c
