@@ -1,3 +1,26 @@
+2000-12-29 01:30 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rtl/memoline.c
+      Added OS_UNIX_COMPATIBLE test for single-byte EOL markers
+         (with apologies to Dave: This probably is not the best way to
+          handle this, It would be better to establish some constants for
+          the target OS EOL string and its length...)
+
+      NOTE: this may not be desirable if a harbour Unix app is manipulating
+      strings with CRLF EOL markers !!!!!!!!!!!!!! Comments? Opinions?
+
+   * contrib/rdd_ads/ads1.c
+      * tweaked return values for fields at eof/bof
+      * added DBI_SHARED option to dbInfo
+      * memo file creation obeys SET(_SET_MBLOCKSIZE)
+      * NOTE from ace.hlp:
+            For ADS_CDX, values are in the range 1-1024.
+            If the value is in the range 1-32, then that value is multiplied by 512 to
+            get the actual block size.
+
+   * harbour/source/rdd/workarea.c
+      * fixed dbEval to not Go Top when a While expression is passed
+
+
 2000-12-28 20:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      * Minor formatting.

@@ -45,6 +45,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 #include "rddads.h"
+#include "hbset.h"
 #include <ctype.h>
 
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
@@ -204,7 +205,11 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
 
    if( pArea->fBof && !pArea->fEof )
    {
-      AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 );
+      if( AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 ) ==
+               AE_NO_CURRENT_RECORD )
+         pArea->fEof = TRUE;
+         /* empty data set trying to skip back to first record. ADS will set eof to False when hit Bof even if there are no records */
+
       return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
    }else
       return SUCCESS;
@@ -479,13 +484,8 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
          AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
          if ( pArea->fBof )             /* might also be true in an empty data set, but this is probably our problem situation so move again */
          {
-            //pArea->fTop = FALSE;
             pArea->fBottom = TRUE;
             AdsGotoBottom  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
-//            if ( lToSkip < -1 )
-//            {
-//               AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, (lToSkip + 1) );
-//            }
          }
       }else
          AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lUnit );
@@ -618,6 +618,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
    UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
    UNSIGNED32 pulLength;
+   BOOL bOnPhantom = FALSE;             /* empty record set may have bof true but eof false and recno 0 */
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -627,17 +628,25 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    pField = pArea->lpFields + uiIndex - 1;
    if( pArea->fEof )
    {
+      /* -----------------12/15/00 11:43pm-----------------
+      TODO: The following seems inefficient to clear the buffer this way for every field
+       when retrieving values at eof.
+       Would some variation of memset be faster?
+       If pBuffer is initialized to pRecord above, if pRecord were always cleared
+       at EOF then this would be unnecessary here.
+       --------------------------------------------------*/
       int i;
       for( i=0; i < (int) pArea->maxFieldLen; i++ )
          *( pBuffer+i ) = ' ';
       *( pBuffer + ( int ) pField->uiLen ) = '\0';
+      bOnPhantom = TRUE;
    }
 
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
    switch( pField->uiType )
    {
       case HB_IT_STRING:
-         if( !pArea->fEof )
+         if( !bOnPhantom )
          {
             pulLength = pArea->maxFieldLen;
             AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
@@ -649,7 +658,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 //         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
 //                 pField->uiLen );
 //         szBuffer[ pField->uiLen ] = 0;
-         if( !pArea->fEof )
+         if( !bOnPhantom )
          {
             pulLength = pArea->maxFieldLen;
             AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
@@ -668,7 +677,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             UNSIGNED16 pusLen = 10;
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
-            if( !pArea->fEof )
+            if( !bOnPhantom )
             {
                pulLength = pArea->maxFieldLen;
                AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
@@ -681,7 +690,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_LOGICAL:
          {
             UNSIGNED16 pbValue = FALSE;
-            if( !pArea->fEof )
+            if( !bOnPhantom )
             {
                AdsGetLogical( pArea->hTable, szName, &pbValue );
             }
@@ -694,7 +703,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
            UNSIGNED8 *pucBuf;
            UNSIGNED32 pulLen;
 
-           if ( pArea->fEof ||
+           if ( bOnPhantom ||
                 AdsGetMemoLength( pArea->hTable, szName, &pulLen ) == AE_NO_CURRENT_RECORD )
                hb_itemPutC( pItem, "" );
            else
@@ -975,7 +984,9 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
      pField++;
    }
    uRetVal = AdsCreateTable( 0, pCreateInfo->abName, NULL, adsFileType, adsCharType,
-                    adsLockType, adsRights, ADS_DEFAULT, ucfieldDefs, &hTable);
+                    adsLockType, adsRights,
+                    hb_set.HB_SET_MBLOCKSIZE,
+                    ucfieldDefs, &hTable);
 
    hb_xfree(ucfieldDefs);
    if( uRetVal != AE_SUCCESS )
@@ -995,12 +1006,16 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( uiIndex )
    {
       case DBI_DBFILTER:
-//         adsFilterText( pArea, pItem );
+//  XXX must have locally unless server can't handle it...   adsFilterText( pArea, pItem );
          break;
 
       case DBI_ISDBF:
       case DBI_CANPUTREC:
          hb_itemPutL( pItem, TRUE );
+         break;
+
+      case DBI_SHARED:
+         hb_itemPutL( pItem, pArea->fShared );
          break;
 
       case DBI_TABLEEXT:

@@ -33,19 +33,12 @@
  *
  */
 
-/*
-   TO-DO (added by BH):
-   Currently assumes CRLF for EndOfLine, which won't work for Unix text files.
-   Should do something like:
-
 #if defined(OS_UNIX_COMPATIBLE)
    #define CRLF_LEN 1
 #else
    #define CRLF_LEN 2
 #endif
 
-And then change all the '2' values with CRLF_LEN.
-*/
 
 #include "hbapi.h"
 
@@ -84,7 +77,7 @@ HB_FUNC( MEMOLINE )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            ulLineEnd = ( ulPos >= 2 ) ? ( ulPos - 2 ) : ulLineBegin;
+            ulLineEnd = ( ulPos >= CRLF_LEN ) ? ( ulPos - CRLF_LEN ) : ulLineBegin;
             ulLines++;
             if( ulLines < ulLineNumber )
             {
@@ -152,7 +145,7 @@ HB_FUNC( MEMOLINE )
 
       memset( pszLine, ' ', ulLineLength );
 
-      if ( ulLineEnd > ulLineBegin )
+      if ( ulLineEnd >= ulLineBegin )
       {
          for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
          {
