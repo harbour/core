@@ -11,9 +11,8 @@
  *  User programs should never call this layer directly!
  */
 
-#define INCL_KBD
 #define INCL_VIO
-#define INCL_DOSPROCESS
+#define INCL_NOPMAPI
 
 #include <string.h>
 #include <os2.h>

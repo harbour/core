@@ -455,6 +455,62 @@ char hb_gt_Row(void)
 #endif
 }
 
+void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
+{
+   USHORT uiRow, uiCol, uiSize;
+   int iLength = ( uiRight - uiLeft ) + 1;
+   int iCount, iColOld, iColNew, iColSize;
+
+   hb_gtGetPos( &uiRow, &uiCol );
+
+   if( hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize ) == 0 )
+   {
+      char * fpBlank = ( char * ) hb_xgrab( iLength );
+      char * fpBuff = ( char * ) hb_xgrab( iLength * 2 );
+      if( fpBlank && fpBuff )
+      {
+         memset( fpBlank, ' ', iLength );
+
+         iColOld = iColNew = uiLeft;
+         if( iCols >= 0 )
+         {
+            iColOld += iCols;
+            iColSize = uiRight - uiLeft;
+            iColSize -= iCols;
+         }
+         else
+         {
+            iColNew -= iCols;
+            iColSize = uiRight - uiLeft;
+            iColSize += iCols;
+         }
+
+         for( iCount = ( iRows >= 0 ? uiTop : uiBottom );
+              ( iRows >= 0 ? iCount <= uiBottom : iCount >= uiTop );
+              ( iRows >= 0 ? iCount++ : iCount-- ) )
+         {
+            int iRowPos = iCount + iRows;
+
+            /* Blank the scroll region in the current row */
+            hb_gt_Puts( iCount, uiLeft, attr, fpBlank, iLength );
+
+            if( ( iRows || iCols ) && iRowPos <= uiBottom && iRowPos >= uiTop )
+            {
+               /* Read the text to be scrolled into the current row */
+               hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
+
+               /* Write the scrolled text to the current row */
+               hb_gt_PutText ( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
+            }
+         }
+      }
+      if( fpBlank ) hb_xfree( fpBlank );
+      if( fpBuff ) hb_xfree( fpBuff );
+   }
+
+   hb_gtSetPos( uiRow, uiCol );
+}
+
 void hb_gt_DispBegin(void)
 {
 /* ptucker */

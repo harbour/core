@@ -52,6 +52,7 @@
 */
 #ifdef __IBMCPP__
    #define INCL_DOSPROCESS
+   #define INCL_NOPMAPI
 #endif
 
 #include "extend.h"
@@ -70,7 +71,6 @@
 #elif defined(HARBOUR_GCC_OS2)
    #include <stdlib.h>
 #elif defined(__IBMCPP__)
-   #define INCL_DOSPROCESS
    #include <bsedos.h>
    #include <conio.h>
 #elif defined(__CYGWIN__)

@@ -1,3 +1,19 @@
+19990908-05:05 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/inkey.c
+    - remove extra #define INCL_DOSPROCESS
+    + add #define INCL_NOPMAPI
+  * source/rtl/gtapi.c
+    simplified hb_gtScroll() to a function call.
+    The code from this function was moved to gt/gtdos.c hb_gt_scroll()
+    I currently can't compile a dos version so need a tester!
+  * source/rtl/gt/gtos2.c
+    - remove #define INCL_KBD since no keyboard functions are used
+    + add #define INCL_NOPMAPI since PMAPI is not needed.
+  * source/rtl/gt/gtdos.c
+    * active hb_gt_scroll source.
+    needs test.
+  * most of this reported by Chen Kedem <niki@actcom.co.il>
+
 19990908-03:05 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtos2.c
     + hb_gt_scroll by Chen Kedem <niki@actcom.co.il>
