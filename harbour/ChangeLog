@@ -7,6 +7,30 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/htmllib/ohtm.prg
+    contrib/htmllib/oedit.prg
+    contrib/htmllib/forms.ch
+    * Added support for accessbility on Forms
+
+2002-04-17 14:57 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! Fix bug in DeleteAll method. Change DTOC() for CTOD().
+
+    * Bug fixed, reported by Lorenzo Fiorini.
+
+2002-04-17 14:28 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/teditor.prg
+    + Added of calls to IdleHook and KeyboardHook for handling of
+      special keys when the mode edition is not used.
+
+2002-04-15 05:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/valtype.c
+    ! Change name of function form IS_VARBYREF() to HB_ISVARREF().
+
+2002-04-15 04:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/libnf/caplock.c
+  * contrib/libnf/numlock.c
+    * Add {} to avoid ambiguous if-else.
   * contrib/libnf/descend.c
   * contrib/libnf/getenvrn.c
   * contrib/libnf/proper.c
