@@ -1,3 +1,9 @@
+20000514-10:07 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.l
+    ! Fixed parse error when DO OPTIONAL WITH 1 or " or other non alpha charcaters
+    ! Fixed parse error when FOR Var := OPTIONAL TO ...
+
 20000514-09:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.y

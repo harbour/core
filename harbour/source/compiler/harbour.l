@@ -360,12 +360,22 @@ Separator     {SpaceTab}
 
 <INITIAL>"optional"                { BEGIN OPTIONAL_; }
 
-<OPTIONAL_>{Separator}+"with"{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] );
+<OPTIONAL_>{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
 						       unput( ' ' );
 						       unput( 'h' );
 						       unput( 't' );
 						       unput( 'i' );
 						       unput( 'w' );
+                                     		       if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                                     		       yylval.string = hb_strdup( "OPTIONAL" );
+                                     		       hb_comp_iState = IDENTIFIER;
+                                     		       return IDENTIFIER;
+                                   		     }
+
+<OPTIONAL_>{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
+						       unput( ' ' );
+						       unput( 'o' );
+						       unput( 't' );
                                      		       if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                                      		       yylval.string = hb_strdup( "OPTIONAL" );
                                      		       hb_comp_iState = IDENTIFIER;

@@ -89,9 +89,11 @@ PROCEDURE THEMAIN( optional )
 
   PRIVATE TEST AS CHAR
 
-  DO Optional WITH cVar
+  DO Proc WITH
 
-  FOR Conter := 1 TO 10
+  DO Optional WITH
+
+  FOR Conter := Optional TO 10
     ? "For with End"
   End
 
