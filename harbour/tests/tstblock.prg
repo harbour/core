@@ -16,7 +16,19 @@ PROCEDURE Main()
       bBlock[i] := {|| &Macro }
    NEXT
 
-   ? "Early:"
+   ? "Early (Simple):"
+
+   FOR i = 1 TO 3
+      ? Eval( bBlock[i] )
+   NEXT
+
+   FOR i = 1 TO 3
+      M->Macro := "Var" + Str( i, 1 )
+      bBlock[i] := {|| &Macro + "!" }
+   NEXT
+
+   ?
+   ? "Early (Complex):"
 
    FOR i = 1 TO 3
       ? Eval( bBlock[i] )
@@ -27,6 +39,7 @@ PROCEDURE Main()
       bBlock[i] := {|| &(Macro) }
    NEXT
 
+   ?
    ? "Late:"
 
    FOR i = 1 TO 3

@@ -802,6 +802,7 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 	    {
 	       unsigned int iBrackets = 1;
 	       char cTmp;
+	       BOOL bMacro = FALSE;
 
                pTmp++;
 	       while( *pTmp )
@@ -818,16 +819,24 @@ int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIg
 		  {
 		     iBrackets++;
 		  }
+		  else if( *pTmp == '&' )
+		  {
+		     bMacro = TRUE;
+		  }
+
                   pTmp++;
 	       }
 
-	       pTmp++;
-	       cTmp = *pTmp;
-	       *pTmp = '\0';
+	       if( bMacro )
+	       {
+	          pTmp++;
+	          cTmp = *pTmp;
+	          *pTmp = '\0';
 
-	       s_sLastBlock = hb_compIdentifierNew( s_szBuffer - 1, TRUE );
+	          s_sLastBlock = hb_compIdentifierNew( s_szBuffer - 1, TRUE );
 
-	       *pTmp = cTmp;
+	          *pTmp = cTmp;
+	       }
 	    }
 	 }
 	 return '{' + DONT_REDUCE;
@@ -997,7 +1006,9 @@ char * hb_comp_SLX_LastBlock( BOOL bReset )
 {
    if( bReset && s_sLastBlock )
    {
-      //hb_xfree( s_sLastBlock );
+      /*
+      hb_xfree( s_sLastBlock );
+      */
       s_sLastBlock = NULL;
    }
 

@@ -1,3 +1,14 @@
+2000-11-21 08:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcomp.c
+   * source/compiler/harbour.c
+     * Corrected compiler warnings.
+
+   * source/compiler/harbour.slx
+     * Small optimization in handling of s_sLastBlock
+
+   * tests/tstblock.prg
+     + Added complex early macro test.
+
 2000-11-21 17:42 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
       + added ::LoadText() method

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compiler main file
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,9 +24,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
- */
-
-/*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
@@ -34,6 +31,15 @@
  *    hb_compPrepareOptimize()
  *    hb_compOptimizeJumps()
  *    hb_compOptimizeFrames()
+ *    hb_compAutoOpenAdd()
+ *    hb_compAutoOpenFind()
+ *    hb_compAutoOpen()
+ *    hb_compDeclaredParameterAdd()
+ *    hb_compClassAdd()
+ *    hb_compClassFind()
+ *    hb_compMethodAdd()
+ *    hb_compMethodFind()
+ *    hb_compDeclaredAdd()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -350,7 +356,10 @@ void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType )
 {
    /* Nothing to do since no warnings requested.*/
    if ( hb_comp_iWarnings < 3 )
+   {
+      HB_SYMBOL_UNUSED( szVarName );
       return;
+   }
 
    /* Either a Declared Function Parameter or a Declared Method Parameter. */
    if( hb_comp_szDeclaredFun )

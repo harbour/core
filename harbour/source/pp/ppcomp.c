@@ -219,7 +219,6 @@ int hb_pp_ReadRules( void )
   char * ptr;
   int lContinue;
   int lens, rdlen;
-  int lLine = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ReadRules()"));
 
@@ -275,17 +274,11 @@ int hb_pp_ReadRules( void )
         else
         {
            CloseInclude();
-           lLine = 1;
+           hb_pp_LastOutLine = hb_comp_iLine;
         }
 
         *s_szLine = '\0';
      }
-  }
-
-  if( lLine )
-  {
-     if( hb_comp_files.iFiles == 1 )
-        hb_pp_LastOutLine = hb_comp_iLine;
   }
 
   return lens;
