@@ -36,6 +36,8 @@
 #ifndef HB_SETUP_H_
 #define HB_SETUP_H_
 
+#include <limits.h>
+
 /* ***********************************************************************
  * This symbol defines if Harbour is compiled using C compiler
  * that support strict ANSI C only

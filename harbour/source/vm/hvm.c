@@ -25,7 +25,6 @@
  * You can contact me at: alinares@fivetech.com
  */
 
-#include <limits.h>
 #ifndef __MPW__
    #include <malloc.h>
 #endif

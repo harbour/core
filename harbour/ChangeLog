@@ -1,3 +1,31 @@
+19990908-21:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/extend.h
+  * include/hbdefs.h
+  * include/hbpp.h
+  * include/hbsetup.h
+  * source/vm/hvm.c
+    ! In order to eliminate a redefinition error for _POSIX_PATH_MAX,
+      "extend.h" now includes "hbdefs.h", which includes "hbsetup.h",
+      which includes <limits.h>.
+
+  * source/rtl/gt/gtdos.c
+    ! Fixed hb_gt_Scroll() by renaming parameter 'attrib' to 'attr',
+      and assigning all other parameters to variables of the correct
+      types and names that the code that was cut-and-pasted from the
+      source/rtl/gtapi.c module expects.
+
+  * source/rtl/gt/gtos2.c
+    ! Changed the types of the hb_gt_Scroll() parameters to 'char' to
+      match the source/rtl/gtapi.c usage and changed their names so
+      that the scrolling logic won't try to use them directly.
+    + Added local variables to hb_gt_Scroll() with the types and names
+      expected by the scrolling code and assigned them from their
+      corresponding parameters.
+    + Added unsigned char to USHORT conversions for the row and column
+      scroll values, because negative scroll values were coming through
+      as positive values greater than 127, because ICC has to default
+      the char type to unsigned to avoid char type related link failures.
+
 19990909-01:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     + Modified to add the current date and time (in a packed form as a

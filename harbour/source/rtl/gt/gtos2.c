@@ -82,12 +82,16 @@ char hb_gt_Col(void)
 }
 
 
-void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char attribute, SHORT sVert, SHORT sHoriz )
+void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char cRows, char cCols )
 {
 /* Chen Kedem <niki@actcom.co.il> */
 
+    USHORT usTop = cTop, usLeft = cLeft, usBottom = cBottom, usRight = cRight;
+    SHORT sVert = cRows, sHoriz = cCols;
     BYTE bCell[ 2 ];                            /* character/attribute pair */
-
+    if( sVert > 128 ) sVert = sVert - 256;
+    if( sHoriz > 128 ) sHoriz = sHoriz - 256;
+printf("\nOS/2 hb_gt_Scroll( T %d, L %d, B %d, R %d, A %d, R %d, V %d )", usTop, usLeft, usBottom, usRight, attribute, sVert, sHoriz );
     bCell [ 0 ] = ' ';
     bCell [ 1 ] = (BYTE)attribute;
     if ( (sVert | sHoriz) == 0 )                /* both zero, clear region */

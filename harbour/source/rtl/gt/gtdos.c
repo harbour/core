@@ -455,8 +455,14 @@ char hb_gt_Row(void)
 #endif
 }
 
-void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
+void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attr, char vert, char horiz )
 {
+   /* Convert the "low-level" parameters back to the same types they
+      had when the following code used to be in gtapi.c */
+   USHORT uiTop = cTop, uiLeft = cLeft, uiBottom = cBottom, uiRight = cRight;
+   int iRows = vert, iCols = horiz;
+   /* End of parameter conversion */
+
    USHORT uiRow, uiCol, uiSize;
    int iLength = ( uiRight - uiLeft ) + 1;
    int iCount, iColOld, iColNew, iColSize;

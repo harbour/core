@@ -7,7 +7,6 @@
 #ifndef HB_PP_H_
 #define HB_PP_H_
 
-#include "hbsetup.h"
 #include "hbdefs.h"
 
 typedef struct _PATHNAMES { /* the list of pathnames to search with #include */

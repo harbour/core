@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
+#include "hbsetup.h"
 
 #if defined(__IBMCPP__)
    /* With the exception of WORD, the IBM Visual Age C++ compiler has

@@ -27,7 +27,6 @@
 #ifndef HB_EXTEND_H_
 #define HB_EXTEND_H_
 
-#include "hbsetup.h"
 #include "hbdefs.h"
 #include "hb_vmpub.h"
 
