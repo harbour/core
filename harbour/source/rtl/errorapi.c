@@ -91,7 +91,7 @@ void hb_errForceLink()
 
 HB_FUNC( __ERRINHANDLER )
 {
-   hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
+   hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
 }
 
 HB_FUNC( ERRORBLOCK )
@@ -191,12 +191,12 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       /* Check if we have a valid error handler */
 
       if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
-         hb_errInternal( IE_ERRNOBLOCK, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
-         hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Lock an item to prevent deallocation by the GC - the error object
        * can be not assigned to any harbour level variable
@@ -261,7 +261,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          hb_itemRelease( pResult );
 
          if( bFailure )
-            hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
+            hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
 
          /* Add one try to the counter. */
 
@@ -269,7 +269,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
             hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
       else
-         hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
    }
    else
       uiAction = E_RETRY; /* Clipper does this, undocumented */
@@ -300,12 +300,12 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       /* Check if we have a valid error handler */
 
       if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
-         hb_errInternal( IE_ERRNOBLOCK, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
-         hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Lock an item to prevent deallocation by the GC - the error object
        * can be not assigned to any harbour level variable
@@ -354,7 +354,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
             consider it as a failure. */
 
          if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
-            hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
+            hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
       }
    }
    else

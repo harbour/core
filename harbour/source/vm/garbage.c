@@ -140,27 +140,28 @@ void hb_gcFree( void *pBlock )
    }
    else
    {
-      hb_errInternal( IE_XFREENULL, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XFREENULL, NULL, NULL, NULL );
    }
 }
 
 /* Lock a memory pointer so it will not be released if stored
    outside of harbour variables
 */
-void *hb_gcLock( void *pBlock )
+void * hb_gcLock( void * pBlock )
 {
    if( pBlock )
    {
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
       --pAlloc;
 
-      if( !pAlloc->locked )
+      if( ! pAlloc->locked )
       {
          hb_gcUnlink( &s_pCurrBlock, pAlloc );          
          hb_gcLink( &s_pLockedBlock, pAlloc );
       }
       ++pAlloc->locked;
    }
+
    return pBlock;
 }
 

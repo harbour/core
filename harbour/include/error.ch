@@ -91,28 +91,28 @@
 #define EG_CONDITION    50      /* Harbour special */
 
 /* Internal errors */
-#define IE_ERRUNRECOV           9000 // "Unrecoverable error %lu: "
-#define IE_ERRRECFAILURE        9001 // "Error recovery failure"
-#define IE_ERRNOBLOCK           9002 // "No ERRORBLOCK() for error"
-#define IE_ERRTOOMANY           9003 // "Too many recursive error handler calls"
-#define IE_RDDINVALID           9004 // "RDD invalid or failed to load"
-#define IE_CLSINVMETHOD         9005 // "Invalid method type from %s"
-#define IE_XGRABALLOC           9006 // "hb_xgrab can't allocate memory"
-#define IE_XREALLOCNULL         9007 // "hb_xrealloc called with a NULL pointer"
-#define IE_XREALLOCINV          9008 // "hb_xrealloc called with an invalid pointer"
-#define IE_XREALLOC             9009 // "hb_xrealloc can't reallocate memory"
-#define IE_XFREEINV             9010 // "hb_xfree called with an invalid pointer"
-#define IE_XFREENULL            9011 // "hb_xfree called with a NULL pointer"
-#define IE_VMBADSTARTUP         9012 // "Can\'t locate the starting procedure: \'%s\'"
-#define IE_VMNOSTARTUP          9013 // "No starting procedure"
-#define IE_VMBADOPCODE          9014 // "Unsupported VM opcode"
-#define IE_VMNOTSYMBOL          9015 // "Symbol item expected from %s"
-#define IE_VMINVSYMBOL          9016 // "Invalid symbol type for self from %s"
-#define IE_VMNOTCBLOCK          9017 // "Codeblock expected from %s"
-#define IE_VMPOPINVITEM         9018 // "Incorrect item type on the stack trying to pop from %s"
-#define IE_STACKUFLOW           9019 // "Stack underflow"
-#define IE_ITEMBADCOPY          9020 // "An item was going to be copied to itself from %s"
-#define IE_MVBADSYMBOL          9021 // "Invalid symbol item passed as memvar %s"
+#define HB_EI_ERRUNRECOV        9000 /* "Unrecoverable error %lu: " */
+#define HB_EI_ERRRECFAILURE     9001 /* "Error recovery failure" */
+#define HB_EI_ERRNOBLOCK        9002 /* "No ERRORBLOCK() for error" */
+#define HB_EI_ERRTOOMANY        9003 /* "Too many recursive error handler calls" */
+#define HB_EI_RDDINVALID        9004 /* "RDD invalid or failed to load" */
+#define HB_EI_CLSINVMETHOD      9005 /* "Invalid method type from %s" */
+#define HB_EI_XGRABALLOC        9006 /* "hb_xgrab can't allocate memory" */
+#define HB_EI_XREALLOCNULL      9007 /* "hb_xrealloc called with a NULL pointer" */
+#define HB_EI_XREALLOCINV       9008 /* "hb_xrealloc called with an invalid pointer" */
+#define HB_EI_XREALLOC          9009 /* "hb_xrealloc can't reallocate memory" */
+#define HB_EI_XFREEINV          9010 /* "hb_xfree called with an invalid pointer" */
+#define HB_EI_XFREENULL         9011 /* "hb_xfree called with a NULL pointer" */
+#define HB_EI_VMBADSTARTUP      9012 /* "Can\'t locate the starting procedure: \'%s\'" */
+#define HB_EI_VMNOSTARTUP       9013 /* "No starting procedure" */
+#define HB_EI_VMBADOPCODE       9014 /* "Unsupported VM opcode" */
+#define HB_EI_VMNOTSYMBOL       9015 /* "Symbol item expected from %s" */
+#define HB_EI_VMINVSYMBOL       9016 /* "Invalid symbol type for self from %s" */
+#define HB_EI_VMNOTCBLOCK       9017 /* "Codeblock expected from %s" */
+#define HB_EI_VMPOPINVITEM      9018 /* "Incorrect item type on the stack trying to pop from %s" */
+#define HB_EI_STACKUFLOW        9019 /* "Stack underflow" */
+#define HB_EI_ITEMBADCOPY       9020 /* "An item was going to be copied to itself from %s" */
+#define HB_EI_MVBADSYMBOL       9021 /* "Invalid symbol item passed as memvar %s" */
 
 #endif /* _ERROR_CH */
 

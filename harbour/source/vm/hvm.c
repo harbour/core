@@ -299,12 +299,12 @@ void hb_vmInit( BOOL bStartMainProc )
          if( pDynSym && pDynSym->pSymbol->pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
          else
-            hb_errInternal( IE_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
+            hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
       }
 #else
 #ifndef HB_C52_STRICT
       else if( ! s_pSymStart )
-         hb_errInternal( IE_VMNOSTARTUP, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
 #endif
 #endif
    }
@@ -1329,7 +1329,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          default:
             /* TODO: Include to failing pcode in the error message */
-            hb_errInternal( IE_VMBADOPCODE, NULL, NULL, NULL );
+            hb_errInternal( HB_EI_VMBADOPCODE, NULL, NULL, NULL );
             break;
       }
 
@@ -1798,7 +1798,7 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
       hb_vmPushLong( ( ULONG ) pItem->item.asSymbol.value->pFunPtr );
    }
    else
-      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmFuncPtr()", NULL );
+      hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmFuncPtr()", NULL );
 }
 
 /* ------------------------------- */
@@ -2752,7 +2752,7 @@ void hb_vmDo( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
-      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
+      hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
    }
 
    pItem->item.asSymbol.lineno = 0;
@@ -2850,7 +2850,7 @@ void hb_vmSend( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
-      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmSend()", NULL );
+      hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmSend()", NULL );
    }
 
    pItem->item.asSymbol.lineno = 0;
@@ -2934,7 +2934,7 @@ static HARBOUR hb_vmDoBlock( void )
    uiStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
 
    if( ! HB_IS_BLOCK( pBlock ) )
-      hb_errInternal( IE_VMNOTCBLOCK, NULL, "hb_vmDoBlock()", NULL );
+      hb_errInternal( HB_EI_VMNOTCBLOCK, NULL, "hb_vmDoBlock()", NULL );
 
    /* Check for valid count of parameters */
    iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
@@ -3661,7 +3661,7 @@ static double hb_vmPopNumber( void )
 
       default:
          dNumber = 0;  /* To avoid GCC -O2 warning */
-         hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopNumber()", NULL );
+         hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopNumber()", NULL );
          break;
    }
 
@@ -3701,7 +3701,7 @@ static double hb_vmPopDouble( int * piDec )
 
       default:
          dNumber = 0;  /* To avoid GCC -O2 warning */
-         hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
+         hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
          break;
    }
 
@@ -3848,7 +3848,7 @@ void hb_stackPop( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPop()"));
 
    if( --hb_stack.pPos < hb_stack.pItems )
-      hb_errInternal( IE_STACKUFLOW, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    if( hb_stack.pPos->type != HB_IT_NIL )
       hb_itemClear( hb_stack.pPos );
@@ -3859,7 +3859,7 @@ static void hb_stackDec( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
 
    if( --hb_stack.pPos < hb_stack.pItems )
-      hb_errInternal( IE_STACKUFLOW, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 }
 
 static void hb_stackFree( void )

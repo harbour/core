@@ -867,7 +867,7 @@ HB_FUNC( __CLSADDMSG )
 
          default:
 
-            hb_errInternal( IE_CLSINVMETHOD, NULL, "__clsAddMsg", NULL );
+            hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsAddMsg", NULL );
             break;
       }
    }

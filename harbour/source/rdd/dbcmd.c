@@ -3276,7 +3276,7 @@ HB_FUNC( RDDREGISTER )
        * > 1: error
        */
       if( hb_rddRegister( szDriver, hb_parni( 2 ) ) > 1 )
-         hb_errInternal( IE_RDDINVALID, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
    }
 }
 

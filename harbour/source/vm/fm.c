@@ -182,7 +182,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    pMem = malloc( ulSize + sizeof( HB_MEMINFO ) );
 
    if( ! pMem )
-      hb_errInternal( IE_XGRABALLOC, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
 
    if( ! s_pFirstBlock )
    {
@@ -239,7 +239,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    pMem = malloc( ulSize );
 
    if( ! pMem )
-      hb_errInternal( IE_XGRABALLOC, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
 
    return pMem;
 
@@ -256,12 +256,12 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
    if( ! pMem )
-      hb_errInternal( IE_XREALLOCNULL, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XREALLOCNULL, NULL, NULL, NULL );
 
    pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
 
    if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
-      hb_errInternal( IE_XREALLOCINV, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XREALLOCINV, NULL, NULL, NULL );
 
    ulMemSize = pMemBlock->ulSize;
 
@@ -272,7 +272,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       s_lMemoryMaxConsumed = s_lMemoryConsumed;
 
    if( ! pMem )
-      hb_errInternal( IE_XREALLOC, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
 
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
    if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
@@ -292,12 +292,12 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
    if( ! pMem )
-      hb_errInternal( IE_XREALLOCNULL, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XREALLOCNULL, NULL, NULL, NULL );
 
    pMem = realloc( pMem, ulSize );
 
    if( ! pMem )
-      hb_errInternal( IE_XREALLOC, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
 
    return pMem;
 
@@ -315,7 +315,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       PHB_MEMINFO pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
 
       if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
-         hb_errInternal( IE_XFREEINV, NULL, NULL, NULL );
+         hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
 
       s_lMemoryConsumed -= pMemBlock->ulSize;
       s_lMemoryBlocks--;
@@ -333,7 +333,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       free( ( void * ) pMemBlock );
    }
    else
-      hb_errInternal( IE_XFREENULL, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XFREENULL, NULL, NULL, NULL );
 
 #else
 
@@ -342,7 +342,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( pMem );
    else
-      hb_errInternal( IE_XFREENULL, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_XFREENULL, NULL, NULL, NULL );
 
 #endif
 }

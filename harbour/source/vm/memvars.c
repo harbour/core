@@ -382,7 +382,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       }
    }
    else
-      hb_errInternal( IE_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
+      hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 }
 
 ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
@@ -410,7 +410,7 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       }
    }
    else
-      hb_errInternal( IE_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
+      hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 
    return bSuccess;
 }
@@ -495,7 +495,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       }
    }
    else
-      hb_errInternal( IE_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
+      hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 }
 
 /*

@@ -1,3 +1,17 @@
+2000-07-24 22:28 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * rdd/dbcmd.c
+   * rtl/errorapi.c
+   * vm/classes.c
+   * vm/fm.c
+   * vm/garbage.c
+   * vm/hvm.c
+   * vm/itemapi.c
+   * vm/memvars.c
+   * include/error.ch
+     * IE_* macros renamed to HB_EI_* to not pollute namespace.
+     ! Removed // comments from error.ch, since it was used in C code.
+
 2000-07-24 22:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbextern.ch

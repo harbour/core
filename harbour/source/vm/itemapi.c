@@ -1053,7 +1053,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    if( pDest == pSource )
-      hb_errInternal( IE_ITEMBADCOPY, NULL, "hb_itemCopy()", NULL );
+      hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemCopy()", NULL );
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
