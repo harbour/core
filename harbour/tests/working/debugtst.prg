@@ -5,6 +5,14 @@
  *                source\rtl\itemapi.c (1999/05/04)
  * $Date$         1999/05/06
  * $End$ */
+
+//
+// Warning : This program contains abstract high level Harbour Power !!!!
+//
+
+#define DATA_SYMBOL 1
+#define DATA_VAL    2
+
 function Main()
 
    local oForm   := TForm():New()
@@ -15,19 +23,22 @@ function Main()
    QOut()
 
    QOut( "-DEBUG Functions-")
-   QOut( ToChar(oForm:ClassSel, ", ", .T.) )
+   Debug( oForm:Transfer() )
 
+   oForm:Transfer( {"nLeft", 50}, {"nRight", 100} )
+                                                // 2 memory blocks get lost
+                                                // somewhere. {} maybe ??
    QOut( "-Statics-" )
-   QOut( ToChar ( __aStatic(), ", ", .T. ) )
+   Debug( __aStatic() )
 
    QOut( "-Global Stack-" )
-   QOut( ToChar ( __aGlobalStack(), ", ", .T. ) )
+   Debug ( __aGlobalStack() )
 
    QOut( "-Local Stack-" )
-   QOut( ToChar ( __aStack(), ", ", .T. ) )
+   Debug ( __aStack() )
 
    QOut( "-Parameters-" )
-   QOut( ToChar ( __aParam(), ", ", .T. ) )
+   Debug ( __aParam() )
 
    Pause()
 
@@ -44,26 +55,30 @@ function FuncSecond( nParam, cParam, uParam )
 
    local cWhat   := "Something"
    local nNumber := 2
-   local uEmpty
+   local xParam
+   local xStack
 
    QOut()
    QOut( "-Second procedure-")
    QOut()
 
    QOut( "-Statics-" )
-   QOut( ToChar ( __aStatic(), ", ", .T. ) )
+   Debug ( __aStatic() )
    QOut()
 
    QOut( "-Global Stack- Len=", __GlobalStackLen() )
-   QOut( ToChar ( __aGlobalStack(), ", ", .T. ) )
+   Debug ( __aGlobalStack() )
    QOut()
 
    QOut( "-Local Stack- Len=", __StackLen() )
-   QOut( ToChar ( __aStack(), ", ", .T. ) )
+   xStack := Debug ( __aStack() )
    QOut()
 
    QOut( "-Parameters-" )
-   QOut( ToChar ( __aParam(), ", ", .T. ) )
+   xParam := Debug( __aParam() )
+   if xParam[ xStack[ 7 ] ] == "Hello"
+      QOut( ":-)" )
+   endif
 
    Pause()
 
@@ -161,11 +176,11 @@ function ToChar( xTxt, cSeparator, lDebug )
       case cValTxt=="O"                         // Object
          if lDebug
             cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
-            aData := aoData( xTxt )
+            aData := aoGet( xTxt )
             nLen  := Len( aData )
             for n := 1 to nLen                     // For each item : Recurse !
-               cOut += aData[n] + ":" + ;
-                       ToChar( oSend( xTxt, aData[n] ), cSeparator, lDebug )
+               cOut += aData[n][DATA_SYMBOL] + ":" + ;
+                       ToChar( aData[n][DATA_VAL], cSeparator, lDebug )
                if n != nLen
                   cOut += cSeparator
                endif
@@ -176,7 +191,20 @@ function ToChar( xTxt, cSeparator, lDebug )
          endif
 
    endcase
+
 return cOut
+
+//
+// <xItem> Debug ( <xItem> )
+//
+// Non-volatile debugging function showing contents of xItem and returing
+// passed argument.
+//
+function Debug( xItem )
+
+   QOut( ToChar( xItem, ", ", .T. ) )
+
+return xItem
 
 
 /* $Doc$
@@ -196,8 +224,12 @@ function TForm()
       oClass:AddData( "nBottom" )
       oClass:AddData( "nRight" )
 
+      oClass:AddMethod( "aExcept", @Virtual() )
+                                          // Export exceptions
+
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "Show", @Show() )
+      oClass:AddMethod( "Transfer", @Transfer() )
 
       oClass:Create()                     // builds this class
    endif
@@ -235,6 +267,47 @@ return nil
 
 
 //
+// <xRet> TForm:Transfer( [<xArg,..>] )
+//
+// Generic object import and export function
+//
+static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
+
+   local self   := QSelf()
+   local aParam := __aParam()
+   local nLen   := Len( aParam )                // PCount() not implemented
+   local xRet
+   local xData
+   local n
+
+   if nLen == 0
+      xRet := aOGet( self, ::aExcept() )
+   else
+      for n := 1 to nLen
+
+         xData := aParam[ n ]
+         if ValType( xData ) == "A"
+            if ValType( xData[1] ) == "A"       // 2D array passed
+               xRet := aOSet( self, xData )
+            else                                // 1D array passed
+               xRet := aOSet( self, {xData} )
+            endif
+         elseif ValType( xData ) == "O"         // Object passed
+            xRet := ::Transfer( xData:Transfer() )
+         elseif ValType( xData ) != "U"
+            QOut( "TRANSFER: Incorrect argument(", n, ") ", xData )
+         endif
+
+      next n
+   endif
+
+return xRet
+
+static function Virtual()               /* Not implemented ?? */
+return nil
+
+
+//
 // aData aOData( oObject )
 //
 // Return an array containing the names of all the data items of oObject.
@@ -243,17 +316,58 @@ function aOData( oObject )
 
    local aInfo  := aSort( oObject:ClassSel() )
    local aData  := {}
-   local n
+   local n      := 1
+   local nLen   := Len( aInfo )
 
-   for n := 1 to Len(aInfo)
-      if SubStr( aInfo[ n ], 1, 1 ) != "_"
-         if aScan( aInfo, "_" + aInfo[ n ] ) != 0
-            aAdd( aData, aInfo[ n ] )
-         endif
+   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
+      if !Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+         aAdd( aData, aInfo[ n ] )
       endif
-   next n
+      n++
+   enddo
 
 return aData
+
+//
+// <aData> aOGet( <oObject>, [<aExcept>] )
+//
+// Basically the same as aOData except that it returns a 2D array
+// containing :
+//
+// [x][1]  Symbol name
+// [x][2]  Value of DATA
+//
+// aExcept is an optional list of DATA you do not want to collect
+//
+function aOGet( oObject, aExcept )
+
+   local aDataSymbol := aoData( oObject )
+   local nLen        := Len( aDataSymbol )
+   local aData       := {}
+   local cSymbol
+   local n
+
+   aExcept := Default( aExcept, {} )
+   for n := 1 to nLen
+      cSymbol := aDataSymbol[ n ]
+      if Empty( aScan( aExcept, cSymbol ) )
+         aAdd( aData, { cSymbol, oSend( oObject, cSymbol ) } )
+      endif
+   next n
+return aData
+
+
+//
+// aOSet( <oObject>, <aData> )
+//
+// The reverse of aOGet. It puts an 2D array of DATA into an object.
+//
+function aOSet( oObject, aData )
+
+  aEval( aData, ;
+       {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+
+return oObject
 
 
 //
@@ -275,8 +389,6 @@ return aIn
 // QuickSort( <aSort>, <nLeft>, <nRight>, <bOrder> )
 //
 // Perform a QuickSort of <aSort>.
-//
-// Warning : Recursion ahead !
 //
 // For instructions :
 // http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
