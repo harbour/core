@@ -73,6 +73,7 @@ STATIC s_nEndTime
 STATIC scString
 STATIC scStringE
 STATIC scStringZ
+STATIC scStringW
 STATIC snIntZ
 STATIC snDoubleZ
 STATIC snIntP
@@ -98,6 +99,7 @@ MEMVAR mxNotHere /* Please don't declare this variable, since it's used to test 
 MEMVAR mcString
 MEMVAR mcStringE
 MEMVAR mcStringZ
+MEMVAR mcStringW
 MEMVAR mnIntZ
 MEMVAR mnDoubleZ
 MEMVAR mnIntP
@@ -1671,10 +1673,10 @@ STATIC FUNCTION Main_MISC()
             to hide different path handling, since Harbour is platform
             independent. */
 
-   TEST_LINE( __copyfile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE "   )
-   TEST_LINE( __copyfile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
-   TEST_LINE( __copyfile("_NOTHERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error _NOTHERE.$$$ F:DR" )
-   TEST_LINE( __copyfile("$$COPYFR.TMP", "*INVALID*.")   , "E BASE 2012 Create error *INVALID*. F:DR" )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE "   )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
+   TEST_LINE( __CopyFile("_NOTHERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error _NOTHERE.$$$ F:DR" )
+   TEST_LINE( __CopyFile("$$COPYFR.TMP", "*INVALID*.")   , "E BASE 2012 Create error *INVALID*. F:DR" )
 
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")
@@ -1949,6 +1951,24 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( MEMVARBLOCK( "mxNotHere" )      , NIL             )
    TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
 
+   /* MEMOWRITE()/MEMOREAD() */
+
+   TEST_LINE( MemoWrit()                         , .F.              )
+   TEST_LINE( MemoWrit("$$MEMOFI.TMP")           , .F.              )
+   TEST_LINE( MemoWrit("$$MEMOFI.TMP","")        , .T.              )
+   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""               )
+   TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringZ) , .T.              )
+   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , "A"+Chr(0)+"B"   )
+   TEST_LINE( MemoWrit("$$MEMOFI.TMP",Chr(26))   , .T.              )
+   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(26)+""    )
+   TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringW) , .T.              )
+   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+"ç"+Chr(10)+""+Chr(9)+"" )
+   TEST_LINE( MemoWrit("*INVALI*.TMP",scStringZ) , .F.              )
+   TEST_LINE( MemoRead()                         , ""               )
+   TEST_LINE( MemoRead("*INVALI*.TMP")           , ""               )
+
+   FErase("$$MEMOFI.TMP")
+
    RETURN NIL
 
 #ifdef __HARBOUR__
@@ -2101,6 +2121,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    scString  := "HELLO"
    scStringE := ""
    scStringZ := "A" + Chr( 0 ) + "B"
+   scStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
    snIntZ    := 0
    snDoubleZ := 0.0
    snIntP    := 10
@@ -2147,6 +2168,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC mcString  := "HELLO"
    PUBLIC mcStringE := ""
    PUBLIC mcStringZ := "A" + Chr( 0 ) + "B"
+   PUBLIC mcStringW := Chr(13)+Chr(10)+Chr(141)+Chr(10)+Chr(9)
    PUBLIC mnIntZ    := 0
    PUBLIC mnDoubleZ := 0.0
    PUBLIC mnIntP    := 10
@@ -2267,7 +2289,16 @@ STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
-   CASE cType == "C" ; RETURN '"' + StrTran( xValue, Chr(0), '"+Chr(0)+"' ) + '"'
+   CASE cType == "C"
+
+      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
+      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
+      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
+      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
+      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+
+      RETURN '"' + xValue + '"'
+
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
    CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )

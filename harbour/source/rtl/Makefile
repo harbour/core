@@ -25,6 +25,7 @@ C_SOURCES=\
         itemapi.c \
         langapi.c \
         math.c \
+        memofile.c \
         memvars.c \
         mouseapi.c \
         mtran.c \

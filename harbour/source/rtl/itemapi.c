@@ -395,6 +395,21 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    return pItem;
 }
 
+PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = IT_STRING;
+   pItem->item.asString.length = ulLen;
+   pItem->item.asString.value = szText;
+   pItem->item.asString.value[ ulLen ] = '\0';
+
+   return pItem;
+}
+
 char * hb_itemGetC( PHB_ITEM pItem )
 {
    if( pItem && IS_STRING( pItem ) )

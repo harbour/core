@@ -89,6 +89,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
     $(OBJ_DIR)\math.obj \
+    $(OBJ_DIR)\memofile.obj \
     $(OBJ_DIR)\memvarbl.obj \
     $(OBJ_DIR)\memvars.obj \
     $(OBJ_DIR)\menuto.obj \
@@ -415,6 +416,9 @@ $(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c

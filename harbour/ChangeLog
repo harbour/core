@@ -1,8 +1,36 @@
+19990917-03:22 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/memofile.c
+    source/rtl/Makefile
+    makefile.*
+    funclist.txt
+    + MEMOREAD()/MEMOWRIT() functions added.
+      (Borland/MSVC makefiles modified, but not tested)
+  * tests/working/rtl_test.prg
+    + MEMOREAD()/MEMOWRIT() tests added.
+  * include/itemapi.h
+    source/rtl/itemapi.c
+    + hb_itemPutCPtr() Item API function added, to make it possible to 
+      attach a buffer directly to a string item in a standard way, this
+      way one memcpy()/strcpy() can be saved, this can be used when the caller
+      have already allocated a buffer. Recommended when the expected string 
+      size is very large. The allocated buffer size must be ulLen + 1.
+  * source/tools/io.c
+    - CD(), MD(), RD(), DISKFREE() removed since these are in the standard
+      RTL.
+  * source/rtl/tget.prg
+    ! Insert() fix by Kwon,Oh-Chul <ohchul@fivetech.net>
+  * source/rtl/console.c
+    ! HB___ACCEPTSTR() one missing underscore added.
+    ! SAVESCREEN() pBuffer type changed back to void *, since xgrab() would not
+      be compatible, (char*) casts would not be needed, and gtSave() would have
+      to complain...in theory at least.
+      (What was the compiler (and which one) complaining about ?)
+
 19990917-21:10 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
     % Changed local pointers in hb_xmemcpy() and hb_xmemset()
       from void * to BYTE * to keep Borland C compiler happy.
-
 
 19990917-18:00 EDT David G. Holm <dholm@jsd-llc.com>
 
@@ -99,7 +127,7 @@
     % Internal vmDo() call replaced with standard API functions.
     ! Internal error removed, direct buffer string modification resolved.
   * source/rtl/objfunc.prg
-    + Explcitly repeated function names in the __ERR*() call changed to 
+    + Explcitly repeated function names in the __ERR*() calls changed to 
       PROCNAME(0).
   * source/vm/hvm.c
     include/ctoharb.h

@@ -1043,7 +1043,7 @@ HARBOUR HB_SAVESCREEN( void )
 #ifdef HARBOUR_USE_GTAPI
    USHORT uiX;
    USHORT uiCoords[ 4 ];
-   char * pBuffer;
+   void * pBuffer;
 
    uiCoords[ 0 ] = 0;
    uiCoords[ 1 ] = 0;
@@ -1196,7 +1196,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
    hb_retc( s_szAcceptResult );
 }
 
-HARBOUR HB__ACCEPTSTR( void )
+HARBOUR HB___ACCEPTSTR( void )
 {
    hb_retc( s_szAcceptResult );
 }

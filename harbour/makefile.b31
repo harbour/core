@@ -22,7 +22,7 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj descend.obj devoutp.obj dir.obj dynsym.obj environ.obj \
               terror.obj errorapi.obj errorsys.obj harbinit.obj extend.obj \
               filesys.obj gtapi.obj hardcr.obj initsymb.obj itemapi.obj \
-              math.obj memvars.obj mtran.obj msguk.obj objfunc.obj \
+              math.obj memofile.obj memvars.obj mtran.obj msguk.obj objfunc.obj \
               set.obj setcolor.obj strings.obj symbols.obj \
               tclass.obj transfrm.obj
 
@@ -66,6 +66,7 @@ harbinit.obj : harbinit.prg extend.h hbdefs.h init.h pcode.h
 hardcr.obj   : hardcr.c     extend.h hbdefs.h
 itemapi.obj  : itemapi.c    extend.h hbdefs.h ctoharb.h itemapi.h set.h dates.h
 math.obj     : math.c       extend.h hbdefs.h
+memofile.obj : memofile.c   extend.h hbdefs.h
 memvars.obj  : memvars.c    extend.h hbdefs.h
 mtran.obj    : mtran.c      extend.h hbdefs.h
 objfunc.obj  : objfunc.prg  extend.h hbdefs.h init.h pcode.h

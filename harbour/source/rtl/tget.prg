@@ -455,6 +455,8 @@ METHOD Insert(cChar) CLASS TGet
       ::BadDate := .f.
    endif
 
+   ::Display()  // Kwon,Oh-Chul
+
 return Self
 
 //---------------------------------------------------------------------------//
