@@ -59,6 +59,9 @@
 #define HB_MACRO_OK           0   /* macro compiled successfully */
 #define HB_MACRO_FAILURE      1   /* syntax error */
 #define HB_MACRO_TOO_COMPLEX  2   /* compiled expression is too complex */
+#define HB_MACRO_GEN_PUSH     4   /* generate PUSH pcodes */
+#define HB_MACRO_GEN_POP      8   /* generate POP pcodes */
+#define HB_MACRO_GEN_ALIASED  16  /* force aliased variable */
 
 
 /* Global functions

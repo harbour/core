@@ -463,6 +463,8 @@ extern HB_MACRO_PTR hb_macroCompile( char * );
 extern void hb_macroDelete( HB_MACRO_PTR );
 extern char * hb_macroTextSubst( char *, ULONG * );
 extern BOOL hb_macroIsIdent( char * );
+extern void hb_macroPopAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
+extern void hb_macroPushAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
 
 /* misc */
 extern char *   hb_version( USHORT uiMode );

@@ -2634,7 +2634,12 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
 
       case HB_EA_DELETE:
          hb_compExprDelete( pSelf->value.asAlias.pAlias );
-         /* NOTE: variable name is not released now */
+#ifdef HB_MACRO_SUPPORT
+         if( pSelf->value.asAlias.pVar )
+            hb_compExprDelete( pSelf->value.asAlias.pVar );
+#else
+          /* NOTE: variable name is not released now */
+#endif
          break;
    }
    return pSelf;
@@ -2728,7 +2733,11 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
       case HB_EA_POP_PCODE:
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
+         break;
       case HB_EA_DELETE:
+#ifdef HB_MACRO_SUPPORT
+         hb_xfree( pSelf->value.asSymbol );
+#endif
          break;
    }
    return pSelf;
@@ -2803,11 +2812,35 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
       case HB_EA_LVALUE:
          break;
       case HB_EA_PUSH_PCODE:
-         hb_compGenPushVar( pSelf->value.asSymbol );
-         break;
-      case HB_EA_POP_PCODE:
-         hb_compGenPopVar( pSelf->value.asSymbol );
-         break;
+
+#ifdef HB_MACRO_SUPPORT
+         /* NOTE: When the following syntax is used:
+          *    ( any_expr )->&var2
+          * then macro compiler is compiling the right side of alias
+          * operator only (if 'any_expr' is not a string) - an alias value
+          * is placed on the eval stack before macro compilation.
+          * The HB_MACRO_GEN_ALIASED flag is used to signal that we have to
+          * genearate alias aware pcode even if we known a variable part only.
+          */
+         if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
+            hb_compGenPushAliasedVar( pSelf->value.asSymbol, FALSE, NULL, 0 );
+         else
+            hb_compGenPushVar( pSelf->value.asSymbol );
+#else
+          hb_compGenPushVar( pSelf->value.asSymbol );
+#endif
+          break;
+	  
+       case HB_EA_POP_PCODE:
+#ifdef HB_MACRO_SUPPORT
+         if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
+            hb_compGenPopAliasedVar( pSelf->value.asSymbol, FALSE, NULL, 0 );
+         else
+            hb_compGenPopVar( pSelf->value.asSymbol );
+#else
+          hb_compGenPopVar( pSelf->value.asSymbol );
+#endif
+          break;
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:

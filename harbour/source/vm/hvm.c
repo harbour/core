@@ -129,6 +129,7 @@ static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an
 /* Push */
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
+static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
@@ -146,6 +147,7 @@ static double  hb_vmPopNumber( void );            /* pops the stack latest value
 static double  hb_vmPopDouble( int * );           /* pops the stack latest value and returns its double numeric format value */
 static void    hb_vmPopAlias( void );             /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
+static void    hb_vmPopAliasedVar( PHB_SYMB );    /* pops an aliased variable from the eval stack*/
 static void    hb_vmPopLocal( SHORT iLocal );     /* pops the stack latest value onto a local */
 static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
 
@@ -777,6 +779,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             w += 3;
             break;
 
+         case HB_P_PUSHALIASEDVAR:
+            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_vmPushAliasedVar( pSymbols + uiParams );
+            w += 3;
+            break;
+
          case HB_P_PUSHFIELD:
             /* It pushes the current value of the given field onto the eval stack
              */
@@ -858,6 +866,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             w += 3;
             break;
 
+         case HB_P_POPALIASEDVAR:
+            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_vmPopAliasedVar( pSymbols + uiParams );
+            w += 3;
+            break;
+
          case HB_P_POPFIELD:
             /* Pops a value from the eval stack and uses it to set
              * a new value of the given field
@@ -916,9 +930,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPOPALIASED:
-            /* compile and run - pop a field value from the stack */
+            /* compile and run - pop an aliased variable from the stack */
+            hb_macroPopAliasedValue( hb_stack.pPos - 2, hb_stack.pPos - 1 );
             w++;
             break;
+
          case HB_P_MACROPUSH:
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
@@ -929,7 +945,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHALIASED:
-            /* compile and run - leave the field value on the stack */
+            /* compile and run - leave an aliased variable on the stack */
+            hb_macroPushAliasedValue( hb_stack.pPos - 2, hb_stack.pPos - 1 );
             w++;
             break;
 
@@ -940,7 +957,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROTEXT:
-            /* macro text substitution 
+            /* macro text substitution
              * "text &macro.other text"
              */
             hb_macroTextValue( hb_stack.pPos - 1 );
@@ -961,6 +978,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             {
                HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
                hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPOPALIASEDVAR:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPopAliasedVar( ( *pDynSym )->pSymbol );
                w += sizeof( HB_DYNS_PTR ) + 1;
             }
             break;
@@ -994,6 +1019,14 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             {
                HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
                hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHALIASEDVAR:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushAliasedVar( ( *pDynSym )->pSymbol );
                w += sizeof( HB_DYNS_PTR ) + 1;
             }
             break;
@@ -2903,6 +2936,56 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    hb_rddSelectWorkAreaNumber( iCurrArea );
 }
 
+/* It pops the last item from the stack to use it to select a workarea
+ * and next pushes the value of either a field or a memvar based on alias value
+ * (for performance reason it replaces alias value with field value)
+ * This is used in the following context:
+ * ( any_alias )->variable
+ */
+static void hb_vmPushAliasedVar( PHB_SYMB pSym )
+{
+   PHB_ITEM pAlias = hb_stack.pPos - 1;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushAliasedVar(%p)", pSym));
+
+   if( IS_STRING( pAlias ) )
+   {
+      char * szAlias = hb_strUpper( pAlias->item.asString.value, pAlias->item.asString.length );
+
+      if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+      {  /* M->variable */
+         hb_memvarGetValue( pAlias, pSym );
+      }
+      else
+      {
+         int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+         if( iCmp == 0 )
+               iCmp = strncmp( szAlias, "MEMVAR", pAlias->item.asString.length );
+         if( iCmp == 0 )
+         {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+            hb_memvarGetValue( pAlias, pSym );
+         }
+         else
+         {  /* field variable */
+            iCmp = strncmp( szAlias, "FIELD", 4 );
+            if( iCmp == 0 )
+               iCmp = strncmp( szAlias, "FIELD", pAlias->item.asString.length );
+            if( iCmp == 0 )
+            {  /* FIELD-> */
+               hb_rddGetFieldValue( pAlias, pSym );
+            }
+            else
+            {  /* database alias */
+               hb_vmPushAliasedField( pSym );
+            }
+         }
+      }
+
+   }
+   else
+      hb_vmPushAliasedField( pSym );
+}
+
 static void hb_vmPushLocal( SHORT iLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocal(%hd)", iLocal));
@@ -3136,7 +3219,7 @@ static void hb_vmPopAlias( void )
 }
 
 /* Pops the alias to use it to select a workarea and next pops a value
- * into given field
+ * into a given field
  */
 static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
@@ -3151,6 +3234,64 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
    hb_rddSelectWorkAreaNumber( iCurrArea );
    hb_stackDec();    /* alias - it was cleared in hb_vmSelectWorkarea */
    hb_stackPop();    /* field value */
+}
+
+/* Pops the alias to use it to select a workarea and next pops a value
+ * into either a field or a memvar based on the alias value
+ * This is used in the following context:
+ * ( any_alias )->variable
+ */
+static void hb_vmPopAliasedVar( PHB_SYMB pSym )
+{
+   HB_ITEM_PTR pAlias = hb_stack.pPos - 1;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPopAliasedVar(%p)", pSym));
+
+   /* "M", "MEMV" - "MEMVAR" and "FIEL" - "FIELD" are reserved aliases
+    */
+   if( IS_STRING( pAlias ) )
+   {
+      char * szAlias = pAlias->item.asString.value;
+
+      if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+      {  /* M->variable */
+         hb_memvarSetValue( pSym, hb_stack.pPos - 2 );
+         hb_stackPop();    /* alias */
+         hb_stackPop();    /* value */
+      }
+      else
+      {
+         int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+         if( iCmp == 0 )
+            iCmp = strncmp( szAlias, "MEMVAR", pAlias->item.asString.length );
+         if( iCmp == 0 )
+         {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+            hb_memvarSetValue( pSym, hb_stack.pPos - 2 );
+            hb_stackPop();    /* alias */
+            hb_stackPop();    /* value */
+         }
+         else
+         {  /* field variable */
+            iCmp = strncmp( szAlias, "FIELD", 4 );
+            if( iCmp == 0 )
+               iCmp = strncmp( szAlias, "FIELD", pAlias->item.asString.length );
+            if( iCmp == 0 )
+            {  /* FIELD-> */
+               hb_rddPutFieldValue( hb_stack.pPos - 2, pSym );
+               hb_stackPop();    /* alias */
+               hb_stackPop();    /* value */
+            }
+            else
+            {  /* database alias */
+               hb_vmPopAliasedField( pSym );
+            }
+         }
+      }
+   }
+   else
+   {
+      hb_vmPopAliasedField( pSym );
+   }
 }
 
 static void hb_vmPopLocal( SHORT iLocal )

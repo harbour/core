@@ -297,6 +297,8 @@ void hb_compGenJava( PHB_FNAME pFileName )
             case HB_P_PUSHFIELD:
             case HB_P_POPALIASEDFIELD:
             case HB_P_PUSHALIASEDFIELD:
+            case HB_P_POPALIASEDVAR:
+            case HB_P_PUSHALIASEDVAR:
                hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
                wVar = hb_compSymbolFixPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
                hb_fputc( HB_LOBYTE( wVar ), yyc );

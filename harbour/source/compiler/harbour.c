@@ -1491,8 +1491,11 @@ void hb_compGenPopAliasedVar( char * szVarName,
       }
    }
    else
-      /* Alias is already placed on stack */
-      hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
+      /* Alias is already placed on stack
+       * NOTE: An alias will be determined at runtime then we cannot decide
+       * here if passed name is either a field or a memvar
+       */
+      hb_compGenVarPCode( HB_P_POPALIASEDVAR, szVarName );
 }
 
 /* generates the pcode to push a nonaliased variable value to the virtual
@@ -1718,8 +1721,11 @@ void hb_compGenPushAliasedVar( char * szVarName,
       }
    }
    else
-      /* Alias is already placed on stack */
-      hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+      /* Alias is already placed on stack 
+       * NOTE: An alias will be determined at runtime then we cannot decide
+       * here if passed name is either a field or a memvar
+       */
+      hb_compGenVarPCode( HB_P_PUSHALIASEDVAR, szVarName );
 }
 
 void hb_compGenPushLogical( int iTrueFalse ) /* pushes a logical value on the virtual machine stack */

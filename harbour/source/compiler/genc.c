@@ -554,6 +554,21 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                }
                break;
 
+            case HB_P_POPALIASEDVAR:
+               {
+                  USHORT wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos = hb_compSymbolFixPos( wVar );
+                  fprintf( yyc, "\tHB_P_POPALIASEDVAR, %i, %i,",
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
+                  fprintf( yyc, "\n" );
+                  lPCodePos += 3;
+               }
+               break;
+
             case HB_P_POPFIELD:
                {
                   USHORT wFixPos;
@@ -674,6 +689,22 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHALIASEDFIELD, %i, %i,",
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
+                  fprintf( yyc, "\n" );
+                  lPCodePos += 3;
+               }
+               break;
+
+            case HB_P_PUSHALIASEDVAR:
+               {
+                  USHORT wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                         pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos = hb_compSymbolFixPos( wVar );
+                  fprintf( yyc, "\tHB_P_PUSHALIASEDVAR, %i, %i,",
                            HB_LOBYTE( wFixPos ),
                            HB_HIBYTE( wFixPos ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );

@@ -1,3 +1,56 @@
+20000115-15:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/pcode.h
+        * added new pcodes:
+                HB_P_PUSHALIASEDVAR
+                HB_P_POPALIASEDVAR
+                HB_P_MPUSHALIASEDVAR
+                HB_P_MPOPALIASEDVAR
+
+NOTE: All sources HAVE TO be recompiled!!!
+    
+    *include/macro.h
+        * added new constant:
+        HB_MACRO_GEN_PUSH     4   /* generate PUSH pcodes */
+        HB_MACRO_GEN_POP      8   /* generate POP pcodes */
+        HB_MACRO_GEN_ALIASED  16  /* force aliased variable */
+
+    *include/extend.h
+        * added declaration of
+        hb_macroPopAliasedValue
+        hb_macroPushAliasedValue
+
+    *source/macro/macro.c
+    *source/compiler/harbour.c
+        * corrected handling of aliased variables in case when an alias
+        is determined at runtime (the field variable was assumed previously
+        but now the virtual machine checks the value of passed alias and
+        used either a memvar or a field)
+        for example:
+        alias := "M"
+        ? ( alias )->var
+        The value of memvar named "var" should be printed
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+        * finished support for aliased macro expressions
+
+    *source/macro/macro.c
+        * finished support for aliased macro expressions
+
+    *source/vm/hvm.c
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+        * added support for new pcodes:
+                HB_P_PUSHALIASEDVAR
+                HB_P_POPALIASEDVAR
+                HB_P_MPUSHALIASEDVAR
+                HB_P_MPOPALIASEDVAR
+
+    *source/compiler/harbour.y
+        * removed 'macro support' from the TODO list :)
+
 2000-01-14 12:20 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * ngdoc/ft_helpc.prg

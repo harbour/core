@@ -185,13 +185,13 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 
 %%
 
-Main : Expression '\n' {   if( HB_MACRO_DATA->Flags &  HB_P_MACROPUSH )
+Main : Expression '\n' {   if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            else
                               hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
-     | Expression      {   if( HB_MACRO_DATA->Flags &  HB_P_MACROPUSH )
+     | Expression      {   if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            else
                               hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );

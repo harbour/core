@@ -45,6 +45,8 @@
 static BOOL hb_comp_bShortCuts = TRUE;  /* .and. & .or. expressions shortcuts */
 static BOOL hb_comp_bUseName10 = FALSE;  /* names limited to 10 characters */
 
+static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
+
 /* ************************************************************************* */
 
 /* Compile passed string into a pcode buffer
@@ -285,7 +287,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
                /* number of characters left on the right side of a variable name */
                ulCharsLeft = ulResStrLen - ( pHead - szResult );
 
-               /* NOTE: 
+               /* NOTE:
                 * if a replacement string is shorter then the variable
                 * name then we don't have to reallocate the result buffer:
                 * 'ulResStrLen' stores the current length of a string in the buffer
@@ -341,6 +343,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  *   This will be called when macro variable or macro expression is
  * placed on the right side of the assignment or when it is used as
  * a parameter.
+ * PUSH operation
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem )
 {
@@ -354,7 +357,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
 
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, HB_P_MACROPUSH );
+      iStatus = hb_macroParse( &struMacro, szString, HB_MACRO_GEN_PUSH );
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
@@ -370,6 +373,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
 /* NOTE:
  *   This will be called when macro variable or macro expression is
  * placed on the left side of the assignment
+ * POP operation
  */
 void hb_macroSetValue( HB_ITEM_PTR pItem )
 {
@@ -383,9 +387,105 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
 
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      iStatus = hb_macroParse( &struMacro, szString, HB_P_MACROPOP );
+      iStatus = hb_macroParse( &struMacro, szString, HB_MACRO_GEN_POP );
 
       hb_stackPop();    /* remove compiled string */
+      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      {
+         hb_macroRun( &struMacro );
+         hb_macroDelete( &struMacro );
+      }
+      else
+         hb_macroSyntaxError( &struMacro );
+   }
+}
+
+/* Compiles and run an aliased macro expression - generated pcode
+ * pops a value from the stack
+ *    &alias->var := any
+ *    alias->&var := any
+ */
+void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
+
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP );
+}
+
+/* Compiles and run an aliased macro expression - generated pcode
+ * pushes a value onto the stack
+ *    any := &alias->var
+ *    any := alias->&var
+ */
+void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
+
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH );
+}
+
+/*
+ * Compile and run:
+ *    &alias->var or
+ *    alias->&var
+ * NOTE:
+ *    Clipper implements these two cases as: &( alias +'->' + variable )
+ *    This causes some non expected behaviours, for example:
+ *    A :="M + M"
+ *    ? &A->&A
+ *    is the same as:
+ *    &( "M + M->M + M" )
+ *    instead of
+ *    &( "M + M" ) -> &( "M + M" )
+ */
+static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag )
+{
+   if( IS_STRING( pAlias ) && IS_STRING( pVar ) )
+   {
+      /* grab memory for "alias->var"
+      */
+      char * szString = ( char * ) hb_xgrab( pAlias->item.asString.length + pVar->item.asString.length + 3 );
+      HB_MACRO struMacro;
+      int iStatus;
+
+      memcpy( szString, pAlias->item.asString.value, pAlias->item.asString.length );
+      szString[ pAlias->item.asString.length ]     = '-';
+      szString[ pAlias->item.asString.length + 1 ] = '>';
+      memcpy( szString + pAlias->item.asString.length + 2, pVar->item.asString.value, pVar->item.asString.length );
+      szString[ pAlias->item.asString.length + 2 + pVar->item.asString.length ] = '\0';
+
+      struMacro.bShortCuts = hb_comp_bShortCuts;
+      struMacro.bName10    = hb_comp_bUseName10;
+      iStatus = hb_macroParse( &struMacro, szString, iFlag );
+      hb_xfree( szString );
+      struMacro.string = NULL;
+
+      hb_stackPop();    /* remove compiled variable name */
+      hb_stackPop();    /* remove compiled alias */
+
+      if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      {
+         hb_macroRun( &struMacro );
+         hb_macroDelete( &struMacro );
+      }
+      else
+         hb_macroSyntaxError( &struMacro );
+   }
+   else if( hb_macroCheckParam( pVar ) )
+   {
+      /* only right side of alias operator is a string - macro-compile
+       * this part only
+       */
+      HB_MACRO struMacro;
+      int iStatus;
+      char * szString = pVar->item.asString.value;
+
+      struMacro.bShortCuts = hb_comp_bShortCuts;
+      struMacro.bName10    = hb_comp_bUseName10;
+      iStatus = hb_macroParse( &struMacro, szString, iFlag | HB_MACRO_GEN_ALIASED );
+
+      hb_stackPop();    /* remove compiled string */
+
       if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
       {
          hb_macroRun( &struMacro );
@@ -711,8 +811,11 @@ void hb_compGenPopAliasedVar( char * szVarName,
       }
    }
    else
-      /* Alias is already placed on stack */
-      hb_compMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_MACRO_PARAM );
+      /* Alias is already placed on stack
+       * NOTE: An alias will be determined at runtime then we cannot decide
+       * here if passed name is either a field or a memvar
+       */
+      hb_compMemvarGenPCode( HB_P_MPOPALIASEDVAR, szVarName, HB_MACRO_PARAM );
 }
 
 /* generates the pcode to push a nonaliased variable value to the virtual
@@ -805,8 +908,11 @@ void hb_compGenPushAliasedVar( char * szVarName,
       }
    }
    else
-      /* Alias is already placed on stack */
-      hb_compMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_MACRO_PARAM );
+      /* Alias is already placed on stack
+       * NOTE: An alias will be determined at runtime then we cannot decide
+       * here if passed name is either a field or a memvar
+       */
+      hb_compMemvarGenPCode( HB_P_MPUSHALIASEDVAR, szVarName, HB_MACRO_PARAM );
 }
 
 /* pushes a logical value on the virtual machine stack , */
