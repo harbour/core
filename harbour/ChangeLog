@@ -1,3 +1,7 @@
+2001-08-30 15:38 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/Makefile
+     * Added mlctopos.c and mpostolc.c to C_SOURCES.
+
 2001-08-30 15:03 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/hgf/os2pm/*
      * changed to add client window repainting capabilities.

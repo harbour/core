@@ -54,10 +54,12 @@ C_SOURCES=\
 	memoline.c   \
 	minmax.c     \
 	mlcount.c    \
+	mlctopos.c   \
 	mlpos.c      \
 	mod.c        \
 	mouseapi.c   \
 	mousex.c     \
+	mpostolc.c   \
 	mtran.c      \
 	natmsg.c     \
 	net.c        \
@@ -118,7 +120,7 @@ PRG_SOURCES=\
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
-   checkbox.prg \
+	checkbox.prg \
 	dbdelim.prg  \
 	dbedit.prg   \
 	dbsdf.prg    \
@@ -135,9 +137,9 @@ PRG_SOURCES=\
 	menuto.prg   \
 	objfunc.prg  \
 	profiler.prg \
-   pushbtn.prg  \
-   radiobtn.prg \
-   radiogrp.prg \
+	pushbtn.prg  \
+	radiobtn.prg \
+	radiogrp.prg \
 	readkey.prg  \
 	readvar.prg  \
 	setfunc.prg  \
