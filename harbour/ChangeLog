@@ -1,3 +1,14 @@
+19990820-11:47 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * funclist.txt
+     include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/sdf1.c
+     source/rdd/delim1.c
+     source/rdd/dbfntx/dbfntx1.c
+     source/vm/hvm.c
+     + Added new functions, changed VM for support Alias and updated function list.
+
 19990819-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + STUFF() and RAT() tests added, some more tests added to PAD*() family.

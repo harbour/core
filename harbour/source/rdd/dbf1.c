@@ -181,6 +181,21 @@ static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
    return SUCCESS;
 }
 
+static ERRCODE DeleteRec( AREAP pArea )
+{
+   printf( "Calling DBF: DeleteRec()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
+{
+   if( pArea->lpExtendInfo->bRecord[ 0 ] ==  '*' )
+      * pDeleted = TRUE;
+   else
+      * pDeleted = FALSE;
+   return SUCCESS;
+}
+
 static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
@@ -447,9 +462,13 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              Skip,
                              0,               /* Super AddField */
                              CreateFields,
+                             DeleteRec,
+                             Deleted,
                              0,               /* Super FieldCount */
                              0,               /* Super FieldName */
+                             0,               /* Super Flush */
                              GetValue,
+                             0,               /* Super Recall */
                              RecCount,
                              0,               /* Super RecNo */
                              0,               /* Super SetFieldsExtent */

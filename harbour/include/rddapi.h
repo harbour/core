@@ -513,9 +513,7 @@ typedef struct _AREA
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
 
    USHORT   uiArea;              /* The number assigned to this workarea */
-#if 0
    void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
-#endif
 
    USHORT   uiFieldExtent;       /* Total number of fields allocated */
    USHORT   uiFieldCount;        /* Total number of fields used */
@@ -617,18 +615,16 @@ typedef struct _RDDFUNCS
    DBENTRYP_S    append;
 #endif
    DBENTRYP_I    createFields;
-#if 0
    DBENTRYP_V    deleterec;
-   DBENTRYP_SP   deleted;
-#endif
+   DBENTRYP_BP   deleted;
    DBENTRYP_SP   fieldCount;
 #if 0
    DBENTRYP_VP   fieldDisplay;
    DBENTRYP_SSI  fieldInfo;
 #endif
    DBENTRYP_SVP  fieldName;
-#if 0
    DBENTRYP_V    flush;
+#if 0
    DBENTRYP_PP   getRec;
 #endif
    DBENTRYP_SI   getValue;
@@ -638,8 +634,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    goHot;
    DBENTRYP_VP   putRec;
    DBENTRYP_SI   putValue;
-   DBENTRYP_V    recall;
 #endif
+   DBENTRYP_V    recall;
    DBENTRYP_LP   reccount;
 #if 0
    DBENTRYP_ISI  recInfo;

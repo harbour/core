@@ -62,18 +62,23 @@ extern HARBOUR HB_SDF( void );
 extern HARBOUR HB_DELIM( void );
 extern HARBOUR HB_RDDSYS( void );
 
+HARBOUR HB_ALIAS( void );
 HARBOUR HB_BOF( void );
 HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
+HARBOUR HB_DBCOMMIT( void );
 HARBOUR HB_DBCREATE( void );
+HARBOUR HB_DBDELETE( void );
 HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
+HARBOUR HB_DBRECALL( void );
 HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
 HARBOUR HB_DBSKIP( void );
 HARBOUR HB_DBTABLEEXT( void );
 HARBOUR HB_DBUSEAREA( void );
+HARBOUR HB_DELETED( void );
 HARBOUR HB_EOF( void );
 HARBOUR HB_FCOUNT( void );
 HARBOUR HB_FIELDGET( void );
@@ -87,21 +92,27 @@ HARBOUR HB_RDDSETDEFAULT( void );
 HARBOUR HB_RDDSHUTDOWN( void );
 HARBOUR HB_RECCOUNT( void );
 HARBOUR HB_RECNO( void );
+HARBOUR HB_SELECT( void );
 HARBOUR HB_USED( void );
 
 HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
+{ "ALIAS",         FS_PUBLIC, HB_ALIAS,         0 },
 { "BOF",           FS_PUBLIC, HB_BOF,           0 },
 { "DBCLOSEALL",    FS_PUBLIC, HB_DBCLOSEALL,    0 },
 { "DBCLOSEAREA",   FS_PUBLIC, HB_DBCLOSEAREA,   0 },
+{ "DBCOMMIT",      FS_PUBLIC, HB_DBCOMMIT,      0 },
 { "DBCREATE",      FS_PUBLIC, HB_DBCREATE,      0 },
+{ "DBDELETE",      FS_PUBLIC, HB_DBDELETE,      0 },
 { "DBGOBOTTOM",    FS_PUBLIC, HB_DBGOBOTTOM,    0 },
 { "DBGOTO",        FS_PUBLIC, HB_DBGOTO,        0 },
 { "DBGOTOP",       FS_PUBLIC, HB_DBGOTOP,       0 },
+{ "DBRECALL",      FS_PUBLIC, HB_DBRECALL,      0 },
 { "DBSELECTAREA",  FS_PUBLIC, HB_DBSELECTAREA,  0 },
 { "DBSETDRIVER",   FS_PUBLIC, HB_DBSETDRIVER,   0 },
 { "DBSKIP",        FS_PUBLIC, HB_DBSKIP,        0 },
 { "DBTABLEEXT",    FS_PUBLIC, HB_DBTABLEEXT,    0 },
 { "DBUSEAREA",     FS_PUBLIC, HB_DBUSEAREA,     0 },
+{ "DELETED",       FS_PUBLIC, HB_DELETED,       0 },
 { "EOF",           FS_PUBLIC, HB_EOF,           0 },
 { "FCOUNT",        FS_PUBLIC, HB_FCOUNT,        0 },
 { "FIELDGET",      FS_PUBLIC, HB_FIELDGET,      0 },
@@ -115,6 +126,7 @@ HB_INIT_SYMBOLS_BEGIN( dbCmd__InitSymbols )
 { "RDDSHUTDOWN",   FS_PUBLIC, HB_RDDSHUTDOWN,   0 },
 { "RECCOUNT",      FS_PUBLIC, HB_RECCOUNT,      0 },
 { "RECNO",         FS_PUBLIC, HB_RECNO,         0 },
+{ "SELECT",        FS_PUBLIC, HB_SELECT,        0 },
 { "USED",          FS_PUBLIC, HB_USED,          0 }
 HB_INIT_SYMBOLS_END( dbCmd__InitSymbols )
 #if ! defined(__GNUC__)
@@ -233,9 +245,15 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    return 0;                           /* Ok */
 }
 
-static USHORT hb_FindAlias( char * szAlias )
+static USHORT hb_Select( char * szAlias )
 {
-   return 1; /* Not implemented yet */
+   PHB_DYNS pSymAlias;
+   
+   pSymAlias = hb_dynsymFind( szAlias );
+   if( pSymAlias && pSymAlias->hArea )
+      return pSymAlias->hArea;
+   else
+      return 0;
 }
 
 static void hb_SelectFirstAvailable( void )
@@ -343,15 +361,39 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
       return FAILURE;
 }
 
+static ERRCODE Flush( AREAP pArea )
+{
+   printf( "Calling default: Flush()\n" );
+   return SUCCESS;
+}
+
 static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    printf( "Calling default: CreateFields()\n" );
    return SUCCESS;
 }
 
+static ERRCODE DeleteRec( AREAP pArea )
+{
+   printf( "Calling default: DeleteRec()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
+{
+   printf( "Calling default: Deleted()\n" );
+   return SUCCESS;
+}
+
 static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    printf( "Calling default: GetValue()\n" );
+   return SUCCESS;
+}
+
+static ERRCODE Recall( AREAP pArea )
+{
+   printf( "Calling default: Recall()\n" );
    return SUCCESS;
 }
 
@@ -380,6 +422,7 @@ static ERRCODE Close( AREAP pArea )
    if( pArea->lpFileInfo->hFile != FS_ERROR )
       hb_fsClose( pArea->lpFileInfo->hFile );
    pArea->lpFileInfo->hFile = FS_ERROR;
+   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
    return SUCCESS;
 }
 
@@ -421,12 +464,20 @@ static ERRCODE NewArea( AREAP pArea )
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    USHORT uiFlags;
+
+   pArea->atomAlias = hb_dynsymFind( ( char * ) pOpenInfo->atomAlias );
+   if( pArea->atomAlias && ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+   {
+      hb_errRT_DBCMD( EG_DUPALIAS, 1011, 0, ( char * ) pOpenInfo->atomAlias );
+      return FAILURE;
+   }
+   pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
+   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
    
-
    if( pArea->lpFileInfo->hFile == FS_ERROR )
       return FAILURE;
 
@@ -507,9 +558,13 @@ static RDDFUNCS defTable = { Bof,
                              Skip,
                              AddField,
                              CreateFields,
+                             DeleteRec,
+                             Deleted,
                              FieldCount,
                              FieldName,
+                             Flush,
                              GetValue,
+                             Recall,
                              RecCount,
                              RecNo,
                              SetFieldExtent,
@@ -565,6 +620,59 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    return SUCCESS;
 }
 
+int  hb_GetCurrentWorkAreaNumber( void )
+{
+   return uiCurrArea;
+}
+
+void hb_SelectWorkAreaNumber( int iArea )
+{
+   LPAREANODE pAreaNode;
+
+   uiCurrArea = iArea;
+
+   pAreaNode = pWorkAreas;
+   while( pAreaNode )
+   {
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
+      {
+         pCurrArea = pAreaNode; /* Select a valid WorkArea */
+         return;
+      }
+      pAreaNode = pAreaNode->pNext;
+   }
+   pCurrArea = 0;               /* Selected WorkArea is closed */
+}
+
+/*
+ * -- HARBOUR FUNCTIONS --
+ */
+
+HARBOUR HB_ALIAS( void )
+{
+   USHORT uiArea;
+   LPAREANODE pAreaNode;
+   
+   uiArea = hb_parni( 1 );
+   uiArea = uiArea ? uiArea : uiCurrArea;
+   pAreaNode = pWorkAreas;
+   while( pAreaNode )
+   {
+      if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiArea )
+      {
+         if( ( ( AREAP ) pAreaNode->pArea )->atomAlias &&
+             ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->hArea )
+         {
+            hb_retc( ( ( PHB_DYNS ) ( ( AREAP ) pAreaNode->pArea )->atomAlias )->pSymbol->szName );
+            return;
+         }
+         break;
+      }
+      pAreaNode = pAreaNode->pNext;
+   }
+   hb_retc( "" );
+}
+
 HARBOUR HB_BOF( void )
 {
    BOOL bBof = TRUE;
@@ -600,6 +708,14 @@ HARBOUR HB_DBCLOSEAREA( void )
    hb_xfree( pCurrArea->pArea );
    hb_xfree( pCurrArea );
    pCurrArea = 0;
+}
+
+HARBOUR HB_DBCOMMIT( void )
+{
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      SELF_FLUSH( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBCOMMIT" );
 }
 
 HARBOUR HB_DBCREATE( void )
@@ -677,6 +793,14 @@ HARBOUR HB_DBCREATE( void )
    hb_xfree( pTempArea );
 }
 
+HARBOUR HB_DBDELETE( void )
+{
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      SELF_DELETE( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBDELETE" );
+}
+
 HARBOUR HB_DBGOBOTTOM( void )
 {
    if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
@@ -710,6 +834,14 @@ HARBOUR HB_DBGOTOP( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBGOTOP" );
 }
 
+HARBOUR HB_DBRECALL( void )
+{
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      SELF_RECALL( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "DBRECALL" );
+}
+
 HARBOUR HB_DBSELECTAREA( void )
 {
    USHORT uiNewArea;
@@ -721,7 +853,7 @@ HARBOUR HB_DBSELECTAREA( void )
       szAlias = hb_parc( 1 );
       szAlias = hb_strUpper( szAlias, strlen( szAlias ) );
      
-      if( ( uiNewArea = hb_FindAlias( szAlias ) ) == 0 )
+      if( ( uiNewArea = hb_Select( szAlias ) ) == 0 )
       {
          hb_errRT_BASE( EG_NOALIAS, 1002, 0, szAlias );
          return;
@@ -929,6 +1061,8 @@ HARBOUR HB_DBUSEAREA( void )
       return;
    }
 
+   ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+
    /* Insert the new WorkArea node */
 
    if( !pWorkAreas )
@@ -953,6 +1087,15 @@ HARBOUR HB_DBUSEAREA( void )
    }
    pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
    pCurrArea->pPrev = pAreaNode;
+}
+
+HARBOUR HB_DELETED( void )
+{
+   BOOL bDeleted = FALSE;
+   
+   if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
+      SELF_DELETE( ( AREAP ) pCurrArea->pArea, &bDeleted );
+   hb_retl( bDeleted );
 }
 
 HARBOUR HB_EOF( void )
@@ -1137,6 +1280,17 @@ HARBOUR HB_RECCOUNT( void )
    if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
       SELF_RECCOUNT( ( AREAP ) pCurrArea->pArea, &ulRecCount );
    hb_retnl( ulRecCount );
+}
+
+HARBOUR HB_SELECT( void )
+{
+   char * szAlias;
+   
+   szAlias = hb_parc( 1 );
+   if( strlen( szAlias ) > 0 )
+      hb_retni( hb_Select( szAlias ) );
+   else
+      hb_retni( uiCurrArea );
 }
 
 HARBOUR HB_USED( void )

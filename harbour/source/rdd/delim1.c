@@ -68,9 +68,13 @@ static RDDFUNCS delimTable = { 0,                /* Super Bof */
                                0,                /* Super Skip */
                                0,                /* Super AddField */
                                0,                /* Super CreateFields */
+                               0,                /* Super DeleteRec */
+                               0,                /* Super Deleted */
                                0,                /* Super FieldCount */
                                0,                /* Super FieldName */
+                               0,                /* Super Flush */
                                0,                /* Super GetValue */
+                               0,                /* Super Recall */
                                0,                /* Super RecCount */
                                0,                /* Super RecNo */
                                0,                /* Super SetFieldExtent */
