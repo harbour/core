@@ -1,4 +1,7 @@
 /*
+ * $Id$
+ */
+/*
  * Harbour Project source code:
  * ODBC Access Class
  *
@@ -130,7 +133,7 @@ METHOD New( cODBCStr ) CLASS TODBC
 
    LOCAL xBuf
 
-   WHILE .t.
+//   WHILE .t.
       ::cODBCStr := cODBCStr
       ::Active   := .f.
       ::Fields   := {}
@@ -144,7 +147,7 @@ METHOD New( cODBCStr ) CLASS TODBC
          ::nRetCode := nRet
          alert( "SQLAllocEnvironment Error" )
          alert( ::SQLErrorMessage() )
-         EXIT
+//         EXIT
 
       ENDIF
 
@@ -153,7 +156,7 @@ METHOD New( cODBCStr ) CLASS TODBC
 
       SQLDriverC( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
       ::cODBCRes := xBuf
-   ENDDO
+//   ENDDO
 
 RETURN ( Self )
 

@@ -1,3 +1,8 @@
+19991021-16:02 GMT+3 Alexander Kresin
+  * contrib/odbc/todbc.prg
+    * there was an infinite loop in TOdbc():New(),
+    * now it works correctly.
+
 19991021-09:14 GMT+3 Alexander Kresin
   + contrib/odbc/todbc.prg
   + contrib/odbc/readme.txt
