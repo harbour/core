@@ -1,8 +1,8 @@
 //
 // Guess a number
 //
-// Written by : E.Runia
-// Date       : 22/4/99
+// Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+// Date       : 1999/04/22
 //
 // My first application (big word) written in Harbour
 //

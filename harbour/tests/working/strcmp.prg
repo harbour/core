@@ -3,6 +3,8 @@
 //
 // Date : 24/4/99 Time : 17:50
 //
+// Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+//
 
 procedure main()
 

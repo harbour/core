@@ -1,8 +1,14 @@
 //
 // Mankala. The first Harbour board game.
 //
+// Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+//
 // Date : 30/04/1999
 // Time : 14:00
+//
+// Original algorithm from the public domain
+//
+// This test has therefore been placed in the public domain
 //
 
 function Main()

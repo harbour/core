@@ -1,3 +1,10 @@
+19990707-20:10 Eddie Runia <eddie@runia.com>
+  * tests/working/mankala.prg; tests/working/transfrm.prg;
+    tests/working/debugtst.prg; tests/working/readhrb.prg;
+    tests/working/strip.prg; tests/working/inherit.prg;
+    tests/working/guess.prg
+      Copyright added (why not)
+
 19990707-19:40:00 Eddie Runia <eddie@runia.com>
   * source\rtl\asort.prg; source\rtl\objfunc.prg; source\runner\runner.c;
     tests\working\runner.c; source\tools\debug.c; source\tools\stringp.prg
