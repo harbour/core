@@ -316,7 +316,6 @@ METHOD Open() CLASS TODBC
         END
         
         ::nRecCount := len(::aRecordSet)
-        ::First()
       ENDIF
       
       // Newly opened recordset - we are on first row
@@ -324,7 +323,9 @@ METHOD Open() CLASS TODBC
       
       // Sets the Dataset state to active
       ::Active := .t.
-      
+
+      // Put data in fields array
+      ::LoadData(::nRecNo)
       EXIT
 
    ENDDO

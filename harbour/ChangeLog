@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2003-04-13 10:23 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * contrib/odbc/todbc.prg
+    ! Better way to move to first record after fetching
 
 2003-04-13 10:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/whatsnew.txt
