@@ -1,0 +1,13 @@
+/*
+ * $Id$
+ */
+
+function main()
+
+   local a:="test"
+   ? a
+
+   USE "test.dbf" ALIAS test SHARED NEW
+
+return nil
+

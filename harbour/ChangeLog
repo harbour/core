@@ -1,3 +1,8 @@
+2001-06-07 20:39 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * contrib/tprepro/tprepro.prg
+     + Added TestPrePro tes test preprocessor output
+   + test.scr file. This is a test script
+
 2001-06-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib\libct\alt\token1.prg

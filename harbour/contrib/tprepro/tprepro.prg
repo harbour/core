@@ -48,6 +48,24 @@
  *
  */
 
+
+//----------------------------------------------------------------------
+Function TestTPerPro()
+LOCAL cScript, oPP
+
+oPP:=TPreProcessor():New("c:\harbour\include")
+oPP:TranslateFile( "Test.scr", .t.,"ppo",.f.)
+oPP:End()
+
+Alert("Please, see test.ppo for preprocessed result")
+
+RETURN NIL
+
+
+
+
+
+
 //------------------------------------------------------------------------
 #include "hbclass.ch"
 
@@ -77,7 +95,7 @@ METHOD New( cIncludePath ) CLASS TPreprocessor
 
    __PP_Init( cIncludePath )
 
-   ::cIncludepath:=cIncludePath )
+   ::cIncludepath:=cIncludePath
 
 return Self
 
@@ -187,7 +205,7 @@ METHOD TranslateFile( cFile, lWritePPO, cPPOExt, lWasteNoSpace ) CLASS TPreproce
 
       if lWasteNoSpace
          if !Empty( cPP )
-            cResult+= LTrim( cPP )
+            cResult+= LTrim( cPP ) + Replicate(CRLF,nPuntComma)
          endif
       else
          cResult+=cPP + Replicate(CRLF,nPuntComma)
