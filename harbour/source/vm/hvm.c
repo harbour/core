@@ -106,7 +106,7 @@ static void hb_vmForceLink( void );
 /* virtual machine state */
 
 BOOL     bHB_DEBUG = FALSE;  /* if TRUE traces the virtual machine activity */
-BOOL     bDebugging = FALSE; /* TRUE if we are running a /b compiled module */
+BOOL     bDebugging = FALSE;
 BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
 STACK    stack;
 HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
@@ -378,7 +378,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LINE:
               stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              if( bDebugShowLines )
+              if( bDebugging && bDebugShowLines )
                  hb_vmDebuggerShowLine( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
@@ -844,6 +844,9 @@ void hb_vmDo( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
+   BOOL bDebugPrevState = bDebugging;
+
+   bDebugging = FALSE;
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -895,6 +898,8 @@ void hb_vmDo( WORD wParams )
 
    stack.pBase = stack.pItems + wStackBase;
    stack.iStatics = iStatics;
+
+   bDebugging = bDebugPrevState;
 }
 
 HARBOUR hb_vmDoBlock( void )

@@ -39,21 +39,22 @@
 
 static oDebugger
 
-function Debugger( uParam )
+function Debugger( uParam )  // debugger entry point
 
    do case
-      case ValType( uParam ) == "C"
+      case ValType( uParam ) == "C"   // called from hvm.c hb_vmModuleName()
            if oDebugger == nil
               oDebugger = TDebugger():New()
               oDebugger:Activate( uParam )
            endif
 
-      case ValType( uParam ) == "N"
+      case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebugShowLines()
            if oDebugger != nil
               oDebugger:cAppImage  = SaveScreen()
               oDebugger:nAppRow    = Row()
               oDebugger:nAppCol    = Col()
               oDebugger:cAppColors = SetColor()
+              oDebugger:nAppCursor = SetCursor()
               RestScreen( 0, 0, MaxRow(), MaxCol(), oDebugger:cImage )
               DispEnd()
               oDebugger:GoToLine( uParam )
@@ -70,7 +71,7 @@ CLASS TDebugger
    DATA   oBar, oBrwText
    DATA   cImage, nOldCursor
    DATA   lEnd
-   DATA   cAppImage, nAppRow, nAppCol, cAppColors
+   DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -151,6 +152,7 @@ METHOD HandleEvent() CLASS TDebugger
               RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
               SetPos( ::nAppRow, ::nAppCol )
               SetColor( ::cAppColors )
+              SetCursor( ::nAppCursor )
               ::Exit()
 
          otherwise
@@ -257,6 +259,7 @@ CLASS TDbWindow  // Debugger windows
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD Show( lFocused )
+   METHOD Move()
 
 ENDCLASS
 
@@ -286,6 +289,53 @@ METHOD Show( lFocused ) CLASS TDbWindow
       @ ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ;
          SAY ::cCaption
    endif
+
+return nil
+
+/*Method move()
+Move a window across the screen
+Copyright Luiz Rafael Culik 1999
+*/
+METHOD Move() Class TDbWindow
+
+#define pbar1 replicate(chr(176),8)+chr(32)
+
+   local noldtop  := ::nTop
+   local noldleft := ::nLeft
+   local noldbottom := ::nbottom
+   local noldright := ::nright
+   local nkey
+
+   while .t.
+      restscreen(,,,, ::cbackimage)
+      dispbox(::ntop,::nleft,::nright,::nbottom,pbar1)
+      nkey=inkey(0)
+      do case
+         case nkey==K_UP
+              if(::ntop !=0,(::ntop--,::nbottom--),nil)
+
+         case nkey==K_DOWN
+              if(::nbottom !=maxrow(),(::ntop++,::nbottom++),nil)
+
+         case nkey==K_LEFT
+              if(::nleft!=0,(::nleft--,::nright--),nil)
+
+         case nkey==K_RIGHT
+              if(::nbottom !=maxrow(),(::nleft++,::nright++),nil)
+
+         case nkey==K_ESC
+              ::ntop:=noldtop
+              ::nleft:=nolfleft
+              ::nbottom:=noldbottom
+              ::nright:=noldright
+      endcase
+
+      if ( nkey==K_ESC .or. nkey==K_ENTER)
+         exit
+      end
+   end
+
+   // __keyboard(chr(0)),inkey())
 
 return nil
 
