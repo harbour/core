@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-20 22:33 UTC+0100 J.lefebvre (Mafact) <jfl@mafact.com>
+ * contrib/htmllib
+   * makefile.vc (Forget -p as Harbour param, creating ppo files when not needed)
+ * source/compiler/hbusage.c
+   * void hb_compPrintCredits( void )
+     Major bug fixed where my name was missing from the list ;-))))
+
 2002-05-20 16:20 UTC+0100 J.lefebvre (Mafact) <jfl@mafact.com>
  * contrib/htmllib
    + make_b32.bat (not tested !!!!)
