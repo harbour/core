@@ -1,3 +1,11 @@
+2001-02-26 19:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+      +Added support yo build librarys
+      %optimized the check if the file is newer then the object file.
+      +added Trap for errors return from command
+   *source/vm/estack.c
+      *added define when source is compiled with -DHB_INCLUDE_WINEXCHANDLER
+
 2001-03-24 23:07 GMT-3 Horacio Roldan <horacioroldan@usa.net>
    * harbour/source/rdd/dbf1.c
      * fixed bug handling drive letter in opening memo file
