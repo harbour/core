@@ -306,14 +306,13 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     column := oBro:getColumn( oBro:colPos )
 
     // create a corresponding GET
-    cValue := PadR( ValToStr( pitem[nSet,2] ), column:Width )
-    @  row(),col() GET cValue
-//    get := Getnew( Row(),col(), column:block,,, oBro:colorSpec )
+    cValue := PadR( ValToStr( pitem[ nSet, 2 ] ), column:Width + 2 )
 
+    @ row(),col() GET cValue ;
+        VALID If( Type( cValue ) == "UE", ( Alert( "Expression error" ), .f. ), .t. )
 
-    // read it
-    ReadModal(getlist )
-//    eval(column:block,get:Buffer)
+    READ
+
     // restore state
     SetCursor( 0 )
     Set( _SET_SCOREBOARD, lScoreSave )

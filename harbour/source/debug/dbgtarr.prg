@@ -138,22 +138,26 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
 
    local nRecsToSkip
    do case
-
       case nKey == K_UP
               oBrwSets:Up()
+
       case nKey == K_DOWN
               oBrwSets:Down()
+
       case nKey == K_HOME .or. (nKey == K_CTRL_PGUP) .or. (nKey == K_CTRL_HOME)
               oBrwSets:GoTop()
+
       case nKey == K_END .or. (nkey == K_CTRL_PGDN) .or. (nkey == K_CTRL_END )
               oBrwSets:GoBottom()
+
       Case nKey == K_PGDN
               oBrwSets:pageDown()
+
       Case nKey == K_PGUP
               OBrwSets:PageUp()
-      Case nKey ==13
 
-               if valtype(aArray[nSet])=="A"
+      Case nKey == K_ENTER
+           if valtype(aArray[nSet])=="A"
                   SetPos(ownd:nBottom,ownd:nLeft)
                   ::aWindows[::nCurwindow]:lFocused:=.f.
                   ::arrayname:= ::arrayname+"["+alltrim(cTemp)+"]"
@@ -167,26 +171,31 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
                   else
                   ::ncurwindow--
                   endif
-               elseif valtype(aArray[nSet])=="B"
+           elseif valtype(aArray[nSet])=="B"
                   Alert("Value cannot be edited")
-               else
-
+           else
               if ::lEditable
                  oBrwSets:RefreshCurrent()
-                 ::doget(oBrwsets,aarray,nSet)
+                 if ValType( aArray[ nSet ] ) == "O"
+                    __DbgObject( aArray[ nSet ], cName + ;
+                                 "[" + AllTrim( Str( nSet ) ) + "]" )
+                 else
+                    ::doget(oBrwsets,aarray,nSet)
+                 endif
                  oBrwSets:RefreshCurrent()
                  oBrwSets:ForceStable()
               else
                  Alert("Value cannot be edited")
               endif
 
-          endif
+           endif
 
    endcase
-      RefreshVarsS(oBrwSets)
 
-      ::aWindows[::nCurwindow]:SetCaption( cName + "["+AllTrim( Str( oBrwSets:cargo[1] ) ) +".."+ ;
-                       Alltrim(str(LenArr))+ "]")
+   RefreshVarsS( oBrwSets )
+
+   ::aWindows[::nCurwindow]:SetCaption( cName + "["+AllTrim( Str( oBrwSets:cargo[1] ) ) +".."+ ;
+                                        Alltrim(str(LenArr))+ "]")
 return self
 
 static function ValToStr( uVal )
@@ -197,8 +206,10 @@ static function ValToStr( uVal )
    do case
       case uVal == nil
            cResult := "NIL"
+
       Case cType  =="B"
          cResult:= "{ || ... }"
+
       case cType == "A"
            cResult := "{ ... }"
 
@@ -220,33 +231,38 @@ static function ValToStr( uVal )
 
 return cResult
 
-METHOD doGet(oBro,pItem,nSet) Class TDBGArray
-    LOCAL column,  nKey
-    local getlist:={}
+METHOD doGet( oBro, pItem, nSet ) Class TDBGArray
+
+    LOCAL nKey
+    local getlist := {}
     // save state
     LOCAL lScoreSave := Set( _SET_SCOREBOARD, .f. )
     LOCAL lExitSave  := Set( _SET_EXIT, .t. )
     LOCAL bInsSave   := SetKey( K_INS )
+    local cValue     := PadR( ValToStr( pItem[ nSet ] ),;
+                              oBro:nRight - oBro:nLeft - oBro:GetColumn( 1 ):width )
 
     // make sure browse is stable
     obro:forcestable()
     // if confirming new record, append blank
 
     // set insert key to toggle insert mode and cursor
-    SetKey( K_INS, ;
-        { || SetCursor( if(ReadInsert(!ReadInsert()), SC_NORMAL, SC_INSERT)) };
-          )
+    SetKey( K_INS, { || SetCursor( if( ReadInsert( ! ReadInsert() ),;
+            SC_NORMAL, SC_INSERT ) ) } )
 
     // initial cursor setting
     SetCursor( IF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
-    // get column object from browse
-    column := oBro:getColumn( oBro:colPos )
-
     // create a corresponding GET
-    @  row(),col() get pItem[nSet]
-    // read it
-    ReadModal(getlist )
+    @ row(), oBro:nLeft + oBro:GetColumn( 1 ):width + 1 GET cValue ;
+       VALID If( Type( cValue ) == "UE", ( Alert( "Expression error" ), .f. ), .t. )
+
+    READ
+
+    if LastKey() == K_ENTER
+       pItem[ nSet ] = &cValue
+    endif
+
     SetCursor( 0 )
     Set( _SET_SCOREBOARD, lScoreSave )
     Set( _SET_EXIT, lExitSave )
@@ -257,10 +273,12 @@ METHOD doGet(oBro,pItem,nSet) Class TDBGArray
     IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
         KEYBOARD CHR( nKey )
     END
+
 RETURN  nil
 
-function __DbgArrays(aArray,cArrayName,lEditable)
-return TDBGArray():New(aArray,cArrayName,lEditable)
+function __DbgArrays( aArray, cArrayName, lEditable )
+
+return TDBGArray():New( aArray, cArrayName, lEditable )
 
 Static function GetTopPos(nPos)
 Local nReturn:=0
