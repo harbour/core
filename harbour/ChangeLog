@@ -1,3 +1,11 @@
+20000803-13:13 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/macro/macro.slx
+     + added id tag
+   * source/compiler/harbour.slx
+     + added id tag
+   * source/compiler/hbslex.c
+     + added id tag
+
 20000803-13:08 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * config/os2/global.cf
      + first command of clean: tag requires a double backslash

@@ -1,3 +1,8 @@
+/*
+ * $Id$
+ */
+
+
 #include "hbcomp.h"
 #include "harboury.h"
 #include "hbsetup.h"
