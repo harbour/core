@@ -61,6 +61,9 @@
  * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
  *    hb_clsDictRealloc()
  *
+ * Copyright 2000  JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ *    hb_clsDictRealloc()   New version
+ *
  * Copyright 2000 JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  *    Now support of shared and not shared class data
  *    Multiple inheritence fully implemented
@@ -75,7 +78,7 @@
  *    hb___msgClsParent()
  *    __CLS_PARAM()
  *    __CLSPARENT()
- *    __SENDER()        (Work in progress)
+ *    __SENDER()
  *    hb_cls_MsgToNum() (New Hashing method to allow a better use of buckets)
  *    hb_clsIsParent()
  *    hb_clsScope()
@@ -308,9 +311,9 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
             }
          }
 
-         /* if CLS_HIDDEN defined, a call to a hidden msg will result to a msg not found error. */
+         /* if HB_CLS_MASKHIDDEN defined, a call to a hidden msg will result to a msg not found error. */
 
-#ifndef HB_MASKHIDDEN
+#ifndef HB_CLS_MASKHIDDEN
          if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
          {
             if( ( uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
@@ -335,7 +338,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
          strcat( szName, pMessage->pSymbol->szName );
          hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName );
       }
-#ifndef CLS_HIDDEN
+#ifndef HB_CLS_MASKHIDDEN
       else if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
       {
          strcpy( szName, szNameObject );
@@ -346,8 +349,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 #endif
 
       if( ( uiScope & HB_OO_CLSTP_READONLY ) == HB_OO_CLSTP_READONLY )
-      {  
-         printf("\nszMsgBase = %s", pMessage->pSymbol->szName);
+      {
          if(
              ( pMethod->pFunction == hb___msgSetData    ) ||
              ( pMethod->pFunction == hb___msgSetClsData ) ||
@@ -400,7 +402,7 @@ BOOL hb_clsIsParent( PCLASS pClass, char * szParentName )
          return hb_clsIsParent( pSprCls, szParentName );
       }
    }
-   
+
    return FALSE;
 }
 
@@ -479,7 +481,6 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
-   char Tmp[255];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetMethod(%p, %p)", pObject, pMessage));
 
@@ -512,7 +513,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       }
    }
 
-   /* TODO: bad method, we should always inherit by default from one generic 
+   /* TODO: bad method, we should always inherit by default from one generic
             superobject which then should know those methods ! [JfL&RaC] */
 
    if( s_msgClassName == NULL )
@@ -792,18 +793,16 @@ HB_FUNC( __CLSADDMSG )
 HB_FUNC( __CLSNEW )
 {
    PCLASS  pNewCls;
-   PMETHOD pMeth;
    USHORT  uiSize;
 
-   PHB_ITEM pSrc, pDst, pahSuper;
+   PHB_ITEM pahSuper;
    USHORT i, uiSuper;
 
    pahSuper = hb_itemParam( 3 );      /* Replace the initial uiSuper   */
    uiSuper  = hb_itemSize( pahSuper ); /* Number of Super class present */
 
    if( s_pClasses )
-      s_pClasses = ( PCLASS ) hb_xrealloc( s_pClasses,
-                 sizeof( CLASS ) * ( s_uiClasses + 1 ) );
+      s_pClasses = ( PCLASS ) hb_xrealloc( s_pClasses, sizeof( CLASS ) * ( s_uiClasses + 1 ) );
    else
       s_pClasses = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
 
@@ -823,9 +822,9 @@ HB_FUNC( __CLSNEW )
       {
          PHB_DYNS pMsg;
          PHB_ITEM pSuper;
-         PHB_ITEM pClsAnyTmp, pClsNewTmp;
+         PHB_ITEM pClsAnyTmp;
          USHORT nSuper;
-         USHORT nLen, nLenShrDatas, nLenClsDatas, nLenInlines;
+         USHORT nLen, nLenShrDatas = 0, nLenClsDatas = 0, nLenInlines = 0;
          USHORT ui, uiAt, uiLimit;
          PCLASS pSprCls;
 
@@ -851,28 +850,17 @@ HB_FUNC( __CLSNEW )
 
             if( pSprCls->pSharedDatas )
             {
-
                pNewCls->pSharedDatas = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
                pNewCls->uiDatasShared = pSprCls->uiDatasShared;
 
                hb_xmemcpy( pNewCls->pSharedDatas, pSprCls->pSharedDatas, sizeof( PHB_ITEM ) * pSprCls->uiDatasShared );
-
             }
 
             pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
 
-            nLenShrDatas = 0; /* In fact, this is really previous len */
-            nLenClsDatas = 0; /* so we have to init it to 0 for the first */
-            nLenInlines  = 0; /* SuperClass, they will add an offset to the array pos */
-
          }
          else
          {
-            USHORT nLenNew, nLenSpr;
-            PHB_ITEM pTmp;
-            ULONG ulLen;
-            ULONG ulPos;
-
             /* Ok add now the previous len to the offset */
             nLenShrDatas += pNewCls->uiDatasShared;
             nLenClsDatas += hb_itemSize( pNewCls->pClassDatas );
@@ -899,7 +887,6 @@ HB_FUNC( __CLSNEW )
                   hb_xmemcpy(pNewCls->pSharedDatas + pNewCls->uiDatasShared , pSprCls->pSharedDatas ,  pSprCls->uiDatasShared * sizeof( PHB_ITEM ) );
 
                   pNewCls->uiDatasShared += pSprCls->uiDatasShared;
-
                }
                else
                {
@@ -947,7 +934,7 @@ HB_FUNC( __CLSNEW )
                    if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
                       break;
 
-#ifdef HB_MASKHIDDEN /* no hidden methods allowed by the inheritence. */
+#ifdef HB_CLS_MASKHIDDEN /* no hidden methods allowed by the inheritence. */
                    if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
                       break;
 #endif
@@ -988,13 +975,13 @@ HB_FUNC( __CLSNEW )
                       if( pSprCls->pMethods[ ui ].pInitValue )
                       {
                          PHB_ITEM pInitValue;
-                      
+
                          if( HB_IS_ARRAY( pSprCls->pMethods[ ui ].pInitValue ) )
                             pNewCls->pMethods[ uiAt+uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue );
                          else
                          {
                             pInitValue = hb_itemNew( NULL );
-                      
+
                             hb_itemCopy( pInitValue, pSprCls->pMethods[ ui ].pInitValue );
                             pNewCls->pMethods[ uiAt+uiBucket ].pInitValue = pInitValue;
                          }
@@ -1002,9 +989,7 @@ HB_FUNC( __CLSNEW )
                       break;
                    }
                    else if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName == pMsg->pSymbol->szName )
-                   {
                       break;
-                   }
                 }
              }
          }
@@ -1025,7 +1010,6 @@ HB_FUNC( __CLSNEW )
       pNewCls->pSharedDatas = 0;
       pNewCls->pInlines     = hb_itemArrayNew( 0 );
       pNewCls->pFunError    = NULL;
-
    }
    hb_itemRelease( pahSuper );
    hb_retni( ++s_uiClasses );
@@ -1284,8 +1268,6 @@ HB_FUNC( __OBJCLONE )
  */
 HB_FUNC( __OBJSENDMSG )
 {
-   USHORT uiAt;
-   PCLASS pClass;
    PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
    PHB_ITEM pMessage = hb_param( 2, HB_IT_STRING );
 
@@ -1496,16 +1478,16 @@ HB_FUNC( __CLS_PARAM )
    PHB_ITEM array;
    USHORT uiParam = hb_pcount();
    USHORT n;
-   
+
    array = hb_itemArrayNew( uiParam );
-   
+
    for( n = 1; n <= uiParam; n++ )
    {
       PHB_ITEM iTmp = hb_itemParam( n );
       hb_itemArrayPut( array, n, iTmp );
       hb_itemRelease( iTmp );
    }
-   
+
    hb_itemReturn( array );
    hb_itemRelease( array );
 }
@@ -1515,23 +1497,26 @@ HB_FUNC( __CLSPARENT )
    hb_retl( hb_clsIsParent( s_pClasses + ( hb_parni( 1 ) - 1 ), hb_parc( 2 ) ) );
 }
 
+
 HB_FUNC( __SENDER )
 {
    PHB_ITEM pBase = hb_stack.pBase;
+   PHB_ITEM oReturn ;
    PHB_ITEM oSender;
-   USHORT iLevel = 1;
+   USHORT iLevel = 3;
    char * szNameSender;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+   while( iLevel > 0 && pBase != hb_stack.pItems )
+   {
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
+      oSender = pBase + 1;
 
-   oSender = pBase + 2;
-   szNameSender = hb_objGetClsName( oSender );
+      if( ( iLevel-- == 2 && ( oSender )->type != HB_IT_BLOCK ) || ( oSender )->type == HB_IT_NIL )
+         break;
+   }
 
-   printf("\nszNameSender : %s", szNameSender );
-
-   if( oSender->type == HB_IT_ARRAY )
-      hb_itemReturn( oSender );
+   if( iLevel == 0 && ( oSender )->type == HB_IT_OBJECT )
+      hb_itemCopy(&hb_stack.Return, oSender);
 }
 
 /* ================================================ */
@@ -1561,7 +1546,7 @@ static HARBOUR hb___msgClsParent( void )
    PHB_ITEM pItemRef;
    PHB_ITEM pItemParam;
    PCLASS pClass;
-   char * szParentName;
+   char * szParentName = 0;
    USHORT uiClass, i;
 
    if( HB_IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */

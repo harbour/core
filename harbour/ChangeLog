@@ -1,3 +1,15 @@
+2000-05-29 22:41 UTC+0200 JFl&RaC <jfl@mafact.com>,<rac@mafact.com>
+ *Some test prog for the new classes and accepted syntax
+ +harbour/tests/DELEGAT.PRG
+ +harbour/tests/FORWARD.PRG
+ +harbour/tests/MULTINH.PRG
+ +harbour/tests/POLYMORF.PRG
+ +harbour/tests/SCOPING.PRG
+
+ *harbour/source/vm/classes.c
+  -Minor correction regarding HIDDEN status at compile time
+  -__Sender() now returning the sender object when using 'delegating'
+
 2000-05-29 22:26 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * doc/whatsnew.txt
@@ -30,7 +42,7 @@
 
    * source/compiler/harbour.l
    * source/rtl/tclass.prg
-     - :: now again translates to Self, since QSelf() is not working well 
+     - :: now again translates to Self, since QSelf() is not working well
        when used in a codeblock. So this change postponed after version 0.34
 
 2000-05-28 23:00 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
@@ -57,7 +69,7 @@
    * doc/whatsnew.txt
      + Class features added.
 
-   * source/compiler/harbour.y 
+   * source/compiler/harbour.y
      - One TODO removed.
 
    * source/rtl/ttopbar.prg
@@ -65,11 +77,11 @@
      % __AltToKey() - minor optimization (one variable removed).
 
    * include/hbclass.ch
-   * include/hbextern.ch 
+   * include/hbextern.ch
    * include/hboo.ch
-   * include/hbsetup.ch 
+   * include/hbsetup.ch
    * source/rtl/objfunc.prg
-   * source/rtl/tclass.prg 
+   * source/rtl/tclass.prg
    * source/vm/classes.c
      * Some variables, macros and functions renamed, some types changed
        (unsigned -> ULONG, USHORT -> BOOL)
@@ -87,7 +99,7 @@
    * source/rtl/Makefile
    * makefile.bc
    * makefile.vc
-     * Two classes in one file separated to two files to compile with 
+     * Two classes in one file separated to two files to compile with
        STRICT, SHORTNAMES mode.
 
    * source/rtl/tgetlist.prg
@@ -96,11 +108,11 @@
      * Restored the previous high level CLASS versions (the fixes where kept),
        since it should now work with 10 chars mode.
      ! Some fixes to make it work in 10 chars mode.
-     ; Now Harbour will compile with 10 chars mode, but note that it still 
+     ; Now Harbour will compile with 10 chars mode, but note that it still
        won't link.
 
-   * source/vm/proc.c 
-   * include/hbapi.h 
+   * source/vm/proc.c
+   * include/hbapi.h
      * hb_procname() declaration moved to the central header.
 
    * source/rtl/setkey.c
@@ -110,7 +122,7 @@
      + HB_SETKEYARRAY() added.
 
 2000-05-28 21:50 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
- 
+
   *contrib\hbzlib\zlibapi.c
     *Small changes
   *contrib\hbzlib\test.prg
@@ -132,9 +144,9 @@
    * source/compiler/harbour.l
      ! Fixed the compiler to not generate reference to the "Self"
        variable but use the native "QSelf()" instead in the "::" operator.
-       Note that HBCLASS.CH still declares Self, but this is no more 
-       a requirement. This way :: operator is a bit faster, and the pcode is 
-       smaller. If the "Self" variable would be removed from HBCLASS.CH, it 
+       Note that HBCLASS.CH still declares Self, but this is no more
+       a requirement. This way :: operator is a bit faster, and the pcode is
+       smaller. If the "Self" variable would be removed from HBCLASS.CH, it
        would be even faster.
 
 2000-05-28 22:16 UTC+0200   Jfl&RaC <jfl@mafact.com>
