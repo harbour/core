@@ -101,7 +101,7 @@ extern void   hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRig
 extern void   hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
 extern void   hb_gt_DispBegin( void );
 extern void   hb_gt_DispEnd( void );
-extern void   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
+extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 extern BOOL   hb_gt_GetBlink(void);
 extern void   hb_gt_SetBlink(BOOL bBlink);
 

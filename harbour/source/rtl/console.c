@@ -161,13 +161,6 @@ void hb_consoleInitialize( void )
    CrLf [1] = 0;
 #endif
 
-#ifdef HARBOUR_USE_GTAPI
-   hb_gtInit();
-   hb_gtGetPos( &dev_row, & dev_col);
-#else
-   dev_row = 0;
-   dev_col = 0;
-#endif
    p_row = p_col = 0;
 
    /* Some compilers open stdout and stderr in text mode, but
@@ -178,6 +171,14 @@ void hb_consoleInitialize( void )
 #elif defined(_MSC_VER)
    _setmode( _fileno( stdout ), _O_BINARY );
    _setmode( _fileno( stderr ), _O_BINARY );
+#endif
+
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtInit();
+   hb_gtGetPos( &dev_row, & dev_col);
+#else
+   dev_row = 0;
+   dev_col = 0;
 #endif
 }
 
@@ -706,7 +707,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
 
 HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 {
-   int i_top = 0, i_left = 0, i_bottom = hb_max_row(), i_right = hb_max_col(),
+   int i_top = 0, i_left = 0,iMR, iMC, i_bottom = iMR=hb_max_row(), i_right = iMC = hb_max_col(),
    v_scroll = 0, h_scroll = 0;
    WORD top, left, bottom, right;
 
@@ -725,27 +726,27 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
 
    /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
    if( i_top < 0 ) top = 0;
-   else if( i_top > hb_max_row() ) top = hb_max_row ();
+   else if( i_top > iMR ) top = iMR;
    else top = i_top;
    if( i_left < 0 ) left = 0;
-   else if( i_left > hb_max_col() ) left = hb_max_col ();
+   else if( i_left > iMC ) left = iMC;
    else left = i_left;
    if( i_bottom < 0 ) bottom = 0;
-   else if( i_bottom > hb_max_row() ) bottom = hb_max_row ();
+   else if( i_bottom > iMR ) bottom = iMR;
    else bottom = i_bottom;
    if( i_right < 0 ) right = 0;
-   else if( i_right > hb_max_col() ) right = hb_max_col ();
+   else if( i_right > iMC ) right = iMC;
    else right = i_right;
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtScroll( top, left, bottom, right, v_scroll, h_scroll );
 #else
-   if( top == 0 && bottom == hb_max_row()
-   && left == 0 && right == hb_max_col()
+   if( top == 0 && bottom == iMR
+   && left == 0 && right == iMC
    && v_scroll == 0 && h_scroll == 0 )
    {
       WORD count;
-      dev_row = hb_max_row();
+      dev_row = iMR;
       for( count = 0; count < dev_row ; count++ ) printf( "\n" );
       dev_row = dev_col = 0;
    }

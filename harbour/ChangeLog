@@ -1,3 +1,37 @@
+19990811-14:30 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/console.c
+    * set binary mode on stanard files before intializing gt system.
+    * HB_SCROLL - changed to only call hb_max_row and col once each.
+  * source/rtl/gtapi.c
+    * hb_gtInit()
+      + add call to hb_gtMaxRow and Col to initialize statics properly
+      - remove calls to setmode, setpos and setcursor
+    * some reformatting
+  * source/rtl/gt/gtwin.c
+    * simplified hb_gtDone
+    * modified code that returns maxrow and col to take into account
+      a window that is larger than the display region.  Now the system
+      will use a screen size of 25x40 or the visible window, whichever
+      is greater.  Comments?
+      NOTE: if you resize the window after initialization, Dispbegin/end
+      may cause the screen to jump around a bit - this will be corrected.
+      Also, if you resize the window while a savescreen is in effect,
+      the resulting restore screen will be unpleasant -this is being
+      reviewed.
+    * simplified hb_gt_DrawShadow
+    + static hb_gt_SetScreenBuffer()
+      * dispbegin/end support routine
+    ! changed hb_gt_SetMode to return BOOL
+  * include/gtapi.h source/rtl/gtdos.c
+    ! changed hb_gt_SetMode to return BOOL
+  * source/rtl/gtos2.c (Chen Kedem <niki@actcom.co.il>)
+    ! changed hb_gt_SetMode to return BOOL
+    + hb_gt_IsColor()
+    + hb_gt_SetAttribute()
+    + hb_gt_DrawShadow()
+  * source/rt/gt/gt_tpl.c
+    * changed a comment
+
 19990811-11:35 EDT David G. Holm <dholm@jsd-llc.com>
   * doc/gmake.txt
     + Added a new section under 'NOTES' discussing how to build only

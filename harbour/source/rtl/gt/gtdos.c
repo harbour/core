@@ -28,10 +28,10 @@
   #include <conio.h>
   #include <sys/farptr.h>
 #else
-#ifndef MK_FP
-#define MK_FP(seg,off) \
-  ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
-#endif
+  #ifndef MK_FP
+    #define MK_FP(seg,off) \
+      ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
+  #endif
 #endif
 
 static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch);
@@ -460,7 +460,6 @@ void hb_gt_DispBegin(void)
 #ifndef __DJGPP__
   if( hb_gtDispCount() == 1 )
   {
-    long offset;
     char FAR *ptr;
     ULONG nSize;
 
@@ -493,9 +492,10 @@ void hb_gt_DispEnd(void)
 #endif
 }
 
-void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
    uiRows=uiCols=0;
+   return 0;
 }
 
 void hb_gt_Replicate(char c, DWORD nLength)
@@ -534,6 +534,5 @@ void hb_gt_SetBlink( BOOL bBlink )
 #else
     int86(0x10, &regs, &regs);
 #endif
-    return;
 #endif
 }

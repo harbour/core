@@ -6,6 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.56   19990811   ptucker   Corrected initial MaxRow/col
  * 1.53   19990807   ptucker   Modified Dispbegin/end support
  * 1.47   19990802   ptucker   DispBegin/End and SetMode for gtWin
  * 1.46   19990801   ptucker   simplified hb_gtScroll if gtWin
@@ -67,8 +68,8 @@ static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
-static USHORT s_uiMaxCol=80;
-static USHORT s_uiMaxRow=24;
+static USHORT s_uiMaxCol;
+static USHORT s_uiMaxRow;
 
 int *_Color;           /* masks: 0x0007     Foreground
                                  0x0070     Background
@@ -88,9 +89,8 @@ void hb_gtInit(void)
     _ColorCount = 5;
     hb_gt_Init();
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
-    hb_gtSetMode( hb_gtMaxRow()+1, hb_gtMaxCol()+1 );
-    hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
-    hb_gtSetCursor(1);
+    hb_gtMaxRow();
+    hb_gtMaxCol();
 }
 
 void hb_gtExit(void)
@@ -247,6 +247,68 @@ int hb_gtDispEnd(void)
     return(0);
 }
 
+int hb_gtGetColorStr(char * fpColorString)
+{
+/* ptucker */
+    char *sColors;
+    int i,j=0,k = 0, nColor;
+
+    sColors = (char *)hb_xgrab( _ColorCount * 8 + 1 ); /* max possible */
+
+    for( i=0; i<_ColorCount; i++ )
+    {
+        j = 0;
+        nColor = _Color[i] & 7;
+        do
+        {
+            if( ( _Color[i] & (j ? 0x8000 : 0x800)) != 0 )
+                sColors[k++] = 'U';
+            else
+            {
+                if( nColor == 7 )
+                    sColors[k++] = 'W';
+                else
+                {
+                    if( nColor == 0 )
+                        sColors[k++] = 'N';
+                    else
+                    {
+                        if( ( nColor & 1 ) != 0 )
+                            sColors[k++] = 'B';
+
+                        if( ( nColor & 2 ) != 0 )
+                            sColors[k++] = 'G';
+
+                        if( ( nColor & 4 ) != 0 )
+                            sColors[k++] = 'R';
+                    }
+                }
+            }
+            if( j == 0 )
+            {
+                if( ( _Color[i] & 8 ) != 0 )
+                    sColors[k++] = '+';
+                sColors[k++] = '/';
+            }
+            else
+                if( ( _Color[i] & 128 ) != 0 )
+                    sColors[k++] = '*';
+
+            nColor = (_Color[i] >> 4) & 7;
+        }
+        while( ++j < 2 );
+
+        if( i+1 < _ColorCount )
+            sColors[k++] = ',';
+    }
+    sColors[k++] = '\0';
+
+    strcpy( fpColorString, sColors );
+    hb_xfree( sColors );
+
+    return(0);
+}
+
 int hb_gtSetColorStr(char * fpColorString)
 {
 /* ptucker */
@@ -394,68 +456,6 @@ int hb_gtSetColorStr(char * fpColorString)
     return(0);
 }
 
-int hb_gtGetColorStr(char * fpColorString)
-{
-/* ptucker */
-    char *sColors;
-    int i,j=0,k = 0, nColor;
-
-    sColors = (char *)hb_xgrab( _ColorCount * 8 + 1 ); /* max possible */
-
-    for( i=0; i<_ColorCount; i++ )
-    {
-        j = 0;
-        nColor = _Color[i] & 7;
-        do
-        {
-            if( ( _Color[i] & (j ? 0x8000 : 0x800)) != 0 )
-                sColors[k++] = 'U';
-            else
-            {
-                if( nColor == 7 )
-                    sColors[k++] = 'W';
-                else
-                {
-                    if( nColor == 0 )
-                        sColors[k++] = 'N';
-                    else
-                    {
-                        if( ( nColor & 1 ) != 0 )
-                            sColors[k++] = 'B';
-
-                        if( ( nColor & 2 ) != 0 )
-                            sColors[k++] = 'G';
-
-                        if( ( nColor & 4 ) != 0 )
-                            sColors[k++] = 'R';
-                    }
-                }
-            }
-            if( j == 0 )
-            {
-                if( ( _Color[i] & 8 ) != 0 )
-                    sColors[k++] = '+';
-                sColors[k++] = '/';
-            }
-            else
-                if( ( _Color[i] & 128 ) != 0 )
-                    sColors[k++] = '*';
-
-            nColor = (_Color[i] >> 4) & 7;
-        }
-        while( ++j < 2 );
-
-        if( i+1 < _ColorCount )
-            sColors[k++] = ',';
-    }
-    sColors[k++] = '\0';
-
-    strcpy( fpColorString, sColors );
-    hb_xfree( sColors );
-
-    return(0);
-}
-
 int hb_gtGetCursor(USHORT * uipCursorShape)
 {
     int i=hb_gt_GetCursorStyle();
@@ -473,10 +473,31 @@ int hb_gtGetCursor(USHORT * uipCursorShape)
     return(rc);
 }
 
+int hb_gtSetCursor(USHORT uiCursorShape)
+{
+    hb_gt_SetCursorStyle(uiCursorShape);
+    return(0);
+}
+
 int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol)
 {
-    *uipRow = s_uiCurrentRow;
-    *uipCol = s_uiCurrentCol;
+    *uipRow = s_uiCurrentRow = hb_gt_Row();
+    *uipCol = s_uiCurrentCol = hb_gt_Col();
+
+    return(0);
+}
+
+int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
+{
+    /* TODO: in this situation Clipper just turns off the cursor */
+    /* any further writes would be accounted for by clipping */
+    if(uiRow > s_uiMaxRow || uiCol > s_uiMaxCol)
+        return(1);
+
+    s_uiCurrentRow = uiRow;
+    s_uiCurrentCol = uiCol;
+
+    hb_gt_SetPos( uiRow, uiCol );
 
     return(0);
 }
@@ -576,12 +597,6 @@ int hb_gtSetBlink(BOOL bBlink)
     return(0);
 }
 
-int hb_gtSetCursor(USHORT uiCursorShape)
-{
-    hb_gt_SetCursorStyle(uiCursorShape);
-    return(0);
-}
-
 int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
 /* ptucker */
@@ -591,23 +606,12 @@ int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
     return(0);
 }
 
-int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
-{
-    /* TODO: in this situation Clipper just turns off the cursor */
-    /* any further writes would be accounted for by clipping */
-    if(uiRow > s_uiMaxRow || uiCol > s_uiMaxCol)
-        return(1);
-
-    s_uiCurrentRow = uiRow;
-    s_uiCurrentCol = uiCol;
-
-    hb_gt_SetPos( uiRow, uiCol );
-
-    return(0);
-}
-
 int hb_gtSetSnowFlag(BOOL bNoSnow)
 {
+   /* COMMENT: This is a compatibility function.
+      If you're running on a CGA and snow is a problem
+      speak up!
+   */
    HB_SYMBOL_UNUSED( bNoSnow );
     return(0);
 }

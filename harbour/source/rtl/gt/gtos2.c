@@ -35,8 +35,12 @@ void hb_gt_Done(void)
 
 int hb_gt_IsColor(void)
 {
-    /* TODO: How to detect this? */
-    return TRUE;
+/* Chen Kedem <niki@actcom.co.il> */
+    VIOMODEINFO vi;
+
+    vi.cb = sizeof(VIOMODEINFO);
+    VioGetMode(&vi, 0);
+    return (vi.fbType);        /* 0 = monochrom-compatible mode */
 }
 
 char hb_gt_GetScreenWidth(void)
@@ -231,17 +235,32 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 
 void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
-   /* TODO: we want to take a screen that is say bright white on blue,
-            and change the attributes only for a section of the screen
-            to white on black.
+/* Chen Kedem <niki@actcom.co.il> */
+   /*
+      TODO: work with DispBegin DispEnd
+      NOTE: type of attribute should be change from char to unsigned char to
+            allow the >127 attributes (sames goes for hb_gt_DrawShadow)
    */
+ 
+    USHORT width;
+    char y;
+
+   /*
+      assume top level check that coordinate are all valid and fall
+      within visible screen, else if width cannot be fit on current line
+      it is going to warp to the next line
+   */
+    width = (USHORT) (cRight - cLeft + 1);
+    for (y = cTop; y <= cBottom; y++)
+        VioWrtNAttr( &attribute, width, y, (USHORT) cLeft, 0);
 }
 
 void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
-   /* TODO: similar to above - either use gtwin.c as a template, or
-            leave it and I will extrapolate from above function.
-   */
+/* Chen Kedem <niki@actcom.co.il> */
+
+    hb_gt_SetAttribute( cBottom+1, cLeft+1, cBottom+1, cRight+1, attribute );
+    hb_gt_SetAttribute( cTop+1, cRight+1, cBottom+1, cRight+1, attribute );
 }
 
 void hb_gt_DispBegin(void)
@@ -258,18 +277,17 @@ void hb_gt_DispEnd(void)
    /* TODO: here we flush the buffer, and restore normal screen writes */
 }
 
-void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-    int rc;
     VIOMODEINFO vi;
+
     VioGetMode(&vi, 0);        /* fill structure with current settings */
     vi.row = uiRows;
     vi.col = uiCols;
-    rc = VioSetMode(&vi, 0);   /* 0 = Ok, other = Fail */
-/*  return rc   */             /* TODO: set a return value for this function */
+    return (BOOL)VioSetMode(&vi, 0);   /* 0 = Ok, other = Fail */
 }
 
-void hb_gt_Replicate(char c, ULONG nLength)
+void hb_gt_Replicate(char c, DWORD nLength)
 {
    /* TODO: this will write character c nlength times to the screen.
             Note that it is not used yet
