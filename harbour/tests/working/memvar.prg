@@ -3,6 +3,7 @@
 // $Id$
 //
 PROCEDURE MAIN()
+LOCAL main:=0
 
     Test1()
     __accept( "press Enter..." )
@@ -19,6 +20,8 @@ PROCEDURE MAIN()
     Test7( 'value1', 2, .T. )
     __accept( "press Enter..." )
     Test8()
+    __accept( "press Enter..." )
+    Test9()
 
 RETURN
 
@@ -168,7 +171,9 @@ PARAMETERS memparam
   Qout( "PARAMETER after passing by reference= ", UseVar( @memparam ) )
 //  Qout( Use( @memnone ) )
 
+#ifdef __HARBOUR__
   Qout( "PUBLIC created by __PUBLIC function=", public1 )
+#endif
   Qout( "" )
 
 RETURN
@@ -178,16 +183,17 @@ FUNCTION UseVar( value )
 
   UseRef( @value )
 
-  __PUBLIC( "public1" )	//, "public21" )
-//  __PRIVATE( "private1", "private2", "private3" )
-  __PRIVATE( {"private1", "private2", "private3"} )
+#ifdef __HARBOUR__
+  __mvPUBLIC( "public1" )	//, "public21" )
+//  __mvPRIVATE( "private1", "private2", "private3" )
+  __mvPRIVATE( {"private1", "private2", "private3"} )
   Qout( "undeclared PUBLIC created by __PUBLIC function=", public1 )
   Qout( "undeclared PRIVATE created by __PRIVATE function=", private1 )
   Qout( "undeclared PRIVATE created by __PRIVATE function=", private2 )
   Qout( "undeclared PRIVATE created by __PRIVATE function=", private3 )
 
   public1 :='public created by __PUBLIC'
-
+#endif
   Qout( "" )
 
 RETURN( value )
@@ -227,7 +233,7 @@ PARAM parameter1again
   Qout( "Parameter 1  =", para1 )
   Qout( "Parameter 2  =", para2 )
   Qout( "Parameter 3  =", para3 )
-  Qout( "Parameter 4  =", parameter1again )  
+  Qout( "Parameter 4  =", parameter1again )
 
 RETURN
 
@@ -280,4 +286,35 @@ PARAMETER param2
   Qout( "Param1   = ", param1 )
   Qout( "Param2   = ", param2 )
 
+RETURN
+
+//////////////////////////////////////////////////////////////////////
+
+PROCEDURE TEST9()
+PUBLIC memvar
+PUBLIC memfunc
+
+  memvar :=19
+  Qout( "Variable with the name of module (memvar)=", memvar )
+
+  memfunc := 33
+  Qout( "Variable with the name of function =", memfunc )
+  Qout( "Return value from a function=", memfunc( 9 ) )
+
+//  mem()
+
+RETURN
+
+STATIC FUNCTION memfunc( memfunc )
+
+RETURN memfunc * memfunc
+
+INIT PROCEDURE initmem()
+PARA memvar
+PARA initmem
+  Qout( "Tests for PARAMETERS, PRIVATE nad PUBLIC variables" )
+  Qout( "" )
+  Qout( 'in INIT function - Passed parameter = ', memvar )
+  Qout( 'in INIT function - Passed parameter with different name = ', initmem )
+  Qout( "" )
 RETURN

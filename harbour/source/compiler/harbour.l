@@ -116,7 +116,7 @@ Separator     {SpaceTab}
 %x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
-%x            PARAM_ PRIVATE_ PUBLIC_
+%x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_
 %s            INDEX
 
 %%
@@ -767,7 +767,30 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"memvar"       _iState =MEMVAR; return MEMVAR;
+"memv"|"memva"|"memvar" { BEGIN MEMVAR_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
+<MEMVAR_>{Separator}+[_a-zA-Z]   { /* an identifier after MEMVAR */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is the first item in the line */
+                   OurFree( (void *) yylval.string );
+                   _iState =MEMVAR;
+                   return MEMVAR;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<MEMVAR_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after MEMVAR */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
 %{
 /* ************************************************************************ */
 %}
@@ -851,7 +874,7 @@ Separator     {SpaceTab}
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
-                 { /* it is first item in the line */
+                 { /* it is the first item in the line */
                    OurFree( (void *) yylval.string );
                    _iState =PARAMETERS;
                    return PARAMETERS;

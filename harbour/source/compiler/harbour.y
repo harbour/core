@@ -179,7 +179,7 @@ PFUNCTION AddFunCall( char * szFuntionName );
 void AddExtern( char * szExternName ); /* defines a new extern name */
 void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 void AddVar( char * szVarName ); /* add a new param, local, static variable to a function definition or a public or private */
-PCOMSYMBOL AddSymbol( char * szSymbolName );
+PCOMSYMBOL AddSymbol( char *, WORD * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
 void DimArray( WORD wDimensions ); /* instructs the virtual machine to build an array with wDimensions */
@@ -188,6 +188,7 @@ void Duplicate( void ); /* duplicates the virtual machine latest stack latest va
 void DupPCode( WORD wStart ); /* duplicates the current generated pcode from an offset */
 void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
+WORD FixSymbolPos( WORD );    /* converts symbol's compile-time position into generation-time position */
 void Function( BYTE bParams ); /* generates the pcode to execute a Clipper function pushing its result */
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
@@ -199,9 +200,8 @@ PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
 WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
-PCOMSYMBOL GetSymbol( char * szSymbolName ); /* returns a symbol pointer from the symbol table */
-PCOMSYMBOL GetSymbolOrd( WORD wSymbol );   /* returns a symbol based on its index on the symbol table */
-WORD GetSymbolPos( char * szSymbolName ); /* returns the index + 1 of a symbol on the symbol table */
+PCOMSYMBOL GetSymbol( char *, WORD * ); /* returns a symbol pointer from the symbol table */
+PCOMSYMBOL GetSymbolOrd( WORD );   /* returns a symbol based on its index on the symbol table */
 void Inc( void );                       /* generates the pcode to increment the latest value on the virtual machine stack */
 WORD Jump( int iOffset );               /* generates the pcode to jump to a specific offset */
 WORD JumpFalse( int iOffset );          /* generates the pcode to jump if false */
@@ -440,6 +440,7 @@ PRETURN pReturns = 0;      /* list of multiple returns from a function */
 PEXTERN pExterns = 0;
 PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
+FILENAME *_pFileName =NULL;
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
@@ -533,14 +534,14 @@ Line       : LINE INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IDENTIFIER { cVarType = ' '; FunDef( $3, $1, 0 ); } Params Crlf { SetFrame(); }
            | FunScope PROCEDURE IDENTIFIER { cVarType = ' '; FunDef( $3, $1, FUN_PROCEDURE ); } Params Crlf { SetFrame(); }
-           | FunScope DECLARE_FUN IDENTIFIER Params              Crlf { cVarType = ' '; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_NUMERIC   Crlf { cVarType = 'N'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_CHARACTER Crlf { cVarType = 'C'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_DATE      Crlf { cVarType = 'D'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_LOGICAL   Crlf { cVarType = 'L'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_ARRAY     Crlf { cVarType = 'A'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_OBJECT    Crlf { cVarType = 'O'; AddSymbol( $3 ); }
-           | FunScope DECLARE_FUN IDENTIFIER Params AS_BLOCK     Crlf { cVarType = 'B'; AddSymbol( $3 ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params              Crlf { cVarType = ' '; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_NUMERIC   Crlf { cVarType = 'N'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_CHARACTER Crlf { cVarType = 'C'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_DATE      Crlf { cVarType = 'D'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_LOGICAL   Crlf { cVarType = 'L'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_ARRAY     Crlf { cVarType = 'A'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_OBJECT    Crlf { cVarType = 'O'; AddSymbol( $3, NULL ); }
+           | FunScope DECLARE_FUN IDENTIFIER Params AS_BLOCK     Crlf { cVarType = 'B'; AddSymbol( $3, NULL ); }
            ;
 
 FunScope   :                  { $$ = FS_PUBLIC; }
@@ -1168,7 +1169,6 @@ int harbour_main( int argc, char * argv[] )
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
    char szPpoName[ _POSIX_PATH_MAX ];
    char *szOutPath ="";
-   FILENAME *pFileName =NULL;
 
    if( argc > 1 )
    {
@@ -1314,19 +1314,19 @@ int harbour_main( int argc, char * argv[] )
             }
          }
          else
-            pFileName =SplitFilename( argv[ iArg ] );
+            _pFileName =SplitFilename( argv[ iArg ] );
          iArg++;
       }
 
-      if( pFileName )
+      if( _pFileName )
       {
-        if( !pFileName->extension )
-          pFileName->extension =".prg";
-        MakeFilename( szFileName, pFileName );
+        if( !_pFileName->extension )
+          _pFileName->extension =".prg";
+        MakeFilename( szFileName, _pFileName );
         if ( lPpo )
         {
-          pFileName->extension =".ppo";
-          MakeFilename( szPpoName, pFileName );
+          _pFileName->extension =".ppo";
+          MakeFilename( szPpoName, _pFileName );
           yyppo = fopen ( szPpoName, "w" );
         }
       }
@@ -1370,8 +1370,20 @@ int harbour_main( int argc, char * argv[] )
           }
           AddSearchPath( pPath, &_pIncludePath );
          }
-         FunDef( yy_strupr( yy_strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
+
+         /* Generate the starting procedure frame
+          */
+         if( _iStartProc )
+            FunDef( yy_strupr( yy_strdup( _pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
+         else
+             /* Don't pass the name of module if the code for starting procedure 
+             * will be not generated. The name cannot be placed as first symbol 
+             * because this symbol can be used as function call or memvar's name.
+             */
+            FunDef( yy_strupr( yy_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
+
          yyparse();
+
          GenExterns();       /* generates EXTERN symbols names */
          fclose( yyin );
          files.pLast = NULL;
@@ -1391,53 +1403,53 @@ int harbour_main( int argc, char * argv[] )
               _pInitFunc->pCode[ 2 ] =HIBYTE( _wStatics );
               _pInitFunc->wStaticsBase =_wStatics;
 
-              pSym = AddSymbol( _pInitFunc->szName );
+              pSym = AddSymbol( _pInitFunc->szName, NULL );
               pSym->cScope |= _pInitFunc->cScope;
               functions.pLast->pNext = _pInitFunc;
               ++functions.iCount;
             }
 
             /* we create a the output file */
-            pFileName->path = szOutPath;
+            _pFileName->path = szOutPath;
             switch( _iLanguage )
             {
                case LANG_C:
-                    pFileName->extension =".c";
-                    MakeFilename( szFileName, pFileName );
-                    GenCCode( szFileName, pFileName->name );
+                    _pFileName->extension =".c";
+                    MakeFilename( szFileName, _pFileName );
+                    GenCCode( szFileName, _pFileName->name );
                     break;
 
                case LANG_JAVA:
-                    pFileName->extension =".java";
-                    MakeFilename( szFileName, pFileName );
-                    GenJava( szFileName, pFileName->name );
+                    _pFileName->extension =".java";
+                    MakeFilename( szFileName, _pFileName );
+                    GenJava( szFileName, _pFileName->name );
                     break;
 
                case LANG_PASCAL:
-                    pFileName->extension =".pas";
-                    MakeFilename( szFileName, pFileName );
-                    GenPascal( szFileName, pFileName->name );
+                    _pFileName->extension =".pas";
+                    MakeFilename( szFileName, _pFileName );
+                    GenPascal( szFileName, _pFileName->name );
                     break;
 
                case LANG_RESOURCES:
-                    pFileName->extension =".rc";
-                    MakeFilename( szFileName, pFileName );
-                    GenRC( szFileName, pFileName->name );
+                    _pFileName->extension =".rc";
+                    MakeFilename( szFileName, _pFileName );
+                    GenRC( szFileName, _pFileName->name );
                     break;
 
                case LANG_PORT_OBJ:
-                    pFileName->extension =".hrb";
-                    MakeFilename( szFileName, pFileName );
-                    GenPortObj( szFileName, pFileName->name );
+                    _pFileName->extension =".hrb";
+                    MakeFilename( szFileName, _pFileName );
+                    GenPortObj( szFileName, _pFileName->name );
                     break;
             }
          }
 #ifdef HARBOUR_OBJ_GENERATION
          if( _iObj32 )
          {
-            pFileName->extension = ".obj";
-            MakeFilename( szFileName, pFileName );
-            GenObj32( szFileName, pFileName->name );
+            _pFileName->extension = ".obj";
+            MakeFilename( szFileName, _pFileName );
+            GenObj32( szFileName, _pFileName->name );
          }
 #endif
          if ( lPpo ) fclose ( yyppo );
@@ -1447,7 +1459,7 @@ int harbour_main( int argc, char * argv[] )
          printf( "Can't open input file: %s\n", szFileName );
          iStatus = 1;
       }
-      OurFree( (void *) pFileName );
+      OurFree( (void *) _pFileName );
    }
    else
       PrintUsage( argv[ 0 ] );
@@ -1735,6 +1747,7 @@ void AddVar( char * szVarName )
    if( iVarScope & VS_MEMVAR )
    {
       PCOMSYMBOL pSym;
+      WORD wPos;
 
       if( ! pFunc->pMemvars )
           pFunc->pMemvars = pVar;
@@ -1749,41 +1762,38 @@ void AddVar( char * szVarName )
       switch( iVarScope )
       {
           case VS_MEMVAR:
-            AddSymbol( yy_strdup(szVarName) );
             /* variable declared in MEMVAR statement */
-            AddSymbol( yy_strdup(szVarName) );
+            pSym =AddSymbol( yy_strdup(szVarName), &wPos );
+            pSym->cScope |= VS_MEMVAR;
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
-                WORD wPos;
-
                 ++functions.pLast->wParamCount;
-                pSym =GetSymbol( szVarName );	/* check if symbol exists already */
+                pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
-                   pSym =AddSymbol( yy_strdup(szVarName) );
+                   pSym =AddSymbol( yy_strdup(szVarName), &wPos );
                 pSym->cScope |= VS_MEMVAR;
-                wPos =GetSymbolPos( szVarName ) - ( _iStartProc ? 1: 2 );
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamCount) );
             }
             break;
           case VS_PRIVATE:
             {
-                PushSymbol(yy_strdup("__PRIVATE"), 1);
+                PushSymbol(yy_strdup("__MVPRIVATE"), 1);
                 PushNil();
                 PushSymbol( yy_strdup(szVarName), 0 );
                 Do( 1 );
-                pSym =GetSymbol( szVarName );
+                pSym =GetSymbol( szVarName, &wPos );
                 pSym->cScope |= VS_MEMVAR;
             }
             break;
           case VS_PUBLIC:
             {
-                PushSymbol(yy_strdup("__PUBLIC"), 1);
+                PushSymbol(yy_strdup("__MVPUBLIC"), 1);
                 PushNil();
                 PushSymbol( yy_strdup(szVarName), 0 );
                 Do( 1 );
-                pSym =GetSymbol( szVarName );
+                pSym =GetSymbol( szVarName, &wPos );
                 pSym->cScope |= VS_MEMVAR;
             }
             break;
@@ -1836,7 +1846,7 @@ void AddVar( char * szVarName )
    }
 }
 
-PCOMSYMBOL AddSymbol( char * szSymbolName )
+PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
 {
    PCOMSYMBOL pSym = ( PCOMSYMBOL ) OurMalloc( sizeof( COMSYMBOL ) );
 
@@ -1856,6 +1866,9 @@ PCOMSYMBOL AddSymbol( char * szSymbolName )
       symbols.pLast = pSym;
    }
    symbols.iCount++;
+
+   if( pwPos )
+      *pwPos =symbols.iCount;
 
    /*if( cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, cVarType, symbols.iCount );*/
    return pSym;
@@ -2037,10 +2050,10 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 
    FixReturns();    /* fix all previous function returns offsets */
 
-   pSym = GetSymbol( szFunName );
+   pSym = GetSymbol( szFunName, NULL );
    if( ! pSym )
       /* there is not a symbol on the symbol table for this function name */
-      pSym = AddSymbol( szFunName );
+      pSym = AddSymbol( szFunName, NULL );
 
    if( cScope != FS_PUBLIC )
 //      pSym->cScope = FS_PUBLIC;
@@ -2136,15 +2149,15 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
 
    /* writes the symbol table */
-/*   fprintf( yyc, "\nstatic SYMBOL symbols[] = { " ); */
    /* Generate the wrapper that will initialize local symbol table
     */
-   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( %s__InitSymbols )\n", symbols.pFirst->szName );
+   yy_strupr( _pFileName->name );
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( %s__InitSymbols )\n", _pFileName->name );
 
    if( ! _iStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
-   wSym = 0; /* syymbols counter */
+   wSym = 0; /* symbols counter */
    while( pSym )
    {
       fprintf( yyc, "{ \"%s\", ", pSym->szName );
@@ -2168,25 +2181,22 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       if( pSym->cScope & VS_MEMVAR )
          fprintf( yyc, " | VS_MEMVAR" );
 
-      /* specify the function address if it is a defined function or a
+      /* specify the function address if it is a defined function or an
          external called function */
-      pFTemp = GetFunction( pSym->szName );
-      if( ! pFTemp ) /* if it is not a defined function */
-         pFTemp = GetFuncall( pSym->szName );  /* check if it is a function call */
-
-      if( pFTemp )
-        fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
+      if( GetFunction( pSym->szName ) ) /* is it a function defined in this module */
+         fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
+      else if( GetFuncall( pSym->szName ) ) /* is it a function called from this module */
+         fprintf( yyc, ", HB_%s, 0 }", pSym->szName );
       else
-        fprintf( yyc, ", 0, 0 }" );
+         fprintf( yyc, ", 0, 0 }" );   /* memvar */
 
       if( pSym != symbols.pLast )
          fprintf( yyc, ",\n" );
 
       pSym = pSym->pNext;
    }
-/*   fprintf( yyc, " };\n\n" ); */
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", symbols.pFirst->szName );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", symbols.pFirst->szName );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", _pFileName->name );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", _pFileName->name );
 
    /* Generate functions data
     */
@@ -2377,12 +2387,17 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_MESSAGE:
-                 wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_MESSAGE, %i, %i,      /* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          GetSymbolOrd( wSym + ! _iStartProc )->szName );
-                 lPCodePos += 3;
+                 {
+                  WORD wFixPos;
+
+                  wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wSym );
+                  fprintf( yyc, "                HB_P_MESSAGE, %i, %i,      /* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wSym )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_MINUS:
@@ -2421,13 +2436,18 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PARAMETER:
-                 wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_PARAMETER, %i, %i, %i,\t/* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          pFunc->pCode[ lPCodePos + 3 ],
-                          GetSymbolOrd( wVar + ! _iStartProc )->szName );
-                 lPCodePos += 4;
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_PARAMETER, %i, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           pFunc->pCode[ lPCodePos + 3 ],
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 4;
+                 }
                  break;
 
             case HB_P_PLUS:
@@ -2471,12 +2491,17 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_POPMEMVAR:
-                 wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_POPMEMVAR, %i, %i,\t/* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          GetSymbolOrd( wVar + ! _iStartProc )->szName );
-                 lPCodePos += 3;
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_POPMEMVAR, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_POPSTATIC:
@@ -2624,23 +2649,33 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PUSHMEMVAR:
-                 wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                        pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_PUSHMEMVAR, %i, %i,\t/* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          GetSymbolOrd( wVar + ! _iStartProc )->szName );
-                 lPCodePos += 3;
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                           pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_PUSHMEMVAR, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_PUSHMEMVARREF:
-                 wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                        pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_PUSHMEMVARREF, %i, %i,\t/* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          GetSymbolOrd( wVar + ! _iStartProc )->szName );
-                 lPCodePos += 3;
+                 {
+                  WORD wFixPos;
+
+                  wVar = pFunc->pCode[ lPCodePos + 1 ] +
+                           pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wVar );
+                  fprintf( yyc, "                HB_P_PUSHMEMVARREF, %i, %i,\t/* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wVar )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_PUSHNIL:
@@ -2706,13 +2741,18 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case HB_P_PUSHSYM:
-                 wSym = pFunc->pCode[ lPCodePos + 1 ] +
-                        pFunc->pCode[ lPCodePos + 2 ] * 256;
-                 fprintf( yyc, "                HB_P_PUSHSYM, %i, %i,      /* %s */\n",
-                          pFunc->pCode[ lPCodePos + 1 ],
-                          pFunc->pCode[ lPCodePos + 2 ],
-                          GetSymbolOrd( wSym + ! _iStartProc )->szName );
-                 lPCodePos += 3;
+                 {
+                  WORD wFixPos;
+
+                  wSym = pFunc->pCode[ lPCodePos + 1 ] +
+                           pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  wFixPos =FixSymbolPos( wSym );
+                  fprintf( yyc, "                HB_P_PUSHSYM, %i, %i,      /* %s */\n",
+                           LOBYTE( wFixPos ),
+                           HIBYTE( wFixPos ),
+                           GetSymbolOrd( wSym )->szName );
+                  lPCodePos += 3;
+                 }
                  break;
 
             case HB_P_RETVALUE:
@@ -2724,7 +2764,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  /* we only generate it if there are statics used in this function */
                  if( pFunc->bFlags & FUN_USES_STATICS )
                  {
-                    w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                    GetSymbol( _pInitFunc->szName, &w );
+                    w = FixSymbolPos( w );
                     fprintf( yyc, "                HB_P_SFRAME, %i, %i,\t\t/* symbol _INITSTATICS */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                  }
@@ -2733,7 +2774,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_STATICS:
                  {
-                    w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                    GetSymbol( _pInitFunc->szName, &w );
+                    w = FixSymbolPos( w );
                     fprintf( yyc, "                HB_P_STATICS, %i, %i,\t\t/* symbol _INITSTATICS */\n",
                              LOBYTE( w ), HIBYTE( w ) );
                     lPCodePos += 3;
@@ -2859,14 +2901,14 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 
   while( pExterns )
   {
-    if( GetSymbolPos( pExterns->szName ) )
+    if( GetSymbol( pExterns->szName, NULL ) )
     {
       if( ! GetFuncall( pExterns->szName ) )
         AddFunCall( pExterns->szName );
     }
     else
     {
-      AddSymbol( pExterns->szName );
+      AddSymbol( pExterns->szName, NULL );
       AddFunCall( pExterns->szName );
     }
     pDelete  = pExterns;
@@ -3094,19 +3136,37 @@ int GetStaticVarPos( char *szVarName )
   return 0;
 }
 
+WORD FixSymbolPos( WORD wCompilePos )
+{
+   return (_iStartProc ? wCompilePos-1 : wCompilePos-2);
+}
 
-PCOMSYMBOL GetSymbol( char * szSymbolName ) /* returns a symbol pointer from the symbol table */
+
+/* returns a symbol pointer from the symbol table
+ * and sets its position in the symbol table
+ */
+PCOMSYMBOL GetSymbol( char * szSymbolName, WORD * pwPos )
 {
    PCOMSYMBOL pSym = symbols.pFirst;
+   WORD wCnt = 1;
 
+   if( pwPos )
+      *pwPos = 0;
    while( pSym )
    {
-      if( ! strcmp( pSym->szName, szSymbolName ) && pSym != symbols.pFirst )
+      if( ! strcmp( pSym->szName, szSymbolName ) )
+      {
+         if( pwPos )
+            *pwPos =wCnt;
          return pSym;
+      }
       else
       {
          if( pSym->pNext )
+         {
             pSym = pSym->pNext;
+            ++wCnt;
+         }
          else
             return 0;
       }
@@ -3117,35 +3177,12 @@ PCOMSYMBOL GetSymbol( char * szSymbolName ) /* returns a symbol pointer from the
 PCOMSYMBOL GetSymbolOrd( WORD wSymbol )   /* returns a symbol based on its index on the symbol table */
 {
    PCOMSYMBOL pSym = symbols.pFirst;
-   WORD w = 0;
+   WORD w = 1;
 
    while( w++ < wSymbol && pSym->pNext )
       pSym = pSym->pNext;
 
    return pSym;
-}
-
-WORD GetSymbolPos( char * szSymbolName ) /* return 0 if not found or order + 1 */
-{
-   PCOMSYMBOL pSym = symbols.pFirst;
-   WORD wSymbol = 1;
-
-   while( pSym )
-   {
-      if( ! strcmp( pSym->szName, szSymbolName ) && pSym != symbols.pFirst )
-         return wSymbol;
-      else
-      {
-         if( pSym->pNext )
-         {
-            pSym = pSym->pNext;
-            wSymbol++;
-         }
-         else
-            return 0;
-      }
-   }
-   return 0;
 }
 
 WORD GetFunctionPos( char * szFunctionName ) /* return 0 if not found or order + 1 */
@@ -3325,35 +3362,26 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
  */
 void MemvarPCode( BYTE bPCode, char * szVarName )
 {
-  WORD wVar;
+   WORD wVar;
+   PCOMSYMBOL pVar;
 
-    GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
+   GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
 
-    if( ( wVar = GetSymbolPos( szVarName ) ) )
-    {
-        wVar -=(_iStartProc ? 1: 2);
-        GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
-    }
-    else
-    {
-        AddSymbol( szVarName );
-        symbols.pLast->cScope =VS_MEMVAR;
-        wVar = GetSymbolPos( szVarName ) - (_iStartProc ? 1: 2);
-        GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
-    }
+   pVar = GetSymbol( szVarName, &wVar );
+   if( ! pVar )
+      pVar =AddSymbol( szVarName, &wVar );
+   pVar->cScope |=VS_MEMVAR;
+   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
 }
 
 void Message( char * szMsgName )       /* sends a message to an object */
 {
-   WORD wSym = GetSymbolPos( szMsgName );
+   WORD wSym;
+   PCOMSYMBOL pSym =GetSymbol( szMsgName, &wSym );
 
-   if( ! wSym )  /* the symbol was not found on the symbol table */
-   {
-      AddSymbol( szMsgName );
-      wSym = symbols.iCount;
-   }
-   GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
-   wSym -= _iStartProc ? 1: 2;
+   if( ! pSym )  /* the symbol was not found on the symbol table */
+      pSym =AddSymbol( szMsgName, &wSym );
+   pSym->cScope |= FS_MESSAGE;
    GenPCode3( HB_P_MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
 
    if( _iWarnings )
@@ -3361,7 +3389,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
       PSTACK_VAL_TYPE pNewStackType;
       char cType;
 
-      cType = GetSymbolOrd( wSym - 1 )->cType;
+      cType = pSym->cType;
 
       pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = cType;
@@ -3375,17 +3403,15 @@ void Message( char * szMsgName )       /* sends a message to an object */
 
 void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate to an object */
 {
-   WORD wSetSym = GetSymbolPos( szMsgName );
+   WORD wSetSym;
+   PCOMSYMBOL pSym;
    BYTE bLoGetSym, bHiGetSym;           /* get symbol */
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! wSetSym )  /* the symbol was not found on the symbol table */
-   {
-      AddSymbol( szMsgName );
-      wSetSym = symbols.iCount;
-   }
-   GetSymbolOrd( wSetSym - 1 )->cScope |= FS_MESSAGE;
-   wSetSym -= _iStartProc ? 1: 2;
+   pSym =GetSymbol( szMsgName, &wSetSym );
+   if( ! pSym )  /* the symbol was not found on the symbol table */
+      pSym =AddSymbol( szMsgName, &wSetSym );
+   pSym->cScope |= FS_MESSAGE;
                                         /* Get previously generated message */
    bLoGetSym = pFunc->pCode[ _lMessageFix + 1];
    bHiGetSym = pFunc->pCode[ _lMessageFix + 2];
@@ -3401,16 +3427,15 @@ void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate t
 
 void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 {
-   WORD wSym = GetSymbolPos( szMsgName );
+   WORD wSym;
+   PCOMSYMBOL pSym;
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! wSym )  /* the symbol was not found on the symbol table */
-   {
-      AddSymbol( szMsgName );
-      wSym = symbols.iCount;
-   }
-   GetSymbolOrd( wSym - 1 )->cScope |= FS_MESSAGE;
-   wSym -= _iStartProc ? 1: 2;
+   pSym =GetSymbol( szMsgName, &wSym );
+   if( ! pSym )  /* the symbol was not found on the symbol table */
+      pSym =AddSymbol( szMsgName, &wSym );
+   pSym->cScope |= FS_MESSAGE;
+
    pFunc->pCode[ _lMessageFix + 1 ] = LOBYTE( wSym );
    pFunc->pCode[ _lMessageFix + 2 ] = HIBYTE( wSym );
    pFunc->lPCodePos -= 3;        /* Remove unnecessary function call */
@@ -3706,7 +3731,8 @@ void PushString( char * szText )
 /* generates the pcode to push a symbol on the virtual machine stack */
 void PushSymbol( char * szSymbolName, int iIsFunction )
 {
-   WORD wSym, wFunId;
+   WORD wSym;
+   PCOMSYMBOL pSym;
 
    if( iIsFunction )
    {
@@ -3720,15 +3746,10 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
         szSymbolName[ strlen( *pName ) ] ='\0';
    }
 
-   wSym = wFunId = GetSymbolPos( szSymbolName ); /* returns 1, 2, ... */
-
-   if( wSym == 1 ) /* default module name procedure */
-      wSym = 0;
-
-   if( ! wSym )  /* the symbol was not found on the symbol table */
+   pSym = GetSymbol( szSymbolName, &wSym );
+   if( ! pSym )  /* the symbol was not found on the symbol table */
    {
-      AddSymbol( szSymbolName );
-      wSym = symbols.iCount;
+      pSym =AddSymbol( szSymbolName, &wSym );
       if( iIsFunction )
          AddFunCall( szSymbolName );
    }
@@ -3737,11 +3758,6 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
       if( iIsFunction && ! GetFuncall( szSymbolName ) )
          AddFunCall( szSymbolName );
    }
-   wSym -= _iStartProc ? 1: 2;
-/*
-   if( ! iIsFunction )
-      GetSymbolOrd( wSym )->cScope |= FS_MESSAGE;
-*/
    GenPCode3( HB_P_PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
 
    if( _iWarnings )
@@ -3750,7 +3766,7 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
       char cType;
 
       if( iIsFunction )
-        cType = GetSymbolOrd( wFunId - 1 )->cType;
+        cType = pSym->cType;
       else
         cType = cVarType;
 
@@ -4889,18 +4905,13 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_JUMPFALSE:
             case HB_P_JUMPTRUE:
             case HB_P_LINE:
-            case HB_P_MESSAGE:
             case HB_P_POPLOCAL:
-            case HB_P_POPMEMVAR:
             case HB_P_POPSTATIC:
             case HB_P_PUSHINT:
             case HB_P_PUSHLOCAL:
             case HB_P_PUSHLOCALREF:
-            case HB_P_PUSHMEMVAR:
-            case HB_P_PUSHMEMVARREF:
             case HB_P_PUSHSTATIC:
             case HB_P_PUSHSTATICREF:
-            case HB_P_PUSHSYM:
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc( pFunc->pCode[ lPCodePos++ ], yyc );
@@ -4920,11 +4931,25 @@ void GenPortObj( char *szFileName, char *szName )
                  }
                  break;
 
+            case HB_P_PUSHSYM:
+            case HB_P_MESSAGE:
+            case HB_P_POPMEMVAR:
+            case HB_P_PUSHMEMVAR:
+            case HB_P_PUSHMEMVARREF:
+                 fputc( pFunc->pCode[ lPCodePos ], yyc );
+                 wVar =FixSymbolPos( pFunc->pCode[ lPCodePos+1 ] + 256 *pFunc->pCode[ lPCodePos+2 ] );
+                 fputc( LOBYTE( wVar ), yyc );
+                 fputc( HIBYTE( wVar ), yyc );
+                 lPCodePos +=3;
+                 break;
+
             case HB_P_PARAMETER:
-                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
-                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos ], yyc );
+                 wVar =FixSymbolPos( pFunc->pCode[ lPCodePos+1 ] + 256 * pFunc->pCode[ lPCodePos+2 ] );
+                 fputc( LOBYTE( wVar ), yyc );
+                 fputc( HIBYTE( wVar ), yyc );
+                 fputc( pFunc->pCode[ lPCodePos+3 ], yyc );
+                 lPCodePos +=4;
                  break;
 
             case HB_P_PUSHBLOCK:
@@ -4979,7 +5004,8 @@ void GenPortObj( char *szFileName, char *szName )
                  /* we only generate it if there are statics used in this function */
                  if( pFunc->bFlags & FUN_USES_STATICS )
                  {
-                    w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                    GetSymbol( _pInitFunc->szName, &w );
+                    w = FixSymbolPos( w );
                     fputc( pFunc->pCode[ lPCodePos ], yyc );
                     fputc( LOBYTE( w ), yyc );
                     fputc( HIBYTE( w ), yyc );
@@ -4990,7 +5016,8 @@ void GenPortObj( char *szFileName, char *szName )
                  break;
 
             case HB_P_STATICS:
-                 w = GetSymbolPos( _pInitFunc->szName ) - ( _iStartProc ? 1: 2 );
+                 GetSymbol( _pInitFunc->szName, &w );
+                 w = FixSymbolPos( w );
                  fputc( pFunc->pCode[ lPCodePos ], yyc );
                  fputc( LOBYTE( w ), yyc );
                  fputc( HIBYTE( w ), yyc );

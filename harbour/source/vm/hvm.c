@@ -1712,7 +1712,7 @@ double PopNumber( void )
 
 void PopParameter( PSYMBOL pSym, BYTE bParam )
 {
-   hb_MemvarSetValue( pSym, hb_param( bParam, IT_ANY ) );
+   hb_MemvarSetValue( pSym, stack.pBase +1 +bParam );
    HB_DEBUG( "PopParameter\n" );
 }
 

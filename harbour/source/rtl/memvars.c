@@ -306,8 +306,11 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
             }
          }
          else if( (_globalLastFree - hValue) == 1 )
+         {
             _globalLastFree =hValue;         /* last item */
-
+            if( _globalLastFree == _globalFirstFree )
+               _globalFreeCnt =0;
+         }
          else
             ++_globalFreeCnt;
 
@@ -317,7 +320,7 @@ void hb_MemvarValueDecRef( HB_HANDLE hValue )
       }
    }
 /* This can happen if for example PUBLIC variable holds a codeblock with
- * detached variable. When hb_MemvarsRelease(0 is called then detached
+ * detached variable. When hb_MemvarsRelease() is called then detached
  * variable can be released before the codeblock. So if the codeblock
  * will be released later then it will try to release again this detached
  * variable.
@@ -348,7 +351,11 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
       if( pDyn->hMemvar )
       {
          /* value is already created */
-         ItemCopy( &_globalTable[ pDyn->hMemvar ].item, pItem );
+         HB_ITEM_PTR pSetItem = &_globalTable[ pDyn->hMemvar ].item;
+         if( IS_BYREF(pSetItem) )
+            ItemCopy( ItemUnRef(pSetItem), pItem );
+         else
+            ItemCopy( pSetItem, pItem );
       }
       else
       {
@@ -358,7 +365,7 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
       }
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
 }
 
 void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
@@ -374,14 +381,19 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
       #endif
       if( pDyn->hMemvar )
       {
-         /* value is already created */
-         ItemCopy( pItem, &_globalTable[ pDyn->hMemvar ].item );
+         /* value is already created
+          */
+         HB_ITEM_PTR pGetItem = &_globalTable[ pDyn->hMemvar ].item;
+         if( IS_BYREF(pGetItem) )
+            ItemCopy( pItem, ItemUnRef(pGetItem) );
+         else
+            ItemCopy( pItem, pGetItem );
       }
       else /* variable is not initialized */
          hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
 }
 
 void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
@@ -397,10 +409,10 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
       #endif
       if( pDyn->hMemvar )
       {
+         /* value is already created */
          pItem->type = IT_BYREF | IT_MEMVAR;
          pItem->item.asMemvar.offset = 0;
          pItem->item.asMemvar.value = pDyn->hMemvar;
-         /* value is already created */
          pItem->item.asMemvar.itemsbase = &_globalTable;
          ++_globalTable[ pDyn->hMemvar ].counter;
       }
@@ -408,7 +420,7 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
          hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
 }
 
 /*
@@ -420,7 +432,7 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
  * bScope - the scope of created variable - if a variable with the same name
  *          exists already then it's value is hidden by new variable with
  *          passed scope
- * pValue - optinal item used to initialize the value of created variable
+ * pValue - optional item used to initialize the value of created variable
  *          or NULL
  *
  */
@@ -445,13 +457,15 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
    if( bScope & VS_PUBLIC )
    {
       /* If the variable with the same name exists already
-         * then the current value have to be unchanged
-         */
+       * then the current value have to be unchanged
+       */
       if( ! pDynVar->hMemvar )
       {
          pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
          if( !pValue )
          {
+            /* new PUBLIC variable - initialize it to .F.
+             */
             _globalTable[ pDynVar->hMemvar ].item.type =IT_LOGICAL;
             _globalTable[ pDynVar->hMemvar ].item.item.asLogical.value =0;
          }
@@ -460,28 +474,89 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
    else
    {
       /* We need to store the handle to the value of variable that is
-         * visible at this moment so later we can restore this value when
-         * the new variable will be released
-         */
+       * visible at this moment so later we can restore this value when
+       * the new variable will be released
+       */
       HB_HANDLE hCurrentValue =pDynVar->hMemvar;
 
       pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
       _globalTable[ pDynVar->hMemvar ].hPrevMemvar =hCurrentValue;
+      /* Add this variable to the PRIVATE variables stack
+       */
       hb_MemvarAddPrivate( pDynVar );
    }
 }
 
-/*
- * This function creates PUBLIC variable
- *
- * This function can be called either by the harbour compiler or by user.
- * The compiler always passes the item of IT_SYMBOL type that stores the
- * name of variable.
- * If user calls this function then the passed argument/arguments can be:
- *  -a string with the name of variable to be created
- *  -an one-dimensional array with strings
+/* This function releases
  */
-HARBOUR HB___PUBLIC( void )
+void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
+{
+   HB_HANDLE hVar, hOldValue;
+   PDYNSYM pDynVar;
+
+   if( IS_STRING(pMemvar) )
+   {
+      pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
+
+      if( pDynVar )
+      {
+         hVar =pDynVar->hMemvar;
+         if( hVar )
+         {
+            hOldValue =_globalTable[ hVar ].hPrevMemvar;
+            hb_MemvarValueDecRef( hVar );
+            /*
+             * Restore previous value for variables that were overridden
+             */
+            pDynVar->hMemvar =hOldValue;
+         }
+      }
+   }
+   else
+      hb_errorRT_BASE( EG_ARG, 3000, "Argument error: ", "RELEASE" );
+}
+
+
+/****************************************************************************
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVXPUBLIC()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function creates a PUBLIC variable
+ *  $SYNTAX$
+ *    __MVPUBLIC( <variable_name> )
+ *  $ARGUMENTS$
+ *    <variable_name> = either a string that contains the variable's name or
+ *       an one-dimensional array of strings with variable names
+ *       No skeleton are allowed here.
+ *  $RETURNS$
+ *    Nothing
+ *  $DESCRIPTION$
+ *    This function can be called either by the harbour compiler or by user.
+ *    The compiler always passes the item of IT_SYMBOL type that stores the
+ *    name of variable.
+ *      If a variable with the same name exists already then the new 
+ *    variable is not created - the previous value remains unchanged.
+ *      If it is first variable with this name then the  variable is 
+ *       initialized with .T. value.
+ *    
+ *  $EXAMPLES$
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+HARBOUR HB___MVPUBLIC( void )
 {
    int i, iCount = hb_pcount();
    PHB_ITEM pMemvar;
@@ -514,17 +589,42 @@ HARBOUR HB___PUBLIC( void )
    }
 }
 
-/*
- * This function creates PRIVATE variable
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVXPRIVATE()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function creates a PRIVATE variable
+ *  $SYNTAX$
+ *    __MVPRIVATE( <variable_name> )
+ *  $ARGUMENTS$
+ *    <variable_name> = either a string that contains the variable's name or
+ *       an one-dimensional array of strings with variable names
+ *       No skeleton are allowed here.
+ *  $RETURNS$
+ *    Nothing
+ *  $DESCRIPTION$
+ *    This function can be called either by the harbour compiler or by user.
+ *    The compiler always passes the item of IT_SYMBOL type that stores the
+ *    name of variable.
+ *    If a variable with the same name exists already then the value of old
+ *    variable is hidden until the new variable is  released. The new variable
+ *    is always initialized to NIL value.
+ *    
+ *  $EXAMPLES$
  *
- * This function can be called either by the harbour compiler or by user.
- * The compiler always passes the item of IT_SYMBOL type that stores the
- * name of variable.
- * If user calls this function then the passed argument/arguments can be:
- *  -a string with the name of variable to be created
- *  -an one-dimensional array with strings
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
  */
-HARBOUR HB___PRIVATE( void )
+HARBOUR HB___MVPRIVATE( void )
 {
    int i, iCount = hb_pcount();
    PHB_ITEM pMemvar;
@@ -560,4 +660,104 @@ HARBOUR HB___PRIVATE( void )
          }
       }
    }
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVXRELEASE()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function releases value stored in PRIVATE or PUBLIC variable
+ *  $SYNTAX$
+ *    __MVXRELEASE( <variable_name> )
+ *  $ARGUMENTS$
+ *    <variable_name> = either a string that contains the variable's name or
+ *       an one-dimensional array of strings with variable names
+ *       No skeleton are allowed here.
+ *  $RETURNS$
+ *    Nothing
+ *  $DESCRIPTION$
+ *    This function releases values stored in memory variable. It shouldn't
+ *    be called directly, rather it should be placed into RELEASE command.
+ *  $EXAMPLES$
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+HARBOUR HB___MVXRELEASE( void )
+{
+   int i, iCount = hb_pcount();
+   PHB_ITEM pMemvar;
+
+   if( iCount )
+   {
+      for( i=1; i<=iCount; i++ )
+      {
+         pMemvar =hb_param( i, IT_ANY );
+         if( pMemvar )
+         {
+            if( IS_ARRAY( pMemvar ) )
+            {
+               /* we are accepting an one-dimensional array of strings only
+                */
+               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               HB_ITEM VarItem;
+
+               for( j=1; j<=ulLen; j++ )
+               {
+                  hb_arrayGet( pMemvar, j, &VarItem );
+                  hb_MemvarRelease( &VarItem );
+                  ItemRelease( &VarItem );
+               }
+            }
+            else
+               hb_MemvarRelease( pMemvar );
+         }
+      }
+   }
+}
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVRELEASE()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ * This function releases value stored in PRIVATE or PUBLIC variable
+ *  $SYNTAX$
+ *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
+ *  $ARGUMENTS$
+ *    <skeleton> = string that contains the wildcard mask for variables' names
+ *       that will be released. Supported wildcards: '*' and '?'
+ *    <include_exclude_flag> = logical value that specifies if variables
+ *       mathing passed skeleton should be either included in deletion (if .T.)
+ *       or excluded from deletion (if .F.)
+ *  $RETURNS$
+ *    Nothing
+ *  $DESCRIPTION$
+ *    This function releases values stored in memory variables. It shouldn't
+ *    be called directly, it should be placed into RELEASE ALL command.
+ *  $EXAMPLES$
+ *
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+HARBOUR HB___MVRELEASE( void )
+{
 }
