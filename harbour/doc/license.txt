@@ -83,10 +83,8 @@
     source\rtl\binnum.c
     source\lang\msgsr852.c
     source\lang\msgpl852.c
-    source\lang\msg_tpl.c
     source\lang\msgpliso.c
     source\lang\msgplmaz.c
-    source\lang\msgro.c
     source\lang\msgeu.c
     source\lang\msgcsiso.c
     source\lang\msgcswin.c
