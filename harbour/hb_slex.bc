@@ -554,6 +554,7 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\hbpcode.obj \
    $(OBJ_DIR)\hbfix.obj \
    $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\gencobj.obj \
    $(OBJ_DIR)\genobj32.obj \
    $(OBJ_DIR)\genjava.obj \
    $(OBJ_DIR)\genhrb.obj \
@@ -745,6 +746,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo. $(OBJ_DIR)\hbpcode.obj >> make.tmp
    echo. $(OBJ_DIR)\hbfix.obj >> make.tmp
    echo. $(OBJ_DIR)\genc.obj >> make.tmp
+   echo. $(OBJ_DIR)\gencobj.obj >> make.tmp
    echo. $(OBJ_DIR)\genobj32.obj >> make.tmp
    echo. $(OBJ_DIR)\genjava.obj >> make.tmp
    echo. $(OBJ_DIR)\genhrb.obj >> make.tmp
@@ -795,6 +797,9 @@ $(OBJ_DIR)\hbfix.obj : $(COMPILER_DIR)\hbfix.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genc.obj : $(COMPILER_DIR)\genc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gencobj.obj : $(COMPILER_DIR)\gencobj.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genobj32.obj : $(COMPILER_DIR)\genobj32.c

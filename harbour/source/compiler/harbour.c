@@ -3540,6 +3540,7 @@ static void hb_compInitVars( void )
 
 static void hb_compGenOutput( int iLanguage )
 {
+
    switch( iLanguage )
    {
       case LANG_C:
@@ -3556,6 +3557,10 @@ static void hb_compGenOutput( int iLanguage )
 
       case LANG_PORT_OBJ:
          hb_compGenPortObj( hb_comp_pFileName );
+         break;
+
+      case LANG_OBJ_MODULE:
+         hb_compGenCObj( hb_comp_pFileName );
          break;
    }
 }

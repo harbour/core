@@ -1,3 +1,25 @@
+2001-07-23  21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
+  * include/hbcomp.h
+    + Added LANG_OBJ_MODULE
+    + Added prototype for hb_compGenCObj( PHB_FNAME );
+  * source/compiler/cmdcheck.c
+    ! Changed -g switch:
+      -go builds platform dependant object module from C compilers
+      -gw builds DOS/WIN 32 bit object modules from Harbour (was -go)
+  * source/compiler/hbusage.c
+    ! Added -gw description
+    + Changed -go description
+  * source/compiler/harbour.c
+    + Added call to hb_compGenCObj()
+  * source/compiler/gencobj.c
+    + void hb_compGenCObj( PHB_FNAME )
+    + static char * hb_searchpath()
+    *makefile.bc
+    hb_slex.vc
+    makefile.vc
+    source/compiler/makefile   
+    ! Updated
+
 2001-07-23 22:35 UTC+0100 Lubos Janica <janicalubos@yahoo.com>
    * classes.c
        Fixed function __CLSNEW. 

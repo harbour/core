@@ -844,6 +844,7 @@ HARBOUR_EXE_OBJ = \
    $(OBJ_DIR)\hbpcode.obj \
    $(OBJ_DIR)\hbfix.obj \
    $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\gencobj.obj \
    $(OBJ_DIR)\genobj32.obj \
    $(OBJ_DIR)\genjava.obj \
    $(OBJ_DIR)\genhrb.obj \
@@ -867,6 +868,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbgenerr.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
+   $(OBJ_DIR)\gencobj.obj \
    $(COMPILER_DIR)\genhrb.c \
    $(COMPILER_DIR)\genjava.c \
    $(COMPILER_DIR)\expropta.c \

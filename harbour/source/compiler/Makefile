@@ -39,6 +39,7 @@ endif
 C_SOURCES=\
 	cmdcheck.c \
 	genc.c \
+   gencobj.c \
 	genhrb.c \
 	genjava.c \
 	genobj32.c \

@@ -554,11 +554,6 @@ void hb_compChkEnvironVar( char * szSwitch )
                       }
                       break;
 
-                   case 'o':
-                   case 'O':
-                      hb_comp_iLanguage = LANG_OBJ32;
-                      break;
-
                    case 'j':
                    case 'J':
                       hb_comp_iLanguage = LANG_JAVA;
@@ -569,6 +564,16 @@ void hb_compChkEnvironVar( char * szSwitch )
                       hb_comp_iLanguage = LANG_PORT_OBJ;
                       break;
 
+                   case 'o':
+                   case 'O':
+                     hb_comp_iLanguage = LANG_OBJ_MODULE;
+                     break;
+  
+                  case 'w':
+                  case 'W':
+                     hb_comp_iLanguage = LANG_OBJ32;
+                     break;
+  
                    default:
                       printf( "\nUnsupported output language option\n" );
                       exit( EXIT_FAILURE );
