@@ -1,3 +1,12 @@
+19990607-03:05 PST Ron Pinkas
+  * include/hberrors.h
+    added WARN_VAR_NOT_USED
+  * source/compiler/harbour.y
+    added warning message "Variable \'%s\' declared but not used in function: %s"
+    added linked list FunVars to record the usage of declared variables
+    added logic to maintain FunVars
+    added logic to check usage as per FunVars in GenReturn()
+
 19990607-09:40 Alexander Kresin
   + source/rtl/natmsg/msgru866.c
   + source/rtl/natmsg/msgr1251.c

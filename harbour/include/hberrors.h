@@ -25,6 +25,7 @@
 #define ERR_SYNTAX2             20
 
 #define WARN_AMBIGUOUS_VAR       1
+#define WARN_VAR_NOT_USED        2
 
 void GenError( int, char*, char * );      /* generic parsing error management function */
 

@@ -266,7 +266,18 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                      };
 
 /* Table with parse warnings */
-char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'" };
+char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'",
+                         "Variable \'%s\' declared but not used in function: %s" };
+
+typedef struct _DECLARED_VAR
+{
+  char *                 szVarName;
+  char                   cVarType;
+  int                    iVarUsed;
+  struct _DECLARED_VAR   *pNextVar;
+} DECLARED_VAR, * PDECLARED_VAR;
+
+DECLARED_VAR FunVars = { "", 'U', 0, 0 };
 
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
@@ -442,10 +453,10 @@ PATHNAMES *_pIncludePath = NULL;
 /*the highest precedence*/
 
 %type <string>  IDENTIFIER LITERAL FunStart MethStart IdSend ObjectData
-%type <dNum>    DOUBLE 
+%type <dNum>    DOUBLE
 %type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
-%type <iNumber> MethCall BlockList FieldList 
+%type <iNumber> MethCall BlockList FieldList
 %type <lNumber> INTLONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
 
@@ -1461,9 +1472,9 @@ void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
   if( pPath )
   {
     while( pPath->pNext )
-      pPath =pPath->pNext;
-    pPath->pNext =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
-    pPath =pPath->pNext;
+      pPath = pPath->pNext;
+    pPath->pNext = ( PATHNAMES * ) OurMalloc( sizeof( PATHNAMES ) );
+    pPath = pPath->pNext;
   }
   else
   {
@@ -1519,6 +1530,7 @@ void AddVar( char * szVarName )
 {
    PVAR pVar, pLastVar;
    PFUNCTION pFunc =functions.pLast;
+   PDECLARED_VAR pVarDef;
 
    if( ! _iStartProc && functions.iCount <= 1 && iVarScope == VS_LOCAL )
    {
@@ -1537,6 +1549,24 @@ void AddVar( char * szVarName )
       --iLine;
       GenError( ERR_FOLLOWS_EXEC, (iVarScope==VS_LOCAL?"LOCAL":"STATIC"), NULL );
    }
+
+   pVarDef = &FunVars;
+   while ( pVarDef->pNextVar )
+   {
+      pVarDef = pVarDef->pNextVar;
+   }
+
+   pVarDef->szVarName = strdup( szVarName );
+   pVarDef->cVarType = 'U';
+   pVarDef->iVarUsed = 0;
+   pVarDef->pNextVar = ( PDECLARED_VAR  ) OurMalloc( sizeof( DECLARED_VAR ) );
+
+   pVarDef = pVarDef->pNextVar;
+
+   pVarDef->szVarName = "";
+   pVarDef->cVarType = 'U';
+   pVarDef->iVarUsed = 0;
+   pVarDef->pNextVar = 0;
 
    /* When static variable is added then functions.pLast points to function
     * that will initialise variables. The function where variable is being
@@ -2534,6 +2564,34 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 void GenReturn( WORD wOffset ) /* generates a return offset to later on fill it with the proper exiting pcode address */
 {
    PRETURN pReturn = ( PRETURN ) OurMalloc( sizeof( _RETURN ) ), pLast;
+   PDECLARED_VAR pVarDef, pRelease;
+
+   if ( _iWarnings )
+   {
+       pVarDef = &FunVars;
+       if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+          GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+       pVarDef = pVarDef->pNextVar;
+
+       FunVars.szVarName = "";
+       FunVars.cVarType = 'U';
+       FunVars.iVarUsed = 0;
+       FunVars.pNextVar = 0;
+
+       while ( pVarDef )
+       {
+
+          if ( *(pVarDef->szVarName) && ! pVarDef->iVarUsed )
+             GenWarning( WARN_VAR_NOT_USED, pVarDef->szVarName, functions.pLast->szName );
+
+          pRelease = pVarDef;
+
+          pVarDef = pVarDef->pNextVar;
+
+          OurFree( pRelease );
+       }
+   }
 
    pReturn->wOffset = wOffset;
    pReturn->pNext   = 0;
@@ -2925,13 +2983,51 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 void PopId( char * szVarName ) /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 {
    WORD wVar;
+   PDECLARED_VAR pVarDef;
+   int iFound = 0;
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
+   {
       GenPCode3( _POPLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
 
-   else if( ( wVar = GetStaticVarPos( szVarName ) ) )
-      GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
+      if ( _iWarnings )
+      {
+          pVarDef = &FunVars;
+          do
+          {
+             if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
+                break;
 
+             pVarDef = pVarDef->pNextVar;
+          } while ( pVarDef->pNextVar );
+
+          if ( iFound )
+             pVarDef->iVarUsed++;
+          else
+             GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
+      }
+   }
+   else if( ( wVar = GetStaticVarPos( szVarName ) ) )
+        {
+            GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+            if ( _iWarnings )
+            {
+                pVarDef = &FunVars;
+                do
+                {
+                   if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
+                      break;
+
+                   pVarDef = pVarDef->pNextVar;
+                } while ( pVarDef->pNextVar );
+
+                if ( iFound )
+                   pVarDef->iVarUsed++;
+                else
+                   GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
+            }
+        }
    else
    {
       GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
@@ -2951,6 +3047,8 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
 void PushId( char * szVarName ) /* generates the pcode to push a variable value to the virtual machine stack */
 {
    WORD wVar;
+   PDECLARED_VAR pVarDef;
+   int iFound = 0;
 
    if( iVarScope == VS_STATIC )
    {
@@ -2961,10 +3059,47 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
    }
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
+   {
       GenPCode3( _PUSHLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
 
+      if ( _iWarnings )
+      {
+          pVarDef = &FunVars;
+          do
+          {
+             if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
+                break;
+
+             pVarDef = pVarDef->pNextVar;
+          } while ( pVarDef->pNextVar );
+
+          if ( iFound )
+             pVarDef->iVarUsed++;
+          else
+             GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
+      }
+   }
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
-      GenPCode3( _PUSHSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
+        {
+            GenPCode3( _PUSHSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+            if ( _iWarnings )
+            {
+                pVarDef = &FunVars;
+                do
+                {
+                   if ( ( iFound = ! strcmp( pVarDef->szVarName, szVarName ) ) )
+                      break;
+
+                   pVarDef = pVarDef->pNextVar;
+                } while ( pVarDef->pNextVar );
+
+                if ( iFound )
+                   pVarDef->iVarUsed++;
+                else
+                   GenError( 0, "Compiler Error, Declared variable \'%s\' not found in linked list", szVarName );
+            }
+        }
 
    else
    {
