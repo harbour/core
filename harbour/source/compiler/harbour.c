@@ -704,9 +704,9 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    if ( hb_comp_iWarnings < 3 )
       return NULL;
 
-   if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) )
+   if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) != NULL )
    {
-      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_DUP_DECLARATION, szDeclaredName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, szDeclaredName, NULL );
       return pDeclared;
    }
 

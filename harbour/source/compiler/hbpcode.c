@@ -252,7 +252,7 @@ void hb_compStrongType( int iSize )
           sprintf( szType1, "%c", pDeclared->cType );
           sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
-          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_RETURN_TYPE, szType2, szType1 );
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_RETURN_TYPE, szType2, szType1 );
        }
        break;
 
@@ -273,7 +273,7 @@ void hb_compStrongType( int iSize )
                {
                   sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
                   sprintf( szType2, "%c", hb_comp_cParamTypes[ hb_comp_iParamCount ] );
-                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, szType1, szType2 );
                }
             }
          }
@@ -281,7 +281,7 @@ void hb_compStrongType( int iSize )
          {
             sprintf( szType1, "%i", wVar );
             sprintf( szType2, "%i", hb_comp_iParamCount );
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, szType1, szType2 );
          }
        }
 
@@ -314,7 +314,7 @@ void hb_compStrongType( int iSize )
                {
                   sprintf( szType1, "%i", hb_comp_iParamCount + 1 );
                   sprintf( szType2, "%c", hb_comp_cParamTypes[ hb_comp_iParamCount ] );
-                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, szType1, szType2 );
                }
             }
          }
@@ -322,7 +322,7 @@ void hb_compStrongType( int iSize )
          {
             sprintf( szType1, "%i", wVar );
             sprintf( szType2, "%i", hb_comp_iParamCount );
-            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, szType1, szType2 );
          }
        }
 

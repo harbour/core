@@ -61,6 +61,19 @@
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
 
+#translate AS CHAR =>
+#translate AS CHARACTER =>
+#translate AS STRING =>
+#translate AS NUM =>
+#translate AS NUMERIC =>
+#translate AS DATE =>
+#translate AS ARRAY =>
+#translate AS BLOCK =>
+#translate AS OBJECT =>
+#translate AS LOGICAL =>
+
+#command DECLARE FUNCTION <*x*> =>
+
 #endif /* HB_CLIP_CH_ */
 
 #endif

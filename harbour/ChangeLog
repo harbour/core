@@ -1,3 +1,16 @@
+20000504-09:12 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * contrib/hbclip/hbclip.ch 
+     + Added strong typing compatibility translation
+
+   * include/hbcomp.h
+   * include/hberrors.h
+   * source/compiler/harbour.c 
+   * source/compiler/hbpcode.c 
+     ! Some macros renamed
+     ! One warning fixed.
+     ! Minor fixes.
+
 20000503-21:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h

@@ -104,11 +104,11 @@ extern "C" {
 #define HB_COMP_WARN_ASSIGN_SUSPECT             11
 #define HB_COMP_WARN_OPERAND_SUSPECT            12
 #define HB_COMP_WARN_NOT_ARRAY                  13
-#define HB_COMP_RETURN_TYPE                     14
-#define HB_COMP_PARAM_COUNT                     15
-#define HB_COMP_PARAM_TYPE                      16
-#define HB_COMP_DUP_DECLARATION                 17
-#define HB_COMP_DECLARATION_CONFLICT            18
+#define HB_COMP_WARN_RETURN_TYPE                14
+#define HB_COMP_WARN_PARAM_COUNT                15
+#define HB_COMP_WARN_PARAM_TYPE                 16
+#define HB_COMP_WARN_DUP_DECLARATION            17
+#define HB_COMP_WARN_DECLARATION_CONFLICT       18
 #define HB_COMP_WARN_NOT_INITIALIZED            19
 #define HB_COMP_WARN_MEANINGLESS                20
 #define HB_COMP_WARN_UNREACHABLE                21
@@ -134,8 +134,8 @@ extern "C" {
 
 #define HB_PP_WARN_DEFINE_REDEF                 1
 
-extern void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 ); /* generic parsing error management function */
-extern void hb_compGenWarning( char * _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2); /* generic parsing warning management function */
+extern void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 ); /* generic parsing error management function */
+extern void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2); /* generic parsing warning management function */
 
 #if defined(HB_EXTERN_C)
 }
