@@ -280,7 +280,7 @@ char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'",
                          "Variable \'%s\' declared but not used in function: %s",
                          "CodeBlock Parameter \'%s\' declared but not used in function: %s",
 			 "Incompatible type in variable assignment: %s",
-			 "Suspecious type in variable assignment: %s "
+			 "Suspicious type in variable assignment: %s "
                        };
 
 /* Table with reserved functions names
