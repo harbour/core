@@ -3058,8 +3058,16 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmLocalName(%hu, %s)", uiLocal, szLocalName));
 
-   HB_SYMBOL_UNUSED( uiLocal );
-   HB_SYMBOL_UNUSED( szLocalName );
+   s_bDebugging = TRUE;
+   s_bDebugShowLines = FALSE;
+   hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
+   hb_vmPushNil();
+   hb_vmPushLongConst( uiLocal );
+   hb_vmPushString( szLocalName, strlen( szLocalName ) );
+   s_bDebuggerIsWorking = TRUE;
+   hb_vmDo( 2 );
+   s_bDebuggerIsWorking = FALSE;
+   s_bDebugShowLines = TRUE;
 }
 
 static void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
