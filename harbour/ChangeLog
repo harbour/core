@@ -1,3 +1,7 @@
+2001-03-01 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/include/hbapi.h
+     + New function ISOBJECT() added.
+
 2001-02-28 22:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Improved managment of variable scoping.
