@@ -391,7 +391,7 @@ int TraSearch(char *cmdname, int ncmd)
 
 int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
 {
- static char mpatt[STR_SIZE], rpatt[STR_SIZE];
+ char mpatt[STR_SIZE], rpatt[STR_SIZE];
  char cmdname[MAX_NAME];
  int mlen,rlen;
  int ipos, rez;
@@ -592,11 +592,9 @@ int ParseExpression( char* sLine, char* sOutLine )
        if ( isname(*ptri) )
          NextName( &ptri, sToken, NULL);
        else
-       {
-         i = 0;
-         while ( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && !isname(*ptri) )
-           *(sToken+i++) = *ptri++;
-         *(sToken+i) = '\0';
+       {        /* (ER) returned to old version */
+         *sToken = *ptri++;
+         *(sToken+1) = '\0';
        }
        SKIPTABSPACES( ptri );
 

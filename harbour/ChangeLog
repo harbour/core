@@ -1,3 +1,7 @@
+19990721-10:25 CET Eddie Runia
+  * source/hbpp/hbpp.c
+    Old lookup returned for '??'. Follow (ER) for the change
+
 Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/compiler/harbour.y: 
