@@ -308,8 +308,6 @@ HB_FUNC( HB_APARAMS )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackDispCall()"));
-
    pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
    hb_itemRelease( hb_itemReturn( hb_arrayFromParams( pBase ) ) );
