@@ -1,3 +1,9 @@
+2001-02-25 06:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+      *Fixed an small bug regarding the number of select files on editor mode
+   *utils/hbdoc/genpdf1.prg
+    utils/hbdoc/rtf.prg
+      *Small enhacements
 2001-02-24 19:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Added CompileNestedBlocks() #ifdef __CLIPPER__, because Clipper's Macro Compiler can *not* compile nested blocks.
