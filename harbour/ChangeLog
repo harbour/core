@@ -1,3 +1,7 @@
+2000-06-21 10:58 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/pp/ppcore.c
+     ! getExpReal() to not return invalid Clipper Expression like unterminated '([{'. This will solve many PP problems.
+
 2000-06-21 14:19 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * include/hbextern.ch
@@ -7,11 +11,11 @@
    * makefile.bc
    * makefile.vc
      * DISKSPACE() made 100% CA-Clipper compatible, so that the second optional
-       extension parameter was removed. The UNIX support has been removed 
+       extension parameter was removed. The UNIX support has been removed
        since the first parameter should always be a numeric value.
-     + HB_DISKSPACE() extension function added, with the optional second 
-       parameter. This function will always need a string as the first 
-       parameter, you can also query space data for a specific directory 
+     + HB_DISKSPACE() extension function added, with the optional second
+       parameter. This function will always need a string as the first
+       parameter, you can also query space data for a specific directory
        on the systems where this is supported (Unix, Win32).
        This version will also support the Retry operation on error.
 
@@ -21,7 +25,7 @@
    * include/fileio.ch
      - Removed non-Clipper compatible macros.
 
-       Add these to your local headers if you need them, as I've already 
+       Add these to your local headers if you need them, as I've already
        noted here: 20000322-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
 
        #define CD( d )       DIRCHANGE( d )
@@ -37,7 +41,7 @@
      ! Fixed several bugs.
 
    * source/rtl/filesys.c
-     ! Rearranged the OS/2 hb_fsSeek() support, to not contain redundant 
+     ! Rearranged the OS/2 hb_fsSeek() support, to not contain redundant
        code, and use the Harbour standard for multiplatform code.
 
    * source/vm/extend.c

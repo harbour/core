@@ -1914,6 +1914,16 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
       */
    }
 
+   /* Ron Pinkas added 2000-06-21 */
+   if( STATE_QUOTE1 || STATE_QUOTE2 || STATE_QUOTE3 || StBr1 || StBr2 || StBr3  )
+   {
+      /* Alexander should we include this???
+      expreal = NULL;
+      */
+      lens = 0;
+   }
+   /* Ron Pinkas added 2000-06-21 */
+
    return lens;
 }
 
@@ -1937,6 +1947,11 @@ static BOOL isExpres( char * stroka )
   /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/+*-%^=(<>"
   return ( l1 <= l2 );
   */
+
+  /*
+  printf( "l1: %i l2: %i\n", l1, l2 );
+  */
+
   return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) );
 }
 
