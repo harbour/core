@@ -48,7 +48,7 @@
 #define MODULELINE   12
 #define LINELINE     14
 #define ERRORLINE    20
-#define LONGLINE     100
+#define LONGLINE     600
 #define LONGONELINE  86
 MEMVAR aDirList
 MEMVAR aDocInfo
@@ -208,8 +208,8 @@ FUNCTION ProcessWww()
 
          IF AT( cDoc, cBuffer ) > 0
             IF lDoc
-               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
+//               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
+//                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
             lDoc    := .T.
             cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
@@ -219,8 +219,8 @@ FUNCTION ProcessWww()
             nMode     := D_IGNORE
          ELSEIF AT( cClassDoc, cBuffer ) > 0
             IF lClassDoc
-               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
-                            + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
+//               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
+  //                          + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
             lClassDoc := .T.
             cBuffer   := TRIM( SUBSTR( ReadLN( @lEof ), ;
@@ -232,17 +232,17 @@ FUNCTION ProcessWww()
          ELSEIF AT( cEnd, cBuffer ) > 0
                      nCurDoc ++
             IF .NOT. lDoc .AND. !lClassDoc
-               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
-                            + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
+//               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
+  //                          + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ELSE
                //  Add a new entry to our list of files
 
                IF EMPTY( cCategory )
-                  WRITE_ERROR( "Blank Category",,,, aDirList[ i, F_NAME ] )
+//                  WRITE_ERROR( "Blank Category",,,, aDirList[ i, F_NAME ] )
                   cCategory := "Unknown"
                ENDIF
                IF EMPTY( cFuncName )
-                  WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
+                 // WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
@@ -343,7 +343,7 @@ FUNCTION ProcessWww()
                ENDIF
                IF ohtm:nHandle < 1
                   ? "Error creating", cFileName, ".htm"
-                  WRITE_ERROR( "Error creating",,,, cFileName + ".htm" )
+//                  WRITE_ERROR( "Error creating",,,, cFileName + ".htm" )
                ENDIF
 
             ELSEIF (AT( cdata, cBuffer ) > 0 .and.  GetItem( cBuffer, nCurdoc ) ).OR. (AT( cmethod, cBuffer ) > 0 .and. GetItem( cBuffer, nCurdoc ) )
@@ -392,8 +392,8 @@ FUNCTION ProcessWww()
                nLineCnt ++
                cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                IF LEN( cOneLine ) > LONGONELINE
-                  WRITE_ERROR( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
-                               aDirList[ i, F_NAME ] )
+//                  WRITE_ERROR( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
+//                               aDirList[ i, F_NAME ] )
                ENDIF
 
                nMode := D_ONELINE
@@ -545,8 +545,8 @@ end
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
                   IF nMode = D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
+ //                                    LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
@@ -556,8 +556,8 @@ end
 
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
@@ -567,8 +567,8 @@ end
                      prochtmdesc( cbuffer, oHtm, "Arguments" )
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
 
@@ -580,15 +580,15 @@ end
                      ProcHtmDesc( cBuffer, oHtm )
                   ELSEIF nMode = D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+  //                      WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+//                                     LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      prochtmdesc( cBuffer, oHtm, "Example" )
                   ELSEIF nMode = D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      prochtmdesc( cBuffer, oHtm, "Description" )
@@ -605,8 +605,8 @@ end
                      ENDIF
                   ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
@@ -617,8 +617,8 @@ end
 
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
@@ -629,8 +629,8 @@ end
 
                   ELSEIF nMode = D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
-                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
-                                     LONGLINE, aDirList[ i, F_NAME ] )
+//                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
+  //                                   LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      prochtmdesc( cBuffer, oHtm, "Compliance" )
@@ -646,9 +646,9 @@ end
 
                      //  unknown data from somewhere
 
-                     WRITE_ERROR( "Unknown Data Type " + cBuffer,, ;
-                                  nLineCnt, ;
-                                  LONGONELINE, aDirList[ i, F_NAME ] )
+//                     WRITE_ERROR( "Unknown Data Type " + cBuffer,, ;
+//                                  nLineCnt, ;
+//                                  LONGONELINE, aDirList[ i, F_NAME ] )
 
                   ENDIF
                ENDIF
@@ -858,7 +858,7 @@ FUNCTION FormatHtmBuff( cBuffer, cStyle, oHtm )
    ELSEIF cStyle == 'Arguments'
 
       nPos := 0
-      IF AT( "<par>", cReturn ) > 0
+      IF AT( "<par>", cReturn ) > 0 .and. at('<b>',cReturn)=0
          cReturn  := STRTRAN( cReturn, "<par>", "" )
          cReturn  := STRTRAN( cReturn, "</par>", "" )
          cReturn  := ALLTRIM( cReturn )
@@ -870,7 +870,24 @@ FUNCTION FormatHtmBuff( cBuffer, cStyle, oHtm )
             cOldLine := STRTRAN( cOldLine, ">", "&gt;" )
             lArgBold := .T.
          ENDIF
+       elseif AT( "<par>", cReturn ) > 0 .and. at('<b>',cReturn)>0
+         cReturn  := STRTRAN( cReturn, "<par>", "" )
+         cReturn  := STRTRAN( cReturn, "</par>", "" )
+         cReturn  := ALLTRIM( cReturn )
+         nPos     := AT( '</b>', cReturn )
+         cOldLine := LEFT( cReturn, nPos + 3 )
+         cReturn  := STRTRAN( cReturn, cOldLine, "" )
+         IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+            cOldLine := STRTRAN( cOldLine, "<b>", "" )
+            cOldLine := STRTRAN( cOldLine, "</b>", "" )
+            cOldLine := STRTRAN( cOldLine, "<", "&lt;" )
+            cOldLine := STRTRAN( cOldLine, ">", "&gt;" )
+            lArgBold := .T.
+         ENDIF
+  
       ENDIF
+
+
       DO WHILE !lEndBuffer
 
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
@@ -1073,7 +1090,7 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
 
-         oHtm:WriteText( "<br>" )
+         oHtm:WriteText( "<br><pre>" )
          oHtm:WritePar( cBuffer )
       ENDIF
       DO WHILE !lendFixed

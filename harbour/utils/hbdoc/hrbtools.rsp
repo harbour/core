@@ -8,13 +8,6 @@
 ..\..\doc\en\dir.txt
 ..\..\doc\en\error.txt
 ..\..\doc\en\file.txt
-..\..\doc\en\ht_class.txt
-..\..\doc\en\ht_conv.txt
-..\..\doc\en\ht_dbf.txt
-..\..\doc\en\ht_doc.txt
-..\..\doc\en\ht_file.txt
-..\..\doc\en\ht_gt.txt
-..\..\doc\en\ht_str.txt
 ..\..\doc\en\hvm.txt
 ..\..\doc\en\input.txt
 ..\..\doc\en\license.txt
@@ -37,7 +30,7 @@
 ..\..\doc\en\tlabel.txt
 ..\..\doc\en\treport.txt
 ..\..\doc\en\var.txt
-..\..\doc\subcodes.txt
-..\..\doc\harbext.txt
-..\..\doc\gnulice.txt
-..\..\doc\compiler.txt
+..\..\doc\en\subcodes.txt
+..\..\doc\en\harbext.txt
+..\..\doc\en\gnulice.txt
+..\..\doc\en\compiler.txt

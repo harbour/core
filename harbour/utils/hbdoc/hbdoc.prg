@@ -153,6 +153,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL aName         // Tokenized name
    LOCAL nLen          // Length of the token array
    LOCAL oHtm
+   LOCAL oHtm1
    LOCAL ppp
    LOCAL cTemp
    PUBLIC theHandle
@@ -435,22 +436,26 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FCLOSE( nHpj )
    ELSEIF lWWW
 
-//      oHtm := THTML():New( "htm\harbour.htm" )
       asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
             do while .t.
           citem:=adocinfo[1,1]
+//          citem:=
+ //     oHtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',cItem)
           ohtm:=THTML():new('htm\hb'+citem+'.htm')
-          ohtm:WriteText("<ul><center>")
+          ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
+          ohtm:WriteText("<ul>")
+  
       for ppp:=1 to len(adocinfo)
       
            if citem ==adocinfo[ppp,1] 
                oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
            else
-           ohtm:WriteText("</ul></center>")
+           ohtm:WriteText("</ul>")
            ohtm:close()
-              citem:=adocinfo[ppp,1]
-            ohtm:=THTML():new('htm\hb'+citem+'.htm')
-           ohtm:WriteText("<ul><center>")
+           citem:=adocinfo[ppp,1]
+           ohtm:=THTML():new('htm\hb'+strtran(adocinfo[ppp,1]," ","")+'.htm')
+           ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
+           ohtm:WriteText("<ul>")
            oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
            endif
            next
@@ -459,18 +464,43 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
         endif
       enddo
         ohtm:close()
-  /*
-      oHtm:WriteTitle( "Harbour Reference Guide" )
+      oHtm1 := THTML():New( "htm\harbour.htm" )
+      oHtm1:WriteTitle( "Harbour Reference Guide" )
+      oHtm1:WriteText( "<H1>Harbour Reference Guide</H1>" )
+      oHtm1:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
+      oHtm1:WriteLink( "overview", UpperLower( "Harbour Read me" ) )
+      oHtm1:WriteLink( "license", UpperLower( "Harbour License" ) )
+      oHtm1:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
+      oHtm1:WriteLink( "compileroptions.htm", "Compiler Options" )
+      oHtm1:WriteLink( "harbourextension.htm", "Harbour Extensions" )
+      oHtm1:WriteText( "</UL>" )
+      oHtm1:WriteText( "<H2>Alphabetical list of functions by Categorie</H2>" )
+      ohtm1:writetext('<ul>')
 
-      oHtm:WriteText( "<H1>Harbour Reference Guide</H1>" )
-      oHtm:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
-      oHtm:WriteLink( "overview", UpperLower( "Harbour Read me" ) )
-      oHtm:WriteLink( "license", UpperLower( "Harbour License" ) )
-      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
-      oHtm:WriteLink( "compileroptions.htm", "Compiler Options" )
-      oHtm:WriteText( "</UL>" )
-      oHtm:WriteText( "<H2>Alphabetical list of functions</H2>" )
-      oHtm:WriteText( "<UL>" )
+        do  while .t.
+          citem:=alltrim(rtrim(ltrim(adocinfo[1,1])))
+  //          citem:=strtran(adocinfo[1,1]," ","")
+        ohtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',UpperLower(cItem))
+        for ppp:=1 to len(adocinfo)
+
+          if citem<>adocinfo[ppp,1]
+                              citem:=alltrim(rtrim(ltrim(adocinfo[ppp,1])))
+                    ohtm1:WriteLink('hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',UpperLower(cItem))
+
+//            citem:=strtran(adocinfo[ppp,1]," ","")
+          endif
+          next
+        if ppp>len(adocinfo)
+        exit
+        endif
+      enddo
+            
+      ohtm1:writetext('</ul>')        
+        ohtm1:close()
+/*
+  oHtm := THTML():New( "htm\harbour.htm" )
+
+/*
       ASORT( awww,,, { | x, y | x[ 1 ] < y[ 1 ] } )
 
       FOR nPos := 1 TO LEN( aWww )
@@ -554,7 +584,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          ? 'ngxc funcn_.txt '
          ? 'ngxc comm.txt'
          ? 'Linking the Guide'
-         ? 'ngxl harbour.lnk'
+         ? 'ngxl '+cLinkName
          ? 'del ngi\*.*'
          ? 'del *.ngo'
       ENDIF
@@ -573,7 +603,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  Send out list of authors
 
-   @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
+/*   @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    @ INFILELINE, 30 SAY "Sorting Author file"         
 
    FOR i := 1 TO LEN( aAuthorList )
@@ -650,6 +680,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET CONSOLE ON
    SET ALTERNATE OFF
    SET ALTERNATE TO
+*/
    @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
 
    //  Return to caller
