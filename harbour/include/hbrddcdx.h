@@ -166,7 +166,7 @@ typedef struct _CDXINDEX
    LONG      NextAvail;
    // review this...
    LPCDXTAG  TagList;
-   struct   _INDEXINFO * pNext;   /* The next index in the list */
+   struct   _CDXINDEX * pNext;   /* The next index in the list */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 

@@ -522,7 +522,7 @@ static void hb_cdxWriteMemo( CDXAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
    BOOL bWriteBlocks;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxWriteMemo(%p, %lu, %p, %lu, %p, %hu)", pArea, ulBlock,
-                           pItem, ulLen, ulNewBlock, uiType));
+                           pItem, ulLen, ulStoredBlock, uiType));
 
    uiBloksRequired = ( USHORT ) ( ulLen + sizeof( MEMOBLOCK ) + pArea->uiMemoBlockSize - 1 ) /
                                   pArea->uiMemoBlockSize;
@@ -1228,10 +1228,7 @@ ERRCODE hb_cdxOpenMemFile( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
          bRetry = FALSE;
    } while( bRetry );
    if( pError )
-   {
       hb_errRelease( pError );
-      pError = NULL;
-   }
    if( pArea->hMemoFile == FS_ERROR )
       return FAILURE;
 
@@ -3977,7 +3974,7 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
             //BOOL fTop;                    /* TRUE if "top" */
             //BOOL fBottom;                 /* TRUE if "bottom" */
             SUPER_GOBOTTOM( ( AREAP ) pArea );
-            SUPER_SKIPRAW( pArea, 1 );
+            SUPER_SKIPRAW( ( AREAP ) pArea, 1 );
             pArea->fEof = pTag->TagEOF = TRUE;
           }
        }
