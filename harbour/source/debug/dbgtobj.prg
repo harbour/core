@@ -119,7 +119,7 @@ Local owndsets
    ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ), nWidth  - 12 ) } ) )
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || If( ::ArrayReference[ ::arrayIndex, 2 ] != "Method", PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ), nWidth  - 12 ), "Method" ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
    ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    ocol:width:= MaxCol() - 14 - nMaxElem
@@ -209,7 +209,7 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
 
    endcase
 
-return
+return nil
 
 static function ValToStr( uVal )
 
@@ -292,7 +292,7 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
         KEYBOARD CHR( nKey )
     END
-RETURN
+RETURN nil
 
 static FUNC maxelem( a )
 
