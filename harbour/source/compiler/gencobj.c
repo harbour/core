@@ -43,10 +43,13 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
    char szLine[ HB_CFG_LINE_LEN ];
-   char szCompiler[ HB_CFG_LINE_LEN ];
+   char szCompiler[ HB_CFG_LINE_LEN ] = "";
    char szOptions[ HB_CFG_LINE_LEN ];
    char szCommandLine[ HB_CFG_LINE_LEN * 2 ];
    char szOutPath[ _POSIX_PATH_MAX ] = "\0";
+#if defined( OS_UNIX_COMPATIBLE )
+   char szDefaultUnixPath[ _POSIX_PATH_MAX ] = "/etc:/usr/local/etc";
+#endif
    FILE * yyc;
    char * pszCfg;
    char * pszEnv;
@@ -67,7 +70,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 #if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
    pszEnv = getenv( "PATH" );
 #elif defined( OS_UNIX_COMPATIBLE )
-   pszEnv = "/etc:/usr/local/etc";
+   pszEnv = szDefaultUnixPath;
 #endif
 
    /* Grab space */
@@ -182,7 +185,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
       hb_xfree( pOut );
    }
 
-   if( szCompiler )
+   if( *szCompiler )
    {
       if( bVerbose )
       {
