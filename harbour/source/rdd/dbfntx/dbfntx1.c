@@ -3025,6 +3025,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
              return retvalue;
            }
            strncpy( pKey2->key, pKey->item.asString.value, pTag->KeyLength );
+           hb_cdpnTranslate( pKey2->key, s_cdpage, pArea->cdPage, pTag->KeyLength );
            break;
         case HB_IT_INTEGER:
         case HB_IT_LONG:
@@ -3894,6 +3895,8 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    pIndex->IndexName[0] = '\0';
    strncat( pIndex->IndexName, szFileName, _POSIX_PATH_MAX );
 
+   if( !pArea->lpCurTag )
+      pArea->lpCurTag = pIndex->CompoundTag;
    if( pArea->lpNtxTag )
    {
       pIndex->CompoundTag->TagRoot++;
@@ -3908,9 +3911,9 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    else
    {
       pArea->lpNtxTag = pIndex->CompoundTag;
+      SELF_GOTOP( ( AREAP ) pArea );
    }
-   if( !pArea->lpCurTag )
-      pArea->lpCurTag = pIndex->CompoundTag;
+
    hb_xfree( szFileName );
    hb_xfree( pFileName );
    return SUCCESS;
@@ -4035,6 +4038,7 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo )
                   if( *ppItem == NULL )
                      *ppItem = hb_itemNew( NULL );
                   hb_itemCopy( *ppItem, sInfo->scopeValue );
+                  hb_cdpnTranslate( (*ppItem)->item.asString.value, s_cdpage, pArea->cdPage, (*ppItem)->item.asString.length );
                }
                break;
             case HB_IT_INTEGER:
