@@ -151,6 +151,7 @@ void hb_idleState( void )
          hb_vm_bCollectGarbage = TRUE;
 
          hb_releaseCPU();
+         s_bIamIdle = FALSE;
          return;
       }
 
