@@ -40,7 +40,9 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
+#include "hbapigt.h"
 #include "hbvmpub.h"
+#include "hbvm.h"
 #define WIN32
 #include "zip.h"
 #include "unzip.h"
@@ -50,8 +52,8 @@ extern "C" {
 
 extern uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt);
 extern char *hb___CheckFile( char * szFile);
-extern int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel);
-extern int hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel);
+extern int hb___CompressOneFile(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL iOverWrite);
+extern int hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL iOverWrite);
 extern int hb___unZipFiles(char *szFile);
 extern int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int* popt_overwrite);
 extern void hb____ChangeFileDate(const char *filename,uLong dosdate,tm_unz tmu_date);
