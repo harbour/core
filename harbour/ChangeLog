@@ -1,4 +1,8 @@
-19990716-13:00 Eddie Runia <eddie@runia>
+19990716-14:30 CET Eddie Runia <eddie@runia.com>
+  * source/runner/runner.c
+    Typo corrected
+
+19990716-13:00 CET Eddie Runia <eddie@runia.com>
   * include/initsymb.h; source/vm/initsymb.c; source/runner/runner.c;
     include/run_exp.h
     The runner is back on-line :-))

@@ -90,7 +90,7 @@ static void InitRunnerTable( void )
 {
 #include <initsymb.h>                           /* Include default symbols  */
 }
-#if !define( __GNUC__ )
+#if !defined( __GNUC__ )
    #pragma startup InitRunnerTable
 #endif
 
