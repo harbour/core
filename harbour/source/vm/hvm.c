@@ -3216,7 +3216,7 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
    itArray.type = HB_IT_NIL;
    hb_arrayNew( &itArray, ulElements );
    for( ulPos = 0; ulPos < ulElements; ulPos++ )
-      hb_itemCopy( itArray.item.asArray.value->pItems + ulPos, hb_stackItemFromTop( ulPos - ulElements ) );
+      hb_itemCopy( itArray.item.asArray.value->pItems + ulPos, hb_stackItemFromTop( ( signed ) ( ulPos - ulElements ) ) );
 
    for( ulPos = 0; ulPos < ulElements; ulPos++ )
       hb_stackPop();
