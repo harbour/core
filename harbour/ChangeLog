@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-18 00:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * include/hbdefs.h
+      * fixed typo on used USHORT_MAX instead of USHRT_MAX
+        as per advise from Przemek.
+
 2005-04-18 22:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * include/hbstack.h
       * two minor changes required for 64 bits support
