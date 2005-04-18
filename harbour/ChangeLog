@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-18 00:15 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/rtl/gtwin/gtwin.c
+      * 64 bits support - temporary minor workarounds
+
 2005-04-18 00:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * include/hbdefs.h
       * fixed typo on used USHORT_MAX instead of USHRT_MAX
