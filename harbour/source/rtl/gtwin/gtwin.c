@@ -1609,7 +1609,10 @@ static int hb_Inp9x( USHORT usPort )
        __emit__(0x32,0xE4);   /* ASM XOR AH, AH */
        usVal = _AX;
     #else
-       usVal = _inp( usPort );
+       /* How to do this in 64 bits ? */
+       #ifndef HB_ARCH_64BIT
+          usVal = _inp( usPort );
+       #endif   
     #endif
 
     return usVal;
@@ -1628,7 +1631,10 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
       __emit__(0x32,0xE4);   /* ASM XOR AH, AH */
       usVal = _AX;
     #else
-       usVal = _outp( usPort, usVal );
+       /* How to do this in 64 bits ? */
+       #ifndef HB_ARCH_64BIT
+          usVal = _outp( usPort, usVal );
+       #endif   
     #endif
 
     return usVal;
