@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-18 22:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * include/hbstack.h
+      * two minor changes required for 64 bits support
+        as per advise from Przemek. It is a general solution for the fix
+        implemented yesterday.
+
+2005-04-17 ??:?? UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/vm/hvm.c
+      * minor change required for 64 bits support.
+
 2005-03-18 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
    * config/dos/global.cf
