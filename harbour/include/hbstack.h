@@ -91,8 +91,8 @@ typedef struct
 
 #if defined(HB_STACK_MACROS)
 
-#define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + (n) ) )
-#define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + (n) + 1 ) )
+#define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) (n) ) )
+#define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) (n) + 1 ) )
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1)
 #define hb_stackTopItem( )          ( * hb_stack.pPos )
