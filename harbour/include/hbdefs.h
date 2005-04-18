@@ -226,11 +226,11 @@
  * below are some hacks which don't have to be true on some machines
  * please update it if necessary
  */
-#if ULONG_MAX > UINT_MAX && UINT_MAX > USHORT_MAX
+#if ULONG_MAX > UINT_MAX && UINT_MAX > USHRT_MAX
 #  define HB_ARCH_64BIT
-#elif ULONG_MAX == UINT_MAX && UINT_MAX > USHORT_MAX
+#elif ULONG_MAX == UINT_MAX && UINT_MAX > USHRT_MAX
 #  define HB_ARCH_32BIT
-#elif ULONG_MAX > UINT_MAX && UINT_MAX == USHORT_MAX
+#elif ULONG_MAX > UINT_MAX && UINT_MAX == USHRT_MAX
 #  define HB_ARCH_16BIT
 #endif
 
