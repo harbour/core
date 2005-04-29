@@ -137,7 +137,7 @@ extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 
-   #ifndef __64__
+   #ifndef _WIN64
 
       #define HB_INIT_SYMBOLS_END( func ) }; \
          static int func( void ) \
