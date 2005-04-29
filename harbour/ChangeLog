@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-29 15:46 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * include/hbdefs.h  
+     * fixed for Windows 64, using Microsoft C provided _WIN64 define
+       Changes provided by Przemek. Thanks! :-)
+
 2005-04-29 07:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile64.nt
      * __64__ define declared
