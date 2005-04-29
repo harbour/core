@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-29 16:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile64.nt
+     * -D__64__ removed. No longer needed.
+
 2005-04-29 15:54 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * include/hbinit.h  
      * __64__ changed into Microsoft C 64 built-in _WIN64
