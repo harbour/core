@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-04-29 07:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile64.nt
+     * __64__ define declared
+   * include/hbinit.h  
+     * __64__ define use to detect building for 64 bits when using Microsoft C compiler
+
+   Please notice that Microsoft C 64 compiler is a cross compiler that works as a 32 bits
+   application, so this is the only way found by now to detect we want to build for 64 bits.
+
+
 2005-04-29 06:08 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    + make_vc64.bat
    + makefile64.nt
