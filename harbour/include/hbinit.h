@@ -137,13 +137,27 @@ extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 
-   #define HB_INIT_SYMBOLS_END( func ) }; \
-      static int func( void ) \
-      { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-         return 1; \
-      }
+   #ifndef __64__
 
+      #define HB_INIT_SYMBOLS_END( func ) }; \
+         static int func( void ) \
+         { \
+            hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+            return 1; \
+         } 
+         
+   #else
+     
+      #define HB_INIT_SYMBOLS_END( func ) }; \
+         static int func( void ) \
+         { \
+            hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+            return 1; \
+         } \
+         static int static_int_##func = func();
+         
+   #endif
+   
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
       static int func( void ) {
 
