@@ -57,19 +57,19 @@
 
 HB_EXTERN_BEGIN
 
-extern double   hb_dateSeconds( void );
-extern void     hb_dateToday( int * piYear, int * piMonth, int * piDay );
-extern void     hb_dateTimeStr( char * pszTime );
-extern char *   hb_dateCMonth( int iMonth );
-extern char *   hb_dateCDOW( int iDay );
-extern int      hb_dateDOW( int iYear, int iMonth, int iDay );
-extern char *   hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
-extern long     hb_dateEncode( int iYear, int iMonth, int iDay );
-extern void     hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );
-extern void     hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
-extern void     hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
-extern char *   hb_dateDecStr( char * szDate, long lJulian );
-extern long     hb_dateEncStr( char * szDate );
+extern double HB_EXPORT hb_dateSeconds( void );
+extern void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay );
+extern void HB_EXPORT hb_dateTimeStr( char * pszTime );
+extern char HB_EXPORT * hb_dateCMonth( int iMonth );
+extern char HB_EXPORT * hb_dateCDOW( int iDay );
+extern int  HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay );
+extern char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
+extern long HB_EXPORT hb_dateEncode( int iYear, int iMonth, int iDay );
+extern void HB_EXPORT hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );
+extern void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
+extern void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
+extern char HB_EXPORT * hb_dateDecStr( char * szDate, long lJulian );
+extern long HB_EXPORT hb_dateEncStr( char * szDate );
 
 HB_EXTERN_END
 
