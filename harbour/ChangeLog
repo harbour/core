@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-05-07 17:01 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile64.nt
+     + bufferoverflowu.lib added to LDFLAGS as per new Microsoft C 64 compiler 
+       (PSDK April 2005) requirement.
+       
+   * hbdate.h    
+   * hbapifs.h
+     + HB_EXPORT added to those functions that already were using it, as per
+       new Microsoft C 64 compiler (PSDK April 2005) requirement.
+
 2005-04-29 16:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile64.nt
      * -D__64__ removed. No longer needed.
