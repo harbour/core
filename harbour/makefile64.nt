@@ -136,7 +136,7 @@ CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-LDFLAGS        = $(LDFLAGS)
+LDFLAGS        = $(LDFLAGS) bufferoverflowu.lib
 
 !ifdef HB_DOC_PDF
 HARBOURFLAGS = $(HARBOURFLAGS) -dPDF
