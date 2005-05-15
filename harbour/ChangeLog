@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-05-15 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/dirstruc.txt
+     + Add oneliner description for: config/hpux
+
 2005-05-15 10:42 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/whatsnew.txt
      + Add information about the upcoming alpha build 45 written by

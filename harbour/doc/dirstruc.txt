@@ -34,6 +34,8 @@ in order to remove empty directories)
 |   |
 |   +---dos            - Configuration files specific to DOS.
 |   |
+|   +---hpux           - Configuration files specific to HP-UX.
+|   |
 |   +---linux          - Configutation files specific to GNU/Linux.
 |   |
 |   +---os2            - Configutation files specific to OS/2.
