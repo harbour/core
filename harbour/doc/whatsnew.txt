@@ -3,7 +3,100 @@
  */
 
 ----------------------------------------------------------------------
+Version 0.45 Alpha Build 45 (????-??-??)
+
+The compiler
+------------
+- Fixed problem with dates.
+- Some Out of bound buffer access fixed.
+- Support for Clipper undocumented <x:&> match marker. Notice that this
+  fixes support for: SET FILTER TO &macro / SET FILTER TO &macro. .AND. expr
+- Support for static functions used in macro compiled expressions
+- Added new .prg #defines: __PLATFORM__<cPlatfrom>, __ARCH{16|32|64}BIT__,
+  __LITTLE_ENDIAN__|__BIG_ENDIAN__|__PDP_ENDIAN__
+- Several internal changes in the way Harbour handle numbers.
+  Better Clipper compatibility in operations with numbers.
+- Fixed accessing to uninitialized memory
+- Fixed memvars and detached locals handling related to reallocation of
+  memvar's buffer and detaching of locals in a loop
+- Changed algorithm for recycling of unused memvar values
+- Improved memory handling.
+- Removed hack for GCC and old Bison versions
+- Modified creation of symbols table:
+  Symbol of function name never share a symbol of variable
+  Symbol for INIT/EXIT procedure has now '$' suffix - this means that
+  such procedures cannot be called from user code (Clipper compatible)
+- Harbour now Run on 64 bits !
+- Some small optimizations in harbour/source/vm/itemapi.c
+
+The runtime modules
+-------------------
+- Enabled creation of classes from C level using functions:
+  hb_clsCreate(), hb_clsAdd() and hb_clsAssociate().
+- Implementation of several Classes as in Class(y) lib:
+  ScalarObject, Character, Array, Block, Date, Logical,Nil, Numeric
+- GetNew() no longer evaluates passed set/get codeblock
+- A new function 'hb_dynsymScope' was added to check if the passed symbol
+  has requested scope
+- Added many functions to the extend system: hb_parnll, hb_stornll,
+  hb_retnll, hbretnlllen, hb_itemPutNLL, hb_itemPutNLLLen, hb_itemGetNLL
+  which operates on LONGLONG
+  Added hb_parnint, hb_stornint, hb_retnint, hb_retnintlen, hb_itemPutNInt,
+  hb_itemPutNIntLen, hb_itemGetNInt which operates on HB_LONG
+  Added HB_PUSHLONGLONG pcode
+- Cleaned all endian dependend code found - now Harbour can be compiled
+  on LITLE and BIG endian machines - for some other like PDP ENDIAN it's
+  enough to define proper macros in hbdefs.h
+- Added macros for to get/put values in chosen byte order:
+         HB_GET_LE_[U]INT{16,24,32,64}( pPtr )
+         HB_GET_BE_[U]INT{16,24,32,64}( pPtr )
+         HB_PUT_LE_[U]INT{16,24,32,64}( pPtr, nVal )
+         HB_PUT_BE_[U]INT{16,24,32,64}( pPtr, nVal )
+- Added macro HB_CAST_BYTE_NUMBERS_OFF which disables casting in
+  HB_{GET|PUT}_{LE|BE}_* macros - it's necessary for some platforms like
+  ALPHA DEC.
+- Many macros added for easier manipulation of different APIs and platforms.
+- Clean the code (no more warning messages under Linux and GCC and DOS
+  OpenWatcom) - some of them were real bugs
+- Replaced code which made pointer casting without respecting machine
+  alignment with proper macros and fixed some problems with byte alignment
+- Added function hb_stackIncrease() and modifications for new stack macros
+- Improved Clipper compatibility in AFILL()
+- Replace of malloc()/free() that still remains by hb_xgrab()/hb_xfree()
+- Added new functions: HB_IDLESLEEP() and hb_idleSleep()
+- Add the missing Greek language and codepage files.
+- Added Spanish Modern codepage
+- Synced HB CDP API with xHarbour - added basic Unicode support
+- Added functions hb_fsLockLarge() and hb_fsSeekLarge() which uses 64bit
+  offsets in filesys.c for files larger than 2Gb
+
+RDD
+---
+- Fixed a bug, causing random GPFs while seeking in NTX.
+- Added some sets for RDD synchronization with xHarbour
+- Improved indexing speed of DBFs with very big number of records (more
+  than 1 million records).
+
+Contrib
+-------
+- New functions has been added to ODBC: sqlSetStmtOption() and sqlColumns()
+- Changes in contrib MySQL module: sqlUseRes() added, sqlListTbl() is
+  modified, and other changes in tmysql.prg, tsqlbrw.prg
+
+General
+-------
+- Updated build process for Debian Linux distribution (.DEB) packages.
+  Now hb* scripts and shared libs are created by standard make install
+- Added support for Solaris (SunOS) and Darwin (Mac OS-X).
+- Added support for Hewlett Packard Unix (HP_UX) and ALPHA DEC.
+- Many adds and fix in compilation scripts on all platforms.
+- Fixed some error messages
+- Some speed improvements
+- Many errors fixed
+
+----------------------------------------------------------------------
 Version 0.44 Alpha Build 44 (2004-07-19)
+
 The compiler
 ------------
 - Fixed support for late/early evaluation of macro exressions in a codeblock
@@ -12,7 +105,7 @@ The compiler
 - New compiler flag -ks was added to enable support for
   strings as array of bytes. (Notice that support for strings
   as array of bytes is disabled by default both in the Harbour compiler
-  and in harbour's runtime modules) 
+  and in harbour's runtime modules)
 - Added a new compiler switch -kJ to disable jump optimalization and
   NOOP pcode removal (optimalization is enabled by default).
 - When xbase mode is not used (-kc or -kch) then compiler doesn't
@@ -25,7 +118,7 @@ The compiler
 - Added support to OpenWatcom DOS/Win32.
 - Fixed compilation of &(exp) in normal stringify
   markers (this fixes INDEX ON bug).
-- Added missing support for @&macro and @M->memvar (aAdded a new 
+- Added missing support for @&macro and @M->memvar (aAdded a new
   pcode HB_MACROPUSHREF)
 - Fixed generation of pcode for &(macro)->() syntax.
 - Fixed #define parsing of pseudofunctions in cases where
@@ -115,8 +208,8 @@ RDD
   created dbf in a different folder.
 - FIELDPUT() Fixed to accept and ignore field NIL values
   without runtime error. C52 compatible.
-- Added scopped relations. Now OrdSetRelation() works with DBFCDX like it
-  does with Clipper 5.3b.
+- Added scopped relations. Now OrdSetRelation() works with DBFCDX like
+  it does with Clipper 5.3b.
 - Changes to ADSCOPYTABLE.
 - Changes to ADSCOPYTABLECONTENTS.
 - Fixed rddMoveRecords() so that copied records, which are
@@ -233,10 +326,11 @@ Version 0.38 Alpha Build 38 (2001-12-15)
 - Hbzlib enhacements
 - Some debugger fixes - it is now really usable.
 - Hbmake enhacements
-- On Win32 platforms, Harbour now supports the ability to create and use
-  .DLL files. These .DLL files can be used as pcode storage, Harbour
-  Runtime storage, or both, and if both, can be made callable from other
-  languages that use .DLL's as fully functional standalone modules
+- On Win32 platforms, Harbour now supports the ability to create and
+  use .DLL files. These .DLL files can be used as pcode storage,
+  Harbour Runtime storage, or both, and if both, can be made callable
+  from other languages that use .DLL's as fully functional standalone
+  modules
 - Extended run-time preprocessing possibilities
 
 ----------------------------------------------------------------------
@@ -676,5 +770,29 @@ Version 0.11 Alpha Build 11 (1999-04-07)
 
 ----------------------------------------------------------------------
 Version 0.10 Alpha Build 10 (1999-04-03)
+
+----------------------------------------------------------------------
+OpenClipper #9 Alpha build 9 (1999-04-01)
+
+- PARAMETERS support
+- BEGIN SEQUENCE support
+- #include support (it opens the include files and parse them)
+- #define support for both identifiers and expressions
+  (though expressions are not translated yet)
+- #ifdef and #ifndef support
+- while loops without statements support
+- Bison 1.24 is used now instead of byacc as byacc were returning
+  a 'Out of space' error (parser execution is faster now!)
+- We are linking using huge memory model now cause DGROUP was already
+  over 64Kb
+
+----------------------------------------------------------------------
+OpenClipper #8 Alpha build 8 (1999-03-29)
+
+----------------------------------------------------------------------
+OpenClipper #7 Alpha build 7 (1999-03-26)
+
+----------------------------------------------------------------------
+OpenClipper #6 Alpha build 6 (1999-03-25)
 
 ----------------------------------------------------------------------

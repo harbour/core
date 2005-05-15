@@ -8,15 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-05-14 10:34 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/whatsnew.txt
+     + Add information about the upcoming alpha build 45 written by
+       Alejandro de Garate <alex_degarate@hotmail.com>
+     + Add historic information about the old OpenClipper
+       builds 6, 7, 8 and 9 I had found on Google
+
 2005-05-07 17:01 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile64.nt
-     + bufferoverflowu.lib added to LDFLAGS as per new Microsoft C 64 compiler 
-       (PSDK April 2005) requirement.
+     + bufferoverflowu.lib added to LDFLAGS as per new Microsoft C 64
+       compiler (PSDK April 2005) requirement.
        
    * hbdate.h    
    * hbapifs.h
-     + HB_EXPORT added to those functions that already were using it, as per
-       new Microsoft C 64 compiler (PSDK April 2005) requirement.
+     + HB_EXPORT added to those functions that already were using it,
+       as per new Microsoft C 64 compiler (PSDK April 2005) requirement.
 
 2005-04-29 16:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile64.nt
