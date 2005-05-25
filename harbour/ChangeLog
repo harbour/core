@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-05-25 09:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbver.h
+  * doc/whatsnew.txt
+  * harbour.spec
+    * Release info has been changed for release 45.
+
 2005-05-15 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/dirstruc.txt
      + Add oneliner description for: config/hpux
