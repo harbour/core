@@ -239,7 +239,7 @@ char * hb_verPlatform( void )
                break;
          }
 
-         sprintf( pszPlatform, "%s %lu.%02lu.%04d",
+         sprintf( pszPlatform, "%s %lu.%lu.%04d",
             pszName,
             ( ULONG ) osVer.dwMajorVersion,
             ( ULONG ) osVer.dwMinorVersion,

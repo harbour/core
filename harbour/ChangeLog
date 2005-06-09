@@ -8,6 +8,40 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-06-09 18:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tget.prg
+     ! :displat fixed (again) to always call VarGet block 
+       to be CA-Cl*pper compatible.
+
+   * config/w32/global.cf
+     ! Fixed to properly create the obj directories when compiling 
+       using GCC under XP. This broke in the near past.
+
+   * source/pp/ppcore.c
+     ! Fixed two compiler warnings.
+     ; Please review one of them if you made the change, since 
+       I'm not sure what the intention was, here's the code snippet:
+
+       ...
+       lenreal = IsMacroVar( *ptri, com_or_tra ); /* THIS LINE IS NOW COMMENTED OUT */
+       *ptri +=1;
+       lenreal = getExpReal( expreal+2, ptri, FALSE, maxlenreal, FALSE );
+       ...
+
+   * source/codepage/cdphu852.c
+     ! HU sorting order fixed to be more compatible with CA-Cl*pper.
+       (Still missing some non-852 chars though)
+
+   * source/common/hbver.c
+     ! Fixed forming NT version number (5.01.2600 -> 5.1.2600)
+
+   * source/compiler/hbusage.c
+     + Copyright year updated.
+   
+   * harbour/source/rtl/idle.c 
+     * Cleaned up a platform dependent code part.
+
 2005-05-25 09:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbver.h
   * doc/whatsnew.txt

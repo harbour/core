@@ -58,7 +58,7 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  36    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -83,10 +83,13 @@
    same excepting the characters case, of course.
  */
 
+/* NOTE: é/Ñ has been added to make it more compatible with sixhu852 for C52 
+         and [vszakats] */
+
 static HB_CODEPAGE s_codepage = { "HU852",
     CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ",
-    "a†bcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz",
+    "AµéBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ",
+    "a†ÑbcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( HU852 );

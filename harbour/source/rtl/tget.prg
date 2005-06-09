@@ -375,13 +375,19 @@ METHOD Display( lForced ) CLASS Get
 
    DEFAULT lForced TO .t.
 
+   // ; VarGet() has to be called everytime here to stay 
+   //   CA-Cl*pper compatible, please take care of that. [vszakats]
+
    if ::buffer == nil
       ::Original := ::VarGet()
       ::Type     := ValType( ::Original )
-      ::picture := ::cPicture    //this sets also ::buffer
+      ::picture  := ::cPicture
+      ::buffer   := ::PutMask( ::Original, .f. )
+   else
+      ::buffer   := ::PutMask( ::VarGet(), .f. )
    endif
 
-   xBuffer := ::buffer     //::PutMask( ::VarGet(), .f. )
+   xBuffer := ::buffer
 
    if ::Type == 'N' .AND. ::hasFocus .AND. ! ::lMinusPrinted .and. ;
          ! Empty( ::DecPos ) .and. ::minus .AND. ;
@@ -494,7 +500,7 @@ METHOD SetFocus() CLASS Get
    ::Original   := ::VarGet()
    ::type       := ValType( ::Original )
    ::Picture    := ::cPicture
-   ::buffer     := ::PutMask( ::VarGet(), .f. )
+   ::buffer     := ::PutMask( ::Original, .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")
 //   ::nMaxLen    := IIF( ::buffer == NIL, 0, Len( ::buffer ) )
@@ -553,18 +559,19 @@ return Self
 //---------------------------------------------------------------------------//
 
 METHOD VarPut( xValue, lReFormat ) CLASS Get
-LOCAL aSubs, nLen, aValue
-LOCAL i
+
+   LOCAL aSubs, nLen, aValue
+   LOCAL i
 
    DEFAULT lReFormat TO .t.
 
-   if ValType( ::Block ) == 'B'
+   if ValType( ::bBlock ) == "B"
       IF ::SubScript == NIL
-         Eval( ::Block, xValue )
+         Eval( ::bBlock, xValue )
       ELSE
          aSubs := ::SubScript
          nLen := Len( aSubs )
-         aValue := Eval( ::Block )
+         aValue := Eval( ::bBlock )
          FOR i:=1 TO nLen - 1
             aValue := aValue[ aSubs[ i ] ]
          NEXT
@@ -586,18 +593,19 @@ return xValue
 //---------------------------------------------------------------------------//
 
 METHOD VarGet() CLASS Get
-LOCAL aSubs, nLen, aValue
-LOCAL i
-LOCAL xValue
 
-   IF ValType( ::Block ) == 'B'
+   LOCAL aSubs, nLen, aValue
+   LOCAL i
+   LOCAL xValue
+
+   IF ValType( ::bBlock ) == "B"
       IF ::SubScript == NIL
-         xValue := Eval( ::Block )
+         xValue := Eval( ::bBlock )
       ELSE
          aSubs := ::SubScript
          nLen := Len( aSubs )
-         aValue := Eval( ::Block )
-         FOR i:=1 TO nLen - 1
+         aValue := Eval( ::bBlock )
+         FOR i := 1 TO nLen - 1
             aValue := aValue[ aSubs[ i ] ]
          NEXT
          xValue := aValue[ aSubs[ i ] ]

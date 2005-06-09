@@ -135,19 +135,23 @@ void hb_releaseCPU( void )
       HB_DOS_INT86( 0x2F, &regs, &regs );
    }
 
-#elif defined(HB_OS_DARWIN)
-   {
-      usleep( 1 );
-   }
 #elif defined(HB_OS_UNIX)
-  {
-     static struct timespec nanosecs = { 0, 1000 };
-     /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */
-     nanosleep( &nanosecs, NULL );
-  }
+
+   #ifdef defined(HB_OS_DARWIN)
+      {
+         usleep( 1 );
+      }
+   #else
+      {
+         static struct timespec nanosecs = { 0, 1000 };
+         /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */
+         nanosleep( &nanosecs, NULL );
+      }
+   #endif
+
 #else
 
-  /* Do nothing */
+   /* Do nothing */
 
 #endif
 }

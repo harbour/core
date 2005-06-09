@@ -697,7 +697,7 @@ int hb_pp_ParseDefine( char * sLine )
             memcpy( pars, tmp, iPar );
             pars[ iPar ] = '\0';
             iOldPos = 0;
-            while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE )) )
+            while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE )) != 0 )
             {
                if( sLine[iOldPos+iPos] != '\001' )
                {
@@ -2101,7 +2101,8 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
               HB_SKIPTABSPACES( *ptri );
               if( **ptri == '(' ) /* macro expression &( expr )  */
               {
-                 lenreal = IsMacroVar( *ptri, com_or_tra );
+/* Commented out this line to avoid a compiler warning. Please review. [vszakats] */
+/*               lenreal = IsMacroVar( *ptri, com_or_tra ); */
                  *ptri +=1;
                  lenreal = getExpReal( expreal+2, ptri, FALSE, maxlenreal, FALSE );
                  if( **ptri == ')' )

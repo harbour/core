@@ -41,6 +41,7 @@ MD = md
 
 dirbase::
 	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\. $(MD) %%d
+	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d
 
 clean::
 	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
