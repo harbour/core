@@ -11,7 +11,7 @@
 2005-06-09 18:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg
-     ! :displat fixed (again) to always call VarGet block 
+     ! :display fixed (again) to always call VarGet block 
        to be CA-Cl*pper compatible.
 
    * config/w32/global.cf
