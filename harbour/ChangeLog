@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-06-11 13:01 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/idle.c 
+     ! Fix to prev. commit.
+
 2005-06-09 18:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg
@@ -39,7 +44,7 @@
    * source/compiler/hbusage.c
      + Copyright year updated.
    
-   * harbour/source/rtl/idle.c 
+   * source/rtl/idle.c 
      * Cleaned up a platform dependent code part.
 
 2005-05-25 09:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>

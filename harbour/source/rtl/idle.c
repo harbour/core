@@ -137,7 +137,7 @@ void hb_releaseCPU( void )
 
 #elif defined(HB_OS_UNIX)
 
-   #ifdef defined(HB_OS_DARWIN)
+   #if defined(HB_OS_DARWIN)
       {
          usleep( 1 );
       }
