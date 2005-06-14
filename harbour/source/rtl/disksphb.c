@@ -259,9 +259,10 @@ HB_FUNC( HB_DISKSPACE )
 
          if( GetLastError() != 0 )
          {
-            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, (EF_CANDEFAULT | EF_CANRETRY), 2, hb_paramError( 1 ), hb_paramError( 2 ) ) == E_RETRY )
-               continue;
+            hb_fsSetError( GetLastError() );
+            dSpace = 0.0;
          }
+
          break;
       }
    }

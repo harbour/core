@@ -5,14 +5,14 @@
 all : first
 
 HB_GT_LIBS=\
-        gtcgi \
-        gtcrs \
-        gtpca \
-        gtsln \
-        gtstd \
+	gtcgi \
+	gtcrs \
+	gtpca \
+	gtsln \
+	gtstd \
 
 ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtstd
+	HB_GT_LIB = gtstd
 endif
 
 ARCH_DIR = $(HB_ARCH)/

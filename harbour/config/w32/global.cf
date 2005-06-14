@@ -5,15 +5,15 @@
 all : first
 
 HB_GT_LIBS=\
-        gtcgi \
-        gtpca \
-        gtstd \
-        gtwin \
-#       gtcrs \
-#       gtsln \
+	gtcgi \
+	gtpca \
+	gtstd \
+	gtwin \
+#	gtcrs \
+#	gtsln \
 
 ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtwin
+	HB_GT_LIB = gtwin
 endif
 
 ifeq ($(SHLVL),) # COMMAND.COM
@@ -26,11 +26,11 @@ ARCH_DOS = $(subst /,\,$(HB_ARCH))
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifeq ($(COMSPEC),) #location of command.com
-  ifeq ($(OS),Windows_NT)
-    COMSPEC := cmd.exe
-  else
-    COMSPEC := command.com
-  endif
+	ifeq ($(OS),Windows_NT)
+		COMSPEC := cmd.exe
+	else
+		COMSPEC := command.com
+	endif
 endif
 
 RM = del

@@ -5,22 +5,22 @@
 all : first
 
 HB_GT_LIBS=\
-        gtcgi \
-        gtcrs \
-        gtpca \
-        gtstd \
-        gtnul \
+	gtcgi \
+	gtcrs \
+	gtpca \
+	gtstd \
+	gtnul \
 
 ifeq ($(HB_COMMERCE),yes)
-   HB_GPM_MOUSE = no
+	HB_GPM_MOUSE = no
 else
 ifneq ($(HB_WITHOUT_GTSLN),yes)
-   HB_GT_LIBS += gtsln
+	HB_GT_LIBS += gtsln
 endif
 endif
 
 ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtstd
+	HB_GT_LIB = gtstd
 endif
 
 ARCH_DIR = $(HB_ARCH)

@@ -5,13 +5,13 @@
 all : first
 
 HB_GT_LIBS=\
-        gtcgi \
-        gtos2 \
-        gtpca \
-        gtstd \
+	gtcgi \
+	gtos2 \
+	gtpca \
+	gtstd \
 
 ifeq ($(HB_GT_LIB),)
-   HB_GT_LIB = gtos2
+	HB_GT_LIB = gtos2
 endif
 
 ifeq ($(SHLVL),) # An OS/2 command shell
@@ -21,11 +21,11 @@ OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 
 ifeq ($(OS2_SHELL),)
-   # Not running on OS/2 (which comes in handy for 'make -r clean')
-   RM = del /q
+	# Not running on OS/2 (which comes in handy for 'make -r clean')
+	RM = del /q
 else
-   # Running on OS/2
-   RM = del /n
+	# Running on OS/2
+	RM = del /n
 endif
 RD = rmdir
 CP = copy
@@ -54,7 +54,7 @@ MD = mkdir
 
 dirbase::
 	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
-	 [ -d $(HB_ARCH) ] || $(MD) $(HB_ARCH)
+	[ -d $(HB_ARCH) ] || $(MD) $(HB_ARCH)
 
 clean::
 	-$(RD) $(ARCH_DIR)

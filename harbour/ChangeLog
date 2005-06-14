@@ -8,6 +8,26 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-06-14 21:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/disksphb.c
+     * hb_DiskSpace() changed to not give a runtime error in case 
+       of any error, but set the FError() value instead.
+
+   * config/bsd/global.cf
+   * config/darwin/global.cf
+   * config/dos/global.cf
+   * config/dos/owatcom.cf
+   * config/hpux/global.cf
+   * config/linux/global.cf
+   * config/linux/owatcom.cf
+   * config/os2/dir.cf
+   * config/os2/global.cf
+   * config/os2/install.cf
+   * config/sunos/global.cf
+   * config/w32/global.cf
+     ! Changed all line beginning spaces to Tabs.
+
 2005-06-11 13:01 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/idle.c 
