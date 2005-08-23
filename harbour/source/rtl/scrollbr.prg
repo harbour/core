@@ -1,418 +1,499 @@
-/*
- * $Id$
- */
+ /*
+  * $Id$
+  */
 
-/*
- * Harbour Project source code:
- * ScrollBar class
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://www.harbour-project.org
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
- *
- */
+ /*
+  * Harbour Project source code:
+  * ScrollBar class
+  *
+  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+  * www - http://www.harbour-project.org
+  *
+  * Copyright 2005 Alejandro de Garate <alex_degarate@hotmail.com>
+  * METHOD SetStyle( cStyle )  
+  * METHOD SetColor( cColor )  
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2, or (at your option)
+  * any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this software; see the file COPYING.  If not, write to
+  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+  *
+  * As a special exception, the Harbour Project gives permission for
+  * additional uses of the text contained in its release of Harbour.
+  *
+  * The exception is that, if you link the Harbour libraries with other
+  * files to produce an executable, this does not by itself cause the
+  * resulting executable to be covered by the GNU General Public License.
+  * Your use of that executable is in no way restricted on account of
+  * linking the Harbour library code into it.
+  *
+  * This exception does not however invalidate any other reasons why
+  * the executable file might be covered by the GNU General Public License.
+  *
+  * This exception applies only to the code released by the Harbour
+  * Project under the name Harbour.  If you copy code from other
+  * Harbour Project or Free Software Foundation releases into a copy of
+  * Harbour, as the General Public License permits, the exception does
+  * not apply to the code that you add in this way.  To avoid misleading
+  * anyone as to the status of such modified files, you must delete
+  * this exception notice from them.
+  *
+  * If you write modifications of your own for Harbour, it is your choice
+  * whether to permit this exception to apply to your modifications.
+  * If you do not wish that, delete this exception notice.
+  *
+  */
 
+ #include "hbclass.ch"
+ #include "color.ch"
+ #include "common.ch"
+ #include "button.ch"
 
-#include "hbclass.ch"
-#include "common.ch"
 
 #ifdef HB_COMPAT_C53
 
-MEMVAR hb_p_lShow
+ // new definitions for better coding. Are screen Codepage dependent, but 
+ // can be changed with the setStyle method.
+ #define SB_UPARROW    CHR(24)
+ #define SB_TRACK      CHR(178)
+ #define SB_THUMB      CHR(254)
+ #define SB_DNARROW    CHR(25)
+ #define SB_LEFTARROW  CHR(27)
+ #define SB_RIGHTARROW CHR(26)
 
-CLASS HBScrollBar
-Data BarLength
-Data Cargo
-Data Sblock
-Data Style
-DATA CLASSNAME init "SCROLLBAR"
-Data Colorspec
-METHOD Display()
-METHOD HitTest()
-METHOD Update()
-METHOD New(nStart,nEnd,nOffSet,bSblock,nOrient)
-ACCESS Current inline ::GetCurrent()
-ASSIGN Current(nCurrent) inline ::GetCurrent(nCurrent)
-ACCESS End inline ::GetEnd()
-ASSIGN End(nEnd) inline ::GetEnd(nEnd)
-ACCESS OffSet inline ::GetOffset()
-ASSIGN OffSet(nOffSet) inline ::GetOffset(nOffset)
-ACCESS Orient inline ::GetOrient()
-ASSIGN Orient(nOrient) inline ::GetOrient(nOrient)
-ACCESS Start inline ::GetStart()
-ASSIGN Start(nStart) inline ::GetStart(nStart)
-ACCESS ThumbPos inline ::GetThumbPos()
-ASSIGN ThumbPos(nPos) inline ::GetThumbPos(nPos)
-ACCESS Total inline ::GetTotal()
-ASSIGN Total(nTotal) inline ::GetTotal(nTotal)
+ #define SB_VERT_SCROLL   1
+ #define SB_HORZ_SCROLL   2
 
-Data Color init ''
-Data nCurrent init 0
-Data nEnd    init 0
-Data nOffSet init 0
-Data nOrient init 0
-Data nStart  init 0
-Data nThumbPos init 1
-Data nTotal init 100
+ // converted to macro to speed up things...
+ #define __GuiColor( cPair, nPos)  (hb_colorindex( cPair, nPos - 1))
 
-METHOD GetCurrent(nCurrent)
-METHOD GetEnd(nEnd)
-METHOD GetStart(nStart)
-METHOD GetThumbPos(nPos)
-METHOD GetTotal(nTotal)
-METHOD GetOffSet(nOffset)
-METHOD GetOrient(nOrient)
-ENDCLASS
-Method New(nStart,nEnd,nOffSet,bSblock,nOrient) CLASS HBScrollBar
-   Local cStyle,cColor
-   
-   if ( nOrient == 1 )
-      cStyle := "°²"
-   elseif ( nOrient == 2 )
-      cStyle := "°²" + Chr(26)
-   endif
-   ::Barlength := nEnd - nStart - 1
-   ::Current := 1
-   ::Cargo := Nil
-   cColor := SetColor()
-   ::ColorSpec := __guicolor(cColor, 5) + "," + __guicolor(cColor, 2)
-   ::end := nEnd
-   ::Offset := nOffSet
-   ::Orient := nOrient
-   ::sBlock := bSblock
-   ::Start := nStart
-   ::Style := cStyle
-   ::Thumbpos := 1
-   ::total:=1
-   return Self
+ CLASS HBScrollBar
 
+    DATA BarLength  INIT 1  // 1er error (no tenia INIT 1)
+    DATA Cargo
+    DATA sBlock
+    DATA Style
+    DATA ClassName  INIT "HBSCROLLBAR"
+    DATA ColorSpec
+    DATA aStyle   // Note: new instance var for old Harbour versions to
+                  // speed up displaying, <Style> instance var is conserved 
+                  // for compatibility purpose. [Alejandro de Garate]
 
-METHOD DISPLAY() CLASS HBScrollBar
+    METHOD Display()
+    METHOD HitTest()
+    METHOD Update()
+    METHOD New( nStart, nEnd, nOffSet, bsBlock, nOrient ) 
+    ACCESS Current inline ::GetCurrent()
+    ASSIGN Current( nCurrent ) inline ::GetCurrent( nCurrent )
+    ACCESS End inline ::GetEnd()
+    ASSIGN End ( nEnd ) inline ::GetEnd( nEnd )
+    ACCESS OffSet inline ::GetOffSet()
+    ASSIGN OffSet( nOffSet ) inline ::GetOffSet( nOffSet )
+    ACCESS Orient inline ::GetOrient()
+    ASSIGN Orient( nOrient ) inline ::GetOrient( nOrient )
+    ACCESS Start inline ::GetStart()
+    ASSIGN Start( nStart ) inline ::GetStart( nStart )
+    ACCESS ThumbPos inline ::GetThumbPos()
+    ASSIGN ThumbPos( nPos ) inline ::GetThumbPos( nPos )
+    ACCESS TOTAL inline ::GetTotal()
+    ASSIGN TOTAL( nTotal ) inline ::GetTotal( nTotal )
 
-   local nCurRow, nCurCol, cCurColor, cStyle, cOffSet, cColor2, cColor1, ;
-      nStart, nEnd, nPos, lDisplay := .F.
+    DATA nCurrent   INIT 0
+    DATA nEnd       INIT 0
+    DATA nOffSet    INIT 0
+    DATA nOrient    INIT 0
+    DATA nStart     INIT 0
+    DATA nThumbPos  INIT 1
+    DATA nTotal     INIT 100
+    DATA hb_p_lShow INIT .F.
 
-   cCurColor := SetColor()
-   nCurRow := Row()
-   nCurCol := Col()
-   if ( thumbpos(Self) )
-      lDisplay := .T.
-      cStyle := ::Style
-      cOffSet := ::Offset
+    METHOD GetCurrent( nCurrent )
+    METHOD GetEnd( nEnd )
+    METHOD GetStart( nStart )
+    METHOD GetThumbPos( nPos )
+    METHOD GetTotal( nTotal )
+    METHOD GetOffSet( nOffSet )
+    METHOD GetOrient( nOrient )
+    METHOD SetStyle( cStyle ) 
+    METHOD SetColor( cColor ) 
 
-      dispbegin()
-      cColor1 := __guicolor(::ColorSpec, 1)
-      cColor2 := __guicolor(::ColorSpec, 2)
-      if ( ::Orient == 1 )
-         set color to (cColor1)
-         nStart := ::Start
-         nEnd := ::End - 1
-         
-            for nPos := nStart + 1 to nEnd
-               SetPos(nPos, cOffSet)
-               ?? SubStr(cStyle, 2, 1)
-            next
-            set color to (cColor2)
-            SetPos(nStart, cOffSet)
-            ?? SubStr(cStyle, 1, 1)
-            SetPos(nStart + ::ThumbPos, cOffSet)
-            ?? SubStr(cStyle, 3, 1)
-            SetPos(nEnd + 1, cOffSet)
-            ?? SubStr(cStyle, 4, 1)
-         
-      else
-         set color to (cColor1)
-         nStart := ::Start
-         nEnd := ::End - 1
-         
-            for nPos := nStart + 1 to nEnd
-               SetPos(cOffSet, nPos)
-               ?? SubStr(cStyle, 2, 1)
-            next
-            set color to (cColor2)
-            SetPos(cOffSet, nStart)
-            ?? SubStr(cStyle, 1, 1)
-            SetPos(cOffSet, nStart + ::ThumbPos)
-            ?? SubStr(cStyle, 3, 1)
-            SetPos(cOffSet, nEnd + 1)
-            ?? SubStr(cStyle, 4, 1)
-         
-      endif
-      dispend()
-
-      set color to (cCurColor)
-      SetPos(nCurRow, nCurCol)
-   endif
-   return lDisplay
-
-METHOD HitTest(nRow,nCol) CLASS HBScrollBar
+ ENDCLASS
 
 
-   local Local1, Local2
-   if ( ::Orient == 1 )
-      
-         do case
-         case nCol != ::Offset
-         case nRow < ::Start
-         case nRow > ::End
-         case nRow == ::Start
-            return -3074
-         case nRow == ::End
-            return -3075
-         case nRow < ::ThumbPos + ::Start
-            return -3076
-         case nRow > ::ThumbPos + ::Start
-            return -3077
-         case nRow == ::ThumbPos + ::Start
-            return -3073
-         endcase
-      if ( nCol == ::Offset + 1 .OR. nCol == ::Offset )
-         do case
-         case nCol != ::Offset .AND. nCol != ::Offset + 1
-         case nRow < ::Start
-         case nRow > ::End
-         case nRow == ::Start
-            return -3074
-         case nRow == ::End
-            return -3075
-         case nRow < ::ThumbPos + ::Start
-            return -3076
-         case nRow > ::ThumbPos + ::Start
-            return -3077
-         case nRow == ::ThumbPos + ::Start
-            return -3073
-         endcase
-      endif
-   elseif ( ::Orient == 2 )
-      do case
-      case nRow != ::Offset
-      case nCol < ::Start
-      case nCol > ::End
-      case nCol == ::Start
-         return -3074
-      case nCol == ::End
-         return -3075
-      case nCol < ::ThumbPos + ::Start
-         return -3076
-      case nCol > ::ThumbPos + ::Start
-         return -3077
-      case nCol == ::ThumbPos + ::Start
-         return -3073
-      endcase
-   endif
-   return 0
+ // NEW METHOD !
+ METHOD SetStyle( cStyle )  CLASS HBScrollBar
+    IF LEN( cStyle ) == 4
+       ::aStyle[ 1] := SUBST( cStyle, 1, 1) 
+       ::aStyle[ 2] := SUBST( cStyle, 2, 1) 
+       ::aStyle[ 3] := SUBST( cStyle, 3, 1) 
+       ::aStyle[ 4] := SUBST( cStyle, 4, 1) 
+       ::Style := cStyle
+    ENDIF
+ RETURN Self
 
-METHOD Update() CLASS HBScrollBar
+ // NEW METHOD !
+ METHOD SetColor( cColor )  CLASS HBScrollBar
+   ::ColorSpec := cColor
+ RETURN Self
 
 
-   local nCurRow, nCurCol, cCurColor, lUpdated := .F., nThumbPos:= ;
-      ::ThumbPos
-   if ( !thumbpos(Self) )
-   elseif ( nThumbPos != ::ThumbPos )
-      lUpdated := .T.
-      cCurColor := SetColor()
-      nCurRow := Row()
-      nCurCol := Col()
-      set color to (__guicolor(::ColorSpec, 1))
-      
-      dispbegin()
-       if ( ::Orient == 1 )
-            SetPos(::Start + nThumbPos, ::Offset)
-            ?? SubStr(::Style, 2, 1)
-            set color to (__guicolor(::ColorSpec, 2))
-            SetPos(::Start + ::ThumbPos, ::Offset)
-            ?? SubStr(::Style, 3, 1)
-         else
-            SetPos(::Offset, ::Start + nThumbPos)
-            ?? SubStr(::Style, 2, 1)
-            set color to (__guicolor(::ColorSpec, 2))
-            SetPos(::Offset, ::Start + ::ThumbPos)
-            ?? SubStr(::Style, 3, 1)
-         endif
-      
-      dispend()
-      
-      set color to (cCurColor)
-      SetPos(nCurRow, nCurCol)
-   endif
-   return lUpdated
+ METHOD New( nStart, nEnd, nOffSet, bsBlock, nOrient ) CLASS HBScrollBar
 
-/*
-METHOD GetColor(xColor) CLASS HBScrollBar
+    LOCAL cStyle, aStyle, cColor := Setcolor()
 
-   if ( !( ISCHARACTER( xColor ) ) )
-   elseif ( Empty(__guicolor(xColor, 2)) )
-   elseif ( Empty(__guicolor(xColor, 3)) )
-      ::Color := xColor
-   endif
-   return ::Color
-*/
-METHOD GETCURRENT( nCurrent) CLASS HBScrollBar
+    IF nOrient == SB_VERT_SCROLL  
+       cStyle := "â–‘"          
+       aStyle := { SB_UPARROW, SB_TRACK, SB_THUMB, SB_DNARROW }
 
-   if ( !( ISNUMBER( nCurrent ) ) )
-   elseif ( nCurrent > ::nTotal )
-   elseif ( nCurrent != ::nCurrent )
-      ::nCurrent := nCurrent
-   endif
-   return ::nCurrent
+    ELSEIF nOrient == SB_HORZ_SCROLL
+       cStyle := "â–" + Chr(26)  
+       aStyle := { SB_LEFTARROW, SB_TRACK, SB_THUMB, SB_RIGHTARROW }
+    ENDIF                  
+
+    ::Style  := aStyle[ 1] + aStyle[ 2] + aStyle[ 3] + aStyle[ 4]
+    ::aStyle := aStyle
+
+    ::BarLength := nEnd - nStart - 1
+    ::Current   := 1
+    ::Cargo     := NIL
+    ::ColorSpec := __guicolor( cColor, CLR_UNSELECTED + 1 ) + "," + ;
+                   __guicolor( cColor, CLR_ENHANCED + 1 )
+    ::End       := nEnd
+    ::OffSet    := nOffSet
+    ::Orient    := nOrient
+    ::sBlock    := bsBlock
+    ::Start     := nStart
+    ::Thumbpos  := 1
+    ::Total     := 1
+
+ RETURN Self
 
 
-METHOD GETEND( nEnd ) CLASS HBScrollBar
+ METHOD Display() CLASS HBScrollBar
 
-   if ( !( ISNUMBER( nEnd ) ) )
-   elseif ( nEnd < ::nStart )
-   elseif ( nEnd != ::nEnd )
-      ::nEnd := nEnd
-      ::barlength := nEnd - ::nStart - 1
-   endif
-   return ::nEnd
+    LOCAL cCurColor := Setcolor()
+    LOCAL nCurRow   := Row()
+    LOCAL nCurCol   := Col()
+    LOCAL cOffSet, cColor2, cColor1
+    LOCAL nStart
+    LOCAL nEnd
+    LOCAL nPos
+    LOCAL lDisplay  := .F.
 
-METHOD GETOFFSET( nOffSet ) CLASS HBScrollBar
+    IF ThumbPos( Self )
+       lDisplay := .T.
+       cOffSet  := ::OffSet
 
-   if ( !( ISNUMBER( nOffSet ) ) )
-   elseif ( nOffSet != ::nOffset )
-      ::nOffset := nOffSet
-   endif
-   return ::nOffset
+       DispBegin()
+       cColor1 := __guicolor( ::ColorSpec, 1 )
+       cColor2 := __guicolor( ::ColorSpec, 2 )
 
-METHOD GETORIENT( nOrient ) CLASS HBScrollBar
+       IF ::Orient == SB_VERT_SCROLL
+          nStart := ::Start
+          nEnd   := ::End - 1
 
-   if ( !( ISNUMBER( nOrient ) ) )
-   elseif ( nOrient == 1 .OR. nOrient == 2 )
-      ::nOrient := nOrient
-   endif
-   return ::nOrient
+          SET COLOR TO (cColor1)
+          FOR nPos := nStart + 1 TO nEnd
+             DispOutAt( nPos, cOffSet, ::aStyle[ 2 ] )
+          NEXT
 
-METHOD GETSTART( nStart ) CLASS HBScrollBar
+          SET COLOR TO (cColor2)
+          DispOutAt( nStart, cOffSet, ::aStyle[ 1 ] )  
+          DispOutAt( nStart + ::ThumbPos, cOffSet, ::aStyle[ 3 ] )
+          DispOutAt( nEnd + 1, cOffSet, ::aStyle[ 4 ] )
 
-   if ( !( ISNUMBER( nStart ) ) )
-   elseif ( nStart > ::End )
-   elseif ( nStart != ::nStart )
-      ::nStart := nStart
-      ::barlength := ::nEnd - nStart - 1
-   endif
-   return ::nStart
-METHOD GETTHUMBPOs( nPos ) CLASS HBScrollBar
+       ELSE
 
-   if ( ISNUMBER( nPos ) )
-      if ( nPos < 1 )
-         ::nThumbPos := 1
-      elseif ( nPos >= ::barlength )
-            ::nThumbPos := ::barlength
+          nStart := ::Start
+          nEnd   := ::End - 1
 
-      elseif ( nPos >= ::barlength - 1 )
-            ::nThumbPos := nPos
-      else
-         ::nThumbPos := nPos
-      endif
+          DispOutAt( cOffSet, nStart +1, Replic(::aStyle[ 2], nEnd - nStart ), cColor1)
 
-      if ( nPos == 0 )
-         hb_p_lShow := .F.
-      else
-         hb_p_lShow := .T.
-      endif
+          SET COLOR TO (cColor2)
+          DispOutAt( cOffSet, nStart, ::aStyle[ 1 ] )
+          DispOutAt( cOffSet, nStart + ::ThumbPos, ::aStyle[ 3 ] )
+          DispOutAt( cOffSet, nEnd + 1, ::aStyle[ 4 ] )
 
-   endif
-   return ::nThumbPos
-METHOD GetTOTAL( nTotal ) CLASS HBScrollBar
+       ENDIF
 
-   if ( !( ISNUMBER( nTotal ) ) )
-   elseif ( nTotal < 2 )
-   elseif ( nTotal != ::nTotal )
-      ::nTotal := nTotal
-   endif
-   return ::nTotal
+       DispEnd()
 
-static function THUMBPOS( oScroll )
+       SET COLOR TO (cCurColor)
+       Setpos( nCurRow, nCurCol )
+    ENDIF
 
-   local nSize, nCurrent, nBarLength, nTotal
-   if ( oScroll:barlength < 2 )
-      return .F.
-   endif
-   if ( oScroll:total < 2 )
-      return .F.
-   endif
-   if ( hb_p_lShow )
-      return .T.
-   endif
-   nCurrent := oScroll:Current
-   nBarLength := oScroll:BarLength
-   nTotal := oScroll:Total
-   nSize := ( ( nBarLength - 1 ) * nCurrent + nTotal - 2 * nBarLength + 1 ) / ;
-      ( nTotal - nBarLength )
-   nSize := Round(nSize, 0)
-   if ( nSize < 1 )
-      nSize := 1
-   endif
-   if ( nSize > nBarLength )
-      nSize := nBarLength
-   endif
-   oScroll:Thumbpos := nSize
-   return .T.
+ RETURN lDisplay
 
-function Scrollbar(nStart,nEnd,nOffSet,bSblock,nOrient)
-   Local oScroll,cStyle
-   Public hb_p_lShow := .F.
 
-   if  !( ISNUMBER( nStart ) ) .or. !( ISNUMBER( nEnd ) ) .or.    !( ISNUMBER( nOffSet ) )  .or. !( ISNUMBER( nOrient ) ) 
-      Return Nil
-   endif
-   if  ValType(nOrient) == "U" 
-      nOrient := 1
-   endif
-   if ( nOrient == 1 )
-      cStyle := "°²"
-   elseif ( nOrient == 2 )
-      cStyle := "°²" + Chr(26)
-   else
-      return Nil
-   endif
+ METHOD HitTest( nRow, nCol ) CLASS HBScrollBar
 
-   oScroll:=HBScrollBar():New(nStart,nEnd,nOffSet,bSblock,nOrient)
-   oScroll:Barlength:=nEnd-nStart-1
-   oScroll:Cargo:=NIL
-   oScroll:end:=nEnd
-   oScroll:offset:=nOffSet
-   oScroll:orient:=nOrient
-   oScroll:sBlock:=bSblock
-   oScroll:Start:=nStart
-   return oScroll
+    IF ::Orient == SB_VERT_SCROLL
+
+       DO CASE
+          CASE nCol != ::OffSet
+          CASE nRow < ::Start
+          CASE nRow > ::End
+          CASE nRow == ::Start
+             RETURN HTSCROLLUNITDEC
+          CASE nRow == ::End
+             RETURN HTSCROLLUNITINC
+          CASE nRow < ::ThumbPos + ::Start
+             RETURN HTSCROLLBLOCKDEC
+          CASE nRow > ::ThumbPos + ::Start
+             RETURN HTSCROLLBLOCKINC
+          CASE nRow == ::ThumbPos + ::Start
+             RETURN HTSCROLLTHUMBDRAG
+       ENDCASE
+
+       IF nCol == ::OffSet + 1 .OR. nCol == ::OffSet
+
+          DO CASE
+             CASE nCol != ::OffSet .AND. nCol != ::OffSet + 1
+             CASE nRow < ::Start
+             CASE nRow > ::End
+             CASE nRow == ::Start
+                RETURN HTSCROLLUNITDEC
+             CASE nRow == ::End
+                RETURN HTSCROLLUNITINC
+             CASE nRow < ::ThumbPos + ::Start
+                RETURN HTSCROLLBLOCKDEC
+             CASE nRow > ::ThumbPos + ::Start
+                RETURN HTSCROLLBLOCKINC
+             CASE nRow == ::ThumbPos + ::Start
+                RETURN HTSCROLLTHUMBDRAG
+          ENDCASE
+
+       ENDIF
+
+    ELSEIF ::Orient == SB_HORZ_SCROLL
+
+       DO CASE
+          CASE nRow != ::OffSet
+          CASE nCol < ::Start
+          CASE nCol > ::End
+          CASE nCol == ::Start
+             RETURN HTSCROLLUNITDEC
+          CASE nCol == ::End
+             RETURN HTSCROLLUNITINC
+          CASE nCol < ::ThumbPos + ::Start
+             RETURN HTSCROLLBLOCKDEC
+          CASE nCol > ::ThumbPos + ::Start
+             RETURN HTSCROLLBLOCKINC
+          CASE nCol == ::ThumbPos + ::Start
+             RETURN HTSCROLLTHUMBDRAG
+       ENDCASE
+
+    ENDIF
+
+ RETURN HTNOWHERE
+
+
+ METHOD Update() CLASS HBScrollBar
+
+    LOCAL nCurRow, nCurCol
+    LOCAL lUpdated  := .F.
+    LOCAL nThumbPos := ::ThumbPos
+
+    IF !ThumbPos( Self )
+    ELSEIF nThumbPos != ::ThumbPos
+       lUpdated  := .T.
+       nCurRow   := Row()
+       nCurCol   := Col()
+
+       DispBegin()
+
+       IF ::Orient == SB_VERT_SCROLL
+          DispOutAt( ::Start + nThumbPos, ::OffSet, ::aStyle[ 2 ], __guicolor( ::ColorSpec, 1 ) )
+          DispOutAt( ::Start + ::ThumbPos, ::OffSet, ::aStyle[ 3 ], __guicolor( ::ColorSpec, 2 ) )
+       ELSE
+          DispOutAt( ::OffSet, ::Start + nThumbPos, ::aStyle[ 2 ], __guicolor( ::ColorSpec, 1 ) )
+          DispOutAt( ::OffSet, ::Start + ::ThumbPos, ::aStyle[ 3 ], __guicolor( ::ColorSpec, 2 ) )
+       ENDIF
+
+       DispEnd()
+
+       SetPos( nCurRow, nCurCol )
+    ENDIF
+
+ RETURN lUpdated
+
+
+ METHOD GetCurrent( nCurrent ) CLASS HBScrollBar
+
+    IF ! IsNumber( nCurrent )
+    ELSEIF nCurrent > ::nTotal
+    ELSEIF nCurrent != ::nCurrent
+       ::nCurrent := nCurrent
+    ENDIF
+
+ RETURN ::nCurrent
+
+
+ METHOD GetEnd( nEnd ) CLASS HBScrollBar
+
+    IF !Isnumber( nEnd )
+    ELSEIF nEnd < ::nStart
+    ELSEIF nEnd != ::nEnd
+       ::nEnd      := nEnd
+       ::BarLength := nEnd - ::nStart - 1
+    ENDIF
+
+ RETURN ::nEnd
+
+
+ METHOD GetOffSet( nOffSet ) CLASS HBScrollBar
+
+    IF ! IsNumber( nOffSet )
+    ELSEIF nOffSet != ::nOffSet
+       ::nOffSet := nOffSet
+    ENDIF
+
+ RETURN ::nOffSet
+
+
+ METHOD GetOrient( nOrient ) CLASS HBScrollBar
+
+    IF ! IsNumber( nOrient )
+    ELSEIF nOrient == SB_VERT_SCROLL .OR. nOrient == SB_HORZ_SCROLL
+       ::nOrient := nOrient
+    ENDIF
+
+ RETURN ::nOrient
+
+
+ METHOD GetStart( nStart ) CLASS HBScrollBar
+
+    IF ! IsNumber( nStart )
+    ELSEIF nStart > ::End
+    ELSEIF nStart != ::nStart
+       ::nStart    := nStart
+       ::BarLength := ::nEnd - nStart - 1
+    ENDIF
+
+ RETURN ::nStart
+
+
+ METHOD GetThumbPos( nPos ) CLASS HBScrollBar
+
+    IF IsNumber( nPos )
+       IF nPos < 1
+          ::nThumbPos := 1
+       ELSEIF nPos >= ::BarLength
+          ::nThumbPos := ::BarLength
+
+       ELSEIF nPos >= ::BarLength - 1
+          ::nThumbPos := nPos
+       ELSE
+          ::nThumbPos := nPos
+       ENDIF
+
+       IF nPos == 0
+          ::hb_p_lShow := .F.
+       ELSE
+          ::hb_p_lShow := .T.
+       ENDIF
+
+    ENDIF
+
+ RETURN ::nThumbPos
+
+
+ METHOD GetTotal( nTotal ) CLASS HBScrollBar
+
+    IF ! IsNumber( nTotal )
+    ELSEIF nTotal < 2
+    ELSEIF nTotal != ::nTotal
+       ::nTotal := nTotal
+    ENDIF
+
+ RETURN ::nTotal
+
+
+ STATIC FUNCTION ThumbPos( oScroll )
+
+    LOCAL nSize
+    LOCAL nCurrent
+    LOCAL nBarLength
+    LOCAL nTotal
+
+    IF oScroll:barLength < 2
+       RETURN .F.
+    ENDIF
+
+    IF oScroll:total < 2
+       RETURN .F.
+    ENDIF
+
+ /*
+    IF oScroll:hb_p_lShow
+       RETURN .T.
+    ENDIF
+ */
+
+    nCurrent   := oScroll:Current
+    nBarLength := oScroll:BarLength
+    nTotal     := oScroll:Total
+
+    // percent relative to total
+    nSize := (100 * nCurrent / nTotal)
+ 
+    // percent relative to nBarLength
+    nSize := (nBarLength * nSize / 100)
+
+    // remove decimal point
+    nSize := IIF( nSize < (nBarLength / 2), ROUND( nSize, 0), INT( nSize) )
+
+    IF nSize <= 1
+       if (nCurrent > 1)
+           nSize := 2
+       else
+           nSize := 1
+       endif
+    ENDIF
+
+    IF nSize >= nBarLength
+       if (nCurrent < nTotal)
+           nSize := nBarLength - 1
+       else
+           nSize := nBarLength
+       endif
+    ENDIF
+
+    if (nCurrent == 1)
+        nSize := 1
+    elseif (nCurrent == nTotal)
+        nSize := nBarLength
+    endif
+
+    oScroll:ThumbPos := nSize
+
+ RETURN .T.
+
+
+ FUNCTION SCROLLBAR( nStart, nEnd, nOffSet, bsBlock, nOrient )
+
+    IF !( IsNumber( nStart ) ) .OR. !( Isnumber( nEnd ) ) .OR.;
+       !( IsNumber( nOffSet )) .OR. !( IsNumber( nOrient ))
+       RETURN NIL
+    ENDIF
+
+    IF nOrient == NIL
+       nOrient := SB_VERT_SCROLL
+    ENDIF
+
+ RETURN( HBScrollBar():New( nStart, nEnd, nOffSet, bsBlock, nOrient ) )
+
 #endif
+
+
+

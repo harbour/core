@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-08-23 18:45 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+
+   * source\rtl\scrollbr.prg
+     * Fixed length in Style string (more than 4 characters) 
+     - Eliminated unused LOCAL vars in Hitest()
+     - Deleted unused method GetColor()
+     + Added METHOD SetStyle( cStyle )  to change SB characters at runtime
+     + Added METHOD SetColor( cColor )  to change SB colors at runtime
+     * fixed bugs, minor optimizations
+  
+2005-08-23 18:45 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+
+   + tests\sbartest.prg
+     Added sample of scrollbar class
+
 2005-06-14 21:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/disksphb.c

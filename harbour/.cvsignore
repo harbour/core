@@ -1,3 +1,4 @@
+*.log
 bsd
 bsd/*
 dos
@@ -14,7 +15,8 @@ b32
 b32/*
 vc
 vc/*
-obj
+obj  OBJ
 obj/*
-lib
+lib  LIB
 lib/*
+
