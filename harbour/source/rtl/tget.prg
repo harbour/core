@@ -375,19 +375,20 @@ METHOD Display( lForced ) CLASS Get
 
    DEFAULT lForced TO .t.
 
-   // ; VarGet() has to be called everytime here to stay 
-   //   CA-Cl*pper compatible, please take care of that. [vszakats]
+   // ; TOFIX: VarGet() has to be called everytime here to stay 
+   //          CA-Cl*pper compatible.
+   //          Currently the caller needs to set :buffer to NIL 
+   //          to force that in Harbour. [vszakats]
 
    if ::buffer == nil
       ::Original := ::VarGet()
       ::Type     := ValType( ::Original )
-      ::picture  := ::cPicture
-      ::buffer   := ::PutMask( ::Original, .f. )
-   else
-      ::buffer   := ::PutMask( ::VarGet(), .f. )
+      ::picture := ::cPicture    //this sets also ::buffer
+// else
+//    xBuffer := ::VarGet() // ; Dummy call, to be CA-Cl*pper compatible. It doesn't work though for some reason. [vszakats]
    endif
 
-   xBuffer := ::buffer
+   xBuffer := ::buffer     //::PutMask( ::VarGet(), .f. )
 
    if ::Type == 'N' .AND. ::hasFocus .AND. ! ::lMinusPrinted .and. ;
          ! Empty( ::DecPos ) .and. ::minus .AND. ;

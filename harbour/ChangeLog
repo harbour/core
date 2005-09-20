@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-20 10:16 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tget.prg
+     ! One previous fix reverted because it broke numeric data entry.
+       Solved from caller side for the meantime. TOFIX added.
+
 2005-08-23 22:01 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
 
    + doc\linux1st.txt
