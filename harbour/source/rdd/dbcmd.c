@@ -4327,6 +4327,7 @@ HB_FUNC( __RDDGETTEMPALIAS )
       hb_ret();
 }
 
+#if defined(__XHARBOUR__)
 HB_FUNC( DBSKIPPER )
 {
    HB_THREAD_STUB
@@ -4385,6 +4386,7 @@ HB_FUNC( DBSKIPPER )
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBSKIPPER" );
 }
+#endif
 
 // Escaping delimited strings. Need to be cleaned/optimized/improved
 static char *hb_strescape( char *szInput, int lLen, char *cDelim )
