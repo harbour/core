@@ -3,11 +3,18 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFFPT RDD
+ * xHarbour Project source code:
+ *    HiPer-SEEK / CFTS compatible library
+ *    Cfts*() functions
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org
+ *
+ * Credits:
+ *    Many thanks for Mindaugas Kavaliauskas for his assistance,
+ *    informations about HSX internals, code checking and general
+ *    helping in many things when this library was written.
+ *                                                          Przemek.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,20 +57,83 @@
  *
  */
 
-#include "rddsys.ch"
+#include "hbapi.h"
 
-ANNOUNCE DBFFPT
+HB_FUNC_EXTERN( HS_ADD );
+HB_FUNC_EXTERN( HS_CLOSE );
+HB_FUNC_EXTERN( HS_CREATE );
+HB_FUNC_EXTERN( HS_DELETE );
+HB_FUNC_EXTERN( HS_IFDEL );
+HB_FUNC_EXTERN( HS_NEXT );
+HB_FUNC_EXTERN( HS_OPEN );
+HB_FUNC_EXTERN( HS_KEYCOUNT );
+HB_FUNC_EXTERN( HS_REPLACE );
+HB_FUNC_EXTERN( HS_SET );
+HB_FUNC_EXTERN( HS_UNDELETE );
+HB_FUNC_EXTERN( HS_VERIFY );
+HB_FUNC_EXTERN( HS_VERSION );
 
-procedure DBFFPTInit
+HB_FUNC( CFTSADD )
+{
+   HB_FUNCNAME( HS_ADD )();
+}
 
-   REQUEST _DBF
-   REQUEST _DBFFPT
+HB_FUNC( CFTSCLOSE )
+{
+   HB_FUNCNAME( HS_CLOSE )();
+}
 
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFFPT", RDT_FULL )
+HB_FUNC( CFTSCREA )
+{
+   HB_FUNCNAME( HS_CREATE )();
+}
 
-return
+HB_FUNC( CFTSDELETE )
+{
+   HB_FUNCNAME( HS_DELETE )();
+}
 
-/* to satisfy old code which has: REQUEST DBFDBT */
-proc DBFDBT
-return
+HB_FUNC( CFTSIFDEL )
+{
+   HB_FUNCNAME( HS_IFDEL )();
+}
+
+HB_FUNC( CFTSNEXT )
+{
+   HB_FUNCNAME( HS_NEXT )();
+}
+
+HB_FUNC( CFTSOPEN )
+{
+   HB_FUNCNAME( HS_OPEN )();
+}
+
+HB_FUNC( CFTSRECN )
+{
+   HB_FUNCNAME( HS_KEYCOUNT )();
+}
+
+HB_FUNC( CFTSREPLAC )
+{
+   HB_FUNCNAME( HS_REPLACE )();
+}
+
+HB_FUNC( CFTSSET )
+{
+   HB_FUNCNAME( HS_SET )();
+}
+
+HB_FUNC( CFTSUNDEL )
+{
+   HB_FUNCNAME( HS_UNDELETE )();
+}
+
+HB_FUNC( CFTSVERI )
+{
+   HB_FUNCNAME( HS_VERIFY )();
+}
+
+HB_FUNC( CFTSVERS )
+{
+   HB_FUNCNAME( HS_VERSION )();
+}

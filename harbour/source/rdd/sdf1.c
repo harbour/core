@@ -59,20 +59,20 @@
 
 #define __PRG_SOURCE__ __FILE__
 
-HB_FUNC( _SDFC );
+HB_FUNC( _SDF );
 HB_FUNC( SDF_GETFUNCTABLE );
 
 #undef HB_PRG_PCODE_VER
 #define HB_PRG_PCODE_VER HB_PCODE_VER
 
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
-{ "_SDFC",            HB_FS_PUBLIC, {HB_FUNCNAME( _SDFC )}, NULL },
+{ "_SDF",            HB_FS_PUBLIC, {HB_FUNCNAME( _SDF )}, NULL },
 { "SDF_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SDF_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 
-#if defined(HB_STATIC_STARTUP)
+#if defined(HB_PRAGMA_STARTUP)
    #pragma startup sdf1__InitSymbols
-#elif defined(_MSC_VER)
+#elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -81,8 +81,6 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
    #endif
    static HB_$INITSYM hb_vm_auto_sdf1__InitSymbols = sdf1__InitSymbols;
    #pragma data_seg()
-#elif ! defined(__GNUC__)
-   #pragma startup sdf1__InitSymbols
 #endif
 
 static RDDFUNCS sdfSuper;
@@ -118,6 +116,7 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
                              hb_sdfRecCount,
                              hb_sdfRecInfo,
                              hb_sdfRecNo,
+                             hb_sdfRecId,
                              hb_sdfSetFieldExtent,
                              hb_sdfAlias,
                              hb_sdfClose,
@@ -164,6 +163,7 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
                              hb_sdfSetLocate,
                              hb_sdfSetScope,
                              hb_sdfSkipScope,
+                             hb_sdfLocate,
                              hb_sdfCompile,
                              hb_sdfError,
                              hb_sdfEvalBlock,
@@ -177,9 +177,11 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
                              hb_sdfPutValueFile,
                              hb_sdfReadDBHeader,
                              hb_sdfWriteDBHeader,
+                             hb_sdfInit,
                              hb_sdfExit,
                              hb_sdfDrop,
                              hb_sdfExists,
+                             hb_sdfRddInfo,
                              hb_sdfWhoCares
                            };
 
@@ -190,9 +192,7 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
 
 
 
-HB_FUNC( _SDFC )
-{
-}
+HB_FUNC( _SDF ) { ; }
 
 HB_FUNC( SDF_GETFUNCTABLE )
 {

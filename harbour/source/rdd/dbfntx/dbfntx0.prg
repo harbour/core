@@ -52,15 +52,18 @@
 
 #include "error.ch"
 #include "rddsys.ch"
+#include "dbinfo.ch"
 
 ANNOUNCE DBFNTX
 
 procedure DBFNTXInit
 
+   REQUEST _DBF
    REQUEST _DBFNTX
 
    rddRegister( "DBF", RDT_FULL )
    rddRegister( "DBFNTX", RDT_FULL )
+   rddInfo( RDDI_MEMOTYPE, DB_MEMO_DBT, "DBFNTX" )
 
 return
 

@@ -103,6 +103,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapierr.h"
 #include "hbset.h"
 #include "hb_io.h"
 
@@ -2130,23 +2131,171 @@ BYTE HB_EXPORT  hb_fsCurDrv( void )
    return ( BYTE ) uiResult; /* Return the drive number, base 0. */
 }
 
-/* TODO: Implement hb_fsExtOpen */
-
-FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
-                      USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError )
+/* copied from xHarbour */
+FHANDLE HB_EXPORT  hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
+                                 USHORT uiExFlags, BYTE * pPaths,
+                                 PHB_ITEM pError )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", (char*) pFilename, (char*) pDefExt, uiFlags, pPaths, pError));
+   HB_PATHNAMES *pSearchPath = NULL, *pNextPath;
+   PHB_FNAME pFilepath;
+   FHANDLE hFile;
+   BOOL fIsFile = FALSE;
+   BYTE * szPath;
+   USHORT uiFlags;
 
-   s_uiErrorLast = FS_ERROR;
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", pFilename, pDefExt, uiExFlags, pPaths, pError));
 
-   HB_SYMBOL_UNUSED( pFilename );
-   HB_SYMBOL_UNUSED( pDefExt );
-   HB_SYMBOL_UNUSED( uiFlags );
-   HB_SYMBOL_UNUSED( pPaths );
-   HB_SYMBOL_UNUSED( pError );
+/*
+   #define FXO_TRUNCATE  0x0100   // Create (truncate if exists)
+   #define FXO_APPEND    0x0200   // Create (append if exists)
+   #define FXO_UNIQUE    0x0400   // Create unique file FO_EXCL ???
+   #define FXO_FORCEEXT  0x0800   // Force default extension
+   #define FXO_DEFAULTS  0x1000   // Use SET command defaults
+   #define FXO_DEVICERAW 0x2000   // Open devices in raw mode
+   // xHarbour extension
+   #define FXO_SHARELOCK 0x4000   // emulate DOS SH_DENY* mode in POSIX OS
+   #define FXO_COPYNAME  0x8000   // copy final szPath into pFilename
 
-   return s_uiErrorLast;
+   hb_errGetFileName( pError );
+*/
+
+   szPath = (BYTE *) hb_xgrab( _POSIX_PATH_MAX + 1 );
+
+   uiFlags = uiExFlags & 0xff;
+   if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
+   {
+      uiFlags |= FO_CREAT;
+      if( uiExFlags & FXO_UNIQUE )
+         uiFlags |= FO_EXCL;
+#if !defined( HB_USE_SHARELOCKS )
+      else if( uiExFlags & FXO_TRUNCATE )
+         uiFlags |= FO_TRUNC;
+#endif
+   }
+
+   pFilepath = hb_fsFNameSplit( ( char * ) pFilename );
+
+   if( pDefExt && ( ( uiExFlags & FXO_FORCEEXT ) || !pFilepath->szExtension ) )
+   {
+      pFilepath->szExtension = ( char * ) pDefExt;
+   }
+
+   if( pFilepath->szPath )
+   {
+      hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+   }
+   else if( uiExFlags & FXO_DEFAULTS )
+   {
+      if( hb_set.HB_SET_DEFAULT )
+      {
+         pFilepath->szPath = hb_set.HB_SET_DEFAULT;
+         hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+         fIsFile = hb_fsFile( szPath );
+      }
+      if( !fIsFile && hb_set.HB_SET_PATH )
+      {
+         pNextPath = hb_setGetFirstSetPath();
+         while( !fIsFile && pNextPath )
+         {
+            pFilepath->szPath = pNextPath->szPath;
+            hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+            fIsFile = hb_fsFile( szPath );
+            pNextPath = pNextPath->pNext;
+         }
+      }
+      if( !fIsFile )
+      {
+         pFilepath->szPath = hb_set.HB_SET_DEFAULT ? hb_set.HB_SET_DEFAULT : NULL;
+         hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+      }
+   }
+   else if( pPaths )
+   {
+      hb_fsAddSearchPath( ( char * ) pPaths, &pSearchPath );
+      pNextPath = pSearchPath;
+      while( !fIsFile && pNextPath )
+      {
+         pFilepath->szPath = pNextPath->szPath;
+         hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+         fIsFile = hb_fsFile( szPath );
+         pNextPath = pNextPath->pNext;
+      }
+      if( !fIsFile )
+      {
+         pFilepath->szPath = NULL;
+         hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+      }
+   }
+   else
+   {
+      hb_fsFNameMerge( ( char * ) szPath, pFilepath );
+   }
+   hb_xfree( pFilepath );
+
+   hFile = hb_fsOpen( szPath, uiFlags );
+
+#if defined( HB_USE_SHARELOCKS )
+   if( hFile != FS_ERROR && uiExFlags & FXO_SHARELOCK )
+   {
+      USHORT uiLock;
+      if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
+          ( uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0 )
+         uiLock = FL_LOCK | FLX_SHARED;
+      else
+         uiLock = FL_LOCK | FLX_EXCLUSIVE;
+
+      if( !hb_fsLockLarge( hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE, uiLock ) )
+      {
+         hb_fsClose( hFile );
+         hFile = FS_ERROR;
+         /*
+          * fix for neterr() support and Clipper compatibility,
+          * should be revised with a better multi platform solution.
+          */
+         hb_fsSetError( ( uiExFlags & FXO_TRUNCATE ) ? 5 : 32 );
+      }
+      else if( uiExFlags & FXO_TRUNCATE )
+      {
+         /* truncate the file only if properly locked */
+         hb_fsSeek( hFile, 0, FS_SET );
+         hb_fsWrite( hFile, NULL, 0 );
+         if( hb_fsError() != 0 )
+         {
+            hb_fsClose( hFile );
+            hFile = FS_ERROR;
+            hb_fsSetError( 5 );
+         }
+      }
+   }
+#elif 1
+   /*
+    * Temporary fix for neterr() support and Clipper compatibility,
+    * should be revised with a better solution.
+    */
+   if( ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
+       hb_fsError() == 5 )
+   {
+      hb_fsSetError( 32 );
+   }
+#endif
+
+   if( pError )
+   {
+      hb_errPutFileName( pError, ( char * ) szPath );
+      if( hFile == FS_ERROR )
+      {
+         hb_errPutOsCode( pError, hb_fsError() );
+         hb_errPutGenCode( pError, ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN );
+      }
+   }
+
+   if( uiExFlags & FXO_COPYNAME && hFile != FS_ERROR )
+      strcpy( ( char * ) pFilename, ( char * ) szPath );
+
+   hb_xfree( szPath );
+   return hFile;
 }
+
 
 BOOL hb_fsEof( FHANDLE hFileHandle )
 {

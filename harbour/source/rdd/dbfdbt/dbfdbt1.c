@@ -112,7 +112,8 @@ static RDDFUNCS dbtTable =
    ( DBENTRYP_V )     hb_dbtRecall,
    ( DBENTRYP_ULP )   hb_dbtRecCount,
    ( DBENTRYP_ISI )   hb_dbtRecInfo,
-   ( DBENTRYP_I )     hb_dbtRecNo,
+   ( DBENTRYP_ULP )   hb_dbtRecNo,
+   ( DBENTRYP_I )     hb_dbtRecId,
    ( DBENTRYP_S )     hb_dbtSetFieldExtent,
 
 
@@ -154,7 +155,7 @@ static RDDFUNCS dbtTable =
 
    ( DBENTRYP_OI )    hb_dbtOrderListAdd,
    ( DBENTRYP_V )     hb_dbtOrderListClear,
-   ( DBENTRYP_VP )    hb_dbtOrderListDelete,
+   ( DBENTRYP_OI )    hb_dbtOrderListDelete,
    ( DBENTRYP_OI )    hb_dbtOrderListFocus,
    ( DBENTRYP_V )     hb_dbtOrderListRebuild,
    ( DBENTRYP_VOI )   hb_dbtOrderCondition,
@@ -175,6 +176,7 @@ static RDDFUNCS dbtTable =
    ( DBENTRYP_VLO )   hb_dbtSetLocate,
    ( DBENTRYP_VOS )   hb_dbtSetScope,
    ( DBENTRYP_VPL )   hb_dbtSkipScope,
+   ( DBENTRYP_B )     hb_dbtLocate,
 
 
    /* Miscellaneous */
@@ -188,7 +190,7 @@ static RDDFUNCS dbtTable =
 
    ( DBENTRYP_VSP )   hb_dbtRawLock,
    ( DBENTRYP_VL )    hb_dbtLock,
-   ( DBENTRYP_UL )    hb_dbtUnLock,
+   ( DBENTRYP_I )     hb_dbtUnLock,
 
 
    /* Memofile functions */
@@ -197,7 +199,7 @@ static RDDFUNCS dbtTable =
    ( DBENTRYP_VP )    hb_dbtCreateMemFile,
    ( DBENTRYP_SVPB )  hb_dbtGetValueFile,
    ( DBENTRYP_VP )    hb_dbtOpenMemFile,
-   ( DBENTRYP_SVP )   hb_dbtPutValueFile,
+   ( DBENTRYP_SVPB )  hb_dbtPutValueFile,
 
 
    /* Database file header handling */
@@ -207,9 +209,11 @@ static RDDFUNCS dbtTable =
 
 
    /* non WorkArea functions       */
-   ( DBENTRYP_I0 )    hb_dbtExit,
-   ( DBENTRYP_I1 )    hb_dbtDrop,
-   ( DBENTRYP_I2 )    hb_dbtExists,
+   ( DBENTRYP_R )     hb_dbtInit,
+   ( DBENTRYP_R )     hb_dbtExit,
+   ( DBENTRYP_RVV )   hb_dbtDrop,
+   ( DBENTRYP_RVV )   hb_dbtExists,
+   ( DBENTRYP_RSLV )  hb_dbtRddInfo,
 
    /* Special and reserved methods */
 
@@ -245,9 +249,9 @@ HB_INIT_SYMBOLS_BEGIN( dbfdbt1__InitSymbols )
 { "DBFDBT_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFDBT_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfdbt1__InitSymbols )
 
-#if defined(HB_STATIC_STARTUP)
+#if defined(HB_PRAGMA_STARTUP)
 #  pragma startup dbfdbt1__InitSymbols
-#elif defined(_MSC_VER)
+#elif defined(HB_MSC_STARTUP)
 #  if _MSC_VER >= 1010
 #     pragma data_seg( ".CRT$XIY" )
 #     pragma comment( linker, "/Merge:.CRT=.data" )
@@ -256,8 +260,6 @@ HB_INIT_SYMBOLS_END( dbfdbt1__InitSymbols )
 #  endif
    static HB_$INITSYM hb_vm_auto_dbfdbt1__InitSymbols = dbfdbt1__InitSymbols;
 #  pragma data_seg()
-#elif ! defined(__GNUC__)
-#  pragma startup dbfdbt1__InitSymbols
 #endif
 
 /*
@@ -319,23 +321,24 @@ static ULONG hb_dbtGetMemoLen( DBTAREAP pArea, USHORT uiIndex )
 {
    ULONG ulBlock;
    BYTE pBlock[ DBT_BLOCKSIZE ];
+   USHORT uiLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtGetMemoLen(%p, %hu)", pArea, uiIndex));
 
    ulBlock = hb_dbfGetMemoBlock( ( DBFAREAP ) pArea, uiIndex );
    if( ulBlock == 0 )
       return 0;
-   hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
+   hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock * DBT_BLOCKSIZE, FS_SET );
    ulBlock = 0;
    do
    {
       uiIndex = 0;
-      if ( hb_fsRead( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE ) == DBT_BLOCKSIZE )
-      {
-         while( uiIndex < DBT_BLOCKSIZE && pBlock[ uiIndex ] != 0x1A )
-            uiIndex++;
-         ulBlock += uiIndex;
-      }
+      uiLen = hb_fsRead( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE );
+      if ( uiLen == ( USHORT ) FS_ERROR )
+         break;
+      while( uiIndex < uiLen && pBlock[ uiIndex ] != 0x1A )
+         uiIndex++;
+      ulBlock += uiIndex;
    } while( uiIndex == DBT_BLOCKSIZE );
    return ulBlock;
 }
@@ -356,16 +359,16 @@ static void hb_dbtGetMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( ulSize > 0 )
    {
       ulBlock = hb_dbfGetMemoBlock( ( DBFAREAP ) pArea, uiIndex );
-      hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
+      hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock * DBT_BLOCKSIZE, FS_SET );
       hb_fsReadLarge( pArea->hMemoFile, pBuffer, ulSize );
+#ifndef HB_CDP_SUPPORT_OFF
+      hb_cdpnTranslate( ( char * ) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
+#endif
    }
    else
       *pBuffer = '\0';
 
    hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
-#ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, ulSize );
-#endif
    hb_itemSetCMemo( pItem );
 }
 
@@ -375,50 +378,69 @@ static void hb_dbtGetMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULONG ulLen,
                              ULONG * ulStoredBlock )
 {
-   BYTE pBlock[ DBT_BLOCKSIZE ], pBuff[4];
+   BYTE pAddr[4];
    BOOL bNewBlock;
-   ULONG ulNewBlock, ulNextBlock = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtWriteMemo(%p, %lu, %p, %lu, %p)", pArea, ulBlock, pItem,
                            ulLen, ulStoredBlock));
 
-   memset( pBlock, 0x1A, DBT_BLOCKSIZE );
    bNewBlock = !( ulBlock && ulLen < DBT_BLOCKSIZE - 1 );
    if( bNewBlock )
    {
       /* Get next block from header */
       hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
-      hb_fsRead( pArea->hMemoFile, pBuff, 4 );
-      ulNewBlock = HB_GET_LE_UINT32( pBuff );
-      ulNextBlock = ulNewBlock * DBT_BLOCKSIZE;
-      hb_fsSeek( pArea->hMemoFile, ulNextBlock, FS_SET );
+      hb_fsRead( pArea->hMemoFile, pAddr, 4 );
+      ulBlock = HB_GET_LE_UINT32( pAddr );
+   }
+   * ulStoredBlock = ulBlock;
+
+   hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock * DBT_BLOCKSIZE, FS_SET );
+#ifndef HB_CDP_SUPPORT_OFF
+   if( hb_cdp_page != pArea->cdPage )
+   {
+      BYTE * pBuff = ( BYTE * ) hb_xalloc( ulLen + 1 );
+
+      if( pBuff )
+      {
+         memcpy( pBuff, pItem->item.asString.value, ulLen );
+         pBuff[ ulLen ] = 0x1A;
+         hb_cdpnTranslate( ( char * ) pBuff, hb_cdp_page, pArea->cdPage, ulLen );
+         hb_fsWriteLarge( pArea->hMemoFile, pBuff, ulLen + 1 );
+         hb_xfree( pBuff );
+      }
+      else
+      {
+         BYTE pBlock[ DBT_BLOCKSIZE ], *pSrc = ( BYTE * ) pItem->item.asString.value;
+         ULONG ulWritten = 0, ulRest;
+
+         do
+         {
+            ulRest = HB_MIN( ulLen - ulWritten, DBT_BLOCKSIZE );
+            memcpy( pBlock, pSrc + ulWritten, ulRest );
+            memset( pBlock + ulRest, 0x1A, DBT_BLOCKSIZE - ulRest );
+            hb_cdpnTranslate( ( char * ) pBlock, hb_cdp_page, pArea->cdPage, ulRest );
+            hb_fsWrite( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE );
+            ulWritten += DBT_BLOCKSIZE;
+         }
+         while ( ulWritten <= ulLen );
+      }
    }
    else
+#endif
    {
-      hb_fsSeek( pArea->hMemoFile, ulBlock * DBT_BLOCKSIZE, FS_SET );
-      ulNewBlock = ulBlock;
+      BYTE pBlock[ DBT_BLOCKSIZE ];
+      memset( pBlock, 0x1A, DBT_BLOCKSIZE );
+      hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) pItem->item.asString.value, ulLen );
+      hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - ( USHORT ) ( ulLen % DBT_BLOCKSIZE ) ) );
    }
-   * ulStoredBlock = ulNewBlock;
-
-#ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpnTranslate( pItem->item.asString.value, hb_cdp_page, pArea->cdPage, ulLen );
-#endif
-   /* Write memo data and eof mark */
-   hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) pItem->item.asString.value, ulLen );
-   hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - ( USHORT ) ( ulLen % DBT_BLOCKSIZE ) ) );
    pArea->fMemoFlush = TRUE;
-#ifndef HB_CDP_SUPPORT_OFF
-   hb_cdpnTranslate( pItem->item.asString.value, pArea->cdPage, hb_cdp_page, ulLen );
-#endif
 
    if( bNewBlock )
    {
-      ulNextBlock += ulLen + 1;
-      ulNextBlock += ( DBT_BLOCKSIZE - ulNextBlock % DBT_BLOCKSIZE );
-      ulNextBlock /= DBT_BLOCKSIZE;
-      HB_PUT_LE_UINT32( pBuff, ulNextBlock );
+      ulBlock += ( ulLen / DBT_BLOCKSIZE ) + 1;
+      HB_PUT_LE_UINT32( pAddr, ulBlock );
       hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
-      hb_fsWrite( pArea->hMemoFile, pBuff, 4 );
+      hb_fsWrite( pArea->hMemoFile, pAddr, 4 );
       pArea->fMemoFlush = TRUE;
    }
 }
@@ -492,7 +514,33 @@ static ERRCODE hb_dbtInfo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( uiIndex )
    {
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, DBT_MEMOEXT );
+         if( pArea->fHasMemo && pArea->hMemoFile != FS_ERROR )
+         {
+            PHB_FNAME pFileName;
+
+            pFileName = hb_fsFNameSplit( ( char * ) pArea->szMemoFileName );
+            hb_itemPutC( pItem, pFileName->szExtension );
+            hb_xfree( pFileName );
+         }
+         else
+         {
+            hb_itemClear( pItem );
+            return SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_MEMOEXT, 0, pItem );
+         }
+         break;
+
+      case DBI_MEMOBLOCKSIZE:
+         if( pArea->fHasMemo && pArea->hMemoFile != FS_ERROR )
+            hb_itemPutNI( pItem, pArea->uiMemoBlockSize );
+         else
+            hb_itemPutNI( pItem, DBT_BLOCKSIZE );
+         break;
+
+      case DBI_MEMOTYPE:
+         if( pArea->fHasMemo && pArea->hMemoFile != FS_ERROR )
+            hb_itemPutNI( pItem, pArea->bMemoType );
+         else
+            hb_itemPutNI( pItem, DB_MEMO_DBT );
          break;
 
       /* case DBI_RDD_VERSION */
@@ -654,7 +702,10 @@ static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* Try create */
       do
       {
-         pArea->hMemoFile = hb_spCreate( pCreateInfo->abName, FC_NORMAL );
+         pArea->hMemoFile = hb_fsExtOpen( pCreateInfo->abName, NULL,
+                                          FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                          FXO_DEFAULTS | FXO_SHARELOCK,
+                                          NULL, pError );
          if( pArea->hMemoFile == FS_ERROR )
          {
             if( !pError )
@@ -711,7 +762,9 @@ static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hMemoFile = hb_spOpen( pOpenInfo->abName, uiFlags );
+      pArea->hMemoFile = hb_fsExtOpen( pOpenInfo->abName, NULL, uiFlags |
+                                       FXO_DEFAULTS | FXO_SHARELOCK,
+                                       NULL, pError );
       if( pArea->hMemoFile == FS_ERROR )
       {
          if( !pError )
@@ -738,35 +791,56 @@ static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo )
    return ( pArea->hMemoFile == FS_ERROR ? FAILURE : SUCCESS );
 }
 
-/* ( DBENTRYP_SVP )   hb_dbtPutValueFile    : NULL */
+/* ( DBENTRYP_SVPB )  hb_dbtPutValueFile    : NULL */
 
 /*
- * Read the database file header record in the WorkArea.
- * ( DBENTRYP_V )     hb_dbtReadDBHeader
+ * Retrieve (set) information about RDD
+ * ( DBENTRYP_RSLV )   hb_dbtFieldInfo
  */
-static ERRCODE hb_dbtReadDBHeader( DBTAREAP pArea )
+static ERRCODE hb_dbtRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbtReadHeader(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbtRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   if( SUPER_READDBHEADER( ( AREAP ) pArea ) == FAILURE )
-      return FAILURE;
-// Set in SUPER() now 3/05/2004
-//   pArea->fHasMemo = ( pArea->bVersion == 0x83 );
+   switch( uiIndex )
+   {
+      case RDDI_MEMOEXT:
+      {
+         LPDBFDATA pData = ( LPDBFDATA ) pRDD->lpvCargo;
+         char *szNew = hb_itemGetCPtr( pItem );
+
+         if( szNew[0] == '.' && szNew[1] )
+            szNew = hb_strdup( szNew );
+         else
+            szNew = NULL;
+
+         hb_itemPutC( pItem, pData->szMemoExt[ 0 ] ? pData->szMemoExt : DBT_MEMOEXT );
+         if( szNew )
+         {
+            hb_strncpy( pData->szMemoExt, szNew, HB_MAX_FILE_EXT );
+            hb_xfree( szNew );
+         }
+         break;
+      }
+      case RDDI_MEMOBLOCKSIZE:
+         hb_itemPutNI( pItem, DBT_BLOCKSIZE );
+         break;
+
+      case RDDI_MEMOTYPE:
+         hb_itemPutNI( pItem, DB_MEMO_DBT );
+         break;
+
+      case RDDI_MEMOGCTYPE:
+         hb_itemPutNI( pItem, 0 );
+         break;
+
+      case RDDI_MEMOREADLOCK:
+      case RDDI_MEMOREUSE:
+         hb_itemPutL( pItem, FALSE );
+         break;
+
+      default:
+         return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
+   }
 
    return SUCCESS;
-}
-
-/*
- * Write the database file header record in the WorkArea.
- * ( DBENTRYP_V )     hb_dbtWriteDBHeader
- */
-static ERRCODE hb_dbtWriteDBHeader( DBTAREAP pArea )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbtWriteDBHeader(%p)", pArea));
-
-   if ( pArea->fHasMemo && pArea->bVersion != 0x30 && pArea->bVersion != 0x31 )
-   {
-      pArea->bVersion = 0x83;
-   }
-   return SUPER_WRITEDBHEADER( ( AREAP ) pArea );
 }

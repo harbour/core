@@ -4,8 +4,9 @@
 
 /*
  * Harbour Project source code:
- * DBFFPT RDD
+ * DBFCDX RDD (ver.2)
  *
+ * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org
  *
@@ -52,18 +53,14 @@
 
 #include "rddsys.ch"
 
-ANNOUNCE DBFFPT
+ANNOUNCE SIXCDX
 
-procedure DBFFPTInit
+procedure SIXCDXInit
 
    REQUEST _DBF
-   REQUEST _DBFFPT
+   REQUEST _SIXCDX
 
    rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFFPT", RDT_FULL )
+   rddRegister( "SIXCDX", RDT_FULL )
 
-return
-
-/* to satisfy old code which has: REQUEST DBFDBT */
-proc DBFDBT
 return

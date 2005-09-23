@@ -66,24 +66,43 @@
 HB_EXTERN_BEGIN
 
 /* MEMO constants and defaults */
+#define DBT_MEMOEXT                          ".dbt"
 #define FPT_MEMOEXT                          ".fpt"
-#define FPT_LOCKPOS                     0x00000000L
-#define FPT_LOCKSIZE                    0x7FFFFFFFL
+#define SMT_MEMOEXT                          ".smt"
+#define DBT_DEFBLOCKSIZE                        512
 #define FPT_DEFBLOCKSIZE                         64
+#define SMT_DEFBLOCKSIZE                         32
+
+#define FPT_LOCKPOS                     0x00000000L
+#define FPT_LOCKSIZE                    0x00000001L
+
 #define SIX_ITEM_BUFSIZE                         14
 #define FLEX_ITEM_BUFSIZE                         8
 #define MAX_SIXFREEBLOCKS                        82
 #define MAX_FLEXFREEBLOCKS                      126
 #define FLEXGCPAGE_SIZE                        1010
 
-/* usMemoType */
-#define MEMO_DBT              1
-#define MEMO_FPT_HB           2
-#define MEMO_FPT_SIX          3
-#define MEMO_FPT_SIXHB        4
-#define MEMO_FPT_FLEX         5
-#define MEMO_FPT_CLIP         6
+/* "V" filed types */
+#define HB_VF_CHAR            64000
+#define HB_VF_DATE            64001
+#define HB_VF_INT             64002
+#define HB_VF_LOG             64003
+#define HB_VF_DNUM            64004
+#define HB_VF_ARRAY           64005
+#define HB_VF_BLOB            64006
+#define HB_VF_BLOBCOMPRESS    64007
+#define HB_VF_BLOBENCRYPT     64008
 
+/* SMT types */
+#define SMT_IT_NIL            0
+#define SMT_IT_CHAR           1
+#define SMT_IT_INT            2
+#define SMT_IT_DOUBLE         3
+#define SMT_IT_DATE           4
+#define SMT_IT_LOGICAL        5
+#define SMT_IT_ARRAY          6
+
+#define FPTIT_DUMMY        0xDEADBEAF
 #define FPTIT_BINARY       0x0000
 #define FPTIT_PICT         0x0000      /* Picture */
 #define FPTIT_TEXT         0x0001      /* Text    */
@@ -118,7 +137,13 @@ HB_EXTERN_BEGIN
 #define FPTIT_FLEX_ULONG   0x03F7   // 1015 *
 #define FPTIT_FLEX_DOUBLE  0x03F8   // 1016
 #define FPTIT_FLEX_LDOUBLE 0x03F9   // 1017 *
-#define FPTIT_FLEX_COMPCH  0x03FA   // 1018 *
+#define FPTIT_FLEX_COMPRCH 0x03FA   // 1018 *
+
+/* Flex II types */
+#define FPTIT_FLEX_DBLITEM 0x2710   // 10000 14-bytes Clipper double item
+#define FPTIT_FLEX_LOGICAL 0x2711   // 10001 4-bytes logical value 
+#define FPTIT_FLEX_NULSTR  0x2722   // 10002 empty string
+
 
 #define FPTIT_FLEXAR_NIL    0x00
 #define FPTIT_FLEXAR_STR    0x07
@@ -138,24 +163,11 @@ HB_EXTERN_BEGIN
 #define FPTIT_FLEXAR_LONG2  0x20
 #define FPTIT_FLEXAR_ULONG  0x21
 
-/*
-#define HB_IT_NIL       ( ( USHORT ) 0x0000 )
-#define HB_IT_POINTER   ( ( USHORT ) 0x0001 )
-#define HB_IT_LONGLONG  ( ( USHORT ) 0x0040 )
-#define HB_IT_SYMBOL    ( ( USHORT ) 0x0100 )
-#define HB_IT_ALIAS     ( ( USHORT ) 0x0200 )
-#define HB_IT_BLOCK     ( ( USHORT ) 0x1000 )
-#define HB_IT_BYREF     ( ( USHORT ) 0x2000 )
-#define HB_IT_MEMVAR    ( ( USHORT ) 0x4000 )
-#define HB_IT_ANY       ( ( USHORT ) 0xFFFF )
-*/
-
 /* MEMO file strucutres */
 typedef struct _FPTHEADER
 {
    BYTE  nextBlock[ 4 ];            /* Next free block in the file */
-   BYTE  reserved1[ 2 ];            /* */
-   BYTE  blockSize[ 2 ];            /* Size of block */
+   BYTE  blockSize[ 4 ];            /* Size of block */
    BYTE  signature1[ 10 ];          /* Signature: "SixMemo", "Harbour", "Made by CLIP"-overwrites next bytes*/
    BYTE  nGCitems[ 2 ];             /* number of GC items in reserved2 (max 82)*/
    BYTE  reserved2[ 492 ];          /* */
@@ -191,6 +203,7 @@ typedef struct _MEMOGCTABLE
    BYTE   bType;                    /* MEMO_FPT_SIX or MEMO_FPT_FLEX */
    BYTE   bChanged;                 /* Should we write GC data to disk */
    ULONG  ulNextBlock;              /* Next free block in the file */
+   ULONG  ulPrevBlock;              /* Previous next free block in the file */
    ULONG  ulRevPage;                /* FLEX Rev GC page offset */
    ULONG  ulDirPage;                /* FLEX Dir GC page offset */
    ULONG  ulCounter;                /* FLEX cyclic counter */
@@ -255,6 +268,7 @@ static ERRCODE hb_fptPutValue( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_fptRecCount                             NULL
 #define hb_fptRecInfo                              NULL
 #define hb_fptRecNo                                NULL
+#define hb_fptRecId                                NULL
 #define hb_fptSetFieldExtent                       NULL
 #define hb_fptAlias                                NULL
 #define hb_fptClose                                NULL
@@ -301,6 +315,7 @@ static ERRCODE hb_fptSysName( FPTAREAP pArea, BYTE * pBuffer );
 #define hb_fptSetLocate                            NULL
 #define hb_fptSetScope                             NULL
 #define hb_fptSkipScope                            NULL
+#define hb_fptLocate                               NULL
 #define hb_fptCompile                              NULL
 #define hb_fptError                                NULL
 #define hb_fptEvalBlock                            NULL
@@ -309,14 +324,16 @@ static ERRCODE hb_fptSysName( FPTAREAP pArea, BYTE * pBuffer );
 #define hb_fptUnLock                               NULL
 #define hb_fptCloseMemFile                         NULL
 static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo );
-#define hb_fptGetValueFile                         NULL
+static ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
 static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo );
-#define hb_fptPutValueFile                         NULL
-static ERRCODE hb_fptReadDBHeader( FPTAREAP pArea );
-static ERRCODE hb_fptWriteDBHeader( FPTAREAP pArea );
+static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+#define hb_fptReadDBHeader                         NULL
+#define hb_fptWriteDBHeader                        NULL
+#define hb_fptInit                                 NULL
 #define hb_fptExit                                 NULL
 #define hb_fptDrop                                 NULL
 #define hb_fptExists                               NULL
+static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_fptWhoCares                             NULL
 
 HB_EXTERN_END

@@ -92,14 +92,16 @@ extern ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, void * szName );
 #define hb_waRecall                                         hb_waUnsupported
 #define hb_waRecCount                      ( DBENTRYP_ULP ) hb_waUnsupported
 #define hb_waRecInfo                       ( DBENTRYP_ISI ) hb_waUnsupported
-#define hb_waRecNo                           ( DBENTRYP_I ) hb_waUnsupported
+#define hb_waRecNo                         ( DBENTRYP_ULP ) hb_waUnsupported
+#define hb_waRecId                           ( DBENTRYP_I ) hb_waUnsupported
 extern ERRCODE hb_waSetFieldExtent( AREAP pArea, USHORT uiFieldExtent );
 extern ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias );
 extern ERRCODE hb_waClose( AREAP pArea );
-#define hb_waCreate                         ( DBENTRYP_VP ) hb_waUnsupported
+/* Like in Clipper map CREATE() method at work area level to OPEN() */
+#define hb_waCreate                                         hb_waOpen
 extern ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 extern ERRCODE hb_waNewArea( AREAP pArea );
-#define hb_waOpen                           ( DBENTRYP_VP ) hb_waUnsupported
+extern ERRCODE hb_waOpen( AREAP pArea, LPDBOPENINFO pInfo );
 extern ERRCODE hb_waRelease( AREAP pArea );
 extern ERRCODE hb_waStructSize( AREAP pArea, USHORT * uiSize );
 extern ERRCODE hb_waSysName( AREAP pArea, BYTE * pBuffer );
@@ -122,7 +124,7 @@ extern ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr );
 extern ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO pRelInfo );
 #define hb_waOrderListAdd                   ( DBENTRYP_OI ) hb_waUnsupported
 #define hb_waOrderListClear                                 hb_waUnsupported
-#define hb_waOrderListDelete                ( DBENTRYP_VP ) hb_waUnsupported
+#define hb_waOrderListDelete                ( DBENTRYP_OI ) hb_waUnsupported
 #define hb_waOrderListFocus                 ( DBENTRYP_OI ) hb_waUnsupported
 #define hb_waOrderListRebuild                               hb_waUnsupported
 extern ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param );
@@ -138,25 +140,28 @@ extern ERRCODE hb_waFilterText( AREAP pArea, PHB_ITEM pFilter );
 #define hb_waScopeInfo                      ( DBENTRYP_SI ) hb_waUnsupported
 extern ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo );
 extern ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo );
-#define hb_waSetScope                       ( DBENTRYP_VOS ) hb_waUnsupported
+#define hb_waSetScope                      ( DBENTRYP_VOS ) hb_waUnsupported
 #define hb_waSkipScope                     ( DBENTRYP_VPL ) hb_waUnsupported
+ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue );
 extern ERRCODE hb_waCompile( AREAP pArea, BYTE * pExpr );
 extern ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError );
 extern ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock );
 #define hb_waRawLock                       ( DBENTRYP_VSP ) hb_waUnsupported
 #define hb_waLock                           ( DBENTRYP_VL ) hb_waUnsupported
-#define hb_waUnLock                         ( DBENTRYP_UL ) hb_waUnsupported
+#define hb_waUnLock                          ( DBENTRYP_I ) hb_waUnsupported
 #define hb_waCloseMemFile                                   hb_waUnsupported
 #define hb_waCreateMemFile                  ( DBENTRYP_VP ) hb_waUnsupported
 #define hb_waGetValueFile                 ( DBENTRYP_SVPB ) hb_waUnsupported
 #define hb_waOpenMemFile                    ( DBENTRYP_VP ) hb_waUnsupported
-#define hb_waPutValueFile                  ( DBENTRYP_SVP ) hb_waUnsupported
+#define hb_waPutValueFile                 ( DBENTRYP_SVPB ) hb_waUnsupported
 #define hb_waReadDBHeader                                   hb_waUnsupported
 #define hb_waWriteDBHeader                                  hb_waUnsupported
 
-#define hb_rddExit                         (DBENTRYP_I0)    NULL
-#define hb_rddDrop                         (DBENTRYP_I1)    hb_waUnsupported
-#define hb_rddExists                       (DBENTRYP_I2)    hb_waUnsupported
+#define hb_rddInit                         (DBENTRYP_R)     NULL
+#define hb_rddExit                         (DBENTRYP_R)     NULL
+#define hb_rddDrop                         (DBENTRYP_RVV)   hb_waRddUnsupported
+#define hb_rddExists                       (DBENTRYP_RVV)   hb_waRddUnsupported
+extern ERRCODE hb_rddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection, PHB_ITEM pItem );
 
 #define hb_waWhoCares                      ( DBENTRYP_SVP ) hb_waUnsupported
 

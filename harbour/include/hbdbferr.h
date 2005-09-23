@@ -57,8 +57,12 @@ HB_EXTERN_BEGIN
 
 /* DBF errors */
 #define EDBF_OPEN_DBF                              1001
+#define EDBF_OPEN_MEMO                             1002
+#define EDBF_OPEN_INDEX                            1003
 #define EDBF_CREATE_DBF                            1004
-#define EDBF_CREATE                                1006
+#define EDBF_CREATE_MEMO                           1005
+#define EDBF_CREATE_INDEX                          1006
+#define EDBF_CREATE                   EDBF_CREATE_INDEX
 #define EDBF_READ                                  1010
 #define EDBF_WRITE                                 1011
 #define EDBF_CORRUPT                               1012
@@ -68,9 +72,21 @@ HB_EXTERN_BEGIN
 #define EDBF_SHARED                                1023
 #define EDBF_APPENDLOCK                            1024
 #define EDBF_READONLY                              1025
+#define EDBF_LIMITEXCEEDED                         1027
+#define EDBF_LOCKTIMEOUT                           1035
 #define EDBF_LOCK                                  1038
 /* ORDER errors */
 #define EDBF_INVALIDKEY                            1026
+#define EDBF_NOTINDEXED                            1201
+#define EDBF_INVALIDORDER                          1050
+#define EDBF_SCOPETYPE                             1051
+#define EDBF_NOTCUSTOM                             1052
+#define EDBF_INVALIDFOR                            1053
+#define EDBF_KEYLENGTH                             1054
+#define EDBF_SIGNATURE                             1055
+
+#define EDBF_MEMOTYPE                              1056
+#define EDBF_MEMOTOOLONG                           1057
 
 HB_EXTERN_END
 

@@ -68,10 +68,13 @@ typedef struct _DBFHEADER
    BYTE   ulRecCount[ 4 ];
    BYTE   uiHeaderLen[ 2 ];
    BYTE   uiRecordLen[ 2 ];
-   BYTE   bReserved1[ 16 ];
-   BYTE   bHasTags;
+   BYTE   bReserved1[ 2 ];
+   BYTE   bTransaction;       /* 1-transaction begin */
+   BYTE   bEncrypted;         /* 1-encryptpted table */
+   BYTE   bReserved2[ 12 ];
+   BYTE   bHasTags;           /* bit filed: 1-production index, 2-memo file in VFP */
    BYTE   bCodePage;
-   BYTE   bReserved2[ 2 ];
+   BYTE   bReserved3[ 2 ];
 } DBFHEADER;
 
 typedef DBFHEADER * LPDBFHEADER;
@@ -84,14 +87,31 @@ typedef struct _DBFFIELD
 {
    BYTE bName[ 11 ];
    BYTE bType;
-   BYTE bReserved1[ 4 ];
+   BYTE bReserved1[ 4 ];      /* offset from record begin in FP */
    BYTE bLen;
    BYTE bDec;
-   BYTE bReserved2[ 13 ];
+   BYTE bFieldFlags;          /* 1-system column, 2-nullable, 4-binary */
+   BYTE bCounter[4];          /* autoincrement counter */
+   BYTE bStep;                /* autoincrement step */
+   BYTE bReserved2[ 7 ];
    BYTE bHasTag;
 } DBFFIELD;
 
 typedef DBFFIELD * LPDBFFIELD;
+
+
+
+/* SMT MEMO field */
+
+typedef struct _SMTFIELD
+{
+   BYTE     type[2];
+   BYTE     length[4];
+   BYTE     block[4];
+} SMTFIELD;
+
+typedef SMTFIELD * LPSMTFIELD;
+
 
 HB_EXTERN_END
 

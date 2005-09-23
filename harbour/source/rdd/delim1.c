@@ -59,20 +59,20 @@
 
 #define __PRG_SOURCE__ __FILE__
 
-HB_FUNC( _DELIMC );
+HB_FUNC( _DELIM );
 HB_FUNC( DELIM_GETFUNCTABLE );
 
 #undef HB_PRG_PCODE_VER
 #define HB_PRG_PCODE_VER HB_PCODE_VER
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
-{ "_DELIMC",            HB_FS_PUBLIC, {HB_FUNCNAME( _DELIMC )}, NULL },
+{ "_DELIM",            HB_FS_PUBLIC, {HB_FUNCNAME( _DELIM )}, NULL },
 { "DELIM_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DELIM_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 
-#if defined(HB_STATIC_STARTUP)
+#if defined(HB_PRAGMA_STARTUP)
    #pragma startup delim1__InitSymbols
-#elif defined(_MSC_VER)
+#elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -81,8 +81,6 @@ HB_INIT_SYMBOLS_END( delim1__InitSymbols )
    #endif
    static HB_$INITSYM hb_vm_auto_delim1__InitSymbols = delim1__InitSymbols;
    #pragma data_seg()
-#elif ! defined(__GNUC__)
-   #pragma startup delim1__InitSymbols
 #endif
 
 static RDDFUNCS delimSuper;
@@ -118,6 +116,7 @@ static RDDFUNCS delimTable = { hb_delimBof,
                                hb_delimRecCount,
                                hb_delimRecInfo,
                                hb_delimRecNo,
+                               hb_delimRecId,
                                hb_delimSetFieldExtent,
                                hb_delimAlias,
                                hb_delimClose,
@@ -164,6 +163,7 @@ static RDDFUNCS delimTable = { hb_delimBof,
                                hb_delimSetLocate,
                                hb_delimSetScope,
                                hb_delimSkipScope,
+                               hb_delimLocate,
                                hb_delimCompile,
                                hb_delimError,
                                hb_delimEvalBlock,
@@ -177,9 +177,11 @@ static RDDFUNCS delimTable = { hb_delimBof,
                                hb_delimPutValueFile,
                                hb_delimReadDBHeader,
                                hb_delimWriteDBHeader,
+                               hb_delimInit,
                                hb_delimExit,
                                hb_delimDrop,
                                hb_delimExists,
+                               hb_delimRddInfo,
                                hb_delimWhoCares
                              };
 
@@ -189,9 +191,7 @@ static RDDFUNCS delimTable = { hb_delimBof,
  */
 
 
-HB_FUNC( _DELIMC )
-{
-}
+HB_FUNC( _DELIM ) { ; }
 
 HB_FUNC( DELIM_GETFUNCTABLE )
 {

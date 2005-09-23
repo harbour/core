@@ -52,11 +52,11 @@
 
 #include "rddsys.ch"
 
-ANNOUNCE _SDF
+ANNOUNCE SDF
 
 init procedure SDFInit
 
-   REQUEST _SDFC
+   REQUEST _SDF
 
    rddRegister( "SDF", RDT_TRANSFER )
 

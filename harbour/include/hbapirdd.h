@@ -59,24 +59,33 @@
 
 HB_EXTERN_BEGIN
 
-#define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
-#define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
+#define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH          32
 
+#ifndef HARBOUR_MAX_RDD_ALIAS_LENGTH
+   #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
+#endif
+
+/* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
+#define HARBOUR_MAX_RDD_AREA_NUM                65535
+
+#define HARBOUR_MAX_RDD_RELTEXT_LENGTH            256
 
 /* RDD virtual machine integration functions */
 
-extern USHORT hb_rddInsertAreaNode( char *szDriver );
-extern USHORT  hb_rddGetCurrentFieldPos( char * szName );
-extern int     hb_rddGetCurrentWorkAreaNumber( void );
-void *         hb_rddGetCurrentWorkAreaPointer( void );
-extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
-extern ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
-extern ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
-extern ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern void    hb_rddShutDown( void );
+extern HB_EXPORT USHORT  hb_rddInsertAreaNode( char *szDriver );
+extern HB_EXPORT USHORT  hb_rddGetCurrentFieldPos( char * szName );
+extern HB_EXPORT void *  hb_rddAllocWorkAreaAlias( char * szAlias, int iArea );
+extern HB_EXPORT int     hb_rddGetCurrentWorkAreaNumber( void );
+extern HB_EXPORT void *  hb_rddGetCurrentWorkAreaPointer( void );
+extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
+extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
+extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
+extern HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT void    hb_rddShutDown( void );
+extern HB_EXPORT void    hb_rddReleaseCurrentArea( void );
 
 
 
@@ -169,6 +178,7 @@ typedef struct
    BOOL   fShared;         /* Share mode of the data store */
    BOOL   fReadonly;       /* Readonly mode of the data store */
    BYTE * cdpId;           /* Id of a codepage */
+   ULONG  ulConnection;    /* connection handler for RDDs which support it */
    void * lpdbHeader;      /* Pointer to a header of the data store */
 } DBOPENINFO;
 
@@ -191,16 +201,21 @@ typedef struct _DBORDERCONDINFO
    PHB_ITEM itmCobWhile;
    PHB_ITEM itmCobEval;
    LONG     lStep;
-   LONG     lStartRecno;
+   PHB_ITEM itmStartRecID;
    LONG     lNextCount;
-   LONG     lRecno;
+   PHB_ITEM itmRecID;
    BOOL     fRest;
    BOOL     fDescending;
+   BOOL     fScoped;
    BOOL     fAll;
    BOOL     fAdditive;
    BOOL     fUseCurrent;
    BOOL     fCustom;
    BOOL     fNoOptimize;
+   BOOL     fCompound;
+   BOOL     fUseFilter;
+   BOOL     fTemporary;
+   BOOL     fExclusive;
    void *   lpvCargo;
 } DBORDERCONDINFO;
 
@@ -262,16 +277,17 @@ typedef struct
    PHB_ITEM itmCobWhile; /* Code Block representation of a WHILE clause */
    PHB_ITEM lpstrWhile;  /* String representation of a WHILE clause */
    PHB_ITEM lNext;       /* NEXT record */
-   PHB_ITEM itmRecID;
+   PHB_ITEM itmRecID;    /* single record ID */
    PHB_ITEM fRest;       /* TRUE if start from the current record */
-   BOOL     fIgnoreFilter;
-   BOOL     fIncludeDeleted;
-   BOOL     fLast;
-   BOOL     fIgnoreDuplicates;
+   BOOL     fIgnoreFilter;       /* process should ignore any filter condition */
+   BOOL     fIncludeDeleted;     /* process should include deleted records */
+   BOOL     fLast;               /* last record of the current scope required */
+   BOOL     fIgnoreDuplicates;   /* process should ignore duplicate key value */
+   BOOL     fBackword;           /* skip backword */
+   BOOL     fOptimized;          /* Is (should be) scope optimized */
 } DBSCOPEINFO;
 
 typedef DBSCOPEINFO * LPDBSCOPEINFO;
-
 
 
 /*
@@ -289,7 +305,6 @@ typedef struct
 typedef DBORDSCOPEINFO * LPDBORDSCOPEINFO;
 
 
-
 /*
  *  DBFILTERINFO
  *  ------------
@@ -300,7 +315,9 @@ typedef struct
 {
    PHB_ITEM itmCobExpr;       /* Block representation of the FILTER expression */
    PHB_ITEM abFilterText;     /* String representation of FILTER expression */
-   BOOL     fFilter;
+   BOOL     fFilter;          /* flag to indicate that filter is active */
+   BOOL     fOptimized;       /* Is (should be) filter optimized */
+   void *   lpvCargo;         /* RDD specific extended filter info */
 } DBFILTERINFO;
 
 typedef DBFILTERINFO * LPDBFILTERINFO;
@@ -318,6 +335,7 @@ typedef struct _DBRELINFO
    PHB_ITEM            itmCobExpr;   /* Block representation of the relational SEEK key */
    PHB_ITEM            abKey;        /* String representation of the relational SEEK key */
    BOOL                isScoped;     /* Is this relation scoped */
+   BOOL                isOptimized;  /* Is relation optimized */
    struct _AREA      * lpaParent;    /* The parent of this relation */
    struct _AREA      * lpaChild;     /* The parents children */
    struct _DBRELINFO * lpdbriNext;   /* Next child or parent */
@@ -338,12 +356,17 @@ typedef DBRELINFO * LPDBRELINFO;
 
 typedef struct
 {
-   PHB_ITEM    itmBlock;  /* The block to be evaluated */
-   DBSCOPEINFO dbsci;     /* Scope info that limits the evaluation */
+   PHB_ITEM    itmBlock;   /* The block to be evaluated */
+   PHB_ITEM    abBlock;    /* String representation of evaluated block */
+   DBSCOPEINFO dbsci;      /* Scope info that limits the evaluation */
 } DBEVALINFO;
 
 typedef DBEVALINFO * LPDBEVALINFO;
 
+/*
+ * NOTE: If your redefine EVAL() method then you may use itmBlock as
+ * string ITEM to make some operations on server side of remote RDD.
+ */
 
 
 /*
@@ -476,6 +499,11 @@ typedef struct _FIELD
 
 typedef FIELD * LPFIELD;
 
+/*
+ * prototype for function to evaluate against index keys
+ * only for local RDDs (DBFNTX, DBFCDX, ...)
+ */
+typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, BYTE *, ULONG, void * );
 
 
 /*--------------------* WORKAREA structure *----------------------*/
@@ -491,6 +519,10 @@ typedef FIELD * LPFIELD;
 typedef struct _AREA
 {
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
+#if 0
+   /* I'll add this soon, Druzus */
+   struct _RDDFUNCS * lprfsSuper;/* Virtual super method table for this workarea */
+#endif
    USHORT uiArea;                /* The number assigned to this workarea */
    void * atomAlias;             /* Pointer to the alias symbol for this workarea */
    USHORT uiFieldExtent;         /* Total number of fields allocated */
@@ -551,7 +583,7 @@ typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONG * param );
 typedef USHORT ( * DBENTRYP_ULP  )( AREAP area, ULONG * param );
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param );
-typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, BOOL p3 );
+typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT p3 );
 typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, ULONG lRecord );
 typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
@@ -559,13 +591,13 @@ typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM
 typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2 );
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2 );
-typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2 );
+typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, BOOL * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */
 
-typedef USHORT ( * DBENTRYP_I0   )( void );
-typedef USHORT ( * DBENTRYP_I1   )( PHB_ITEM p1 );
-typedef USHORT ( * DBENTRYP_I2   )( PHB_ITEM p1, PHB_ITEM p2 );
+typedef USHORT ( * DBENTRYP_R    )( struct _RDDNODE * pRDD );
+typedef USHORT ( * DBENTRYP_RVV  )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2 );
+typedef USHORT ( * DBENTRYP_RSLV )( struct _RDDNODE * pRDD, USHORT index, ULONG p1, PHB_ITEM p2 );
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef struct _RDDFUNCS
@@ -607,7 +639,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    recall;            /* Undelete the current record. */
    DBENTRYP_ULP  reccount;          /* Obtain number of records in WorkArea. */
    DBENTRYP_ISI  recInfo;           /*  */
-   DBENTRYP_I    recno;             /* Obtain physical row number at current WorkArea cursor position. */
+   DBENTRYP_ULP  recno;             /* Obtain physical row number at current WorkArea cursor position. */
+   DBENTRYP_I    recid;             /* Obtain physical row ID at current WorkArea cursor position. */
    DBENTRYP_S    setFieldExtent;    /* Establish the extent of the array of fields for a WorkArea. */
 
 
@@ -649,7 +682,7 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_OI   orderListAdd;      /*  */
    DBENTRYP_V    orderListClear;    /*  */
-   DBENTRYP_VP   orderListDelete;   /*  */
+   DBENTRYP_OI   orderListDelete;   /*  */
    DBENTRYP_OI   orderListFocus;    /*  */
    DBENTRYP_V    orderListRebuild;  /*  */
    DBENTRYP_VOI  orderCondition;    /*  */
@@ -670,6 +703,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_VLO  setLocate;         /*-Set the locate scope for the specified WorkArea. */
    DBENTRYP_VOS  setScope;          /*  */
    DBENTRYP_VPL  skipScope;         /*  */
+   DBENTRYP_B    locate;            /* reposition cursor to postions set by setLocate */
 
 
    /* Miscellaneous */
@@ -683,7 +717,7 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_VSP  rawlock;           /* Perform a lowlevel network lock in the specified WorkArea. */
    DBENTRYP_VL   lock;              /* Perform a network lock in the specified WorkArea. */
-   DBENTRYP_UL   unlock;            /* Release network locks in the specified WorkArea. */
+   DBENTRYP_I    unlock;            /* Release network locks in the specified WorkArea. */
 
 
    /* Memofile functions */
@@ -692,7 +726,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_VP   createMemFile;     /* Create a memo file in the WorkArea. */
    DBENTRYP_SVPB getValueFile;      /*  */
    DBENTRYP_VP   openMemFile;       /* Open a memo file in the specified WorkArea. */
-   DBENTRYP_SVP  putValueFile;      /*  */
+   DBENTRYP_SVPB putValueFile;      /*  */
 
 
    /* Database file header handling */
@@ -702,9 +736,11 @@ typedef struct _RDDFUNCS
 
 
    /* non WorkArea functions       */
-   DBENTRYP_I0   exit;              /*  */
-   DBENTRYP_I1   drop;              /* remove table */
-   DBENTRYP_I2   exists;            /* check if table exist */
+   DBENTRYP_R    init;              /* init RDD after registration */
+   DBENTRYP_R    exit;              /* unregister RDD */
+   DBENTRYP_RVV  drop;              /* remove table */
+   DBENTRYP_RVV  exists;            /* check if table exist */
+   DBENTRYP_RSLV rddInfo;           /* RDD info */
 
    /* Special and reserved methods */
 
@@ -720,11 +756,13 @@ typedef RDDFUNCS * PRDDFUNCS;
 typedef struct _RDDNODE
 {
    char szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ]; /* Name of RDD */
-   USHORT uiType;                                        /* Type of RDD */
-   RDDFUNCS pTable;                                      /* Table of functions */
-   RDDFUNCS pSuperTable;                                 /* Table of super functions */
-   USHORT uiAreaSize;                                    /* Size of the WorkArea */
-   struct _RDDNODE * pNext;                              /* Next RDD in the list */
+   USHORT   uiType;           /* Type of RDD */
+   USHORT   rddID;            /* Type of RDD */
+   RDDFUNCS pTable;           /* Table of functions */
+   RDDFUNCS pSuperTable;      /* Table of super functions */
+   USHORT   uiAreaSize;       /* Size of the WorkArea */
+   void     *lpvCargo;        /* RDD specific extended data, if used then
+                                 RDD should free it in EXIT() non WA method */
 } RDDNODE;
 
 typedef RDDNODE * LPRDDNODE;
@@ -750,7 +788,7 @@ typedef RDDNODE * LPRDDNODE;
 /* Data management */
 
 #define SELF_ADDFIELD(w, ip)            ((*(w)->lprfsHost->addField)(w, ip))
-#define SELF_APPEND(w,l)                ((*(w)->lprfsHost->append)(w,l))
+#define SELF_APPEND(w, b)               ((*(w)->lprfsHost->append)(w, b))
 #define SELF_CREATEFIELDS(w, v)         ((*(w)->lprfsHost->createFields)(w, v))
 #define SELF_DELETE(w)                  ((*(w)->lprfsHost->deleterec)(w))
 #define SELF_DELETED(w, sp)             ((*(w)->lprfsHost->deleted)(w, sp))
@@ -767,9 +805,10 @@ typedef RDDNODE * LPRDDNODE;
 #define SELF_PUTVALUE(w, i, v)          ((*(w)->lprfsHost->putValue)(w, i, v))
 #define SELF_PUTREC(w, bp)              ((*(w)->lprfsHost->putRec)(w, bp))
 #define SELF_RECALL(w)                  ((*(w)->lprfsHost->recall)(w))
-#define SELF_RECCOUNT(w, sp)            ((*(w)->lprfsHost->reccount)(w, sp))
+#define SELF_RECCOUNT(w, lp)            ((*(w)->lprfsHost->reccount)(w, lp))
 #define SELF_RECINFO(w,v1,i,v2)         ((*(w)->lprfsHost->recInfo)(w,v1,i,v2))
-#define SELF_RECNO(w, i)                ((*(w)->lprfsHost->recno)(w, i))
+#define SELF_RECNO(w, lp)               ((*(w)->lprfsHost->recno)(w, lp))
+#define SELF_RECID(w, i)                ((*(w)->lprfsHost->recid)(w, i))
 #define SELF_SETFIELDEXTENT(w, s)       ((*(w)->lprfsHost->setFieldExtent)(w, s))
 
 
@@ -840,6 +879,7 @@ typedef RDDNODE * LPRDDNODE;
 #define SELF_SETLOCATE(w, ip)           ((*(w)->lprfsHost->setLocate)(w, ip))
 #define SELF_SETSCOPE(w, ip)            ((*(w)->lprfsHost->setScope)(w, ip))
 #define SELF_SKIPSCOPE(w, bp, l)        ((*(w)->lprfsHost->skipScope)(w, bp, l))
+#define SELF_LOCATE(w, b)               ((*(w)->lprfsHost->locate)(w, b))
 
 
 /* Miscellaneous */
@@ -854,16 +894,16 @@ typedef RDDNODE * LPRDDNODE;
 #define SELF_GETLOCKS(w, g)             ((*(w)->lprfsHost->info)(w, DBI_GETLOCKARRAY, g))
 #define SELF_RAWLOCK(w, i, l)           ((*(w)->lprfsHost->rawlock)(w, i, l))
 #define SELF_LOCK(w, sp)                ((*(w)->lprfsHost->lock)(w, sp))
-#define SELF_UNLOCK(w, l)               ((*(w)->lprfsHost->unlock)(w, l))
+#define SELF_UNLOCK(w, i)               ((*(w)->lprfsHost->unlock)(w, i))
 
 
 /* Memofile functions */
 
 #define SELF_CLOSEMEMFILE(w)            ((*(w)->lprfsHost->closeMemFile)(w))
 #define SELF_CREATEMEMFILE(w,bp)        ((*(w)->lprfsHost->createMemFile)(w,bp))
-#define SELF_GETVALUEFILE(w,i,bp,b)     ((*(w)->lprfsHost->getValueFile)(w,i,bp,b))
+#define SELF_GETVALUEFILE(w,i,bp,u)     ((*(w)->lprfsHost->getValueFile)(w,i,bp,u))
 #define SELF_OPENMEMFILE(w,bp)          ((*(w)->lprfsHost->openMemFile)(w,bp))
-#define SELF_PUTVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->putValueFile)(w,i,bp))
+#define SELF_PUTVALUEFILE(w,i,bp,u)     ((*(w)->lprfsHost->putValueFile)(w,i,bp,u))
 
 
 /* Database file header handling */
@@ -881,11 +921,14 @@ typedef RDDNODE * LPRDDNODE;
 #define SELF_GETDELIM(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_GETDELIMITER, fp))
 #define SELF_TABLEEXT(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
 
+#define SELF_RDDNODE(w)                 hb_rddGetNode((w)->rddID)
 
 /* non WorkArea functions */
-#define SELF_EXIT(r)                    ((*(r)->pTable.exit)())
-#define SELF_DROP(r, i)                 ((*(r)->pTable.drop)(i))
-#define SELF_EXISTS(r, it, ii)          ((*(r)->pTable.exists)(it,ii))
+#define SELF_INIT(r)                    ((*(r)->pTable.init)(r))
+#define SELF_EXIT(r)                    ((*(r)->pTable.exit)(r))
+#define SELF_DROP(r, it, ii)            ((*(r)->pTable.drop)(r, it, ii))
+#define SELF_EXISTS(r, it, ii)          ((*(r)->pTable.exists)(r, it, ii))
+#define SELF_RDDINFO(r, i, l, g)        ((*(r)->pTable.rddInfo)(r, i, l, g))
 
 
 /*--------------------* SUPER Methods *------------------------*/
@@ -909,7 +952,7 @@ typedef RDDNODE * LPRDDNODE;
 /* Data management */
 
 #define SUPER_ADDFIELD(w, ip)           ((*(SUPERTABLE)->addField)(w, ip))
-#define SUPER_APPEND(w,l)               ((*(SUPERTABLE)->append)(w,l))
+#define SUPER_APPEND(w, b)              ((*(SUPERTABLE)->append)(w, b))
 #define SUPER_CREATEFIELDS(w, v)        ((*(SUPERTABLE)->createFields)(w, v))
 #define SUPER_DELETE(w)                 ((*(SUPERTABLE)->deleterec)(w))
 #define SUPER_DELETED(w, sp)            ((*(SUPERTABLE)->deleted)(w, sp))
@@ -926,9 +969,10 @@ typedef RDDNODE * LPRDDNODE;
 #define SUPER_PUTVALUE(w, i, v)         ((*(SUPERTABLE)->putValue)(w, i, v))
 #define SUPER_PUTREC(w, bp)             ((*(SUPERTABLE)->putRec)(w, bp))
 #define SUPER_RECALL(w)                 ((*(SUPERTABLE)->recall)(w))
-#define SUPER_RECCOUNT(w, sp)           ((*(SUPERTABLE)->reccount)(w, sp))
+#define SUPER_RECCOUNT(w, lp)           ((*(SUPERTABLE)->reccount)(w, lp))
 #define SUPER_RECINFO(w,v1,i,v2)        ((*(SUPERTABLE)->recInfo)(w,v1,i,v2))
-#define SUPER_RECNO(w, sp)              ((*(SUPERTABLE)->recno)(w, sp))
+#define SUPER_RECNO(w, lp)              ((*(SUPERTABLE)->recno)(w, lp))
+#define SUPER_RECID(w, i)               ((*(SUPERTABLE)->recid)(w, i))
 #define SUPER_SETFIELDEXTENT(w, s)      ((*(SUPERTABLE)->setFieldExtent)(w, s))
 
 
@@ -999,6 +1043,7 @@ typedef RDDNODE * LPRDDNODE;
 #define SUPER_SETLOCATE(w, ip)          ((*(SUPERTABLE)->setLocate)(w, ip))
 #define SUPER_SETSCOPE(w, ip)           ((*(SUPERTABLE)->setScope)(w, ip))
 #define SUPER_SKIPSCOPE(w, bp, l)       ((*(SUPERTABLE)->skipScope)(w, bp, l))
+#define SUPER_LOCATE(w, b)              ((*(SUPERTABLE)->locate)(w, b))
 
 
 /* Miscellaneous */
@@ -1013,16 +1058,16 @@ typedef RDDNODE * LPRDDNODE;
 #define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
 #define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
 #define SUPER_LOCK(w, sp)               ((*(SUPERTABLE)->lock)(w, sp))
-#define SUPER_UNLOCK(w,l)               ((*(SUPERTABLE)->unlock)(w,l))
+#define SUPER_UNLOCK(w, i)              ((*(SUPERTABLE)->unlock)(w, i))
 
 
 /* Memofile functions */
 
 #define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
 #define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
-#define SUPER_GETVALUEFILE(w,i,bp,b)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,b))
+#define SUPER_GETVALUEFILE(w,i,bp,u)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,u))
 #define SUPER_OPENMEMFILE(w,bp)         ((*(SUPERTABLE)->openMemFile)(w,bp))
-#define SUPER_PUTVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->putValueFile)(w,i,bp))
+#define SUPER_PUTVALUEFILE(w,i,bp,u)    ((*(SUPERTABLE)->putValueFile)(w,i,bp,u))
 
 
 /* Database file header handling */
@@ -1041,23 +1086,30 @@ typedef RDDNODE * LPRDDNODE;
 #define SUPER_TABLEEXT(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
 /* non WorkArea functions */
-#define SUPER_EXIT()                    ((*(SUPERTABLE)->exit)())
-#define SUPER_DROP(i)                   ((*(SUPERTABLE)->drop)(i))
-#define SUPER_EXISTS(it, ii)            ((*(SUPERTABLE)->exists)(it, ii))
+#define SUPER_INIT(r)                   ((*(SUPERTABLE)->init)(r))
+#define SUPER_EXIT(r)                   ((*(SUPERTABLE)->exit)(r))
+#define SUPER_DROP(r, it, ii)           ((*(SUPERTABLE)->drop)(r, it, ii))
+#define SUPER_EXISTS(r, it, ii)         ((*(SUPERTABLE)->exists)(r, it, ii))
+#define SUPER_RDDINFO(r, i, l, g)       ((*(SUPERTABLE)->rddInfo)(r, i, l, g))
+
+#define ISSUPER_INIT(r)                 ((SUPERTABLE)->init != NULL)
+#define ISSUPER_EXIT(r)                 ((SUPERTABLE)->exit != NULL)
 
 /*
  *  PROTOTYPES
  *  ----------
  */
-extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
-extern ERRCODE hb_rddDisinherit( BYTE * drvName );
-extern USHORT  hb_rddExtendType( USHORT fieldType );
-extern USHORT  hb_rddFieldType( USHORT extendType );
+extern ERRCODE   HB_EXPORT hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
+extern ERRCODE   HB_EXPORT hb_rddDisinherit( BYTE * drvName );
+extern USHORT    HB_EXPORT hb_rddExtendType( USHORT fieldType );
+extern USHORT    HB_EXPORT hb_rddFieldType( USHORT extendType );
+extern LPRDDNODE HB_EXPORT hb_rddGetNode( USHORT uiNode );
 
 typedef short (* WACALLBACK )( AREA *, int );
-extern ERRCODE hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
-USHORT hb_rddFieldIndex( AREAP pArea, char * szName);
-ERRCODE hb_rddGetTempAlias( char * szAliasTmp );
+extern ERRCODE HB_EXPORT hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
+extern USHORT  HB_EXPORT hb_rddFieldIndex( AREAP pArea, char * szName );
+extern USHORT  HB_EXPORT hb_rddFieldExpIndex( AREAP pArea, char * szField );
+extern ERRCODE HB_EXPORT hb_rddGetTempAlias( char * szAliasTmp );
 
 HB_EXTERN_END
 

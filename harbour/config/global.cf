@@ -11,6 +11,8 @@ HB_DB_DRIVERS=\
 	dbfcdx \
 	dbffpt \
 	dbfdbt \
+	hbsix \
+	hsx \
 
 ifeq ($(HB_BIN_COMPILE),)
 HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(HB_ARCH)

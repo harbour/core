@@ -725,6 +725,36 @@ PHB_ITEM hb_errRT_New_Subst(
    return pError;
 }
 
+PHB_ITEM hb_errRT_SubstParams( char *szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   PHB_ITEM pRetVal;
+   PHB_ITEM pError;
+   PHB_ITEM pArray;
+
+   HB_TRACE_STEALTH( HB_TR_DEBUG, ( "hb_errRT_SubstParams()") );
+
+   pError = hb_errRT_New_Subst( ES_ERROR, szSubSystem ? szSubSystem : HB_ERR_SS_BASE,
+               ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+
+   pArray = hb_arrayFromParams( hb_stack.pBase );
+
+   /* Assign the new array to the object data item. */
+   hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
+   hb_vmPush( pError );
+   hb_vmPush( pArray );
+   hb_vmSend( 1 );
+
+   hb_itemRelease( pArray );
+
+   /* Ok, launch... */
+   pRetVal = hb_errLaunchSubst( pError );
+
+   hb_itemRelease( pError );
+
+   return pRetVal;
+}
+
+
 HB_FUNC( __ERRRT_BASE )
 {
    hb_errRT_BASE( ( ULONG ) hb_parnl( 1 ),
@@ -979,6 +1009,20 @@ USHORT hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
    uiAction = hb_errLaunch( pError );
 
    hb_errRelease( pError );
+
+   return uiAction;
+}
+
+USHORT hb_errRT_DBCMD_Ext( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags )
+{
+   USHORT uiAction;
+   PHB_ITEM pError;
+
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_DBCMD, ulGenCode, ulSubCode, (char *)szDescription, (char *)szOperation, 0, uiFlags );
+
+   uiAction = hb_errLaunch( pError );
+
+   hb_itemRelease( pError );
 
    return uiAction;
 }

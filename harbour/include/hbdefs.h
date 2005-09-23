@@ -690,6 +690,21 @@ typedef unsigned long HB_COUNTER;
                                        (( BYTE * )( p ))[1] = ( BYTE )( (w) >>  8 ); \
                                        (( BYTE * )( p ))[2] = ( BYTE )( (w) >> 16 ); \
                                     } while ( 0 )
+#define HB_GET_BE_INT24( p )        ( ( INT32 ) \
+                                      ( ( INT32 ) (( BYTE * )( p ))[2] | \
+                                        ( INT32 ) (( BYTE * )( p ))[1] <<  8 | \
+                                        ( INT32 ) (( BYTE * )( p ))[0] << 16 | \
+                                        ( INT32 ) ((( BYTE * )( p ))[0] & 0x80 ? 0xFF : 0x00 ) << 24 ) )
+#define HB_GET_BE_UINT24( p )       ( ( UINT32 ) \
+                                      ( ( UINT32 ) (( BYTE * )( p ))[2] | \
+                                        ( UINT32 ) (( BYTE * )( p ))[1] <<  8 | \
+                                        ( UINT32 ) (( BYTE * )( p ))[0] << 16 ) )
+#define HB_PUT_BE_UINT24( p, w )    do { \
+                                       (( BYTE * )( p ))[2] = ( BYTE )( w ); \
+                                       (( BYTE * )( p ))[1] = ( BYTE )( (w) >>  8 ); \
+                                       (( BYTE * )( p ))[0] = ( BYTE )( (w) >> 16 ); \
+                                    } while ( 0 )
+
 
 
 #if defined( HB_PDP_ENDIAN )

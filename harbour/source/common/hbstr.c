@@ -218,6 +218,28 @@ HB_EXPORT char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
    return pBuf;
 }
 
+char HB_EXPORT * hb_strndup( const char * pszText, ULONG ulLen )
+{
+   char * pszDup;
+   ULONG ul;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%s, %ld)", pszText, ulLen));
+
+   ul = 0;
+   pszDup = ( char * ) pszText;
+   while( ulLen-- && *pszDup++ )
+   {
+      ++ul;
+   }
+
+   pszDup = ( char * ) hb_xgrab( ul + 1 );
+   memcpy( pszDup, pszText, ul );
+   pszDup[ ul ] = '\0';
+
+   return pszDup;
+}
+
+
 /* This function copies and converts szText to upper case.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
@@ -598,3 +620,78 @@ double hb_strVal( const char * szText, ULONG ulLen )
       dVal = ( double ) lVal;
    return dVal;
 }
+
+/*
+AJ: 2004-02-23
+Concatenates multiple strings into a single result.
+Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
+*/
+char HB_EXPORT * hb_xstrcat ( char *szDest, const char *szSrc, ... )
+{
+   char *szResult = szDest;
+   va_list va;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcat(%p, %p, ...)", szDest, szSrc));
+
+   while( *szDest )
+      szDest++;
+
+   va_start(va, szSrc);
+
+   while( szSrc )
+   {
+      while ( *szSrc )
+         *szDest++ = *szSrc++;
+      szSrc = va_arg ( va, char* );
+   }
+
+   *szDest = '\0';
+   va_end ( va );
+   return ( szResult );
+}
+
+/*
+AJ: 2004-02-23
+Concatenates multiple strings into a single result.
+Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
+Returns szDest.
+Any existing contents of szDest are cleared. If the szDest buffer is NULL,
+allocates a new buffer with the required length and returns that. The
+buffer is allocated using hb_xgrab(), and should eventually be freed
+using hb_xfree().
+*/
+char HB_EXPORT * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
+{
+   const char *szSrc_Ptr;
+   va_list va;
+   size_t dest_size;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcpy(%p, %p, ...)", szDest, szSrc));
+
+   if (szDest == NULL)
+   {
+       va_start (va, szSrc);
+       szSrc_Ptr = szSrc;
+       dest_size = 1;
+       while (szSrc_Ptr)
+       {
+          dest_size += strlen (szSrc_Ptr);
+          szSrc_Ptr = va_arg (va, char *);
+       }
+       va_end (va);
+
+       szDest = (char *) hb_xgrab( dest_size );
+   }
+
+   va_start (va, szSrc);
+   szSrc_Ptr  = szSrc;
+   szDest [0] = '\0';
+   while (szSrc_Ptr)
+   {
+      hb_xstrcat (szDest, szSrc_Ptr, NULL );
+      szSrc_Ptr = va_arg (va, char *);
+   }
+   va_end (va);
+   return (szDest);
+}
+

@@ -68,8 +68,8 @@ HB_EXTERN_BEGIN
 /* MEMO constants and defaults */
 #define DBT_MEMOEXT                             ".dbt"
 #define DBT_BLOCKSIZE                              512
-#define DBT_LOCKPOS                        0x00000001L
-#define DBT_LOCKSIZE                       0x7FFFFFFFL
+#define DBT_LOCKPOS                        0x00000000L
+#define DBT_LOCKSIZE                       0x00000001L
 
 /*
  *  DBFDBT WORKAREA
@@ -124,6 +124,7 @@ static ERRCODE hb_dbtPutValue( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_dbtRecCount                             NULL
 #define hb_dbtRecInfo                              NULL
 #define hb_dbtRecNo                                NULL
+#define hb_dbtRecId                                NULL
 #define hb_dbtSetFieldExtent                       NULL
 #define hb_dbtAlias                                NULL
 #define hb_dbtClose                                NULL
@@ -170,6 +171,7 @@ static ERRCODE hb_dbtSysName( DBTAREAP pArea, BYTE * pBuffer );
 #define hb_dbtSetLocate                            NULL
 #define hb_dbtSetScope                             NULL
 #define hb_dbtSkipScope                            NULL
+#define hb_dbtLocate                               NULL
 #define hb_dbtCompile                              NULL
 #define hb_dbtError                                NULL
 #define hb_dbtEvalBlock                            NULL
@@ -181,11 +183,13 @@ static ERRCODE hb_dbtCreateMemFile( DBTAREAP pArea, LPDBOPENINFO pCreateInfo );
 #define hb_dbtGetValueFile                         NULL
 static ERRCODE hb_dbtOpenMemFile( DBTAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_dbtPutValueFile                         NULL
-static ERRCODE hb_dbtReadDBHeader( DBTAREAP pArea );
-static ERRCODE hb_dbtWriteDBHeader( DBTAREAP pArea );
+#define hb_dbtReadDBHeader                         NULL
+#define hb_dbtWriteDBHeader                        NULL
+#define hb_dbtInit                                 NULL
 #define hb_dbtExit                                 NULL
 #define hb_dbtDrop                                 NULL
 #define hb_dbtExists                               NULL
+static ERRCODE hb_dbtRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_dbtWhoCares                             NULL
 
 HB_EXTERN_END

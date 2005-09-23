@@ -56,6 +56,7 @@
 #include "hbsetup.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
+#include "hbdbf.h"
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
 #endif
@@ -64,39 +65,68 @@ HB_EXTERN_BEGIN
 
 /* DBF default file extensions */
 #define DBF_TABLEEXT                      ".dbf"
+
 /* DBF locking schemes */
-#define DBF_LOCKPOS_CLIP                  1000000000L
-#define DBF_LOCKPOS_CL53                  1000000000L
-#define DBF_LOCKPOS_VFP                   0x40000000L
-#define DBF_LOCKPOS_VFPX                  0x7ffffffeL
+#define DBF_LOCKPOS_CLIP                  1000000000UL
+#define DBF_LOCKPOS_CL53                  1000000000UL
+#define DBF_LOCKPOS_VFP                   0x40000000UL
+#define DBF_LOCKPOS_VFPX                  0x7ffffffeUL
+#define DBF_LOCKPOS_CL53EXT               4000000000UL
+#define DBF_LOCKPOS_XHB64                 HB_LL( 0x7FFFFFFF00000001 )
 
 #define DBF_LOCKDIR_CLIP                  1
 #define DBF_LOCKDIR_CL53                  1
 #define DBF_LOCKDIR_VFP                   2  /* lock forward at at record offset */
 #define DBF_LOCKDIR_VFPX                  -1
+#define DBF_LOCKDIR_CL53EXT               1
+#define DBF_LOCKDIR_XHB64                 1
 
-#define DBF_FLCKSIZE_CLIP                 1000000000L
-#define DBF_FLCKSIZE_CL53                 1000000000L
-#define DBF_FLCKSIZE_VFP                  0x3ffffffdL
-#define DBF_FLCKSIZE_VFPX                 0x07ffffffL
+#define DBF_FLCKSIZE_CLIP                 1000000000UL
+#define DBF_FLCKSIZE_CL53                 1000000000UL
+#define DBF_FLCKSIZE_VFP                  0x3ffffffdUL
+#define DBF_FLCKSIZE_VFPX                 0x07ffffffUL
+#define DBF_FLCKSIZE_CL53EXT              294967295UL
+#define DBF_FLCKSIZE_XHB64                0x7ffffffeUL
 
-#define DBF_RLCKSIZE_CLIP                 1L
-#define DBF_RLCKSIZE_CL53                 1L
-#define DBF_RLCKSIZE_VFP                  1L
-#define DBF_RLCKSIZE_VFPX                 1L
+#define DBF_RLCKSIZE_CLIP                 1UL
+#define DBF_RLCKSIZE_CL53                 1UL
+#define DBF_RLCKSIZE_VFP                  1UL
+#define DBF_RLCKSIZE_VFPX                 1UL
+#define DBF_RLCKSIZE_CL53EXT              1UL
+#define DBF_RLCKSIZE_XHB64                1UL
 
-#define IDX_LOCKPOS_CLIP                  1000000000L
-#define IDX_LOCKPOS_CL53                  0xfffeffffL
-#define IDX_LOCKPOS_VFP                   0x7ffffffeL
+#define IDX_LOCKPOS_CLIP                  1000000000UL
+#define IDX_LOCKPOS_CL53                  0xfffeffffUL
+#define IDX_LOCKPOS_VFP                   0x7ffffffeUL
+#define IDX_LOCKPOS_CL53EXT               0xfffeffffUL
+#define IDX_LOCKPOS_XHB64                 HB_LL( 0x7FFFFFFF00000001 )
 
-#define IDX_LOCKPOOL_CLIP                 0L
-#define IDX_LOCKPOOL_CL53                 0x00010000L
-#define IDX_LOCKPOOL_VFP                  0L
+#define IDX_LOCKPOOL_CLIP                 0UL
+#define IDX_LOCKPOOL_CL53                 0x00010000UL
+#define IDX_LOCKPOOL_VFP                  0UL
+#define IDX_LOCKPOOL_CL53EXT              0x00010000UL
+#define IDX_LOCKPOOL_XHB64                0UL
 
-#ifdef OS_UNIX_COMPATIBLE
-#define DBF_EXLUSIVE_LOCKPOS              0x7fffffffL
-#define DBF_EXLUSIVE_LOCKSIZE             1L
-#endif
+/*
+ * Private DBF* RDD data kept in RDDNODE
+ */
+typedef struct _DBFDATA
+{
+   char     szTableExt[ HB_MAX_FILE_EXT + 1 ];
+   char     szIndexExt[ HB_MAX_FILE_EXT + 1 ];
+   char     szMemoExt[ HB_MAX_FILE_EXT + 1 ];
+
+   BYTE     bLockType;  //= 0;
+   BYTE     bTableType; //= DB_DBF_STD;
+   BYTE     bCryptType; //= DB_CRYPT_NONE;
+   BYTE     bMemoType;  // = DB_MEMO_FPT;
+   BYTE     bMemoExtType;// = DB_MEMOVER_FLEX;
+   USHORT   uiMemoBlockSize; // = 0;
+} DBFDATA;
+
+typedef DBFDATA * LPDBFDATA;
+
+
 
 /*
  *  DBF WORKAREA
@@ -138,43 +168,47 @@ typedef struct _DBFAREA
    *  example.
    */
 
-   FHANDLE hDataFile;            /* Data file handle */
-   FHANDLE hMemoFile;            /* Memo file handle */
-   USHORT uiHeaderLen;           /* Size of header */
-   USHORT uiRecordLen;           /* Size of record */
-   ULONG ulRecCount;             /* Total records */
-   char * szDataFileName;        /* Name of data file */
-   char * szMemoFileName;        /* Name of memo file */
-   USHORT uiMemoBlockSize;       /* Size of memo block */
-   BYTE bMemoType;               /* MEMO type used in DBF memo fields */
-   BOOL fHasMemo;                /* WorkArea with Memo fields */
-   BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BOOL fDataFlush;              /* data was written to DBF and not commited */
-   BOOL fMemoFlush;              /* data was written to MEMO and not commited */
-   BYTE bVersion;                /* DBF version ID byte */
-   BYTE bCodePage;               /* DBF codepage ID */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadonly;               /* Read only file */
-   USHORT * pFieldOffset;        /* Pointer to field offset array */
-   BYTE * pRecord;               /* Buffer of record data */
-   BOOL fValidBuffer;            /* State of buffer */
-   BOOL fPositioned;             /* Positioned record */
-   ULONG ulRecNo;                /* Current record */
-   BOOL fRecordChanged;          /* Record changed */
-   BOOL fAppend;                 /* TRUE if new record is added */
-   BOOL fDeleted;                /* TRUE if record is deleted */
-   BOOL fUpdateHeader;           /* Update header of file */
-   BOOL fFLocked;                /* TRUE if file is locked */
-   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
-   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
-   BYTE bYear;                   /* Last update */
-   BYTE bMonth;
-   BYTE bDay;
-   BYTE bLockType;               /* Type of locking shemes */
-   ULONG * pLocksPos;            /* List of records locked */
-   ULONG ulNumLocksPos;          /* Number of records locked */
+   FHANDLE  hDataFile;              /* Data file handle */
+   FHANDLE  hMemoFile;              /* Memo file handle */
+   char *   szDataFileName;         /* Name of data file */
+   char *   szMemoFileName;         /* Name of memo file */
+   USHORT   uiHeaderLen;            /* Size of header */
+   USHORT   uiRecordLen;            /* Size of record */
+   USHORT   uiMemoBlockSize;        /* Size of memo block */
+   USHORT   uiMemoVersion;          /* MEMO file version */
+   DBFHEADER dbfHeader;             /* DBF header buffer */
+   BYTE     bTableType;             /* DBF type */
+   BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
+   BYTE     bLockType;              /* Type of locking shemes */
+   BYTE     bCryptType;             /* Type of used encryption */
+   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   BYTE *   pRecord;                /* Buffer of record data */
+   ULONG    ulRecCount;             /* Total records */
+   ULONG    ulRecNo;                /* Current record */
+   BOOL     fAutoInc;               /* WorkArea with auto increment fields */
+   BOOL     fHasMemo;               /* WorkArea with Memo fields */
+   BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fDataFlush;             /* data was written to DBF and not commited */
+   BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
+   BOOL     fShared;                /* Shared file */
+   BOOL     fReadonly;              /* Read only file */
+   BOOL     fValidBuffer;           /* State of buffer */
+   BOOL     fPositioned;            /* Positioned record */
+   BOOL     fRecordChanged;         /* Record changed */
+   BOOL     fAppend;                /* TRUE if new record is added */
+   BOOL     fDeleted;               /* TRUE if record is deleted */
+   BOOL     fEncrypted;             /* TRUE if record is encrypted */
+   BOOL     fTableEncrypted;        /* TRUE if table is encrypted */
+   BOOL     fUpdateHeader;          /* Update header of file */
+   BOOL     fFLocked;               /* TRUE if file is locked */
+   BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
+   ULONG *  pLocksPos;              /* List of records locked */
+   ULONG    ulNumLocksPos;          /* Number of records locked */
+   BYTE *   pCryptKey;              /* Pointer to encryption key */
+   PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
+   PHB_CODEPAGE cdPage;             /* Area's codepage pointer  */
 #endif
 } DBFAREA;
 
@@ -223,7 +257,8 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 static ERRCODE hb_dbfRecall( DBFAREAP pArea );
 static ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount );
 static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType, PHB_ITEM pInfo );
-static ERRCODE hb_dbfRecNo( DBFAREAP pArea, PHB_ITEM pRecNo );
+static ERRCODE hb_dbfRecNo( DBFAREAP pArea, ULONG * pRecNo );
+static ERRCODE hb_dbfRecId( DBFAREAP pArea, PHB_ITEM pRecNo );
 static ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent );
 #define hb_dbfAlias                                NULL
 static ERRCODE hb_dbfClose( DBFAREAP pArea );
@@ -236,10 +271,10 @@ static ERRCODE hb_dbfStructSize( DBFAREAP pArea, USHORT * uiSize );
 static ERRCODE hb_dbfSysName( DBFAREAP pArea, BYTE * pBuffer );
 #define hb_dbfEval                                 NULL
 static ERRCODE hb_dbfPack( DBFAREAP pArea );
-#define hb_dbfPackRec                              NULL
+static ERRCODE hb_dbfPackRec( DBFAREAP pArea, ULONG ulRecNo, BOOL *fWritten );
 static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo );
 static ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo );
-static ERRCODE hb_dbfTransRec( DBFAREAP pArea, LPDBTRANSINFO pTransInfo );
+#define hb_dbfTransRec                             NULL
 static ERRCODE hb_dbfZap( DBFAREAP pArea );
 static ERRCODE hb_dbfChildEnd( DBFAREAP pArea, LPDBRELINFO pRelInfo );
 static ERRCODE hb_dbfChildStart( DBFAREAP pArea, LPDBRELINFO pRelInfo );
@@ -270,33 +305,44 @@ static ERRCODE hb_dbfSetFilter( DBFAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_dbfSetLocate                            NULL
 #define hb_dbfSetScope                             NULL
 #define hb_dbfSkipScope                            NULL
+#define hb_dbfLocate                               NULL
 #define hb_dbfCompile                              NULL
 #define hb_dbfError                                NULL
 #define hb_dbfEvalBlock                            NULL
 static ERRCODE hb_dbfRawLock( DBFAREAP pArea, USHORT uiAction, ULONG lRecNo );
 static ERRCODE hb_dbfLock( DBFAREAP pArea, LPDBLOCKINFO pLockInfo );
-static ERRCODE hb_dbfUnLock( DBFAREAP pArea, ULONG ulRecNo );
+static ERRCODE hb_dbfUnLock( DBFAREAP pArea, PHB_ITEM pRecNo );
 #define hb_dbfCloseMemFile                         NULL
 static ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo );
-#define hb_dbfGetValueFile                         NULL
+static ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
 static ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
-#define hb_dbfPutValueFile                         NULL
+static ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode );
+
 static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea );
 static ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea );
 
-#define hb_dbfExit                         NULL
-static ERRCODE hb_dbfDrop( PHB_ITEM pItemTable );
+static ERRCODE hb_dbfInit( LPRDDNODE pRDD );
+static ERRCODE hb_dbfExit( LPRDDNODE pRDD );
+static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex );
+static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex );
+static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 
 #define hb_dbfWhoCares                             NULL
 
 #endif /* HB_EXTERNAL_RDDDBF_USE */
 
-extern BOOL HB_EXPORT  hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex );
-extern ULONG HB_EXPORT hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
-extern void  HB_EXPORT hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock );
+extern ULONG   HB_EXPORT hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex );
+extern void    HB_EXPORT hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex,
+                                             ULONG ulBlock );
+extern ERRCODE HB_EXPORT hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
+                                            ULONG * pulBlock, ULONG * pulSize,
+                                            ULONG * pulType );
+extern ERRCODE HB_EXPORT hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
+                                            ULONG ulBlock, ULONG ulSize,
+                                            ULONG ulType );
 extern ERRCODE HB_EXPORT hb_dbfGetEGcode( ERRCODE errCode );
-extern BOOL HB_EXPORT hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, ULONG *pPoolPos );
-extern BOOL HB_EXPORT hb_dbfLockIdxGetData( BYTE bScheme, ULONG *ulPos, ULONG *ulPool );
+extern BOOL    HB_EXPORT hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos );
+extern BOOL    HB_EXPORT hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool );
 
 HB_EXTERN_END
 

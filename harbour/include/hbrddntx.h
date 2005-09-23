@@ -58,24 +58,106 @@
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
 #endif
+#define HB_EXTERNAL_RDDDBF_USE
+#include "hbrdddbf.h"
 
 HB_EXTERN_BEGIN
 
 /* DBFNTX default extensions */
-#define NTX_INDEXEXT                              ".ntx"
+#define NTX_INDEXEXT                             ".ntx"
 
 /* DBFNTX constants declarations */
 
-#define TOP_RECORD                                                      1
-#define BTTM_RECORD                                                     2
-#define PREV_RECORD                                                     3
-#define NEXT_RECORD                                                     4
+#define NTX_IGNORE_REC_NUM                        0x0UL
+#define NTX_MAX_REC_NUM                    0xFFFFFFFFUL
 
-#define NTX_MAX_KEY          256      /* Max len of key */
-#define NTXBLOCKSIZE         1024     /* Size of block in NTX file */
-#define NTX_MAX_TAGNAME      12       /* Max len of tag name */
-#define NTX_LOCK_OFFSET      1000000000
-#define NTX_PAGES_PER_TAG    32
+#define NTX_DUMMYNODE                      0xFFFFFFFFUL
+
+#define NTX_FLAG_DEFALUT         0x0006
+#define NTX_FLAG_OLDDEFALUT      0x0003
+#define NTX_FLAG_FORITEM         0x0001
+#define NTX_FLAG_PARTIAL         0x0008
+#define NTX_FLAG_EXTLOCK         0x0010
+#define NTX_FLAG_CUSTOM          0x0020
+#define NTX_FLAG_CHGONLY         0x0040
+#define NTX_FLAG_TEMPLATE        0x0080
+#define NTX_FLAG_SORTRECNO       0x0100
+#define NTX_FLAG_LARGEFILE       0x0200
+#define NTX_FLAG_MULTIKEY        0x0400
+#define NTX_FLAG_COMPOUND        0x8000
+#define NTX_FLAG_MASK            0x87FF
+
+#define CTX_MAX_TAGS                 63
+
+#define NTX_MAX_KEY                     256     /* Max len of key */
+#define NTX_MAX_EXP                     256     /* Max len of KEY/FOR expression */
+#define NTXBLOCKBITS                     10     /* Size of NTX block in bits */
+#define NTXBLOCKSIZE      (1<<NTXBLOCKBITS)     /* Size of block in NTX file */
+#define NTX_MAX_TAGNAME                  10     /* Max len of tag name */
+#define NTX_TAGITEMSIZE                  16     /* Size of tag item in CTX header */
+#define NTX_HDR_UNUSED                  473     /* the unused part of header */
+#define NTX_PAGES_PER_TAG                 8
+#define NTX_STACKSIZE                    32	/* Maximum page stack size */
+
+/* index file structures - defined as BYTEs to avoid alignment problems */
+
+typedef struct _NTXHEADER     /* Header of NTX file */
+{
+   BYTE  type[2];
+   BYTE  version[2];
+   BYTE  root[4];
+   BYTE  next_page[4];
+   BYTE  item_size[2];
+   BYTE  key_size[2];
+   BYTE  key_dec[2];
+   BYTE  max_item[2];
+   BYTE  half_page[2];
+   BYTE  key_expr[ NTX_MAX_EXP ];
+   BYTE  unique[1];
+   BYTE  unknown1[1];
+   BYTE  descend[1];
+   BYTE  unknown2[1];
+   BYTE  for_expr[ NTX_MAX_EXP ];
+   BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
+   BYTE  custom[1];
+   BYTE  unused[ NTX_HDR_UNUSED ];
+} NTXHEADER;
+typedef NTXHEADER * LPNTXHEADER;
+
+typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */
+{
+   BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
+   BYTE  tag_header[ 4 ];
+} CTXTAGITEM;
+typedef CTXTAGITEM * LPCTXTAGITEM;
+
+typedef struct _CTXHEADER     /* Header of xHarbour CTX file */
+{
+   BYTE  type[ 2 ];     /* 0x9591 LE */
+   BYTE  ntags[ 2 ];    /* number of tag entries MAX63 */
+   BYTE  version[ 4 ];  /* update counter LE */
+   BYTE  freepage[ 4 ]; /* first free page in index file */
+   BYTE  filesize[ 4 ]; /* size of index file in pages */
+   BYTE  tags[ CTX_MAX_TAGS * NTX_TAGITEMSIZE ];
+} CTXHEADER;
+typedef CTXHEADER * LPCTXHEADER;
+
+#if 0
+/* original CLIP CTX file header - for information only it's binary
+   compatible so both RDD can read the same file but it's not safe
+   to use CLIP for writing when the file is open by xHarbour.
+   In spare time I'll update CLIP to respect my extensions and send
+   patches to Rust - hope they will be included in CLIP.
+*/
+typedef struct _CTXHEADER     /* Header of CLIP CTX file */
+{
+   BYTE  type[ 2 ];     /* 0x9591 in LE */
+   BYTE  ntags[ 1 ];    /* number of tag entries */
+   BYTE  unused[ 13 ];
+   CTX_TAG tags[ 63 ];
+} CTXHEADER
+#endif
+
 
 /* forward declarations
  */
@@ -86,137 +168,171 @@ struct _NTXINDEX;
 
 typedef struct _KEYINFO
 {
-   /* PHB_ITEM pItem; */
-   LONG     Tag;
-   LONG     Xtra;
-   char     key[ 1 ]; /* value of key */
+   ULONG    Tag;      /* page number */
+   ULONG    Xtra;     /* record number */
+   char     key[ 1 ]; /* key value */
 } KEYINFO;
-
 typedef KEYINFO * LPKEYINFO;
 
 typedef struct _TREE_STACK
 {
-   LONG     page;
+   ULONG    page;
    SHORT    ikey;
 }  TREE_STACK;
-
 typedef TREE_STACK * LPTREESTACK;
 
-typedef struct HB_PAGEINFO_STRU
+typedef struct _HB_PAGEINFO
 {
-   LONG      Page;
-   BOOL      Changed;
-   BOOL      lBusy;
-   USHORT    uiKeys;
-   SHORT     CurKey;
-   char*     buffer;
+   ULONG    Page;
+   BOOL     Changed;
+   int      iUsed;
+   USHORT   uiKeys;
+   struct  _HB_PAGEINFO * pNext;
+   struct  _HB_PAGEINFO * pPrev;
+#ifdef HB_NTX_EXTERNAL_PAGEBUFFER
+   char *   buffer;
+#else
+   char     buffer[ NTXBLOCKSIZE ];
+#endif
 } HB_PAGEINFO;
-
 typedef HB_PAGEINFO * LPPAGEINFO;
 
+typedef struct _HB_NTXSCOPE
+{
+   PHB_ITEM   scopeItem;
+   LPKEYINFO  scopeKey;
+   USHORT     scopeKeyLen;
+} HB_NTXSCOPE;
+typedef HB_NTXSCOPE * PHB_NTXSCOPE;
 
 typedef struct _TAGINFO
 {
-   char *     TagName;
-   LONG       TagRoot;
-   char *     KeyExpr;
-   char *     ForExpr;
-   PHB_ITEM   pKeyItem;
-   PHB_ITEM   pForItem;
-   PHB_ITEM   topScope;
-   PHB_ITEM   bottomScope;
-   BOOL       fTagName;
-   BOOL       AscendKey;
-   BOOL       UniqueKey;
-   BOOL       Custom;
-   BOOL       TagChanged;
-   BOOL       TagBOF;
-   BOOL       TagEOF;
-   BOOL       NewRoot;
-   BOOL       Memory;
-   BYTE       KeyType;
-   BYTE       OptFlags;
-   LONG       TagBlock;
-   LONG       RootBlock;
-   USHORT     nField;
-   USHORT     KeyLength;
-   USHORT     KeyDec;
-   USHORT     MaxKeys;
-   LPTREESTACK stack;
-   USHORT     stackDepth;
-   USHORT     stackLevel;
-   ULONG      keyCount;
-   ULONG      ulPagesDepth;
-   ULONG      ulPages;
-   ULONG      ulPagesStart;
-   LPKEYINFO  CurKeyInfo;
-   LPPAGEINFO pages;
-   BOOL       InIndex;
-   char*      buffer;
-   struct    _NTXINDEX * Owner;
-   struct    _TAGINFO * pNext;
-} TAGINFO;
+   char *      TagName;
+   char *      KeyExpr;
+   char *      ForExpr;
+   PHB_ITEM    pKeyItem;
+   PHB_ITEM    pForItem;
+   HB_NTXSCOPE top;
+   HB_NTXSCOPE bottom;
 
+   BOOL        fTagName;      /* remove */
+   BOOL        fUsrDescend;
+   BOOL        AscendKey;
+   BOOL        UniqueKey;
+
+   BOOL        Signature;
+
+   BOOL        Custom;
+   BOOL        ChgOnly;
+   BOOL        Partial;
+   BOOL        Template;
+   BOOL        MultiKey;
+   BOOL        fSortRec;
+
+   BOOL        HdrChanged;
+   BOOL        TagBOF;
+   BOOL        TagEOF;
+   ULONG       HeadBlock;
+   ULONG       RootBlock;
+   USHORT      uiNumber;
+   BYTE        KeyType;
+   USHORT      nField;
+   USHORT      KeyLength;
+   USHORT      KeyDec;
+   USHORT      MaxKeys;
+   LPTREESTACK stack;
+   USHORT      stackSize;
+   USHORT      stackLevel;
+   ULONG       keyCount;
+   LPKEYINFO   CurKeyInfo;
+   LPKEYINFO   HotKeyInfo;
+   BOOL        HotFor;
+
+   struct     _NTXINDEX * Owner;
+} TAGINFO;
 typedef TAGINFO * LPTAGINFO;
 
 typedef struct _NTXINDEX
 {
-   char *    IndexName;
-   BOOL      Locked;
-   LONG      NextAvail;
-   struct   _NTXAREA * Owner;
-   FHANDLE   DiskFile;
-   BOOL      fFlush;
-   LPTAGINFO CompoundTag;
-   struct   _NTXINDEX * pNext;   /* The next index in the list */
-} NTXINDEX;
+   char *      IndexName;
+   char *      RealName;
+   ULONG       Version;       /* The index VERSION filed to signal index updates for other stations */
+   ULONG       NextAvail;
+   ULONG       TagBlock;      /* Index attr, next free page */
+   struct     _NTXAREA * Owner;
+   FHANDLE     DiskFile;
+   BOOL        fDelete;       /* delete on close flag */
+   BOOL        fReadonly;
+   BOOL        fShared;
+   BOOL        fFlush;
+   BOOL        LargeFile;
+   BOOL        Changed;
+   BOOL        Update;
+   BOOL        Compound;
+   BOOL        Production;    /* Production index */
+   HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
+   int         lockWrite;     /* number of write lock set */
+   int         lockRead;      /* number of read lock set */
 
+   BYTE *      HeaderBuff;    /* TODO: make it member */
+   BOOL        fValidHeader;
+   int         iTags;
+   LPTAGINFO * lpTags;
+
+   ULONG       ulPages;
+   ULONG       ulPageLast;
+   ULONG       ulPagesDepth;
+   LPPAGEINFO *pages;
+   LPPAGEINFO  pChanged;
+   LPPAGEINFO  pFirst;
+   LPPAGEINFO  pLast;
+
+   struct     _NTXINDEX * pNext;   /* The next index in the list */
+} NTXINDEX;
 typedef NTXINDEX * LPNTXINDEX;
 
-/* Internal structures used by saving file */
-
-typedef struct _NTXHEADER    /* Header of NTX file */
+/* for index creation */
+typedef struct
 {
-   UINT16   type;
-   UINT16   version;
-   UINT32   root;
-   UINT32   next_page;
-   UINT16   item_size;
-   UINT16   key_size;
-   UINT16   key_dec;
-   UINT16   max_item;
-   UINT16   half_page;
-   char     key_expr[ NTX_MAX_KEY ];
-   char     unique;
-   char     unknown1;
-   char     descend;
-   char     unknown2;
-   char     for_expr[ NTX_MAX_KEY ];
-   char     tag_name[ NTX_MAX_TAGNAME ];
-   char     custom;
-} NTXHEADER;
+   HB_FOFFSET  nOffset;    /* offset in temporary file */
+   ULONG       ulKeys;     /* number of keys in page */
+   ULONG       ulKeyBuf;   /* number of keys in memory buffer */
+   ULONG       ulCurKey;   /* current key in memory buffer */
+   BYTE *      pKeyPool;   /* memory buffer */
+} NTXSWAPPAGE;
+typedef NTXSWAPPAGE * LPNTXSWAPPAGE;
 
-typedef NTXHEADER * LPNTXHEADER;
-
-typedef struct _NTXBUFFER    /* Header of each block in NTX file (only block
-                                with header has other format */
+typedef struct
 {
-   UINT16   item_count;
-   UINT16   item_offset[ 1 ];
-} NTXBUFFER;
+   LPTAGINFO pTag;             /* current Tag */
+   FHANDLE  hTempFile;        /* handle to temporary file */
+   char *   szTempFileName;   /* temporary file name */
+   int      keyLen;           /* key length */
+   BOOL     fUnique;          /* TRUE if index is unique */
+   BOOL     fReindex;         /* TRUE if reindexing is in process */
+   ULONG    ulMaxRec;         /* the highest record number */
+   ULONG    ulTotKeys;        /* total number of keys indexed */
+   ULONG    ulKeys;           /* keys in curently created page */
+   ULONG    ulPages;          /* number of pages */
+   ULONG    ulCurPage;        /* current page */
+   ULONG    ulPgKeys;         /* maximum number of key in page memory buffer */
+   ULONG    ulMaxKey;         /* maximum number of keys in single page */
+   BYTE *   pKeyPool;         /* memory buffer for current page then for pages */
+   BYTE *   pStartKey;        /* begining of key pool after sorting */
+   LPNTXSWAPPAGE pSwapPage;   /* list of pages */
+   LPPAGEINFO NodeList[ NTX_STACKSIZE ];   /* Stack of pages */
+   ULONG    ulFirst;
+   ULONG *  pSortedPages;
+   BYTE     pLastKey[ NTX_MAX_KEY ]; /* last key val */
+   ULONG    ulLastRec;
 
-typedef NTXBUFFER * LPNTXBUFFER;
-
-typedef struct _NTXITEM      /* each item in NTX block has following format */
-{
-   UINT32   page;     /* subpage (each key in subpage has < value like this key */
-   UINT32   rec_no;   /* RecNo of record with this key */
-   char     key[ 1 ]; /* value of key */
-} NTXITEM;
-
-typedef NTXITEM * LPNTXITEM;
-
-struct _NTXAREA;
+   BYTE *   pBuffIO;          /* index IO buffer */
+   ULONG    ulSizeIO;         /* size of IO buffer in index pages */
+   ULONG    ulPagesIO;        /* number of index pages in buffer */
+   ULONG    ulFirstIO;        /* first page in buffer */
+   ULONG    ulLastIO;         /* last page in buffer */
+} NTXSORTINFO;
+typedef NTXSORTINFO * LPNTXSORTINFO;
 
 /*
  *  DBF WORKAREA
@@ -258,43 +374,47 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   FHANDLE hDataFile;            /* Data file handle */
-   FHANDLE hMemoFile;            /* Memo file handle */
-   USHORT uiHeaderLen;           /* Size of header */
-   USHORT uiRecordLen;           /* Size of record */
-   ULONG ulRecCount;             /* Total records */
-   char * szDataFileName;        /* Name of data file */
-   char * szMemoFileName;        /* Name of memo file */
-   USHORT uiMemoBlockSize;       /* Size of memo block */
-   BYTE bMemoType;               /* MEMO type used in DBF memo fields */
-   BOOL fHasMemo;                /* WorkArea with Memo fields */
-   BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BOOL fDataFlush;              /* data was written to DBF and not commited */
-   BOOL fMemoFlush;              /* data was written to MEMO and not commited */
-   BYTE bVersion;                /* DBF version ID byte */
-   BYTE bCodePage;               /* DBF codepage ID */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadonly;               /* Read only file */
-   USHORT * pFieldOffset;        /* Pointer to field offset array */
-   BYTE * pRecord;               /* Buffer of record data */
-   BOOL fValidBuffer;            /* State of buffer */
-   BOOL fPositioned;             /* Positioned record */
-   ULONG ulRecNo;                /* Current record */
-   BOOL fRecordChanged;          /* Record changed */
-   BOOL fAppend;                 /* TRUE if new record is added */
-   BOOL fDeleted;                /* TRUE if record is deleted */
-   BOOL fUpdateHeader;           /* Update header of file */
-   BOOL fFLocked;                /* TRUE if file is locked */
-   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
-   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
-   BYTE bYear;                   /* Last update */
-   BYTE bMonth;
-   BYTE bDay;
-   BYTE bLockType;               /* Type of locking shemes */
-   ULONG * pLocksPos;            /* List of records locked */
-   ULONG ulNumLocksPos;          /* Number of records locked */
+   FHANDLE  hDataFile;              /* Data file handle */
+   FHANDLE  hMemoFile;              /* Memo file handle */
+   char *   szDataFileName;         /* Name of data file */
+   char *   szMemoFileName;         /* Name of memo file */
+   USHORT   uiHeaderLen;            /* Size of header */
+   USHORT   uiRecordLen;            /* Size of record */
+   USHORT   uiMemoBlockSize;        /* Size of memo block */
+   USHORT   uiMemoVersion;          /* MEMO file version */
+   DBFHEADER dbfHeader;             /* DBF header buffer */
+   BYTE     bTableType;             /* DBF type */
+   BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
+   BYTE     bLockType;              /* Type of locking shemes */
+   BYTE     bCryptType;             /* Type of used encryption */
+   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   BYTE *   pRecord;                /* Buffer of record data */
+   ULONG    ulRecCount;             /* Total records */
+   ULONG    ulRecNo;                /* Current record */
+   BOOL     fAutoInc;               /* WorkArea with auto increment fields */
+   BOOL     fHasMemo;               /* WorkArea with Memo fields */
+   BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fDataFlush;             /* data was written to DBF and not commited */
+   BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
+   BOOL     fShared;                /* Shared file */
+   BOOL     fReadonly;              /* Read only file */
+   BOOL     fValidBuffer;           /* State of buffer */
+   BOOL     fPositioned;            /* Positioned record */
+   BOOL     fRecordChanged;         /* Record changed */
+   BOOL     fAppend;                /* TRUE if new record is added */
+   BOOL     fDeleted;               /* TRUE if record is deleted */
+   BOOL     fEncrypted;             /* TRUE if record is encrypted */
+   BOOL     fTableEncrypted;        /* TRUE if table is encrypted */
+   BOOL     fUpdateHeader;          /* Update header of file */
+   BOOL     fFLocked;               /* TRUE if file is locked */
+   BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
+   ULONG *  pLocksPos;              /* List of records locked */
+   ULONG    ulNumLocksPos;          /* Number of records locked */
+   BYTE *   pCryptKey;              /* Pointer to encryption key */
+   PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
+   PHB_CODEPAGE cdPage;             /* Area's codepage pointer  */
 #endif
 
    /*
@@ -305,12 +425,13 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   LPTAGINFO lpCurTag;           /* Pointer to current order */
-   LPTAGINFO lpNtxTag;           /* Pointer to tags list */
-   BOOL fNtxAppend;              /* TRUE if new record is added */
+   BOOL           fNtxAppend;       /* TRUE if new record is added */
+   BOOL           fSetTagNumbers;   /* Tag number should be recreated */
+   LPNTXINDEX     lpIndexes;        /* Pointer to list of indexes */
+   LPTAGINFO      lpCurTag;         /* Pointer to current order */
+   LPNTXSORTINFO  pSort;            /* Index build structure */
 
 } NTXAREA;
-
 typedef NTXAREA * LPNTXAREA;
 
 #ifndef NTXAREAP
@@ -328,7 +449,7 @@ typedef NTXAREA * LPNTXAREA;
 #define ntxEof                   NULL
 #define ntxFound                 NULL
 static ERRCODE ntxGoBottom( NTXAREAP pArea );
-static ERRCODE ntxGoTo( NTXAREAP pArea, ULONG ulRecNo );
+#define ntxGoTo                  NULL
 #define ntxGoToId                NULL
 static ERRCODE ntxGoTop( NTXAREAP pArea );
 static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
@@ -357,6 +478,7 @@ static ERRCODE ntxGoHot( NTXAREAP pArea );
 #define ntxRecCount              NULL
 #define ntxRecInfo               NULL
 #define ntxRecNo                 NULL
+#define ntxRecId                 NULL
 #define ntxSetFieldsExtent       NULL
 #define ntxAlias                 NULL
 static ERRCODE ntxClose( NTXAREAP pArea );
@@ -365,7 +487,7 @@ static ERRCODE ntxClose( NTXAREAP pArea );
 #define ntxCreate                NULL
 #define ntxInfo                  NULL
 #define ntxNewArea               NULL
-#define ntxOpen                  NULL
+static ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define ntxRelease               NULL
 static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize );
 static ERRCODE ntxSysName( NTXAREAP pArea, BYTE * pBuffer );
@@ -387,28 +509,25 @@ static ERRCODE ntxZap( NTXAREAP pArea );
 #define ntxrelText               NULL
 #define ntxsetRel                NULL
 static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-         /* Open next index */
 static ERRCODE ntxOrderListClear( NTXAREAP pArea );
-         /* Close all indexes */
-#define ntxOrderListDelete       NULL
+static ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE ntxOrderListRebuild( NTXAREAP pArea );
-static ERRCODE ntxOrderCondition( NTXAREAP area, LPDBORDERCONDINFO pOrdCondInfo );
+#define ntxOrderCondition        NULL
 static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-         /* Create new Index */
-#define ntxOrderDestroy          NULL
+static ERRCODE ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );
-         /* Some information about index */
 #define ntxClearFilter           NULL
 #define ntxClearLocate           NULL
-static ERRCODE ntxClearScope( NTXAREAP pArea );
-#define ntxCountScope            NULL
+#define ntxClearScope            NULL
+static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo );
 #define ntxFilterText            NULL
-static ERRCODE ntxScopeInfo( NTXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
+#define ntxScopeInfo             NULL
 #define ntxSetFilter             NULL
 #define ntxSetLocate             NULL
-static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo );
+#define ntxSetScope              NULL
 #define ntxSkipScope             NULL
+#define ntxLocate                NULL
 #define ntxCompile               NULL
 #define ntxError                 NULL
 #define ntxEvalBlock             NULL
@@ -422,9 +541,11 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define ntxPutValueFile          NULL
 #define ntxReadDBHeader          NULL
 #define ntxWriteDBHeader         NULL
+#define ntxInit                  NULL
 #define ntxExit                  NULL
 #define ntxDrop                  NULL
 #define ntxExists                NULL
+static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define ntxWhoCares              NULL
 
 HB_EXTERN_END

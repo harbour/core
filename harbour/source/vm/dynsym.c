@@ -158,6 +158,19 @@ PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    return pDynSym;
 }
 
+PHB_DYNS HB_EXPORT hb_dynsymGetCase( char * szName )  /* finds and creates a symbol if not found */
+{
+   PHB_DYNS pDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
+
+   pDynSym = hb_dynsymFind( szName );
+   if( ! pDynSym )       /* Does it exists ? */
+      pDynSym = hb_dynsymNew( hb_symbolNew( szName ) );   /* Make new symbol */
+
+   return pDynSym;
+}
+
 PHB_DYNS HB_EXPORT hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;

@@ -160,6 +160,35 @@ char HB_EXPORT * hb_parc( int iParam, ... )
    return ( char * ) 0;
 }
 
+char HB_EXPORT * hb_parcx( int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_STRING( pItem ) )
+         return pItem->item.asString.value;
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return hb_arrayGetCPtr( pItem, ulArrayIndex );
+      }
+   }
+
+   return "";
+}
+
 ULONG  HB_EXPORT hb_parclen( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d, ...)", iParam));
@@ -289,6 +318,42 @@ char  HB_EXPORT * hb_pardsbuff( char * szDate, int iParam, ... )
 
    return hb_dateDecStr( szDate, 0 );
 }
+
+/* retrieve a date as long integer - number of days from Julian's day */
+
+LONG  HB_EXPORT hb_pardl( int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pardl(%d, ...)", iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         pItem = hb_itemUnRef( pItem );
+      }
+
+      if( HB_IS_DATE( pItem ) )
+      {
+         return pItem->item.asDate.value;
+      }
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return hb_arrayGetDL( pItem, ulArrayIndex );
+      }
+   }
+
+   return hb_itemGetDL( NULL );
+}
+
 
 int  HB_EXPORT hb_parl( int iParam, ... )
 {
@@ -647,6 +712,32 @@ void  HB_EXPORT hb_retclen_buffer( char * szText, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%s, %lu)", szText, ulLen));
 
    hb_itemPutCPtr( &hb_stack.Return, szText, ulLen );
+}
+
+#undef hb_retcAdopt
+void HB_EXPORT hb_retcAdopt( char * szText )
+{
+   /* 
+    * This functions "adopts" passed pointer to buffer containing a string
+    * as a value of item of string type
+    *
+    * Copied from xHarbour
+    */
+   HB_TRACE_STEALTH( HB_TR_INFO, ("hb_retcAdopt(%s)", szText ) );
+
+
+   if( ( &(hb_stack.Return) )->type )
+   {
+      hb_itemClear( &(hb_stack.Return) );
+   }
+
+   ( &(hb_stack.Return) )->type = HB_IT_STRING;
+   ( &(hb_stack.Return) )->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+   *( ( &(hb_stack.Return) )->item.asString.u.pulHolders ) = 1;
+   ( &(hb_stack.Return) )->item.asString.bStatic = FALSE;
+   ( &(hb_stack.Return) )->item.asString.value   = szText;
+   ( &(hb_stack.Return) )->item.asString.length  = strlen( szText );
+
 }
 
 /* szDate must have YYYYMMDD format */

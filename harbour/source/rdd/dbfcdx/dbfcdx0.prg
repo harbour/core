@@ -57,6 +57,7 @@ ANNOUNCE DBFCDX
 
 procedure DBFCDXInit
 
+   REQUEST _DBF
    REQUEST _DBFCDX
 
    rddRegister( "DBF", RDT_FULL )

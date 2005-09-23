@@ -610,6 +610,19 @@ PHB_ITEM HB_EXPORT hb_itemReturn( PHB_ITEM pItem )
    return pItem;
 }
 
+PHB_ITEM HB_EXPORT hb_itemReturnForward( PHB_ITEM pItem )
+{
+   HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemReturnForward(%p)", pItem ) );
+
+   if( pItem )
+   {
+      hb_itemForwardValue( &hb_stack.Return, pItem );
+   }
+
+   return pItem;
+}
+
+
 PHB_ITEM HB_EXPORT hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutDS(%p, %s)", pItem, szDate));
@@ -1150,6 +1163,31 @@ void HB_EXPORT hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       else if( HB_IS_MEMVAR( pSource ) )
          hb_memvarValueIncRef( pSource->item.asMemvar.value );
    }
+}
+
+/* copy (transfer) the value of item without increasing 
+ * a reference counters (the pSource item cannot be cleared)
+*/
+void HB_EXPORT hb_itemForwardValue( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemForwardValue(%p, %p) %i", pDest, pSource, pDest->type ) );
+
+   if( pDest == pSource )
+   {
+      hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemForwardValue()", NULL );
+   }
+
+   if( HB_IS_COMPLEX( pDest ) )
+   {
+      hb_itemClear( pDest );
+   }
+
+   /* Forward. */
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+
+   /* Now fake clear the transferer. */
+   //pSource->item.asString.bStatic = FALSE;
+   pSource->type = HB_IT_NIL;
 }
 
 void HB_EXPORT hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )

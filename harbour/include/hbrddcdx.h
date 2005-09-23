@@ -67,9 +67,11 @@ HB_EXTERN_BEGIN
 /* CDX constants and defaults */
 #define CDX_INDEXEXT                              ".cdx"
 #define CDX_MAXKEY                                  240
+#define CDX_MAXEXP                                  255
 #define CDX_MAXTAGNAMELEN                            10
 #define CDX_PAGELEN                                 512
 #define CDX_HEADERLEN                              1024
+#define CDX_HEADEREXPLEN          (CDX_HEADERLEN - 512)
 #define CDX_HEADERPAGES   ((CDX_HEADERLEN+CDX_PAGELEN-1)/CDX_PAGELEN)
 #define CDX_INT_FREESPACE              (CDX_PAGELEN-12) /* 500 */
 #define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
@@ -150,7 +152,39 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
-typedef void ( * HB_EVALSCOPE_FUNC )( ULONG, BYTE *, ULONG, void * );
+/*
+ TODO like in SIXCDX:
+   switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
+      case CDX_TYPE_TEMPORARY:
+         PARTIAL_RYO
+      case CDX_TYPE_CUSTOM:
+         PARTIAL_RYO | CHGONLY_RYO
+      case CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM:
+         PARTIAL_RYO | NOUPDATE_RYO
+         if index key begin with:
+            'SXCHAR(' or 'SXNUM(' or 'SXDATE(' or 'SXLOG('
+         then
+            | TEMPLATE_RYO
+
+   sx_chill()  if ( ! NOUPDATE_RYO ) then set ( CHGONLY_RYO | PARTIAL_RYO )
+                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  {
+                     indexOpt &= ~CDX_TYPE_CUSTOM;
+                     indexOpt |= CDX_TYPE_TEMPORARY
+                  }
+
+   sx_warm()   if ( ! NOUPDATE_RYO ) then clear CHGONLY_RYO
+                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  {
+                     indexOpt |= CDX_TYPE_CUSTOM;
+                     indexOpt &= ~CDX_TYPE_TEMPORARY
+                  }
+
+   sx_freeze() set NOUPDATE_RYO
+                  indexOpt |= CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM;
+*/
 
 /* CDX index node strucutres */
 /* Compact Index Header Record */
@@ -162,13 +196,14 @@ typedef struct _CDXTAGHEADER
    BYTE     keySize  [ 2 ];   /* key length */
    BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    BYTE     indexSig;         /* index signature */
-   BYTE     reserved2[ 486 ];
+   BYTE     reserved2[ 484 ];
+   BYTE     ignoreCase[ 2 ];  /* 1 = ignore case, key converted to upper */
    BYTE     ascendFlg[ 2 ];   /* 0 = ascending  1 = descending */
    BYTE     forExpPos[ 2 ];   /* offset of filter expression */
    BYTE     forExpLen[ 2 ];   /* length of filter expression */
    BYTE     keyExpPos[ 2 ];   /* offset of key expression */
    BYTE     keyExpLen[ 2 ];   /* length of key expression */
-   BYTE     keyExpPool[ CDX_HEADERLEN - 512 ];
+   BYTE     keyExpPool[ CDX_HEADEREXPLEN ];
 } CDXTAGHEADER;
 typedef CDXTAGHEADER * LPCDXTAGHEADER;
 
@@ -287,6 +322,7 @@ typedef struct _CDXTAG
    USHORT   uiType;           /* a type of key expression value */
    USHORT   uiLen;            /* length of the key expression value */
    USHORT   nField;           /* Field number for simple (one field) key expersion */
+   BYTE     bTrail;           /* trailing character for shorter key value */
    BYTE     OptFlags;         /* index options flag */
    BOOL     AscendKey;        /* ascending/descending order flag */
    BOOL     UniqueKey;        /* unique order flag */
@@ -333,27 +369,29 @@ typedef CDXTAG * LPCDXTAG;
 
 typedef struct _CDXINDEX
 {
-   char *   szFileName;       /* Name of index file */
-   FHANDLE  hFile;            /* Index file handle */
+   char *      szFileName;    /* Name of index file */
+   char *      szRealName;    /* Real name of index file */
+   FHANDLE     hFile;         /* Index file handle */
    struct _CDXAREA  * pArea;  /* Parent WorkArea */
    struct _CDXINDEX * pNext;  /* The next index in the list */
-   LPCDXTAG pCompound;        /* Compound Tag (index of tags) */
-   LPCDXTAG TagList;          /* List of tags in index file */
-   BOOL     fShared;          /* Shared file */
-   BOOL     fReadonly;        /* Read only file */
-   ULONG    nextAvail;        /* offset to next free page in the end of index file */
-   ULONG    freePage;         /* offset to next free page inside index file */
-   LPCDXLIST freeLst;         /* list of free pages in index file */
-   int      lockWrite;        /* number of write lock set */
-   int      lockRead;         /* number of read lock set */
-   ULONG    ulLockPos;        /* readlock position for CL53 lock scheme */
+   LPCDXTAG    pCompound;     /* Compound tag */
+   LPCDXTAG    TagList;       /* List of tags in index file */
+   BOOL        fShared;       /* Shared file */
+   BOOL        fReadonly;     /* Read only file */
+   BOOL        fDelete;       /* delete on close flag */
+   ULONG       nextAvail;     /* offset to next free page in the end of index file */
+   ULONG       freePage;      /* offset to next free page inside index file */
+   LPCDXLIST   freeLst;       /* list of free pages in index file */
+   int         lockWrite;     /* number of write lock set */
+   int         lockRead;      /* number of read lock set */
+   HB_FOFFSET  ulLockPos;     /* readlock position for CL53 lock scheme */
 #ifdef HB_CDX_DBGCODE
-   BOOL     RdLck;
-   BOOL     WrLck;
+   BOOL        RdLck;
+   BOOL        WrLck;
 #endif
-   BOOL     fChanged;         /* changes written to index, need upadte ulVersion */
-   ULONG    ulVersion;        /* network version/update flag */
-   BOOL     fFlush;           /* changes written to index, need upadte ulVersion */
+   BOOL        fChanged;      /* changes written to index, need upadte ulVersion */
+   ULONG       ulVersion;     /* network version/update flag */
+   BOOL        fFlush;        /* changes written to index, need upadte ulVersion */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 
@@ -376,6 +414,7 @@ typedef struct
    int      keyLen;           /* key length */
    BYTE     bTrl;             /* filler char for shorter keys */
    BOOL     fUnique;          /* TRUE if index is unique */
+   BOOL     fReindex;         /* TRUE if reindexing is in process */
    ULONG    ulMaxRec;         /* the highest record number */
    ULONG    ulTotKeys;        /* total number of keys indexed */
    ULONG    ulKeys;           /* keys in curently created page */
@@ -439,43 +478,47 @@ typedef struct _CDXAREA
    *  example.
    */
 
-   FHANDLE hDataFile;            /* Data file handle */
-   FHANDLE hMemoFile;            /* Memo file handle */
-   USHORT uiHeaderLen;           /* Size of header */
-   USHORT uiRecordLen;           /* Size of record */
-   ULONG ulRecCount;             /* Total records */
-   char * szDataFileName;        /* Name of data file */
-   char * szMemoFileName;        /* Name of memo file */
-   USHORT uiMemoBlockSize;       /* Size of memo block */
-   BYTE bMemoType;               /* MEMO type used in DBF memo fields */
-   BOOL fHasMemo;                /* WorkArea with Memo fields */
-   BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BOOL fDataFlush;              /* data was written to DBF and not commited */
-   BOOL fMemoFlush;              /* data was written to MEMO and not commited */
-   BYTE bVersion;                /* DBF version ID byte */
-   BYTE bCodePage;               /* DBF codepage ID */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadonly;               /* Read only file */
-   USHORT * pFieldOffset;        /* Pointer to field offset array */
-   BYTE * pRecord;               /* Buffer of record data */
-   BOOL fValidBuffer;            /* State of buffer */
-   BOOL fPositioned;             /* Positioned record */
-   ULONG ulRecNo;                /* Current record */
-   BOOL fRecordChanged;          /* Record changed */
-   BOOL fAppend;                 /* TRUE if new record is added */
-   BOOL fDeleted;                /* TRUE if record is deleted */
-   BOOL fUpdateHeader;           /* Update header of file */
-   BOOL fFLocked;                /* TRUE if file is locked */
-   BOOL fHeaderLocked;           /* TRUE if DBF header is locked */
-   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
-   BYTE bYear;                   /* Last update */
-   BYTE bMonth;
-   BYTE bDay;
-   BYTE bLockType;               /* Type of locking shemes */
-   ULONG * pLocksPos;            /* List of records locked */
-   ULONG ulNumLocksPos;          /* Number of records locked */
+   FHANDLE  hDataFile;              /* Data file handle */
+   FHANDLE  hMemoFile;              /* Memo file handle */
+   char *   szDataFileName;         /* Name of data file */
+   char *   szMemoFileName;         /* Name of memo file */
+   USHORT   uiHeaderLen;            /* Size of header */
+   USHORT   uiRecordLen;            /* Size of record */
+   USHORT   uiMemoBlockSize;        /* Size of memo block */
+   USHORT   uiMemoVersion;          /* MEMO file version */
+   DBFHEADER dbfHeader;             /* DBF header buffer */
+   BYTE     bTableType;             /* DBF type */
+   BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
+   BYTE     bLockType;              /* Type of locking shemes */
+   BYTE     bCryptType;             /* Type of used encryption */
+   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   BYTE *   pRecord;                /* Buffer of record data */
+   ULONG    ulRecCount;             /* Total records */
+   ULONG    ulRecNo;                /* Current record */
+   BOOL     fAutoInc;               /* WorkArea with auto increment fields */
+   BOOL     fHasMemo;               /* WorkArea with Memo fields */
+   BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fDataFlush;             /* data was written to DBF and not commited */
+   BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
+   BOOL     fShared;                /* Shared file */
+   BOOL     fReadonly;              /* Read only file */
+   BOOL     fValidBuffer;           /* State of buffer */
+   BOOL     fPositioned;            /* Positioned record */
+   BOOL     fRecordChanged;         /* Record changed */
+   BOOL     fAppend;                /* TRUE if new record is added */
+   BOOL     fDeleted;               /* TRUE if record is deleted */
+   BOOL     fEncrypted;             /* TRUE if record is encrypted */
+   BOOL     fTableEncrypted;        /* TRUE if table is encrypted */
+   BOOL     fUpdateHeader;          /* Update header of file */
+   BOOL     fFLocked;               /* TRUE if file is locked */
+   BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
+   ULONG *  pLocksPos;              /* List of records locked */
+   ULONG    ulNumLocksPos;          /* Number of records locked */
+   BYTE *   pCryptKey;              /* Pointer to encryption key */
+   PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
 #ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
+   PHB_CODEPAGE cdPage;             /* Area's codepage pointer  */
 #endif
 
    /*
@@ -489,8 +532,8 @@ typedef struct _CDXAREA
    BOOL           fCdxAppend;    /* Appended record changed */
    LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
    USHORT         uiTag;         /* current tag focus */
+   LPCDXSORTINFO  pSort;         /* Index build structure */
    BYTE *         bCdxSortTab;   /* Table with storted characters */
-   LPCDXSORTINFO  pSort;         /* Index build structur */
 
 } CDXAREA;
 
@@ -539,6 +582,7 @@ static ERRCODE hb_cdxGoHot( CDXAREAP pArea );
 #define hb_cdxRecCount                             NULL
 #define hb_cdxRecInfo                              NULL
 #define hb_cdxRecNo                                NULL
+#define hb_cdxRecId                                NULL
 #define hb_cdxSetFieldExtent                       NULL
 #define hb_cdxAlias                                NULL
 static ERRCODE hb_cdxClose( CDXAREAP pArea );
@@ -577,14 +621,15 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxClearFilter( CDXAREAP pArea );
 #define hb_cdxClearLocate                          NULL
-static ERRCODE hb_cdxClearScope( CDXAREAP pArea );
+#define hb_cdxClearScope                           NULL
 static ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec );
 #define hb_cdxFilterText                           NULL
-static ERRCODE hb_cdxScopeInfo( CDXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
+#define hb_cdxScopeInfo                            NULL
 static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo );
 #define hb_cdxSetLocate                            NULL
-static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
+#define hb_cdxSetScope                             NULL
 #define hb_cdxSkipScope                            NULL
+#define hb_cdxLocate                               NULL
 #define hb_cdxCompile                              NULL
 #define hb_cdxError                                NULL
 #define hb_cdxEvalBlock                            NULL
@@ -598,9 +643,11 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxPutValueFile                         NULL
 #define hb_cdxReadDBHeader                         NULL
 #define hb_cdxWriteDBHeader                        NULL
+#define hb_cdxInit                                 NULL
 #define hb_cdxExit                                 NULL
 #define hb_cdxDrop                                 NULL
 #define hb_cdxExists                               NULL
+static ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_ITEM pItem );
 #define hb_cdxWhoCares                             NULL
 
 HB_EXTERN_END

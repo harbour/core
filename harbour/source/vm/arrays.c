@@ -125,6 +125,27 @@ BOOL HB_EXPORT hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
    return FALSE;
 }
 
+BOOL HB_EXPORT hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayAddForward(%p, %p)", pArray, pValue));
+
+   if( pArray->type == HB_IT_ARRAY )
+   {
+      PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
+
+      if( pBaseArray->ulLen < ULONG_MAX )
+      {
+         hb_arraySize( pArray, pBaseArray->ulLen + 1 );
+         pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
+         hb_itemForwardValue( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
+
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
 ULONG HB_EXPORT hb_arrayLen( PHB_ITEM pArray )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayLen(%p)", pArray));

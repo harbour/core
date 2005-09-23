@@ -3928,6 +3928,36 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
    return &hb_stack.Return;
 }
 
+/* Evaluates a passed codeblock item or macro pointer item
+ */
+HB_EXPORT HB_ITEM_PTR hb_vmEvalBlockOrMacro( HB_ITEM_PTR pItem )
+{
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockOrMacro(%p)", pItem));
+
+   if ( pItem->type == HB_IT_BLOCK )
+   {
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( pItem );
+      hb_vmSend( 0 );
+   }
+   else
+   {
+      HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
+      if ( pMacro )
+      {
+         hb_macroRun( pMacro );
+         hb_itemCopy( &hb_stack.Return, hb_stackItemFromTop( - 1 ) );
+         hb_stackPop();
+      }
+      else
+      {
+         hb_itemClear( &hb_stack.Return );
+      }
+   }
+   return &hb_stack.Return;
+}
+
 void hb_vmFunction( USHORT uiParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFunction(%hu)", uiParams));

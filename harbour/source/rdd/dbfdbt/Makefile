@@ -10,6 +10,11 @@ C_SOURCES=\
 PRG_SOURCES=\
 	dbfdbt0.prg \
 
+ifeq ($(HB_MT),MT)
+   MT_LIBNAME=dbfdbtmt
+endif
+
+
 LIBNAME=dbfdbt
 
 include $(TOP)$(ROOT)config/lib.cf

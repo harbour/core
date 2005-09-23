@@ -54,6 +54,54 @@
 #define HB_DBINFO_CH_
 
 /*
+   Constants for SELF_RDDINFO ()
+*/
+
+#define RDDI_ISDBF                1    /* Does this RDD support DBFs? */
+#define RDDI_CANPUTREC            2    /* Can this RDD Put Records? */
+#define RDDI_DELIMITER            3    /* The field delimiter (as a string) */
+#define RDDI_SEPARATOR            4    /* The record separator (as a string) */
+
+#define RDDI_TABLEEXT             5    /* Default data file's file extension */
+#define RDDI_MEMOEXT              6    /* Default memo file's file extension */
+#define RDDI_ORDBAGEXT            7    /* Default multi tag index's file extension */
+#define RDDI_ORDEREXT             8    /* default single tag index's file extension */
+#define RDDI_ORDSTRUCTEXT         9    /* default single tag index's file extension */
+
+#define RDDI_LOCAL                10   /* Local file access? */
+#define RDDI_REMOTE               11   /* Remote table access? */
+#define RDDI_CONNECTION           12   /* Get/Set default connection */
+#define RDDI_TABLETYPE            13   /* Type of table file */
+#define RDDI_MEMOTYPE             14   /* Type of MEMO file: DBT, SMT, FPT(FP,SIX3,FLEXIII) */
+#define RDDI_LARGEFILE            15   /* Is large file size (>=4GB) supported */
+#define RDDI_LOCKSCHEME           16   /* Locking scheme used by RDD */
+#define RDDI_RECORDMAP            17   /* Does RDD support record map functionality? */
+#define RDDI_ENCRYPTION           18   /* Does RDD support encryption */
+#define RDDI_TRIGGERS             19   /* Get/Set default trigger function */
+#define RDDI_AUTOLOCK             20   /* automatic locking on update */
+
+/* index parameters */
+#define RDDI_STRUCTORD            21   /* Are structural indexes supported */
+#define RDDI_STRICTREAD           22   /* Flag for avoiding RDD hierarchy and using a bigger buffer when indexing */
+#define RDDI_STRICTSTRUCT         23   /* Flag for strict structural order checking */
+#define RDDI_OPTIMIZE             24   /* Flag for whether to use query optimization */
+#define RDDI_FORCEOPT             25   /* Flag for forcing linear optimization */
+#define RDDI_AUTOOPEN             26   /* Flag for automatically opening structural indexes */
+#define RDDI_AUTOORDER            27   /* When a structural index is opened, the order to be set */
+#define RDDI_AUTOSHARE            28   /* When a network is detected, open the index shared, otherwise open exclusively */
+#define RDDI_MULTITAG             29   /* Does RDD support multi tag in index file */
+#define RDDI_SORTRECNO            30   /* Is record number part of key in sorting */
+#define RDDI_MULTIKEY             31   /* Does custom orders support repeated keys? */
+
+/* memo parameters */
+#define RDDI_MEMOBLOCKSIZE        32   /* Memo File's block size */
+#define RDDI_MEMOVERSION          33   /* sub version of memo file */
+#define RDDI_MEMOGCTYPE           34   /* type of garbage collector used by GC */
+#define RDDI_MEMOREADLOCK         35   /* use read lock in memo file access */
+#define RDDI_MEMOREUSE            36   /* reuse free space on write */
+
+
+/*
    Constants for SELF_ORDINFO ()
 */
 
@@ -90,13 +138,14 @@
 #define DBOI_SCOPEBOTTOM          40  /* Get or Set the scope botto        */
 #define DBOI_SCOPETOPCLEAR        41  /* Clear the scope top               */
 #define DBOI_SCOPEBOTTOMCLEAR     42  /* Clear the scope bottom            */
-
 #define DBOI_CUSTOM               45  /* Is this a Custom Index?           */
 #define DBOI_SKIPUNIQUE           46  /* Was a skip to adjacent unique Key successful?   */
 
 #define DBOI_KEYSINCLUDED         50  /* Number of keys in the index order */
 /* key numbers and counts */
 #define DBOI_KEYGOTO              DBOI_POSITION
+#define DBOI_KEYGOTORAW           DBOI_KEYNORAW
+#define DBOI_KEYNO                DBOI_POSITION
 #define DBOI_KEYNORAW             51  /* The key number disregarding filters  */
 #define DBOI_KEYCOUNTRAW          52  /* The key count disregarding filter    */
 
@@ -110,7 +159,7 @@
 #define DBOI_AUTOORDER            63  /* When a structural index is opened, the order to be set */
 #define DBOI_AUTOSHARE            64  /* When a network is detected, open the index shared, otherwise open exclusively   */
 
-/* Harbour extensions */
+/* xHarbour extensions */
 #define DBOI_SKIPEVAL            100  /* skip while code block doesn't return TRUE */
 #define DBOI_SKIPEVALBACK        101  /* skip backward while code block doesn't return TRUE */
 #define DBOI_SKIPREGEX           102  /* skip while regular expression on index key doesn't return TRUE */
@@ -118,6 +167,34 @@
 #define DBOI_SKIPWILD            104  /* skip while while comparison with given pattern with wildcards doesn't return TRUE */
 #define DBOI_SKIPWILDBACK        105  /* skip backward while comparison with given pattern with wildcards doesn't return TRUE */
 #define DBOI_SCOPEEVAL           106  /* skip through index evaluating given C function */
+#define DBOI_FINDREC             107  /* find given record in a Tag beginning from TOP */
+#define DBOI_FINDRECCONT         108  /* find given record in a Tag beginning from current position */
+#define DBOI_SCOPESET            109  /* set both scopes */
+#define DBOI_SCOPECLEAR          110  /* clear both scopes */
+
+#define DBOI_BAGCOUNT            111  /* number of open order bags */
+#define DBOI_BAGNUMBER           112  /* bag position in bag list */
+#define DBOI_BAGORDER            113  /* number of first order in a bag */
+
+#define DBOI_ISMULTITAG          114  /* does RDD support multi tag in index file */
+#define DBOI_ISSORTRECNO         115  /* is record number part of key in sorting */
+#define DBOI_LARGEFILE           116  /* is large file size (>=4GB) supported */
+#define DBOI_TEMPLATE            117  /* order with free user keys */
+#define DBOI_MULTIKEY            118  /* custom order with multikeys */
+#define DBOI_CHGONLY             119  /* update only existing keys */
+#define DBOI_PARTIAL             120  /* is index partially updated */
+#define DBOI_SHARED              121  /* is index open in shared mode */
+#define DBOI_ISREADONLY          122  /* is index open in readonly mode */
+#define DBOI_READLOCK            123  /* get/set index read lock */
+#define DBOI_WRITELOCK           124  /* get/set index write lock */
+#define DBOI_UPDATECOUNTER       125  /* get/set update index counter */
+
+#define DBOI_EVALSTEP            126  /* eval step (EVERY) used in index command */
+#define DBOI_ISREINDEX           127  /* Is reindex in process */
+#define DBOI_I_BAGNAME           128  /* created index name */
+#define DBOI_I_TAGNAME           129  /* created tag name */
+
+#define DBOI_RELKEYPOS           130  /* get/set relative key position (in range 0 - 1) */
 
 /* Return values for DBOI_OPTLEVEL */
 #define DBOI_OPTIMIZED_NONE       0
@@ -130,9 +207,10 @@
 #define DBRI_RECSIZE              3
 #define DBRI_RECNO                4
 #define DBRI_UPDATED              5
-#define DBRI_RAWRECORD            6
-#define DBRI_RAWMEMOS             7
-#define DBRI_RAWDATA              8
+#define DBRI_ENCRYPTED            6
+#define DBRI_RAWRECORD            7
+#define DBRI_RAWMEMOS             8
+#define DBRI_RAWDATA              9
 
 /* constants for some SCOPED DBOI_* parameter */
 #define DBRMI_FUNCTION  1
@@ -179,8 +257,24 @@
 #define DBI_LOCKSCHEME          128  /* Locking scheme used by RDD */
 #define DBI_ISREADONLY          129  /* Was the file opened readonly? */
 #define DBI_ROLLBACK            130  /* Rollback changes made to current record */
+#define DBI_PASSWORD            131  /* Workarea password */
+#define DBI_ISENCRYPTED         132  /* The database is encrypted */
+#define DBI_MEMOTYPE            133  /* Type of MEMO file: DBT, SMT, FPT */
+#define DBI_SEPARATOR           134  /* The record separator (as a string) */
+#define DBI_MEMOVERSION         135  /* sub version of memo file */
+#define DBI_TABLETYPE           136   /* Type of table file */
 
-#define DBI_USER               1000  /* User-defined DBI_ constants */
+/* RECORD MAP (RM) support */
+#define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */
+#define DBI_RM_CREATE           151  /* create new empty work area record map */
+#define DBI_RM_REMOVE           152  /* remove active work area record map */
+#define DBI_RM_CLEAR            153  /* remove all records from WA record map */
+#define DBI_RM_FILL             154  /* add all records to WA record map */
+#define DBI_RM_ADD              155  /* add record to work area record map */
+#define DBI_RM_DROP             156  /* remove record from work area record map */
+#define DBI_RM_TEST             157  /* test if record is set in WA record map */
+#define DBI_RM_COUNT            158  /* number of records set in record map */
+#define DBI_RM_HANDLE           159  /* get/set record map filter handle */
 
 /* BLOB support - definitions for internal use by BLOB.CH */
 #define DBI_BLOB_DIRECT_EXPORT  201
@@ -199,6 +293,9 @@
 #define DBI_BLOB_OFFSET         212
 #define DBI_BLOB_RECOVER        213
 
+#define DBI_USER               1000  /* User-defined DBI_ constants */
+
+/* extended dbFieldInfo() actions */
 #define DBS_BLOB_GET            201  /* This is internal definition */
 #define DBS_BLOB_LEN            202
 #define DBS_BLOB_OFFSET         203
@@ -207,5 +304,43 @@
 
 #define BLOB_EXPORT_APPEND      1
 #define BLOB_EXPORT_OVERWRITE   0
+
+#define BLOB_IMPORT_COMPRESS    1
+#define BLOB_IMPORT_ENCRYPT     2
+
+#define FILEGET_APPEND          BLOB_EXPORT_APPEND
+#define FILEGET_OVERWRITE       BLOB_EXPORT_OVERWRITE
+
+#define FILEPUT_COMPRESS        BLOB_IMPORT_COMPRESS
+#define FILEPUT_ENCRYPT         BLOB_IMPORT_ENCRYPT
+
+/* DBF TYPES */
+#define DB_DBF_STD            0
+#define DB_DBF_VFP            1
+
+/* MEMO TYPES */
+#define DB_MEMO_NONE          0
+#define DB_MEMO_DBT           1
+#define DB_MEMO_FPT           2
+#define DB_MEMO_SMT           3
+
+/* MEMO EXTENDED TYPES */
+#define DB_MEMOVER_STD        1
+#define DB_MEMOVER_SIX        2
+#define DB_MEMOVER_FLEX       3
+#define DB_MEMOVER_CLIP       4
+
+/* ENCRYPTION TYPE */
+#define DB_CRYPT_NONE         0
+#define DB_CRYPT_SIX          1
+
+/* LOCK SCHEMES */
+#define DB_DBFLOCK_DEFAULT    0
+#define DB_DBFLOCK_CLIP       1
+#define DB_DBFLOCK_CL53       2
+#define DB_DBFLOCK_VFP        3
+#define DB_DBFLOCK_CL53EXT    4
+#define DB_DBFLOCK_XHB64      5
+
 
 #endif /* HB_DBINFO_CH_ */

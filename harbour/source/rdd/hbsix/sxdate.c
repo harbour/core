@@ -3,10 +3,15 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFFPT RDD
+ * xHarbour Project source code:
+ *    SIX compatible functions:
+ *          hb_sxDtoP()
+ *          hb_sxPtoD()
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ *          SX_DTOP()
+ *          SX_PTOD()
+ *
+ * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,20 +55,49 @@
  *
  */
 
-#include "rddsys.ch"
+#include "hbsxfunc.h"
 
-ANNOUNCE DBFFPT
+char * hb_sxDtoP( char * pDate, LONG lJulian )
+{
+   int iYear, iMonth, iDay;
+   LONG lPDate;
 
-procedure DBFFPTInit
+   HB_TRACE(HB_TR_DEBUG, ("hb_sxDtoP(%p, %ld)", pDate, lJulian));
 
-   REQUEST _DBF
-   REQUEST _DBFFPT
+   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+   lPDate = ( ( ( iYear << 1 ) | ( iMonth >> 3 ) ) << 8 ) |
+            ( ( iMonth & 7 ) << 5 ) | iDay;
+   HB_PUT_BE_UINT24( pDate, lPDate );
 
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFFPT", RDT_FULL )
+   return pDate;
+}
 
-return
+LONG hb_sxPtoD( char * pDate )
+{
+   int iYear, iMonth, iDay;
+   LONG lPDate;
 
-/* to satisfy old code which has: REQUEST DBFDBT */
-proc DBFDBT
-return
+   HB_TRACE(HB_TR_DEBUG, ("hb_sxPtoD(%p)", pDate));
+
+   if( pDate )
+   {
+      lPDate = HB_GET_BE_UINT24( pDate );
+      iDay = lPDate & 0x1f;
+      iMonth = ( lPDate >> 5 ) & 0x0f;
+      iYear = ( lPDate >> 9 );
+
+      return hb_dateEncode( iYear, iMonth, iDay );
+   }
+   return 0;
+}
+
+HB_FUNC( SX_DTOP )
+{
+   char pDate[ 3 ];
+   hb_retclen( hb_sxDtoP( pDate, hb_pardl( 1 ) ), 3 );
+}
+
+HB_FUNC( SX_PTOD )
+{
+   hb_retdl( hb_sxPtoD( hb_parclen( 1 ) < 3 ? NULL : hb_parc( 1 ) ) );
+}

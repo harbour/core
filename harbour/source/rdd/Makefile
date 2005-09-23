@@ -15,8 +15,8 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	dbf0.prg \
-   dbtotal.prg \
-   dbfuncs.prg \
+	dbfuncs.prg \
+	dbtotal.prg \
 	dblist.prg \
 	dbsort.prg \
 	dbstrux.prg \
@@ -25,8 +25,13 @@ PRG_SOURCES=\
 	delim0.prg \
 	rddord.prg \
 	rddsys.prg \
+ 
+ifeq ($(HB_MT),MT)
+   MT_LIBNAME=rddmt
+endif
 
 LIBNAME=rdd
+
 
 # The list of all valid DB drivers is defined in config/global.cf.
 DIRS=$(HB_DB_DRIVERS)

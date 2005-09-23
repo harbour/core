@@ -93,6 +93,7 @@ HB_EXTERN_BEGIN
 #define hb_delimRecCount                             NULL
 #define hb_delimRecInfo                              NULL
 #define hb_delimRecNo                                NULL
+#define hb_delimRecId                                NULL
 #define hb_delimSetFieldExtent                       NULL
 #define hb_delimAlias                                NULL
 #define hb_delimClose                                NULL
@@ -139,6 +140,7 @@ HB_EXTERN_BEGIN
 #define hb_delimSetLocate                            NULL
 #define hb_delimSetScope                             NULL
 #define hb_delimSkipScope                            NULL
+#define hb_delimLocate                               NULL
 #define hb_delimCompile                              NULL
 #define hb_delimError                                NULL
 #define hb_delimEvalBlock                            NULL
@@ -152,9 +154,11 @@ HB_EXTERN_BEGIN
 #define hb_delimPutValueFile                         NULL
 #define hb_delimReadDBHeader                         NULL
 #define hb_delimWriteDBHeader                        NULL
+#define hb_delimInit                                 NULL
 #define hb_delimExit                                 NULL
 #define hb_delimDrop                                 NULL
 #define hb_delimExists                               NULL
+#define hb_delimRddInfo                              NULL
 #define hb_delimWhoCares                             NULL
 
 HB_EXTERN_END

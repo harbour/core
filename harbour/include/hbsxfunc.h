@@ -3,10 +3,10 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFFPT RDD
+ * xHarbour Project source code:
+ *    header file for SIX compatible functions
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,20 +50,28 @@
  *
  */
 
-#include "rddsys.ch"
+#ifndef HB_SXFUNC_H_
+#define HB_SXFUNC_H_
 
-ANNOUNCE DBFFPT
+#include "hbapi.h"
+#include "hbapifs.h"
+#include "hbapirdd.h"
+#include "hbapierr.h"
+#include "hbdate.h"
 
-procedure DBFFPTInit
+HB_EXTERN_BEGIN
 
-   REQUEST _DBF
-   REQUEST _DBFFPT
+char * hb_sxDtoP( char * pDate, LONG lJulian );
+LONG hb_sxPtoD( char * pDate );
 
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFFPT", RDT_FULL )
+void hb_sxEnCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );
+void hb_sxDeCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );
 
-return
+BOOL hb_LZSSxDecompressMem( BYTE * pSrcBuf, ULONG ulSrcLen, BYTE * pDstBuf, ULONG ulDstLen );
+BOOL hb_LZSSxDecompressMem( BYTE * pSrcBuf, ULONG ulSrcLen, BYTE * pDstBuf, ULONG ulDstLen );
+BOOL hb_LZSSxCompressFile( FHANDLE hInput, FHANDLE hOutput, ULONG * pulSize );
+BOOL hb_LZSSxDecompressFile( FHANDLE hInput, FHANDLE hOutput );
 
-/* to satisfy old code which has: REQUEST DBFDBT */
-proc DBFDBT
-return
+HB_EXTERN_END
+
+#endif /* HB_SXFUNC_H_ */

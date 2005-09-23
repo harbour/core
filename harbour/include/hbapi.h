@@ -104,6 +104,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
 #define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
+#define HB_IS_NUMBER( p ) ( ( p )->type & HB_IT_NUMERIC )
 #define HB_IS_NUMINT( p )  ( ( p )->type & HB_IT_NUMINT )
 #define HB_IS_COMPLEX( p ) ( ( p )->type & HB_IT_COMPLEX )
 #define HB_IS_BADITEM( p ) ( ( p )->type & HB_IT_COMPLEX && ( p )->type & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) )
@@ -313,10 +314,12 @@ extern HB_SYMB  hb_symEval;
 
 /* Extend API */
 extern char       HB_EXPORT * hb_parc( int iParam, ... );  /* retrieve a string parameter */
+extern char       HB_EXPORT * hb_parcx( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG      HB_EXPORT hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
 extern ULONG      HB_EXPORT hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern char       HB_EXPORT * hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern char       HB_EXPORT * hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern LONG       HB_EXPORT hb_pardl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
 extern ULONG      HB_EXPORT hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern int        HB_EXPORT hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int        HB_EXPORT hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
@@ -352,6 +355,7 @@ extern LONGLONG   HB_EXPORT hb_parnll( int iParam, ... ); /* retrieve a numeric 
 #define hb_retc_const( szText )              hb_itemPutCConst( &hb_stack.Return, szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( &hb_stack.Return, szText, ulLen )
 #define hb_retclen_buffer( szText, ulLen )   hb_itemPutCPtr( &hb_stack.Return, szText, ulLen )
+#define hb_retcAdopt( szText )               hb_itemPutCPtr( &hb_stack.Return, (szText), strlen( szText ) )
 #define hb_retds( szDate )                   hb_itemPutDS( &hb_stack.Return, szDate )
 #define hb_retd( lYear, lMonth, lDay )       hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )
 #define hb_retdl( lJulian )                  hb_itemPutDL( &hb_stack.Return, lJulian )
@@ -379,6 +383,7 @@ extern void  HB_EXPORT  hb_retc_buffer( char * szText ); /* sames as above, but 
 extern void  HB_EXPORT  hb_retc_const( char * szText ); /* returns a string as a pcode based string */
 extern void  HB_EXPORT  hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern void  HB_EXPORT  hb_retclen_buffer( char * szText, ULONG ulLen ); /* sames as above, but accepts an allocated buffer */
+extern void  HB_EXPORT  hb_retcAdopt( char * szText ); /* adopts a pointer to a string as the value of an item */
 extern void  HB_EXPORT  hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
 extern void  HB_EXPORT  hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern void  HB_EXPORT  hb_retdl( long lJulian );   /* returns a long value as a julian date */
@@ -444,6 +449,7 @@ extern BOOL       HB_EXPORT hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creat
 extern ULONG      HB_EXPORT hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
 extern BOOL       HB_EXPORT hb_arrayIsObject( PHB_ITEM pArray ); /* retrives if the array is an object */
 extern BOOL       HB_EXPORT hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
+extern BOOL       HB_EXPORT hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue ); /* add a new item to the end of an array item with no incrementing of reference counters */
 extern BOOL       HB_EXPORT hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* insert a nil item into an array, without changing the length */
 extern BOOL       HB_EXPORT hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
 extern BOOL       HB_EXPORT hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
@@ -497,6 +503,7 @@ extern char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existin
 extern char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
 extern char *   hb_strncpy( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
 extern char *   hb_strncat( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
+extern char *   hb_strndup( const char * pszText, ULONG ulLen );
 extern char *   hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen );
 extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
 extern char *   hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen );
@@ -507,6 +514,8 @@ extern BOOL     hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pd
 extern BOOL     hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );
 extern BOOL     hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
 extern BOOL     hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern char *   hb_xstrcat( char *dest, const char *src, ... ); /* Concatenates multiple strings into a single result */
+extern char *   hb_xstrcpy( char *szDest, const char *szSrc, ...); /* Concatenates multiple strings into a single result */
 
 extern double   hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern double   hb_numInt( double dNum ); /* take the integer part of the number */
@@ -526,6 +535,7 @@ extern USHORT   hb_objGetClass( PHB_ITEM pItem );
 
 /* dynamic symbol table management */
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
+extern PHB_DYNS hb_dynsymGetCase( char * szName );    /* finds and creates a dynamic symbol if not found - case sensitive */
 extern PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbol based on a local one */
 extern PHB_DYNS hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
 extern PHB_DYNS hb_dynsymFindName( char * szName ); /* converts to uppercase and finds a dynamic symbol */

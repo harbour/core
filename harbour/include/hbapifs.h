@@ -81,9 +81,14 @@ typedef int     FHANDLE;
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
 #define FXO_APPEND    0x0200   /* Create (append if exists)   */
+#define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
 #define FXO_FORCEEXT  0x0800   /* Force default extension     */
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
+/* xHarbour extension */
+#define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
+#define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
+
 
 /* File attributes flags */
 #define HB_FA_ALL               0
@@ -145,10 +150,13 @@ extern FHANDLE HB_EXPORT hb_fsPOpen      ( BYTE * pFilename, BYTE * pMode );
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
+#define HB_MAX_DRIVE_LENGTH   10
+#define HB_MAX_FILE_EXT       10
+
 /* Filename support */
 typedef struct
 {
-   char   szBuffer[ _POSIX_PATH_MAX + 3 + 10 ]; /* TOFIX: +10 is for the drive letter support, and should be changed to some manifest constant */
+   char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + HB_MAX_FILE_EXT + 1 ]; /* TOFIX: +10 is for the drive letter support, and should be changed to some manifest constant */
    char * szPath;
    char * szName;
    char * szExtension;
@@ -167,7 +175,7 @@ typedef struct _HB_PATHNAMES
 
 extern void    hb_fsAddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
 
-extern BOOL    hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] );
+extern BOOL    hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + HB_MAX_FILE_EXT + 1 ] );
 extern FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
 extern FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
 extern FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );

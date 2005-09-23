@@ -93,6 +93,7 @@ HB_EXTERN_BEGIN
 #define hb_sdfRecCount                             NULL
 #define hb_sdfRecInfo                              NULL
 #define hb_sdfRecNo                                NULL
+#define hb_sdfRecId                                NULL
 #define hb_sdfSetFieldExtent                       NULL
 #define hb_sdfAlias                                NULL
 #define hb_sdfClose                                NULL
@@ -139,6 +140,7 @@ HB_EXTERN_BEGIN
 #define hb_sdfSetLocate                            NULL
 #define hb_sdfSetScope                             NULL
 #define hb_sdfSkipScope                            NULL
+#define hb_sdfLocate                               NULL
 #define hb_sdfCompile                              NULL
 #define hb_sdfError                                NULL
 #define hb_sdfEvalBlock                            NULL
@@ -152,9 +154,11 @@ HB_EXTERN_BEGIN
 #define hb_sdfPutValueFile                         NULL
 #define hb_sdfReadDBHeader                         NULL
 #define hb_sdfWriteDBHeader                        NULL
+#define hb_sdfInit                                 NULL
 #define hb_sdfExit                                 NULL
 #define hb_sdfDrop                                 NULL
 #define hb_sdfExists                               NULL
+#define hb_sdfRddInfo                              NULL
 #define hb_sdfWhoCares                             NULL
 
 HB_EXTERN_END

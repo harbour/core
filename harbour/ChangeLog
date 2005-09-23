@@ -8,6 +8,68 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-23 15:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * config/global.cf
+   * include/dbinfo.ch
+   * include/hbapi.h
+   * include/hbapierr.h
+   * include/hbapifs.h
+   * include/hbapirdd.h
+   * include/hbdbf.h
+   * include/hbdbferr.h
+   * include/hbdefs.h
+   * include/hbrddcdx.h
+   * include/hbrdddbf.h
+   * include/hbrdddbt.h
+   * include/hbrdddel.h
+   * include/hbrddfpt.h
+   * include/hbrddntx.h
+   * include/hbrddsdf.h
+   * include/hbrddwrk.h
+   * include/hbvm.h
+   * source/common/hbstr.c
+   * source/rdd/Makefile
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/dbtotal.prg
+   * source/rdd/delim0.prg
+   * source/rdd/delim1.c
+   * source/rdd/rddsys.prg
+   * source/rdd/sdf0.prg
+   * source/rdd/sdf1.c
+   * source/rdd/workarea.c
+   * source/rdd/dbfcdx/Makefile
+   * source/rdd/dbfcdx/dbfcdx0.prg
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfdbt/Makefile
+   * source/rdd/dbfdbt/dbfdbt1.c
+   * source/rdd/dbffpt/Makefile
+   * source/rdd/dbffpt/dbffpt0.prg
+   * source/rdd/dbffpt/dbffpt1.c
+   * source/rdd/dbfntx/Makefile
+   * source/rdd/dbfntx/dbfntx0.prg
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/nulsys/nulsys.prg
+   * source/rtl/errorapi.c
+   * source/rtl/filesys.c
+   * source/vm/dynsym.c
+   * source/vm/extend.c
+   * source/vm/itemapi.c
+   * source/vm/hvm.c
+   + include/hbsxfunc.h
+   + source/rdd/dbfcdx/sixcdx0.prg
+   + source/rdd/dbfcdx/sixcdx1.c
+   + source/rdd/hbsix/Makefile
+   + source/rdd/hbsix/sxcompr.c
+   + source/rdd/hbsix/sxcrypt.c
+   + source/rdd/hbsix/sxdate.c
+   + source/rdd/hsx/Makefile
+   + source/rdd/hsx/cftsfunc.c
+   + source/rdd/hsx/hsx.c
+      * changes to synhronize RDD code with xHarbour (state of 23.09.2005)
+        Many, many thanks to Przemek Czerpak for his work.
+      
+
 2005-09-20 10:16 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg

@@ -3,10 +3,10 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFFPT RDD
+ * xHarbour Project source code:
+ * SIXCDX RDD
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * Copyright 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,20 +50,6 @@
  *
  */
 
-#include "rddsys.ch"
+#define HB_SIXCDX
 
-ANNOUNCE DBFFPT
-
-procedure DBFFPTInit
-
-   REQUEST _DBF
-   REQUEST _DBFFPT
-
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFFPT", RDT_FULL )
-
-return
-
-/* to satisfy old code which has: REQUEST DBFDBT */
-proc DBFDBT
-return
+#include "dbfcdx1.c"

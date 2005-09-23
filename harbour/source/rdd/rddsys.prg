@@ -50,19 +50,16 @@
  *
  */
 
-// Standard Harbour RDDSys system
+/* Standard Harbour RDDSys system */
 
 ANNOUNCE RDDSYS
 
 PROCEDURE RddInit
 
+   REQUEST _DBF
    REQUEST DBFNTX
-   REQUEST DBFDBT
+   REQUEST DBFFPT
 
-   /* NOTE: Using this internal version of this functions, since at this
-            point the DBFNTX RDD may not be registered, depending on the
-            execution order of INIT procedures. */
-
-   __rddSetDefault( "DBFNTX" )
+   rddSetDefault( "DBFNTX" )
 
 return

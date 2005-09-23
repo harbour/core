@@ -280,11 +280,13 @@ RETURN nil
 STATIC FUNCTION DbRead()
 
     LOCAL cAlias := Alias()
-    LOCAL aRec   := Array( Fcount() )
+    LOCAL aRec   := {}
     LOCAL nCount
 
-    FOR nCount := 1 TO Fcount()
-        aRec[ nCount ] := Fieldget( nCount )
+    FOR nCount := 1 TO FCount()
+        IF ( FieldType( nCount ) != "M" )
+            AAdd( aRec, Fieldget( nCount ) )
+        ENDIF
     NEXT
 
 RETURN aRec
