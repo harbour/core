@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2005-09-23 13:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+      * updated build files for non-GNU make engines
+      
 
 2005-09-23 15:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * config/global.cf

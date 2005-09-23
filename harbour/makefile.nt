@@ -152,6 +152,8 @@ DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
 DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
 DBFDBT_LIB   = $(LIB_DIR)\dbfdbt.lib
 DBFFPT_LIB   = $(LIB_DIR)\dbffpt.lib
+HBSIX_LIB    = $(LIB_DIR)\hbsix.lib
+HSX_LIB      = $(LIB_DIR)\hsx.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
 LANG_LIB     = $(LIB_DIR)\lang.lib
 MACRO_LIB    = $(LIB_DIR)\macro.lib
@@ -225,6 +227,8 @@ LIBLIST = \
    $(DBFNTX_LIB) \
    $(DBFDBT_LIB) \
    $(DBFFPT_LIB) \
+   $(HBSIX_LIB) \
+   $(HSX_LIB) \
    $(NULSYS_LIB) \
    $(VM_LIB) \
    $(HB_GT_LIB)
@@ -640,8 +644,33 @@ DBFNTX_LIB_OBJS = \
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
+   $(OBJ_DIR)\sixcdx1.obj \
    \
-   $(OBJ_DIR)\dbfcdx0.obj
+   $(OBJ_DIR)\dbfcdx0.obj \
+   $(OBJ_DIR)\sixcdx0.obj
+
+#
+# HBSIX.LIB rules
+#
+
+{$(RDD_DIR)\hbsix}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+HBSIX_LIB_OBJS = \
+   $(OBJ_DIR)\sxcompr.obj \
+   $(OBJ_DIR)\sxcrypt.obj \
+   $(OBJ_DIR)\sxdata.obj
+
+#
+# HSX.LIB rules
+#
+
+{$(RDD_DIR)\hsx}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+HSX_LIB_OBJS = \
+   $(OBJ_DIR)\hsx.obj \
+   $(OBJ_DIR)\cftsfunc.obj
 
 #
 # DBFDBT.LIB rules
@@ -856,6 +885,8 @@ all: \
    $(DBFCDX_LIB) \
    $(DBFDBT_LIB) \
    $(DBFFPT_LIB) \
+   $(HBSIX_LIB) \
+   $(HSX_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -884,6 +915,8 @@ all: \
    $(DBFCDX_LIB) \
    $(DBFDBT_LIB) \
    $(DBFFPT_LIB) \
+   $(HBSIX_LIB) \
+   $(HSX_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -1127,6 +1160,12 @@ $(DBFDBT_LIB) : $(DBFDBT_LIB_OBJS)
 $(DBFFPT_LIB) : $(DBFFPT_LIB_OBJS)
    lib /out:$@ $**
 
+$(HBSIX_LIB) : $(HBSIX_LIB_OBJS)
+   lib /out:$@ $**
+
+$(HSX_LIB) : $(HSX_LIB_OBJS)
+   lib /out:$@ $**
+
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
    lib /out:$@ $**
 
@@ -1221,6 +1260,8 @@ $(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
 $(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
 $(DBFDBT_LIB)2 : $(DBFDBT_LIB_OBJS)
 $(DBFFPT_LIB)2 : $(DBFFPT_LIB_OBJS)
+$(HBSIX_LIB)2  : $(HBSIX_LIB_OBJS)
+$(HSX_LIB)2    : $(HSX_LIB_OBJS)
 $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
 $(GTCGI_LIB)2  : $(GTCGI_LIB_OBJS)
