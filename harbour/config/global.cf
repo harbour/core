@@ -10,7 +10,6 @@ HB_DB_DRIVERS=\
 	dbfntx \
 	dbfcdx \
 	dbffpt \
-	dbfdbt \
 	hbsix \
 	hsx \
 

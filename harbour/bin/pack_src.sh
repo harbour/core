@@ -106,9 +106,9 @@ $hb_collect source/rdd/*.[ch]
 $hb_collect source/rdd/*.prg
 
 # SOURCE\RDD\DBFDBT
-$hb_collect source/rdd/dbfdbt/Makefile
-$hb_collect source/rdd/dbfdbt/*.[ch]
-$hb_collect source/rdd/dbfdbt/*.prg
+#$hb_collect source/rdd/dbfdbt/Makefile
+#$hb_collect source/rdd/dbfdbt/*.[ch]
+#$hb_collect source/rdd/dbfdbt/*.prg
 
 # SOURCE\RDD\DBFFPT
 $hb_collect source/rdd/dbffpt/Makefile
@@ -125,6 +125,18 @@ $hb_collect source/rdd/dbfntx/Makefile
 $hb_collect source/rdd/dbfntx/*.[ch]
 $hb_collect source/rdd/dbfntx/*.prg
 
+# SOURCE\RDD\HBSIX
+$hb_collect source/rdd/hbsix/Makefile
+$hb_collect source/rdd/hbsix/*.[ch]
+$hb_collect source/rdd/hbsix/*.ch
+$hb_collect source/rdd/hbsix/*.prg
+
+# SOURCE\RDD\HSX
+$hb_collect source/rdd/hsx/Makefile
+$hb_collect source/rdd/hsx/*.[ch]
+$hb_collect source/rdd/hsx/*.ch
+$hb_collect source/rdd/hsx/*.prg
+
 # SOURCE\RDD\NULSYS
 $hb_collect source/rdd/nulsys/Makefile
 $hb_collect source/rdd/nulsys/*.prg
@@ -133,6 +145,7 @@ for d in ${HB_DB_DRVEXT}
 do
   $hb_collect source/rdd/$d/Makefile
   $hb_collect source/rdd/$d/*.[ch]
+  $hb_collect source/rdd/$d/*.ch
   $hb_collect source/rdd/$d/*.prg
 done
 

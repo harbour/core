@@ -195,7 +195,7 @@ PHB_ITEM HB_EXPORT hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pIt
    return pArray;
 }
 
-PHB_ITEM HB_EXPORT hb_itemPutC( PHB_ITEM pItem, char * szText )
+PHB_ITEM HB_EXPORT hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
 
@@ -234,7 +234,7 @@ PHB_ITEM HB_EXPORT hb_itemPutC( PHB_ITEM pItem, char * szText )
    return pItem;
 }
 
-PHB_ITEM HB_EXPORT hb_itemPutCConst( PHB_ITEM pItem, char * szText )
+PHB_ITEM HB_EXPORT hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s)", pItem, szText));
 
@@ -257,13 +257,13 @@ PHB_ITEM HB_EXPORT hb_itemPutCConst( PHB_ITEM pItem, char * szText )
    else
    {
       pItem->item.asString.length = strlen( szText );
-      pItem->item.asString.value  = szText;
+      pItem->item.asString.value  = ( char * ) szText;
    }
 
    return pItem;
 }
 
-PHB_ITEM HB_EXPORT hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
+PHB_ITEM HB_EXPORT hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %s, %lu)", pItem, szText, ulLen));
 
@@ -623,7 +623,7 @@ PHB_ITEM HB_EXPORT hb_itemReturnForward( PHB_ITEM pItem )
 }
 
 
-PHB_ITEM HB_EXPORT hb_itemPutDS( PHB_ITEM pItem, char * szDate )
+PHB_ITEM HB_EXPORT hb_itemPutDS( PHB_ITEM pItem, const char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutDS(%p, %s)", pItem, szDate));
 

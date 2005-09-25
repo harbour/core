@@ -2121,6 +2121,8 @@ static void hb_vmDivide( void )
 
          if( pResult )
          {
+            hb_stackPop();
+            hb_stackPop();
             hb_vmPush( pResult );
             hb_itemRelease( pResult );
          }

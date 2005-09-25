@@ -204,7 +204,7 @@ char HB_EXPORT * hb_dateDecStr( char * szDate, LONG lJulian )
    return szDate;
 }
 
-LONG HB_EXPORT hb_dateEncStr( char * szDate )
+LONG HB_EXPORT hb_dateEncStr( const char * szDate )
 {
    int  iYear, iMonth, iDay;
 

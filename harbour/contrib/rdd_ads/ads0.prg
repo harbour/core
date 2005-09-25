@@ -55,10 +55,13 @@
 
 ANNOUNCE ADS
 
-init procedure ADSInit
+procedure ADSInit
 
    REQUEST _ADS
 
    rddRegister( "ADS", RDT_FULL )
+   rddRegister( "ADT", RDT_FULL )
+   rddRegister( "ADSCDX", RDT_FULL )
+   rddRegister( "ADSNTX", RDT_FULL )
 
 return

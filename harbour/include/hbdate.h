@@ -69,7 +69,7 @@ extern void HB_EXPORT hb_dateDecode( long julian, int * piYear, int * piMonth, i
 extern void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
 extern void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
 extern char HB_EXPORT * hb_dateDecStr( char * szDate, long lJulian );
-extern long HB_EXPORT hb_dateEncStr( char * szDate );
+extern long HB_EXPORT hb_dateEncStr( const char * szDate );
 
 HB_EXTERN_END
 

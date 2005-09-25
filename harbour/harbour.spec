@@ -362,8 +362,9 @@ This RPM distribution of %{dname} includes extra commands to make compiling
 and linking with %{dname} a little easier. There are compiler and linker
 wrappers called "%{hb_pref}cc", "%{hb_pref}cmp", "%{hb_pref}lnk" and "%{hb_pref}mk".
 
-"%{hb_pref}cc" is a wrapper to the harbour compiler only. It only sets environment
-variables. The result of its work is a C file.
+"%{hb_pref}cc" is a wrapper to the C compiler only. It sets all flags
+and paths necessary to compile .c files which include %{dname} header
+files. The result of its work is an object file.
 
 Use "%{hb_pref}cmp" exactly as you would use the harbour compiler itself.
 The main difference with %{hb_pref}cmp is that it results in an object file,
@@ -387,8 +388,12 @@ All these scripts accept command line switches:
 -gt<hbgt>               # link with <hbgt> GT driver, can be repeated to
                         # link with more GTs. The first one will be
                         #      the default at runtime
+-xbgtk                  # link with xbgtk library (xBase GTK+ interface)
+-hwgui                  # link with HWGUI library (GTK+ interface)
+-l<libname>             # link with <libname> library
 -fmstat                 # link with the memory statistics lib
 -nofmstat               # do not link with the memory statistics lib (default)
+-[no]strip              # strip (no strip) binaries
 -main=<main_func>       # set the name of main program function/procedure.
                         # if not set then 'MAIN' is used or if it doesn't
                         # exist the name of first public function/procedure
@@ -530,6 +535,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libnulsys*.a
 %{_libdir}/%{name}/libpp*.a
 %{_libdir}/%{name}/librdd*.a
+%{_libdir}/%{name}/libhsx*.a
+%{_libdir}/%{name}/libhbsix*.a
 %{_libdir}/%{name}/librtl*.a
 %{_libdir}/%{name}/libsamples.a
 %{_libdir}/%{name}/libvm*.a

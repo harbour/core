@@ -8,6 +8,32 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-25 21:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+   - harbour/source/codepage/cdpsrwin.c
+  * harbour/make_tgz.sh
+     * Renamed codepage files (cdp*.c -> cd*.c)
+  * harbour/bin/pack_src.sh
+  * harbour/config/global.cf
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbdate.h
+  * harbour/include/hbextern.ch
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rtl/dates.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    * updated for proper RDD synchronization with xHarbour
+
+  * harbour/contrib/rdd_ads/ads0.prg
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/contrib/rdd_ads/rddads.h
+    * synced base of ADS RDD with xHarbour - old code cannot be compiled
+      without it - external ADS*() functions not synced - I do not use them
+      and I do not want to break sth - Harbour ADS developers should check it
+
 2005-09-23 15:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbextern.ch
       * removed reference to SDFC and DELIMC

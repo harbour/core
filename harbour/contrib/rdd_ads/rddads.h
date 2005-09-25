@@ -50,17 +50,14 @@
  *
  */
 
+#ifndef ADS_REQUIRE_VERSION
+/*#define ADS_REQUIRE_VERSION 6*/
+#endif
+
 #include "hbapirdd.h"
 #include "ace.h"
 
-/*
-*  ADS RDD Version
-*  --------
-*  Change to be one higher than the current version number in the Id string.
-*/
-
 #define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
-
 /*
 *  ADS WORKAREA
 *  --------
@@ -102,37 +99,46 @@ typedef struct _ADSAREA_
    *  example.
    */
 
-   char * szDataFileName;        /* Name of data file */
-   USHORT uiHeaderLen;           /* Size of header */
-   USHORT uiRecordLen;           /* Size of record */
-   ULONG ulRecCount;             /* Total records */
-   ULONG ulRecNo;                /* Current record */
-   BYTE bYear;                   /* Last update */
-   BYTE bMonth;
-   BYTE bDay;
-   USHORT * pFieldOffset;        /* Pointer to field offset array */
-   BYTE * pRecord;               /* Buffer of record data */
-   ULONG maxFieldLen;
-   BOOL fValidBuffer;            /* State of buffer */
-   BOOL fRecordChanged;          /* Record changed */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadonly;               /* Read only file */
-   BOOL fFLocked;                /* TRUE if file is locked */
+   LPDBRELINFO lpdbPendingRel;   /* Pointer to parent rel struct */
+
+   char *   szDataFileName;      /* Name of data file */
+   USHORT   uiRecordLen;         /* Size of record */
+   ULONG    ulRecNo;             /* Current record */
+   BYTE *   pRecord;             /* Buffer of record data */
+   ULONG    maxFieldLen;         /* Max field length in table record */
+
+   BOOL     fPositioned;         /* TRUE if we are not at phantom record */
+   BOOL     fShared;             /* Shared file */
+   BOOL     fReadonly;           /* Read only file */
+   BOOL     fFLocked;            /* TRUE if file is locked */
+
+   int      iFileType;           /* adt/cdx/ntx */
+
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
    ADSHANDLE hStatement;
-   int iFileType;                /* adt/cdx/ntx */
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;
 
+#define SELF_RESETREL( p )    if( pArea->lpdbPendingRel ) \
+                              { \
+                                 if( pArea->lpdbPendingRel->isScoped && \
+                                    !pArea->lpdbPendingRel->isOptimized ) \
+                                    SELF_FORCEREL( ( AREAP ) pArea ); \
+                                 else \
+                                    pArea->lpdbPendingRel = NULL; \
+                              }
+
+ADSAREAP hb_rddGetADSWorkAreaPointer( void );
+
 UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE  hObj,
-                                       UNSIGNED8  *pucFldName,
-                                       UNSIGNED8  *pucBuf,
-                                       UNSIGNED32 ulLen );
+                                      UNSIGNED8  *pucFldName,
+                                      UNSIGNED8  *pucBuf,
+                                      UNSIGNED32 ulLen );
 
 UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE  hTbl,
-                                       UNSIGNED8  *pucFldName,
-                                       UNSIGNED8  *pucBuf,
-                                       UNSIGNED32 *pulLen );
+                                      UNSIGNED8  *pucFldName,
+                                      UNSIGNED8  *pucBuf,
+                                      UNSIGNED32 *pulLen );
 

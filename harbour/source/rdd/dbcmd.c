@@ -2273,7 +2273,10 @@ HB_FUNC( FIELDDEC )
 HB_FUNC( FIELDGET )
 {
    HB_THREAD_STUB
-   HB_ITEM_NEW( Item );
+   /* this cannot be C stack item - memos can handle nested arrays
+      and IO operation may cause GC activation in MT programs what
+      can be the reason of random GPFs */
+   PHB_ITEM pItem = hb_itemNew( NULL );
    USHORT uiField, uiFields;
    AREAP pArea = HB_CURRENT_WA;
 
@@ -2283,10 +2286,11 @@ HB_FUNC( FIELDGET )
    {
       if( SELF_FIELDCOUNT( pArea, &uiFields ) == SUCCESS &&
           uiField > 0 && uiField <= uiFields )
-         SELF_GETVALUE( pArea, uiField, &Item );
+         SELF_GETVALUE( pArea, uiField, pItem );
    }
 
-   hb_itemForwardValue( hb_stackReturnItem(), &Item );
+   hb_itemForwardValue( hb_stackReturnItem(), pItem );
+   hb_itemRelease( pItem );
 }
 
 HB_FUNC( FIELDLEN )
@@ -3234,18 +3238,26 @@ HB_FUNC( ORDSETFOCUS )
 HB_FUNC( RDDLIST )
 {
    HB_THREAD_STUB
-   USHORT uiType, uiCount;
-   HB_ITEM_NEW( Name );
+   USHORT uiType, uiCount, uiRdds = 0, uiIndex = 0;
+   PHB_ITEM pRddArray = hb_itemNew( NULL );
 
-   hb_arrayNew( hb_stackReturnItem(), 0 );
    uiType = hb_parni( 1 );       /* 0 all types of RDD's */
+
    for( uiCount = 0; uiCount < s_uiRddMax; ++uiCount )
    {
       if( ( uiType == 0 ) || ( s_RddList[ uiCount ]->uiType == uiType ) )
+         ++ uiRdds;
+   }
+   hb_arrayNew( pRddArray, uiRdds );
+   for( uiCount = 0; uiRdds && uiCount < s_uiRddMax; ++uiCount )
+   {
+      if( ( uiType == 0 ) || ( s_RddList[ uiCount ]->uiType == uiType ) )
       {
-         hb_arrayAddForward( hb_stackReturnItem(), hb_itemPutC( &Name, s_RddList[ uiCount ]->szName ) );
+         hb_itemPutC( hb_arrayGetItemPtr( pRddArray, uiIndex++ ), s_RddList[ uiCount ]->szName );
       }
    }
+   hb_itemReturnForward( pRddArray );
+   hb_itemRelease( pRddArray );
 }
 
 HB_FUNC( RDDNAME )
@@ -4391,10 +4403,10 @@ HB_FUNC( DBSKIPPER )
 // Escaping delimited strings. Need to be cleaned/optimized/improved
 static char *hb_strescape( char *szInput, int lLen, char *cDelim )
 {
-   int     lCnt     = 0;
+   int     lCnt = 0;
    char  * szChr;
-   char  * szEscape = NULL;
-   char  * szReturn = NULL;
+   char  * szEscape;
+   char  * szReturn;
 
    szReturn = szEscape = ( char * ) hb_xgrab( lLen * 2 + 4 );
 

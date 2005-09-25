@@ -16,17 +16,25 @@ get_hbplatform()
 {
     local id
 
-    # please add your distro suffix if it not belong to the one recognized below
-    # and remember that order checking can be important
+    if [ "$OSTYPE" = "msdosdjgpp" ]; then
+        id="djgpp"
+    else
+        # please add your distro suffix if it not belong to the one recognized below
+        # and remember that order checking can be important
 
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' fedora-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' suse-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' aurox-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
-    [ "${id}" = "" ] && id=`[ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'`
-    [ "${id}" = "" ] && id=`uname -sr | tr '[A-Z]' '[a-z]' | tr -d " "`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' fedora-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' suse-release 2>/dev/null) && echo "fc$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`rel=$(rpm -q --queryformat='.%{VERSION}' aurox-release 2>/dev/null) && echo "cl$rel"|tr -d "."`
+        [ "${id}" = "" ] && id=`[ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'`
+        [ "${id}" = "" ] && id=`uname -sr | tr '[ A-Z]' '[_a-z]'`
+        case "${id}" in
+            mingw*) id="mingw" ;;
+            *) ;;
+        esac
+    fi
     echo -n "${id}"
 }
 
@@ -55,7 +63,7 @@ mk_hbgetlibs()
 {
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbfdbt dbffpt dbfcdx dbfntx ${HB_DB_DRVEXT} macro common lang codepage gtnul gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler"
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix ${HB_DB_DRVEXT} macro common lang codepage gtnul gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler"
     else
         echo -n "$@"
     fi
@@ -84,11 +92,19 @@ mk_hbtools()
         hb_path_separator=";"
         hb_static="yes"
         hb_static_default=" (default)"
+        hb_exesuf=".exe"
+    elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
+        hb_tool="$1/${hb_pref}-build"
+        hb_path_separator=":"
+        hb_static="yes"
+        hb_static_default=" (default)"
+        hb_exesuf=".exe"
     else
         hb_tool="$1/${hb_pref}-build"
         hb_path_separator=":"
         hb_static="no"
         hb_shared_default=" (default)"
+        hb_exesuf=""
     fi
     hb_libs=`mk_hbgetlibs "$2"`
     hb_libsc=`mk_hbgetlibsctb "$3"`
@@ -130,6 +146,22 @@ mk_hbtools()
 # ---------------------------------------------------------------
 #
 
+# set environment variables
+export HB_ARCHITECTURE="${HB_ARCHITECTURE}"
+export HB_COMPILER="${HB_COMPILER}"
+[ -z "\${HB_BIN_INSTALL}" ] && export HB_BIN_INSTALL="${_DEFAULT_BIN_DIR}"
+[ -z "\${HB_INC_INSTALL}" ] && export HB_INC_INSTALL="${_DEFAULT_INC_DIR}"
+[ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${_DEFAULT_LIB_DIR}"
+
+# be sure that ${name} binaries are in your path
+export PATH="\${HB_BIN_INSTALL}${hb_path_separator}${CCPATH}\${PATH}"
+
+if [ "\${HB_COMPILER}" == "gpp" ]; then
+   HB_CC="g++"
+else
+   HB_CC="gcc"
+fi
+
 if [ \$# = 0 ]; then
     echo "syntax: \$0 [<options,...>] <file>[.prg|.o]
 
@@ -144,6 +176,8 @@ if [ \$# = 0 ]; then
                         # link with more GTs. The first one will be
                         #      the default at runtime
     -xbgtk              # link with xbgtk library (xBase GTK+ interface)
+    -hwgui              # link with HWGUI library (GTK+ interface)
+    -l<libname>         # link with <libname> library
     -fmstat             # link with the memory statistics lib
     -nofmstat           # do not link with the memory statistics lib (default)
     -[no]strip          # strip (no strip) binaries
@@ -183,6 +217,9 @@ HB_FM_REQ=""
 HB_STRIP="yes"
 HB_MAIN_FUNC=""
 HB_XBGTK=""
+HB_HWGUI=""
+HB_USRLIBS=""
+HB_GENC=""
 [ -n "\$TMPDIR" ] || TMPDIR="\$TMP"
 [ -n "\$TMPDIR" ] || TMPDIR="\$TEMP"
 [ -n "\$TMPDIR" ] || TMPDIR="/tmp"
@@ -206,13 +243,16 @@ while [ \$n -lt \${#P[@]} ]; do
         -fullstatic) HB_STATIC="full" ;;
         -shared)     HB_STATIC="no" ;;
         -xbgtk)      HB_XBGTK="yes" ;;
+        -hwgui)      HB_HWGUI="yes" ;;
         -mt)         HB_MT="MT" ;;
         -gt*)        HB_GT_REQ="\${HB_GT_REQ} \${v#-gt}" ;;
         -fmstat)     HB_FM_REQ="STAT" ;;
         -nofmstat)   HB_FM_REQ="NOSTAT" ;;
         -strip)      HB_STRIP="yes" ;;
         -nostrip)    HB_STRIP="no" ;;
+        -l[a-zA-z]*) HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
         -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
+        -gc|-gc[0-9]) HB_GENC="yes"; p="\${v}" ;;
         -*)          p="\${v}" ;;
         *)           [ -z \${FILEOUT} ] && FILEOUT="\${v##*/}"; p="\${v}" ;;
     esac
@@ -229,7 +269,13 @@ esac
 SYSTEM_LIBS="${HB_SYS_LIBS}"
 # use pthread system library for MT programs
 if [ "\${HB_MT}" = "MT" ]; then
-    SYSTEM_LIBS="-lpthread \${SYSTEM_LIBS}"
+    case "\${HB_ARCHITECTURE}" in
+        dos|w32|os2)
+            ;;
+        *)
+            SYSTEM_LIBS="-lpthread \${SYSTEM_LIBS}"
+            ;;
+    esac
 fi
 
 HB_GT_STAT=""
@@ -244,16 +290,6 @@ else
 fi
 HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr '[a-z]' '[A-Z]'\`
 
-# set environment variables
-export HB_ARCHITECTURE="${HB_ARCHITECTURE}"
-export HB_COMPILER="${HB_COMPILER}"
-[ -z "\${HB_BIN_INSTALL}" ] && export HB_BIN_INSTALL="${_DEFAULT_BIN_DIR}"
-[ -z "\${HB_INC_INSTALL}" ] && export HB_INC_INSTALL="${_DEFAULT_INC_DIR}"
-[ -z "\${HB_LIB_INSTALL}" ] && export HB_LIB_INSTALL="${_DEFAULT_LIB_DIR}"
-
-# be sure that ${name} binaries are in your path
-export PATH="\${HB_BIN_INSTALL}${hb_path_separator}\${PATH}"
-
 HB_PATHS="-I\${HB_INC_INSTALL}"
 GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 LINK_OPT=""
@@ -262,7 +298,9 @@ CC_OPT=""
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
     if [ "\${HB_ARCHITECTURE}" = "darwin" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/sw/lib"
+        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/sw/lib -L/opt/local/lib"
+    elif [ "\${HB_ARCHITECTURE}" = "bsd" ]; then
+        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/local/lib"
     fi
     SYSTEM_LIBS="\${SYSTEM_LIBS} -l${HB_SLN_LIB:-slang}"
     [ "\${HB_GPM_MOUSE}" = "yes" ] && HB_GPM_LIB="gpm"
@@ -286,7 +324,7 @@ if [ "\${HB_STATIC}" = "full" ]; then
     LINK_OPT="\${LINK_OPT} -static"
     HB_STATIC="yes"
 fi
-if [ "\${HB_XBGTK}" = "yes" ]; then
+if [ "\${HB_XBGTK}" = "yes" ] || [ "\${HB_HWGUI}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0\`"
 fi
 
@@ -305,19 +343,26 @@ for gt in \${HB_GT_REQ}; do
 done
 [ -n "\${HB_FM_REQ}" ] && HB_LNK_REQ="\${HB_LNK_REQ} HB_FM_\${HB_FM_REQ}"
 
+HB_LNK_ATTR=""
 HARBOUR_LIBS=""
 if [ "\${HB_STATIC}" = "yes" ]; then
     libs="${hb_libs} ${hb_libsc}"
 else
     l="${name}"
     if [ "\${HB_ARCHITECTURE}" = "darwin" ]; then
-        ext="dylib"
+        pref="lib"
+        ext=".dylib"
         LINK_OPT="-bind_at_load -multiply_defined suppress"
+    elif [ "\${HB_ARCHITECTURE}" = "w32" ]; then
+        pref=""
+        ext=".dll"
+        HB_LNK_ATTR="__attribute__ ((dllimport))"
     else
-        ext="so"
+        pref="lib"
+        ext=".so"
     fi
-    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.\${ext}" ] && l="\${l}mt"
-    [ -f "\${HB_LIB_INSTALL}/lib\${l}.\${ext}" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ] && l="\${l}mt"
+    [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
     libs="gtalleg hbodbc debug profiler ${hb_libsc}"
 fi
 for l in \${libs}
@@ -331,6 +376,9 @@ do
 done
 if [ "\${HB_XBGTK}" = "yes" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} -lxbgtk"
+fi
+if [ "\${HB_HWGUI}" = "yes" ]; then
+    HARBOUR_LIBS="\${HARBOUR_LIBS} -lhwgui -lprocmisc -lhbxml"
 fi
 if [ "\${HB_ARCHITECTURE}" = "darwin" ] || [ "\${HB_ARCHITECTURE}" = "sunos" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} \${HARBOUR_LIBS}"
@@ -351,20 +399,26 @@ if [ "\${HB_ARCHITECTURE}" = "darwin" ]; then
     CC_OPT="-no-cpp-precomp -Wno-long-double"
 elif [ "\${HB_ARCHITECTURE}" = "sunos" ]; then
     HB_STRIP="no"
+elif [ "\${HB_ARCHITECTURE}" = "w32" ]; then
+    CC_OPT="$CC_C_USR"
+    HB_OPT="$CC_PRG_USR"
 fi
 
-FOUTC1="\${FILEOUT%.*}.c"
-FOUTO1="\${FILEOUT%.*}.o"
-FOUTE1="\${FILEOUT%.[Pp][Rr][Gg]}"
-FOUTE1="\${FOUTE1%.[oc]}"
 FOUTC="\${DIROUT}/\${FILEOUT%.*}.c"
 FOUTO="\${DIROUT}/\${FILEOUT%.*}.o"
 FOUTE="\${DIROUT}/\${FILEOUT%.[Pp][Rr][Gg]}"
-FOUTE="\${FOUTE%.[oc]}"
+FOUTE="\${FOUTE%.[oc]}${hb_exesuf}"
 
 hb_cc()
 {
-    ${hb_cmpname} "\$@" \${HB_PATHS} && [ -f "\${FOUTC}" ] 
+    ${CCPREFIX}\${HB_CC} "\$@" \${CC_OPT} \${GCC_PATHS}
+}
+
+hb_cmp()
+{
+    ${hb_cmpname} "\$@" \${HB_OPT} \${HB_PATHS} && [ -f "\${FOUTC}" ] && \\
+    hb_cc -c "\${FOUTC}" -o "\${FOUTO}" && \\
+    ( [ "\${HB_GENC}" = "yes" ] || rm -f "\${FOUTC}" )
 }
 
 hb_link()
@@ -378,17 +432,10 @@ hb_link()
     fi
     if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         hb_lnk_request > \${_TMP_FILE_} && \\
-        gcc "\$@" \${CC_OPT} "\${_TMP_FILE_}" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+        hb_cc "\$@" "\${_TMP_FILE_}" \${LINK_OPT} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
     else
-        gcc "\$@" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+        hb_cc "\$@" \${LINK_OPT} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
     fi
-}
-
-hb_cmp()
-{
-    hb_cc "\$@" && \\
-    gcc -c \${CC_OPT} "\${FOUTC}" -o "\${FOUTO}" \${GCC_PATHS} && \\
-    rm -f "\${FOUTC}"
 }
 
 hb_lnk_request()
@@ -408,8 +455,10 @@ hb_lnk_request()
     gt="\${HB_GT_REQ%% *}"
     if [ -n "\$gt" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         echo "#include \\"hbinit.h\\""
-        echo "extern char * s_defaultGT;"
-        echo "extern char * s_pszLinkedMain;"
+        echo "HB_EXTERN_BEGIN"
+        echo "extern \${HB_LNK_ATTR} char * s_defaultGT;"
+        echo "extern \${HB_LNK_ATTR} char * s_pszLinkedMain;"
+        echo "HB_EXTERN_END"
         echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
         if [ -n "\$gt" ]; then
             echo "   s_defaultGT = \\"\$gt\\";"
@@ -423,8 +472,8 @@ hb_lnk_request()
 
 hb_lnk_main()
 {
-    (nm \$1 -g -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* T HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
-#    (nm \$1 -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* [Tt] HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
+    (${CCPREFIX}nm \$1 -g -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* T HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
+#    (${CCPREFIX}nm \$1 -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* [Tt] HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
 }
 
 hb_cleanup()
@@ -515,7 +564,10 @@ mk_hblibso()
     if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         full_lib_name="lib${name}.${hb_ver}.dylib"
         full_lib_name_mt="lib${name}mt.${hb_ver}.dylib"
-        linker_options="-L/sw/lib $linker_options"
+        linker_options="-L/sw/lib -L/opt/local/lib $linker_options"
+    elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
+        full_lib_name="${name}.dll"
+        full_lib_name_mt="${name}mt.dll"
     else
         full_lib_name="lib${name}-${hb_ver}.so"
         full_lib_name_mt="lib${name}mt-${hb_ver}.so"
@@ -532,21 +584,25 @@ mk_hblibso()
         then
             if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
                 ll=${l%.${hb_ver}.dylib}.dylib
+            elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
+                ll=""
             else
                 ll=${l%-${hb_ver}.so}.so
                 ln -sf $l $ll
             fi
-            case $HB_LIB_INSTALL in
-                */usr/lib/*|*/usr/lib64/*|*/usr/local/lib/*|*/usr/local/lib64/*)
-                    ln -sf ${name}/$l ../$ll
-                    ;;
-                */usr/local/*)
-                    mkdir -p ../../lib
-                    ln -sf ../${name}/lib/$l ../../lib/$ll
-                    ;;
-                *)
-                    ;;
-            esac
+            if [ -n "$ll" ]; then
+                case $HB_LIB_INSTALL in
+                    */usr/lib/*|*/usr/lib64/*|*/usr/local/lib/*|*/usr/local/lib64/*)
+                        ln -sf ${name}/$l ../$ll
+                        ;;
+                    */usr/local/*)
+                        mkdir -p ../../lib
+                        ln -sf ../${name}/lib/$l ../../lib/$ll
+                        ;;
+                    *)
+                        ;;
+                esac
+            fi
         fi
     done
     )

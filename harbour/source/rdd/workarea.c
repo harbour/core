@@ -1021,7 +1021,7 @@ ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
    {
       PHB_ITEM pItem = hb_itemNew( NULL );
       LPDBTRANSITEM pTransItem;
-      USHORT uiCount = 0;
+      USHORT uiCount;
 
       /* Append a new record */
       errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, TRUE );

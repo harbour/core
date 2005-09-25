@@ -1117,22 +1117,29 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
    UNSIGNED32 ulRetVal;
    ADSHANDLE hCursor = 0;
    ADSAREAP pArea;
-   DBOPENINFO pInfo;
 
-   if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
+   if( adsConnectHandle && ( pArea = hb_rddGetADSWorkAreaPointer() ) != 0
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
-      ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, (UNSIGNED8 *) hb_parc( 1 ),  &hCursor );
+      char * pucStmt = hb_parcx( 1 );
+
+      ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, (UNSIGNED8 *) pucStmt, &hCursor );
       if( ulRetVal == AE_SUCCESS )
       {
          if( hCursor )
          {
-            pInfo.atomAlias = NULL;
+            DBOPENINFO pInfo;
+
+            memset( &pInfo, 0, sizeof( DBOPENINFO ) );
+            pInfo.abName = ( BYTE * ) "";
+            pInfo.fReadonly = TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
          else
+         {
             adsCloseCursor( pArea );
+         }
          hb_retl( 1 );
       }
       else
@@ -1142,7 +1149,9 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
       }
    }
    else
+   {
       hb_retl( 0 );
+   }
 }
 
 HB_FUNC( ADSPREPARESQL )
@@ -1171,9 +1180,8 @@ HB_FUNC( ADSEXECUTESQL )
    UNSIGNED32 ulRetVal;
    ADSHANDLE hCursor = 0;
    ADSAREAP pArea;
-   DBOPENINFO pInfo;
 
-   if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
+   if( adsConnectHandle && ( pArea = hb_rddGetADSWorkAreaPointer() ) != 0
                         && pArea->hStatement )
    {
       ulRetVal = AdsExecuteSQL( pArea->hStatement, &hCursor );
@@ -1181,12 +1189,18 @@ HB_FUNC( ADSEXECUTESQL )
       {
          if( hCursor )
          {
-            pInfo.atomAlias = NULL;
+            DBOPENINFO pInfo;
+
+            memset( &pInfo, 0, sizeof( DBOPENINFO ) );
+            pInfo.abName = ( BYTE * ) "";
+            pInfo.fReadonly = TRUE;
             pArea->hTable = hCursor;
             SELF_OPEN( ( AREAP ) pArea, &pInfo );
          }
          else
+         {
             adsCloseCursor( pArea );
+         }
          hb_retl( 1 );
       }
       else
@@ -1196,7 +1210,9 @@ HB_FUNC( ADSEXECUTESQL )
       }
    }
    else
+   {
       hb_retl( 0 );
+   }
 }
 
 HB_FUNC( ADSCLOSEALLTABLES )
@@ -1558,7 +1574,7 @@ HB_FUNC( ADSVERSION )
    hb_retc( ucVersion );
 }
 
-#ifdef ADS_REQUIRE_VERSION6
+#if ADS_REQUIRE_VERSION >= 6
 
 HB_FUNC( ADSGETNUMACTIVELINKS )         // requires 6.2 !
 {
@@ -1906,5 +1922,5 @@ HB_FUNC( ADSCOPYTABLECONTENTS )
 
 }
 
-#endif   /* ADS_REQUIRE_VERSION6  */
+#endif   /* ADS_REQUIRE_VERSION >= 6  */
 /*  Please add all-version functions above this block */

@@ -2900,7 +2900,6 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pError )
    {
       hb_itemRelease( pError );
-      pError = NULL;
    }
 
    /* Exit if error */
