@@ -22,9 +22,11 @@
   * harbour/source/rdd/workarea.c
   * harbour/source/rdd/dbfntx/dbfntx1.c
   * harbour/source/rtl/dates.c
-  * harbour/source/vm/hvm.c
   * harbour/source/vm/itemapi.c
     * updated for proper RDD synchronization with xHarbour
+
+  * harbour/source/vm/hvm.c
+    ! fixed bug in divide by 0 substitution
 
   * harbour/contrib/rdd_ads/ads0.prg
   * harbour/contrib/rdd_ads/ads1.c
