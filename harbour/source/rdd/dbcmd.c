@@ -3253,7 +3253,7 @@ HB_FUNC( RDDLIST )
    {
       if( ( uiType == 0 ) || ( s_RddList[ uiCount ]->uiType == uiType ) )
       {
-         hb_itemPutC( hb_arrayGetItemPtr( pRddArray, uiIndex++ ), s_RddList[ uiCount ]->szName );
+         hb_itemPutC( hb_arrayGetItemPtr( pRddArray, ++uiIndex ), s_RddList[ uiCount ]->szName );
       }
    }
    hb_itemReturnForward( pRddArray );

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-26 12:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/source/rdd/dbcmd.c
+    ! fixed bug I introduced in RDDLIST()
+
 2005-09-25 21:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
    - harbour/source/codepage/cdpsrwin.c
   * harbour/make_tgz.sh
