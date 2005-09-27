@@ -94,18 +94,23 @@
 #define ADS_AIS_SERVER           4
 
 /*
-   If you are want to use functions from ADS version 6 or later
-   (data dictionary support, built-in Internet Server
-   capabilities, etc.), you must do two things:
+   If you want to limit your app to use an ADS version
+   earlier than the current one, you must set this constant
+      ADS_REQUIRE_VERSION
+   to the *latest* version you want to allow/require, as in
+      -DADS_REQUIRE_VERSION=5
 
-   1) Link with an ACE32.LIB created from the version 6 or
-         later dll that imports these functions, and
+   As of 6/7/2004, the default supports linking to v6 and v7,
+   as there are no v7-specific features yet.
+   It does cover v6 data dictionary support, built-in
+   Internet Server capabilities, etc.
+
+   So to link to v5, do this:
+   1) Link with an ACE32.LIB created from the version 5
+         dll that imports these functions, and
+
    2) Set this "define" when compiling rddads:
-
-   #define ADS_REQUIRE_VERSION6
-
-   Otherwise, any version of ADS will work but you won't have
-   the extra functionality available past v.5.
+      -DADS_REQUIRE_VERSION=5
 
 */
 

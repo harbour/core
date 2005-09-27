@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-27 15:10 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * harbour/contrib/rdd_ads/adsfunc.c
+    ! added missing functions hb_oemansi & hb_ansioem required with
+      the recent sycn by Ryzard
+  * harbour/contrib/rdd_ads/ads.ch
+    ! updated comment on how to use ADS_REQUIRED_VERSION manifest constant
+
 2005-09-26 12:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * xharbour/source/rdd/dbcmd.c
     ! fixed bug I introduced in RDDLIST()

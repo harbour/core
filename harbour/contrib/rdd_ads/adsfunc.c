@@ -71,12 +71,42 @@ int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
 int adsCharType = ADS_ANSI;
+#if ADS_REQUIRE_VERSION >= 6
+BOOL adsOEM = FALSE;
+#endif
 ADSHANDLE adsConnectHandle = 0;
 BOOL bDictionary = FALSE;               /* Use Data Dictionary? */
 BOOL bTestRecLocks = FALSE;             /* Debug Implicit locks */
 
 PHB_ITEM itmCobCallBack = 0;
 
+#if ADS_REQUIRE_VERSION >= 6
+void hb_oemansi( char* pcString, LONG lLen )
+{
+#if defined(HB_OS_WIN_32)
+   char * pszDst = ( char * ) hb_xgrab( lLen + 1 );
+   OemToCharBuff( ( LPCSTR ) pcString, ( LPSTR ) pszDst, (DWORD) lLen );
+   memcpy( pcString, pszDst, lLen );
+   hb_xfree( pszDst );
+#else
+   HB_SYMBOL_UNUSED( pcString );
+   HB_SYMBOL_UNUSED( lLen );
+#endif
+}
+
+void hb_ansioem( char* pcString, LONG lLen )
+{
+#if defined(HB_OS_WIN_32)
+   char * pszDst = ( char * ) hb_xgrab( lLen + 1 );
+   CharToOemBuff( ( LPCSTR ) pcString, ( LPSTR ) pszDst, (DWORD) lLen );
+   memcpy( pcString, pszDst, lLen );
+   hb_xfree( pszDst );
+#else
+   HB_SYMBOL_UNUSED( pcString );
+   HB_SYMBOL_UNUSED( lLen );
+#endif
+}
+#endif
 
 HB_FUNC( ADSTESTRECLOCKS )              /* Debug Implicit locks Set/Get call */
 {
