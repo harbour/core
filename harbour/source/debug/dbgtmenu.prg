@@ -210,14 +210,15 @@ METHOD Display() CLASS TDbMenu
       SetPos( 0, 0 )
    else
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
-      @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
+      @ ::nTop, ::nLeft TO ::nBottom, ::nRight
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
    for n := 1 to Len( ::aItems )
       if ::aItems[ n ]:cPrompt == "-"  // Separator
-         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
-            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
+         @ ::aItems[ n ]:nRow, ::nLeft+1 TO ::aItems[ n ]:nRow, ::nRight - 1
+//         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
+//            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
       else
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
       endif

@@ -453,7 +453,7 @@ METHOD New() CLASS TDebugger
 
    s_oDebugger := Self
 
-   ::aColors := {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG"}
+   ::aColors := {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG", "GR+/BG"}
    ::lMonoDisplay      := .f.
    ::aWindows          := {}
    ::nCurrentWindow    := 1
@@ -3251,8 +3251,8 @@ RETURN .T.
 function __DbgColors()
 
 return iif( ! s_oDebugger:lMonoDisplay, s_oDebugger:aColors,;
-           { "W+/N", "W+/N", "N/W", "N/W", "N/W", "N/W", "W+/N",;
-             "N/W", "W+/W", "W/N", "W+/N" } )
+           { "W/N", "W+/N", "N/W", "N/W", "N/W", "N/W", "W+/N",;
+             "N/W", "W+/W", "W/N", "W+/N", "W+/N" } )
 
 function __Dbg()
 

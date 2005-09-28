@@ -8,6 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-09-28 13:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+      - removed references to DBFDBT library
+   
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtmitm.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+   * source/rtl/alert.prg
+      * fixed displaying of boxes under the xterm
+        (use @ ... TO ... instead of @ ... BOX)
+      
+   * source/rtl/gtcrs/gtcrs.c
+      * fixed restoring of alternate characters flag
+
+
 2005-09-27 15:10 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * harbour/contrib/rdd_ads/adsfunc.c
     ! added missing functions hb_oemansi & hb_ansioem required with

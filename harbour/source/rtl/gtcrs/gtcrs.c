@@ -320,7 +320,8 @@ static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
 
    move( uiRow, uiCol );
-   addch( s_charmap_table[ byChar ] | s_alternate_char_set | s_color_table[ byAttr ] );
+   addch( s_charmap_table[ byChar ] | 
+   s_alternate_char_set | s_color_table[ byAttr ] );
 }
 
 void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
@@ -807,6 +808,7 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
       ret = 0;
    }
 
+   s_alternate_char_set = l_alternate_char_set;
    return ret;
 }
 

@@ -64,6 +64,7 @@ CLASS TDbMenuItem
    DATA bAction
    DATA lChecked
    DATA Ident
+   DATA cCheckMark
 
    ACCESS Checked() INLINE ::lChecked
    ASSIGN Checked(lOnOff) INLINE ::lChecked:=lOnOff
@@ -82,6 +83,8 @@ METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS TDbMenuItem
    ::bAction  := bAction
    ::lChecked := lChecked
    ::Ident    := xIdent
+   //Check mark should be different under xterm terminal
+   ::cCheckMark  := IIF( AT("TERM",UPPER(GETENV("TERM")))>0, 'v', CHR(251) )
 
 return Self
 
@@ -96,6 +99,8 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
      SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-   DispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
+   IF( ::lChecked )
+      DispOutAt( ::nRow, ::nCol, ::cCheckMark, cClrText )
+   ENDIF
 
 return Self

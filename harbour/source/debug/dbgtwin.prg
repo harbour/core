@@ -64,8 +64,8 @@
 CLASS TDbWindow  // Debugger windows and dialogs
 
    DATA   nTop, nLeft, nBottom, nRight
-   DATA   cCaption
-   DATA   cBackImage, cColor
+   DATA   cCaption, cMark
+   DATA   cBackImage, cColor, cColorFocus
    DATA   lFocused, bGotFocus, bLostFocus
    DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
    DATA   lShadow, lVisible
@@ -104,9 +104,12 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::nRight   := nRight
    ::cCaption := cCaption
    ::cColor   := cColor
+   ::cColorFocus := __DbgColors()[ 12 ]
    ::lShadow  := .f.
    ::lVisible := .f.
    ::lFocused := .f.
+   //Check mark should be different under xterm terminal
+   ::cMark    := '['+ IIF( AT("TERM",UPPER(GETENV("TERM")))>0, 'X', CHR(254) )+ ']'
 
 return Self
 
@@ -150,7 +153,8 @@ METHOD ShowCaption CLASS TDbWindow
    if ! Empty( ::cCaption )
       DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
          ( ( Len( ::cCaption ) + 2 ) / 2 ),;
-         " " + ::cCaption + " ", ::cColor )
+         " " + ::cCaption + " ", ;
+         IIF( ::lFocused, ::cColorFocus, ::cColor ) )
    endif
 
 return nil
@@ -165,10 +169,13 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
    ::lFocused := lOnOff
 
-   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( lOnOff, B_DOUBLE, B_SINGLE ) ;
-      COLOR ::cColor
+   IF( lOnOff )
+      @ ::nTop, ::nLeft TO ::nBottom, ::nRight DOUBLE COLOR ::cColorFocus
+   ELSE
+      @ ::nTop, ::nLeft TO ::nBottom, ::nRight COLOR ::cColor
+   ENDIF
 
-   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
+   DispOutAt( ::nTop, ::nLeft + 1, ::cMark, IIF(lOnOff,::cColorFocus,::cColor) )
 
    if ! Empty( ::cCaption )
       ::ShowCaption( ::cCaption )
@@ -190,10 +197,13 @@ METHOD Refresh() CLASS TDbWindow
 
    DispBegin()
 
-   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( ::lFocused, B_DOUBLE, B_SINGLE ) ;
-      COLOR ::cColor
+   IF( ::lFocused )
+      @ ::nTop, ::nLeft TO ::nBottom, ::nRight DOUBLE COLOR ::cColorFocus
+   ELSE
+      @ ::nTop, ::nLeft TO ::nBottom, ::nRight COLOR ::cColor
+   ENDIF
 
-   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
+   DispOutAt( ::nTop, ::nLeft + 1, ::cMark, IIF(::lFocused,::cColorFocus,::cColor) )
 
    if ! Empty( ::cCaption )
       ::ShowCaption( ::cCaption )

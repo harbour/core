@@ -264,7 +264,10 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */
-      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
+      //Fixed box characters cannot be displayed correctly on some terminals
+      //(e.g. xterm)
+      //DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
+      @ nInitRow, nInitCol TO nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 COLOR cColorNorm
 
       FOR nEval := 1 TO Len( aSay )
          DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
