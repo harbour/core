@@ -240,7 +240,8 @@ METHOD FieldType(nNum) CLASS TMySQLRow
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
-              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
             cType := "N"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
@@ -255,10 +256,10 @@ METHOD FieldType(nNum) CLASS TMySQLRow
             cType := "C"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
-            cType := "I"
+            cType := "N"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
-            cType := "B"
+            cType := "M"
 
          otherwise
             cType := "U"
@@ -775,7 +776,8 @@ METHOD FieldType(nNum) CLASS TMySQLQuery
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
               ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .OR.;
-              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE.OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
             cType := "N"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
@@ -790,10 +792,10 @@ METHOD FieldType(nNum) CLASS TMySQLQuery
             cType := "C"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
-            cType := "I"
+            cType := "N"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
-            cType := "B"
+            cType := "M"
 
          otherwise
             cType := "U"
@@ -871,7 +873,6 @@ METHOD GetRow(nRow) CLASS TMySQLTable
 
    ::aOldvalue:={}
    for i := 1 to ::nNumFields
-
        // ::aOldValue[i] := ::FieldGet(i)
        aadd(::aOldvalue,::fieldget(i))
    next
@@ -1396,6 +1397,7 @@ CLASS TMySQLServer
    DATA  cPassword               // his/her password
    DATA  lError                  // .T. if occurred an error
    DATA  cCreateQuery
+
    METHOD   New(cServer, cUser, cPassword)   // Opens connection to a server, returns a server object
    METHOD   Destroy()                        // Closes connection to server
 

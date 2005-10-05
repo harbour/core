@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2005-10-05 03:08 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
+  * harbour/include/hbextern.ch
+    ! added missing declarations:
+      DBRELATION, DBRSELECT, MENUMODAL, _PUSHBUTT_, _LISTBOX_
+  * harbour/contrib/mysql/tmysql.prg
+    ! added conversion from tiny int MySQL type into numeric DBF. (an error before).
+      Supplied by Mitja Podgornik
+
+
 2005-09-28 13:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * makefile.bc
    * makefile.nt
