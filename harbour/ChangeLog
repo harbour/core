@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-05 15:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/common/expropt2.c
+      * fixed bug in ASC() optimization (when character code > 127)
+
 
 2005-10-05 03:08 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
   * harbour/include/hbextern.ch

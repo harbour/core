@@ -1231,7 +1231,7 @@ BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 	
    if( pArg->ExprType == HB_ET_STRING )
    {
-   	HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->value.asString.string[0] );
+   	HB_EXPR_PTR pExpr = hb_compExprNewLong( (BYTE)pArg->value.asString.string[0] );
 
      	hb_compExprFree( pParms, HB_MACRO_PARAM );
      	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
