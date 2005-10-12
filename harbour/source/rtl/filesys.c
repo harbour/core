@@ -568,7 +568,7 @@ FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
       }
       if( pFilename[ ulLen - 1 ] == '|' )
       {
-          pbyTmp = hb_strdup( ( char * ) pFilename );
+          pbyTmp = ( BYTE * ) hb_strdup( ( char * ) pFilename );
           pbyTmp[--ulLen] = 0;
           pFilename = pbyTmp;
       } else
@@ -936,7 +936,7 @@ BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    HB_SYMBOL_UNUSED( uiDevMode );
 
    bResult = FALSE;
-   s_uiErrorLast = FS_ERROR;
+   s_uiErrorLast = ( USHORT ) FS_ERROR;
 
 #endif
 
@@ -1974,8 +1974,8 @@ USHORT HB_EXPORT hb_fsChDrv( BYTE nDrive )
 
    HB_SYMBOL_UNUSED( nDrive );
 
-   uiResult = FS_ERROR;
-   s_uiErrorLast = FS_ERROR;
+   uiResult = ( USHORT ) FS_ERROR;
+   s_uiErrorLast = ( USHORT ) FS_ERROR;
 
 #endif
 
@@ -2045,8 +2045,8 @@ USHORT HB_EXPORT hb_fsIsDrv( BYTE nDrive )
 
    HB_SYMBOL_UNUSED( nDrive );
 
-   uiResult = FS_ERROR;
-   s_uiErrorLast = FS_ERROR;
+   uiResult = ( USHORT ) FS_ERROR;
+   s_uiErrorLast = ( USHORT ) FS_ERROR;
 
 #endif
 
@@ -2124,7 +2124,7 @@ BYTE HB_EXPORT  hb_fsCurDrv( void )
 #else
 
    uiResult = 0;
-   s_uiErrorLast = FS_ERROR;
+   s_uiErrorLast = ( USHORT ) FS_ERROR;
 
 #endif
 
@@ -2309,7 +2309,7 @@ BOOL hb_fsEof( FHANDLE hFileHandle )
    }
    else if( newPos != curPos )
    {
-      hb_fsSetError( FS_ERROR );
+      hb_fsSetError( ( USHORT ) FS_ERROR );
    }
    return curPos >= endPos;
 #else

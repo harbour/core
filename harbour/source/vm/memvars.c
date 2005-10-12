@@ -1528,7 +1528,7 @@ HB_FUNC( __MVRESTORE )
 
       if( fhnd != FS_ERROR )
       {
-         char * pszMask = ISCHAR( 3 ) ? hb_parc( 3 ) : "*";
+         char * pszMask = ISCHAR( 3 ) ? hb_parc( 3 ) : ( char * ) "*";
          BOOL bIncludeMask = ISCHAR( 4 ) ? hb_parl( 4 ) : TRUE;
          BYTE buffer[ HB_MEM_REC_LEN ];
 

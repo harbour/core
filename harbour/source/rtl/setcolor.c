@@ -54,7 +54,7 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
-char * hb_conSetColor( char * szColor )
+char * hb_conSetColor( const char * szColor )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conSetColor(%s)", szColor));
 

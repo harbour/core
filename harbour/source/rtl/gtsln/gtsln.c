@@ -262,7 +262,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    if( ! gt_Inited )
    {
-      char *errmsg = '\r'+'\n'+"Internal error : screen driver initialization failure"+'\r'+'\n'+( char )0;
+      const char *errmsg = '\r'+'\n'+"Internal error : screen driver initialization failure"+'\r'+'\n'+( char )0;
 
       /* something went wrong - restore default settings */
       SLang_reset_tty();
@@ -1247,7 +1247,7 @@ static void hb_gt_build_conv_tabs()
       s_convHighChars[ i ] = ( ( SLsmg_Char_Type ) i ) | 0x8000;
 
    /* init an alternate chars table */
-   if( ( p = SLtt_Graphics_Char_Pairs ) )
+   if( ( p = ( unsigned char * ) SLtt_Graphics_Char_Pairs ) )
    {
       len = strlen( ( char * ) p );
 
@@ -1365,7 +1365,7 @@ static void hb_gt_build_conv_tabs()
 
    /* init national chars */
 
-   env = hb_getenv( hb_NationCharsEnvName );
+   env = ( unsigned char * ) hb_getenv( hb_NationCharsEnvName );
    p = env;
 
    if( p && p[ 0 ] != '\0' )

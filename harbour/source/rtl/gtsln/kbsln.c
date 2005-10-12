@@ -235,7 +235,7 @@ int hb_gt_Init_Terminal( int phase )
 
       /* get Dead key definition */
 
-      p = hb_getenv( hb_DeadKeyEnvName );
+      p = ( unsigned char * ) hb_getenv( hb_DeadKeyEnvName );
 
       if( p && p[ 0 ] != '\0' )
       {

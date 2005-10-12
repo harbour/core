@@ -206,7 +206,7 @@ HB_FUNC( DISKSPACE )
 #elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
 
    {
-      char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : "/";
+      char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) "/";
 #if defined(HB_OS_SUNOS)
       struct statvfs st;
       if ( statvfs( szName, &st) == 0 )

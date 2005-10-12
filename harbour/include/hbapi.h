@@ -588,10 +588,10 @@ extern HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local
 extern void     hb_conInit( void ); /* initialize the console API system */
 extern void     hb_conRelease( void ); /* release the console API system */
 extern char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
-extern void     hb_conOutStd( char * pStr, ULONG ulLen ); /* output an string to STDOUT */
-extern void     hb_conOutErr( char * pStr, ULONG ulLen ); /* output an string to STDERR */
+extern void     hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
+extern void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
 extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
-extern char *   hb_conSetColor( char * szColor ); /* retrieve and optionally set console color */
+extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 extern void     hb_conXSaveRestRelease( void ); /* release the save/restore API */
 
 /* compiler and macro compiler */

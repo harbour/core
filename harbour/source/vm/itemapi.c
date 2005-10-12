@@ -1054,7 +1054,7 @@ char * HB_EXPORT hb_itemTypeStr( PHB_ITEM pItem )
    switch( pItem->type & ~HB_IT_BYREF )
    {
       case HB_IT_ARRAY:
-         return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
+         return ( char * ) ( hb_arrayIsObject( pItem ) ? "O" : "A" );
 
       case HB_IT_BLOCK:
          return "B";
@@ -1777,7 +1777,7 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          break;
 
       case HB_IT_LOGICAL:
-         buffer = ( hb_itemGetL( pItem ) ? ".T." : ".F." );
+         buffer = ( char * ) ( hb_itemGetL( pItem ) ? ".T." : ".F." );
          * ulLen = 3;
          * bFreeReq = FALSE;
          break;

@@ -201,7 +201,7 @@ HB_FUNC( HB_OSNEWLINE )
    hb_retc( s_szCrLf );
 }
 
-typedef void hb_out_func_typedef( char *, ULONG );
+typedef void hb_out_func_typedef( const char *, ULONG );
 
 /* Format items for output, then call specified output function */
 static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
@@ -222,7 +222,7 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 }
 
 /* Output an item to STDOUT */
-void hb_conOutStd( char * pStr, ULONG ulLen )
+void hb_conOutStd( const char * pStr, ULONG ulLen )
 {
    USHORT uiErrorOld;
 
@@ -246,7 +246,7 @@ void hb_conOutStd( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to STDERR */
-void hb_conOutErr( char * pStr, ULONG ulLen )
+void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
    USHORT uiErrorOld;
 
@@ -270,7 +270,7 @@ void hb_conOutErr( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-static void hb_conOutAlt( char * pStr, ULONG ulLen )
+static void hb_conOutAlt( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
@@ -304,7 +304,7 @@ static void hb_conOutAlt( char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer */
-static void hb_conOutDev( char * pStr, ULONG ulLen )
+static void hb_conOutDev( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", pStr, ulLen));
 

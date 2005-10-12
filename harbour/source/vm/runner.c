@@ -660,7 +660,7 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 
    hb_hrbAsmPatch( asmRet->pAsmData, 1, pSymbols );   /* Insert pointer to testsym */
    hb_hrbAsmPatch( asmRet->pAsmData, 6, pCode );      /* Insert pointer to testcode */
-   hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, hb_vmExecute, 15 );
+   hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, ( void * ) hb_vmExecute, 15 );
                                       /* Insert pointer to hb_vmExecute() */
 
 /* #elseif INTEL16 */

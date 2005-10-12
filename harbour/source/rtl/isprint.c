@@ -159,10 +159,10 @@ HB_FUNC( ISPRINTER )
       char DefaultPrinter[ 80 ];
       DWORD pdwBufferSize = 80;
       DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize);
-      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : (char*)DefaultPrinter ) );
+      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) DefaultPrinter ) );
    }
    #else
-      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : "LPT1" ) );
+      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) "LPT1" ) );
    #endif
 }
 

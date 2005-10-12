@@ -1569,7 +1569,7 @@ HB_FUNC( ADSREINDEX )
    if( pArea )
       ulRetVal = AdsReindex( pArea->hTable);
    else
-      ulRetVal = AdsReindex( -1 ); // should return error!
+      ulRetVal = AdsReindex( ( ADSHANDLE ) -1 ); // should return error!
 
    if( ulRetVal == AE_SUCCESS )
       hb_retl( 1 );

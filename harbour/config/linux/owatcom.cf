@@ -28,7 +28,7 @@ CPPFLAGS += -onaehtzr -oi+ -ei -zp8 -s -zt0
 
 CPPFLAGS += -i. -i$(TOP)include -i$(TOP)$(ROOT)include -iinclude
 ifneq ($(HB_LIB_COMPILE),)
-	CPPFLAGS += -i$(HB_INC_COMPILE)
+   CPPFLAGS += -i$(HB_INC_COMPILE)
 endif
 
 ifeq ($(HB_LEX),SIMPLEX)

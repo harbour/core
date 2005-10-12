@@ -77,9 +77,15 @@
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
+#if defined(HB_OS_LINUX) && defined(__WATCOMC__)
+#include "/usr/include/sql.h"
+#include "/usr/include/sqlext.h"
+#include "/usr/include/sqltypes.h"
+#else
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
+#endif
 
 HB_FUNC( SQLALLOCEN ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {
@@ -111,7 +117,7 @@ HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) 
    #elif defined(HB_OS_UNIX)
       RETCODE ret =  SQLDriverConnect( ( HDBC ) hb_parnl( 1 ),
                              0,
-                             hb_parc( 2 ), strlen(hb_parc(2)),
+                             ( SQLCHAR * ) hb_parc( 2 ), strlen(hb_parc(2)),
                              bBuffer1, 1024, &wLen, SQL_DRIVER_COMPLETE ) ;
 
    #endif

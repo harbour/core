@@ -90,7 +90,7 @@ ULONG hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
       }
    }
 
-   hb_fsSetError( FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
    return 0;
 }
 

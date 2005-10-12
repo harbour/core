@@ -326,7 +326,7 @@ ULONG hb_xquery( USHORT uiMode )
    return 0;
 }
 
-void hb_conOutErr( char * pStr, ULONG ulLen )
+void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
    HB_SYMBOL_UNUSED( ulLen );
 

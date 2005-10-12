@@ -4,12 +4,18 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
+ifeq ($(HB_COMPILER),gpp)
+   HB_CMP = g++
+else
+   HB_CMP = $(HB_COMPILER)
+endif
+
 OBJ_EXT = .o
 EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = $(HB_CCACHE) gcc
+CC = $(HB_CCACHE) $(HB_CMP)
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
@@ -26,7 +32,7 @@ CFLAGS += -DSIMPLEX
 endif
 
 
-LD = $(HB_CCACHE) gcc
+LD = $(HB_CCACHE) $(HB_CMP)
 LD_OUT = -o
 
 # Add all libraries specified in CONTRIBS and LIBS.

@@ -58,7 +58,7 @@
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
 
-void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
+void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 128 ];
 

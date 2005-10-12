@@ -75,12 +75,12 @@
 
 /* CT subsystem error throwing functions */
 extern USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                        char * szDescription, char * szOperation, USHORT uiOsCode,
-                        USHORT uiFlags, ULONG uiArgCount, ...);
+                        const char * szDescription, const char * szOperation,
+                        USHORT uiOsCode, USHORT uiFlags, ULONG uiArgCount, ...);
 
 extern PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                                char * szDescription, char * szOperation, USHORT uiOsCode,
-                                USHORT uiFlags, ULONG uiArgCount, ...);
+                                const char * szDescription, const char * szOperation,
+                                USHORT uiOsCode, USHORT uiFlags, ULONG uiArgCount, ...);
 
 /* set argument error behaviour */
 extern void ct_setargerrormode (int iMode);

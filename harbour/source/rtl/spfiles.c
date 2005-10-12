@@ -107,7 +107,7 @@ BOOL hb_spFile( BYTE * pFilename, BYTE * pRetPath )
        */
       if( ! bIsFile )
       {
-         pFilepath->szPath = hb_set.HB_SET_DEFAULT ? hb_set.HB_SET_DEFAULT : ".";
+         pFilepath->szPath = hb_set.HB_SET_DEFAULT ? hb_set.HB_SET_DEFAULT : ( char * ) ".";
          hb_fsFNameMerge( (char*) Path, pFilepath );
       }
    }

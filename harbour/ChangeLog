@@ -8,6 +8,47 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-12 02:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/global.cf
+    + added HB_DB_DRVEXT envvar support for additional RDDs
+   - harbour/source/codepage/cdpruwin.c
+  * harbour/config/linux/gcc.cf
+  + harbour/config/linux/gpp.cf
+    + added GNU C++ support
+   - harbour/source/codepage/cdpslwin.c
+  * harbour/config/linux/owatcom.cf
+  * harbour/contrib/btree/hb_btree.c
+  * harbour/contrib/libct/ct.h
+  * harbour/contrib/libct/ctc.c
+  * harbour/contrib/odbc/odbc.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/include/hbapi.h
+  * harbour/include/hbapierr.h
+  * harbour/include/hbapigt.h
+  * harbour/include/hbapilng.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/datec.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/isprint.c
+  * harbour/source/rtl/natmsg.c
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/setcolor.c
+  * harbour/source/rtl/spfiles.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/runner.c
+    * fixed for popper compilation with GNU C++ and OpenWatcom on Linux
+
 2005-10-05 15:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/common/expropt2.c
       * fixed bug in ASC() optimization (when character code > 127)

@@ -154,7 +154,7 @@ int hb_gtReadKey( HB_inkey_enum eventmask )
    return hb_gt_ReadKey( eventmask );
 }
 
-void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
+void hb_gtAdjustPos( int iHandle, const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtAdjustPos()"));
 
@@ -488,7 +488,7 @@ USHORT hb_gtColorToN( char * szColorString )
    return nColor;
 }
 
-USHORT hb_gtSetColorStr( char * szColorString )
+USHORT hb_gtSetColorStr( const char * szColorString )
 {
    char c;
    char buff[ 6 ];
@@ -1116,7 +1116,7 @@ USHORT hb_gtSuspend( void )
     * to prepare screen for outside output
     */
    if( !hb_gt_Suspend() )
-      return( -1 );
+      return( ( USHORT ) -1 );
 
    return( 0 );
 }
@@ -1132,7 +1132,7 @@ USHORT hb_gtResume( void )
          hb_gt_DispBegin();
    }
    else
-      return( -1 );
+      return( ( USHORT ) -1 );
 
    return( 0 );
 }

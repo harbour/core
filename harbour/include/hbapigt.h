@@ -149,7 +149,7 @@ typedef enum
 
 extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
-extern void   hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
+extern void   hb_gtAdjustPos( int iHandle, const char * pStr, ULONG ulLen );
 extern USHORT hb_gtBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, BYTE * pbyFrame );
 extern USHORT hb_gtBoxD( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
 extern USHORT hb_gtBoxS( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
@@ -179,7 +179,7 @@ extern USHORT hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
 extern USHORT hb_gtScrDim( USHORT * puiHeight, USHORT * puiWidth );
 extern USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols );
 extern USHORT hb_gtSetBlink( BOOL bBlink );
-extern USHORT hb_gtSetColorStr( char * pszColorString );
+extern USHORT hb_gtSetColorStr( const char * pszColorString );
 extern USHORT hb_gtSetCursor( USHORT uiCursorShape );
 extern USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols );
 extern USHORT hb_gtSetPos( SHORT iRow, SHORT iCol );

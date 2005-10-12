@@ -267,28 +267,28 @@ typedef struct ioBuffer_tag
   BYTE    Buffer[ 1 ];
 } ioBuffer_T;
 
-typedef enum BTreeFlags_enum {
+typedef int hb_BTreeFlags_T;
 
-  IsNormal         = 0,
 
-  /* btree file access flags */
-  IsReadOnly       = HB_BTREE_READONLY,
-  IsExclusive      = HB_BTREE_EXCLUSIVE,
-  IsShared         = HB_BTREE_SHARED,
+#define IsNormal        0
 
-  /* btree control flags */
-  IsUnique         = HB_BTREE_UNIQUE,
-  IsCaseLess       = HB_BTREE_CASELESS,
-  IsInMemory       = HB_BTREE_INMEMORY,
+/* btree file access flags */
+#define IsReadOnly      HB_BTREE_READONLY
+#define IsExclusive     HB_BTREE_EXCLUSIVE
+#define IsShared        HB_BTREE_SHARED
 
-  /* internal flags */
-  IsRecordFound    = 1 << 16,
-  IsDuplicateKey   = 1 << 17,
-  IsMultiBuffers   = 1 << 18,
-  IsOptimized      = 1 << 19,
-} hb_BTreeFlags_T;
+/* btree control flags */
+#define IsUnique        HB_BTREE_UNIQUE
+#define IsCaseLess      HB_BTREE_CASELESS
+#define IsInMemory      HB_BTREE_INMEMORY
 
-#define GETFLAG( pBTree, flag )   ( BOOL )( ( ( pBTree )->ulFlags & ( flag ) ) == ( flag ) )
+/* internal flags */
+#define IsRecordFound   ( 1 << 16 )
+#define IsDuplicateKey  ( 1 << 17 )
+#define IsMultiBuffers  ( 1 << 18 )
+#define IsOptimized     ( 1 << 19 )
+
+#define GETFLAG( pBTree, flag )   ( BOOL )( ( ( int ) ( pBTree )->ulFlags & ( flag ) ) == ( flag ) )
 #define SETFLAG( pBTree, flag )   ( ( pBTree )->ulFlags |= ( flag ) )
 #define RESETFLAG( pBTree, flag ) ( ( pBTree )->ulFlags &= ~( flag ) )
 
@@ -932,7 +932,7 @@ static void KeySet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, hb_Ke
 static LONG KeyCompare( struct hb_BTree * pBTree, hb_KeyData_T *left, hb_KeyData_T *right )
 {
 /*  LONG lResults = strnicmp( left->szKey, right->szKey, pBTree->usKeySize );*/
-  LONG lResults = ( pBTree->pStrCompare )( left->szKey, right->szKey, pBTree->usKeySize );
+  LONG lResults = ( pBTree->pStrCompare )( ( char * ) left->szKey, ( char * ) right->szKey, pBTree->usKeySize );
 
   if ( lResults == 0 && GETFLAG( pBTree, IsUnique ) )
   {
@@ -1617,7 +1617,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
       }
     }
 
-    pBTree->szFileName = hb_strdup( ( char * ) FileName );
+    pBTree->szFileName = ( BYTE * ) hb_strdup( ( char * ) FileName );
   }
 
   pBTree->ulFreePage = NULLPAGE;
@@ -1663,7 +1663,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
   }
   else /* IsInMemory == TRUE */
   {
-    pBTree->ulFlags &= ~HB_BTREE_UNIQUE; /* clear this flag */
+    RESETFLAG( pBTree, HB_BTREE_UNIQUE ); /* clear this flag */
   }
 
   return pBTree;
@@ -1678,7 +1678,7 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
-  pBTree->szFileName = hb_strdup( ( char * ) FileName );
+  pBTree->szFileName = ( BYTE * ) hb_strdup( ( char * ) FileName );
   pBTree->hFile      = hb_fsOpen( pBTree->szFileName, FO_READWRITE );
   if ( pBTree->hFile == -1 )
   {
@@ -1717,7 +1717,7 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
   HB_SYMBOL_UNUSED( ulFlags );
   ioBufferAlloc( pBTree, usBuffers );
 
-  pBTree->ulFlags &= ~HB_BTREE_INMEMORY; /* clear this flag */
+  RESETFLAG( pBTree, HB_BTREE_INMEMORY ); /* clear this flag */
   pBTree->IsDirtyFlagAssignment = TRUE;  /* replaces const value for assignment */
 
   if ( GETFLAG( pBTree, IsCaseLess ) )

@@ -819,7 +819,7 @@ USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyF
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
-      pbyFrame = s_xTermBox;
+      pbyFrame = ( BYTE * ) s_xTermBox;
    }
 
    s_alternate_char_set = A_ALTCHARSET;
@@ -837,7 +837,7 @@ USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyF
    if( s_under_xterm )
    {
       /* Under xterm use hard-coded box drawing characters */
-      pbyFrame = s_xTermBox;
+      pbyFrame = ( BYTE * ) s_xTermBox;
    }
 
    s_alternate_char_set = A_ALTCHARSET;

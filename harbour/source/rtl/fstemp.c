@@ -151,7 +151,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
    }
 #endif
 
-   hb_fsSetError( FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
    return FS_ERROR;
 }
 

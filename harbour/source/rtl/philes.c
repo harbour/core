@@ -234,7 +234,7 @@ HB_FUNC( HB_F_EOF )
    }
    else
    {
-      hb_fsSetError( FS_ERROR );
+      hb_fsSetError( ( USHORT ) FS_ERROR );
       hb_retl( TRUE );
    }
 }

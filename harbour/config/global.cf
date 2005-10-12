@@ -13,6 +13,10 @@ HB_DB_DRIVERS=\
 	hbsix \
 	hsx \
 
+ifneq ($(HB_DB_DRVEXT),)
+HB_DB_DRIVERS += $(HB_DB_DRVEXT)
+endif
+
 ifeq ($(HB_BIN_COMPILE),)
 HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(HB_ARCH)
 endif
