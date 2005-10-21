@@ -657,7 +657,7 @@ DBFCDX_LIB_OBJS = \
 HBSIX_LIB_OBJS = \
    $(OBJ_DIR)\sxcompr.obj \
    $(OBJ_DIR)\sxcrypt.obj \
-   $(OBJ_DIR)\sxdata.obj
+   $(OBJ_DIR)\sxdate.obj
 
 #
 # HSX.LIB rules
