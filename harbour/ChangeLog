@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-21 08:40 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile.nt
+     + minor fix.
+
 2005-10-12 02:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/global.cf
     + added HB_DB_DRVEXT envvar support for additional RDDs
