@@ -72,6 +72,9 @@
 */
 
 #include "hbapi.h"
+#ifdef HB_NO_DEFAULT_API_MACROS
+#include "hbapiitm.h"
+#endif
 #include "hbinit.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
