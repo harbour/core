@@ -8,6 +8,27 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-23 09:05 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * harbour/source/rdd/dbfntx/dbfntx1.c  
+   * harbour/source/rdd/dbfcdx/dbfcdx1.c  
+   * harbour/source/rdd/dbffpt/dbffpt1.c  
+   * harbour/source/rdd/hbsix/sxcompr.c
+   * harbour/source/rdd/hbsix/sxcrypt.c
+   * harbour/source/rdd/hsx/hsx.c
+     + Minor fix to support define HB_NO_DEFAULT_API_MACROS (if used)
+       required by Microsoft compiler
+       
+   IMPORTANT: Now Harbour properly builds using Microsoft compiler and 
+              define HB_NO_DEFAULT_API_MACROS, but applications fail to start, showing
+              this error: 
+              Unrecoverable error 9004: RDD invalid or failed to load
+              Called from DBFFPTINIT(62)
+              
+              Using Borland and the same define, all compiles and works ok.
+              
+              We need to discover why such error raises using Microsoft compiler and that
+              define.
+
 2005-10-21 08:40 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile.nt
      + minor fix.
