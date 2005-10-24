@@ -523,7 +523,6 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\delim1.obj \
    $(OBJ_DIR)\sdf1.obj \
    \
-   $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dbtotal.obj \
    $(OBJ_DIR)\dbfuncs.obj \
    $(OBJ_DIR)\dblist.obj \
@@ -531,10 +530,8 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \
    $(OBJ_DIR)\dbupdat.obj \
-   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
-   $(OBJ_DIR)\rddsys.obj \
-   $(OBJ_DIR)\sdf0.obj
+   $(OBJ_DIR)\rddsys.obj 
 
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
@@ -547,15 +544,11 @@ DBFNTX_LIB_OBJS = \
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
-   $(OBJ_DIR)\dbfcdx0.obj \
-   \
-   $(OBJ_DIR)\sixcdx1.obj \
-   $(OBJ_DIR)\sixcdx0.obj
+    \
+   $(OBJ_DIR)\sixcdx1.obj 
 
 DBFFPT_LIB_OBJS = \
-   $(OBJ_DIR)\dbffpt1.obj \
-   \
-   $(OBJ_DIR)\dbffpt0.obj
+   $(OBJ_DIR)\dbffpt1.obj 
 
 HBSIX_LIB_OBJS = \
    $(OBJ_DIR)\sxcompr.obj \
@@ -1055,13 +1048,6 @@ $(OBJ_DIR)\workarea.obj : $(RDD_DIR)\workarea.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\dbf0.obj : $(OBJ_DIR)\dbf0.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
@@ -1116,21 +1102,7 @@ $(OBJ_DIR)\dbupdat.obj : $(OBJ_DIR)\dbupdat.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\sdf0.obj : $(OBJ_DIR)\sdf0.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\sdf1.obj : $(RDD_DIR)\sdf1.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\delim0.obj : $(OBJ_DIR)\delim0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
@@ -2614,21 +2586,7 @@ $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
 # DBFCDX.LIB dependencies
 #
 
-$(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\dbfcdx0.obj : $(OBJ_DIR)\dbfcdx0.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\sixcdx0.c : $(RDD_DIR)\dbfcdx\sixcdx0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\sixcdx0.obj : $(OBJ_DIR)\sixcdx0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
 
@@ -2639,13 +2597,6 @@ $(OBJ_DIR)\sixcdx1.obj : $(RDD_DIR)\dbfcdx\sixcdx1.c
 #
 # DBFFPT.LIB dependencies
 #
-
-$(OBJ_DIR)\dbfFPT0.c : $(RDD_DIR)\dbfFPT\dbfFPT0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\dbfFPT0.obj : $(OBJ_DIR)\dbfFPT0.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(DBFFPT_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\dbfFPT1.obj : $(RDD_DIR)\dbfFPT\dbfFPT1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
