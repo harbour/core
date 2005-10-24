@@ -117,7 +117,7 @@ extern BOOL       hb_itemRelease  ( PHB_ITEM pItem );
 extern PHB_ITEM   hb_itemReturn   ( PHB_ITEM pItem );
 extern PHB_ITEM   hb_itemReturnForward( PHB_ITEM pItem );
 extern ULONG      hb_itemSize     ( PHB_ITEM pItem );
-extern USHORT     hb_itemType     ( PHB_ITEM pItem );
+extern HB_TYPE    hb_itemType     ( PHB_ITEM pItem );
 extern char *     hb_itemTypeStr  ( PHB_ITEM pItem );
 #ifndef HB_LONG_LONG_OFF
 extern LONGLONG   hb_itemGetNLL   ( PHB_ITEM pItem );
@@ -127,7 +127,7 @@ extern PHB_ITEM   hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG lNumber, int iWidth
 
 /* Non Clipper compliant internal API */
 
-extern PHB_ITEM hb_itemParamPtr ( USHORT uiParam, int iMask );
+extern PHB_ITEM hb_itemParamPtr ( USHORT uiParam, long lMask );
 extern int      hb_itemStrCmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern void     hb_itemCopy     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
 extern void     hb_itemForwardValue( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies the value of an item without incrementing of reference counters */

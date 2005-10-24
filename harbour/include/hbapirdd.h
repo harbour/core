@@ -153,11 +153,11 @@ struct _RDDNODE;
 
 typedef struct
 {
-   BYTE * atomName;        /* FIELD (symbol) name */
-   USHORT uiType;          /* FIELD type */
-   USHORT uiTypeExtended;  /* FIELD type extended */
-   USHORT uiLen;           /* Overall FIELD length */
-   USHORT uiDec;           /* Decimal places of numeric FIELD */
+   BYTE *   atomName;         /* FIELD (symbol) name */
+   HB_TYPE  uiType;           /* FIELD type */
+   USHORT   uiTypeExtended;   /* FIELD type extended */
+   USHORT   uiLen;            /* Overall FIELD length */
+   USHORT   uiDec;            /* Decimal places of numeric FIELD */
 } DBFIELDINFO;
 
 typedef DBFIELDINFO * LPDBFIELDINFO;
@@ -488,7 +488,7 @@ typedef DBLOCKINFO * LPDBLOCKINFO;
 
 typedef struct _FIELD
 {
-   USHORT  uiType;           /* Field type */
+   HB_TYPE uiType;           /* Field type */
    USHORT  uiTypeExtended;   /* Field type - extended */
    USHORT  uiLen;            /* Field length */
    USHORT  uiDec;            /* Decimal length */

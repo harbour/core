@@ -138,12 +138,12 @@ char * hb_parc( int iParam, ... )
    return NULL;
 }
 
-PHB_ITEM hb_param( int iParam, int iMask ) /* retrieve a generic parameter */
+PHB_ITEM hb_param( int iParam, long lMask ) /* retrieve a generic parameter */
 {
    PHB_ITEM pReturn;
    FARPROC pParam=GetProcAddress( GetModuleHandle( NULL ), "_hb_param" );
    if (pParam)
-      pReturn=((HB_PARAM)pParam)(iParam,iMask);
+      pReturn=((HB_PARAM)pParam)(iParam,lMask);
    return pReturn;
 }
 

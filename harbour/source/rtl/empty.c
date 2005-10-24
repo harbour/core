@@ -57,7 +57,7 @@ HB_FUNC( EMPTY )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   switch( hb_itemType( pItem ) & ~HB_IT_BYREF )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY:
          hb_retl( hb_arrayLen( pItem ) == 0 );

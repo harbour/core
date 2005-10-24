@@ -455,7 +455,7 @@ void * hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex )
 }
 
 
-USHORT hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
+HB_TYPE hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetType(%p, %lu)", pArray, ulIndex));
 

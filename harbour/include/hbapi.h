@@ -65,27 +65,27 @@ HB_EXTERN_BEGIN
 #define HB_MAX_MACRO_ARGS 16
 
 /* items types and type checking macros */
-#define HB_IT_NIL       ( ( USHORT ) 0x0000 )
-#define HB_IT_POINTER   ( ( USHORT ) 0x0001 )
-#define HB_IT_INTEGER   ( ( USHORT ) 0x0002 )
-#define HB_IT_LONG      ( ( USHORT ) 0x0008 )
-#define HB_IT_DOUBLE    ( ( USHORT ) 0x0010 )
-#define HB_IT_DATE      ( ( USHORT ) 0x0020 )
-#define HB_IT_LOGICAL   ( ( USHORT ) 0x0080 )
-#define HB_IT_SYMBOL    ( ( USHORT ) 0x0100 )
-#define HB_IT_ALIAS     ( ( USHORT ) 0x0200 )
-#define HB_IT_STRING    ( ( USHORT ) 0x0400 )
-#define HB_IT_MEMOFLAG  ( ( USHORT ) 0x0800 )
+#define HB_IT_NIL       ( ( HB_TYPE ) 0x0000 )
+#define HB_IT_POINTER   ( ( HB_TYPE ) 0x0001 )
+#define HB_IT_INTEGER   ( ( HB_TYPE ) 0x0002 )
+#define HB_IT_LONG      ( ( HB_TYPE ) 0x0008 )
+#define HB_IT_DOUBLE    ( ( HB_TYPE ) 0x0010 )
+#define HB_IT_DATE      ( ( HB_TYPE ) 0x0020 )
+#define HB_IT_LOGICAL   ( ( HB_TYPE ) 0x0080 )
+#define HB_IT_SYMBOL    ( ( HB_TYPE ) 0x0100 )
+#define HB_IT_ALIAS     ( ( HB_TYPE ) 0x0200 )
+#define HB_IT_STRING    ( ( HB_TYPE ) 0x0400 )
+#define HB_IT_MEMOFLAG  ( ( HB_TYPE ) 0x0800 )
 #define HB_IT_MEMO      ( HB_IT_MEMOFLAG | HB_IT_STRING )
-#define HB_IT_BLOCK     ( ( USHORT ) 0x1000 )
-#define HB_IT_BYREF     ( ( USHORT ) 0x2000 )
-#define HB_IT_MEMVAR    ( ( USHORT ) 0x4000 )
-#define HB_IT_ARRAY     ( ( USHORT ) 0x8000 )
+#define HB_IT_BLOCK     ( ( HB_TYPE ) 0x1000 )
+#define HB_IT_BYREF     ( ( HB_TYPE ) 0x2000 )
+#define HB_IT_MEMVAR    ( ( HB_TYPE ) 0x4000 )
+#define HB_IT_ARRAY     ( ( HB_TYPE ) 0x8000 )
 #define HB_IT_OBJECT    HB_IT_ARRAY
-#define HB_IT_NUMERIC   ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
-#define HB_IT_NUMINT    ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG ) )
-#define HB_IT_ANY       ( ( USHORT ) 0xFFFF )
-#define HB_IT_COMPLEX   ( ( USHORT ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
+#define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
+#define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
+#define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFF )
+#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
 
 #define HB_IS_OF_TYPE( p, t ) ( ( ( p )->type & ~HB_IT_BYREF ) == t )
 #define HB_IS_BYREF( p )   ( ( p )->type & HB_IT_BYREF )
@@ -251,7 +251,7 @@ struct hb_struSymbol
 /* items hold at the virtual machine stack */
 typedef struct _HB_ITEM
 {
-   USHORT type;
+   HB_TYPE type;
    union
    {
       struct hb_struArray   asArray;
@@ -274,9 +274,9 @@ typedef struct _HB_BASEARRAY
    PHB_ITEM    pItems;       /* pointer to the array items */
    ULONG       ulLen;        /* number of items in the array */
    HB_COUNTER  ulHolders;    /* number of holders of this array */
+   USHORT *    puiClsTree;   /* remember array of super called ID Tree  */
    USHORT      uiClass;      /* offset to the classes base if it is an object */
    USHORT      uiPrevCls;    /* for fixing after access super */
-   USHORT *    puiClsTree;   /* remember array of super called ID Tree  */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
 /* internal structure for codeblocks */
@@ -321,14 +321,14 @@ extern char       HB_EXPORT * hb_pards( int iParam, ... ); /* retrieve a date as
 extern char       HB_EXPORT * hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern LONG       HB_EXPORT hb_pardl( int iParam, ... ); /* retrieve a date as a LONG NUMBER  */
 extern ULONG      HB_EXPORT hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
-extern int        HB_EXPORT hb_parinfo( int iParam ); /* Determine the param count or data type */
+extern ULONG      HB_EXPORT hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int        HB_EXPORT hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern double     HB_EXPORT hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern int        HB_EXPORT hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern long       HB_EXPORT hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern HB_LONG    HB_EXPORT hb_parnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
 extern void       HB_EXPORT * hb_parptr( int iParam, ... ); /* retrieve a parameter as a pointer */
-extern PHB_ITEM   HB_EXPORT hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
+extern PHB_ITEM   HB_EXPORT hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern PHB_ITEM   HB_EXPORT hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern BOOL       HB_EXPORT hb_extIsArray( int iParam );
 #ifndef HB_LONG_LONG_OFF
@@ -464,7 +464,7 @@ extern HB_LONG    hb_arrayGetNInt( PHB_ITEM pArray, ULONG ulIndex ); /* retrieve
 extern double     hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
 extern char *     hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern long       hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
-extern USHORT     hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
+extern HB_TYPE    hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern BOOL       hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
 extern ULONG      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern BOOL       hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */

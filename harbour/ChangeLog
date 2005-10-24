@@ -8,6 +8,23 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-24 13:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbapirdd.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbtypes.h
+  * harbour/source/rtl/empty.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/maindllp.c
+    + added HB_TYPE to as HB_ITEM type marker.
+    * set HB_TYPE as UINT32
+    * updated to the above modifications
+    * cleaned some ~HB_IT_BYREF which has no effect in current VM
+
 2005-10-24 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbtypes.h
   * harbour/source/vm/maindllp.c

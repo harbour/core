@@ -132,11 +132,11 @@ PHB_ITEM HB_EXPORT hb_itemParam( USHORT uiParam )
 
 /* Internal Item API. Use this with care. */
 
-PHB_ITEM HB_EXPORT hb_itemParamPtr( USHORT uiParam, int iMask )
+PHB_ITEM HB_EXPORT hb_itemParamPtr( USHORT uiParam, long lMask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemParamPtr(%hu, %d)", uiParam, iMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemParamPtr(%hu, %ld)", uiParam, lMask));
 
-   return hb_param( ( int ) uiParam, iMask );
+   return hb_param( ( int ) uiParam, lMask );
 }
 
 USHORT HB_EXPORT hb_itemPCount( void )
@@ -1038,12 +1038,12 @@ ULONG HB_EXPORT hb_itemSize( PHB_ITEM pItem )
    return 0;
 }
 
-USHORT HB_EXPORT hb_itemType( PHB_ITEM pItem )
+HB_TYPE HB_EXPORT hb_itemType( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemType(%p)", pItem));
 
    if( pItem )
-      return ( USHORT ) pItem->type;
+      return ( HB_TYPE ) pItem->type;
    else
       return HB_IT_NIL;
 }
@@ -1052,7 +1052,7 @@ char * HB_EXPORT hb_itemTypeStr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemTypeStr(%p)", pItem));
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_ARRAY:
          return ( char * ) ( hb_arrayIsObject( pItem ) ? "O" : "A" );
@@ -1583,7 +1583,7 @@ BOOL HB_EXPORT hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
    {
       HB_LONG lNumber;
 
-      switch( pNumber->type & ~HB_IT_BYREF )
+      switch( pNumber->type )
       {
          case HB_IT_INTEGER:
             lNumber = pNumber->item.asInteger.value;
@@ -1732,7 +1732,7 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemString(%p, %p, %p)", pItem, ulLen, bFreeReq));
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
@@ -1829,7 +1829,6 @@ char HB_EXPORT * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pulSize, bFreeReq));
 
-   /* to be clipper compatible don't convert HB_IT_BYREF items */
    if( pItem )
    {
       switch( pItem->type )

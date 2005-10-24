@@ -68,7 +68,7 @@ typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 typedef BOOL     ( * EXT_IS_ARRAY ) ( int iParam );
 typedef char *   ( * EXT_PARC1 )  ( int iParam );
 typedef char *   ( * EXT_PARC2 )  ( int iParam, ULONG ulArrayIndex );
-typedef PHB_ITEM ( * HB_PARAM)( int iParam, LONG iMask );
+typedef PHB_ITEM ( * HB_PARAM)( int iParam, long lMask );
 typedef PHB_ITEM ( * HB_PARAMERROR)( int iParam );
 typedef int      ( * HB_PCOUNTS )( void );
 typedef void     ( * HB_RET)( void );

@@ -3286,7 +3286,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
    pDim = hb_stackItemFromTop( - uiDimension );
 
    /* use the proper type of number of elements */
-   switch( pDim->type & ~HB_IT_BYREF )
+   switch( pDim->type )
    {
       case HB_IT_INTEGER:
          ulElements = ( ULONG ) pDim->item.asInteger.value;
@@ -3394,7 +3394,7 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
    /* NOTE: Clipper doesn't generate an error if an workarea specified
     * as numeric value cannot be selected
     */
-   switch( pAlias->type & ~HB_IT_BYREF )
+   switch( pAlias->type )
    {
       case HB_IT_INTEGER:
          /* Alias was used as integer value, for example: 4->field
@@ -4862,7 +4862,7 @@ static double hb_vmPopNumber( void )
    pItem = hb_stackItemFromTop( -1 );
    hb_stackDec();
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_INTEGER:
          dNumber = ( double ) pItem->item.asInteger.value;
@@ -4899,7 +4899,7 @@ static HB_LONG hb_vmPopHBLong( void )
    pItem = hb_stackItemFromTop( -1 );
    hb_stackDec();
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_INTEGER:
          lNumber = ( HB_LONG ) pItem->item.asInteger.value;
@@ -4936,7 +4936,7 @@ static double hb_vmPopDouble( int * piDec )
    pItem = hb_stackItemFromTop( -1 );
    hb_stackDec();
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_INTEGER:
          dNumber = ( double ) pItem->item.asInteger.value;
@@ -5128,7 +5128,7 @@ static double hb_vmTopNumber( void )
 
    pItem = hb_stackItemFromTop( -1 );
 
-   switch( pItem->type & ~HB_IT_BYREF )
+   switch( pItem->type )
    {
       case HB_IT_INTEGER:
          dNumber = ( double ) pItem->item.asInteger.value;
