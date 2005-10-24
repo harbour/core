@@ -27,6 +27,7 @@ C_SOURCES=\
 	msghriso.c   \
 	msghu852.c   \
 	msghucwi.c   \
+	msghuiso.c   \
 	msghuwin.c   \
 	msgid.c      \
 	msgis850.c   \

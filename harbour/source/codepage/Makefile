@@ -13,6 +13,7 @@ C_SOURCES=\
 	cdpgedos.c    \
 	cdpgewin.c    \
 	cdphu852.c    \
+	cdphuiso.c    \
 	cdphuwin.c    \
 	cdppl852.c    \
 	cdppliso.c    \

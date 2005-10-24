@@ -339,6 +339,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\msghriso.obj \
   $(OBJ_DIR)\msghu852.obj \
   $(OBJ_DIR)\msghucwi.obj \
+  $(OBJ_DIR)\msghuiso.obj \
   $(OBJ_DIR)\msghuwin.obj \
   $(OBJ_DIR)\msgid.obj \
   $(OBJ_DIR)\msgis850.obj \
@@ -385,6 +386,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\cdpgedos.obj \
   $(OBJ_DIR)\cdpgewin.obj \
   $(OBJ_DIR)\cdphu852.obj \
+  $(OBJ_DIR)\cdphuiso.obj \
   $(OBJ_DIR)\cdphuwin.obj \
   $(OBJ_DIR)\cdppl852.obj \
   $(OBJ_DIR)\cdppliso.obj \
@@ -1585,6 +1587,9 @@ $(OBJ_DIR)\msghu852.obj : $(LANG_DIR)\msghu852.c
 $(OBJ_DIR)\msghucwi.obj : $(LANG_DIR)\msghucwi.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
+$(OBJ_DIR)\msghuiso.obj : $(LANG_DIR)\msghuiso.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
 $(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
@@ -1789,6 +1794,9 @@ $(OBJ_DIR)\cdpgewin.obj : $(CODEPAGE_DIR)\cdpgewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\cdphu852.obj : $(CODEPAGE_DIR)\cdphu852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdphuiso.obj : $(CODEPAGE_DIR)\cdphuiso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\cdphuwin.obj : $(CODEPAGE_DIR)\cdphuwin.c

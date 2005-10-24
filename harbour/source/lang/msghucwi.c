@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (HUCWI)
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2005 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -205,7 +205,16 @@ HB_LANG_ANNOUNCE( HUCWI );
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_HUCWI )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_HUCWI )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_HUCWI
-#endif
 
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_lang_Init_HUCWI
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_HUCWI = hb_lang_Init_HUCWI;
+   #pragma data_seg()
+#endif

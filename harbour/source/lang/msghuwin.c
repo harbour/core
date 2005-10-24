@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (HUWIN)
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2005 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: Windows-1 */
+/* Codepage: Windows-1250 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Hungarian",                 /* Name (in English) */
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */
-      "Windows-1",                 /* Codepage */
+      "Windows-1250",              /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
@@ -205,7 +205,16 @@ HB_LANG_ANNOUNCE( HUWIN );
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_HUWIN )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_HUWIN )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_HUWIN
-#endif
 
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_lang_Init_HUWIN
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_HUWIN = hb_lang_Init_HUWIN;
+   #pragma data_seg()
+#endif

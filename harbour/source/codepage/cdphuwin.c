@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module (HUWIN)
  *
- * Copyright 1999-2004 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2005 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,9 +50,9 @@
  *
  */
 
-/* Language name: <Your language> */
+/* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -91,7 +91,15 @@ static HB_CODEPAGE s_codepage = { "HUWIN",
 
 HB_CODEPAGE_INIT( HUWIN );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+#if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_HUWIN
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HUWIN = hb_codepage_Init_HUWIN;
+   #pragma data_seg()
 #endif
-

@@ -8,6 +8,26 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-24 12:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+
+   * hrbdll.bc
+   * hrbdll.vc
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+   * source/codepage/Makefile
+   * source/codepage/cdphu852.c
+   + source/codepage/cdphuiso.c
+   * source/codepage/cdphuwin.c
+   * source/lang/Makefile
+   * source/lang/msghu852.c
+   * source/lang/msghucwi.c
+   + source/lang/msghuiso.c
+   * source/lang/msghuwin.c
+     * HU lang stuff updated. ISO cp added (same as Win cp). Minor fixes 
+       (not related to functionality) added.
+
 2005-10-24 02:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/dot/pp.prg
   * harbour/contrib/dot/pp_harb.ch
