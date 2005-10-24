@@ -5,8 +5,18 @@
 /* Use this format for the entry headers:
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
-   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2005-10-24 15:09 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
+  * harbour/makefile.bc
+    - Remove references to:
+      harbour/source/rdd/dbf0.prg
+      harbour/source/rdd/delim0.prg
+      harbour/source/rdd/sdf0.prg
+      harbour/source/rdd/dbfcdx/dbfcdx0.prg
+      harbour/source/rdd/dbfcdx/sixcdx0.prg
+      harbour/source/rdd/dbfdbt/dbfdbt0.prg
 
 2005-10-24 14:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/makefile.bc
