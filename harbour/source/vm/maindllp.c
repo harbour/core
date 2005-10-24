@@ -164,21 +164,21 @@ int   hb_pcount( void )          /* returns the number of suplied parameters */
    return iReturn;
 }
 
-void hb_retc( char * szText )   /* returns a string */
+void hb_retc( const char * szText )   /* returns a string */
 {
    FARPROC pRetc=GetProcAddress(GetModuleHandle( NULL ), "_hb_retc" );
    if (pRetc)
       ((HB_RETC)pRetc)(szText);
 }
 
-void hb_retclen( char * szText, ULONG ulLen ) /* returns a string with a specific length */
+void hb_retclen( const char * szText, ULONG ulLen ) /* returns a string with a specific length */
 {
    FARPROC pRetclen=GetProcAddress(GetModuleHandle( NULL ), "_hb_retclen" );
    if (pRetclen)
       ((HB_RETCLEN)pRetclen)(szText,ulLen);
 }
 
-void hb_retds( char * szDate )  /* returns a date, must use yyyymmdd format */
+void hb_retds( const char * szDate )  /* returns a date, must use yyyymmdd format */
 {
    FARPROC pRetds=GetProcAddress(GetModuleHandle( NULL ), "_hb_retds" );
    if (pRetds)
@@ -274,13 +274,13 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex ) /* retrieve length or elem
    return ulReturn;
 }
 
-int hb_parinfo( int iParam ) /* Determine the param count or data type */
+ULONG hb_parinfo( int iParam ) /* Determine the param count or data type */
 {
-   int iReturn;
+   ULONG ulReturn;
    FARPROC pParinfo=GetProcAddress( GetModuleHandle( NULL ), "_hb_parinfo" );
    if (pParinfo)
-      iReturn=((HB_PARINFO)pParinfo)(iParam);
-   return iReturn;
+      ulReturn=((HB_PARINFO)pParinfo)(iParam);
+   return ulReturn;
 }
 
 ULONG hb_parclen( int iParam, ... ) /* retrieve a string parameter length */

@@ -8,8 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2005-10-24 12:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-10-24 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbtypes.h
+  * harbour/source/vm/maindllp.c
+    ! fixed some declaration I missed in previous commit
 
+2005-10-24 12:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
@@ -55,22 +59,22 @@
   * harbour/source/lang/msgplwin.c
   * harbour/source/rdd/Makefile
   * harbour/source/rdd/dbcmd.c
-  -  harbour/source/rdd/dbf0.prg
+  - harbour/source/rdd/dbf0.prg
   * harbour/source/rdd/dbf1.c
-  -  harbour/source/rdd/delim0.prg
+  - harbour/source/rdd/delim0.prg
   * harbour/source/rdd/delim1.c
   * harbour/source/rdd/rddsys.prg
-  -  harbour/source/rdd/sdf0.prg
+  - harbour/source/rdd/sdf0.prg
   * harbour/source/rdd/sdf1.c
   * harbour/source/rdd/dbfcdx/Makefile
-  -  harbour/source/rdd/dbfcdx/dbfcdx0.prg
+  - harbour/source/rdd/dbfcdx/dbfcdx0.prg
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
-  -  harbour/source/rdd/dbfcdx/sixcdx0.prg
+  - harbour/source/rdd/dbfcdx/sixcdx0.prg
   * harbour/source/rdd/dbfdbt/Makefile
-  -  harbour/source/rdd/dbfdbt/dbfdbt0.prg
+  - harbour/source/rdd/dbfdbt/dbfdbt0.prg
   * harbour/source/rdd/dbfdbt/dbfdbt1.c
   * harbour/source/rdd/dbffpt/Makefile
-  -  harbour/source/rdd/dbffpt/dbffpt0.prg
+  - harbour/source/rdd/dbffpt/dbffpt0.prg
   * harbour/source/rdd/dbffpt/dbffpt1.c
   * harbour/source/rdd/dbfntx/Makefile
   * harbour/source/rdd/dbfntx/dbfntx0.prg
