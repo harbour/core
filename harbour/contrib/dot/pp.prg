@@ -3209,7 +3209,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
       IF Left( sLine, 1 ) == '#'
 
          sLine := LTrim( SubStr( sLine, 2 ) )
-         sDirective := RTrim( Upper( NextToken( @sLine ) ) )
+         sDirective := RTrim( Upper( _pp_NextToken( @sLine ) ) )
 
          IF ( nLen := Len( sDirective ) ) < 4
             Alert( [ERROR! Unknown directive: ] + "'" + sDirective + "' " + sSource )
@@ -3443,7 +3443,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
 
       sBackupLine := sLine
       sPassed     := ""
-      DO WHILE ( sToken := NextIdentifier( @sLine, @sSkipped ) ) != NIL
+      DO WHILE ( sToken := _pp_NextIdentifier( @sLine, @sSkipped ) ) != NIL
          //? "Token = '"  + sToken + "'"
          //WAIT
 
@@ -3451,7 +3451,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
 
          // Save incase MatchRule fails.
          #ifdef USE_C_BOOST
-            bArrayPrefix := GetArrayPrefix()
+            bArrayPrefix := _pp_GetArrayPrefix()
          #else
             bArrayPrefix := s_bArrayPrefix
          #endif
@@ -3510,7 +3510,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
          ELSE
             // Restore since MatchRule() faild.
             #ifdef USE_C_BOOST
-               SetArrayPrefix( bArrayPrefix )
+               _pp_setArrayPrefix( bArrayPrefix )
             #else
                s_bArrayPrefix := bArrayPrefix
             #endif
@@ -3525,13 +3525,13 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
       sLine := sBackupLine
 
       sPassed := ""
-      DO WHILE ( sToken := NextToken( @sLine ) ) != NIL
+      DO WHILE ( sToken := _pp_NextToken( @sLine ) ) != NIL
          //? "Token = '"  + sToken + "'"
          //WAIT
 
          // Save incase MatchRule fails.
          #ifdef USE_C_BOOST
-            bArrayPrefix := GetArrayPrefix()
+            bArrayPrefix := _pp_GetArrayPrefix()
          #else
             bArrayPrefix := s_bArrayPrefix
          #endif
@@ -3592,7 +3592,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
          ELSE
             // Restore since MatchRule() faild.
             #ifdef USE_C_BOOST
-               SetArrayPrefix( bArrayPrefix )
+               _pp_setArrayPrefix( bArrayPrefix )
             #else
                s_bArrayPrefix := bArrayPrefix
             #endif
@@ -3603,7 +3603,7 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
 
       sLine := sPassed //sBackupLine
 
-      sToken := NextToken( @sLine )
+      sToken := _pp_NextToken( @sLine )
 
       IF sToken != NIL .AND. ( nRule := MatchRule( sToken, @sLine, aCommRules, aCommResults, .T., .T. ) ) > 0
          //? "COMMANDED: " + sLine
@@ -3889,7 +3889,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          IF cType != ':' .AND. sAnchor == NIL .AND. ValType( aList ) == 'A'
 
             sPreStoppers := sWorkLine
-            sPrimaryStopper := NextToken( @sWorkLine )
+            sPrimaryStopper := _pp_NextToken( @sWorkLine )
 
             IF sPrimaryStopper == NIL
 
@@ -3926,7 +3926,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                         sMultiStopper += sNextStopper
                         sStopper      := SubStr( sStopper, nSpaceAt )
                         sMultiStopper += ExtractLeadingWS( @sStopper )
-                        sToken        := NextToken( @sStopLine )
+                        sToken        := _pp_NextToken( @sStopLine )
                         sToken        := Upper( RTrim( sToken ) )
                      ELSE
                         EXIT
@@ -4040,7 +4040,7 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          sPreMatch := sWorkLine
 
          IF ( sAnchor == NIL .OR. sMultiStopper != NIL .OR. ;
-              ( ( ( sToken := NextToken( @sWorkLine ) ) != NIL  .AND. ( DropTrailingWS( @sToken, @sPad ), nLen := Max( 4, Len( sToken ) ), Upper( sToken ) == Left( sAnchor, nLen ) ) ) ) ) ;
+              ( ( ( sToken := _pp_NextToken( @sWorkLine ) ) != NIL  .AND. ( DropTrailingWS( @sToken, @sPad ), nLen := Max( 4, Len( sToken ) ), Upper( sToken ) == Left( sAnchor, nLen ) ) ) ) ) ;
             .AND. ( nMarkerId == 0 .OR. ( sAnchor == NIL .AND. sMultiStopper != NIL ) .OR. ( ( xMarker := NextExp( @sWorkLine, cType, aList, sNextAnchor, aRules[nRule][3] ) ) != NIL ) )
 
             IF sMultiStopper != NIL
@@ -4611,7 +4611,7 @@ RETURN 0
 
 #ifndef USE_C_BOOST
 
-STATIC FUNCTION NextToken( sLine, lDontRecord )
+STATIC FUNCTION _pp_NextToken( sLine, lDontRecord )
 
    LOCAL sReturn, Counter, nLen, nClose
    LOCAL s1, s2, s3
@@ -4650,7 +4650,7 @@ STATIC FUNCTION NextToken( sLine, lDontRecord )
 
             nClose := AT( ']]', sLine )
             IF nClose == 0
-               //Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine + "[" + Str( ProcLine() ) + "]"  )
+               //Alert( "ERROR! [_pp_NextToken()] Unterminated '[[' at: " + sLine + "[" + Str( ProcLine() ) + "]"  )
                sReturn := "["  // Clipper does NOT consider '[[' a single token
             ELSE
                sReturn := Left( sLine, nClose + 2 )
@@ -4765,7 +4765,7 @@ STATIC FUNCTION NextToken( sLine, lDontRecord )
 
          nClose := AT( '"', sLine, 2 )
          IF nClose == 0
-            //Alert( 'ERROR! [NextToken()] Unterminated ["] at: ' + sLine )
+            //Alert( 'ERROR! [_pp_NextToken()] Unterminated ["] at: ' + sLine )
             sReturn := '"'
          ELSE
             sReturn := Left( sLine, nClose )
@@ -4777,7 +4777,7 @@ STATIC FUNCTION NextToken( sLine, lDontRecord )
 
          nClose := AT( "'", sLine, 2 )
          IF nClose == 0
-            //Alert( "ERROR! [NextToken()] Unterminated ['] at: " + sLine )
+            //Alert( "ERROR! [_pp_NextToken()] Unterminated ['] at: " + sLine )
             sReturn := "'"
          ELSE
             sReturn := SubStr( sLine, 2, nClose - 2 )
@@ -4797,7 +4797,7 @@ STATIC FUNCTION NextToken( sLine, lDontRecord )
          ELSE
             nClose := AT( ']', sLine )
             IF nClose == 0
-               //Alert( "ERROR! [NextToken()] Unterminated '[' at: " + sLine + "[" + Str( ProcLine() ) + "]" )
+               //Alert( "ERROR! [_pp_NextToken()] Unterminated '[' at: " + sLine + "[" + Str( ProcLine() ) + "]" )
                sReturn := '['
             ELSE
                sReturn := SubStr( sLine, 2, nClose - 2 )
@@ -4863,12 +4863,12 @@ STATIC FUNCTION NextToken( sLine, lDontRecord )
       IF s_bRecursive
          s1 := Left( sReturn, 1 )
          IF ( IsAlpha( s1 ) .OR. s1 == '_' ) .AND. MatchRule( sReturn, @sLine, aDefRules, aDefResults, .F., .F. ) > 0
-            RETURN NextToken( @sLine, .T. )
+            RETURN _pp_NextToken( @sLine, .T. )
          ENDIF
 
          IF MatchRule( sReturn, @sLine, aTransRules, aTransResults, .F., .T. ) > 0
             //? '>', sLine, '<'
-            RETURN NextToken( @sLine, .T. )
+            RETURN _pp_NextToken( @sLine, .T. )
          ENDIF
 
          //? sReturn, "not defined/translated."
@@ -4912,7 +4912,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
 
      CASE cType == ':'
         sWorkLine       := sLine
-        sPrimaryStopper := NextToken( @sWorkLine )
+        sPrimaryStopper := _pp_NextToken( @sWorkLine )
 
         IF sPrimaryStopper == NIL
            //? "No primary", sPrimaryStopper
@@ -4947,7 +4947,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                     sMultiStopper += sNextStopper
                     sStopper      := SubStr( sStopper, nSpaceAt )
                     sMultiStopper += ExtractLeadingWS( @sStopper )
-                    sToken        := NextToken( @sStopLine )
+                    sToken        := _pp_NextToken( @sStopLine )
                     sToken        := Upper( RTrim( sToken ) )
                  ELSE
                     EXIT
@@ -5002,7 +5002,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
 
      CASE cType == '!'
         IF IsAlpha( cChar := Left( sLine, 1 ) ) .OR. cChar == '_'
-           RETURN NextToken( @sLine )
+           RETURN _pp_NextToken( @sLine )
         ELSE
            RETURN NIL
         ENDIF
@@ -5013,7 +5013,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
 
   sExp := ""
   DO WHILE .T.
-     sToken := NextToken( @sLine )
+     sToken := _pp_NextToken( @sLine )
 
      IF sToken == NIL
         EXIT
@@ -5048,7 +5048,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
         sNext1     := ""
      ELSE
         sNextLine := sLine
-        sNextToken := NextToken( @sNextLine, .T. )
+        sNextToken := _pp_NextToken( @sNextLine, .T. )
         IF sNextToken == NIL
            sNextToken := ""
            sJustNext  := ""
@@ -5085,23 +5085,23 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                  sLastToken     := sJustNext
                  sLine          := sNextLine
                  #ifdef USE_C_BOOST
-                    SetArrayPrefix( .T. )
+                    _pp_setArrayPrefix( .T. )
                  #else
                     s_bArrayPrefix := .T.
                  #endif
-                 sNextToken     := NextToken( @sNextLine, .T. )
+                 sNextToken     := _pp_NextToken( @sNextLine, .T. )
                  IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '.'
                     // Get the macro terminator.
                     sExp           += sNextToken
                     sLastToken     := "."
                     sLine          := sNextLine
                     #ifdef USE_C_BOOST
-                       SetArrayPrefix( .T. )
+                       _pp_setArrayPrefix( .T. )
                     #else
                        s_bArrayPrefix := .T.
                     #endif
                     IF sNextToken == '.' //(Last Token) No space after Macro terminator, so get the suffix.
-                       sNextToken := NextToken( @sNextLine, .T. )
+                       sNextToken := _pp_NextToken( @sNextLine, .T. )
                        IF sNextToken != NIL
                           sNext1 := Left( sNextToken, 1 )
                           IF IsAlpha( sNext1 ) .OR. IsDigit( sNext1 ) .OR. sNext1 == '_'
@@ -5110,7 +5110,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                              sLastToken     := RTrim( sNextToken )
                              sLine          := sNextLine
                              #ifdef USE_C_BOOST
-                                SetArrayPrefix( .T. )
+                                _pp_setArrayPrefix( .T. )
                              #else
                                 s_bArrayPrefix := .T.
                              #endif
@@ -5132,7 +5132,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
               sExp           += sNextToken
               sLine          := sNextLine
               #ifdef USE_C_BOOST
-                 SetArrayPrefix( .T. )
+                 _pp_setArrayPrefix( .T. )
               #else
                  s_bArrayPrefix := .T.
               #endif
@@ -5148,7 +5148,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                  //TraceLog( "Content: '" + sTemp + "'", sExp, sLine )
               ENDIF
 
-              sToken := NextToken( @sLine ) // Close
+              sToken := _pp_NextToken( @sLine ) // Close
               IF sToken == NIL
                  TraceLog( "ERROR!(2) Unbalanced '(' at: " + sExp, sLine )
                  Alert( [ERROR!(2) Unbalanced '(' at: ] + sExp )
@@ -5175,16 +5175,16 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
               sExp           += sNextToken
               sLine          := sNextLine
               #ifdef USE_C_BOOST
-                 SetArrayPrefix( .F. )
+                 _pp_setArrayPrefix( .F. )
               #else
                  s_bArrayPrefix := .F.
               #endif
-              sNextToken     := NextToken( @sNextLine, .T. )
+              sNextToken     := _pp_NextToken( @sNextLine, .T. )
               IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
                  sExp           += sNextToken
                  sLine          := sNextLine
                  #ifdef USE_C_BOOST
-                    SetArrayPrefix( .F. )
+                    _pp_setArrayPrefix( .F. )
                  #else
                     s_bArrayPrefix := .F.
                  #endif
@@ -5200,12 +5200,12 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
 
                  /* sLine was changed by NextExp()! */
                  sNextLine  := sLine
-                 sNextToken := NextToken( @sNextLine, .T. )
+                 sNextToken := _pp_NextToken( @sNextLine, .T. )
                  IF sNextToken != NIL .AND. Left( sNextToken, 1 ) == '|'
                     sExp           += sNextToken
                     sLine          := sNextLine
                     #ifdef USE_C_BOOST
-                       SetArrayPrefix( .F. )
+                       _pp_setArrayPrefix( .F. )
                     #else
                        s_bArrayPrefix := .F.
                     #endif
@@ -5225,7 +5225,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                  sExp +=  sTemp
               ENDIF
 
-              sToken := NextToken( @sLine ) // Close
+              sToken := _pp_NextToken( @sLine ) // Close
               IF sToken == NIL
                  TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                  Alert( [ERROR! Unbalanced '{' at: ] + sExp )
@@ -5247,7 +5247,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                  sExp           += sNextToken
                  sLine          := sNextLine
                  #ifdef USE_C_BOOST
-                    SetArrayPrefix( .T. )
+                    _pp_setArrayPrefix( .T. )
                  #else
                     s_bArrayPrefix := .T.
                  #endif
@@ -5261,7 +5261,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
                     sExp +=  sTemp
                  ENDIF
 
-                 sToken := NextToken( @sLine ) // Close
+                 sToken := _pp_NextToken( @sLine ) // Close
                  IF sToken == NIL
                     TraceLog( "ERROR! Unbalanced '{' at: " + sExp )
                     Alert( [ERROR! Unbalanced '{' at: ] + sExp )
@@ -5292,7 +5292,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
               sExp += sTemp
            ENDIF
 
-           sToken := NextToken( @sLine ) // Close
+           sToken := _pp_NextToken( @sLine ) // Close
            IF sToken == NIL
               Alert( [ERROR! Unbalanced ] + "'['" + [ at: ] + sExp )
               EXIT
@@ -5356,7 +5356,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
         IF s5 == '.AND.'
            sLine := sToken + sLine
            EXIT
-        /* .NOT. is being translated to ! at NextToken() !!!
+        /* .NOT. is being translated to ! at _pp_NextToken() !!!
         ELSEIF s5 == ".NOT."
            sExp       += sToken
            LOOP
@@ -5392,7 +5392,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
         EXIT
      ELSE
         sNextLine  := sLine
-        sNextToken := NextToken( @sNextLine, .T. )
+        sNextToken := _pp_NextToken( @sNextLine, .T. )
         IF sNextToken == NIL
            sNextToken := ""
         ENDIF
@@ -5428,13 +5428,13 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
 
         IF sNext1 == '(' .AND. ( IsAlpha( cLastChar ) .OR. IsDigit( cLastChar ) .OR. cLastChar $ "_."  )
            LOOP
-        ELSEIF sNext1 == '[' // No need to check prefix because NextToken() already has the logic.
+        ELSEIF sNext1 == '[' // No need to check prefix because _pp_NextToken() already has the logic.
            LOOP
         ELSEIF sNext1 $ "+-*/:=^!><!$%#|" // *** Very ODD Clipper consider '|' a continuation token !!!
            sExp           += sNextToken
            sLine          := sNextLine
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif
@@ -5448,7 +5448,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
               sExp           += sNextToken
               sLine          := sNextLine
               #ifdef USE_C_BOOST
-                 SetArrayPrefix( .F. )
+                 _pp_setArrayPrefix( .F. )
               #else
                  s_bArrayPrefix := .F.
               #endif
@@ -5457,7 +5457,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            sExp           += sNextToken
            sLine          := sNextLine
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .T. )
+              _pp_setArrayPrefix( .T. )
            #else
               s_bArrayPrefix := .T.
            #endif
@@ -5470,7 +5470,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            sExp           += sNextToken
            sLine          := sNextLine
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif
@@ -5484,7 +5484,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            sLine          := sNextLine
            s_bArrayPrefix := .F.
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif
@@ -5495,7 +5495,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            sLine          := sNextLine
            s_bArrayPrefix := .F.
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif */
@@ -5512,7 +5512,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            sList          += ( sExp + sNextToken )
            sLine          := sNextLine
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif
@@ -5521,7 +5521,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, sNextAnchor, bX )
            aAdd( aExp, sExp )
            sLine          := sNextLine
            #ifdef USE_C_BOOST
-              SetArrayPrefix( .F. )
+              _pp_setArrayPrefix( .F. )
            #else
               s_bArrayPrefix := .F.
            #endif
@@ -6050,7 +6050,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
    ExtractLeadingWS( @sRule )
 
-   sKey := NextToken( @sRule )
+   sKey := _pp_NextToken( @sRule )
    IF Left( sKey, 1 ) == '\'
       sKey := SubStr( sKey, 2, 1 )
    ENDIF
@@ -6139,13 +6139,13 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                sRule := SubStr( sRule, 2 )
                BREAK
             ELSEIF s1 == '_' .OR. IsAlpha( s1 )
-               sTemp := Upper( RTrim( NextToken( sRule ) ) ) // Not by refernce because of SubStr() below!!!
+               sTemp := Upper( RTrim( _pp_NextToken( sRule ) ) ) // Not by refernce because of SubStr() below!!!
                BREAK
             ELSEIF s1 == '.' // Might pull decimal numbers...
-               sTemp := RTrim( NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
+               sTemp := RTrim( _pp_NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
                BREAK
             ELSEIF IsDigit( s1 )
-               sTemp := RTrim( NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
+               sTemp := RTrim( _pp_NextToken( sRule ) ) // Not by refernce because of SubStr() below!!!
                BREAK
             ELSEIF s1 == ']' .AND. nOptional == 0
                sTemp := ']'
@@ -6533,7 +6533,7 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ENDIF
          ENDIF
 
-         sAnchor := NextToken( @sRule )
+         sAnchor := _pp_NextToken( @sRule )
       ENDIF
    ENDDO
 
@@ -7229,7 +7229,7 @@ STATIC FUNCTION CompileDefine( sRule )
 
    ExtractLeadingWS( @sRule )
 
-   sKey := NextToken( @sRule )
+   sKey := _pp_NextToken( @sRule )
 
    // TraceLog( sKey, sRule )
    // ? "KEY: '" + sKey + "'"
@@ -7319,7 +7319,7 @@ STATIC FUNCTION CompileDefine( sRule )
 
          ELSE
 
-            WHILE ( sToken := NextToken( @sResult ) ) != NIL
+            WHILE ( sToken := _pp_NextToken( @sResult ) ) != NIL
                DropTrailingWS( @sToken, @sPad )
 
 //? "Token: '" + sToken + "'"
@@ -8669,7 +8669,7 @@ RETURN s_oSelf
 
 #ifndef USE_C_BOOST
 
-STATIC FUNCTION NextIdentifier( sLine, sSkipped )
+STATIC FUNCTION _pp_NextIdentifier( sLine, sSkipped )
 
    LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar := '0', nStart, sIdentifier, sTmp
 

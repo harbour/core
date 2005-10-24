@@ -56,12 +56,12 @@
  */
 
 #define HB_OS_WIN_32_USED
-#define HB_NO_DEFAULT_API_MACROS
 
 #include "hbtypes.h"
 
 
 #if defined(HB_OS_WIN_32)
+HB_EXTERN_BEGIN
 
 BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
@@ -851,4 +851,7 @@ ULONG   hb_xsize( void * pMem )                  /* returns the size of an alloc
       ulReturn= pXsize((void *)pMem);
    return ulReturn;
 }
+
+HB_EXTERN_END
+
 #endif

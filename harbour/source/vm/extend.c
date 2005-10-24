@@ -68,6 +68,7 @@
  *
  */
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
@@ -76,6 +77,8 @@
 
 /* NOTE: iParam = -1 can be used to access the return value. */
 /* NOTE: iParam = 0 can be used to access the SELF object. */
+
+HB_EXTERN_BEGIN
 
 PHB_ITEM HB_EXPORT hb_param( int iParam, int iMask )
 {
@@ -675,7 +678,7 @@ void  HB_EXPORT hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
 }
 
 #undef hb_retc
-void HB_EXPORT hb_retc( char * szText )
+void HB_EXPORT hb_retc( const char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
 
@@ -691,7 +694,7 @@ void HB_EXPORT hb_retc_buffer( char * szText )
 }
 
 #undef hb_retc_const
-void HB_EXPORT hb_retc_const( char * szText )
+void HB_EXPORT hb_retc_const( const char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc_const(%s)", szText));
 
@@ -699,7 +702,7 @@ void HB_EXPORT hb_retc_const( char * szText )
 }
 
 #undef hb_retclen
-void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
+void  HB_EXPORT hb_retclen( const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
 
@@ -743,7 +746,7 @@ void HB_EXPORT hb_retcAdopt( char * szText )
 /* szDate must have YYYYMMDD format */
 
 #undef hb_retds
-void HB_EXPORT hb_retds( char * szDate )
+void HB_EXPORT hb_retds( const char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
 
@@ -1219,3 +1222,4 @@ int HB_EXPORT hb_storptr( void * pointer, int iParam, ... )
    return 0;
 }
 
+HB_EXTERN_END

@@ -54,6 +54,7 @@
 #define HB_SXFUNC_H_
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapirdd.h"
 #include "hbapierr.h"

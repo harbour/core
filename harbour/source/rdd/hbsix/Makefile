@@ -11,8 +11,4 @@ C_SOURCES=\
 
 LIBNAME=hbsix
 
-ifeq ($(HB_MT),MT)
-   MT_LIBNAME=$(LIBNAME)mt
-endif
-
 include $(TOP)$(ROOT)config/lib.cf

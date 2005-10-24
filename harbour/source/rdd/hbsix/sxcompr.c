@@ -121,9 +121,6 @@
 
 */
 
-#ifdef HB_NO_DEFAULT_API_MACROS
-#include "hbapiitm.h"
-#endif
 #include "hbsxfunc.h"
 
 /* number of bits for encoded item (position,length) */

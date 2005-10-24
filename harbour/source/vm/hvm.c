@@ -69,6 +69,7 @@
 #include <math.h>
 #include <time.h>
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapierr.h"
@@ -288,6 +289,9 @@ char *hb_vm_acAscii[256] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05", "\x
                              "\xE0", "\xE1", "\xE2", "\xE3", "\xE4", "\xE5", "\xE6", "\xE7", "\xE8", "\xE9", "\xEA", "\xEB", "\xEC", "\xED", "\xEE", "\xEF",
                              "\xF0", "\xF1", "\xF2", "\xF3", "\xF4", "\xF5", "\xF6", "\xF7", "\xF8", "\xF9", "\xFA", "\xFB", "\xFC", "\xFD", "\xFE", "\xFF" };
 
+static PHB_FUNC_LIST s_InitFunctions = NULL;
+static PHB_FUNC_LIST s_ExitFunctions = NULL;
+
 /* 21/10/00 - maurilio.longo@libero.it
    This Exception Handler gets called in case of an abnormal termination of an harbour program and
    displays a full stack trace at the harbour language level */
@@ -297,6 +301,67 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
                              PCONTEXTRECORD               p3,
                              PVOID                        pv);
 #endif
+
+void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
+{
+   PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
+
+   pLst->pFunc = pFunc;
+   pLst->cargo = cargo;
+   pLst->pNext = s_InitFunctions;
+   s_InitFunctions = pLst;
+}
+
+void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
+{
+   PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
+
+   pLst->pFunc = pFunc;
+   pLst->cargo = cargo;
+   pLst->pNext = s_ExitFunctions;
+   s_ExitFunctions = pLst;
+}
+
+static void hb_vmCleanModuleFunctions( void )
+{
+   PHB_FUNC_LIST pLst;
+
+   while( s_InitFunctions )
+   {
+      pLst = s_InitFunctions;
+      s_InitFunctions = pLst->pNext;
+      hb_xfree( pLst );
+   }
+   while( s_ExitFunctions )
+   {
+      pLst = s_ExitFunctions;
+      s_ExitFunctions = pLst->pNext;
+      hb_xfree( pLst );
+   }
+}
+
+static void hb_vmDoModuleInitFunctions( void )
+{
+   PHB_FUNC_LIST pLst = s_InitFunctions;
+
+   while( pLst )
+   {
+      pLst->pFunc( pLst->cargo );
+      pLst = pLst->pNext;
+   }
+}
+
+static void hb_vmDoModuleExitFunctions( void )
+{
+   PHB_FUNC_LIST pLst = s_ExitFunctions;
+
+   while( pLst )
+   {
+      pLst->pFunc( pLst->cargo );
+      pLst = pLst->pNext;
+   }
+}
+
 
 /* call CLIPINIT function to initialize ErrorBlock() and __SetHelpK() */
 static void hb_vmDoInitClip( void )
@@ -308,30 +373,6 @@ static void hb_vmDoInitClip( void )
       hb_vmPushSymbol( pDynSym->pSymbol );
       hb_vmPushNil();
       hb_vmDo(0);
-   }
-}
-
-/* Initialize linked RDDs */
-static void hb_vmDoInitRdd( void )
-{
-   PHB_DYNS pDynSym;
-   int i;
-   char * rddName[] = { "DBFDBTINIT",
-                        "DBFFPTINIT",
-                        "DBFNTXINIT",
-                        "DBFCDXINIT",
-                        "RDDINIT",
-                        NULL };
-
-   for ( i = 0; rddName[i]; i++ )
-   {
-      pDynSym = hb_dynsymFind( rddName[i] );
-      if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
-      {
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         hb_vmDo(0);
-      }
    }
 }
 
@@ -402,8 +443,9 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
     * and not depends on INIT clause.
     */
    hb_vmDoInitClip();      
-   hb_vmDoInitRdd();       /* initialize the Harbour's RDDs */
-   hb_vmDoInitFunctions(); /* process defined INIT functions */
+
+   hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
+   hb_vmDoInitFunctions();          /* process defined INIT functions */
 
    /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
       it will be executed first. [vszakats] */
@@ -492,6 +534,10 @@ void HB_EXPORT hb_vmQuit( void )
 
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
+
+   /* process AtExit registered functions */
+   hb_vmDoModuleExitFunctions();
+   hb_vmCleanModuleFunctions();
 
    /* release all known items stored in subsystems */
    hb_rddShutDown();
@@ -3932,12 +3978,11 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
 
 /* Evaluates a passed codeblock item or macro pointer item
  */
-HB_EXPORT HB_ITEM_PTR hb_vmEvalBlockOrMacro( HB_ITEM_PTR pItem )
+HB_EXPORT PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
 {
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockOrMacro(%p)", pItem));
 
-   if ( pItem->type == HB_IT_BLOCK )
+   if( pItem->type == HB_IT_BLOCK )
    {
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pItem );
@@ -3946,19 +3991,37 @@ HB_EXPORT HB_ITEM_PTR hb_vmEvalBlockOrMacro( HB_ITEM_PTR pItem )
    else
    {
       HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
-      if ( pMacro )
+      if( pMacro )
       {
          hb_macroRun( pMacro );
-         hb_itemCopy( &hb_stack.Return, hb_stackItemFromTop( - 1 ) );
+         hb_itemForwardValue( hb_stackReturnItem(), hb_stackItemFromTop( - 1 ) );
          hb_stackPop();
       }
       else
       {
-         hb_itemClear( &hb_stack.Return );
+         hb_itemClear( hb_stackReturnItem() );
       }
    }
-   return &hb_stack.Return;
+   return hb_stackReturnItem();
 }
+
+/*
+ * destroy codeblock or macro in given item
+ */
+HB_EXPORT void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
+{
+   if( pItem->type == HB_IT_POINTER )
+   {
+      HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
+      if( pMacro )
+      {
+         hb_macroDelete( pMacro );
+      }
+   }
+   hb_itemRelease( pItem );
+}
+
+
 
 void hb_vmFunction( USHORT uiParams )
 {

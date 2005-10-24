@@ -93,6 +93,7 @@
 #  include <ieeefp.h>
 #endif
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapiitm.h"

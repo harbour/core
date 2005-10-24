@@ -93,6 +93,15 @@ typedef struct _HB_DYNS
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
+typedef void (*HB_INIT_FUNC)(void *);
+/* List of functions used by hb_vmAtInit()/hb_vmAtExit() */
+typedef struct _HB_FUNC_LIST
+{
+   HB_INIT_FUNC   pFunc;
+   void *         cargo;
+   struct _HB_FUNC_LIST * pNext;
+} HB_FUNC_LIST, * PHB_FUNC_LIST;
+
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
 #define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x01 )
 #define HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )

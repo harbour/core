@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFDBT RDD
+ * xHarbour Project source code:
+ * Header files to force macro inlining for HVM build
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
+ * Copyright 2005 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,15 +50,19 @@
  *
  */
 
-#include "rddsys.ch"
+/*
+ * This header file enable macro inlining of some functions.
+ * It should be included before any other hb*.h files.
+ * !!! Be careful - including this file cause that the final binaries
+ * can be linked only with exactly the same HVM version for which
+ * it was compiled and only if exactly the same C compiler switches
+ * which interacts with alignment are used. [druzus]
+ */
+#if !defined( HB_NO_DEFAULT_API_MACROS ) && !defined( HB_API_MACROS )
+#  define HB_API_MACROS
+#endif
 
-ANNOUNCE DBFDBT
+#if !defined( HB_NO_DEFAULT_STACK_MACROS ) && !defined( HB_STACK_MACROS )
+#  define HB_STACK_MACROS
+#endif
 
-procedure DBFDBTInit
-
-   REQUEST _DBFDBT
-
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFDBT", RDT_FULL )
-
-return

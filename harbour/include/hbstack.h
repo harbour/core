@@ -62,10 +62,6 @@
 
 HB_EXTERN_BEGIN
 
-#ifndef HB_NO_DEFAULT_STACK_MACROS
-    #define HB_STACK_MACROS
-#endif
-
 /* stack managed by the virtual machine */
 typedef struct
 {
@@ -78,8 +74,6 @@ typedef struct
    int      iStatics;     /* statics base for the current function call */
    char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
-
-HB_STACK HB_EXPORT hb_GetStack( void );
 
 extern HB_STACK hb_stack;
 

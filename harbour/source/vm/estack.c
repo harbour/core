@@ -54,11 +54,14 @@
    #define HB_OS_WIN_32_USED
 #endif
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbdefs.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+
+HB_EXTERN_BEGIN
 
 /* ------------------------------- */
 
@@ -70,11 +73,6 @@
 #endif
 
 HB_STACK hb_stack;
-
-HB_STACK HB_EXPORT hb_GetStack( void )
-{
-    return hb_stack;
-}
 
 /* ------------------------------- */
 
@@ -501,3 +499,5 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
 }
 #endif
+
+HB_EXTERN_END

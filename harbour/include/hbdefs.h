@@ -1020,6 +1020,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #define HB_EXTERN_C_
 #endif
 
+#define HB_FUNC_EXEC( funcname )   HB_FUN_##funcname();
 #define HB_FUNC( funcname )        HB_EXTERN_C_ HARBOUR HB_EXPORT HB_FUN_##funcname ( void )
 #define HB_FUNC_STATIC( funcname ) HB_EXTERN_C_ static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_EXTERN( funcname ) HB_EXTERN_C_ extern HARBOUR HB_FUN_##funcname ( void )

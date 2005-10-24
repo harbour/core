@@ -220,9 +220,7 @@
 */
 
 #include "hbapi.h"
-#ifdef HB_NO_DEFAULT_API_MACROS
 #include "hbapiitm.h"
-#endif
 #include "hbapifs.h"
 #include "hbapirdd.h"
 #include "hbapierr.h"
@@ -957,10 +955,10 @@ static int hb_hsxIfDel( int iHandle, ULONG ulRecord )
    {
       iRetVal = hb_hsxRead( iHandle, ulRecord, &pRecPtr );
       if ( iRetVal == HSX_SUCCESS )
-         iRetVal = *pRecPtr & 0x80 ? HSX_SUCCESSFALSE : HSX_SUCCESS;
+         iRetVal = *pRecPtr & 0x80 ? HSX_SUCCESS : HSX_SUCCESSFALSE;
    }
    iRet = hb_hsxLock( iHandle, HSX_READUNLOCK, ulRecord );
-   if ( iRetVal == HSX_SUCCESS )
+   if ( iRet != HSX_SUCCESS )
       iRetVal = iRet;
    return iRetVal;
 }
@@ -1068,10 +1066,7 @@ static int hb_hsxAdd( int iHandle, ULONG *pulRecNo, PHB_ITEM pExpr, BOOL fDelete
    if ( ! pHSX )
       return HSX_BADHANDLE;
 
-   if ( !pExpr )
-      pExpr = pHSX->pKeyItem;
-
-   if ( !pExpr )
+   if ( !pExpr && !pHSX->pKeyItem )
       return HSX_BADPARMS;
 
    iRetVal = hb_hsxLock( iHandle, HSX_APPENDLOCK, 0 );

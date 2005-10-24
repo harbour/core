@@ -92,7 +92,15 @@ static HB_CODEPAGE s_codepage = { "PLISO",
 
 HB_CODEPAGE_INIT( PLISO );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+#if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_PLISO
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_PLISO = hb_codepage_Init_PLISO;
+   #pragma data_seg()
 #endif
-

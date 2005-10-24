@@ -138,8 +138,8 @@
  *
  */
 
+#include "hbvmopt.h"
 #include "hbapi.h"
-
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"

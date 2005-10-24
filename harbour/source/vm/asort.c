@@ -58,6 +58,7 @@
          SORTING AND SEARCHING ALGORITHMS: A COOKBOOK, BY THOMAS NIEMANN
          http://members.xoom.com/_XMCM/thomasn/s_man.htm */
 
+#include "hbvmopt.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbstack.h"

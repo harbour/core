@@ -132,9 +132,7 @@
 */
 
 #include "hbapi.h"
-#ifdef HB_NO_DEFAULT_API_MACROS
 #include "hbapiitm.h"
-#endif
 #include "hbinit.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
@@ -142,39 +140,12 @@
 #include "hbset.h"
 #include "hbmath.h"
 #include "hbrddntx.h"
+#include "rddsys.ch"
 #ifdef __XHARBOUR__
 #include "hbregex.h"
 #endif
 #ifndef HB_CDP_SUPPORT_OFF
    #include "hbapicdp.h"
-#endif
-
-#define __PRG_SOURCE__ __FILE__
-
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
-
-HB_FUNC( _DBFNTX );
-HB_FUNC( DBFNTX_GETFUNCTABLE );
-
-HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "_DBFNTX",             HB_FS_PUBLIC, {HB_FUNCNAME( _DBFNTX )},             0 },
-{ "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE)} , 0 }
-HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
-
-#if defined(HB_PRAGMA_STARTUP)
-   #pragma startup dbfntx1__InitSymbols
-#elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
-   static HB_$INITSYM hb_vm_auto_dbfntx1__InitSymbols = dbfntx1__InitSymbols;
-   #pragma data_seg()
 #endif
 
 #ifdef HB_NTX_DEBUG_DISP
@@ -468,6 +439,8 @@ static LPKEYINFO hb_ntxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, ULONG ulRecNo
 #ifndef HB_CDP_SUPPORT_OFF
          if( fTrans )
             hb_cdpnTranslate( pKey->key, hb_cdp_page, pTag->Owner->Owner->cdPage, pTag->KeyLength );
+#else
+         HB_SYMBOL_UNUSED( fTrans );
 #endif
          break;
       case 'N':
@@ -511,6 +484,8 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
                pItem = hb_itemPutCPtr( pItem, pVal, pTag->KeyLength );
             }
             else
+#else
+            HB_SYMBOL_UNUSED( fTrans );
 #endif
             {
                pItem = hb_itemPutCL( pItem, pKey->key, pTag->KeyLength );
@@ -538,16 +513,6 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
       pItem = hb_itemNew( NULL );
 
    return pItem;
-}
-
-/*
- * destroy compiled expression
- */
-static void hb_ntxDestroyExp( PHB_ITEM pExp )
-{
-   if( hb_itemType( pExp ) != HB_IT_BLOCK )
-      hb_macroDelete( ( HB_MACRO_PTR ) hb_itemGetPtr( pExp ) );
-   hb_itemRelease( pExp );
 }
 
 /*
@@ -1471,9 +1436,9 @@ static void hb_ntxTagFree( LPTAGINFO pTag )
    if( pTag->ForExpr )
       hb_xfree( pTag->ForExpr );
    if( pTag->pKeyItem )
-      hb_ntxDestroyExp( pTag->pKeyItem );
+      hb_vmDestroyBlockOrMacro( pTag->pKeyItem );
    if( pTag->pForItem )
-      hb_ntxDestroyExp( pTag->pForItem );
+      hb_vmDestroyBlockOrMacro( pTag->pForItem );
    if( pTag->HotKeyInfo )
       hb_ntxKeyFree( pTag->HotKeyInfo );
    hb_ntxKeyFree( pTag->CurKeyInfo );
@@ -1559,7 +1524,7 @@ static LPTAGINFO hb_ntxTagLoad( LPNTXINDEX pIndex, ULONG ulBlock,
    {
       if( SELF_COMPILE( ( AREAP ) pIndex->Owner, lpNTX->for_expr ) == FAILURE )
       {
-         hb_ntxDestroyExp( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
          return NULL;
       }
       pForExp = pIndex->Owner->valResult;
@@ -3014,7 +2979,7 @@ static BOOL hb_ntxTagKeyDel( LPTAGINFO pTag, LPKEYINFO pKey )
 
    while( iLevel > 0 )
    {
-      if( pPage->uiKeys < pTag->MaxKeys >> 1 )
+      if( pPage->uiKeys < ( pTag->MaxKeys >> 1 ) )
       {
          USHORT uiFirst, uiLast, uiBaseKey;
 
@@ -4079,6 +4044,14 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
       return fForward ? !pArea->fEof : !pArea->fBof;
    }
 
+#ifndef HB_CDP_SUPPORT_OFF
+   if( pArea->cdPage != hb_cdp_page )
+   {
+      szPattern = hb_strdup( szPattern );
+      hb_cdpTranslate( szPattern, hb_cdp_page, pArea->cdPage );
+   }
+#endif
+
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
@@ -4138,10 +4111,35 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    else
       pArea->fEof = FALSE;
 
+#ifndef HB_CDP_SUPPORT_OFF
+   if( pArea->cdPage != hb_cdp_page )
+   {
+      hb_xfree( szPattern );
+   }
+#endif
+
    return fFound;
 }
 
 #if defined(__XHARBOUR__)
+
+static BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
+{
+#ifndef HB_CDP_SUPPORT_OFF
+   char szBuff[ NTX_MAX_KEY + 1 ];
+
+   if( pTag->Owner->Owner->cdPage != hb_cdp_page )
+   {
+      hb_strncpy( szBuff, pTag->CurKeyInfo->key, pTag->KeyLength );
+      hb_cdpnTranslate( szBuff, pTag->Owner->Owner->cdPage, hb_cdp_page, pTag->KeyLength );
+      szKey = szBuff;
+   }
+#else
+   HB_SYMBOL_UNUSED( pTag );
+#endif
+   return hb_regexMatch( pRegEx, szKey, FALSE );
+}
+
 /*
  * skip while regular expression on index key val doesn't return TRUE
  */
@@ -4182,12 +4180,13 @@ static BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
          {
             if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra ) != SUCCESS )
                break;
-            if( hb_regexMatch( &RegEx, (const char *) pTag->CurKeyInfo->key, FALSE ) )
+
+            if( hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
             {
                ULONG ulRecNo = pArea->ulRecNo;
                SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 );
                if( pArea->ulRecNo == ulRecNo ||
-                   hb_regexMatch( &RegEx, (const char *) pTag->CurKeyInfo->key, FALSE ) )
+                   hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
                {
                   fFound = TRUE;
                   break;
@@ -4243,7 +4242,7 @@ static BOOL hb_ntxOrdKeyAdd( LPTAGINFO pTag, PHB_ITEM pItem )
    {
       if( pArea->lpdbPendingRel )
          SELF_FORCEREL( ( AREAP ) pArea );
-      pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, FALSE, NULL );
+      pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, TRUE, NULL );
    }
    else
    {
@@ -4283,7 +4282,7 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag, PHB_ITEM pItem )
    {
       if( pArea->lpdbPendingRel )
          SELF_FORCEREL( ( AREAP ) pArea );
-      pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, FALSE, NULL );
+      pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, TRUE, NULL );
    }
    else
    {
@@ -5939,7 +5938,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    errCode = SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp );
    if( errCode != SUCCESS )
    {
-      hb_ntxDestroyExp( pKeyExp );
+      hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       return errCode;
    }
@@ -5974,7 +5973,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* Make sure KEY has proper type and iLen is not 0 */
    if( bType == 'U' || iLen == 0 )
    {
-      hb_ntxDestroyExp( pKeyExp );
+      hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_ntxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
                      1026, NULL, 0, 0 );
@@ -5998,7 +5997,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          errCode = SELF_COMPILE( ( AREAP ) pArea, ( BYTE * ) szFor );
          if( errCode != SUCCESS )
          {
-            hb_ntxDestroyExp( pKeyExp );
+            hb_vmDestroyBlockOrMacro( pKeyExp );
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
             return errCode;
          }
@@ -6010,23 +6009,23 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* Test conditional expression */
    if( pForExp )
    {
-      USHORT uiType;
+      BOOL fOK;
 
       errCode = SELF_EVALBLOCK( ( AREAP ) pArea, pForExp );
       if( errCode != SUCCESS )
       {
-         hb_ntxDestroyExp( pKeyExp );
-         hb_ntxDestroyExp( pForExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return errCode;
       }
-      uiType = hb_itemType( pArea->valResult );
+      fOK = hb_itemType( pArea->valResult ) == HB_IT_LOGICAL;
       hb_itemRelease( pArea->valResult );
       pArea->valResult = NULL;
-      if( uiType != HB_IT_LOGICAL )
+      if( ! fOK )
       {
-         hb_ntxDestroyExp( pKeyExp );
-         hb_ntxDestroyExp( pForExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          hb_ntxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0 );
          return FAILURE;
@@ -6078,18 +6077,18 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       if( pIndex->fReadonly )
       {
-         hb_ntxDestroyExp( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
-            hb_ntxDestroyExp( pForExp );
+            hb_vmDestroyBlockOrMacro( pForExp );
          hb_ntxErrorRT( pArea, EG_READONLY, EDBF_READONLY, pIndex->IndexName, 0, 0 );
          return FAILURE;
       }
 #if 0 /* enable this code if you want to forbid tag deleting in shared mode */
       else if( pIndex->fShared )
       {
-         hb_ntxDestroyExp( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
-            hb_ntxDestroyExp( pForExp );
+            hb_vmDestroyBlockOrMacro( pForExp );
          hb_ntxErrorRT( pArea, EG_SHARED, EDBF_SHARED, pIndex->IndexName, 0, 0 );
          return FAILURE;
       }
@@ -6129,9 +6128,9 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
       if( hFile == FS_ERROR )
       {
-         hb_ntxDestroyExp( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
-            hb_ntxDestroyExp( pForExp );
+            hb_vmDestroyBlockOrMacro( pForExp );
          /* hb_ntxSetTagNumbers() */
          return FAILURE;
       }
@@ -6167,9 +6166,9 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          {
             *pIndexPtr = pIndex->pNext;
             hb_ntxIndexFree( pIndex );
-            hb_ntxDestroyExp( pKeyExp );
+            hb_vmDestroyBlockOrMacro( pKeyExp );
             if( pForExp != NULL )
-               hb_ntxDestroyExp( pForExp );
+               hb_vmDestroyBlockOrMacro( pForExp );
             /* hb_ntxSetTagNumbers() */
             hb_ntxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0 );
             return errCode;
@@ -6186,9 +6185,9 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( ! iTag && pIndex->iTags == CTX_MAX_TAGS )
    {
-      hb_ntxDestroyExp( pKeyExp );
+      hb_vmDestroyBlockOrMacro( pKeyExp );
       if( pForExp != NULL )
-         hb_ntxDestroyExp( pForExp );
+         hb_vmDestroyBlockOrMacro( pForExp );
       /* hb_ntxSetTagNumbers() */
       hb_ntxErrorRT( pArea, EG_LIMIT, EDBF_LIMITEXCEEDED, pIndex->IndexName, 0, 0 );
       return FAILURE;
@@ -6531,7 +6530,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
                      if( pTag->ForExpr )
                         hb_xfree( pTag->ForExpr );
                      if( pTag->pForItem )
-                        hb_ntxDestroyExp( pTag->pForItem );
+                        hb_vmDestroyBlockOrMacro( pTag->pForItem );
                      if( pForItem )
                      {
                         pTag->ForExpr = hb_strndup( szForExpr, NTX_MAX_EXP );
@@ -6549,7 +6548,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
                      hb_ntxTagUnLockWrite( pTag );
                   }
                   if( pForItem )
-                     hb_ntxDestroyExp( pForItem );
+                     hb_vmDestroyBlockOrMacro( pForItem );
                }
             }
             break;
@@ -6746,10 +6745,14 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutNI( pInfo->itmResult, pTag->KeyDec );
             break;
          case DBOI_KEYVAL:
-            if( hb_ntxCurKeyRefresh( pTag ) )
-               hb_ntxKeyGetItem( pInfo->itmResult, pTag->CurKeyInfo, pTag, TRUE );
-            else
-               hb_itemClear( pInfo->itmResult );
+            if( hb_ntxTagLockRead( pTag ) )
+            {
+               if( hb_ntxCurKeyRefresh( pTag ) )
+                  hb_ntxKeyGetItem( pInfo->itmResult, pTag->CurKeyInfo, pTag, TRUE );
+               else
+                  hb_itemClear( pInfo->itmResult );
+               hb_ntxTagUnLockRead( pTag );
+            }
             break;
          case DBOI_SKIPUNIQUE:
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdSkipUnique( pTag,
@@ -7390,7 +7393,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxWhoCares
                            };
 
-HB_FUNC(_DBFNTX ) {;}
+HB_FUNC( DBFNTX ) {;}
 
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {
@@ -7427,3 +7430,65 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
       hb_retni( FAILURE );
    }
 }
+
+
+#define __PRG_SOURCE__ __FILE__
+
+#ifdef HB_PCODE_VER
+#  undef HB_PRG_PCODE_VER
+#  define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+HB_FUNC_EXTERN( _DBF );
+
+static void hb_dbfntxRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "DBF",    RDT_FULL ) <= 1 )
+   {
+      USHORT usResult;
+
+      hb_rddRegister( "DBFFPT", RDT_FULL );
+      usResult = hb_rddRegister( "DBFNTX", RDT_FULL );
+      if( usResult <= 1 )
+      {
+         if( usResult == 0 )
+         {
+            PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_DBT );
+            SELF_RDDINFO( hb_rddGetNode( s_uiRddId ), RDDI_MEMOTYPE, 0, pItem );
+            hb_itemRelease( pItem );
+         }
+         return;
+      }
+   }
+
+   hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   /* not executed, only to force DBF RDD linking */
+   HB_FUNC_EXEC( _DBF );
+}
+
+HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
+{ "DBFNTX",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX )}, NULL },
+{ "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_dbfntx_rdd_init_ )
+   hb_vmAtInit( hb_dbfntxRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_dbfntx_rdd_init_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+#  pragma startup dbfntx1__InitSymbols
+#  pragma startup _hb_dbfntx_rdd_init_
+#elif defined(HB_MSC_STARTUP)
+#  if _MSC_VER >= 1010
+#     pragma data_seg( ".CRT$XIY" )
+#     pragma comment( linker, "/Merge:.CRT=.data" )
+#  else
+#     pragma data_seg( "XIY" )
+#  endif
+   static HB_$INITSYM hb_vm_auto_dbfntx1__InitSymbols = dbfntx1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_dbfntx_rdd_init = _hb_dbfntx_rdd_init_;
+#  pragma data_seg()
+#endif

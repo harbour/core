@@ -8,6 +8,101 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-24 02:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/dot/pp.prg
+  * harbour/contrib/dot/pp_harb.ch
+  * harbour/include/hbapi.h
+  * harbour/include/hbapirdd.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbextern.ch
+  * harbour/include/hbinit.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbsxfunc.h
+  * harbour/include/hbvm.h
+  + harbour/include/hbvmopt.h
+  * harbour/include/hbvmpub.h
+  * harbour/source/codepage/cdp_tpl.c
+  * harbour/source/codepage/cdppl852.c
+  * harbour/source/codepage/cdppliso.c
+  * harbour/source/codepage/cdpplmaz.c
+  * harbour/source/codepage/cdpplwin.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/lang/msgca.c
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgplmaz.c
+  * harbour/source/lang/msgplwin.c
+  * harbour/source/rdd/Makefile
+  * harbour/source/rdd/dbcmd.c
+  -  harbour/source/rdd/dbf0.prg
+  * harbour/source/rdd/dbf1.c
+  -  harbour/source/rdd/delim0.prg
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/rddsys.prg
+  -  harbour/source/rdd/sdf0.prg
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfcdx/Makefile
+  -  harbour/source/rdd/dbfcdx/dbfcdx0.prg
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  -  harbour/source/rdd/dbfcdx/sixcdx0.prg
+  * harbour/source/rdd/dbfdbt/Makefile
+  -  harbour/source/rdd/dbfdbt/dbfdbt0.prg
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/Makefile
+  -  harbour/source/rdd/dbffpt/dbffpt0.prg
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/Makefile
+  * harbour/source/rdd/dbfntx/dbfntx0.prg
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/hbsix/Makefile
+  * harbour/source/rdd/hbsix/sxcompr.c
+  * harbour/source/rdd/hbsix/sxcrypt.c
+  * harbour/source/rdd/hbsix/sxdate.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rdd/nulsys/nulsys.prg
+  * harbour/source/rtl/browdbx.prg
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/arrayshb.c
+  * harbour/source/vm/asort.c
+  * harbour/source/vm/break.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/vm/dynsym.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/evalhb.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/garbage.c
+   - harbour/source/codepage/cdpru866.c
+  * harbour/source/vm/initsymb.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/maindllp.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/memvclip.c
+  * harbour/source/vm/pcount.c
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/pvalue.c
+  * harbour/source/vm/runner.c
+    * remove default API and stack macros. Now API/stack macros can be
+      enabled by including hb_vmopt.h file.
+      This file should be included _ONLY_ by core code because binary
+      object/libraries generated after can work only with _EXACTLY_ the
+      same HVM compiled the same C alignment switches
+    * cleaned some HB_EXTERN_C declaration - Anotonio you should be able
+      to build FWH now
+    * cleaned startup initialization code -
+      please update lang and codepage files - I only updated
+      source/codepage/cdppl*.c and source/lang/msgpl*.c files
+      Or other files should be updated or they will not work MSC
+    * synced with recent xHarbour modification in RDD init code
+
 2005-10-23 09:05 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * harbour/source/rdd/dbfntx/dbfntx1.c  
    * harbour/source/rdd/dbfcdx/dbfcdx1.c  

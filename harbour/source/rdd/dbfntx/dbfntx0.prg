@@ -50,6 +50,7 @@
  *
  */
 
+/*
 #include "error.ch"
 #include "rddsys.ch"
 #include "dbinfo.ch"
@@ -66,6 +67,7 @@ procedure DBFNTXInit
    rddInfo( RDDI_MEMOTYPE, DB_MEMO_DBT, "DBFNTX" )
 
 return
+*/
 
 /* NOTE: Commented out, because in Harbour the INIT order is not guaranteed,
          so it can happen that this error handler will be installed *before*

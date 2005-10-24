@@ -65,6 +65,7 @@
 #include "hbdbsort.h"
 #include "hbsxfunc.h"
 #include "error.ch"
+#include "rddsys.ch"
 
 #ifndef HB_CDP_SUPPORT_OFF
 #  include "hbapicdp.h"
@@ -72,33 +73,6 @@
 
 #if defined( __XCC__ ) || defined( __MINGW32__ )
    #include <stdint.h>
-#endif
-
-#define __PRG_SOURCE__ __FILE__
-
-HB_FUNC( _DBFC );
-HB_FUNC( DBF_GETFUNCTABLE );
-#define __PRG_SOURCE__ __FILE__
-#undef HB_PRG_PCODE_VER
-#define HB_PRG_PCODE_VER HB_PCODE_VER
-
-
-HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )
-{ "_DBFC",            HB_FS_PUBLIC, {HB_FUNCNAME( _DBFC )}, NULL },
-{ "DBF_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBF_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
-
-#if defined(HB_PRAGMA_STARTUP)
-   #pragma startup dbf1__InitSymbols
-#elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
-   static HB_$INITSYM hb_vm_auto_dbf1__InitSymbols = dbf1__InitSymbols;
-   #pragma data_seg()
 #endif
 
 static USHORT s_uiRddId = ( USHORT ) -1;
@@ -4375,7 +4349,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 }
 
 
-HB_FUNC( _DBFC ) { ; }
+HB_FUNC( _DBF ) { ; }
 
 HB_FUNC( DBF_GETFUNCTABLE )
 {
@@ -4408,3 +4382,45 @@ HB_FUNC( DBF_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
+
+
+#define __PRG_SOURCE__ __FILE__
+
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+static void hb_dbfRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "DBF", RDT_FULL ) > 1 )
+   {
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+   }
+}
+
+HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )
+{ "_DBF",             HB_FS_PUBLIC, {HB_FUNCNAME( _DBF )}, NULL },
+{ "DBF_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBF_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_dbf_rdd_init_ )
+   hb_vmAtInit( hb_dbfRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_dbf_rdd_init_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup dbf1__InitSymbols
+   #pragma startup _hb_dbf_rdd_init_
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_dbf1__InitSymbols = dbf1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_dbf_rdd_init = _hb_dbf_rdd_init_;
+   #pragma data_seg()
+#endif

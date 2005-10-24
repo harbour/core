@@ -55,33 +55,9 @@
 #include "hbvm.h"
 #include "hbapirdd.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbrddsdf.h"
-
-#define __PRG_SOURCE__ __FILE__
-
-HB_FUNC( _SDF );
-HB_FUNC( SDF_GETFUNCTABLE );
-
-#undef HB_PRG_PCODE_VER
-#define HB_PRG_PCODE_VER HB_PCODE_VER
-
-HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
-{ "_SDF",            HB_FS_PUBLIC, {HB_FUNCNAME( _SDF )}, NULL },
-{ "SDF_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SDF_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
-
-#if defined(HB_PRAGMA_STARTUP)
-   #pragma startup sdf1__InitSymbols
-#elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
-   static HB_$INITSYM hb_vm_auto_sdf1__InitSymbols = sdf1__InitSymbols;
-   #pragma data_seg()
-#endif
+#include "rddsys.ch"
 
 static RDDFUNCS sdfSuper;
 static RDDFUNCS sdfTable = { hb_sdfBof,
@@ -192,7 +168,7 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
 
 
 
-HB_FUNC( _SDF ) { ; }
+HB_FUNC( SDF ) { ; }
 
 HB_FUNC( SDF_GETFUNCTABLE )
 {
@@ -210,3 +186,45 @@ HB_FUNC( SDF_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
+
+
+#define __PRG_SOURCE__ __FILE__
+
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+static void hb_sdfRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "SDF", RDT_TRANSFER ) > 1 )
+   {
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+   }
+}
+
+HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
+{ "SDF",              HB_FS_PUBLIC, {HB_FUNCNAME( SDF )}, NULL },
+{ "SDF_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SDF_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_sdf_rdd_init_ )
+   hb_vmAtInit( hb_sdfRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_sdf_rdd_init_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup sdf1__InitSymbols
+   #pragma startup _hb_sdf_rdd_init_
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_sdf1__InitSymbols = sdf1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_sdf_rdd_init = _hb_sdf_rdd_init_;
+   #pragma data_seg()
+#endif

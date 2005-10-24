@@ -61,7 +61,6 @@
 #  define HB_CDX_PACKTRAIL
 #endif
 
-
 #define HB_CDX_DBGCODE
 /*
 #define HB_CDX_DBGCODE_EXT
@@ -72,9 +71,7 @@
 */
 
 #include "hbapi.h"
-#ifdef HB_NO_DEFAULT_API_MACROS
 #include "hbapiitm.h"
-#endif
 #include "hbinit.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
@@ -82,6 +79,7 @@
 #include "hbset.h"
 #include "hbrddcdx.h"
 #include "hbmath.h"
+#include "rddsys.ch"
 #ifdef __XHARBOUR__
 #include "hbregex.h"
 #endif
@@ -97,13 +95,6 @@
    #define hb_cdpcharcmp( c1, c2, cdpage )     ( (BYTE)(c1) - (BYTE)(c2) )
  */
 #endif
-
-#define __PRG_SOURCE__ __FILE__
-#ifdef HB_PCODE_VER
-   #undef HB_PRG_PCODE_VER
-   #define HB_PRG_PCODE_VER HB_PCODE_VER
-#endif
-
 
 /*
  * Tag->fRePos = TURE means that rootPage->...->childLeafPage path is
@@ -292,113 +283,6 @@ static RDDFUNCS cdxTable =
 
    ( DBENTRYP_SVP )   hb_cdxWhoCares
 };
-
-#if defined( HB_SIXCDX )
-
-HB_FUNC( _SIXCDX ) {;}
-
-HB_FUNC( SIXCDX_GETFUNCTABLE )
-{
-   RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
-
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = hb_parni( 4 );
-
-   HB_TRACE(HB_TR_DEBUG, ("SIXCDX_GETFUNCTABLE(%i, %p)", uiCount, pTable));
-
-   if ( pTable )
-   {
-      ERRCODE errCode;
-
-      if ( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFFPT" );
-      if ( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFDBT" );
-      if ( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBF" );
-      hb_retni( errCode );
-      if ( errCode == SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
-   }
-   else
-      hb_retni( FAILURE );
-}
-
-
-HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "_SIXCDX",             HB_FS_PUBLIC, {HB_FUNCNAME( _SIXCDX )}, NULL },
-{ "SIXCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-
-#else
-
-HB_FUNC( _DBFCDX ) {;}
-
-HB_FUNC( DBFCDX_GETFUNCTABLE )
-{
-   RDDFUNCS * pTable;
-   USHORT * uiCount, uiRddId;
-
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-   uiRddId = hb_parni( 4 );
-
-   HB_TRACE(HB_TR_DEBUG, ("DBFCDX_GETFUNCTABLE(%i, %p)", uiCount, pTable));
-
-   if ( pTable )
-   {
-      ERRCODE errCode;
-
-      if ( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFFPT" );
-      if ( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFDBT" );
-      if ( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBF" );
-      if ( errCode == SUCCESS )
-      {
-         /*
-          * we successfully register our RDD so now we can initialize it
-          * You may think that this place is RDD init statement, Druzus
-          */
-         s_uiRddId = uiRddId;
-      }
-      hb_retni( errCode );
-   }
-   else
-      hb_retni( FAILURE );
-}
-
-
-HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "_DBFCDX",             HB_FS_PUBLIC, {HB_FUNCNAME( _DBFCDX )}, NULL },
-{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-
-#endif
-
-#if defined(HB_PRAGMA_STARTUP)
-   #pragma startup dbfcdx1__InitSymbols
-#elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
-   static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
-   #pragma data_seg()
-#endif
 
 
 #ifdef HB_CDX_DSPDBG_INFO
@@ -829,16 +713,6 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
       pItem = hb_itemNew( NULL );
 
    return pItem;
-}
-
-/*
- * destroy compiled expression
- */
-static void hb_cdxDestroyExp( PHB_ITEM pExp )
-{
-   if ( hb_itemType( pExp ) != HB_IT_BLOCK )
-      hb_macroDelete( ( HB_MACRO_PTR ) hb_itemGetPtr( pExp ) );
-   hb_itemRelease( pExp );
 }
 
 /*
@@ -3176,8 +3050,8 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
 #if 1
    if ( iNeedKeys == 1 && iBlncKeys > 1 && childs[0]->Left != CDX_DUMMYNODE &&
         childs[iBlncKeys-1]->Right != CDX_DUMMYNODE &&
-        iKeys >= CDX_BALANCE_INTPAGES << 1 &&
-        iKeys > pPage->TagParent->MaxKeys * 3 >> 1 )
+        iKeys >= ( CDX_BALANCE_INTPAGES << 1 ) &&
+        iKeys > ( pPage->TagParent->MaxKeys * 3 ) >> 1 )
    {
       iNeedKeys = 2;
    }
@@ -3685,11 +3559,11 @@ static void hb_cdxTagFree( LPCDXTAG pTag )
    if ( pTag->KeyExpr != NULL )
       hb_xfree( pTag->KeyExpr );
    if ( pTag->pKeyItem != NULL )
-      hb_cdxDestroyExp( pTag->pKeyItem );
+      hb_vmDestroyBlockOrMacro( pTag->pKeyItem );
    if ( pTag->ForExpr != NULL )
       hb_xfree( pTag->ForExpr );
    if ( pTag->pForItem != NULL )
-      hb_cdxDestroyExp( pTag->pForItem );
+      hb_vmDestroyBlockOrMacro( pTag->pForItem );
    hb_cdxKeyFree( pTag->CurKey );
    if ( pTag->HotKey )
       hb_cdxKeyFree( pTag->HotKey );
@@ -5424,6 +5298,14 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
       return fForward ? pArea->fPositioned : !pArea->fBof;
    }
 
+#ifndef HB_CDP_SUPPORT_OFF
+   if( pArea->cdPage != hb_cdp_page )
+   {
+      szPattern = hb_strdup( szPattern );
+      hb_cdpTranslate( szPattern, hb_cdp_page, pArea->cdPage );
+   }
+#endif
+
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
 
@@ -5493,10 +5375,36 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    else
       pArea->fEof = FALSE;
 
+#ifndef HB_CDP_SUPPORT_OFF
+   if( pArea->cdPage != hb_cdp_page )
+   {
+      hb_xfree( szPattern );
+   }
+#endif
+
    return fFound;
 }
 
 #if defined(__XHARBOUR__)
+
+static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
+{
+   char * szKey = ( char * ) pKey->val;
+#ifndef HB_CDP_SUPPORT_OFF
+   char szBuff[ CDX_MAXKEY + 1 ];
+
+   if( pArea->cdPage != hb_cdp_page )
+   {
+      hb_strncpy( szBuff, szKey, pKey->len );
+      hb_cdpnTranslate( szBuff, pArea->cdPage, hb_cdp_page, pKey->len );
+      szKey = szBuff;
+   }
+#else
+   HB_SYMBOL_UNUSED( pArea );
+#endif
+   return hb_regexMatch( pRegEx, szKey, FALSE );
+}
+
 /*
  * skip while regular expression on index key val doesn't return TRUE
  */
@@ -5537,12 +5445,12 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
          hb_cdxTagSkipNext( pTag );
       while ( !pTag->TagEOF )
       {
-         if( hb_regexMatch( &RegEx, (const char *) pTag->CurKey->val, FALSE ) )
+         if( hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
          {
             ULONG ulRecNo = pArea->ulRecNo;
             SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
             if ( pArea->ulRecNo == ulRecNo ||
-                 hb_regexMatch( &RegEx, (const char *) pTag->CurKey->val, FALSE ) )
+                 hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
             {
                fFound = TRUE;
                break;
@@ -5558,12 +5466,12 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
          hb_cdxTagSkipPrev( pTag );
       while ( !pTag->TagBOF )
       {
-         if( hb_regexMatch( &RegEx, (const char *) pTag->CurKey->val, FALSE ) )
+         if( hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
          {
             ULONG ulRecNo = pArea->ulRecNo;
             SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
             if ( pArea->ulRecNo == ulRecNo ||
-                 hb_regexMatch( &RegEx, (const char *) pTag->CurKey->val, FALSE ) )
+                 hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
             {
                fFound = TRUE;
                break;
@@ -7300,7 +7208,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    SELF_GOTO( ( AREAP ) pArea, 0 );
    if ( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp ) == FAILURE )
    {
-      hb_cdxDestroyExp( pKeyExp );
+      hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       return FAILURE;
    }
@@ -7328,7 +7236,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
    if ( bType == 'U' || uiLen == 0 )
    {
-      hb_cdxDestroyExp( pKeyExp );
+      hb_vmDestroyBlockOrMacro( pKeyExp );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_cdxErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH,
                      1026, NULL, 0, 0 );
@@ -7351,7 +7259,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          /* Otherwise, try compiling the conditional expression string */
          if ( SELF_COMPILE( (AREAP) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
          {
-            hb_cdxDestroyExp( pKeyExp );
+            hb_vmDestroyBlockOrMacro( pKeyExp );
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
             return FAILURE;
          }
@@ -7362,24 +7270,24 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    /* Test conditional expression */
    if ( pForExp )
    {
-      USHORT uiType;
+      BOOL fOK;
 
       if ( SELF_EVALBLOCK( ( AREAP ) pArea, pForExp ) == FAILURE )
       {
-         hb_cdxDestroyExp( pKeyExp );
-         hb_cdxDestroyExp( pForExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return FAILURE;
       }
-      uiType = hb_itemType( pArea->valResult );
+      fOK = hb_itemType( pArea->valResult ) == HB_IT_LOGICAL;
       hb_itemRelease( pArea->valResult );
       pArea->valResult = NULL;
-      if ( uiType != HB_IT_LOGICAL )
+      if ( ! fOK )
       {
-         hb_cdxDestroyExp( pKeyExp );
-         hb_cdxDestroyExp( pForExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pForExp );
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-         /* TODO: !!! runtime error ? */
+         hb_cdxErrorRT( pArea, EG_DATATYPE, EDBF_INVALIDFOR, NULL, 0, 0 );
          return FAILURE;
       }
    }
@@ -7499,9 +7407,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
       if ( hFile == FS_ERROR )
       {
-         hb_cdxDestroyExp( pKeyExp );
+         hb_vmDestroyBlockOrMacro( pKeyExp );
          if ( pForExp != NULL )
-            hb_cdxDestroyExp( pForExp );
+            hb_vmDestroyBlockOrMacro( pForExp );
          return FAILURE;
       }
    }
@@ -7786,7 +7694,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             }
             if ( pTag->pForItem != NULL )
             {
-               hb_cdxDestroyExp( pTag->pForItem );
+               hb_vmDestroyBlockOrMacro( pTag->pForItem );
                pTag->pForItem = NULL;
             }
             if ( hb_itemGetCLen( pOrderInfo->itmNewVal ) > 0 )
@@ -7808,7 +7716,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
                      pArea->valResult = NULL;
                   }
                   if ( pForItem )
-                     hb_cdxDestroyExp( pForItem );
+                     hb_vmDestroyBlockOrMacro( pForItem );
                }
             }
          }
@@ -9195,3 +9103,160 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
    hb_cdp_page = cdpTmp;
 #endif
 }
+
+#define __PRG_SOURCE__ __FILE__
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+HB_FUNC_EXTERN( _DBF );
+
+#if defined( HB_SIXCDX )
+
+HB_FUNC( SIXCDX ) {;}
+
+HB_FUNC( SIXCDX_GETFUNCTABLE )
+{
+   RDDFUNCS * pTable;
+   USHORT * uiCount, uiRddId;
+
+   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   uiRddId = hb_parni( 4 );
+
+   HB_TRACE(HB_TR_DEBUG, ("SIXCDX_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
+   if ( pTable )
+   {
+      ERRCODE errCode;
+
+      if ( uiCount )
+         * uiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFFPT" );
+      if ( errCode != SUCCESS )
+         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFDBT" );
+      if ( errCode != SUCCESS )
+         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBF" );
+      hb_retni( errCode );
+      if ( errCode == SUCCESS )
+      {
+         /*
+          * we successfully register our RDD so now we can initialize it
+          * You may think that this place is RDD init statement, Druzus
+          */
+         s_uiRddId = uiRddId;
+      }
+   }
+   else
+      hb_retni( FAILURE );
+}
+
+static void hb_dbfcdxRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "DBF",    RDT_FULL ) <= 1 )
+   {
+      hb_rddRegister( "DBFFPT", RDT_FULL );
+      if( hb_rddRegister( "SIXCDX", RDT_FULL ) <= 1 )
+      {
+         return;
+      }
+   }
+
+   hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   /* not executed, only to force DBF RDD linking */
+   HB_FUNC_EXEC( _DBF );
+}
+
+HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
+{ "SIXCDX",              HB_FS_PUBLIC, {HB_FUNCNAME( SIXCDX )}, NULL },
+{ "SIXCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
+
+#else
+
+HB_FUNC( DBFCDX ) {;}
+
+HB_FUNC( DBFCDX_GETFUNCTABLE )
+{
+   RDDFUNCS * pTable;
+   USHORT * uiCount, uiRddId;
+
+   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   uiRddId = hb_parni( 4 );
+
+   HB_TRACE(HB_TR_DEBUG, ("DBFCDX_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
+   if ( pTable )
+   {
+      ERRCODE errCode;
+
+      if ( uiCount )
+         * uiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFFPT" );
+      if ( errCode != SUCCESS )
+         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBFDBT" );
+      if ( errCode != SUCCESS )
+         errCode = hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBF" );
+      if ( errCode == SUCCESS )
+      {
+         /*
+          * we successfully register our RDD so now we can initialize it
+          * You may think that this place is RDD init statement, Druzus
+          */
+         s_uiRddId = uiRddId;
+      }
+      hb_retni( errCode );
+   }
+   else
+      hb_retni( FAILURE );
+}
+
+static void hb_dbfcdxRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "DBF", RDT_FULL ) <= 1 )
+   {
+      hb_rddRegister( "DBFFPT", RDT_FULL );
+      if( hb_rddRegister( "DBFCDX", RDT_FULL ) <= 1 )
+      {
+         return;
+      }
+   }
+
+   hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   /* not executed, only to force DBF RDD linking */
+   HB_FUNC_EXEC( _DBF );
+}
+
+HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
+{ "DBFCDX",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFCDX )}, NULL },
+{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
+
+#endif
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_dbfcdx_rdd_init_ )
+   hb_vmAtInit( hb_dbfcdxRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_dbfcdx_rdd_init_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+#  pragma startup dbfcdx1__InitSymbols
+#  pragma startup _hb_dbfcdx_rdd_init_
+#elif defined(HB_MSC_STARTUP)
+#  if _MSC_VER >= 1010
+#     pragma data_seg( ".CRT$XIY" )
+#     pragma comment( linker, "/Merge:.CRT=.data" )
+#  else
+#     pragma data_seg( "XIY" )
+#  endif
+   static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_dbfcdx_rdd_init = _hb_dbfcdx_rdd_init_;
+#  pragma data_seg()
+#endif

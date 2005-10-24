@@ -33,6 +33,7 @@
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCFunc( FILE *yyc, char *cDecor, char *szName, int iStrip );
+static void hb_writeEndInit( FILE* yyc, char * szModulname );
 
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
@@ -221,25 +222,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          pSym = pSym->pNext;
       }
 
-      fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
-                    "#if defined(_MSC_VER)\n"
-                    "   #if _MSC_VER >= 1010\n"
-                    /* [pt] First version of MSC I have that supports this */
-                    /* is msvc4.1 (which is msc 10.10) */
-                    "      #pragma data_seg( \".CRT$XIY\" )\n"
-                    "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
-                    "   #else\n"
-                    "      #pragma data_seg( \"XIY\" )\n"
-                    "   #endif\n"
-                    "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
-                    "   #pragma data_seg()\n"
-                    "#elif ! defined(__GNUC__)\n"
-                    "   #pragma startup hb_vm_SymbolInit_%s%s\n"
-                    "#endif\n\n",
-                    hb_comp_szPrefix, szModulname,
-                    hb_comp_szPrefix, szModulname,
-                    hb_comp_szPrefix, szModulname,
-                    hb_comp_szPrefix, szModulname );
+      hb_writeEndInit( yyc, szModulname );
 
       /* Generate functions data
        */
@@ -376,6 +359,30 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    if( ! hb_comp_bQuiet )
       printf( "Done.\n" );
 }
+
+static void hb_writeEndInit( FILE* yyc, char * szModulname )
+{
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n\n"
+                 "#if defined(HB_PRAGMA_STARTUP)\n"
+                 "   #pragma startup hb_vm_SymbolInit_%s%s\n"
+                 "#elif defined(HB_MSC_STARTUP)\n"
+                 "   #if _MSC_VER >= 1010\n"
+                 /* [pt] First version of MSC I have that supports this */
+                 /* is msvc4.1 (which is msc 10.10) */
+                 "      #pragma data_seg( \".CRT$XIY\" )\n"
+                 "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
+                 "   #else\n"
+                 "      #pragma data_seg( \"XIY\" )\n"
+                 "   #endif\n"
+                 "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
+                 "   #pragma data_seg()\n"
+                 "#endif\n\n",
+                 hb_comp_szPrefix, szModulname,
+                 hb_comp_szPrefix, szModulname,
+                 hb_comp_szPrefix, szModulname,
+                 hb_comp_szPrefix, szModulname );
+}
+
 
 static void hb_compGenCFunc( FILE * yyc, char *cDecor, char *szName, int iStrip )
 {

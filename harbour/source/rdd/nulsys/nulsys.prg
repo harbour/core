@@ -50,17 +50,9 @@
  *
  */
 
-// Harbour without RDD
+/* Harbour without RDD */
 
 ANNOUNCE RDDSYS
-
-PROCEDURE RDDInit
-
-RETURN
-
-PROCEDURE DBFInit
-
-RETURN
 
 #pragma BEGINDUMP
 

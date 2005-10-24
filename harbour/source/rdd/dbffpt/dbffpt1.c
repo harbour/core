@@ -62,9 +62,7 @@
 #endif
 
 #include "hbapi.h"
-#ifdef HB_NO_DEFAULT_API_MACROS
 #include "hbapiitm.h"
-#endif
 #include "hbinit.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
@@ -73,15 +71,10 @@
 #include "hbdate.h"
 #include "hbrddfpt.h"
 #include "hbsxfunc.h"
+#include "rddsys.ch"
 
 #ifndef HB_CDP_SUPPORT_OFF
 #  include "hbapicdp.h"
-#endif
-
-#define __PRG_SOURCE__ __FILE__
-#ifdef HB_PCODE_VER
-#  undef HB_PRG_PCODE_VER
-#  define HB_PRG_PCODE_VER HB_PCODE_VER
 #endif
 
 static RDDFUNCS fptSuper;
@@ -232,47 +225,6 @@ static RDDFUNCS fptTable =
 
    ( DBENTRYP_SVP )   hb_fptWhoCares
 };
-
-HB_FUNC( _DBFFPT ) {;}
-
-HB_FUNC( DBFFPT_GETFUNCTABLE )
-{
-   RDDFUNCS * pTable;
-   USHORT * uiCount;
-
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-
-   HB_TRACE(HB_TR_DEBUG, ("DBFFPT_GETFUNCTABLE(%i, %p)", uiCount, pTable));
-
-   if( pTable )
-   {
-      if ( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      hb_retni( hb_rddInherit( pTable, &fptTable, &fptSuper, ( BYTE * ) "DBF" ) );
-   }
-   else
-      hb_retni( FAILURE );
-}
-
-
-HB_INIT_SYMBOLS_BEGIN( dbffpt1__InitSymbols )
-{ "_DBFFPT",             HB_FS_PUBLIC, {HB_FUNCNAME( _DBFFPT )}, NULL },
-{ "DBFFPT_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFFPT_GETFUNCTABLE )}, NULL }
-HB_INIT_SYMBOLS_END( dbffpt1__InitSymbols )
-
-#if defined(HB_PRAGMA_STARTUP)
-#  pragma startup dbffpt1__InitSymbols
-#elif defined(HB_MSC_STARTUP)
-#  if _MSC_VER >= 1010
-#     pragma data_seg( ".CRT$XIY" )
-#     pragma comment( linker, "/Merge:.CRT=.data" )
-#  else
-#     pragma data_seg( "XIY" )
-#  endif
-   static HB_$INITSYM hb_vm_auto_dbffpt1__InitSymbols = dbffpt1__InitSymbols;
-#  pragma data_seg()
-#endif
 
 /*
  * generate Run-Time error
@@ -1183,10 +1135,8 @@ static ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
                                        ULONG * pulArrayCount )
 {
    ULONG ulLen, i, ulSize;
-   USHORT usType;
 
-   usType = hb_itemType( pItem );
-   switch( usType )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
          (*pulArrayCount)++;
@@ -1584,10 +1534,8 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
                                        ULONG * pulArrayCount )
 {
    ULONG ulLen, i, ulSize;
-   USHORT usType;
 
-   usType = hb_itemType( pItem );
-   switch ( usType )
+   switch ( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
          (*pulArrayCount)++;
@@ -1630,16 +1578,14 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
  */
 static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr )
 {
-   USHORT usType;
    ULONG ulLen, i, ulSize;
    HB_LONG iVal;
    int iWidth, iDec;
    PHB_ITEM pTmpItem;
 
    memset( *bBufPtr, '\0', SIX_ITEM_BUFSIZE );
-   usType = hb_itemType( pItem );
    ulSize = SIX_ITEM_BUFSIZE;
-   switch ( usType )
+   switch ( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
          HB_PUT_LE_UINT16( &(*bBufPtr)[0], FPTIT_SIX_ARRAY );
@@ -1825,11 +1771,9 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
                                         ULONG * pulArrayCount )
 {
    ULONG ulLen, i, ulSize = 1;
-   USHORT usType;
    HB_LONG iVal;
 
-   usType = hb_itemType( pItem );
-   switch ( usType )
+   switch ( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY:
          (*pulArrayCount)++;
@@ -1870,11 +1814,9 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr )
 {
    ULONG ulLen, i;
-   USHORT usType;
    HB_LONG iVal;
 
-   usType = hb_itemType( pItem );
-   switch ( usType )
+   switch ( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY:
          ulLen = hb_arrayLen( pItem ) & 0xFFFF;
@@ -2663,7 +2605,6 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    }
    else if( pArea->uiMemoVersion == DB_MEMOVER_SIX )
    {
-      ulType = hb_itemType( pItem );
       ulSize = hb_fptCountSixItemLength( pArea, pItem, &ulArrayCount );
       if ( ulSize > 0 )
       {
@@ -2672,11 +2613,14 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          ulType = ( ULONG ) HB_GET_LE_UINT16( bBufAlloc );
          bBufPtr = bBufAlloc;
       }
+      else
+      {
+         return EDBF_DATATYPE;
+      }
    }
    else if ( pArea->uiMemoVersion == DB_MEMOVER_FLEX )
    {
-      ulType = hb_itemType( pItem );
-      switch ( ulType )
+      switch ( hb_itemType( pItem ) )
       {
          case HB_IT_ARRAY:
             ulType = FPTIT_FLEX_ARRAY;
@@ -3719,9 +3663,17 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
       }
       else
       {
+         ULONG ulSize, ulBlock, ulType, ulOldSize, ulOldType;
          HB_FOFFSET size = hb_fsSeekLarge( hFile, 0, FS_END );
-         ULONG ulSize = HB_MIN( size, 0xFFFFFFFF - sizeof( FPTBLOCK ) ),
-               ulBlock, ulType, ulOldSize, ulOldType;
+
+         if( ( size & 0xFFFFFFFF ) == size )
+         {
+            ulSize = HB_MIN( ( ULONG ) size, 0xFFFFFFFFUL - sizeof( FPTBLOCK ) );
+         }
+         else
+         {
+            ulSize = HB_MIN( size, ( HB_FOFFSET ) ( 0xFFFFFFFF - sizeof( FPTBLOCK ) ) );
+         }
 
          if( pArea->bMemoType == DB_MEMO_SMT )
             ulType = SMT_IT_CHAR;
@@ -4022,3 +3974,76 @@ static ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
 
    return SUCCESS;
 }
+
+/* for backward compatibility */
+HB_FUNC( DBFDBT ) {;}
+
+HB_FUNC( DBFFPT ) {;}
+
+HB_FUNC( DBFFPT_GETFUNCTABLE )
+{
+   RDDFUNCS * pTable;
+   USHORT * uiCount;
+
+   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+
+   HB_TRACE(HB_TR_DEBUG, ("DBFFPT_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
+   if( pTable )
+   {
+      if ( uiCount )
+         * uiCount = RDDFUNCSCOUNT;
+      hb_retni( hb_rddInherit( pTable, &fptTable, &fptSuper, ( BYTE * ) "DBF" ) );
+   }
+   else
+      hb_retni( FAILURE );
+}
+
+
+#define __PRG_SOURCE__ __FILE__
+
+#ifdef HB_PCODE_VER
+#  undef HB_PRG_PCODE_VER
+#  define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+HB_FUNC_EXTERN( _DBF );
+
+static void hb_dbffptRddInit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( hb_rddRegister( "DBF",    RDT_FULL ) > 1 ||
+       hb_rddRegister( "DBFFPT", RDT_FULL ) > 1 )
+   {
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+      /* not executed, only to force DBF RDD linking */
+      HB_FUNC_EXEC( _DBF );
+   }
+}
+
+HB_INIT_SYMBOLS_BEGIN( dbffpt1__InitSymbols )
+{ "DBFFPT",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFFPT )}, NULL },
+{ "DBFFPT_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFFPT_GETFUNCTABLE )}, NULL }
+HB_INIT_SYMBOLS_END( dbffpt1__InitSymbols )
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_dbffpt_rdd_init_ )
+   hb_vmAtInit( hb_dbffptRddInit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_dbffpt_rdd_init_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+#  pragma startup dbffpt1__InitSymbols
+#  pragma startup _hb_dbffpt_rdd_init_
+#elif defined(HB_MSC_STARTUP)
+#  if _MSC_VER >= 1010
+#     pragma data_seg( ".CRT$XIY" )
+#     pragma comment( linker, "/Merge:.CRT=.data" )
+#  else
+#     pragma data_seg( "XIY" )
+#  endif
+   static HB_$INITSYM hb_vm_auto_dbffpt1__InitSymbols = dbffpt1__InitSymbols;
+   static HB_$INITSYM hb_vm_auto_dbffpt_rdd_init = _hb_dbffpt_rdd_init_;
+#  pragma data_seg()
+#endif

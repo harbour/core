@@ -54,6 +54,7 @@
  */
 #define HB_MACRO_SUPPORT
 
+#include "hbvmopt.h"
 #include "hbmacro.h"
 #include "hbcomp.h"
 #include "hbstack.h"

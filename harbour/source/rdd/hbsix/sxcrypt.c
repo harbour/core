@@ -55,9 +55,6 @@
  *
  */
 
-#ifdef HB_NO_DEFAULT_API_MACROS
-#include "hbapiitm.h"
-#endif
 #include "hbsxfunc.h"
 
 #define rnd_mul1  0x0de6d

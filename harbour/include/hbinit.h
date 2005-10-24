@@ -59,9 +59,28 @@ HB_EXTERN_BEGIN
 
 extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
 
+#if defined(_MSC_VER) && !defined(_WIN64) && \
+    !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
+    !defined(HARBOUR_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
+    !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-  #define HB_USE_PRAGMA_STARTUP  
+   /* In order to maintain compatibility with other products, MSVC should
+      always use this startup.  If you know that you can use HB_STATIC_STARTUP
+      below, then all you need to do is define HB_STATIC_STARTUP to the
+      compiler.
+
+      Sat 07 Maj 2005 02:46:38 CEST
+      This is only necessary when you want to create binary libs using
+      MSC in C++ mode (-TP switch) and later this binaries will be linked
+      by standard C linker with [x]Harbour programs. I strongly suggest
+      to for 3-rd party developers to use MSC in standard C mode to create
+      libraries which can be used with standard C compilers. This will
+      eliminate the problem and we will be able to set C++ initialization
+      as default for MSC in C++ mode. Druzus.
+   */
+
+   #define HB_MSC_STARTUP
+
 #endif
 
 
@@ -69,124 +88,138 @@ extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
-   
-   #define HB_INIT_SYMBOLS_END( func ) }; \
+
+   #define HB_INIT_SYMBOLS_END( func ) \
+      }; \
       void func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
       }
 
-   #define HB_CALL_ON_STARTUP_BEGIN( func ) func( void ) {
-   #define HB_CALL_ON_STARTUP_END( func ) }
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      func( void ) \
+      {
+
+   #define HB_CALL_ON_STARTUP_END( func ) \
+      }
 
 #elif defined(__GNUC__)
 
+   #if defined(HB_PRAGMA_STARTUP) || defined(HB_MSC_STARTUP)
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
+
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 
-   #define HB_INIT_SYMBOLS_END( func )  }; \
+   #define HB_INIT_SYMBOLS_END( func ) \
+      }; \
       static void __attribute__ ((constructor)) func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      static void __attribute__ ((constructor)) func( void ) {
+      static void __attribute__ ((constructor)) func( void ) \
+      {
 
-   #define HB_CALL_ON_STARTUP_END( func ) }
-
-#elif defined(__BORLANDC__)
-
-   #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
-
-   #define HB_INIT_SYMBOLS_END( func )  }; \
-      static void func( void ) \
-      { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
+   #define HB_CALL_ON_STARTUP_END( func ) \
       }
 
-   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      static void func( void ) {
-
-   #define HB_CALL_ON_STARTUP_END( func ) }
-
-#elif defined(__IBMCPP__) || defined(__MPW__)
-
-   #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
-
-   #define HB_INIT_SYMBOLS_END( func ) }; \
-      static int func( void ) \
-      { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-         return 1; \
-      }; \
-      static int static_int_##func = func();
-
-   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      static int func( void ) {
-
-   #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-      static int static_int_##func = func();
-
-#elif defined(_MSC_VER)
+#elif defined(HB_MSC_STARTUP)
 
    typedef int (* HB_$INITSYM)( void );
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 
-   #ifndef _WIN64
+   #define HB_INIT_SYMBOLS_END( func ) \
+      }; \
+      static int func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         return 0; \
+      }
 
-      #define HB_INIT_SYMBOLS_END( func ) }; \
-         static int func( void ) \
-         { \
-            hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-            return 1; \
-         } 
-         
-   #else
-     
-      #define HB_INIT_SYMBOLS_END( func ) }; \
-         static int func( void ) \
-         { \
-            hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-            return 1; \
-         } \
-         static int static_int_##func = func();
-         
-   #endif
-   
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      static int func( void ) {
+      static int func( void ) \
+      {
 
-   #define HB_CALL_ON_STARTUP_END( func ) return 1; } \
-      static int static_int_##func = func();
+   #define HB_CALL_ON_STARTUP_END( func ) \
+         return 0; \
+      }
 
-#elif defined(__WATCOMC__)
+   /*  After each '_END' symbol, additional 'hooks' are required See the C
+       output of a generated prg for example
+   */
+
+#elif defined(HB_STATIC_STARTUP) || defined(__cplusplus)
+
+   #if defined(HB_PRAGMA_STARTUP) || defined(HB_MSC_STARTUP)
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols[] = {
 
-   #define HB_INIT_SYMBOLS_END( func ) }; \
+   /* this allows any macros to be preprocessed first
+      so that token pasting is handled correctly */
+   #define HB_INIT_SYMBOLS_END( func ) \
+           _HB_INIT_SYMBOLS_END( func )
+
+   #define _HB_INIT_SYMBOLS_END( func ) \
+      }; \
       static int func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) ); \
-         return 1; \
-      }; \
-      static int static_int_##func = func();
+         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         return 0; \
+      } \
+      static int hb_vm_auto_##func = func();
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
-      static int func( void ) {
+      static int func( void ) \
+      {
 
-   #define HB_CALL_ON_STARTUP_END( func ) return 1; }; \
+   /* this allows any macros to be preprocessed first
+      so that token pasting is handled correctly */
+   #define HB_CALL_ON_STARTUP_END( func ) \
+          _HB_CALL_ON_STARTUP_END( func )
+
+   #define _HB_CALL_ON_STARTUP_END( func ) \
+         return 0; \
+      } \
       static int static_int_##func = func();
 
-#endif
+#elif defined(HB_PRAGMA_STARTUP) || \
+      defined(__BORLANDC__) || defined(__LCC__) || defined(__POCC__) || defined(__XCC__)
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-  #define HB_PRAGMA_STARTUP  
+   #if defined(HB_MSC_STARTUP)
+      #error Wrong macros set for startup code - clean your make/env settings.
+   #endif
+
+   #if !defined(HB_PRAGMA_STARTUP)
+      #define HB_PRAGMA_STARTUP
+   #endif
+
+   #define HB_INIT_SYMBOLS_BEGIN( func ) \
+      static HB_SYMB symbols[] = {
+
+   #define HB_INIT_SYMBOLS_END( func ) \
+      }; \
+      static void func( void ) \
+      { \
+         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+      }
+
+   #define HB_CALL_ON_STARTUP_BEGIN( func ) \
+      static void func( void ) \
+      {
+
+   #define HB_CALL_ON_STARTUP_END( func ) \
+      }
+
+#else
+   #error Unknown initialization method.
 #endif
 
 HB_EXTERN_END

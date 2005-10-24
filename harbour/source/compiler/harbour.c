@@ -1703,6 +1703,7 @@ void hb_compAnnounce( char * szFunName )
          hb_comp_functions.pLast = pFunc;
       }
       hb_comp_functions.iCount++;
+      hb_comp_iFunctionCnt++;
 
       /* this function have a very limited functionality
        */

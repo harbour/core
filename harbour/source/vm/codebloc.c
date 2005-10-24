@@ -52,6 +52,7 @@
 
 /* The Harbour implementation of codeblocks */
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"

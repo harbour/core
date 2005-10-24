@@ -61,6 +61,12 @@ HB_EXTERN_BEGIN
 extern void HB_EXPORT hb_vmInit( BOOL bStartMainProc );
 extern void HB_EXPORT hb_vmQuit( void );            /* Immediately quits the virtual machine */
 
+/* registration AtInit and AtExit functions - they are executed
+ * just before (after) .prg INIT (EXIT) procedures.
+ */
+void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
+void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
+
 /* Harbour virtual machine functions */
 extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
@@ -88,7 +94,8 @@ extern void    hb_vmSend( USHORT uiParams ); /* sends a message to an object */
 extern PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
 /* executes passed codeblock with variable number of arguments */
 extern PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, ULONG ulArgCount, ... );
-extern PHB_ITEM hb_vmEvalBlockOrMacro( HB_ITEM_PTR pItem ); /* execute a codeblock or a macro */
+HB_EXPORT extern PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem ); /* executes codeblock or macro pointed by given item */
+HB_EXPORT extern void     hb_vmDestroyBlockOrMacro( PHB_ITEM pItem ); /* destroy codeblock or macro in given item */
 
 /* Push */
 extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
@@ -106,8 +113,8 @@ extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type
 
 /* various flags for supported features 
 */
-#define  HB_VMFLAG_HARBOUR		1	/* enable Harbour extension */
-#define	HB_VMFLAG_ARRSTR		2	/* support for string as array of bytes -ks */
+#define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */
+#define  HB_VMFLAG_ARRSTR     2     /* support for string as array of bytes -ks */
 
 extern ULONG hb_vmFlagEnabled( ULONG flag);
 

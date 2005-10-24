@@ -57,7 +57,10 @@
 
 /* NOTE: This function is exactly the same as Skipped() in BROWDB.PRG */
 
+
 #ifdef HB_COMPAT_XPP
+
+#ifdef HB_PRG_DBSKIPPER
 
 FUNCTION dbSkipper( nRecs )
 
@@ -87,5 +90,7 @@ FUNCTION dbSkipper( nRecs )
    ENDIF
 
    RETURN nSkipped
+
+#endif
 
 #endif

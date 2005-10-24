@@ -65,6 +65,7 @@
 
 #include <ctype.h> /* for toupper() function */
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"

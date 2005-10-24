@@ -79,6 +79,7 @@
    #include <malloc.h>
 */
 
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapierr.h"

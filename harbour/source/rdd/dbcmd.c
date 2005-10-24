@@ -62,7 +62,11 @@
  *
  */
 
+/* JC1: optimizing stack access under MT */
+#define HB_THREAD_OPTIMIZE_STACK
+
 #include <ctype.h>
+#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbvm.h"
@@ -331,11 +335,47 @@ static LPRDDNODE hb_rddFindNode( char * szDriver, USHORT * uiIndex )
    return NULL;
 }
 
+/*
+ * Get (/set) default RDD driver
+ */
+static char * hb_rddDefaultDrv( char * szDriver )
+{
+   static BOOL fInit = FALSE;
+
+   if( szDriver && *szDriver )
+   {
+      char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+
+      hb_strncpyUpper( szNewDriver, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      {
+         return NULL;
+      }
+      strcpy( s_szDefDriver, szNewDriver );
+   }
+   else if( !fInit && !s_szDefDriver[ 0 ] && s_uiRddMax )
+   {
+      char *szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF", NULL };
+      int i;
+
+      for( i = 0; szDrvTable[ i ]; ++i )
+      {
+         if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
+         {
+            strcpy( s_szDefDriver, szDrvTable[ i ] );
+            break;
+         }
+      }
+      fInit = TRUE;
+   }
+
+   return s_szDefDriver;
+}
 
 /*
  * Register a RDD driver.
  */
-static int hb_rddRegister( char * szDriver, USHORT uiType )
+int HB_EXPORT hb_rddRegister( char * szDriver, USHORT uiType )
 {
    LPRDDNODE pRddNewNode;
    PHB_DYNS pGetFuncTable;
@@ -1567,7 +1607,7 @@ static ERRCODE hb_rddOpenTable( char * szFileName,  char * szDriver,
    }
    else
    {
-      szDriver = s_szDefDriver;
+      szDriver = hb_rddDefaultDrv( NULL );
    }
 
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
@@ -1635,7 +1675,7 @@ static ERRCODE hb_rddCreateTable( char * szFileName, PHB_ITEM pStruct,
    }
    else
    {
-      szDriver = s_szDefDriver;
+      szDriver = hb_rddDefaultDrv( NULL );
    }
 
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
@@ -2139,7 +2179,7 @@ HB_FUNC( DBTABLEEXT )
    {
       LPRDDNODE pRddNode;
       USHORT uiRddID;
-      pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
+      pRddNode = hb_rddFindNode( hb_rddDefaultDrv( NULL ), &uiRddID );
       if( pRddNode )
       {
          pArea = hb_rddNewAreaNode( pRddNode, uiRddID );
@@ -2532,7 +2572,7 @@ HB_FUNC( ORDBAGEXT )
    {
       LPRDDNODE pRddNode;
       USHORT uiRddID;
-      pRddNode = hb_rddFindNode( s_szDefDriver, &uiRddID );
+      pRddNode = hb_rddFindNode( hb_rddDefaultDrv( NULL ), &uiRddID );
       if( pRddNode )
       {
          pArea = hb_rddNewAreaNode( pRddNode, uiRddID );
@@ -3237,7 +3277,6 @@ HB_FUNC( ORDSETFOCUS )
 
 HB_FUNC( RDDLIST )
 {
-   HB_THREAD_STUB
    USHORT uiType, uiCount, uiRdds = 0, uiIndex = 0;
    PHB_ITEM pRddArray = hb_itemNew( NULL );
 
@@ -3419,26 +3458,15 @@ HB_FUNC( RDDSETDEFAULT )
 {
    HB_THREAD_STUB
 
-   USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   hb_retc( hb_rddDefaultDrv( NULL ) );
 
-   hb_retc( s_szDefDriver );
-
-   uiLen = ( USHORT ) hb_parclen( 1 );
-
-   if( uiLen > 0 )
+   if( hb_parclen( 1 ) > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-      {
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-      }
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
-      if( ! hb_rddFindNode( szNewDriver, NULL ) )
+      if( ! hb_rddDefaultDrv( hb_parc( 1 ) ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "RDDSETDEFAULT" );
          return;
       }
-      strcpy( s_szDefDriver, szNewDriver );
    }
 }
 
@@ -3446,26 +3474,15 @@ HB_FUNC( DBSETDRIVER )
 {
    HB_THREAD_STUB
 
-   USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   hb_retc( hb_rddDefaultDrv( NULL ) );
 
-   hb_retc( s_szDefDriver );
-
-   uiLen = ( USHORT ) hb_parclen( 1 );
-
-   if( uiLen > 0 )
+   if( hb_parclen( 1 ) > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-      {
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-      }
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
-      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      if( ! hb_rddDefaultDrv( hb_parc( 1 ) ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBSETDRIVER" );
          return;
       }
-      strcpy( s_szDefDriver, szNewDriver );
    }
 }
 
@@ -3938,7 +3955,7 @@ HB_FUNC( DBDROP )
    szDriver = hb_parc( 3 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
    {
-      szDriver = s_szDefDriver;
+      szDriver = hb_rddDefaultDrv( NULL );
    }
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
@@ -3963,7 +3980,7 @@ HB_FUNC( DBEXISTS )
    szDriver = hb_parc( 3 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
    {
-      szDriver = s_szDefDriver;
+      szDriver = hb_rddDefaultDrv( NULL );
    }
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
@@ -3989,7 +4006,7 @@ HB_FUNC( RDDINFO )
    szDriver = hb_parc( 3 );
    if( !szDriver ) /* no VIA RDD parameter, use default */
    {
-      szDriver = s_szDefDriver;
+      szDriver = hb_rddDefaultDrv( NULL );
    }
    ulConnection = hb_parnl( 4 );
 
@@ -4223,7 +4240,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
 
    if( errCode == SUCCESS )
    {
-      hb_rddSelectWorkAreaNumber( lpaSource->uiArea );
+      hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
 
       dbTransInfo.dbsci.itmCobFor   = pCobFor;
       dbTransInfo.dbsci.lpstrFor    = pStrFor;
@@ -4239,7 +4256,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.fIgnoreDuplicates = FALSE;
       dbTransInfo.dbsci.fBackword         = FALSE;
 
-      errCode = SELF_TRANS( lpaSource, &dbTransInfo );
+      errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
    }
 
    if( dbTransInfo.lpTransItems )
@@ -4339,7 +4356,6 @@ HB_FUNC( __RDDGETTEMPALIAS )
       hb_ret();
 }
 
-#if defined(__XHARBOUR__)
 HB_FUNC( DBSKIPPER )
 {
    HB_THREAD_STUB
@@ -4398,7 +4414,6 @@ HB_FUNC( DBSKIPPER )
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBSKIPPER" );
 }
-#endif
 
 // Escaping delimited strings. Need to be cleaned/optimized/improved
 static char *hb_strescape( char *szInput, int lLen, char *cDelim )
