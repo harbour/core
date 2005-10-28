@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-28 10:23 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   * hrbdll.bc
+   * hrbdll.vc
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+   * include/hbapicdp.h
+   * source/codepage/Makefile
+   * source/codepage/cdphu852.c
+   * source/lang/Makefile
+   * source/lang/msg_tpl.c
+   * source/lang/msghu852.c
+   + source/codepage/cdpbg866.c
+   + source/codepage/cdpbgiso.c
+   + source/codepage/cdpbgwin.c
+   + source/codepage/uc8859_5.c
+   + source/lang/msgbg866.c
+   + source/lang/msgbgiso.c
+   + source/lang/msgbgwin.c
+     + Added BG language support.
+     * HU minor fix.
+     * Lang template updated.
+
 2005-10-24 15:09 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/makefile.bc
     - Remove references to:

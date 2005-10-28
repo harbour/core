@@ -5,6 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
+	msgbg866.c   \
+	msgbgiso.c   \
+	msgbgwin.c   \
 	msgca.c      \
 	msgcs852.c   \
 	msgcsiso.c   \

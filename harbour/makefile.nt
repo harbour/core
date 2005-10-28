@@ -452,6 +452,9 @@ RTL_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 LANG_LIB_OBJS = \
+   $(OBJ_DIR)\msgbg866.obj \
+   $(OBJ_DIR)\msgbgiso.obj \
+   $(OBJ_DIR)\msgbgwin.obj \
    $(OBJ_DIR)\msgca.obj \
    $(OBJ_DIR)\msgcs852.obj \
    $(OBJ_DIR)\msgcsiso.obj \
@@ -507,6 +510,9 @@ LANG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdpbg866.obj \
+   $(OBJ_DIR)\cdpbgiso.obj \
+   $(OBJ_DIR)\cdpbgwin.obj \
    $(OBJ_DIR)\cdpeldos.obj \
    $(OBJ_DIR)\cdpelwin.obj \
    $(OBJ_DIR)\cdpesdos.obj \
@@ -541,6 +547,7 @@ CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\uc866.obj    \
    $(OBJ_DIR)\uc8859_1.obj \
    $(OBJ_DIR)\uc8859_2.obj \
+   $(OBJ_DIR)\uc8859_5.obj \
    $(OBJ_DIR)\uc88591b.obj \
    $(OBJ_DIR)\uckoi8.obj   \
    $(OBJ_DIR)\uckoi8u.obj  \

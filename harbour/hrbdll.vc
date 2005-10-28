@@ -317,6 +317,9 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dbfntx1.obj \
   $(OBJ_DIR)\dbfcdx1.obj \
   $(OBJ_DIR)\dbfcdx0.obj \
+  $(OBJ_DIR)\msgbg866.obj \
+  $(OBJ_DIR)\msgbgiso.obj \
+  $(OBJ_DIR)\msgbgwin.obj \
   $(OBJ_DIR)\msgca.obj \
   $(OBJ_DIR)\msgcs852.obj \
   $(OBJ_DIR)\msgcsiso.obj \
@@ -378,6 +381,9 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\maindllh.obj \
   $(OBJ_DIR)\hvm.obj \
   \
+  $(OBJ_DIR)\cdpbg866.obj \
+  $(OBJ_DIR)\cdpbgiso.obj \
+  $(OBJ_DIR)\cdpbgwin.obj \
   $(OBJ_DIR)\cdpeldos.obj \
   $(OBJ_DIR)\cdpelwin.obj \
   $(OBJ_DIR)\cdpesdos.obj \
@@ -412,6 +418,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\uc866.obj \
   $(OBJ_DIR)\uc8859_1.obj \
   $(OBJ_DIR)\uc8859_2.obj \
+  $(OBJ_DIR)\uc8859_5.obj \
   $(OBJ_DIR)\uc88591b.obj \
   $(OBJ_DIR)\uckoi8.obj \
   $(OBJ_DIR)\uckoi8u.obj \
@@ -1521,6 +1528,15 @@ $(OBJ_DIR)\xhelp.obj : $(RTL_DIR)\xhelp.c
 $(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
+$(OBJ_DIR)\msgbg852.obj : $(LANG_DIR)\msgbg852.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\msgbgiso.obj : $(LANG_DIR)\msgbgiso.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\msgbgwin.obj : $(LANG_DIR)\msgbgwin.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
 $(OBJ_DIR)\msgca.obj : $(LANG_DIR)\msgca.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
@@ -1772,6 +1788,15 @@ $(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
 $(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
+$(OBJ_DIR)\cdpbg866.obj : $(CODEPAGE_DIR)\cdpbg866.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdpbgiso.obj : $(CODEPAGE_DIR)\cdpbgiso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdpbgwin.obj : $(CODEPAGE_DIR)\cdpbgwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\cdpeldos.obj : $(CODEPAGE_DIR)\cdpeldos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
@@ -1872,6 +1897,9 @@ $(OBJ_DIR)\uc8859_1.obj : $(CODEPAGE_DIR)\uc8859_1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\uc8859_2.obj : $(CODEPAGE_DIR)\uc8859_2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\uc8859_5.obj : $(CODEPAGE_DIR)\uc8859_5.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\uc88591b.obj : $(CODEPAGE_DIR)\uc88591b.c

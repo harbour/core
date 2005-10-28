@@ -140,6 +140,7 @@ extern PHB_CODEPAGE hb_cdp_page;
 #define CPID_8859_1     "iso8859-1"
 #define CPID_8859_1B    "iso8859-1b"
 #define CPID_8859_2     "iso8859-2"
+#define CPID_8859_5     "iso8859-5"
 #define CPID_KOI_8      "koi-8"
 #define CPID_KOI_8U     "koi-8u"
 #define CPID_MAZ        "plmaz"
@@ -155,6 +156,7 @@ extern PHB_CODEPAGE hb_cdp_page;
 #define UNITB_8859_1    &hb_uniTbl_8859_1
 #define UNITB_8859_1B   &hb_uniTbl_8859_1b
 #define UNITB_8859_2    &hb_uniTbl_8859_2
+#define UNITB_8859_5    &hb_uniTbl_8859_5
 #define UNITB_KOI_8     &hb_uniTbl_KOI_8
 #define UNITB_KOI_8U    &hb_uniTbl_KOI_8U
 #define UNITB_MAZ       &hb_uniTbl_mazovia
@@ -172,6 +174,7 @@ extern HB_UNITABLE hb_uniTbl_1257;
 extern HB_UNITABLE hb_uniTbl_8859_1;
 extern HB_UNITABLE hb_uniTbl_8859_1b;
 extern HB_UNITABLE hb_uniTbl_8859_2;
+extern HB_UNITABLE hb_uniTbl_8859_5;
 extern HB_UNITABLE hb_uniTbl_KOI_8;
 extern HB_UNITABLE hb_uniTbl_KOI_8U;
 extern HB_UNITABLE hb_uniTbl_mazovia;

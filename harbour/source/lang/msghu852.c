@@ -52,7 +52,7 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: IBM-852 */
+/* Codepage: 852 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Hungarian",                 /* Name (in English) */
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */
-      "IBM-852",                   /* Codepage */
+      "852",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (Template)
  *
- * Copyright 1999-2001 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2005 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "IBM-437",                   /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
@@ -205,6 +205,16 @@ HB_LANG_ANNOUNCE( TPL );
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_TPL )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_TPL )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+
+#if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_lang_Init_TPL
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_TPL = hb_lang_Init_TPL;
+   #pragma data_seg()
 #endif

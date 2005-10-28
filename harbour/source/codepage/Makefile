@@ -5,6 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
+	cdpbg866.c    \
+	cdpbgiso.c    \
+	cdpbgwin.c    \
 	cdpeldos.c    \
 	cdpelwin.c    \
 	cdpesdos.c    \
@@ -40,6 +43,7 @@ C_SOURCES=\
 	uc8859_1.c    \
 	uc88591b.c    \
 	uc8859_2.c    \
+	uc8859_5.c    \
 	uckoi8.c      \
 	uckoi8u.c     \
 	ucmaz.c       \
