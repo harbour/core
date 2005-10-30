@@ -206,6 +206,10 @@ in order to remove empty directories)
 |   |   |
 |   |   +---dbfntx     - DBFNTX RDD.
 |   |   |
+|   |   +---hbsix      - SIX compatible functions.
+|   |   |
+|   |   +---hsx        - HiPer-SEEK / CFTS compatible library.
+|   |   |
 |   |   +---nulsys     - NULL RDD.
 |   |
 |   +---rtl            - Run-Time libraries functions and various General

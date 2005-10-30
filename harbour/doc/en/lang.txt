@@ -167,6 +167,9 @@
  *      <table>
  *      Language              Codepage       <cNewLang>
  *
+ *      Bulgarian             866            BG866
+ *      Bulgarian             ISO-8859-5     BGISO
+ *      Bulgarian             Windows-1251   BGWIN
  *      Basque                850            EU
  *      Catalan               850            CA
  *      Chinese Simplified    936            ZHGB
@@ -189,6 +192,7 @@
  *      Hebrew                Windows-1255   HEWIN
  *      Hungarian             852            HU852
  *      Hungarian             CWI-2          HUCWI
+ *      Hungarian             ISO-8859-2     HUISO
  *      Hungarian             Windows-1      HUWIN
  *      Icelandic             850            IS850
  *      Indonesian            437            ID
@@ -272,29 +276,34 @@
  *      <table>
  *      Language              Codepage       <cNewLang>
  *
+ *      Bulgarian             866            BG866
+ *      Bulgarian             ISO-8859-5     BGISO
+ *      Bulgarian             Windows-1251   BGWIN
  *      English               437            EN
  *      German                850            DE
- *      German ANSI           ANSI           DEWIN
+ *      German                ISO-8859-1     DEWIN
  *      Greek                 737            EL
- *      Greek ANSI            Windows-1253   ELWIN
+ *      Greek                 Windows-1253   ELWIN
  *      Hungarian             852            HU852
- *      Hungarian             Windows-1      HUWIN
+ *      Hungarian             ISO-8859-2     HUISO
+ *      Hungarian             Windows-1250   HUWIN
  *      Polish                852            PL852
  *      Polish                ISO-8859-2     PLISO
  *      Polish                Mozowia        PLMAZ
  *      Polish                Windows-1250   PLWIN
- *      Portuguese            850            PT
+ *      Portuguese            850            PT850
  *      Portuguese            ISO-8859-1     PTISO
  *      Russian               866            RU866
  *      Russian               KOI-8          RUKOI8
- *      Russian               Windows-1251   RUWIN
+ *      Russian               Windows-1251   RU1251
  *      Serbian               Windows-1251   SRWIN
  *      Slovenian             437            SL437
  *      Slovenian             852            SL852
  *      Slovenian             ISO-8859-2     SLISO
  *      Slovenian             Windows-1250   SLWIN
  *      Spanish               850            ES
- *      Spanish ANSI          ANSI           ESWIN
+ *      Spanish               ISO-8859-1     ESWIN
+ *      Spanish Modern        ISO-8859-1     ESMWIN
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
@@ -390,4 +399,3 @@
  *      HB_LANGSELECT(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
  *  $END$
  */
-

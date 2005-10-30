@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-30 14:50 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * doc/dirstruc.txt
+     + Add oneliner description for: source/rdd/hbsix, source/rdd/hsx
+
+   * doc/en/lang.txt
+     + Added the following to HB_LANGSELECT() list of supported ID's:
+       BG866, BGISO, BGWIN, HUISO
+     + Added the following to HB_SETCODEPAGE() list of supported ID's:
+       BG866, BGISO, BGWIN, ESMWIN, HUISO
+     * Change the following to HB_SETCODEPAGE() list of supported ID's:
+       PT --> PT850, RUWIN --> RU1251
+
+   * source/lang/msghe862.c
+   * source/lang/msghewin.c
+     * Update startup code to work with MSC
+
 2005-10-28 10:23 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    * hrbdll.bc
    * hrbdll.vc
