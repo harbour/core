@@ -595,7 +595,6 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\delim1.obj \
    $(OBJ_DIR)\sdf1.obj \
    \
-   $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dbtotal.obj \
    $(OBJ_DIR)\dbfuncs.obj \
    $(OBJ_DIR)\dblist.obj \
@@ -603,10 +602,8 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \
    $(OBJ_DIR)\dbupdat.obj \
-   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
-   $(OBJ_DIR)\rddsys.obj \
-   $(OBJ_DIR)\sdf0.obj
+   $(OBJ_DIR)\rddsys.obj
 
 #
 # NULSYS.LIB rules
@@ -651,26 +648,7 @@ DBFNTX_LIB_OBJS = \
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx1.obj \
-   $(OBJ_DIR)\sixcdx1.obj \
-   \
-   $(OBJ_DIR)\dbfcdx0.obj \
-   $(OBJ_DIR)\sixcdx0.obj
-
-#
-# DBFFPT.LIB rules
-#
-
-{$(RDD_DIR)\dbffpt}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-
-{$(RDD_DIR)\dbffpt}.prg{$(OBJ_DIR)}.obj::
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(DBFFPT_LIB)2
-
-DBFFPT_LIB_OBJS = \
-   $(OBJ_DIR)\dbffpt1.obj \
-   \
-   $(OBJ_DIR)\dbffpt0.obj
+   $(OBJ_DIR)\sixcdx1.obj
 
 #
 # HBSIX.LIB rules
@@ -694,6 +672,20 @@ HBSIX_LIB_OBJS = \
 HSX_LIB_OBJS = \
    $(OBJ_DIR)\hsx.obj \
    $(OBJ_DIR)\cftsfunc.obj
+
+#
+# DBFFPT.LIB rules
+#
+
+{$(RDD_DIR)\dbffpt}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(RDD_DIR)\dbffpt}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(DBFFPT_LIB)2
+
+DBFFPT_LIB_OBJS = \
+   $(OBJ_DIR)\dbffpt1.obj 
 
 #
 # PP.LIB rules
@@ -1140,16 +1132,16 @@ $(RDD_LIB) : $(RDD_LIB_OBJS)
 $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
    lib /out:$@ $**
 
-$(HBSIX_LIB) : $(HBSIX_LIB_OBJS)
-   lib /out:$@ $**
-
-$(HSX_LIB) : $(HSX_LIB_OBJS)
-   lib /out:$@ $**
-
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
    lib /out:$@ $**
 
 $(DBFFPT_LIB) : $(DBFFPT_LIB_OBJS)
+   lib /out:$@ $**
+
+$(HBSIX_LIB) : $(HBSIX_LIB_OBJS)
+   lib /out:$@ $**
+
+$(HSX_LIB) : $(HSX_LIB_OBJS)
    lib /out:$@ $**
 
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
