@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-31 14:38 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile.nt
+   * makefile64.nt
+      - Some files removed cause recent changes:
+        harbour/source/rdd/dbf0.prg
+        harbour/source/rdd/delim0.prg
+        harbour/source/rdd/sdf0.prg
+        harbour/source/rdd/dbfcdx/dbfcdx0.prg
+        harbour/source/rdd/dbfcdx/sixcdx0.prg
+        harbour/source/rdd/dbfdbt/dbfdbt0.prg
+
 2005-10-30 14:50 UTC+0200 Chen Kedem <niki@actcom.co.il>
    * doc/dirstruc.txt
      + Add oneliner description for: source/rdd/hbsix, source/rdd/hsx
