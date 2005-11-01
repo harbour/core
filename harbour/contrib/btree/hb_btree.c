@@ -301,6 +301,8 @@ typedef struct hb_KeyData_Tag
   BYTE szKey[ 1 ];
 } hb_KeyData_T;
 
+typedef int ( * BTreeCmpFunc )( const char * l, const char * r, size_t n );
+
 struct hb_BTree
 {
   BYTE          * szFileName;
@@ -319,7 +321,7 @@ struct hb_BTree
   void          * BufferEnd;
   BOOL            IsDirtyFlagAssignment;   /* replaces const TRUE, and !GETFLAG( pBTree, IsInMemory ) */
 
-  int ( *pStrCompare )( const char * l, const char * r, size_t n );
+  BTreeCmpFunc    pStrCompare;
 
 };
 
@@ -1636,11 +1638,11 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
 
   if ( GETFLAG( pBTree, IsCaseLess ) )
   {
-    pBTree->pStrCompare = hb_strnicmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) hb_strnicmp;
   }
   else
   {
-    pBTree->pStrCompare = strncmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) strncmp;
   }
 
   if ( GETFLAG( pBTree, IsInMemory ) == FALSE )
@@ -1722,11 +1724,11 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
 
   if ( GETFLAG( pBTree, IsCaseLess ) )
   {
-    pBTree->pStrCompare = hb_strnicmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) hb_strnicmp;
   }
   else
   {
-    pBTree->pStrCompare = strncmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) strncmp;
   }
 
   return pBTree;

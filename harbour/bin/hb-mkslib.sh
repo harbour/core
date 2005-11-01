@@ -12,11 +12,24 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-if [ `uname` = "Darwin" ]; then
-   SLIB_EXT=".dylib"
+if [ -n "${HB_ARCHITECTURE}" ]
+then
+    hb_arch="${HB_ARCHITECTURE}"
 else
-   SLIB_EXT=".so"
+    hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
 fi
+
+case "$hb_arch" in
+    *windows*|*mingw32*)    hb_arch="w32" ;;
+    *dos)   hb_arch="dos" ;;
+    *bsd)   hb_arch="bsd" ;;
+esac
+
+case "$hb_arch" in
+    darwin) SLIB_EXT=".dylib" ;;
+    w32)    SLIB_EXT=".dll" ;;
+    *)      SLIB_EXT=".so" ;;
+esac
 
 NAME="${1%${SLIB_EXT}}"
 LIB_NAME="${NAME##*/}"
@@ -65,7 +78,7 @@ for f in $*
 do
     case "${f}" in
 	*.o)
-            if [ ! -r "${dir}/${f}" ]
+	    if [ ! -r "${dir}/${f}" ]
 	    then
 	        echo "cannot read file: ${f}"
 	        exit 1
@@ -82,7 +95,7 @@ do
 	    d="${f##*/}"
 	    mkdir $d
 	    cd $d
-	    ar -x "${dir}/${f}" || exit 1
+	    ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
 	    cd ..
 	    ;;
 	*)
@@ -93,22 +106,29 @@ done
 OBJLST=`find . -name \*.o`
 
 cd "${OTMPDIR}"
-if [ `uname` = "Darwin" ]; then
+if [ "${SLIB_EXT}" = ".dylib" ]; then
     FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
     ld -r -o "${FULLNAME}.o" $OBJLST && \
-    gcc -dynamiclib -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
+    ${CCPREFIX}gcc -dynamiclib -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
-        -flat_namespace -undefined warning -multiply_defined suppress \
+        -flat_namespace -undefined warning -multiply_defined suppress -single_module \
         -o "${FULLNAME}" "${FULLNAME}.o" ${linker_options} && \
     cd "${dir}" && \
     mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
+elif [ "${SLIB_EXT}" = ".dll" ]; then
+    FULLNAME="${LIB_NAME}${SLIB_EXT}"
+    SYSLIBS="-luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32"
+    SYSLIBS="${SYSLIBS} -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32"
+    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${SYSLIBS} ${HB_DLLIBS} && \
+        cd "${dir}" && \
+        mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} && \
+    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi

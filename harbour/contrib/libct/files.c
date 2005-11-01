@@ -284,45 +284,41 @@ HB_FUNC(SETFATTR)
    #endif
 
 #elif defined(HB_OS_WIN_32)
-   {
+{
    DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
    DWORD dwLastError=ERROR_SUCCESS;
-   int iAttr;
    LPCTSTR cFile=hb_parc(1);
+   int iAttr=hb_parni(2);
    BOOL lSuccess;
-   if (ISNUM(2))
-      iAttr=hb_parni(2);
-      if( iAttr & FA_RDONLY )
-         dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-      if( iAttr & FA_HIDDEN )
-         dwFlags |= FILE_ATTRIBUTE_HIDDEN;
-
-      if( iAttr & FA_SYSTEM )
-         dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-      if( iAttr & FA_NORMAL )
-         dwFlags |=    FILE_ATTRIBUTE_NORMAL;
-      lSuccess=SetFileAttributes(cFile,dwFlags);
-      if (lSuccess)
-         hb_retni(dwLastError);
-      else
+   if( iAttr & FA_RDONLY )
+      dwFlags |= FILE_ATTRIBUTE_READONLY;
+   if( iAttr & FA_HIDDEN )
+      dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+   if( iAttr & FA_SYSTEM )
+      dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+   if( iAttr & FA_NORMAL )
+      dwFlags |=    FILE_ATTRIBUTE_NORMAL;
+   lSuccess=SetFileAttributes(cFile,dwFlags);
+   if (lSuccess)
+      hb_retni(dwLastError);
+   else
+   {
+      dwLastError=GetLastError();
+      switch (dwLastError)
       {
-         dwLastError=GetLastError();
-         switch (dwLastError)
-         {
-            case ERROR_FILE_NOT_FOUND :
-                hb_retni(-2);
-                break;
-            case ERROR_PATH_NOT_FOUND :
-               hb_retni(-3);
-               break;
-            case ERROR_ACCESS_DENIED:
-               hb_retni(-5);
-               break;
-         }
+         case ERROR_FILE_NOT_FOUND :
+             hb_retni(-2);
+             break;
+         case ERROR_PATH_NOT_FOUND :
+            hb_retni(-3);
+            break;
+         case ERROR_ACCESS_DENIED:
+            hb_retni(-5);
+            break;
       }
    }
-
+}
 #else
 {
    hb_retnl(-1);

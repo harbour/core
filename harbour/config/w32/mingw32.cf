@@ -118,7 +118,7 @@ ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 AR_RULE = $(create_library)
 LD_RULE = $(link_exe_file)
 else
-AR_RULE = $(AR) $(ARFLAGS) r $@ $^ && $(RANLIB) $@ || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) cr $@ $^ && $(RANLIB) $@ || $(RM) $@
 endif
 
 include $(TOP)$(ROOT)config/rules.cf

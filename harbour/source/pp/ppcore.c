@@ -84,7 +84,7 @@
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>
 #else
-   #include <sys\timeb.h>
+   #include <sys/timeb.h>
 #endif
 
 int hb_pp_ParseDefine( char * );                         /* Process #define directive */

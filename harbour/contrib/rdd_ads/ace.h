@@ -45,8 +45,9 @@
 #if defined( WIN32 ) && !defined( ADS_LINUX )
    /* 16-bit compiler doesn't seem to like this */
    /* MingWin reports "warning: ignoring pragma: )" */
-   #pragma warning( error : 4706 )
-
+   #if !defined( __GNUC__ )
+      #pragma warning( error : 4706 )
+   #endif
    #define ADS_PATH_DELIMITER    '\\'
 #endif
 

@@ -13,6 +13,7 @@ C_SOURCES=\
 	hbtrace.c \
 	hbver.c \
 	hbverdsp.c \
+	hbarch.c \
 	reserved.c \
 	expropt1.c \
 	expropt2.c \

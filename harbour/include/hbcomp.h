@@ -147,7 +147,7 @@ typedef struct _VAR
 typedef struct __FUNC
 {
    char *       szName;                   /* name of a defined Clipper function */
-   char         cScope;                   /* scope of a defined Clipper function */
+   HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
    BYTE         bFlags;                   /* some flags we may need */
    USHORT       wParamCount;              /* number of declared parameters */
    USHORT       wParamNum;                /* current parameter number */
@@ -206,12 +206,12 @@ typedef struct
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
 {
-   char *    szName;               /* the name of the symbol */
-   char      cScope;               /* the scope of the symbol */
-   BYTE      cType;
-   BOOL      bFunc;     /* is it a function name (TRUE) or memvar (FALSE) */
-   PCOMCLASS pClass;
-   struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
+   char *         szName;               /* the name of the symbol */
+   HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
+   BYTE           cType;
+   BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
+   PCOMCLASS      pClass;
+   struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
 /* symbol table support structures */

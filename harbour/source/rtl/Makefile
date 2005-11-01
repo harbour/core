@@ -36,6 +36,7 @@ C_SOURCES=\
     filesys.c    \
     fkmax.c      \
     fnsplit.c    \
+    fserror.c    \
     fssize.c     \
     fstemp.c     \
     gete.c       \

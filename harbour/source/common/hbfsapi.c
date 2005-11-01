@@ -58,44 +58,50 @@
 extern void hb_fhnd_ForceLink( void );
 
 /*
- * Function that adds at most one path to a list of pathnames to search
- */
-static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
-{
-   HB_PATHNAMES * pPath = *pSearchList;
-
-   if( pPath )
-   {
-      while( pPath->pNext )
-         pPath = pPath->pNext;
-
-      pPath->pNext = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-      pPath = pPath->pNext;
-   }
-   else
-      *pSearchList = pPath = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-
-   pPath->pNext  = NULL;
-   pPath->szPath = szPath;
-}
-
-/*
  * Function that adds zero or more paths to a list of pathnames to search
  */
-void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
+void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;
 
+   while( *pSearchList )
+   {
+      pSearchList = &(*pSearchList)->pNext;
+   }
+
    pPath = hb_strdup( szPath );
    while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
    {
-      * pDelim = '\0';
-      AddSearchPath( pPath, pSearchList );
+      *pDelim = '\0';
+      *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
+      (*pSearchList)->szPath = pPath;
+      pSearchList = &(*pSearchList)->pNext;
       pPath = pDelim + 1;
    }
+   *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
+   (*pSearchList)->szPath = pPath;
+   (*pSearchList)->pNext  = NULL;
+}
 
-   AddSearchPath( pPath, pSearchList );
+/*
+ * free list of pathnames to search
+ */
+void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
+{
+   HB_PATHNAMES * pNext;
+
+   /* Only the first path holds an allocated string.
+      All of the other paths in the list are part of
+      that first string. */
+   hb_xfree( pSearchList->szPath );
+
+   while( pSearchList )
+   {
+      pNext = pSearchList->pNext;
+      hb_xfree( pSearchList );
+      pSearchList = pNext;
+   }
 }
 
 /* Split given filename into path, name and extension, plus determine drive */
@@ -103,93 +109,77 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
 {
    PHB_FNAME pFileName;
    char * pszPos;
-   char * pszAt;
+   int iSize, iPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
 
-   /* Grab memory, set defaults */
+   iPos = iSize = hb_strnlen( pszFileName, _POSIX_PATH_MAX );
 
+   /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
    pszPos = pFileName->szBuffer;
 
+   pFileName->szPath = pFileName->szName = pFileName->szExtension =
+   pFileName->szDrive = NULL;
+
    /* Find the end of the path part, and find out where the
       name+ext starts */
 
-   pszAt = NULL;
-   if( pszFileName[ 0 ] != '\0' )
+   while( --iPos >= 0 )
    {
-      int iPos = strlen( pszFileName );
-
-      while( --iPos >= 0 )
+      if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iPos ] ) )
       {
-         if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iPos ] ) )
-         {
-            pszAt = pszFileName + iPos;
-            break;
-         }
+         pFileName->szPath = pszPos;
+         hb_strncpy( pszPos, pszFileName, iPos + 1 );
+         pszPos += iPos + 2;
+         pszFileName += iPos + 1;
+         iSize -= iPos + 1;
+         break;
       }
    }
-
-   if( pszAt )
-   {
-      pFileName->szPath = pszPos;
-      pszPos[0] = '\0';
-      strncat( pszPos, pszFileName, pszAt - pszFileName + 1 );
-      pszPos += pszAt - pszFileName + 1;
-      *pszPos++ = '\0';
-      pszFileName = pszAt + 1;
-   }
-   else
-      pFileName->szPath = NULL;
 
    /* From this point pszFileName will point to the name+ext part of the path */
-
    /* Split the filename part to name and extension */
-
-   pszAt = strrchr( pszFileName, '.' );
-   if( pszAt && pszAt != pszFileName )
+   iPos = iSize;
+   while( --iPos > 0 )
+   {
+      if( pszFileName[ iPos ] == '.' )
+      {
+         pFileName->szExtension = pszPos;
+         hb_strncpy( pszPos, pszFileName + iPos, iSize - iPos );
+         pszPos += iSize - iPos + 1;
+         iSize = iPos;
+         break;
+      }
+   }
+   if( iSize )
    {
       pFileName->szName = pszPos;
-      pszPos[0] = '\0';
-      strncat( pszPos, pszFileName, pszAt - pszFileName );
-      pszPos += pszAt - pszFileName;
-      *pszPos++ = '\0';
-
-      pFileName->szExtension = pszPos;
-      strcpy( pszPos, pszAt );
-      pszPos += strlen( pszAt ) + 1;
-   }
-   else
-   {
-      if( pszFileName[ 0 ] != '\0' )
-      {
-         pFileName->szName = pszPos;
-         strcpy( pszPos, pszFileName );
-         pszPos += strlen( pszFileName ) + 1;
-      }
-      else
-         pFileName->szName = NULL;
-
-      pFileName->szExtension = NULL;
+      hb_strncpy( pszPos, pszFileName, iSize );
+      pszPos += iSize + 1;
    }
 
    /* Duplicate the drive letter from the path for easy access on
       platforms where applicable. Note that the drive info is always
       present also in the path itself. */
 
-   if( pFileName->szPath && ( pszAt = strchr( pFileName->szPath, ':' ) ) != NULL )
+   if( pFileName->szPath )
    {
-      pFileName->szDrive = pszPos;
-      pszPos[0] = '\0';
-      strncat( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );
-      pszPos += pszAt - pFileName->szPath + 1;
-      *pszPos = '\0';
+      iPos = 0;
+      while( iPos < HB_MAX_DRIVE_LENGTH && pFileName->szPath[ iPos ] != '\0' )
+      {
+         if( pFileName->szPath[ iPos ] == ':' )
+         {
+            pFileName->szDrive = pszPos;
+            hb_strncpy( pszPos, pFileName->szPath, iPos );
+            break;
+         }
+         ++iPos;
+      }
    }
-   else
-      pFileName->szDrive = NULL;
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));

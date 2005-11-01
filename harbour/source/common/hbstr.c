@@ -67,7 +67,7 @@
 #include "hbapi.h"
 #include "hbmath.h"
 
-ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+ULONG HB_EXPORT hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
@@ -100,7 +100,7 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
       return 0;
 }
 
-char * hb_strupr( char * pszText )
+char HB_EXPORT * hb_strupr( char * pszText )
 {
    char * pszPos;
 
@@ -112,110 +112,17 @@ char * hb_strupr( char * pszText )
    return pszText;
 }
 
-char * hb_strdup( const char * pszText )
+char HB_EXPORT * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   int iLen = strlen( pszText ) + 1;
+   ULONG ulLen = strlen( pszText ) + 1;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %i)", pszText, iLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %ld)", pszText, ulLen));
 
-   pszDup = ( char * ) hb_xgrab( iLen );
-   memcpy( pszDup, pszText, iLen );
+   pszDup = ( char * ) hb_xgrab( ulLen );
+   memcpy( pszDup, pszText, ulLen );
 
    return pszDup;
-}
-
-int hb_stricmp( const char * s1, const char * s2 )
-{
-   int rc = 0;
-   ULONG l1;
-   ULONG l2;
-   ULONG count;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_stricmp(%s, %s)", s1, s2));
-
-   l1 = strlen( s1 );
-   l2 = strlen( s2 );
-   count = ( l1 < l2 ? l1 : l2 );
-
-   while( rc == 0 && count > 0 )
-   {
-      char c1 = toupper( *s1 );
-      char c2 = toupper( *s2 );
-
-      s1++;
-      s2++;
-
-      if( c1 != c2 )
-         rc = ( c1 < c2 ? -1 : 1 );
-
-      count--;
-   }
-
-   if( rc == 0 && l1 != l2 )
-      rc = ( l1 < l2 ? -1 : 1 );
-
-   return rc;
-}
-
-/*
- * This function copies szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- */
-HB_EXPORT char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
-{
-   char *pBuf = pDest;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
-
-   pDest[ ulLen ] ='\0';
-
-   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
-   {
-      ulLen--;
-   }
-
-   while (ulLen--)
-   {
-      *pDest++ = '\0';
-   }
-
-   return pBuf;
-}
-
-/*
- * This function copies szText to destination buffer.
- * NOTE: Unlike the documentation for strncat, this routine will always append
- *       a null and the ulLen param is pDest size not pSource limit
- */
-HB_EXPORT char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
-{
-   char *pBuf = pDest;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
-
-   pDest[ ulLen ] ='\0';
-
-   while( ulLen && *pDest )
-   {
-      pDest++;
-      ulLen--;
-   }
-
-   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
-   {
-      ulLen--;
-   }
-
-/* if someone will need this then please uncomment the cleaning the rest of buffer. */
-/*
-   while (ulLen--)
-   {
-      *pDest++ = '\0';
-   }
-*/
-   return pBuf;
 }
 
 char HB_EXPORT * hb_strndup( const char * pszText, ULONG ulLen )
@@ -239,103 +146,116 @@ char HB_EXPORT * hb_strndup( const char * pszText, ULONG ulLen )
    return pszDup;
 }
 
-
-/* This function copies and converts szText to upper case.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- */
-HB_EXPORT char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
+ULONG HB_EXPORT hb_strnlen( const char * pszText, ULONG ulLen )
 {
-   char *pBuf = pDest;
+   ULONG ul = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%s, %ld)", pszText, ulLen));
 
-   pDest[ ulLen ] ='\0';
-
-   /* some compilers impliment toupper as a macro, and this has side effects! */
-   /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && (*pDest++ = toupper( *pSource )) != '\0' )
+   while( ulLen-- && *pszText++ )
    {
-      ulLen--;
-      pSource++;
+      ++ul;
    }
-
-   while (ulLen--)
-   {
-      *pDest++ = '\0';
-   }
-
-   return pBuf;
+   return ul;
 }
 
-/* This function copies and converts szText to upper case AND Trims it
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- */
-HB_EXPORT char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
+HB_EXPORT int hb_stricmp( const char * s1, const char * s2 )
 {
-   char *pBuf = pDest;
-   ULONG ulSLen = strlen( pSource );
+   int rc = 0, c1, c2;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stricmp(%s, %s)", s1, s2));
 
-   pDest[ ulLen ] ='\0';
-
-   while( ulSLen && pSource[ ulSLen - 1 ] == ' ')
+   do
    {
-      ulSLen--;
-   }
+      c1 = toupper( (unsigned char) *s1 );
+      c2 = toupper( (unsigned char) *s2 );
 
-   /* some compilers impliment toupper as a macro, and this has side effects! */
-   /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )) != '\0' )
-   {
-      ulSLen--;
-      ulLen--;
-      pSource++;
-   }
+      s1++;
+      s2++;
 
-   while (ulLen--)
-   {
-      *pDest++ = '\0';
+      if( c1 != c2 )
+      {
+         rc = ( c1 < c2 ? -1 : 1 );
+         break;
+      }
    }
+   while ( c1 );
 
-   return pBuf;
+   return rc;
 }
 
 /*
- * This function copies trimed szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- */
-HB_EXPORT char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
+AJ: 2004-02-23
+Concatenates multiple strings into a single result.
+Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
+*/
+char HB_EXPORT * hb_xstrcat ( char *szDest, const char *szSrc, ... )
 {
-   char *pBuf = pDest;
-   LONG lSLen = strlen( pSource );
+   char *szResult = szDest;
+   va_list va;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcat(%p, %p, ...)", szDest, szSrc));
 
-   pDest[ ulLen ] ='\0';
+   while( *szDest )
+      szDest++;
 
-   while( lSLen && pSource[ lSLen - 1 ] == ' ')
+   va_start(va, szSrc);
+
+   while( szSrc )
    {
-      lSLen--;
+      while ( *szSrc )
+         *szDest++ = *szSrc++;
+      szSrc = va_arg ( va, char* );
    }
 
-   /* some compilers impliment toupper as a macro, and this has side effects! */
-   /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && lSLen && ( *pDest++ = *pSource++ ) != '\0' )
+   *szDest = '\0';
+   va_end ( va );
+   return ( szResult );
+}
+
+/*
+AJ: 2004-02-23
+Concatenates multiple strings into a single result.
+Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
+Returns szDest.
+Any existing contents of szDest are cleared. If the szDest buffer is NULL,
+allocates a new buffer with the required length and returns that. The
+buffer is allocated using hb_xgrab(), and should eventually be freed
+using hb_xfree().
+*/
+char HB_EXPORT * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
+{
+   const char *szSrc_Ptr;
+   va_list va;
+   size_t dest_size;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcpy(%p, %p, ...)", szDest, szSrc));
+
+   if (szDest == NULL)
    {
-      lSLen--;
-      ulLen--;
+       va_start (va, szSrc);
+       szSrc_Ptr = szSrc;
+       dest_size = 1;
+       while (szSrc_Ptr)
+       {
+          dest_size += strlen (szSrc_Ptr);
+          szSrc_Ptr = va_arg (va, char *);
+       }
+       va_end (va);
+
+       szDest = (char *) hb_xgrab( dest_size );
    }
 
-   while (ulLen--)
+   va_start (va, szSrc);
+   szSrc_Ptr  = szSrc;
+   szDest [0] = '\0';
+   while (szSrc_Ptr)
    {
-      *pDest++ = '\0';
+      hb_xstrcat (szDest, szSrc_Ptr, NULL );
+      szSrc_Ptr = va_arg (va, char *);
    }
-
-   return pBuf;
+   va_end (va);
+   return (szDest);
 }
 
 static double hb_numPow10( int nPrecision )
@@ -371,7 +291,7 @@ static double hb_numPow10( int nPrecision )
    return pow(10.0, (double) nPrecision);
 }
 
-double hb_numRound( double dNum, int iDec )
+double HB_EXPORT hb_numRound( double dNum, int iDec )
 {
    static const double doBase = 10.0f;
    double doComplete5, doComplete5i, dPow;
@@ -392,10 +312,88 @@ double hb_numRound( double dNum, int iDec )
       doComplete5 = dNum * dPow * doBase;
    }
 
+/*
+ * double precision if 15 digit the 16th one is usually wrong but
+ * can give some information about number,
+ * Clipper display 16 digit only others are set to 0
+ * many people don't know/understand FL arithmetic. They expect
+ * that it will behaves in the same way as real numbers. It's not
+ * true but in business application we can try to hide this problem
+ * for them. Usually they not need such big precision in presented
+ * numbers so we can decrease the precision to 15 digits and use
+ * the cut part for proper rounding. It should resolve
+ * most of problems. But if someone totally  not understand FL
+ * and will try to convert big matrix or sth like that it's quite
+ * possible that he chose one of the natural school algorithm which
+ * works nice with real numbers but can give very bad results in FL.
+ * In such case it could be good to decrease precision even more.
+ * It not fixes the used algorithm of course but will make many users
+ * happy because they can see nice (proper) result.
+ * So maybe it will be good to add SET PRECISION TO <n> for them and
+ * use the similar hack in ==, >=, <=, <, > operations if it's set.
+ */
+
+//#define HB_NUM_PRECISION  16
+
+#ifdef HB_NUM_PRECISION
+   /*
+    * this is a hack for people who cannot live without hacked FL values
+    * in rounding
+    */
+   {
+      int iDecR, iPrec;
+      BOOL fNeg;
+
+      if ( dNum < 0 )
+      {
+         fNeg = TRUE;
+         dNum = -dNum;
+      }
+      else
+      {
+         fNeg = FALSE;
+      }
+      iDecR = (int) log10( dNum );
+      iPrec = iDecR + iDec;
+
+      if ( iPrec < -1 )
+      {
+         return 0.0;
+      }
+      else
+      {
+         if ( iPrec > HB_NUM_PRECISION )
+         {
+            iDec = HB_NUM_PRECISION - ( dNum < 1.0 ? 0 : 1 ) - iDecR;
+            iPrec = -1;
+         }
+         else
+         {
+            iPrec -= HB_NUM_PRECISION;
+         }
+      }
+      if ( iDec < 0 )
+      {
+         dPow = hb_numPow10( -iDec );
+         doComplete5 = dNum / dPow * doBase + 5.0 + hb_numPow10( iPrec );
+      }
+      else
+      {
+         dPow = hb_numPow10( iDec );
+         doComplete5 = dNum * dPow * doBase + 5.0 + hb_numPow10( iPrec );
+      }
+
+      if ( fNeg )
+      {
+         doComplete5 = -doComplete5;
+      }
+   }
+#else
    if( dNum < 0.0f )
       doComplete5 -= 5.0f;
    else
       doComplete5 += 5.0f;
+#endif
 
    doComplete5 /= doBase;
 
@@ -407,13 +405,22 @@ double hb_numRound( double dNum, int iDec )
 
    modf( doComplete5, &doComplete5i );
 
+#if defined( __XCC__ ) || defined( __POCC__ )
+   if ( iDec < 16 )
+   {
+      if ( iDec >= 0 )
+         return doComplete5i / (LONGLONG) dPow;
+      else if ( iDec > -16 )
+         return doComplete5i * (LONGLONG) dPow;
+   }
+#endif
    if ( iDec < 0 )
       return doComplete5i * dPow;
    else
       return doComplete5i / dPow;
 }
 
-double hb_numInt( double dNum )
+double HB_EXPORT hb_numInt( double dNum )
 {
    double dInt;
 
@@ -432,9 +439,9 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    ULONG ulPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %ul %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %lu, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
 
-   while ( ulPos < ulLen && isspace( ( BYTE ) szNum[ulPos] ) )
+   while ( ulPos < ulLen && isspace( (BYTE) szNum[ulPos] ) )
       ulPos++;
 
    if ( ulPos >= ulLen )
@@ -545,8 +552,15 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
       *dVal = (double) *lVal;
       fDbl = TRUE;
    }
-   if ( fDbl && iDec )
-      *dVal /= hb_numPow10( iDec );
+   if ( iDec )
+   {
+#if defined( __XCC__ ) || defined( __POCC__ )
+      if ( iDec < 16 )
+         *dVal /= ( LONGLONG ) hb_numPow10( iDec );
+      else
+#endif
+         *dVal /= hb_numPow10( iDec );
+   }
 
    if ( piDec )
       *piDec = iDec + iDecR;
@@ -592,7 +606,7 @@ BOOL HB_EXPORT hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdV
 
 BOOL HB_EXPORT hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_valStrToNum( %s, %l, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_valStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
@@ -604,94 +618,282 @@ BOOL HB_EXPORT hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal )
 
 BOOL HB_EXPORT hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %l, %p, %p)", szNum, ulLen, plVal, pdVal ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %lu, %p, %p)", szNum, ulLen, plVal, pdVal ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
 }
 
 /* returns the numeric value of a character string representation of a number */
-double hb_strVal( const char * szText, ULONG ulLen )
+double HB_EXPORT hb_strVal( const char * szText, ULONG ulLen )
 {
    HB_LONG lVal;
    double dVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s)", szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s, %lu)", szText, ulLen));
 
    if ( ! hb_str2number( FALSE, szText, ulLen, &lVal, &dVal, NULL, NULL ) )
       dVal = ( double ) lVal;
    return dVal;
 }
 
-/*
-AJ: 2004-02-23
-Concatenates multiple strings into a single result.
-Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
-*/
-char HB_EXPORT * hb_xstrcat ( char *szDest, const char *szSrc, ... )
+HB_LONG HB_EXPORT hb_strValInt( const char * szText, int * iOverflow )
 {
-   char *szResult = szDest;
-   va_list va;
+   HB_LONG lVal;
+   double dVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcat(%p, %p, ...)", szDest, szSrc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
 
-   while( *szDest )
-      szDest++;
-
-   va_start(va, szSrc);
-
-   while( szSrc )
+   if ( ! hb_str2number( FALSE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
    {
-      while ( *szSrc )
-         *szDest++ = *szSrc++;
-      szSrc = va_arg ( va, char* );
+      *iOverflow = 1;
+      return 0;
    }
-
-   *szDest = '\0';
-   va_end ( va );
-   return ( szResult );
+   *iOverflow = 0;
+   return lVal;
 }
 
 /*
-AJ: 2004-02-23
-Concatenates multiple strings into a single result.
-Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
-Returns szDest.
-Any existing contents of szDest are cleared. If the szDest buffer is NULL,
-allocates a new buffer with the required length and returns that. The
-buffer is allocated using hb_xgrab(), and should eventually be freed
-using hb_xfree().
-*/
-char HB_EXPORT * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
+ * This function copies szText to destination buffer.
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ */
+HB_EXPORT char * hb_strncpy( char * pDest, const char * pSource, ULONG ulLen )
 {
-   const char *szSrc_Ptr;
-   va_list va;
-   size_t dest_size;
+   char *pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xstrcpy(%p, %p, ...)", szDest, szSrc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
 
-   if (szDest == NULL)
+   pDest[ ulLen ] ='\0';
+
+   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
    {
-       va_start (va, szSrc);
-       szSrc_Ptr = szSrc;
-       dest_size = 1;
-       while (szSrc_Ptr)
-       {
-          dest_size += strlen (szSrc_Ptr);
-          szSrc_Ptr = va_arg (va, char *);
-       }
-       va_end (va);
-
-       szDest = (char *) hb_xgrab( dest_size );
+      ulLen--;
    }
 
-   va_start (va, szSrc);
-   szSrc_Ptr  = szSrc;
-   szDest [0] = '\0';
-   while (szSrc_Ptr)
+   while (ulLen--)
    {
-      hb_xstrcat (szDest, szSrc_Ptr, NULL );
-      szSrc_Ptr = va_arg (va, char *);
+      *pDest++ = '\0';
    }
-   va_end (va);
-   return (szDest);
+
+   return pBuf;
 }
 
+/*
+ * This function copies szText to destination buffer.
+ * NOTE: Unlike the documentation for strncat, this routine will always append
+ *       a null and the ulLen param is pDest size not pSource limit
+ */
+HB_EXPORT char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
+{
+   char *pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   pDest[ ulLen ] ='\0';
+
+   while( ulLen && *pDest )
+   {
+      pDest++;
+      ulLen--;
+   }
+
+   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
+   {
+      ulLen--;
+   }
+
+/* if someone will need this then please uncomment the cleaning the rest of
+   buffer. */
+/*
+   while (ulLen--)
+   {
+      *pDest++ = '\0';
+   }
+*/
+   return pBuf;
+}
+
+/* This function copies and converts szText to upper case.
+ */
+/*
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ * pt
+ */
+HB_EXPORT char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
+{
+   char *pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   pDest[ ulLen ] ='\0';
+
+   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* *pDest++ = toupper( *pSource++ ); */
+   while( ulLen && (*pDest++ = toupper( *pSource )) != '\0' )
+   {
+      ulLen--;
+      pSource++;
+   }
+
+   while (ulLen--)
+   {
+      *pDest++ = '\0';
+   }
+
+   return pBuf;
+}
+
+/* This function copies and converts szText to upper case AND Trims it
+ */
+/*
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ * pt
+ */
+HB_EXPORT char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
+{
+   char *pBuf = pDest;
+   ULONG ulSLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   ulSLen = 0;
+   while ( ulSLen < ulLen && pSource[ ulSLen ] )
+   {
+      ulSLen++;
+   }
+   while( ulSLen && pSource[ ulSLen - 1 ] == ' ')
+   {
+      ulSLen--;
+   }
+
+   pDest[ ulLen ] = '\0';
+
+   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* *pDest++ = toupper( *pSource++ ); */
+   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )) != '\0' )
+   {
+      ulSLen--;
+      ulLen--;
+      pSource++;
+   }
+
+   while (ulLen--)
+   {
+      *pDest++ = '\0';
+   }
+
+   return pBuf;
+}
+
+/*
+ * This function copies trimed szText to destination buffer.
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ */
+HB_EXPORT char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen )
+{
+   char *pBuf = pDest;
+   ULONG ulSLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   ulSLen = 0;
+   while( ulSLen < ulLen && pSource[ ulSLen ] )
+   {
+      ulSLen++;
+   }
+   while( ulSLen && pSource[ ulSLen - 1 ] == ' ' )
+   {
+      ulSLen--;
+   }
+
+   pDest[ ulLen ] ='\0';
+
+   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* *pDest++ = toupper( *pSource++ ); */
+   while( ulLen && ulSLen && ( *pDest++ = *pSource++ ) != '\0' )
+   {
+      ulSLen--;
+      ulLen--;
+   }
+
+   while (ulLen--)
+   {
+      *pDest++ = '\0';
+   }
+
+   return pBuf;
+}
+
+/*
+  Simple routine to extract uncommented part of (read) buffer
+*/
+HB_EXPORT char *hb_stripOutComments( char* buffer )
+{
+   if( buffer && *buffer )
+   {
+      USHORT ui = strlen( buffer );
+      char *szOut = (char*) hb_xgrab( ui + 1 );
+      int i;
+      int uu = 0;
+      char *last;
+
+      hb_xmemset( szOut, 0, ui + 1 );
+
+      for ( i = 0; i < ui; i ++ )
+      {
+         if ( buffer[ i ] == '/' )
+         {
+            if( buffer [ i + 1 ] == '*' )
+            {
+	       i ++;
+               while ( ++ i < ui )
+               {
+                  if ( buffer [ i ] == '*' && buffer [ i + 1 ] == '/' )
+	          {
+		     i += 2;
+                     break;
+	          }
+               }
+            }
+            else if ( buffer[ i + 1 ] == '/' )
+            {
+               while ( ++ i < ui )
+               {
+                  if ( buffer [ i ] == '\n' || buffer [ i ] == '\r' )
+	          {
+                     break;
+	          }
+               }
+            }
+         }
+
+         szOut[ uu ++ ] = buffer[ i ];
+      }
+
+      /* trim left */
+      while ( HB_ISSPACE( *szOut ) )
+      {
+         strcpy( szOut, szOut + 1 );
+      }
+
+      /* trim right */
+      last = szOut + strlen ( szOut );
+      while ( last > szOut )
+      {
+         if ( !HB_ISSPACE( *( last - 1 ) ) )
+         {
+            break;
+         }
+         last--;
+      }
+
+      *last = 0;
+      return( szOut );
+   }
+   else
+   {
+     return ( NULL );
+   }
+}

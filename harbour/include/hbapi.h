@@ -484,36 +484,53 @@ extern LONGLONG   hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR )
 
-extern int      hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
-extern int      hb_strnicmp( const char * s1, const char * s2, size_t ulLen ); /* compare two string without regards to case, limited by length */
-extern char *   hb_strupr( char * pszText ); /* convert a string in-place to upper-case */
-extern char *   hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
-extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
-extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
-extern void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
-extern BOOL     hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) */
-extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
-extern char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
-extern char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
-extern char *   hb_strncpy( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
-extern char *   hb_strncat( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
-extern char *   hb_strndup( const char * pszText, ULONG ulLen );
-extern char *   hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen );
-extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
-extern char *   hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen );
-extern double   hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
-extern char *   hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
-extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
-extern BOOL     hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double */
-extern BOOL     hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );
-extern BOOL     hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
-extern BOOL     hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
-extern char *   hb_xstrcat( char *dest, const char *src, ... ); /* Concatenates multiple strings into a single result */
-extern char *   hb_xstrcpy( char *szDest, const char *szSrc, ...); /* Concatenates multiple strings into a single result */
+extern HB_EXPORT int      hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
+extern HB_EXPORT int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */
+extern HB_EXPORT char *   hb_strupr( char * pszText ); /* convert a string in-place to upper-case */
+extern HB_EXPORT char *   hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
+extern HB_EXPORT char *   hb_strndup( const char * pszText, ULONG ulLen ); /* returns a pointer to a newly allocated copy of the source string not longer then ulLen */
+extern HB_EXPORT ULONG    hb_strnlen( const char * pszText, ULONG ulLen ); /* like strlen() but result is limited to ulLen */
+extern HB_EXPORT char *   hb_xstrcat( char *dest, const char *src, ... ); /* Concatenates multiple strings into a single result */
+extern HB_EXPORT char *   hb_xstrcpy( char *szDest, const char *szSrc, ...); /* Concatenates multiple strings into a single result */
+extern HB_EXPORT BOOL     hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by compiler */
+extern HB_EXPORT BOOL     hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns TRUE if results is double, used by VAL() */
+extern HB_EXPORT BOOL     hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
+extern HB_EXPORT BOOL     hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
 
-extern double   hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
-extern double   hb_numInt( double dNum ); /* take the integer part of the number */
+extern HB_EXPORT BOOL     hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
+extern HB_EXPORT BOOL     hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) */
+extern HB_EXPORT BOOL     hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
+extern HB_EXPORT void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
+extern HB_EXPORT ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
+extern HB_EXPORT char *   hb_stripOutComments( char* buffer ); /* extract uncommented part of read buffer */
+extern HB_EXPORT char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
+extern HB_EXPORT char *   hb_strUpperCopy( char * szText, ULONG ulLen );
+extern HB_EXPORT char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
+extern HB_EXPORT char *   hb_strncpy( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
+extern HB_EXPORT char *   hb_strncat( char * pDest, const char * pSource, ULONG ulLen ); /* copy at most ulLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
+extern HB_EXPORT char *   hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen );
+extern HB_EXPORT char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
+extern HB_EXPORT char *   hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen );
+extern HB_EXPORT double   hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
+extern HB_EXPORT char  *  hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
+extern HB_EXPORT ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
 
+extern HB_EXPORT double   hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
+extern HB_EXPORT double   hb_numInt( double dNum ); /* take the integer part of the number */
+
+/* architecture dependent number conversions */
+extern HB_EXPORT void     hb_put_ieee754( BYTE * ptr, double d );
+extern HB_EXPORT double   hb_get_ieee754( BYTE * ptr );
+extern HB_EXPORT void     hb_put_ord_ieee754( BYTE * ptr, double d );
+extern HB_EXPORT double   hb_get_ord_ieee754( BYTE * ptr );
+extern HB_EXPORT double   hb_get_rev_double( BYTE * ptr );
+extern HB_EXPORT double   hb_get_std_double( BYTE * ptr );
+
+#if defined( HB_LONG_LONG_OFF )
+   extern HB_EXPORT double   hb_get_le_int64( BYTE * ptr );
+   extern HB_EXPORT double   hb_get_le_uint64( BYTE * ptr );
+   extern HB_EXPORT void     hb_put_le_uint64( BYTE * ptr, double d );
+#endif
 
 /* class management */
 extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
@@ -679,6 +696,7 @@ extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer cont
 extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
 extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
+extern BOOL HB_EXPORT hb_iswinnt(void); /* return .T. if OS == WinNt, 2000, XP */
 
 /* environment variables access */
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */

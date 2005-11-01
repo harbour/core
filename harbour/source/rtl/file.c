@@ -59,7 +59,7 @@ BOOL HB_EXPORT hb_fsFile( BYTE * pFilename )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", ( char * ) pFilename));
 
-   pFilename = hb_filecase( hb_strdup( ( char * ) pFilename ) );
+   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename) );
 
    if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
    {

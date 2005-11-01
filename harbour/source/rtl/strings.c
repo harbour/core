@@ -54,7 +54,7 @@
 
 #include "hbapi.h"
 
-BOOL hb_strEmpty( const char * szText, ULONG ulLen )
+HB_EXPORT BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %lu)", szText, ulLen));
 
@@ -71,18 +71,26 @@ BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 
 /* warning: It is not case sensitive */
 
-int hb_strnicmp( const char * s1, const char * s2, size_t count )
+HB_EXPORT int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 {
+   ULONG ulCount;
+   int rc = 0;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
 
-   while( count > 0 &&
-          *s1 != '\0' &&
-          toupper( *s1 ) == toupper( *s2 ) )
+   for( ulCount = 0; ulCount < count; ulCount++ )
    {
-      s1++;
-      s2++;
-      count--;
+      unsigned char c1 = toupper( (unsigned char) s1[ ulCount ] );
+      unsigned char c2 = toupper( (unsigned char) s2[ ulCount ] );
+
+      if( c1 != c2 )
+      {
+         rc = ( c1 < c2 ? -1 : 1 );
+         break;
+      }
+      else if ( !c1 )
+         break;
    }
 
-   return ( count == 0 ) ? 0 : toupper( *s1 ) - toupper( *s2 );
+   return rc;
 }

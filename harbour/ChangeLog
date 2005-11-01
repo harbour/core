@@ -8,6 +8,84 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-01 23:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gnu.sh
+  + harbour/make_xmingw.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/postinst.sh
+  * harbour/config/w32/mingw32.cf
+    * added support for cross compilation (Windows binaries at Linux) with
+      MinGW - borrowed from xHarbour Phil Krylov solution
+
+  * harbour/contrib/btree/hb_btree.c
+    * casting
+
+  * harbour/contrib/libct/files.c
+    ! fixed iAttr initialization in SETFATTR()
+
+  * harbour/contrib/ole/ole2.c
+    ! fixed names of included files
+
+  * harbour/contrib/rdd_ads/ace.h
+    * cover #pragma warning( error : 4706 ) by !defined( __GNUC__ )
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbdefs.h
+  + harbour/source/common/hbarch.c
+  * harbour/source/common/Makefile
+    * added functions for machine independent double and long long conversions
+      (my code borrowed from xHarbour)
+
+  * harbour/include/hbapifs.h
+    * synced file IO with xHarbour - it fixes some problems, adds some
+      missing functionality and long (64bit) file support for Windows.
+      For Linux I added it some time ago.
+
+  * harbour/include/hbcomp.h
+    * changed 'char cScope' to 'HB_SYMBOLSCOPE cScope'
+
+  * harbour/source/common/hbfsapi.c
+    ! fixed some possible buffer overflow
+
+  * harbour/source/common/hbstr.c
+    * synced with xHarbour
+
+  * harbour/source/common/hbver.c
+    + added hb_iswinnt() (borrowed from xHarbour)
+
+  * harbour/source/compiler/cmdcheck.c
+    + added -undef: compiler switch (borrowed from xHarbour)
+
+  * harbour/source/compiler/gencobj.c
+    * cleanup
+
+  * harbour/source/pp/ppcore.c
+    ! fixed path delimiters in included file names
+
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/fserror.c
+    + added C -> OS file error trnalsations - not perfect but better then
+      the used hacks (borrowed from xHarbour)
+
+  * harbour/source/rtl/file.c
+    * use hb_fileNameConv() instead of hb_filecase() - hb_fileNameConv()
+      is the only one function to make file name conversions dependent on
+      some SETs.
+
+  * harbour/source/rtl/filesys.c
+    * synced file IO with xHarbour - it fixes some problems, adds some
+      missing functionality and long (64bit) file support for Windows.
+      For Linux I added it some time ago.
+
+  * harbour/source/rtl/fstemp.c
+    * synced with xHarbour
+
+  * harbour/source/rtl/strings.c
+    * use ULONG instead of size_t in hb_strnicmp declaration - we have to
+      decide what we should use. Using size_t or its Harbour version f.e.
+      HB_SIZE_T seems to be reasonable but it has to be global - redefining
+      single functions does not make sense and will create troubles only.
+
 2005-10-31 14:38 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile.nt
    * makefile64.nt

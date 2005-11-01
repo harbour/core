@@ -35,16 +35,17 @@ else
 fi
 . ${hb_root}/bin/hb-func.sh
 
-if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "djgpp" ]
+if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
+   [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "djgpp" ]
 then
     RANLIB=""
     MAKE=make
-    AR="ar -cr"
-    if [ "${HB_ARCHITECTURE}" = "bsd" ]; then
+    AR="${CCPREFIX}ar -cr"
+    if [ "${HB_ARCHITECTURE}" = "bsd" ] || [ `uname` = "FreeBSD" ]; then
         MAKE=gmake
     elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         # We must build an archive index on Darwin
-        AR="ar -crs"
+        AR="${CCPREFIX}ar -crs"
     fi
     if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
         install -m 755 -f "${HB_BIN_INSTALL}" "${hb_root}/bin/hb-mkslib.sh"
@@ -53,8 +54,10 @@ then
         install -c -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
-    [ "$HB_COMPILER" = "gcc" ] && mk_hblibso "${hb_root}"
-
+    if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
+       [ "$HB_COMPILER" = "mingw32" ]; then
+        mk_hblibso "${hb_root}"
+    fi
     # build fm lib with memory statistic
     (cd ${hb_root}/source/vm
     C_USR=${C_USR//-DHB_FM_STATISTICS_OFF/}

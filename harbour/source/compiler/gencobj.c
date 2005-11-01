@@ -50,15 +50,18 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    char szOutPath[ _POSIX_PATH_MAX ] = "\0";
 #if defined( HOST_OS_UNIX_COMPATIBLE )
    char szDefaultUnixPath[ _POSIX_PATH_MAX ] = "/etc:/usr/local/etc";
+   char * pszEnv = szDefaultUnixPath;
    #define HB_NULL_STR " > /dev/null"
    #define HB_ACCESS_FLAG F_OK
 #elif defined( OS_DOS_COMPATIBLE )
+   char * pszEnv = hb_getenv( "PATH" );
    #define HB_NULL_STR " >nul"      
    #define HB_ACCESS_FLAG 0
+#else
+   char * pszEnv = NULL;
 #endif
    FILE * yyc;
    char * pszCfg;
-   char * pszEnv;
    BOOL bVerbose = FALSE;   /* Don't show C compiler messages (default). */
    BOOL bDelTmp = TRUE;     /* Delete intermediate C file (default). */
    int iSuccess;
@@ -75,7 +78,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    /* Set up things  */
 #if defined( OS_DOS_COMPATIBLE ) 
    pszEnv = hb_getenv( "PATH" );
-#elif defined( OS_UNIX_COMPATIBLE )
+#elif defined( HOST_OS_UNIX_COMPATIBLE )
    pszEnv = szDefaultUnixPath;
 #else
    pszEnv = NULL;

@@ -291,6 +291,19 @@ char * hb_verPlatform( void )
    return pszPlatform;
 }
 
+BOOL HB_EXPORT hb_iswinnt(void)
+{
+#if defined(HB_OS_WIN_32)
+
+  OSVERSIONINFO osvi ;
+  osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+  GetVersionEx (&osvi);
+  return(osvi.dwPlatformId == VER_PLATFORM_WIN32_NT); // && osvi.dwMajorVersion >= 4);
+#else
+  return FALSE ;
+#endif
+}
+
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
 char * hb_verCompiler( void )

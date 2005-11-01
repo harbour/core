@@ -15,15 +15,17 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
+name="harbour"
+
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
     else
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
-            *windows*) hb_arch="w32" ;;
-            *dos)      hb_arch="dos" ;;
-            *bsd)      hb_arch="bsd" ;;
+            *windows*|*mingw32*)    hb_arch="w32" ;;
+            *dos)   hb_arch="dos" ;;
+            *bsd)   hb_arch="bsd" ;;
         esac
     fi
     export HB_ARCHITECTURE="$hb_arch"
@@ -70,13 +72,25 @@ fi
 # export C_USR=
 # export L_USR=
 
-if [ -z "$PREFIX" ]; then export PREFIX=/usr/local; fi
+[ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
+[ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX=/usr/local
 
 # Set to constant value to be consistent with the non-GNU make files.
 
-if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$PREFIX/bin/; fi
-if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$PREFIX/lib/harbour/; fi
-if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$PREFIX/include/harbour/; fi
+case "$HB_INSTALL_PREFIX" in
+    /usr|/usr/local|/opt)
+        hb_instsubdir="/$name"
+        ;;
+    *)
+        hb_instsubdir=""
+        ;;
+esac
+
+if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; fi
+if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
+if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
+
+
 
 if [ -z "$HB_ARCHITECTURE" ]; then
    echo "Error: HB_ARCHITECTURE is not set."
@@ -115,7 +129,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - When HB_ARCHITECTURE=dos"
    echo "        - bcc16   (Borland C++ 3.x, 4.x, 5.0x, DOS 16-bit)"
    echo "        - djgpp   (Delorie GNU C, DOS 32-bit)"
-   echo "        - rxs32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
+   echo "        - rsx32   (EMX/RSXNT/DOS GNU C, DOS 32-bit)"
    echo "        - watcom  (Watcom C++ 9.x, 10.x, 11.x, DOS 32-bit)"
    echo "      - When HB_ARCHITECTURE=w32"
    echo "        - bcc32   (Borland C++ 4.x, 5.x, Windows 32-bit)"
@@ -153,7 +167,7 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ `uname` = "FreeBSD" ]; then
+   if [ "$HB_ARCHITECTURE" = "bsd" ] || uname|grep "BSD$" &> /dev/null; then
       gmake $*
    else
       make $*

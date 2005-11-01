@@ -75,11 +75,11 @@
 
 #define HB_OS_WIN_32_USED
 
-#include <Windows.h>
-#include <Ole2.h>
+#include <windows.h>
+#include <ole2.h>
 
-#include <HBdate.h>
-#include <hbvm.h>
+#include "hbvm.h"
+#include "hbdate.h"
 
 static far VARIANTARG RetVal;
 static EXCEPINFO excep;
@@ -133,9 +133,8 @@ static LPSTR WideToAnsi( LPSTR cWide )
 static void GetParams(DISPPARAMS * dParams)
 {
    VARIANTARG * pArgs = NULL;
-   PHB_ITEM uParam, Self;
+   PHB_ITEM uParam;
    int n, nArgs, nArg;
-   double date;
    LPSTR cString;
 
    nArgs = hb_pcount() - 2;
