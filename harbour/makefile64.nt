@@ -303,6 +303,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\filehb.obj \
    $(OBJ_DIR)\filesys.obj \
    $(OBJ_DIR)\fkmax.obj \
+   $(OBJ_DIR)\fserror.obj \
    $(OBJ_DIR)\fnsplit.obj \
    $(OBJ_DIR)\fssize.obj \
    $(OBJ_DIR)\fstemp.obj \
@@ -744,6 +745,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbverdsp.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
+   $(OBJ_DIR)\hbarch.obj \
    $(OBJ_DIR)\reserved.obj
 
 #
