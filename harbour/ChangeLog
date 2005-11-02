@@ -7,6 +7,12 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2005-11-02 07:32 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * makefile.nt
+   * makefile64.nt
+     + + added references to new files.
+ 
 2005-11-02 01:56 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/makefile.bc
    + added references to harbour/source/common/hbarch.c
