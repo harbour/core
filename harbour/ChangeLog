@@ -8,10 +8,48 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-03 10:42 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+     + added Microsoft initialization code
+          harbour/source/lang/msgcs852.c
+          harbour/source/lang/msgcsiso.c
+          harbour/source/lang/msgcskam.c
+          harbour/source/lang/msgcswin.c
+          harbour/source/lang/msgde.c
+          harbour/source/lang/msgdewin.c
+          harbour/source/lang/msgel.c
+          harbour/source/lang/msgelwin.c
+          harbour/source/lang/msgen.c
+          harbour/source/lang/msgeo.c
+          harbour/source/lang/msges.c
+          harbour/source/lang/msgeswin.c
+          harbour/source/lang/msgeu.c
+          harbour/source/lang/msgfr.c
+          harbour/source/lang/msggl.c
+          harbour/source/lang/msghr852.c
+          harbour/source/lang/msghriso.c
+          harbour/source/lang/msgid.c
+          harbour/source/lang/msgis850.c
+          harbour/source/lang/msgit.c
+          harbour/source/lang/msgko.c
+          harbour/source/lang/msgpt.c
+          harbour/source/lang/msgro.c
+          harbour/source/lang/msgru866.c
+          harbour/source/lang/msgrukoi.c
+          harbour/source/lang/msgruwin.c
+          harbour/source/lang/msgsl437.c
+          harbour/source/lang/msgsl852.c
+          harbour/source/lang/msgsliso.c
+          harbour/source/lang/msgslwin.c
+          harbour/source/lang/msgsr852.c
+          harbour/source/lang/msgsriso.c
+          harbour/source/lang/msgsrwin.c
+          harbour/source/lang/msgzhb5.c
+          harbour/source/lang/msgzhgb.c
+
 2005-11-02 07:32 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile.nt
    * makefile64.nt
-     + + added references to new files.
+     + added references to new files.
  
 2005-11-02 01:56 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/makefile.bc
