@@ -206,6 +206,16 @@ HB_LANG_ANNOUNCE( ZHB5 );
 HB_CALL_ON_STARTUP_BEGIN( hb_lang_Init_ZHB5 )
    hb_langRegister( &s_lang );
 HB_CALL_ON_STARTUP_END( hb_lang_Init_ZHB5 )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_lang_Init_ZHB5
-#endif
+
+#if defined(HB_PRAGMA_STARTUP)                                         
+   #pragma startup hb_lang_Init_ZHB5                                     
+#elif defined(HB_MSC_STARTUP)                                          
+   #if _MSC_VER >= 1010                                                
+      #pragma data_seg( ".CRT$XIY" )                                   
+      #pragma comment( linker, "/Merge:.CRT=.data" )                   
+   #else                                                               
+      #pragma data_seg( "XIY" )                                        
+   #endif                                                              
+   static HB_$INITSYM hb_vm_auto_hb_lang_Init_ZHB5 = hb_lang_Init_ZHB5;    
+   #pragma data_seg()                                                  
+#endif                                                                 
