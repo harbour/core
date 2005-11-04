@@ -69,6 +69,12 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     LPSTR lpCmdLine,          /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
+   #ifdef HB_INCLUDE_WINEXCHANDLER
+      LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
+      
+      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
+   #endif
+
    LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
    char szAppName[ 250 ];
 
