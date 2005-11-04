@@ -453,7 +453,7 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
 
    MessageBox( NULL, msg, HB_I_("Harbour Exception"), MB_ICONSTOP );
 
-   return EXCEPTION_EXECUTE_HANDLER; /* EXCEPTION_CONTINUE_SEARCH; */
+   return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
 }
 
 #endif
