@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-04 22:19 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+     * harbour/source/vm/estack.c
+       * hb_UnhandledExceptionFilter() modified to return EXCEPTION_CONTINUE_SEARCH
+       
+     NOTICE: When returning EXCEPTION_CONTINUE_SEARCH then both Microsoft and Borland
+             behave the same way, and the Windows GPF dialogbox is finally shown, which
+             it is quite usefull to locate the GPF address (on a MAP file).  
+
 2005-11-04 12:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
      * harbour/source/vm/mainwin.c
        * SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER define is used
