@@ -422,7 +422,7 @@ void hb_vmIsLocalRef( void )
 
 #if defined(HB_OS_WIN_32)
 
-WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
+LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
    PHB_ITEM *pBase = hb_stack.pBase;
 
