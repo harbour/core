@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-04 12:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+     * harbour/source/vm/mainwin.c
+       * SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER define is used
+     
+     * harbour/source/vm/estack.c
+       * UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and 
+         WINBASEAPI removed.
+
 2005-11-03 10:42 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
      + added Microsoft initialization code
           harbour/source/lang/msgcs852.c
