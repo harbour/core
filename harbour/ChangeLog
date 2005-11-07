@@ -8,6 +8,55 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-07 14:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * include/hbapiitm.h
+   * include/hbcomp.h
+   * include/hberrors.h
+   * include/hbexpra.c
+   * include/hbpcode.h
+   * include/hbsetup.h
+   * source/common/expropt1.c
+   * source/compiler/expropta.c
+   * source/compiler/genc.c
+   * source/compiler/gencli.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+   * source/compiler/hbfix.c
+   * source/compiler/hbgenerr.c
+   * source/compiler/hbpcode.c
+   * source/macro/macroa.c
+   * source/vm/hvm.c
+   * source/vm/itemapi.c
+   + tests/foreach.prg
+      + added support for FOR EACH loop
+         FOR EACH var1 [,var255] IN expr1 [,expr255] [DESCEND]
+         NEXT
+         
+         Note:
+            -expr can be a string or an array
+               if it is a string then assigments to the control
+               variable does not change the string
+            -after the loop the controlling variable(s) store the
+             value which they had before entering the loop
+            -the controlling variable supports the following properties
+             :__enumindex - the loop counter for variable
+             :__enumbase  - the value that is being traversed
+             :__enumvalue - the value of variable
+            -see tests/foreach.prg for examples
+            
+      + added warnings in cases of duplicated loop variables
+       eg. FOR i:=1 TO 5
+            FOR i:=i TO i+5
+
+      -removed strong typing in the compiler (xHarbour too)
+      (reactivate it by compiling with -DHB_COMP_STRONG_TYPES)
+
+NOTE:
+   The new pcodes were added - rebuild everything
+         
+      
 2005-11-04 22:19 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
      * harbour/source/vm/estack.c
        * hb_UnhandledExceptionFilter() modified to return EXCEPTION_CONTINUE_SEARCH

@@ -88,6 +88,12 @@ static void hb_compRTVariableGen( char * );
 
 static void hb_compVariableDim( char *, HB_EXPR_PTR );
 
+static void hb_compForStart( char *szVarName, BOOL bForEach );
+static void hb_compForEnd( char *szVarName );
+static void hb_compEnumStart( HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
+static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend );
+static void hb_compEnumEnd( HB_EXPR_PTR pExpr );
+
 #ifdef HARBOUR_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
@@ -181,6 +187,7 @@ static void hb_compDebugStart( void ) { };
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 %token PROCREQ GET
 %token CBSTART DOIDENT
+%token FOREACH DESCEND
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -217,6 +224,7 @@ static void hb_compDebugStart( void ) { };
 %type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
+%type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
 %type <asExpr>  Argument ArgList ElemList BlockExpList BlockVarList BlockNoVar
@@ -250,6 +258,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
+%type <asExpr>  ForVar ForList ForExpr
 %type <asCodeblock> CBSTART
 
 %%
@@ -463,6 +472,7 @@ IdentName  : IDENTIFIER       { $$ = $1; }
            | PUBLIC           { $$ = $<string>1; }
            | PARAMETERS       { $$ = $<string>1; }
            | PROCREQ          { $$ = $<string>1; }
+           | DESCEND          { $$ = $<string>1; }
            ;
 
 /* Numeric values
@@ -1353,6 +1363,7 @@ ExecFlow   : IfEndif
            | DoWhile
            | ForNext
            | BeginSeq
+           | ForEach
            ;
 
 IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
@@ -1520,6 +1531,10 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compDebugStart();
                   ++hb_comp_wForCounter;              /* 5 */
                   $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4 ) );
+                  if( hb_compExprAsString($<asExpr>2) )
+                  {
+                     hb_compForStart( hb_compExprAsString($<asExpr>2), FALSE );
+                  }
                }
              TO Expression StepExpr                   /* 6  7  8 */
                {
@@ -1572,6 +1587,10 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compGenJump( $<lNumber>9 - hb_comp_functions.pLast->lPCodePos );
                   hb_compGenJumpHere( $<lNumber>11 );
                   hb_compLoopEnd();
+                  if( hb_compExprAsString($<asExpr>2) )
+                  {
+                     hb_compForEnd( hb_compExprAsString($<asExpr>2) );
+                  }
                   hb_compExprDelete( $7 );
                   hb_compExprDelete( $<asExpr>5 ); /* deletes $5, $2, $4 */
                   if( $<asExpr>8 )
@@ -1592,6 +1611,58 @@ ForStatements : EmptyStats NEXT                     { hb_compLinePush(); --hb_co
            | EmptyStats NEXT IdentName              { hb_compLinePush(); --hb_comp_wForCounter; }
            | EmptyStats END                         { hb_compLinePush(); --hb_comp_wForCounter; }
            | EmptyStats END IdentName               { hb_compLinePush(); --hb_comp_wForCounter; }
+           ;
+
+ForVar     : IdentName     { $$ = hb_compExprNewVarRef($1); }
+           | AliasVar      { $$ = hb_compExprNewRef($1); }
+           ;
+           
+ForList    : ForVar                { $$ = hb_compExprNewArgList( $1 ); }
+           | ForList ',' ForVar    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           ;
+
+ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1 ); }
+           | ForExpr ',' Expression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           ;           
+           
+ForEach    : FOREACH ForList IN ForExpr          /* 1  2  3  4 */
+             {
+                ++hb_comp_wForCounter;              /* 5 */
+                hb_compLinePush();
+                hb_compDebugStart();
+             }
+             Descend    /* 6 */
+             {
+                /* 7
+                */
+                hb_compEnumStart( $2, $4, $6 );
+                
+                hb_compLoopStart();
+                $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
+             }
+             Crlf                                     /* 8 */
+             {
+                /* 9
+                */
+                $<lNumber>$ = hb_compGenJumpFalse( 0 );
+             }
+             ForStatements                            /* 10 */
+             {
+                hb_compLoopHere();
+                hb_compEnumNext( $2, $6 );
+                hb_compGenJump( $<lNumber>7 - hb_comp_functions.pLast->lPCodePos );
+
+                hb_compGenJumpHere( $<lNumber>9 );
+                hb_compLoopEnd();
+                hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                hb_compEnumEnd( $2 );
+                hb_compExprDelete( $2 );
+                hb_compExprDelete( $4 );
+             }
+           ;
+
+Descend    : /* default up */     { $$ =  1; }
+           | DESCEND              { $$ = -1; }
            ;
 
 BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf
@@ -2132,3 +2203,154 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName ) ) );
   }
 }
+
+static void hb_compForStart( char *szVarName, BOOL bForEach )
+{
+   HB_ENUMERATOR_PTR pEnumVar;
+   
+   pEnumVar = hb_comp_functions.pLast->pEnum;
+   if( pEnumVar == NULL )
+   {
+      hb_comp_functions.pLast->pEnum = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
+      pEnumVar = hb_comp_functions.pLast->pEnum;
+   }
+   else
+   {
+      BOOL bWarn = TRUE;
+      HB_ENUMERATOR_PTR pLast = pEnumVar;
+
+      while( pEnumVar )
+      {
+         if( strcmp( pEnumVar->szName, szVarName ) == 0 )
+         {
+            /* Enumerator variable exists already - throw warning */
+            if( bWarn == TRUE )
+            {
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FORVAR_DUPL, szVarName, NULL );
+               bWarn = FALSE;
+            }
+         }
+         pLast = pEnumVar;
+         pEnumVar = pEnumVar->pNext;
+      }
+      pLast->pNext = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
+      pEnumVar = pLast->pNext;
+   }
+   pEnumVar->szName   = szVarName;
+   pEnumVar->bForEach = bForEach;
+   pEnumVar->pNext    = NULL;
+}
+
+BOOL hb_compForEachVarError( char *szVarName )
+{
+   HB_ENUMERATOR_PTR pEnumVar;
+   
+   pEnumVar = hb_comp_functions.pLast->pEnum;
+   if( pEnumVar )
+   {
+      while( pEnumVar )
+      {
+         if( strcmp( pEnumVar->szName, szVarName ) == 0 )
+         {
+            if( pEnumVar->bForEach )
+            {
+               /* only if it is FOR EACH enumerator 
+                * generate warning if it is FOR/NEXT loop
+               */
+               return FALSE;
+            }
+         }
+         pEnumVar = pEnumVar->pNext;
+      }
+   }
+
+   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ENUM_INVALID, szVarName, NULL );
+   return TRUE;            
+}
+
+static void hb_compForEnd( char *szVar )
+{
+   HB_ENUMERATOR_PTR pEnumVar;
+   
+   HB_SYMBOL_UNUSED( szVar );
+   
+   pEnumVar = hb_comp_functions.pLast->pEnum;
+   if( pEnumVar->pNext )
+   {
+      HB_ENUMERATOR_PTR pLast = pEnumVar;
+      
+      while( pEnumVar->pNext )
+      {
+         pLast = pEnumVar;
+         pEnumVar = pEnumVar->pNext;
+      }
+      hb_xfree( pEnumVar );
+      pLast->pNext = NULL;
+   }
+   else
+   {
+      hb_xfree( pEnumVar );
+      hb_comp_functions.pLast->pEnum = NULL;
+   }
+}
+
+static HB_CARGO2_FUNC( hb_compEnumEvalStart )
+{
+   char * szName = hb_compExprAsString( (HB_EXPR_PTR)cargo );
+   if( szName )
+      hb_compForStart( szName, TRUE );
+      
+   hb_compExprGenPush( (HB_EXPR_PTR)dummy );  /* expression */
+   hb_compExprGenPush( (HB_EXPR_PTR)cargo );  /* variable */
+}
+
+static void hb_compEnumStart( HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
+{
+   ULONG ulLen;
+   
+   if( hb_compExprListLen(pVars) != hb_compExprListLen(pExprs) )
+   {
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
+   }
+
+   ulLen = hb_compExprListEval2( pVars, pExprs, hb_compEnumEvalStart );
+   
+   if( ulLen > 255 )
+   {
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_TOOMANY, NULL, NULL );
+   }
+   else
+   {
+      BYTE Len;
+      Len = (BYTE) (ulLen & 0xFF);
+      hb_compGenPCode3( HB_P_ENUMSTART, Len, ((descend>0)?1:0), FALSE );
+   }
+}
+
+static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend )
+{
+   HB_SYMBOL_UNUSED( pExpr );
+   if( descend > 0 )
+   {
+      hb_compGenPCode1( HB_P_ENUMNEXT );
+   }
+   else
+   {
+      hb_compGenPCode1( HB_P_ENUMPREV );
+   }
+}
+
+static HB_CARGO_FUNC( hb_compEnumEvalEnd )
+{
+   char * szName = hb_compExprAsString( (HB_EXPR_PTR)cargo );
+
+   if( szName )
+      hb_compForEnd( szName );
+}
+
+static void hb_compEnumEnd( HB_EXPR_PTR pExpr )
+{
+   hb_compExprListEval( pExpr, hb_compEnumEvalEnd );
+   hb_compGenPCode1( HB_P_ENUMEND );
+}
+

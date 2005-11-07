@@ -226,6 +226,9 @@ struct hb_struRefer
    } BasePtr;
    LONG offset;    /* 0 for static variables */
    LONG value;
+   union {
+      struct _HB_ITEM * itemPtr;       /* item pointer  */
+   } ValuePtr;
 };
 
 struct hb_struString

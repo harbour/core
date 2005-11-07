@@ -192,8 +192,12 @@ typedef enum
    HB_P_LOCALNEARADDINT,       /* 125 Add/Subtract specified int into specified local without using the stack. */
    HB_P_MACROPUSHREF,          /* 126 Reference to macro variable @&mvar */
    HB_P_PUSHLONGLONG,          /* 127 places an integer number on the virtual machine stack */
+   HB_P_ENUMSTART,             /* 128 Start of FOR EACH loop */
+   HB_P_ENUMNEXT,              /* 129 Next item of FOR EACH loop  */
+   HB_P_ENUMPREV,              /* 130 Previous item of FOR EACH loop  */
+   HB_P_ENUMEND,               /* 131 End of FOR EACH loop */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 128 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 132 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

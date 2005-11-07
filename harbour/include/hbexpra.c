@@ -213,6 +213,59 @@ void hb_compExprErrorType( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
    HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );
 }
 
+#ifndef HB_MACRO_SUPPORT
+ULONG hb_compExprListEval( HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
+{
+   ULONG ulLen = 0;
+  
+   if( pEval && ((pExpr->ExprType == HB_ET_LIST) || (pExpr->ExprType == HB_ET_ARGLIST)) )
+   {
+      pExpr = pExpr->value.asList.pExprList;
+      while( pExpr )
+      {
+         (pEval)( (void *) pExpr );
+         pExpr = pExpr->pNext;
+         ++ulLen;
+      }
+   }
+   return ulLen;
+}
+
+ULONG hb_compExprListEval2( HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval )
+{
+   ULONG ulLen = 0;
+
+   if( !pEval )
+      return ulLen;  
+      
+   if( (pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST) 
+       && 
+       (pExpr2->ExprType == HB_ET_LIST || pExpr2->ExprType == HB_ET_ARGLIST) )
+   {
+      pExpr1 = pExpr1->value.asList.pExprList;
+      pExpr2 = pExpr2->value.asList.pExprList;
+      while( pExpr1 && pExpr2 )
+      {
+         (pEval)( (void *) pExpr1, (void *)pExpr2 );
+         pExpr1 = pExpr1->pNext;
+         pExpr2 = pExpr2->pNext;
+         ++ulLen;
+      }
+   }
+   else if( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST)
+   {
+      pExpr1 = pExpr1->value.asList.pExprList;
+      while( pExpr1 )
+      {
+         (pEval)( (void *) pExpr1, (void *)pExpr2 );
+         pExpr1 = pExpr1->pNext;
+         ++ulLen;
+      }
+   }
+   return ulLen;
+}
+#endif
+
 /* Add a new local variable declaration
  */
 #ifdef HB_MACRO_SUPPORT
@@ -648,6 +701,38 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 
    return pExpr;
 }
+
+/* Creates new send expression
+ *    pObject : szMessage
+ */
+HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%p, %s)", pObject, szMessage));
+
+   pExpr = hb_compExprNew( HB_ET_SEND );
+   pExpr->value.asMessage.szMessage = szMessage;
+   pExpr->value.asMessage.pObject   = pObject;
+   pExpr->value.asMessage.pParms     = NULL;
+
+#ifndef HB_MACRO_SUPPORT 
+   if( (strcmp( "__ENUMINDEX", szMessage ) == 0) || 
+       (strcmp( "__ENUMBASE", szMessage ) == 0 ) ||
+       (strcmp( "__ENUMVALUE", szMessage ) == 0 ) )
+   {
+      if( pObject->ExprType == HB_ET_VARIABLE )
+      {
+         if( ! hb_compForEachVarError( pObject->value.asSymbol ) )
+         {
+            pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol );
+         }
+      }
+   }
+#endif
+   return pExpr;
+}
+
 
 /* In macro compiler strings should be automatically deallocated by
  * the expression optimizer

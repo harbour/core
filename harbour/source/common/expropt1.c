@@ -211,8 +211,9 @@ char *hb_compExprAsString( HB_EXPR_PTR pExpr )
    switch( pExpr->ExprType )
    {
       case HB_ET_VARIABLE:
+      case HB_ET_VARREF:
          return pExpr->value.asSymbol ;
-         
+         break;         
    }
    return NULL;
 }
@@ -479,23 +480,6 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
            pAlias->value.asMacro.SubType == HB_ET_MACRO_EXPR )
            pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
    }
-
-   return pExpr;
-}
-
-/* Creates new send expression
- *    pObject : szMessage
- */
-HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
-{
-   HB_EXPR_PTR pExpr;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%p, %s)", pObject, szMessage));
-
-   pExpr = hb_compExprNew( HB_ET_SEND );
-   pExpr->value.asMessage.szMessage = szMessage;
-   pExpr->value.asMessage.pObject   = pObject;
-   pExpr->value.asMessage.pParms     = NULL;
 
    return pExpr;
 }

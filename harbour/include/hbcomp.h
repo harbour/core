@@ -140,6 +140,22 @@ typedef struct _VAR
    struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
 
+typedef struct HB_ENUMERATOR_
+{
+   char *szName;
+   BOOL bForEach;
+   struct HB_ENUMERATOR_ *pNext;
+} HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
+
+/*Support for traversing of linked list */
+#define  HB_CARGO_FUNC( proc )  void proc( void *cargo )
+typedef  HB_CARGO_FUNC( HB_CARGO_FUNC_ );
+typedef  HB_CARGO_FUNC_ *HB_CARGO_FUNC_PTR;
+
+#define  HB_CARGO2_FUNC( proc )  void proc( void *cargo, void *dummy )
+typedef  HB_CARGO2_FUNC( HB_CARGO2_FUNC_ );
+typedef  HB_CARGO2_FUNC_ *HB_CARGO2_FUNC_PTR;
+
 /* pcode chunks bytes size */
 #define HB_PCODE_CHUNK   100
 
@@ -174,6 +190,7 @@ typedef struct __FUNC
    BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
+   HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
 } _FUNC, * PFUNCTION;
 
 /* structure to hold an INLINE block of source */
@@ -340,6 +357,7 @@ extern void hb_compAutoOpenAdd( char * szName );
 #else /* HB_MACRO_SUPPORT */
 
 extern BOOL hb_compIsValidMacroVar( char * ); /* checks if passed variable can be used in macro */
+extern BOOL hb_compForEachVarError( char * );  /* checks if it is FOR EACH enumerator variable and generates a warning */
 
 extern ULONG hb_compGenJump( LONG );                /* generates the pcode to jump to a specific offset */
 extern ULONG hb_compGenJumpFalse( LONG );           /* generates the pcode to jump if false */
@@ -407,6 +425,9 @@ extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
 extern void hb_compErrorCodeblock( char * );
 extern void hb_compErrorMacro( char * );
 extern HB_EXPR_PTR hb_compErrorRefer( HB_EXPR_PTR, char * );
+
+extern ULONG hb_compExprListEval( HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval );
+extern ULONG hb_compExprListEval2( HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
 
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );

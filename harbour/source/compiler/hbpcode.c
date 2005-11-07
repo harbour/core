@@ -171,10 +171,15 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_MACROLISTEND,         */
    0,        /* HB_P_MPUSHSTR              */
    4,        /* HB_P_LOCALNEARADDINT,      */
-   1,        /* HB_P_MACROPUSHREF,         */
-   9         /* HB_P_PUSHLONGLONG          */
+   1,        /* HB_P_MACROPUSHREF          */
+   9,        /* HB_P_PUSHLONGLONG          */
+   3,        /* HB_P_ENUMSTART             */
+   1,        /* HB_P_ENUMNEXT              */
+   1,        /* HB_P_ENUMPREV              */
+   1         /* HB_P_ENUMEND               */
 };
 
+#if defined(HB_COMP_STRONG_TYPES)
 static PVAR hb_compPrivateFind( char * szPrivateName )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;
@@ -193,6 +198,7 @@ static PVAR hb_compPrivateFind( char * szPrivateName )
    }
    return NULL;
 }
+#endif
 
 void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
@@ -229,6 +235,7 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
 
 }
 
+#if defined(HB_COMP_STRONG_TYPES)
 void hb_compStrongType( int iSize )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast, pTmp;
@@ -3061,6 +3068,7 @@ void hb_compStrongType( int iSize )
       pFunc->iStackIndex = 0;
    }
 }
+#endif   /* ifdefined(HB_COMP_STRONG_TYPES) */
 
 void hb_compGenPCode1( BYTE byte )
 {
@@ -3077,8 +3085,10 @@ void hb_compGenPCode1( BYTE byte )
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 
+#if defined(HB_COMP_STRONG_TYPES)
    if( hb_comp_iWarnings >= 3 )
       hb_compStrongType( 1 );
+#endif
 }
 
 void hb_compGenPData1( BYTE byte )
@@ -3113,8 +3123,12 @@ void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
 
+#if defined(HB_COMP_STRONG_TYPES)
    if( hb_comp_iWarnings >= 3 && bStackAffected )
       hb_compStrongType( 2 );
+#else
+   HB_SYMBOL_UNUSED( bStackAffected );
+#endif
 }
 
 void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected )
@@ -3134,8 +3148,12 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
 
+#if defined(HB_COMP_STRONG_TYPES)
    if( hb_comp_iWarnings >= 3 && bStackAffected  )
       hb_compStrongType( 3 );
+#else
+   HB_SYMBOL_UNUSED( bStackAffected );
+#endif
 }
 
 void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected )
@@ -3156,8 +3174,12 @@ void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bSta
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 
+#if defined(HB_COMP_STRONG_TYPES)
    if( hb_comp_iWarnings >= 3 && bStackAffected  )
       hb_compStrongType( 4 );
+#else
+   HB_SYMBOL_UNUSED( bStackAffected );
+#endif
 }
 
 void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected )
@@ -3180,6 +3202,10 @@ void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected )
    memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
    pFunc->lPCodePos += ulSize;
 
+#if defined(HB_COMP_STRONG_TYPES)
    if( hb_comp_iWarnings >= 3 && bStackAffected  )
       hb_compStrongType( ulSize );
+#else
+   HB_SYMBOL_UNUSED( bStackAffected );
+#endif
 }

@@ -1509,6 +1509,7 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    pFunc->iStackFunctions = 0;
    pFunc->iStackClasses   = 0;
    pFunc->bLateEval       = TRUE;
+   pFunc->pEnum           = NULL;
 
    return pFunc;
 }

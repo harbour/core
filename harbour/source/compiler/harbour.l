@@ -120,7 +120,7 @@ Separator     {SpaceTab}
 
 %x            STRING1 STRING2 STRING3 STRING4START STRING4 STRING5
 %x            NEXT_ BREAK_ CASE_ DO_ DOIDENT_ WHILE_ WITH_ END_ FIELD_
-%x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_
+%x            FOR_ FOREACH_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
 %x            DECLARE_ DECLARE_ID_
@@ -623,6 +623,14 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
+"descend"    {
+                   yylval.string = hb_compIdentifierNew( "DESCEND", TRUE );
+                   hb_comp_iState =IDENTIFIER;
+                   return DESCEND;
+               }
+%{
+/* ************************************************************************ */
+%}
 "else"         { /* ELSE can be used in one context only */
                  if( hb_comp_wIfCounter == 0 )
                    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_ELSE, NULL, NULL );
@@ -766,6 +774,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "for"          { BEGIN FOR_; }
+<FOR_>{Separator}+"each" { BEGIN FOREACH_;}
 <FOR_>{Separator}+[&_a-zA-Z] { /* an identifier or a macro after the FOR */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
@@ -803,6 +812,19 @@ Separator     {SpaceTab}
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
              }
+<FOREACH_>{Separator}*[\:\=] { /* FOR each:=  or FOR each= */
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               unput( 'h' ); unput( 'c' ); unput( 'a' ); unput( 'e' );
+               hb_comp_iState = FOR;
+               return FOR;
+             }
+<FOREACH_>. { 
+               BEGIN 0;             
+               unput( yytext[ yyleng-1 ] );
+               hb_comp_iState = FOREACH;
+               return FOREACH;
+            }
 %{
 /* ************************************************************************ */
 %}

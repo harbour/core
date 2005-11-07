@@ -281,9 +281,11 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
       {
         /* After fixing this variable cannot be accessed using near code */
         char sTemp[16];
+        char sTemp2[16];
 
         sprintf( (char *) sTemp, "%i", pFunc->wParamCount );
-        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, "HB_P_LOCALNEARADDINT", (const char *) sTemp );
+        sprintf( (char *) sTemp2, "%i", wNewId );
+        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, (const char *) sTemp2, (const char *) sTemp );
       }
    }
 
@@ -425,8 +427,12 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MACROLISTEND,         */
    NULL,                       /* HB_P_MPUSHSTR,             */
    hb_p_localnearaddint,       /* HB_P_LOCALNEARADDINT,      */
-   NULL,                       /* HB_P_MACROPUSHREF,         */
-   NULL                        /* HB_P_PUSHLONGLONG          */
+   NULL,                       /* HB_P_MACROPUSHREF          */
+   NULL,                       /* HB_P_PUSHLONGLONG          */
+   NULL,                       /* HB_P_ENUMSTART             */
+   NULL,                       /* HB_P_ENUMNEXT              */
+   NULL,                       /* HB_P_ENUMPREV              */
+   NULL                        /* HB_P_ENUMEND               */
 };
 
 void hb_compFixFuncPCode( PFUNCTION pFunc )

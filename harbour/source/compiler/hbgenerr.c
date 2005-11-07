@@ -83,7 +83,10 @@ char * hb_comp_szErrors[] =
    "GET contains complex macro",
    "Unterminated inline block in function: \'%s\'",
    "Too many inline blocks %s",
-   "Inline C requires C output generation, use -gc[n]"
+   "Inline C requires C output generation, use -gc[n]",
+   "Too many local variables [%s] or parameters [%s]",
+   "Too many enumerate variables in FOR EACH loop",
+   "Incorrect number of enumerate variables"
 };
 
 /* Table with parse warnings */
@@ -120,7 +123,9 @@ char * hb_comp_szWarnings[] =
    "3Message \'%s\' not known in class \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
-   "1Redundant \'ANNOUNCE %s\' statement ignored"
+   "1Redundant \'ANNOUNCE %s\' statement ignored",
+   "0Duplicate variable \'%s\' in nested FOR loop",
+   "0Invalid variable \'%s\' for enumerator message"
 };
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )

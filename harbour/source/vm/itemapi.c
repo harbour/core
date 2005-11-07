@@ -1124,6 +1124,18 @@ void HB_EXPORT hb_itemClear( PHB_ITEM pItem )
    else if( HB_IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
+   else if( HB_IS_BYREF( pItem ) && pItem->item.asRefer.offset < 0 && pItem->item.asRefer.value >= 0 )
+   {
+      /* FOR EACH control variable */
+      hb_itemClear( pItem->item.asRefer.BasePtr.itemPtr );
+      hb_itemRelease( pItem->item.asRefer.BasePtr.itemPtr );
+      if( pItem->item.asRefer.ValuePtr.itemPtr )
+      {
+         hb_itemClear( pItem->item.asRefer.ValuePtr.itemPtr );
+         hb_itemRelease( pItem->item.asRefer.ValuePtr.itemPtr );
+      }
+   }
+   
 #if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
    else if( HB_IS_BADITEM( pItem ) )
       hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_itemClear()", NULL );
@@ -1249,6 +1261,24 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
    return pItem;
 }
 
+/* Unreference passed variable 
+ * Do not unreference the last reference stored
+*/
+PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
+{
+   PHB_ITEM pRef = pItem;
+   PHB_ITEM pLast;
+   
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefRefer(%p)", pItem));
+
+   do {
+     pLast = pItem;
+     pItem = hb_itemUnRefOnce( pItem );
+   }
+   while( HB_IS_BYREF( pItem ) && (pRef != pItem) );
+
+   return pLast;
+}
 
 /* Internal API, not standard Clipper */
 /* De-references item passed by the reference */
@@ -1276,6 +1306,18 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                /* a reference to a static variable */
                pItem = *( pItem->item.asRefer.BasePtr.itemsbase ) +
                        pItem->item.asRefer.value;
+            }
+            else if( pItem->item.asRefer.offset < 0 )
+            {
+               /* enumerator variable */
+               if( HB_IS_ARRAY(pItem->item.asRefer.BasePtr.itemPtr) )
+               {
+                  pItem = hb_arrayGetItemPtr( pItem->item.asRefer.BasePtr.itemPtr, pItem->item.asRefer.value );
+               }
+               else if( pItem->item.asRefer.ValuePtr.itemPtr )
+               {
+                  pItem = pItem->item.asRefer.ValuePtr.itemPtr;
+               }
             }
             else
             {
@@ -1829,6 +1871,7 @@ char HB_EXPORT * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pulSize, bFreeReq));
 
+   /* to be clipper compatible don't convert HB_IT_BYREF items */
    if( pItem )
    {
       switch( pItem->type )

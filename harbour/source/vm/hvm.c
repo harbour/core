@@ -127,6 +127,10 @@ static void    hb_vmGreater( void );         /* checks if the latest - 1 value i
 static void    hb_vmGreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 static void    hb_vmInstring( void );        /* check whether string 1 is contained in string 2 */
 static void    hb_vmForTest( void );         /* test for end condition of for */
+static LONG    hb_vmEnumStart( BYTE, BYTE, LONG ); /* prepare FOR EACH loop */
+static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
+static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
+static LONG    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
 
 /* Operators (logical) */
 static void    hb_vmNot( void );             /* changes the latest logical value on the stack */
@@ -255,6 +259,8 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
+/* Stores the position on the stack of current FOR EACh envelope
+*/
 /* Stores level of procedures call stack
 */
 static ULONG   s_ulProcLevel = 0;
@@ -581,6 +587,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    ULONG ulPrivateBase;
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
+   LONG lForEachBase = 0; /* Stores the position on the stack of current FOR EACH envelope */
 #ifndef HB_GUI
    static unsigned short uiPolls = 1;
 #endif
@@ -736,6 +743,26 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
+         case HB_P_ENUMSTART:
+            lForEachBase = hb_vmEnumStart( pCode[ w + 1 ], pCode[ w + 2 ], lForEachBase );
+            w += 3;
+            break;
+
+         case HB_P_ENUMNEXT:
+            hb_vmEnumNext();
+            w++;
+            break;
+            
+         case HB_P_ENUMPREV:
+            hb_vmEnumPrev();
+            w++;
+            break;
+            
+         case HB_P_ENUMEND:
+            lForEachBase = hb_vmEnumEnd();
+            w++;
+            break;
+            
          /* Operators (logical) */
 
          case HB_P_NOT:
@@ -1816,6 +1843,15 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                 * There is the BEGIN/END sequence deifined in current
                 * procedure/function - use it to continue opcodes execution
                 */
+               while( lForEachBase && lForEachBase > s_lRecoverBase )
+               {
+                  /* remove FOR EACH stack frame so there is no orphan
+                   * item pointers hanging
+                   */
+                  hb_stackRemove( lForEachBase );
+                  lForEachBase = hb_vmEnumEnd();
+               }
+            
                /*
                 * remove all items placed on the stack after BEGIN code
                 */
@@ -1844,6 +1880,15 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
          }
       }
+   }
+
+   while( lForEachBase )
+   {
+      /* remove FOR EACH stack frame so there is no orphan
+       * item pointers hanging
+       */
+      hb_stackRemove( lForEachBase );
+      lForEachBase = hb_vmEnumEnd();
    }
 
    if( pSymbols )
@@ -2979,6 +3024,231 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
    }
 }
 
+/* At this moment the eval stack should store:
+ * -2 -> <array for traverse>
+ * -1 -> <the reference to enumerate variable>
+ */
+ /* Test to check the start point of the FOR EACH loop */
+static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
+{
+   HB_ITEM_PTR pItem;
+   HB_ITEM_PTR pRef;
+   int i;
+   ULONG ulMax;
+
+   --nVars;
+   pItem = hb_itemUnRef( hb_stackItemFromTop( -(nVars*2) -2 ) );
+   if( HB_IS_ARRAY( pItem ) )
+   {
+      ulMax = pItem->item.asArray.value->ulLen;
+   }
+   else if( HB_IS_STRING(pItem) )
+   {
+      ulMax = pItem->item.asString.length;
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
+      return lOldBase;
+   }
+   
+   for( i=nVars; i>=0; i-- )
+   {   
+      HB_ITEM item;
+      
+      /* value to iterate store it in temporary holder */
+      item.type = HB_IT_NIL;
+      hb_itemCopy( &item, hb_itemUnRef( hb_stackItemFromTop( -(i*2) -2 ) ) );
+      
+      /* the control variable */
+      pRef = hb_itemUnRefOnce( hb_stackItemFromTop( -(i*2) -1 ) );
+      /* store the old value of variable */
+      hb_itemCopy( hb_stackItemFromTop( -(i*2) -2 ), pRef );
+      hb_itemClear( pRef );   /* clear the old value of variable */
+
+      /* set the iterator value */
+      pRef->type = HB_IT_BYREF;
+      pRef->item.asRefer.ValuePtr.itemPtr = NULL;
+      pRef->item.asRefer.BasePtr.itemPtr = hb_itemNew( &item );
+      pRef->item.asRefer.offset = -1;  /* enumerator variable */
+      hb_itemClear( &item );
+
+      pItem = pRef->item.asRefer.BasePtr.itemPtr;
+      if( HB_IS_ARRAY(pItem) )
+      {
+         pRef->item.asRefer.value = (nDescend>0)?1:pItem->item.asArray.value->ulLen;   /* the index into an array */
+         if( ulMax > pItem->item.asArray.value->ulLen )
+            ulMax = pItem->item.asArray.value->ulLen;
+      }
+      else if( HB_IS_STRING(pItem) )
+      {
+         /* storage item for single characters */
+         pRef->item.asRefer.value = (nDescend>0)?1:pItem->item.asString.length;
+         pRef->item.asRefer.ValuePtr.itemPtr = 
+            hb_itemPutCL( NULL, pItem->item.asString.value +
+            pRef->item.asRefer.value-1, 1 );
+         if( ulMax > pItem->item.asString.length )
+            ulMax = pItem->item.asString.length;
+      }
+      else
+      {
+         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
+      }
+   }
+
+   hb_vmPushLong( nVars + 1 );   /* number of iterators */
+   hb_vmPushLong( lOldBase );    /* previous FOREACH frame */
+   hb_vmPushLong( ulMax );       /* max number of iterations */
+
+   /* empty array/string - do not start enumerations loop */
+   hb_vmPushLogical( ulMax != 0 );
+   
+   return hb_stackTopOffset() - 1;
+}        
+
+
+/* Enumeration in ascending order
+ * At this moment the eval stack should store:
+ * -5 -> <old value of enumerator variable>
+ * -4 -> <the reference to enumerate variable>
+ * -3 -> <number of iterators>
+ * -2 -> <previous FOREACH frame>
+ * -1 -> <max number of iterations>
+ */
+static void hb_vmEnumNext( void )
+{
+   ULONG ulIdx;
+   HB_ITEM_PTR pIdx;
+   HB_ITEM_PTR pRef;
+   int i;
+   LONG lVars;
+   
+   lVars = ( hb_stackItemFromTop( - 3 ) )->item.asLong.value;
+   
+   --lVars;
+   pIdx = hb_stackItemFromTop( -1 );
+   ulIdx = pIdx->item.asLong.value - 1;
+   if( ulIdx > 0 )
+   {
+      for( i=lVars; i >= 0; i-- )
+      {
+         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i*2) - 4 ) );
+         if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
+         {
+            pRef->item.asRefer.value++;
+         }
+         else if( HB_IS_STRING(pRef->item.asRefer.BasePtr.itemPtr) )
+         {
+            HB_ITEM_PTR pItem;
+            pRef->item.asRefer.value++;
+            pItem = pRef->item.asRefer.BasePtr.itemPtr;
+            hb_itemPutCL( pRef->item.asRefer.ValuePtr.itemPtr, 
+               pItem->item.asString.value + pRef->item.asRefer.value-1, 1 );
+         }
+         else
+         {
+            hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pRef->item.asRefer.BasePtr.itemPtr );
+         }
+      }
+      hb_vmPushLogical( TRUE );
+   }
+   else
+   {
+      hb_vmPushLogical( FALSE );
+   }
+   pIdx->item.asLong.value = ulIdx;
+}
+
+/* Enumeration in descending order
+ * At this moment the eval stack should store:
+ * -5 -> <old value of enumerator variable>
+ * -4 -> <the reference to enumerate variable>
+ * -3 -> <number of iterators>
+ * -2 -> <previous FOREACH frame>
+ * -1 -> <max number of iterations>
+ */
+static void hb_vmEnumPrev( void )
+{
+   ULONG ulIdx;
+   HB_ITEM_PTR pIdx;
+   HB_ITEM_PTR pRef;
+   int i;
+   LONG lVars;
+   
+   lVars = ( hb_stackItemFromTop( - 3 ) )->item.asLong.value;
+   
+   --lVars;
+   pIdx = hb_stackItemFromTop( -1 );
+   ulIdx = pIdx->item.asLong.value - 1;
+   if( ulIdx > 0 )
+   {
+      for( i=lVars; i >= 0; i-- )
+      {
+         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i*2) - 4 ) );
+         if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
+         {
+            pRef->item.asRefer.value--;
+         }
+         else if( HB_IS_STRING(pRef->item.asRefer.BasePtr.itemPtr) )
+         {
+            HB_ITEM_PTR pItem;
+            pRef->item.asRefer.value--;
+            pItem = pRef->item.asRefer.BasePtr.itemPtr;
+            hb_itemPutCL( pRef->item.asRefer.ValuePtr.itemPtr, 
+               pItem->item.asString.value + pRef->item.asRefer.value-1, 1 );
+         }
+         else
+         {
+            hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pRef->item.asRefer.BasePtr.itemPtr );
+         }
+      }
+      hb_vmPushLogical( TRUE );
+   }
+   else
+   {
+      hb_vmPushLogical( FALSE );
+   }
+   pIdx->item.asLong.value = ulIdx;
+}
+
+/* Enumeration in descending order
+ * At this moment the eval stack should store:
+ * -5 -> <old value of enumerator variable>
+ * -4 -> <the reference to enumerate variable>
+ * -3 -> <number of iterators>
+ * -2 -> <previous FOREACH frame>
+ * -1 -> <max number of iterations>
+ */
+static LONG hb_vmEnumEnd()
+{
+   int i;
+   LONG lOldBase;
+   LONG lVars;
+   
+   /* remove loop counter */
+   hb_stackDec();
+   ( hb_stackTopItem() )->type = HB_IT_NIL;
+   /* restore stack frame offset of previous FOREACH loop 
+   */
+   hb_stackDec();
+   lOldBase = ( hb_stackTopItem() )->item.asLong.value;
+   ( hb_stackTopItem() )->type = HB_IT_NIL;
+   /* remove number of iterators */
+   hb_stackDec();
+   lVars = ( hb_stackTopItem() )->item.asLong.value;
+   ( hb_stackTopItem() )->type = HB_IT_NIL;
+
+   --lVars;
+   for( i=lVars; i>=0; i-- )
+   {
+      /* restore the value of variable before the FOREACH loop */
+      hb_itemCopy( hb_itemUnRefOnce( hb_stackItemFromTop( -1 ) ), hb_stackItemFromTop( -2 ) );
+      hb_stackPop();
+      hb_stackPop();
+   }
+   return lOldBase;
+}
+
 /* ------------------------------- */
 /* Operators (logical)             */
 /* ------------------------------- */
@@ -3687,6 +3957,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
    ULONG ulClock = 0;
    void *pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
+   BOOL bNotHandled = TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
@@ -3713,7 +3984,34 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
 
    /* printf( "Symbol: '%s'\n", pSym->szName ); */
 
-   if( HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
+   if ( HB_IS_BYREF(pSelf) )
+   {
+      /* method of enumerator variable from FOR EACH statement
+      */
+      HB_ITEM_PTR pRef;
+      
+      pRef = hb_itemUnRefRefer( pSelf );
+      if( HB_IS_BYREF(pRef) && pRef->item.asRefer.offset < 0 && pRef->item.asRefer.value >= 0 )
+      {
+         if( hb_stricmp( (const char *)pSym->szName, "__ENUMINDEX" ) == 0 )
+         {
+            hb_itemPutNL( &hb_stack.Return, pRef->item.asRefer.value );
+            bNotHandled = FALSE;
+         }
+         else if( hb_stricmp( (const char *)pSym->szName, "__ENUMBASE" ) == 0 )
+         {
+            hb_itemCopy( &hb_stack.Return, pRef->item.asRefer.BasePtr.itemPtr );
+            bNotHandled = FALSE;
+         }
+         else if( hb_stricmp( (const char *)pSym->szName, "__ENUMVALUE" ) == 0 )
+         {
+            hb_itemCopy( &hb_stack.Return, hb_itemUnRefOnce(pRef) );
+            bNotHandled = FALSE;
+         }
+      }
+   }
+   
+   if( HB_IS_NIL( pSelf ) && bNotHandled ) /* are we sending a message ? */
    {
       pFunc = pSym->value.pFunPtr;
 
@@ -3765,7 +4063,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
          }
       }
    }
-   else
+   else if( bNotHandled )
    {
       PHB_BASEARRAY pSelfBase = NULL;
       BOOL lPopSuper = FALSE;

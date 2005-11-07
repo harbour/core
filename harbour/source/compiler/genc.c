@@ -1837,6 +1837,37 @@ static HB_GENC_FUNC( hb_p_macrolistend )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_enumstart )
+{
+   fprintf( cargo->yyc, "\tHB_P_ENUMSTART, %i, %i,\n", pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_enumnext )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+   fprintf( cargo->yyc, "\tHB_P_ENUMNEXT,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_enumprev )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+   fprintf( cargo->yyc, "\tHB_P_ENUMPREV,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_enumend )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+   fprintf( cargo->yyc, "\tHB_P_ENUMEND,\n" );
+   return 1;
+}
+
+
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
    fprintf( cargo->yyc, "\tHB_P_LOCALNEARADDINT, %i, %i, %i,", pFunc->pCode[ lPCodePos + 1 ],
@@ -1990,7 +2021,11 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    /* end: */
    hb_p_localnearaddint,
    hb_p_macropushref,
-   hb_p_pushlonglong
+   hb_p_pushlonglong,
+   hb_p_enumstart,
+   hb_p_enumnext,
+   hb_p_enumprev,
+   hb_p_enumend
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

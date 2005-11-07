@@ -217,6 +217,15 @@
 */
 /* #define HB_FAST_STOD */
 
+/* ***********************************************************************
+ * You can select here if you want a strong type support in the compiler
+ * For example:
+ * LOCAL nVar AS ARRAY
+ *
+ * By default we are not using the strong typing because it is not
+ * complete code and can be erratic now.
+*/
+/* #define HB_COMP_STRONG_TYPES */
 
 /* ***********************************************************************
  *  Detect GCC/OS2
