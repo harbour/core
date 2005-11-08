@@ -227,6 +227,9 @@ ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed 
 /* virtual machine state */
 
 HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEnumIndex = { "__ENUMINDEX", HB_FS_PUBLIC, {NULL}, NULL };
+HB_SYMB  hb_symEnumBase  = { "__ENUMBASE",  HB_FS_PUBLIC, {NULL}, NULL };
+HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", HB_FS_PUBLIC, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static USHORT   s_uiStatics;        /* Number of statics added after processing hb_vmStatics() */
@@ -409,7 +412,12 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
    hb_xinit();
    hb_errInit();
    hb_stackInit();
+
    hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   hb_dynsymNew( &hb_symEnumIndex );
+   hb_dynsymNew( &hb_symEnumBase );
+   hb_dynsymNew( &hb_symEnumValue );
+
    hb_setInitialize();        /* initialize Sets */
    hb_conInit();    /* initialize Console */
    hb_memvarsInit();
@@ -583,7 +591,6 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
-   BYTE curPCode;
    ULONG ulPrivateBase;
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
@@ -605,7 +612,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    if( hb_bProfiler )
       ulPastClock = ( ULONG ) clock();
 
-   while( ( curPCode = pCode[ w ] ) != HB_P_ENDPROC )
+   while( TRUE )
    {
       if( hb_bProfiler )
       {
@@ -621,7 +628,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       if( ! --uiPolls )
       {
          hb_inkeyPoll();
-         uiPolls = 255;
+         //uiPolls = 255;
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
 
@@ -642,7 +649,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       }
 #endif
 
-      switch( curPCode )
+      switch( pCode[ w ] )
       {
          /* Operators ( mathematical / character / misc ) */
 
@@ -946,11 +953,22 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ENDBLOCK:
-            HB_TRACE(HB_TR_INFO, ("(EndBlock)"));
+            HB_TRACE(HB_TR_INFO, ("HB_P_ENDBLOCK"));
             hb_vmEndBlock();
-            if( pSymbols )
-               hb_memvarSetPrivatesBase( ulPrivateBase );
-            return;   /* end of a codeblock - stop evaluation */
+            /* manually inlined hb_vmRequestEndProc() for some C compilers
+             * which does not make such optimisation
+             */
+            s_uiActionRequest = HB_ENDPROC_REQUESTED; 
+            
+            break;
+
+         case HB_P_ENDPROC:
+            HB_TRACE(HB_TR_INFO, ("HB_P_ENDPROC"));
+            /* manually inlined hb_vmRequestEndProc() for some C compilers
+             * which does not make such optimisation
+             */
+            s_uiActionRequest = HB_ENDPROC_REQUESTED; 
+            break;
 
          /* BEGIN SEQUENCE/RECOVER/END SEQUENCE */
 
@@ -1835,7 +1853,15 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
       if( s_uiActionRequest )
       {
-         if( s_uiActionRequest & HB_BREAK_REQUESTED )
+         if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
+         {
+            /* request to stop current procedure was issued
+             * (from macro evaluation)
+             */
+            s_uiActionRequest = 0;
+            break;
+         }
+         else if( s_uiActionRequest & HB_BREAK_REQUESTED )
          {
             if( bCanRecover )
             {
@@ -1843,7 +1869,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                 * There is the BEGIN/END sequence deifined in current
                 * procedure/function - use it to continue opcodes execution
                 */
-               while( lForEachBase && lForEachBase > s_lRecoverBase )
+               while( lForEachBase > s_lRecoverBase )
                {
                   /* remove FOR EACH stack frame so there is no orphan
                    * item pointers hanging
@@ -1871,14 +1897,6 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          }
          else if( s_uiActionRequest & HB_QUIT_REQUESTED )
             break;
-         else if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
-         {
-            /* request to stop current procedure was issued
-             * (from macro evaluation)
-             */
-            s_uiActionRequest = 0;
-            break;
-         }
       }
    }
 
@@ -3052,26 +3070,22 @@ static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
       return lOldBase;
    }
    
-   for( i=nVars; i>=0; i-- )
+   for( i = nVars * 2; i >= 0; i -= 2 )
    {   
-      HB_ITEM item;
+      PHB_ITEM pBaseValue;
       
-      /* value to iterate store it in temporary holder */
-      item.type = HB_IT_NIL;
-      hb_itemCopy( &item, hb_itemUnRef( hb_stackItemFromTop( -(i*2) -2 ) ) );
-      
+      /* copy value to iterate */
+      pBaseValue = hb_itemNew( hb_itemUnRef( hb_stackItemFromTop( -i -2 ) ) );
       /* the control variable */
-      pRef = hb_itemUnRefOnce( hb_stackItemFromTop( -(i*2) -1 ) );
-      /* store the old value of variable */
-      hb_itemCopy( hb_stackItemFromTop( -(i*2) -2 ), pRef );
-      hb_itemClear( pRef );   /* clear the old value of variable */
+      pRef = hb_itemUnRefOnce( hb_stackItemFromTop( -i -1 ) );
+      /* store the old value of variable and clear it */
+      hb_itemMove( hb_stackItemFromTop( -i -2 ), pRef );
 
       /* set the iterator value */
       pRef->type = HB_IT_BYREF;
       pRef->item.asRefer.ValuePtr.itemPtr = NULL;
-      pRef->item.asRefer.BasePtr.itemPtr = hb_itemNew( &item );
+      pRef->item.asRefer.BasePtr.itemPtr = pBaseValue;
       pRef->item.asRefer.offset = -1;  /* enumerator variable */
-      hb_itemClear( &item );
 
       pItem = pRef->item.asRefer.BasePtr.itemPtr;
       if( HB_IS_ARRAY(pItem) )
@@ -3132,7 +3146,7 @@ static void hb_vmEnumNext( void )
    {
       for( i=lVars; i >= 0; i-- )
       {
-         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i*2) - 4 ) );
+         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i<<1) - 4 ) );
          if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
          {
             pRef->item.asRefer.value++;
@@ -3219,7 +3233,7 @@ static void hb_vmEnumPrev( void )
  * -2 -> <previous FOREACH frame>
  * -1 -> <max number of iterations>
  */
-static LONG hb_vmEnumEnd()
+static LONG hb_vmEnumEnd( void )
 {
    int i;
    LONG lOldBase;
@@ -3984,7 +3998,7 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
 
    /* printf( "Symbol: '%s'\n", pSym->szName ); */
 
-   if ( HB_IS_BYREF(pSelf) )
+   if( HB_IS_BYREF(pSelf) )
    {
       /* method of enumerator variable from FOR EACH statement
       */
@@ -3993,25 +4007,24 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
       pRef = hb_itemUnRefRefer( pSelf );
       if( HB_IS_BYREF(pRef) && pRef->item.asRefer.offset < 0 && pRef->item.asRefer.value >= 0 )
       {
-         if( hb_stricmp( (const char *)pSym->szName, "__ENUMINDEX" ) == 0 )
+         if( pSym->pDynSym == hb_symEnumIndex.pDynSym )
          {
             hb_itemPutNL( &hb_stack.Return, pRef->item.asRefer.value );
             bNotHandled = FALSE;
          }
-         else if( hb_stricmp( (const char *)pSym->szName, "__ENUMBASE" ) == 0 )
+         else if( pSym->pDynSym == hb_symEnumBase.pDynSym )
          {
             hb_itemCopy( &hb_stack.Return, pRef->item.asRefer.BasePtr.itemPtr );
             bNotHandled = FALSE;
          }
-         else if( hb_stricmp( (const char *)pSym->szName, "__ENUMVALUE" ) == 0 )
+         else if( pSym->pDynSym == hb_symEnumValue.pDynSym )
          {
             hb_itemCopy( &hb_stack.Return, hb_itemUnRefOnce(pRef) );
             bNotHandled = FALSE;
          }
       }
    }
-   
-   if( HB_IS_NIL( pSelf ) && bNotHandled ) /* are we sending a message ? */
+   else if( HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
       pFunc = pSym->value.pFunPtr;
 
@@ -4062,8 +4075,11 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
             hb_itemRelease( pArgsArray );
          }
       }
+
+      bNotHandled = FALSE;
    }
-   else if( bNotHandled )
+
+   if( bNotHandled )
    {
       PHB_BASEARRAY pSelfBase = NULL;
       BOOL lPopSuper = FALSE;

@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-08 01:56 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/garbage.c
+    - removed unnecessary memset()
+
+  * harbour/source/vm/hvm.c
+    % use startup initialized symbols: hb_symEnumIndex, hb_symEnumBase,
+      hb_symEnumValue instead of strcmp( pSym->szName, ... ) in hb_vmSend()
+    % remove unnecessary temporary item in hb_vmEnumStart() and use
+      hb_itemMove() instead of hb_itemCopy()+hb_itemClear()
+    % changed main VM loop to eliminate one comparision done on each
+      loop. Now HB_P_ENDBLOCK and HB_P_ENDPROC pcodes set HB_ENDPROC_REQUESTED
+      and the main loop can be exited only from one place. It gives some
+      small but noticeable speed improvement.
+      Ryszard please check this modification. AFAIK it should not cause
+      any bad side effect and IMHO the code is cleaner now.
+
+  * harbour/source/vm/itemapi.c
+    % removed two unnecessary hb_itemClear() before hb_itemRelease()
+
 2005-11-07 14:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * include/hbapiitm.h

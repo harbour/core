@@ -1127,13 +1127,9 @@ void HB_EXPORT hb_itemClear( PHB_ITEM pItem )
    else if( HB_IS_BYREF( pItem ) && pItem->item.asRefer.offset < 0 && pItem->item.asRefer.value >= 0 )
    {
       /* FOR EACH control variable */
-      hb_itemClear( pItem->item.asRefer.BasePtr.itemPtr );
       hb_itemRelease( pItem->item.asRefer.BasePtr.itemPtr );
       if( pItem->item.asRefer.ValuePtr.itemPtr )
-      {
-         hb_itemClear( pItem->item.asRefer.ValuePtr.itemPtr );
          hb_itemRelease( pItem->item.asRefer.ValuePtr.itemPtr );
-      }
    }
    
 #if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )

@@ -191,16 +191,10 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
       pAlloc->pFunc  = hb_gcGripRelease;
       pAlloc->locked = 1;
       pAlloc->used   = s_uUsedFlag;
+
+      pItem->type = HB_IT_NIL;
       if( pOrigin )
-      {
-         pItem->type = HB_IT_NIL;
          hb_itemCopy( pItem, pOrigin );
-      }
-      else
-      {
-         memset( pItem, 0, sizeof( HB_ITEM ) );
-         pItem->type = HB_IT_NIL;
-      }
 
       return pItem;
    }
@@ -214,7 +208,8 @@ void hb_gcGripDrop( HB_ITEM_PTR pItem )
    {
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pItem - HB_GARBAGE_SIZE );
 
-      hb_itemClear( pItem );    /* clear value stored in this item */
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );    /* clear value stored in this item */
 
       hb_gcUnlink( &s_pLockedBlock, pAlloc );
       HB_GARBAGE_FREE( pAlloc );
