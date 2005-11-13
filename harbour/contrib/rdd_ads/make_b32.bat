@@ -14,6 +14,7 @@ if "%1" == "CLEAN" goto CLEAN
 :BUILD_OK
 
    copy ..\..\lib\b32\rddads.lib ..\..\lib\*.* > nul
+   if exist ..\..\lib\b32\rddads.bak del ..\..\lib\b32\rddads.bak
    goto EXIT
 
 :BUILD_ERR
