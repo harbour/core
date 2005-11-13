@@ -51,7 +51,7 @@
  */
 
 
-#include "HBClass.ch"
+#include "hbclass.ch"
 
 
 CLASS TOleAuto

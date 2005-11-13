@@ -149,6 +149,8 @@ INLINES        hb_comp_inlines;
 /* various compatibility flags (-k switch) */
 ULONG          hb_comp_Supported;
 
+FILE *         hb_comp_errFile = NULL;
+
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -190,6 +192,12 @@ int main( int argc, char * argv[] )
    BOOL bAnyFiles;
 
    hb_comp_pOutPath = NULL;
+
+#if defined( HOST_OS_UNIX_COMPATIBLE )
+   hb_comp_errFile = stderr;
+#else 
+   hb_comp_errFile = stdout;
+#endif
 
    /* Activate Harbour extensions by default. */
    hb_comp_Supported  = HB_COMPFLAG_HARBOUR |
@@ -328,9 +336,7 @@ ULONG hb_xquery( USHORT uiMode )
 
 void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
-   HB_SYMBOL_UNUSED( ulLen );
-
-   printf( pStr );
+   fprintf( hb_comp_errFile, "%.*s", ( int ) ulLen, pStr );
 }
 
 char * hb_conNewLine( void )
@@ -4342,7 +4348,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          }
          else
          {
-            printf( "Cannot open input file: %s\n", szFileName );
+            fprintf( hb_comp_errFile, "Cannot open input file: %s\n", szFileName );
 
             /* printf( "No code generated\n" ); */
             iStatus = EXIT_FAILURE;
@@ -4510,7 +4516,7 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
          }
          else
          {
-            printf( "Cannot open %s, assumed external\n", szFileName );
+            fprintf( hb_comp_errFile, "Cannot open %s, assumed external\n", szFileName );
          }
       }
    }

@@ -55,9 +55,6 @@
 
 #include "hbapirdd.h"
 #include "hbdbferr.h"
-#ifndef HB_CDP_SUPPORT_OFF
-#include "hbapicdp.h"
-#endif
 #define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
@@ -365,6 +362,7 @@ typedef struct _NTXAREA
    USHORT heapSize;
    USHORT rddID;
    USHORT uiMaxFieldNameLength;
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
 
    /*
    *  DBFS's additions to the workarea structure
@@ -413,9 +411,6 @@ typedef struct _NTXAREA
    ULONG    ulNumLocksPos;          /* Number of records locked */
    BYTE *   pCryptKey;              /* Pointer to encryption key */
    PHB_DYNS pTriggerSym;            /* DynSym pointer to trigger function */
-#ifndef HB_CDP_SUPPORT_OFF
-   PHB_CODEPAGE cdPage;             /* Area's codepage pointer  */
-#endif
 
    /*
    *  NTX's additions to the workarea structure

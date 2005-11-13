@@ -8,7 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2005-11-08 01:56 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2005-11-13 12:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/ole/ole2.c
+  * harbour/contrib/ole/oleauto.prg
+    ! fixed casting
+
+  * harbour/contrib/rdd_ads/Makefile
+  * harbour/contrib/rdd_ads/ace.h
+  * harbour/contrib/rdd_ads/ads.ch
+  - harbour/contrib/rdd_ads/ads0.prg
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/contrib/rdd_ads/adsmgmnt.c
+  * harbour/contrib/rdd_ads/rddads.h
+  * harbour/include/hbapirdd.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrdddbt.h
+  * harbour/include/hbrddfpt.h
+  * harbour/include/hbrddntx.h
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbsort.prg
+  * harbour/source/rdd/dbstrux.prg
+  * harbour/source/rdd/dbtotal.prg
+  * harbour/source/rdd/hbdbsort.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * synced with xHarbour
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbpcode.c
+    * emit warning and error messages to stderr instead of stdout
+      Now it's enabled only for *nix platforms.
+
+  * harbour/source/vm/extend.c
+    * allow hb_param() to return parameters accessed by HB_IT_BYREF
+
+2005-11-08 01:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/garbage.c
     - removed unnecessary memset()
 
@@ -135,12 +175,12 @@ NOTE:
    * makefile64.nt
      + added references to new files.
  
-2005-11-02 01:56 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
+2005-11-02 01:56 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/makefile.bc
    + added references to harbour/source/common/hbarch.c
    + added references to harbour/source/rtl/fserror.c
 
-2005-11-01 23:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2005-11-01 23:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gnu.sh
   + harbour/make_xmingw.sh
   * harbour/bin/hb-mkslib.sh

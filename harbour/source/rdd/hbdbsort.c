@@ -52,6 +52,13 @@
 
 #include "hbdbsort.h"
 
+#ifndef HB_CDP_SUPPORT_OFF
+#  include "hbapicdp.h"
+
+void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
+#endif
+
+
 BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
 {
    /* Create temp file */
@@ -239,6 +246,13 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
 
          /* Remove deleted flag */
          pQuickSort->pSwapBufferA[ 0 ] = ' ';
+
+#ifndef HB_CDP_SUPPORT_OFF
+         if( pArea->cdPage != hb_cdp_page )
+         {
+            hb_dbfTranslateRec( (DBFAREAP) pArea, (BYTE *) pQuickSort->pSwapBufferA, hb_cdp_page, pArea->cdPage );
+         }
+#endif
 
          /* Append a new record and copy data */
          if( SELF_APPEND( pArea, TRUE ) == FAILURE ||

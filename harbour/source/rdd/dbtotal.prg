@@ -55,8 +55,8 @@
 #include "error.ch"
 
 FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
-                        xFor, xWhile, nNext, nRec, lRest, rdd ;
-                        )
+                        xFor, xWhile, nNext, nRec, lRest, rdd, ;
+                        nConnection, cdpId)
 
     LOCAL CurSelect
     LOCAL NewSelect
@@ -161,9 +161,7 @@ FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
         Aeval( aFields, { | _1 | Aadd( aGetField, getfield( _1 ) ) } )
         aFieldsSum := Array( Len( aGetField ) )
 
-        Dbcreate( cFile, aNewDbStruct, rdd )
-        USE ( cFile ) NEW EXCLUSIVE Alias ( cAlias ) via ( rdd )
-
+        dbCreate( cFile, aNewDbStruct, rdd, .T., cAlias, cdpId, nConnection )
         NewSelect := SELECT()
         SELECT( CurSelect )
 

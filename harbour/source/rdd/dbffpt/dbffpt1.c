@@ -2483,7 +2483,7 @@ static ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
       hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) *ulStoredBlock *
                       ( HB_FOFFSET ) pArea->uiMemoBlockSize, FS_SET );
 
-      if( pArea->bMemoType == DB_MEMO_FPT )
+      if( pArea->bMemoType == DB_MEMO_FPT && !ulType == FPTIT_DUMMY )
       {
          FPTBLOCK fptBlock;
          HB_PUT_BE_UINT32( fptBlock.type, ulType );

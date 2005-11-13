@@ -90,7 +90,11 @@ PHB_ITEM HB_EXPORT hb_param( int iParam, long lMask )
       HB_TYPE uiType;
 
       if( pItem->type & HB_IT_BYREF )
+      {
          pItem = hb_itemUnRef( pItem );
+         if( ( HB_TYPE ) lMask == HB_IT_BYREF )
+            return pItem;
+      }
 
       uiType = pItem->type;
 

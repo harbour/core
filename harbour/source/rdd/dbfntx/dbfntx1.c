@@ -125,6 +125,9 @@
 
 /* #define HB_NTX_EXTERNAL_PAGEBUFFER */
 
+#define HB_NTX_STRONG_BALANCE
+
+
 /*
 #define HB_NTX_DEBUG
 #define HB_NTX_DEBUG_EXT
@@ -355,7 +358,7 @@ static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen )
    }
    else
    {
-      *(pKey->key) = '\0';
+      pKey->key[ keylen ] = '\0';
       pKey->Tag = pKey->Xtra = 0;
    }
    return pKey;
@@ -2893,7 +2896,12 @@ static BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
          hb_ntxPageRelease( pTag, pPage );
       pPage = hb_ntxPageLoad( pTag, pTag->stack[ iLevel ].page );
       if( ! pPage )
+      {
+         if( pNewKey )
+            hb_ntxKeyFree( pNewKey );
+         pTag->stackLevel = 0;
          return FALSE;
+      }
       iKey = pTag->stack[ iLevel ].ikey;
       if( pPage->uiKeys < pTag->MaxKeys )
       {
@@ -2902,11 +2910,80 @@ static BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
       }
       else
       {
+         pTag->stackLevel = 0;
+#if defined( HB_NTX_STRONG_BALANCE )
+         if( iLevel > 0 )
+         {
+            LPPAGEINFO pBasePage;
+            USHORT uiFirst, uiLast, uiBaseKey;
+            pBasePage = hb_ntxPageLoad( pTag, pTag->stack[ iLevel - 1 ].page );
+            if( !pBasePage )
+            {
+               hb_ntxPageRelease( pTag, pPage );
+               if( pNewKey )
+                  hb_ntxKeyFree( pNewKey );
+               return FALSE;
+            }
+            uiFirst = uiLast = uiBaseKey = pTag->stack[ iLevel -1 ].ikey;
+            if( uiLast < pBasePage->uiKeys && hb_ntxGetKeyPage( pBasePage, uiLast + 1 ) != 0 )
+               uiLast++;
+            else if( uiFirst > 0 && hb_ntxGetKeyPage( pBasePage, uiFirst - 1 ) != 0 )
+               uiFirst--;
+            if( uiFirst != uiLast )
+            {
+               LPPAGEINFO pFirst, pLast;
+
+               if( uiFirst == uiBaseKey )
+               {
+                  pFirst = pPage;
+                  pLast = hb_ntxPageLoad( pTag, hb_ntxGetKeyPage( pBasePage, uiLast ) );
+                  if( ! pLast )
+                  {
+                     hb_ntxPageRelease( pTag, pPage );
+                     hb_ntxPageRelease( pTag, pBasePage );
+                     if( pNewKey )
+                        hb_ntxKeyFree( pNewKey );
+                     return FALSE;
+                  }
+                  uiBaseKey = iKey;
+               }
+               else
+               {
+                  pLast = pPage;
+                  pFirst = hb_ntxPageLoad( pTag, hb_ntxGetKeyPage( pBasePage, uiFirst ) );
+                  if( ! pFirst )
+                  {
+                     hb_ntxPageRelease( pTag, pPage );
+                     hb_ntxPageRelease( pTag, pBasePage );
+                     if( pNewKey )
+                        hb_ntxKeyFree( pNewKey );
+                     return FALSE;
+                  }
+                  uiBaseKey = pFirst->uiKeys + iKey + 1;
+               }
+               if( pFirst->uiKeys + pLast->uiKeys <= ( pTag->MaxKeys - 1 ) << 1 )
+               {
+                  hb_ntxBalancePages( pTag, pBasePage, uiFirst, pFirst, pLast );
+                  if( pFirst->uiKeys >= uiBaseKey )
+                     hb_ntxPageKeyAdd( pTag, pFirst, uiBaseKey, pKey->Tag, pKey->Xtra, pKey->key );
+                  else
+                     hb_ntxPageKeyAdd( pTag, pLast, uiBaseKey - pFirst->uiKeys - 1, pKey->Tag, pKey->Xtra, pKey->key );
+                  pKey = NULL;
+               }
+               if( pFirst != pPage )
+                  hb_ntxPageRelease( pTag, pFirst );
+               else
+                  hb_ntxPageRelease( pTag, pLast );
+               hb_ntxPageRelease( pTag, pBasePage );
+               if( !pKey )
+                  break;
+            }
+         }
+#endif
          pKey = hb_ntxPageSplit( pTag, pPage, pKey, iKey );
          if( pNewKey )
             hb_ntxKeyFree( pNewKey );
          pNewKey = pKey;
-         pTag->stackLevel = 0;
       }
       iLevel--;
    }
@@ -4234,14 +4311,17 @@ static BOOL hb_ntxOrdKeyAdd( LPTAGINFO pTag, PHB_ITEM pItem )
    BOOL fResult = FALSE;
    LPKEYINFO pKey;
 
-   if( !pTag->Custom || pArea->fEof || ( pTag->pForItem &&
-       !hb_ntxEvalCond( pArea, pTag->pForItem, TRUE ) ) )
+   if( pArea->lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
+   if( !pArea->fPositioned )
+      return FALSE;
+
+   if( pTag->pForItem && !hb_ntxEvalCond( pArea, pTag->pForItem, TRUE ) )
       return FALSE;
 
    if( pTag->Template && pItem && hb_itemType( pItem ) != HB_IT_NIL )
    {
-      if( pArea->lpdbPendingRel )
-         SELF_FORCEREL( ( AREAP ) pArea );
       pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, TRUE, NULL );
    }
    else
@@ -4274,14 +4354,17 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag, PHB_ITEM pItem )
    BOOL fResult = FALSE;
    LPKEYINFO pKey;
 
-   if( !pTag->Custom || pArea->fEof || ( pTag->pForItem &&
-       !hb_ntxEvalCond( pArea, pTag->pForItem, TRUE ) ) )
+   if( pArea->lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
+   if( !pArea->fPositioned )
+      return FALSE;
+
+   if( pTag->pForItem && !hb_ntxEvalCond( pArea, pTag->pForItem, TRUE ) )
       return FALSE;
 
    if( pTag->Template && pItem && hb_itemType( pItem ) != HB_IT_NIL )
    {
-      if( pArea->lpdbPendingRel )
-         SELF_FORCEREL( ( AREAP ) pArea );
       pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, TRUE, NULL );
    }
    else
@@ -5179,9 +5262,11 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
                iRecBuff = 0;
             }
             pArea->pRecord = pSort->pBuffIO + iRecBuff * pArea->uiRecordLen;
-            pArea->fValidBuffer = TRUE;
             pArea->ulRecNo = ulRecNo;
-            pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
+            if( SELF_GETREC( ( AREAP ) pArea, NULL ) == FAILURE )
+               break;
+            pArea->fValidBuffer = pArea->fPositioned = TRUE;
+            pArea->fDeleted = pArea->pRecord[ 0 ] == '*';
             /* Force relational movement in child WorkAreas */
             if( pArea->lpdbRelations )
             {
@@ -5687,7 +5772,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                         {
                            if( pTag->ChgOnly )
                               fAdd = FALSE;
-                           else if( !pTag->Partial )
+                           else if( !pTag->Partial && !pTag->UniqueKey )
                               hb_ntxErrorRT( pTag->Owner->Owner,
                                              EG_CORRUPTION, EDBF_CORRUPT,
                                              pTag->Owner->IndexName, 0, 0 );

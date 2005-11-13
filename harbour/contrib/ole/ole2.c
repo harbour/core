@@ -122,11 +122,10 @@ static LPSTR WideToAnsi( LPSTR cWide )
    LPSTR cString;
 
    wLen = WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
-                               cString, 0, NULL, NULL );
-   cString = hb_xgrab( (!wLen)? 2:wLen );
+                               NULL, 0, NULL, NULL );
+   cString = hb_xgrab( (!wLen) ? 2 : wLen );
    WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
                         cString, wLen, NULL, NULL );
-
    return ( cString );
 }
 
@@ -367,8 +366,12 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
 {
    LPSTR cCLSID;
    GUID ClassID, iid;
-   REFIID riid = &IID_IDispatch;
-   IDispatch * pDisp = NULL;
+   LPIID riid = (LPIID) &IID_IDispatch;
+   void *pDisp = NULL; /* IDispatch */
+   /* void *
+    * used intentionally to inform compiler that there is no
+    * strict-aliasing
+    */
 
    nOleError = S_OK;
 
@@ -381,9 +384,9 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
 
       cCLSID = AnsiToWide( hb_parc( 1 ) );
       if ( hb_parc( 1 )[ 0 ] == '{' )
-         nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &ClassID );
+         nOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, (LPCLSID) &ClassID );
       else
-         nOleError = CLSIDFromProgID( ( LPCOLESTR ) cCLSID, &ClassID );
+         nOleError = CLSIDFromProgID( ( LPCOLESTR ) cCLSID, (LPCLSID) &ClassID );
       hb_xfree( cCLSID );
 
       if ( hb_pcount() == 2 )
@@ -397,12 +400,12 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
          else
             memcpy( ( LPVOID ) &iid, hb_parc( 2 ), sizeof( iid ) );
 
-         ( LPVOID ) riid = &iid;
+         riid = &iid;
       }
 
       if ( nOleError == S_OK )
          nOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER,
-                                       riid, (LPVOID) &pDisp );
+                                       (REFIID) riid, &pDisp );
    }
 
    hb_retnl( ( LONG ) pDisp );
@@ -650,9 +653,13 @@ HB_FUNC( GETOLEOBJECT )
    BSTR wCLSID;
    IID ClassID, iid;
    LPIID riid = (LPIID) &IID_IDispatch;
-   IDispatch *pDisp = NULL;
    IUnknown *pUnk = NULL;
    char *cOleName = hb_parc( 1 );
+   void *pDisp = NULL; /* IDispatch */
+   /* void *
+    * used intentionally to inform compiler that there is no
+    * strict-aliasing
+    */
 
    nOleError = S_OK;
 
@@ -692,7 +699,7 @@ HB_FUNC( GETOLEOBJECT )
 
       if ( nOleError == S_OK )
       {
-         nOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, (void **) &pDisp );
+         nOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, &pDisp );
       }
    }
 

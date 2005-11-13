@@ -1632,7 +1632,7 @@ static ERRCODE hb_rddOpenTable( char * szFileName,  char * szDriver,
       return FAILURE;
    }
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   
+
    /* Fill pInfo structure */
    pInfo.uiArea = pArea->uiArea;
    pInfo.abName = ( BYTE * ) szFileName;
@@ -1700,7 +1700,7 @@ static ERRCODE hb_rddCreateTable( char * szFileName, PHB_ITEM pStruct,
       return FAILURE;
    }
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   
+
    /* Fill pInfo structure */
    pInfo.uiArea = pArea->uiArea;
    pInfo.abName = ( BYTE * ) szFileName;
@@ -2301,7 +2301,7 @@ HB_FUNC( FIELDDEC )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, &Item ) == SUCCESS)
          {
-            hb_itemForwardValue( hb_stackReturnItem(), &Item );
+            hb_itemReturnForward( &Item );
             return;
          }
       }
@@ -2329,7 +2329,7 @@ HB_FUNC( FIELDGET )
          SELF_GETVALUE( pArea, uiField, pItem );
    }
 
-   hb_itemForwardValue( hb_stackReturnItem(), pItem );
+   hb_itemReturnForward( pItem );
    hb_itemRelease( pItem );
 }
 
@@ -2347,7 +2347,7 @@ HB_FUNC( FIELDLEN )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, &Item ) == SUCCESS )
          {
-            hb_itemForwardValue( hb_stackReturnItem(), &Item );
+            hb_itemReturnForward( &Item );
             return;
          }
       }
@@ -2429,7 +2429,7 @@ HB_FUNC( FIELDTYPE )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, &Item ) == SUCCESS )
          {
-            hb_itemForwardValue( hb_stackReturnItem(), &Item );
+            hb_itemReturnForward( &Item );
             return;
          }
       }
@@ -2477,9 +2477,9 @@ HB_FUNC( HEADER )
       hb_retni( 0 );
    else
    {
-      HB_ITEM_NEW( RecSize );
-      SELF_INFO( pArea, DBI_GETHEADERSIZE, &RecSize );
-      hb_itemForwardValue( hb_stackReturnItem(), &RecSize );
+      HB_ITEM_NEW( HdrSize );
+      SELF_INFO( pArea, DBI_GETHEADERSIZE, &HdrSize );
+      hb_itemReturnForward( &HdrSize );
    }
 }
 
@@ -2543,7 +2543,7 @@ HB_FUNC( LUPDATE )
    {
       HB_ITEM_NEW( Item );
       SELF_INFO( pArea, DBI_LASTUPDATE, &Item );
-      hb_itemForwardValue( hb_stackReturnItem(), &Item );
+      hb_itemReturnForward( &Item );
    }
    else
       hb_retds( "" );
@@ -2704,6 +2704,7 @@ HB_FUNC( ORDCREATE )
 {
    HB_THREAD_STUB
    DBORDERCREATEINFO dbOrderInfo;
+   DBCONSTRAINTINFO dbConstrInfo;
    AREAP pArea = HB_CURRENT_WA;
 
    if( pArea )
@@ -2720,9 +2721,27 @@ HB_FUNC( ORDCREATE )
       }
       dbOrderInfo.itmCobExpr = hb_param( 4, HB_IT_BLOCK );
       if( ISLOG( 5 ) )
+      {
          dbOrderInfo.fUnique = hb_parl( 5 );
+      }
       else
+      {
          dbOrderInfo.fUnique = hb_set.HB_SET_UNIQUE;
+      }
+
+      dbConstrInfo.abConstrName = ( BYTE * ) hb_parc( 6 );
+      dbConstrInfo.abTargetName = ( BYTE * ) hb_parc( 7 );
+      dbConstrInfo.itmRelationKey = hb_param( 8, HB_IT_ARRAY );
+      if( dbConstrInfo.abConstrName && dbConstrInfo.abTargetName && dbConstrInfo.itmRelationKey )
+      {
+         dbConstrInfo.fEnabled = hb_parl( 9 );
+         dbOrderInfo.lpdbConstraintInfo = &dbConstrInfo;
+      }
+      else
+      {
+         dbOrderInfo.lpdbConstraintInfo = NULL;
+      }
+
       SELF_ORDCREATE( pArea, &dbOrderInfo );
    }
    else
@@ -3359,7 +3378,9 @@ HB_FUNC( RECNO )
 
    hb_itemPutNL( &RecNo, 0 );
    if( pArea )
+   {
       SELF_RECID( pArea, &RecNo );
+   }
    hb_itemReturnForward( &RecNo );
 }
 
@@ -3372,7 +3393,7 @@ HB_FUNC( RECSIZE )
    {
       HB_ITEM_NEW( RecSize );
       SELF_INFO( pArea, DBI_GETRECSIZE, &RecSize );
-      hb_itemForwardValue( hb_stackReturnItem(), &RecSize );
+      hb_itemReturnForward( &RecSize );
    }
    else
       hb_retni( 0 );
@@ -4195,7 +4216,8 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
                                    PHB_ITEM pCobFor, PHB_ITEM pStrFor,
                                    PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
                                    PHB_ITEM pNext, PHB_ITEM pRecID,
-                                   PHB_ITEM pRest )
+                                   PHB_ITEM pRest,
+                                   char *szCpId )
 {
    AREAP lpaSource, lpaDest, lpaClose = NULL;
    DBTRANSINFO dbTransInfo;
@@ -4215,7 +4237,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
       if( errCode == SUCCESS )
       {
          errCode = hb_rddCreateTable( szFileName, pStruct, szDriver,
-                                      TRUE, 0, "", NULL, ulConnection );
+                                      TRUE, 0, "", szCpId, ulConnection );
          if( errCode == SUCCESS )
          {
             dbTransInfo.lpaDest = lpaClose = lpaDest =
@@ -4229,7 +4251,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
    {
       lpaDest = pArea;
       errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
-                                 NULL, ulConnection );
+                                 szCpId, ulConnection );
       if( errCode == SUCCESS )
       {
          lpaClose = lpaSource = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -4290,7 +4312,8 @@ HB_FUNC( __DBAPP )
                NULL,                          /* lpStrWhile */
                hb_param( 5, HB_IT_NUMERIC ),  /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
-               hb_param( 7, HB_IT_LOGICAL ) );/* Rest */
+               hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
+               hb_parc( 10 ) );               /* Codepage */
       }
       else
       {
@@ -4318,7 +4341,8 @@ HB_FUNC( __DBCOPY )
                NULL,                          /* lpStrWhile */
                hb_param( 5, HB_IT_NUMERIC ),  /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
-               hb_param( 7, HB_IT_LOGICAL ) );/* Rest */
+               hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
+               hb_parc( 10 ) );               /* Codepage */
       }
       else
       {
@@ -4520,6 +4544,9 @@ HB_FUNC( DBF2TEXT )
    FHANDLE handle = (FHANDLE) hb_parnl(5);
    BYTE *cSep     = (BYTE *) hb_parc( 6 );
    int nCount     = (int) hb_parnl( 7 );
+#ifndef HB_CDP_SUPPORT_OFF
+   PHB_CODEPAGE cdp = hb_cdpFind( (char *) hb_parc( 8 ) );
+#endif
 
    AREAP pArea = HB_CURRENT_WA;
 
@@ -4586,11 +4613,17 @@ HB_FUNC( DBF2TEXT )
                }
 
                SELF_GETVALUE( pArea, ui, &Tmp );
+#ifndef HB_CDP_SUPPORT_OFF
+               if( HB_IS_STRING( &Tmp ) && cdp && (cdp != hb_cdp_page) )
+               {
+                  hb_cdpnTranslate( Tmp.item.asString.value, hb_cdp_page, cdp, Tmp.item.asString.length );
+               }
+#endif
                bWriteSep = hb_ExportVar( handle, &Tmp, cDelim );
                hb_itemClear( &Tmp );
             }
          }
-         // Only requested fields are exorted here
+         // Only requested fields are exported here
          else
          {
             USHORT uiFieldCopy = ( USHORT ) pFields->item.asArray.value->ulLen;
@@ -4610,6 +4643,12 @@ HB_FUNC( DBF2TEXT )
                         hb_fsWriteLarge( handle, cSep, iSepLen );
                      }
                      SELF_GETVALUE( pArea, iPos, &Tmp );
+#ifndef HB_CDP_SUPPORT_OFF
+                     if( HB_IS_STRING( &Tmp ) && cdp && (cdp != hb_cdp_page) )
+                     {
+                        hb_cdpnTranslate( Tmp.item.asString.value, hb_cdp_page, cdp, Tmp.item.asString.length );
+                     }
+#endif
                      bWriteSep = hb_ExportVar( handle, &Tmp, cDelim );
                      hb_itemClear( &Tmp );
                   }

@@ -553,6 +553,9 @@ extern int            hb_comp_iLinePRG;
 
 extern ULONG          hb_comp_Supported;
 
+/* error messages output */
+extern FILE           *hb_comp_errFile;
+
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1

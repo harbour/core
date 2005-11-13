@@ -9,9 +9,15 @@ C_SOURCES=    \
    adsfunc.c  \
    adsmgmnt.c \
 
-PRG_SOURCES=\
-	ads0.prg \
+PRG_HEADERS=\
+	ads.ch \
 
 LIBNAME=rddads
 
+
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)

@@ -56,8 +56,15 @@
 #include "hbapifs.h"
 #include "dbinfo.ch"   /* Constants for SELF_ORDINFO, SELF_INFO(), SELF_RECINFO() */
 #include "dbstruct.ch" /* Constants for SELF_FIELDINFO() */
+#ifndef HB_CDP_SUPPORT_OFF
+#include "hbapicdp.h"
+#endif
 
 HB_EXTERN_BEGIN
+
+#ifdef HB_CDP_SUPPORT_OFF
+   typedef void * PHB_CODEPAGE
+#endif
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH          32
 
@@ -231,13 +238,24 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 
 typedef struct
 {
-   LPDBORDERCONDINFO lpdbOrdCondInfo; /* Conditional information */
-   BYTE *            abBagName;       /* Name of the Order bag */
-   BYTE *            atomBagName;     /* Name of the Order */
-   PHB_ITEM          itmOrder;
-   BOOL              fUnique;         /* Flag to determine if all keys are unique */
-   PHB_ITEM          itmCobExpr;      /* Code block containing the KEY expression */
-   PHB_ITEM          abExpr;          /* String containing the KEY expression */
+   BYTE *             abConstrName;       /* Name of relational integrity constraint */
+   BYTE *             abTargetName;       /* Name of target relation table */
+   PHB_ITEM           itmRelationKey;     /* Array of columns in source table to match target primary key */
+   BOOL               fEnabled;           /* Is constraint enabled ? */
+} DBCONSTRAINTINFO;
+
+typedef DBCONSTRAINTINFO * LPDBCONSTRAINTINFO;
+
+typedef struct
+{
+   LPDBORDERCONDINFO  lpdbOrdCondInfo;    /* Conditional information */
+   BYTE *             abBagName;          /* Name of the Order bag */
+   BYTE *             atomBagName;        /* Name of the Order */
+   PHB_ITEM           itmOrder;
+   BOOL               fUnique;            /* Flag to determine if all keys are unique */
+   PHB_ITEM           itmCobExpr;         /* Code block containing the KEY expression */
+   PHB_ITEM           abExpr;             /* String containing the KEY expression */
+   LPDBCONSTRAINTINFO lpdbConstraintInfo; /* Relational constraint info */
 } DBORDERCREATEINFO;
 
 typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
@@ -544,6 +562,7 @@ typedef struct _AREA
    USHORT heapSize;
    USHORT rddID;
    USHORT uiMaxFieldNameLength;
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
 } AREA;
 
 typedef AREA * LPAREA;
@@ -1099,7 +1118,6 @@ typedef RDDNODE * LPRDDNODE;
  *  PROTOTYPES
  *  ----------
  */
-
 extern int       HB_EXPORT hb_rddRegister( char * szDriver, USHORT uiType );
 extern ERRCODE   HB_EXPORT hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
 extern LPRDDNODE HB_EXPORT hb_rddGetNode( USHORT uiNode );

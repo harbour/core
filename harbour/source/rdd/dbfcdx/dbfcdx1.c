@@ -4239,9 +4239,9 @@ static ULONG hb_cdxTagKeySeek( LPCDXTAG pTag, LPCDXKEY pKey )
 static BOOL hb_cdxTagKeyAdd( LPCDXTAG pTag, LPCDXKEY pKey )
 {
    hb_cdxTagOpen( pTag );
-   if ( hb_cdxPageSeekKey( pTag->RootPage, pKey,
-                           pTag->UniqueKey ? CDX_IGNORE_REC_NUM : pKey->rec,
-                           TRUE ) != 0 || pTag->Custom )
+   if( hb_cdxPageSeekKey( pTag->RootPage, pKey,
+                          pTag->UniqueKey ? CDX_IGNORE_REC_NUM : pKey->rec,
+                          TRUE ) != 0 || ( pTag->Custom && !pTag->UniqueKey ) )
    {
       hb_cdxPageKeyInsert( pTag->RootPage, pKey );
       pTag->curKeyState &= ~( CDX_CURKEY_RAWPOS | CDX_CURKEY_LOGPOS |
@@ -6638,7 +6638,7 @@ static ERRCODE hb_cdxGoCold( CDXAREAP pArea )
             pKey = hb_cdxKeyEval( pKey, pTag );
 
             if ( pTag->pForItem != NULL )
-               fAdd = hb_cdxEvalCond ( pArea, pTag->pForItem, TRUE );
+               fAdd = hb_cdxEvalCond( pArea, pTag->pForItem, TRUE );
             else
                fAdd = TRUE;
 
@@ -8010,18 +8010,28 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          {
             if ( pTag->Custom )
             {
-               LPCDXKEY pKey;
                if( pArea->lpdbPendingRel )
                   SELF_FORCEREL( ( AREAP ) pArea );
-               hb_cdxIndexLockWrite( pTag->pIndex );
-               if ( pOrderInfo->itmNewVal && !HB_IS_NIL( pOrderInfo->itmNewVal ) )
-                  pKey = hb_cdxKeyPutItem( NULL, pOrderInfo->itmNewVal, pArea->ulRecNo, pTag, TRUE, TRUE );
+
+               if( !pArea->fPositioned ||
+                   ( pTag->pForItem && 
+                     !hb_cdxEvalCond( pArea, pTag->pForItem, TRUE ) ) )
+               {
+                  pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult, FALSE );
+               }
                else
-                  pKey = hb_cdxKeyEval( NULL, pTag );
-               pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
-                                             hb_cdxTagKeyAdd( pTag, pKey ) );
-               hb_cdxIndexUnLockWrite( pTag->pIndex );
-               hb_cdxKeyFree( pKey );
+               {
+                  LPCDXKEY pKey;
+                  hb_cdxIndexLockWrite( pTag->pIndex );
+                  if ( pOrderInfo->itmNewVal && !HB_IS_NIL( pOrderInfo->itmNewVal ) )
+                     pKey = hb_cdxKeyPutItem( NULL, pOrderInfo->itmNewVal, pArea->ulRecNo, pTag, TRUE, TRUE );
+                  else
+                     pKey = hb_cdxKeyEval( NULL, pTag );
+                  pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
+                                                hb_cdxTagKeyAdd( pTag, pKey ) );
+                  hb_cdxIndexUnLockWrite( pTag->pIndex );
+                  hb_cdxKeyFree( pKey );
+               }
             }
             else
             {
@@ -8039,18 +8049,28 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          {
             if ( pTag->Custom )
             {
-               LPCDXKEY pKey;
                if( pArea->lpdbPendingRel )
                   SELF_FORCEREL( ( AREAP ) pArea );
-               hb_cdxIndexLockWrite( pTag->pIndex );
-               if ( pOrderInfo->itmNewVal && !HB_IS_NIL( pOrderInfo->itmNewVal ) )
-                  pKey = hb_cdxKeyPutItem( NULL, pOrderInfo->itmNewVal, pArea->ulRecNo, pTag, TRUE, TRUE );
+
+               if( !pArea->fPositioned ||
+                   ( pTag->pForItem && 
+                     !hb_cdxEvalCond( pArea, pTag->pForItem, TRUE ) ) )
+               {
+                  pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult, FALSE );
+               }
                else
-                  pKey = hb_cdxKeyEval( NULL, pTag );
-               pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
-                                             hb_cdxTagKeyDel( pTag, pKey ) );
-               hb_cdxIndexUnLockWrite( pTag->pIndex );
-               hb_cdxKeyFree( pKey );
+               {
+                  LPCDXKEY pKey;
+                  hb_cdxIndexLockWrite( pTag->pIndex );
+                  if ( pOrderInfo->itmNewVal && !HB_IS_NIL( pOrderInfo->itmNewVal ) )
+                     pKey = hb_cdxKeyPutItem( NULL, pOrderInfo->itmNewVal, pArea->ulRecNo, pTag, TRUE, TRUE );
+                  else
+                     pKey = hb_cdxKeyEval( NULL, pTag );
+                  pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
+                                                hb_cdxTagKeyDel( pTag, pKey ) );
+                  hb_cdxIndexUnLockWrite( pTag->pIndex );
+                  hb_cdxKeyFree( pKey );
+               }
             }
             else
             {
@@ -8960,9 +8980,11 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
                iRecBuff = 0;
             }
             pArea->pRecord = pSort->pRecBuff + iRecBuff * pArea->uiRecordLen;
-            pArea->fValidBuffer = TRUE;
             pArea->ulRecNo = ulRecNo;
-            pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
+            if( SELF_GETREC( ( AREAP ) pArea, NULL ) == FAILURE )
+               break;
+            pArea->fValidBuffer = pArea->fPositioned = TRUE;
+            pArea->fDeleted = pArea->pRecord[ 0 ] == '*';
             /* Force relational movement in child WorkAreas */
             if( pArea->lpdbRelations )
                SELF_SYNCCHILDREN( ( AREAP ) pArea );

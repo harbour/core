@@ -239,7 +239,7 @@ static BOOL hb_dbfReadRecord( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfReadRecord(%p)", pArea));
 
-   if( pArea->fEof )
+   if( !pArea->fPositioned )
    {
       pArea->fValidBuffer = TRUE;
       return TRUE;
@@ -258,8 +258,24 @@ static BOOL hb_dbfReadRecord( DBFAREAP pArea )
       }
    }
 
-   /* Set record encryption flag */
-   pArea->fEncrypted = FALSE;
+   /* Read data from file */
+   hb_fsSeekLarge( pArea->hDataFile, ( HB_FOFFSET ) pArea->uiHeaderLen +
+                   ( HB_FOFFSET ) ( pArea->ulRecNo - 1 ) *
+                   ( HB_FOFFSET ) pArea->uiRecordLen, FS_SET );
+   if( hb_fsRead( pArea->hDataFile, pArea->pRecord, pArea->uiRecordLen ) !=
+       pArea->uiRecordLen )
+   {
+      PHB_ITEM pError = hb_errNew();
+
+      hb_errPutGenCode( pError, EG_READ );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READ ) );
+      hb_errPutSubCode( pError, EDBF_READ );
+      hb_errPutOsCode( pError, hb_fsError() );
+      hb_errPutFileName( pError, pArea->szDataFileName );
+      SELF_ERROR( ( AREAP ) pArea, pError );
+      hb_itemRelease( pError );
+      return FALSE;
+   }
 
    if( SELF_GETREC( ( AREAP ) pArea, NULL ) == FAILURE )
       return FALSE;
@@ -1043,24 +1059,17 @@ static ERRCODE hb_dbfSkipRaw( DBFAREAP pArea, LONG lToSkip )
 
    if( lToSkip == 0 )
    {
-      if( pArea->fPositioned )
-      {
-         BOOL bBof, bEof;
+      BOOL bBof, bEof;
 
-         /* Save flags */
-         bBof = pArea->fBof;
-         bEof = pArea->fEof;
+      /* Save flags */
+      bBof = pArea->fBof;
+      bEof = pArea->fEof;
 
-         uiError = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo );
+      uiError = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo );
 
-         /* Restore flags */
-         pArea->fBof = bBof;
-         pArea->fEof = bEof;
-      }
-      else
-      {
-         uiError = SUCCESS;
-      }
+      /* Restore flags */
+      pArea->fBof = bBof;
+      pArea->fEof = bEof;
    }
    else if( lToSkip < 0 && ( ULONG ) ( -lToSkip ) >= pArea->ulRecNo )
    {
@@ -1265,25 +1274,6 @@ static ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer )
    }
    else
    {
-      /* Read data from file */
-      hb_fsSeekLarge( pArea->hDataFile, ( HB_FOFFSET ) pArea->uiHeaderLen +
-                      ( HB_FOFFSET ) ( pArea->ulRecNo - 1 ) *
-                      ( HB_FOFFSET ) pArea->uiRecordLen, FS_SET );
-      if( hb_fsRead( pArea->hDataFile, pArea->pRecord, pArea->uiRecordLen ) !=
-          pArea->uiRecordLen )
-      {
-         PHB_ITEM pError = hb_errNew();
-
-         hb_errPutGenCode( pError, EG_READ );
-         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READ ) );
-         hb_errPutSubCode( pError, EDBF_READ );
-         hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutFileName( pError, pArea->szDataFileName );
-         SELF_ERROR( ( AREAP ) pArea, pError );
-         hb_itemRelease( pError );
-         return FAILURE;
-      }
-
       if( pArea->pRecord[ 0 ] == 'D' || pArea->pRecord[ 0 ] == 'E' )
       {
          pArea->fEncrypted = TRUE;
@@ -3229,6 +3219,23 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
    return SELF_GOTO( ( AREAP ) pArea, 1 );
 }
 
+#ifndef HB_CDP_SUPPORT_OFF
+void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
+{
+   USHORT uiIndex;
+   LPFIELD pField;
+
+   for( uiIndex = 0, pField = pArea->lpFields; uiIndex < pArea->uiFieldCount; uiIndex++, pField++ )
+   {
+      if( pField->uiType == HB_IT_STRING )
+      {
+         hb_cdpnTranslate( ( char * ) pBuffer + pArea->pFieldOffset[ uiIndex ], cdp_src, cdp_dest, pField->uiLen );
+      }
+   }
+
+}
+#endif
+
 /*
  * Physically reorder a database.
  */
@@ -3306,6 +3313,12 @@ static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
 
          /* Copy data */
          memcpy( pBuffer, pArea->pRecord, pArea->uiRecordLen );
+#ifndef HB_CDP_SUPPORT_OFF
+         if( pArea->cdPage != hb_cdp_page )
+         {
+            hb_dbfTranslateRec( pArea, pBuffer, pArea->cdPage, hb_cdp_page );
+         }
+#endif
          pBuffer += pArea->uiRecordLen;
          uiCount++;
       }
@@ -3340,7 +3353,7 @@ static ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
 
    if( pTransInfo->uiFlags & DBTF_MATCH )
    {
-      if( pArea->fHasMemo )
+      if( pArea->fHasMemo || pArea->cdPage != pTransInfo->lpaDest->cdPage )
          pTransInfo->uiFlags &= ~DBTF_PUTREC;
       else if( pArea->rddID == pTransInfo->lpaDest->rddID )
          pTransInfo->uiFlags |= DBTF_PUTREC;
@@ -3932,7 +3945,7 @@ static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
          pArea->bMemoType  = DB_MEMO_NONE;
          pArea->bCryptType = DB_CRYPT_NONE;
 
-         pArea->fHasTags = pArea->dbfHeader.bHasTags & 0x01;
+         pArea->fHasTags = ( pArea->dbfHeader.bHasTags & 0x01 ) != 0;
 
          switch( pArea->dbfHeader.bVersion )
          {
@@ -3940,9 +3953,11 @@ static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
                pArea->fAutoInc = TRUE;
             case 0x30:
                pArea->bTableType = DB_DBF_VFP;
-               pArea->bMemoType = DB_MEMO_FPT;
                if( pArea->dbfHeader.bHasTags & 0x02 )
+               {
+                  pArea->bMemoType = DB_MEMO_FPT;
                   pArea->fHasMemo = TRUE;
+               }
                break;
 
             case 0x03:
@@ -4051,20 +4066,21 @@ static ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    if( pArea->bTableType == DB_DBF_VFP )
    {
       pArea->dbfHeader.bVersion = ( pArea->fAutoInc ? 0x31 : 0x30 );
-      if( pArea->bMemoType == DB_MEMO_FPT )
+      if( pArea->fHasMemo && pArea->bMemoType == DB_MEMO_FPT )
          pArea->dbfHeader.bHasTags |= 0x02;
    }
    else 
    {
-      if( pArea->bMemoType == DB_MEMO_DBT )
-         pArea->dbfHeader.bVersion = 0x83;
-      else if( pArea->bMemoType == DB_MEMO_FPT )
-         pArea->dbfHeader.bVersion = 0xF5;
-      else if( pArea->bMemoType == DB_MEMO_SMT )
-         pArea->dbfHeader.bVersion = 0xE5;
-      else
-         pArea->dbfHeader.bVersion = 0x03;
-
+      pArea->dbfHeader.bVersion = 0x03;
+      if( pArea->fHasMemo )
+      {
+         if( pArea->bMemoType == DB_MEMO_DBT )
+            pArea->dbfHeader.bVersion = 0x83;
+         else if( pArea->bMemoType == DB_MEMO_FPT )
+            pArea->dbfHeader.bVersion = 0xF5;
+         else if( pArea->bMemoType == DB_MEMO_SMT )
+            pArea->dbfHeader.bVersion = 0xE5;
+      }
       if( pArea->fTableEncrypted && pArea->bCryptType == DB_CRYPT_SIX )
          pArea->dbfHeader.bVersion = ( pArea->dbfHeader.bVersion & 0xf0 ) | 0x06;
    }

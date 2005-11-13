@@ -102,7 +102,7 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
+FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConnection )
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
    LOCAL oError
@@ -122,8 +122,8 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
             { "FIELD_NAME", "C", 10, 0 },;
             { "FIELD_TYPE", "C",  1, 0 },;
             { "FIELD_LEN" , "N",  3, 0 },;
-            { "FIELD_DEC" , "N",  3, 0 } }, cRDDName )
-         dbUseArea( .F., cRDDName, cFileName, cAlias )
+            { "FIELD_DEC" , "N",  3, 0 } }, cRDDName,,, cdpId, nConnection )
+         dbUseArea( .F., cRDDName, cFileName, cAlias,,, cdpId, nConnection )
 
       ELSE
 
@@ -145,8 +145,8 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
             ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256, ;
               aField[ DBS_DEC ] := 0 ), NIL ) } )
 
-         dbCreate( cFileName, aStruct, cRDDName )
-         dbUseArea( lNew, cRDDName, cFileName, cAlias,,, cdpId )
+         dbCreate( cFileName, aStruct, cRDDName,,, cdpId, nConnection )
+         dbUseArea( lNew, cRDDName, cFileName, cAlias,,, cdpId, nConnection )
 
       ENDIF
 
