@@ -133,10 +133,10 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       echo rdd.lib >> build.tmp
       echo macro.lib >> build.tmp
       echo pp.lib >> build.tmp
-      echo dbfdbt.lib >> build.tmp
       echo dbffpt.lib >> build.tmp
       echo dbfntx.lib >> build.tmp
       echo dbfcdx.lib >> build.tmp
+      echo hbsix.lib >> build.tmp
       echo common.lib >> build.tmp
       bcc @build.tmp
       del build.tmp
@@ -158,10 +158,10 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       echo -lvm >> build.tmp
       echo -lmacro >> build.tmp
       echo -lpp >> build.tmp
-      echo -ldbfdbt >> build.tmp
       echo -ldbffpt >> build.tmp
       echo -ldbfntx >> build.tmp
       echo -ldbfcdx >> build.tmp
+      echo -lhbsix >> build.tmp
       echo -lcommon >> build.tmp
       echo -lm >> build.tmp
       gcc @build.tmp
@@ -172,7 +172,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
 
    if not "%HB_COMPILER%" == "rsx32" GOTO A_DOS_RSX32_NOT
 
-      gcc %1.c -Zrsx32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
+      gcc %1.c -Zrsx32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
       goto END
 
 :A_DOS_RSX32_NOT
@@ -192,8 +192,8 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       echo LIB pp.lib >> build.tmp
       echo LIB dbfntx.lib >> build.tmp
       echo LIB dbfcdx.lib >> build.tmp
-      echo LIB dbfdbt.lib >> build.tmp
       echo LIB dbffpt.lib >> build.tmp
+      echo LIB hbsix.lib  >> build.tmp
       echo LIB common.lib >> build.tmp
       wlink @build.tmp
       del build.tmp
@@ -205,13 +205,13 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtwin
 
-   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c debug.lib vm.lib rtl.lib %_HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbfdbt.lib dbffpt.lib dbfntx.lib dbfcdx.lib common.lib
+   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c debug.lib vm.lib rtl.lib %_HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbffpt.lib dbfntx.lib dbfcdx.lib hbsix.lib common.lib
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp  -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
 
-   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\dbfdbt.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\common.lib user32.lib winspool.lib
+   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\common.lib user32.lib winspool.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
 
 :C_WATCOM
@@ -230,8 +230,8 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
    echo LIB pp.lib >> build.tmp
    echo LIB dbfntx.lib >> build.tmp
    echo LIB dbfcdx.lib >> build.tmp
-   echo LIB dbfdbt.lib >> build.tmp
    echo LIB dbffpt.lib >> build.tmp
+   echo LIB hbsix.lib >> build.tmp
    echo LIB rdd.lib >> build.tmp
    echo LIB common.lib >> build.tmp
    echo LIB kernel32.lib >> build.tmp
@@ -249,8 +249,8 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtos2
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %CFLAGS% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbfdbt.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\common.lib
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp  -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %CFLAGS% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\common.lib
    goto END
 
 :A_LINUX
@@ -259,7 +259,7 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtstd
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L../lib -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfdbt -ldbffpt -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L../lib -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
    goto END
 
 :CLEANUP
