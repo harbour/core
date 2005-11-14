@@ -133,6 +133,7 @@ extern ULONG hb_compGenJumpTrue( LONG lOffset, HB_BISON_PTR pMacro );
 extern void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_BISON_PTR pMacro );
 extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_BISON_PTR pMacro );
 extern void hb_compGenPushLong( HB_LONG lNumber, HB_BISON_PTR pMacro );
+extern void hb_compGenPushDate( HB_LONG lNumber, HB_BISON_PTR pMacro );
 extern void hb_compGenMessage( char * szMsgName, HB_BISON_PTR pMacro );
 extern void hb_compGenMessageData( char * szMsg, HB_BISON_PTR pMacro );
 extern void hb_compGenPopVar( char * szVarName, HB_BISON_PTR pMacro );

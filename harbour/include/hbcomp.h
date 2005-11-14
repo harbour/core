@@ -380,6 +380,7 @@ extern void hb_compGenPushVarRef( char * szVarName );    /* generates the pcode 
 extern void hb_compGenPushInteger( int iNumber );        /* Pushes a integer number on the virtual machine stack */
 extern void hb_compGenPushLogical( int iTrueFalse );     /* pushes a logical value on the virtual machine stack */
 extern void hb_compGenPushLong( HB_LONG lNumber );       /* Pushes a long number on the virtual machine stack */
+extern void hb_compGenPushDate( HB_LONG lNumber );       /* Pushes a date constant on the virtual machine stack */
 extern void hb_compGenPushNil( void );                   /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( char * szText, ULONG ulLen );       /* Pushes a string on the virtual machine stack */
 extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias ); /* Pushes a symbol on to the Virtual machine stack */
@@ -534,6 +535,9 @@ extern USHORT         hb_comp_wForCounter;
 extern USHORT         hb_comp_wIfCounter;
 extern USHORT         hb_comp_wWhileCounter;
 extern USHORT         hb_comp_wCaseCounter;
+extern USHORT         hb_comp_wSwitchCounter;
+extern BOOL           hb_comp_long_optimize;
+extern BOOL           hb_comp_bTextSubst;
 
 extern char *         hb_comp_szDeclaredFun;
 

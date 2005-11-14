@@ -123,6 +123,7 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR, HB_MACRO_DECL );
 static HB_EXPR_FUNC( hb_compExprUseDummy );
 static HB_EXPR_FUNC( hb_compExprUseNil );
 static HB_EXPR_FUNC( hb_compExprUseNumeric );
+static HB_EXPR_FUNC( hb_compExprUseDate );
 static HB_EXPR_FUNC( hb_compExprUseString );
 static HB_EXPR_FUNC( hb_compExprUseCodeblock );
 static HB_EXPR_FUNC( hb_compExprUseLogical );
@@ -189,6 +190,7 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUseDummy,
    hb_compExprUseNil,
    hb_compExprUseNumeric,
+   hb_compExprUseDate,
    hb_compExprUseString,
    hb_compExprUseCodeblock,
    hb_compExprUseLogical,
@@ -333,6 +335,38 @@ static HB_EXPR_FUNC( hb_compExprUseNumeric )
    return pSelf;
 }
 
+/* actions for HB_ET_DATE expression
+ */
+static HB_EXPR_FUNC( hb_compExprUseDate )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         break;
+      case HB_EA_ARRAY_AT:
+         hb_compErrorType( pSelf );
+         break;
+      case HB_EA_ARRAY_INDEX:
+         hb_compErrorIndex( pSelf );     /* Date cannot be used as index element */
+         break;
+      case HB_EA_LVALUE:
+         hb_compErrorLValue( pSelf );
+         break;
+      case HB_EA_PUSH_PCODE:
+         HB_EXPR_PCODE1( hb_compGenPushDate, pSelf->value.asNum.lVal );
+         break;
+      case HB_EA_POP_PCODE:
+         break;
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+         hb_compWarnMeaningless( pSelf );
+      case HB_EA_DELETE:
+         break;
+   }
+
+   return pSelf;
+}
+
 /* actions for HB_ET_STRING expression
  */
 static HB_EXPR_FUNC( hb_compExprUseString )
@@ -358,7 +392,10 @@ static HB_EXPR_FUNC( hb_compExprUseString )
 	    
 	         szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
-	
+#if ! defined( HB_MACRO_SUPPORT )
+            if( hb_comp_bTextSubst )
+            {
+#endif	
 	         bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM );
             if( bUseTextSubst )
             {
@@ -383,6 +420,9 @@ static HB_EXPR_FUNC( hb_compExprUseString )
                   }
                }
             }
+#if ! defined( HB_MACRO_SUPPORT )
+            }
+#endif
             hb_xfree( szDupl );
          }
          break;

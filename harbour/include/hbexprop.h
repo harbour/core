@@ -70,6 +70,7 @@ HB_EXTERN_BEGIN
 #define  HB_EV_SYMBOL      128
 #define  HB_EV_VARREF      256
 #define  HB_EV_FUNREF      512
+#define  HB_EV_DATE        1024
 
 /* messages sent to expressions
  */
@@ -114,6 +115,7 @@ typedef enum
    HB_ET_NONE = 0,
    HB_ET_NIL,
    HB_ET_NUMERIC,
+   HB_ET_DATE,
    HB_ET_STRING,
    HB_ET_CODEBLOCK,
    HB_ET_LOGICAL,
@@ -308,6 +310,7 @@ HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );
 HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE );
 HB_EXPR_PTR hb_compExprNewLong( HB_LONG );
+HB_EXPR_PTR hb_compExprNewDate( HB_LONG );
 HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );
@@ -371,8 +374,12 @@ void hb_compExprClear( HB_EXPR_PTR );
 char * hb_compExprDescription( HB_EXPR_PTR );
 int hb_compExprType( HB_EXPR_PTR );
 int hb_compExprIsInteger( HB_EXPR_PTR );
+int hb_compExprIsLong( HB_EXPR_PTR );
 int hb_compExprAsInteger( HB_EXPR_PTR );
+int hb_compExprIsString( HB_EXPR_PTR );
+int hb_compExprAsStringLen( HB_EXPR_PTR );
 char *hb_compExprAsString( HB_EXPR_PTR );
+char *hb_compExprAsSymbol( HB_EXPR_PTR );
 
 void hb_compExprFree( HB_EXPR_PTR, HB_MACRO_DECL );
 void hb_compExprErrorType( HB_EXPR_PTR, HB_MACRO_DECL );

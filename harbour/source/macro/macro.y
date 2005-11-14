@@ -64,6 +64,7 @@
 
 #include "hbmacro.h"
 #include "hbcomp.h"
+#include "hbdate.h"
 
 /* Compile using: bison -d -p hb_comp macro.y */
 
@@ -159,7 +160,7 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 #endif
 %}
 
-%token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG
+%token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE
 %token IIF IF LITERAL TRUEVALUE FALSEVALUE
 %token AND OR NOT EQ NE1 NE2 INC DEC ALIASOP SELF
 %token LE GE FIELD MACROVAR MACROTEXT
@@ -194,6 +195,7 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 %type <string>  IDENTIFIER LITERAL MACROVAR MACROTEXT
 %type <valDouble>  NUM_DOUBLE
 %type <valLong>    NUM_LONG
+%type <valLong>    NUM_DATE
 %type <asExpr>  Argument ArgList ElemList BlockExpList BlockVarList BlockNoVar
 %type <asExpr>  NumValue NumAlias
 %type <asExpr>  NilValue
@@ -221,6 +223,7 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 %type <asExpr>  ArrayIndex IndexList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
+%type <asExpr>  DateValue
 
 %%
 
@@ -267,6 +270,9 @@ NumValue   : NUM_DOUBLE      { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth,
            | NUM_LONG        { $$ = hb_compExprNewLong( $1.lNumber ); }
            ;
 
+DateValue  : NUM_DATE        { $$ = hb_compExprNewDate( $1.lNumber ); }
+           ;
+           
 NumAlias   : NUM_LONG ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber ); }
 ;
 
@@ -431,6 +437,7 @@ Argument   : EmptyExpression                   { $$ = $1; }
  */
 ObjectData  : NumValue ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
             | NilValue ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | DateValue ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
             | LiteralValue ':' IDENTIFIER    { $$ = hb_compExprNewSend( $1, $3 ); }
             | CodeBlock ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
             | Logical ':' IDENTIFIER         { $$ = hb_compExprNewSend( $1, $3 ); }
@@ -458,6 +465,7 @@ ObjectMethod : ObjectData '(' ArgList ')'    { $$ = hb_compExprNewMethodCall( $1
 SimpleExpression :
              NumValue
            | NilValue                         { $$ = $1; }
+           | DateValue                        { $$ = $1; }
            | LiteralValue                     { $$ = $1; }
            | CodeBlock                        { $$ = $1; }
            | Logical                          { $$ = $1; }

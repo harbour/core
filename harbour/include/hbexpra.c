@@ -77,6 +77,7 @@ static BYTE s_PrecedTable[] = {
    HB_ET_NIL,                 /*   HB_ET_NONE = 0,    */
    HB_ET_NIL,                 /*   HB_ET_NIL,         */
    HB_ET_NIL,                 /*   HB_ET_NUMERIC,     */
+   HB_ET_NIL,                 /*   HB_ET_DATE,        */
    HB_ET_NIL,                 /*   HB_ET_STRING,      */
    HB_ET_NIL,                 /*   HB_ET_CODEBLOCK,   */
    HB_ET_NIL,                 /*   HB_ET_LOGICAL,     */

@@ -176,7 +176,9 @@ static BYTE s_pcode_len[] = {
    3,        /* HB_P_ENUMSTART             */
    1,        /* HB_P_ENUMNEXT              */
    1,        /* HB_P_ENUMPREV              */
-   1         /* HB_P_ENUMEND               */
+   1,        /* HB_P_ENUMEND               */
+   3,        /* HB_P_SWITCH                */
+   5         /* HB_P_PUSHDATE,             */
 };
 
 #if defined(HB_COMP_STRONG_TYPES)

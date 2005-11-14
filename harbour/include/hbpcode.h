@@ -196,8 +196,10 @@ typedef enum
    HB_P_ENUMNEXT,              /* 129 Next item of FOR EACH loop  */
    HB_P_ENUMPREV,              /* 130 Previous item of FOR EACH loop  */
    HB_P_ENUMEND,               /* 131 End of FOR EACH loop */
+   HB_P_SWITCH,                /* 132 SWITCH using long values */
+   HB_P_PUSHDATE,              /* 133 SWITCH using long values */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 132 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 134 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

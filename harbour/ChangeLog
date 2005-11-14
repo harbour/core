@@ -7,6 +7,74 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2005-11-14 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbcomp.h
+   * include/hberrors.h
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprop.h
+   * include/hbhash.h
+   * include/hbmacro.h
+   * include/hbpcode.h
+   * source/common/Makefile
+   * source/common/expropt1.c
+   * source/common/expropt2.c
+   * source/common/hbhash.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+   * source/compiler/hbfix.c
+   * source/compiler/hbgenerr.c
+   * source/compiler/hbident.c
+   * source/compiler/hbpcode.c
+   * source/macro/macro.l
+   * source/macro/macro.y
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+   * source/rtl/dates.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+   + source/common/hbdate.c
+   + tests/ddate.prg
+   + tests/switch.prg
+      +added support for DATE type constants in the following format:
+         0dYYYYMMDD
+      for example (see tests/ddate.prg for more):
+      IF( dDate > 0d20051112 )
+
+      +added support for SWITCH command (see tests/switch.prg)
+         SWITCH <expr>
+         CASE <integer_expression>
+            ...
+            [EXIT]
+         CASE <string_expression>
+            ...
+            [EXIT]
+         [OTHERWISE]
+            ...
+         END
+
+   Notice:
+      - Integer and string expressions can be mixed in a single 
+        SWITCH command with no runtime errors;
+      - CASE expression have to be resolved at compile time and 
+        the result has to be either an integer or string constant
+      - if there is no EXIT statement then next CASE is executed
+        (or OTHERWISE for the last CASE)
+      For example:
+      CASE 1+32+2*4
+      CASE CHR(64)
+      CASE ASC('A')
+      CASE "A"+CHR(13)
+
+   Notice:
+      The above changes apply only to FLEX version!
+            
+
 2005-11-13 21:21 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/contrib/ole/bldtest.bat
   * harbour/contrib/ole/hbtest.prg

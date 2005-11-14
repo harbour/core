@@ -52,12 +52,13 @@
 
 #include "hbhash.h"
 
-static HB_HASH_ITEM_PTR hb_hashItemNew( ULONG ulKey, void * pValue )
+static HB_HASH_ITEM_PTR hb_hashItemNew( ULONG ulKey, void *pKey, void * pValue )
 {
    HB_HASH_ITEM_PTR pItem = (HB_HASH_ITEM_PTR) hb_xgrab( sizeof( HB_HASH_ITEM ) );
    
    pItem->key = ulKey;
-   pItem->cargo = pValue;
+   pItem->KeyPtr = pKey;
+   pItem->ValPtr = pValue;
    pItem->next = NULL;
 
    return pItem;
@@ -113,7 +114,7 @@ void hb_hashTableKill( HB_HASH_TABLE_PTR pTable )
          while( pItem )
          {
             if( pTable->pDeleteItemFunc )
-               ( pTable->pDeleteItemFunc )( pItem->cargo, NULL );
+               ( pTable->pDeleteItemFunc )( pTable, pItem->KeyPtr, pItem->ValPtr );
             pNext = pItem->next;
             hb_xfree( ( void * ) pItem );
             pItem = pNext;
@@ -151,7 +152,7 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize 
             HB_HASH_ITEM_PTR pNewItem, pNext;
             
             pNext = pItem->next;
-            ulKey = ( pTable->pKeyFunc )( pItem->cargo, NULL );
+            ulKey = ( pTable->pKeyFunc )( pNew, pItem->KeyPtr, pItem->ValPtr );
             pNewItem = pNew->pItems[ ulKey ];
             if( pNewItem )
             {
@@ -179,22 +180,22 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize 
 }
 
 /* add a new value into th ehash table */
-BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pValue )
+BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pKey, void *pValue )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    
-   ulKey = ( pTable->pKeyFunc )( pValue, NULL );
+   ulKey = ( pTable->pKeyFunc )( pTable, pKey, pValue );
    pItem = pTable->pItems[ ulKey ];
    if( pItem )
    {
       while( pItem->next )
          pItem = pItem->next;
-      pItem->next = hb_hashItemNew( ulKey, pValue );
+      pItem->next = hb_hashItemNew( ulKey, pKey, pValue );
    }
    else
    {
-      pTable->pItems[ ulKey ] = hb_hashItemNew( ulKey, pValue );
+      pTable->pItems[ ulKey ] = hb_hashItemNew( ulKey, pKey, pValue );
       ++pTable->ulUsed;
    }
    ++pTable->ulCount;
@@ -204,21 +205,21 @@ BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pValue )
 
 /* return the pointer to item's value or NULL if not found 
 */
-void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pValue )
+void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pKey )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    void * pFound = NULL;
    
-   ulKey = ( pTable->pKeyFunc )( pValue, NULL );
+   ulKey = ( pTable->pKeyFunc )( pTable, pKey, NULL );
    pItem = pTable->pItems[ ulKey ];
    if( pItem )
    {
-      while( pItem && (( pTable->pCompFunc )( pItem->cargo, pValue ) != 0) )
+      while( pItem && (( pTable->pCompFunc )( pTable, pItem->KeyPtr, pKey ) != 0) )
          pItem = pItem->next;
          
       if( pItem )
-         pFound =  pItem->cargo;
+         pFound = pItem->ValPtr;
    }
 
    return pFound;
@@ -228,28 +229,38 @@ void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pValue )
 * Returns TRUE if item was found and returns FALSE when passed item
 * is not stored in the table
 */
-BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, void *pValue )
+BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, void *pKey )
 {
    ULONG ulKey;
    HB_HASH_ITEM_PTR pItem;
    HB_HASH_ITEM_PTR pPrev = NULL;
    BOOL bFound = FALSE;
    
-   ulKey = ( pTable->pKeyFunc )( pValue, NULL );
+   ulKey = ( pTable->pKeyFunc )( pTable, pKey, NULL );
+   if( ulKey > pTable->ulTableSize )
+      return FALSE;
+      
    pItem = pTable->pItems[ ulKey ];
    while( pItem && !bFound )
    {
-      if( ( pTable->pCompFunc )( pItem->cargo, pValue ) == 0 )
+      if( ( pTable->pCompFunc )( pTable, pItem->KeyPtr, pKey ) == 0 )
       {
          if( pPrev )
+         {
             pPrev->next = pItem->next;
+         }
          else
          {
             pTable->pItems[ ulKey ] = pItem->next;
             if( !pItem->next )
+            {
                --pTable->ulUsed;
+               pTable->pItems[ ulKey ] = NULL;
+            }
          }
 
+         if( pTable->pDeleteItemFunc )
+            ( pTable->pDeleteItemFunc )( pTable, pItem->KeyPtr, pItem->ValPtr );
          hb_hashItemDelete( pItem );         
          bFound = TRUE;
          --pTable->ulCount;

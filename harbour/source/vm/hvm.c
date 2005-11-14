@@ -131,6 +131,7 @@ static LONG    hb_vmEnumStart( BYTE, BYTE, LONG ); /* prepare FOR EACH loop */
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
 static LONG    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
+static LONG    hb_vmSwitch( const BYTE * pCode, LONG, USHORT );  /* make a SWITCH statement */
 
 /* Operators (logical) */
 static void    hb_vmNot( void );             /* changes the latest logical value on the stack */
@@ -628,7 +629,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       if( ! --uiPolls )
       {
          hb_inkeyPoll();
-         //uiPolls = 255;
+         uiPolls = 255;
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
 
@@ -768,6 +769,10 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_ENUMEND:
             lForEachBase = hb_vmEnumEnd();
             w++;
+            break;
+            
+         case HB_P_SWITCH:
+            w = hb_vmSwitch( pCode, w+3, HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
             break;
             
          /* Operators (logical) */
@@ -1249,6 +1254,12 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHSTRSHORT:
             hb_vmPushStringPcode( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] - 1 );
             w += ( 2 + pCode[ w + 1 ] );
+            break;
+
+         case HB_P_PUSHDATE:
+            HB_TRACE( HB_TR_DEBUG, ("(HB_P_PUSHDATE)") );
+            hb_vmPushDate( ( long ) HB_PCODE_MKLONG( &pCode[ w + 1 ] ) );
+            w += 5;
             break;
 
          case HB_P_PUSHBLOCK:
@@ -3261,6 +3272,85 @@ static LONG hb_vmEnumEnd( void )
       hb_stackPop();
    }
    return lOldBase;
+}
+
+static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
+{
+   HB_ITEM_PTR pSwitch = hb_stackItemFromTop( -1 );
+   
+   if( !(HB_IS_NUMINT(pSwitch) || HB_IS_STRING(pSwitch)) )
+   {
+      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+         pSwitch = hb_stackItemFromTop( -1 );
+      }
+      else
+         return offset;
+   }
+   
+   while( casesCnt-- )
+   {
+      switch( pCode[ offset ] )
+      {
+         case HB_P_PUSHLONG:
+         {
+            if( HB_IS_NUMINT(pSwitch) )
+            {
+               if( HB_ITEM_GET_NUMINTRAW(pSwitch) == HB_PCODE_MKLONG( &pCode[ offset + 1 ] ) )
+               {
+                  hb_stackPop();
+                  return offset + 5;
+               }
+            }
+            offset += 5;
+         }
+         break;
+      
+         case HB_P_PUSHSTRSHORT:
+         {
+            if( HB_IS_STRING(pSwitch) )
+            {
+//                  int i = hb_itemStrCmp( pItem1, pItem2, bExact );
+
+               if( strcmp( pSwitch->item.asString.value, ( char * ) pCode + offset + 2 ) == 0 )
+               {
+                  hb_stackPop();
+                  return offset + 2 + pCode[ offset + 1 ];
+               }
+            }
+            offset += ( 2 + pCode[ offset + 1 ] );
+         }
+         break;
+      
+         case HB_P_PUSHNIL:
+         {
+            /* default clause */
+            hb_stackPop();
+            return offset + 1;
+         }
+         break;
+      }
+      
+      switch( pCode[ offset ] )
+      {
+         case HB_P_JUMP:
+            offset += 3;
+            break;
+         case HB_P_JUMPNEAR:
+            offset += 2;
+            break;
+         default:
+            offset += 4;
+            break;
+      }
+   }
+   hb_stackPop();
+   return offset;
 }
 
 /* ------------------------------- */

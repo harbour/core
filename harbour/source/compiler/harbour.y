@@ -94,6 +94,11 @@ static void hb_compEnumStart( HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend
 static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend );
 static void hb_compEnumEnd( HB_EXPR_PTR pExpr );
 
+static void hb_compSwitchStart( void );
+static void hb_compSwitchAdd( HB_EXPR_PTR );
+static void hb_compSwitchEnd( void );
+
+
 #ifdef HARBOUR_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
@@ -114,6 +119,24 @@ typedef struct _LOOPEXIT
    struct _LOOPEXIT * pNext;
 } LOOPEXIT, * PTR_LOOPEXIT;  /* support structure for EXIT and LOOP statements */
 
+/* support structure for SWITCH statement */
+typedef struct _SWITCHCASE
+{
+   ULONG ulOffset;
+   HB_EXPR_PTR pExpr;
+   struct _SWITCHCASE *pNext;
+} SWITCHCASE, * SWITCHCASE_PTR;
+
+typedef struct _SWITCHCMD
+{
+   ULONG ulOffset;
+   int iCount;
+   SWITCHCASE_PTR pCases;
+   SWITCHCASE_PTR pLast;
+   ULONG ulDefault;
+   struct _SWITCHCMD *pPrev;
+} SWITCHCMD, *SWITCHCMD_PTR;
+
 typedef struct HB_RTVAR_
 {
    HB_EXPR_PTR pVar;
@@ -127,11 +150,15 @@ USHORT hb_comp_wForCounter   = 0;
 USHORT hb_comp_wIfCounter    = 0;
 USHORT hb_comp_wWhileCounter = 0;
 USHORT hb_comp_wCaseCounter  = 0;
+USHORT hb_comp_wSwitchCounter= 0;
+BOOL hb_comp_long_optimize = TRUE;
+BOOL hb_comp_bTextSubst = TRUE;
 
 char * hb_comp_buffer; /* yacc input buffer */
 
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
+static SWITCHCMD_PTR hb_comp_pSwitch = NULL;
 
 extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 
@@ -188,6 +215,8 @@ static void hb_compDebugStart( void ) { };
 %token PROCREQ GET
 %token CBSTART DOIDENT
 %token FOREACH DESCEND
+%token DOSWITCH
+%token NUM_DATE
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -220,6 +249,7 @@ static void hb_compDebugStart( void ) { };
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
+%type <valLong> NUM_DATE
 %type <iNumber> FunScope
 %type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
@@ -260,6 +290,8 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  PostOp
 %type <asExpr>  ForVar ForList ForExpr
 %type <asCodeblock> CBSTART
+%type <asExpr>  SwitchCases SwitchStart SwitchBegin SwitchDefault
+%type <asExpr>  DateValue
 
 %%
 
@@ -482,6 +514,14 @@ NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWi
            | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber ); }
            ;
 
+DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber );
+                                   if( $1.lNumber == 0 )
+                                   {
+                                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, $1.szValue, NULL );
+                                   }
+                                  }
+           ;
+           
 NumAlias   : NUM_INTEGER ALIASOP      { $$ = hb_compExprNewLong( $1.iNumber ); }
            | NUM_LONG    ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber ); }
            | NUM_DOUBLE  ALIASOP      { $$ = hb_compErrorAlias( hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ) ); }
@@ -682,6 +722,7 @@ SendId      : IdentName      { $$ = $1; }
 
 ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
             | NilValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | DateValue ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
             | LiteralValue ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
             | CodeBlock ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
             | Logical ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
@@ -719,6 +760,7 @@ ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
 SimpleExpression :
              NumValue
            | NilValue                         { $$ = $1; }
+           | DateValue                        { $$ = $1; }
            | LiteralValue                     { $$ = $1; }
            | CodeBlock                        { $$ = $1; }
            | Logical                          { $$ = $1; }
@@ -836,6 +878,7 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
 
 ExprEqual   : NumValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
             | NilValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
+            | DateValue    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
             | LiteralValue '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
             | CodeBlock    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
             | Logical      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
@@ -1364,6 +1407,7 @@ ExecFlow   : IfEndif
            | ForNext
            | BeginSeq
            | ForEach
+           | DoSwitch
            ;
 
 IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
@@ -1531,9 +1575,9 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compDebugStart();
                   ++hb_comp_wForCounter;              /* 5 */
                   $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4 ) );
-                  if( hb_compExprAsString($<asExpr>2) )
+                  if( hb_compExprAsSymbol($<asExpr>2) )
                   {
-                     hb_compForStart( hb_compExprAsString($<asExpr>2), FALSE );
+                     hb_compForStart( hb_compExprAsSymbol($<asExpr>2), FALSE );
                   }
                }
              TO Expression StepExpr                   /* 6  7  8 */
@@ -1571,7 +1615,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      iStep = 1;
                   }
 
-                  if( iStep && ( iLocal = hb_compLocalGetPos( hb_compExprAsString($<asExpr>2) ) ) > 0 && iLocal < 256 )
+                  if( iStep && ( iLocal = hb_compLocalGetPos( hb_compExprAsSymbol($<asExpr>2) ) ) > 0 && iLocal < 256 )
                   {
                      hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), ( BOOL ) 0 );
                   }
@@ -1587,9 +1631,9 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compGenJump( $<lNumber>9 - hb_comp_functions.pLast->lPCodePos );
                   hb_compGenJumpHere( $<lNumber>11 );
                   hb_compLoopEnd();
-                  if( hb_compExprAsString($<asExpr>2) )
+                  if( hb_compExprAsSymbol($<asExpr>2) )
                   {
-                     hb_compForEnd( hb_compExprAsString($<asExpr>2) );
+                     hb_compForEnd( hb_compExprAsSymbol($<asExpr>2) );
                   }
                   hb_compExprDelete( $7 );
                   hb_compExprDelete( $<asExpr>5 ); /* deletes $5, $2, $4 */
@@ -1665,6 +1709,68 @@ Descend    : /* default up */     { $$ =  1; }
            | DESCEND              { $$ = -1; }
            ;
 
+DoSwitch   : SwitchBegin
+              {
+                 hb_compLoopStart();
+                 hb_compSwitchStart();
+                 hb_compGenJump( 0 );
+              }
+                SwitchCases
+             EndSwitch
+             {
+               hb_compSwitchEnd();
+               hb_compLoopEnd();
+             }
+
+           | SwitchBegin
+             EndSwitch
+             {
+               hb_compGenPData1( HB_P_POP );
+             }
+
+           ;
+           
+EndSwitch  : END
+             {
+               --hb_comp_wSwitchCounter; 
+               hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+             }
+           ;
+
+SwitchStart : DOSWITCH 
+              { ++hb_comp_wSwitchCounter; 
+                 hb_compLinePush();
+              } 
+               Expression Crlf
+              {
+                 hb_compExprDelete( hb_compExprGenPush( $3 ) );
+              }
+            ;
+
+SwitchBegin : SwitchStart            { }
+            | SwitchStart Statements {
+                        if( $<lNumber>2 > 0 )
+                        {
+                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+                        }
+                     }
+           ;
+
+SwitchCases : CASE Expression { hb_compSwitchAdd( $2 ); hb_compLinePush(); } Crlf
+             EmptyStats
+
+           | SwitchCases CASE Expression { hb_compSwitchAdd( $3 ); hb_compLinePush(); }Crlf
+             EmptyStats
+
+           | SwitchDefault
+
+           | SwitchCases SwitchDefault
+           ;
+
+SwitchDefault : OTHERWISE {hb_compSwitchAdd(NULL); hb_compLinePush(); } Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+                EmptyStats
+           ;
+           
 BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf
                 EmptyStats
                 {
@@ -2296,7 +2402,7 @@ static void hb_compForEnd( char *szVar )
 
 static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 {
-   char * szName = hb_compExprAsString( (HB_EXPR_PTR)cargo );
+   char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
    if( szName )
       hb_compForStart( szName, TRUE );
       
@@ -2342,7 +2448,7 @@ static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend )
 
 static HB_CARGO_FUNC( hb_compEnumEvalEnd )
 {
-   char * szName = hb_compExprAsString( (HB_EXPR_PTR)cargo );
+   char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
 
    if( szName )
       hb_compForEnd( szName );
@@ -2354,3 +2460,126 @@ static void hb_compEnumEnd( HB_EXPR_PTR pExpr )
    hb_compGenPCode1( HB_P_ENUMEND );
 }
 
+static void hb_compSwitchStart()
+{
+   SWITCHCMD_PTR pLast = hb_comp_pSwitch;
+
+   hb_comp_pSwitch = (SWITCHCMD_PTR) hb_xgrab( sizeof(SWITCHCMD) );
+   hb_comp_pSwitch->pPrev = pLast;
+   hb_comp_pSwitch->pCases = NULL;
+   hb_comp_pSwitch->pLast  = NULL;
+   hb_comp_pSwitch->ulDefault = 0;
+   hb_comp_pSwitch->ulOffset = hb_comp_functions.pLast->lPCodePos;
+   hb_comp_pSwitch->iCount = 0;
+}
+
+static void hb_compSwitchAdd( HB_EXPR_PTR pExpr )
+{
+   SWITCHCASE_PTR pCase;
+   
+   if( pExpr )
+   {
+      /* normal CASE */
+      pCase = (SWITCHCASE_PTR) hb_xgrab( sizeof(SWITCHCASE) );
+      pCase->ulOffset = hb_comp_functions.pLast->lPCodePos;
+      pCase->pNext = NULL;
+      pExpr = hb_compExprReduce( pExpr );
+      if( !(hb_compExprIsLong(pExpr) || hb_compExprIsString(pExpr)) )
+      {
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
+      }
+      pCase->pExpr = pExpr;
+
+      if( hb_comp_pSwitch->pLast )
+      {
+         hb_comp_pSwitch->pLast->pNext = pCase;
+         hb_comp_pSwitch->pLast = pCase;
+      }
+      else
+      {
+         hb_comp_pSwitch->pCases = hb_comp_pSwitch->pLast = pCase;
+      }
+      hb_comp_pSwitch->iCount++;
+      if( hb_compExprIsString( pExpr ) && hb_compExprAsStringLen(pExpr) > 255 )
+      {
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_STR, NULL, NULL );
+      }
+   }
+   else
+   {
+      /* DEFAULT */
+      if( hb_comp_pSwitch->ulDefault )
+      {
+         /* more than one default clause */
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+      }
+      else
+      {
+         hb_comp_pSwitch->ulDefault = hb_comp_functions.pLast->lPCodePos;
+         hb_comp_pSwitch->iCount++;
+      }
+   }
+   
+}
+
+static void hb_compSwitchEnd( void )
+{ 
+   BOOL longOptimize = hb_comp_long_optimize;
+   BOOL bTextSubst = hb_comp_bTextSubst;
+   SWITCHCASE_PTR pCase = hb_comp_pSwitch->pCases;
+   SWITCHCASE_PTR pTmp;
+   SWITCHCMD_PTR pTmpSw;
+   ULONG ulExitPos;
+   ULONG ulDef;
+
+   /* skip switch pcode if there was no EXIT in the last CASE
+    * or in the DEFAULT case
+   */
+   ulExitPos = hb_compGenJump( 0 ); 
+   
+   hb_compGenJumpHere( hb_comp_pSwitch->ulOffset + 1 );
+   hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE(hb_comp_pSwitch->iCount), HB_HIBYTE(hb_comp_pSwitch->iCount), FALSE );
+   hb_comp_long_optimize = FALSE;   
+   hb_comp_bTextSubst = FALSE;
+   while( pCase )
+   {
+      if( pCase->pExpr )
+      {
+         if( hb_compExprIsLong(pCase->pExpr) || hb_compExprIsString(pCase->pExpr) )
+         {
+            hb_compExprDelete( hb_compExprGenPush( pCase->pExpr ) );
+            hb_compGenJumpThere( hb_compGenJump( 0 ), pCase->ulOffset );
+         }
+         else
+         {
+            hb_compExprDelete( pCase->pExpr );
+         }
+      }
+      pCase = pCase->pNext;
+   }
+   hb_compGenPData1( HB_P_PUSHNIL );    /* end of cases */
+   ulDef = hb_compGenJump( 0 );
+   
+   if( hb_comp_pSwitch->ulDefault )
+   {
+      hb_compGenJumpThere( ulDef, hb_comp_pSwitch->ulDefault );
+   }
+   else
+      hb_compGenJumpHere( ulDef );
+
+   hb_comp_long_optimize = longOptimize;
+   hb_comp_bTextSubst = bTextSubst;
+
+   hb_compGenJumpHere( ulExitPos );
+   
+   pCase = hb_comp_pSwitch->pCases;
+   while( pCase )
+   {
+      pTmp = pCase->pNext;
+      hb_xfree( (void *)pCase );
+      pCase = pTmp;
+   }
+   pTmpSw = hb_comp_pSwitch;
+   hb_comp_pSwitch = hb_comp_pSwitch->pPrev;
+   hb_xfree( pTmpSw );
+}

@@ -49,7 +49,7 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
       else
          szIdent = szName;
 
-      hb_hashTableAdd( s_comp_Identifiers, (void *)szIdent );
+      hb_hashTableAdd( s_comp_Identifiers, (void *)szIdent, (void *)szIdent );
    }
 
    return szIdent;
@@ -64,6 +64,7 @@ HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
    while( *szName )
      ulSum += *szName++;
 
+   HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
      
    return ulSum % HB_IDENT_TABLE_SIZE;
@@ -73,6 +74,7 @@ HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
 HB_HASH_FUNC( hb_comp_IdentDel )
 {
    hb_xfree( Value );
+   HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;
 }
@@ -80,6 +82,7 @@ HB_HASH_FUNC( hb_comp_IdentDel )
 /* compares two identifiers */
 HB_HASH_FUNC( hb_comp_IdentComp )
 {
+   HB_SYMBOL_UNUSED( HashPtr );
    return strcmp( (char *)Value, (char *)Cargo );
 }
 

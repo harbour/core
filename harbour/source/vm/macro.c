@@ -1284,6 +1284,15 @@ void hb_compGenPushLong( HB_LONG lNumber, HB_MACRO_DECL )
    }
 }
 
+/* generates the pcode to push a date on the virtual machine stack */
+void hb_compGenPushDate( HB_LONG lNumber, HB_MACRO_DECL )
+{
+   BYTE pBuffer[ 5 ];
+   
+   pBuffer[ 0 ] = HB_P_PUSHDATE;
+   HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+   hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_MACRO_PARAM );
+}
 
 /* sends a message to an object */
 void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )

@@ -29,6 +29,7 @@
 #include <assert.h>
 
 #include "hbcomp.h"
+#include "hbdate.h"
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
@@ -1867,6 +1868,47 @@ static HB_GENC_FUNC( hb_p_enumend )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_switch )
+{
+   if( cargo->bVerbose )
+      fprintf( cargo->yyc, "/* %05li */ ", lPCodePos );
+   else
+      fprintf( cargo->yyc, "\t" );
+
+   fprintf( cargo->yyc, "HB_P_SWITCH, %i, %i,", pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
+
+   if( cargo->bVerbose )
+   {
+      fprintf( cargo->yyc, "\t/* %i*/", HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 2 ] ) ) );
+   }
+
+   fprintf( cargo->yyc, "\n" );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_pushdate )
+{
+   
+   fprintf( cargo->yyc, "\tHB_P_PUSHDATE, %i, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ],
+            pFunc->pCode[ lPCodePos + 4 ] );
+   if( cargo->bVerbose ) 
+   {
+      int year, month, day;
+      char date[9];
+      
+      hb_dateDecode( HB_PCODE_MKLONG( &( pFunc->pCode[ lPCodePos + 1 ] ) ), &year, &month, &day );
+      hb_dateStrPut( date, year, month, day );
+      date[8] = '\0';
+      fprintf( cargo->yyc, "\t/* %s */", date );
+   }
+   fprintf( cargo->yyc, "\n" );
+
+   return 5;
+}
+
 
 static HB_GENC_FUNC( hb_p_localnearaddint )
 {
@@ -2025,7 +2067,9 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_enumstart,
    hb_p_enumnext,
    hb_p_enumprev,
-   hb_p_enumend
+   hb_p_enumend,
+   hb_p_switch,
+   hb_p_pushdate
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

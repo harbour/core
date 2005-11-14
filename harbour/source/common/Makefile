@@ -10,6 +10,7 @@ C_SOURCES=\
 	hbgete.c \
 	hbhash.c \
 	hbstr.c \
+	hbdate.c \
 	hbtrace.c \
 	hbver.c \
 	hbverdsp.c \

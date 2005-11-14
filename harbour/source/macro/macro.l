@@ -73,6 +73,7 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 
 #include "hbmacro.h"
 #include "hbcomp.h"
+#include "hbdate.h"
 
 #include "macroy.h"
 #include "hbsetup.h"    /* main configuration file */
@@ -117,6 +118,7 @@ SpaceTab      [ \t]+
 Number        ([0-9]+)|([0-9]*\.[0-9]+)|(0x[0-9A-Fa-f]+)
 InvalidNumber [0-9]+\.
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
+Date          0d[0-9]{8}
 
 MacroVar      \&{Identifier}[\.]?
 MacroEnd      \&{Identifier}\.({Identifier})|([0-9]+)
@@ -266,6 +268,15 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
       yylval_ptr->valLong.szValue = yytext;
       return NUM_LONG;
    }
+}
+
+{Date}        {
+   int year, month, day;
+   
+   hb_dateStrGet( yytext+2, &year, &month, &day );
+   yylval_ptr->valLong.lNumber = hb_dateEncode( year, month, day );
+   
+   return NUM_DATE;
 }
 
 {MacroVar}     {

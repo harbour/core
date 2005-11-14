@@ -76,6 +76,7 @@ static char * s_OperTable[] = {
    "",
    "NIL",
    "Numeric",
+   "Date",
    "String",
    "Codeblock",
    "Logical",
@@ -192,10 +193,48 @@ HB_EXPR_PTR hb_compExprNewLong( HB_LONG lValue )
    return pExpr;
 }
 
+HB_EXPR_PTR hb_compExprNewDate( HB_LONG lValue )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewDate(%" PFHL "d)", lValue));
+
+   pExpr = hb_compExprNew( HB_ET_DATE );
+
+   pExpr->value.asNum.lVal    = lValue;
+   pExpr->ValType = HB_EV_DATE;
+
+   return pExpr;
+}
+
 int hb_compExprIsInteger( HB_EXPR_PTR pExpr )
 {
    return ( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG &&
             HB_LIM_INT16( pExpr->value.asNum.lVal ) );
+}
+
+int hb_compExprIsLong( HB_EXPR_PTR pExpr )
+{
+   return ( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG );
+}
+
+int hb_compExprIsString( HB_EXPR_PTR pExpr )
+{
+   return ( pExpr->ExprType == HB_ET_STRING );
+}
+
+char * hb_compExprAsString( HB_EXPR_PTR pExpr )
+{
+   if( pExpr->ExprType == HB_ET_STRING )
+      return pExpr->value.asString.string;
+   return NULL;
+}
+
+int hb_compExprAsStringLen( HB_EXPR_PTR pExpr )
+{
+   if( pExpr->ExprType == HB_ET_STRING )
+      return pExpr->ulLength;
+   return 0;
 }
 
 int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
@@ -206,7 +245,15 @@ int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
       return 0;
 }
 
-char *hb_compExprAsString( HB_EXPR_PTR pExpr )
+long hb_compExprAsLong( HB_EXPR_PTR pExpr )
+{
+   if( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG )
+      return pExpr->value.asNum.lVal;
+   else
+      return 0;
+}
+
+char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
 {
    switch( pExpr->ExprType )
    {

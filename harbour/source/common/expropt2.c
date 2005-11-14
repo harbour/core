@@ -335,6 +335,31 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       hb_compExprFree( pLeft, HB_MACRO_PARAM );
       hb_compExprFree( pRight, HB_MACRO_PARAM );
    }
+   else if( pLeft->ExprType == HB_ET_DATE && pRight->ExprType == HB_ET_DATE )
+   {
+      pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - pRight->value.asNum.lVal;
+      pSelf->value.asNum.bDec = 0;
+      pSelf->value.asNum.NumType = HB_ET_LONG;
+      pSelf->ExprType = HB_ET_NUMERIC;
+      pSelf->ValType  = HB_EV_NUMERIC;
+      hb_compExprFree( pLeft, HB_MACRO_PARAM );
+      hb_compExprFree( pRight, HB_MACRO_PARAM );
+   }
+   else if( pLeft->ExprType == HB_ET_DATE && pRight->ExprType == HB_ET_NUMERIC )
+   {
+      if( pRight->value.asNum.NumType == HB_ET_LONG )
+      {
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - pRight->value.asNum.lVal;
+      }
+      else
+      {
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - pRight->value.asNum.dVal;
+      }
+      pSelf->ExprType = HB_ET_DATE;
+      pSelf->ValType  = HB_EV_DATE;
+      hb_compExprFree( pLeft, HB_MACRO_PARAM );
+      hb_compExprFree( pRight, HB_MACRO_PARAM );
+   }
    else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
    {
       /* TODO:
@@ -444,6 +469,21 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
          	pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_MACRO_PARAM );
          }
       }
+   }
+   else if( pLeft->ExprType == HB_ET_DATE && pRight->ExprType == HB_ET_NUMERIC )
+   {
+      if( pRight->value.asNum.NumType == HB_ET_LONG )
+      {
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal + pRight->value.asNum.lVal;
+      }
+      else
+      {
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal + pRight->value.asNum.dVal;
+      }
+      pSelf->ExprType = HB_ET_DATE;
+      pSelf->ValType  = HB_EV_DATE;
+      hb_compExprFree( pLeft, HB_MACRO_PARAM );
+      hb_compExprFree( pRight, HB_MACRO_PARAM );
    }
    else
    {

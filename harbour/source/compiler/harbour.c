@@ -2393,35 +2393,6 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    {
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
-         /*
-         case HB_P_JUMPNEAR :
-            break;
-
-         case HB_P_JUMPTRUENEAR :
-            break;
-
-         case HB_P_JUMPFALSENEAR :
-            break;
-
-         case HB_P_JUMP :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPTRUE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPFALSE :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-         */
-
          case HB_P_JUMPFAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
             pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
@@ -3211,28 +3182,57 @@ void hb_compGenPushFunCall( char * szFunName )
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( HB_LONG lNumber )
 {
-   if( lNumber == 0 )
-      hb_compGenPCode1( HB_P_ZERO );
-   else if( lNumber == 1 )
-      hb_compGenPCode1( HB_P_ONE );
-   else if( HB_LIM_INT8( lNumber ) )
-      hb_compGenPCode2( HB_P_PUSHBYTE, (BYTE) lNumber, TRUE );
-   else if( HB_LIM_INT16( lNumber ) )
-      hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( lNumber ), HB_HIBYTE( lNumber ), TRUE );
-   else if( HB_LIM_INT32( lNumber ) )
+   if( hb_comp_long_optimize )
    {
-      BYTE pBuffer[ 5 ];
-      pBuffer[ 0 ] = HB_P_PUSHLONG;
-      HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
-      hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      if( lNumber == 0 )
+         hb_compGenPCode1( HB_P_ZERO );
+      else if( lNumber == 1 )
+         hb_compGenPCode1( HB_P_ONE );
+      else if( HB_LIM_INT8( lNumber ) )
+         hb_compGenPCode2( HB_P_PUSHBYTE, (BYTE) lNumber, TRUE );
+      else if( HB_LIM_INT16( lNumber ) )
+         hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( lNumber ), HB_HIBYTE( lNumber ), TRUE );
+      else if( HB_LIM_INT32( lNumber ) )
+      {
+         BYTE pBuffer[ 5 ];
+         pBuffer[ 0 ] = HB_P_PUSHLONG;
+         HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+         hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      }
+      else
+      {
+         BYTE pBuffer[ 9 ];
+         pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
+         HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+         hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      }
    }
    else
    {
-      BYTE pBuffer[ 9 ];
-      pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
-      HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
-      hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      if( HB_LIM_INT32( lNumber ) )
+      {
+         BYTE pBuffer[ 5 ];
+         pBuffer[ 0 ] = HB_P_PUSHLONG;
+         HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+         hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      }
+      else
+      {
+         BYTE pBuffer[ 9 ];
+         pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
+         HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+         hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
+      }
    }
+}
+
+void hb_compGenPushDate( HB_LONG lNumber )
+{
+   BYTE pBuffer[ 5 ];
+
+   pBuffer[ 0 ] = HB_P_PUSHDATE;
+   HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+   hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), TRUE );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */

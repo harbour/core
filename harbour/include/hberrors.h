@@ -114,6 +114,9 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE 52
 #define HB_COMP_ERR_FORVAR_TOOMANY              53
 #define HB_COMP_ERR_FORVAR_DIFF                 54
+#define HB_COMP_ERR_NOT_LITERAL_CASE            55
+#define HB_COMP_ERR_INVALID_STR                 56
+#define HB_COMP_ERR_INVALID_DATE                57
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

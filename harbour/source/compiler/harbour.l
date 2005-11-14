@@ -41,9 +41,11 @@
 #include "hbsetup.h"    /* main configuration file */
 #include "hberrors.h"
 #include "hbdefs.h"
+#include "hbdate.h"
 
 /* helper functions */
 static int yy_ConvertNumber( char * szBuffer );
+static int yy_ConvertDate( char * szBuffer );
 extern int hb_ppInsideTextBlock;
 extern BOOL hb_ppNestedLiteralString;
 
@@ -102,6 +104,7 @@ SpaceTab      [ \t]+
 Number        ([0-9]+)|([0-9]*\.[0-9]+)|(0x[0-9A-Fa-f]+)
 InvalidNumber [0-9]+\.
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
+Date          0d[0-9]{8}
 
 MacroVar      \&{Identifier}[\.]?
 MacroEnd      \&{Identifier}\.([_a-zA-Z0-9]*)
@@ -122,6 +125,7 @@ Separator     {SpaceTab}
 %x            NEXT_ BREAK_ CASE_ DO_ DOIDENT_ WHILE_ WITH_ END_ FIELD_
 %x            FOR_ FOREACH_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
+%x            SWITCH_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
 %x            DECLARE_ DECLARE_ID_
 
@@ -465,7 +469,7 @@ Separator     {SpaceTab}
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
-               if( hb_comp_wCaseCounter == 0 )
+               if( hb_comp_wCaseCounter == 0 && hb_comp_wSwitchCounter == 0 )
                   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
                hb_comp_iState =CASE;
                return CASE;
@@ -475,7 +479,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                if( hb_comp_iState == LOOKUP )
                { /* it is first item in the line */
-                  if( hb_comp_wCaseCounter == 0 )
+                  if( hb_comp_wCaseCounter == 0 && hb_comp_wSwitchCounter == 0 )
                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
                  hb_comp_iState =CASE;
                  return CASE;
@@ -1208,7 +1212,7 @@ Separator     {SpaceTab}
                  unput( yytext[ yyleng-1 ] );
                  if( hb_comp_iState == LOOKUP )
                  { /* it is the first item in the line */
-                    if( hb_comp_wCaseCounter == 0 )
+                    if( hb_comp_wCaseCounter == 0 && hb_comp_wSwitchCounter == 0 )
                        hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CASE, NULL, NULL );
                     hb_comp_iState = OTHERWISE;
                     return OTHERWISE;
@@ -1384,6 +1388,51 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "step"         { hb_comp_iState = IDENTIFIER; return STEP; }
+%{
+/* ************************************************************************ */
+%}
+"switch"         BEGIN SWITCH_;
+<SWITCH_>{Separator}*    ;
+<SWITCH_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "switch" */
+               BEGIN 0;
+               yylval.string = hb_compIdentifierNew( "SWITCH", TRUE );
+               hb_comp_iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<SWITCH_>("+="|"-="|"->") { /* operators */
+               BEGIN 0;
+               yylval.string = hb_compIdentifierNew( "SWITCH", TRUE );
+               hb_comp_iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               return IDENTIFIER;
+             }
+<SWITCH_>("::") { /* send operators */
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               hb_comp_iState =DOSWITCH;
+               return DOSWITCH;
+             }
+<SWITCH_>(\n|.) { /* not operator */
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               if( hb_comp_iState == LOOKUP )
+               { /* it is first item in the line */
+                 hb_comp_iState =DOSWITCH;
+                 return DOSWITCH;
+               }
+               else
+               { /* there is another item in line already */
+                 yylval.string = hb_compIdentifierNew( "SWITCH", TRUE );
+                 hb_comp_iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+             }
+%{
+/* ************************************************************************ */
+%}
 "to"           { hb_comp_iState = IDENTIFIER; return TO; }
 %{
 /* ************************************************************************ */
@@ -1684,6 +1733,8 @@ Separator     {SpaceTab}
 {TrueValue}   { hb_comp_iState =RSEPARATOR; return TRUEVALUE;  }
 {FalseValue}  { hb_comp_iState =RSEPARATOR; return FALSEVALUE; }
 
+{Date}        { return yy_ConvertDate( yytext ); }
+
 {MacroVar}     {
                   if( yytext[ yyleng-1 ] == '.' )
                      yytext[ yyleng-1 ] = '\0';
@@ -1764,4 +1815,15 @@ static int yy_ConvertNumber( char * szBuffer )
       yylval.valLong.szValue = szBuffer;
       return NUM_LONG;
    }
+}
+
+static int yy_ConvertDate( char * szBuffer )
+{
+   int year, month, day;
+   
+   hb_dateStrGet( szBuffer+2, &year, &month, &day );
+   yylval.valLong.lNumber = hb_dateEncode( year, month, day );
+   yylval.valLong.szValue = szBuffer;
+   
+   return NUM_DATE;
 }

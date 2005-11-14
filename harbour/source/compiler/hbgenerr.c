@@ -86,7 +86,10 @@ char * hb_comp_szErrors[] =
    "Inline C requires C output generation, use -gc[n]",
    "Too many local variables [%s] or parameters [%s]",
    "Too many enumerate variables in FOR EACH loop",
-   "Incorrect number of enumerate variables"
+   "Incorrect number of enumerate variables",
+   "CASE requires either numeric or string constant",
+   "String too long for SWITCH",
+   "Invalid date constant \'%s\'"
 };
 
 /* Table with parse warnings */

@@ -57,13 +57,16 @@
 
 HB_EXTERN_BEGIN
 
-#define HB_HASH_FUNC( hbfunc )   ULONG hbfunc( void *Value, void *Cargo )
+struct HB_HASH_TABLE_;
+
+#define HB_HASH_FUNC( hbfunc )   ULONG hbfunc( struct HB_HASH_TABLE_ *HashPtr, void *Value, void *Cargo )
 typedef HB_HASH_FUNC( HB_HASH_FUNC_ );
 typedef HB_HASH_FUNC_ *HB_HASH_FUNC_PTR;
 
 typedef struct HB_HASH_ITEM_
 {
-   void *cargo;        /* value stored in the hash table */
+   void *ValPtr;        /* value stored in the hash table */
+   void *KeyPtr;
    ULONG key;
    struct HB_HASH_ITEM_ *next;
 } HB_HASH_ITEM, *HB_HASH_ITEM_PTR;
@@ -79,13 +82,14 @@ typedef struct HB_HASH_TABLE_
    HB_HASH_FUNC_PTR pCompFunc;       /* ptr to func that compares two itmes */
 } HB_HASH_TABLE, *HB_HASH_TABLE_PTR;
 
+
 extern HB_HASH_TABLE_PTR hb_hashTableCreate( ULONG ulSize, 
                                    HB_HASH_FUNC_PTR pHashFunc, 
                                    HB_HASH_FUNC_PTR pDelete,
                                    HB_HASH_FUNC_PTR pComp );
 extern void hb_hashTableKill( HB_HASH_TABLE_PTR pTable ); /* release all items and the hash table */
-extern BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pValue ); /* add a new item into the table */
-extern void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pValue ); /* return the pointer to item's value or NULL if not found */
+extern BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pKey, void *pValue ); /* add a new item into the table */
+extern void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pKey ); /* return the pointer to item's value or NULL if not found */
 extern HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize ); /* resize the hash table */
 
 HB_EXTERN_END
