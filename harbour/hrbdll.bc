@@ -310,7 +310,6 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dbstrux.obj \
   $(OBJ_DIR)\dbtotal.obj \
   $(OBJ_DIR)\dbupdat.obj \
-  $(OBJ_DIR)\delim0.obj \
   $(OBJ_DIR)\rddord.obj \
   $(OBJ_DIR)\rddsys.obj \
   $(OBJ_DIR)\sdf0.obj \
@@ -769,7 +768,6 @@ $(HARBOUR_DLL)  : \
   echo. $(OBJ_DIR)\dbstrux.obj           + >> hdll.tmp
   echo. $(OBJ_DIR)\dbtotal.obj           + >> hdll.tmp
   echo. $(OBJ_DIR)\dbupdat.obj           + >> hdll.tmp
-  echo. $(OBJ_DIR)\delim0.obj            + >> hdll.tmp
   echo. $(OBJ_DIR)\rddord.obj            + >> hdll.tmp
   echo. $(OBJ_DIR)\rddsys.obj            + >> hdll.tmp
   echo. $(OBJ_DIR)\sdf0.obj              + >> hdll.tmp
@@ -1032,12 +1030,6 @@ $(OBJ_DIR)\dbupdat.c : $(RDD_DIR)\dbupdat.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\dbupdat.obj : $(OBJ_DIR)\dbupdat.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
-$(OBJ_DIR)\delim0.c : $(RDD_DIR)\delim0.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\delim0.obj : $(OBJ_DIR)\delim0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c

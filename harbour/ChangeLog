@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-14 9:01 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * hrbdll.bc
+     - removed references to delim0.prg/c
+
 2005-11-14 14:40 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
    * harbour/bin/bld.bat 
      + added references to hbsix.lib
