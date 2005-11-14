@@ -290,7 +290,6 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  PostOp
 %type <asExpr>  ForVar ForList ForExpr
 %type <asCodeblock> CBSTART
-%type <asExpr>  SwitchCases SwitchStart SwitchBegin SwitchDefault
 %type <asExpr>  DateValue
 
 %%
