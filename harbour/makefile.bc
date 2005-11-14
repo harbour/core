@@ -608,6 +608,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
    $(OBJ_DIR)\hbhash.obj \
+   $(OBJ_DIR)\hbdate.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
@@ -885,6 +886,10 @@ $(OBJ_DIR)\hbgete.obj : $(COMMON_DIR)\hbgete.c
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hbhash.obj : $(COMMON_DIR)\hbhash.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbdate.obj : $(COMMON_DIR)\hbdate.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 

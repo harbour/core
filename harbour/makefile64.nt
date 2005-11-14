@@ -739,6 +739,7 @@ COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
    $(OBJ_DIR)\hbhash.obj \
+   $(OBJ_DIR)\hbdate.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \

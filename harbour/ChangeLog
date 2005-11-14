@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-14 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+      * updated to compile source/common/hbdate.c
+      
+
 2005-11-14 11:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbcomp.h
    * include/hberrors.h
