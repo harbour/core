@@ -132,7 +132,7 @@ CFLAGS = $(CFLAGS) -DSIMPLEX
 #
 
 AS             = ML
-CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo -D_CRT_SECURE_NO_DEPRECATE $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
@@ -924,7 +924,7 @@ CLEAN:
 
 $(HBPP_EXE) : \
    $(HBPP_DIR)\hbpp.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $** -o $(HBPP_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $** /link /OUT:$(HBPP_EXE) $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
 
 #
 # HBRUN.EXE rules
@@ -934,7 +934,7 @@ $(HBRUN_EXE) : \
    $(HBRUN_DIR)\hbrun.prg \
    $(HBRUN_DIR)\external.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbrun.c  $(OBJ_DIR)\external.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbrun.c  $(OBJ_DIR)\external.c /link /OUT:$(HBRUN_EXE) $(LDFLAGS) $(LIBS2)
 
 #
 # HBTEST.EXE rules
@@ -964,7 +964,7 @@ $(HBTEST_EXE) : \
                                    $(OBJ_DIR)\rt_str.c \
                                    $(OBJ_DIR)\rt_stra.c \
                                    $(OBJ_DIR)\rt_trans.c \
-                   -o $(HBTEST_EXE) /link $(LDFLAGS) $(LIBS)
+                   /link /OUT:$(HBTEST_EXE) $(LDFLAGS) $(LIBS)
 
 #
 # HBDOC.EXE rules
@@ -1006,7 +1006,7 @@ $(HBDOC_EXE) : \
                                    $(OBJ_DIR)\fclass1.c \
                                    $(OBJ_DIR)\ffile1.c \
                                    $(OBJ_DIR)\ft_funcs.c \
-                   -o $(HBDOC_EXE) /link $(LDFLAGS) $(LIBS2)
+                   /link /OUT:$(HBDOC_EXE) $(LDFLAGS) $(LIBS2)
 
 #
 # HBMAKE.EXE rules
@@ -1035,7 +1035,7 @@ $(HBMAKE_EXE) : \
                                    $(OBJ_DIR)\pickfile.c \
                                    $(OBJ_DIR)\prb_stak.c \
                                    $(HBMAKE_DIR)\hbmlang.c \
-                   -o $(HBMAKE_EXE) /link $(LDFLAGS) $(LIBS2)
+                   /link /OUT:$(HBMAKE_EXE) $(LDFLAGS) $(LIBS2)
 
 #
 # HBVERFIX.EXE rules
@@ -1044,7 +1044,7 @@ $(HBMAKE_EXE) : \
 $(HBVER_EXE) : \
    $(HBVER_DIR)\hbverfix.c
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hbverfix.c \
-                   -o $(HBVER_EXE) /link $(LDFLAGS)
+                   /link /OUT:$(HBVER_EXE) $(LDFLAGS)
 
 #
 # HARBOUR.EXE rules
@@ -1073,7 +1073,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** /link /OUT:$(HARBOUR_EXE) $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !else
@@ -1099,7 +1099,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -W3 $** /link /OUT:$(HARBOUR_EXE) $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -$(DEL) $(OBJ_DIR)\unistd.h
 
 !endif

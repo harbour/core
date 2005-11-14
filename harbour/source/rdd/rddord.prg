@@ -108,6 +108,8 @@ FUNCTION ORDSETFOCU( xOrder, cFile )
 FUNCTION ORDSETRELA( xArea, bRelation, cRelation )
    RETURN ORDSETRELATION( xArea, bRelation, cRelation )
 
+#ifdef HB_COMPAT_XPP
+
 FUNCTION ORDWILDSEEK( cPattern, lCont, lBack )
    LOCAL lFound := .F.
 
@@ -124,7 +126,7 @@ FUNCTION ORDWILDSEEK( cPattern, lCont, lBack )
       ELSE
          DBGOTOP()
       ENDIF
-      lFound := WildMatch( cPattern, ORDKEYVAL() )
+      lFound := HB_WildMatch( cPattern, ORDKEYVAL() )
    ENDIF
 
    IF ! lFound
@@ -132,3 +134,5 @@ FUNCTION ORDWILDSEEK( cPattern, lCont, lBack )
    ENDIF
 
    RETURN lFound
+
+#endif

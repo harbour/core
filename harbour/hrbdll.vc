@@ -82,7 +82,7 @@ HARBOUR_DLL  = lib\vc\harbour.dll
 
 HTMLFLAGS     = -DHB_FM_STATISTICS_OFF -iIinclude;contrib\htmllib -n -q0 -w -es2 -gc0
 HARBOURFLAGS  = /D__EXPORT__ /DHB_FM_STATISTICS_OFF /i$(INCLUDE_DIR) /n /q0 /w /es2 /gc0
-CLIBFLAGS     = /D__EXPORT__ /MT /G6 /Ox /GD /TP /W3 /nologo /c /I$(INCLUDE_DIR) /D__WINDOWS__ /DWIN32
+CLIBFLAGS     = /D__EXPORT__ /MT /G6 /Ox /GD /TP /W3 /nologo /c /I$(INCLUDE_DIR) /D__WINDOWS__ /DWIN32 /D_CRT_SECURE_NO_DEPRECATE
 
 # 旼컴컴컴컴컴컴컴컴컴컴�
 # �  HARBOUR_DLL rules  넴

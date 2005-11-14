@@ -161,12 +161,11 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
    return hb_strMatchDOS( szString, szMask );
 }
 
-
 /*
  * WildMatch( cPattern, cValue ) compares cValue ith cPattern, cPattern
  * may contain wildcard characters (?*)
  */
-HB_FUNC( WILDMATCH )
+HB_FUNC( HB_WILDMATCH )
 {
    hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
             hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );

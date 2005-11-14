@@ -8,6 +8,39 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-14 20:50 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   * hrbdll.vc
+   * makefile.nt
+   * makefile.vc 
+   * makefile64.nt
+     * Change -o linker option to /OUT: to avoid warning with 
+       MS Visual Studio 2005 compiler tools.
+     + Added -D_CRT_SECURE_NO_DEPRECATE to suppress the many 
+       new MS warnings about unsafe function usage.
+     ; NOTE: MSVC 14.0 fails to compile macroy.c
+     ; NOTE: Still tons of warnings, but other than these it 
+             compiles fine.
+
+   * source/codepage/cdpsl437.c
+     ! Fixed wrong escape char (\ -> \\).
+
+   * include/hbsetup.ch
+   * source/common/hbverdsp.c
+     + Added CLIP compatibility switch.
+
+   * include/hbextern.ch
+     + Updated (somewhat).
+
+   * source/rtl/strmatch.c 
+   * source/rdd/rddord.prg
+     ! WILDMATCH() renamed to HB_WILDMATCH()
+   
+   * source/rdd/rddord.prg
+     ! ORDWILDSEEK() guarded with HB_COMPAT_XPP
+
+   * source/rtl/seconds.c
+     ! SECONDSCPU guarded with HB_COMPAT_FLAGSHIP
+
 2005-11-14 9:01 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
      - removed references to delim0.prg/c

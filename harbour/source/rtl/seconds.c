@@ -159,16 +159,16 @@ HB_FUNC( SECONDS )
    hb_retnd( hb_dateSeconds() );
 }
 
-#ifdef HB_EXTENSION
+#ifdef HB_COMPAT_FLAGSHIP
 
 HB_FUNC( SECONDSCPU )
 {
    hb_retnd( hb_secondsCPU( hb_parni( 1 ) ) );
 }
 
+#endif
+
 HB_FUNC( HB_CLOCKS2SECS )
 {
    hb_retnd((double) hb_parnl( 1 ) / CLOCKS_PER_SEC );
 }
-
-#endif
