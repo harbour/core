@@ -8,6 +8,41 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-14 20:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/expropt2.c
+    * casting
+
+  * harbour/include/hbdate.h
+    + added hb_dateJulianDOW() - retrieve day of week from Julian's date
+
+  * harbour/source/rtl/dates.c
+  * harbour/source/common/hbdate.c
+    * moved hb_dateDOW(), hb_dateDecStr() and hb_dateEncStr() to
+      hbdate.c - Ryszard I'd prefer to keep this function together
+      It will be much easier to update them.
+    + added HB_STR_DATE_BASE for conversion to string - Clipper
+      compatibility though we are not 100% Clipper compatible in STOD()
+      because we will have to reduce functionality (supported date
+      range) to reach it. In Clipper STOD(DTOS()) is not revertible.
+      I decided to make it revertible in [x]Harbour for the whole supported
+      in string conversion range: 0000/01/01 : 9999/01/01
+    % optimized hb_dateEncode()
+    * some minor fixes for Clipper compatibility
+
+  * harbour/source/rtl/dateshb.c
+    * use faster and Clipper compatible hb_dateJulianDOW() instead of
+      hb_dateDOW()
+
+  * harbour/source/rdd/nulsys/Makefile
+  - harbour/source/rdd/nulsys/nulsys.prg
+  + harbour/source/rdd/nulsys/nulsys.c
+    * replaced .prg code with #pragma begindump/enddump by native C code
+      rtl/symbol.prg have to be updated yet.
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * synced with xHarbour
+
 2005-11-14 20:50 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    * hrbdll.vc
    * makefile.nt

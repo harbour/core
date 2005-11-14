@@ -65,23 +65,24 @@
    #define HB_DATE_YEAR_LIMIT    9999
 #endif
 
+#define HB_STR_DATE_BASE      1721060     /* 0000/01/01 */
+
 LONG HB_EXPORT hb_dateEncode( int iYear, int iMonth, int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%d, %d, %d)", iYear, iMonth, iDay));
 
    /* Perform date validation */
-   if( iYear >= 1 && iYear <= HB_DATE_YEAR_LIMIT &&
+   if( iYear >= 0 && iYear <= HB_DATE_YEAR_LIMIT &&
        iMonth >= 1 && iMonth <= 12 &&
        iDay >= 1 )
    {
       /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
-      int auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      static int auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-      if( ( ( iYear % 4 == 0 && iYear % 100 != 0 ) || iYear % 400 == 0 ) )
-         auiDayLimit[ 1 ] = 29;
-
-      if( iDay <= auiDayLimit[ iMonth - 1 ] )
+      if( iDay <= auiDayLimit[ iMonth - 1 ] ||
+          ( iDay == 29 && iMonth == 2 &&
+            ( iYear & 3 ) == 0 && ( iYear % 100 != 0 || iYear % 400 == 0 ) ) )
       {
          int iFactor = ( iMonth < 3 ) ? -1 : 0;
 
@@ -99,7 +100,7 @@ void HB_EXPORT hb_dateDecode( LONG lJulian, int *piYear, int *piMonth, int *piDa
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, piYear, piMonth, piDay));
 
-   if( lJulian > 0 )
+   if( lJulian >= HB_STR_DATE_BASE )
    {
       LONG U, V, W, X;
 
@@ -127,7 +128,7 @@ void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %d, %d, %d)", szDate, iYear, iMonth, iDay));
 
-   if( iYear >= 0 && iMonth && iDay )
+   if( iYear >= 0 && iMonth > 0 && iDay > 0 )
    {
       szDate[ 0 ] = ( ( iYear % 10000 ) / 1000 ) + '0';
       szDate[ 1 ] = ( ( iYear % 1000 ) / 100 ) + '0';
@@ -140,10 +141,10 @@ void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
       szDate[ 6 ] = ( iDay / 10 ) + '0';
       szDate[ 7 ] = ( iDay % 10 ) + '0';
    }
-   else if ( iYear || iMonth || iDay )
-      memset( szDate, '0', 8 );
    else
-      memset( szDate, ' ', 8 );
+   {
+      memset( szDate, '0', 8 );
+   }
 }
 
 void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay )
@@ -167,4 +168,64 @@ void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, 
       *piMonth =
       *piDay   = 0;
    }
+}
+
+int HB_EXPORT hb_dateJulianDOW( LONG lJulian )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateJulianDOW(%ld)", lJulian));
+
+   if( lJulian >= HB_STR_DATE_BASE )
+      return ( int ) ( ( lJulian + 1 ) % 7 ) + 1;
+   else
+      return 0;
+}
+
+int HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%d, %d, %d)", iYear, iMonth, iDay));
+
+   if( iMonth < 3 )
+   {
+      iMonth += 13;
+      iYear--;
+   }
+   else
+      iMonth++;
+
+   return ( iDay + 26 * iMonth / 10 +
+            iYear + iYear / 4 - iYear / 100 + iYear / 400 + 6 ) % 7 + 1;
+}
+
+/* This function always closes the date with a zero byte, so it needs a
+   9 character long buffer. */
+
+char HB_EXPORT * hb_dateDecStr( char * szDate, LONG lJulian )
+{
+   int iYear, iMonth, iDay;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%p, %ld)", szDate, lJulian));
+
+   if( lJulian == 0 )
+   {
+      memset( szDate, ' ', 8 );
+   }
+   else
+   {
+      hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+      hb_dateStrPut( szDate, iYear, iMonth, iDay );
+   }
+   szDate[ 8 ] = '\0';
+
+   return szDate;
+}
+
+LONG HB_EXPORT hb_dateEncStr( const char * szDate )
+{
+   int  iYear, iMonth, iDay;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
+
+   hb_dateStrGet( szDate, &iYear, &iMonth, &iDay );
+
+   return hb_dateEncode( iYear, iMonth, iDay );
 }

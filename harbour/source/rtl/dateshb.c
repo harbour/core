@@ -282,20 +282,8 @@ HB_FUNC( DOW )
 
    if( pDate )
    {
-      long lDate = hb_itemGetDL( pDate );
-
-      if( lDate )
-      {
-         int iYear, iMonth, iDay;
-
-         hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
-
-         hb_retnilen( hb_dateDOW( iYear, iMonth, iDay ), 3 );
-      }
-      else
-         hb_retnilen( 0, 3 );
+      hb_retnilen( hb_dateJulianDOW( hb_itemGetDL( pDate ) ), 3 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, "DOW", 1, hb_paramError( 1 ) );
 }
-

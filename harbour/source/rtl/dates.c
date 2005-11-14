@@ -78,34 +78,6 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-
-/* This function always closes the date with a zero byte, so it needs a
-   9 character long buffer. */
-
-char HB_EXPORT * hb_dateDecStr( char * szDate, LONG lJulian )
-{
-   int iYear, iMonth, iDay;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%p, %ld)", szDate, lJulian));
-
-   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
-   hb_dateStrPut( szDate, iYear, iMonth, iDay );
-   szDate[ 8 ] = '\0';
-
-   return szDate;
-}
-
-LONG HB_EXPORT hb_dateEncStr( const char * szDate )
-{
-   int  iYear, iMonth, iDay;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
-
-   hb_dateStrGet( szDate, &iYear, &iMonth, &iDay );
-
-   return hb_dateEncode( iYear, iMonth, iDay );
-}
-
 char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*
@@ -276,22 +248,6 @@ char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    szFormattedDate[ format_count ] = '\0';
 
    return szFormattedDate;
-}
-
-int HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%d, %d, %d)", iYear, iMonth, iDay));
-
-   if( iMonth < 3 )
-   {
-      iMonth += 13;
-      iYear--;
-   }
-   else
-      iMonth++;
-
-   return ( iDay + 26 * iMonth / 10 +
-            iYear + iYear / 4 - iYear / 100 + iYear / 400 + 6 ) % 7 + 1;
 }
 
 void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay )

@@ -5,9 +5,9 @@
 ROOT = ../../../
 
 C_SOURCES=\
+	nulsys.c \
 
 PRG_SOURCES=\
-	nulsys.prg \
 
 LIBNAME=nulsys
 

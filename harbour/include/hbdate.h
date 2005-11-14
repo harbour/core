@@ -63,6 +63,7 @@ extern void HB_EXPORT hb_dateTimeStr( char * pszTime );
 extern char HB_EXPORT * hb_dateCMonth( int iMonth );
 extern char HB_EXPORT * hb_dateCDOW( int iDay );
 extern int  HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay );
+extern int  HB_EXPORT hb_dateJulianDOW( LONG lJulian );
 extern char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
 extern long HB_EXPORT hb_dateEncode( int iYear, int iMonth, int iDay );
 extern void HB_EXPORT hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );

@@ -2263,6 +2263,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem, FH
 
    errCode = hb_dbfGetMemoData( ( DBFAREAP ) pArea, uiIndex,
                                 &ulBlock, &ulSize, &ulType );
+
    if( errCode != SUCCESS )
       return errCode;
 
@@ -2483,7 +2484,7 @@ static ERRCODE hb_fptWriteMemo( FPTAREAP pArea, ULONG ulBlock, ULONG ulSize,
       hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) *ulStoredBlock *
                       ( HB_FOFFSET ) pArea->uiMemoBlockSize, FS_SET );
 
-      if( pArea->bMemoType == DB_MEMO_FPT && !ulType == FPTIT_DUMMY )
+      if( pArea->bMemoType == DB_MEMO_FPT && ulType != FPTIT_DUMMY )
       {
          FPTBLOCK fptBlock;
          HB_PUT_BE_UINT32( fptBlock.type, ulType );

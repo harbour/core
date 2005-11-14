@@ -2640,11 +2640,6 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
          BYTE *pResult ;
          ULONG ulLength;
 
-         if( !pArea->fHasMemo )
-         {
-            hb_itemPutC( pInfo, "" );
-            break;
-         }
          if( !pArea->fValidBuffer && !hb_dbfReadRecord( pArea ) )
          {
             errResult = FAILURE;
@@ -2657,19 +2652,22 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
             memcpy( pResult, pArea->pRecord, ulLength );
          }
 
-         for( uiFields = 0; uiFields < pArea->uiFieldCount ; uiFields++ )
+         if( pArea->fHasMemo )
          {
-            if( pArea->lpFields[ uiFields ].uiType == HB_IT_MEMO )
+            for( uiFields = 0; uiFields < pArea->uiFieldCount ; uiFields++ )
             {
-               errResult = SELF_GETVALUE( ( AREAP ) pArea, uiFields + 1, pInfo );
-               if( errResult != SUCCESS )
-                  break;
-               if( HB_IS_STRING( pInfo ) && pInfo->item.asString.length > 0 )
+               if( pArea->lpFields[ uiFields ].uiType == HB_IT_MEMO )
                {
-                  pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + pInfo->item.asString.length );
+                  errResult = SELF_GETVALUE( ( AREAP ) pArea, uiFields + 1, pInfo );
+                  if( errResult != SUCCESS )
+                     break;
+                  if( HB_IS_STRING( pInfo ) && pInfo->item.asString.length > 0 )
+                  {
+                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + pInfo->item.asString.length );
+                  }
+                  memcpy( pResult + ulLength, pInfo->item.asString.value, pInfo->item.asString.length );
+                  ulLength += pInfo->item.asString.length;
                }
-               memcpy( pResult + ulLength, pInfo->item.asString.value, pInfo->item.asString.length );
-               ulLength += pInfo->item.asString.length;
             }
          }
          hb_itemPutCPtr( pInfo, ( char * ) pResult, ulLength );

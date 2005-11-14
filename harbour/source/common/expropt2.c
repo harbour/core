@@ -353,7 +353,7 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       }
       else
       {
-         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - pRight->value.asNum.dVal;
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal - ( HB_LONG ) pRight->value.asNum.dVal;
       }
       pSelf->ExprType = HB_ET_DATE;
       pSelf->ValType  = HB_EV_DATE;
@@ -478,7 +478,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       }
       else
       {
-         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal + pRight->value.asNum.dVal;
+         pSelf->value.asNum.lVal = pLeft->value.asNum.lVal + ( HB_LONG ) pRight->value.asNum.dVal;
       }
       pSelf->ExprType = HB_ET_DATE;
       pSelf->ValType  = HB_EV_DATE;
