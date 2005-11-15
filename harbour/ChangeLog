@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-15 05:10 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   * hrbdll.bc
+   * hrbdll.vc
+   * makefile.bc
+   * makefile.nt
+   * makefile.vc
+   * makefile64.nt
+     * nulsys generation updated.
+
+   * source/compiler/gencobj.c
+     ! Fixed warning.
+
+   * source/rdd/rddord.prg
+     ! Fixed to include hbsetup.ch for HB_COMPAT_* guard
+
+   * source/vm/hvm.c
+     ! Fixed warning.
+
+   * make_b32.bat
+     - Removed "set BISON_SIMPLE" (was remmed)
+
 2005-11-14 20:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/expropt2.c
     * casting

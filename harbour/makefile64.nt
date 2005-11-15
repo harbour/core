@@ -612,9 +612,6 @@ RDD_LIB_OBJS = \
 
 {$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-
-{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj::
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS)f$(MK_FILE) $(NULSYS_LIB)2
 
 NULSYS_LIB_OBJS = \

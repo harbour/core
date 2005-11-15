@@ -1698,9 +1698,6 @@ $(OBJ_DIR)\macrob.obj : $(MACRO_DIR)\macrob.c
 $(OBJ_DIR)\macroc.obj : $(MACRO_DIR)\macroc.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
-$(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
 $(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 

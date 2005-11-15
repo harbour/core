@@ -579,10 +579,6 @@ RDD_LIB_OBJS = \
 {$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj:
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
-
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 

@@ -2610,10 +2610,7 @@ $(OBJ_DIR)\macroc.obj : $(MACRO_DIR)\macroc.c
 # NULSYS.LIB dependencies
 #
 
-$(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
+$(OBJ_DIR)\nulsys.obj : $(RDD_DIR)\nulsys\nulsys.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NULSYS_LIB) $(ARFLAGS) -+$@,,
 

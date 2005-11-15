@@ -76,13 +76,6 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-#if defined( OS_DOS_COMPATIBLE ) 
-   pszEnv = hb_getenv( "PATH" );
-#elif defined( HOST_OS_UNIX_COMPATIBLE )
-   pszEnv = szDefaultUnixPath;
-#else
-   pszEnv = NULL;
-#endif
 
    /* Grab space */
    pszCfg = ( char * ) hb_xgrab( /*strlen( pszEnv )*/ _POSIX_PATH_MAX );

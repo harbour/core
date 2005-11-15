@@ -2067,10 +2067,7 @@ $(OBJ_DIR)\macroc.obj : $(MACRO_DIR)\macroc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 
-$(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
+$(OBJ_DIR)\nulsys.obj : $(RDD_DIR)\nulsys\nulsys.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg

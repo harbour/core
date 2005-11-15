@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 #include "dbinfo.ch"
 

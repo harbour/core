@@ -3333,7 +3333,7 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
             hb_stackPop();
             return offset + 1;
          }
-         break;
+/*       break; */
       }
       
       switch( pCode[ offset ] )
