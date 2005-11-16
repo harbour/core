@@ -8,8 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-16 13:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    * updated for nulsys.prg -> nulsys.c modification
+
 2005-11-16 13:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * xharbour/include/hbvmpub.h
+  * harbour/include/hbvmpub.h
     * changed definition of HB_SYMB structure.
           HB_SYMBOLSCOPE    cScope
       replaced by:

@@ -139,7 +139,7 @@ $hb_collect source/rdd/hsx/*.prg
 
 # SOURCE\RDD\NULSYS
 $hb_collect source/rdd/nulsys/Makefile
-$hb_collect source/rdd/nulsys/*.prg
+$hb_collect source/rdd/nulsys/*.c
 
 for d in ${HB_DB_DRVEXT}
 do
