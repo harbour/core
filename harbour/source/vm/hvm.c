@@ -227,10 +227,10 @@ ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed 
 
 /* virtual machine state */
 
-HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
-HB_SYMB  hb_symEnumIndex = { "__ENUMINDEX", HB_FS_PUBLIC, {NULL}, NULL };
-HB_SYMB  hb_symEnumBase  = { "__ENUMBASE",  HB_FS_PUBLIC, {NULL}, NULL };
-HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", HB_FS_PUBLIC, {NULL}, NULL };
+HB_SYMB  hb_symEval      = { "__EVAL",      {HB_FS_PUBLIC}, {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEnumIndex = { "__ENUMINDEX", {HB_FS_PUBLIC}, {NULL}, NULL };
+HB_SYMB  hb_symEnumBase  = { "__ENUMBASE",  {HB_FS_PUBLIC}, {NULL}, NULL };
+HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", {HB_FS_PUBLIC}, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static USHORT   s_uiStatics;        /* Number of statics added after processing hb_vmStatics() */
@@ -3209,7 +3209,7 @@ static void hb_vmEnumPrev( void )
    {
       for( i=lVars; i >= 0; i-- )
       {
-         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i*2) - 4 ) );
+         pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i<<1) - 4 ) );
          if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
          {
             pRef->item.asRefer.value--;
@@ -3277,7 +3277,7 @@ static LONG hb_vmEnumEnd( void )
 static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
 {
    HB_ITEM_PTR pSwitch = hb_stackItemFromTop( -1 );
-   
+
    if( !(HB_IS_NUMINT(pSwitch) || HB_IS_STRING(pSwitch)) )
    {
       HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
@@ -3292,7 +3292,7 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
       else
          return offset;
    }
-   
+
    while( casesCnt-- )
    {
       switch( pCode[ offset ] )
@@ -5588,7 +5588,7 @@ void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymb
    {
       HB_SYMBOLSCOPE hSymScope;
 
-      hSymScope = ( pModuleSymbols + ui )->cScope;
+      hSymScope = ( pModuleSymbols + ui )->scope.value;
       pNewSymbols->hScope |= hSymScope;
       if( ( ! s_pSymStart ) && ( hSymScope & HB_FS_FIRST && ! (  hSymScope & HB_FS_INITEXIT ) ) )
             s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
@@ -5631,7 +5631,7 @@ static void hb_vmDoInitStatics( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
 
             if( scope == ( HB_FS_INIT | HB_FS_EXIT ) )
             {
@@ -5661,7 +5661,7 @@ static void hb_vmDoExitFunctions( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
 
             if( scope == HB_FS_EXIT )
             {
@@ -5695,7 +5695,7 @@ static void hb_vmDoInitFunctions( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( HB_FS_EXIT | HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
 
             if( scope == HB_FS_INIT )
             {
@@ -5978,7 +5978,7 @@ void HB_EXPORT hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleS
    {
       HB_SYMBOLSCOPE hSymScope;
 
-      hSymScope = ( pModuleSymbols + ui )->cScope;
+      hSymScope = ( pModuleSymbols + ui )->scope.value;
       pNewSymbols->hScope |= hSymScope;
 
       if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )

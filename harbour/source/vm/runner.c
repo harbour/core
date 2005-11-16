@@ -334,15 +334,15 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
 
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .HRB     */
       {
-         pSymRead[ ul ].szName  = hb_hrbFileReadId( file, szFileName );
-         pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file, szFileName );
+         pSymRead[ ul ].szName = hb_hrbFileReadId( file, szFileName );
+         pSymRead[ ul ].scope.value = hb_hrbFileReadByte( file, szFileName );
          pSymRead[ ul ].value.pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
          pSymRead[ ul ].pDynSym = NULL;
 
          if ( pHrbBody->ulSymStart == -1 &&
-                    pSymRead[ ul ].cScope & HB_FS_FIRST &&
-                    ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
-             pHrbBody->ulSymStart = ul;
+              pSymRead[ ul ].scope.value & HB_FS_FIRST &&
+              ! ( pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) )
+            pHrbBody->ulSymStart = ul;
       }
 
       pHrbBody->ulFuncs = hb_hrbFileReadLong( file, szFileName );  /* Read number of functions */
@@ -374,7 +374,7 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
             {
                /* Exists and NOT static ?  */
 /*                if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
-                   !( pSymRead[ ul ].cScope & HB_FS_STATIC ) )
+                   !( pSymRead[ ul ].scope.value & HB_FS_STATIC ) )
                {
                   hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
                   bError = TRUE;
@@ -423,7 +423,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
     */
    for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions     */
    {
-      if( ( pHrbBody->pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
+      if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
       {
          /* call (_INITSTATICS) function. This function assigns
           * literal values to static variables only. There is no need
@@ -435,7 +435,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
    }
    for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions     */
    {
-      if( ( pHrbBody->pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INIT )
+      if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
       {
          hb_vmPushSymbol( pHrbBody->pSymRead + ul );
          hb_vmPushNil();
@@ -461,12 +461,12 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
 
    for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check EXIT functions     */
    {
-      if( ( pHrbBody->pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_EXIT )
+      if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_EXIT )
       {
          hb_vmPushSymbol( pHrbBody->pSymRead + ul );
          hb_vmPushNil();
          hb_vmDo( 0 );                   /* Run exit function        */
-         pHrbBody->pSymRead[ ul ].cScope = pHrbBody->pSymRead[ ul ].cScope & ( ~HB_FS_EXIT );
+         pHrbBody->pSymRead[ ul ].scope.value = pHrbBody->pSymRead[ ul ].scope.value & ( ~HB_FS_EXIT );
                                          /* Exit function cannot be
                                             handled by main in hvm.c */
       }

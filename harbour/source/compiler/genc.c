@@ -172,11 +172,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             * we are using these two bits to mark the special function used to
             * initialize static variables
             */
-            fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "{ \"(_INITSTATICS)\", {HB_FS_INIT | HB_FS_EXIT}, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
          }
          else
          {
-            fprintf( yyc, "{ \"%s\", ", pSym->szName );
+            fprintf( yyc, "{ \"%s\", {", pSym->szName );
 
             if( pSym->cScope & HB_FS_STATIC )
             {
@@ -205,16 +205,16 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             if( pSym->bFunc && hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
             {
                if( pSym->cScope & HB_FS_INIT )
-                  hb_compGenCFunc( yyc, ", {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
+                  hb_compGenCFunc( yyc, "}, {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
                else if( pSym->cScope & HB_FS_EXIT )
-                  hb_compGenCFunc( yyc, ", {HB_EXIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
+                  hb_compGenCFunc( yyc, "}, {HB_EXIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
                else
-                  fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
+                  fprintf( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
             }
             else if( pSym->bFunc && hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
-               fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
+               fprintf( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
             else
-               fprintf( yyc, ", {NULL}, NULL }" );   /* memvar */
+               fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar */
          }
 
          if( pSym != hb_comp_symbols.pLast )

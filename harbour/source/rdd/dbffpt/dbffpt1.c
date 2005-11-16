@@ -4026,8 +4026,8 @@ static void hb_dbffptRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbffpt1__InitSymbols )
-{ "DBFFPT",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFFPT )}, NULL },
-{ "DBFFPT_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFFPT_GETFUNCTABLE )}, NULL }
+{ "DBFFPT",              {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFFPT )}, NULL },
+{ "DBFFPT_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFFPT_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbffpt1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_dbffpt_rdd_init_ )

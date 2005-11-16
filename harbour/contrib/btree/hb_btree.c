@@ -2015,8 +2015,8 @@ static void hb_BTree_Terminate( void )
 }
 
 HB_INIT_SYMBOLS_BEGIN( hb_BTree_Initialize_Terminate )
-  { "hb_BTree_Initialize", HB_FS_INIT, {hb_BTree_Initialize}, NULL },
-  { "hb_BTree_Terminate" , HB_FS_EXIT, {hb_BTree_Terminate} , NULL },
+  { "hb_BTree_Initialize", {HB_FS_INIT}, {hb_BTree_Initialize}, NULL },
+  { "hb_BTree_Terminate" , {HB_FS_EXIT}, {hb_BTree_Terminate} , NULL },
 HB_INIT_SYMBOLS_END( hb_BTree_Initialize_Terminate )
 
 HB_EXTERN_END

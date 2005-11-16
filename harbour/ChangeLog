@@ -8,6 +8,41 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-16 13:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/include/hbvmpub.h
+    * changed definition of HB_SYMB structure.
+          HB_SYMBOLSCOPE    cScope
+      replaced by:
+         union
+         {
+            HB_SYMBOLSCOPE    value;      /* the scope of the symbol */
+            void *            pointer;    /* filler to force alignment */
+         } scope;
+      This modification should only force the same alignment independently
+      on used compiler alignment switches or executed #pragma pack*
+      It's important to keep this structure with fixed size because it's
+      used in .c files generated from .prg code.
+      The code with #pragma pack* removed - it should not be longer
+      necessary but please make a real tests with different compiler
+      alignment switches
+
+  * harbour/contrib/btree/hb_btree.c
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/runjava/runjava.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/vm/dynsym.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/initsymb.c
+  * harbour/source/vm/runner.c
+    * updated for modified HB_SYMB structure.
+
 2005-11-15 05:10 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    * hrbdll.bc
    * hrbdll.vc

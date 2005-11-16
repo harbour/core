@@ -59,24 +59,21 @@ HB_EXTERN_BEGIN
 
 struct _HB_DYNS;
 
-#if defined(_MSC_VER) && _MSC_VER < 1000
-   #pragma pack(8)
-#endif
-
 /* symbol support structure */
 typedef struct
 {
    char *            szName;  /* the name of the symbol */
-   HB_SYMBOLSCOPE    cScope;  /* the scope of the symbol */
+   union
+   {
+      HB_SYMBOLSCOPE value;      /* the scope of the symbol */
+      void *         pointer;    /* filler to force alignment */
+   } scope;
    union {
      PHB_FUNC        pFunPtr;        /* function address for function symbol table entries */
      int             iStaticsBase;
    } value;
    struct _HB_DYNS * pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
-#if defined(_MSC_VER) && _MSC_VER < 1000
-   #pragma pack()
-#endif
 
 /* dynamic symbol structure */
 typedef struct _HB_DYNS

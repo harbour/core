@@ -176,10 +176,10 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
 
    for( ul = 0; ul < ulSymbols; ul++ )       /* Read symbols in .HRB     */
    {
-      pSymRead[ ul ].szName  = hb_hrbFileReadId( file );
-      pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file );
-      pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file );
-      pSymRead[ ul ].pDynSym = NULL;
+      pSymRead[ ul ].szName      = hb_hrbFileReadId( file );
+      pSymRead[ ul ].scope.value = hb_hrbFileReadByte( file );
+      pSymRead[ ul ].pFunPtr     = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file );
+      pSymRead[ ul ].pDynSym     = NULL;
    }
 
    ulFuncs = hb_hrbFileReadLong( file );            /* Read number of functions */
@@ -209,7 +209,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
          {
             /* Exists and NOT static ?  */
 /*          if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
-                !( pSymRead[ ul ].cScope & FS_STATIC ) )
+                !( pSymRead[ ul ].scope.value & FS_STATIC ) )
             {
                hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
                bError = TRUE;
@@ -244,7 +244,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
        */
       for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
       {
-         if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
+         if( ( pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
          {
             /* call (_INITSTATICS) function. This function assigns
              * literal values to static variables only. There is no need
@@ -256,7 +256,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
       }
       for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
       {
-         if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_INIT )
+         if( ( pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
          {
             hb_vmPushSymbol( pSymRead + ul );
             hb_vmPushNil();
@@ -278,12 +278,12 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
 
       for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
       {
-         if( ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) == HB_FS_EXIT )
+         if( ( pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_EXIT )
          {
             hb_vmPushSymbol( pSymRead + ul );
             hb_vmPushNil();
             hb_vmDo( 0 );                        /* Run exit function        */
-            pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~HB_FS_EXIT );
+            pSymRead[ ul ].scope.value = pSymRead[ ul ].scope.value & ( ~HB_FS_EXIT );
                                             /* Exit function cannot be
                                                handled by main in hvm.c */
          }

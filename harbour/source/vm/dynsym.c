@@ -86,8 +86,8 @@ PHB_SYMB HB_EXPORT hb_symbolNew( char * szName )      /* Create a new symbol */
 
    pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
    pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
-   pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
    strcpy( pSymbol->szName, szName );
+   pSymbol->scope.value = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
    pSymbol->value.pFunPtr = NULL;
    pSymbol->pDynSym = NULL;
 
@@ -104,7 +104,7 @@ PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
 
    if( pDynSym )            /* If name exists */
    {
-      if( pSymbol->cScope & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
+      if( pSymbol->scope.value & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
       {
          if( ( ! pDynSym->pFunPtr ) && pSymbol->value.pFunPtr ) /* The DynSym existed */
          {
@@ -146,7 +146,7 @@ PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    pDynSym->ulTime  = 0; /* profiler support */
    pDynSym->ulRecurse = 0;
 
-   if( pSymbol->cScope & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
+   if( pSymbol->scope.value & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
    {
       pDynSym->pFunPtr = pSymbol->value.pFunPtr;    /* place the pointer function at DynSym */
    }
@@ -345,7 +345,7 @@ void hb_dynsymRelease( void )
    for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )
    {
       /* it is a allocated symbol ? */
-      if( ( s_pDynItems + uiPos )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
+      if( ( s_pDynItems + uiPos )->pDynSym->pSymbol->scope.value == SYM_ALLOCATED )
       {
          hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol->szName );
          hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol );

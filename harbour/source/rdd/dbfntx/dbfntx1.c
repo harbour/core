@@ -7555,8 +7555,8 @@ static void hb_dbfntxRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "DBFNTX",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX )}, NULL },
-{ "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE )}, NULL }
+{ "DBFNTX",              {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFNTX )}, NULL },
+{ "DBFNTX_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_dbfntx_rdd_init_ )

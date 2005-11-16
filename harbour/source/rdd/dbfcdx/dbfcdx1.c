@@ -9194,8 +9194,8 @@ static void hb_dbfcdxRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "SIXCDX",              HB_FS_PUBLIC, {HB_FUNCNAME( SIXCDX )}, NULL },
-{ "SIXCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
+{ "SIXCDX",              {HB_FS_PUBLIC}, {HB_FUNCNAME( SIXCDX )}, NULL },
+{ "SIXCDX_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( SIXCDX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 
 #else
@@ -9258,8 +9258,8 @@ static void hb_dbfcdxRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
-{ "DBFCDX",              HB_FS_PUBLIC, {HB_FUNCNAME( DBFCDX )}, NULL },
-{ "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
+{ "DBFCDX",              {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFCDX )}, NULL },
+{ "DBFCDX_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFCDX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
 
 #endif
