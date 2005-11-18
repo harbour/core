@@ -143,7 +143,7 @@ extern BOOL     HB_EXPORT hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName
 extern ULONG    HB_EXPORT hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
 extern HB_FOFFSET HB_EXPORT hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
 extern ULONG    HB_EXPORT hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
-extern void     HB_EXPORT hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
+extern BOOL     HB_EXPORT hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
 extern void     HB_EXPORT hb_fsSetError   ( USHORT uiError ); /* set the file system DOS error number */
 extern void     HB_EXPORT hb_fsSetIOError ( BOOL fResult, USHORT uiOperation ); /* set the file system error number after IO operation */
 extern USHORT   HB_EXPORT hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */

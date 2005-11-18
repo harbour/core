@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-19 00:30 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   * include/hbapifs.c
+   * src/rtl/filesys.c
+     ! hb_fsSetDevMode() fixed back to return a BOOL value 
+       to be compatible with the CA-Cl*pper undocumented 
+       _tdevraw() function. (hb_fsSetDevMove() is mapped 
+       to _tdevraw() in hbundoc.api, it's the documented 
+       version of the same functionality)
+       Also fixed warning and error for one of the dummy 
+       platform branches.
+       Since this came from xHarbour it pbly needs to be 
+       fixed there too.
+
+   * tests/Makefile
+     + symbolt.prg added
+
 2005-11-16 13:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/pack_src.sh
     * updated for nulsys.prg -> nulsys.c modification

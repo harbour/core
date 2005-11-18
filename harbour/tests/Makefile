@@ -115,6 +115,7 @@ PRG_SOURCES=\
 	statfun.prg \
 	statics.prg \
 	strdelim.prg \
+	symbolt.prg \
 	t1.prg \
 	test_all.prg \
 	testbrdb.prg \

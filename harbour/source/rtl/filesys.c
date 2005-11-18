@@ -796,7 +796,7 @@ void HB_EXPORT hb_fsClose( FHANDLE hFileHandle )
 #endif
 }
 
-void    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
+BOOL    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
 
@@ -816,7 +816,10 @@ void    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
          iRet = setmode( hFileHandle, O_TEXT );
          break;
    }
+
    hb_fsSetIOError( iRet != -1, 0 );
+
+   return iRet != -1;
 }
 #elif defined(_MSC_VER) || defined(__MINGW32__) || defined(__DMC__)
 {
@@ -832,20 +835,30 @@ void    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
          iRet = _setmode( hFileHandle, _O_TEXT );
          break;
    }
+
    hb_fsSetIOError( iRet != -1, 0 );
+
+   return iRet != -1;
 }
 #elif defined( HB_OS_UNIX )
 
    HB_SYMBOL_UNUSED( hFileHandle );
    HB_SYMBOL_UNUSED( uiDevMode );
+
    hb_fsSetError( ( USHORT ) FS_ERROR );
+
+   return FALSE;
 
 #else
 
-   hb_fsSetError( (USHORT) FS_ERROR );
+   HB_SYMBOL_UNUSED( hFileHandle );
+   HB_SYMBOL_UNUSED( uiDevMode );
+
+   hb_fsSetError( ( USHORT ) FS_ERROR );
+
+   return FALSE;
 
 #endif
-
 }
 
 USHORT  HB_EXPORT hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
