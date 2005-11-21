@@ -53,211 +53,179 @@
 /* NOTE: The process is not completely automatical, the generated output should
          be edited by hand after extraction. */
 
-#include "common.ch"
+#include "directry.ch"
 #include "fileio.ch"
 
-#ifndef __HARBOUR__
-   #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
+// Remark this line when BEGINDUMP/ENDDUMP #pragma's
+// are not used anymore in Harbour core and RTL PRG files
+#define PRG_CAN_HAVE_HB_FUNC
+
+#ifdef __HARBOUR__
+   #define EOL  hb_OSNewLine()
+#else
+   #define EOL  ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
-#define PATH_SEPARATOR "\"
-#define BASE_DIR "..\..\source\"
+#ifdef __PLATFORM__UNIX
+   #define PATH_SEPARATOR "/"
+   #define BASE_DIR "../../source/"
+#else
+   #define PATH_SEPARATOR "\"
+   #define BASE_DIR "..\..\source\"
+#endif
 
-STATIC aNames := {}
+// List of known files which does not contain any real public function.
+// (always write the UPPERCASE file name)
+STATIC aSkipList := { "PROFILER.PRG" }
 
 PROCEDURE MAIN()
-   LOCAL aDirs:={ BASE_DIR + "vm",;
-                  BASE_DIR + "rtl",;
-                  BASE_DIR + "rdd",;
-                  BASE_DIR + "pp",;
-                  BASE_DIR + "tools" }
-   LOCAL i
-   LOCAL aFiles
-   LOCAL nOutput
-   LOCAL nTime:=SECONDS()
-   
+   LOCAL aDirs :={ BASE_DIR + "debug", ;
+                   BASE_DIR + "pp"   , ;
+                   BASE_DIR + "rdd"  , ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "dbfcdx", ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "dbfdbt", ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "dbffpt", ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "dbfntx", ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "hbsix" , ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "hsx"   , ;
+                   BASE_DIR + "rdd" + PATH_SEPARATOR + "nulsys", ;
+                   BASE_DIR + "rtl"  , ;
+                   BASE_DIR + "vm"     }
+   LOCAL i, nOutput
+
+   SET DATE FORMAT TO "yyyy-mm-dd"
+   ? "Processing files:"
    nOutput := FCREATE( "hbextern.ch_" )
    IF nOutput > 0
-      FOR i:=1 TO LEN(aDirs)
-         FWRITE( nOutput, "// Files from: " +aDirs[i] )
-         FWRITE( nOutput, hb_OSNewLine() )
-         FWRITE( nOutput, "//" )
-         FWRITE( nOutput, hb_OSNewLine() )
-         aFiles := DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.c" )
-         ProcessDir( nOutput, aFiles, aDirs[ i ] )
-         aFiles := DIRECTORY( aDirs[i] +PATH_SEPARATOR +"*.prg" )
-         ProcessDir( nOutput, aFiles, aDirs[ i ] )
-         FWRITE( nOutput, "//" )
-         FWRITE( nOutput, REPLICATE( "-", 60) )
-         FWRITE( nOutput, hb_OSNewLine() )
+      FWRITE( nOutput, "// NOTE: Machine generated on: " + DTOC( DATE() ) + EOL + ;
+                       "//       This output should be edited by hand after extraction." + EOL + EOL )
+      FOR i := 1 TO LEN( aDirs )
+         FWRITE( nOutput, EOL + "// " + REPLICATE( "-", 60 ) + EOL )
+         FWRITE( nOutput, "// Files from: " +aDirs[i] + EOL + EOL )
+         ProcessDir( nOutput, aDirs[i] + PATH_SEPARATOR + "*.c"  , aDirs[ i ], .F. )
+         ProcessDir( nOutput, aDirs[i] + PATH_SEPARATOR + "*.prg", aDirs[ i ], .T. )
       NEXT
+      FWRITE( nOutput, EOL + "// " + REPLICATE( "-", 60 ) + EOL + EOL )
       FCLOSE( nOutput )
    ENDIF
-   ? SECONDS() - nTime
-   
-   RETURN
-
-PROCEDURE ProcessDir( nOutput, aFiles, cDir )
-   LOCAL i, nLen
-
-   ? "Files from ", cDir
-   nLen := LEN( aFiles )
-   FOR i := 1 TO nLen
-      FWRITE( nOutput, "//" )
-      FWRITE( nOutput, hb_OSNewLine() )
-      FWRITE( nOutput, "//symbols from file: " +Lower(cDir+ PATH_SEPARATOR +aFiles[i][ 1 ] ))
-      FWRITE( nOutput, hb_OSNewLine() )
-      FWRITE( nOutput, "//" )
-      FWRITE( nOutput, hb_OSNewLine() )
-      ProcessFile( nOutput, cDir + PATH_SEPARATOR + aFiles[ i ][ 1 ] )
-   NEXT
+   ? "Done."
 
    RETURN
 
-PROCEDURE ProcessFile( nOut, cFile )
+STATIC PROCEDURE ProcessDir( nOutput, cFiles, cDir, lPRG )
+   LOCAL i, nLen, aFiles
+
+   aFiles := DIRECTORY( cFiles )
+   IF ( nLen := LEN( aFiles ) ) > 0
+      ASORT( aFiles,,, {|x,y| x[ F_NAME ] < y[ F_NAME ] } )
+      FOR i := 1 TO nLen
+         ProcessFile( nOutput, cDir + PATH_SEPARATOR + aFiles[ i ][ 1 ], lPRG )
+      NEXT
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE ProcessFile( nOutput, cFile, lPRG )
    LOCAL nH
 
-   ? cFile
-   IF( AT( "INITSYMB.C", UPPER(cFile) ) == 0 )
-      nH := FOPEN( cFile )
-      IF( nH > 0 )
-         FILEEVAL( nH, 255, hb_OSNewLine(), {|c| Processline(nOut, c)} )
-         FCLOSE( nH )
-      ENDIF
-   ENDIF
-
-   RETURN
-
-PROCEDURE ProcessLine( nOut, cLine )
-   LOCAL nPos
-
-   nPos := AT( "//", cLine )
-   IF nPos > 0 .AND. nPos < 7
+   // Skip known files which does not contain any real public function
+   IF ASCAN( aSkipList, {|c| c $ upper( cFile ) } ) > 0
       RETURN
-   ELSE
-      nPos := AT( "*", cLine )
-      IF nPos > 0 .AND. nPos < 7
-         RETURN
-      ENDIF
    ENDIF
 
-   nPos := AT( "HB_FUNC(", cLine )
-   IF nPos > 0
-      cLine := LTRIM( SUBSTR( cLine, nPos + Len("HB_FUNC(") ) )
-      nPos := AT( ")", cLine )
-      IF nPos > 0
-         cLine := ALLTRIM( Left( cLine, nPos - 1 ) )
-         ? cLine
-         IF (ISALPHA(cLine) .OR. cLine="_") .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
-            AADD( aNames, cLine )
-            FWRITE( nOut, "EXTERNAL " +cLine + hb_OSNewLine() )
-         ENDIF
-      ENDIF
-   ELSE
-      cLine := UPPER( cLine )
-      nPos := AT( "FUNCTION", cLine )
-      IF nPos > 0
-         IF( AT( "STATIC", cLine ) ==  0 )
-            cLine := LTRIM( SUBSTR( cLine, nPos+8 ) )
-            nPos := AT( "(", cLine )
-            IF nPos > 0
-               cLine := ALLTRIM( LEFT( cLine, nPos-1 ) )
-               ? cLine
-               IF (ISALPHA(cLine) .OR. cLine="_") .AND. !(" " $ cLine) .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
-                  AADD( aNames, cLine )
-                  FWRITE( nOut, "EXTERNAL " +cLine + hb_OSNewLine() )
-               ENDIF
-            ENDIF
-         ENDIF
-      ELSE
-         nPos := AT( "PROCEDURE", cLine )
-         IF nPos > 0
-            IF AT( "STATIC", cLine ) ==  0
-               cLine := LTRIM( SUBSTR( cLine, nPos+9 ) )
-               nPos := AT( "(", cLine )
-               IF nPos > 0
-                  cLine :=ALLTRIM( LEFT( cLine, nPos-1 ) )
-                  ? cLine
-                  IF (ISALPHA(cLine) .OR. cLine="_") .AND. !(" " $ cLine) .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
-                     AADD( aNames, cLine )
-                     FWRITE( nOut, "EXTERNAL " +cLine + hb_OSNewLine() )
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDIF
+   ? cFile
+   FWRITE( nOutput, "//" + EOL + "// symbols from file: " + cFile + EOL + "//" + EOL )
+   nH := FOPEN( cFile )
+   IF nH > 0
+      FILEEVAL( nH, 255, EOL, {|c| Processline( nOutput, c, lPRG ) } )
+      FCLOSE( nH )
    ENDIF
 
    RETURN
 
-PROCEDURE FileEval( nHandle, nLineLength, cDelim, bBlock )
-   LOCAL cLine
+STATIC PROCEDURE ProcessLine( nOutput, cLine, lPRG )
+   LOCAL nPos, nLen
+
+   cLine := AllTrim( cLine )
+   IF empty( cLine )
+      RETURN
+   ENDIF
+
+   IF lPRG                                // PRG source file (FUNC, PROC)
+
+      IF upper( SubStr( cLine, 1, 4 ) ) == "FUNC" .or. upper( SubStr( cLine, 1, 4 ) ) == "PROC"
+         IF ( nPos := AT( " ", cLine ) ) > 4
+            cLine := LTrim( SubStr( cLine, nPos ) )
+            nLen  := len( cLine )
+            FOR nPos := 1 TO nLen
+                IF SubStr( cLine, nPos, 1 ) $ " (;/&" + Chr( 9 )
+                   --nPos
+                   EXIT
+                ENDIF
+            NEXT
+            WriteSymbol( nOutput, SubStr( cLine, 1, nPos ) )
+         ENDIF
+      ENDIF
+
+#ifdef PRG_CAN_HAVE_HB_FUNC
+   ENDIF
+#else
+   ELSE                                   // C source file (HB_FUNC)
+#endif
+
+      IF SubStr( cLine, 1, 8 ) == "HB_FUNC("
+         cLine := SubStr( cLine, 9 )
+         IF ( nPos := AT( ")", cLine ) ) > 0
+            WriteSymbol( nOutput, AllTrim( SubStr( cLine, 1, nPos - 1 ) ) )
+         ENDIF
+      ENDIF
+
+#ifndef PRG_CAN_HAVE_HB_FUNC
+   ENDIF
+#endif
+
+   RETURN
+
+
+STATIC PROCEDURE FileEval( nHandle, nMaxLine, cDelim, bBlock )
+   LOCAL cBuffer := ""
 
    FSEEK( nHandle, 0 )
 
-   cLine := FReadLn( nHandle, 1, nLineLength, cDelim )
-   IF FERROR() != 0
-      RETURN
-   ENDIF
-
-   DO WHILE !( cLine == "" )
-
-      EVAL( bBlock, cLine )
-
-      cLine := FReadLn( nHandle, 1, nLineLength, cDelim )
-      IF FERROR() != 0
-         RETURN
-      ENDIF
-
+   DO WHILE FReadLn( nHandle, @cBuffer, nMaxLine, cDelim )
+      EVAL( bBlock, cBuffer )
    ENDDO
 
    RETURN
 
-FUNCTION FReadLn( nHandle, nLines, nLineLength, cDelim )
-   LOCAL nCurPos
-   LOCAL nFileSize
-   LOCAL nChrsToRead
-   LOCAL nChrsRead
-   LOCAL cBuffer
-   LOCAL cLines
-   LOCAL nCount
-   LOCAL nEOLPos
 
-   nCurPos   := FSEEK( nHandle, 0, FS_RELATIVE )
-   nFileSize := FSEEK( nHandle, 0, FS_END )
-   FSEEK( nHandle, nCurPos )
+STATIC FUNCTION FReadLn( nHandle, cBuffer, nMaxLine, cDelim )
+   LOCAL cLine, nSavePos, nEol, nNumRead
 
-   nChrsToRead := MIN( nLineLength, nFileSize - nCurPos )
+   cLine := space( nMaxLine )
+   cBuffer := ""
+   nSavePos := FSEEK( nHandle, 0, FS_RELATIVE )
+   nNumRead := FREAD( nHandle, @cLine, nMaxLine )
+   IF ( nEol := AT( cDelim, substr( cLine, 1, nNumRead ) ) ) == 0
+     cBuffer := cLine
+   ELSE
+     cBuffer := SubStr( cLine, 1, nEol - 1 )
+     FSEEK( nHandle, nSavePos + nEol + 1, FS_SET )
+   ENDIF
 
-   cLines  := ""
-   nCount  := 1
-   DO WHILE nCount <= nLines .AND. nChrsToRead != 0
+   RETURN nNumRead != 0
 
-      cBuffer   := SPACE( nChrsToRead )
-      nChrsRead := FREAD( nHandle, @cBuffer, nChrsToRead )
 
-      IF nChrsRead != nChrsToRead
-         nChrsToRead := 0
+STATIC PROCEDURE WriteSymbol( nOutput, cLine )
+STATIC aNames := { "MAIN" }   // Init with names you want to skip
+
+   IF len( cLine ) > 0
+      cLine = upper( cLine )
+      IF ASCAN( aNames, {|c| c == cLine } ) == 0
+         AADD( aNames, cLine )
+         FWRITE( nOutput, "EXTERNAL " +cLine + EOL )
       ENDIF
+   ENDIF
 
-      nEOLPos := AT( cDelim, cBuffer )
-
-      IF nEOLPos == 0
-         cLines  += LEFT( cBuffer, nChrsRead )
-         nCurPos += nChrsRead
-      ELSE
-         cLines  += LEFT( cBuffer, nEOLPos + LEN( cDelim ) - 1 )
-         nCurPos += nEOLPos + LEN( cDelim ) - 1
-         FSEEK( nHandle, nCurPos, FS_SET )
-      ENDIF
-
-      IF ( nFileSize - nCurPos ) < nLineLength
-         nChrsToRead := nFileSize - nCurPos
-      ENDIF
-
-      nCount++
-
-   ENDDO
-
-   RETURN cLines
+   RETURN
 

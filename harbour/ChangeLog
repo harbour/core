@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-21 18:29 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/math.c
+     * Standardized public function names (to make HbExtern happy):
+       HB_FUNC (MATHERRMODE)    --> HB_FUNC( MATHERRMODE )
+       HB_FUNC (MATHERRORBLOCK) --> HB_FUNC( MATHERRORBLOCK )
+       HB_FUNC (LOG)            --> HB_FUNC( LOG )
+
+   * utils/hbextern/hbextern.prg
+     * Heavily modified to produce more accurate output
+
 2005-11-14 16:42 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * harbour/contrib/rdd_ads/makefile.vc
      - removed module ads0
