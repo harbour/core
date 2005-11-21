@@ -123,8 +123,8 @@ extern HB_MATH_HANDLERPROC hb_mathGetHandler (void);
 
 extern double hb_random_num( void );
 
-/* include defines from math.ch */
-#include <math.ch>
+/* include defines from hbmath.ch */
+#include <hbmath.ch>
 
 HB_EXTERN_END
 

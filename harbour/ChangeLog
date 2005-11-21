@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-21 18:03 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   - include/math.ch
+   + include/hbmath.ch
+   * include/hbmath.h
+   * tests/mathtest.prg
+     ! math.ch -> hbmath.ch (rename)
+
 2005-11-21 17:44 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    + tests/simplet.prg
    * src/rtl/symbol.prg

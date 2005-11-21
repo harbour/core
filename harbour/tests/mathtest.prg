@@ -2,7 +2,7 @@
 // $Id$
 //
 
-#include "math.ch"
+#include "hbmath.ch"
 
 function main()
 
