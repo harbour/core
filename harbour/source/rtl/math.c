@@ -296,11 +296,11 @@ int hb_mathSetErrMode (int imode)
 
   oldmode = s_hb_matherr_mode;
 
-  if ((iNewMode == HB_MATH_ERRMODE_DEFAULT) ||
-      (iNewMode == HB_MATH_ERRMODE_CDEFAULT) ||
-      (iNewMode == HB_MATH_ERRMODE_USER) ||
-      (iNewMode == HB_MATH_ERRMODE_USERDEFAULT) ||
-      (iNewMode == HB_MATH_ERRMODE_USERCDEFAULT))
+  if ((imode == HB_MATH_ERRMODE_DEFAULT) ||
+      (imode == HB_MATH_ERRMODE_CDEFAULT) ||
+      (imode == HB_MATH_ERRMODE_USER) ||
+      (imode == HB_MATH_ERRMODE_USERDEFAULT) ||
+      (imode == HB_MATH_ERRMODE_USERCDEFAULT))
   {
     s_hb_matherr_mode = imode;
   }
