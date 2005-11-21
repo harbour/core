@@ -293,8 +293,18 @@ int hb_mathSetErrMode (int imode)
   int oldmode;
 
   HB_TRACE (HB_TR_DEBUG, ("hb_mathSetErrMode (%i)", imode));
+
   oldmode = s_hb_matherr_mode;
-  s_hb_matherr_mode = imode;
+
+  if ((iNewMode == HB_MATH_ERRMODE_DEFAULT) ||
+      (iNewMode == HB_MATH_ERRMODE_CDEFAULT) ||
+      (iNewMode == HB_MATH_ERRMODE_USER) ||
+      (iNewMode == HB_MATH_ERRMODE_USERDEFAULT) ||
+      (iNewMode == HB_MATH_ERRMODE_USERCDEFAULT))
+  {
+    s_hb_matherr_mode = imode;
+  }
+
   return (oldmode);
 }
 
@@ -306,22 +316,14 @@ int hb_mathGetErrMode (void)
 }
 
 /* Harbour equivalent to mathSet/GetErrMode */
-HB_FUNC( MATHERRMODE )  /* ([<nNewMode>]) -> <nOldMode> */
+HB_FUNC( HB_MATHERRMODE )  /* ([<nNewMode>]) -> <nOldMode> */
 {
   hb_retni (hb_mathGetErrMode());
 
   /* set new mode */
   if (ISNUM (1))
   {
-    int iNewMode = hb_parni (1);
-    if ((iNewMode == HB_MATH_ERRMODE_DEFAULT) ||
-        (iNewMode == HB_MATH_ERRMODE_CDEFAULT) ||
-        (iNewMode == HB_MATH_ERRMODE_USER) ||
-        (iNewMode == HB_MATH_ERRMODE_USERDEFAULT) ||
-        (iNewMode == HB_MATH_ERRMODE_USERCDEFAULT))
-    {
-      hb_mathSetErrMode (iNewMode);
-    }
+    hb_mathSetErrMode( hb_parni( 1 ) );
   }
 
   return;
@@ -577,7 +579,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 }
 
 /* set/get math error block */
-HB_FUNC( MATHERRORBLOCK )  /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
+HB_FUNC( HB_MATHERRORBLOCK )  /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
 {
 
   /* immediately install hb_matherrblock and keep it permanently installed !

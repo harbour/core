@@ -594,13 +594,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      MATHERRMODE()
+ *      HB_MATHERRMODE()
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling mode
  *  $SYNTAX$
- *      MATHERRMODE ([<nNewMode>]) -> <nOldMode> 
+ *      HB_MATHERRMODE ([<nNewMode>]) -> <nOldMode> 
  *  $ARGUMENTS$
  *      [<nNumber>]   new math error handling mode, one of the following constants, defined in math.ch
  *                     HB_MATH_ERRMODE_DEFAULT
@@ -626,13 +626,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      MATHERRORBLOCK()
+ *      HB_MATHERRORBLOCK()
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling codeblock
  *  $SYNTAX$
- *      MATHERRORBLOCK ([<bNewBlock>]) -> <bOldBlock> 
+ *      HB_MATHERRORBLOCK ([<bNewBlock>]) -> <bOldBlock> 
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$

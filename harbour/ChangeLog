@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-21 17:44 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   + tests/simplet.prg
+   * src/rtl/symbol.prg
+     * Embedded example code moved to the test dir.
+
+   * src/rtl/math.c
+   * include/hbextern.ch
+   * tests/mathtest.prg
+   * doc/en/math.txt
+     ! HB_ prefix added for non-Clipper functions.
+       MATHERRMODE()    -> HB_MATHERRMODE()   
+       MATHERRORBLOCK() -> HB_MATHERRORBLOCK()
+     + Above two functions added to hbextern.ch
+     * HB_MATHERRMODE() input validation logic moved to the lower 
+       level function. This is a step to make this a simple Set()
+
+   * include/math.ch
+     + HB_ prefix added.
+
 2005-11-21 18:29 UTC+0200 Chen Kedem <niki@actcom.co.il>
    * source/rtl/math.c
      * Standardized public function names (to make HbExtern happy):
