@@ -314,6 +314,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\space.obj \
    $(OBJ_DIR)\spfiles.obj \
    $(OBJ_DIR)\str.obj \
+   $(OBJ_DIR)\strpeek.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
    $(OBJ_DIR)\strmatch.obj \
@@ -1977,6 +1978,10 @@ $(OBJ_DIR)\spfiles.obj : $(RTL_DIR)\spfiles.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\str.obj : $(RTL_DIR)\str.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\strpeek.obj : $(RTL_DIR)\strpeek.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

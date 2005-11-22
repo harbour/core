@@ -7,6 +7,9 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2005-11-22 02:22 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
+  * makefile.bc
+    * updated to compile source/rtl/strpeek.c
 
 2005-11-22 01:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsetup.ch
@@ -16,7 +19,6 @@
       alternative and some of its functions are quite often used in
       Clipper/FoxPro programs ported to *nixes so I'd want to keep it
       enabled at least when HB_OS_LINUX/HB_OS_UNIX is defined.
-
 
   * harbour/include/hbvm.h
     + added missing extern in hb_vmAtInit() and hb_vmAtExit() declarations
