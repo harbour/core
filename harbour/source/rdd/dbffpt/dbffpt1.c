@@ -2794,11 +2794,14 @@ static ERRCODE hb_fptLockForRead( FPTAREAP pArea, USHORT uiIndex, BOOL *fUnLock 
    }
    else
    {
-      HB_ITEM recItm = HB_ITEM_NIL, resultItm = HB_ITEM_NIL;
-      uiError = SELF_RECINFO( ( AREAP ) pArea, &recItm, DBRI_LOCKED, &resultItm );
+      PHB_ITEM pRecNo = hb_itemNew( NULL ), pResult = hb_itemNew( NULL );
+
+      uiError = SELF_RECINFO( ( AREAP ) pArea, pRecNo, DBRI_LOCKED, pResult );
+      fLocked = hb_itemGetL( pResult );
+      hb_itemRelease( pRecNo );
+      hb_itemRelease( pResult );
       if( uiError != SUCCESS )
          return uiError;
-      fLocked = hb_itemGetL( &resultItm );
    }
 
    if( !fLocked )

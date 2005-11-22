@@ -8,6 +8,53 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-11-22 01:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbsetup.ch
+    * enable HB_COMPAT_FLAGSHIP by default
+      I hope it will not be a problem - if it does then I can disable it
+      but in *nixes for a long time FlagShip was the only one Clipper
+      alternative and some of its functions are quite often used in
+      Clipper/FoxPro programs ported to *nixes so I'd want to keep it
+      enabled at least when HB_OS_LINUX/HB_OS_UNIX is defined.
+
+
+  * harbour/include/hbvm.h
+    + added missing extern in hb_vmAtInit() and hb_vmAtExit() declarations
+
+  * harbour/include/hbvmpub.h
+    * formatting
+
+  * harbour/source/rdd/dbcmd.c
+    ! fixed the problem with fieldput(<n>,nil) at phantom recrod reported
+      by Victor
+    * do not use C level HB_ITEM
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed possible GPF when "/an/existing/path/" was used as file name.
+      No in DOS in such case it will casue RT error that file:
+         /an/existing/path/.<ext>
+      cannot be created (like in Clipper) but in other systems (f.e. Linux)
+      which allow to use such file names it will work without any problems.
+
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * do not use C level HB_ITEM
+
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/strpeek.c
+    + added STRPEEK and STRPOKE FS functions covered by HB_COMPAT_FLAGSHIP
+      macro
+
+  * harbour/source/rtl/philes.c
+    ! fixed GPF when unshareing string item buffer with embedded 0 by using
+      hb_itemUnShare()
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + added hb_itemUnShare() - /* un-share given string item */
+      and hb_itemClone() - /* clone the given item */
+
 2005-11-21 18:03 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
    - include/math.ch
    + include/hbmath.ch

@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ * Harbour Project source code FlagShip compatible functions:
+ * STRPEEK(cStr,nPos)->nASC, STRPOKE(cStr,nPos,nASCval)->cStr
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- * www - http://www.harbour-project.org
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,39 +50,47 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
+#ifdef HB_COMPAT_FLAGSHIP
 
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
+HB_FUNC( STRPEEK )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-#define HB_EXTENSION              /* Enable Harbour extensions */
+   if( pText && ISNUM( 2 ) )
+   {
+      ULONG ulPos = hb_parnl( 2 );
 
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
+      if( ulPos > 0 && ulPos < pText->item.asString.length )
+         hb_retni( ( BYTE ) * ( pText->item.asString.value + ulPos - 1 ) );
+      else
+         hb_retni( 0 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STRPEEK", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+}
 
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-#define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
-/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
-         set to 10 explicitly and not through the HB_C52_STRICT option
-         [vszakats] */
+HB_FUNC( STRPOKE )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
-/* Turn on short names support for the class engine */
-#ifdef HB_C52_STRICT
-   #define HB_SHORTNAMES
-#endif
+   if( pText && ISNUM( 2 ) && ISNUM( 3 ) )
+   {
+      ULONG ulPos = hb_parnl( 2 );
 
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
+      if( ulPos > 0 && ulPos < pText->item.asString.length )
+      {
+         pText = hb_itemUnShare( pText );
+         pText->item.asString.value[ ulPos - 1 ] = (char) ( hb_parni( 3 ) & 0xff );
+      }
+      hb_itemReturn( pText );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STRPOKE", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
+}
 
-/*#define HB_CLS_ENFORCERO */     /* Activate the RO checking on OO DATA    */
-                                  /* when not called from a constructor     */
-
-#endif /* HB_SETUP_CH_ */
+#endif /* HB_COMPAT_FLAGSHIP */

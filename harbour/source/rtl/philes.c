@@ -90,20 +90,11 @@ HB_FUNC( HB_FCREATE )
 
 HB_FUNC( FREAD )
 {
-   ULONG ulRead;
+   PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
+   ULONG ulRead = 0;
 
-   if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
+   if( ISNUM( 1 ) && pBuffer && ISBYREF( 2 ) && ISNUM( 3 ) )
    {
-      PHB_ITEM pItem = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
-
-      if( pItem->item.asString.bStatic ||
-          ( * pItem->item.asString.u.pulHolders ) > 1 )
-         /*
-          * Warning: Don't use hb_itemPutC() here, as it fails if 1 byte buffer used
-          * cause 1 byte length strings optimization
-         */
-         hb_itemPutCPtr( pItem, hb_strdup( hb_parc( 2 ) ), hb_parclen( 2 ) );
-
       ulRead = hb_parnl( 3 );
 
       /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz()
@@ -112,16 +103,21 @@ HB_FUNC( FREAD )
                the terminating zero could be used if needed. [vszakats] */
 
       if( ulRead <= hb_parcsiz( 2 ) )
+      {
          /* NOTE: Warning, the read buffer will be directly modified,
                   this is normal here ! [vszakats] */
+
+         /* Unshare the item to avoid GPF on static buffers and changing
+            other items which shares this buffer. [druzus] */
+         pBuffer = hb_itemUnShare( pBuffer );
+
          ulRead = hb_fsReadLarge( hb_parni( 1 ),
-                                  ( BYTE * ) hb_parc( 2 ),
+                                  ( BYTE * ) hb_itemGetCPtr( pBuffer ),
                                   ulRead );
+      }
       else
          ulRead = 0;
    }
-   else
-      ulRead = 0;
 
    hb_retnl( ulRead );
 }

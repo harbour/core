@@ -80,7 +80,6 @@
 #include "hbfast.h"
 #else
 #  define HB_THREAD_STUB
-#  define HB_ITEM_NEW(hb)  HB_ITEM hb = HB_ITEM_NIL
 #endif
 #ifndef HB_CDP_SUPPORT_OFF
 #  include "hbapicdp.h"
@@ -2170,10 +2169,8 @@ HB_FUNC( DBSTRUCT )
 HB_FUNC( DBTABLEEXT )
 {
    HB_THREAD_STUB
-   HB_ITEM_NEW( Item );
    AREAP pArea = HB_CURRENT_WA;
-
-   hb_itemPutC( &Item, "" );
+   PHB_ITEM pItem = hb_itemPutC( NULL, "" );
 
    if( !pArea )
    {
@@ -2185,16 +2182,17 @@ HB_FUNC( DBTABLEEXT )
          pArea = hb_rddNewAreaNode( pRddNode, uiRddID );
          if ( pArea )
          {
-            SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, &Item );
+            SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
             SELF_RELEASE( pArea );
          }
       }
    }
    else
    {
-      SELF_INFO( pArea, DBI_TABLEEXT, &Item );
+      SELF_INFO( pArea, DBI_TABLEEXT, pItem );
    }
-   hb_itemReturnForward( &Item );
+   hb_itemReturnForward( pItem );
+   hb_itemRelease( pItem );
 }
 
 HB_FUNC( DBUNLOCK )
@@ -2297,13 +2295,15 @@ HB_FUNC( FIELDDEC )
 
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
-         HB_ITEM_NEW( Item );
+         PHB_ITEM pItem = hb_itemNew( NULL );
 
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, &Item ) == SUCCESS)
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, pItem ) == SUCCESS)
          {
-            hb_itemReturnForward( &Item );
+            hb_itemReturnForward( pItem );
+            hb_itemRelease( pItem );
             return;
          }
+         hb_itemRelease( pItem );
       }
    }
 
@@ -2343,13 +2343,15 @@ HB_FUNC( FIELDLEN )
       USHORT uiIndex;
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
-         HB_ITEM_NEW( Item );
+         PHB_ITEM pItem = hb_itemNew( NULL );
 
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, &Item ) == SUCCESS )
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
          {
-            hb_itemReturnForward( &Item );
+            hb_itemReturnForward( pItem );
+            hb_itemRelease( pItem );
             return;
          }
+         hb_itemRelease( pItem );
       }
    }
 
@@ -2400,16 +2402,21 @@ HB_FUNC( FIELDPOS )
 HB_FUNC( FIELDPUT )
 {
    HB_THREAD_STUB
-   USHORT uiIndex;
    AREAP pArea = HB_CURRENT_WA;
 
-   uiIndex = hb_parni( 1 );
-   if( pArea && uiIndex )
+   if( pArea )
    {
-      PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
-      if( SELF_PUTVALUE( pArea, uiIndex, pItem ) == SUCCESS )
+      USHORT uiIndex = hb_parni( 1 );
+      if( uiIndex )
       {
-         hb_itemReturn( pItem );
+         PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
+         if( pItem && !HB_IS_NIL( pItem ) )
+         {
+            if( SELF_PUTVALUE( pArea, uiIndex, pItem ) == SUCCESS )
+            {
+               hb_itemReturn( pItem );
+            }
+         }
       }
    }
 }
@@ -2425,13 +2432,15 @@ HB_FUNC( FIELDTYPE )
 
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
-         HB_ITEM_NEW( Item );
+         PHB_ITEM pItem = hb_itemNew( NULL );
 
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, &Item ) == SUCCESS )
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
          {
-            hb_itemReturnForward( &Item );
+            hb_itemReturnForward( pItem );
+            hb_itemRelease( pItem );
             return;
          }
+         hb_itemRelease( pItem );
       }
    }
 
@@ -2477,9 +2486,10 @@ HB_FUNC( HEADER )
       hb_retni( 0 );
    else
    {
-      HB_ITEM_NEW( HdrSize );
-      SELF_INFO( pArea, DBI_GETHEADERSIZE, &HdrSize );
-      hb_itemReturnForward( &HdrSize );
+      PHB_ITEM pItem = hb_itemNew( NULL );
+      SELF_INFO( pArea, DBI_GETHEADERSIZE, pItem );
+      hb_itemReturnForward( pItem );
+      hb_itemRelease( pItem );
    }
 }
 
@@ -2541,9 +2551,11 @@ HB_FUNC( LUPDATE )
 
    if( pArea )
    {
-      HB_ITEM_NEW( Item );
-      SELF_INFO( pArea, DBI_LASTUPDATE, &Item );
-      hb_itemReturnForward( &Item );
+      PHB_ITEM pItem = hb_itemNew( NULL );
+
+      SELF_INFO( pArea, DBI_LASTUPDATE, pItem );
+      hb_itemReturnForward( pItem );
+      hb_itemRelease( pItem );
    }
    else
       hb_retds( "" );
@@ -3373,15 +3385,15 @@ HB_FUNC( RECCOUNT )
 HB_FUNC( RECNO )
 {
    HB_THREAD_STUB
-   HB_ITEM_NEW( RecNo );
    AREAP pArea = HB_CURRENT_WA;
+   PHB_ITEM pRecNo = hb_itemPutNL( NULL, 0 );
 
-   hb_itemPutNL( &RecNo, 0 );
    if( pArea )
    {
-      SELF_RECID( pArea, &RecNo );
+      SELF_RECID( pArea, pRecNo );
    }
-   hb_itemReturnForward( &RecNo );
+   hb_itemReturnForward( pRecNo );
+   hb_itemRelease( pRecNo );
 }
 
 HB_FUNC( RECSIZE )
@@ -3391,9 +3403,10 @@ HB_FUNC( RECSIZE )
 
    if( pArea )
    {
-      HB_ITEM_NEW( RecSize );
-      SELF_INFO( pArea, DBI_GETRECSIZE, &RecSize );
-      hb_itemReturnForward( &RecSize );
+      PHB_ITEM pItem = hb_itemNew( NULL );
+      SELF_INFO( pArea, DBI_GETRECSIZE, pItem );
+      hb_itemReturnForward( pItem );
+      hb_itemRelease( pItem );
    }
    else
       hb_retni( 0 );
@@ -4555,7 +4568,7 @@ HB_FUNC( DBF2TEXT )
    int iSepLen;
    USHORT uiFields = 0;
    USHORT ui;
-   HB_ITEM_NEW( Tmp );
+   PHB_ITEM pTmp;
    BOOL bWriteSep = FALSE;
 
    BOOL bEof = TRUE;
@@ -4563,11 +4576,14 @@ HB_FUNC( DBF2TEXT )
 
    BOOL bNoFieldPassed = ( pFields == NULL || pFields->item.asArray.value->ulLen == 0 ) ;
 
+
    if( ! handle )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBF2TEXT" );
       return;
    }
+
+   pTmp = hb_itemNew( NULL );
 
    if ( !cDelim )
    {
@@ -4612,15 +4628,15 @@ HB_FUNC( DBF2TEXT )
                   hb_fsWriteLarge( handle, cSep, iSepLen );
                }
 
-               SELF_GETVALUE( pArea, ui, &Tmp );
+               SELF_GETVALUE( pArea, ui, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF
-               if( HB_IS_STRING( &Tmp ) && cdp && (cdp != hb_cdp_page) )
+               if( HB_IS_STRING( pTmp ) && cdp && (cdp != hb_cdp_page) )
                {
-                  hb_cdpnTranslate( Tmp.item.asString.value, hb_cdp_page, cdp, Tmp.item.asString.length );
+                  hb_cdpnTranslate( pTmp->item.asString.value, hb_cdp_page, cdp, pTmp->item.asString.length );
                }
 #endif
-               bWriteSep = hb_ExportVar( handle, &Tmp, cDelim );
-               hb_itemClear( &Tmp );
+               bWriteSep = hb_ExportVar( handle, pTmp, cDelim );
+               hb_itemClear( pTmp );
             }
          }
          // Only requested fields are exported here
@@ -4642,15 +4658,15 @@ HB_FUNC( DBF2TEXT )
                      {
                         hb_fsWriteLarge( handle, cSep, iSepLen );
                      }
-                     SELF_GETVALUE( pArea, iPos, &Tmp );
+                     SELF_GETVALUE( pArea, iPos, pTmp );
 #ifndef HB_CDP_SUPPORT_OFF
-                     if( HB_IS_STRING( &Tmp ) && cdp && (cdp != hb_cdp_page) )
+                     if( HB_IS_STRING( pTmp ) && cdp && (cdp != hb_cdp_page) )
                      {
-                        hb_cdpnTranslate( Tmp.item.asString.value, hb_cdp_page, cdp, Tmp.item.asString.length );
+                        hb_cdpnTranslate( pTmp->item.asString.value, hb_cdp_page, cdp, pTmp->item.asString.length );
                      }
 #endif
-                     bWriteSep = hb_ExportVar( handle, &Tmp, cDelim );
-                     hb_itemClear( &Tmp );
+                     bWriteSep = hb_ExportVar( handle, pTmp, cDelim );
+                     hb_itemClear( pTmp );
                   }
                }
             }
@@ -4670,4 +4686,5 @@ HB_FUNC( DBF2TEXT )
 
    // Writing EOF
    hb_fsWriteLarge( handle, (BYTE*) "\x1A", 1 );
+   hb_itemRelease( pTmp );
 }

@@ -3478,7 +3478,10 @@ static void hb_ntxCreateFName( NTXAREAP pArea, char * szBagName, BOOL * fProd,
 
    if( szTagName )
    {
-      hb_strncpyUpperTrim( szTagName, pFileName->szName, NTX_MAX_TAGNAME );
+      if( pFileName->szName )
+         hb_strncpyUpperTrim( szTagName, pFileName->szName, NTX_MAX_TAGNAME );
+      else
+         szTagName[ 0 ] = '\0';
    }
 
    if( !pFileName->szExtension || !fName )
@@ -3492,23 +3495,26 @@ static void hb_ntxCreateFName( NTXAREAP pArea, char * szBagName, BOOL * fProd,
          pFileName->szExtension = hb_itemGetCPtr( pExtInfo.itmResult );
       }
    }
-
    hb_fsFNameMerge( szFileName, pFileName );
 
-   if( pExt )
-      hb_itemRelease( pExt );
    if( fProd )
    {
-      if( !fName )
+      if( ! pFileName->szName )
+         *fProd = FALSE;
+      else if( !fName )
          *fProd = TRUE;
       else
       {
          PHB_FNAME pTableFileName = hb_fsFNameSplit( pArea->szDataFileName );
-         *fProd = hb_stricmp( pTableFileName->szName, pFileName->szName ) == 0;
+
+         *fProd = pTableFileName->szName &&
+                  hb_stricmp( pTableFileName->szName, pFileName->szName ) == 0;
          hb_xfree( pTableFileName );
       }
    }
    hb_xfree( pFileName );
+   if( pExt )
+      hb_itemRelease( pExt );
 }
 
 /*
@@ -3521,10 +3527,15 @@ static LPNTXINDEX hb_ntxFindBag( NTXAREAP pArea, char * szBagName )
    BOOL fFound;
 
    pSeek = hb_fsFNameSplit( szBagName );
+   if( ! pSeek->szName )
+      pSeek->szName = "";
+
    pIndex = pArea->lpIndexes;
    while( pIndex )
    {
       pName = hb_fsFNameSplit( pIndex->IndexName );
+      if( ! pName->szName )
+         pName->szName = "";
       fFound = !hb_stricmp( pName->szName, pSeek->szName ) &&
                ( !pSeek->szPath || ( pName->szPath &&
                   !hb_stricmp( pName->szPath, pSeek->szPath ) ) ) &&
@@ -7097,8 +7108,10 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    hb_ntxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ),
                       &fProd, szFileName, szTagName );
 
+/*
    if( ! szTagName[0] )
       return FAILURE;
+*/
 
    pIndex = hb_ntxFindBag( pArea, szFileName );
 
@@ -7205,9 +7218,7 @@ static ERRCODE ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    hb_ntxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ), &fProd,
                       szFileName, szTagName );
-
-   if( szTagName[0] )
-      pIndex = hb_ntxFindBag( pArea, szFileName );
+   pIndex = hb_ntxFindBag( pArea, szFileName );
 
    if( pIndex )
    {

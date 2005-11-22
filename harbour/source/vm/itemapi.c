@@ -1335,6 +1335,53 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
    return pItem;
 }
 
+/* Internal API, not standard Clipper */
+/* UnShare string buffer of given item */
+
+PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
+{
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemUnShare(%p)", pItem));
+
+   if( HB_IS_BYREF( pItem ) )
+   {
+      pItem = hb_itemUnRef( pItem );
+   }
+
+   if( HB_IS_STRING( pItem ) )
+   {
+      if( pItem->item.asString.bStatic || *( pItem->item.asString.u.pulHolders ) > 1 )
+      {
+         ULONG ulLen = pItem->item.asString.length;
+         char *szText = ( char* ) hb_xgrab( ulLen + 1 );
+
+         hb_xmemcpy( szText, pItem->item.asString.value, ulLen + 1 );
+         pItem->item.asString.value = szText;
+         if( ! pItem->item.asString.bStatic )
+         {
+            --*( pItem->item.asString.u.pulHolders );
+         }
+         pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+         *( pItem->item.asString.u.pulHolders ) = 1;
+      }
+   }
+
+   return pItem;
+}
+
+/* Internal API, not standard Clipper */
+/* clone the given item */
+PHB_ITEM HB_EXPORT hb_itemClone( PHB_ITEM pItem )
+{
+   if( HB_IS_ARRAY( pItem ) )
+   {
+      return hb_arrayClone( pItem, NULL );
+   }
+   else
+   {
+      return hb_itemNew( pItem );
+   }
+}
+
 
 /* Internal API, not standard Clipper */
 

@@ -68,9 +68,10 @@ typedef struct
       HB_SYMBOLSCOPE value;      /* the scope of the symbol */
       void *         pointer;    /* filler to force alignment */
    } scope;
-   union {
+   union
+   {
      PHB_FUNC        pFunPtr;        /* function address for function symbol table entries */
-     int             iStaticsBase;
+     int             iStaticsBase;   /* base offset to array of statics */
    } value;
    struct _HB_DYNS * pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;

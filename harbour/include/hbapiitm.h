@@ -136,6 +136,8 @@ extern void     hb_itemClear    ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemUnRef    ( PHB_ITEM pItem ); /* de-references passed variable */
 extern PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem ); /* de-references passed variable, one step*/
 extern PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem ); /* de-references passed variable, leaving the last reference */
+extern PHB_ITEM hb_itemUnShare  ( PHB_ITEM pItem ); /* un-share given string item */
+extern PHB_ITEM hb_itemClone    ( PHB_ITEM pItem ); /* clone the given item */
 extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern BOOL     hb_itemStrBuf   ( char *szResult, PHB_ITEM pNumber, int iSize, int iDec ); /* convert a number to a string */

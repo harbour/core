@@ -4789,7 +4789,10 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
 
    if ( szBaseName )
    {
-      hb_strncpyUpperTrim( szBaseName, pFileName->szName, CDX_MAXTAGNAMELEN );
+      if( pFileName->szName )
+         hb_strncpyUpperTrim( szBaseName, pFileName->szName, CDX_MAXTAGNAMELEN );
+      else
+         szBaseName[ 0 ] = '\0';
    }
 
    if ( !pFileName->szExtension || !fName )
@@ -4827,7 +4830,8 @@ static void hb_cdxOrdListClear( CDXAREAP pArea, BOOL fAll, LPCDXINDEX pKeepInd )
          PHB_FNAME pFileNameDbf, pFileNameCdx;
          pFileNameDbf = hb_fsFNameSplit( pArea->szDataFileName );
          pFileNameCdx = hb_fsFNameSplit( pArea->lpIndexes->szFileName );
-         fAll = ( hb_stricmp( pFileNameDbf->szName, pFileNameCdx->szName ) != 0 );
+         fAll = hb_stricmp( pFileNameDbf->szName ? pFileNameDbf->szName : "",
+                            pFileNameCdx->szName ? pFileNameCdx->szName : "" ) != 0;
          hb_xfree( pFileNameDbf );
          hb_xfree( pFileNameCdx );
       }
@@ -4857,7 +4861,7 @@ static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, char * szBagName )
    char * szBaseName, * szBasePath;
 
    pFileName = hb_fsFNameSplit( szBagName );
-   szBaseName = hb_strdup( pFileName->szName );
+   szBaseName = hb_strdup( pFileName->szName ? pFileName->szName : "" );
    szBasePath = pFileName->szPath ? hb_strdup( pFileName->szPath ) : NULL;
    hb_strUpper( szBaseName, strlen(szBaseName) );
 
@@ -4866,8 +4870,9 @@ static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, char * szBagName )
    {
       hb_xfree( pFileName );
       pFileName = hb_fsFNameSplit( pIndex->szFileName );
-      if ( !hb_stricmp( pFileName->szName, szBaseName ) && ( !szBasePath ||
-           ( pFileName->szPath && !hb_stricmp( pFileName->szPath, szBasePath ) ) ) )
+      if ( !hb_stricmp( pFileName->szName ? pFileName->szName : "", szBaseName ) &&
+           ( !szBasePath ||
+             ( pFileName->szPath && !hb_stricmp( pFileName->szPath, szBasePath ) ) ) )
          break;
       pIndex = pIndex->pNext;
    }
@@ -6989,9 +6994,10 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    hb_cdxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ),
                       szFileName, szBaseName );
 
+/*
    if ( ! szBaseName[0] )
       return FAILURE;
-
+*/
    pIndex = hb_cdxFindBag( pArea, szFileName );
 
    if ( pIndex )
@@ -7453,7 +7459,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    {
       PHB_FNAME pFileName;
       pFileName = hb_fsFNameSplit( pArea->szDataFileName );
-      hb_strncpyUpperTrim( szFileName, pFileName->szName, CDX_MAXTAGNAMELEN );
+      hb_strncpyUpperTrim( szFileName, pFileName->szName ? pFileName->szName : "", CDX_MAXTAGNAMELEN );
       hb_xfree( pFileName );
       if ( hb_stricmp( szFileName, szCpndTagName ) == 0 )
       {

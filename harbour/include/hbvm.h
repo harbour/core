@@ -64,8 +64,8 @@ extern void HB_EXPORT hb_vmQuit( void );            /* Immediately quits the vir
 /* registration AtInit and AtExit functions - they are executed
  * just before (after) .prg INIT (EXIT) procedures.
  */
-void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
-void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
+extern void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
+extern void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
 
 /* Harbour virtual machine functions */
 extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */

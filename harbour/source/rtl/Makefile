@@ -103,6 +103,7 @@ C_SOURCES=\
     strcase.c    \
     strings.c    \
     strmatch.c   \
+    strpeek.c    \
     strtran.c    \
     strzero.c    \
     stuff.c      \
