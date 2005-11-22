@@ -18,6 +18,10 @@ LIBS=\
 	vm \
 	macro \
 	pp \
+	dbfntx \
+	dbfcdx \
+	dbffpt \
+	hbsix \
 	common \
 
 ifeq ($(PM),)

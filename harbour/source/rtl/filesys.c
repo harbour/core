@@ -851,9 +851,6 @@ BOOL    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
 #else
 
-   HB_SYMBOL_UNUSED( hFileHandle );
-   HB_SYMBOL_UNUSED( uiDevMode );
-
    hb_fsSetError( ( USHORT ) FS_ERROR );
 
    return FALSE;

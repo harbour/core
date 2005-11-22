@@ -20,6 +20,8 @@ echo macro.lib >> build.tmp
 echo pp.lib >> build.tmp
 echo dbfntx.lib >> build.tmp
 echo dbfcdx.lib >> build.tmp
+echo dbffpt.lib >> build.tmp
+echo hbsix.lib >> build.tmp
 echo common.lib >> build.tmp
 bcc32 @build.tmp
 del build.tmp

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "hbdefs.h"
 
 int main()

@@ -961,13 +961,13 @@
  *      C Prototype
  *      
  *      #include <hbapifs.h>
- *      hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode ) --> void
+ *      hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode ) --> BOOL
  *  $ARGUMENTS$
  *      <hFileHandle>
  * 
  *      <uiDevMode>
  *  $RETURNS$
- *      
+ *      TRUE when successful, FALSE when not.
  *  $DESCRIPTION$
  *      
  *  $EXAMPLES$

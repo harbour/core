@@ -21,6 +21,10 @@ LIBS=\
 	vm \
 	macro \
 	pp \
+	dbfntx \
+	dbfcdx \
+	dbffpt \
+	hbsix \
 	common \
 
 include $(TOP)$(ROOT)config/bin.cf

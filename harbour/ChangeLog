@@ -7,6 +7,34 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+      * fixed <-x-> match marker
+2005-11-22 10:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+  * doc/en/hb_apifs.txt
+    ! Fixed doc for hb_fsSetDevMode()
+
+  * source/rtl/filesys.c
+    + Partially undone prev commit, so that now it gives 
+      unreferenced var warnings for the not-implemented 
+      platform branch.
+
+  * tests/bldtest/bldtest.c
+    + Added missing CVS ID.
+
+  * samples/guestbk/Makefile
+  * samples/guestbk/bld_b32.bat
+  * samples/hscript/Makefile
+  * samples/hscript/bld_b32.bat
+  * samples/misc/Makefile
+  * samples/pe/Makefile
+  * tests/Makefile
+  * utils/hbdoc/Makefile
+  * utils/hbextern/Makefile
+  * utils/hbmake/Makefile
+  * utils/hbrun/Makefile
+  * utils/hbtest/Makefile 
+    + Added missing dbf*, hbsix libs.
+      Could not test GCC because MingW build is broken.
+
 2005-11-22 02:22 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * makefile.bc
     * updated to compile source/rtl/strpeek.c

@@ -14,7 +14,7 @@ PRG_SOURCES=\
 	gentrf.prg \
 	genng.prg \
 	genhtm.prg \
-    genchm.prg \
+	genchm.prg \
 	genrtf.prg \
 	genhpc.prg \
 	genasc.prg \
@@ -39,6 +39,10 @@ LIBS=\
 	macro \
 	pp \
 	lang \
+	dbfntx \
+	dbfcdx \
+	dbffpt \
+	hbsix \
 	common \
 
 include $(TOP)$(ROOT)config/bin.cf
