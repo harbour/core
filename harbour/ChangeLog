@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2005-11-22 10:31 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+  * source/rtl/symbol.prg
+  * source/vm/dynsym.c
+  * include/hbextern.ch
+    ! Moved and renamed two functions from BEGINDUMP to their 
+      proper place.
+      GETSYMBOLPOINTER() -> __DYNSGETPOINTER()
+      GETSYMBOLNAME() -> __DYNSGETNAME()
+    + Added the two functions to hbextern.ch
+    + TOFIX added to symbol.prg to remove the remaining one C 
+      function inside BEGINDUMP. (Antonio, can you take a look?)
+
 2005-11-22 10:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
   * doc/en/hb_apifs.txt
     ! Fixed doc for hb_fsSetDevMode()

@@ -50,32 +50,6 @@
  *
  */
 
-/* uncomment this section for a working sample
-
-// Class(y) Class Symbol documentation is located at:
-// http://www.clipx.net/ng/classy/ngdebc.php
-
-function Main()
-
-   local oSym := Symbol():New( "QOUT" )
-
-   ? "Now test the :Exec() method"
-
-   oSym:Exec( "This string is being printed by QOUT" )
-   oSym:Exec( "which is being invoked by the :Exec()" )
-   oSym:Exec( "method in the Symbol class." )
-
-   ?
-   ? "symbol name: ", oSym:name
-
-   ? "Comparing QOut symbol with xOut symbol"
-   ? oSym:IsEqual( Symbol():New( "xOut" ) )
-
-   ? "done!"
-   ?
-
-return nil */
-
 #include "hbclass.ch"
 
 CLASS Symbol
@@ -91,13 +65,13 @@ CLASS Symbol
 
    METHOD _name( cName ) VIRTUAL // name simulates a read-only DATA so it
                                  // can't be assigned
-   METHOD name() INLINE GetSymbolName( ::nSym ) // retrieves the symbol name
+   METHOD name() INLINE __DynSGetName( ::nSym ) // retrieves the symbol name
 
 ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
 
-   ::nSym = GetSymbolPointer( cSymName )
+   ::nSym = __DynSGetPointer( cSymName )
 
 return Self
 
@@ -111,20 +85,10 @@ return .f.
 
 #pragma BEGINDUMP
 
+/* TOFIX: Not to use BEGINDUMP in Harbour core code. Move SYMBOL_EXEC to symbolc.c */
+
 #include <hbapi.h>
 #include <hbvm.h>
-
-HB_FUNC( GETSYMBOLPOINTER )
-{
-   hb_retptr( hb_dynsymGet( hb_parc( 1 ) ) );
-}
-
-HB_FUNC( GETSYMBOLNAME )
-{
-   PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
-
-   hb_retc( ( pDynSym != NULL ? pDynSym->pSymbol->szName : "" ) );
-}
 
 HB_FUNC( SYMBOL_EXEC )
 {

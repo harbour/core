@@ -416,3 +416,15 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 }
 
 #endif
+
+HB_FUNC( __DYNSGETPOINTER )
+{
+   hb_retptr( hb_dynsymGet( hb_parc( 1 ) ) );
+}
+
+HB_FUNC( __DYNSGETNAME )
+{
+   PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
+
+   hb_retc( ( pDynSym != NULL ? pDynSym->pSymbol->szName : "" ) );
+}
