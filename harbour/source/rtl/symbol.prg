@@ -65,13 +65,13 @@ CLASS Symbol
 
    METHOD _name( cName ) VIRTUAL // name simulates a read-only DATA so it
                                  // can't be assigned
-   METHOD name() INLINE __DynSGetName( ::nSym ) // retrieves the symbol name
+   METHOD name() INLINE __DynsP2Name( ::nSym ) // retrieves the symbol name
 
 ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
 
-   ::nSym = __DynSGetPointer( cSymName )
+   ::nSym = __DynSN2Ptr( cSymName )
 
 return Self
 

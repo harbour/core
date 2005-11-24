@@ -417,12 +417,12 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 
 #endif
 
-HB_FUNC( __DYNSGETPOINTER )
+HB_FUNC( __DYNSN2PTR )
 {
    hb_retptr( hb_dynsymGet( hb_parc( 1 ) ) );
 }
 
-HB_FUNC( __DYNSGETNAME )
+HB_FUNC( __DYNSP2NAME )
 {
    PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
 

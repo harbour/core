@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2005-11-24 23:24 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+  * include/hbpcode.h
+    + Comment added about adding new pcodes at the end of 
+      the list for compatibility.
+
+  * source/rtl/filesys.c
+    + Added hb_fsSetDevMode() Unix branch added (thx Przemek)
+
+  * tests/mathtest.prg
+  * source/rtl/math.c
+    ! Fixed prev commit to comply with 10char function name 
+      rule:
+      HB_MATHERRMODE()    -> HB_MATHERMODE()   
+      HB_MATHERRORBLOCK() -> HB_MATHERBLOCK()
+
+  * source/rtl/seconds.c
+    ! hb_secondsCPU() move inside FlagShip guard instead 
+      of HB_EXTENSION.
+    * hb_secondsCPU() made static (Harbour level function 
+      helper only with non-std name).
+
+  * source/vm/dynlibhb.c
+  * include/hbextern.ch
+    * LIBLOAD(), LIBFREE() moved (back) to Harbour namespace:
+      HB_LIBLOAD(), HB_LIBFREE()
+    + Added these functions to hbextern.ch
+
+  * source/rtl/symbol.prg
+  * source/vm/dynsym.c
+  * include/hbextern.ch
+    * Internal function names renamed to comply and to 
+      not collide with existing ones (mistake in prev 
+      commit).
+
+  + tests/symbolt.prg 
+    ; Missed from prev commit.
+
 2005-11-22 10:31 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
   * source/rtl/symbol.prg
   * source/vm/dynsym.c

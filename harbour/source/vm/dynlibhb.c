@@ -62,7 +62,7 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-HB_FUNC( LIBLOAD )
+HB_FUNC( HB_LIBLOAD )
 {
 #if defined(HB_OS_WIN_32)
    {
@@ -75,7 +75,7 @@ HB_FUNC( LIBLOAD )
 #endif
 }
 
-HB_FUNC( LIBFREE )
+HB_FUNC( HB_LIBFREE )
 {
 #if defined(HB_OS_WIN_32)
    {

@@ -54,6 +54,13 @@
 #define HB_PCODE_H_
 
 /* NOTE:
+ *
+ * IMPORTANT:
+ *   Always add new pcodes to the end of the list to maintain compatibility.
+ *
+ */
+
+/* NOTE:
  * Please update any opcode lookup tables present in
  *  genc.c
  *  harbour.c

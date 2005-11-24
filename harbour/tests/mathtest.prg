@@ -36,9 +36,9 @@ local bOldMathErr
   qout ("       sqrt (-4) == 0.00 ?", sqrt (-4))
   qout ("")
 
-  nOldMathErrMode := hb_MathErrMode (HB_MATH_ERRMODE_USERDEFAULT)
+  nOldMathErrMode := hb_MathErMode (HB_MATH_ERRMODE_USERDEFAULT)
 
-  qout ("  IIb) error handling by error (hb_MathErrMode() == HB_MATH_ERRMODE_USERDEFAULT)")
+  qout ("  IIb) error handling by error (hb_MathErMode() == HB_MATH_ERRMODE_USERDEFAULT)")
   qout ("       exp (-1000) == 0.00   ?", exp (-1000))
   qout ("       exp (1000) == ****... ?", exp (1000))
   qout ("")
@@ -48,12 +48,12 @@ local bOldMathErr
   qout ("       sqrt (-4) == 0.00 ?", sqrt (-4))
   qout ("")
 
-  hb_MathErrMode (nOldMathErrMode)
+  hb_MathErMode (nOldMathErrMode)
 
-  bOldMathErr := hb_MathErrorBlock ({|nType, cFuncname, cError, nArg1, nArg2, aInfo|;
-                                   localmatherr (nType, cFuncname, cError, nArg1, nArg2, aInfo)})
+  bOldMathErr := hb_MathErBlock ({|nType, cFuncname, cError, nArg1, nArg2, aInfo|;
+                                  localmatherr (nType, cFuncname, cError, nArg1, nArg2, aInfo)})
 
-  qout ("  IIc) error handling by callback block (hb_MathErrorBlock())")
+  qout ("  IIc) error handling by callback block (hb_MathErBlock())")
   qout ("       exp (-1000) == ?", exp (-1000))
   qout ("       exp (1000) ==  ?", exp (1000))
   qout ("")
@@ -62,7 +62,7 @@ local bOldMathErr
   qout ("")
   qout ("       sqrt (-4) ==   ?", sqrt (-4))
 
-  hb_MathErrorBlock (bOldMathErr)
+  hb_MathErBlock (bOldMathErr)
 
 return nil
 

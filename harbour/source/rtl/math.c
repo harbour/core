@@ -316,7 +316,7 @@ int hb_mathGetErrMode (void)
 }
 
 /* Harbour equivalent to mathSet/GetErrMode */
-HB_FUNC( HB_MATHERRMODE )  /* ([<nNewMode>]) -> <nOldMode> */
+HB_FUNC( HB_MATHERMODE )  /* ([<nNewMode>]) -> <nOldMode> */
 {
   hb_retni (hb_mathGetErrMode());
 
@@ -579,7 +579,7 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 }
 
 /* set/get math error block */
-HB_FUNC( HB_MATHERRORBLOCK )  /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
+HB_FUNC( HB_MATHERBLOCK )  /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
 {
 
   /* immediately install hb_matherrblock and keep it permanently installed !

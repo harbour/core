@@ -843,11 +843,15 @@ BOOL    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 #elif defined( HB_OS_UNIX )
 
    HB_SYMBOL_UNUSED( hFileHandle );
-   HB_SYMBOL_UNUSED( uiDevMode );
 
-   hb_fsSetError( ( USHORT ) FS_ERROR );
+   if uiDevMode == FD_TEXT )
+   {
+      hb_fsSetError( ( USHORT ) FS_ERROR );
+      return FALSE;
+   }
 
-   return FALSE;
+   hb_fsSetError( 0 );
+   return TRUE;
 
 #else
 
