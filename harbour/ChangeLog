@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2005-11-27 11:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * doc/en/math.txt
+     * Rename HB_MATHERRMODE()    --> HB_MATHERMODE(),
+              HB_MATHERRORBLOCK() --> HB_MATHERBLOCK(),
+              math.ch             --> hbmath.ch
+     * Some formating to 76 characters per line
+
 2005-11-24 23:24 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
   * include/hbpcode.h
     + Comment added about adding new pcodes at the end of 

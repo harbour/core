@@ -106,7 +106,8 @@
  *  $DESCRIPTION$
  *      This function converts a numeric expression to an integer. All
  *      decimal digits are truncated. This function does not round a value
- *      upward or downward; it merely truncates a number at the decimal point.
+ *      upward or downward; it merely truncates a number at the decimal
+ *      point.
  *  $EXAMPLES$
  *      SET Decimal to 5
  *      ? INT(632512.62541)
@@ -179,9 +180,9 @@
  *      This function returns the larger of the two passed espressions. If
  *      <xValue> and <xValue1> are numeric data types, the value returned by
  *      this function will be a numeric data type as well and will be the
- *      larger of the two numbers passed to it. If <xValue> and <xValue1> are
- *      date data types, the return value will be a date data
- *      type as well. It will be the later of the two dates passed to it.
+ *      larger of the two numbers passed to it. If <xValue> and <xValue1>
+ *      are date data types, the return value will be a date data type as
+ *      well. It will be the later of the two dates passed to it.
  *  $EXAMPLES$
  *      ? MAX(214514214,6251242142)
  *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')
@@ -251,7 +252,8 @@
  *  $RETURNS$
  *      <nRemainder>  The remainder after the division operation.
  *  $DESCRIPTION$
- *      This functuion returns the remainder of one number divided by another.
+ *      This functuion returns the remainder of one number divided by
+ *      another.
  *  $EXAMPLES$
  *      ? MOD(12,8.521)
  *      ? Mod(12,0)
@@ -284,9 +286,10 @@
  *  $RETURNS$
  *      <nSqrt>   The square root of <number>.
  *  $DESCRIPTION$
- *      This function returns the square root of <nNumber>. The precision of
- *      this evaluation is based solely on the settings of the SET DECIMAL TO
- *      command. Any negative number passed as <nNumber> will always return a 0.
+ *      This function returns the square root of <nNumber>. The precision
+ *      of this evaluation is based solely on the settings of the
+ *      SET DECIMAL TO command. Any negative number passed as <nNumber>
+ *      will always return a 0.
  *  $EXAMPLES$
  *      SET Decimal to 5
  *      ? SQRT(632512.62541)
@@ -321,10 +324,10 @@
  *      <nResult> The rounded number.
  *  $DESCRIPTION$
  *      This function rounds off the value of <nNumber> to the number of
- *      decimal places specified by <nPlace>. If the value of <nPlace> is a
- *      negative number, the function will attempt to round <nNumber> in whole
- *      numbers. Numbers from 5 through 9 will be rounded up, all others will
- *      be rounded down.
+ *      decimal places specified by <nPlace>. If the value of <nPlace> is
+ *      a negative number, the function will attempt to round <nNumber> in
+ *      whole numbers. Numbers from 5 through 9 will be rounded up, all
+ *      others will be rounded down.
  *  $EXAMPLES$
  *      ? ROUND(632512.62541,5)
  *      ? ROUND(845414111.91440,3)
@@ -350,39 +353,47 @@
  *      get the last math lib error
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
- *      hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc) --> int iMathErrorType
+ *      hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc)
+ *                          --> int iMathErrorType
  *  $ARGUMENTS$
- *      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL, the structure will be filled
- *                  with information about the last math error:
- *                  typedef struct _HB_MATH_EXCEPTION {
- *                    int type;        /* math error type, is one of the constants HB_MATH_ERR_xxx defined in math.ch */
- *                    char *funcname;  /* pointer to name of the math C RTL routine that caused the error */
- *                    char *error;     /* pointer to error description */ 
- *                    double arg1;     /* first and */
- *                    double arg2;     /* second double argument to the math routine */
- *                    double retval;   /* corrected return value for the math routine */
- *                    int retvalwidth; /* width and */
- *                    int retvaldec;   /* decimals of the corrected return value, both default to -1 */
- *                    int handled;     /* 1, if the math error is already corrected, 0 otherwise */
- *                 } HB_MATH_EXCEPTION;
+ *      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL,
+ *                  the structure will be filled with information about the
+ *                  last math error:
+ *
+ *           typedef struct _HB_MATH_EXCEPTION {
+ *             int type;        // Math error type, is one of the constants
+ *                              // HB_MATH_ERR_xxx defined in hbmath.ch
+ *             char *funcname;  // Pointer to name of the math C RTL routine
+ *                              // that caused the error.
+ *             char *error;     // Pointer to error description.
+ *             double arg1;     // First and
+ *             double arg2;     // Second double argument to the math routine.
+ *             double retval;   // Corrected return value for the math routine.
+ *             int retvalwidth; // Width and
+ *             int retvaldec;   // Decimals of the corrected return value,
+ *                              // both default to -1
+ *             int handled;     // 1, if the math error is already corrected,
+ *                              // 0 otherwise.
+ *          } HB_MATH_EXCEPTION;
  *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
@@ -395,27 +406,28 @@
  *      reset the internal math error information structure
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
  *      hb_mathResetError (void) --> void
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
@@ -428,27 +440,28 @@
  *      check if harbour math error handling is available
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
  *      hb_mathIsMathErr (void) --> int iIsMathHandler
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
- *      
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
@@ -458,32 +471,34 @@
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
- *      set the harbour math handler 
+ *      set the harbour math handler
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
- *      hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc) --> HB_MATH_HANDLERPROC previous_handerproc
+ *      hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc)
+ *                        --> HB_MATH_HANDLERPROC previous_handerproc
  *  $ARGUMENTS$
- *      handlerproc             custom math handler 
- *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
+ *      handlerproc             custom math handler
+ *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
  *  $RETURNS$
  *      previous_handlerproc    previous math handler
- *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
+ *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
  *  $DESCRIPTION$
- * 
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
@@ -496,28 +511,29 @@
  *      get current Harbour math error handler
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
  *      hb_mathGetHandler (void) --> HB_MATH_HANDLERPROC handlerproc
  *  $ARGUMENTS$
- *      handlerproc             custom math handler 
- *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
+ *      handlerproc             custom math handler
+ *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
@@ -530,32 +546,34 @@
  *      set math error handling mode
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
  *      hb_mathSetErrMode (int imode) --> int ioldmode
  *  $ARGUMENTS$
- *      imode        math error handling mode, one of the following constants, defined in math.ch
+ *      imode        math error handling mode, one of the following
+ *                   constants, defined in hbmath.ch:
  *                     HB_MATH_ERRMODE_DEFAULT
  *                     HB_MATH_ERRMODE_CDEFAULT
  *                     HB_MATH_ERRMODE_USER
  *                     HB_MATH_ERRMODE_USERDEFAULT
  *                     HB_MATH_ERRMODE_USERCDEFAULT
  *  $RETURNS$
- *      ioldmode     old math error handling mode 
+ *      ioldmode     old math error handling mode
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *      hb_mathGetErrMode()
  *  $END$
  */
 
@@ -568,7 +586,7 @@
  *      get math error handling mode
  *  $SYNTAX$
  *      C Prototype
- *      
+ *
  *      #include <hbmath.h>
  *      hb_mathGetErrMode (void) --> imode
  *  $ARGUMENTS$
@@ -576,33 +594,35 @@
  *  $RETURNS$
  *      imode       math error handling mode
  *  $DESCRIPTION$
- *      
+ *
  *  $EXAMPLES$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Compliance is not applicable to API calls.
  *  $FILES$
+ *      Header file is hbmath.h
  *      Library is rtl
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      
+ *      hb_mathSetErrMode()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_MATHERRMODE()
+ *      HB_MATHERMODE()
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling mode
  *  $SYNTAX$
- *      HB_MATHERRMODE ([<nNewMode>]) -> <nOldMode> 
+ *      HB_MATHERMODE ([<nNewMode>]) --> <nOldMode>
  *  $ARGUMENTS$
- *      [<nNumber>]   new math error handling mode, one of the following constants, defined in math.ch
+ *      [<nNumber>]   new math error handling mode, one of the following
+ *                    constants, defined in hbmath.ch:
  *                     HB_MATH_ERRMODE_DEFAULT
  *                     HB_MATH_ERRMODE_CDEFAULT
  *                     HB_MATH_ERRMODE_USER
@@ -618,21 +638,22 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
+ *      Header file is hbmath.ch
  *      Library is rtl
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *      HB_MATHERRORBLOCK()
+ *      HB_MATHERBLOCK()
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
  *      Set/Get math error handling codeblock
  *  $SYNTAX$
- *      HB_MATHERRORBLOCK ([<bNewBlock>]) -> <bOldBlock> 
+ *      HB_MATHERBLOCK ([<bNewBlock>]) --> <bOldBlock>
  *  $ARGUMENTS$
  *  $RETURNS$
  *  $DESCRIPTION$
@@ -645,9 +666,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */
-
-
 
