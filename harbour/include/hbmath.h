@@ -114,8 +114,8 @@ extern void hb_mathResetError (void);
 extern int hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc);
 extern int hb_mathIsMathErr (void);
 
-extern int hb_mathSetDefErrMode (int imode);
-extern int hb_mathGetDefErrMode (void);
+extern int hb_mathSetErrMode (int imode);
+extern int hb_mathGetErrMode (void);
 extern int hb_matherr (HB_MATH_EXCEPTION * pexc);
 
 extern HB_MATH_HANDLERPROC hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc);

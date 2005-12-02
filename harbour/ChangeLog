@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+   * include/hbmath.h
+     ! Fixed a few declarations to be in sync with the 
+       implementation. (Thanks Chen)
+
 2005-11-27 11:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
    * doc/en/math.txt
      * Rename HB_MATHERRMODE()    --> HB_MATHERMODE(),
