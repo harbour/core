@@ -8,7 +8,7 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
-2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * include/hbmath.h
      ! Fixed a few declarations to be in sync with the 
        implementation. (Thanks Chen)
@@ -20,7 +20,7 @@
               math.ch             --> hbmath.ch
      * Some formating to 76 characters per line
 
-2005-11-24 23:24 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-24 23:24 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
   * include/hbpcode.h
     + Comment added about adding new pcodes at the end of 
       the list for compatibility.
@@ -57,7 +57,7 @@
   + tests/symbolt.prg 
     ; Missed from prev commit.
 
-2005-11-22 10:31 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-22 10:31 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
   * source/rtl/symbol.prg
   * source/vm/dynsym.c
   * include/hbextern.ch
@@ -69,7 +69,7 @@
     + TOFIX added to symbol.prg to remove the remaining one C 
       function inside BEGINDUMP. (Antonio, can you take a look?)
 
-2005-11-22 10:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-22 10:08 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
   * doc/en/hb_apifs.txt
     ! Fixed doc for hb_fsSetDevMode()
 
@@ -146,14 +146,14 @@
     + added hb_itemUnShare() - /* un-share given string item */
       and hb_itemClone() - /* clone the given item */
 
-2005-11-21 18:03 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-21 18:03 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    - include/math.ch
    + include/hbmath.ch
    * include/hbmath.h
    * tests/mathtest.prg
      ! math.ch -> hbmath.ch (rename)
 
-2005-11-21 17:44 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-21 17:44 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    + tests/simplet.prg
    * src/rtl/symbol.prg
      * Embedded example code moved to the test dir.
@@ -186,7 +186,7 @@
    * harbour/contrib/rdd_ads/makefile.vc
      - removed module ads0
 
-2005-11-19 00:30 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-19 00:30 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * include/hbapifs.c
    * src/rtl/filesys.c
      ! hb_fsSetDevMode() fixed back to return a BOOL value 
@@ -241,7 +241,7 @@
   * harbour/source/vm/runner.c
     * updated for modified HB_SYMB structure.
 
-2005-11-15 05:10 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-15 05:10 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
@@ -297,7 +297,7 @@
   * harbour/source/rdd/dbffpt/dbffpt1.c
     * synced with xHarbour
 
-2005-11-14 20:50 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-11-14 20:50 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * hrbdll.vc
    * makefile.nt
    * makefile.vc 
@@ -704,7 +704,7 @@ NOTE:
    * source/lang/msghewin.c
      * Update startup code to work with MSC
 
-2005-10-28 10:23 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-10-28 10:23 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
@@ -764,7 +764,7 @@ NOTE:
   * harbour/source/vm/maindllp.c
     ! fixed some declaration I missed in previous commit
 
-2005-10-24 12:08 UTC+0100 Viktor Szakats (viktor.szakats/syenar.hu)
+2005-10-24 12:08 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
@@ -1094,7 +1094,7 @@ NOTE:
         Many, many thanks to Przemek Czerpak for his work.
       
 
-2005-09-20 10:16 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2005-09-20 10:16 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/tget.prg
      ! One previous fix reverted because it broke numeric data entry.
@@ -1120,7 +1120,7 @@ NOTE:
    + tests\sbartest.prg
      Added sample of scrollbar class
 
-2005-06-14 21:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2005-06-14 21:11 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/disksphb.c
      * hb_DiskSpace() changed to not give a runtime error in case 
@@ -1140,12 +1140,12 @@ NOTE:
    * config/w32/global.cf
      ! Changed all line beginning spaces to Tabs.
 
-2005-06-11 13:01 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2005-06-11 13:01 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/idle.c 
      ! Fix to prev. commit.
 
-2005-06-09 18:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2005-06-09 18:09 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/tget.prg
      ! :display fixed (again) to always call VarGet block 
@@ -2533,7 +2533,7 @@ NOTE:
    * source/rtl/tget.prg
       * GetNew() no longer evaluates passed set/get codeblock    
 
-2004-08-01 14:38 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2004-08-01 14:38 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/filesys.c
      ! Out of bound buffer access fixed. (I couldn't test this)
@@ -2589,7 +2589,7 @@ NOTE:
   * hrbdll.bc
     + Added module scalar.prg
 
-2004-07-26 10:50 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2004-07-26 10:50 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/compiler/cmdcheck.c
      ! Writing out of bound when using -x compiler switch fixed.
@@ -3376,7 +3376,7 @@ NOTE:
       * fixed typo for -ks switch
 
 
-2004-04-01 09:09 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2004-04-01 09:09 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/common/hbffind.c
      ! Fix for NT4
@@ -3384,7 +3384,7 @@ NOTE:
    * source/rdd/dbsort.prg
      * Fix by Mitja Podgornik
 
-2004-04-01 08:49 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+2004-04-01 08:49 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * bin/bld.bat
      * Updated
