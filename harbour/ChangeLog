@@ -13,7 +13,7 @@
      + Added new functions HBDLLENTRY1() and HBDLLENTRY2()
      
      These function allow to call a Harbour (self contained) DLL and provide it
-     one or two Harbour items as parameters. A HBDLLENTRYN() that allows optinally 
+     one or two Harbour items as parameters. A HBDLLENTRYN() that allows optionally 
      N parameters would be valuable too.
 
 2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
