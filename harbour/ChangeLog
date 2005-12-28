@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2005-12-28 13:05 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * vm/maindll.c
+     + Added new functions HBDLLENTRY1() and HBDLLENTRY2()
+     
+     These function allow to call a Harbour (self contained) DLL and provide it
+     one or two Harbour items as parameters. A HBDLLENTRYN() that allows optinally 
+     N parameters would be valuable too.
+
 2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * include/hbmath.h
      ! Fixed a few declarations to be in sync with the 
