@@ -92,4 +92,18 @@ LONG HB_EXPORT PASCAL HBDLLENTRY( char * cProcName )
    return 0;
 }
 
+LONG HB_EXPORT PASCAL HBDLLENTRY1( char * cProcName, LONG pItem )
+{
+   hb_itemDoC( cProcName, 1, ( PHB_ITEM ) pItem, 0 );
+
+   return 0;
+}
+
+LONG HB_EXPORT PASCAL HBDLLENTRY2( char * cProcName, LONG pItem1, LONG pItem2 )
+{
+   hb_itemDoC( cProcName, 2, ( PHB_ITEM ) pItem1, ( PHB_ITEM ) pItem2, 0 );
+
+   return 0;
+}
+
 #endif
