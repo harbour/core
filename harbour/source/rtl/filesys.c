@@ -844,7 +844,7 @@ BOOL    HB_EXPORT hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
    HB_SYMBOL_UNUSED( hFileHandle );
 
-   if uiDevMode == FD_TEXT )
+   if( uiDevMode == FD_TEXT )
    {
       hb_fsSetError( ( USHORT ) FS_ERROR );
       return FALSE;

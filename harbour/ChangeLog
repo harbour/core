@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-01-09 14:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexprb.c
+   * source/compiler/exproptb.c
+   * source/macro/macrob.c
+      * fixed to release the memory if macro compiled code contains
+        a variable or a function reference
+        
+   * source/rtl/filesys.c
+      * added missing '(' to copile correctly on UNIX'es
+      
+
 2005-12-28 13:05 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * vm/maindll.c
      + Added new functions HBDLLENTRY1() and HBDLLENTRY2()

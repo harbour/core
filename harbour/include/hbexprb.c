@@ -828,6 +828,10 @@ static HB_EXPR_FUNC( hb_compExprUseVarRef )
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( pSelf );
       case HB_EA_DELETE:
+         /* NOTE: variable name should be released if macro compilation */
+#if defined( HB_MACRO_SUPPORT )
+             HB_XFREE( pSelf->value.asSymbol );
+#endif
          break;
    }
    return pSelf;
@@ -859,6 +863,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef )
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( pSelf );
       case HB_EA_DELETE:
+         /* NOTE: function name should be released if macro compilation */
+#if defined( HB_MACRO_SUPPORT )
+             HB_XFREE( pSelf->value.asSymbol );
+#endif
          break;
    }
    return pSelf;
