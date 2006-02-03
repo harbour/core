@@ -271,7 +271,7 @@ static BOOL s_fUseWaitLocks = TRUE;
           #endif
        #endif
 
-
+      #ifndef _WIN64 /* MSVC64 already provides these funtions */ 
       __inline void * LongToHandle( const long h )
       {
           return((void *) (INT_PTR) h );
@@ -281,6 +281,7 @@ static BOOL s_fUseWaitLocks = TRUE;
       {
          return((long) h );
       }
+      #endif
    #endif
 
 HANDLE DostoWinHandle( FHANDLE fHandle )
