@@ -370,6 +370,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
    $(OBJ_DIR)\strmatch.obj \
+   $(OBJ_DIR)\strpeek.obj \
    $(OBJ_DIR)\strtran.obj \
    $(OBJ_DIR)\strzero.obj \
    $(OBJ_DIR)\stuff.obj \
@@ -766,6 +767,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\cmdarg.obj \
    $(OBJ_DIR)\codebloc.obj \
    $(OBJ_DIR)\debug.obj \
+   $(OBJ_DIR)\dynlibhb.obj \
    $(OBJ_DIR)\dynsym.obj \
    $(OBJ_DIR)\estack.obj \
    $(OBJ_DIR)\eval.obj \
