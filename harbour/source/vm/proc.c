@@ -69,6 +69,7 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbstack.h"
 
 #ifdef HB_EXTENSION

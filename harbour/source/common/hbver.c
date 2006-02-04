@@ -291,7 +291,7 @@ char * hb_verPlatform( void )
    return pszPlatform;
 }
 
-BOOL HB_EXPORT hb_iswinnt(void)
+HB_EXPORT BOOL hb_iswinnt(void)
 {
 #if defined(HB_OS_WIN_32)
 

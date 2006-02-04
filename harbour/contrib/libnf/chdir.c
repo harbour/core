@@ -75,34 +75,13 @@ Endp     _HB_FUN_FT_CHDIR
 Ends     _NanFor
 End
 */
+
 /* This is the New one Rewriten in C*/
 
-
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
-
-#include "extend.h"
-#if defined(HB_OS_DOS)
-#include "dos.h"
-#endif
+#include "hbapi.h"
+#include "hbapifs.h"
 
 HB_FUNC( FT_CHDIR)
 {
-#if defined(HB_OS_DOS)
-   {
-
-    int Status;
-    char *path=hb_parc(1);
-    union REGS regs;
-    struct SREGS sregs;
-    segread(&sregs);
-    regs.h.ah=0x3B;
-    sregs.ds=FP_SEG(path);
-    regs.HB_XREGS.dx=FP_OFF(path);
-    HB_DOS_INT86X(0x21,&regs,&regs,&sregs);
-    Status=regs.HB_XREGS.ax;
-    hb_retl(Status);
-   }
-#endif
+   hb_retl( ISCHAR( 1 ) && hb_fsChDir( ( BYTE * ) hb_parc(1) ) );
 }

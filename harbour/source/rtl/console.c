@@ -80,85 +80,65 @@
 /* length of buffer for CR/LF characters */
 #define CRLF_BUFFER_LEN   OS_EOL_LEN + 1
 
-static BOOL   s_bInit = FALSE;
-static USHORT s_uiPRow;
-static USHORT s_uiPCol;
-static SHORT  s_originalMaxRow;
-static SHORT  s_originalMaxCol;
-static char   s_szCrLf[ CRLF_BUFFER_LEN ];
-#if defined(X__WIN32__)
-static int    s_iFilenoStdin;
-static int    s_iFilenoStdout;
-static int    s_iFilenoStderr;
-#else
-static int    s_iFilenoStdin;
-static int    s_iFilenoStdout;
-static int    s_iFilenoStderr;
-#endif
+static BOOL    s_bInit = FALSE;
+static USHORT  s_uiPRow;
+static USHORT  s_uiPCol;
+static char    s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
+static int     s_iCrLfLen = 1;
+static FHANDLE s_hFilenoStdin  = 0;
+static FHANDLE s_hFilenoStdout = 1;
+static FHANDLE s_hFilenoStderr = 2;
 
 void hb_conInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conInit()"));
 
-#if defined(OS_UNIX_COMPATIBLE) && !defined(HB_EOL_CRLF)
-   s_szCrLf[ 0 ] = HB_CHAR_LF;
-   s_szCrLf[ 1 ] = '\0';
-#else
-   s_szCrLf[ 0 ] = HB_CHAR_CR;
-   s_szCrLf[ 1 ] = HB_CHAR_LF;
-   s_szCrLf[ 2 ] = '\0';
-#endif
+#if !defined( HB_WIN32_IO )
+   /* when HB_WIN32_IO is set file handles with numbers 0, 1, 2 are
+      transalted inside filesys to:
+      GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
+      GetStdHandle( STD_ERROR_HANDLE ) */
 
-   s_uiPRow = s_uiPCol = 0;
-
-#if defined(X__WIN32__)
-
-   s_iFilenoStdin = GetStdHandle( STD_INPUT_HANDLE );
-   s_iFilenoStdout = GetStdHandle( STD_OUTPUT_HANDLE );
-
-#else
-
-   s_iFilenoStdin = fileno( stdin );
-   s_iFilenoStdout = fileno( stdout );
+   s_hFilenoStdin  = fileno( stdin );
+   s_hFilenoStdout = fileno( stdout );
+   s_hFilenoStderr = fileno( stderr );
 
 #endif
 
 #ifdef HB_C52_UNDOC
    {
-      int iStderr = hb_cmdargNum( "STDERR" ); /* Undocumented CA-Clipper switch //STDERR:x */
+      /* Undocumented CA-Clipper switch //STDERR:x */
+      FHANDLE hStderr = ( FHANDLE ) hb_cmdargNum( "STDERR" );
 
-      if( iStderr < 0 )        /* //STDERR not used or invalid */
-   #if defined(X__WIN32__)
-         s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );
-   #else
-         s_iFilenoStderr = fileno( stderr );
-   #endif
-      else if( iStderr == 0 )  /* //STDERR with no parameter or 0 */
-         s_iFilenoStderr = s_iFilenoStdout;
-      else                     /* //STDERR:x */
-         s_iFilenoStderr = iStderr;
+      if( hStderr == 0 )      /* //STDERR with no parameter or 0 */
+         s_hFilenoStderr = s_hFilenoStdout;
+      else if( hStderr > 0 ) /* //STDERR:x */
+         s_hFilenoStderr = hStderr;
    }
+#endif
+
+#if defined(OS_UNIX_COMPATIBLE) && !defined(HB_EOL_CRLF)
+   s_szCrLf[ 0 ] = HB_CHAR_LF;
+   s_szCrLf[ 1 ] = '\0';
+   s_iCrLfLen = 1;
 #else
-   #if defined(X__WIN32__)
-   s_iFilenoStderr = GetStdHandle( STD_ERROR_HANDLE );
-   #else
-   s_iFilenoStderr = fileno( stderr );
-   #endif
+   s_szCrLf[ 0 ] = HB_CHAR_CR;
+   s_szCrLf[ 1 ] = HB_CHAR_LF;
+   s_szCrLf[ 2 ] = '\0';
+   s_iCrLfLen = 2;
 #endif
 
-   /* Some compilers open stdout and stderr in text mode, but
-      Harbour needs them to be open in binary mode. */
+   /*
+    * Some compilers open stdout and stderr in text mode, but
+    * Harbour needs them to be open in binary mode.
+    */
+   hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
+   hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
-#if !defined(X__WIN32__)
-   hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
-   hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
-#endif
-
+   s_uiPRow = s_uiPCol = 0;
    s_bInit = TRUE;
 
-   hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
-   s_originalMaxRow = hb_gtMaxRow(); /* Save the original */
-   s_originalMaxCol = hb_gtMaxCol(); /* screen size */
+   hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr );
    hb_setkeyInit();  /* April White, May 6, 2000 */
 }
 
@@ -166,25 +146,23 @@ void hb_conRelease( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conRelease()"));
 
-   if( s_originalMaxRow != hb_gtMaxRow() || s_originalMaxCol != hb_gtMaxCol() )
-   {
-      /* If the program changed the screen size, restore the original */
-      hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
-   }
-
-#if !defined(X__WIN32__)
-   hb_fsSetDevMode( s_iFilenoStdout, FD_TEXT );
-   hb_fsSetDevMode( s_iFilenoStderr, FD_TEXT );
-#endif
-
-   /* The is done by the OS from now on */
-   s_szCrLf[ 0 ] = HB_CHAR_LF;
-   s_szCrLf[ 1 ] = '\0';
+   /*
+    * Clipper does not restore screen size on exit so I removed the code with:
+    *    hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
+    * If the low level GT drive change some video adapter parameters which
+    * have to be restored on exit then it should does it in its Exit()
+    * method. Here we cannot force any actions because it may cause bad
+    * results in some GTs, f.e. when the screen size is controlled by remote
+    * user and not xHarbour application (some terminal modes), [Druzus]
+    */
 
    hb_setkeyExit();  /* April White, May 6, 2000 */
    hb_conXSaveRestRelease();
 
    hb_gtExit();
+
+   hb_fsSetDevMode( s_hFilenoStdout, FD_TEXT );
+   hb_fsSetDevMode( s_hFilenoStderr, FD_TEXT );
 
    s_bInit = FALSE;
 }
@@ -224,49 +202,23 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * pStr, ULONG ulLen )
 {
-   USHORT uiErrorOld;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-   if( s_bInit )
-      hb_gtPreExt();
-
-   uiErrorOld = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( ( int ) s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-   hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
-
-   if( s_bInit )
-   {
-      hb_gtAdjustPos( ( int ) s_iFilenoStdout, pStr, ulLen );
-      hb_gtPostExt();
-   }
+   hb_gtOutStd( ( BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to STDERR */
 void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
-   USHORT uiErrorOld;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-   if( s_bInit )
-      hb_gtPreExt();
-
-   uiErrorOld = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( ( int ) s_iFilenoStderr, ( BYTE * ) pStr, ulLen );
-   hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
-
-   if( s_bInit )
-   {
-      hb_gtAdjustPos( ( int ) s_iFilenoStderr, pStr, ulLen );
-      hb_gtPostExt();
-   }
+   hb_gtOutErr( ( BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
@@ -362,7 +314,7 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
 
 HB_FUNC( QOUT )
 {
-   hb_conOutAlt( s_szCrLf, CRLF_BUFFER_LEN - 1 );
+   hb_conOutAlt( s_szCrLf, s_iCrLfLen );
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
@@ -424,7 +376,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
       }
 
       for( uiCount = s_uiPRow; uiCount < uiProw; uiCount++ )
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN - 1 );
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, s_iCrLfLen );
 
       if( uiProw > s_uiPRow )
          s_uiPCol = 0;
@@ -556,11 +508,15 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
 HB_FUNC( HB_GETSTDIN ) /* Return Handel for STDIN */
 {
-   hb_retni( s_iFilenoStdin );
+   hb_retni( s_hFilenoStdin );
 }
 
 HB_FUNC( HB_GETSTDOUT ) /* Return Handel for STDOUT */
 {
-   hb_retni( s_iFilenoStdout );
+   hb_retni( s_hFilenoStdout );
 }
 
+HB_FUNC( HB_GETSTDERR ) /* Return Handel for STDERR */
+{
+   hb_retni( s_hFilenoStderr );
+}

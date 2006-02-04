@@ -72,6 +72,22 @@ fi
 # export C_USR=
 # export L_USR=
 
+if [ "$HB_ARCHITECTURE" = "linux" ]
+then
+    if [ "${C_USR}" == "${C_USR//-fPIC/}" ]
+    then
+        HB_CPU=`uname -m`
+        case "$HB_CPU" in
+            *[@_]64)
+                export C_USR="$C_USR -fPIC"
+                HB_ARCH64="yes"
+                ;;
+            *)
+                ;;
+        esac
+    fi
+fi
+
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 [ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX=/usr/local
 

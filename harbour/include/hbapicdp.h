@@ -50,10 +50,10 @@
  *
  */
 
-#ifndef HB_CDP_SUPPORT_OFF
-
 #ifndef HB_APICDP_H_
 #define HB_APICDP_H_
+
+#ifndef HB_CDP_SUPPORT_OFF
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -75,12 +75,13 @@ HB_EXTERN_BEGIN
                                        hb_cdpRegister( &s_codepage ); \
                                        HB_CALL_ON_STARTUP_END( hb_codepage_Init_##id )
 
+
 typedef struct _HB_UNITABLE
 {
-   char     *uniID;
+   char *   uniID;
    int      nChars;
    BOOL     lMulti;
-   USHORT   *uniCodes;
+   USHORT * uniCodes;
 } HB_UNITABLE, * PHB_UNITABLE;
 
 typedef struct _HB_MULTICHAR
@@ -110,23 +111,6 @@ typedef struct _HB_CODEPAGE
    int            nMulti;
    PHB_MULTICHAR  multi;
 } HB_CODEPAGE, * PHB_CODEPAGE;
-
-extern BOOL HB_EXPORT hb_cdpRegister( PHB_CODEPAGE );
-extern char * HB_EXPORT hb_cdpSelectID( char * );
-extern PHB_CODEPAGE HB_EXPORT hb_cdpSelect( PHB_CODEPAGE );
-extern PHB_CODEPAGE HB_EXPORT hb_cdpFind( char * );
-extern void HB_EXPORT hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
-extern void HB_EXPORT hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
-extern int HB_EXPORT hb_cdpcmp( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
-extern int HB_EXPORT hb_cdpchrcmp( char, char, PHB_CODEPAGE );
-extern void HB_EXPORT hb_cdpReleaseAll( void );
-
-extern USHORT HB_EXPORT hb_cdpGetU16( PHB_CODEPAGE, BYTE );
-extern BOOL HB_EXPORT hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * uc );
-extern ULONG HB_EXPORT hb_cdpStrnToUTF( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
-extern ULONG HB_EXPORT hb_cdpStrnToU16( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
-
-extern PHB_CODEPAGE hb_cdp_page;
 
 #define CPID_437        "cp437"
 #define CPID_737        "cp737"
@@ -179,12 +163,29 @@ extern HB_UNITABLE hb_uniTbl_KOI_8;
 extern HB_UNITABLE hb_uniTbl_KOI_8U;
 extern HB_UNITABLE hb_uniTbl_mazovia;
 
-HB_EXTERN_END
+extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
+extern HB_EXPORT char *        hb_cdpSelectID( char * );
+extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
+extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( char * );
+extern HB_EXPORT void          hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
+extern HB_EXPORT void          hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
+extern HB_EXPORT int           hb_cdpcmp( char*, char*, ULONG, PHB_CODEPAGE, ULONG* );
+extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
+extern HB_EXPORT void          hb_cdpReleaseAll( void );
+       
+extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BYTE );
+extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * uc );
+extern HB_EXPORT ULONG         hb_cdpStrnToUTF( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
+extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
 
-#endif /* HB_APICDP_H_ */
+extern PHB_CODEPAGE hb_cdp_page;
+
+HB_EXTERN_END
 
 #else
 
-#define PHB_CODEPAGE void*
+typedef PHB_CODEPAGE void *
 
 #endif /* HB_CDP_SUPPORT_OFF */
+
+#endif /* HB_APICDP_H_ */

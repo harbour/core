@@ -350,6 +350,11 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
 
    switch( iKeyType )
    {
+   /*
+      TODO: ADS_RAW only partially supported.  Presumed string.
+            ADT files can use ";" concatentation operator, which returns index key types as Raw
+   */
+      case ADS_RAW:
       case ADS_STRING:
          hb_itemPutCL( pItem, pKeyBuf, iKeyLen );
          break;
@@ -404,11 +409,6 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
       default:
          hb_itemClear( pItem );
 
-   /*
-      TODO: ADS_RAW Currently unsupported
-            Returns nil; Throw an error re unsupported type ?
-      case ADS_RAW:
-   */
    }
 }
 
@@ -460,8 +460,9 @@ static ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB
          /* make sure passed item has same type as index */
          switch( u16KeyType )
          {
+            case ADS_RAW:               /* adt files need the ";" concatenation operator (instead of "+") to be optimized */
             case ADS_STRING:
-               if( pItem->type == HB_IT_STRING )
+               if( HB_IS_STRING( pItem ) )
                {
                   /* bTypeError = FALSE; */
 #ifdef ADS_USE_OEM_TRANSLATION
@@ -479,7 +480,7 @@ static ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB
 
             case ADS_NUMERIC:
             {
-               if( pItem->type & HB_IT_NUMERIC )
+               if( HB_IS_NUMERIC( pItem ) )
                {
                   double dTemp;
                   /* bTypeError = FALSE; */
@@ -493,7 +494,7 @@ static ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB
             }
 
             case ADS_DATE:
-               if( pItem->type == HB_IT_DATE )
+               if( HB_IS_DATE( pItem ) )
                {
                   double dTemp;
                   /* bTypeError = FALSE; */
@@ -1645,10 +1646,22 @@ static ERRCODE adsFieldName( ADSAREAP pArea, USHORT uiIndex, void * szName )
 
 static ERRCODE adsFlush( ADSAREAP pArea )
 {
-   HB_SYMBOL_UNUSED( pArea );
    HB_TRACE(HB_TR_DEBUG, ("adsFlush(%p)", pArea ));
 
-   AdsWriteRecord( pArea->hTable );
+   /* This function should flush current record buffer if hot and
+      send to OS request to flush its file buffers to disk, so instead
+      of AdsWriteRecord(), AdsFlushFileBuffers() should be used */
+   /* AdsWriteRecord( pArea->hTable ); */
+
+   if( !pArea->fReadonly )
+   {
+#if ADS_REQUIRE_VERSION >= 6
+      AdsFlushFileBuffers( pArea->hTable );
+#else
+      AdsWriteRecord( pArea->hTable );
+#endif
+   }
+
    return SUCCESS;
 }
 
@@ -2340,29 +2353,33 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
         case HB_IT_MEMO:
             if( pField->uiTypeExtended != ADS_VARCHAR )
             {
-               if( strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > (unsigned int) pArea->uiMaxFieldNameLength )
+               char * szName = hb_dynsymName( ( PHB_DYNS ) pField->sym );
+               if( strlen( szName ) > (unsigned int) pArea->uiMaxFieldNameLength )
                {
-                   strncpy( (char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName, pArea->uiMaxFieldNameLength );
+                   strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
                    sprintf( (char*)ucBuffer, "%s,%s;", ucField, cType );
                }
                else
                {
-                   sprintf( (char*)ucBuffer, "%s,%s;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName, cType );
+                   sprintf( (char*)ucBuffer, "%s,%s;", szName, cType );
                }
                break;
             }
 
-        default :
-            if( strlen( ( ( PHB_DYNS ) pField->sym )->pSymbol->szName) > (unsigned int) pArea->uiMaxFieldNameLength )
+        default:
             {
-                strncpy( (char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName, pArea->uiMaxFieldNameLength );
-                sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
+               char * szName = hb_dynsymName( ( PHB_DYNS ) pField->sym );
+               if( strlen( szName) > (unsigned int) pArea->uiMaxFieldNameLength )
+               {
+                   strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
+                   sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
+               }
+               else
+               {
+                   sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", szName, cType, pField->uiLen, pField->uiDec );
+               }
+               break;
             }
-            else
-            {
-                sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", (( PHB_DYNS ) pField->sym )->pSymbol->szName, cType, pField->uiLen, pField->uiDec );
-            }
-            break;
      }
 
      strcat( (char*)ucfieldDefs, (char*)ucBuffer );
@@ -3918,7 +3935,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 
       if( bValidExpr )
       {
-         char * szFilter = hb_adsOemToAnsi( pucFilter, 
+         char * szFilter = hb_adsOemToAnsi( pucFilter,
                                  hb_itemGetCLen( pFilterInfo->abFilterText ) );
 
          if( hb_set.HB_SET_OPTIMIZE )

@@ -260,7 +260,6 @@ char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
       case HB_ET_VARIABLE:
       case HB_ET_VARREF:
          return pExpr->value.asSymbol ;
-         break;         
    }
    return NULL;
 }
@@ -454,15 +453,15 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
           * ? &var      // this is OK
           * ? &var.ext  // this is invalid
           */
-	      char *szDupl;
-	      BOOL bUseTextSubst;
-	  
-	      szDupl = hb_strupr( hb_strdup( szName ) );
+         char *szDupl;
+         BOOL bUseTextSubst;
+
+         szDupl = hb_strupr( hb_strdup( szName ) );
          if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst, NULL ) )
          {
 	         hb_compErrorMacro( szName );
          }
-	      hb_xfree( szDupl );
+         hb_xfree( szDupl );
       }
    }
    else

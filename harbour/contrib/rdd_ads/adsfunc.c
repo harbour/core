@@ -587,13 +587,13 @@ HB_FUNC( ADSKEYNO )
       }
       else         /* must be number or nil since checked above */
       {
-         if( pxOrder->item.asString.length == 0 )          /* passed "" */
+         if( hb_itemGetCLen( pxOrder ) == 0 )          /* passed "" */
          {
             hIndex = pArea->hOrdCurrent;
          }
          else
          {
-            ordName = (UNSIGNED8*) pxOrder->item.asString.value;
+            ordName = (UNSIGNED8*) hb_itemGetCPtr( pxOrder );
             AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
          }
       }
@@ -666,13 +666,13 @@ HB_FUNC( ADSKEYCOUNT )
       }
       else         /* must be String since checked above */
       {
-         if( pxOrder->item.asString.length == 0 )          /* passed "" */
+         if( hb_itemGetCLen( pxOrder ) == 0 )          /* passed "" */
          {
             hIndex = pArea->hOrdCurrent;
          }
          else
          {
-            ordName = (UNSIGNED8*) pxOrder->item.asString.value;
+            ordName = (UNSIGNED8*) hb_itemGetCPtr( pxOrder );
             AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
          }
       }
@@ -1651,11 +1651,12 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
 {
    if( s_pItmCobCallBack && HB_IS_BLOCK( s_pItmCobCallBack ) )
    {
-      HB_ITEM PercentDone;
-      PercentDone.type = HB_IT_NIL;
-      hb_itemPutNI( &PercentDone, usPercentDone );
+      PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
+      BOOL fResult;
 
-      return hb_itemGetL( hb_vmEvalBlockV( s_pItmCobCallBack, 1, &PercentDone ) ) ;
+      fResult = hb_itemGetL( hb_vmEvalBlockV( s_pItmCobCallBack, 1, pPercentDone ) );
+      hb_itemRelease( pPercentDone );
+      return fResult;
    }
    else
    {

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * {Harbour Mouse Subsystem Template}
+ * Header file for Clipper Tools like window system
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,92 +50,30 @@
  *
  */
 
-#include "hbapigt.h"
+#ifndef HB_CTWIN_H_
+#define HB_CTWIN_H_
 
-/* C callable low-level interface */
+HB_EXTERN_BEGIN
 
-void hb_mouse_Init( void )
-{
-   /* TODO: */
-}
+extern BOOL hb_ctw_Init( void );
+extern int  hb_ctw_SetShadowAttr( int iAttr );
+extern int  hb_ctw_SetMoveMode( int iMode );
+extern int  hb_ctw_SetMoveStep( int iVertical, int iHorizontal );
+extern int  hb_ctw_SetWindowBoard( int iTop, int iLeft, int iBottom, int iRight );
+extern int  hb_ctw_SetBorderMode( int iTop, int iLeft, int iBottom, int iRight );
+extern int  hb_ctw_CreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fClear );
+extern int  hb_ctw_CloseAllWindows( void );
+extern int  hb_ctw_CloseWindow( int iWindow );
+extern int  hb_ctw_CurrentWindow( void );
+extern int  hb_ctw_SelectWindow( int iWindow );
+extern int  hb_ctw_MaxWindow( void );
+extern int  hb_ctw_ChangeMargins( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
+extern int  hb_ctw_GetWindowCords( int iWindow, BOOL fCenter, int * piTop, int * piLeft, int * piBottom, int * piRight );
+extern int  hb_ctw_GetFormatCords( int iWindow, BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
+extern int  hb_ctw_MoveWindow( int iWindow, int iRow, int iCol );
+extern int  hb_ctw_CenterWindow( int iWindow, BOOL fCenter );
+extern int  hb_ctw_AddWindowBox( int iWindow, BYTE * szBox );
 
-void hb_mouse_Exit( void )
-{
-   /* TODO: */
-}
+HB_EXTERN_END
 
-BOOL hb_mouse_IsPresent( void )
-{
-   /* TODO: */
-
-   return FALSE;
-}
-
-void hb_mouse_Show( void )
-{
-   /* TODO: */
-}
-
-void hb_mouse_Hide( void )
-{
-   /* TODO: */
-}
-
-int hb_mouse_Col( void )
-{
-   /* TODO: */
-
-   return 0;
-}
-
-int hb_mouse_Row( void )
-{
-   /* TODO: */
-
-   return 0;
-}
-
-void hb_mouse_SetPos( int iRow, int iCol )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
-}
-
-BOOL hb_mouse_IsButtonPressed( int iButton )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iButton );
-
-   return FALSE;
-}
-
-int hb_mouse_CountButton( void )
-{
-   /* TODO: */
-
-   return 0;
-}
-
-void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iTop );
-   HB_SYMBOL_UNUSED( iLeft );
-   HB_SYMBOL_UNUSED( iBottom );
-   HB_SYMBOL_UNUSED( iRight );
-}
-
-void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( piTop );
-   HB_SYMBOL_UNUSED( piLeft );
-   HB_SYMBOL_UNUSED( piBottom );
-   HB_SYMBOL_UNUSED( piRight );
-}
-
+#endif /* HB_CTWIN_H_ */

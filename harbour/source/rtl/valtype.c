@@ -79,11 +79,11 @@ HB_FUNC( HB_ISBYREF )
    {
       pItem = hb_stackItemFromBase( 1 );
 
-      if( pItem->type & HB_IT_BYREF )
+      if( HB_IS_BYREF( pItem ) )
       {
          pItem = hb_itemUnRefOnce( pItem );
 
-         if( pItem->type & HB_IT_BYREF )
+         if( HB_IS_BYREF( pItem ) )
 
             hb_retl( TRUE );
 

@@ -23,6 +23,7 @@ C_HEADERS=\
 	hbdefs.h     \
 	hberrors.h   \
 	hbexprop.h   \
+	hbgtcore.h   \
 	hbhash.h     \
 	hbinit.h     \
 	hbmacro.h    \
@@ -43,6 +44,7 @@ C_HEADERS=\
 	hbtrace.h    \
 	hbver.h      \
 	hbvm.h       \
+	hbvmopt.h    \
 	hbvmpub.h    \
 	hb_io.h      \
 
@@ -65,6 +67,7 @@ PRG_HEADERS=\
 	hbdebug.ch   \
 	hbextern.ch  \
 	hbgetcmt.ch  \
+	hbgtinfo.ch  \
 	hbinkey.ch   \
 	hblang.ch    \
 	hbmacro.ch   \

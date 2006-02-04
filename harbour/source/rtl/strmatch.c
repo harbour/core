@@ -99,7 +99,7 @@ static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
 
 #define HB_MAX_WILDPATTERN     256
 
-BOOL HB_EXPORT hb_strMatchWild( const char *szString, const char *szPattern )
+HB_EXPORT BOOL hb_strMatchWild( const char *szString, const char *szPattern )
 {
    BOOL fMatch = TRUE, fAny = FALSE;
    ULONG ulAnyPosP[HB_MAX_WILDPATTERN], ulAnyPosV[HB_MAX_WILDPATTERN],

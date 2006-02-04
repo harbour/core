@@ -75,6 +75,7 @@
 #include "error.ch"
 #include "hbmemvar.ch"
 #include "hbset.h"
+#include "hbstack.h"
 
 static PHB_DYNS * s_privateStack  = NULL;
 static ULONG s_privateStackSize = 0;
@@ -1648,7 +1649,8 @@ void hb_memvarsIsMemvarRef( void )
          */
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
-            hb_gcItemRef( s_globalTable[ ulCnt ].pVarItem );
+            if( HB_IS_GCITEM( s_globalTable[ ulCnt ].pVarItem ) )
+               hb_gcItemRef( s_globalTable[ ulCnt ].pVarItem );
          }
       }
    }

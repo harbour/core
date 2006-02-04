@@ -62,6 +62,8 @@
 
 HB_EXTERN_BEGIN
 
+#ifdef _HB_API_INTERNAL_
+
 /* stack managed by the virtual machine */
 typedef struct
 {
@@ -82,6 +84,8 @@ typedef struct
    LONG lBaseItem;
    LONG iStatics;
 } HB_STACK_STATE;    /* used to save/restore stack state in hb_vmDo)_ */
+
+#endif
 
 #if defined(HB_STACK_MACROS)
 
@@ -142,8 +146,11 @@ extern void    hb_stackInit( void );       /* initializes the stack */
 extern void    hb_stackIncrease( void );   /* increase the stack size */
 
 extern void hb_stackRemove( LONG lUntilPos );
+
+#ifdef _HB_API_INTERNAL_
 extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
 extern void hb_stackOldFrame( HB_STACK_STATE * pStack );
+#endif
 
 HB_EXTERN_END
 

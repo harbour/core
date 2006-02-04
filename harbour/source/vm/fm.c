@@ -81,6 +81,7 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbmemory.ch"
@@ -129,7 +130,7 @@ static PHB_MEMINFO s_pLastBlock = NULL;
 
 #endif
 
-void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
+HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
 
 #ifdef HB_FM_STATISTICS
@@ -215,7 +216,7 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
 #endif
 }
 
-void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
+HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */
 {
    void * pMem;
 
@@ -300,7 +301,7 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
 #endif
 }
 
-void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
+HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
 #ifdef HB_FM_STATISTICS
 
@@ -386,7 +387,7 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 #endif
 }
 
-void HB_EXPORT hb_xfree( void * pMem )            /* frees fixed memory */
+HB_EXPORT void hb_xfree( void * pMem )            /* frees fixed memory */
 {
 #ifdef HB_FM_STATISTICS
 
@@ -441,7 +442,7 @@ void HB_EXPORT hb_xfree( void * pMem )            /* frees fixed memory */
 /* NOTE: Debug function, it will always return 0 when HB_FM_STATISTICS is
          not defined, don't use it for final code [vszakats] */
 
-ULONG HB_EXPORT  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
+HB_EXPORT ULONG  hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
@@ -454,12 +455,12 @@ ULONG HB_EXPORT  hb_xsize( void * pMem ) /* returns the size of an allocated mem
 #endif
 }
 
-void HB_EXPORT hb_xinit( void ) /* Initialize fixed memory subsystem */
+HB_EXPORT void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 }
 
-void HB_EXPORT hb_xexit( void ) /* Deinitialize fixed memory subsystem */
+HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 

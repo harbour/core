@@ -47,8 +47,10 @@ C_SOURCES=\
     hbfunchk.c \
     hbgenerr.c \
     hbpcode.c \
-    hbusage.c \
     hbfix.c \
+    hbdead.c \
+    hbstripl.c \
+    hbusage.c \
     hbident.c \
     expropta.c \
     exproptb.c \

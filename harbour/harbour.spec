@@ -13,10 +13,10 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with adsrdd      - build ads RDD
 # --with mysql       - build mysql lib (unused)
 # --with pgsql       - build pgsql lib (unused)
 # --with odbc        - build build odbc lib
+# --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXVT and GTXWC (unused)
@@ -61,7 +61,6 @@
 %define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O3"
 %define hb_lflag export L_USR=%{?_with_static:-static}
 %define hb_mt    export HB_MT=no
-%define hb_mgt   export HB_MULTI_GT=no
 %define hb_gt    export HB_GT_LIB=gtcrs
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
 %define hb_sln   export HB_WITHOUT_GTSLN=%{?_without_gtsln:yes}
@@ -71,7 +70,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
-%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_mgt} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_cmrc}
+%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
@@ -86,7 +85,7 @@ Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{platform}
-Copyright:      GPL (plus exception)
+License:        GPL (plus exception)
 Group:          Development/Languages
 Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
@@ -220,7 +219,7 @@ dos programas.
 Summary:        Clipper/Harbour/xBase compatible Pre-Processor, DOT prompt and interpreter
 Summary(pl):    Kompatybilny z Clipper/Harbour/xBase Preprocesor i interpreter
 Summary(ru):    Совместимый с Clipper/Harbour/xBase препроцессор и интерпретатор
-Copyright:      GPL
+License:        GPL
 Group:          Development/Languages
 Requires:       %{name} = %{version}
 
@@ -285,6 +284,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 %{hb_env}
+case "`uname -m`" in
+    *[_@]64)
+        export C_USR="$C_USR -fPIC"
+        ;;
+esac
 
 make -r
 
@@ -297,6 +301,11 @@ make -r
 # Install harbour itself.
 
 %{hb_env}
+case "`uname -m`" in
+    *[_@]64)
+        export C_USR="$C_USR -fPIC"
+        ;;
+esac
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
 export _DEFAULT_INC_DIR=$HB_INC_INSTALL
@@ -321,7 +330,7 @@ strip $HB_BIN_INSTALL/harbour
 strip --strip-debug $HB_LIB_INSTALL/*
 
 mkdir -p $RPM_BUILD_ROOT/etc/harbour
-#install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
+install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
 cat > $RPM_BUILD_ROOT/etc/harbour.cfg <<EOF
 CC=gcc
 CFLAGS=-c -I$_DEFAULT_INC_DIR -O2
@@ -504,7 +513,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir /etc/harbour
 %verify(not md5 mtime) %config /etc/harbour.cfg
-#%verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
+%verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hb-mkslib
 %{_bindir}/%{hb_pref}-build
@@ -546,7 +555,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{!?_without_nf: %{_libdir}/%{name}/libnf*.a}
-%{?_with_adsrdd: %{_libdir}/%{name}/librddads*.a}
+%{!?_without_adsrdd: %{_libdir}/%{name}/librddads*.a}
 #%{?_with_mysql: %{_libdir}/%{name}/libmysql*.a}
 #%{?_with_pgsql: %{_libdir}/%{name}/libpgsql*.a}
 %{_libdir}/%{name}/libhbbtree.a

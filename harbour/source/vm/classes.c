@@ -390,12 +390,14 @@ void hb_clsIsClassRef( void )
    {
       if( pClass->pInlines )
       {
-         hb_gcItemRef( pClass->pInlines );
+         if( HB_IS_GCITEM( pClass->pInlines ) )
+            hb_gcItemRef( pClass->pInlines );
       }
 
       if( pClass->pClassDatas )
       {
-         hb_gcItemRef( pClass->pClassDatas );
+         if( HB_IS_GCITEM( pClass->pClassDatas ) )
+            hb_gcItemRef( pClass->pClassDatas );
       }
 
       uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
@@ -404,7 +406,8 @@ void hb_clsIsClassRef( void )
       {
          if( pMeth->pInitValue )
          {
-            hb_gcItemRef( pMeth->pInitValue );
+            if( HB_IS_GCITEM( pMeth->pInitValue ) )
+               hb_gcItemRef( pMeth->pInitValue );
          }
       }
 
@@ -612,7 +615,7 @@ BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
 
 USHORT hb_objGetClass( PHB_ITEM pItem )
 {
-   if ( pItem && HB_IS_ARRAY( pItem ) )
+   if( pItem && HB_IS_ARRAY( pItem ) )
       return pItem->item.asArray.value->uiClass;
    else
       return 0;
@@ -1149,7 +1152,7 @@ HB_FUNC( __CLSADDMSG )
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
                   if( HB_IS_ARRAY( pInit ) )
-                     pNewMeth->pInitValue = hb_arrayClone( pInit, NULL );
+                     pNewMeth->pInitValue = hb_arrayClone( pInit );
                   else
                   {
                      pNewMeth->pInitValue = hb_itemNew( NULL );
@@ -1176,7 +1179,7 @@ HB_FUNC( __CLSADDMSG )
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
                   if( HB_IS_ARRAY( pInit ) )
-                     pNewMeth->pInitValue = hb_arrayClone( pInit, NULL );
+                     pNewMeth->pInitValue = hb_arrayClone( pInit );
                   else
                   {
                      pNewMeth->pInitValue = hb_itemNew( NULL );
@@ -1314,9 +1317,9 @@ HB_FUNC( __CLSNEW )
             pNewCls->uiHashKey = pSprCls->uiHashKey;
 
             /* CLASS DATA Not Shared ( new array, new value ) */
-            pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas, NULL );
+            pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas );
 
-            pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines, NULL );
+            pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
 
             pNewCls->uiDatasShared = pSprCls->uiDatasShared;
 
@@ -1329,7 +1332,7 @@ HB_FUNC( __CLSNEW )
             nLenDatas     = ( USHORT ) pNewCls->uiDatas;
 
             /* ClassDatas */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas, NULL );
+            pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas );
             nLen = ( USHORT ) hb_itemSize( pClsAnyTmp );
             for( ui = 1; ui <= nLen; ui++ )
             {
@@ -1344,7 +1347,7 @@ HB_FUNC( __CLSNEW )
             pNewCls->uiDatasShared += pSprCls->uiDatasShared;
 
             /* Inlines */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pInlines, NULL );
+            pClsAnyTmp = hb_arrayClone( pSprCls->pInlines );
             nLen = ( USHORT ) hb_itemSize( pClsAnyTmp );
             for( ui = 1; ui <= nLen; ui++ )
             {
@@ -1435,7 +1438,7 @@ HB_FUNC( __CLSNEW )
                         PHB_ITEM pInitValue;
 
                         if( HB_IS_ARRAY( pSprCls->pMethods[ ui ].pInitValue ) )
-                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue, NULL );
+                           pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = hb_arrayClone( pSprCls->pMethods[ ui ].pInitValue );
                         else
                         {
                            pInitValue = hb_itemNew( NULL );
@@ -1612,7 +1615,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
             {
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
                 {
-                pInit = hb_arrayClone( pMeth->pInitValue, NULL );
+                pInit = hb_arrayClone( pMeth->pInitValue );
                 }
                else
                {
@@ -1637,7 +1640,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
 
                if( HB_IS_ARRAY( pMeth->pInitValue ) )
                {
-                  pInitValue = hb_arrayClone( pMeth->pInitValue, NULL );
+                  pInitValue = hb_arrayClone( pMeth->pInitValue );
                }
                else
                {
@@ -1663,7 +1666,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
                {
 
                   if( HB_IS_ARRAY( pMeth->pInitValue ) )
-                   pInit = hb_arrayClone( pMeth->pInitValue, NULL );
+                   pInit = hb_arrayClone( pMeth->pInitValue );
                   else
                   {
                    pInit = hb_itemNew( NULL );
@@ -1811,7 +1814,7 @@ HB_FUNC( __OBJCLONE )
 
    if( pSrcObject )
     {
-      pDstObject= hb_arrayClone( pSrcObject, NULL ) ;
+      pDstObject= hb_arrayClone( pSrcObject ) ;
 
       /* pDstObject->item.asArray.value->puiClsTree = NULL; */
       /* pDstObject->item.asArray.value->puiClsTree = ( USHORT * ) hb_xgrab( sizeof( USHORT ) ); */

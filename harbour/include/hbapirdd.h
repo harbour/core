@@ -1118,20 +1118,20 @@ typedef RDDNODE * LPRDDNODE;
  *  PROTOTYPES
  *  ----------
  */
-extern int       HB_EXPORT hb_rddRegister( char * szDriver, USHORT uiType );
-extern ERRCODE   HB_EXPORT hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
-extern LPRDDNODE HB_EXPORT hb_rddGetNode( USHORT uiNode );
-#if 0
-extern ERRCODE   HB_EXPORT hb_rddDisinherit( BYTE * drvName );
-extern USHORT    HB_EXPORT hb_rddExtendType( HB_TYPE fieldType );
-extern HB_TYPE   HB_EXPORT hb_rddFieldType( USHORT extendType );
+extern HB_EXPORT int       hb_rddRegister( char * szDriver, USHORT uiType );
+extern HB_EXPORT ERRCODE   hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
+extern HB_EXPORT LPRDDNODE hb_rddGetNode( USHORT uiNode );
+#if 0  
+extern HB_EXPORT ERRCODE   hb_rddDisinherit( BYTE * drvName );
+extern HB_EXPORT USHORT    hb_rddExtendType( HB_TYPE fieldType );
+extern HB_EXPORT HB_TYPE   hb_rddFieldType( USHORT extendType );
 #endif
 
 typedef short (* WACALLBACK )( AREA *, int );
-extern ERRCODE HB_EXPORT hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
-extern USHORT  HB_EXPORT hb_rddFieldIndex( AREAP pArea, char * szName );
-extern USHORT  HB_EXPORT hb_rddFieldExpIndex( AREAP pArea, char * szField );
-extern ERRCODE HB_EXPORT hb_rddGetTempAlias( char * szAliasTmp );
+extern HB_EXPORT ERRCODE   hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
+extern HB_EXPORT USHORT    hb_rddFieldIndex( AREAP pArea, char * szName );
+extern HB_EXPORT USHORT    hb_rddFieldExpIndex( AREAP pArea, char * szField );
+extern HB_EXPORT ERRCODE   hb_rddGetTempAlias( char * szAliasTmp );
 
 HB_EXTERN_END
 

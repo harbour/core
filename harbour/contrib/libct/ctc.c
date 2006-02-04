@@ -93,7 +93,7 @@ USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                          szDescription, szOperation, uiOsCode, uiFlags);
 
   /* Assign the new array to the object data item. */
-  hb_vmPushSymbol (hb_dynsymGet ("_ARGS")->pSymbol);
+  hb_vmPushSymbol (hb_dynsymGetSymbol ("_ARGS" ));
   hb_vmPush (pError);
   hb_vmPush (pArray);
   hb_vmDo (1);
@@ -148,7 +148,7 @@ PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                                szDescription, szOperation, uiOsCode, uiFlags);
 
   /* Assign the new array to the object data item. */
-  hb_vmPushSymbol (hb_dynsymGet ("_ARGS")->pSymbol);
+  hb_vmPushSymbol (hb_dynsymGetSymbol ("_ARGS"));
   hb_vmPush (pError);
   hb_vmPush (pArray);
   hb_vmDo (1);

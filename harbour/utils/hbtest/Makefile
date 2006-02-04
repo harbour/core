@@ -32,10 +32,6 @@ LIBS=\
 	rtl \
 	vm \
 	macro \
-	dbfntx \
-	dbfcdx \
-	dbffpt \
-	hbsix \
 	common \
 
 include $(TOP)$(ROOT)config/bin.cf

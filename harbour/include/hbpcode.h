@@ -204,7 +204,7 @@ typedef enum
    HB_P_ENUMPREV,              /* 130 Previous item of FOR EACH loop  */
    HB_P_ENUMEND,               /* 131 End of FOR EACH loop */
    HB_P_SWITCH,                /* 132 SWITCH using long values */
-   HB_P_PUSHDATE,              /* 133 SWITCH using long values */
+   HB_P_PUSHDATE,              /* 133 places a data constant value on the virtual machine stack */
 /* NOTE: This have to be the last definition */
    HB_P_LAST_PCODE             /* 134 this defines the number of defined pcodes */
 } HB_PCODE;

@@ -445,6 +445,13 @@ typedef unsigned long HB_COUNTER;
    typedef LONGLONG HB_FOFFSET;
 #endif
 
+#if defined( HB_WIN32_IO )
+   typedef long   FHANDLE;
+#else
+   typedef int    FHANDLE;
+#endif
+
+
 /* maximum length of double number in decimal representation:
    log10(2^1024) ~ 308.25 */
 #define HB_MAX_DOUBLE_LENGTH 320
@@ -1052,6 +1059,9 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
       #define HB_EXPORT __attribute__ (( dllexport ))
 
+   #elif defined( __GNUC__ ) &&  defined( HB_OS_LINUX )
+      #define HB_EXPORT __attribute__ ((visibility ("default")))
+
    #elif defined( __BORLANDC__ )
       #define HB_EXPORT _declspec( dllexport )
 
@@ -1090,7 +1100,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #endif
 
 #define HB_FUNC_EXEC( funcname )   HB_FUN_##funcname();
-#define HB_FUNC( funcname )        HB_EXTERN_C_ HARBOUR HB_EXPORT HB_FUN_##funcname ( void )
+#define HB_FUNC( funcname )        HB_EXTERN_C_ HB_EXPORT HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_STATIC( funcname ) HB_EXTERN_C_ static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_EXTERN( funcname ) HB_EXTERN_C_ extern HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_INIT( funcname )   HB_EXTERN_C_ static HARBOUR HB_FUN_init_##funcname ( void )

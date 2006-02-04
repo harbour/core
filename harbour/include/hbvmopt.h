@@ -66,3 +66,6 @@
 #  define HB_STACK_MACROS
 #endif
 
+#if !defined( _HB_API_INTERNAL_ )
+#  define _HB_API_INTERNAL_
+#endif

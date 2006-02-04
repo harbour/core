@@ -112,53 +112,70 @@ HB_EXTERN_BEGIN
 #define FPTIT_SIX_CHAR     0x0400      /* CHAR */
 #define FPTIT_SIX_ARRAY    0x8000      /* ARRAY */
 
-//#define FPTIT_SIX_BLOCK    0x1000
-//#define FPTIT_SIX_VREF     0x2000
-//#define FPTIT_SIX_MREF     0x4000
+/* #define FPTIT_SIX_BLOCK    0x1000 */
+/* #define FPTIT_SIX_VREF     0x2000 */
+/* #define FPTIT_SIX_MREF     0x4000 */
 
-#define FPTIT_FLEX_GC      0x03E8   // 1000
-#define FPTIT_FLEX_UNUSED  0x03E9   // 1001
-#define FPTIT_FLEX_ARRAY   0x03EA   // 1002
-#define FPTIT_FLEX_OBJECT  0x03EB   // 1003 *
-#define FPTIT_FLEX_VOARR   0x03EC   // 1004 *
-#define FPTIT_FLEX_VOOBJ   0x03ED   // 1005 *
-#define FPTIT_FLEX_NIL     0x03EE   // 1006
-#define FPTIT_FLEX_TRUE    0x03EF   // 1007
-#define FPTIT_FLEX_FALSE   0x03F0   // 1008
-#define FPTIT_FLEX_LDATE   0x03F1   // 1009
-#define FPTIT_FLEX_CHAR    0x03F2   // 1010
-#define FPTIT_FLEX_UCHAR   0x03F3   // 1011 *
-#define FPTIT_FLEX_SHORT   0x03F4   // 1012
-#define FPTIT_FLEX_USHORT  0x03F5   // 1013 *
-#define FPTIT_FLEX_LONG    0x03F6   // 1014
-#define FPTIT_FLEX_ULONG   0x03F7   // 1015 *
-#define FPTIT_FLEX_DOUBLE  0x03F8   // 1016
-#define FPTIT_FLEX_LDOUBLE 0x03F9   // 1017 *
-#define FPTIT_FLEX_COMPRCH 0x03FA   // 1018 *
+#define FPTIT_FLEX_GC      0x03E8   /* 1000   */
+#define FPTIT_FLEX_UNUSED  0x03E9   /* 1001   */
+#define FPTIT_FLEX_ARRAY   0x03EA   /* 1002   */
+#define FPTIT_FLEX_OBJECT  0x03EB   /* 1003 ! */
+#define FPTIT_FLEX_VOARR   0x03EC   /* 1004 ! */
+#define FPTIT_FLEX_VOOBJ   0x03ED   /* 1005 ! */
+#define FPTIT_FLEX_NIL     0x03EE   /* 1006   */
+#define FPTIT_FLEX_TRUE    0x03EF   /* 1007   */
+#define FPTIT_FLEX_FALSE   0x03F0   /* 1008   */
+#define FPTIT_FLEX_LDATE   0x03F1   /* 1009   */
+#define FPTIT_FLEX_CHAR    0x03F2   /* 1010   */
+#define FPTIT_FLEX_UCHAR   0x03F3   /* 1011   */
+#define FPTIT_FLEX_SHORT   0x03F4   /* 1012   */
+#define FPTIT_FLEX_USHORT  0x03F5   /* 1013   */
+#define FPTIT_FLEX_LONG    0x03F6   /* 1014   */
+#define FPTIT_FLEX_ULONG   0x03F7   /* 1015   */
+#define FPTIT_FLEX_DOUBLE  0x03F8   /* 1016   */
+#define FPTIT_FLEX_LDOUBLE 0x03F9   /* 1017 ! */
+#define FPTIT_FLEX_COMPRCH 0x03FA   /* 1018 ! */
 
 /* Flex II types */
-#define FPTIT_FLEX_DBLITEM 0x2710   // 10000 14-bytes Clipper double item
-#define FPTIT_FLEX_LOGICAL 0x2711   // 10001 4-bytes logical value 
-#define FPTIT_FLEX_NULSTR  0x2722   // 10002 empty string
+#define FPTIT_FLEX_DBLITEM 0x2710   /* 10000 14-bytes Clipper double item */
+#define FPTIT_FLEX_LOGICAL 0x2711   /* 10001 4-bytes logical value  */
+#define FPTIT_FLEX_NULSTR  0x2722   /* 10002 empty string */
 
 
-#define FPTIT_FLEXAR_NIL    0x00
-#define FPTIT_FLEXAR_STR    0x07
-#define FPTIT_FLEXAR_ARAY   0x0C
-#define FPTIT_FLEXAR_DATE   0x0E
-#define FPTIT_FLEXAR_DBL    0x0F
-#define FPTIT_FLEXAR_BYTE   0x11
-#define FPTIT_FLEXAR_CHAR   0x12
-#define FPTIT_FLEXAR_SHORT  0x13
-#define FPTIT_FLEXAR_USHORT 0x14
-#define FPTIT_FLEXAR_LONG   0x15
-#define FPTIT_FLEXAR_NUL    0x18
-#define FPTIT_FLEXAR_TRUE   0x19
-#define FPTIT_FLEXAR_FALSE  0x1A
-#define FPTIT_FLEXAR_BYTE2  0x1D
-#define FPTIT_FLEXAR_SHORT2 0x1E
-#define FPTIT_FLEXAR_LONG2  0x20
-#define FPTIT_FLEXAR_ULONG  0x21
+#define FPTIT_FLEXAR_NIL      0x00  /* () */
+#define FPTIT_FLEXAR_UCHAR    0x01  /* uchar */
+#define FPTIT_FLEXAR_CHAR     0x02  /* char */
+#define FPTIT_FLEXAR_SHORT    0x03  /* short[2] */
+#define FPTIT_FLEXAR_USHORT   0x04  /* ushort[2] */
+#define FPTIT_FLEXAR_LONG     0x05  /* long[4] */
+                           /* 0x06 - unknown */
+#define FPTIT_FLEXAR_STR      0x07  /* len[2], char[n] */
+                           /* 0x08 - unknown */
+#define FPTIT_FLEXAR_DOUBLE   0x09  /* double[8] */
+#define FPTIT_FLEXAR_DATEX    0x0A  /* long[4] */
+#define FPTIT_FLEXAR_LOGIC    0x0B  /* val[1] */
+#define FPTIT_FLEXAR_ARAY     0x0C  /* len[2], ... */
+                           /* 0x0D - unknown */
+#define FPTIT_FLEXAR_DATEJ    0x0E  /* long[4] */
+#define FPTIT_FLEXAR_DOUBLE2  0x0F  /* len, dec, double[8] */
+                           /* 0x10 - unknown */
+#define FPTIT_FLEXAR_UCHAR1   0x11  /* byte, dec */
+#define FPTIT_FLEXAR_CHAR1    0x12  /* char, dec */
+#define FPTIT_FLEXAR_SHORT1   0x13  /* short[2], len */
+#define FPTIT_FLEXAR_USHORT1  0x14  /* ushort[2], len */
+#define FPTIT_FLEXAR_LONG1    0x15  /* long[4], len */
+                           /* 0x16 - unknown */
+                           /* 0x17 - unknown */
+#define FPTIT_FLEXAR_NUL      0x18  /* () */
+#define FPTIT_FLEXAR_TRUE     0x19  /* () */
+#define FPTIT_FLEXAR_FALSE    0x1A  /* () */
+#define FPTIT_FLEXAR_LDOUBLE  0x1B  /* longdouble[10] */
+#define FPTIT_FLEXAR_UCHAR2   0x1C  /* byte[1], len, dec */
+#define FPTIT_FLEXAR_CHAR2    0x1D  /* char[1], len, dec */
+#define FPTIT_FLEXAR_SHORT2   0x1E  /* short[2], len, dec */
+#define FPTIT_FLEXAR_USHORT2  0x1F  /* ushort[2], len, dec */
+#define FPTIT_FLEXAR_LONG2    0x20  /* long[4], len, dec */
+#define FPTIT_FLEXAR_ULONG2   0x21  /* ulong[4], len, dec */
 
 /* MEMO file strucutres */
 typedef struct _FPTHEADER

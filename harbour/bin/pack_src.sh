@@ -158,10 +158,6 @@ $hb_collect source/rtl/*.prg
 $hb_collect source/rtl/gt_tpl/Makefile
 $hb_collect source/rtl/gt_tpl/*.[ch]
 
-# SOURCE\RTL\GTNUL
-$hb_collect source/rtl/gtnul/Makefile*
-$hb_collect source/rtl/gtnul/*.[ch]
-
 # SOURCE\RTL\GTCGI
 $hb_collect source/rtl/gtcgi/Makefile
 $hb_collect source/rtl/gtcgi/*.[ch]
@@ -180,7 +176,6 @@ $hb_collect source/rtl/gtdos/*.[ch]
 # SOURCE\RTL\GTOS2
 $hb_collect source/rtl/gtos2/Makefile
 $hb_collect source/rtl/gtos2/*.[ch]
-$hb_collect source/rtl/gtos2/*.gcc
 
 # SOURCE\RTL\GTPCA
 $hb_collect source/rtl/gtpca/Makefile

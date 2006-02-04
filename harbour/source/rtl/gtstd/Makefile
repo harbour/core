@@ -6,7 +6,6 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtstd.c \
-	mousestd.c \
 
 LIBNAME=gtstd
 

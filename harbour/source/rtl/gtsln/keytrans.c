@@ -87,6 +87,16 @@ static int KeyTranslationTable[][ 2 ] =
    { SL_KEY_END        | ( ALTL_PRESSED << 16 ),     K_ALT_END    },
    { SL_KEY_PPAGE      | ( ALTL_PRESSED << 16 ),     K_ALT_PGUP   },
    { SL_KEY_NPAGE      | ( ALTL_PRESSED << 16 ),     K_ALT_PGDN   },
+
+   { SL_KEY_UP         | ( SHIFT_PRESSED << 16 ),     K_SH_UP     },
+   { SL_KEY_DOWN       | ( SHIFT_PRESSED << 16 ),     K_SH_DOWN   },
+   { SL_KEY_LEFT       | ( SHIFT_PRESSED << 16 ),     K_SH_LEFT   },
+   { SL_KEY_RIGHT      | ( SHIFT_PRESSED << 16 ),     K_SH_RIGHT  },
+   { SL_KEY_HOME       | ( SHIFT_PRESSED << 16 ),     K_SH_HOME   },
+   { SL_KEY_END        | ( SHIFT_PRESSED << 16 ),     K_SH_END    },
+   { SL_KEY_PPAGE      | ( SHIFT_PRESSED << 16 ),     K_SH_PGUP   },
+   { SL_KEY_NPAGE      | ( SHIFT_PRESSED << 16 ),     K_SH_PGDN   },
+
 #endif
 
    { SL_KEY_IC,                                      K_INS        },
@@ -130,6 +140,11 @@ static int KeyTranslationTable[][ 2 ] =
    { SL_KEY_B2         | ( ALTR_PRESSED << 16 ),     KP_ALT_5     },
 
    { K_TAB             | ( SHIFT_PRESSED << 16 ),    K_SH_TAB     },
+
+   { SL_KEY_IC         | ( SHIFT_PRESSED << 16 ),    K_SH_INS     },
+   { SL_KEY_DELETE     | ( SHIFT_PRESSED << 16 ),    K_SH_DEL     },
+   { K_ENTER           | ( SHIFT_PRESSED << 16 ),    K_SH_ENTER   },
+
 #endif
 
 #if HB_GT_KBD_MODIF_MASK
@@ -376,11 +391,11 @@ static int KeyTranslationTable[][ 2 ] =
             ( sizeof( KeyTranslationTable ) / ( 2 * sizeof ( int ) ) )
 
 /* a very simple sort algorithm */
-static void hb_gt_SortKeyTranslationTable( void )
+static void hb_sln_SortKeyTranslationTable( void )
 {
    int i, j, min, KeyTmp[ 2 ];
 
-   for ( i = 0; i < (int) ( KeyTranslationTableSize - 1 ); i++ )
+   for ( i = 0; i < ( (int) KeyTranslationTableSize - 1 ); i++ )
    {
       min = i;
 
@@ -413,7 +428,7 @@ static void hb_gt_SortKeyTranslationTable( void )
 /* ************************************************************************* */
 
 /* standard binary search */
-static int hb_gt_FindKeyTranslation( int SlangKey )
+static int hb_sln_FindKeyTranslation( int SlangKey )
 {
    int Start,Stop,CurPos;
 
@@ -445,20 +460,23 @@ static int hb_gt_FindKeyTranslation( int SlangKey )
 
 /* ************************************************************************* */
 
-void hb_gt_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
+int hb_sln_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 {
+   int i, Found = 0;
 
    if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
         ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      int i;
       for ( i = 0; i < (int) KeyTranslationTableSize; i++ )
       {
          if ( SlangKey == KeyTranslationTable[ i ][ 0 ] )
             KeyTranslationTable[ i ][ 1 ] = ClipKey;
+       Found = 1;
             /* we don't break here because SlangKey can be defined more than once */
       }
    }
+
+   return( Found );
 }
 
 /* ************************************************************************* */

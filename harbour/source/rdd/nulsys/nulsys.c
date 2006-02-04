@@ -54,33 +54,33 @@
 #include "hbapi.h"
 #include "hbapirdd.h"
 
-ERRCODE HB_EXPORT hb_rddSelectWorkAreaAlias( char * szName )
+HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 {
    HB_SYMBOL_UNUSED( szName );
 
    return FAILURE;
 }
 
-ERRCODE HB_EXPORT hb_rddSelectWorkAreaNumber( int iArea )
+HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    HB_SYMBOL_UNUSED( iArea );
 
    return FAILURE;
 }
 
-ERRCODE HB_EXPORT hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
+HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
    HB_SYMBOL_UNUSED( pSymAlias );
 
    return FAILURE;
 }
 
-int HB_EXPORT hb_rddGetCurrentWorkAreaNumber( void )
+HB_EXPORT int hb_rddGetCurrentWorkAreaNumber( void )
 {
    return 0;
 }
 
-ERRCODE HB_EXPORT hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_EXPORT ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -88,7 +88,7 @@ ERRCODE HB_EXPORT hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
-ERRCODE HB_EXPORT hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_EXPORT ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -96,7 +96,7 @@ ERRCODE HB_EXPORT hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
-ERRCODE HB_EXPORT hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_EXPORT ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -104,7 +104,7 @@ ERRCODE HB_EXPORT hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
-ERRCODE HB_EXPORT hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -112,7 +112,7 @@ ERRCODE HB_EXPORT hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
-void HB_EXPORT hb_rddShutDown( void ) {}
+HB_EXPORT void hb_rddShutDown( void ) {}
 
 
 HB_FUNC( RDDSYS ) {}
@@ -148,7 +148,9 @@ HB_FUNC( DBSEEK ) { hb_retl( FALSE ); }
 
 HB_FUNC( DBSKIP ) { hb_retni( 0 ); }
 
+#ifdef HB_COMPAT_XPP
 HB_FUNC( DBSKIPPER ) { hb_retni( 0 ); }
+#endif
 
 HB_FUNC( DBAPPEND ) {}
 

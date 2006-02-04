@@ -186,7 +186,6 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
          pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
          if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
          {
-            
             if ( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
                return FAILURE;
             continue;
@@ -205,7 +204,7 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    {
       if ( fBottom )
       {
-         /* GOTO EOF (phantom) record - 
+         /* GOTO EOF (phantom) record -
             this is the only one place where GOTO is used by xHarbour
             directly and RDD which does not operate on numbers should
             serve this method only as SELF_GOEOF() synonym. If it's a
@@ -399,7 +398,7 @@ ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pIt
    switch( uiType )
    {
       case DBS_NAME:
-         hb_itemPutC( pItem, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName );
+         hb_itemPutC( pItem, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );
          break;
 
       case DBS_TYPE:
@@ -471,13 +470,8 @@ ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, void * szName )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-   /*
-   strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
-            HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
-   */
-   ((char *) szName)[0] = '\0';
-   strncat( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
-            pArea->uiMaxFieldNameLength );
+   hb_strncpy( ( char * ) szName, hb_dynsymName( ( PHB_DYNS ) pField->sym ),
+               pArea->uiMaxFieldNameLength );
    return SUCCESS;
 }
 
@@ -505,9 +499,9 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
    HB_TRACE(HB_TR_DEBUG, ("hb_waAlias(%p, %p)", pArea, szAlias));
 
    hb_strncpy( ( char * ) szAlias,
-               ( pArea->atomAlias && ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
-               ? ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName : "",
-               HARBOUR_MAX_RDD_ALIAS_LENGTH );
+      pArea->atomAlias && hb_dynsymAreaHandle( ( PHB_DYNS ) pArea->atomAlias )
+      ? hb_dynsymName( ( PHB_DYNS ) pArea->atomAlias ) : "",
+      HARBOUR_MAX_RDD_ALIAS_LENGTH );
 
    return SUCCESS;
 }
@@ -575,7 +569,7 @@ ERRCODE hb_waClose( AREAP pArea )
    }
 
    if( pArea->atomAlias )
-      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
+      hb_dynsymSetAreaHandle( ( PHB_DYNS ) pArea->atomAlias, 0 );
 
    return SUCCESS;
 }
@@ -915,7 +909,7 @@ ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
             break;
          }
 
-         if( !fContinue && 
+         if( !fContinue &&
              ( pArea->dbsi.itmRecID || ( pArea->dbsi.lNext && --lNext < 1 ) ) )
             break;
 

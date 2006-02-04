@@ -67,7 +67,7 @@
 #include "hbapi.h"
 #include "hbmath.h"
 
-ULONG HB_EXPORT hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+HB_EXPORT ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
@@ -100,7 +100,7 @@ ULONG HB_EXPORT hb_strAt( const char * szSub, ULONG ulSubLen, const char * szTex
       return 0;
 }
 
-char HB_EXPORT * hb_strupr( char * pszText )
+HB_EXPORT char * hb_strupr( char * pszText )
 {
    char * pszPos;
 
@@ -112,7 +112,7 @@ char HB_EXPORT * hb_strupr( char * pszText )
    return pszText;
 }
 
-char HB_EXPORT * hb_strdup( const char * pszText )
+HB_EXPORT char * hb_strdup( const char * pszText )
 {
    char * pszDup;
    ULONG ulLen = strlen( pszText ) + 1;
@@ -125,7 +125,7 @@ char HB_EXPORT * hb_strdup( const char * pszText )
    return pszDup;
 }
 
-char HB_EXPORT * hb_strndup( const char * pszText, ULONG ulLen )
+HB_EXPORT char * hb_strndup( const char * pszText, ULONG ulLen )
 {
    char * pszDup;
    ULONG ul;
@@ -146,7 +146,7 @@ char HB_EXPORT * hb_strndup( const char * pszText, ULONG ulLen )
    return pszDup;
 }
 
-ULONG HB_EXPORT hb_strnlen( const char * pszText, ULONG ulLen )
+HB_EXPORT ULONG hb_strnlen( const char * pszText, ULONG ulLen )
 {
    ULONG ul = 0;
 
@@ -189,7 +189,7 @@ AJ: 2004-02-23
 Concatenates multiple strings into a single result.
 Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
 */
-char HB_EXPORT * hb_xstrcat ( char *szDest, const char *szSrc, ... )
+HB_EXPORT char * hb_xstrcat ( char *szDest, const char *szSrc, ... )
 {
    char *szResult = szDest;
    va_list va;
@@ -223,7 +223,7 @@ allocates a new buffer with the required length and returns that. The
 buffer is allocated using hb_xgrab(), and should eventually be freed
 using hb_xfree().
 */
-char HB_EXPORT * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
+HB_EXPORT char * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
 {
    const char *szSrc_Ptr;
    va_list va;
@@ -291,7 +291,7 @@ static double hb_numPow10( int nPrecision )
    return pow(10.0, (double) nPrecision);
 }
 
-double HB_EXPORT hb_numRound( double dNum, int iDec )
+HB_EXPORT double hb_numRound( double dNum, int iDec )
 {
    static const double doBase = 10.0f;
    double doComplete5, doComplete5i, dPow;
@@ -420,7 +420,7 @@ double HB_EXPORT hb_numRound( double dNum, int iDec )
       return doComplete5i / dPow;
 }
 
-double HB_EXPORT hb_numInt( double dNum )
+HB_EXPORT double hb_numInt( double dNum )
 {
    double dInt;
 
@@ -598,32 +598,32 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    return fDbl;
 }
 
-BOOL HB_EXPORT hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_EXPORT BOOL hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %p, %p, %p, %p)", szNum, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( TRUE, szNum, strlen( szNum ), plVal, pdVal, piDec, piWidth );
 }
 
-BOOL HB_EXPORT hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_EXPORT BOOL hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_valStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
-BOOL HB_EXPORT hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal )
+HB_EXPORT BOOL hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %p, %p)", szNum, plVal, pdVal ));
    return hb_str2number( FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
-BOOL HB_EXPORT hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal )
+HB_EXPORT BOOL hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strToNum(%s, %lu, %p, %p)", szNum, ulLen, plVal, pdVal ));
    return hb_str2number( FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
 }
 
 /* returns the numeric value of a character string representation of a number */
-double HB_EXPORT hb_strVal( const char * szText, ULONG ulLen )
+HB_EXPORT double hb_strVal( const char * szText, ULONG ulLen )
 {
    HB_LONG lVal;
    double dVal;
@@ -635,7 +635,7 @@ double HB_EXPORT hb_strVal( const char * szText, ULONG ulLen )
    return dVal;
 }
 
-HB_LONG HB_EXPORT hb_strValInt( const char * szText, int * iOverflow )
+HB_EXPORT HB_LONG hb_strValInt( const char * szText, int * iOverflow )
 {
    HB_LONG lVal;
    double dVal;

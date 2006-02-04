@@ -88,13 +88,21 @@
 #define INCL_BASE
 #define INCL_VIO
 #define INCL_KBD
+#define INCL_MOU
 #define INCL_DOSMEMMGR
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
+#define HB_GT_NAME	OS2
+
+#include "hbgtcore.h"
+#include "hbinit.h"
 #include "hbapierr.h"
-#include "hbapigt.h"
 #include "inkey.ch"
+
+#ifdef _HB_OS2_H
+#include "hbos2.h"
+#endif
 
 /* convert 16:16 address to 0:32 */
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
@@ -111,29 +119,18 @@
 #endif
 #include <conio.h>
 
-static char hb_gt_GetCellSize( void );
-static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol );
-static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch );
-static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch );
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER (&SuperTable)
 
-/*
-static void hb_gt_GetCursorSize( char * start, char * end );
-*/
-
-/* how many nested BeginDisp() */
-static USHORT s_uiDispCount;
+static int  s_iCurRow;
+static int  s_iCurCol;
+static int  s_iCursorStyle;
 
 /* pointer to offscreen video buffer */
 static ULONG s_ulLVBptr;
-
 /* length of video buffer */
 static USHORT s_usLVBlength;
 
-/* keyboard event record */
-static PKBDKEYINFO s_key;
-
-/* keyboard handle, 0 == default */
-static PHKBD s_hk;
 
 /* Code page ID of active codepage at the time harbour program was start */
 static USHORT s_usOldCodePage;
@@ -142,39 +139,375 @@ static USHORT s_usOldCodePage;
    use this static which contains active mode info */
 static VIOMODEINFO s_vi;
 
+/* keyboard event record */
+static PKBDKEYINFO s_key;
+/* keyboard handle, 0 == default */
+static PHKBD s_hk;
 
-void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
+/* mouse logical handle */
+static HMOU s_uMouHandle;
+
+static void hb_gt_os2_mouse_Init( void )
+{
+   USHORT fsEvents = MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN |
+                     MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN |
+                     MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN ;
+
+   if( MouOpen ( 0L, &s_uMouHandle ) )          /* try to open mouse */
+      s_uMouHandle = 0;                         /* no mouse found */
+   else
+      MouSetEventMask ( &fsEvents, s_uMouHandle );    /* mask some events */
+}
+
+static void hb_gt_os2_mouse_Exit( void )
+{
+   if( s_uMouHandle )
+   {
+      MouClose( s_uMouHandle );           /* relese mouse handle */
+      s_uMouHandle = 0;
+   }
+}
+
+static BOOL hb_gt_os2_mouse_IsPresent( void )
+{
+   return s_uMouHandle != 0;
+}
+
+static void hb_gt_os2_mouse_Show( void )
+{
+   if( s_uMouHandle )
+      MouDrawPtr( s_uMouHandle );
+}
+
+static void hb_gt_os2_mouse_Hide( void )
+{
+   /*
+      NOTE: mouse cursor always visible if not in full screen
+    */
+   NOPTRRECT rect;
+   VIOMODEINFO vi;                             /* needed to get max Row/Col */
+   if( s_uMouHandle )
+   {
+      /*
+         QUESTION: should I call the GT MaxRow/Col function ?
+         pro: encapsulating of the GetScreen function
+         con: calling function from another module, GT must be linked in
+         con: VioGetMode is been called twice
+       */
+      vi.cb = sizeof(VIOMODEINFO);
+      VioGetMode( &vi, 0 );
+      rect.row  = 0;                            /* x-coordinate upper left */
+      rect.col  = 0;                            /* y-coordinate upper left */
+      rect.cRow = vi.row - 1;                   /* x-coordinate lower right */
+      rect.cCol = vi.col - 1;                   /* y-coordinate lower right */
+      MouRemovePtr( &rect, s_uMouHandle );
+   }
+}
+
+/*
+   QUESTION: when getting mouse coordinate you normally need both
+   row and column, we should think about using just one function
+   hb_gt_os2_mouse_GetPos( &row, &col ) or something like that
+*/
+
+static void hb_gt_os2_mouse_GetPos( int * row, int * col )
+{
+   if( s_uMouHandle )
+   {
+      PTRLOC pos;
+      MouGetPtrPos( &pos, s_uMouHandle );
+      *row = ( int ) pos.row;
+      *col = ( int ) pos.col;
+   }
+}
+
+static void hb_gt_os2_mouse_SetPos( int row, int col )
+{
+   if( s_uMouHandle )
+   {
+      PTRLOC pos;
+      pos.row = ( USHORT ) row;
+      pos.col = ( USHORT ) col;
+      MouSetPtrPos( &pos, s_uMouHandle );
+   }
+}
+
+typedef struct
+{
+   BOOL     fDown;
+   int      iPressed;
+   int      iPressRow;
+   int      iPressCol;
+   ULONG    ulPressTime;
+   int      iReleased;
+   int      iReleaseRow;
+   int      iReleaseCol;
+   ULONG    ulReleaseTime;
+} HB_OS2_BUTTONSTATE;
+
+static HB_OS2_BUTTONSTATE s_ButtonState[ 3 ];
+static ULONG   s_ButtonMask[ 3 ] =
+                           { MOUSE_BN1_DOWN, MOUSE_BN2_DOWN, MOUSE_BN3_DOWN };
+static ULONG   s_ulMouseLastState;
+
+static void hb_gt_os2_mouse_ReadMouseState( void )
+{
+   if( s_uMouHandle )
+   {
+      USHORT WaitOption = 0;  /* 1 = wait until mouse event exist, 0 = don't */
+      MOUEVENTINFO MouEvent;
+      if( MouReadEventQue( &MouEvent, &WaitOption, s_uMouHandle ) == NO_ERROR )
+      {
+         ULONG ulDiff;
+         int i;
+
+         ulDiff = s_ulMouseLastState ^ MouEvent.fs;
+         s_ulMouseLastState = MouEvent.fs;
+
+         for( i = 0; i < 3; ++i )
+         {
+            if( ulDiff & s_ButtonMask[ i ] )
+            {
+               if( s_ulMouseLastState & s_ButtonMask[ i ] )
+               {
+                  s_ButtonState[ i ].fDown = TRUE;
+                  s_ButtonState[ i ].iPressed++;
+                  s_ButtonState[ i ].iPressRow = MouEvent.row;
+                  s_ButtonState[ i ].iPressCol = MouEvent.col;
+                  s_ButtonState[ i ].ulPressTime = MouEvent.time;
+               }
+               else
+               {
+                  s_ButtonState[ i ].fDown = FALSE;
+                  s_ButtonState[ i ].iReleased++;
+                  s_ButtonState[ i ].iReleaseRow = MouEvent.row;
+                  s_ButtonState[ i ].iReleaseCol = MouEvent.col;
+                  s_ButtonState[ i ].ulReleaseTime = MouEvent.time;
+               }
+            }
+         }
+      }
+   }
+}
+
+static BOOL hb_gt_os2_mouse_ButtonState( int iButton )
+{
+   hb_gt_os2_mouse_ReadMouseState();
+
+   if( s_uMouHandle && iButton >= 0 && iButton < 3 )
+      return s_ButtonState[ iButton ].fDown;
+   else
+      return FALSE;
+}
+
+static BOOL hb_gt_os2_mouse_ButtonPressed( int iButton, int * piRow, int * piCol )
+{
+   hb_gt_os2_mouse_ReadMouseState();
+
+   if( s_uMouHandle && iButton >= 0 && iButton < 3 )
+   {
+      if( s_ButtonState[ iButton ].iPressed )
+      {
+         s_ButtonState[ iButton ].iPressed = 0;
+         *piRow = s_ButtonState[ iButton ].iPressRow;
+         *piCol = s_ButtonState[ iButton ].iPressCol;
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+static BOOL hb_gt_os2_mouse_ButtonReleased( int iButton, int * piRow, int * piCol )
+{
+   hb_gt_os2_mouse_ReadMouseState();
+
+   if( s_uMouHandle && iButton >= 0 && iButton < 3 )
+   {
+      if( s_ButtonState[ iButton ].iReleased )
+      {
+         s_ButtonState[ iButton ].iReleased = 0;
+         *piRow = s_ButtonState[ iButton ].iReleaseRow;
+         *piCol = s_ButtonState[ iButton ].iReleaseCol;
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+static int hb_gt_os2_mouse_CountButton( void )
+{
+   USHORT usButtons = 0;
+   if( s_uMouHandle )
+      MouGetNumButtons ( &usButtons, s_uMouHandle );
+   return ( int ) usButtons;
+}
+
+static void hb_gt_os2_GetCursorPosition( int * piRow, int * piCol )
+{
+   USHORT y, x;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCursorPosition(%p, %p)", piRow, piCol));
+
+   VioGetCurPos( &y, &x, 0 );
+
+   *piRow = y;
+   *piCol = x;
+}
+
+static void hb_gt_os2_SetCursorPosition( int iRow, int iCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorPosition(%d, %d)", iRow, iCol));
+
+   if( s_iCurRow != iRow || s_iCurCol != iCol )
+   {
+      VioSetCurPos( ( USHORT ) iRow, ( USHORT ) iCol, 0 );
+      s_iCurRow = iRow;
+      s_iCurCol = iCol;
+   }
+}
+
+static void hb_gt_os2_SetCursorSize( char start, char end, int visible )
+{
+   VIOCURSORINFO vi;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
+
+   vi.yStart = start;
+   vi.cEnd = end;
+   vi.cx = 0;
+   vi.attr = ( visible ? 0 : -1 );
+   VioSetCurType( &vi, 0 );
+}
+
+static char hb_gt_os2_GetCharHeight()
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCharHeight()"));
+
+   return ( char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
+}
+
+static int hb_gt_os2_GetCursorStyle( void )
+{
+   int iStyle;
+   char charheight;
+   VIOCURSORINFO vi;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCursorStyle()"));
+
+   VioGetCurType( &vi, 0 );
+
+   if( vi.attr )
+      iStyle = SC_NONE;
+   else
+   {
+      charheight = hb_gt_os2_GetCharHeight();
+
+      if( vi.yStart == 0 && vi.cEnd == 0 )
+         iStyle = SC_NONE;
+
+      else if( ( vi.yStart == charheight - 1 || vi.yStart == charheight - 2 ) &&
+               vi.cEnd == charheight )
+         iStyle = SC_NORMAL;
+
+      else if( vi.yStart == charheight >> 1 && vi.cEnd == charheight )
+         iStyle = SC_INSERT;
+
+      else if( vi.yStart == 0 && vi.cEnd == charheight )
+         iStyle = SC_SPECIAL1;
+
+      else if( vi.yStart == 0 && vi.cEnd == charheight >> 1 )
+         iStyle = SC_SPECIAL2;
+
+      else
+         iStyle = -1;
+   }
+
+   return iStyle;
+}
+
+static void hb_gt_os2_SetCursorStyle( int iStyle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorStyle(%d)", iStyle));
+
+   if( iStyle != s_iCursorStyle )
+   {
+      char charheight;
+
+      charheight = hb_gt_os2_GetCharHeight();
+
+      switch( iStyle )
+      {
+         case SC_NONE:
+            hb_gt_os2_SetCursorSize( 0, 0, 0 );
+            break;
+
+         case SC_NORMAL:
+            hb_gt_os2_SetCursorSize( charheight - 1, charheight, 1 );
+            break;
+
+         case SC_INSERT:
+            hb_gt_os2_SetCursorSize( charheight >> 1, charheight, 1 );
+            break;
+
+         case SC_SPECIAL1:
+            hb_gt_os2_SetCursorSize( 0, charheight, 1 );
+            break;
+
+         case SC_SPECIAL2:
+            hb_gt_os2_SetCursorSize( 0, charheight >> 1, 1 );
+            break;
+
+         default:
+            return;
+      }
+      s_iCursorStyle = iStyle;
+   }
+}
+
+static void hb_gt_os2_GetScreenContents( void )
+{
+   /* TODO: implement it if necessary */
+   ;
+}
+
+static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
    APIRET rc;           /* return code from DosXXX api call */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
-   s_uiDispCount = 0;
-
-   if(VioGetBuf(&s_ulLVBptr, &s_usLVBlength, 0) == NO_ERROR) {
-      s_ulLVBptr = (ULONG) SELTOFLAT(s_ulLVBptr);
-      VioShowBuf(0, s_usLVBlength, 0);
-   } else {
-      s_ulLVBptr = (ULONG) NULL;
+   if( VioGetBuf( &s_ulLVBptr, &s_usLVBlength, 0 ) == NO_ERROR )
+   {
+      s_ulLVBptr = ( ULONG ) SELTOFLAT( s_ulLVBptr );
+      VioShowBuf( 0, s_usLVBlength, 0 );
+   }
+   else
+   {
+      s_ulLVBptr = ( ULONG ) NULL;
    }
 
    /* Alloc tileable memory for calling a 16 subsystem */
-   rc = DosAllocMem((PPVOID) &s_hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
-   if (rc != NO_ERROR) {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
+   rc = DosAllocMem( ( PPVOID ) &s_hk, sizeof( HKBD ),
+                     PAG_COMMIT | OBJ_TILE | PAG_WRITE );
+   if( rc != NO_ERROR )
+   {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL );
    }
+
    /* it is a long after all, so I set it to zero only one time since it never changes */
-   memset(s_hk, 0, sizeof(HKBD));
+   memset( s_hk, 0, sizeof( HKBD ) );
 
-   rc = DosAllocMem((PPVOID) &s_key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
-   if (rc != NO_ERROR) {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
+   rc = DosAllocMem( ( PPVOID ) &s_key, sizeof( KBDKEYINFO ),
+                     PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   if( rc != NO_ERROR )
+   {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL);
    }
-
-   hb_mouse_Init();
 
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
@@ -191,86 +524,77 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    */
 
    /* 21/08/2001 - <maurilio.longo@libero.it>
-      NOTE: Box drawing characters need page 437 to show correctly, so, in your config.sys you
-            need to have a CODEPAGE=x,y statement where x or y is equal to 437
+      NOTE: Box drawing characters need page 437 to show correctly, so, in your
+            config.sys you need to have a CODEPAGE=x,y statement where x or y
+            is equal to 437
    */
 
-   VioGetCp(0, &s_usOldCodePage, 0);
+   VioGetCp( 0, &s_usOldCodePage, 0 );
 
-   /* If I could not set codepage 437 I reset previous codepage, maybe I do not need to do this */
-   if (VioSetCp(0, 437, 0) != NO_ERROR) {
-      VioSetCp(0, s_usOldCodePage, 0);
+   /* If I could not set codepage 437 I reset previous codepage,
+      maybe I do not need to do this */
+   if( VioSetCp( 0, 437, 0 ) != NO_ERROR )
+   {
+      VioSetCp( 0, s_usOldCodePage, 0 );
    }
+
+   hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
+   s_iCursorStyle = hb_gt_os2_GetCursorStyle();
+
+   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
+   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   if( s_iCursorStyle > 0 )
+      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
+   hb_gt_os2_GetScreenContents();
 }
 
-
-void hb_gt_Exit( void )
+static void hb_gt_os2_Exit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Exit()"));
 
-   DosFreeMem(s_key);
-   DosFreeMem(s_hk);
+   HB_GTSUPER_EXIT();
 
-   hb_mouse_Exit();
-   VioSetCp(0, s_usOldCodePage, 0);
-
-   /* TODO: */
+   DosFreeMem( s_key );
+   DosFreeMem( s_hk );
+   VioSetCp( 0, s_usOldCodePage, 0 );
 }
 
 
-BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
-{
-   USHORT x, y;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
-
-   HB_SYMBOL_UNUSED( pStr );
-   HB_SYMBOL_UNUSED( ulLen );
-
-   VioGetCurPos( &y, &x, 0 );
-   hb_gtSetPos( ( SHORT ) y, ( SHORT ) x );
-
-   return TRUE;
-}
-
-
-int hb_gt_ExtendedKeySupport()
-{
-   return 0;
-}
-
-
-int hb_gt_ReadKey( HB_inkey_enum eventmask )
+static int hb_gt_os2_ReadKey( int iEventMask )
 {
    int ch;              /* next char if any */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_ReadKey(%d)", iEventMask));
 
    /* zero out keyboard event record */
-   memset(s_key, 0, sizeof(KBDKEYINFO));
+   memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
    /* Get next character without wait */
-   KbdCharIn(s_key, IO_NOWAIT, (HKBD) * s_hk);
+   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) * s_hk );
 
    /* extended key codes have 00h or E0h as chChar */
-   if ((s_key->fbStatus & KBDTRF_EXTENDED_CODE) && (s_key->chChar == 0x00 || s_key->chChar == 0xE0))  {
-
+   if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
+       ( s_key->chChar == 0x00 || s_key->chChar == 0xE0 ) )
+   {
       /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
          unless extended keyboard events are allowed, in which case offset it by 512 */
-      if ((s_key->chChar == 0xE0) && (eventmask & INKEY_RAW)) {
-         ch = (int) s_key->chScan + 512;
-
-      } else {
-         ch = (int) s_key->chScan + 256;
-
+      if( ( s_key->chChar == 0xE0 ) && ( iEventMask & INKEY_RAW ) )
+      {
+         ch = ( int ) s_key->chScan + 512;
       }
-
-   } else if (s_key->fbStatus & KBDTRF_FINAL_CHAR_IN) {
-      ch = (int) s_key->chChar;
-
-   } else {
+      else
+      {
+         ch = ( int ) s_key->chScan + 256;
+      }
+   }
+   else if ( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
+   {
+      ch = ( int ) s_key->chChar;
+   }
+   else
+   {
       ch = 0;
-
    }
 
    /* Perform key translations */
@@ -380,568 +704,49 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       case 396:  /* Alt + F12 */
          ch = 349 - ch;
    }
+   if( ch == 0 )
+   {
+      ch = hb_mouse_ReadKey( iEventMask );
+   }
 
    return ch;
 }
 
-
-BOOL hb_gt_IsColor( void )
+static BOOL hb_gt_os2_IsColor( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_IsColor()"));
 
    return s_vi.fbType != 0;        /* 0 = monochrom-compatible mode */
 }
 
-
-USHORT hb_gt_GetScreenWidth( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
-
-   return s_vi.col;
-}
-
-
-USHORT hb_gt_GetScreenHeight( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
-
-   return s_vi.row;
-}
-
-
-void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
-
-   HB_SYMBOL_UNUSED( iMethod );
-
-   VioSetCurPos( ( USHORT ) iRow, ( USHORT ) iCol, 0 );
-}
-
-
-SHORT hb_gt_Row( void )
-{
-   USHORT x, y;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
-
-   VioGetCurPos( &y, &x, 0 );
-   return ( SHORT ) y;
-}
-
-
-SHORT hb_gt_Col( void )
-{
-   USHORT x, y;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
-
-   VioGetCurPos( &y, &x, 0 );
-   return ( SHORT ) x;
-}
-
-
-void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
-
-   if(s_uiDispCount > 0)
-   {
-      int iRows = sVert, iCols = sHoriz;
-
-      /* NOTE: 'SHORT' is used intentionally to correctly compile
-       *  with C++ compilers
-       */
-      SHORT usRow, usCol;
-      UINT uiSize;
-      int iLength = ( usRight - usLeft ) + 1;
-      int iCount, iColOld, iColNew, iColSize;
-
-      hb_gtGetPos( &usRow, &usCol );
-
-      if( hb_gtRectSize( usTop, usLeft, usBottom, usRight, &uiSize ) == 0 )
-      {
-         /* NOTE: 'unsigned' is used intentionally to correctly compile
-          * with C++ compilers
-          */
-         BYTE * fpBlank = ( BYTE * ) hb_xgrab( iLength );
-         BYTE * fpBuff = ( BYTE * ) hb_xgrab( iLength * 2 );
-
-         memset( fpBlank, ' ', iLength );
-
-         iColOld = iColNew = usLeft;
-         if( iCols >= 0 )
-         {
-            iColOld += iCols;
-            iColSize = ( int ) ( usRight - usLeft );
-            iColSize -= iCols;
-         }
-         else
-         {
-            iColNew -= iCols;
-            iColSize = ( int ) ( usRight - usLeft );
-            iColSize += iCols;
-         }
-
-         for( iCount = ( iRows >= 0 ? usTop : usBottom );
-         ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
-         ( iRows >= 0 ? iCount++ : iCount-- ) )
-         {
-            int iRowPos = iCount + iRows;
-
-            /* Blank the scroll region in the current row */
-            hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
-
-            if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
-            {
-               /* Read the text to be scrolled into the current row */
-               hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
-
-               /* Write the scrolled text to the current row */
-               hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
-            }
-         }
-
-         hb_xfree( fpBlank );
-         hb_xfree( fpBuff );
-      }
-
-      hb_gtSetPos( usRow, usCol );
-
-   }
-   else
-   {
-      BYTE bCell[ 2 ];                          /* character/attribute pair */
-
-      bCell [ 0 ] = ' ';
-      bCell [ 1 ] = attr;
-
-      if( ( sVert | sHoriz ) == 0 )             /* both zero, clear region */
-         VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
-
-      else
-      {
-         if( sVert > 0 )                        /* scroll up */
-            VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
-
-         else if( sVert < 0 )                   /* scroll down */
-            VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
-
-         if( sHoriz > 0 )                       /* scroll left */
-            VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
-
-         else if( sHoriz < 0 )                  /* scroll right */
-            VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
-      }
-   }
-}
-
-/* QUESTION: not been used, do we need this function ? */
-/* Answer: In the dos version, this gets called by hb_gt_GetCursorStyle()
-   as that function is written below, we don't need this */
-
-/*
-static void hb_gt_GetCursorSize( char * start, char * end )
-{
-   VIOCURSORINFO vi;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorSize(%p, %p)", start, end));
-
-   VioGetCurType( &vi, 0 );
-   *start = vi.yStart;
-   *end = vi.cEnd;
-}
-*/
-
-
-static void hb_gt_SetCursorSize( char start, char end, int visible )
-{
-   VIOCURSORINFO vi;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
-
-   vi.yStart = start;
-   vi.cEnd = end;
-   vi.cx = 0;
-   vi.attr = ( visible ? 0 : -1 );
-   VioSetCurType( &vi, 0 );
-}
-
-
-static char hb_gt_GetCellSize()
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCellSize()"));
-
-   return ( char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
-}
-
-
-USHORT hb_gt_GetCursorStyle( void )
-{
-   int rc;
-   char cellsize;
-   VIOCURSORINFO vi;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
-
-   VioGetCurType( &vi, 0 );
-
-   if( vi.attr )
-      rc = SC_NONE;
-   else
-   {
-      cellsize = hb_gt_GetCellSize();
-
-      if( vi.yStart == 0 && vi.cEnd == 0 )
-         rc = SC_NONE;
-
-      else if( ( vi.yStart == cellsize - 1 || vi.yStart == cellsize - 2 ) && vi.cEnd == cellsize )
-         rc = SC_NORMAL;
-
-      else if( vi.yStart == cellsize / 2 && vi.cEnd == cellsize )
-         rc = SC_INSERT;
-
-      else if( vi.yStart == 0 && vi.cEnd == cellsize )
-         rc = SC_SPECIAL1;
-
-      else if( vi.yStart == 0 && vi.cEnd == cellsize / 2 )
-         rc = SC_SPECIAL2;
-
-      else
-         rc = SC_NONE;
-   }
-
-   return rc;
-}
-
-
-void hb_gt_SetCursorStyle( USHORT style )
-{
-   char cellsize;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
-
-   cellsize = hb_gt_GetCellSize();
-   switch( style )
-   {
-   case SC_NONE:
-      hb_gt_SetCursorSize( 0, 0, 0 );
-      break;
-
-   case SC_NORMAL:
-      hb_gt_SetCursorSize( cellsize - 1, cellsize, 1 );
-      break;
-
-   case SC_INSERT:
-      hb_gt_SetCursorSize( cellsize / 2, cellsize, 1 );
-      break;
-
-   case SC_SPECIAL1:
-      hb_gt_SetCursorSize( 0, cellsize, 1 );
-      break;
-
-   case SC_SPECIAL2:
-      hb_gt_SetCursorSize( 0, cellsize / 2, 1 );
-      break;
-
-   default:
-      break;
-   }
-}
-
-
-static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
-
-   return (char *) (s_ulLVBptr + ( cRow * hb_gt_GetScreenWidth() * 2 ) + ( cCol * 2 ));
-}
-
-
-/* TODO: 21/08/2001 - <maurilio.longo@libero.it>
-         This function works even if a DispBegin() has been issued, but should be corrected
-         to use VioXXX calls if not
-*/
-static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
-{
-   char * p;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
-
-   p = hb_gt_ScreenPtr( cRow, cCol );
-   *ch = *p;
-   *attr = *( p + 1 );
-}
-
-
-static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
-
-   if (s_uiDispCount > 0) {
-      USHORT * p = (USHORT *) hb_gt_ScreenPtr( cRow, cCol );
-      *p = (attr << 8) + ch;
-
-   } else {
-      USHORT Cell = (attr << 8) + ch;
-      VioWrtNCell((PBYTE) &Cell, 1, cRow, cCol, 0);
-   }
-}
-
-void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
-
-   if (s_uiDispCount > 0){
-      USHORT * p = (USHORT *) hb_gt_ScreenPtr( uiRow, uiCol );
-      *p = (byAttr << 8) + byChar;
-
-   } else {
-      USHORT Cell = (byAttr << 8) + byChar;
-      VioWrtNCell((PBYTE) &Cell, 1, uiRow, uiCol, 0);
-   }
-}
-
-void hb_gt_PutChar( SHORT uiRow, SHORT uiCol, BYTE byChar )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byChar );
-}
-
-void hb_gt_PutAttr( SHORT uiRow, SHORT uiCol, BYTE byAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byAttr );
-}
-
-void hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr )
-{
-   char * p;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCharAttr(%hu, %hu, %p, %p)", uiRow, uiCol, pbyChar, pbyAttr));
-
-   p = hb_gt_ScreenPtr( uiRow, uiCol );
-   *pbyChar = *p;
-   *pbyAttr = *( p + 1 );
-}
-
-void hb_gt_GetChar( SHORT uiRow, SHORT uiCol, BYTE * pbyChar )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( pbyChar );
-}
-
-void hb_gt_GetAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( pbyAttr );
-}
-
-void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
-
-   if (s_uiDispCount > 0) {
-      USHORT *p;
-      register USHORT byAttr = attr << 8;
-
-      p = (USHORT *) hb_gt_ScreenPtr( usRow, usCol );
-      while( len-- )
-      {
-         *p++ = byAttr + (*str++);
-      }
-
-   } else {
-      VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
-
-   }
-}
-
-
-int hb_gt_RectSize( USHORT rows, USHORT cols )
-{
-   return rows * cols * 2;
-}
-
-
-void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *dest )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, dest));
-
-   if (s_uiDispCount > 0) {
-      USHORT x, y;
-
-      for( y = usTop; y <= usBottom; y++ ) {
-         for( x = usLeft; x <= usRight; x++ ) {
-            hb_gt_xGetXY( y, x, dest + 1, dest );
-            dest += 2;
-         }
-      }
-
-   } else {
-      USHORT width, y;
-
-      width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-      for( y = usTop; y <= usBottom; y++ )
-      {
-         VioReadCellStr( dest, &width, y, usLeft, 0 );
-         dest += width;
-      }
-   }
-}
-
-
-void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *srce )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce));
-
-   if (s_uiDispCount > 0) {
-      USHORT x, y;
-
-      for( y = usTop; y <= usBottom; y++ ) {
-         for( x = usLeft; x <= usRight; x++ ) {
-            hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
-            srce += 2;
-         }
-      }
-
-   } else {
-      USHORT width, y;
-
-      width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-      for( y = usTop; y <= usBottom; y++ ) {
-         VioWrtCellStr( srce, width, y, usLeft, 0 );
-         srce += width;
-      }
-   }
-}
-
-
-void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr));
-
-   if(s_uiDispCount >0) {
-
-      USHORT x, y;
-
-      for( y = usTop; y <= usBottom; y++ ) {
-
-         BYTE scratchattr;
-         BYTE ch;
-
-         for( x = usLeft; x <= usRight; x++ ) {
-            hb_gt_xGetXY( y, x, &scratchattr, &ch );
-            hb_gt_xPutch( y, x, attr, ch );
-         }
-      }
-   } else {
-
-      USHORT width, y;
-
-      /*
-         assume top level check that coordinate are all valid and fall
-         within visible screen, else if width cannot be fit on current line
-         it is going to warp to the next line
-      */
-      width = ( USHORT ) ( usRight - usLeft + 1 );
-      for( y = usTop; y <= usBottom; y++ )
-         VioWrtNAttr( &attr, width, y, usLeft, 0 );
-   }
-}
-
-
-/* NOTE: 21/08/2001 - <maurilio.longo@libero.it>
-         If you need to call this function from inside gtos2.c then there is
-         something WRONG with your code :-)
-*/
-void hb_gt_DispBegin( void )
-{
-   /* NOTE: 02/04/2000 - <maurilio.longo@libero.it>
-            added support for DispBegin() and DispEnd() functions.
-            OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
-            every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
-            off screen buffer with screen
-   */
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
-
-   /* pointer to the only one available screen buffer is set on startup,
-      we only need to keep track of nesting */
-   ++s_uiDispCount;
-}
-
-
-void hb_gt_DispEnd( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
-
-   if (--s_uiDispCount == 0) {
-      VioShowBuf(0, s_usLVBlength, 0);   /* refresh everything */
-   }
-}
-
-
-BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
-
-   s_vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &s_vi, 0 );        /* fill structure with current settings */
-   s_vi.row = uiRows;
-   s_vi.col = uiCols;
-   return ! ( BOOL ) VioSetMode( &s_vi, 0 );   /* 0 = Ok, other = Fail */
-}
-
-
-BOOL hb_gt_GetBlink()
+static BOOL hb_gt_os2_GetBlink()
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetBlink()"));
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* get intensity/blink toggle */
    VioGetState( &vi, 0 );
-   return ( vi.fs == 0 );               /* 0 = blink, 1 = intens      */
+   return vi.fs == 0;                   /* 0 = blink, 1 = intens      */
 }
 
 
-void hb_gt_SetBlink( BOOL bBlink )
+static void hb_gt_os2_SetBlink( BOOL fBlink )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetBlink(%d)", (int) fBlink));
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* set intensity/blink toggle */
-   vi.fs   = ( bBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
+   vi.fs   = ( fBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
    VioSetState( &vi, 0 );
 }
 
-
-void hb_gt_Tone( double dFrequency, double dDuration )
+static void hb_gt_os2_Tone( double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Tone(%lf, %lf)", dFrequency, dDuration));
 
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
@@ -967,233 +772,192 @@ void hb_gt_Tone( double dFrequency, double dDuration )
    }
 }
 
-
-char * hb_gt_Version( void )
+static char * hb_gt_os2_Version( int iType )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%d)", iType ) );
+
+   if( iType == 0 )
+      return HB_GT_DRVNAME( HB_GT_NAME );
+
    return "Harbour Terminal: OS/2 console";
 }
 
-
-USHORT hb_gt_DispCount()
+static BOOL hb_gt_os2_SetMode( int iRows, int iCols )
 {
-   return s_uiDispCount;
-}
+   BOOL fResult;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetMode(%d, %d)", iRows, iCols));
 
-void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
-{
-   USHORT byte = (byAttr << 8) + byChar;
+   s_vi.cb = sizeof( VIOMODEINFO );
+   VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
+   s_vi.row = iRows;
+   s_vi.col = iCols;
+   fResult = VioSetMode( &s_vi, 0 ) == 0; /* 0 = Ok, other = Fail */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
-
-   if (s_uiDispCount > 0) {
-      register USHORT *p;
-
-      p = (USHORT *) hb_gt_ScreenPtr( uiRow, uiCol );
-      while( nLength-- )
-      {
-         *p++ = byte;
-      }
-
-   } else {
-      VioWrtNCell((PBYTE) &byte, nLength, uiRow, uiCol, 0);
-
-   }
-}
-
-USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * szBox, BYTE byAttr )
-{
-   USHORT ret = 1;
-   SHORT Row;
-   SHORT Col;
-   SHORT Height;
-   SHORT Width;
-
-   if( Left >= 0 || Left < hb_gt_GetScreenWidth()
-       || Right >= 0 || Right < hb_gt_GetScreenWidth()
-       || Top >= 0 || Top < hb_gt_GetScreenHeight()
-       || Bottom >= 0 || Bottom < hb_gt_GetScreenHeight() )
+   if( !fResult )
    {
-
-      /* Ensure that box is drawn from top left to bottom right. */
-      if( Top > Bottom )
-      {
-         SHORT tmp = Top;
-         Top = Bottom;
-         Bottom = tmp;
-      }
-      if( Left > Right )
-      {
-         SHORT tmp = Left;
-         Left = Right;
-         Right = tmp;
-      }
-
-      /* Draw the box or line as specified */
-      Height = Bottom - Top + 1;
-      Width  = Right - Left + 1;
-
-      if( Height > 1 && Width > 1 && Top >= 0 && Top < hb_gt_GetScreenHeight() && Left >= 0 && Left < hb_gt_GetScreenWidth() )
-         hb_gt_xPutch( Top, Left, byAttr, szBox[ 0 ] ); /* Upper left corner */
-
-      Col = ( Height > 1 ? Left + 1 : Left );
-      if(Col < 0 )
-      {
-         Width += Col;
-         Col = 0;
-      }
-      if( Right >= hb_gt_GetScreenWidth() )
-      {
-         Width -= Right - hb_gt_GetScreenWidth();
-      }
-
-      if( Col <= Right && Col < hb_gt_GetScreenWidth() && Top >= 0 && Top < hb_gt_GetScreenHeight() )
-         hb_gt_Replicate( Top, Col, byAttr, szBox[ 1 ], Width + ( (Right - Left) > 1 ? -2 : 0 ) ); /* Top line */
-
-      if( Height > 1 && (Right - Left) > 1 && Right < hb_gt_GetScreenWidth() && Top >= 0 && Top < hb_gt_GetScreenHeight() )
-         hb_gt_xPutch( Top, Right, byAttr, szBox[ 2 ] ); /* Upper right corner */
-
-      if( szBox[ 8 ] && Height > 2 && Width > 2 )
-      {
-         for( Row = Top + 1; Row < Bottom; Row++ )
-         {
-            if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
-            {
-               Col = Left;
-               if( Col < 0 )
-                  Col = 0; /* The width was corrected earlier. */
-               else
-                  hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
-               hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
-               if( Right < hb_gt_GetScreenWidth() )
-                  hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
-            }
-         }
-      }
-      else
-      {
-         for( Row = ( Width > 1 ? Top + 1 : Top ); Row < ( (Right - Left ) > 1 ? Bottom : Bottom + 1 ); Row++ )
-         {
-            if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
-            {
-               if( Left >= 0 && Left < hb_gt_GetScreenWidth() )
-                  hb_gt_xPutch( Row, Left, byAttr, szBox[ 7 ] ); /* Left side */
-               if( ( Width > 1 || Left < 0 ) && Right < hb_gt_GetScreenWidth() )
-                  hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
-            }
-         }
-      }
-
-      if( Height > 1 && Width > 1 )
-      {
-         if( Left >= 0 && Bottom < hb_gt_GetScreenHeight() )
-            hb_gt_xPutch( Bottom, Left, byAttr, szBox[ 6 ] ); /* Bottom left corner */
-
-         Col = Left + 1;
-         if( Col < 0 )
-            Col = 0; /* The width was corrected earlier. */
-
-         if( Col <= Right && Bottom < hb_gt_GetScreenHeight() )
-            hb_gt_Replicate( Bottom, Col, byAttr, szBox[ 5 ], Width - 2 ); /* Bottom line */
-
-         if( Right < hb_gt_GetScreenWidth() && Bottom < hb_gt_GetScreenHeight() )
-            hb_gt_xPutch( Bottom, Right, byAttr, szBox[ 4 ] ); /* Bottom right corner */
-      }
-      ret = 0;
+      s_vi.cb = sizeof( VIOMODEINFO );
+      VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
    }
 
-   return ret;
+   hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
+   s_iCursorStyle = hb_gt_os2_GetCursorStyle();
+   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
+   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   if( s_iCursorStyle > 0 )
+      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
+   hb_gt_os2_GetScreenContents();
+
+   return fResult;
 }
 
-
-USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
+static BOOL hb_gt_os2_PreExt()
 {
-   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PreExt()"));
+
+   return TRUE;
 }
 
-
-USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
+static BOOL hb_gt_os2_PostExt()
 {
-   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt()"));
+
+   hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
+   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   hb_gt_os2_GetScreenContents();
+
+   return TRUE;
 }
 
-
-USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE byAttr )
+static BOOL hb_gt_os2_Suspend()
 {
-   USHORT ret = 1;
-   if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Suspend()"));
+
+   return TRUE;
+}
+
+static BOOL hb_gt_os2_Resume()
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume()"));
+
+   s_vi.cb = sizeof( VIOMODEINFO );
+   VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
+   hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
+   s_iCursorStyle = hb_gt_os2_GetCursorStyle();
+   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
+   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   if( s_iCursorStyle > 0 )
+      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
+   hb_gt_os2_GetScreenContents();
+
+   return TRUE;
+}
+
+static void hb_gt_os2_Redraw( int iRow, int iCol, int iSize )
+{
+   BYTE bColor, bAttr;
+   USHORT usChar, usCell;
+   int iLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+
+   while( iLen < iSize )
    {
-      if( Left < 0 )
-         Left = 0;
-      else if( Left >= hb_gt_GetScreenWidth() )
-         Left = hb_gt_GetScreenWidth() - 1;
+      if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+         break;
 
-      if( Right < 0 )
-         Right = 0;
-      else if( Right >= hb_gt_GetScreenWidth() )
-         Right = hb_gt_GetScreenWidth() - 1;
+      /*
+       * TODO: it can be very slow (I haven't tested it) because it
+       * update screen with single characters so if necessary optimize
+       * it by groping cells for the whole line or characters with
+       * the same color. [druzus]
+       */
+      usCell = ( bColor << 8 ) + ( usChar & 0xff );
+      VioWrtNCell( ( PBYTE ) &usCell, 1, iRow, iCol + iLen, 0 );
 
-      if( Left < Right )
-         hb_gt_Replicate( Row, Left, byAttr, byChar, Right - Left + 1 );
-      else
-         hb_gt_Replicate( Row, Right, byAttr, byChar, Left - Right + 1 );
-      ret = 0;
+      iLen++;
    }
-   return ret;
 }
 
-
-USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
+static void hb_gt_os2_Refresh( void )
 {
-   USHORT ret = 1;
-   SHORT Row;
+   int iRow, iCol, iStyle;
 
-   if( Col >= 0 && Col < hb_gt_GetScreenWidth() )
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Refresh()" ) );
+
+   HB_GTSUPER_REFRESH();
+
+   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+   if( iStyle != SC_NONE )
    {
-      if( Top < 0 )
-         Top = 0;
-      else if( Top >= hb_gt_GetScreenHeight() )
-         Top = hb_gt_GetScreenHeight() - 1;
-
-      if( Bottom < 0 )
-         Bottom = 0;
-      else if( Bottom >= hb_gt_GetScreenHeight() )
-         Bottom = hb_gt_GetScreenHeight() - 1;
-
-      if( Top <= Bottom )
-         Row = Top;
+      if( iRow >= 0 && iCol >= 0 && iRow < s_vi.row && iCol < s_vi.col )
+         hb_gt_os2_SetCursorPosition( iRow, iCol );
       else
-      {
-         Row = Bottom;
-         Bottom = Top;
-      }
-      while( Row <= Bottom )
-         hb_gt_xPutch( Row++, Col, byAttr, byChar );
-      ret = 0;
+         iStyle = SC_NONE;
    }
-   return ret;
+   hb_gt_os2_SetCursorStyle( iStyle );
 }
 
 
-BOOL hb_gt_PreExt()
+/* *********************************************************************** */
+
+static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+
+   pFuncTable->Init                       = hb_gt_os2_Init;
+   pFuncTable->Exit                       = hb_gt_os2_Exit;
+   pFuncTable->IsColor                    = hb_gt_os2_IsColor;
+   pFuncTable->SetMode                    = hb_gt_os2_SetMode;
+   pFuncTable->Redraw                     = hb_gt_os2_Redraw;
+   pFuncTable->Refresh                    = hb_gt_os2_Refresh;
+   pFuncTable->SetBlink                   = hb_gt_os2_SetBlink;
+   pFuncTable->GetBlink                   = hb_gt_os2_GetBlink;
+   pFuncTable->Version                    = hb_gt_os2_Version;
+   pFuncTable->Suspend                    = hb_gt_os2_Suspend;
+   pFuncTable->Resume                     = hb_gt_os2_Resume;
+   pFuncTable->PreExt                     = hb_gt_os2_PreExt;
+   pFuncTable->PostExt                    = hb_gt_os2_PostExt;
+   pFuncTable->Tone                       = hb_gt_os2_Tone;
+
+   pFuncTable->ReadKey                    = hb_gt_os2_ReadKey;
+
+   pFuncTable->MouseInit                  = hb_gt_os2_mouse_Init;
+   pFuncTable->MouseExit                  = hb_gt_os2_mouse_Exit;
+   pFuncTable->MouseIsPresent             = hb_gt_os2_mouse_IsPresent;
+   pFuncTable->MouseShow                  = hb_gt_os2_mouse_Show;
+   pFuncTable->MouseHide                  = hb_gt_os2_mouse_Hide;
+   pFuncTable->MouseGetPos                = hb_gt_os2_mouse_GetPos;
+   pFuncTable->MouseSetPos                = hb_gt_os2_mouse_SetPos;
+   pFuncTable->MouseButtonState           = hb_gt_os2_mouse_ButtonState;
+   pFuncTable->MouseButtonPressed         = hb_gt_os2_mouse_ButtonPressed;
+   pFuncTable->MouseButtonReleased        = hb_gt_os2_mouse_ButtonReleased;
+   pFuncTable->MouseCountButton           = hb_gt_os2_mouse_CountButton;
+
    return TRUE;
 }
 
+/* ********************************************************************** */
 
-BOOL hb_gt_PostExt()
-{
-   return TRUE;
-}
+static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
+                             hb_gt_FuncInit,
+                             HB_GTSUPER };
 
+HB_GT_ANNOUNCE( HB_GT_NAME );
 
-BOOL hb_gt_Suspend()
-{
-   return TRUE;
-}
+HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
+   hb_gtRegister( &gtInit );
+HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
-
-BOOL hb_gt_Resume()
-{
-   return TRUE;
-}
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_startup_gt_Init_
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
+   #pragma data_seg()
+#endif

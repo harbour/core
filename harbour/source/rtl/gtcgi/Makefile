@@ -6,7 +6,6 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtcgi.c \
-	mousecgi.c \
 
 LIBNAME=gtcgi
 

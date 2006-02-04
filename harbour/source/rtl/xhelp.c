@@ -55,22 +55,22 @@
 
 HB_FUNC( __XHELP )
 {
-   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
+   PHB_SYMB pSym = hb_dynsymFindSymbol( "HELP" );
 
-   if( pDynSym )
+   if( pSym )
    {
       /* awhite: push the existing params after the dyn symbol */
 
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
-      hb_vmPushSymbol( pDynSym->pSymbol );
+      hb_vmPushSymbol( pSym );
       hb_vmPushNil();
       for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( uiPCount );
 /*
-      hb_vmPushSymbol( pDynSym->pSymbol );
+      hb_vmPushSymbol( pSym );
       hb_vmPushNil();
       hb_vmDo( 0 );
 */

@@ -54,8 +54,8 @@
 #define HB_SET_H_
 
 #include "hbapi.h"
-#include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbapifs.h"
 
 HB_EXTERN_BEGIN
 
@@ -163,7 +163,7 @@ typedef struct
    BOOL    HB_SET_EOF;
    int     HB_SET_EPOCH;
    BOOL    HB_SET_ESCAPE;
-   HB_inkey_enum  HB_SET_EVENTMASK;
+   int     HB_SET_EVENTMASK;
    BOOL    HB_SET_EXACT;
    BOOL    HB_SET_EXCLUSIVE;
    BOOL    HB_SET_EXIT;

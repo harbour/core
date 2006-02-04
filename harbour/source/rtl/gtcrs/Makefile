@@ -5,18 +5,8 @@
 ROOT = ../../../
 
 C_SOURCES=\
-	gtcrs.c \
-	mousecrs.c \
-	kbdcrs.c \
-
-PRG_SOURCES=\
-	keymap.prg \
-	charmap.prg
-
-PRG_HEADERS=\
-	eterm.map \
-	linux.map \
-	debug.map \
+    gtcrs.c \
+    chrmap.c \
 
 LIBNAME=gtcrs
 
@@ -40,8 +30,7 @@ endif
 
 ifeq ($(HB_GPM_MOUSE),yes)
   CFLAGS += -DHAVE_GPM_H
+ifeq ($(HB_GPM_NOICE_DISABLE),yes)
+  CFLAGS += -DHB_GPM_NOICE_DISABLE
 endif
-
-ifeq ($(HB_MULTI_GT),yes)
-  CFLAGS += -DHB_MULTI_GT
 endif

@@ -76,7 +76,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-BOOL HB_EXPORT hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
+HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
    ULONG ulPos;
@@ -96,6 +96,7 @@ BOOL HB_EXPORT hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
    pBaseArray->ulHolders  = 1;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
+   pBaseArray->puiClsTree = NULL;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
       ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
@@ -105,7 +106,7 @@ BOOL HB_EXPORT hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
    return TRUE;
 }
 
-BOOL HB_EXPORT hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
+HB_EXPORT BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayAdd(%p, %p)", pArray, pValue));
 
@@ -126,7 +127,7 @@ BOOL HB_EXPORT hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
    return FALSE;
 }
 
-BOOL HB_EXPORT hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
+HB_EXPORT BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayAddForward(%p, %p)", pArray, pValue));
 
@@ -147,17 +148,7 @@ BOOL HB_EXPORT hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
    return FALSE;
 }
 
-ULONG HB_EXPORT hb_arrayLen( PHB_ITEM pArray )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayLen(%p)", pArray));
-
-   if( HB_IS_ARRAY( pArray ) )
-      return pArray->item.asArray.value->ulLen;
-   else
-      return 0;
-}
-
-BOOL HB_EXPORT hb_arrayIsObject( PHB_ITEM pArray )
+HB_EXPORT BOOL hb_arrayIsObject( PHB_ITEM pArray )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayIsObject(%p)", pArray));
 
@@ -167,7 +158,26 @@ BOOL HB_EXPORT hb_arrayIsObject( PHB_ITEM pArray )
       return FALSE;
 }
 
-BOOL HB_EXPORT hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
+/* retrives the array unique ID */
+HB_EXPORT void * hb_arrayId( PHB_ITEM pArray )
+{
+   if( HB_IS_ARRAY( pArray ) )
+      return ( void * ) pArray->item.asArray.value;
+   else
+      return NULL;
+}
+
+HB_EXPORT ULONG hb_arrayLen( PHB_ITEM pArray )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayLen(%p)", pArray));
+
+   if( HB_IS_ARRAY( pArray ) )
+      return pArray->item.asArray.value->ulLen;
+   else
+      return 0;
+}
+
+HB_EXPORT BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySize(%p, %lu)", pArray, ulLen));
 
@@ -221,7 +231,7 @@ BOOL HB_EXPORT hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
       return FALSE;
 }
 
-BOOL HB_EXPORT hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
+HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayDel(%p, %lu)", pArray, ulIndex));
 
@@ -233,14 +243,8 @@ BOOL HB_EXPORT hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
       {
          PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
 
-         hb_itemClear( pBaseArray->pItems + ( ulIndex - 1 ) );
-
-         for( ulIndex--; ulIndex < ulLen - 1; ulIndex++ )       /* move items */
-         {
-            hb_itemCopy( pBaseArray->pItems + ulIndex, pBaseArray->pItems + ( ulIndex + 1 ) );
-         }
-
-         hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
+         for( ; ulIndex < ulLen; ++ulIndex )       /* move items */
+            hb_itemMove( pBaseArray->pItems + ulIndex - 1, pBaseArray->pItems + ulIndex );
       }
 
       return TRUE;
@@ -249,7 +253,7 @@ BOOL HB_EXPORT hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
       return FALSE;
 }
 
-BOOL HB_EXPORT hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
+HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayIns(%p, %lu)", pArray, ulIndex));
 
@@ -275,7 +279,7 @@ BOOL HB_EXPORT hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
       return FALSE;
 }
 
-BOOL HB_EXPORT hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
+HB_EXPORT BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySet(%p, %lu, %p)", pArray, ulIndex, pItem));
 
@@ -288,7 +292,7 @@ BOOL HB_EXPORT hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
       return FALSE;
 }
 
-BOOL HB_EXPORT hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
+HB_EXPORT BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGet(%p, %lu, %p)", pArray, ulIndex, pItem));
 
@@ -773,123 +777,86 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       return FALSE;
 }
 
-PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
+static void hb_arrayCloneTo( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBaseArray, PHB_NESTED_CLONED pClonedList )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p, %p)", pSrcArray, pClonedList));
+   PHB_ITEM pSrcItem, pDstItem;
+   ULONG ulLen;
 
-   if( HB_IS_ARRAY( pSrcArray ) )
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCloneTo(%p, %p, %p)", pSrcBaseArray, pDstBaseArray, pClonedList));
+
+   pSrcItem = pSrcBaseArray->pItems;
+   pDstItem = pDstBaseArray->pItems;
+   ulLen = pSrcBaseArray->ulLen;
+
+   pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
+
+   for( ulLen = pSrcBaseArray->ulLen; ulLen; --ulLen, ++pSrcItem, ++pDstItem )
    {
-      PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
-      PHB_BASEARRAY pDstBaseArray;
-      ULONG ulSrcLen = pSrcBaseArray->ulLen;
-      ULONG ulCount;
-      PHB_ITEM pDstArray;
-      PHB_NESTED_CLONED pCloned;
-      BOOL bTop;
-
-      pDstArray = hb_itemNew( NULL );
-      hb_arrayNew( pDstArray, ulSrcLen );
-
-      if( pClonedList == NULL )
+      /* Clipper clones nested array ONLY if NOT an Object!!! */
+      if( pSrcItem->type == HB_IT_ARRAY && pSrcItem->item.asArray.value->uiClass == 0 )
       {
-         bTop = TRUE;
+         PHB_NESTED_CLONED pCloned = pClonedList;
+         PHB_BASEARRAY pBaseArray = pSrcItem->item.asArray.value;
 
-         pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-
-         pCloned = pClonedList;
-
-         pCloned->pSrcBaseArray = pSrcBaseArray;
-         pCloned->pDest         = pDstArray;
-
-         pCloned->pNext = NULL;
-      }
-      else
-      {
-         bTop = FALSE;
-
-         pCloned = pClonedList;
-         while( pCloned->pNext )
+         do
          {
+            if( pCloned->pSrcBaseArray == pBaseArray )
+               break;
             pCloned = pCloned->pNext;
          }
+         while( pCloned );
 
-         pCloned->pNext = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-         pCloned = pCloned->pNext;
-
-         pCloned->pSrcBaseArray = pSrcBaseArray;
-         pCloned->pDest         = pDstArray;
-
-         pCloned->pNext = NULL;
-      }
-
-      pDstBaseArray = pDstArray->item.asArray.value;
-      pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
-
-      /*-----------------12/20/2001 7:05PM----------------
-       * TODO: Is this correct? was taken from __objClone()
-       * was token from xHarbour
-       * --------------------------------------------------*/
-      pDstBaseArray->puiClsTree = NULL;
-
-      for( ulCount = 0; ulCount < ulSrcLen; ulCount++ )
-      {
-         PHB_ITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
-
-         if( pSrcItem->type == HB_IT_ARRAY )
+         if( pCloned )
          {
-            PHB_ITEM pClone;
-
-            /* Broken down like this to avoid redundant comparisons. */
-            pCloned = pClonedList;
-            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
-            {
-               pClone = pCloned->pDest;
-               goto DontClone;
-            }
-            while( pCloned->pNext )
-            {
-               pCloned = pCloned->pNext;
-
-               if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
-               {
-                  pClone = pCloned->pDest;
-                  goto DontClone;
-               }
-            }
-            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
-            {
-               pClone = pCloned->pDest;
-               goto DontClone;
-            }
-
-            pClone = hb_arrayClone( pSrcItem, pClonedList );
-
-           DontClone :
-            hb_arraySet( pDstArray, ulCount + 1, pClone );
+            hb_itemCopy( pDstItem, pCloned->pDest );
          }
          else
          {
-            hb_arraySet( pDstArray, ulCount + 1, pSrcItem );
+            hb_arrayNew( pDstItem, pBaseArray->ulLen );
+
+            pCloned = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
+            pCloned->pSrcBaseArray = pBaseArray;
+            pCloned->pDest         = pDstItem;
+            pCloned->pNext         = pClonedList->pNext;
+            pClonedList->pNext     = pCloned;
+
+            hb_arrayCloneTo( pBaseArray, pDstItem->item.asArray.value, pClonedList );
          }
       }
-
-      /* Top Level - Release the created list. */
-      if( bTop )
+      else
       {
-         /* 1st. Chain alway exists, and points to our top level pDstArray, which should NOT be (item) released. */
-         pCloned     = pClonedList;
+         hb_itemCopy( pDstItem, pSrcItem );
+      }
+   }
+}
+
+HB_EXPORT PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p)", pSrcArray));
+
+   if( HB_IS_ARRAY( pSrcArray ) )
+   {
+      PHB_NESTED_CLONED pClonedList, pCloned;
+      PHB_ITEM pDstArray;
+      PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
+      ULONG ulSrcLen = pSrcBaseArray->ulLen;
+
+      pDstArray = hb_itemArrayNew( ulSrcLen );
+
+      pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
+      pClonedList->pSrcBaseArray = pSrcBaseArray;
+      pClonedList->pDest         = pDstArray;
+      pClonedList->pNext         = NULL;
+
+      hb_arrayCloneTo( pSrcBaseArray, pDstArray->item.asArray.value, pClonedList );
+
+      do
+      {
+         pCloned = pClonedList;
          pClonedList = pClonedList->pNext;
          hb_xfree( pCloned );
-
-         while( pClonedList )
-         {
-            pCloned     = pClonedList;
-            pClonedList = pClonedList->pNext;
-
-            hb_itemRelease( pCloned->pDest );
-            hb_xfree( pCloned );
-         }
       }
+      while( pClonedList );
 
       return pDstArray;
    }
@@ -899,7 +866,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
    }
 }
 
-PHB_ITEM hb_arrayFromStack( USHORT uiLen )
+HB_EXPORT PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 {
    PHB_ITEM pArray = hb_itemNew( NULL );
    USHORT uiPos;
@@ -916,18 +883,53 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
    return pArray;
 }
 
-PHB_ITEM hb_arrayFromParams( PHB_ITEM *pBase )
+PHB_ITEM hb_arrayFromParams( int iLevel )
 {
-   PHB_ITEM pArray = hb_itemNew( NULL );
-   USHORT uiPos, uiPCount = (* pBase)->item.asSymbol.paramcnt;
+   PHB_ITEM pArray, pBase;
+   USHORT uiPos, uiPCount;
+   LONG lBaseOffset;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
+
+   lBaseOffset = hb_stackBaseOffset();
+   while( iLevel-- > 0 && lBaseOffset > 1 )
+   {
+      pBase = hb_stackItem( lBaseOffset - 1 );
+      lBaseOffset = pBase->item.asSymbol.stackbase + 1;
+   }
+
+   if( iLevel < 0 )
+   {
+      pBase = hb_stackItem( lBaseOffset - 1 );
+      uiPCount = pBase->item.asSymbol.paramcnt;
+   }
+   else
+      uiPCount = 0;
+
+   pArray = hb_itemArrayNew( uiPCount );
+   for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
+   {
+      hb_arraySet( pArray, uiPos, hb_stackItem( lBaseOffset + uiPos ) );
+   }
+
+   return pArray;
+}
+
+HB_EXPORT PHB_ITEM hb_arrayBaseParams( void )
+{
+   PHB_ITEM pArray;
+   USHORT uiPos, uiPCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams()"));
+
+   pArray = hb_itemNew( NULL );
+   uiPCount = hb_stackBaseItem()->item.asSymbol.paramcnt;
 
    hb_arrayNew( pArray, uiPCount );
 
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
    {
-      hb_arraySet( pArray, uiPos, *( pBase + uiPos + 1 ) );
+      hb_arraySet( pArray, uiPos, hb_stackItemFromBase( uiPos ) );
    }
 
    return pArray;

@@ -58,27 +58,28 @@
 HB_EXTERN_BEGIN
 
 /* Harbour virtual machine init/exit functions */
-extern void HB_EXPORT hb_vmInit( BOOL bStartMainProc );
-extern void HB_EXPORT hb_vmQuit( void );            /* Immediately quits the virtual machine */
+extern HB_EXPORT void     hb_vmInit( BOOL bStartMainProc );
+extern HB_EXPORT void     hb_vmQuit( void ); /* Immediately quits the virtual machine */
 
 /* registration AtInit and AtExit functions - they are executed
  * just before (after) .prg INIT (EXIT) procedures.
  */
-extern void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
-extern void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
+extern HB_EXPORT void     hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo );
+extern HB_EXPORT void     hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
 
 /* Harbour virtual machine functions */
-extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
-extern void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
-extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
+extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern HB_EXPORT void     hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
+       
+extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
 /* Harbour virtual machine escaping API */
-extern void    hb_vmRequestBreak( PHB_ITEM pItem );
-extern void    hb_vmRequestCancel( void );
-extern void    hb_vmRequestDebug( void );
-extern void    hb_vmRequestEndProc( void );
-extern USHORT  hb_vmRequestQuery( void );
-extern void    hb_vmRequestQuit( void );
+extern HB_EXPORT void     hb_vmRequestBreak( PHB_ITEM pItem );
+extern HB_EXPORT void     hb_vmRequestCancel( void );
+extern HB_EXPORT void     hb_vmRequestDebug( void );
+extern HB_EXPORT void     hb_vmRequestEndProc( void );
+extern HB_EXPORT USHORT   hb_vmRequestQuery( void );
+extern HB_EXPORT void     hb_vmRequestQuit( void );
 
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED       1   /* immediately quit the application */
@@ -88,35 +89,35 @@ extern void    hb_vmRequestQuit( void );
 /* Public PCode functions */
 
 /* Execution */
-extern void    hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
-extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
-extern void    hb_vmSend( USHORT uiParams ); /* sends a message to an object */
-extern PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
+extern HB_EXPORT void     hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
+extern HB_EXPORT void     hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
+extern HB_EXPORT void     hb_vmSend( USHORT uiParams ); /* sends a message to an object */
+extern HB_EXPORT PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
 /* executes passed codeblock with variable number of arguments */
-extern PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, ULONG ulArgCount, ... );
-HB_EXPORT extern PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem ); /* executes codeblock or macro pointed by given item */
-HB_EXPORT extern void     hb_vmDestroyBlockOrMacro( PHB_ITEM pItem ); /* destroy codeblock or macro in given item */
+extern HB_EXPORT PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, ULONG ulArgCount, ... );
+extern HB_EXPORT PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem ); /* executes codeblock or macro pointed by given item */
+extern HB_EXPORT void     hb_vmDestroyBlockOrMacro( PHB_ITEM pItem ); /* destroy codeblock or macro in given item */
 
 /* Push */
-extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
-extern void    hb_vmPushNil( void );            /* in this case it places nil at self */
-extern void    hb_vmPushNumber( double dNumber, int iDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
-extern void    hb_vmPushInteger( int iNumber ); /* pushes a integer number onto the stack */
-extern void    hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
-extern void    hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
-extern void    hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
-extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a string on to the stack */
-extern void    hb_vmPushStringPcode( char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
-extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
-extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
-extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
+extern HB_EXPORT void     hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
+extern HB_EXPORT void     hb_vmPushNil( void );            /* in this case it places nil at self */
+extern HB_EXPORT void     hb_vmPushNumber( double dNumber, int iDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
+extern HB_EXPORT void     hb_vmPushInteger( int iNumber ); /* pushes a integer number onto the stack */
+extern HB_EXPORT void     hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
+extern HB_EXPORT void     hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */
+extern HB_EXPORT void     hb_vmPushLogical( BOOL bValue );    /* pushes a logical value onto the stack */
+extern HB_EXPORT void     hb_vmPushString( char * szText, ULONG length );  /* pushes a string on to the stack */
+extern HB_EXPORT void     hb_vmPushStringPcode( char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
+extern HB_EXPORT void     hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
+extern HB_EXPORT void     hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
+extern HB_EXPORT void     hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
+extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on stack */
+extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
 
-/* various flags for supported features 
-*/
+/* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */
 #define  HB_VMFLAG_ARRSTR     2     /* support for string as array of bytes -ks */
-
-extern ULONG hb_vmFlagEnabled( ULONG flag);
+extern HB_EXPORT ULONG    hb_vmFlagEnabled( ULONG flag );
 
 HB_EXTERN_END
 

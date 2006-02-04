@@ -370,7 +370,7 @@ int hb_matherr (HB_MATH_EXCEPTION * pexc)
                                  (mode == HB_MATH_ERRMODE_USER ? 0: EF_CANDEFAULT));
 
     /* Assign the new array to the object data item. */
-    hb_vmPushSymbol (hb_dynsymGet ("_ARGS")->pSymbol);
+    hb_vmPushSymbol (hb_dynsymGetSymbol("_ARGS"));
     hb_vmPush (pError);
     hb_vmPush (pArray);
     hb_vmDo (1);
@@ -596,11 +596,7 @@ HB_FUNC( HB_MATHERBLOCK )  /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
   }
   else
   {
-    HB_ITEM oldMathError;
-    hb_itemInit (&oldMathError);
-    hb_itemCopy (&oldMathError, spMathErrorBlock);
-    hb_itemReturn (&oldMathError);
-    hb_itemClear (&oldMathError);
+    hb_itemReturn (spMathErrorBlock);
   }
 
   if (hb_pcount() > 0)

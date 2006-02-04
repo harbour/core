@@ -51,8 +51,10 @@
  */
 
 #include "hbapi.h"
+#include "hbdate.h"
 
 #include <time.h>
+
 #if defined( HB_OS_BSD)
    #include <sys/time.h>
 #else
@@ -62,8 +64,11 @@
    #include <sys/times.h>
    #include <unistd.h>
 #endif
+#if defined( HB_OS_WIN_32 )
+   #include <windows.h>
+#endif
 
-double hb_dateSeconds( void )
+HB_EXPORT double hb_dateSeconds( void )
 {
 #if defined(_MSC_VER)
    #define timeb _timeb
@@ -122,42 +127,74 @@ HB_FUNC( HB_CLOCKS2SECS )
     n == 12 cstime -> sum of the system CPU time of the current + child process
     n == 13 cu+cs  -> sum of cutime + cstime
 */
-static double hb_secondsCPU(int n)
+HB_EXPORT double hb_secondsCPU( int n )
 {
-   double d = 0;
+   double d = 0.0;
 
-#if defined( OS_UNIX_COMPATIBLE )
-   struct tms tm;
+#if defined( HB_OS_WIN_32 )
+   FILETIME Create, Exit, Kernel, User;
+   static BOOL s_fInit = FALSE, s_fWinNT = FALSE;
 
-   times(&tm);
+   if( !s_fInit )
+   {
+      s_fInit = TRUE ;
+      s_fWinNT = hb_iswinnt() ;
+   }
+#endif
 
-   if ((n < 1 || n > 3) && (n < 11 || n > 13))
+   if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
       n = 3;
    
-   if (n > 10)
+#if defined( OS_UNIX_COMPATIBLE )
    {
-      n -= 10;
-      if (n & 1)
-         d += tm.tms_cutime;
-      if (n & 2)
-         d += tm.tms_cstime;
+      struct tms tm;
+
+      times(&tm);
+
+      if( n > 10 )
+      {
+         n -= 10;
+         if( n & 1 )
+            d += tm.tms_cutime;
+         if( n & 2 )
+            d += tm.tms_cstime;
+      }
+      if( n & 1 )
+         d += tm.tms_utime;
+      if( n & 2 )
+         d += tm.tms_stime;
+
+      /* In POSIX-1996 the CLK_TCK symbol is mentioned as obsolescent */
+      /* d /= CLK_TCK; */
+      d /= (double) sysconf(_SC_CLK_TCK);
    }
-   if (n & 1)
-      d += tm.tms_utime;
-   if (n & 2)
-      d += tm.tms_stime;
-
-   d /= (double) sysconf(_SC_CLK_TCK);
 #else
-   /* TODO: this code is only for DOS and other platforms which cannot
-            calculate process time */
-
-   if ((n < 1 || n > 3) && (n < 11 || n > 13))
-      n = 3;
-   else if (n > 10)
+   if( n > 10 )
       n -= 10;
-   if (n & 1)
-      d = hb_dateSeconds(  );
+#if defined( HB_OS_WIN_32 )
+   if( s_fWinNT &&
+       GetProcessTimes( GetCurrentProcess(), &Create, &Exit, &Kernel, &User ) )
+   {
+      if( n & 1 )
+      {
+         d += ( double ) ( ( ( HB_LONG ) User.dwHighDateTime << 32 ) +
+                             ( HB_LONG ) User.dwLowDateTime );
+      }
+      if( n & 2 )
+      {
+         d += ( double ) ( ( ( HB_LONG ) Kernel.dwHighDateTime << 32 ) +
+                             ( HB_LONG ) Kernel.dwLowDateTime );
+      }
+      d /= 10000000.0;
+   }
+   else
+#endif
+   {
+      /* TODO: this code is only for DOS and other platforms which cannot
+               calculate process time */
+      if( n & 1 )
+         d = hb_dateSeconds(  );
+   }
 #endif
    return d;
 }

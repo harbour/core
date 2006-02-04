@@ -17,7 +17,6 @@
 if [ -z "$HB_ARCHITECTURE" ]; then export HB_ARCHITECTURE=bsd; fi
 if [ -z "$HB_COMPILER" ]; then export HB_COMPILER=gcc; fi
 if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtstd; fi
-if [ -z "$HB_MULTI_GT" ]; then export HB_MULTI_GT=no; fi
 if [ -z "$HB_MT" ]; then export HB_MT=MT; fi
 
 # export PRG_USR=

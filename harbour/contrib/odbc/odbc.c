@@ -262,7 +262,7 @@ HB_FUNC( SQLFETCHSC )
 HB_FUNC( SQLERROR ) //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
 {
    BYTE bBuffer1[ 256 ], szErrorMsg[ 256 ];
-   LONG lError;
+   SQLINTEGER lError;
    SWORD wLen;
 
    hb_retni( SQLError( ( HENV ) hb_parnl( 1 ), ( HDBC ) hb_parnl( 2 ),

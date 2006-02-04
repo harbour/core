@@ -1651,7 +1651,7 @@
 
          if( pbArrayPrefix != NULL )
          {
-            s_bArrayPrefix = pbArrayPrefix->item.asLogical.value;
+            s_bArrayPrefix = hb_itemGetL( pbArrayPrefix );
          }
       }
 
@@ -1677,14 +1677,14 @@
             USHORT uiLine;
          #endif
 
-         if( pLine == NULL || pLine->item.asString.length == 0 )
+         sLine = hb_itemGetCPtr( pLine );
+         nLen = hb_itemGetCLen( pLine );
+
+         if( nLen == 0 )
          {
             hb_ret();
             return;
          }
-
-         sLine = pLine->item.asString.value;
-         nLen = pLine->item.asString.length;
 
          #ifdef DEBUG_TOKEN
             hb_procinfo( 1, (char *) &sProc, &uiLine );
@@ -1697,7 +1697,7 @@
          }
          else
          {
-            lDontRecord = pDontRecord->item.asLogical.value;
+            lDontRecord = hb_itemGetL( pDontRecord );
          }
 
          // *** To be removed after final testing !!!
@@ -2036,13 +2036,13 @@
          size_t nAt, nLen;
          int nStart = -1;
 
-         if( pLine == NULL || pLine->item.asString.length == 0 )
+         sLine = hb_itemGetCPtr( pLine );
+         nLen  = hb_itemGetCLen( pLine );
+
+         if( nLen == 0 )
          {
             hb_ret();
          }
-
-         sLine = pLine->item.asString.value;
-         nLen  = pLine->item.asString.length;
 
          for( nAt = 0; nAt < nLen; nAt++ )
          {
@@ -2175,9 +2175,10 @@
             return;
          }
 
-         iLen = pLine->item.asString.length;
+         pTmp = hb_itemGetCPtr( pLine );
+         iLen = hb_itemGetCLen( pLine );
 
-         while( pLine->item.asString.value[i] == ' ' )
+         while( pTmp[i] == ' ' )
          {
             i++;
          }
@@ -2186,7 +2187,7 @@
          {
             if( HB_IS_BYREF( hb_stackItemFromBase( 1 ) ) )
             {
-               hb_itemPutCPtr( pLine, hb_strdup( pLine->item.asString.value + i ), iLen - i );
+               hb_itemPutCPtr( pLine, hb_strdup( pTmp + i ), iLen - i );
             }
          }
 

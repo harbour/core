@@ -62,7 +62,7 @@
 
 #if defined(HB_OS_WIN_32)
 
-BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );
@@ -85,21 +85,21 @@ BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID
    return TRUE;
 }
 
-LONG HB_EXPORT PASCAL HBDLLENTRY( char * cProcName )
+HB_EXPORT LONG PASCAL HBDLLENTRY( char * cProcName )
 {
    hb_itemDoC( cProcName, 0, 0 );
 
    return 0;
 }
 
-LONG HB_EXPORT PASCAL HBDLLENTRY1( char * cProcName, LONG pItem )
+HB_EXPORT LONG PASCAL HBDLLENTRY1( char * cProcName, LONG pItem )
 {
    hb_itemDoC( cProcName, 1, ( PHB_ITEM ) pItem, 0 );
 
    return 0;
 }
 
-LONG HB_EXPORT PASCAL HBDLLENTRY2( char * cProcName, LONG pItem1, LONG pItem2 )
+HB_EXPORT LONG PASCAL HBDLLENTRY2( char * cProcName, LONG pItem1, LONG pItem2 )
 {
    hb_itemDoC( cProcName, 2, ( PHB_ITEM ) pItem1, ( PHB_ITEM ) pItem2, 0 );
 

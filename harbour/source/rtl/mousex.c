@@ -65,20 +65,29 @@ HB_FUNC( NUMBUTTONS )
 
 HB_FUNC( SETMOUSE )
 {
+   BOOL fRow, fCol;
+
    hb_retl( hb_mouseGetCursor() );
 
    if( ISLOG( 1 ) )
       hb_mouseSetCursor( hb_parl( 1 ) );
 
-   {
-      PHB_ITEM pRow = hb_param( 2, HB_IT_NUMERIC );
-      PHB_ITEM pCol = hb_param( 3, HB_IT_NUMERIC );
+   fRow = ISNUM( 2 );
+   fCol = ISNUM( 3 );
 
-      if( pRow || pCol )
-      {
-         hb_mouseSetPos( pRow ? hb_itemGetNI( pRow ) : hb_mouseRow() ,
-                         pCol ? hb_itemGetNI( pCol ) : hb_mouseCol() );
-      }
+   if( fRow || fCol )
+   {
+      int iRow = 0, iCol = 0;
+
+      if( !fRow || !fCol )
+         hb_mouseGetPos( &iRow, &iCol );
+
+      if( fRow )
+         iRow = hb_parni( 2 );
+      if( fCol )
+         iCol = hb_parni( 3 );
+
+      hb_mouseSetPos( iRow, iCol );
    }
 }
 

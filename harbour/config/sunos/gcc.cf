@@ -44,11 +44,11 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
-# Add the specified GT driver library
+# Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
+
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
-endif
 
 # HB_SCREEN_LIB: empty, or one of curses, slang
 ifeq ($(HB_GT_LIB),gtcrs)
@@ -56,11 +56,33 @@ HB_SCREEN_LIB:=curses
 else
 ifeq ($(HB_GT_LIB),gtsln)
 HB_SCREEN_LIB:=slang
+else
+ifeq ($(HB_GT_LIB),gtalleg)
+HB_GTALLEG:=yes
+LINKLIBS += `allegro-config --static`
+endif
 endif
 endif
 
 ifneq ($(HB_SCREEN_LIB),)
 LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
+ifeq ($(HB_GT_LIB),gtxvt)
+LINKLIBS += -lX11
+LINKPATHS +=-L/usr/X11R6/lib
+else
+ifeq ($(HB_GT_LIB),gtxwc)
+LINKLIBS += -lX11
+LINKPATHS +=-L/usr/X11R6/lib
+endif
+endif
+
+# HB_GPM_MOUSE: use gpm mouse driver
+ifeq ($(HB_GPM_MOUSE),yes)
+LINKLIBS += -lgpm
+endif
+
 endif
 
 LINKLIBS += -lm -lrt

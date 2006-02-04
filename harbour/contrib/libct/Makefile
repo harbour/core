@@ -31,6 +31,8 @@ C_SOURCES = \
 	ctstr.c \
 	ctchksum.c \
 	ctcrypt.c \
+	ctwfunc.c \
+	ctwin.c \
 	exponent.c \
 	files.c \
 	finan.c \

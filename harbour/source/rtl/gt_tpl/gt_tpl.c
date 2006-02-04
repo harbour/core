@@ -54,488 +54,134 @@
 
 /* TODO: include any standard headers here */
 
-#include "hbapigt.h"
+#include "hbgtcore.h"
+#include "hbinit.h"
 
-static USHORT s_uiDispCount;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER (&SuperTable)
 
-void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
+static void hb_gt_tpl_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
-   /* TODO: Is anything required to initialize the video subsystem? */
+   /* TODO: */
 
-   s_uiDispCount = 0;
+   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
 }
 
-void hb_gt_Exit( void )
+static void hb_gt_tpl_Exit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_Exit()"));
+
+   HB_GTSUPER_EXIT();
 
    /* TODO: */
 }
 
-int hb_gt_ExtendedKeySupport()
+
+static int hb_gt_tpl_ReadKey( int iEventMask )
 {
-   /* TODO: If this GTAPI supports the Harbour extended key
-            codes, then change the return value from 0 to 1. */
-   return 0;
-}
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_ReadKey(%d)", iEventMask));
 
-int hb_gt_ReadKey( HB_inkey_enum eventmask )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
+   HB_SYMBOL_UNUSED( iEventMask );
 
-   HB_SYMBOL_UNUSED( eventmask );
-
-   /* TODO: */
+   /* TODO: check the input queue (incoming mouse and keyboard events)
+            and return the inkey code if any */
 
    return 0;
 }
 
-BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+static char * hb_gt_tpl_Version( int iType )
 {
-   USHORT row = hb_gt_Row();
-   USHORT col = hb_gt_Col();
-   ULONG ulCount;
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Version(%d)", iType ) );
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+   if( iType == 0 )
+      return HB_GT_DRVNAME( HB_GT_NAME );
 
-   for( ulCount = 0; ulCount < ulLen; ulCount++ )
-   {
-      switch( *pStr++ )
-      {
-         case HB_CHAR_BEL:
-            break;
-
-         case HB_CHAR_BS:
-            if( col )
-               col--;
-            else
-            {
-               col = hb_gt_GetScreenWidth();
-               if( row )
-                  row--;
-            }
-            break;
-
-         case HB_CHAR_LF:
-            if( row < hb_gt_GetScreenHeight() )
-               row++;
-            break;
-
-         case HB_CHAR_CR:
-            col = 0;
-            break;
-
-         default:
-            if( col < hb_gt_GetScreenWidth() )
-               col++;
-            else
-            {
-               col = 0;
-               if( row < hb_gt_GetScreenHeight() )
-                  row++;
-            }
-      }
-   }
-
-   hb_gt_SetPos( row, col, HB_GT_SET_POS_AFTER );
-
-   return TRUE;
+   return "Harbour Terminal: (template)";
 }
 
-BOOL hb_gt_IsColor( void )
+static BOOL hb_gt_tpl_SetMode( int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_SetMode(%d, %d)", iRows, iCols));
 
-   /* TODO: How to detect this? */
-   return TRUE;
-}
-
-USHORT hb_gt_GetScreenWidth( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
-
-   /* TODO: How many columns on screen? */
-   return 0;
-}
-
-USHORT hb_gt_GetScreenHeight( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
-
-   /* TODO: How many rows on screen? */
-   return 0;
-}
-
-void hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hd, %hd, %hd)", iRow, iCol, iMethod));
-
-   /* TODO: How to reposition the cursor? */
-
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
-   HB_SYMBOL_UNUSED( iMethod );
-}
-
-SHORT hb_gt_Col( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
-
-   /* TODO: What Column is the cursor on? */
-   return 0;
-}
-
-SHORT hb_gt_Row( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
-
-   /* TODO: What Row is the cursor on? */
-   return 0;
-}
-
-USHORT hb_gt_GetCursorStyle( void )
-{
-   USHORT uiStyle;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
-
-   /* TODO: What shape is the cursor? */
-
-   /* example from the dos driver */
-
-   hb_gt_GetCursorSize( &start, &end )
-
-   if( start == 32 && end == 32 )
-      uiStyle = SC_NONE;
-   else if( start == 6 && end == 7 )
-      uiStyle = SC_NORMAL;
-   else if( start == 4 && end == 7 )
-      uiStyle = SC_INSERT;
-   else if( start == 0 && end == 7 )
-      uiStyle = SC_SPECIAL1;
-   else if( start == 0 && end == 3 )
-      uiStyle = SC_SPECIAL2;
-   else
-      uiStyle = 0;
-   
-   return uiStyle;
-}
-
-void hb_gt_SetCursorStyle( USHORT uiStyle )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
-
-   /* TODO: How to set the shape of the cursor? */
-   /* see ..\..\..\tests\working\cursrtst.prg for an explanation */
-   switch( uiStyle )
-   {
-   case SC_NONE:
-      /* TODO: turn it off */
-      break;
-
-   case SC_NORMAL:
-      break;
-
-   case SC_INSERT:
-      break;
-
-   case SC_SPECIAL1:
-      break;
-
-   case SC_SPECIAL2:
-      break;
-
-   default:
-      break;
-   }
-}
-
-static void hb_gt_xPutch( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %i)", uiRow, uiCol, (int) byAttr, byChar));
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( pbyStr );
-   HB_SYMBOL_UNUSED( ulLen );
-}
-
-void hb_gt_PutCharAttr( SHORT uiRow, SHORT uiCol, BYTE byChar, BYTE byAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutCharAttr(%hu, %hu, %i, %d)", uiRow, uiCol, byChar, (int) byAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byChar );
-   HB_SYMBOL_UNUSED( byAttr );
-}
-
-void hb_gt_PutChar( SHORT uiRow, SHORT uiCol, BYTE byChar )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutChar(%hu, %hu, %i)", uiRow, uiCol, byChar));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byChar );
-}
-
-void hb_gt_PutAttr( SHORT uiRow, SHORT uiCol, BYTE byAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutAttr(%hu, %hu, %d)", uiRow, uiCol, (int) byAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byAttr );
-}
-
-void hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCharAttr(%hu, %hu, %p, %p)", uiRow, uiCol, pbyChar, pbyAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( pbyChar );
-   HB_SYMBOL_UNUSED( pbyAttr );
-}
-
-void hb_gt_GetChar( SHORT uiRow, SHORT uiCol, BYTE * pbyChar )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetChar(%hu, %hu, %p)", uiRow, uiCol, pbyChar));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( pbyChar );
-}
-
-void hb_gt_GetAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetAttr(%hu, %hu, %p)", uiRow, uiCol, pbyAttr));
-
-   /* TODO */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( pbyAttr );
-}
-
-void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
-   HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( pbyStr );
-   HB_SYMBOL_UNUSED( ulLen );
-}
-
-int hb_gt_RectSize( USHORT rows, USHORT cols )
-{
-   return rows * cols * 2;
-}
-
-void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
-
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
-   HB_SYMBOL_UNUSED( pbyDst );
-}
-
-void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
-
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
-   HB_SYMBOL_UNUSED( pbySrc );
-}
-
-void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
-
-   /* TODO: we want to take a screen that is say bright white on blue,
-            and change the attributes only for a section of the screen
-            to white on black.
-   */
-
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
-   HB_SYMBOL_UNUSED( byAttr );
-}
-
-void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
-
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
    HB_SYMBOL_UNUSED( iRows );
    HB_SYMBOL_UNUSED( iCols );
-}
 
-void hb_gt_DispBegin( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
-
-   ++s_uiDispCount;
-
-   /* TODO: Is there a way to change screen buffers?
-            ie: can we write somewhere without it going to the screen
-            and then update the screen from this buffer at a later time?
-            We will initially want to copy the current screen to this buffer.
-   */
-}
-
-void hb_gt_DispEnd()
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
-
-   --s_uiDispCount;
-
-   /* TODO: here we flush the buffer, and restore normal screen writes */
-}
-
-BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
-
-   /* TODO: How to change the size of the screen? */
-
-   HB_SYMBOL_UNUSED( uiRows );
-   HB_SYMBOL_UNUSED( uiCols );
-}
-
-BOOL hb_gt_GetBlink()
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
-
-   /* TODO: under dos, the background 'intensity' bit can be switched
-            from intensity to 'blinking'
-            does this work under your platform?
-   */
+   /* TODO: if possible change the size of the screen and return TRUE */
 
    return FALSE;
 }
 
-void hb_gt_SetBlink( BOOL bBlink )
+static void hb_gt_tpl_Redraw( int iRow, int iCol, int iSize )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
+   BYTE bColor, bAttr;
+   USHORT usChar;
 
-   /* TODO: set the bit if it's supported */
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
 
-   HB_SYMBOL_UNUSED( bBlink );
-}
-
-void hb_gt_Tone( double dFrequency, double dDuration )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
-
-   /* TODO: Implement this */
-
-   HB_SYMBOL_UNUSED( dFrequency );
-   HB_SYMBOL_UNUSED( dDuration );
-}
-
-char * hb_gt_Version( void )
-{
-   return "Harbour Terminal: (template)"
-}
-
-USHORT hb_gt_DispCount()
-{
-   return s_uiDispCount;
-}
-
-void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
-
-   /* TODO: replace it with native (optimized) version */
-   while( nLength-- )
-      hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
-}
-
-USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
-                  BYTE * pbyFrame, BYTE byAttr )
-{
-   HB_SYMBOL_UNUSED( Top );
-   HB_SYMBOL_UNUSED( Left );
-   HB_SYMBOL_UNUSED( Bottom );
-   HB_SYMBOL_UNUSED( Right );
-   HB_SYMBOL_UNUSED( pbyFrame );
-   HB_SYMBOL_UNUSED( byAttr );
-
-   return 0;
-}
-
-USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
-{
-   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
-}
-
-USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
-{
-   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
-}
-
-USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE byAttr )
-{
-   if( Left < Right )
-      hb_gt_Replicate( Row, Left, byAttr, byChar, Right - Left + 1 );
-   else
-      hb_gt_Replicate( Row, Right, byAttr, byChar, Left - Right + 1 );
-
-   return 0;
-}
-
-USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
-{
-   SHORT Row;
-
-   if( Top <= Bottom )
-      Row = Top;
-   else
+   while( iSize-- )
    {
-      Row = Bottom;
-      Bottom = Top;
+      if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+         break;
+      /* TODO: display usChar at iRow, iCol position with color bColor */
+      ++iCol;
    }
-
-   while( Row <= Bottom )
-      hb_gt_xPutch( Row++, Col, byAttr, byChar );
-
-   return 0;
 }
 
-BOOL hb_gt_PreExt()
+static void hb_gt_tpl_Refresh( void )
 {
+   int iRow, iCol, iStyle;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Refresh()" ) );
+
+   HB_GTSUPER_REFRESH();
+   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+
+   /* TODO: set cursor position and shape */
+}
+
+
+/* *********************************************************************** */
+
+static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+
+   pFuncTable->Init                       = hb_gt_tpl_Init;
+   pFuncTable->Exit                       = hb_gt_tpl_Exit;
+   pFuncTable->ReadKey                    = hb_gt_tpl_ReadKey;
+   pFuncTable->Version                    = hb_gt_tpl_Version;
+   pFuncTable->SetMode                    = hb_gt_tpl_SetMode;
+   pFuncTable->Redraw                     = hb_gt_tpl_Redraw;
+   pFuncTable->Refresh                    = hb_gt_tpl_Refresh;
+
    return TRUE;
 }
 
-BOOL hb_gt_PostExt()
-{
-   return TRUE;
-}
+/* ********************************************************************** */
+
+static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
+                             hb_gt_FuncInit,
+                             HB_GTSUPER };
+
+HB_GT_ANNOUNCE( HB_GT_NAME );
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
+   hb_gtRegister( &gtInit );
+HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_startup_gt_Init_
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
+   #pragma data_seg()
+#endif
+
+/* *********************************************************************** */

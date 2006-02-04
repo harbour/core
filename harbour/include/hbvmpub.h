@@ -57,36 +57,108 @@
 
 HB_EXTERN_BEGIN
 
-struct _HB_DYNS;
+#ifdef _HB_API_INTERNAL_
+
+struct _HB_SYMB;
+
+#  define HB_ITEM_TYPE( p )   ( ( p )->type )
+#  define HB_OBJ_CLASS( p )   ( ( p )->item.asArray.value->uiClass )
+
+#  if defined(__GNUC__)
+#     define HB_ITEM_NIL      { HB_IT_NIL, {} }
+#  else
+#     define HB_ITEM_NIL      { HB_IT_NIL, NULL }
+#  endif
+
+#  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
+                                        ( HB_LONG ) p->item.asInteger.value : \
+                                        ( HB_LONG ) p->item.asLong.value )
+
+#  define HB_ITEM_PUT_NUMINTRAW( p, v )  \
+               do { \
+                  if( HB_LIM_INT( v ) ) \
+                  { \
+                     (p)->type = HB_IT_INTEGER; \
+                     (p)->item.asInteger.length = HB_INT_LENGTH( v ); \
+                     (p)->item.asInteger.value = ( int ) (v); \
+                  } \
+                  else \
+                  { \
+                     (p)->type = HB_IT_LONG; \
+                     (p)->item.asLong.value = (v); \
+                     (p)->item.asLong.length = HB_LONG_LENGTH( v ); \
+                  } \
+               } while ( 0 )
+
+   /* dynamic symbol structure */
+   typedef struct _HB_DYNS
+   {
+      struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
+      PHB_FUNC  pFunPtr;         /* Pointer to the function address */
+      HB_HANDLE hArea;           /* Workarea number */
+      HB_HANDLE hMemvar;         /* Index number into memvars ( publics & privates ) array */
+      ULONG     ulCalls;         /* profiler support */
+      ULONG     ulTime;          /* profiler support */
+      ULONG     ulRecurse;       /* profiler support */
+   } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
+
+#else
+
+#  undef HB_API_MACROS
+#  undef HB_STACK_MACROS
+
+/* This is ugly trick bu works without speed overhead */
+#  define HB_ITEM_TYPE( p )   ( * ( HB_TYPE * ) ( p ) )
+
+/* if you do not like it then use this definition */
+/* #  define HB_ITEM_TYPE( p )   ( hb_itemType( p ) ) */
+
+#  define HB_OBJ_CLASS( p )   ( hb_objGetClass( p ) )
+
+   /* basic types */
+   typedef void *  PHB_ITEM;
+   typedef void *  HB_ITEM_PTR;
+   typedef void *  HB_CODEBLOCK_PTR;
+
+   typedef void    HB_STACK;
+
+   /*
+    * The first version reduce the number of modification in existing 3-rd
+    * party code but in longer terms I'd prefer to disable it and left
+    * only the second one where PHB_DYNS is mapped to void*.
+    * This will allow us to fully redesign dynamic symbol internals
+    * in the future if it will be necessary. [druzus]
+    */
+#if 0
+   struct _HB_SYMB;
+   typedef struct
+   {
+      struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
+   } _HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
+#else
+   typedef void *  PHB_DYNS;
+   typedef void *  PHB_DYNS_PTR;
+#endif
+
+#endif
+
 
 /* symbol support structure */
-typedef struct
+typedef struct _HB_SYMB
 {
-   char *            szName;  /* the name of the symbol */
+   char *         szName;           /* the name of the symbol */
    union
    {
-      HB_SYMBOLSCOPE value;      /* the scope of the symbol */
-      void *         pointer;    /* filler to force alignment */
+      HB_SYMBOLSCOPE value;         /* the scope of the symbol */
+      void *         pointer;       /* filler to force alignment */
    } scope;
    union
    {
-     PHB_FUNC        pFunPtr;        /* function address for function symbol table entries */
-     int             iStaticsBase;   /* base offset to array of statics */
+      PHB_FUNC       pFunPtr;       /* function address for function symbol table entries */
+      int            iStaticsBase;  /* base offset to array of statics */
    } value;
-   struct _HB_DYNS * pDynSym; /* pointer to its dynamic symbol if defined */
+   PHB_DYNS       pDynSym;          /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
-
-/* dynamic symbol structure */
-typedef struct _HB_DYNS
-{
-   HB_HANDLE hArea;        /* Workarea number */
-   HB_HANDLE hMemvar;      /* Index number into memvars ( publics & privates ) array */
-   PHB_SYMB  pSymbol;      /* pointer to its relative local symbol */
-   PHB_FUNC  pFunPtr;      /* Pointer to the function address */
-   ULONG     ulCalls;      /* profiler support */
-   ULONG     ulTime;       /* profiler support */
-   ULONG     ulRecurse;    /* profiler support */
-} HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
 
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
@@ -110,7 +182,7 @@ typedef struct _HB_FUNC_LIST
 #define HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
 #define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
-extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
 HB_EXTERN_END
 

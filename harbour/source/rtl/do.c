@@ -60,59 +60,56 @@
 
 HB_FUNC( DO )
 {
-   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   USHORT uiPCount = hb_pcount();
+   USHORT uiParam;
 
-   if( HB_IS_STRING( pItem ) )
+   if( uiPCount > 0 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+      PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-      if( pDynSym )
+      if( HB_IS_STRING( pItem ) )
       {
-         USHORT uiPCount = hb_pcount();
-         USHORT uiParam;
+         PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
+         if( pDynSym )
+         {
+            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+            hb_vmPushNil();
+         }
+         else
+         {
+            PHB_ITEM pArgsArray = hb_arrayBaseParams();
+
+            hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), 1, pArgsArray );
+            hb_itemRelease( pArgsArray );
+            return;
+         }
+      }
+      else if( HB_IS_BLOCK( pItem ) )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pItem );
+      }
+      else if( HB_IS_SYMBOL( pItem ) )
+      {
+         hb_vmPushSymbol( hb_itemGetSymbol( pItem ) );
          hb_vmPushNil();
-         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-         hb_vmDo( uiPCount - 1 );
       }
       else
-      {
-         PHB_ITEM pArgsArray = hb_arrayFromParams( hb_stack.pBase );
-
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), 1, pArgsArray );
-         hb_itemRelease( pArgsArray );
-      }
+         uiPCount = 0;
    }
-   else if( HB_IS_BLOCK( pItem ) )
-   {
-      USHORT uiPCount = hb_pcount();
-      USHORT uiParam;
 
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-      hb_vmDo( uiPCount - 1 );
-   }
-   else if( HB_IS_SYMBOL( pItem ) )
+   if( uiPCount > 0 )
    {
-      USHORT uiPCount = hb_pcount();
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
          hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( uiPCount - 1 );
    }
    else
    {
-      PHB_ITEM pArgsArray = hb_arrayFromParams( hb_stack.pBase );
+      PHB_ITEM pArgsArray = hb_arrayBaseParams();
 
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO", 1, pArgsArray );
       hb_itemRelease( pArgsArray );
    }
 }
-

@@ -59,6 +59,7 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbstack.h"
 #include "hbvm.h"
 

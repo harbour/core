@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Harbour Mouse Subsystem for Windows
+ * Harbour extended GT functions
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,119 +50,79 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include "hbapigt.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 
-#if defined(__IBMCPP__)
-   #undef WORD                            /* 2 bytes unsigned */
-   typedef unsigned short int WORD;
-#else
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
-      #undef WORD                            /* 2 bytes unsigned */
-      typedef unsigned short int WORD;
-
-      #undef DWORD                           /* 4 bytes unsigned */
-      typedef unsigned long DWORD;
-   #endif
-#endif
-
-#if ! defined(__GNUC__) && defined(__CYGWIN__)
-   typedef WORD far * LPWORD;
-#endif /* __GNUC__ */
-
-int hb_mouse_iCol;
-int hb_mouse_iRow;
-
-/* C callable low-level interface */
-
-void hb_mouse_Init( void )
+HB_FUNC( HB_SETDISPCP )
 {
-   /* TODO: */
+   if ( ISCHAR(1) )
+   {
+      if ( hb_pcount() == 2 && ISLOG(2) )
+         hb_gtSetDispCP( hb_parc( 1 ), NULL, hb_parl( 2 ) );
+      else
+         hb_gtSetDispCP( hb_parc( 1 ), hb_parc( 2 ), hb_parl( 3 ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETDISPCP", 1, hb_paramError( 1 ) );
 
-   hb_mouse_iCol = 0;
-   hb_mouse_iRow = 0;
+   hb_ret();  /* return NIL */
 }
 
-void hb_mouse_Exit( void )
+HB_FUNC( HB_SETKEYCP )
 {
-   /* TODO: */
+   if ( ISCHAR(1) )
+   {
+      hb_gtSetKeyCP( hb_parc( 1 ), hb_parc( 2 ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETKEYCP", 1, hb_paramError( 1 ) );
+
+   hb_ret();  /* return NIL */
 }
 
-BOOL hb_mouse_IsPresent( void )
+HB_FUNC( HB_SETTERMCP )
 {
-   /* TODO: */
+   if ( ISCHAR(1) )
+   {
+      if ( hb_pcount() == 2 && ISLOG(2) )
+      {
+         hb_gtSetDispCP( hb_parc( 1 ), NULL, hb_parl( 2 ) );
+         hb_gtSetKeyCP( hb_parc( 1 ), NULL );
+      }
+      else
+      {
+         hb_gtSetDispCP( hb_parc( 1 ), hb_parc( 2 ), hb_parl( 3 ) );
+         hb_gtSetKeyCP( hb_parc( 1 ), hb_parc( 2 ) );
+      }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETTERMCP", 1, hb_paramError( 1 ) );
 
-   return TRUE;
+   hb_ret();  /* return NIL */
 }
 
-void hb_mouse_Show( void )
+HB_FUNC( HB_GTINFO )
 {
-   /* TODO: */
+   if( ISNUM( 1 ) )
+   {
+      HB_GT_INFO gtInfo;
+
+      gtInfo.pNewVal = hb_param( 2, HB_IT_ANY );
+      gtInfo.pResult = NULL;
+
+      hb_gtInfo( hb_parni( 1 ), &gtInfo );
+      if( gtInfo.pResult )
+         hb_itemRelease( hb_itemReturn( gtInfo.pResult ) );
+      else
+         hb_ret();
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_GTINFO", 2,
+                            hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
-void hb_mouse_Hide( void )
+HB_FUNC( HB_GTVERSION )
 {
-   /* TODO: */
+   hb_retc( hb_gtVersion( hb_parni( 1 ) ) );
 }
-
-int hb_mouse_Col( void )
-{
-   /* TODO: */
-
-   return hb_mouse_iCol;
-}
-
-int hb_mouse_Row( void )
-{
-   /* TODO: */
-
-   return hb_mouse_iRow;
-}
-
-void hb_mouse_SetPos( int iRow, int iCol )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
-}
-
-BOOL hb_mouse_IsButtonPressed( int iButton )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iButton );
-
-   return FALSE;
-}
-
-int hb_mouse_CountButton( void )
-{
-   DWORD dwCount = 0;
-
-   GetNumberOfConsoleMouseButtons( &dwCount );
-
-   return dwCount;
-}
-
-void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( iTop );
-   HB_SYMBOL_UNUSED( iLeft );
-   HB_SYMBOL_UNUSED( iBottom );
-   HB_SYMBOL_UNUSED( iRight );
-}
-
-void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
-{
-   /* TODO: */
-
-   HB_SYMBOL_UNUSED( piTop );
-   HB_SYMBOL_UNUSED( piLeft );
-   HB_SYMBOL_UNUSED( piBottom );
-   HB_SYMBOL_UNUSED( piRight );
-}
-

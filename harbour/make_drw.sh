@@ -17,7 +17,6 @@
 export HB_ARCHITECTURE=darwin
 export HB_COMPILER=gcc
 export HB_GPM_MOUSE=no
-export HB_MULTI_GT=no
 export PREFIX=/usr/local
 
 if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtstd; fi

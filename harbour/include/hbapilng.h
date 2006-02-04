@@ -79,23 +79,22 @@ typedef struct _HB_LANG
 
 /* Supported language list management */
 
-extern BOOL     hb_langRegister         ( PHB_LANG lang );
-extern BOOL     hb_langDeRegister       ( char * pszID );
-extern PHB_LANG hb_langFind             ( char * pszID );
+extern HB_EXPORT BOOL      hb_langRegister         ( PHB_LANG lang );
+extern HB_EXPORT BOOL      hb_langDeRegister       ( char * pszID );
+extern HB_EXPORT PHB_LANG  hb_langFind             ( char * pszID );
 
 /* Default language selection and data query */
 
-extern PHB_LANG hb_langSelect           ( PHB_LANG lang );
-extern char *   hb_langSelectID         ( char * pszID );
-extern char *   hb_langDGetItem         ( int iIndex );
-extern char *   hb_langID               ( void );
-extern char *   hb_langName             ( void );
+extern HB_EXPORT PHB_LANG  hb_langSelect           ( PHB_LANG lang );
+extern HB_EXPORT char *    hb_langSelectID         ( char * pszID );
+extern HB_EXPORT char *    hb_langDGetItem         ( int iIndex );
+extern HB_EXPORT char *    hb_langID               ( void );
+extern HB_EXPORT char *    hb_langName             ( void );
 
 /* Compatibility interface */
 
-extern char *   hb_langDGetErrorDesc    ( ULONG ulIndex );
+extern HB_EXPORT char *    hb_langDGetErrorDesc    ( ULONG ulIndex );
 
 HB_EXTERN_END
 
 #endif /* HB_APILNG_H_ */
-

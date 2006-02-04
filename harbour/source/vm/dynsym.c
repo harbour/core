@@ -52,6 +52,8 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
 
 #define SYM_ALLOCATED ( ( HB_SYMBOLSCOPE ) -1 )
 
@@ -78,7 +80,7 @@ void hb_dynsymLog( void )
       printf( "%i %s\n", uiPos + 1, s_pDynItems[ uiPos ].pDynSym->pSymbol->szName );
 }
 
-PHB_SYMB HB_EXPORT hb_symbolNew( char * szName )      /* Create a new symbol */
+HB_EXPORT PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
 {
    PHB_SYMB pSymbol;
 
@@ -94,7 +96,7 @@ PHB_SYMB HB_EXPORT hb_symbolNew( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
+HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
    PHB_DYNS pDynSym;
 
@@ -159,7 +161,7 @@ PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    return pDynSym;
 }
 
-PHB_DYNS HB_EXPORT hb_dynsymGetCase( char * szName )  /* finds and creates a symbol if not found */
+HB_EXPORT PHB_DYNS hb_dynsymGetCase( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
 
@@ -172,7 +174,7 @@ PHB_DYNS HB_EXPORT hb_dynsymGetCase( char * szName )  /* finds and creates a sym
    return pDynSym;
 }
 
-PHB_DYNS HB_EXPORT hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
+HB_EXPORT PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -217,7 +219,7 @@ PHB_DYNS HB_EXPORT hb_dynsymGet( char * szName )  /* finds and creates a symbol 
    return pDynSym;
 }
 
-PHB_DYNS HB_EXPORT hb_dynsymFindName( char * szName )  /* finds a symbol */
+HB_EXPORT PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
 {
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
 
@@ -257,7 +259,7 @@ PHB_DYNS HB_EXPORT hb_dynsymFindName( char * szName )  /* finds a symbol */
    return hb_dynsymFind( szUprName );
 }
 
-PHB_DYNS HB_EXPORT hb_dynsymFind( char * szName )
+HB_EXPORT PHB_DYNS hb_dynsymFind( char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFind(%s)", szName));
 
@@ -325,6 +327,58 @@ PHB_DYNS HB_EXPORT hb_dynsymFind( char * szName )
    return NULL;
 }
 
+HB_EXPORT PHB_SYMB hb_dynsymGetSymbol( char * szName )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGetSymbol(%s)", szName));
+
+   return hb_dynsymGet( szName )->pSymbol;
+}
+
+HB_EXPORT PHB_SYMB hb_dynsymFindSymbol( char * szName )
+{
+   PHB_DYNS pDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFindSymbol(%s)", szName));
+
+   pDynSym = hb_dynsymFind( szName );
+   return pDynSym ? pDynSym->pSymbol : NULL;
+}
+
+HB_EXPORT PHB_SYMB hb_dynsymSymbol( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymSymbol(%p)", pDynSym));
+
+   return pDynSym->pSymbol;
+}
+
+HB_EXPORT char * hb_dynsymName( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymName(%p)", pDynSym));
+
+   return pDynSym->pSymbol->szName;
+}
+
+HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymMemvarHandle(%p)", pDynSym));
+
+   return pDynSym->hMemvar;
+}
+
+HB_EXPORT HB_HANDLE hb_dynsymAreaHandle( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymAreaHandle(%p)", pDynSym));
+
+   return pDynSym->hArea;
+}
+
+HB_EXPORT void hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymSetAreaHandle(%p,%d)", pDynSym, iArea));
+
+   pDynSym->hArea = iArea;
+}
+
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    BOOL bCont = TRUE;
@@ -376,7 +430,13 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
 
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
-   PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
+   PHB_DYNS pDynSym;
+   char * szName = hb_parc( 1 );
+
+   if( szName )
+      pDynSym = hb_dynsymFindName( szName );
+   else
+      pDynSym = NULL;
 
    if( pDynSym )
       hb_retnl( ( long ) ( s_uiClosestDynSym + 1 ) );
@@ -419,7 +479,9 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 
 HB_FUNC( __DYNSN2PTR )
 {
-   hb_retptr( hb_dynsymGet( hb_parc( 1 ) ) );
+   char * szName = hb_parc( 1 );
+
+   hb_retptr( szName ? hb_dynsymGet( szName ) : NULL );
 }
 
 HB_FUNC( __DYNSP2NAME )

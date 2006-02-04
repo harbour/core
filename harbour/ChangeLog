@@ -8,6 +8,630 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-04 17:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/make_bsd.sh
+  * harbour/make_drw.sh
+  * harbour/make_gnu.sh
+  * harbour/make_rpm.sh
+  * harbour/make_tgz.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/pack_src.sh
+  * harbour/config/c.cf
+  * harbour/config/global.cf
+  * harbour/config/rules.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/darwin/global.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/dos/global.cf
+  * harbour/config/dos/install.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/hpux/global.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/global.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/watcom.cf
+    * include ADSRDD by default in RPMs
+    * updated for new RPM which does not accept some old tags
+    * set -fPIC on 64bit platforms
+    + added /etc/harbour/hb-charmap.def
+    * updated for new GT system and drivers
+
+  * harbour/contrib/dot/pp.prg
+  * harbour/contrib/dot/pp_harb.ch
+    * use _APMAIN as startup function
+    * cleaned direct access to item internals
+
+  * harbour/contrib/libct/Makefile
+  + harbour/contrib/libct/ctwfunc.c
+  + harbour/contrib/libct/ctwin.c
+  + harbour/contrib/libct/ctwin.h
+    * added CT3 like Window System - it's a GT driver which inherits
+      from the existing one and adds CTW functionality
+
+  * harbour/contrib/libct/screen1.c
+    * updated for GTAPI modifications
+
+  * harbour/contrib/libnf/Makefile
+  * harbour/contrib/libnf/chdir.c
+  * harbour/contrib/libnf/mkdir.c
+  * harbour/contrib/libnf/rmdir.c
+    * use hb_fs*() API functions instead of calling DOS interrupts
+      Now NF dir functions works on all platforms - it will be nice
+      to update other functions too.
+
+  * harbour/contrib/libnf/dispc.c
+  * harbour/contrib/libnf/ftattr.c
+    * updated for GT API modifications, some of this code still depends
+      on EGA/VGA video buffer so will work only if user will force in GT
+      using it - it will be nice to rewrite them
+
+  * harbour/contrib/odbc/odbc.c
+  * harbour/contrib/ole/ole2.c
+    * casting and cleaning direct access to item internals
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/contrib/rdd_ads/adsmgmnt.c
+    * synced with xHarbour
+
+  * harbour/include/Makefile
+    * added new header files
+
+  + harbour/include/hbgtinfo.ch
+    + added GTI_* defintions for hb_gtInfo() function.
+      This function works in similar way to dbInfo() in RDD.
+      The GTI_* definitions are taken from xHarbour "as is" and
+      they should be cleaned - not all functionality are supported
+      in Harbour and some others should be implemented in differ
+      way then in xHarbour.
+
+  + harbour/include/hbgtcore.h
+  * harbour/include/hbapigt.h
+    * new GTAPI
+      hbgtcore.h file should not be included by user code
+      it's only for internal use in GT drivers
+    * HB_inkey_enum changed to int - this is bit field not enumerated type.
+      Many of C/C++ compilers forbid bit operations on enum types and
+      forcing it by casting which finally exceeds the enum range is defined
+      as bug because it may badly interacts with some compiler optimizations
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbapierr.h
+  * harbour/include/hbapifs.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbapilng.h
+  * harbour/include/hbapirdd.h
+  * harbour/include/hbdate.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbinit.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbset.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbvm.h
+  * harbour/include/hbvmopt.h
+  * harbour/include/hbvmpub.h
+    * separated internal and external API. Now the definitions for
+      internal HVM structures and functions are excluded by default
+      they could be enabled if user include hbvmopt.h before other
+      header files. Such operation should be done _ONLY_ by core
+      code - if 3-rd party developers make sth like that then it's
+      for their own risk and such code may stop to work with next
+      Harbour versions. Without hbvmopt.h the internal structures
+      like HB_ITEM, HB_DYNS, ... are  mapped to 'void' so there is
+      no way to access their members so we can modify them in the
+      future without afford for 3-rd party code.
+      There is one small exception 'type' should be the first member
+      for HB_ITEM structure because I used a small ugly hack in
+      HB_IS_*() macros with castin PHB_ITEM to HB_TYPE* - it works
+      without speed overhead but if you think that it will be
+      better/cleaner to not use such tricks then it's enough to
+      change HB_ITEM_TYPE() definitions in hbvmpub.h - see note.
+    * cleared the usage of HB_EXPORT - to avoid problems with some C/C++
+      compilers we agreed that the only one common way of using HB_EXPORT
+      is adding it ad begining of declaration - please keep this convention
+      in the future.
+    + added new functions:
+      hb_extIsObject(), hb_codeblockId(), hb_idleSleep(),
+      hb_fsGetOsHandle(),
+      hb_dynsymFindSymbol(), hb_dynsymGetSymbol(),
+      hb_dynsymSymbol(), hb_dynsymName(),
+      hb_dynsymMemvarHandle(), hb_dynsymAreaHandle(), hb_dynsymSetAreaHandle()
+    * changed hb_arrayClone() declaration to:
+         PHB_ITEM hb_arrayClone( PHB_ITEM pArray )
+    * changed hb_arrayFromParams() declaration to:
+         PHB_ITEM hb_arrayFromParams( int iLevel )
+      The previous version needed a pointer to stack relocatable area
+      so any stack resizing could cause GPF.
+
+  * harbour/include/inkey.ch
+    * added definitions for extended mouse keys/events and some key
+      combinations
+
+  * harbour/source/codepage/uc1250.c
+  * harbour/source/codepage/uc1251.c
+  * harbour/source/codepage/uc1253.c
+  * harbour/source/codepage/uc1257.c
+  * harbour/source/codepage/uc737.c
+  * harbour/source/codepage/uc850.c
+  * harbour/source/codepage/uc852.c
+  * harbour/source/codepage/uc866.c
+  * harbour/source/codepage/uc88591b.c
+  * harbour/source/codepage/uc8859_1.c
+  * harbour/source/codepage/uc8859_2.c
+  * harbour/source/codepage/uc8859_5.c
+  * harbour/source/codepage/uckoi8.c
+  * harbour/source/codepage/uckoi8u.c
+  * harbour/source/codepage/ucmaz.c
+    * updated unicode values for characters in rabge 1-31 to keep
+      DOS compatibility
+
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/hbarch.c
+  * harbour/source/common/hbdate.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+    * keep HB_EXPORT at the beginning of function declaration
+
+  * harbour/include/hbpcode.h
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbfix.c
+  + harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbpcode.c
+  + harbour/source/compiler/hbstripl.c
+    % rewritten jump optimization
+      ! fixed some minor problems
+      * do not optimize jumps and local variable access by shorter
+        PCODE version and HB_P_NOOP when jump optimization is
+        disabled, this is a note I left in source code in few places:
+         /*
+          * optimizing jumps here by shorting them and setting HB_P_NOOPs
+          * only slow down the compilation process for three reasons:
+          * 1. When it's dummy jump to next instruction we need two passes
+          *    in hb_compOptimizeJumps() to fully remove it
+          * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
+          * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
+          *    at runtime because we will have more HVM loops: first  for the
+          *    shorter jump and next for the HB_P_NOOP PCODE(s)
+          * [druzuz]
+          */
+
+      + added support for multi passes in jump/dead code elimination
+        (hb_compOptimizeJumps())
+        By default is set upto three passes.
+        Now hb_compOptimizeJumps() keeps all compiler internal data clean
+        on exist and can be called any times and does not change other
+        compiler's functions behaviors
+      + added dummy jumps elimination
+      + added optimization for:
+            IF .T.
+            IF .F.
+            WHILE .T.
+            WHILE .F.
+         etc.
+      * restored empty BEGIN/RECOVER sequence block elimination
+        if Jump Optimization is enabled then it marks the block
+        with HB_P_NOOPS else it cut the generated PCODE
+      + added dead code eliminator (new functions hb_compCodeTraceMarkDead()/
+        hb_compPCodeTrace() - it works only when Jump Optimization is
+        not disabled)
+      As a result of the above we have smaller and faster PCODE.
+
+      I do not think that we will have meta code support in the reasonable
+      time and because I need some valid compiler data/structures like
+      updated table of all jumps for real C code (not PCODE in .c files)
+      generation then I decide to make some modifications and the above
+      is in practice a side effect of this work.
+
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/rddord.prg
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/nulsys/nulsys.c
+    * synced with my modifications in xHarbour
+    * updated for API modifications
+
+  * harbour/source/rtl/Makefile
+    + added gtsys.c, gtfunc.c, hbgtcore.c
+
+  * harbour/source/rtl/accept.c
+  * harbour/source/rtl/alert.prg
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/dates.c
+  * harbour/source/rtl/do.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/errorsys.prg
+  * harbour/source/rtl/file.c
+  * harbour/source/rtl/fserror.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/oldclear.c
+  * harbour/source/rtl/strmatch.c
+  * harbour/source/rtl/strpeek.c
+  * harbour/source/rtl/valtype.c
+  * harbour/source/rtl/xsavescr.c
+    * updated for API modifications
+    * cleaned some compiler warnings
+
+  * harbour/source/rtl/filesys.c
+    + added hb_fsGetOsHandle()
+    * updated for API modifications
+    
+  * harbour/source/rtl/gt.c
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/gtapiu.c
+  + harbour/source/rtl/gtfunc.c
+  + harbour/source/rtl/gtsys.c
+  + harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/inkey.c
+  * harbour/source/rtl/maxrow.c
+  * harbour/source/rtl/mouseapi.c
+  * harbour/source/rtl/setcolor.c
+  * harbour/source/rtl/setposbs.c
+  * harbour/source/rtl/shadow.c
+    * new GT API code
+
+  * harbour/source/rtl/saverest.c
+    * changed default behavior in SEVESCREEN/RESTSCREEN with parameters
+      out of screen range to be Clipper compatible. Added last logical
+      parameter to keep previous behavior for programs which begins to
+      use it.
+
+  * harbour/source/rtl/seconds.c
+    * include missing header file to fix C++ compilation
+    * make hb_secondsCPU global function
+
+  * harbour/source/rtl/set.c
+    * make HB_SET_TYPEAHEAD Clipper compatible
+
+  * harbour/source/rtl/gtcgi/Makefile
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  - harbour/source/rtl/gtcgi/mousecgi.c
+    * rewritten for new GT API
+      some detail behaviors has been changed but I think the current
+      implementation is better for CGI programs output - please check
+      and fix me if necessary
+
+  * harbour/source/rtl/gtcrs/Makefile
+  - harbour/source/rtl/gtcrs/charmap.prg
+  + harbour/source/rtl/gtcrs/chrmap.c
+  - harbour/source/rtl/gtcrs/debug.map
+  - harbour/source/rtl/gtcrs/eterm.map
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  + harbour/source/rtl/gtcrs/gtcrs.h
+  + harbour/source/rtl/gtcrs/hb-charmap.def
+  - harbour/source/rtl/gtcrs/kbdcrs.c
+  - harbour/source/rtl/gtcrs/keymap.prg
+  - harbour/source/rtl/gtcrs/linux.map
+  - harbour/source/rtl/gtcrs/mousecrs.c
+    * new GTCRS based on my xHarbour and Flagship curses code
+      Please not that at runtime it looks for a file
+      /etc/harbour/hb-charmap.def where user can fully tune output
+      for his terminal. This file is included with proper path in
+      binaries created by make_rpm.sh and make_tgz.sh
+      Ryszard I've removed some of your extensions which are no longer
+      necessary and some other (keyboard sequence redefinition) should
+      be done in a little bit differ way. I would like to talk about it
+      when you test current code.
+      Added support for extended mouse keys (middle button and wheel).
+
+  * harbour/source/rtl/gtdos/Makefile
+  * harbour/source/rtl/gtdos/gtdos.c
+  - harbour/source/rtl/gtdos/mousedos.c
+    * rewritten for new GT API
+      Fixed some small problems, finished mouse code which for DJGPP
+      is fully Clipper compatible with real mouse SAVE/RESTORE code.
+      For other compilers it should be updated depending on memory
+      model and used DPMI driver (if any).
+
+  * harbour/source/rtl/gtos2/Makefile
+  * harbour/source/rtl/gtos2/gtos2.c
+  - harbour/source/rtl/gtos2/mouseos2.c
+    * rewritten for new GT API
+      Fixed some problems and finished the mouse code.
+      Please test it - I made all modifications without OS2 and
+      I was not able to make any test. I'm interesting in information
+      if it works and the speed difference - f.e. results from
+      tests/vidtest.prg run with previous and current version.
+
+  * harbour/source/rtl/gtpca/Makefile
+  * harbour/source/rtl/gtpca/gtpca.c
+  - harbour/source/rtl/gtpca/kbdos2.gcc
+  - harbour/source/rtl/gtpca/mousepca.c
+    * rewritten for new GT API
+      and finished so now it's full functional GT driver
+      I'm interesting in keyboard sequences used by PC-ANSI drivers
+      in DOS so it will be possible to implement also support for
+      extended keys input.
+
+  * harbour/source/rtl/gtsln/Makefile
+  * harbour/source/rtl/gtsln/gtsln.c
+  + harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtsln/keytrans.c
+  * harbour/source/rtl/gtsln/mousesln.c
+    * rewritten for new GT API basing on current xHarbour code
+      added support for slang 1.4x patched for UNICODE (Debian
+      patches used by most of current Linux distributions) and
+      slang 2.x - It's unicode ready, tries to detect terminal mode
+      (utf-8/iso) at startup and switch the internal logic to
+      iso/unicode mode. When compiled with slang 1.4x or 2.x
+      and terminal is in UTF-8 it can display all characters like
+      in DOS if only used font have them or good fall-back table is
+      loaded (f.e. the one created by QRCZAK)
+      Added support for extended mouse keys (middle button and wheel).
+
+  * harbour/source/rtl/gtstd/Makefile
+  * harbour/source/rtl/gtstd/gtstd.c
+  - harbour/source/rtl/gtstd/mousestd.c
+    * rewritten for new GT API
+      Now it can work as full screen GT driver redrawing the previous
+      screen contents from internal GT core buffers. I run with this
+      GT some of my programs and they work quite well ;-) of course
+      without colors.
+
+  * harbour/source/rtl/gtwin/Makefile
+  * harbour/source/rtl/gtwin/gtwin.c
+  - harbour/source/rtl/gtwin/mousewin.c
+    * updated for new GT API
+
+  + harbour/source/rtl/gtxwc/Makefile
+  + harbour/source/rtl/gtxwc/gtxwc.c
+  + harbour/source/rtl/gtxwc/gtxwc.h
+    * new XWindow Console GT driver based on my and Giancarlo Niccolai
+      code form xHarbour - this GT can work in XWindow environment only
+      and create its own window for  console output. It delays the
+      initialization to the moment when user try to display anything on
+      the screen so even without X Window system programs which uses this
+      GT can work as long as use only outstd/outerr output.
+
+  * harbour/source/vm/arrays.c
+    * updated for API modifications
+    + added hb_arrayId(), 
+    * changed hb_arrayClone() declaration to:
+         HB_EXPORT PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
+    * changed hb_arrayFromParams() declaration to:
+         PHB_ITEM hb_arrayFromParams( int iLevel )
+
+  * harbour/source/vm/arrayshb.c
+    * updated for API modifications
+    + added new parameter iLevel to function HB_APARAMS()
+
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/maindll.c
+  * harbour/source/vm/maindllh.c
+  * harbour/source/vm/maindllp.c
+  * harbour/source/vm/mainstd.c
+  * harbour/source/vm/mainwin.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/pcount.c
+  * harbour/source/vm/proc.c
+    * updated for API modifications
+
+  * harbour/source/vm/codebloc.c
+    * updated for API modifications
+    + added hb_codeblockId()
+
+  * harbour/source/vm/dynsym.c
+    * updated for API modifications
+    + added new functions:
+      hb_dynsymFindSymbol(), hb_dynsymGetSymbol(),
+      hb_dynsymSymbol(), hb_dynsymName(),
+      hb_dynsymMemvarHandle(), hb_dynsymAreaHandle(), hb_dynsymSetAreaHandle()
+
+  * harbour/source/vm/eval.c
+    * updated for API modifications
+    * call hb_vmPushState()/hb_vmPopState() in hb_itemDo()/hb_itemDoC()
+      functions - it's necessary to make HVM reentrant safe.
+
+  * harbour/source/vm/extend.c
+    * updated for API modifications
+    + added hb_extIsObject() similar to existing hb_extIsArray()
+
+  * harbour/source/vm/hvm.c
+    * updated for API modifications
+    + added new functions: hb_vmPushState(), hb_vmPopState()
+      which save/restore HVM state (the top stack value which can be
+      processed and return item and maybe sth else in the future) making
+      HVM ready for reentrant.
+
+  * harbour/source/vm/itemapi.c
+    * updated for API modifications
+    + added new function:
+         HB_EXPORT PHB_SYMB hb_itemGetSymbol( PHB_ITEM pItem );
+    ! fixed bug in hb_itemPutNInt()
+
+  * harbour/tests/Makefile
+  * harbour/utils/hbdoc/Makefile
+  * harbour/utils/hbextern/Makefile
+  * harbour/utils/hbmake/Makefile
+  * harbour/utils/hbrun/Makefile
+  * harbour/utils/hbtest/Makefile
+    - removed badly added: dbfntx, dbfcdx, dbffpt, hbsix libraries.
+      what broke GNU make compilation for some compilers
+      This libraries should be included automatically when RDD lib
+      is included by *.cf files
+
+   Summary:
+      The whole patch (cvs diff -uN) is ~1.5MB length and I cannot describe
+      everything in details - sorry but it was too much modifications in
+      one commit so now just some of general notes.
+      The header files included as is does not have any information about
+      internal HVM structures and some functions. In practice only HB_SYMB
+      is public and it has to be public for .c files generated from .prg
+      so I force the fixed size of this structure (alignment independent)
+      by redefining some members to union with void * - it's a little bit
+      ugly trick but it effectively eliminates the problem of linking
+      binaries compiled with differ alignment C compiler switches.
+      The structures like HB_ITEM, HB_CODEBLOCK, HB_STACK, HB_DYNS are not
+      longer defined and pointers to the defined as void * - like in Clipper
+      the ITEM structure. It caused that I had to add some new functions
+      to make some operation still possible to implement. If I missed sth
+      and any of you will have a problem with your code then please inform
+      me about it and after a small discussion on Harbour developers list
+      we can decide if other functions should be added.
+      The internal API is still accessible. It's enough to include "hbvmopt.h"
+      file before other header files to enable it. Now only files in
+      source/vm directory include it.
+      The 3-rd party code which does not include hbvmopt.h (or tries to
+      set some internals macros) should be safe for future HVM modifications
+      and will work also with new binaries so 3-rd party library developers
+      should remember about it. If they won't then it's only their and
+      their clients problem not Harbour developers.
+      With this modifications I also create new GT model which is similar
+      to the one used by RDD with multi inheritance. It can be quite easy
+      extended to simultaneously load more then one GT subsystem (sth like
+      work areas in RDD) but I left it for the future when someone may
+      need it. hbapigt.h file now contains only information about public
+      functions and does not have any code which depends on current
+      internal implementation - it should be backword compatible as long
+      as somone did not try to use internal GT functions.
+      The internal GT system use hbgtcore.h file which should not be
+      included by 3-rd party code as long as someone will not make new
+      GT driver. The internal GT code is new so I expect that it will
+      be changed yet in the nearest future (I'm waiting for other developers
+      feedback) and in such case any 3-rd party GTs will have to be updated.
+      How it works:
+         The base GT driver (GTNUL) is fully functional GT driver which
+         makes all operations on memory buffer. After each screen write
+         Flush() method is called which check for dispcount() and if
+         it's 0 then call Refresh() method to update modified area by
+         Redraw() method. This method is dummy in GTNUL and external
+         output with this GT can be reached by outstd()/outerr() which
+         are now redirected to GT methods. A simple GT driver may overload
+         only Refresh() method to give full screen output.
+         Application can use only this GT driver and it seems to be very
+         good choice for GUI and background daemon/service programs.
+         This GT is loaded at startup then all other GTs can be loaded
+         later and inherit from the previously loaded GT drivers.
+         The new GT driver can overload as much method as wants/needs.
+         Now all GT operations are implemented as GT method so GT driver
+         can easy change their default behavior, f.e. it may fully overload
+         color parsing methods and use differ or extended to Clipper color
+         definitions.
+         I rewrote all existing GTs to work with new GT model.
+         OS2 users - please test GTOS2 which I was not able to test and
+         see the note in Redraw() method. If possible please make some
+         speed tests.
+         In fact now there is much more internal operations then it was
+         before but because they are done on memory only then current
+         code is much faster in this GT drivers which so far makes all
+         operations on real video area. I made some tests with GTNUL
+         and tests/vidtest.prg and the total overhead is minimal. Now
+         dipbegin()/dispend() in practice does not cost anything so it
+         gives additional speed improvement in application which extensively
+         use it.
+         More then one GT driver can be linked with final binaries and
+         chose on application startup by //GT<NAME> switch and/or environment
+         variable HB_GT=<name>
+         In the RTL is new GT function GTSYS() which works in similar way
+         to RDDSYS() in RDD subsystem and for linking default GT driver
+         for given platform. When RTL is compiled the default GT driver
+         is set to HB_GT_DEFAULT envvar and if not exist to HB_GT_LIB
+         envvar and if it also does not exist to hard coded platfom GTs
+         (see source/rtl/gtsys.c and source/rtl/Makefile for rules)
+         Adding to source code:
+            ANNOUNCE GTSYS
+         disable linking the default GT driver and:
+            REQUEST HB_GT_<name>
+         for linking given (<name>) GT driver, f.e.: REQUEST HB_GT_WIN
+         If you are working in SH environment (Linux and other *nixes users,
+         DJGPP bash, MinGW shell then it's possible to use -gt<name> switch
+         in hblnk / hbmk scripts to force linking GT drivers (it could be
+         repeated with different <name>) and the first one becomes the default
+         one. F.e.:
+            xhbmk -m -n -w -es2 -gtcrs -gtsln -gtstd -gtpca vidtest.prg
+         Usually the GT driver are loaded at HVM startup but it's possible
+         to load it later. I created new GT driver CTW which gives full
+         CT3 like Window system. The CT3 extended driver change the behavior
+         of some function in Clipper extended driver, f.e WRITECON() or
+         SETPOS() with parameters out of screen range. So I implemented it
+         CTW as RT GTs which is loaded when some of CTWIN function is used
+         (f.e. WOPEN()/WBOARD()) and inherits from any existing GT driver.
+         This is full CT3 WIN implementation with all detail behaviors I
+         found (with some CT3 bug fixes). It does not have any CT3 limitations
+         and can be used for any virtual screen/window size though I hardcoded
+         CT3 limitation for backword compatibility. If somone will want to
+         remove it then it will be enough to delete few lines from ctwin.c
+         file. I'm not CTWIN Clipper user so maybe I missed some side effects
+         in this driver and was not able to well test it so if you will find
+         any incompatibilities then please inform me.
+         THe default GT buffer uses 32bit character cell internally but
+         in savescreen/restscreen it uses VGA compatible two bytes character
+         cell. Some GT drivers may want to use differ character cell.
+         Now GTCRS and GTSLN use 32bit character cell by default. They
+         need additional information about character set (box/normal) to
+         properly display box characters. It is possible to force in this
+         GT drivers using Clipper compatible character cell by calling:
+            hb_gtInfo( GTI_COMPATBUFFER, <lCompat> ) -> <lPreviousSeting>
+         but in may cause that box drawing characters will be lost in
+         some countries after RESTSCREEN(). It will depend on used code
+         page.
+         HB_GTINFO() is new function which works in similar way to DBINFO()
+         in RDD. It allows to retrieve/change some of GT driver settings.
+         GTI_* actions are defined in hbgtinfo.ch - it has all GTI_*
+         definitions used in xHarbour. Now in Harbour only few of them
+         are implemented.
+         The new three .prg functions:
+            HB_SETKEYCP( <cTermCP> [,<cHostCP>] )
+            HB_SETDISPCP( <cTermCP> [,<cHostCP>] [,<lBoxChar>] )
+            HB_SETTERMCP( <cTermCP> [,<cHostCP>] [,<lBoxChar>] )
+         have been added. They set automatic input (HB_SETKEYCP)
+         and output (HB_SETDISPCP) (or both: HB_SETTERMCP) character
+         translation. They are also important for some GTs which
+         informing them about used internal code page for unicode
+         translation (GTXWC, GTSLN) and/or chosing proper character
+         set (standard/alternate) for letters and other (f.e. box
+         drawing characters) (GTCRS, GTSLN),
+            <cTermCP> is encoding used on external (terminal) side
+            <cHostCP> is encoding used internally, if not given then
+                      current code page set HB_SETCODEPAGE() is used.
+                      some of GTs which uses unicode output may
+                      ignore <cTermCP>
+            <lBoxChar> is optional parameter which interacts with dispbox()
+                       output disabling switching to alternate character
+                       set in some GTs. It effectively causes that if internal
+                       (host) code page contains some letters on the box char
+                       positions then they will be shown also by box drawing
+                       functions like dispbox() instead of CP437 characters.
+                       In some cases it could be useful. By default lBoxChar
+                       is not set and GTs which can switch between standard
+                       and alternate character set (GTCRS, GTSLN) will try to
+                       use alternate character set for box drawing functions.
+
+      Victor: I removed some of your functions. They can be very easy
+      implemented with hb_gt_GetChar()/hb_gt_PutChar() but I do not want to
+      make them part of documented external API because some GT drivers may
+      want to use absolutely differ color definitions and they will stop to
+      work so I do not want to make this functions documented external API.
+
+      Ryszard: Setting alternative debug keys does not longer work.
+      I like such possibilities but it should be implemented in differ
+      way to f.e. using HB_GTINFO interface to allow low level GT driver
+      extensions, f.e. in *nixes using CTRL+[A-Z] and SIGINT, SIGQUIT,
+      SIGTSTP signals for real asynchronous setting of debug/cancel flag
+      without keyboard polling from main HVM loop. I would like to discus
+      about such more general solution.
+
+   *** Please updated non GNU make files ***
+
 2006-02-03 15:56 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile.nt
    * makefile64.nt

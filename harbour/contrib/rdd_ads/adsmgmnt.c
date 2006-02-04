@@ -55,6 +55,9 @@
 
 #include "rddads.h"
 
+#include "hbapi.h"
+#include "hbapiitm.h"
+
 
 /*
                Advantage Management API Examples
@@ -370,14 +373,15 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 {
 
    UNSIGNED32  ulRetVal;
-   UNSIGNED16  ulMaxUsers = 100;        /* needed for array memory allocation; caller can set with 2nd arg */
+   UNSIGNED16  ulMaxUsers = 2000;        /* needed for array memory allocation; caller can set with 2nd arg */
    UNSIGNED16  ulCount;
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO * pastUserInfo;
+
 /*
-//   ADS_MGMT_USER_INFO  astUserInfo[MAX_NUM_USERS];
-// bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
-*/
+   ADS_MGMT_USER_INFO  astUserInfo[MAX_NUM_USERS];
+   bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
+ */
    if ( ISNUM( 2 ) )
    {
       ulMaxUsers = (UNSIGNED16) hb_parnl( 2 );
@@ -385,30 +389,39 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 
    pastUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
       /*
-      //   AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
-      //                      UNSIGNED8 *pucFileName,
-      //                      ADS_MGMT_USER_INFO astUserInfo[],
-      //                      UNSIGNED16 *pusArrayLen,
-      //                      UNSIGNED16 *pusStructSize );
+         AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
+                            UNSIGNED8 *pucFileName,
+                            ADS_MGMT_USER_INFO astUserInfo[],
+                            UNSIGNED16 *pusArrayLen,
+                            UNSIGNED16 *pusStructSize );
       */
    ulRetVal = AdsMgGetUserNames( hMgmtHandle, ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parcx( 1 ) : NULL,
                                  pastUserInfo,
                                  &ulMaxUsers,
                                  &usStructSize );
       /*
-      //if ( sizeof( ADS_MGMT_USER_INFO ) < usStructSize )
-      //   {
-      //      HB_TRACE(HB_TR_INFO, ("The \nUser Information structure on the server is larger.
-      //         \nMore info is available with the current ACE.H." ));
-      //   }
+      if ( sizeof( ADS_MGMT_USER_INFO ) < usStructSize )
+         {
+            HB_TRACE(HB_TR_INFO, ("The \nUser Information structure on the server is larger.
+               \nMore info is available with the current ACE.H." ));
+         }
       */
    if ( ulRetVal == AE_SUCCESS )
    {
-      hb_reta( ulMaxUsers );
-      for ( ulCount = 0; ulCount < ulMaxUsers; ulCount++ )
+      PHB_ITEM pArray = hb_itemArrayNew( ulMaxUsers ), pArrayItm;
+
+      for ( ulCount = 1; ulCount <= ulMaxUsers; ulCount++ )
       {
-         hb_storc( (char *) pastUserInfo[ulCount].aucUserName , -1, ulCount+1 );
+         pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
+         hb_arrayNew( pArrayItm, 3 );
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 1 ),
+                      ( char * ) pastUserInfo[ulCount].aucUserName );
+         hb_itemPutNL( hb_arrayGetItemPtr( pArrayItm, 2 ),
+                       pastUserInfo[ulCount].usConnNumber );
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 3 ),
+                      ( char * ) pastUserInfo[ulCount].aucAddress );
       }
+      hb_itemRelease( hb_itemReturn( pArray ) );
    }
    else
    {
@@ -519,7 +532,7 @@ HB_FUNC( ADSMGKILLUSER )
 */
 HB_FUNC( ADSMGKILLUSER )
 {
-   AdsMgKillUser( hMgmtHandle, (UNSIGNED8 *) hb_parc(1), (UNSIGNED16) hb_parnl(2) );
+   hb_retnl( (UNSIGNED16) AdsMgKillUser( hMgmtHandle, (UNSIGNED8 *) hb_parc(1), (UNSIGNED16) hb_parnl(2) ));
 }
 
 HB_FUNC( ADSMGGETHANDLE )

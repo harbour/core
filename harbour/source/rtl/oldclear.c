@@ -66,7 +66,7 @@ HB_FUNC( __ATCLEAR )
 HB_FUNC( __CLEAR )
 {
    hb_gtScroll( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), 0, 0 );
-   hb_gtSetPosContext( 0, 0, HB_GT_SET_POS_AFTER );
+   hb_gtSetPos( 0, 0 );
 }
 
 #endif

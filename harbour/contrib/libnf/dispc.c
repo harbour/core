@@ -549,7 +549,7 @@ static void filebot()
 HB_FUNC( _FT_DFINIT )
 {
     int rval, i, j;
-    UINT uiSize;
+    ULONG ulSize;
 
     rval = 0;
 
@@ -561,8 +561,8 @@ HB_FUNC( _FT_DFINIT )
     width  = ecol - scol;                 /* calc width of window  */
     height = eline - sline + 1;           /* calc height of window */
 
-    hb_gtRectSize( sline, scol, eline, ecol, &uiSize );
-    vseg = (char * ) hb_xalloc( uiSize );
+    hb_gtRectSize( sline, scol, eline, ecol, &ulSize );
+    vseg = (char * ) hb_xalloc( ulSize );
     if (vseg != NULL)
        hb_gtSave( sline, scol, eline, ecol, vseg );
 
@@ -916,7 +916,7 @@ static int keyin()
     ch = 0;
     while ( ch == 0x00 )                   /* check to see if it's extended */
     {
-        ch = hb_inkeyTranslate( hb_gtReadKey( ( HB_inkey_enum ) 0 ), ( HB_inkey_enum ) 0);
+        ch = hb_inkeyTranslate( hb_gtReadKey( 0 ),  0 );
         if (ch == 257)   /* error compiling with bcc55 */
            ch = 27;      /* ESC with CapsLock ON = 257, with CapsLock OFF = 27 */
         hb_idleState();

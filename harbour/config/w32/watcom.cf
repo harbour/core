@@ -66,9 +66,6 @@ endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
-ifeq ($(HB_MULTI_GT),yes)
-GTLIBS := $(TOP)$(ROOT)source/rtl/gtnul/$(HB_ARCH)/gtnul
-endif
 GTLIBS := $(subst /,\,$(GTLIBS))
 endif
 

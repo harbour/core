@@ -81,17 +81,15 @@ void hb_conXSaveRestRelease( void )
 
 HB_FUNC( __XSAVESCREEN )
 {
+   ULONG ulSize;
+
    if( s_pBuffer != NULL )
       hb_xfree( s_pBuffer );
 
    hb_gtGetPos( &s_iRow, &s_iCol );
 
-   {
-      UINT   uiSize;
-      hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &uiSize );
-      s_pBuffer = hb_xgrab( uiSize );
-   }
-
+   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
+   s_pBuffer = hb_xgrab( ulSize );
    hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
 }
 
@@ -108,7 +106,7 @@ HB_FUNC( __XRESTSCREEN )
       hb_xfree( s_pBuffer );
       s_pBuffer = NULL;
 
-      hb_gtSetPosContext( s_iRow, s_iCol, HB_GT_SET_POS_AFTER );
+      hb_gtSetPos( s_iRow, s_iCol );
    }
 }
 

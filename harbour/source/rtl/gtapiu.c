@@ -52,7 +52,7 @@
 
 #include "hbapigt.h"
 
-void hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd )
+HB_EXPORT void hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd )
 {
    /* TODO: */
 
@@ -60,35 +60,35 @@ void hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd )
    HB_SYMBOL_UNUSED( wnd );
 }
 
-void hb_gtWDestroy( HB_GT_WND * wnd )
+HB_EXPORT void hb_gtWDestroy( HB_GT_WND * wnd )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( wnd );
 }
 
-BOOL hb_gtWFlash( void )
+HB_EXPORT BOOL hb_gtWFlash( void )
 {
    /* TODO: */
 
    return FALSE;
 }
 
-void hb_gtWApp( HB_GT_WND ** wnd )
+HB_EXPORT void hb_gtWApp( HB_GT_WND ** wnd )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( wnd );
 }
 
-void hb_gtWCurrent( HB_GT_WND * wnd )
+HB_EXPORT void hb_gtWCurrent( HB_GT_WND * wnd )
 {
    /* TODO: */
 
    HB_SYMBOL_UNUSED( wnd );
 }
 
-void hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
+HB_EXPORT void hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
 {
    /* TODO: */
 
@@ -96,7 +96,7 @@ void hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
    HB_SYMBOL_UNUSED( rect );
 }
 
-BOOL hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus )
+HB_EXPORT BOOL hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus )
 {
    /* TODO: */
 
@@ -106,7 +106,7 @@ BOOL hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus )
    return FALSE;
 }
 
-USHORT hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
+HB_EXPORT USHORT hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
 {
    /* Do nothing in Harbour, since the low-level GT API is
       implemented with a different method than in CA-Cl*pper. */
@@ -116,7 +116,7 @@ USHORT hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
    return 1;
 }
 
-USHORT hb_gtModalRead( void * dummy )
+HB_EXPORT USHORT hb_gtModalRead( void * dummy )
 {
    /* TODO: */
 
@@ -125,28 +125,14 @@ USHORT hb_gtModalRead( void * dummy )
    return 1;
 }
 
-USHORT hb_gtBeginWrite( void )
-{
-   /* Do nothing in Harbour */
-
-   return 0;
-}
-
-USHORT hb_gtEndWrite( void )
-{
-   /* Do nothing in Harbour */
-
-   return 0;
-}
-
-USHORT hb_gtFlushCursor( void )
+HB_EXPORT USHORT hb_gtFlushCursor( void )
 {
    /* TODO: */
 
    return 1;
 }
 
-USHORT hb_gtSetColor( HB_GT_RGB * color )
+HB_EXPORT USHORT hb_gtSetColor( HB_GT_RGB * color )
 {
    /* TODO: */
 
@@ -155,7 +141,7 @@ USHORT hb_gtSetColor( HB_GT_RGB * color )
    return 1;
 }
 
-USHORT hb_gtGetColor( HB_GT_RGB * color )
+HB_EXPORT USHORT hb_gtGetColor( HB_GT_RGB * color )
 {
    /* TODO: */
 
@@ -164,7 +150,7 @@ USHORT hb_gtGetColor( HB_GT_RGB * color )
    return 1;
 }
 
-USHORT hb_gtSetBorder( HB_GT_RGB * color )
+HB_EXPORT USHORT hb_gtSetBorder( HB_GT_RGB * color )
 {
    /* TODO: */
 

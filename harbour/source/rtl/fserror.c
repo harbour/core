@@ -175,7 +175,7 @@ static int hb_WinToDosError( ULONG ulError )
 #endif
 
 /* return DOS error code of last operation */
-USHORT HB_EXPORT hb_fsError( void )
+HB_EXPORT USHORT hb_fsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
 
@@ -183,7 +183,7 @@ USHORT HB_EXPORT hb_fsError( void )
 }
 
 /* return real error code of last operation */
-USHORT  HB_EXPORT hb_fsOsError( void )
+HB_EXPORT USHORT hb_fsOsError( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
 
@@ -191,7 +191,7 @@ USHORT  HB_EXPORT hb_fsOsError( void )
 }
 
 /* set DOS error code for last operation */
-void  HB_EXPORT hb_fsSetError( USHORT uiError )
+HB_EXPORT void  hb_fsSetError( USHORT uiError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%hu)", uiError));
 
@@ -200,7 +200,7 @@ void  HB_EXPORT hb_fsSetError( USHORT uiError )
 }
 
 /* set error code for last operation */
-void  HB_EXPORT hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
+HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
 {
 
    /* TODO: implement it */

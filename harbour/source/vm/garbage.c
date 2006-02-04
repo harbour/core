@@ -64,11 +64,11 @@
  */
 typedef struct HB_GARBAGE_
 {
-  struct HB_GARBAGE_ *pNext;  /* next memory block */
-  struct HB_GARBAGE_ *pPrev;  /* previous memory block */
-  HB_GARBAGE_FUNC_PTR pFunc;  /* cleanup function called before memory releasing */
-  USHORT locked;              /* locking counter */
-  USHORT used;                /* used/unused block */
+   struct HB_GARBAGE_ *pNext;  /* next memory block */
+   struct HB_GARBAGE_ *pPrev;  /* previous memory block */
+   HB_GARBAGE_FUNC_PTR pFunc;  /* cleanup function called before memory releasing */
+   USHORT locked;              /* locking counter */
+   USHORT used;                /* used/unused block */
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
 #ifdef HB_ALLOC_ALIGNMENT
@@ -301,8 +301,7 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
          /* mark as used all detached variables in a codeblock */
          while( ui <= pCBlock->uiLocals )
          {
-            hb_gcItemRef( &pCBlock->pLocals[ ui ] );
-            ++ui;
+            hb_gcItemRef( &pCBlock->pLocals[ ui++ ] );
          }
       }
    }

@@ -68,7 +68,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in,
              if it is not, the console mode is choosen here. [vszakats] */
-   LOCAL lConsole := .F.
+   /* We can simply check if GTNUL (always present) is current GT driver */
+   LOCAL lConsole := HB_GTVERSION( 0 ) != "NUL"
 
 #ifdef HB_C52_UNDOC
 
@@ -203,7 +204,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    nChoice := 1
 
-   IF lConsole
+   IF !lConsole
 
       FOR nEval := 1 TO Len( aSay )
          OutStd( aSay[ nEval ] )
@@ -224,12 +225,16 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       /* choice loop */
       DO WHILE .T.
 
-         nKey := Inkey( nDelay, INKEY_ALL )
+         /* TOFIX, we need a way to check if key input exist for
+            nonconsole GTs, [druzus] */
+         nKey := 0 /* Inkey( nDelay, INKEY_ALL ) */
 
          DO CASE
 
          CASE nKey == 0
-
+            IF Len( aHotkey ) > 0
+               nChoice := 1
+            ENDIF
             EXIT
 
          CASE nKey == K_ESC
@@ -263,11 +268,14 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       nOldCursor := SetCursor( SC_NONE )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
+      DispBegin()
       /* draw box */
       //Fixed box characters cannot be displayed correctly on some terminals
       //(e.g. xterm)
       //DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
+
       @ nInitRow, nInitCol TO nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 COLOR cColorNorm
+      DispBox( nInitRow + 1, nInitCol + 1, nInitRow + Len( aSay ) + 2, nInitCol + nWidth, "         ", cColorNorm )
 
       FOR nEval := 1 TO Len( aSay )
          DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
@@ -276,10 +284,14 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       /* choice loop */
       DO WHILE .T.
 
+         IF DispCount() == 0
+            DispBegin()
+         ENDIF
          FOR nEval := 1 TO Len( aOptionsOK )
             DispOutAt( nInitRow + Len( aSay ) + 2, aPos[ nEval ], " " + aOptionsOK[ nEval ] + " ",;
                iif( nEval == nChoice, cColorHigh, cColorNorm ) )
          NEXT
+         DispEnd()
 
          nKey := Inkey( nDelay, INKEY_ALL )
 

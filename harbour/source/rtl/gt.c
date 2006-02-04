@@ -67,12 +67,3 @@ HB_FUNC( DISPCOUNT )
 {
    hb_retni( hb_gtDispCount() );
 }
-
-#ifdef HB_EXTENSION
-
-HB_FUNC( HB_GT_VERSION )
-{
-   hb_retc( hb_gt_Version() );
-}
-
-#endif

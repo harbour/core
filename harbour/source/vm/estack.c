@@ -411,7 +411,7 @@ void hb_vmIsLocalRef( void )
       HB_ITEM_PTR * pItem = hb_stack.pPos - 1;
       while( pItem != hb_stack.pItems )
       {
-         if( ( *pItem )->type & (HB_IT_BYREF | HB_IT_ARRAY | HB_IT_BLOCK) )
+         if( HB_IS_GCITEM( *pItem ) )
             hb_gcItemRef( *pItem );
          --pItem;
       }

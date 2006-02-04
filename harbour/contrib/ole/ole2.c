@@ -79,6 +79,7 @@
 #include <ole2.h>
 
 #include "hbvm.h"
+#include "hbapiitm.h"
 #include "hbdate.h"
 
 static far VARIANTARG RetVal;
@@ -151,7 +152,7 @@ static void GetParams(DISPPARAMS * dParams)
 
          uParam = hb_param( nArg, 0xFFFF );
 
-         switch( uParam->type )
+         switch( hb_itemType( uParam ) )
          {
             case '\0':
 #if !defined(__BORLANDC__)
@@ -231,7 +232,7 @@ static void GetParams(DISPPARAMS * dParams)
                     pData = hb_dynsymFindName( "hObj" );
                     if( pData )
                     {
-                       hb_vmPushSymbol( pData->pSymbol );
+                       hb_vmPushSymbol( hb_dynsymSymbol( pData ) );
                        hb_vmPush( uParam );
                        hb_vmDo( 0 );
 #if !defined(__BORLANDC__)

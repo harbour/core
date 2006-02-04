@@ -32,7 +32,7 @@ ifneq ($(HB_LIB_COMPILE),)
 endif
 
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
+   CFLAGS += -DSIMPLEX
 endif
 
 empty:=
@@ -43,38 +43,35 @@ LD = wlink
 LDFLAGS = debug all sys Linux OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS := $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib)))
-LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib)))
+   LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib))
 else
-LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
-LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
+   LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
 endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-ifeq ($(HB_LIB_COMPILE),)
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv))
-else
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
-endif
+   ifeq ($(HB_LIB_COMPILE),)
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv))
+   else
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
+   endif
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-ifeq ($(HB_LIB_COMPILE),)
-GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
-else
-GTLIBS := $(HB_LIB_COMPILE)/$(HB_GT_LIB)
-endif
-ifeq ($(HB_MULTI_GT),yes)
-GTLIBS += $(TOP)$(ROOT)source/rtl/gtnul/$(HB_ARCH)/gtnul
-endif
+   ifeq ($(HB_LIB_COMPILE),)
+      GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
+   else
+      GTLIBS := $(HB_LIB_COMPILE)/$(HB_GT_LIB)
+   endif
 endif
 
 LDFILES = $(subst $(space),$(comma) ,$(^F))
 LDLIBS  = $(subst $(space),$(comma) ,$(strip $(LINKLIBS) $(RDDLIBS) $(GTLIBS)))
 LD_RULE = $(LD) $(LDFLAGS) NAME $@ FILE $(LDFILES)
 ifneq ($(LDLIBS),)
-LD_RULE += LIB $(LDLIBS)
+   LD_RULE += LIB $(LDLIBS)
 endif
 
 AR = wlib

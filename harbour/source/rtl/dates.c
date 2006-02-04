@@ -78,7 +78,7 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
+HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*
     * NOTE: szFormattedDate must point to a buffer of at least 11 bytes.
@@ -250,7 +250,7 @@ char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    return szFormattedDate;
 }
 
-void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay )
+HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
 {
 #if defined(HB_OS_WIN_32)
    {
@@ -278,7 +278,7 @@ void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay )
 
 /* NOTE: The passed buffer must be at least 9 chars long */
 
-void HB_EXPORT hb_dateTimeStr( char * pszTime )
+HB_EXPORT void hb_dateTimeStr( char * pszTime )
 {
 #if defined(HB_OS_WIN_32)
    {

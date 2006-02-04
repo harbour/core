@@ -42,10 +42,12 @@ C_SOURCES=\
     gete.c       \
     gt.c         \
     gtapi.c      \
-    gtapiu.c     \
+    gtsys.c      \
+    gtfunc.c     \
     gx.c         \
     hardcr.c     \
     hbffind.c    \
+    hbgtcore.c   \
     hbrandom.c   \
     idle.c       \
     inkey.c      \
@@ -187,3 +189,10 @@ DIRS=$(HB_GT_LIBS)
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf
+
+ifneq ($(HB_GT_DEFAULT),)
+CFLAGS += -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt%=%)
+endif
+ifneq ($(HB_GT_LIB),)
+CFLAGS += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
+endif

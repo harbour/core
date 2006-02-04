@@ -254,11 +254,12 @@ typedef struct _AUTOOPEN
 
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
-#define HB_PCODE_FUNC( func, type ) USHORT func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
+#define HB_PCODE_FUNC( func, type ) ULONG func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
-void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 #define VS_NONE       0
 #define VS_LOCAL      1
@@ -448,9 +449,14 @@ extern int hb_compCompile( char * szPrg, int argc, char * argv[] );
 /* Misc functions defined in harbour.c */
 extern void hb_compFinalizeFunction( void ); /* fixes all last defined function returns jumps offsets */
 extern void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos );
-
+extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );
+extern BOOL hb_compIsJump( PFUNCTION pFunc, ULONG ulPos );
 /* Misc functions defined in hbfix.c */
 extern void hb_compFixFuncPCode( PFUNCTION );
+/* Misc functions defined in hbstripl.c */
+extern void hb_compStripFuncLines( PFUNCTION pFunc );
+/* Misc functions defined in hbdead.c */
+extern void hb_compCodeTraceMarkDead( PFUNCTION pFunc );
 
 /* Misc functions defined in harbour.y */
 #if 0
@@ -556,6 +562,9 @@ extern int            hb_comp_iLineINLINE;
 extern int            hb_comp_iLinePRG;
 
 extern ULONG          hb_comp_Supported;
+
+/* table with PCODEs' length */
+extern const BYTE     hb_comp_pcode_len[];
 
 /* error messages output */
 extern FILE           *hb_comp_errFile;

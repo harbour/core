@@ -11,13 +11,12 @@ HB_GT_LIBS=\
 	gtpca \
 	gtstd \
 	gtdos \
-#	gtnul \
 #	gtcrs \
 #	gtsln \
 
 
 ifeq ($(HB_GT_LIB),)
-	HB_GT_LIB = gtdos
+   HB_GT_LIB = gtdos
 endif
 
 ifeq ($(SHLVL),) # COMMAND.COM
@@ -30,29 +29,29 @@ ARCH_DOS = $(subst /,\,$(HB_ARCH))
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifeq ($(COMSPEC),) #location of command.com
-	COMSPEC := command.com
+   COMSPEC := command.com
 else
-	ifeq ($(HB_COMPILER),bcc16)
-		#Use standard dos path, which is already set up.
-	else
-		ifeq ($(HB_COMPILER),rsx32)
-			#Use standard dos path, which is already set up.
-		else
-			ifneq ($(findstring watcom,$(HB_COMPILER)),)
-				#Use standard dos path, which is already set up.
-			else
-				ifeq ($(HB_COMPILER),djgpp)
-					#Use standard dos path, which is already set up.
-				else
-					ifeq ($(HB_COMPILER),emx)
-						#Use standard dos path, which is already set up.
-					else
-						COMSPEC := $(subst \,/,$(COMSPEC))
-					endif
-				endif
-			endif
-		endif
-	endif
+   ifeq ($(HB_COMPILER),bcc16)
+      #Use standard dos path, which is already set up.
+   else
+      ifeq ($(HB_COMPILER),rsx32)
+         #Use standard dos path, which is already set up.
+      else
+         ifneq ($(findstring watcom,$(HB_COMPILER)),)
+            #Use standard dos path, which is already set up.
+         else
+            ifeq ($(HB_COMPILER),djgpp)
+               #Use standard dos path, which is already set up.
+            else
+               ifeq ($(HB_COMPILER),emx)
+                  #Use standard dos path, which is already set up.
+               else
+                  COMSPEC := $(subst \,/,$(COMSPEC))
+               endif
+            endif
+         endif
+      endif
+   endif
 endif
 
 RM = del
@@ -65,13 +64,11 @@ MD = md
 RANLIB = ranlib
 
 dirbase::
-	-if not exist $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
-	-if not exist $(ARCH_DOS)        $(MD) $(ARCH_DOS)
-#	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
+	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
 
 clean::
-	-@for %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@for %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
+	-@$(COMSPEC) /Cfor %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@$(COMSPEC) /Cfor %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
 
 else  # bash
 

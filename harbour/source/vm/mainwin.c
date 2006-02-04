@@ -126,7 +126,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 } 
 
 #if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
-void HB_EXPORT hb_forceLinkMainWin( void ) {}
+HB_EXPORT void hb_forceLinkMainWin( void ) {}
 #endif
 
 HB_EXTERN_END

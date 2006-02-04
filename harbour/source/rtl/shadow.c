@@ -68,11 +68,11 @@ HB_FUNC( HB_SHADOW )
 HB_FUNC( HB_CLRAREA )
 {
    if( hb_pcount() > 4 )
-      hb_gt_SetAttribute( hb_parni( 1 ),
-                          hb_parni( 2 ),
-                          hb_parni( 3 ),
-                          hb_parni( 4 ),
-                          hb_parni( 5 ) );
+      hb_gtSetAttribute( hb_parni( 1 ),
+                         hb_parni( 2 ),
+                         hb_parni( 3 ),
+                         hb_parni( 4 ),
+                         hb_parni( 5 ) );
 }
 
 #endif

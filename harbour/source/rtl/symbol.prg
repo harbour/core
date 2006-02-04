@@ -102,7 +102,7 @@ HB_FUNC( SYMBOL_EXEC )
 
    /* Lets retrieve DATA nSym from Self,
       first we place the nSym symbol at the HVM stack */
-   hb_vmPushSymbol( pDynSym->pSymbol );
+   hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
 
    /* we place the object at the HVM stack */
    hb_vmPush( pSelf );
@@ -112,11 +112,11 @@ HB_FUNC( SYMBOL_EXEC )
 
    pSym = ( PHB_DYNS ) hb_parptr( -1 );  /* we take the returned DATA value from
                                            the HVM hb_stack.Return */
-   if( pSym != NULL && pSym->pSymbol->value.pFunPtr )
+   if( pSym != NULL && hb_dynsymSymbol( pSym )->value.pFunPtr )
    {
       int i;
 
-      hb_vmPushSymbol( pSym->pSymbol );
+      hb_vmPushSymbol( hb_dynsymSymbol( pSym ) );
       hb_vmPushNil(); /* No Self. We are going to execute a function or a procedure */
 
       for( i = 1; i <= hb_pcount(); i++ ) /* number of supplied params */

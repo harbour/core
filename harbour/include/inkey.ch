@@ -65,8 +65,10 @@
 #define INKEY_LUP               4
 #define INKEY_RDOWN             8
 #define INKEY_RUP               16
+#define INKEY_MMIDDLE           32  /* Harbour extension middle button mask */
+#define INKEY_MWHEEL            64  /* Harbour extension mouse wheel mask */
 #define INKEY_KEYBOARD          128
-#define INKEY_ALL               159
+#define INKEY_ALL               255
 
 #define HB_INKEY_RAW            256 /* Harbour extension */
 #define HB_INKEY_EXTENDED       512 /* Harbour extension */
@@ -80,6 +82,19 @@
 #define K_RBUTTONUP             1005
 #define K_LDBLCLK               1006
 #define K_RDBLCLK               1007
+#define K_MBUTTONDOWN           1008   /* Middle Button Down */
+#define K_MBUTTONUP             1009   /* Middle Button Up */
+#define K_MDBLCLK               1010   /* Middle Button Double Click */
+#define K_MMLEFTDOWN            1011   /* Mouse Move Left Down */
+#define K_MMRIGHTDOWN           1012   /* Mouse Move Right Down */
+#define K_MMMIDDLEDOWN          1013   /* Mouse Move Middle Down */
+#define K_MWFORWARD             1014   /* Mouse Wheel Forward */
+#define K_MWBACKWARD            1015   /* Mouse Wheel Backward */
+#define K_NCMOUSEMOVE           1016   /* Non-Client Area Mouse Movement */
+
+#define K_MINMOUSE              1001
+#define K_MAXMOUSE              1016
+
 
 /* Harbour extension - this marks that multi-characters keycode will be
    returned - call INKEY() until ZERO will be returned
@@ -131,10 +146,11 @@
 
 #define K_ALT_ENTER             284   /* * Alt-Enter                     */
 #define K_ALT_RETURN            284   /* * Alt-Return                    */
-#define K_ALT_EQUALS            387   /* * Alt-Equals                    */
 #define K_ALT_ESC               257   /* * Alt-Esc                       */
 
 /* Keypad keys */
+
+#define KP_CENTER               332   /* * Keypad 5                      */
 
 #define KP_ALT_ENTER            422   /* * Keypad Alt-Enter              */
 
@@ -167,6 +183,9 @@
 #define K_ALT_DEL               419   /* * Alt-Del                       */
 #define K_ALT_BS                270   /* * Alt-Backspace                 */
 #define K_ALT_TAB               421   /* * Alt-Tab                       */
+
+#define K_CTRL_SH_TAB           423   /* * Ctrl-Shift-Tab                */
+#define K_SH_BS                 423   /* * Shift-Backspace               */
 
 /* Control keys */
 
@@ -225,6 +244,7 @@
 #define K_ALT_X                 301   /*   Alt-X                         */
 #define K_ALT_Y                 277   /*   Alt-Y                         */
 #define K_ALT_Z                 300   /*   Alt-Z                         */
+#define K_ALT_BACKQUOTE         297   /*   Alt-`                         */
 #define K_ALT_1                 376   /*   Alt-1                         */
 #define K_ALT_2                 377   /*   Alt-2                         */
 #define K_ALT_3                 378   /*   Alt-3                         */
@@ -235,6 +255,17 @@
 #define K_ALT_8                 383   /*   Alt-8                         */
 #define K_ALT_9                 384   /*   Alt-9                         */
 #define K_ALT_0                 385   /*   Alt-0                         */
+#define K_ALT_MINUS             386
+#define K_ALT_EQUALS            387   /* * Alt-Equals                    */
+#define K_ALT_OSB               282
+#define K_ALT_CSB               283
+#define K_ALT_BACKSLASH         299
+#define K_ALT_SC                295
+#define K_ALT_QUOTE             296
+#define K_ALT_COMMA             307
+#define K_ALT_PERIOD            308
+#define K_ALT_SLASH             309   /*   Alt-Slash (fyi Ctrl-? doesn't
+                                           work - maybe just under xp?)  */
 
 /* Function keys */
 

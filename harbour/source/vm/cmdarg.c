@@ -52,8 +52,10 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbmemory.ch"
+#include "hbstack.h"
 
 /* Command line argument management */
 static int     s_argc = 0;
@@ -61,7 +63,7 @@ static char ** s_argv = NULL;
 
 static char * hb_cmdargGet( const char * pszName, BOOL bRetValue );
 
-void HB_EXPORT hb_cmdargInit( int argc, char * argv[] )
+HB_EXPORT void hb_cmdargInit( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargInit(%d, %p)", argc, argv));
 

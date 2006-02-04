@@ -57,11 +57,6 @@ endif
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 
-ifeq ($(HB_MULTI_GT),yes)
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/gtnul/$(HB_ARCH)
-LINKLIBS += -lgtnul
-endif
-
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
 

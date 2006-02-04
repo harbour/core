@@ -57,20 +57,21 @@
 
 HB_EXTERN_BEGIN
 
-extern double HB_EXPORT hb_dateSeconds( void );
-extern void HB_EXPORT hb_dateToday( int * piYear, int * piMonth, int * piDay );
-extern void HB_EXPORT hb_dateTimeStr( char * pszTime );
-extern char HB_EXPORT * hb_dateCMonth( int iMonth );
-extern char HB_EXPORT * hb_dateCDOW( int iDay );
-extern int  HB_EXPORT hb_dateDOW( int iYear, int iMonth, int iDay );
-extern int  HB_EXPORT hb_dateJulianDOW( LONG lJulian );
-extern char HB_EXPORT * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
-extern long HB_EXPORT hb_dateEncode( int iYear, int iMonth, int iDay );
-extern void HB_EXPORT hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );
-extern void HB_EXPORT hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
-extern void HB_EXPORT hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
-extern char HB_EXPORT * hb_dateDecStr( char * szDate, long lJulian );
-extern long HB_EXPORT hb_dateEncStr( const char * szDate );
+extern HB_EXPORT double hb_dateSeconds( void );
+extern HB_EXPORT double hb_secondsCPU( int n );
+extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
+extern HB_EXPORT void   hb_dateTimeStr( char * pszTime );
+extern HB_EXPORT char * hb_dateCMonth( int iMonth );
+extern HB_EXPORT char * hb_dateCDOW( int iDay );
+extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
+extern HB_EXPORT int    hb_dateJulianDOW( LONG lJulian );
+extern HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
+extern HB_EXPORT long   hb_dateEncode( int iYear, int iMonth, int iDay );
+extern HB_EXPORT void   hb_dateDecode( long julian, int * piYear, int * piMonth, int * piDay );
+extern HB_EXPORT void   hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay );
+extern HB_EXPORT void   hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, int * piDay );
+extern HB_EXPORT char * hb_dateDecStr( char * szDate, long lJulian );
+extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
 
 HB_EXTERN_END
 

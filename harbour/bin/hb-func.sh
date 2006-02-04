@@ -63,7 +63,7 @@ mk_hbgetlibs()
 {
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix ${HB_DB_DRVEXT} macro common lang codepage gtnul gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler"
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler"
     else
         echo -n "$@"
     fi
@@ -208,7 +208,6 @@ fi
 HB_STATIC="${hb_static}"
 HB_MT=""
 HB_GT="${HB_GT_LIB#gt}"
-HB_MG="${HB_MULTI_GT}"
 
 HB_GPM_MOUSE="${HB_GPM_MOUSE}"
 
@@ -280,19 +279,12 @@ fi
 
 HB_GT_STAT=""
 [ -z "\${HB_GT_REQ}" ] && HB_GT_REQ="\${HB_GT}"
-if [ "\${HB_MG}" != "yes" ]; then
-    if [ "\${HB_STATIC}" = "yes" ] || [ "\${HB_STATIC}" = "full" ]; then
-        HB_GT_STAT=\`echo \${HB_GT_REQ}|tr '[A-Z]' '[a-z]'\`
-    fi
-    HB_GT_REQ=""
-else
-    HB_GT_REQ=\`echo \${HB_GT_REQ}|tr '[a-z]' '[A-Z]'\`
-fi
+HB_GT_REQ=\`echo \${HB_GT_REQ}|tr '[a-z]' '[A-Z]'\`
 HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr '[a-z]' '[A-Z]'\`
 
 HB_PATHS="-I\${HB_INC_INSTALL}"
 GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
-LINK_OPT=""
+LINK_OPT="${CC_L_USR}"
 CC_OPT=""
 
 HB_GPM_LIB=""
@@ -318,8 +310,9 @@ fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -l\${HB_GPM_LIB}"
 
 if [ "\${HB_STATIC}" = "full" ]; then
-    if [ "\${HB_STATIC}" = "full" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -ldl"
+    SYSTEM_LIBS="\${SYSTEM_LIBS} -ldl"
+    if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
+       SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread"
     fi
     LINK_OPT="\${LINK_OPT} -static"
     HB_STATIC="yes"
@@ -367,11 +360,9 @@ else
 fi
 for l in \${libs}
 do
-    if [ "\${HB_MG}" = "yes" ] || [ "\${l#gt}" = "\${l}" ] || [ "\${l}" = "gt\${HB_GT_STAT}" ]; then
-        [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-        if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ]; then
-            HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-        fi
+    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
+    if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ]; then
+        HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
     fi
 done
 if [ "\${HB_XBGTK}" = "yes" ]; then
@@ -432,9 +423,9 @@ hb_link()
     fi
     if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         hb_lnk_request > \${_TMP_FILE_} && \\
-        hb_cc "\$@" "\${_TMP_FILE_}" \${LINK_OPT} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+        hb_cc "\$@" "\${_TMP_FILE_}" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
     else
-        hb_cc "\$@" \${LINK_OPT} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+        hb_cc "\$@" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
     fi
 }
 
@@ -536,25 +527,20 @@ mk_hblibso()
                 else
                     lm="${ls}"
                 fi
-                if [ "${HB_MULTI_GT}" = "yes" ] || \
-                   [ "${l#gt}" = "${l}" ] || \
-                   [ "${l}" = "${HB_GT_LIB}" ]
+                if [ -f $ls ]
                 then
-                    if [ -f $ls ]
-                    then
-                        LIBS="$LIBS $ls"
-                    fi
-                    if [ -f $lm ]
-                    then
-                        LIBSMT="$LIBSMT $lm"
-                    fi
-                    if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-                        if [ "${l}" = gtcrs ]; then
-                            linker_options="$linker_options -lncurses"
-                        elif [ "${l}" = gtsln ]; then
-                            if [ "${HB_WITHOUT_GTSLN}" != "yes" ]; then
-                                linker_options="$linker_options -lslang"
-                            fi
+                    LIBS="$LIBS $ls"
+                fi
+                if [ -f $lm ]
+                then
+                    LIBSMT="$LIBSMT $lm"
+                fi
+                if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
+                    if [ "${l}" = gtcrs ]; then
+                        linker_options="$linker_options -lncurses"
+                    elif [ "${l}" = gtsln ]; then
+                        if [ "${HB_WITHOUT_GTSLN}" != "yes" ]; then
+                            linker_options="$linker_options -lslang"
                         fi
                     fi
                 fi

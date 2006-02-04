@@ -94,15 +94,15 @@
 HB_FUNC( SCREENATTR )
 {
 
-  UINT   uiSize;
+  ULONG  ulSize;
   int    iRow, iCol;
   char * pcPos;
 
   iRow = hb_parni( 1 );
   iCol = hb_parni( 2 );
 
-  hb_gtRectSize( iRow, iCol, iRow, iCol, &uiSize );
-  pcPos = (char * ) hb_xalloc( uiSize + 1 );
+  hb_gtRectSize( iRow, iCol, iRow, iCol, &ulSize );
+  pcPos = (char * ) hb_xalloc( ulSize + 1 );
 
   if( pcPos != NULL )
   {

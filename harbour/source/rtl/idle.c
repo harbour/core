@@ -173,7 +173,7 @@ void hb_idleState( void )
 
       if( s_pIdleTasks && s_uiIdleTask < s_uiIdleMaxTask )
       {
-         hb_vmEvalBlock( s_pIdleTasks[ s_uiIdleTask ] );
+         hb_itemRelease( hb_itemDo( s_pIdleTasks[ s_uiIdleTask ], 0 ) );
          ++s_uiIdleTask;
          if( hb_set.HB_SET_IDLEREPEAT && s_uiIdleTask == s_uiIdleMaxTask )
          {
@@ -187,7 +187,7 @@ void hb_idleState( void )
 
 void hb_idleReset( void )
 {
-   if( (! hb_set.HB_SET_IDLEREPEAT) && s_uiIdleTask == s_uiIdleMaxTask )
+   if( ( ! hb_set.HB_SET_IDLEREPEAT ) && s_uiIdleTask == s_uiIdleMaxTask )
    {
       s_uiIdleTask = 0;
    }
@@ -238,6 +238,12 @@ HB_FUNC( HB_IDLESTATE )
    hb_idleState();
 }
 
+/* call from user code to reset idle state */
+HB_FUNC( HB_IDLERESET )
+{
+   hb_idleReset();
+}
+
 /* call from user code to stay in idle state for given period */
 HB_FUNC( HB_IDLESLEEP )
 {
@@ -266,7 +272,7 @@ HB_FUNC( HB_IDLEADD )
 
       /* return a pointer as a handle to this idle task
       */
-      hb_retptr( ( void * ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
+      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from harbour code */
    }
    else
       hb_retptr( NULL );    /* error - a codeblock is required */
@@ -287,7 +293,7 @@ HB_FUNC( HB_IDLEDEL )
       while( iTask < s_uiIdleMaxTask && !bFound )
       {
          pItem = s_pIdleTasks[ iTask ];
-         if( pID == ( void * ) pItem->item.asBlock.value )
+         if( pID == hb_codeblockId( pItem ) )
          {
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
              hb_itemRelease( pItem );

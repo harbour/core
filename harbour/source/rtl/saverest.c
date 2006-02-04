@@ -53,29 +53,81 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
+static void hb_getScreenRange( USHORT * pusMin, USHORT * pusMax,
+                               BOOL fNoCheck, BOOL fVertical )
+{
+   int iFrom, iTo, iMax;
+
+   if( fVertical )
+   {
+      iMax  = hb_gtMaxRow();
+      iFrom = hb_parni( 1 );
+      iTo   = ISNUM( 3 ) ? hb_parni( 3 ) : iMax;
+   }
+   else
+   {
+      iMax = hb_gtMaxCol();
+      iFrom = hb_parni( 2 );
+      iTo   = ISNUM( 4 ) ? hb_parni( 4 ) : iMax;
+   }
+
+   if( iFrom < 0 )
+      iFrom = 0;
+   else if( iFrom > iMax && !fNoCheck )
+      iFrom = iMax;
+
+   if( iTo < 0 )
+      iTo = 0;
+   else if( iTo > iMax && !fNoCheck )
+      iTo = iMax;
+
+   if( iFrom > iTo )
+   {
+      *pusMin = ( USHORT ) iTo;
+      *pusMax = ( USHORT ) iFrom;
+   }
+   else
+   {
+      *pusMin = ( USHORT ) iFrom;
+      *pusMax = ( USHORT ) iTo;
+   }
+}
+
 HB_FUNC( SAVESCREEN )
 {
-   USHORT uiTop    = hb_parni( 1 ); /* Defaults to zero on bad type */
-   USHORT uiLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
-   USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-   USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
-
-   UINT   uiSize;
+   USHORT uiTop, uiLeft, uiBottom, uiRight;
+   ULONG  ulSize;
    void * pBuffer;
+#if defined( HB_EXTENSION )
+   BOOL fNoCheck = hb_parl( 5 );
+#else
+   BOOL fNoCheck = FALSE;
+#endif
 
-   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );
-   pBuffer = hb_xgrab( uiSize + 1 );
+   hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
+   hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
+
+   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &ulSize );
+   pBuffer = hb_xgrab( ulSize + 1 );
 
    hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
-   hb_retclen_buffer( ( char * ) pBuffer, uiSize );
+   hb_retclen_buffer( ( char * ) pBuffer, ulSize );
 }
 
 HB_FUNC( RESTSCREEN )
 {
    if( ISCHAR( 5 ) )
-      hb_gtRest( hb_parni( 1 ), /* Defaults to zero on bad type */
-                 hb_parni( 2 ), /* Defaults to zero on bad type */
-                 ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
-                 ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol(),
-                 ( void * ) hb_parc( 5 ) );
+   {
+      USHORT uiTop, uiLeft, uiBottom, uiRight;
+#if defined( HB_EXTENSION )
+      BOOL fNoCheck = hb_parl( 6 );
+#else
+      BOOL fNoCheck = FALSE;
+#endif
+
+      hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, TRUE );
+      hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, FALSE );
+
+      hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, ( void * ) hb_parc( 5 ) );
+   }
 }

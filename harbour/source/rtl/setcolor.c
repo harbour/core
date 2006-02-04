@@ -83,10 +83,10 @@ HB_FUNC( SETBLINK )
 
    hb_gtGetBlink( &bPreviousBlink );
 
-   hb_retl( bPreviousBlink );
-
    if( ISLOG( 1 ) )
       hb_gtSetBlink( hb_parl( 1 ) );
+
+   hb_retl( bPreviousBlink );
 }
 
 #ifdef HB_EXTENSION

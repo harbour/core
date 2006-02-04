@@ -425,15 +425,15 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 {
    BOOL bFound;
 
-   USHORT nYear;
-   USHORT nMonth;
-   USHORT nDay;
+   USHORT nYear = 0;
+   USHORT nMonth = 0;
+   USHORT nDay = 0;
 
-   USHORT nHour;
-   USHORT nMin;
-   USHORT nSec;
+   USHORT nHour = 0;
+   USHORT nMin = 0;
+   USHORT nSec = 0;
 
-   ULONG raw_attr;
+   ULONG raw_attr = 0;
 
    /* Set the default values in case some platforms don't
       support some of these, or they may fail on them. */
@@ -508,7 +508,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             if( errno == 4 )
                errno = 5;
          #endif
-         
+
          hb_fsSetError( errno );
       }
    }
@@ -589,14 +589,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             ffind->szName[ 0 ] = '\0';
 
             bFound = GetVolumeInformation( ffind->pszFileMask, ffind->szName, _POSIX_PATH_MAX, NULL, NULL, NULL, NULL, 0 );
-
-            nYear = 
-            nMonth = 
-            nDay = 
-            nHour = 
-            nMin = 
-            nSec = 0;
-            raw_attr = 0;
          }
       }
       else
@@ -604,10 +596,10 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          if( ffind->bFirst )
          {
             ffind->bFirst = FALSE;
-            
+
             info->hFindFile = FindFirstFile( ffind->pszFileMask, &info->pFindFileData );
             info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( ffind->attrmask );
-            
+
             if( ( info->hFindFile != INVALID_HANDLE_VALUE ) && HB_WIN_32_MATCH() )
                bFound = TRUE;
          }
@@ -623,26 +615,24 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                }
             }
          }
-         
+
          /* Fill Harbour found file info */
-         
+
          if( bFound )
          {
             strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
-         
+
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
             else
-               /* TOFIX: Use the complete value, to get around the 4GB limit, must use some
-                         larger type (double ?) in order to do this. [vszakats] */
-/*             ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
-               ffind->size = info->pFindFileData.nFileSizeLow;
-         
+               ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow +
+                     ( ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32 );
+
             raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
-         
+
             /* NOTE: One of these may fail when searching on an UNC path, I
                      don't know yet what's the reason. [vszakats] */
-         
+
             {
                FILETIME ft;
                SYSTEMTIME time;
@@ -656,15 +646,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                   nHour  = time.wHour;
                   nMin   = time.wMinute;
                   nSec   = time.wSecond;
-               }
-               else
-               {
-                  nYear  =
-                  nMonth =
-                  nDay   =
-                  nHour  =
-                  nMin   =
-                  nSec   = 0;
                }
             }
          }
@@ -716,9 +697,9 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          
          if( info->pattern[ 0 ] == '\0' )
             strcpy( info->pattern, "*" );
-         
+
          tzset();
-         
+
          info->dir = opendir( dirname );
          strcpy( info->path, dirname );
       }
@@ -746,28 +727,28 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       if( bFound )
       {
          struct stat sStat;
-      
+
          strcpy( dirname, info->path );
          strcat( dirname, info->entry->d_name );
          if( stat( dirname, &sStat ) != 0 )
             printf("\n%s (%i)", dirname, errno );
-      
+
          strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
          ffind->size = sStat.st_size;
-      
+
          raw_attr = sStat.st_mode;
-      
+
          {
             time_t ftime;
             struct tm * ft;
-      
+
             ftime = sStat.st_mtime;
             ft = localtime( &ftime );
-      
+
             nYear  = ft->tm_year + 1900;
             nMonth = ft->tm_mon + 1;
             nDay   = ft->tm_mday;
-      
+
             nHour  = ft->tm_hour;
             nMin   = ft->tm_min;
             nSec   = ft->tm_sec;

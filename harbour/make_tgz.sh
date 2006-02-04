@@ -63,13 +63,26 @@ if [ -z "$HB_GT_LIB" ]; then
     export HB_GT_LIB
 fi
 
-if [ -z "$HB_MULTI_GT" ]; then export HB_MULTI_GT=no; fi
 if [ -z "$HB_COMMERCE" ]; then export HB_COMMERCE=no; fi
 
 # default lib dir name
 HB_LIBDIRNAME="lib"
 
 ETC="/etc"
+
+HB_ARCH64=""
+if [ "$HB_ARCHITECTURE" = "linux" ]
+then
+    HB_CPU=`uname -m`
+    case "$HB_CPU" in
+        *[_@]64)
+            export C_USR="$C_USR -fPIC"
+            HB_ARCH64="yes"
+            ;;
+        *)
+            ;;
+    esac
+fi
 
 # Select the platform-specific installation prefix and ownership
 HB_INSTALL_OWNER=root
@@ -81,7 +94,7 @@ case "$HB_ARCHITECTURE" in
 	;;
     linux)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
-        [ -d "$HB_INSTALL_PREFIX/lib64" ] && HB_LIBDIRNAME="lib64"
+        [ -d "$HB_INSTALL_PREFIX/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
         HB_INSTALL_GROUP=root
         ;;
     w32)
@@ -206,7 +219,7 @@ strip -S `find $HB_LIB_INSTALL -type f`
 if [ "${hb_sysdir}" = "yes" ]; then
 
 mkdir -p $HB_INST_PREF$ETC/harbour
-#$INSTALL -m644 source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
+$INSTALL -m644 source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
 
 cat > $HB_INST_PREF$ETC/harbour.cfg <<EOF
 CC=${CCPREFIX}gcc

@@ -524,7 +524,7 @@ static void hb_dbfGetLockArray( DBFAREAP pArea, PHB_ITEM pItem )
  * This function is common for different DBF based RDD implementation
  * so I don't make it static
  */
-ERRCODE HB_EXPORT hb_dbfGetEGcode( ERRCODE errCode )
+HB_EXPORT ERRCODE hb_dbfGetEGcode( ERRCODE errCode )
 {
    ERRCODE errEGcode;
 
@@ -582,7 +582,7 @@ ERRCODE HB_EXPORT hb_dbfGetEGcode( ERRCODE errCode )
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-ULONG HB_EXPORT hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex )
+HB_EXPORT ULONG hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex )
 {
    ULONG ulBlock= 0;
 
@@ -615,7 +615,7 @@ ULONG HB_EXPORT hb_dbfGetMemoBlock( DBFAREAP pArea, USHORT uiIndex )
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-void HB_EXPORT hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock )
+HB_EXPORT void hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutMemoBlock(%p, %hu, %lu)", pArea, uiIndex, ulBlock));
 
@@ -647,7 +647,7 @@ void HB_EXPORT hb_dbfPutMemoBlock( DBFAREAP pArea, USHORT uiIndex, ULONG ulBlock
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-ERRCODE HB_EXPORT hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
+HB_EXPORT ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
                                      ULONG * pulBlock, ULONG * pulSize,
                                      ULONG * pulType )
 {
@@ -706,7 +706,7 @@ ERRCODE HB_EXPORT hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-ERRCODE HB_EXPORT hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
+HB_EXPORT ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
                                      ULONG ulBlock, ULONG ulSize, ULONG ulType )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfSetMemoData(%p, %hu, %lu, %lu, %lu)", pArea, uiIndex, ulBlock, ulSize, ulType));
@@ -757,7 +757,7 @@ ERRCODE HB_EXPORT hb_dbfSetMemoData( DBFAREAP pArea, USHORT uiIndex,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-BOOL HB_EXPORT hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
+HB_EXPORT BOOL hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
 {
    switch ( bScheme )
    {
@@ -799,7 +799,7 @@ BOOL HB_EXPORT hb_dbfLockIdxGetData( BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-BOOL HB_EXPORT hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
+HB_EXPORT BOOL hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, HB_FOFFSET *pPoolPos )
 {
    HB_FOFFSET ulPos, ulPool, ulSize = 1;
    BOOL fRet = FALSE, fWait;
@@ -1655,11 +1655,11 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       {
          if( pField->uiType == HB_IT_STRING )
          {
-            uiSize = ( USHORT ) pItem->item.asString.length;
+            uiSize = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiSize > pField->uiLen )
                uiSize = pField->uiLen;
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                    pItem->item.asString.value, uiSize );
+                    hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
             if( HB_IS_STRING( pItem ) )
                hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
@@ -1721,7 +1721,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             int iSize;
 
             if( HB_IS_DOUBLE( pItem ) &&
-                 ! HB_DBL_LIM_INT64( pItem->item.asDouble.value ) )
+                 ! HB_DBL_LIM_INT64( hb_itemGetND( pItem ) ) )
             {
                lVal = 0;
                iSize = 99;
@@ -1784,7 +1784,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             HB_LONG lVal = hb_itemGetNInt( pItem );
             if( HB_IS_DOUBLE( pItem ) ?
-                        HB_DBL_LIM_INT32( pItem->item.asDouble.value ) :
+                        HB_DBL_LIM_INT32( hb_itemGetND( pItem ) ) :
                         HB_LIM_INT32( lVal ) )
             {
                HB_PUT_LE_UINT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], ( UINT32 ) lVal );
@@ -2140,7 +2140,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       LPFIELD pField = pArea->lpFields + uiCount;
       strncpy( ( char * ) pThisField->bName,
-               ( ( PHB_DYNS ) pField->sym )->pSymbol->szName, 10 );
+               hb_dynsymName( ( PHB_DYNS ) pField->sym ), 10 );
       pArea->pFieldOffset[ uiCount ] = pArea->uiRecordLen;
       /* field offset */
       if( pArea->bTableType == DB_DBF_VFP )
@@ -2274,6 +2274,8 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->cdPage = hb_cdp_page;
 #endif
 
+   /* Force write new header */
+   pArea->fUpdateHeader = TRUE;
    /* Write header */
    errCode = SELF_WRITEDBHEADER( ( AREAP ) pArea );
    if( errCode != SUCCESS )
@@ -2637,8 +2639,8 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
       case DBRI_RAWDATA:
       {
          USHORT uiFields;
-         BYTE *pResult ;
-         ULONG ulLength;
+         BYTE *pResult;
+         ULONG ulLength, ulLen;
 
          if( !pArea->fValidBuffer && !hb_dbfReadRecord( pArea ) )
          {
@@ -2661,12 +2663,13 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
                   errResult = SELF_GETVALUE( ( AREAP ) pArea, uiFields + 1, pInfo );
                   if( errResult != SUCCESS )
                      break;
-                  if( HB_IS_STRING( pInfo ) && pInfo->item.asString.length > 0 )
+                  ulLen = hb_itemGetCLen( pInfo );
+                  if( ulLen > 0 )
                   {
-                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + pInfo->item.asString.length );
+                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + ulLen );
+                     memcpy( pResult + ulLength, hb_itemGetCPtr( pInfo ), ulLen );
+                     ulLength += ulLen;
                   }
-                  memcpy( pResult + ulLength, pInfo->item.asString.value, pInfo->item.asString.length );
-                  ulLength += pInfo->item.asString.length;
                }
             }
          }
@@ -3455,19 +3458,26 @@ static ERRCODE hb_dbfChildSync( DBFAREAP pArea, LPDBRELINFO pRelInfo )
     * !!! The side effect of calling GOCOLD() inside CHILDSYNC() is
     * evaluation of index expressions (index KEY and FOR condition)
     * when the pArea is not the current one - it means that the
-    * used RDD has to set proper work area before eval, DBFCDX does
-    * but DBFNTX not yet - it should be changed.
+    * used RDD has to set proper work area before eval.
     * IMHO GOCOLD() could be safely removed from this place but I'm not
     * sure it's Clipper compatible - I will have to check it, Druzus.
     */
    /*
     * I've checked in CL5.3 Technical Reference Guide that only
-    * FORCEREL() should ensure that the work area buffer is not hot
+    * FORCEREL() should ensure that the work area buffer is not HOT
     * and then call RELEVAL() - I hope it describes the CL5.3 DBF* RDDs
     * behavior so I replicate it - the GOCOLD() is moved from CHILDSYNC()
     * to FORCEREL(), Druzus.
     */
-   /* SELF_GOCOLD( ( AREAP ) pArea ); */
+   /*
+    * After some cleanups, the core DBF* code can work with GOCOLD() here
+    * and in FORCEREL() without any problems. Because calling GOCOLD() in
+    * FORCEREL() may interacts with badly written users RDD which inherits
+    * from DBF* RDDs and/or user triggers then I decided to keep it here,
+    * Druzus.
+    */
+
+   SELF_GOCOLD( ( AREAP ) pArea );
 
    pArea->lpdbPendingRel = pRelInfo;
    if( pArea->lpdbRelations )
@@ -3490,7 +3500,8 @@ static ERRCODE hb_dbfForceRel( DBFAREAP pArea )
       pArea->lpdbPendingRel = NULL;
 
       /* update buffers */
-      SELF_GOCOLD( ( AREAP ) pArea );
+      /* commented out - see comment above in CHILDSYNC() method, Druzus */
+      /* SELF_GOCOLD( ( AREAP ) pArea ); */
 
       return SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
    }
@@ -3751,7 +3762,7 @@ static ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    return FAILURE;
 }
 
-/* 
+/*
  * BLOB2FILE - retrieve memo contents into file
  */
 static ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
@@ -3839,7 +3850,7 @@ static ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    return FAILURE;
 }
 
-/* 
+/*
  * FILE2BLOB - store file contents in MEMO
  */
 static ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
@@ -4067,7 +4078,7 @@ static ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
       if( pArea->fHasMemo && pArea->bMemoType == DB_MEMO_FPT )
          pArea->dbfHeader.bHasTags |= 0x02;
    }
-   else 
+   else
    {
       pArea->dbfHeader.bVersion = 0x03;
       if( pArea->fHasMemo )
@@ -4338,7 +4349,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
       {
          int iScheme = hb_itemGetNI( pItem );
 
-         hb_itemPutNI( pItem, pData->bLockType ? pData->bLockType : 
+         hb_itemPutNI( pItem, pData->bLockType ? pData->bLockType :
                               hb_set.HB_SET_DBFLOCKSCHEME );
          switch( iScheme )
          {

@@ -12,11 +12,13 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CPPFLAGS = -I. -I$(TOP)include -Iinclude
+ifneq ($(HB_INC_COMPILE),)
+   CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+endif
+CFLAGS = -Wall -W
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS = -Wall -DSIMPLEX
-else
-CFLAGS = -Wall
+   CFLAGS += -DSIMPLEX
 endif
 
 LD = gcc
@@ -39,7 +41,7 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
-# Add the specified GT driver library
+# Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
@@ -59,7 +61,7 @@ echo. CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo. SAVE >> __lib__.tmp
 echo. END >> __lib__.tmp
-$(AR) -M < __lib__.tmp
+$(AR) $(ARFLAGS) -M < __lib__.tmp
 endef
 
 # NOTE: The empty line below HAVE TO exist!
@@ -69,10 +71,12 @@ echo. $(file) >> __link__.tmp
 endef
 
 define link_exe_file
-echo. $(L_USR) $(LD_OUT)$@ > __link__.tmp
+echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
+echo. -Wl,--start-group >> __link__.tmp
 $(foreach file, $(LINKLIBS), $(link_file))
+echo. -Wl,--end-group >> __link__.tmp
 echo. $(LDLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef

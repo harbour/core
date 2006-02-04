@@ -116,7 +116,7 @@ STATIC FUNCTION DefError( oError )
       IF Empty( oError:osCode )
          nChoice := Alert( cMessage, aOptions )
       ELSE
-         nChoice := Alert( cMessage + ";" + cDOSError, aOptions)
+         nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
       ENDIF
 
    ENDDO

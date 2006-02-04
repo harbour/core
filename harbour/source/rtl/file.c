@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL HB_EXPORT hb_fsFile( BYTE * pFilename )
+HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
 {
    PHB_FFIND ffind;
 

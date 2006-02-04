@@ -2,7 +2,7 @@
 # $Id$
 #
 
-C_OBJS = $(C_SOURCES:.c=$(OBJ_EXT))
+C_OBJS = $(C_SOURCES:.c=$(OBJ_EXT)) $(CPP_SOURCES:.cpp=$(OBJ_EXT))
 
 C_MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
 

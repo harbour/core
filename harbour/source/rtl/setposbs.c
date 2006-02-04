@@ -67,6 +67,5 @@ HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
             [vszakats] */
 
    hb_gtGetPos( &iRow, &iCol );
-   hb_gtSetPosContext( iRow, iCol + 1, HB_GT_SET_POS_AFTER );
+   hb_gtSetPos( iRow, iCol + 1 );
 }
-

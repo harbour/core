@@ -74,5 +74,5 @@ ifeq ($(SHLVL),) # COMMAND.COM
 else
 # Generic rule to clean up.
 clean::
-	-$(RM) *.bak *.obj core *.core *~ *.o
+	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo
 endif

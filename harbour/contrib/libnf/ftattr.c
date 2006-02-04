@@ -180,23 +180,23 @@ HB_FUNC( FT_SAVEATT )
    USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
    USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-   UINT   uiSize;
+   ULONG  ulSize;
    USHORT uiFor;
    char * pBuffer;
    char * pAttrib;
 
-   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );
-   pBuffer = ( char * ) hb_xgrab( uiSize + 1 );
-   pAttrib = ( char * ) hb_xgrab( ( uiSize / 2 ) + 1 );
+   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &ulSize );
+   pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+   pAttrib = ( char * ) hb_xgrab( ( ulSize / 2 ) + 1 );
 
    hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
 
-   for( uiFor = 1; uiFor < uiSize; uiFor += 2 )
+   for( uiFor = 1; uiFor < ulSize; uiFor += 2 )
       *(pAttrib + ((uiFor - 1) / 2)) = *(pBuffer + uiFor);
 
    hb_xfree( pBuffer );
 
-   hb_retclen_buffer( pAttrib, ( uiSize / 2 ) );
+   hb_retclen_buffer( pAttrib, ( ulSize / 2 ) );
 }
 
 /*
@@ -378,19 +378,19 @@ HB_FUNC( FT_RESTATT )
       USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
       USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-      UINT   uiSize;
+      ULONG  ulSize;
       USHORT uiFor;
       char * pBuffer;
       char * pAttrib;
 
-      hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &uiSize );
-      pBuffer = ( char * ) hb_xgrab( uiSize + 1 );
+      hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &ulSize );
+      pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
 
       hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
 
       pAttrib = hb_parc( 5 );
 
-      for( uiFor = 1; uiFor < uiSize; uiFor += 2 )
+      for( uiFor = 1; uiFor < ulSize; uiFor += 2 )
          *(pBuffer + uiFor) = *(pAttrib + ((uiFor - 1) / 2));
 
       hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, pBuffer );

@@ -13,11 +13,11 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with adsrdd      - build ads RDD
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib
 # --with odbc        - build build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
+# --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXVT and GTXWC

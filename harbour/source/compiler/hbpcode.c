@@ -41,7 +41,7 @@
 
 #include "hbcomp.h"
 
-static BYTE s_pcode_len[] = {
+const BYTE hb_comp_pcode_len[] = {
    1,        /* HB_P_AND,                  */
    1,        /* HB_P_ARRAYPUSH,            */
    1,        /* HB_P_ARRAYPOP,             */
@@ -181,13 +181,77 @@ static BYTE s_pcode_len[] = {
    5         /* HB_P_PUSHDATE,             */
 };
 
+void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+{
+   ULONG ulPos = 0;
+   ULONG ulSkip;
+   BYTE opcode;
+   HB_PCODE_FUNC_PTR pCall;
+
+   /* Make sure that table is correct */
+   assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
+
+   while( ulPos < pFunc->lPCodePos )
+   {
+      opcode = pFunc->pCode[ ulPos ];
+      if( opcode < HB_P_LAST_PCODE )
+      {
+         ulSkip = hb_comp_pcode_len[ opcode ];
+         pCall = pFunctions[ opcode ];
+         if( pCall )
+         {
+            if( ulSkip )
+               pCall( pFunc, ulPos, cargo );
+            else
+               ulSkip = pCall( pFunc, ulPos, cargo );
+         }
+         ulPos += ulSkip;
+      }
+      else
+      {
+         fprintf( hb_comp_errFile, "--- Invalid opcode %i in hb_compPCodeEval() ---\n", opcode );
+         ++ulPos;
+      }
+   }
+
+}
+
+void hb_compPCodeTrace( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+{
+   ULONG ulPos = 0;
+   BYTE opcode;
+   HB_PCODE_FUNC_PTR pCall;
+
+   /* Make sure that table is correct */
+   assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
+
+   while( ulPos < pFunc->lPCodePos )
+   {
+      opcode = pFunc->pCode[ ulPos ];
+      if( opcode < HB_P_LAST_PCODE )
+      {
+         pCall = pFunctions[ opcode ];
+         if( pCall )
+            ulPos = pCall( pFunc, ulPos, cargo );
+         else
+            ulPos += hb_comp_pcode_len[ opcode ];
+      }
+      else
+      {
+         fprintf( hb_comp_errFile, "--- Invalid opcode %i in hb_compPCodeTrace() ---\n", opcode );
+         ++ulPos;
+      }
+   }
+}
+
 #if defined(HB_COMP_STRONG_TYPES)
+
 static PVAR hb_compPrivateFind( char * szPrivateName )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;
    PVAR pPrivate = NULL;
 
-    if( pFunc )
+   if( pFunc )
        pPrivate = pFunc->pPrivates;
 
    while ( pPrivate )
@@ -200,44 +264,7 @@ static PVAR hb_compPrivateFind( char * szPrivateName )
    }
    return NULL;
 }
-#endif
 
-void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
-{
-   ULONG ulPos = 0;
-   USHORT usSkip;
-   BYTE opcode;
-   HB_PCODE_FUNC_PTR pCall;
-
-   /* Make sure that table is correct */
-   assert( sizeof( s_pcode_len ) == HB_P_LAST_PCODE );
-
-   while( ulPos < pFunc->lPCodePos )
-   {
-      opcode = pFunc->pCode[ ulPos ];
-      if( opcode < HB_P_LAST_PCODE )
-      {
-         usSkip = s_pcode_len[ opcode ];
-         pCall = pFunctions[ opcode ];
-         if( pCall )
-         {
-            if( usSkip )
-               pCall( pFunc, ulPos, cargo );
-            else
-               usSkip = pCall( pFunc, ulPos, cargo );
-         }
-         ulPos += usSkip;
-      }
-      else
-      {
-         fprintf( hb_comp_errFile, "--- Invalid opcode %i in hb_compPCodeEval() ---\n", opcode );
-         ++ulPos;
-      }
-   }
-
-}
-
-#if defined(HB_COMP_STRONG_TYPES)
 void hb_compStrongType( int iSize )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast, pTmp;

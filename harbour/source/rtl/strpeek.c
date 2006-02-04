@@ -64,8 +64,8 @@ HB_FUNC( STRPEEK )
    {
       ULONG ulPos = hb_parnl( 2 );
 
-      if( ulPos > 0 && ulPos < pText->item.asString.length )
-         hb_retni( ( BYTE ) * ( pText->item.asString.value + ulPos - 1 ) );
+      if( ulPos > 0 && ulPos < hb_itemGetCLen( pText ) )
+         hb_retni( ( BYTE ) * ( hb_itemGetCPtr( pText ) + ulPos - 1 ) );
       else
          hb_retni( 0 );
    }
@@ -82,10 +82,10 @@ HB_FUNC( STRPOKE )
    {
       ULONG ulPos = hb_parnl( 2 );
 
-      if( ulPos > 0 && ulPos < pText->item.asString.length )
+      if( ulPos > 0 && ulPos < hb_itemGetCLen( pText ) )
       {
          pText = hb_itemUnShare( pText );
-         pText->item.asString.value[ ulPos - 1 ] = (char) ( hb_parni( 3 ) & 0xff );
+         hb_itemGetCPtr( pText )[ ulPos - 1 ] = (char) ( hb_parni( 3 ) & 0xff );
       }
       hb_itemReturn( pText );
    }

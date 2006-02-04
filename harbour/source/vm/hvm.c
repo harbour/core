@@ -312,7 +312,7 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
                              PVOID                        pv);
 #endif
 
-void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
+HB_EXPORT void hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
 {
    PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
 
@@ -322,7 +322,7 @@ void HB_EXPORT hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )
    s_InitFunctions = pLst;
 }
 
-void HB_EXPORT hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
+HB_EXPORT void hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo )
 {
    PHB_FUNC_LIST pLst = ( PHB_FUNC_LIST ) hb_xgrab( sizeof( HB_FUNC_LIST ) );
 
@@ -388,7 +388,7 @@ static void hb_vmDoInitClip( void )
 
 /* application entry point */
 
-void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
+HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 {
 
 #if defined(HB_OS_OS2)
@@ -539,7 +539,7 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
 #endif
 }
 
-void HB_EXPORT hb_vmQuit( void )
+HB_EXPORT void hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
@@ -588,7 +588,7 @@ void HB_EXPORT hb_vmQuit( void )
    exit( s_byErrorLevel );
 }
 
-void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
@@ -629,7 +629,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       if( ! --uiPolls )
       {
          hb_inkeyPoll();
-         uiPolls = 255;
+         //uiPolls = 255;
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
 
@@ -995,7 +995,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * 2) store the address of RECOVER or END opcode
              */
             ( hb_stackTopItem() )->type = HB_IT_LONG;
-            ( hb_stackTopItem() )->item.asLong.value = w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );;
+            ( hb_stackTopItem() )->item.asLong.value = w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );
             hb_stackPush();
             /*
              * 3) store current RECOVER base
@@ -3867,7 +3867,7 @@ static void hb_vmSwapAlias( void )
 /* Execution                       */
 /* ------------------------------- */
 
-void HB_EXPORT hb_vmDo( USHORT uiParams )
+HB_EXPORT void hb_vmDo( USHORT uiParams )
 {
    PHB_ITEM pItem;
    PHB_SYMB pSym;
@@ -3886,7 +3886,9 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
    */
    s_ulProcLevel++;
 
-   if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
+   if( hb_vm_iExtraParamsIndex &&
+       HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) &&
+       pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
    }
@@ -4050,7 +4052,7 @@ void HB_EXPORT hb_vmDo( USHORT uiParams )
    s_ulProcLevel--;
 }
 
-void HB_EXPORT hb_vmSend( USHORT uiParams )
+HB_EXPORT void hb_vmSend( USHORT uiParams )
 {
    PHB_ITEM pItem;
    PHB_SYMB pSym;
@@ -4070,7 +4072,9 @@ void HB_EXPORT hb_vmSend( USHORT uiParams )
    */
 
    s_ulProcLevel++;
-   if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
+   if( hb_vm_iExtraParamsIndex &&
+       HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) &&
+       pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
    }
@@ -4595,7 +4599,7 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
 /* Push                            */
 /* ------------------------------- */
 
-void HB_EXPORT hb_vmPush( PHB_ITEM pItem )
+HB_EXPORT void hb_vmPush( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPush(%p)", pItem));
 
@@ -4603,7 +4607,18 @@ void HB_EXPORT hb_vmPush( PHB_ITEM pItem )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushNil( void )
+HB_EXPORT void hb_vmPushState( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushState()"));
+
+   /* Save top item which can be processed at this moment */
+   hb_stackPush();
+
+   hb_itemMove( hb_stackTopItem(), hb_stackReturnItem() );
+   hb_stackPush();
+}
+
+HB_EXPORT void hb_vmPushNil( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNil()"));
 
@@ -4611,7 +4626,7 @@ void HB_EXPORT hb_vmPushNil( void )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushLogical( BOOL bValue )
+HB_EXPORT void hb_vmPushLogical( BOOL bValue )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4622,12 +4637,12 @@ void HB_EXPORT hb_vmPushLogical( BOOL bValue )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushNumber( double dNumber, int iDec )
+HB_EXPORT void hb_vmPushNumber( double dNumber, int iDec )
 {
    hb_vmPushNumType( dNumber, iDec, 0, 0 );
 }
 
-void HB_EXPORT hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
+HB_EXPORT void hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNumber(%lf, %d)", dNumber, iDec));
 
@@ -4672,7 +4687,7 @@ static void hb_vmPushNumInt( HB_LONG lNumber )
       hb_vmPushHBLong( lNumber );
 }
 
-void HB_EXPORT hb_vmPushInteger( int iNumber )
+HB_EXPORT void hb_vmPushInteger( int iNumber )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4698,7 +4713,7 @@ static void hb_vmPushIntegerConst( int iNumber )
 }
 #endif
 
-void HB_EXPORT hb_vmPushLong( long lNumber )
+HB_EXPORT void hb_vmPushLong( long lNumber )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4762,7 +4777,7 @@ static void hb_vmPushLongLongConst( LONGLONG llNumber )
 }
 #endif
 
-void HB_EXPORT hb_vmPushDouble( double dNumber, int iDec )
+HB_EXPORT void hb_vmPushDouble( double dNumber, int iDec )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4801,7 +4816,7 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushDate( long lDate )
+HB_EXPORT void hb_vmPushDate( long lDate )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4812,7 +4827,7 @@ void HB_EXPORT hb_vmPushDate( long lDate )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushPointer( void * pPointer )
+HB_EXPORT void hb_vmPushPointer( void * pPointer )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4823,7 +4838,7 @@ void HB_EXPORT hb_vmPushPointer( void * pPointer )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushString( char * szText, ULONG length )
+HB_EXPORT void hb_vmPushString( char * szText, ULONG length )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4870,7 +4885,7 @@ void hb_vmPushStringPcode( char * szText, ULONG length )
    hb_stackPush();
 }
 
-void HB_EXPORT hb_vmPushSymbol( PHB_SYMB pSym )
+HB_EXPORT void hb_vmPushSymbol( PHB_SYMB pSym )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -5222,6 +5237,17 @@ static void hb_vmDuplTwo( void )
 /* Pop                             */
 /* ------------------------------- */
 
+HB_EXPORT void hb_vmPopState( void )
+{
+   HB_TRACE_STEALTH( HB_TR_DEBUG, ( "hb_vmPopState()" ) );
+
+   hb_itemMove( hb_stackReturnItem(), hb_stackItemFromTop( -1 ) );
+   hb_stackDec();
+
+   /* Restore top item */
+   hb_stackDec();
+}
+
 static BOOL hb_vmPopLogical( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopLogical()"));
@@ -5359,6 +5385,7 @@ static double hb_vmPopDouble( int * piDec )
 
       default:
          dNumber = 0;  /* To avoid GCC -O2 warning */
+         *piDec = 0;   /* To avoid GCC -O3 warning */
          hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
          break;
    }
@@ -5558,7 +5585,7 @@ static double hb_vmTopNumber( void )
 
 /* ----------------------------------------------- */
 
-void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* module symbols initialization */
+HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* module symbols initialization */
 {
    PSYMBOLS pNewSymbols;
    USHORT ui;
@@ -5866,7 +5893,7 @@ HB_FUNC( HB_DBG_INVOKEDEBUG )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSLIST )
 {
-   PHB_ITEM pStatics = hb_arrayClone( &s_aStatics, NULL );
+   PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
 
    hb_itemCopy( &hb_stack.Return, pStatics );
    hb_itemRelease( pStatics );
@@ -5948,7 +5975,7 @@ HB_FUNC( __TRACEPRGCALLS )
 
 /* hvm support for pcode DLLs */
 
-void HB_EXPORT hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
+HB_EXPORT void hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
 {
    PSYMBOLS pNewSymbols;
    USHORT ui;
@@ -6052,7 +6079,7 @@ HB_FUNC( __VMVARSSET )
 
 #ifdef HB_FORCE_LINK_MAIN
 HB_EXTERN_BEGIN
-extern void HB_EXPORT HB_FORCE_LINK_MAIN( void );
+extern HB_EXPORT void HB_FORCE_LINK_MAIN( void );
 HB_EXTERN_END
 void _hb_forceLinkMain()
 {

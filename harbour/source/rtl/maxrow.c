@@ -55,10 +55,35 @@
 
 HB_FUNC( MAXROW ) /* Return the maximum screen row number (zero origin) */
 {
-   hb_retni( hb_gtMaxRow() );
+   /*
+    * if called with logical .T. parameter then return real screen high - 1
+    * It gives exactly the same result in all standard GT drivers so we
+    * are still Clipper compatible. The difference can appear in some extended
+    * GT drivers which have additional functionality, f.e. CTW GT which
+    * is upper level GT and add CTIII Window support. When it's activated
+    * then MaxRow() will return current window max row and MaxRow(.t.) real
+    * screen (window 0) max row what is the exact behavior of MaxRow()
+    * in CT3, [druzus]
+    */
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   {
+      USHORT uiRows, uiCols;
+      hb_gtScrDim( &uiRows, &uiCols );
+      hb_retni( uiRows - 1 );
+   }
+   else
+      hb_retni( hb_gtMaxRow() );
 }
 
 HB_FUNC( MAXCOL ) /* Return the maximum screen column number (zero origin) */
 {
-   hb_retni( hb_gtMaxCol() );
+   /* See the note about MaxRow(.t.) above */
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   {
+      USHORT uiRows, uiCols;
+      hb_gtScrDim( &uiRows, &uiCols );
+      hb_retni( uiCols - 1 );
+   }
+   else
+      hb_retni( hb_gtMaxCol() );
 }

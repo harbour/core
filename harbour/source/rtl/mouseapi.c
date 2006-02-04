@@ -63,11 +63,9 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbapigt.h"
+#include "hbgtcore.h"
 
-static BOOL   s_bVisible = FALSE;
-static USHORT s_uiDoubleClickSpeed = 168; /* In milliseconds */
-static int    s_iLeftButton = 1;
+static int    s_iLeftButton = 0;
 static int    s_iRightButton = 1;
 
 /* NOTE: Mouse initialization is called directly from low level GT driver
@@ -77,84 +75,139 @@ static int    s_iRightButton = 1;
 */
 /* C callable interface */
 
-BOOL hb_mouseIsPresent( void )
+HB_EXPORT BOOL hb_mouseIsPresent( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseIsPresent()"));
 
    return hb_mouse_IsPresent();
 }
 
-BOOL hb_mouseGetCursor( void )
+HB_EXPORT BOOL hb_mouseGetCursor( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetCursor()"));
 
-   return s_bVisible;
+   return hb_mouse_GetCursor();
 }
 
-void hb_mouseSetCursor( BOOL bVisible )
+HB_EXPORT void hb_mouseSetCursor( BOOL fVisible )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetCursor(%d)", (int) bVisible));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetCursor(%d)", (int) fVisible));
 
-   if( bVisible )
-   {
-      hb_mouse_Show();
-      s_bVisible = TRUE;
-   }
-   else
-   {
-      hb_mouse_Hide();
-      s_bVisible = FALSE;
-   }
+   hb_mouse_SetCursor( fVisible );
 }
 
-int hb_mouseCol( void )
+HB_EXPORT int hb_mouseCol( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseCol()"));
 
    return hb_mouse_Col();
 }
 
-int hb_mouseRow( void )
+HB_EXPORT int hb_mouseRow( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseRow()"));
 
    return hb_mouse_Row();
 }
 
-void hb_mouseSetPos( int iRow, int iCol )
+HB_EXPORT void hb_mouseGetPos( int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetPos(%p, %p)", piRow, piCol));
+
+   hb_mouse_GetPos( piRow, piCol );
+}
+
+HB_EXPORT void hb_mouseSetPos( int iRow, int iCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetPos(%d, %d)", iRow, iCol));
 
    hb_mouse_SetPos( iRow, iCol );
 }
 
-BOOL hb_mouseIsButtonPressed( int iButton )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseIsButtonPressed(%d)", iButton));
-
-   return hb_mouse_IsButtonPressed( iButton );
-}
-
-int hb_mouseCountButton( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseCountButton()"));
-
-   return hb_mouse_CountButton();
-}
-
-void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
+HB_EXPORT void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetBounds(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
 
    hb_mouse_SetBounds( iTop, iLeft, iBottom, iRight );
 }
 
-void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
+HB_EXPORT void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight));
 
    hb_mouse_GetBounds( piTop, piLeft, piBottom, piRight );
 }
+
+HB_EXPORT int hb_mouseStorageSize( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseStorageSize()"));
+
+   return hb_mouse_StorageSize();
+}
+
+HB_EXPORT void hb_mouseSaveState( BYTE * pBuffer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSaveState(%p)", pBuffer));
+
+   hb_mouse_SaveState( pBuffer );
+}
+
+HB_EXPORT void hb_mouseRestoreState( BYTE * pBuffer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseRestoreState(%p)", pBuffer));
+
+   hb_mouse_RestoreState( pBuffer );
+}
+
+HB_EXPORT int hb_mouseGetDoubleClickSpeed( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetDoubleClickSpeed()"));
+
+   return hb_mouse_GetDoubleClickSpeed();
+}
+
+HB_EXPORT void hb_mouseSetDoubleClickSpeed( int iSpeed )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetDoubleClickSpeed(%d)", iSpeed));
+
+   hb_mouse_SetDoubleClickSpeed( iSpeed );
+}
+
+HB_EXPORT int hb_mouseCountButton( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseCountButton()"));
+
+   return hb_mouse_CountButton();
+}
+
+HB_EXPORT BOOL hb_mouseButtonState( int iButton )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonState(%d)", iButton));
+
+   return hb_mouse_ButtonState( iButton );
+}
+
+HB_EXPORT BOOL hb_mouseButtonPressed( int iButton, int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonPressed(%d,%p,%p)", iButton, piRow, piCol));
+
+   return hb_mouse_ButtonPressed( iButton, piRow, piCol );
+}
+
+HB_EXPORT BOOL hb_mouseButtonReleased( int iButton, int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseButtonReleased(%d,%p,%p)", iButton, piRow, piCol));
+
+   return hb_mouse_ButtonReleased( iButton, piRow, piCol );
+}
+
+HB_EXPORT int hb_mouseReadKey( int iEventMask )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseReadKey(%d)", iEventMask));
+
+   return hb_mouse_ReadKey( iEventMask );
+}
+
 
 /* HARBOUR callable interface */
 
@@ -185,12 +238,28 @@ HB_FUNC( MSETCURSOR )
 
 HB_FUNC( MROW )
 {
-   hb_retni( hb_mouseRow() );
+   if( ISLOG( 1 ) )
+   {
+      int iRow, iCol;
+
+      hb_mouseGetPos( &iRow, &iCol );
+      hb_retni( iRow );
+   }
+   else
+      hb_retni( hb_mouseRow() );
 }
 
 HB_FUNC( MCOL )
 {
-   hb_retni( hb_mouseCol() );
+   if( ISLOG( 1 ) )
+   {
+      int iRow, iCol;
+
+      hb_mouseGetPos( &iRow, &iCol );
+      hb_retni( iCol );
+   }
+   else
+      hb_retni( hb_mouseCol() );
 }
 
 HB_FUNC( MSETPOS )
@@ -201,100 +270,44 @@ HB_FUNC( MSETPOS )
 
 HB_FUNC( MRIGHTDOWN )
 {
-   hb_retl( hb_mouseIsButtonPressed( s_iRightButton ) );
+   hb_retl( hb_mouseButtonState( s_iRightButton ) );
 }
 
 HB_FUNC( MLEFTDOWN )
 {
-   hb_retl( hb_mouseIsButtonPressed( s_iLeftButton ) );
+   hb_retl( hb_mouseButtonState( s_iLeftButton ) );
 }
 
 HB_FUNC( MDBLCLK )
 {
-   hb_retni( s_uiDoubleClickSpeed );
+   hb_retni( hb_mouseGetDoubleClickSpeed() );
 
    if( ISNUM( 1 ) )
    {
-      int uiDoubleClickSpeed = hb_parni( 1 );
-
-      if( uiDoubleClickSpeed > 0 )
-         s_uiDoubleClickSpeed = uiDoubleClickSpeed;
+      hb_mouseSetDoubleClickSpeed( hb_parni( 1 ) );
    }
 }
 
 HB_FUNC( MSAVESTATE )
 {
-   int iTop, iLeft, iBottom, iRight;
+   int iLen = hb_mouseStorageSize();
 
-   USHORT uiPos;
-   USHORT uiLen = sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( BOOL ) +
-                  sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( int );
+   if( iLen > 0 )
+   {
+      BYTE * pBuffer = ( BYTE * ) hb_xgrab( iLen + 1 );
 
-   BYTE * pBuffer = ( BYTE * ) hb_xgrab( uiLen + 1 );
-
-   hb_mouseGetBounds( &iTop, &iLeft, &iBottom, &iRight );
-
-   uiPos = 0;
-   *( pBuffer + uiPos ) = hb_mouseRow();
-   uiPos += sizeof( int );
-   *( pBuffer + uiPos ) = hb_mouseCol();
-   uiPos += sizeof( int );
-   *( pBuffer + uiPos ) = s_bVisible;
-   uiPos += sizeof( BOOL );
-   *( pBuffer + uiPos ) = iTop;
-   uiPos += sizeof( int );
-   *( pBuffer + uiPos ) = iLeft;
-   uiPos += sizeof( int );
-   *( pBuffer + uiPos ) = iBottom;
-   uiPos += sizeof( int );
-   *( pBuffer + uiPos ) = iRight;
-
-   hb_retclen_buffer( ( char * ) pBuffer, uiLen );
+      hb_mouseSaveState( pBuffer );
+      hb_retclen_buffer( ( char * ) pBuffer, iLen );
+   }
+   else
+      hb_retc( NULL );
 }
 
 HB_FUNC( MRESTSTATE )
 {
-   USHORT uiLen = sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( BOOL ) +
-                  sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( int ) +
-                  sizeof( int );
-
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) uiLen )
+   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
    {
-      int iRow, iCol;
-      int iTop, iLeft, iBottom, iRight;
-      BOOL bVisible;
-
-      USHORT uiPos;
-
-      BYTE * pBuffer = ( BYTE * ) hb_parc( 1 );
-
-      uiPos = 0;
-      iRow = *( pBuffer + uiPos );
-      uiPos += sizeof( int );
-      iCol = *( pBuffer + uiPos );
-      uiPos += sizeof( int );
-      bVisible = *( pBuffer + uiPos );
-      uiPos += sizeof( BOOL );
-      iTop = *( pBuffer + uiPos );
-      uiPos += sizeof( int );
-      iLeft = *( pBuffer + uiPos );
-      uiPos += sizeof( int );
-      iBottom = *( pBuffer + uiPos );
-      uiPos += sizeof( int );
-      iRight = *( pBuffer + uiPos );
-
-      hb_mouseSetPos( iRow, iCol );
-      hb_mouseSetBounds( iTop, iLeft, iBottom, iRight );
-      hb_mouseSetCursor( bVisible );
+      hb_mouseRestoreState( ( BYTE * ) hb_parc( 1 ) );
    }
 }
 

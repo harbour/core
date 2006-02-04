@@ -34,7 +34,7 @@ ifneq ($(HB_LIB_COMPILE),)
 endif
 
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
+   CFLAGS += -DSIMPLEX
 endif
 
 # work arround to DOS command line size limit
@@ -44,18 +44,18 @@ CPPFLAGS =
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that the 'echo' command is separated by LF
 define link_file
-echo FILE $(file) >> __link__.tmp
+echo. FILE $(file) >> __link__.tmp
 
 endef
 
 #Note: The empty line directly before 'endef' HAVE TO exist!
 define link_lib
-echo LIB $(lib) >> __link__.tmp
+echo. LIB $(lib) >> __link__.tmp
 
 endef
 
 define link_exe_file
-echo $(LDFLAGS) NAME $@ > __link__.tmp
+echo. $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach lib, $(HB_USER_LIBS), $(link_lib))
 $(foreach lib, $(LINKLIBS), $(link_lib))
@@ -67,53 +67,48 @@ endef
 LD = wlink
 LDFLAGS = debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe
 
-HB_USER_LIBS := $(foreach lib, $(HB_USER_LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
-
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
-LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
+   LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
 else
-LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
-LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+   LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
 endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-ifeq ($(HB_LIB_COMPILE),)
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
-else
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(HB_LIB_COMPILE)/$(drv)))
-endif
+   ifeq ($(HB_LIB_COMPILE),)
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
+   else
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(HB_LIB_COMPILE)/$(drv)))
+   endif
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-ifeq ($(HB_LIB_COMPILE),)
-GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
-else
-GTLIBS := $(HB_LIB_COMPILE)/$(HB_GT_LIB)
-endif
-ifeq ($(HB_MULTI_GT),yes)
-GTLIBS += $(TOP)$(ROOT)source/rtl/gtnul/$(HB_ARCH)/gtnul
-endif
-GTLIBS := $(subst /,\,$(GTLIBS))
+   ifeq ($(HB_LIB_COMPILE),)
+      GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
+   else
+      GTLIBS := $(HB_LIB_COMPILE)/$(HB_GT_LIB)
+   endif
+   GTLIBS := $(subst /,\,$(GTLIBS))
 endif
 
 LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
-echo -+$(file) >> __lib__.tmp
+echo. -+$(file) >> __lib__.tmp
 
 endef
 
 define create_library
-echo $@ > __lib__.tmp
+echo. $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
-ARFLAGS = -p=32 -c $(A_USR)
+ARFLAGS = -p=32 -c -n $(A_USR)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

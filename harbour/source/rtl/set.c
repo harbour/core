@@ -613,7 +613,7 @@ HB_FUNC( SET )
          break;
       case HB_SET_EVENTMASK  :
          hb_retni( hb_set.HB_SET_EVENTMASK );
-         if( args > 1 ) hb_set.HB_SET_EVENTMASK = ( HB_inkey_enum ) set_number( pArg2, hb_set.HB_SET_EVENTMASK );
+         if( args > 1 ) hb_set.HB_SET_EVENTMASK = set_number( pArg2, hb_set.HB_SET_EVENTMASK );
          break;
       case HB_SET_EXACT      :
          hb_retl( hb_set.HB_SET_EXACT );
@@ -770,8 +770,8 @@ HB_FUNC( SET )
             if( hb_set.HB_SET_TYPEAHEAD == 0 ) /* Do nothing */ ;
             else if( hb_set.HB_SET_TYPEAHEAD < 16 ) hb_set.HB_SET_TYPEAHEAD = 16;
             else if( hb_set.HB_SET_TYPEAHEAD > 4096 ) hb_set.HB_SET_TYPEAHEAD = 4096;
-            /* Always reset the buffer, but only reallocate if the size changed */
-            hb_inkeyReset( old == hb_set.HB_SET_TYPEAHEAD ? FALSE : TRUE );
+            /* reset keyboard buffer */
+            hb_inkeyReset();
          }
          break;
       case HB_SET_UNIQUE     :
@@ -966,7 +966,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;
    hb_set.HB_SET_STRICTREAD = FALSE;
-   hb_set.HB_SET_TYPEAHEAD = 50; hb_inkeyReset( TRUE ); /* Allocate keyboard typeahead buffer */
+   hb_set.HB_SET_TYPEAHEAD = HB_DEFAULT_INKEY_BUFSIZE;
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
@@ -1014,7 +1014,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 
-   hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
+   hb_set.HB_SET_TYPEAHEAD = 0;   hb_inkeyReset(); /* reset keyboard buffer */
 
    while( sp_sl_first )
    {

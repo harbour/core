@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "common.ch"
 #include "dbinfo.ch"
 
@@ -109,32 +107,3 @@ FUNCTION ORDSETFOCU( xOrder, cFile )
 
 FUNCTION ORDSETRELA( xArea, bRelation, cRelation )
    RETURN ORDSETRELATION( xArea, bRelation, cRelation )
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION ORDWILDSEEK( cPattern, lCont, lBack )
-   LOCAL lFound := .F.
-
-   IF VALTYPE( lCont ) != "L"
-      lCont := .F.
-   ENDIF
-   IF VALTYPE( lBack ) != "L"
-      lBack := .F.
-   ENDIF
-
-   IF ! lCont
-      IF lBack
-         DBGOBOTTOM()
-      ELSE
-         DBGOTOP()
-      ENDIF
-      lFound := HB_WildMatch( cPattern, ORDKEYVAL() )
-   ENDIF
-
-   IF ! lFound
-      lFound := DBORDERINFO( IIF( lBack, DBOI_SKIPWILDBACK, DBOI_SKIPWILD ),,, cPattern )
-   ENDIF
-
-   RETURN lFound
-
-#endif

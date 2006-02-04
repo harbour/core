@@ -77,7 +77,6 @@ static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for d
 
 /* int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight ); */
 static void hb_compOptimizeJumps( void );
-static void hb_compPrepareOptimize( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
 
 static void hb_compDeclaredInit( void );
@@ -2245,7 +2244,7 @@ void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
 /* NOTE: To disable jump optimization, just make this function a dummy one.
  [vszakats] */
 
-static void hb_compPrepareOptimize()
+static void hb_compPrepareOptimize( void )
 {
    if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
    {
@@ -2261,34 +2260,23 @@ static void hb_compPrepareOptimize()
          hb_comp_functions.pLast->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
          hb_comp_functions.pLast->pJumps[ hb_comp_functions.pLast->iJumps - 1 ] = ( ULONG ) ( hb_comp_functions.pLast->lPCodePos - 4 );
       }
-#if 0
-      /* rglab: Sun Nov  9 10:46:56 2003
-      * Checking for HB_P_NOOP is not safe here - the value
-      * of HB_P_NOOP can be a part of valid offset
-      */
-      /* Only Reserve Request - Don't know if NOOPs will remain yet. */
-      if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 3 ] == 0 &&
-         hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == 0 &&
-         hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 1 ] == 0 )
-         return;
-      
-      /* 3rd. Byte might be not used */
-      if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 1 ] == HB_P_NOOP )
-      {
-         hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-
-         /* 2nd. Byte might be not used */
-         if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == HB_P_NOOP )
-         {
-            hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
-         }
-      }
-#endif
    }
 }
 
 ULONG hb_compGenJump( LONG lOffset )
 {
+   /*
+    * optimizing jumps here by shorting them and setting HB_P_NOOPs
+    * only slow down the compilation process for three reasons:
+    * 1. When it's dummy jump to next instruction we need two passes
+    *    in hb_compOptimizeJumps() to fully remove it
+    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
+    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
+    *    at runtime because we will have more HVM loops: first  for the
+    *    shorter jump and next for the HB_P_NOOP PCODE(s)
+    * [druzuz]
+    */
+#if 0
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
@@ -2297,15 +2285,17 @@ ULONG hb_compGenJump( LONG lOffset )
    else if( HB_LIM_INT8( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
+      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
    else if( HB_LIM_INT16( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
-   else if( HB_LIM_INT24( lOffset ) )
+   else
+#endif
+   if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
@@ -2321,6 +2311,18 @@ ULONG hb_compGenJump( LONG lOffset )
 
 ULONG hb_compGenJumpFalse( LONG lOffset )
 {
+   /*
+    * optimizing jumps here by shorting them and setting HB_P_NOOPs
+    * only slow down the compilation process for three reasons:
+    * 1. When it's dummy jump to next instruction we need two passes
+    *    in hb_compOptimizeJumps() to fully remove it
+    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
+    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
+    *    at runtime because we will have more HVM loops: first  for the
+    *    shorter jump and next for the HB_P_NOOP PCODE(s)
+    * [druzuz]
+    */
+#if 0
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
@@ -2329,15 +2331,17 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    else if( HB_LIM_INT8( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
+      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
    else if( HB_LIM_INT16( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
-   else if( HB_LIM_INT24( lOffset ) )
+   else
+#endif
+   if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
@@ -2353,6 +2357,18 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
 
 ULONG hb_compGenJumpTrue( LONG lOffset )
 {
+   /*
+    * optimizing jumps here by shorting them and setting HB_P_NOOPs
+    * only slow down the compilation process for three reasons:
+    * 1. When it's dummy jump to next instruction we need two passes
+    *    in hb_compOptimizeJumps() to fully remove it
+    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
+    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
+    *    at runtime because we will have more HVM loops: first  for the
+    *    shorter jump and next for the HB_P_NOOP PCODE(s)
+    * [druzuz]
+    */
+#if 0
    /* Just a place holder, it might be a far jump...*/
    if( lOffset == 0 )
    {
@@ -2361,15 +2377,17 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    else if( HB_LIM_INT8( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
+      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
    else if( HB_LIM_INT16( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
       hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
    }
-   else if( HB_LIM_INT24( lOffset ) )
+   else
+#endif
+   if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
    }
@@ -2387,8 +2405,19 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 {
    BYTE * pCode = hb_comp_functions.pLast->pCode;
    LONG lOffset = ulTo - ulFrom + 1;
-   BOOL bOptimize = TRUE;
 
+   /*
+    * optimizing jumps here by shorting them and setting HB_P_NOOPs
+    * only slow down the compilation process for three reasons:
+    * 1. When it's dummy jump to next instruction we need two passes
+    *    in hb_compOptimizeJumps() to fully remove it
+    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
+    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
+    *    at runtime because we will have more HVM loops: first  for the
+    *    shorter jump and next for the HB_P_NOOP PCODE(s)
+    * [druzuz]
+    */
+#if 0
    if( HB_LIM_INT8( lOffset ) )
    {
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
@@ -2411,13 +2440,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
+         /* there is no shorter jump version for these PCODEs */
          case HB_P_SEQBEGIN :
-            bOptimize = FALSE;
-            break;
-
          case HB_P_SEQEND :
-            bOptimize = FALSE;
-            break;
+            HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
+            return;
 
          default:
             /* printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
@@ -2427,42 +2454,13 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
       pCode[ ( ULONG ) ulFrom ] = HB_LOBYTE( lOffset );
 
-      if( ! bOptimize  )
-         return;
-
-      hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
       hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
+      hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
    }
    else if( HB_LIM_INT16( lOffset ) )
    {
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
-         /*
-         case HB_P_JUMPNEAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPTRUENEAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPFALSENEAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMP :
-            break;
-
-         case HB_P_JUMPTRUE :
-            break;
-
-         case HB_P_JUMPFALSE :
-            break;
-         */
-
          case HB_P_JUMPFAR :
             pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
@@ -2478,13 +2476,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
             break;
 
+         /* there is no shorter jump version for these PCODEs */
          case HB_P_SEQBEGIN :
-            bOptimize = FALSE;
-            break;
-
          case HB_P_SEQEND :
-            bOptimize = FALSE;
-            break;
+            HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
+            return;
 
          default:
             /* printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
@@ -2494,12 +2490,11 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
       HB_PUT_LE_UINT16( &pCode[ ulFrom ], lOffset );
 
-      if( ! bOptimize )
-         return;
-
       hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
    }
-   else if( HB_LIM_INT24( lOffset ) )
+   else
+#endif
+   if( HB_LIM_INT24( lOffset ) )
    {
       HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
    }
@@ -3354,8 +3349,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
       else
          hb_compFixFuncPCode( pFunc );
 
-      if( pFunc->iNOOPs )
-         hb_compOptimizeJumps();
+     hb_compOptimizeJumps();
 
       if( hb_comp_iWarnings )
       {
@@ -3538,140 +3532,369 @@ hb_compSort_ULONG( const void * pLeft, const void * pRight )
        return 1;
 }
 
+void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck )
+{
+   ULONG ul;
+
+   while( iCount-- )
+   {
+      if( fPop )
+      {
+         pFunc->pCode[ ulFrom ] = HB_P_POP;
+         fPop = FALSE;
+      }
+      else if( fCheck && pFunc->pCode[ ulFrom ] == HB_P_NOOP && pFunc->iNOOPs )
+      {
+         for( ul = 0; ul < pFunc->iNOOPs; ++ul )
+         {
+            if( pFunc->pNOOPs[ ul ] == ulFrom )
+               break;
+         }
+         if( ul == pFunc->iNOOPs )
+            hb_compNOOPadd( pFunc, ulFrom );
+      }
+      else
+      {
+         pFunc->pCode[ ulFrom ] = HB_P_NOOP;
+         hb_compNOOPadd( pFunc, ulFrom );
+      }
+      ++ulFrom;
+   }
+}
+
+int hb_compIsJump( PFUNCTION pFunc, ULONG ulPos )
+{
+   ULONG iJump;
+   /*
+    * Do not allow any optimization (code striping) when Jump Optimization
+    * is disabled and we do not have any information about jump addreses
+    */
+   if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      return TRUE;
+
+   for( iJump = 0; iJump < pFunc->iJumps; iJump++ )
+   {
+      ULONG ulJumpAddr = pFunc->pJumps[ iJump ];
+      switch( pFunc->pCode[ ulJumpAddr ] )
+      {
+         case HB_P_JUMPNEAR:
+         case HB_P_JUMPFALSENEAR:
+         case HB_P_JUMPTRUENEAR:
+            ulJumpAddr += ( signed char ) pFunc->pCode[ ulJumpAddr + 1 ];
+            break;
+
+         case HB_P_JUMP:
+         case HB_P_JUMPFALSE:
+         case HB_P_JUMPTRUE:
+            ulJumpAddr += HB_PCODE_MKSHORT( &pFunc->pCode[ ulJumpAddr + 1 ] );
+            break;
+
+         default:
+            ulJumpAddr += HB_PCODE_MKINT24( &pFunc->pCode[ ulJumpAddr + 1 ] );
+            break;
+      }
+      if( ulJumpAddr == ulPos )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
+/* Jump Optimizer and dummy code eliminator */
 static void hb_compOptimizeJumps( void )
 {
-   /* Jump Optimizer */
-   BYTE * pCode      = hb_comp_functions.pLast->pCode;
-   ULONG * pNOOPs    = hb_comp_functions.pLast->pNOOPs;
-   ULONG * pJumps    = hb_comp_functions.pLast->pJumps;
-   ULONG ulOptimized = 0;
-   ULONG ulNextByte  = 0;
-   LONG * piShifts    = NULL;
-   ULONG iNOOP;
-   LONG ulOffset;
-   ULONG ulBytes2Copy;
-   ULONG iJump;
-   BOOL bForward = FALSE;
-   BOOL bSet;
+   BYTE * pCode = hb_comp_functions.pLast->pCode;
+   ULONG * pNOOPs, * pJumps;
+   ULONG ulOptimized, ulNextByte, ulBytes2Copy, ulJumpAddr, iNOOP, iJump;
+   int iPass;
 
    if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
       return;
-      
-   /* Needed so the pasting of PCODE pieces below will work correctly  */
-   qsort( ( void * ) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
 
-   if ( hb_comp_functions.pLast->iJumps )
-      piShifts = ( LONG * ) hb_xgrab( sizeof( LONG ) * hb_comp_functions.pLast->iJumps );
+   hb_compCodeTraceMarkDead( hb_comp_functions.pLast );
 
-   for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
-      piShifts[ iJump ] = 0;
-
-   /* First Scan NOOPS - Adjust Jump addresses. */
-   for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
+   for( iPass = 0; iPass < 3; ++iPass )
    {
-      /* Adjusting preceding jumps that pooint to code beyond the current NOOP
-         or trailing backward jumps pointing to lower address. */
-      for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps ; iJump++ )
+      LONG lOffset;
+
+      if( iPass == 2 )
+         hb_compStripFuncLines( hb_comp_functions.pLast );
+
+      if( hb_comp_functions.pLast->iJumps > 0 )
       {
-         switch( pCode[ pJumps[ iJump ] ] )
+         pJumps = hb_comp_functions.pLast->pJumps;
+         iJump = hb_comp_functions.pLast->iJumps - 1;
+
+         do
          {
-            case HB_P_JUMPNEAR :
-            case HB_P_JUMPFALSENEAR :
-            case HB_P_JUMPTRUENEAR :
-               ulOffset = ( signed char ) pCode[ pJumps[ iJump ] + 1 ];
-               bForward = ( ulOffset > 0 );
-               break;
+            ulJumpAddr = pJumps[ iJump ];
 
-            case HB_P_JUMP :
-            case HB_P_JUMPFALSE :
-            case HB_P_JUMPTRUE :
-               ulOffset = HB_PCODE_MKSHORT( &pCode[ pJumps[ iJump ] + 1 ] );
-               bForward = ( ulOffset > 0 );
-               break;
-
-            default:
-               ulOffset = HB_PCODE_MKINT24( &pCode[ pJumps[ iJump ] + 1 ] );
-               bForward = ( ulOffset > 0 );
-               break;
-         }
-
-         bSet = FALSE;
-         /* Only interested in forward (positive) jumps. */
-         if( bForward )
-         {
-            /* Only if points to code beyond the current fix. */
-            if( pJumps[ iJump ] < pNOOPs[ iNOOP ] && 
-                ( ULONG ) ( pJumps[ iJump ] + piShifts[ iJump ] + ulOffset ) > pNOOPs[ iNOOP ] )
+            /*
+             * optimize existing jumps, it will be good to also join
+             * unconditional jump chain calculating total jump offset but
+             * it will be necessary to add some code to protect against
+             * infinite loop which will appear when we add optimization
+             * for the PCODE sequences like:
+             *
+             *    HB_P_{FALSE|TRUE},
+             * [ no jump targets or stack modification here ]
+             *    HB_P_JUMP{FALSE|TRUE}*,
+             *
+             * I'll think about sth like that later, [druzus]
+             */
+            switch( pCode[ ulJumpAddr ] )
             {
-               /* Increasing Shift Counter for this Jump. */
-               piShifts[ iJump ]++;
-               ulOffset--;
-               bSet = TRUE;
-            }
-         }
-         else
-         {
-            /* Adjusting all later jumps (if negative) and target prior 
-               the current NOOP. */
-
-            /* Only if points to code beyond the current fix. */
-            if( pJumps[ iJump ] > pNOOPs[ iNOOP ] && 
-                ( ULONG ) ( pJumps[ iJump ] + piShifts[ iJump ] + ulOffset ) < pNOOPs[ iNOOP ] )
-            {
-               /* Decreasing Shift Counter for this Jump. */
-               piShifts[ iJump ]--;
-               ulOffset++;
-               bSet = TRUE;
-            }
-         }
-
-         if( bSet )
-         {
-            switch( pCode[ pJumps[ iJump ] ] )
-            {
-               case HB_P_JUMPNEAR :
-               case HB_P_JUMPFALSENEAR :
-               case HB_P_JUMPTRUENEAR :
-                  pCode[ pJumps[ iJump ] + 1 ] = HB_LOBYTE( ulOffset );
+               case HB_P_JUMPNEAR:
+                  if( ( signed char ) pCode[ ulJumpAddr + 1 ] == 2 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 2, FALSE, FALSE );
                   break;
 
-               case HB_P_JUMP :
-               case HB_P_JUMPFALSE :
-               case HB_P_JUMPTRUE :
-                  HB_PUT_LE_UINT16( &pCode[ pJumps[ iJump ] + 1 ], ulOffset );
+               case HB_P_JUMPFALSENEAR:
+               case HB_P_JUMPTRUENEAR:
+                  if( ( signed char ) pCode[ ulJumpAddr + 1 ] == 2 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 2, TRUE, FALSE );
                   break;
 
-               default:
-                  HB_PUT_LE_UINT24( &pCode[ pJumps[ iJump ] + 1 ], ulOffset );
+               case HB_P_JUMP:
+                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 3 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 3, FALSE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPNEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 1, FALSE, FALSE );
+                  }
+                  break;
+
+               case HB_P_JUMPFALSE:
+                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 3 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 3, TRUE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPFALSENEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 1, FALSE, FALSE );
+                  }
+                  break;
+
+               case HB_P_JUMPTRUE:
+                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 3 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 3, TRUE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPTRUENEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 1, FALSE, FALSE );
+                  }
+                  break;
+
+               case HB_P_JUMPFAR:
+                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 4 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 4, FALSE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPNEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 2, FALSE, FALSE );
+                  }
+                  else if( HB_LIM_INT16( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMP;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 3, 1, FALSE, FALSE );
+                  }
+                  break;
+
+               case HB_P_JUMPFALSEFAR:
+                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 4 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 4, TRUE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPFALSENEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 2, FALSE, FALSE );
+                  }
+                  else if( HB_LIM_INT16( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPFALSE;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 3, 1, FALSE, FALSE );
+                  }
+                  break;
+
+               case HB_P_JUMPTRUEFAR:
+                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                  if( lOffset == 4 )
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr, 4, TRUE, FALSE );
+                  else if( HB_LIM_INT8( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPTRUENEAR;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 2, 2, FALSE, FALSE );
+                  }
+                  else if( HB_LIM_INT16( lOffset ) )
+                  {
+                     pCode[ ulJumpAddr ] = HB_P_JUMPTRUE;
+                     hb_compNOOPfill( hb_comp_functions.pLast, ulJumpAddr + 3, 1, FALSE, FALSE );
+                  }
                   break;
             }
+
+            /* remove dummy jumps (over dead code) */
+            if( pCode[ ulJumpAddr ] == HB_P_NOOP ||
+                pCode[ ulJumpAddr ] == HB_P_POP )
+            {
+               if( hb_comp_functions.pLast->iJumps > iJump + 1 )
+                  memmove( &pJumps[ iJump ], &pJumps[ iJump + 1 ],
+                           ( hb_comp_functions.pLast->iJumps - iJump - 1 ) *
+                           sizeof( ULONG ) );
+               hb_comp_functions.pLast->iJumps--;
+            }
+         }
+         while( iJump-- );
+
+         if( hb_comp_functions.pLast->iJumps == 0 )
+         {
+            hb_xfree( hb_comp_functions.pLast->pJumps );
+            hb_comp_functions.pLast->pJumps = NULL;
          }
       }
-   }
 
-   /* Second Scan, after all adjustements been made, we can copy the optimized code. */
-   for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
-   {
-      ulBytes2Copy = ( pNOOPs[ iNOOP ] - ulNextByte ) ;
+      if( hb_comp_functions.pLast->iNOOPs == 0 )
+         return;
 
+      pNOOPs = hb_comp_functions.pLast->pNOOPs;
+
+      /* Needed so the pasting of PCODE pieces below will work correctly */
+      qsort( ( void * ) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
+
+      if( hb_comp_functions.pLast->iJumps )
+      {
+         LONG * plSizes, * plShifts;
+         ULONG ulSize;
+
+         pJumps = hb_comp_functions.pLast->pJumps;
+         ulSize = sizeof( LONG ) * hb_comp_functions.pLast->iJumps;
+         plSizes = ( LONG * ) hb_xgrab( ulSize );
+         plShifts = ( LONG * ) hb_xgrab( ulSize );
+
+         for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
+            plSizes[ iJump ] = plShifts[ iJump ] = 0;
+
+         /* First Scan NOOPS - Adjust Jump addresses. */
+         for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
+         {
+            /* Adjusting preceding jumps that pooint to code beyond the current NOOP
+               or trailing backward jumps pointing to lower address. */
+            for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps ; iJump++ )
+            {
+               ulJumpAddr = pJumps[ iJump ];
+               switch( pCode[ ulJumpAddr ] )
+               {
+                  case HB_P_JUMPNEAR:
+                  case HB_P_JUMPFALSENEAR:
+                  case HB_P_JUMPTRUENEAR:
+                     lOffset = ( signed char ) pCode[ ulJumpAddr + 1 ];
+                     break;
+
+                  case HB_P_JUMP:
+                  case HB_P_JUMPFALSE:
+                  case HB_P_JUMPTRUE:
+                     lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                     break;
+
+                  case HB_P_JUMPFAR:
+                  case HB_P_JUMPTRUEFAR:
+                  case HB_P_JUMPFALSEFAR:
+                  case HB_P_SEQBEGIN:
+                  case HB_P_SEQEND:
+                     lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                     break;
+
+                  default:
+                     hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
+                     continue;
+               }
+
+               /* update jump size */
+               if( lOffset > 0 ) /* forward (positive) jump */
+               {
+                  /* Only if points to code beyond the current fix. */
+                  if( pNOOPs[ iNOOP ] > ulJumpAddr &&
+                      pNOOPs[ iNOOP ] < ( ULONG ) ( ulJumpAddr + lOffset ) )
+                     plSizes[ iJump ]--;
+               }
+               else /* if( lOffset < 0 ) - backword (negative) jump */
+               {
+                  /* Only if points to code prior the current fix. */
+                  if( pNOOPs[ iNOOP ] < ulJumpAddr &&
+                      pNOOPs[ iNOOP ] >= ( ULONG ) ( ulJumpAddr + lOffset ) )
+                     plSizes[ iJump ]++;
+               }
+
+               /* update jump address */
+               if( pNOOPs[ iNOOP ] < ulJumpAddr )
+                  plShifts[ iJump ]++;
+            }
+         }
+
+         for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
+         {
+            lOffset = plSizes[ iJump ];
+            if( lOffset != 0 )
+            {
+               ulJumpAddr = pJumps[ iJump ];
+               switch( pCode[ ulJumpAddr ] )
+               {
+                  case HB_P_JUMPNEAR:
+                  case HB_P_JUMPFALSENEAR:
+                  case HB_P_JUMPTRUENEAR:
+                     lOffset += ( signed char ) pCode[ ulJumpAddr + 1 ];
+                     pCode[ ulJumpAddr + 1 ] = HB_LOBYTE( lOffset );
+                     break;
+
+                  case HB_P_JUMP:
+                  case HB_P_JUMPFALSE:
+                  case HB_P_JUMPTRUE:
+                     lOffset += HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                     HB_PUT_LE_UINT16( &pCode[ ulJumpAddr + 1 ], lOffset );
+                     break;
+
+                  default:
+                     lOffset += HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                     HB_PUT_LE_UINT24( &pCode[ ulJumpAddr + 1 ], lOffset );
+                     break;
+               }
+            }
+            pJumps[ iJump ] -= plShifts[ iJump ];
+         }
+         hb_xfree( plSizes );
+         hb_xfree( plShifts );
+      }
+
+      ulOptimized = ulNextByte = 0;
+      /* Second Scan, after all adjustements been made, we can copy the optimized code. */
+      for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
+      {
+         ulBytes2Copy = ( pNOOPs[ iNOOP ] - ulNextByte ) ;
+
+         memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
+
+         ulOptimized += ulBytes2Copy;
+         ulNextByte  += ulBytes2Copy;
+
+         /* Skip the NOOP and point to next valid byte */
+         ulNextByte++;
+      }
+
+      ulBytes2Copy = ( hb_comp_functions.pLast->lPCodePos - ulNextByte ) ;
       memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
-
       ulOptimized += ulBytes2Copy;
-      ulNextByte  += ulBytes2Copy;
 
-      /* Skip the NOOP and point to next valid byte */
-      ulNextByte++;
+      hb_comp_functions.pLast->lPCodePos  = ulOptimized;
+      hb_comp_functions.pLast->lPCodeSize = ulOptimized;
+
+      hb_xfree( hb_comp_functions.pLast->pNOOPs );
+      hb_comp_functions.pLast->pNOOPs = NULL;
+      hb_comp_functions.pLast->iNOOPs = 0;
    }
-
-   ulBytes2Copy = ( hb_comp_functions.pLast->lPCodePos - ulNextByte ) ;
-   memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
-   ulOptimized += ulBytes2Copy;
-
-   hb_comp_functions.pLast->lPCodePos  = ulOptimized;
-   hb_comp_functions.pLast->lPCodeSize = ulOptimized;
-
-   if ( piShifts )
-      hb_xfree( piShifts );
 }
 
 /* Generate the opcode to open BEGIN/END sequence
@@ -3704,11 +3927,6 @@ ULONG hb_compSequenceEnd( void )
    return hb_comp_functions.pLast->lPCodePos - 3;
 }
 
-/*
-  Commented out because we also have to "rewind" Jump Optimizations data, and that is
-  far more complex then it seems to be. :-(
-*/
-#if 0
 /* Remove unnecessary opcodes in case there were no executable statements
  * beetwen BEGIN and RECOVER sequence
  */
@@ -3718,12 +3936,29 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
    {
       if( ! bUsualStmts )
       {
-         hb_comp_functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
-         hb_comp_ulLastLinePos = ulStartPos - 5;
+         if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+         {
+            hb_comp_functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
+            hb_comp_ulLastLinePos = ulStartPos - 5;
+         }
+         else
+         {
+            /*
+             * We can safely remove the dead code when Jump Optimization
+             * is enabled by replacing it with HB_P_NOOP PCODEs - which
+             * will be later eliminated and jump data updated.
+             */
+            while( ulStartPos <= hb_comp_functions.pLast->lPCodePos )
+            {
+               hb_comp_functions.pLast->pCode[ ulStartPos - 1 ] = HB_P_NOOP;
+               hb_compNOOPadd( hb_comp_functions.pLast, ulStartPos - 1 );
+               ++ulStartPos;
+            }
+            hb_comp_ulLastLinePos = ulStartPos - 5;
+         }
       }
    }
 }
-#endif
 
 /* Set the name of an alias for the list of previously declared FIELDs
  *
@@ -3848,9 +4083,7 @@ void hb_compCodeBlockEnd( void )
    int iLocalPos;
    PVAR pVar, pFree;
 
-   if( hb_comp_functions.pLast &&
-       hb_comp_functions.pLast->iNOOPs )
-      hb_compOptimizeJumps();
+   hb_compOptimizeJumps();
 
    pCodeblock = hb_comp_functions.pLast;
 
@@ -3892,26 +4125,29 @@ void hb_compCodeBlockEnd( void )
       wSize += (3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( pFunc->szName ));
       wSize += wLocalsLen;
    }
-   if( wSize <= 255 &&  pCodeblock->wParamCount == 0 && wLocals == 0 )
+   if( wSize <= 255 && pCodeblock->wParamCount == 0 && wLocals == 0 )
    {
       hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) wSize, ( BOOL ) 0 );
    }
    else
    {
-   /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
+      /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
       wSize += (5+ wLocals * 2);
       hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 0 );
-      hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
-      hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ), ( BOOL ) 0 );
-   }
 
-   /* generate the table of referenced local variables */
-   pVar = pCodeblock->pStatics;
-   while( wLocals-- )
-   {
-      wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
-      hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), ( BOOL ) 0 );
-      pVar = pVar->pNext;
+      /* generate the number of local parameters */
+      hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
+      /* generate the number of referenced local variables */
+      hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ), ( BOOL ) 0 );
+
+      /* generate the table of referenced local variables */
+      pVar = pCodeblock->pStatics;
+      while( wLocals-- )
+      {
+         wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
+         hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), ( BOOL ) 0 );
+         pVar = pVar->pNext;
+      }
    }
 
    if( hb_comp_bDebugInfo )
