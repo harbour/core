@@ -55,24 +55,29 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_ReadKey()
+ *    hb_gt_os2_ReadKey()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    hb_gt_Tone()
- *    hb_gt_IsColor()
- *    hb_gt_Scroll()
- *    hb_gt_SetCursorSize()
- *    hb_gt_GetCellSize()
- *    hb_gt_GetCursorStyle()
- *    hb_gt_SetCursorStyle()
- *    hb_gt_SetAttribute()
- *    hb_gt_GetBlink()
- *    hb_gt_SetBlink()
+ *    hb_gt_os2_mouse_Init()
+ *    hb_gt_os2_mouse_Exit()
+ *    hb_gt_os2_mouse_IsPresent()
+ *    hb_gt_os2_mouse_Show()
+ *    hb_gt_os2_mouse_Hide()
+ *    hb_gt_os2_mouse_SetPos()
+ *    hb_gt_os2_mouse_CountButton()
+ *    hb_gt_os2_Tone()
+ *    hb_gt_os2_IsColor()
+ *    hb_gt_os2_SetCursorSize()
+ *    hb_gt_os2_GetCharHeight()
+ *    hb_gt_os2_GetCursorStyle()
+ *    hb_gt_os2_SetCursorStyle()
+ *    hb_gt_os2_GetBlink()
+ *    hb_gt_os2_SetBlink()
  *
  * Copyright 2000 - 2001 Maurilio Longo <maurilio.longo@libero.it>
  *    hb_gt_DispBegin() / hb_gt_DispEnd()
  *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
- *    16 bit KBD subsystem use inside hb_gt_ReadKey()
+ *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -93,7 +98,7 @@
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
-#define HB_GT_NAME	OS2
+#define HB_GT_NAME      OS2
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -203,12 +208,6 @@ static void hb_gt_os2_mouse_Hide( void )
       MouRemovePtr( &rect, s_uMouHandle );
    }
 }
-
-/*
-   QUESTION: when getting mouse coordinate you normally need both
-   row and column, we should think about using just one function
-   hb_gt_os2_mouse_GetPos( &row, &col ) or something like that
-*/
 
 static void hb_gt_os2_mouse_GetPos( int * row, int * col )
 {

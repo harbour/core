@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-05 09:47 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/gtos2/gtos2.c
+     * Restore my copyright notice for functions used to be in mouseos2.c
+
 2006-02-04 17:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/make_bsd.sh
