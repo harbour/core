@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-07 20:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/vm/mainwin.c
+     * minor fix
+
 2006-02-07 18:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * source/vm/mainwin.c
      ! Fixed previous commit.
