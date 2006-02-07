@@ -147,7 +147,7 @@ static void hb_gt_std_setKeyTrans( char * pSrcChars, char * pDstChars )
    if( pSrcChars && pDstChars )
    {
       BYTE c;
-      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ); ++i )
+      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ) != 0; ++i )
          s_keyTransTbl[ c ] = ( BYTE ) pDstChars[ i ];
    }
 }

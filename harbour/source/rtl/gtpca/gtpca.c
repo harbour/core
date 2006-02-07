@@ -344,7 +344,7 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
    }
 }
 
-static void hb_gt_pca_AnsiInit()
+static void hb_gt_pca_AnsiInit( void )
 {
    s_iCurrentSGR = s_iRow = s_iCol = s_iCursorStyle = s_iAM = -1;
 }
@@ -370,7 +370,7 @@ static void hb_gt_pca_setKeyTrans( char * pSrcChars, char * pDstChars )
    if( pSrcChars && pDstChars )
    {
       BYTE c;
-      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ); ++i )
+      for( i = 0; i < 256 && ( c = ( BYTE ) pSrcChars[ i ] ) != 0; ++i )
          s_keyTransTbl[ c ] = ( BYTE ) pDstChars[ i ];
    }
 }

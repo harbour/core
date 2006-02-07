@@ -1379,7 +1379,7 @@ static BOOL hb_gt_def_Resize( int iRows, int iCols )
       {
          BYTE * pBuffer = NULL;
          ULONG ulLen = ( ULONG ) iRows * iCols, ulIndex;
-         ULONG ulSize = 0;
+         ULONG ulSize;
          int i;
 
          ulSize = hb_gt_RectSize( 0, 0, iRows - 1, iCols - 1 );

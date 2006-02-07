@@ -58,7 +58,7 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  30    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               0    /* Should be 1, if the national alphabet
@@ -85,8 +85,8 @@
 
 static HB_CODEPAGE s_codepage = { "BGISO",
     CPID_8859_5, UNITB_8859_5, NUMBER_OF_CHARACTERS,
-    "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ",
-    "абвгдежзийклмнопрстуфхцчшщъьюя",
+    "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
+    "абвгдежзийклмнопрстуфхцчшщъыьэюя",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( BGISO );

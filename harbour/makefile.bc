@@ -257,9 +257,12 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gtapiu.obj \
+   $(OBJ_DIR)\gtfunc.obj \
+   $(OBJ_DIR)\gtsys.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\hbffind.obj \
+   $(OBJ_DIR)\hbgtcore.obj \
    $(OBJ_DIR)\hbrandom.obj \
    $(OBJ_DIR)\idle.obj \
    $(OBJ_DIR)\inkey.obj \
@@ -665,40 +668,35 @@ VM_LIB_OBJS = \
 #
 
 GTCGI_LIB_OBJS = \
-   $(OBJ_DIR)\gtcgi.obj \
-   $(OBJ_DIR)\mousecgi.obj
+   $(OBJ_DIR)\gtcgi.obj
 
 #
 # GTDOS.LIB rules
 #
 
 GTDOS_LIB_OBJS = \
-   $(OBJ_DIR)\gtdos.obj \
-   $(OBJ_DIR)\mousedos.obj
+   $(OBJ_DIR)\gtdos.obj
 
 #
 # GTPCA.LIB rules
 #
 
 GTPCA_LIB_OBJS = \
-   $(OBJ_DIR)\gtpca.obj \
-   $(OBJ_DIR)\mousepca.obj
+   $(OBJ_DIR)\gtpca.obj
 
 #
 # GTSTD.LIB rules
 #
 
 GTSTD_LIB_OBJS = \
-   $(OBJ_DIR)\gtstd.obj \
-   $(OBJ_DIR)\mousestd.obj
+   $(OBJ_DIR)\gtstd.obj
 
 #
 # GTWIN.LIB rules
 #
 
 GTWIN_LIB_OBJS = \
-   $(OBJ_DIR)\gtwin.obj \
-   $(OBJ_DIR)\mousewin.obj
+   $(OBJ_DIR)\gtwin.obj
 
 #
 # HARBOUR.EXE rules
@@ -708,6 +706,8 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\harbour.obj \
    $(OBJ_DIR)\harboury.obj \
    $(OBJ_DIR)\cmdcheck.obj \
+   $(OBJ_DIR)\hbdead.obj \
+   $(OBJ_DIR)\hbstripl.obj \
    $(OBJ_DIR)\hbusage.obj \
    $(OBJ_DIR)\hbident.obj \
    $(OBJ_DIR)\hbgenerr.obj \
@@ -953,6 +953,8 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    $(ECHO) $(OBJ_DIR)\harbourl.obj >> make.tmp
 !endif
    $(ECHO) $(OBJ_DIR)\cmdcheck.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hbdead.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hbstripl.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbusage.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbident.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbgenerr.obj >> make.tmp
@@ -1008,6 +1010,12 @@ $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
 !endif
 
 $(OBJ_DIR)\cmdcheck.obj : $(COMPILER_DIR)\cmdcheck.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbdead.obj : $(COMPILER_DIR)\hbdead.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbstripl.obj : $(COMPILER_DIR)\hbstripl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbusage.obj : $(COMPILER_DIR)\hbusage.c
@@ -1598,6 +1606,14 @@ $(OBJ_DIR)\gtapiu.obj : $(RTL_DIR)\gtapiu.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\gtfunc.obj : $(RTL_DIR)\gtfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\gtsys.obj : $(RTL_DIR)\gtsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
@@ -1607,6 +1623,10 @@ $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hbffind.obj : $(RTL_DIR)\hbffind.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbgtcore.obj : $(RTL_DIR)\hbgtcore.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -2771,19 +2791,11 @@ $(OBJ_DIR)\gtcgi.obj : $(RTL_DIR)\gtcgi\gtcgi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\mousecgi.obj : $(RTL_DIR)\gtcgi\mousecgi.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
-
 #
 # GTDOS.LIB dependencies
 #
 
 $(OBJ_DIR)\gtdos.obj : $(RTL_DIR)\gtdos\gtdos.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTDOS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\mousedos.obj : $(RTL_DIR)\gtdos\mousedos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTDOS_LIB) $(ARFLAGS) -+$@,,
 
@@ -2795,10 +2807,6 @@ $(OBJ_DIR)\gtpca.obj : $(RTL_DIR)\gtpca\gtpca.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTPCA_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\mousepca.obj : $(RTL_DIR)\gtpca\mousepca.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTPCA_LIB) $(ARFLAGS) -+$@,,
-
 #
 # GTSTD.LIB dependencies
 #
@@ -2807,19 +2815,11 @@ $(OBJ_DIR)\gtstd.obj : $(RTL_DIR)\gtstd\gtstd.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTSTD_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\mousestd.obj : $(RTL_DIR)\gtstd\mousestd.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTSTD_LIB) $(ARFLAGS) -+$@,,
-
 #
 # GTWIN.LIB dependencies
 #
 
 $(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTWIN_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTWIN_LIB) $(ARFLAGS) -+$@,,
 

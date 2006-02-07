@@ -116,6 +116,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctwfunc.obj \
+   $(OBJ_DIR)\ctwin.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\files.obj \
    $(OBJ_DIR)\finan.obj \
@@ -273,6 +275,14 @@ $(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ctwfunc.obj : $(TOOLS_DIR)\ctwfunc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ctwin.obj : $(TOOLS_DIR)\ctwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

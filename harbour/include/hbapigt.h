@@ -253,7 +253,7 @@ extern HB_EXPORT void    hb_inkeyPut( int ch );          /* Inserts an inkey cod
 extern HB_EXPORT int     hb_inkeyLast( int iEvenMask );  /* Return the value of the last key that was extracted */
 extern HB_EXPORT int     hb_inkeyNext( int iEvenMask );  /* Return the next key without extracting it */
 extern HB_EXPORT void    hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
-extern HB_EXPORT void    hb_inkeyReset();                /* Reset the Harbour keyboard buffer */
+extern HB_EXPORT void    hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
 extern HB_EXPORT int     hb_inkeyTranslate( int key, int iEvenMask ); /* Translation extended codes to normal codes, if needed */
 extern HB_EXPORT void    hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
 

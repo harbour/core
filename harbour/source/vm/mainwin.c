@@ -84,6 +84,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( iCmdShow );
+   HB_SYMBOL_UNUSED( ef );
 
    hb_hInstance = hInstance;
    GetModuleFileName( hInstance, szAppName, 249 );

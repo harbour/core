@@ -786,7 +786,6 @@ static void hb_arrayCloneTo( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBase
 
    pSrcItem = pSrcBaseArray->pItems;
    pDstItem = pDstBaseArray->pItems;
-   ulLen = pSrcBaseArray->ulLen;
 
    pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
 
