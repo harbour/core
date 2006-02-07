@@ -73,6 +73,8 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
       
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
+
+      HB_SYMBOL_UNUSED( ef );
    #endif
 
    LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
@@ -84,7 +86,6 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( iCmdShow );
-   HB_SYMBOL_UNUSED( ef );
 
    hb_hInstance = hInstance;
    GetModuleFileName( hInstance, szAppName, 249 );

@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-07 18:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * source/vm/mainwin.c
+     ! Fixed previous commit.
+
 2006-02-07 12:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * makefile.bc
      + Updated for latest changes.
