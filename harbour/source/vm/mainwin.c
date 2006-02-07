@@ -71,14 +71,16 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 {
    #ifdef HB_INCLUDE_WINEXCHANDLER
       LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
-      
-      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
 
-      HB_SYMBOL_UNUSED( ef );
+      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
    #endif
 
    LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
    char szAppName[ 250 ];
+
+   #ifdef HB_INCLUDE_WINEXCHANDLER
+      HB_SYMBOL_UNUSED( ef );
+   #endif
 
    strcpy( pArgs, lpCmdLine );
 
