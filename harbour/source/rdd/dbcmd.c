@@ -3832,7 +3832,7 @@ HB_FUNC( __DBARRANGE )
       /* Free items */
       if( dbSortInfo.lpdbsItem )
          hb_xfree( dbSortInfo.lpdbsItem );
-      if( dbSortInfo.dbtri.lpTransItems > 0 )
+      if( dbSortInfo.dbtri.lpTransItems )
          hb_xfree( dbSortInfo.dbtri.lpTransItems );
    }
 }
