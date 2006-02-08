@@ -60,7 +60,6 @@
 
 #include "hbapi.h"
 #include "hbvm.h"
-#include "hbstack.h"
 
 #define  LOWORD(l)   ((USHORT)l)
 #define  HIWORD(l)   ((USHORT)((ULONG)l >> 16))
@@ -72,35 +71,36 @@ MRESULT EXPENTRY WndProc( HWND, ULONG, MPARAM, MPARAM );
 MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 {
    static PHB_DYNS pDynSym = 0;
+   MRESULT mResult;
    HPS hps;
 
    if( ! pDynSym )
       pDynSym = hb_dynsymFind( "HB_GUI" );
 
-   switch (Msg) {
+   switch (Msg)
+   {
       case WM_PAINT:
-         {
          hps = WinBeginPaint( hWnd, 0L, NULL );
          GpiErase( hps );
          WinEndPaint( hps );
          return 0;
-         }
 
       default:
-         {
-         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushState();
+         hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
          hb_vmPushNil();
          hb_vmPushLong( (LONG) hWnd );
          hb_vmPushLong( (LONG) Msg );
          hb_vmPushLong( (LONG) mp1 );
          hb_vmPushLong( (LONG) mp2 );
          hb_vmDo( 4 );
-
-         if( hb_arrayGetType( &hb_stack.Return, 1 ) == HB_IT_NIL )
-            return WinDefWindowProc( hWnd, Msg, mp1, mp2 );
+         if( hb_arrayGetType( hb_param( -1, HB_IT_ANY ), 1 ) == HB_IT_NIL )
+            mResult = (MRESULT) WinDefWindowProc( hWnd, Msg, mp1, mp2 );
          else
-            return (MRESULT) hb_parnl( -1, 1 );
-          }
+            mResult = (MRESULT) hb_parnl( -1, 1 );
+         hb_vmPopState();
+
+         return mResult;
    }
 
 }

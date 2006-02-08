@@ -229,7 +229,7 @@ static int hb_gt_def_MaxRow( void )
       return 24;
 }
 
-static int hb_gt_def_IsColor( void )
+static BOOL hb_gt_def_IsColor( void )
 {
    return s_fIsColor;
 }
@@ -2059,7 +2059,7 @@ int    hb_gt_MaxRow( void )
    return gtCoreFunc.MaxRow();
 }
 
-int    hb_gt_IsColor( void )
+BOOL   hb_gt_IsColor( void )
 {
    return gtCoreFunc.IsColor();
 }

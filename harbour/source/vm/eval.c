@@ -247,9 +247,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
          else
             hb_vmDo( ( USHORT ) ulPCount );
 
-         pResult = hb_itemNew( NULL );
-         hb_itemForwardValue( pResult, hb_stackReturnItem() );
-
+         pResult = hb_itemNew( hb_stackReturnItem() );
          hb_vmPopState();
       }
    }
@@ -290,7 +288,7 @@ PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
             va_end( va );
          }
          hb_vmDo( ( unsigned short ) ulPCount );
-         pResult = hb_itemNew( &hb_stack.Return );
+         pResult = hb_itemNew( hb_stackReturnItem() );
          hb_vmPopState();
       }
    }

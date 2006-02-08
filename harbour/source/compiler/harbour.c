@@ -3562,7 +3562,7 @@ void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL
    }
 }
 
-int hb_compIsJump( PFUNCTION pFunc, ULONG ulPos )
+BOOL hb_compIsJump( PFUNCTION pFunc, ULONG ulPos )
 {
    ULONG iJump;
    /*

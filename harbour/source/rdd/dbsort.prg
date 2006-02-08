@@ -64,12 +64,6 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
       RETURN .F.
    ENDIF
 
-   /* Sort returns an empty table if source table contains only one record  */
-   IF Lastrec() == 1
-      COPY TO ( cToFileName )
-      RETURN .T.
-   ENDIF
-
    BEGIN SEQUENCE
 
       dbCreate( cToFileName, aStruct, cRddName, .T., "", cdpID, nConnection )

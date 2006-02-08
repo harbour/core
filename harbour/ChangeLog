@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-08 14:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtdos/gtdos.c
+    * updated copyright message with authors from removed mousedos.c
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/compiler/harbour.c
+    ! fixed BOLL / int typos
+
+  * harbour/source/vm/eval.c
+    * minor modification
+
+  * harbour/source/rdd/dbf1.c
+    * enable 'Y' (currency) fields - translated to HB_IT_DOUBLE
+
+  * harbour/source/rdd/dbcmd.c
+    ! fixed some wrong behavior in SORT parameters setting in __dbArrange()
+
+  * harbour/source/rdd/dbsort.prg
+    ! removed hack with COPY TO ... when lastrec()==1
+      which introduced new bugs
+  * harbour/source/rdd/hbdbsort.c
+    ! fixed sort output when only one record is sorted
+      There are still some problems with sort like sorting numeric
+      fields as ASCII strings or using strcmp what will not work
+      with binary fields but all all this code should be rewritten
+      due to unacceptable performance so I left it as is to some
+      spare time in the future.
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    ! save cursor position at startup
+
+  * harbour/source/rtl/net.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/contrib/hgf/os2pm/os2pm.c
+    * some warnings cleaned and updates for new API in OS2 build
+
 2006-02-07 20:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * source/vm/mainwin.c
      * minor fix

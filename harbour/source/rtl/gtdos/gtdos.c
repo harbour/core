@@ -74,6 +74,10 @@
  *    hb_gt_SetMode()
  *    hb_gt_GetDisplay()
  *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *                Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Harbour Mouse Subsystem for DOS
+ *
  * See doc/license.txt for licensing terms.
  *
  */

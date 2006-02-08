@@ -234,7 +234,7 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
    AREAP pArea;
 
    ulRecCount = hb_fsSeek( pQuickSort->hFile, 0, FS_END ) / pQuickSort->uiRecordLen;
-   if( ulRecCount > 1 )
+   if( ulRecCount >= 1 )
    {
       hb_dbQSortDo( pQuickSort, 1, ulRecCount );
       pArea = pQuickSort->pSortInfo->dbtri.lpaDest;

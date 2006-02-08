@@ -3000,6 +3000,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          case 'Y':
             pFieldInfo.uiType = HB_IT_DOUBLE;
             pFieldInfo.uiDec = pField->bDec;
+            break;
 
          default:
             errCode = FAILURE;

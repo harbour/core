@@ -3716,7 +3716,7 @@ HB_FUNC( __DBARRANGE )
 
    if( pArea )
    {
-      USHORT uiNewArea, uiCount;
+      USHORT uiNewArea, uiCount, uiDest;
       ULONG ulSize;
       char * szFieldLine, * szPos;
       PHB_ITEM pStruct, pFields;
@@ -3748,6 +3748,7 @@ HB_FUNC( __DBARRANGE )
                else
                {
                   hb_xfree( dbSortInfo.dbtri.lpTransItems );
+                  dbSortInfo.dbtri.lpTransItems = NULL;
                   dbSortInfo.dbtri.uiItemCount = 0;
                   break;
                }
@@ -3775,10 +3776,7 @@ HB_FUNC( __DBARRANGE )
       dbSortInfo.dbtri.dbsci.fIncludeDeleted = TRUE;
 
       pFields = hb_param( 8, HB_IT_ARRAY );
-      if( pFields )
-         dbSortInfo.uiItemCount = ( USHORT ) hb_arrayLen( pFields );
-      else
-         dbSortInfo.uiItemCount = 0;
+      dbSortInfo.uiItemCount = pFields ? ( USHORT ) hb_arrayLen( pFields ) : 0;
       if( dbSortInfo.uiItemCount > 0 )
       {
          dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
@@ -3790,62 +3788,51 @@ HB_FUNC( __DBARRANGE )
                ulSize = ulLine;
          }
          szFieldLine = ( char * ) hb_xgrab( ulSize + 1 );
-         for( uiCount = 0; uiCount < dbSortInfo.uiItemCount; ++uiCount )
+         for( uiCount = uiDest = 0; uiCount < dbSortInfo.uiItemCount; ++uiCount )
          {
-            dbSortInfo.lpdbsItem[ uiCount ].uiFlags = 0;
+            dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;
             hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount + 1 ),
                              hb_arrayGetCLen( pFields, uiCount + 1 ) );
             szPos = strchr( szFieldLine, '/' );
             if( szPos )
             {
-               if( * ( szPos + 1 ) == 'D' )
-                  dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_DESCEND;
-               else if( * ( szPos + 1 ) == 'C' )
-               {
-                  dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_CASE;
-                  dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_ASCEND;
-               }
+               *szPos++ = 0;
+               if( strchr( szPos, 'D' ) > strchr( szPos, 'A' ) )
+                  dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_DESCEND;
                else
-                  dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_ASCEND;
-               if( * ( szPos + 1 ) != 0 && ( ( * ( szPos + 2 ) == 'C' ) ||
-                   ( * ( szPos + 2 ) != 0 && * ( szPos + 3 ) == 'C' ) ) )
-                  dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_CASE;
-               * szPos = 0;
+                  dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_ASCEND;
+               if( strchr( szPos, 'C' ) != NULL )
+                  dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_CASE;
             }
             else
             {
-               dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_ASCEND;
+               dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_ASCEND;
             }
 
-            dbSortInfo.lpdbsItem[ uiCount ].uiField = hb_rddFieldIndex( pArea, szFieldLine );
+            dbSortInfo.lpdbsItem[ uiDest ].uiField = hb_rddFieldExpIndex( pArea, szFieldLine );
 
-            /* Field not found */
-            if( dbSortInfo.lpdbsItem[ uiCount ].uiField == 0 )
+            /* Field found */
+            if( dbSortInfo.lpdbsItem[ uiDest ].uiField != 0 )
             {
-               hb_xfree( dbSortInfo.lpdbsItem );
-               dbSortInfo.lpdbsItem = NULL;
-               break;
+               ++uiDest;
             }
          }
+         dbSortInfo.uiItemCount = uiDest;
          hb_xfree( szFieldLine );
       }
-      else
-         return;
-
-      /* Fields not found? */
-      if( dbSortInfo.lpdbsItem == NULL )
-         return;
 
       dbSortInfo.dbtri.lpaSource = pArea;
-      dbSortInfo.dbtri.lpaDest = NULL;
       dbSortInfo.dbtri.lpaDest = HB_GET_WA( uiNewArea );
 
-      SELF_SORT( pArea, &dbSortInfo );
+      if( dbSortInfo.uiItemCount == 0 )
+         SELF_TRANS( pArea, &dbSortInfo.dbtri );
+      else
+         SELF_SORT( pArea, &dbSortInfo );
 
       /* Free items */
       if( dbSortInfo.lpdbsItem )
          hb_xfree( dbSortInfo.lpdbsItem );
-      if( dbSortInfo.dbtri.uiItemCount > 0 )
+      if( dbSortInfo.dbtri.lpTransItems > 0 )
          hb_xfree( dbSortInfo.dbtri.lpTransItems );
    }
 }

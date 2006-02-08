@@ -868,7 +868,7 @@ static void hb_gt_os2_Redraw( int iRow, int iCol, int iSize )
       /*
        * TODO: it can be very slow (I haven't tested it) because it
        * update screen with single characters so if necessary optimize
-       * it by groping cells for the whole line or characters with
+       * it by grouping cells for the whole line or characters with
        * the same color. [druzus]
        */
       usCell = ( bColor << 8 ) + ( usChar & 0xff );

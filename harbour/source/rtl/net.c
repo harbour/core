@@ -69,7 +69,10 @@
 
    #include "hb_io.h"
 
-   #if defined(__EMX__)
+   /* 25/03/2004 - <maurilio.longo@libero.it>
+      not needed anymore as of GCC 3.2.2 */
+
+   #if defined(__EMX__) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
       #include <emx/syscalls.h>
       #define gethostname __gethostname
    #endif

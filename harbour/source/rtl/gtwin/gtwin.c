@@ -666,6 +666,7 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
       hb_gt_win_xInitScreenParam();
       hb_gt_win_xGetScreenContents();
+      hb_gt_SetPos( s_sCurRow, s_sCurCol );
    }
 
    if( s_HInput != INVALID_HANDLE_VALUE )
@@ -814,6 +815,8 @@ static BOOL hb_gt_win_Resume()
    SetConsoleMode( s_HInput, s_dwimode );
    SetConsoleMode( s_HOutput, s_dwomode );
    hb_gt_win_xSetCursorStyle();
+   /* hb_gt_win_xGetScreenContents(); */
+   /* hb_gt_SetPos( s_sCurRow, s_sCurCol ); */
 
    return TRUE;
 }

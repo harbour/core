@@ -307,7 +307,7 @@ extern void   hb_gt_GetPos( int * piRow, int * piCol );
 extern void   hb_gt_SetPos( int iRow, int iCol );
 extern int    hb_gt_MaxCol( void );
 extern int    hb_gt_MaxRow( void );
-extern int    hb_gt_IsColor( void );
+extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_GetColorStr( char * );
 extern void   hb_gt_SetColorStr( const char * );
 extern void   hb_gt_ColorSelect( int iColorIndex );
