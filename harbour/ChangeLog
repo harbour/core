@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-08 20:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.nt
+  * makefile64.nt
+    * updated with recent changes
+
 2006-02-08 18:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwin/gtwin.c
     + added PreExt() and PostExt() methods
