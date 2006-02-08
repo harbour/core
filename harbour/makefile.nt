@@ -311,8 +311,11 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gtapiu.obj \
+   $(OBJ_DIR)\gtfunc.obj \
+   $(OBJ_DIR)\gtsys.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
+   $(OBJ_DIR)\hbgtcore.obj \
    $(OBJ_DIR)\hbrandom.obj \
    $(OBJ_DIR)\idle.obj \
    $(OBJ_DIR)\inkey.obj \
@@ -733,6 +736,7 @@ DEBUG_LIB_OBJS = \
 
 COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbffind.obj \
+   $(OBJ_DIR)\hbgtcore.obj \
    $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
@@ -800,8 +804,7 @@ VM_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 GTCGI_LIB_OBJS = \
-   $(OBJ_DIR)\gtcgi.obj \
-   $(OBJ_DIR)\mousecgi.obj
+   $(OBJ_DIR)\gtcgi.obj
 
 #
 # GTDOS.LIB rules
@@ -811,8 +814,7 @@ GTCGI_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 GTDOS_LIB_OBJS = \
-   $(OBJ_DIR)\gtdos.obj \
-   $(OBJ_DIR)\mousedos.obj
+   $(OBJ_DIR)\gtdos.obj
 
 #
 # GTPCA.LIB rules
@@ -822,8 +824,7 @@ GTDOS_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 GTPCA_LIB_OBJS = \
-   $(OBJ_DIR)\gtpca.obj \
-   $(OBJ_DIR)\mousepca.obj
+   $(OBJ_DIR)\gtpca.obj
 
 #
 # GTSTD.LIB rules
@@ -833,8 +834,7 @@ GTPCA_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 GTSTD_LIB_OBJS = \
-   $(OBJ_DIR)\gtstd.obj \
-   $(OBJ_DIR)\mousestd.obj
+   $(OBJ_DIR)\gtstd.obj
 
 #
 # GTWIN.LIB rules
@@ -844,8 +844,7 @@ GTSTD_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 GTWIN_LIB_OBJS = \
-   $(OBJ_DIR)\gtwin.obj \
-   $(OBJ_DIR)\mousewin.obj
+   $(OBJ_DIR)\gtwin.obj
 
 #
 # Our default target
@@ -1056,6 +1055,8 @@ $(HARBOUR_EXE) : \
    $(OBJ_DIR)\harboury.c \
    $(COMPILER_DIR)\hbslex.c \
    $(COMPILER_DIR)\cmdcheck.c \
+   $(COMPILER_DIR)\hbdead.c \
+   $(COMPILER_DIR)\hbstripl.c \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
@@ -1082,6 +1083,8 @@ $(HARBOUR_EXE) : \
    $(OBJ_DIR)\harboury.c \
    $(OBJ_DIR)\harbourl.c \
    $(COMPILER_DIR)\cmdcheck.c \
+   $(COMPILER_DIR)\hbdead.c \
+   $(COMPILER_DIR)\hbstripl.c \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
