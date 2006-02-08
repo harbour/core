@@ -150,6 +150,7 @@ static USHORT  s_usUpdtBottom;
 static USHORT  s_usUpdtLeft;
 static USHORT  s_usUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
+static ULONG   s_ulScreenBuffSize = 0;
 
 static FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
 
@@ -560,29 +561,36 @@ static void hb_gt_win_xInitScreenParam( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xInitScreenParam()"));
 
-   if( s_pCharInfoScreen != NULL )
-   {
-      hb_xfree( s_pCharInfoScreen );
-      s_pCharInfoScreen = NULL;
-   }
-
    if( GetConsoleScreenBufferInfo( s_HOutput, &s_csbi ) )
-      s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( _GetScreenWidth() *
-                                                    _GetScreenHeight() *
-                                                    sizeof( CHAR_INFO ) );
-   s_sCurRow = s_csbi.dwCursorPosition.Y;
-   s_sCurCol = s_csbi.dwCursorPosition.X;
-   s_usUpdtTop = _GetScreenHeight();
-   s_usUpdtLeft = _GetScreenWidth();
-   s_usUpdtBottom = s_usUpdtRight = 0;
+   {
+      ULONG ulSize = ( ULONG ) _GetScreenWidth() * _GetScreenHeight() *
+                     sizeof( CHAR_INFO );
 
-   /* read the screen rectangle into the buffer */
-   if( s_pCharInfoScreen != NULL )
+      if( s_pCharInfoScreen == NULL || ulSize != s_ulScreenBuffSize )
+      {
+         if( s_pCharInfoScreen != NULL )
+            hb_xfree( s_pCharInfoScreen );
+         s_ulScreenBuffSize = ulSize;
+         s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_ulScreenBuffSize );
+      }
+      s_sCurRow = s_csbi.dwCursorPosition.Y;
+      s_sCurCol = s_csbi.dwCursorPosition.X;
+      s_usUpdtTop = _GetScreenHeight();
+      s_usUpdtLeft = _GetScreenWidth();
+      s_usUpdtBottom = s_usUpdtRight = 0;
+
+      /* read the screen rectangle into the buffer */
       ReadConsoleOutput( s_HOutput,          /* screen handle */
                          s_pCharInfoScreen,  /* transfer area */
                          s_csbi.dwSize,      /* size of destination buffer */
                          coDest,             /* upper-left cell to write data to */
                          &s_csbi.srWindow ); /* screen buffer rectangle to read from */
+   }
+   else if( s_pCharInfoScreen != NULL )
+   {
+      hb_xfree( s_pCharInfoScreen );
+      s_ulScreenBuffSize = 0;
+   }
 
    HB_GTSUPER_RESIZE( _GetScreenHeight(), _GetScreenWidth() );
 }
@@ -789,6 +797,26 @@ static char * hb_gt_win_Version( int iType )
 
 /* *********************************************************************** */
 
+static BOOL hb_gt_win_PreExt()
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PreExt()"));
+
+   return TRUE;
+}
+
+static BOOL hb_gt_win_PostExt()
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PostExt()"));
+
+   hb_gt_win_xInitScreenParam();
+   hb_gt_win_xGetScreenContents();
+   hb_gt_SetPos( s_sCurRow, s_sCurCol );
+
+   return TRUE;
+}
+
+/* *********************************************************************** */
+
 static BOOL hb_gt_win_Suspend()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Suspend()"));
@@ -804,8 +832,6 @@ static BOOL hb_gt_win_Suspend()
    return TRUE;
 }
 
-/* *********************************************************************** */
-
 static BOOL hb_gt_win_Resume()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Resume()"));
@@ -815,8 +841,9 @@ static BOOL hb_gt_win_Resume()
    SetConsoleMode( s_HInput, s_dwimode );
    SetConsoleMode( s_HOutput, s_dwomode );
    hb_gt_win_xSetCursorStyle();
-   /* hb_gt_win_xGetScreenContents(); */
-   /* hb_gt_SetPos( s_sCurRow, s_sCurCol ); */
+   hb_gt_win_xInitScreenParam();
+   hb_gt_win_xGetScreenContents();
+   hb_gt_SetPos( s_sCurRow, s_sCurCol );
 
    return TRUE;
 }
@@ -1796,6 +1823,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Redraw                     = hb_gt_win_Redraw;
    pFuncTable->Refresh                    = hb_gt_win_Refresh;
    pFuncTable->Version                    = hb_gt_win_Version;
+   pFuncTable->PreExt                     = hb_gt_win_PreExt;
+   pFuncTable->PostExt                    = hb_gt_win_PostExt;
    pFuncTable->Suspend                    = hb_gt_win_Suspend;
    pFuncTable->Resume                     = hb_gt_win_Resume;
    pFuncTable->Tone                       = hb_gt_win_Tone;
