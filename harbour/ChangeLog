@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-09 12:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/bld.cmd
+    + added -ldbffpt, -lhbsix, -lhsx libraries for GCC OS2 linking
+
+  * harbour/config/os2/gcc.cf
+  * harbour/contrib/libct/files.c
+    + some cleanups for OS2 - please check me.
+
+  * harbour/source/rtl/gtos2/gtos2.c
+    + implemented hb_gt_os2_GetScreenContents() - please check me
+
+  * harbour/include/Makefile
+    + added missing hbfixdj.h
+
+  * harbour/source/rtl/gtdos/gtdos.c
+    ! for screen synchronization after PostExt()
+
 2006-02-09 03:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtapi.c
     * minor modifications for GTs which may no flush data in PreExt()

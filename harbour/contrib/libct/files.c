@@ -502,7 +502,7 @@ HB_FUNC(FILESIZE)
       hb_retnl(fsOldFiles.ff_fsize);
    }
 }
-#elif defined(OS_UNIX_COMPATIBLE)
+#elif defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_OS2)
 {
    if (hb_pcount() >0) {
    const char *szFile=hb_parc(1);
@@ -611,7 +611,7 @@ HB_FUNC(FILEDATE)
    else
       hb_retd( (long) (fsOldFiles.ff_fdate >> 9) +1980, (long) ((fsOldFiles.ff_fdate & ~0xFE00) >> 5), (long)fsOldFiles.ff_fdate & ~0xFFE0);
 }
-#elif defined(OS_UNIX_COMPATIBLE)
+#elif defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_OS2)
 {
    if (hb_pcount() >0)
    {

@@ -467,8 +467,21 @@ static void hb_gt_os2_SetCursorStyle( int iStyle )
 
 static void hb_gt_os2_GetScreenContents( void )
 {
-   /* TODO: implement it if necessary */
-   ;
+   BYTE Cell[2];
+   int iRow, iCol;
+   USHORT usSize;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents()")`);
+
+   for( iRow = 0; iRow < s_vi.row; ++iRow )
+   {
+      for( iCol = 0; iCol < s_vi.col; ++iCol )
+      {
+         VioReadCellStr( ( PBYTE ) Cell, &usSize, iRow, iCol, 0 );
+         hb_gt_PutChar( iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
+      }
+   }
+   hb_gt_ExposeArea( 0, 0, s_vi.row, s_vi.col );
 }
 
 static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )

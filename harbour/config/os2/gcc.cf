@@ -12,11 +12,16 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CPPFLAGS = -I. -I$(TOP)include -I$(HB_INC_COMPILE)
+CFLAGS = -W -Wall -O2 -DHB_OS_OS2 -fsigned-char
+
+# 26/03/2004 - <maurilio.longo@libero.it>
+# added -DTCPV40HDRS to compile with GCC 3.2.2 on OS/2 v4.0 with mixed 16/32 bit tcp/ip stack
+# to be removed if compiled on a tcp/ip stack >= 4.1 (eComStation, for example)
+CFLAGS += -DTCPV40HDRS
+
 ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS = -Wall -O2 -DSIMPLEX
-else
-CFLAGS = -Wall -O2
+CFLAGS += -DSIMPLEX
 endif
 
 LD = gcc
@@ -45,6 +50,8 @@ LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
+# add a last round of rtl/vm to solve positional interdependencies (at the moment hbrun requires this)
+LINKLIBS += -lrtl -lvm
 endif
 
 # Add the specified GT driver library
@@ -64,6 +71,7 @@ endif
 endif
 
 #LINKLIBS += -Wl,-)
+# statical linking with GCC 3.2.2 libc as not require its presence on user system
 LDFLAGS += $(LINKPATHS)
 
 ifeq ($(C_MAIN),)

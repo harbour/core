@@ -290,6 +290,7 @@ static void hb_gt_dos_GetScreenContents( void )
          hb_gt_PutChar( iRow, iCol, bAttr, 0, s_charTransRev[ bChar ] );
       }
    }
+   hb_gt_ExposeArea( 0, 0, s_iRows, s_iCols );
 }
 
 static void hb_gt_dos_GetCursorPosition( int * piRow, int * piCol )
