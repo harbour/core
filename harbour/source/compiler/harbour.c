@@ -261,7 +261,11 @@ int main( int argc, char * argv[] )
       }
    }
 
+   hb_pp_Free();
+   
    hb_compIdentifierClose();
+   if( hb_comp_pIncludePath )
+      hb_fsFreeSearchPath( hb_comp_pIncludePath );
 
    if( (! bAnyFiles ) && (! hb_comp_bQuiet) )
    {

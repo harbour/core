@@ -9,9 +9,6 @@
 
 #include "inkey.ch"
 
-#define K_MBUTTONDOWN   332    // any value
-#define K_MBUTTONUP     331
-
 PROCEDURE main()
 LOCAL nR := 5, nC := 38
 

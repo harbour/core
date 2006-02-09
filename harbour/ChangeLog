@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-09 15:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.c
+      * fixed to release memory allocated with the proeprocessor
+
+   * tests/mousetst.prg
+      * minor fix after latest Przemek changes
+            
+   * source/pp/ppcore.c
+      * fixed bug in processing the list of optional repeatable code
+      reported by Lorenzo
+
 2006-02-09 12:52 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/bld.cmd
     + added -ldbffpt, -lhbsix, -lhsx libraries for GCC OS2 linking

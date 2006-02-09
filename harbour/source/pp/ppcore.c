@@ -2874,10 +2874,11 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
 
   HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
 
-  if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
+  if( *(exppatt+1) == '\0' )
+      *( ptro + *lenres ) = '\0';
+      
   while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE, MD_STR_AT_USESUBCASE )) > 0 )
     {
-
       bFound = TRUE;
       rezs = FALSE;
       ptr = ptrOut + ifou - 2;
@@ -2885,8 +2886,11 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
       ptr = PrevSquare( ptr, ptro, &kolmarkers );
       if( ptr )
         {
-          if( s_Repeate ) s_aIsRepeate[ s_Repeate - 1 ]++;
-          if( !s_bReplacePat ) return;
+          if( s_Repeate ) 
+            s_aIsRepeate[ s_Repeate - 1 ]++;
+          if( !s_bReplacePat ) 
+            return;
+            
           ptr2 = ptrOut + ifou + 3;
           while( *ptr2 != ']' || *(ptr2-1) == '\\' )
             {
@@ -2900,7 +2904,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
               isdvig += ifou;
               rezs = TRUE;
             }
-          else
+          else if( s_Repeate )
             {
               if( lenreal == 0 )
                 {
@@ -2942,7 +2946,16 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
                   rezs = TRUE;
                 }
             }
+          else if( exppatt[0] == '\001' && exppatt[1] == '\000' )
+          {
+            /* final pass to remove optional markers */
+            hb_pp_Stuff( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
+            *lenres -= ptr2-ptr+1;
+            isdvig = ptr - ptro;
+            rezs = TRUE;
+          }
         }
+        
       if( !rezs && s_bReplacePat )
         {
           if( *(ptrOut + ifou + 2) != '0' && *(exppatt+1) )
@@ -2962,7 +2975,8 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
       else if( !s_bReplacePat ) isdvig += ifou;
       ptrOut = ptro + isdvig;
     }
-    if( !bFound && s_Repeate ) s_aIsRepeate[ s_Repeate - 1 ]++;
+    if( !bFound && s_Repeate )
+      s_aIsRepeate[ s_Repeate - 1 ]++;
 }
 
 static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
