@@ -95,13 +95,13 @@ HB_EXPORT ERRCODE hb_gtInit( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDL
    hb_gt_SetColorStr( hb_set.HB_SET_COLOR );
    hb_gt_SetCursorStyle( SC_NORMAL );
    s_bInit = TRUE;
+   hb_gt_Flush();
 
    if( hb_cmdargCheck( "INFO" ) )
    {
       hb_conOutErr( hb_gt_Version( 1 ), 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
    }
-   hb_gt_Flush();
 
    return SUCCESS;
 }

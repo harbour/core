@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-09 03:08 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtapi.c
+    * minor modifications for GTs which may no flush data in PreExt()
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    ! fixed Init() code by adding missing SUPER_INIT()
+    * modified a little bit PreExt() and PostExt() methods
+
 2006-02-08 20:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * makefile.nt
   * makefile64.nt

@@ -534,16 +534,16 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
 /* *********************************************************************** */
 
-static void hb_gt_win_xGetScreenContents( void )
+static void hb_gt_win_xGetScreenContents( SMALL_RECT * psrWin )
 {
    int iRow, iCol, i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_GetScreenContents()"));
 
-   i = 0;
-   for( iRow = 0; iRow < _GetScreenHeight(); ++iRow )
+   for( iRow = psrWin->Top; iRow <= psrWin->Bottom; ++iRow )
    {
-      for( iCol = 0; iCol < _GetScreenWidth(); ++iCol )
+      i = iRow * _GetScreenWidth() + psrWin->Left;
+      for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
          hb_gt_PutChar( iRow, iCol, ( BYTE ) s_pCharInfoScreen[i].Attributes, 0,
                     s_charTransRev[ ( BYTE ) s_pCharInfoScreen[i].Char.AsciiChar ] );
@@ -557,14 +557,16 @@ static void hb_gt_win_xGetScreenContents( void )
 
 static void hb_gt_win_xInitScreenParam( void )
 {
-   COORD coDest = { 0, 0 };
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xInitScreenParam()"));
 
    if( GetConsoleScreenBufferInfo( s_HOutput, &s_csbi ) )
    {
+      COORD coDest;
+      SMALL_RECT srWin;
       ULONG ulSize = ( ULONG ) _GetScreenWidth() * _GetScreenHeight() *
                      sizeof( CHAR_INFO );
+
+      HB_GTSUPER_RESIZE( _GetScreenHeight(), _GetScreenWidth() );
 
       if( s_pCharInfoScreen == NULL || ulSize != s_ulScreenBuffSize )
       {
@@ -573,26 +575,51 @@ static void hb_gt_win_xInitScreenParam( void )
          s_ulScreenBuffSize = ulSize;
          s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_ulScreenBuffSize );
       }
+
       s_sCurRow = s_csbi.dwCursorPosition.Y;
       s_sCurCol = s_csbi.dwCursorPosition.X;
-      s_usUpdtTop = _GetScreenHeight();
-      s_usUpdtLeft = _GetScreenWidth();
+      s_usUpdtTop  = s_csbi.dwSize.Y;
+      s_usUpdtLeft = s_csbi.dwSize.X;
       s_usUpdtBottom = s_usUpdtRight = 0;
 
+      /*
+       * Unfortunatelly Windows refuse to read to big area :-(
+       * (I do not know why) so we cannot read the whole console
+       * buffer { 0, 0, s_csbi.dwSize.Y - 1, s_csbi.dwSize.X - 1 }
+       * because it reads nothing, [druzus]
+       */
+#if 0
+      srWin.Top    = 0;
+      srWin.Left   = 0;
+      srWin.Bottom = s_csbi.dwSize.Y - 1;
+      srWin.Right  = s_csbi.dwSize.X - 1;
+#else
+      srWin.Top    = s_csbi.srWindow.Top;
+      srWin.Left   = s_csbi.srWindow.Left;
+      srWin.Bottom = s_csbi.srWindow.Bottom;
+      srWin.Right  = s_csbi.srWindow.Right;
+#endif
+
+      coDest.Y = srWin.Top;
+      coDest.X = srWin.Left;
+
       /* read the screen rectangle into the buffer */
-      ReadConsoleOutput( s_HOutput,          /* screen handle */
-                         s_pCharInfoScreen,  /* transfer area */
-                         s_csbi.dwSize,      /* size of destination buffer */
-                         coDest,             /* upper-left cell to write data to */
-                         &s_csbi.srWindow ); /* screen buffer rectangle to read from */
+      if ( ReadConsoleOutput( s_HOutput,          /* screen handle */
+                              s_pCharInfoScreen,  /* transfer area */
+                              s_csbi.dwSize,      /* size of destination buffer */
+                              coDest,             /* upper-left cell to write data to */
+                              &srWin ) )          /* screen buffer rectangle to read from */
+      {
+         hb_gt_win_xGetScreenContents( &srWin );
+         hb_gt_ExposeArea( srWin.Top, srWin.Left, srWin.Bottom, srWin.Right );
+      }
+      hb_gt_SetPos( s_sCurRow, s_sCurCol );
    }
    else if( s_pCharInfoScreen != NULL )
    {
       hb_xfree( s_pCharInfoScreen );
       s_ulScreenBuffSize = 0;
    }
-
-   HB_GTSUPER_RESIZE( _GetScreenHeight(), _GetScreenWidth() );
 }
 
 /* *********************************************************************** */
@@ -651,6 +678,8 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 #endif
    }
 
+   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+
    s_HOutput = CreateFile( "CONOUT$",     /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
                      FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
@@ -673,8 +702,6 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       SetConsoleScreenBufferSize( s_HOutput, s_csbi.dwSize );
 
       hb_gt_win_xInitScreenParam();
-      hb_gt_win_xGetScreenContents();
-      hb_gt_SetPos( s_sCurRow, s_sCurCol );
    }
 
    if( s_HInput != INVALID_HANDLE_VALUE )
@@ -801,17 +828,16 @@ static BOOL hb_gt_win_PreExt()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PreExt()"));
 
-   return TRUE;
+   return HB_GTSUPER_PREEXT();
 }
 
 static BOOL hb_gt_win_PostExt()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PostExt()"));
 
-   hb_gt_win_xInitScreenParam();
-   hb_gt_win_xGetScreenContents();
-   hb_gt_SetPos( s_sCurRow, s_sCurCol );
-
+   HB_GTSUPER_POSTEXT();
+   if( s_pCharInfoScreen )
+      hb_gt_win_xInitScreenParam();
    return TRUE;
 }
 
@@ -821,13 +847,16 @@ static BOOL hb_gt_win_Suspend()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Suspend()"));
 
-   GetConsoleMode( s_HInput, &s_dwimode );
-   GetConsoleMode( s_HOutput, &s_dwomode );
-   SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, FALSE );
-   SetConsoleCtrlHandler( NULL, TRUE );
-   if( b_MouseEnable )
+   if( s_pCharInfoScreen )
    {
-      SetConsoleMode( s_HInput, s_dwimode & ~ENABLE_MOUSE_INPUT );
+      GetConsoleMode( s_HInput, &s_dwimode );
+      GetConsoleMode( s_HOutput, &s_dwomode );
+      SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, FALSE );
+      SetConsoleCtrlHandler( NULL, TRUE );
+      if( b_MouseEnable )
+      {
+         SetConsoleMode( s_HInput, s_dwimode & ~ENABLE_MOUSE_INPUT );
+      }
    }
    return TRUE;
 }
@@ -836,15 +865,15 @@ static BOOL hb_gt_win_Resume()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Resume()"));
 
-   SetConsoleCtrlHandler( NULL, FALSE );
-   SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
-   SetConsoleMode( s_HInput, s_dwimode );
-   SetConsoleMode( s_HOutput, s_dwomode );
-   hb_gt_win_xSetCursorStyle();
-   hb_gt_win_xInitScreenParam();
-   hb_gt_win_xGetScreenContents();
-   hb_gt_SetPos( s_sCurRow, s_sCurCol );
-
+   if( s_pCharInfoScreen )
+   {
+      SetConsoleCtrlHandler( NULL, FALSE );
+      SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
+      SetConsoleMode( s_HInput, s_dwimode );
+      SetConsoleMode( s_HOutput, s_dwomode );
+      hb_gt_win_xInitScreenParam();
+      hb_gt_win_xSetCursorStyle();
+   }
    return TRUE;
 }
 
