@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-11 16:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+    * do not strip redundant line information when compiled for debug (-b)
+
+  * harbour/source/compiler/harbour.y
+    ! fixed typo in hb_compSequenceFinish() call - Ryszard please check me.
+      using iNumber instead of lNumber caused that on big endian machines
+      begin sequence / endsequence block was stripped
+
+  * harbour/source/compiler/hbdead.c
+    ! fixed stupid typo in counting length of debug variable/module names
+
 2006-02-11 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/Makefile
     * added missing header files

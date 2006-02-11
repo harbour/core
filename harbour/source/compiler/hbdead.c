@@ -167,7 +167,7 @@ static HB_CODETRACE_FUNC( hb_p_localname )
    ULONG ulStart = lPCodePos;
 
    lPCodePos += 3;
-   while( pFunc->pCode[ lPCodePos + lPCodePos++ ] );
+   while( pFunc->pCode[ lPCodePos++ ] );
 
    hb_compCodeTraceMark( cargo, ulStart, lPCodePos - ulStart );
    return hb_compCodeTraceNextPos( cargo, lPCodePos );
@@ -177,7 +177,7 @@ static HB_CODETRACE_FUNC( hb_p_modulename )
 {
    ULONG ulStart = lPCodePos;
 
-   while( pFunc->pCode[ lPCodePos + lPCodePos++ ] );
+   while( pFunc->pCode[ lPCodePos++ ] );
 
    hb_compCodeTraceMark( cargo, ulStart, lPCodePos - ulStart );
    return hb_compCodeTraceNextPos( cargo, lPCodePos );
@@ -188,7 +188,7 @@ static HB_CODETRACE_FUNC( hb_p_staticname )
    ULONG ulStart = lPCodePos;
 
    lPCodePos += 4;
-   while( pFunc->pCode[ lPCodePos + lPCodePos++ ] );
+   while( pFunc->pCode[ lPCodePos++ ] );
 
    hb_compCodeTraceMark( cargo, ulStart, lPCodePos - ulStart );
    return hb_compCodeTraceNextPos( cargo, lPCodePos );

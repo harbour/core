@@ -3722,7 +3722,7 @@ static void hb_compOptimizeJumps( void )
    {
       LONG lOffset;
 
-      if( iPass == 2 )
+      if( iPass == 2 && ! hb_comp_bDebugInfo )
          hb_compStripFuncLines( hb_comp_functions.pLast );
 
       if( hb_comp_functions.pLast->iJumps > 0 )
