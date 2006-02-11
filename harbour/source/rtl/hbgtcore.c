@@ -1751,7 +1751,7 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       if( iEventMask & INKEY_LDOWN && hb_mouse_ButtonPressed( 0, &iRow, &iCol ) )
       {
          clock_t timer = clock();
-         if( timer - s_iMouseLeftTimer <= hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         if( timer - s_iMouseLeftTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
             iKey = K_LDBLCLK;
          else
             iKey = K_LBUTTONDOWN;
@@ -1764,7 +1764,7 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       else if( iEventMask & INKEY_RDOWN && hb_mouse_ButtonPressed( 1, &iRow, &iCol ) )
       {
          clock_t timer = clock();
-         if( timer - s_iMouseRightTimer <= hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         if( timer - s_iMouseRightTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
             iKey = K_RDBLCLK;
          else
             iKey = K_RBUTTONDOWN;
@@ -1777,7 +1777,7 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       else if( iEventMask & INKEY_MMIDDLE && hb_mouse_ButtonPressed( 2, &iRow, &iCol ) )
       {
          clock_t timer = clock();
-         if( timer - s_iMouseMiddleTimer <= hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         if( timer - s_iMouseMiddleTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
             iKey = K_MDBLCLK;
          else
             iKey = K_MBUTTONDOWN;

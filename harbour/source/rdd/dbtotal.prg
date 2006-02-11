@@ -71,11 +71,9 @@ FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
     LOCAL cset
     LOCAL flag_err
     LOCAL err_block
-    LOCAL cAlias
     LOCAL wRec
     LOCAL err
 
-    cAlias   := TmpAlias()
     err_block := Errorblock( { | x | Break( x ) } )
     flag_err  := .F.
     cset      := Set( _SET_CANCEL, .f. )
@@ -161,7 +159,7 @@ FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
         Aeval( aFields, { | _1 | Aadd( aGetField, getfield( _1 ) ) } )
         aFieldsSum := Array( Len( aGetField ) )
 
-        dbCreate( cFile, aNewDbStruct, rdd, .T., cAlias, cdpId, nConnection )
+        dbCreate( cFile, aNewDbStruct, rdd, .T., "", cdpId, nConnection )
         NewSelect := SELECT()
         SELECT( CurSelect )
 
@@ -223,17 +221,6 @@ FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
 
 RETURN ( .t. )
 
-STATIC FUNCTION TMPALIAS()
-
-    LOCAL i
-    LOCAL alias := "_tmp"
-    i := 1
-    WHILE SELECT( alias ) != 0
-        alias += Alltrim( Str( i ) )
-        i ++
-    ENDDO
-RETURN alias
-
 STATIC FUNCTION GETFIELD( cField )
 
     LOCAL nPos
@@ -277,7 +264,6 @@ RETURN nil
 
 STATIC FUNCTION DbRead()
 
-    LOCAL cAlias := Alias()
     LOCAL aRec   := {}
     LOCAL nCount
 

@@ -3881,7 +3881,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          ULONG ulSize, ulBlock, ulType, ulOldSize, ulOldType;
          HB_FOFFSET size = hb_fsSeekLarge( hFile, 0, FS_END );
 
-         if( ( size & 0xFFFFFFFF ) == size )
+         if( ( HB_FOFFSET ) ( size & 0xFFFFFFFF ) == size )
          {
             ulSize = HB_MIN( ( ULONG ) size, 0xFFFFFFFFUL - sizeof( FPTBLOCK ) );
          }

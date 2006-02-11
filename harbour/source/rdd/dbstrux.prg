@@ -62,7 +62,6 @@ FUNCTION __dbCopyXStruct( cFileName )
    LOCAL nOldArea
    LOCAL oError
    LOCAL aStruct
-   local cTmpAlias
 
    IF Empty( aStruct := dbStruct() )
       RETURN .F.
@@ -71,10 +70,9 @@ FUNCTION __dbCopyXStruct( cFileName )
    nOldArea := Select()
 
    BEGIN SEQUENCE
-      cTmpAlias := __rddGetTempAlias()
 
       dbSelectArea( 0 )
-      __dbCreate( cFileName, NIL, NIL, .F., cTmpAlias )
+      __dbCreate( cFileName, NIL, NIL, .F., "" )
 
       AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
          ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ) } )
@@ -106,7 +104,6 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConne
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
    LOCAL oError
-   local cTmpAlias
 
    DEFAULT lNew TO .F.
 
@@ -127,9 +124,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConne
 
       ELSE
 
-         cTmpAlias := __rddGetTempAlias()
-
-         dbUseArea( lNew,, cFileFrom, cTmpAlias )
+         dbUseArea( lNew,, cFileFrom, "" )
 
          dbEval( {|| AAdd( aStruct, { Rtrim(FIELD->FIELD_NAME) ,;
                                       Rtrim(FIELD->FIELD_TYPE) ,;

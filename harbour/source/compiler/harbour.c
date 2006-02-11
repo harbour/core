@@ -83,6 +83,7 @@ static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode 
 static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
 static PINLINE hb_compInlineNew( char * );  /* creates and initialises the _INLINE structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
+static int hb_compProcessRSPFile( char *, int, char * argv[] ); /* process response file */
 
 /* int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight ); */
 static void hb_compOptimizeJumps( void );
@@ -274,7 +275,10 @@ int main( int argc, char * argv[] )
             hb_pp_Init();
          }
 
-         iStatus = hb_compCompile( argv[ i ], argc, argv );
+         if( argv[ i ][ 0 ] == '@' )
+            iStatus = hb_compProcessRSPFile( argv[ i ] + 1, argc, argv );
+         else
+            iStatus = hb_compCompile( argv[ i ], argc, argv );
 
          if( iStatus != EXIT_SUCCESS )
             break;
@@ -301,6 +305,83 @@ int main( int argc, char * argv[] )
 
    if( hb_comp_iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
+
+   return iStatus;
+}
+
+static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
+{
+   char szFile[ _POSIX_PATH_MAX + 1 ];
+   int iStatus = EXIT_SUCCESS;
+   PHB_FNAME pFileName;
+   FILE *inFile;
+
+   pFileName = hb_fsFNameSplit( szRspName );
+
+   if( !pFileName->szExtension )
+   {
+      pFileName->szExtension = ".clp";
+      hb_fsFNameMerge( szFile, pFileName );
+      szRspName = szFile;
+   }
+   hb_xfree( pFileName );
+
+   inFile = fopen( szRspName, "r" );
+   if( !inFile )
+   {
+      fprintf( hb_comp_errFile, "Cannot open input file: %s\n", szRspName );
+      iStatus = EXIT_FAILURE;
+   }
+   else
+   {
+      int iProcess = 1, i = 0, ch;
+
+      do
+      {
+         ch = fgetc( inFile );
+
+         /*
+          * '"' - quoting file names is Harbour extension - 
+          * Clipper does not serve it, [druzus]
+          */
+         if( ch == '"' )
+         {
+            while( ( ch = fgetc ( inFile ) ) != EOF && ch != '"' && ch != '\n' )
+            {
+               if( i < _POSIX_PATH_MAX )
+                  szFile[ i++ ] = (char) ch;
+            }
+            if( ch == '"' )
+               continue;
+         }
+
+         if( ch == EOF || HB_ISSPACE( ch ) || ch == '#' )
+         {
+            szFile[ i ] = '\0';
+
+            if( i > 0 )
+            {
+               if( iProcess > 1 )
+                  hb_pp_Init();
+
+               iStatus = hb_compCompile( szFile, argc, argv );
+
+               if( iStatus != EXIT_SUCCESS )
+                  break;
+
+               iProcess ++;
+               i = 0;
+            }
+            while( ch != EOF && ch != '\n' )
+               ch = fgetc( inFile );
+         }
+         else if( i < _POSIX_PATH_MAX )
+            szFile[ i++ ] = (char) ch;
+      }
+      while( ch != EOF );
+
+      fclose ( inFile );
+   }
 
    return iStatus;
 }
@@ -4107,6 +4188,8 @@ void hb_compCodeBlockEnd( void )
    int iLocalPos;
    PVAR pVar, pFree;
 
+   hb_compGenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
+
    hb_compOptimizeJumps();
 
    pCodeblock = hb_comp_functions.pLast;
@@ -4142,8 +4225,8 @@ void hb_compCodeBlockEnd( void )
    }
    wLocalsCnt = wLocals;
    
-   /* NOTE: 3 = HB_P_PUSHBLOCK + BYTE( size ) + _ENDBLOCK */
-   wSize = ( USHORT ) pCodeblock->lPCodePos + 3 ;
+   /* NOTE: 2 = HB_P_PUSHBLOCK + BYTE( size ) */
+   wSize = ( USHORT ) pCodeblock->lPCodePos + 2;
    if( hb_comp_bDebugInfo )
    {
       wSize += (3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( pFunc->szName ));
@@ -4213,7 +4296,6 @@ void hb_compCodeBlockEnd( void )
    }
 
    hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
-   hb_compGenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
 
    /* this fake-function is no longer needed */
    hb_xfree( ( void * ) pCodeblock->pCode );

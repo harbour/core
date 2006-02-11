@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-11 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    * added missing header files
+
+  * harbour/source/compiler/harbour.c
+    * added support for @filelst[.clp] - partially borrowed from xHarbour
+      It's not exactly the same as in Clipper because Clipper creates
+      one final file when [x]Harbour series of files.
+      To make it like in Clipper we will have to add support from more
+      then one symbol table in the final file. It will be also useful 
+      for proper implementation of:
+         DO <file>
+      Now in [x]Harbour it works like #include <file>.prg when in Clipper
+      also new symbol table is created for included files. The difference
+      can be easy sync when current file has static functions with exactly
+      the same names as the one included by DO - compilation fails.
+    * add HB_P_ENDBLOCK to PCODE with codeblock body before run any
+      optimization - it fixes pcode tracing in jump optimization and
+      also allow to make some validation of generated PCODE
+
+  * harbour/source/rdd/dbstrux.prg
+  * harbour/source/rdd/dbtotal.prg
+    * removed not longer necessary temporary alias creation. Harbour
+      support empty aliases ("") like Clipper.
+
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rtl/hbgtcore.c
+    * casting
+
+  * harbour/source/rtl/gtos2/gtos2.c
+    ! fixed hb_gt_os2_GetScreenContents()
+
 2006-02-11 12:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
    * source/compiler/harbour.y

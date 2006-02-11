@@ -477,6 +477,7 @@ static void hb_gt_os2_GetScreenContents( void )
    {
       for( iCol = 0; iCol < s_vi.col; ++iCol )
       {
+         usSize = 2;
          VioReadCellStr( ( PBYTE ) Cell, &usSize, iRow, iCol, 0 );
          hb_gt_PutChar( iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
       }

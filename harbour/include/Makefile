@@ -42,7 +42,9 @@ C_HEADERS=\
 	hbset.h      \
 	hbsetup.h    \
 	hbstack.h    \
+	hbsxfunc.h   \
 	hbtrace.h    \
+	hbtypes.h    \
 	hbver.h      \
 	hbvm.h       \
 	hbvmopt.h    \
@@ -72,6 +74,7 @@ PRG_HEADERS=\
 	hbinkey.ch   \
 	hblang.ch    \
 	hbmacro.ch   \
+	hbmath.ch     \
 	hbmemory.ch  \
 	hbmemvar.ch  \
 	hboo.ch      \
