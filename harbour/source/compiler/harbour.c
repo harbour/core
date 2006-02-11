@@ -50,6 +50,15 @@
 #include <malloc.h> 
 */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_TRACE_UTILS)
+   #if defined(HB_TRACE_LEVEL)
+      #undef HB_TRACE_LEVEL
+   #endif
+#endif
+
 #include "hbcomp.h"
 #include "hbhash.h"
 
@@ -190,6 +199,8 @@ int main( int argc, char * argv[] )
    int i;
    BOOL bAnyFiles;
 
+   HB_TRACE(HB_TR_DEBUG, ("main()"));
+
    hb_comp_pOutPath = NULL;
 
 #if defined( HOST_OS_UNIX_COMPATIBLE )
@@ -246,13 +257,22 @@ int main( int argc, char * argv[] )
 
    for( i = 1; i < argc; i++ )
    {
+      HB_TRACE(HB_TR_DEBUG, ("main LOOP(%i,%s)", i, argv[i]));
       if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
       {
          if( ! bAnyFiles )
+         {
             bAnyFiles = TRUE;
-
-         if( i > 1 )
+            /* do not call hb_pp_Init() because it was already called
+             * in hb_pp_SetRules
+             */
+         }
+         else
+         {
+            /* Clear and reinitialize preprocessor state
+            */
             hb_pp_Init();
+         }
 
          iStatus = hb_compCompile( argv[ i ], argc, argv );
 
@@ -4322,6 +4342,7 @@ static void hb_compInitVars( void )
 
 static void hb_compGenOutput( int iLanguage )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compGenOutput()"));
 
    switch( iLanguage )
    {
@@ -4353,6 +4374,8 @@ static void hb_compGenOutput( int iLanguage )
 
 static void hb_compPpoFile( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compPpoFile()"));
+
    hb_comp_pFilePpo->szPath = NULL;
    hb_comp_pFilePpo->szExtension = NULL;
 
@@ -4377,6 +4400,8 @@ static void hb_compPpoFile( void )
 
 static void hb_compOutputFile( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compOutputFile()"));
+
    hb_comp_pFileName->szPath = NULL;
    hb_comp_pFileName->szExtension = NULL;
 
@@ -4399,6 +4424,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 {
    int iStatus = EXIT_SUCCESS;
    PHB_FNAME pFileName;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compCompile(%s,%i)", szPrg, argc));
 
    hb_comp_pFileName = hb_fsFNameSplit( szPrg );
 
@@ -4630,6 +4657,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
 void hb_compAutoOpenAdd( char * szName )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compAutoOpenAdd(%s)", szName));
+
    if( hb_comp_bAutoOpen && ! hb_compAutoOpenFind( szName ) )
    {
       PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
@@ -4653,6 +4682,8 @@ void hb_compAutoOpenAdd( char * szName )
 BOOL hb_compAutoOpenFind( char * szName )
 {
    PAUTOOPEN pLast = hb_comp_pAutoOpen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compAutoOpenFind(%s)", szName));
 
    if( pLast == NULL )
       return FALSE;

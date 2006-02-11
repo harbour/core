@@ -1936,6 +1936,15 @@ int hb_compYACCMain( char * szName )
 
 /* ------------------------------------------------------------------------ */
 
+/*
+ * Avoid tracing in preprocessor/compiler.
+ */
+#if ! defined(HB_TRACE_UTILS)
+   #if defined(HB_TRACE_LEVEL)
+      #undef HB_TRACE_LEVEL
+   #endif
+#endif
+
 void yyerror( char * s )
 {
    if( yytext[ 0 ] == '\n' )
@@ -1948,6 +1957,8 @@ void yyerror( char * s )
 BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
 {
    PFILE pFile;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compInclude(%s,%p)", szFileName, pSearch));
 
    yyin = fopen( szFileName, "r" );
    if( ! yyin )
@@ -1999,6 +2010,8 @@ BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
 
 int yywrap( void )   /* handles the EOF of the currently processed file */
 {
+   HB_TRACE(HB_TR_DEBUG, ("yywrap()"));
+
    if( hb_comp_files.iFiles == 1 )
    {
       hb_xfree( hb_comp_files.pLast->pBuffer );

@@ -376,6 +376,12 @@ void hb_pp_Free( void )
       hb_xfree( stcmd );
       s_kolAddTras--;
    }
+   if( hb_pp_aCondCompile )
+   {
+      hb_xfree( (void *)hb_pp_aCondCompile );
+      hb_pp_aCondCompile = NULL;
+   }
+
 }
 
 void hb_pp_Init( void )
