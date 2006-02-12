@@ -93,13 +93,13 @@ HB_EXTERN_BEGIN
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
-#define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFF )
+#define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
 #define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_BYREF ) )
 
 #define HB_IS_OF_TYPE( p, t ) ( ( HB_ITEM_TYPE( p ) & ~HB_IT_BYREF ) == t )
 
-#define HB_IS_BYREF( p )   ( HB_ITEM_TYPE( p ) & HB_IT_BYREF )
+#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_ARRAY( p )   HB_IS_OF_TYPE( p, HB_IT_ARRAY )
 #define HB_IS_NIL( p )     HB_IS_OF_TYPE( p, HB_IT_NIL )
 #define HB_IS_BLOCK( p )   HB_IS_OF_TYPE( p, HB_IT_BLOCK )
@@ -114,12 +114,12 @@ HB_EXTERN_BEGIN
 #define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
 #define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
-#define HB_IS_NUMERIC( p ) ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC )
-#define HB_IS_NUMBER( p )  ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC )
-#define HB_IS_NUMINT( p )  ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT )
-#define HB_IS_COMPLEX( p ) ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX )
-#define HB_IS_GCITEM( p )  ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM )
-#define HB_IS_BADITEM( p ) ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX && HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) )
+#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMBER( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX != 0 ) && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 
 
 #define ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
@@ -128,7 +128,7 @@ HB_EXTERN_BEGIN
 #define ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
 #define ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
 #define ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
-#define ISBYREF( n )       ( hb_parinfo( n ) & HB_IT_BYREF ) /* NOTE: Intentionally using a different method */
+#define ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 ) /* NOTE: Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
 #define ISOBJECT( n )      ( hb_extIsObject( n ) )
 #define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */

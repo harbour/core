@@ -515,10 +515,7 @@ static void hb_gt_std_DispLine( int iRow )
    }
    hb_gt_std_newLine();
    if( iMin > 0 )
-   {
       hb_gt_std_termOut( s_sLineBuf, iMin );
-      iMin--;
-   }
    s_iLastCol = s_iCol = iMin;
    s_iRow = iRow;
 }

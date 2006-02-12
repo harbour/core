@@ -51,7 +51,7 @@ ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 # add a last round of rtl/vm to solve positional interdependencies (at the moment hbrun requires this)
-LINKLIBS += -lrtl -lvm
+LINKLIBS += -lrtl -lvm -lrtl
 endif
 
 # Add the specified GT driver library
@@ -69,6 +69,9 @@ LINKLIBS += -l$(HB_GT_LIB)
 endif
 endif
 endif
+
+# add socket library
+LINKLIBS += -lsocket
 
 #LINKLIBS += -Wl,-)
 # statical linking with GCC 3.2.2 libc as not require its presence on user system

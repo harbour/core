@@ -110,6 +110,10 @@ extern int    hb_pp_nCondCompile;
 extern char * hb_pp_szErrors[];
 extern char * hb_pp_szWarnings[];
 extern int    hb_pp_nEmptyStrings;
+extern BOOL   hb_pp_bInline;
+extern int    hb_pp_LastOutLine;
+extern BOOL   hb_ppInsideTextBlock;
+extern BOOL   hb_ppNestedLiteralString;
 
 /* PPCOMP.C exported functions */
 

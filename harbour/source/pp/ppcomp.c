@@ -68,9 +68,6 @@
 
 static int strncmp_nocase( char* s1, char* s2, int n );
 
-extern BOOL hb_ppInsideTextBlock;
-extern BOOL hb_ppNestedLiteralString;
-
 BOOL hb_pp_bInline = FALSE;
 
 static char s_szLine[ HB_PP_STR_SIZE ];
@@ -80,8 +77,6 @@ int hb_pp_LastOutLine = 1;
 /*
 BOOL bDebug = FALSE;
 */
-
-extern void CloseInclude( void );
 
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {

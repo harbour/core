@@ -43,11 +43,16 @@
 #include "hbdefs.h"
 #include "hbdate.h"
 
+#undef alloca
+#define alloca  hb_xgrab
+#undef malloc
+#define malloc  hb_xgrab
+#undef free
+#define free hb_xfree
+
 /* helper functions */
 static int yy_ConvertNumber( char * szBuffer );
 static int yy_ConvertDate( char * szBuffer );
-extern int hb_ppInsideTextBlock;
-extern BOOL hb_ppNestedLiteralString;
 
 /* YACC functions */
 void yyerror( char * );
@@ -851,167 +856,166 @@ Separator     {SpaceTab}
 
 "hb_inline" {
 
-	 /* NOTE: hb_compiLineINLINE is being RESET in ppcomp.c - hb_pp_Internal() */
+      /* NOTE: hb_compiLineINLINE is being RESET in ppcomp.c - hb_pp_Internal() */
 
-     if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) )
-     {
-	     yylval.string = hb_compIdentifierNew( "HB_INLINE", TRUE );
+      if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) )
+      {
+         yylval.string = hb_compIdentifierNew( "HB_INLINE", TRUE );
          hb_comp_iState = IDENTIFIER;
          return IDENTIFIER;
-     }
+      }
 
-	 if( hb_comp_iLineINLINE )
-	 {
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, "on the same line", NULL );
-	 }
-	 else
-	 {
-	    #define INLINE_NORMAL 0
-	    #define INLINE_SINGLE_QUOT 1
-	    #define INLINE_DOUBLE_QUOT 2
-	    #define INLINE_COMMENT 3
+      if( hb_comp_iLineINLINE )
+      {
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, "on the same line", NULL );
+	}
+	else
+	{
+         #define INLINE_NORMAL 0
+         #define INLINE_SINGLE_QUOT 1
+         #define INLINE_DOUBLE_QUOT 2
+         #define INLINE_COMMENT 3
 
-	    char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0", cMode = INLINE_NORMAL;
-	    int iSize, iBraces = 0;
-	    extern BOOL hb_pp_bInline;
-            PINLINE pInline;
+         char sBuffer[ YY_BUF_SIZE ], *pBuffer, sInlineSym[] = "HB_INLINE_0", cMode = INLINE_NORMAL;
+         int iSize, iBraces = 0;
+         PINLINE pInline;
 
-	    hb_comp_iLineINLINE = hb_comp_iLine;
-            hb_pp_bInline = TRUE;
+         hb_comp_iLineINLINE = hb_comp_iLine;
+         hb_pp_bInline = TRUE;
 
-	    sInlineSym[10] = hb_comp_cInlineID++;
+         sInlineSym[10] = hb_comp_cInlineID++;
 
-	    switch( sInlineSym[10] )
-	    {
-	       case '9' + 1 :
-		  sInlineSym[10] = 'A';
-		  break;
+         switch( sInlineSym[10] )
+         {
+            case '9' + 1 :
+               sInlineSym[10] = 'A';
+               break;
 
-	       case 'Z' + 1 :
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, NULL, NULL );
-		  break;
-	    }
+            case 'Z' + 1 :
+               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, NULL, NULL );
+               break;
+         }
 
-            pInline = hb_compInlineAdd( hb_compIdentifierNew( sInlineSym, TRUE ) );
+         pInline = hb_compInlineAdd( hb_compIdentifierNew( sInlineSym, TRUE ) );
 
-	  DigestInline :
+      DigestInline:
 
-            YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
-	    if( iSize == 0 )
-	    {
-               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
-	       hb_pp_bInline = FALSE;
-	       return '\n';
-	    }
-	    pBuffer = (char*) sBuffer;
+         YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
+         if( iSize == 0 )
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
+            hb_pp_bInline = FALSE;
+            return '\n';
+         }
+         pBuffer = (char*) sBuffer;
 
-	    while( *pBuffer )
-	    {
-	       switch( cMode )
-	       {
-		  case INLINE_NORMAL :
-	             if( *pBuffer == '{' )
-	             {
-	                iBraces++;
-	             }
-	             else if( *pBuffer == '}' && iBraces > 1 )
-	             {
-	                iBraces--;
-	             }
-	             else if( *pBuffer == '}' )
-	             {
-	                hb_pp_bInline = FALSE;
-			break;
-	             }
-	             else if( *pBuffer == '\'' )
-	             {
-		        cMode = INLINE_SINGLE_QUOT;
-	             }
-	             else if( *pBuffer == '"' )
-	             {
-		        cMode = INLINE_DOUBLE_QUOT;
-	             }
-	             else if( *pBuffer == '/' && *(pBuffer+1) == '/' )
-	             {
-		        goto SaveInline;
-	             }
-	             else if( *pBuffer == '/' && *(pBuffer+1) == '*' )
-	             {
-		        pBuffer++;
-		        cMode = INLINE_COMMENT;
-	             }
-		     break;
+         while( *pBuffer )
+         {
+            switch( cMode )
+            {
+               case INLINE_NORMAL :
+                  if( *pBuffer == '{' )
+                  {
+                     iBraces++;
+                  }
+                  else if( *pBuffer == '}' && iBraces > 1 )
+                  {
+                     iBraces--;
+                  }
+                  else if( *pBuffer == '}' )
+                  {
+                     hb_pp_bInline = FALSE;
+                     break;
+                  }
+                  else if( *pBuffer == '\'' )
+                  {
+                     cMode = INLINE_SINGLE_QUOT;
+                  }
+                  else if( *pBuffer == '"' )
+                  {
+                     cMode = INLINE_DOUBLE_QUOT;
+                  }
+                  else if( *pBuffer == '/' && *(pBuffer+1) == '/' )
+                  {
+                     goto SaveInline;
+                  }
+                  else if( *pBuffer == '/' && *(pBuffer+1) == '*' )
+                  {
+                     pBuffer++;
+                     cMode = INLINE_COMMENT;
+                  }
+                  break;
 
-		  case INLINE_SINGLE_QUOT :
-		     if( *pBuffer == '\\' )
-		     {
-		        pBuffer++;
-		     }
-		     else if( *pBuffer == '\'' )
-		     {
-			cMode = INLINE_NORMAL;
-		     }
-		     break;
+               case INLINE_SINGLE_QUOT :
+                  if( *pBuffer == '\\' )
+                  {
+                     pBuffer++;
+                  }
+                  else if( *pBuffer == '\'' )
+                  {
+                     cMode = INLINE_NORMAL;
+                  }
+                  break;
 
-		  case INLINE_DOUBLE_QUOT :
-		     if( *pBuffer == '\\' )
-		     {
-		        pBuffer++;
-		     }
-		     else if( *pBuffer == '"' )
-		     {
-			cMode = INLINE_NORMAL;
-		     }
-		     break;
+               case INLINE_DOUBLE_QUOT :
+                  if( *pBuffer == '\\' )
+                  {
+                     pBuffer++;
+                  }
+                  else if( *pBuffer == '"' )
+                  {
+                     cMode = INLINE_NORMAL;
+                  }
+                  break;
 
-		  case INLINE_COMMENT :
-		     if( *pBuffer == '*' && *(pBuffer+1) == '/' )
-		     {
-		        pBuffer++;
-			cMode = INLINE_NORMAL;
-		     }
-		     break;
-	       }
+               case INLINE_COMMENT :
+                  if( *pBuffer == '*' && *(pBuffer+1) == '/' )
+                  {
+                     pBuffer++;
+                     cMode = INLINE_NORMAL;
+                  }
+                  break;
+            }
 
-               pBuffer++;
-	    }
+            pBuffer++;
+         }
 
-          SaveInline :
+      SaveInline:
 
-	    if( pInline->pCode == NULL )
-	    {
-               pInline->pCode = (BYTE *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-               strcpy( (char *) pInline->pCode, (char*) sBuffer );
-	    }
-	    else
-	    {
-               pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-               strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char*) sBuffer );
-	    }
-	    pInline->lPCodeSize += iSize;
+         if( pInline->pCode == NULL )
+         {
+            pInline->pCode = (BYTE *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+            strcpy( (char *) pInline->pCode, (char*) sBuffer );
+         }
+         else
+         {
+            pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+            strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char*) sBuffer );
+         }
+         pInline->lPCodeSize += iSize;
 
-	    if( hb_pp_bInline )
-	    {
-	       goto DigestInline;
-	    }
-	    else
-	    {
-               if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
-	       {
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
-                  hb_xfree( ( void * ) pInline->pCode );
-                  hb_xfree( ( void * ) pInline->szFileName );
-                  hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
-	       }
+         if( hb_pp_bInline )
+         {
+            goto DigestInline;
+         }
+         else
+         {
+            if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
+            {
+               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+               hb_xfree( ( void * ) pInline->pCode );
+               hb_xfree( ( void * ) pInline->szFileName );
+               hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
+            }
 
-	       hb_comp_iLinePRG = hb_comp_iLine - 1;
-	       hb_comp_iLine = hb_comp_iLineINLINE;
+            hb_comp_iLinePRG = hb_comp_iLine - 1;
+            hb_comp_iLine = hb_comp_iLineINLINE;
 
-               yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
-               return IDENTIFIER;
-	    }
-	 }
-	    }
+            yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
+            return IDENTIFIER;
+         }
+      }
+   }
 %{
 /* ************************************************************************ */
 %}

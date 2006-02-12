@@ -33,16 +33,17 @@
  * 2) Support this syntax: nPtr := @Hello()
  */
 
-/* malloc.h has been obsoleted by stdlib.h, which is included via hbcomp.h
-#include <malloc.h>
-*/
-
 #include "hbcomp.h"
+#undef alloca
+#define alloca  hb_xgrab
+#undef malloc
+#define malloc  hb_xgrab
+#undef free
+#define free hb_xfree
 
 /* Compile using: bison -d -v harbour.y */
 
 extern FILE *yyin;      /* currently yacc parsed file */
-extern int hb_comp_iLine;       /* currently parsed file line number */
 extern char *yytext;
 
 #ifdef __cplusplus
@@ -159,8 +160,6 @@ char * hb_comp_buffer; /* yacc input buffer */
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 static SWITCHCMD_PTR hb_comp_pSwitch = NULL;
-
-extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 

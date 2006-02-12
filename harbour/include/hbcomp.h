@@ -318,6 +318,7 @@ extern void hb_compVariableAdd( char * szVarName, BYTE cType ); /* add a new par
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
+extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 
 #define HB_SYM_MEMVAR   FALSE
 #define HB_SYM_FUNCNAME TRUE

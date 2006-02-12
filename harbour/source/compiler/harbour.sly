@@ -33,11 +33,13 @@
  * 2) Support this syntax: nPtr := @Hello()
  */
 
-/* malloc.h has been obsoleted by stdlib.h, which is included via hbcomp.h
-#include <malloc.h>
-*/
-
 #include "hbcomp.h"
+#undef alloca
+#define alloca  hb_xgrab
+#undef malloc
+#define malloc  hb_xgrab
+#undef free
+#define free hb_xfree
 
 /* Compile using: bison -d -v harbour.y */
 

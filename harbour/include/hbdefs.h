@@ -160,7 +160,7 @@
    #if ! defined( HB_DONT_DEFINE_BOOL )
       #undef BOOL                         /* boolean */
       typedef int BOOL;
-   #endif   
+   #endif
 
    #undef UINT                            /* varies with platform */
    typedef unsigned int UINT;

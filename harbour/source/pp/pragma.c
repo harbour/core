@@ -67,10 +67,6 @@ static BOOL s_bTracePragma = FALSE;
 /* Size of abreviated pragma commands */
 #define PRAGMAS_LEN       8
 
-#if defined(__WATCOMC__)
-  extern BOOL hb_pp_bInline;
-#endif
-
 /* TODO:  Add support for:
           RequestLib    /R
 */
@@ -194,9 +190,6 @@ void hb_pp_ParsePragma( char * szLine )
       {
          char sBuffer[ HB_PP_STR_SIZE ], *pBuffer, sDirective[9] ;
          int iSize;
-#ifndef __WATCOMC__
-         extern BOOL hb_pp_bInline;
-#endif
          PINLINE pInline;
 
          if( hb_comp_bPPO )

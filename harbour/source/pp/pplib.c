@@ -131,57 +131,48 @@ HB_FUNC( __PP_INIT )
       char * pDelim;
 
       while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-        {
-          *pDelim = '\0';
-          AddSearchPath( pPath, &hb_comp_pIncludePath );
-          pPath = pDelim + 1;
-        }
+      {
+         *pDelim = '\0';
+         AddSearchPath( pPath, &hb_comp_pIncludePath );
+         pPath = pDelim + 1;
+      }
       AddSearchPath( pPath, &hb_comp_pIncludePath );
    }
 }
 
 HB_FUNC( __PP_PATH )
 {
-   HB_PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
-
-   if( ISLOG( 2 ) && hb_parl( 2 ) )
+   if( ISLOG( 2 ) && hb_parl( 2 ) && hb_comp_pIncludePath )
    {
-      while( pPath )
-      {
-         pPathNext = pPath->pNext;
-         hb_xfree( pPath->szPath );
-         hb_xfree( pPath );
-         pPath = pPathNext;
-      }
+      hb_fsFreeSearchPath( hb_comp_pIncludePath );
+      hb_comp_pIncludePath = NULL;
    }
+
    if( ISCHAR( 1 ) )
    {
       char * cDelim;
       char * cPath = hb_parc( 1 );
 
       while( ( cDelim = strchr( cPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-        {
-          *cDelim = '\0';
-          AddSearchPath( cPath, &hb_comp_pIncludePath );
-          cPath = cDelim + 1;
-        }
+      {
+         *cDelim = '\0';
+         AddSearchPath( cPath, &hb_comp_pIncludePath );
+         cPath = cDelim + 1;
+      }
       AddSearchPath( cPath, &hb_comp_pIncludePath );
    }
 }
 
 HB_FUNC( __PP_FREE )
 {
-  HB_PATHNAMES * pPath = hb_comp_pIncludePath, * pPathNext;
-
-   while( pPath )
+   if( hb_comp_pIncludePath )
    {
-      pPathNext = pPath->pNext;
-      hb_xfree( pPath->szPath );
-      hb_xfree( pPath );
-      pPath = pPathNext;
+      hb_fsFreeSearchPath( hb_comp_pIncludePath );
+      hb_comp_pIncludePath = NULL;
    }
 
    hb_pp_Free();
+
    if( hb_pp_aCondCompile )
    {
       hb_xfree( hb_pp_aCondCompile );

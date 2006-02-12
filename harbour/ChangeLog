@@ -8,6 +8,45 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-12 14:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbdefs.h
+    * cleaned BOOL usage
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.sly
+  * harbour/source/compiler/harbour.y
+  * harbour/source/pp/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/pp/pragma.c
+    * keep functions and public variables definitions in header files.
+      Do not use any extern ... in source code to aviod possible mistakes
+    ! fixed some mistakes in BOOL/int declarations
+    * use hb_fsFreeSearchPath() to free allocated path list
+
+  * harbour/source/compiler/harbour.c
+    * keep functions and public variables definitions in header files.
+    + added memory statistic module - it's disabled now because too
+      much errors is reported.
+      Ryszard I hope it will help in locating memory leaks in compiler.
+    * begun of cleaning static variables to make compiler code
+      ready for reentrance.
+
+  * harbour/source/rtl/gtstd/gtstd.c
+    ! fixed cursor positioning
+
+  * harbour/config/os2/gcc.cf
+    + added socket library
+
+  + harbour/tests/ctwtest.prg
+    + added CTWIN test program
+
+  + harbour/contrib/dot/Makefile
+    + added GNU Makefile
+
 2006-02-12 11:15 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * harbour/include/hbdefs.h 
     * minor fix to avoid conflict with Darwin and Cocoa BOOL use
