@@ -157,7 +157,7 @@
 
 #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
-   #ifndef HB_DONT_DEFINE_BOOL
+   #if ! defined( HB_DONT_DEFINE_BOOL )
       #undef BOOL                         /* boolean */
       typedef int BOOL;
    #endif   
