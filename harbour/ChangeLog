@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-12 11:15 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * harbour/include/hbdefs.h 
+    * minor fix to avoid conflict with Darwin and Cocoa BOOL use
+
 2006-02-11 16:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.c
     * do not strip redundant line information when compiled for debug (-b)
