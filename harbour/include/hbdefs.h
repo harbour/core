@@ -157,8 +157,10 @@
 
 #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
-   #undef BOOL                            /* boolean */
-   typedef int BOOL;
+   #ifndef HB_DONT_DEFINE_BOOL
+      #undef BOOL                         /* boolean */
+      typedef int BOOL;
+   #endif   
 
    #undef UINT                            /* varies with platform */
    typedef unsigned int UINT;
