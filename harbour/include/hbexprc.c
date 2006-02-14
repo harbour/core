@@ -149,6 +149,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    }
    /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
     */
+#if ! defined( HB_MACRO_SUPPORT )
    else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
@@ -215,6 +216,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
          }
       }
    }
+#endif   
    /* push old value */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
    /* push increment value */
@@ -268,6 +270,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    }
    /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
     */
+#if ! defined( HB_MACRO_SUPPORT )
    else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
@@ -334,7 +337,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
          }
       }
    }
-
+#endif
    /* push old value */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
    /* push increment value */
