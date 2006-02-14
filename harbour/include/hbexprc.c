@@ -153,61 +153,66 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      /* NOTE: direct type change */
-      pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+      int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
 
-      if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
-          pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING ||
-          pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+      if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
       {
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE ) 
+         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
+             pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
          {
             /* NOTE: direct type change */
-            pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+            pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            switch( bOpEq )
+            {
+               case HB_P_PLUS:
+                  bOpEq = HB_P_PLUSEQ;
+                  break;
+               case HB_P_MINUS:
+                  bOpEq = HB_P_MINUSEQ;
+                  break;
+               case HB_P_MULT:
+                  bOpEq = HB_P_MULTEQ;
+                  break;
+               case HB_P_DIVIDE:
+                  bOpEq = HB_P_DIVEQ;
+                  break;
+            }
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+            return;
          }
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         switch( bOpEq )
+         else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
          {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQ;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQ;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQ;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQ;
-               break;
+            int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
+
+            if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+            {
+               /* NOTE: direct type change */
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+               pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+               switch( bOpEq )
+               {
+                  case HB_P_PLUS:
+                     bOpEq = HB_P_PLUSEQ;
+                     break;
+                  case HB_P_MINUS:
+                     bOpEq = HB_P_MINUSEQ;
+                     break;
+                  case HB_P_MULT:
+                     bOpEq = HB_P_MULTEQ;
+                     break;
+                  case HB_P_DIVIDE:
+                     bOpEq = HB_P_DIVEQ;
+                     break;
+               }
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+               return;
+            }
          }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-         return;
-      }
-      else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
-      {
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-         /* NOTE: direct type change */
-         pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         switch( bOpEq )
-         {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQ;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQ;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQ;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQ;
-               break;
-         }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-         return;
       }
    }
    /* push old value */
@@ -267,55 +272,66 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      /* NOTE: direct type change */
-      pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+      int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
 
-      if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
-          pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
+      if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
       {
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         switch( bOpEq )
+         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
+             pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
          {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQPOP;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQPOP;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQPOP;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQPOP;
-               break;
+            /* NOTE: direct type change */
+            pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            switch( bOpEq )
+            {
+               case HB_P_PLUS:
+                  bOpEq = HB_P_PLUSEQPOP;
+                  break;
+               case HB_P_MINUS:
+                  bOpEq = HB_P_MINUSEQPOP;
+                  break;
+               case HB_P_MULT:
+                  bOpEq = HB_P_MULTEQPOP;
+                  break;
+               case HB_P_DIVIDE:
+                  bOpEq = HB_P_DIVEQPOP;
+                  break;
+            }
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+            return;
          }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-         return;
-      }
-      else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
-      {
-         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-         /* NOTE: direct type change */
-         pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         switch( bOpEq )
+         else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
          {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQPOP;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQPOP;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQPOP;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQPOP;
-               break;
+            int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
+
+            if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+            {
+               /* NOTE: direct type change */
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+               pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+               switch( bOpEq )
+               {
+                  case HB_P_PLUS:
+                     bOpEq = HB_P_PLUSEQPOP;
+                     break;
+                  case HB_P_MINUS:
+                     bOpEq = HB_P_MINUSEQPOP;
+                     break;
+                  case HB_P_MULT:
+                     bOpEq = HB_P_MULTEQPOP;
+                     break;
+                  case HB_P_DIVIDE:
+                     bOpEq = HB_P_DIVEQPOP;
+                     break;
+               }
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+               return;
+            }
          }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-         return;
       }
    }
 

@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-14 13:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexprc.c
+   * source/compiler/exproptc.c
+   * source/macro/macroc.c
+      * disabled optimalization of compound assignment for fields
+      
+
 2006-02-14 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapiitm.h
    * include/hbcomp.h
