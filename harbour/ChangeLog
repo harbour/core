@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-14 16:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapiitm.h
+   * include/hbexpra.c
+   * include/hbexprc.c
+   * include/hbexprop.h
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/exproptc.c
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+   * source/macro/macroc.c
+   * source/vm/hvm.c
+   * source/vm/itemapi.c
+      * fixed code for adding date and numeric values (introduced
+        in my last commits)
+      * removed hb_itemPutBHLong (use hb_itemPutNInt instead)
+      * added more optimization for localvar+=integer
+        using HB_P_LOCALNEARADDINT pcode
+        (borrowed from xHarbour)
+
 2006-02-14 14:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexprc.c
    * source/compiler/exproptc.c

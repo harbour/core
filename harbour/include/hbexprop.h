@@ -168,6 +168,7 @@ typedef enum
    HB_EO_PREDEC      /* pre-operators -> the highest precedence */
 } HB_EXPR_OPERATOR;
 
+typedef USHORT HB_EXPRTYPE;
 
 typedef struct HB_EXPR_
 {
@@ -240,7 +241,7 @@ typedef struct HB_EXPR_
    } value;
    ULONG ulLength;
    ULONG Counter;
-   unsigned char ExprType;  /* internal expression type */
+   HB_EXPRTYPE ExprType;  /* internal expression type */
    USHORT ValType;          /* language level value type */
    struct HB_EXPR_ *pNext;  /* next expression in the list of expressions */
 } HB_EXPR, *HB_EXPR_PTR;
@@ -305,7 +306,7 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage );
 #endif
 
 
-HB_EXPR_PTR hb_compExprNew( int );
+HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE );
 HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );
 HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE );

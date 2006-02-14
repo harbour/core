@@ -104,7 +104,6 @@ extern HB_EXPORT void       hb_itemSetCMemo ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemPutD     ( PHB_ITEM pItem, int iYear, int iMonth, int iDay );
 extern HB_EXPORT PHB_ITEM   hb_itemPutDS    ( PHB_ITEM pItem, const char * szDate );
 extern HB_EXPORT PHB_ITEM   hb_itemPutDL    ( PHB_ITEM pItem, long lJulian );
-extern HB_EXPORT PHB_ITEM   hb_itemPutHBLong( PHB_ITEM pItem, HB_LONG lNumber );
 extern HB_EXPORT PHB_ITEM   hb_itemPutL     ( PHB_ITEM pItem, BOOL bValue );
 extern HB_EXPORT PHB_ITEM   hb_itemPutND    ( PHB_ITEM pItem, double dNumber );
 extern HB_EXPORT PHB_ITEM   hb_itemPutNI    ( PHB_ITEM pItem, int iNumber );

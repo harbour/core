@@ -158,9 +158,31 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
       if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
       {
-         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
-             pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
+         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType;
+         
+         if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
          {
+            if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
+                ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
+            {
+               int iLocal = hb_compLocalGetPos( pSelf->value.asOperator.pLeft->value.asSymbol ); 
+
+               if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
+               {
+                  int iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
+
+                  if( bOpEq == HB_P_MINUS )
+                  {
+                     iIncrement = -iIncrement;
+                  }
+
+                  hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+
+                  HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+
+                  return;
+               }
+            }
             /* NOTE: direct type change */
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
 
@@ -279,9 +301,29 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
       if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
       {
-         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
-             pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
+         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType;
+         
+         if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
          {
+            if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
+                ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
+            {
+               int iLocal = hb_compLocalGetPos( pSelf->value.asOperator.pLeft->value.asSymbol ); 
+
+               if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
+               {
+                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
+
+                  if( bOpEq == HB_P_MINUS )
+                  {
+                     iIncrement = -iIncrement;
+                  }
+
+                  hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+
+                  return;
+               }
+            }
             /* NOTE: direct type change */
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
 

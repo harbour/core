@@ -1049,29 +1049,6 @@ HB_EXPORT PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG llNumber, int iWid
 }
 #endif
 
-HB_EXPORT PHB_ITEM hb_itemPutHBLong( PHB_ITEM pItem, HB_LONG lNumber )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutHBLong( %p, %" PFHL "d)", pItem, lNumber));
-
-   if( pItem )
-   {
-      if( HB_IS_COMPLEX( pItem ) )
-      {
-         hb_itemClear( pItem );
-      }
-   }
-   else
-   {
-      pItem = hb_itemNew( NULL );
-   }
-
-   pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = lNumber;
-   pItem->item.asLong.length = HB_LONG_LENGTH( lNumber );
-
-   return pItem;
-}
-
 HB_EXPORT PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1, int iType2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNumType( %p, %lf, %d, %i, %i)", pItem, dNumber, iDec, iType1, iType2));
@@ -1082,11 +1059,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, 
    }
    else if ( HB_DBL_LIM_INT( dNumber ) )
    {
-      return hb_itemPutNI( pItem, ( int ) dNumber );
-   }
-   else if ( HB_DBL_LIM_LONG( dNumber ) )
-   {
-      return hb_itemPutHBLong( pItem, ( HB_LONG ) dNumber );
+      return hb_itemPutNInt( pItem, ( HB_LONG ) dNumber );
    }
    else
    {

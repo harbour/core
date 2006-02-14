@@ -134,7 +134,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char *, BYTE );
 
 /* ************************************************************************ */
 
-HB_EXPR_PTR hb_compExprNew( int iType )
+HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE iType )
 {
    HB_EXPR_PTR pExpr;
 

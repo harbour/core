@@ -2159,7 +2159,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutND( pResult, ( long ) hb_itemGetND( pItem1 ) + ( long ) hb_itemGetND( pItem1 ) );
+      hb_itemPutDL( pResult, ( long ) hb_itemGetND( pItem1 ) + ( long ) hb_itemGetND( pItem1 ) );
       while( iPopCnt-- > 0 )
       {
          hb_stackDec();
@@ -2235,7 +2235,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutND( pResult, ( long ) hb_itemGetND( pItem1 ) - ( long ) hb_itemGetND( pItem1 ) );
+      hb_itemPutNL( pResult, ( long ) hb_itemGetND( pItem1 ) - ( long ) hb_itemGetND( pItem1 ) );
       while( iPopCnt-- > 0 )
       {
          hb_stackDec();
