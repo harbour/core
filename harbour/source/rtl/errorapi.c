@@ -206,6 +206,9 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       s_iLaunchCount++;
 
+      /* set DOSERROR() to last OS error code */
+      s_uiErrorDOS = hb_errGetOsCode( pError );
+
       if( s_errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
@@ -308,6 +311,9 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
       s_iLaunchCount++;
+
+      /* set DOSERROR() to last OS error code */
+      s_uiErrorDOS = hb_errGetOsCode( pError );
 
       if( s_errorHandler )
       {

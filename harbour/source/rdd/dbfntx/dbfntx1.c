@@ -1306,7 +1306,8 @@ static LPPAGEINFO hb_ntxPageNew( LPTAGINFO pTag, BOOL fNull )
 
    if( pTag->Owner->NextAvail != 0 )
    {
-      /* Handling of a pool of empty pages.
+      /*
+         Handling of a pool of empty pages.
          Some sources says that this address is in the first 4 bytes of
          a page ( http://www.e-bachmann.dk/docs/xbase.htm ).
          But as I understood, studying dumps of Clipper ntx'es, address of the
@@ -1317,12 +1318,20 @@ static LPPAGEINFO hb_ntxPageNew( LPTAGINFO pTag, BOOL fNull )
       pPage = hb_ntxPageLoad( pTag, pTag->Owner->NextAvail );
       if( ! pPage )
          return NULL;
+      /*
+         Unfortunately Clipper does not left unused index pages clean and
+         the key counter can be set to non zero value so to make possible
+         concurrent index access from Clipper and xHarbour it's necessary
+         to disable the check code below. [druzus]
+       */
+#if 0
       if( pPage->uiKeys != 0 )
       {
          hb_ntxErrorRT( pTag->Owner->Owner, EG_CORRUPTION, EDBF_CORRUPT,
                         pTag->Owner->IndexName, 0, 0 );
          return NULL;
       }
+#endif
       pTag->Owner->NextAvail = hb_ntxGetKeyPage( pPage, 0 );
 #if defined( HB_NTX_NOMULTITAG )
       hb_ntxSetKeyPage( pPage, 0, 0 );

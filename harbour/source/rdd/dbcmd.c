@@ -4634,6 +4634,12 @@ HB_FUNC( DBF2TEXT )
    BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
 
 
+   if( !pArea )
+   {
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "COPY TO" );
+      return;
+   }
+
    if( ! handle )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBF2TEXT" );

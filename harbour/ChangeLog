@@ -8,6 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-14 18:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+   * enabled FM statistic by default when compiled without:
+         -DHB_FM_STATISTICS_OFF
+     after last Ryszard modification there is no memory leak in valid
+     .prg code so this may help us to find some unknown problems.
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbpcode.c
+   * formatting
+
+  * harbour/source/rdd/dbcmd.c
+    * fixed GPF in DBF2TEXT when work are is not in use.
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * disabled validation of unused index pages - Clipper left them
+      dirty so xHarbour reported that index is corrupted
+
+  * harbour/source/rtl/dbdelim.prg
+    * generate 2001 RT error when work area is not in used() state
+      before export file is created.
+
+  * harbour/source/rtl/errorapi.c
+    * set DOSERROR() to oError:OSCODE when RT error is generated
+      It's documented Clipper behavior.
+
+  * harbour/source/vm/hvm.c
+    * some fixes in new operators and removed unnecessary
+      long->double->long conventions
+
 2006-02-14 16:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapiitm.h
    * include/hbexpra.c
@@ -33,13 +63,12 @@
    * source/compiler/exproptc.c
    * source/macro/macroc.c
       * disabled optimalization of compound assignment in macro compiler
-      
+
 2006-02-14 13:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexprc.c
    * source/compiler/exproptc.c
    * source/macro/macroc.c
       * disabled optimalization of compound assignment for fields
-      
 
 2006-02-14 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapiitm.h

@@ -84,6 +84,7 @@ local cCharEol:=HB_OSNewLine()
 local nLenEol:=LEN(cCharEol)
 local nPosLasteol
 local lcisonoeol
+local lErrResult
 //------------------
    // Process the delimiter argument.
    IF !EMPTY( cDelimArg )
@@ -136,20 +137,36 @@ local lcisonoeol
 
    IF lExport
       // COPY TO DELIMITED
-      handle := FCREATE( cFileName )
-      IF handle == -1
+      IF !USED()
          oErr := ErrorNew()
          oErr:severity := ES_ERROR
-         oErr:genCode := EG_CREATE
+         oErr:genCode := EG_NOTABLE
          oErr:subSystem := "DELIM"
-         oErr:subCode := 1002
+         oErr:subCode := 2001
          oErr:description := HB_LANGERRMSG( oErr:genCode )
-         oErr:canRetry := .T.
+         oErr:canRetry := .F.
          oErr:canDefault := .T.
-         oErr:fileName := cFileName
-         oErr:osCode := FERROR()
          Eval(ErrorBlock(), oErr)
+         handle := -1
       ELSE
+         WHILE ( handle := FCREATE( cFileName ) ) == -1
+            oErr := ErrorNew()
+            oErr:severity := ES_ERROR
+            oErr:genCode := EG_CREATE
+            oErr:subSystem := "DELIM"
+            oErr:subCode := 1002
+            oErr:description := HB_LANGERRMSG( oErr:genCode )
+            oErr:canRetry := .T.
+            oErr:canDefault := .T.
+            oErr:fileName := cFileName
+            oErr:osCode := FERROR()
+            lErrResult := Eval(ErrorBlock(), oErr)
+            IF VALTYPE( lErrResult ) != "L" .OR. !lErrResult
+               EXIT
+            ENDIF
+         ENDDO
+      ENDIF
+      IF handle != -1
          IF nStart > -1
             // Only reposition if a starting record was specified or implied.
             IF nStart == 0

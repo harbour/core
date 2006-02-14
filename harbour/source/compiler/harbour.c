@@ -412,7 +412,7 @@ int isatty( int handle )
 
 /* remove this 'undef' when number of memory leaks will be reduced to
    reasonable size */
-#undef HB_FM_STATISTICS
+/* #undef HB_FM_STATISTICS */
 
 #ifdef HB_FM_STATISTICS
 

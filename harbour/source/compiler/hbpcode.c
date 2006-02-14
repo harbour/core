@@ -222,7 +222,6 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
          ++ulPos;
       }
    }
-
 }
 
 void hb_compPCodeTrace( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )

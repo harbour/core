@@ -2111,10 +2111,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       {
          hb_itemPutNDDec( pResult, ( double ) lNumber1 + ( double ) lNumber2, 0 );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
    }
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
@@ -2123,10 +2119,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       double dNumber2 = hb_itemGetNDDec( pItem2, &iDec2 );
 
       hb_itemPutNumType( pResult, dNumber1 + dNumber2, ( ( iDec1 > iDec2 ) ? iDec1 : iDec2 ), iType1, iType2 );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
    }
    else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
@@ -2140,10 +2132,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
          hb_xmemcpy( szNewString, pItem1->item.asString.value, ulLen1 );
          hb_xmemcpy( szNewString + ulLen1, pItem2->item.asString.value, ulLen2 );
          hb_itemPutCPtr( pResult, szNewString, ulLen1 + ulLen2 );
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackPop();
-         }
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+", 2, pItem1, pItem2 );
@@ -2151,28 +2139,20 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
    {
       /* NOTE: This is not a bug. CA-Cl*pper does exactly that. */
-      hb_itemPutDL( pResult, ( long ) hb_itemGetND( pItem1 ) + ( long ) hb_itemGetND( pItem2 ) );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
+      hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetNL( pItem2 ) );
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutDL( pResult, ( long ) hb_itemGetND( pItem1 ) + ( long ) hb_itemGetND( pItem1 ) );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
+      hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) + hb_itemGetNL( pItem2 ) );
+   }
+   else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_DATE( pItem2 ) )
+   {
+      hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetDL( pItem2 ) );
    }
    else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpPlus" ) )
    {
       hb_vmOperatorCall( pResult, pItem1, pItem2, "__OPPLUS" );
       --iPopCnt;  /* hb_vmOperatorCall pops pItem2 */
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
    }
    else
    {
@@ -2183,10 +2163,10 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
          hb_itemForwardValue( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
+   }
+   while( --iPopCnt >= 0 )
+   {
+      hb_stackDec();
    }
 }
 
@@ -2208,10 +2188,6 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       {
          hb_itemPutNDDec( pResult, ( double ) lNumber1 - ( double ) lNumber2, 0 );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
    }
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
@@ -2220,26 +2196,14 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       double dNumber2 = hb_itemGetNDDec( pItem2, &iDec2 );
 
       hb_itemPutNumType( pResult, dNumber1 - dNumber2, ( ( iDec1 > iDec2 ) ? iDec1 : iDec2 ), iType1, iType2 );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
    {
-      hb_itemPutNInt( pResult, ( long ) hb_itemGetND( pItem1 ) - ( long ) hb_itemGetND( pItem2 ) );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
+      hb_itemPutNInt( pResult, hb_itemGetDL( pItem1 ) - hb_itemGetDL( pItem2 ) );
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
    {
-      hb_itemPutNL( pResult, ( long ) hb_itemGetND( pItem1 ) - ( long ) hb_itemGetND( pItem1 ) );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
+      hb_itemPutDL( pResult, hb_itemGetDL( pItem1 ) - hb_itemGetNL( pItem2 ) );
    }
    else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
@@ -2258,10 +2222,6 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
          hb_xmemcpy( szNewString + ulLen1, pItem2->item.asString.value, ulLen2 );
          hb_xmemset( szNewString + ulLen1 + ulLen2, ' ', pItem1->item.asString.length - ulLen1 );
          hb_itemPutCPtr( pResult, szNewString, ulNewLen );
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackPop();
-         }
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-", 2, pItem1, pItem2 );
@@ -2270,10 +2230,6 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
    {
       hb_vmOperatorCall( pResult, pItem1, pItem2, "__OPMINUS" );
       --iPopCnt;  /* hb_vmOperatorCall pops pItem2 */
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
    }
    else
    {
@@ -2284,10 +2240,10 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
          hb_itemForwardValue( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
+   }
+   while( --iPopCnt >= 0 )
+   {
+      hb_stackDec();
    }
 }
 
@@ -2312,20 +2268,12 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       double dNumber2 = hb_itemGetNDDec( pItem2, &iDec2 );
 
       hb_itemPutNumType( pResult, dNumber1 * dNumber2, iDec1 + iDec2, iType1, iType2 );
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackDec();
-      }
    }
 
    else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMult" ) )
    {
       hb_vmOperatorCall( pResult, pItem1, pItem2, "__OPMULT" );
       --iPopCnt;  /* hb_vmOperatorCall pops pItem2 */
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
    }
    else
    {
@@ -2336,10 +2284,10 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
          hb_itemForwardValue( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
+   }
+   while( --iPopCnt >= 0 )
+   {
+      hb_stackPop();
    }
 }
 
@@ -2355,7 +2303,7 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
    {
       HB_LONG lDivisor = HB_ITEM_GET_NUMINTRAW( pItem2 );
 
-      if ( lDivisor == 0 )
+      if( lDivisor == 0 )
       {
          PHB_ITEM pSubst = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/", 2, pItem1, pItem2 );
 
@@ -2364,19 +2312,11 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
             hb_itemForwardValue( pResult, pSubst );
             hb_itemRelease( pSubst );
          }
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackPop();
-         }
       }
       else
       {
          HB_LONG lNumber1 = HB_ITEM_GET_NUMINTRAW( pItem1 );
          hb_itemPutNDDec( pResult, ( double ) lNumber1 / ( double ) lDivisor, hb_set.HB_SET_DECIMALS );
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackDec();
-         }
       }
    }
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
@@ -2392,10 +2332,6 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
             hb_itemForwardValue( pResult, pSubst );
             hb_itemRelease( pSubst );
          }
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackPop();
-         }
       }
       else
       {
@@ -2409,20 +2345,12 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
          double dNumber1 = hb_itemGetND( pItem1 );
 
          hb_itemPutNDDec( pResult, dNumber1 / dDivisor, hb_set.HB_SET_DECIMALS );
-         while( iPopCnt-- > 0 )
-         {
-            hb_stackDec();
-         }
       }
    }
    else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpDivide" ) )
    {
       hb_vmOperatorCall( pResult, pItem1, pItem2, "__OPDIVIDE" );
       --iPopCnt;  /* hb_vmOperatorCall pops pItem2 */
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
    }
    else
    {
@@ -2433,10 +2361,10 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
          hb_itemForwardValue( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
-      while( iPopCnt-- > 0 )
-      {
-         hb_stackPop();
-      }
+   }
+   while( --iPopCnt >= 0 )
+   {
+      hb_stackPop();
    }
 }
 
@@ -2473,7 +2401,7 @@ static void hb_vmModulus( void )
          hb_stackDec();
          /* NOTE: Clipper always returns the result of modulus
                   with the SET number of decimal places. */
-         if ( hb_set.HB_SET_DECIMALS == 0 )
+         if( hb_set.HB_SET_DECIMALS == 0 )
             hb_vmPushNumInt( HB_ITEM_GET_NUMINTRAW( pItem1 ) % lDivisor );
          else
             hb_vmPushDouble( ( double ) ( HB_ITEM_GET_NUMINTRAW( pItem1 ) % lDivisor ), hb_set.HB_SET_DECIMALS );

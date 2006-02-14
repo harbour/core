@@ -587,7 +587,7 @@ extern FILE           *hb_comp_errFile;
 #define HB_COMPFLAG_HARBOUR        1    /* -kh */
 #define HB_COMPFLAG_XBASE          2    /* -kx */
 #define HB_COMPFLAG_HB_INLINE      4    /* -ki */
-#define HB_COMPFLAG_ARRSTR			  8	 /* -ks strings as array of bytes */
+#define HB_COMPFLAG_ARRSTR         8    /* -ks strings as array of bytes */
 #define HB_COMPFLAG_OPTJUMP       16    /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_RT_MACRO      64    /* -kr */
 
@@ -600,4 +600,3 @@ extern FILE           *hb_comp_errFile;
 HB_EXTERN_END
 
 #endif /* HB_COMP_H_ */
-
