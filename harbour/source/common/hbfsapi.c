@@ -94,10 +94,10 @@ void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
    /* Only the first path holds an allocated string.
       All of the other paths in the list are part of
       that first string. */
-   hb_xfree( pSearchList->szPath );
 
    while( pSearchList )
    {
+      hb_xfree( pSearchList->szPath );
       pNext = pSearchList->pNext;
       hb_xfree( pSearchList );
       pSearchList = pNext;

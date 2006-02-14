@@ -205,8 +205,17 @@ typedef enum
    HB_P_ENUMEND,               /* 131 End of FOR EACH loop */
    HB_P_SWITCH,                /* 132 SWITCH using long values */
    HB_P_PUSHDATE,              /* 133 places a data constant value on the virtual machine stack */
+/* optimalization of inlined math operations */   
+   HB_P_PLUSEQPOP,             /* 134 adds a value to the variable reference */
+   HB_P_MINUSEQPOP,            /* 135 subs a value from the variable reference */
+   HB_P_MULTEQPOP,             /* 136 multiplies a variable reference by a value */
+   HB_P_DIVEQPOP,              /* 137 divides the var reference by a value */
+   HB_P_PLUSEQ,                /* 138 adds a value to the variable reference, leave result on the stack */
+   HB_P_MINUSEQ,               /* 139 subs a value from the variable reference, leave result on the stack */
+   HB_P_MULTEQ,                /* 140 multiplies a variable reference by a value, leave result on the stack */
+   HB_P_DIVEQ,                 /* 141 divides the var reference by a value, leave result on the stack */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 134 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 142 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

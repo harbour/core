@@ -488,7 +488,16 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_ENUMPREV              */
    hb_p_default,               /* HB_P_ENUMEND               */
    hb_p_switch,                /* HB_P_SWITCH                */
-   hb_p_default                /* HB_P_PUSHDATE              */
+   hb_p_default,               /* HB_P_PUSHDATE              */
+                               /* optimalization of inlined math operations */
+   hb_p_default,               /* HB_P_PLUSEQPOP             */
+   hb_p_default,               /* HB_P_MINUSEQPOP            */
+   hb_p_default,               /* HB_P_MULTEQPOP             */
+   hb_p_default,               /* HB_P_DIVEQPOP              */
+   hb_p_default,               /* HB_P_PLUSEQ                */
+   hb_p_default,               /* HB_P_MINUSEQ               */
+   hb_p_default,               /* HB_P_MULTEQ                */
+   hb_p_default,               /* HB_P_DIVEQ                 */
 };
 
 void hb_compCodeTraceMarkDead( PFUNCTION pFunc )

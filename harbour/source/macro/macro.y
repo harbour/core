@@ -299,7 +299,7 @@ SelfValue  : SELF            { $$ = hb_compExprNewSelf(); }
 
 /* Literal array
  */
-Array      : '{' ElemList '}'          { $$ = hb_compExprNewArray( $2 ); }
+Array      : '{' ElemList '}'          { $$ = hb_compExprNewArray( $2, HB_MACRO_PARAM ); }
            ;
 
 /* Literal array access

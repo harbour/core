@@ -269,7 +269,16 @@ static PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_ENUMPREV              */
    NULL,                       /* HB_P_ENUMEND               */
    NULL,                       /* HB_P_SWITCH                */
-   NULL                        /* HB_P_PUSHDATE              */
+   NULL,                       /* HB_P_PUSHDATE              */
+                               /* optimalization of inlined math operations */
+   NULL,                       /* HB_P_PLUSEQPOP             */
+   NULL,                       /* HB_P_MINUSEQPOP            */
+   NULL,                       /* HB_P_MULTEQPOP             */
+   NULL,                       /* HB_P_DIVEQPOP              */
+   NULL,                       /* HB_P_PLUSEQ                */
+   NULL,                       /* HB_P_MINUSEQ               */
+   NULL,                       /* HB_P_MULTEQ                */
+   NULL                        /* HB_P_DIVEQ                 */
 };
 
 void hb_compStripFuncLines( PFUNCTION pFunc )

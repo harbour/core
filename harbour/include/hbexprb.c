@@ -487,7 +487,11 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          HB_EXPR_PTR pNext;
 
          hb_compExprCBVarDel( pSelf->value.asCodeblock.pLocals );
-
+         
+         if( pSelf->value.asCodeblock.string )
+         {
+            HB_XFREE( pSelf->value.asCodeblock.string );
+         }
          /* Delete all expressions of the block.
          */
          while( pExp )
@@ -1853,11 +1857,8 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
 
       case HB_EA_DELETE:
          HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asAlias.pAlias );
-          /* NOTE: variable name is released only during macro compilation */
-#if defined( HB_MACRO_SUPPORT )
          if( pSelf->value.asAlias.pVar )
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asAlias.pVar );
-#endif
          break;
    }
    return pSelf;
@@ -2005,7 +2006,12 @@ static HB_EXPR_FUNC( hb_compExprUseRTVariable )
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
+         break;
       case HB_EA_DELETE:
+#if ! defined( HB_MACRO_SUPPORT )
+         if( ! pSelf->value.asRTVar.szName )
+            HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asRTVar.pMacro );
+#endif
          break;
    }
    return pSelf;
@@ -2143,16 +2149,17 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
              */
             hb_compWarnMeaningless( pSelf );
          }
+         break;
 
       case HB_EA_DELETE:
-#if defined( HB_MACRO_SUPPORT )
          {
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMessage.pObject );
             if( pSelf->value.asMessage.pParms )
                HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMessage.pParms );
+#if defined( HB_MACRO_SUPPORT )
             HB_XFREE( pSelf->value.asMessage.szMessage );
-         }
 #endif
+         }
          break;
    }
    return pSelf;

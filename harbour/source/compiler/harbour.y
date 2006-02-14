@@ -432,7 +432,7 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                         {
                            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        hb_compExprGenPush( $3 );   /* TODO: check if return value agree with declared value */
+                        hb_compExprDelete( hb_compExprGenPush( $3 ) );   /* TODO: check if return value agree with declared value */
                         hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, ( BOOL ) 1 );
                         if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
@@ -444,10 +444,10 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                      }
            | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } Crlf
+                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPUBLIC",TRUE) ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } Crlf
            | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } Crlf
+                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPRIVATE",TRUE) ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } Crlf
 
            | EXIT { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1385,10 +1385,10 @@ DummyArgument : EmptyExpression                    {}
 
 FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
            | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' ); }
+           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' );  hb_compExprDelete( $<asExpr>4 );}
            | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType ); }
            | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $4, 'F' ); }
+           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $4, 'F' ); hb_compExprDelete( $<asExpr>6 ); }
            ;
 
 OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
@@ -2021,6 +2021,19 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
    return 0;
 }
 
+void hb_compParserStop( void )
+{
+   if( hb_comp_buffer )
+   {
+#ifdef __cplusplus   
+      yy_delete_buffer( (YY_BUFFER_STATE) hb_comp_buffer );
+#else
+      yy_delete_buffer( (void *) hb_comp_buffer );
+#endif      
+      hb_comp_buffer = NULL;
+   }
+}
+
 /* ************************************************************************* */
 
 /*
@@ -2211,11 +2224,14 @@ static void * hb_compElseIfGen( void * pFirst, ULONG ulOffset )
 static void hb_compElseIfFix( void * pFixElseIfs )
 {
    PELSEIF pFix = ( PELSEIF ) pFixElseIfs;
-
+   PELSEIF pDel;
+   
    while( pFix )
    {
       hb_compGenJumpHere( pFix->ulOffset );
+      pDel = pFix;
       pFix = pFix->pNext;
+      hb_xfree( pDel );
    }
 }
 
@@ -2247,7 +2263,7 @@ static void hb_compRTVariableGen( char * szCreateFun )
    HB_RTVAR_PTR pDel;
 
    /* generate the function call frame */
-   hb_compGenPushSymbol( hb_strdup( szCreateFun ), TRUE, FALSE );
+   hb_compGenPushSymbol( szCreateFun, TRUE, FALSE );
    hb_compGenPushNil();
 
    /* push variable names to create */

@@ -1,4 +1,4 @@
-%{
+%{ 
 /*
  * $Id$
  */
@@ -1718,17 +1718,22 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
-{InvalidNumber} BEGIN INVALIDNUM_; yylval.string = hb_strupr( hb_strdup( yytext ) );
+{InvalidNumber} BEGIN INVALIDNUM_; yylval.string = hb_strdup( yytext );
 <INVALIDNUM_>("."|{Separator}+) {
                    BEGIN 0;
+                   hb_xfree( yylval.string );
                    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NUMERIC_FORMAT, NULL, NULL );
                  }
 <INVALIDNUM_>.   {
+                    int iRet;
+                    char *pTmp = yylval.string;
                     BEGIN 0;
                     unput( yytext[ yyleng-1 ] );
                     unput( '.' );
                     yylval.string[ strlen(yylval.string) - 1 ] = '\0';
-                    return yy_ConvertNumber( yylval.string );
+                    iRet = yy_ConvertNumber( yylval.string );
+                    hb_xfree( pTmp );
+                    return iRet;
                  }
 
 
@@ -1748,19 +1753,21 @@ Separator     {SpaceTab}
                }
 
 {MacroEnd}     {
-                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
+                  yylval.string = yytext;
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
-                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
+                  yylval.string = yytext;
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
-                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
@@ -1831,3 +1838,4 @@ static int yy_ConvertDate( char * szBuffer )
    
    return NUM_DATE;
 }
+

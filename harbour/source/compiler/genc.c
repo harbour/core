@@ -1925,6 +1925,79 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
    return 4;
 }
 
+static HB_GENC_FUNC( hb_p_pluseqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_PLUSEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_minuseqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MINUSEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_multeqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MULTEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_diveqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_DIVEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_pluseq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_PLUSEQ,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_minuseq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MINUSEQ,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_multeq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MULTEQ,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_diveq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_DIVEQ,\n" );
+   return 1;
+}
+
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -2067,7 +2140,16 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_enumprev,
    hb_p_enumend,
    hb_p_switch,
-   hb_p_pushdate
+   hb_p_pushdate,
+   /* optimalization of inlined math operations (+=, -= */
+   hb_p_pluseqpop,
+   hb_p_minuseqpop,
+   hb_p_multeqpop,
+   hb_p_diveqpop,
+   hb_p_pluseq,
+   hb_p_minuseq,
+   hb_p_multeq,
+   hb_p_diveq
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

@@ -377,45 +377,6 @@ HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR pRefer )
    return pExpr;
 }
 
-/* Creates a new literal array { item1, item2, ... itemN }
- *    'pArrList' is a list of array elements
- */
-HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList )
-{
-   HB_EXPR_PTR pExpr;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArray()"));
-
-   pArrList->ExprType = HB_ET_ARRAY;   /* change type from ET_LIST */
-   pArrList->ValType  = HB_EV_ARRAY;
-   pArrList->ulLength = 0;
-
-   pExpr = pArrList->value.asList.pExprList;   /* get first element on the list */
-   /* Now we need to replace all EO_NONE expressions with ET_NIL expressions
-    * If EO_NONE is the first expression and there is no more expressions
-    * then it is an empty array {} and ET_NIL cannot be used
-    */
-   if( pExpr->ExprType == HB_ET_NONE && pExpr->pNext == NULL )
-   {
-      pArrList->value.asList.pExprList = NULL;
-   }
-   else
-   {
-      /* there are at least one non-empty element specified
-       */
-      while( pExpr )
-      {
-         /* if empty element was specified replace it with NIL value */
-         if( pExpr->ExprType == HB_ET_NONE )
-            pExpr->ExprType = HB_ET_NIL;
-         pExpr = pExpr->pNext;
-         ++pArrList->ulLength;
-      }
-   }
-   pArrList->value.asList.pIndex = NULL;
-   return pArrList;
-}
-
 /* Creates new macro expression
  */
 HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp, char * szName )

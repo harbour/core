@@ -178,7 +178,16 @@ const BYTE hb_comp_pcode_len[] = {
    1,        /* HB_P_ENUMPREV              */
    1,        /* HB_P_ENUMEND               */
    3,        /* HB_P_SWITCH                */
-   5         /* HB_P_PUSHDATE,             */
+   5,        /* HB_P_PUSHDATE,             */
+             /* optimalization of inlined math operations */
+   1,        /* HB_P_PLUSEQPOP,            */
+   1,        /* HB_P_MINUSEQPOP,           */
+   1,        /* HB_P_MULTEQPOP,            */
+   1,        /* HB_P_DIVEQPOP,             */
+   1,        /* HB_P_PLUSEQ,               */
+   1,        /* HB_P_MINUSEQ,              */
+   1,        /* HB_P_MULTEQ,               */
+   1         /* HB_P_DIVEQ,                */
 };
 
 void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )

@@ -315,7 +315,6 @@ HB_EXPR_PTR hb_compExprNewString( char * );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *, BOOL, BOOL );
-HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewVar( char * );
 HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -394,6 +393,7 @@ BOOL hb_compExprIsValidMacro( char *, BOOL *, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 
+HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR, HB_MACRO_DECL );
@@ -406,6 +406,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_MACRO_DECL );
 
 #else
 
+HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR );

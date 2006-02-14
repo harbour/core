@@ -464,6 +464,7 @@ extern void hb_compCodeTraceMarkDead( PFUNCTION pFunc );
 extern int hb_compYACCMain( char * szName );
 #endif
 extern BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearchPath );  /* end #include support */
+extern void hb_compParserStop( void ); /* cleanup the bison parser */
 
 extern char * hb_comp_buffer; /* yacc input buffer */
 

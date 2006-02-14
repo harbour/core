@@ -144,21 +144,81 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
       /* call pop message with one argument */
       HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
+      
+      return;
    }
    /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
     */
-   else
+   else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
+              bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
+            ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      /* push old value */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* push increment value */
-      HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-      /* perform operation and duplicate the new value */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-      /* pop the new value into variable and leave the copy on the stack */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
+      /* NOTE: direct type change */
+      pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+
+      if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
+          pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING ||
+          pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+      {
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE ) 
+         {
+            /* NOTE: direct type change */
+            pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+         }
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         switch( bOpEq )
+         {
+            case HB_P_PLUS:
+               bOpEq = HB_P_PLUSEQ;
+               break;
+            case HB_P_MINUS:
+               bOpEq = HB_P_MINUSEQ;
+               break;
+            case HB_P_MULT:
+               bOpEq = HB_P_MULTEQ;
+               break;
+            case HB_P_DIVIDE:
+               bOpEq = HB_P_DIVEQ;
+               break;
+         }
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         return;
+      }
+      else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+      {
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         /* NOTE: direct type change */
+         pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         switch( bOpEq )
+         {
+            case HB_P_PLUS:
+               bOpEq = HB_P_PLUSEQ;
+               break;
+            case HB_P_MINUS:
+               bOpEq = HB_P_MINUSEQ;
+               break;
+            case HB_P_MULT:
+               bOpEq = HB_P_MULTEQ;
+               break;
+            case HB_P_DIVIDE:
+               bOpEq = HB_P_DIVEQ;
+               break;
+         }
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         return;
+      }
    }
+   /* push old value */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+   /* push increment value */
+   HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+   /* perform operation and duplicate the new value */
+   HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+   /* pop the new value into variable and leave the copy on the stack */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generates pcodes for <operator>= syntax
@@ -198,18 +258,75 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
       /* pop the unneeded value from the stack */
       HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+      
+      return;
    }
-   else
+   /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
+    */
+   else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
+              bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
+            ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      /* push old value */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* push increment value */
-      HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-      /* add */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-      /* pop the new value into variable and remove it from the stack */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
+      /* NOTE: direct type change */
+      pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+
+      if( pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC || 
+          pSelf->value.asOperator.pRight->ExprType == HB_ET_STRING )
+      {
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         switch( bOpEq )
+         {
+            case HB_P_PLUS:
+               bOpEq = HB_P_PLUSEQPOP;
+               break;
+            case HB_P_MINUS:
+               bOpEq = HB_P_MINUSEQPOP;
+               break;
+            case HB_P_MULT:
+               bOpEq = HB_P_MULTEQPOP;
+               break;
+            case HB_P_DIVIDE:
+               bOpEq = HB_P_DIVEQPOP;
+               break;
+         }
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         return;
+      }
+      else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+      {
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         /* NOTE: direct type change */
+         pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         switch( bOpEq )
+         {
+            case HB_P_PLUS:
+               bOpEq = HB_P_PLUSEQPOP;
+               break;
+            case HB_P_MINUS:
+               bOpEq = HB_P_MINUSEQPOP;
+               break;
+            case HB_P_MULT:
+               bOpEq = HB_P_MULTEQPOP;
+               break;
+            case HB_P_DIVIDE:
+               bOpEq = HB_P_DIVEQPOP;
+               break;
+         }
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         return;
+      }
    }
+
+   /* push old value */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+   /* push increment value */
+   HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+   /* add */
+   HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+   /* pop the new value into variable and remove it from the stack */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generates the pcodes for pre- increment/decrement expressions
@@ -513,6 +630,8 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
    memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
    pLeft->ulLength += pRight->ulLength;
    szString[ pLeft->ulLength ] = '\0';
+   if( pLeft->value.asString.dealloc )
+      hb_xfree( pLeft->value.asString.string );
    pLeft->value.asString.string = szString;
    pLeft->value.asString.dealloc = TRUE;
    hb_compExprFree( pRight, HB_MACRO_PARAM );
