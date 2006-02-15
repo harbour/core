@@ -864,11 +864,12 @@ void hb_compChkPaths( void )
 {
    char * szInclude = hb_getenv( "INCLUDE" );
 
-   if( szInclude && szInclude[ 0 ] != '\0' )
-      hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
-
    if( szInclude )
+   {
+      if( szInclude[ 0 ] != '\0' )
+         hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
       hb_xfree( ( void * ) szInclude );
+   }
 }
 
 static void hb_compChkDefineSwitch( char * pszSwitch )

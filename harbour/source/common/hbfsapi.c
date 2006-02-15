@@ -64,6 +64,7 @@ void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;
+   BOOL fFree = TRUE;
 
    while( *pSearchList )
    {
@@ -76,12 +77,15 @@ void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES ** pSearchList )
       *pDelim = '\0';
       *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
       (*pSearchList)->szPath = pPath;
+      (*pSearchList)->fFree  = fFree;
       pSearchList = &(*pSearchList)->pNext;
       pPath = pDelim + 1;
+      fFree = FALSE;
    }
    *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
    (*pSearchList)->szPath = pPath;
    (*pSearchList)->pNext  = NULL;
+   (*pSearchList)->fFree  = fFree;
 }
 
 /*
@@ -97,7 +101,8 @@ void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 
    while( pSearchList )
    {
-      hb_xfree( pSearchList->szPath );
+      if( pSearchList->fFree )
+         hb_xfree( pSearchList->szPath );
       pNext = pSearchList->pNext;
       hb_xfree( pSearchList );
       pSearchList = pNext;

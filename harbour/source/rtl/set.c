@@ -79,26 +79,11 @@ static HB_PATHNAMES * sp_set_path;
 
 static void hb_setFreeSetPath( void )
 {
-   /* Free all set paths */
-   HB_PATHNAMES * curPath = sp_set_path;
-   HB_PATHNAMES * nextPath;
-
    if( sp_set_path )
    {
-      /* Only the first path holds an allocated string.
-         All of the other paths in the list are part of
-         that first string. */
-      hb_xfree( sp_set_path->szPath );
+      hb_fsFreeSearchPath( sp_set_path );
+      sp_set_path = NULL;
    }
-
-   while( curPath )
-   {
-      nextPath = curPath->pNext;
-      hb_xfree( curPath );
-      curPath = nextPath;
-   }
-
-   sp_set_path = NULL;
 }
 
 static char set_char( PHB_ITEM pItem, char oldChar )

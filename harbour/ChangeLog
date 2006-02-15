@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-15 11:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+   * do not line striping optimization when -l compiler switch
+     (suppress line number information) is set - in such case it's only
+     waste of time
+
+  * harbour/include/hbapifs.h
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/set.c
+    * cleaned the usage of hb_fsAddSearchPath()/hb_fsFreeSearchPath()
+      It fixes few possible memory leaks and GPF traps.
+
 2006-02-14 18:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.c
    * enabled FM statistic by default when compiled without:

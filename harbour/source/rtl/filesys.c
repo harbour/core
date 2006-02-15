@@ -2217,7 +2217,7 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
          hb_fsFNameMerge( ( char * ) szPath, pFilepath );
       }
    }
-   else if( pPaths )
+   else if( pPaths && *pPaths )
    {
       hb_fsAddSearchPath( ( char * ) pPaths, &pSearchPath );
       pNextPath = pSearchPath;
@@ -2228,6 +2228,7 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
          fIsFile = hb_fsFile( szPath );
          pNextPath = pNextPath->pNext;
       }
+      hb_fsFreeSearchPath( pSearchPath );
       if( !fIsFile )
       {
          pFilepath->szPath = NULL;

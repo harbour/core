@@ -175,6 +175,7 @@ typedef struct _HB_PATHNAMES
 {
    char * szPath;
    struct _HB_PATHNAMES * pNext;
+   BOOL   fFree;
 } HB_PATHNAMES;
 
 extern HB_EXPORT void    hb_fsAddSearchPath( char * szPath, HB_PATHNAMES ** pSearchList );

@@ -94,31 +94,6 @@ FILE *         hb_comp_yyppo = NULL;
 
 /* static jmp_buf s_env; */
 
-/* TODO: This function should return an error code. The preprocessed sting
- * should be returned  by a reference.
- */
-
-static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
-{
-  HB_PATHNAMES * pPath = *pSearchList;
-
-  HB_TRACE(HB_TR_DEBUG, ("AddSearchPath(%s, %p)", szPath, pSearchList));
-
-  if( pPath )
-    {
-      while( pPath->pNext )
-        pPath = pPath->pNext;
-      pPath->pNext = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-      pPath = pPath->pNext;
-    }
-  else
-    {
-      *pSearchList = pPath = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-    }
-  pPath->pNext  = NULL;
-  pPath->szPath = hb_strdup( szPath );
-}
-
 HB_FUNC( __PP_INIT )
 {
    hb_pp_Table();
@@ -127,16 +102,7 @@ HB_FUNC( __PP_INIT )
 
    if( ISCHAR( 1 ) )
    {
-      char * pPath = hb_parc( 1 );
-      char * pDelim;
-
-      while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-      {
-         *pDelim = '\0';
-         AddSearchPath( pPath, &hb_comp_pIncludePath );
-         pPath = pDelim + 1;
-      }
-      AddSearchPath( pPath, &hb_comp_pIncludePath );
+      hb_fsAddSearchPath( hb_parc( 1 ), &hb_comp_pIncludePath );
    }
 }
 
@@ -150,16 +116,7 @@ HB_FUNC( __PP_PATH )
 
    if( ISCHAR( 1 ) )
    {
-      char * cDelim;
-      char * cPath = hb_parc( 1 );
-
-      while( ( cDelim = strchr( cPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
-      {
-         *cDelim = '\0';
-         AddSearchPath( cPath, &hb_comp_pIncludePath );
-         cPath = cDelim + 1;
-      }
-      AddSearchPath( cPath, &hb_comp_pIncludePath );
+      hb_fsAddSearchPath( hb_parc( 1 ), &hb_comp_pIncludePath );
    }
 }
 
