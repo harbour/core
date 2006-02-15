@@ -474,33 +474,33 @@ LANG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 CODEPAGE_LIB_OBJS = \
-   $(OBJ_DIR)\cdpbg866.obj \
-   $(OBJ_DIR)\cdpbgiso.obj \
-   $(OBJ_DIR)\cdpbgwin.obj \
-   $(OBJ_DIR)\cdpeldos.obj \
-   $(OBJ_DIR)\cdpelwin.obj \
-   $(OBJ_DIR)\cdpesdos.obj \
-   $(OBJ_DIR)\cdpesmwi.obj \
-   $(OBJ_DIR)\cdpeswin.obj \
-   $(OBJ_DIR)\cdpgedos.obj \
-   $(OBJ_DIR)\cdpgewin.obj \
-   $(OBJ_DIR)\cdphu852.obj \
-   $(OBJ_DIR)\cdphuiso.obj \
-   $(OBJ_DIR)\cdphuwin.obj \
-   $(OBJ_DIR)\cdppl852.obj \
-   $(OBJ_DIR)\cdppliso.obj \
-   $(OBJ_DIR)\cdpplmaz.obj \
-   $(OBJ_DIR)\cdpplwin.obj \
-   $(OBJ_DIR)\cdppt850.obj \
-   $(OBJ_DIR)\cdpptiso.obj \
-   $(OBJ_DIR)\cdpru866.obj \
-   $(OBJ_DIR)\cdprukoi.obj \
-   $(OBJ_DIR)\cdpruwin.obj \
-   $(OBJ_DIR)\cdpsl437.obj \
-   $(OBJ_DIR)\cdpsl852.obj \
-   $(OBJ_DIR)\cdpsliso.obj \
-   $(OBJ_DIR)\cdpslwin.obj \
-   $(OBJ_DIR)\cdpsrwin.obj \
+   $(OBJ_DIR)\cpbg866.obj  \
+   $(OBJ_DIR)\cpbgiso.obj  \
+   $(OBJ_DIR)\cpbgwin.obj  \
+   $(OBJ_DIR)\cpeldos.obj  \
+   $(OBJ_DIR)\cpelwin.obj  \
+   $(OBJ_DIR)\cpesdos.obj  \
+   $(OBJ_DIR)\cpesmwi.obj  \
+   $(OBJ_DIR)\cpeswin.obj  \
+   $(OBJ_DIR)\cpgedos.obj  \
+   $(OBJ_DIR)\cpgewin.obj  \
+   $(OBJ_DIR)\cphu852.obj  \
+   $(OBJ_DIR)\cphuiso.obj  \
+   $(OBJ_DIR)\cphuwin.obj  \
+   $(OBJ_DIR)\cppl852.obj  \
+   $(OBJ_DIR)\cppliso.obj  \
+   $(OBJ_DIR)\cpplmaz.obj  \
+   $(OBJ_DIR)\cpplwin.obj  \
+   $(OBJ_DIR)\cppt850.obj  \
+   $(OBJ_DIR)\cpptiso.obj  \
+   $(OBJ_DIR)\cpru866.obj  \
+   $(OBJ_DIR)\cprukoi.obj  \
+   $(OBJ_DIR)\cpruwin.obj  \
+   $(OBJ_DIR)\cpsl437.obj  \
+   $(OBJ_DIR)\cpsl852.obj  \
+   $(OBJ_DIR)\cpsliso.obj  \
+   $(OBJ_DIR)\cpslwin.obj  \
+   $(OBJ_DIR)\cpsrwin.obj  \
    $(OBJ_DIR)\uc1250.obj   \
    $(OBJ_DIR)\uc1251.obj   \
    $(OBJ_DIR)\uc1253.obj   \

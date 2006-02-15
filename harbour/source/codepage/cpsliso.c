@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SL437 )
+ * National Collation Support Module ( SLISO )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: 437 */
+/* Codepage: ISO-8859-2 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -84,15 +84,23 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "SL437",
-    CPID_437, UNITB_437, NUMBER_OF_CHARACTERS,
-    "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY",
-    "abc~}d|efghijklmnopqrs{tuvwz`xy",
+static HB_CODEPAGE s_codepage = { "SLISO",
+    CPID_8859_2, UNITB_8859_2, NUMBER_OF_CHARACTERS,
+    "ABCÈÆDÐEFGHIJKLMNOPQRS©TUVWZ®XY",
+    "abcèædðefghijklmnopqrs¹tuvwz¾xy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SL437 );
+HB_CODEPAGE_INIT( SLISO );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_SL437
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_SLISO
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SLISO = hb_codepage_Init_SLISO;
+   #pragma data_seg()
 #endif
-

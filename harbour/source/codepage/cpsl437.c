@@ -4,11 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( German MS-DOS )
+ * National Collation Support Module ( SL437 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * v1.0 2003 Guenther Steiner <byte-one@aon.at>
+ * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,15 +51,15 @@
  *
  */
 
-/* Language name: German */
-/* ISO language code (2 chars): DE */
-/* Codepage: 850 */
+/* Language name: Slovenian */
+/* ISO language code (2 chars): SL */
+/* Codepage: 437 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  30    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -75,7 +75,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-    a~€
+      a~€
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -84,15 +84,23 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "DE",
-    CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
-    "AŽBCDEFGHIJKLMNO™PQRSáTUšVWXYZ",
-    "a„bcdefghijklmno”pqrsátuvwxyz",
+static HB_CODEPAGE s_codepage = { "SL437",
+    CPID_437, UNITB_437, NUMBER_OF_CHARACTERS,
+    "ABC^]D\\EFGHIJKLMNOPQRS[TUVWZ@XY",
+    "abc~}d|efghijklmnopqrs{tuvwz`xy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( DE );
+HB_CODEPAGE_INIT( SL437 );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_DE
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_SL437
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_SL437 = hb_codepage_Init_SL437;
+   #pragma data_seg()
 #endif
-

@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Greek WIN )
+ * National Collation Support Module (RUWIN)
  *
- * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
+ * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * v1.0 2004 Panayotis (Pete) Dionysopoulos <pete_westg@yahoo.gr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,47 +50,31 @@
  *
  */
 
-/* Language name: Greek WIN*/
-/* ISO language code (2 chars): EL */
-/* Codepage: ANSI (1253) */
+/* Language name: Russian */
+/* ISO language code (2 chars): RU */
+/* Codepage: Windows-1251 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
-                                       alphabet, two-as-one aren't considered
-                                       here, accented - are considered. */
-#define IS_LATIN               0    /* Should be 1, if the national alphabet
-                                       is based on Latin */
-#define ACCENTED_EQUAL         1    /* Should be 1, if accented character 
-                                       has the same weight as appropriate
-                                       unaccented. */
-#define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
-                                       sort after their unaccented counterparts
-                                       only if the unaccented versions of all 
-                                       characters being compared are the same 
-                                       ( interleaving ) */
+static HB_CODEPAGE s_codepage = { "RU1251",
+    CPID_1251, UNITB_1251, 32,
+    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß",
+    "àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ",
+    0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
-/* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
-   accented characters with the symbol '~' before each of them, for example:
-    a~€
-   If there is two-character sequence, which is considered as one, it should
-   be marked with '.' before and after it, for example:
-      ... h.ch.i ...
+HB_CODEPAGE_INIT( RU1251 );
 
-   The Upper case string and the Lower case string should be absolutely the
-   same excepting the characters case, of course.
- */
-
-static HB_CODEPAGE s_codepage = { "ELWIN",
-    CPID_1253, UNITB_1253, NUMBER_OF_CHARACTERS,
-    "Á~¢ÂÃÄÅ¸ÆÇ~¹ÈÉ~ºÊËÌÍÎÏ~¼ÐÑÓÓÔÕ~¾Ö×ØÙ~¿",
-    "á~Üâãäå~Ýæç~Þèé~ßêëìíîï~üðñóòôõ~ýö÷øù~þ",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
-
-HB_CODEPAGE_INIT( ELWIN );
-
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_ELWIN
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_RU1251
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_RU1251 = hb_codepage_Init_RU1251;
+   #pragma data_seg()
 #endif

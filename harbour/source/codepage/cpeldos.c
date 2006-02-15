@@ -1,14 +1,13 @@
 /*
  * $Id$
- */
+*/
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SL852 )
+ * National Collation Support Module ( template )
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://www.harbour-project.org
- * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,20 +50,20 @@
  *
  */
 
-/* Language name: Slovenian */
-/* ISO language code (2 chars): SL */
-/* Codepage: 852 */
+/* Language name: <Greek dos> */
+/* ISO language code (2 chars): EL */
+/* Codepage: 737 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
+#define IS_LATIN               0    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
+#define ACCENTED_EQUAL         1    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
@@ -75,7 +74,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-      a~€
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -84,15 +83,23 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "SL852",
-    CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
-    "ABC¬DÑEFGHIJKLMNOPQRSæTUVWZ¦XY",
-    "abcŸ†dÐefghijklmnopqrsçtuvwz§xy",
+static HB_CODEPAGE s_codepage = { "EL",
+    CPID_737, UNITB_737, NUMBER_OF_CHARACTERS,
+    "€~ê‚ƒ„ë…†~ì‡ˆ~í‰Š‹ŒŽ~î‘‘’“~ï”•–—~ð",
+    "˜~á™š›œ~âž~ãŸ ~å¡¢£¤¥¦~æ§¨©ª«¬~ç­®¯à~é",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SL852 );
+HB_CODEPAGE_INIT( EL );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_SL852
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_EL
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_EL = hb_codepage_Init_EL;
+   #pragma data_seg()
 #endif
-

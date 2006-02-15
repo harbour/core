@@ -4,11 +4,12 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SLWIN )
+ * National Collation Support Module ( Latin 850 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+ * Portuguese collating sequence (PT850) done
+ * by Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,15 +52,15 @@
  *
  */
 
-/* Language name: Slovenian */
-/* ISO language code (2 chars): SL */
-/* Codepage: 1250 */
+/* Language name: Portuguese       */
+/* ISO language code (2 chars): PT */
+/* Codepage: 850                   */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  31    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  49    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -84,15 +85,23 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "SLWIN",
-    CPID_1250, UNITB_1250, NUMBER_OF_CHARACTERS,
-    "ABCÈÆDÐEFGHIJKLMNOPQRSŠTUVWZŽXY",
-    "abcèædðefghijklmnopqrsštuvwzžxy",
+static HB_CODEPAGE s_codepage = { "PT850",
+    CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
+    "Aµ·¶ÇŽBC€DEÔÒFGHIÖÞ×ØJKLMN¥Oàãâå™PQRSTUéëêšVWXYZ",
+    "a …ƒÆ„bc‡de‚Šˆfghi¡Œ‹jklmn¤o¢•“ä”pqrstu£—–vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SLWIN );
+HB_CODEPAGE_INIT( PT850 );
 
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_SLWIN
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_PT850
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_PT850 = hb_codepage_Init_PT850;
+   #pragma data_seg()
 #endif
-

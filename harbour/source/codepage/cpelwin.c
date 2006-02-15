@@ -4,11 +4,11 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Spanish MS-DOS )
+ * National Collation Support Module ( Greek WIN )
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://www.harbour-project.org
- * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
+ * v1.0 2004 Panayotis (Pete) Dionysopoulos <pete_westg@yahoo.gr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,26 +51,26 @@
  *
  */
 
-/* Language name: Spanish */
-/* ISO language code (2 chars): ES */
-/* Codepage: 850 */
+/* Language name: Greek WIN*/
+/* ISO language code (2 chars): EL */
+/* Codepage: ANSI (1253) */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
+#define IS_LATIN               0    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
+#define ACCENTED_EQUAL         1    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
@@ -84,15 +84,23 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ES", 
-   CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
-   "AµBCDEFGHIÖJKLMN¥OàPQRSTUéšVWXYZ", 
-   "a bcde‚fghi¡jklmn¤o¢pqrstu£vwxyz",
-   IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
+static HB_CODEPAGE s_codepage = { "ELWIN",
+    CPID_1253, UNITB_1253, NUMBER_OF_CHARACTERS,
+    "Á~¢ÂÃÄÅ¸ÆÇ~¹ÈÉ~ºÊËÌÍÎÏ~¼ÐÑÓÓÔÕ~¾Ö×ØÙ~¿",
+    "á~Üâãäå~Ýæç~Þèé~ßêëìíîï~üðñóòôõ~ýö÷øù~þ",
+    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
+HB_CODEPAGE_INIT( ELWIN );
 
-HB_CODEPAGE_INIT( ES );
-
-#ifdef HB_USE_PRAGMA_STARTUP
-   #pragma startup hb_codepage_Init_ES
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hb_codepage_Init_ELWIN
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_ELWIN = hb_codepage_Init_ELWIN;
+   #pragma data_seg()
 #endif

@@ -381,33 +381,33 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\maindllh.obj \
   $(OBJ_DIR)\hvm.obj \
   \
-  $(OBJ_DIR)\cdpbg866.obj \
-  $(OBJ_DIR)\cdpbgiso.obj \
-  $(OBJ_DIR)\cdpbgwin.obj \
-  $(OBJ_DIR)\cdpeldos.obj \
-  $(OBJ_DIR)\cdpelwin.obj \
-  $(OBJ_DIR)\cdpesdos.obj \
-  $(OBJ_DIR)\cdpesmwi.obj \
-  $(OBJ_DIR)\cdpeswin.obj \
-  $(OBJ_DIR)\cdpgedos.obj \
-  $(OBJ_DIR)\cdpgewin.obj \
-  $(OBJ_DIR)\cdphu852.obj \
-  $(OBJ_DIR)\cdphuiso.obj \
-  $(OBJ_DIR)\cdphuwin.obj \
-  $(OBJ_DIR)\cdppl852.obj \
-  $(OBJ_DIR)\cdppliso.obj \
-  $(OBJ_DIR)\cdpplmaz.obj \
-  $(OBJ_DIR)\cdpplwin.obj \
-  $(OBJ_DIR)\cdppt850.obj \
-  $(OBJ_DIR)\cdpptiso.obj \
-  $(OBJ_DIR)\cdpru866.obj \
-  $(OBJ_DIR)\cdprukoi.obj \
-  $(OBJ_DIR)\cdpruwin.obj \
-  $(OBJ_DIR)\cdpsl437.obj \
-  $(OBJ_DIR)\cdpsl852.obj \
-  $(OBJ_DIR)\cdpsliso.obj \
-  $(OBJ_DIR)\cdpslwin.obj \
-  $(OBJ_DIR)\cdpsrwin.obj \
+  $(OBJ_DIR)\cpbg866.obj \
+  $(OBJ_DIR)\cpbgiso.obj \
+  $(OBJ_DIR)\cpbgwin.obj \
+  $(OBJ_DIR)\cpeldos.obj \
+  $(OBJ_DIR)\cpelwin.obj \
+  $(OBJ_DIR)\cpesdos.obj \
+  $(OBJ_DIR)\cpesmwi.obj \
+  $(OBJ_DIR)\cpeswin.obj \
+  $(OBJ_DIR)\cpgedos.obj \
+  $(OBJ_DIR)\cpgewin.obj \
+  $(OBJ_DIR)\cphu852.obj \
+  $(OBJ_DIR)\cphuiso.obj \
+  $(OBJ_DIR)\cphuwin.obj \
+  $(OBJ_DIR)\cppl852.obj \
+  $(OBJ_DIR)\cppliso.obj \
+  $(OBJ_DIR)\cpplmaz.obj \
+  $(OBJ_DIR)\cpplwin.obj \
+  $(OBJ_DIR)\cppt850.obj \
+  $(OBJ_DIR)\cpptiso.obj \
+  $(OBJ_DIR)\cpru866.obj \
+  $(OBJ_DIR)\cprukoi.obj \
+  $(OBJ_DIR)\cpruwin.obj \
+  $(OBJ_DIR)\cpsl437.obj \
+  $(OBJ_DIR)\cpsl852.obj \
+  $(OBJ_DIR)\cpsliso.obj \
+  $(OBJ_DIR)\cpslwin.obj \
+  $(OBJ_DIR)\cpsrwin.obj \
   $(OBJ_DIR)\uc1250.obj \
   $(OBJ_DIR)\uc1251.obj \
   $(OBJ_DIR)\uc1253.obj \
@@ -1785,85 +1785,85 @@ $(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
 $(OBJ_DIR)\mousewin.obj : $(RTL_DIR)\gtwin\mousewin.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
-$(OBJ_DIR)\cdpbg866.obj : $(CODEPAGE_DIR)\cdpbg866.c
+$(OBJ_DIR)\cpbg866.obj : $(CODEPAGE_DIR)\cpbg866.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpbgiso.obj : $(CODEPAGE_DIR)\cdpbgiso.c
+$(OBJ_DIR)\cpbgiso.obj : $(CODEPAGE_DIR)\cpbgiso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpbgwin.obj : $(CODEPAGE_DIR)\cdpbgwin.c
+$(OBJ_DIR)\cpbgwin.obj : $(CODEPAGE_DIR)\cpbgwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpeldos.obj : $(CODEPAGE_DIR)\cdpeldos.c
+$(OBJ_DIR)\cpeldos.obj : $(CODEPAGE_DIR)\cpeldos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpelwin.obj : $(CODEPAGE_DIR)\cdpelwin.c
+$(OBJ_DIR)\cpelwin.obj : $(CODEPAGE_DIR)\cpelwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpesdos.obj : $(CODEPAGE_DIR)\cdpesdos.c
+$(OBJ_DIR)\cpesdos.obj : $(CODEPAGE_DIR)\cpesdos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpesmwi.obj : $(CODEPAGE_DIR)\cdpesmwi.c
+$(OBJ_DIR)\cpesmwi.obj : $(CODEPAGE_DIR)\cpesmwi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpeswin.obj : $(CODEPAGE_DIR)\cdpeswin.c
+$(OBJ_DIR)\cpeswin.obj : $(CODEPAGE_DIR)\cpeswin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpgedos.obj : $(CODEPAGE_DIR)\cdpgedos.c
+$(OBJ_DIR)\cpgedos.obj : $(CODEPAGE_DIR)\cpgedos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpgewin.obj : $(CODEPAGE_DIR)\cdpgewin.c
+$(OBJ_DIR)\cpgewin.obj : $(CODEPAGE_DIR)\cpgewin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdphu852.obj : $(CODEPAGE_DIR)\cdphu852.c
+$(OBJ_DIR)\cphu852.obj : $(CODEPAGE_DIR)\cphu852.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdphuiso.obj : $(CODEPAGE_DIR)\cdphuiso.c
+$(OBJ_DIR)\cphuiso.obj : $(CODEPAGE_DIR)\cphuiso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdphuwin.obj : $(CODEPAGE_DIR)\cdphuwin.c
+$(OBJ_DIR)\cphuwin.obj : $(CODEPAGE_DIR)\cphuwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdppl852.obj : $(CODEPAGE_DIR)\cdppl852.c
+$(OBJ_DIR)\cppl852.obj : $(CODEPAGE_DIR)\cppl852.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdppliso.obj : $(CODEPAGE_DIR)\cdppliso.c
+$(OBJ_DIR)\cppliso.obj : $(CODEPAGE_DIR)\cppliso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpplmaz.obj : $(CODEPAGE_DIR)\cdpplmaz.c
+$(OBJ_DIR)\cpplmaz.obj : $(CODEPAGE_DIR)\cpplmaz.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpplwin.obj : $(CODEPAGE_DIR)\cdpplwin.c
+$(OBJ_DIR)\cpplwin.obj : $(CODEPAGE_DIR)\cpplwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdppt850.obj : $(CODEPAGE_DIR)\cdppt850.c
+$(OBJ_DIR)\cppt850.obj : $(CODEPAGE_DIR)\cppt850.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpptiso.obj : $(CODEPAGE_DIR)\cdpptiso.c
+$(OBJ_DIR)\cpptiso.obj : $(CODEPAGE_DIR)\cpptiso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpru866.obj : $(CODEPAGE_DIR)\cdpru866.c
+$(OBJ_DIR)\cpru866.obj : $(CODEPAGE_DIR)\cpru866.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdprukoi.obj : $(CODEPAGE_DIR)\cdprukoi.c
+$(OBJ_DIR)\cprukoi.obj : $(CODEPAGE_DIR)\cprukoi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpruwin.obj : $(CODEPAGE_DIR)\cdpruwin.c
+$(OBJ_DIR)\cpruwin.obj : $(CODEPAGE_DIR)\cpruwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpsl437.obj : $(CODEPAGE_DIR)\cdpsl437.c
+$(OBJ_DIR)\cpsl437.obj : $(CODEPAGE_DIR)\cpsl437.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpsl852.obj : $(CODEPAGE_DIR)\cdpsl852.c
+$(OBJ_DIR)\cpsl852.obj : $(CODEPAGE_DIR)\cpsl852.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpsliso.obj : $(CODEPAGE_DIR)\cdpsliso.c
+$(OBJ_DIR)\cpsliso.obj : $(CODEPAGE_DIR)\cpsliso.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpslwin.obj : $(CODEPAGE_DIR)\cdpslwin.c
+$(OBJ_DIR)\cpslwin.obj : $(CODEPAGE_DIR)\cpslwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\cdpsrwin.obj : $(CODEPAGE_DIR)\cdpsrwin.c
+$(OBJ_DIR)\cpsrwin.obj : $(CODEPAGE_DIR)\cpsrwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\uc1250.obj : $(CODEPAGE_DIR)\uc1250.c

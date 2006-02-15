@@ -5,33 +5,33 @@
 ROOT = ../../
 
 C_SOURCES=\
-	cdpbg866.c    \
-	cdpbgiso.c    \
-	cdpbgwin.c    \
-	cdpeldos.c    \
-	cdpelwin.c    \
-	cdpesdos.c    \
-	cdpeswin.c    \
-	cdpesmwi.c    \
-	cdpgedos.c    \
-	cdpgewin.c    \
-	cdphu852.c    \
-	cdphuiso.c    \
-	cdphuwin.c    \
-	cdppl852.c    \
-	cdppliso.c    \
-	cdpplmaz.c    \
-	cdpplwin.c    \
-	cdppt850.c    \
-	cdpptiso.c    \
-	cdpru866.c    \
-	cdprukoi.c    \
-	cdpruwin.c    \
-	cdpsl437.c    \
-	cdpsl852.c    \
-	cdpsliso.c    \
-	cdpslwin.c    \
-	cdpsrwin.c    \
+	cpbg866.c     \
+	cpbgiso.c     \
+	cpbgwin.c     \
+	cpeldos.c     \
+	cpelwin.c     \
+	cpesdos.c     \
+	cpeswin.c     \
+	cpesmwi.c     \
+	cpgedos.c     \
+	cpgewin.c     \
+	cphu852.c     \
+	cphuiso.c     \
+	cphuwin.c     \
+	cppl852.c     \
+	cppliso.c     \
+	cpplmaz.c     \
+	cpplwin.c     \
+	cppt850.c     \
+	cpptiso.c     \
+	cpru866.c     \
+	cprukoi.c     \
+	cpruwin.c     \
+	cpsl437.c     \
+	cpsl852.c     \
+	cpsliso.c     \
+	cpslwin.c     \
+	cpsrwin.c     \
 	uc1250.c      \
 	uc1251.c      \
 	uc1253.c      \

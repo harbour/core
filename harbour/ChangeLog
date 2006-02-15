@@ -8,6 +8,73 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+2006-02-16 14:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+   * include/hbexpra.c
+   * source/compiler/Makefile
+   * source/compiler/expropta.c
+      
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/hbgenerr.c
+      * all compiler structures are deallocated on exit now
+
+
+2006-02-15 20:24 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/hrbdll.bc
+   * harbour/hrbdll.vc
+   * harbour/makefile.bc
+   * harbour/makefile.nt
+   * harbour/makefile.vc
+   * harbour/makefile64.nt
+   * harbour/source/codepage/Makefile
+   + harbour/source/codepage/cp_tpl.c
+   + harbour/source/codepage/cpbg866.c
+   + harbour/source/codepage/cpbgiso.c
+   + harbour/source/codepage/cpbgwin.c
+   + harbour/source/codepage/cpeldos.c
+   + harbour/source/codepage/cpelwin.c
+   + harbour/source/codepage/cpesdos.c
+   + harbour/source/codepage/cpesmwi.c
+   + harbour/source/codepage/cpeswin.c
+   + harbour/source/codepage/cpgedos.c
+   + harbour/source/codepage/cpgewin.c
+   + harbour/source/codepage/cphu852.c
+   + harbour/source/codepage/cphuiso.c
+   + harbour/source/codepage/cphuwin.c
+   + harbour/source/codepage/cppl852.c
+   + harbour/source/codepage/cppliso.c
+   + harbour/source/codepage/cpplmaz.c
+   + harbour/source/codepage/cpplwin.c
+   + harbour/source/codepage/cppt850.c
+   + harbour/source/codepage/cpptiso.c
+   + harbour/source/codepage/cpru866.c
+   + harbour/source/codepage/cprukoi.c
+   + harbour/source/codepage/cpruwin.c
+   + harbour/source/codepage/cpsl437.c
+   + harbour/source/codepage/cpsl852.c
+   + harbour/source/codepage/cpsliso.c
+   + harbour/source/codepage/cpslwin.c
+   + harbour/source/codepage/cpsrwin.c
+   - harbour/source/codepage/cdp_tpl.c
+   - harbour/source/codepage/cdpbg866.c
+   - harbour/source/codepage/cdpbgiso.c
+   - harbour/source/codepage/cdpbgwin.c
+   - harbour/source/codepage/cdpeldos.c
+   - harbour/source/codepage/cdpelwin.c
+   - harbour/source/codepage/cdpesdos.c
+   - harbour/source/codepage/cdpesmwi.c
+   - harbour/source/codepage/cdpeswin.c
+   - harbour/source/codepage/cdpgedos.c
+   - harbour/source/codepage/cdpgewin.c
+   - harbour/source/codepage/cdphu852.c
+   - harbour/source/codepage/cdphuiso.c
+   - harbour/source/codepage/cdphuwin.c
+   - harbour/source/codepage/cdppl852.c
+   - harbour/source/codepage/cdppliso.c
+   - harbour/source/codepage/cdpplmaz.c
+   - harbour/source/codepage/cdpplwin.c
+   - harbour/source/codepage/cdppt850.c
    - harbour/source/codepage/cdpptiso.c
    - harbour/source/codepage/cdpru866.c
    - harbour/source/codepage/cdprukoi.c
