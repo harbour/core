@@ -59,7 +59,7 @@
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O3"
-%define hb_lflag export L_USR=%{?_with_static:-static}
+%define hb_lflag export L_USR="${CC_L_USR} %{?_with_static:-static}"
 %define hb_mt    export HB_MT=no
 %define hb_gt    export HB_GT_LIB=gtcrs
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
@@ -350,7 +350,7 @@ popd
 if [ "%{!?_with_static:1}" ]
 then
     unset HB_GTALLEG
-    export L_USR="-L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
+    export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
 
     for utl in hbmake hbrun hbpp hbdoc
     do

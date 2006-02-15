@@ -2166,7 +2166,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    }
    while( --iPopCnt >= 0 )
    {
-      hb_stackDec();
+      hb_stackPop();
    }
 }
 
@@ -2243,7 +2243,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
    }
    while( --iPopCnt >= 0 )
    {
-      hb_stackDec();
+      hb_stackPop();
    }
 }
 
