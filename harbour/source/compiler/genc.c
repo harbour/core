@@ -54,8 +54,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    char szModulname[ _POSIX_PATH_MAX + 1 ];
    PFUNCTION pFunc = hb_comp_functions.pFirst;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-   PCOMDECLARED pDeclared;
-   PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
 
@@ -299,63 +297,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    }
 
    fclose( yyc );
-
-   pFunc = hb_comp_functions.pFirst;
-   while( pFunc )
-      pFunc = hb_compFunctionKill( pFunc );
-
-   pFunc = hb_comp_funcalls.pFirst;
-   while( pFunc )
-   {
-      hb_comp_funcalls.pFirst = pFunc->pNext;
-      hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
-      pFunc = hb_comp_funcalls.pFirst;
-   }
-
-   pInline = hb_comp_inlines.pFirst;
-   while( pInline )
-   {
-      hb_comp_inlines.pFirst = pInline->pNext;
-      if( pInline->pCode )
-      {
-         hb_xfree( ( void * ) pInline->pCode );
-      }
-      hb_xfree( ( void * ) pInline->szFileName );
-      hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
-      pInline = hb_comp_inlines.pFirst;
-   }
-
-   if ( hb_comp_iWarnings >= 3 )
-   {
-      pDeclared = hb_comp_pReleaseDeclared->pNext;
-      while( pDeclared )
-      {
-         hb_comp_pFirstDeclared = pDeclared->pNext;
-         hb_xfree( ( void * ) pDeclared );
-         pDeclared = hb_comp_pFirstDeclared;
-      }
-
-      pClass = hb_comp_pReleaseClass->pNext;
-      while( pClass )
-      {
-         hb_comp_pFirstClass = pClass->pNext;
-
-         pDeclared = pClass->pMethod;
-         while ( pDeclared )
-         {
-            hb_comp_pFirstDeclared = pDeclared->pNext;
-            hb_xfree( ( void * ) pDeclared );
-            pDeclared = hb_comp_pFirstDeclared;
-         }
-
-         hb_xfree( ( void * ) pClass );
-         pClass = hb_comp_pFirstClass;
-      }
-   }
-
-   pSym = hb_comp_symbols.pFirst;
-   while( pSym )
-      pSym = hb_compSymbolKill( pSym );
 
    if( ! hb_comp_bQuiet )
       printf( "Done.\n" );

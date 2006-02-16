@@ -302,6 +302,8 @@ int hb_compVariableScope( char * );
 #define FUN_USES_LOCAL_PARAMS 16  /* parameters are declared using () */
 #define FUN_WITH_RETURN       32  /* there was RETURN statement in previous line */
 
+extern void      hb_compMainExit( void ); /* main cleanup function */
+
 extern void      hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( char * szFunName ); /* locates a previously defined function */
 extern PINLINE   hb_compInlineFind( char * szFunName );
@@ -342,6 +344,10 @@ extern void hb_compExternGen( void ); /* generates the symbols for the EXTERN na
 extern void hb_compExternAdd( char * szExternName ); /* defines a new extern name */
 
 extern void hb_compAutoOpenAdd( char * szName );
+
+extern void hb_compSwitchKill( void );
+extern void hb_compLoopKill( void );
+extern void hb_compRTVariableKill( void );
 
 #ifdef HB_MACRO_SUPPORT
 

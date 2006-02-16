@@ -740,7 +740,10 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
       {
          if( ! hb_compForEachVarError( pObject->value.asSymbol ) )
          {
-            pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol );
+/*            pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol );*/
+            /* NOTE: direct type change */
+            pObject->ExprType = HB_ET_VARREF;
+            pExpr->value.asMessage.pObject = pObject;
          }
       }
    }

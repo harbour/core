@@ -150,7 +150,10 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
 
    /* fatal error - exit immediately */
    if( cPrefix == 'F' )
+   {
+      hb_compMainExit();
       exit( EXIT_FAILURE );
+   }
 }
 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)

@@ -2152,13 +2152,14 @@ static void hb_compLoopExit( void )
  */
 static void hb_compLoopHere( void )
 {
-   PTR_LOOPEXIT pLoop = hb_comp_pLoops, pFree;
+   PTR_LOOPEXIT pLoop = hb_comp_pLoops, pFree, pLast;
 
    if( pLoop )
    {
       while( pLoop->pNext )
          pLoop = pLoop->pNext;
 
+      pLast = pLoop;
       pLoop = pLoop->pLoopList;
       while( pLoop )
       {
@@ -2167,6 +2168,7 @@ static void hb_compLoopHere( void )
          pLoop = pLoop->pLoopList;
          hb_xfree( ( void * ) pFree );
       }
+      pLast->pLoopList = NULL;
    }
 }
 
@@ -2197,6 +2199,25 @@ static void hb_compLoopEnd( void )
       pLast->pNext = NULL;
       if( pLoop == hb_comp_pLoops )
          hb_comp_pLoops = NULL;
+      hb_xfree( ( void * ) pLoop );
+   }
+}
+
+void hb_compLoopKill( void )
+{
+   PTR_LOOPEXIT pLoop;
+   PTR_LOOPEXIT pExit;
+   
+   while( hb_comp_pLoops )   
+   {
+      pLoop = hb_comp_pLoops;
+      while( pLoop->pExitList )
+      {
+         pExit = pLoop->pExitList;
+         pLoop->pExitList = pExit->pExitList;
+         hb_xfree( ( void * ) pExit );
+      }
+      hb_comp_pLoops = pLoop->pNext;
       hb_xfree( ( void * ) pLoop );
    }
 }
@@ -2292,6 +2313,21 @@ static void hb_compRTVariableGen( char * szCreateFun )
       pDel = pVar;
       pVar = pVar->pPrev;
       hb_xfree( pDel );
+   }
+   hb_comp_rtvars = NULL;
+}
+
+void hb_compRTVariableKill( void )
+{
+   HB_RTVAR_PTR pVar;
+   
+   while( hb_comp_rtvars )
+   {
+      pVar = hb_comp_rtvars;
+
+      hb_compExprDelete( pVar->pVar );
+      hb_comp_rtvars = pVar->pPrev;
+      hb_xfree( pVar );
    }
    hb_comp_rtvars = NULL;
 }
@@ -2609,4 +2645,26 @@ static void hb_compSwitchEnd( void )
    pTmpSw = hb_comp_pSwitch;
    hb_comp_pSwitch = hb_comp_pSwitch->pPrev;
    hb_xfree( pTmpSw );
+}
+
+/* Release all switch statements
+*/
+void hb_compSwitchKill( )
+{
+   SWITCHCASE_PTR pCase;
+   SWITCHCMD_PTR pSwitch;
+
+   while( hb_comp_pSwitch )
+   {
+      while( hb_comp_pSwitch->pCases )
+      {
+         pCase = hb_comp_pSwitch->pCases;
+         hb_compExprDelete( pCase->pExpr );
+         hb_comp_pSwitch->pCases = pCase->pNext;
+         hb_xfree( (void *) pCase );
+      }
+      pSwitch = hb_comp_pSwitch;
+      hb_comp_pSwitch = pSwitch->pPrev;
+      hb_xfree( (void *) pSwitch );
+   }
 }

@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+
+2006-02-17 10:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+   * source/compiler/Makefile
+   * source/compiler/cmdcheck.c
+       
+   * source/compiler/harbour.y
+   * source/compiler/hbident.c
+      * even more fixes to memory leaks in the compiler
+       (all compiler structures are deallocated on exit now, really :)
+
+
 2006-02-16 14:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h
    * include/hbexpra.c
