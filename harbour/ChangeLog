@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+    * cleaned some redundant extern declarations
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * removed some unnecessary #include ...
+
+  * harbour/source/rtl/str.c
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/vm/itemapi.c
+    ! fixed some small incompatibilities with Clipper in number to string
+      conversions
 
 2006-02-17 10:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h

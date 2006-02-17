@@ -60,8 +60,6 @@ C_SOURCES=\
 C_MAIN=harbour.c
 
 LIBS=\
-   ccmalloc \
-   dl \
     pp \
     common \
 

@@ -33,7 +33,8 @@
 
 #define HB_IDENT_TABLE_SIZE    509UL
 
-static HB_HASH_TABLE_PTR s_comp_Identifiers;    /* table of identifiers for reuse */
+/* table of identifiers for reuse */
+static HB_HASH_TABLE_PTR s_comp_Identifiers = NULL;    
 
 /* create a new identifier or return the existing one 
 */
@@ -96,5 +97,8 @@ void hb_compIdentifierOpen( )
 /* release identifiers table */
 void hb_compIdentifierClose( )
 {
-   hb_hashTableKill( s_comp_Identifiers );
+   if( s_comp_Identifiers )
+   {
+      hb_hashTableKill( s_comp_Identifiers );
+   }
 }

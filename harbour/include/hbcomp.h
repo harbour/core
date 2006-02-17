@@ -90,6 +90,7 @@ typedef struct
 {
    FILE * handle;               /* handle of the opened file */
    void * pBuffer;              /* file buffer */
+   char * yyBuffer;             /* buffer used by yyac */
    int    iBuffer;              /* current position in file buffer */
    int    lenBuffer;            /* current length of data in file buffer */
    char * szFileName;           /* name of the file */
@@ -348,6 +349,7 @@ extern void hb_compAutoOpenAdd( char * szName );
 extern void hb_compSwitchKill( void );
 extern void hb_compLoopKill( void );
 extern void hb_compRTVariableKill( void );
+extern void hb_compElseIfKill( void );
 
 #ifdef HB_MACRO_SUPPORT
 

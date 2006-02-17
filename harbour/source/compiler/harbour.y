@@ -104,39 +104,42 @@ static void hb_compSwitchEnd( void );
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
 
-typedef struct __ELSEIF
+/* support structure for else if pcode fixups */
+typedef struct HB_ELSEIF_
 {
    ULONG ulOffset;
-   struct __ELSEIF * pNext;
-} _ELSEIF, * PELSEIF;      /* support structure for else if pcode fixups */
+   struct HB_ELSEIF_ * pElseif; /* next ELSEIF in the current IF statement */
+   struct HB_ELSEIF_ * pPrev;   /* previous IF statement */
+} HB_ELSEIF, * HB_ELSEIF_PTR;      
 
-typedef struct _LOOPEXIT
+/* support structure for EXIT and LOOP statements */
+typedef struct HB_LOOPEXIT_
 {
    ULONG ulOffset;
    int iLine;
    USHORT wSeqCounter;
-   struct _LOOPEXIT * pLoopList;
-   struct _LOOPEXIT * pExitList;
-   struct _LOOPEXIT * pNext;
-} LOOPEXIT, * PTR_LOOPEXIT;  /* support structure for EXIT and LOOP statements */
+   struct HB_LOOPEXIT_ * pLoopList;
+   struct HB_LOOPEXIT_ * pExitList;
+   struct HB_LOOPEXIT_ * pNext;
+} HB_LOOPEXIT, * HB_LOOPEXIT_PTR;  
 
 /* support structure for SWITCH statement */
-typedef struct _SWITCHCASE
+typedef struct HB_SWITCHCASE_
 {
    ULONG ulOffset;
    HB_EXPR_PTR pExpr;
-   struct _SWITCHCASE *pNext;
-} SWITCHCASE, * SWITCHCASE_PTR;
+   struct HB_SWITCHCASE_ *pNext;
+} HB_SWITCHCASE, * HB_SWITCHCASE_PTR;
 
-typedef struct _SWITCHCMD
+typedef struct HB_SWITCHCMD_
 {
    ULONG ulOffset;
    int iCount;
-   SWITCHCASE_PTR pCases;
-   SWITCHCASE_PTR pLast;
+   HB_SWITCHCASE_PTR pCases;
+   HB_SWITCHCASE_PTR pLast;
    ULONG ulDefault;
-   struct _SWITCHCMD *pPrev;
-} SWITCHCMD, *SWITCHCMD_PTR;
+   struct HB_SWITCHCMD_ *pPrev;
+} HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
 
 typedef struct HB_RTVAR_
 {
@@ -157,9 +160,10 @@ BOOL hb_comp_bTextSubst = TRUE;
 
 char * hb_comp_buffer; /* yacc input buffer */
 
-static PTR_LOOPEXIT hb_comp_pLoops = NULL;
+static HB_LOOPEXIT_PTR hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
-static SWITCHCMD_PTR hb_comp_pSwitch = NULL;
+static HB_SWITCHCMD_PTR hb_comp_pSwitch = NULL;
+static HB_ELSEIF_PTR hb_comp_elseif = NULL;
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
@@ -1519,7 +1523,7 @@ Cases      : CASE { hb_compLinePush(); } Expression Crlf
              EmptyStats
                {
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  $$ = hb_compElseIfGen( 0, hb_compGenJump( 0 ) );
+                  $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) );
                   hb_compGenJumpHere( $<iNumber>5 );
                }
 
@@ -1874,67 +1878,6 @@ Crlf       : '\n'          { hb_comp_bError = FALSE; }
  ** ------------------------------------------------------------------------ **
  */
 
-#if 0
-int hb_compYACCMain( char * szName )
-{
-   /* Generate the starting procedure frame */
-   if( hb_comp_bStartProc )
-      hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
-   else
-         /* Don't pass the name of module if the code for starting procedure
-         * will be not generated. The name cannot be placed as first symbol
-         * because this symbol can be used as function call or memvar's name.
-         */
-      hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
-
-   yyparse();
-
-   /* fix all previous function returns offsets */
-   hb_compFinalizeFunction();
-
-   hb_compExternGen();       /* generates EXTERN symbols names */
-
-   if( hb_comp_pInitFunc )
-   {
-      PCOMSYMBOL pSym;
-
-      /* Fix the number of static variables */
-      hb_comp_pInitFunc->pCode[ 3 ] = HB_LOBYTE( hb_comp_iStaticCnt );
-      hb_comp_pInitFunc->pCode[ 4 ] = HB_HIBYTE( hb_comp_iStaticCnt );
-      hb_comp_pInitFunc->iStaticsBase = hb_comp_iStaticCnt;
-
-      pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL );
-      pSym->cScope |= hb_comp_pInitFunc->cScope;
-      hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
-      hb_comp_functions.pLast = hb_comp_pInitFunc;
-      hb_compGenPCode1( HB_P_ENDPROC );
-      ++hb_comp_functions.iCount;
-   }
-
-   if( hb_comp_szAnnounce )
-      hb_compAnnounce( hb_comp_szAnnounce );
-
-   /* Close processed file (it is opened in hb_compInclude() function )
-   */
-   fclose( yyin );
-
-   while( hb_comp_files.pLast )
-   {
-     PFILE pFile = hb_comp_files.pLast;
-     if( pFile->pBuffer )
-        hb_xfree( (void *) pFile->pBuffer );
-     hb_xfree( (void *) pFile->szFileName );
-     hb_comp_files.pLast = pFile->pPrev;
-     hb_xfree( pFile );
-   }
-   hb_comp_files.pLast = NULL;
-
-   return 0;
-}
-#endif
-
-/* ------------------------------------------------------------------------ */
-
 /*
  * Avoid tracing in preprocessor/compiler.
  */
@@ -1947,7 +1890,9 @@ int hb_compYACCMain( char * szName )
 void yyerror( char * s )
 {
    if( yytext[ 0 ] == '\n' )
+   {
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
+   }
    else
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, yytext );
 }
@@ -1998,9 +1943,9 @@ BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
    hb_comp_files.pLast = pFile;
 
 #ifdef __cplusplus
-   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
+   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( pFile->yyBuffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
 #else
-   yy_switch_to_buffer( hb_comp_buffer = yy_create_buffer( yyin, 8192 * 2 ) );
+   yy_switch_to_buffer( pFile->yyBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
 #endif
    hb_comp_files.iFiles++;
 
@@ -2023,14 +1968,14 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
 
 void hb_compParserStop( void )
 {
-   if( hb_comp_buffer )
+   if( hb_comp_files.pLast && hb_comp_files.pLast->yyBuffer )
    {
 #ifdef __cplusplus   
-      yy_delete_buffer( (YY_BUFFER_STATE) hb_comp_buffer );
+      yy_delete_buffer( (YY_BUFFER_STATE) hb_comp_files.pLast->yyBuffer );
 #else
-      yy_delete_buffer( (void *) hb_comp_buffer );
+      yy_delete_buffer( (void *) hb_comp_files.pLast->yyBuffer );
 #endif      
-      hb_comp_buffer = NULL;
+      hb_comp_files.pLast->yyBuffer = NULL;
    }
 }
 
@@ -2042,11 +1987,11 @@ void hb_compParserStop( void )
  */
 static void hb_compLoopStart( void )
 {
-   PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof( LOOPEXIT ) );
+   HB_LOOPEXIT_PTR pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
    if( hb_comp_pLoops )
    {
-      PTR_LOOPEXIT pLast = hb_comp_pLoops;
+      HB_LOOPEXIT_PTR pLast = hb_comp_pLoops;
 
       while( pLast->pNext )
          pLast = pLast->pNext;
@@ -2074,9 +2019,9 @@ static void hb_compLoopLoop( void )
    }
    else
    {
-      PTR_LOOPEXIT pLast, pLoop;
+      HB_LOOPEXIT_PTR pLast, pLoop;
 
-      pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof( LOOPEXIT ) );
+      pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
       pLoop->pLoopList = NULL;
       pLoop->ulOffset = hb_comp_functions.pLast->lPCodePos;  /* store the position to fix */
@@ -2116,9 +2061,9 @@ static void hb_compLoopExit( void )
    }
    else
    {
-      PTR_LOOPEXIT pLast, pLoop;
+      HB_LOOPEXIT_PTR pLast, pLoop;
 
-      pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof( LOOPEXIT ) );
+      pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
       pLoop->pExitList = NULL;
       pLoop->ulOffset = hb_comp_functions.pLast->lPCodePos;  /* store the position to fix */
@@ -2152,7 +2097,7 @@ static void hb_compLoopExit( void )
  */
 static void hb_compLoopHere( void )
 {
-   PTR_LOOPEXIT pLoop = hb_comp_pLoops, pFree, pLast;
+   HB_LOOPEXIT_PTR pLoop = hb_comp_pLoops, pFree, pLast;
 
    if( pLoop )
    {
@@ -2177,7 +2122,7 @@ static void hb_compLoopHere( void )
  */
 static void hb_compLoopEnd( void )
 {
-   PTR_LOOPEXIT pExit, pLoop = hb_comp_pLoops, pLast = hb_comp_pLoops, pFree;
+   HB_LOOPEXIT_PTR pExit, pLoop = hb_comp_pLoops, pLast = hb_comp_pLoops, pFree;
 
    if( pLoop )
    {
@@ -2205,8 +2150,8 @@ static void hb_compLoopEnd( void )
 
 void hb_compLoopKill( void )
 {
-   PTR_LOOPEXIT pLoop;
-   PTR_LOOPEXIT pExit;
+   HB_LOOPEXIT_PTR pLoop;
+   HB_LOOPEXIT_PTR pExit;
    
    while( hb_comp_pLoops )   
    {
@@ -2224,19 +2169,27 @@ void hb_compLoopKill( void )
 
 static void * hb_compElseIfGen( void * pFirst, ULONG ulOffset )
 {
-   PELSEIF pElseIf = ( PELSEIF ) hb_xgrab( sizeof( _ELSEIF ) ), pLast;
+   HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
 
    pElseIf->ulOffset = ulOffset;
-   pElseIf->pNext   = 0;
+   pElseIf->pPrev   = NULL;
+   pElseIf->pElseif = NULL;
 
-   if( ! pFirst )
-      pFirst = pElseIf;
+   if( pFirst )
+   {
+      pLast = ( HB_ELSEIF_PTR ) pFirst;
+      while( pLast->pElseif )
+         pLast = pLast->pElseif;
+      pLast->pElseif = pElseIf;
+   }
    else
    {
-      pLast = ( PELSEIF ) pFirst;
-      while( pLast->pNext )
-         pLast = pLast->pNext;
-      pLast->pNext = pElseIf;
+      if( hb_comp_elseif )
+      {
+         pElseIf->pPrev = hb_comp_elseif;
+      }
+      pFirst = pElseIf;
+      hb_comp_elseif = pElseIf;
    }
    return pFirst;
 }
@@ -2244,15 +2197,34 @@ static void * hb_compElseIfGen( void * pFirst, ULONG ulOffset )
 
 static void hb_compElseIfFix( void * pFixElseIfs )
 {
-   PELSEIF pFix = ( PELSEIF ) pFixElseIfs;
-   PELSEIF pDel;
+   HB_ELSEIF_PTR pFix = ( HB_ELSEIF_PTR ) pFixElseIfs;
+   HB_ELSEIF_PTR pDel;
    
+   hb_comp_elseif = pFix->pPrev;
    while( pFix )
    {
       hb_compGenJumpHere( pFix->ulOffset );
       pDel = pFix;
-      pFix = pFix->pNext;
+      pFix = pFix->pElseif;
       hb_xfree( pDel );
+   }
+}
+
+void hb_compElseIfKill( void )
+{
+   HB_ELSEIF_PTR pFix;
+   HB_ELSEIF_PTR pDel;
+   
+   while( hb_comp_elseif )
+   {
+      pFix = hb_comp_elseif;
+      hb_comp_elseif = pFix->pPrev;
+      while( pFix )
+      {
+         pDel = pFix;
+         pFix = pFix->pElseif;
+         hb_xfree( pDel );
+      }
    }
 }
 
@@ -2525,9 +2497,9 @@ static void hb_compEnumEnd( HB_EXPR_PTR pExpr )
 
 static void hb_compSwitchStart()
 {
-   SWITCHCMD_PTR pLast = hb_comp_pSwitch;
+   HB_SWITCHCMD_PTR pLast = hb_comp_pSwitch;
 
-   hb_comp_pSwitch = (SWITCHCMD_PTR) hb_xgrab( sizeof(SWITCHCMD) );
+   hb_comp_pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof(HB_SWITCHCMD) );
    hb_comp_pSwitch->pPrev = pLast;
    hb_comp_pSwitch->pCases = NULL;
    hb_comp_pSwitch->pLast  = NULL;
@@ -2538,12 +2510,12 @@ static void hb_compSwitchStart()
 
 static void hb_compSwitchAdd( HB_EXPR_PTR pExpr )
 {
-   SWITCHCASE_PTR pCase;
+   HB_SWITCHCASE_PTR pCase;
    
    if( pExpr )
    {
       /* normal CASE */
-      pCase = (SWITCHCASE_PTR) hb_xgrab( sizeof(SWITCHCASE) );
+      pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof(HB_SWITCHCASE) );
       pCase->ulOffset = hb_comp_functions.pLast->lPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr );
@@ -2589,9 +2561,9 @@ static void hb_compSwitchEnd( void )
 { 
    BOOL longOptimize = hb_comp_long_optimize;
    BOOL bTextSubst = hb_comp_bTextSubst;
-   SWITCHCASE_PTR pCase = hb_comp_pSwitch->pCases;
-   SWITCHCASE_PTR pTmp;
-   SWITCHCMD_PTR pTmpSw;
+   HB_SWITCHCASE_PTR pCase = hb_comp_pSwitch->pCases;
+   HB_SWITCHCASE_PTR pTmp;
+   HB_SWITCHCMD_PTR pTmpSw;
    ULONG ulExitPos;
    ULONG ulDef;
 
@@ -2651,8 +2623,8 @@ static void hb_compSwitchEnd( void )
 */
 void hb_compSwitchKill( )
 {
-   SWITCHCASE_PTR pCase;
-   SWITCHCMD_PTR pSwitch;
+   HB_SWITCHCASE_PTR pCase;
+   HB_SWITCHCMD_PTR pSwitch;
 
    while( hb_comp_pSwitch )
    {

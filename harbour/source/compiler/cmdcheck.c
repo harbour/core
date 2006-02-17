@@ -615,6 +615,7 @@ void hb_compChkEnvironVar( char * szSwitch )
 
                    default:
                       printf( "\nUnsupported output language option\n" );
+                      hb_compMainExit();
                       exit( EXIT_FAILURE );
                 }
                 break;

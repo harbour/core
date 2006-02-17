@@ -322,8 +322,15 @@ void hb_compMainExit( void )
       hb_xfree( hb_comp_pPpoPath );
       hb_comp_pPpoPath = NULL;
    }
+   
+   while( hb_comp_pAutoOpen )
+   {
+      PAUTOOPEN pAutoOpen = hb_comp_pAutoOpen;
 
-   hb_compParserStop();
+      hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
+      hb_xfree( pAutoOpen->szName );
+      hb_xfree( pAutoOpen );
+   }
       
    hb_xexit();
 }
@@ -2150,6 +2157,7 @@ PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
 
    hb_compLoopKill();   
    hb_compSwitchKill();
+   hb_compElseIfKill();
 
    return pNext;
 }
@@ -4860,6 +4868,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                hb_comp_yyppo = NULL;
                if( hb_comp_pFilePpo )
                   hb_xfree( hb_comp_pFilePpo );
+               hb_comp_pFilePpo = NULL;
             }
 
             /* Saving main file. */
@@ -4975,8 +4984,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
                hb_compGenOutput( hb_comp_iLanguage );
             }
-            hb_compCompileEnd();
             hb_compParserStop();
+            hb_compCompileEnd();
          }
          else
          {
@@ -5008,12 +5017,27 @@ static void hb_compCompileEnd( void )
       hb_comp_pFileName = NULL;
    }
 
+   if( hb_comp_bPPO && hb_comp_yyppo )
+   {
+      fclose( hb_comp_yyppo );
+      hb_comp_yyppo = NULL;
+      if( hb_comp_pFilePpo )
+         hb_xfree( hb_comp_pFilePpo );
+      hb_comp_pFilePpo = NULL;
+   }
+
    while( hb_comp_files.pLast )
    {
       PFILE pFile = hb_comp_files.pLast;
       fclose( pFile->handle );
       if( pFile->pBuffer )
+      {
          hb_xfree( (void *) pFile->pBuffer );
+      }
+      if( pFile->yyBuffer )
+      {
+         hb_compParserStop(); /* uses hb_comp_files.pLast */
+      }
       hb_comp_files.pLast = pFile->pPrev;
       hb_xfree( pFile );
    }
@@ -5220,13 +5244,18 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
 
                yyparse();
 
+               if( hb_comp_bPPO && hb_comp_yyppo )
+               {
+                  fclose( hb_comp_yyppo );
+                  hb_comp_yyppo = NULL;
+                  if( hb_comp_pFilePpo )
+                     hb_xfree( hb_comp_pFilePpo );
+                  hb_comp_pFilePpo = NULL;
+               }
+
                hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
                hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
             }
-
-            /* Close processed file (it is opened in hb_compInclude() function ) */
-            fclose( yyin );
-            hb_comp_files.pLast = NULL;
 
             if( hb_comp_bAnyWarning )
             {
@@ -5241,6 +5270,7 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
                   printf( "\nNo code generated.\n" );
                }
             }
+            hb_compParserStop();
          }
          else
          {
