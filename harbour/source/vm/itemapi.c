@@ -1840,61 +1840,42 @@ HB_EXPORT char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    {
       /* Default to the width and number of decimals specified by the item,
          with a limit of 90 integer places, plus one space for the sign. */
-      int iWidth;
-      int iDec;
+      int iWidth, iDec, iSize;
 
       hb_itemGetNLen( pNumber, &iWidth, &iDec );
 
       if( iWidth > 90 )
          iWidth = 90;
 
-      if( hb_set.HB_SET_FIXED )
-      {
-         /* If fixed mode is enabled, always use the default number of decimal places. */
-         iDec = hb_set.HB_SET_DECIMALS;
-      }
-
-      if( pWidth )
+      if( pWidth && HB_IS_NUMERIC( pWidth ) )
       {
          /* If the width parameter is specified, override the default value
             and set the number of decimals to zero */
-         int iWidthPar = hb_itemGetNI( pWidth );
+         iWidth = hb_itemGetNI( pWidth );
 
-         if( iWidthPar < 1 )
-         {
+         if( iWidth < 1 )
             iWidth = 10;                  /* If 0 or negative, use default */
-         }
-         else
-         {
-            iWidth = iWidthPar;
-         }
-
          iDec = 0;
       }
 
-      if( pDec )
+      /* Clipper ignores decimal places when iWidth is 1 */
+      if( iWidth > 1 && pDec && HB_IS_NUMERIC( pDec ) )
       {
          /* This function does not include the decimal places in the width,
             so the width must be adjusted downwards, if the decimal places
             parameter is greater than 0  */
-         int iDecPar = hb_itemGetNI( pDec );
+         iDec = hb_itemGetNI( pDec );
 
-         if( iDecPar < 0 )
-         {
+         if( iDec <= 0 )
             iDec = 0;
-         }
-         else if( iDecPar > 0 )
-         {
-            iDec = iDecPar;
+         else if ( pWidth )
             iWidth -= ( iDec + 1 );
-         }
       }
 
-      if( iWidth )
-      {
-         /* We at least have a width value */
-         int iSize = ( iDec > 0 ? iWidth + 1 + iDec : iWidth );
+      iSize = ( iDec > 0 ? iWidth + 1 + iDec : iWidth );
 
+      if( iSize > 0 )
+      {
          szResult = ( char * ) hb_xgrab( iSize + 1 );
          hb_itemStrBuf( szResult, pNumber, iSize, iDec );
       }
@@ -1940,7 +1921,15 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
       case HB_IT_DOUBLE:
       case HB_IT_INTEGER:
       case HB_IT_LONG:
-         buffer = hb_itemStr( pItem, NULL, NULL );
+         if( hb_set.HB_SET_FIXED )
+         {
+            /* If fixed mode is enabled, use the default number of decimal places. */
+            PHB_ITEM pDec = hb_itemPutNI( NULL, hb_set.HB_SET_DECIMALS );
+            buffer = hb_itemStr( pItem, NULL, pDec );
+            hb_itemRelease( pDec );
+         }
+         else
+            buffer = hb_itemStr( pItem, NULL, NULL );
          if( buffer )
          {
             * ulLen = strlen( buffer );

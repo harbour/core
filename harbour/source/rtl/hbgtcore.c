@@ -719,7 +719,7 @@ static void hb_gt_def_Tone( double dFrequency, double dDuration )
 
 static void hb_gt_def_Bell( void )
 {
-   ;
+   hb_gt_Tone( 700.0, 3.0 );
 }
 
 static char * hb_gt_def_Version( int iType )
@@ -1131,6 +1131,90 @@ static void hb_gt_def_Scroll( int iTop, int iLeft, int iBottom, int iRight,
    }
 }
 
+static void hb_gt_def_ScrollArea( int iTop, int iLeft, int iBottom, int iRight,
+                                  BYTE bColor, BYTE bChar, int iRows, int iCols )
+{
+   if( s_curGT && ( iRows || iCols ) )
+   {
+      int iColOld, iColNew, iColSize, iColClear, iClrs, iLength, iHeight, iWidth;
+
+      hb_gt_GetSize( &iHeight, &iWidth );
+      if( iTop < 0 )
+         iTop = 0;
+      if( iLeft < 0 )
+         iLeft = 0;
+      if( iBottom >= iHeight )
+         iBottom = iHeight -1;
+      if( iRight >= iWidth )
+         iRight = iWidth -1;
+
+      iColSize = iRight - iLeft;
+      iLength = iColSize + 1;
+      iColOld = iColNew = iLeft;
+
+      if ( iCols >= 0 )
+      {
+         iColOld += iCols;
+         iColSize -= iCols;
+         iColClear = iColOld + iColSize + 1;
+         iClrs = iCols;
+      }
+      else
+      {
+         iColNew -= iCols;
+         iColSize += iCols;
+         iColClear = iColOld;
+         iClrs = -iCols;
+      }
+
+      if( iLength > 0 )
+      {
+         long lIndex, lOffset = ( long ) iRows * iWidth + iCols;
+         BOOL fMove = ( iRows || iCols ) && iColSize >= 0 &&
+                      ( iBottom - iTop >= iRows );
+
+         while( iTop <= iBottom )
+         {
+            int iRowPos, i;
+
+            if( iRows >= 0 )
+               iRowPos = iTop++;
+            else
+               iRowPos = iBottom--;
+
+            if( fMove && iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom )
+            {
+               lIndex = ( long ) iRowPos * iWidth + iColNew;
+               if( lOffset < 0 )
+               {
+                  for( i = 0; i <= iColSize; ++i, ++lIndex )
+                  {
+                     s_curGT->screenBuffer[ lIndex ].uiValue =
+                        s_curGT->screenBuffer[ lIndex + lOffset ].uiValue;
+                     s_curGT->prevBuffer[ lIndex ].uiValue =
+                        s_curGT->prevBuffer[ lIndex + lOffset ].uiValue;
+                  }
+               }
+               else
+               {
+                  for( i = iColSize, lIndex += iColSize; i >= 0; --i, --lIndex )
+                  {
+                     s_curGT->screenBuffer[ lIndex ].uiValue =
+                        s_curGT->screenBuffer[ lIndex + lOffset ].uiValue;
+                     s_curGT->prevBuffer[ lIndex ].uiValue =
+                        s_curGT->prevBuffer[ lIndex + lOffset ].uiValue;
+                  }
+               }
+               if( iClrs )
+                  hb_gt_Replicate( iRowPos, iColClear, bColor, 0, bChar, iClrs );
+            }
+            else
+               hb_gt_Replicate( iRowPos, iLeft, bColor, 0, bChar, iLength );
+         }
+      }
+   }
+}
+
 static void hb_gt_def_ScrollUp( int iRows, BYTE bColor, BYTE bChar )
 {
    if( s_curGT && iRows > 0 )
@@ -1444,6 +1528,40 @@ static void hb_gt_def_GetSize( int * piRows, int  * piCols )
    {
       *piRows = 25;
       *piCols = 80;
+   }
+}
+
+static void hb_gt_def_ColdArea( int iTop, int iLeft, int iBottom, int iRight )
+{
+   if( s_curGT )
+   {
+      long lIndex;
+      int i;
+
+      if( iTop > iBottom )
+      {
+         i = iTop;
+         iTop = iBottom;
+         iBottom = i;
+      }
+      if( iLeft > iRight )
+      {
+         i = iLeft;
+         iLeft = iRight; 
+         iRight = i;
+      }
+      while( iTop <= iBottom )
+      {
+         for( i = iLeft; i <= iRight; ++i )
+         {
+            if( hb_gt_CheckPos( iTop, i, &lIndex ) )
+            {
+               s_curGT->prevBuffer[ lIndex ].uiValue =
+                     s_curGT->screenBuffer[ lIndex ].uiValue;
+            }
+         }
+         ++iTop;
+      }
    }
 }
 
@@ -1819,7 +1937,9 @@ static HB_GT_FUNCS gtCoreFunc =
    Resize                     : hb_gt_def_Resize                        ,
    SetMode                    : hb_gt_def_SetMode                       ,
    GetSize                    : hb_gt_def_GetSize                       ,
+   ColdArea                   : hb_gt_def_ColdArea                      ,
    ExposeArea                 : hb_gt_def_ExposeArea                    ,
+   ScrollArea                 : hb_gt_def_ScrollArea                    ,
    TouchCell                  : hb_gt_def_TouchCell                     ,
    Redraw                     : hb_gt_def_Redraw                        ,
    Refresh                    : hb_gt_def_Refresh                       ,
@@ -1846,6 +1966,7 @@ static HB_GT_FUNCS gtCoreFunc =
    SetCursorStyle             : hb_gt_def_SetCursorStyle                ,
    GetScrCursor               : hb_gt_def_GetScrCursor                  ,
    GetScrChar                 : hb_gt_def_GetChar                       ,
+   PutScrChar                 : hb_gt_def_PutChar                       ,
    DispBegin                  : hb_gt_def_DispBegin                     ,
    DispEnd                    : hb_gt_def_DispEnd                       ,
    DispCount                  : hb_gt_def_DispCount                     ,
@@ -1920,7 +2041,9 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_Resize                       ,
    hb_gt_def_SetMode                      ,
    hb_gt_def_GetSize                      ,
+   hb_gt_def_ColdArea                     ,
    hb_gt_def_ExposeArea                   ,
+   hb_gt_def_ScrollArea                   ,
    hb_gt_def_TouchCell                    ,
    hb_gt_def_Redraw                       ,
    hb_gt_def_Refresh                      ,
@@ -1947,6 +2070,7 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_SetCursorStyle               ,
    hb_gt_def_GetScrCursor                 ,
    hb_gt_def_GetChar                      , /* intentionally mapped to GetScrChar */
+   hb_gt_def_PutChar                      , /* intentionally mapped to PutScrChar */
    hb_gt_def_DispBegin                    ,
    hb_gt_def_DispEnd                      ,
    hb_gt_def_DispCount                    ,
@@ -2209,6 +2333,11 @@ BOOL   hb_gt_GetChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT 
    return gtCoreFunc.GetChar( iRow, iCol, pbColor, pbAttr, pusChar );
 }
 
+BOOL   hb_gt_PutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+{
+   return gtCoreFunc.PutScrChar( iRow, iCol, bColor, bAttr, usChar );
+}
+
 BOOL   hb_gt_PutChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
 {
    return gtCoreFunc.PutChar( iRow, iCol, bColor, bAttr, usChar );
@@ -2314,9 +2443,19 @@ void   hb_gt_GetSize( int * piRows, int * piCols )
    gtCoreFunc.GetSize( piRows, piCols );
 }
 
+void   hb_gt_ColdArea( int iTop, int iLeft, int iBottom, int iRight )
+{
+   gtCoreFunc.ColdArea( iTop, iLeft, iBottom, iRight );
+}
+
 void   hb_gt_ExposeArea( int iTop, int iLeft, int iBottom, int iRight )
 {
    gtCoreFunc.ExposeArea( iTop, iLeft, iBottom, iRight );
+}
+
+void   hb_gt_ScrollArea( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols )
+{
+   gtCoreFunc.ScrollArea( iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
 }
 
 void   hb_gt_TouchCell( int iRow, int iCol )

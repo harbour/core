@@ -55,8 +55,6 @@
 #define HB_OS_WIN_32_USED
 #define MAX_STR_LEN 255
 
-#include "hbdefs.h"
-
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"

@@ -52,8 +52,6 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "hbsetup.h"
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbinit.h"
@@ -63,7 +61,6 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 #include "rddads.h"
-#include "hbstack.h"
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
 #define MAX_STR_LEN 255

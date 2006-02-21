@@ -824,15 +824,14 @@ HB_FUNC( TRANSFORM )
       }
       else if( HB_IS_NUMERIC( pValue ) )
       {
-         char * szStr = hb_itemStr( pValue, NULL, NULL );
+         ULONG ulLen;
+         BOOL bFreeReq;
+         char * szStr = hb_itemString( pValue, &ulLen, &bFreeReq );
 
-         if( szStr )
-         {
-            hb_retc( szStr );
-            hb_xfree( szStr );
-         }
+         if( bFreeReq )
+            hb_retclen_buffer( szStr, ulLen );
          else
-            hb_retc( "" );
+            hb_retclen( szStr, ulLen );
       }
       else if( HB_IS_DATE( pValue ) )
       {

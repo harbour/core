@@ -8,6 +8,61 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+        (introduced recently)
+
+
+2006-02-22 21:25 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+   * harbour/.cvsignore
+   restored to previous 1.9 revision
+
+2006-02-22 15:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rtl/gtdos/gtdos.c
+    * fixed casting and typos for DOS OpenWatcom compilation
+
+2006-02-21 23:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * added support for -L<librarypath> in xhbmk
+    * set the highest priority to user libraries specified by
+      -l<libname> linker option
+
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    * added UTF8 related functions: hb_cdpUTF8StringLength(),
+      hb_cdpStringInUTF8Length(), hb_cdpUTF8ToStrn().
+    * Changed name of hb_cdpStrnToUTF() function to hb_cdpStrnToUTF8()
+      to avoid confusions with UTF16
+
+  * harbour/include/hberrors.h
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/harbour.c
+    + added to new errors (memory corruption and memory overflow) for
+      compiler level FM statistic.
+
+  * harbour/source/compiler/hbfix.c
+    ! fixed stupid typo in copy and past which broke conditional jump
+      reduction
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtwin/gtwin.c
+    * added new method to change screen buffer state (hot/cold/scroll)
+      and use them in some GTs.
+
+  * harbour/source/rtl/gx.c
+  * xharbour/contrib/rdd_ads/ads1.c
+  * xharbour/contrib/rdd_ads/adsfunc.c
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtxwc/gtxwc.h
+    * added support for clipboard
+    * added support for cursor shape - like in DOS/VGA
+
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
     * cleaned some redundant extern declarations
 
   * harbour/contrib/rdd_ads/ads1.c

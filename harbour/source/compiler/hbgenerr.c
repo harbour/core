@@ -89,7 +89,9 @@ char * hb_comp_szErrors[] =
    "Incorrect number of enumerate variables",
    "CASE requires either numeric or string constant",
    "String too long for SWITCH",
-   "Invalid date constant \'%s\'"
+   "Invalid date constant \'%s\'",
+   "Memory buffer overflow",
+   "Memory corruption detected"   
 };
 
 /* Table with parse warnings */

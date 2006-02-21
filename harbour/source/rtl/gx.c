@@ -77,7 +77,13 @@ HB_FUNC( NOSNOW )
 
 HB_FUNC( SETMODE )
 {
-   hb_retl( hb_gtSetMode( ISNUM( 1 ) ? hb_parni( 1 ) : ( hb_gtMaxRow() + 1 ),
-                          ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
-}
+   USHORT uiRows, uiCols;
 
+   hb_gtScrDim( &uiRows, &uiCols );
+   if( ISNUM( 1 ) )
+      uiRows = ( USHORT ) hb_parni( 1 );
+   if( ISNUM( 2 ) )
+      uiCols = ( USHORT ) hb_parni( 2 );
+
+   hb_retl( hb_gtSetMode( uiRows, uiCols ) == SUCCESS );
+}

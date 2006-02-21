@@ -515,27 +515,32 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    pMemBlock = ( PHB_MEMINFO ) ( ( BYTE * ) pMem - HB_MEMINFO_SIZE );
    ulMemSize = pMemBlock->ulSize;
 
-   if( pMemBlock->Signature == HB_MEMINFO_SIGNATURE &&
-       HB_GET_LE_UINT32( ( ( BYTE * ) pMem ) + ulMemSize ) == HB_MEMINFO_SIGNATURE )
-   {
-      HB_PUT_LE_UINT32( ( ( BYTE * ) pMem ) + ulMemSize, 0 );
-      pResult = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( UINT32 ) );
-      if( pResult )
-      {
-         if( s_pMemBlocks == pMemBlock )
-            s_pMemBlocks = ( PHB_MEMINFO ) pResult;
-         else
-            ( ( PHB_MEMINFO ) pResult )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pResult;
-         if( ( ( PHB_MEMINFO ) pResult )->pNextBlock )
-            ( ( PHB_MEMINFO ) pResult )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pResult;
+   if( pMemBlock->Signature != HB_MEMINFO_SIGNATURE )
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMCORRUPT, NULL, NULL );
 
+   if( HB_GET_LE_UINT32( ( ( BYTE * ) pMem ) + ulMemSize ) != HB_MEMINFO_SIGNATURE )
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMOVERFLOW, NULL, NULL );
+
+   HB_PUT_LE_UINT32( ( ( BYTE * ) pMem ) + ulMemSize, 0 );
+
+   pResult = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( UINT32 ) );
+   if( pResult )
+   {
+      if( s_pMemBlocks == pMemBlock )
+         s_pMemBlocks = ( PHB_MEMINFO ) pResult;
+      else
+         ( ( PHB_MEMINFO ) pResult )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pResult;
+
+      if( ( ( PHB_MEMINFO ) pResult )->pNextBlock )
+         ( ( PHB_MEMINFO ) pResult )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pResult;
          s_ulMemoryConsumed += ( ulSize - ulMemSize );
-         if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
-            s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
-         ( ( PHB_MEMINFO ) pResult )->ulSize = ulSize;  /* size of the memory block */
-         HB_PUT_LE_UINT32( ( ( BYTE * ) pResult ) + ulSize + HB_MEMINFO_SIZE, HB_MEMINFO_SIGNATURE );
-         pResult = ( BYTE * ) pResult + HB_MEMINFO_SIZE;
-      }
+
+      if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
+         s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
+
+      ( ( PHB_MEMINFO ) pResult )->ulSize = ulSize;  /* size of the memory block */
+      HB_PUT_LE_UINT32( ( ( BYTE * ) pResult ) + ulSize + HB_MEMINFO_SIZE, HB_MEMINFO_SIGNATURE );
+      pResult = ( BYTE * ) pResult + HB_MEMINFO_SIZE;
    }
 #else
    void * pResult = realloc( pMem, ulSize );
@@ -554,32 +559,33 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-#ifdef HB_FM_STATISTICS
    if( pMem )
    {
+#ifdef HB_FM_STATISTICS
       PHB_MEMINFO pMemBlock = ( PHB_MEMINFO ) ( ( BYTE * ) pMem - HB_MEMINFO_SIZE );
 
-      if( pMemBlock->Signature == HB_MEMINFO_SIGNATURE &&
-          HB_GET_LE_UINT32( ( ( BYTE * ) pMem ) + pMemBlock->ulSize ) == HB_MEMINFO_SIGNATURE )
-      {
-         s_ulMemoryConsumed -= pMemBlock->ulSize;
-         s_ulMemoryBlocks--;
-         if( s_pMemBlocks == pMemBlock )
-            s_pMemBlocks = pMemBlock->pNextBlock;
-         else
-            pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
-         if( pMemBlock->pNextBlock )
-            pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
-         pMemBlock->Signature = 0;
-         HB_PUT_LE_UINT32( ( ( BYTE * ) pMem ) + pMemBlock->ulSize, 0 );
-         pMem = ( BYTE * ) pMem - HB_MEMINFO_SIZE;
-      }
+      if( pMemBlock->Signature != HB_MEMINFO_SIGNATURE )
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMCORRUPT, NULL, NULL );
+
+      if( HB_GET_LE_UINT32( ( ( BYTE * ) pMem ) + pMemBlock->ulSize ) != HB_MEMINFO_SIGNATURE )
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMOVERFLOW, NULL, NULL );
+
+      s_ulMemoryConsumed -= pMemBlock->ulSize;
+      s_ulMemoryBlocks--;
+      if( s_pMemBlocks == pMemBlock )
+         s_pMemBlocks = pMemBlock->pNextBlock;
       else
-         pMem = NULL;
-   }
+         pMemBlock->pPrevBlock->pNextBlock = pMemBlock->pNextBlock;
+
+      if( pMemBlock->pNextBlock )
+         pMemBlock->pNextBlock->pPrevBlock = pMemBlock->pPrevBlock;
+
+      pMemBlock->Signature = 0;
+      HB_PUT_LE_UINT32( ( ( BYTE * ) pMem ) + pMemBlock->ulSize, 0 );
+      pMem = ( BYTE * ) pMem - HB_MEMINFO_SIZE;
 #endif
-   if( pMem )
       free( pMem );
+   }
    else
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMFREE, NULL, NULL );
 }
@@ -683,6 +689,9 @@ void hb_xexit( void )
 
 void hb_conOutErr( const char * pStr, ULONG ulLen )
 {
+   if( ulLen == 0 )
+      ulLen = strlen( pStr );
+
    fprintf( hb_comp_errFile, "%.*s", ( int ) ulLen, pStr );
 }
 

@@ -287,10 +287,10 @@ static void hb_gt_dos_GetScreenContents( void )
          bAttr = *( pScreenPtr + 1 );
          pScreenPtr += 2;
 #endif
-         hb_gt_PutChar( iRow, iCol, bAttr, 0, s_charTransRev[ bChar ] );
+         hb_gt_PutScrChar( iRow, iCol, bAttr, 0, s_charTransRev[ bChar ] );
       }
    }
-   hb_gt_ExposeArea( 0, 0, s_iRows, s_iCols );
+   hb_gt_ColdArea( 0, 0, s_iRows, s_iCols );
 }
 
 static void hb_gt_dos_GetCursorPosition( int * piRow, int * piCol )

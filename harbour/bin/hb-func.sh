@@ -73,7 +73,7 @@ mk_hbgetlibsctb()
 {
     if [ -z "$@" ]
     then
-        echo -n "ct rddads"
+        echo -n "rddads hbodbc ct nf"
     else
         echo -n "$@"
     fi
@@ -218,6 +218,7 @@ HB_MAIN_FUNC=""
 HB_XBGTK=""
 HB_HWGUI=""
 HB_USRLIBS=""
+HB_USRLPATH=""
 HB_GENC=""
 [ -n "\$TMPDIR" ] || TMPDIR="\$TMP"
 [ -n "\$TMPDIR" ] || TMPDIR="\$TEMP"
@@ -249,7 +250,8 @@ while [ \$n -lt \${#P[@]} ]; do
         -nofmstat)   HB_FM_REQ="NOSTAT" ;;
         -strip)      HB_STRIP="yes" ;;
         -nostrip)    HB_STRIP="no" ;;
-        -l[a-zA-z]*) HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
+        -l[^-]*)     HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
+        -L[^-]*)     HB_USRLPATH="\${HB_USRLPATH} \${v}" ;;
         -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
         -gc|-gc[0-9]) HB_GENC="yes"; p="\${v}" ;;
         -*)          p="\${v}" ;;
@@ -424,11 +426,10 @@ hb_link()
         fi
     fi
     if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
-        hb_lnk_request > \${_TMP_FILE_} && \\
-        hb_cc "\$@" "\${_TMP_FILE_}" \${LN_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
-    else
-        hb_cc "\$@" \${LN_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${HB_USRLIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+        hb_lnk_request > \${_TMP_FILE_}
+        LN_OPT="\${_TMP_FILE_} \${LN_OPT}"
     fi
+    hb_cc "\$@" \${LN_OPT} \${GCC_PATHS} \${HB_USRLPATH} \${HB_USRLIBS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
 }
 
 hb_lnk_request()

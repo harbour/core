@@ -56,33 +56,12 @@
 
 HB_FUNC( STR )
 {
-   BOOL bValid;
    PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
-   PHB_ITEM pWidth  = NULL;
-   PHB_ITEM pDec    = NULL;
+   PHB_ITEM pWidth  = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pDec    = hb_param( 3, HB_IT_NUMERIC );
+   int iParams = hb_pcount();
 
-   if( pNumber )
-   {
-      bValid = TRUE;
-
-      if( hb_pcount() >= 2 )
-      {
-         pWidth = hb_param( 2, HB_IT_NUMERIC );
-         if( !pWidth )
-            bValid = FALSE;
-      }
-
-      if( hb_pcount() >= 3 )
-      {
-         pDec = hb_param( 3, HB_IT_NUMERIC );
-         if( !pDec )
-            bValid = FALSE;
-      }
-   }
-   else
-      bValid = FALSE;
-
-   if( bValid )
+   if( pNumber && ( iParams < 2 || pWidth ) && ( iParams < 3 || pDec ) )
    {
       char * szResult = hb_itemStr( pNumber, pWidth, pDec );
 
@@ -94,4 +73,3 @@ HB_FUNC( STR )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", HB_MIN( hb_pcount(), 3 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }
-

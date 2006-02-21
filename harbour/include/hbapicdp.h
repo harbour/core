@@ -175,8 +175,11 @@ extern HB_EXPORT void          hb_cdpReleaseAll( void );
        
 extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BYTE );
 extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * uc );
-extern HB_EXPORT ULONG         hb_cdpStrnToUTF( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
+extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
 extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BYTE*, ULONG, BYTE* );
+extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( BYTE * pSrc, ULONG ulLen );
+extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE cdp, BYTE * pSrc, ULONG ulLen );
+extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp, BYTE * pSrc, ULONG ulSrc, BYTE * pDst, ULONG ulDst );
 
 extern PHB_CODEPAGE hb_cdp_page;
 

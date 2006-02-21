@@ -73,6 +73,7 @@
 #include "hbapicdp.h"
 #endif
 
+#include <unistd.h>
 #include <signal.h>
 #include <sys/time.h>
 

@@ -102,6 +102,18 @@ static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
 PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
 
 
+static int utf8Size( USHORT uc )
+{
+   if ( uc <  0x0080 )
+      return 1;
+
+   else if ( uc <  0x0800 )
+      return 2;
+
+   else /* if ( uc <= 0xffff ) */
+      return 3;
+}
+
 static int u16toutf8( BYTE *szUTF8, USHORT uc )
 {
    int n;
@@ -489,6 +501,77 @@ HB_EXPORT USHORT hb_cdpGetU16( PHB_CODEPAGE cdp, BYTE ch )
    return u;
 }
 
+HB_EXPORT ULONG hb_cdpUTF8StringLength( BYTE * pSrc, ULONG ulLen )
+{
+   ULONG ul, ulDst;
+   USHORT uc;
+   int n = 0;
+
+   for( ul = ulDst = 0; ul < ulLen; ++ul )
+   {
+      if( utf8tou16nextchar( pSrc[ ul ], &n, &uc ) )
+      {
+         if( n == 0 )
+            ++ulDst;
+      }
+   }
+
+   return ulDst;
+}
+
+HB_EXPORT ULONG hb_cdpStringInUTF8Length( PHB_CODEPAGE cdp, BYTE * pSrc, ULONG ulLen )
+{
+   ULONG ul, ulDst;
+
+   for( ul = ulDst = 0; ul < ulLen; ++ul )
+   {
+      ulDst += utf8Size( hb_cdpGetU16( cdp, pSrc[ ul ] ) );
+   }
+
+   return ulDst;
+}
+
+HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp,
+                                  BYTE * pSrc, ULONG ulSrc,
+                                  BYTE * pDst, ULONG ulDst )
+{
+   ULONG ulS, ulD;
+   USHORT uc;
+   int n = 0;
+
+   for( ulS = ulD = 0; ulS < ulSrc; ++ulS )
+   {
+      if( utf8tou16nextchar( pSrc[ ulS ], &n, &uc ) )
+      {
+         if( n == 0 )
+         {
+            if( ulD < ulDst )
+            {
+               if( cdp->uniTable && cdp->uniTable->uniCodes && uc >= 0x100 )
+               {
+                  int i;
+                  for ( i = 0; i < cdp->uniTable->nChars; i++ )
+                  {
+                     if ( cdp->uniTable->uniCodes[ i ] == uc )
+                     {
+                        uc = i;
+                        break;
+                     }
+                  }
+               }
+               pDst[ ulD ] = uc >= 0x100 ? '?' : uc;
+            }
+            ++ulD;
+         }
+      }
+   }
+
+   if( ulD < ulDst )
+      pDst[ ulD ] = '\0';
+
+   return ulD;
+}
+
 HB_EXPORT BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * uc )
 {
    if ( utf8tou16nextchar( ch, n, uc ) )
@@ -510,7 +593,7 @@ HB_EXPORT BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * u
    return FALSE;
 }
 
-HB_EXPORT ULONG hb_cdpStrnToUTF( PHB_CODEPAGE cdp, BYTE* pSrc, ULONG ulLen, BYTE* pDst )
+HB_EXPORT ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BYTE* pSrc, ULONG ulLen, BYTE* pDst )
 {
    USHORT u, *uniCodes, nChars;
    ULONG i, n;

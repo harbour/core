@@ -545,11 +545,12 @@ static void hb_gt_win_xGetScreenContents( SMALL_RECT * psrWin )
       i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
-         hb_gt_PutChar( iRow, iCol, ( BYTE ) s_pCharInfoScreen[i].Attributes, 0,
+         hb_gt_PutScrChar( iRow, iCol, ( BYTE ) s_pCharInfoScreen[i].Attributes, 0,
                     s_charTransRev[ ( BYTE ) s_pCharInfoScreen[i].Char.AsciiChar ] );
          ++i;
       }
    }
+   hb_gt_ColdArea( psrWin->Top, psrWin->Left, psrWin->Bottom, psrWin->Right );
 }
 
 
@@ -611,7 +612,6 @@ static void hb_gt_win_xInitScreenParam( void )
                               &srWin ) )          /* screen buffer rectangle to read from */
       {
          hb_gt_win_xGetScreenContents( &srWin );
-         hb_gt_ExposeArea( srWin.Top, srWin.Left, srWin.Bottom, srWin.Right );
       }
       hb_gt_SetPos( s_sCurRow, s_sCurCol );
    }

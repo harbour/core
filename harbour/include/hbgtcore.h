@@ -113,7 +113,9 @@ typedef struct
    BOOL     (* Resize ) ( int, int );
    BOOL     (* SetMode) ( int, int );
    void     (* GetSize) ( int *, int * );
+   void     (* ColdArea) ( int, int, int, int );
    void     (* ExposeArea) ( int, int, int, int );
+   void     (* ScrollArea) ( int, int, int, int, BYTE, BYTE, int, int );
    void     (* TouchCell) ( int, int );
    void     (* Redraw) ( int, int, int );
    void     (* Refresh) ( void );
@@ -140,6 +142,7 @@ typedef struct
    void     (* SetCursorStyle) ( int );
    void     (* GetScrCursor) ( int *, int *, int * );
    BOOL     (* GetScrChar) ( int, int, BYTE *, BYTE *, USHORT * );
+   BOOL     (* PutScrChar) ( int, int, BYTE, BYTE, USHORT );
    void     (* DispBegin) ( void );
    void     (* DispEnd) ( void );
    int      (* DispCount) ( void );
@@ -213,13 +216,13 @@ typedef struct
     /* keyboard */
     int     (* ExtendedKeySupport) ( void );
 
-    /* extended GT functions */
+    /* GT CLIPBOARD functions */
     void    (* GetClipboard) ( char *, ULONG * );
     void    (* SetClipboard) ( char *, ULONG );
     ULONG   (* GetClipboardSize) ( void );
+
     void    (* ProcessMessages) ( void );
 
-    /* GT CLIPBOARD functions */
     /* GT to DRIVER communication functions */
     void    (* update ) ( int );
     int     (* info ) ( int, BOOL , int , void * );
@@ -324,6 +327,7 @@ extern int    hb_gt_GetCursorStyle( void );
 extern void   hb_gt_SetCursorStyle( int iStyle );
 extern void   hb_gt_GetScrCursor( int * piRow, int * piCol, int * piStyle );
 extern BOOL   hb_gt_GetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
+extern BOOL   hb_gt_PutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar );
 extern BOOL   hb_gt_GetBlink( void );
 extern void   hb_gt_SetBlink( BOOL fBlink );
 extern void   hb_gt_SetSnowFlag( BOOL fNoSnow );
@@ -358,7 +362,9 @@ extern void   hb_gt_VertLine( int iCol, int iTop, int iBottom, BYTE bChar, BYTE 
 extern BOOL   hb_gt_SetMode( int iRows, int iCols );
 extern BOOL   hb_gt_Resize( int iRows, int iCols );
 extern void   hb_gt_GetSize( int * piRows, int * piCols );
+extern void   hb_gt_ColdArea( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_gt_ExposeArea( int iTop, int iLeft, int iBottom, int iRight );
+extern void   hb_gt_ScrollArea( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols );
 extern void   hb_gt_TouchCell( int iRow, int iCol );
 extern void   hb_gt_Redraw( int iRow, int iCol, int iSize );
 extern void   hb_gt_Refresh( void );
@@ -422,6 +428,7 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_SETCURSORSTYLE(s)         (HB_GTSUPER)->SetCursorStyle(s)
 #define HB_GTSUPER_GETSCRCURSOR(pr,pc,ps)    (HB_GTSUPER)->GetScrCursor(pr,pc,ps)
 #define HB_GTSUPER_GETSCRCHAR(r,c,pm,pa,pc)  (HB_GTSUPER)->GetScrChar(r,c,pm,pa,pc)
+#define HB_GTSUPER_PUTSCRCHAR(r,c,m,a,u)     (HB_GTSUPER)->PutScrChar(r,c,m,a,u)
 #define HB_GTSUPER_GETBLINK()                (HB_GTSUPER)->GetBlink()
 #define HB_GTSUPER_SETBLINK(b)               (HB_GTSUPER)->SetBlink(b)
 #define HB_GTSUPER_SETSNOWFLAG(b)            (HB_GTSUPER)->SetSnowFlag(b)
@@ -458,7 +465,9 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_SETMODE(r,c)              (HB_GTSUPER)->SetMode(r,c)
 #define HB_GTSUPER_RESIZE(r,c)               (HB_GTSUPER)->Resize(r,c)
 #define HB_GTSUPER_GETSIZE(pr,pc)            (HB_GTSUPER)->GetSize(pr,pc)
+#define HB_GTSUPER_COLDAREA(t,l,b,r)         (HB_GTSUPER)->ColdArea(t,l,b,r)
 #define HB_GTSUPER_EXPOSEAREA(t,l,b,r)       (HB_GTSUPER)->ExposeArea(t,l,b,r)
+#define HB_GTSUPER_SCROLLAREA(t,l,b,r,m,u,v,h) (HB_GTSUPER)->ScrollArea(t,l,b,r,m,u,v,h)
 #define HB_GTSUPER_TOUCHCELL(r,c)            (HB_GTSUPER)->TouchCell(r,c)
 #define HB_GTSUPER_REDRAW(r,c,l)             (HB_GTSUPER)->Redraw(r,c,l)
 #define HB_GTSUPER_REFRESH()                 (HB_GTSUPER)->Refresh()

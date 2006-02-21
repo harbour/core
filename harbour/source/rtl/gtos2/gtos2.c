@@ -479,10 +479,10 @@ static void hb_gt_os2_GetScreenContents( void )
       {
          usSize = 2;
          VioReadCellStr( ( PBYTE ) Cell, &usSize, iRow, iCol, 0 );
-         hb_gt_PutChar( iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
+         hb_gt_PutScrChar( iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
       }
    }
-   hb_gt_ExposeArea( 0, 0, s_vi.row, s_vi.col );
+   hb_gt_ColdArea( 0, 0, s_vi.row, s_vi.col );
 }
 
 static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
