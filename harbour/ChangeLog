@@ -6,7 +6,11 @@
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
+*/ 
+    * harbour/makefile.vc
+      * fixed handling of optional clauses in command/translate
+      
+        #command PRINT TO <oPage> => [<oPage>:=]PrintPage()
       * fixed <-x-> match marker
       * added fixed length of command/translate/define name to
         speed translation
