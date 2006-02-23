@@ -167,7 +167,7 @@ static int kbhit( void )
 
 #if !defined(__DJGPP__) && !defined(__RSX32__)
 #if defined(__WATCOMC__) || defined(_MSC_VER)
-static void hb_gt_CtrlBreak_Handler( int iSignal )
+static void hb_gt_dos_CtrlBreak_Handler( int iSignal )
 {
    /* Ctrl-Break was pressed */
    /* NOTE: the layout of this function is forced by the compiler
@@ -1189,7 +1189,7 @@ static void vmode50x80( void )
  *  FFh    unknown display type
  ****************************************************************************/
 
-static USHORT hb_gt_GetDisplay( void )
+static USHORT hb_gt_dos_GetDisplay( void )
 {
    union REGS regs;
 
@@ -1206,7 +1206,7 @@ static BOOL hb_gt_dos_SetMode( int iRows, int iCols )
 
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_dos_SetMode(%d, %d)", iRows, iCols) );
 
-   bIsVGA = ( hb_gt_GetDisplay() == 8 );
+   bIsVGA = ( hb_gt_dos_GetDisplay() == 8 );
    bIsVesa = FALSE;
 
    /* Available modes in B&N and color screens */
@@ -1241,7 +1241,7 @@ static BOOL hb_gt_dos_SetMode( int iRows, int iCols )
       if( iCols > 80 && bIsVesa )
       {
          /* In development process
-          * return( hb_gt_Modevesa( nMode) );
+          * return( hb_gt_dos_Modevesa( nMode) );
           */
       }
    }

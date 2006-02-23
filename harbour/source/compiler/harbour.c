@@ -5047,7 +5047,7 @@ static void hb_compCompileEnd( void )
       {
          hb_compParserStop(); /* uses hb_comp_files.pLast */
       }
-      hb_comp_files.pLast = pFile->pPrev;
+      hb_comp_files.pLast = ( PFILE ) pFile->pPrev;
       hb_xfree( pFile );
    }
    hb_comp_files.pLast = NULL;

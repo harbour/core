@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
       * fixed <-x-> match marker
+      * added fixed length of command/translate/define name to
+        speed translation
+
+   * source/compiler/harbour.l
+      * fixed GPF in handling of '&macro.tekst' syntax
         (introduced recently)
 
 
