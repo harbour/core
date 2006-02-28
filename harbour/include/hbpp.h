@@ -64,6 +64,7 @@ struct _DEFINES;
 typedef struct _DEFINES
 {
    char * name;
+   int namelen;
    char * pars;
    int    npars;
    char * value;
@@ -75,6 +76,7 @@ typedef struct _COMMANDS
 {
    int com_or_xcom;
    char * name;
+   int namelen;
    char * mpatt;
    char * value;
    struct _COMMANDS * last;

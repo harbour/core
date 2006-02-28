@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+    + added basic support for GFX operations
+
+  + harbour/source/rtl/gtalleg/Makefile
+  + harbour/source/rtl/gtalleg/fixedth.sfc
+  + harbour/source/rtl/gtalleg/gtalleg.c
+  + harbour/source/rtl/gtalleg/ssf.c
+  + harbour/source/rtl/gtalleg/ssf.h
+    + added new GT by Mauricio Abre based on Allegro cross platform
+      graphic libraries.
+      Code borrowed from xHarbour and modified by my for new Harbour
+      GT API.
+
+2006-02-28 17:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbpp.h
+   * source/pp/ppcore.c
+   * source/pp/pptable.c
       * fixed handling of optional clauses in command/translate
       
         #command PRINT TO <oPage> => [<oPage>:=]PrintPage()

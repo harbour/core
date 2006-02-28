@@ -1753,21 +1753,19 @@ Separator     {SpaceTab}
                }
 
 {MacroEnd}     {
-/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
                   yylval.string = yytext;
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
-/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
                   yylval.string = yytext;
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
-/*                  yylval.string = hb_strupr( hb_strdup( yytext ) );*/
+                  yylval.string = yytext;
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
