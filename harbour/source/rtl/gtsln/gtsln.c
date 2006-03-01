@@ -354,7 +354,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
    {
 #ifndef HB_CDP_SUPPORT_OFF
       if( hb_sln_Is_Unicode )
-         iDst = hb_cdpGetU16( cdpHost, ( BYTE ) i );
+         iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) i );
       else
 #endif
          iDst = i;
@@ -396,7 +396,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
          {
             iSrc = ( unsigned char ) cdpHost->CharsUpper[ i ];
 #ifdef HB_SLN_UNICODE
-            iDst = hb_cdpGetU16( cdpHost, ( BYTE ) iSrc );
+            iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) iSrc );
 #else
             iDst = fTrans ? ( unsigned char ) cdpTerm->CharsUpper[ i ] : iSrc;
 #endif
@@ -406,7 +406,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
 
             iSrc = ( unsigned char ) cdpHost->CharsLower[ i ];
 #ifdef HB_SLN_UNICODE
-            iDst = hb_cdpGetU16( cdpHost, ( BYTE ) iSrc );
+            iDst = hb_cdpGetU16( cdpHost, TRUE, ( BYTE ) iSrc );
 #else
             iDst = fTrans ? ( unsigned char ) cdpTerm->CharsLower[ i ] : iSrc;
 #endif

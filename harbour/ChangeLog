@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+2006-03-02 01:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    * fixed yest another problem with PP which caused GPF on
+      minigui compilation
+
+2006-03-01 21:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbinfo.ch
+  * harbour/source/rdd/workarea.c
+    * added DBI_SCOPEDRELATION action. It alow to test if given
+      relation on current work area sets scope on child index.
       F.e.: dbInfo( DBI_SCOPEDRELATION, 1 )
 
 2006-03-01 20:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)

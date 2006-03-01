@@ -1555,7 +1555,7 @@ static void hb_gt_xwc_BuildCharTrans( PXWND_DEF wnd )
    for( i = 0; i < 256; i++ )
    {
 #ifndef HB_CDP_SUPPORT_OFF
-      usCh16 = hb_cdpGetU16( wnd->hostCDP, ( BYTE ) i );
+      usCh16 = hb_cdpGetU16( wnd->hostCDP, TRUE, ( BYTE ) i );
 #else
       int j;
       usCh16 = ( USHORT ) i;
@@ -2228,10 +2228,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          }
          else if( req->target == s_atomUTF8String )
          {
-            ULONG ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, wnd->ClipboardData, wnd->ClipboardSize );
+            ULONG ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, FALSE, wnd->ClipboardData, wnd->ClipboardSize );
             BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulLen + 1 );
 
-            hb_cdpStrnToUTF8( wnd->hostCDP, wnd->ClipboardData, wnd->ClipboardSize, pBuffer );
+            hb_cdpStrnToUTF8( wnd->hostCDP, FALSE, wnd->ClipboardData, wnd->ClipboardSize, pBuffer );
 #ifdef XWC_DEBUG
             printf( "SelectionRequest: (%s)->(%s) [%s]\r\n", wnd->ClipboardData, pBuffer, wnd->hostCDP->id ); fflush(stdout);
 #endif
