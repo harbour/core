@@ -263,6 +263,7 @@
 #define DBI_SEPARATOR           134  /* The record separator (as a string) */
 #define DBI_MEMOVERSION         135  /* sub version of memo file */
 #define DBI_TABLETYPE           136   /* Type of table file */
+#define DBI_SCOPEDRELATION      137   /* Is given relation scoped */
 
 /* RECORD MAP (RM) support */
 #define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */

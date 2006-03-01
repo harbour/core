@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+        #command TEXT => __text|Qout(%s)|QQOut()
+        #command TEXT TO FILE <f> => ;
+         __text|Qout(%s)|__TextRestore()|__TextSave(<f>)
+
+        ParseBlockCode is called for every line beetwen TEXT/ENDTEXT,
+        %s is replaced with the text enclosed with []
+
 2006-03-02 01:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     * fixed yest another problem with PP which caused GPF on

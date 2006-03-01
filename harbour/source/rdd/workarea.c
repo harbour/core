@@ -645,6 +645,27 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
 
+      case DBI_SCOPEDRELATION:
+      {
+         int iRelNo = hb_itemGetNI( pItem );
+         BOOL fScoped = FALSE;
+
+         if( iRelNo > 0 )
+         {
+            LPDBRELINFO lpdbRelations = pArea->lpdbRelations;
+            while( lpdbRelations )
+            {
+               if( --iRelNo == 0 )
+               {
+                  fScoped = lpdbRelations->isScoped;
+                  break;
+               }
+               lpdbRelations = lpdbRelations->lpdbriNext;
+            }
+         }
+         hb_itemPutL( pItem, fScoped );
+      }
+
       case DBI_RM_SUPPORTED:
          hb_itemPutL( pItem, FALSE );
          break;
