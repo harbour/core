@@ -2110,7 +2110,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      wnd->ClipboardRequest,
                      wnd->ClipboardRequest == None ? "None" : XGetAtomName(wnd->dpy, wnd->ClipboardRequest) ); fflush(stdout);
 #endif
-         if( evt->xselection.property != None && wnd->ClipboardRequest )
+         if( evt->xselection.property != None )
          {
             XTextProperty text;
             unsigned long nItem;
@@ -2120,6 +2120,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             {
                if( evt->xselection.target == s_atomUTF8String && text.format == 8 )
                {
+#ifdef XWC_DEBUG
+                  printf( "UTF8String='%s'\r\n", text.value ); fflush(stdout);
+#endif
                   nItem = hb_cdpUTF8StringLength( text.value, text.nitems );
                   if( wnd->ClipboardData != NULL )
                      hb_xfree( wnd->ClipboardData );
@@ -2132,6 +2135,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                }
                else if( evt->xselection.target == s_atomString && text.format == 8 )
                {
+#ifdef XWC_DEBUG
+                  printf( "String='%s'\r\n", text.value ); fflush(stdout);
+#endif
                   if( wnd->ClipboardData != NULL )
                      hb_xfree( wnd->ClipboardData );
                   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( text.nitems + 1 );
@@ -2207,7 +2213,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             {
                BYTE * pBuffer = ( BYTE * ) hb_xgrab( wnd->ClipboardSize + 1 );
                memcpy( pBuffer, wnd->ClipboardData, wnd->ClipboardSize + 1 );
-               hb_cdpnTranslate( ( char * ) pBuffer, wnd->inCDP, wnd->hostCDP, wnd->ClipboardSize );
+               hb_cdpnTranslate( ( char * ) pBuffer, wnd->hostCDP, wnd->inCDP, wnd->ClipboardSize );
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
                                 pBuffer, wnd->ClipboardSize );
@@ -2222,11 +2228,13 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          }
          else if( req->target == s_atomUTF8String )
          {
-            PHB_CODEPAGE cdp = wnd->inCDP ? wnd->inCDP : wnd->hostCDP;
-            ULONG ulLen = hb_cdpStringInUTF8Length( cdp, wnd->ClipboardData, wnd->ClipboardSize );
+            ULONG ulLen = hb_cdpStringInUTF8Length( wnd->hostCDP, wnd->ClipboardData, wnd->ClipboardSize );
             BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulLen + 1 );
 
-            hb_cdpStrnToUTF8( cdp, wnd->ClipboardData, wnd->ClipboardSize, pBuffer );
+            hb_cdpStrnToUTF8( wnd->hostCDP, wnd->ClipboardData, wnd->ClipboardSize, pBuffer );
+#ifdef XWC_DEBUG
+            printf( "SelectionRequest: (%s)->(%s) [%s]\r\n", wnd->ClipboardData, pBuffer, wnd->hostCDP->id ); fflush(stdout);
+#endif
             XChangeProperty( wnd->dpy, req->requestor, req->property,
                              s_atomUTF8String, 8, PropModeReplace,
                              pBuffer, ulLen );

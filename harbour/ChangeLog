@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+      F.e.: dbInfo( DBI_SCOPEDRELATION, 1 )
+
+2006-03-01 20:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
     * added optional BOOL parameter to functions which translate to UTF8
       to not translate control code characters
 
