@@ -1920,6 +1920,28 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
    return iKey;
 }
 
+static int hb_gt_def_GfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+   HB_SYMBOL_UNUSED( iType );
+   HB_SYMBOL_UNUSED( iTop );
+   HB_SYMBOL_UNUSED( iLeft );
+   HB_SYMBOL_UNUSED( iBottom );
+   HB_SYMBOL_UNUSED( iRight );
+   HB_SYMBOL_UNUSED( iColor );
+
+   return 0;
+}
+
+static void hb_gt_def_GfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth )
+{
+   HB_SYMBOL_UNUSED( iTop );
+   HB_SYMBOL_UNUSED( iLeft );
+   HB_SYMBOL_UNUSED( szText );
+   HB_SYMBOL_UNUSED( iColor );
+   HB_SYMBOL_UNUSED( iSize );
+   HB_SYMBOL_UNUSED( iWidth );
+}
+
 static void hb_gt_def_WhoCares( void * pCargo )
 {
    HB_SYMBOL_UNUSED( pCargo );
@@ -2029,6 +2051,8 @@ static HB_GT_FUNCS gtCoreFunc =
    MouseButtonPressed         : hb_gt_def_MouseButtonPressed            ,
    MouseButtonReleased        : hb_gt_def_MouseButtonReleased           ,
    MouseReadKey               : hb_gt_def_MouseReadKey                  ,
+   GfxPrimitive               : hb_gt_def_GfxPrimitive                  ,
+   GfxText                    : hb_gt_def_GfxText                       ,
    WhoCares                   : hb_gt_def_WhoCares
 };
 #else
@@ -2133,6 +2157,8 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_MouseButtonPressed           ,
    hb_gt_def_MouseButtonReleased          ,
    hb_gt_def_MouseReadKey                 ,
+   hb_gt_def_GfxPrimitive                 ,
+   hb_gt_def_GfxText                      ,
    hb_gt_def_WhoCares
 };
 #endif
@@ -2631,6 +2657,16 @@ BOOL   hb_mouse_ButtonReleased( int iButton, int * piRow, int * piCol )
 int    hb_mouse_ReadKey( int iEventMask )
 {
    return gtCoreFunc.MouseReadKey( iEventMask );
+}
+
+int    hb_gt_GfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+   return gtCoreFunc.GfxPrimitive( iType, iTop, iLeft, iBottom, iRight, iColor );
+}
+
+void   hb_gt_GfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth )
+{
+   gtCoreFunc.GfxText( iTop, iLeft, szText, iColor, iSize, iWidth );
 }
 
 void   hb_gt_WhoCares( void * pCargo )

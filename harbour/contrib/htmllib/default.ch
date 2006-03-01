@@ -86,10 +86,10 @@
 
 
 #xtranslate RestState(<a>)      =>   DispBegin()                 ;;
-                                     RestScreen(,,,,<a>\[\5])    ;;
-                                     SetColor(<a>\[\3] )         ;;
-                                     SetCursor(<a>\[\4])         ;;
-                                     SetPos(<a>\[\1], <a>\[\2] ) ;;
+                                     RestScreen(,,,,<a>\[5\])    ;;
+                                     SetColor(<a>\[3\] )         ;;
+                                     SetCursor(<a>\[4\])         ;;
+                                     SetPos(<a>\[1\], <a>\[2\] ) ;;
                                      DispEnd()
 
 
@@ -103,10 +103,10 @@
                                          NIL )
 
 #xTranslate DbRestState( <a> )   =>   IIF( <a> != NIL, ;
-                                        ( Select( <a>\[\1] ),    ;
-                                          OrdListAdd(<a>\[\3] ), ;
-                                          OrdSetFocus(<a>\[\4] ), ;
-                                          DbGoto(<a>\[\2] )),)
+                                        ( Select( <a>\[1\] ),    ;
+                                          OrdListAdd(<a>\[3\] ), ;
+                                          OrdSetFocus(<a>\[4\] ),;
+                                          DbGoto(<a>\[2\] )),)
 
 
 // --> Display a Message at MAXROW() with optional colour...

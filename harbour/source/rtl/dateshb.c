@@ -85,7 +85,6 @@ HB_FUNC( CTOD )
    {
       char * szDate = hb_parc( 1 );
       int d_value = 0, m_value = 0, y_value = 0;
-      char szDateFormat[ 9 ];
 
       if( szDate )
       {
@@ -170,9 +169,7 @@ HB_FUNC( CTOD )
          }
       }
 
-      sprintf( szDateFormat, "%04i%02i%02i", y_value, m_value, d_value );
-
-      hb_retds( szDateFormat );
+      hb_retd( y_value, m_value, d_value );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, "CTOD", 1, hb_paramError( 1 ) );

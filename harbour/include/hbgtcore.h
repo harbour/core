@@ -212,6 +212,10 @@ typedef struct
    BOOL     (* MouseButtonReleased) ( int, int *, int * );
    int      (* MouseReadKey) ( int );
 
+   /* Graphics API */
+   int      (* GfxPrimitive) ( int, int, int, int, int, int );
+   void     (* GfxText) ( int, int, char *, int, int, int );
+
 #if 0
     /* keyboard */
     int     (* ExtendedKeySupport) ( void );
@@ -226,10 +230,6 @@ typedef struct
     /* GT to DRIVER communication functions */
     void    (* update ) ( int );
     int     (* info ) ( int, BOOL , int , void * );
-
-    /* Graphics API */
-    int     (* gfxPrimitive) ( int, int, int, int, int, int );
-    void    (* gfxText) ( int, int, char *, int, int, int );
 
 #endif
 
@@ -400,6 +400,8 @@ extern BOOL   hb_mouse_ButtonState( int iButton );
 extern BOOL   hb_mouse_ButtonPressed( int iButton, int * piRow, int * piCol );
 extern BOOL   hb_mouse_ButtonReleased( int iButton, int * piRow, int * piCol );
 extern int    hb_mouse_ReadKey( int iEventMask );
+extern int    hb_gt_GfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
+extern void   hb_gt_GfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth );
 extern void   hb_gt_WhoCares( void * pCargo );
 
 #define HB_GTSUPER_NEW()                     (HB_GTSUPER)->New()
@@ -499,6 +501,8 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_MOUSEBUTTONPRESSED(b,r,c) (HB_GTSUPER)->MouseButtonPressed(b,r,c)
 #define HB_GTSUPER_MOUSEBUTTONRELEASED(b,r,c) (HB_GTSUPER)->MouseButtonReleased(b,r,c)
 #define HB_GTSUPER_MOUSEREADKEY(m)           (HB_GTSUPER)->MouseReadKey(m)
+#define HB_GTSUPER_GFXPRIMITIVE(g,t,l,b,r,c) (HB_GTSUPER)->GfxPrimitive(g,t,l,b,r,c)
+#define HB_GTSUPER_GFXTEXT(t,l,s,c,h,w)      (HB_GTSUPER)->GfxPrimitive(t,l,s,c,h,w)
 #define HB_GTSUPER_WHOCARES(p)               (HB_GTSUPER)->WhoCares(p)
 
 extern HB_EXPORT void hb_gtSetDefault( char * szGtName );

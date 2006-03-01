@@ -254,5 +254,10 @@ PINLINE   hb_compInlineAdd( char * szFunName )
    return NULL;
 }
 
+void hb_compParserStop( void  )
+{
+   ;
+}
+
 #endif
 

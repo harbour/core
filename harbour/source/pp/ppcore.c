@@ -304,6 +304,11 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
                fclose( hb_comp_files.pLast->handle );
                hb_xfree( hb_comp_files.pLast->pBuffer );
+               hb_xfree( hb_comp_files.pLast->szFileName );
+               if( hb_comp_files.pLast->yyBuffer )
+               {
+                  hb_compParserStop(); /* uses hb_comp_files.pLast */
+               }
                hb_xfree( hb_comp_files.pLast );
                hb_comp_files.pLast = NULL;
                hb_comp_files.iFiles = 0;
@@ -2023,7 +2028,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
 
 static int RemoveSlash( char * cpatt )
 {
-  int i;
+  int i = 0;
   int lenres = strlen( cpatt );
   
   while( cpatt[ i ] != '\0' )
@@ -4500,8 +4505,8 @@ static BOOL OpenInclude( char * szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pM
      pFile->handle = fptr;
      pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
      pFile->iBuffer = pFile->lenBuffer = 10;
-     pFile->szFileName = ( char * ) hb_xgrab( strlen( szFileName ) + 1 );
-     hb_pp_strocpy( pFile->szFileName, szFileName );
+     pFile->yyBuffer = NULL;
+     pFile->szFileName = hb_strdup( szFileName );
 
      if( hb_comp_files.pLast )
         hb_comp_files.pLast->iLine = hb_comp_iLine;

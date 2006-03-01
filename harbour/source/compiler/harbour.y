@@ -1936,7 +1936,7 @@ BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
    pFile->handle = yyin;
    pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
    pFile->iBuffer = pFile->lenBuffer = 10;
-   pFile->szFileName = szFileName;
+   pFile->szFileName = hb_strdup( szFileName );
    pFile->iLine = 0;
    pFile->pPrev = hb_comp_files.pLast;
 

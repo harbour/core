@@ -4579,7 +4579,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stack.iStatics = pSym->value.iStaticsBase; /* pSym is { "$_INITSTATICS", HB_FS_INIT | HB_FS_EXIT, _INITSTATICS } for each PRG */
+   hb_stack.iStatics = pSym->value.iStaticsBase; /* pSym is { "$_INITSTATICS", HB_FS_INITEXIT, _INITSTATICS } for each PRG */
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -5697,7 +5697,7 @@ static void hb_vmReleaseLocalSymbols( void )
 }
 
 /* This calls all _INITSTATICS functions defined in the application.
- * We are using a special symbol's scope ( HB_FS_INIT | HB_FS_EXIT ) to mark
+ * We are using a special symbol's scope HB_FS_INITEXIT to mark
  * this function. These two bits cannot be marked at the same
  * time for normal user defined functions.
  */
@@ -5709,7 +5709,7 @@ static void hb_vmDoInitStatics( void )
 
    do
    {
-      if( ( pLastSymbols->hScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
+      if( ( pLastSymbols->hScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
       {
          USHORT ui;
 
@@ -5717,7 +5717,7 @@ static void hb_vmDoInitStatics( void )
          {
             HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
 
-            if( scope == ( HB_FS_INIT | HB_FS_EXIT ) )
+            if( scope == HB_FS_INITEXIT )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();

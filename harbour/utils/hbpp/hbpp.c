@@ -541,3 +541,8 @@ PINLINE   hb_compInlineAdd( char * szFunName )
    HB_SYMBOL_UNUSED( szFunName );
    return NULL;
 }
+
+void hb_compParserStop( void  )
+{
+   ;
+}

@@ -67,7 +67,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "inkey.ch"
-#include "error.ch"
+#include "hbgfxdef.ch"
 
 #ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"

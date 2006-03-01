@@ -631,6 +631,8 @@ HB_EXPORT ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BYTE* pSrc, ULONG ulLen, BYT
          u = uniCodes[ u ];
       n += u16toutf8( &pDst[n], u );
    }
+   pDst[ n ] = '\0';
+
    return n;
 }
 

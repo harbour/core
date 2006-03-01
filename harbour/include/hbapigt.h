@@ -193,6 +193,8 @@ extern HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen );
 extern HB_EXPORT ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox );
 extern HB_EXPORT ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP );
 extern HB_EXPORT ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo );
+extern HB_EXPORT int     hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
+extern HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth );
        
 extern HB_EXPORT BOOL    hb_mouseIsPresent( void );
 extern HB_EXPORT BOOL    hb_mouseGetCursor( void );

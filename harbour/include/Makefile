@@ -70,11 +70,13 @@ PRG_HEADERS=\
 	hbdebug.ch   \
 	hbextern.ch  \
 	hbgetcmt.ch  \
+	hbgfx.ch     \
+	hbgfxdef.ch  \
 	hbgtinfo.ch  \
 	hbinkey.ch   \
 	hblang.ch    \
 	hbmacro.ch   \
-	hbmath.ch     \
+	hbmath.ch    \
 	hbmemory.ch  \
 	hbmemvar.ch  \
 	hboo.ch      \
@@ -89,6 +91,7 @@ PRG_HEADERS=\
 	setcurs.ch   \
 	simpleio.ch  \
 	std.ch       \
+	tbrowse.ch   \
 
 API_HEADERS=\
 	error.api    \
@@ -102,4 +105,3 @@ API_HEADERS=\
 	vm.api       \
 
 include $(TOP)$(ROOT)config/header.cf
-

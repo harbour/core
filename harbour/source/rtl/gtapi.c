@@ -607,3 +607,21 @@ ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
    else
       return FAILURE;
 }
+
+int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+   int iResult;
+
+   iResult = hb_gt_GfxPrimitive( iType, iTop, iLeft, iBottom, iRight, iColor );
+   hb_gt_Flush();
+
+   return iResult;
+}
+
+ERRCODE hb_gtGfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+{
+   hb_gt_GfxText( iTop, iLeft, cBuf, iColor, iSize, iWidth );
+   hb_gt_Flush();
+
+   return SUCCESS;
+}

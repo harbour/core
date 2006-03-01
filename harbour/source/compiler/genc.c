@@ -106,7 +106,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
          /* Is it a STATIC$ */
          else if ( bIsStaticVariable )
-            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "HB_FUNC_INITSTATICS();\n" ); /* NOTE: hb_ intentionally in lower case */
          /* Is it an INIT FUNCTION/PROCEDURE */
          else if ( bIsInitFunction )
             hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName, 1 );
@@ -170,7 +170,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             * we are using these two bits to mark the special function used to
             * initialize static variables
             */
-            fprintf( yyc, "{ \"(_INITSTATICS)\", {HB_FS_INIT | HB_FS_EXIT}, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "{ \"(_INITSTATICS)\", {HB_FS_INITEXIT}, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
          }
          else
          {
@@ -242,7 +242,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
          /* Is it STATICS$ */
          else if( bIsStaticVariable )
-            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "HB_FUNC_INITSTATICS()" ); /* NOTE: hb_ intentionally in lower case */
          /* Is it an INIT FUNCTION/PROCEDURE */
          else if ( bIsInitFunction )
             hb_compGenCFunc( yyc, "HB_FUNC_INIT( %s )", pFunc->szName, 1 );
@@ -1214,7 +1214,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
          * because at the time of C code generation we don't know
          * in which function was defined this local variable
          */
-      if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) != ( HB_FS_INIT | HB_FS_EXIT ) )
+      if( ( pFunc->cScope & HB_FS_INITEXIT ) != HB_FS_INITEXIT )
          if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, w )->szName );
       fprintf( cargo->yyc, "\n" );
       lPCodePos +=2;

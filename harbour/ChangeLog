@@ -8,6 +8,82 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+    * added optional BOOL parameter to functions which translate to UTF8
+      to not translate control code characters
+
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * update for new parameter in UTF8 functions
+
+2006-03-01 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    ! fixed UTF8 trnalsations
+
+2006-03-01 14:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/htmllib/default.ch
+    * fixed few wrong definitions - Ryszard, the definitions where wrong
+      but Clipper PP seems to parse them.
+
+  * harbour/contrib/rdd_ads/ads1.c
+    * call AdsFlushFileBuffers() only when _SET_HARDCOMMIT is set (default)
+
+  * harbour/include/Makefile
+  + harbour/include/hbgfx.ch
+  + harbour/include/hbgfxdef.ch
+    + added hbgfx.ch, hbgfxdef.ch and missing tbrowse.ch
+
+  * harbour/include/hbapigt.h
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/hbgtcore.c
+    + added hb_gtGfxPrimitive(), hb_gtGfxText() - it's a work in progress
+      now this functions works like in xHarbour allow to draw graphic
+      objects in GTs which can do that (GTALLEG, GTXWC) but I plan to
+      introduce some modifications in them.
+
+  + harbour/tests/gfx.prg
+    + added test program by Mauricio Abre (borrowed from xHarbour) which
+      illustrates GFX usage
+
+  * harbour/include/hbdefs.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/vm/hvm.c
+    * minor modification in some harbour func name and symbol scope
+      definitions - I'd like to keep them in one place for easier
+      manipulations in the future
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/pplib.c
+  * harbour/utils/hbpp/hbpp.c
+    * clean a little bit recent modification it should resolve the
+      problem with GPFs reported by users and some possible memory
+      leaks when preprocessing/compilation process is interrupted.
+      Ryszard I decided to always store copy of file name in open
+      files structure - it can be used by compiler, preprocessor,
+      PPLIB and HBPP and IMHO in all cases it should have valid
+      and always initialized in the same way members for easier
+      manipulation. In the future I'd like to clean the whole PP
+      usage. I will need to keep all compiler and PP static variables
+      in one structure pointed by pointer in thread local data or
+      passed to called functions for MT support.
+
+  * harbour/source/rtl/cdpapi.c
+    * set 0 at the end of destination string in hb_cdpStrnToUTF8()
+
+  * harbour/source/rtl/dateshb.c
+    ! fixed possible GPF in CTOD when badly formated date is given
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtxwc/gtxwc.h
+    * changed the selection code - now both PRIMARY and CLIPBOARD
+      selections are set by Harbour. It should work with any programs
+      which uses any of them but I'd like to remove one of this selections
+      or give user a way to chose the preferred one. I can also add support
+      for automatic setting/clearing/pasting PRIMARY selection by GTXWC
+      with mouse and shift key. I'm waiting for opinions.
     + added basic support for GFX operations
 
   + harbour/source/rtl/gtalleg/Makefile

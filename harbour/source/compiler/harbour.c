@@ -2353,7 +2353,7 @@ int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variabl
          while( pFunc )
          {
             bStatic = FALSE;
-            if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
+            if( ( pFunc->cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
             {
                /* we are in a codeblock used to initialize a static variable -
                 * skip to a function where this static variable was declared
@@ -3142,7 +3142,7 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
        * initialization function - if YES then we have to switch to a function
        * where the static variable was declared
        */
-      if( ( hb_comp_functions.pLast->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
+      if( ( hb_comp_functions.pLast->cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
          pFunc = hb_comp_functions.pLast->pOwner;
       else
          pFunc = hb_comp_functions.pLast;
@@ -4408,7 +4408,7 @@ void hb_compStaticDefStart( void )
       hb_comp_pInitFunc = hb_compFunctionNew( hb_compIdentifierNew("(_INITSTATICS)", TRUE), HB_FS_INIT );
       hb_comp_pInitFunc->pOwner = hb_comp_functions.pLast;
       hb_comp_pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
-      hb_comp_pInitFunc->cScope = HB_FS_INIT | HB_FS_EXIT;
+      hb_comp_pInitFunc->cScope = HB_FS_INITEXIT;
       hb_comp_functions.pLast = hb_comp_pInitFunc;
 
       pBuffer[ 0 ] = HB_P_STATICS;
@@ -5038,6 +5038,7 @@ static void hb_compCompileEnd( void )
    while( hb_comp_files.pLast )
    {
       PFILE pFile = hb_comp_files.pLast;
+      hb_xfree( pFile->szFileName );
       fclose( pFile->handle );
       if( pFile->pBuffer )
       {
