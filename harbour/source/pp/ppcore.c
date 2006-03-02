@@ -91,7 +91,7 @@ int hb_pp_ParseDefine( char * );                         /* Process #define dire
 
 static COMMANDS * AddCommand( char * );                  /* Add new #command to an array  */
 static COMMANDS * AddTranslate( char * );                /* Add new #translate to an array  */
-static DEFINES *  DefSearch( char *, BOOL * );
+static DEFINES *  DefSearch( char *, int, BOOL * );
 static COMMANDS * ComSearch( char *, COMMANDS * );
 static COMMANDS * TraSearch( char *, COMMANDS * );
 
@@ -262,35 +262,6 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
                hb_pp_Init();
 
                hb_pp_ReadRules();
-
-               /*
-               {
-                  COMMANDS * stcmd;
-                  DEFINES * stdef;
-
-                  stcmd = hb_pp_topCommand;
-                  while ( stcmd )
-                  {
-                      printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
-                      stcmd = stcmd->last;
-                  }
-
-                  stcmd = hb_pp_topTranslate;
-                  while ( stcmd )
-                  {
-                      printf( "Translate: %s \nPattern: %s\n", stcmd->name, stcmd->mpatt );
-                      stcmd = stcmd->last;
-                  }
-
-                  stdef = hb_pp_topDefine;
-                  while ( stdef && s_kolAddDefs > 3 )
-                  {
-                      printf( "Define: %s Value: %s\n", stdef->name, stdef->value );
-                      stdef = stdef->last;
-                      s_kolAddDefs--;
-                  }
-               }
-               */
 
                if ( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
                {
@@ -735,10 +706,11 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
 {
   BOOL isNew;
   DEFINES * stdef;
+  int len = strlen( defname );
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_AddDefine(%s, %s)", defname, value));
 
-  stdef = DefSearch( defname, &isNew );
+  stdef = DefSearch( defname, len, &isNew );
 
   if( stdef != NULL )
   {
@@ -756,7 +728,7 @@ DEFINES * hb_pp_AddDefine( char * defname, char * value )
     stdef->last = hb_pp_topDefine;
     hb_pp_topDefine = stdef;
     stdef->name = hb_strdup( defname );
-    stdef->namelen = strlen( defname );
+    stdef->namelen = len;
     stdef->npars = -1;
 
     s_kolAddDefs++;
@@ -773,12 +745,14 @@ static int ParseUndef( char * sLine )
   char defname[ MAX_NAME ];
   DEFINES * stdef;
   BOOL isNew;
+  int len;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseUndef(%s)", sLine));
 
   NextWord( &sLine, defname, FALSE );
-
-  if( ( stdef = DefSearch(defname, &isNew ) ) != NULL )
+  
+  len = strlen( defname );
+  if( ( stdef = DefSearch(defname, len, &isNew ) ) != NULL )
   {
     if( isNew )
     {
@@ -799,12 +773,13 @@ static int ParseIfdef( char * sLine, int usl )
 {
   char defname[ MAX_NAME ];
   DEFINES * stdef;
+  int len;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseIfdef(%s, %d)", sLine, usl));
 
   if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
-      NextWord( &sLine, defname, FALSE );
+      len = NextWord( &sLine, defname, FALSE );
       if( *defname == '\0' )
         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
     }
@@ -815,7 +790,7 @@ static int ParseIfdef( char * sLine, int usl )
     }
   if( hb_pp_nCondCompile==0 || hb_pp_aCondCompile[hb_pp_nCondCompile-1])
     {
-      if( ( (stdef = DefSearch(defname,NULL)) != NULL && usl )
+      if( ( (stdef = DefSearch(defname,len,NULL)) != NULL && usl )
            || ( stdef == NULL && !usl ) ) hb_pp_aCondCompile[hb_pp_nCondCompile] = 1;
       else hb_pp_aCondCompile[hb_pp_nCondCompile] = 0;
     }
@@ -827,7 +802,7 @@ static int ParseIfdef( char * sLine, int usl )
   return 0;
 }
 
-static DEFINES * DefSearch( char * defname, BOOL * isNew )
+static DEFINES * DefSearch( char * defname, int len, BOOL * isNew )
 {
   int kol = 0,j;
   DEFINES * stdef = hb_pp_topDefine;
@@ -837,7 +812,7 @@ static DEFINES * DefSearch( char * defname, BOOL * isNew )
   while( stdef != NULL )
     {
       kol++;
-      if( stdef->name != NULL )
+      if( stdef->name != NULL && stdef->namelen == len )
         {
           for( j=0; *(stdef->name+j) == *(defname+j) &&
                   *(stdef->name+j) != '\0'; j++ );
@@ -1413,7 +1388,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                  printf( "Token: >%s< Line: >%s<\n", sToken, sLine );
               #endif
 
-              if( (stdef=DefSearch(sToken,NULL)) != NULL )
+              if( (stdef=DefSearch(sToken,lenToken,NULL)) != NULL )
               {
                  ptrb = ptri - lenToken;
 
@@ -2676,23 +2651,26 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                State = STATE_BRACKET;
                StBr3 = 1;
             }
-            /* Ron Pinkas added 2001-01-08 */
             else if( **ptri == ')' && StBr1 == 0 )
             {
                rez = TRUE;
             }
-            /* Ron Pinkas added 2000-06-02 */
+            else if( **ptri == ']' && StBr2 == 0 )
+            {
+               rez = TRUE;
+            }
+            else if( **ptri == '}' && StBr3 == 0 )
+            {
+               rez = TRUE;
+            }
             else if( **ptri == '&' )
             {
                bMacro = TRUE;
             }
-            /* Ron Pinkas end 2000-06-02 */
             else if( **ptri == ' ' )
             {
                State = STATE_ID_END;
-               /* Ron Pinkas added 2000-06-02 */
                bMacro = FALSE;
-               /* Ron Pinkas end 2000-06-02 */
             }
 
             break;

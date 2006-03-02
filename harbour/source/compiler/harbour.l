@@ -165,39 +165,6 @@ Separator     {SpaceTab}
                         return '[';
                     }
                   }
-
-"QOUT(["    {
-    /* preprocessed TEXT/ENDTEXT line
-    NOTE: Clipper preprocesses TEXT/ENDTEXT block into a series of QOUT calls
-    QOUT("...")<EndOfLine>
-    or
-    QOUT([...])<EndOfLine>
-    [] is used if text contains any string delimiters "'[]
-    NOTE: Clipper allows for \[\[nested\]\] only if it is preprocessed from
-    TEXT/ENDTEXT block - in normal code the preprocesor uses the first
-    closing ] as a string terminator.
-    However we have to get some information from the preprocessor about
-    TEXT/ENDTEXT block start/end condition to distinguish code:
-    TEXT
-    some string]) ; qout([some more
-    ENDTEXT
-    from direct calls for qout function
-    QOUT([some string]) ; QOUT([some more])
-    */
-    if( hb_ppInsideTextBlock )
-    {
-        BEGIN STRING4START;
-        unput( '(' );
-    }
-    else
-
-        yyless( 4 );    /* len of QOUT */
-
-    yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
-    hb_comp_iState = IDENTIFIER;
-    return IDENTIFIER;
-}
-
 <STRING1>[^\x27\n]*\n  { BEGIN 0;
                       unput( '\n' );
                       yytext[--yyleng] = '\0';

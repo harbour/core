@@ -67,13 +67,16 @@
 #include "hbcomp.h"
 
 static int strncmp_nocase( char* s1, char* s2, int n );
+static char *hb_pp_TextCommand( char * ptr, int *pLen );
 
 BOOL hb_pp_bInline = FALSE;
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 int hb_pp_LastOutLine = 1;
-
+static char *s_TextOutFunc = NULL;
+static char *s_TextEndFunc = NULL;
+static char *s_TextStartFunc = NULL;
 /*
 BOOL bDebug = FALSE;
 */
@@ -113,38 +116,52 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
         if( hb_ppInsideTextBlock )
         {
-           char cQuote;
-           int i;
-
            ptr = s_szLine;
            HB_SKIPTABSPACES( ptr );
            if( !strncmp_nocase( ptr,"ENDTEXT",7 ) && *(ptr+7) <= ' ' )
            {
               hb_ppInsideTextBlock = FALSE;
-              strcpy( s_szLine,"__TextRestore()" );
+              if( s_TextEndFunc )
+              {
+                strcpy( s_szLine, s_TextEndFunc );
+                hb_xfree( (void *)s_TextEndFunc );
+              }
+              else
+              {
+                s_szLine[ 0 ] = '\0';
+              }
+              if( s_TextOutFunc )
+              {
+                 hb_xfree( (void *)s_TextOutFunc );
+              }
+              if( s_TextStartFunc )
+              {
+                 hb_xfree( (void *)s_TextStartFunc );
+              }
+              hb_ppNestedLiteralString = FALSE;
               break;
            }
 
-           if( !strchr( s_szLine,'\"' ) )
-              cQuote = '\"';
-           else if( !strchr( s_szLine,'\'' ) )
-              cQuote = '\'';
+           if( s_TextOutFunc )
+           {
+              memmove( s_szLine+1, s_szLine, lens++ );
+              s_szLine[ 0 ] = '[';
+              s_szLine[ lens++ ] = ']';
+              s_szLine[ lens ] = '\0';
+              lens = snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
+              memcpy( s_szLine, s_szOutLine, lens+1 );
+              hb_ppNestedLiteralString = TRUE;
+           }
            else
-              cQuote = '[';
-
-           s_szLine[ lens++ ] = ( cQuote == '[' )? ']':cQuote;
-           s_szLine[ lens++ ] = ')';
-           s_szLine[ lens ] = '\0';
-           for( i=lens;i>=0;i-- )
-              *( s_szLine+i+6 ) = *( s_szLine+i );
-           s_szLine[0] = 'Q'; s_szLine[1] = 'O'; s_szLine[2] = 'u';
-           s_szLine[3] = 't'; s_szLine[4] = '('; s_szLine[5] = cQuote;
+           {
+              s_szLine[ 0 ] = '\0'; /* discard text */
+           }
            break;
         }
 
         if( s_szLine[ lens - 1 ] == ';' )
         {
-           lContinue = 1;
+           lContinue = pFile->lenBuffer ? 1 : 0;
            lens--;
            lens--;
            while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
@@ -203,10 +220,20 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                        hb_pp_LastOutLine = hb_comp_iLine;
                        */
                        hb_pp_ParseExpression( ptr, s_szOutLine );
-                       if( !strncmp( ptr,"text QOut;",10 ) )
+                       if( !strncmp( ptr,"__text|",7 ) )
                        {
-                          /* printf( "\ntext QOut %d\n",strlen(ptr) ); */
-                          memcpy( ptr, ptr+10, strlen(ptr)-9 );
+                         /* internal handling of TEXT/ENDTEXT command
+                          * __text;functionOut;functionEnd;functionStart
+                         */
+                          int len;
+                          
+                          len = strlen(ptr) - 6;
+                          memcpy( ptr, ptr+7, len );
+                          s_TextOutFunc = hb_pp_TextCommand( ptr, &len );
+                          s_TextEndFunc = hb_pp_TextCommand( ptr, &len );
+                          s_TextStartFunc = hb_pp_TextCommand( ptr, &len );
+                          if( s_TextStartFunc )
+                            memcpy( s_szLine, s_TextStartFunc, strlen(s_TextStartFunc)+1 );
                           hb_ppInsideTextBlock = TRUE;
                        }
                     }
@@ -298,6 +325,44 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   #endif
 
   return lens;
+}
+
+static char *hb_pp_TextCommand( char * ptr, int *pLen )
+{
+   int i;
+   char *cCommand = NULL;
+   
+   i = 0;
+   while( ptr[i] && ptr[i] != '|' )
+   {
+      i++;
+   }
+   if( i > 0 )
+   {
+      cCommand = (char *)hb_xgrab( i+1 );
+      i = 0;
+      while( ptr[i] && ptr[i] != '|' )
+      {
+         cCommand[ i ] = ptr[ i ];
+         i++;
+      }
+      cCommand[ i ] = '\0';
+      *pLen -= i+1;
+      if( *pLen )
+         memcpy( ptr, ptr+i+1, *pLen );
+      else
+         ptr[ 0 ] ='\0';
+   }
+   else if( i == 0 && *ptr == '|' )
+   {
+      (*pLen)--;
+      if( *pLen )
+         memcpy( ptr, ptr+1, *pLen );
+      else
+         *ptr ='\0';
+   }
+   
+   return cCommand;
 }
 
 int hb_pp_ReadRules( void )

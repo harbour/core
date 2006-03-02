@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+   * harbour/contrib/mysql/tmysql.prg
+     + added functions sql_commit(), sql_rollback()(CLASS TMySQLServer)
+       to support transactions with InnoDB table types
+     + added function sql_version()                (CLASS TMySQLServer)
+       returns 5 digit numeric version of MySQL server
+
+   * harbour/source/codepage/cdpsl437.c
+   * harbour/source/codepage/cdpsl852.c
+   * harbour/source/codepage/cdpslwin.c
+   * harbour/source/codepage/cdpsliso.c
+     + Update startup code to work with MSC
+
+2006-03-02 18:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/compiler/harbour.l
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+        +added new hidden preprocessor directive 
+      * fixed compilation of included files in cases when the file
+        
+      * fixed translation of nested command/translate
       * fixed translation of TEXT/ENDTEXT to be more Clipper compatible
         +added new hidden preprocessor directive
         __text|ParseBlockCode|EndBlockCode|StartBlockCode

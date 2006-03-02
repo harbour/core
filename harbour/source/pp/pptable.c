@@ -195,9 +195,9 @@ void hb_pp_Table( void )
    static COMMANDS sC___64 = {0,"?",1,"\2 \1A10\3","QOut( \1A00 )",&sC___63 };
    static COMMANDS sC___65 = {0,"?",1,"? \2 \1A10\3","QQOut( \1A00 )",&sC___64 };
    static COMMANDS sC___66 = {0,"EJECT",5,"","__Eject()",&sC___65 };
-   static COMMANDS sC___67 = {0,"TEXT",4,"","text QOut;",&sC___66 };
-   static COMMANDS sC___68 = {0,"TEXT",4,"TO FILE \1A40","text QOut; __TextSave( \1A30 )",&sC___67 };
-   static COMMANDS sC___69 = {0,"TEXT",4,"TO PRINTER","text QOut;__TextSave('PRINTER')",&sC___68 };
+   static COMMANDS sC___67 = {0,"TEXT",4,"","__text|QOut(%s)|QQOut()",&sC___66 };
+   static COMMANDS sC___68 = {0,"TEXT",4,"TO FILE \1A40","__text|QOut(%s)|__TextRestore()|__TextSave( \1A30 )",&sC___67 };
+   static COMMANDS sC___69 = {0,"TEXT",4,"TO PRINTER","__text|QOut(%s)|__TextRestore()|__TextSave('PRINTER')",&sC___68 };
    static COMMANDS sC___70 = {0,"CLS",3,"","Scroll() ; SetPos(0,0)",&sC___69 };
    static COMMANDS sC___71 = {0,"CLEAR",5,"SCREEN","CLS",&sC___70 };
    static COMMANDS sC___72 = {0,"@",1,"\1A00, \1B00","Scroll( \1A00, \1B00, \1A00 ) ; SetPos( \1A00, \1B00 )",&sC___71 };
