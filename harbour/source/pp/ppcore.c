@@ -1100,56 +1100,46 @@ static int ConvertOptional( char *cpatt, int len )
 
 static void RemoveOptional( char *cpatt )
 {
-  int i = 0;
-  int len = strlen( cpatt );
-  int iOpenBra = 0;
+   int i = 0;
+   int len = strlen( cpatt );
+   int iOpenBra = 0;
   
-  while( cpatt[ i ] != '\0' )
-  {
-    if( cpatt[ i ] == '"' || cpatt[ i ] == '\'' )
-    {
-      char c = cpatt[ i ];
-      i++;
-      while( cpatt[ i ] && cpatt[ i ] != c )
+   while( cpatt[ i ] != '\0' )
+   {
+      if( cpatt[ i ] == '"' || cpatt[ i ] == '\'' )
       {
-        i++;
-      }
-      i++;
-      continue; /* skip "strings" */
-    }     
-    if( cpatt[ i ] == '[' )
-    {
-      i++;
-      iOpenBra++;
-      while( cpatt[ i ] && (cpatt[ i ] != ']' || iOpenBra) )
-      {
-        if( cpatt[i] == '[' )
-        {
-          iOpenBra++;
-        }
-        else if( cpatt[i] == ']' )
-        {
-          iOpenBra--;
-          if( iOpenBra == 0 )
-          {
+         char c = cpatt[ i++ ];
+         while( cpatt[ i ] && cpatt[ i ] != c )
+         {
             i++;
-            break;
-          }
-        }
-        i++;
+         }
+         if( cpatt[ i ] )
+            i++;
+         continue; /* skip "strings" */
       }
-      i++;
-      continue; /* skip [strings] */
-    }     
-   
-    if( cpatt[ i ] == HB_PP_OPT_START || cpatt[ i ] == HB_PP_OPT_END )
-    {
-      hb_pp_Stuff( "", cpatt + i, 0, 1, len - i + 1 );
-      len--;
-    }
-    else
-      i++;
-  }
+      if( cpatt[ i ] == '[' )
+      {
+         i++;
+         iOpenBra++;
+         while( cpatt[ i ] && iOpenBra )
+         {
+            if( cpatt[i] == '[' )
+               iOpenBra++;
+            else if( cpatt[i] == ']' )
+               iOpenBra--;
+            i++;
+         }
+         continue; /* skip [strings] */
+      }
+
+      if( cpatt[ i ] == HB_PP_OPT_START || cpatt[ i ] == HB_PP_OPT_END )
+      {
+         hb_pp_Stuff( "", cpatt + i, 0, 1, len - i + 1 );
+         len--;
+      }
+      else
+         i++;
+   }
 }
 
 
@@ -3927,29 +3917,29 @@ static int IsInStr( char symb, char * s )
 */
 void hb_pp_Stuff(char *ptri, char * ptro, int len1, int len2, int lenres )
 {
-  char *ptr1, *ptr2;
-  int i;
+   char *ptr1, *ptr2;
+   int i;
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2, lenres));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2, lenres));
 
-  if( len1 > len2 )
-    {
+   if( len1 > len2 )
+   {
       ptr1 = ptro + lenres;
       ptr2 = ptro + lenres + len1 - len2;
-		/* This is a static buffer - current inserting can erase the null char
-			than we need set it again.
-		*/
-		ptr2[1] = '\0'; 
-      for( i=0; i<=lenres; ptr1--,ptr2--,i++ ) *ptr2 = *ptr1;
-    }
-  else
-    {
+      /* This is a static buffer - current inserting can erase the null char
+         than we need set it again.
+      */
+      ptr2[1] = '\0'; 
+      for( i = 0; i <= lenres; ptr1--, ptr2--, i++ ) *ptr2 = *ptr1;
+   }
+   else
+   {
       ptr1 = ptro + len2;
       ptr2 = ptro + len1;
-      for( ; ptr1 <= ptro+lenres; ptr1++,ptr2++ ) *ptr2 = *ptr1;
-    }
-  ptr2 = ptro;
-  for( i=0; i < len1; i++ ) *ptr2++ = *(ptri+i);
+      for( ; ptr1 <= ptro+lenres; ptr1++, ptr2++ ) *ptr2 = *ptr1;
+   }
+   ptr2 = ptro;
+   for( i = 0; i < len1; i++ ) *ptr2++ = *(ptri+i);
 }
 
 int hb_pp_strocpy( char * ptro, char * ptri )

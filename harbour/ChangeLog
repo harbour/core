@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+      * fixed translation of TEXT/ENDTEXT to be more Clipper compatible
+        +added new hidden preprocessor directive
+        __text|ParseBlockCode|EndBlockCode|StartBlockCode
+        
+        currently TEXT is preprocessed using:
         #command TEXT => __text|Qout(%s)|QQOut()
         #command TEXT TO FILE <f> => ;
          __text|Qout(%s)|__TextRestore()|__TextSave(<f>)
