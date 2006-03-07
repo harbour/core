@@ -232,6 +232,7 @@ METHOD FieldType(nNum) CLASS TMySQLRow
    local cType := "U"
 
    if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
+
       do case
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
             cType := "L"
@@ -873,6 +874,7 @@ METHOD GetRow(nRow) CLASS TMySQLTable
 
    ::aOldvalue:={}
    for i := 1 to ::nNumFields
+
        // ::aOldValue[i] := ::FieldGet(i)
        aadd(::aOldvalue,::fieldget(i))
    next
@@ -1417,7 +1419,10 @@ CLASS TMySQLServer
    METHOD   NetErr() INLINE ::lError         // Returns .T. if something went wrong
    METHOD   Error()                          // Returns textual description of last error
    METHOD   CreateDatabase( cDataBase )      // Create an New Mysql Database
-
+//Mitja
+   METHOD   sql_Commit()      // Commits transaction
+   METHOD   sql_Rollback()    // Rollbacks transaction
+   METHOD   sql_Version()     // server version as numeric
 ENDCLASS
 
 
@@ -1435,11 +1440,34 @@ METHOD New(cServer, cUser, cPassword) CLASS TMySQLServer
 
 return Self
 
+
+
 METHOD Destroy() CLASS TMySQLServer
-
    sqlClose(::nSocket)
-
 return Self
+
+
+
+METHOD sql_commit() CLASS TMySQLServer
+  if sqlCommit(::nSocket) == 0
+    Return .T.
+  endif
+return .F.
+
+
+
+METHOD sql_rollback() CLASS TMySQLServer
+  if sqlRollback(::nSocket) == 0
+    Return .T.
+  endif
+return .F.
+
+
+METHOD sql_version() CLASS TMySQLServer
+local nVer
+  nVer:=sqlversion(::nSocket)
+return nVer
+
 
 
 *METHOD SelectDB(cDBName) CLASS TMySQLServer
@@ -1452,6 +1480,7 @@ return Self
 *   endif
 *
 *return .F.
+
 
 *****************alterado
 METHOD SelectDB(cDBName) CLASS TMySQLServer
@@ -1468,7 +1497,6 @@ METHOD SelectDB(cDBName) CLASS TMySQLServer
    endif
 
 return .F.
-
 
 
 METHOD CreateDatabase ( cDataBase ) CLASS TMySQLServer

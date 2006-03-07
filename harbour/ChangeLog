@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+  * source/pp/ppcomp.c
+    * modified TEXT/ENDTEXT to use '#pragma __text'
+    + added #pragma __stream and #pragma __cstream
+      (examples later)
+
+
+2006-03-08 3:31 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
+   - harbour/source/codepage/cdpsl437.c
+   - harbour/source/codepage/cdpsl852.c
+   - harbour/source/codepage/cdpslwin.c
+   - harbour/source/codepage/cdpsliso.c
+     - Removed these four files.
+
+2006-03-06 12:00 UTC+0100 Mitja Podgornik <Yamamoto@rocketmail.com>
+   David Macias: Source code provided by Mitja Podgornik
+   * harbour/contrib/mysql/mysql.ch
+     + added MYSQL_DECIMAL_TYPE for MySQL versions 5.0 and above
+
+       returns 5 digit numeric version of MySQL server 
    * harbour/contrib/mysql/tmysql.prg
      + added functions sql_commit(), sql_rollback()(CLASS TMySQLServer)
        to support transactions with InnoDB table types

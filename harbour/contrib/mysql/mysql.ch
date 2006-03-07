@@ -56,7 +56,6 @@
 
 // MySQL field types
 
-#define  MYSQL_DECIMAL_TYPE      0
 // NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T.
 #define  MYSQL_TINY_TYPE         1
 #define  MYSQL_SHORT_TYPE        2
@@ -72,6 +71,7 @@
 #define  MYSQL_DATETIME_TYPE     12
 #define  MYSQL_YEAR_TYPE         13
 #define  MYSQL_NEWDATE_TYPE      14
+#define  MYSQL_DECIMAL_TYPE      246
 #define  MYSQL_ENUMTYPE          247
 #define  MYSQL_SET_TYPE          248
 #define  MYSQL_TINY_BLOB_TYPE    249

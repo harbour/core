@@ -82,6 +82,14 @@
    also .h files from same distribution
 */
 
+
+
+HB_FUNC( SQLVERSION ) // long mysql_get_server_version(MYSQL *)
+{
+  hb_retnl( (long) mysql_get_server_version((MYSQL *)_parnl(1)) );
+}
+
+
 HB_FUNC( SQLCONNECT ) // MYSQL *mysql_real_connect(MYSQL*, char * host, char * user, char * password, char * db, uint port, char *, uint flags)
 {
    MYSQL * mysql;
@@ -118,6 +126,18 @@ HB_FUNC( SQLCLOSE ) // void mysql_close(MYSQL *mysql)
 {
    mysql_close((MYSQL *)_parnl(1));
    hb_ret();
+}
+
+
+HB_FUNC( SQLCOMMIT ) // bool mysql_commit(MYSQL *mysql)
+{
+   hb_retnl((long) mysql_commit((MYSQL *)_parnl(1)));
+}
+
+
+HB_FUNC( SQLROLLBACK ) // bool mysql_rollback(MYSQL *mysql)
+{
+   hb_retnl((long) mysql_rollback((MYSQL *)_parnl(1)));
 }
 
 
@@ -250,7 +270,7 @@ HB_FUNC( SQLNUMFI ) // unsigned int mysql_num_fields(MYSQL_RES *)
 }
 
 #if MYSQL_VERSION_ID > 32200
-HB_FUNC( SQLFICOU ) // unsigned int mysql_num_fields(MYSQL_RES *)
+HB_FUNC( SQLFICOU ) // unsigned int mysql_field_count(MYSQL *)
 {
    hb_retnl(mysql_field_count(((MYSQL *)_parnl(1))));
 }
