@@ -9,6 +9,13 @@
 */ 
     * harbour/makefile.vc
   * source/pp/ppcomp.c
+  * source/pp/ppcore.c
+  * source/pp/pplib.c
+  * source/pp/pptable.c
+  * source/pp/pragma.c
+    * fixed compilation of #command ( => (,7
+      (loops in #define or #command are trapped now)
+    * fixed compilation of \[ and \] in command/translate
     * modified TEXT/ENDTEXT to use '#pragma __text'
     + added #pragma __stream and #pragma __cstream
       (examples later)
