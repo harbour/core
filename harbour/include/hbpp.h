@@ -97,7 +97,7 @@ extern void   hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_b
 extern int    hb_pp_ReadRules( void );
 extern void   hb_pp_Init( void );
 extern void   hb_pp_Free( void );
-extern void   CloseInclude( void );
+extern void   hb_pp_CloseInclude( void );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
 extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
 extern int    hb_pp_WrStr( FILE *, char * );
@@ -112,14 +112,24 @@ extern int    hb_pp_nCondCompile;
 extern char * hb_pp_szErrors[];
 extern char * hb_pp_szWarnings[];
 extern int    hb_pp_nEmptyStrings;
-extern BOOL   hb_pp_bInline;
 extern int    hb_pp_LastOutLine;
-extern BOOL   hb_ppInsideTextBlock;
-extern BOOL   hb_ppNestedLiteralString;
+extern BOOL   hb_pp_StreamBlock;
+extern BOOL   hb_pp_NestedLiteralString;
+extern BOOL   hb_pp_LiteralEscSeq;
+unsigned int  hb_pp_MaxTranslateCycles;
 
 /* PPCOMP.C exported functions */
 
 extern int    hb_pp_Internal( FILE *, char * );
+extern void   hb_pp_InternalFree( void );
+
+#define HB_PP_STREAM_DUMP_C   1 /* pragma BEGINDUMP */
+#define HB_PP_STREAM_CLIPPER  2 /* clipper compatible TEXT/ENDTEXT */
+#define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
+#define HB_PP_STREAM_C        8 /* TEXT/ENDTEXT lines joined and ESC seq processed */
+
+extern BOOL   hb_pp_StreamBlockBegin( char *, int );
+extern void   hb_pp_BlockEnd( void );
 
 /* PPTABLE.C exported functions and variables */
 
@@ -131,7 +141,7 @@ extern COMMANDS * hb_pp_topTranslate;
 
 /* PRAGMA.C exported functions */
 
-extern void hb_pp_ParsePragma( char * szline );
+extern BOOL hb_pp_ParsePragma( char * szline );
 
 HB_EXTERN_END
 

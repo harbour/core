@@ -461,7 +461,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                       }
                       else /* {|| &cMacro.suffix } -> cMacro + "suffix" */
                       {
-                         pElem = hb_compExprNewString( pBlock->value.asMacro.szMacro );
+                         char *cStr = pBlock->value.asMacro.szMacro;
+                         pElem = hb_compExprNewString( cStr, strlen(cStr) );
                       }
 
                       if( pPrev )
@@ -639,7 +640,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 #else
                      char *szText = hb_compIdentifierNew( pFirst->value.asMacro.szMacro, FALSE );
 #endif
-                     pArg->pNext = hb_compExprNewString( szText );
+                     pArg->pNext = hb_compExprNewString( szText, strlen(szText) );
                      pArg->pNext->pNext = pNext;
                   }
                   HB_EXPR_PCODE1( hb_compExprDelete, pFirst );  /* delete first argument */
@@ -757,7 +758,7 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
  * In harbour compiler strings are shared in the hash table then they
  * cannot be deallocated by default
 */
-HB_EXPR_PTR hb_compExprNewString( char *szValue )
+HB_EXPR_PTR hb_compExprNewString( char *szValue, ULONG ulLen )
 {
    HB_EXPR_PTR pExpr;
 
@@ -771,7 +772,7 @@ HB_EXPR_PTR hb_compExprNewString( char *szValue )
 #else
    pExpr->value.asString.dealloc = FALSE;
 #endif
-   pExpr->ulLength = strlen( szValue );
+   pExpr->ulLength = ulLen;
    pExpr->ValType = HB_EV_STRING;
 
    return pExpr;

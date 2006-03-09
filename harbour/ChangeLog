@@ -8,6 +8,39 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+2006-03-10 10:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+    
+    *fixed compilation for Borland C
+
+  * source/pp/ppcore.c
+    
+
+  * tests/Makefile
+  + tests/pretest.prg
+    + added the file to show '#pragma __stream' and '#pragma __cstream'
+
+
+2006-03-09 16:30 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+    
+  * include/hbexpra.c
+  * include/hbexprb.c
+  * include/hbexprop.h
+    * modified to support strings with embeded LF/CR characters
+    
+  * source/common/hbstr.c
+    * added new command line switch 
+    * added hb_strRemEscSeq() function that removes C-like Esc
+      sequences (\n \t \r \b currently)
+
+  * source/compiler/cmdcheck.c
+    * added new command line switch
+      -r=<max_recursive_preprocessor_passes>
+      with defaults equal to -r=1024
+
+  * include/hbpp.h
+  * source/compiler/harbour.l
+  * source/compiler/harbour.y
+  * source/macro/macro.y
   * source/pp/ppcomp.c
   * source/pp/ppcore.c
   * source/pp/pplib.c

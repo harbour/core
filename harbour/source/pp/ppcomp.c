@@ -66,204 +66,210 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
-static int strncmp_nocase( char* s1, char* s2, int n );
-static char *hb_pp_TextCommand( char * ptr, int *pLen );
+static void pp_ParseBuffer( PFILE, int * );
+static char *pp_TextCommand( char * ptr, int *pLen );
+static void pp_TextBlockFinish( void );
+static void pp_StreamBlockFinish( void );
 
-BOOL hb_pp_bInline = FALSE;
-
+#if !defined(HB_PP_DEBUG_MEMORY)
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
+#else
+static char *s_szLine = NULL;
+static char *s_szOutLine = NULL;
+#endif
 int hb_pp_LastOutLine = 1;
 static char *s_TextOutFunc = NULL;
 static char *s_TextEndFunc = NULL;
 static char *s_TextStartFunc = NULL;
+
 /*
 BOOL bDebug = FALSE;
 */
+
+void hb_pp_InternalFree( void )
+{
+#if defined(HB_PP_DEBUG_MEMORY)
+   if( s_szLine )
+   {
+      hb_xfree( (void *)s_szLine );
+      s_szLine = NULL;
+   }
+   if( s_szOutLine )
+   {
+      hb_xfree( (void *)s_szOutLine );
+      s_szOutLine = NULL;
+   }
+#endif
+   if( s_TextOutFunc )
+   {
+      hb_xfree( (void *)s_TextOutFunc );
+      s_TextOutFunc = NULL;
+   }
+   if( s_TextEndFunc )
+   {
+      hb_xfree( (void *)s_TextEndFunc );
+      s_TextEndFunc = NULL;
+   }
+   if( s_TextStartFunc )
+   {
+      hb_xfree( (void *)s_TextStartFunc );
+      s_TextStartFunc = NULL;
+   }
+}
 
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
   PFILE pFile;
   char * ptr, * ptrOut, * tmpPtr;
   int lContinue;
-  int lens, rdlen;
+  int rdlen;
+  ULONG lens;
   int lLine = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
 
-	hb_ppNestedLiteralString = FALSE;
+#if defined(HB_PP_DEBUG_MEMORY)
+  if( ! s_szLine )
+     s_szLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
+  if( ! s_szOutLine )
+     s_szOutLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
+#endif
+
+  hb_pp_NestedLiteralString = FALSE;
+  hb_pp_LiteralEscSeq = FALSE;
   while( TRUE )
   {
-     pFile = hb_comp_files.pLast;
-     lens = lContinue = 0;
-     ptrOut = sOut;
-     while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
+    pFile = hb_comp_files.pLast;
+    lens = 0;
+    lContinue = 0;
+    ptrOut = sOut;
+    while( ( rdlen = hb_pp_RdStr( pFile->handle, s_szLine + lens, HB_PP_STR_SIZE -
                   lens, lContinue, ( char * ) pFile->pBuffer, &( pFile->lenBuffer ),
                   &( pFile->iBuffer ) ) ) >= 0 )
-     {
-        lens += rdlen;
-        hb_comp_iLine ++;
+    {
+      lens += rdlen;
+      hb_comp_iLine ++;
 
-        if( lens >= HB_PP_STR_SIZE )
+      if( lens >= HB_PP_STR_SIZE-2 )
+      {
+        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+      }
+
+      if( hb_pp_StreamBlock )
+      {
+        if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
+          break;
+        else if( hb_pp_StreamBlock == HB_PP_STREAM_CLIPPER )
         {
-           hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
-        }
+          /* Clipper compatible TEXT/ENDTEXT handling */
+          ptr = s_szLine;
+          HB_SKIPTABSPACES( ptr );
+          if( hb_stricmp( ptr, "ENDTEXT" ) == 0 ||
+              hb_stricmp( ptr, "#pragma __endtext" ) == 0 )
+          {
+            pp_TextBlockFinish();
+            break;
+          }
 
-        if( hb_pp_bInline )
+          if( s_TextOutFunc )
+          {
+            memmove( s_szLine+1, s_szLine, lens++ );
+            s_szLine[ 0 ] = '[';
+            s_szLine[ lens++ ] = ']';
+            s_szLine[ lens ] = '\0';
+            lens = snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
+            memcpy( s_szLine, s_szOutLine, lens+1 );
+            hb_pp_NestedLiteralString = TRUE;
+            break;
+          }
+          else
+          {
+            s_szLine[ 0 ] = '\0'; /* discard text */
+          }
+        }
+        else if( hb_pp_StreamBlock == HB_PP_STREAM_PRG )
         {
-           break;
+          ptr = s_szLine + lens - rdlen;
+          HB_SKIPTABSPACES( ptr );
+          if( hb_stricmp( ptr, "ENDTEXT" ) == 0 ||
+              hb_stricmp( ptr, "#pragma __endtext" ) == 0 )
+          {
+            lens -= rdlen;
+            s_szLine[ lens ] = '\0';
+            pp_StreamBlockFinish( );
+            lens =strlen( s_szLine );
+            lContinue = 0;
+            break;
+          }
+          else
+          {
+            lContinue = 1;
+            continue;
+          }
         }
-
-        if( hb_ppInsideTextBlock )
+        else if( hb_pp_StreamBlock == HB_PP_STREAM_C )
         {
-           ptr = s_szLine;
-           HB_SKIPTABSPACES( ptr );
-           if( !strncmp_nocase( ptr,"ENDTEXT",7 ) && *(ptr+7) <= ' ' )
-           {
-              hb_ppInsideTextBlock = FALSE;
-              if( s_TextEndFunc )
-              {
-                strcpy( s_szLine, s_TextEndFunc );
-                hb_xfree( (void *)s_TextEndFunc );
-              }
-              else
-              {
-                s_szLine[ 0 ] = '\0';
-              }
-              if( s_TextOutFunc )
-              {
-                 hb_xfree( (void *)s_TextOutFunc );
-              }
-              if( s_TextStartFunc )
-              {
-                 hb_xfree( (void *)s_TextStartFunc );
-              }
-              hb_ppNestedLiteralString = FALSE;
-              break;
-           }
-
-           if( s_TextOutFunc )
-           {
-              memmove( s_szLine+1, s_szLine, lens++ );
-              s_szLine[ 0 ] = '[';
-              s_szLine[ lens++ ] = ']';
-              s_szLine[ lens ] = '\0';
-              lens = snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
-              memcpy( s_szLine, s_szOutLine, lens+1 );
-              hb_ppNestedLiteralString = TRUE;
-           }
-           else
-           {
-              s_szLine[ 0 ] = '\0'; /* discard text */
-           }
-           break;
+          ptr = s_szLine + lens - rdlen;
+          HB_SKIPTABSPACES( ptr );
+          if( hb_stricmp( ptr, "ENDTEXT" ) == 0 ||
+              hb_stricmp( ptr, "#pragma __endtext" ) == 0 )
+          {
+            lens -= rdlen;
+            s_szLine[ lens ] = '\0';
+            pp_StreamBlockFinish( );
+            lens = strlen( s_szLine );
+            lContinue = 0;
+            hb_pp_LiteralEscSeq = TRUE;
+            break;
+          }
+          else
+          {
+            lContinue = 1;
+            continue;
+          }
         }
+      }
+        
+      if( s_szLine[ lens - 1 ] == ';' )
+      {
+        lContinue = pFile->lenBuffer ? 1 : 0;
+        lens--;
+        lens--;
+        while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
+        s_szLine[ ++lens ] = ' ';
+        s_szLine[ ++lens ] = '\0';
+      }
+      else
+      {
+        lContinue = 0;
+        lens = 0;
+      }
 
-        if( s_szLine[ lens - 1 ] == ';' )
-        {
-           lContinue = pFile->lenBuffer ? 1 : 0;
-           lens--;
-           lens--;
-           while( s_szLine[ lens ] == ' ' || s_szLine[ lens ] == '\t' ) lens--;
-           s_szLine[ ++lens ] = ' ';
-           s_szLine[ ++lens ] = '\0';
-        }
-        else
-        {
-           lContinue = 0;
-           lens = 0;
-        }
-
-        if( !lContinue )
-        {
-           if( *s_szLine != '\0' )
-           {
-              ptr = s_szLine;
-              HB_SKIPTABSPACES( ptr );
-
-              if( *ptr == '#' )
-              {
-                 hb_pp_ParseDirective( ptr + 1 );
-
-                 if( pFile != hb_comp_files.pLast )
-                 {
-                    pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
-
-                    if( lLine )
-                       sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
-                    else
-                       *s_szLine = '\0';
-
-                    lLine = 0;
-                    sprintf( s_szLine + strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
-                 }
-                 else
-                    *s_szLine = '\0';
-              }
-              else
-              {
-                 if( *ptr == '\0' )
-                 {
-                    if( hb_comp_files.iFiles == 1 )
-                       *s_szLine = '\0';
-                    else
-                       continue;
-                 }
-                 else
-                 {
-                    if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
-                    {
-                       /* Ron Pinkas removed 2001-01-20
-                       if( ( hb_pp_LastOutLine < hb_comp_iLine - 1 ) && hb_comp_files.iFiles == 1 && handl_o )
-                          for( ; hb_pp_LastOutLine < hb_comp_iLine-1; hb_pp_LastOutLine++ )
-                             hb_pp_WrStr( handl_o, "\n" );
-                       hb_pp_LastOutLine = hb_comp_iLine;
-                       */
-                       hb_pp_ParseExpression( ptr, s_szOutLine );
-                       if( !strncmp( ptr,"__text|",7 ) )
-                       {
-                         /* internal handling of TEXT/ENDTEXT command
-                          * __text;functionOut;functionEnd;functionStart
-                         */
-                          int len;
-                          
-                          len = strlen(ptr) - 6;
-                          memcpy( ptr, ptr+7, len );
-                          s_TextOutFunc = hb_pp_TextCommand( ptr, &len );
-                          s_TextEndFunc = hb_pp_TextCommand( ptr, &len );
-                          s_TextStartFunc = hb_pp_TextCommand( ptr, &len );
-                          if( s_TextStartFunc )
-                            memcpy( s_szLine, s_TextStartFunc, strlen(s_TextStartFunc)+1 );
-                          hb_ppInsideTextBlock = TRUE;
-                       }
-                    }
-                    else
-                       *s_szLine = '\0';
-                 }
-              }
-           }
-
-           break;
-        }
-     }
-
-     if( rdlen < 0 )
-     {
-        if( hb_comp_files.iFiles == 1 )
-           return 0;      /* we have reached the main EOF */
-        else
-        {
-           CloseInclude();
-           lLine = 1;
-        }
-
-        /* Ron Pinkas added 2000-06-22 */
-        s_szLine[0] = '\0';
+      if( !lContinue )
+      {
+        pp_ParseBuffer( pFile, &lLine );
         break;
-       /* Ron Pinkas end 2000-06-22 */
-     }
+      }
+    }
 
-     if( *s_szLine ) break;
+    if( rdlen < 0 )
+    {
+      if( hb_comp_files.iFiles == 1 )
+        return 0;      /* we have reached the main EOF */
+      else
+      {
+        hb_pp_CloseInclude();
+        lLine = 1;
+      }
+
+      /* Ron Pinkas added 2000-06-22 */
+      s_szLine[0] = '\0';
+      break;
+      /* Ron Pinkas end 2000-06-22 */
+    }
+
+    if( *s_szLine ) break;
   }
 
   if( lLine )
@@ -306,7 +312,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
 
-  if( hb_comp_iLineINLINE && hb_pp_bInline == 0 )
+  if( hb_comp_iLineINLINE && hb_pp_StreamBlock == 0 )
   {
      hb_comp_iLine = hb_comp_iLinePRG + ( hb_comp_iLine - hb_comp_iLineINLINE );
      #ifndef SIMPLEX
@@ -327,7 +333,68 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   return lens;
 }
 
-static char *hb_pp_TextCommand( char * ptr, int *pLen )
+static void pp_ParseBuffer( PFILE pFile, int *plLine )
+{
+   BOOL bCont = TRUE;
+   char * ptr;
+   
+   while( bCont && *s_szLine != '\0' )
+   {
+      ptr = s_szLine;
+      HB_SKIPTABSPACES( ptr );
+
+      if( *ptr == '#' )
+      {
+         BOOL bIgnore = hb_pp_ParseDirective( ptr );
+
+         if( pFile != hb_comp_files.pLast )
+         {
+            pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+
+            if( *plLine )
+            {
+               sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
+               *plLine = 0;
+            }
+            else
+               *s_szLine = '\0';
+
+            sprintf( s_szLine + strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
+            bCont = FALSE;
+         }
+         else if( bIgnore )
+            *s_szLine = '\0';
+         else
+         {
+            hb_pp_ParseExpression( ptr, s_szOutLine );
+         }
+      }
+      else
+      {
+         if( *ptr == '\0' )
+         {
+            if( hb_comp_files.iFiles == 1 )
+               *s_szLine = '\0';
+            else
+               bCont = FALSE;
+         }
+         else
+         {
+            if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
+            {
+               hb_pp_ParseExpression( ptr, s_szOutLine );
+               HB_SKIPTABSPACES( ptr );
+
+               bCont = ( *ptr == '#' );
+            }
+            else
+               *s_szLine = '\0';
+         }
+      }
+   }
+}
+
+static char *pp_TextCommand( char * ptr, int *pLen )
 {
    int i;
    char *cCommand = NULL;
@@ -365,6 +432,132 @@ static char *hb_pp_TextCommand( char * ptr, int *pLen )
    return cCommand;
 }
 
+static void pp_TextBlockFinish( void )
+{
+   hb_pp_StreamBlock = 0;
+   if( s_TextEndFunc )
+   {
+      strcpy( s_szLine, s_TextEndFunc );
+      hb_xfree( (void *)s_TextEndFunc );
+      s_TextEndFunc = NULL;
+   }
+   else
+   {
+      s_szLine[ 0 ] = '\0';
+   }
+   if( s_TextOutFunc )
+   {
+      hb_xfree( (void *)s_TextOutFunc );
+      s_TextOutFunc = NULL;
+   }
+   if( s_TextStartFunc )
+   {
+      hb_xfree( (void *)s_TextStartFunc );
+      s_TextStartFunc = NULL;
+   }
+   hb_pp_NestedLiteralString = FALSE;
+}
+
+BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
+{
+  BOOL bIgnore = TRUE;
+  int len;
+   
+  switch( iStreamType )
+  {
+    case HB_PP_STREAM_CLIPPER:
+    {
+      /* internal handling of TEXT/ENDTEXT command
+       * #pragma __text|functionOut|functionEnd|functionStart
+       */
+      len = strlen(ptr) - 6;
+      memcpy( ptr, ptr+7, len );
+      s_TextOutFunc = pp_TextCommand( ptr, &len );
+      s_TextEndFunc = pp_TextCommand( ptr, &len );
+      s_TextStartFunc = pp_TextCommand( ptr, &len );
+      if( s_TextStartFunc )
+      {
+        memcpy( ptr, s_TextStartFunc, strlen(s_TextStartFunc)+1 );
+        bIgnore = FALSE;
+      }
+      hb_pp_StreamBlock = iStreamType;
+      break;
+    }
+
+    case HB_PP_STREAM_PRG:
+    {
+      /* internal handling of TEXT/ENDTEXT command
+       * #pragma __stream|functionOut|functionEnd|functionStart
+       * (lines are joined with CR/LF or LF)
+       */
+      len = strlen(ptr) - 8;
+      memcpy( ptr, ptr+9, len );
+      s_TextOutFunc = pp_TextCommand( ptr, &len );
+      s_TextEndFunc = pp_TextCommand( ptr, &len );
+      s_TextStartFunc = pp_TextCommand( ptr, &len );
+      *ptr ='\0';
+      hb_pp_StreamBlock = iStreamType;
+      break;
+    }
+    
+    case HB_PP_STREAM_C:
+    {
+      /* internal handling of TEXT/ENDTEXT command
+       * #pragma __cstream|functionOut|functionEnd|functionStart
+       * (lines are joined and C esc sequences are converted)
+       */
+      len = strlen(ptr) - 9;
+      memcpy( ptr, ptr+10, len );
+      s_TextOutFunc = pp_TextCommand( ptr, &len );
+      s_TextEndFunc = pp_TextCommand( ptr, &len );
+      s_TextStartFunc = pp_TextCommand( ptr, &len );
+      *ptr ='\0';
+      hb_pp_StreamBlock = iStreamType;
+      break;
+    }
+      
+    default:
+  }                          
+  return bIgnore;
+}
+
+static void pp_StreamBlockFinish( void )
+{
+   hb_pp_StreamBlock = 0;
+   snprintf( s_szOutLine, HB_PP_STR_SIZE, s_TextOutFunc, s_szLine );
+   s_szLine[ 0 ] = '\0';
+   if( s_TextStartFunc )
+   {
+      strcat( s_szLine, s_TextStartFunc );
+      hb_xfree( (void *)s_TextStartFunc );
+      s_TextStartFunc = NULL;
+   }
+   strcat( s_szLine, "[" );
+   strcat( s_szLine, s_szOutLine );
+   strcat( s_szLine, "]" );
+   if( s_TextEndFunc )
+   {
+      strcat( s_szLine, s_TextEndFunc );
+      hb_xfree( (void *)s_TextEndFunc );
+      s_TextEndFunc = NULL;
+   }
+   if( s_TextOutFunc )
+   {
+      hb_xfree( (void *)s_TextOutFunc );
+      s_TextOutFunc = NULL;
+   }
+   hb_pp_NestedLiteralString = TRUE;
+}
+
+void hb_pp_BlockEnd( )
+{
+   if( hb_pp_StreamBlock == HB_PP_STREAM_CLIPPER )
+      pp_TextBlockFinish();
+   else
+      pp_StreamBlockFinish();
+}
+
+
 int hb_pp_ReadRules( void )
 {
   PFILE pFile;
@@ -373,7 +566,12 @@ int hb_pp_ReadRules( void )
   int lens, rdlen;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ReadRules()"));
-
+#if defined(HB_PP_DEBUG_MEMORY)
+   if( ! s_szLine )
+      s_szLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
+   if( ! s_szOutLine )
+      s_szOutLine = (char *) hb_xgrab( HB_PP_STR_SIZE );
+#endif
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;
@@ -427,7 +625,7 @@ int hb_pp_ReadRules( void )
         }
         else
         {
-           CloseInclude();
+           hb_pp_CloseInclude();
            hb_pp_LastOutLine = hb_comp_iLine;
         }
 
@@ -436,11 +634,3 @@ int hb_pp_ReadRules( void )
   }
 }
 
-static int strncmp_nocase( char* s1, char* s2, int n )
-{
-   int i;
-   for( i=0;i<n;i++,s1++,s2++ )
-      if( toupper(*s1) != *s2 )
-         return ( toupper(*s1) - *s2 );
-   return 0;
-}

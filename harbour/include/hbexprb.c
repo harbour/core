@@ -613,9 +613,9 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 		HB_EXPR_PTR pVar, pNew;
 
 		pVar = hb_compExprNewVar( pExpr->value.asMacro.szMacro );
-		pNew = hb_compExprNewString( "{||" );
+		pNew = hb_compExprNewString( "{||", 3 );
 		pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew ), pVar );
-		pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew ), hb_compExprNewString( "}" ) );
+		pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew ), hb_compExprNewString( "}", 1 ) );
 		pNew = hb_compExprNewMacro( pNew, 0, NULL );
 		HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
 		hb_compExprDelete( pNew );
@@ -626,10 +626,12 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 	 	* {|| &variable+1} => &( '{|| &variable+1}' )
 		*/
 		HB_EXPR_PTR pNew;
+    char *cStr;
 
       hb_compExprCodeblockPush( pSelf, FALSE );
 
-		pNew = hb_compExprNewMacro( hb_compExprNewString(pSelf->value.asCodeblock.string), 0, NULL );
+    cStr = pSelf->value.asCodeblock.string;
+		pNew = hb_compExprNewMacro( hb_compExprNewString(cStr, strlen(cStr)), 0, NULL );
 		HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
 		hb_compExprDelete( pNew );
 		HB_EXPR_PCODE0( hb_compCodeBlockStop );

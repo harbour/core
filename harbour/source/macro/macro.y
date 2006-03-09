@@ -283,7 +283,7 @@ NilValue   : NIL             { $$ = hb_compExprNewNil(); }
 
 /* Literal string value
  */
-LiteralValue : LITERAL       { $$ = hb_compExprNewString( $1 ); }
+LiteralValue : LITERAL       { $$ = hb_compExprNewString( $1, strlen($1) ); }
 ;
 
 /* Logical value

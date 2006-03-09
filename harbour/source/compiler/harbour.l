@@ -96,6 +96,8 @@ char *hb_lex_codeblock = NULL;
 
 #define DEBUG_STRINGS
 
+void yy_breakFlex( void ){ };
+
 %}
 
 %{
@@ -154,8 +156,11 @@ Separator     {SpaceTab}
                         (hb_comp_iState == WHILE)
                       )
 							 {
-							 	if( hb_ppNestedLiteralString )
+							 	if( hb_pp_NestedLiteralString )
+                {
+                          yy_breakFlex();
                         	BEGIN STRING5;
+                }
 								else
                         	BEGIN STRING3;
 							 }
@@ -280,6 +285,7 @@ Separator     {SpaceTab}
     int i;
 	 
     BEGIN 0;
+   yy_breakFlex();
 	 for( i = yyleng-1; i; --i )
     {
        if( yytext[ i ] == ']' )
@@ -848,7 +854,7 @@ Separator     {SpaceTab}
          PINLINE pInline;
 
          hb_comp_iLineINLINE = hb_comp_iLine;
-         hb_pp_bInline = TRUE;
+         hb_pp_StreamBlock = HB_PP_STREAM_DUMP_C;
 
          sInlineSym[10] = hb_comp_cInlineID++;
 
@@ -871,7 +877,7 @@ Separator     {SpaceTab}
          if( iSize == 0 )
          {
             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
-            hb_pp_bInline = FALSE;
+            hb_pp_StreamBlock = 0;
             return '\n';
          }
          pBuffer = (char*) sBuffer;
@@ -891,7 +897,7 @@ Separator     {SpaceTab}
                   }
                   else if( *pBuffer == '}' )
                   {
-                     hb_pp_bInline = FALSE;
+                     hb_pp_StreamBlock = 0;
                      break;
                   }
                   else if( *pBuffer == '\'' )
@@ -961,7 +967,7 @@ Separator     {SpaceTab}
          }
          pInline->lPCodeSize += iSize;
 
-         if( hb_pp_bInline )
+         if( hb_pp_StreamBlock )
          {
             goto DigestInline;
          }

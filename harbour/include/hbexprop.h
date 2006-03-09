@@ -312,7 +312,7 @@ HB_EXPR_PTR hb_compExprNewNil( void );
 HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE );
 HB_EXPR_PTR hb_compExprNewLong( HB_LONG );
 HB_EXPR_PTR hb_compExprNewDate( HB_LONG );
-HB_EXPR_PTR hb_compExprNewString( char * );
+HB_EXPR_PTR hb_compExprNewString( char *, ULONG );
 HB_EXPR_PTR hb_compExprNewLogical( int );
 HB_EXPR_PTR hb_compExprNewSelf( void );
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *, BOOL, BOOL );

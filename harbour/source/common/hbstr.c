@@ -184,6 +184,31 @@ HB_EXPORT int hb_stricmp( const char * s1, const char * s2 )
    return rc;
 }
 
+/* warning: It is not case sensitive */
+HB_EXPORT int hb_strnicmp( const char * s1, const char * s2, ULONG count )
+{
+   ULONG ulCount;
+   int rc = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
+
+   for( ulCount = 0; ulCount < count; ulCount++ )
+   {
+      unsigned char c1 = toupper( (unsigned char) s1[ ulCount ] );
+      unsigned char c2 = toupper( (unsigned char) s2[ ulCount ] );
+
+      if( c1 != c2 )
+      {
+         rc = ( c1 < c2 ? -1 : 1 );
+         break;
+      }
+      else if ( !c1 )
+         break;
+   }
+
+   return rc;
+}
+
 /*
 AJ: 2004-02-23
 Concatenates multiple strings into a single result.
@@ -642,7 +667,7 @@ HB_EXPORT HB_LONG hb_strValInt( const char * szText, int * iOverflow )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
 
-   if ( ! hb_str2number( FALSE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
+   if ( hb_str2number( FALSE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
    {
       *iOverflow = 1;
       return 0;
@@ -896,4 +921,57 @@ HB_EXPORT char *hb_stripOutComments( char* buffer )
    {
      return ( NULL );
    }
+}
+
+char * hb_strRemEscSeq( char *str, ULONG *pLen )
+{
+  char *ptr = str;
+  
+  while( *ptr )
+  {
+    if( *ptr == '\\' )
+    {
+      switch( *(ptr+1) )
+      {
+        case '\\':
+        {
+          memmove( ptr, ptr+1, *pLen - (ptr - str) );
+          (*pLen)--;
+          break;
+        }
+        case 'r':
+        {
+          memmove( ptr, ptr+1, *pLen - (ptr - str) );
+          *ptr = '\r';
+          (*pLen)--;
+          break;
+        }
+        case 'n':
+        {
+          memmove( ptr, ptr+1, *pLen - (ptr - str) );
+          *ptr = '\n';
+          (*pLen)--;
+          break;
+        }
+        case 't':
+        {
+          memmove( ptr, ptr+1, *pLen - (ptr - str) );
+          *ptr = '\t';
+          (*pLen)--;
+          break;
+        }
+        case 'b':
+        {
+          memmove( ptr, ptr+1, *pLen - (ptr - str) );
+          *ptr = '\b';
+          (*pLen)--;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+    ptr++;
+  }
+  return str;
 }

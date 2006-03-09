@@ -503,6 +503,9 @@ extern HB_EXPORT char *   hb_strncpyUpperTrim( char * pDest, const char * pSourc
 extern HB_EXPORT double   hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
 extern HB_EXPORT char *   hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
 extern HB_EXPORT ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
+extern HB_EXPORT double   hb_strVal( const char * szText, ULONG ulLen );
+extern HB_EXPORT HB_LONG  hb_strValInt( const char * szText, int * iOverflow );
+extern HB_EXPORT char *   hb_strRemEscSeq( char * szText, ULONG * ulLen ); /* remove C ESC sequences and converts them to Clipper chars */
 
 extern HB_EXPORT double   hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double   hb_numInt( double dNum ); /* take the integer part of the number */

@@ -539,7 +539,14 @@ NilAlias   : NilValue ALIASOP          { $$ = $1; }
 
 /* Literal string value
  */
-LiteralValue : LITERAL                    { $$ = hb_compExprNewString( $1 ); }
+LiteralValue : LITERAL         {
+                                 ULONG len = strlen( $1 );
+                                 if( hb_pp_LiteralEscSeq )
+                                 {
+                                   hb_strRemEscSeq( $1, &len );
+                                 }
+                                 $$ = hb_compExprNewString( $1, len );
+                               }
 ;
 
 LiteralAlias : LiteralValue ALIASOP       { $$ = $1; }

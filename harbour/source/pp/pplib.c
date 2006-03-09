@@ -158,7 +158,7 @@ HB_FUNC( __PPADDRULE )
          {
             hb_buffer = ( char* ) hb_xgrab( HB_PP_STR_SIZE );
             while( hb_pp_Internal( NULL,hb_buffer ) > 0 );
-            CloseInclude();
+            hb_pp_CloseInclude();
             hb_xfree( hb_buffer );
          }
          hb_retl( 1 );

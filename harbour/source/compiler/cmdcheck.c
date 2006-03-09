@@ -341,6 +341,12 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                        break;
 
+                     case 'r' :
+                     case 'R' :
+                       hb_compChkEnvironVar( Args[i] );
+                       j = strlen( Args[i] ) - 1;
+                       break;
+
                      case 'u' :
                      case 'U' :
                        Args[i] += (j - 1);
@@ -767,8 +773,18 @@ void hb_compChkEnvironVar( char * szSwitch )
 
              case 'r':
              case 'R':
-                /* TODO: Implement this switch */
-                printf( "Not yet supported command line option: %s\n", s );
+                if( *( s + 1 ) == '=' )
+                {
+                  int iOverflow;
+                  HB_LONG lCycles = hb_strValInt( s + 2, &iOverflow );
+                  if( ! iOverflow )
+                     hb_pp_MaxTranslateCycles = lCycles;
+                }
+                else
+                {
+                  /* TODO: Implement this switch */
+                  printf( "Not yet supported command line option: %s\n", s );
+                }
                 break;
 
              case 's':

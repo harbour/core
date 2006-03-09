@@ -132,7 +132,7 @@ static BOOL   OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME, BOOL bStandardOnly
 static BOOL   IsIdentifier( char *szProspect );
 static int    IsMacroVar( char *szText, BOOL isCommand );
 static void   RemoveOptional( char *cpatt );
-static int    ConvertOptional( char *cpatt, int len );
+static int    ConvertOptional( char *cpatt, int len, BOOL bLeft );
 
 #define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
@@ -191,12 +191,14 @@ static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
 
-int *      hb_pp_aCondCompile = NULL;
-int        hb_pp_nCondCompile = 0;
-BOOL       hb_ppInsideTextBlock = FALSE;
-BOOL		  hb_ppNestedLiteralString = FALSE;
-
-char *     hb_pp_STD_CH = NULL;
+/* global variables */
+int *        hb_pp_aCondCompile = NULL;
+int          hb_pp_nCondCompile = 0;
+BOOL		     hb_pp_NestedLiteralString = FALSE;
+BOOL         hb_pp_LiteralEscSeq = FALSE;
+unsigned int hb_pp_MaxTranslateCycles = 1024;
+int          hb_pp_StreamBlock = 0;
+char *       hb_pp_STD_CH = NULL;
 
 /* Ron Pinkas added 2000-11-21 */
 static BOOL s_bArray = FALSE;
@@ -358,6 +360,7 @@ void hb_pp_Free( void )
       hb_xfree( (void *)hb_pp_aCondCompile );
       hb_pp_aCondCompile = NULL;
    }
+   hb_pp_InternalFree();
 }
 
 void hb_pp_Init( void )
@@ -486,8 +489,13 @@ int hb_pp_ParseDirective( char * sLine )
   char sDirective[ MAX_NAME ];
   char szInclude[ _POSIX_PATH_MAX ];
   int i;
+  int bIgnore = 1;
+  char *sParse;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseDirective(%s)", sLine));
+
+  hb_pp_strocpy( sLine, sLine+1 );
+  sParse = sLine;
 
   i = NextName( &sLine, sDirective );
   hb_strupr( sDirective );
@@ -578,12 +586,14 @@ int hb_pp_ParseDirective( char * sLine )
         return -1;
 
       else if( i == 6 && memcmp( sDirective, "PRAGMA", 6 ) == 0 )
-        hb_pp_ParsePragma( sLine );   /* --- #pragma  --- */
-
+      {
+        hb_pp_strocpy( sParse, sParse+6 );
+        bIgnore = hb_pp_ParsePragma( sParse );   /* --- #pragma  --- */
+      }
       else
         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE, sDirective, NULL );
     }
-  return 0;
+  return bIgnore;
 }
 
 int hb_pp_ParseDefine( char * sLine )
@@ -874,7 +884,11 @@ static COMMANDS * TraSearch( char * cmdname, COMMANDS * sttraStart )
 
 static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 {
+#if !defined(HB_PP_DEBUG_MEMORY)
   static char mpatt[ PATTERN_SIZE ];
+#else
+  char *mpatt = (char *)hb_xgrab( PATTERN_SIZE );
+#endif
   char *rpatt;
 
   char cmdname[ MAX_NAME ];
@@ -924,6 +938,9 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   if( !ipos )
   {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)mpatt );
+#endif
      return;
   }
 
@@ -1011,14 +1028,16 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
      sLine -= ( ipos + 1 );
      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
   }
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)mpatt );
+#endif
 }
 
 /* Remove escape characters and check '[' optional markers
 */
-static int ConvertOptional( char *cpatt, int len )
+static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
 {
   int i = 0;
-  int iOpenBrackets = 0;
   
   while( cpatt[ i ] != '\0' )
   {
@@ -1033,7 +1052,7 @@ static int ConvertOptional( char *cpatt, int len )
       i++;
       continue; /* skip "strings" */
     }     
-   
+
     if( cpatt[ i ] == '[' )
     {
        if( i && cpatt[ i - 1 ] == '\\' )
@@ -1044,8 +1063,48 @@ static int ConvertOptional( char *cpatt, int len )
        }
        else
        {
-          iOpenBrackets++;
-          cpatt[i] = HB_PP_OPT_START;
+          int j = i + 1;
+          int iOpenBrackets = 1;
+          BOOL bOption = FALSE;
+          
+          while( cpatt[ j ] && iOpenBrackets )
+          {
+            if( cpatt[ j ] == '[' && cpatt[ j - 1 ] != '\\' )
+              iOpenBrackets++;
+            else if( cpatt[ j ] == ']' && cpatt[ j - 1 ] != '\\' )
+            {
+              if( --iOpenBrackets == 0 && ( bOption || bLeft ) )
+              {
+                cpatt[ i ] = HB_PP_OPT_START;
+                cpatt[ j ] = HB_PP_OPT_END;
+              }
+            }
+            else if( cpatt[ j ] == '<' )
+            {
+              j++;
+              while( cpatt[j] == ' ' || cpatt[j] == '\t' ) j++;
+              if( strchr( "*(!-", cpatt[ j ] ) || ISNAME(cpatt[ j ]) )
+              {
+                bOption = TRUE;
+                continue;
+              }
+            }
+            else if( cpatt[ j ] == '"' || cpatt[ j ] == '\'' )
+            {
+              char c = cpatt[ j ];
+              j++;
+              while( cpatt[ j ] && cpatt[ j ] != c )
+              {
+                j++;
+              }
+            }
+            j++;     
+          }
+ 
+          if( iOpenBrackets )
+          {
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, cpatt+i, NULL );
+          }
        }
     }
     else if( cpatt[ i ] == ']' )
@@ -1056,20 +1115,10 @@ static int ConvertOptional( char *cpatt, int len )
           len--;
           continue;
        }
-       else
-       {
-          iOpenBrackets--;
-          cpatt[i] = HB_PP_OPT_END;
-       }
     }
     i++;
   }
   
-  if( iOpenBrackets )
-  {
-     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
-    /* error */
-  }
   return len;
 }
 
@@ -1133,8 +1182,8 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
   HB_TRACE(HB_TR_DEBUG, ("ConvertPatterns(%s, %d, %s, %d)", mpatt, mlen, rpatt, rlen));
 
   expreal[0] = HB_PP_MATCH_MARK;
-  mlen = ConvertOptional( mpatt, mlen );
-  rlen = ConvertOptional( rpatt, rlen );
+  mlen = ConvertOptional( mpatt, mlen, TRUE );  /* left pattern */
+  rlen = ConvertOptional( rpatt, rlen, FALSE ); /* right pattern */
   
   while( *(mpatt+i) != '\0' )
   {
@@ -1323,28 +1372,25 @@ static COMMANDS* AddTranslate( char * traname )
 
 int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 {
-  static char rpatt[ PATTERN_SIZE ];
+#if !defined(HB_PP_DEBUG_MEMORY)
+  static char rpatt[ PATTERN_SIZE ]; 
+#else
+  char *rpatt = (char *)hb_xgrab( PATTERN_SIZE ); 
+#endif
   char sToken[MAX_NAME];
   char * ptri, * ptro, * ptrb;
   int lenToken, i, ipos, isdvig, lens;
   int ifou;
-  int rezDef, rezTra, rezCom, kolpass = 0;
+  int rezDef, rezTra, rezCom;
+  unsigned int kolpass = 0;
   DEFINES * stdef;
   COMMANDS * stcmd;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseExpression(%s, %s)", sLine, sOutLine));
 
-  #if 0
-     printf( "Line: >%s<\n", sLine );
-  #endif
-
   do
   {
      strotrim( sLine, FALSE );
-
-     #if 0
-        printf( "Trimed: >%s<\n", sLine );
-     #endif
 
      rezDef = 0; rezTra = 0; rezCom = 0;
      isdvig = 0;
@@ -1364,16 +1410,23 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
         if( *ptri == '#' )
         {
-           hb_pp_strocpy( rpatt, ptri+1 );
-           hb_pp_ParseDirective( rpatt );
+           int bIgnore;
+
+           strcpy( rpatt, ptri );
+           bIgnore = hb_pp_ParseDirective( rpatt );
 
            if( ipos > 0 )
            {
+              ipos--;
               *( sLine + isdvig + ipos - 1 ) = ';';
+              *( sLine + isdvig + ipos ) = ' ';
            }
 
            lens = strlen( sLine + isdvig );
-           hb_pp_Stuff( " ", sLine + isdvig, 0, (ipos)? ipos:lens, lens );
+           if( bIgnore )
+              hb_pp_Stuff( " ", sLine + isdvig, 0, (ipos)? ipos:lens, lens );
+           else
+              hb_pp_Stuff( rpatt, sLine+isdvig, strlen(rpatt), (ipos)? ipos:lens, lens );
 
            if( ipos > 0 )
            {
@@ -1413,13 +1466,6 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                  }
               }
            }
-
-           #if 0
-               if( *sOutLine )
-                  printf( "*After #defines: >%s<\n", sOutLine );
-               else
-                  printf( "After #defines: >%s<\n", sLine );
-           #endif
 
            if( rezDef == 0 )
            {
@@ -1468,13 +1514,6 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
            }
            }   /* rezDef == 0 */
            
-           #if 0
-               if( *sOutLine )
-                  printf( "*After #translate: >%s<\n", sOutLine );
-               else
-                  printf( "After #translate: >%s<\n", sLine );
-           #endif
-
            /* Look for definitions from #command      */
            /* JFL ! Was 3 but insufficient in most cases */
            /* I know this is a new hardcoded limit ... any better idea's welcome */
@@ -1515,10 +1554,6 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               }
 
               HB_SKIPTABSPACES( ptri );
-
-              #if 0
-                 printf( "Token: %s\n", sToken );
-              #endif
 
               if( ( *ptri == '\0' || ( *ptri != '=' && (!IsInStr(*ptri,":/+*-%^") || *(ptri+1) != '=') &&
                   ( *ptri != '-' || *(ptri+1) != '>' ) ) ) && ( stcmd = ComSearch(sToken,NULL) ) != NULL )
@@ -1570,7 +1605,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
      kolpass++;
 
-     if( kolpass > 750 && rezDef )
+     if( kolpass > hb_pp_MaxTranslateCycles && (rezDef || rezTra || rezCom) )
      {
         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
         break;
@@ -1584,13 +1619,9 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
      RemoveOptional( sOutLine ); 
   }
   
-  #if 0
-      if( *sOutLine )
-         printf( "Out: >%s<\n", sOutLine );
-      else
-         printf( "Out: >%s<\n", sLine );
-  #endif
-
+#if defined(HB_PP_DEBUG_MEMORY)
+   hb_xfree( (void *)rpatt );
+#endif
   return 0;
 }
 
@@ -2034,9 +2065,13 @@ static int RemoveSlash( char * cpatt )
 
 static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
+#if ! defined(HB_PP_DEBUG_MEMORY)
   static char expreal[ MAX_EXP ];
-
   char exppatt[ MAX_NAME ];
+#else
+  char *expreal = (char *)hb_xgrab( MAX_EXP );
+  char *exppatt = (char *)hb_xgrab( MAX_NAME );
+#endif
   int lenreal = 0, maxlenreal = HB_PP_STR_SIZE, lenpatt;
   int rezrestr, ipos, nBra;
   char * ptr, * ptrtemp;
@@ -2101,6 +2136,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
            {
               if( s_numBrackets )
               {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
                   return 0;
               }
            }
@@ -2118,27 +2157,17 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 
            lenreal = stroncpy( expreal, *ptri, ipos-1 );
 
-           #if 0
-              printf( "\nExpr: '%s' ptrtemp: '%s' exppat: '%s'\n", expreal, ptrtemp, exppatt );
-           #endif
-
            if( ipos > 1 )
            {
                if( *(exppatt+2) == '5' )       /*  ----  Minimal match marker  */
                {
                   if( IsIdentifier( expreal ) )
                   {
-                     /*
-                     printf( "Accepted ID: >%s<\n", expreal );
-                     */
                      *ptri += lenreal;
                   }
                }
                else if( isExpres( expreal, *(exppatt+2) == '1' ) )
                {
-                  /*
-                  printf( "Accepted: >%s<\n", expreal );
-                  */
                   *ptri += lenreal;
                }
            }
@@ -2146,6 +2175,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
            {
               if( s_numBrackets )
               {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
                  return 0;
               }
               else
@@ -2159,6 +2192,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
      {
         if( s_numBrackets )
         {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
            return 0;
         }
         else
@@ -2249,7 +2286,13 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
                     break;
                  }
                  else
+                 {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
                     return 0;
+                 }
               }
               break;
            }
@@ -2298,6 +2341,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
             return 0;
         }
         */
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
         return 0;
      }
   }
@@ -2314,6 +2361,10 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
      }
      else
      {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
         return 0;
      }
   }
@@ -2335,10 +2386,18 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
      }
      else
      {
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
         return 0;
      }
   }
 
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expreal );
+hb_xfree( (void *)exppatt );
+#endif
   return 1;
 }
 
@@ -2764,6 +2823,9 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    {
       if( *(expreal-1) == ' ' )
       {
+#if defined(HB_PP_DEBUG_MEMORY)
+         *(expreal-1) = ' ';
+#endif         
          expreal--;
          lens--;
       }
@@ -2997,7 +3059,11 @@ static void SkipOptional( char ** ptri )
 
 static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, int * lenres )
 {
+#if ! defined(HB_PP_DEBUG_MEMORY)
   static char expnew[ MAX_EXP ];
+#else
+  char *expnew = (char *)hb_xgrab( MAX_EXP );
+#endif
 
   int ifou, isdvig = 0;
   BOOL rezs, bFound = FALSE;
@@ -3111,6 +3177,9 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
     }
     if( !bFound && s_Repeate )
       s_aIsRepeate[ s_Repeate - 1 ]++;
+#if defined(HB_PP_DEBUG_MEMORY)
+hb_xfree( (void *)expnew );
+#endif
 }
 
 static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
@@ -3171,7 +3240,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
       hb_pp_Stuff( expreal, ptro+1, lenreal, 0, lenres );
     rmlen = lenreal + 2;
 	 if( *sQuotes == '[' )
-	 	hb_ppNestedLiteralString = TRUE;
+	 	hb_pp_NestedLiteralString = TRUE;
     break;
 
   case '2':  /* Normal stringify result marker  */
@@ -3472,7 +3541,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
 
     if( cha == '\n' )
     {
-      if( ( ! hb_pp_bInline ) && s_ParseState == STATE_COMMENT && symbLast == ';' )
+      if( ( hb_pp_StreamBlock != HB_PP_STREAM_DUMP_C ) && s_ParseState == STATE_COMMENT && symbLast == ';' )
       {
         buffer[readed++] = ';';
       }
@@ -3480,7 +3549,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
     }
     else
     {
-      if( hb_pp_bInline )
+      if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
       {
         buffer[readed++] = cha;
         continue;
@@ -3562,7 +3631,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
               break;
 
             case '/':
-              if( readed>0 && buffer[readed-1] == '/' && !hb_ppInsideTextBlock )
+              if( readed>0 && buffer[readed-1] == '/' && !hb_pp_StreamBlock )
               {
                 maxlen = 0;
                 readed--;
@@ -3570,7 +3639,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
               break;
 
             case '*':
-              if( readed > 0 && buffer[readed-1] == '/' && !hb_ppInsideTextBlock )
+              if( readed > 0 && buffer[readed-1] == '/' && !hb_pp_StreamBlock )
               {
                 s_ParseState = STATE_COMMENT;
                 readed--;
@@ -4243,7 +4312,7 @@ static int NextName( char ** sSource, char * sDest )
 
   /* Ron Pinkas added 2000-11-08 - Prepare for next run. */
   pTmp = *sSource;
-  while( *pTmp && ( *pTmp == ' ' || *pTmp == '\t' ) )
+  while( *pTmp && ( *pTmp == ' ' || *pTmp == '\t' || *pTmp == HB_PP_OPT_END || *pTmp == HB_PP_OPT_START ) )
   {
      pTmp++;
   }
@@ -4491,7 +4560,7 @@ static BOOL OpenInclude( char * szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pM
 }
 
 
-void CloseInclude( void )
+void hb_pp_CloseInclude( void )
 {
    PFILE pFile;
 
