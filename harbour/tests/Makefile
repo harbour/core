@@ -97,6 +97,7 @@ PRG_SOURCES=\
 	overload.prg \
 	parexpr.prg \
 	passref.prg \
+	pretest.prg \
 	procline.prg \
 	procname.prg \
 	readhrb.prg \

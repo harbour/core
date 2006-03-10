@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+
+2006-03-10 12:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+    
+    + added 'extern' declaration
+
+  * source/compiler/hbusage.c
+    + added short usage info abour /r= switch
+
+  * doc/pragma.txt
+  * doc/en/compiler.txt
+    
+
 2006-03-10 10:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
     
     *fixed compilation for Borland C

@@ -218,8 +218,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
             lens -= rdlen;
             s_szLine[ lens ] = '\0';
             pp_StreamBlockFinish( );
-            lens = strlen( s_szLine );
-            lContinue = 0;
             hb_pp_LiteralEscSeq = TRUE;
             break;
           }
@@ -517,6 +515,7 @@ BOOL hb_pp_StreamBlockBegin( char * ptr, int iStreamType )
     }
       
     default:
+      break;
   }                          
   return bIgnore;
 }

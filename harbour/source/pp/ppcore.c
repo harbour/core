@@ -1083,7 +1083,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
             {
               j++;
               while( cpatt[j] == ' ' || cpatt[j] == '\t' ) j++;
-              if( strchr( "*(!-", cpatt[ j ] ) || ISNAME(cpatt[ j ]) )
+              if( strchr( "*(!-{", cpatt[ j ] ) || ISNAME(cpatt[ j ]) )
               {
                 bOption = TRUE;
                 continue;
