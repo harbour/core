@@ -41,7 +41,7 @@ endef
 define link_exe_file
 echo $(LDFLAGS) NAME $@ > __link__.tmp
 echo LIB kernel32.lib, user32.lib, winspool.lib, oleaut32.lib, uuid.lib >> __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
@@ -80,7 +80,7 @@ endef
 
 define create_library
 echo $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 

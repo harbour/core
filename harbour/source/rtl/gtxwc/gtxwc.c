@@ -2818,18 +2818,21 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
 {
    XEvent evt;
 
-   if( s_cursorBlinkRate == 0 )
+   if( wnd->cursorType != SC_NONE )
    {
-      s_cursorState = TRUE;
-   }
-   else
-   {
-      ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
-
-      if( ulCurrentTime - s_cursorStateTime > s_cursorBlinkRate )
+      if( s_cursorBlinkRate == 0 )
       {
-         s_cursorState = !s_cursorState;
-         s_cursorStateTime = ulCurrentTime;
+         s_cursorState = TRUE;
+      }
+      else
+      {
+         ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
+
+         if( ulCurrentTime - s_cursorStateTime > s_cursorBlinkRate )
+         {
+            s_cursorState = !s_cursorState;
+            s_cursorStateTime = ulCurrentTime;
+         }
       }
    }
 
@@ -3383,7 +3386,7 @@ static char * hb_gt_xwc_Version( int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "xHarbour Terminal: XWindow Console XWC";
+   return "Harbour Terminal: XWindow Console XWC";
 }
 
 /* *********************************************************************** */
@@ -3432,6 +3435,8 @@ static void hb_gt_xwc_Tone( double dFrequency, double dDuration )
 
 static BOOL hb_gt_xwc_mouse_IsPresent( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_IsPresent()"));
+
    return s_wnd->mouseNumButtons > 0;
 }
 
@@ -3439,6 +3444,8 @@ static BOOL hb_gt_xwc_mouse_IsPresent( void )
 
 static void hb_gt_xwc_mouse_GetPos( int * piRow, int * piCol )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_GetPos(%p,%p)", piRow, piCol));
+
    hb_gt_xwc_LateRefresh();
    *piRow = s_wnd->mouseGotoRow;
    *piCol = s_wnd->mouseGotoCol;
@@ -3448,6 +3455,8 @@ static void hb_gt_xwc_mouse_GetPos( int * piRow, int * piCol )
 
 static void hb_gt_xwc_mouse_SetPos( int iRow, int iCol )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_SetPos(%d,%d)", iRow, iCol));
+
    s_wnd->mouseGotoRow = iRow;
    s_wnd->mouseGotoCol = iCol;
    hb_gt_xwc_LateRefresh();
@@ -3457,7 +3466,7 @@ static void hb_gt_xwc_mouse_SetPos( int iRow, int iCol )
 
 static BOOL hb_gt_xwc_mouse_ButtonState( int iButton )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_ButtonState(%i)", iButton ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_ButtonState(%i)", iButton));
 
    if( iButton >= 0 && iButton < s_wnd->mouseNumButtons )
       return ( s_wnd->mouseButtonsState & 1 << iButton ) != 0;
@@ -3469,7 +3478,7 @@ static BOOL hb_gt_xwc_mouse_ButtonState( int iButton )
 
 static int hb_gt_xwc_mouse_CountButton( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_CountButton()") );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_CountButton()"));
 
    hb_gt_xwc_RealRefresh();
 
@@ -3612,7 +3621,7 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
-               s_wnd->fontWidth = iVal;
+            s_wnd->fontWidth = iVal;
          break;
 
       case GTI_FONTNAME:
@@ -3857,7 +3866,16 @@ static void hb_gt_xwc_Redraw( int iRow, int iCol, int iSize )
    {
       if( s_wnd->fInit )
       {
+#if 1
          hb_gt_xwc_InvalidateChar( s_wnd, iCol, iRow, iCol + iSize - 1, iRow );
+#else
+         hb_gt_xwc_RepaintChar( s_wnd, iCol, iRow, iCol + iSize - 1, iRow );
+         iCol *= s_wnd->fontWidth;
+         iRow *= s_wnd->fontHeight;
+         hb_gt_xwc_InvalidatePts( s_wnd, iCol, iRow,
+                                  iCol + iSize * s_wnd->fontWidth - 1,
+                                  iRow + s_wnd->fontHeight - 1 );
+#endif
       }
       else if( !s_wnd->fData )
       {

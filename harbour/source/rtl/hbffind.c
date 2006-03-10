@@ -876,6 +876,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
 #elif defined(HB_OS_WIN_32)
 
+         if( info->hFindFile != INVALID_HANDLE_VALUE )
          {
             FindClose( info->hFindFile );
          }

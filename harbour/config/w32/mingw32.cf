@@ -42,6 +42,16 @@ LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
+# Add the standard C main() entry
+ifeq ($(HB_MAIN),std)
+ifeq ($(findstring vm,$(LIBS)),vm)
+ifneq ($(HB_GT_LIB),gtwvt)
+LINKPATHS += -L$(TOP)$(ROOT)source/vm/mainstd/$(HB_ARCH)
+LINKLIBS += -lmainstd
+endif
+endif
+endif
+
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
@@ -87,7 +97,7 @@ endef
 # in commmand line
 define create_library
 echo. CREATE $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 echo. SAVE >> __lib__.tmp
 echo. END >> __lib__.tmp
 $(AR) $(ARFLAGS) -M < __lib__.tmp
@@ -101,7 +111,7 @@ endef
 
 define link_exe_file
 echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))
 -$(LD) @__link__.tmp
@@ -118,7 +128,7 @@ ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 AR_RULE = $(create_library)
 LD_RULE = $(link_exe_file)
 else
-AR_RULE = $(AR) $(ARFLAGS) cr $@ $^ && $(RANLIB) $@ || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) cr $@ $(^F) && $(RANLIB) $@ || $(RM) $@
 endif
 
 include $(TOP)$(ROOT)config/rules.cf

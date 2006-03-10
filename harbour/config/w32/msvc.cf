@@ -44,6 +44,6 @@ LDFLAGS = $(LINKPATHS)
 
 AR = lib.exe
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) /out:$@ $^ || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) /out:$@ $(^F) || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -343,8 +343,8 @@ void hb_gt_sln_mouse_Init( void )
       s_iMouseButtons = SLtt_tgetnum( "BT" );
 
       /* force two buttons mouse under xterm */
-      if( s_iMouseButtons == -1 )
-         s_iMouseButtons = 2;
+      if( s_iMouseButtons < 1 )
+         s_iMouseButtons = 3;
 
       s_bMousePresent = TRUE;
    }
@@ -378,7 +378,15 @@ void hb_gt_sln_mouse_Init( void )
             s_iMouseCol = Evt.x;
          }
 
+         /*
+          * In recent GPM versions it produce unpleasure noice on the screen
+          * so I covered it with this macro, [druzus]
+          */         
+#ifdef HB_GPM_USE_XTRA
          s_iMouseButtons = Gpm_GetSnapshot( NULL );
+#else
+         s_iMouseButtons = 3;
+#endif
          hb_gt_sln_mouse_FixTrash();
       }
 #ifdef HB_GPM_NOICE_DISABLE

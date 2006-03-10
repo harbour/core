@@ -487,7 +487,8 @@ extern HB_EXPORT BOOL     hb_strToNum( const char* szNum, HB_LONG * plVal, doubl
 extern HB_EXPORT BOOL     hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
 
 extern HB_EXPORT BOOL     hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
-extern HB_EXPORT BOOL     hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) */
+extern HB_EXPORT BOOL     hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
+extern HB_EXPORT BOOL     hb_strMatchWildExact( const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to cover whole string */
 extern HB_EXPORT BOOL     hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
@@ -555,13 +556,17 @@ extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
 
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
-extern int      hb_cmdargARGC( void ); /* retrieve command line argument count */
-extern char **  hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
-extern BOOL     hb_cmdargIsInternal( const char * szArg ); /* determine if a string is an internal setting */
-extern BOOL     hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern char *   hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
-extern int      hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern ULONG    hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
+extern int       hb_cmdargARGC( void ); /* retrieve command line argument count */
+extern char **   hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
+extern BOOL      hb_cmdargIsInternal( const char * szArg ); /* determine if a string is an internal setting */
+extern BOOL      hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
+extern char *    hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern int       hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
+extern ULONG     hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
+#if defined( HB_OS_WIN_32 ) && defined( HB_OS_WIN_32_USED )
+extern HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
+extern HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
+#endif
 
 /* Symbol management */
 extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */

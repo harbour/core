@@ -9,6 +9,7 @@ HB_GT_LIBS=\
 	gtpca \
 	gtstd \
 	gtwin \
+	gtwvt \
 #	gtcrs \
 #	gtsln \
 

@@ -34,7 +34,7 @@ endef
 
 define link_exe_file
 $(COMSPEC) /E:2048 /Cecho $(LDFLAGS) NAME $@ > __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
@@ -69,13 +69,12 @@ endef
 
 define create_library
 $(COMSPEC) /E:2048 /Cecho $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
 ARFLAGS = -p=32 -c $(A_USR)
-
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

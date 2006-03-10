@@ -50,6 +50,8 @@
  *
  */
 
+#define HB_OS_WIN_32_USED
+
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -61,7 +63,38 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-static char * hb_cmdargGet( const char * pszName, BOOL bRetValue );
+#if defined( HB_OS_WIN_32 ) && defined( HB_OS_WIN_32_USED )
+
+HB_EXTERN_BEGIN
+
+HANDLE hb_hInstance     = 0;
+HANDLE hb_hPrevInstance = 0;
+int    s_iCmdShow       = 0;
+BOOL   s_WinMainParam   = FALSE;
+
+HB_EXTERN_END
+
+HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance, int iCmdShow )
+{
+   hb_hInstance = hInstance;
+   hb_hPrevInstance = hPrevInstance;
+   s_iCmdShow = iCmdShow;
+   s_WinMainParam = TRUE;
+}
+
+HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow )
+{
+   if( phInstance )
+      *phInstance = hb_hInstance;
+   if( phPrevInstance )
+      *phPrevInstance = hb_hPrevInstance;
+   if( piCmdShow )
+      *piCmdShow = s_iCmdShow;
+
+   return s_WinMainParam;
+}
+
+#endif
 
 HB_EXPORT void hb_cmdargInit( int argc, char * argv[] )
 {

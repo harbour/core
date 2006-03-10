@@ -38,7 +38,7 @@ endef
 
 define link_exe_file
 echo $(LDFLAGS) -Fe$@ > __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 echo $(LINKLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
@@ -57,7 +57,7 @@ endef
 
 define create_library
 echo $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 $(AR) @__lib__.tmp
 del __lib__.tmp
 endef

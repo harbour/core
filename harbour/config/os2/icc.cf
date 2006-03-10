@@ -67,7 +67,7 @@ endif
 
 AR = ilib
 ARFLAGS = /NOE /NOIgnoreCase $(A_USR)
-AROBJS = $(foreach file, $^, -+$(file))
+AROBJS = $(foreach file, $(^F), -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -56,67 +56,72 @@
 #include "hbvm.h"
 
 #if defined(HB_OS_WIN_32)
-HB_EXTERN_BEGIN
 
-int argc = 0;
-char * argv[ 20 ];
+#define MAX_ARGS 128
 
-HANDLE hb_hInstance = 0;
-HANDLE hb_hPrevInstance = 0;
+static int    s_argc = 0;
+static char * s_argv[ MAX_ARGS ];
+static char   s_szAppName[ 256 ];
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
                     LPSTR lpCmdLine,          /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
+   LPSTR pArgs, pArg, pDst, pSrc;
+   BOOL fQuoted;
+
    #ifdef HB_INCLUDE_WINEXCHANDLER
+   {
       LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
-
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
-   #endif
-
-   LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
-   char szAppName[ 250 ];
-
-   #ifdef HB_INCLUDE_WINEXCHANDLER
       HB_SYMBOL_UNUSED( ef );
+   }
    #endif
-
-   strcpy( pArgs, lpCmdLine );
 
    HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 
-   HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( iCmdShow );
+   GetModuleFileName( hInstance, s_szAppName, sizeof( s_szAppName ) - 1 );
+   s_argv[ s_argc++ ] = s_szAppName;
 
-   hb_hInstance = hInstance;
-   GetModuleFileName( hInstance, szAppName, 249 );
-   argv[ 0 ] = szAppName;
+   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 );
+   pArg = NULL;
+   pSrc = lpCmdLine;
+   fQuoted = FALSE;
 
-   if( * pArgs != 0 )
-      argv[ ++argc ] = pArgs;
-
-   while( *pArg != 0 )
+   while( *pSrc != 0 && s_argc < MAX_ARGS )
    {
-      if( *pArg == ' ' )
+      if( *pSrc == '"' )
       {
-         *pArg++ = 0;
-         argc++;
-
-         while( *pArg == ' ' )
-            pArg++;
-
-         if( *pArg != 0 )
-            argv[ argc ] = pArg++;
-         else
-            argc--;
+         if( pArg == NULL )
+            pArg = pDst;
+         fQuoted = !fQuoted;
+      }
+      else if( fQuoted || !HB_ISSPACE ( *pSrc ) )
+      {
+         if( pArg == NULL )
+            pArg = pDst;
+         *pDst++ = *pSrc;
       }
       else
-         pArg++;
+      {
+         if( pArg )
+         {
+            *pDst++ = '\0';
+            s_argv[ s_argc++ ] = pArg;
+            pArg = NULL;
+         }
+      }
+      ++pSrc;
    }
-   argc++;
+   if( pArg )
+   {
+      *pDst = '\0';
+      s_argv[ s_argc++ ] = pArg;
+   }
 
-   hb_cmdargInit( argc, argv );
+   hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
+   hb_cmdargInit( s_argc, s_argv );
    hb_vmInit( TRUE );
    hb_vmQuit();
 
@@ -127,12 +132,12 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    /* NOTE: This point is never reached */
 
    return 0;
-} 
+}
 
 #if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
+HB_EXTERN_BEGIN
 HB_EXPORT void hb_forceLinkMainWin( void ) {}
-#endif
-
 HB_EXTERN_END
+#endif
 
 #endif

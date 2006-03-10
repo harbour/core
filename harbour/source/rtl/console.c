@@ -153,7 +153,7 @@ void hb_conRelease( void )
     * have to be restored on exit then it should does it in its Exit()
     * method. Here we cannot force any actions because it may cause bad
     * results in some GTs, f.e. when the screen size is controlled by remote
-    * user and not xHarbour application (some terminal modes), [Druzus]
+    * user and not Harbour application (some terminal modes), [Druzus]
     */
 
    hb_setkeyExit();  /* April White, May 6, 2000 */

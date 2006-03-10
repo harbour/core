@@ -78,6 +78,6 @@ LDFLAGS += $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

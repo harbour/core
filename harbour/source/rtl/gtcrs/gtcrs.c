@@ -121,7 +121,7 @@ typedef struct InOutBase {
 
    char *acsc, *beep, *flash, *civis, *cnorm, *cvvis;
 
-   int is_mouse;
+   int mouse_type;
    int mButtons;
    int nTermMouseChars;
    unsigned char cTermMouseBuf[3];
@@ -1186,31 +1186,34 @@ static void flush_gpmevt( mouseEvent * mEvt )
 }
 #endif
 
+static void disp_mousecursor( InOutBase * ioBase )
+{
+#ifdef HAVE_GPM_H
+   if ( ioBase->mouse_type == MOUSE_GPM && gpm_visiblepointer )
+   {
+      Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
+                       gpm_consolefd );
+   }
+#endif
+}
+
 static void mouse_init( InOutBase * ioBase )
 {
    if ( ioBase->terminal_type == TERM_XTERM )
    {
       /* save old hilit tracking & enable mouse tracking */
       write_ttyseq( ioBase, "\033[?1001s\033[?1002h" );
-      ioBase->is_mouse = 1;
+      ioBase->mouse_type = MOUSE_XTERM;
       memset( ( void * ) &ioBase->mLastEvt, 0, sizeof( ioBase->mLastEvt ) );
       ioBase->mLastEvt.click_delay = DBLCLK_DELAY;
       /* curses mouse buttons check */
       ioBase->mButtons = tigetnum( "btns" );
       if ( ioBase->mButtons < 1 )
-         ioBase->mButtons = 2;
+         ioBase->mButtons = 3;
    }
 #ifdef HAVE_GPM_H
    else if ( ioBase->terminal_type == TERM_LINUX )
    {
-#ifdef HB_GPM_NOICE_DISABLE
-      int iNull, iErr;
-
-      iErr = dup( 2 );
-      iNull = open( "/dev/null", O_RDWR );
-      dup2( iNull, 2 );
-      close( iNull );
-#endif
       ioBase->Conn.eventMask =
          GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_DOUBLE;
       /* give me move events but handle them anyway */
@@ -1218,43 +1221,47 @@ static void mouse_init( InOutBase * ioBase )
       /* only pure mouse events, no Ctrl,Alt,Shft events */
       ioBase->Conn.minMod = ioBase->Conn.maxMod = 0;
       gpm_zerobased = 1;
-      gpm_visiblepointer = 1;
+      gpm_visiblepointer = 0;
       if ( Gpm_Open( &ioBase->Conn, 0 ) >= 0 && gpm_fd >= 0 )
       {
-         ioBase->is_mouse = 1;
+         int flags;
+
+         if ( ( flags = fcntl( gpm_fd, F_GETFL, 0 ) ) != -1 )
+            fcntl( gpm_fd, F_SETFL, flags | O_NONBLOCK );
+
+         ioBase->mouse_type = MOUSE_GPM;
          memset( ( void * ) &ioBase->mLastEvt, 0, sizeof( ioBase->mLastEvt ) );
          ioBase->mLastEvt.click_delay = DBLCLK_DELAY;
          flush_gpmevt( &ioBase->mLastEvt );
          add_efds( ioBase, gpm_fd, O_RDONLY, set_gpmevt,
                    ( void * ) &ioBase->mLastEvt );
+
+         /*
+          * In recent GPM versions it produce unpleasure noice on the screen
+          * so I covered it with this macro, [druzus]
+          */         
+#ifdef HB_GPM_USE_XTRA
          ioBase->mButtons = Gpm_GetSnapshot( NULL );
-         if ( gpm_visiblepointer )
-            Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
-                             gpm_consolefd );
-      }
-#ifdef HB_GPM_NOICE_DISABLE
-      dup2( iErr, 2 );
-      close( iErr );
+#else
+         ioBase->mButtons = 3;
 #endif
+      }
    }
 #endif
 }
 
 static void mouse_exit( InOutBase * ioBase )
 {
-   if ( ioBase->terminal_type == TERM_XTERM )
+   if ( ioBase->mouse_type == MOUSE_XTERM )
    {
       /* disable mouse tracking & restore old hilit tracking */
       write_ttyseq( ioBase, "\033[?1002l\033[?1001r" );
    }
 #ifdef HAVE_GPM_H
-   else if ( ioBase->terminal_type == TERM_LINUX )
+   else if ( ioBase->mouse_type == MOUSE_GPM && gpm_fd >= 0 )
    {
-      if ( ioBase->is_mouse && gpm_fd >= 0 )
-      {
-         del_efds( ioBase, gpm_fd );
-         Gpm_Close();
-      }
+      del_efds( ioBase, gpm_fd );
+      Gpm_Close();
    }
 #endif
 }
@@ -1343,12 +1350,7 @@ static void gt_refresh( InOutBase * ioBase )
       wmove( ioBase->stdscr, ioBase->row, ioBase->col );
       wrefresh( ioBase->stdscr );
       disp_cursor( ioBase );
-#ifdef HAVE_GPM_H
-      if ( ioBase->is_mouse && ioBase->terminal_type == TERM_LINUX )
-         if ( gpm_visiblepointer )
-            Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
-                             gpm_consolefd );
-#endif
+      disp_mousecursor( ioBase );
    }
 }
 
@@ -2642,7 +2644,7 @@ static BOOL hb_gt_crs_mouse_IsPresent( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent()" ) );
 
-   return s_ioBase->is_mouse;
+   return s_ioBase->mouse_type != 0;
 }
 
 /* *********************************************************************** */
@@ -2652,13 +2654,10 @@ static void hb_gt_crs_mouse_Show( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Show()" ) );
 
 #ifdef HAVE_GPM_H
-   if( s_ioBase->terminal_type == TERM_LINUX && s_ioBase->is_mouse )
-   {
+   if( s_ioBase->mouse_type == MOUSE_GPM )
       gpm_visiblepointer = 1;
-      Gpm_DrawPointer( s_ioBase->mLastEvt.col, s_ioBase->mLastEvt.row,
-                       gpm_consolefd );
-   }
 #endif
+   disp_mousecursor( s_ioBase );
 }
 
 /* *********************************************************************** */
@@ -2668,7 +2667,7 @@ static void hb_gt_crs_mouse_Hide( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Hide()" ) );
 
 #ifdef HAVE_GPM_H
-   if( s_ioBase->terminal_type == TERM_LINUX && s_ioBase->is_mouse )
+   if( s_ioBase->mouse_type == MOUSE_GPM )
    {
       gpm_visiblepointer = 0;
    }
@@ -2694,11 +2693,7 @@ static void hb_gt_crs_mouse_SetPos( int iRow, int iCol )
    /* it does really nothing */
    s_ioBase->mLastEvt.col = iCol;
    s_ioBase->mLastEvt.row = iRow;
-#ifdef HAVE_GPM_H
-   if( s_ioBase->terminal_type == TERM_LINUX && s_ioBase->is_mouse )
-      if( gpm_visiblepointer )
-         Gpm_DrawPointer( iCol, iRow, gpm_consolefd );
-#endif
+   disp_mousecursor( s_ioBase );
 }
 
 /* *********************************************************************** */
@@ -2709,7 +2704,7 @@ static BOOL hb_gt_crs_mouse_ButtonState( int iButton )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%i)", iButton ) );
 
-   if( s_ioBase->is_mouse )
+   if( s_ioBase->mouse_type != 0 )
    {
       int mask;
 

@@ -99,13 +99,13 @@ endif
 LINKLIBS += -lm
 
 LDFLAGS = $(LINKPATHS)
-LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $^ $(LDFLAGS) $(L_USR) $(LINKLIBS) $(LINKLIBS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS) $(LINKLIBS)
 
 #AR = ar
 #ARFLAGS = $(A_USR)
-#AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
+#AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
 LIBTOOL = libtool
 LIBTOOLFLAGS = $(LIBTOOL_USR)
-AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $@ $^ || $(RM) $@
+AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $@ $(^F) || $(RM) $@
 RANLIB = ranlib
 include $(TOP)$(ROOT)config/rules.cf

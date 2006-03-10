@@ -8,6 +8,115 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+    * fixed to force max recurse preprocessor passed bigger then 0
+
+  * source/pp/ppcore.c
+    * suppressed memory access error in getExpReal
+    + added missing '.' in valid match markers (ConvertOptional)
+
+2006-03-11 09:45 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+  * source/pp/ppcomp.c
+  * source/pp/ppcore.c
+  * source/rtl/gtcrs/gtcrs.c
+    * fixed to suppress warning messages in some compilers
+
+2006-03-10 21:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/rules.cf
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/bcc16.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/dos/watcom.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/os2/icc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/global.cf
+  * harbour/config/w32/icc.cf
+  * harbour/config/w32/mingw32.cf
+  * harbour/config/w32/msvc.cf
+  * harbour/config/w32/rsxnt.cf
+  * harbour/config/w32/watcom.cf
+    * use F macro extension to extract file name from given macros.
+      It simplified some rules and allow to use vpath and differ file
+      locations in GNU Makefiles
+    * moved the BCC16 excpetion for C_RULE from global rules.cf to
+      DOS bcc16.cf file
+    * use mainstd library in MinGW build
+
+  * harbour/include/hbapi.h
+    + added two new functions: hb_winmainArgInit() and hb_winmainArgGet()
+      to set/retrieve WinMain() parameters.
+    + added hb_strMatchWildExact()
+
+  * harbour/source/pp/ppcore.c
+    * initialized variable to avoid compiler warning
+
+  * harbour/source/rtl/console.c
+    * cleaned comment
+
+  * harbour/source/rtl/hbffind.c
+    ! Fixed invalid handle error in Windows when file() fails
+      (fix borrowed from xHarbour)
+
+  * harbour/source/rtl/strmatch.c
+    + added hb_strMatchWildExact()
+    + added 3-rd parameter <lExact> to WildMatch() - when it's TRUE
+      WildMatch() will check if given pattern cover the whole string.
+      Without it it check if pattern is valid prefix only.
+
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+  * harbour/source/rtl/gtsln/mousesln.c
+    * do not call Gpm_GetSnapshot() to avoid stupid message on stderr
+      generated from GPM library - I lost the the hope that it will be
+      fixed ;-)
+
+  * harbour/source/rtl/gtpca/gtpca.c
+    * use select() in *nixes for cursor position terminal feedback.
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    * try to always allocate console when compiled without
+      HB_NO_ALLOC_CONSOLE. It allow to use GTWIN also in real windows
+      programs.
+
+  + harbour/source/rtl/gtwvt/Makefile
+         proc GTSYS()
+  + harbour/source/rtl/gtwvt/gtwvt.h
+    + added new GT driver GTWVT - the core of this driver it's Peter Ress
+      work in xHarbour. In Harbour GTWVT contains only pure GT code without
+      local to GTWVT xHarbour extensions and GTWVT contrib libraries.
+      This extensions can be added but later but I want to keep them
+      separated from the core GTWVT code and add them as upper level GT
+      which can inherit from GTWVT. Just like I've implemented CTWIN.
+      Please update non GNU make files and test this GT in Windows.
+      The programs which want to use GTWVT should be compiled as standard
+      Windows GUI programs. GTWVT replaces window console code.
+      hb* scripts does not have to use GTSYS() in source code but can simply
+      use -gt<name> switch in hblnk and hbmk.
+         request HB_GT_WIN
+         request HB_GT_WVT
+         return
+      then the final binaries will be linked with both GT drivers and you
+      can switch between them using //gt[:]<name> switch. F.e.:
+         ./my_prog //gtwin
+      or
+         ./my_prog //gtwvt
+      this feature works in all platforms.
+      People who works in shell environment (*nixes, MSYS, DJGPP) and use
+      hb* scripts does not have to use HB_GTSYS() in source code but can
+      simply use -gt<name> switch in hblnk and hbmk.
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * some minor cleanups and code formatting
+
+  * harbour/source/vm/Makefile
+  + harbour/source/vm/mainstd/Makefile
+    * moved mainstd.c to separate mainstd library for MinGW32 build.
       Unfortunately MinGW always link main() function if it locate
       it in libraries and ignores WinMain() what effectively makes
       impossible to create Windows GUI programs if we have main() in

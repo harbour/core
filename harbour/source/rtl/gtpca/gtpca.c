@@ -206,30 +206,73 @@ static void hb_gt_pca_AnsiSetAutoMargin( int iAM )
 
 static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
 {
+   static BOOL s_fIsAnswer = TRUE;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_AnsiGetCurPos(%p, %p)", iRow, iCol));
 
-   if( s_bStdinConsole && s_bStdoutConsole )
+   if( s_fIsAnswer && s_bStdinConsole && s_bStdoutConsole )
    {
-      USHORT ch, value = 0, index = 0;
-
       hb_gt_pca_termOut( ( BYTE * ) "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
 
-      do
+#ifdef OS_UNIX_COMPATIBLE
       {
-         ch = getc( stdin );
-         if( isdigit( ch ) )
+         char rdbuf[ 64 ];
+         int i, n, y, x;
+         struct timeval tv;
+         fd_set rdfds;
+
+         FD_ZERO( &rdfds );
+         FD_SET( s_hFilenoStdin, &rdfds );
+         tv.tv_sec = 2;
+         tv.tv_usec = 0;
+
+         *iRow = *iCol = -1;
+         n = 0;
+         s_fIsAnswer = FALSE;
+
+         while( select( s_hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) > 0 )
          {
-            value = ( value * 10 ) + ( ch - '0' );
+            i = read( s_hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - 1 - n );
+            if( i <= 0 )
+               break;
+            n += i;
+            if( n >= 6 )
+            {
+               rdbuf[ n ] = '\0';
+               if( sscanf( rdbuf, "\033[%d;%dR", &y, &x ) == 2 )
+               {
+                  *iRow = y;
+                  *iCol = x;
+                  s_fIsAnswer = TRUE;
+                  break;
+               }
+            }
          }
-         else if( ch == ';' )
-         {
-            *iRow = value - 1;
-            value = 0;
-         }
+         if( !s_fIsAnswer )
+            *iRow = *iCol = -1;
       }
-      while( ch != 'R' && index < 10 );
-      *iCol = value - 1;
+#else
+      {
+         USHORT ch, value = 0, index = 0;
+         do
+         {
+            ch = getc( stdin );
+            if( isdigit( ch ) )
+            {
+               value = ( value * 10 ) + ( ch - '0' );
+            }
+            else if( ch == ';' )
+            {
+               *iRow = value - 1;
+               value = 0;
+            }
+         }
+         while( ch != 'R' && index < 10 );
+         *iCol = value - 1;
+         s_fIsAnswer = ch == 'R' && *iCol != -1 && *iRow != -1;
+      }
+#endif
    }
 }
 

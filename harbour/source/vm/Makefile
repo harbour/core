@@ -5,12 +5,17 @@
 ROOT = ../../
 
 ifeq ($(HB_ARCHITECTURE),w32)
-	C_MAIN := mainstd.c mainwin.c
+	ifeq ($(HB_COMPILER),mingw32)
+		C_MAIN = mainwin.c
+		DIRS = mainstd
+	else
+		C_MAIN = mainstd.c mainwin.c
+	endif
 else
 	ifeq ($(HB_ARCHITECTURE),os2)
-		C_MAIN := mainstd.c mainpm.c
+		C_MAIN = mainstd.c mainpm.c
 	else
-		C_MAIN := main.c
+		C_MAIN = main.c
 	endif
 endif
 
@@ -50,3 +55,6 @@ PRG_SOURCES=\
 LIBNAME=vm
 
 include $(TOP)$(ROOT)config/lib.cf
+ifneq ($(DIRS),)
+	include $(TOP)$(ROOT)config/dir.cf
+endif

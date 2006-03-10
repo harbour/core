@@ -662,20 +662,18 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    if( ( s_HInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
    {
-#ifdef HB_ALLOC_CONSOLE
-      AllocConsole(); /* It is a Windows app without a console, so we create one */
-      s_HInput = GetStdHandle( STD_INPUT_HANDLE );
-      if( s_HInput == INVALID_HANDLE_VALUE )
-      {
-         hb_errInternal( 10001, "Can't allocate console", "", "" );
-      }
-#else
-      if( hb_dynsymFindName( "__DBGENTRY" ) ) /* the debugger is linked */
+#ifdef HB_NO_ALLOC_CONSOLE
+      /* allocate console only when debugger is linked */
+      if( hb_dynsymFindName( "__DBGENTRY" ) )
+#endif
       {
          AllocConsole(); /* It is a Windows app without a console, so we create one */
          s_HInput = GetStdHandle( STD_INPUT_HANDLE );
       }
-#endif
+      if( s_HInput == INVALID_HANDLE_VALUE )
+      {
+         hb_errInternal( 10001, "Can't allocate console", "", "" );
+      }
    }
 
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -1558,7 +1556,7 @@ static void hb_gt_win_Tone( double dFrequency, double dDuration )
 
    /*
     * According to the Clipper NG, the duration in 'ticks' is truncated to the
-    * interger portion  ... Depending on the platform, xHarbour allows a finer
+    * interger portion  ... Depending on the platform, Harbour allows a finer
     * resolution, but the minimum is 1 tick (for compatibility)
     */
    /* Convert from ticks to seconds */

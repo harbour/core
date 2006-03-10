@@ -27,6 +27,10 @@ CC_OUT = -o
 CPPFLAGS = -I$($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP) -I$(_HB_INC_COMPILE)
 CFLAGS = -i48 -O2 -mh -d -DHB_LONG_LONG_OFF
 
+# BCC (at least version 3.1) requires that the output file be listed ahead of the input file
+CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_OUT)$(?F:.c=$(OBJ_EXT)) $(CC_IN) $?
+
+
 #Note: The empty line below HAVE TO exist!
 define link_file
 echo. $(file) >> __link__.tmp
@@ -36,7 +40,7 @@ endef
 
 define link_exe_file
 echo. $(LDFLAGS) -e$@ > __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))
 -$(LD) @__link__.tmp
 endef
@@ -79,7 +83,7 @@ endef
 
 define create_library
 echo. $@ &> __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 echo. ,, >> __lib__.tmp
 $(AR) $(ARFLAGS) @__lib__.tmp
 del __lib__.tmp

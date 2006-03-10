@@ -58,7 +58,7 @@ endef
 # in commmand line
 define create_library
 echo. CREATE $@ > __lib__.tmp
-$(foreach file, $^, $(lib_object))
+$(foreach file, $(^F), $(lib_object))
 echo. SAVE >> __lib__.tmp
 echo. END >> __lib__.tmp
 $(AR) $(ARFLAGS) -M < __lib__.tmp
@@ -72,7 +72,7 @@ endef
 
 define link_exe_file
 echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
-$(foreach file, $^, $(link_file))
+$(foreach file, $(^F), $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 echo. -Wl,--start-group >> __link__.tmp
 $(foreach file, $(LINKLIBS), $(link_file))

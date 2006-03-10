@@ -783,7 +783,7 @@ static int ParseIfdef( char * sLine, int usl )
 {
   char defname[ MAX_NAME ];
   DEFINES * stdef;
-  int len;
+  int len = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("ParseIfdef(%s, %d)", sLine, usl));
 

@@ -144,9 +144,13 @@ extern int hb_gt_crs_chrmapinit( int *piTransTbl, char *pszTerm );
 #define EVTFDSTAT_STOP	0x02
 #define EVTFDSTAT_DEL	0x03
 
-#define CTRL_SEQ	"\036"
-#define ALT_SEQ		"\037"
-//#define NATION_SEQ	"\016"
+#define CTRL_SEQ        "\036"
+#define ALT_SEQ         "\037"
+/*#define NATION_SEQ      "\016"*/
+
+#define MOUSE_NONE      0
+#define MOUSE_GPM       1
+#define MOUSE_XTERM     2
 
 #define K_UNDEF         0x10000
 #define K_METAALT       0x10001
