@@ -116,7 +116,7 @@ extern int    hb_pp_LastOutLine;
 extern BOOL   hb_pp_StreamBlock;
 extern BOOL   hb_pp_NestedLiteralString;
 extern BOOL   hb_pp_LiteralEscSeq;
-unsigned int  hb_pp_MaxTranslateCycles;
+extern unsigned int  hb_pp_MaxTranslateCycles;
 
 /* PPCOMP.C exported functions */
 

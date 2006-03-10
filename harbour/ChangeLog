@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+      Unfortunately MinGW always link main() function if it locate
+      it in libraries and ignores WinMain() what effectively makes
+      impossible to create Windows GUI programs if we have main() in
+      VM library. People who are using MinGW and wants to create only
+      pure console programs should now include mainstd library to linked
+      library list.
+
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/mainwin.c
+    + added two new functions: hb_winmainArgInit() and hb_winmainArgGet()
+      to set/retrieve WinMain() parameters.
 
 2006-03-10 12:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
     

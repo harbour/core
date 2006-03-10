@@ -131,6 +131,16 @@
  *
  *          Currently not supported in Harbour.   
  *
+ *      /r=<max>         sets maximum number of preprocessor iterations </par>
+ *      =================   </par>
+ *
+ *          This set the maximum number of preprocessor iterations
+ *          during processing the source code. If this switch is not 
+ *          used then the preprocessor stops after 1024 iterations.
+ *          This value is used to stop processing of infinite loops,
+ *          for example:
+ *          #command ( => (,7
+ *
  *      /s               syntax check only   </par>
  *      =================   </par>
  *
