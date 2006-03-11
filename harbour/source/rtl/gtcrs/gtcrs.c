@@ -1194,6 +1194,8 @@ static void disp_mousecursor( InOutBase * ioBase )
       Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
                        gpm_consolefd );
    }
+#else
+  HB_SYMBOL_UNUSED( ioBase );
 #endif
 }
 

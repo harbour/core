@@ -1005,7 +1005,7 @@ hb_xfree( (void *)mpatt );
     rlen = strotrim( rpatt, TRUE );
 
     ConvertPatterns( mpatt, mlen, rpatt, rlen );
-    mlen = RemoveSlash( mpatt );
+    RemoveSlash( mpatt );
     rlen = RemoveSlash( rpatt );
 
     if( com_or_tra )
@@ -1016,12 +1016,6 @@ hb_xfree( (void *)mpatt );
     stcmd->com_or_xcom = com_or_xcom;
     stcmd->mpatt = hb_strdup( mpatt );
     stcmd->value = ( rlen > 0 ) ? hb_strdup( rpatt ) : NULL;
-
-    /* JFL */
-    /*
-    printf( "Parsecommand Name: %s Pat: %s Val: %s\n", stcmd->name, stcmd->mpatt, stcmd->value );
-    */
-
   }
   else
   {

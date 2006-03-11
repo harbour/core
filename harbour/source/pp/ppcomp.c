@@ -198,8 +198,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
             lens -= rdlen;
             s_szLine[ lens ] = '\0';
             pp_StreamBlockFinish( );
-            lens =strlen( s_szLine );
-            lContinue = 0;
             break;
           }
           else

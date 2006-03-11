@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+  * harbour/source/rtl/gtcrs/gtcrs.c
+    * formatting
+    
+2006-03-13 11:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+  * source/compiler/cmdcheck.c
+    
+  * source/pp/pragma.c
     * fixed to force max recurse preprocessor passed bigger then 0
 
   * source/pp/ppcore.c
