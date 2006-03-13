@@ -1077,7 +1077,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
             {
               j++;
               while( cpatt[j] == ' ' || cpatt[j] == '\t' ) j++;
-              if( strchr( "*(!-{", cpatt[ j ] ) || ISNAME(cpatt[ j ]) )
+              if( strchr( "*(!-{.", cpatt[ j ] ) || ISNAME(cpatt[ j ]) )
               {
                 bOption = TRUE;
                 continue;
@@ -2403,6 +2403,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    int StBr1 = 0, StBr2 = 0, StBr3 = 0;
    BOOL rez = FALSE;
    BOOL bMacro = FALSE;
+   char *cStart = expreal;
 
    char cLastChar = '\0';
 
@@ -2813,13 +2814,10 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
       }
    }
 
-   if( expreal != NULL )
+   if( expreal != NULL && expreal > cStart )
    {
       if( *(expreal-1) == ' ' )
       {
-#if defined(HB_PP_DEBUG_MEMORY)
-         *(expreal-1) = ' ';
-#endif         
          expreal--;
          lens--;
       }

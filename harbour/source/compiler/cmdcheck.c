@@ -776,9 +776,9 @@ void hb_compChkEnvironVar( char * szSwitch )
                 if( *( s + 1 ) == '=' )
                 {
                   int iOverflow;
-                  HB_LONG lCycles = hb_strValInt( s + 2, &iOverflow );
-                  if( ! iOverflow )
-                     hb_pp_MaxTranslateCycles = lCycles;
+                  int iCycles = hb_strValInt( s + 2, &iOverflow );
+                  if( ! iOverflow && iCycles > 0 )
+                     hb_pp_MaxTranslateCycles = (unsigned int)iCycles;
                 }
                 else
                 {

@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+      hb_fsWrite() when trunc operation will be activated for non
+      real file handles in some systems
+
+  * harbour/source/rtl/errorint.c
+    * increased the error message buffer
+
+  * harbour/source/rtl/inkey.c
+    * fixed typo in comment
+
   * harbour/source/rtl/gtcrs/gtcrs.c
     * formatting
     

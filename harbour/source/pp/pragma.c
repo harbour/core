@@ -334,10 +334,13 @@ BOOL hb_pp_ParsePragma( char * szLine )
       else if( hb_strnicmp( szLine, "RECURSELEVEL", PRAGMAS_LEN ) == 0 )
       {
          int iOverflow;
+         int iMax;
          
-         hb_pp_MaxTranslateCycles = hb_strValInt( szLine, &iOverflow );
-         if( iOverflow )
+         iMax = hb_strValInt( szLine, &iOverflow );
+         if( iOverflow || iMax < 1 )
             hb_pp_MaxTranslateCycles = 1024;
+         else
+            hb_pp_MaxTranslateCycles = (unsigned int)iMax;
          DebugPragma( szLine, hb_pp_MaxTranslateCycles, FALSE );
       }
    }
