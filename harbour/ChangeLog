@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+      least one lang module defined at sartup.
+      Modified after common group agreement - no one was against,
+      thanks to all for answers.
+      Please update non GNU make files and remove
+      harbour/source/lang/msgen.c file.
+
+  * harbour/source/rtl/cdpapi.c
+    * replaced CDP startup initialization with simple assignment
+
+  * harbour/source/rtl/gtpca/gtpca.c
+    * added #include <sys/time.h> for *nix platforms
+
 2006-03-13 23:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     * respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL

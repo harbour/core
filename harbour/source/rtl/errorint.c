@@ -61,13 +61,25 @@
 void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 1024 ];
+   BOOL fLang;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
+   fLang = ( hb_langID() != NULL );
+
    hb_conOutErr( hb_conNewLine(), 0 );
-   sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+   if( fLang )
+      sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+   else
+      sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
+
    hb_conOutErr( buffer, 0 );
-   sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
+   if( szText )
+      sprintf( buffer, szText, szPar1, szPar2 );
+   else if( fLang )
+      sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
+   else
+      buffer[ 0 ] = '\0';
    hb_conOutErr( buffer, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 

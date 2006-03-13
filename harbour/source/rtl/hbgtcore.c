@@ -2822,6 +2822,12 @@ HB_EXPORT void hb_gtStartupInit( void )
    if( hb_gtLoad( s_defaultGT, &gtCoreFunc ) )
       return;
 
+   if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly requsted */
+   {
+      if( hb_gtLoad( "NUL", &gtCoreFunc ) )
+         return;
+   }
+
    hb_errInternal( 9998, "Internal error: screen driver initialization failure", "", "" );
 
    /* force linking HB_GTSYS() */
