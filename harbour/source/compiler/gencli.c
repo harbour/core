@@ -71,6 +71,10 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
    BOOL bIsStaticVariable ;
    BOOL bIsFirstFunction = TRUE;
 
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( pSym );
+   HB_SYMBOL_UNUSED( pInline );
+
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".il";
    hb_fsFNameMerge( szFileName, pFileName );
