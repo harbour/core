@@ -340,7 +340,7 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 #define hb_retds( szDate )                   hb_itemPutDS( hb_stackReturnItem(), szDate )
 #define hb_retd( iYear, iMonth, iDay )       hb_itemPutD( hb_stackReturnItem(), iYear, iMonth, iDay )
 #define hb_retdl( lJulian )                  hb_itemPutDL( hb_stackReturnItem(), lJulian )
-#define hb_retl( iLogical )                  hb_itemPutL( hb_stackReturnItem(), iLogical ? TRUE : FALSE )
+#define hb_retl( iLogical )                  hb_itemPutL( hb_stackReturnItem(), (iLogical) ? TRUE : FALSE )
 #define hb_retnd( dNumber )                  hb_itemPutND( hb_stackReturnItem(), dNumber )
 #define hb_retni( iNumber )                  hb_itemPutNI( hb_stackReturnItem(), iNumber )
 #define hb_retnl( lNumber )                  hb_itemPutNL( hb_stackReturnItem(), lNumber )

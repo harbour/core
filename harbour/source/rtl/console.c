@@ -207,7 +207,8 @@ void hb_conOutStd( const char * pStr, ULONG ulLen )
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-   hb_gtOutStd( ( BYTE * ) pStr, ulLen );
+   if( ulLen > 0 )
+      hb_gtOutStd( ( BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to STDERR */
@@ -218,7 +219,8 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-   hb_gtOutErr( ( BYTE * ) pStr, ulLen );
+   if( ulLen > 0 )
+      hb_gtOutErr( ( BYTE * ) pStr, ulLen );
 }
 
 /* Output an item to the screen and/or printer and/or alternate */

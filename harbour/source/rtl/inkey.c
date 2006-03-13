@@ -170,7 +170,7 @@ HB_EXPORT void hb_inkeyPut( int iKey )
    if( iKey == K_MOUSEMOVE )
    {
       /*
-       * Clipper dos not store in buffer repeated mouse movement
+       * Clipper does not store in buffer repeated mouse movement
        * IMHO it's good idea to reduce unnecessary inkey buffer
        * overloading so I also implemented it, [druzus]
        */

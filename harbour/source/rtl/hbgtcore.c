@@ -685,28 +685,34 @@ static BOOL hb_gt_def_Resume()
 
 static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )
 {
-   USHORT uiErrorOld;
+   if( ulLen )
+   {
+      USHORT uiErrorOld;
 
-   if( s_curGT )
-      hb_gt_PreExt();
-   uiErrorOld = hb_fsError();
-   hb_fsWriteLarge( s_hStdOut, ( BYTE * ) pbyStr, ulLen );
-   hb_fsSetError( uiErrorOld );
-   if( s_curGT )
-      hb_gt_PostExt();
+      if( s_curGT )
+         hb_gt_PreExt();
+      uiErrorOld = hb_fsError();
+      hb_fsWriteLarge( s_hStdOut, ( BYTE * ) pbyStr, ulLen );
+      hb_fsSetError( uiErrorOld );
+      if( s_curGT )
+         hb_gt_PostExt();
+   }
 }
 
 static void hb_gt_def_OutErr( BYTE * pbyStr, ULONG ulLen )
 {
-   USHORT uiErrorOld;
+   if( ulLen )
+   {
+      USHORT uiErrorOld;
 
-   if( s_curGT )
-      hb_gt_PreExt();
-   uiErrorOld = hb_fsError();
-   hb_fsWriteLarge( s_hStdErr, ( BYTE * ) pbyStr, ulLen );
-   hb_fsSetError( uiErrorOld );
-   if( s_curGT )
-      hb_gt_PostExt();
+      if( s_curGT )
+         hb_gt_PreExt();
+      uiErrorOld = hb_fsError();
+      hb_fsWriteLarge( s_hStdErr, ( BYTE * ) pbyStr, ulLen );
+      hb_fsSetError( uiErrorOld );
+      if( s_curGT )
+         hb_gt_PostExt();
+   }
 }
 
 static void hb_gt_def_Tone( double dFrequency, double dDuration )

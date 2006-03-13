@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+2006-03-13 23:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    * respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL
+      is linked
+
+  * harbour/source/rtl/errorint.c
+    ! fixed GPF when no lang module is register - I'll wait a while for
+      other people opinion and if no one will give good reason against
+      then I'll make EN language definition default part of langapi.c
+      what will resolve the problem of valid error description when no
+      language module is linked.
+
+2006-03-13 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    * fixed description in last commit. Should be HB_GTSYS() not GTSYS()
+
+  * harbour/include/hbapi.h
+    * fixed hb_retl() macro by adding missing parenthesis
+
+  * harbour/source/compiler/harbour.c
+    * removed unnecessary initialization to avoid BCC warning
+
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/hbgtcore.c
+    * do not call hb_gtOutStd()/hb_gtOutErr() when given string
+      has 0 length - it may cause unpredictable results in low level
       hb_fsWrite() when trunc operation will be activated for non
       real file handles in some systems
 
@@ -22,7 +48,6 @@
     
 2006-03-13 11:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
   * source/compiler/cmdcheck.c
-    
   * source/pp/pragma.c
     * fixed to force max recurse preprocessor passed bigger then 0
 
@@ -101,7 +126,7 @@
       programs.
 
   + harbour/source/rtl/gtwvt/Makefile
-         proc GTSYS()
+  + harbour/source/rtl/gtwvt/gtwvt.c
   + harbour/source/rtl/gtwvt/gtwvt.h
     + added new GT driver GTWVT - the core of this driver it's Peter Ress
       work in xHarbour. In Harbour GTWVT contains only pure GT code without
@@ -112,8 +137,8 @@
       Please update non GNU make files and test this GT in Windows.
       The programs which want to use GTWVT should be compiled as standard
       Windows GUI programs. GTWVT replaces window console code.
-      hb* scripts does not have to use GTSYS() in source code but can simply
-      use -gt<name> switch in hblnk and hbmk.
+      if you add to your code:
+         proc HB_GTSYS()
          request HB_GT_WIN
          request HB_GT_WVT
          return

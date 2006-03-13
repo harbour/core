@@ -1195,7 +1195,7 @@ static void disp_mousecursor( InOutBase * ioBase )
                        gpm_consolefd );
    }
 #else
-  HB_SYMBOL_UNUSED( ioBase );
+   HB_SYMBOL_UNUSED( ioBase );
 #endif
 }
 

@@ -501,7 +501,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 #ifdef HB_FM_STATISTICS
    PHB_MEMINFO pMemBlock;
    ULONG ulMemSize;
-   void * pResult = NULL;
+   void * pResult;
 
    if( ulSize == 0 )
    {
