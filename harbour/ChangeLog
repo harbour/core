@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
     * harbour/makefile.vc
+    * harbour/makefile64.nt
+    * harbour/makefile.bc  
+    * harbour/makefile.vc
+      - removed references to harbour/source/rtl/gtwin/mouseobj
+
+2006-03-16 09:00 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
+    * harbour/makefile.bc
+    * harbour/makefile.nt
+    * harbour/makefile.vc
+    * harbour/makefile64.nt
+      - removed entry for harbour/source/lang/msgen.c file.
+
+2006-03-16 05:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/lang/Makefile
+  - harbour/source/lang/msgen.c
+  * harbour/source/rtl/langapi.c
+    * moved EN lang definitions to core lang code so we always have at
       least one lang module defined at sartup.
       Modified after common group agreement - no one was against,
       thanks to all for answers.

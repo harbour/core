@@ -56,8 +56,6 @@
 
 #include "hbapicdp.h"
 
-#define HB_CDP_MAX_ 64
-
 #define NUMBER_OF_CHARS    256
 
 static USHORT uniCodes[NUMBER_OF_CHARS] = {
@@ -98,7 +96,10 @@ static USHORT uniCodes[NUMBER_OF_CHARS] = {
 HB_UNITABLE hb_uniTbl_437 = { CPID_437, NUMBER_OF_CHARS, FALSE, uniCodes };
 
 static HB_CODEPAGE  s_en_codepage = { "EN",CPID_437,UNITB_437,0,NULL,NULL,0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
-static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ];
+
+#define HB_CDP_MAX_ 64
+
+static PHB_CODEPAGE s_cdpList[ HB_CDP_MAX_ ] = { &s_en_codepage };
 PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
 
 
@@ -835,22 +836,5 @@ HB_FUNC( HB_TRANSLATE )
    else
       hb_retc( "" );
 }
-
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_EN )
-   hb_cdpRegister( &s_en_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_EN )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup hb_codepage_Init_EN
-#elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_EN = hb_codepage_Init_EN;
-   #pragma data_seg()
-#endif
 
 #endif /* HB_CDP_SUPPORT_OFF */
