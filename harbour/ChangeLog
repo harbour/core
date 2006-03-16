@@ -7,6 +7,12 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+      some typos in some of them which are very seldom used so your tests
+      will be very important.
+
+2006-03-19 03:43 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
+    * harbour/makefile.bc
+    * harbour/makefile.nt
     * harbour/makefile.vc
     * harbour/makefile64.nt
     * harbour/makefile.bc  

@@ -421,7 +421,6 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgdewin.obj \
    $(OBJ_DIR)\msgel.obj \
    $(OBJ_DIR)\msgelwin.obj \
-   $(OBJ_DIR)\msgen.obj \
    $(OBJ_DIR)\msgeo.obj \
    $(OBJ_DIR)\msges.obj \
    $(OBJ_DIR)\msgeswin.obj \
@@ -2267,10 +2266,6 @@ $(OBJ_DIR)\msgel.obj : $(LANG_DIR)\msgel.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgelwin.obj : $(LANG_DIR)\msgelwin.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
