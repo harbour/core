@@ -7,6 +7,15 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+      VHM PCODE, C code, .NET code, etc. but at this moment adding support
+      for .c compilation directly into compiler will make the compiler code
+      too much complicated for me - IMHO it's better to invest time into
+      clear separation to FRONT_END->REAL_COMPILER->BACK_END
+      Please make test with your code. I rebuild whole Harbour code with
+      -gc3 set in HB_FLAGS in harbour/config/rules.cf and all seems to
+      work correctly. hbtest returns exactly the same results.
+      I also made tests with my programs and they work correctly but
+    * harbour/makefile.bc  
       some typos in some of them which are very seldom used so your tests
       will be very important.
 

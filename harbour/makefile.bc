@@ -165,6 +165,7 @@ GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+GTWVT_LIB    = $(LIB_DIR)\gtwvt.lib 
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
@@ -200,7 +201,8 @@ HB_GT_LIBS = \
    $(GTCGI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
-   $(GTWIN_LIB)
+   $(GTWIN_LIB) \
+   $(GTWVT_LIB)  
 
 !if !$d(HB_GT_LIB)
    HB_GT_LIB = $(GTWIN_LIB)
@@ -698,6 +700,13 @@ GTWIN_LIB_OBJS = \
    $(OBJ_DIR)\gtwin.obj
 
 #
+# GTWVT.LIB rules
+#
+
+GTWVT_LIB_OBJS = \
+   $(OBJ_DIR)\gtwvt.obj 
+
+#
 # HARBOUR.EXE rules
 #
 
@@ -856,7 +865,7 @@ $(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
 $(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)  : $(GTSTD_LIB_OBJS)
 $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
-
+$(GTWVT_LIB)  : $(GTWVT_LIB_OBJS)
 #
 # COMMON.LIB dependencies
 #
@@ -2817,6 +2826,15 @@ $(OBJ_DIR)\gtstd.obj : $(RTL_DIR)\gtstd\gtstd.c
 $(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTWIN_LIB) $(ARFLAGS) -+$@,,
+
+#
+# GTWVT.LIB dependencies
+#
+
+$(OBJ_DIR)\gtwvt.obj : $(RTL_DIR)\gtwvt\gtwvt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTWVT_LIB) $(ARFLAGS) -+$@,,
+
 
 #
 # HBPP.EXE dependencies
