@@ -7,6 +7,11 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+   * source/pp/ppcore.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/hvm.c
+    * cleaned the code which created HB_ITEMs on C stack. Only three
+      places have to be update yet and array/clodeblock creation little
       bit modified and we will be able add automatic GC activation in
       hb_xgrab() or hb_gcAlloc().
 
