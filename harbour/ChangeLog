@@ -7,6 +7,11 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+      bit modified and we will be able add automatic GC activation in
+      hb_xgrab() or hb_gcAlloc().
+
+2006-03-21 13:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
     ! added missing void in hb_xvmActionRequest() declaration to avoid
       BCC warnings
 

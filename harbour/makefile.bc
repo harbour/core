@@ -719,9 +719,11 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\hbusage.obj \
    $(OBJ_DIR)\hbident.obj \
    $(OBJ_DIR)\hbgenerr.obj \
+   $(OBJ_DIR)\hblbl.obj \
    $(OBJ_DIR)\hbpcode.obj \
    $(OBJ_DIR)\hbfix.obj \
    $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\gencc.obj \
    $(OBJ_DIR)\gencli.obj \
    $(OBJ_DIR)\gencobj.obj \
    $(OBJ_DIR)\genobj32.obj \
@@ -966,9 +968,11 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    $(ECHO) $(OBJ_DIR)\hbusage.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbident.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbgenerr.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hblbl.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbpcode.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbfix.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\genc.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\gencc.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\gencli.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\gencobj.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\genobj32.obj >> make.tmp
@@ -1035,6 +1039,9 @@ $(OBJ_DIR)\hbident.obj : $(COMPILER_DIR)\hbident.c
 $(OBJ_DIR)\hbgenerr.obj : $(COMPILER_DIR)\hbgenerr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\hblbl.obj : $(COMPILER_DIR)\hblbl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\hbpcode.obj : $(COMPILER_DIR)\hbpcode.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
@@ -1042,6 +1049,9 @@ $(OBJ_DIR)\hbfix.obj : $(COMPILER_DIR)\hbfix.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genc.obj : $(COMPILER_DIR)\genc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\gencc.obj : $(COMPILER_DIR)\gencc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\gencli.obj : $(COMPILER_DIR)\gencli.c
