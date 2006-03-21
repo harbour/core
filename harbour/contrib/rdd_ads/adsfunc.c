@@ -2414,7 +2414,10 @@ HB_FUNC( ADSCHECKEXISTENCE )
 }
 
 
-// Function is not documented, but exists in ace32.dll  version 6.x, 7.x
+/* Function is not documented, but exists in ace32.dll  version 6.x, 7.x */
+#ifdef __cplusplus
+   extern "C"
+#endif
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8* pucFileName );
 
 HB_FUNC( ADSDELETEFILE )

@@ -154,16 +154,21 @@ static HB_FIX_FUNC( hb_p_modulename )
 
 static HB_FIX_FUNC( hb_p_poplocal )
 {
-   if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount != 0 )
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 )
    {
-      /* only local variables used outside of a codeblock need fixing
-       */
-      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
       iVar += pFunc->wParamCount;
       pVar[ 0 ] = HB_LOBYTE( iVar );
       pVar[ 1 ] = HB_HIBYTE( iVar );
+      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      {
+         pFunc->pCode[ lPCodePos ] = HB_P_POPLOCALNEAR;
+         hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
+      }
    }
 
    return 3;
@@ -171,16 +176,21 @@ static HB_FIX_FUNC( hb_p_poplocal )
 
 static HB_FIX_FUNC( hb_p_pushlocal )
 {
-   if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount != 0 )
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 )
    {
-      /* only local variables used outside of a codeblock need fixing
-       */
-      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
       iVar += pFunc->wParamCount;
       pVar[ 0 ] = HB_LOBYTE( iVar );
       pVar[ 1 ] = HB_HIBYTE( iVar );
+      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      {
+         pFunc->pCode[ lPCodePos ] = HB_P_PUSHLOCALNEAR;
+         hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
+      }
    }
 
    return 3;
@@ -188,11 +198,11 @@ static HB_FIX_FUNC( hb_p_pushlocal )
 
 static HB_FIX_FUNC( hb_p_pushlocalref )
 {
+   /* only local variables used outside of a codeblock need fixing
+    */
    if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount != 0 )
    {
-      /* only local variables used outside of a codeblock need fixing
-       */
-      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
+      BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
       iVar += pFunc->wParamCount;
@@ -205,56 +215,60 @@ static HB_FIX_FUNC( hb_p_pushlocalref )
 
 static HB_FIX_FUNC( hb_p_poplocalnear )
 {
-   if( cargo->iNestedCodeblock == 0 )
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount != 0 )
    {
-      /* only local variables used outside of a codeblock need fixing
+      /*
+       * this code should never be executed because compiler should
+       * generate only non size optimized HB_P_POPLOCAL pcodes
+       * for function body
        */
-      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
-      SHORT iVar = HB_PCODE_MKSHORT( pVar );
+      SHORT iVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
       iVar += pFunc->wParamCount;
-      pVar[ 0 ] = HB_LOBYTE( iVar );
-      pVar[ 1 ] = HB_HIBYTE( iVar );
-      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      pFunc->pCode[ lPCodePos + 1 ] = ( BYTE ) iVar;
+      if( !HB_LIM_INT8( iVar ) )
       {
-         hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
-      }
-      else
-      {
-         /* After fixing this variable cannot be accessed using near code
-          */
-         pFunc->pCode[ lPCodePos ] = HB_P_POPLOCAL;
+         char sTemp[16];
+         char sTemp2[16];
+
+         sprintf( sTemp, "%i", pFunc->wParamCount );
+         sprintf( sTemp2, "%i", iVar );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
-   return 3;
+   return 2;
 }
 
 static HB_FIX_FUNC( hb_p_pushlocalnear )
 {
-   if( cargo->iNestedCodeblock == 0 )
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount != 0 )
    {
-      /* only local variables used outside of a codeblock need fixing
+      /*
+       * this code should never be executed because compiler should
+       * generate only non size optimized HB_P_POPLOCAL pcodes
+       * for function body
        */
-      BYTE * pVar = &( pFunc->pCode[ lPCodePos + 1 ] );
-      SHORT iVar = HB_PCODE_MKSHORT( pVar );
+      SHORT iVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
       iVar += pFunc->wParamCount;
-      pVar[ 0 ] = HB_LOBYTE( iVar );
-      pVar[ 1 ] = HB_HIBYTE( iVar );
-      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      pFunc->pCode[ lPCodePos + 1 ] = ( BYTE ) iVar;
+      if( !HB_LIM_INT8( iVar ) )
       {
-         hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
-      }
-      else
-      {
-         /* After fixing this variable cannot be accessed using near code
-          */
-         pFunc->pCode[ lPCodePos ] = HB_P_PUSHLOCAL;
+         char sTemp[16];
+         char sTemp2[16];
+
+         sprintf( sTemp, "%i", pFunc->wParamCount );
+         sprintf( sTemp2, "%i", iVar );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
-   return 3;
+   return 2;
 }
 
 static HB_FIX_FUNC( hb_p_staticname )
@@ -271,16 +285,16 @@ static HB_FIX_FUNC( hb_p_staticname )
 
 static HB_FIX_FUNC( hb_p_localnearaddint )
 {
-   BYTE cVarId = pFunc->pCode[ lPCodePos + 1 ];
-   USHORT wNewId;
-
-   HB_SYMBOL_UNUSED( cargo );
-
-   if( pFunc->wParamCount )
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 && pFunc->wParamCount )
    {
-      if( ( wNewId = cVarId + pFunc->wParamCount ) < 256 )
+      USHORT uiVar = pFunc->pCode[ lPCodePos + 1 ];
+
+      uiVar += pFunc->wParamCount;
+      if( uiVar < 256 )
       {
-         pFunc->pCode[ lPCodePos + 1 ] = (BYTE) wNewId;
+         pFunc->pCode[ lPCodePos + 1 ] = ( BYTE ) uiVar;
       }
       else
       {
@@ -288,9 +302,9 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
          char sTemp[16];
          char sTemp2[16];
 
-         sprintf( (char *) sTemp, "%i", pFunc->wParamCount );
-         sprintf( (char *) sTemp2, "%i", wNewId );
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, (const char *) sTemp2, (const char *) sTemp );
+         sprintf( sTemp, "%i", pFunc->wParamCount );
+         sprintf( sTemp2, "%i", uiVar );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
@@ -349,8 +363,6 @@ static HB_FIX_FUNC( hb_p_false )
 
 static HB_FIX_FUNC( hb_p_true )
 {
-   HB_SYMBOL_UNUSED( cargo );
-
    if( cargo->iNestedCodeblock == 0 )
    {
       switch( pFunc->pCode[ lPCodePos + 1 ] )
@@ -398,6 +410,63 @@ static HB_FIX_FUNC( hb_p_true )
    return 1;
 }
 
+static HB_FIX_FUNC( hb_p_jumpfar )
+{
+   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   {
+      BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+      LONG lOffset = HB_PCODE_MKINT24( pAddr );
+      ULONG ulNewPos = lPCodePos + lOffset;
+
+      switch( pFunc->pCode[ ulNewPos ] )
+      {
+         case HB_P_JUMPFAR:
+            lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            HB_PUT_LE_UINT24( pAddr, lOffset );
+            break;
+      }
+   }
+   return 4;
+}
+
+static HB_FIX_FUNC( hb_p_jumpfalsefar )
+{
+   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   {
+      BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+      LONG lOffset = HB_PCODE_MKINT24( pAddr );
+      ULONG ulNewPos = lPCodePos + lOffset;
+
+      switch( pFunc->pCode[ ulNewPos ] )
+      {
+         case HB_P_JUMPFAR:
+            lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            HB_PUT_LE_UINT24( pAddr, lOffset );
+            break;
+      }
+   }
+   return 4;
+}
+
+static HB_FIX_FUNC( hb_p_jumptruefar )
+{
+   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   {
+      BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+      LONG lOffset = HB_PCODE_MKINT24( pAddr );
+      ULONG ulNewPos = lPCodePos + lOffset;
+
+      switch( pFunc->pCode[ ulNewPos ] )
+      {
+         case HB_P_JUMPFAR:
+            lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            HB_PUT_LE_UINT24( pAddr, lOffset );
+            break;
+      }
+   }
+   return 4;
+}
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -430,13 +499,13 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_INSTRING,             */
    NULL,                       /* HB_P_JUMPNEAR,             */
    NULL,                       /* HB_P_JUMP,                 */
-   NULL,                       /* HB_P_JUMPFAR,              */
+   hb_p_jumpfar,               /* HB_P_JUMPFAR,              */
    NULL,                       /* HB_P_JUMPFALSENEAR,        */
    NULL,                       /* HB_P_JUMPFALSE,            */
-   NULL,                       /* HB_P_JUMPFALSEFAR,         */
+   hb_p_jumpfalsefar,          /* HB_P_JUMPFALSEFAR,         */
    NULL,                       /* HB_P_JUMPTRUENEAR,         */
    NULL,                       /* HB_P_JUMPTRUE,             */
-   NULL,                       /* HB_P_JUMPTRUEFAR,          */
+   hb_p_jumptruefar,           /* HB_P_JUMPTRUEFAR,          */
    NULL,                       /* HB_P_LESSEQUAL,            */
    NULL,                       /* HB_P_LESS,                 */
    NULL,                       /* HB_P_LINE,                 */

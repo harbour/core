@@ -138,6 +138,7 @@ static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
 
 static BOOL    s_bSpecialKeyHandling;
+static BOOL    s_bAltKeyHandling;
 static DWORD   s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
 static BOOL    s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
 static USHORT  s_uiDispCount;
@@ -173,9 +174,10 @@ static INPUT_RECORD  s_irInBuf[ INPUT_BUFFER_LEN ];
 static BYTE          s_charTransRev[ 256 ];
 static BYTE          s_charTrans[ 256 ];
 static BYTE          s_keyTrans[ 256 ];
-static int           s_iRelCount;
-static int           s_mouseLast;  /* Last mouse button to be pressed                   */
+static int           s_altisdown = 0;
+static int           s_altnum = 0;
 
+static int           s_mouseLast;  /* Last mouse button to be pressed                   */
 static int           hb_mouse_iCol;
 static int           hb_mouse_iRow;
 
@@ -651,7 +653,7 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_uiDispCount = 0;
    s_usOldCurStyle = s_usCursorStyle = SC_NORMAL;
    s_bSpecialKeyHandling = FALSE;
-   s_iRelCount = 0;
+   s_bAltKeyHandling = TRUE;
 
    /* initialize code page translation */
    hb_gt_SetDispCP( NULL, NULL, FALSE );
@@ -877,152 +879,221 @@ static BOOL hb_gt_win_Resume()
 
 /* *********************************************************************** */
 
-static void Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey, int * pch )
+static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey, int ch )
 {
-//   if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState & ~ (LEFT_ALTENHANCED_KEY)
-//   {
-//      *paltisdown = 0;
-//   }
-//   else
+   if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
    {
-      if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+      /*
+         on Keydown, it better be the alt or a numpad key,
+         or bail out.
+      */
+      switch(wKey)
       {
-         /*
-            on Keydown, it better be the alt or a numpad key,
-            or bail out.
-         */
-         switch(wKey)
-         {
-            case 0x38:
-            case 0x47:
-            case 0x48:
-            case 0x49:
-            case 0x4b:
-            case 0x4c:
-            case 0x4d:
-            case 0x4f:
-            case 0x50:
-            case 0x51:
-            case 0x52:
-               break;
+         case 0x38:
+         case 0x47:
+         case 0x48:
+         case 0x49:
+         case 0x4b:
+         case 0x4c:
+         case 0x4d:
+         case 0x4f:
+         case 0x50:
+         case 0x51:
+         case 0x52:
+            break;
 
-            default:
-               *paltisdown=0;
-               break;
-         }
-      }
-      else
-      {
-         /* Keypad handling is done during Key up */
-
-         unsigned short nm = 10;
-
-         switch(wKey)
-         {
-            case 0x38:
-               /* Alt key ... */
-#if 0
-		printf( " the state %ld ",s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
-#endif
-
-               if ((s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
-                  0x04000000 ))
-               /* ... has been released after a numpad entry */
-               {
-                  *pch = *paltnum & 0xff;
-                  ++s_cNumIndex;
-               }
-               else
-               /* ... has been released after no numpad entry */
-               {
-                  s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown = 1;
-               }
-               *paltisdown = *paltnum = 0;
-               break;
-
-            case 0x52: --nm;
-            case 0x4f: --nm;
-            case 0x50: --nm;
-            case 0x51: --nm;
-            case 0x4b: --nm;
-            case 0x4c: --nm;
-            case 0x4d: --nm;
-            case 0x47: --nm;
-            case 0x48: --nm;
-            case 0x49: --nm;
-               *paltnum = ((*paltnum * 10) & 0xff) + nm;
-               break;
-
-            default:
-               *paltisdown=0;
-               break;
-         }
+         default:
+            *paltisdown=0;
+            break;
       }
    }
+   else
+   {
+      /* Keypad handling is done during Key up */
+
+      unsigned short nm = 10;
+
+      switch(wKey)
+      {
+         case 0x38:
+            /* Alt key ... */
+#if 0
+            printf( " the state %ld ",s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
+#endif
+
+            if ((s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
+               0x04000000 ))
+            /* ... has been released after a numpad entry */
+            {
+               ch = *paltnum & 0xff;
+               ++s_cNumIndex;
+            }
+            else
+            /* ... has been released after no numpad entry */
+            {
+               s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown = 1;
+            }
+            *paltisdown = *paltnum = 0;
+            break;
+
+         case 0x52: --nm;
+         case 0x4f: --nm;
+         case 0x50: --nm;
+         case 0x51: --nm;
+         case 0x4b: --nm;
+         case 0x4c: --nm;
+         case 0x4d: --nm;
+         case 0x47: --nm;
+         case 0x48: --nm;
+         case 0x49: --nm;
+            *paltnum = ((*paltnum * 10) & 0xff) + nm;
+            break;
+
+         default:
+            *paltisdown = 0;
+            break;
+      }
+   }
+   return ch;
 }
 
-static int SpecialHandling( WORD * wChar, int wKey, int ch )
+static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, BOOL lReverse )
 {
-   switch (wKey)
+   if( lReverse )
    {
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-         *wChar = ch = wKey + 47;
-         break;
+      switch (wKey)
+      {
+         case 2:           /* 1 to 9 */
+         case 3:
+         case 4:
+         case 5:
+         case 6:
+         case 7:
+         case 8:
+         case 9:
+         case 10:
+            ch = wKey + 31;
+            break;
 
-      case 11:          // 0
-         *wChar = ch = 48;
-         break;
+         case 11:          /* 0 */
+            ch = 41;
+            break;
 
-      case 12:          // -
-         ch = 45;
-         break;
+         case 12:          /* - */
+            ch = 95;
+            break;
 
-      case 13:          // =
-         *wChar = ch = 61;
-         break;
+         case 13:          /* = */
+            ch = 43;
+            break;
 
-      case 26:          // [
-         *wChar = ch = 91;
-         break;
+         case 26:          /* [ */
+            ch = 123;
+            break;
 
-      case 27:          // ]
-         *wChar = ch = 93;
-         break;
+         case 27:          /* ] */
+            ch = 125;
+            break;
 
-      case 39:          // ;
-         *wChar = ch = 59;
-         break;
+         case 39:          /* ; */
+            ch = 58;
+            break;
 
-      case 40:          // '
-         ch = 39;
-         break;
+         case 40:          /* ' */
+            ch = 34;
+            break;
 
-      case 41:          // `
-         *wChar = ch = 96;
-         break;
+         case 41:          /* ` */
+            ch = 126;
+            break;
 
-      case 43:          // \ //
-         *wChar = ch = 92;
-         break;
+         case 43:          /* \  */
+            ch = 124;
+            break;
 
-      case 51:          // ,
-         *wChar = ch = 44;
-         break;
+         case 51:          /* , */
+            ch = 60;
+            break;
 
-      case 52:          // .
-         *wChar = ch = 46;
-         break;
+         case 52:          /* . */
+            ch = 62;
+            break;
 
-      default:
-         break;
+         case 53:          /* / */
+            ch = 63;
+            break;
+
+         default:
+            break;
+      }
+   }
+   else
+   {
+      switch (wKey)
+      {
+         case 2:           /* 1 to 9 */
+         case 3:
+         case 4:
+         case 5:
+         case 6:
+         case 7:
+         case 8:
+         case 9:
+         case 10:
+            *wChar = ch = wKey + 47;
+            break;
+
+         case 11:          /* 0 */
+            *wChar = ch = 48;
+            break;
+
+         case 12:          /* - */
+            ch = 45;
+            break;
+
+         case 13:          /* = */
+            *wChar = ch = 61;
+            break;
+
+         case 26:          /* [ */
+            *wChar = ch = 91;
+            break;
+
+         case 27:          /* ] */
+            *wChar = ch = 93;
+            break;
+
+         case 39:          /* ; */
+            *wChar = ch = 59;
+            break;
+
+         case 40:          /* ' */
+            ch = 39;
+            break;
+
+         case 41:          /* ` */
+            *wChar = ch = 96;
+            break;
+
+         case 43:          /* \ */
+            *wChar = ch = 92;
+            break;
+
+         case 51:          /* , */
+            *wChar = ch = 44;
+            break;
+
+         case 52:          /* . */
+            *wChar = ch = 46;
+            break;
+
+         case 53:          /* / */
+            ch = 47;
+            break;
+
+         default:
+            break;
+      }
    }
    return ch;
 }
@@ -1045,64 +1116,57 @@ static int hb_gt_win_ReadKey( int iEventMask )
    /* Check for events only when the event buffer is exhausted. */
    else if( s_wRepeated == 0 && s_cNumRead <= s_cNumIndex )
    {
-      int altisdown = 0;
-      int altnum = 0;
-
       /* Check for keyboard input */
-      do
+
+      s_cNumRead = 0;
+      GetNumberOfConsoleInputEvents( s_HInput, &s_cNumRead );
+
+      if( s_cNumRead )
       {
-         if( ++s_iRelCount > 100 )
+         /* Read keyboard input */
+         ReadConsoleInput( s_HInput,          /* input buffer handle   */
+                           s_irInBuf,         /* buffer to read into   */
+                           INPUT_BUFFER_LEN,  /* size of read buffer   */
+                           &s_cNumRead);      /* number of records read */
+         /* Set up to process the first input event */
+         s_cNumIndex = 0;
+
+         if ( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
          {
-            s_iRelCount = 0;
-            hb_idleSleep( 0.01 );
-         }
-
-         s_cNumRead = 0;
-         GetNumberOfConsoleInputEvents( s_HInput, &s_cNumRead );
-
-         if( s_cNumRead )
-         {
-            /* Read keyboard input */
-            ReadConsoleInput( s_HInput,          /* input buffer handle   */
-                              s_irInBuf,         /* buffer to read into   */
-                              INPUT_BUFFER_LEN,  /* size of read buffer   */
-                              &s_cNumRead);      /* number of records read */
-            /* Set up to process the first input event */
-            s_cNumIndex = 0;
-
-            if ( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
-            {
-               unsigned short wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+            unsigned short wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
 
 #if 0
-               if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
-               {
-                  printf("\n scan %ld key %ld char %ld state %ld alt %d %d %d %d",
-                         wKey, /* scan code */
-                         s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode,  /* key code */
-                         s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar,  /* char */
-                         s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState, /* state */
-                         altisdown, s_wRepeated, s_cNumRead, s_cNumIndex);
-               }
+            if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+            {
+               printf("\n scan %ld key %ld char %ld state %ld alt %d %d %d %d %d",
+                      wKey, /* scan code */
+                      s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode,  /* key code */
+                      s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar,  /* char */
+                      s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState, /* state */
+                      s_altisdown, s_wRepeated, s_cNumRead, s_cNumIndex, (int) s_bAltKeyHandling);
+            }
 #endif
-               if( altisdown )
+            if( s_bAltKeyHandling )
+            {
+               if( s_altisdown )
                {
-                  Handle_Alt_Key( &altisdown, &altnum, wKey, &ch );
+                  ch = Handle_Alt_Key( &s_altisdown, &s_altnum, wKey, ch );
                }
                else
                {
-//                if ( wKey == 0x38 &&
-//                     s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
                   if ( wKey == 0x38 &&
                        s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown &&
-                       s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState & ((RIGHT_ALT_PRESSED | LEFT_ALT_PRESSED) & !(LEFT_CTRL_PRESSED) ))
+                       (s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState 
+                         & NUMLOCK_ON )
+                         & ( (RIGHT_ALT_PRESSED | LEFT_ALT_PRESSED ) | NUMLOCK_ON )
+                         & ~(LEFT_CTRL_PRESSED) )
                   {
-                     altisdown = 1;
+                     s_altisdown = 1;
                   }
                }
             }
          }
-      } while (altisdown);
+      }
    }
 
    /* Only process one keyboard event at a time. */
@@ -1147,8 +1211,12 @@ static int hb_gt_win_ReadKey( int iEventMask )
              *
              */
 
-            if ( s_bSpecialKeyHandling )
-               ch = SpecialHandling( &wChar, wKey, ch );
+            if ( s_bSpecialKeyHandling &&
+                 ( dwState & CAPSLOCK_ON ) && 
+                 s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS ) 
+            {
+               ch = SpecialHandling( &wChar, wKey, ch, (dwState & SHIFT_PRESSED) );
+            }
 
             if ( s_wRepeated == 0 )
             {
@@ -1734,6 +1802,12 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bSpecialKeyHandling );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case GTI_KBDALT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bAltKeyHandling );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
       default:

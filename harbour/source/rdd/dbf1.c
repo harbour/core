@@ -2437,6 +2437,15 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutNL( pItem, pArea->ulNumLocksPos );
          break;
 
+      case DBI_LOCKOFFSET:
+      {
+         HB_FOFFSET ulPos, ulPool;
+
+         hb_dbfLockIdxGetData( pArea->bLockType, &ulPos, &ulPool );
+         hb_itemPutNInt( pItem, ulPos );
+         break;
+      }
+
       case DBI_LOCKSCHEME:
       {
          SHORT bScheme = hb_itemGetNI( pItem );

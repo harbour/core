@@ -71,7 +71,18 @@
 #define GTI_DESKTOPDEPTH       8  /* Amount of bits used for colors in system */
 #define GTI_COMPATBUFFER       9  /* Use DOS CGA/EGA/VGA character/attribute buffer in SAVE/REST SCREEN */
 #define GTI_KBDSHIFTS         10  /* Keyboard shift/ctrl/alt, caps/num/scroll & winkeys state */
-#define GTI_KBDSPECIAL        11  /* Keyboard special handling (now for Win98 Caps lock issue) */
+#define GTI_KBDSPECIAL        11  /* This will get/set the status of the top row
+                                     shift state handling. Enable to correct a
+                                     documented keyboard handling bug under Win9x.
+                                     Enable if the caps-lock key affects the top
+                                     row keys.  (Alternate language keys are not
+                                     handled properly by this temporary fix.
+                                     Default is disabled.
+                                   */
+#define GTI_KBDALT            12  /* This will get/set the status of the alt-numpad
+                                     key handling.
+                                     Default is Enabled.
+                                   */
 #define GTI_CLIPBOARDDATA     15  /* Get/Set clipboard */
 #define GTI_CLIPBOARDPAST     16  /* Paste clipboard data into keyboard buffer */
 #define GTI_CURSORBLINKRATE   19  /* Get/Set cursor blinking rate in milliseconds */

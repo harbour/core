@@ -68,10 +68,10 @@
  * Note: pLocalPosTable cannot be used if uiLocals is ZERO
  *
  */
-HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
-            USHORT uiLocals,
-            BYTE * pLocalPosTable,
-            PHB_SYMB pSymbols )
+HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
+                                  USHORT uiLocals,
+                                  const BYTE * pLocalPosTable,
+                                  PHB_SYMB pSymbols )
 {
    HB_CODEBLOCK_PTR pCBlock;
 
@@ -156,7 +156,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
     * The only allowed operation on a codeblock is evaluating it then
     * there is no need to duplicate its pcode - just store the pointer to it
     */
-   pCBlock->pCode     = pBuffer;
+   pCBlock->pCode     = ( BYTE * ) pBuffer;
    pCBlock->dynBuffer = FALSE;
 
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;

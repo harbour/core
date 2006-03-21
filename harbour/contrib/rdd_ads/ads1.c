@@ -1048,86 +1048,68 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    else
    {
       ERRCODE errCode = SUCCESS;
+      LONG lSkipper;
 
-      pArea->fTop = pArea->fBottom = FALSE;
-
-      if( lToSkip > 0 )
+      if( !pArea->fPositioned && lToSkip < 0 )
       {
-         if( !pArea->fPositioned )
-         {
-            errCode = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo );
-         }
-         else
-         {
-            pArea->fEof = FALSE;
-         }
+         errCode = SELF_GOBOTTOM( ( AREAP ) pArea );
+         ++lToSkip;
+      }
 
-         // Tony Bretado <jabrecer@yahoo.com> 10/26/2005    1:47PM
+      if( !pArea->fPositioned )
+      {
+         if( lToSkip > 0 )
+            pArea->fEof = TRUE;
+         else
+            pArea->fBof = TRUE;
+      }
+      else if( lToSkip )
+      {
+         pArea->fTop = pArea->fBottom = FALSE;
+
+         /*
+          * This causes that skip id done on the server side but it
+          * may cause bad side effect - in multiple skip ADS respects
+          * only index keys and bitmap filter so it may skip differ
+          * number of records then we asked, [druzus]
+          */
          if( pArea->dbfi.itmCobExpr == NULL || pArea->dbfi.fOptimized )
          {
-//            MessageBox(0, "Down-Optimized", "Filter", 0);   // This line for testing only
-            AdsSkip( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
-            hb_adsUpdateAreaFlags( pArea );
-            /* Force relational movement in child WorkAreas */
-            if( pArea->lpdbRelations )
-               SELF_SYNCCHILDREN( ( AREAP ) pArea );
-            errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lToSkip );
+            lSkipper = lToSkip;
          }
          else
          {
-//            MessageBox(0, "Down-Not Optimized", "Filter", 0);   // This line for testing only
-            while( errCode == SUCCESS && !pArea->fEof && lToSkip-- )
+            lSkipper = lToSkip < 0 ? -1 : 1;
+         }
+
+         if( lToSkip > 0 )
+         {
+            while( errCode == SUCCESS && !pArea->fEof && lToSkip )
             {
-               AdsSkip( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, 1 );
+               AdsSkip( ( pArea->hOrdCurrent ) ? pArea->hOrdCurrent : pArea->hTable, lSkipper );
                hb_adsUpdateAreaFlags( pArea );
                /* Force relational movement in child WorkAreas */
                if( pArea->lpdbRelations )
                   SELF_SYNCCHILDREN( ( AREAP ) pArea );
-               errCode = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+               errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lSkipper );
+               lToSkip -= lSkipper;
             }
-         }
-
-         pArea->fBof = FALSE;
-      }
-      else
-      {
-         if( !pArea->fPositioned )
-         {
-            errCode = SELF_GOBOTTOM( ( AREAP ) pArea );
-            pArea->fBottom = FALSE;
-            ++lToSkip;
-         }
-         else
-         {
             pArea->fBof = FALSE;
          }
-
-         // Tony Bretado <jabrecer@yahoo.com> 10/26/2005    1:47PM
-         if( pArea->dbfi.itmCobExpr == NULL || pArea->dbfi.fOptimized )
-         {
-//            MessageBox(0, "Up-Optimized", "Filter", 0);   // This line for testing only
-            AdsSkip( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lToSkip );
-            hb_adsUpdateAreaFlags( pArea );
-            /* Force relational movement in child WorkAreas */
-            if( pArea->lpdbRelations )
-               SELF_SYNCCHILDREN( ( AREAP ) pArea );
-            errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lToSkip );
-         }
          else
          {
-//            MessageBox(0, "Up-Not Optimized", "Filter", 0);  // This line for testing only
-            while( errCode == SUCCESS && !pArea->fBof && lToSkip++ )
+            while( errCode == SUCCESS && !pArea->fBof && lToSkip )
             {
-               AdsSkip( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, -1 );
+               AdsSkip( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable, lSkipper );
                hb_adsUpdateAreaFlags( pArea );
                /* Force relational movement in child WorkAreas */
                if( pArea->lpdbRelations )
                   SELF_SYNCCHILDREN( ( AREAP ) pArea );
-               errCode = SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
+               errCode = SELF_SKIPFILTER( ( AREAP ) pArea, lSkipper );
+               lToSkip -= lSkipper;
             }
+            pArea->fEof = FALSE;
          }
-
-         pArea->fEof = FALSE;
       }
 
       return errCode;

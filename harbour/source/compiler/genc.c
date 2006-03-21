@@ -31,6 +31,8 @@
 #include "hbcomp.h"
 #include "hbdate.h"
 
+extern void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc );
+
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCFunc( FILE *yyc, char *cDecor, char *szName, int iStrip );
@@ -88,7 +90,12 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fprintf( yyc, "#include \"hbvmpub.h\"\n" );
       if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
          fprintf( yyc, "#include \"hbpcode.h\"\n" );
-      fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
+      fprintf( yyc, "#include \"hbinit.h\"\n" );
+
+      if( hb_comp_iGenCOutput == HB_COMPGENC_REALCODE )
+         fprintf( yyc, "#include \"hbxvm.h\"\n" );
+
+      fprintf( yyc, "\n\n" );
 
       if( ! hb_comp_bStartProc )
          pFunc = pFunc->pNext; /* No implicit starting procedure */
@@ -253,16 +260,19 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          else
             fprintf( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName );
 
-         fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
-
-         if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
-            hb_compGenCCompact( pFunc, yyc );
+         fprintf( yyc, "\n" );
+         if( hb_comp_iGenCOutput == HB_COMPGENC_REALCODE )
+         {
+            hb_compGenCRealCode( pFunc, yyc );
+         }
          else
-            hb_compGenCReadable( pFunc, yyc );
-
-         fprintf( yyc, "   };\n\n" );
-
-         fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
+         {
+            if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
+               hb_compGenCCompact( pFunc, yyc );
+            else
+               hb_compGenCReadable( pFunc, yyc );
+         }
+         fprintf( yyc, "\n" );
          pFunc = pFunc->pNext;
       }
 
@@ -521,11 +531,8 @@ static HB_GENC_FUNC( hb_p_function )
 
 static HB_GENC_FUNC( hb_p_functionshort )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-
    fprintf( cargo->yyc, "\tHB_P_FUNCTIONSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   return 1;
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_arraygen )
@@ -1249,7 +1256,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    if( cargo->bVerbose )
    {
       fprintf( cargo->yyc, "\t/* %.*f, %d, %d */",
-      *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
+      *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] ) ),
       HB_PCODE_MKDOUBLE( &( pFunc->pCode[ lPCodePos ] ) ),
       *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
       *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) + sizeof( BYTE ) ] ) ) );
@@ -1818,7 +1825,7 @@ static HB_GENC_FUNC( hb_p_switch )
 
    if( cargo->bVerbose )
    {
-      fprintf( cargo->yyc, "\t/* %i*/", HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 2 ] ) ) );
+      fprintf( cargo->yyc, "\t/* %i*/", HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
    }
 
    fprintf( cargo->yyc, "\n" );
@@ -2104,10 +2111,13 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
    genc_info.bVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
    genc_info.yyc = yyc;
 
+   fprintf( yyc, "{\n   static const BYTE pcode[] =\n   {\n" );
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
       fprintf( yyc, "/* %05li */\n", pFunc->lPCodePos );
+   fprintf( yyc, "   };\n\n" );
+   fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n" );
 }
 
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
@@ -2115,10 +2125,9 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
    ULONG lPCodePos = 0;
    int nChar;
 
-   fprintf( yyc, "\t" );
+   fprintf( yyc, "{\n   static const BYTE pcode[] =\n   {\n\t" );
 
    nChar = 0;
-
    while( lPCodePos < pFunc->lPCodePos )
    {
       ++nChar;
@@ -2138,4 +2147,7 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
 
    if( nChar != 0)
       fprintf( yyc, "\n" );
+
+   fprintf( yyc, "   };\n\n" );
+   fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n" );
 }

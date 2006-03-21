@@ -7,6 +7,139 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+    ! added missing void in hb_xvmActionRequest() declaration to avoid
+      BCC warnings
+
+    * harbour/makefile.bc  
+    * harbour/source/vm/hvm.c
+      + missing declaration for hb_xvmActionRequest added
+
+2006-03-21 03:17 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
+    * harbour/makefile.bc
+      added referenced to:
+         harbour/source/compiler/gencc.c
+         harbour/source/compiler/hblbl.c
+
+2006-03-21 02:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gnu.bat
+  * harbour/make_gnu.cmd
+  * harbour/make_gnu.sh
+    * added information about GTWVT to GT description for Windows
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/source/rdd/dbf1.c
+    * synced with xHarbour
+
+  * harbour/source/rtl/console.c
+    ! fixed PROW() updating to be Clipper compatible when row number
+      exceed 16bit integer value
+
+  * harbour/source/rtl/filesys.c
+    ! fixed possible GPF when hb_fsCurDirBuff()
+
+  * harbour/source/rtl/str.c
+  * harbour/source/rtl/strzero.c
+    * minor optimizations
+
+  * harbour/source/rtl/strpeek.c
+    ! fixed accessing the last character in STRPEEK() and STRPOKE()
+
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/gtwin/gtwin.c
+    + synced with recent xHarbour modifications
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * cleaned BCC warning
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/codebloc.c
+    * declare BYTE * passed to hb_codeblockNew() as const
+
+  * harbour/include/hbpcode.h
+    ! fixed the PCODE numbers in PCODE description, 122 was repeated for
+      two different PCODEs: HB_P_ONE and HB_P_MACROLIST
+
+  * harbour/source/compiler/genc.c
+    ! fixed hb_p_functionshort pcode size returned by genc function
+    ! fixed double value presented in verbose genc mode for HB_P_PUSHDOUBLE
+    ! fixed number of cases presented in verbose genc mode for HB_P_SWITCH
+
+  * harbour/source/compiler/hbdead.c
+    + added support for dead code elimination in functions which uses
+      SWITCH ...; CASE ...; ...; END syntax
+
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/hbfix.c
+    ! fixed optimization for HB_P_PUSHLOCALNEAR and HB_P_POPLOCALNEAR.
+      It was a long existing bug not reported so far because 0, 1 and 2
+      PCODEs uses only one BYTE and bad PCODE tracing in hbfix.c didn't
+      caused bad side effects as long as number of locals in function
+      was smaller then 768. Now for functions HB_P_PUSHLOCAL and
+      HB_P_POPLOCAL is used and later changed to NEAR version in hbfix.c
+      if possible.
+
+  * harbour/source/compiler/hbfix.c
+    * join sequential jumps to optimize constructions like:
+         while ...
+            ...
+            if ...
+               exit
+            endif
+         enddo
+
+  * harbour/source/compiler/hbdead.c
+    * remove HB_P_END PCODE also at the and of function if is repeated
+      just before, f.e. in code like (source/rtl/color53.prg):
+         Function RADGRDEFCO( cColor )
+            if isdefcolor()
+               Return applydefau( cColor, "W/N", "W/N", "W+/N")
+            Else
+               Return applydefau( cColor, 3, 1, 4)
+            endif
+         Return nil
+      Now such redundant constructions like above are fully stripped by
+      compiler anyhow if someone has time and think is important then can
+      clean also this .prg code.
+
+
+  * harbour/include/Makefile
+  * harbour/include/hbcomp.h
+  + harbour/include/hbxvm.h
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/genc.c
+  + harbour/source/compiler/gencc.c
+  + harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/vm/hvm.c
+    + added support for generating real C code not PCODE in .c files.
+      Now with  -gc3 Harbour will generate .c files with real .c code
+      which is later compiled to real machine code.
+      I left PCODE only for code block definitions though it's also
+      possible to have even code block compiled to machine code but
+      we will have to add a flag to codeblock structure which will
+      be checked at runtime and proper method of execution in EVAL
+      will be chosen. If you think it's worth of afford then I can
+      add it too in some spare time.
+      The final binaries are noticable longer then the one which has
+      only PCODE but they are faster. The speed improvement depends
+      on type of operations. The pure Clipper code which does not
+      execute any external time consuming C functions compiled with
+      -gc3 is from 10% to 50% faster.
+      The side effect of generating pure machine code is also harder
+      recompilation but it does not mean that is impossible. If sth
+      can be executed by some machines (virtual or hardware) then it
+      can always be decompiled by definition.
+      This modification opens door for farther optimization, f.e. when
+      we will have fully working strong type support then we can add
+      using native .c types.
+      In fact this module is PCODE to .c translater not part of compiler
+      and can be used as separate module to translate generated PCODE,
+      f.e. .hrb files.
+      Maybe in the future we will change the compiler to generate meta
+      code not directly PCODE and it will be possible to make optimizations
+      on this meta code which will depend on selected output type:
       VHM PCODE, C code, .NET code, etc. but at this moment adding support
       for .c compilation directly into compiler will make the compiler code
       too much complicated for me - IMHO it's better to invest time into

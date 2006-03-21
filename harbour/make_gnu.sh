@@ -165,6 +165,7 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - gtstd (Standard streaming) (for all architectures)"
    echo "      - gtdos (DOS console)        (for dos architecture)"
    echo "      - gtwin (Win32 console)      (for w32 architecture)"
+   echo "      - gtwvt (Win32 win console)  (for w32 architecture)"
    echo "      - gtos2 (OS/2 console)       (for os2 architecture)"
    echo "      - gtpca (PC ANSI console)    (for all architectures)"
    echo "      - gtcrs (Curses console)     (for linux, w32 architectures)"

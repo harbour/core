@@ -253,6 +253,18 @@ typedef struct _AUTOOPEN
    struct _AUTOOPEN * pNext;
 } AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
 
+typedef struct _HB_LABEL_INFO
+{
+   FILE   * yyc;
+   BOOL     fVerbose;
+   BOOL     fSetSeqBegin;
+   BOOL     fCondJump;
+   BOOL     fForEach;
+   BOOL     fSequence;
+   BOOL     fEndProc;
+   ULONG *  pulLabels;
+} HB_LABEL_INFO, * PHB_LABEL_INFO;
+
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
 #define HB_PCODE_FUNC( func, type ) ULONG func( PFUNCTION pFunc, ULONG lPCodePos, type cargo )
@@ -261,6 +273,8 @@ typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
 extern void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
+
+extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 
 #define VS_NONE       0
 #define VS_LOCAL      1
@@ -583,6 +597,7 @@ extern FILE           *hb_comp_errFile;
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
 #define HB_COMPGENC_VERBOSE     2
+#define HB_COMPGENC_REALCODE    3
 
 /* /ES command line setting types */
 #define HB_EXITLEVEL_DEFAULT    0

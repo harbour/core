@@ -193,29 +193,29 @@ typedef enum
    HB_P_TRUE,                  /* 120 pushes true on the virtual machine stack */
    HB_P_ZERO,                  /* 121 places a ZERO on the virtual machine stack */
    HB_P_ONE,                   /* 122 places a ONE on the virtual machine stack */
-   HB_P_MACROLIST,             /* 122 HB_P_MACROPUSHLIST envelope start. */
-   HB_P_MACROLISTEND,          /* 123 HB_P_MACROPUSHLIST envelope end. */
-   HB_P_MPUSHSTR,              /* 124 Macro compiled pushed string */
-   HB_P_LOCALNEARADDINT,       /* 125 Add/Subtract specified int into specified local without using the stack. */
-   HB_P_MACROPUSHREF,          /* 126 Reference to macro variable @&mvar */
-   HB_P_PUSHLONGLONG,          /* 127 places an integer number on the virtual machine stack */
-   HB_P_ENUMSTART,             /* 128 Start of FOR EACH loop */
-   HB_P_ENUMNEXT,              /* 129 Next item of FOR EACH loop  */
-   HB_P_ENUMPREV,              /* 130 Previous item of FOR EACH loop  */
-   HB_P_ENUMEND,               /* 131 End of FOR EACH loop */
-   HB_P_SWITCH,                /* 132 SWITCH using long values */
-   HB_P_PUSHDATE,              /* 133 places a data constant value on the virtual machine stack */
+   HB_P_MACROLIST,             /* 123 HB_P_MACROPUSHLIST envelope start. */
+   HB_P_MACROLISTEND,          /* 124 HB_P_MACROPUSHLIST envelope end. */
+   HB_P_MPUSHSTR,              /* 125 Macro compiled pushed string */
+   HB_P_LOCALNEARADDINT,       /* 126 Add/Subtract specified int into specified local without using the stack. */
+   HB_P_MACROPUSHREF,          /* 127 Reference to macro variable @&mvar */
+   HB_P_PUSHLONGLONG,          /* 128 places an integer number on the virtual machine stack */
+   HB_P_ENUMSTART,             /* 129 Start of FOR EACH loop */
+   HB_P_ENUMNEXT,              /* 130 Next item of FOR EACH loop  */
+   HB_P_ENUMPREV,              /* 131 Previous item of FOR EACH loop  */
+   HB_P_ENUMEND,               /* 132 End of FOR EACH loop */
+   HB_P_SWITCH,                /* 133 SWITCH using long values */
+   HB_P_PUSHDATE,              /* 134 places a data constant value on the virtual machine stack */
 /* optimalization of inlined math operations */   
-   HB_P_PLUSEQPOP,             /* 134 adds a value to the variable reference */
-   HB_P_MINUSEQPOP,            /* 135 subs a value from the variable reference */
-   HB_P_MULTEQPOP,             /* 136 multiplies a variable reference by a value */
-   HB_P_DIVEQPOP,              /* 137 divides the var reference by a value */
-   HB_P_PLUSEQ,                /* 138 adds a value to the variable reference, leave result on the stack */
-   HB_P_MINUSEQ,               /* 139 subs a value from the variable reference, leave result on the stack */
-   HB_P_MULTEQ,                /* 140 multiplies a variable reference by a value, leave result on the stack */
-   HB_P_DIVEQ,                 /* 141 divides the var reference by a value, leave result on the stack */
+   HB_P_PLUSEQPOP,             /* 135 adds a value to the variable reference */
+   HB_P_MINUSEQPOP,            /* 136 subs a value from the variable reference */
+   HB_P_MULTEQPOP,             /* 137 multiplies a variable reference by a value */
+   HB_P_DIVEQPOP,              /* 138 divides the var reference by a value */
+   HB_P_PLUSEQ,                /* 139 adds a value to the variable reference, leave result on the stack */
+   HB_P_MINUSEQ,               /* 140 subs a value from the variable reference, leave result on the stack */
+   HB_P_MULTEQ,                /* 141 multiplies a variable reference by a value, leave result on the stack */
+   HB_P_DIVEQ,                 /* 142 divides the var reference by a value, leave result on the stack */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 142 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 143 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

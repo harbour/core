@@ -457,7 +457,7 @@ static void hb_gt_wvt_MouseEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 {
    POINT xy, colrow;
    SHORT keyCode = 0;
-   SHORT keyState = 0;
+   SHORT keyState;
 
    HB_SYMBOL_UNUSED( hWnd );
    HB_SYMBOL_UNUSED( wParam );

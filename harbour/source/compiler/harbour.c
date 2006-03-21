@@ -3120,17 +3120,12 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
    {
       /* local variable
        */
-      if( HB_LIM_INT8( iVar ) )
-      {
-         /* local variables used in a coddeblock will not be adjusted
-          * if PARAMETERS statement will be used then it is safe to
-          * use 2 bytes for LOCALNEAR
-          */
-         if( hb_comp_functions.pLast->szName )
-            hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
-         else
-            hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
-      }
+      /* local variables used in a coddeblock will not be adjusted
+       * if PARAMETERS statement will be used then it is safe to
+       * use 2 bytes for LOCALNEAR
+       */
+      if( HB_LIM_INT8( iVar ) && !hb_comp_functions.pLast->szName )
+         hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
       else
          hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
    }
@@ -3293,17 +3288,12 @@ void hb_compGenPushVar( char * szVarName, BOOL bMacroVar )
    {
       /* local variable
        */
-      if( HB_LIM_INT8( iVar ) )
-      {
-         /* local variables used in a coddeblock will not be adjusted
-          * if PARAMETERS statement will be used then it is safe to
-          * use 2 bytes for LOCALNEAR
-          */
-         if( hb_comp_functions.pLast->szName )
-            hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
-         else
-            hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
-      }
+      /* local variables used in a coddeblock will not be adjusted
+       * if PARAMETERS statement will be used then it is safe to
+       * use 2 bytes for LOCALNEAR
+       */
+      if( HB_LIM_INT8( iVar ) && !hb_comp_functions.pLast->szName )
+         hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
       else
          hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
    }

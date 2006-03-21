@@ -39,6 +39,7 @@ endif
 C_SOURCES=\
     cmdcheck.c \
     genc.c \
+    gencc.c \
     gencobj.c \
     genhrb.c \
     genjava.c \
@@ -49,6 +50,7 @@ C_SOURCES=\
     hbpcode.c \
     hbfix.c \
     hbdead.c \
+    hblbl.c \
     hbstripl.c \
     hbusage.c \
     hbident.c \

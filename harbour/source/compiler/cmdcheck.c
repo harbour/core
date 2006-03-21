@@ -575,8 +575,11 @@ void hb_compChkEnvironVar( char * szSwitch )
 
                       switch( *( s + 2 ) )
                       {
-                         case '\0':
+                         case '3':
+                            hb_comp_iGenCOutput = HB_COMPGENC_REALCODE;
+                            break;
 
+                         case '\0':
                          case '2':
                             hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE;
                             break;

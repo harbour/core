@@ -1966,13 +1966,15 @@ HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
       hb_fsSetError( usError );
    }
 
-   if( usError == 0 )
+   if( usError == 0 && pbyBuffer[ 0 ] )
    {
       BYTE * pbyStart = pbyBuffer;
 
       /* Strip the leading drive spec, and leading backslash if there's one. */
       /* NOTE: A trailing underscore is not returned on this platform,
                so we don't need to strip it. [vszakats] */
+
+      ulLen = strlen( ( char * ) pbyBuffer );
 
 #if defined(OS_HAS_DRIVE_LETTER)
       if( pbyStart[ 1 ] == OS_DRIVE_DELIMITER )
@@ -1987,12 +1989,12 @@ HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
          ulLen--;
       }
 
-      if( pbyBuffer != pbyStart )
-         memmove( pbyBuffer, pbyStart, ulLen );
-
       /* Strip the trailing (back)slash if there's one */
       if( strchr( OS_PATH_DELIMITER_LIST, pbyBuffer[ ulLen - 1 ] ) )
          ulLen--;
+
+      if( ulLen && pbyBuffer != pbyStart )
+         memmove( pbyBuffer, pbyStart, ulLen );
 
       pbyBuffer[ ulLen ] = '\0';
    }

@@ -573,7 +573,7 @@ extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
 
 /* Codeblock management */
 extern HB_EXPORT void *   hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, BYTE * pLocalPosTable, PHB_SYMB pSymbols ); /* create a code-block */
+extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
 extern void     hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
 extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */

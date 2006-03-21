@@ -123,8 +123,8 @@ static void hb_compCodeTraceMark( PHB_CODETRACE_INFO pInfo, ULONG ulPCodePos, UL
 static HB_CODETRACE_FUNC( hb_p_default )
 {
    ULONG ulSize = hb_comp_pcode_len[ pFunc->pCode[ lPCodePos ] ];
-   hb_compCodeTraceMark( cargo, lPCodePos, ulSize );
 
+   hb_compCodeTraceMark( cargo, lPCodePos, ulSize );
    return hb_compCodeTraceNextPos( cargo, lPCodePos + ulSize );
 }
 
@@ -307,26 +307,47 @@ static HB_CODETRACE_FUNC( hb_p_seqend )
 
 static HB_CODETRACE_FUNC( hb_p_switch )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
+   USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
+   ULONG ulStart = lPCodePos, ulNewPos;
 
+   lPCodePos += 3;
+   for( us = 0; us < usCases; ++us )
+   {
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_PUSHLONG:
+            lPCodePos += 5;
+            break;
+         case HB_P_PUSHSTRSHORT:
+            lPCodePos += 2 + pFunc->pCode[ lPCodePos + 1 ];
+            break;
+         case HB_P_PUSHNIL:
+            /* default clause */
+            us = usCases;
+            lPCodePos++;
+            break;
+      }
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_JUMPNEAR:
+            ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+            lPCodePos += 2;
+            break;
+         case HB_P_JUMP:
+            ulNewPos = lPCodePos + HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 3;
+            break;
+         /*case HB_P_JUMPFAR:*/
+         default:
+            ulNewPos = lPCodePos + HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 4;
+            break;
+      }
+      hb_compCodeTraceAddJump( cargo, ulNewPos );
+   }
+   hb_compCodeTraceMark( cargo, ulStart, lPCodePos - ulStart );
 
-   /*
-    * TODO: it has to be updated in differ way
-    *       HB_P_SWITCH is not normal PCODE, it generates a table
-    *       with case conditions and jumps using standard PCODEs 
-    *       which are not evaluated by HVM but by hb_vmSwitch()
-    *       working like a small VM but using differ actions for
-    *       given PCODE so we will have to repeat it here.
-    *       Ryszard if you want then please update it.
-    *       Personally I do not like such exceptions which needs
-    *       special code, we will have the same problem with real
-    *       stack context optimizer if we will have it in the
-    *       future, [druzus]
-    */
-
-   /* break farther code scanning here without setting cargo->fFinished */
-   return cargo->ulPCodeSize;
+   return hb_compCodeTraceNextPos( cargo, lPCodePos );
 }
 
 static HB_CODETRACE_FUNC( hb_p_endblock )
@@ -524,24 +545,33 @@ void hb_compCodeTraceMarkDead( PFUNCTION pFunc )
    if( code_info.fFinished )
    {
       ULONG ulPos = 0, ulCount = 0;
+      BYTE bLastCode = HB_P_LAST_PCODE;
 
       do
       {
          if( code_info.pCodeMark[ ulPos ] == 0 )
             ++ulCount;
-         else if( ulCount )
+         else
          {
-            hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, FALSE, TRUE );
-            ulCount = 0;
+            bLastCode = pFunc->pCode[ ulPos ];
+            if( ulCount )
+            {
+               hb_compNOOPfill( pFunc, ulPos - ulCount, ulCount, FALSE, TRUE );
+               ulCount = 0;
+            }
          }
       }
       while( ++ulPos < code_info.ulPCodeSize );
 
-      if( ulCount > 1 )
+      /* do not strip the last HB_P_ENDBLOCK / HB_P_ENDPROC marker */
+      if( ulCount > 0 && bLastCode != ( pFunc->szName ? HB_P_ENDPROC : HB_P_ENDBLOCK ) )
       {
-         /* do not strip the last HB_P_ENDBLOCK / HB_P_ENDPROC marker */
-         --ulPos; --ulCount;
+         --ulPos;
+         --ulCount;
+      }
 
+      if( ulCount > 0 )
+      {
          /*
           * We cannot simply decrease size of the generated PCODE here
           * because jumps or noops tables may point to the this area

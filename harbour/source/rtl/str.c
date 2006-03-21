@@ -56,12 +56,25 @@
 
 HB_FUNC( STR )
 {
-   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
-   PHB_ITEM pWidth  = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pDec    = hb_param( 3, HB_IT_NUMERIC );
    int iParams = hb_pcount();
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pWidth  = NULL;
+   PHB_ITEM pDec    = NULL;
 
-   if( pNumber && ( iParams < 2 || pWidth ) && ( iParams < 3 || pDec ) )
+   if( iParams >= 2 )
+   {
+      pWidth = hb_param( 2, HB_IT_NUMERIC );
+      if( pWidth == NULL )
+         pNumber = NULL;
+      else if( iParams >= 3 )
+      {
+         pDec = hb_param( 3, HB_IT_NUMERIC );
+         if( pDec == NULL )
+            pNumber = NULL;
+      }
+   }
+
+   if( pNumber )
    {
       char * szResult = hb_itemStr( pNumber, pWidth, pDec );
 
