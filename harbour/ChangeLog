@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+      that in the future but in such case we will have to also update
+      hb_itemCopy() and hb_itemMove() so we can also update hb_itemSwap()
+
+  * harbour/source/vm/asort.c
+  * harbour/source/vm/classes.c
   * harbour/source/vm/memvars.c
   * harbour/source/vm/hvm.c
     * cleaned the code which created HB_ITEMs on C stack. Only three

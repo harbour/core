@@ -214,7 +214,6 @@ static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS f
 static void    hb_vmDoInitFunctions( void );      /* executes all defined PRGs INIT functions */
 static void    hb_vmDoExitFunctions( void );      /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
-static BOOL    hb_xvmActionRequest(void) ;
 
 extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
@@ -5935,7 +5934,7 @@ ULONG hb_vmFlagEnabled( ULONG flags )
 
 #define HB_XVM_RETURN   return ( s_uiActionRequest ? hb_xvmActionRequest() : FALSE );
 
-static BOOL hb_xvmActionRequest()
+static BOOL hb_xvmActionRequest( void )
 {
    if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED ) )
       return TRUE;
