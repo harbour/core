@@ -65,8 +65,22 @@
 
 /* #define HB_ASORT_OPT_ITEMCOPY  - use hbsetup.h to enable/disable it*/
 
-static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
+static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
 {
+   if( pBlock )
+   {
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( pBlock );
+      hb_vmPush( pItem1 );
+      hb_vmPush( pItem2 );
+      hb_vmSend( 2 );
+
+      if( HB_IS_LOGICAL( hb_stackReturnItem() ) )
+         return hb_itemGetL( hb_stackReturnItem() );
+   }
+
+   /* Do native compare when no codeblock is supplied */
+
    if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
       return hb_itemStrCmp( pItem1, pItem2, FALSE ) < 0;
    else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
@@ -74,7 +88,7 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       return hb_itemGetND( pItem1 ) < hb_itemGetND( pItem2 );
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
-      return hb_itemGetDL( pItem1 ) < hb_itemGetDL( pItem2 );
+      return pItem1->item.asDate.value < pItem2->item.asDate.value;
    else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
       return hb_itemGetL( pItem1 ) < hb_itemGetL( pItem2 );
    else
@@ -109,27 +123,14 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
 static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_ITEM pBlock )
 {
-   LONG i;
-   LONG j;
-   LONG p;
-
-   HB_ITEM pivot;
+   LONG i, j, p;
 
    /* select pivot and exchange with 1st element */
-   p = lb + ( ( ub - lb ) / 2 );
-
-#ifdef HB_ASORT_OPT_ITEMCOPY
-   memcpy( &pivot, pItems + p, sizeof( HB_ITEM ) );
+   p = lb + ( ( ub - lb ) >> 1 );
    if( p != lb )
    {
-      memcpy( pItems + p, pItems + lb, sizeof( HB_ITEM ) );
+      hb_itemSwap( pItems + lb, pItems + p );
    }
-#else
-   hb_itemInit( &pivot );
-   hb_itemCopy( &pivot, pItems + p );
-   if( p != lb )
-      hb_itemCopy( pItems + p, pItems + lb );
-#endif
 
    /* sort lb+1..ub based on pivot */
    i = lb + 1;
@@ -137,84 +138,32 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
 
    while( TRUE )
    {
-      if( pBlock )
+      while( i < j && hb_itemIsLess( pItems + i, pItems + lb, pBlock ) )
       {
-         /* Call the codeblock to compare the items */
-         while( i < j )
-         {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pBlock );
-            hb_vmPush( pItems + i );
-            hb_vmPush( &pivot );
-            hb_vmDo( 2 );
-
-            if( ( HB_IS_LOGICAL( &hb_stack.Return ) ? hb_stack.Return.item.asLogical.value : hb_itemIsLess( pItems + i, &pivot ) ) )
-               i++;
-            else
-               break;
-         }
-
-         while( j >= i )
-         {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pBlock );
-            hb_vmPush( &pivot );
-            hb_vmPush( pItems + j );
-            hb_vmDo( 2 );
-
-            if( ( HB_IS_LOGICAL( &hb_stack.Return ) ? hb_stack.Return.item.asLogical.value : hb_itemIsLess( &pivot, pItems + j ) ) )
-               j--;
-            else
-               break;
-         }
+         i++;
       }
-      else
-      {
-         /* Do native compare when no codeblock is supplied */
-         while( i < j && hb_itemIsLess( pItems + i, &pivot ) )
-            i++;
 
-         while( j >= i && hb_itemIsLess( &pivot, pItems + j ) )
-            j--;
+      while( j >= i && hb_itemIsLess( pItems + lb, pItems + j, pBlock ) )
+      {
+         j--;
       }
 
       if( i >= j )
-         break;
-
-      /* Swap the items */
       {
-         HB_ITEM temp;
-
-#ifdef HB_ASORT_OPT_ITEMCOPY
-         memcpy( &temp, pItems + j, sizeof( HB_ITEM ) );
-         memcpy( pItems + j, pItems + i, sizeof( HB_ITEM ) );
-         memcpy( pItems + i, &temp, sizeof( HB_ITEM ) );
-#else
-         hb_itemInit( &temp );
-         hb_itemCopy( &temp, pItems + j );
-         hb_itemCopy( pItems + j, pItems + i );
-         hb_itemCopy( pItems + i, &temp );
-         hb_itemClear( &temp );
-#endif
+         break;
       }
 
+      /* Swap the items */
+      hb_itemSwap( pItems + i, pItems + j );
       j--;
       i++;
    }
 
    /* pivot belongs in pItems[j] */
-#ifdef HB_ASORT_OPT_ITEMCOPY
-   if( lb != j )
+   if( j > lb )
    {
-      memcpy( pItems + lb, pItems + j, sizeof( HB_ITEM ) );
+      hb_itemSwap( pItems + lb, pItems + j );
    }
-   memcpy( pItems + j, &pivot, sizeof( HB_ITEM ) );
-#else
-   if( lb != j )
-      hb_itemCopy( pItems + lb, pItems + j );
-   hb_itemCopy( pItems + j, &pivot );
-   hb_itemClear( &pivot );
-#endif
 
    return j;
 }

@@ -73,6 +73,27 @@ static void hb_gencc_string_put( FILE * yyc, BYTE * pText, USHORT usLen )
    fputc( '"', yyc );
 }
 
+static int hb_gencc_checkNumAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
+{
+   if( HB_GENC_GETLABEL( lPCodePos ) == 0 && lValue > 0 )
+   {
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_ARRAYPUSH:
+            fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
+            return 1;
+
+         case HB_P_ARRAYPOP:
+            fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
+            return 1;
+         case HB_P_MULT:
+            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", lValue );
+            return 1;
+      }
+   }
+   return 0;
+}
+
 static HB_GENC_FUNC( hb_p_and )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -917,20 +938,28 @@ static HB_GENC_FUNC( hb_p_pushfield )
 
 static HB_GENC_FUNC( hb_p_pushbyte )
 {
+   int iVal = ( signed char ) pFunc->pCode[ lPCodePos + 1 ], iSkip;
+
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n",
-            ( signed char ) pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   iSkip = hb_gencc_checkNumAhead( iVal, pFunc, lPCodePos + 2, cargo );
+
+   if( iSkip == 0 )
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", iVal );
+   return 2 + iSkip;
 }
 
 static HB_GENC_FUNC( hb_p_pushint )
 {
+   int iVal = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n",
-            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-   return 3;
+   iSkip = hb_gencc_checkNumAhead( iVal, pFunc, lPCodePos + 3, cargo );
+
+   if( iSkip == 0 )
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", iVal );
+   return 3 + iSkip;
 }
 
 static HB_GENC_FUNC( hb_p_pushlocal )
@@ -1216,12 +1245,14 @@ static HB_GENC_FUNC( hb_p_true )
 
 static HB_GENC_FUNC( hb_p_one )
 {
-   HB_SYMBOL_UNUSED( pFunc );
+   int iSkip;
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushInteger( 1 );\n" );
-   return 1;
+   iSkip = hb_gencc_checkNumAhead( 1, pFunc, lPCodePos + 1, cargo );
+   if( iSkip == 0 )
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( 1 );\n" );
+   return 1 + iSkip;
 }
 
 static HB_GENC_FUNC( hb_p_zero )

@@ -97,6 +97,15 @@ void hb_stackDec( void )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 }
 
+#undef hb_stackDecrease
+void hb_stackDecrease( ULONG ulItems )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
+
+   if( ( hb_stack.pPos -= ulItems ) < hb_stack.pItems )
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
+}
+
 void hb_stackFree( void )
 {
    LONG i;

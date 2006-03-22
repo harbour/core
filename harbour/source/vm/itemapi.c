@@ -1316,23 +1316,13 @@ HB_EXPORT void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemSwap(%p, %p)", pItem1, pItem2));
 
-   temp.type = HB_IT_NIL;
    /*
-   hb_itemMove( &temp, pItem2 );
-   hb_itemMove( pItem2, pItem1 );
-   hb_itemMove( pItem1, &temp );
-   */
-   hb_itemCopy( &temp, pItem2 );
-   hb_itemCopy( pItem2, pItem1 );
-   hb_itemCopy( pItem1, &temp );
-   if( HB_IS_COMPLEX( &temp ) )
-      hb_itemClear( &temp );
-
-/* Faster, but less safe way
+    * It's safe to use this version because our GC cannot be
+    * activated inside memcpy()
+    */
    memcpy( &temp, pItem2, sizeof( HB_ITEM ) );
    memcpy( pItem2, pItem1, sizeof( HB_ITEM ) );
    memcpy( pItem1, &temp, sizeof( HB_ITEM ) );
-*/
 }
 
 /* Internal API, not standard Clipper */

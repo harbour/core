@@ -189,6 +189,14 @@ extern HB_EXPORT void   hb_xvmPushLongLong( LONGLONG llNumber );
 #define hb_xvmPushSymbol( p )             hb_vmPushSymbol( p )
 #define hb_xvmPushDate( p )               hb_vmPushDate( p )
 
+
+/*
+ * additional multi PCODE operations
+ */
+extern HB_EXPORT BOOL hb_xvmArrayItemPush( ULONG ulIndex );
+extern HB_EXPORT BOOL hb_xvmArrayItemPop( ULONG ulIndex );
+extern HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue );
+
 HB_EXTERN_END
 
 #endif /* HB_XVM_H_ */

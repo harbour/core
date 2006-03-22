@@ -100,9 +100,14 @@ typedef struct
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 
 
+#define hb_stackDecrease( n )       do { \
+                                       if( ( hb_stack.pPos -= (n) ) < hb_stack.pItems ) \
+                                          hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
+                                    } while ( 0 )
+
 #define hb_stackDec( )              do { \
                                        if( --hb_stack.pPos < hb_stack.pItems ) \
-                                       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
+                                          hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                     } while ( 0 )
 
 #define hb_stackPop( )              do { \

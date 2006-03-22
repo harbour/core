@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+  * harbour/source/vm/itemapi.c
+    * some minor speed optimizations
+    
+2006-03-23 14:50 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+  * source/pp/ppcore.c
+    
+      as Clipper
+
+  * tests/pretest.prg
+    * added more tests to check preprocessor
+
+
+2006-03-22 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    + added hb_stackDecrease( ULONG )
+
+  * harbour/include/hbxvm.h
+  * harbour/source/vm/hvm.c
+    + added hb_xvmArrayItemPush(), hb_xvmArrayItemPop(), hb_xvmMultByInt()
+
+  * harbour/source/compiler/gencc.c
+    % use hb_xvmArrayItemPush(), hb_xvmArrayItemPop(), hb_xvmMultByInt()
+      If someone has time then it will be good to also add:
+      hb_xvmDivByInt(), hb_xvmModulusInt(), hb_xvmPlusInt(), hb_xvmMinusInt()
+
+  * harbour/source/vm/itemapi.c
+    * use simple memcpy() in hb_itemSwap() - it's save in current HVM
+      It could become unsafe if we add reference tracing or sth like
       that in the future but in such case we will have to also update
       hb_itemCopy() and hb_itemMove() so we can also update hb_itemSwap()
 

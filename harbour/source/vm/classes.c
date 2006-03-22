@@ -1602,88 +1602,42 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
          if( pMeth->pInitValue )
          {
 
-          if( pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
-           {
-            HB_ITEM init;
-            PHB_ITEM pInit;
-
-            ( &init )->type = HB_IT_NIL; /* hb_itemInit( &init ); */
-
-            hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
-
-            if( init.type == HB_IT_NIL )
+            if( pMeth->pFunction == hb___msgGetClsData && !( pMeth->bClsDataInitiated ) )
             {
-               if( HB_IS_ARRAY( pMeth->pInitValue ) )
-                {
-                pInit = hb_arrayClone( pMeth->pInitValue );
-                }
-               else
-               {
-                   pInit = hb_itemNew( NULL );
-                   hb_itemCopy( pInit, pMeth->pInitValue );
-               }
-
-               hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
-               hb_itemRelease(pInit);
-               pMeth->bClsDataInitiated = 1;
-
-            }
-
-
-
-            hb_itemClear( &init );
-
-           }
-           else if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
-           {
-               PHB_ITEM pInitValue ;
-
-               if( HB_IS_ARRAY( pMeth->pInitValue ) )
-               {
-                  pInitValue = hb_arrayClone( pMeth->pInitValue );
-               }
-               else
-               {
-                  pInitValue = hb_itemNew( NULL );
-                  hb_itemCopy(pInitValue,  pMeth->pInitValue );
-               }
-
-               hb_arraySet( pSelf, pMeth->uiData, pInitValue );
-               hb_itemRelease( pInitValue );
-
-           }
-           else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
-           {
-               /* Init Shared Classdata as needed, we only need to init the first */
-               /* not inherited classdata array where all shared will point to    */
-               HB_ITEM init;
                PHB_ITEM pInit;
 
-               ( &init )->type = HB_IT_NIL;
-
-               hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
-               if( init.type == HB_IT_NIL )
+               pInit = hb_arrayGetItemPtr( pClass->pClassDatas, pMeth->uiData );
+               if( HB_IS_NIL( pInit ) )
                {
-
-                  if( HB_IS_ARRAY( pMeth->pInitValue ) )
-                   pInit = hb_arrayClone( pMeth->pInitValue );
-                  else
-                  {
-                   pInit = hb_itemNew( NULL );
-                   hb_itemCopy( pInit, pMeth->pInitValue );
-                  }
-
+                  pInit = hb_itemClone( pMeth->pInitValue );
 
                   hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
-                  hb_itemRelease(pInit);
+                  hb_itemRelease( pInit );
                   pMeth->bClsDataInitiated = 1;
                }
+            }
+            else if( pMeth->pFunction == hb___msgGetData ) /* is a DATA but not herited */
+            {
+               PHB_ITEM pInit = hb_itemClone( pMeth->pInitValue );
 
+               hb_arraySet( pSelf, pMeth->uiData, pInit );
+               hb_itemRelease( pInit );
+            }
+            else if( pMeth->pFunction == hb___msgGetShrData && !( pMeth->bClsDataInitiated ) )
+            {
+               /* Init Shared Classdata as needed, we only need to init the first */
+               /* not inherited classdata array where all shared will point to    */
+               PHB_ITEM pInit;
 
-
-               hb_itemClear( &init );
-
-           }
+               pInit = hb_arrayGetItemPtr( pClass->pClassDatas, pMeth->uiData );
+               if( HB_IS_NIL( pInit ) )
+               {
+                  pInit = hb_itemClone( pMeth->pInitValue );
+                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
+                  hb_itemRelease( pInit );
+                  pMeth->bClsDataInitiated = 1;
+               }
+            }
          }
       }
    }
@@ -2313,27 +2267,21 @@ static HARBOUR hb___msgClsSel( void )
  */
 static HARBOUR hb___msgEvalInline( void )
 {
-   HB_ITEM block;
    USHORT uiClass = ( hb_stackSelfItem() )->item.asArray.value->uiClass;
    USHORT uiParam;
-   USHORT uiPCount=hb_pcount();
-
-   ( &block )->type = HB_IT_NIL; /* hb_itemInit( &block ); */
-
-   hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
+   USHORT uiPCount = hb_pcount();
 
    hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( &block );
-   hb_vmPush( hb_stackSelfItem() );                     /* Push self                */
+   hb_vmPush( hb_arrayGetItemPtr( s_pClasses[ uiClass - 1 ].pInlines,
+                                  s_pMethod->uiData ) );
+   hb_vmPush( hb_stackSelfItem() );              /* Push self                */
 
    for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
    {
       hb_vmPush( hb_stackItemFromBase( uiParam ) );
    }
 
-   hb_vmDo( ( USHORT ) (uiPCount + 1 ) );     /* Self is also an argument */
-
-   hb_itemClear( &block );                       /* Release block            */
+   hb_vmDo( ( USHORT ) ( uiPCount + 1 ) );       /* Self is also an argument */
 }
 
 /*

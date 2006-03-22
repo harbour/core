@@ -100,7 +100,7 @@ struct mv_PUBLIC_var_info
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
 static void hb_memvarReleasePublic( PHB_ITEM pMemVar );
-static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR );
+static HB_DYNS_PTR hb_memvarFindSymbol( char *, ULONG );
 
 void hb_memvarsInit( void )
 {
@@ -592,16 +592,12 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 
 char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
 {
-   HB_ITEM itName;
    HB_DYNS_PTR pDynVar;
    char * szValue = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetStrValuePtr(%s, %li)", szVarName, pulLen));
 
-   itName.type = HB_IT_STRING;
-   itName.item.asString.value  = szVarName;
-   itName.item.asString.length = *pulLen;
-   pDynVar = hb_memvarFindSymbol( &itName );
+   pDynVar = hb_memvarFindSymbol( szVarName, *pulLen );
 
    if( pDynVar )
    {
@@ -971,31 +967,25 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
    return pValue;
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
+static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
 {
    HB_DYNS_PTR pDynSym = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p)", pName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%lu)", szArg, ulLen));
 
-   if( pName )
+   if( szArg && *szArg && ulLen )
    {
-      ULONG ulLen = pName->item.asString.length;
+      char * szName = ( char * ) hb_xgrab( ulLen + 1 );
 
-      if( ulLen )
+      szName[ ulLen ] = '\0';
+      do
       {
-         char * szName = ( char * ) hb_xgrab( ulLen + 1 );
-         char * szArg  = pName->item.asString.value;
+         --ulLen;
+         szName[ ulLen ] = toupper( szArg[ ulLen ] );
+      } while( ulLen );
 
-         szName[ ulLen ] = '\0';
-         do
-         {
-            --ulLen;
-            szName[ ulLen ] = toupper( szArg[ ulLen ] );
-         } while( ulLen );
-
-         pDynSym = hb_dynsymFind( szName );
-         hb_xfree( szName );
-      }
+      pDynSym = hb_dynsymFind( szName );
+      hb_xfree( szName );
    }
    return pDynSym;
 }
@@ -1021,14 +1011,10 @@ HB_FUNC( __MVPUBLIC )
                /* we are accepting an one-dimensional array of strings only
                 */
                ULONG j, ulLen = hb_arrayLen( pMemvar );
-               HB_ITEM VarItem;
 
-               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
-                  hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_memvarCreateFromItem( &VarItem, VS_PUBLIC, NULL );
-                  hb_itemClear( &VarItem );
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PUBLIC, NULL );
                }
             }
             else
@@ -1057,14 +1043,10 @@ HB_FUNC( __MVPRIVATE )
                /* we are accepting an one-dimensional array of strings only
                 */
                ULONG j, ulLen = hb_arrayLen( pMemvar );
-               HB_ITEM VarItem;
 
-               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
-                  hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_memvarCreateFromItem( &VarItem, VS_PRIVATE, NULL );
-                  hb_itemClear( &VarItem );
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PRIVATE, NULL );
                }
             }
             else
@@ -1093,14 +1075,10 @@ HB_FUNC( __MVXRELEASE )
                /* we are accepting an one-dimensional array of strings only
                 */
                ULONG j, ulLen = hb_arrayLen( pMemvar );
-               HB_ITEM VarItem;
 
-               hb_itemInit( &VarItem );
                for( j = 1; j <= ulLen; j++ )
                {
-                  hb_arrayGet( pMemvar, j, &VarItem );
-                  hb_memvarRelease( &VarItem );
-                  hb_itemClear( &VarItem );
+                  hb_memvarRelease( hb_arrayGetItemPtr( pMemvar, j ) );
                }
             }
             else
@@ -1205,10 +1183,9 @@ HB_FUNC( __MVDBGINFO )
 
 HB_FUNC( __MVEXIST )
 {
-   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
    PHB_DYNS pDyn;
-
-   hb_retl( pName && ( pDyn = hb_memvarFindSymbol( pName ) ) != NULL && pDyn->hMemvar );
+   pDyn = hb_memvarFindSymbol( hb_parc( 1 ), hb_parclen( 1 ) );
+   hb_retl( pDyn && pDyn->hMemvar );
 }
 
 HB_FUNC( __MVGET )
@@ -1217,15 +1194,18 @@ HB_FUNC( __MVGET )
 
    if( pName )
    {
-      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
+      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
+                                                 pName->item.asString.length );
 
       if( pDynVar )
       {
-         HB_ITEM retValue;
+         PHB_ITEM pValue;
 
-         hb_itemInit( &retValue );
-         hb_memvarGetValue( &retValue, pDynVar->pSymbol );
-         hb_itemClear( hb_itemReturn( &retValue ) );
+         pValue = hb_stackTopItem();
+         hb_stackPush();
+         hb_memvarGetValue( pValue, pDynVar->pSymbol );
+         hb_itemReturnForward( pValue );
+         hb_stackDec();
       }
       else
       {
@@ -1243,15 +1223,18 @@ HB_FUNC( __MVGET )
             uiAction = hb_errLaunch( pError );
             if( uiAction == E_RETRY )
             {
-               pDynVar = hb_memvarFindSymbol( pName );
+               pDynVar = hb_memvarFindSymbol( hb_itemGetCPtr( pName ),
+                                              hb_itemGetCLen( pName ) );
                if( pDynVar )
                {
-                  HB_ITEM retValue;
+                  PHB_ITEM pValue;
 
-                  hb_itemInit( &retValue );
-                  hb_memvarGetValue( &retValue, pDynVar->pSymbol );
-                  hb_itemClear( hb_itemReturn( &retValue ) );
-                  uiAction = E_DEFAULT;
+                  pValue = hb_stackTopItem();
+                  hb_stackPush();
+                  hb_memvarGetValue( pValue, pDynVar->pSymbol );
+                  hb_itemReturnForward( pValue );
+                  hb_stackDec();
+                  break;
                }
             }
          }
@@ -1274,19 +1257,14 @@ HB_FUNC( __MVGET )
 HB_FUNC( __MVPUT )
 {
    HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
-   HB_ITEM nil;
-   HB_ITEM_PTR pValue = &nil;
-
-   nil.type = HB_IT_NIL;
-   if( hb_pcount() >= 2 )
-      pValue = hb_param( 2, HB_IT_ANY );
+   HB_ITEM_PTR pValue = hb_paramError( 2 );
 
    if( pName )
    {
       /* the first parameter is a string with not empty variable name
        */
-      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
-
+      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
+                                                 pName->item.asString.length );
       if( pDynVar )
       {
          /* variable was declared somwhere - assign a new value
@@ -1536,7 +1514,7 @@ HB_FUNC( __MVRESTORE )
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
          {
-            PHB_ITEM pName = hb_itemPutC( NULL, ( char * ) buffer );
+            char *szName = hb_strdup( ( char * ) buffer );
             USHORT uiType = ( USHORT ) ( buffer[ 11 ] - 128 );
             USHORT uiWidth = ( USHORT ) buffer[ 16 ];
             USHORT uiDec = ( USHORT ) buffer[ 17 ];
@@ -1592,20 +1570,20 @@ HB_FUNC( __MVRESTORE )
 
             if( pItem )
             {
-               BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( hb_itemGetCPtr( pName ), pszMask ) );
+               BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( szName, pszMask ) );
 
                /* Process it if it matches the passed mask */
                if( bIncludeMask ? bMatch : ! bMatch )
                {
                   /* the first parameter is a string with not empty variable name */
-                  HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
+                  HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( szName, strlen( szName ) );
 
                   if( pDynVar )
                      /* variable was declared somwhere - assign a new value */
                      hb_memvarSetValue( pDynVar->pSymbol, pItem );
                   else
                      /* attempt to assign a value to undeclared variable create the PRIVATE one */
-                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pItem );
+                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( szName ), VS_PRIVATE, pItem );
 
                   hb_itemReturn( pItem );
                }
@@ -1613,7 +1591,7 @@ HB_FUNC( __MVRESTORE )
                hb_itemRelease( pItem );
             }
 
-            hb_itemRelease( pName );
+            hb_xfree( szName );
          }
 
          hb_fsClose( fhnd );
