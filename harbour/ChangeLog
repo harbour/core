@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+
+  * harbour/source/rdd/dbf1.c
+    * set Operation in error object to field name in field{put,get} methods.
+    + added DBI_LOCKOFFSET
+
+  * harbour/source/vm/classes.c
+    * formatting
+
+  * harbour/source/vm/hvm.c
   * harbour/source/vm/itemapi.c
     * some minor speed optimizations
     
