@@ -69,12 +69,13 @@ typedef struct
 {
    PHB_ITEM * pItems;       /* pointer to the stack items */
    PHB_ITEM * pPos;         /* pointer to the latest used item */
-   LONG     wItems;       /* total items that may be holded on the stack */
-   HB_ITEM  Return;       /* latest returned value */
+   PHB_ITEM * pEnd;         /* pointer to the end of stack items */
+   LONG       wItems;       /* total items that may be holded on the stack */
+   HB_ITEM    Return;       /* latest returned value */
    PHB_ITEM * pBase;        /* stack frame position for the current function call */
    PHB_ITEM * pEvalBase;    /* stack frame position for the evaluated codeblock */
-   int      iStatics;     /* statics base for the current function call */
-   char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
+   int        iStatics;     /* statics base for the current function call */
+   char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
 extern HB_STACK hb_stack;
@@ -116,15 +117,11 @@ typedef struct
                                        if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
                                           hb_itemClear( * hb_stack.pPos ); \
                                     } while ( 0 )
-
 #define hb_stackPush( )             do { \
-                                       if( hb_stack.wItems - 1 <= hb_stack.pPos - hb_stack.pItems ) \
-                                       { \
+                                       if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
-                                       } \
-                                       ( * (++hb_stack.pPos) )->type = HB_IT_NIL; \
+                                       ( * hb_stack.pPos )->type = HB_IT_NIL; \
                                     } while ( 0 )
-
 #else
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );

@@ -1059,7 +1059,15 @@ HB_EXPORT PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, 
    }
    else if ( HB_DBL_LIM_INT( dNumber ) )
    {
-      return hb_itemPutNInt( pItem, ( HB_LONG ) dNumber );
+      return hb_itemPutNI( pItem, ( int ) dNumber );
+   }
+   else if ( HB_DBL_LIM_LONG( dNumber ) )
+   {
+#ifdef HB_LONG_LONG_OFF
+      return hb_itemPutNL( pItem, ( long ) dNumber );
+#else
+      return hb_itemPutNLL( pItem, ( LONGLONG ) dNumber );
+#endif
    }
    else
    {
@@ -1196,9 +1204,7 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
 
    if( HB_IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.bStatic )
-         pItem->item.asString.value = NULL;
-      else
+      if( !pItem->item.asString.bStatic )
       {
          if( --*( pItem->item.asString.u.pulHolders ) == 0 )
          {
@@ -1207,12 +1213,14 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
             hb_xfree( pItem->item.asString.u.pulHolders );
          }
       }
-      pItem->item.asString.length = 0;
    }
-   else if( HB_IS_ARRAY( pItem ) && pItem->item.asArray.value )
+   else if( HB_IS_ARRAY( pItem ) )
    {
-      if( --( pItem->item.asArray.value )->ulHolders == 0 )
-         hb_arrayRelease( pItem );
+      if( pItem->item.asArray.value )
+      {
+         if( --( pItem->item.asArray.value )->ulHolders == 0 )
+            hb_arrayRelease( pItem );
+      }
    }
    else if( HB_IS_BLOCK( pItem ) )
       hb_codeblockDelete( pItem );
@@ -1220,12 +1228,15 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    else if( HB_IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
-   else if( HB_IS_BYREF( pItem ) && pItem->item.asRefer.offset < 0 && pItem->item.asRefer.value >= 0 )
+   else if( HB_IS_BYREF( pItem ) )
    {
-      /* FOR EACH control variable */
-      hb_itemRelease( pItem->item.asRefer.BasePtr.itemPtr );
-      if( pItem->item.asRefer.ValuePtr.itemPtr )
-         hb_itemRelease( pItem->item.asRefer.ValuePtr.itemPtr );
+      if( pItem->item.asRefer.offset < 0 && pItem->item.asRefer.value >= 0 )
+      {
+         /* FOR EACH control variable */
+         hb_itemRelease( pItem->item.asRefer.BasePtr.itemPtr );
+         if( pItem->item.asRefer.ValuePtr.itemPtr )
+            hb_itemRelease( pItem->item.asRefer.ValuePtr.itemPtr );
+      }
    }
    
 #if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
@@ -1991,7 +2002,6 @@ HB_EXPORT char * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pulSize, bFreeReq));
 
-   /* to be clipper compatible don't convert HB_IT_BYREF items */
    if( pItem )
    {
       switch( pItem->type )

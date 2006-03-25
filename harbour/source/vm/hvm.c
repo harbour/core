@@ -3579,7 +3579,7 @@ static void hb_vmArrayPush( void )
             /* this is a temporary copy of an array - we can overwrite
              * it with no problem
             */
-            hb_arrayGet( pArray, ulIndex, pArray );
+            hb_itemCopy( pArray, pArray->item.asArray.value->pItems + ulIndex - 1 );
             hb_stackPop();
          }
          else
@@ -3587,7 +3587,7 @@ static void hb_vmArrayPush( void )
             /* this is a constant array { 1, 2, 3 } - we cannot use
              * the optimization here
             */
-            hb_arrayGet( pArray, ulIndex, pIndex );
+            hb_itemMove( pIndex, pArray->item.asArray.value->pItems + ulIndex - 1 );
             hb_itemMove( pArray, pIndex );
             hb_stackDec();
          }
@@ -3654,12 +3654,10 @@ static void hb_vmArrayPop( void )
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
-         hb_arraySet( pArray, ulIndex, pValue );
-         /* This is no longer needed as we manage the array by reference */
-         /* hb_itemCopy( pArray, pValue );  places pValue at pArray position */
+         hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
          hb_stackPop();
          hb_stackPop();
-         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+         hb_stackDec();    /* value was moved above hb_stackDec() is enough */
       }
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
@@ -4647,7 +4645,7 @@ static void hb_vmRetValue( void )
 
 static void hb_vmDebuggerEndProc( void )
 {
-   PHB_ITEM pReturn
+   PHB_ITEM pReturn;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerEndProc()"));
 
@@ -6841,7 +6839,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
             /* this is a temporary copy of an array - we can overwrite
              * it with no problem
             */
-            hb_arrayGet( pArray, ulIndex, pArray );
+            hb_itemCopy( pArray, pArray->item.asArray.value->pItems + ulIndex - 1 );
          }
          else
          {
@@ -6851,7 +6849,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
             PHB_ITEM pItem = hb_stackTopItem();
 
             hb_stackPush();
-            hb_arrayGet( pArray, ulIndex, pItem );
+            hb_itemMove( pItem, pArray->item.asArray.value->pItems + ulIndex - 1 );
             hb_itemMove( pArray, pItem );
             hb_stackDec();
          }
@@ -6911,11 +6909,9 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
-         hb_arraySet( pArray, ulIndex, pValue );
-         /* This is no longer needed as we manage the array by reference */
-         /* hb_itemCopy( pArray, pValue );  places pValue at pArray position */
+         hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
          hb_stackPop();
-         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+         hb_stackDec();    /* value was moved above hb_stackDec() is enough */
       }
       else
       {

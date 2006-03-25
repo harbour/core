@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+  * contrib/htmllib/default.ch
+    
+
+  * source/compiler/hbident.c
+  * source/compiler/harbour.l
+    
+
+  * source/pp/ppcore.c
+    * fixed my last commits
+    * processed this file with indent
+
+
+2006-03-25 03:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    * added pEnd to hb_stack structure to speed up hb_stackPush()
+      which is one of the most often used operation in HVM.
+
+  * harbour/include/hbapi.h
+    * small trick with HB_IS_* macros to give a compiler a chance to make
+      them faster on some machines
+
+  * harbour/source/compiler/genc.c
+    ! fixed stripping non identifier characters from symbol table name
+
+  * harbour/source/compiler/hbpcode.c
+    * cleaned comment
 
   * harbour/source/rdd/dbf1.c
     * set Operation in error object to field name in field{put,get} methods.

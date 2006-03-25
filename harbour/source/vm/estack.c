@@ -121,38 +121,13 @@ void hb_stackFree( void )
 #undef hb_stackPush
 void hb_stackPush( void )
 {
-   LONG CurrIndex;   /* index of current top item */
-   LONG TopIndex;    /* index of the topmost possible item */
-
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPush()"));
 
-   CurrIndex = hb_stack.pPos - hb_stack.pItems;
-   TopIndex  = hb_stack.wItems - 1;
-
    /* enough room for another item ? */
-   if( !( TopIndex > CurrIndex ) )
-   {
-      LONG BaseIndex;   /* index of stack base */
-      LONG i;
-
-      BaseIndex = hb_stack.pBase - hb_stack.pItems;
-
-      /* no, make more headroom: */
-      /* hb_stackDispLocal(); */
-      hb_stack.pItems = ( HB_ITEM_PTR * ) hb_xrealloc( ( void *)hb_stack.pItems, sizeof( HB_ITEM_PTR ) *
-                                ( hb_stack.wItems + STACK_EXPANDHB_ITEMS ) );
-
-      /* fix possibly modified by realloc pointers: */
-      hb_stack.pPos = hb_stack.pItems + CurrIndex;
-      hb_stack.pBase = hb_stack.pItems + BaseIndex;
-      hb_stack.wItems += STACK_EXPANDHB_ITEMS;
-      for( i=CurrIndex + 1; i < hb_stack.wItems; ++i )
-         hb_stack.pItems[ i ] = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
-      /* hb_stackDispLocal(); */
-   }
+   if( ++hb_stack.pPos == hb_stack.pEnd )
+      hb_stackIncrease();
 
    /* now, push it: */
-   hb_stack.pPos++;
    ( * hb_stack.pPos )->type = HB_IT_NIL;
 }
 
@@ -160,24 +135,26 @@ void hb_stackIncrease( void )
 {
    LONG BaseIndex;   /* index of stack base */
    LONG CurrIndex;   /* index of current top item */
-   LONG i;
+   LONG EndIndex;    /* index of current top item */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackIncrease()"));
 
    BaseIndex = hb_stack.pBase - hb_stack.pItems;
    CurrIndex = hb_stack.pPos - hb_stack.pItems;
+   EndIndex  = hb_stack.pEnd - hb_stack.pItems;
 
    /* no, make more headroom: */
    /* hb_stackDispLocal(); */
-   hb_stack.pItems = ( HB_ITEM_PTR * ) hb_xrealloc( ( void *)hb_stack.pItems, sizeof( HB_ITEM_PTR ) *
-                             ( hb_stack.wItems + STACK_EXPANDHB_ITEMS ) );
+   hb_stack.pItems = ( PHB_ITEM * ) hb_xrealloc( ( void * ) hb_stack.pItems,
+            sizeof( PHB_ITEM ) * ( hb_stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
    /* fix possibly modified by realloc pointers: */
-   hb_stack.pPos = hb_stack.pItems + CurrIndex;
-   hb_stack.pBase = hb_stack.pItems + BaseIndex;
+   hb_stack.pPos   = hb_stack.pItems + CurrIndex;
+   hb_stack.pBase  = hb_stack.pItems + BaseIndex;
    hb_stack.wItems += STACK_EXPANDHB_ITEMS;
-   for( i = CurrIndex + 1; i < hb_stack.wItems; ++i )
-      hb_stack.pItems[ i ] = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
+   hb_stack.pEnd   = hb_stack.pItems + hb_stack.wItems;
+   while( EndIndex < hb_stack.wItems )
+      hb_stack.pItems[ EndIndex++ ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 }
 
 void hb_stackInit( void )
@@ -186,13 +163,14 @@ void hb_stackInit( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackInit()"));
 
-   hb_stack.pItems = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) * STACK_INITHB_ITEMS );
+   hb_stack.pItems = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * STACK_INITHB_ITEMS );
    hb_stack.pBase  = hb_stack.pItems;
    hb_stack.pPos   = hb_stack.pItems;     /* points to the first stack item */
    hb_stack.wItems = STACK_INITHB_ITEMS;
+   hb_stack.pEnd   = hb_stack.pItems + hb_stack.wItems;
 
    for( i=0; i < hb_stack.wItems; ++i )
-     hb_stack.pItems[ i ] = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) );
+     hb_stack.pItems[ i ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 }
 
 void hb_stackRemove( LONG lUntilPos )

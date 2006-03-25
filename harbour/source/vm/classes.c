@@ -2146,10 +2146,10 @@ static HARBOUR hb___msgClsParent( void )
    if( HB_IS_OBJECT( pItemParam ) )
       szParentName = hb_objGetClsName( pItemParam );
    else if( HB_IS_STRING( pItemParam ) )
-     {
+   {
       szParentName = hb_itemGetC( pItemParam );
       lClass=TRUE;
-     }
+   }
 
    for( i = 0; szParentName[ i ] != '\0'; i++ )
       szParentName[ i ] = ( char ) toupper( szParentName[ i ] );
@@ -2157,7 +2157,7 @@ static HARBOUR hb___msgClsParent( void )
    hb_retl( hb_clsIsParent( uiClass , szParentName ) );
 
    if (lClass)
-    hb_itemFreeC( szParentName );
+      hb_itemFreeC( szParentName );
 }
 
 

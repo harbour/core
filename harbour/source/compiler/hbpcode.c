@@ -222,8 +222,8 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
          }
 #if 0
          /*
-          * Test code to validate return values by PCODE eavl functions,
-          * in some cases the eval functions can return intentinally differ
+          * Test code to validate return values by PCODE eval functions,
+          * in some cases the eval functions can return intentionally differ
           * values so it's not enabled by default. [druzus]
           */
          if( hb_comp_pcode_len[ opcode ] != 0 && hb_comp_pcode_len[ opcode ] != ulSkip )

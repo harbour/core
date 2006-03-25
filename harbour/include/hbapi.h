@@ -97,29 +97,107 @@ HB_EXTERN_BEGIN
 #define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_BYREF ) )
 
+#if 0
+
+/*
+ * In Harbour VM HB_IT_BYREF is never ORed with item type. It can be used
+ * as stand alone type for locals and statics passed by reference or with 
+ * HB_IT_MEMVAR for memvars passed by reference so this macro is less usable.
+ * only the hb_parinfo() function can return HB_TYPE as HB_IT_BYREF ORed
+ * with real type but this value is never set as item type.
+ */
+
 #define HB_IS_OF_TYPE( p, t ) ( ( HB_ITEM_TYPE( p ) & ~HB_IT_BYREF ) == t )
 
-#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
-#define HB_IS_ARRAY( p )   HB_IS_OF_TYPE( p, HB_IT_ARRAY )
+/*
+ * These macros are slower but can be usable in debugging some code.
+ * They are a little bit more safe in buggy code but they can
+ * also hide bugs which should be exploited as soon as possible to
+ * know that sth is wrong and has to be fixed.
+ * the version below which check only chosen bits allow compiler to
+ * use some optimizations if used CPU supports it. F.e. on standard
+ * x86 machines they can safe few CPU cycles. [druzus]
+ */
+
 #define HB_IS_NIL( p )     HB_IS_OF_TYPE( p, HB_IT_NIL )
+#define HB_IS_ARRAY( p )   HB_IS_OF_TYPE( p, HB_IT_ARRAY )
 #define HB_IS_BLOCK( p )   HB_IS_OF_TYPE( p, HB_IT_BLOCK )
 #define HB_IS_DATE( p )    HB_IS_OF_TYPE( p, HB_IT_DATE )
 #define HB_IS_DOUBLE( p )  HB_IS_OF_TYPE( p, HB_IT_DOUBLE )
 #define HB_IS_INTEGER( p ) HB_IS_OF_TYPE( p, HB_IT_INTEGER )
 #define HB_IS_LOGICAL( p ) HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
 #define HB_IS_LONG( p )    HB_IS_OF_TYPE( p, HB_IT_LONG )
-#define HB_IS_OBJECT( p )  ( HB_IS_OF_TYPE( p, HB_IT_OBJECT ) && HB_OBJ_CLASS( p ) != 0 )
-#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
-#define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
 #define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
-#define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
+#define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
+#define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
+#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
+#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
-#define HB_IS_NUMBER( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
 #define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
 #define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
-#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX != 0 ) && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+
+#elif 0
+
+/*
+ * these macros illustrates possible HB_TYPE bit combinations in HVM,
+ * they are the safest one in buggy code which may produce wrong item
+ * signatures but also they can be slower on some machines
+ */
+#define HB_IS_NIL( p )     ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
+#define HB_IS_ARRAY( p )   ( HB_ITEM_TYPE( p ) == HB_IT_ARRAY )
+#define HB_IS_BLOCK( p )   ( HB_ITEM_TYPE( p ) == HB_IT_BLOCK )
+#define HB_IS_DATE( p )    ( HB_ITEM_TYPE( p ) == HB_IT_DATE )
+#define HB_IS_DOUBLE( p )  ( HB_ITEM_TYPE( p ) == HB_IT_DOUBLE )
+#define HB_IS_INTEGER( p ) ( HB_ITEM_TYPE( p ) == HB_IT_INTEGER )
+#define HB_IS_LOGICAL( p ) ( HB_ITEM_TYPE( p ) == HB_IT_LOGICAL )
+#define HB_IS_LONG( p )    ( HB_ITEM_TYPE( p ) == HB_IT_LONG )
+#define HB_IS_SYMBOL( p )  ( HB_ITEM_TYPE( p ) == HB_IT_SYMBOL )
+#define HB_IS_POINTER( p ) ( HB_ITEM_TYPE( p ) == HB_IT_POINTER )
+#define HB_IS_MEMO( p )    ( HB_ITEM_TYPE( p ) == HB_IT_MEMO )
+#define HB_IS_MEMVAR( p )  ( HB_ITEM_TYPE( p ) == ( HB_IT_MEMVAR | HB_IT_BYREF ) )
+#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMOFLAG ) == HB_IT_STRING )
+#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMVAR ) == HB_IT_BYREF )
+#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+
+#else
+
+/*
+ * these ones are can be the most efficiently optimized on some CPUs
+ */
+#define HB_IS_NIL( p )     ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
+#define HB_IS_ARRAY( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_ARRAY ) != 0 )
+#define HB_IS_BLOCK( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BLOCK ) != 0 )
+#define HB_IS_DATE( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_DATE ) != 0 )
+#define HB_IS_DOUBLE( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_DOUBLE ) != 0 )
+#define HB_IS_INTEGER( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_INTEGER ) != 0 )
+#define HB_IS_LOGICAL( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_LOGICAL ) != 0 )
+#define HB_IS_LONG( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_LONG ) != 0 )
+#define HB_IS_SYMBOL( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_SYMBOL ) != 0 )
+#define HB_IS_POINTER( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_POINTER ) != 0 )
+#define HB_IS_MEMO( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMOFLAG ) != 0 )
+#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_STRING ) != 0 )
+#define HB_IS_MEMVAR( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMVAR ) != 0 )
+#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
+#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+
+#endif
 
 
 #define ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
@@ -133,7 +211,6 @@ HB_EXTERN_BEGIN
 #define ISOBJECT( n )      ( hb_extIsObject( n ) )
 #define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
 #define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
-
 
 
 #ifdef _HB_API_INTERNAL_
