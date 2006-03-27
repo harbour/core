@@ -116,6 +116,7 @@ static void SearnRep( char *, char *, int, char *, int * );
 static int ReplacePattern( char, char *, int, char *, int );
 static void pp_rQuotes( char *, char * );
 static int md_strAt( char *, int, char *, BOOL, BOOL, BOOL, int );
+
 #define MD_STR_AT_IGNORECASE  0 /* search ignoring case */
 #define MD_STR_AT_USESUBCASE  1 /* use case specified in search string (old) */
 static char *PrevSquare( char *, char *, int * );
@@ -128,8 +129,7 @@ static int strotrim( char *, BOOL );    /* Ron Pinkas 2001-02-14 added 2nd param
 static int NextWord( char **, char *, BOOL );
 static int NextName( char **, char * );
 static int NextParm( char **, char * );
-static BOOL OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME,
-                         BOOL bStandardOnly, char * );
+static BOOL OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, char * );
 static BOOL IsIdentifier( char *szProspect );
 static int IsMacroVar( char *szText, BOOL isCommand );
 static void RemoveOptional( char *cpatt );
@@ -267,16 +267,11 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
                if( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
                {
                   if( !hb_comp_bQuiet )
-                     printf
-                        ( "Loaded: %i Commands, %i Translates, %i Defines from: %s\n",
-                          s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3,
-                          szFileName );
+                     printf( "Loaded: %i Commands, %i Translates, %i Defines from: %s\n", s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3, szFileName );
                }
                else
                {
-                  hb_compGenWarning( hb_pp_szWarnings, 'I',
-                                     HB_PP_WARN_NO_DIRECTIVES,
-                                     NULL /*szFileName */ , NULL );
+                  hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_NO_DIRECTIVES, NULL /*szFileName */ , NULL );
                }
 
                fclose( hb_comp_files.pLast->handle );
@@ -299,16 +294,12 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
             }
             else
             {
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_CANNOT_OPEN_RULES, szFileName,
-                                NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName, NULL );
             }
          }
          else
          {
-            hb_compGenError( hb_pp_szErrors, 'F',
-                             HB_PP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH,
-                             NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
          }
       }
       else
@@ -390,7 +381,7 @@ void hb_pp_Init( void )
    s_prevchar = 'A';
 
    if( !hb_pp_aCondCompile )
-      hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof ( int ) * 5 );
+      hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
    hb_pp_nCondCompile = 0;
 
@@ -407,11 +398,9 @@ void hb_pp_Init( void )
       n = strlen( sOS );
       pDst = sOS;
 
-      while( *pSrc && *pSrc != ' ' && n < ( int ) sizeof ( sOS ) - 1 )
+      while( *pSrc && *pSrc != ' ' && n < ( int ) sizeof( sOS ) - 1 )
       {
-         if( *pSrc == '_' || ( *pSrc >= 'A' && *pSrc <= 'Z' )
-             || ( *pSrc >= 'a' && *pSrc <= 'z' )
-             || ( *pSrc >= '0' && *pSrc <= '9' ) )
+         if( *pSrc == '_' || ( *pSrc >= 'A' && *pSrc <= 'Z' ) || ( *pSrc >= 'a' && *pSrc <= 'z' ) || ( *pSrc >= '0' && *pSrc <= '9' ) )
          {
             pDst[n++] = *pSrc;
          }
@@ -424,7 +413,7 @@ void hb_pp_Init( void )
       pDst[n++] = '"';
       if( *pSrc == ' ' )
       {
-         while( *( ++pSrc ) && n < ( int ) sizeof ( sVer ) - 2 )
+         while( *( ++pSrc ) && n < ( int ) sizeof( sVer ) - 2 )
             pDst[n++] = *pSrc;
       }
       pDst[n++] = '"';
@@ -461,19 +450,17 @@ void hb_pp_Init( void )
       time( &t );
       oTime = localtime( &t );
 
-      sprintf( szResult, "\"%04d%02d%02d\"", oTime->tm_year + 1900,
-               oTime->tm_mon + 1, oTime->tm_mday );
+      sprintf( szResult, "\"%04d%02d%02d\"", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
       hb_pp_AddDefine( "__DATE__", szResult );
 
-      sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min,
-               oTime->tm_sec );
+      sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
       hb_pp_AddDefine( "__TIME__", szResult );
    }
 
    {
       char szResult[11];
 
-      sprintf( szResult, "%d", ( int ) sizeof ( void * ) );
+      sprintf( szResult, "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
       hb_pp_AddDefine( "__ARCH16BIT__", szResult );
 #elif defined( HB_ARCH_32BIT )
@@ -523,19 +510,15 @@ int hb_pp_ParseDirective( char *sLine )
    if( i == 4 && memcmp( sDirective, "ELSE", 4 ) == 0 )
    {                            /* ---  #else  --- */
       if( hb_pp_nCondCompile == 0 )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ELSE, NULL,
-                          NULL );
-      else if( hb_pp_nCondCompile == 1
-               || hb_pp_aCondCompile[hb_pp_nCondCompile - 2] )
-         hb_pp_aCondCompile[hb_pp_nCondCompile - 1] =
-            1 - hb_pp_aCondCompile[hb_pp_nCondCompile - 1];
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ELSE, NULL, NULL );
+      else if( hb_pp_nCondCompile == 1 || hb_pp_aCondCompile[hb_pp_nCondCompile - 2] )
+         hb_pp_aCondCompile[hb_pp_nCondCompile - 1] = 1 - hb_pp_aCondCompile[hb_pp_nCondCompile - 1];
    }
 
    else if( i >= 4 && i <= 5 && memcmp( sDirective, "ENDIF", i ) == 0 )
    {                            /* --- #endif  --- */
       if( hb_pp_nCondCompile == 0 )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ENDIF,
-                          NULL, NULL );
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ENDIF, NULL, NULL );
       else
          hb_pp_nCondCompile--;
    }
@@ -546,16 +529,14 @@ int hb_pp_ParseDirective( char *sLine )
    else if( i >= 4 && i <= 6 && memcmp( sDirective, "IFNDEF", i ) == 0 )
       ParseIfdef( sLine, FALSE );       /* --- #ifndef  --- */
 
-   else if( hb_pp_nCondCompile == 0
-            || hb_pp_aCondCompile[hb_pp_nCondCompile - 1] )
+   else if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[hb_pp_nCondCompile - 1] )
    {
       if( i >= 4 && i <= 7 && memcmp( sDirective, "INCLUDE", i ) == 0 )
       {                         /* --- #include --- */
          char cDelimChar;
 
          if( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL,
-                             NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
 
          cDelimChar = *sLine;
          if( cDelimChar == '<' )
@@ -568,25 +549,19 @@ int hb_pp_ParseDirective( char *sLine )
          while( *( sLine + i ) != '\0' && *( sLine + i ) != cDelimChar )
             i++;
          if( *( sLine + i ) != cDelimChar )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL,
-                             NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
          *( sLine + i ) = '\0';
 
-         if( !OpenInclude
-             ( sLine, hb_comp_pIncludePath, hb_comp_pFileName,
-               ( cDelimChar == '>' ), szInclude ) )
+         if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
          {
             if( errno == 0 || errno == EMFILE )
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
             {
 #if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__)
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN,
-                                sLine, "" );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
 #else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN,
-                                sLine, strerror( errno ) );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
 #endif
             }
          }
@@ -598,16 +573,13 @@ int hb_pp_ParseDirective( char *sLine )
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "UNDEF", i ) == 0 )
          ParseUndef( sLine );   /* --- #undef  --- */
 
-      else if( ( i >= 4 && i <= 7 && memcmp( sDirective, "COMMAND", i ) == 0 )
-               || ( i >= 4 && i <= 8
-                    && memcmp( sDirective, "XCOMMAND", i ) == 0 ) )
+      else if( ( i >= 4 && i <= 7 && memcmp( sDirective, "COMMAND", i ) == 0 ) || ( i >= 4 && i <= 8 && memcmp( sDirective, "XCOMMAND", i ) == 0 ) )
          /* --- #command  --- */
          ParseCommand( sLine, ( i == 7 ) ? FALSE : TRUE, TRUE );
 
       else
          if( ( i >= 4 && i <= 9 && memcmp( sDirective, "TRANSLATE", i ) == 0 )
-             || ( i >= 4 && i <= 10
-                  && memcmp( sDirective, "XTRANSLATE", i ) == 0 ) )
+             || ( i >= 4 && i <= 10 && memcmp( sDirective, "XTRANSLATE", i ) == 0 ) )
          /* --- #translate  --- */
          ParseCommand( sLine, ( i == 9 ) ? FALSE : TRUE, FALSE );
 
@@ -616,8 +588,7 @@ int hb_pp_ParseDirective( char *sLine )
 
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
          /* --- #error  --- */
-         hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine,
-                          NULL );
+         hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
          return -1;
@@ -628,8 +599,7 @@ int hb_pp_ParseDirective( char *sLine )
          bIgnore = hb_pp_ParsePragma( sParse ); /* --- #pragma  --- */
       }
       else
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE,
-                          sDirective, NULL );
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE, sDirective, NULL );
    }
    return bIgnore;
 }
@@ -672,17 +642,15 @@ int hb_pp_ParseDefine( char *sLine )
                {
                   /* '~xy0' -> '~xy,~ab0' */
                   char *cPos;
+
                   cPos = strstr( cParams, pars );
                   if( cPos && ( cPos[iLen] == ',' || cPos[iLen] == '\0' ) )
                   {
                      cPos--;
                      if( *cPos == '\001' )
-                        hb_compGenError( hb_pp_szErrors, 'F',
-                                         HB_PP_ERR_LABEL_DUPL_IN_DEFINE,
-                                         defname, pars );
+                        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_DUPL_IN_DEFINE, defname, pars );
                   }
-                  cParams =
-                     ( char * ) hb_xrealloc( cParams, iParLen + iLen + 3 );
+                  cParams = ( char * ) hb_xrealloc( cParams, iParLen + iLen + 3 );
                   cParams[iParLen++] = ',';
                   cParams[iParLen] = '\0';
                }
@@ -693,25 +661,19 @@ int hb_pp_ParseDefine( char *sLine )
                HB_SKIPTABSPACES( sLine );
             }
             else
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname,
-                                NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
 
             if( *sLine == ',' )
             {
                sLine++;
                HB_SKIPTABSPACES( sLine );
                if( *sLine == ')' )
-                  hb_compGenError( hb_pp_szErrors, 'F',
-                                   HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname,
-                                   NULL );
+                  hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
             }
          }
          HB_SKIPTABSPACES( sLine );
          if( *sLine == '\0' )
-            hb_compGenError( hb_pp_szErrors, 'F',
-                             HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname,
-                             NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
 
          sLine++;
       }
@@ -736,14 +698,11 @@ int hb_pp_ParseDefine( char *sLine )
             memcpy( pars, tmp, iPar );
             pars[iPar] = '\0';
             iOldPos = 0;
-            while( ( iPos =
-                     md_strAt( pars + 1, iPar - 1, sLine + iOldPos, TRUE,
-                               FALSE, FALSE, MD_STR_AT_IGNORECASE ) ) != 0 )
+            while( ( iPos = md_strAt( pars + 1, iPar - 1, sLine + iOldPos, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE ) ) != 0 )
             {
                if( sLine[iOldPos + iPos] != '\001' )
                {
-                  hb_pp_Stuff( pars, sLine + iOldPos + iPos - 1, iPar,
-                               iPar - 1, iLen - iPos - iOldPos );
+                  hb_pp_Stuff( pars, sLine + iOldPos + iPos - 1, iPar, iPar - 1, iLen - iPos - iOldPos );
                   iLen++;
                }
                iOldPos += iPos + iPar;
@@ -758,8 +717,7 @@ int hb_pp_ParseDefine( char *sLine )
       lastdef->pars = cParams;
    }
    else
-      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL,
-                       NULL );
+      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
 
    return 0;
 }
@@ -776,8 +734,7 @@ DEFINES *hb_pp_AddDefine( char *defname, char *value )
 
    if( stdef != NULL )
    {
-      hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF,
-                         defname, NULL );
+      hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
 
       if( isNew )
       {
@@ -789,7 +746,7 @@ DEFINES *hb_pp_AddDefine( char *defname, char *value )
    }
    else
    {
-      stdef = ( DEFINES * ) hb_xgrab( sizeof ( DEFINES ) );
+      stdef = ( DEFINES * ) hb_xgrab( sizeof( DEFINES ) );
       stdef->last = hb_pp_topDefine;
       hb_pp_topDefine = stdef;
       stdef->name = hb_strdup( defname );
@@ -848,20 +805,16 @@ static int ParseIfdef( char *sLine, int usl )
    {
       len = NextWord( &sLine, defname, FALSE );
       if( *defname == '\0' )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL,
-                          NULL );
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
    }
    if( hb_pp_nCondCompile == s_maxCondCompile )
    {
       s_maxCondCompile += 5;
-      hb_pp_aCondCompile =
-         ( int * ) hb_xrealloc( hb_pp_aCondCompile,
-                                sizeof ( int ) * s_maxCondCompile );
+      hb_pp_aCondCompile = ( int * ) hb_xrealloc( hb_pp_aCondCompile, sizeof( int ) * s_maxCondCompile );
    }
    if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[hb_pp_nCondCompile - 1] )
    {
-      if( ( ( stdef = DefSearch( defname, len, NULL ) ) != NULL && usl )
-          || ( stdef == NULL && !usl ) )
+      if( ( ( stdef = DefSearch( defname, len, NULL ) ) != NULL && usl ) || ( stdef == NULL && !usl ) )
          hb_pp_aCondCompile[hb_pp_nCondCompile] = 1;
       else
          hb_pp_aCondCompile[hb_pp_nCondCompile] = 0;
@@ -886,8 +839,7 @@ static DEFINES *DefSearch( char *defname, int len, BOOL * isNew )
       kol++;
       if( stdef->name != NULL && stdef->namelen == len )
       {
-         for( j = 0; *( stdef->name + j ) == *( defname + j ) &&
-              *( stdef->name + j ) != '\0'; j++ );
+         for( j = 0; *( stdef->name + j ) == *( defname + j ) && *( stdef->name + j ) != '\0'; j++ ) ;
          if( *( stdef->name + j ) == *( defname + j ) )
          {
             if( isNew )
@@ -911,14 +863,9 @@ static COMMANDS *ComSearch( char *cmdname, COMMANDS * stcmdStart )
       int j;
 
       for( j = 0; ( *( stcmd->name + j ) == toupper( *( cmdname + j ) ) ) &&
-           ( *( stcmd->name + j ) != '\0' ) &&
-           ( ( stcmd->com_or_xcom ) ? 1 : ( j < 4
-                                            || ISNAME( ( BYTE ) *
-                                                       ( cmdname + j +
-                                                         1 ) ) ) ); j++ );
+           ( *( stcmd->name + j ) != '\0' ) && ( ( stcmd->com_or_xcom ) ? 1 : ( j < 4 || ISNAME( ( BYTE ) * ( cmdname + j + 1 ) ) ) ); j++ ) ;
       if( ( *( stcmd->name + j ) == toupper( *( cmdname + j ) ) )
-          || ( !stcmd->com_or_xcom && j >= 4 && *( stcmd->name + j ) != '\0'
-               && *( cmdname + j ) == '\0' ) )
+          || ( !stcmd->com_or_xcom && j >= 4 && *( stcmd->name + j ) != '\0' && *( cmdname + j ) == '\0' ) )
          break;
 
       stcmd = stcmd->last;
@@ -937,14 +884,9 @@ static COMMANDS *TraSearch( char *cmdname, COMMANDS * sttraStart )
    while( sttra != NULL )
    {
       for( j = 0; *( sttra->name + j ) == toupper( *( cmdname + j ) ) &&
-           *( sttra->name + j ) != '\0' &&
-           ( ( sttra->com_or_xcom ) ? 1 : ( j < 4
-                                            || ISNAME( ( BYTE ) *
-                                                       ( cmdname + j +
-                                                         1 ) ) ) ); j++ );
+           *( sttra->name + j ) != '\0' && ( ( sttra->com_or_xcom ) ? 1 : ( j < 4 || ISNAME( ( BYTE ) * ( cmdname + j + 1 ) ) ) ); j++ ) ;
       if( *( sttra->name + j ) == toupper( *( cmdname + j ) )
-          || ( !sttra->com_or_xcom && j >= 4 && *( sttra->name + j ) != '\0'
-               && *( cmdname + j ) == '\0' ) )
+          || ( !sttra->com_or_xcom && j >= 4 && *( sttra->name + j ) != '\0' && *( cmdname + j ) == '\0' ) )
          break;
       sttra = sttra->last;
    }
@@ -968,8 +910,7 @@ static void ParseCommand( char *sLine, BOOL com_or_xcom, BOOL com_or_tra )
    /* Ron Pinkas added 2000-12-03 */
    BOOL bOk = FALSE;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "ParseCommand(%s, %d, %d)", sLine, com_or_xcom, com_or_tra ) );
+   HB_TRACE( HB_TR_DEBUG, ( "ParseCommand(%s, %d, %d)", sLine, com_or_xcom, com_or_tra ) );
 
    HB_SKIPTABSPACES( sLine );
    ipos = 0;
@@ -981,8 +922,7 @@ static void ParseCommand( char *sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
    /* I changed it to the following to allow < and = to be the first char within a translate or xtranslate */
    while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t'
-          && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 )
-          && ( *sLine != '(' || ipos == 0 ) )
+          && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 ) && ( *sLine != '(' || ipos == 0 ) )
    {
       /* Ron Pinkas added 2000-01-24 */
       if( !ISNAME( ( BYTE ) * sLine ) )
@@ -1092,8 +1032,7 @@ static void ParseCommand( char *sLine, BOOL com_or_xcom, BOOL com_or_tra )
    else
    {
       sLine -= ( ipos + 1 );
-      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION,
-                       cmdname, sLine );
+      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
    }
 #if defined(HB_PP_DEBUG_MEMORY)
    hb_xfree( ( void * ) mpatt );
@@ -1111,6 +1050,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
       if( cpatt[i] == '"' || cpatt[i] == '\'' )
       {
          char c = cpatt[i];
+
          i++;
          while( cpatt[i] && cpatt[i] != c )
          {
@@ -1160,6 +1100,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
                else if( cpatt[j] == '"' || cpatt[j] == '\'' )
                {
                   char c = cpatt[j];
+
                   j++;
                   while( cpatt[j] && cpatt[j] != c )
                   {
@@ -1171,9 +1112,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
 
             if( iOpenBrackets )
             {
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_PATTERN_DEFINITION, cpatt + i,
-                                NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, cpatt + i, NULL );
             }
          }
       }
@@ -1203,6 +1142,7 @@ static void RemoveOptional( char *cpatt )
       if( cpatt[i] == '"' || cpatt[i] == '\'' )
       {
          char c = cpatt[i++];
+
          while( cpatt[i] && cpatt[i] != c )
          {
             i++;
@@ -1249,9 +1189,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
    char lastchar = '@', exptype;
    char *ptr, *ptrtmp;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "ConvertPatterns(%s, %d, %s, %d)", mpatt, mlen, rpatt,
-               rlen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "ConvertPatterns(%s, %d, %s, %d)", mpatt, mlen, rpatt, rlen ) );
 
    expreal[0] = HB_PP_MATCH_MARK;
    mlen = ConvertOptional( mpatt, mlen, TRUE ); /* left pattern */
@@ -1262,6 +1200,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
       if( mpatt[i] == '"' || mpatt[i] == '\'' )
       {
          char c = mpatt[i];
+
          i++;
          while( mpatt[i] && mpatt[i] != c )
          {
@@ -1300,8 +1239,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
          {
             if( *ptr == '\0' || *ptr == '<' || *ptr == '[' || *ptr == ']' )
             {
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
                return;
             }
             ptr++;
@@ -1332,31 +1270,26 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
             if( *( exppatt + explen - 1 ) == '*' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
          else if( exptype == '4' )
          {
             if( *( exppatt + explen - 1 ) == ')' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
          else if( exptype == '5' )
          {
             if( *( exppatt + explen - 1 ) == '!' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F',
-                                HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
 
          rmlen = i - ipos + 1;
          /* Convert match marker into inner format */
-         lastchar =
-            ( lastchar !=
-              'Z' ) ? ( ( char ) ( ( unsigned int ) lastchar + 1 ) ) : 'a';
+         lastchar = ( lastchar != 'Z' ) ? ( ( char ) ( ( unsigned int ) lastchar + 1 ) ) : 'a';
          expreal[1] = lastchar;
          expreal[2] = exptype;
          hb_pp_Stuff( expreal, mpatt + ipos, 4, rmlen, mlen - ipos );
@@ -1365,9 +1298,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
 
          /* Look for appropriate result markers */
          ptr = rpatt;
-         while( ( ifou =
-                  hb_strAt( exppatt, explen, ptr,
-                            rlen - ( ptr - rpatt ) ) ) > 0 )
+         while( ( ifou = hb_strAt( exppatt, explen, ptr, rlen - ( ptr - rpatt ) ) ) > 0 )
          {
             /* Convert result marker into inner format */
             ifou--;
@@ -1404,9 +1335,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
                ptr += rmlen++;
                while( *ptr != '\0' && *ptr != '>' && *( ptr - 1 ) != '\\' )
                {
-                  if( *ptr != ' ' && *ptr != '\t' && *ptr != '\"'
-                      && *ptr != ')' && *ptr != '}' && *ptr != '.'
-                      && *ptr != '-' )
+                  if( *ptr != ' ' && *ptr != '\t' && *ptr != '\"' && *ptr != ')' && *ptr != '}' && *ptr != '.' && *ptr != '-' )
                   {
                      ifou = -1;
                      break;
@@ -1418,16 +1347,14 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
                {
                   ptr -= rmlen;
                   ptr++;
-                  if( exptype == '0' && *( ptr - 1 ) == '#'
-                      && *( ptr - 2 ) != '\\' )
+                  if( exptype == '0' && *( ptr - 1 ) == '#' && *( ptr - 2 ) != '\\' )
                   {
                      exptype = '1';     /* dumb stringify result marker */
                      ptr--;
                      rmlen++;
                   }
                   expreal[2] = exptype;
-                  hb_pp_Stuff( expreal, ptr, 4, rmlen,
-                               rlen + ( rpatt - ptr ) );
+                  hb_pp_Stuff( expreal, ptr, 4, rmlen, rlen + ( rpatt - ptr ) );
                   rlen += 4 - rmlen;
                }
                else
@@ -1447,7 +1374,7 @@ static COMMANDS *AddCommand( char *cmdname )
 
    HB_TRACE( HB_TR_DEBUG, ( "AddCommand(%s)", cmdname ) );
 
-   stcmd = ( COMMANDS * ) hb_xgrab( sizeof ( COMMANDS ) );
+   stcmd = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
    stcmd->last = hb_pp_topCommand;
    hb_pp_topCommand = stcmd;
    stcmd->name = hb_strdup( cmdname );
@@ -1462,7 +1389,7 @@ static COMMANDS *AddTranslate( char *traname )
 
    HB_TRACE( HB_TR_DEBUG, ( "AddTranslate(%s)", traname ) );
 
-   sttra = ( COMMANDS * ) hb_xgrab( sizeof ( COMMANDS ) );
+   sttra = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
    sttra->last = hb_pp_topTranslate;
    hb_pp_topTranslate = sttra;
    sttra->name = hb_strdup( traname );
@@ -1487,8 +1414,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
    DEFINES *stdef;
    COMMANDS *stcmd;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "hb_pp_ParseExpression(%s, %s)", sLine, sOutLine ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_ParseExpression(%s, %s)", sLine, sOutLine ) );
 
    do
    {
@@ -1503,9 +1429,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
       {
          ptro = sOutLine;
          ptri = sLine + isdvig;
-         ipos =
-            md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE,
-                      MD_STR_AT_IGNORECASE );
+         ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE );
 
          if( ipos > 0 )
          {
@@ -1530,11 +1454,9 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
 
             lens = strlen( sLine + isdvig );
             if( bIgnore )
-               hb_pp_Stuff( " ", sLine + isdvig, 0, ( ipos ) ? ipos : lens,
-                            lens );
+               hb_pp_Stuff( " ", sLine + isdvig, 0, ( ipos ) ? ipos : lens, lens );
             else
-               hb_pp_Stuff( rpatt, sLine + isdvig, strlen( rpatt ),
-                            ( ipos ) ? ipos : lens, lens );
+               hb_pp_Stuff( rpatt, sLine + isdvig, strlen( rpatt ), ( ipos ) ? ipos : lens, lens );
 
             if( ipos > 0 )
             {
@@ -1584,20 +1506,14 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
                   ptri = sLine + isdvig;
                   lenToken = stcmd->namelen;
 
-                  while( ( ifou =
-                           md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE,
-                                     FALSE, MD_STR_AT_USESUBCASE ) ) > 0 )
+                  while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE, FALSE, MD_STR_AT_USESUBCASE ) ) > 0 )
                   {
                      ptri += ifou - 1;
 
-                     if( ( i =
-                           WorkTranslate( ptri + lenToken, ptro, stcmd,
-                                          &lens ) ) >= 0 )
+                     if( ( i = WorkTranslate( ptri + lenToken, ptro, stcmd, &lens ) ) >= 0 )
                      {
                         lens += lenToken;
-                        while( lens > 0
-                               && ( *( ptri + lens - 1 ) == ' '
-                                    || *( ptri + lens - 1 ) == '\t' ) )
+                        while( lens > 0 && ( *( ptri + lens - 1 ) == ' ' || *( ptri + lens - 1 ) == '\t' ) )
                         {
                            lens--;
                         }
@@ -1673,10 +1589,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
                      || ( *ptri != '='
                           && ( !IsInStr( *ptri, ":/+*-%^" )
                                || *( ptri + 1 ) != '=' ) && ( *ptri != '-'
-                                                              || *( ptri +
-                                                                    1 ) !=
-                                                              '>' ) ) )
-                   && ( stcmd = ComSearch( sToken, NULL ) ) != NULL )
+                                                              || *( ptri + 1 ) != '>' ) ) ) && ( stcmd = ComSearch( sToken, NULL ) ) != NULL )
                {
                   ptro = sOutLine;
 
@@ -1693,8 +1606,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
                      if( isdvig + ipos > 0 )
                      {
                         lens = strlen( sLine + isdvig );
-                        hb_pp_Stuff( ptro, sLine + isdvig, i,
-                                     ( ipos ) ? ipos - 1 : lens, lens );
+                        hb_pp_Stuff( ptro, sLine + isdvig, i, ( ipos ) ? ipos - 1 : lens, lens );
 
                         if( ipos > 0 )
                         {
@@ -1726,11 +1638,9 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
 
       kolpass++;
 
-      if( kolpass > hb_pp_MaxTranslateCycles
-          && ( rezDef || rezTra || rezCom ) )
+      if( kolpass > hb_pp_MaxTranslateCycles && ( rezDef || rezTra || rezCom ) )
       {
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL,
-                          NULL );
+         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
          break;
       }
    }
@@ -1827,8 +1737,7 @@ static int WorkPseudoF( char **ptri, char *ptro, DEFINES * stdef )
       ibeg = 0;
       do                        /* Parsing through parameters */
       {                         /* in macro definition        */
-         if( *( stdef->pars + ipos ) == ','
-             || *( stdef->pars + ipos ) == '\0' )
+         if( *( stdef->pars + ipos ) == ',' || *( stdef->pars + ipos ) == '\0' )
          {
             *( parfict + ipos - ibeg ) = '\0';
             lenfict = ipos - ibeg;
@@ -1841,16 +1750,12 @@ static int WorkPseudoF( char **ptri, char *ptro, DEFINES * stdef )
                lenreal = NextParm( ptri, NULL );
 
                ptrb = ptro;
-               while( ( ifou =
-                        hb_strAt( parfict, lenfict, ptrb,
-                                  lenres - ( ptrb - ptro ) ) ) > 0 )
+               while( ( ifou = hb_strAt( parfict, lenfict, ptrb, lenres - ( ptrb - ptro ) ) ) > 0 )
                {
                   ptrb = ptrb + ifou - 1;
-                  if( !ISNAME( ( BYTE ) * ( ptrb - 1 ) )
-                      && !ISNAME( ( BYTE ) * ( ptrb + lenfict ) ) )
+                  if( !ISNAME( ( BYTE ) * ( ptrb - 1 ) ) && !ISNAME( ( BYTE ) * ( ptrb + lenfict ) ) )
                   {
-                     hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict,
-                                  lenres + ( ptro - ptrb ) );
+                     hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres + ( ptro - ptrb ) );
                      lenres += lenreal - lenfict;
                      ptrb += lenreal;
                   }
@@ -1905,8 +1810,7 @@ static int WorkCommand( char *ptri, char *ptro, COMMANDS * stcmd )
       ptrmp = stcmd->mpatt;     /* Pointer to a match pattern */
       s_Repeate = 0;
       s_groupchar = '@';
-      rez =
-         CommandStuff( ptrmp, ptri, ptro, &lenres, TRUE, stcmd->com_or_xcom );
+      rez = CommandStuff( ptrmp, ptri, ptro, &lenres, TRUE, stcmd->com_or_xcom );
 
       stcmd = stcmd->last;
       if( rez < 0 && stcmd != NULL )
@@ -1922,16 +1826,14 @@ static int WorkCommand( char *ptri, char *ptro, COMMANDS * stcmd )
    return -1;
 }
 
-static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra,
-                          int *lens )
+static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra, int *lens )
 {
    int rez;
    int lenres;
    char *ptrmp;
    char *sToken = sttra->name;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "WorkTranslate(%s, %s, %p, %p)", ptri, ptro, sttra, lens ) );
+   HB_TRACE( HB_TR_DEBUG, ( "WorkTranslate(%s, %s, %p, %p)", ptri, ptro, sttra, lens ) );
 
    do
    {
@@ -1939,9 +1841,7 @@ static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra,
       ptrmp = sttra->mpatt;
       s_Repeate = 0;
       s_groupchar = '@';
-      rez =
-         CommandStuff( ptrmp, ptri, ptro, &lenres, FALSE,
-                       sttra->com_or_xcom );
+      rez = CommandStuff( ptrmp, ptri, ptro, &lenres, FALSE, sttra->com_or_xcom );
 
       sttra = sttra->last;
 
@@ -1965,8 +1865,7 @@ static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra,
 
 #define MAX_OPTIONALS 5
 
-static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
-                         int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
+static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
    BOOL endTranslation = FALSE;
    int ipos;
@@ -1979,9 +1878,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
       printf( "MP: >%s<\nIn: >%s<\n", ptrmp, ptri );
     */
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "CommandStuff(%s, %s, %s, %p, %d, %d)", ptrmp, inputLine, ptro,
-               lenres, com_or_tra, com_or_xcom ) );
+   HB_TRACE( HB_TR_DEBUG, ( "CommandStuff(%s, %s, %s, %p, %d, %d)", ptrmp, inputLine, ptro, lenres, com_or_tra, com_or_xcom ) );
 
    s_numBrackets = 0;
    HB_SKIPTABSPACES( ptri );
@@ -1999,16 +1896,13 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
          {
             strtopti = ptrmp;
          }
-         if( !s_numBrackets && strtopti && strtptri != ptri &&
-             ( ISNAME( ( BYTE ) * ptri ) || *ptri == '&' ) )
+         if( !s_numBrackets && strtopti && strtptri != ptri && ( ISNAME( ( BYTE ) * ptri ) || *ptri == '&' ) )
          {
             strtptri = ptri;
             ptrmp = strtopti;
             ptr = ptri;
             ipos = NextName( &ptr, tmpname );
-            ipos =
-               md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE,
-                         MD_STR_AT_USESUBCASE );
+            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE, MD_STR_AT_USESUBCASE );
             if( ipos && TestOptional( strtopti, strtopti + ipos - 2 ) )
             {
                ptr = strtopti + ipos - 2;
@@ -2020,50 +1914,50 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
 
          switch ( *ptrmp )
          {
-         case HB_PP_OPT_START:
-            if( !s_numBrackets )
-               isWordInside = 0;
-            s_numBrackets++;
-            s_aIsRepeate[s_Repeate] = 0;
-            lastopti[s_Repeate++] = ptrmp;
-            ptrmp++;
-            if( !CheckOptional
-                ( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
-            {
-               SkipOptional( &ptrmp );
-            }
-            break;
-
-         case HB_PP_OPT_END:
-            if( s_Repeate )
-            {
-               s_Repeate--;
-               if( s_aIsRepeate[s_Repeate] )
+            case HB_PP_OPT_START:
+               if( !s_numBrackets )
+                  isWordInside = 0;
+               s_numBrackets++;
+               s_aIsRepeate[s_Repeate] = 0;
+               lastopti[s_Repeate++] = ptrmp;
+               ptrmp++;
+               if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                {
-                  if( ISNAME( ( BYTE ) * ptri ) )
+                  SkipOptional( &ptrmp );
+               }
+               break;
+
+            case HB_PP_OPT_END:
+               if( s_Repeate )
+               {
+                  s_Repeate--;
+                  if( s_aIsRepeate[s_Repeate] )
                   {
-                     ptr = ptri;
-                     ipos = NextName( &ptr, tmpname );
-                     ipos =
-                        md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE,
-                                  MD_STR_AT_USESUBCASE );
-                     if( ipos && TestOptional( ptrmp + 1, ptrmp + ipos - 2 ) )
+                     if( ISNAME( ( BYTE ) * ptri ) )
                      {
-                        ptr = PrevSquare( ptrmp + ipos - 2, ptrmp + 1, NULL );
-                        if( !ptr
-                            || CheckOptional( ptrmp + 1, ptri, ptro, lenres,
-                                              com_or_tra, com_or_xcom ) )
+                        ptr = ptri;
+                        ipos = NextName( &ptr, tmpname );
+                        ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE, MD_STR_AT_USESUBCASE );
+                        if( ipos && TestOptional( ptrmp + 1, ptrmp + ipos - 2 ) )
                         {
-                           ptrmp = lastopti[s_Repeate];
-                           ptrmp++;
-                           s_Repeate++;
-                           SkipOptional( &ptrmp );
-                           s_numBrackets++;
-                           ptrmp++;
-                           strtptri = ptri;
+                           ptr = PrevSquare( ptrmp + ipos - 2, ptrmp + 1, NULL );
+                           if( !ptr || CheckOptional( ptrmp + 1, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
+                           {
+                              ptrmp = lastopti[s_Repeate];
+                              ptrmp++;
+                              s_Repeate++;
+                              SkipOptional( &ptrmp );
+                              s_numBrackets++;
+                              ptrmp++;
+                              strtptri = ptri;
+                           }
+                           else
+                              ptrmp = lastopti[s_Repeate];
                         }
                         else
+                        {
                            ptrmp = lastopti[s_Repeate];
+                        }
                      }
                      else
                      {
@@ -2072,87 +1966,81 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
                   }
                   else
                   {
-                     ptrmp = lastopti[s_Repeate];
+                     if( !isWordInside )
+                        strtopti = NULL;
+                     ptrmp++;
                   }
+                  s_numBrackets--;
                }
                else
                {
                   if( !isWordInside )
                      strtopti = NULL;
+                  s_numBrackets--;
                   ptrmp++;
                }
-               s_numBrackets--;
-            }
-            else
-            {
-               if( !isWordInside )
+               break;
+
+            case ',':
+               if( s_numBrackets == 1 )
+                  isWordInside = 1;
+               if( !s_numBrackets )
                   strtopti = NULL;
-               s_numBrackets--;
-               ptrmp++;
-            }
-            break;
-
-         case ',':
-            if( s_numBrackets == 1 )
-               isWordInside = 1;
-            if( !s_numBrackets )
-               strtopti = NULL;
-            if( *ptri == ',' )
-            {
-               ptrmp++;
-               ptri++;
-            }
-            else
-            {
-               if( s_numBrackets )
+               if( *ptri == ',' )
                {
-                  SkipOptional( &ptrmp );
+                  ptrmp++;
+                  ptri++;
                }
                else
-                  return -1;
-            }
-            break;
-
-         case HB_PP_MATCH_MARK:        /*  Match marker */
-            if( !s_numBrackets )
-               strtopti = NULL;
-            if( s_numBrackets == 1 && *( ptrmp + 2 ) == '2' )
-               isWordInside = 1;        /*  restricted match marker  */
-            if( !WorkMarkers
-                ( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
-            {
-               if( s_numBrackets )
                {
-                  SkipOptional( &ptrmp );
+                  if( s_numBrackets )
+                  {
+                     SkipOptional( &ptrmp );
+                  }
+                  else
+                     return -1;
                }
-               else
-                  return -1;
-            }
-            break;
+               break;
 
-         case '\0':
-            if( com_or_tra )
-               return -1;
-            else
-               endTranslation = TRUE;
-            break;
-
-         default:              /*   Key word    */
-            if( s_numBrackets == 1 )
-               isWordInside = 1;
-            if( !s_numBrackets )
-               strtopti = NULL;
-            ptr = ptri;
-            if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
-            {
-               ptri = ptr;
-               if( s_numBrackets )
+            case HB_PP_MATCH_MARK:     /*  Match marker */
+               if( !s_numBrackets )
+                  strtopti = NULL;
+               if( s_numBrackets == 1 && *( ptrmp + 2 ) == '2' )
+                  isWordInside = 1;     /*  restricted match marker  */
+               if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                {
-                  SkipOptional( &ptrmp );
+                  if( s_numBrackets )
+                  {
+                     SkipOptional( &ptrmp );
+                  }
+                  else
+                     return -1;
                }
-               else
+               break;
+
+            case '\0':
+               if( com_or_tra )
                   return -1;
-            }
+               else
+                  endTranslation = TRUE;
+               break;
+
+            default:           /*   Key word    */
+               if( s_numBrackets == 1 )
+                  isWordInside = 1;
+               if( !s_numBrackets )
+                  strtopti = NULL;
+               ptr = ptri;
+               if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
+               {
+                  ptri = ptr;
+                  if( s_numBrackets )
+                  {
+                     SkipOptional( &ptrmp );
+                  }
+                  else
+                     return -1;
+               }
          }
          HB_SKIPTABSPACES( ptri );
       };
@@ -2172,16 +2060,16 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro,
          if( *ptrmp != '\0' )
             switch ( *ptrmp )
             {
-            case HB_PP_OPT_START:
-               ptrmp++;
-               SkipOptional( &ptrmp );
-               ptrmp++;
-               break;
-            case HB_PP_OPT_END:
-               ptrmp++;
-               break;
-            default:
-               return -1;
+               case HB_PP_OPT_START:
+                  ptrmp++;
+                  SkipOptional( &ptrmp );
+                  ptrmp++;
+                  break;
+               case HB_PP_OPT_END:
+                  ptrmp++;
+                  break;
+               default:
+                  return -1;
             }
       }
       while( *ptrmp != '\0' );
@@ -2208,6 +2096,7 @@ static int RemoveSlash( char *cpatt )
       if( cpatt[i] == '"' || cpatt[i] == '\'' )
       {
          char c = cpatt[i];
+
          i++;
          while( cpatt[i] && cpatt[i] != c )
          {
@@ -2239,8 +2128,7 @@ static int RemoveSlash( char *cpatt )
    return lenres;
 }
 
-static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres,
-                        BOOL com_or_tra, BOOL com_or_xcom )
+static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
 #if ! defined(HB_PP_DEBUG_MEMORY)
    static char expreal[MAX_EXP];
@@ -2253,8 +2141,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres,
    int rezrestr, ipos, nBra;
    char *ptr, *ptrtemp;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres ) );
+   HB_TRACE( HB_TR_DEBUG, ( "WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres ) );
 
    /* Copying a match pattern to 'exppatt' */
    lenpatt = stroncpy( exppatt, *ptrmp, 4 );
@@ -2303,14 +2190,11 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres,
    }
 
    if( *( exppatt + 2 ) != '2' && *ptrtemp != HB_PP_MATCH_MARK
-       && *ptrtemp != ',' && *ptrtemp != HB_PP_OPT_START
-       && *ptrtemp != HB_PP_OPT_END && *ptrtemp != '\0' )
+       && *ptrtemp != ',' && *ptrtemp != HB_PP_OPT_START && *ptrtemp != HB_PP_OPT_END && *ptrtemp != '\0' )
    {
       lenreal = strincpy( expreal, ptrtemp );
 
-      if( ( ipos =
-            md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE,
-                      MD_STR_AT_USESUBCASE ) ) > 0 )
+      if( ( ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE, MD_STR_AT_USESUBCASE ) ) > 0 )
       {
          if( ptrtemp > *ptrmp )
          {
@@ -2441,9 +2325,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres,
 /* Commented out this line to avoid a compiler warning. Please review. [vszakats] */
 /*               lenreal = IsMacroVar( *ptri, com_or_tra ); */
                   *ptri += 1;
-                  lenreal =
-                     getExpReal( expreal + 2, ptri, FALSE, maxlenreal,
-                                 FALSE );
+                  lenreal = getExpReal( expreal + 2, ptri, FALSE, maxlenreal, FALSE );
                   if( **ptri == ')' )
                   {
                      *ptri += 1;
@@ -2586,8 +2468,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres,
    return 1;
 }
 
-static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
-                       BOOL bStrict )
+static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL bStrict )
 {
    int lens = 0;
    char *sZnaki = "+-=><*/$.:#%!^";
@@ -2596,22 +2477,18 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
    BOOL rez = FALSE;
    BOOL bMacro = FALSE;
    char *cStart = expreal;
-
+   char cLastSep = '\0';
    char cLastChar = '\0';
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "getExpReal(%s, %p, %d, %d, %d)", expreal, ptri, prlist,
-               maxrez, bStrict ) );
+   HB_TRACE( HB_TR_DEBUG, ( "getExpReal(%s, %p, %d, %d, %d)", expreal, ptri, prlist, maxrez, bStrict ) );
 
    HB_SKIPTABSPACES( *ptri );
 
-   State = ( **ptri == '\'' || **ptri == '\"'
-             || **ptri == '[' ) ? STATE_EXPRES : STATE_ID;
+   State = ( **ptri == '\'' || **ptri == '\"' || **ptri == '[' ) ? STATE_EXPRES : STATE_ID;
 
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
-      if( State == STATE_EXPRES ||
-          ( cLastChar && strchr( "({[.|,$!#=<>^%*/+-", cLastChar ) ) )
+      if( State == STATE_EXPRES || ( cLastChar && strchr( "({[.|,$!#=<>^%*/+-", cLastChar ) ) )
          /* Ron Pinkas added if on State 2001-05-02 to avoid 
             multiple strings concatination. 
           */
@@ -2646,8 +2523,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
             lens++;
 
             cLastChar = '"';
-            State = ( StBr1 == 0 && StBr2 == 0
-                      && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
+            State = ( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
             continue;
          }
          else if( **ptri == '\'' )
@@ -2698,8 +2574,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
             lens++;
 
             cLastChar = '\'';
-            State = ( StBr1 == 0 && StBr2 == 0
-                      && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
+            State = ( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
             continue;
          }
          else if( **ptri == '[' )
@@ -2759,8 +2634,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
             lens++;
 
             cLastChar = ']';
-            State = ( StBr1 == 0 && StBr2 == 0
-                      && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
+            State = ( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 ) ? STATE_ID_END : STATE_BRACKET;
             continue;
          }
          /* Added by Ron Pinkas 2001-05-02 
@@ -2784,224 +2658,230 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
 
       switch ( State )
       {
-      case STATE_BRACKET:
-      {
-         if( **ptri == '(' )
+         case STATE_BRACKET:
          {
-            StBr1++;
-         }
-         else if( **ptri == '[' )
-         {
-            StBr2++;
-         }
-         else if( **ptri == '{' )
-         {
-            StBr3++;
-         }
-         else if( **ptri == ')' )
-         {
-            StBr1--;
-            if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+            if( **ptri == '(' )
             {
-               State = STATE_ID_END;
+               StBr1++;
             }
-         }
-         else if( **ptri == ']' )
-         {
-            StBr2--;
-            if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+            else if( **ptri == '[' )
             {
-               State = STATE_ID_END;
+               StBr2++;
             }
-         }
-         else if( **ptri == '}' )
-         {
-            StBr3--;
-            if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+            else if( **ptri == '{' )
             {
-               State = STATE_ID_END;
+               StBr3++;
             }
+            else if( **ptri == ')' )
+            {
+               StBr1--;
+               if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+            else if( **ptri == ']' )
+            {
+               StBr2--;
+               if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+            else if( **ptri == '}' )
+            {
+               StBr3--;
+               if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
+               {
+                  State = STATE_ID_END;
+               }
+            }
+
+            break;
          }
 
-         break;
-      }
-
-      case STATE_ID:
-      case STATE_ID_END:
-      {
-         if( ( ( ISNAME( ( BYTE ) ** ptri ) || **ptri == '\\'
-                 || **ptri == '&' ) && State == STATE_ID_END )
-             || **ptri == ',' )
+         case STATE_ID:
+         case STATE_ID_END:
          {
-            if( **ptri == ',' )
+            if( ( ( ISNAME( ( BYTE ) ** ptri ) || **ptri == '\\' || **ptri == '&' ) && State == STATE_ID_END ) || **ptri == ',' )
+            {
+               if( **ptri == ',' )
+               {
+                  if( !prlist )
+                  {
+                     rez = TRUE;
+                  }
+                  else
+                  {
+                     State = STATE_EXPRES;
+                  }
+                  cLastSep = ',';
+               }
+               else
+               {
+                  rez = TRUE;
+               }
+            }
+            else if( IsInStr( **ptri, sZnaki ) )
+            {
+               cLastSep = ',';
+               /* Ron Pinkas added 2000-06-02 */
+               if( **ptri == '.' && bMacro )
+               {
+                  /* Macro terminator '.' */
+                  if( *( *ptri + 1 ) == ' ' )
+                  {
+                     State = STATE_ID_END;
+                  }
+
+                  bMacro = FALSE;
+
+                  /* Ron Pinkas added 2000-05-03 */
+                  /* Macro terminator is NOT a coninutation char unlike '.' of logical operators, so we don't want it recorded as cLastChar! */
+                  if( expreal != NULL )
+                  {
+                     *expreal++ = **ptri;
+                  }
+                  ( *ptri )++;
+                  lens++;
+                  continue;
+                  /* END - Ron Pinkas added 2000-05-03 */
+               }
+               else if( **ptri == '*' && *( *ptri + 1 ) == '*' )
+               {
+                  /* Clipper replaces ** with ^ operator */
+                  if( expreal != NULL )
+                  {
+                     *expreal++ = '^';
+                  }
+                  ( *ptri ) += 2;
+                  lens++;
+                  cLastChar = '^';
+                  State = STATE_EXPRES;
+                  continue;
+               }
+               else
+                  /* Ron Pinkas end 2000-06-02 */
+                  State = STATE_EXPRES;
+            }
+            else if( **ptri == '(' )
+            {
+               State = STATE_BRACKET;
+               StBr1 = 1;
+            }
+            else if( **ptri == '[' )
+            {
+               StBr2++;
+               State = STATE_BRACKET;
+            }
+            else if( **ptri == '{' )
+            {
+               State = STATE_BRACKET;
+               StBr3 = 1;
+            }
+            else if( **ptri == ')' && StBr1 == 0 )
+            {
+               rez = TRUE;
+            }
+            else if( **ptri == ']' && StBr2 == 0 )
+            {
+               rez = TRUE;
+            }
+            else if( **ptri == '}' && StBr3 == 0 )
+            {
+               rez = TRUE;
+            }
+            else if( **ptri == '&' )
+            {
+               bMacro = TRUE;
+            }
+            else if( **ptri == ' ' )
+            {
+               State = STATE_ID_END;
+               bMacro = FALSE;
+            }
+
+            break;
+         }
+
+         case STATE_EXPRES:
+         case STATE_EXPRES_ID:
+         {
+            if( **ptri == '[' )
+            {
+               StBr2++;
+               State = STATE_BRACKET;
+            }
+            else if( ISNAME( ( BYTE ) ** ptri ) )
+            {
+               if( prlist && cLastSep == ' ' )
+               {
+                  State = STATE_ID_END;
+                  rez = TRUE;
+               }
+               else
+                  State = STATE_EXPRES_ID;
+               cLastSep = **ptri;
+            }
+            else if( **ptri == ' ' )
+            {
+               if( !prlist )
+               {
+                  if( State == STATE_EXPRES_ID )
+                  {
+                     State = STATE_ID_END;
+                  }
+                  else if( lens > 2 && ( ( *( *ptri - 2 ) == '+' && *( *ptri - 1 ) == '+' ) || ( *( *ptri - 2 ) == '-' && *( *ptri - 1 ) == '-' ) ) )
+                  {
+                     State = STATE_ID_END;
+                  }
+               }
+               if( cLastSep != ',' )
+                  cLastSep = ' ';
+            }
+            /* Ron Pinkas added 2000-06-14 */
+            else if( **ptri == ')' && StBr1 == 0 )
+            {
+               rez = TRUE;
+            }
+            /* Ron Pinkas end 2000-06-14 */
+            else if( **ptri == '(' )
+            {
+               StBr1++;
+               State = STATE_BRACKET;
+            }
+            else if( **ptri == '{' )
+            {
+               StBr3++;
+               State = STATE_BRACKET;
+            }
+            else if( **ptri == ',' )
             {
                if( !prlist )
                {
                   rez = TRUE;
-               }
-               else
-               {
                   State = STATE_EXPRES;
                }
+               cLastSep = ',';
             }
-            else
+            else if( **ptri == '.' && *( *ptri - 2 ) == '.' &&
+                     ( *( *ptri - 1 ) == 'T' || *( *ptri - 1 ) == 'F' || *( *ptri - 1 ) == 't' || *( *ptri - 1 ) == 'f' ) )
             {
-               rez = TRUE;
+               State = STATE_ID_END;
             }
-         }
-         else if( IsInStr( **ptri, sZnaki ) )
-         {
-            /* Ron Pinkas added 2000-06-02 */
-            if( **ptri == '.' && bMacro )
+            else if( **ptri == '&' )
             {
-               /* Macro terminator '.' */
-               if( *( *ptri + 1 ) == ' ' )
-               {
-                  State = STATE_ID_END;
-               }
-
-               bMacro = FALSE;
-
-               /* Ron Pinkas added 2000-05-03 */
-               /* Macro terminator is NOT a coninutation char unlike '.' of logical operators, so we don't want it recorded as cLastChar! */
-               if( expreal != NULL )
-               {
-                  *expreal++ = **ptri;
-               }
-               ( *ptri )++;
-               lens++;
-               continue;
-               /* END - Ron Pinkas added 2000-05-03 */
-            }
-            else if( **ptri == '*' && *( *ptri + 1 ) == '*' )
-            {
-               /* Clipper replaces ** with ^ operator */
-               if( expreal != NULL )
-               {
-                  *expreal++ = '^';
-               }
-               ( *ptri ) += 2;
-               lens++;
-               cLastChar = '^';
-               State = STATE_EXPRES;
+               State = STATE_ID;
                continue;
             }
             else
-               /* Ron Pinkas end 2000-06-02 */
-               State = STATE_EXPRES;
-         }
-         else if( **ptri == '(' )
-         {
-            State = STATE_BRACKET;
-            StBr1 = 1;
-         }
-         else if( **ptri == '[' )
-         {
-            StBr2++;
-            State = STATE_BRACKET;
-         }
-         else if( **ptri == '{' )
-         {
-            State = STATE_BRACKET;
-            StBr3 = 1;
-         }
-         else if( **ptri == ')' && StBr1 == 0 )
-         {
-            rez = TRUE;
-         }
-         else if( **ptri == ']' && StBr2 == 0 )
-         {
-            rez = TRUE;
-         }
-         else if( **ptri == '}' && StBr3 == 0 )
-         {
-            rez = TRUE;
-         }
-         else if( **ptri == '&' )
-         {
-            bMacro = TRUE;
-         }
-         else if( **ptri == ' ' )
-         {
-            State = STATE_ID_END;
-            bMacro = FALSE;
-         }
-
-         break;
-      }
-
-      case STATE_EXPRES:
-      case STATE_EXPRES_ID:
-      {
-         if( **ptri == '[' )
-         {
-            StBr2++;
-            State = STATE_BRACKET;
-         }
-         else if( ISNAME( ( BYTE ) ** ptri ) )
-         {
-            State = STATE_EXPRES_ID;
-         }
-         else if( **ptri == ' ' )
-         {
-            if( !prlist )
             {
-               if( State == STATE_EXPRES_ID )
-               {
-                  State = STATE_ID_END;
-               }
-               else if( lens > 2
-                        &&
-                        ( ( *( *ptri - 2 ) == '+' && *( *ptri - 1 ) == '+' )
-                          || ( *( *ptri - 2 ) == '-'
-                               && *( *ptri - 1 ) == '-' ) ) )
-               {
-                  State = STATE_ID_END;
-               }
-            }
-         }
-         /* Ron Pinkas added 2000-06-14 */
-         else if( **ptri == ')' && StBr1 == 0 )
-         {
-            rez = TRUE;
-         }
-         /* Ron Pinkas end 2000-06-14 */
-         else if( **ptri == '(' )
-         {
-            StBr1++;
-            State = STATE_BRACKET;
-         }
-         else if( **ptri == '{' )
-         {
-            StBr3++;
-            State = STATE_BRACKET;
-         }
-         else if( **ptri == ',' )
-         {
-            if( !prlist )
-            {
-               rez = TRUE;
                State = STATE_EXPRES;
+               cLastSep = ',';
             }
-         }
-         else if( **ptri == '.' && *( *ptri - 2 ) == '.' &&
-                  ( *( *ptri - 1 ) == 'T' || *( *ptri - 1 ) == 'F' ||
-                    *( *ptri - 1 ) == 't' || *( *ptri - 1 ) == 'f' ) )
-         {
-            State = STATE_ID_END;
-         }
-         else if( **ptri == '&' )
-         {
-            State = STATE_ID;
-            continue;
-         }
-         else
-         {
-            State = STATE_EXPRES;
-         }
 
-         break;
-      }
+            break;
+         }
       }
 
       if( !rez )
@@ -3023,7 +2903,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
 
    if( expreal != NULL && expreal > cStart )
    {
-      if( *( expreal - 1 ) == ' ' )
+      while( *( expreal - 1 ) == ' ' && expreal > cStart )
       {
          expreal--;
          lens--;
@@ -3035,9 +2915,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez,
    /* Ron Pinkas added 2000-06-21 */
    if( bStrict )
    {
-      if( State == STATE_QUOTE1 || State == STATE_QUOTE2
-          || State == STATE_QUOTE3 || State == STATE_BRACKET || StBr1 || StBr2
-          || StBr3 )
+      if( State == STATE_QUOTE1 || State == STATE_QUOTE2 || State == STATE_QUOTE3 || State == STATE_BRACKET || StBr1 || StBr2 || StBr3 )
       {
          /* Alexander should we include this???
             expreal = NULL;
@@ -3064,16 +2942,14 @@ static BOOL isExpres( char *stroka, BOOL prlist )
    l2 = getExpReal( NULL, &stroka, prlist, HB_PP_STR_SIZE, TRUE );
 
 #if 0
-   printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2,
-           ( stroka - l2 )[l1 - 1] );
+   printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1 - 1] );
 #endif
 
    /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/+*-%^=(<>"
       return ( l1 <= l2 );
     */
 
-   return ( l1 <=
-            l2 /*&& ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) */  );
+   return ( l1 <= l2 /*&& ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) */  );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
@@ -3122,8 +2998,7 @@ static BOOL TestOptional( char *ptr1, char *ptr2 )
    return !flagname;
 }
 
-static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres,
-                           BOOL com_or_tra, BOOL com_or_xcom )
+static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
    int save_numBr = s_numBrackets, save_Repeate = s_Repeate;
    BOOL endTranslation = FALSE;
@@ -3133,9 +3008,7 @@ static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres,
 
    HB_SYMBOL_UNUSED( com_or_tra );
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "CheckOptional(%s, %s, %s, %p, %d, %d)", ptrmp, ptri, ptro,
-               lenres, com_or_tra, com_or_xcom ) );
+   HB_TRACE( HB_TR_DEBUG, ( "CheckOptional(%s, %s, %s, %p, %d, %d)", ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) );
 
    s_bReplacePat = FALSE;
    lastInputptr[s_Repeate] = ptri;
@@ -3144,78 +3017,77 @@ static BOOL CheckOptional( char *ptrmp, char *ptri, char *ptro, int *lenres,
       HB_SKIPTABSPACES( ptrmp );
       switch ( *ptrmp )
       {
-      case HB_PP_OPT_START:
-         s_numBrackets++;
-         s_aIsRepeate[s_Repeate] = 0;
-         lastInputptr[s_Repeate] = ptri;
-         lastopti[s_Repeate++] = ptrmp;
-         ptrmp++;
-         break;
-
-      case HB_PP_OPT_END:
-         if( s_numBrackets == save_numBr )
-            endTranslation = TRUE;
-         else
-         {
-            if( s_Repeate )
-            {
-               s_Repeate--;
-               ptrmp = lastopti[s_Repeate];
-            }
-            else
-               ptrmp++;
-            s_numBrackets--;
-         }
-         break;
-
-      case ',':
-         if( *ptri == ',' )
-         {
+         case HB_PP_OPT_START:
+            s_numBrackets++;
+            s_aIsRepeate[s_Repeate] = 0;
+            lastInputptr[s_Repeate] = ptri;
+            lastopti[s_Repeate++] = ptrmp;
             ptrmp++;
-            ptri++;
-         }
-         else
-         {
-            if( s_numBrackets - save_numBr > 0 )
+            break;
+
+         case HB_PP_OPT_END:
+            if( s_numBrackets == save_numBr )
+               endTranslation = TRUE;
+            else
             {
-               SkipOptional( &ptrmp );
-               ptri = lastInputptr[s_Repeate];
+               if( s_Repeate )
+               {
+                  s_Repeate--;
+                  ptrmp = lastopti[s_Repeate];
+               }
+               else
+                  ptrmp++;
+               s_numBrackets--;
+            }
+            break;
+
+         case ',':
+            if( *ptri == ',' )
+            {
+               ptrmp++;
+               ptri++;
             }
             else
-               bResult = FALSE;
-         }
-         break;
-
-      case HB_PP_MATCH_MARK:   /*  Match marker */
-         if( !WorkMarkers
-             ( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
-         {
-            if( s_numBrackets - save_numBr > 0 )
             {
-               SkipOptional( &ptrmp );
-               ptri = lastInputptr[s_Repeate];
+               if( s_numBrackets - save_numBr > 0 )
+               {
+                  SkipOptional( &ptrmp );
+                  ptri = lastInputptr[s_Repeate];
+               }
+               else
+                  bResult = FALSE;
             }
-            else
-               bResult = FALSE;
-         }
-         break;
+            break;
 
-      case '\0':
-         bResult = FALSE;
-
-      default:                 /*   Key word    */
-         ptr = ptri;
-         if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
-         {
-            ptri = ptr;
-            if( s_numBrackets - save_numBr > 0 )
+         case HB_PP_MATCH_MARK:        /*  Match marker */
+            if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
             {
-               SkipOptional( &ptrmp );
-               ptri = lastInputptr[s_Repeate];
+               if( s_numBrackets - save_numBr > 0 )
+               {
+                  SkipOptional( &ptrmp );
+                  ptri = lastInputptr[s_Repeate];
+               }
+               else
+                  bResult = FALSE;
             }
-            else
-               bResult = FALSE;
-         }
+            break;
+
+         case '\0':
+            bResult = FALSE;
+
+         default:              /*   Key word    */
+            ptr = ptri;
+            if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
+            {
+               ptri = ptr;
+               if( s_numBrackets - save_numBr > 0 )
+               {
+                  SkipOptional( &ptrmp );
+                  ptri = lastInputptr[s_Repeate];
+               }
+               else
+                  bResult = FALSE;
+            }
       }
       HB_SKIPTABSPACES( ptri );
    };
@@ -3256,18 +3128,18 @@ static void SkipOptional( char **ptri )
    {
       switch ( **ptri )
       {
-      case HB_PP_OPT_START:
-         nbr++;
-         break;
-      case HB_PP_OPT_END:
-         nbr--;
-         break;
-      case HB_PP_MATCH_MARK:
-         ( *ptri ) += 3;
-         if( *( *ptri - 1 ) == '2' )
-            while( **ptri != '>' )
-               ( *ptri )++;
-         break;
+         case HB_PP_OPT_START:
+            nbr++;
+            break;
+         case HB_PP_OPT_END:
+            nbr--;
+            break;
+         case HB_PP_MATCH_MARK:
+            ( *ptri ) += 3;
+            if( *( *ptri - 1 ) == '2' )
+               while( **ptri != '>' )
+                  ( *ptri )++;
+            break;
       }
       ( *ptri )++;
    }
@@ -3280,8 +3152,7 @@ static void SkipOptional( char **ptri )
    }
 }
 
-static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
-                      int *lenres )
+static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int *lenres )
 {
 #if ! defined(HB_PP_DEBUG_MEMORY)
    static char expnew[MAX_EXP];
@@ -3296,16 +3167,12 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
    char lastchar = '0';
    char *ptr, *ptr2, *ptrOut = ptro;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal,
-               ptro, lenres ) );
+   HB_TRACE( HB_TR_DEBUG, ( "SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres ) );
 
    if( *( exppatt + 1 ) == '\0' )
       *( ptro + *lenres ) = '\0';
 
-   while( ( ifou =
-            md_strAt( exppatt, ( *( exppatt + 1 ) ) ? 2 : 1, ptrOut, FALSE,
-                      FALSE, TRUE, MD_STR_AT_USESUBCASE ) ) > 0 )
+   while( ( ifou = md_strAt( exppatt, ( *( exppatt + 1 ) ) ? 2 : 1, ptrOut, FALSE, FALSE, TRUE, MD_STR_AT_USESUBCASE ) ) > 0 )
    {
       bFound = TRUE;
       rezs = FALSE;
@@ -3327,8 +3194,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
             ptr2++;
          }
 
-         if( s_Repeate && lenreal && kolmarkers && lastchar != '0' &&
-             *( ptrOut + ifou + 2 ) == '0' )
+         if( s_Repeate && lenreal && kolmarkers && lastchar != '0' && *( ptrOut + ifou + 2 ) == '0' )
          {
             isdvig += ifou;
             rezs = TRUE;
@@ -3344,8 +3210,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
                }
                else
                {
-                  hb_pp_Stuff( "", ptr, 0, ptr2 - ptr + 1,
-                               *lenres - ( ptr - ptro ) );
+                  hb_pp_Stuff( "", ptr, 0, ptr2 - ptr + 1, *lenres - ( ptr - ptro ) );
                   *lenres -= ptr2 - ptr + 1;
                   isdvig = ptr - ptro;
                   rezs = TRUE;
@@ -3359,8 +3224,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
                *( expnew + lennew++ ) = ' ';
                *( expnew + lennew ) = '\0';
                while( ( i = hb_strAt( exppatt, 2, expnew, lennew ) ) > 0 )
-                  lennew += ReplacePattern( exppatt[2], expreal, lenreal,
-                                            expnew + i - 1, lennew );
+                  lennew += ReplacePattern( exppatt[2], expreal, lenreal, expnew + i - 1, lennew );
                if( kolmarkers )
                {
                   s_groupchar = ( char ) ( ( unsigned int ) s_groupchar + 1 );
@@ -3371,8 +3235,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
                         i += 4;
                      }
                }
-               hb_pp_Stuff( expnew, ptr, lennew, 0,
-                            *lenres - ( ptr - ptro ) );
+               hb_pp_Stuff( expnew, ptr, lennew, 0, *lenres - ( ptr - ptro ) );
                *lenres += lennew;
                isdvig = ptr - ptro + ( ptr2 - ptr - 1 ) + lennew;
                rezs = TRUE;
@@ -3381,8 +3244,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
          else if( exppatt[0] == '\001' && exppatt[1] == '\000' )
          {
             /* final pass to remove optional markers */
-            hb_pp_Stuff( "", ptr, 0, ptr2 - ptr + 1,
-                         *lenres - ( ptr - ptro ) );
+            hb_pp_Stuff( "", ptr, 0, ptr2 - ptr + 1, *lenres - ( ptr - ptro ) );
             *lenres -= ptr2 - ptr + 1;
             isdvig = ptr - ptro;
             rezs = TRUE;
@@ -3402,9 +3264,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro,
                continue;
             }
          }
-         *lenres += ReplacePattern( exppatt[2], expreal, lenreal,
-                                    ptrOut + ifou - 1,
-                                    *lenres - isdvig - ifou + 1 );
+         *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - isdvig - ifou + 1 );
          isdvig += ifou - 1;
       }
       else if( !s_bReplacePat )
@@ -3463,18 +3323,18 @@ static int pp_Stringify( BOOL bSmart, char **ptro, int *lenres, char *expr, int 
    int lenTrim = lenitem;
    int iAdd = 0;
    char sQuotes[3] = "\"\"";
-   BOOL bComma = expr[ lenitem ] == ',';
-            
+   BOOL bComma = expr[lenitem] == ',';
+
    while( *expr == ' ' && lenTrim )
    {
       expr++;
       lenTrim--;
    }
-   while( lenTrim && expr[ lenTrim - 1 ] == ' ' )
+   while( lenTrim && expr[lenTrim - 1] == ' ' )
    {
       lenTrim--;
    }
-   
+
    if( !lenTrim )
    {
       /* empty string - do nothing unless the comma is required */
@@ -3503,9 +3363,8 @@ static int pp_Stringify( BOOL bSmart, char **ptro, int *lenres, char *expr, int 
       }
    }
    else if( bSmart && ( *expr == '('
-       || ( *expr == '\"' && *( expr + lenTrim - 1 ) == '\"' )
-       || ( *expr == '[' && *( expr + lenTrim - 1 ) == ']' )
-       || ( *expr == '\'' && *( expr + lenTrim - 1 ) == '\'' ) ) )
+                        || ( *expr == '\"' && *( expr + lenTrim - 1 ) == '\"' )
+                        || ( *expr == '[' && *( expr + lenTrim - 1 ) == ']' ) || ( *expr == '\'' && *( expr + lenTrim - 1 ) == '\'' ) ) )
    {
       /* items enclosed in () "" '' [] leave unchanged */
       hb_pp_Stuff( expr, *ptro, lenTrim, 0, *lenres );
@@ -3518,213 +3377,143 @@ static int pp_Stringify( BOOL bSmart, char **ptro, int *lenres, char *expr, int 
       hb_pp_Stuff( sQuotes, *ptro, iAdd, 0, *lenres );
       hb_pp_Stuff( expr, *ptro + 1, lenTrim, 0, *lenres + iAdd );
    }
-   (*ptro) += lenTrim + iAdd;
-   (*lenres) += lenTrim +iAdd;
+   ( *ptro ) += lenTrim + iAdd;
+   ( *lenres ) += lenTrim + iAdd;
 
    if( bComma )
    {
       hb_pp_Stuff( ",", *ptro, 1, 0, *lenres );
-      (*lenres)++;
-      (*ptro)++;
+      ( *lenres )++;
+      ( *ptro )++;
       rmlen++;
    }
-   rmlen += lenitem+iAdd;
-   
+   rmlen += lenitem + iAdd;
+
    return rmlen;
 }
 
-static int ReplacePattern( char patttype, char *expreal, int lenreal,
-                           char *ptro, int lenres )
+static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
 {
    int rmlen = lenreal, ifou, lenitem, i = 0;
    char sQuotes[4] = "\"\",";
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal,
-               lenreal, ptro, lenres ) );
+   HB_TRACE( HB_TR_DEBUG, ( "ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal, lenreal, ptro, lenres ) );
 
    switch ( *( ptro + 2 ) )
    {
-   case '0':                   /* Regular result marker  */
-      hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
-      break;
+      case '0':                /* Regular result marker  */
+         hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+         break;
 
-   case '1':                   /* Dumb stringify result marker  */
-      pp_rQuotes( expreal, sQuotes );
-      hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
-      if( lenreal )
-         hb_pp_Stuff( expreal, ptro + 1, lenreal, 0, lenres );
-      rmlen = lenreal + 2;
-      if( *sQuotes == '[' )
-         hb_pp_NestedLiteralString = TRUE;
-      break;
+      case '1':                /* Dumb stringify result marker  */
+         pp_rQuotes( expreal, sQuotes );
+         hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
+         if( lenreal )
+            hb_pp_Stuff( expreal, ptro + 1, lenreal, 0, lenres );
+         rmlen = lenreal + 2;
+         if( *sQuotes == '[' )
+            hb_pp_NestedLiteralString = TRUE;
+         break;
 
-   case '2':                   /* Normal stringify result marker  */
-      hb_pp_Stuff( "", ptro, 0, 4, lenres ); /* remove match marker */
-      lenres -= 4;
-      if( patttype == '1' )     /* list match marker */
-      {
-         rmlen = 0;
-         do
-         {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
-            if( *expreal != '\0' )
-            {
-               rmlen += pp_Stringify( FALSE, &ptro, &lenres, expreal, (( ifou ) ? ifou - 1 : lenreal) );
-            }
-            expreal += ifou;
-            lenreal -= ifou;
-         }
-         while( ifou > 0 );
-      }
-      else
-      {
-         rmlen = pp_Stringify( FALSE, &ptro, &lenres, expreal, lenreal );
-      }
-      break;
-/*    
-      if( !lenreal )
-         hb_pp_Stuff( "", ptro, 0, 4, lenres );
-      else if( patttype == '1' )        /  list match marker * 
-      {
-         hb_pp_Stuff( "", ptro, 0, 4, lenres );
+      case '2':                /* Normal stringify result marker  */
+         hb_pp_Stuff( "", ptro, 0, 4, lenres ); /* remove match marker */
          lenres -= 4;
-         rmlen = 0;
-         do
+         if( patttype == '1' )  /* list match marker */
          {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
-            lenitem = ( ifou ) ? ifou - 1 : lenreal;
-            if( *expreal != '\0' )
+            rmlen = 0;
+            do
             {
-               BOOL bSmartMacro = FALSE;
-               int lennew;
-
-               lennew = lenitem;
-               if( *expreal == '&' )
-                  bSmartMacro = ScanMacro( expreal, lenitem, &lennew );
-               if( bSmartMacro )
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
+               if( *expreal != '\0' )
                {
-                  if( ifou )
-                  {
-                     hb_pp_Stuff( ",", ptro, 1, 0, lenres );
-                     i = 1;
-                  }
-                  hb_pp_Stuff( expreal + 1, ptro, lennew, 0, lenres );
+                  rmlen += pp_Stringify( FALSE, &ptro, &lenres, expreal, ( ( ifou ) ? ifou - 1 : lenreal ) );
                }
-               else
-               {
-                  i = ( ifou ) ? 3 : 2;
-                  pp_rQuotes( expreal, sQuotes );
-                  hb_pp_Stuff( sQuotes, ptro, i, 0, lenres );
-                  hb_pp_Stuff( expreal, ptro + 1, lenitem, 0, lenres + i );
-               }
-               ptro += i + lennew;
-               rmlen += i + lennew;
+               expreal += ifou;
+               lenreal -= ifou;
             }
-            expreal += ifou;
-            lenreal -= ifou;
-         }
-         while( ifou > 0 );
-      }
-      else
-      {
-         BOOL bSmartMacro = FALSE;
-         int lennew;
-
-         lennew = lenreal;
-         if( *expreal == '&' )
-            bSmartMacro = ScanMacro( expreal, lenreal, &lennew );
-         if( bSmartMacro )
-         {
-            hb_pp_Stuff( expreal + 1, ptro, lennew, 4, lenres );
-            rmlen = lennew;
+            while( ifou > 0 );
          }
          else
          {
-            pp_rQuotes( expreal, sQuotes );
-            hb_pp_Stuff( sQuotes, ptro, 2, 4, lenres );
-            hb_pp_Stuff( expreal, ptro + 1, lenreal, 0, lenres );
-            rmlen = lenreal + 2;
+            rmlen = pp_Stringify( FALSE, &ptro, &lenres, expreal, lenreal );
          }
-      }
-*/
-      break;
+         break;
 
-   case '3':                   /* Smart stringify result marker  */
-      hb_pp_Stuff( "", ptro, 0, 4, lenres ); /* remove match marker */
-      lenres -= 4;
-      if( patttype == '1' )     /* list match marker */
-      {
-         rmlen = 0;
-         do
-         {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
-            if( *expreal != '\0' )
-            {
-               rmlen += pp_Stringify( TRUE, &ptro, &lenres, expreal, (( ifou ) ? ifou - 1 : lenreal) );
-            }
-            expreal += ifou;
-            lenreal -= ifou;
-         }
-         while( ifou > 0 );
-      }
-      else
-      {
-         rmlen = pp_Stringify( TRUE, &ptro, &lenres, expreal, lenreal );
-      }
-      break;
-
-   case '4':                   /* Blockify result marker  */
-      if( !lenreal )
-         hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
-      else if( patttype == '1' )        /* list match marker */
-      {
-         hb_pp_Stuff( "", ptro, 0, 4, lenres );
+      case '3':                /* Smart stringify result marker  */
+         hb_pp_Stuff( "", ptro, 0, 4, lenres ); /* remove match marker */
          lenres -= 4;
-         rmlen = 0;
-         do
+         if( patttype == '1' )  /* list match marker */
          {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
-            lenitem = ( ifou ) ? ifou - 1 : lenreal;
-            if( *expreal != '\0' )
+            rmlen = 0;
+            do
             {
-               i = ( ifou ) ? 5 : 4;
-               hb_pp_Stuff( "{||},", ptro, i, 0, lenres );
-               hb_pp_Stuff( expreal, ptro + 3, lenitem, 0, lenres + i );
-               ptro += i + lenitem;
-               rmlen += i + lenitem;
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
+               if( *expreal != '\0' )
+               {
+                  rmlen += pp_Stringify( TRUE, &ptro, &lenres, expreal, ( ( ifou ) ? ifou - 1 : lenreal ) );
+               }
+               expreal += ifou;
+               lenreal -= ifou;
             }
-            expreal += ifou;
-            lenreal -= ifou;
+            while( ifou > 0 );
          }
-         while( ifou > 0 );
-      }
-      else if( lenreal && *expreal == '{' )
-      {
-         hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
-      }
-      else
-      {
-         hb_pp_Stuff( "{||}", ptro, 4, 4, lenres );
-         hb_pp_Stuff( expreal, ptro + 3, lenreal, 0, lenres );
-         rmlen = lenreal + 4;
-      }
-      break;
+         else
+         {
+            rmlen = pp_Stringify( TRUE, &ptro, &lenres, expreal, lenreal );
+         }
+         break;
 
-   case '5':                   /* Logify result marker  */
-      rmlen = 3;
-      if( !lenreal )
-      {
-         hb_pp_Stuff( ".F.", ptro, 3, 4, lenres );
-      }
-      else
-         hb_pp_Stuff( ".T.", ptro, 3, 4, lenres );
-      break;
+      case '4':                /* Blockify result marker  */
+         if( !lenreal )
+            hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+         else if( patttype == '1' )     /* list match marker */
+         {
+            hb_pp_Stuff( "", ptro, 0, 4, lenres );
+            lenres -= 4;
+            rmlen = 0;
+            do
+            {
+               ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE, MD_STR_AT_IGNORECASE );
+               lenitem = ( ifou ) ? ifou - 1 : lenreal;
+               if( *expreal != '\0' )
+               {
+                  i = ( ifou ) ? 5 : 4;
+                  hb_pp_Stuff( "{||},", ptro, i, 0, lenres );
+                  hb_pp_Stuff( expreal, ptro + 3, lenitem, 0, lenres + i );
+                  ptro += i + lenitem;
+                  rmlen += i + lenitem;
+               }
+               expreal += ifou;
+               lenreal -= ifou;
+            }
+            while( ifou > 0 );
+         }
+         else if( lenreal && *expreal == '{' )
+         {
+            hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
+         }
+         else
+         {
+            hb_pp_Stuff( "{||}", ptro, 4, 4, lenres );
+            hb_pp_Stuff( expreal, ptro + 3, lenreal, 0, lenres );
+            rmlen = lenreal + 4;
+         }
+         break;
 
-   case '6':                   /* Ommit result marker  */
-      rmlen = 1;
-      hb_pp_Stuff( " ", ptro, 1, 4, lenres );
-      break;
+      case '5':                /* Logify result marker  */
+         rmlen = 3;
+         if( !lenreal )
+         {
+            hb_pp_Stuff( ".F.", ptro, 3, 4, lenres );
+         }
+         else
+            hb_pp_Stuff( ".T.", ptro, 3, 4, lenres );
+         break;
+
+      case '6':                /* Ommit result marker  */
+         rmlen = 1;
+         hb_pp_Stuff( " ", ptro, 1, 4, lenres );
+         break;
    }
    return rmlen - 4;
 }
@@ -3768,17 +3557,14 @@ static void pp_rQuotes( char *expreal, char *sQuotes )
    }
 }
 
-int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue,
-                 char *sBuffer, int *lenBuffer, int *iBuffer )
+int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue, char *sBuffer, int *lenBuffer, int *iBuffer )
 {
    int readed = 0;
    int State = 0;
    char cha, cLast = '\0', symbLast = '\0';
    BOOL lDropSpaces = lContinue;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer,
-               maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer ) );
 
    if( *lenBuffer == 0 )
    {
@@ -3789,8 +3575,7 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue,
    {
       if( *iBuffer == *lenBuffer )
       {
-         if( ( *lenBuffer =
-               fread( sBuffer, 1, HB_PP_BUFF_SIZE, handl_i ) ) < 1 )
+         if( ( *lenBuffer = fread( sBuffer, 1, HB_PP_BUFF_SIZE, handl_i ) ) < 1 )
          {
             sBuffer[0] = '\n';
          }
@@ -3807,8 +3592,7 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue,
 
       if( cha == '\n' )
       {
-         if( ( hb_pp_StreamBlock != HB_PP_STREAM_DUMP_C )
-             && s_ParseState == STATE_COMMENT && symbLast == ';' )
+         if( ( hb_pp_StreamBlock != HB_PP_STREAM_DUMP_C ) && s_ParseState == STATE_COMMENT && symbLast == ';' )
          {
             buffer[readed++] = ';';
          }
@@ -3827,107 +3611,104 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue,
       {
          switch ( s_ParseState )
          {
-         case STATE_COMMENT:
-            if( cha == '/' && cLast == '*' )
-            {
-               s_ParseState = STATE_NORMAL;
-               cha = ' ';
-            }
-
-            cLast = cha;
-
-            if( cha != ' ' && cha != '\t' )
-            {
-               symbLast = cha;
-            }
-            break;
-
-         case STATE_QUOTE1:
-            if( cha == '\'' )
-               s_ParseState = STATE_NORMAL;
-            break;
-
-         case STATE_QUOTE2:
-            if( cha == '\"' )
-               s_ParseState = STATE_NORMAL;
-            break;
-
-         case STATE_QUOTE3:
-            if( cha == ']' )
-               s_ParseState = STATE_NORMAL;
-            break;
-
-         default:
-            switch ( cha )
-            {
-            case '[':
-               /* Ron Pinkas modified 2000-06-17
-                  if( ISNAME(( BYTE ) s_prevchar) || s_prevchar == ']' )
-                */
-               if( ISNAME( ( BYTE ) s_prevchar )
-                   || strchr( ")]}.", s_prevchar ) )
+            case STATE_COMMENT:
+               if( cha == '/' && cLast == '*' )
                {
-                  s_ParseState = STATE_BRACKET;
+                  s_ParseState = STATE_NORMAL;
+                  cha = ' ';
                }
-               else
+
+               cLast = cha;
+
+               if( cha != ' ' && cha != '\t' )
                {
-                  s_ParseState = STATE_QUOTE3;
+                  symbLast = cha;
                }
                break;
 
-            case ']':
-               s_ParseState = STATE_NORMAL;
+            case STATE_QUOTE1:
+               if( cha == '\'' )
+                  s_ParseState = STATE_NORMAL;
                break;
 
-            case '\"':
-               if( s_ParseState != STATE_BRACKET )
-               {
-                  s_ParseState = STATE_QUOTE2;
-               }
+            case STATE_QUOTE2:
+               if( cha == '\"' )
+                  s_ParseState = STATE_NORMAL;
                break;
 
-            case '\'':
-               if( s_ParseState != STATE_BRACKET )
-               {
-                  s_ParseState = STATE_QUOTE1;
-               }
+            case STATE_QUOTE3:
+               if( cha == ']' )
+                  s_ParseState = STATE_NORMAL;
                break;
 
-            case '&':
-               if( readed > 0 && buffer[readed - 1] == '&' )
+            default:
+               switch ( cha )
                {
-                  maxlen = 0;
-                  readed--;
-               }
-               break;
+                  case '[':
+                     /* Ron Pinkas modified 2000-06-17
+                        if( ISNAME(( BYTE ) s_prevchar) || s_prevchar == ']' )
+                      */
+                     if( ISNAME( ( BYTE ) s_prevchar ) || strchr( ")]}.", s_prevchar ) )
+                     {
+                        s_ParseState = STATE_BRACKET;
+                     }
+                     else
+                     {
+                        s_ParseState = STATE_QUOTE3;
+                     }
+                     break;
 
-            case '/':
-               if( readed > 0 && buffer[readed - 1] == '/'
-                   && !hb_pp_StreamBlock )
-               {
-                  maxlen = 0;
-                  readed--;
-               }
-               break;
+                  case ']':
+                     s_ParseState = STATE_NORMAL;
+                     break;
 
-            case '*':
-               if( readed > 0 && buffer[readed - 1] == '/'
-                   && !hb_pp_StreamBlock )
-               {
-                  s_ParseState = STATE_COMMENT;
-                  readed--;
-               }
-               else if( !State && !lContinue )
-               {
-                  maxlen = readed = 0;
-               }
-               break;
-            }
+                  case '\"':
+                     if( s_ParseState != STATE_BRACKET )
+                     {
+                        s_ParseState = STATE_QUOTE2;
+                     }
+                     break;
 
-            if( cha != ' ' && cha != ';' )
-            {
-               s_prevchar = cha;
-            }
+                  case '\'':
+                     if( s_ParseState != STATE_BRACKET )
+                     {
+                        s_ParseState = STATE_QUOTE1;
+                     }
+                     break;
+
+                  case '&':
+                     if( readed > 0 && buffer[readed - 1] == '&' )
+                     {
+                        maxlen = 0;
+                        readed--;
+                     }
+                     break;
+
+                  case '/':
+                     if( readed > 0 && buffer[readed - 1] == '/' && !hb_pp_StreamBlock )
+                     {
+                        maxlen = 0;
+                        readed--;
+                     }
+                     break;
+
+                  case '*':
+                     if( readed > 0 && buffer[readed - 1] == '/' && !hb_pp_StreamBlock )
+                     {
+                        s_ParseState = STATE_COMMENT;
+                        readed--;
+                     }
+                     else if( !State && !lContinue )
+                     {
+                        maxlen = readed = 0;
+                     }
+                     break;
+               }
+
+               if( cha != ' ' && cha != ';' )
+               {
+                  s_prevchar = cha;
+               }
          }
 
          if( cha != ' ' && cha != '\t' )
@@ -3940,16 +3721,14 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue,
             lDropSpaces = 0;
          }
 
-         if( readed < maxlen && ( !lDropSpaces || readed == 0 )
-             && s_ParseState != STATE_COMMENT )
+         if( readed < maxlen && ( !lDropSpaces || readed == 0 ) && s_ParseState != STATE_COMMENT )
          {
             buffer[readed++] = cha;
          }
       }
    }
 
-   while( --readed >= 0
-          && ( buffer[readed] == ' ' || buffer[readed] == '\t' ) );
+   while( --readed >= 0 && ( buffer[readed] == ' ' || buffer[readed] == '\t' ) ) ;
 
    /* rglab: start */
    if( cha == '\n' && readed < 0 )
@@ -4001,8 +3780,7 @@ int hb_pp_WrStr( FILE * handl_o, char *buffer )
    return 0;
 }
 
-static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
-                     BOOL checkPrth, BOOL bRule, int iCaseOption )
+static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword, BOOL checkPrth, BOOL bRule, int iCaseOption )
 {
    int State = STATE_NORMAL;
    long lPos = 0, lSubPos = 0;
@@ -4011,9 +3789,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
    int iNestedQuote3 = 0;
    char cLastChar = '\0';
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "md_strAt(%s, %d, %s, %d, %d, %d)", szSub, lSubLen, szText,
-               checkword, checkPrth, iCaseOption ) );
+   HB_TRACE( HB_TR_DEBUG, ( "md_strAt(%s, %d, %s, %d, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth, iCaseOption ) );
 
    if( iCaseOption == MD_STR_AT_IGNORECASE )
    {
@@ -4057,8 +3833,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
       {
          if( State == STATE_BRACKET )
          {
-            if( *( szText + lPos ) == ']'
-                && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
+            if( *( szText + lPos ) == ']' && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
             {
                kolSquare--;
                if( kolSquare == 0 )
@@ -4070,8 +3845,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
                lPos++;
                continue;
             }
-            else if( *( szText + lPos ) == '['
-                     && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
+            else if( *( szText + lPos ) == '[' && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
             {
                kolSquare++;
                cLastChar = '[';
@@ -4087,31 +3861,26 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
          }
          else
          {
-            if( ( *( szText + lPos ) == '\'' || *( szText + lPos ) == '`' )
-                && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
+            if( ( *( szText + lPos ) == '\'' || *( szText + lPos ) == '`' ) && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
             {
                State = STATE_QUOTE1;
                lPos++;
                continue;
             }
-            else if( *( szText + lPos ) == '\"'
-                     && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
+            else if( *( szText + lPos ) == '\"' && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
             {
                State = STATE_QUOTE2;
                lPos++;
                continue;
             }
-            else if( bRule == FALSE && *( szText + lPos ) == '['
-                     && strchr( ")]}.", cLastChar ) == NULL
-                     && !ISNAME( ( BYTE ) cLastChar ) )
+            else if( bRule == FALSE && *( szText + lPos ) == '[' && strchr( ")]}.", cLastChar ) == NULL && !ISNAME( ( BYTE ) cLastChar ) )
             {
                State = STATE_QUOTE3;
                iNestedQuote3++;
                lPos++;
                continue;
             }
-            else if( *( szText + lPos ) == '['
-                     && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
+            else if( *( szText + lPos ) == '[' && ( lPos == 0 || *( szText + lPos - 1 ) != '\\' ) )
             {
                State = STATE_BRACKET;
                kolSquare++;
@@ -4137,33 +3906,25 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
             }
             else if( szText[lPos] == '.' && szSub[0] != '.' )
             {
-               if( toupper( szText[lPos + 1] ) == 'T'
-                   && szText[lPos + 2] == '.' )
+               if( toupper( szText[lPos + 1] ) == 'T' && szText[lPos + 2] == '.' )
                {
                   lPos += 3;
                }
-               else if( toupper( szText[lPos + 1] ) == 'F'
-                        && szText[lPos + 2] == '.' )
+               else if( toupper( szText[lPos + 1] ) == 'F' && szText[lPos + 2] == '.' )
                {
                   lPos += 3;
                }
-               else if( toupper( szText[lPos + 1] ) == 'O'
-                        && toupper( szText[lPos + 2] ) == 'R'
-                        && szText[lPos + 4] == '.' )
+               else if( toupper( szText[lPos + 1] ) == 'O' && toupper( szText[lPos + 2] ) == 'R' && szText[lPos + 4] == '.' )
                {
                   lPos += 4;
                }
                else if( toupper( szText[lPos + 1] ) == 'A'
-                        && toupper( szText[lPos + 2] ) == 'N'
-                        && toupper( szText[lPos + 3] ) == 'D'
-                        && szText[lPos + 4] == '.' )
+                        && toupper( szText[lPos + 2] ) == 'N' && toupper( szText[lPos + 3] ) == 'D' && szText[lPos + 4] == '.' )
                {
                   lPos += 5;
                }
                else if( toupper( szText[lPos + 1] ) == 'N'
-                        && toupper( szText[lPos + 2] ) == 'O'
-                        && toupper( szText[lPos + 3] ) == 'T'
-                        && szText[lPos + 4] == '.' )
+                        && toupper( szText[lPos + 2] ) == 'O' && toupper( szText[lPos + 3] ) == 'T' && szText[lPos + 4] == '.' )
                {
                   lPos += 5;
                }
@@ -4181,9 +3942,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
              ( ( ( kolPrth > 1 )
                  || ( kolPrth == 1 && *( szText + lPos ) != '(' )
                  || ( kolPrth == 0 && *( szText + lPos ) == ')' ) )
-               || ( ( kolFig > 1 )
-                    || ( kolFig == 1 && *( szText + lPos ) != '{' )
-                    || ( kolFig == 0 && *( szText + lPos ) == '}' ) ) ) )
+               || ( ( kolFig > 1 ) || ( kolFig == 1 && *( szText + lPos ) != '{' ) || ( kolFig == 0 && *( szText + lPos ) == '}' ) ) ) )
          {
             cLastChar = *( szText + lPos );
             lPos++;
@@ -4199,10 +3958,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
          }
 
          if( ( lCase
-               && toupper( *( szText + lPos ) ) ==
-               toupper( *( szSub + lSubPos ) ) ) || ( !lCase
-                                                      && *( szText + lPos ) ==
-                                                      *( szSub + lSubPos ) ) )
+               && toupper( *( szText + lPos ) ) == toupper( *( szSub + lSubPos ) ) ) || ( !lCase && *( szText + lPos ) == *( szSub + lSubPos ) ) )
          {
             lSubPos++;
             cLastChar = *( szText + lPos );
@@ -4211,8 +3967,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
             if( lSubPos >= lSubLen && checkword &&
                 ( ( ISNAME( ( BYTE ) * szSub ) && lPos > lSubPos
                     && ISNAME( ( BYTE ) * ( szText + lPos - lSubPos - 1 ) ) )
-                  || ( ISNAME( ( BYTE ) * ( szSub + lSubLen - 1 ) )
-                       && ISNAME( ( BYTE ) * ( szText + lPos ) ) ) ) )
+                  || ( ISNAME( ( BYTE ) * ( szSub + lSubLen - 1 ) ) && ISNAME( ( BYTE ) * ( szText + lPos ) ) ) ) )
             {
                lSubPos = 0;
             }
@@ -4233,8 +3988,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
    if( bRule == 0 && szSub[0] != ';' )
    {
       printf( "Rule: %i Find: >%s< In: >%s<\n", bRule, szSub, szText );
-      printf( "Pos: %i Len: %i At: >%s<\n", lPos, lSubLen,
-              ( szText + lPos - lSubLen ) );
+      printf( "Pos: %i Len: %i At: >%s<\n", lPos, lSubLen, ( szText + lPos - lSubLen ) );
    }
 #endif
 
@@ -4243,9 +3997,7 @@ static int md_strAt( char *szSub, int lSubLen, char *szText, BOOL checkword,
 
 static char *PrevSquare( char *ptr, char *bound, int *kolmark )
 {
-   HB_TRACE( HB_TR_DEBUG,
-             ( "PrevSquare(%s, %s, %d)", ptr, bound,
-               kolmark == NULL ? 0 : *kolmark ) );
+   HB_TRACE( HB_TR_DEBUG, ( "PrevSquare(%s, %s, %d)", ptr, bound, kolmark == NULL ? 0 : *kolmark ) );
    while( ptr > bound )
    {
       if( kolmark && *ptr == HB_PP_MATCH_MARK )
@@ -4282,9 +4034,7 @@ void hb_pp_Stuff( char *ptri, char *ptro, int len1, int len2, int lenres )
    char *ptr1, *ptr2;
    int i;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "hb_pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2,
-               lenres ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2, lenres ) );
 
    if( len1 > len2 )
    {
@@ -4350,17 +4100,14 @@ static BOOL truncmp( char **ptro, char **ptri, BOOL lTrunc )
    for( ;
         **ptri != ' ' && **ptri != '\t' && **ptri != ','
         && **ptri != HB_PP_OPT_START && **ptri != HB_PP_OPT_END
-        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0'
-        && toupper( **ptri ) == toupper( **ptro ); ( *ptro )++, ( *ptri )++ );
+        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && toupper( **ptri ) == toupper( **ptro ); ( *ptro )++, ( *ptri )++ ) ;
    co = *( *ptro - 1 );
    ci = **ptri;
    if( ( ( ci == ' ' || ci == ',' || ci == HB_PP_OPT_START ||
            ci == HB_PP_OPT_END || ci == HB_PP_MATCH_MARK || ci == '\0' ) &&
-         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) ||
-           ( !ISNAME( ( BYTE ) co ) ) ) ) )
+         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) || ( !ISNAME( ( BYTE ) co ) ) ) ) )
       return FALSE;
-   else if( lTrunc && *ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci )
-            && !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) )
+   else if( lTrunc && *ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci ) && !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) )
    {
       while( ISNAME( ( BYTE ) ** ptri ) )
          ( *ptri )++;
@@ -4377,17 +4124,14 @@ static BOOL strincmp( char *ptro, char **ptri, BOOL lTrunc )
 
    for( ;
         **ptri != ',' && **ptri != HB_PP_OPT_START && **ptri != HB_PP_OPT_END
-        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0'
-        && toupper( **ptri ) == toupper( *ptro ); ptro++, ( *ptri )++ );
+        && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && toupper( **ptri ) == toupper( *ptro ); ptro++, ( *ptri )++ ) ;
    co = *( ptro - 1 );
    ci = **ptri;
    if( ( ( ci == ' ' || ci == ',' || ci == HB_PP_OPT_START ||
            ci == HB_PP_OPT_END || ci == HB_PP_MATCH_MARK || ci == '\0' ) &&
-         ( ( !ISNAME( ( BYTE ) * ptro ) && ISNAME( ( BYTE ) co ) ) ||
-           ( !ISNAME( ( BYTE ) co ) ) ) ) )
+         ( ( !ISNAME( ( BYTE ) * ptro ) && ISNAME( ( BYTE ) co ) ) || ( !ISNAME( ( BYTE ) co ) ) ) ) )
       return FALSE;
-   else if( lTrunc && ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci )
-            && !ISNAME( ( BYTE ) * ptro ) && ISNAME( ( BYTE ) co ) )
+   else if( lTrunc && ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci ) && !ISNAME( ( BYTE ) * ptro ) && ISNAME( ( BYTE ) co ) )
    {
       /*      while( ISNAME(( BYTE ) **ptri) ) (*ptri)++; */
       return FALSE;
@@ -4403,8 +4147,7 @@ static int strincpy( char *ptro, char *ptri )
 
    for( ;
         *ptri != ' ' && *ptri != ',' && *ptri != HB_PP_OPT_START
-        && *ptri != HB_PP_OPT_END && *ptri != HB_PP_MATCH_MARK
-        && *ptri != '\0'; ptro++, ptri++, lens++ )
+        && *ptri != HB_PP_OPT_END && *ptri != HB_PP_MATCH_MARK && *ptri != '\0'; ptro++, ptri++, lens++ )
       *ptro = *ptri;
    return lens;
 }
@@ -4464,9 +4207,7 @@ static int strotrim( char *stroka, BOOL bRule )
 
       if( State != STATE_NORMAL || curc != ' ' ||
           ( curc == ' ' && !bRule ) ||
-          ( curc == ' ' && lastc != ' ' && lastc != ',' && lastc != '('
-            && *( stroka + 1 ) != ',' && *( stroka + 1 ) != ' '
-            && *( stroka + 1 ) ) )
+          ( curc == ' ' && lastc != ' ' && lastc != ',' && lastc != '(' && *( stroka + 1 ) != ',' && *( stroka + 1 ) != ' ' && *( stroka + 1 ) ) )
       {
          *ptr++ = curc;
          lastc = curc;
@@ -4485,13 +4226,11 @@ static int NextWord( char **sSource, char *sDest, BOOL lLower )
 {
    int i = 0;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "NextWord(%p, %s, %d)", sSource, sDest, lLower ) );
+   HB_TRACE( HB_TR_DEBUG, ( "NextWord(%p, %s, %d)", sSource, sDest, lLower ) );
 
    HB_SKIPTABSPACES( ( *sSource ) );
 
-   while( **sSource != '\0' && **sSource != ' ' && **sSource != '\t'
-          && **sSource != '(' )
+   while( **sSource != '\0' && **sSource != ' ' && **sSource != '\t' && **sSource != '(' )
    {
       *sDest++ = ( lLower ) ? tolower( **sSource ) : **sSource;
       ( *sSource )++;
@@ -4507,6 +4246,7 @@ static int NextName( char **sSource, char *sDest )
 {
    /* Ron Pinkas added 2000-11-08 */
    char cLastChar = '\0', *pString = NULL, *pTmp;
+
    /* END - Ron Pinkas added 2000-11-08 */
 
    int lenName = 0, State = STATE_NORMAL;
@@ -4517,8 +4257,7 @@ static int NextName( char **sSource, char *sDest )
    printf( "In: >%s<\n", *sSource );
 #endif
 
-   while( **sSource != '\0'
-          && ( !ISNAME( ( BYTE ) ** sSource ) || State != STATE_NORMAL ) )
+   while( **sSource != '\0' && ( !ISNAME( ( BYTE ) ** sSource ) || State != STATE_NORMAL ) )
    {
       if( State == STATE_QUOTE1 )
       {
@@ -4572,48 +4311,39 @@ static int NextName( char **sSource, char *sDest )
             /* END - Ron Pinkas added 2000-11-08 */
          }
       }
-      else if( ( *sSource )[0] == HB_PP_OPT_START
-               || ( *sSource )[0] == HB_PP_OPT_END )
+      else if( ( *sSource )[0] == HB_PP_OPT_START || ( *sSource )[0] == HB_PP_OPT_END )
       {
          State = STATE_NORMAL;
       }
       /* Ron Pinkas added 2001-02-21 */
       else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'A'
-               && toupper( ( *sSource )[2] ) == 'N'
-               && toupper( ( *sSource )[3] ) == 'D'
-               && ( *sSource )[4] == '.' )
+               && toupper( ( *sSource )[2] ) == 'N' && toupper( ( *sSource )[3] ) == 'D' && ( *sSource )[4] == '.' )
       {
          ( *sSource ) += 5;
          cLastChar = ' ';
          continue;
       }
       else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'N'
-               && toupper( ( *sSource )[2] ) == 'O'
-               && toupper( ( *sSource )[3] ) == 'T'
-               && ( *sSource )[4] == '.' )
+               && toupper( ( *sSource )[2] ) == 'O' && toupper( ( *sSource )[3] ) == 'T' && ( *sSource )[4] == '.' )
       {
          ( *sSource ) += 5;
          cLastChar = ' ';
          continue;
       }
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'O'
-               && toupper( ( *sSource )[2] ) == 'R'
-               && ( *sSource )[3] == '.' )
+      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'O' && toupper( ( *sSource )[2] ) == 'R' && ( *sSource )[3] == '.' )
       {
          ( *sSource ) += 4;
          cLastChar = ' ';
          continue;
       }
       /* End - Ron Pinkas added 2001-02-21 */
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'T'
-               && ( *sSource )[2] == '.' )
+      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'T' && ( *sSource )[2] == '.' )
       {
          ( *sSource ) += 3;
          cLastChar = ' ';
          continue;
       }
-      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'F'
-               && ( *sSource )[2] == '.' )
+      else if( ( *sSource )[0] == '.' && toupper( ( *sSource )[1] ) == 'F' && ( *sSource )[2] == '.' )
       {
          ( *sSource ) += 3;
          cLastChar = ' ';
@@ -4632,9 +4362,7 @@ static int NextName( char **sSource, char *sDest )
          State = STATE_QUOTE2;
       }
       /* Ron Pinkas added 2000-11-08 */
-      else if( **sSource == '[' && s_bArray == FALSE
-               && strchr( ")]}.", cLastChar ) == NULL
-               && !ISNAME( ( BYTE ) cLastChar ) )
+      else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.", cLastChar ) == NULL && !ISNAME( ( BYTE ) cLastChar ) )
       {
          /* Ron Pinkas added 2000-11-08 */
          pString = *sSource;
@@ -4662,9 +4390,7 @@ static int NextName( char **sSource, char *sDest )
 
    /* Ron Pinkas added 2000-11-08 - Prepare for next run. */
    pTmp = *sSource;
-   while( *pTmp
-          && ( *pTmp == ' ' || *pTmp == '\t' || *pTmp == HB_PP_OPT_END
-               || *pTmp == HB_PP_OPT_START ) )
+   while( *pTmp && ( *pTmp == ' ' || *pTmp == '\t' || *pTmp == HB_PP_OPT_END || *pTmp == HB_PP_OPT_START ) )
    {
       pTmp++;
    }
@@ -4720,8 +4446,7 @@ static int NextParm( char **sSource, char *sDest )
       {
          State = STATE_QUOTE2;
       }
-      else if( **sSource == '[' && strchr( ")]}.", cLastChar ) == NULL
-               && !ISNAME( ( BYTE ) cLastChar ) )
+      else if( **sSource == '[' && strchr( ")]}.", cLastChar ) == NULL && !ISNAME( ( BYTE ) cLastChar ) )
       {
          State = STATE_QUOTE3;
       }
@@ -4819,8 +4544,7 @@ static int IsMacroVar( char *szText, BOOL isCommand )
    {
       int i = 1;
 
-      while( ISNAME( ( BYTE ) szText[i] ) || isdigit( ( BYTE ) szText[i] )
-             || szText[i] == '&' || szText[i] == '.' )
+      while( ISNAME( ( BYTE ) szText[i] ) || isdigit( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
       {
          i++;
       }
@@ -4839,8 +4563,7 @@ static int IsMacroVar( char *szText, BOOL isCommand )
       }
 */
       len = i;
-      if( !( szText[i] == '\0' || szText[i] == ' ' || szText[i] == ')' )
-          && isCommand )
+      if( !( szText[i] == '\0' || szText[i] == ' ' || szText[i] == ')' ) && isCommand )
       {
          return 0;
       }
@@ -4849,17 +4572,13 @@ static int IsMacroVar( char *szText, BOOL isCommand )
 }
 
 
-static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch,
-                         PHB_FNAME pMainFileName, BOOL bStandardOnly,
-                         char *szInclude )
+static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMainFileName, BOOL bStandardOnly, char *szInclude )
 {
    FILE *fptr;
    PHB_FNAME pFileName;
    PFILE pFile;
 
-   HB_TRACE( HB_TR_DEBUG,
-             ( "OpenInclude(%s, %p, %p, %d, %s)", szFileName, pSearch,
-               pMainFileName, ( int ) bStandardOnly, szInclude ) );
+   HB_TRACE( HB_TR_DEBUG, ( "OpenInclude(%s, %p, %p, %d, %s)", szFileName, pSearch, pMainFileName, ( int ) bStandardOnly, szInclude ) );
 
    errno = 0;
    if( bStandardOnly )
@@ -4871,8 +4590,7 @@ static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch,
    {
       pFileName = hb_fsFNameSplit( szFileName );
 
-      if( ( pFileName->szPath == NULL || *( pFileName->szPath ) == '\0' )
-          && pMainFileName )
+      if( ( pFileName->szPath == NULL || *( pFileName->szPath ) == '\0' ) && pMainFileName )
          pFileName->szPath = pMainFileName->szPath;
 
       hb_fsFNameMerge( szInclude, pFileName );
@@ -4898,7 +4616,7 @@ static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch,
 
    if( fptr )
    {
-      pFile = ( PFILE ) hb_xgrab( sizeof ( _FILE ) );
+      pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
       pFile->handle = fptr;
       pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
       pFile->iBuffer = pFile->lenBuffer = 10;

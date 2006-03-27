@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbstripl.c
+    * use hb_compPCodeSize() function
+    * removed not longer necessary functions for checking the real size
+      of variable size PCODEs
+
+  * harbour/source/vm/hvm.c
+    * fixed RT error number in hb_vmAddInt() for negative values to be
+    
+
+2006-03-27 15:25 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
   * contrib/htmllib/default.ch
     
 

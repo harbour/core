@@ -265,10 +265,10 @@
 #command  UNTIL <*lexpr*>          =>   IF (<lexpr>); EXIT ; END ; ENDDO
 
 #command  IF <lexpr> THEN <*statement*>  =>;
-          IIF(<lexpr>) ; <statement> ; END
+          IF(<lexpr>) ; <statement> ; END
 
 #command IF <lexpr> THEN <statement1> ELSE <statement2> =>;
-         IIF(<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
+         IF(<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
 
 #define _DEFAULT_CH_
 #endif

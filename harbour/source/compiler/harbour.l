@@ -1726,19 +1726,19 @@ Separator     {SpaceTab}
                }
 
 {MacroEnd}     {
-                  yylval.string = yytext;
+                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
-                  yylval.string = yytext;
+                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext+1 ), TRUE );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
-                  yylval.string = yytext;
+                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext+1 ), TRUE );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }

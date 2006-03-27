@@ -100,5 +100,6 @@ void hb_compIdentifierClose( )
    if( s_comp_Identifiers )
    {
       hb_hashTableKill( s_comp_Identifiers );
+      s_comp_Identifiers = NULL;
    }
 }
