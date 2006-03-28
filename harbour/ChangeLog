@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+      
+      *fixed declaration of hb_pp_StreamBlock
+
+   * source/pp/ppcore.c
       * added two guards for buffer overflow
 
 

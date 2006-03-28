@@ -3691,10 +3691,10 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
       /* move items from HVM stack to created array */
       for( ulPos = 0; ulPos < ulElements; ulPos++ )
          hb_itemMove( pArray->item.asArray.value->pItems + ulPos,
-                      hb_stackItemFromTop( ( signed ) ( ulPos - ulElements - 1 ) ) );
+                      hb_stackItemFromTop( ( int ) ( ulPos - ulElements - 1 ) ) );
 
       /* move the new array to position of first parameter */
-      hb_itemMove( hb_stackItemFromTop( -ulElements - 1 ), pArray );
+      hb_itemMove( hb_stackItemFromTop( ( int ) ( -ulElements - 1 ) ), pArray );
 
       /* decrease the stack counter - all items are NIL */
       hb_stackDecrease( ulElements );
@@ -7334,13 +7334,15 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    ULONG ulOpcode = hb_parnl( 1 );
 
    hb_reta( 2 );
-   hb_stornl( 0, -1, 1 );
-   hb_stornl( 0, -1, 2 );
-
    if( ulOpcode < HB_P_LAST_PCODE )
    {
       hb_stornl( hb_ulOpcodesCalls[ ulOpcode ], -1, 1 );
       hb_stornl( hb_ulOpcodesTime[ ulOpcode ],  -1, 2 );
+   }
+   else
+   {
+       hb_stornl( 0, -1, 1 );
+       hb_stornl( 0, -1, 2 );
    }
 }
 
