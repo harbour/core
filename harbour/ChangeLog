@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+      * fixed calls to hb_pp_ParseDirective
+      * increased back the input buffer to HB_PP_STR_SIZE (12288 bytes)
+      
+
+2006-03-29 11:55 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
       
       *fixed declaration of hb_pp_StreamBlock
 
