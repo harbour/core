@@ -271,6 +271,7 @@ typedef void * HB_VOID_PTR;
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
+extern LONG hb_compPCodeSize( PFUNCTION, ULONG );
 extern void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
@@ -419,6 +420,11 @@ extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL ); /* generates 3 bytes of 
 extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL );  /* copy bytes to a pcode buffer + flag for optional StrongType() */
 
+#if defined(HB_COMP_STRONG_TYPES)
+extern void hb_compStrongType( int iSize );
+#endif
+
+
 extern ULONG hb_compSequenceBegin( void );
 extern ULONG hb_compSequenceEnd( void );
 extern void hb_compSequenceFinish( ULONG, int );
@@ -552,9 +558,6 @@ extern PHB_FNAME      hb_comp_pOutPath;
 extern PHB_FNAME      hb_comp_pPpoPath;
 extern BOOL           hb_comp_bCredits;
 extern BOOL           hb_comp_bBuildInfo;
-
-/* Andi Jahja */
-extern BOOL           hb_comp_bFileVersionInfo;
 
 extern BOOL           hb_comp_bLogo;
 extern BOOL           hb_comp_bSyntaxCheckOnly;

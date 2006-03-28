@@ -86,8 +86,10 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 #define alloca  hb_xgrab
 #undef malloc
 #define malloc  hb_xgrab
+#undef realloc
+#define realloc hb_xrealloc
 #undef free
-#define free hb_xfree
+#define free    hb_xfree
 
 
 /* declaration of yylex function

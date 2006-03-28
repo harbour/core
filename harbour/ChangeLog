@@ -8,6 +8,49 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+
+    * harbour/makefile.bc  
+    * fixed calculation of length of stringify expressions
+
+
+2006-03-28 13:46 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
+    * harbour/makefile.bc
+    * harbour/makefile.nt
+    * harbour/makefile.vc
+    * harbour/makefile64.nt
+      + added references for harbour/source/compiler/hbstrong.c
+
+2006-03-28 13:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+    + added hb_compPCodeSize() and hb_compStrongType() declarations
+
+  * harbour/include/hbpp.h
+    * formatting
+
+  * harbour/source/compiler/Makefile
+  + harbour/source/compiler/hbstrong.c
+  * harbour/source/compiler/hbpcode.c
+    * moved strong typing code to separate file
+
+  * harbour/source/compiler/hbpcode.c
+    + added hb_compPCodeSize() function
+    + added support for automatic size checking of variable size PCODEs
+      in hb_compPCodeEval()
+
+  * harbour/source/compiler/gencc.c
+    * added escaping of '?' character in generated strings to
+      avoid possible conflicts with trigraph sequences which
+      are part of ANSI C standard
+    * force .0 at the end of double numbers to avoid possible range
+      conflicts in generated .c files
+    * removed unnecessary HB_SYMBOL_UNUSED()
+
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+    * added #define realloc hb_xrealloc
+
   * harbour/source/compiler/hbdead.c
   * harbour/source/compiler/hbfix.c
   * harbour/source/compiler/hblbl.c

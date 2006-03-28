@@ -62,8 +62,11 @@ static void hb_gencc_string_put( FILE * yyc, BYTE * pText, USHORT usLen )
        *    into a string containing nonprintable characters.
        *
        * TODO: add switch to use hexadecimal format "%#04x"
+       *
+       * ? is escaped to avoid conflicts with trigraph sequences which
+       * are part of ANSI C standard
        */
-      if( uchr == '"' || uchr == '\\' )
+      if( uchr == '"' || uchr == '\\' || uchr == '?' )
          fprintf( yyc, "\\%c", uchr );
       else if( uchr < ( BYTE ) ' ' || uchr >= 127 )
          fprintf( yyc, "\\%03o", uchr );
@@ -96,8 +99,6 @@ static int hb_gencc_checkNumAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos
 
 static HB_GENC_FUNC( hb_p_and )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmAnd() ) break;\n" );
@@ -106,8 +107,6 @@ static HB_GENC_FUNC( hb_p_and )
 
 static HB_GENC_FUNC( hb_p_arraypush )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmArrayPush() ) break;\n" );
@@ -116,8 +115,6 @@ static HB_GENC_FUNC( hb_p_arraypush )
 
 static HB_GENC_FUNC( hb_p_arraypop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmArrayPop() ) break;\n" );
@@ -126,8 +123,6 @@ static HB_GENC_FUNC( hb_p_arraypop )
 
 static HB_GENC_FUNC( hb_p_dec )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDec() ) break;\n" );
@@ -145,8 +140,6 @@ static HB_GENC_FUNC( hb_p_arraydim )
 
 static HB_GENC_FUNC( hb_p_divide )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDivide() ) break;\n" );
@@ -155,8 +148,6 @@ static HB_GENC_FUNC( hb_p_divide )
 
 static HB_GENC_FUNC( hb_p_do )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDo( %hu ) ) break;\n",
@@ -175,8 +166,6 @@ static HB_GENC_FUNC( hb_p_doshort )
 
 static HB_GENC_FUNC( hb_p_duplicate )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmDuplicate();\n" );
@@ -185,8 +174,6 @@ static HB_GENC_FUNC( hb_p_duplicate )
 
 static HB_GENC_FUNC( hb_p_dupltwo )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmDuplTwo();\n" );
@@ -195,8 +182,6 @@ static HB_GENC_FUNC( hb_p_dupltwo )
 
 static HB_GENC_FUNC( hb_p_equal )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmEqual( FALSE ) ) break;\n" );
@@ -205,8 +190,6 @@ static HB_GENC_FUNC( hb_p_equal )
 
 static HB_GENC_FUNC( hb_p_exactlyequal )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmEqual( TRUE ) ) break;\n" );
@@ -215,8 +198,6 @@ static HB_GENC_FUNC( hb_p_exactlyequal )
 
 static HB_GENC_FUNC( hb_p_endblock )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    HB_GENC_ERROR( "HB_P_ENDBLOCK" );
@@ -240,8 +221,6 @@ static HB_GENC_FUNC( hb_p_endproc )
 
 static HB_GENC_FUNC( hb_p_false )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushLogical( FALSE );\n" );
@@ -250,8 +229,6 @@ static HB_GENC_FUNC( hb_p_false )
 
 static HB_GENC_FUNC( hb_p_fortest )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmForTest() ) break;\n" );
@@ -269,8 +246,6 @@ static HB_GENC_FUNC( hb_p_frame )
 
 static HB_GENC_FUNC( hb_p_funcptr )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmFuncPtr();\n" );
@@ -306,8 +281,6 @@ static HB_GENC_FUNC( hb_p_arraygen )
 
 static HB_GENC_FUNC( hb_p_greater )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmGreater() ) break;\n" );
@@ -316,8 +289,6 @@ static HB_GENC_FUNC( hb_p_greater )
 
 static HB_GENC_FUNC( hb_p_greaterequal )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmGreaterEqual() ) break;\n" );
@@ -326,8 +297,6 @@ static HB_GENC_FUNC( hb_p_greaterequal )
 
 static HB_GENC_FUNC( hb_p_inc )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmInc() ) break;\n" );
@@ -336,8 +305,6 @@ static HB_GENC_FUNC( hb_p_inc )
 
 static HB_GENC_FUNC( hb_p_instring )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmInstring() ) break;\n" );
@@ -445,8 +412,6 @@ static HB_GENC_FUNC( hb_p_jumptruefar )
 
 static HB_GENC_FUNC( hb_p_less )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmLess() ) break;\n" );
@@ -455,8 +420,6 @@ static HB_GENC_FUNC( hb_p_less )
 
 static HB_GENC_FUNC( hb_p_lessequal )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmLessEqual() ) break;\n" );
@@ -514,8 +477,6 @@ static HB_GENC_FUNC( hb_p_macropush )
 
 static HB_GENC_FUNC( hb_p_macropushref )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroPushRef() ) break;\n" );
@@ -555,8 +516,6 @@ static HB_GENC_FUNC( hb_p_macropushlist )
 
 static HB_GENC_FUNC( hb_p_macropushindex )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroPushIndex( %d ) ) break;\n",
@@ -566,8 +525,6 @@ static HB_GENC_FUNC( hb_p_macropushindex )
 
 static HB_GENC_FUNC( hb_p_macropushpare )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroPushPare( %d ) ) break;\n",
@@ -577,8 +534,6 @@ static HB_GENC_FUNC( hb_p_macropushpare )
 
 static HB_GENC_FUNC( hb_p_macropushaliased )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroPushAliased( %d ) ) break;\n",
@@ -588,8 +543,6 @@ static HB_GENC_FUNC( hb_p_macropushaliased )
 
 static HB_GENC_FUNC( hb_p_macrosymbol )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroSymbol() ) break;\n" );
@@ -598,8 +551,6 @@ static HB_GENC_FUNC( hb_p_macrosymbol )
 
 static HB_GENC_FUNC( hb_p_macrotext )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroText() ) break;\n" );
@@ -617,8 +568,6 @@ static HB_GENC_FUNC( hb_p_message )
 
 static HB_GENC_FUNC( hb_p_minus )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMinus() ) break;\n" );
@@ -640,8 +589,6 @@ static HB_GENC_FUNC( hb_p_modulename )
 
 static HB_GENC_FUNC( hb_p_modulus )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmModulus() ) break;\n" );
@@ -650,8 +597,6 @@ static HB_GENC_FUNC( hb_p_modulus )
 
 static HB_GENC_FUNC( hb_p_mult )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMult() ) break;\n" );
@@ -660,8 +605,6 @@ static HB_GENC_FUNC( hb_p_mult )
 
 static HB_GENC_FUNC( hb_p_negate )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmNegate() ) break;\n" );
@@ -670,8 +613,6 @@ static HB_GENC_FUNC( hb_p_negate )
 
 static HB_GENC_FUNC( hb_p_not )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmNot() ) break;\n" );
@@ -680,8 +621,6 @@ static HB_GENC_FUNC( hb_p_not )
 
 static HB_GENC_FUNC( hb_p_notequal )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmNotEqual() ) break;\n" );
@@ -690,8 +629,6 @@ static HB_GENC_FUNC( hb_p_notequal )
 
 static HB_GENC_FUNC( hb_p_or )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmOr() ) break;\n" );
@@ -710,8 +647,6 @@ static HB_GENC_FUNC( hb_p_parameter )
 
 static HB_GENC_FUNC( hb_p_plus )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPlus() ) break;\n" );
@@ -720,8 +655,6 @@ static HB_GENC_FUNC( hb_p_plus )
 
 static HB_GENC_FUNC( hb_p_pop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_stackPop();\n" );
@@ -730,8 +663,6 @@ static HB_GENC_FUNC( hb_p_pop )
 
 static HB_GENC_FUNC( hb_p_popalias )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPopAlias() ) break;\n" );
@@ -821,8 +752,6 @@ static HB_GENC_FUNC( hb_p_popvariable )
 
 static HB_GENC_FUNC( hb_p_power )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPower() ) break;\n" );
@@ -831,8 +760,6 @@ static HB_GENC_FUNC( hb_p_power )
 
 static HB_GENC_FUNC( hb_p_pushalias )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPushAlias() ) break;\n" );
@@ -919,7 +846,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushDouble( %.*f, %d, %d );\n",
-            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ],
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] + 1,
             HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos + 1 ] ),
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
@@ -1035,8 +962,6 @@ static HB_GENC_FUNC( hb_p_pushmemvarref )
 
 static HB_GENC_FUNC( hb_p_pushnil )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushNil();\n" );
@@ -1045,8 +970,6 @@ static HB_GENC_FUNC( hb_p_pushnil )
 
 static HB_GENC_FUNC( hb_p_pushself )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushSelf();\n" );
@@ -1126,8 +1049,6 @@ static HB_GENC_FUNC( hb_p_pushvariable )
 
 static HB_GENC_FUNC( hb_p_retvalue )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmRetValue();\n" );
@@ -1154,8 +1075,6 @@ static HB_GENC_FUNC( hb_p_sendshort )
 
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tdo {\n" );
@@ -1180,8 +1099,6 @@ static HB_GENC_FUNC( hb_p_seqend )
 
 static HB_GENC_FUNC( hb_p_seqrecover )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmSeqRecover( %s );\n",
@@ -1225,8 +1142,6 @@ static HB_GENC_FUNC( hb_p_staticname )
 
 static HB_GENC_FUNC( hb_p_swapalias )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmSwapAlias() ) break;\n" );
@@ -1235,8 +1150,6 @@ static HB_GENC_FUNC( hb_p_swapalias )
 
 static HB_GENC_FUNC( hb_p_true )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushLogical( TRUE );\n" );
@@ -1257,18 +1170,18 @@ static HB_GENC_FUNC( hb_p_one )
 
 static HB_GENC_FUNC( hb_p_zero )
 {
-   HB_SYMBOL_UNUSED( pFunc );
+   int iSkip;
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushInteger( 0 );\n" );
-   return 1;
+   iSkip = hb_gencc_checkNumAhead( 0, pFunc, lPCodePos + 1, cargo );
+   if( iSkip == 0 )
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( 0 );\n" );
+   return 1 + iSkip;
 }
 
 static HB_GENC_FUNC( hb_p_noop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    return 1;
@@ -1284,8 +1197,6 @@ static HB_GENC_FUNC( hb_p_dummy )
 
 static HB_GENC_FUNC( hb_p_macrolist )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmMacroList();\n" );
@@ -1294,8 +1205,6 @@ static HB_GENC_FUNC( hb_p_macrolist )
 
 static HB_GENC_FUNC( hb_p_macrolistend )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmMacroListEnd();\n" );
@@ -1313,8 +1222,6 @@ static HB_GENC_FUNC( hb_p_enumstart )
 
 static HB_GENC_FUNC( hb_p_enumnext )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmEnumNext() ) break;\n" );
@@ -1323,8 +1230,6 @@ static HB_GENC_FUNC( hb_p_enumnext )
 
 static HB_GENC_FUNC( hb_p_enumprev )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmEnumPrev() ) break;\n" );
@@ -1333,8 +1238,6 @@ static HB_GENC_FUNC( hb_p_enumprev )
 
 static HB_GENC_FUNC( hb_p_enumend )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmEnumEnd( &lForEachBase );\n" );
@@ -1422,8 +1325,6 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
 
 static HB_GENC_FUNC( hb_p_pluseqpop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPlusEqPop() ) break;\n" );
@@ -1432,8 +1333,6 @@ static HB_GENC_FUNC( hb_p_pluseqpop )
 
 static HB_GENC_FUNC( hb_p_minuseqpop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMinusEqPop() ) break;\n" );
@@ -1442,8 +1341,6 @@ static HB_GENC_FUNC( hb_p_minuseqpop )
 
 static HB_GENC_FUNC( hb_p_multeqpop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMultEqPop() ) break;\n" );
@@ -1452,8 +1349,6 @@ static HB_GENC_FUNC( hb_p_multeqpop )
 
 static HB_GENC_FUNC( hb_p_diveqpop )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDivEqPop() ) break;\n" );
@@ -1462,8 +1357,6 @@ static HB_GENC_FUNC( hb_p_diveqpop )
 
 static HB_GENC_FUNC( hb_p_pluseq )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmPlusEq() ) break;\n" );
@@ -1472,8 +1365,6 @@ static HB_GENC_FUNC( hb_p_pluseq )
 
 static HB_GENC_FUNC( hb_p_minuseq )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMinusEq() ) break;\n" );
@@ -1482,8 +1373,6 @@ static HB_GENC_FUNC( hb_p_minuseq )
 
 static HB_GENC_FUNC( hb_p_multeq )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMultEq() ) break;\n" );
@@ -1492,8 +1381,6 @@ static HB_GENC_FUNC( hb_p_multeq )
 
 static HB_GENC_FUNC( hb_p_diveq )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDivEq() ) break;\n" );

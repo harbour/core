@@ -74,8 +74,16 @@
 #define alloca  hb_xgrab
 #undef malloc
 #define malloc  hb_xgrab
+#undef realloc
+#define realloc hb_xrealloc
 #undef free
-#define free hb_xfree
+#define free    hb_xfree
+
+#undef YYFREE
+#define YYFREE hb_xfree
+#undef YYMALLOC
+#define YYMALLOC hb_xgrab
+
 /* This is workaround of yyparse() declaration bug in bison.simple
 */
 

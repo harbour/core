@@ -85,7 +85,7 @@ typedef struct _COMMANDS
 #define HB_PP_STR_SIZE  12288
 #define HB_PP_BUFF_SIZE 4096
 
-#define HB_SKIPTABSPACES( sptr ) while( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
+#define HB_SKIPTABSPACES( sptr ) while( *( sptr ) == ' ' || *( sptr ) == '\t' ) ( sptr )++
 
 /* PPCORE.C exported functions and variables */
 

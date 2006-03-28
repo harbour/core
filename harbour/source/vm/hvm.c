@@ -2015,8 +2015,16 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, int iAdd )
    {
       PHB_ITEM pSubst, pAdd = hb_stackTopItem();
 
-      hb_vmPushInteger( iAdd );
-      pSubst = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pResult, pAdd );
+      if( iAdd > 0 )
+      {
+         hb_vmPushInteger( iAdd );
+         pSubst = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pResult, pAdd );
+      }
+      else
+      {
+         hb_vmPushInteger( -iAdd );
+         pSubst = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pResult, pAdd );
+      }
 
       if( pSubst )
       {
@@ -6938,7 +6946,7 @@ HB_EXPORT BOOL hb_xvmArrayPush( void )
 
 HB_EXPORT BOOL hb_xvmArrayItemPush( ULONG ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayPush(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPush(%lu)", ulIndex));
 
    hb_vmArrayItemPush( ulIndex );
 
@@ -6956,7 +6964,7 @@ HB_EXPORT BOOL hb_xvmArrayPop( void )
 
 HB_EXPORT BOOL hb_xvmArrayItemPop( ULONG ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayPop(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPop(%lu)", ulIndex));
 
    hb_vmArrayItemPop( ulIndex );
 

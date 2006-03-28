@@ -52,6 +52,7 @@ C_SOURCES=\
     hbdead.c \
     hblbl.c \
     hbstripl.c \
+    hbstrong.c \
     hbusage.c \
     hbident.c \
     expropta.c \
