@@ -721,6 +721,7 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\hbgenerr.obj \
    $(OBJ_DIR)\hblbl.obj \
    $(OBJ_DIR)\hbpcode.obj \
+   $(OBJ_DIR)\hbstrong.obj \
    $(OBJ_DIR)\hbfix.obj \
    $(OBJ_DIR)\genc.obj \
    $(OBJ_DIR)\gencc.obj \
@@ -970,6 +971,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    $(ECHO) $(OBJ_DIR)\hbgenerr.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hblbl.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbpcode.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hbstrong.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbfix.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\genc.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\gencc.obj >> make.tmp
@@ -1043,6 +1045,9 @@ $(OBJ_DIR)\hblbl.obj : $(COMPILER_DIR)\hblbl.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbpcode.obj : $(COMPILER_DIR)\hbpcode.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbstrong.obj : $(COMPILER_DIR)\hbstrong.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\hbfix.obj : $(COMPILER_DIR)\hbfix.c

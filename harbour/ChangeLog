@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+2006-03-28 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    
+
+2006-03-28 14:35 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+  * include/hbexpra.c
+    * fixed optimization of 'EVAL' in macro compiler
 
     * harbour/makefile.bc  
     * fixed calculation of length of stringify expressions

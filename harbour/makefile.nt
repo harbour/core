@@ -1081,6 +1081,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
+   $(COMPILER_DIR)\hbstrong.c \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
    $(COMPILER_DIR)\hbgenerr.c \
@@ -1109,6 +1110,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
+   $(COMPILER_DIR)\hbstrong.c \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
    $(COMPILER_DIR)\hbgenerr.c \
