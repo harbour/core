@@ -3387,7 +3387,7 @@ static int pp_Stringify( BOOL bSmart, char **ptro, int *lenres, char *expr, int 
       ( *ptro )++;
       rmlen++;
    }
-   rmlen += lenitem + iAdd;
+   rmlen += lenTrim + iAdd;
 
    return rmlen;
 }

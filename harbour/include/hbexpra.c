@@ -387,7 +387,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 #ifndef HB_MACRO_SUPPORT
             hb_compExprNewSend( pParms->value.asList.pExprList, hb_compIdentifierNew( "EVAL", TRUE ) ),
 #else
-            hb_compExprNewSend( pParms->value.asList.pExprList, "EVAL" ),
+            hb_compExprNewSend( pParms->value.asList.pExprList, hb_strdup("EVAL") ),
 #endif            
             hb_compExprNewArgList( pParms->value.asList.pExprList->pNext ) );
                

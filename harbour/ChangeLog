@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+      * added two guards for buffer overflow
+
+
+2006-03-28 18:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+    ! upper the default .prg function name created from .prg file name
+      when compiled without -n switch
+
 2006-03-28 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     
