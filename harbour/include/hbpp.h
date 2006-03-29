@@ -113,7 +113,7 @@ extern char * hb_pp_szErrors[];
 extern char * hb_pp_szWarnings[];
 extern int    hb_pp_nEmptyStrings;
 extern int    hb_pp_LastOutLine;
-extern BOOL   hb_pp_StreamBlock;
+extern int    hb_pp_StreamBlock;
 extern BOOL   hb_pp_NestedLiteralString;
 extern BOOL   hb_pp_LiteralEscSeq;
 extern unsigned int  hb_pp_MaxTranslateCycles;

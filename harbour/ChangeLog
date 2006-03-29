@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+
+   * source/compiler/harbour.l
+      * fixed compilation of macro expression (the first letter
+        was eaten in some cases)
+
+      
+   * source/pp/ppcore.c
+   * source/pp/pplib.c
       * fixed calls to hb_pp_ParseDirective
       * increased back the input buffer to HB_PP_STR_SIZE (12288 bytes)
       

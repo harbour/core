@@ -2137,7 +2137,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    char *expreal = ( char * ) hb_xgrab( MAX_EXP );
    char *exppatt = ( char * ) hb_xgrab( MAX_NAME );
 #endif
-   int lenreal = 0, maxlenreal = HB_PP_STR_SIZE, lenpatt;
+   int lenreal = 0, maxlenreal = MAX_EXP/*HB_PP_STR_SIZE*/, lenpatt;
    int rezrestr, ipos, nBra;
    char *ptr, *ptrtemp;
 
@@ -2211,7 +2211,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
             }
             else
             {
-               maxlenreal = ipos - 1;
+               maxlenreal = ipos;
                lenreal = 0;
             }
          }
@@ -2900,6 +2900,10 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
          lens++;
       }
    }
+   if( !rez && lens >= maxrez )
+   {
+      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+   }
 
    if( expreal != NULL && expreal > cStart )
    {
@@ -3220,7 +3224,15 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
             {
                lennew = ptr2 - ptr - 1;
 
-               memcpy( expnew, ptr + 1, lennew );
+               if( lennew < MAX_EXP )
+               {
+                  memcpy( expnew, ptr + 1, lennew );
+               }
+               else
+               {
+                  hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+                  return;
+               }
                *( expnew + lennew++ ) = ' ';
                *( expnew + lennew ) = '\0';
                while( ( i = hb_strAt( exppatt, 2, expnew, lennew ) ) > 0 )
