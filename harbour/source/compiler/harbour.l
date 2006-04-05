@@ -107,6 +107,10 @@ void yy_breakFlex( void ){ };
 /* disable warnings for unreachable code */
 #pragma warning 13 9
 #endif
+
+#ifdef _MSC_VER
+   #define YY_NEVER_INTERACTIVE TRUE
+#endif
 %}
 
 SpaceTab      [ \t]+
