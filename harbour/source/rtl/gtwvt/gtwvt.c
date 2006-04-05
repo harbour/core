@@ -86,6 +86,10 @@
 
 #include "gtwvt.h"
 
+#if defined(_MSC_VER)
+   #include <conio.h>
+#endif   
+
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
 
@@ -296,7 +300,7 @@ static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
    SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 }
 
-static void HB_EXPORT hb_gt_wvt_SetWindowTitle( char * title )
+static void hb_gt_wvt_SetWindowTitle( char * title )
 {
    SetWindowText( _s.hWnd, title );
 }
@@ -1228,7 +1232,7 @@ static BOOL hb_gt_wvt_GetClipboard( char ** pszClipData, ULONG *pulLen )
 
             if( *pulLen )
             {
-               *pszClipData = hb_xgrab( *pulLen + 1 );
+               *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
                memcpy( *pszClipData, lptstr, *pulLen + 1 );
             }
             GlobalUnlock( hglb );
