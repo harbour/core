@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
    * source/pp/ppcore.c
+      * ignore escaped '<' in command/translate definitions
+        (work in progress)
+
+2006-04-05 15:49 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+   * source/makefile.nt
+     + Added hblbl.c and gencc.c modules
+
+   * harbour/source/vm/mainwin.c
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/compiler/harbour.l
+      
+
+2006-04-05 13:35 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/compiler/harbour.c
+      
 
    * source/compiler/harbour.l
       * fixed compilation of macro expression (the first letter

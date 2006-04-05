@@ -191,6 +191,9 @@ static BOOL s_bReplacePat = TRUE;
 static int s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
+/* additional buffers for expressions */
+static char *s_expreal = NULL;   /* allocation inside WorkMarkers */
+static char *s_expcopy = NULL;   /* allocation inside SearnExp */
 
 /* global variables */
 int *hb_pp_aCondCompile = NULL;
@@ -256,10 +259,6 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
             if( ( *hb_compInclude ) ( szFileName, hb_comp_pIncludePath ) )
             {
-               /*
-                  printf( "Loading Standard Rules from: \'%s\'\n", szFileName );
-                */
-
                hb_pp_Init(  );
 
                hb_pp_ReadRules(  );
@@ -287,10 +286,6 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
                hb_xfree( ( void * ) hb_comp_pFileName );
                hb_comp_pFileName = NULL;
-
-               s_kolAddComs = 0;
-               s_kolAddTras = 0;
-               s_kolAddDefs = 0;
             }
             else
             {
@@ -309,6 +304,7 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
          hb_pp_Init(  );
       }
+      hb_xfree( hb_pp_STD_CH );
    }
    else
    {
@@ -367,6 +363,17 @@ void hb_pp_Free( void )
       hb_pp_aCondCompile = NULL;
    }
    hb_pp_InternalFree(  );
+   
+   if( s_expreal )
+   {
+      hb_xfree( ( void *) s_expreal );
+      s_expreal = NULL;
+   }
+   if( s_expcopy )
+   {
+      hb_xfree( ( void *) s_expcopy );
+      s_expcopy = NULL;
+   }
 }
 
 void hb_pp_Init( void )
@@ -2131,18 +2138,21 @@ static int RemoveSlash( char *cpatt )
 static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
 #if ! defined(HB_PP_DEBUG_MEMORY)
-   static char expreal[MAX_EXP];
    char exppatt[MAX_NAME];
 #else
-   char *expreal = ( char * ) hb_xgrab( MAX_EXP );
    char *exppatt = ( char * ) hb_xgrab( MAX_NAME );
 #endif
-   int lenreal = 0, maxlenreal = MAX_EXP/*HB_PP_STR_SIZE*/, lenpatt;
+   int lenreal = 0, maxlenreal, lenpatt;
    int rezrestr, ipos, nBra;
    char *ptr, *ptrtemp;
 
    HB_TRACE( HB_TR_DEBUG, ( "WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres ) );
 
+   
+   maxlenreal = HB_PP_STR_SIZE;
+   if( s_expreal == NULL )
+      s_expreal = ( char * ) hb_xgrab( maxlenreal );
+      
    /* Copying a match pattern to 'exppatt' */
    lenpatt = stroncpy( exppatt, *ptrmp, 4 );
    *ptrmp += 4;
@@ -2192,9 +2202,9 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    if( *( exppatt + 2 ) != '2' && *ptrtemp != HB_PP_MATCH_MARK
        && *ptrtemp != ',' && *ptrtemp != HB_PP_OPT_START && *ptrtemp != HB_PP_OPT_END && *ptrtemp != '\0' )
    {
-      lenreal = strincpy( expreal, ptrtemp );
+      lenreal = strincpy( s_expreal, ptrtemp );
 
-      if( ( ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE, MD_STR_AT_USESUBCASE ) ) > 0 )
+      if( ( ipos = md_strAt( s_expreal, lenreal, *ptri, TRUE, TRUE, FALSE, MD_STR_AT_USESUBCASE ) ) > 0 )
       {
          if( ptrtemp > *ptrmp )
          {
@@ -2203,7 +2213,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                if( s_numBrackets )
                {
 #if defined(HB_PP_DEBUG_MEMORY)
-                  hb_xfree( ( void * ) expreal );
                   hb_xfree( ( void * ) exppatt );
 #endif
                   return 0;
@@ -2218,21 +2227,21 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
          else
          {
             /*
-               printf( "\nFound: '%s' Len: %i In: '%s' At: %i \n", expreal, lenreal, *ptri, ipos );
+               printf( "\nFound: '%s' Len: %i In: '%s' At: %i \n", s_expreal, lenreal, *ptri, ipos );
              */
 
-            lenreal = stroncpy( expreal, *ptri, ipos - 1 );
+            lenreal = stroncpy( s_expreal, *ptri, ipos - 1 );
 
             if( ipos > 1 )
             {
                if( *( exppatt + 2 ) == '5' )    /*  ----  Minimal match marker  */
                {
-                  if( IsIdentifier( expreal ) )
+                  if( IsIdentifier( s_expreal ) )
                   {
                      *ptri += lenreal;
                   }
                }
-               else if( isExpres( expreal, *( exppatt + 2 ) == '1' ) )
+               else if( isExpres( s_expreal, *( exppatt + 2 ) == '1' ) )
                {
                   *ptri += lenreal;
                }
@@ -2242,7 +2251,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                if( s_numBrackets )
                {
 #if defined(HB_PP_DEBUG_MEMORY)
-                  hb_xfree( ( void * ) expreal );
                   hb_xfree( ( void * ) exppatt );
 #endif
                   return 0;
@@ -2259,7 +2267,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
          if( s_numBrackets )
          {
 #if defined(HB_PP_DEBUG_MEMORY)
-            hb_xfree( ( void * ) expreal );
             hb_xfree( ( void * ) exppatt );
 #endif
             return 0;
@@ -2274,16 +2281,16 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    if( *( exppatt + 2 ) == '4' )        /*  ----  extended match marker  */
    {
       if( !lenreal )
-         lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE );
       {
-         SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+         SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
       }
    }
    else if( *( exppatt + 2 ) == '3' )   /*  ----  wild match marker  */
    {
-      lenreal = hb_pp_strocpy( expreal, *ptri );
+      lenreal = hb_pp_strocpy( s_expreal, *ptri );
       *ptri += lenreal;
-      SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+      SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
    }
    else if( *( exppatt + 2 ) == '2' )   /*  ---- restricted match marker  */
    {
@@ -2325,18 +2332,18 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
 /* Commented out this line to avoid a compiler warning. Please review. [vszakats] */
 /*               lenreal = IsMacroVar( *ptri, com_or_tra ); */
                   *ptri += 1;
-                  lenreal = getExpReal( expreal + 2, ptri, FALSE, maxlenreal, FALSE );
+                  lenreal = getExpReal( s_expreal + 2, ptri, FALSE, maxlenreal, FALSE );
                   if( **ptri == ')' )
                   {
                      *ptri += 1;
                   }
                   if( !( **ptri == '\0' || **ptri == ' ' ) && com_or_tra )
                      break;
-                  expreal[0] = '&';
-                  expreal[1] = '(';
+                  s_expreal[0] = '&';
+                  s_expreal[1] = '(';
                   lenreal += 3;
-                  expreal[lenreal - 1] = ')';
-                  SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+                  s_expreal[lenreal - 1] = ')';
+                  SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
                   rezrestr = 1;
                }
                else
@@ -2344,18 +2351,17 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                   lenreal = IsMacroVar( *ptri, com_or_tra );
                   if( lenreal > 0 )
                   {
-                     strncpy( expreal + 1, *ptri, lenreal );
-                     expreal[0] = '&';
-                     expreal[lenreal + 1] = '\0';
+                     strncpy( s_expreal + 1, *ptri, lenreal );
+                     s_expreal[0] = '&';
+                     s_expreal[lenreal + 1] = '\0';
                      *ptri += lenreal;
-                     SearnRep( exppatt, expreal, lenreal + 1, ptro, lenres );
+                     SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
                      rezrestr = 1;
                      break;
                   }
                   else
                   {
 #if defined(HB_PP_DEBUG_MEMORY)
-                     hb_xfree( ( void * ) expreal );
                      hb_xfree( ( void * ) exppatt );
 #endif
                      return 0;
@@ -2375,9 +2381,9 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
             ptrtemp = ptr;
             if( !strincmp( *ptri, &ptr, !com_or_xcom ) )
             {
-               lenreal = stroncpy( expreal, *ptri, ( ptr - ptrtemp ) );
+               lenreal = stroncpy( s_expreal, *ptri, ( ptr - ptrtemp ) );
                *ptri += lenreal;
-               SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+               SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
                rezrestr = 1;
                break;
             }
@@ -2409,7 +2415,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
             }
           */
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) expreal );
          hb_xfree( ( void * ) exppatt );
 #endif
          return 0;
@@ -2419,17 +2424,16 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    {
       if( !lenreal )
       {
-         lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, TRUE, maxlenreal, FALSE );
       }
 
       if( lenreal )
       {
-         SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+         SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
       }
       else
       {
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) expreal );
          hb_xfree( ( void * ) exppatt );
 #endif
          return 0;
@@ -2437,24 +2441,23 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    }
    else                         /*  ---- regular match marker  */
    {
-      /* Copying a real expression to 'expreal' */
+      /* Copying a real expression to 's_expreal' */
       if( !lenreal )
       {
-         lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE );
       }
 
       /*
-         printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
+         printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, s_expreal );
        */
 
       if( lenreal )
       {
-         SearnRep( exppatt, expreal, lenreal, ptro, lenres );
+         SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
       }
       else
       {
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) expreal );
          hb_xfree( ( void * ) exppatt );
 #endif
          return 0;
@@ -2462,7 +2465,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    }
 
 #if defined(HB_PP_DEBUG_MEMORY)
-   hb_xfree( ( void * ) expreal );
    hb_xfree( ( void * ) exppatt );
 #endif
    return 1;
@@ -3158,12 +3160,6 @@ static void SkipOptional( char **ptri )
 
 static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int *lenres )
 {
-#if ! defined(HB_PP_DEBUG_MEMORY)
-   static char expnew[MAX_EXP];
-#else
-   char *expnew = ( char * ) hb_xgrab( MAX_EXP );
-#endif
-
    int ifou, isdvig = 0;
    BOOL rezs, bFound = FALSE;
    int kolmarkers;
@@ -3173,6 +3169,9 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
 
    HB_TRACE( HB_TR_DEBUG, ( "SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres ) );
 
+   if( s_expcopy == NULL )
+      s_expcopy = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+   
    if( *( exppatt + 1 ) == '\0' )
       *( ptro + *lenres ) = '\0';
 
@@ -3224,30 +3223,30 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
             {
                lennew = ptr2 - ptr - 1;
 
-               if( lennew < MAX_EXP )
+               if( lennew < HB_PP_STR_SIZE-2 )
                {
-                  memcpy( expnew, ptr + 1, lennew );
+                  memcpy( s_expcopy, ptr + 1, lennew );
                }
                else
                {
                   hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
                   return;
                }
-               *( expnew + lennew++ ) = ' ';
-               *( expnew + lennew ) = '\0';
-               while( ( i = hb_strAt( exppatt, 2, expnew, lennew ) ) > 0 )
-                  lennew += ReplacePattern( exppatt[2], expreal, lenreal, expnew + i - 1, lennew );
+               *( s_expcopy + lennew++ ) = ' ';
+               *( s_expcopy + lennew ) = '\0';
+               while( ( i = hb_strAt( exppatt, 2, s_expcopy, lennew ) ) > 0 )
+                  lennew += ReplacePattern( exppatt[2], expreal, lenreal, s_expcopy + i - 1, lennew );
                if( kolmarkers )
                {
                   s_groupchar = ( char ) ( ( unsigned int ) s_groupchar + 1 );
                   for( i = 0; i < lennew; i++ )
-                     if( *( expnew + i ) == HB_PP_MATCH_MARK )
+                     if( *( s_expcopy + i ) == HB_PP_MATCH_MARK )
                      {
-                        *( expnew + i + 3 ) = s_groupchar;
+                        *( s_expcopy + i + 3 ) = s_groupchar;
                         i += 4;
                      }
                }
-               hb_pp_Stuff( expnew, ptr, lennew, 0, *lenres - ( ptr - ptro ) );
+               hb_pp_Stuff( s_expcopy, ptr, lennew, 0, *lenres - ( ptr - ptro ) );
                *lenres += lennew;
                isdvig = ptr - ptro + ( ptr2 - ptr - 1 ) + lennew;
                rezs = TRUE;
@@ -3285,9 +3284,6 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
    }
    if( !bFound && s_Repeate )
       s_aIsRepeate[s_Repeate - 1]++;
-#if defined(HB_PP_DEBUG_MEMORY)
-   hb_xfree( ( void * ) expnew );
-#endif
 }
 
 static BOOL ScanMacro( char *expreal, int lenitem, int *pNewLen )

@@ -153,7 +153,7 @@ HB_FUNC( __PPADDRULE )
             hb_pp_Init();
             hb_comp_files.iFiles = 0;
          }
-         hb_pp_ParseDirective( ptr + 1 );
+         hb_pp_ParseDirective( ptr );
          if( hb_comp_files.pLast )
          {
             hb_buffer = ( char* ) hb_xgrab( HB_PP_STR_SIZE );

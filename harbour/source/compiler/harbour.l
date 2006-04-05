@@ -1734,13 +1734,13 @@ Separator     {SpaceTab}
                }
 
 {MacroId}      {
-                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext+1 ), TRUE );
+                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
-                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext+1 ), TRUE );
+                  yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }

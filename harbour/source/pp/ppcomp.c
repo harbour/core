@@ -604,7 +604,7 @@ int hb_pp_ReadRules( void )
 
               if( *ptr == '#' )
               {
-                 hb_pp_ParseDirective( ptr + 1 );
+                 hb_pp_ParseDirective( ptr );
               }
 
               *s_szLine = '\0';
