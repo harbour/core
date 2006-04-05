@@ -1085,8 +1085,10 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
    $(COMPILER_DIR)\hbgenerr.c \
+   $(COMPILER_DIR)\hblbl.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
+   $(COMPILER_DIR)\gencc.c \
    $(COMPILER_DIR)\gencli.c \
    $(COMPILER_DIR)\gencobj.c \
    $(COMPILER_DIR)\genhrb.c \
@@ -1114,8 +1116,10 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
    $(COMPILER_DIR)\hbgenerr.c \
+   $(COMPILER_DIR)\hblbl.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
+   $(COMPILER_DIR)\gencc.c \
    $(COMPILER_DIR)\gencli.c \
    $(COMPILER_DIR)\gencobj.c \
    $(COMPILER_DIR)\genhrb.c \
