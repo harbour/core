@@ -7,6 +7,14 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/extend.c
+      
+
+2006-04-06 14:05 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/compiler/harbour.c
+      * fixed registering of startup procedure name
+
    * source/pp/ppcore.c
       * ignore escaped '<' in command/translate definitions
         (work in progress)
