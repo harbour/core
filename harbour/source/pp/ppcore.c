@@ -1219,6 +1219,12 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
 
       if( *( mpatt + i ) == '<' )
       {
+         if( i && mpatt[ i-1 ] == '\\' )
+         {
+            i++;
+            continue;
+         }
+         
          /* Drag match marker, determine it type */
          explen = 0;
          ipos = i;

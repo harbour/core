@@ -4855,7 +4855,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             /* Generate the starting procedure frame */
             if( hb_comp_bStartProc )
             {
-               hb_compFunctionAdd( hb_strupr( hb_compIdentifierNew( hb_comp_pFileName->szName, TRUE ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               hb_compFunctionAdd( hb_compIdentifierNew( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), FALSE ), HB_FS_PUBLIC, FUN_PROCEDURE );
             }
             else
             {

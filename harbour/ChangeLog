@@ -7,6 +7,15 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+
+  * harbour/source/rtl/padc.c
+  * harbour/source/rtl/padl.c
+  * harbour/source/rtl/padr.c
+  * harbour/source/rtl/substr.c
+    * some minor optimizations to avoid new string item creation when
+      it's not necessary
+      
+
   * harbour/source/vm/classes.c
   * harbour/source/vm/extend.c
       
