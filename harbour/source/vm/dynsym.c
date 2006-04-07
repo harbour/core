@@ -165,7 +165,7 @@ HB_EXPORT PHB_DYNS hb_dynsymGetCase( char * szName )  /* finds and creates a sym
 {
    PHB_DYNS pDynSym;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGetCase(%s)", szName));
 
    pDynSym = hb_dynsymFind( szName );
    if( ! pDynSym )       /* Does it exists ? */

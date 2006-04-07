@@ -879,12 +879,12 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
 
    if( s_msgClassName == NULL )
    {
-      s_msgClassName = hb_dynsymGet( "CLASSNAME" );  /* Standard messages        */
-      s_msgClassH    = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
-      s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
-      s_msgEval      = hb_dynsymGet( "EVAL" );
-      /*s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );*/
-      /*s_msgClass     = hb_dynsymGet( "CLASS" );*/
+      s_msgClassName = hb_dynsymGetCase( "CLASSNAME" );  /* Standard messages        */
+      s_msgClassH    = hb_dynsymGetCase( "CLASSH" );     /* Not present in classdef. */
+      s_msgClassSel  = hb_dynsymGetCase( "CLASSSEL" );
+      s_msgEval      = hb_dynsymGetCase( "EVAL" );
+      /*s_msgClsParent = hb_dynsymGetCase( "ISDERIVEDFROM" );*/
+      /*s_msgClass     = hb_dynsymGetCase( "CLASS" );*/
    }
 
    if( pMsg == s_msgClassName )
@@ -1018,7 +1018,8 @@ HB_FUNC( __CLSADDMSG )
    {
       PCLASS   pClass   = s_pClasses + ( uiClass - 1 );
 
-      PHB_DYNS pMessage ;
+      PHB_DYNS pMessage;
+      char *   szMessage = hb_parc( 2 );
 
       USHORT   uiBucket;
 
@@ -1026,58 +1027,58 @@ HB_FUNC( __CLSADDMSG )
       USHORT   uiAt;
       PMETHOD  pNewMeth;
 
-      if     (strcmp("+",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpPlus" ) ;
-      else if (strcmp("-",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpMinus") ;
-      else if (strcmp("*",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpMult" ) ;
-      else if (strcmp("/",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpDivide") ;
-      else if (strcmp("%",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpMod"  ) ;
-      else if (strcmp("^",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpPower") ;
-      else if (strcmp("**",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpPower"  ) ;
-      else if (strcmp("++",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpInc"  ) ;
-      else if (strcmp("--",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpDec"  ) ;
-      else if (strcmp("==",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpEqual") ;
-      else if (strcmp("=",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpEqual") ;
-      else if (strcmp("!=",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpNotEqual") ;
-      else if (strcmp("<>",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpNotEqual") ;
-      else if (strcmp("#",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpNotEqual") ;
-      else if (strcmp("<",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpLess" ) ;
-      else if (strcmp("<=",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpLessEqual") ;
-      else if (strcmp(">",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpGreater") ;
-      else if (strcmp(">=",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpGreaterEqual") ;
-      else if (strcmp(":=",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpAssign") ;
-      else if (strcmp("$",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpInstring") ;
-      else if (strcmp("!",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpNot"    ) ;
-      else if (strcmp(".NOT.",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpNot"    ) ;
-      else if (strcmp(".AND.",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpAnd"    ) ;
-      else if (strcmp(".OR.",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpOr"     ) ;
-      else if( strcmp("[]",hb_parc(2)) == 0)
-         pMessage = hb_dynsymGet( "__OpArrayIndex" ) ;
+      if      (strcmp("+", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPPLUS" );
+      else if (strcmp("-", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPMINUS" );
+      else if (strcmp("*", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPMULT" );
+      else if (strcmp("/", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPDIVIDE" );
+      else if (strcmp("%", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPMOD" );
+      else if (strcmp("^", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPPOWER" );
+      else if (strcmp("**", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPPOWER" );
+      else if (strcmp("++", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPINC" );
+      else if (strcmp("--", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPDEC" );
+      else if (strcmp("==", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPEQUAL" );
+      else if (strcmp("=", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPEQUAL" );
+      else if (strcmp("!=", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPNOTEQUAL" );
+      else if (strcmp("<>", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPNOTEQUAL" );
+      else if (strcmp("#", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPNOTEQUAL" );
+      else if (strcmp("<", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPLESS" );
+      else if (strcmp("<=", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPLESSEQUAL" );
+      else if (strcmp(">", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPGREATER" );
+      else if (strcmp(">=", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPGREATEREQUAL" );
+      else if (strcmp(":=", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPASSIGN" );
+      else if (strcmp("$", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPINSTRING" );
+      else if (strcmp("!", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPNOT" );
+      else if (hb_stricmp(".NOT.", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPNOT" );
+      else if (hb_stricmp(".AND.", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPAND" );
+      else if (hb_stricmp(".OR.", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPOR" );
+      else if( strcmp("[]", szMessage) == 0)
+         pMessage = hb_dynsymGetCase( "__OPARRAYINDEX" );
       else
-         pMessage = hb_dynsymGet( hb_parc( 2 ) );
+         pMessage = hb_dynsymGet( szMessage );
 
       if( wType == HB_OO_MSG_INLINE && hb_param( 3, HB_IT_BLOCK ) == NULL )
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );

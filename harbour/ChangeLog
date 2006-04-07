@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+2006-04-09 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rdd_ads/ads1.c
+    * Added possibility to save memo fields > 64K
+
+2006-04-08 02:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! update current order number after ordDestroy()
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+     % Optimized __CLSADDMSG() to call hb_parc() only once instead 
+      but I forgot to also change the record in DBF
+     ! Possible problem fixed in __CLSADDMSG() where message parameter 
+       was required to be uppercase when overloading operator .NOT., 
    * harbour/source/vm/classes.c
      % hb_dynsymGet() calls replaced with hb_dynsymGetCase() where the 
        of 25 times for most cases.
