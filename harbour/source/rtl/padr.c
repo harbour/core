@@ -60,40 +60,45 @@ HB_FUNC( PADR )
    ULONG ulSize;
    BOOL bFreeReq;
    char * szText;
+   long lLen = hb_parnl( 2 );
 
-   if ( ISNUM( 2 ) )
-      szText = hb_itemPadConv( hb_param( 1, HB_IT_ANY ), &ulSize, &bFreeReq );
-   else
-      szText = NULL;
-
-   if( szText )
+   if( lLen > 0 )
    {
-      long lLen = hb_parnl( 2 );
+      PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-      if( lLen > ( long ) ulSize )
+      if( pItem && HB_IS_STRING( pItem ) && ( ULONG ) lLen == hb_itemGetCLen( pItem ) )
       {
-         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
-         long lPos;
-         char cPad;
-
-         hb_xmemcpy( szResult, szText, ( long ) ulSize );
-
-         cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
-
-         for( lPos = ( long ) ulSize; lPos < lLen; lPos++ )
-            szResult[ lPos ] = cPad;
-
-         hb_retclen_buffer( szResult, ( ULONG ) lLen );
+         hb_itemReturn( pItem );
       }
       else
       {
-         if( lLen < 0 )
-            lLen = 0;
+         szText = hb_itemPadConv( pItem, &ulSize, &bFreeReq );
+         if( szText )
+         {
+            if( ( ULONG ) lLen > ulSize )
+            {
+               char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+               char cPad;
 
-         hb_retclen( szText, lLen );
+               cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
+               hb_xmemcpy( szResult, szText, ulSize );
+               hb_xmemset( szResult + ulSize, cPad, ( ULONG ) lLen - ulSize );
+
+               hb_retclen_buffer( szResult, ( ULONG ) lLen );
+               if ( bFreeReq )
+                  hb_xfree( szText );
+            }
+            else
+            {
+               if ( bFreeReq )
+                  hb_retclen_buffer( szText, ( ULONG ) lLen );
+               else
+                  hb_retclen( szText, lLen );
+            }
+         }
+         else
+            hb_retc( NULL );
       }
-      if ( bFreeReq )
-         hb_xfree( szText );
    }
    else
       hb_retc( NULL );

@@ -117,7 +117,7 @@ extern HB_EXPORT BOOL   hb_xvmPushAlias( void );
 extern HB_EXPORT BOOL   hb_xvmPopAlias( void );                   /* select the workarea using a given item or a substituted value */
 extern HB_EXPORT BOOL   hb_xvmPopLogical( BOOL * );               /* pops the stack latest value and returns its logical value */
 extern HB_EXPORT BOOL   hb_xvmSwapAlias( void );                  /* swaps items on the eval stack and pops the workarea number */
-extern HB_EXPORT BOOL   hb_xvmLocalAddInt( int iLocal, int iAdd ); /* add integer to given local variable */
+extern HB_EXPORT BOOL   hb_xvmLocalAddInt( int iLocal, LONG lAdd ); /* add integer to given local variable */
 
 extern HB_EXPORT BOOL   hb_xvmAnd( void );
 extern HB_EXPORT BOOL   hb_xvmOr( void );
@@ -196,6 +196,8 @@ extern HB_EXPORT void   hb_xvmPushLongLong( LONGLONG llNumber );
 extern HB_EXPORT BOOL hb_xvmArrayItemPush( ULONG ulIndex );
 extern HB_EXPORT BOOL hb_xvmArrayItemPop( ULONG ulIndex );
 extern HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmDivideByInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmAddInt( LONG lValue );
 
 HB_EXTERN_END
 

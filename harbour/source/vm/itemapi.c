@@ -198,6 +198,8 @@ HB_EXPORT PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pIt
 
 HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
+   ULONG ulLen = szText ? strlen( szText ) : 0;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
 
    if( pItem )
@@ -210,13 +212,13 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    pItem->type = HB_IT_STRING;
 
-   if( szText == NULL || szText[0] == '\0' )
+   if( ulLen == 0 )
    {
       pItem->item.asString.length  = 0;
       pItem->item.asString.value   = hb_vm_sNull;
       pItem->item.asString.bStatic = TRUE;
    }
-   else if( szText[1] == '\0' )
+   else if( ulLen == 1 )
    {
       pItem->item.asString.length  = 1;
       pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
@@ -224,12 +226,13 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    }
    else
    {
-      pItem->item.asString.length = strlen( szText );
-      pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
+      pItem->item.asString.length = ulLen;
+      pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
       pItem->item.asString.bStatic = 0;
       pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
       * ( pItem->item.asString.u.pulHolders ) = 1;
-      strcpy( pItem->item.asString.value, szText );
+      hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
+      pItem->item.asString.value[ ulLen ] = '\0';
    }
 
    return pItem;
@@ -322,11 +325,26 @@ HB_EXPORT PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
-   pItem->item.asString.value = szText;
-   pItem->item.asString.value[ ulLen ] = '\0';
-   pItem->item.asString.bStatic = 0;
-   pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-   * ( pItem->item.asString.u.pulHolders ) = 1;
+   if( ulLen == 0 )
+   {
+      pItem->item.asString.value   = hb_vm_sNull;
+      pItem->item.asString.bStatic = TRUE;
+      hb_xfree( szText );
+   }
+   else if( ulLen == 1 )
+   {
+      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.bStatic = TRUE;
+      hb_xfree( szText );
+   }
+   else
+   {
+      pItem->item.asString.value = szText;
+      pItem->item.asString.value[ ulLen ] = '\0';
+      pItem->item.asString.bStatic = FALSE;
+      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+      * ( pItem->item.asString.u.pulHolders ) = 1;
+   }
 
    return pItem;
 }

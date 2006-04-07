@@ -466,7 +466,7 @@ hb_lnk_request()
 
 hb_lnk_main()
 {
-    (${CCPREFIX}nm \$1 -g -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* T HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
+    (${CCPREFIX}nm \$1 -g -n --defined-only -C|sed -e '/ HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* T HB_FUN_\([A-Z0-9_]*\).*/\1/'|head -1|grep -v '^MAIN\$')2>/dev/null
 #    (${CCPREFIX}nm \$1 -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* [Tt] HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
 }
 

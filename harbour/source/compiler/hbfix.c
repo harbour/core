@@ -362,6 +362,52 @@ static HB_FIX_FUNC( hb_p_true )
    return 1;
 }
 
+static HB_FIX_FUNC( hb_p_not )
+{
+   if( cargo->iNestedCodeblock == 0 )
+   {
+      BYTE opcode;
+
+      switch( pFunc->pCode[ lPCodePos + 1 ] )
+      {
+         case HB_P_NOT:
+            opcode = HB_P_NOOP;
+            break;
+         case HB_P_JUMPTRUENEAR:
+            opcode = HB_P_JUMPFALSENEAR;
+            break;
+         case HB_P_JUMPTRUE:
+            opcode = HB_P_JUMPFALSE;
+            break;
+         case HB_P_JUMPTRUEFAR:
+            opcode = HB_P_JUMPFALSEFAR;
+            break;
+         case HB_P_JUMPFALSENEAR:
+            opcode = HB_P_JUMPTRUENEAR;
+            break;
+         case HB_P_JUMPFALSE:
+            opcode = HB_P_JUMPTRUE;
+            break;
+         case HB_P_JUMPFALSEFAR:
+            opcode = HB_P_JUMPTRUEFAR;
+            break;
+         default:
+            opcode = HB_P_LAST_PCODE;
+            break;
+      }
+
+      if( opcode < HB_P_LAST_PCODE && ! hb_compIsJump( pFunc, lPCodePos + 1 ) )
+      {
+         hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+         if( opcode == HB_P_NOOP )
+            hb_compNOOPfill( pFunc, lPCodePos + 1, 1, FALSE, FALSE );
+         else
+            pFunc->pCode[ lPCodePos + 1 ] = opcode;
+      }
+   }
+   return 1;
+}
+
 static HB_FIX_FUNC( hb_p_jumpfar )
 {
    if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
@@ -494,7 +540,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MULT,                 */
    NULL,                       /* HB_P_NEGATE,               */
    NULL,                       /* HB_P_NOOP,                 */
-   NULL,                       /* HB_P_NOT,                  */
+   hb_p_not,                   /* HB_P_NOT,                  */
    NULL,                       /* HB_P_NOTEQUAL,             */
    NULL,                       /* HB_P_OR,                   */
    NULL,                       /* HB_P_PARAMETER,            */

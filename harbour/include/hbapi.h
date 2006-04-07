@@ -402,6 +402,11 @@ extern HB_EXPORT BOOL       hb_extIsObject( int iParam );
 extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
+/* xHarbour compatible function */
+#define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
+#define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
+#define hb_retcStatic( szText )              hb_retc_const( (szText) )
+
 #ifdef HB_API_MACROS
 
 #define hb_pcount()                          ( ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt )
@@ -413,7 +418,6 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 #define hb_retc_const( szText )              hb_itemPutCConst( hb_stackReturnItem(), szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( hb_stackReturnItem(), szText, ulLen )
 #define hb_retclen_buffer( szText, ulLen )   hb_itemPutCPtr( hb_stackReturnItem(), szText, ulLen )
-#define hb_retcAdopt( szText )               hb_itemPutCPtr( hb_stackReturnItem(), (szText), strlen( szText ) )
 #define hb_retds( szDate )                   hb_itemPutDS( hb_stackReturnItem(), szDate )
 #define hb_retd( iYear, iMonth, iDay )       hb_itemPutD( hb_stackReturnItem(), iYear, iMonth, iDay )
 #define hb_retdl( lJulian )                  hb_itemPutDL( hb_stackReturnItem(), lJulian )
@@ -440,7 +444,6 @@ extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but 
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern HB_EXPORT void   hb_retclen_buffer( char * szText, ULONG ulLen ); /* sames as above, but accepts an allocated buffer */
-extern HB_EXPORT void   hb_retcAdopt( char * szText ); /* adopts a pointer to a string as the value of an item */
 extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use yyyymmdd format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */

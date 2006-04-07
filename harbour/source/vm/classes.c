@@ -2214,10 +2214,9 @@ static HARBOUR hb___msgClsSel( void )
       USHORT uiPos = 0;
       USHORT uiAt;
 
-      hb_itemRelease( pReturn );
-      pReturn = hb_itemArrayNew( pClass->uiMethods );
-                                                /* Create a transfer array  */
-      for( uiAt = 0; uiAt < uiLimit; uiAt++ )
+      hb_arrayNew( pReturn, pClass->uiMethods );
+
+      for( uiAt = 0; uiAt < uiLimit && uiPos < pClass->uiMethods; uiAt++ )
       {
          PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
 
@@ -2227,31 +2226,28 @@ static HARBOUR hb___msgClsSel( void )
          {
             s_pMethod = pClass->pMethods + uiAt;
 
-            if (  (  nParam==HB_MSGLISTALL )  ||
-                  ( (nParam==HB_MSGLISTCLASS) &&
-                    (
-                     (s_pMethod->pFunction == hb___msgSetClsData) ||
-                     (s_pMethod->pFunction == hb___msgGetClsData) ||
-                     (s_pMethod->pFunction == hb___msgSetShrData) ||
-                     (s_pMethod->pFunction == hb___msgGetShrData)
-                    )
-                  ) ||
-                  ( (nParam==HB_MSGLISTPURE) &&
-                    (
-                     (! (s_pMethod->pFunction == hb___msgSetClsData)) &&
-                     (! (s_pMethod->pFunction == hb___msgGetClsData)) &&
-                     (! (s_pMethod->pFunction == hb___msgSetShrData)) &&
-                     (! (s_pMethod->pFunction == hb___msgGetShrData))
-                    )
+            if( ( nParam == HB_MSGLISTALL )  ||
+                ( nParam == HB_MSGLISTCLASS &&
+                  (
+                    ( s_pMethod->pFunction == hb___msgSetClsData ) ||
+                    ( s_pMethod->pFunction == hb___msgGetClsData ) ||
+                    ( s_pMethod->pFunction == hb___msgSetShrData ) ||
+                    ( s_pMethod->pFunction == hb___msgGetShrData )
                   )
-               )
-             {
-
-               PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
-                                                /* Add to array             */
-               hb_itemArrayPut( pReturn, ++uiPos, pItem );
-               hb_itemRelease( pItem );
-             }
+                ) ||
+                ( nParam == HB_MSGLISTPURE &&
+                  !(
+                    ( s_pMethod->pFunction == hb___msgSetClsData ) ||
+                    ( s_pMethod->pFunction == hb___msgGetClsData ) ||
+                    ( s_pMethod->pFunction == hb___msgSetShrData ) ||
+                    ( s_pMethod->pFunction == hb___msgGetShrData )
+                   )
+                )
+              )
+            {
+               hb_itemPutC( hb_arrayGetItemPtr( pReturn, ++uiPos ),
+                            pMessage->pSymbol->szName );
+            }
          }
       }
    }

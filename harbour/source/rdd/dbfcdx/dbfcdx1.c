@@ -5750,7 +5750,7 @@ static LONG hb_cdxDBOIKeyNo( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
       {
          if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
          {
-            if ( hb_cdxBottomScope( pTag ) && 
+            if ( hb_cdxBottomScope( pTag ) && hb_cdxTopScope( pTag ) &&
                  ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, ulRecNo ) ) )
             {
                

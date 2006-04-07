@@ -114,7 +114,7 @@ static void    hb_vmPower( void );           /* power the latest two values on t
 static void    hb_vmInc( void );             /* increment the latest numeric value on the stack */
 static void    hb_vmDec( void );             /* decrements the latest numeric value on the stack */
 static void    hb_vmFuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
-static void    hb_vmAddInt( HB_ITEM_PTR pResult, int iAdd );      /* add integer to given item */
+static void    hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd );      /* add integer to given item */
 static void    hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2, int iPopCnt );            /* sums the latest two values on the stack, removes them and leaves the result */
 static void    hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2, int iPopCnt );           /* substracts the latest two values on the stack, removes them and leaves the result */
 static void    hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2, int iPopCnt );            /* multiplies the latest two values on the stack, removes them and leaves the result */
@@ -1975,11 +1975,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 /*             character / misc )  */
 /* ------------------------------- */
 
-static void hb_vmAddInt( HB_ITEM_PTR pResult, int iAdd )
+static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
 {
    double dNewVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmAddInt(%p,%d)", pResult, iAdd));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmAddInt(%p,%ld)", pResult, lAdd));
 
    if( HB_IS_BYREF( pResult ) )
    {
@@ -1990,39 +1990,39 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, int iAdd )
    {
       HB_LONG lVal = HB_ITEM_GET_NUMINTRAW( pResult ), lNewVal;
 
-      lNewVal = lVal + iAdd;
+      lNewVal = lVal + lAdd;
 
-      if( iAdd >= 0 ? lNewVal >= lVal : lNewVal <  lVal )
+      if( lAdd >= 0 ? lNewVal >= lVal : lNewVal <  lVal )
       {
          HB_ITEM_PUT_NUMINTRAW( pResult, lNewVal );
          return;
       }
       else
       {
-         dNewVal = ( double ) lVal + ( double ) iAdd;
+         dNewVal = ( double ) lVal + lAdd;
       }
    }
    else if( HB_IS_DATE( pResult ) )
    {
-      pResult->item.asDate.value += iAdd;
+      pResult->item.asDate.value += lAdd;
       return;
    }
    else if( pResult->type & HB_IT_DOUBLE )
    {
-      dNewVal = pResult->item.asDouble.value + iAdd;
+      dNewVal = pResult->item.asDouble.value + lAdd;
    }
    else
    {
       PHB_ITEM pSubst, pAdd = hb_stackTopItem();
 
-      if( iAdd > 0 )
+      if( lAdd > 0 )
       {
-         hb_vmPushInteger( iAdd );
+         hb_vmPushLong( lAdd );
          pSubst = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pResult, pAdd );
       }
       else
       {
-         hb_vmPushInteger( -iAdd );
+         hb_vmPushLong( -lAdd );
          pSubst = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pResult, pAdd );
       }
 
@@ -3160,9 +3160,9 @@ static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
    }
    
    for( i = nVars * 2; i >= 0; i -= 2 )
-   {   
+   {
       PHB_ITEM pBaseValue;
-      
+
       /* copy value to iterate */
       pBaseValue = hb_itemNew( hb_itemUnRef( hb_stackItemFromTop( -i -2 ) ) );
       /* the control variable */
@@ -3177,19 +3177,19 @@ static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
       pRef->item.asRefer.offset = -1;  /* enumerator variable */
 
       pItem = pRef->item.asRefer.BasePtr.itemPtr;
-      if( HB_IS_ARRAY(pItem) )
+      if( HB_IS_ARRAY( pItem ) )
       {
-         pRef->item.asRefer.value = (nDescend>0)?1:pItem->item.asArray.value->ulLen;   /* the index into an array */
+         pRef->item.asRefer.value = ( nDescend > 0 ) ? 1 : pItem->item.asArray.value->ulLen;   /* the index into an array */
          if( ulMax > pItem->item.asArray.value->ulLen )
             ulMax = pItem->item.asArray.value->ulLen;
       }
-      else if( HB_IS_STRING(pItem) )
+      else if( HB_IS_STRING( pItem ) )
       {
          /* storage item for single characters */
-         pRef->item.asRefer.value = (nDescend>0)?1:pItem->item.asString.length;
+         pRef->item.asRefer.value = ( nDescend > 0 ) ? 1 : pItem->item.asString.length;
          pRef->item.asRefer.ValuePtr.itemPtr = 
             hb_itemPutCL( NULL, pItem->item.asString.value +
-            pRef->item.asRefer.value-1, 1 );
+            pRef->item.asRefer.value - 1, 1 );
          if( ulMax > pItem->item.asString.length )
             ulMax = pItem->item.asString.length;
       }
@@ -3236,17 +3236,17 @@ static void hb_vmEnumNext( void )
       for( i=lVars; i >= 0; i-- )
       {
          pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i<<1) - 4 ) );
-         if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
+         if( HB_IS_ARRAY( pRef->item.asRefer.BasePtr.itemPtr ) )
          {
             pRef->item.asRefer.value++;
          }
-         else if( HB_IS_STRING(pRef->item.asRefer.BasePtr.itemPtr) )
+         else if( HB_IS_STRING( pRef->item.asRefer.BasePtr.itemPtr ) )
          {
             HB_ITEM_PTR pItem;
             pRef->item.asRefer.value++;
             pItem = pRef->item.asRefer.BasePtr.itemPtr;
             hb_itemPutCL( pRef->item.asRefer.ValuePtr.itemPtr, 
-               pItem->item.asString.value + pRef->item.asRefer.value-1, 1 );
+               pItem->item.asString.value + pRef->item.asRefer.value - 1, 1 );
          }
          else
          {
@@ -3278,7 +3278,7 @@ static void hb_vmEnumPrev( void )
    int i;
    LONG lVars;
    
-   lVars = ( hb_stackItemFromTop( - 3 ) )->item.asLong.value;
+   lVars = ( hb_stackItemFromTop( -3 ) )->item.asLong.value;
    
    --lVars;
    pIdx = hb_stackItemFromTop( -1 );
@@ -3288,17 +3288,17 @@ static void hb_vmEnumPrev( void )
       for( i=lVars; i >= 0; i-- )
       {
          pRef = hb_itemUnRefRefer( hb_stackItemFromTop( -(i<<1) - 4 ) );
-         if( HB_IS_ARRAY(pRef->item.asRefer.BasePtr.itemPtr) )
+         if( HB_IS_ARRAY( pRef->item.asRefer.BasePtr.itemPtr ) )
          {
             pRef->item.asRefer.value--;
          }
-         else if( HB_IS_STRING(pRef->item.asRefer.BasePtr.itemPtr) )
+         else if( HB_IS_STRING( pRef->item.asRefer.BasePtr.itemPtr ) )
          {
             HB_ITEM_PTR pItem;
             pRef->item.asRefer.value--;
             pItem = pRef->item.asRefer.BasePtr.itemPtr;
             hb_itemPutCL( pRef->item.asRefer.ValuePtr.itemPtr, 
-               pItem->item.asString.value + pRef->item.asRefer.value-1, 1 );
+               pItem->item.asString.value + pRef->item.asRefer.value - 1, 1 );
          }
          else
          {
@@ -3330,23 +3330,23 @@ static LONG hb_vmEnumEnd( void )
    
    /* remove loop counter */
    hb_stackDec();
-   ( hb_stackTopItem() )->type = HB_IT_NIL;
+   hb_stackTopItem()->type = HB_IT_NIL;
    /* restore stack frame offset of previous FOREACH loop 
    */
    hb_stackDec();
-   lOldBase = ( hb_stackTopItem() )->item.asLong.value;
-   ( hb_stackTopItem() )->type = HB_IT_NIL;
+   lOldBase = hb_stackTopItem()->item.asLong.value;
+   hb_stackTopItem()->type = HB_IT_NIL;
    /* remove number of iterators */
    hb_stackDec();
-   lVars = ( hb_stackTopItem() )->item.asLong.value;
-   ( hb_stackTopItem() )->type = HB_IT_NIL;
+   lVars = hb_stackTopItem()->item.asLong.value;
+   hb_stackTopItem()->type = HB_IT_NIL;
 
    --lVars;
    for( i=lVars; i>=0; i-- )
    {
       /* restore the value of variable before the FOREACH loop */
-      hb_itemCopy( hb_itemUnRefOnce( hb_stackItemFromTop( -1 ) ), hb_stackItemFromTop( -2 ) );
-      hb_stackPop();
+      hb_itemMove( hb_itemUnRefOnce( hb_stackItemFromTop( -1 ) ), hb_stackItemFromTop( -2 ) );
+      hb_stackDec();
       hb_stackPop();
    }
    return lOldBase;
@@ -3635,28 +3635,6 @@ static void hb_vmArrayPop( void )
       return;
    }
 
-/* #ifndef HB_C52_STRICT */
-   if( (hb_vmFlagEnabled(HB_VMFLAG_ARRSTR)) && (HB_IS_STRING( pArray )) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
-      {
-         if( pArray->item.asString.bStatic || *( pArray->item.asString.u.pulHolders ) > 1 )
-            hb_itemPutCL( pArray, pArray->item.asString.value, pArray->item.asString.length );
-
-         pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
-
-         hb_stackPop();
-         hb_stackPop();
-         hb_stackPop();    /* remove the value from the stack just like other POP operations */
-      }
-      else
-         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pArray, pIndex );
-
-      return;
-   }
-/* #endif */
-
    if( HB_IS_ARRAY( pArray ) )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
@@ -3670,6 +3648,30 @@ static void hb_vmArrayPop( void )
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
    }
+/* #ifndef HB_C52_STRICT */
+   else if( hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) && HB_IS_STRING( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+      {
+         if( pArray->item.asString.length == 1 )
+            hb_itemPutCL( pArray, hb_vm_acAscii[ ( BYTE ) hb_itemGetNI( pValue ) ], 1 );
+         else
+         {
+            if( pArray->item.asString.bStatic || *( pArray->item.asString.u.pulHolders ) > 1 )
+               hb_itemPutCL( pArray, pArray->item.asString.value, pArray->item.asString.length );
+            pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
+         }
+
+         hb_stackPop();
+         hb_stackPop();
+         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pArray, pIndex );
+   }
+/* #endif */
+
    else
       hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
 }
@@ -3996,7 +3998,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
       BOOL lPopSuper = FALSE;
       PHB_BASEARRAY pSelfBase = NULL;
 
-      if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
+      if( pSym == &hb_symEval && HB_IS_BLOCK( pSelf ) )
          pFunc = pSym->value.pFunPtr;                 /* __EVAL method = function */
       else
       {
@@ -4006,38 +4008,37 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
-              PHB_ITEM pRealSelf;
-              USHORT nPos;
-              USHORT uiClass;
+               PHB_ITEM pRealSelf;
+               USHORT nPos;
+               USHORT uiClass;
 
-              /*
-              printf( "\n VmDo Method: %s \n", pSym->szName );
-              */
-              uiClass=pSelfBase->uiClass;
+               /*
+               printf( "\n VmDo Method: %s \n", pSym->szName );
+               */
+               uiClass=pSelfBase->uiClass;
 
-              pRealSelf = hb_itemNew( NULL ) ;
-              hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  /* hb_arrayGetItemPtr(pSelf,1) ; */
-              /* and take back the good pSelfBase */
-              pSelfBase = pRealSelf->item.asArray.value;
-              /* Now I should exchnage it with the current stacked value */
-              hb_itemSwap( pSelf, pRealSelf );
-              hb_itemRelease(pRealSelf) ; /* and release the fake one */
+               pRealSelf = hb_itemNew( NULL ) ;
+               hb_itemCopy(pRealSelf ,pSelf->item.asArray.value->pItems) ;  /* hb_arrayGetItemPtr(pSelf,1) ; */
+               /* and take back the good pSelfBase */
+               pSelfBase = pRealSelf->item.asArray.value;
+               /* Now I should exchnage it with the current stacked value */
+               hb_itemSwap( pSelf, pRealSelf );
+               hb_itemRelease(pRealSelf) ; /* and release the fake one */
 
-              /* Push current SuperClass handle */
-              lPopSuper = TRUE ;
+               /* Push current SuperClass handle */
+               lPopSuper = TRUE ;
 
-              if ( ! pSelf->item.asArray.value->puiClsTree)
-              {
-               pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-               pSelf->item.asArray.value->puiClsTree[0]=0;
-              }
+               if ( ! pSelf->item.asArray.value->puiClsTree)
+               {
+                  pSelf->item.asArray.value->puiClsTree   = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+                  pSelf->item.asArray.value->puiClsTree[0]=0;
+               }
 
-              nPos=pSelfBase->puiClsTree[0]+1;
-              pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( nPos + 1 ) );
+               nPos=pSelfBase->puiClsTree[0]+1;
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * ( nPos + 1 ) );
 
-              pSelfBase->puiClsTree[0] = nPos ;
-              pSelfBase->puiClsTree[ nPos ] = uiClass;
-
+               pSelfBase->puiClsTree[0] = nPos ;
+               pSelfBase->puiClsTree[ nPos ] = uiClass;
             }
          }
       }
@@ -4055,20 +4056,19 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
          if (lPopSuper && pSelfBase->puiClsTree)
          {
 
-           USHORT nPos=pSelfBase->puiClsTree[0]-1;
-           /* POP SuperClass handle */
+            USHORT nPos=pSelfBase->puiClsTree[0]-1;
+            /* POP SuperClass handle */
 
-           if (nPos)
+            if (nPos)
             {
-             pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
-             pSelfBase->puiClsTree[0]=nPos;
+               pSelfBase->puiClsTree = ( USHORT * ) hb_xrealloc( pSelfBase->puiClsTree, sizeof( USHORT ) * (nPos + 1) );
+               pSelfBase->puiClsTree[0]=nPos;
             }
-           else
+            else
             {
-             hb_xfree(pSelfBase->puiClsTree);
-             pSelfBase->puiClsTree = NULL ;
+               hb_xfree(pSelfBase->puiClsTree);
+               pSelfBase->puiClsTree = NULL ;
             }
-
          }
 
          if( bProfiler )
@@ -4076,15 +4076,13 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
       }
       else if( pSym->szName[ 0 ] == '_' )
       {
-         PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pArgsArray );
-         hb_itemRelease( pArgsArray );
+         hb_vmArrayGen( uiParams );
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, hb_stackItemFromTop( -1 ) );
       }
       else
       {
-         PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pArgsArray );
-         hb_itemRelease( pArgsArray );
+         hb_vmArrayGen( uiParams );
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
       }
    }
    else /* it is a function */
@@ -4093,37 +4091,39 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
       if( pFunc )
       {
-            if( bProfiler && pSym->pDynSym ) {
-               pSym->pDynSym->ulRecurse++;
-            }
+         if( bProfiler && pSym->pDynSym )
+         {
+            pSym->pDynSym->ulRecurse++;
+         }
 
-            if ( hb_bTracePrgCalls )
-               HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
+         if ( hb_bTracePrgCalls )
+            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
 
-            pFunc();
+         pFunc();
 
-            if( bProfiler && pSym->pDynSym )
+         if( bProfiler && pSym->pDynSym )
+         {
+            pSym->pDynSym->ulCalls++;                   /* profiler support */
+
+            /* Time spent has to be added only inside topmost call of a recursive function */
+            if( pSym->pDynSym->ulRecurse == 1 )
             {
-               pSym->pDynSym->ulCalls++;                   /* profiler support */
-
-               /* Time spent has to be added only inside topmost call of a recursive function */
-               if( pSym->pDynSym->ulRecurse == 1 ) {
-                  pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
-               }
+               pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
             }
+         }
 
-            if( bProfiler && pSym->pDynSym ) {
-               pSym->pDynSym->ulRecurse--;
-            }
+         if( bProfiler && pSym->pDynSym )
+         {
+            pSym->pDynSym->ulRecurse--;
+         }
       }
       else
       {
          /* Attempt to call an undefined function
           *  - generate unrecoverable runtime error
           */
-         PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, pArgsArray );
-         hb_itemRelease( pArgsArray );
+         hb_vmArrayGen( uiParams );
+         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
       }
    }
 
@@ -4241,15 +4241,13 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
          }
          else if( pSym->szName[ 0 ] == '_' )
          {
-            PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, "Class: NIL has no exported property", pSym->szName + 1, 1, pArgsArray );
-            hb_itemRelease( pArgsArray );
+            hb_vmArrayGen( uiParams );
+            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, "Class: NIL has no exported property", pSym->szName + 1, 1, hb_stackItemFromTop( -1 ) );
          }
          else
          {
-            PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, "Class: NIL has no exported method", pSym->szName, 1, pArgsArray );
-            hb_itemRelease( pArgsArray );
+            hb_vmArrayGen( uiParams );
+            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, "Class: NIL has no exported method", pSym->szName, 1, hb_stackItemFromTop( -1 ) );
          }
       }
 
@@ -4367,19 +4365,15 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
             if( pSym->szName[ 0 ] == '_' )
             {
-               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-
                sprintf( (char *) sDesc, "Class: '%s' has no property", sClass );
-               hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1, 1, pArgsArray );
-               hb_itemRelease( pArgsArray );
+               hb_vmArrayGen( uiParams );
+               hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1, 1, hb_stackItemFromTop( -1 ) );
             }
             else
             {
-               PHB_ITEM pArgsArray = hb_arrayFromStack( uiParams );
-
                sprintf( (char *) sDesc, "Class: '%s' has no exported method", sClass );
-               hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName, 1, pArgsArray );
-               hb_itemRelease( pArgsArray );
+               hb_vmArrayGen( uiParams );
+               hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
             }
          }
       }
@@ -4967,7 +4961,7 @@ HB_EXPORT void hb_vmPushString( char * szText, ULONG length )
    hb_stackPush();
 }
 
-void hb_vmPushStringPcode( char * szText, ULONG length )
+HB_EXPORT void hb_vmPushStringPcode( char * szText, ULONG length )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -6433,11 +6427,11 @@ HB_EXPORT BOOL hb_xvmPopAliasedVar( PHB_SYMB pSymbol )
    HB_XVM_RETURN
 }
 
-HB_EXPORT BOOL hb_xvmLocalAddInt( int iLocal, int iAdd )
+HB_EXPORT BOOL hb_xvmLocalAddInt( int iLocal, LONG lAdd )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAddInt(%d,%d)", iLocal, iAdd));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAddInt(%d,%ld)", iLocal, lAdd));
 
-   hb_vmAddInt( hb_stackItemFromBase( iLocal ), iAdd );
+   hb_vmAddInt( hb_stackItemFromBase( iLocal ), lAdd );
 
    HB_XVM_RETURN
 }
@@ -6580,6 +6574,15 @@ HB_EXPORT BOOL hb_xvmInstring( void )
    HB_XVM_RETURN
 }
 
+HB_EXPORT BOOL hb_xvmAddInt( LONG lAdd )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAddInt(%ld)", lAdd));
+
+   hb_vmAddInt( hb_stackItemFromTop( -1 ), lAdd );
+
+   HB_XVM_RETURN
+}
+
 HB_EXPORT BOOL hb_xvmPlus( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPlus()"));
@@ -6690,7 +6693,6 @@ HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue )
    HB_XVM_RETURN
 }
 
-
 HB_EXPORT BOOL hb_xvmMult( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmMult()"));
@@ -6722,6 +6724,58 @@ HB_EXPORT BOOL hb_xvmMultEqPop( void )
 
    pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
    hb_vmMult( pResult, pResult, hb_itemUnRef( hb_stackItemFromTop( -1 ) ), 2 );
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmDivideByInt( LONG lDivisor )
+{
+   PHB_ITEM pValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmDivideByInt(%ld)", lDivisor));
+
+   pValue = hb_stackItemFromTop( -1 );
+
+   if( HB_IS_NUMERIC( pValue ) )
+   {
+      if( lDivisor == 0 )
+      {
+         PHB_ITEM pSubst;
+
+         hb_vmPushLong( lDivisor );
+         pSubst = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/", 2, pValue, hb_stackItemFromTop( -1 ) );
+
+         if( pSubst )
+         {
+            hb_stackPop();
+            hb_itemForwardValue( pValue, pSubst );
+            hb_itemRelease( pSubst );
+         }
+      }
+      else
+      {
+         hb_itemPutNDDec( pValue, hb_itemGetND( pValue ) / lDivisor, hb_set.HB_SET_DECIMALS );
+      }
+   }
+   else if( HB_IS_OBJECT( pValue ) && hb_objHasMsg( pValue, "__OpDivide" ) )
+   {
+      hb_vmPushLong( lDivisor );
+      hb_vmOperatorCall( pValue, pValue, hb_stackItemFromTop( -1 ), "__OPDIVIDE" );
+   }
+   else
+   {
+      PHB_ITEM pSubst;
+
+      hb_vmPushLong( lDivisor );
+      pSubst = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/", 2, pValue, hb_stackItemFromTop( -1 ) );
+
+      if( pSubst )
+      {
+         hb_stackPop();
+         hb_itemForwardValue( pValue, pSubst );
+         hb_itemRelease( pSubst );
+      }
+   }
 
    HB_XVM_RETURN
 }
@@ -6888,30 +6942,6 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
    if( HB_IS_BYREF( pArray ) )
       pArray = hb_itemUnRef( pArray );
 
-/* #ifndef HB_C52_STRICT */
-   if( (hb_vmFlagEnabled(HB_VMFLAG_ARRSTR)) && (HB_IS_STRING( pArray )) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
-      {
-         if( pArray->item.asString.bStatic || *( pArray->item.asString.u.pulHolders ) > 1 )
-            hb_itemPutCL( pArray, pArray->item.asString.value, pArray->item.asString.length );
-
-         pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
-
-         hb_stackPop();
-         hb_stackPop();    /* remove the value from the stack just like other POP operations */
-      }
-      else
-      {
-         hb_vmPushNumInt( ulIndex );
-         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pArray, hb_stackItemFromTop( -1 ) );
-      }
-
-      return;
-   }
-/* #endif */
-
    if( HB_IS_ARRAY( pArray ) )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
@@ -6927,6 +6957,30 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, hb_stackItemFromTop( -1 ) );
       }
    }
+/* #ifndef HB_C52_STRICT */
+   else if( hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) && HB_IS_STRING( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+      {
+         if( pArray->item.asString.length == 1 )
+            hb_itemPutCL( pArray, hb_vm_acAscii[ ( BYTE ) hb_itemGetNI( pValue ) ], 1 );
+         else
+         {
+            if( pArray->item.asString.bStatic || *( pArray->item.asString.u.pulHolders ) > 1 )
+               hb_itemPutCL( pArray, pArray->item.asString.value, pArray->item.asString.length );
+            pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
+         }
+         hb_stackPop();
+         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+      }
+      else
+      {
+         hb_vmPushNumInt( ulIndex );
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pArray, hb_stackItemFromTop( -1 ) );
+      }
+   }
+/* #endif */
    else
    {
       hb_vmPushNumInt( ulIndex );

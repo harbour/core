@@ -78,19 +78,40 @@ static void hb_gencc_string_put( FILE * yyc, BYTE * pText, USHORT usLen )
 
 static int hb_gencc_checkNumAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo )
 {
-   if( HB_GENC_GETLABEL( lPCodePos ) == 0 && lValue > 0 )
+   if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
       switch( pFunc->pCode[ lPCodePos ] )
       {
          case HB_P_ARRAYPUSH:
-            fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
-            return 1;
+            if( lValue > 0 )
+            {
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
+               return 1;
+            }
+            break;
 
          case HB_P_ARRAYPOP:
-            fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
-            return 1;
+            if( lValue > 0 )
+            {
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
+               return 1;
+            }
+            break;
+
          case HB_P_MULT:
             fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", lValue );
+            return 1;
+
+         case HB_P_DIVIDE:
+            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
+            return 1;
+
+         case HB_P_PLUS:
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
+            return 1;
+
+         case HB_P_MINUS:
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
             return 1;
       }
    }
@@ -430,7 +451,7 @@ static HB_GENC_FUNC( hb_p_line )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSetLine( %d );\n", 
+   fprintf( cargo->yyc, "\thb_xvmSetLine( %d );\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
    return 3;
 }
@@ -561,7 +582,7 @@ static HB_GENC_FUNC( hb_p_message )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %hu );\n", 
+   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %hu );\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
    return 3;
 }
@@ -845,12 +866,22 @@ static HB_GENC_FUNC( hb_p_pushdouble )
 {
    HB_GENC_LABEL();
 
+#if 0
    fprintf( cargo->yyc, "\thb_xvmPushDouble( %.*f, %d, %d );\n",
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] + 1,
             HB_PCODE_MKDOUBLE( &pFunc->pCode[ lPCodePos + 1 ] ),
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
-
+#else
+   /*
+    * This version keeps double calculation compatible with RT FL functions
+    */
+   fprintf( cargo->yyc, "\thb_xvmPushDouble( * ( double * ) " );
+   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], sizeof( double ) );
+   fprintf( cargo->yyc, ", %d, %d );\n",
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
+            pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
+#endif
    return sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1;
 }
 
@@ -918,28 +949,46 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
 static HB_GENC_FUNC( hb_p_pushlong )
 {
+   LONG lVal = HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+
    HB_GENC_LABEL();
 
-#if HB_INT_MAX >= INT32_MAX
-   fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int )
-#else
-   fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long )
-#endif
-            HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   iSkip = hb_gencc_checkNumAhead( lVal, pFunc, lPCodePos + 5, cargo );
 
-   return 5;
+   if( iSkip == 0 )
+   {
+#if HB_INT_MAX >= INT32_MAX
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) lVal );
+#else
+      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) lVal );
+#endif
+   }
+   return 5 + iSkip;
 }
 
 static HB_GENC_FUNC( hb_p_pushlonglong )
 {
+#ifdef HB_LONG_LONG_OFF
+   HB_GENC_LABEL();
+   fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.1f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 9;
+#elif LONG_MAX == LONGLONG_MAX
+   LONGLONG llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+
    HB_GENC_LABEL();
 
-#ifdef HB_LONG_LONG_OFF
-   fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.0f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   iSkip = hb_gencc_checkNumAhead( lVal, pFunc, lPCodePos + 9, cargo );
+
+   if( iSkip == 0 )
+   {
+      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) lVal );
+   }
+   return 9 + iSkip;
 #else
+   HB_GENC_LABEL();
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( HB_LL( %" PFLL "i ) );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ lPCodePos + 1 ] ) );
-#endif
    return 9;
+#endif
 }
 
 static HB_GENC_FUNC( hb_p_pushmemvar )

@@ -8,13 +8,52 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+   * harbour/source/vm/classes.c
+     % hb_dynsymGet() calls replaced with hb_dynsymGetCase() where the 
+       of 25 times for most cases.
+     ! Possible problem fixed in __CLSADDMSG() where message parameter
+       was required to be uppercase when overloading operator .NOT.,
+       .AND. or .OR.
+     % hb_dynsymGet() calls replaced with hb_dynsymGetCase() where the
+       parameter was an already uppercased constant.
+
+   * harbour/source/vm/dynsym.c
+     ! Fixed HB_TRACE() function name in hb_dynsymGetCase().
+
+2006-04-07 15:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * support for detecting startup function in C++ mode
+
+  * harbour/include/hbapi.h
+    * some few #defines to translate some xHarbour functions names to Harbour
+
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/common/hbdate.c
+    + added optimizations for add and div by integer value
+    * changed code generated for double values to avoid limitation in some
+      C compilers like MSC and possible differ conversion inside C RTL then
+      the one which uses Harbour RTL
+    * some minor optimizations, cleanups and code formating
+
+  * harbour/source/compiler/hbfix.c
+    * optimize usage of HB_P_NOT PCODE - remove repeated NOT operations
+      or revert conditional jumps if they are just after NOT.
+
+  * harbour/source/rdd/dbf1.c
+    * added support for NULL value set in memo fields by ACCESS
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * fixed ordKeyPos() - for records out of scope
+
   * harbour/source/rtl/padc.c
   * harbour/source/rtl/padl.c
   * harbour/source/rtl/padr.c
   * harbour/source/rtl/substr.c
     * some minor optimizations to avoid new string item creation when
       it's not necessary
-      
 
   * harbour/source/vm/classes.c
   * harbour/source/vm/extend.c

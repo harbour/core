@@ -87,7 +87,6 @@ HB_EXPORT PHB_ITEM hb_param( int iParam, long lMask )
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam  );
-      HB_TYPE uiType;
 
       if( pItem->type & HB_IT_BYREF )
       {
@@ -96,9 +95,7 @@ HB_EXPORT PHB_ITEM hb_param( int iParam, long lMask )
             return pItem;
       }
 
-      uiType = pItem->type;
-
-      if( ( uiType & ( HB_TYPE ) lMask ) || ( uiType == HB_IT_NIL && ( HB_TYPE ) lMask == HB_IT_ANY ) )
+      if( ( pItem->type & ( HB_TYPE ) lMask ) || ( HB_TYPE ) lMask == HB_IT_ANY )
          return pItem;
    }
 
@@ -672,14 +669,6 @@ HB_EXPORT ULONG  hb_parinfo( int iParam )
    }
 }
 
-#undef hb_pcount
-HB_EXPORT int  hb_pcount( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
-
-   return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
-}
-
 #undef hb_ret
 HB_EXPORT void  hb_ret( void )
 {
@@ -747,19 +736,7 @@ HB_EXPORT void hb_retcAdopt( char * szText )
     */
    HB_TRACE_STEALTH( HB_TR_INFO, ("hb_retcAdopt(%s)", szText ) );
 
-
-   if( ( &(hb_stack.Return) )->type )
-   {
-      hb_itemClear( &(hb_stack.Return) );
-   }
-
-   ( &(hb_stack.Return) )->type = HB_IT_STRING;
-   ( &(hb_stack.Return) )->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-   *( ( &(hb_stack.Return) )->item.asString.u.pulHolders ) = 1;
-   ( &(hb_stack.Return) )->item.asString.bStatic = FALSE;
-   ( &(hb_stack.Return) )->item.asString.value   = szText;
-   ( &(hb_stack.Return) )->item.asString.length  = strlen( szText );
-
+   hb_itemPutCPtr( &hb_stack.Return, szText, strlen( szText ) );
 }
 
 /* szDate must have YYYYMMDD format */
@@ -1239,6 +1216,14 @@ HB_EXPORT int hb_storptr( void * pointer, int iParam, ... )
    }
 
    return 0;
+}
+
+#undef hb_pcount
+HB_EXPORT int  hb_pcount( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
+
+   return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
 }
 
 HB_EXTERN_END
