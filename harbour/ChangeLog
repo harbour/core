@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+      dos not exist in index
+  * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/vm/classes.c
+    * use hb_itemClone() - it will save us modifications in the
+  * xharbour/source/rdd/dbfntx/dbfntx1.c
+      parameters like arrays (f.e. hashes)
+    * some source code formatting
+
 2006-04-09 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/ads1.c
     * Added possibility to save memo fields > 64K

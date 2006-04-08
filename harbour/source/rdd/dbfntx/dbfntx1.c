@@ -3809,13 +3809,29 @@ static ULONG hb_ntxOrdKeyNo( LPTAGINFO pTag )
  */
 static BOOL hb_ntxOrdKeyGoto( LPTAGINFO pTag, ULONG ulKeyNo )
 {
+   NTXAREAP pArea = pTag->Owner->Owner;
+
    if( ! ulKeyNo || ! hb_ntxTagLockRead( pTag ) )
       return FALSE;
+
    hb_ntxTagRefreshScope( pTag );
    hb_ntxTagGoTop( pTag );
    while( !pTag->TagEOF && --ulKeyNo )
    {
       hb_ntxTagSkipNext( pTag );
+   }
+
+   if( pTag->TagEOF )
+   {
+      SELF_GOTO( ( AREAP ) pArea, 0 );
+   }
+   else
+   {
+      LPTAGINFO pSavedTag = pArea->lpCurTag;
+      pArea->lpCurTag = pTag;
+      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
+      SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+      pArea->lpCurTag = pSavedTag;
    }
    hb_ntxTagUnLockRead( pTag );
    return TRUE;

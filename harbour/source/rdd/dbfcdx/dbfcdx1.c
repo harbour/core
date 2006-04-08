@@ -7567,6 +7567,7 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    LPCDXINDEX pIndex, pIndexTmp;
    LPCDXTAG pTag;
+   USHORT uiTag;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderDestroy(%p, %p)", pArea, pOrderInfo));
 
@@ -7578,7 +7579,7 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if ( pOrderInfo->itmOrder )
    {
-      pTag = hb_cdxFindTag( pArea, pOrderInfo->itmOrder, pOrderInfo->atomBagName, NULL );
+      pTag = hb_cdxFindTag( pArea, pOrderInfo->itmOrder, pOrderInfo->atomBagName, &uiTag );
       if ( pTag )
       {
          pIndex = pTag->pIndex;
@@ -7619,6 +7620,10 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
                pIndex->fDelete = TRUE;
                hb_cdxIndexFree( pIndex );
             }
+            if( uiTag < pArea->uiTag )
+               pArea->uiTag--;
+            else if( uiTag == pArea->uiTag )
+               pArea->uiTag = 0;
          }
          else
          {
