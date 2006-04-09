@@ -5134,9 +5134,11 @@ static ERRCODE hb_cdxDBOISkipUnique( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForwar
       hb_cdxTagRefreshScope( pTag );
       if ( ! hb_cdxCurKeyRefresh( pArea, pTag ) )
       {
-         if ( pTag->TagEOF )
+         if ( pTag->TagEOF || ( fForward ? !hb_cdxBottomScope( pTag ) :
+                                           !hb_cdxTopScope( pTag ) ) )
             fOut = TRUE;
-         else if ( ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) &&
+         else if ( ( fForward ? pTag->UsrAscend && hb_cdxTopScope( pTag ) :
+                               !pTag->UsrAscend && hb_cdxBottomScope( pTag ) ) &&
                    pTag->CurKey->rec != 0 )
          {
             pKey = hb_cdxKeyEval( pKey, pTag );
@@ -5241,7 +5243,8 @@ static BOOL hb_cdxDBOISkipEval( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    if ( ! hb_cdxCurKeyRefresh( pArea, pTag ) )
    {
       if ( !pTag->TagEOF && pTag->CurKey->rec != 0 &&
-           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) )
+           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) &&
+           hb_cdxTopScope( pTag ) && hb_cdxBottomScope( pTag ) )
          fFirst = FALSE;
    }
    if ( fForward )
@@ -5349,7 +5352,8 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    if ( ! hb_cdxCurKeyRefresh( pArea, pTag ) )
    {
       if ( !pTag->TagEOF && pTag->CurKey->rec != 0 &&
-           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) )
+           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) &&
+           hb_cdxTopScope( pTag ) && hb_cdxBottomScope( pTag ) )
          fFirst = FALSE;
    }
 
@@ -5506,7 +5510,8 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    if ( ! hb_cdxCurKeyRefresh( pArea, pTag ) )
    {
       if ( !pTag->TagEOF && pTag->CurKey->rec != 0 &&
-           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) )
+           ( fForward ? pTag->UsrAscend : !pTag->UsrAscend ) &&
+           hb_cdxTopScope( pTag ) && hb_cdxBottomScope( pTag ) )
          fFirst = FALSE;
    }
    if ( fForward )
@@ -6541,22 +6546,22 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
    {
       if ( fForward )
       {
-         if ( pTag->TagEOF )
+         if ( pTag->TagEOF || !hb_cdxBottomScope( pTag ) )
             fOut = TRUE;
-         else if ( pTag->UsrAscend )
+         else if ( pTag->UsrAscend && hb_cdxTopScope( pTag ) )
             lToSkip--;
       }
       else if ( pArea->fPositioned )
       {
-         if ( pTag->TagEOF )
+         if ( pTag->TagEOF || !hb_cdxTopScope( pTag ) )
             fOut = TRUE;
-         else if ( !pTag->UsrAscend )
+         else if ( !pTag->UsrAscend && hb_cdxBottomScope( pTag ) )
             lToSkip++;
       }
    }
    if ( fForward )
    {
-      if ( pArea->fPositioned && !fOut )
+      if ( !fOut )
       {
          while ( lToSkip-- > 0 )
          {
@@ -6568,7 +6573,7 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
             }
          }
       }
-      retval = SELF_GOTO( ( AREAP ) pArea, ( !pArea->fPositioned || pTag->TagEOF || fOut )
+      retval = SELF_GOTO( ( AREAP ) pArea, ( pTag->TagEOF || fOut )
                                            ? 0 : pTag->CurKey->rec );
    }
    else /* if ( lToSkip < 0 ) */

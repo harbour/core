@@ -8,15 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+      Authors of RDDs which do not allow to create tables without fields
+      should add to their low level RDD code necessary RT error.
+ 
+2006-04-14 20:51 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
+  * source/rtl/filesys.c
+    ! fixed problem in CURDIR() wchich return truncate value
+      if directory name is 3 chars long (fix given by Przemyslaw Czerpak)
+
+2006-04-10 00:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed skip back after updating last record
 
 2006-04-09 19:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
     ! fixed scope checking when skip is done from the record which
       dos not exist in index
-  * xharbour/source/rdd/dbfcdx/dbfcdx1.c
+
   * harbour/source/vm/classes.c
     * use hb_itemClone() - it will save us modifications in the
-  * xharbour/source/rdd/dbfntx/dbfntx1.c
+      future if we will add new items which will be passed as
       parameters like arrays (f.e. hashes)
     * some source code formatting
 
@@ -874,8 +885,8 @@
       and use them in some GTs.
 
   * harbour/source/rtl/gx.c
-  * xharbour/contrib/rdd_ads/ads1.c
-  * xharbour/contrib/rdd_ads/adsfunc.c
+    * use screen dimensions as default values for SETMODE() not maxrow()/
+      maxcol()
 
   * harbour/source/rtl/gtxwc/gtxwc.c
   * harbour/source/rtl/gtxwc/gtxwc.h
