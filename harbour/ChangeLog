@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+    * do not report error when empty structure table is passed to DBCREATE()
+      CL5.3 allow to create even DBF files without any fields and because
+      I can imagine some valid code which use it as a feature then I also
+      allow it in DBF RDD.
       Authors of RDDs which do not allow to create tables without fields
       should add to their low level RDD code necessary RT error.
  

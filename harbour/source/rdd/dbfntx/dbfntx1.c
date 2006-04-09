@@ -2877,7 +2877,6 @@ static BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
             return FALSE;
       }
    }
-   pTag->CurKeyInfo = hb_ntxKeyCopy( pTag->CurKeyInfo, pKey, pTag->KeyLength );
 
    iLevel = pTag->stackLevel - 1;
    if( fBottom )
@@ -2897,6 +2896,8 @@ static BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
             pTag->stack[ iLevel ].ikey++;
       }
    }
+
+   pTag->CurKeyInfo = hb_ntxKeyCopy( pTag->CurKeyInfo, pKey, pTag->KeyLength );
 
    while( iLevel >= 0 && pKey )
    {
@@ -3159,7 +3160,7 @@ static BOOL hb_ntxCurKeyRefresh( LPTAGINFO pTag )
    if( !pArea->fPositioned )
    {
       pTag->stackLevel = 0;
-      pTag->TagEOF = TRUE;
+      pTag->TagBOF = pTag->TagEOF = TRUE;
       pTag->CurKeyInfo->Xtra = 0;
       return FALSE;
    }
@@ -3199,6 +3200,7 @@ static BOOL hb_ntxCurKeyRefresh( LPTAGINFO pTag )
       hb_ntxKeyFree( pKey );
       return( pTag->CurKeyInfo->Xtra != 0 && pTag->CurKeyInfo->Xtra == pArea->ulRecNo );
    }
+   pTag->TagBOF = pTag->TagEOF = FALSE;
    return TRUE;
 }
 
