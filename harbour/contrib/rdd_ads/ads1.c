@@ -722,7 +722,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
  * Sut 24 Sep 2005 16:24:18 CEST, Druzus
  * IMHO such GOTO operation should reposition our RDD to phantom record
  */
-   UNSIGNED32 ulRetVal = 0, u32RecNo;
+   UNSIGNED32 ulRetVal, u32RecNo;
    ULONG ulRecCount;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGoTo(%p, %lu)", pArea, ulRecNo));
@@ -1805,30 +1805,52 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       {
          UNSIGNED8 *pucBuf;
          UNSIGNED32 pulLen;
+         UNSIGNED16 pusType;
 
-         if( AdsGetMemoLength( pArea->hTable, ADSFIELD( uiIndex ), &pulLen ) == AE_NO_CURRENT_RECORD )
+         AdsGetMemoDataType( pArea->hTable, ADSFIELD( uiIndex ), &pusType );
+         if( pusType == ADS_MEMO )
          {
-            hb_itemPutC( pItem, "" );
+            if( AdsGetMemoLength( pArea->hTable, ADSFIELD( uiIndex ), &pulLen ) == AE_NO_CURRENT_RECORD )
+            {
+               hb_itemPutC( pItem, "" );
+            }
+            else
+            {
+               if( pulLen > 0 )
+               {
+                  char * szRet;
+
+                  pulLen++;                 /* make room for NULL */
+                  pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
+                  AdsGetString( pArea->hTable, ADSFIELD( uiIndex ), pucBuf, &pulLen, ADS_NONE );
+
+                  szRet = hb_adsAnsiToOem( ( char * ) pucBuf, pulLen );
+                  hb_itemPutCL( pItem, szRet, pulLen );
+                  hb_adsOemAnsiFree( szRet );
+
+                  hb_xfree( pucBuf );
+               }
+               else
+               {
+                  hb_itemPutC( pItem, "" );
+               }
+            }
          }
          else
          {
-            if( pulLen > 0 )
+            if( AdsGetBinaryLength( pArea->hTable, ADSFIELD( uiIndex ), &pulLen ) == AE_NO_CURRENT_RECORD )
+                hb_itemPutC( pItem, "" );
+            else
             {
                char * szRet;
 
                pulLen++;                 /* make room for NULL */
                pucBuf = (UNSIGNED8*) hb_xgrab( pulLen );
-               AdsGetString( pArea->hTable, ADSFIELD( uiIndex ), pucBuf, &pulLen, ADS_NONE );
-
+               AdsGetBinary( pArea->hTable, ADSFIELD( uiIndex ), 0, pucBuf, &pulLen );
                szRet = hb_adsAnsiToOem( ( char * ) pucBuf, pulLen );
                hb_itemPutCL( pItem, szRet, pulLen );
                hb_adsOemAnsiFree( szRet );
-
                hb_xfree( pucBuf );
-            }
-            else
-            {
-               hb_itemPutC( pItem, "" );
             }
          }
          hb_itemSetCMemo( pItem );
@@ -2027,14 +2049,23 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_STRING( pItem ) )
          {
             char * szRet;
+            ULONG ulLen;
 
             bTypeError = FALSE;
-            uiCount = ( USHORT ) hb_itemGetCLen( pItem );
-            /* TODO: Doesn't ADS support longer then 64KB memo fields? */
+            ulLen = hb_itemGetCLen( pItem );
 
-            szRet = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), uiCount );
-            ulRetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ),
-                                     (UNSIGNED8*) szRet, uiCount );
+            szRet = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), ulLen );
+            if( ulLen < 0xFFFF )
+            {
+               ulRetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ),
+                  (UNSIGNED8*) szRet, ulLen );
+            }
+            else
+            {
+               ulRetVal = AdsSetBinary( pArea->hTable, ADSFIELD( uiIndex ),
+                  ADS_BINARY, ulLen, 0, 
+                  (UNSIGNED8*) szRet, ulLen );
+            }
             hb_adsOemAnsiFree( szRet );
          }
          break;
@@ -2594,7 +2625,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
 
 static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   ADSHANDLE hTable = 0, hStatement = 0, hConnection = 0;
+   ADSHANDLE hTable = 0, hStatement = 0, hConnection;
    UNSIGNED32 u32RetVal, u32Length;
    USHORT uiFields = 0, uiCount;
    UNSIGNED8 szName[ ADS_MAX_FIELD_NAME + 1 ];
@@ -4092,7 +4123,7 @@ static ERRCODE adsUnLock( ADSAREAP pArea, PHB_ITEM pRecNo )
 
 static ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
 {
-   UNSIGNED32 u32RetVal = 0;
+   UNSIGNED32 u32RetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValueFile(%p, %hu, %s, %hu)", pArea, uiIndex, szFile, uiMode));
 
@@ -4122,7 +4153,7 @@ static ERRCODE adsGetValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
 
 static ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, USHORT uiMode )
 {
-   UNSIGNED32 u32RetVal = 0;
+   UNSIGNED32 u32RetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsPutValueFile(%p, %hu, %s, %hu)", pArea, uiIndex, szFile, uiMode));
 
