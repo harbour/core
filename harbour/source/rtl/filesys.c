@@ -1990,7 +1990,7 @@ HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
       }
 
       /* Strip the trailing (back)slash if there's one */
-      if( strchr( OS_PATH_DELIMITER_LIST, pbyBuffer[ ulLen - 1 ] ) )
+      if( ulLen && strchr( OS_PATH_DELIMITER_LIST, pbyStart[ ulLen - 1 ] ) )
          ulLen--;
 
       if( ulLen && pbyBuffer != pbyStart )

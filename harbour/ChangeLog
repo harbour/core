@@ -7,7 +7,11 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+      It operates on memo files only (.dbv) without tables (.dbf)
+      To create .DBV file use:
+         dbCreate( cFile, {}, "DBFBLOB" )
 
+  * harbour/source/rdd/dbcmd.c
     * do not report error when empty structure table is passed to DBCREATE()
       CL5.3 allow to create even DBF files without any fields and because
       I can imagine some valid code which use it as a feature then I also
