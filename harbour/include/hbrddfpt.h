@@ -66,12 +66,15 @@ HB_EXTERN_BEGIN
 #define DBT_MEMOEXT                          ".dbt"
 #define FPT_MEMOEXT                          ".fpt"
 #define SMT_MEMOEXT                          ".smt"
+#define DBV_MEMOEXT                          ".dbv"
 #define DBT_DEFBLOCKSIZE                        512
 #define FPT_DEFBLOCKSIZE                         64
 #define SMT_DEFBLOCKSIZE                         32
 
 #define FPT_LOCKPOS                     0x00000000L
 #define FPT_LOCKSIZE                    0x00000001L
+
+#define FPT_ROOTBLOCK_OFFSET                  0x218 /* Clipper 5.3 ROOT data block offset */
 
 #define SIX_ITEM_BUFSIZE                         14
 #define FLEX_ITEM_BUFSIZE                         8
@@ -176,6 +179,7 @@ HB_EXTERN_BEGIN
 #define FPTIT_FLEXAR_USHORT2  0x1F  /* ushort[2], len, dec */
 #define FPTIT_FLEXAR_LONG2    0x20  /* long[4], len, dec */
 #define FPTIT_FLEXAR_ULONG2   0x21  /* ulong[4], len, dec */
+
 
 /* MEMO file strucutres */
 typedef struct _FPTHEADER

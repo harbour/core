@@ -3,10 +3,10 @@
  */
 
 /*
- * xHarbour Project source code:
- * DBF error codes
+ * Harbour Project source code:
+ * Header file for the RDD API Index OrderInfo and DBInfo support
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * Copyright 2004 {list of individual authors and e-mail addresses}
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,45 +50,34 @@
  *
  */
 
-#ifndef HB_DBFERR_H_
-#define HB_DBFERR_H_
+#ifndef HB_BLOB_CH_
+#define HB_BLOB_CH_
 
-HB_EXTERN_BEGIN
 
-/* DBF errors */
-#define EDBF_UNSUPPORTED                           1000
-#define EDBF_OPEN_DBF                              1001
-#define EDBF_OPEN_MEMO                             1002
-#define EDBF_OPEN_INDEX                            1003
-#define EDBF_CREATE_DBF                            1004
-#define EDBF_CREATE_MEMO                           1005
-#define EDBF_CREATE_INDEX                          1006
-#define EDBF_CREATE                   EDBF_CREATE_INDEX
-#define EDBF_READ                                  1010
-#define EDBF_WRITE                                 1011
-#define EDBF_CORRUPT                               1012
-#define EDBF_DATATYPE                              1020
-#define EDBF_DATAWIDTH                             1021
-#define EDBF_UNLOCKED                              1022
-#define EDBF_SHARED                                1023
-#define EDBF_APPENDLOCK                            1024
-#define EDBF_READONLY                              1025
-#define EDBF_LIMITEXCEEDED                         1027
-#define EDBF_LOCKTIMEOUT                           1035
-#define EDBF_LOCK                                  1038
-/* ORDER errors */
-#define EDBF_INVALIDKEY                            1026
-#define EDBF_NOTINDEXED                            1201
-#define EDBF_INVALIDORDER                          1050
-#define EDBF_SCOPETYPE                             1051
-#define EDBF_NOTCUSTOM                             1052
-#define EDBF_INVALIDFOR                            1053
-#define EDBF_KEYLENGTH                             1054
-#define EDBF_SIGNATURE                             1055
+#ifndef HB_DBINFO_CH
+  #include "dbinfo.ch"
+#endif
 
-#define EDBF_MEMOTYPE                              1056
-#define EDBF_MEMOTOOLONG                           1057
+#xtranslate BLOBRootLock()          => dbInfo( DBI_BLOB_ROOT_LOCK )
+#xtranslate BLOBRootUnlock()        => dbInfo( DBI_BLOB_ROOT_UNLOCK )
+#xtranslate BLOBRootGet()           => dbInfo( DBI_BLOB_ROOT_GET )
+#xtranslate BLOBRootPut( <xBlob> )  => dbInfo( DBI_BLOB_ROOT_PUT, <xBlob> )
+#xtranslate BLOBRootDelete()        => BLOBRootPut( "" )
 
-HB_EXTERN_END
+#xtranslate BLOBDirectExport( <nPointer>, <cTargetFile> [, <kMode>] )   => ;
+            dbInfo( DBI_BLOB_DIRECT_EXPORT, { <nPointer>, <cTargetFile>, ;
+                    iif( <.kMode.>, <kMode>, BLOB_EXPORT_OVERWRITE ) } )
+#xtranslate BLOBDirectGet( <nPointer> [, <nStart> [, <nCount> ]] )      => ;
+            dbInfo( DBI_BLOB_DIRECT_GET, { <nPointer>, <nStart>, <nCount> } )
+#xtranslate BLOBDirectImport( <nOldPointer>, <cSourceFile> )            => ;
+            dbInfo( DBI_BLOB_DIRECT_IMPORT, { <nOldPointer>, <cSourceFile> } )
+#xtranslate BLOBDirectPut( [<nOldPointer>], <xBlob> )                   => ;
+            dbInfo( DBI_BLOB_DIRECT_PUT, { <nOldPointer>, <xBlob> } )
+#xtranslate BLOBGet( <nFieldNo> [, <nStart> [, <nCount>]] )             => ;
+            dbFieldInfo( DBS_BLOB_GET, <nFieldNo>, { <nStart>, <nCount> } )
+#xtranslate BLOBExport( <nFieldNo>, <cTargetFile>, <nMode> )            => ;
+            dbFileGet( <nFieldNo>, <cTargetFile>, <nMode> )
+#xtranslate BLOBImport( <nFieldNo>, <cSourceFile> )                     => ;
+            dbFilePut( <nFieldNo>, <cSourceFile> )
 
-#endif /* HB_DBFERR_H_ */
+#endif  /* HB_BLOB_CH_ */

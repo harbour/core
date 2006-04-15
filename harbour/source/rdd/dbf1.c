@@ -228,8 +228,11 @@ static ULONG hb_dbfCalcRecCount( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCalcRecCount(%p)", pArea));
 
-   return ( ULONG ) ( ( hb_fsSeekLarge( pArea->hDataFile, 0, FS_END ) -
-                        pArea->uiHeaderLen ) / pArea->uiRecordLen );
+   if( pArea->hDataFile == FS_ERROR )
+      return 0;
+   else
+      return ( ULONG ) ( ( hb_fsSeekLarge( pArea->hDataFile, 0, FS_END ) -
+                           pArea->uiHeaderLen ) / pArea->uiRecordLen );
 }
 
 /*
@@ -1928,8 +1931,11 @@ static ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent )
       return FAILURE;
 
    /* Alloc field offsets array */
-   pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT * ) );
-   memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT * ) );
+   if( uiFieldExtent )
+   {
+      pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT * ) );
+      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT * ) );
+   }
 
    return SUCCESS;
 }
@@ -2019,9 +2025,9 @@ static ERRCODE hb_dbfClose( DBFAREAP pArea )
  */
 static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
-   ERRCODE errCode;
+   ERRCODE errCode = SUCCESS;
    USHORT uiSize, uiCount;
-   BOOL fRetry, fError;
+   BOOL fRetry, fError, fRawBlob;
    DBFFIELD * pBuffer, *pThisField;
    PHB_FNAME pFileName;
    PHB_ITEM pItem = NULL, pError;
@@ -2036,8 +2042,6 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
       pFileName->szExtension = hb_itemGetCPtr( pItem );
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
-      hb_itemRelease( pItem );
-      pItem = NULL;
    }
    else
    {
@@ -2045,48 +2049,52 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    }
    hb_xfree( pFileName );
 
-   pError = NULL;
-   /* Try create */
-   do
+   pItem = hb_itemPutL( pItem, FALSE );
+   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, 0, pItem ) == SUCCESS &&
+              hb_itemGetL( pItem );
+
+   if( !fRawBlob )
    {
-      pArea->hDataFile = hb_fsExtOpen( szFileName, NULL,
-                                       FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                       FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                       NULL, pError );
+      pError = NULL;
+      /* Try create */
+      do
+      {
+         pArea->hDataFile = hb_fsExtOpen( szFileName, NULL,
+                                          FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                          FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                          NULL, pError );
+         if( pArea->hDataFile == FS_ERROR )
+         {
+            if( !pError )
+            {
+               pError = hb_errNew();
+               hb_errPutGenCode( pError, EG_CREATE );
+               hb_errPutSubCode( pError, EDBF_CREATE_DBF );
+               hb_errPutOsCode( pError, hb_fsError() );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
+               hb_errPutFileName( pError, ( char * ) szFileName );
+               hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            }
+            fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+         }
+         else
+            fRetry = FALSE;
+      } while( fRetry );
+
+      if( pError )
+      {
+         hb_itemRelease( pError );
+      }
+
       if( pArea->hDataFile == FS_ERROR )
       {
-         if( !pError )
-         {
-            pError = hb_errNew();
-            hb_errPutGenCode( pError, EG_CREATE );
-            hb_errPutSubCode( pError, EDBF_CREATE_DBF );
-            hb_errPutOsCode( pError, hb_fsError() );
-            hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
-            hb_errPutFileName( pError, ( char * ) szFileName );
-            hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
-         }
-         fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+         if( pItem )
+            hb_itemRelease( pItem );
+         return FAILURE;
       }
-      else
-         fRetry = FALSE;
-   } while( fRetry );
-
-   if( pError )
-   {
-      hb_itemRelease( pError );
-   }
-
-   if( pArea->hDataFile == FS_ERROR )
-   {
-      return FAILURE;
    }
 
    pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
-   uiSize = pArea->uiFieldCount * sizeof( DBFFIELD );
-
-   pBuffer = ( DBFFIELD * ) hb_xgrab( uiSize );
-   memset( pBuffer, 0, uiSize );
-   pThisField = pBuffer;
 
    /* Size for deleted flag */
    pArea->uiRecordLen = 1;
@@ -2117,7 +2125,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
    }
 
-   if( pArea->bTableType == DB_DBF_VFP )
+   if( pArea->bTableType == DB_DBF_VFP && !fRawBlob )
    {
       pArea->bMemoType = DB_MEMO_FPT;
    }
@@ -2139,6 +2147,18 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       hb_itemRelease( pItem );
    }
+
+   uiSize = pArea->uiFieldCount * sizeof( DBFFIELD );
+   if( pArea->uiFieldCount )
+   {
+      pBuffer = ( DBFFIELD * ) hb_xgrab( uiSize );
+      memset( pBuffer, 0, uiSize );
+   }
+   else
+   {
+      pBuffer = NULL;
+   }
+   pThisField = pBuffer;
 
    pArea->fHasMemo = fError = FALSE;
 
@@ -2253,7 +2273,6 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
-
          return FAILURE;
       }
       pThisField++ ;
@@ -2263,6 +2282,10 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->ulRecCount = 0;
    pArea->uiHeaderLen = sizeof( DBFHEADER ) + uiSize +
                         ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 );
+   if( fRawBlob )
+   {
+      pArea->fHasMemo = TRUE;
+   }
    if( !pArea->fHasMemo )
    {
       pArea->bMemoType = DB_MEMO_NONE;
@@ -2280,31 +2303,37 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->cdPage = hb_cdp_page;
 #endif
 
-   /* Force write new header */
-   pArea->fUpdateHeader = TRUE;
-   /* Write header */
-   errCode = SELF_WRITEDBHEADER( ( AREAP ) pArea );
-   if( errCode != SUCCESS )
+   if( !fRawBlob )
    {
-      hb_xfree( pBuffer );
-      SELF_CLOSE( ( AREAP ) pArea );
-      return errCode;
-   }
+      /* Force write new header */
+      pArea->fUpdateHeader = TRUE;
+      /* Write header */
+      errCode = SELF_WRITEDBHEADER( ( AREAP ) pArea );
+      if( errCode != SUCCESS )
+      {
+         if( pBuffer )
+            hb_xfree( pBuffer );
+         SELF_CLOSE( ( AREAP ) pArea );
+         return errCode;
+      }
 
-   /* Write fields and eof mark */
-   if( hb_fsWrite( pArea->hDataFile, ( BYTE * ) pBuffer, uiSize ) != uiSize ||
-       ( pArea->bTableType == DB_DBF_VFP ?
-            hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\r\032", 2 ) != 2 :
-            hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\r\0\032", 3 ) != 3 ) )
-   {
-      /* TODO: add RT error */
-      hb_xfree( pBuffer );
-      SELF_CLOSE( ( AREAP ) pArea );
-      return FAILURE;
-   }
+      /* Write fields and eof mark */
+      if( hb_fsWrite( pArea->hDataFile, ( BYTE * ) pBuffer, uiSize ) != uiSize ||
+          ( pArea->bTableType == DB_DBF_VFP ?
+               hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\r\032", 2 ) != 2 :
+               hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\r\0\032", 3 ) != 3 ) )
+      {
+         /* TODO: add RT error */
+         if( pBuffer )
+            hb_xfree( pBuffer );
+         SELF_CLOSE( ( AREAP ) pArea );
+         return FAILURE;
+      }
 
-   pArea->fDataFlush = TRUE;
-   hb_xfree( pBuffer );
+      pArea->fDataFlush = TRUE;
+      if( pBuffer )
+         hb_xfree( pBuffer );
+   }
 
    /* Create memo file */
    if( pArea->fHasMemo )
@@ -2375,10 +2404,6 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                              pArea->dbfHeader.bDay );
          break;
 
-      case DBI_GETDELIMITER:
-      case DBI_SETDELIMITER:
-         break;
-
       case DBI_GETRECSIZE:
          hb_itemPutNL( pItem, pArea->uiRecordLen );
          break;
@@ -2413,7 +2438,7 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_MEMOHANDLE:
-         hb_itemPutNL( pItem, (LONG)pArea->hMemoFile );
+         hb_itemPutNL( pItem, ( LONG ) pArea->hMemoFile );
          break;
 
       case DBI_SHARED:
@@ -2727,8 +2752,8 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    ERRCODE errCode;
    USHORT uiFlags, uiFields, uiSize, uiCount;
-   BOOL fRetry;
-   PHB_ITEM pError, pFileExt;
+   BOOL fRetry, fRawBlob;
+   PHB_ITEM pError, pFileExt, pItem;
    PHB_FNAME pFileName;
    BYTE * pBuffer;
    LPDBFFIELD pField;
@@ -2798,126 +2823,143 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    hb_xfree( pFileName );
 
-   /* Try open */
-   do
+   pItem = hb_itemPutL( NULL, FALSE );
+   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, 0, pItem ) == SUCCESS &&
+              hb_itemGetL( pItem );
+   hb_itemRelease( pItem );
+
+   if( fRawBlob )
    {
-      pArea->hDataFile = hb_fsExtOpen( szFileName, NULL, uiFlags |
-                                       FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                       NULL, pError );
+      uiFields = 0;
+      pBuffer = NULL;
+      pArea->fHasMemo = TRUE;
+   }
+   else
+   {
+      /* Try open */
+      do
+      {
+         pArea->hDataFile = hb_fsExtOpen( szFileName, NULL, uiFlags |
+                                          FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                          NULL, pError );
+         if( pArea->hDataFile == FS_ERROR )
+         {
+            if( !pError )
+            {
+               pError = hb_errNew();
+               hb_errPutGenCode( pError, EG_OPEN );
+               hb_errPutSubCode( pError, EDBF_OPEN_DBF );
+               hb_errPutOsCode( pError, hb_fsError() );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
+               hb_errPutFileName( pError, ( char * ) szFileName );
+               hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            }
+            fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+         }
+         else
+            fRetry = FALSE;
+      } while( fRetry );
+
+      if( pError )
+      {
+         hb_itemRelease( pError );
+         pError = NULL;
+      }
+
+      /* Exit if error */
       if( pArea->hDataFile == FS_ERROR )
       {
-         if( !pError )
+         SELF_CLOSE( ( AREAP ) pArea );
+         return FAILURE;
+      }
+
+      /* Allocate only after succesfully open file */
+      pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
+
+      /* Read file header and exit if error */
+      errCode = SELF_READDBHEADER( ( AREAP ) pArea );
+      if( errCode != SUCCESS )
+      {
+         SELF_CLOSE( ( AREAP ) pArea );
+         return errCode;
+      }
+
+      /* Add fields */
+      uiFields = ( pArea->uiHeaderLen - sizeof( DBFHEADER ) ) / sizeof( DBFFIELD );
+      uiSize = uiFields * sizeof( DBFFIELD );
+      pBuffer = uiFields ? ( BYTE * ) hb_xgrab( uiSize ) : NULL;
+
+      /* Read fields and exit if error */
+      do
+      {
+         hb_fsSeek( pArea->hDataFile, sizeof( DBFHEADER ), FS_SET );
+         if( hb_fsRead( pArea->hDataFile, pBuffer, uiSize ) != uiSize )
          {
-            pError = hb_errNew();
-            hb_errPutGenCode( pError, EG_OPEN );
-            hb_errPutSubCode( pError, EDBF_OPEN_DBF );
-            hb_errPutOsCode( pError, hb_fsError() );
-            hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
-            hb_errPutFileName( pError, ( char * ) szFileName );
-            hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            errCode = FAILURE;
+            if( !pError )
+            {
+               pError = hb_errNew();
+               hb_errPutGenCode( pError, EG_CORRUPTION );
+               hb_errPutSubCode( pError, EDBF_CORRUPT );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CORRUPTION ) );
+               hb_errPutFileName( pError, pArea->szDataFileName );
+               hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            }
+            fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
          }
-         fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
-      }
-      else
-         fRetry = FALSE;
-   } while( fRetry );
-
-   if( pError )
-   {
-      hb_itemRelease( pError );
-      pError = NULL;
-   }
-
-   /* Exit if error */
-   if( pArea->hDataFile == FS_ERROR )
-   {
-      SELF_CLOSE( ( AREAP ) pArea );
-      return FAILURE;
-   }
-
-   /* Allocate only after succesfully open file */
-   pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
-
-   /* Read file header and exit if error */
-   errCode = SELF_READDBHEADER( ( AREAP ) pArea );
-   if( errCode != SUCCESS )
-   {
-      SELF_CLOSE( ( AREAP ) pArea );
-      return errCode;
-   }
-
-
-   /* Add fields */
-   uiFields = ( pArea->uiHeaderLen - sizeof( DBFHEADER ) ) / sizeof( DBFFIELD );
-   uiSize = uiFields * sizeof( DBFFIELD );
-   pBuffer = ( BYTE * ) hb_xgrab( uiSize );
-
-   /* Read fields and exit if error */
-   do
-   {
-      hb_fsSeek( pArea->hDataFile, sizeof( DBFHEADER ), FS_SET );
-      if( hb_fsRead( pArea->hDataFile, pBuffer, uiSize ) != uiSize )
-      {
-         errCode = FAILURE;
-         if( !pError )
+         else
          {
-            pError = hb_errNew();
-            hb_errPutGenCode( pError, EG_CORRUPTION );
-            hb_errPutSubCode( pError, EDBF_CORRUPT );
-            hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CORRUPTION ) );
-            hb_errPutFileName( pError, pArea->szDataFileName );
-            hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            errCode = SUCCESS;
+            break;
          }
-         fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
-      }
-      else
-      {
-         errCode = SUCCESS;
-         break;
-      }
-   } while( fRetry );
+      } while( fRetry );
 
-   if( pError )
-   {
-      hb_itemRelease( pError );
+      if( pError )
+      {
+         hb_itemRelease( pError );
+      }
+
+      /* Exit if error */
+      if( errCode != SUCCESS )
+      {
+         if( pBuffer )
+            hb_xfree( pBuffer );
+         SELF_CLOSE( ( AREAP ) pArea );
+         return errCode;
+      }
+
+      /* some RDDs use the additional space in the header after field arrray
+         for private data we should check for 0x0D marker to not use this
+         data as fields description */
+      for( uiCount = 0; uiCount < uiFields; uiCount++ )
+      {
+         if( pBuffer[ uiCount * sizeof( DBFFIELD ) ] == 0x0d )
+         {
+            uiFields = uiCount;
+            break;
+         }
+         /* Peter added it for FVP DBFs but in wrong place,
+            anyhow I cannot see why it's necessary, FVP private data
+            in header should be after 0x0d - I disabled this code, [druzus] */
+         /*
+            if( pArea->bTableType == DB_DBF_VFP &&
+             pBuffer[ uiCount * sizeof( DBFFIELD ) ] == 0x00 )
+         {
+            uiFields = uiCount;
+            break;
+         }
+         */
+      }
    }
 
-   /* Exit if error */
-   if( errCode != SUCCESS )
-   {
-      hb_xfree( pBuffer );
-      SELF_CLOSE( ( AREAP ) pArea );
-      return errCode;
-   }
-
-   /* some RDDs use the additional space in the header after field arrray
-      for private data we should check for 0x0D marker to not use this
-      data as fields description */
-   for( uiCount = 0; uiCount < uiFields; uiCount++ )
-   {
-      if( pBuffer[ uiCount * sizeof( DBFFIELD ) ] == 0x0d )
-      {
-         uiFields = uiCount;
-         break;
-      }
-      /* Peter added it for FVP DBFs but in wrong place,
-         anyhow I cannot see why it's necessary, FVP private data
-         in header should be after 0x0d - I disabled this code, [druzus] */
-      /*
-      if( pArea->bTableType == DB_DBF_VFP &&
-          pBuffer[ uiCount * sizeof( DBFFIELD ) ] == 0x00 )
-      {
-         uiFields = uiCount;
-         break;
-      }
-      */
-   }
-
+   /* CL5.3 allow to create and open DBFs without fields */
+#ifdef HB_C52_STRICT
    if( uiFields == 0 )
    {
       errCode = FAILURE;
    }
    else
+#endif
    {
       errCode = SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
       if( errCode != SUCCESS )
@@ -3030,7 +3072,8 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( errCode != SUCCESS )
          break;
    }
-   hb_xfree( pBuffer );
+   if( pBuffer )
+      hb_xfree( pBuffer );
 
    /* Exit if error */
    if( errCode != SUCCESS )

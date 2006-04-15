@@ -57,6 +57,7 @@ PRG_HEADERS=\
 	assert.ch    \
 	box.ch       \
 	button.ch    \
+	blob.ch      \
 	color.ch     \
 	common.ch    \
 	dbedit.ch    \

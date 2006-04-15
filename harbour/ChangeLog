@@ -7,6 +7,30 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
+
+      
+
+      * fixed bug in ParseOptional 
+   * bin/bld.sh
+      * fixed typo
+
+   * source/pp/ppcore.c
+      * fixed bug in ParseOptional
+      <"var"> were not recognized correctly
+      (This fixes SET RELATION bug reported by David Macias)
+
+
+2006-04-15 20:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+  + harbour/include/blob.ch
+  * harbour/include/dbinfo.ch
+  * harbour/include/hbdbferr.h
+  * harbour/include/hbrddfpt.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    + added all CL5.3 BLOB*() functions support
+    + added new RDD DBFBLOB compatible with CL5.3 DBFBLOB
       It operates on memo files only (.dbv) without tables (.dbf)
       To create .DBV file use:
          dbCreate( cFile, {}, "DBFBLOB" )

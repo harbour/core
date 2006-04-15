@@ -485,8 +485,11 @@ ERRCODE hb_waSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
    pArea->uiFieldExtent = uiFieldExtent;
 
    /* Alloc field array */
-   pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
-   memset( pArea->lpFields, 0, uiFieldExtent * sizeof( FIELD ) );
+   if( uiFieldExtent )
+   {
+      pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
+      memset( pArea->lpFields, 0, uiFieldExtent * sizeof( FIELD ) );
+   }
 
    return SUCCESS;
 }
@@ -1557,6 +1560,7 @@ ERRCODE hb_rddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection, PHB_ITEM
       case RDDI_MULTITAG:
       case RDDI_SORTRECNO:
       case RDDI_MULTIKEY:
+      case RDDI_BLOB_SUPPORT:
          hb_itemPutL( pItem, FALSE );
          break;
 

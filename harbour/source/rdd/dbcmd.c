@@ -1741,7 +1741,17 @@ HB_FUNC( DBCREATE )
    fKeepOpen = ISLOG( 4 );
    fCurrArea = fKeepOpen && !hb_parl( 4 );
 
-   if( !pStruct || hb_arrayLen( pStruct ) == 0 ||
+   /*
+    * Clipper allows to use empty struct array for RDDs which does not
+    * support fields, f.e.: DBFBLOB in CL5.3
+    * In CL5.3 it's also possible to create DBF file without fields.
+    * if some RDD wants to block it then they should serve it in lower
+    * level, [druzus]
+    */
+   if( !pStruct ||
+#ifdef HB_C52_STRICT
+       hb_arrayLen( pStruct ) == 0 ||
+#endif
        !szFileName || !szFileName[ 0 ] )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, "DBCREATE" );
