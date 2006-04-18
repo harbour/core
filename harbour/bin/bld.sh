@@ -35,7 +35,7 @@ if [ -z "$1" ] || [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo Notes:
    echo
    echo "  - 'filename' is the .prg filename *without* extension."
-   echo "  - Don't forget to make a MAIN() function for you application."
+   echo "  - Don't forget to make a MAIN() function for your application."
    echo "  - This batch file assumes you are in some directory off the main"
    echo "    harbour directory."
    echo "  - Environment variables HB_ARCHITECTURE, HB_COMPILER, HB_GT_LIB"

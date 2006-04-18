@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+
+  * harbour/source/vm/macro.c
+
+  * harbour/include/hbvmpub.h
+    * removed HB_FS_ALLOCATED
+
+  * harbour/source/vm/dynsym.c
+    * changed the code for hb_symbolNew() to avoid possible memory leak
+      alerts and keep the list of all dynamic symbols accessible.
+      It also reduced a little bit the memory fragmentation and total
       
 
       * fixed bug in ParseOptional 
