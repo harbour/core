@@ -588,26 +588,25 @@ ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 
 BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
 {
-  USHORT uiAt, uiLimit;
+   USHORT uiAt, uiLimit;
 
-  if( uiClass && uiClass <= s_uiClasses )
+   if( uiClass && uiClass <= s_uiClasses )
    {
-    PCLASS pClass = s_pClasses + ( uiClass - 1 );
+      PCLASS pClass = s_pClasses + ( uiClass - 1 );
 
-    uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+      uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
 
-    if( strcmp( pClass->szName, szParentName ) == 0 )
-      return TRUE;
+      if( strcmp( pClass->szName, szParentName ) == 0 )
+         return TRUE;
 
-    for( uiAt = 0; uiAt < uiLimit; uiAt++)
-    {
-       if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
-       {
-          if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, szParentName ) == 0 )
-             return TRUE;
-       }
-    }
-
+      for( uiAt = 0; uiAt < uiLimit; uiAt++)
+      {
+         if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
+         {
+            if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, szParentName ) == 0 )
+               return TRUE;
+         }
+      }
    }
 
    return FALSE;
@@ -717,59 +716,58 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
 
          /* default value to current class object */
          if (pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0])
-          {
-           uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
-           uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-          }
+         {
+            uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
+            uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
+         }
          else
-          {
-           uiClsTree = 1;          /* Flag value */
-           uiCurCls = uiClass;
-          }
+         {
+            uiClsTree = 1;          /* Flag value */
+            uiCurCls = uiClass;
+         }
 
          while (uiClsTree)
-          {
-           if( uiCurCls && uiCurCls <= s_uiClasses )
+         {
+            if( uiCurCls && uiCurCls <= s_uiClasses )
             {
-              PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
-              USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
-              USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-              USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+               PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
+               USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+               USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+               USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
 
-              while( uiAt != uiLimit )
-              {
-                 if( pClass->pMethods[ uiAt ].pMessage == pMsg )
-                 {
-                    uiClass = (pClass->pMethods + uiAt)->uiSprClass;
-                    uiClsTree=1; /* Flag Value */
-                    break;
-                 }
+               while( uiAt != uiLimit )
+               {
+                  if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+                  {
+                     uiClass = (pClass->pMethods + uiAt)->uiSprClass;
+                     uiClsTree=1; /* Flag Value */
+                     break;
+                  }
 
-                 uiAt++;
+                  uiAt++;
 
-                 if( uiAt == uiMask )
-                 {
-                    uiAt = 0;
-                 }
-              }
+                  if( uiAt == uiMask )
+                  {
+                     uiAt = 0;
+                  }
+               }
             }
 
-           if (-- uiClsTree)
-           {
-            uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-           }
+            if (-- uiClsTree)
+            {
+               uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
+            }
 
-          }
+         }
 
          if( uiClass && uiClass <= s_uiClasses )
          {
-          szClassName = ( s_pClasses + uiClass - 1 )->szName;
+            szClassName = ( s_pClasses + uiClass - 1 )->szName;
          }
          else
          {
-          szClassName = "UNKNOWN";
+            szClassName = "UNKNOWN";
          }
-
       }
    }
    else                                         /* built in types */
@@ -781,6 +779,7 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
             break;
 
          case HB_IT_STRING:
+         case HB_IT_MEMO:
             szClassName = "CHARACTER";
             break;
 
@@ -964,13 +963,13 @@ BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
    HB_TRACE(HB_TR_DEBUG, ("hb_objHasMsg(%p, %s)", pObject, szString));
 
    if( pDynSym )
-    {
+   {
       return hb_objGetMthd( pObject, pDynSym->pSymbol, FALSE ) != NULL;
-    }
+   }
    else
-    {
+   {
       return FALSE;
-    }
+   }
 }
 
 
@@ -1235,14 +1234,15 @@ HB_FUNC( __CLSADDMSG )
 
 
 /*
- * <hClass> := __clsNew( <cClassName>, <nDatas>, [ahSuper,aoSuper] )
+ * <hClass> := __clsNew( <cClassName>, <nDatas>, [ahSuper|aoSuper] )
  *
  * Create a new class
  *
  * <cClassName> Name of the class
  * <nDatas>     Number of DATAs in the class
  * <ahSuper>    Optional handle(s) of superclass(es)
- * <ahSuper>    Optional superclass(es) Object instance
+ * <aoSuper>    Optional superclass(es) Object instance -
+ *              seems it's not implemented
  */
 HB_FUNC( __CLSNEW )
 {
@@ -1267,11 +1267,7 @@ HB_FUNC( __CLSNEW )
       s_pClasses = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
 
    pNewCls = s_pClasses + s_uiClasses;
-   pNewCls->szName = ( char * ) hb_xgrab( hb_parclen( 1 ) + 1 );
-
-   memset(pNewCls->szName, 0, hb_parclen( 1 ) + 1);
-
-   strcpy( pNewCls->szName, hb_parc( 1 ) );
+   pNewCls->szName = hb_strdup( hb_parc( 1 ) );
    pNewCls->uiDataFirst = 0;
    pNewCls->uiDatas = 0;
    pNewCls->uiMethods = 0;
@@ -1725,14 +1721,14 @@ HB_FUNC( __OBJHASMSG )
    PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
 
    if( pObject && pString )
-    {
+   {
       hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) );
-    }
+   }
    else
-    {
+   {
       /*hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG", 0 );*/
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__ObjHasMsg", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
-    }
+   }
 }
 
 

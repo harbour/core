@@ -422,6 +422,24 @@ static HB_FIX_FUNC( hb_p_jumpfar )
             lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
             HB_PUT_LE_UINT24( pAddr, lOffset );
             break;
+
+         case HB_P_JUMPFALSEFAR:
+            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            if( ulNewPos == lPCodePos + 4 )
+            {
+               pFunc->pCode[ lPCodePos ] = HB_P_JUMPTRUEFAR;
+               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+            }
+            break;
+
+         case HB_P_JUMPTRUEFAR:
+            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            if( ulNewPos == lPCodePos + 4 )
+            {
+               pFunc->pCode[ lPCodePos ] = HB_P_JUMPFALSEFAR;
+               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+            }
+            break;
       }
    }
    return 4;

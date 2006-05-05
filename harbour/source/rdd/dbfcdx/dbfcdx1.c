@@ -6471,18 +6471,35 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
 static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip )
 {
    LPCDXTAG pTag;
-   ULONG ulPos;
+   ULONG ulPos, ulRec;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkip(%p, %ld)", pArea, lToSkip));
 
+   if( pArea->lpdbPendingRel )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
    pTag = lToSkip == 0 ? NULL : hb_cdxGetActiveTag( pArea );
-   ulPos = ( pTag && pArea->fPositioned && CURKEY_LOGPOS( pTag ) ) ? pTag->logKeyPos : 0;
+   if( pTag && pArea->fPositioned && CURKEY_LOGPOS( pTag ) )
+   {
+      ulPos = pTag->logKeyPos;
+      ulRec = pTag->logKeyRec;
+   }
+   else
+   {
+      ulPos = ulRec = 0;
+   }
 
    if ( SUPER_SKIP( ( AREAP ) pArea, lToSkip ) == FAILURE )
       return FAILURE;
 
    if ( pTag )
    {
+      if ( ulPos && ( pTag->logKeyPos != ulPos || pTag->logKeyRec != ulRec ||
+           ( pTag->curKeyState & CDX_CURKEY_LOGPOS ) == 0 ) )
+      {
+         ulPos = 0;
+      }
+
       if ( lToSkip > 0 )
       {
          if ( pArea->fEof )

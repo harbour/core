@@ -255,13 +255,11 @@ typedef struct _AUTOOPEN
 
 typedef struct _HB_LABEL_INFO
 {
-   FILE   * yyc;
+   FILE *   yyc;
    BOOL     fVerbose;
    BOOL     fSetSeqBegin;
    BOOL     fCondJump;
    BOOL     fForEach;
-   BOOL     fSequence;
-   BOOL     fEndProc;
    ULONG *  pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 

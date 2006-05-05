@@ -8,6 +8,40 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */ 
 
+  * harbour/source/vm/itemapi.c
+    * return "S" for HB_IT_SYMBOL by hb_itemType()
+    * formatting
+
+2006-05-14 09:36 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/dirstruc.txt
+     + Add oneliner description for: source\rtl\gtalleg, source\rtl\gtwvt,
+       source\rtl\gtxwc, source\vm\mainstd
+
+   * doc/howtocvs.txt
+     * Update CVS location to reflect recent changes in SourceForge.
+
+2006-05-05 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * changed the exit code for .hrb file compilation by xhbcmp
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hblbl.c
+    * removed some variables which are not necessary in Harbour
+
+  * harbour/source/compiler/hbfix.c
+    + added unconditional and conditional jump joining optimization
+
+  * harbour/source/vm/classes.c
+  * xharbour/include/hbvmpub.h
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * xharbour/source/vm/dynsym.c
+      or hot record buffer updating
+
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/vm/hvm.c
+    * casting
 
   * harbour/source/vm/macro.c
 

@@ -3696,7 +3696,7 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
                       hb_stackItemFromTop( ( int ) ( ulPos - ulElements - 1 ) ) );
 
       /* move the new array to position of first parameter */
-      hb_itemMove( hb_stackItemFromTop( ( int ) ( -ulElements - 1 ) ), pArray );
+      hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - ulElements ) ), pArray );
 
       /* decrease the stack counter - all items are NIL */
       hb_stackDecrease( ulElements );
@@ -5715,6 +5715,52 @@ HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymb
    }
 }
 
+/* hvm support for pcode DLLs */
+HB_EXPORT void hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
+{
+   PSYMBOLS pNewSymbols;
+   USHORT ui;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDllSymbols(%p, %hu)", pModuleSymbols, uiModuleSymbols));
+
+   pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
+   pNewSymbols->pModuleSymbols = pModuleSymbols;
+   pNewSymbols->uiModuleSymbols = uiModuleSymbols;
+   pNewSymbols->pNext = NULL;
+   pNewSymbols->hScope = 0;
+
+   if( s_pSymbols == NULL )
+      s_pSymbols = pNewSymbols;
+   else
+   {
+      PSYMBOLS pLastSymbols;
+
+      pLastSymbols = s_pSymbols;
+      while( pLastSymbols->pNext ) /* locates the latest processed group of symbols */
+         pLastSymbols = pLastSymbols->pNext;
+
+      pLastSymbols->pNext = pNewSymbols;
+   }
+
+   for( ui = 0; ui < uiModuleSymbols; ui++ ) /* register each public symbol on the dynamic symbol table */
+   {
+      HB_SYMBOLSCOPE hSymScope;
+
+      hSymScope = ( pModuleSymbols + ui )->scope.value;
+      pNewSymbols->hScope |= hSymScope;
+
+      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymFind( ( pModuleSymbols + ui )->szName );
+
+         if( pDynSym && pDynSym->pFunPtr && ( pModuleSymbols + ui )->value.pFunPtr )
+            ( pModuleSymbols + ui )->value.pFunPtr = pDynSym->pFunPtr;
+         else
+             hb_dynsymNew( ( pModuleSymbols + ui ) );
+      }
+   }
+}
+
 static void hb_vmReleaseLocalSymbols( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmReleaseLocalSymbols()"));
@@ -7327,53 +7373,6 @@ HB_FUNC( __TRACEPRGCALLS )
    hb_bTracePrgCalls = hb_parl( 1 );
 
    hb_retl( bOldValue );
-}
-
-/* hvm support for pcode DLLs */
-
-HB_EXPORT void hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
-{
-   PSYMBOLS pNewSymbols;
-   USHORT ui;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDllSymbols(%p, %hu)", pModuleSymbols, uiModuleSymbols));
-
-   pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
-   pNewSymbols->pModuleSymbols = pModuleSymbols;
-   pNewSymbols->uiModuleSymbols = uiModuleSymbols;
-   pNewSymbols->pNext = NULL;
-   pNewSymbols->hScope = 0;
-
-   if( s_pSymbols == NULL )
-      s_pSymbols = pNewSymbols;
-   else
-   {
-      PSYMBOLS pLastSymbols;
-
-      pLastSymbols = s_pSymbols;
-      while( pLastSymbols->pNext ) /* locates the latest processed group of symbols */
-         pLastSymbols = pLastSymbols->pNext;
-
-      pLastSymbols->pNext = pNewSymbols;
-   }
-
-   for( ui = 0; ui < uiModuleSymbols; ui++ ) /* register each public symbol on the dynamic symbol table */
-   {
-      HB_SYMBOLSCOPE hSymScope;
-
-      hSymScope = ( pModuleSymbols + ui )->scope.value;
-      pNewSymbols->hScope |= hSymScope;
-
-      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )
-      {
-         PHB_DYNS pDynSym = hb_dynsymFind( ( pModuleSymbols + ui )->szName );
-
-         if( pDynSym && pDynSym->pFunPtr && ( pModuleSymbols + ui )->value.pFunPtr )
-            ( pModuleSymbols + ui )->value.pFunPtr = pDynSym->pFunPtr;
-         else
-             hb_dynsymNew( ( pModuleSymbols + ui ) );
-      }
-   }
 }
 
 HB_FUNC( __OPCOUNT ) /* it returns the total amount of opcodes */

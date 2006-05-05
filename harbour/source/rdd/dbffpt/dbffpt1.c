@@ -872,7 +872,7 @@ static ERRCODE hb_fptReadGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
          pGCtable->ulCounter = HB_GET_LE_UINT32( pGCtable->fptHeader.counter );
          if ( pGCtable->ulDirPage )
          {
-            hb_fsSeek( pArea->hMemoFile, pGCtable->ulDirPage, FS_SET );
+            hb_fsSeekLarge( pArea->hMemoFile, pGCtable->ulDirPage, FS_SET );
             if ( hb_fsRead( pArea->hMemoFile, ( BYTE * ) &fptBlock,
                                 sizeof( FPTBLOCK ) ) != sizeof( FPTBLOCK ) ||
                  HB_GET_BE_UINT32( fptBlock.type ) != FPTIT_FLEX_GC )
@@ -997,7 +997,7 @@ static ERRCODE hb_fptWriteGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
                HB_PUT_LE_UINT32( &bPageBuf[ ( i - j ) * 8 + 6 ],
                                 pGCtable->pGCitems[i].ulSize * pArea->uiMemoBlockSize );
             }
-            hb_fsSeek( pArea->hMemoFile, pGCtable->ulDirPage, FS_SET );
+            hb_fsSeekLarge( pArea->hMemoFile, pGCtable->ulDirPage, FS_SET );
             if ( hb_fsWrite( pArea->hMemoFile, ( BYTE * ) &fptBlock,
                              sizeof( FPTBLOCK ) ) != sizeof( FPTBLOCK ) ||
                  hb_fsWrite( pArea->hMemoFile, bPageBuf,
@@ -1014,7 +1014,7 @@ static ERRCODE hb_fptWriteGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
                   HB_PUT_LE_UINT32( &bPageBuf[ ( i - j ) * 8 + 6 ],
                                    pGCtable->pGCitems[i].ulOffset * pArea->uiMemoBlockSize );
                }
-               hb_fsSeek( pArea->hMemoFile, pGCtable->ulRevPage, FS_SET );
+               hb_fsSeekLarge( pArea->hMemoFile, pGCtable->ulRevPage, FS_SET );
                if ( hb_fsWrite( pArea->hMemoFile, ( BYTE * ) &fptBlock,
                                 sizeof( FPTBLOCK ) ) != sizeof( FPTBLOCK ) ||
                     hb_fsWrite( pArea->hMemoFile, bPageBuf,
@@ -3389,7 +3389,7 @@ static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile )
    {
       ULONG ulSize;
       HB_FOFFSET size = hb_fsSeekLarge( hFile, 0, FS_END );
-      hb_fsSeekLarge( hFile, 0, FS_SET );
+      hb_fsSeek( hFile, 0, FS_SET );
       if( ( HB_FOFFSET ) ( size & 0xFFFFFFFFUL ) == size )
          ulSize = HB_MIN( ( ULONG ) size, 0xFFFFFFFFUL - sizeof( FPTBLOCK ) );
       else
@@ -4125,10 +4125,10 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          ULONG ulSize;
          HB_FOFFSET size = hb_fsSeekLarge( hFile, 0, FS_END );
 
-         hb_fsSeekLarge( hFile, 0, FS_SET );
-         ulSize = HB_MIN( size, HB_VF_CHAR );
+         hb_fsSeek( hFile, 0, FS_SET );
+         ulSize = ( ULONG ) HB_MIN( size, HB_VF_CHAR );
          pAlloc = ( BYTE * ) hb_xgrab( ulSize + 1 );
-         if( hb_fsRead( hFile, pAlloc, ulSize ) != ulSize )
+         if( hb_fsRead( hFile, pAlloc, ulSize ) != ( USHORT ) ulSize )
          {
             uiError = EDBF_READ;
             hb_xfree( pAlloc );
@@ -4151,7 +4151,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          ULONG ulSize, ulBlock, ulType, ulOldSize, ulOldType;
          HB_FOFFSET size = hb_fsSeekLarge( hFile, 0, FS_END );
 
-         hb_fsSeekLarge( hFile, 0, FS_SET );
+         hb_fsSeek( hFile, 0, FS_SET );
          if( ( HB_FOFFSET ) ( size & 0xFFFFFFFFUL ) == size )
          {
             ulSize = HB_MIN( ( ULONG ) size, 0xFFFFFFFFUL - sizeof( FPTBLOCK ) );

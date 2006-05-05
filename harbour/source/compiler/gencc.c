@@ -232,10 +232,7 @@ static HB_GENC_FUNC( hb_p_endproc )
    fprintf( cargo->yyc, "\t/* *** END PROC *** */\n" );
    if( lPCodePos < pFunc->lPCodePos - 1 )
    {
-      if( cargo->fEndProc && cargo->fSequence )
-         fprintf( cargo->yyc, "\tgoto labEND;\n" );
-      else
-         fprintf( cargo->yyc, "\tbreak;\n" );
+      fprintf( cargo->yyc, "\tbreak;\n" );
    }
    return 1;
 }
@@ -1601,8 +1598,7 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    label_info.yyc = yyc;
    label_info.fVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
-   label_info.fCondJump = label_info.fForEach = label_info.fSequence =
-   label_info.fEndProc = FALSE;
+   label_info.fCondJump = label_info.fForEach = FALSE;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
    else
@@ -1623,8 +1619,6 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &label_info );
 
    fprintf( yyc, "   } while ( 0 );\n" );
-   if( label_info.fEndProc && label_info.fSequence )
-      fprintf( yyc, "labEND:\n" );
    if( label_info.fForEach )
       fprintf( yyc, "   while( lForEachBase )\n   {\n\thb_stackRemove( lForEachBase );\n\thb_xvmEnumEnd( &lForEachBase );\n   }\n" );
    fprintf( yyc, "   hb_xvmExitPorc( ulPrivateBase );\n" );

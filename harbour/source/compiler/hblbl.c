@@ -150,7 +150,6 @@ static HB_LABEL_FUNC( hb_p_seqbegin )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    ULONG ulRecoverPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
-   cargo->fSequence = TRUE;
    if( cargo->fSetSeqBegin )
       cargo->pulLabels[ ulRecoverPos ]++;
    return 4;
@@ -176,13 +175,6 @@ static HB_LABEL_FUNC( hb_p_enumstart )
    return 3;
 }
 
-static HB_LABEL_FUNC( hb_p_endproc )
-{
-   if( lPCodePos < pFunc->lPCodePos - 1 )
-      cargo->fEndProc = TRUE;
-   return 1;
-}
-
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -195,7 +187,7 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_ARRAYGEN,             */
    NULL,                       /* HB_P_EQUAL,                */
    NULL,                       /* HB_P_ENDBLOCK,             */
-   hb_p_endproc,               /* HB_P_ENDPROC,              */
+   NULL,                       /* HB_P_ENDPROC,              */
    NULL,                       /* HB_P_EXACTLYEQUAL,         */
    NULL,                       /* HB_P_FALSE,                */
    NULL,                       /* HB_P_FORTEST,              */

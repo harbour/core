@@ -55,8 +55,6 @@
 #include "hbapiitm.h"
 #include "hbstack.h"
 
-#define SYM_ALLOCATED ( ( HB_SYMBOLSCOPE ) -1 )
-
 typedef struct
 {
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
@@ -64,6 +62,17 @@ typedef struct
 
 static PDYNHB_ITEM s_pDynItems = NULL;    /* Pointer to dynamic items */
 static USHORT      s_uiDynSymbols = 0;    /* Number of symbols present */
+
+typedef struct _HB_SYM_HOLDER
+{
+   HB_SYMB  symbol;
+   struct _HB_SYM_HOLDER * pNext;
+   char     szName[ 1 ];
+}
+HB_SYM_HOLDER, * PHB_SYM_HOLDER;
+
+static PHB_SYM_HOLDER s_pAllocSyms = NULL;
+
 
 /* Closest symbol for match. hb_dynsymFind() will search for the name. */
 /* If it cannot find the name, it positions itself to the */
@@ -82,18 +91,23 @@ void hb_dynsymLog( void )
 
 HB_EXPORT PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
 {
-   PHB_SYMB pSymbol;
+   PHB_SYM_HOLDER pHolder;
+   int iLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_symbolNew(%s)", szName));
 
-   pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
-   pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
-   strcpy( pSymbol->szName, szName );
-   pSymbol->scope.value = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
-   pSymbol->value.pFunPtr = NULL;
-   pSymbol->pDynSym = NULL;
+   iLen = strlen( szName );
+   pHolder = ( PHB_SYM_HOLDER ) hb_xgrab( sizeof( HB_SYM_HOLDER ) + iLen );
+   memcpy( pHolder->szName, szName, iLen + 1 );
+   pHolder->pNext = s_pAllocSyms;
+   s_pAllocSyms = pHolder;
 
-   return pSymbol;
+   pHolder->symbol.szName        = pHolder->szName;
+   pHolder->symbol.scope.value   = 0;
+   pHolder->symbol.value.pFunPtr = NULL;
+   pHolder->symbol.pDynSym       = NULL;
+
+   return &pHolder->symbol;
 }
 
 HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
@@ -268,9 +282,7 @@ HB_EXPORT PHB_DYNS hb_dynsymFind( char * szName )
       s_pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
       s_pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
-      s_pDynItems->pDynSym->hMemvar = 0;
-      s_pDynItems->pDynSym->pSymbol = NULL;
-      s_pDynItems->pDynSym->pFunPtr = NULL;
+      memset( s_pDynItems->pDynSym, 0, sizeof( HB_DYNS ) );
 
       return NULL;
    }
@@ -392,23 +404,25 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 
 void hb_dynsymRelease( void )
 {
+   PHB_SYM_HOLDER pHolder;
    USHORT uiPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymRelease()"));
 
    for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )
    {
-      /* it is a allocated symbol ? */
-      if( ( s_pDynItems + uiPos )->pDynSym->pSymbol->scope.value == SYM_ALLOCATED )
-      {
-         hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol->szName );
-         hb_xfree( ( s_pDynItems + uiPos )->pDynSym->pSymbol );
-      }
-
       hb_xfree( ( s_pDynItems + uiPos )->pDynSym );
    }
-
    hb_xfree( s_pDynItems );
+   s_pDynItems = NULL;
+   s_uiDynSymbols = 0;
+
+   while( s_pAllocSyms )
+   {
+      pHolder = s_pAllocSyms;
+      s_pAllocSyms = s_pAllocSyms->pNext;
+      hb_xfree( pHolder );
+   }
 }
 
 #ifdef HB_EXTENSION
