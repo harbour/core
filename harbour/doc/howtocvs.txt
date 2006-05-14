@@ -11,7 +11,7 @@ Content
 1.1 Here's how to prepare for uploading to the CVS server
 1.2 Here's how to upload your changes to the CVS server
 1.3 Here's how to format your ChangeLog entries
-1.4 Here's how to use the CVS server in anonymous read-only mode (TODO)
+1.4 Here's how to use the CVS server in anonymous read-only mode
 1.5 Switching from anonymous access to read/write access
 1.6 Things to do to avoid damaging the SourceForge CVS tree
 1.7 How I got SSH and CVS to work together
@@ -21,10 +21,10 @@ Content
 =========================================================
 by Viktor Szakats <viktor.szakats@syenar.hu>
 
- 1) Read the Harbour FAQ (www.harbour-project.org), monitor the mailing-list
-    (http://www.harbour-project.org/faq/harbour-4.html), consult with the
-    developers, make contributions. This way your chances are high to get a
-    RW access to the CVS.
+ 1) Read the Harbour FAQ (http://www.harbour-project.org/faq), monitor the
+    mailing-list (http://www.harbour-project.org/faq/harbour34.html),
+    consult with the developers, make contributions. This way your chances
+    are high to get a RW access to the CVS.
  2) Before uploading anything you'll need Developer (RW) status for the
     Harbour CVS server. To get this please make a request on the list,
     or contact the Harbour Administrators. Note that getting Developer
@@ -67,7 +67,7 @@ by Ryszard Glab <rglab@imid.med.pl>
     (for example: "cvs -z3 update -d >.log"
  3) Resolve all conflicts, run cvs update again (see point 2), recompile
     all sources, fix all errors
- 4) Copy all names of modifed, added or deleted files (files marked with 
+ 4) Copy all names of modifed, added or deleted files (files marked with
     'M', 'A' or 'D' flag) from update log into a ChangeLog
  5) Write necessary comments in the ChangeLog
  6) Save all your changes from ChangeLog into a file
@@ -76,7 +76,7 @@ by Ryszard Glab <rglab@imid.med.pl>
     cvs commit -F file_with_saved_ChangeLog_changes
  9) Mail file_with_saved_ChangeLog_changes as an email body (do not
     send it as an attachment) to the harbour list
- 
+
 Important notes:
 
  1) *Always* add a ChangeLog entry when committing to the CVS.
@@ -101,7 +101,8 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 - Add an entry header using this format:
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
 
-  For example: 2000-05-27 23:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+  For example:
+    2000-05-27 23:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -131,16 +132,17 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 1.4 Here's how to use the CVS server in anonymous read-only mode
 ================================================================
 
-(TODO)
+Please read the following FAQ entry:
+http://www.harbour-project.org/faq/harbour25.html
 
 1.5 Switching from anonymous access to read/write access
 ========================================================
 by David G. Holm <Harbour@SpaceMoose.com>
 
 1) Change your CVSROOT variable from
-      :pserver:anonymous@cvs.sourceforge.net:/cvsroot/harbour-project
+      :pserver:anonymous@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
    to
-      :ext:your_source_forge_ID_in_lower_case@cvs.sourceforge.net:/cvsroot/harbour-project
+      :ext:your_source_forge_ID_in_lower_case@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
 
 2) Set up CVS to use SSH (see section 1.7 for details).
 
@@ -206,7 +208,7 @@ First I set up SSH, using the following steps:
    the following commands in it:
       @echo off
       SET HOME=D:\hb-dev\
-      ssh -l dholm cvs.sourceforge.net
+      ssh -l dholm harbour-project.cvs.sourceforge.net
       ssh -l dholm Harbour-project.sourceforge.net
 6) I ran the LOGIN batch file, which automatically created a .ssh
    directory under D:\hb-dev\, automatically added SourceForge to
@@ -231,7 +233,7 @@ Next I set up CVS, using the following steps:
       SET HOMEDRIVE=D:
       SET HOMEPATH=/hb-dev/
       SET HOME=D:\hb-dev\
-      SET CVSROOT=:ext:dholm@cvs.sourceforge.net:/cvsroot/harbour-project
+      SET CVSROOT=:ext:dholm@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
       SET CVS_RSH=ssh
       cvs co harbour
 6) I ran the CHECKOUT batch file and was prompted for my SourceForge

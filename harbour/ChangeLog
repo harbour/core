@@ -6,7 +6,15 @@
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/ 
+*/
+
+2006-05-14 09:36 UTC+0200 Chen Kedem <niki@actcom.co.il>
+      for evaluation some pending relations. The whole code should be
+      carefully checked and to not operate on hb_stackTopItem() if other
+      functions are called to make the HVM fully reentrant.
+    + added commented out support for passing HB_IT_SYMBOL as function
+      pointer
+    * formatting
 
   * harbour/source/vm/itemapi.c
     * return "S" for HB_IT_SYMBOL by hb_itemType()

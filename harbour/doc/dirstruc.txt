@@ -47,8 +47,8 @@ in order to remove empty directories)
 +---contrib            - Miscellaneous contribution files. Those are not part
 |   |                    of the official Harbour project.
 |   |
-|   +---apollo         - Wrapper functions for VistaSoftware's Apollo database
-|   |   |                driver.
+|   +---apollo         - Wrapper functions for VistaSoftware's Apollo
+|   |   |                database driver.
 |   |   |
 |   |   +---test       - Test programs.
 |   |
@@ -215,6 +215,8 @@ in order to remove empty directories)
 |   +---rtl            - Run-Time libraries functions and various General
 |   |   |                Terminal (GT) implementation
 |   |   |
+|   |   +---gtalleg    - GT subsystem based on Allegro with graphic extensions.
+|   |   |
 |   |   +---gtcgi      - GT subsystem aimed at cgi-bin applications.
 |   |   |
 |   |   +---gtcrs      - GT subsystem based on ncurses.
@@ -229,12 +231,20 @@ in order to remove empty directories)
 |   |   |
 |   |   +---gtstd      - GT subsystem for plain ANSI C stream IO.
 |   |   |
-|   |   +---gtwin      - GT subsystem for Win32 compilers.
+|   |   +---gtwin      - GT subsystem for Win32 compilers (Console).
+|   |   |
+|   |   +---gtwvt      - GT subsystem for Win32 using GUI windows instead of
+|   |   |                Console.
+|   |   |
+|   |   +---gtxwc      - GT subsystem for XWindow Console.
 |   |   |
 |   |   +---gt_tpl     - GT subsystem template.
 |   |
-|   +---vm             - Harbour Virtual Machine and internal Run-Time library
-|                        functions.
+|   +---vm             - Harbour Virtual Machine and internal Run-Time
+|       |                library functions.
+|       |
+|       +---mainstd    - mainstd library for MinGW32 build.
+|
 |
 +---tests              - Test programs.
 |   |
@@ -260,9 +270,9 @@ in order to remove empty directories)
 
 Legend:
 =======
-(*)      Should exist in a final build or if you build them yourself, in normal
-         CVS distribution this directory is empty or does not contain all
-         files.
+(*)      Should exist in a final build or if you build them yourself, in
+         normal CVS distribution this directory is empty or does not contain
+         all files.
 
 
 Chen Kedem <niki@actcom.co.il>
