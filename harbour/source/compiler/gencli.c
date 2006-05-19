@@ -195,7 +195,7 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       //      if( pSym->cScope & VS_MEMVAR )
       //         fprintf( yyc, " | HB_FS_MEMVAR" );
       //
-      //      if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
+      //      if( pSym->cScope & HB_FS_MESSAGE )
       //         fprintf( yyc, " | HB_FS_MESSAGE" );
       //
       //      if ( ( pSym->cScope & HB_FS_FIRST ) &&  ( ! hb_comp_bNoStartUp ) )

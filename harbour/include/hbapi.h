@@ -211,6 +211,7 @@ HB_EXTERN_BEGIN
 #define ISOBJECT( n )      ( hb_extIsObject( n ) )
 #define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
 #define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
+#define ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL ) /* Not available in CA-Cl*pper. */
 
 
 #ifdef _HB_API_INTERNAL_
@@ -336,7 +337,7 @@ typedef struct _HB_BASEARRAY
    PHB_ITEM    pItems;       /* pointer to the array items */
    ULONG       ulLen;        /* number of items in the array */
    HB_COUNTER  ulHolders;    /* number of holders of this array */
-   USHORT *    puiClsTree;   /* remember array of super called ID Tree  */
+   USHORT *    puiClsTree;   /* remember array of super called ID Tree */
    USHORT      uiClass;      /* offset to the classes base if it is an object */
    USHORT      uiPrevCls;    /* for fixing after access super */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
@@ -617,6 +618,11 @@ extern BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TR
 extern void     hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
 extern USHORT   hb_objGetClass( PHB_ITEM pItem );
 
+/* profiler for object management */
+extern void *  hb_mthRequested( void );           /* profiler from classes.c */
+extern void    hb_mthAddTime( void *, ULONG );    /* profiler from classes.c */
+
+
 /* dynamic symbol table management */
 extern HB_EXPORT PHB_DYNS  hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
 extern HB_EXPORT PHB_DYNS  hb_dynsymGetCase( char * szName );    /* finds and creates a dynamic symbol if not found - case sensitive */
@@ -634,6 +640,9 @@ extern HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym ); /* return 
 extern HB_EXPORT HB_HANDLE hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return work area number bound with given dynamic symbol */
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
 
+/* Symbol management */
+extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
+
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
 extern int       hb_cmdargARGC( void ); /* retrieve command line argument count */
@@ -648,37 +657,34 @@ extern HB_EXPORT void hb_winmainArgInit( HANDLE hInstance, HANDLE hPrevInstance,
 extern HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif
 
-/* Symbol management */
-extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
-
 /* Codeblock management */
-extern HB_EXPORT void *   hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
+extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
 extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
-extern void     hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
-extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer ); /* get local variable passed by reference */
-extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
+extern void             hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
+extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
+extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer ); /* get local variable passed by reference */
+extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */
-extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
-extern void     hb_memvarsInit( void ); /* initialize the memvar API system */
-extern void     hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE variables */
-extern void     hb_memvarsFree( void ); /* release the memvar API system */
-extern void     hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
-extern void     hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
-extern void     hb_memvarValueDecGarbageRef( HB_HANDLE hValue ); /* decrease the reference count of a detached local variable */
-extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
-extern ERRCODE  hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
-extern void     hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
-extern void     hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
-extern ULONG    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
-extern void     hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
-extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
-extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
-extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
-extern int      hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
-extern HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern HB_HANDLE  hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
+extern void       hb_memvarsInit( void ); /* initialize the memvar API system */
+extern void       hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE variables */
+extern void       hb_memvarsFree( void ); /* release the memvar API system */
+extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
+extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
+extern void       hb_memvarValueDecGarbageRef( HB_HANDLE hValue ); /* decrease the reference count of a detached local variable */
+extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
+extern ERRCODE    hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
+extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
+extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
+extern ULONG      hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
+extern void       hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
+extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
+extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
+extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
+extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
+extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
@@ -789,7 +795,6 @@ extern HB_EXPORT BOOL   hb_iswinnt(void); /* return .T. if OS == WinNt, 2000, XP
 extern char * hb_getenv( const char * name );
 
 /* Version tracking related things */
-
 #ifdef HB_FILE_VER_STATIC
    #define HB_FILE_VER( id ) static char s_hb_file_ver[] = id;
 #else

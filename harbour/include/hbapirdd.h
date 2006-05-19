@@ -230,12 +230,6 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 
 
 
-/*
- *  DBORDERCREATE
- *  -------------
- *  The Create Order Info structure
- */
-
 typedef struct
 {
    BYTE *             abConstrName;       /* Name of relational integrity constraint */
@@ -245,6 +239,13 @@ typedef struct
 } DBCONSTRAINTINFO;
 
 typedef DBCONSTRAINTINFO * LPDBCONSTRAINTINFO;
+
+
+/*
+ *  DBORDERCREATE
+ *  -------------
+ *  The Create Order Info structure
+ */
 
 typedef struct
 {
@@ -301,7 +302,7 @@ typedef struct
    BOOL     fIncludeDeleted;     /* process should include deleted records */
    BOOL     fLast;               /* last record of the current scope required */
    BOOL     fIgnoreDuplicates;   /* process should ignore duplicate key value */
-   BOOL     fBackword;           /* skip backword */
+   BOOL     fBackward;           /* skip backward */
    BOOL     fOptimized;          /* Is (should be) scope optimized */
 } DBSCOPEINFO;
 
@@ -610,7 +611,7 @@ typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM
 typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2 );
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2 );
-typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, BOOL * p2 );
+typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, ULONG p1, BOOL * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */
 
@@ -755,11 +756,13 @@ typedef struct _RDDFUNCS
 
 
    /* non WorkArea functions       */
+
    DBENTRYP_R    init;              /* init RDD after registration */
    DBENTRYP_R    exit;              /* unregister RDD */
    DBENTRYP_RVV  drop;              /* remove table */
    DBENTRYP_RVV  exists;            /* check if table exist */
    DBENTRYP_RSLV rddInfo;           /* RDD info */
+
 
    /* Special and reserved methods */
 
@@ -952,167 +955,174 @@ typedef RDDNODE * LPRDDNODE;
 
 /*--------------------* SUPER Methods *------------------------*/
 
+#ifndef _SUPERTABLE
+#define _SUPERTABLE(w)                  SUPERTABLE
+#endif
+#ifndef __SUPERTABLE
+#define __SUPERTABLE(w)                 SUPERTABLE
+#endif
 
 /* Movement and positioning methods */
 
-#define SUPER_BOF(w, sp)                ((*(SUPERTABLE)->bof)(w, sp))
-#define SUPER_EOF(w, sp)                ((*(SUPERTABLE)->eof)(w, sp))
-#define SUPER_FOUND(w, sp)              ((*(SUPERTABLE)->found)(w, sp))
-#define SUPER_GOTO(w, l)                ((*(SUPERTABLE)->go)(w, l))
-#define SUPER_GOTOID(w, sp)             ((*(SUPERTABLE)->goToId)(w, sp))
-#define SUPER_GOBOTTOM(w)               ((*(SUPERTABLE)->goBottom)(w))
-#define SUPER_GOTOP(w)                  ((*(SUPERTABLE)->goTop)(w))
-#define SUPER_SEEK(w, i1, v, i2)        ((*(SUPERTABLE)->seek)(w, i1, v, i2))
-#define SUPER_SKIP(w, l)                ((*(SUPERTABLE)->skip)(w, l))
-#define SUPER_SKIPFILTER(w, l)          ((*(SUPERTABLE)->skipFilter)(w, l))
-#define SUPER_SKIPRAW(w, l)             ((*(SUPERTABLE)->skipRaw)(w, l))
+#define SUPER_BOF(w, sp)                ((*(_SUPERTABLE(w))->bof)(w, sp))
+#define SUPER_EOF(w, sp)                ((*(_SUPERTABLE(w))->eof)(w, sp))
+#define SUPER_FOUND(w, sp)              ((*(_SUPERTABLE(w))->found)(w, sp))
+#define SUPER_GOTO(w, l)                ((*(_SUPERTABLE(w))->go)(w, l))
+#define SUPER_GOTOID(w, sp)             ((*(_SUPERTABLE(w))->goToId)(w, sp))
+#define SUPER_GOBOTTOM(w)               ((*(_SUPERTABLE(w))->goBottom)(w))
+#define SUPER_GOTOP(w)                  ((*(_SUPERTABLE(w))->goTop)(w))
+#define SUPER_SEEK(w, i1, v, i2)        ((*(_SUPERTABLE(w))->seek)(w, i1, v, i2))
+#define SUPER_SKIP(w, l)                ((*(_SUPERTABLE(w))->skip)(w, l))
+#define SUPER_SKIPFILTER(w, l)          ((*(_SUPERTABLE(w))->skipFilter)(w, l))
+#define SUPER_SKIPRAW(w, l)             ((*(_SUPERTABLE(w))->skipRaw)(w, l))
 
 
 /* Data management */
 
-#define SUPER_ADDFIELD(w, ip)           ((*(SUPERTABLE)->addField)(w, ip))
-#define SUPER_APPEND(w, b)              ((*(SUPERTABLE)->append)(w, b))
-#define SUPER_CREATEFIELDS(w, v)        ((*(SUPERTABLE)->createFields)(w, v))
-#define SUPER_DELETE(w)                 ((*(SUPERTABLE)->deleterec)(w))
-#define SUPER_DELETED(w, sp)            ((*(SUPERTABLE)->deleted)(w, sp))
-#define SUPER_FIELDCOUNT(w, sp)         ((*(SUPERTABLE)->fieldCount)(w, sp))
-#define SUPER_FIELDDISPLAY(w, sp)       ((*(SUPERTABLE)->fieldDisplay)(w, sp))
-#define SUPER_FIELDINFO(w,s1,s2,v)      ((*(SUPERTABLE)->fieldInfo)(w,s1,s2,v))
-#define SUPER_FIELDNAME(w, i, bp)       ((*(SUPERTABLE)->fieldName)(w, i, bp))
-#define SUPER_FLUSH(w)                  ((*(SUPERTABLE)->flush)(w))
-#define SUPER_GETREC(w, bpp)            ((*(SUPERTABLE)->getRec)(w, bpp))
-#define SUPER_GETVALUE(w, i, v)         ((*(SUPERTABLE)->getValue)(w, i, v))
-#define SUPER_GETVARLEN(w, i, lp)       ((*(SUPERTABLE)->getVarLen)(w, i, lp))
-#define SUPER_GOCOLD(w)                 ((*(SUPERTABLE)->goCold)(w))
-#define SUPER_GOHOT(w)                  ((*(SUPERTABLE)->goHot)(w))
-#define SUPER_PUTVALUE(w, i, v)         ((*(SUPERTABLE)->putValue)(w, i, v))
-#define SUPER_PUTREC(w, bp)             ((*(SUPERTABLE)->putRec)(w, bp))
-#define SUPER_RECALL(w)                 ((*(SUPERTABLE)->recall)(w))
-#define SUPER_RECCOUNT(w, lp)           ((*(SUPERTABLE)->reccount)(w, lp))
-#define SUPER_RECINFO(w,v1,i,v2)        ((*(SUPERTABLE)->recInfo)(w,v1,i,v2))
-#define SUPER_RECNO(w, lp)              ((*(SUPERTABLE)->recno)(w, lp))
-#define SUPER_RECID(w, i)               ((*(SUPERTABLE)->recid)(w, i))
-#define SUPER_SETFIELDEXTENT(w, s)      ((*(SUPERTABLE)->setFieldExtent)(w, s))
+#define SUPER_ADDFIELD(w, ip)           ((*(_SUPERTABLE(w))->addField)(w, ip))
+#define SUPER_APPEND(w, b)              ((*(_SUPERTABLE(w))->append)(w, b))
+#define SUPER_CREATEFIELDS(w, v)        ((*(_SUPERTABLE(w))->createFields)(w, v))
+#define SUPER_DELETE(w)                 ((*(_SUPERTABLE(w))->deleterec)(w))
+#define SUPER_DELETED(w, sp)            ((*(_SUPERTABLE(w))->deleted)(w, sp))
+#define SUPER_FIELDCOUNT(w, sp)         ((*(_SUPERTABLE(w))->fieldCount)(w, sp))
+#define SUPER_FIELDDISPLAY(w, sp)       ((*(_SUPERTABLE(w))->fieldDisplay)(w, sp))
+#define SUPER_FIELDINFO(w,s1,s2,v)      ((*(_SUPERTABLE(w))->fieldInfo)(w,s1,s2,v))
+#define SUPER_FIELDNAME(w, i, bp)       ((*(_SUPERTABLE(w))->fieldName)(w, i, bp))
+#define SUPER_FLUSH(w)                  ((*(_SUPERTABLE(w))->flush)(w))
+#define SUPER_GETREC(w, bpp)            ((*(_SUPERTABLE(w))->getRec)(w, bpp))
+#define SUPER_GETVALUE(w, i, v)         ((*(_SUPERTABLE(w))->getValue)(w, i, v))
+#define SUPER_GETVARLEN(w, i, lp)       ((*(_SUPERTABLE(w))->getVarLen)(w, i, lp))
+#define SUPER_GOCOLD(w)                 ((*(_SUPERTABLE(w))->goCold)(w))
+#define SUPER_GOHOT(w)                  ((*(_SUPERTABLE(w))->goHot)(w))
+#define SUPER_PUTVALUE(w, i, v)         ((*(_SUPERTABLE(w))->putValue)(w, i, v))
+#define SUPER_PUTREC(w, bp)             ((*(_SUPERTABLE(w))->putRec)(w, bp))
+#define SUPER_RECALL(w)                 ((*(_SUPERTABLE(w))->recall)(w))
+#define SUPER_RECCOUNT(w, lp)           ((*(_SUPERTABLE(w))->reccount)(w, lp))
+#define SUPER_RECINFO(w,v1,i,v2)        ((*(_SUPERTABLE(w))->recInfo)(w,v1,i,v2))
+#define SUPER_RECNO(w, lp)              ((*(_SUPERTABLE(w))->recno)(w, lp))
+#define SUPER_RECID(w, i)               ((*(_SUPERTABLE(w))->recid)(w, i))
+#define SUPER_SETFIELDEXTENT(w, s)      ((*(_SUPERTABLE(w))->setFieldExtent)(w, s))
 
 
 /* WorkArea/Database management */
 
-#define SUPER_ALIAS(w, bp)              ((*(SUPERTABLE)->alias)(w, bp))
-#define SUPER_CLOSE(w)                  ((*(SUPERTABLE)->close)(w))
-#define SUPER_CREATE(w, ip)             ((*(SUPERTABLE)->create)(w, ip))
-#define SUPER_INFO(w, i, g)             ((*(SUPERTABLE)->info)(w, i, g))
-#define SUPER_NEW(w)                    ((*(SUPERTABLE)->newarea)(w))
-#define SUPER_OPEN(w, ip)               ((*(SUPERTABLE)->open)(w, ip))
-#define SUPER_RELEASE(w)                ((*(SUPERTABLE)->release)(w))
-#define SUPER_STRUCTSIZE(w, sp)         ((*(SUPERTABLE)->structSize)(w, sp))
-#define SUPER_SYSNAME(w, bp)            ((*(SUPERTABLE)->sysName)(w, bp))
-#define SUPER_DBEVAL(w, ip)             ((*(SUPERTABLE)->dbEval)(w, ip))
-#define SUPER_PACK(w)                   ((*(SUPERTABLE)->pack)(w))
-#define SUPER_PACKREC(w, l, sp)         ((*(SUPERTABLE)->packRec)(w, l, sp))
-#define SUPER_SORT(w, ip)               ((*(SUPERTABLE)->sort)(w, ip))
-#define SUPER_TRANS(w, ip)              ((*(SUPERTABLE)->trans)(w, ip))
-#define SUPER_TRANSREC(w, ip)           ((*(SUPERTABLE)->transRec)(w, ip))
-#define SUPER_ZAP(w)                    ((*(SUPERTABLE)->zap)(w))
+#define SUPER_ALIAS(w, bp)              ((*(_SUPERTABLE(w))->alias)(w, bp))
+#define SUPER_CLOSE(w)                  ((*(_SUPERTABLE(w))->close)(w))
+#define SUPER_CREATE(w, ip)             ((*(_SUPERTABLE(w))->create)(w, ip))
+#define SUPER_INFO(w, i, g)             ((*(_SUPERTABLE(w))->info)(w, i, g))
+#define SUPER_NEW(w)                    ((*(_SUPERTABLE(w))->newarea)(w))
+#define SUPER_OPEN(w, ip)               ((*(_SUPERTABLE(w))->open)(w, ip))
+#define SUPER_RELEASE(w)                ((*(_SUPERTABLE(w))->release)(w))
+#define SUPER_STRUCTSIZE(w, sp)         ((*(_SUPERTABLE(w))->structSize)(w, sp))
+#define SUPER_SYSNAME(w, bp)            ((*(_SUPERTABLE(w))->sysName)(w, bp))
+#define SUPER_DBEVAL(w, ip)             ((*(_SUPERTABLE(w))->dbEval)(w, ip))
+#define SUPER_PACK(w)                   ((*(_SUPERTABLE(w))->pack)(w))
+#define SUPER_PACKREC(w, l, sp)         ((*(_SUPERTABLE(w))->packRec)(w, l, sp))
+#define SUPER_SORT(w, ip)               ((*(_SUPERTABLE(w))->sort)(w, ip))
+#define SUPER_TRANS(w, ip)              ((*(_SUPERTABLE(w))->trans)(w, ip))
+#define SUPER_TRANSREC(w, ip)           ((*(_SUPERTABLE(w))->transRec)(w, ip))
+#define SUPER_ZAP(w)                    ((*(_SUPERTABLE(w))->zap)(w))
 
 
 /* Relational Methods */
 
-#define SUPER_CHILDEND(w, ip)           ((*(SUPERTABLE)->childEnd)(w, ip))
-#define SUPER_CHILDSTART(w, ip)         ((*(SUPERTABLE)->childStart)(w, ip))
-#define SUPER_CHILDSYNC(w, ip)          ((*(SUPERTABLE)->childSync)(w, ip))
-#define SUPER_SYNCCHILDREN(w)           ((*(SUPERTABLE)->syncChildren)(w))
-#define SUPER_CLEARREL(w)               ((*(SUPERTABLE)->clearRel)(w))
-#define SUPER_FORCEREL(w)               ((*(SUPERTABLE)->forceRel)(w))
-#define SUPER_RELAREA(w, s, sp)         ((*(SUPERTABLE)->relArea)(w, s, sp))
-#define SUPER_RELEVAL(w, ip)            ((*(SUPERTABLE)->relEval)(w, ip))
-#define SUPER_RELTEXT(w, s, bp)         ((*(SUPERTABLE)->relText)(w, s, bp))
-#define SUPER_SETREL(w, ip)             ((*(SUPERTABLE)->setRel)(w, ip))
+#define SUPER_CHILDEND(w, ip)           ((*(_SUPERTABLE(w))->childEnd)(w, ip))
+#define SUPER_CHILDSTART(w, ip)         ((*(_SUPERTABLE(w))->childStart)(w, ip))
+#define SUPER_CHILDSYNC(w, ip)          ((*(_SUPERTABLE(w))->childSync)(w, ip))
+#define SUPER_SYNCCHILDREN(w)           ((*(_SUPERTABLE(w))->syncChildren)(w))
+#define SUPER_CLEARREL(w)               ((*(_SUPERTABLE(w))->clearRel)(w))
+#define SUPER_FORCEREL(w)               ((*(_SUPERTABLE(w))->forceRel)(w))
+#define SUPER_RELAREA(w, s, sp)         ((*(_SUPERTABLE(w))->relArea)(w, s, sp))
+#define SUPER_RELEVAL(w, ip)            ((*(_SUPERTABLE(w))->relEval)(w, ip))
+#define SUPER_RELTEXT(w, s, bp)         ((*(_SUPERTABLE(w))->relText)(w, s, bp))
+#define SUPER_SETREL(w, ip)             ((*(_SUPERTABLE(w))->setRel)(w, ip))
 
 
 /* Order Management */
 
-#define SUPER_ORDLSTADD(w, lp)          ((*(SUPERTABLE)->orderListAdd)(w, lp))
-#define SUPER_ORDLSTDELETE(w, lp)       ((*(SUPERTABLE)->orderListDelete)(w, lp))
-#define SUPER_ORDLSTFOCUS(w, lp)        ((*(SUPERTABLE)->orderListFocus)(w, lp))
-#define SUPER_ORDLSTREBUILD(w)          ((*(SUPERTABLE)->orderListRebuild)(w))
-#define SUPER_ORDLSTCLEAR(w)            ((*(SUPERTABLE)->orderListClear)(w))
-#define SUPER_ORDSETCOND(w,ip)          ((*(SUPERTABLE)->orderCondition)(w, ip))
-#define SUPER_ORDCREATE(w, ip)          ((*(SUPERTABLE)->orderCreate)(w, ip))
-#define SUPER_ORDDELETE(w, ip)          ((*(SUPERTABLE)->orderDelete)(w, ip))
-#define SUPER_ORDINFO(w, i, p)          ((*(SUPERTABLE)->orderInfo)(w, i, p))
-#define SUPER_ORDEXPR(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_EXPRESSION, p))
-#define SUPER_ORDCOND(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_CONDITION,  p))
-#define SUPER_ORDRECNO(w, p)            ((*(SUPERTABLE)->orderInfo)(w, DBOI_RECNO,      p))
-#define SUPER_ORDPOS(w, p)              ((*(SUPERTABLE)->orderInfo)(w, DBOI_POSITION,   p))
-#define SUPER_ORDNUMBER(w, p)           ((*(SUPERTABLE)->orderInfo)(w, DBOI_NUMBER,     p))
-#define SUPER_ORDNAME(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_NAME,       p))
-#define SUPER_ORDBAGNAME(w, p)          ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGNAME,    p))
-#define SUPER_ORDBAGEXT(w,  p)          ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGEXT,     p))
+#define SUPER_ORDLSTADD(w, lp)          ((*(_SUPERTABLE(w))->orderListAdd)(w, lp))
+#define SUPER_ORDLSTDELETE(w, lp)       ((*(_SUPERTABLE(w))->orderListDelete)(w, lp))
+#define SUPER_ORDLSTFOCUS(w, lp)        ((*(_SUPERTABLE(w))->orderListFocus)(w, lp))
+#define SUPER_ORDLSTREBUILD(w)          ((*(_SUPERTABLE(w))->orderListRebuild)(w))
+#define SUPER_ORDLSTCLEAR(w)            ((*(_SUPERTABLE(w))->orderListClear)(w))
+#define SUPER_ORDSETCOND(w,ip)          ((*(_SUPERTABLE(w))->orderCondition)(w, ip))
+#define SUPER_ORDCREATE(w, ip)          ((*(_SUPERTABLE(w))->orderCreate)(w, ip))
+#define SUPER_ORDDESTROY(w, ip)         ((*(_SUPERTABLE(w))->orderDestroy)(w, ip))
+#define SUPER_ORDDELETE(w, ip)          ((*(_SUPERTABLE(w))->orderDelete)(w, ip))
+#define SUPER_ORDINFO(w, i, p)          ((*(_SUPERTABLE(w))->orderInfo)(w, i, p))
+#define SUPER_ORDEXPR(w, p)             ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_EXPRESSION, p))
+#define SUPER_ORDCOND(w, p)             ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_CONDITION,  p))
+#define SUPER_ORDRECNO(w, p)            ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_RECNO,      p))
+#define SUPER_ORDPOS(w, p)              ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_POSITION,   p))
+#define SUPER_ORDNUMBER(w, p)           ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_NUMBER,     p))
+#define SUPER_ORDNAME(w, p)             ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_NAME,       p))
+#define SUPER_ORDBAGNAME(w, p)          ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_BAGNAME,    p))
+#define SUPER_ORDBAGEXT(w,  p)          ((*(_SUPERTABLE(w))->orderInfo)(w, DBOI_BAGEXT,     p))
 
 
 /* Filters and Scope Settings */
 
-#define SUPER_CLEARFILTER(w)            ((*(SUPERTABLE)->clearFilter)(w))
-#define SUPER_CLEARLOCATE(w)            ((*(SUPERTABLE)->clearLocate)(w))
-#define SUPER_CLEARSCOPE(w)             ((*(SUPERTABLE)->clearScope)(w))
-#define SUPER_COUNTSCOPE(w,ip,lp)       ((*(SUPERTABLE)->countScope)(w,ip,lp))
-#define SUPER_FILTERTEXT(w, bp)         ((*(SUPERTABLE)->filterText)(w, bp))
-#define SUPER_SCOPEINFO(w,i,v)          ((*(SUPERTABLE)->scopeInfo)(w,i,v))
-#define SUPER_SETFILTER(w, ip)          ((*(SUPERTABLE)->setFilter)(w, ip))
-#define SUPER_SETLOCATE(w, ip)          ((*(SUPERTABLE)->setLocate)(w, ip))
-#define SUPER_SETSCOPE(w, ip)           ((*(SUPERTABLE)->setScope)(w, ip))
-#define SUPER_SKIPSCOPE(w, bp, l)       ((*(SUPERTABLE)->skipScope)(w, bp, l))
-#define SUPER_LOCATE(w, b)              ((*(SUPERTABLE)->locate)(w, b))
+#define SUPER_CLEARFILTER(w)            ((*(_SUPERTABLE(w))->clearFilter)(w))
+#define SUPER_CLEARLOCATE(w)            ((*(_SUPERTABLE(w))->clearLocate)(w))
+#define SUPER_CLEARSCOPE(w)             ((*(_SUPERTABLE(w))->clearScope)(w))
+#define SUPER_COUNTSCOPE(w,ip,lp)       ((*(_SUPERTABLE(w))->countScope)(w,ip,lp))
+#define SUPER_FILTERTEXT(w, bp)         ((*(_SUPERTABLE(w))->filterText)(w, bp))
+#define SUPER_SCOPEINFO(w,i,v)          ((*(_SUPERTABLE(w))->scopeInfo)(w,i,v))
+#define SUPER_SETFILTER(w, ip)          ((*(_SUPERTABLE(w))->setFilter)(w, ip))
+#define SUPER_SETLOCATE(w, ip)          ((*(_SUPERTABLE(w))->setLocate)(w, ip))
+#define SUPER_SETSCOPE(w, ip)           ((*(_SUPERTABLE(w))->setScope)(w, ip))
+#define SUPER_SKIPSCOPE(w, bp, l)       ((*(_SUPERTABLE(w))->skipScope)(w, bp, l))
+#define SUPER_LOCATE(w, b)              ((*(_SUPERTABLE(w))->locate)(w, b))
 
 
 /* Miscellaneous */
 
-#define SUPER_COMPILE(w, bp)            ((*(SUPERTABLE)->compile)(w, bp))
-#define SUPER_ERROR(w, ip)              ((*(SUPERTABLE)->error)(w, ip))
-#define SUPER_EVALBLOCK(w, v)           ((*(SUPERTABLE)->evalBlock)(w, v))
+#define SUPER_COMPILE(w, bp)            ((*(_SUPERTABLE(w))->compile)(w, bp))
+#define SUPER_ERROR(w, ip)              ((*(_SUPERTABLE(w))->error)(w, ip))
+#define SUPER_EVALBLOCK(w, v)           ((*(_SUPERTABLE(w))->evalBlock)(w, v))
 
 
 /* Network operations */
 
-#define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
-#define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
-#define SUPER_LOCK(w, sp)               ((*(SUPERTABLE)->lock)(w, sp))
-#define SUPER_UNLOCK(w, i)              ((*(SUPERTABLE)->unlock)(w, i))
+#define SUPER_GETLOCKS(w, g)            ((*(_SUPERTABLE(w))->info)(w, DBI_GETLOCKARRAY, g))
+#define SUPER_RAWLOCK(w, i, l)          ((*(_SUPERTABLE(w))->rawlock)(w, i, l))
+#define SUPER_LOCK(w, sp)               ((*(_SUPERTABLE(w))->lock)(w, sp))
+#define SUPER_UNLOCK(w, i)              ((*(_SUPERTABLE(w))->unlock)(w, i))
 
 
 /* Memofile functions */
 
-#define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
-#define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
-#define SUPER_GETVALUEFILE(w,i,bp,u)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,u))
-#define SUPER_OPENMEMFILE(w,bp)         ((*(SUPERTABLE)->openMemFile)(w,bp))
-#define SUPER_PUTVALUEFILE(w,i,bp,u)    ((*(SUPERTABLE)->putValueFile)(w,i,bp,u))
+#define SUPER_CLOSEMEMFILE(w)           ((*(_SUPERTABLE(w))->closeMemFile)(w))
+#define SUPER_CREATEMEMFILE(w,bp)       ((*(_SUPERTABLE(w))->createMemFile)(w,bp))
+#define SUPER_GETVALUEFILE(w,i,bp,u)    ((*(_SUPERTABLE(w))->getValueFile)(w,i,bp,u))
+#define SUPER_OPENMEMFILE(w,bp)         ((*(_SUPERTABLE(w))->openMemFile)(w,bp))
+#define SUPER_PUTVALUEFILE(w,i,bp,u)    ((*(_SUPERTABLE(w))->putValueFile)(w,i,bp,u))
 
 
 /* Database file header handling */
 
-#define SUPER_READDBHEADER(w)           ((*(SUPERTABLE)->readDBHeader)(w))
-#define SUPER_WRITEDBHEADER(w)          ((*(SUPERTABLE)->writeDBHeader)(w))
+#define SUPER_READDBHEADER(w)           ((*(_SUPERTABLE(w))->readDBHeader)(w))
+#define SUPER_WRITEDBHEADER(w)          ((*(_SUPERTABLE(w))->writeDBHeader)(w))
 
 
 /* Info operations */
 
-#define SUPER_RECSIZE(w, lp)            ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
-#define SUPER_HEADERSIZE(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))
-#define SUPER_LUPDATE(w, fp)            ((*(SUPERTABLE)->info)(w, DBI_LASTUPDATE, fp ))
-#define SUPER_SETDELIM(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
-#define SUPER_GETDELIM(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
-#define SUPER_TABLEEXT(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
+#define SUPER_RECSIZE(w, lp)            ((*(_SUPERTABLE(w))->info)(w, DBI_GETRECSIZE, lp))
+#define SUPER_HEADERSIZE(w, fp)         ((*(_SUPERTABLE(w))->info)(w, DBI_GETHEADERSIZE, fp))
+#define SUPER_LUPDATE(w, fp)            ((*(_SUPERTABLE(w))->info)(w, DBI_LASTUPDATE, fp ))
+#define SUPER_SETDELIM(w, fp)           ((*(_SUPERTABLE(w))->info)(w, DBI_SETDELIMITER, fp))
+#define SUPER_GETDELIM(w, fp)           ((*(_SUPERTABLE(w))->info)(w, DBI_GETDELIMITER, fp))
+#define SUPER_TABLEEXT(w, fp)           ((*(_SUPERTABLE(w))->info)(w, DBI_TABLEEXT, fp))
 
 /* non WorkArea functions */
-#define SUPER_INIT(r)                   ((*(SUPERTABLE)->init)(r))
-#define SUPER_EXIT(r)                   ((*(SUPERTABLE)->exit)(r))
-#define SUPER_DROP(r, it, ii)           ((*(SUPERTABLE)->drop)(r, it, ii))
-#define SUPER_EXISTS(r, it, ii)         ((*(SUPERTABLE)->exists)(r, it, ii))
-#define SUPER_RDDINFO(r, i, l, g)       ((*(SUPERTABLE)->rddInfo)(r, i, l, g))
+#define SUPER_INIT(r)                   ((*(__SUPERTABLE(r))->init)(r))
+#define SUPER_EXIT(r)                   ((*(__SUPERTABLE(r))->exit)(r))
+#define SUPER_DROP(r, it, ii)           ((*(__SUPERTABLE(r))->drop)(r, it, ii))
+#define SUPER_EXISTS(r, it, ii)         ((*(__SUPERTABLE(r))->exists)(r, it, ii))
+#define SUPER_RDDINFO(r, i, l, g)       ((*(__SUPERTABLE(r))->rddInfo)(r, i, l, g))
 
-#define ISSUPER_INIT(r)                 ((SUPERTABLE)->init != NULL)
-#define ISSUPER_EXIT(r)                 ((SUPERTABLE)->exit != NULL)
+#define ISSUPER_INIT(r)                 ((__SUPERTABLE(r))->init != NULL)
+#define ISSUPER_EXIT(r)                 ((__SUPERTABLE(r))->exit != NULL)
 
 /*
  *  PROTOTYPES
@@ -1121,7 +1131,7 @@ typedef RDDNODE * LPRDDNODE;
 extern HB_EXPORT int       hb_rddRegister( char * szDriver, USHORT uiType );
 extern HB_EXPORT ERRCODE   hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
 extern HB_EXPORT LPRDDNODE hb_rddGetNode( USHORT uiNode );
-#if 0  
+#if 0
 extern HB_EXPORT ERRCODE   hb_rddDisinherit( BYTE * drvName );
 extern HB_EXPORT USHORT    hb_rddExtendType( HB_TYPE fieldType );
 extern HB_EXPORT HB_TYPE   hb_rddFieldType( USHORT extendType );

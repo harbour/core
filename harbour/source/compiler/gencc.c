@@ -974,11 +974,11 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
 
    HB_GENC_LABEL();
 
-   iSkip = hb_gencc_checkNumAhead( lVal, pFunc, lPCodePos + 9, cargo );
+   iSkip = hb_gencc_checkNumAhead( llVal, pFunc, lPCodePos + 9, cargo );
 
    if( iSkip == 0 )
    {
-      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) lVal );
+      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) llVal );
    }
    return 9 + iSkip;
 #else

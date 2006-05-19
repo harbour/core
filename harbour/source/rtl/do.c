@@ -58,10 +58,14 @@
 
 /* NOTE: DO() as a function is a Harbour extension. [vszakats] */
 
+/* NOTE: use hb_stackItemFromBase( uiParam ) instead of
+ *       hb_param( uiParam, HB_IT_ANY ) to keep references to
+ *       parameters passed by refeence. [druzus]
+ */
+
 HB_FUNC( DO )
 {
    USHORT uiPCount = hb_pcount();
-   USHORT uiParam;
 
    if( uiPCount > 0 )
    {
@@ -101,8 +105,9 @@ HB_FUNC( DO )
 
    if( uiPCount > 0 )
    {
+      USHORT uiParam;
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
       hb_vmDo( uiPCount - 1 );
    }
    else

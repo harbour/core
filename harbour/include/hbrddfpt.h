@@ -108,6 +108,7 @@ HB_EXTERN_BEGIN
 #define FPTIT_TEXT         0x0001      /* Text    */
 #define FPTIT_OBJ          0x0002      /* Object  */
 
+#define FPTIT_SIX_NIL      0x0000      /* NIL VALUE (USED ONLY IN ARRAYS) */
 #define FPTIT_SIX_LNUM     0x0002      /* LONG LE */
 #define FPTIT_SIX_DNUM     0x0008      /* DOUBLE LE */
 #define FPTIT_SIX_LDATE    0x0020      /* DATE (LONG LE) */

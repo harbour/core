@@ -184,9 +184,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             fprintf( yyc, "{ \"%s\", {", pSym->szName );
 
             if( pSym->cScope & HB_FS_STATIC )
-            {
                fprintf( yyc, "HB_FS_STATIC" );
-            }
+
             else if( pSym->cScope & HB_FS_INIT )
                fprintf( yyc, "HB_FS_INIT" );
 
@@ -199,10 +198,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             if( pSym->cScope & VS_MEMVAR )
                fprintf( yyc, " | HB_FS_MEMVAR" );
 
-            if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
+            if( pSym->cScope & HB_FS_MESSAGE )
                fprintf( yyc, " | HB_FS_MESSAGE" );
 
-            if ( ( pSym->cScope & HB_FS_FIRST ) &&  ( ! hb_comp_bNoStartUp ) )
+            if( ( pSym->cScope & HB_FS_FIRST ) &&  ( ! hb_comp_bNoStartUp ) )
                fprintf( yyc, " | HB_FS_FIRST" );
 
             /* specify the function address if it is a defined function or an

@@ -1761,6 +1761,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          }
          break;
       default:
+         HB_PUT_LE_UINT16( &(*bBufPtr)[0], FPTIT_SIX_NIL );
          *bBufPtr += SIX_ITEM_BUFSIZE;
          break;
    }
@@ -1842,6 +1843,10 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
                }
             }
             ulLen = 0;
+            break;
+
+         case FPTIT_SIX_NIL:
+            hb_itemClear( pItem );
             break;
 
          default:
@@ -2936,17 +2941,25 @@ static ERRCODE hb_fptPutMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    }
    else if( pArea->uiMemoVersion == DB_MEMOVER_SIX )
    {
-      ulSize = hb_fptCountSixItemLength( pArea, pItem, &ulArrayCount );
-      if ( ulSize > 0 )
+      if( HB_IS_NIL( pItem ) )
       {
-         bBufPtr = bBufAlloc = ( BYTE * ) hb_xgrab( ulSize );
-         hb_fptStoreSixItem( pArea, pItem, &bBufPtr );
-         ulType = ( ULONG ) HB_GET_LE_UINT16( bBufAlloc );
-         bBufPtr = bBufAlloc;
+         ulType = FPTIT_SIX_NIL;
+         ulSize = 0;
       }
       else
       {
-         return EDBF_DATATYPE;
+         ulSize = hb_fptCountSixItemLength( pArea, pItem, &ulArrayCount );
+         if ( ulSize > 0 )
+         {
+            bBufPtr = bBufAlloc = ( BYTE * ) hb_xgrab( ulSize );
+            hb_fptStoreSixItem( pArea, pItem, &bBufPtr );
+            ulType = ( ULONG ) HB_GET_LE_UINT16( bBufAlloc );
+            bBufPtr = bBufAlloc;
+         }
+         else
+         {
+            return EDBF_DATATYPE;
+         }
       }
    }
    else if ( pArea->uiMemoVersion == DB_MEMOVER_FLEX )

@@ -8,6 +8,79 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-05-23 14:21 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/whatsnew.txt
+     + Add information about the upcoming alpha build 46.
+
+   * doc/en/compiler.txt
+     + Add a line for -gc3 switch.
+
+   * source/compiler/hbusage.c
+     + Add a line for -gc3 switch.
+     * Bumped the copyright year from 2005 to 2006.
+
+2006-05-19 21:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * added support -go[0-3] and other -g* switches to xhb* scripts
+
+  * harbour/include/hbapi.h
+    + added ISSYMBOL() macro
+    * formatting
+
+  * harbour/include/hbapirdd.h
+    * changed definition of SUPERTABLE for optional dynamic overloading
+      this modification will not effect existing code
+
+  * harbour/include/hbrddfpt.h
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * added support for NIL value in SIX3 FPT files
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genjava.c
+    ! message symbols are not function symbols - cleaned the HB_FS_MESSAGE
+      usage and fix the problem with registering static function in global
+      symbol table
+
+  * harbour/source/compiler/gencc.c
+    ! fixed typo in compilation for platforms 64 bit LONG
+
+  * harbour/include/hbvmpub.h
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/vm/asort.c
+  * harbour/source/vm/evalhb.c
+    * formatting
+
+  * harbour/source/rdd/dbcmd.c
+    * formatting and some minor clean-up
+
+  * harbour/source/rdd/workarea.c
+    * added default SYSNAME method
+    ! fixed possible memory leak when APPEND failed in TRANSREC method
+
+  * harbour/source/rdd/hsx/hsx.c
+    ! fixed using HS_ADD()/HS_REPLACE() without STRING/BLOCK expression
+
+  * harbour/source/rtl/cdpapi.c
+    * cleaned GCC4 warning
+
+  * harbour/source/rtl/do.c
+    * changed to keep parameter references in DO() function. Now it works
+      like IIF()/EVAL()
+
+  * harbour/source/vm/classes.c
+    * removed some definitions repared from hbapi.h
+    + added support to passing function references as HB_IT_SYMBOL
+
+  * harbour/source/vm/dynlibhb.c
+    ! fixed GPF in HB_LIBDO called with wrong parameter
+
+  * harbour/source/vm/hvm.c
+    ! fixed hb_rddGetFieldValue() to not operate on unallocated stack area
 2006-05-14 09:36 UTC+0200 Chen Kedem <niki@actcom.co.il>
       for evaluation some pending relations. The whole code should be
       carefully checked and to not operate on hb_stackTopItem() if other

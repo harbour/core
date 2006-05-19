@@ -253,8 +253,9 @@ while [ \$n -lt \${#P[@]} ]; do
         -l[^-]*)     HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
         -L[^-]*)     HB_USRLPATH="\${HB_USRLPATH} \${v}" ;;
         -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
-        -gc|-gc[0-9]) HB_GEN="C"; p="\${v}" ;;
-        -gh)         HB_GEN="H"; p="\${v}" ;;
+        -g[cohwij])  HB_GEN="\${v#-g}"; p="\${v}" ;;
+        -gc[0-9])    HB_GEN="c"; p="\${v}" ;;
+        -go[0-9])    HB_GEN="o"; p="\${v}" ;;
         -*)          p="\${v}" ;;
         *)           [ -z \${FILEOUT} ] && FILEOUT="\${v##*/}"; p="\${v}" ;;
     esac
@@ -413,10 +414,10 @@ hb_cc()
 hb_cmp()
 {
     ${hb_cmpname} "\$@" \${HB_OPT} \${HB_PATHS} && \\
-    ( [ "\${HB_GEN}" = "H" ] || \\
+    ( [ "\${HB_GEN//c/}" != "" ] || \\
     ( [ -f "\${FOUTC}" ] && \\
     hb_cc -c "\${FOUTC}" -o "\${FOUTO}" && \\
-    ( [ "\${HB_GEN}" = "C" ] || rm -f "\${FOUTC}" ) ) )
+    ( [ "\${HB_GEN}" = "c" ] || rm -f "\${FOUTC}" ) ) )
 }
 
 hb_link()

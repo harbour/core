@@ -3066,10 +3066,10 @@ void hb_compGenVarPCode( BYTE bPCode, char * szVarName )
 void hb_compGenMessage( char * szMsgName )       /* sends a message to an object */
 {
    USHORT wSym;
-   PCOMSYMBOL pSym = hb_compSymbolFind( szMsgName, &wSym, HB_SYM_FUNCNAME );
+   PCOMSYMBOL pSym = hb_compSymbolFind( szMsgName, &wSym, HB_SYM_MSGNAME );
 
    if( ! pSym )  /* the symbol was not found on the symbol table */
-      pSym = hb_compSymbolAdd( szMsgName, &wSym, HB_SYM_FUNCNAME );
+      pSym = hb_compSymbolAdd( szMsgName, &wSym, HB_SYM_MSGNAME );
    pSym->cScope |= HB_FS_MESSAGE;
    hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
 }

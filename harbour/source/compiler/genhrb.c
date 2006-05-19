@@ -82,22 +82,16 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    {
       fputs( pSym->szName, yyc );
       fputc( 0, yyc );
-      if( pSym->cScope != HB_FS_MESSAGE )
-         fputc( pSym->cScope, yyc );
-      else
-         fputc( 0, yyc );
+      fputc( pSym->cScope, yyc );
 
       /* specify the function address if it is a defined function or a
          external called function */
       if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
          fputc( SYM_FUNC, yyc );
+      else if( hb_compFunCallFind( pSym->szName ) )
+         fputc( SYM_EXTERN, yyc );
       else
-      {
-         if( hb_compFunCallFind( pSym->szName ) )
-            fputc( SYM_EXTERN, yyc );
-         else
-            fputc( SYM_NOLINK, yyc );
-      }
+         fputc( SYM_NOLINK, yyc );
       pSym = pSym->pNext;
    }
 

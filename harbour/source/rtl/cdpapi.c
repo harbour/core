@@ -538,7 +538,7 @@ HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp,
                                   BYTE * pDst, ULONG ulDst )
 {
    ULONG ulS, ulD;
-   USHORT uc;
+   USHORT uc = 0;
    int n = 0;
 
    for( ulS = ulD = 0; ulS < ulSrc; ++ulS )

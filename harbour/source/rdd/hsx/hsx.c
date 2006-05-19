@@ -1673,7 +1673,7 @@ HB_FUNC( HS_INDEX )
                           hb_parni( 7 ) ) );
 }
 
-/* hs_Add( <hIndex>, <xExpr>, [lDel] ) -> nVal >= 1 (RECNO), nVal < 0 (ERROR CODE)
+/* hs_Add( <hIndex>, [<xExpr>], [lDel] ) -> nVal >= 1 (RECNO), nVal < 0 (ERROR CODE)
    Adds a text string entry to a HiPer-SEEK index file */
 HB_FUNC( HS_ADD )
 {
@@ -1683,7 +1683,8 @@ HB_FUNC( HS_ADD )
       int iRetVal;
 
       iRetVal = hb_hsxAdd( hb_parni( 1 ), &ulRecNo,
-                           hb_param( 2, HB_IT_ANY ), hb_parl( 3 ) );
+                           hb_param( 2, HB_IT_BLOCK | HB_IT_STRING ),
+                           hb_parl( 3 ) );
 
       if ( iRetVal == HSX_SUCCESS )
          hb_retnint( ulRecNo );
@@ -1694,13 +1695,14 @@ HB_FUNC( HS_ADD )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_Replace( <hIndex>, <xExpr>, <nRecNo>, [lDel] ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Replace( <hIndex>, [<xExpr>], <nRecNo>, [lDel] ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Replaces current HiPer-SEEK index entry with a new value */
 HB_FUNC( HS_REPLACE )
 {
    if ( hb_param( 1, HB_IT_NUMERIC ) && hb_param( 3, HB_IT_NUMERIC ) )
       hb_retni( hb_hsxReplace( hb_parni( 1 ), hb_parnl( 3 ), 
-                               hb_param( 2, HB_IT_ANY ), hb_parl( 4 ) ) );
+                               hb_param( 2, HB_IT_BLOCK | HB_IT_STRING ),
+                               hb_parl( 4 ) ) );
    else
       hb_retni( HSX_BADPARMS );
 }
@@ -1847,7 +1849,8 @@ HB_FUNC( HS_FILTER )
          else
          {
             iResult = hb_hsxFilter( iHandle, szText, ulLen,
-                                 hb_param( 3, HB_IT_ANY ), HSX_VERIFY_PHRASE );
+                                    hb_param( 3, HB_IT_ANY ),
+                                    HSX_VERIFY_PHRASE );
          }
       }
       if ( iResult == HSX_SUCCESS )

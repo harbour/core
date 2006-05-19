@@ -402,7 +402,7 @@ HB_EXPORT int hb_rddRegister( char * szDriver, USHORT uiType )
    memset( pRddNewNode, 0, sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
-   strncat( pRddNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   hb_strncpy( pRddNewNode->szName, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
    pRddNewNode->uiType = uiType;
    pRddNewNode->rddID = s_uiRddMax;
 
@@ -606,7 +606,7 @@ static AREAP hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
 {
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddNewAreaNode(%p %d)", pRddNode, uiRddID));
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddNewAreaNode(%p,%hu)", pRddNode, uiRddID));
 
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
@@ -615,6 +615,7 @@ static AREAP hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
       pArea = ( AREAP ) hb_xgrab( sizeof( AREA ) );
       memset( pArea, 0, sizeof( AREA ) );
       pArea->lprfsHost = &pRddNode->pTable;
+      pArea->rddID = uiRddID;
 
       /* Need more space? */
       SELF_STRUCTSIZE( pArea, &uiSize );
@@ -623,6 +624,7 @@ static AREAP hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
          pArea = ( AREAP ) hb_xrealloc( pArea, uiSize );
          memset( pArea, 0, uiSize );
          pArea->lprfsHost = &pRddNode->pTable;
+         pArea->rddID = uiRddID;
       }
 
       pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
@@ -632,9 +634,9 @@ static AREAP hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
       pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
       memset( pArea, 0, pRddNode->uiAreaSize );
       pArea->lprfsHost = &pRddNode->pTable;
+      pArea->rddID = uiRddID;
    }
 
-   pArea->rddID = uiRddID;
    SELF_NEW( pArea );
 
    return pArea;
@@ -869,8 +871,8 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( char *szDriver )
    }
    s_WaList[ uiWaPos ] = hb_rddNewAreaNode( pRddNode, uiRddID );
    s_WaNums[ s_uiCurrArea ] = uiWaPos;
-   s_WaList[ uiWaPos ]->uiArea = s_uiCurrArea;
    s_pCurrArea = s_WaList[ uiWaPos ];
+   s_pCurrArea->uiArea = s_uiCurrArea;
 
    UNLOCK_AREA
 
@@ -1878,7 +1880,7 @@ HB_FUNC( __DBLOCATE )
    dbScopeInfo.fIncludeDeleted   = TRUE;
    dbScopeInfo.fLast             = FALSE;
    dbScopeInfo.fIgnoreDuplicates = FALSE;
-   dbScopeInfo.fBackword         = FALSE;
+   dbScopeInfo.fBackward         = FALSE;
 
    if ( SELF_SETLOCATE( pArea, &dbScopeInfo ) == SUCCESS )
    {
@@ -2188,7 +2190,7 @@ HB_FUNC( DBTABLEEXT )
       if( pRddNode )
       {
          pArea = hb_rddNewAreaNode( pRddNode, uiRddID );
-         if ( pArea )
+         if( pArea )
          {
             SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
             SELF_RELEASE( pArea );
@@ -2596,7 +2598,7 @@ HB_FUNC( ORDBAGEXT )
       if( pRddNode )
       {
          pArea = hb_rddNewAreaNode( pRddNode, uiRddID );
-         if ( pArea )
+         if( pArea )
          {
             SELF_ORDINFO( pArea, DBOI_BAGEXT, &pInfo );
             SELF_RELEASE( pArea );
@@ -2619,9 +2621,9 @@ HB_FUNC( ORDBAGNAME )
 
    if( pArea )
    {
-      if ( ISNUM(1) || ISNIL(1) )
+      if( ISNUM(1) || ISNIL(1) )
       {
-         if ( hb_parni(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
+         if( hb_parni(1) == 0 || ISNIL(1) )          /* if NIL or ask for 0, use current order  */
             pOrderInfo.itmOrder  = NULL;
          else
             pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
@@ -3782,7 +3784,7 @@ HB_FUNC( __DBARRANGE )
       dbSortInfo.dbtri.dbsci.fIgnoreFilter =
       dbSortInfo.dbtri.dbsci.fLast =
       dbSortInfo.dbtri.dbsci.fIgnoreDuplicates =
-      dbSortInfo.dbtri.dbsci.fBackword = FALSE;
+      dbSortInfo.dbtri.dbsci.fBackward = FALSE;
       dbSortInfo.dbtri.dbsci.fIncludeDeleted = TRUE;
 
       pFields = hb_param( 8, HB_IT_ARRAY );
@@ -4339,7 +4341,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.fIncludeDeleted   = TRUE;
       dbTransInfo.dbsci.fLast             = FALSE;
       dbTransInfo.dbsci.fIgnoreDuplicates = FALSE;
-      dbTransInfo.dbsci.fBackword         = FALSE;
+      dbTransInfo.dbsci.fBackward         = FALSE;
 
       errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
    }

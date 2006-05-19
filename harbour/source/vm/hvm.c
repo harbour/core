@@ -186,7 +186,7 @@ static void    hb_vmPushHBLong( HB_LONG lNumber ); /* pushes a HB_LONG number on
 static void    hb_vmPushIntegerConst( int iNumber );  /* Pushes a int constant (pcode) */
 #endif
 static void    hb_vmPushNumInt( HB_LONG lNumber );     /* pushes a number on to the stack and decides if it is integer or HB_LONG */
-extern void    hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 ); /* pushes a number on to the stack and decides if it is integer, long or double */
+static void    hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 ); /* pushes a number on to the stack and decides if it is integer, long or double */
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
 static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
@@ -213,9 +213,6 @@ static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS f
 static void    hb_vmDoInitFunctions( void );      /* executes all defined PRGs INIT functions */
 static void    hb_vmDoExitFunctions( void );      /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
-
-extern void * hb_mthRequested( void ); /* profiler from classes.c */
-extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
 BOOL hb_bProfiler = FALSE; /* profiler status is off */
 BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
@@ -1418,8 +1415,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHFIELD:
             /* It pushes the current value of the given field onto the eval stack
              */
-            hb_rddGetFieldValue( ( hb_stackTopItem() ), pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
             hb_stackPush();
+            hb_rddGetFieldValue( hb_stackItemFromTop( -1 ), pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPushField)"));
             w += 3;
             break;
@@ -1831,8 +1828,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
             /* It pushes the current value of the given field onto the eval stack
             */
-            hb_rddGetFieldValue( ( hb_stackTopItem() ), pDynSym->pSymbol );
             hb_stackPush();
+            hb_rddGetFieldValue( hb_stackItemFromTop( -1 ), pDynSym->pSymbol );
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;
@@ -2612,8 +2609,11 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
 
    if( HB_IS_SYMBOL( pItem ) )
    {
+      /* do nothing when we will begin to use HB_IT_SYMBOL */
+#if 1
       hb_stackPop();
       hb_vmPushPointer( ( void* ) pItem->item.asSymbol.value->value.pFunPtr );
+#endif
    }
    else
       hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmFuncPtr()", NULL );
@@ -4144,7 +4144,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    PHB_FUNC pFunc = NULL;
    BOOL bDebugPrevState;
    ULONG ulClock = 0;
-   void *pMethod = NULL;
+   void * pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
    BOOL bNotHandled = TRUE;
 
@@ -4153,8 +4153,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    /*
    printf( "\n VmSend nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
-
    s_ulProcLevel++;
+
    if( hb_vm_iExtraParamsIndex &&
        HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) &&
        pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
@@ -4163,9 +4163,13 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    }
 
    if( bProfiler )
-   {
       ulClock = ( ULONG ) clock();
-   }
+
+   /* Poll the console keyboard
+   #ifndef HB_GUI
+      hb_inkeyPoll();
+   #endif
+   */
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );   /* procedure name */
    pSym = pItem->item.asSymbol.value;
@@ -4173,16 +4177,14 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
 
-   /* printf( "Symbol: '%s'\n", pSym->szName ); */
-
-   if( HB_IS_BYREF(pSelf) )
+   if( HB_IS_BYREF( pSelf ) )
    {
       /* method of enumerator variable from FOR EACH statement
       */
       HB_ITEM_PTR pRef;
       
       pRef = hb_itemUnRefRefer( pSelf );
-      if( HB_IS_BYREF(pRef) && pRef->item.asRefer.offset < 0 && pRef->item.asRefer.value >= 0 )
+      if( HB_IS_BYREF( pRef ) && pRef->item.asRefer.offset < 0 && pRef->item.asRefer.value >= 0 )
       {
          if( pSym->pDynSym == hb_symEnumIndex.pDynSym )
          {
@@ -4196,7 +4198,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
          }
          else if( pSym->pDynSym == hb_symEnumValue.pDynSym )
          {
-            hb_itemCopy( &hb_stack.Return, hb_itemUnRefOnce(pRef) );
+            hb_itemCopy( &hb_stack.Return, hb_itemUnRefOnce( pRef ) );
             bNotHandled = FALSE;
          }
       }
@@ -4207,7 +4209,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
       if( pFunc )
       {
-         if( bProfiler && pSym->pDynSym ) {
+         if( bProfiler && pSym->pDynSym )
+         {
             pSym->pDynSym->ulRecurse++;
          }
 
@@ -4221,12 +4224,14 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
             pSym->pDynSym->ulCalls++;                   /* profiler support */
 
             /* Time spent has to be added only inside topmost call of a recursive function */
-            if ( pSym->pDynSym->ulRecurse == 1 ) {
+            if( pSym->pDynSym->ulRecurse == 1 )
+            {
                pSym->pDynSym->ulTime += clock() - ulClock; /* profiler support */
             }
          }
 
-         if( bProfiler && pSym->pDynSym ) {
+         if( bProfiler && pSym->pDynSym )
+         {
             pSym->pDynSym->ulRecurse--;
          }
       }
@@ -4256,8 +4261,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    if( bNotHandled )
    {
-      PHB_BASEARRAY pSelfBase = NULL;
       BOOL lPopSuper = FALSE;
+      PHB_BASEARRAY pSelfBase = NULL;
 
       if( HB_IS_BLOCK( pSelf ) )
       {
@@ -4731,9 +4736,9 @@ HB_EXPORT void hb_vmPushNumber( double dNumber, int iDec )
    hb_vmPushNumType( dNumber, iDec, 0, 0 );
 }
 
-HB_EXPORT void hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
+static void hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNumber(%lf, %d)", dNumber, iDec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNumType(%lf, %d)", dNumber, iDec));
 
    if( iDec || iType1 & HB_IT_DOUBLE || iType2 & HB_IT_DOUBLE )
       hb_vmPushDouble( dNumber, iDec );
@@ -5239,7 +5244,7 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
        * is stored can be no longer placed on the eval stack at the time
        * of a codeblock evaluation or variable access
       */
-      pTop->item.asRefer.BasePtr.block = (hb_stackSelfItem())->item.asBlock.value;
+      pTop->item.asRefer.BasePtr.block = hb_stackSelfItem()->item.asBlock.value;
    }
    hb_stackPush();
 }
@@ -6384,8 +6389,8 @@ HB_EXPORT BOOL hb_xvmPushField( PHB_SYMB pSymbol )
 {
    HB_TRACE(HB_TR_INFO, ("hb_xvmPushField(%p)", pSymbol));
 
-   hb_rddGetFieldValue( hb_stackTopItem(), pSymbol );
    hb_stackPush();
+   hb_rddGetFieldValue( hb_stackItemFromTop( -1 ), pSymbol );
 
    HB_XVM_RETURN
 }
@@ -6899,7 +6904,7 @@ HB_EXPORT void hb_xvmArrayGen( ULONG ulElements )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayGen(%lu)", ulElements));
 
-   hb_vmArrayGen( ulElements );
+   hb_vmArrayGen( ulElements + hb_vm_iExtraElements );
    hb_vm_iExtraElements = 0;
 }
 

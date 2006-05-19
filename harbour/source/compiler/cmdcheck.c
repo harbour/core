@@ -477,143 +477,143 @@ void hb_compChkEnvironVar( char * szSwitch )
          s++;
          switch( *s )
          {
-             case 'a':
-             case 'A':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bAutoMemvarAssume = FALSE;
-                else
-                   hb_comp_bAutoMemvarAssume = TRUE;
-                break;
+            case 'a':
+            case 'A':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bAutoMemvarAssume = FALSE;
+               else
+                  hb_comp_bAutoMemvarAssume = TRUE;
+               break;
 
-             case 'b':
-             case 'B':
-                {
-                   unsigned int i = 0;
-                   char * szOption = hb_strupr( hb_strdup( s ) );
-                   while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
-                      i++;
-                   szOption[ i ] = '\0';
+            case 'b':
+            case 'B':
+               {
+                  unsigned int i = 0;
+                  char * szOption = hb_strupr( hb_strdup( s ) );
+                  while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
+                     i++;
+                  szOption[ i ] = '\0';
 
-                   if( strcmp( szOption, "BUILD" ) == 0 )
-                      hb_comp_bBuildInfo = TRUE;
-                   else
-                   {
-                      if( *( s + 1 ) == '-' )
-                         hb_comp_bDebugInfo = FALSE;
-                      else
-                      {
-                         hb_comp_bDebugInfo = TRUE;
-                         hb_comp_bLineNumbers = TRUE;
-                      }
-                   }
+                  if( strcmp( szOption, "BUILD" ) == 0 )
+                     hb_comp_bBuildInfo = TRUE;
+                  else
+                  {
+                     if( *( s + 1 ) == '-' )
+                        hb_comp_bDebugInfo = FALSE;
+                     else
+                     {
+                        hb_comp_bDebugInfo = TRUE;
+                        hb_comp_bLineNumbers = TRUE;
+                     }
+                  }
 
-                   hb_xfree( szOption );
-                }
-                break;
+                  hb_xfree( szOption );
+               }
+               break;
 
-             case 'c':
-             case 'C':
-                {
-                   unsigned int i = 0;
-                   char * szOption = hb_strupr( hb_strdup( s ) );
-                   while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
-                      i++;
-                   szOption[ i ] = '\0';
+            case 'c':
+            case 'C':
+               {
+                  unsigned int i = 0;
+                  char * szOption = hb_strupr( hb_strdup( s ) );
+                  while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[ i ] ) )
+                     i++;
+                  szOption[ i ] = '\0';
 
-                   if( strcmp( szOption, "CREDITS" ) == 0 ||
-                       strcmp( szOption, "CREDIT" ) == 0 ||
-                       strcmp( szOption, "CREDI" ) == 0 ||
-                       strcmp( szOption, "CRED" ) == 0 )
-                      hb_comp_bCredits = TRUE;
-                   else
-                      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
+                  if( strcmp( szOption, "CREDITS" ) == 0 ||
+                      strcmp( szOption, "CREDIT" ) == 0 ||
+                      strcmp( szOption, "CREDI" ) == 0 ||
+                      strcmp( szOption, "CRED" ) == 0 )
+                     hb_comp_bCredits = TRUE;
+                  else
+                     hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
 
-                   hb_xfree( szOption );
-                }
-                break;
+                  hb_xfree( szOption );
+               }
+               break;
 
-             case 'd':
-             case 'D':
-                /* NOTE: Ignore these -d switches will be processed separately */
-                break;
+            case 'd':
+            case 'D':
+               /* NOTE: Ignore these -d switches will be processed separately */
+               break;
 
-             case 'e':
-             case 'E':
-                if( *( s + 1 ) == 's' || *( s + 1 ) == 'S' )
-                {
-                   switch( *( s + 2 ) )
-                   {
-                      case '\0':
-                      case '0':
-                         hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT;
-                         break;
+            case 'e':
+            case 'E':
+               if( *( s + 1 ) == 's' || *( s + 1 ) == 'S' )
+               {
+                  switch( *( s + 2 ) )
+                  {
+                     case '\0':
+                     case '0':
+                        hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT;
+                        break;
 
-                      case '1':
-                         hb_comp_iExitLevel = HB_EXITLEVEL_SETEXIT;
-                         break;
+                     case '1':
+                        hb_comp_iExitLevel = HB_EXITLEVEL_SETEXIT;
+                        break;
 
-                      case '2':
-                         hb_comp_iExitLevel = HB_EXITLEVEL_DELTARGET;
-                         break;
+                     case '2':
+                        hb_comp_iExitLevel = HB_EXITLEVEL_DELTARGET;
+                        break;
 
-                      default:
-                         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                   }
-                }
-                else
-                   hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                     default:
+                        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                  }
+               }
+               else
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
 
-                break;
+               break;
 
-             case 'g':
-             case 'G':
-                switch( *( s + 1 ) )
-                {
-                   case 'c':
-                   case 'C':
-                      hb_comp_iLanguage = LANG_C;
+            case 'g':
+            case 'G':
+               switch( *( s + 1 ) )
+               {
+                  case 'c':
+                  case 'C':
+                     hb_comp_iLanguage = LANG_C;
 
-                      switch( *( s + 2 ) )
-                      {
-                         case '3':
-                            hb_comp_iGenCOutput = HB_COMPGENC_REALCODE;
-                            break;
+                     switch( *( s + 2 ) )
+                     {
+                        case '3':
+                           hb_comp_iGenCOutput = HB_COMPGENC_REALCODE;
+                           break;
 
-                         case '\0':
-                         case '2':
-                            hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE;
-                            break;
+                        case '\0':
+                        case '2':
+                           hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE;
+                           break;
 
-                         case '1':
-                            hb_comp_iGenCOutput = HB_COMPGENC_NORMAL;
-                            break;
+                        case '1':
+                           hb_comp_iGenCOutput = HB_COMPGENC_NORMAL;
+                           break;
 
-                         case '0':
-                            hb_comp_iGenCOutput = HB_COMPGENC_COMPACT;
-                            break;
+                        case '0':
+                           hb_comp_iGenCOutput = HB_COMPGENC_COMPACT;
+                           break;
 
-                         default:
-                            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                      }
-                      break;
+                        default:
+                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                     }
+                     break;
 
-                   case 'j':
-                   case 'J':
-                      hb_comp_iLanguage = LANG_JAVA;
-                      break;
+                  case 'j':
+                  case 'J':
+                     hb_comp_iLanguage = LANG_JAVA;
+                     break;
 
-                   case 'h':
-                   case 'H':
-                      hb_comp_iLanguage = LANG_PORT_OBJ;
-                      break;
+                  case 'h':
+                  case 'H':
+                     hb_comp_iLanguage = LANG_PORT_OBJ;
+                     break;
 
-                   case 'i':
-                   case 'I':
-                      hb_comp_iLanguage = LANG_CLI;
-                      break;
+                  case 'i':
+                  case 'I':
+                     hb_comp_iLanguage = LANG_CLI;
+                     break;
 
-                   case 'o':
-                   case 'O':
+                  case 'o':
+                  case 'O':
                      hb_comp_iLanguage = LANG_OBJ_MODULE;
                      break;
 
@@ -622,259 +622,259 @@ void hb_compChkEnvironVar( char * szSwitch )
                      hb_comp_iLanguage = LANG_OBJ32;
                      break;
 
-                   default:
-                      printf( "\nUnsupported output language option\n" );
-                      hb_compMainExit();
-                      exit( EXIT_FAILURE );
-                }
-                break;
+                  default:
+                     printf( "\nUnsupported output language option\n" );
+                     hb_compMainExit();
+                     exit( EXIT_FAILURE );
+               }
+               break;
 
                /* NOTE:
                   h or H from HELP or help
                */
-             case 'h':
-             case 'H':
-             case '?':
-                break;
+            case 'h':
+            case 'H':
+            case '?':
+               break;
 
                /* NOTE:
                   It already has support for several include files
                */
-             case 'i':
-             case 'I':
-                hb_fsAddSearchPath( s + 1, &hb_comp_pIncludePath );
-                break;
+            case 'i':
+            case 'I':
+               hb_fsAddSearchPath( s + 1, &hb_comp_pIncludePath );
+               break;
 
-             case 'k':
-             case 'K':
-                {
-                   int i = 1;
-                   while( s[ i ] )
-                   {
-                      switch( s[ i++ ] )
-                      {
-                         case '?':
-                            hb_compPrintLogo();
-                            hb_compPrintModes();
-                            hb_comp_bLogo = FALSE;
-                            hb_comp_bQuiet = TRUE;
-                            break;
+            case 'k':
+            case 'K':
+               {
+                  int i = 1;
+                  while( s[ i ] )
+                  {
+                     switch( s[ i++ ] )
+                     {
+                        case '?':
+                           hb_compPrintLogo();
+                           hb_compPrintModes();
+                           hb_comp_bLogo = FALSE;
+                           hb_comp_bQuiet = TRUE;
+                           break;
 
-                         case 'h':
-                            /* default Harbour mode */
-                            hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
-                            break;
+                        case 'h':
+                           /* default Harbour mode */
+                           hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
+                           break;
 
-                         case 'c':
-                            /* clear all flags - minimal set of features */
-                            hb_comp_Supported = HB_COMPFLAG_OPTJUMP;
-                            break;
+                        case 'c':
+                           /* clear all flags - minimal set of features */
+                           hb_comp_Supported = HB_COMPFLAG_OPTJUMP;
+                           break;
 
-                         case 'x':
-                            hb_comp_Supported |= HB_COMPFLAG_XBASE;
-                            break;
+                        case 'x':
+                           hb_comp_Supported |= HB_COMPFLAG_XBASE;
+                           break;
 
-                         case 'i':
-                            hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
-                            break;
+                        case 'i':
+                           hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
+                           break;
 
-                         case 'J':
-                            hb_comp_Supported &= ~HB_COMPFLAG_OPTJUMP;
-                            break;
+                        case 'J':
+                           hb_comp_Supported &= ~HB_COMPFLAG_OPTJUMP;
+                           break;
 
-                         case 'r':
-                            hb_comp_Supported |= HB_COMPFLAG_RT_MACRO;
-                            break;
+                        case 'r':
+                           hb_comp_Supported |= HB_COMPFLAG_RT_MACRO;
+                           break;
 
-                         case 's':
-                            hb_comp_Supported |= HB_COMPFLAG_ARRSTR;
-                            break;
+                        case 's':
+                           hb_comp_Supported |= HB_COMPFLAG_ARRSTR;
+                           break;
 
-                         default:
-                            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                            break;
-                      }
-                   }
-                }
-                break;
-
-             case 'l':
-             case 'L':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bLineNumbers = TRUE;
-                else
-                   hb_comp_bLineNumbers = FALSE;
-                break;
-
-             case 'm':
-             case 'M':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bAutoOpen = TRUE;
-                else
-                   hb_comp_bAutoOpen = FALSE;
-                break;
-
-             case 'n':
-             case 'N':
-                /*
-                   -n1 no start up procedure and no implicit start up procedure
-                */
-                if( *( s + 1 ) == '1' )
-                {
-                   hb_comp_bStartProc = FALSE;
-                   hb_comp_bNoStartUp = TRUE;
-                }
-                /*
-                   -n or -n0 no implicit start up procedure
-                */
-                else if ( ( *( s + 1 ) == '0' ) || ( *( s + 1 ) == '\0' ) )
-                   hb_comp_bStartProc = FALSE;
-                /*
-                   -n- ceates implicit start up procedure
-                */
-                else if( *( s + 1 ) == '-' )
-                   hb_comp_bStartProc = TRUE;
-                /*
-                   invalid command
-                */
-                else
-                   hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                break;
-
-             case 'o':
-             case 'O':
-                {
-                   char * szPath = hb_strdup( s + 1 );
-
-                   hb_comp_pOutPath = hb_fsFNameSplit( szPath );
-                   hb_xfree( szPath );
-                }
-                break;
-
-             /* Added for preprocessor needs */
-             case 'p':
-             case 'P':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bPPO = 0;
-                else
-                {
-                   char * szPath = hb_strdup( s + 1 );
-                   hb_comp_pPpoPath = hb_fsFNameSplit( szPath );
-                   hb_xfree( szPath );
-
-                   hb_comp_bPPO = 1;
-                }
-                break;
-
-             case 'q':
-             case 'Q':
-                if( *( s + 1 ) == '0' )
-                   hb_comp_bLogo = FALSE;
-
-                hb_comp_bQuiet = TRUE;
-                break;
-
-             case 'r':
-             case 'R':
-                if( *( s + 1 ) == '=' )
-                {
-                  int iOverflow;
-                  int iCycles = hb_strValInt( s + 2, &iOverflow );
-                  if( ! iOverflow && iCycles > 0 )
-                     hb_pp_MaxTranslateCycles = (unsigned int)iCycles;
-                }
-                else
-                {
-                  /* TODO: Implement this switch */
-                  printf( "Not yet supported command line option: %s\n", s );
-                }
-                break;
-
-             case 's':
-             case 'S':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bSyntaxCheckOnly = FALSE;
-                else
-                   hb_comp_bSyntaxCheckOnly = TRUE;
-                break;
-
-             case 't':
-             case 'T':
-                /* TODO: Implement this switch */
-                printf( "Not yet supported command line option: %s\n", s );
-                break;
-
-             case 'u':
-             case 'U':
-                if ( s[1] && toupper( s[1] ) == 'N'
-                     && s[2] && toupper( s[2] ) == 'D'
-                     && s[3] && toupper( s[3] ) == 'E'
-                     && s[4] && toupper( s[4] ) == 'F'
-                     && s[5] == ':' )
-                {
-                   /* NOTE: Ignore these -undef: switches will be processed separately */
-                   break;
-                }
-                hb_pp_STD_CH = hb_strdup( s + 1 );
-                break;
-
-             case 'v':
-             case 'V':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bForceMemvars = FALSE;
-                else
-                   hb_comp_bForceMemvars = TRUE;
-                break;
-
-             case 'w':
-             case 'W':
-                  hb_comp_iWarnings = 1;
-                  if( s[ 1 ] )
-                  {  /*there is -w<0,1,2,3> probably */
-                     hb_comp_iWarnings = s[ 1 ] - '0';
-                     if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 4 )
-                        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                        default:
+                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                           break;
+                     }
                   }
-                break;
+               }
+               break;
 
-             case 'x':
-             case 'X':
-                {
-                   unsigned int i = 0;
-                   char * szPrefix = hb_strdup( s + 1 );
-                   while( i < strlen( szPrefix ) && !HB_ISOPTSEP( szPrefix[ i ] ) )
-                      i++;
-                   szPrefix[ i ] = '\0';
+            case 'l':
+            case 'L':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bLineNumbers = TRUE;
+               else
+                  hb_comp_bLineNumbers = FALSE;
+               break;
 
-                   if( strlen( szPrefix ) == 0 )
-                      sprintf( szPrefix, "%08lX_", PackDateTime() );
+            case 'm':
+            case 'M':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bAutoOpen = TRUE;
+               else
+                  hb_comp_bAutoOpen = FALSE;
+               break;
 
-                   strncpy( hb_comp_szPrefix, szPrefix, 16 );
-                   hb_comp_szPrefix[ 16 ] = '\0';
-                   strcat( hb_comp_szPrefix, "_" );
+            case 'n':
+            case 'N':
+               /*
+                  -n1 no start up procedure and no implicit start up procedure
+               */
+               if( *( s + 1 ) == '1' )
+               {
+                  hb_comp_bStartProc = FALSE;
+                  hb_comp_bNoStartUp = TRUE;
+               }
+               /*
+                  -n or -n0 no implicit start up procedure
+               */
+               else if ( ( *( s + 1 ) == '0' ) || ( *( s + 1 ) == '\0' ) )
+                  hb_comp_bStartProc = FALSE;
+               /*
+                  -n- ceates implicit start up procedure
+               */
+               else if( *( s + 1 ) == '-' )
+                  hb_comp_bStartProc = TRUE;
+               /*
+                  invalid command
+               */
+               else
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+               break;
 
-                   hb_xfree( szPrefix );
-                }
-                break;
+            case 'o':
+            case 'O':
+               {
+                  char * szPath = hb_strdup( s + 1 );
+
+                  hb_comp_pOutPath = hb_fsFNameSplit( szPath );
+                  hb_xfree( szPath );
+               }
+               break;
+
+            /* Added for preprocessor needs */
+            case 'p':
+            case 'P':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bPPO = 0;
+               else
+               {
+                  char * szPath = hb_strdup( s + 1 );
+                  hb_comp_pPpoPath = hb_fsFNameSplit( szPath );
+                  hb_xfree( szPath );
+
+                  hb_comp_bPPO = 1;
+               }
+               break;
+
+            case 'q':
+            case 'Q':
+               if( *( s + 1 ) == '0' )
+                  hb_comp_bLogo = FALSE;
+
+               hb_comp_bQuiet = TRUE;
+               break;
+
+            case 'r':
+            case 'R':
+               if( *( s + 1 ) == '=' )
+               {
+                 int iOverflow;
+                 int iCycles = hb_strValInt( s + 2, &iOverflow );
+                 if( ! iOverflow && iCycles > 0 )
+                    hb_pp_MaxTranslateCycles = (unsigned int)iCycles;
+               }
+               else
+               {
+                 /* TODO: Implement this switch */
+                 printf( "Not yet supported command line option: %s\n", s );
+               }
+               break;
+
+            case 's':
+            case 'S':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bSyntaxCheckOnly = FALSE;
+               else
+                  hb_comp_bSyntaxCheckOnly = TRUE;
+               break;
+
+            case 't':
+            case 'T':
+               /* TODO: Implement this switch */
+               printf( "Not yet supported command line option: %s\n", s );
+               break;
+
+            case 'u':
+            case 'U':
+               if ( s[1] && toupper( s[1] ) == 'N'
+                    && s[2] && toupper( s[2] ) == 'D'
+                    && s[3] && toupper( s[3] ) == 'E'
+                    && s[4] && toupper( s[4] ) == 'F'
+                    && s[5] == ':' )
+               {
+                  /* NOTE: Ignore these -undef: switches will be processed separately */
+                  break;
+               }
+               hb_pp_STD_CH = hb_strdup( s + 1 );
+               break;
+
+            case 'v':
+            case 'V':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bForceMemvars = FALSE;
+               else
+                  hb_comp_bForceMemvars = TRUE;
+               break;
+
+            case 'w':
+            case 'W':
+                 hb_comp_iWarnings = 1;
+                 if( s[ 1 ] )
+                 {  /*there is -w<0,1,2,3> probably */
+                    hb_comp_iWarnings = s[ 1 ] - '0';
+                    if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 4 )
+                       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                 }
+               break;
+
+            case 'x':
+            case 'X':
+               {
+                  unsigned int i = 0;
+                  char * szPrefix = hb_strdup( s + 1 );
+                  while( i < strlen( szPrefix ) && !HB_ISOPTSEP( szPrefix[ i ] ) )
+                     i++;
+                  szPrefix[ i ] = '\0';
+
+                  if( strlen( szPrefix ) == 0 )
+                     sprintf( szPrefix, "%08lX_", PackDateTime() );
+
+                  strncpy( hb_comp_szPrefix, szPrefix, 16 );
+                  hb_comp_szPrefix[ 16 ] = '\0';
+                  strcat( hb_comp_szPrefix, "_" );
+
+                  hb_xfree( szPrefix );
+               }
+               break;
 
 #ifdef YYDEBUG
-             case 'y':
-             case 'Y':
-                yydebug = TRUE;
-                break;
+            case 'y':
+            case 'Y':
+               yydebug = TRUE;
+               break;
 #endif
 
-             case 'z':
-             case 'Z':
-                if( *( s + 1 ) == '-' )
-                   hb_comp_bShortCuts = TRUE;
-                else
-                   hb_comp_bShortCuts = FALSE;
-                break;
+            case 'z':
+            case 'Z':
+               if( *( s + 1 ) == '-' )
+                  hb_comp_bShortCuts = TRUE;
+               else
+                  hb_comp_bShortCuts = FALSE;
+               break;
 
-             default:
-                hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                break;
+            default:
+               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+               break;
          }
       }
    }

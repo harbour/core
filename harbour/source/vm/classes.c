@@ -206,28 +206,13 @@ static PHB_ITEM hb_clsInst( USHORT uiClass );
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 #endif
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
-       BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
 static void     hb_clsRelease( PCLASS );
-       void     hb_clsReleaseAll( void );
 
-       char *   hb_objGetClsName( PHB_ITEM pObject );
-       char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szName );
-       PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
-       PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
-       
-       #ifdef _MSC_VER
-          extern "C" { 
-       #endif   	
-         	PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
-       #ifdef _MSC_VER
-        }
-       #endif   	
-         	
-       BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString );
-
-       void *   hb_mthRequested( void );
-       void     hb_mthAddTime( void * pMethod, ULONG ulClockTicks );
+static PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
+#ifdef HB_CLS_ENFORCERO
+static PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
+#endif
 
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
@@ -599,7 +584,7 @@ BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
       if( strcmp( pClass->szName, szParentName ) == 0 )
          return TRUE;
 
-      for( uiAt = 0; uiAt < uiLimit; uiAt++)
+      for( uiAt = 0; uiAt < uiLimit; uiAt++ )
       {
          if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
          {
@@ -822,10 +807,10 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
  */
 PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
-   return hb_objGetMthd( (PHB_ITEM) pObject, (PHB_SYMB) pMessage, TRUE ) ;
+   return hb_objGetMthd( (PHB_ITEM) pObject, (PHB_SYMB) pMessage, TRUE );
 }
 
-PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc )
+static PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc )
 {
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
@@ -915,7 +900,21 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
    return NULL;
 }
 
-PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
+static PHB_FUNC hb_objFuncParam( int iParam )
+{
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ANY );
+
+   if( HB_IS_SYMBOL( pItem ) )
+      return pItem->item.asSymbol.value->value.pFunPtr;
+
+   else if( HB_IS_POINTER( pItem ) )
+      return ( PHB_FUNC ) pItem->item.asPointer.value;
+
+   return NULL;
+}
+
+#ifdef HB_CLS_ENFORCERO
+static PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    USHORT uiClass;
    PHB_DYNS pMsg = pMessage->pDynSym;
@@ -947,7 +946,7 @@ PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 
    return NULL;
 }
-
+#endif
 
 /*
  * <bool> = hb_objHasMsg( <pObject>, <szString> )
@@ -1131,7 +1130,7 @@ HB_FUNC( __CLSADDMSG )
       {
          case HB_OO_MSG_METHOD:
 
-            pNewMeth->pFunction = ( PHB_FUNC ) hb_parptr( 3 );
+            pNewMeth->pFunction = hb_objFuncParam( 3 );
             pNewMeth->uiScope = uiScope;
             pNewMeth->uiData = 0;
             break;
@@ -1221,7 +1220,7 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ONERROR:
 
-            pClass->pFunError = ( PHB_FUNC ) hb_parptr( 3 );
+            pClass->pFunError = hb_objFuncParam( 3 );
             break;
 
          default:
@@ -1674,7 +1673,7 @@ HB_FUNC( __CLSMODMSG )
             }
             else                                   /* Modify METHOD            */
             {
-               pClass->pMethods[ uiAt ].pFunction = ( PHB_FUNC ) hb_parptr( 3 );
+               pClass->pMethods[ uiAt ].pFunction = hb_objFuncParam( 3 );
             }
          }
       }

@@ -1201,6 +1201,9 @@ HB_EXPORT char * hb_itemTypeStr( PHB_ITEM pItem )
 
       case HB_IT_POINTER:
          return "P";
+
+      case HB_IT_SYMBOL:
+         return "S";
    }
 
    return "U";
@@ -1367,7 +1370,7 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
    {
       pItem = hb_itemUnRefOnce( pItem );
    }
-   while( HB_IS_BYREF( pItem ) && (pRef != pItem) );
+   while( HB_IS_BYREF( pItem ) && ( pRef != pItem ) );
 
    return pItem;
 }
@@ -1382,11 +1385,12 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
    
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefRefer(%p)", pItem));
 
-   do {
-     pLast = pItem;
-     pItem = hb_itemUnRefOnce( pItem );
+   do
+   {
+      pLast = pItem;
+      pItem = hb_itemUnRefOnce( pItem );
    }
-   while( HB_IS_BYREF( pItem ) && (pRef != pItem) );
+   while( HB_IS_BYREF( pItem ) && ( pRef != pItem ) );
 
    return pLast;
 }
@@ -1421,7 +1425,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
             else if( pItem->item.asRefer.offset < 0 )
             {
                /* enumerator variable */
-               if( HB_IS_ARRAY(pItem->item.asRefer.BasePtr.itemPtr) )
+               if( HB_IS_ARRAY( pItem->item.asRefer.BasePtr.itemPtr ) )
                {
                   pItem = hb_arrayGetItemPtr( pItem->item.asRefer.BasePtr.itemPtr, pItem->item.asRefer.value );
                }

@@ -107,7 +107,7 @@ struct _HB_SYMB;
 #  undef HB_API_MACROS
 #  undef HB_STACK_MACROS
 
-/* This is ugly trick bu works without speed overhead */
+/* This is ugly trick but works without speed overhead */
 #  define HB_ITEM_TYPE( p )   ( * ( HB_TYPE * ) ( p ) )
 
 /* if you do not like it then use this definition */

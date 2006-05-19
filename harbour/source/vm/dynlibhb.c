@@ -95,24 +95,25 @@ HB_FUNC( HB_LIBFREE )
 
 HB_FUNC( HB_LIBDO )
 {
-   char *szName = hb_strupr( hb_strdup( hb_parc( 1 ) ) );
-   PHB_DYNS pDynSym = hb_dynsymFind( hb_strupr( hb_parc( 1 ) ) );
-
-   if( pDynSym )
+   if( hb_parclen( 1 ) > 0 )
    {
-      USHORT uiPCount = hb_pcount();
-      USHORT uiParam;
+      PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
 
-      hb_vmPushSymbol( pDynSym->pSymbol );
-      hb_vmPushNil();
-
-      /* same logic here as from HB_FUNC( EVAL ) */
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+      if( pDynSym )
       {
-         hb_vmPush( hb_stackItemFromBase( uiParam ) );
-      }
+         USHORT uiPCount = hb_pcount();
+         USHORT uiParam;
 
-      hb_vmDo( uiPCount - 1 );
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
+
+         /* same logic here as from HB_FUNC( EVAL ) */
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+         {
+            hb_vmPush( hb_stackItemFromBase( uiParam ) );
+         }
+
+         hb_vmDo( uiPCount - 1 );
+      }
    }
-   hb_xfree( szName );
 }

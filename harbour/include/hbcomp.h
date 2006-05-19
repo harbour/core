@@ -337,6 +337,7 @@ extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns 
 extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
 
 #define HB_SYM_MEMVAR   FALSE
+#define HB_SYM_MSGNAME  FALSE
 #define HB_SYM_FUNCNAME TRUE
 extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT *, BOOL );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */

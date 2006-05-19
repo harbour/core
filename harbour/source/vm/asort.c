@@ -235,7 +235,7 @@ HB_FUNC( ASORT )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
-   if( pArray && ! hb_arrayIsObject( pArray )  )
+   if( pArray && ! hb_arrayIsObject( pArray ) )
    {
       ULONG ulStart = hb_parnl( 2 );
       ULONG ulCount = hb_parnl( 3 );
