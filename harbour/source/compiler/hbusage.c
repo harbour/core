@@ -68,6 +68,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cg<type>         output type generated is <type> (see below)",
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
            "\n                           <type>: 0=compact 1=normal 2=verbose (default)",
+           "\n                                   3=generate real C code",
            "\n          %cgo              output type: Platform dependant object module",
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
@@ -188,5 +189,5 @@ void hb_compPrintLogo( void )
 {
    printf( "Harbour Compiler Alpha build %d.%d (%s)\n",
       HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
-   printf( "Copyright 1999-2005, http://www.harbour-project.org/\n" );
+   printf( "Copyright 1999-2006, http://www.harbour-project.org/\n" );
 }
