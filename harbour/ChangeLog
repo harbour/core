@@ -10,7 +10,7 @@
 
 
 2006-05-29 14:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
-     + Add information about the upcoming alpha build 45.
+      in PARAMETERS and PRIVATE statements (NOTICE: this error is 
       *fixed invalid memory access
 
       
