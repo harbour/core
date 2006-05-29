@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   + doc/howtorel.txt
+     + How-to-Release document by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+   * doc/whatsnew.txt
+     + Add tag information to all tagged builds.
+
+      
+   * harbour.spec
+   * doc/whatsnew.txt
+   * include/hbver.h
+      * modified to store build number 46
+      
 
 2006-05-29 14:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
       in PARAMETERS and PRIVATE statements (NOTICE: this error is 

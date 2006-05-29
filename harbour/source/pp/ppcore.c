@@ -2863,6 +2863,10 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
                StBr3++;
                State = STATE_BRACKET;
             }
+            else if( **ptri == '}' && StBr3 == 0 )
+            {
+               rez = TRUE;
+            }
             else if( **ptri == ',' )
             {
                if( !prlist )
@@ -3185,7 +3189,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
    {
       bFound = TRUE;
       rezs = FALSE;
-      ptr = ptrOut + ifou - 2;
+      ptr = ptrOut + ifou - 1;
       kolmarkers = 0;
       ptr = PrevSquare( ptr, ptro, &kolmarkers );
       if( ptr )
@@ -3757,7 +3761,13 @@ int hb_pp_RdStr( FILE * handl_i, char *buffer, int maxlen, BOOL lContinue, char 
       s_ParseState = STATE_NORMAL;
    }
 
-   readed++;
+   if( maxlen  )
+   {
+      if( readed < maxlen )
+         readed++;
+   }
+   else
+      readed++;
    buffer[readed] = '\0';
 
 #if 0

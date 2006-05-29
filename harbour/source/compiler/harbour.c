@@ -931,6 +931,8 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
             pFunc->pMemvars = pVar;
          else
          {
+            hb_compCheckDuplVars( pFunc->pMemvars, szVarName );
+            
             pLastVar = pFunc->pMemvars;
             while( pLastVar->pNext )
                pLastVar = pLastVar->pNext;
