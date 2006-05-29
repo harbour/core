@@ -3,66 +3,46 @@
  */
 
 ----------------------------------------------------------------------
-Version 0.46 Alpha Build 46 (2006-05-??)
+Version 0.46 Alpha Build 46 (2006-05-29)
 
 The compiler
-------------
+============================================================
+syntax:
+-------
+- Added support for DATE type constants in the format 0dYYYYMMDD
+  (FLEX version only)
+- Added support for SWITCH command (see tests/switch.prg).
+  (FLEX version only)
+- Added support for FOR EACH loop (see tests/foreach.prg).
+  (FLEX version only)
 - Added new compiler switch -gc3 to generate real C code output
   (instead of PCODE array called by a C wrapper).
-- Fixed bug in divide by 0 substitution.
-- Fixed bug in ASC() optimization (when character code > 127)
-- Remove default API and stack macros. Now API/stack macros can be
-  enabled by including hb_vmopt.h file. This file should be included
-  ONLY by core code because binary object/libraries generated after
-  can work only with EXACTLY the same HVM compiled the same C
-  alignment switches.
-- Added HB_TYPE to as HB_ITEM type marker.
-- Set HB_TYPE as UINT32.
-- Cleaned some ~HB_IT_BYREF which has no effect in current VM.
+- Added new command line switch -r=<max_recursive_preprocessor_passes>
 - Added -undef: compiler switch (borrowed from xHarbour).
-- Fixed path delimiters in included file names.
-- Added support for FOR EACH loop.
-- Added warnings in cases of duplicated loop variables.
-- Removed strong typing in the compiler. Reactivate it by compiling
-  with -DHB_COMP_STRONG_TYPES.
-- New pcodes were added.
-- Changed main VM loop to eliminate one comparision done on each loop.
-  Now HB_P_ENDBLOCK and HB_P_ENDPROC pcodes set HB_ENDPROC_REQUESTED
-  and the main loop can be exited only from one place. It gives some
-  small but noticeable speed improvement.
+- Added support for @filelst[.clp] - partially borrowed from xHarbour.
+  It's not exactly the same as in Clipper because Clipper creates one
+  final file when [x]Harbour series of files.
 - Emit warning and error messages to stderr instead of stdout on *nix
   platforms.
-- FLEX: Added support for DATE type constants in the format 0dYYYYMMDD
-- FLEX: Added support for SWITCH command (see tests/switch.prg).
+- Added warnings in cases of duplicated loop variables.
+- Fixed compilation of included files in cases when the file ends
+  with ';' (with no LF or CR).
+internals:
+----------
+- Fixed bug in divide by 0 substitution.
+- Fixed bug in ASC() optimization (when character code > 127)
+- Fixed path delimiters in included file names.
+- Removed strong typing in the compiler. Reactivate it by compiling
+  with -DHB_COMP_STRONG_TYPES.
 - Fixed to release the memory if macro compiled code contains a
   variable or a function reference.
 - Rewritten jump optimization.
-- Do not optimize jumps and local variable access by shorter PCODE
-  version and HB_P_NOOP when jump optimization is disabled.
-- Added support for multi passes in jump/dead code elimination.
-- Added dummy jumps elimination.
-- Added unconditional and conditional jump joining optimization.
 - Added optimization for: IF .T.
                           IF .F.
                           WHILE .T.
                           WHILE .F.
-- Restored empty BEGIN/RECOVER sequence block elimination if Jump
-  Optimization is enabled then it marks the block with HB_P_NOOPS else
-  it cut the generated PCODE.
 - Added dead code eliminator. It works only when Jump Optimization is
   not disabled. As a result, we have smaller and faster PCODE.
-- Fixed to release memory allocated with the proeprocessor.
-- PP: Fixed bug in processing the list of optional repeatable code.
-- PP: Added tracing code.
-- PP: Fixed handling of optional clauses in command/translate.
-- PP: Fixed <-x-> match marker.
-- PP: Fixed bug in ParseOptional <"var"> were not recognized
-      correctly.
-- PP: Fixed compilation of \[ and \] in command/translate.
-- PP: Fixed to preserve spaces the same way (almost) as Clipper.
-- Added support for @filelst[.clp] - partially borrowed from xHarbour.
-  It's not exactly the same as in Clipper because Clipper creates one
-  final file when [x]Harbour series of files.
 - Do not strip redundant line information when compiled for debug (-b).
 - Fixed many more memory leaks in the compiler. Now, the Harbour code
   compiles itself with no memory leaks.
@@ -73,59 +53,41 @@ The compiler
   HB_P_LOCALNEARADDINT pcode (borrowed from xHarbour).
 - Enabled FM statistic by default when compiled without
   -DHB_FM_STATISTICS_OFF.
-- All compiler structures are deallocated on exit now.
-- Added to new errors (memory corruption and memory overflow) for
+- Added new errors (memory corruption and memory overflow) for
   compiler level FM statistic.
-- Fixed compilation of included files in cases when the file ends
-  with ';' (with no LF or CR).
-- Fixed translation of nested command/translate.
-- Fixed translation of TEXT/ENDTEXT to be more Clipper compatible.
-- Added new hidden preprocessor directive
-  __text|ParseBlockCode|EndBlockCode|StartBlockCode
-- Added new command line switch -r=<max_recursive_preprocessor_passes>
-- Modified TEXT/ENDTEXT to use '#pragma __text'.
-- Added #pragma __stream and #pragma __cstream.
-- Fixed hb_p_functionshort pcode size returned by genc function.
 - Fixed double value presented in verbose genc mode for
   HB_P_PUSHDOUBLE.
-- Fixed number of cases presented in verbose genc mode for HB_P_SWITCH.
 - Fixed stripping non identifier characters from symbol table name.
-- Added support for dead code elimination in functions which uses
-  SWITCH ...; CASE ...; ...; END syntax.
-- Cleaned the code which created HB_ITEMs on C stack.
-- Added memory duplication for macro text (&a._m).
 - Added escaping of '?' character in generated strings to avoid
   possible conflicts with trigraph sequences which are part of ANSI C
   standard.
 - Force .0 at the end of double numbers to avoid possible range
   conflicts in generated .c files.
-- Fixed optimization of 'EVAL' in macro compiler.
 - Upper the default .prg function name created from .prg file name
   when compiled without -n switch.
 - Fixed registering of startup procedure name.
 - Changed code generated for double values to avoid limitation in some
   C compilers like MSC and possible differ conversion inside C RTL
   then the one which uses Harbour RTL.
-- Message symbols are not function symbols, cleaned the HB_FS_MESSAGE
-  usage and fix the problem with registering static function in global
-  symbol table.
-- Classed: Added support to passing function references as
-  HB_IT_SYMBOL.
+preprocessor:
+-------------
+- Fixed to release memory allocated with the preprocessor.
+- Fixed bug in processing the list of optional repeatable code.
+- Fixed handling of optional clauses in command/translate.
+- Fixed <-x-> match marker.
+- Fixed compilation of \[ and \] in command/translate.
+- Fixed to preserve spaces the same way (almost) as Clipper.
+- Fixed translation of nested command/translate.
+- Fixed translation of TEXT/ENDTEXT to be more Clipper compatible.
+- Added new hidden preprocessor directive
+  __text|ParseBlockCode|EndBlockCode|StartBlockCode
+- Modified TEXT/ENDTEXT to use '#pragma __text'.
+- Added #pragma __stream and #pragma __cstream (see doc/pragma.txt)
 
 The runtime modules
--------------------
-- GT: Multi GT support with an option to link many GT drivers in a
-  single binary and switch between GTs at application startup based
-  on its environment.
-- GT: New GTAPI.
-- GT: Added GTI_* defintions for hb_gtInfo() function. This function
-  works in similar way to dbInfo() in RDD.
-- GT: New driver GTCRS based on xHarbour and Flagship curses code.
-- GT: New driver GTWVT for Win32 using GUI window instead of console.
-- GT: New driver GTXWC for XWindow Console.
-- GT: New driver GTALLEG for Allegro cross platform graphic libraries.
-- GT: Respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL
-  is linked.
+============================================================
+API
+---
 - Separated internal and external API. Now the definitions for
   internal HVM structures and functions are excluded by default they
   could be enabled if user include hbvmopt.h before other header
@@ -135,80 +97,113 @@ The runtime modules
   hbvmopt.h the internal structures like HB_ITEM, HB_DYNS, ... are
   mapped to 'void' so there is no way to access their members so we
   can modify them in the future without afford for 3-rd party code.
+- Remove default API and stack macros. Now API/stack macros can be
+  enabled by including hb_vmopt.h file. This file should be included
+  ONLY by core code because binary object/libraries generated after
+  can work only with EXACTLY the same HVM compiled the same C
+  alignment switches. 3-rd party code should include hbvmpub.h only.
+- Added support to passing function references as HB_IT_SYMBOL.
+- hb_itemType() return "S" for HB_IT_SYMBOL.
+- Message symbols are not function symbols, cleaned the HB_FS_MESSAGE
+  usage and fix the problem with registering static function in global
+  symbol table.
+- Added HB_TYPE to as HB_ITEM type marker (UINT32 currently).
+- Cleaned some ~HB_IT_BYREF which has no effect in current VM.
 - Added new functions: hb_extIsObject(), hb_codeblockId(),
   hb_idleSleep(), hb_fsGetOsHandle(), hb_dynsymFindSymbol(),
   hb_dynsymGetSymbol(), hb_dynsymSymbol(), hb_dynsymName(),
   hb_dynsymMemvarHandle(), hb_dynsymAreaHandle(),
   hb_dynsymSetAreaHandle().
+- Changed definition of HB_SYMB structure.
+- Cleaned some HB_EXTERN_C declaration.
 - Changed hb_arrayClone() declaration to:
   PHB_ITEM hb_arrayClone( PHB_ITEM pArray )
 - Changed hb_arrayFromParams() declaration to:
   PHB_ITEM hb_arrayFromParams( int iLevel )
   The previous version needed a pointer to stack relocatable area so
   any stack resizing could cause GPF.
-- Codepage: Updated UNICODE values for characters in rabge 1-31 to
-  keep DOS compatibility.
-- Codepage: Renamed files (cdp*.c -> cd*.c).
-- Codepage: Added UTF8 related functions: hb_cdpUTF8StringLength(),
-  hb_cdpStringInUTF8Length(), hb_cdpUTF8ToStrn().
+- Allow hb_param() to return parameters accessed by HB_IT_BYREF.
+- Cleaned the code which created HB_ITEMs on C stack.
+- Changed main VM loop to eliminate one comparision done on each loop.
+  Now HB_P_ENDBLOCK and HB_P_ENDPROC pcodes set HB_ENDPROC_REQUESTED
+  and the main loop can be exited only from one place. It gives some
+  small but noticeable speed improvement.
+- Possible problem fixed in __CLSADDMSG() where message parameter was
+  required to be uppercase when overloading operators .NOT. .AND. .OR.
+- Fixed GPF when unshareing string item buffer with embedded 0 by
+  using hb_itemUnShare().
 - Make HB_SET_TYPEAHEAD Clipper compatible.
 - Set DOSERROR() to oError:OSCODE when RT error is generated.
 - Fixed some small incompatibilities with Clipper in number to string
   conversions.
-- Fixed possible GPF in CTOD when badly formated date is given.
-- Fixed invalid handle error in Windows when file() fails (borrowed
-  from xHarbour).
-  at least one lang module defined at sartup.
-- Fixed RT error number in hb_vmAddInt() for negative values to be
-  Clipper compatible.
-- Optimized __CLSADDMSG() to call hb_parc() only once instead of 25
-  times for most cases.
-- Possible problem fixed in __CLSADDMSG() where message parameter was
-  required to be uppercase when overloading operators .NOT. .AND. .OR.
-- Fixed GPF in HB_LIBDO called with wrong parameter.
-- hb_itemType() return "S" for HB_IT_SYMBOL.
-- Lang: Moved EN lang definitions to core lang code so we always have
-- Lang: HU sorting order fixed to be more compatible with Clipper.
-- Lang: Added BG language support.
-- hb_DiskSpace() changed to not give a runtime error in case of any
-  error, but set the FError() value instead.
-- Fixed displaying of boxes under the xterm, use @ TO instead of @ BOX.
-- Cleaned some HB_EXTERN_C declaration.
-- Cleaned startup initialization code for lang and codepages.
-- Synced file IO with xHarbour, it fixed some problems, added some
-  missing functionality and long (64bit) file support for Windows.
-- Added C -> OS file error trnalsations - not perfect but better then
-  the used hacks (borrowed from xHarbour).
-- Use hb_fileNameConv() instead of hb_filecase(), hb_fileNameConv()
-  is the only one function to make file name conversions dependent on
-  some SETs.
-- SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER
-  define is used.
-- UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and
-  WINBASEAPI removed.
-- Allow hb_param() to return parameters accessed by HB_IT_BYREF.
-- Optimized hb_dateEncode().
 - Added HB_STR_DATE_BASE for conversion to string, Clipper
   compatibility though we are not 100% Clipper compatible in STOD()
   because we will have to reduce functionality (supported date range)
   to reach it. In Clipper STOD(DTOS()) is not revertible, it is
   revertible in [x]Harbour for the whole supported in string
   conversion range: 0000/01/01 : 9999/01/01.
-- Changed definition of HB_SYMB structure.
+- Fixed possible GPF in CTOD when badly formated date is given.
+- Optimized hb_dateEncode().
+- Fixed RT error number in hb_vmAddInt() for negative values to be
+  Clipper compatible.
+- Optimized __CLSADDMSG() to call hb_parc() only once instead of 25
+  times for most cases.
+- Synced file IO with xHarbour, it fixed some problems, added some
+  missing functionality and long (64bit) file support for Windows.
+- hb_DiskSpace() changed to not give a runtime error in case of any
+  error, but set the FError() value instead.
+- Added C -> OS file error translations - not perfect but better then
+  the used hacks (borrowed from xHarbour).
+- Use hb_fileNameConv() instead of hb_filecase(), hb_fileNameConv()
+  is the only one function to make file name conversions dependent on
+  some SETs.
 - HB_MATHERRMODE() input validation logic moved to the lower level
   function. This is a step to make this a simple Set().
 - Added STRPEEK and STRPOKE FS functions covered by HB_COMPAT_FLAGSHIP
   macro.
-- Fixed GPF when unshareing string item buffer with embedded 0 by
-  using hb_itemUnShare().
 - Added hb_fsSetDevMode() Unix branch added.
 - hb_secondsCPU() move inside FlagShip guard instead of HB_EXTENSION.
+- Fixed invalid handle error in Windows when file() fails (borrowed
+  from xHarbour).
+- SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER
+  define is used.
+- UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and
+  WINBASEAPI removed.
 - Added new functions HBDLLENTRY1() and HBDLLENTRY2(). These function
   allow to call a Harbour (self contained) DLL and provide it one or
   two Harbour items as parameters.
+- Fixed GPF in HB_LIBDO called with wrong parameter.
+- Fixed optimization of 'EVAL' in macro compiler.
+GT:
+---
+- New GTAPI.
+- Multi GT support with an option to link many GT drivers in a
+  single binary and switch between GTs at application startup based
+  on its environment.
+- Added GTI_* defintions for hb_gtInfo() function. This function
+  works in similar way to dbInfo() in RDD.
+- New driver GTCRS based on xHarbour and Flagship curses code.
+- New driver GTWVT for Win32 using GUI window instead of console.
+- New driver GTXWC for XWindow Console.
+- New driver GTALLEG for Allegro cross platform graphic libraries.
+- Respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL
+  is linked.
+- Fixed displaying of boxes under the xterm, use @ TO instead of @ BOX.
+Multilangual:
+-------------
+- Cleaned startup initialization code for lang and codepages.
+  at least one lang module defined at startup.
+- Codepage: Updated UNICODE values for characters in range 1-31 to
+  keep DOS compatibility.
+- Codepage: Renamed files (cdp*.c -> cd*.c).
+- Codepage: Added UTF8 related functions: hb_cdpUTF8StringLength(),
+  hb_cdpStringInUTF8Length(), hb_cdpUTF8ToStrn().
+- Moved EN lang definitions to core lang code so we always have
+- HU sorting order fixed to be more compatible with Clipper.
+- Added BG language support.
 
 RDD
----
+============================================================
 - DBT, FPT, SMT memos are fully support and automatically detected in
   USE command. For newly created tables the memo type can be set with
   rddInfo(RDDI_MEMOTYPE,<DB_MEMO_DBT|DB_MEMO_FPT|DB_MEMO_SMT> [,<cRdd>])
@@ -264,7 +259,7 @@ RDD
 - Fixed possible memory leak when APPEND failed in TRANSREC method.
 
 Contrib
--------
+============================================================
 - ADS: Added ADSCDX, ADSNTX and ADT RDDs. ADS RDD should not be longer
   used, it's only for backward compatibility.
 - ADS: Call AdsFlushFileBuffers() only when _SET_HARDCOMMIT is set.
@@ -281,7 +276,7 @@ Contrib
   Now NF dir functions works on all platforms.
 
 Utilities
----------
+============================================================
 - HbExtern: Heavily modified to produce more accurate output.
 
 General

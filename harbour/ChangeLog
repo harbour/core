@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * force 10 bytes size for memo fields in DBF and SMT memos.
+    * some minor clean-up.
+
+  * harbour/source/rdd/workarea.c
+    * added some dummy DBI_* actions in base RDD level
+
+2006-05-30 12:09 UTC+0300 Chen Kedem <niki@actcom.co.il>
    + doc/howtorel.txt
      + How-to-Release document by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
    * doc/whatsnew.txt
