@@ -902,7 +902,9 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_GETDELIMITER:
       {
-         char szDelim[ 2 ] = { pArea->cDelim, '\0' };
+         char szDelim[ 2 ];
+         szDelim[ 0 ] = pArea->cDelim;
+         szDelim[ 1 ] = '\0';
          hb_itemPutC( pItem, szDelim );
          break;
       }
@@ -923,8 +925,10 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_SEPARATOR:
       {
-         char szSeparator[ 2 ] = { pArea->cSeparator, '\0' };
+         char szSeparator[ 2 ];
          char * szNew = hb_itemGetCPtr( pItem );
+         szSeparator[ 0 ] = pArea->cSeparator;
+         szSeparator[ 1 ]  = '\0';
          if( *szNew )
             pArea->cSeparator = *szNew;
          hb_itemPutC( pItem, szSeparator );

@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-10-30 18:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/source/rdd/sdf1.c
+
+  * xharbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbcmd.c
+    * Sinchronised version with harbour/include/hbver.h  
+
 2006-05-31 13:45 UTC+0200 Tomaz Zupan (tomaz.zupan at orpo.si)
   * harbour.spec
     * Added Mandriva to recognised distros
