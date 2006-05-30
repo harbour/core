@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/rdd/dbcmd.c
+    + added support for table structure inheriting in transfer RDDs.
+    + added eleventh parameter with delimiter to __dbCopy()/__dbApp()
+
+  * harbour/source/rdd/dbf1.c
     * force 10 bytes size for memo fields in DBF and SMT memos.
     * some minor clean-up.
 

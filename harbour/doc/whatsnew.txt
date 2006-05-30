@@ -3,18 +3,18 @@
  */
 
 ----------------------------------------------------------------------
-Version 0.46 Alpha Build 46 (2006-05-29)
+Version 0.46 Alpha Build 46 (2006-05-29) tag: build46
 
 The compiler
 ============================================================
 syntax:
 -------
 - Added support for DATE type constants in the format 0dYYYYMMDD
-  (FLEX version only)
-- Added support for SWITCH command (see tests/switch.prg).
-  (FLEX version only)
-- Added support for FOR EACH loop (see tests/foreach.prg).
-  (FLEX version only)
+  (FLEX version only).
+- Added support for SWITCH command (see tests/switch.prg)
+  (FLEX version only).
+- Added support for FOR EACH loop (see tests/foreach.prg)
+  (FLEX version only).
 - Added new compiler switch -gc3 to generate real C code output
   (instead of PCODE array called by a C wrapper).
 - Added new command line switch -r=<max_recursive_preprocessor_passes>
@@ -280,7 +280,7 @@ Utilities
 - HbExtern: Heavily modified to produce more accurate output.
 
 General
--------
+============================================================
 - Fixed for popper compilation with GNU C++ and OpenWatcom on Linux.
 - Added support for cross compilation (Windows binaries at Linux) with
   MinGW (borrowed from xHarbour).
@@ -296,7 +296,7 @@ General
   scripts.
 
 ----------------------------------------------------------------------
-Version 0.45 Alpha Build 45 (2005-05-25)
+Version 0.45 Alpha Build 45 (2005-05-25) tag: build45
 
 The compiler
 ------------
@@ -388,7 +388,7 @@ General
 - Many errors fixed
 
 ----------------------------------------------------------------------
-Version 0.44 Alpha Build 44 (2004-07-19)
+Version 0.44 Alpha Build 44 (2004-07-19) tag: build44
 
 The compiler
 ------------
@@ -516,7 +516,7 @@ Utilities
 - Some updates for the Spanish documents.
 
 ----------------------------------------------------------------------
-Version 0.43 Alpha Build 43 (2003-10-01)
+Version 0.43 Alpha Build 43 (2003-10-01) tag: build43 (tag date: 2003-09-26)
 
 - RDD DBFCDX is highly improved, it is very close to be stable now.
 - New national codepages has been added.
@@ -525,7 +525,7 @@ Version 0.43 Alpha Build 43 (2003-10-01)
 - Many bug fixes and enhancements in all subsystems.
 
 ----------------------------------------------------------------------
-Version 0.42 Alpha Build 42 (2003-04-08)
+Version 0.42 Alpha Build 42 (2003-04-08) tag: build42
 
 - Further speed improvements
 - Codepage subsystem added
@@ -540,10 +540,12 @@ Version 0.42 Alpha Build 42 (2003-04-08)
 - Many bug fixes and enhancements
 
 ----------------------------------------------------------------------
-Version 0.41 Alpha Build 41 was not officially released (2002-12-31)
+Version 0.41 Alpha Build 41 (2002-12-31) tag: build41
+
+** was not officially released **
 
 ----------------------------------------------------------------------
-Version 0.40 Alpha Build 40 (2002-06-16)
+Version 0.40 Alpha Build 40 (2002-06-16) tag: build40
 
 - Great speed improvements
 - ADS RDD: added support of extended data types, fixed seeking and
@@ -559,7 +561,7 @@ Version 0.40 Alpha Build 40 (2002-06-16)
 - Many bug fixes and enhancements
 
 ----------------------------------------------------------------------
-Version 0.39 Alpha Build 39 (2002-04-08)
+Version 0.39 Alpha Build 39 (2002-04-08) tag: build39
 
 - Delphi integration started
 - Dbfntx basic functionality is ready
@@ -577,7 +579,7 @@ Version 0.39 Alpha Build 39 (2002-04-08)
   more faster
 
 ----------------------------------------------------------------------
-Version 0.38 Alpha Build 38 (2001-12-15)
+Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 
 - Added new function __VMVARSLEN() --> nStatics
   It returns the total amount of used statics variables
@@ -627,7 +629,7 @@ Version 0.38 Alpha Build 38 (2001-12-15)
 - Extended run-time preprocessing possibilities
 
 ----------------------------------------------------------------------
-Version 0.37 Alpha Build 37 (2001-06-26)
+Version 0.37 Alpha Build 37 (2001-06-26) tag: build37
 
 - Fixed and improved NTX support
 - Improved and fixed OOP
@@ -783,12 +785,12 @@ Version 0.32 Alpha Build 32 (2000-03-07)
 - __TYPEFILE() added
 
 ----------------------------------------------------------------------
-Version 0.31a Alpha Build 31a (2000-02-02)
+Version 0.31a Alpha Build 31a (2000-02-02) tag: build31a
 
 - Bugs fixed
 
 ----------------------------------------------------------------------
-Version 0.31 Alpha Build 31 (2000-01-27)
+Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 
 - Added macro support
 - Many changes, fixes, and enhancements to compiler internals
