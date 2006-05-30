@@ -439,7 +439,7 @@ STATIC s_aSwitchDefs := {}
          bCompile := .T.
          sSwitch := ""
          aParams := { p1, p2, p3, p4, p5, p6, p7, p8, p9 }
-         aSize( aParams, PCount() )
+         aSize( aParams, PCount() - 1 )
       endif
    #endif
 

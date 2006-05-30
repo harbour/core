@@ -583,12 +583,13 @@ ERRCODE hb_waClose( AREAP pArea )
 ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
-   HB_SYMBOL_UNUSED( pArea );
 
    switch ( uiIndex )
    {
       case DBI_ISDBF:
       case DBI_CANPUTREC:
+      case DBI_ISFLOCK:
+      case DBI_SHARED:
          hb_itemPutL( pItem, FALSE );
          break;
 
@@ -600,6 +601,20 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_SEPARATOR:
          hb_itemPutC( pItem, "" );
          return FAILURE;
+
+      case DBI_GETHEADERSIZE:
+      case DBI_GETRECSIZE:
+      case DBI_LOCKCOUNT:
+         hb_itemPutNI( pItem, 0 );
+         break;
+
+      case DBI_LASTUPDATE:
+         hb_itemPutDL( pItem, 0 );
+         break;
+
+      case DBI_GETLOCKARRAY:
+         hb_arrayNew( pItem, 0 );
+         break;
 
       case DBI_CHILDCOUNT:
       {
@@ -647,6 +662,10 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutC( pItem, szAlias );
          break;
       }
+
+      case DBI_TABLEEXT:
+         hb_itemClear( pItem );
+         return SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_TABLEEXT, 0, pItem );
 
       case DBI_SCOPEDRELATION:
       {

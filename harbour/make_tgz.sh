@@ -255,13 +255,14 @@ then
 fi
 
 # Create and install PP
-pushd contrib/dot
-$HB_BIN_INSTALL/${hb_pref}mk pp -n -w -D_DEFAULT_INC_DIR=\"${_DEFAULT_INC_DIR}\"
-$INSTALL -m755 pp $HB_BIN_INSTALL/pp
-ln -s pp $HB_BIN_INSTALL/pprun
+(cd contrib/dot
+export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\""
+$HB_BIN_INSTALL/${hb_pref}mk pp -n -w
+strip pp${hb_exesuf}
+$INSTALL -m755 pp${hb_exesuf} $HB_BIN_INSTALL/pp${hb_exesuf}
+ln -s pp${hb_exesuf} $HB_BIN_INSTALL/pprun${hb_exesuf}
 $INSTALL -m644 rp_dot.ch $HB_INC_INSTALL/
-rm -f pp
-popd
+rm -f pp${hb_exesuf})
 
 
 CURDIR=$(pwd)

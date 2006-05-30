@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * SDF RDD module
+ *    SDF RDD
  *
- * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,109 +57,76 @@
 
 HB_EXTERN_BEGIN
 
+/* SDF default file extensions */
+#define SDF_TABLEEXT                      ".txt"
+
+
 /*
- * -- SDF METHODS --
+ *  SDF WORKAREA
+ *  ------------
+ *  The Workarea Structure of SDF RDD
+ *
  */
 
-#define hb_sdfBof                                  NULL
-#define hb_sdfEof                                  NULL
-#define hb_sdfFound                                NULL
-#define hb_sdfGoBottom                             NULL
-#define hb_sdfGoTo                                 NULL
-#define hb_sdfGoToId                               NULL
-#define hb_sdfGoTop                                NULL
-#define hb_sdfSeek                                 NULL
-#define hb_sdfSkip                                 NULL
-#define hb_sdfSkipFilter                           NULL
-#define hb_sdfSkipRaw                              NULL
-#define hb_sdfAddField                             NULL
-#define hb_sdfAppend                               NULL
-#define hb_sdfCreateFields                         NULL
-#define hb_sdfDeleteRec                            NULL
-#define hb_sdfDeleted                              NULL
-#define hb_sdfFieldCount                           NULL
-#define hb_sdfFieldDisplay                         NULL
-#define hb_sdfFieldInfo                            NULL
-#define hb_sdfFieldName                            NULL
-#define hb_sdfFlush                                NULL
-#define hb_sdfGetRec                               NULL
-#define hb_sdfGetValue                             NULL
-#define hb_sdfGetVarLen                            NULL
-#define hb_sdfGoCold                               NULL
-#define hb_sdfGoHot                                NULL
-#define hb_sdfPutRec                               NULL
-#define hb_sdfPutValue                             NULL
-#define hb_sdfRecall                               NULL
-#define hb_sdfRecCount                             NULL
-#define hb_sdfRecInfo                              NULL
-#define hb_sdfRecNo                                NULL
-#define hb_sdfRecId                                NULL
-#define hb_sdfSetFieldExtent                       NULL
-#define hb_sdfAlias                                NULL
-#define hb_sdfClose                                NULL
-#define hb_sdfCreate                               NULL
-#define hb_sdfInfo                                 NULL
-#define hb_sdfNewArea                              NULL
-#define hb_sdfOpen                                 NULL
-#define hb_sdfRelease                              NULL
-#define hb_sdfStructSize                           NULL
-#define hb_sdfSysName                              NULL
-#define hb_sdfEval                                 NULL
-#define hb_sdfPack                                 NULL
-#define hb_sdfPackRec                              NULL
-#define hb_sdfSort                                 NULL
-#define hb_sdfTrans                                NULL
-#define hb_sdfTransRec                             NULL
-#define hb_sdfZap                                  NULL
-#define hb_sdfChildEnd                             NULL
-#define hb_sdfChildStart                           NULL
-#define hb_sdfChildSync                            NULL
-#define hb_sdfSyncChildren                         NULL
-#define hb_sdfClearRel                             NULL
-#define hb_sdfForceRel                             NULL
-#define hb_sdfRelArea                              NULL
-#define hb_sdfRelEval                              NULL
-#define hb_sdfRelText                              NULL
-#define hb_sdfSetRel                               NULL
-#define hb_sdfOrderListAdd                         NULL
-#define hb_sdfOrderListClear                       NULL
-#define hb_sdfOrderListDelete                      NULL
-#define hb_sdfOrderListFocus                       NULL
-#define hb_sdfOrderListRebuild                     NULL
-#define hb_sdfOrderCondition                       NULL
-#define hb_sdfOrderCreate                          NULL
-#define hb_sdfOrderDestroy                         NULL
-#define hb_sdfOrderInfo                            NULL
-#define hb_sdfClearFilter                          NULL
-#define hb_sdfClearLocate                          NULL
-#define hb_sdfClearScope                           NULL
-#define hb_sdfCountScope                           NULL
-#define hb_sdfFilterText                           NULL
-#define hb_sdfScopeInfo                            NULL
-#define hb_sdfSetFilter                            NULL
-#define hb_sdfSetLocate                            NULL
-#define hb_sdfSetScope                             NULL
-#define hb_sdfSkipScope                            NULL
-#define hb_sdfLocate                               NULL
-#define hb_sdfCompile                              NULL
-#define hb_sdfError                                NULL
-#define hb_sdfEvalBlock                            NULL
-#define hb_sdfRawLock                              NULL
-#define hb_sdfLock                                 NULL
-#define hb_sdfUnLock                               NULL
-#define hb_sdfCloseMemFile                         NULL
-#define hb_sdfCreateMemFile                        NULL
-#define hb_sdfGetValueFile                         NULL
-#define hb_sdfOpenMemFile                          NULL
-#define hb_sdfPutValueFile                         NULL
-#define hb_sdfReadDBHeader                         NULL
-#define hb_sdfWriteDBHeader                        NULL
-#define hb_sdfInit                                 NULL
-#define hb_sdfExit                                 NULL
-#define hb_sdfDrop                                 NULL
-#define hb_sdfExists                               NULL
-#define hb_sdfRddInfo                              NULL
-#define hb_sdfWhoCares                             NULL
+typedef struct _SDFAREA
+{
+   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
+   USHORT uiArea;                /* The number assigned to this workarea */
+   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
+   USHORT uiFieldExtent;         /* Total number of fields allocated */
+   USHORT uiFieldCount;          /* Total number of fields used */
+   LPFIELD lpFields;             /* Pointer to an array of fields */
+   void * lpFieldExtents;        /* Void ptr for additional field properties */
+   PHB_ITEM valResult;           /* All purpose result holder */
+   BOOL fTop;                    /* TRUE if "top" */
+   BOOL fBottom;                 /* TRUE if "bottom" */
+   BOOL fBof;                    /* TRUE if "bof" */
+   BOOL fEof;                    /* TRUE if "eof" */
+   BOOL fFound;                  /* TRUE if "found" */
+   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
+   DBFILTERINFO dbfi;            /* Filter in effect */
+   LPDBORDERCONDINFO lpdbOrdCondInfo;
+   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
+   USHORT uiParents;             /* Number of parents for this area */
+   USHORT heap;
+   USHORT heapSize;
+   USHORT rddID;
+   USHORT uiMaxFieldNameLength;
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
+
+   /*
+   *  SDFS's additions to the workarea structure
+   *
+   *  Warning: The above section MUST match WORKAREA exactly!  Any
+   *  additions to the structure MUST be added below, as in this
+   *  example.
+   */
+
+   FHANDLE  hFile;                  /* Data file handle */
+   char *   szFileName;             /* Name of data file */
+   char *   szEol;                  /* EOL marker */
+   USHORT   uiEolLen;               /* Size of EOL marker */
+   USHORT   uiRecordLen;            /* Size of record */
+   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   BYTE *   pRecord;                /* Buffer of record data */
+   HB_FOFFSET ulRecordOffset;       /* Current record offest */
+   HB_FOFFSET ulNextOffset;         /* Next record offest */
+   HB_FOFFSET ulFileSize;           /* File table size in export mode */
+   ULONG    ulRecNo;                /* Current record */
+   ULONG    ulRecCount;             /* Number of records (in export) */
+   BOOL     fTransRec;              /* Can put whole records */
+   BOOL     fFlush;                 /* Data was written to SDF and not commited */
+   BOOL     fShared;                /* Shared file */
+   BOOL     fReadonly;              /* Read only file */
+   BOOL     fPositioned;            /* Positioned record */
+   BOOL     fRecordChanged;         /* Record changed */
+} SDFAREA;
+
+typedef SDFAREA * LPSDFAREA;
+
+#ifndef SDFAREAP
+#define SDFAREAP LPSDFAREA
+#endif
 
 HB_EXTERN_END
 

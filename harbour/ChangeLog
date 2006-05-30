@@ -8,6 +8,67 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-05-31 13:45 UTC+0200 Tomaz Zupan (tomaz.zupan at orpo.si)
+  * harbour.spec
+    * Added Mandriva to recognised distros
+    * Sinchronised version with harbour/include/hbver.h
+
+2006-05-30 18:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/sdf1.c
+    * cleaned BCC warning
+  * harbour/source/rdd/delim1.c
+    ! fixed BCC compilation (string initialization with dynamic
+      values is forbidden by BCC)
+
+2006-05-30 12:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbver.h
+    * changed version number and ChangeLog entry
+
+  * harbour/make_tgz.sh
+    ! fixed creating PP in DJGPP builds
+
+  * harbour/contrib/dot/pp.prg
+    ! minor fix in parameter checking
+
+  * harbour/contrib/libmisc/hb_f.c
+    ! fixed bug in record numbering after reaching EOF position and
+      backward skipping
+
+  * harbour/include/hbrdddel.h
+  * harbour/source/rdd/delim1.c
+    + implemented DELIM RDD. It should be fully Clipper compatible
+      in comma files parsing. If you will find any difference, please
+      inform me and I'll update it. Unlike in Clipper in [x]Harbour
+      these RDD can be used also in direct import operations with
+      APPEND FROM ... VIA "DELIM"
+      These RDD also support whole record transfering between RDDs
+      if they support the same record format and field representation
+      and can translate extended field types like "I", "B", "V3", "V4",
+      etc.
+
+  * harbour/source/rtl/dbdelim.prg
+    * replaced old code of __dbDelim() function with simple calls to
+      __dbCopy()/__dbApp() - it should fix most of the reported
+      incompatibilities in DELIM import/export operations and
+      increase their speed many times
+
+  * harbour/include/hbrddsdf.h
+  * harbour/source/rdd/sdf1.c
+    + implemented SDF RDD. It should be fully Clipper compatible
+      in SDF files parsing. If you will find any difference, please
+      inform me and I'll update it. Unlike in Clipper in [x]Harbour
+      these RDD can be used also in direct import operations with
+      APPEND FROM ... VIA "SDF"
+      These RDD also support whole record transfering between RDDs
+      if they support the same record format and field representation
+      and can translate extended field types like "I", "B", "V3", "V4",
+      etc.
+
+  * harbour/source/rtl/dbsdf.prg
+    * replaced old code of __dbSDF() function with simple calls to
+      __dbCopy()/__dbApp() - it should fix most of the reported
+      incompatibilities in SDF import/export operations and
+      increase their speed many times
 
   * harbour/source/rdd/dbcmd.c
     + added support for table structure inheriting in transfer RDDs.

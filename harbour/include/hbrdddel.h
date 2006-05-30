@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * DELIMITED RDD module
+ *    DELIM RDD
  *
- * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,109 +57,84 @@
 
 HB_EXTERN_BEGIN
 
+/* DELIMITED default file extensions */
+#define DELIM_TABLEEXT                    ".txt"
+
+
 /*
- * -- DELIMITED METHODS --
+ *  DELIM WORKAREA
+ *  ------------
+ *  The Workarea Structure of DELIM RDD
+ *
  */
 
-#define hb_delimBof                                  NULL
-#define hb_delimEof                                  NULL
-#define hb_delimFound                                NULL
-#define hb_delimGoBottom                             NULL
-#define hb_delimGoTo                                 NULL
-#define hb_delimGoToId                               NULL
-#define hb_delimGoTop                                NULL
-#define hb_delimSeek                                 NULL
-#define hb_delimSkip                                 NULL
-#define hb_delimSkipFilter                           NULL
-#define hb_delimSkipRaw                              NULL
-#define hb_delimAddField                             NULL
-#define hb_delimAppend                               NULL
-#define hb_delimCreateFields                         NULL
-#define hb_delimDeleteRec                            NULL
-#define hb_delimDeleted                              NULL
-#define hb_delimFieldCount                           NULL
-#define hb_delimFieldDisplay                         NULL
-#define hb_delimFieldInfo                            NULL
-#define hb_delimFieldName                            NULL
-#define hb_delimFlush                                NULL
-#define hb_delimGetRec                               NULL
-#define hb_delimGetValue                             NULL
-#define hb_delimGetVarLen                            NULL
-#define hb_delimGoCold                               NULL
-#define hb_delimGoHot                                NULL
-#define hb_delimPutRec                               NULL
-#define hb_delimPutValue                             NULL
-#define hb_delimRecall                               NULL
-#define hb_delimRecCount                             NULL
-#define hb_delimRecInfo                              NULL
-#define hb_delimRecNo                                NULL
-#define hb_delimRecId                                NULL
-#define hb_delimSetFieldExtent                       NULL
-#define hb_delimAlias                                NULL
-#define hb_delimClose                                NULL
-#define hb_delimCreate                               NULL
-#define hb_delimInfo                                 NULL
-#define hb_delimNewArea                              NULL
-#define hb_delimOpen                                 NULL
-#define hb_delimRelease                              NULL
-#define hb_delimStructSize                           NULL
-#define hb_delimSysName                              NULL
-#define hb_delimEval                                 NULL
-#define hb_delimPack                                 NULL
-#define hb_delimPackRec                              NULL
-#define hb_delimSort                                 NULL
-#define hb_delimTrans                                NULL
-#define hb_delimTransRec                             NULL
-#define hb_delimZap                                  NULL
-#define hb_delimChildEnd                             NULL
-#define hb_delimChildStart                           NULL
-#define hb_delimChildSync                            NULL
-#define hb_delimSyncChildren                         NULL
-#define hb_delimClearRel                             NULL
-#define hb_delimForceRel                             NULL
-#define hb_delimRelArea                              NULL
-#define hb_delimRelEval                              NULL
-#define hb_delimRelText                              NULL
-#define hb_delimSetRel                               NULL
-#define hb_delimOrderListAdd                         NULL
-#define hb_delimOrderListClear                       NULL
-#define hb_delimOrderListDelete                      NULL
-#define hb_delimOrderListFocus                       NULL
-#define hb_delimOrderListRebuild                     NULL
-#define hb_delimOrderCondition                       NULL
-#define hb_delimOrderCreate                          NULL
-#define hb_delimOrderDestroy                         NULL
-#define hb_delimOrderInfo                            NULL
-#define hb_delimClearFilter                          NULL
-#define hb_delimClearLocate                          NULL
-#define hb_delimClearScope                           NULL
-#define hb_delimCountScope                           NULL
-#define hb_delimFilterText                           NULL
-#define hb_delimScopeInfo                            NULL
-#define hb_delimSetFilter                            NULL
-#define hb_delimSetLocate                            NULL
-#define hb_delimSetScope                             NULL
-#define hb_delimSkipScope                            NULL
-#define hb_delimLocate                               NULL
-#define hb_delimCompile                              NULL
-#define hb_delimError                                NULL
-#define hb_delimEvalBlock                            NULL
-#define hb_delimRawLock                              NULL
-#define hb_delimLock                                 NULL
-#define hb_delimUnLock                               NULL
-#define hb_delimCloseMemFile                         NULL
-#define hb_delimCreateMemFile                        NULL
-#define hb_delimGetValueFile                         NULL
-#define hb_delimOpenMemFile                          NULL
-#define hb_delimPutValueFile                         NULL
-#define hb_delimReadDBHeader                         NULL
-#define hb_delimWriteDBHeader                        NULL
-#define hb_delimInit                                 NULL
-#define hb_delimExit                                 NULL
-#define hb_delimDrop                                 NULL
-#define hb_delimExists                               NULL
-#define hb_delimRddInfo                              NULL
-#define hb_delimWhoCares                             NULL
+typedef struct _DELIMAREA
+{
+   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
+   USHORT uiArea;                /* The number assigned to this workarea */
+   void * atomAlias;             /* Pointer to the alias symbol for this workarea */
+   USHORT uiFieldExtent;         /* Total number of fields allocated */
+   USHORT uiFieldCount;          /* Total number of fields used */
+   LPFIELD lpFields;             /* Pointer to an array of fields */
+   void * lpFieldExtents;        /* Void ptr for additional field properties */
+   PHB_ITEM valResult;           /* All purpose result holder */
+   BOOL fTop;                    /* TRUE if "top" */
+   BOOL fBottom;                 /* TRUE if "bottom" */
+   BOOL fBof;                    /* TRUE if "bof" */
+   BOOL fEof;                    /* TRUE if "eof" */
+   BOOL fFound;                  /* TRUE if "found" */
+   DBSCOPEINFO dbsi;             /* Info regarding last LOCATE */
+   DBFILTERINFO dbfi;            /* Filter in effect */
+   LPDBORDERCONDINFO lpdbOrdCondInfo;
+   LPDBRELINFO lpdbRelations;    /* Parent/Child relationships used */
+   USHORT uiParents;             /* Number of parents for this area */
+   USHORT heap;
+   USHORT heapSize;
+   USHORT rddID;
+   USHORT uiMaxFieldNameLength;
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer */
+
+   /*
+   *  DELIM's additions to the workarea structure
+   *
+   *  Warning: The above section MUST match WORKAREA exactly!  Any
+   *  additions to the structure MUST be added below, as in this
+   *  example.
+   */
+
+   FHANDLE  hFile;                  /* Data file handle */
+   char *   szFileName;             /* Name of data file */
+   char *   szEol;                  /* EOL marker */
+   USHORT   uiEolLen;               /* Size of EOL marker */
+   BOOL     fDelim;                 /* Use character field delimiter? */
+   char     cDelim;                 /* Character field delimiter */
+   char     cSeparator;             /* Field delimiter */
+   USHORT   uiRecordLen;            /* Size of record */
+   USHORT * pFieldOffset;           /* Pointer to field offset array */
+   BYTE *   pRecord;                /* Buffer of record data */
+   BYTE *   pBuffer;                /* Read/Write */
+   ULONG    ulBufferSize;           /* IO buffer size */
+   ULONG    ulBufferRead;           /* Number of bytes in read buffer */
+   ULONG    ulBufferIndex;          /* Index to read read buffer */
+   HB_FOFFSET ulRecordOffset;       /* Current record offest */
+   HB_FOFFSET ulNextOffset;         /* Next record offest */
+   HB_FOFFSET ulFileSize;           /* File table size in export mode */
+   HB_FOFFSET ulBufferStart;        /* Start offset of read buffer */
+   ULONG    ulRecNo;                /* Current record */
+   ULONG    ulRecCount;             /* Number of records (in export) */
+   BOOL     fTransRec;              /* Can put whole records */
+   BOOL     fFlush;                 /* Data was written to table and not commited */
+   BOOL     fShared;                /* Shared file */
+   BOOL     fReadonly;              /* Read only file */
+   BOOL     fPositioned;            /* Positioned record */
+   BOOL     fRecordChanged;         /* Record changed */
+} DELIMAREA;
+
+typedef DELIMAREA * LPDELIMAREA;
+
+#ifndef DELIMAREAP
+#define DELIMAREAP LPDELIMAREA
+#endif
 
 HB_EXTERN_END
 

@@ -10,6 +10,10 @@
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    function __dbSDF() replaced by the new one which uses
+ *    SDF RDD I've just created
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -57,6 +61,21 @@
 #include "set.ch"
 
 HB_FILE_VER( "$Id$" )
+
+REQUEST SDF
+
+PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+
+   IF lExport
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
+   ELSE
+      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
+   ENDIF
+
+RETURN
+
+
+#ifdef __DBSDF_OLD_CODE__
 
 #define SkipEOL( handle )   FSEEK( handle, nEOLSize, FS_RELATIVE )
 #define AppendEOL( handle ) FWRITE( handle, HB_OSNewLine() )
@@ -287,3 +306,4 @@ STATIC FUNCTION FindEOL(fh)
   endif  
 RETURN cResult
 
+#endif /* __DBSDF_OLD_CODE__ */

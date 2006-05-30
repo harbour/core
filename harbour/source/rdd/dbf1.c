@@ -1098,6 +1098,11 @@ static ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfAddField(%p, %p)", pArea, pFieldInfo));
 
+   if( pFieldInfo->uiType == HB_IT_MEMO && pArea->bMemoType == DB_MEMO_SMT )
+   {
+      pFieldInfo->uiLen = 10;
+   }
+
    /* Update field offset */
    pArea->pFieldOffset[ pArea->uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
@@ -1265,7 +1270,7 @@ static ERRCODE hb_dbfFlush( DBFAREAP pArea )
 }
 
 /*
- * Replace the current record.
+ * Retrieve current record buffer
  */
 static ERRCODE hb_dbfGetRec( DBFAREAP pArea, BYTE ** pBuffer )
 {
@@ -1420,18 +1425,16 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( pField->uiDec )
             {
                hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                                ( int ) ( pField->uiLen - pField->uiDec - 1 ),
                                 ( int ) pField->uiDec );
             }
-            else if( pField->uiLen > 9 )
+            else if( fDbl )
             {
-               hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
-                                ( int ) pField->uiLen, 0 );
+               hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen, 0 );
             }
             else
             {
-               hb_itemPutNLLen( pItem, ( LONG ) ( fDbl ? dVal : lVal ),
-                                ( int ) pField->uiLen );
+               hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
             }
          }
          break;
@@ -1669,8 +1672,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
 #ifndef HB_CDP_SUPPORT_OFF
-            if( HB_IS_STRING( pItem ) )
-               hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
+            hb_cdpnTranslate( (char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ], hb_cdp_page, pArea->cdPage, uiSize );
 #endif
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
@@ -1933,8 +1935,8 @@ static ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent )
    /* Alloc field offsets array */
    if( uiFieldExtent )
    {
-      pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT * ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT * ) );
+      pArea->pFieldOffset = ( USHORT * ) hb_xgrab( uiFieldExtent * sizeof( USHORT ) );
+      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( USHORT ) );
    }
 
    return SUCCESS;
@@ -2096,9 +2098,6 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
 
-   /* Size for deleted flag */
-   pArea->uiRecordLen = 1;
-
    if( pArea->bTableType == 0 )
    {
       pItem = hb_itemPutNI( pItem, 0 );
@@ -2162,6 +2161,9 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pArea->fHasMemo = fError = FALSE;
 
+   /* Size for deleted flag */
+   pArea->uiRecordLen = 1;
+
    for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
    {
       LPFIELD pField = pArea->lpFields + uiCount;
@@ -2196,7 +2198,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             }
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pThisField->bDec = 0;
-            pArea->uiRecordLen += pThisField->bLen;
+            pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = TRUE;
             break;
 
@@ -2228,14 +2230,14 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             }
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pThisField->bDec = 0;
-            pArea->uiRecordLen += pThisField->bLen;
+            pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_IT_LONG:
             pThisField->bType = 'N';
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pThisField->bDec = ( BYTE ) pField->uiDec;
-            pArea->uiRecordLen += pThisField->bLen;
+            pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_IT_DOUBLE:
@@ -2243,7 +2245,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pField->uiLen = 8;
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pThisField->bDec = ( BYTE ) pField->uiDec;
-            pArea->uiRecordLen += pThisField->bLen;
+            pArea->uiRecordLen += pField->uiLen;
             break;
 
          case HB_IT_INTEGER:
@@ -2255,7 +2257,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             }
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pThisField->bDec = 0;
-            pArea->uiRecordLen += pThisField->bLen;
+            pArea->uiRecordLen += pField->uiLen;
             break;
 
          default:

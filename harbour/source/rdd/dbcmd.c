@@ -75,6 +75,7 @@
 #include "hbapilng.h"
 #include "hbapiitm.h"
 #include "hbrddwrk.h"
+#include "rddsys.ch"
 #if defined(__XHARBOUR__)
 #include "hbfast.h"
 #else
@@ -1589,7 +1590,8 @@ HB_FUNC( DBCOMMITALL )
 static ERRCODE hb_rddOpenTable( char * szFileName,  char * szDriver,
                                 USHORT uiArea, char *szAlias,
                                 BOOL fShared, BOOL fReadonly,
-                                char * szCpId, ULONG ulConnection )
+                                char * szCpId, ULONG ulConnection,
+                                PHB_ITEM pStruct )
 {
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    DBOPENINFO pInfo;
@@ -1642,13 +1644,25 @@ static ERRCODE hb_rddOpenTable( char * szFileName,  char * szDriver,
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
-   /* Open file */
-   errCode = SELF_OPEN( pArea, &pInfo );
-
-   if( errCode != SUCCESS )
+   if( pStruct )
    {
-      hb_rddReleaseCurrentArea();
-      hb_rddSelectWorkAreaNumber( uiPrevArea );
+      errCode = SELF_CREATEFIELDS( pArea, pStruct );
+   }
+   else
+   {
+      errCode = SUCCESS;
+   }
+
+   if( errCode == SUCCESS )
+   {
+      /* Open file */
+      errCode = SELF_OPEN( pArea, &pInfo );
+
+      if( errCode != SUCCESS )
+      {
+         hb_rddReleaseCurrentArea();
+         hb_rddSelectWorkAreaNumber( uiPrevArea );
+      }
    }
 
    s_bNetError = errCode != SUCCESS;
@@ -2247,7 +2261,7 @@ HB_FUNC( DBUSEAREA )
                     hb_parl( 1 ) ? 0 : hb_rddGetCurrentWorkAreaNumber(),
                     hb_parc( 4 ),
                     ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE,
-                    hb_parl( 6 ), hb_parc( 7 ), hb_parnl( 8 ) );
+                    hb_parl( 6 ), hb_parc( 7 ), hb_parnl( 8 ), NULL );
 }
 
 HB_FUNC( __DBZAP )
@@ -4282,11 +4296,13 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
                                    PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
                                    PHB_ITEM pNext, PHB_ITEM pRecID,
                                    PHB_ITEM pRest,
-                                   char *szCpId )
+                                   char *szCpId,
+                                   PHB_ITEM pDelim )
 {
-   AREAP lpaSource, lpaDest, lpaClose = NULL;
+   AREAP lpaClose = NULL;
+   PHB_ITEM pStruct = NULL;
    DBTRANSINFO dbTransInfo;
-   USHORT uiPrevArea;
+   USHORT uiPrevArea, uiCount, uiSwap;
    ERRCODE errCode;
 
    memset( &dbTransInfo, 0, sizeof( DBTRANSINFO ) );
@@ -4294,10 +4310,7 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
 
    if( fExport )
    {
-      PHB_ITEM pStruct = NULL;
-
-      lpaSource = pArea;
-      errCode = hb_dbTransStruct( lpaSource, NULL, &dbTransInfo,
+      errCode = hb_dbTransStruct( pArea, NULL, &dbTransInfo,
                                   &pStruct, pFields );
       if( errCode == SUCCESS )
       {
@@ -4305,25 +4318,70 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
                                       TRUE, 0, "", szCpId, ulConnection );
          if( errCode == SUCCESS )
          {
-            dbTransInfo.lpaDest = lpaClose = lpaDest =
+            dbTransInfo.lpaDest = lpaClose =
                                  ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+            if( pDelim )
+            {
+               SELF_INFO( dbTransInfo.lpaDest, DBI_SETDELIMITER, pDelim );
+            }
          }
       }
-      if( pStruct )
-         hb_itemRelease( pStruct );
    }
    else
    {
-      lpaDest = pArea;
-      errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
-                                 szCpId, ulConnection );
-      if( errCode == SUCCESS )
+      LPRDDNODE pRddNode = hb_rddFindNode( szDriver, NULL );
+
+      if( !pRddNode )
       {
-         lpaClose = lpaSource = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-         errCode = hb_dbTransStruct( lpaSource, lpaDest, &dbTransInfo,
-                                     NULL, pFields );
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
+         return FAILURE;
+      }
+
+      if( pRddNode->uiType == RDT_TRANSFER )
+      {
+         errCode = hb_dbTransStruct( pArea, NULL, &dbTransInfo,
+                                     &pStruct, pFields );
+
+         /* revert area and items */
+         dbTransInfo.lpaDest = dbTransInfo.lpaSource;
+         for( uiCount = 0; uiCount < dbTransInfo.uiItemCount; ++uiCount )
+         {
+            uiSwap = dbTransInfo.lpTransItems[uiCount].uiSource;
+            dbTransInfo.lpTransItems[uiCount].uiSource =
+                                    dbTransInfo.lpTransItems[uiCount].uiDest;
+            dbTransInfo.lpTransItems[uiCount].uiDest = uiSwap;
+         }
+
+         if( errCode == SUCCESS )
+         {
+            errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
+                                       szCpId, ulConnection, pStruct );
+            if( errCode == SUCCESS )
+            {
+               lpaClose = dbTransInfo.lpaSource =
+                                 ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+               if( pDelim )
+               {
+                  SELF_INFO( dbTransInfo.lpaSource, DBI_SETDELIMITER, pDelim );
+               }
+            }
+         }
+      }
+      else
+      {
+         errCode = hb_rddOpenTable( szFileName, szDriver, 0, "", TRUE, TRUE,
+                                    szCpId, ulConnection, NULL );
+         if( errCode == SUCCESS )
+         {
+            lpaClose = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+            errCode = hb_dbTransStruct( lpaClose, pArea, &dbTransInfo,
+                                        NULL, pFields );
+         }
       }
    }
+
+   if( pStruct )
+      hb_itemRelease( pStruct );
 
    if( errCode == SUCCESS )
    {
@@ -4378,7 +4436,8 @@ HB_FUNC( __DBAPP )
                hb_param( 5, HB_IT_NUMERIC ),  /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
                hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
-               hb_parc( 10 ) );               /* Codepage */
+               hb_parc( 10 ),                 /* Codepage */
+               hb_param( 11, HB_IT_STRING ) );/* Delimiter */
       }
       else
       {
@@ -4407,7 +4466,8 @@ HB_FUNC( __DBCOPY )
                hb_param( 5, HB_IT_NUMERIC ),  /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
                hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
-               hb_parc( 10 ) );               /* Codepage */
+               hb_parc( 10 ),                 /* Codepage */
+               hb_param( 11, HB_IT_STRING ) );/* Delimiter */
       }
       else
       {

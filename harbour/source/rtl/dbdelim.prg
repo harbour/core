@@ -11,6 +11,10 @@
  * www - http://www.harbour-project.org
  * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
  *
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    function __dbDelim() replaced by the new one which uses
+ *    DELIM RDD I've just created
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -51,6 +55,21 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+REQUEST DELIM
+
+PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
+
+   IF lExport
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimArg )
+   ELSE
+      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimArg )
+   ENDIF
+
+RETURN
+
+
+#ifdef __DBDELIM_OLD_CODE__
 
 #include "hbcommon.ch"
 #include "fileio.ch"
@@ -368,3 +387,5 @@ for ii:=1 to nDBFfields
    FIELDPUT(ii,vRes)
 next
 return .T. 
+
+#endif /* __DBDELIM_OLD_CODE__ */

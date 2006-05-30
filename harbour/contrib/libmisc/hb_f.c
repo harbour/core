@@ -253,7 +253,7 @@ HB_FUNC( HB_FGOBOTTOM )
 {
    int x;
    int len;
-   long loc;
+   long loc, last;
 
    if ( last_rec[area] != 0 ) {
       recno[area] = last_rec[area];
@@ -263,14 +263,15 @@ HB_FUNC( HB_FGOBOTTOM )
 
       loc = 0L;
 
+      last = offset[area];
       do {
-
          hb_fsSeek( handles[area], offset[area], SEEK_SET );
          len = hb_fsRead(  handles[area], ( BYTE * ) c, c_size );
          for ( x = 0; x < len; x++ ) {
             if ( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
                  ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
                  ( x - loc > b_size ) ) {
+               last = offset[area] + loc;
                recno[area]++;
                x++;
                loc = x + 1;
@@ -281,7 +282,7 @@ HB_FUNC( HB_FGOBOTTOM )
       } while ( len == c_size );
 
       last_rec[area] = --recno[area];
-      last_off[area] = offset[area];
+      last_off[area] = last;
    }
 }
 
@@ -371,6 +372,7 @@ HB_FUNC( HB_FREADANDSKIP )
            ((*(b + x) == 10) && x < read-1 && (*(b + x + 1) == 13)) )
       {
          x += 2;
+         bHasCRLF = TRUE;
          break;
       }
       x++;
