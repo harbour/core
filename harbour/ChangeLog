@@ -9,9 +9,9 @@
 */
 
 2005-10-30 18:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * xharbour/source/rdd/sdf1.c
+      NOTICE: The above files are retagged to 'build46'
 
-  * xharbour/source/rdd/delim1.c
+2006-05-31 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbcmd.c
     * Sinchronised version with harbour/include/hbver.h  
 
@@ -217,10 +217,10 @@
     + added unconditional and conditional jump joining optimization
 
   * harbour/source/vm/classes.c
-  * xharbour/include/hbvmpub.h
+    * indenting and some minor modifications
 
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
-  * xharbour/source/vm/dynsym.c
+    ! clear the logical key position buffer for pending relations
       or hot record buffer updating
 
   * harbour/source/rdd/dbffpt/dbffpt1.c
