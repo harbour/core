@@ -4308,6 +4308,9 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
    memset( &dbTransInfo, 0, sizeof( DBTRANSINFO ) );
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
+   if( szDriver == NULL )
+      szDriver = SELF_RDDNODE( pArea )->szName;
+
    if( fExport )
    {
       errCode = hb_dbTransStruct( pArea, NULL, &dbTransInfo,
