@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      
+      * fixed bug in GET var[ any_one_dim_index ]
+
+   * source/pp/ppcore.c
+      * fixed BCC warning
 2005-10-30 18:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
       NOTICE: The above files are retagged to 'build46'
 

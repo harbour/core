@@ -31,6 +31,8 @@
 # please add your distro suffix if it not belong to the one recognized below
 # and remember that order checking can be important
 
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
+%if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
@@ -50,10 +52,11 @@
 %endif
 %endif
 %endif
+%endif
 
 %define name     harbour
 %define dname    Harbour
-%define version  0.46.0
+%define version  0.47.0
 %define releasen 0
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
