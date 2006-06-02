@@ -8,6 +8,72 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/rdd/dbf1.c
+    * DBI_LOCKOFFSET now returns DBF record lock offset really used
+      (f.e. updated in FP locking after open/close production index)
+
+  * harbour/source/rdd/delim1.c
+    * cleaned BCC warning
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! updated internal production index flag after manual opening
+      production index
+
+2006-06-02 14:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/config/global.cf
+  + harbour/include/usrrdd.ch
+  + harbour/source/rdd/usrrdd/Makefile
+  + harbour/source/rdd/usrrdd/usrrdd.c
+  + harbour/source/rdd/usrrdd/rdds/Makefile
+    + added USRRDD library. It allows to create new RDD from scratch
+      or by inheriting from any other RDDs (except USRRDDs) and overloading
+      any of their methods at .prg level.
+      I hope you will find a lot of fun in creating your own RDDs.
+      I wanted to create more examples and added some documentation
+      but I do not have time for it now - sorry. Try to look at examples
+      below and if you need some more detail information then look at
+      Clipper's NG Technical Reference Guide or ask me. I'll try to help.
+      Two RDDs which seems to be requested by users are ARRAY RDD and
+      OLE RDD. I hope that some of you implement them.
+
+  + harbour/source/rdd/usrrdd/rdds/dbtcdx.prg
+    * Very simple RDD DBTCDX which inherits from DBFCDX and
+      set default memo type to DBT, see exmemo.prg as an example.
+
+  + harbour/source/rdd/usrrdd/rdds/fptcdx.prg
+    * Very simple RDD FPTCDX which inherits from DBFCDX and
+      set default memo type to FPT, see exmemo.prg as an example.
+
+  + harbour/source/rdd/usrrdd/rdds/smtcdx.prg
+    * Very simple RDD SMTCDX which inherits from DBFCDX and
+      set default memo type to SMT, see exmemo.prg as an example.
+
+  + harbour/source/rdd/usrrdd/rdds/fcomma.prg
+    * A simple RDD which uses HB_F*() functions from MISC library
+      to access CSV files. It allow to open an CSV file and navigate
+      using SKIP()/GOTO()/GOTOP()/GOBOTTOM() functions using
+      BOF()/EOF()/RECNO()/LASTREC() to check current state.
+      HB_F*() functions does not support single field access and allow
+      to read only the whole line. This RDD also. I only added one
+      virtual field which exist in all tables open by this RDD called
+      LINE which contains the current .csv file line.
+
+  + harbour/source/rdd/usrrdd/rdds/hscdx.prg
+    * A simple RDD which adds automatically update HSX indexes to DBFCDX
+      To create new HSX index for current work area use: HSX_CREATE()
+      To open already existing one use HSX_OPEN(),
+      To close use: HSX_CLOSE()
+      To retieve an handle use: HSX_HANDLE()
+
+  + harbour/source/rdd/usrrdd/rdds/rlcdx.prg
+    * A simple RDD which introduce lock counters. It has full DBFCDX
+      functionality from which it inherits but if you execute DBRLOCK(100)
+      twice then you will have to also repeat call to DBRUNLOCK(100) to
+      really unlock the record 100. The same if for FLOCK()
+      This idea comes from one of messages sent by Mindaugas Kavaliauskas.
+
   + harbour/source/rdd/usrrdd/example/exfcm.prg
     * example of using FCOMMA RDD
 
@@ -22,7 +88,7 @@
 
 2006-06-02 14:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * harbour.spec
-      
+   * include/hbver.h
       * updated to set version 0.46.1 for build46
    
 2006-06-02 14:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>

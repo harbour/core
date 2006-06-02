@@ -2609,8 +2609,8 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
 
    if( HB_IS_SYMBOL( pItem ) )
    {
-      /* do nothing when we will begin to use HB_IT_SYMBOL */
-#if 1
+      /* do nothing - now we are using HB_IT_SYMBOL */
+#if 0
       hb_stackPop();
       hb_vmPushPointer( ( void* ) pItem->item.asSymbol.value->value.pFunPtr );
 #endif

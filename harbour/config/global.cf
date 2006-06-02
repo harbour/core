@@ -12,6 +12,7 @@ HB_DB_DRIVERS=\
 	dbffpt \
 	hbsix \
 	hsx \
+	usrrdd \
 
 
 ifneq ($(HB_DB_DRVEXT),)
