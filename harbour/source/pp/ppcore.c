@@ -3412,7 +3412,7 @@ static int pp_Stringify( BOOL bSmart, char **ptro, int *lenres, char *expr, int 
 
 static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro, int lenres )
 {
-   int rmlen = lenreal, ifou, lenitem, i = 0;
+   int rmlen = lenreal, ifou, lenitem;
    char sQuotes[4] = "\"\",";
 
    HB_TRACE( HB_TR_DEBUG, ( "ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal, lenreal, ptro, lenres ) );
@@ -3495,6 +3495,8 @@ static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro
                lenitem = ( ifou ) ? ifou - 1 : lenreal;
                if( *expreal != '\0' )
                {
+                  int i;
+                  
                   i = ( ifou ) ? 5 : 4;
                   hb_pp_Stuff( "{||},", ptro, i, 0, lenres );
                   hb_pp_Stuff( expreal, ptro + 3, lenitem, 0, lenres + i );

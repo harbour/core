@@ -494,6 +494,11 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
          USHORT uiCount;
          if( pArg->ExprType == HB_ET_ARRAYAT )
          {
+            /* replace:
+               _GET_( a[1], "a[1]", , , )
+               into:
+               __GETA( {||a }, "a", , , , { 1 } )
+            */
             HB_EXPR_PTR pIndex, pVar;
             HB_EXPR_PTR pBase;
 
@@ -583,8 +588,14 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                   }
                }
             }
-            pBase->value.asList.pExprList = NULL;
-            hb_compExprClear( pBase );
+            /* clear expressions no longer used */
+            while( pBase->ExprType == HB_ET_ARRAYAT )
+            {
+               pVar = pBase->value.asList.pExprList;
+               pBase->value.asList.pExprList = NULL;
+               hb_compExprClear( pBase );
+               pBase = pVar;
+            }
          }
          else if( pArg->ExprType == HB_ET_MACRO )
          {

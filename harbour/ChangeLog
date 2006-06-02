@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  + harbour/source/rdd/usrrdd/example/exrlx.prg
+    * example of using RLCDX RDD
+
+  + harbour/source/rdd/usrrdd/example/exmemo.prg
+    * example of using DBTCDX, FPTCDX and SMTCDX RDDs
+
+2006-06-02 14:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * harbour.spec
+      
       * updated to set version 0.46.1 for build46
    
 2006-06-02 14:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
