@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  + harbour/source/rdd/usrrdd/example/exfcm.prg
+    * example of using FCOMMA RDD
+
+  + harbour/source/rdd/usrrdd/example/exhsx.prg
+    * example of using HSCDX RDD
 
   + harbour/source/rdd/usrrdd/example/exrlx.prg
     * example of using RLCDX RDD
