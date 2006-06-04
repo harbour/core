@@ -4127,6 +4127,27 @@ HB_FUNC( RDDINFO )
    }
 }
 
+static char * hb_dbTransFieldPos( PHB_ITEM pFields, USHORT uiField )
+{
+   char * szField = NULL;
+   PHB_ITEM pItem;
+
+   pItem = hb_arrayGetItemPtr( pFields, uiField );
+   if( pItem )
+   {
+      HB_TYPE type = hb_itemType( pItem );
+
+      if( type & HB_IT_ARRAY )
+         szField = hb_arrayGetCPtr( pItem, DBS_NAME );
+      else if( type & HB_IT_STRING )
+         szField = hb_itemGetCPtr( pItem );
+
+      if( * szField == '\0' )
+         szField = NULL;
+   }
+
+   return szField;
+}
 
 static ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                                  LPDBTRANSINFO lpdbTransInfo,
@@ -4214,7 +4235,7 @@ static ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
       uiSize = 0;
       for( uiCount = 1; uiCount <= uiFields; ++uiCount )
       {
-         szField = hb_arrayGetCPtr( pFields, uiCount );
+         szField = hb_dbTransFieldPos( pFields, uiCount );
          if( szField )
          {
             uiPosSrc = hb_rddFieldExpIndex( lpaSource, szField );
@@ -4417,6 +4438,63 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
    hb_rddSelectWorkAreaNumber( uiPrevArea );
 
    return errCode;
+}
+
+/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) */
+HB_FUNC( __DBTRANS )
+{
+   if( ISNUM( 1 ) )
+   {
+      USHORT uiSrcArea, uiDstArea;
+      AREAP pSrcArea, pDstArea;
+
+      uiSrcArea = hb_rddGetCurrentWorkAreaNumber();
+      pSrcArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+      uiDstArea = hb_parni( 1 );
+      hb_rddSelectWorkAreaNumber( uiDstArea );
+      pDstArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+      if( pSrcArea && pDstArea )
+      {
+         DBTRANSINFO dbTransInfo;
+         ERRCODE errCode;
+         PHB_ITEM pFields = hb_param( 2, HB_IT_ARRAY );
+
+         memset( &dbTransInfo, 0, sizeof( DBTRANSINFO ) );
+         errCode = hb_dbTransStruct( pSrcArea, pDstArea, &dbTransInfo,
+                                     NULL, pFields );
+
+         if( errCode == SUCCESS )
+         {
+            hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
+
+            dbTransInfo.dbsci.itmCobFor   = hb_param( 3, HB_IT_BLOCK );
+            dbTransInfo.dbsci.lpstrFor    = NULL;
+            dbTransInfo.dbsci.itmCobWhile = hb_param( 4, HB_IT_BLOCK );
+            dbTransInfo.dbsci.lpstrWhile  = NULL;
+            dbTransInfo.dbsci.lNext       = hb_param( 5, HB_IT_NUMERIC );
+            dbTransInfo.dbsci.itmRecID    = ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY );
+            dbTransInfo.dbsci.fRest       = hb_param( 7, HB_IT_LOGICAL );
+
+            dbTransInfo.dbsci.fIgnoreFilter     = TRUE;
+            dbTransInfo.dbsci.fIncludeDeleted   = TRUE;
+            dbTransInfo.dbsci.fLast             = FALSE;
+            dbTransInfo.dbsci.fIgnoreDuplicates = FALSE;
+            dbTransInfo.dbsci.fBackward         = FALSE;
+
+            errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+         }
+
+         if( dbTransInfo.lpTransItems )
+            hb_xfree( dbTransInfo.lpTransItems );
+      }
+      else
+         hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "__DBTRANS" );
+
+      hb_rddSelectWorkAreaNumber( uiSrcArea );
+   }
+   else
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "__DBTRANS" );
 }
 
 HB_FUNC( __DBAPP )

@@ -1149,9 +1149,9 @@ static ERRCODE hb_delimClose( DELIMAREAP pArea )
  */
 static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
-   ERRCODE errCode = SUCCESS;
-   PHB_FNAME pFileName;
    PHB_ITEM pError = NULL;
+   PHB_FNAME pFileName;
+   ERRCODE errCode;
    BOOL fRetry;
    BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
 

@@ -4780,16 +4780,16 @@ static BOOL hb_cdxIndexLoad( LPCDXINDEX pIndex, char * szBaseName )
 /*
  * create index file name
  */
-static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
+static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName, BOOL * fProd,
                                char * szFileName, char * szBaseName )
 {
    PHB_FNAME pFileName;
-   BOOL fName = szBagName && *szBagName;
    PHB_ITEM pExt = NULL;
+   BOOL fName = szBagName && *szBagName;
 
    pFileName = hb_fsFNameSplit( fName ? szBagName : pArea->szDataFileName );
 
-   if ( szBaseName )
+   if( szBaseName )
    {
       if( pFileName->szName )
          hb_strncpyUpperTrim( szBaseName, pFileName->szName, CDX_MAXTAGNAMELEN );
@@ -4797,23 +4797,48 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
          szBaseName[ 0 ] = '\0';
    }
 
-   if ( !pFileName->szExtension || !fName )
+   if( !pFileName->szExtension || !fName )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
       pExt = pExtInfo.itmResult = hb_itemPutC( NULL, "" );
-      if ( SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo ) == SUCCESS &&
-           hb_itemGetCLen( pExtInfo.itmResult ) > 0 )
+      if( SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo ) == SUCCESS &&
+          hb_itemGetCLen( pExt ) > 0 )
       {
-         pFileName->szExtension = hb_itemGetCPtr( pExtInfo.itmResult );
+         pFileName->szExtension = hb_itemGetCPtr( pExt );
       }
    }
-
    hb_fsFNameMerge( szFileName, pFileName );
 
-   if ( pExt )
-      hb_itemRelease( pExt );
+   if( fProd )
+   {
+      if( ! pFileName->szName )
+         *fProd = FALSE;
+      else if( !fName )
+         *fProd = TRUE;
+      else
+      {
+         PHB_FNAME pTableFileName = hb_fsFNameSplit( pArea->szDataFileName );
+
+         *fProd = pTableFileName->szName &&
+                  hb_stricmp( pTableFileName->szName, pFileName->szName ) == 0;
+         if( *fProd && pFileName->szExtension && ! pExt )
+         {
+            DBORDERINFO pExtInfo;
+            memset( &pExtInfo, 0, sizeof( pExtInfo ) );
+            pExt = pExtInfo.itmResult = hb_itemPutC( NULL, "" );
+            if( SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo ) == SUCCESS )
+            {
+               *fProd = hb_stricmp( pFileName->szExtension,
+                                    hb_itemGetCPtr( pExt ) ) == 0;
+            }
+         }
+         hb_xfree( pTableFileName );
+      }
+   }
    hb_xfree( pFileName );
+   if( pExt )
+      hb_itemRelease( pExt );
 }
 
 /*
@@ -6944,7 +6969,8 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
-      hb_cdxCreateFName( pArea, NULL, szFileName, NULL );
+      pArea->fHasTags = FALSE;
+      hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
       if ( hb_spFile( ( BYTE * ) szFileName, NULL ) )
       {
          DBORDERINFO pOrderInfo;
@@ -6964,10 +6990,6 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
          }
          hb_itemRelease( pOrderInfo.atomBagName );
          hb_itemRelease( pOrderInfo.itmResult );
-      }
-      else
-      {
-         pArea->fHasTags = FALSE;
       }
    }
    else
@@ -7068,7 +7090,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    char szBaseName[ CDX_MAXTAGNAMELEN + 1 ];
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    LPCDXINDEX pIndex, * pIndexPtr;
-   BOOL bRetry;
+   BOOL fProd, bRetry;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
@@ -7079,7 +7101,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
       return FAILURE;
 
    hb_cdxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ),
-                      szFileName, szBaseName );
+                      &fProd, szFileName, szBaseName );
 
 /*
    if ( ! szBaseName[0] )
@@ -7147,6 +7169,9 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
                      szFileName, hb_fsError(), EF_CANDEFAULT );
       return FAILURE;
    }
+
+   if( fProd )
+      pArea->fHasTags = TRUE;
 
    /* dbfcdx specific: If there was no controlling order, set this one.
     * This is the behaviour of Clipper's dbfcdx, although
@@ -7266,7 +7291,7 @@ static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea )
 static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    ULONG ulRecNo;
-   BOOL fNewFile, fOpenedIndex, fProd = FALSE, fAscend = TRUE, fCustom = FALSE,
+   BOOL fNewFile, fOpenedIndex, fProd, fAscend = TRUE, fCustom = FALSE,
         fTemporary = FALSE, fExclusive = FALSE;
    PHB_ITEM pKeyExp, pForExp = NULL, pResult;
    char szCpndTagName[ CDX_MAXTAGNAMELEN + 1 ], szTagName[ CDX_MAXTAGNAMELEN + 1 ];
@@ -7396,7 +7421,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
     */
 
    hb_cdxCreateFName( pArea, ( char * ) pOrderInfo->abBagName,
-                      szFileName, szCpndTagName );
+                      &fProd, szFileName, szCpndTagName );
 
    if ( pOrderInfo->atomBagName && pOrderInfo->atomBagName[0] )
    {
@@ -7542,25 +7567,23 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
    hb_cdxIndexUnLockWrite( pIndex );
    /* Update DBF header */
-   if( !pArea->fHasTags && !fOpenedIndex && !pIndex->fDelete )
+   if( !pArea->fHasTags && !fOpenedIndex && !pIndex->fDelete && fProd )
    {
-      PHB_FNAME pFileName;
-      pFileName = hb_fsFNameSplit( pArea->szDataFileName );
-      hb_strncpyUpperTrim( szFileName, pFileName->szName ? pFileName->szName : "", CDX_MAXTAGNAMELEN );
-      hb_xfree( pFileName );
-      if ( hb_stricmp( szFileName, szCpndTagName ) == 0 )
+      pArea->fHasTags = TRUE;
+      if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 )
       {
-         pArea->fHasTags = fProd = TRUE;
-         if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 )
-         {
 #ifdef HB_CDX_CLIP_AUTOPEN
-            if ( hb_set.HB_SET_AUTOPEN )
+         if ( hb_set.HB_SET_AUTOPEN )
 #endif
-               SELF_WRITEDBHEADER( ( AREAP ) pArea );
-         }
+            SELF_WRITEDBHEADER( ( AREAP ) pArea );
       }
    }
-   if ( !fOpenedIndex )
+   else
+   {
+      fProd = FALSE;
+   }
+
+   if( !fOpenedIndex )
    {
       if ( fProd || pArea->lpIndexes == NULL )
       {

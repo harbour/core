@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/rdd/dbf1.c
+    ! fixed setting [V]FP DBF table type
+
+  * harbour/source/vm/arrays.c
+    ! fixed ADEL() to clear last element
+    % optimized a little bit AINS() - use hb_itemMove() instead of
+      hb_itemCopy()
+
+2006-06-05 20:30 UTC+0200 Jacek Kubica (kubica/at/wssk.wroc.pl)
+  * harbour/makefile.bc
+    * added references for USRRDD.LIB
+
+2006-06-04 18:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    * use i64 suffix for BCC 3.0 and higher for long long int
+
+  * harbour/source/rtl/dummy.prg
+  * harbour/source/rdd/dbcmd.c
+    * added undocumented Clipper function: __dbTrans()
+      __dbOpenSDF() and __dbJoin() I'll commit soon.
+      There is also __dbTransRec() in dummy.prg but I cannot find any
+      information about this function and its parameters in GOOGLE.
+      If someone knows what is this functions syntax and can Inform
+      me then I'll implement it. I guess it's a wrapper to TRANSREC()
+      RDD method.
 
   * harbour/source/rdd/dbf1.c
     * DBI_LOCKOFFSET now returns DBF record lock offset really used

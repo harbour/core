@@ -63,5 +63,4 @@ FUNCTION __dbJoin()        ; RETURN NIL
 /* NOTE: Internal functions */
 FUNCTION __dbFList()       ; RETURN {}
 FUNCTION __dbOpenSDF()     ; RETURN NIL
-FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL

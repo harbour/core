@@ -862,6 +862,67 @@ HB_EXPORT BOOL hb_dbfLockIdxFile( FHANDLE hFile, BYTE bScheme, USHORT usMode, HB
 }
 
 /*
+ * Get DBF locking parameters
+ */
+static ERRCODE hb_dbfLockData( DBFAREAP pArea,
+                               HB_FOFFSET * ulPos, HB_FOFFSET * ulFlSize,
+                               HB_FOFFSET * ulRlSize, int * iDir )
+{
+   switch( pArea->bLockType )
+   {
+      case DB_DBFLOCK_CLIP:
+         *ulPos = DBF_LOCKPOS_CLIP;
+         *iDir = DBF_LOCKDIR_CLIP;
+         *ulFlSize = DBF_FLCKSIZE_CLIP;
+         *ulRlSize = DBF_RLCKSIZE_CLIP;
+         break;
+
+      case DB_DBFLOCK_CL53:
+         *ulPos = DBF_LOCKPOS_CL53;
+         *iDir = DBF_LOCKDIR_CL53;
+         *ulFlSize = DBF_FLCKSIZE_CL53;
+         *ulRlSize = DBF_RLCKSIZE_CL53;
+         break;
+
+      case DB_DBFLOCK_CL53EXT:
+         *ulPos = DBF_LOCKPOS_CL53EXT;
+         *iDir = DBF_LOCKDIR_CL53EXT;
+         *ulFlSize = DBF_FLCKSIZE_CL53EXT;
+         *ulRlSize = DBF_RLCKSIZE_CL53EXT;
+         break;
+
+      case DB_DBFLOCK_VFP:
+         if( pArea->fHasTags )
+         {
+            *ulPos = DBF_LOCKPOS_VFPX;
+            *iDir = DBF_LOCKDIR_VFPX;
+            *ulFlSize = DBF_FLCKSIZE_VFPX;
+            *ulRlSize = DBF_RLCKSIZE_VFPX;
+         }
+         else
+         {
+            *ulPos = DBF_LOCKPOS_VFP;
+            *iDir = DBF_LOCKDIR_VFP;
+            *ulFlSize = DBF_FLCKSIZE_VFP;
+            *ulRlSize = DBF_RLCKSIZE_VFP;
+         }
+         break;
+
+#ifndef HB_LONG_LONG_OFF
+      case DB_DBFLOCK_XHB64:
+         *ulPos = DBF_LOCKPOS_XHB64;
+         *iDir = DBF_LOCKDIR_XHB64;
+         *ulFlSize = DBF_FLCKSIZE_XHB64;
+         *ulRlSize = DBF_RLCKSIZE_XHB64;
+         break;
+#endif
+      default:
+         return FAILURE;
+   }
+   return SUCCESS;
+}
+
+/*
  * -- DBF METHODS --
  */
 
@@ -2472,9 +2533,11 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_LOCKOFFSET:
       {
-         HB_FOFFSET ulPos, ulPool;
+         HB_FOFFSET ulPos, ulFlSize, ulRlSize;
+         int iDir;
 
-         hb_dbfLockIdxGetData( pArea->bLockType, &ulPos, &ulPool );
+         if( hb_dbfLockData( pArea, &ulPos, &ulFlSize, &ulRlSize, &iDir ) == FAILURE )
+            ulPos = 0;
          hb_itemPutNInt( pItem, ulPos );
          break;
       }
@@ -3595,58 +3658,8 @@ static ERRCODE hb_dbfRawLock( DBFAREAP pArea, USHORT uiAction, ULONG ulRecNo )
 
    if( pArea->fShared )
    {
-      switch( pArea->bLockType )
-      {
-         case DB_DBFLOCK_CLIP:
-            ulPos = DBF_LOCKPOS_CLIP;
-            iDir = DBF_LOCKDIR_CLIP;
-            ulFlSize = DBF_FLCKSIZE_CLIP;
-            ulRlSize = DBF_RLCKSIZE_CLIP;
-            break;
-
-         case DB_DBFLOCK_CL53:
-            ulPos = DBF_LOCKPOS_CL53;
-            iDir = DBF_LOCKDIR_CL53;
-            ulFlSize = DBF_FLCKSIZE_CL53;
-            ulRlSize = DBF_RLCKSIZE_CL53;
-            break;
-
-         case DB_DBFLOCK_CL53EXT:
-            ulPos = DBF_LOCKPOS_CL53EXT;
-            iDir = DBF_LOCKDIR_CL53EXT;
-            ulFlSize = DBF_FLCKSIZE_CL53EXT;
-            ulRlSize = DBF_RLCKSIZE_CL53EXT;
-            break;
-
-         case DB_DBFLOCK_VFP:
-            if( pArea->fHasTags )
-            {
-               ulPos = DBF_LOCKPOS_VFPX;
-               iDir = DBF_LOCKDIR_VFPX;
-               ulFlSize = DBF_FLCKSIZE_VFPX;
-               ulRlSize = DBF_RLCKSIZE_VFPX;
-            }
-            else
-            {
-               ulPos = DBF_LOCKPOS_VFP;
-               iDir = DBF_LOCKDIR_VFP;
-               ulFlSize = DBF_FLCKSIZE_VFP;
-               ulRlSize = DBF_RLCKSIZE_VFP;
-            }
-            break;
-
-#ifndef HB_LONG_LONG_OFF
-         case DB_DBFLOCK_XHB64:
-            ulPos = DBF_LOCKPOS_XHB64;
-            iDir = DBF_LOCKDIR_XHB64;
-            ulFlSize = DBF_FLCKSIZE_XHB64;
-            ulRlSize = DBF_RLCKSIZE_XHB64;
-            break;
-#endif
-
-         default:
-            return FAILURE;
-      }
+      if( hb_dbfLockData( pArea, &ulPos, &ulFlSize, &ulRlSize, &iDir ) == FAILURE )
+         return FAILURE;
 
       switch( uiAction )
       {
