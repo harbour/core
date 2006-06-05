@@ -150,6 +150,7 @@ DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
 DBFFPT_LIB   = $(LIB_DIR)\dbffpt.lib
 HBSIX_LIB    = $(LIB_DIR)\hbsix.lib
 HSX_LIB      = $(LIB_DIR)\hsx.lib
+USRRDD_LIB   = $(LIB_DIR)\usrrdd.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
 LANG_LIB     = $(LIB_DIR)\lang.lib
 CODEPAGE_LIB = $(LIB_DIR)\codepage.lib
@@ -572,6 +573,8 @@ HSX_LIB_OBJS = \
    $(OBJ_DIR)\hsx.obj \
    $(OBJ_DIR)\cftsfunc.obj
 
+USRRDD_LIB_OBJS = \
+   $(OBJ_DIR)\usrrdd.obj 
 
 #
 # PP.LIB rules
@@ -837,6 +840,7 @@ all: \
    $(DBFFPT_LIB) \
    $(HBSIX_LIB) \
    $(HSX_LIB) \
+   $(USRRDD_LIB) \
    $(HB_GT_LIBS) \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
@@ -854,6 +858,7 @@ $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 $(DBFFPT_LIB) : $(DBFFPT_LIB_OBJS)
 $(HBSIX_LIB)  : $(HBSIX_LIB_OBJS)
 $(HSX_LIB)    : $(HSX_LIB_OBJS)
+$(USRRDD_LIB) : $(USRRDD_LIB_OBJS)
 $(DEBUG_LIB)  : $(DEBUG_LIB_OBJS)
 $(LANG_LIB)   : $(LANG_LIB_OBJS)
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
@@ -2722,6 +2727,14 @@ $(OBJ_DIR)\hsx.obj : $(RDD_DIR)\hsx\hsx.c
    tlib $(HSX_LIB) $(ARFLAGS) -+$@,,
 
 #
+# USRRDD.LIB dependencies
+#
+
+$(OBJ_DIR)\usrrdd.obj : $(RDD_DIR)\usrrdd\usrrdd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(USRRDD_LIB) $(ARFLAGS) -+$@,,
+
+#
 # DEBUG.LIB dependencies
 #
 
@@ -2891,6 +2904,7 @@ $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
    $(ECHO) $(DBFFPT_LIB) >> make.tmp
    $(ECHO) $(HBSIX_LIB) >> make.tmp
    $(ECHO) $(HSX_LIB) >> make.tmp
+   $(ECHO) $(USRRDD_LIB) >> make.tmp
    $(CC) @make.tmp
    $(DEL) make.tmp
 
@@ -2938,6 +2952,7 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
    $(ECHO) $(DBFFPT_LIB) >> make.tmp
    $(ECHO) $(HBSIX_LIB) >> make.tmp
    $(ECHO) $(HSX_LIB) >> make.tmp
+   $(ECHO) $(USRRDD_LIB) >> make.tmp
    $(CC) @make.tmp
    $(DEL) make.tmp
 
@@ -3045,6 +3060,7 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    $(ECHO) $(DBFFPT_LIB) >> make.tmp
    $(ECHO) $(HBSIX_LIB) >> make.tmp
    $(ECHO) $(HSX_LIB) >> make.tmp
+   $(ECHO) $(USRRDD_LIB) >> make.tmp
 !if $d(HB_DOC_PDF)
    $(ECHO) $(OBJ_DIR)\genpdf1.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\pdfhbdoc.obj >> make.tmp
@@ -3195,6 +3211,7 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
    $(ECHO) $(DBFFPT_LIB) >> make.tmp
    $(ECHO) $(HBSIX_LIB) >> make.tmp
    $(ECHO) $(HSX_LIB) >> make.tmp
+   $(ECHO) $(USRRDD_LIB) >> make.tmp
    $(CC) @make.tmp
    $(DEL) make.tmp
 

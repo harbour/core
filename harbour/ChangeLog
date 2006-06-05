@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * cleaned // comments and some compiler warnings
+
+  * harbour/include/dbinfo.ch
   * harbour/source/rdd/dbf1.c
     ! fixed setting [V]FP DBF table type
 
