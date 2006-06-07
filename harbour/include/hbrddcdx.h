@@ -74,8 +74,8 @@ HB_EXTERN_BEGIN
 #define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
 #define CDX_DUMMYNODE                       0xFFFFFFFFL
 
-//#define CDX_LOCKOFFSET                      0x7FFFFFFEL
-//#define CDX_LOCKSIZE                                 1L
+/* #define CDX_LOCKOFFSET                      0x7FFFFFFEL */
+/* #define CDX_LOCKSIZE                                 1L */
 #define CDX_STACKSIZE                                64
 #define CDX_PAGECACHESIZE                             8
 #define CDX_NODE_BRANCH                               0
@@ -349,7 +349,7 @@ typedef struct _CDXTAG
    struct _CDXINDEX * pIndex; /* a parent index info */
    struct _CDXTAG   * pNext;  /* pointer to next tag in index */
 
-   //CDXSTACK  PageStack[ CDX_STACKSIZE ];  /* stack with page path to current key */
+   /* CDXSTACK  PageStack[ CDX_STACKSIZE ]; */  /* stack with page path to current key */
    LPCDXPAGE RootPage;        /* pointer to root of keys tree in memory */
    LPCDXKEY  CurKey;          /* current value of key expression */
    LPCDXKEY  HotKey;          /* value of hot key expression */

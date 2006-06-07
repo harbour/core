@@ -113,12 +113,12 @@ typedef struct _DBFDATA
    char     szIndexExt[ HB_MAX_FILE_EXT + 1 ];
    char     szMemoExt[ HB_MAX_FILE_EXT + 1 ];
 
-   BYTE     bLockType;  //= 0;
-   BYTE     bTableType; //= DB_DBF_STD;
-   BYTE     bCryptType; //= DB_CRYPT_NONE;
-   BYTE     bMemoType;  // = DB_MEMO_FPT;
-   BYTE     bMemoExtType;// = DB_MEMOVER_FLEX;
-   USHORT   uiMemoBlockSize; // = 0;
+   BYTE     bLockType;        /* 0 */
+   BYTE     bTableType;       /* DB_DBF_STD */
+   BYTE     bCryptType;       /* DB_CRYPT_NONE */
+   BYTE     bMemoType;        /* DB_MEMO_FPT */
+   BYTE     bMemoExtType;     /* DB_MEMOVER_FLEX */
+   USHORT   uiMemoBlockSize;  /* 0 */
 } DBFDATA;
 
 typedef DBFDATA * LPDBFDATA;

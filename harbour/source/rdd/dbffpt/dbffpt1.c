@@ -1150,10 +1150,11 @@ static char * hb_fptGetMemoType( FPTAREAP pArea, USHORT uiIndex )
                return "M";
             case FPTIT_SIX_ARRAY:
                return "A";
-//            case FPTIT_SIX_BLOCK:
-//            case FPTIT_SIX_VREF:
-//            case FPTIT_SIX_MREF:
-
+/*
+            case FPTIT_SIX_BLOCK:
+            case FPTIT_SIX_VREF:
+            case FPTIT_SIX_MREF:
+*/
             case FPTIT_FLEX_ARRAY:
             case FPTIT_FLEX_VOARR:
                return "A";
@@ -1220,7 +1221,7 @@ static ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 
    switch( hb_itemType( pItem ) )
    {
-      case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
+      case HB_IT_ARRAY: /* HB_IT_OBJECT == HB_IT_ARRAY */
          (*pulArrayCount)++;
          ulSize = 3;
          ulLen = hb_arrayLen( pItem );
@@ -1626,7 +1627,7 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 
    switch ( hb_itemType( pItem ) )
    {
-      case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
+      case HB_IT_ARRAY: /* HB_IT_OBJECT == HB_IT_ARRAY */
          (*pulArrayCount)++;
          ulSize = SIX_ITEM_BUFSIZE;
          ulLen = hb_arrayLen( pItem );
@@ -1678,7 +1679,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
    ulSize = SIX_ITEM_BUFSIZE;
    switch ( hb_itemType( pItem ) )
    {
-      case HB_IT_ARRAY: // HB_IT_OBJECT = HB_IT_ARRAY
+      case HB_IT_ARRAY: /* HB_IT_OBJECT == HB_IT_ARRAY */
          HB_PUT_LE_UINT16( &(*bBufPtr)[0], FPTIT_SIX_ARRAY );
          ulLen = hb_arrayLen( pItem );
          if ( pArea->uiMemoVersion == DB_MEMOVER_SIX )
@@ -1820,11 +1821,11 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
                errCode = EDBF_CORRUPT;
             }
             break;
-
-//         case FPTIT_SIX_BLOCK:
-//         case FPTIT_SIX_VREF:
-//         case FPTIT_SIX_MREF:
-
+/*
+         case FPTIT_SIX_BLOCK:
+         case FPTIT_SIX_VREF:
+         case FPTIT_SIX_MREF:
+*/
          case FPTIT_SIX_ARRAY:
             ulLen = HB_GET_LE_UINT32( &(*pbMemoBuf)[2] );
             if ( pArea->uiMemoVersion == DB_MEMOVER_SIX )
@@ -2683,9 +2684,11 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
             case FPTIT_SIX_LOG:
             case FPTIT_SIX_CHAR:
             case FPTIT_SIX_ARRAY:
-//            case FPTIT_SIX_BLOCK:
-//            case FPTIT_SIX_VREF:
-//            case FPTIT_SIX_MREF:
+/*
+            case FPTIT_SIX_BLOCK:
+            case FPTIT_SIX_VREF:
+            case FPTIT_SIX_MREF:
+*/
                bMemoBuf = pBuffer;
                errCode = hb_fptReadSixItem( pArea, &bMemoBuf, bMemoBuf + ulSize, pItem );
                break;

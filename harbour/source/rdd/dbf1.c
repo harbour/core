@@ -50,7 +50,6 @@
  *
  */
 
-#include "hbsetup.h"
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbvm.h"
@@ -2116,49 +2115,6 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, 0, pItem ) == SUCCESS &&
               hb_itemGetL( pItem );
 
-   if( !fRawBlob )
-   {
-      pError = NULL;
-      /* Try create */
-      do
-      {
-         pArea->hDataFile = hb_fsExtOpen( szFileName, NULL,
-                                          FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                          FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                          NULL, pError );
-         if( pArea->hDataFile == FS_ERROR )
-         {
-            if( !pError )
-            {
-               pError = hb_errNew();
-               hb_errPutGenCode( pError, EG_CREATE );
-               hb_errPutSubCode( pError, EDBF_CREATE_DBF );
-               hb_errPutOsCode( pError, hb_fsError() );
-               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
-               hb_errPutFileName( pError, ( char * ) szFileName );
-               hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
-            }
-            fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
-         }
-         else
-            fRetry = FALSE;
-      } while( fRetry );
-
-      if( pError )
-      {
-         hb_itemRelease( pError );
-      }
-
-      if( pArea->hDataFile == FS_ERROR )
-      {
-         if( pItem )
-            hb_itemRelease( pItem );
-         return FAILURE;
-      }
-   }
-
-   pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
-
    if( pArea->bTableType == 0 )
    {
       pItem = hb_itemPutNI( pItem, 0 );
@@ -2207,6 +2163,47 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       hb_itemRelease( pItem );
    }
+
+   if( !fRawBlob )
+   {
+      pError = NULL;
+      /* Try create */
+      do
+      {
+         pArea->hDataFile = hb_fsExtOpen( szFileName, NULL,
+                                          FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                          FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                          NULL, pError );
+         if( pArea->hDataFile == FS_ERROR )
+         {
+            if( !pError )
+            {
+               pError = hb_errNew();
+               hb_errPutGenCode( pError, EG_CREATE );
+               hb_errPutSubCode( pError, EDBF_CREATE_DBF );
+               hb_errPutOsCode( pError, hb_fsError() );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
+               hb_errPutFileName( pError, ( char * ) szFileName );
+               hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
+            }
+            fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
+         }
+         else
+            fRetry = FALSE;
+      } while( fRetry );
+
+      if( pError )
+      {
+         hb_itemRelease( pError );
+      }
+
+      if( pArea->hDataFile == FS_ERROR )
+      {
+         return FAILURE;
+      }
+   }
+
+   pArea->szDataFileName = hb_strdup( ( char * ) szFileName );
 
    uiSize = pArea->uiFieldCount * sizeof( DBFFIELD );
    if( pArea->uiFieldCount )
@@ -4418,6 +4415,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
             case DB_DBF_VFP:        /* VFP DBF file */
                pData->bTableType = iType;
          }
+         break;
       }
       case RDDI_LOCKSCHEME:
       {

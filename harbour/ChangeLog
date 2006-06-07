@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/vm/runner.c
+    * synced with xHarbour
+
+  * harbour/utils/hbtest/rt_misc.prg
+   * added overloading "=" operator. Now "==" and "=" can be overloaded
+     with different methods
+
+   All names I used for new functions/macros can be changed. Please look at
+   it and if you will some better propositions then we can use it.
+   hb_vmProcessSymbolsExt() is added but not used yet.
+
+2006-06-07 16:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrdddbf.h
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/delim1.c
   * harbour/source/rdd/dbffpt/dbffpt1.c
     * cleaned // comments and some compiler warnings
 

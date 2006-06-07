@@ -133,7 +133,7 @@ static BOOL s_bNetError = FALSE;       /* Error on Networked environments */
             } while ( 0 );
 
 #define HB_GET_WA( n )  ( ( (n) < s_uiWaNumMax ) ? s_WaList[ s_WaNums[ ( n ) ] ] : NULL )
-//#define HB_CURRENT_WA   HB_GET_WA( s_uiCurrArea )
+/* #define HB_CURRENT_WA   HB_GET_WA( s_uiCurrArea ) */
 #define HB_CURRENT_WA   s_pCurrArea
 
 /*
@@ -4083,7 +4083,7 @@ HB_FUNC( DBEXISTS )
       szDriver = hb_rddDefaultDrv( NULL );
    }
 
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  // find the RDD
+   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
    if ( !pRDDNode )
    {
@@ -4457,14 +4457,11 @@ HB_FUNC( __DBTRANS )
       if( pSrcArea && pDstArea )
       {
          DBTRANSINFO dbTransInfo;
-         ERRCODE errCode;
          PHB_ITEM pFields = hb_param( 2, HB_IT_ARRAY );
 
          memset( &dbTransInfo, 0, sizeof( DBTRANSINFO ) );
-         errCode = hb_dbTransStruct( pSrcArea, pDstArea, &dbTransInfo,
-                                     NULL, pFields );
-
-         if( errCode == SUCCESS )
+         if( hb_dbTransStruct( pSrcArea, pDstArea, &dbTransInfo,
+                               NULL, pFields ) == SUCCESS )
          {
             hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
 
@@ -4482,7 +4479,7 @@ HB_FUNC( __DBTRANS )
             dbTransInfo.dbsci.fIgnoreDuplicates = FALSE;
             dbTransInfo.dbsci.fBackward         = FALSE;
 
-            errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+            SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
          }
 
          if( dbTransInfo.lpTransItems )
@@ -4651,7 +4648,7 @@ HB_FUNC( DBSKIPPER )
 
 
 
-// Escaping delimited strings. Need to be cleaned/optimized/improved
+/* Escaping delimited strings. Need to be cleaned/optimized/improved */
 static char *hb_strescape( char *szInput, int lLen, char *cDelim )
 {
    int     lCnt = 0;
@@ -4681,7 +4678,7 @@ static char *hb_strescape( char *szInput, int lLen, char *cDelim )
    return szReturn;
 }
 
-// Export field values to text file
+/* Export field values to text file */
 #ifndef HB_CDP_SUPPORT_OFF
 static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char *cDelim, PHB_CODEPAGE cdp )
 #else
@@ -4690,7 +4687,7 @@ static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char *cDelim )
 {
    switch( hb_itemType( pValue ) )
    {
-      // a "C" field
+      /* a "C" field */
       case HB_IT_STRING:
       {
          char *szStrEsc;
@@ -4706,15 +4703,15 @@ static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char *cDelim )
 #endif
          szString = hb_xstrcpy( NULL,cDelim,szStrEsc,cDelim,NULL);
 
-         // FWrite( handle, szString )
+         /* FWrite( handle, szString ) */
          hb_fsWriteLarge( handle, (BYTE*) szString, strlen( szString ) );
 
-         // Orphaned, get rif off it
+         /* Orphaned, get rif off it */
          hb_xfree( szStrEsc );
          hb_xfree( szString );
          break;
       }
-      // a "D" field
+      /* a "D" field */
       case HB_IT_DATE:
       {
          char *szDate = (char*) hb_xgrab( 9 );
@@ -4724,13 +4721,13 @@ static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char *cDelim )
          hb_xfree( szDate );
          break;
       }
-      // an "L" field
+      /* an "L" field */
       case HB_IT_LOGICAL:
       {
          hb_fsWriteLarge( handle, (BYTE*) ( hb_itemGetL( pValue )  ? "T" : "F" ), 1 );
          break;
       }
-      // an "N" field
+      /* an "N" field */
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
@@ -4747,9 +4744,9 @@ static BOOL hb_ExportVar( int handle, PHB_ITEM pValue, char *cDelim )
          }
          break;
       }
-      // an "M" field or the other, might be a "V" in SixDriver
+      /* an "M" field or the other, might be a "V" in SixDriver */
       default:
-      // We do not want MEMO contents
+      /* We do not want MEMO contents */
          return FALSE;
    }
    return TRUE;
@@ -4773,7 +4770,7 @@ HB_FUNC( DBF2TEXT )
 
    AREAP pArea = HB_CURRENT_WA;
 
-   // Export DBF content to text file
+   /* Export DBF content to text file */
 
    int iSepLen;
    USHORT uiFields = 0;
@@ -4826,7 +4823,7 @@ HB_FUNC( DBF2TEXT )
    while( ( nCount == -1 || nCount > 0 ) &&
           ( !pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
    {
-      // While !BOF() .AND. !EOF()
+      /* While !BOF() .AND. !EOF() */
       SELF_EOF( pArea, &bEof );
       SELF_BOF( pArea, &bBof );
 
@@ -4835,11 +4832,11 @@ HB_FUNC( DBF2TEXT )
          break;
       }
 
-      // For condition is met
-      // if For is NULL, hb__Eval returns TRUE
+      /* For condition is met */
+      /* if For is NULL, hb__Eval returns TRUE */
       if( !pFor || hb_itemGetL( hb_vmEvalBlock( pFor ) ) )
       {
-         // User does not request fields, copy all fields
+         /* User does not request fields, copy all fields */
          if( bNoFieldPassed )
          {
             for ( ui = 1; ui <= uiFields; ui ++ )
@@ -4858,7 +4855,7 @@ HB_FUNC( DBF2TEXT )
                hb_itemClear( pTmp );
             }
          }
-         // Only requested fields are exported here
+         /* Only requested fields are exported here */
          else
          {
             USHORT uiFieldCopy = ( USHORT ) hb_arrayLen( pFields );
@@ -4897,11 +4894,11 @@ HB_FUNC( DBF2TEXT )
          nCount-- ;
       }
 
-      // DBSKIP()
+      /* DBSKIP() */
       SELF_SKIP( pArea, 1 );
    }
 
-   // Writing EOF
+   /* Writing EOF */
    hb_fsWriteLarge( handle, (BYTE*) "\x1A", 1 );
    hb_itemRelease( pTmp );
 }

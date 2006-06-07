@@ -243,8 +243,16 @@ HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
       {
          PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
 
-         for( ; ulIndex < ulLen; ++ulIndex )       /* move items */
-            hb_itemMove( pBaseArray->pItems + ulIndex - 1, pBaseArray->pItems + ulIndex );
+         if( ulIndex == ulLen )
+         {
+            hb_itemClear( pBaseArray->pItems + ulIndex - 1 );
+         }
+         else
+         {
+            for( ; ulIndex < ulLen; ++ulIndex )       /* move items */
+               hb_itemMove( pBaseArray->pItems + ulIndex - 1,
+                            pBaseArray->pItems + ulIndex );
+         }
       }
 
       return TRUE;
@@ -265,12 +273,16 @@ HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
       {
          PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
 
-         hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
-
-         for( ulLen--; ulLen >= ulIndex; ulLen-- )          /* move items */
-            hb_itemCopy( pBaseArray->pItems + ulLen, pBaseArray->pItems + ( ulLen - 1 ) );
-
-         hb_itemClear( pBaseArray->pItems + ulLen );
+         if( ulIndex == ulLen )
+         {
+            hb_itemClear( pBaseArray->pItems + ulIndex - 1 );
+         }
+         else
+         {
+            while( --ulLen >= ulIndex )                     /* move items */
+               hb_itemMove( pBaseArray->pItems + ulLen,
+                            pBaseArray->pItems + ulLen - 1 );
+         }
       }
 
       return TRUE;

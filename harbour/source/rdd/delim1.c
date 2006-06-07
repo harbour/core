@@ -250,7 +250,7 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_delimReadRecord(%p)", pArea));
 
    if( pArea->ulBufferStart <= pArea->ulRecordOffset &&
-       pArea->ulBufferStart + pArea->ulBufferRead > pArea->ulRecordOffset )
+       pArea->ulBufferStart + ( HB_FOFFSET ) pArea->ulBufferRead > pArea->ulRecordOffset )
    {
       pArea->ulBufferIndex = pArea->ulRecordOffset - pArea->ulBufferStart;
    }
@@ -355,7 +355,8 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
       ch = hb_delimNextChar( pArea );
 
    if( ch == -2 &&
-       pArea->ulRecordOffset == pArea->ulBufferStart + pArea->ulBufferIndex )
+       pArea->ulRecordOffset == ( HB_FOFFSET ) ( pArea->ulBufferStart +
+                                                 pArea->ulBufferIndex ) )
    {
       pArea->fEof = TRUE;
       pArea->fPositioned = FALSE;

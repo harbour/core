@@ -316,8 +316,8 @@
 #define FILEPUT_ENCRYPT         BLOB_IMPORT_ENCRYPT
 
 /* DBF TYPES */
-#define DB_DBF_STD            0
-#define DB_DBF_VFP            1
+#define DB_DBF_STD            1
+#define DB_DBF_VFP            2
 
 /* MEMO TYPES */
 #define DB_MEMO_NONE          0
