@@ -3783,6 +3783,8 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( pCreateInfo )
    {
+      BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+      PHB_FNAME pFileName;
       PHB_ITEM pError = NULL, pItem = NULL;
       BOOL bRetry;
 
@@ -3808,6 +3810,7 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
          {
             hb_memoErrorRT( pArea, EG_CREATE, EDBF_MEMOTYPE,
                             ( char * ) pCreateInfo->abName, 0, 0 );
+            hb_itemRelease( pItem );
             return FAILURE;
          }
       }
@@ -3838,6 +3841,23 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
          }
          pArea->uiMemoBlockSize = hb_itemGetNI( pItem );
       }
+
+      /* create file name */
+      pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+      if( ! pFileName->szExtension )
+      {
+         pItem = hb_itemPutC( pItem, "" );
+         SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
+         pFileName->szExtension = hb_itemGetCPtr( pItem );
+         hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      }
+      else
+      {
+         hb_strncpy( ( char * ) szFileName, ( char * ) pCreateInfo->abName, _POSIX_PATH_MAX );
+      }
+      hb_xfree( pFileName );
+
+
       if( pItem )
       {
          hb_itemRelease( pItem );
@@ -3846,7 +3866,7 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* Try create */
       do
       {
-         pArea->hMemoFile = hb_fsExtOpen( pCreateInfo->abName, NULL,
+         pArea->hMemoFile = hb_fsExtOpen( szFileName, NULL,
                                           FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
                                           FXO_DEFAULTS | FXO_SHARELOCK,
                                           NULL, pError );
@@ -3859,7 +3879,7 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
                hb_errPutSubCode( pError, EDBF_CREATE_MEMO );
                hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
                hb_errPutOsCode( pError, hb_fsError() );
-               hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
+               hb_errPutFileName( pError, ( char * ) szFileName );
                hb_errPutFlags( pError, EF_CANRETRY );
             }
             bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
@@ -3872,6 +3892,8 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( pArea->hMemoFile == FS_ERROR )
          return FAILURE;
+
+      pArea->szMemoFileName = hb_strdup( ( char * ) szFileName );
    }
    else /* For zap file */
       hb_fsSeek( pArea->hMemoFile, 0, FS_SET );
@@ -3984,9 +4006,11 @@ static ERRCODE hb_fptGetValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
  */
 static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
+   BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
+   PHB_FNAME pFileName;
+   PHB_ITEM pError;
    USHORT uiFlags;
    BOOL bRetry;
-   PHB_ITEM pError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fptOpenMemFile(%p, %p)", pArea, pOpenInfo));
 
@@ -4004,6 +4028,22 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
       return FAILURE;
    }
 
+   /* create file name */
+   pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
+   if( ! pFileName->szExtension )
+   {
+      PHB_ITEM pItem = hb_itemPutC( NULL, "" );
+      SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
+      pFileName->szExtension = hb_itemGetCPtr( pItem );
+      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_itemRelease( pItem );
+   }
+   else
+   {
+      hb_strncpy( ( char * ) szFileName, ( char * ) pOpenInfo->abName, _POSIX_PATH_MAX );
+   }
+   hb_xfree( pFileName );
+
    uiFlags = (pOpenInfo->fReadonly ? FO_READ : FO_READWRITE) |
              (pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE);
    pError = NULL;
@@ -4011,7 +4051,7 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hMemoFile = hb_fsExtOpen( pOpenInfo->abName, NULL, uiFlags |
+      pArea->hMemoFile = hb_fsExtOpen( szFileName, NULL, uiFlags |
                                        FXO_DEFAULTS | FXO_SHARELOCK,
                                        NULL, pError );
       if( pArea->hMemoFile == FS_ERROR )
@@ -4023,7 +4063,7 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
             hb_errPutSubCode( pError, EDBF_OPEN_MEMO );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
             hb_errPutOsCode( pError, hb_fsError() );
-            hb_errPutFileName( pError, ( char * ) pOpenInfo->abName );
+            hb_errPutFileName( pError, ( char * ) szFileName );
             hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
          }
          bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
@@ -4037,6 +4077,8 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pArea->hMemoFile == FS_ERROR )
       return FAILURE;
+
+   pArea->szMemoFileName = hb_strdup( ( char * ) szFileName );
 
    if( pArea->bMemoType == DB_MEMO_DBT )
    {
@@ -4086,7 +4128,7 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pArea->uiMemoBlockSize == 0 )
    {
       hb_memoErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT,
-                      ( char * ) pOpenInfo->abName, 0, 0 );
+                      ( char * ) pArea->szMemoFileName, 0, 0 );
       return FAILURE;
    }
 

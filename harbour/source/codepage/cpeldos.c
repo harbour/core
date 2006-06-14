@@ -89,7 +89,7 @@ static HB_CODEPAGE s_codepage = { "EL",
     "Ш~сЩЪЫЬ~тЭЮ~уЯа~хбвгдеж~цзийклм~чнопр~щ",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( EL );
+HB_CODEPAGE_INIT( EL )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_EL

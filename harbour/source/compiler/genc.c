@@ -177,7 +177,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             * we are using these two bits to mark the special function used to
             * initialize static variables
             */
-            fprintf( yyc, "{ \"(_INITSTATICS)\", {HB_FS_INITEXIT}, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "{ \"%s\", {HB_FS_INITEXIT}, {hb_INITSTATICS}, NULL }", pSym->szName ); /* NOTE: hb_ intentionally in lower case */
          }
          else
          {

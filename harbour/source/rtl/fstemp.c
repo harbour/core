@@ -157,7 +157,7 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
       strcpy( ( char * ) pszName, ( char * ) pszTempDir );
       if ( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER || hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
       {
-         // check to see if temp directory already upper or lower. If not use current directory ( "." )
+         /* check to see if temp directory already upper or lower. If not use current directory ( "." ) */
          char *psZ = ( char * ) pszName ;
          int iChar ;
          BOOL bLower =  hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER  ;

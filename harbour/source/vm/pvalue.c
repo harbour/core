@@ -58,10 +58,11 @@
 HB_FUNC( HB_PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
-   PHB_ITEM *pBase = hb_stack.pItems + ( hb_stackBaseItem() )->item.asSymbol.stackbase; /* Skip function + self */
+   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackbase; /* Skip function + self */
+   PHB_ITEM pBase = hb_stackItem( lOffset ); 
 
-   if( uiParam && uiParam <= ( *pBase )->item.asSymbol.paramcnt ) /* Valid number */
-      hb_itemReturn( *( pBase + 1 + uiParam ) );
+   if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt ) /* Valid number */
+      hb_itemReturn( hb_stackItem( lOffset + 1 + uiParam ) );
    else
       hb_ret();    /* return NIL */
 }

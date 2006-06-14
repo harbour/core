@@ -56,6 +56,7 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapicls.h"
 #include "hbdefs.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
@@ -86,6 +87,20 @@ void hb_stackPop( void )
 
    if( HB_IS_COMPLEX( * hb_stack.pPos ) )
       hb_itemClear( * hb_stack.pPos );
+}
+
+#undef hb_stackPopReturn
+void hb_stackPopReturn( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackPopReturn()"));
+
+   if( HB_IS_COMPLEX( &hb_stack.Return ) )
+      hb_itemClear( &hb_stack.Return );
+
+   if( --hb_stack.pPos < hb_stack.pItems )
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
+
+   hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos );
 }
 
 #undef hb_stackDec
@@ -122,6 +137,21 @@ void hb_stackFree( void )
 void hb_stackPush( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPush()"));
+
+   /* enough room for another item ? */
+   if( ++hb_stack.pPos == hb_stack.pEnd )
+      hb_stackIncrease();
+
+   /* now, push it: */
+   ( * hb_stack.pPos )->type = HB_IT_NIL;
+}
+
+#undef hb_stackPushReturn
+void hb_stackPushReturn( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackPushReturn()"));
+
+   hb_itemRawMove( * hb_stack.pPos, &hb_stack.Return );
 
    /* enough room for another item ? */
    if( ++hb_stack.pPos == hb_stack.pEnd )

@@ -1285,14 +1285,14 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             BOOL bRemoveRef = FALSE;
 /*         #ifndef HB_C52_STRICT */
-				if( HB_SUPPORT_ARRSTR )
-            	/* to manage strings as bytes arrays, they must be pushed by reference */
-            	/* arrays also are passed by reference */
-            	if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
-            	{
-               	pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
-               	bRemoveRef = TRUE;
-            	}
+            if( HB_SUPPORT_ARRSTR )
+               /* to manage strings as bytes arrays, they must be pushed by reference */
+               /* arrays also are passed by reference */
+               if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+               {
+                  pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
+                  bRemoveRef = TRUE;
+               }
 /*         #endif */
 
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
@@ -1300,11 +1300,11 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
 
 /*         #ifndef HB_C52_STRICT */
-				if( HB_SUPPORT_ARRSTR )
-            	if( bRemoveRef )
-            	{
-               	pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
-            	}
+            if( HB_SUPPORT_ARRSTR )
+               if( bRemoveRef )
+               {
+                  pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+               }
 /*         #endif */
 
          }
@@ -3356,6 +3356,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
       case HB_EA_LVALUE:
          hb_compErrorLValue( pSelf );
          break;
+
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );

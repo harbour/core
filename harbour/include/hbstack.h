@@ -97,7 +97,7 @@ typedef struct
 #define hb_stackTopItem( )          ( * hb_stack.pPos )
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
-#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + iItemPos ) )
+#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 
 
@@ -117,7 +117,23 @@ typedef struct
                                        if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
                                           hb_itemClear( * hb_stack.pPos ); \
                                     } while ( 0 )
+
 #define hb_stackPush( )             do { \
+                                       if( ++hb_stack.pPos == hb_stack.pEnd ) \
+                                          hb_stackIncrease(); \
+                                       ( * hb_stack.pPos )->type = HB_IT_NIL; \
+                                    } while ( 0 )
+
+#define hb_stackPopReturn( )        do { \
+                                       if( HB_IS_COMPLEX( &hb_stack.Return ) ) \
+                                          hb_itemClear( &hb_stack.Return ); \
+                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                          hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
+                                       hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
+                                    } while ( 0 )
+
+#define hb_stackPushReturn( )       do { \
+                                       hb_itemRawMove( * hb_stack.pPos, &hb_stack.Return ); \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
                                        ( * hb_stack.pPos )->type = HB_IT_NIL; \

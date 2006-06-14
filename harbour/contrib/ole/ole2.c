@@ -80,6 +80,7 @@
 
 #include "hbvm.h"
 #include "hbapiitm.h"
+#include "hbapicls.h"
 #include "hbdate.h"
 
 static far VARIANTARG RetVal;

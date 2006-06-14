@@ -58,9 +58,11 @@
 
 HB_FUNC( SPACE )
 {
-   if( ISNUM( 1 ) )
+   PHB_ITEM pItem = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pItem )
    {
-      long lLen = hb_parnl( 1 );
+      long lLen = hb_itemGetNL( pItem );
 
       if( lLen > 0 )
       {

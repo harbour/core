@@ -8,6 +8,310 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * generate Clipper compatible error messages for EG_NO[VAR]METHOD
+      and EG_NOFUNC. Please do not change it. If you want previous Harbour
+      error messages for EG_NO[VAR]METHOD then please change __msgNoMethod
+      in classy.c
+
+  * harbour/source/vm/arrays.c
+    * minor modification
+
+2006-06-14 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapiitm.h
+    + added missing declaration of hb_itemPutPtrGC()
+
+2006-06-14 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/linux/dir.cf
+  * harbour/config/linux/gcc.cf
+    * formatting
+
+  * harbour/config/linux/global.cf
+  * harbour/config/linux/install.cf
+    * added -ldl to linked library list and RANLIB executing after library
+      creation
+
+  * harbour/contrib/ole/ole2.c
+    * added #include "hbapicls.h"
+
+  + harbour/include/hbapicls.h
+  * harbour/include/hbapi.h
+    + added HB_IT_ENUM item
+    + added collect member to HB_IT_POINTER structure for POINTER items
+      inspected by GC
+    * changed the order of HB_CODEBLOCK members to safe few bytes on
+      alignment
+    * removed counters from HB_CODEBLOCK and HB_BASEARRAY structure
+    + added hb_xRefInc(), hb_xRefDec(), hb_xRefFree(), hb_xRefCount(),
+      hb_xRefResize() functions. They are internal Harbour VM functions
+      and covered by internal API macro. Should not be used by 3-rd
+      party code because we may change them in the future or even remove.
+    + added hb_gcRefInc(), hb_gcRefDec(), hb_gcRefFree(), hb_gcRefCount()
+      functions. These are also internal function which corresponds to the
+      above hb_x*() ones.
+    - removed hb_arrayRelease() function. This function is not longer
+      necessary and it should never be public function - it was implemented
+      in very dangerous way.
+    - removed hb_codeblockDelete() function.
+    - removed hb_memvarValueDecGarbageRef()
+    + added USHORT usLen parameter to hb_codeblockMacroNew() - when sets
+      to non 0 value it informs that PCODE should be copied to dynamically
+      allocated buffer.
+    * moved all classes/object functions to separate file: hbapicls.h
+    + added hb_retptrGC()
+    + added internal function hb_memvarGetItem()
+
+  * harbour/include/hbapiitm.h
+    - removed hb_itemForwardValue() and added macro which translates
+      hb_itemForwardValue() to hb_itemMove()
+    + added hb_itemUnShareString() and hb_itemReSizeString() functions
+    + added hb_itemSetNil() macro
+
+  * harbour/include/hbdefs.h
+    * some cleanups in macro definitions
+
+  * harbour/include/hbexprb.c
+    * indenting
+
+  * harbour/include/hbvm.h
+  * harbour/include/hbinit.h
+    + added hb_vmProcessSymbolsExt(), hb_vmRegisterSymbols(),
+      hb_vmFreeSymbols(), hb_vmBeginSymbolGroup(),
+      hb_vmInitSymbolGroup(), hb_vmExitSymbolGroup()
+    * changed hb_vmProcessSymbols() to return address of register symbol
+      table. For normal code it's the same address as given in parameter
+      so it does not break backward binary compatibility.
+    * changed symbol init macros to work correctly with modified address
+      of symbol table
+
+  * harbour/include/hbsetup.h
+    * added support for HB_USE_PROFILER macro. Now profiler code is
+      is disable in HVM by default
+    * commented out HB_ASORT_OPT_ITEMCOPY - it's not longer used - see note.
+
+  * harbour/include/hbstack.h
+    * added missing parenthesis in hb_stackItem() macro
+
+  * harbour/include/hbtypes.h
+    * updated VM_PROCESS_DLL_SYMBOLS definition
+    + added VM_PROCESS_SYMBOLS_EXT
+    - removed HB_ARRAYRELEASE
+
+  * harbour/include/hbver.h
+    * changed revision number to 2
+
+  * harbour/include/hbvmpub.h
+    - remove pFunPtr from HB_DYNS and cover profiler member by
+      #ifndef HB_NO_PROFILER
+    + added HB_PCODEFUNC structure
+    + added HB_FS_PCODEFUNC, HB_FS_DYNCODE and HB_FS_LOCAL - the last one
+      is not used yet.
+
+  * harbour/include/hbxvm.h
+    * added some multipcode functions for some speed optimization in -gc3
+      output
+
+  * harbour/include/hbapicdp.h
+  * harbour/source/codepage/cpbg866.c
+  * harbour/source/codepage/cpbgiso.c
+  * harbour/source/codepage/cpbgwin.c
+  * harbour/source/codepage/cpeldos.c
+  * harbour/source/codepage/cpelwin.c
+  * harbour/source/codepage/cpesdos.c
+  * harbour/source/codepage/cpesmwi.c
+  * harbour/source/codepage/cpeswin.c
+  * harbour/source/codepage/cpgedos.c
+  * harbour/source/codepage/cpgewin.c
+  * harbour/source/codepage/cphu852.c
+  * harbour/source/codepage/cphuiso.c
+  * harbour/source/codepage/cphuwin.c
+  * harbour/source/codepage/cppl852.c
+  * harbour/source/codepage/cppliso.c
+  * harbour/source/codepage/cpplmaz.c
+  * harbour/source/codepage/cpplwin.c
+  * harbour/source/codepage/cppt850.c
+  * harbour/source/codepage/cpptiso.c
+  * harbour/source/codepage/cpru866.c
+  * harbour/source/codepage/cprukoi.c
+  * harbour/source/codepage/cpruwin.c
+  * harbour/source/codepage/cpsl437.c
+  * harbour/source/codepage/cpsl852.c
+  * harbour/source/codepage/cpsliso.c
+  * harbour/source/codepage/cpslwin.c
+  * harbour/source/codepage/cpsrwin.c
+  * harbour/source/common/hbfhnd.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/langapi.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtalleg/ssf.h
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * cleaned the code to avoid warnings for some non ANSI C constructions
+
+  * harbour/source/compiler/cmdcheck.c
+    * formatting
+
+  * harbour/source/compiler/gencc.c
+    * added some multipcode optimizations
+
+    * formatting 
+    * keep function name set by compiler for static initstatics
+
+  * harbour/source/compiler/harbour.c
+    * extend init statics name with the number of used static variables
+    * formatting
+
+  * harbour/source/compiler/hbusage.c
+    + added my name to developers list - I hope that there is enough
+      of my code in Harbour (BTW for quite long time) ;-)
+
+  * harbour/source/rdd/dbcmd.c
+    - removed DBF2TEXT() function
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * generate RT error when someone tries to create DBF with memo fields
+      without MEMO RDD linked.
+
+  * harbour/source/rtl/errorapi.c
+    * replace all hb_vmDo() with hb_vmSend()
+
+  * harbour/source/rtl/math.c
+    * use hb_errPutArgs() to pass parameters to error object
+
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/space.c
+  * harbour/source/rtl/strpeek.c
+    * some minor optimizations
+
+  * harbour/source/vm/arrays.c
+    - removed hb_arrayRelease() function.
+    * changed hb_arrayReleaseGarbage() to be safe for recursive call
+    * updated to use GC counters
+
+  * harbour/source/vm/arrayshb.c
+    * use stack function/macros instead of direct accessing HB_STACK members
+
+  * harbour/source/vm/asort.c
+    * removed unused HB_ASORT_OPT_ITEMCOPY
+
+  * harbour/source/vm/classes.c
+    * added class code from HVM
+    % added fast overloaded operator detection and execution
+    + added hb_objHasOperator(), hb_objOperatorCall()
+    + added separated overloading of "=" and "==" operators
+    * operate on PHB_SYMB not PHB_FUNC - support for pure PCODE function
+      without any machine code
+    * use stack function/macros instead of direct accessing HB_STACK members
+    * separated profiler code
+    * some code cleaning
+
+  * harbour/source/vm/codebloc.c
+    + added USHORT usLen parameter to hb_codeblockMacroNew() - when sets
+      to non 0 value it informs that PCODE should be copied to dynamically
+      allocated buffer.
+    * updated to use GC counters
+    - removed hb_codeblockDelete() function.
+    * changed hb_codeblockDeleteGarbage() to be safe for recursive call
+    - removed restoring statics base in hb_codeblockEvaluate()
+
+  * harbour/source/vm/debug.c
+    * cleaned and optimized some code
+
+  * harbour/source/vm/dynlibhb.c
+    + added support for loading and unloading dynamic libraries with PCODE
+    + added support for dynamic libraries in Linux (.so)
+    + added HB_LIBERROR() - returns error string with last error in
+      HB_LIBLOAD() - now works only in Linux
+
+  * harbour/source/vm/dynsym.c
+    * separated profiler code
+    + use pDynSym->pSymbol->value.pFunPtr instead of pDynSym->pFunPtr
+
+  * harbour/source/vm/estack.c
+    + added #include "hbapicls.h"
+    + added hb_stackPushReturn(), hb_stackPopReturn()
+
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/extend.c
+    * use stack function/macros instead of direct accessing HB_STACK members
+    + added hb_retptrGC()
+
+  * harbour/source/vm/fm.c
+    + added hb_xRefInc(), hb_xRefDec(), hb_xRefFree(), hb_xRefCount(),
+      hb_xRefResize() functions. They are internal Harbour VM functions
+      and covered by internal API macro. Should not be used by 3-rd
+      party code because we may change them in the future or even remove.
+
+  * harbour/source/vm/garbage.c
+    + added hb_gcRefInc(), hb_gcRefDec(), hb_gcRefFree(), hb_gcRefCount()
+      functions. These are also internal function which corresponds to the
+      above hb_x*() ones.
+    * changed Step 3 of GC pass and execution of clean-up function to be
+      safe for recursive calls and additional activity.
+      Ryszard see my note and s_pDeletedBlock
+    + added GC inspected HB_IT_POINTER items.
+
+  * harbour/source/vm/hvm.c
+    * separated profiler code
+    * separated class code from HVM
+    + added support for loading and unloading libraries with PCODE modules
+    + added support for pure PCODE functions
+    + added support for string item resizing and preallocating string buffer
+    + added some new multipcode functions for -gc3 optimization
+    + added hb_vmProcessSymbolsExt(), hb_vmRegisterSymbols(),
+      hb_vmFreeSymbols(), hb_vmBeginSymbolGroup(),
+      hb_vmInitSymbolGroup(), hb_vmExitSymbolGroup()
+    * changed hb_vmProcessSymbols() to return address of register symbol
+      table. For normal code it's the same address as given in parameter
+      so it does not break backward binary compatibility.
+    + use new code for operator overloading
+    * changed FOR EACH to dynamically check iteration scope in
+      hb_vmEnumNext()/hb_vmEnumPrev() and remove max number of iteration
+      stored on HVM stack
+    * temporary use hb_itemUnRefOnce() instead of hb_itemUnRefRefer() as
+      workaround for possible GPF. I'd like Ryszard will chose the final
+      version
+
+  * harbour/source/vm/itemapi.c
+    + added support for preallocating string buffer size
+    + added hb_itemUnShareString() and hb_itemReSizeString()
+    * updated string items to use counters allocated with each
+      memory block by xh_xgrab()/hb_xalloc()
+    * updated codeblock and array items to use GC reference counters
+    + added GC inspected HB_IT_POINTER items.
+    * generate RT error in hb_itemUnreOnce() for enumerator items
+      out of scope
+    + added hb_itemPutPtrGC()
+
+  * harbour/source/vm/macro.c
+    * use pDynSym->pSymbol->value.pFunPtr instead of pDynSym->pFunPtr
+
+  * harbour/source/vm/maindllp.c
+    * updated usage of hb_vmProcessSymbols()
+    * added hb_vmProcessSymbolsExt()
+
+  * harbour/source/vm/memvars.c
+    + added hb_memvarGetItem()
+    - removed hb_memvarValueDecGarbageRef()
+
+  * harbour/source/vm/proc.c
+    + added #include "hbapicls.h"
+
+  * harbour/source/vm/pvalue.c
+    * do not access stack structure directly but use hb_stack*()
+      functions (macros)
 
   * harbour/source/vm/runner.c
     * synced with xHarbour

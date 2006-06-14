@@ -63,29 +63,101 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
+#if defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+#  include <dlfcn.h>
+#endif
+
 HB_FUNC( HB_LIBLOAD )
 {
+   void * hDynLib = NULL;
+
 #if defined(HB_OS_WIN_32)
+   if( hb_parclen( 1 ) > 0 )
    {
-      hb_retnl( ( long ) LoadLibrary( hb_parc( 1 ) ) );
+      int argc = hb_pcount() - 1, i;
+      char **argv = NULL;
+
+      if( argc > 0 )
+      {
+         argv = ( char** ) hb_xgrab( sizeof( char* ) * argc );
+         for( i = 0; i < argc; ++i )
+         {
+            argv[i] = hb_parcx( i + 2 );
+         }
+      }
+
+      /* use stack address as first level marker */
+      hb_vmBeginSymbolGroup( ( void * ) &hb_stack, TRUE );
+      hDynLib = ( void * ) LoadLibrary( hb_parc( 1 ) );
+      /* set real marker */
+      hb_vmInitSymbolGroup( hDynLib, argc, argv );
+      if( argv )
+      {
+         hb_xfree( argv );
+      }
    }
-#else
+#elif defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+   if( hb_parclen( 1 ) > 0 )
    {
-      hb_retnl( 0 );
+      int argc = hb_pcount() - 1, i;
+      char **argv = NULL;
+
+      if( argc > 0 )
+      {
+         argv = ( char** ) hb_xgrab( sizeof( char* ) * argc );
+         for( i = 0; i < argc; ++i )
+         {
+            argv[i] = hb_parcx( i + 2 );
+         }
+      }
+
+      /* use stack address as first level marker */
+      hb_vmBeginSymbolGroup( ( void * ) &hb_stack, TRUE );
+      hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
+      /* set real marker */
+      hb_vmInitSymbolGroup( hDynLib, argc, argv );
+      if( argv )
+      {
+         hb_xfree( argv );
+      }
    }
 #endif
+
+   hb_retptr( hDynLib );
 }
 
 HB_FUNC( HB_LIBFREE )
 {
 #if defined(HB_OS_WIN_32)
+   void * hDynLib = hb_parptr( 1 );
+
+   if( hDynLib )
    {
-      hb_retl( FreeLibrary( ( HMODULE ) hb_parnl( 1 ) ) );
+      hb_vmExitSymbolGroup( hDynLib );
+      hb_retl( FreeLibrary( ( HMODULE ) hDynLib ) );
    }
-#else
+   else
+#elif defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+   void * hDynLib = hb_parptr( 1 );
+
+   if( hDynLib )
+   {
+      hb_vmExitSymbolGroup( hDynLib );
+      hb_retl( dlclose( hDynLib ) == 0 );
+   }
+   else
+#endif
    {
       hb_retl( FALSE );
    }
+}
+
+HB_FUNC( HB_LIBERROR )
+{
+#if defined(HB_OS_LINUX) && !defined(__WATCOMC__)
+   hb_retc( dlerror() );
+#else
+   hb_retc( NULL );
 #endif
 }
 

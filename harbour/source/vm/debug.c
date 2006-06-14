@@ -61,22 +61,20 @@
  * $End$ */
 static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 {
-   PHB_ITEM pTemp;
-
    HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
 
    if( pItem->type == HB_IT_SYMBOL )
    {                                            /* Symbol is pushed as text */
-      pTemp = hb_itemNew( NULL );               /* Create temporary string */
-      pTemp->type = HB_IT_STRING;
-      pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName ) + 2;
-      pTemp->item.asString.value = ( char * ) hb_xgrab( pTemp->item.asString.length + 1 );
-      pTemp->item.asString.bStatic = FALSE;
+      PHB_ITEM pArrayItem = hb_arrayGetItemPtr( pReturn, ulPos );
 
-      sprintf( pTemp->item.asString.value, "[%s]", pItem->item.asSymbol.value->szName );
+      if( pArrayItem )
+      {
+         ULONG ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
+         char * szBuff = ( char * ) hb_xgrab( ulLen );
 
-      hb_itemArrayPut( pReturn, ulPos, pTemp );
-      hb_itemRelease( pTemp );                  /* Get rid of temporary str.*/
+         sprintf( szBuff, "[%s]", pItem->item.asSymbol.value->szName );
+         hb_itemPutCPtr( pArrayItem, szBuff, ulLen );
+      }
    }
    else                                         /* Normal types             */
       hb_itemArrayPut( pReturn, ulPos, pItem );

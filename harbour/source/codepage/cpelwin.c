@@ -90,7 +90,7 @@ static HB_CODEPAGE s_codepage = { "ELWIN",
     "ב~Üגדהו~Ýזח~Þטי~‗ךכלםמן~üנסףעפץ~‎צקרש~‏",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ELWIN );
+HB_CODEPAGE_INIT( ELWIN )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_ELWIN

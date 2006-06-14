@@ -205,7 +205,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
          s_globalTable = ( HB_VALUE_PTR ) hb_xrealloc( s_globalTable, sizeof( HB_VALUE ) * s_globalTableSize );
       }
    }
-   
+
    pValue = s_globalTable + hValue;
    pValue->pVarItem = ( HB_ITEM_PTR ) hb_xgrab( sizeof( HB_ITEM ) );
    pValue->counter = 1;
@@ -219,9 +219,9 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    }
 
    if( bTrueMemvar )
-       pValue->hPrevMemvar = 0;
+      pValue->hPrevMemvar = 0;
    else
-       pValue->hPrevMemvar = ( HB_HANDLE )-1;    /* detached variable */
+      pValue->hPrevMemvar = ( HB_HANDLE ) -1;    /* detached variable */
 
    HB_TRACE(HB_TR_INFO, ("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
@@ -233,7 +233,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachLocal(%p, %d)", pLocal, pLocal->type ));
-   
+
    if( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) )
    {
       HB_ITEM_PTR pItem = pLocal;
@@ -311,8 +311,7 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
 
    while( s_privateStackCnt > s_privateStackBase )
    {
-      --s_privateStackCnt;
-      hVar = s_privateStack[ s_privateStackCnt ]->hMemvar;
+      hVar = s_privateStack[ --s_privateStackCnt ]->hMemvar;
       if( hVar )
       {
           hOldValue = s_globalTable[ hVar ].hPrevMemvar;
@@ -373,7 +372,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 
    if( pValue->counter > 0 )
    {
-      /* Notice that Counter can be equal to 0.
+     /* Notice that Counter can be equal to 0.
       * This can happen if for example PUBLIC variable holds a codeblock
       * with detached variable. When hb_memvarsRelease() is called then
       * detached variable can be released before the codeblock. So if
@@ -382,7 +381,8 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
       */
       if( --pValue->counter == 0 )
       {
-         hb_itemClear( pValue->pVarItem );
+         if( HB_IS_COMPLEX( pValue->pVarItem ) )
+            hb_itemClear( pValue->pVarItem );
          hb_xfree( pValue->pVarItem );
          hb_memvarRecycle( hValue );
 
@@ -391,6 +391,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
    }
 }
 
+#if 0
 /* This function is called from releasing of detached local variables
  * referenced in a codeblock that is wiped out by the Garbage Collector.
  * Decrement the reference counter and clear a value stored in the memvar.
@@ -409,7 +410,7 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
 
    if( pValue->counter > 0 )
    {
-      /* Notice that Counter can be equal to 0.
+     /* Notice that Counter can be equal to 0.
       * This can happen if for example PUBLIC variable holds a codeblock
       * with detached variable. When hb_memvarsRelease() is called then
       * detached variable can be released before the codeblock. So if
@@ -427,6 +428,7 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
       }
    }
 }
+#endif
 
 /*
  * This functions copies passed item value into the memvar pointed
@@ -513,7 +515,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                              NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+                             NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
       while( uiAction == E_RETRY )
       {
@@ -556,7 +558,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+                                NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
          while( uiAction == E_RETRY )
          {
@@ -579,6 +581,24 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
+}
+
+PHB_ITEM hb_memvarGetItem( PHB_SYMB pMemvarSymb )
+{
+   PHB_DYNS pDyn;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetItem(%p)", pMemvarSymb));
+
+   pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
+   if( pDyn && pDyn->hMemvar )
+   {
+      HB_ITEM_PTR pItem = s_globalTable[ pDyn->hMemvar ].pVarItem;
+      if( HB_IS_BYREF( pItem ) )
+         return hb_itemUnRef( pItem );
+      else
+         return pItem;
+   }
+   return NULL;
 }
 
 /*
@@ -643,7 +663,8 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
 
    /* find dynamic symbol or creeate one */
    if( HB_IS_SYMBOL( pMemvar ) )
-      pDynVar = hb_dynsymGet( pMemvar->item.asSymbol.value->szName );
+      /* pDynVar = hb_dynsymGet( pMemvar->item.asSymbol.value->szName ); */
+      pDynVar = pMemvar->item.asSymbol.value->pDynSym;
    else if( HB_IS_STRING( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
    else
@@ -1201,8 +1222,8 @@ HB_FUNC( __MVGET )
       {
          PHB_ITEM pValue;
 
-         pValue = hb_stackTopItem();
          hb_stackPush();
+         pValue = hb_stackItemFromTop( -1 );
          hb_memvarGetValue( pValue, pDynVar->pSymbol );
          hb_itemReturnForward( pValue );
          hb_stackDec();
@@ -1229,8 +1250,8 @@ HB_FUNC( __MVGET )
                {
                   PHB_ITEM pValue;
 
-                  pValue = hb_stackTopItem();
                   hb_stackPush();
+                  pValue = hb_stackItemFromTop( -1 );
                   hb_memvarGetValue( pValue, pDynVar->pSymbol );
                   hb_itemReturnForward( pValue );
                   hb_stackDec();

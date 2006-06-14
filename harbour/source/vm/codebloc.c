@@ -58,6 +58,44 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
+/* Release all allocated memory when called from the garbage collector
+ */
+static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
+{
+   HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDeleteGarbage(%p)", Cargo));
+
+   /* free space allocated for pcodes - if it was a macro-compiled codeblock
+    */
+   if( pCBlock->pCode && pCBlock->dynBuffer )
+   {
+      hb_xfree( pCBlock->pCode );
+      pCBlock->pCode = NULL;
+   }
+
+   /* free space allocated for local variables
+    */
+   if( pCBlock->pLocals )
+   {
+      PHB_ITEM pLocals = pCBlock->pLocals;
+      USHORT uiLocals = pCBlock->uiLocals;
+
+      /* clear pCBlock->pLocals to avoid infinit loop in cross
+       * referenced items
+       */
+      pCBlock->pLocals = NULL;
+      pCBlock->uiLocals = 0;
+
+      if( hb_xRefDec( pLocals ) )
+      {
+         while( uiLocals )
+            hb_memvarValueDecRef( pLocals[ uiLocals-- ].item.asMemvar.value );
+         hb_xfree( pLocals );
+      }
+   }
+}
+
 /* Creates the codeblock structure
  *
  * pBuffer -> the buffer with pcodes (without HB_P_PUSHBLOCK)
@@ -71,11 +109,12 @@
 HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
                                   USHORT uiLocals,
                                   const BYTE * pLocalPosTable,
-                                  PHB_SYMB pSymbols )
+                                  PHB_SYMB pSymbols,
+                                  USHORT usLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p)", pBuffer, uiLocals, pLocalPosTable, pSymbols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %hu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, usLen));
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
 
@@ -133,37 +172,41 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
       {
          HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
 
-         pCBlock->pLocals = pOwner->pLocals;
-         pCBlock->uiLocals = uiLocals = pOwner->uiLocals;
+         pCBlock->uiLocals = pOwner->uiLocals;
+         pCBlock->pLocals  = pOwner->pLocals;
          if( pOwner->pLocals )
-         {  /* the outer codeblock have the table with local references - reuse it */
-            while( uiLocals )
-            {
-               hb_memvarValueIncRef( pCBlock->pLocals[ uiLocals ].item.asMemvar.value );
-               --uiLocals;
-            }
-            /* increment a reference counter for the table of local references
-             */
-            pCBlock->pLocals[ 0 ].item.asLong.value++;
-         }
+            hb_xRefInc( pOwner->pLocals );
       }
       else
          pCBlock->pLocals = NULL;
    }
 
-   /*
-    * The codeblock pcode is stored in static segment.
-    * The only allowed operation on a codeblock is evaluating it then
-    * there is no need to duplicate its pcode - just store the pointer to it
-    */
-   pCBlock->pCode     = ( BYTE * ) pBuffer;
-   pCBlock->dynBuffer = FALSE;
+   if( usLen )
+   {
+      /*
+       * The codeblock pcode is stored in dynamically allocated memory that
+       * can be deallocated after creation of a codeblock. We have to duplicate
+       * the passed buffer
+       */
+      pCBlock->pCode = ( BYTE * ) hb_xgrab( usLen );
+      memcpy( pCBlock->pCode, pBuffer, usLen );
+      pCBlock->dynBuffer = TRUE;
+   }
+   else
+   {
+      /*
+       * The codeblock pcode is stored in static segment.
+       * The only allowed operation on a codeblock is evaluating it then
+       * there is no need to duplicate its pcode - just store the pointer to it
+       */
+      pCBlock->pCode     = ( BYTE * ) pBuffer;
+      pCBlock->dynBuffer = FALSE;
+   }
 
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
-   pCBlock->ulCounter = 1;
 
-   HB_TRACE(HB_TR_INFO, ("codeblock created (%li) %lx", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
 
    return pCBlock;
 }
@@ -191,84 +234,10 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen )
 
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
-   pCBlock->ulCounter = 1;
 
-   HB_TRACE(HB_TR_INFO, ("codeblock created (%li) %lx", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
 
    return pCBlock;
-}
-
-/* Delete a codeblock
- */
-void  hb_codeblockDelete( HB_ITEM_PTR pItem )
-{
-   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDelete(%p)", pItem));
-
-   if( pCBlock && (--pCBlock->ulCounter == 0) )
-   {
-      if( pCBlock->pLocals )
-      {
-         USHORT ui = pCBlock->uiLocals;
-         while( ui )
-            hb_memvarValueDecRef( pCBlock->pLocals[ ui-- ].item.asMemvar.value );
-         /* decrement the table reference counter and release memory if
-          * it was the last reference
-          */
-         if( --pCBlock->pLocals[ 0 ].item.asLong.value == 0 )
-            hb_xfree( pCBlock->pLocals );
-      }
-
-      /* free space allocated for pcodes - if it was a macro-compiled codeblock
-       */
-      if( pCBlock->pCode && pCBlock->dynBuffer )
-      {
-         hb_xfree( pCBlock->pCode );
-         pCBlock->pCode = NULL;
-      }
-
-      /* free space allocated for a CODEBLOCK structure
-      */
-      hb_gcFree( pCBlock );
-   }
-}
-
-/* Release all allocated memory when called from the garbage collector
- */
-HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
-{
-   HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDeleteGarbage(%p)", Cargo));
-
-   /* free space allocated for local variables
-    */
-   if( pCBlock->pLocals )
-   {
-      USHORT ui = 1;
-      while( ui <= pCBlock->uiLocals )
-      {
-         hb_memvarValueDecGarbageRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
-         ++ui;
-      }
-      /* decrement the table reference counter and release memory if
-       * it was the last reference
-       */
-      if( --pCBlock->pLocals[ 0 ].item.asLong.value == 0 )
-      {
-         hb_xfree( pCBlock->pLocals );
-         pCBlock->pLocals = NULL;
-      }
-   }
-
-   /* free space allocated for pcodes - if it was a macro-compiled codeblock
-    */
-   if( pCBlock->pCode && pCBlock->dynBuffer )
-   {
-      hb_xfree( pCBlock->pCode );
-      pCBlock->pCode = NULL;
-   }
 }
 
 /* Evaluate passed codeblock
@@ -279,13 +248,10 @@ HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
  */
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
-   int iStatics = hb_stack.iStatics;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
    hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
-   hb_stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock

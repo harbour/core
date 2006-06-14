@@ -102,140 +102,6 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       fprintf( yyc, ".assembly " );
       fprintf( yyc, hb_strupr( pFileName->szName ) );
       fprintf( yyc, "_PRG{}\n" );
-      // if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
-      //   fprintf( yyc, "#include \"hbpcode.h\"\n" );
-      // fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
-
-      // if( ! hb_comp_bStartProc )
-      //   pFunc = pFunc->pNext; /* No implicit starting procedure */
-
-      // /* write functions prototypes for PRG defined functions */
-      // while( pFunc )
-      // {
-      //   bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) ;
-      //   bIsExitFunction   = ( pFunc->cScope & HB_FS_EXIT ) ;
-      //   bIsStaticVariable = ( pFunc == hb_comp_pInitFunc ) ;
-      //   bIsPublicFunction = ( pFunc->cScope == HB_FS_PUBLIC ) ;
-      //
-      //   /* Is it a PUBLIC FUNCTION/PROCEDURE */
-      //   if ( bIsPublicFunction )
-      //      fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
-      //   /* Is it a STATIC$ */
-      //   else if ( bIsStaticVariable )
-      //      fprintf( yyc, "static HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
-      //   /* Is it an INIT FUNCTION/PROCEDURE */
-      //   else if ( bIsInitFunction )
-      //      fprintf( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName );
-      //   /* Is it an EXIT FUNCTION/PROCEDURE */
-      //   else if ( bIsExitFunction )
-      //      fprintf( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName );
-      //   /* Then it must be a STATIC FUNCTION/PROCEDURE */
-      //   else
-      //      fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName );
-      //
-      //   pFunc = pFunc->pNext;
-      // }
-
-      // /* write functions prototypes for inline blocks */
-      // while( pInline )
-      // {
-      //   if( pInline->szName )
-      //      fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pInline->szName );
-      //   pInline = pInline->pNext;
-      // }
-
-      // /* write functions prototypes for called functions outside this PRG */
-      // pFunc = hb_comp_funcalls.pFirst;
-      // while( pFunc )
-      // {
-      //   if( hb_compFunctionFind( pFunc->szName ) == NULL &&
-      //       hb_compInlineFind( pFunc->szName ) == NULL )
-      //      fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFunc->szName );
-      //
-      //   pFunc = pFunc->pNext;
-      // }
-
-      // /* writes the symbol table */
-      // /* Generate the wrapper that will initialize local symbol table
-      // */
-      // hb_strupr( pFileName->szName );
-      // fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
-
-      // while( pSym )
-      // {
-      //   if( pSym->szName[ 0 ] == '(' )
-      //   {
-      //      /* Since the normal function cannot be INIT and EXIT at the same time
-      //      * we are using these two bits to mark the special function used to
-      //      * initialize static variables
-      //      */
-      //      fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, {hb_INITSTATICS}, NULL }" ); /* NOTE: hb_ intentionally in lower case */
-      //   }
-      //   else
-      //   {
-      //      fprintf( yyc, "{ \"%s\", ", pSym->szName );
-      //
-      //      if( pSym->cScope & HB_FS_STATIC )
-      //      {
-      //         fprintf( yyc, "HB_FS_STATIC" );
-      //
-      //         if( pSym->cScope & HB_FS_PUBLIC )
-      //            fprintf( yyc, " | HB_FS_PUBLIC" );
-      //      }
-      //
-      //      else if( pSym->cScope & HB_FS_INIT )
-      //         fprintf( yyc, "HB_FS_INIT" );
-      //
-      //      else if( pSym->cScope & HB_FS_EXIT )
-      //         fprintf( yyc, "HB_FS_EXIT" );
-      //
-      //      else
-      //         fprintf( yyc, "HB_FS_PUBLIC" );
-      //
-      //      if( pSym->cScope & VS_MEMVAR )
-      //         fprintf( yyc, " | HB_FS_MEMVAR" );
-      //
-      //      if( pSym->cScope & HB_FS_MESSAGE )
-      //         fprintf( yyc, " | HB_FS_MESSAGE" );
-      //
-      //      if ( ( pSym->cScope & HB_FS_FIRST ) &&  ( ! hb_comp_bNoStartUp ) )
-      //         fprintf( yyc, " | HB_FS_FIRST" );
-      //
-      //      /* specify the function address if it is a defined function or an
-      //         external called function */
-      //      if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
-      //         fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
-      //      else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
-      //         fprintf( yyc, ", {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
-      //      else
-      //         fprintf( yyc, ", {NULL}, NULL }" );   /* memvar */
-      //   }
-      //
-      //   if( pSym != hb_comp_symbols.pLast )
-      //      fprintf( yyc, ",\n" );
-      //
-      //   pSym = pSym->pNext;
-      // }
-
-      // fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
-      //              "#if defined(_MSC_VER)\n"
-      //              "   #if _MSC_VER >= 1010\n"
-      //              /* [pt] First version of MSC I have that supports this */
-      //              /* is msvc4.1 (which is msc 10.10) */
-      //              "      #pragma data_seg( \".CRT$XIY\" )\n"
-      //              "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
-      //              "   #else\n"
-      //              "      #pragma data_seg( \"XIY\" )\n"
-      //              "   #endif\n"
-      //              "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
-      //              "   #pragma data_seg()\n"
-      //              "#elif ! defined(__GNUC__)\n"
-      //              "   #pragma startup hb_vm_SymbolInit_%s%s\n"
-      //              "#endif\n\n",
-      //              hb_comp_szPrefix, pFileName->szName,
-      //              hb_comp_szPrefix, pFileName->szName,
-      //              hb_comp_szPrefix, pFileName->szName,
-      //              hb_comp_szPrefix, pFileName->szName );
 
       /* Generate functions data
        */
@@ -282,7 +148,6 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
 
          fprintf( yyc, "   ret\n}\n" );
 
-         // fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
          pFunc = pFunc->pNext;
       }
 
@@ -316,7 +181,7 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       fprintf( yyc, "/* Empty source file */\n\n" );
    }
 
-   // Generate .NET support functions
+   /* Generate .NET support functions */
    hb_genNetFunctions( yyc );
 
    fclose( yyc );
@@ -399,7 +264,7 @@ static HB_GENC_FUNC( hb_p_arraypush )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call object ObjArrayPush( object, object )\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_ARRAYPUSH,\n" );
+   /* fprintf( cargo->yyc, "\tHB_P_ARRAYPUSH,\n" ); */
 
    return 1;
 }
@@ -475,7 +340,7 @@ static HB_GENC_FUNC( hb_p_doshort )
    fprintf( cargo->yyc, "call object %s( object )\n", szFunName );
    fprintf( cargo->yyc, "            pop\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
+   /* fprintf( cargo->yyc, "\tHB_P_DOSHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] ); */
 
    return 2;
 }
@@ -515,7 +380,7 @@ static HB_GENC_FUNC( hb_p_exactlyequal )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call bool ObjExactlyEqual( object, object )\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_EXACTLYEQUAL,\n" );
+   /* fprintf( cargo->yyc, "\tHB_P_EXACTLYEQUAL,\n" ); */
    return 1;
 }
 
@@ -535,10 +400,6 @@ static HB_GENC_FUNC( hb_p_endproc )
    HB_SYMBOL_UNUSED( cargo );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   // if( (lPCodePos+1) == pFunc->lPCodePos )
-   //    fprintf( cargo->yyc, "\tHB_P_ENDPROC\n" );
-   // else
-   //    fprintf( cargo->yyc, "\tHB_P_ENDPROC,\n" );
    return 1;
 }
 
@@ -551,8 +412,6 @@ static HB_GENC_FUNC( hb_p_false )
    fprintf( cargo->yyc, "ldc.i4.0\n" );
    fprintf( cargo->yyc, "            box [mscorlib]System.Boolean\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_FALSE,\n" );
-
    return 1;
 }
 
@@ -564,7 +423,6 @@ static HB_GENC_FUNC( hb_p_fortest )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call bool ObjForTest( object, object, object )\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_FORTEST,\n" );
    return 1;
 }
 
@@ -583,12 +441,6 @@ static HB_GENC_FUNC( hb_p_frame )
    }
 
    fprintf( cargo->yyc, " )\n" );
-
-   // fprintf( cargo->yyc, "\tHB_P_FRAME, %i, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ],
-   //          pFunc->pCode[ lPCodePos + 2 ] );
-   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
-   // fprintf( cargo->yyc, "\n" );
 
    return 3;
 }
@@ -635,8 +487,6 @@ static HB_GENC_FUNC( hb_p_functionshort )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call object %s( object )\n", szFunName );
 
-   // fprintf( cargo->yyc, "\tHB_P_FUNCTIONHORT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-
    return 2;
 }
 
@@ -651,12 +501,6 @@ static HB_GENC_FUNC( hb_p_arraygen )
       fprintf( cargo->yyc, ",object" );
 
    fprintf( cargo->yyc, ")\n" );
-
-   // fprintf( cargo->yyc, "\tHB_P_ARRAYGEN, %i, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ],
-   //          pFunc->pCode[ lPCodePos + 2 ] );
-   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
-   // fprintf( cargo->yyc, "\n" );
 
    return 3;
 }
@@ -708,19 +552,6 @@ static HB_GENC_FUNC( hb_p_jumpnear )
    fprintf( cargo->yyc, "br.s" );
    fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
 
-   // fprintf( cargo->yyc, "\tHB_P_JUMPNEAR, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose )
-   // {
-   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
-   //
-   //    if( lOffset > 127 )
-   //       lOffset -= 256;
-   //
-   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   // }
-   // fprintf( cargo->yyc, "\n" );
-
    return 2;
 }
 
@@ -735,20 +566,6 @@ static HB_GENC_FUNC( hb_p_jump )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "br.s" );
    fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
-
-   // fprintf( cargo->yyc, "\tHB_P_JUMP, %i, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ],
-   //          pFunc->pCode[ lPCodePos + 2 ] );
-   // if( cargo->bVerbose )
-   // {
-   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
-   //
-   //    if( lOffset > SHRT_MAX )
-   //       lOffset -= 65536;
-   //
-   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   // }
-   // fprintf( cargo->yyc, "\n" );
 
    return 3;
 }
@@ -782,18 +599,6 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
    fprintf( cargo->yyc, "brfalse.s" );
    fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
 
-   // fprintf( cargo->yyc, "\tHB_P_JUMPFALSENEAR, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose )
-   // {
-   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
-   //
-   //    if( lOffset > 127 )
-   //       lOffset -= 256;
-   //
-   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   // }
-   // fprintf( cargo->yyc, "\n" );
    return 2;
 }
 
@@ -901,7 +706,6 @@ static HB_GENC_FUNC( hb_p_lessequal )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call bool ObjLessEqual( object, object )\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_LESSEQUAL,\n" );
    return 1;
 }
 
@@ -912,16 +716,6 @@ static HB_GENC_FUNC( hb_p_line )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "nop  // HB_P_LINE\n" );
 
-   // if( cargo->bVerbose )
-   //    fprintf( cargo->yyc, "/* %05li */ ", lPCodePos );
-   // else
-   //    fprintf( cargo->yyc, "\t" );
-   // fprintf( cargo->yyc, "HB_P_LINE, %i, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ],
-   //          pFunc->pCode[ lPCodePos + 2 ] );
-   // if( cargo->bVerbose )
-   //    fprintf( cargo->yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
-   // fprintf( cargo->yyc, "\n" );
    return 3;
 }
 
@@ -1123,8 +917,6 @@ static HB_GENC_FUNC( hb_p_not )
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "call object ObjNot( object )\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_NOT,\n" );
-
    return 1;
 }
 
@@ -1163,7 +955,6 @@ static HB_GENC_FUNC( hb_p_plus )
    HB_SYMBOL_UNUSED( lPCodePos );
 
    fprintf( cargo->yyc, "   call object ObjAdd( object, object )\n" );
-   // fprintf( cargo->yyc, "\tHB_P_PLUS,\n" );
 
    return 1;
 }
@@ -1255,33 +1046,10 @@ static HB_GENC_FUNC( hb_p_poplocal )
 
 static HB_GENC_FUNC( hb_p_poplocalnear )
 {
-   // important: check the below code for codeblock locals management
+   /* important: check the below code for codeblock locals management */
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
-   // warning: IL requires zero based locals index
+   /* warning: IL requires zero based locals index */
    fprintf( cargo->yyc, "stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
-
-   // fprintf( cargo->yyc, "\tHB_P_POPLOCALNEAR, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose )
-   // {
-   //    char wVar = ( char ) pFunc->pCode[ lPCodePos + 1 ];
-   //    /* Variable with negative order are local variables
-   //       * referenced in a codeblock -handle it with care
-   //       */
-   //
-   //    if( cargo->iNestedCodeblock )
-   //    {
-   //       /* we are accesing variables within a codeblock */
-   //       /* the names of codeblock variable are lost     */
-   //       if( wVar < 0 )
-   //          fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
-   //       else
-   //          fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
-   //    }
-   //    else
-   //       fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
-   // }
-   // fprintf( cargo->yyc, "\n" );
 
    return 2;
 }
@@ -1470,16 +1238,10 @@ static HB_GENC_FUNC( hb_p_pushfield )
 static HB_GENC_FUNC( hb_p_pushbyte )
 {
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
-   // load constant numeric onto the stack
+   /* load constant numeric onto the stack */
    fprintf( cargo->yyc, "ldc.i4.s   %i\n", pFunc->pCode[ lPCodePos + 1 ] );
-   // turn the stack value into an object
+   /* turn the stack value into an object */
    fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
-
-   // fprintf( cargo->yyc, "\tHB_P_PUSHBYTE, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // fprintf( cargo->yyc, "\n" );
 
    return 2;
 }
@@ -1526,33 +1288,10 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
-   // Important: check the below code for codeblocks locals
+   /* Important: check the below code for codeblocks locals */
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
-   // Warning: IL uses zero based locals indexes
+   /* Warning: IL uses zero based locals indexes */
    fprintf( cargo->yyc, "ldloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
-
-   // fprintf( cargo->yyc, "\tHB_P_PUSHLOCALNEAR, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose )
-   // {
-   //    signed char wVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
-   //    /* Variable with negative order are local variables
-   //     * referenced in a codeblock -handle it with care
-   //     */
-   //
-   //    if( cargo->iNestedCodeblock )
-   //    {
-   //       /* we are accesing variables within a codeblock */
-   //       /* the names of codeblock variable are lost     */
-   //       if( wVar < 0 )
-   //          fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
-   //       else
-   //          fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
-   //    }
-   //    else
-   //       fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
-   // }
-   // fprintf( cargo->yyc, "\n" );
 
    return 2;
 }
@@ -1591,14 +1330,6 @@ static HB_GENC_FUNC( hb_p_pushlong )
    fprintf( cargo->yyc, "ldc.i4 %li\n",
             *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
    fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
-
-   // fprintf( cargo->yyc, "\tHB_P_PUSHLONG, %i, %i, %i, %i,",
-   //          pFunc->pCode[ lPCodePos + 1 ],
-   //          pFunc->pCode[ lPCodePos + 2 ],
-   //          pFunc->pCode[ lPCodePos + 3 ],
-   //          pFunc->pCode[ lPCodePos + 4 ] );
-   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
-   // fprintf( cargo->yyc, "\n" );
 
    return 5;
 }
@@ -1651,17 +1382,19 @@ static HB_GENC_FUNC( hb_p_pushnil )
          pTemp->bFirstParam = FALSE;
       else
       {
-         // fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
-         // fprintf( cargo->yyc, "ldnull\n" );
+/*
+         fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+         fprintf( cargo->yyc, "ldnull\n" );
+*/
       }
    }
    else
    {
-      // fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
-      // fprintf( cargo->yyc, "ldnull\n" );
+/*
+      fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+      fprintf( cargo->yyc, "ldnull\n" );
+*/
    }
-
-   // fprintf( cargo->yyc, "   // HB_P_PUSHNIL,\n" );
 
    return 1;
 }
@@ -1759,12 +1492,8 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
    ULONG ulStart = lPCodePos;
    USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
 
-   // fprintf( cargo->yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "ldstr " );
-
-   // if( cargo->bVerbose )
-   //      fprintf( cargo->yyc, "\t/* %i */", wLen );
 
    lPCodePos += 2;
    if( wLen > 0 )
@@ -1828,16 +1557,8 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
    pTemp->bFirstParam = TRUE;
    pTemp->pNext  = NULL;
 
-   // fprintf( cargo->yyc, "\tHB_P_PUSHSYMNEAR, %i,",
-   //         pFunc->pCode[ lPCodePos + 1 ] );
-   // if( cargo->bVerbose )
-   //    fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
-
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "nop\n" );
-
-   // fprintf( cargo->yyc, "   call void %s()\n", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] )->szName );
-   // fprintf( cargo->yyc, "\n" );
 
    return 2;
 }
@@ -1981,8 +1702,6 @@ static HB_GENC_FUNC( hb_p_true )
    fprintf( cargo->yyc, "ldc.i4.1\n" );
    fprintf( cargo->yyc, "            box [mscorlib]System.Boolean\n" );
 
-   // fprintf( cargo->yyc, "\tHB_P_TRUE,\n" );
-
    return 1;
 }
 
@@ -1993,10 +1712,8 @@ static HB_GENC_FUNC( hb_p_one )
 
    fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
    fprintf( cargo->yyc, "ldc.i4.1\n" );
-   // turn the stack value into an object
+   /* turn the stack value into an object */
    fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
-
-   // fprintf( cargo->yyc, "\tHB_P_ONE,\n" );
 
    return 1;
 }
@@ -2086,18 +1803,6 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
    fprintf( cargo->yyc, "            add\n" );
    fprintf( cargo->yyc, "            box [mscorlib]System.Int32\n" );
    fprintf( cargo->yyc, "            stloc.%i\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
-
-   // fprintf( cargo->yyc, "\tHB_P_LOCALNEARADDINT, %i, %i, %i,", pFunc->pCode[ lPCodePos + 1 ],
-   //                                                             pFunc->pCode[ lPCodePos + 2 ],
-   //                                                             pFunc->pCode[ lPCodePos + 3 ] );
-   //
-   // if( cargo->bVerbose )
-   // {
-   //    fprintf( cargo->yyc, "\t/* %s %i*/", hb_compLocalVariableFind( pFunc, ( signed char ) pFunc->pCode[ lPCodePos + 1 ] )->szName,
-   //             HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 2 ] ) ) );
-   // }
-   //
-   // fprintf( cargo->yyc, "\n" );
 
    return 4;
 }
@@ -2257,9 +1962,6 @@ static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
    genc_info.yyc = yyc;
 
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &genc_info );
-
-   // if( genc_info.bVerbose )
-   //   fprintf( yyc, "/* %05li */\n", pFunc->lPCodePos );
 }
 
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
@@ -2296,6 +1998,7 @@ static void hb_genNetFunctions( FILE * yyc )
 {
    int i;
 
+/*
    // generated IL code for C# source code:
    // public static object ObjAdd( object a, object b )
    // {
@@ -2309,6 +2012,7 @@ static void hb_genNetFunctions( FILE * yyc )
    // }
    // VERY IMPORTANT: As ObjAdd() is a public method, not specific to a Class,
    // then arguments have to be decreased, as on a normal method, argument 0 is Self.
+*/
 
    char * ObjAdd[] = {
 "\n.method public static object ObjAdd(object a, object b)",
@@ -2359,6 +2063,7 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0078:  ret",
 "}", 0 };
 
+/*
    // public static object ObjArrayGen( __arglist )
    // {
    //    ArrayList a    = new ArrayList();
@@ -2369,7 +2074,7 @@ static void hb_genNetFunctions( FILE * yyc )
    //
    //    return a;
    // }
-
+*/
    char * ObjArrayGen[] = {
 "\n.method public static vararg object ObjArrayGen()",
 "{",
@@ -2401,10 +2106,12 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0034:  ret",
 "}", 0 };
 
+/*
    // public static object ObjArrayPush( object array, object index )
    // {
    //    return ( ( ArrayList ) array )[ ( ( int ) index ) - 1 ];
    // }
+*/
 
    char * ObjArrayPush[] = {
 "\n.method public static object ObjArrayPush(object 'array', object index)",
@@ -2425,6 +2132,7 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0018:  ret",
 "}", 0 };
 
+/*
    // public static bool ObjLessEqual( object a, object b )
    // {
    //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
@@ -2432,6 +2140,7 @@ static void hb_genNetFunctions( FILE * yyc )
    //
    //    return false;
    // }
+*/
 
    char * ObjLessEqual[] = {
 "\n.method public static bool ObjLessEqual( object a, object b )",
@@ -2466,6 +2175,7 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_003f:  ret",
 "}", 0 };
 
+/*
    // public static bool ObjForTest( object current, object end, object step )
    // {
    //    if( ( int ) step >= 0 )
@@ -2473,6 +2183,7 @@ static void hb_genNetFunctions( FILE * yyc )
    //    else
    //       return ( int ) current >= ( int ) end;
    // }
+*/
 
    char * ObjForTest[] = {
 "\n.method public static bool ObjForTest(object current,object end,object step)",
@@ -2510,6 +2221,7 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0037:  ret",
 "}", 0 };
 
+/*
    // public static bool ObjExactlyEqual( object a, object b )
    // {
    //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
@@ -2520,6 +2232,7 @@ static void hb_genNetFunctions( FILE * yyc )
    //
    //    return false;
    // }
+*/
 
    char * ObjExactlyEqual[] = {
 "\n.method public static bool ObjExactlyEqual(object a, object b)",
@@ -2569,10 +2282,12 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0074:  ret",
 "}", 0 };
 
+/*
    // public static object ObjNot( object o )
    // {
    //    return ! ( bool ) o;
    // }
+*/
 
    char * ObjNot[] = {
 "\n.method public static object ObjNot(object o)",
@@ -2591,10 +2306,12 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0013:  ret",
 "}", 0 };
 
+/*
    // public static object LEN( object o )
    // {
    //    return ( ( ArrayList ) o ).Count;
    // }
+*/
 
    char * LEN[] = {
 "\n.method public static object LEN(object o)",
@@ -2611,6 +2328,7 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0014:  ret",
 "}", 0 };
 
+/*
    // public static object QOUT( object o )
    // {
    //    if( o == null )
@@ -2624,6 +2342,7 @@ static void hb_genNetFunctions( FILE * yyc )
    //
    //    return null;
    // }
+*/
 
    char * QOUT[] = {
 "\n.method public static object QOUT(object o)",

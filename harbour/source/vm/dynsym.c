@@ -120,16 +120,14 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
 
    if( pDynSym )            /* If name exists */
    {
-      if( pSymbol->scope.value & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
+      if( !pDynSym->pSymbol->value.pFunPtr && pSymbol->value.pFunPtr ) /* The DynSym existed */
       {
-         if( ( ! pDynSym->pFunPtr ) && pSymbol->value.pFunPtr ) /* The DynSym existed */
-         {
-            pDynSym->pFunPtr = pSymbol->value.pFunPtr;  /* but had no function ptr assigned */
-            pDynSym->pSymbol = pSymbol;
-            pDynSym->ulCalls = 0; /* profiler support */
-            pDynSym->ulTime  = 0; /* profiler support */
-            pDynSym->ulRecurse = 0;
-         }
+         pDynSym->pSymbol = pSymbol;
+#ifndef HB_NO_PROFILER
+         pDynSym->ulCalls = 0;   /* profiler support */
+         pDynSym->ulTime  = 0;   /* profiler support */
+         pDynSym->ulRecurse = 0; /* profiler support */
+#endif
       }
       pSymbol->pDynSym = pDynSym;    /* place a pointer to DynSym */
       return pDynSym;                /* Return pointer to DynSym */
@@ -158,19 +156,12 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    pDynSym->pSymbol = pSymbol;
    pDynSym->hMemvar = 0;
    pDynSym->hArea   = 0;
-   pDynSym->ulCalls = 0; /* profiler support */
-   pDynSym->ulTime  = 0; /* profiler support */
-   pDynSym->ulRecurse = 0;
-
-   if( pSymbol->scope.value & HB_FS_PUBLIC ) /* only for HB_FS_PUBLIC */
-   {
-      pDynSym->pFunPtr = pSymbol->value.pFunPtr;    /* place the pointer function at DynSym */
-   }
-   else
-   {
-      pDynSym->pFunPtr = NULL;
-   }
-   pSymbol->pDynSym = pDynSym;                /* place a pointer to DynSym */
+#ifndef HB_NO_PROFILER
+   pDynSym->ulCalls = 0;   /* profiler support */
+   pDynSym->ulTime  = 0;   /* profiler support */
+   pDynSym->ulRecurse = 0; /* profiler support */
+#endif
+   pSymbol->pDynSym = pDynSym;         /* place a pointer to DynSym */
 
    return pDynSym;
 }
@@ -464,7 +455,7 @@ HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure point
    long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
 
    if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
-      hb_retl( s_pDynItems[ lIndex - 1 ].pDynSym->pFunPtr != NULL );
+      hb_retl( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->value.pFunPtr != NULL );
    else
       hb_retl( FALSE );
 }
@@ -473,20 +464,24 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
                                      called and consumed times { nTimes, nTime }
                                      , given the dynamic symbol index */
 {
+#ifndef HB_NO_PROFILER
    long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
+#endif
 
    hb_reta( 2 );
    hb_stornl( 0, -1, 1 );
    hb_stornl( 0, -1, 2 );
 
+#ifndef HB_NO_PROFILER
    if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
    {
-      if( s_pDynItems[ lIndex - 1 ].pDynSym->pFunPtr ) /* it is a function or procedure */
+      if( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->value.pFunPtr ) /* it is a function or procedure */
       {
          hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulCalls, -1, 1 );
          hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulTime,  -1, 2 );
       }
    }
+#endif
 }
 
 #endif

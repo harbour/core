@@ -1228,7 +1228,7 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
       }
       else if( bFunction )
       {
-         if( pSym->pFunPtr==NULL )
+         if( pSym->pSymbol->value.pFunPtr == NULL )
          {
             /* static functions are not allowed in macro */
             HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;

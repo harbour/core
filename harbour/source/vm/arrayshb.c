@@ -108,7 +108,7 @@ HB_FUNC( ARRAY )
       }
 
       if( ! bError )
-         hb_arrayNewRagged( &hb_stack.Return, 1 );
+         hb_arrayNewRagged( hb_stackReturnItem(), 1 );
    }
 }
 
@@ -166,7 +166,7 @@ HB_FUNC( ATAIL )
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
-      hb_arrayLast( pArray, &hb_stack.Return );
+      hb_arrayLast( pArray, hb_stackReturnItem() );
 }
 
 HB_FUNC( AINS )
@@ -335,7 +335,7 @@ HB_FUNC( HB_APARAMS )
 
 HB_FUNC( HB_AEXPRESSIONS )
 {
-   PHB_ITEM pArray = &hb_stack.Return;
+   PHB_ITEM pArray = hb_stackReturnItem();
    PHB_ITEM pLine  = hb_param( 1, HB_IT_STRING );
    size_t i, iOffset = 0;
    int iParans = 0, iArrays = 0, iIndexs = 0;

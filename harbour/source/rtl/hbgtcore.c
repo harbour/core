@@ -1955,7 +1955,7 @@ static void hb_gt_def_WhoCares( void * pCargo )
 
 /* ************************************************************************* */
 
-#ifdef __GNUC__
+#if defined( __GNUC__ ) && 0
 static HB_GT_FUNCS gtCoreFunc =
 {
    Init                       : hb_gt_def_Init                          ,
@@ -2834,4 +2834,4 @@ HB_EXPORT void hb_gtStartupInit( void )
    HB_FUNC_EXEC( HB_GTSYS );
 }
 
-HB_GT_ANNOUNCE( HB_GT_NAME );
+HB_GT_ANNOUNCE( HB_GT_NAME )

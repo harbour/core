@@ -74,27 +74,28 @@ HB_EXTERN_BEGIN
 
 
 /* items types and type checking macros */
-#define HB_IT_NIL       ( ( HB_TYPE ) 0x0000 )
-#define HB_IT_POINTER   ( ( HB_TYPE ) 0x0001 )
-#define HB_IT_INTEGER   ( ( HB_TYPE ) 0x0002 )
-#define HB_IT_LONG      ( ( HB_TYPE ) 0x0008 )
-#define HB_IT_DOUBLE    ( ( HB_TYPE ) 0x0010 )
-#define HB_IT_DATE      ( ( HB_TYPE ) 0x0020 )
-#define HB_IT_LOGICAL   ( ( HB_TYPE ) 0x0080 )
-#define HB_IT_SYMBOL    ( ( HB_TYPE ) 0x0100 )
-#define HB_IT_ALIAS     ( ( HB_TYPE ) 0x0200 )
-#define HB_IT_STRING    ( ( HB_TYPE ) 0x0400 )
-#define HB_IT_MEMOFLAG  ( ( HB_TYPE ) 0x0800 )
+#define HB_IT_NIL       ( ( HB_TYPE ) 0x00000 )
+#define HB_IT_POINTER   ( ( HB_TYPE ) 0x00001 )
+#define HB_IT_INTEGER   ( ( HB_TYPE ) 0x00002 )
+#define HB_IT_LONG      ( ( HB_TYPE ) 0x00008 )
+#define HB_IT_DOUBLE    ( ( HB_TYPE ) 0x00010 )
+#define HB_IT_DATE      ( ( HB_TYPE ) 0x00020 )
+#define HB_IT_LOGICAL   ( ( HB_TYPE ) 0x00080 )
+#define HB_IT_SYMBOL    ( ( HB_TYPE ) 0x00100 )
+#define HB_IT_ALIAS     ( ( HB_TYPE ) 0x00200 )
+#define HB_IT_STRING    ( ( HB_TYPE ) 0x00400 )
+#define HB_IT_MEMOFLAG  ( ( HB_TYPE ) 0x00800 )
 #define HB_IT_MEMO      ( HB_IT_MEMOFLAG | HB_IT_STRING )
-#define HB_IT_BLOCK     ( ( HB_TYPE ) 0x1000 )
-#define HB_IT_BYREF     ( ( HB_TYPE ) 0x2000 )
-#define HB_IT_MEMVAR    ( ( HB_TYPE ) 0x4000 )
-#define HB_IT_ARRAY     ( ( HB_TYPE ) 0x8000 )
+#define HB_IT_BLOCK     ( ( HB_TYPE ) 0x01000 )
+#define HB_IT_BYREF     ( ( HB_TYPE ) 0x02000 )
+#define HB_IT_MEMVAR    ( ( HB_TYPE ) 0x04000 )
+#define HB_IT_ARRAY     ( ( HB_TYPE ) 0x08000 )
+#define HB_IT_ENUM      ( ( HB_TYPE ) 0x10000 )
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
 #define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
-#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_STRING | HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_MEMVAR | HB_IT_BYREF ) )
+#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_STRING ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_BYREF ) )
 
 #if 0
@@ -119,27 +120,28 @@ HB_EXTERN_BEGIN
  * x86 machines they can safe few CPU cycles. [druzus]
  */
 
-#define HB_IS_NIL( p )     HB_IS_OF_TYPE( p, HB_IT_NIL )
-#define HB_IS_ARRAY( p )   HB_IS_OF_TYPE( p, HB_IT_ARRAY )
-#define HB_IS_BLOCK( p )   HB_IS_OF_TYPE( p, HB_IT_BLOCK )
-#define HB_IS_DATE( p )    HB_IS_OF_TYPE( p, HB_IT_DATE )
-#define HB_IS_DOUBLE( p )  HB_IS_OF_TYPE( p, HB_IT_DOUBLE )
-#define HB_IS_INTEGER( p ) HB_IS_OF_TYPE( p, HB_IT_INTEGER )
-#define HB_IS_LOGICAL( p ) HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
-#define HB_IS_LONG( p )    HB_IS_OF_TYPE( p, HB_IT_LONG )
-#define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
-#define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
-#define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
-#define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
-#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
-#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
-#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
-#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
-#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
-#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
-#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
-#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
-#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+#define HB_IS_NIL( p )        HB_IS_OF_TYPE( p, HB_IT_NIL )
+#define HB_IS_ARRAY( p )      HB_IS_OF_TYPE( p, HB_IT_ARRAY )
+#define HB_IS_BLOCK( p )      HB_IS_OF_TYPE( p, HB_IT_BLOCK )
+#define HB_IS_DATE( p )       HB_IS_OF_TYPE( p, HB_IT_DATE )
+#define HB_IS_DOUBLE( p )     HB_IS_OF_TYPE( p, HB_IT_DOUBLE )
+#define HB_IS_INTEGER( p )    HB_IS_OF_TYPE( p, HB_IT_INTEGER )
+#define HB_IS_LOGICAL( p )    HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
+#define HB_IS_LONG( p )       HB_IS_OF_TYPE( p, HB_IT_LONG )
+#define HB_IS_SYMBOL( p )     HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
+#define HB_IS_POINTER( p )    HB_IS_OF_TYPE( p, HB_IT_POINTER )
+#define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
+#define HB_IS_MEMO( p )       HB_IS_OF_TYPE( p, HB_IT_MEMO )
+#define HB_IS_ENUM( p )       HB_IS_OF_TYPE( p, HB_IT_ENUM )
+#define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
+#define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
+#define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
 #elif 0
 
@@ -148,54 +150,56 @@ HB_EXTERN_BEGIN
  * they are the safest one in buggy code which may produce wrong item
  * signatures but also they can be slower on some machines
  */
-#define HB_IS_NIL( p )     ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
-#define HB_IS_ARRAY( p )   ( HB_ITEM_TYPE( p ) == HB_IT_ARRAY )
-#define HB_IS_BLOCK( p )   ( HB_ITEM_TYPE( p ) == HB_IT_BLOCK )
-#define HB_IS_DATE( p )    ( HB_ITEM_TYPE( p ) == HB_IT_DATE )
-#define HB_IS_DOUBLE( p )  ( HB_ITEM_TYPE( p ) == HB_IT_DOUBLE )
-#define HB_IS_INTEGER( p ) ( HB_ITEM_TYPE( p ) == HB_IT_INTEGER )
-#define HB_IS_LOGICAL( p ) ( HB_ITEM_TYPE( p ) == HB_IT_LOGICAL )
-#define HB_IS_LONG( p )    ( HB_ITEM_TYPE( p ) == HB_IT_LONG )
-#define HB_IS_SYMBOL( p )  ( HB_ITEM_TYPE( p ) == HB_IT_SYMBOL )
-#define HB_IS_POINTER( p ) ( HB_ITEM_TYPE( p ) == HB_IT_POINTER )
-#define HB_IS_MEMO( p )    ( HB_ITEM_TYPE( p ) == HB_IT_MEMO )
-#define HB_IS_MEMVAR( p )  ( HB_ITEM_TYPE( p ) == ( HB_IT_MEMVAR | HB_IT_BYREF ) )
-#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMOFLAG ) == HB_IT_STRING )
-#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMVAR ) == HB_IT_BYREF )
-#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
-#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
-#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
-#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
-#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
-#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
-#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+#define HB_IS_NIL( p )        ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
+#define HB_IS_ARRAY( p )      ( HB_ITEM_TYPE( p ) == HB_IT_ARRAY )
+#define HB_IS_BLOCK( p )      ( HB_ITEM_TYPE( p ) == HB_IT_BLOCK )
+#define HB_IS_DATE( p )       ( HB_ITEM_TYPE( p ) == HB_IT_DATE )
+#define HB_IS_DOUBLE( p )     ( HB_ITEM_TYPE( p ) == HB_IT_DOUBLE )
+#define HB_IS_INTEGER( p )    ( HB_ITEM_TYPE( p ) == HB_IT_INTEGER )
+#define HB_IS_LOGICAL( p )    ( HB_ITEM_TYPE( p ) == HB_IT_LOGICAL )
+#define HB_IS_LONG( p )       ( HB_ITEM_TYPE( p ) == HB_IT_LONG )
+#define HB_IS_SYMBOL( p )     ( HB_ITEM_TYPE( p ) == HB_IT_SYMBOL )
+#define HB_IS_POINTER( p )    ( HB_ITEM_TYPE( p ) == HB_IT_POINTER )
+#define HB_IS_MEMO( p )       ( HB_ITEM_TYPE( p ) == HB_IT_MEMO )
+#define HB_IS_MEMVAR( p )     ( HB_ITEM_TYPE( p ) == ( HB_IT_MEMVAR | HB_IT_BYREF ) )
+#define HB_IS_ENUM( p )       ( HB_ITEM_TYPE( p ) == ( HB_IT_ENUM | HB_IT_BYREF ) )
+#define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMOFLAG ) == HB_IT_STRING )
+#define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMVAR ) == HB_IT_BYREF )
+#define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
 #else
 
 /*
  * these ones are can be the most efficiently optimized on some CPUs
  */
-#define HB_IS_NIL( p )     ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
-#define HB_IS_ARRAY( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_ARRAY ) != 0 )
-#define HB_IS_BLOCK( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BLOCK ) != 0 )
-#define HB_IS_DATE( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_DATE ) != 0 )
-#define HB_IS_DOUBLE( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_DOUBLE ) != 0 )
-#define HB_IS_INTEGER( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_INTEGER ) != 0 )
-#define HB_IS_LOGICAL( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_LOGICAL ) != 0 )
-#define HB_IS_LONG( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_LONG ) != 0 )
-#define HB_IS_SYMBOL( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_SYMBOL ) != 0 )
-#define HB_IS_POINTER( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_POINTER ) != 0 )
-#define HB_IS_MEMO( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMOFLAG ) != 0 )
-#define HB_IS_STRING( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_STRING ) != 0 )
-#define HB_IS_MEMVAR( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMVAR ) != 0 )
-#define HB_IS_BYREF( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
-#define HB_IS_NUMERIC( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
-#define HB_IS_NUMINT( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
-#define HB_IS_COMPLEX( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
-#define HB_IS_GCITEM( p )  ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
-#define HB_IS_BADITEM( p ) ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
-#define HB_IS_OBJECT( p )  ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
-#define HB_IS_NUMBER( p )  HB_IS_NUMERIC( p )
+#define HB_IS_NIL( p )        ( HB_ITEM_TYPE( p ) == HB_IT_NIL )
+#define HB_IS_ARRAY( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_ARRAY ) != 0 )
+#define HB_IS_BLOCK( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BLOCK ) != 0 )
+#define HB_IS_DATE( p )       ( ( HB_ITEM_TYPE( p ) & HB_IT_DATE ) != 0 )
+#define HB_IS_DOUBLE( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_DOUBLE ) != 0 )
+#define HB_IS_INTEGER( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_INTEGER ) != 0 )
+#define HB_IS_LOGICAL( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_LOGICAL ) != 0 )
+#define HB_IS_LONG( p )       ( ( HB_ITEM_TYPE( p ) & HB_IT_LONG ) != 0 )
+#define HB_IS_SYMBOL( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_SYMBOL ) != 0 )
+#define HB_IS_POINTER( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_POINTER ) != 0 )
+#define HB_IS_MEMO( p )       ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMOFLAG ) != 0 )
+#define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_STRING ) != 0 )
+#define HB_IS_MEMVAR( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMVAR ) != 0 )
+#define HB_IS_ENUM( p )       ( ( HB_ITEM_TYPE( p ) & HB_IT_ENUM ) != 0 )
+#define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
+#define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
+#define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
+#define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
+#define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
+#define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_OBJ_CLASS( p ) != 0 )
+#define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
 #endif
 
@@ -265,42 +269,42 @@ struct hb_struLong
    HB_LONG value;
 };
 
+struct hb_struPointer
+{
+   void * value;
+   BOOL collect;
+};
+
 struct hb_struMemvar
 {
    struct _HB_VALUE ** itemsbase;
    LONG value;
 };
 
-struct hb_struPointer
-{
-   void * value;
-};
-
 struct hb_struRefer
 {
    union {
-      struct _HB_CODEBLOCK * block;    /* codeblock */
-      struct _HB_ITEM * itemPtr;       /* item pointer  */
-      struct _HB_ITEM ** itemsbase;    /* static variables */
-      struct _HB_ITEM ** *itemsbasePtr; /* local variables */
+      struct _HB_CODEBLOCK * block;       /* codeblock */
+      struct _HB_ITEM * itemPtr;          /* item pointer  */
+      struct _HB_ITEM ** itemsbase;       /* static variables */
+      struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
-   LONG offset;    /* 0 for static variables */
+   LONG offset;                           /* 0 for static variables */
    LONG value;
-   union {
-      struct _HB_ITEM * itemPtr;       /* item pointer  */
-   } ValuePtr;
+};
+
+struct hb_struEnum
+{
+   struct _HB_ITEM * basePtr;             /* base item pointer */
+   struct _HB_ITEM * valuePtr;            /* value item pointer */
+   LONG offset;
 };
 
 struct hb_struString
 {
    ULONG length;
+   ULONG allocated;     /* size of memory block allocated for string value, 0 for static strings */
    char * value;
-   SHORT bStatic;        /* it is a static string from pcode or from a C string */
-   union
-   {
-      char         value[1];
-      HB_COUNTER * pulHolders; /* number of holders of this string */
-   } u;
 };
 
 struct hb_struSymbol
@@ -317,18 +321,19 @@ typedef struct _HB_ITEM
    HB_TYPE type;
    union
    {
-      struct hb_struArray   asArray;
-      struct hb_struBlock   asBlock;
-      struct hb_struDate    asDate;
-      struct hb_struDouble  asDouble;
-      struct hb_struInteger asInteger;
-      struct hb_struLogical asLogical;
-      struct hb_struLong    asLong;
-      struct hb_struMemvar  asMemvar;
-      struct hb_struPointer asPointer;
-      struct hb_struRefer   asRefer;
-      struct hb_struString  asString;
-      struct hb_struSymbol  asSymbol;
+      struct hb_struArray     asArray;
+      struct hb_struBlock     asBlock;
+      struct hb_struDate      asDate;
+      struct hb_struDouble    asDouble;
+      struct hb_struInteger   asInteger;
+      struct hb_struLogical   asLogical;
+      struct hb_struLong      asLong;
+      struct hb_struPointer   asPointer;
+      struct hb_struMemvar    asMemvar;
+      struct hb_struRefer     asRefer;
+      struct hb_struEnum      asEnum;
+      struct hb_struString    asString;
+      struct hb_struSymbol    asSymbol;
    } item;
 } HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
 
@@ -336,7 +341,6 @@ typedef struct _HB_BASEARRAY
 {
    PHB_ITEM    pItems;       /* pointer to the array items */
    ULONG       ulLen;        /* number of items in the array */
-   HB_COUNTER  ulHolders;    /* number of holders of this array */
    USHORT *    puiClsTree;   /* remember array of super called ID Tree */
    USHORT      uiClass;      /* offset to the classes base if it is an object */
    USHORT      uiPrevCls;    /* for fixing after access super */
@@ -346,12 +350,11 @@ typedef struct _HB_BASEARRAY
 typedef struct _HB_CODEBLOCK
 {
    BYTE *      pCode;        /* codeblock pcode */
-   PHB_ITEM    pLocals;      /* table with referenced local variables */
-   USHORT      uiLocals;     /* number of referenced local variables */
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
-   HB_COUNTER  ulCounter;    /* numer of references to this codeblock */
-   BOOL        dynBuffer;    /* is pcode buffer allocated dynamically */
+   PHB_ITEM    pLocals;      /* table with referenced local variables */
+   USHORT      uiLocals;     /* number of referenced local variables */
+   SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE
@@ -435,6 +438,7 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 #define hb_retnint( iNumber )                hb_itemPutNInt( hb_stackReturnItem(), iNumber )
 #define hb_retnintlen( lNumber, iWidth )     hb_itemPutNIntLen( hb_stackReturnItem(), lNumber, iWidth )
 #define hb_retptr( pointer )                 hb_itemPutPtr( hb_stackReturnItem(), pointer )
+#define hb_retptrGC( pointer )               hb_itemPutPtrGC( hb_stackReturnItem(), pointer )
 
 #else
 
@@ -460,6 +464,7 @@ extern HB_EXPORT void   hb_retnllen( long lNumber, int iWidth ); /* returns a lo
 extern HB_EXPORT void   hb_retnintlen( HB_LONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 extern HB_EXPORT void   hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
+extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT void   hb_retnll( LONGLONG lNumber );/* returns a long long number */
 extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
@@ -489,6 +494,32 @@ extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocat
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
 
+#ifdef _HB_API_INTERNAL_
+extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
+extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return TRUE when 0 reached */
+extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
+extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
+extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /* reallocates memory, create copy if reference counter greater then 1 */
+
+#if 0
+
+/* 
+ * I used this macros only to test some speed overhead,
+ * They may not be supported in the future so please do
+ * not create any code which needs them. [druzus]
+ */
+
+#define hb_xRefInc( p )             (++(*HB_COUNTER_PTR( p )))
+#define hb_xRefDec( p )             (--(*HB_COUNTER_PTR( p ))==0)
+#define hb_xRefFree( p )            do { \
+                                       if( hb_xRefDec( p ) ) \
+                                          hb_xfree( (p) ); \
+                                    } while( 0 )
+
+#endif
+
+#endif
+
 /* #if UINT_MAX == ULONG_MAX */
 /* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
    we need these functions only when max(size_t) < max(long)
@@ -505,6 +536,32 @@ extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ul
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
 #endif
 
+/* garbage collector */
+#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
+typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
+typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
+
+extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
+extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
+
+extern void *     hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
+extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
+extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
+extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
+#ifdef _HB_API_INTERNAL_
+extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
+extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
+extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
+extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
+#endif
+extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
+extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
+extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
+extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
+extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
+extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
+extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
+
 /* array management */
 extern HB_EXPORT BOOL       hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern HB_EXPORT ULONG      hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array len */
@@ -516,7 +573,6 @@ extern HB_EXPORT BOOL       hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* in
 extern HB_EXPORT BOOL       hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
 extern HB_EXPORT BOOL       hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
 extern HB_EXPORT BOOL       hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
-extern HB_EXPORT BOOL       hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
 extern HB_EXPORT BOOL       hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern HB_EXPORT BOOL       hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 /* hb_arrayGetItemPtr() is dangerous */
@@ -606,23 +662,6 @@ extern HB_EXPORT double   hb_get_le_uint64( BYTE * ptr );
 extern HB_EXPORT void     hb_put_le_uint64( BYTE * ptr, double d );
 #endif
 
-/* class management */
-extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
-extern BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
-
-/* object management */
-extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
-extern char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
-extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
-extern BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
-extern void     hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
-extern USHORT   hb_objGetClass( PHB_ITEM pItem );
-
-/* profiler for object management */
-extern void *  hb_mthRequested( void );           /* profiler from classes.c */
-extern void    hb_mthAddTime( void *, ULONG );    /* profiler from classes.c */
-
-
 /* dynamic symbol table management */
 extern HB_EXPORT PHB_DYNS  hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
 extern HB_EXPORT PHB_DYNS  hb_dynsymGetCase( char * szName );    /* finds and creates a dynamic symbol if not found - case sensitive */
@@ -659,9 +698,8 @@ extern HB_EXPORT BOOL hb_winmainArgGet( HANDLE * phInstance, HANDLE * phPrevInst
 
 /* Codeblock management */
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols ); /* create a code-block */
+extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols, USHORT usLen ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
-extern void             hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
 extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
 extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer ); /* get local variable passed by reference */
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
@@ -673,7 +711,6 @@ extern void       hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE var
 extern void       hb_memvarsFree( void ); /* release the memvar API system */
 extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
 extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
-extern void       hb_memvarValueDecGarbageRef( HB_HANDLE hValue ); /* decrease the reference count of a detached local variable */
 extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern ERRCODE    hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
@@ -685,6 +722,9 @@ extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+#ifdef _HB_API_INTERNAL_
+extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
+#endif
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
@@ -752,29 +792,6 @@ extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYT
 extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 extern char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pbNewString ); /* expands valid '&' operator */
-
-/* garbage collector */
-#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
-typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
-
-extern HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pItem );
-extern void   hb_gcGripDrop( HB_ITEM_PTR pItem );
-
-extern void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
-extern void   hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
-extern void * hb_gcLock( void *pAlloc ); /* do not release passed memory block */
-extern void * hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
-extern void   hb_gcCollect( void ); /* checks if a single memory block can be released */
-extern void   hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
-extern void   hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
-extern void   hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
-extern void   hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
-extern void   hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
-extern void   hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
-extern void   hb_clsIsClassRef( void ); /* classes.c - mark all class internals as used */
-extern HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage ); /* clear a codeblock before releasing by the GC */
-extern HB_GARBAGE_FUNC( hb_arrayReleaseGarbage ); /* clear an array before releasing by the GC */
 
 /* idle states */
 extern void   hb_releaseCPU( void );

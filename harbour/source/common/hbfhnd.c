@@ -90,7 +90,7 @@
 void hb_fhnd_ForceLink( void )
 {
    /* Intentionally do nothing */
-};
+}
 
 #if defined(__WIN32__) && defined(__BORLANDC__)
 

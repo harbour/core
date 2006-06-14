@@ -57,7 +57,8 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeMin, USHORT uiPcodeMax ); /* module symbols initialization with extended information */
 
 #if defined(_MSC_VER) && !defined(_WIN64) && \
     !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
@@ -87,13 +88,14 @@ extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 #if defined(HARBOUR_STRICT_ANSI_C)
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
+      static HB_SYMB symbols_table[] = {
 
    #define HB_INIT_SYMBOLS_END( func ) \
       }; \
+      static PHB_SYMB symbols = symbols_table; \
       void func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
@@ -110,13 +112,14 @@ extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
+      static HB_SYMB symbols_table[] = {
 
    #define HB_INIT_SYMBOLS_END( func ) \
       }; \
+      static PHB_SYMB symbols = symbols_table; \
       static void __attribute__ ((constructor)) func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
@@ -131,13 +134,14 @@ extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    typedef int (* HB_$INITSYM)( void );
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
+      static HB_SYMB symbols_table[] = {
 
    #define HB_INIT_SYMBOLS_END( func ) \
       }; \
+      static PHB_SYMB symbols = symbols_table; \
       static int func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ) ); \
          return 0; \
       }
 
@@ -160,21 +164,11 @@ extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
+      static HB_SYMB symbols_table[] = {
 
-   /* this allows any macros to be preprocessed first
-      so that token pasting is handled correctly */
    #define HB_INIT_SYMBOLS_END( func ) \
-           _HB_INIT_SYMBOLS_END( func )
-
-   #define _HB_INIT_SYMBOLS_END( func ) \
       }; \
-      static int func( void ) \
-      { \
-         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
-         return 0; \
-      } \
-      static int hb_vm_auto_##func = func();
+      static PHB_SYMB symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ) ); \
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
       static int func( void ) \
@@ -202,13 +196,14 @@ extern HB_EXPORT void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
    #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
-      static HB_SYMB symbols[] = {
+      static HB_SYMB symbols_table[] = {
 
    #define HB_INIT_SYMBOLS_END( func ) \
       }; \
+      static PHB_SYMB symbols = symbols_table; \
       static void func( void ) \
       { \
-         hb_vmProcessSymbols( symbols, (USHORT) ( sizeof( symbols ) / sizeof( HB_SYMB ) ) ); \
+         symbols = hb_vmProcessSymbols( symbols_table, (USHORT) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ) ); \
       }
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \

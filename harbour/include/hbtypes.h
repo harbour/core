@@ -60,8 +60,12 @@
 #include "hbvm.h"
 #include "hbapiitm.h"
 
-typedef void ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
-                                            USHORT uiModuleSymbols );
+typedef PHB_SYMB ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
+                                                USHORT uiModuleSymbols );
+typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EXT )
+                           ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
+                             char * szModuleName, ULONG ulID,
+                             USHORT uiPcodeMin, USHORT uiPcodeMax );
 
 typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
 
@@ -126,7 +130,6 @@ typedef BOOL     ( * HB_ARRAYINS)( PHB_ITEM pArray, ULONG ulIndex );
 typedef BOOL     ( * HB_ARRAYDEL)( PHB_ITEM pArray, ULONG ulIndex );
 typedef BOOL     ( * HB_ARRAYSIZE)( PHB_ITEM pArray, ULONG ulLen );
 typedef BOOL     ( * HB_ARRAYLAST)( PHB_ITEM pArray, PHB_ITEM pResult );
-typedef BOOL     ( * HB_ARRAYRELEASE)( PHB_ITEM pArray );
 typedef BOOL     ( * HB_ARRAYSET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
 typedef BOOL     ( * HB_ARRAYGET)( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
 typedef void     ( * HB_XINIT)( void );                         /* Initialize fixed memory subsystem */

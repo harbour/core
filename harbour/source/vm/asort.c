@@ -63,8 +63,6 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-/* #define HB_ASORT_OPT_ITEMCOPY  - use hbsetup.h to enable/disable it*/
-
 static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
 {
    if( pBlock )

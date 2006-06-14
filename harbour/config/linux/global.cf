@@ -37,6 +37,7 @@ CP = cp -f
 MV = mv -f
 MD = mkdir
 MDP = mkdir -p
+RANLIB = ranlib
 
 dirbase::
 	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)

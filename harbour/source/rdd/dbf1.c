@@ -2399,23 +2399,11 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    if( pArea->fHasMemo )
    {
       pFileName = hb_fsFNameSplit( ( char * ) szFileName );
-      pItem = hb_itemPutC( NULL, "" );
-      errCode = SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
-      if( errCode == SUCCESS )
-      {
-         pFileName->szExtension = hb_itemGetCPtr( pItem );
-         hb_fsFNameMerge( ( char * ) szFileName, pFileName );
-         pArea->szMemoFileName = hb_strdup( ( char * ) szFileName );
-      }
-      hb_itemRelease( pItem );
+      pFileName->szExtension = NULL;
+      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
-      if( errCode == SUCCESS )
-      {
-         BYTE *tmp = pCreateInfo->abName;
-         pCreateInfo->abName = ( BYTE * ) pArea->szMemoFileName;
-         errCode = SELF_CREATEMEMFILE( ( AREAP ) pArea, pCreateInfo );
-         pCreateInfo->abName = tmp;
-      }
+      pCreateInfo->abName = szFileName;
+      errCode = SELF_CREATEMEMFILE( ( AREAP ) pArea, pCreateInfo );
    }
    /* If successful call SUPER_CREATE to finish system jobs */
    if( errCode == SUCCESS )
@@ -3156,24 +3144,11 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pArea->fHasMemo )
    {
       pFileName = hb_fsFNameSplit( ( char * ) szFileName );
-      pFileExt = hb_itemPutC( NULL, "" );
-      errCode = SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pFileExt );
-      if( errCode == SUCCESS )
-      {
-         pFileName->szExtension = hb_itemGetCPtr( pFileExt );
-         hb_fsFNameMerge( ( char * ) szFileName, pFileName );
-      }
-      hb_itemRelease( pFileExt );
+      pFileName->szExtension = NULL;
+      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
       hb_xfree( pFileName );
-      if( errCode == SUCCESS )
-      {
-         BYTE * tmp = pOpenInfo->abName;
-         pArea->szMemoFileName = hb_strdup( ( char * ) szFileName );
-         pOpenInfo->abName = ( BYTE * ) pArea->szMemoFileName;
-         /* Open memo file and exit if error */
-         errCode = SELF_OPENMEMFILE( ( AREAP ) pArea, pOpenInfo );
-         pOpenInfo->abName = tmp;
-      }
+      pOpenInfo->abName = szFileName;
+      errCode = SELF_OPENMEMFILE( ( AREAP ) pArea, pOpenInfo );
    }
 
    if( errCode == SUCCESS )

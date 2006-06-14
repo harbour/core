@@ -109,7 +109,7 @@ HB_FUNC( FREAD )
 
          /* Unshare the item to avoid GPF on static buffers and changing
             other items which shares this buffer. [druzus] */
-         pBuffer = hb_itemUnShare( pBuffer );
+         pBuffer = hb_itemUnShareString( pBuffer );
 
          ulRead = hb_fsReadLarge( hb_parni( 1 ),
                                   ( BYTE * ) hb_itemGetCPtr( pBuffer ),

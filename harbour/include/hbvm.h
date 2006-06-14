@@ -69,8 +69,31 @@ extern HB_EXPORT void     hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
 
 /* Harbour virtual machine functions */
 extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
-extern HB_EXPORT void     hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
-       
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeMin, USHORT uiPcodeMax ); /* module symbols initialization with extended information */
+
+#ifdef _HB_API_INTERNAL_
+   typedef struct _HB_SYMBOLS
+   {
+      PHB_SYMB pModuleSymbols;      /* pointer to module symbol table */
+      USHORT   uiModuleSymbols;     /* number of symbols on that table */
+      struct _HB_SYMBOLS * pNext;   /* pointer to the next SYMBOLS structure */
+      HB_SYMBOLSCOPE hScope;        /* scope collected from all symbols in module used to speed initialization code */
+      void *   hDynLib;             /* handler to dynamic library */
+      BOOL     fAllocated;          /* the symbol table is dynamically allocated and should be freed on HVM exit */
+      BOOL     fActive;             /* the symbol table is currently active */
+      BOOL     fInitStatics;        /* static initialization should be executed */
+      char *   szModuleName;        /* module name */
+      ULONG    ulID;                /* module unique identifier */
+   } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
+
+   extern PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone );
+   extern void        hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );
+   extern void        hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
+   extern void        hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] );
+   extern void        hb_vmExitSymbolGroup( void * hDynLib );
+#endif
+
 extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
 /* Harbour virtual machine escaping API */
@@ -90,7 +113,7 @@ extern HB_EXPORT void     hb_vmRequestQuit( void );
 
 /* Execution */
 extern HB_EXPORT void     hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
-extern HB_EXPORT void     hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
+extern HB_EXPORT void     hb_vmFunction( USHORT uiParams ); /* executes a function */
 extern HB_EXPORT void     hb_vmSend( USHORT uiParams ); /* sends a message to an object */
 extern HB_EXPORT PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
 /* executes passed codeblock with variable number of arguments */

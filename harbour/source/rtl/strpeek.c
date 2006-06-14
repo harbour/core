@@ -84,7 +84,7 @@ HB_FUNC( STRPOKE )
 
       if( ulPos > 0 && ulPos <= hb_itemGetCLen( pText ) )
       {
-         pText = hb_itemUnShare( pText );
+         pText = hb_itemUnShareString( pText );
          hb_itemGetCPtr( pText )[ ulPos - 1 ] = (char) ( hb_parni( 3 ) & 0xff );
       }
       hb_itemReturn( pText );

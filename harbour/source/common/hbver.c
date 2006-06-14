@@ -298,7 +298,7 @@ HB_EXPORT BOOL hb_iswinnt(void)
   OSVERSIONINFO osvi ;
   osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
   GetVersionEx (&osvi);
-  return(osvi.dwPlatformId == VER_PLATFORM_WIN32_NT); // && osvi.dwMajorVersion >= 4);
+  return(osvi.dwPlatformId == VER_PLATFORM_WIN32_NT); /* && osvi.dwMajorVersion >= 4); */
 #else
   return FALSE ;
 #endif

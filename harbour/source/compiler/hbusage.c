@@ -174,6 +174,7 @@ void hb_compPrintCredits( void )
            "Paul Tucker <ptucker@sympatico.ca>\n"
            "Peter Townsend <cephas@tpgi.com.au>\n"
            "Phil Barnett <philb@iag.net>\n"
+           "Przemyslaw Czerpak <druzus@priv.onet.pl>\n"
            "Ron Pinkas <ron@profit-master.com>\n"
            "Ryszard Glab <rglab@imid.med.pl>\n"
            "Tim Stone <timstone@mstrlink.com>\n"

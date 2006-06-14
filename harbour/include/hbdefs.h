@@ -404,16 +404,20 @@
 #  define HB_LL( num )           num##LL
 #endif
 
-#if HB_LONG_MAX > HB_LL( 10000000000 )
-#  define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 || (l) >= HB_LL( 10000000000 ) ) ? 20 : 10 )
-#else
-#  define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 ) ? 20 : 10 )
-#endif
-
 #if HB_INT_MIN <= -1000000000
 #  define HB_INT_LENGTH( i )  ( ( (i) <= -1000000000 ) ? 20 : 10 )
 #else
 #  define HB_INT_LENGTH( i )  10
+#endif
+
+#if !defined( HB_LONG_LONG_OFF )
+#  if HB_LONG_MAX > HB_LL( 10000000000 )
+#     define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 || (l) >= HB_LL( 10000000000 ) ) ? 20 : 10 )
+#  endif
+#endif
+
+#if !defined HB_LONG_LENGTH
+#  define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 ) ? 20 : 10 )
 #endif
 
 /* NOTE: Yes, -999999999.0 is right instead of -1000000000.0 [vszakats] */
@@ -433,6 +437,11 @@ typedef UINT32 HB_TYPE;
 
 /* type of reference counter */
 typedef unsigned long HB_COUNTER;
+#if ULONG_MAX <= UINT32_MAX
+#  define HB_COUNTER_SIZE     4
+#else
+#  define HB_COUNTER_SIZE     8
+#endif
 
 /* type for memory pointer diff */
 #if defined( _WIN64 )
@@ -584,10 +593,21 @@ typedef unsigned long HB_COUNTER;
 #  if !defined( HB_STRICT_ALIGNMENT )
 #     define HB_STRICT_ALIGNMENT
 #  endif
+#endif
+
+#if defined( HB_STRICT_ALIGNMENT )
 #  if !defined( HB_ALLOC_ALIGNMENT ) || ( HB_ALLOC_ALIGNMENT + 1 == 1 )
 #     define HB_ALLOC_ALIGNMENT     8
 #  endif
 #endif
+
+#if defined( HB_ALLOC_ALIGNMENT ) && HB_COUNTER_SIZE < HB_ALLOC_ALIGNMENT + 0
+#  define HB_COUNTER_OFFSET   HB_ALLOC_ALIGNMENT
+#else
+#  define HB_COUNTER_OFFSET   HB_COUNTER_SIZE
+#endif
+
+#define HB_COUNTER_PTR( p )         ((HB_COUNTER*) ((BYTE *) (p)-HB_COUNTER_OFFSET))
 
 /*
  * These macros are necessary for architectures which need
@@ -601,6 +621,8 @@ typedef unsigned long HB_COUNTER;
 #     define   HB_PUT_LONG( p, v )  HB_PUT_BE_UINT32( p, ( UINT32 ) ( v ) )
 #     define   HB_GET_LONG( p )     HB_GET_BE_UINT32( p )
 #  endif
+#  define   HB_PUT_UINT32( p, v )   HB_PUT_BE_UINT32( p, ( UINT32 ) ( v ) )
+#  define   HB_GET_UINT32( p )      HB_GET_BE_UINT32( p )
 #else
 #  if defined( HB_ARCH_64BIT )
 #     define   HB_PUT_LONG( p, v )  HB_PUT_LE_UINT64( p, ( UINT64 ) ( v ) )
@@ -609,6 +631,8 @@ typedef unsigned long HB_COUNTER;
 #     define   HB_PUT_LONG( p, v )  HB_PUT_LE_UINT32( p, ( UINT32 ) ( v ) )
 #     define   HB_GET_LONG( p )     HB_GET_LE_UINT32( p )
 #  endif
+#  define   HB_PUT_UINT32( p, v )   HB_PUT_LE_UINT32( p, ( UINT32 ) ( v ) )
+#  define   HB_GET_UINT32( p )      HB_GET_LE_UINT32( p )
 #endif
 
 #if !defined( HB_STRICT_ALIGNMENT )

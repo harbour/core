@@ -76,6 +76,38 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
+/* This releases array when called from the garbage collector */
+static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+{
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
+
+   /* clear object tree as needed */
+   if( pBaseArray->uiClass && pBaseArray->puiClsTree )
+   {
+      hb_xfree( pBaseArray->puiClsTree );
+      pBaseArray->puiClsTree = NULL;
+   }
+
+   if( pBaseArray->pItems )
+   {
+      HB_ITEM_PTR pItems = pBaseArray->pItems;
+      ULONG ulLen = pBaseArray->ulLen;
+
+      /* clear the pBaseArray->pItems to avoid infinit loop in cross
+       * referenced items
+       */
+      pBaseArray->pItems = NULL;
+      pBaseArray->ulLen  = 0;
+
+      while( ulLen-- )
+      {
+         if( HB_IS_COMPLEX( pItems + ulLen ) )
+            hb_itemClear( pItems + ulLen );
+      }
+      hb_xfree( pItems );
+   }
+}
+
 HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
@@ -93,7 +125,6 @@ HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
       pBaseArray->pItems = NULL;
 
    pBaseArray->ulLen      = ulLen;
-   pBaseArray->ulHolders  = 1;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
    pBaseArray->puiClsTree = NULL;
@@ -576,7 +607,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                hb_vmPushLong( ulStart + 1 );
                hb_vmDo( 2 );
 
-               if( HB_IS_LOGICAL( &hb_stack.Return ) && hb_stack.Return.item.asLogical.value )
+               if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
                   return ulStart + 1;                  /* arrays start from 1 */
             }
          }
@@ -679,41 +710,6 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
             hb_vmDo( 2 );
          }
       }
-
-      return TRUE;
-   }
-   else
-      return FALSE;
-}
-
-BOOL hb_arrayRelease( PHB_ITEM pArray )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayRelease(%p)", pArray));
-
-   if( HB_IS_ARRAY( pArray ) )
-   {
-      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG ulLen = pBaseArray->ulLen;
-      ULONG ulPos;
-
-      /* clear object tree as needed */
-      if( pBaseArray->uiClass && pBaseArray->puiClsTree )
-      {
-        hb_xfree(pBaseArray->puiClsTree);
-        pBaseArray->puiClsTree = NULL;
-      }
-
-      if( pBaseArray->pItems )
-      {
-         for( ulPos = 0; ulPos < ulLen; ulPos++ )
-            hb_itemClear( pBaseArray->pItems + ulPos );
-         hb_xfree( pBaseArray->pItems );
-      }
-
-      hb_gcFree( ( void * ) pBaseArray );
-
-      pArray->type = HB_IT_NIL;
-      pArray->item.asArray.value = NULL;
 
       return TRUE;
    }
@@ -944,31 +940,4 @@ HB_EXPORT PHB_ITEM hb_arrayBaseParams( void )
    }
 
    return pArray;
-}
-
-/* This releases array when called from the garbage collector */
-HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
-{
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
-
-   if( pBaseArray->pItems )
-   {
-      HB_ITEM_PTR pItem = pBaseArray->pItems;
-      ULONG ulLen = pBaseArray->ulLen;
-
-      while( ulLen-- )
-      {
-         /* Only strings should be deallocated.
-          * Arrays, objects and codeblock should be released directly by
-          * the garbage collector
-          */
-         if( HB_IS_STRING( pItem ) )
-            hb_itemClear( pItem );
-
-         ++pItem;
-      }
-      hb_xfree( pBaseArray->pItems );
-      pBaseArray->pItems = NULL;
-      pBaseArray->ulLen  = 0;
-   }
 }

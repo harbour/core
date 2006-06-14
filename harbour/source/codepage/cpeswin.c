@@ -90,7 +90,7 @@ static HB_CODEPAGE s_codepage = { "ESWIN",
     "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( ESWIN );
+HB_CODEPAGE_INIT( ESWIN )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_ESWIN

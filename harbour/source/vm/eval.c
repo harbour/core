@@ -130,7 +130,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &hb_stack.Return );
+         hb_itemCopy( pResult, hb_stackReturnItem() );
       }
       else if( HB_IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
@@ -141,7 +141,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &hb_stack.Return );
+         hb_itemCopy( pResult, hb_stackReturnItem() );
       }
       else
          pResult = NULL;
@@ -297,7 +297,7 @@ PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
 }
 
 /*
- * Notice that these two functions place the result at hb_stack.Return,
+ * Notice that these two functions place the result at hb_stackReturnItem(),
  * that you may access its value using a _par...( -1 ).
  */
 

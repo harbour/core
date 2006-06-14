@@ -134,13 +134,14 @@ extern HB_EXPORT PHB_ITEM   hb_itemPutNLLLen( PHB_ITEM pItem, LONGLONG lNumber, 
 extern HB_EXPORT PHB_ITEM   hb_itemParamPtr ( USHORT uiParam, long lMask );
 extern HB_EXPORT int        hb_itemStrCmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT void       hb_itemCopy     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
-extern HB_EXPORT void       hb_itemForwardValue( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies the value of an item without incrementing of reference counters */
-extern HB_EXPORT void       hb_itemMove     ( PHB_ITEM pDest, PHB_ITEM pSource );
+extern HB_EXPORT void       hb_itemMove     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* moves the value of an item without incrementing of reference counters, source is cleared */
 extern HB_EXPORT void       hb_itemClear    ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemUnRef    ( PHB_ITEM pItem ); /* de-references passed variable */
 extern HB_EXPORT PHB_ITEM   hb_itemUnRefOnce( PHB_ITEM pItem ); /* de-references passed variable, one step*/
 extern HB_EXPORT PHB_ITEM   hb_itemUnRefRefer( PHB_ITEM pItem ); /* de-references passed variable, leaving the last reference */
 extern HB_EXPORT PHB_ITEM   hb_itemUnShare  ( PHB_ITEM pItem ); /* un-share given string item */
+extern HB_EXPORT PHB_ITEM   hb_itemUnShareString( PHB_ITEM pItem ); /* un-share given string item - the pItem have to be valid unrefed string item */
+extern HB_EXPORT PHB_ITEM   hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
 extern HB_EXPORT PHB_ITEM   hb_itemClone    ( PHB_ITEM pItem ); /* clone the given item */
 extern HB_EXPORT char *     hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern HB_EXPORT char *     hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq );  /* Convert any scalar to a string */
@@ -148,6 +149,35 @@ extern HB_EXPORT BOOL       hb_itemStrBuf   ( char *szResult, PHB_ITEM pNumber, 
 extern HB_EXPORT PHB_ITEM   hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
 extern HB_EXPORT char *     hb_itemPadConv  ( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeReq );
 extern HB_EXPORT void       hb_itemSwap     ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
+
+#if defined( _HB_API_INTERNAL_ )
+
+#  define hb_itemSetNil( item )           do { \
+                                             if( HB_IS_COMPLEX( item ) ) \
+                                                hb_itemClear( item ); \
+                                             else \
+                                                (item)->type = HB_IT_NIL; \
+                                          } while( 0 )
+
+#if 0
+#  define hb_itemRawMove( dst, src )      do { \
+                                             memcpy( (dst), (src), sizeof( HB_ITEM ) ); \
+                                             (src)->type = HB_IT_NIL; \
+                                          } while( 0 )
+#else
+#  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
+#endif
+
+#else
+
+#  define hb_itemSetNil( item )           hb_itemClear( (item) )
+
+#  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
+
+#endif
+
+/* xHarbour compatible function */
+#define hb_itemForwardValue( dst, src )   hb_itemMove( (dst), (src) )
 
 HB_EXTERN_END
 

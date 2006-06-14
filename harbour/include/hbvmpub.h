@@ -94,13 +94,21 @@ struct _HB_SYMB;
    typedef struct _HB_DYNS
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-      PHB_FUNC  pFunPtr;         /* Pointer to the function address */
       HB_HANDLE hArea;           /* Workarea number */
       HB_HANDLE hMemvar;         /* Index number into memvars ( publics & privates ) array */
+#ifndef HB_NO_PROFILER
       ULONG     ulCalls;         /* profiler support */
       ULONG     ulTime;          /* profiler support */
       ULONG     ulRecurse;       /* profiler support */
+#endif
    } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
+
+   /* pCode dynamic function - HRB */
+   typedef struct _HB_PCODEFUNC
+   {
+      BYTE *      pCode;         /* function body - PCODE */
+      struct _HB_SYMB * pSymbols;/* module symbol table */
+   } HB_PCODEFUNC, * PHB_PCODEFUNC;
 
 #else
 
@@ -119,6 +127,7 @@ struct _HB_SYMB;
    typedef void *  PHB_ITEM;
    typedef void *  HB_ITEM_PTR;
    typedef void *  HB_CODEBLOCK_PTR;
+   typedef void *  PHB_PCODEFUNC;
 
    typedef void    HB_STACK;
 
@@ -154,7 +163,8 @@ typedef struct _HB_SYMB
    } scope;
    union
    {
-      PHB_FUNC       pFunPtr;       /* function address for function symbol table entries */
+      PHB_FUNC       pFunPtr;       /* machine code function address for function symbol table entries */
+      PHB_PCODEFUNC  pCodeFunc;     /* PCODE function address */
       int            iStaticsBase;  /* base offset to array of statics */
    } value;
    PHB_DYNS       pDynSym;          /* pointer to its dynamic symbol if defined */
@@ -173,14 +183,18 @@ typedef struct _HB_FUNC_LIST
 } HB_FUNC_LIST, * PHB_FUNC_LIST;
 
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
-#define HB_FS_PUBLIC   ( ( HB_SYMBOLSCOPE ) 0x01 )
-#define HB_FS_STATIC   ( ( HB_SYMBOLSCOPE ) 0x02 )
-#define HB_FS_FIRST    ( ( HB_SYMBOLSCOPE ) 0x04 )
-#define HB_FS_INIT     ( ( HB_SYMBOLSCOPE ) 0x08 )
-#define HB_FS_EXIT     ( ( HB_SYMBOLSCOPE ) 0x10 )
+#define HB_FS_PUBLIC    ( ( HB_SYMBOLSCOPE ) 0x0001 )
+#define HB_FS_STATIC    ( ( HB_SYMBOLSCOPE ) 0x0002 )
+#define HB_FS_FIRST     ( ( HB_SYMBOLSCOPE ) 0x0004 )
+#define HB_FS_INIT      ( ( HB_SYMBOLSCOPE ) 0x0008 )
+#define HB_FS_EXIT      ( ( HB_SYMBOLSCOPE ) 0x0010 )
+#define HB_FS_MESSAGE   ( ( HB_SYMBOLSCOPE ) 0x0020 )
+#define HB_FS_MEMVAR    ( ( HB_SYMBOLSCOPE ) 0x0080 )
+#define HB_FS_PCODEFUNC ( ( HB_SYMBOLSCOPE ) 0x0100 )
+#define HB_FS_LOCAL     ( ( HB_SYMBOLSCOPE ) 0x0200 )
+#define HB_FS_DYNCODE   ( ( HB_SYMBOLSCOPE ) 0x0400 )
+
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
-#define HB_FS_MESSAGE  ( ( HB_SYMBOLSCOPE ) 0x20 )
-#define HB_FS_MEMVAR   ( ( HB_SYMBOLSCOPE ) 0x80 )
 
 extern HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 

@@ -64,7 +64,7 @@ static HB_CODEPAGE s_codepage = { "RU1251",
     "אבגדהוזחטיךכלםמןנסעףפץצקרשתûü‎‏ÿ",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_INIT( RU1251 );
+HB_CODEPAGE_INIT( RU1251 )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_RU1251

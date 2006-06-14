@@ -375,7 +375,7 @@ char * hb_errGetDescription( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "DESCRIPTION" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetCPtr( hb_stackReturnItem() );
 }
@@ -387,7 +387,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, const char * szDescription )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_DESCRIPTION" ) );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szDescription, strlen( szDescription ) );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -398,7 +398,7 @@ char * hb_errGetFileName( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "FILENAME" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetCPtr( hb_stackReturnItem() );
 }
@@ -410,7 +410,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, const char * szFileName )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_FILENAME" ) );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szFileName, strlen( szFileName ) );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -421,7 +421,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "GENCODE" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetNI( hb_stackReturnItem() );
 }
@@ -433,7 +433,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_GENCODE" ) );
    hb_vmPush( pError );
    hb_vmPushInteger( uiGenCode );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -444,7 +444,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "OPERATION" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetCPtr( hb_stackReturnItem() );
 }
@@ -456,7 +456,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, const char * szOperation )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_OPERATION" ) );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szOperation, strlen( szOperation ) );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -467,7 +467,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "OSCODE" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetNI( hb_stackReturnItem() );
 }
@@ -479,7 +479,7 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_OSCODE" ) );
    hb_vmPush( pError );
    hb_vmPushInteger( uiOsCode );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -490,7 +490,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "SEVERITY" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetNI( hb_stackReturnItem() );
 }
@@ -502,7 +502,7 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_SEVERITY" ) );
    hb_vmPush( pError );
    hb_vmPushInteger( uiSeverity );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -513,7 +513,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "SUBCODE" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetNI( hb_stackReturnItem() );
 }
@@ -525,7 +525,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_SUBCODE" ) );
    hb_vmPush( pError );
    hb_vmPushInteger( uiSubCode );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -536,7 +536,7 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "SUBSYSTEM" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetCPtr( hb_stackReturnItem() );
 }
@@ -548,7 +548,7 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, const char * szSubSystem )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_SUBSYSTEM" ) );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szSubSystem, strlen( szSubSystem ) );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -559,7 +559,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "TRIES" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    return hb_itemGetNI( hb_stackReturnItem() );
 }
@@ -571,7 +571,7 @@ PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_TRIES" ) );
    hb_vmPush( pError );
    hb_vmPushInteger( uiTries );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    return pError;
 }
@@ -586,7 +586,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "CANRETRY" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    if( hb_itemGetL( hb_stackReturnItem() ) )
       uiFlags |= EF_CANRETRY;
@@ -595,7 +595,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "CANSUBSTITUTE" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    if( hb_itemGetL( hb_stackReturnItem() ) )
       uiFlags |= EF_CANSUBSTITUTE;
@@ -604,7 +604,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "CANDEFAULT" ) );
    hb_vmPush( pError );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
 
    if( hb_itemGetL( hb_stackReturnItem() ) )
       uiFlags |= EF_CANDEFAULT;
@@ -621,21 +621,21 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANRETRY" ) );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANRETRY ) ? TRUE : FALSE );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    /* ; */
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANSUBSTITUTE" ) );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANSUBSTITUTE ) ? TRUE : FALSE );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    /* ; */
 
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANDEFAULT" ) );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANDEFAULT ) ? TRUE : FALSE );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    /* ; */
 
@@ -664,7 +664,7 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
    hb_vmPush( pError );
    hb_vmPush( pArray );
-   hb_vmDo( 1 );
+   hb_vmSend( 1 );
 
    hb_itemRelease( pArray );
 
@@ -824,7 +824,7 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
       hb_vmPush( pArray );
-      hb_vmDo( 1 );
+      hb_vmSend( 1 );
 
       /* Release the Array. */
       if( bRelease )
@@ -867,7 +867,7 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
       hb_vmPush( pArray );
-      hb_vmDo( 1 );
+      hb_vmSend( 1 );
 
       /* Release the Array. */
       hb_itemRelease( pArray );
@@ -906,7 +906,7 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
       hb_vmPush( pArray );
-      hb_vmDo( 1 );
+      hb_vmSend( 1 );
 
       /* Release the Array. */
       hb_itemRelease( pArray );
@@ -969,7 +969,7 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
       hb_vmPush( pArray );
-      hb_vmDo( 1 );
+      hb_vmSend( 1 );
 
       /* Release the Array. */
       if( bRelease )

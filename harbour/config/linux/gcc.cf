@@ -23,7 +23,7 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 # We are under linux
 CFLAGS = -DHB_OS_LINUX -Wall -W -fsigned-char
 
-# uncomment this if you want to farce relocateable code for .so libs
+# uncomment this if you want to force relocateable code for .so libs
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
@@ -106,12 +106,12 @@ endif
 
 endif
 
-LINKLIBS += -lm -Wl,--end-group
+LINKLIBS += -lm -ldl -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) cr $@ $(^F) || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) cr $@ $(^F) && $(RANLIB) $@ || ( $(RM) $@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

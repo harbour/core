@@ -358,7 +358,7 @@ HB_EXPORT double hb_numRound( double dNum, int iDec )
  * use the similar hack in ==, >=, <=, <, > operations if it's set.
  */
 
-//#define HB_NUM_PRECISION  16
+/* #define HB_NUM_PRECISION  16 */
 
 #ifdef HB_NUM_PRECISION
    /*

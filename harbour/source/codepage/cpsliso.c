@@ -90,7 +90,7 @@ static HB_CODEPAGE s_codepage = { "SLISO",
     "abcèædðefghijklmnopqrs¹tuvwz¾xy",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( SLISO );
+HB_CODEPAGE_INIT( SLISO )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_SLISO

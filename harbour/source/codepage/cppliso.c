@@ -90,7 +90,7 @@ static HB_CODEPAGE s_codepage = { "PLISO",
     "a±bcædeêfghijkl³mnñoópqrs¶tuvwxyz¼¿",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( PLISO );
+HB_CODEPAGE_INIT( PLISO )
 
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_codepage_Init_PLISO

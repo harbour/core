@@ -1944,11 +1944,10 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       int iLen;
       
       iLen = strlen(szFunName);
-      szNewName =(char *)hb_xgrab( iLen+2 );
-      szNewName[0] = '\0';
+      szNewName = ( char * ) hb_xgrab( iLen + 2 );
       strcpy( szNewName, szFunName );
       szNewName[ iLen ] ='$';
-      szNewName[ iLen+1 ] = '\0';
+      szNewName[ iLen + 1 ] = '\0';
       szFunName = hb_compIdentifierNew( szNewName, TRUE );
       hb_xfree( szNewName );
    }
@@ -2207,13 +2206,13 @@ void hb_compExternGen( void ) /* generates the symbols for the EXTERN names */
    {
       if( hb_compSymbolFind( hb_comp_pExterns->szName, NULL, HB_SYM_FUNCNAME ) )
       {
-            if( ! hb_compFunCallFind( hb_comp_pExterns->szName ) )
+         if( ! hb_compFunCallFind( hb_comp_pExterns->szName ) )
             hb_compFunCallAdd( hb_comp_pExterns->szName );
       }
       else
       {
-             hb_compSymbolAdd( hb_comp_pExterns->szName, NULL, HB_SYM_FUNCNAME );
-             hb_compFunCallAdd( hb_comp_pExterns->szName );
+          hb_compSymbolAdd( hb_comp_pExterns->szName, NULL, HB_SYM_FUNCNAME );
+          hb_compFunCallAdd( hb_comp_pExterns->szName );
       }
       pDelete  = hb_comp_pExterns;
       hb_comp_pExterns = hb_comp_pExterns->pNext;
@@ -4404,7 +4403,7 @@ void hb_compStaticDefStart( void )
    {
       BYTE pBuffer[ 5 ];
 
-      hb_comp_pInitFunc = hb_compFunctionNew( hb_compIdentifierNew("(_INITSTATICS)", TRUE), HB_FS_INIT );
+      hb_comp_pInitFunc = hb_compFunctionNew( hb_compIdentifierNew( "(_INITSTATICS)", TRUE ), HB_FS_INITEXIT );
       hb_comp_pInitFunc->pOwner = hb_comp_functions.pLast;
       hb_comp_pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
       hb_comp_pInitFunc->cScope = HB_FS_INITEXIT;
@@ -4822,7 +4821,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       {
          hb_comp_pFilePpo  = hb_fsFNameSplit( szPrg );
          hb_compPpoFile();
-         //hb_comp_pFileName->szExtension = ".ppo";
+         /*hb_comp_pFileName->szExtension = ".ppo";*/
          hb_fsFNameMerge( szPpoName, hb_comp_pFilePpo );
          hb_comp_yyppo = fopen( szPpoName, "w" );
          if( ! hb_comp_yyppo )
@@ -4909,11 +4908,15 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             if( hb_comp_pInitFunc )
             {
                PCOMSYMBOL pSym;
+               char szNewName[ 32 ];
 
                /* Fix the number of static variables */
                hb_comp_pInitFunc->pCode[ 3 ] = HB_LOBYTE( hb_comp_iStaticCnt );
                hb_comp_pInitFunc->pCode[ 4 ] = HB_HIBYTE( hb_comp_iStaticCnt );
                hb_comp_pInitFunc->iStaticsBase = hb_comp_iStaticCnt;
+               /* Update pseudo function name */
+               sprintf( szNewName, "(_INITSTATICS%05d)", hb_comp_iStaticCnt );
+               hb_comp_pInitFunc->szName = hb_compIdentifierNew( szNewName, TRUE );
 
                pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL, HB_SYM_FUNCNAME );
                pSym->cScope |= hb_comp_pInitFunc->cScope;

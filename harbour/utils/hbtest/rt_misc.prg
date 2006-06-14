@@ -763,6 +763,7 @@ STATIC FUNCTION HB_TString()
 
       oClass:AddData( "cValue" )
 
+      oClass:AddInline( "="    , {| self, cTest | ::cValue =  cTest } )
       oClass:AddInline( "=="   , {| self, cTest | ::cValue == cTest } )
       oClass:AddInline( "!="   , {| self, cTest | ::cValue != cTest } )
       oClass:AddInline( "<"    , {| self, cTest | ::cValue <  cTest } )

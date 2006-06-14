@@ -350,15 +350,7 @@ int hb_matherr (HB_MATH_EXCEPTION * pexc)
     PHB_ITEM pMatherrResult;
     PHB_ITEM pArg1 = hb_itemPutND(NULL, pexc->arg1);
     PHB_ITEM pArg2 = hb_itemPutND(NULL, pexc->arg2);
-    PHB_ITEM pArray;
     PHB_ITEM pError;
-
-    /* create an array with the two double arguments */
-    /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
-       math function has been called, so we always take two */
-    pArray = hb_itemArrayNew(2);
-    hb_itemArrayPut(pArray, 1, pArg1);
-    hb_itemArrayPut(pArray, 2, pArg2);
 
     /* create an error object */
     /* NOTE: In case of HB_MATH_ERRMODE_USER[C]DEFAULT, I am setting both EF_CANSUBSTITUTE and EF_CANDEFAULT to .T. here.
@@ -370,28 +362,24 @@ int hb_matherr (HB_MATH_EXCEPTION * pexc)
                                  (mode == HB_MATH_ERRMODE_USER ? 0: EF_CANDEFAULT));
 
     /* Assign the new array to the object data item. */
-    hb_vmPushSymbol (hb_dynsymGetSymbol("_ARGS"));
-    hb_vmPush (pError);
-    hb_vmPush (pArray);
-    hb_vmDo (1);
-
-    /* Release the Array. */
-    hb_itemRelease (pArray);
+    /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
+       math function has been called, so we always take two */
+    hb_errPutArgs( pError, 2, pArg1, pArg2 );
 
     /* launch error codeblock */
     pMatherrResult = hb_errLaunchSubst (pError);
     hb_errRelease (pError);
 
-    if ((pMatherrResult != NULL) && (HB_IS_NUMERIC (pMatherrResult)))
+    if (pMatherrResult != NULL)
     {
-      pexc->retval = hb_itemGetND (pMatherrResult);
-      hb_itemGetNLen (pMatherrResult, &(pexc->retvalwidth), &(pexc->retvaldec));
-      pexc->handled = 1;
+      if (HB_IS_NUMERIC (pMatherrResult))
+      {
+         pexc->retval = hb_itemGetND (pMatherrResult);
+         hb_itemGetNLen (pMatherrResult, &(pexc->retvalwidth), &(pexc->retvaldec));
+         pexc->handled = 1;
+      }
+      hb_itemRelease (pMatherrResult);
     }
-
-    hb_itemRelease (pMatherrResult);
-    hb_itemRelease (pArg1);
-    hb_itemRelease (pArg2);
   }
 
   /* math exception not handled by Harbour error routine above ? */

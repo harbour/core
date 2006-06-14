@@ -97,6 +97,7 @@
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
+#include "hbapilng.h"
 #include "hbapierr.h"
 #include "hbdate.h"
 #include "hbset.h"
@@ -214,25 +215,23 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    if( ulLen == 0 )
    {
-      pItem->item.asString.length  = 0;
-      pItem->item.asString.value   = hb_vm_sNull;
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.length    = 0;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_sNull;
    }
    else if( ulLen == 1 )
    {
-      pItem->item.asString.length  = 1;
-      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.length    = 1;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
    }
    else
    {
-      pItem->item.asString.length = ulLen;
-      pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-      pItem->item.asString.bStatic = 0;
-      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-      * ( pItem->item.asString.u.pulHolders ) = 1;
-      hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
-      pItem->item.asString.value[ ulLen ] = '\0';
+      pItem->item.asString.length    = ulLen;
+      pItem->item.asString.allocated = ulLen + 1;
+      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
+      /* we used strlen() above so we no it's 0-ended string */
+      hb_xmemcpy( pItem->item.asString.value, szText, ulLen + 1 );
    }
 
    return pItem;
@@ -251,7 +250,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.bStatic = 1;
+   pItem->item.asString.allocated = 0;
 
    if( szText == NULL )
    {
@@ -287,23 +286,21 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
 
    if( szText == NULL || ulLen == 0 )
    {
-      pItem->item.asString.length  = 0;
-      pItem->item.asString.value   = hb_vm_sNull;
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.length    = 0;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_sNull;
    }
    else if( ulLen == 1 )
    {
-      pItem->item.asString.length  = 1;
-      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.length    = 1;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
    }
    else
    {
-      pItem->item.asString.length = ulLen;
-      pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-      pItem->item.asString.bStatic = 0;
-      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-      * ( pItem->item.asString.u.pulHolders ) = 1;
+      pItem->item.asString.length    = ulLen;
+      pItem->item.asString.allocated = ulLen + 1;
+      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
    }
@@ -327,23 +324,21 @@ HB_EXPORT PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.length = ulLen;
    if( ulLen == 0 )
    {
-      pItem->item.asString.value   = hb_vm_sNull;
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_sNull;
       hb_xfree( szText );
    }
    else if( ulLen == 1 )
    {
-      pItem->item.asString.value   = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
-      pItem->item.asString.bStatic = TRUE;
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
       hb_xfree( szText );
    }
    else
    {
-      pItem->item.asString.value = szText;
-      pItem->item.asString.value[ ulLen ] = '\0';
-      pItem->item.asString.bStatic = FALSE;
-      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-      * ( pItem->item.asString.u.pulHolders ) = 1;
+      szText[ ulLen ] = '\0';
+      pItem->item.asString.allocated = ulLen + 1;
+      pItem->item.asString.value     = szText;
    }
 
    return pItem;
@@ -634,7 +629,7 @@ HB_EXPORT PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemReturn(%p)", pItem));
 
    if( pItem )
-      hb_itemCopy( &hb_stack.Return, pItem );
+      hb_itemCopy( hb_stackReturnItem(), pItem );
 
    return pItem;
 }
@@ -644,9 +639,7 @@ HB_EXPORT PHB_ITEM hb_itemReturnForward( PHB_ITEM pItem )
    HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemReturnForward(%p)", pItem ) );
 
    if( pItem )
-   {
-      hb_itemForwardValue( &hb_stack.Return, pItem );
-   }
+      hb_itemMove( hb_stackReturnItem(), pItem );
 
    return pItem;
 }
@@ -918,14 +911,10 @@ HB_EXPORT PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
    if( pItem )
    {
       if( HB_IS_COMPLEX( pItem ) )
-      {
          hb_itemClear( pItem );
-      }
    }
    else
-   {
       pItem = hb_itemNew( NULL );
-   }
 
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = HB_DBL_LENGTH( dNumber );
@@ -1107,6 +1096,26 @@ HB_EXPORT PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
 
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
+   pItem->item.asPointer.collect = FALSE;
+
+   return pItem;
+}
+
+HB_EXPORT PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutPtrGC(%p, %p)", pItem, pValue));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_POINTER;
+   pItem->item.asPointer.value = pValue;
+   pItem->item.asPointer.collect = TRUE;
 
    return pItem;
 }
@@ -1225,41 +1234,30 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
 
    if( HB_IS_STRING( pItem ) )
    {
-      if( !pItem->item.asString.bStatic )
-      {
-         if( --*( pItem->item.asString.u.pulHolders ) == 0 )
-         {
-            hb_xfree( pItem->item.asString.value );
-            pItem->item.asString.value = NULL;
-            hb_xfree( pItem->item.asString.u.pulHolders );
-         }
-      }
+      if( pItem->item.asString.allocated )
+         hb_xRefFree( pItem->item.asString.value );
    }
    else if( HB_IS_ARRAY( pItem ) )
-   {
-      if( pItem->item.asArray.value )
-      {
-         if( --( pItem->item.asArray.value )->ulHolders == 0 )
-            hb_arrayRelease( pItem );
-      }
-   }
+      hb_gcRefFree( pItem->item.asArray.value );
+
    else if( HB_IS_BLOCK( pItem ) )
-      hb_codeblockDelete( pItem );
+      hb_gcRefFree( pItem->item.asBlock.value );
 
    else if( HB_IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
-   else if( HB_IS_BYREF( pItem ) )
+   else if( HB_IS_POINTER( pItem ) )
    {
-      if( pItem->item.asRefer.offset < 0 && pItem->item.asRefer.value >= 0 )
-      {
-         /* FOR EACH control variable */
-         hb_itemRelease( pItem->item.asRefer.BasePtr.itemPtr );
-         if( pItem->item.asRefer.ValuePtr.itemPtr )
-            hb_itemRelease( pItem->item.asRefer.ValuePtr.itemPtr );
-      }
+      if( pItem->item.asPointer.collect )
+         hb_gcRefFree( pItem->item.asPointer.value );
    }
-   
+   else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
+   {
+      hb_itemRelease( pItem->item.asEnum.basePtr );
+      if( pItem->item.asEnum.valuePtr )
+         hb_itemRelease( pItem->item.asEnum.valuePtr );
+   }
+
 #if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
    else if( HB_IS_BADITEM( pItem ) )
       hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_itemClear()", NULL );
@@ -1286,47 +1284,30 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    {
       if( HB_IS_STRING( pSource ) )
       {
-         if( !pSource->item.asString.bStatic )
-            ++*( pSource->item.asString.u.pulHolders );
+         if( pSource->item.asString.allocated )
+            hb_xRefInc( pSource->item.asString.value );
       }
       else if( HB_IS_ARRAY( pSource ) )
-      {
-         ( pSource->item.asArray.value )->ulHolders++;
-      }
+         hb_gcRefInc( pSource->item.asArray.value );
+
       else if( HB_IS_BLOCK( pSource ) )
-      {
-         ( pSource->item.asBlock.value )->ulCounter++;
-      }
+         hb_gcRefInc( pSource->item.asBlock.value );
+
       else if( HB_IS_MEMVAR( pSource ) )
          hb_memvarValueIncRef( pSource->item.asMemvar.value );
+
+      else if( HB_IS_POINTER( pSource ) )
+      {
+         if( pSource->item.asPointer.collect )
+            hb_gcRefInc( pSource->item.asPointer.value );
+      }
    }
 }
 
-/* copy (transfer) the value of item without increasing 
- * a reference counters (the pSource item cannot be cleared)
-*/
-HB_EXPORT void hb_itemForwardValue( PHB_ITEM pDest, PHB_ITEM pSource )
-{
-   HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemForwardValue(%p, %p) %i", pDest, pSource, pDest->type ) );
-
-   if( pDest == pSource )
-   {
-      hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemForwardValue()", NULL );
-   }
-
-   if( HB_IS_COMPLEX( pDest ) )
-   {
-      hb_itemClear( pDest );
-   }
-
-   /* Forward. */
-   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
-
-   /* Now fake clear the transferer. */
-   //pSource->item.asString.bStatic = FALSE;
-   pSource->type = HB_IT_NIL;
-}
-
+/*
+ * copy (transfer) the value of item without increasing 
+ * a reference counters, the pSource item is cleared
+ */
 HB_EXPORT void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
@@ -1339,7 +1320,6 @@ HB_EXPORT void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pSource->type = HB_IT_NIL;
-
 }
 
 HB_EXPORT void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
@@ -1377,7 +1357,7 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 
 /* Unreference passed variable 
  * Do not unreference the last reference stored
-*/
+ */
 PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 {
    PHB_ITEM pRef = pItem;
@@ -1412,6 +1392,34 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                      pItem->item.asMemvar.value;
          pItem = pValue->pVarItem;
       }
+      else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
+      {
+         /* enumerator variable */
+         if( HB_IS_ARRAY( pItem->item.asEnum.basePtr ) )
+         {
+            PHB_ITEM pResult = hb_arrayGetItemPtr( pItem->item.asEnum.basePtr,
+                                                   pItem->item.asEnum.offset );
+            if( pResult )
+               return pResult;
+         }
+         else if( pItem->item.asEnum.valuePtr )
+            return pItem->item.asEnum.valuePtr;
+
+         /* to avoid recursive RT error generation */
+         if( pItem->item.asEnum.offset >= 0 )
+         {
+            hb_stackPush();
+            hb_itemPutNInt( hb_stackItemFromTop( -1 ), pItem->item.asEnum.offset );
+            pItem->item.asEnum.offset = -1;
+            if( !pItem->item.asEnum.valuePtr )
+               pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
+
+            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+            /* break() was executed by error block */
+         }
+         return pItem->item.asEnum.valuePtr;
+      }
       else
       {
          if( pItem->item.asRefer.value >= 0 )
@@ -1422,30 +1430,19 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                pItem = *( pItem->item.asRefer.BasePtr.itemsbase ) +
                        pItem->item.asRefer.value;
             }
-            else if( pItem->item.asRefer.offset < 0 )
-            {
-               /* enumerator variable */
-               if( HB_IS_ARRAY( pItem->item.asRefer.BasePtr.itemPtr ) )
-               {
-                  pItem = hb_arrayGetItemPtr( pItem->item.asRefer.BasePtr.itemPtr, pItem->item.asRefer.value );
-               }
-               else if( pItem->item.asRefer.ValuePtr.itemPtr )
-               {
-                  pItem = pItem->item.asRefer.ValuePtr.itemPtr;
-               }
-            }
             else
             {
                /* a reference to a local variable */
                HB_ITEM_PTR *pLocal;
-               pLocal = *( pItem->item.asRefer.BasePtr.itemsbasePtr ) + pItem->item.asRefer.offset + pItem->item.asRefer.value;
+
+               pLocal = *( pItem->item.asRefer.BasePtr.itemsbasePtr ) +
+                        pItem->item.asRefer.offset + pItem->item.asRefer.value;
                pItem = *pLocal;
             }
          }
          else
          {
-            /* local variable referenced in a codeblock
-            */
+            /* local variable referenced in a codeblock */
             pItem = hb_codeblockGetRef( pItem->item.asRefer.BasePtr.block, pItem );
          }
       }
@@ -1455,36 +1452,79 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 }
 
 /* Internal API, not standard Clipper */
-/* UnShare string buffer of given item */
+/* Resize string buffer of given string item */
+
+PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize )
+{
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemReSizeString(%p,%lu)", pItem, ulSize));
+
+   if( pItem->item.asString.allocated == 0 )
+   {
+      char *szText = ( char* ) hb_xgrab( ulSize + 1 );
+      hb_xmemcpy( szText, pItem->item.asString.value,
+                  pItem->item.asString.length );
+      szText[ ulSize ] = '\0';
+      pItem->item.asString.value     = szText;
+      pItem->item.asString.length    = ulSize;
+      pItem->item.asString.allocated = ulSize + 1;
+   }
+#if 0
+   else if( pItem->item.asString.allocated > ulSize )
+   {
+      pItem->item.asString.length = ulSize;
+      pItem->item.asString.value[ ulSize ] = '\0';
+   }
+#endif
+   else
+   {
+      ULONG ulAlloc = ulSize + 1 +
+                ( pItem->item.asString.allocated < ulSize ? ulSize : 0 );
+      pItem->item.asString.value = ( char* )
+                     hb_xRefResize( pItem->item.asString.value,
+                                    pItem->item.asString.length,
+                                    ulAlloc );
+      pItem->item.asString.length = ulSize;
+      pItem->item.asString.allocated = ulAlloc;
+      pItem->item.asString.value[ ulSize ] = '\0';
+   }
+
+   return pItem;
+}
+
+/* Internal API, not standard Clipper */
+/* UnShare string buffer of given string item */
+
+PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
+{
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemUnShareString(%p)", pItem));
+
+   if( pItem->item.asString.allocated == 0 ||
+       hb_xRefCount( pItem->item.asString.value ) > 1 )
+   {
+      ULONG ulLen = pItem->item.asString.length + 1;
+      char *szText = ( char* ) hb_xgrab( ulLen );
+
+      hb_xmemcpy( szText, pItem->item.asString.value, ulLen );
+      pItem->item.asString.value = szText;
+      if( ! pItem->item.asString.allocated )
+         hb_xRefDec( pItem->item.asString.value );
+      pItem->item.asString.allocated = ulLen;
+   }
+
+   return pItem;
+}
 
 PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemUnShare(%p)", pItem));
 
    if( HB_IS_BYREF( pItem ) )
-   {
       pItem = hb_itemUnRef( pItem );
-   }
 
    if( HB_IS_STRING( pItem ) )
-   {
-      if( pItem->item.asString.bStatic || *( pItem->item.asString.u.pulHolders ) > 1 )
-      {
-         ULONG ulLen = pItem->item.asString.length;
-         char *szText = ( char* ) hb_xgrab( ulLen + 1 );
-
-         hb_xmemcpy( szText, pItem->item.asString.value, ulLen + 1 );
-         pItem->item.asString.value = szText;
-         if( ! pItem->item.asString.bStatic )
-         {
-            --*( pItem->item.asString.u.pulHolders );
-         }
-         pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
-         *( pItem->item.asString.u.pulHolders ) = 1;
-      }
-   }
-
-   return pItem;
+      return hb_itemUnShareString( pItem );
+   else
+      return pItem;
 }
 
 /* Internal API, not standard Clipper */
@@ -1645,7 +1685,7 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
          double dInt, dFract, dDig, doBase = 10.0;
          int iPrec, iFirst = -1;
 
-         //dNumber = hb_numRound( dNumber, iDec );
+         /* dNumber = hb_numRound( dNumber, iDec ); */
 
 #ifdef HB_NUM_PRECISION
          iPrec = HB_NUM_PRECISION;
@@ -1979,34 +2019,33 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          break;
 
       case HB_IT_POINTER:
+      {
+         int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
+         int n;
+         BOOL bFail = TRUE; 
+
+         buffer = ( char * ) hb_xgrab( size );
+         do
          {
-            int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
-            int n;
-            BOOL bFail = TRUE; 
-
-            buffer = ( char * ) hb_xgrab( size );
-            do
+            n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
+            if( (n > -1) && (n < size) )
             {
-               n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
-               if( (n > -1) && (n < size) )
-               {
-                  bFail = FALSE;
-               }
-               else
-               {
-                  if( n > -1 )
-                     size = n + 1;
-                  else
-                     size *= 2;
-                  buffer = ( char * ) hb_xrealloc( buffer, size );
-               }
+               bFail = FALSE;
             }
-            while( bFail );
-            * ulLen = strlen( buffer );
-            * bFreeReq = TRUE;
+            else
+            {
+               if( n > -1 )
+                  size = n + 1;
+               else
+                  size *= 2;
+               buffer = ( char * ) hb_xrealloc( buffer, size );
+            }
          }
+         while( bFail );
+         * ulLen = strlen( buffer );
+         * bFreeReq = TRUE;
          break;
-
+      }
       default:
          buffer = "";
          * ulLen = 0;

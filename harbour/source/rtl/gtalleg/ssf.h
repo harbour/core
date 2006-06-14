@@ -64,7 +64,7 @@
 
 #include <allegro.h>
 
-// Hack to use old Allegro branches
+/* Hack to use old Allegro branches */
 #ifndef AL_GFX_NONE
 #define AL_GFX_NONE GFX_NONE
 #define AL_GFX_SAFE GFX_SAFE
@@ -239,4 +239,4 @@ extern void ssfSetFontSize(ssfFont *sfont, unsigned short fsize);
 extern unsigned short ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int color);
 extern int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, char *s, int x, int y, int color);
 
-#endif  // _SSF_H_
+#endif  /* _SSF_H_ */

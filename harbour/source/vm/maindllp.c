@@ -85,7 +85,7 @@ HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID
 }
 
 /* module symbols initialization */
-void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
+PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 {
    /* notice hb_vmProcessDllSymbols() must be used, and not
     * hb_vmProcessSymbols(), as some special symbols pointers
@@ -94,10 +94,27 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
    FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
                                              "_hb_vmProcessDllSymbols" );
    if( pProcessSymbols )
-      ( ( VM_PROCESS_DLL_SYMBOLS ) pProcessSymbols ) ( pModuleSymbols,
-                                                       uiModuleSymbols );
+      return ( ( VM_PROCESS_DLL_SYMBOLS ) pProcessSymbols ) ( pSymbols,
+                                                              uiSymbols );
    /* else
     *    may we issue an error ? */
+
+   return pSymbols;
+}
+
+/* module symbols initialization */
+PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeMin, USHORT uiPcodeMax ) /* module symbols initialization with extended information */
+{
+   FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
+                                             "_hb_vmProcessSymbolsExt" );
+   if( pProcessSymbols )
+      return ( ( VM_PROCESS_SYMBOLS_EXT ) pProcessSymbols )
+                  ( pSymbols, uiSymbols, szModuleName,
+                    ulID, uiPcodeMin, uiPcodeMax );
+   /* else
+    *    may we issue an error ? */
+
+   return pSymbols;
 }
 
 void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
@@ -764,15 +781,6 @@ BOOL     hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )  /* retrieve last ite
    HB_ARRAYLAST  pArrayLast= (HB_ARRAYLAST)GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayLast" );
    if (pArrayLast)
       return pArrayLast( pArray, pResult );
-   else
-      return FALSE;
-}
-
-BOOL     hb_arrayRelease( PHB_ITEM pArray )  /* releases an array - don't call it - use ItemRelease() !!! */
-{
-   HB_ARRAYRELEASE  pArrayRelease = (HB_ARRAYRELEASE)GetProcAddress( GetModuleHandle( NULL ), "_hb_arrayRelease" );
-   if (pArrayRelease)
-      return pArrayRelease( pArray );
    else
       return FALSE;
 }

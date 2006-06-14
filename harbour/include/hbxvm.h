@@ -73,7 +73,7 @@ HB_EXTERN_BEGIN
  * to check HVM state so they are simply declared as void.
  */
 
-extern HB_EXPORT void   hb_xvmExitPorc( ULONG );
+extern HB_EXPORT void   hb_xvmExitProc( ULONG ulPrivateBase );
 extern HB_EXPORT void   hb_xvmSeqBegin( void );
 extern HB_EXPORT BOOL   hb_xvmSeqEnd( LONG * );
 extern HB_EXPORT BOOL   hb_xvmSeqRecover( LONG * );
@@ -198,6 +198,26 @@ extern HB_EXPORT BOOL hb_xvmArrayItemPop( ULONG ulIndex );
 extern HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue );
 extern HB_EXPORT BOOL hb_xvmDivideByInt( LONG lValue );
 extern HB_EXPORT BOOL hb_xvmAddInt( LONG lValue );
+extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, LONG lValue );
+/*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, ULONG ulLen );*/
+extern HB_EXPORT void hb_xvmPushFuncSymbol( PHB_SYMB pSym );
+
+extern HB_EXPORT BOOL hb_xvmLessThenInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmLessThenIntIs( LONG lValue, BOOL *fValue );
+extern HB_EXPORT BOOL hb_xvmLessEqualThenInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmLessEqualThenIntIs( LONG lValue, BOOL *fValue );
+extern HB_EXPORT BOOL hb_xvmGreaterThenInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmGreaterThenIntIs( LONG lValue, BOOL *fValue );
+extern HB_EXPORT BOOL hb_xvmGreaterEqualThenInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, BOOL *fValue );
+extern HB_EXPORT BOOL hb_xvmEqualInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmEqualIntIs( LONG lValue, BOOL *fValue );
+extern HB_EXPORT BOOL hb_xvmNotEqualInt( LONG lValue );
+extern HB_EXPORT BOOL hb_xvmNotEqualIntIs( LONG lValue, BOOL *fValue );
+
+extern HB_EXPORT BOOL hb_xvmLocalAdd( int iLocal );
+extern HB_EXPORT BOOL hb_xvmStaticAdd( USHORT uiStatic );
+extern HB_EXPORT BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol );
 
 HB_EXTERN_END
 

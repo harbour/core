@@ -125,6 +125,16 @@
    #define HB_FM_STATISTICS
 #endif
 
+
+/* ***********************************************************************
+ * Enable profiler support in HVM
+ * By default this is turned off. Define HB_USE_PROFILER to turn it on.
+ */
+
+#ifndef HB_USE_PROFILER
+   #define HB_NO_PROFILER
+#endif
+
 /* ***********************************************************************
  * Use native Windows memory allocation functions (HB_OS_WIN_32)
  * This option can disabled compiler memory allocation optimization
@@ -207,7 +217,16 @@
  * Using this option makes sorting *much* faster, but if you have a
  * problem, or the low level stuff changes, turn it off. [vszakats]
 */
-#define HB_ASORT_OPT_ITEMCOPY
+/*
+ * It's not longer used - current code which uses hb_itemSwap() should
+ * give similar performance (probably a little bit worser due to some small
+ * function call overhead) but it's ready for automatic GC activation and
+ * I'd like to keep it.
+ * If the current performance is not enough then I can change sorting
+ * algorithm used inside ASORT and with cost of some additional memory 
+ * improve the speed but it's not my priority now. [druzus]
+ */
+/* #define HB_ASORT_OPT_ITEMCOPY */
 
 /* ***********************************************************************
  * You can select here faster but less secure behaviour of STOD() function

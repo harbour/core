@@ -199,7 +199,7 @@ static HB_LANG s_lang_en =
    }
 };
 
-HB_LANG_ANNOUNCE( EN );
+HB_LANG_ANNOUNCE( EN )
 
 /* Always link in the default language */
 /* HB_LANG_REQUEST( HB_LANG_DEFAULT ); */
