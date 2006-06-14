@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * changed __msgClsSel to return variable size array with only valid items
+      If some code needs fixed size array then it will have to be updated
+
+  * harbour/source/vm/hvm.c
     * generate Clipper compatible error messages for EG_NO[VAR]METHOD
       and EG_NOFUNC. Please do not change it. If you want previous Harbour
       error messages for EG_NO[VAR]METHOD then please change __msgNoMethod
