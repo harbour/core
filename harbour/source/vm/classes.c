@@ -198,6 +198,7 @@ static HARBOUR  hb___msgSetShrData( void );
 static HARBOUR  hb___msgEvalInline( void );
 static HARBOUR  hb___msgVirtual( void );
 static HARBOUR  hb___msgSuper( void );
+static HARBOUR  hb___msgNoMethod( void );
 
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
@@ -248,6 +249,7 @@ static HB_SYMB s___msgGetShrData = { "__msgGetShrData", {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgEvalInline = { "__msgEvalInline", {HB_FS_MESSAGE}, {hb___msgEvalInline}, NULL };
 static HB_SYMB s___msgVirtual    = { "__msgVirtual",    {HB_FS_MESSAGE}, {hb___msgVirtual},    NULL };
 static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {hb___msgSuper},      NULL };
+static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {hb___msgNoMethod},   NULL };
 
 static HB_SYMB s___msgClassName  = { "CLASSNAME",       {HB_FS_MESSAGE}, {hb___msgClsName},    NULL };
 static HB_SYMB s___msgClassH     = { "CLASSH",          {HB_FS_MESSAGE}, {hb___msgClsH},       NULL };
@@ -748,17 +750,11 @@ char * hb_objGetClsName( PHB_ITEM pObject )
  */
 char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
 {
-   char * szClassName;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p)", pObject));
 
    if( HB_IS_ARRAY( pObject ) )
    {
-      if( ! pObject->item.asArray.value->uiClass )
-      {
-         szClassName = "ARRAY";
-      }
-      else
+      if( pObject->item.asArray.value->uiClass )
       {
          PHB_DYNS pMsg = hb_dynsymFindName( szName );
          USHORT uiClass;
@@ -796,75 +792,20 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
                      uiClsTree=1; /* Flag Value */
                      break;
                   }
-
-                  uiAt++;
-
-                  if( uiAt == uiMask )
-                  {
+                  if( ++uiAt == uiMask )
                      uiAt = 0;
-                  }
                }
             }
-
             if (-- uiClsTree)
-            {
                uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-            }
-
          }
 
          if( uiClass && uiClass <= s_uiClasses )
-         {
-            szClassName = ( s_pClasses + uiClass - 1 )->szName;
-         }
-         else
-         {
-            szClassName = "UNKNOWN";
-         }
-      }
-   }
-   else                                         /* built in types */
-   {
-      switch( pObject->type )
-      {
-         case HB_IT_NIL:
-            szClassName = "NIL";
-            break;
-
-         case HB_IT_STRING:
-         case HB_IT_MEMO:
-            szClassName = "CHARACTER";
-            break;
-
-         case HB_IT_BLOCK:
-            szClassName = "BLOCK";
-            break;
-
-         case HB_IT_SYMBOL:
-            szClassName = "SYMBOL";
-            break;
-
-         case HB_IT_DATE:
-            szClassName = "DATE";
-            break;
-
-         case HB_IT_INTEGER:
-         case HB_IT_LONG:
-         case HB_IT_DOUBLE:
-            szClassName = "NUMERIC";
-            break;
-
-         case HB_IT_LOGICAL:
-            szClassName = "LOGICAL";
-            break;
-
-         default:
-            szClassName = "UNKNOWN";
-            break;
+            return ( s_pClasses + uiClass - 1 )->szName;
       }
    }
 
-   return szClassName;
+   return hb_objGetClsName( pObject );
 }
 
 static void hb_objPushSuperCast( PHB_ITEM pObject )
@@ -922,12 +863,17 @@ void hb_objPopSuperCast( PHB_ITEM pObject )
    }
 }
 
-static PHB_SYMB hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper )
+/*
+ * <pFuncSym> = hb_objGetMethod( <pObject>, <pMessage>, <fpPopSuper> )
+ *
+ * Internal function to the function pointer of a message of an object
+ */
+PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper )
 {
    PCLASS pClass = NULL;
    PHB_DYNS pMsg;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_objGetMthd(%p, %p, %p)", pObject, pMessage, pfPopSuper));
+   HB_TRACE(HB_TR_DEBUG, ("hb_objGetMethod(%p, %p, %p)", pObject, pMessage, pfPopSuper));
 
    s_pMethod = NULL;
    if( pfPopSuper )
@@ -987,29 +933,25 @@ static PHB_SYMB hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPop
    else if( pMsg == s___msgClassSel.pDynSym )
       return &s___msgClassSel;
 
+/*
    else if( pMsg == s___msgEval.pDynSym )
       return &s___msgEval;
-/*
+
    else if( pMsg == s___msgClsParent.pDynSym )
       return &s___msgClsParent;
 
    else if( pMsg == s___msgClass.pDynSym )
       return &s___msgClass;
 */
-   else if( pClass && pfPopSuper )
-      return pClass->pFunError;
+   else if( pfPopSuper )
+   {
+      if( pClass && pClass->pFunError )
+         return pClass->pFunError;
 
+      /* remove this line if you want default HVM error message */
+      return &s___msgNoMethod;
+   }
    return NULL;
-}
-
-/*
- * <pFunc> = hb_objGetMethod( <pObject>, <pMessage>, <fpPopSuper> )
- *
- * Internal function to the function pointer of a message of an object
- */
-PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper )
-{
-   return hb_objGetMthd( (PHB_ITEM) pObject, (PHB_SYMB) pMessage, pfPopSuper );
 }
 
 static PHB_SYMB hb_objFuncParam( int iParam )
@@ -1122,7 +1064,7 @@ BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
 
    if( pDynSym )
    {
-      return hb_objGetMthd( pObject, pDynSym->pSymbol, NULL ) != NULL;
+      return hb_objGetMethod( pObject, pDynSym->pSymbol, NULL ) != NULL;
    }
    else
    {
@@ -2165,20 +2107,21 @@ HB_FUNC( __CLASSSEL )
       USHORT uiPos = 0;
       USHORT uiAt;
 
-      hb_itemRelease( pReturn );
-      pReturn = hb_itemArrayNew( pClass->uiMethods );
-                                                /* Create a transfer array  */
+      hb_arrayNew( pReturn, pClass->uiMethods ); /* Create a transfer array */
       for( uiAt = 0; uiAt < uiLimit; uiAt++ )
       {
          PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
-            PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
-                                                /* Add to array             */
-            hb_itemArrayPut( pReturn, ++uiPos, pItem );
-            hb_itemRelease( pItem );
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pReturn, ++uiPos );
+            if( pItem )
+               hb_itemPutC( pItem, pMessage->pSymbol->szName );
+            else
+               break;  /* Generate internal error? */
          }
       }
+      if( uiPos < pClass->uiMethods )
+         hb_arraySize( pReturn, uiPos );
    }
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
@@ -2235,25 +2178,22 @@ HB_FUNC( __CLASSH )
  */
 HB_FUNC( __EVAL )
 {
-   PHB_ITEM pObject = hb_itemParam( 1 );
+   PHB_ITEM pObject = hb_param( 1, HB_IT_ANY );
    USHORT uiPCount = hb_pcount();
 
-   if( HB_IS_BLOCK( pObject ) )
+   if( pObject && HB_IS_BLOCK( pObject ) )
    {
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pObject );                     /* Push block               */
-      for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+      hb_vmPush( pObject );                /* Push block              */
+      for( uiParam = 1; uiParam <= uiPCount; ++uiParam )
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
 
-      hb_vmDo( ( USHORT ) uiPCount );     /* Self is also an argument */
+      hb_vmDo( ( USHORT ) uiPCount );
    }
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 0 );
-
-   hb_itemRelease( pObject );
-
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", pObject ? 1 : 0, pObject );
 }
 
 /* ================================================ */
@@ -2295,60 +2235,48 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   HB_ITEM_PTR pSelf = hb_stackSelfItem();
-   USHORT uiClass = ( USHORT ) ( HB_IS_ARRAY( pSelf )
-                                 ? pSelf->item.asArray.value->uiClass : 0 );
-                                                /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
-   USHORT nParam = HB_MSGLISTALL;
-   USHORT uiPCount = hb_pcount();
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   USHORT uiClass;
 
-   if( uiPCount >= 1 )
-   {
-       nParam = ( USHORT ) hb_parni( 1 );
-   }
+   if( HB_IS_BYREF( pSelf ) )
+      pSelf =  hb_itemUnRef( pSelf );
 
-   if( ( ! uiClass ) && HB_IS_BYREF( pSelf ) )
-   {                                            /* Variables by reference   */
-      PHB_ITEM pItemRef = hb_itemUnRef( pSelf );
-      if( HB_IS_ARRAY( pItemRef ) )
-         uiClass = pItemRef->item.asArray.value->uiClass;
-   }
+   uiClass = hb_objGetClass( pSelf );
 
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS pClass = s_pClasses + ( uiClass - 1 );
       USHORT uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET ); /* Number of Hash keys      */
-      USHORT uiPos = 0;
-      USHORT uiAt;
+      USHORT uiPos = 0, uiAt;
+      USHORT nParam;
 
+      nParam = hb_pcount() > 0 ? ( USHORT ) hb_parni( 1 ) : HB_MSGLISTALL;
       hb_arrayNew( pReturn, pClass->uiMethods );
 
       for( uiAt = 0; uiAt < uiLimit && uiPos < pClass->uiMethods; uiAt++ )
       {
          PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
 
-         s_pMethod = NULL;                            /* Current method pointer   */
-
          if( pMessage )                         /* Hash Entry used ?        */
          {
-            s_pMethod = pClass->pMethods + uiAt;
+            PMETHOD pMethod = pClass->pMethods + uiAt;
 
             if( ( nParam == HB_MSGLISTALL )  ||
                 ( nParam == HB_MSGLISTCLASS &&
                   (
-                    ( s_pMethod->pFuncSym == &s___msgSetClsData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgGetClsData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgSetShrData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgGetShrData )
+                    ( pMethod->pFuncSym == &s___msgSetClsData ) ||
+                    ( pMethod->pFuncSym == &s___msgGetClsData ) ||
+                    ( pMethod->pFuncSym == &s___msgSetShrData ) ||
+                    ( pMethod->pFuncSym == &s___msgGetShrData )
                   )
                 ) ||
                 ( nParam == HB_MSGLISTPURE &&
                   !(
-                    ( s_pMethod->pFuncSym == &s___msgSetClsData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgGetClsData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgSetShrData ) ||
-                    ( s_pMethod->pFuncSym == &s___msgGetShrData )
+                    ( pMethod->pFuncSym == &s___msgSetClsData ) ||
+                    ( pMethod->pFuncSym == &s___msgGetClsData ) ||
+                    ( pMethod->pFuncSym == &s___msgSetShrData ) ||
+                    ( pMethod->pFuncSym == &s___msgGetShrData )
                    )
                 )
               )
@@ -2358,9 +2286,12 @@ static HARBOUR hb___msgClsSel( void )
             }
          }
       }
+      if( uiPos < pClass->uiMethods )
+         hb_arraySize( pReturn, uiPos );
+      hb_itemRelease( hb_itemReturn( pReturn ) );
    }
-
-   hb_itemRelease( hb_itemReturn( pReturn ) );
+   else
+      hb_ret();
 }
 
 #if 0
@@ -2450,20 +2381,52 @@ static HARBOUR hb___msgEvalInline( void )
 static HARBOUR hb___msgEval( void )
 {
    HB_ITEM_PTR pSelf = hb_stackSelfItem();
+
    if( HB_IS_BLOCK( pSelf ) )
    {
       USHORT uiParam;
-      USHORT uiPCount=hb_pcount();
+      USHORT uiPCount = hb_pcount();
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pSelf );                     /* Push block               */
+      hb_vmPush( pSelf );
       for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
 
-      hb_vmDo( ( USHORT ) uiPCount );                       /* Self is also an argument */
+      hb_vmDo( ( USHORT ) uiPCount );
    }
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 0 );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 1, pSelf );
+}
+
+/*
+ * __msgNoMethod()
+ *
+ * Internal function for generating error when not existing message is sent
+ */
+static HARBOUR hb___msgNoMethod( void )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
+
+#if 1  /* Clipper compatible error message */
+   if( pSym->szName[ 0 ] == '_' )
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
+   else
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
+#else
+   char szDesc[ 128 ];
+
+   if( pSym->szName[ 0 ] == '_' )
+   {
+      sprintf( szDesc, "Class: '%s' has no property", hb_objGetClsName( pSelf ) );
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, szDesc, pSym->szName + 1, HB_ERR_ARGS_BASEPARAMS );
+   }
+   else
+   {
+      sprintf( szDesc, "Class: '%s' has no exported method", hb_objGetClsName( pSelf ) );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, szDesc, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
+   }
+#endif
 }
 
 /*

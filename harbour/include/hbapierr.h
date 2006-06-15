@@ -93,6 +93,8 @@ HB_EXTERN_BEGIN
 #define HB_ERR_IE_UNREC_ERROR           1026
 #define HB_ERR_IE_GENERIC               1027
 
+#define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
+
 /* Standard API */
 
 extern char *   hb_errGetDescription    ( PHB_ITEM pError );

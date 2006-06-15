@@ -8,6 +8,46 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+         ! 2907 MAIN_MISC(200)  TFORNEXT( NIL, NIL, NIL )               
+      like in Clipper. I cannot uncomment it because it will break
+      backward binary compatibility so I'll do that when some modification
+         ! 2919 MAIN_MISC(212)  TFORNEXT( NIL, NIL, NIL )               
+      Enabling this code clean the following errors reported by hbtest:
+         ! 2907 MAIN_MISC(200)  TFORNEXT( NIL, NIL, NIL )
+                Result: "E BASE 1074 Argument error <= A:2:U:NIL;U:NIL F:S"
+              Expected: "E BASE 1075 Argument error > A:2:U:NIL;U:NIL F:S"
+         ! 2919 MAIN_MISC(212)  TFORNEXT( NIL, NIL, NIL )
+                Result: "E BASE 1074 Argument error <= A:2:U:NIL;U:NIL F:S"
+              Expected: "E BASE 1075 Argument error > A:2:U:NIL;U:NIL F:S"
+
+2006-06-15 18:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+    + added HB_ERR_ARGS_BASEPARAMS 
+    + added functions to set WorkArea flags USRRDD_SETBOF, USRRDD_SETEOF,
+      USRRDD_SETFOUND, USRRDD_SETTOP, USRRDD_SETBOTTOM
+
+  * harbour/include/hbapierr.h
+    + added HB_ERR_ARGS_BASEPARAMS
+
+  * harbour/source/rtl/errorapi.c
+    ! check if ARGS passed to __ERRRT_BASE() and __ERRRT_SBASE() are
+      valid to avoid possible GPF
+    * replaced old hack with passing ARGS in array for some chosen errors
+      by HB_ERR_ARGS_BASEPARAMS in hb_errRT_BASE and hb_errRT_BASE_SubstR
+      - it was impossible to generate Clipper compatible error message
+
+  * harbour/source/rtl/do.c
+    * use HB_ERR_ARGS_BASEPARAMS
+
+  * harbour/source/rtl/tobject.prg
+    * assign SELF to ARGS of error object when EG_NO[VAR]METHOD RT error
+      is generated - Clipper compatible.
+
+  * harbour/source/vm/classes.c
+    * added __msgNoMethod which is returned to hb_vmSend when object does
+      not support requested message. This handler can display previous
+      Harbour error message though now it's disabled and Clipper compatible
+      error message is generated. I leave the decision to Harbour users
+      which version of error message should be used.
     * changed __msgClsSel to return variable size array with only valid items
       If some code needs fixed size array then it will have to be updated
 

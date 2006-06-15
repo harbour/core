@@ -3224,7 +3224,6 @@ static void hb_vmEnumNext( void )
 
    for( i = ( int ) hb_stackItemFromTop( -2 )->item.asLong.value; i > 0; --i )
    {
-//      pEnum = hb_itemUnRefRefer( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
       pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
@@ -3263,7 +3262,6 @@ static void hb_vmEnumPrev( void )
    
    for( i = hb_stackItemFromTop( -2 )->item.asLong.value; i > 0; --i )
    {
-//      pEnum = hb_itemUnRefRefer( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
       pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
@@ -3931,15 +3929,9 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 #endif
       }
       else if( pSym->szName[ 0 ] == '_' )
-      {
-         hb_vmArrayGen( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, hb_stackItemFromTop( -1 ) );
-      }
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
       else
-      {
-         hb_vmArrayGen( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
-      }
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
 
       if( lPopSuper )
          hb_objPopSuperCast( pSelf );
@@ -3973,13 +3965,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 #endif
       }
       else
-      {
-         /* Attempt to call an undefined function
-          *  - generate unrecoverable runtime error
-          */
-         hb_vmArrayGen( uiParams );
-         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
-      }
+         hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
    }
 
    if( s_bDebugging )
@@ -4039,7 +4025,6 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    {
       /* method of enumerator variable from FOR EACH statement
        */
-      //HB_ITEM_PTR pEnum = hb_itemUnRefRefer( pSelf );
       HB_ITEM_PTR pEnum = hb_itemUnRefOnce( pSelf );
 
       if( HB_IS_ENUM( pEnum ) )
@@ -4089,23 +4074,10 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
             hb_mthAddTime( pMethod, clock() - ulClock );
 #endif
       }
+      else if( pSym->szName[ 0 ] == '_' )
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
       else
-      {
-         char sDesc[128];
-
-         if( pSym->szName[ 0 ] == '_' )
-         {
-            sprintf( (char *) sDesc, "Class: '%s' has no property", hb_objGetClsName( pSelf ) );
-            hb_vmArrayGen( uiParams );
-            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1, 1, hb_stackItemFromTop( -1 ) );
-         }
-         else
-         {
-            sprintf( (char *) sDesc, "Class: '%s' has no exported method", hb_objGetClsName( pSelf ) );
-            hb_vmArrayGen( uiParams );
-            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName, 1, hb_stackItemFromTop( -1 ) );
-         }
-      }
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
 
       if( lPopSuper )
          hb_objPopSuperCast( pSelf );

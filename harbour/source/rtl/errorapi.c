@@ -757,7 +757,7 @@ HB_FUNC( __ERRRT_BASE )
                   ( ULONG ) hb_parnl( 2 ),
                   hb_parc( 3 ),
                   hb_parc( 4 ),
-                  ( USHORT ) hb_parni( 5 ),
+                  ( USHORT ) ( hb_pcount() > 5 && hb_parni( 5 ) > 0 ? 1 : 0 ),
                   hb_param( 6, HB_IT_ANY ) );
 }
 
@@ -767,7 +767,7 @@ HB_FUNC( __ERRRT_SBASE )
                          ( ULONG ) hb_parnl( 2 ),
                          hb_parc( 3 ),
                          hb_parc( 4 ),
-                         ( USHORT ) hb_parni( 5 ),
+                         ( USHORT ) ( hb_pcount() > 5 && hb_parni( 5 ) > 0 ? 1 : 0 ),
                          hb_param( 6, HB_IT_ANY ) );
 }
 
@@ -776,42 +776,34 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
    USHORT uiAction;
    PHB_ITEM pError;
 
-   PHB_ITEM pArray, pArg;
+   PHB_ITEM pArray;
    va_list va;
    ULONG ulArgPos;
    BOOL bRelease = TRUE;
 
    /* Build the array from the passed arguments. */
-   va_start( va, ulArgCount );
-   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && ulArgCount == 1 )
-   {
-      pArray = va_arg( va, PHB_ITEM );
-
-      if( HB_IS_ARRAY( pArray ) )
-      {
-         bRelease = FALSE;
-      }
-      else
-      {
-         pArg = pArray;
-         pArray = hb_itemArrayNew( 1 );
-         hb_itemArrayPut( pArray, 1, pArg );
-      }
-   }
-   else if ( ulArgCount == 0 )
+   if( ulArgCount == 0 )
    {
       pArray = NULL;
+   }
+   else if( ulArgCount == HB_ERR_ARGS_BASEPARAMS )
+   {
+      if( hb_pcount() == 0 )
+         pArray = NULL;
+      else
+         pArray = hb_arrayBaseParams();
    }
    else
    {
       pArray = hb_itemArrayNew( ulArgCount );
 
+      va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
          hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
       }
+      va_end( va );
    }
-   va_end( va );
 
    /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
     * If it's wrong and I missed sth please fix me, Druzus.
@@ -924,42 +916,34 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
 {
    PHB_ITEM pError;
 
-   PHB_ITEM pArray, pArg;
+   PHB_ITEM pArray;
    va_list va;
    ULONG ulArgPos;
    BOOL bRelease = TRUE;
 
    /* Build the array from the passed arguments. */
-   va_start( va, ulArgCount );
-   if( ( ulSubCode == 1001 || ulSubCode == 1004 || ulSubCode == 1005 ) && ulArgCount == 1 )
-   {
-      pArray = va_arg( va, PHB_ITEM );
-
-      if( HB_IS_ARRAY( pArray ) )
-      {
-         bRelease = FALSE;
-      }
-      else
-      {
-         pArg = pArray;
-         pArray = hb_itemArrayNew( 1 );
-         hb_itemArrayPut( pArray, 1, pArg );
-      }
-   }
-   else if ( ulArgCount == 0 )
+   if( ulArgCount == 0 )
    {
       pArray = NULL;
+   }
+   else if( ulArgCount == HB_ERR_ARGS_BASEPARAMS )
+   {
+      if( hb_pcount() == 0 )
+         pArray = NULL;
+      else
+         pArray = hb_arrayBaseParams();
    }
    else
    {
       pArray = hb_itemArrayNew( ulArgCount );
 
+      va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
          hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
       }
+      va_end( va );
    }
-   va_end( va );
 
    pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 

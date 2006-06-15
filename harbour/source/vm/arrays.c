@@ -599,16 +599,16 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
 
          if( HB_IS_BLOCK( pValue ) )
          {
-            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            for( --ulStart; ulCount > 0; --ulCount )
             {
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pValue );
                hb_vmPush( pBaseArray->pItems + ulStart );
-               hb_vmPushLong( ulStart + 1 );
+               hb_vmPushLong( ++ulStart );
                hb_vmDo( 2 );
 
                if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
-                  return ulStart + 1;                  /* arrays start from 1 */
+                  return ulStart;                  /* arrays start from 1 */
             }
          }
          else if( HB_IS_STRING( pValue ) )
