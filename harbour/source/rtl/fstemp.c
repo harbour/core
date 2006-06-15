@@ -151,9 +151,9 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
 {
    BOOL bOk= FALSE;
-   if ( pszTempDir!= NULL && *pszTempDir!= '\0' )
+   if ( pszTempDir != NULL && *pszTempDir != '\0' )
    {
-      bOk= TRUE;
+      bOk = TRUE;
       strcpy( ( char * ) pszName, ( char * ) pszTempDir );
       if ( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER || hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
       {
@@ -161,10 +161,10 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
          char *psZ = ( char * ) pszName ;
          int iChar ;
          BOOL bLower =  hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER  ;
-         while ( *psZ )
+         while( *psZ )
          {
             iChar = ( int ) *psZ;
-            if ( isalpha( iChar ) && !( bLower ? islower( iChar ) : isupper( iChar ) ) )
+            if( isalpha( iChar ) && !( bLower ? islower( iChar ) : isupper( iChar ) ) )
             {
                bOk = FALSE;
                break;
@@ -188,16 +188,16 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
    {
       pszName[0] = '\0';
 
-      if ( pszDir != NULL && pszDir[0] != '\0' )
+      if( pszDir != NULL && pszDir[0] != '\0' )
       {
          strcpy( ( char * ) pszName, ( char * ) pszDir );
       }
-      else if ( !fsGetTempDirByCase( pszName, getenv( "TMPDIR" ) ) &&
-                !fsGetTempDirByCase( pszName, P_tmpdir ) )
+      else if( !fsGetTempDirByCase( pszName, getenv( "TMPDIR" ) ) &&
+               !fsGetTempDirByCase( pszName, P_tmpdir ) )
       {
          strcpy( ( char * ) pszName, "." );
       }
-      if ( pszName[0] != '\0' )
+      if( pszName[0] != '\0' )
       {
          int len;
          len = strlen( ( char * ) pszName );

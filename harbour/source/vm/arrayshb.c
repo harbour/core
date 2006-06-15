@@ -101,7 +101,7 @@ HB_FUNC( ARRAY )
 
          if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
          {
-            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 1, hb_paramError( 1 ) );
+            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), HB_ERR_ARGS_BASEPARAMS );
             bError = TRUE;
             break;
          }
@@ -123,10 +123,10 @@ HB_FUNC( AADD )
       if( pValue && hb_arrayAdd( pArray, pValue ) )
          hb_itemReturn( pValue );
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", HB_ERR_ARGS_BASEPARAMS );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", HB_MIN( hb_pcount(), 2 ), hb_paramError(1), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
@@ -157,7 +157,7 @@ HB_FUNC( ASIZE )
    }
 #ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
    else
-      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE", HB_ERR_ARGS_BASEPARAMS );
 #endif
 }
 
@@ -244,9 +244,9 @@ HB_FUNC( AFILL )
       /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
                call AEVAL() to do the job, so the error (if any) will also be
                thrown by AEVAL().  [vszakats] */
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_ERR_ARGS_BASEPARAMS );
 #else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", HB_ERR_ARGS_BASEPARAMS );
 #endif
 }
 
@@ -290,7 +290,7 @@ HB_FUNC( AEVAL )
       hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_MIN( hb_pcount(), 4 ), hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( ACOPY )
@@ -343,7 +343,7 @@ HB_FUNC( HB_AEXPRESSIONS )
 
    if( pLine == NULL )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "HB_AEXPRESSIONS", 1, hb_paramError(1) );
+      hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "HB_AEXPRESSIONS", HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 

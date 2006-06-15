@@ -8,6 +8,54 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * changed to use stack macros/functions instead of direct accessing
+      HB_STACK members
+    + implemented PROCFILE() - it returns now real source file name
+      with body of given function symbol or function executed at given
+      stack level. If the source file cannot be detected then empty
+      string is returned. Unlike in xHarbour it works also for static
+      functions. synatx:
+         PROCFILE( [ <FuncSym> | <nStackLevel> ] )
+      F.e.:
+         PROCFILE() -> current module name
+         PROCFILE(@DBFCDX())  -> ../../dbfcdx1.c
+
+2006-06-16 01:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    * added hb_arraySelfParams()
+
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    + added HB_ERR_ARGS_SELFPARAMS for automatic setting as argument list
+      array with self item and passed parameters
+
+  * harbour/source/rtl/copyfile.c
+  * harbour/source/rtl/str.c
+  * harbour/source/rtl/strtran.c
+  * harbour/source/rtl/strzero.c
+  * harbour/source/rtl/substr.c
+  * harbour/source/vm/arrayshb.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/evalhb.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/runner.c
+    * use HB_ERR_ARGS_BASEPARAMS in generated RT messages
+
+  * harbour/source/rtl/fstemp.c
+    * formatting
+
+  * harbour/source/vm/hvm.c
+    ! added some missing operator overloading
+    ! fixed some error messages to be Clipper compatible
+    ! fixed FOR loop for nonnumerical value and STEP, f.e.:
+         FOR d := date() TO date() + 10 step 2
+            ? d
+         NEXT
+    * added disabled code to support reverted FOR condition
+      like in Clipper. See below.
+
+  * harbour/source/compiler/harbour.y
          ! 2907 MAIN_MISC(200)  TFORNEXT( NIL, NIL, NIL )               
       like in Clipper. I cannot uncomment it because it will break
       backward binary compatibility so I'll do that when some modification

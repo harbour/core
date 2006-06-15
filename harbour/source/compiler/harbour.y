@@ -1602,11 +1602,19 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                }
              Crlf                                     /* 10 */
                {
+#if 0 /* This is real Clipper behavior which I'll restore when we add PCODE version checking */
+                  if( $<asExpr>8 )
+                     hb_compGenPCode1( HB_P_FORTEST );
+                  else
+                     hb_compGenPCode1( HB_P_GREATER );
+                  $<lNumber>$ = hb_compGenJumpTrue( 0 );    /* 11 */
+#else
                   if( $<asExpr>8 )
                      hb_compGenPCode1( HB_P_FORTEST );
                   else
                      hb_compGenPCode1( HB_P_LESSEQUAL );
                   $<lNumber>$ = hb_compGenJumpFalse( 0 );   /* 11 */
+#endif
                }
              ForStatements                            /* 12 */
                {

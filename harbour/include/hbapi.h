@@ -599,6 +599,7 @@ extern HB_EXPORT BOOL       hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULO
 extern HB_EXPORT PHB_ITEM   hb_arrayFromStack( USHORT uiLen ); /* Creates and returns an Array of n Elements from the Eval Stack - Does NOT pop the items. */
 extern HB_EXPORT PHB_ITEM   hb_arrayFromParams( int iLevel ); /* Creates and returns an Array of Generic Parameters for a given call level */
 extern HB_EXPORT PHB_ITEM   hb_arrayBaseParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol. */
+extern HB_EXPORT PHB_ITEM   hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT LONGLONG   hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long long numeric value contained on an array element */
 #endif

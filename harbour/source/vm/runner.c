@@ -711,7 +711,7 @@ PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
 
    while ( ( file = hb_fsOpen( ( BYTE *)szFileName, FO_READ )) == 0 )
    {
-      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 1, hb_paramError( 1 ) );
+      USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, HB_ERR_ARGS_BASEPARAMS );
 
       if( uiAction == E_DEFAULT || uiAction == E_BREAK )
       {

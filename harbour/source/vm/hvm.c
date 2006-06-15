@@ -2000,24 +2000,40 @@ static void hb_vmAddInt( HB_ITEM_PTR pResult, LONG lAdd )
    {
       dNewVal = pResult->item.asDouble.value + lAdd;
    }
+   else if( hb_objHasOperator( pResult, HB_OO_OP_PLUS ) )
+   {
+      hb_vmPushLong( lAdd );
+      hb_objOperatorCall( HB_OO_OP_PLUS, pResult, pResult, hb_stackItemFromTop( -1 ) );
+      hb_stackPop();
+      return;
+   }
    else
    {
       PHB_ITEM pSubst;
 
-      if( lAdd > 0 )
+      if( lAdd == 1 )
+      {
+         pSubst = hb_errRT_BASE_Subst( EG_ARG, 1086, NULL, "++", 1, pResult );
+      }
+      else if( lAdd == -1 )
+      {
+         pSubst = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--", 1, pResult );
+      }
+      else if( lAdd > 0 )
       {
          hb_vmPushLong( lAdd );
          pSubst = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pResult, hb_stackItemFromTop( -1 ) );
+         hb_stackPop();
       }
       else
       {
          hb_vmPushLong( -lAdd );
          pSubst = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pResult, hb_stackItemFromTop( -1 ) );
+         hb_stackPop();
       }
 
       if( pSubst )
       {
-         hb_stackPop();
          hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
@@ -3029,106 +3045,53 @@ static void hb_vmInstring( void )
  */
 static void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
-   double dStep;
+   BOOL fBack;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForTest()"));
 
-   while( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
+   if( HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
    {
-      PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
-
-      if( pResult )
-      {
-         hb_stackPop();
-         hb_vmPush( pResult );
-         hb_itemRelease( pResult );
-      }
-      else
-         /* NOTE: Return from the inside. */
-         return;
-   }
-
-   dStep = hb_vmPopNumber();
-
-   while( ( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) ) && ( ! HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) ) )
-   {
-      PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
-
-      if( pResult )
-      {
-         hb_stackPop();
-         hb_vmPush( pResult );
-         hb_itemRelease( pResult );
-      }
-      else
-         /* NOTE: Return from the inside. */
-         return;
-   }
-
-   if ( hb_stackItemFromTop( -1 )->type == HB_IT_LOGICAL )
-   {
-      BOOL lEnd;
-      BOOL lCurrent;
-
-      lEnd = hb_vmPopLogical();
-      while( ! HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) )
-      {
-         PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
-
-         if( pResult )
-         {
-            hb_stackPop();
-            hb_vmPush( pResult );
-            hb_itemRelease( pResult );
-         }
-         else
-            /* NOTE: Return from the inside. */
-            return;
-      }
-      lCurrent = hb_vmPopLogical();
-      if( dStep >= 0 )           /* Positive loop. Use LESS */
-      {
-         hb_vmPushLogical( lCurrent <= lEnd );
-      }
-      else if( dStep < 0 )      /* Negative loop. Use GREATER */
-      {
-         hb_vmPushLogical( lCurrent >= lEnd );
-      }
+      fBack = hb_vmPopNumber() < 0.0;
    }
    else
    {
-      double dEnd;
-      double dCurrent;
+      PHB_ITEM pResult;
 
-      dEnd = hb_vmPopNumber();
-      while( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
+      hb_vmPushInteger( 0 );
+      pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 2, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
+
+      if( pResult )
       {
-         PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
-
-         if( pResult )
+         if( HB_IS_LOGICAL( pResult ) )
          {
-            hb_stackPop();
-            hb_vmPush( pResult );
+            fBack = pResult->item.asLogical.value;
             hb_itemRelease( pResult );
+            hb_stackPop();
+            hb_stackPop();
          }
          else
-            /* NOTE: Return from the inside. */
+         {
+            hb_itemMove( hb_stackItemFromTop( -1 ), pResult );
+            hb_itemRelease( pResult );
+            hb_errRT_BASE( EG_ARG, 1066, NULL, hb_langDGetErrorDesc( EG_CONDITION ), 1, hb_stackItemFromTop( -1 ) );
             return;
+         }
       }
-      dCurrent = hb_vmPopNumber();
-      if( dStep >= 0 )          /* Positive loop. Use LESS */
-      {
-         hb_vmPushLogical( dCurrent <= dEnd );
-      }
-      else if( dStep < 0 )      /* Negative loop. Use GREATER */
-      {
-         hb_vmPushLogical( dCurrent >= dEnd );
-      }
+      else
+         return;
    }
+
+#if 0 /* This is real Clipper behavior which I'll restore when we add PCODE version checking */
+   if( fBack )
+      hb_vmLess();
+   else
+      hb_vmGreater();
+#else
+   if( fBack )
+      hb_vmGreaterEqual();
+   else
+      hb_vmLessEqual();
+#endif
 }
 
 /* At this moment the eval stack should store:
@@ -3929,9 +3892,9 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 #endif
       }
       else if( pSym->szName[ 0 ] == '_' )
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
       else
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 
       if( lPopSuper )
          hb_objPopSuperCast( pSelf );
@@ -4075,9 +4038,9 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 #endif
       }
       else if( pSym->szName[ 0 ] == '_' )
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
+         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
       else
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
+         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 
       if( lPopSuper )
          hb_objPopSuperCast( pSelf );
@@ -6490,7 +6453,7 @@ HB_EXPORT void hb_xvmLocalSetInt( int iLocal, LONG lValue )
 
    if( HB_IS_OBJECT( pLocal ) && hb_objHasOperator( pLocal, HB_OO_OP_ASSIGN ) )
    {
-      hb_vmPushInteger( lValue );
+      hb_vmPushLong( lValue );
       hb_objOperatorCall( HB_OO_OP_ASSIGN, pLocal, pLocal,
                           hb_stackItemFromTop( -1 ) );
       hb_stackPop();
@@ -6673,7 +6636,7 @@ HB_EXPORT BOOL hb_xvmEqualInt( LONG lValue )
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_EQUAL ) )
    {
-      hb_vmPushNumInt( lValue );
+      hb_vmPushLong( lValue );
       hb_objOperatorCall( HB_OO_OP_EQUAL, pItem, pItem,
                           hb_stackItemFromTop( -1 ) );
       hb_stackPop();

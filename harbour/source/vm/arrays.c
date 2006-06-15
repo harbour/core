@@ -927,7 +927,7 @@ HB_EXPORT PHB_ITEM hb_arrayBaseParams( void )
    PHB_ITEM pArray;
    USHORT uiPos, uiPCount;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayBaseParams()"));
 
    pArray = hb_itemNew( NULL );
    uiPCount = hb_stackBaseItem()->item.asSymbol.paramcnt;
@@ -937,6 +937,26 @@ HB_EXPORT PHB_ITEM hb_arrayBaseParams( void )
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
    {
       hb_arraySet( pArray, uiPos, hb_stackItemFromBase( uiPos ) );
+   }
+
+   return pArray;
+}
+
+HB_EXPORT PHB_ITEM hb_arraySelfParams( void )
+{
+   PHB_ITEM pArray;
+   USHORT uiPos, uiPCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySelfParams()"));
+
+   pArray = hb_itemNew( NULL );
+   uiPCount = hb_stackBaseItem()->item.asSymbol.paramcnt;
+
+   hb_arrayNew( pArray, uiPCount + 1 );
+
+   for( uiPos = 0; uiPos <= uiPCount; uiPos++ )
+   {
+      hb_arraySet( pArray, uiPos + 1, hb_stackItemFromBase( uiPos ) );
    }
 
    return pArray;

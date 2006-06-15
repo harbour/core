@@ -779,7 +779,11 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
    PHB_ITEM pArray;
    va_list va;
    ULONG ulArgPos;
-   BOOL bRelease = TRUE;
+
+   /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
+    * If it's wrong and I missed sth please fix me, Druzus.
+    */
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -793,6 +797,10 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       else
          pArray = hb_arrayBaseParams();
    }
+   else if( ulArgCount == HB_ERR_ARGS_SELFPARAMS )
+   {
+      pArray = hb_arraySelfParams();
+   }
    else
    {
       pArray = hb_itemArrayNew( ulArgCount );
@@ -804,12 +812,6 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       }
       va_end( va );
    }
-
-   /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
-    * If it's wrong and I missed sth please fix me, Druzus.
-    */
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
-
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
@@ -819,10 +821,7 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       hb_vmSend( 1 );
 
       /* Release the Array. */
-      if( bRelease )
-      {
-         hb_itemRelease( pArray );
-      }
+      hb_itemRelease( pArray );
    }
 
    /* Ok, launch... */
@@ -845,16 +844,35 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
 
    pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, uiOsCode, uiFlags );
 
-   if ( ulArgCount > 0 )
+   /* Build the array from the passed arguments. */
+   if( ulArgCount == 0 )
+   {
+      pArray = NULL;
+   }
+   else if( ulArgCount == HB_ERR_ARGS_BASEPARAMS )
+   {
+      if( hb_pcount() == 0 )
+         pArray = NULL;
+      else
+         pArray = hb_arrayBaseParams();
+   }
+   else if( ulArgCount == HB_ERR_ARGS_SELFPARAMS )
+   {
+      pArray = hb_arraySelfParams();
+   }
+   else
    {
       pArray = hb_itemArrayNew( ulArgCount );
 
-      /* Build the array from the passed arguments. */
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
+      {
          hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+      }
       va_end( va );
-
+   }
+   if ( pArray )
+   {
       /* Assign the new array to the object data item. */
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
@@ -884,16 +902,35 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
 
    pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 
-   if ( ulArgCount > 0 )
+   /* Build the array from the passed arguments. */
+   if( ulArgCount == 0 )
+   {
+      pArray = NULL;
+   }
+   else if( ulArgCount == HB_ERR_ARGS_BASEPARAMS )
+   {
+      if( hb_pcount() == 0 )
+         pArray = NULL;
+      else
+         pArray = hb_arrayBaseParams();
+   }
+   else if( ulArgCount == HB_ERR_ARGS_SELFPARAMS )
+   {
+      pArray = hb_arraySelfParams();
+   }
+   else
    {
       pArray = hb_itemArrayNew( ulArgCount );
 
-      /* Build the array from the passed arguments. */
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
+      {
          hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+      }
       va_end( va );
-
+   }
+   if ( pArray )
+   {
       /* Assign the new array to the object data item. */
       hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
       hb_vmPush( pError );
@@ -919,7 +956,8 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
    PHB_ITEM pArray;
    va_list va;
    ULONG ulArgPos;
-   BOOL bRelease = TRUE;
+
+   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
 
    /* Build the array from the passed arguments. */
    if( ulArgCount == 0 )
@@ -933,6 +971,10 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       else
          pArray = hb_arrayBaseParams();
    }
+   else if( ulArgCount == HB_ERR_ARGS_SELFPARAMS )
+   {
+      pArray = hb_arraySelfParams();
+   }
    else
    {
       pArray = hb_itemArrayNew( ulArgCount );
@@ -944,9 +986,6 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       }
       va_end( va );
    }
-
-   pError = hb_errRT_New_Subst( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
-
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
@@ -956,10 +995,7 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       hb_vmSend( 1 );
 
       /* Release the Array. */
-      if( bRelease )
-      {
-         hb_itemRelease( pArray );
-      }
+      hb_itemRelease( pArray );
    }
 
    /* Ok, launch... */

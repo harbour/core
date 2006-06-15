@@ -81,7 +81,7 @@ HB_FUNC( EVAL )
    }
    else
    {
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 

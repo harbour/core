@@ -141,5 +141,5 @@ HB_FUNC( __COPYFILE )
          hb_retl( FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE", HB_MIN( hb_pcount(), 2 ), hb_paramError( 1 ), hb_paramError( 2 ) ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE", HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }

@@ -1849,7 +1849,7 @@ HB_FUNC( __OBJHASMSG )
    else
    {
       /*hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG", 0 );*/
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__ObjHasMsg", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__ObjHasMsg", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -2395,7 +2395,7 @@ static HARBOUR hb___msgEval( void )
       hb_vmDo( ( USHORT ) uiPCount );
    }
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 1, pSelf );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", HB_ERR_ARGS_SELFPARAMS );
 }
 
 /*
@@ -2405,25 +2405,24 @@ static HARBOUR hb___msgEval( void )
  */
 static HARBOUR hb___msgNoMethod( void )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
    PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
 
 #if 1  /* Clipper compatible error message */
    if( pSym->szName[ 0 ] == '_' )
-      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, pSelf );
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, 1, pSelf );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 #else
    char szDesc[ 128 ];
 
    if( pSym->szName[ 0 ] == '_' )
    {
-      sprintf( szDesc, "Class: '%s' has no property", hb_objGetClsName( pSelf ) );
+      sprintf( szDesc, "Class: '%s' has no property", hb_objGetClsName( hb_stackSelfItem() ) );
       hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, szDesc, pSym->szName + 1, HB_ERR_ARGS_BASEPARAMS );
    }
    else
    {
-      sprintf( szDesc, "Class: '%s' has no exported method", hb_objGetClsName( pSelf ) );
+      sprintf( szDesc, "Class: '%s' has no exported method", hb_objGetClsName( hb_stackSelfItem() ) );
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, szDesc, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
    }
 #endif
@@ -2667,13 +2666,8 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
    USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
    USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
    PMETHOD pMethod;
-#endif
 
    hb_reta( 2 );
-   hb_stornl( 0, -1, 1 );
-   hb_stornl( 0, -1, 2 );
-
-#ifndef HB_NO_PROFILER
    while( uiAt != uiLimit )
    {
       if( ! strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, cMsg ) )
@@ -2687,7 +2681,11 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
       if( uiAt == uiMask )
          uiAt = 0;
    }
+#else
+   hb_reta( 2 );
 #endif
+   hb_stornl( 0, -1, 1 );
+   hb_stornl( 0, -1, 2 );
 }
 
 /* __ClsGetProperties( nClassHandle ) --> aPropertiesNames

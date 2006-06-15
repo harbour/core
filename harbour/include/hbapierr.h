@@ -94,6 +94,7 @@ HB_EXTERN_BEGIN
 #define HB_ERR_IE_GENERIC               1027
 
 #define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
+#define HB_ERR_ARGS_SELFPARAMS          0xFFFFFFFE
 
 /* Standard API */
 
