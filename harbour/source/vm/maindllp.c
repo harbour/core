@@ -103,14 +103,13 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 }
 
 /* module symbols initialization */
-PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeMin, USHORT uiPcodeMax ) /* module symbols initialization with extended information */
+PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ) /* module symbols initialization with extended information */
 {
    FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
-                                             "_hb_vmProcessSymbolsExt" );
+                                             "_hb_vmProcessSymbolsEx" );
    if( pProcessSymbols )
-      return ( ( VM_PROCESS_SYMBOLS_EXT ) pProcessSymbols )
-                  ( pSymbols, uiSymbols, szModuleName,
-                    ulID, uiPcodeMin, uiPcodeMax );
+      return ( ( VM_PROCESS_SYMBOLS_EX ) pProcessSymbols )
+                  ( pSymbols, uiSymbols, szModuleName, ulID, uiPcodeVer );
    /* else
     *    may we issue an error ? */
 

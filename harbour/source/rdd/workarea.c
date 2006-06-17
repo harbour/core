@@ -719,7 +719,7 @@ ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO param )
    HB_SYMBOL_UNUSED( index );
    HB_SYMBOL_UNUSED( param );
 
-   hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "ORDERINFO" );
+   hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBORDERINFO" );
    return FAILURE;
 }
 #endif

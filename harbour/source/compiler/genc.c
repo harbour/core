@@ -36,7 +36,7 @@ extern void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCFunc( FILE *yyc, char *cDecor, char *szName, int iStrip );
-static void hb_writeEndInit( FILE* yyc, char * szModulname );
+static void hb_writeEndInit( FILE* yyc, char * szModulname, char * szSourceFile );
 
 /* helper structure to pass information */
 typedef struct HB_stru_genc_info
@@ -64,6 +64,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    BOOL bIsExitFunction   ;
    BOOL bIsStaticVariable ;
 
+   hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
@@ -177,7 +178,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             * we are using these two bits to mark the special function used to
             * initialize static variables
             */
-            fprintf( yyc, "{ \"%s\", {HB_FS_INITEXIT}, {hb_INITSTATICS}, NULL }", pSym->szName ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "{ \"%s\", {HB_FS_INITEXIT|HB_FS_LOCAL}, {hb_INITSTATICS}, NULL }", pSym->szName ); /* NOTE: hb_ intentionally in lower case */
          }
          else
          {
@@ -208,6 +209,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                external called function */
             if( pSym->bFunc && hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
             {
+               fprintf( yyc, " | HB_FS_LOCAL" );
+
                if( pSym->cScope & HB_FS_INIT )
                   hb_compGenCFunc( yyc, "}, {HB_INIT_FUNCNAME( %s )}, NULL }", pSym->szName, 1 );
                else if( pSym->cScope & HB_FS_EXIT )
@@ -227,7 +230,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          pSym = pSym->pNext;
       }
 
-      hb_writeEndInit( yyc, szModulname );
+      hb_writeEndInit( yyc, szModulname, hb_comp_szFile );
 
       /* Generate functions data
        */
@@ -311,10 +314,17 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       printf( "Done.\n" );
 }
 
-static void hb_writeEndInit( FILE* yyc, char * szModulname )
+static void hb_writeEndInit( FILE* yyc, char * szModulname, char * szSourceFile )
 {
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n\n"
-                 "#if defined(HB_PRAGMA_STARTUP)\n"
+/*
+   HB_SYMBOL_UNUSED( szSourceFile );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n\n",
+                 hb_comp_szPrefix, szModulname );
+*/
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, \"%s\", 0x%lx, 0x%04x )\n\n",
+                 hb_comp_szPrefix, szModulname, szSourceFile, 0L, HB_PCODE_VER );
+
+   fprintf( yyc, "#if defined(HB_PRAGMA_STARTUP)\n"
                  "   #pragma startup hb_vm_SymbolInit_%s%s\n"
                  "#elif defined(HB_MSC_STARTUP)\n"
                  "   #if _MSC_VER >= 1010\n"
@@ -328,7 +338,6 @@ static void hb_writeEndInit( FILE* yyc, char * szModulname )
                  "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
                  "   #pragma data_seg()\n"
                  "#endif\n\n",
-                 hb_comp_szPrefix, szModulname,
                  hb_comp_szPrefix, szModulname,
                  hb_comp_szPrefix, szModulname,
                  hb_comp_szPrefix, szModulname );

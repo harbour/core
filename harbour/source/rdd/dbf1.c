@@ -4359,7 +4359,6 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
       case RDDI_ISDBF:
       case RDDI_CANPUTREC:
       case RDDI_LOCAL:
-      case RDDI_LARGEFILE:
          hb_itemPutL( pItem, TRUE );
          break;
 
@@ -4474,8 +4473,8 @@ static void hb_dbfRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbf1__InitSymbols )
-{ "_DBF",             {HB_FS_PUBLIC}, {HB_FUNCNAME( _DBF )}, NULL },
-{ "DBF_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DBF_GETFUNCTABLE )}, NULL }
+{ "_DBF",             {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( _DBF )}, NULL },
+{ "DBF_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBF_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_dbf_rdd_init_ )

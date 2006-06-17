@@ -5313,6 +5313,26 @@ static double hb_vmTopNumber( void )
 /*
  * Functions to mange module symbols
  */
+char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
+{
+   if( pSym )
+   {
+      PHB_SYMBOLS pLastSymbols = s_pSymbols;
+
+      while( pLastSymbols )
+      {
+         if( pLastSymbols->fActive &&
+             pSym >= pLastSymbols->pModuleSymbols &&
+             pSym < pLastSymbols->pModuleSymbols + pLastSymbols->uiModuleSymbols )
+         {
+            return pLastSymbols->szModuleName;
+         }
+         pLastSymbols = pLastSymbols->pNext;
+      }
+   }
+   return NULL;
+}
+
 static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
                                         char * szModuleName, ULONG ulID )
 {
@@ -5661,15 +5681,25 @@ hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModule
 /*
  * module symbols initialization with extended information
  */
-HB_EXPORT PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
-                                           char * szModuleName, ULONG ulID,
-                                           USHORT uiPcodeMin, USHORT uiPcodeMax )
+HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymbols,
+                                          char * szModuleName, ULONG ulID,
+                                          USHORT uiPCodeVer )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p,%hu,%s,%lu,%hu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPcodeMin, uiPcodeMax));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPcodeVer));
 
-   /* TODO: verify suported PCODE versions */
-   HB_SYMBOL_UNUSED( uiPcodeMin );
-   HB_SYMBOL_UNUSED( uiPcodeMax );
+   if( uiPCodeVer != 0 )
+   {
+      if( uiPCodeVer > HB_PCODE_VER || /* the module is compiled with newer compiler version then HVM */
+          uiPCodeVer < HB_PCODE_VER_MIN )  /* the module is compiled with olde compiler version */
+      {
+         char szPCode[ 10 ];
+         sprintf( szPCode, "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
+
+         hb_errInternal( HB_EI_ERRUNRECOV, "Module '%s'\n"
+                         "was compiled with unsupported PCODE version %s.\n"
+                         "Please recompile.", szModuleName, szPCode );
+      }
+   }
 
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
                                 s_fCloneSym, s_fCloneSym )->pModuleSymbols;

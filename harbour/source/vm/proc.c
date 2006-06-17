@@ -72,6 +72,7 @@
 #include "hbapicls.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
+#include "hbvm.h"
 
 #ifdef HB_EXTENSION
 
@@ -93,14 +94,14 @@ HB_FUNC( PROCNAME )
 
 HB_FUNC( PROCLINE )
 {
+   long lOffset = hb_stackBaseOffset();
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM * pBase = hb_stack.pBase;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+   while( iLevel-- > 0 && lOffset > 1 )
+      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
 
    if( iLevel < 0 )
-      hb_retni( ( *pBase )->item.asSymbol.lineno );
+      hb_retni( hb_stackItem( lOffset - 1 )->item.asSymbol.lineno );
    else
       hb_retni( 0 );
 }
@@ -112,7 +113,45 @@ HB_FUNC( PROCLINE )
 
 HB_FUNC( PROCFILE )
 {
-   hb_retc( NULL );
+   PHB_SYMB pLocalSym = NULL;
+   PHB_SYMB pSym = NULL;
+
+   if( ISSYMBOL( 1 ) )
+   {
+      pSym = hb_itemGetSymbol( hb_param( 1, HB_IT_SYMBOL ) );
+   }
+   else
+   {
+      long lOffset = hb_stackBaseOffset();
+      int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcFile() */
+
+      while( iLevel-- > 0 && lOffset > 1 )
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+
+      if( iLevel < 0 )
+      {
+         pSym = hb_stackItem( lOffset - 1 )->item.asSymbol.value;
+
+         if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
+         {
+            PHB_ITEM pSelf = hb_stackItem( lOffset );
+
+            if( HB_IS_BLOCK( pSelf ) )
+               pLocalSym = pSelf->item.asBlock.value->pDefSymb;
+         }
+      }
+   }
+
+   if( !pLocalSym && pSym )
+   {
+      if( ( pSym->scope.value & HB_FS_LOCAL ) != 0 )
+         pLocalSym = pSym;
+      else if( pSym->pDynSym &&
+               ( pSym->pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
+         pLocalSym = pSym->pDynSym->pSymbol;
+   }
+
+   hb_retc( hb_vmFindModuleSymbolName( pLocalSym ) );
 }
 
 #endif
@@ -120,64 +159,60 @@ HB_FUNC( PROCFILE )
 /* NOTE: szName size must be an at least:
          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 [vszakats] */
 
-char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock  )
+char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
 {
-   PHB_ITEM * pBase = hb_stack.pBase;
-   char * szTstName;
-   BOOL lcb = FALSE;
-   int iLev = iLevel;
+   long lOffset = hb_stackBaseOffset(), lPrevOffset = 0;
+   PHB_ITEM pBase, pSelf;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-
-   szTstName = ( *pBase )->item.asSymbol.value->szName ;
-
-   if( bSkipBlock )
-   {
-      /* Is it an inline method ? if so back one more ... */
-      if( ( strcmp( szTstName, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems )
-      {
-         pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-         lcb = TRUE ;
-      }
-   }
+   while( iLevel-- > 0 && lOffset > 1 )
+      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
 
    if( iLevel < 0 )
    {
-      if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a method name */
+      if( bSkipBlock && lOffset > 1 )
       {
-         strcpy( szName, hb_objGetRealClsName( *( pBase + 1 ), ( *pBase )->item.asSymbol.value->szName ) );
+         char * szTstName = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName ;
+         /* Is it an inline method ? if so back one more ... */
+         if( strcmp( szTstName, "__EVAL" ) == 0 )
+         {
+            lPrevOffset = lOffset;
+            lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         }
+      }
 
-         if( lcb )
+      pBase = hb_stackItem( lOffset -1 );
+      pSelf = hb_stackItem( lOffset );
+      if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
+      {
+         strcpy( szName, hb_objGetRealClsName( pSelf, pBase->item.asSymbol.value->szName ) );
+
+         if( lPrevOffset )
             strcat( szName, ":(b)" );
          else
             strcat( szName, ":" );
 
-         strcat( szName, ( *pBase )->item.asSymbol.value->szName );
+         strcat( szName, pBase->item.asSymbol.value->szName );
       }
       else
       {
-         if( lcb ) /* Back to standart code block */
+         if( lPrevOffset ) /* Back to standart code block */
          {
-            pBase = hb_stack.pBase;
-            while( ( iLev-- > 0 ) && pBase != hb_stack.pItems )
-               pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+            lOffset = lPrevOffset;
+            pBase = hb_stackItem( lOffset -1 );
+            pSelf = hb_stackItem( lOffset );
          }
 
-         if( ( strcmp( ( *pBase )->item.asSymbol.value->szName, "EVAL" ) == 0 ) )
+         if( strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
          {
             strcpy( szName, "(b)" );
-            if( ( *( pBase + 1 ) )->type == HB_IT_BLOCK )
-            {
-               PHB_SYMB pSymb;
-               pSymb = ( *( pBase + 1 ) )->item.asBlock.value->pDefSymb;
-               strcat( szName, pSymb->szName );
-            }
+
+            if( HB_IS_BLOCK( pSelf ) )
+               strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
             else
-               strcat( szName, ( *pBase )->item.asSymbol.value->szName );
+               strcat( szName, pBase->item.asSymbol.value->szName );
          }
          else
-            strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
+            strcpy( szName, pBase->item.asSymbol.value->szName );
       }
    }
    else
@@ -185,4 +220,3 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock  )
 
    return szName;
 }
-

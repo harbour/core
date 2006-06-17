@@ -110,7 +110,7 @@ char *         hb_comp_szFromClass;
 PCOMDECLARED   hb_comp_pLastMethod;
 
 int            hb_comp_iLine;                             /* currently processed line number (globaly) */
-char *         hb_comp_szFile;                            /* File Name of last compiled line */
+char *         hb_comp_szFile;                            /* Source file name of compiled module */
 PFUNCTION      hb_comp_pInitFunc;
 PHB_FNAME      hb_comp_pFileName = NULL;
 PHB_FNAME      hb_comp_pFilePpo  = NULL;
@@ -4809,8 +4809,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
    if( hb_comp_pFileName->szName )
    {
-      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-      char szPpoName[ _POSIX_PATH_MAX ];
+      char szFileName[ _POSIX_PATH_MAX + 1 ];    /* filename to parse */
+      char szPpoName[ _POSIX_PATH_MAX + 1 ];
 
       if( !hb_comp_pFileName->szExtension )
          hb_comp_pFileName->szExtension = ".prg";

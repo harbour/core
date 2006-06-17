@@ -62,7 +62,7 @@
 
 typedef PHB_SYMB ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
                                                 USHORT uiModuleSymbols );
-typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EXT )
+typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EX )
                            ( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols,
                              char * szModuleName, ULONG ulID,
                              USHORT uiPcodeMin, USHORT uiPcodeMax );

@@ -6743,9 +6743,11 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutC( pInfo->itmResult, pTag->Owner->IndexName );
             break;
          case DBOI_KEYCOUNT:
+         case DBOI_KEYCOUNTRAW:
             hb_itemPutNL( pInfo->itmResult, hb_ntxOrdKeyCount( pTag ) );
             break;
          case DBOI_POSITION:
+         case DBOI_KEYNORAW:
             if( hb_itemType( pInfo->itmNewVal ) & HB_IT_NUMERIC )
                hb_itemPutL( pInfo->itmResult,
                   hb_ntxOrdKeyGoto( pTag, hb_itemGetNL( pInfo->itmNewVal ) ) );
@@ -6880,6 +6882,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_ntxTagClearScope( pTag, 1 );
             if( pInfo->itmResult )
                hb_itemClear( pInfo->itmResult );
+            break;
          case DBOI_KEYADD:
             if( pTag->Owner->fReadonly )
             {
@@ -7656,8 +7659,8 @@ static void hb_dbfntxRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
-{ "DBFNTX",              {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFNTX )}, NULL },
-{ "DBFNTX_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE )}, NULL }
+{ "DBFNTX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFNTX )}, NULL },
+{ "DBFNTX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_dbfntx_rdd_init_ )

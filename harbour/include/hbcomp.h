@@ -589,6 +589,8 @@ extern int            hb_comp_iLinePRG;
 
 extern ULONG          hb_comp_Supported;
 
+extern char *         hb_comp_szFile; 
+
 /* table with PCODEs' length */
 extern const BYTE     hb_comp_pcode_len[];
 

@@ -120,7 +120,8 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
 
    if( pDynSym )            /* If name exists */
    {
-      if( !pDynSym->pSymbol->value.pFunPtr && pSymbol->value.pFunPtr ) /* The DynSym existed */
+      if( ( !pDynSym->pSymbol->value.pFunPtr && pSymbol->value.pFunPtr ) ||
+          ( pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
       {
          pDynSym->pSymbol = pSymbol;
 #ifndef HB_NO_PROFILER

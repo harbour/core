@@ -70,7 +70,7 @@ extern HB_EXPORT void     hb_vmAtExit( HB_INIT_FUNC pFunc, void * cargo );
 /* Harbour virtual machine functions */
 extern HB_EXPORT void     hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
-extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeMin, USHORT uiPcodeMax ); /* module symbols initialization with extended information */
+extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
 #ifdef _HB_API_INTERNAL_
    typedef struct _HB_SYMBOLS
@@ -92,6 +92,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsExt( PHB_SYMB pSymbols, USHORT uiSy
    extern void        hb_vmBeginSymbolGroup( void * hDynLib, BOOL fClone );
    extern void        hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] );
    extern void        hb_vmExitSymbolGroup( void * hDynLib );
+   extern char *      hb_vmFindModuleSymbolName( PHB_SYMB pSym );
+
 #endif
 
 extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */

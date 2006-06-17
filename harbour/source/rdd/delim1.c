@@ -1340,7 +1340,6 @@ static ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect,
    {
       case RDDI_CANPUTREC:
       case RDDI_LOCAL:
-      case RDDI_LARGEFILE:
          hb_itemPutL( pItem, TRUE );
          break;
 
@@ -1502,8 +1501,8 @@ static void hb_delimRddInit( void * cargo )
 }
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
-{ "DELIM",              {HB_FS_PUBLIC}, {HB_FUNCNAME( DELIM )}, NULL },
-{ "DELIM_GETFUNCTABLE", {HB_FS_PUBLIC}, {HB_FUNCNAME( DELIM_GETFUNCTABLE )}, NULL }
+{ "DELIM",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DELIM )}, NULL },
+{ "DELIM_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( DELIM_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_delim_rdd_init_ )

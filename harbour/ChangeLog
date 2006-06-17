@@ -8,6 +8,84 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/rtl/math.c
+    ! fixed possible memory leak
+    * indenting
+
+  * harbour/source/vm/classes.c
+    ! fixed possible GPF in __GETMSGPRF
+    * use only one function for method name hashing
+
+  * harbour/source/vm/hvm.c
+    * minor fix
+
+2006-06-17 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+    + added extern hb_comp_szFile
+
+  * harbour/include/hbinit.h
+    * changed hb_vmProcessSymbolsExt() to hb_vmProcessSymbolsEx() respecting
+      Mindaugas suggestion.
+    + added HB_INIT_SYMBOLS_EX_END() macro
+    * translate HB_INIT_SYMBOLS_END() macro to HB_INIT_SYMBOLS_EX_END()
+
+  * harbour/include/hbsetup.h
+    + added HB_PCODE_VER_MIN and HB_PCODE_VER both now are set to 0x0001
+
+  * harbour/include/hbtypes.h
+    * changed VM_PROCESS_SYMBOLS_EXT to VM_PROCESS_SYMBOLS_EX
+
+  * harbour/include/hbvm.h
+    + added hb_vmFindModuleSymbolName() - it returns the file name of given
+      symbol if it was registered in HVM
+
+  * harbour/source/compiler/genc.c
+    * set HB_FS_LOCAL for local module functions
+    * use HB_INIT_SYMBOLS_EX_END instead of HB_INIT_SYMBOLS_END
+
+  * harbour/source/compiler/harbour.c
+    * minor modifications
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * added HB_FS_LOCAL to function symbols in registered symbol tables
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * added HB_FS_LOCAL to function symbols in registered symbol tables
+    ! added missing break
+    + added DBOI_KEYCOUNTRAW, DBOI_KEYNORAW. They works like DBOI_KEYCOUNT
+      and DBOI_KEYNO in pure DBFNTX. Only with some upper level RDDs like
+      RMDBFNTX which supports bit map filters they can return differ results.
+
+  * harbour/source/rdd/workarea.c
+    * changed ORDERINFO to DBORDERINFO in error message
+
+  * harbour/source/rtl/set.c
+    * respect previous settings in logical SETs if given value is not valid
+      new one.
+    + added misinf initialization for _SET_FORCEOPT and _SET_HARDCOMMIT.
+    * changed default value of _SET_OPTIMIZE to TRUE
+
+  * harbour/source/vm/dynsym.c
+    * give the highest priority for LOCAL function symbols
+
+  * harbour/source/vm/hvm.c
+    + added hb_vmFindModuleSymbolName() - it returns the file name of given
+      symbol if it was registered in HVM
+    * changed hb_vmProcessSymbolsExt() to hb_vmProcessSymbolsEx() and added
+      PCOE version checking
+
+  * harbour/source/vm/maindllp.c
+    * changed hb_vmProcessSymbolsExt() to hb_vmProcessSymbolsEx()
+    * changed VM_PROCESS_SYMBOLS_EXT to VM_PROCESS_SYMBOLS_EX
+
+  * harbour/source/vm/proc.c
     * changed to use stack macros/functions instead of direct accessing
       HB_STACK members
     + implemented PROCFILE() - it returns now real source file name
