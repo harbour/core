@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
 
 #if defined(__WATCOMC__)
    #define HB_MATH_HANDLER
-   #if (__WATCOMC__ > 1000) && defined(__cplusplus)
+   #if (__WATCOMC__ > 1000) /* && defined(__cplusplus) */
       #define exception _exception
    #endif
 #elif defined(__BORLANDC__)
@@ -82,7 +82,10 @@ HB_EXTERN_BEGIN
          #define exception _exception
       #endif
    #endif
-#elif defined(__MINGW32__)
+
+/* it seems that MinGW has some problem with MATH HANDLER
+   use HB_MATH_ERRNO instead */
+#elif defined(__MINGW32__) && 0
    #define HB_MATH_HANDLER
    #define matherr _matherr
    #define exception _exception
@@ -90,8 +93,7 @@ HB_EXTERN_BEGIN
    #define HB_MATH_HANDLER
 #endif
 
-#if !defined(HB_MATH_HANDLER) && defined(__GNUC__) && \
-    ( defined(HB_OS_LINUX) || defined(HB_OS_UNIX) )
+#if !defined(HB_MATH_HANDLER) && defined(__GNUC__) /* && defined(HB_OS_UNIX) */
    #define HB_MATH_ERRNO
 #endif
 

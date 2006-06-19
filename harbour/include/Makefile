@@ -9,6 +9,7 @@ C_HEADERS=\
 	extend.h     \
 	hbapi.h      \
 	hbapicdp.h   \
+	hbapicls.h   \
 	hbapierr.h   \
 	hbapifs.h    \
 	hbapigt.h    \

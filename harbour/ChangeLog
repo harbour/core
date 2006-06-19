@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/source/rtl/gtwin/gtwin.c
+     + Copied Windows Clipboard support from the GTWVT driver. So now
+       it is available in Win32 console apps too. (Thanks Przemek for
+       the functions and instructions).
+     ! Fixed TBrowse:skipBlock() (throwing proper error, NIL parameter 
+
+2006-06-20 02:37 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/tbrowse.prg
+     ! Fixed TBrowseNew() not initializing :skipBlock()
+     ! Fixed TBrowse:skipBlock() (throwing proper error, NIL parameter
+       behaviour, parameter checking)
+
+2006-06-19 23:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added hbapicls.h
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/garbage.c
+    * added some testing macros
+
+  * harbour/include/hbmath.h
+    * HB_MATH_ERRNO enabled for MINGW build. Seems that MinGW doesn't
+      activate math error handler and only sets errno
+
+  * harbour/include/hbtypes.h
+  * harbour/source/vm/maindllp.c
+    ! fixed VM_PROCESS_SYMBOLS_EX definition
+    * cleaned a little bit code to not return uninitialized values
+      when original function cannot be detected
+
+  * harbour/source/compiler/genc.c
+    * minor modifications
 
   * harbour/source/rtl/math.c
     ! fixed possible memory leak

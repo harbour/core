@@ -3273,8 +3273,8 @@ static LONG hb_vmEnumEnd( void )
    {
       /* restore the value of variable before the FOREACH loop */
       hb_itemMove( hb_itemUnRefOnce( hb_stackItemFromTop( -1 ) ), hb_stackItemFromTop( -2 ) );
-      hb_stackDec();
       hb_stackPop();
+      hb_stackDec();
    }
 
    return lOldBase;

@@ -706,6 +706,7 @@ char * hb_objGetClsName( PHB_ITEM pObject )
             break;
 
          case HB_IT_STRING:
+         case HB_IT_MEMO:
             szClassName = "CHARACTER";
             break;
 
@@ -752,57 +753,54 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p)", pObject));
 
-   if( HB_IS_ARRAY( pObject ) )
+   if( HB_IS_OBJECT( pObject ) )
    {
-      if( pObject->item.asArray.value->uiClass )
+      PHB_DYNS pMsg = hb_dynsymFindName( szName );
+      USHORT uiClass;
+      USHORT uiCurCls;
+      USHORT uiClsTree;
+
+      uiClass = pObject->item.asArray.value->uiClass;
+
+      /* default value to current class object */
+      if (pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0])
       {
-         PHB_DYNS pMsg = hb_dynsymFindName( szName );
-         USHORT uiClass;
-         USHORT uiCurCls;
-         USHORT uiClsTree;
-
-         uiClass = pObject->item.asArray.value->uiClass;
-
-         /* default value to current class object */
-         if (pObject->item.asArray.value->puiClsTree && pObject->item.asArray.value->puiClsTree[0])
-         {
-            uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
-            uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-         }
-         else
-         {
-            uiClsTree = 1;          /* Flag value */
-            uiCurCls = uiClass;
-         }
-
-         while (uiClsTree)
-         {
-            if( uiCurCls && uiCurCls <= s_uiClasses )
-            {
-               PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
-               USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
-               USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-               USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
-
-               while( uiAt != uiLimit )
-               {
-                  if( pClass->pMethods[ uiAt ].pMessage == pMsg )
-                  {
-                     uiClass = (pClass->pMethods + uiAt)->uiSprClass;
-                     uiClsTree=1; /* Flag Value */
-                     break;
-                  }
-                  if( ++uiAt == uiMask )
-                     uiAt = 0;
-               }
-            }
-            if (-- uiClsTree)
-               uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
-         }
-
-         if( uiClass && uiClass <= s_uiClasses )
-            return ( s_pClasses + uiClass - 1 )->szName;
+         uiClsTree = pObject->item.asArray.value->puiClsTree[0] ;
+         uiCurCls  = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
       }
+      else
+      {
+         uiClsTree = 1;          /* Flag value */
+         uiCurCls = uiClass;
+      }
+
+      while (uiClsTree)
+      {
+         if( uiCurCls && uiCurCls <= s_uiClasses )
+         {
+            PCLASS pClass  = s_pClasses + ( uiCurCls - 1 );
+            USHORT uiAt    = ( USHORT ) ( ( ( hb_cls_MsgToNum( pMsg ) ) % pClass->uiHashKey ) * BUCKET );
+            USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+            USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+
+            while( uiAt != uiLimit )
+            {
+               if( pClass->pMethods[ uiAt ].pMessage == pMsg )
+               {
+                  uiClass = (pClass->pMethods + uiAt)->uiSprClass;
+                  uiClsTree=1; /* Flag Value */
+                  break;
+               }
+               if( ++uiAt == uiMask )
+                  uiAt = 0;
+            }
+         }
+         if (-- uiClsTree)
+            uiCurCls = pObject->item.asArray.value->puiClsTree[uiClsTree] ;
+      }
+
+      if( uiClass && uiClass <= s_uiClasses )
+         return ( s_pClasses + uiClass - 1 )->szName;
    }
 
    return hb_objGetClsName( pObject );
@@ -2629,17 +2627,6 @@ HB_FUNC( __CLS_PAR00 )
 }
 
 #ifndef HB_NO_PROFILER
-static ULONG MsgToNum( char * szName )
-{
-   USHORT i;
-   ULONG nRetVal = 0;
-
-   for( i = 0; szName[ i ] != '\0'; i++)
-      nRetVal = ( nRetVal << 1 ) + szName[ i ];
-
-   return nRetVal;
-}
-
 /* profiler: It provides to the HVM the just requested method pointer */
 void * hb_mthRequested( void )
 {
@@ -2660,26 +2647,36 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
                        /* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
 {
 #ifndef HB_NO_PROFILER
-   PCLASS pClass  = s_pClasses + ( hb_parnl( 1 ) - 1 );
+   USHORT uiClass = ( USHORT ) hb_parni( 1 );
    char * cMsg    = hb_parc( 2 );
-   USHORT uiAt    = ( USHORT ) ( ( ( MsgToNum( cMsg ) ) % pClass->uiHashKey ) * BUCKET );
-   USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
-   USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
-   PMETHOD pMethod;
 
    hb_reta( 2 );
-   while( uiAt != uiLimit )
+   if( uiClass && uiClass <= s_uiClasses && cMsg && *cMsg )
    {
-      if( ! strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, cMsg ) )
+      PHB_DYNS pMsg = hb_dynsymFindName( cMsg );
+
+      if( pMsg )
       {
-         pMethod = pClass->pMethods + uiAt;
-         hb_stornl( pMethod->ulCalls, -1, 1 );
-         hb_stornl( pMethod->ulTime, -1, 2 );
-         return;
+         PCLASS pClass  = s_pClasses + ( uiClass - 1 );
+         USHORT uiAt    = ( USHORT ) ( ( hb_cls_MsgToNum( pMsg ) % pClass->uiHashKey ) * BUCKET );
+         USHORT uiMask  = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+         USHORT uiLimit = ( USHORT ) ( uiAt ? ( uiAt - 1 ) : ( uiMask - 1 ) );
+         PMETHOD pMethod;
+
+         while( uiAt != uiLimit )
+         {
+            if( pClass->pMethods[ uiAt ].pMessage->pSymbol->pDynSym = pMsg )
+            {
+               pMethod = pClass->pMethods + uiAt;
+               hb_stornl( pMethod->ulCalls, -1, 1 );
+               hb_stornl( pMethod->ulTime, -1, 2 );
+               return;
+            }
+            uiAt++;
+            if( uiAt == uiMask )
+               uiAt = 0;
+         }
       }
-      uiAt++;
-      if( uiAt == uiMask )
-         uiAt = 0;
    }
 #else
    hb_reta( 2 );

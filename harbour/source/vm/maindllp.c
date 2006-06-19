@@ -156,16 +156,16 @@ char * hb_parc( int iParam, ... )
 
 PHB_ITEM hb_param( int iParam, long lMask ) /* retrieve a generic parameter */
 {
-   PHB_ITEM pReturn;
-   FARPROC pParam=GetProcAddress( GetModuleHandle( NULL ), "_hb_param" );
-   if (pParam)
-      pReturn=((HB_PARAM)pParam)(iParam,lMask);
+   PHB_ITEM pReturn = NULL;
+   FARPROC pParam = GetProcAddress( GetModuleHandle( NULL ), "_hb_param" );
+   if( pParam )
+      pReturn = ( ( HB_PARAM ) pParam )( iParam, lMask );
    return pReturn;
 }
 
 PHB_ITEM hb_paramError( int iParam ) /* Returns either the generic parameter or a NIL item if param not provided */
 {
-   PHB_ITEM pReturn;
+   PHB_ITEM pReturn = NULL;
    FARPROC pParamError=GetProcAddress( GetModuleHandle( NULL ), "_hb_paramError" );
    if (pParamError)
       pReturn=((HB_PARAMERROR)pParamError)(iParam);
@@ -173,7 +173,7 @@ PHB_ITEM hb_paramError( int iParam ) /* Returns either the generic parameter or 
 }
 int   hb_pcount( void )          /* returns the number of suplied parameters */
 {
-   int iReturn;
+   int iReturn = 0;
    FARPROC pCounts=GetProcAddress(GetModuleHandle( NULL ), "_hb_pcount" );
    if (pCounts)
       iReturn=((HB_PCOUNTS)pCounts)();
@@ -250,7 +250,6 @@ void hb_retnlen( double dNumber, int iWidth, int iDec ) /* returns a double, wit
    FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnlen" );
    if (pRet)
       ((HB_RETNLEN)pRet)(dNumber,iWidth,iDec);
-
 }
 
 void hb_retndlen( double dNumber, int iWidth, int iDec ) /* returns a double, with specific width and decimals */
@@ -283,7 +282,7 @@ void hb_reta( ULONG ulLen )  /* returns an array with a specific length */
 
 ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex ) /* retrieve length or element type of an array parameter */
 {
-   ULONG ulReturn;
+   ULONG ulReturn = 0;
    FARPROC pParinfa=GetProcAddress( GetModuleHandle( NULL ), "_hb_parinfa" );
    if (pParinfa)
       ulReturn=((HB_PARINFA)pParinfa)(iParamNum,uiArrayIndex);
@@ -292,7 +291,7 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex ) /* retrieve length or elem
 
 ULONG hb_parinfo( int iParam ) /* Determine the param count or data type */
 {
-   ULONG ulReturn;
+   ULONG ulReturn = 0;
    FARPROC pParinfo=GetProcAddress( GetModuleHandle( NULL ), "_hb_parinfo" );
    if (pParinfo)
       ulReturn=((HB_PARINFO)pParinfo)(iParam);
@@ -818,7 +817,7 @@ void     hb_xexit( void )                         /* Deinitialize fixed memory s
 
 void * hb_xalloc( ULONG ulSize )                /* allocates memory, returns NULL on failure */
 {
-   void * pRet;
+   void * pRet = NULL;
    HB_XALLOC pXalloc =  (HB_XALLOC)GetProcAddress( GetModuleHandle( NULL ), "_hb_xalloc" );
    if (pXalloc)
       pRet=pXalloc(ulSize);
@@ -827,7 +826,7 @@ void * hb_xalloc( ULONG ulSize )                /* allocates memory, returns NUL
 
 void * hb_xgrab( ULONG ulSize )                 /* allocates memory, exits on failure */
 {
-   void * pRet;
+   void * pRet = NULL;
    HB_XGRAB pXgrab =  (HB_XGRAB)GetProcAddress( GetModuleHandle( NULL ), "_hb_xgrab" );
    if (pXgrab)
       pRet=pXgrab(ulSize);
@@ -843,7 +842,7 @@ void hb_xfree( void * pMem )                  /* frees memory */
 
 void * hb_xrealloc( void * pMem, ULONG ulSize ) /* reallocates memory */
 {
-   void * pRet;
+   void * pRet = NULL;
    HB_XREALLOC pXrealloc =  (HB_XREALLOC)GetProcAddress( GetModuleHandle( NULL ), "_hb_xrealloc" );
    if (pXrealloc)
       pRet= (void*)pXrealloc( pMem, ulSize );

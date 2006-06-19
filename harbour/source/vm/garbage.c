@@ -59,6 +59,8 @@
 #include "hbvm.h"
 #include "error.ch"
 
+#if !defined( HB_GC_PTR )
+
 /* holder of memory block information */
 /* NOTE: USHORT is used intentionally to fill up the structure to
  * full 16 bytes (on 16/32 bit environment)
@@ -80,6 +82,9 @@ typedef struct HB_GARBAGE_
 #endif
 
 #define HB_GC_PTR( p )        ( ( HB_GARBAGE_PTR ) ( ( BYTE * ) ( p ) - HB_GARBAGE_SIZE ) )
+
+#endif /* !defined( HB_GC_PTR ) */
+
 #define HB_MEM_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
 
 /* we may use a cache later */
@@ -178,18 +183,21 @@ void hb_gcFree( void *pBlock )
 }
 
 /* increment reference counter */
+#undef hb_gcRefInc
 void hb_gcRefInc( void * pBlock )
 {
    hb_xRefInc( HB_GC_PTR( pBlock ) );
 }
 
 /* decrement reference counter, return TRUE when 0 reached */
+#undef hb_gcRefDec
 BOOL hb_gcRefDec( void * pBlock )
 {
    return hb_xRefDec( HB_GC_PTR( pBlock ) );
 }
 
 /* decrement reference counter and free the block when 0 reached */
+#undef hb_gcRefFree
 void hb_gcRefFree( void * pBlock )
 {
    if( pBlock )
@@ -234,6 +242,7 @@ void hb_gcRefFree( void * pBlock )
 }
 
 /* return number of references */
+#undef hb_gcRefCount
 HB_COUNTER hb_gcRefCount( void * pBlock )
 {
    return hb_xRefCount( HB_GC_PTR( pBlock ) );

@@ -199,7 +199,6 @@ int matherr (struct exception * err)
      retval = 1;  /* don't print any message, don't set errno and use return value provided by C RTL */
    }
    return (retval);
-
 }
 
 #elif defined(HB_MATH_ERRNO)
@@ -210,11 +209,13 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
 
    HB_TRACE (HB_TR_DEBUG, ("hb_mathErrSet(%f, %d)", dResult, errCode));
 
-   switch (errCode)
+   switch( errCode )
    {
       case EDOM:
       case ERANGE:
+#if defined(EOVERFLOW)
       case EOVERFLOW:
+#endif
          break;
 
       default:
@@ -224,6 +225,8 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
          }
 #if defined(HB_OS_SUNOS)
          else if ( !finite( dResult ) )
+#elif defined(HB_OS_OS2)
+         else if ( !isfinite( dResult ) )
 #else
          else if ( isinf( dResult ) )
 #endif
@@ -240,7 +243,7 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
    hb_mathResetError();
 
    /* map math error types */
-   switch (errCode)
+   switch( errCode )
    {
       case EDOM:
          s_hb_exc.type = HB_MATH_ERR_DOMAIN;
@@ -251,12 +254,12 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
          s_hb_exc.type = HB_MATH_ERR_SING;
          s_hb_exc.error = "Calculation results in singularity";
          break;
-
+#if defined(EOVERFLOW)
       case EOVERFLOW:
          s_hb_exc.type = HB_MATH_ERR_OVERFLOW;
          s_hb_exc.error = "Calculation result too large to represent";
          break;
-
+#endif        
       default:
          s_hb_exc.type = HB_MATH_ERR_UNKNOWN;
          s_hb_exc.error = "Unknown math error";
@@ -270,9 +273,9 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
    s_hb_exc.handled = 0;
 
    mathHandler = hb_mathGetHandler();
-   if (mathHandler != NULL)
+   if( mathHandler != NULL )
    {
-      (*(mathHandler))(&s_hb_exc);
+      ( *( mathHandler ) )( &s_hb_exc );
    }
    return 1;
 }
@@ -330,94 +333,84 @@ HB_FUNC( HB_MATHERMODE )  /* ([<nNewMode>]) -> <nOldMode> */
 }
 
 /* Harbour default math error handling routine */
-int hb_matherr (HB_MATH_EXCEPTION * pexc)
+int hb_matherr( HB_MATH_EXCEPTION * pexc )
 {
+   int mode = hb_mathGetErrMode();
+   int iRet = 1;
 
-  int mode = hb_mathGetErrMode();
+   HB_TRACE(HB_TR_DEBUG, ("hb_matherr(%p)",pexc));
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_matherr(%p)",pexc));
-  if ((pexc == NULL) ||
-      ((pexc != NULL) && (pexc->handled != 0)))
-  {
-    /* error already handled by other handlers ! */
-    return (1);
-  }
+   if( pexc == NULL || pexc->handled != 0 )
+   {
+      /* error already handled by other handlers ! */
+      return 1;
+   }
 
-  if ((mode == HB_MATH_ERRMODE_USER) || (mode == HB_MATH_ERRMODE_USERDEFAULT) ||
-      (mode == HB_MATH_ERRMODE_USERCDEFAULT))
-  {
+   if( mode == HB_MATH_ERRMODE_USER || mode == HB_MATH_ERRMODE_USERDEFAULT ||
+       mode == HB_MATH_ERRMODE_USERCDEFAULT )
+   {
+      PHB_ITEM pArg1, pArg2, pError;
+      PHB_ITEM pMatherrResult;
 
-    PHB_ITEM pMatherrResult;
-    PHB_ITEM pArg1 = hb_itemPutND(NULL, pexc->arg1);
-    PHB_ITEM pArg2 = hb_itemPutND(NULL, pexc->arg2);
-    PHB_ITEM pError;
+      /* create an error object */
+      /* NOTE: In case of HB_MATH_ERRMODE_USER[C]DEFAULT, I am setting both EF_CANSUBSTITUTE and EF_CANDEFAULT to .T. here.
+         This is forbidden according to the original Cl*pper docs, but I think this reflects the situation best here:
+         The error handler can either substitute the errorneous value (by returning a numeric value) or choose the
+         default error handling (by returning .F., as usual) [martin vogel]*/
+      pError = hb_errRT_New_Subst( ES_ERROR, "MATH", EG_NUMERR, pexc->type,
+                                   pexc->error, pexc->funcname, 0, EF_CANSUBSTITUTE |
+                                   ( mode == HB_MATH_ERRMODE_USER ? 0 : EF_CANDEFAULT ) );
 
-    /* create an error object */
-    /* NOTE: In case of HB_MATH_ERRMODE_USER[C]DEFAULT, I am setting both EF_CANSUBSTITUTE and EF_CANDEFAULT to .T. here.
-       This is forbidden according to the original Cl*pper docs, but I think this reflects the situation best here:
-       The error handler can either substitute the errorneous value (by returning a numeric value) or choose the
-       default error handling (by returning .F., as usual) [martin vogel]*/
-    pError = hb_errRT_New_Subst (ES_ERROR, "MATH", EG_NUMERR, pexc->type,
-                                 pexc->error, pexc->funcname, 0, EF_CANSUBSTITUTE |
-                                 (mode == HB_MATH_ERRMODE_USER ? 0: EF_CANDEFAULT));
+      /* Assign the new array to the object data item. */
+      /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
+         math function has been called, so we always take two */
+      pArg1 = hb_itemPutND( NULL, pexc->arg1 );
+      pArg2 = hb_itemPutND( NULL, pexc->arg2 );
+      hb_errPutArgs( pError, 2, pArg1, pArg2 );
+      hb_itemRelease( pArg1 );
+      hb_itemRelease( pArg2 );
 
-    /* Assign the new array to the object data item. */
-    /* NOTE: Unfortunately, we cannot decide whether one or two parameters have been used when the
-       math function has been called, so we always take two */
-    hb_errPutArgs( pError, 2, pArg1, pArg2 );
+      /* launch error codeblock */
+      pMatherrResult = hb_errLaunchSubst( pError );
+      hb_errRelease( pError );
 
-    /* launch error codeblock */
-    pMatherrResult = hb_errLaunchSubst (pError);
-    hb_errRelease (pError);
-
-    if (pMatherrResult != NULL)
-    {
-      if (HB_IS_NUMERIC (pMatherrResult))
+      if( pMatherrResult != NULL )
       {
-         pexc->retval = hb_itemGetND (pMatherrResult);
-         hb_itemGetNLen (pMatherrResult, &(pexc->retvalwidth), &(pexc->retvaldec));
-         pexc->handled = 1;
+         if( HB_IS_NUMERIC( pMatherrResult ) )
+         {
+            pexc->retval = hb_itemGetND( pMatherrResult );
+            hb_itemGetNLen( pMatherrResult, &pexc->retvalwidth, &pexc->retvaldec );
+            pexc->handled = 1;
+         }
+         hb_itemRelease( pMatherrResult );
       }
-      hb_itemRelease (pMatherrResult);
-    }
-  }
+   }
 
-  /* math exception not handled by Harbour error routine above ? */
-  if (pexc->handled == 0)
-  {
-    int iret;
-    switch (mode)
-    {
-    case HB_MATH_ERRMODE_USER:
+   /* math exception not handled by Harbour error routine above ? */
+   if( pexc->handled == 0 )
+   {
+      switch( mode )
       {
-         /* user failed to handle the math exception, so quit the app [yes, that's the meaning of this mode !!] */
-         iret = 0;
-         hb_vmRequestQuit();
-      }; break;
+         case HB_MATH_ERRMODE_USER:
+            /* user failed to handle the math exception, so quit the app [yes, that's the meaning of this mode !!] */
+            iRet = 0;
+            hb_vmRequestQuit();
+            break;
 
-    case HB_MATH_ERRMODE_DEFAULT:
-    case HB_MATH_ERRMODE_USERDEFAULT:
-      {
-         /* return 1 to suppress C RTL error msgs, but leave error handling to the calling Harbour routine */
-         iret = 1;
-      }; break;
+         case HB_MATH_ERRMODE_DEFAULT:
+         case HB_MATH_ERRMODE_USERDEFAULT:
+            /* return 1 to suppress C RTL error msgs, but leave error handling to the calling Harbour routine */
+            break;
 
-    case HB_MATH_ERRMODE_CDEFAULT:
-    case HB_MATH_ERRMODE_USERCDEFAULT:
-      {
-         /* use the correction value supplied in pexc->retval */
-         pexc->handled = 1;
-         iret = 1;
-      }; break;
-    default:
-        iret = 1;
-    }
-    return (iret);
+         case HB_MATH_ERRMODE_CDEFAULT:
+         case HB_MATH_ERRMODE_USERCDEFAULT:
+            /* use the correction value supplied in pexc->retval */
+            pexc->handled = 1;
+            break;
+      }
+   }
 
-  }
-
-  return (1); /* error handling successful */
-
+   return iRet; /* error handling successful */
 }
 
 
@@ -432,24 +425,24 @@ int hb_matherr (HB_MATH_EXCEPTION * pexc)
 static HB_MATH_HANDLERPROC s_mathHandlerProc = hb_matherr; /* TODO: make this thread safe */
 
 /* install a harbour-like math error handler (that will be called by the matherr() function), return old handler */
-HB_MATH_HANDLERPROC hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc)
+HB_MATH_HANDLERPROC hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc )
 {
-  HB_MATH_HANDLERPROC oldHandlerProc;
+   HB_MATH_HANDLERPROC oldHandlerProc;
 
-  HB_TRACE (HB_TR_DEBUG, ("hb_mathSetHandler (%p)", handlerproc));
+   HB_TRACE (HB_TR_DEBUG, ("hb_mathSetHandler (%p)", handlerproc));
 
-  oldHandlerProc = s_mathHandlerProc;
-  s_mathHandlerProc = handlerproc;
+   oldHandlerProc = s_mathHandlerProc;
+   s_mathHandlerProc = handlerproc;
 
-  return ((HB_MATH_HANDLERPROC)oldHandlerProc);
+   return oldHandlerProc;
 }
 
 /* get current harbour-like math error handler */
-HB_MATH_HANDLERPROC hb_mathGetHandler (void)
+HB_MATH_HANDLERPROC hb_mathGetHandler( void )
 {
-  HB_TRACE (HB_TR_DEBUG, ("hb_mathGetHandler ()"));
+   HB_TRACE (HB_TR_DEBUG, ("hb_mathGetHandler ()"));
 
-  return ((HB_MATH_HANDLERPROC)s_mathHandlerProc);
+   return s_mathHandlerProc;
 }
 
 /*
@@ -465,105 +458,105 @@ static HB_MATH_HANDLERPROC sPrevMathHandler = NULL;
 
 static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
 {
-  int retval;
+   int retval;
 
-  /* call codeblock for both case: handled and unhandled exceptions */
+   /* call codeblock for both case: handled and unhandled exceptions */
 
-  if( spMathErrorBlock != NULL )
-  {
-    PHB_ITEM pArray, pRet;
-    PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
+   if( spMathErrorBlock != NULL )
+   {
+      PHB_ITEM pArray, pRet;
+      PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
 
-    pType = hb_itemPutNI (NULL, pexc->type);
-    pFuncname = hb_itemPutC (NULL, pexc->funcname);
-    pError = hb_itemPutC (NULL, pexc->error);
-    pArg1 = hb_itemPutND (NULL, pexc->arg1);
-    pArg2 = hb_itemPutND (NULL, pexc->arg2);
-    pRetval = hb_itemPutNDLen (NULL, pexc->retval, pexc->retvalwidth, pexc->retvaldec);
-    pHandled = hb_itemPutL (NULL, pexc->handled);
+      pType = hb_itemPutNI( NULL, pexc->type );
+      pFuncname = hb_itemPutC( NULL, pexc->funcname );
+      pError = hb_itemPutC( NULL, pexc->error );
+      pArg1 = hb_itemPutND( NULL, pexc->arg1 );
+      pArg2 = hb_itemPutND( NULL, pexc->arg2 );
+      pRetval = hb_itemPutNDLen( NULL, pexc->retval, pexc->retvalwidth, pexc->retvaldec );
+      pHandled = hb_itemPutL( NULL, pexc->handled );
 
-    pArray = hb_itemArrayNew (2);
-    hb_itemArrayPut (pArray, 1, pRetval);
-    hb_itemArrayPut (pArray, 2, pHandled);
+      pArray = hb_itemArrayNew( 2 );
+      hb_itemArrayPut( pArray, 1, pRetval );
+      hb_itemArrayPut( pArray, 2, pHandled );
 
-    /* launch error codeblock that can
-       a) change the members of the array = {dRetval, lHandled} to set the return value of the math C RTL routine and
-          the <exception handled flag> and it
-       b) can return an integer value to set the return value of matherr().
-       NOTE that these values are only used if lHandled was .F. and is set to .T. within the codeblock */
-    pRet = hb_itemDo (spMathErrorBlock, 6, pType, pFuncname, pError, pArg1, pArg2, pArray);
+      /* launch error codeblock that can
+         a) change the members of the array = {dRetval, lHandled} to set the return value of the math C RTL routine and
+            the <exception handled flag> and it
+         b) can return an integer value to set the return value of matherr().
+         NOTE that these values are only used if lHandled was .F. and is set to .T. within the codeblock */
+      pRet = hb_itemDo( spMathErrorBlock, 6, pType, pFuncname, pError, pArg1, pArg2, pArray );
 
-    hb_itemRelease (pType);
-    hb_itemRelease (pFuncname);
-    hb_itemRelease (pError);
-    hb_itemRelease (pArg1);
-    hb_itemRelease (pArg2);
-    hb_itemRelease (pRetval);
-    hb_itemRelease (pHandled);
+      hb_itemRelease( pType );
+      hb_itemRelease( pFuncname );
+      hb_itemRelease( pError );
+      hb_itemRelease( pArg1 );
+      hb_itemRelease( pArg2 );
+      hb_itemRelease( pRetval );
+      hb_itemRelease( pHandled );
 
-    if( pexc->handled )
-    {
-      /* math exception has already been handled, so codeblock call above was only informative */
-      retval = 1;
-    }
-    else
-    {
-      /* exception handled by codeblock ? */
-      pHandled = hb_itemArrayGet (pArray, 2);
-      if (pHandled != NULL)
+      if( pexc->handled )
       {
-         pexc->handled = hb_itemGetL( pHandled );
-         hb_itemRelease( pHandled );
-      }
-
-      if (pexc->handled)
-      {
-         /* YES ! */
-         /* extract retval for math routine and matherr() */
-         pRetval = hb_itemArrayGet (pArray, 1);
-         if (pRetval != NULL)
-         {
-            pexc->retval = hb_itemGetND (pRetval);
-            hb_itemGetNLen (pRetval, &(pexc->retvalwidth), &(pexc->retvaldec));
-            hb_itemRelease (pRetval);
-         }
-         if ((pRet != NULL) && HB_IS_NUMERIC (pRet))
-         {
-            retval = hb_itemGetNI (pRet); /* block may also return 0 to force C math lib warnings */
-            hb_itemRelease (pRet);
-         }
-         else
-         {
-            retval = 1; /* default return value to suppress C math lib warnings */
-         }
+         /* math exception has already been handled, so codeblock call above was only informative */
+         retval = 1;
       }
       else
       {
-         /* NO ! */
-         retval = 1;
-      }
-    }
-    hb_itemRelease (pArray);
-  }
-  else
-  {
-    retval = 1; /* default return value to suppress C math lib warnings */
-  }
+         /* exception handled by codeblock ? */
+         pHandled = hb_itemArrayGet( pArray, 2 );
+         if( pHandled != NULL )
+         {
+            pexc->handled = hb_itemGetL( pHandled );
+            hb_itemRelease( pHandled );
+         }
 
-  if (sPrevMathHandler != NULL)
-  {
-    if (pexc->handled)
-    {
-      /* the error is handled, so simply inform the previous handler */
-      (*sPrevMathHandler)(pexc);
-    }
-    else
-    {
-      /* else go on error handling within previous handler */
-      retval = (*sPrevMathHandler)(pexc);
-    }
-  }
-  return retval;
+         if( pexc->handled )
+         {
+            /* YES ! */
+            /* extract retval for math routine and matherr() */
+            pRetval = hb_itemArrayGet( pArray, 1 );
+            if( pRetval != NULL )
+            {
+               pexc->retval = hb_itemGetND( pRetval );
+               hb_itemGetNLen( pRetval, &pexc->retvalwidth, &pexc->retvaldec );
+               hb_itemRelease( pRetval );
+            }
+            if( pRet != NULL && HB_IS_NUMERIC( pRet ) )
+            {
+               retval = hb_itemGetNI( pRet ); /* block may also return 0 to force C math lib warnings */
+               hb_itemRelease( pRet );
+            }
+            else
+            {
+               retval = 1; /* default return value to suppress C math lib warnings */
+            }
+         }
+         else
+         {
+            /* NO ! */
+            retval = 1;
+         }
+      }
+      hb_itemRelease( pArray );
+   }
+   else
+   {
+      retval = 1; /* default return value to suppress C math lib warnings */
+   }
+
+   if( sPrevMathHandler != NULL )
+   {
+      if( pexc->handled )
+      {
+         /* the error is handled, so simply inform the previous handler */
+         (*sPrevMathHandler)( pexc );
+      }
+      else
+      {
+         /* else go on error handling within previous handler */
+         retval = (*sPrevMathHandler)( pexc );
+      }
+   }
+   return retval;
 }
 
 /* set/get math error block */
@@ -625,16 +618,16 @@ HB_FUNC( EXP )
    if( ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult;
+      double dResult, dArg = hb_parnd( 1 );
 
 #if defined(HB_MATH_ERRNO)
       errno = 0;
-      dResult = exp( hb_parnd( 1 ) );
-      if ( hb_mathErrSet( dResult, hb_parnd (1), 0.0, "EXP", errno ) )
+      dResult = exp( dArg );
+      if( hb_mathErrSet( dResult, dArg, 0.0, "EXP", errno ) )
 #else
       hb_mathResetError();
-      dResult = exp( hb_parnd( 1 ) );
-      if ( hb_mathIsMathErr() )
+      dResult = exp( dArg );
+      if( hb_mathIsMathErr() )
 #endif
       {
          /* the C-RTL provides a kind of matherr() mechanism */
@@ -674,16 +667,16 @@ HB_FUNC( LOG )
    if( ISNUM ( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult;
+      double dResult, dArg = hb_parnd( 1 );
 
 #if defined(HB_MATH_ERRNO)
       errno = 0;
-      dResult = log( hb_parnd( 1 ) );
-      if ( hb_mathErrSet( dResult, hb_parnd (1), 0.0, "LOG", errno ) )
+      dResult = log( dArg );
+      if( hb_mathErrSet( dResult, dArg, 0.0, "LOG", errno ) )
 #else
       hb_mathResetError();
-      dResult = log( hb_parnd( 1 ) );
-      if ( hb_mathIsMathErr() )
+      dResult = log( dArg );
+      if( hb_mathIsMathErr() )
 #endif
       {
          /* the C-RTL provides a kind of matherr() mechanism */
@@ -726,16 +719,16 @@ HB_FUNC( SQRT )
    if( ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult;
+      double dResult, dArg = hb_parnd( 1 );
 
 #if defined(HB_MATH_ERRNO)
       errno = 0;
-      dResult = sqrt( hb_parnd( 1 ) );
-      if ( hb_mathErrSet( dResult, hb_parnd( 1 ), 0.0, "SQRT", errno ) )
+      dResult = sqrt( dArg );
+      if ( hb_mathErrSet( dResult, dArg, 0.0, "SQRT", errno ) )
 #else
       hb_mathResetError();
-      dResult = sqrt( hb_parnd( 1 ) );
-      if ( hb_mathIsMathErr() )
+      dResult = sqrt( dArg );
+      if( hb_mathIsMathErr() )
 #endif
       {
          /* the C-RTL provides a kind of matherr() mechanism */

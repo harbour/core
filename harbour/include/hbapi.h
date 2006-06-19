@@ -513,12 +513,13 @@ extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /*
 #define hb_xRefDec( p )             (--(*HB_COUNTER_PTR( p ))==0)
 #define hb_xRefFree( p )            do { \
                                        if( hb_xRefDec( p ) ) \
-                                          hb_xfree( (p) ); \
+                                          hb_xfree( p ); \
                                     } while( 0 )
+#define hb_xRefCount( p )           (*HB_COUNTER_PTR( p ))
 
 #endif
 
-#endif
+#endif /* _HB_API_INTERNAL_ */
 
 /* #if UINT_MAX == ULONG_MAX */
 /* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
@@ -553,7 +554,14 @@ extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter 
 extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
 extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
+
+#if 0
+#define hb_gcRefInc( p )      hb_xRefInc( HB_GC_PTR( p ) )
+#define hb_gcRefDec( p )      hb_xRefDec( HB_GC_PTR( p ) )
+#define hb_gcRefCount( p )    hb_xRefCount( HB_GC_PTR( p ) )
 #endif
+
+#endif /* _HB_API_INTERNAL_ */
 extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
 extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
