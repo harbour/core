@@ -9,6 +9,12 @@
 */
 
    * harbour/source/rtl/gtwin/gtwin.c
+   * harbour/source/rtl/gtwxt/gtwxt.c
+     + Copied Windows Clipboard support from the GTWVT driver. So now 
+       it is available in Win32 console apps too. (Thanks Przemek for 
+
+2006-06-20 08:55 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/gtwin/gtwin.c
      + Copied Windows Clipboard support from the GTWVT driver. So now
        it is available in Win32 console apps too. (Thanks Przemek for
        the functions and instructions).

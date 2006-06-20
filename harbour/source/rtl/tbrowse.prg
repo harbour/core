@@ -82,6 +82,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "color.ch"
+#include "error.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "button.ch"
@@ -112,7 +113,8 @@ CLASS TBrowse
    DATA rightVisible          // Indicates position of rightmost unfrozen column in display
    DATA rowCount              // Number of visible data rows in the TBrowse display
    DATA rowPos                // Current cursor row position
-   DATA skipBlock             // Code block used to reposition data source
+   ACCESS skipBlock INLINE ::bSkipBlock
+   ASSIGN skipBlock( b ) INLINE ::SetSkipBlock( b )
    DATA stable                // Indicates if the TBrowse object is stable
 
 #ifdef HB_COMPAT_C53
@@ -188,6 +190,7 @@ CLASS TBrowse
                                                          // is .T. if it is a header and not a footer
    METHOD SetFrozenCols( nHowMany )       // Handles freezing of columns
    METHOD SetColumnWidth( oCol )          // Calcs width of given column
+   METHOD SetSkipBlock( b )               // Sets ::skipBlock()
 
    DATA aRect                             // The rectangle specified with ColorRect()
    DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
@@ -202,12 +205,13 @@ CLASS TBrowse
    DATA lHitBottom
    DATA nRecsToSkip                       // Recs to skip on next Stabilize()
    DATA nNewRowPos                        // Next position of data source (after first phase of stabilization)
-   DATA nLastRetrieved                    // Position, relative to first row, of last retrieved row (with an Eval(::SkipBlock, n))
+   DATA nLastRetrieved                    // Position, relative to first row, of last retrieved row (with an Eval(::bSkipBlock, n))
 
    DATA nHeaderHeight                     // How many lines is highest Header/Footer and so how many lines of
    DATA nFooterHeight                     // screen space I have to reserve
    DATA nFrozenWidth                      // How many screen column are not available on the left side of TBrowse display
                                           // > 0 only when there are frozen columns
+   DATA bSkipBlock                        // Code block used to reposition data source
    DATA nFrozenCols                       // Number of frozen columns on left side of TBrowse
    DATA nColumns                          // Number of columns added to TBrowse
    DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilized()
@@ -241,6 +245,7 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
    ::HeadSep         := ""
    ::RowPos          := 1
    ::nNewRowPos      := 1
+   ::bSkipBlock      := {|| NIL }
    ::stable          := .F.
    ::nLastRetrieved  := 1
    ::nRecsToSkip     := 0
@@ -306,7 +311,7 @@ return Self
 METHOD Configure( nMode ) CLASS TBrowse
 
    local n, nHeight
-   local nLeft,nRight
+   local nLeft, nRight
 
    ::lHeaders := .F.
    ::lFooters := .F.
@@ -581,7 +586,7 @@ METHOD GoBottom() CLASS TBrowse
 
    Eval( ::goBottomBlock )
    // Skip back from last record as many records as TBrowse can hold
-   nToTop := Abs( Eval( ::SkipBlock, - ( ::RowCount - 1 ) ) )
+   nToTop := Abs( Eval( ::bSkipBlock, - ( ::RowCount - 1 ) ) )
    // From top of TBrowse new row position is nToTop + 1 records away
    ::nNewRowPos := nToTop + 1
    // Last read record is first record inside TBrowse
@@ -876,7 +881,7 @@ METHOD HowManyCol( nWidth ) CLASS TBrowse
 
       if ::nColsWidth > nWidth
          /* NOTE: Why do I change frozen columns here? */
-         ::Freeze := 0
+         ::freeze := 0
          ::nColsWidth := 0
       endif
    endif
@@ -1062,11 +1067,11 @@ METHOD Stabilize() CLASS TBrowse
 
          // If I'm not under cursor (maybe I've interrupted an ongoing stabilization) I have to set data source to cursor position
          if ::nLastRetrieved <> ::nNewRowPos
-            Eval( ::SkipBlock, ::nNewRowPos - ::nLastRetrieved )
+            Eval( ::bSkipBlock, ::nNewRowPos - ::nLastRetrieved )
             ::nLastRetrieved := ::nNewRowPos
          endif
 
-         nRecsSkipped := Eval( ::SkipBlock, ::nRecsToSkip )
+         nRecsSkipped := Eval( ::bSkipBlock, ::nRecsToSkip )
 
          // I've tried to move past top or bottom margin
          if nRecsSkipped == 0
@@ -1184,7 +1189,7 @@ METHOD Stabilize() CLASS TBrowse
                //       remaining 17 rows in a single operation, I will, instead, try to skip
                //       17 times. Should be made more clever.
                if nRow <> ::nLastRetrieved
-                  if lDisplay := Eval( ::SkipBlock, nRow - ::nLastRetrieved ) == ( nRow - ::nLastRetrieved )
+                  if lDisplay := Eval( ::bSkipBlock, nRow - ::nLastRetrieved ) == ( nRow - ::nLastRetrieved )
                      ::nLastRetrieved := nRow
                   endif
                else
@@ -1232,7 +1237,7 @@ METHOD Stabilize() CLASS TBrowse
 
          // If I'm not already under cursor I have to set data source to cursor position
          if ::nLastRetrieved <> ::nNewRowPos
-            Eval( ::SkipBlock, ::nNewRowPos - ::nLastRetrieved )
+            Eval( ::bSkipBlock, ::nNewRowPos - ::nLastRetrieved )
             ::nLastRetrieved := ::nNewRowPos
          endif
 
@@ -1524,6 +1529,24 @@ METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
 
 return Self
 
+METHOD SetSkipBlock( b )
+   local oErr
+
+   if ISBLOCK( b )
+      ::bSkipBlock := b
+   elseif b != NIL
+      oErr := ErrorNew()
+      oErr:Args          := { b }
+      oErr:CanSubstitute := .T.
+      oErr:severity      := ES_ERROR
+      oErr:genCode       := EG_ARG
+      oErr:subSystem     := "TBROWSE"
+      oErr:SubCode       := 1001
+      oErr:Description   := "Argument error"
+      Eval( ErrorBlock(), oErr )
+   endif
+
+return ::bSkipBlock
 
 function TBrowseNew( nTop, nLeft, nBottom, nRight )
 
