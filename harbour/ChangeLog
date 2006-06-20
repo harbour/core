@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/utils/hbtest/rt_hvm.prg
+     + HB_SYMBOL_UNUSED() added for .prg code. It can suppress unused
+       Note that there are several false "unreachable code" warnings, 
+       and there are still quite a few unused var warnings inside 
+       codeblocks. After fixing these /w2 switch could be added to 
+     ! Fixed a number (>200) of declared but unused variable /w2 error.
+       All parts were scanned and fixed (except contrib).
+       Note that there are several false "unreachable code" warnings,
+       and there are still quite a few unused var warnings inside
+       codeblocks. After fixing these /w2 switch could be added to
+       the standard build process to maintain code quality.
+
+2006-06-21 00:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/dir.cf
+    + added EOL at EOF
 
   * harbour/config/w32/global.cf
     * changed clean and dirbase commands to work cleanly with CMD.EXE

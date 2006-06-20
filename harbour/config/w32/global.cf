@@ -34,21 +34,42 @@ ifeq ($(COMSPEC),) #location of command.com
 	endif
 endif
 
+ifeq ($(findstring cmd.exe,$(COMSPEC)),cmd.exe)
+  CMD_EXE := yes
+else
+  CMD_EXE := no
+endif
+
 RM = del
 RD = rmdir
+MD = md
 CP = copy
 MV = move
-MD = md
+
+ifeq ($(CMD_EXE),yes)
+
+RM = del /q /f
+RD = rmdir /q /s
 
 dirbase::
-	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\. $(MD) %%d
-	-@for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d
+	-@$(COMSPEC) /c \
+	'for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d'
+
+clean::
+	-@$(COMSPEC) /c \
+	'if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)'
+
+else # command.com
+
+dirbase::
+	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\nul $(MD) %%d
 
 clean::
 	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
-	-@for %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
-	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\. $(RD) %%d
-	-@for %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\NUL $(RD) %d
+	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\nul $(RD) %%d
+
+endif
+
 else  # bash
 
 ARCH_DIR = $(HB_ARCH)/

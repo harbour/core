@@ -155,8 +155,8 @@ static void hb_gt_wvt_InitStatics( void )
    _s.fontQuality      = DEFAULT_QUALITY;
    strcpy( _s.fontFace,"Courier New" );
 
-   _s.CentreWindow     = TRUE;       /* Default is to always display window in centre of screen */
-   _s.CodePage         = GetACP() ;  /* Set code page to default system */
+   _s.CentreWindow     = TRUE;            /* Default is to always display window in centre of screen */
+   _s.CodePage         = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 
    _s.Win9X            = ( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
    _s.AltF4Close       = FALSE;
