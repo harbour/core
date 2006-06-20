@@ -1757,7 +1757,7 @@ static void hb_gt_win_SetClipboard( char * szClipData, ULONG ulLen )
 {
    LPTSTR  lptstrCopy;
    HGLOBAL hglbCopy;
-   UINT    uFormat = OEM_CHARSET;
+   UINT    uFormat = CF_OEMTEXT;
 
    if ( OpenClipboard( NULL ) )
    {
@@ -1783,7 +1783,7 @@ static BOOL hb_gt_win_GetClipboard( char ** pszClipData, ULONG *pulLen )
 {
    HGLOBAL hglb;
    LPTSTR  lptstr;
-   UINT    uFormat = OEM_CHARSET;
+   UINT    uFormat = CF_OEMTEXT;
 
    *pulLen = 0;
    *pszClipData = NULL;

@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    + added hb_objHasMesage( PHB_ITEM pObject, PHB_DYNS pMessage )
+    + added hb_objGetpMethod() for backward binary compatibility with FWH
     * hidden for 3-rd party users hb_objGetMethod() and hb_objPopSuperCast()
       If for some reason 3-rd party code will need these methods please
       tell me in which case and I'll add necessary functions. Please
