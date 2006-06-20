@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      after updating local HVM functions.
+
+2006-06-20 11:33 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/gtwin/gtwin.c
+     ! Possible (double) fix to properly handle embedded zero bytes 
+
+2006-06-20 09:45 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/gtwin/gtwin.c
    * harbour/source/rtl/gtwxt/gtwxt.c
      + Copied Windows Clipboard support from the GTWVT driver. So now 

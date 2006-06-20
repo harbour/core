@@ -1753,6 +1753,64 @@ static int kbdShiftsState( void )
    return kbdShifts;
 }
 
+static void hb_gt_win_SetClipboard( char * szClipData, ULONG ulLen )
+{
+   LPTSTR  lptstrCopy;
+   HGLOBAL hglbCopy;
+   UINT    uFormat = OEM_CHARSET;
+
+   if ( OpenClipboard( NULL ) )
+   {
+      EmptyClipboard();
+
+      /* Allocate a global memory object for the text. */
+      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ulLen + 1 );
+      if ( hglbCopy )
+      {
+         /* Lock the handle and copy the text to the buffer. */
+         lptstrCopy = ( LPSTR ) GlobalLock( hglbCopy );
+         memcpy( lptstrCopy, szClipData, ulLen );
+         lptstrCopy[ ulLen ] = 0;
+         GlobalUnlock( hglbCopy );
+         /* Place the handle on the clipboard. */
+         SetClipboardData( uFormat, hglbCopy );
+      }
+      CloseClipboard();
+   }
+}
+
+static BOOL hb_gt_win_GetClipboard( char ** pszClipData, ULONG *pulLen )
+{
+   HGLOBAL hglb;
+   LPTSTR  lptstr;
+   UINT    uFormat = OEM_CHARSET;
+
+   *pulLen = 0;
+   *pszClipData = NULL;
+   if ( IsClipboardFormatAvailable( uFormat ) && OpenClipboard( NULL ) )
+   {
+      hglb = GetClipboardData( uFormat );
+      if ( hglb )
+      {
+         lptstr = ( LPSTR ) GlobalLock( hglb );
+         if ( lptstr != NULL )
+         {
+            *pulLen = strlen( lptstr );
+
+            if( *pulLen )
+            {
+               *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
+               memcpy( *pszClipData, lptstr, *pulLen + 1 );
+            }
+            GlobalUnlock( hglb );
+         }
+      }
+      CloseClipboard();
+   }
+
+   return *pulLen != 0;
+}
+
 /* *********************************************************************** */
 
 static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
@@ -1808,6 +1866,29 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bAltKeyHandling );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case GTI_CLIPBOARDDATA:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            hb_gt_win_SetClipboard( hb_itemGetCPtr( pInfo->pNewVal ),
+                                    hb_itemGetCLen( pInfo->pNewVal ) );
+         }
+         else
+         {
+            char * szClipboardData;
+            ULONG ulLen;
+            if( hb_gt_win_GetClipboard( &szClipboardData, &ulLen ) )
+            {
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+                                                szClipboardData,
+                                                strlen( szClipboardData ) );
+            }
+            else
+            {
+               pInfo->pResult = hb_itemPutC( pInfo->pResult, "" );
+            }
+         }
          break;
 
       default:
