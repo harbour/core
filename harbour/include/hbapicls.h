@@ -107,7 +107,7 @@ extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object 
 extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
 
 extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
-extern BOOL       hb_objHasMesage( PHB_ITEM pObject, PHB_DYNS pMessage );
+extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
 extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
 
 #ifndef HB_NO_PROFILER

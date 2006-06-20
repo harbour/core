@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * always try to allocate console
+    + added workaround for MSYS console which does not support
+      WriteConsoleOutput()/ReadConsoleInput()
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
     * changed default codepage to OEM
 
 2006-06-20 17:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
