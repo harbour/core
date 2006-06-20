@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * changed default codepage to OEM
+
+2006-06-20 17:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed memory leak when CLASSSEL() message was sent to non object
+      item
+
+2006-06-20 14:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    ! fixed typo in function name should be hb_objHasMessage()
+
+2006-06-20 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicls.h
   * harbour/source/vm/classes.c
     + added hb_objHasMesage( PHB_ITEM pObject, PHB_DYNS pMessage )

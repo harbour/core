@@ -952,6 +952,27 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper
    return NULL;
 }
 
+/*
+ * return TRUE if object has a given message
+ */
+BOOL hb_objHasMesage( PHB_ITEM pObject, PHB_DYNS pMessage )
+{
+   return hb_objGetMethod( pObject, pMessage->pSymbol, NULL ) != NULL;
+}
+
+/*
+ * This function is only for backward binary compatibility
+ * It will be removed in the future so please do not use it.
+ * Use hb_objHasMesage() instead.
+ */
+#if defined(__cplusplus)
+   extern "C" BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage );
+#endif
+BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
+{
+   return hb_objGetMethod( pObject, pMessage, NULL ) != NULL;
+}
+
 static PHB_SYMB hb_objFuncParam( int iParam )
 {
    PHB_ITEM pItem = hb_param( iParam, HB_IT_SYMBOL );

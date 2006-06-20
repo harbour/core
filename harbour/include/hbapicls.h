@@ -94,15 +94,20 @@ extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class in
 extern BOOL       hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 
 /* object management */
+#ifdef _HB_API_INTERNAL_
+extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, BOOL * pfPopSuper ); /* returns the method pointer of an object class */
+extern void       hb_objPopSuperCast( PHB_ITEM pObject ); /* clean super casting if necessary */
+#endif
+
 extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
 extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg );
 
 extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
 extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
 extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
-extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, BOOL * pfPopSuper ); /* returns the method pointer of an object class */
-extern void       hb_objPopSuperCast( PHB_ITEM pObject ); /* clean super casting if necessary */
-extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString );          /* returns TRUE/FALSE whether szString is an existing message for object */
+
+extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
+extern BOOL       hb_objHasMesage( PHB_ITEM pObject, PHB_DYNS pMessage );
 extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
 
 #ifndef HB_NO_PROFILER
