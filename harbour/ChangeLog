@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/config/w32/global.cf
+    * changed clean and dirbase commands to work cleanly with CMD.EXE
+
+  * harbour/source/rtl/gtwin/gtwin.c
     * always try to allocate console
     + added workaround for MSYS console which does not support
       WriteConsoleOutput()/ReadConsoleInput()

@@ -2254,7 +2254,6 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   PHB_ITEM pReturn = hb_itemNew( NULL );
    PHB_ITEM pSelf = hb_stackSelfItem();
    USHORT uiClass;
 
@@ -2265,6 +2264,7 @@ static HARBOUR hb___msgClsSel( void )
 
    if( uiClass && uiClass <= s_uiClasses )
    {
+      PHB_ITEM pReturn = hb_itemNew( NULL );
       PCLASS pClass = s_pClasses + ( uiClass - 1 );
       USHORT uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET ); /* Number of Hash keys      */
       USHORT uiPos = 0, uiAt;
