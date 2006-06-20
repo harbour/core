@@ -1228,7 +1228,7 @@ static BOOL hb_gt_wvt_GetClipboard( char ** pszClipData, ULONG *pulLen )
          lptstr = ( LPSTR ) GlobalLock( hglb );
          if ( lptstr != NULL )
          {
-            *pulLen = strlen( lptstr );
+            *pulLen = GlobalSize( hglb );
 
             if( *pulLen )
             {
@@ -1700,7 +1700,7 @@ static int hb_gt_wvt_mouse_CountButton( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_mouse_CountButton()") );
 
-  return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
+   return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
 }
 
 /* *********************************************************************** */
@@ -1989,7 +1989,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
             {
                pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
                                                 szClipboardData,
-                                                strlen( szClipboardData ) );
+                                                ulLen );
             }
             else
             {

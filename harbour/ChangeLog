@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * hidden for 3-rd party users hb_objGetMethod() and hb_objPopSuperCast()
+      If for some reason 3-rd party code will need these methods please
+      tell me in which case and I'll add necessary functions. Please
+      try to not use any non-public function. I strongly prefer to
+      add new public functions for which we will know that they are used
+      by 3-rd party code then create problems with binary compatibility
       after updating local HVM functions.
 
 2006-06-20 11:33 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)

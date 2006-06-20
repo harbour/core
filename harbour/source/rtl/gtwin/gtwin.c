@@ -1795,7 +1795,7 @@ static BOOL hb_gt_win_GetClipboard( char ** pszClipData, ULONG *pulLen )
          lptstr = ( LPSTR ) GlobalLock( hglb );
          if ( lptstr != NULL )
          {
-            *pulLen = strlen( lptstr );
+            *pulLen = GlobalSize( hglb );
 
             if( *pulLen )
             {
@@ -1882,7 +1882,7 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
             {
                pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
                                                 szClipboardData,
-                                                strlen( szClipboardData ) );
+                                                ulLen );
             }
             else
             {
