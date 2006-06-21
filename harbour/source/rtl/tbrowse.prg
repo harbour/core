@@ -1010,7 +1010,6 @@ METHOD Stabilize() CLASS TBrowse
 
    local nRow, n
    local nWidth := ::nRight - ::nLeft + 1 // Visible width of the browse
-   local cColColor                        // Column color to use
    local oStartCol, oEndCol
    local lDisplay                      // Is there something to show inside current cell?
    local nRecsSkipped                  // How many records do I really skipped?
@@ -1362,22 +1361,24 @@ return ::TApplyKey( nKey, self )
 
 METHOD InitKeys( o ) CLASS TBROWSE
 
-   Default o:aKeys to {{K_DOWN,{|Ob,nKey| Ob:Down(),0}},;
-              {K_END,{|Ob,nKey| Ob:End(),0}},;
-              {K_CTRL_PGDN,{|Ob,nKey| Ob:GoBottom(),0}},;
-              {K_CTRL_PGUP,{|Ob,nKey| Ob:GoTop(),0}},;
-              {K_HOME,{|Ob,nKey| Ob:Home(),0}},;
-              {K_LEFT,{|Ob,nKey| Ob:Left(),0}},;
-              {K_PGDN,{|Ob,nKey| Ob:PageDown(),0}},;
-              {K_PGUP,{|Ob,nKey| Ob:PageUp(),0}},;
-              {K_CTRL_END,{|Ob,nKey| Ob:PanEnd(),0}},;
-              {K_CTRL_HOME,{|Ob,nKey| Ob:PanHome(),0}},;
-              {K_CTRL_LEFT,{|Ob,nKey| Ob:PanLeft(),0}},;
-              {K_CTRL_RIGHT,{|Ob,nKey| Ob:PanRight(),0}},;
-              {K_RIGHT,{|Ob,nKey| Ob:Right(),0}},;
-              {K_UP,{|Ob,nKey| Ob:Up(),0}},;
-              {K_ESC,{|Ob,nKey| -1 }},;
-              {K_LBUTTONDOWN,{|Ob,nKey| tbmouse(ob,mRow(),mCol())}}}
+   // ; Assigned codeblock receives two parameters: {|oTBrowse, nKey| <action> }
+
+   Default o:aKeys to {{ K_DOWN       , {|Ob| Ob:Down(), 0 }},;
+                       { K_END        , {|Ob| Ob:End(), 0 }},;
+                       { K_CTRL_PGDN  , {|Ob| Ob:GoBottom(), 0 }},;
+                       { K_CTRL_PGUP  , {|Ob| Ob:GoTop(), 0 }},;
+                       { K_HOME       , {|Ob| Ob:Home(), 0 }},;
+                       { K_LEFT       , {|Ob| Ob:Left(), 0 }},;
+                       { K_PGDN       , {|Ob| Ob:PageDown(), 0 }},;
+                       { K_PGUP       , {|Ob| Ob:PageUp(), 0 }},;
+                       { K_CTRL_END   , {|Ob| Ob:PanEnd(), 0 }},;
+                       { K_CTRL_HOME  , {|Ob| Ob:PanHome(), 0 }},;
+                       { K_CTRL_LEFT  , {|Ob| Ob:PanLeft(), 0 }},;
+                       { K_CTRL_RIGHT , {|Ob| Ob:PanRight(), 0 }},;
+                       { K_RIGHT      , {|Ob| Ob:Right(), 0 }},;
+                       { K_UP         , {|Ob| Ob:Up(),0 }},;
+                       { K_ESC        , {|| -1 }},;
+                       { K_LBUTTONDOWN, {|Ob| tbmouse(ob, MRow(), MCol()) }}}
 return o
 
 

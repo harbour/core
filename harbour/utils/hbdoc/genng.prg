@@ -118,9 +118,6 @@ FUNCTION ProcessiNg()
 
    LOCAL lData         := .F.
    LOCAL lMethod       := .F.
-   LOCAL cBuffEnd
-   LOCAL nPos
-   LOCAL nPosEND
    LOCAL lIsDataLink   := .F.
    LOCAL lIsMethodLink := .F.
 
@@ -953,8 +950,6 @@ RETURN nil
 *+
 FUNCTION GenNgTable( oNgi )
 
-   LOCAL y
-   LOCAL nLen2
    LOCAL x
    LOCAL nMax
    LOCAL nSpace
@@ -963,7 +958,6 @@ FUNCTION GenNgTable( oNgi )
    LOCAL nSpace2
    LOCAL nPos1
    LOCAL nPos2
-   LOCAL LColor
    LOCAL nPos
    LOCAL aLensFItem  := {}
    LOCAL aLensSItem  := {}
@@ -976,7 +970,7 @@ FUNCTION GenNgTable( oNgi )
    LOCAL nSpace4
    LOCAL aLensTItem  := {}
    LOCAL aLensfoItem := {}
-   LOCAL nLen
+
    FOR X := 1 TO LEN( afitable )
       IF !EMPTY( afiTable[ x ] )
          AADD( aLensFItem, LEN( afiTable[ x ] ) )
@@ -1155,7 +1149,6 @@ FUNCTION ProcNgTable( cBuffer, nNum )
    LOCAL cItem2    := ''
    LOCAL cItem3    := ''
    LOCAL cItem4    := ''
-   LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
    cBuffer := ALLTRIM( cBuffer )
@@ -1286,7 +1279,6 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    LOCAL nColorPos
    LOCAL ccolor      := ''
    LOCAL cReturn     := ''
-   LOCAL ncolorend
    LOCAL nIdentLevel
    LOCAL cOldLine
    LOCAL lEndPar     := .F.
@@ -1608,7 +1600,6 @@ FUNC maxelem( a )
    LOCAL tam     := 0
    LOCAL nMax2   := 0
    LOCAL nPos    := 1
-   LOCAL cString
 
    LOCAL nCount
    FOR nCount := 1 TO nSize
@@ -1638,9 +1629,11 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
    LOCAL cBuffEnd      := ''
    LOCAL lEndBuffer    := .f.
    LOCAL nPos
-   LOCAL nPosend
    LOCAL lArgBold      := .f.
    LOCAL LFstTableItem := .t.
+
+   HB_SYMBOL_UNUSED( ongi )
+
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1739,7 +1732,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1767,7 +1759,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn
-   LOCAL x
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

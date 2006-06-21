@@ -78,4 +78,8 @@
 #command UPDATE <v1> IF <exp> TO <v2> => ;
                                 IF <exp> ; <v1> := <v2> ; END
 
+/* To suppress unused variable /w2 warnings. The code snippet will be optimized 
+   out by the compiler, so it won't cause any overhead. */
+#define HB_SYMBOL_UNUSED( symbol )  IF .F. ; symbol := symbol ; END
+
 #endif /* HB_COMMON_CH_ */

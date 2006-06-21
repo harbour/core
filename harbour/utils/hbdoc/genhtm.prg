@@ -136,7 +136,6 @@ FUNCTION ProcessWww()
    LOCAL lEndSyntax    := .F.
    LOCAL lEndReturns   := .F.
    LOCAL lEndData      := .F.
-   LOCAL lDataLink
 
    LOCAL lBlankLine     := .F.             // Blank line encountered and sent out
    LOCAL lAddBlank      := .F.             // Need to add a blank line if next line is not blank
@@ -177,7 +176,9 @@ FUNCTION ProcessWww()
    LOCAL cData          := DELIM + "DATA" + DELIM
    LOCAL cMethod        := DELIM + 'METHOD' + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
+#ifdef GAUGE
    Local aGauge,agauge1
+#endif
    LOCAL nDocs:=0
    //
    //  Entry Point
@@ -936,7 +937,9 @@ FUNCTION FormatHtmBuff( cBuffer, cStyle, oHtm )
    LOCAL lEndBuffer := .f.
    LOCAL lArgBold   := .f.
    LOCAL npos
-   LOCAL nposend
+
+   HB_SYMBOL_UNUSED( oHtm )
+
    creturn := cBuffer + ' '
    IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1101,7 +1104,6 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
    LOCAL nColorPos
    LOCAL ccolor        := ''
    LOCAL creturn       := ''
-   LOCAL ncolorend
    LOCAL nIdentLevel
    LOCAL lEndPar       := .F.
    LOCAL cLine         := ''
@@ -1407,7 +1409,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1435,7 +1436,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn:=.F.
-   LOCAL x
    LOCAL xPos
    
    if nCurdoc <= len(aCurdoc)

@@ -107,10 +107,6 @@ RETURN Self
 
 METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
 
-   LOCAL cTemp
-   LOCAL nPos
-   LOCAL cWrite
-
    cTopic := HB_OEMTOANSI( cTopic )
 
    FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )

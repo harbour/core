@@ -255,7 +255,6 @@ RETURN Self
 
 METHOD NewContent( cFile ) CLASS THTML
     
-   Local nCount
    IF Nx > 0
       FCLOSE( NX )
    ENDIF

@@ -55,7 +55,6 @@
 FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
    LOCAL nOldArea := Select()
    LOCAL xKey
-   LOCAL xPrevKey
 
    LOCAL oError
 

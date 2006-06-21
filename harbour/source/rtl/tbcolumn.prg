@@ -98,8 +98,6 @@ ENDCLASS
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   local xRes, cType, nTokenPos := 0, nL
-
    DEFAULT cHeading TO ""
 
    ::DefColor := { 1, 2, 1, 1 }

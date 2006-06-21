@@ -137,7 +137,6 @@ FUNCTION ProcessChm()
    LOCAL lEndSyntax    := .F.
    LOCAL lEndReturns   := .F.
    LOCAL lEndData      := .F.
-   LOCAL lDataLink
 
    LOCAL lBlankLine     := .F.             // Blank line encountered and sent out
    LOCAL lAddBlank      := .F.             // Need to add a blank line if next line is not blank
@@ -930,7 +929,9 @@ FUNCTION FormatChmBuff( cBuffer, cStyle, oChm )
    LOCAL lEndBuffer := .f.
    LOCAL lArgBold   := .f.
    LOCAL npos
-   LOCAL nposend
+
+   HB_SYMBOL_UNUSED( oChm )
+
    creturn := cBuffer + ' '
    IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1094,7 +1095,6 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
    LOCAL nColorPos
    LOCAL ccolor        := ''
    LOCAL creturn       := ''
-   LOCAL ncolorend
    LOCAL nIdentLevel
    LOCAL lHasFixed     := .F.
    LOCAL lEndPar       := .F.
@@ -1398,7 +1398,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1426,7 +1425,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn
-   LOCAL x
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

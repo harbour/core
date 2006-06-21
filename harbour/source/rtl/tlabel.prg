@@ -121,10 +121,11 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
    LOCAL OldMargin
-   LOCAL nLen
+// LOCAL nLen
 
-   ::aBandToPrint:={} // ARRAY(5)
+   ::aBandToPrint := {} // ARRAY(5)
    ::nCurrentCol := 1
+
    // Resolve parameters
    IF cLBLName == NIL
       err := ErrorNew()
@@ -132,12 +133,10 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       err:genCode := EG_ARG
       err:subSystem := "FRMLBL"
       Eval(ErrorBlock(), err)
-
    ELSE
       IF AT( ".", cLBLName ) == 0
          cLBLName := TRIM( cLBLName ) + ".lbl"
       ENDIF
-
    ENDIF
 
    IF lPrinter == NIL
@@ -191,9 +190,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       IF ::lOneMoreBand
          // Print the band
          AEVAL( ::aBandToPrint, { | BandLine | PrintIt( BandLine ) } )
-
       ENDIF
-
 
    RECOVER USING xBreakVal
 
@@ -221,11 +218,11 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       BREAK xBreakVal               // continue breaking
    ENDIF
 
-   SET( _SET_MARGIN, OldMargin)
+   SET( _SET_MARGIN, OldMargin )
 
    RETURN Self
 
-   METHOD ExecuteLabel() CLASS HBLabelForm
+METHOD ExecuteLabel() CLASS HBLabelForm
    LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
    LOCAL v
 
@@ -456,12 +453,12 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
       // Close file
       FCLOSE( nHandle )
+
       nFileError := FERROR()
 
    ENDIF
+
    RETURN aLabel
-
-
 
 FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lSample )
@@ -474,6 +471,7 @@ STATIC PROCEDURE PrintIt( cString )
    IF cString == NIL
       cString := ""
    ENDIF
+
    QQOUT( cString )
    QOUT()
 
@@ -514,4 +512,3 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
    ENDIF
 
    RETURN aList                       // Return the array
-

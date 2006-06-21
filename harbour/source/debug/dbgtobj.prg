@@ -167,12 +167,15 @@ Local owndsets
 
 return self
 
-method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class tdbgObject
+method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, LenArr, aArray ) class tdbgObject
 
    local nSet := oBrwSets:Cargo
-   local cTemp:=str(nSet,4)
-   local cOldname:= ::objname
-   Local nPos
+   local cTemp := str(nSet, 4)
+   local cOldname := ::objname
+
+   HB_SYMBOL_UNUSED( oWnd )
+   HB_SYMBOL_UNUSED( cName )
+   HB_SYMBOL_UNUSED( LenArr )
 
    do case
       case nKey == K_UP

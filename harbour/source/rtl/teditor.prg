@@ -877,7 +877,6 @@ METHOD Edit(nPassedKey) CLASS HBEditor
 
    LOCAL i
    LOCAL nKey
-   LOCAL lOldInsert
    LOCAL lDelAppend
    LOCAL bKeyBlock
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit

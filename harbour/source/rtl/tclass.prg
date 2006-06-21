@@ -174,7 +174,8 @@ STATIC FUNCTION New( cClassName, xSuper )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE Create(MetaClass)
+/* STATIC PROCEDURE Create(MetaClass) */
+STATIC PROCEDURE Create()
 
    LOCAL Self := QSelf()
    LOCAL n

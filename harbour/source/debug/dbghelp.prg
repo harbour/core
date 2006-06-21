@@ -60,7 +60,7 @@
 
 function __dbgHelp( nTopic )
 
-   local oDlg, n
+   local oDlg
    local cColor := If( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
                        "N/W, N/BG, R/W, R/BG" )
    local oBrw, aTopics := GetTopics()
@@ -108,6 +108,8 @@ return
 static procedure ProcessKey( nKey, oDlg, oBrw, aTopics, cColor )
 
    local n, nSkip
+
+   HB_SYMBOL_UNUSED( cColor )
 
    do case
       case nKey == K_UP

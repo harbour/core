@@ -67,7 +67,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oLineNumbers
    local oCaseSensitive
    local oMonoDisplay
-   local oPublic, oPrivate, oStatic, oLocal, oAll, oSort
+   local oPublic, oPrivate, oStatic, oLocal, oAll
    local oCallStack
    local oCBTrace
    local oPPo

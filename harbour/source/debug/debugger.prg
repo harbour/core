@@ -790,9 +790,7 @@ RETURN NIL
 
 METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
-   local cCommand, cResult, oE
-   local bLastHandler
-   local lDisplay
+   local cCommand
 
    do case
       case nKey == K_UP
@@ -1155,7 +1153,7 @@ METHOD EditVar( nVar ) CLASS TDebugger
    local cVarName   := ::aVars[ nVar ][ 1 ]
    local uVarValue  := ::aVars[ nVar ][ 2 ]
    local cVarType   := ::aVars[ nVar ][ 3 ]
-   local aArray
+// local aArray
    local cVarStr
 
    uVarValue := ::VarGetValue( ::aVars[ nVar ] )
@@ -1502,7 +1500,6 @@ return nil
 METHOD ShowCallStack() CLASS TDebugger
 
    local n := 1
-   local oCol
 
    ::lShowCallStack = .t.
 
@@ -1582,7 +1579,6 @@ return nil
 METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
    local nCount, n, m, xValue, cName
-   local cStaticName, nStaticIndex, nStaticsBase
    LOCAL aVars
    LOCAL aBVars
    
@@ -1835,7 +1831,7 @@ return nil
 
 //METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
 METHOD ShowCodeLine( nProc ) CLASS TDebugger
-LOCAL nPos, nLevel
+LOCAL nPos
 LOCAL nLine, cPrgName
 
    // we only update the stack window and up a new browse
@@ -1903,10 +1899,7 @@ return nil
 
 
 METHOD Open() CLASS TDebugger
-   LOCAL cFileName := ::InputBox( "Please enter the filename", Space( 255 ) )
-   LOCAL cPrgName
-
-   cFileName:= ALLTRIM( cFileName )
+   LOCAL cFileName := AllTrim( ::InputBox( "Please enter the filename", Space( 255 ) ) )
 
    if !EMPTY(cFileName) .AND. (cFileName != ::cPrgName .OR. valtype(::cPrgName)=='U')
       if ! File( cFileName ) .and. ! Empty( ::cPathForFiles )
@@ -2224,8 +2217,6 @@ return nil
 
 METHOD RestoreSettings() CLASS TDebugger
 
-   local n
-
    ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
 
    if LastKey() != K_ESC
@@ -2459,11 +2450,9 @@ return nil
 
 static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
-
    local nSet := oBrwSets:cargo[1]
-   local cTemp:=str(nSet,4)
+   local cTemp := str(nSet, 4)
 
-   Local nRectoMove
    do case
       case nKey == K_UP
               oBrwSets:Up()
@@ -2487,16 +2476,20 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
            endif
 
    endcase
-      RefreshVarsS(oBrwSets)
 
-      oWnd:SetCaption( cCaption + "[" + AllTrim( Str( oBrwSets:Cargo[1] ) ) + ;
-                       ".." + AllTrim( Str( nSets ) ) + "]" )
+   RefreshVarsS(oBrwSets)
+
+   oWnd:SetCaption( cCaption + "[" + AllTrim( Str( oBrwSets:Cargo[1] ) ) + ;
+                    ".." + AllTrim( Str( nSets ) ) + "]" )
 
 return
 
 static procedure SetsKeyVarPressed( nKey, oBrwSets, nSets, oWnd, bEdit )
-   Local nRectoMove
    local nSet := oBrwSets:Cargo[1]
+
+   HB_SYMBOL_UNUSED( nSets )
+   HB_SYMBOL_UNUSED( oWnd )
+
    do case
       case nKey == K_UP
               oBrwSets:Up()
@@ -2768,7 +2761,6 @@ METHOD WatchPointsShow() CLASS TDebugger
    Local oCol
    local lRepaint := .f.
    local nTop
-   LOCAL lFocused
 
    if ::lGo
       return nil
@@ -3009,7 +3001,7 @@ LOCAL lValid
 RETURN aWatch[WP_EXPR]+" <"+aWatch[WP_TYPE]+", " +cType+">: " +xVal
 
 METHOD ResizeWindows( oWindow ) CLASS TDebugger
-LOCAL oWindow2, nTop, i
+LOCAL oWindow2, nTop
 
    IF( oWindow == ::oWndVars )
       oWindow2 := ::oWndPnt
@@ -3286,7 +3278,7 @@ static procedure RefreshVarsS( oBrowse )
 
 return
 
-static function ArrayBrowseSkip( nPos, oBrwSets, n )
+static function ArrayBrowseSkip( nPos, oBrwSets )
 
 return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
        iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
@@ -3331,5 +3323,3 @@ STATIC FUNCTION strip_path( cFileName )
 
   HB_FNAMESPLIT( cFileName, NIL, @cName, @cExt )
 RETURN cName + cExt
-
-

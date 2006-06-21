@@ -42,7 +42,6 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL nFrstItem := 0
    LOCAL nLastItem := 0
 
-   LOCAL nCntr
    LOCAL bAction
    LOCAL cKey
 

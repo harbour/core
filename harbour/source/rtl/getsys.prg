@@ -324,6 +324,8 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    LOCAL cMessage
    LOCAL nOldRow, nOldCol
 
+   HB_SYMBOL_UNUSED( xDummy )
+
    IF !oGet:changed
       RETURN .T.
    ENDIF
@@ -392,8 +394,10 @@ PROCEDURE GuiApplyKey(oGet,nKey)
 
    RETURN
 
-FUNCTION GuiGetPreValidate( oGet ,oGui)
+FUNCTION GuiGetPreValidate( oGet, oGUI )
    LOCAL oGetList := __GetListActive()
+
+   HB_SYMBOL_UNUSED( oGUI )
 
    IF oGetList != NIL
       IF oGet != NIL
@@ -405,7 +409,7 @@ FUNCTION GuiGetPreValidate( oGet ,oGui)
 
    RETURN .F.
 
-FUNCTION GuiGetPostValidate( oGet,oGui )
+FUNCTION GuiGetPostValidate( oGet, oGUI )
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -413,7 +417,7 @@ FUNCTION GuiGetPostValidate( oGet,oGui )
          oGetList:oGet := oGet
       ENDIF
       
-      RETURN oGetList:GuiGetPostValidate(oGui)
+      RETURN oGetList:GuiGetPostValidate( oGUI )
    ENDIF
 
    RETURN .F.

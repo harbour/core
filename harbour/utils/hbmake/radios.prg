@@ -132,9 +132,7 @@ RETURN
 
 PROC RadioApplyKey(oGet, nKey, aGetList)
 
-LOCAL cKey
 LOCAL bKeyBlock
-LOCAL nSaveRow, nSaveCol
 
   // check for SET KEY first
   IF ( (bKeyBlock := SetKey(nKey)) <> NIL )

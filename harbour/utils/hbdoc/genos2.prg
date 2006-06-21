@@ -134,10 +134,6 @@ FUNCTION ProcessOs2()
    LOCAL oOs2
    LOCAL lData         := .F.
    LOCAL lMethod       := .F.
-   LOCAL nPos
-   LOCAL nEpos
-   LOCAL nPosend
-   LOCAL cBuffEnd
    LOCAL lIsDataLink   := .F.
    LOCAL lIsMethodLink := .F.
 
@@ -740,15 +736,13 @@ FUNCTION Formatos2Buff( cBuffer, cStyle, ongi )
 
    LOCAL cReturn  := ''
    LOCAL cLine    := ''
-   LOCAL cBuffend := ''
-   LOCAL cEnd
-   LOCAL cStart
    LOCAL coline   := ''
    LOCAL lEndBuff := .f.
 
    LOCAL nPos
-   LOCAL nPosEnd
    LOCAL lArgBold := .f.
+
+   HB_SYMBOL_UNUSED( ongi )
 
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
@@ -879,7 +873,6 @@ FUNCTION ProcOs2Table( cBuffer , nNum )
    LOCAL cItem2
    LOCAL cItem3
    LOCAL cItem4
-   LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
    cBuffer := ALLTRIM( cBuffer )
@@ -955,7 +948,6 @@ FUNC maxos2elem( a )
    LOCAL tam     := 0
    LOCAL max2    := 0
    LOCAL nPos    := 1
-   LOCAL cString
    LOCAL ncount
    FOR ncount := 1 TO nsize
       tam := LEN( a[ ncount ] )
@@ -974,7 +966,7 @@ RETURN max
 *+
 FUNCTION Genos2Table( oOs2 )
     Local x
-    Local cItem,cItem1,cItem2,cItem3
+    Local cItem,cItem1
 //   oos2:WritePar( "" )
     if nNumTableItems == 2
         citem  := str(maxos2elem(afitable),2)
@@ -1041,7 +1033,6 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
    LOCAL nColorPos
    LOCAL ccolor      := ''
    LOCAL creturn     := ''
-   LOCAL ncolorend
    LOCAL NIDENTLEVEL
    LOCAL coline
    LOCAL lEndPar     := .F.
@@ -1285,7 +1276,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1313,7 +1303,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn
-   LOCAL x
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

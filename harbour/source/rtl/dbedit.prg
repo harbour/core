@@ -96,7 +96,6 @@ FUNCTION dbEdit(;
    LOCAL cAlias
    LOCAL cFieldName
    LOCAL cHeading
-   LOCAL cBlock
    LOCAL bBlock
    LOCAL aSubArray
 

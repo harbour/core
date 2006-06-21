@@ -56,7 +56,6 @@
 #include "rt_vars.ch"
 
 FUNCTION Main_HVM()
-   LOCAL nA, nB, nC
 
 /* NOTE: CA-Cl*pper PP fails on these
    TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )

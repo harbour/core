@@ -219,9 +219,6 @@ RETURN Self
 
 METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
 
-   LOCAL cTemp
-   LOCAL nPos
-   LOCAL cWrite
    LOCAL nItem
    Local lHead:=.F.
    LOCAL nrItem,nIItem
@@ -300,7 +297,6 @@ RETURN Self
 METHOD ScanLink( cLink ) CLASS TOs2
 
    LOCAL nItem
-   LOCAL nReturn
 
    nItem := ASCAN( Self:aLinkRef, { | a, b | Upper(a[ 1 ] )== upper(cLink) } )
 
@@ -313,7 +309,6 @@ RETURN nItem
 METHOD ScanRef( cLink ) CLASS TOs2
 
    LOCAL nItem
-   LOCAL nReturn
 
    nItem := ASCAN( Self:aHeadRef, { | a | Upper(a)== upper(cLink) } )
 
@@ -326,7 +321,6 @@ RETURN nItem
 METHOD ScanInd( cLink ) CLASS TOs2
 
    LOCAL nItem
-   LOCAL nReturn
 
    nItem := ASCAN( Self:aIndRef, { | a | Upper(a)== upper(cLink) } )
 
@@ -368,7 +362,6 @@ RETURN cReturn
 
 METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TOs2
 
-   LOCAL cTemp
    LOCAL nPos
    LOCAL cWrite
 

@@ -50,6 +50,7 @@
  *
  */
 
+#include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 
@@ -59,6 +60,8 @@ function __dbgShowWorkAreas( oDebugger )
    local aAlias, aBrw, aStruc, aInfo
    local cColor
    local n1, n2, n3, cur_id
+
+   HB_SYMBOL_UNUSED( oDebugger )
 
    aAlias := {}
    aBrw   := Array(3)
@@ -273,6 +276,8 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 return nil
 
 static procedure WorkAreasKeyPressed( nKey, oBrw, oDlg, nTotal )
+
+   HB_SYMBOL_UNUSED( oDlg )
 
    do case
       case nKey == K_UP

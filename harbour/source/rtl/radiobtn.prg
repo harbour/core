@@ -149,10 +149,11 @@ METHOD kILLFOcus()  CLASS HBRadioButton
       ::display()
    endif
    return Self
-METHOD DISPLAy()  CLASS HBRadioButton
+
+METHOD DISPLAY()  CLASS HBRadioButton
    
    local cColor := SetColor(), cCurStyle, nCurRow:= Row(), nCurCol:= ;
-   Col(), cPairs, cPairs3, nPos, cPairs4, cOldCaption 
+   Col(), nPos, cPairs4, cOldCaption 
 
    cCurStyle := ::Style
    dispbegin()
@@ -180,7 +181,7 @@ METHOD DISPLAy()  CLASS HBRadioButton
    SetPos(::CapRow, ::CapCol)
    ?? cOldCaption
    if ( nPos != 0 )
-      set color to (cPairs4)
+      set color to (cPairs4) // ; FIXME: cPairs4 is not initialized
       SetPos(::CapRow, ::CapCol + nPos - 1)
       ?? SubStr(cOldCaption, nPos, 1)
    endif
@@ -189,6 +190,7 @@ METHOD DISPLAy()  CLASS HBRadioButton
    set color to (cColor)
    SetPos(nCurRow, nCurCol)
    return Self
+
 METHOD IsAccel( xValue )  CLASS HBRadioButton
    
    local nPos, cCaption, xResult

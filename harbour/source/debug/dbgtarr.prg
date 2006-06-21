@@ -129,14 +129,14 @@ Local owndsets
 
 return self
 
-method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class TDBGArray
+method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, LenArr, aArray ) Class TDBGArray
 
    local nSet := oBrwSets:cargo[1]
-   local cTemp:=str(nSet,4)
-   local cOldname:= ::arrayName
-   Local nPos
+   local cTemp := str(nSet, 4)
+   local cOldname := ::arrayName
 
-   local nRecsToSkip
+   HB_SYMBOL_UNUSED( nSets )
+
    do case
       case nKey == K_UP
               oBrwSets:Up()
@@ -307,7 +307,8 @@ static procedure RefreshVarsS( oBrowse )
    endif
    oBrowse:hilite()
    return
-static function ArrayBrowseSkip( nPos, oBrwSets,n )
+
+static function ArrayBrowseSkip( nPos, oBrwSets )
 
    return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
       iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;

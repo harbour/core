@@ -31,7 +31,7 @@ Function GetSourceFiles( lSubdir )
      Local cdrive
      Local nPos
      Local xItem
-     local ccc,ddd
+
      Default lSubdir To .t.
 
 

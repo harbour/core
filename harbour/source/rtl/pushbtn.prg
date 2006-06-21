@@ -369,7 +369,7 @@ FUNCTION _GETNUMCOL( Arg1 )
       Arg1 := ""
    ENDIF
 
-   nReturn := Ascan( aColors, { | a, b | a[ 1 ] == arg1 } )
+   nReturn := Ascan( aColors, { | a | a[ 1 ] == arg1 } )
 
    IF nReturn > 0
       RETURN aColors[ nReturn, 2 ]

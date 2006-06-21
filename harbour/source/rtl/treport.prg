@@ -451,7 +451,7 @@ METHOD ReportHeader() CLASS HBReportForm
    LOCAL nLinesInHeader := 0
    LOCAL aPageHeader    := {}
    LOCAL nHeadingLength := ::aReportData[RPT_WIDTH] - ::aReportData[RPT_LMARGIN] -30
-   LOCAL nCol,nLine,nMaxColLength,nGroup,cHeader
+   LOCAL nCol, nLine, nMaxColLength, cHeader
    LOCAL nHeadline
    LOCAL nRPageSize
    LOCAL aTempPgHeader
@@ -561,7 +561,6 @@ METHOD ExecuteReport() CLASS HBReportForm
    LOCAL nMaxLines                     // Number of lines needed by record
    LOCAL nLine                         // Counter for each record line
    LOCAL cLine                         // Current line of text for parsing
-   LOCAL nLastElement                  // Last element pointer if record is
 
    LOCAL lAnySubTotals
 
@@ -886,8 +885,6 @@ METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
    LOCAL aPaths            // array of paths
    LOCAL nPathIndex := 0   // iteration counter
 
-   LOCAL s, paths
-   LOCAL i
    LOCAL aHeader                           // temporary storage for report form headings
    LOCAL nHeaderIndex              // index into temporary header array
 
@@ -1270,7 +1267,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 *
 */
 METHOD GetColumn( cFieldsBuffer, nOffset ) CLASS HBReportForm
-   LOCAL nPointer := 0, nNumber := 0, aColumn[ RCT_COUNT ], cType,cExpr
+   LOCAL nPointer := 0, nNumber := 0, aColumn[ RCT_COUNT ], cType, cExpr
 
    // Column width
    aColumn[ RCT_WIDTH ] := BIN2W(SUBSTR(cFieldsBuffer, nOffset + ;
@@ -1371,22 +1368,20 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
 STATIC FUNCTION MakeAStr( uVar, cType )
    LOCAL cString
+
    DO CASE
    CASE UPPER(cType) == "D"
       cString := DTOC( uVar )
-
    CASE UPPER(cType) == "L"
       cString := iif( uVar, "T", "F" )
-
    CASE UPPER(cType) == "N"
       cString := STR( uVar )
-
    CASE UPPER(cType) == "C"
       cString := uVar
-
    OTHERWISE
       cString := "INVALID EXPRESSION"
    ENDCASE
+
    RETURN cString
 
 FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;

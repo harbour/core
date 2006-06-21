@@ -110,7 +110,6 @@ Static cDefLang
 
 FUNCTION main( cFile, p1, p2, p3, p4, p5, p6 )
 
-    LOCAL nPos
     LOCAL aFile    := {}
     LOCAL aDef     := {}
     LOCAL cOs      := Os()
@@ -255,7 +254,6 @@ RETURN nil
 
 FUNCTION ParseMakfi( cFile )
 
-    LOCAL nPos
     LOCAL cBuffer     := {}
     LOCAL cMacro      := "#BCC"
     LOCAL cDep        := "#DEPENDS"
@@ -546,7 +544,6 @@ RETURN nil
 
 FUNCTION Checkdefine( cTemp )
 
-    LOCAL cDef
     LOCAL nPos
     LOCAL cRead
     LOCAL aSet     := {}
@@ -594,7 +591,6 @@ RETURN nil
 FUNCTION Setcommands( cTemP )
 
     LOCAL cRead        := Alltrim( readln( @leof ) )
-    LOCAL nPos
     LOCAL nCount       := 0
     LOCAL aTempMacros  := {}
     LOCAL aLocalMacros := {}
@@ -652,7 +648,6 @@ RETURN cRead
 
 FUNCTION Replacemacros( cMacros )
 
-    LOCAL nPos
     LOCAL nCount       := 0
     LOCAL aTempMacros  := {}
     LOCAL aLocalMacros := {}
@@ -1163,8 +1158,6 @@ FUNCTION GetParaDefines( cTemp )
 RETURN NIL
 
 FUNCTION PrintMacros()
-
-    LOCAL nPos
 
     Outstd( "HBMAKE Version ", Version(), "CopyRight (c) 2000-2002 The Harbour Project" + CRLF )
     Outstd( "" + CRLF )
@@ -2317,7 +2310,6 @@ FUNC crtlibmakfile( cFile )
     LOCAL cObjDir     := 'obj' + Space( 20 )
     LOCAL lCompMod := .f.
     LOCAL x
-    LOCAL y
     LOCAL nPos as numeric
     LOCAL lGenppo  := .f.
     LOCAL getlist  := {}

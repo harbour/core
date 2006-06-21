@@ -492,7 +492,6 @@ return Self
 METHOD SetFocus() CLASS Get
 
    local lWasNil := ::buffer == NIL
-   local nFor
 
    ::hasfocus   := .t.
    ::rejected   := .f.
@@ -1212,7 +1211,6 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    local cPicFunc
    local cMask
    local nFor
-   local nAt
    local nNoEditable := 0
 
 

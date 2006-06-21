@@ -211,8 +211,6 @@ Return ::vScrolls
 
 Method SetTop( xData ) Class HBListBox
 
-     Local nTop
-
      If ( !( ISNIL( xData ) .and. ISNUMBER( xData ) ) .and. ISNUMBER( ( ::xTop := xData ) ) .and. ISOBJECT( ::vScroll ) )
         ::vScroll:start := xData + 1
      Endif
@@ -763,7 +761,6 @@ Method HITTEST( nMouseRow, nMouseCol ) Class HBListBox
 
      Local nRet,ntop
      Local nHit := 0
-     Local cColor
      If ( !::isopen )
      Elseif ( !( ISOBJECT( ::vScroll ) ) )
      Elseif ( ( nHit :=::vScroll:hittest( nMouseRow, nMouseCol ) ) != 0 )

@@ -119,9 +119,7 @@ RETURN
 
 PROC CheckApplyKey(oGet, nKey)
 
-LOCAL cKey
 LOCAL bKeyBlock
-LOCAL nSaveRow, nSaveCol
 
   // check for SET KEY first
   IF ( (bKeyBlock := SetKey(nKey)) <> NIL )
@@ -185,10 +183,8 @@ RETURN
 PROC DrawCheck(oGet)
 
 LOCAL lSelected := Eval(oGet:checkGsb)
-LOCAL oGet1
 LOCAL nSaveRow := Row()
 LOCAL nSaveCol := Col()
-LOCAL nGet
 
   DevPos(oGet:row, oGet:col - 3)
   IF lSelected

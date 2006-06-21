@@ -134,10 +134,6 @@ FUNCTION ProcessRtf()
    LOCAL lPar
    LOCAL lWrite         := .f.
    LOCAL lWasLine       := .F.
-   LOCAL nPos
-   LOCAL nEpos
-   LOCAL nPosend
-   LOCAL cBuffEnd
    LOCAL lIsDataLink    := .F.
    LOCAL lIsMethodLink  := .F.
    LOCAL cName
@@ -850,7 +846,6 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
    LOCAL nColorPos
    LOCAL ccolor      := ''
    LOCAL creturn     := ''
-   LOCAL ncolorend
    LOCAL NIDENTLEVEL
    LOCAL coline
    LOCAL lEndPar     := .F.
@@ -1016,9 +1011,6 @@ FUNCTION ProcRtfTable( cBuffer )
 
    LOCAL nPos
    LOCAL cItem
-   LOCAL cItem2
-   LOCAL cItem3
-   LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
    IF AT( "<color:", cBuffer ) > 0
@@ -1057,17 +1049,10 @@ RETURN Nil
 *+
 FUNCTION GenRtfTable( oRtf )
 
-   LOCAL y
-   LOCAL nLen2
    LOCAL x
-   LOCAL nMax
-   LOCAL nSpace
    LOCAL lCar       := .f.
    LOCAL nMax2
-   LOCAL nSpace2
-   LOCAL nPos1
    LOCAL nPos2
-   LOCAL LColor
    LOCAL nPos
    LOCAL aLensFItem := {}
    LOCAL aLensSItem := {}
@@ -1172,13 +1157,13 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle, ongi )
    LOCAL cReturn  := ''
    LOCAL cLine    := ''
    LOCAL cBuffend := ''
-   LOCAL cEnd
-   LOCAL cStart
    LOCAL coline   := ''
    LOCAL lEndBuff := .f.
    LOCAL nPos
-   LOCAL nPosEnd
    LOCAL lArgBold := .f.
+
+   HB_SYMBOL_UNUSED( ongi )
+
    creturn := cBuffer + ' '
    IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1280,7 +1265,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1308,7 +1292,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn
-   LOCAL x
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

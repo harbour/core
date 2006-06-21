@@ -72,7 +72,7 @@ ENDCLASS
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
    local nFrom  := 1, cLine, cToken
-   local lStart := .t., aArray
+   local lStart := .t.
    private oSelf
 
    if empty( cObjectText )
@@ -93,7 +93,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
               endif
 
          case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "ARRAY"
-              cLine = SubStr( cLine, At( "::", cLine ) )
+              cLine := SubStr( cLine, At( "::", cLine ) )
               M->oSelf := Self
               cLine := StrTran( cLine, "::", "oSelf:" )
               cLine := StrTran( cLine, " LEN ", " = Array( " )
@@ -210,7 +210,8 @@ return cArray
 static function ValToText( uValue )
 
    local cType := ValType( uValue )
-   local cText, cQuote := '"'
+   local cText
+   local cQuote := '"'
 
    do case
       case cType == "C"
@@ -241,16 +242,14 @@ return cText
 
 static function ExtractLine( cText, nFrom )
 
-  local cLine, nAt, nTo
-
-  nAt = At( HB_OsNewLine(), cText, nFrom )
+  local nAt := At( HB_OsNewLine(), cText, nFrom )
 
   if nAt > 0
-    cText = Substr( cText, nFrom, nAt - nFrom )
-    nFrom = nAt + 2
+    cText := Substr( cText, nFrom, nAt - nFrom )
+    nFrom := nAt + 2
   else
-    cText = Substr( cText, nFrom )
-    nFrom = Len( cText ) + 1
+    cText := Substr( cText, nFrom )
+    nFrom := Len( cText ) + 1
   endif
 
 return cText
