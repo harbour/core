@@ -8,6 +8,57 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      * updated to set version 0.46.2
+      
+   * include/hbapi.h
+   * source/vm/garbage.c
+      + added possibility to register a sweep function that will scan
+      memory block allocated with hb_gcAlloc
+
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+      * fixed 'unreachable code' warning in IF/ELSEIF
+      * fixed 'variable unused' warnings when -w3 switvh was used
+
+2006-06-22 00:25 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/common.ch
+   * harbour/source/debug/dbghelp.prg
+   * harbour/source/debug/dbgmenu.prg
+   * harbour/source/debug/dbgtarr.prg
+   * harbour/source/debug/dbgtobj.prg
+   * harbour/source/debug/dbgwa.prg
+   * harbour/source/debug/debugger.prg
+   * harbour/source/rdd/dbupdat.prg
+   * harbour/source/rtl/achoice.prg
+   * harbour/source/rtl/checkbox.prg
+   * harbour/source/rtl/dbedit.prg
+   * harbour/source/rtl/getsys.prg
+   * harbour/source/rtl/listbox.prg
+   * harbour/source/rtl/persist.prg
+   * harbour/source/rtl/pushbtn.prg
+   * harbour/source/rtl/radiobtn.prg
+   * harbour/source/rtl/tbcolumn.prg
+   * harbour/source/rtl/tbrowse.prg
+   * harbour/source/rtl/tclass.prg
+   * harbour/source/rtl/teditor.prg
+   * harbour/source/rtl/tget.prg
+   * harbour/source/rtl/tgetlist.prg
+   * harbour/source/rtl/tlabel.prg
+   * harbour/source/rtl/treport.prg
+   * harbour/utils/hbdoc/genchm.prg
+   * harbour/utils/hbdoc/genhtm.prg
+   * harbour/utils/hbdoc/genng.prg
+   * harbour/utils/hbdoc/genos2.prg
+   * harbour/utils/hbdoc/genrtf.prg
+   * harbour/utils/hbdoc/gentrf.prg
+   * harbour/utils/hbdoc/html.prg
+   * harbour/utils/hbdoc/ng.prg
+   * harbour/utils/hbdoc/os2.prg
+   * harbour/utils/hbdoc/rtf.prg
+     + HB_SYMBOL_UNUSED() added for .prg code. It can suppress unused 
+       var warnings where applicable. The code won't generate any final 
+       pcodes, so it won't cause overhead. The only current downside 
+   * harbour/utils/hbmake/radios.prg
    * harbour/utils/hbtest/rt_hvm.prg
      + HB_SYMBOL_UNUSED() added for .prg code. It can suppress unused
        Note that there are several false "unreachable code" warnings, 
