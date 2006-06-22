@@ -319,7 +319,7 @@ FUNCTION Main_ARRAY()
 #endif
    TEST_LINE( aScan( "A", "A" )               , 0           )
    TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
-   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
+   TEST_LINE( aScan( {1,2,3}, {|| NIL } )     , 0           )
    TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
 #ifdef __HARBOUR__
    TEST_LINE( aScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */

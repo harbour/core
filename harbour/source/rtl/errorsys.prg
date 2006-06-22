@@ -138,17 +138,23 @@ STATIC FUNCTION DefError( oError )
       cMessage += " " + cDOSError
    ENDIF
 
-   QOut() /// dgh - Temporary to keep DOS prompt from overwriting message.
-   QOut( cMessage )
+   OutErr( hb_OSNewLine() )
+   OutErr( cMessage )
 
-   n := 2
-   WHILE ! Empty( ProcName( n ) )
-      QOut("Called from " + ProcName( n ) + ;
-               "(" + AllTrim( Str( ProcLine( n++ ) ) ) + ")")
+   n := 1
+   WHILE ! Empty( ProcName( ++n ) )
+
+      OutErr( hb_OSNewLine() )
+      OutErr( "Called from " + ProcName( n ) + ;
+               "(" + LTrim( Str( ProcLine( n ) ) ) + ")  " )
+
    ENDDO
+
 /// For some strange reason, the DOS prompt gets written on the first line
 /// *of* the message instead of on the first line *after* the message after
 /// the program quits, unless the screen has scrolled. - dgh
+
+   ErrorLevel( 1 )
    QUIT
 
    RETURN .F.
