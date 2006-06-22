@@ -10,6 +10,7 @@ HB_GT_LIBS=\
 	gtstd \
 	gtwin \
 	gtwvt \
+	gtgui \
 #	gtcrs \
 #	gtsln \
 

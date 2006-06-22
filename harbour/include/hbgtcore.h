@@ -80,6 +80,7 @@
 #define HB_GT_QTc    HB_GT_QTC
 #define HB_GT_xvt    HB_GT_XVT
 #define HB_GT_xwc    HB_GT_XWC
+#define HB_GT_gui    HB_GT_GUI
 #define HB_GT_alleg  HB_GT_ALLEG
 
 /* These hacks are needed to force preprocessing if id/x is also a macro */
@@ -474,6 +475,8 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_REDRAW(r,c,l)             (HB_GTSUPER)->Redraw(r,c,l)
 #define HB_GTSUPER_REFRESH()                 (HB_GTSUPER)->Refresh()
 #define HB_GTSUPER_FLUSH()                   (HB_GTSUPER)->Flush()
+#define HB_GTSUPER_TONE(f,d)                 (HB_GTSUPER)->Tone(f,d)
+#define HB_GTSUPER_BELL()                    (HB_GTSUPER)->Bell()
 #define HB_GTSUPER_SETDISPCP(t,h,b)          (HB_GTSUPER)->SetDispCP(t,h,b)
 #define HB_GTSUPER_SETKEYCP(t,h)             (HB_GTSUPER)->SetKeyCP(t,h)
 #define HB_GTSUPER_INFO(i,p)                 (HB_GTSUPER)->Info(i,p)
@@ -510,5 +513,14 @@ extern HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit );
 extern HB_EXPORT BOOL hb_gtLoad( char * szGtName, PHB_GT_FUNCS pFuncTable );
 extern HB_EXPORT BOOL hb_gtUnLoad( void );
 extern HB_EXPORT void hb_gtStartupInit( void );
+
+
+/* low level GT functions common to different GTs supported by RTL */
+#if defined( HB_OS_WIN_32 )
+void hb_gt_w32_Tone( double dFrequency, double dDuration );
+void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen );
+BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
+#endif /* HB_OS_WIN_32 */
+
 
 #endif /* HB_GTCORE_H_ */

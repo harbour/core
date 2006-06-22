@@ -42,7 +42,9 @@ C_SOURCES=\
     gete.c       \
     gt.c         \
     gtapi.c      \
+    gtclip.c     \
     gtsys.c      \
+    gttone.c     \
     gtfunc.c     \
     gx.c         \
     hardcr.c     \

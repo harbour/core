@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-06-22 17:28 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/makefile.bc
+     * Updated for latest changes.
+
+2006-06-22 16:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/gtclip.c
+  + harbour/source/rtl/gttone.c
+  * harbour/include/hbgtcore.h
+    * separated low level TONE and ClipBoard code for W32
+      new functions:
+         hb_gt_w32_Tone()
+         hb_gt_w32_SetClipboard()
+         hb_gt_w32_GetClipboard()
+      Please update non GNU make files
+
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * use hb_gt_w32_*() for common GT code
+
+  * harbour/config/w32/global.cf
   + harbour/source/rtl/gtgui/Makefile
   + harbour/source/rtl/gtgui/gtgui.c
     + added GTGUI GT driver - it inherits from GTNUL and add support

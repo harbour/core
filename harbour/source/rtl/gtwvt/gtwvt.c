@@ -1186,64 +1186,6 @@ static DWORD hb_gt_wvt_ProcessMessages( void )
    return msg.wParam;
 }
 
-static void hb_gt_wvt_SetClipboard( char * szClipData, ULONG ulLen )
-{
-   LPTSTR  lptstrCopy;
-   HGLOBAL hglbCopy;
-   UINT    uFormat = ( _s.CodePage == OEM_CHARSET ) ? CF_OEMTEXT : CF_TEXT;
-
-   if ( OpenClipboard( NULL ) )
-   {
-      EmptyClipboard();
-
-      /* Allocate a global memory object for the text. */
-      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ulLen + 1 );
-      if ( hglbCopy )
-      {
-         /* Lock the handle and copy the text to the buffer. */
-         lptstrCopy = ( LPSTR ) GlobalLock( hglbCopy );
-         memcpy( lptstrCopy, szClipData, ulLen );
-         lptstrCopy[ ulLen ] = 0;
-         GlobalUnlock( hglbCopy );
-         /* Place the handle on the clipboard. */
-         SetClipboardData( uFormat, hglbCopy );
-      }
-      CloseClipboard();
-   }
-}
-
-static BOOL hb_gt_wvt_GetClipboard( char ** pszClipData, ULONG *pulLen )
-{
-   HGLOBAL hglb;
-   LPTSTR  lptstr;
-   UINT    uFormat = ( _s.CodePage == OEM_CHARSET ) ? CF_OEMTEXT : CF_TEXT;
-
-   *pulLen = 0;
-   *pszClipData = NULL;
-   if ( IsClipboardFormatAvailable( uFormat ) && OpenClipboard( NULL ) )
-   {
-      hglb = GetClipboardData( uFormat );
-      if ( hglb )
-      {
-         lptstr = ( LPSTR ) GlobalLock( hglb );
-         if ( lptstr != NULL )
-         {
-            *pulLen = GlobalSize( hglb );
-
-            if( *pulLen )
-            {
-               *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
-               memcpy( *pszClipData, lptstr, *pulLen + 1 );
-            }
-            GlobalUnlock( hglb );
-         }
-      }
-      CloseClipboard();
-   }
-
-   return *pulLen != 0;
-}
-
 static BOOL hb_gt_wvt_ValidWindowSize( int rows, int cols, HFONT hFont, int iWidth )
 {
    HDC        hdc;
@@ -1350,7 +1292,6 @@ static void hb_gt_wvt_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       hb_errInternal( 10001, "It's not a window GUI program.", "", "" );
    }
 
-   /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
    s_osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &s_osv );
 
@@ -1462,204 +1403,12 @@ static int hb_gt_wvt_ReadKey( int iEventMask )
 }
 
 /* *********************************************************************** */
-
-/*
- * Tone code copied from gtwin
- */
-
-#if defined( HB_ARCH_32BIT ) && \
-    ( defined(__BORLANDC__) || defined(_MSC_VER) || \
-      defined(__WATCOMC__) || defined(__MINGW32__) )
-static int hb_Inp9x( USHORT usPort )
-{
-   USHORT usVal;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_Inp9x(%hu)", usPort));
-
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
-
-      _DX = usPort;
-      __emit__(0xEC);         /* ASM  IN AL, DX */
-      __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
-      usVal = _AX;
-
-   #elif defined( __XCC__ )
-
-      __asm {
-               mov   dx, usPort
-               xor   ax, ax
-               in    al, dx
-               mov   usVal, ax
-            }
-
-   #elif defined( __MINGW32__ )
-      __asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
-
-   #elif defined( __WATCOMC__ )
-
-      usVal = inp( usPort );
-
-   #else
-
-      usVal = _inp( usPort );
-
-   #endif
-
-   return usVal;
-}
-
-/* *********************************************************************** */
-
-static int hb_Outp9x( USHORT usPort, USHORT usVal )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_Outp9x(%hu, %hu)", usPort, usVal));
-
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
-
-      _DX = usPort;
-      _AL = usVal;
-      __emit__(0xEE);        /* ASM OUT DX, AL */
-
-   #elif defined( __XCC__ )
-
-      __asm {
-               mov   dx, usPort
-               mov   ax, usVal
-               out   dx, al
-            }
-
-   #elif defined( __MINGW32__ )
-
-      __asm__ __volatile__ ("outb %b0,%w1": :"a" (usVal), "Nd" (usPort));
-
-   #elif defined( __WATCOMC__ )
-
-       outp( usPort, usVal );
-
-   #else
-
-      _outp( usPort, usVal );
-
-   #endif
-
-   return usVal;
-}
-
-/* *********************************************************************** */
-/* dDurat is in seconds */
-static void hb_gt_wvt_w9xTone( double dFreq, double dDurat )
-{
-   INT uLSB,uMSB;
-   ULONG lAdjFreq;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_w9xtone(%lf, %lf)", dFreq, dDurat));
-
-   /* sync with internal clock with very small time period */
-   hb_idleSleep( 0.01 );
-
-   /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-      less than < 20 hz (and so should we) to maintain compatibility .. */
-
-   if( dFreq >= 20.0 )
-   {
-      /* Setup Sound Control Port Registers and timer channel 2 */
-      hb_Outp9x(67, 182) ;
-
-      lAdjFreq = (ULONG)( 1193180 / dFreq ) ;
-
-      if( (LONG) lAdjFreq < 0 )
-         uLSB = lAdjFreq + 65536;
-      else
-         uLSB = lAdjFreq % 256;
-
-      if( (LONG) lAdjFreq < 0 )
-         uMSB = lAdjFreq + 65536;
-      else
-         uMSB = lAdjFreq / 256;
-
-
-      /* set the frequency (LSB,MSB) */
-
-      hb_Outp9x(66, uLSB);
-      hb_Outp9x(66, uMSB);
-
-      /* Get current Port setting */
-      /* enable Speaker Data & Timer gate bits */
-      /* (00000011B is bitmask to enable sound) */
-      /* Turn on Speaker - sound Tone for duration.. */
-
-      hb_Outp9x(97, hb_Inp9x( 97 ) | 3);
-
-      hb_idleSleep( dDurat );
-
-      /* Read back current Port value for Reset */
-      /* disable Speaker Data & Timer gate bits */
-      /* (11111100B is bitmask to disable sound) */
-      /* Turn off the Speaker ! */
-
-      hb_Outp9x(97, hb_Inp9x( 97 ) & 0xFC);
-
-   }
-   else
-   {
-      hb_idleSleep( dDurat );
-   }
-}
-#endif
-
-/* *********************************************************************** */
-/* dDurat is in seconds */
-static void hb_gt_wvt_wNtTone( double dFreq, double dDurat )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_wNtTone(%lf, %lf)", dFreq, dDurat));
-
-   /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-      less than < 20 hz.  Windows NT minimum is 37... */
-
-   if( dFreq >= 37.0 )
-   {
-      Beep( (ULONG) dFreq, (ULONG) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
-   }
-   else
-   {
-      hb_idleSleep( dDurat );
-   }
-}
-
-/* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%lf, %lf)", dFrequency, dDuration));
 
-   /*
-    * According to the Clipper NG, the duration in 'ticks' is truncated to the
-    * interger portion  ... Depending on the platform, Harbour allows a finer
-    * resolution, but the minimum is 1 tick (for compatibility)
-    */
-   /* Convert from ticks to seconds */
-   dDuration  = ( HB_MIN( HB_MAX( 1.0, dDuration ), ULONG_MAX ) ) / 18.2;
-
-   /* keep the frequency in an acceptable range */
-   dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
-
-   /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
-   if( _s.Win9X )
-   {
-      #if defined( HB_ARCH_32BIT ) && \
-           ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-             defined( __WATCOMC__ )  || defined(__MINGW32__) )
-         hb_gt_wvt_w9xTone( dFrequency, dDuration );
-      #else
-         hb_gt_wvt_wNtTone( dFrequency, dDuration );
-      #endif
-   }
-   /* If Windows NT or NT2k, use wNtTone, which provides TONE()
-      reset sequence support (new) */
-   else /* if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_NT ) */
-   {
-      hb_gt_wvt_wNtTone( dFrequency, dDuration );
-   }
+   hb_gt_w32_Tone( dFrequency, dDuration );
 }
 
 
@@ -1978,14 +1727,18 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_gt_wvt_SetClipboard( hb_itemGetCPtr( pInfo->pNewVal ),
+            hb_gt_w32_SetClipboard( _s.CodePage == OEM_CHARSET ?
+                                    CF_OEMTEXT : CF_TEXT,
+                                    hb_itemGetCPtr( pInfo->pNewVal ),
                                     hb_itemGetCLen( pInfo->pNewVal ) );
          }
          else
          {
             char * szClipboardData;
             ULONG ulLen;
-            if( hb_gt_wvt_GetClipboard( &szClipboardData, &ulLen ) )
+            if( hb_gt_w32_GetClipboard( _s.CodePage == OEM_CHARSET ?
+                                        CF_OEMTEXT : CF_TEXT,
+                                        &szClipboardData, &ulLen ) )
             {
                pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
                                                 szClipboardData,
