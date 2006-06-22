@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * try to enable raw mode for console stdin in W32
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * code clean-up
+
+2006-06-22 11:58 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * TODO
+     * Modify to include latests TODO and TOFIX entries,
+       removed completed tasks.
+   * doc/gtapi.txt
+     + Add a section by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+       "How to get rid of unwanted console in Windows GUI applications"
+      
+2006-06-22 10:55 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * harbour.spec
+   * include/hbver.h
       * updated to set version 0.46.2
       
    * include/hbapi.h

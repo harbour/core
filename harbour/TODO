@@ -2,76 +2,225 @@
  * $Id$
  */
 
+=======================================================================
+
                   Harbour Project To-Do list
 
 =======================================================================
 Tasks for v.1 beta:
-_______________________________________________________________________
+-------------------
 
-          Topic                              Responsible developer(s)
-===================================          =========================
+Assign to: Jean-Francois Lefebvre (JFL)
+Detail...: The following need to be added to the OO system:
+           Class Method, Multiple Constructor, Class init Support.
+Status...: Open.
 
-DBFCDX support                               Ryszard Glab
+***
 
-Remove #pragma pack() tricks                 ???
-from rdd .h files.
+Assign to: <nobody>
+Detail...: 'SAVE TO' statement doesn't work like Clipper.
+Status...: Is it still true?
 
-OO system                                    Jean-Francois Lefebvre (JFL)
-   Adding Class Method
-   Adding Multiple Constructor
-   Adding Class init Support
+***
 
-Integrate floating point methods to          ???
-avoid inequalities at 13 or more
-decimals.  See DETAILS_FLOAT below.
+Assign to: <nobody>
+Detail...: Is memofile support complete?
+Status...: Is it still true?
 
-Add missing 5.3 ord* functions.              Brian Hays
-OrdKeyVal and others are still in
-dummy.prg. Move dbcmd.c
+***
 
-'SAVE TO' statement doesn't work             ???
-like clipper's.  Is memofile
-support complete?
-[more info ???]
+Assign to: Ryszard, Przemek
+Detail...: Debugger with basic interface written in C - it's enough to
+           borrow Phil's work from xHarbour.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add missing preprocessor directives from CL5.3:
+           REINDEX: missing [NOOPTIMIZE]
+           SEEK: missing [LAST]
+           SET DESCENDING OFF
+           SET DESCENDING ON
+           SET SCOPE TO
+           SET SCOPETOP TO
+           SET SCOPEBOTTOM TO
+           SET VIDEOMODE TO
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add missing Clipper virtual memory functions.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: TBrowse() implementation still has bugs.
+Status...: Open.
 
 
 =======================================================================
 Tasks for v.1 release:
-_______________________________________________________________________
+----------------------
 
-Rewrite filesys.c to use native platform     ???
-specific file I/O with unlimited number 
-of file handles, while maintaining 
-compatibility with the CA-Cl*pper legacy 
-handle numbering system. This either 
-involves adding a linked list for the 
-translation table, or we should state that 
-only handles 0-4 are number compatible. 
-[Optimization]
+Assign to: <nobody>
+Detail...: Rewrite filesys.c to use native platform specific file I/O
+           with unlimited number of file handles, while maintaining
+           compatibility with the CA-Cl*pper legacy handle numbering
+           system. This either involves adding a linked list for the
+           translation table, or we should state that only handles 0-4
+           are number compatible.
+Status...: Open.
 
-Optimize out the need for the PUSHNIL        Ryszard Glab
-opcode before each function call.
-[Optimization]
+***
+
+Assign to: Ryszard
+Detail...: Optimize out the need for the PUSHNIL opcode before each
+           function call.
+Status...: Open.
 
 
 =======================================================================
 Tasks for after v.1 release:
-_______________________________________________________________________
+----------------------------
 
+Assign to: <nobody>
+Detail...: Dynamic multi-language compiler/runtime support.
+Status...: Open.
 
-Dynamic multi-language compiler/runtime      ???
-support
+***
 
-UNICODE support.                             ???
+Assign to: <nobody>
+Detail...: UNICODE support.
+Status...: Open.
 
-Multithreading support.                      ???
+***
+
+Assign to: <nobody>
+Detail...: Multithreading support.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add support for INET sockets.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add support for virtual file handles and registering some
+           meta handles so it will be possible to make:
+              h := fopen( "gzip:/tmp/myarchive.gz", FO_WRITE )
+              fwrite( h, cData )
+              fclose( h )
+           or:
+              h := fopen( "tcp:some.host:port", FO_WRITE )
+              ...
+           or:
+              h := fopen( "|lpr -PLaserJet", FO_WRITE )
+              ...
+           or:
+              h := fopen( "gunzip /tmp/myarchive.gz|", FO_READ )
+              ...
+           etc.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Define multi platform platform API for GTs which can mix
+           graphics objects with standard text output. Now it's
+           possible in GTXWC, GTWVT and GTALLEG. This I will discuss
+           yet also with xHarbour developers.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add GTNET driver which will allow to run Harbour application
+           remotely. GTNET will be used on server side and on client
+           side any native GT driver.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add support for remotely controlled GUI objects so we will
+           be able to create GUI programs with GTNET.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add NETRDD - meta RDD which will allow transport layer
+           between client application and server application with any
+           other chosen RDD driver. Idea similar to GTNET but for RDD
+           drivers - it's sth like ADS does.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Extended HB_IT_POINTER. In practice we can give them the
+           same functionality as for objects and use them for fast
+           creation objects at C level. We can also add HB_VALTYPE()
+           function which will return the extended type name, f.e.
+           "WINDOW", "FONT", "SOCKET" or anything what 3-rd party
+           programmers may want to use. It will greatly simplify
+           writing some libraries.
+Status...: Open.
+
 
 =======================================================================
-Detail descriptions for Tasks:
-_______________________________________________________________________
 
-DETAILS_FLOAT
-   The building of the double in val.c is simply different than how it
-   gets created when coded in source or read from a dbf
-   See Harbour archives under the subject
-      Some numbers are not as equal as others
+                  Harbour Project To-Fix list
+
+=======================================================================
+
+Assign to: Przemek
+Detail...: Eliminate using hb_stackTopItem() it causes that HVM is not
+           safe for reentrant and automatic GC activation. To not
+           reduce the speed chance the indexes in HB_STACK structure to
+           give fastest access to the most last allocated item on the
+           stack.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Clean vertical spacing in .ppo files. It's necessary to
+           strep leading blank lines from included files.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Fix setting private base for code blocks created by macro
+           compiler. Maybe it should be bound with making CLEAR MEMORY
+           safe.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: SQLRDD.
+Status...: Open.
+
+***
+
+Assign to: Ryszard
+Detail...: Hash.
+Status...: Working on it.
+
+***
+
+Assign to: <nobody>
+Detail...: Real strong typing in the compiler.
+Status...: Open.
+
+
+=======================================================================
+
