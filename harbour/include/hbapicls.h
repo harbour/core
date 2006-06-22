@@ -109,6 +109,7 @@ extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /*
 extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
 extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
+extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */

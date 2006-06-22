@@ -1899,36 +1899,49 @@ HB_FUNC( __OBJCLONE )
    }
 }
 
-void hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... )
+void hb_objSendMsg( PHB_ITEM pObject, char *sMsg, ULONG ulArg, ... )
 {
-   PHB_DYNS pMsgSym = hb_dynsymFindName( sMsg );
+   hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
+   hb_vmPush( pObject );
+   if( ulArg )
+   {
+      unsigned long i;
+      va_list ap;
 
-   if( pMsgSym )
+      va_start( ap, ulArg );
+      for( i = 0; i < ulArg; i++ )
+      {
+         hb_vmPush( va_arg( ap, PHB_ITEM ) );
+      }
+      va_end( ap );
+   }
+   hb_vmSend( (USHORT) ulArg );
+}
+
+void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
+{
+   if( pObject && pMsgSym )
    {
       hb_vmPushSymbol( pMsgSym->pSymbol );
-      hb_vmPush( pObj );
+      hb_vmPush( pObject );
 
       if( ulArg )
       {
          unsigned long i;
-
          va_list ap;
 
          va_start( ap, ulArg );
-
          for( i = 0; i < ulArg; i++ )
          {
             hb_vmPush( va_arg( ap, PHB_ITEM ) );
          }
-
          va_end( ap );
       }
-
       hb_vmSend( (USHORT) ulArg );
    }
    else
    {
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMsg()", 0 );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
    }
 }
 
@@ -1940,28 +1953,22 @@ void hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... )
 HB_FUNC( __OBJSENDMSG )
 {
    PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
-   USHORT uiPCount = hb_pcount();
+   char * szMsg = hb_parc( 2 );
 
-   if( uiPCount>=2 && pObject )    /* Object & message passed */
+   if( pObject && szMsg && *szMsg )    /* Object & message passed */
    {
-                    /*hb_dynsymFindName( hb_parc(2) );*/
-      PHB_DYNS pMsg = hb_dynsymGet( hb_parc(2) );
+      USHORT uiPCount = hb_pcount();
+      USHORT uiParam;
 
-      if( pMsg )
+      hb_vmPushSymbol( hb_dynsymGet( szMsg )->pSymbol );    /* Push message symbol */
+      hb_vmPush( pObject );                                 /* Push object */
+
+      for( uiParam = 3; uiParam <= uiPCount; ++uiParam )    /* Push arguments on stack */
       {
-         USHORT uiParam;
-
-         hb_vmPushSymbol( pMsg->pSymbol );   /* Push message symbol */
-
-         hb_vmPush( pObject );               /* Push object */
-
-         for( uiParam = 3; uiParam <= uiPCount; uiParam++ )   /* Push arguments on stack */
-         {
-            hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
-         }
-
-         hb_vmSend( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message */
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       }
+
+      hb_vmSend( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message */
    }
    else
    {
@@ -1976,29 +1983,28 @@ HB_FUNC( __OBJSENDMSG )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
+   char * szString = hb_parc( 1 );
    BOOL bFound = FALSE;
 
-   if( hb_pcount() >= 1 )
+   if( szString && *szString )
    {
+      PHB_DYNS pDynSym = hb_dynsymFindName( szString );
 
-      char * cString=hb_parc(1);
-      PHB_DYNS pDynSym = hb_dynsymFind( cString );
-
-      if( pDynSym )                             /* Find function            */
+      if( pDynSym )                                   /* Find function            */
       {
          USHORT uiClass;
 
-         hb_vmPushSymbol( pDynSym->pSymbol );        /* Push function name       */
+         hb_vmPushSymbol( pDynSym->pSymbol );         /* Push function name       */
          hb_vmPushNil();
-         hb_vmFunction( 0 );                         /* Execute super class      */
+         hb_vmFunction( 0 );                          /* Execute super class      */
 
          if( HB_IS_OBJECT( hb_stackReturnItem() ) )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
-            {                                      /* Locate the entry         */
-               if( hb_stricmp( cString , s_pClasses[ uiClass ].szName ) == 0 )
+            {                                         /* Locate the entry         */
+               if( hb_stricmp( szString , s_pClasses[ uiClass ].szName ) == 0 )
                {
-                  hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
+                  hb_retni( uiClass + 1 );            /* Entry + 1 = hb___msgClsH    */
                   bFound = TRUE;
                }
             }
@@ -2029,12 +2035,8 @@ HB_FUNC( __CLS_CNTCLSDATA )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
-   if( uiClass )
-   {
-      PCLASS pClass = s_pClasses + ( uiClass - 1 );
-      hb_retni( hb_arrayLen( pClass->pClassDatas ) );
-   }
-   else hb_retni( 0 );
+   hb_retni( uiClass && uiClass <= s_uiClasses ?
+                  hb_arrayLen( s_pClasses[ uiClass - 1 ].pClassDatas ) : 0 );
 }
 
 
@@ -2047,8 +2049,8 @@ HB_FUNC( __CLS_CNTDATA )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
-   if( uiClass )
-      hb_retni( uiClass != 0 ? s_pClasses[ uiClass - 1 ].uiDatas : 0 );
+   hb_retni( uiClass && uiClass <= s_uiClasses ?
+             s_pClasses[ uiClass - 1 ].uiDatas : 0 );
 }
 
 
@@ -2061,8 +2063,10 @@ HB_FUNC( __CLS_DECDATA )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
-   if( uiClass )
+   if( uiClass && uiClass <= s_uiClasses && s_pClasses[ uiClass - 1 ].uiDatas )
       hb_retni( s_pClasses[ uiClass - 1 ].uiDatas-- );
+   else
+      hb_retni( 0 );
 }
 
 
@@ -2075,8 +2079,11 @@ HB_FUNC( __CLS_INCDATA )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
-   if( uiClass )
-      hb_retni( uiClass != 0 ? ++s_pClasses[ uiClass - 1 ].uiDatas : 0 );
+   if( uiClass && uiClass <= s_uiClasses )
+      /* TOFIX: fix the description or change preincrementation to postinc */
+      hb_retni( ++s_pClasses[ uiClass - 1 ].uiDatas );
+   else
+      hb_retni( 0 );
 }
 
 /* NOTE: Undocumented Clipper function */

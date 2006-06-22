@@ -147,13 +147,13 @@ HB_FUNC( __HRBRUN )
             hb_xfree( argv );
          }
 
-         hb_retl( 1 );
-
          hb_hrbUnLoad( pHrbBody );
+
+         hb_retl( TRUE );
       }
       else
       {
-         hb_retl( 0 );
+         hb_retl( FALSE );
       }
    }
    else
@@ -286,6 +286,7 @@ HB_FUNC( __HRBGETFU )
 
          if( ulPos < pHrbBody->ulSymbols )
          {
+            /* TODO: return HB_IT_SYMBOL item */
             hb_retptr( ( void *) ( pHrbBody->pSymRead + ulPos ) );
          }
          else

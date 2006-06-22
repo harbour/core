@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  + harbour/source/rtl/gtgui/Makefile
+  + harbour/source/rtl/gtgui/gtgui.c
+    + added GTGUI GT driver - it inherits from GTNUL and add support
+      for TONE and CLIPBOARD
+
+2006-06-22 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    + hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... )
+    * code clean-up
+
+  * harbour/source/rtl/do.c
+    * removed old not longer necessary code - thanks to Chen.
+
+  * harbour/source/vm/runner.c
+    * added one TODO note
+
+  * harbour/source/rtl/gtstd/gtstd.c
     * try to enable raw mode for console stdin in W32
 
   * harbour/source/rdd/dbfntx/dbfntx1.c

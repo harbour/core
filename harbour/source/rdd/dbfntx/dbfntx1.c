@@ -3831,8 +3831,8 @@ static BOOL hb_ntxOrdKeyGoto( LPTAGINFO pTag, ULONG ulKeyNo )
    {
       LPTAGINFO pSavedTag = pArea->lpCurTag;
       pArea->lpCurTag = pTag;
-      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-      SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+      if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra ) == SUCCESS )
+         SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
       pArea->lpCurTag = pSavedTag;
    }
    hb_ntxTagUnLockRead( pTag );
@@ -3970,10 +3970,12 @@ static void hb_ntxOrdSetRelKeyPos( LPTAGINFO pTag, double dPos )
                hb_ntxTagGoTop( pTag );
             if( pTag->CurKeyInfo->Xtra != 0 )
             {
-               SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-               SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
-               if( pArea->fEof && !fTop )
-                  fForward = FALSE;
+               if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra ) == SUCCESS )
+               {
+                  SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+                  if( pArea->fEof && !fTop )
+                     fForward = FALSE;
+               }
             }
             else if( fTop )
                SELF_GOTO( ( AREAP ) pArea, 0 );
@@ -3983,8 +3985,8 @@ static void hb_ntxOrdSetRelKeyPos( LPTAGINFO pTag, double dPos )
          if( !fForward )
          {
             hb_ntxTagGoBottom( pTag );
-            SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-            if( pTag->CurKeyInfo->Xtra != 0 )
+            if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra ) == SUCCESS &&
+                pTag->CurKeyInfo->Xtra != 0 )
             {
                pArea->fBottom = TRUE;
                SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
@@ -4053,8 +4055,8 @@ static BOOL hb_ntxOrdSkipUnique( LPTAGINFO pTag, LONG lDir )
       }
       hb_ntxTagUnLockRead( pTag );
 
-      SELF_GOTO( ( AREAP ) pArea, fEof ? 0 : pTag->CurKeyInfo->Xtra );
-      if( !fEof )
+      if( SELF_GOTO( ( AREAP ) pArea, fEof ? 0 : pTag->CurKeyInfo->Xtra ) == SUCCESS &&
+          !fEof )
       {
          SELF_SKIPFILTER( ( AREAP ) pArea, ( fForward || fOut ) ? 1 : -1 );
          if( ! fForward && fOut )
@@ -4115,8 +4117,8 @@ static BOOL hb_ntxOrdSkipEval( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pEval )
             if( hb_ntxEvalSeekCond( pTag, pEval ) )
             {
                ULONG ulRecNo = pArea->ulRecNo;
-               SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 );
-               if( pArea->ulRecNo == ulRecNo || hb_ntxEvalSeekCond( pTag, pEval ) )
+               if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
+                   pArea->ulRecNo == ulRecNo || hb_ntxEvalSeekCond( pTag, pEval ) )
                {
                   fFound = TRUE;
                   break;
@@ -4230,8 +4232,8 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
                ULONG ulRecNo = pTag->CurKeyInfo->Xtra;
                if( SELF_GOTO( ( AREAP ) pArea, ulRecNo ) != SUCCESS )
                   break;
-               SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 );
-               if( pArea->ulRecNo == ulRecNo ||
+               if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
+                   pArea->ulRecNo == ulRecNo ||
                    hb_strMatchWild( pTag->CurKeyInfo->key, szPattern ) )
                {
                   fFound = TRUE;
@@ -4342,8 +4344,8 @@ static BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
             if( hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
             {
                ULONG ulRecNo = pArea->ulRecNo;
-               SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 );
-               if( pArea->ulRecNo == ulRecNo ||
+               if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
+                   pArea->ulRecNo == ulRecNo ||
                    hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
                {
                   fFound = TRUE;
@@ -4739,6 +4741,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
       {
+         /* TODO: add RT error */
          hb_errInternal( 9999, "hb_ntxSortWritePage: Can't create temporary file.", "", "" );
       }
       pSort->szTempFileName = hb_strdup( ( char * ) szName );
@@ -4747,6 +4750,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
    pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
    if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
    {
+      /* TODO: add RT error */
       hb_errInternal( 9999, "hb_ntxSortWritePage: Write error in temporary file.", "", "" );
    }
    pSort->ulKeys = 0;
@@ -4766,6 +4770,7 @@ static void hb_ntxSortGetPageKey( LPNTXSORTINFO pSort, ULONG ulPage,
       if( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
           hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize )
       {
+         /* TODO: add RT error */
          hb_errInternal( 9999, "hb_ntxSortGetPageKey: Read error from temporary file.", "", "" );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
@@ -7079,9 +7084,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
                   ulRecNo = ( ULONG ) dPos * ulRecCount + 1;
                   if( ulRecNo >= ulRecCount )
                      ulRecNo = ulRecCount;
-                  SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-                  SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
-                  if( pArea->fEof )
+                  if( SELF_GOTO( ( AREAP ) pArea, ulRecNo ) == SUCCESS &&
+                      SELF_SKIPFILTER( ( AREAP ) pArea, 1 ) == SUCCESS &&
+                      pArea->fEof )
                      SELF_GOTOP( ( AREAP ) pArea );
                }
                pArea->lpCurTag = pSavedTag;
@@ -7091,17 +7096,19 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
                ULONG ulRecNo = 0, ulRecCount = 0;
                double dPos = 0.0;
                /* resolve any pending relations */
-               SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
-               if( !pArea->fPositioned )
+               if( SELF_RECNO( ( AREAP ) pArea, &ulRecNo ) == SUCCESS )
                {
-                  if( ulRecNo > 1 )
-                     dPos = 1.0;
-               }
-               else
-               {
-                  SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
-                  if( ulRecCount != 0 )
-                     dPos = ( 0.5 + ulRecNo ) / ulRecCount;
+                  if( !pArea->fPositioned )
+                  {
+                     if( ulRecNo > 1 )
+                        dPos = 1.0;
+                  }
+                  else
+                  {
+                     SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
+                     if( ulRecCount != 0 )
+                        dPos = ( 0.5 + ulRecNo ) / ulRecCount;
+                  }
                }
                hb_itemPutND( pInfo->itmResult, dPos );
             }
@@ -7340,9 +7347,20 @@ static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( pOrderInfo->itmOrder )
    {
-      /* TODO: In Clipper tag is not changed when bad name is given */
+      /*
+       * In Clipper tag is not changed when bad name is given in DBFNTX
+       * but not in DBFCDX. I'd like to keep the same behavior in
+       * [x]Harbour RDDs and I chosen DBFCDX one as default. [druzus]
+       */
+#ifdef HB_C52_STRICT
+      LPTAGINFO pTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
+                                      pOrderInfo->atomBagName );
+      if( pTag )
+         pArea->lpCurTag = pTag;
+#else
       pArea->lpCurTag = hb_ntxFindTag( pArea, pOrderInfo->itmOrder,
                                        pOrderInfo->atomBagName );
+#endif
    }
 
    return SUCCESS;

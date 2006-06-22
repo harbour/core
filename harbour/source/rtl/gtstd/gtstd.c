@@ -221,10 +221,15 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    {
       struct winsize win;
 
-      if ( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
+      if( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
          HB_GTSUPER_RESIZE( win.ws_row, win.ws_col );
       }
+   }
+#elif defined( HB_WIN32_IO )
+   if( s_bStdinConsole )
+   {
+      SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0x0000 );
    }
 #endif
 }

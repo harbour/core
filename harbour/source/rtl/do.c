@@ -82,10 +82,7 @@ HB_FUNC( DO )
          }
          else
          {
-            PHB_ITEM pArgsArray = hb_arrayBaseParams();
-
             hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), HB_ERR_ARGS_BASEPARAMS );
-            hb_itemRelease( pArgsArray );
             return;
          }
       }
