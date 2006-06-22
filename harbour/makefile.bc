@@ -167,6 +167,7 @@ GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
 GTWVT_LIB    = $(LIB_DIR)\gtwvt.lib 
+GTGUI_LIB    = $(LIB_DIR)\gtgui.lib 
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
@@ -203,7 +204,8 @@ HB_GT_LIBS = \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
-   $(GTWVT_LIB)  
+   $(GTWVT_LIB) \
+   $(GTGUI_LIB)  
 
 !if !$d(HB_GT_LIB)
    HB_GT_LIB = $(GTWIN_LIB)
@@ -260,8 +262,10 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gtapiu.obj \
+   $(OBJ_DIR)\gtclip.obj \
    $(OBJ_DIR)\gtfunc.obj \
    $(OBJ_DIR)\gtsys.obj \
+   $(OBJ_DIR)\gttone.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\hbffind.obj \
@@ -710,6 +714,13 @@ GTWVT_LIB_OBJS = \
    $(OBJ_DIR)\gtwvt.obj 
 
 #
+# GTGUI.LIB rules
+#
+
+GTGUI_LIB_OBJS = \
+   $(OBJ_DIR)\gtgui.obj 
+
+#
 # HARBOUR.EXE rules
 #
 
@@ -874,6 +885,7 @@ $(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)  : $(GTSTD_LIB_OBJS)
 $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 $(GTWVT_LIB)  : $(GTWVT_LIB_OBJS)
+$(GTGUI_LIB)  : $(GTGUI_LIB_OBJS)
 #
 # COMMON.LIB dependencies
 #
@@ -1634,11 +1646,19 @@ $(OBJ_DIR)\gtapiu.obj : $(RTL_DIR)\gtapiu.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\gtclip.obj : $(RTL_DIR)\gtclip.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\gtfunc.obj : $(RTL_DIR)\gtfunc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\gtsys.obj : $(RTL_DIR)\gtsys.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\gttone.obj : $(RTL_DIR)\gttone.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -2860,6 +2880,14 @@ $(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gtwin\gtwin.c
 #
 
 $(OBJ_DIR)\gtwvt.obj : $(RTL_DIR)\gtwvt\gtwvt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTWVT_LIB) $(ARFLAGS) -+$@,,
+
+#
+# GTGUI.LIB dependencies
+#
+
+$(OBJ_DIR)\gtgui.obj : $(RTL_DIR)\gtgui\gtgui.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(GTWVT_LIB) $(ARFLAGS) -+$@,,
 

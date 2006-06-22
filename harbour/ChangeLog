@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+       a wrong fix back then.)
+  * harbour/makefile.bc
+    * Updated for latest changes.
+     * Removed one codeblock unused var warning.
 
 2006-06-22 17:28 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/makefile.bc
