@@ -542,6 +542,13 @@ extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /
 typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
 typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
 
+#define HB_GARBAGE_SWEEPER( hbfunc )   BOOL hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
+typedef HB_GARBAGE_SWEEPER( HB_GARBAGE_SWEEPER_ );
+typedef HB_GARBAGE_SWEEPER_ * HB_GARBAGE_SWEEPER_PTR;
+
+extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
+extern void  hb_gcUnregisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
+
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 

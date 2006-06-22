@@ -1460,9 +1460,9 @@ IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
 
-IfElseIf   : ELSEIF { hb_compLinePush(); } Expression Crlf
-                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  hb_compExprDelete( hb_compExprGenPush( $3 ) );
+IfElseIf   : ELSEIF { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); } 
+                Expression Crlf
+                { hb_compExprDelete( hb_compExprGenPush( $3 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
                 }
                 EmptyStats
@@ -1470,9 +1470,9 @@ IfElseIf   : ELSEIF { hb_compLinePush(); } Expression Crlf
                   hb_compGenJumpHere( $<iNumber>5 );
                 }
 
-           | IfElseIf ELSEIF { hb_compLinePush(); } Expression Crlf
-                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  hb_compExprDelete( hb_compExprGenPush( $4 ) );
+           | IfElseIf ELSEIF { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); } 
+                Expression Crlf
+                { hb_compExprDelete( hb_compExprGenPush( $4 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
                 }
                 EmptyStats

@@ -104,6 +104,15 @@ static HB_GARBAGE_PTR s_pCurrBlock = NULL;
 /* pointer to locked memory blocks */
 static HB_GARBAGE_PTR s_pLockedBlock = NULL;
 
+/* list of functions that sweeps external memory blocks */
+typedef struct _HB_GARBAGE_EXTERN {
+   HB_GARBAGE_SWEEPER_PTR pFunc;
+   void * pBlock;
+   struct _HB_GARBAGE_EXTERN *pNext;
+} HB_GARBAGE_EXTERN, *HB_GARBAGE_EXTERN_PTR;
+
+static HB_GARBAGE_EXTERN_PTR s_pSweepExtern = NULL;
+
 /* pointer to memory blocks that will be deleted */
 static HB_GARBAGE_PTR s_pDeletedBlock = NULL;
 
@@ -397,6 +406,62 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
    /* all other data types don't need the GC */
 }
 
+/* Register a function which sweeps memory blocks stored outside of
+ * internal harbour structures
+ *
+ * NOTICE!: Cargo have to be a pointer to memory allocated with
+ *          hb_gcAlloc()
+ */
+void hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
+{
+   HB_GARBAGE_EXTERN_PTR pExt;
+   
+   pExt = ( HB_GARBAGE_EXTERN_PTR ) hb_xgrab( sizeof( HB_GARBAGE_EXTERN ) );
+   pExt->pFunc = pSweep;
+   pExt->pBlock = Cargo;
+   pExt->pNext = NULL;
+   
+   if( s_pSweepExtern == NULL )
+   {
+      s_pSweepExtern = pExt;
+   }
+   else
+   {
+      pExt->pNext = s_pSweepExtern;
+      s_pSweepExtern = pExt;
+   }
+   
+}
+
+void hb_gcUnregisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
+{
+   HB_GARBAGE_EXTERN_PTR pExt;
+   HB_GARBAGE_EXTERN_PTR pPrev;
+
+   pPrev = pExt = s_pSweepExtern;
+   while( pExt )
+   {
+      if( pExt->pFunc == pSweep && pExt->pBlock == Cargo )
+      {
+         if( pExt == s_pSweepExtern )
+         {
+            s_pSweepExtern = pExt->pNext;
+         }
+         else
+         {
+            pPrev->pNext = pExt->pNext;
+         }
+         
+         hb_xfree( (void *) pExt );
+         pExt = NULL;
+      }
+      else
+      {
+         pPrev = pExt;
+         pExt = pExt->pNext;
+      }
+   }
+}
 
 void hb_gcCollect( void )
 {
@@ -426,6 +491,23 @@ void hb_gcCollectAll( void )
       hb_memvarsIsMemvarRef();
       hb_gcItemRef( hb_stackReturnItem() );
       hb_clsIsClassRef();
+      
+      if( s_pSweepExtern )
+      {
+         HB_GARBAGE_EXTERN_PTR pExt = s_pSweepExtern;
+         
+         do
+         {
+            if( ( pExt->pFunc )( pExt->pBlock ) )
+            {
+               /* block is still used */
+               pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pExt->pBlock - HB_GARBAGE_SIZE );
+               pAlloc->used ^= HB_GC_USED_FLAG;
+            }
+            pExt = pExt->pNext;
+         }
+         while( pExt );
+      }
 
       /* check list of locked block for blocks referenced from
        * locked block

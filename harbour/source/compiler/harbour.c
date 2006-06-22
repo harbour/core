@@ -2306,12 +2306,7 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
-         if ( hb_comp_iWarnings < 3 )
-            pVars->iUsed |= VU_USED;
-         /*
-           else
-           Handled by hb_compStrongType()
-         */
+         pVars->iUsed |= VU_USED;
 
          return wVar;
       }
