@@ -9,6 +9,10 @@
 */
 
 
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    * changed 'char *' to 'const char *' in hb_gtSetDefault(), hb_gtLoad()
+
 2006-06-22 21:41 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
      ! Fixed to use OutErr() instead of QOut() for CA-Cl*pper 
      * Fix to prev.

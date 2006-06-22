@@ -2889,7 +2889,7 @@ $(OBJ_DIR)\gtwvt.obj : $(RTL_DIR)\gtwvt\gtwvt.c
 
 $(OBJ_DIR)\gtgui.obj : $(RTL_DIR)\gtgui\gtgui.c
    $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(GTWVT_LIB) $(ARFLAGS) -+$@,,
+   tlib $(GTGUI_LIB) $(ARFLAGS) -+$@,,
 
 
 #
