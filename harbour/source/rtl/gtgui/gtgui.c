@@ -54,9 +54,32 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME   GUI
 
 #define HB_OS_WIN_32_USED
+#include "hbapi.h"
+
+
+/*
+ * This GT should be called GUI but we introduce a hack to make
+ * Windows users happy ;-) and we will change its name to the
+ * one used by default GT REQUESTed by our RTL library, [druzus]
+ */
+
+#if defined( HB_OS_WIN_32 )
+
+#if defined(HB_GT_DEFAULT)
+#  define HB_GT_NAME HB_GT_DEFAULT
+#elif defined(HB_GT_LIB)
+#  define HB_GT_NAME HB_GT_LIB
+#else
+#  define HB_GT_NAME WIN
+#endif
+
+#else
+
+#define HB_GT_NAME   GUI
+
+#endif
 
 #include "hbgtcore.h"
 #include "hbinit.h"

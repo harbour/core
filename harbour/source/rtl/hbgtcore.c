@@ -2725,7 +2725,7 @@ static char * hb_gtFindDefault( void )
       return NULL;
 }
 
-static int hb_gtFindEntry( char * pszID )
+static int hb_gtFindEntry( const char * pszID )
 {
    int iPos;
 
@@ -2740,7 +2740,7 @@ static int hb_gtFindEntry( char * pszID )
    return -1;
 }
 
-HB_EXPORT void hb_gtSetDefault( char * szGtName )
+HB_EXPORT void hb_gtSetDefault( const char * szGtName )
 {
    hb_strncpy( s_gtNameBuf, szGtName, HB_GT_NAME_MAX_ );
    s_defaultGT = s_gtNameBuf;
@@ -2756,7 +2756,7 @@ HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit )
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_gtLoad( char * szGtName, PHB_GT_FUNCS pFuncTable )
+HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
 {
    int iPos;
 

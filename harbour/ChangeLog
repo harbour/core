@@ -9,6 +9,16 @@
 */
 
 
+2006-06-25 08:32 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * TODO
+     * Change one assignment from Przemek to Ryszard
+
+2006-06-23 02:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtgui/Makefile
+  * harbour/source/rtl/gtgui/gtgui.c
+    * hacked GTGUI for W32 to be compiled using the same name as RTL default
+      GT driver (GTWIN).
+
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c
     * changed 'char *' to 'const char *' in hb_gtSetDefault(), hb_gtLoad()

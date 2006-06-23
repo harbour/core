@@ -508,9 +508,9 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_GFXTEXT(t,l,s,c,h,w)      (HB_GTSUPER)->GfxPrimitive(t,l,s,c,h,w)
 #define HB_GTSUPER_WHOCARES(p)               (HB_GTSUPER)->WhoCares(p)
 
-extern HB_EXPORT void hb_gtSetDefault( char * szGtName );
+extern HB_EXPORT void hb_gtSetDefault( const char * szGtName );
 extern HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit );
-extern HB_EXPORT BOOL hb_gtLoad( char * szGtName, PHB_GT_FUNCS pFuncTable );
+extern HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable );
 extern HB_EXPORT BOOL hb_gtUnLoad( void );
 extern HB_EXPORT void hb_gtStartupInit( void );
 
