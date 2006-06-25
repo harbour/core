@@ -190,7 +190,7 @@ Status...: Open.
 
 ***
 
-Assign to: Przemek
+Assign to: Ryszard
 Detail...: Clean vertical spacing in .ppo files. It's necessary to
            strep leading blank lines from included files.
 Status...: Open.

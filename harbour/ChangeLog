@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * include/hbapi.h
+   * source/vm/garbage.c
+      * fixed to call hb_gcUnregisterSweep before the memory
+      block clean-up
 
 2006-06-25 08:32 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * TODO
