@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * BCC warnings clean-up - synced with xHarbour
+
+  * harbour/source/rtl/empty.c
+    * added HB_IT_SYMBOL
 
 2006-06-26 14:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/en/var.txt

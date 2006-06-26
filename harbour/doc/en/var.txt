@@ -545,7 +545,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compatible
+ *      This function is CA-Clipper compatible
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $FILES$
@@ -677,28 +677,30 @@
  *  $RETURNS$
  *      <cRetType> a string indicating the type of the passed expression.
  *
- *  <table>
- *    <cRetType>   Meaning
+ *      <table>
+ *        <cRetType>   Meaning
  *
- *    "A"          array
- *    "B"          block
- *    "C"          string
- *    "D"          date
- *    "L"          logical
- *    "M"          memo
- *    "N"          numeric
- *    "O"          object
- *    "U"          NIL, local, or static variable, or not linked-in function
- *    "UE"         syntax error in the expression or invalid arguments
- *    "UI"         function with non-reserved name was requested
- *  </table>
+ *        "A"          Array
+ *        "B"          Block
+ *        "C"          Character (string)
+ *        "D"          Date
+ *        "L"          Logical
+ *        "M"          Memo
+ *        "N"          Numeric
+ *        "O"          Object
+ *        "P"          Pointer
+ *        "S"          Symbol
+ *        "U"          NIL, local or static variable, or not linked-in function
+ *        "UE"         syntax error in the expression or invalid arguments
+ *        "UI"         function with non-reserved name was requested
+ *      </table>
  *  $DESCRIPTION$
  *      This function returns a string which represents the data type
  *      of the argument. The argument can be any valid Harbour expression.
  *      If there is a syntax error in passed expression then "UE" is returned.
  *      If there is a call for any non-reserved Harbour function then "UI"
  *      is returned (in other words there is no call for passed UDF function
- *      during a data type determination - this is Clipper compatible
+ *      during a data type determination - this is CA-Clipper compatible
  *      behavior). Additionally if requested user defined function is not
  *      linked into executable then "U" is returned.
  *
@@ -737,19 +739,20 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
- *      - Incompatibility with Clipper:
- *          In the following code:
+ *      - Incompatibility with CA-Clipper:
+ *        In the following code:
  *
  *          PRIVATE lCond := 0
  *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
  *
- *          Clipper will print "UE" - in Harbour the output will be "UI"
+ *        CA-Clipper will print "UE" - in Harbour the output will be "UI"
  *
- *      - if "UI" is returned then the syntax of the expression is
- *          correct. However invalid arguments can be passed to
- *          function/procedure that will cause runtime errors during
- *          evaluation of expression.
+ *      - If "UI" is returned then the syntax of the expression is
+ *        correct. However invalid arguments can be passed to
+ *        function/procedure that will cause runtime errors during
+ *        evaluation of expression.
+ *      - Harbour supports two new types (Pointer and Symbol) which does
+ *        not exists in CA-Clipper.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -765,33 +768,52 @@
  *  $ONELINER$
  *      Retrieves the data type of an expression
  *  $SYNTAX$
- *      VALTYPE( <xExp> ) --> <cReturnType>
+ *      VALTYPE( <xExp> ) --> <cRetType>
  *  $ARGUMENTS$
  *      <xExp> is any valid expression.
  *  $RETURNS$
- *      <cReturnType> a character indicating the type of the passed expression.
+ *      <cRetType> a character indicating the type of the passed expression.
+ *
+ *      <table>
+ *        <cRetType>   Meaning
+ *
+ *        "A"          Array
+ *        "B"          Block
+ *        "C"          Character (string)
+ *        "D"          Date
+ *        "L"          Logical
+ *        "M"          Memo
+ *        "N"          Numeric
+ *        "O"          Object
+ *        "P"          Pointer
+ *        "S"          Symbol
+ *        "U"          NIL
+ *  </table>
  *  $DESCRIPTION$
- *      This function returns one character which represents the date type
+ *      This function returns one character which represents the data type
  *      of the argument.
  *  $EXAMPLES$
  *      See Test
  *  </fixed>
  *  $TESTS$
  *      function Test()
- *         ? ValType( Array( 1 ) )  --> "A"
- *         ? ValType( {|| 1 + 1 } ) --> "B"
- *         ? ValType( "HARBOUR" )   --> "C"
- *         ? ValType( Date() )      --> "D"
- *         ? ValType( .T. )         --> "L"
- *         ? ValType( 1 )           --> "N"
- *         ? ValType( TBrowse() )   --> "O"
- *         ? ValType( NIL )         --> "U"
+ *         ? ValType( Array( 1 ) )   // "A"
+ *         ? ValType( {|| 1 + 1 } )  // "B"
+ *         ? ValType( "HARBOUR" )    // "C"
+ *         ? ValType( Date() )       // "D"
+ *         ? ValType( .T. )          // "L"
+ *         ? ValType( 1 )            // "N"
+ *         ? ValType( TBrowse() )    // "O"
+ *         ? ValType( hb_idleadd() ) // "P" Harbour extension
+ *         ? ValType( @QOut() )      // "S" Harbour extension
+ *         ? ValType( NIL )          // "U"
  *      return nil
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      VALTYPE() is fully CA-Clipper compliant.
+ *      VALTYPE() is CA-Clipper compliant, with the addition of the new
+ *      Harbour types: Pointer and Symbol.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
