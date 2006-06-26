@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-06-26 14:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/en/var.txt
+      
+
+2006-06-26 12:55 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * TODO
+      * assigned SQLRDD to me
+
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+      * fixed one more warning (function with no RETURN) in cases:
+      
+            RETURN 1
+         ELSE
+      * fixed to call hb_gcUnregisterSweep before the memory 
+         ENDIF
+
    * include/hbapi.h
    * source/vm/garbage.c
       * fixed to call hb_gcUnregisterSweep before the memory

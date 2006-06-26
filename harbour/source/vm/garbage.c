@@ -96,6 +96,7 @@ typedef struct HB_GARBAGE_
 #define HB_GC_LOCKED       1  /* do not collect a memory block */
 #define HB_GC_USED_FLAG    2  /* the bit for used/unused flag */
 #define HB_GC_DELETE       4  /* item will be deleted during finalization */
+#define HB_GC_USERSWEEP    8  /* memory block with user defined sweep function */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
@@ -415,12 +416,17 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
 void hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
 {
    HB_GARBAGE_EXTERN_PTR pExt;
+   HB_GARBAGE_PTR pAlloc;
    
    pExt = ( HB_GARBAGE_EXTERN_PTR ) hb_xgrab( sizeof( HB_GARBAGE_EXTERN ) );
    pExt->pFunc = pSweep;
    pExt->pBlock = Cargo;
    pExt->pNext = NULL;
    
+   /* set user sweep flag */
+   pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) Cargo - HB_GARBAGE_SIZE );
+   pAlloc->used ^= HB_GC_USERSWEEP;
+
    if( s_pSweepExtern == NULL )
    {
       s_pSweepExtern = pExt;
@@ -433,7 +439,7 @@ void hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
    
 }
 
-void hb_gcUnregisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
+void hb_gcUnregisterSweep( void * Cargo )
 {
    HB_GARBAGE_EXTERN_PTR pExt;
    HB_GARBAGE_EXTERN_PTR pPrev;
@@ -441,8 +447,14 @@ void hb_gcUnregisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
    pPrev = pExt = s_pSweepExtern;
    while( pExt )
    {
-      if( pExt->pFunc == pSweep && pExt->pBlock == Cargo )
+      if( pExt->pBlock == Cargo )
       {
+         HB_GARBAGE_PTR pAlloc;
+         
+         /* clear user sweep flag */
+         pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) Cargo - HB_GARBAGE_SIZE );
+         pAlloc->used &= ~ HB_GC_USERSWEEP;
+         
          if( pExt == s_pSweepExtern )
          {
             s_pSweepExtern = pExt->pNext;
@@ -568,6 +580,9 @@ void hb_gcCollectAll( void )
          pAlloc = s_pDeletedBlock;
          do
          {
+            if( s_pDeletedBlock->used & HB_GC_USERSWEEP )
+               hb_gcUnregisterSweep( HB_MEM_PTR( s_pDeletedBlock ) );
+               
             if( s_pDeletedBlock->pFunc )
                ( s_pDeletedBlock->pFunc )( HB_MEM_PTR( s_pDeletedBlock ) );
 

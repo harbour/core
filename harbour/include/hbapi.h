@@ -547,7 +547,7 @@ typedef HB_GARBAGE_SWEEPER( HB_GARBAGE_SWEEPER_ );
 typedef HB_GARBAGE_SWEEPER_ * HB_GARBAGE_SWEEPER_PTR;
 
 extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
-extern void  hb_gcUnregisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
+extern void  hb_gcUnregisterSweep( void * Cargo );
 
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );

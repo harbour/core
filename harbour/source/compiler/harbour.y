@@ -330,7 +330,7 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
 
-ProcReq    : PROCREQ CompTimeStr ')' Crlf {}
+ProcReq    : PROCREQ CompTimeStr ')' Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
 CompTimeStr: LITERAL { hb_compAutoOpenAdd( $1 ); }
@@ -388,27 +388,29 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_c
  *    stop compilation if invalid syntax will be used.
  */
 Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
-           | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | MacroVar CrlfStmnt     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          hb_compExprDelete( hb_compExprGenStatement( $1 ) );
                                       else
                                          hb_compExprDelete( hb_compErrorSyntax( $1 ) );
+                                       hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                      }
            | MacroExpr CrlfStmnt    { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          hb_compExprDelete( hb_compExprGenStatement( $1 ) );
                                       else
                                          hb_compExprDelete( hb_compErrorSyntax( $1 ) );
+                                       hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                      }
-           | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0, ( BOOL ) 1 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | BREAK { hb_compLinePushIfInside(); } Expression Crlf  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
@@ -450,10 +452,16 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                      }
            | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPUBLIC",TRUE) ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } Crlf
+                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPUBLIC",TRUE) ); 
+                      hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; 
+                      hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                    } Crlf
            | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPRIVATE",TRUE) ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } Crlf
+                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPRIVATE",TRUE) ); 
+                      hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; 
+                      hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                    } Crlf
 
            | EXIT { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -1481,8 +1489,8 @@ IfElseIf   : ELSEIF { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_co
                 }
            ;
 
-EndIf      : ENDIF    { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
-           | END      { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
+EndIf      : ENDIF    { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+           | END      { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
            ;
 
 DoCase     : DoCaseBegin
@@ -2657,3 +2665,4 @@ void hb_compSwitchKill( )
       hb_xfree( (void *) pSwitch );
    }
 }
+

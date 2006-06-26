@@ -193,7 +193,7 @@ Status...: Open.
 Assign to: Ryszard
 Detail...: Clean vertical spacing in .ppo files. It's necessary to
            strep leading blank lines from included files.
-Status...: Open.
+Status...: Worjing on it.
 
 ***
 
@@ -205,9 +205,9 @@ Status...: Open.
 
 ***
 
-Assign to: <nobody>
+Assign to: Ryszard
 Detail...: SQLRDD.
-Status...: Open.
+Status...: Working on it.
 
 ***
 
@@ -217,7 +217,7 @@ Status...: Working on it.
 
 ***
 
-Assign to: <nobody>
+Assign to: Ryszard
 Detail...: Real strong typing in the compiler.
 Status...: Open.
 

@@ -2926,7 +2926,7 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    }
    hb_comp_bDontGenLineNum = FALSE;
    /* clear RETURN/BREAK flag */
-   hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+   hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );
 
    /* Resting Compile Time Stack */
    hb_comp_functions.pLast->iStackIndex = 0;
@@ -2948,7 +2948,7 @@ void hb_compLinePushIfDebugger( void )
          /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       }
-      hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );  /* clear RETURN flag */
+      hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );  /* clear RETURN flag */
    }
 }
 
