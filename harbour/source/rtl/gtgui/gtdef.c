@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * EMPTY() function
+ *    Mini GT for GUI programs.
+ *    Now it supports only low level TONE and CLIPBOARD code for W32
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,59 +51,41 @@
  *
  */
 
+
+/* NOTE: User programs should never call this layer directly! */
+
+
 #include "hbapi.h"
-#include "hbapiitm.h"
 
-HB_FUNC( EMPTY )
-{
-   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+/*
+ * This GT is called GUI but we introduce a hack to make
+ * Windows users happy ;-) and we will add aliased name equal
+ * to the default GT REQUESTed by our RTL library, [druzus]
+ */
 
-   switch( hb_itemType( pItem ) )
-   {
-      case HB_IT_ARRAY:
-         hb_retl( hb_arrayLen( pItem ) == 0 );
-         break;
+#if defined( HB_OS_WIN_32 )
 
-      case HB_IT_STRING:
-      case HB_IT_MEMO:
-         hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
-         break;
+#if defined(HB_GT_DEFAULT)
+#  define HB_GT_NAME HB_GT_DEFAULT
+#elif defined(HB_GT_LIB)
+#  define HB_GT_NAME HB_GT_LIB
+#else
+#  define HB_GT_NAME WIN
+#endif
 
-      case HB_IT_INTEGER:
-         hb_retl( hb_itemGetNI( pItem ) == 0 );
-         break;
+/* Small trick to check if the default GT is not already set to GUI */
+#define GUI 1
+#define gui 1
 
-      case HB_IT_LONG:
-         hb_retl( hb_itemGetNInt( pItem ) == 0 );
-         break;
+#if HB_GT_NAME + 1 == 1
 
-      case HB_IT_DOUBLE:
-         hb_retl( hb_itemGetND( pItem ) == 0.0 );
-         break;
+#undef GUI
+#undef gui
 
-      case HB_IT_DATE:
-         hb_retl( hb_itemGetDL( pItem ) == 0 );
-         break;
+#include "hbgtcore.h"
 
-      case HB_IT_LOGICAL:
-         hb_retl( ! hb_itemGetL( pItem ) );
-         break;
+HB_GT_REQUEST( GUI );
+HB_GT_ANNOUNCE( HB_GT_NAME );
+#endif
 
-      case HB_IT_BLOCK:
-         hb_retl( FALSE );
-         break;
-
-      case HB_IT_POINTER:
-         hb_retl( hb_itemGetPtr( pItem ) == NULL );
-         break;
-
-      case HB_IT_SYMBOL:
-         hb_retl( hb_itemGetSymbol( pItem ) == NULL );
-         break;
-
-      default:
-         hb_retl( TRUE );
-         break;
-   }
-}
-
+#endif

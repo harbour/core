@@ -833,7 +833,7 @@ static ERRCODE adsGoTop( ADSAREAP pArea )
 
 static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
-   UNSIGNED32 u32Result, u32RecNo = 0, u32NewRec;
+   UNSIGNED32 u32RecNo = 0, u32NewRec;
    UNSIGNED16 u16SeekType = ( bSoftSeek ) ? ADS_SOFTSEEK : ADS_HARDSEEK,
               u16KeyType, u16Found, u16KeyLen;
    UNSIGNED8 *pszKey;
@@ -897,8 +897,8 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
    if( bFindLast )
    {
-      u32Result = AdsSeekLast( pArea->hOrdCurrent,
-                               pszKey, u16KeyLen, u16KeyType, &u16Found );
+      AdsSeekLast( pArea->hOrdCurrent,
+                   pszKey, u16KeyLen, u16KeyType, &u16Found );
       if( bSoftSeek && ! u16Found )
       {
          UNSIGNED16 u16Eof;
@@ -906,8 +906,8 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          /* in such case ADS set record at EOF position so we
             should make normal soft seek and then skip -1 to emulate
             Clipper behavior, Druzus */
-         u32Result = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
-                              u16KeyType, u16SeekType, &u16Found );
+         AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
+                  u16KeyType, u16SeekType, &u16Found );
 
          AdsAtEOF( pArea->hTable, &u16Eof );
          if( !u16Eof )
@@ -918,8 +918,8 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    }
    else
    {
-      u32Result = AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
-                           u16KeyType, u16SeekType, &u16Found );
+      AdsSeek( pArea->hOrdCurrent, pszKey, u16KeyLen,
+               u16KeyType, u16SeekType, &u16Found );
    }
 
    hb_adsUpdateAreaFlags( pArea );
@@ -2063,7 +2063,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             else
             {
                ulRetVal = AdsSetBinary( pArea->hTable, ADSFIELD( uiIndex ),
-                  ADS_BINARY, ulLen, 0, 
+                  ADS_BINARY, ulLen, 0,
                   (UNSIGNED8*) szRet, ulLen );
             }
             hb_adsOemAnsiFree( szRet );

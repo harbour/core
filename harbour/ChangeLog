@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      * fixed handling of sweeper functions
+      * there is no need to call hb_UnregisterSweep - this
+        is done automatically inside hb_gcFree and during
+        garbage collecting
+
+2006-06-26 15:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtgui/Makefile
+  * harbour/source/rtl/gtgui/gtgui.c
+  + harbour/source/rtl/gtgui/gtdef.c
+    + added GT version info
+    * modified the hack which overwrite the default GT name
+      Now original GTGUI is always present and only separate
+      file add linker bindings. It will be cleaner solution which
+      will allow to use REQUEST HB_GT_GUI in valid programs and
+      libraries.
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    * indenting
+
+  * harbour/source/vm/garbage.c
+    * minor modification: use HB_GC_PTR() to take HB_GRABAGE pointer
+    + added alternate code for sweep function execution - disabled by
+      default, maybe it will be used when we agree the sweep function
+      behavior
+
+  * harbour/contrib/rdd_ads/ads1.c
     * BCC warnings clean-up - synced with xHarbour
 
   * harbour/source/rtl/empty.c

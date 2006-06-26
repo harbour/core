@@ -416,27 +416,15 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
 void hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo )
 {
    HB_GARBAGE_EXTERN_PTR pExt;
-   HB_GARBAGE_PTR pAlloc;
-   
+
    pExt = ( HB_GARBAGE_EXTERN_PTR ) hb_xgrab( sizeof( HB_GARBAGE_EXTERN ) );
    pExt->pFunc = pSweep;
    pExt->pBlock = Cargo;
-   pExt->pNext = NULL;
-   
-   /* set user sweep flag */
-   pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) Cargo - HB_GARBAGE_SIZE );
-   pAlloc->used ^= HB_GC_USERSWEEP;
+   pExt->pNext = s_pSweepExtern;
+   s_pSweepExtern = pExt;
 
-   if( s_pSweepExtern == NULL )
-   {
-      s_pSweepExtern = pExt;
-   }
-   else
-   {
-      pExt->pNext = s_pSweepExtern;
-      s_pSweepExtern = pExt;
-   }
-   
+   /* set user sweep flag */
+   HB_GC_PTR( Cargo )->used ^= HB_GC_USERSWEEP;
 }
 
 void hb_gcUnregisterSweep( void * Cargo )
@@ -449,12 +437,11 @@ void hb_gcUnregisterSweep( void * Cargo )
    {
       if( pExt->pBlock == Cargo )
       {
-         HB_GARBAGE_PTR pAlloc;
-         
+         HB_GARBAGE_PTR pAlloc = HB_GC_PTR( Cargo );
+
          /* clear user sweep flag */
-         pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) Cargo - HB_GARBAGE_SIZE );
          pAlloc->used &= ~ HB_GC_USERSWEEP;
-         
+
          if( pExt == s_pSweepExtern )
          {
             s_pSweepExtern = pExt->pNext;
@@ -463,7 +450,7 @@ void hb_gcUnregisterSweep( void * Cargo )
          {
             pPrev->pNext = pExt->pNext;
          }
-         
+
          hb_xfree( (void *) pExt );
          pExt = NULL;
       }
@@ -503,27 +490,55 @@ void hb_gcCollectAll( void )
       hb_memvarsIsMemvarRef();
       hb_gcItemRef( hb_stackReturnItem() );
       hb_clsIsClassRef();
-      
+
+#if 1
       if( s_pSweepExtern )
       {
          HB_GARBAGE_EXTERN_PTR pExt = s_pSweepExtern;
-         
+
          do
          {
             if( ( pExt->pFunc )( pExt->pBlock ) )
             {
                /* block is still used */
-               pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pExt->pBlock - HB_GARBAGE_SIZE );
+               pAlloc = HB_GC_PTR( pExt->pBlock );
                pAlloc->used ^= HB_GC_USED_FLAG;
             }
             pExt = pExt->pNext;
          }
          while( pExt );
       }
+#else
+      /* alternate version which unregister sweep functions in one pass */
+      if( s_pSweepExtern )
+      {
+         HB_GARBAGE_EXTERN_PTR * pExtPtr = &s_pSweepExtern;
+
+         do
+         {
+            pAlloc = HB_GC_PTR( ( * pExtPtr )->pBlock );
+
+            if( ( ( * pExtPtr )->pFunc )( ( * pExtPtr )->pBlock ) )
+            {
+               /* block is still used */
+               pAlloc->used ^= HB_GC_USED_FLAG;
+               pExtPtr = &( * pExtPtr )->pNext;
+            }
+            else
+            {
+               HB_GARBAGE_EXTERN_PTR pFree = * pExtPtr;
+               pAlloc->used &= ~HB_GC_USERSWEEP;
+               * pExtPtr = ( * pExtPtr )->pNext;
+               hb_xfree( pFree );
+            }
+         }
+         while( * pExtPtr );
+      }
+#endif
 
       /* check list of locked block for blocks referenced from
        * locked block
-      */
+       */
       if( s_pLockedBlock )
       {
          pAlloc = s_pLockedBlock;

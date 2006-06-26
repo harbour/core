@@ -54,33 +54,9 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-
-#define HB_OS_WIN_32_USED
-#include "hbapi.h"
-
-
-/*
- * This GT should be called GUI but we introduce a hack to make
- * Windows users happy ;-) and we will change its name to the
- * one used by default GT REQUESTed by our RTL library, [druzus]
- */
-
-#if defined( HB_OS_WIN_32 )
-
-#if defined(HB_GT_DEFAULT)
-#  define HB_GT_NAME HB_GT_DEFAULT
-#elif defined(HB_GT_LIB)
-#  define HB_GT_NAME HB_GT_LIB
-#else
-#  define HB_GT_NAME WIN
-#endif
-
-#else
-
 #define HB_GT_NAME   GUI
 
-#endif
-
+#define HB_OS_WIN_32_USED
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -89,6 +65,18 @@
 
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
+
+/* *********************************************************************** */
+
+static char * hb_gt_gui_Version( int iType )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%d)", iType ) );
+
+   if ( iType == 0 )
+      return HB_GT_DRVNAME( HB_GT_NAME );
+
+   return "Harbour Terminal: Strep GT driver for W32 GUI programs";
+}
 
 /* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
@@ -148,6 +136,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
+   pFuncTable->Version                    = hb_gt_gui_Version;
    pFuncTable->Tone                       = hb_gt_gui_Tone;
    pFuncTable->Info                       = hb_gt_gui_Info;
 

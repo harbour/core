@@ -6,6 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtgui.c \
+	gtdef.c \
 
 LIBNAME=gtgui
 
