@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      debuger.
+    * changed HB_DBG_VMSTKGLIST() to operate on functions/macros.
+      It's possible that the above will badly interact with core debugger
+      code so I stop farther modifications leaving them for someone who
+      knows debugger core code.
+
+2006-06-26 16:35 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+        is done automatically inside hb_gcFree and during 
+   * source/vm/garbage.c
+      * changed hb_gcUnregistedSweep to static function
       * fixed handling of sweeper functions
       * there is no need to call hb_UnregisterSweep - this
         is done automatically inside hb_gcFree and during
