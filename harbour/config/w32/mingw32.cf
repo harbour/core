@@ -101,15 +101,32 @@ echo. $(file) >> __link__.tmp
 
 endef
 
-define link_exe_file
-echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
-$(foreach file, $(LINKPATHS), $(link_file))
-$(foreach file, $(^F), $(link_file))
-echo. -Wl,--start-group >> __link__.tmp
+define search_dir
+echo. SEARCH_DIR($(file)) >> __link__.tmp
+
+endef
+
+ifneq ($(strip $(LDLIBS)),)
+define libs_list
+echo. GROUP( >> __link__.tmp
 $(foreach file, $(LDLIBS), $(link_file))
-echo. -Wl,--end-group >> __link__.tmp
-$(foreach file, $(SYSLIBS), $(link_file))
--$(LD) __link__.tmp
+echo. ) >> __link__.tmp
+endef
+else
+libs_list=
+endif
+
+define link_exe_file
+echo. OUTPUT($@) > __link__.tmp
+echo. INPUT( >> __link__.tmp
+$(foreach file, $(^F), $(link_file))
+echo. ) >> __link__.tmp
+$(libs_list)
+$(foreach file, $(subst -L,,$(LINKPATHS)), $(search_dir))
+echo. GROUP( >> __link__.tmp
+#$(foreach file, $(SYSLIBS), $(link_file))
+echo. ) >> __link__.tmp
+-$(LD) $(LDFLAGS) $(L_USR) $(LD_OUT)$@ __link__.tmp
 endef
 
 LDFLAGS = -mno-cygwin

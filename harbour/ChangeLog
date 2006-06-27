@@ -9,6 +9,10 @@
 */
 
 
+  * harbour/source/rtl/gtgui/gtdef.c
+    * register "GUI" GT as default one by executing
+      hb_gtSetDefault( "GUI" ) at startup
+
 2006-06-28 01:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/w32/mingw32.cf
     * create LD scripts for W9x
