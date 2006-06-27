@@ -587,7 +587,7 @@ static ERRCODE hb_cdxClose( CDXAREAP pArea );
 static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_cdxRelease                              NULL
 static ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
-static ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
+#define hb_cdxSysName                              NULL
 #define hb_cdxEval                                 NULL
 static ERRCODE hb_cdxPack ( CDXAREAP pArea );
 #define hb_cdxPackRec                              NULL

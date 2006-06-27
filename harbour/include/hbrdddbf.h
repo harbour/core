@@ -263,7 +263,7 @@ static ERRCODE hb_dbfNewArea( DBFAREAP pArea );
 static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_dbfRelease                              NULL
 static ERRCODE hb_dbfStructSize( DBFAREAP pArea, USHORT * uiSize );
-static ERRCODE hb_dbfSysName( DBFAREAP pArea, BYTE * pBuffer );
+#define hb_dbfSysName                              NULL
 #define hb_dbfEval                                 NULL
 static ERRCODE hb_dbfPack( DBFAREAP pArea );
 static ERRCODE hb_dbfPackRec( DBFAREAP pArea, ULONG ulRecNo, BOOL *fWritten );

@@ -215,7 +215,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
       if( bTrueMemvar )
          hb_itemCopy( pValue->pVarItem, pSource );
       else
-         memcpy( pValue->pVarItem, pSource, sizeof(HB_ITEM) );
+         memcpy( pValue->pVarItem, pSource, sizeof( HB_ITEM ) );
    }
 
    if( bTrueMemvar )

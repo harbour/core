@@ -485,7 +485,7 @@ static ERRCODE ntxClose( NTXAREAP pArea );
 static ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define ntxRelease               NULL
 static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize );
-static ERRCODE ntxSysName( NTXAREAP pArea, BYTE * pBuffer );
+#define ntxSysName               NULL
 #define ntxEval                  NULL
 static ERRCODE ntxPack( NTXAREAP pArea );
 #define ntPackRec                NULL

@@ -3611,7 +3611,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayNew(%p, %hu)", pArray, uiDimension));
 
-   pDim = hb_stackItemFromTop( - uiDimension );
+   pDim = hb_stackItemFromTop( ( int ) ( -1 - uiDimension ) );
 
    /* use the proper type of number of elements */
    switch( pDim->type )
@@ -3651,19 +3651,19 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 
 static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 {
-   HB_ITEM itArray;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayDim(%hu)", uiDimensions));
 
-   itArray.type = HB_IT_NIL;
-
-   hb_vmArrayNew( &itArray, uiDimensions );
-
-   while( uiDimensions-- )
-      hb_stackPop();
-
-   hb_itemMove( hb_stackTopItem(), &itArray );
    hb_stackPush();
+
+   hb_vmArrayNew( hb_stackItemFromTop( -1 ), uiDimensions );
+
+   hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - uiDimensions ) ),
+                hb_stackItemFromTop( -1 ) );
+   do
+   {
+      hb_stackPop();
+   }
+   while( --uiDimensions );
 }
 
 /* ------------------------------- */
@@ -3820,11 +3820,10 @@ static void hb_vmSwapAlias( void )
 
    pItem = hb_stackItemFromTop( -1 );
    pWorkArea = hb_stackItemFromTop( -2 );
+
    hb_vmSelectWorkarea( pWorkArea );
 
-   /* hb_vmSelectWorkarea() clears the given item and we can simply copy the value */
-   memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
-   pItem->type = HB_IT_NIL;
+   hb_itemMove( pWorkArea, pItem );
    hb_stackDec();
 }
 

@@ -522,19 +522,6 @@ static ERRCODE hb_dbtStructSize( DBTAREAP pArea, USHORT * uiSize )
 }
 
 /*
- * Obtain the name of replaceable database driver (RDD) subsystem.
- * ( DBENTRYP_P )     hb_dbtSysName
- */
-static ERRCODE hb_dbtSysName( DBTAREAP pArea, BYTE * pBuffer )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbtSysName(%p, %p)", pArea, pBuffer));
-   HB_SYMBOL_UNUSED( pArea );
-
-   strncpy( ( char * ) pBuffer, "DBFDBT", 7  /* HARBOUR_MAX_RDD_DRIVERNAME_LENGTH */ );
-   return SUCCESS;
-}
-
-/*
  * Obtain the current value of a field.
  * ( DBENTRYP_SI )    hb_dbtGetValue
  */

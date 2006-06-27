@@ -297,7 +297,7 @@ static ERRCODE hb_fptInfo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_fptOpen                                 NULL
 #define hb_fptRelease                              NULL
 static ERRCODE hb_fptStructSize( FPTAREAP pArea, USHORT * uiSize );
-static ERRCODE hb_fptSysName( FPTAREAP pArea, BYTE * pBuffer );
+#define hb_fptSysName                              NULL
 #define hb_fptEval                                 NULL
 #define hb_fptPack                                 NULL
 #define hb_fptPackRec                              NULL

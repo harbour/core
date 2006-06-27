@@ -9,6 +9,30 @@
 */
 
 
+2006-06-28 01:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/mingw32.cf
+    * create LD scripts for W9x
+
+2006-06-27 23:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    * indenting
+
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrdddbt.h
+  * harbour/include/hbrddfpt.h
+  * harbour/include/hbrddntx.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * remove SYSNAME() method - use the default WA one.
+
+  * harbour/source/vm/hvm.c
+    ! fixed last C stack usage of HB_ITEM - now HVM should be cleaned
+      and we begin to implement automatic GC activation
+
   * harbour/config/w32/mingw32.cf
      ! Fix to make it work in environments where "gcc @__lib__.tmp" 
        construct is not possible. The "@" expansion is done by gcc 

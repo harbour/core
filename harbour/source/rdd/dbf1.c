@@ -3187,18 +3187,6 @@ static ERRCODE hb_dbfStructSize( DBFAREAP pArea, USHORT * uiSize )
 }
 
 /*
- * Obtain the name of replaceable database driver (RDD) subsystem.
- */
-static ERRCODE hb_dbfSysName( DBFAREAP pArea, BYTE * pBuffer )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfSysName(%p, %p)", pArea, pBuffer));
-   HB_SYMBOL_UNUSED( pArea );
-
-   strcpy( ( char * ) pBuffer, "DBF" );
-   return SUCCESS;
-}
-
-/*
  * Pack helper function called for each packed record
  */
 static ERRCODE hb_dbfPackRec( DBFAREAP pArea, ULONG ulRecNo, BOOL *fWritten )

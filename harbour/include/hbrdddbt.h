@@ -131,7 +131,7 @@ static ERRCODE hb_dbtInfo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define hb_dbtOpen                                 NULL
 #define hb_dbtRelease                              NULL
 static ERRCODE hb_dbtStructSize( DBTAREAP pArea, USHORT * uiSize );
-static ERRCODE hb_dbtSysName( DBTAREAP pArea, BYTE * pBuffer );
+#define hb_dbtSysName                              NULL
 #define hb_dbtEval                                 NULL
 #define hb_dbtPack                                 NULL
 #define hb_dbtPackRec                              NULL
