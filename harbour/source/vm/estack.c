@@ -199,6 +199,8 @@ void hb_stackInit( void )
    hb_stack.wItems = STACK_INITHB_ITEMS;
    hb_stack.pEnd   = hb_stack.pItems + hb_stack.wItems;
 
+   hb_stack.Return.type = HB_IT_NIL;
+
    for( i=0; i < hb_stack.wItems; ++i )
      hb_stack.pItems[ i ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
 }
@@ -309,6 +311,47 @@ LONG hb_stackBaseOffset( void )
    return hb_stack.pBase - hb_stack.pItems + 1;
 }
 
+#undef hb_stackTotalItems
+LONG hb_stackTotalItems( void )
+{
+   return hb_stack.wItems;
+}
+
+#undef hb_stackDateBuffer
+char * hb_stackDateBuffer( void )
+{
+   return hb_stack.szDate;
+}
+
+#undef hb_stackGetStaticsBase
+int hb_stackGetStaticsBase( void )
+{
+   return hb_stack.iStatics;
+}
+
+#undef hb_stackSetStaticsBase
+void hb_stackSetStaticsBase( int iBase )
+{
+   hb_stack.iStatics = iBase;
+}
+
+void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
+{
+   /*
+    * This function is called by FM module and has to be ready for execution
+    * before stack initialization, [druzus];
+    */
+   if( hb_stack.pPos > hb_stack.pBase )
+   {
+      strcpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName );
+      * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.lineno;
+   }
+   else
+   {
+      szProcName[ 0 ] = '\0';
+      * puiProcLine = 0;
+   }
+}
 
 /* NOTE: DEBUG function */
 void hb_stackDispLocal( void )

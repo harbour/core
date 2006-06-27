@@ -756,6 +756,7 @@ extern char *   hb_compReservedName( char * szName ); /* determines if a string 
 
 /* misc */
 extern char *   hb_procname( int iLevel, char * szName, BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
+extern BOOL     hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile );
 
 /* macro compiler */
 

@@ -267,10 +267,6 @@ static PMETHOD  s_pMethod      = NULL; /* TOFIX: The object engine is not thread
 /* All functions contained in classes.c */
 
 static PHB_ITEM hb_clsInst( USHORT uiClass );
-#if 0
-/* see function definition */
-static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
-#endif
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
 static void     hb_clsDictRealloc( PCLASS pClass );
 static void     hb_clsRelease( PCLASS );
@@ -478,7 +474,7 @@ void hb_clsIsClassRef( void )
 #if 0
 static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
-   PHB_ITEM * pBase = hb_stack.pBase;
+   long lOffset = hb_stackBaseOffset();
    PHB_ITEM pCaller;
    LONG iLevel = 1;
    BOOL bRetVal = FALSE ;
@@ -491,142 +487,154 @@ static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szSelfNameObject;    /* debug */
    char * szSelfNameRealClass;
 
-   if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
-        (( uiScope & HB_OO_CLSTP_HIDDEN )    ) ||
-        (( uiScope & HB_OO_CLSTP_READONLY )  )
-      )
-    {
-
+   if( ( ( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
+       ( ( uiScope & HB_OO_CLSTP_HIDDEN    ) ) ||
+       ( ( uiScope & HB_OO_CLSTP_READONLY  ) ) )
+   {
       szSelfNameObject    = hb_objGetClsName( pObject );  /* debug */
       szSelfNameMsg       = pMessage->pSymbol->szName  ;
       szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
 
-      while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+      while( iLevel-- > 0 && lOffset > 1 )
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
 
-      szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
+      szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
 
       /* Is it an inline ? if so back one more ... */
-      if ( ( strcmp( szCallerNameMsg, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
-       {
-        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
-       }
+      if( strcmp( szCallerNameMsg, "__EVAL" ) == 0 && lOffset > 1 )
+      {
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
+      }
 
       /* Is it an eval ? if so back another one more ... */
-      if ( ( strcmp( szCallerNameMsg, "EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
-       {
-        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
-       }
+      if( ( strcmp( szCallerNameMsg, "EVAL" ) == 0 ) && lOffset > 1 )
+      {
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
+      }
 
       /* Is it an Aeval ? if so back another one more ... */
-      if ( ( strcmp( szCallerNameMsg, "AEVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
-       {
-        pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-        szCallerNameMsg = ( *pBase )->item.asSymbol.value->szName ;
-       }
+      if ( ( strcmp( szCallerNameMsg, "AEVAL" ) == 0 ) && lOffset > 1 )
+      {
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
+      }
 
       if( iLevel == -1 )
-       {
-        /* Now get the callers ...  */
-        pCaller = * (pBase+1 ) ;
-        szCallerNameObject    = hb_objGetRealClsName( pCaller, szCallerNameMsg ) ;
+      {
+         /* Now get the callers ...  */
+         pCaller = hb_stackItem( lOffset );
+         szCallerNameObject = hb_objGetRealClsName( pCaller, szCallerNameMsg );
 
-        strcpy( szName, szCallerNameObject );
-        strcat( szName, ":" );
-        strcat( szName, szCallerNameMsg );
-        strcat( szName, ">" );
-        strcat( szName, szSelfNameRealClass );
-        strcat( szName, ">" );
-        strcat( szName, szSelfNameObject );
-        strcat( szName, ":" );
-        strcat( szName, szSelfNameMsg );
+         strcpy( szName, szCallerNameObject );
+         strcat( szName, ":" );
+         strcat( szName, szCallerNameMsg );
+         strcat( szName, ">" );
+         strcat( szName, szSelfNameRealClass );
+         strcat( szName, ">" );
+         strcat( szName, szSelfNameObject );
+         strcat( szName, ":" );
+         strcat( szName, szSelfNameMsg );
 
-        /*strcpy( szName, szSelfNameRealClass ); */
-        /*strcat( szName, ":" );                 */
-        /*strcat( szName, szSelfNameMsg );       */
+         /*strcpy( szName, szSelfNameRealClass ); */
+         /*strcat( szName, ":" );                 */
+         /*strcat( szName, szSelfNameMsg );       */
 
-        if ( uiScope & HB_OO_CLSTP_PROTECTED )
+         if( uiScope & HB_OO_CLSTP_PROTECTED )
          {
-         if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
-           {
-             /* Trying to access a protected Msg from outside the object ... */
-             if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 1)", szName, 0 );
-           }
-          else
-           {
-            /* If called from a function ... protected violation !  */
-            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 0)", szName, 0 );
-           }
-         }
-
-        if ( uiScope & HB_OO_CLSTP_HIDDEN )
-         {
-          if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
-           {
-             /* Trying to access a protected Msg from outside the object ... */
-             if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 1)", szName, 0 );
-             else
-              {
-               /* Now as it is an hidden Msg, it can only be called from */
-               /* a method of its original class */
-               if (! (hb_objGetRealClsName( pCaller, szCallerNameMsg) == szSelfNameRealClass)  )
-                 hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 2)", szName, 0 );
-              }
-           }
-          else
-           {
-            /* If called from a function ... Hidden violation ! */
-            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 0)", szName, 0 );
-           }
-         }
-
-         if ( uiScope & HB_OO_CLSTP_READONLY )
-         {
-            if( ( pMethod->pFuncSym == s___msgSetData    ) ||
-                ( pMethod->pFuncSym == s___msgSetClsData ) ||
-                ( pMethod->pFuncSym == s___msgSetShrData ) )
-             bRetVal = TRUE;
-
-            if (bRetVal)
+            if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
             {
-             if( ( *( pBase+1 ) )->type == HB_IT_ARRAY )  /* is the sender an object  */
-              {
-               /* Trying to assign a RO Msg from outside the object ... */
-               if ( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-                hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
+               /* Trying to access a protected Msg from outside the object ... */
+               if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+               {
+                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 1)", szName, 0 );
+                  return;
+               }
+            }
+            else
+            {
+               /* If called from a function ... protected violation !  */
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 0)", szName, 0 );
+               return;
+            }
+         }
+
+         if( uiScope & HB_OO_CLSTP_HIDDEN )
+         {
+            if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
+            {
+               /* Trying to access a protected Msg from outside the object ... */
+               if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+               {
+                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 1)", szName, 0 );
+                  return;
+               }
                else
-                {
+               {
+                  /* Now as it is an hidden Msg, it can only be called from */
+                  /* a method of its original class */
+                  if( !( hb_objGetRealClsName( pCaller, szCallerNameMsg ) == szSelfNameRealClass ) )
+                  {
+                     hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 2)", szName, 0 );
+                     return;
+                  }
+               }
+            }
+            else
+            {
+               /* If called from a function ... Hidden violation ! */
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 0)", szName, 0 );
+            }
+         }
+
+         if( uiScope & HB_OO_CLSTP_READONLY )
+         {
+            if( ( pMethod->pFuncSym == &s___msgSetData    ) ||
+                ( pMethod->pFuncSym == &s___msgSetClsData ) ||
+                ( pMethod->pFuncSym == &s___msgSetShrData ) )
+               bRetVal = TRUE;
+
+            if( bRetVal )
+            {
+               if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
+               {
+                  /* Trying to assign a RO Msg from outside the object ... */
+                  if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
+                  {
+                     hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
+                     return;
+                  }
+                  else
+                  {
 #ifdef HB_CLS_ENFORCERO  /* Not enabled by default */
                          /* can only be called from a Constructor */
                          /* ok Now is it a CTOR ? */
+                     PMETHOD pCallerMethod ;
+                     PHB_DYNS pCallerMsg = hb_dynsymGet( szCallerNameMsg );
 
-                 PMETHOD pCallerMethod ;
+                     pCallerMethod = hb_objGetpMethod( pCaller, pCallerMsg->pSymbol );
 
-                 PHB_DYNS pCallerMsg = hb_dynsymGet( szCallerNameMsg );
-
-                 pCallerMethod = hb_objGetpMethod( pCaller, pCallerMsg->pSymbol );
-
-                 if ( pCallerMethod )
-                   {
-                     if ( ! (pCallerMethod->uiScope & HB_OO_CLSTP_CTOR) )
-                       hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
-                   }
+                     if( pCallerMethod )
+                     {
+                        if( ! ( pCallerMethod->uiScope & HB_OO_CLSTP_CTOR ) )
+                        {
+                           hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
+                           return;
+                        }
+                     }
 #endif
-                }
-              }
-             else
-              {
-               /* If called from a function ... ReadOnly violation ! */
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly 0)", szName, 0 );
-              }
+                  }
+               }
+               else
+               {
+                  /* If called from a function ... ReadOnly violation ! */
+                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly 0)", szName, 0 );
+               }
             }
-          }
-        }
-    }
+         }
+      }
+   }
 }
 #endif
 
@@ -903,7 +911,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper
             if( pClass->pMethods[ uiAt ].pMessage == pMsg )
             {
                PMETHOD pMethod = pClass->pMethods + uiAt;
-               /*hb_clsScope( pObject, pMethod );*/  /* debug */
+               /* hb_clsScope( pObject, pMethod ); */  /* debug */
                s_pMethod = pMethod ;
                return pMethod->pFuncSym;
             }
@@ -960,6 +968,7 @@ BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
    return hb_objGetMethod( pObject, pMessage->pSymbol, NULL ) != NULL;
 }
 
+#ifndef HB_CLS_ENFORCERO
 /*
  * This function is only for backward binary compatibility
  * It will be removed in the future so please do not use it.
@@ -972,16 +981,7 @@ BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    return hb_objGetMethod( pObject, pMessage, NULL ) != NULL;
 }
-
-static PHB_SYMB hb_objFuncParam( int iParam )
-{
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_SYMBOL );
-
-   if( pItem )
-      return pItem->item.asSymbol.value;
-
-   return NULL;
-}
+#endif
 
 #ifdef HB_CLS_ENFORCERO
 static PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
@@ -1017,6 +1017,16 @@ static PMETHOD hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    return NULL;
 }
 #endif
+
+static PHB_SYMB hb_objFuncParam( int iParam )
+{
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_SYMBOL );
+
+   if( pItem )
+      return pItem->item.asSymbol.value;
+
+   return NULL;
+}
 
 /*
  * Check if object has a given operator

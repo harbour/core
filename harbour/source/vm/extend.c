@@ -275,7 +275,7 @@ HB_EXPORT ULONG  hb_parcsiz( int iParam, ... )
    return 0;
 }
 
-/* NOTE: Using hb_stack.szDate as a temporary date buffer guaranties
+/* NOTE: Using hb_stackDateBuffer() a temporary date buffer guaranties
          good behavior when multithreading. */
 
 HB_EXPORT char  * hb_pards( int iParam, ... )
@@ -290,7 +290,7 @@ HB_EXPORT char  * hb_pards( int iParam, ... )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_DATE( pItem ) )
-         return hb_dateDecStr( hb_stack.szDate, pItem->item.asDate.value );
+         return hb_dateDecStr( hb_stackDateBuffer(), pItem->item.asDate.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -300,11 +300,11 @@ HB_EXPORT char  * hb_pards( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return hb_arrayGetDS( pItem, ulArrayIndex, hb_stack.szDate );
+         return hb_arrayGetDS( pItem, ulArrayIndex, hb_stackDateBuffer() );
       }
    }
 
-   return hb_dateDecStr( hb_stack.szDate, 0 );
+   return hb_dateDecStr( hb_stackDateBuffer(), 0 );
 }
 
 /* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */

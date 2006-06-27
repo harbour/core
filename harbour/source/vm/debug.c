@@ -81,28 +81,12 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> __vmStkGCount()
- * $Description$  Returns the length of the global stack
- * $End$ */
-static USHORT hb_stackLenGlobal( void )
-{
-   PHB_ITEM * pItem;
-   USHORT uiCount = 0;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackLenGlobal()"));
-
-   for( pItem = hb_stack.pItems; pItem++ <= hb_stack.pPos; uiCount++ );
-
-   return uiCount;
-}
-
-/* $Doc$
  * $FuncName$     <nVars> hb_dbg_vmStkGCount()
  * $Description$  Returns the length of the global stack
  * $End$ */
 HB_FUNC( HB_DBG_VMSTKGCOUNT )
 {
-   hb_retni( hb_stackLenGlobal() );
+   hb_retnl( hb_stackTopOffset() );
 }
 
 /* $Doc$
@@ -112,16 +96,15 @@ HB_FUNC( HB_DBG_VMSTKGCOUNT )
 HB_FUNC( HB_DBG_VMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   PHB_ITEM * pItem;
+   ULONG ulLen = hb_stackTopOffset();
+   ULONG ulPos;
 
-   USHORT uiLen = hb_stackLenGlobal();
-   USHORT uiPos = 1;
+   pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
 
-   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
-
-   for( pItem = hb_stack.pItems; pItem <= hb_stack.pPos; pItem++ )
-      AddToArray( *pItem, pReturn, uiPos++ );
-
+   for( ulPos = 0; ulPos < ulLen; ++ulPos )
+   {
+      AddToArray( hb_stackItem( ulPos ), pReturn, ulPos + 1 );
+   }
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
@@ -136,7 +119,7 @@ static USHORT hb_stackLen( int iLevel )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+   while( iLevel-- > 0 && pBase != hb_stack.pItems )
    {
       uiCount = pBase - ( hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase ) - 2;
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
@@ -246,12 +229,13 @@ HB_FUNC( HB_DBG_VMVARLSET )
       iLocal -= USHRT_MAX;
       iLocal--;
    }
+
    if( iLocal >= 0 )
       pLocal = *(pBase + 1 + iLocal);
    else
       pLocal = hb_codeblockGetVar( *(pBase+1), ( LONG ) iLocal );
 
-   hb_itemCopy( hb_itemUnRef(pLocal), *(hb_stack.pBase + 4) );
+   hb_itemCopy( hb_itemUnRef( pLocal ), *(hb_stack.pBase + 4) );
 }
 
 HB_FUNC( __VMSTKLCOUNT )

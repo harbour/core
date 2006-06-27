@@ -200,17 +200,7 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    }
    else
    {
-      if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
-      {
-         pMem->uiProcLine = ( hb_stackBaseItem() )->item.asSymbol.lineno; /* PRG line number */
-         strcpy( pMem->szProcName,
-               ( hb_stackBaseItem() )->item.asSymbol.value->szName ); /* PRG ProcName */
-      }
-      else
-      {
-         pMem->uiProcLine = 0; /* PRG line number */
-         pMem->szProcName[ 0 ] = '\0'; /* PRG ProcName */
-      }
+      hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
    }
 
    s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
@@ -275,17 +265,7 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
    }
    else
    {
-      if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
-      {
-         pMem->uiProcLine = ( hb_stackBaseItem() )->item.asSymbol.lineno; /* PRG line number */
-         strcpy( pMem->szProcName,
-               ( hb_stackBaseItem() )->item.asSymbol.value->szName ); /* PRG ProcName */
-      }
-      else
-      {
-         pMem->uiProcLine = 0; /* PRG line number */
-         pMem->szProcName[ 0 ] = '\0'; /* PRG ProcName */
-      }
+      hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
    }
 
    s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
@@ -829,11 +809,11 @@ ULONG hb_xquery( USHORT uiMode )
       break;
 
    case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack)      */
-      ulResult = hb_stack.wItems;
+      ulResult = hb_stackTotalItems();
       break;
 
    case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
-      ulResult = hb_stack.wItems * sizeof( HB_ITEM );
+      ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
       break;
 
    case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack)      */

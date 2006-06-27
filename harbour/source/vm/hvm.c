@@ -404,12 +404,9 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
 
-   hb_stack.pItems = NULL; /* keep this here as it is used by fm.c */
-   hb_stack.Return.type = HB_IT_NIL;
-
    hb_xinit();
-   hb_errInit();
    hb_stackInit();
+   hb_errInit();
 
    hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_dynsymNew( &hb_symEnumIndex );
@@ -3994,17 +3991,17 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
       {
          if( pSym->pDynSym == hb_symEnumIndex.pDynSym )
          {
-            hb_itemPutNL( &hb_stack.Return, pEnum->item.asEnum.offset );
+            hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
             bNotHandled = FALSE;
          }
          else if( pSym->pDynSym == hb_symEnumBase.pDynSym )
          {
-            hb_itemCopy( &hb_stack.Return, pEnum->item.asEnum.basePtr );
+            hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
             bNotHandled = FALSE;
          }
          else if( pSym->pDynSym == hb_symEnumValue.pDynSym )
          {
-            hb_itemCopy( &hb_stack.Return, hb_itemUnRefOnce( pEnum ) );
+            hb_itemCopy( hb_stackReturnItem(), hb_itemUnRefOnce( pEnum ) );
             bNotHandled = FALSE;
          }
       }
@@ -4094,7 +4091,7 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
    hb_vmDo( 0 );
-   return &hb_stack.Return;
+   return hb_stackReturnItem();
 }
 
 /* Evaluates a codeblock item using passed additional arguments
@@ -4124,7 +4121,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
    /* added an explicit casting here for VC++ JFL */
    hb_vmDo( (USHORT) ulArgCount );
 
-   return &hb_stack.Return;
+   return hb_stackReturnItem();
 }
 
 /* Evaluates a passed codeblock item or macro pointer item
@@ -4214,7 +4211,7 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
       hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
       hb_vmPushNil();
       hb_vmPushLongConst( HB_DBG_STATICNAME );
-      hb_vmPushLongConst( hb_stack.iStatics );  /* current static frame */
+      hb_vmPushLongConst( hb_stackGetStaticsBase() );  /* current static frame */
       hb_vmPushLongConst( uiStatic );  /* variable index */
       hb_vmPushString( szStaticName, strlen( szStaticName ) );
       s_bDebuggerIsWorking = TRUE;
@@ -4271,7 +4268,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stack.iStatics = pSym->value.iStaticsBase; /* pSym is { "$_INITSTATICS", HB_FS_INITEXIT, _INITSTATICS } for each PRG */
+   hb_stackSetStaticsBase( pSym->value.iStaticsBase );
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -4649,7 +4646,7 @@ static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usLen 
 
    /* store the statics base of function where the codeblock was defined
     */
-   pStackTopItem->item.asBlock.statics = hb_stack.iStatics;
+   pStackTopItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pStackTopItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( pCode );
@@ -4682,7 +4679,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, USHORT u
 
    /* store the statics base of function where the codeblock was defined
     */
-   pStackTopItem->item.asBlock.statics = hb_stack.iStatics;
+   pStackTopItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pStackTopItem->item.asBlock.paramcnt = 0;
@@ -4713,7 +4710,7 @@ static void hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols )
 
    /* store the statics base of function where the codeblock was defined
     */
-   pStackTopItem->item.asBlock.statics = hb_stack.iStatics;
+   pStackTopItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pStackTopItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( &( pCode[ 3 ] ) );
@@ -4888,7 +4885,7 @@ static void hb_vmPushStatic( USHORT uiStatic )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStatic(%hu)", uiStatic));
 
-   pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
+   pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
    if( HB_IS_BYREF( pStatic ) )
       hb_itemCopy( hb_stackTopItem(), hb_itemUnRef( pStatic ) );
    else
@@ -4903,7 +4900,7 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
 
    pTop->type = HB_IT_BYREF;
    /* we store the offset instead of a pointer to support a dynamic stack */
-   pTop->item.asRefer.value = hb_stack.iStatics + uiStatic - 1;
+   pTop->item.asRefer.value = hb_stackGetStaticsBase() + uiStatic - 1;
    pTop->item.asRefer.offset = 0;    /* 0 for static variables */
    pTop->item.asRefer.BasePtr.itemsbase = &s_aStatics.item.asArray.value->pItems;
    hb_stackPush();
@@ -5257,7 +5254,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
 
    /* Remove MEMOFLAG if exists (assignment from field). */
    pVal->type &= ~HB_IT_MEMOFLAG;
-   pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
+   pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
 
    /* Is it Clipper compatible? */
    if( HB_IS_BYREF( pStatic ) )
@@ -5939,39 +5936,22 @@ void hb_vmRequestCancel( void )
 
    if( hb_set.HB_SET_CANCEL )
    {
-      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
-      int i = 1, i2;
-      ULONG ulLine;
-      PHB_ITEM * pBase;
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
+      USHORT uiLine;
+      int i = 0;
 
       hb_conOutErr( hb_conNewLine(), 0 );
-      sprintf( buffer, "Cancelled at: %s (%i)", ( hb_stackBaseItem() )->item.asSymbol.value->szName, ( hb_stackBaseItem() )->item.asSymbol.lineno );
-      hb_conOutErr( buffer, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_conOutErr( "Cancelled at: ", 0 );
+      hb_stackBaseProcInfo( buffer, &uiLine );
 
-      while( buffer[0] )
+      do
       {
-         i2 = i;
-         hb_procname( i++, buffer, FALSE );
-
-         if( buffer[0] == 0 )
-            break;
-
-         pBase = hb_stack.pBase;
-         while( ( i2-- > 0 ) && pBase != hb_stack.pItems )
-            pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-
-         if( i2 == -1 )
-            ulLine = ( *pBase )->item.asSymbol.lineno;
-         else
-            ulLine = 0;
-
-         i2 = strlen( (char *) buffer );
-         sprintf( buffer + i2, " (%lu)", ulLine );
+         sprintf( buffer + strlen( buffer ), " (%hu)", uiLine );
 
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
+      while( hb_procinfo( ++i, buffer, &uiLine, NULL ) );
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
@@ -6524,7 +6504,7 @@ HB_EXPORT BOOL hb_xvmStaticAdd( USHORT uiStatic )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticAdd(%hu)", uiStatic));
 
-   pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
+   pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
    if( HB_IS_BYREF( pStatic ) )
       pStatic = hb_itemUnRef( pStatic );
    hb_vmPlus( pStatic, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), 2 );

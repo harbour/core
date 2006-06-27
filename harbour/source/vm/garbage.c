@@ -190,10 +190,10 @@ void hb_gcFree( void *pBlock )
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
          else
             hb_gcUnlink( &s_pCurrBlock, pAlloc );
-            
+
          if( pAlloc->flags & HB_GC_USERSWEEP )
             hb_gcUnregisterSweep( pBlock );
-            
+
          HB_GARBAGE_FREE( pAlloc );
       }
    }
@@ -530,7 +530,7 @@ void hb_gcCollectAll( void )
             else
             {
                HB_GARBAGE_EXTERN_PTR pFree = *pExtPtr;
-               
+
                pAlloc->flags &= ~ HB_GC_USERSWEEP;
                *pExtPtr = ( *pExtPtr )->pNext;
                hb_xfree( pFree );
@@ -582,7 +582,7 @@ void hb_gcCollectAll( void )
          }
          else
          {
-             /* at least one block will not be deleted, set new stop condition */
+            /* at least one block will not be deleted, set new stop condition */
             if( ! pAlloc )
                pAlloc = s_pCurrBlock;
             s_pCurrBlock = s_pCurrBlock->pNext;

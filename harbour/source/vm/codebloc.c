@@ -250,7 +250,7 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
-   hb_stack.iStatics = pItem->item.asBlock.statics;
+   hb_stackSetStaticsBase( pItem->item.asBlock.statics );
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
 }
 

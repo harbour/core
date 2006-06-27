@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      to it. This code does not work as it should even know
+      and it's absolutely not reentrant safe. It will have to
+      be fixed before we will have .prg destructor and MT support.
+      As I can see the same problems has xHarbour.
+
+2006-06-27 10:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/proc.c
+    + added BOOL hb_procinfo( int iLevel, char * szName,
+                              USHORT * puiLine, char * szFile )
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    + added hb_stackTotalItems(), hb_stackDateBuffer(),
+      hb_stackGetStaticsBase(), hb_stackSetStaticsBase(),
+      hb_stackBaseProcInfo()
+
+  * harbour/source/vm/garbage.c
+    * indenting
+
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/hvm.c
+    * replaced direct stack access by stack functions/macros
+
+  * harbour/source/vm/debug.c
+    * removed hb_stackLenGlobal() and replace it by hb_stackTopOffset()
+      Warning!!! hb_stackTopOffset() returnes results smaller by 1.
+      The TOP stack item is undefined and should not be accessed by
       debuger.
     * changed HB_DBG_VMSTKGLIST() to operate on functions/macros.
       It's possible that the above will badly interact with core debugger

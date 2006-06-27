@@ -87,7 +87,7 @@ HB_FUNC( HB_METHODNAME )
 
 HB_FUNC( PROCNAME )
 {
-   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
+   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
    hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, FALSE ) );
 }
@@ -157,7 +157,7 @@ HB_FUNC( PROCFILE )
 #endif
 
 /* NOTE: szName size must be an at least:
-         HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 [vszakats] */
+         HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 [vszakats] */
 
 char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
 {
@@ -180,7 +180,7 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
          }
       }
 
-      pBase = hb_stackItem( lOffset -1 );
+      pBase = hb_stackItem( lOffset - 1 );
       pSelf = hb_stackItem( lOffset );
       if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
       {
@@ -198,7 +198,7 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
          if( lPrevOffset ) /* Back to standart code block */
          {
             lOffset = lPrevOffset;
-            pBase = hb_stackItem( lOffset -1 );
+            pBase = hb_stackItem( lOffset - 1 );
             pSelf = hb_stackItem( lOffset );
          }
 
@@ -219,4 +219,86 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
       strcpy( szName, "" );
 
    return szName;
+}
+
+/* NOTE: szName size must be an at least:
+ *          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5
+ *       szFile szie must be an at least:
+ *          _POSIX_PATH_MAX + 1
+ */
+BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
+{
+   long lOffset = hb_stackBaseOffset();
+   PHB_ITEM pBase, pSelf;
+   PHB_SYMB pSym;
+
+   while( iLevel-- > 0 && lOffset > 1 )
+      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+
+   if( iLevel < 0 )
+   {
+      pBase = hb_stackItem( lOffset - 1 );
+      pSelf = hb_stackItem( lOffset );
+
+      pSym = pBase->item.asSymbol.value;
+
+      if( szName )
+      {
+         if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
+         {
+            strcpy( szName, hb_objGetRealClsName( pSelf, pSym->szName ) );
+            strcat( szName, ":" );
+            strcat( szName, pSym->szName );
+         }
+         else
+         {
+            if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
+            {
+               strcpy( szName, "(b)" );
+
+               if( HB_IS_BLOCK( pSelf ) )
+                  strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
+               else
+                  strcat( szName, pSym->szName );
+            }
+            else
+               strcpy( szName, pSym->szName );
+         }
+      }
+
+      if( puiLine )
+         * puiLine = pBase->item.asSymbol.lineno;
+
+      if( szFile )
+      {
+         char * szModule;
+
+         if( ( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 ) &&
+             HB_IS_BLOCK( pSelf ) && pSelf->item.asBlock.value->pDefSymb )
+            pSym = pSelf->item.asBlock.value->pDefSymb;
+         else if( ( pSym->scope.value & HB_FS_LOCAL ) == 0 )
+         {
+            if( ( pSym->pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
+               pSym = pSym->pDynSym->pSymbol;
+            else
+               pSym = NULL;
+         }
+         szModule = hb_vmFindModuleSymbolName( pSym );
+         if( szModule )
+            strcpy( szFile, szModule );
+         else
+            szFile[ 0 ] = '\0';
+      }
+
+      return TRUE;
+   }
+
+   if( szName )
+      szName[ 0 ] = '\0';
+   if( puiLine )
+      * puiLine = 0;
+   if( szFile )
+      szFile[ 0 ] = '\0';
+
+   return FALSE;
 }
