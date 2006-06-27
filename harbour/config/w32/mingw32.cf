@@ -110,11 +110,10 @@ echo. $(file) >> __link__.tmp
 endef
 
 define link_exe_file
-echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
+echo. INPUT( >> __link__.tmp
 $(foreach file, $(^F), $(link_file))
-$(foreach file, $(LINKPATHS), $(link_file))
-$(foreach file, $(LINKLIBS), $(link_file))
--$(LD) @__link__.tmp
+echo. ) >> __link__.tmp
+-$(LD) $(LDFLAGS) $(L_USR) $(LD_OUT)$@ __link__.tmp $(foreach item, $(LINKPATHS), $(item)) $(foreach item, $(LINKLIBS), $(item))
 endef
 
 LDFLAGS = $(LINKPATHS) -mno-cygwin

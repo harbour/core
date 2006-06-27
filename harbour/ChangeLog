@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/config/w32/mingw32.cf
+     ! Fix to make it work in environments where "gcc @__lib__.tmp" 
+       construct is not possible. The "@" expansion is done by gcc 
+       when using Cygwin, but it's not done (and left to the shell, 
+       which doesn't do it either when using CMD/COMMAND) when using 
+   * harbour/config/w32/mingw32.cf
+     ! Fix to make it work in environments where "gcc @__lib__.tmp"
        construct is not possible. The "@" expansion is done by gcc
        when using Cygwin, but it's not done (and left to the shell,
        which doesn't do it either when using CMD/COMMAND) when using
