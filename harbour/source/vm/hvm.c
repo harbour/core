@@ -139,6 +139,9 @@ static void    hb_vmArrayPop( void );        /* pops a value from the stack */
 static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
 
+/* macros */
+static void hb_vmMacroPushIndex( BYTE bFlags ); /* push macro array index {...}[ &var ] */
+
 /* Database */
 static ERRCODE hb_vmSelectWorkarea( PHB_ITEM );  /* select the workarea using a given item or a substituted value */
 static void    hb_vmSwapAlias( void );           /* swaps items on the eval stack and pops the workarea number */
@@ -268,8 +271,6 @@ int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex = 0;
 PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
 int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_vm_iExtraElements = 0;
-
-int hb_vm_iExtraIndex;
 
 /* Request for some action - stop processing of opcodes
  */
@@ -1648,40 +1649,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHINDEX:
-            /* compile and run - leave the result on the stack */
-            /* the topmost element on the stack contains a macro
-             * string for compilation
-             */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX, pCode[ ++w ] );
-            if( hb_vm_iExtraIndex )
-            {
-               HB_ITEM *aExtraItems = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) * hb_vm_iExtraIndex );
-               int i;
-
-               /* Storing and removing the extra indexes. */
-               for ( i = hb_vm_iExtraIndex - 1; i >= 0; i-- )
-               {
-                  hb_itemMove( aExtraItems + i, hb_stackItemFromTop(-1) );
-                  hb_stackDec();
-               }
-
-               /* First index is still on stack.*/
-               hb_vmArrayPush();
-
-               /* Now process each of the additional index including the last
-                  one (we will skip the HB_P_ARRAYPUSH which is know to follow */
-               for ( i = 0; i < hb_vm_iExtraIndex; i++ )
-               {
-                  hb_vmPush( aExtraItems + i );
-                  hb_vmArrayPush();
-               }
-
-               hb_xfree( aExtraItems );
-
-               w++; /* To force skip the HB_P_ARRAYPUSH (was already processed above). */
-            }
-
-            w++;
+            hb_vmMacroPushIndex( pCode[ ++w ] );
+            ++w;
             break;
 
          case HB_P_MACROPUSHPARE:
@@ -3696,6 +3665,56 @@ static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Ar
    hb_itemMove( hb_stackTopItem(), &itArray );
    hb_stackPush();
 }
+
+/* ------------------------------- */
+/* Macros                          */
+/* ------------------------------- */
+
+static void hb_vmMacroPushIndex( BYTE bFlags )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroPushIndex(%d)", ( int ) bFlags));
+
+   /* compile and run - leave the result on the stack
+    * the topmost element on the stack contains a macro
+    * string for compilation
+    */
+   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX, bFlags );
+
+   /* If no RT errors during compilation */
+   if( s_uiActionRequest == 0 )
+   {
+      /*
+       * Now the top most element on the stack points to number of
+       * additional indexes to generated array
+       */
+      ULONG ulIndexes = hb_itemGetNL( hb_stackItemFromTop( -1 ) );
+      hb_stackDec();
+
+      if( ulIndexes )
+      {
+         PHB_ITEM pIndexArray;
+         ULONG ul = 1;
+
+         hb_vmArrayGen( ulIndexes );
+         pIndexArray = hb_itemNew( hb_stackItemFromTop( -1 ) );
+         hb_stackPop();
+
+         /* First index is still on stack.*/
+         do
+         {
+            hb_vmArrayPush();
+            /* RT error? */
+            if( s_uiActionRequest != 0 )
+               break;
+            hb_vmPush( hb_arrayGetItemPtr( pIndexArray, ul ) );
+         }
+         while( ++ul <= ulIndexes );
+
+         hb_itemRelease( pIndexArray );
+      }
+   }
+}
+
 
 /* ------------------------------- */
 /* Database                        */
@@ -7759,36 +7778,7 @@ HB_EXPORT BOOL hb_xvmMacroPushIndex( BYTE bFlags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushIndex(%d)", bFlags));
 
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX, bFlags );
-
-   if( hb_vm_iExtraIndex )
-   {
-      HB_ITEM *aExtraItems = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) * hb_vm_iExtraIndex );
-      int i;
-
-      /* Storing and removing the extra indexes. */
-      for ( i = hb_vm_iExtraIndex - 1; i >= 0; i-- )
-      {
-         hb_itemCopy( aExtraItems + i, hb_stackItemFromTop(-1) );
-         hb_stackPop();
-      }
-
-      /* First index is still on stack.*/
-      hb_vmArrayPush();
-
-      /* Now process each of the additional index.
-       * Do not process the last one which will be processes by the
-       * HB_P_ARRAYPUSH which is know to follow
-       */
-      for ( i = 0; i < hb_vm_iExtraIndex; i++ )
-      {
-         hb_vmPush( aExtraItems + i );
-         if( i < hb_vm_iExtraIndex - 1 )
-            hb_vmArrayPush();
-         
-      }
-      hb_xfree( aExtraItems );
-   }
+   hb_vmMacroPushIndex( bFlags );
 
    HB_XVM_RETURN
 }

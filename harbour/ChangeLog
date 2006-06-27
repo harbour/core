@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+       construct is not possible. The "@" expansion is done by gcc
+       when using Cygwin, but it's not done (and left to the shell,
+       which doesn't do it either when using CMD/COMMAND) when using
+       plain MinGW.
+
+2006-06-27 19:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+    * indenting
+
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    ! fixed HB_P_MACROPUSHINDEX
+      - removed hb_vm_iExtraIndex
+      - fixed GPF in direct uninitialized HB_ITEM usage
+      - make it safe for HVM reentrant and pending RT errors
+      There is a set of global hb_vm*Extra* variables which
+      tries to extend HVM by adding some additional registers
       to it. This code does not work as it should even know
       and it's absolutely not reentrant safe. It will have to
       be fixed before we will have .prg destructor and MT support.

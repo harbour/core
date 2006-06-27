@@ -1392,8 +1392,8 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
-					if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
-					{
+		   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
+		   {
                	if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
                	{
                   	/* funCall( &macro )
@@ -1440,8 +1440,8 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   	/* usual &macro */
                   	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
                	}
-					}
-					else
+		   }
+		   else
                   /* usual &macro */
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
             }

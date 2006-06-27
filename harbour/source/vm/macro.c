@@ -516,7 +516,6 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
    /* TODO: remove these externals */
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
    extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
-   extern int hb_vm_iExtraIndex;
 
    extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
@@ -597,8 +596,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 #ifdef HB_MACRO_STATEMENTS
       if( struMacro.supported & HB_SM_PREPROC )
       {
-        hb_xfree( pText );
-        hb_xfree( pOut );
+         hb_xfree( pText );
+         hb_xfree( pOut );
       }
 #endif
 
@@ -607,7 +606,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       {
          hb_macroEvaluate( &struMacro );
 
-         if( iContext && struMacro.iListElements > 0 )
+         if( iContext )
          {
             if( iContext == HB_P_MACROPUSHARG )
             {
@@ -620,7 +619,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
             }
             else if( iContext == HB_P_MACROPUSHINDEX )
             {
-               hb_vm_iExtraIndex = struMacro.iListElements;
+               hb_vmPushLong( struMacro.iListElements );
             }
          }
       }

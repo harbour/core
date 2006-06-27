@@ -379,7 +379,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 
       /* TODO: EMPTY() (not done by Clipper) */
 
-		if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
+	if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
