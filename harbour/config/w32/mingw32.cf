@@ -116,14 +116,13 @@ libs_list=
 endif
 
 define link_exe_file
-echo. OUTPUT($@) > __link__.tmp
 echo. INPUT( >> __link__.tmp
 $(foreach file, $(^F), $(link_file))
 echo. ) >> __link__.tmp
 $(libs_list)
 $(foreach file, $(subst -L,,$(LINKPATHS)), $(search_dir))
 echo. GROUP( >> __link__.tmp
-#$(foreach file, $(SYSLIBS), $(link_file))
+$(foreach file, $(SYSLIBS), $(link_file))
 echo. ) >> __link__.tmp
 -$(LD) $(LDFLAGS) $(L_USR) $(LD_OUT)$@ __link__.tmp
 endef

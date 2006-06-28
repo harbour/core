@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-06-28 22:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+     ! One minor fix and another minor correction made after testing 
+    + added USRRDD
+
 2006-06-28 15:46 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/config/w32/mingw32.cf
      ! One minor fix and another minor correction made after testing
