@@ -66,6 +66,10 @@
 
 #if defined( HB_OS_WIN_32 )
 
+#if defined(_MSC_VER)
+   #include <conio.h>
+#endif   
+
 #if defined( HB_ARCH_32BIT ) && \
     ( defined(__BORLANDC__) || defined(_MSC_VER) || \
       defined(__WATCOMC__) || defined(__MINGW32__) )
