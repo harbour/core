@@ -9,6 +9,14 @@
 */
 
 
+2006-06-28 07:59 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/config/w32/mingw32.cf
+     % Removed Windows system libs we don't need to link in Harbour.
+
+2006-06-28 02:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    - removed forgotten printf() used as debug message
+
   * harbour/source/rtl/gtgui/gtdef.c
     * register "GUI" GT as default one by executing
       hb_gtSetDefault( "GUI" ) at startup

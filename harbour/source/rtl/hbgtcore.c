@@ -1618,8 +1618,6 @@ static void hb_gt_def_TouchCell( int iRow, int iCol )
          s_curGT->pLines[ iRow ] = TRUE;
          s_curGT->fRefresh = TRUE;
       }
-      else
-         printf("\nTouch error: %d, %d", iRow, iCol);fflush(stdout);
    }
 }
 
@@ -2766,7 +2764,7 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
          return TRUE;
 
       iPos = hb_gtFindEntry( szGtName );
-      
+
       if( iPos != -1 )
       {
          if( pFuncTable == NULL )
