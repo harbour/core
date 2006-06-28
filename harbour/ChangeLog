@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/rdd/dbcmd.c
+    ! added fix for GPF in APPEND FROM when source file has repeated
+      fields with the same names.
+
+2006-06-29 00:02 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+     
+   * harbour/makefile64.nt
+     + added Microsoft requested header file.  
+     + Added gtdef.c file
      + Added gttone.c file
 
    * harbour/rtl/gttone.c
