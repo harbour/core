@@ -4213,8 +4213,19 @@ static ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                fAll = FALSE;
             if( uiPosDst )
             {
-               lpdbTransInfo->lpTransItems[ uiSize ].uiSource = uiCount;
-               lpdbTransInfo->lpTransItems[ uiSize++ ].uiDest = uiPosDst;
+               USHORT ui;
+
+               /* check for replicated field names in source area */
+               for( ui = 0; ui < uiSize; ++ui )
+               {
+                  if( lpdbTransInfo->lpTransItems[ ui ].uiDest == uiPosDst )
+                     break;
+               }
+               if( ui == uiSize )
+               {
+                  lpdbTransInfo->lpTransItems[ uiSize ].uiSource = uiCount;
+                  lpdbTransInfo->lpTransItems[ uiSize++ ].uiDest = uiPosDst;
+               }
             }
          }
          hb_itemRelease( pItem );

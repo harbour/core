@@ -92,7 +92,7 @@
 #define HB_GT_REQUEST__( id )    HB_FUNC_EXTERN( id ); \
                                  void hb_gt_ForceLink_##id( void ) \
                                  { \
-                                    HB_FUNCNAME( id )(); \
+                                    HB_FUNC_EXEC( id ); \
                                  }
 
 #define HB_GT_ANNOUNCE( id )     HB_GT_ANNOUNCE_( _HB_GT_PREF_( id ) )

@@ -9,6 +9,15 @@
 */
 
 
+2006-06-29 08:25 UTC+0200 Tomaz Zupan (tomaz.zupan at orpo.si)
+  * harbour.spec
+    * Added libusrrdd.a to rpm files
+
+2006-06-29 00:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/include/hbgtcore.h
+    * use HB_FUNC*() macros
+
   * harbour/source/rdd/dbcmd.c
     ! added fix for GPF in APPEND FROM when source file has repeated
       fields with the same names.
