@@ -9,6 +9,10 @@
 */
 
 
+2006-06-28 09:29 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * harbour/makefile.bc
+     + Added gtdef.c file
+
 2006-06-28 07:59 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/config/w32/mingw32.cf
      % Removed Windows system libs we don't need to link in Harbour.
