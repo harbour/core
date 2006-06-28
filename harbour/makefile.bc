@@ -718,6 +718,7 @@ GTWVT_LIB_OBJS = \
 #
 
 GTGUI_LIB_OBJS = \
+   $(OBJ_DIR)\gtdef.obj \
    $(OBJ_DIR)\gtgui.obj 
 
 #
@@ -2886,6 +2887,10 @@ $(OBJ_DIR)\gtwvt.obj : $(RTL_DIR)\gtwvt\gtwvt.c
 #
 # GTGUI.LIB dependencies
 #
+
+$(OBJ_DIR)\gtdef.obj : $(RTL_DIR)\gtgui\gtdef.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTGUI_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\gtgui.obj : $(RTL_DIR)\gtgui\gtgui.c
    $(CC) $(CLIBFLAGS) -o$@ $**
