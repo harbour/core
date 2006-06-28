@@ -164,6 +164,7 @@ VM_LIB       = $(LIB_DIR)\vm.lib
 
 GTCGI_LIB    = $(LIB_DIR)\gtcgi.lib
 GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
+GTGUI_LIB    = $(LIB_DIR)\gtgui.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
@@ -185,6 +186,7 @@ HBVER_EXE    = $(BIN_DIR)\hbverfix.exe
 
 HB_GT_LIBS = \
    $(GTCGI_LIB) \
+   $(GTGUI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB) \
@@ -313,8 +315,10 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gtapiu.obj \
+   $(OBJ_DIR)\gtclip.obj \
    $(OBJ_DIR)\gtfunc.obj \
    $(OBJ_DIR)\gtsys.obj \
+   $(OBJ_DIR)\gttone.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\hbgtcore.obj \
@@ -818,6 +822,17 @@ GTDOS_LIB_OBJS = \
    $(OBJ_DIR)\gtdos.obj
 
 #
+# GTGUI.LIB rules
+#
+
+{$(RTL_DIR)\gtgui}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+GTGUI_LIB_OBJS = \
+   $(OBJ_DIR)\gtdef.obj \
+   $(OBJ_DIR)\gtgui.obj
+
+#
 # GTPCA.LIB rules
 #
 
@@ -854,7 +869,7 @@ GTWIN_LIB_OBJS = \
 {$(RTL_DIR)\gtwvt}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-GTWIN_LIB_OBJS = \
+GTWVT_LIB_OBJS = \
    $(OBJ_DIR)\gtwvt.obj
 
 
@@ -1172,6 +1187,9 @@ $(VM_LIB) : $(VM_LIB_OBJS)
 $(GTCGI_LIB) : $(GTCGI_LIB_OBJS)
    lib /out:$@ $**
 
+$(GTGUI_LIB) : $(GTGUI_LIB_OBJS)
+   lib /out:$@ $**
+
 $(GTPCA_LIB) : $(GTPCA_LIB_OBJS)
    lib /out:$@ $**
 
@@ -1264,6 +1282,7 @@ $(HSX_LIB)2    : $(HSX_LIB_OBJS)
 $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
 $(GTCGI_LIB)2  : $(GTCGI_LIB_OBJS)
+$(GTGUI_LIB)2  : $(GTGUI_LIB_OBJS)
 $(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
 $(GTWIN_LIB)2  : $(GTWIN_LIB_OBJS)
