@@ -137,6 +137,13 @@ $hb_collect source/rdd/hsx/*.[ch]
 $hb_collect source/rdd/hsx/*.ch
 $hb_collect source/rdd/hsx/*.prg
 
+# SOURCE\RDD\USRRDD
+$hb_collect source/rdd/usrrdd/Makefile
+$hb_collect source/rdd/usrrdd/*.c
+$hb_collect source/rdd/usrrdd/example/*.prg
+$hb_collect source/rdd/usrrdd/rdds/Makefile
+$hb_collect source/rdd/usrrdd/rdds/*.prg
+
 # SOURCE\RDD\NULSYS
 $hb_collect source/rdd/nulsys/Makefile
 $hb_collect source/rdd/nulsys/*.c

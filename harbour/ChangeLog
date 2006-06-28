@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     + Added gttone.c file
+
+   * harbour/rtl/gttone.c
+     + added Microsoft requested header file.
 
 2006-06-28 22:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
      ! One minor fix and another minor correction made after testing 
