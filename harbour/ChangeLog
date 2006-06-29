@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   add automatic GC and begin to work on MT though before that I'd like
+   to clean the RT error support.
+   Please carefully check if all is correct. It was modification in core
+   code and even small typo can break whole application.
 
 2006-06-29 08:25 UTC+0200 Tomaz Zupan (tomaz.zupan at orpo.si)
   * harbour.spec
