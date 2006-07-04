@@ -95,7 +95,7 @@ typedef struct
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1 )
 #define hb_stackTotalItems( )       ( hb_stack.wItems )
-#define hb_stackTopItem( )          ( * hb_stack.pPos )
+/*#define hb_stackTopItem( )          ( * hb_stack.pPos )*/
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
@@ -103,7 +103,11 @@ typedef struct
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
 #define hb_stackGetStaticsBase( )   ( hb_stack.iStatics )
 #define hb_stackSetStaticsBase( n ) do { hb_stack.iStatics = ( n ); } while ( 0 )
+#define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 
+#define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \
+                                        hb_stackIncrease() : (void) 0 ), \
+                                      * ( hb_stack.pPos - 1 ) )
 
 #define hb_stackDecrease( n )       do { \
                                        if( ( hb_stack.pPos -= (n) ) < hb_stack.pItems ) \
@@ -125,7 +129,6 @@ typedef struct
 #define hb_stackPush( )             do { \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
-                                       ( * hb_stack.pPos )->type = HB_IT_NIL; \
                                     } while ( 0 )
 
 #define hb_stackPopReturn( )        do { \
@@ -140,7 +143,6 @@ typedef struct
                                        hb_itemRawMove( * hb_stack.pPos, &hb_stack.Return ); \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
-                                       ( * hb_stack.pPos )->type = HB_IT_NIL; \
                                     } while ( 0 )
 #else
 
@@ -149,7 +151,7 @@ extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
 extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
-extern HB_ITEM_PTR hb_stackTopItem( void );
+/*extern HB_ITEM_PTR hb_stackTopItem( void );*/
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackSelfItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
@@ -157,22 +159,24 @@ extern HB_ITEM_PTR hb_stackReturnItem( void );
 extern char *      hb_stackDateBuffer( void );
 extern void        hb_stackSetStaticsBase( int iBase );
 extern int         hb_stackGetStaticsBase( void );
+extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 extern void        hb_stackPop( void );        /* pops an item from the stack */
 extern void        hb_stackPush( void );       /* pushes an item on to the stack */
+extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 
 #endif
 
 /* stack management functions */
-extern void    hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine ); /* get current .PRG function name and line number */
-extern void    hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
-extern void    hb_stackDispCall( void );
-extern void    hb_stackFree( void );       /* releases all memory used by the stack */
-extern void    hb_stackInit( void );       /* initializes the stack */
-extern void    hb_stackIncrease( void );   /* increase the stack size */
+extern void       hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine ); /* get current .PRG function name and line number */
+extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
+extern void       hb_stackDispCall( void );
+extern void       hb_stackFree( void );       /* releases all memory used by the stack */
+extern void       hb_stackInit( void );       /* initializes the stack */
+extern void       hb_stackIncrease( void );   /* increase the stack size */
 
-extern void    hb_stackRemove( LONG lUntilPos );
+extern void       hb_stackRemove( LONG lUntilPos );
 
 #ifdef _HB_API_INTERNAL_
 extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );

@@ -211,8 +211,6 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = HB_IT_STRING;
-
    if( ulLen == 0 )
    {
       pItem->item.asString.length    = 0;
@@ -233,6 +231,8 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
       /* we used strlen() above so we no it's 0-ended string */
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen + 1 );
    }
+
+   pItem->type = HB_IT_STRING;
 
    return pItem;
 }
@@ -282,8 +282,6 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
             trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 
-   pItem->type = HB_IT_STRING;
-
    if( szText == NULL || ulLen == 0 )
    {
       pItem->item.asString.length    = 0;
@@ -304,6 +302,8 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
    }
+
+   pItem->type = HB_IT_STRING;
 
    return pItem;
 }
@@ -1408,8 +1408,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
          /* to avoid recursive RT error generation */
          if( pItem->item.asEnum.offset >= 0 )
          {
-            hb_stackPush();
-            hb_itemPutNInt( hb_stackItemFromTop( -1 ), pItem->item.asEnum.offset );
+            hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
             pItem->item.asEnum.offset = -1;
             if( !pItem->item.asEnum.valuePtr )
                pItem->item.asEnum.valuePtr = hb_itemNew( NULL );

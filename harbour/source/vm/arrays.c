@@ -110,31 +110,126 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 
 HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
+   PHB_BASEARRAY pBaseArray;
+   PHB_ITEM pItems;
    ULONG ulPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayNew(%p, %lu)", pItem, ulLen));
 
-   hb_itemClear( pItem );
+   if( HB_IS_COMPLEX( pItem ) )
+      hb_itemClear( pItem );
 
-   pItem->type = HB_IT_ARRAY;
-
+   /*
+    * allocate memory for items before hb_gcAlloc() to be
+    * safe for automatic GC activation in hb_xgrab() without
+    * calling hb_gcLock()/hb_gcUnlock(). [druzus]
+    */
    if( ulLen > 0 )
-      pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * ulLen );
+   {
+      pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * ulLen );
+      for( ulPos = 0; ulPos < ulLen; ++ulPos )
+         ( pItems + ulPos )->type = HB_IT_NIL;
+   }
    else
-      pBaseArray->pItems = NULL;
+      pItems = NULL;
 
+   pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
+   pBaseArray->pItems     = pItems;
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
    pBaseArray->puiClsTree = NULL;
 
-   for( ulPos = 0; ulPos < ulLen; ulPos++ )
-      ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
-
+   pItem->type = HB_IT_ARRAY;
    pItem->item.asArray.value = pBaseArray;
 
    return TRUE;
+}
+
+HB_EXPORT BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySize(%p, %lu)", pArray, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) )
+   {
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
+
+      if( ulLen != pBaseArray->ulLen )
+      {
+         ULONG ulPos;
+
+         if( pBaseArray->ulLen == 0 )
+         {
+            pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
+
+            for( ulPos = 0; ulPos < ulLen; ulPos++ )
+               ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
+         }
+         else
+         {
+            if( pBaseArray->ulLen < ulLen )
+            {
+               pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+
+               /* set value for new items */
+               for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
+                  ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
+            }
+            else if( pBaseArray->ulLen > ulLen )
+            {
+               /* release old items */
+               for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
+               {
+                  if( HB_IS_COMPLEX( pBaseArray->pItems + ulPos ) )
+                     hb_itemClear( pBaseArray->pItems + ulPos );
+               }
+
+               if( ulLen == 0 )
+               {
+                  hb_xfree( pBaseArray->pItems );
+                  pBaseArray->pItems = NULL;
+               }
+               else
+                  pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+            }
+         }
+
+         pBaseArray->ulLen = ulLen;
+      }
+
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT ULONG hb_arrayLen( PHB_ITEM pArray )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayLen(%p)", pArray));
+
+   if( HB_IS_ARRAY( pArray ) )
+      return pArray->item.asArray.value->ulLen;
+   else
+      return 0;
+}
+
+HB_EXPORT BOOL hb_arrayIsObject( PHB_ITEM pArray )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayIsObject(%p)", pArray));
+
+   if( HB_IS_ARRAY( pArray ) )
+      return pArray->item.asArray.value->uiClass != 0;
+   else
+      return FALSE;
+}
+
+/* retrives the array unique ID */
+HB_EXPORT void * hb_arrayId( PHB_ITEM pArray )
+{
+   if( HB_IS_ARRAY( pArray ) )
+      return ( void * ) pArray->item.asArray.value;
+   else
+      return NULL;
 }
 
 HB_EXPORT BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
@@ -179,89 +274,6 @@ HB_EXPORT BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_arrayIsObject( PHB_ITEM pArray )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayIsObject(%p)", pArray));
-
-   if( HB_IS_ARRAY( pArray ) )
-      return pArray->item.asArray.value->uiClass != 0;
-   else
-      return FALSE;
-}
-
-/* retrives the array unique ID */
-HB_EXPORT void * hb_arrayId( PHB_ITEM pArray )
-{
-   if( HB_IS_ARRAY( pArray ) )
-      return ( void * ) pArray->item.asArray.value;
-   else
-      return NULL;
-}
-
-HB_EXPORT ULONG hb_arrayLen( PHB_ITEM pArray )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayLen(%p)", pArray));
-
-   if( HB_IS_ARRAY( pArray ) )
-      return pArray->item.asArray.value->ulLen;
-   else
-      return 0;
-}
-
-HB_EXPORT BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySize(%p, %lu)", pArray, ulLen));
-
-   if( HB_IS_ARRAY( pArray ) )
-   {
-      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-
-      if( ulLen != pBaseArray->ulLen )
-      {
-         ULONG ulPos;
-
-         if( pBaseArray->ulLen == 0 )
-         {
-            pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
-
-            for( ulPos = 0; ulPos < ulLen; ulPos++ )
-               ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
-         }
-         else
-         {
-            if( pBaseArray->ulLen < ulLen )
-            {
-               pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
-
-               /* set value for new items */
-               for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
-                  ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
-            }
-            else if( pBaseArray->ulLen > ulLen )
-            {
-               /* release old items */
-               for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
-                  hb_itemClear( pBaseArray->pItems + ulPos );
-
-               if( ulLen == 0 )
-               {
-                  hb_xfree( pBaseArray->pItems );
-                  pBaseArray->pItems = NULL;
-               }
-               else
-                  pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
-            }
-         }
-
-         pBaseArray->ulLen = ulLen;
-      }
-
-      return TRUE;
-   }
-   else
-      return FALSE;
-}
-
 HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayDel(%p, %lu)", pArray, ulIndex));
@@ -276,7 +288,7 @@ HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 
          if( ulIndex == ulLen )
          {
-            hb_itemClear( pBaseArray->pItems + ulIndex - 1 );
+            hb_itemSetNil( pBaseArray->pItems + ulIndex - 1 );
          }
          else
          {
@@ -306,7 +318,7 @@ HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
 
          if( ulIndex == ulLen )
          {
-            hb_itemClear( pBaseArray->pItems + ulIndex - 1 );
+            hb_itemSetNil( pBaseArray->pItems + ulIndex - 1 );
          }
          else
          {
@@ -346,7 +358,7 @@ HB_EXPORT BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
    }
    else
    {
-      hb_itemClear( pItem );
+      hb_itemSetNil( pItem );
       return FALSE;
    }
 }
@@ -522,12 +534,12 @@ BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
          hb_itemCopy( pResult, pArray->item.asArray.value->pItems +
                              ( pArray->item.asArray.value->ulLen - 1 ) );
       else
-         hb_itemClear( pResult );
+         hb_itemSetNil( pResult );
 
       return TRUE;
    }
 
-   hb_itemClear( pResult );
+   hb_itemSetNil( pResult );
 
    return FALSE;
 }
@@ -699,15 +711,21 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
          if( ulStart + ulCount > ulLen )             /* check range */
             ulCount = ulLen - ulStart + 1;
 
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         if( ulCount > 0 )
          {
-            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
-
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( bBlock );
-            hb_vmPush( pItem );
-            hb_vmPushLong( ulStart + 1 );
-            hb_vmDo( 2 );
+            do
+            {
+               hb_vmPushSymbol( &hb_symEval );
+               hb_vmPush( bBlock );
+               hb_vmPush( pBaseArray->pItems + ulStart - 1 );
+               hb_vmPushLong( ulStart );
+               hb_vmDo( 2 );
+            }
+            while( --ulCount > 0 && ++ulStart < pBaseArray->ulLen );
+            /*
+             * checking for ulStart < pBaseArray->ulLen is fix for
+             * possible GPF when codeblock decrease array size
+             */
          }
       }
 

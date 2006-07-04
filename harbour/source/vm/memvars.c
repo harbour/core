@@ -1220,10 +1220,8 @@ HB_FUNC( __MVGET )
 
       if( pDynVar )
       {
-         PHB_ITEM pValue;
+         PHB_ITEM pValue = hb_stackAllocItem();
 
-         hb_stackPush();
-         pValue = hb_stackItemFromTop( -1 );
          hb_memvarGetValue( pValue, pDynVar->pSymbol );
          hb_itemReturnForward( pValue );
          hb_stackDec();
@@ -1248,10 +1246,8 @@ HB_FUNC( __MVGET )
                                               hb_itemGetCLen( pName ) );
                if( pDynVar )
                {
-                  PHB_ITEM pValue;
+                  PHB_ITEM pValue = hb_stackAllocItem();
 
-                  hb_stackPush();
-                  pValue = hb_stackItemFromTop( -1 );
                   hb_memvarGetValue( pValue, pDynVar->pSymbol );
                   hb_itemReturnForward( pValue );
                   hb_stackDec();

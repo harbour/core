@@ -815,7 +815,7 @@ static ERRCODE hb_usrSysName( AREAP pArea, BYTE * szSysName )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrSysName(%p,%p)", pArea, szSysName));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_SYSNAME ) )
    {
       hb_stackPop();
@@ -1145,7 +1145,7 @@ static ERRCODE hb_usrFieldName( AREAP pArea, USHORT uiIndex, void * szName )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrFieldName(%p,%hu,%p)", pArea, uiIndex, szName));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_FIELDNAME ) )
    {
       hb_stackPop();
@@ -1289,7 +1289,7 @@ static ERRCODE hb_usrGetRec( AREAP pArea, BYTE ** pBuffer )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrGetRec(%p,%p)", pArea, pBuffer));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_GETREC ) )
    {
       hb_stackPop();
@@ -1317,7 +1317,7 @@ static ERRCODE hb_usrGetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrGetValue(%p,%hu,%p)", pArea, uiIndex, pItem));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_GETVALUE ) )
    {
       hb_stackPop();
@@ -1539,7 +1539,7 @@ static ERRCODE hb_usrAlias( AREAP pArea, BYTE * szAlias )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrAlias(%p,%p)", pArea, szAlias));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_ALIAS ) )
    {
       hb_stackPop();
@@ -1915,7 +1915,7 @@ static ERRCODE hb_usrRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
    HB_TRACE(HB_TR_DEBUG, ("hb_usrRelText(%p,%hu,%p)", pArea, uiRelNo, pExpr));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-   hb_stackPush();
+   hb_vmPushNil();
    if( !hb_usrPushMethod( SELF_USRNODE( pArea )->pMethods, UR_RELTEXT ) )
    {
       hb_stackPop();

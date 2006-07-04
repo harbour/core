@@ -113,14 +113,37 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
                                   USHORT usLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
+   PHB_ITEM pLocals;
+   BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %hu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, usLen));
 
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
-
-   /* Store the number of referenced local variables
+   /*
+    * allocate memory for code block body and detach items hb_gcAlloc()
+    * to be safe for automatic GC activation in hb_xgrab() without
+    * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
-   pCBlock->uiLocals = uiLocals;
+
+   if( usLen )
+   {
+      /*
+       * The codeblock pcode is stored in dynamically allocated memory that
+       * can be deallocated after creation of a codeblock. We have to duplicate
+       * the passed buffer
+       */
+      pCode = ( BYTE * ) hb_xgrab( usLen );
+      memcpy( pCode, pBuffer, usLen );
+   }
+   else
+   {
+      /*
+       * The codeblock pcode is stored in static segment.
+       * The only allowed operation on a codeblock is evaluating it then
+       * there is no need to duplicate its pcode - just store the pointer to it
+       */
+      pCode     = ( BYTE * ) pBuffer;
+   }
+
    if( uiLocals )
    {
       /* NOTE: if a codeblock will be created by macro compiler then
@@ -136,11 +159,11 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
        * NOTE: This table can be shared by codeblocks created during
        * evaluation of this codeblock
        */
-      pCBlock->pLocals = ( PHB_ITEM ) hb_xgrab( ( uiLocals + 1 ) * sizeof( HB_ITEM ) );
-      pCBlock->pLocals[ 0 ].type = HB_IT_LONG;
-      pCBlock->pLocals[ 0 ].item.asLong.value = 1;
+      pLocals = ( PHB_ITEM ) hb_xgrab( ( uiLocals + 1 ) * sizeof( HB_ITEM ) );
+      pLocals[ 0 ].type = HB_IT_LONG;
+      pLocals[ 0 ].item.asLong.value = 1;
 
-      while( uiLocals-- )
+      do
       {
          /* Swap the current value of local variable with the reference to this
           * value.
@@ -151,13 +174,13 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
          pLocalPosTable += 2;
 
          pLocal = hb_memvarDetachLocal( pLocal );
-         memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
+         memcpy( pLocals + ui, pLocal, sizeof( HB_ITEM ) );
          /* Increment the reference counter so this value will not be
           * released if other codeblock will be deleted
           */
          hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-         ++ui;
       }
+      while( ++ui <= uiLocals );
    }
    else
    {
@@ -172,39 +195,23 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
       {
          HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
 
-         pCBlock->uiLocals = pOwner->uiLocals;
-         pCBlock->pLocals  = pOwner->pLocals;
-         if( pOwner->pLocals )
-            hb_xRefInc( pOwner->pLocals );
+         uiLocals = pOwner->uiLocals;
+         pLocals  = pOwner->pLocals;
+         if( pLocals )
+            hb_xRefInc( pLocals );
       }
       else
-         pCBlock->pLocals = NULL;
+         pLocals = NULL;
    }
 
-   if( usLen )
-   {
-      /*
-       * The codeblock pcode is stored in dynamically allocated memory that
-       * can be deallocated after creation of a codeblock. We have to duplicate
-       * the passed buffer
-       */
-      pCBlock->pCode = ( BYTE * ) hb_xgrab( usLen );
-      memcpy( pCBlock->pCode, pBuffer, usLen );
-      pCBlock->dynBuffer = TRUE;
-   }
-   else
-   {
-      /*
-       * The codeblock pcode is stored in static segment.
-       * The only allowed operation on a codeblock is evaluating it then
-       * there is no need to duplicate its pcode - just store the pointer to it
-       */
-      pCBlock->pCode     = ( BYTE * ) pBuffer;
-      pCBlock->dynBuffer = FALSE;
-   }
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
 
+   pCBlock->pCode     = pCode;
+   pCBlock->dynBuffer = usLen != 0;
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
+   pCBlock->uiLocals  = uiLocals;
+   pCBlock->pLocals   = pLocals;
 
    HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
 
@@ -214,24 +221,29 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
 HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
+   BYTE * pCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %i)", pBuffer, usLen));
 
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
-
-   /* Store the number of referenced local variables
-    */
-   pCBlock->uiLocals = 0;
-   pCBlock->pLocals  = NULL;
    /*
     * The codeblock pcode is stored in dynamically allocated memory that
     * can be deallocated after creation of a codeblock. We have to duplicate
     * the passed buffer
     */
-   pCBlock->pCode = ( BYTE * ) hb_xgrab( usLen );
-   memcpy( pCBlock->pCode, pBuffer, usLen );
-   pCBlock->dynBuffer = TRUE;
+   /*
+    * allocate memory for code block body and detach items hb_gcAlloc()
+    * to be safe for automatic GC activation in hb_xgrab() without
+    * calling hb_gcLock()/hb_gcUnlock(). [druzus]
+    */
+   pCode = ( BYTE * ) hb_xgrab( usLen );
+   memcpy( pCode, pBuffer, usLen );
 
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
+   /* Store the number of referenced local variables */
+   pCBlock->uiLocals  = 0;
+   pCBlock->pLocals   = NULL;
+   pCBlock->pCode     = pCode;
+   pCBlock->dynBuffer = TRUE;
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
 

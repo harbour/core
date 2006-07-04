@@ -141,9 +141,17 @@ void hb_stackPush( void )
    /* enough room for another item ? */
    if( ++hb_stack.pPos == hb_stack.pEnd )
       hb_stackIncrease();
+}
 
-   /* now, push it: */
-   ( * hb_stack.pPos )->type = HB_IT_NIL;
+#undef hb_stackAllocItem
+HB_ITEM_PTR hb_stackAllocItem( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackAllocItem()"));
+
+   if( ++hb_stack.pPos == hb_stack.pEnd )
+      hb_stackIncrease();
+
+   return * ( hb_stack.pPos - 1 );
 }
 
 #undef hb_stackPushReturn
@@ -156,9 +164,6 @@ void hb_stackPushReturn( void )
    /* enough room for another item ? */
    if( ++hb_stack.pPos == hb_stack.pEnd )
       hb_stackIncrease();
-
-   /* now, push it: */
-   ( * hb_stack.pPos )->type = HB_IT_NIL;
 }
 
 void hb_stackIncrease( void )
@@ -183,8 +188,13 @@ void hb_stackIncrease( void )
    hb_stack.pBase  = hb_stack.pItems + BaseIndex;
    hb_stack.wItems += STACK_EXPANDHB_ITEMS;
    hb_stack.pEnd   = hb_stack.pItems + hb_stack.wItems;
-   while( EndIndex < hb_stack.wItems )
-      hb_stack.pItems[ EndIndex++ ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+
+   do
+   {
+      hb_stack.pItems[ EndIndex ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+      hb_stack.pItems[ EndIndex ]->type = HB_IT_NIL;
+   }
+   while( ++EndIndex < hb_stack.wItems );
 }
 
 void hb_stackInit( void )
@@ -201,8 +211,11 @@ void hb_stackInit( void )
 
    hb_stack.Return.type = HB_IT_NIL;
 
-   for( i=0; i < hb_stack.wItems; ++i )
-     hb_stack.pItems[ i ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+   for( i = 0; i < hb_stack.wItems; ++i )
+   {
+      hb_stack.pItems[ i ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+      hb_stack.pItems[ i ]->type = HB_IT_NIL;
+   }
 }
 
 void hb_stackRemove( LONG lUntilPos )
@@ -333,6 +346,12 @@ int hb_stackGetStaticsBase( void )
 void hb_stackSetStaticsBase( int iBase )
 {
    hb_stack.iStatics = iBase;
+}
+
+#undef hb_stackItemBasePtr
+PHB_ITEM ** hb_stackItemBasePtr( void )
+{
+   return &hb_stack.pItems;
 }
 
 void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )

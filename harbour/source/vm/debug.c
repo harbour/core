@@ -112,20 +112,25 @@ HB_FUNC( HB_DBG_VMSTKGLIST )
  * $FuncName$     <nVars> __vmStkLCount( <nProcLevel> )
  * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
-static USHORT hb_stackLen( int iLevel )
+static LONG hb_stackLen( int iLevel )
 {
-   PHB_ITEM * pBase = hb_stack.pBase;
-   USHORT uiCount = 0;
+   LONG lBaseOffset, lPrevOffset, lLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
-   while( iLevel-- > 0 && pBase != hb_stack.pItems )
-   {
-      uiCount = pBase - ( hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase ) - 2;
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-   }
+   lBaseOffset = hb_stackBaseOffset();
+   while( --iLevel > 0 && lBaseOffset > 1 )
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
 
-   return uiCount;
+   if( lBaseOffset > 1 )
+   {
+      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase;
+      lLen = lBaseOffset - lPrevOffset - 3;
+   }
+   else
+      lLen = 0;
+
+   return lLen;
 }
 
 /* $Doc$
@@ -134,9 +139,7 @@ static USHORT hb_stackLen( int iLevel )
  * $End$ */
 HB_FUNC( HB_DBG_VMSTKLCOUNT )
 {
-   int iLevel = hb_parni( 1 ) + 1;
-
-   hb_retni( hb_stackLen( iLevel ) );
+   hb_retnl( hb_stackLen( hb_parni( 1 ) + 1 ) );
 }
 
 /* $Doc$
@@ -153,16 +156,16 @@ HB_FUNC( HB_DBG_VMSTKLCOUNT )
 HB_FUNC( HB_DBG_VMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   PHB_ITEM * pItem;
-   PHB_ITEM * pBase = hb_stack.pItems + ( *(hb_stack.pBase) )->item.asSymbol.stackbase;
+   ULONG ulLen, ul;
+   LONG lBaseOffset, lPrevOffset;
 
-   USHORT uiLen = hb_stackLen( 1 );
-   USHORT uiPos = 1;
+   lBaseOffset = hb_stackBaseOffset();
+   lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase;
 
-   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
-
-   for( pItem = pBase; pItem < hb_stack.pBase; pItem++ )
-      AddToArray( *pItem, pReturn, uiPos++ );
+   ulLen = lBaseOffset - lPrevOffset - 3;
+   pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
+   for( ul = 0; ul < ulLen; ++ul )
+      AddToArray( hb_stackItem( lPrevOffset + ul ), pReturn, ul + 1 );
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
@@ -176,66 +179,59 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
                /* and locals                        */
 HB_FUNC( HB_DBG_VMPARLLIST )
 {
-   int iLevel = hb_parni( 1 ) + 1;
-   PHB_ITEM * pBase = hb_stack.pBase;
-   PHB_ITEM pReturn;
-   PHB_ITEM * pItem;
-   USHORT uiLen, uiPos = 1;
-
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
-
-   uiLen = ( * pBase )->item.asSymbol.paramcnt;
-   pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
-
-   for( pItem = pBase + 2; uiLen--; pItem++ )
-      AddToArray( *pItem, pReturn, uiPos++ );
-
-   hb_itemRelease( hb_itemReturn( pReturn ) );
+   hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
 }
 
 HB_FUNC( HB_DBG_VMVARLGET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
-   PHB_ITEM * pBase = hb_stack.pBase;
+   LONG lBaseOffset;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+   lBaseOffset = hb_stackBaseOffset();
+   while( iLevel-- > 0 && lBaseOffset > 1 )
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
 
-   if( iLocal > SHRT_MAX )
+   if( iLevel < 0 )
    {
-      iLocal -= USHRT_MAX;
-      iLocal--;
+      if( iLocal > SHRT_MAX )
+      {
+         iLocal -= USHRT_MAX;
+         iLocal--;
+      }
+      if( iLocal >= 0 )
+         hb_itemReturn( hb_itemUnRef( hb_stackItem( lBaseOffset + iLocal ) ) );
+      else
+         hb_itemReturn( hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal ) );
    }
-   if( iLocal >= 0 )
-      hb_itemReturn( hb_itemUnRef( *(pBase + 1 + iLocal) ) );
-   else
-      hb_itemReturn( hb_codeblockGetVar( *(pBase+1), ( LONG ) iLocal ) );
 }
 
 HB_FUNC( HB_DBG_VMVARLSET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
-   PHB_ITEM * pBase = hb_stack.pBase;
+   LONG lBaseOffset;
    PHB_ITEM pLocal;
 
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+   lBaseOffset = hb_stackBaseOffset();
+   while( iLevel-- > 0 && lBaseOffset > 1 )
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
 
-   if( iLocal > SHRT_MAX )
+   if( iLevel < 0 )
    {
-      iLocal -= USHRT_MAX;
-      iLocal--;
+      if( iLocal > SHRT_MAX )
+      {
+         iLocal -= USHRT_MAX;
+         iLocal--;
+      }
+
+      if( iLocal >= 0 )
+         pLocal = hb_stackItem( lBaseOffset + iLocal );
+      else
+         pLocal = hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal );
+
+      hb_itemCopy( hb_itemUnRef( pLocal ), hb_stackItemFromBase( 3 ) );
    }
-
-   if( iLocal >= 0 )
-      pLocal = *(pBase + 1 + iLocal);
-   else
-      pLocal = hb_codeblockGetVar( *(pBase+1), ( LONG ) iLocal );
-
-   hb_itemCopy( hb_itemUnRef( pLocal ), *(hb_stack.pBase + 4) );
 }
 
 HB_FUNC( __VMSTKLCOUNT )
