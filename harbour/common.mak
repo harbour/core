@@ -4,14 +4,14 @@
 
 #**********************************************************
 #
-# Common Makefile.bc and Makefile.vc definitions
+# Common makefile.bc and makefile.vc definitions
 #
 #**********************************************************
 
 #
 # Macro to show/hide executed commands
 #
-!ifdef SHOW_COMMANDS
+!ifdef HB_BUILD_VERBOSE
 HIDE =
 !else
 HIDE = @

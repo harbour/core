@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * code cleanup
+
+  * harbour/source/vm/runner.c
+    ! fixed possible memory leaks when corrupted .hrb file is loaded
+
+2006-07-05 20:30 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   - harbour/Common.mak
+   + harbour/common.mak
+   * harbour/make_b32.bat
+   * harbour/make_vc.bat
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+     ! Filename casing correction. (fixed in two previous commits)
+     ! Missing CVS ID added. (fixed in previous commit)
      ! Few minor formatting, typos fixed.
      + Few build envvars prefixed with HB_ (some renamed)
      * Few minor cleanups not related the actual make process.

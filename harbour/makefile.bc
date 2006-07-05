@@ -16,22 +16,23 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       CFLAGS        - Extra C compiler options for libraries and for
-#                       executables
-#       CLIBFLAGS     - Extra C compiler options for the libraries
-#       C_USR         - Extra C compiler options for libraries and for
-#                       executables (GNU make compatible envvar)
-#       HARBOURFLAGS  - Extra Harbour compiler options
-#       HB_DOC_PDF    - Turns on the .PDF file support in the HBDOC utility.
-#                       Note that this will require the pdflib contrib.
-#       HB_GT_LIB     - To override the default GT driver
-#                       (search for HB_GT_LIBS for a list of values)
-#       PRG_USR       - Extra Harbour compiler options
-#                      (GNU make compatible envvar)
-#       HB_DEBUG_BUILD- If set to yes causes to compile with debug info
+#       CFLAGS            - Extra C compiler options for libraries and for
+#                           executables
+#       CLIBFLAGS         - Extra C compiler options for the libraries
+#       C_USR             - Extra C compiler options for libraries and for
+#                           executables (GNU make compatible envvar)
+#       HARBOURFLAGS      - Extra Harbour compiler options
+#       HB_GT_LIB         - To override the default GT driver
+#                           (search for HB_GT_LIBS for a list of values)
+#       PRG_USR           - Extra Harbour compiler options
+#                           (GNU make compatible envvar)
+#       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
+#       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       BCCDLL_WITH_DYNRT - If set to -tWR causes taht harbour-bc.dll
-#                           will use dynamic runtime library (recomended)
-#       SHOW_COMMANDS - enables echoing commands being executed
+#                           will use dynamic runtime library (recommended)
+#
+#       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
+#                           Note that this will require the pdflib contrib.
 
 #
 # NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
@@ -96,7 +97,7 @@ CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 
 CLIBFLAGS      = -c -q $(CFLAGS) $(CLIBFLAGS)
 
-!ifdef HB_DEBUG_BUILD
+!ifdef HB_BUILD_DEBUG
     CLIBFLAGS  = -y -v $(CLIBFLAGS)
 !endif
 
@@ -104,7 +105,7 @@ CLIBFLAGSDLL   = -D__EXPORT__ -DHB_FM_STATISTICS_OFF -tWM $(BCCDLL_WITH_DYNRT) $
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 
-!ifdef HB_DEBUG_BUILD
+!ifdef HB_BUILD_DEBUG
     LDFLAGS    = -v $(LDFLAGS)
 !endif
 
