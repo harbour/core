@@ -1808,7 +1808,8 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED16 pusType;
 
          AdsGetMemoDataType( pArea->hTable, ADSFIELD( uiIndex ), &pusType );
-         if( pusType == ADS_MEMO )
+
+         if( pusType != ADS_BINARY )
          {
             if( AdsGetMemoLength( pArea->hTable, ADSFIELD( uiIndex ), &pulLen ) == AE_NO_CURRENT_RECORD )
             {
