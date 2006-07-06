@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with Toninho modifications in xHarbour:
+      (! Inverted checking for memo data types, verifying binary first,
+         to prevent freeze in some empty ADT tabes.)
+
+2006-07-06 23:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added usrrdd.ch
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + added hb_itemPutSymbol()
+
+  * harbour/source/vm/hvm.c
+    ! fixed HB_P_POPVARIABLE - it should work like HB_P_POPMEMVAR
+      This Ron's code which illustrates it:
+            PROCEDURE Main()
+               USE Test
+               First := First
+               CLOSE
+               ? First
+            RETURN
+      In practice it means that we do not need this PCODE at all and
+      we should replace it in compiler by HB_P_POPMEMVAR and reuse
+      it in the future for differ things.
+
+  * harbour/source/vm/memvars.c
     * code cleanup
 
   * harbour/source/vm/runner.c

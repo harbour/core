@@ -95,6 +95,7 @@ PRG_HEADERS=\
 	simpleio.ch  \
 	std.ch       \
 	tbrowse.ch   \
+	usrrdd.ch    \
 
 API_HEADERS=\
 	error.api    \

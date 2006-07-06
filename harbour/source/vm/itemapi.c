@@ -1120,6 +1120,27 @@ HB_EXPORT PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
    return pItem;
 }
 
+HB_EXPORT PHB_ITEM hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutSymbol(%p,%p)", pItem, pSym));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_SYMBOL;
+   pItem->item.asSymbol.stackbase = 0;
+   pItem->item.asSymbol.lineno    = 0;
+   pItem->item.asSymbol.paramcnt  = 0;
+   pItem->item.asSymbol.value     = pSym;
+
+   return pItem;
+}
+
 HB_EXPORT void hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDecimal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNLen(%p, %p, %p)", pItem, piWidth, piDecimal));

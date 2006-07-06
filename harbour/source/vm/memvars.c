@@ -511,21 +511,17 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       /* Generate an error with retry possibility
        * (user created error handler can create this variable)
        */
-      USHORT uiAction = E_RETRY;
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                              NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
-      while( uiAction == E_RETRY )
+      while( hb_errLaunch( pError ) == E_RETRY )
       {
-         uiAction = hb_errLaunch( pError );
-         if( uiAction == E_RETRY )
-         {
-            if( hb_memvarGet( pItem, pMemvarSymb ) == SUCCESS )
-               uiAction = E_DEFAULT;
-         }
+         if( hb_memvarGet( pItem, pMemvarSymb ) == SUCCESS )
+            break;
       }
+
       hb_errRelease( pError );
    }
 }
@@ -554,26 +550,21 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          /* Generate an error with retry possibility
           * (user created error handler can make this variable accessible)
           */
-         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
 
-         while( uiAction == E_RETRY )
+         while( hb_errLaunch( pError ) == E_RETRY )
          {
-            uiAction = hb_errLaunch( pError );
-            if( uiAction == E_RETRY )
+            if( pDyn->hMemvar )
             {
-               if( pDyn->hMemvar )
-               {
-                  /* value is already created */
-                  pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
-                  pItem->item.asMemvar.value = pDyn->hMemvar;
-                  pItem->item.asMemvar.itemsbase = &s_globalTable;
-                  ++s_globalTable[ pDyn->hMemvar ].counter;
-                  uiAction = E_DEFAULT;
-               }
+               /* value is already created */
+               pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
+               pItem->item.asMemvar.value = pDyn->hMemvar;
+               pItem->item.asMemvar.itemsbase = &s_globalTable;
+               ++s_globalTable[ pDyn->hMemvar ].counter;
+               break;
             }
          }
          hb_errRelease( pError );
@@ -1231,28 +1222,23 @@ HB_FUNC( __MVGET )
          /* Generate an error with retry possibility
           * (user created error handler can create this variable)
           */
-         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                  NULL, pName->item.asString.value, 0, EF_CANRETRY );
 
-         while( uiAction == E_RETRY )
+         while( hb_errLaunch( pError ) == E_RETRY )
          {
-            uiAction = hb_errLaunch( pError );
-            if( uiAction == E_RETRY )
+            pDynVar = hb_memvarFindSymbol( hb_itemGetCPtr( pName ),
+                                           hb_itemGetCLen( pName ) );
+            if( pDynVar )
             {
-               pDynVar = hb_memvarFindSymbol( hb_itemGetCPtr( pName ),
-                                              hb_itemGetCLen( pName ) );
-               if( pDynVar )
-               {
-                  PHB_ITEM pValue = hb_stackAllocItem();
+               PHB_ITEM pValue = hb_stackAllocItem();
 
-                  hb_memvarGetValue( pValue, pDynVar->pSymbol );
-                  hb_itemReturnForward( pValue );
-                  hb_stackDec();
-                  break;
-               }
+               hb_memvarGetValue( pValue, pDynVar->pSymbol );
+               hb_itemReturnForward( pValue );
+               hb_stackDec();
+               break;
             }
          }
          hb_errRelease( pError );
@@ -1263,9 +1249,6 @@ HB_FUNC( __MVGET )
       /* either the first parameter is not specified or it has a wrong type
        * (it must be a string)
        * This is not a critical error - we can continue normal processing
-       */
-      /* TODO: This should be expanded a little to report a passed incorrect
-       * value to the error handler
        */
       hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
    }
@@ -1302,9 +1285,6 @@ HB_FUNC( __MVPUT )
       /* either the first parameter is not specified or it has a wrong type
        * (it must be a string)
        * This is not a critical error - we can continue normal processing
-       */
-      /* TODO: This should be expanded a little to report a passed incorrect
-       * value to the error handler
        */
       HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
 
@@ -1446,13 +1426,14 @@ HB_FUNC( __MVSAVE )
 
       /* Create .MEM file */
 
-      while( ( fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL ) ) == FS_ERROR )
+      do
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, HB_ERR_ARGS_BASEPARAMS );
-
-         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
-            break;
+         fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
       }
+      while( fhnd == FS_ERROR &&
+             hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName,
+                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
+                                 HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
 
       if( fhnd != FS_ERROR )
       {
@@ -1515,13 +1496,14 @@ HB_FUNC( __MVRESTORE )
 
       /* Open .MEM file */
 
-      while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_DENYWRITE | FO_PRIVATE ) ) == FS_ERROR )
+      do
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, HB_ERR_ARGS_BASEPARAMS );
-
-         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
-            break;
+         fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_DENYWRITE | FO_PRIVATE );
       }
+      while( fhnd == FS_ERROR &&
+             hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName,
+                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
+                                 HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
 
       if( fhnd != FS_ERROR )
       {

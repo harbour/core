@@ -118,6 +118,7 @@ extern HB_EXPORT PHB_ITEM   hb_itemPutNLLen ( PHB_ITEM pItem, long lNumber, int 
 extern HB_EXPORT PHB_ITEM   hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1, int iType2 );
 extern HB_EXPORT PHB_ITEM   hb_itemPutPtr   ( PHB_ITEM pItem, void * pValue );
 extern HB_EXPORT PHB_ITEM   hb_itemPutPtrGC ( PHB_ITEM pItem, void * pValue );
+extern HB_EXPORT PHB_ITEM   hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym );
 extern HB_EXPORT BOOL       hb_itemRelease  ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemReturn   ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemReturnForward( PHB_ITEM pItem );

@@ -1439,7 +1439,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHVARIABLE:
             /* Push a value of variable of unknown type onto the eval stack
              */
-            hb_vmPushVariable( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushVariable( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1466,7 +1466,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPALIASEDFIELD:
-            hb_vmPopAliasedField( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPopAliasedField( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1476,7 +1476,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPALIASEDVAR:
-            hb_vmPopAliasedVar( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPopAliasedVar( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1484,14 +1484,14 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* Pops a value from the eval stack and uses it to set
              * a new value of the given field
              */
-            hb_rddPutFieldValue( ( hb_stackItemFromTop(-1) ), pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_rddPutFieldValue( hb_stackItemFromTop(-1), pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             hb_stackPop();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopField)"));
             w += 3;
             break;
 
          case HB_P_POPLOCAL:
-            hb_vmPopLocal( HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPopLocal( HB_PCODE_MKSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1501,12 +1501,13 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_POPSTATIC:
-            hb_vmPopStatic( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPopStatic( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
          case HB_P_POPMEMVAR:
-            hb_memvarSetValue( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ), hb_stackItemFromTop( -1 ) );
+            hb_memvarSetValue( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ),
+                               hb_stackItemFromTop( -1 ) );
             hb_stackPop();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopMemvar)"));
             w += 3;
@@ -1514,32 +1515,36 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_POPVARIABLE:
          {
-            USHORT uiParams;
-            PHB_DYNS pDyn;
-
+            /*
+               2004-03-19 Ron Pinkas
+               Test with Clipper shows that for assignment, MEMVAR context
+               is always used even if MEMVAR does NOT exists, and a FIELD
+               with this name exists!!!
+               Here is the Test Ueed - Clipper produced NO R/T Error -
+               indicating MEMVAR was created.
+                 PROCEDURE Main()
+                    USE Test
+                    First := First
+                    CLOSE
+                    ? First
+                 RETURN
+            */
+#if 0
             /* Pops a value from the eval stack and uses it to set
              * a new value of a variable of unknown type.
              */
-            uiParams = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
-            /* First try if passed symbol is a name of field
-             * in a current workarea - if it is not a field (FAILURE)
-             * then try the memvar variable (it will create PRIVATE
-             * variable if this variable doesn't exist)
-             */
+            PHB_SYMB pSymbol = pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
 
-            /* memvars.c 417 */
-            pDyn = ( PHB_DYNS ) ( pSymbols + uiParams )->pDynSym;
-            if( pDyn && pDyn->hMemvar )
-            {
+            if( pSymbol->pDynSym && pSymbol->pDynSym->hMemvar )
                /* If exist a memory symbol with this name use it */
-               hb_memvarSetValue( pSymbols + uiParams, hb_stackItemFromTop( -1 ) );
-            }
-            else
-            {
+               hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
+            else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
                /* Try with a field and after create a memvar */
-               if( hb_rddFieldPut( hb_stackItemFromTop( -1 ), pSymbols + uiParams ) == FAILURE )
-                  hb_memvarSetValue( pSymbols + uiParams, hb_stackItemFromTop( -1 ) );
-            }
+               hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
+#else
+            hb_memvarSetValue( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ),
+                               hb_stackItemFromTop( -1 ) );
+#endif
             hb_stackPop();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
             w += 3;
@@ -6220,10 +6225,13 @@ HB_EXPORT BOOL hb_xvmPopVariable( PHB_SYMB pSymbol )
 {
    HB_TRACE(HB_TR_INFO, ("hb_xvmPopVariable(%p)", pSymbol));
 
+   /* See the note above in HB_P_POPVARIABLE */
+#if 0
    if( pSymbol->pDynSym && pSymbol->pDynSym->hMemvar )
-      hb_memvarSetValue( pSymbol, ( hb_stackItemFromTop(-1) ) );
-   else if( hb_rddFieldPut( ( hb_stackItemFromTop(-1) ), pSymbol ) == FAILURE )
-      hb_memvarSetValue( pSymbol, ( hb_stackItemFromTop(-1) ) );
+      hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
+   else if( hb_rddFieldPut( hb_stackItemFromTop(-1), pSymbol ) == FAILURE )
+#endif
+      hb_memvarSetValue( pSymbol, hb_stackItemFromTop(-1) );
    hb_stackPop();
 
    HB_XVM_RETURN
