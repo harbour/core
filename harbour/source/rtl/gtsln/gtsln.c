@@ -689,7 +689,10 @@ static void hb_gt_sln_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    hb_gt_sln_mouse_Init();
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSUPER_RESIZE( SLtt_Screen_Rows, SLtt_Screen_Cols );
-   hb_gt_SetCompatBuffer( FALSE );
+   hb_gt_SetFlag( GTI_COMPATBUFFER, FALSE );
+   hb_gt_SetFlag( GTI_STDOUTCON, s_fStdOutTTY );
+   hb_gt_SetFlag( GTI_STDERRCON, s_fStdErrTTY );
+
    hb_gt_SetBlink( TRUE );
    hb_gt_SetPos( SLsmg_get_row(), SLsmg_get_column() );
 }
@@ -810,37 +813,6 @@ static char * hb_gt_sln_Version( int iType )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
    return "Harbour Terminal: Slang";
-}
-
-/* *********************************************************************** */
-
-static void hb_gt_sln_OutStd( BYTE * pbyStr, ULONG ulLen )
-{
-   if( s_fStdOutTTY )
-   {
-      SLsmg_set_color( ( int )( ( unsigned char )( hb_gt_GetColor() - 7 ) ) );
-      SLsmg_write_nchars( ( char * ) pbyStr, ulLen );
-      SLsmg_refresh();
-   }
-   else
-      HB_GTSUPER_OUTSTD( pbyStr, ulLen );
-}
-
-/* *********************************************************************** */
-
-static void hb_gt_sln_OutErr( BYTE * pbyStr, ULONG ulLen )
-{
-   if( s_fStdErrTTY )
-   {
-      int Save_SLang_TT_Write_FD = SLang_TT_Write_FD;
-      SLang_TT_Write_FD = s_hStdErr;
-      SLsmg_set_color( ( int )( ( unsigned char )( hb_gt_GetColor() - 7 ) ) );
-      SLsmg_write_nchars( ( char * ) pbyStr, ulLen );
-      SLsmg_refresh();
-      SLang_TT_Write_FD = Save_SLang_TT_Write_FD;
-   }
-   else
-      HB_GTSUPER_OUTERR( pbyStr, ulLen );
 }
 
 /* *********************************************************************** */
@@ -1033,8 +1005,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Resume                     = hb_gt_sln_Resume;
    pFuncTable->PreExt                     = hb_gt_sln_PreExt;
    pFuncTable->PostExt                    = hb_gt_sln_PostExt;
-   pFuncTable->OutStd                     = hb_gt_sln_OutStd;
-   pFuncTable->OutErr                     = hb_gt_sln_OutErr;
    pFuncTable->Tone                       = hb_gt_sln_Tone;
    pFuncTable->Info                       = hb_gt_sln_Info;
    pFuncTable->SetDispCP                  = hb_gt_sln_SetDispCP;

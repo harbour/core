@@ -492,6 +492,8 @@ static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    }
 
    HB_GTSUPER_RESIZE( iRows, iCols );
+   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
+   hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
 
    hb_gt_pca_AnsiInit();
    hb_gt_pca_AnsiGetCurPos( &s_iRow, &s_iCol );
@@ -771,26 +773,6 @@ static BOOL hb_gt_pca_Resume()
    return TRUE;
 }
 
-static void hb_gt_pca_OutStd( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_OutStd(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_bStdoutConsole )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTSTD( pbyStr, ulLen );
-}
-
-static void hb_gt_pca_OutErr( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_OutErr(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_bStderrConsole )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTERR( pbyStr, ulLen );
-}
-
 static BOOL hb_gt_pca_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
@@ -940,8 +922,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_pca_Version;
    pFuncTable->Suspend                    = hb_gt_pca_Suspend;
    pFuncTable->Resume                     = hb_gt_pca_Resume;
-   pFuncTable->OutStd                     = hb_gt_pca_OutStd;
-   pFuncTable->OutErr                     = hb_gt_pca_OutErr;
    pFuncTable->SetDispCP                  = hb_gt_pca_SetDispCP;
    pFuncTable->SetKeyCP                   = hb_gt_pca_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_pca_Tone;

@@ -334,15 +334,6 @@ HB_EXPORT ERRCODE hb_gtSetSnowFlag( BOOL fNoSnow )
    return SUCCESS;
 }
 
-HB_EXPORT ERRCODE hb_gtSetCompatBuffer( BOOL fCompat )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetCompatBuffer(%d)", (int) fCompat));
-
-   hb_gt_SetCompatBuffer( fCompat );
-
-   return SUCCESS;
-}
-
 HB_EXPORT ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, ULONG * pulBuffSize )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtRectSize(%d, %d, %d, %d, %p)", iTop, iLeft, iBottom, iRight, pulBuffSize));
@@ -606,6 +597,11 @@ ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
       return SUCCESS;
    else
       return FAILURE;
+}
+
+int hb_gtSetFlag( int iType, int iNewValue )
+{
+   return hb_gt_SetFlag( iType, iNewValue );
 }
 
 int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )

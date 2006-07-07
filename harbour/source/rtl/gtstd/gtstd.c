@@ -232,6 +232,8 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0x0000 );
    }
 #endif
+   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
+   hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
 }
 
 static void hb_gt_std_Exit( void )
@@ -387,26 +389,6 @@ static BOOL hb_gt_std_Resume()
    }
 #endif
    return TRUE;
-}
-
-static void hb_gt_std_OutStd( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_OutStd(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_bStdoutConsole )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTSTD( pbyStr, ulLen );
-}
-
-static void hb_gt_std_OutErr( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_OutErr(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_bStderrConsole )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTERR( pbyStr, ulLen );
 }
 
 static void hb_gt_std_Scroll( int iTop, int iLeft, int iBottom, int iRight,
@@ -672,8 +654,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_std_Version;
    pFuncTable->Suspend                    = hb_gt_std_Suspend;
    pFuncTable->Resume                     = hb_gt_std_Resume;
-   pFuncTable->OutStd                     = hb_gt_std_OutStd;
-   pFuncTable->OutErr                     = hb_gt_std_OutErr;
    pFuncTable->SetDispCP                  = hb_gt_std_SetDispCP;
    pFuncTable->SetKeyCP                   = hb_gt_std_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_std_Tone;

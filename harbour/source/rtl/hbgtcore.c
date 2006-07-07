@@ -67,9 +67,11 @@
 #include <time.h>
 
 static PHB_GT_BASE   s_curGT = NULL;
-static BOOL          s_fVgaCell  = TRUE;
-static BOOL          s_fIsColor  = TRUE;
-static BOOL          s_fBlinking = TRUE;
+static BOOL          s_fVgaCell   = TRUE;
+static BOOL          s_fIsColor   = TRUE;
+static BOOL          s_fBlinking  = TRUE;
+static BOOL          s_fStdOutCon = FALSE;
+static BOOL          s_fStdErrCon = FALSE;
 static int           s_iCursorShape = SC_NORMAL;
 static USHORT        s_uiDispCount = 0;
 static USHORT        s_uiExtCount = 0;
@@ -633,11 +635,6 @@ static void hb_gt_def_SetSnowFlag( BOOL fNoSnow )
    HB_SYMBOL_UNUSED( fNoSnow );
 }
 
-static void hb_gt_def_SetCompatBuffer( BOOL fCompat )
-{
-   s_fVgaCell = fCompat;
-}
-
 static void hb_gt_def_DispBegin( void )
 {
    ++s_uiDispCount;
@@ -683,19 +680,32 @@ static BOOL hb_gt_def_Resume()
    return hb_gt_PostExt();
 }
 
+static void hb_gt_def_OutFile( FHANDLE hFile, BYTE * pbyStr, ULONG ulLen )
+{
+   USHORT uiErrorOld;
+
+   uiErrorOld = hb_fsError();
+   hb_fsWriteLarge( hFile, pbyStr, ulLen );
+   hb_fsSetError( uiErrorOld );
+}
+
 static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )
 {
    if( ulLen )
    {
-      USHORT uiErrorOld;
-
       if( s_curGT )
-         hb_gt_PreExt();
-      uiErrorOld = hb_fsError();
-      hb_fsWriteLarge( s_hStdOut, ( BYTE * ) pbyStr, ulLen );
-      hb_fsSetError( uiErrorOld );
-      if( s_curGT )
-         hb_gt_PostExt();
+      {
+         if( s_fStdOutCon )
+            hb_gt_WriteCon( pbyStr, ulLen );
+         else
+         {
+            hb_gt_PreExt();
+            hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
+            hb_gt_PostExt();
+         }
+      }
+      else
+         hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
    }
 }
 
@@ -703,15 +713,19 @@ static void hb_gt_def_OutErr( BYTE * pbyStr, ULONG ulLen )
 {
    if( ulLen )
    {
-      USHORT uiErrorOld;
-
       if( s_curGT )
-         hb_gt_PreExt();
-      uiErrorOld = hb_fsError();
-      hb_fsWriteLarge( s_hStdErr, ( BYTE * ) pbyStr, ulLen );
-      hb_fsSetError( uiErrorOld );
-      if( s_curGT )
-         hb_gt_PostExt();
+      {
+         if( s_fStdErrCon )
+            hb_gt_WriteCon( pbyStr, ulLen );
+         else
+         {
+            hb_gt_PreExt();
+            hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
+            hb_gt_PostExt();
+         }
+      }
+      else
+         hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
    }
 }
 
@@ -1456,6 +1470,31 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
    return TRUE;
 }
 
+static int hb_gt_def_SetFlag( int iType, int iNewValue )
+{
+   int iPrevValue = 0;
+
+   switch ( iType )
+   {
+      case GTI_COMPATBUFFER:
+         iPrevValue = s_fVgaCell;
+         s_fVgaCell = iNewValue != 0;
+         break;
+
+      case GTI_STDOUTCON:
+         iPrevValue = s_fStdOutCon;
+         s_fStdOutCon = iNewValue != 0;
+         break;
+
+      case GTI_STDERRCON:
+         iPrevValue = s_fStdErrCon;
+         s_fStdErrCon = iNewValue != 0;
+         break;
+   }
+
+   return iPrevValue;
+}
+
 static BOOL hb_gt_def_SetMode( int iRows, int iCols )
 {
    return hb_gt_Resize( iRows, iCols );
@@ -2018,7 +2057,6 @@ static HB_GT_FUNCS gtCoreFunc =
    GetBlink                   : hb_gt_def_GetBlink                      ,
    SetBlink                   : hb_gt_def_SetBlink                      ,
    SetSnowFlag                : hb_gt_def_SetSnowFlag                   ,
-   SetCompatBuffer            : hb_gt_def_SetCompatBuffer               ,
    Version                    : hb_gt_def_Version                       ,
    Suspend                    : hb_gt_def_Suspend                       ,
    Resume                     : hb_gt_def_Resume                        ,
@@ -2029,6 +2067,7 @@ static HB_GT_FUNCS gtCoreFunc =
    Tone                       : hb_gt_def_Tone                          ,
    Bell                       : hb_gt_def_Bell                          ,
    Info                       : hb_gt_def_Info                          ,
+   SetFlag                    : hb_gt_def_SetFlag                       ,
    SetDispCP                  : hb_gt_def_SetDispCP                     ,
    SetKeyCP                   : hb_gt_def_SetKeyCP                      ,
    ReadKey                    : hb_gt_def_ReadKey                       ,
@@ -2124,7 +2163,6 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_GetBlink                     ,
    hb_gt_def_SetBlink                     ,
    hb_gt_def_SetSnowFlag                  ,
-   hb_gt_def_SetCompatBuffer              ,
    hb_gt_def_Version                      ,
    hb_gt_def_Suspend                      ,
    hb_gt_def_Resume                       ,
@@ -2135,6 +2173,7 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_Tone                         ,
    hb_gt_def_Bell                         ,
    hb_gt_def_Info                         ,
+   hb_gt_def_SetFlag                      ,
    hb_gt_def_SetDispCP                    ,
    hb_gt_def_SetKeyCP                     ,
    hb_gt_def_ReadKey                      ,
@@ -2306,11 +2345,6 @@ void   hb_gt_SetBlink( BOOL fBlink )
 void   hb_gt_SetSnowFlag( BOOL fNoSnow )
 {
    gtCoreFunc.SetSnowFlag( fNoSnow );
-}
-
-void   hb_gt_SetCompatBuffer( BOOL fCompat )
-{
-   gtCoreFunc.SetCompatBuffer( fCompat );
 }
 
 void   hb_gt_DispBegin( void )
@@ -2541,6 +2575,11 @@ BOOL   hb_gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
 BOOL   hb_gt_Info( int iType, PHB_GT_INFO pInfo )
 {
    return gtCoreFunc.Info( iType, pInfo );
+}
+
+int    hb_gt_SetFlag( int iType, int iNewValue )
+{
+   return gtCoreFunc.SetFlag( iType, iNewValue );
 }
 
 int    hb_gt_ReadKey( int iEventMask )

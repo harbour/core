@@ -124,6 +124,7 @@ static void hb_gt_cgi_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
 }
 
 static void hb_gt_cgi_Exit( void )

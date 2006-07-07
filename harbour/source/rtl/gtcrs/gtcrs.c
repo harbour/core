@@ -2469,7 +2469,7 @@ static void hb_gt_crs_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
          add_new_ioBase( ioBase );
          HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
          HB_GTSUPER_RESIZE( s_ioBase->maxrow, s_ioBase->maxcol );
-         hb_gt_SetCompatBuffer( FALSE );
+         hb_gt_SetFlag( GTI_COMPATBUFFER, FALSE );
          hb_gt_SetBlink( TRUE );
       }
    }

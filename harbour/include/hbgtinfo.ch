@@ -110,6 +110,10 @@
 #define GTI_VIEWPORTHEIGHT    36  /* Current viewport height:for current mode */
 #define GTI_VIEWPORTWIDTH     37  /* Current viewport width:either win or full scrn */
 
+
+#define GTI_STDOUTCON         38  /* redirect STDOUT to console */
+#define GTI_STDERRCON         39  /* redirect STDERR to console */
+
 /* these are used _by_ MaxRow/Col */
 #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */
 #define GTI_SCREEN         1  /* Maximum screen size ('Screen' in CT terms) */

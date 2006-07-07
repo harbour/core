@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/vm/classes.c
+    + added HB_ARRAY_OBJ() and changed HB_IS_OBJECT() to use it
+      instead of HB_OBJ_CLASS() - it allows to use HB_IS_OBJECT()
+      without including hbapicls.h
+
+2006-07-07 12:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/ctwfunc.c
+    + added missing header note
+
+  * harbour/include/hbapigt.h
+  * harbour/include/hbgtcore.h
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+    * started basic modifications for multi CDP unicode screen buffer
+      added hb_gtSetFlag(), removed hb_gt_SetCompatBuffer(),
+      added GTI_STDOUTCON, GTI_STDERRCON, etc.
 
   * harbour/source/vm/arrays.c
     ! fixed bug I introduce recently in AEVAL and additional range checking

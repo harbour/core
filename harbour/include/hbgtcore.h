@@ -169,7 +169,6 @@ typedef struct
    BOOL     (* GetBlink) ( void );
    void     (* SetBlink) ( BOOL );
    void     (* SetSnowFlag) ( BOOL );
-   void     (* SetCompatBuffer) ( BOOL );
    char *   (* Version) ( int );
    BOOL     (* Suspend) ( void );
    BOOL     (* Resume) ( void );
@@ -180,6 +179,7 @@ typedef struct
    void     (* Tone) ( double, double );
    void     (* Bell) ( void );
    BOOL     (* Info) ( int, PHB_GT_INFO );
+   BOOL     (* SetFlag) ( int, int );
 
    /* internationalization */
    BOOL     (* SetDispCP) ( char *, char *, BOOL );
@@ -332,7 +332,6 @@ extern BOOL   hb_gt_PutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USH
 extern BOOL   hb_gt_GetBlink( void );
 extern void   hb_gt_SetBlink( BOOL fBlink );
 extern void   hb_gt_SetSnowFlag( BOOL fNoSnow );
-extern void   hb_gt_SetCompatBuffer( BOOL fCompat );
 extern void   hb_gt_DispBegin( void );
 extern void   hb_gt_DispEnd( void );
 extern int    hb_gt_DispCount( void );
@@ -377,6 +376,7 @@ extern void   hb_gt_OutErr( BYTE * pbyStr, ULONG ulLen );
 extern BOOL   hb_gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox );
 extern BOOL   hb_gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP );
 extern BOOL   hb_gt_Info( int iType, PHB_GT_INFO pInfo );
+extern int    hb_gt_SetFlag( int iType, int iNewValue );
 extern int    hb_gt_ReadKey( int iEventMask );
 extern void   hb_mouse_Init( void );
 extern void   hb_mouse_Exit( void );
@@ -435,7 +435,6 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_GETBLINK()                (HB_GTSUPER)->GetBlink()
 #define HB_GTSUPER_SETBLINK(b)               (HB_GTSUPER)->SetBlink(b)
 #define HB_GTSUPER_SETSNOWFLAG(b)            (HB_GTSUPER)->SetSnowFlag(b)
-#define HB_GTSUPER_SETCOMPATBUFFER(b)        (HB_GTSUPER)->SetCompatBuffer(b)
 #define HB_GTSUPER_DISPBEGIN()               (HB_GTSUPER)->DispBegin()
 #define HB_GTSUPER_DISPEND()                 (HB_GTSUPER)->DispEnd()
 #define HB_GTSUPER_DISPCOUNT()               (HB_GTSUPER)->DispCount()
@@ -480,6 +479,7 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_SETDISPCP(t,h,b)          (HB_GTSUPER)->SetDispCP(t,h,b)
 #define HB_GTSUPER_SETKEYCP(t,h)             (HB_GTSUPER)->SetKeyCP(t,h)
 #define HB_GTSUPER_INFO(i,p)                 (HB_GTSUPER)->Info(i,p)
+#define HB_GTSUPER_SETFLAG(i,f)              (HB_GTSUPER)->Info(i,f)
 #define HB_GTSUPER_READKEY(m)                (HB_GTSUPER)->ReadKey(m)
 #define HB_GTSUPER_MOUSEINIT()               (HB_GTSUPER)->MouseInit()
 #define HB_GTSUPER_MOUSEEXIT()               (HB_GTSUPER)->MouseExit()
