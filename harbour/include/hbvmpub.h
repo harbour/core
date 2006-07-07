@@ -63,6 +63,7 @@ struct _HB_SYMB;
 
 #  define HB_ITEM_TYPE( p )   ( ( p )->type )
 #  define HB_OBJ_CLASS( p )   ( ( p )->item.asArray.value->uiClass )
+#  define HB_ARRAY_OBJ( p )   ( ( p )->item.asArray.value->uiClass != 0 )
 
 #  if defined(__GNUC__)
 #     define HB_ITEM_NIL      { HB_IT_NIL, {} }
@@ -122,6 +123,7 @@ struct _HB_SYMB;
 /* #  define HB_ITEM_TYPE( p )   ( hb_itemType( p ) ) */
 
 #  define HB_OBJ_CLASS( p )   ( hb_objGetClass( p ) )
+#  define HB_ARRAY_OBJ( p )   ( hb_arrayIsObject( pSrcArray ) )
 
    /* basic types */
    typedef void *  PHB_ITEM;

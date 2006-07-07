@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     ! AFIELDS() made fully CA-Cl*pper compatible.
+
+   * harbour/contrib/libct/ctc.c
+     ! Warning fixed.
+
+2006-07-07 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbvmpub.h
   * harbour/source/vm/classes.c
     + added HB_ARRAY_OBJ() and changed HB_IS_OBJECT() to use it
       instead of HB_OBJ_CLASS() - it allows to use HB_IS_OBJECT()
