@@ -1339,7 +1339,7 @@ HB_FUNC( AFIELDS )
 {
    HB_THREAD_STUB
    PHB_ITEM pName, pType, pLen, pDec;
-   USHORT uiFields, uiArrayLen, uiCount;
+   USHORT uiFields, uiCount;
    AREAP pArea = HB_CURRENT_WA;
 
    if( !pArea )
@@ -1358,54 +1358,63 @@ HB_FUNC( AFIELDS )
       return;
    }
 
-   uiArrayLen = 0;
    SELF_FIELDCOUNT( pArea, &uiFields );
+
    if( pName )
    {
-      uiArrayLen = ( USHORT ) hb_arrayLen( pName );
-      if( uiArrayLen > uiFields )
-         uiArrayLen = uiFields;
-      for( uiCount = 1; uiCount <= uiArrayLen; ++uiCount )
+      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pName );
+      if( uiArrayLen < uiFields )
+         uiFields = uiArrayLen;
+   }
+   if( pType )
+   {
+      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pType );
+      if( uiArrayLen < uiFields )
+         uiFields = uiArrayLen;
+   }
+   if( pLen )
+   {
+      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pLen );
+      if( uiArrayLen < uiFields )
+         uiFields = uiArrayLen;
+   }
+   if( pDec )
+   {
+      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pDec );
+      if( uiArrayLen < uiFields )
+         uiFields = uiArrayLen;
+   }
+
+   if( pName )
+   {
+      for( uiCount = 1; uiCount <= uiFields; ++uiCount )
       {
-         SELF_FIELDINFO( pArea, uiCount, DBS_NAME,
-                         hb_arrayGetItemPtr( pName, uiCount ) );
+         SELF_FIELDINFO( pArea, uiCount, DBS_NAME, hb_arrayGetItemPtr( pName, uiCount ) );
       }
    }
    if( pType )
    {
-      uiArrayLen = ( USHORT ) hb_arrayLen( pType );
-      if( uiArrayLen > uiFields )
-         uiArrayLen = uiFields;
-      for( uiCount = 1; uiCount <= uiArrayLen; ++uiCount )
+      for( uiCount = 1; uiCount <= uiFields; ++uiCount )
       {
-         SELF_FIELDINFO( pArea, uiCount, DBS_TYPE,
-                         hb_arrayGetItemPtr( pType, uiCount ) );
+         SELF_FIELDINFO( pArea, uiCount, DBS_TYPE, hb_arrayGetItemPtr( pType, uiCount ) );
       }
    }
    if( pLen )
    {
-      uiArrayLen = ( USHORT ) hb_arrayLen( pLen );
-      if( uiArrayLen > uiFields )
-         uiArrayLen = uiFields;
-      for( uiCount = 1; uiCount <= uiArrayLen; ++uiCount )
+      for( uiCount = 1; uiCount <= uiFields; ++uiCount )
       {
-         SELF_FIELDINFO( pArea, uiCount, DBS_LEN,
-                         hb_arrayGetItemPtr( pLen, uiCount ) );
+         SELF_FIELDINFO( pArea, uiCount, DBS_LEN, hb_arrayGetItemPtr( pLen, uiCount ) );
       }
    }
    if( pDec )
    {
-      uiArrayLen = ( USHORT ) hb_arrayLen( pDec );
-      if( uiArrayLen > uiFields )
-         uiArrayLen = uiFields;
-      for( uiCount = 1; uiCount <= uiArrayLen; ++uiCount )
+      for( uiCount = 1; uiCount <= uiFields; ++uiCount )
       {
-         SELF_FIELDINFO( pArea, uiCount, DBS_DEC,
-                         hb_arrayGetItemPtr( pDec, uiCount ) );
+         SELF_FIELDINFO( pArea, uiCount, DBS_DEC, hb_arrayGetItemPtr( pDec, uiCount ) );
       }
    }
 
-   hb_retni( uiArrayLen );
+   hb_retni( uiFields );
 }
 
 HB_FUNC( ALIAS )

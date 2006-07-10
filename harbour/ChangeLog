@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+   * harbour/makefile.vc
+     + Generalized linker flags (LDFLAGS) and small exe generation
+       improvements.
+
+2006-07-10 13:29 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rdd/dbcmd.c
      ! AFIELDS() made fully CA-Cl*pper compatible.
 
    * harbour/contrib/libct/ctc.c

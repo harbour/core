@@ -82,9 +82,9 @@ USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
 
   for (uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++)
   {
-    PHB_ITEM pTemp;
-    hb_itemArrayPut (pArray, uiArgPos, pTemp = va_arg (va, PHB_ITEM));
-    HB_TRACE(HB_TR_DEBUG, ("\t%p,",pTemp));
+    PHB_ITEM pTemp = va_arg (va, PHB_ITEM);
+    hb_itemArrayPut (pArray, uiArgPos, pTemp);
+    HB_TRACE(HB_TR_DEBUG, ("\t%p,", pTemp));
   }
   va_end (va);
   HB_TRACE(HB_TR_DEBUG, (")"));
