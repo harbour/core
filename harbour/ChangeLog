@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * minor optimizations
+
+  * harbour/source/vm/itemapi.c
+    * make hb_itemClear() safe for not allocated stack items
+
+     + Generalized linker flags (LDFLAGS) and small exe generation 
+
+   By Marek Paliwoda:
 
    * harbour/makefile.vc
      + Generalized linker flags (LDFLAGS) and small exe generation
