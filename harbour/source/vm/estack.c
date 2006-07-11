@@ -221,8 +221,13 @@ void hb_stackInit( void )
 void hb_stackRemove( LONG lUntilPos )
 {
    HB_ITEM_PTR * pEnd = hb_stack.pItems + lUntilPos;
+
    while( hb_stack.pPos > pEnd )
-      hb_stackPop();
+   {
+      --hb_stack.pPos;
+      if( HB_IS_COMPLEX( * hb_stack.pPos ) )
+         hb_itemClear( * hb_stack.pPos );
+   }
 }
 
 HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
@@ -251,7 +256,11 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
 void hb_stackOldFrame( HB_STACK_STATE * pStack )
 {
    while( hb_stack.pPos > hb_stack.pBase )
-      hb_stackPop();
+   {
+      --hb_stack.pPos;
+      if( HB_IS_COMPLEX( * hb_stack.pPos ) )
+         hb_itemClear( * hb_stack.pPos );
+   }
 
    hb_stack.pBase = hb_stack.pItems + pStack->lBaseItem;
    hb_stack.iStatics = pStack->iStatics;

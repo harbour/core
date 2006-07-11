@@ -1274,9 +1274,17 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    }
    else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
    {
+      /*
+       * pItem->item.asEnum.valuePtr is intentionally assigned to pValue to
+       * avoid possible problems when pItem is stack item just freed which
+       * can be overwritten if hb_itemRelease( pItem->item.asEnum.basePtr )
+       * activate .prg destructor [druzus]
+       */
+      PHB_ITEM pValue = pItem->item.asEnum.valuePtr;
+
       hb_itemRelease( pItem->item.asEnum.basePtr );
-      if( pItem->item.asEnum.valuePtr )
-         hb_itemRelease( pItem->item.asEnum.valuePtr );
+      if( pValue )
+         hb_itemRelease( pValue );
    }
 
 #if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
