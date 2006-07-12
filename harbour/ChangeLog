@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/itemapi.c
+    * formatting
+
+2006-07-12 12:24 UTC+0300 Chen Kedem <niki@actcom.co.il>
    * doc/en/rddmisc.txt
    * doc/en/rdddb.txt
      ! Fix the sample for AFIELDS()

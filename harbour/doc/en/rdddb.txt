@@ -455,9 +455,9 @@
  *      This function is Not CA-Clipper compliant
  *  $FILES$
  *      Library is rdd
- *      Header  is Dbstruct.ch
+ *      Header  is dbstruct.ch
  *  $SEEALSO$
- *      AFIELDS(),DBSTRUCT()
+ *      AFIELDS()*,DBSTRUCT()
  *  $END$
  */
 
@@ -1077,9 +1077,9 @@
  *      This function is CA-Clipper compliant
  *  $FILES$
  *      Library is rdd
- *      Header is  DbStruct.ch
+ *      Header  is dbstruct.ch
  *  $SEEALSO$
- *      AFIELDS()
+ *      AFIELDS()*
  *  $END$
  */
 

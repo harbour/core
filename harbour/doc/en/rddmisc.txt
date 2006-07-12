@@ -17,7 +17,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     AFIELDS()
+ *     AFIELDS()*
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
@@ -36,34 +36,58 @@
  *      <nFields> Number od fields in a database or work area
  *  $DESCRIPTION$
  *      This function will fill a series of arrays with field
- *      names,field types,field lenghts, and number of field
+ *      names, field types, field lenghts, and number of field
  *      decimal positions for the currently selected or designed
  *      database. Each array parallels the different descriptors
- *      of a file's structure.The first array will consist of the
- *      names of the fields in the current work area.All other arrays
+ *      of a file's structure. The first array will consist of the
+ *      names of the fields in the current work area. All other arrays
  *      are optional and will be filled with the corrensponding data.
  *      This function will return zero if no parameters are specified
- *      or if no database is avaliable in the current work area.Otherwise,
+ *      or if no database is avaliable in the current work area. Otherwise,
  *      the number of fields or the lenght of the shortest array argument,
  *      witchever is smaller, will be returned.
+ *
+ *      AFIELDS() is a compatibility function, it is superseded by
+ *      DBSTRUCT() which returns one multidimensional array.
+ *
+ *      NOTE: The destination arrays must be initialized to a given size,
+ *            usually FCOUNT(), before calling this function.
+ *
  *  $EXAMPLES$
  *      FUNCTION Main()
- *         LOCAL aNames:={},aTypes:={},aLens:={},aDecs:={},nFields:=0
- *
+ *         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
  *         USE Test
  *
- *         dbGoTop()
- *         nFields:=aFields(aNames,aTypes,aLens,aDecs)
+ *         nCount := FCount()
+ *         ? "Number of fields:", nCount
+ *         PrintFields( nCount )   // Information for all fields
+ *         PrintFields( 4      )   // Information for first 4 fields
+ *      RETURN NIL
  *
- *         ? "Number of fields", nFields
+ *      FUNCTION PrintFields( nCount )
+ *         LOCAL aNames, aTypes, aLens, aDecs, nFields, i
  *
- *         RETURN NIL
+ *         aNames  := Array( nCount )
+ *         aTypes  := Array( nCount )
+ *         aLens   := Array( nCount )
+ *         aDecs   := Array( nCount )
+ *         nFields := aFields( aNames, aTypes, aLens, aDecs )
+ *
+ *         ? "Number of items :", nFields
+ *         FOR i := 1 TO nFields
+ *             ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
+ *             ?? aLens[ i ], aDecs[ i ]
+ *         NEXT
+ *         ?
+ *      RETURN NIL
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      AFIELDS() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rdd
+ *  $SEEALSO$
+ *      DBSTRUCT()
  *  $END$
  */
 
@@ -392,7 +416,7 @@
  *      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
  *  $ARGUMENTS$
  *      <nField> The field numeric position
- *  
+ *
  *      <expAssign> Expression to be assigned to the specified field
  *  $RETURNS$
  *      <ValueAssigned> Any expression
@@ -494,7 +518,7 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Return the length of a database file header 
+ *      Return the length of a database file header
  *  $SYNTAX$
  *      HEADER() --> nBytes
  *  $RETURNS$
@@ -701,7 +725,7 @@
  *  $TESTS$
  *  $STATUS$
  *      R
- *  $COMPLIANCE$    
+ *  $COMPLIANCE$
  *      This function is Ca-Clipper compliant
  *  $FILES$
  *      Library is rdd
@@ -733,7 +757,7 @@
  *      DBGOTOP()
  *      RECSIZE()            // Returns 1
  *      DBGOTO(50)
- *      RECSIZE() 
+ *      RECSIZE()
  *  $TESTS$
  *  $STATUS$
  *      R
