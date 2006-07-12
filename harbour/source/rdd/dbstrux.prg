@@ -175,10 +175,11 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    /* Build a filtered list of the requested fields. */
 
    aStructFiltered := {}
-   bFindName := {| aField | aField[ DBS_NAME ] == RTrim( Upper(cName ) ) }
+   bFindName := {| aField | aField[ DBS_NAME ] == cName }
 
-   AEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName, nIndex := aScan( aStruct, bFindName ),;
-      iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
+   AEval( aFieldList, {| cFieldName, nIndex | ;
+         cName := RTrim( Upper( cFieldName ) ), ;
+         nIndex := aScan( aStruct, bFindName ),;
+         iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered
-

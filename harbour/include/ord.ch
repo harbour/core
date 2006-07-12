@@ -58,22 +58,44 @@
 
 /* SCOPE commands: */
 
-#command SET SCOPETOP TO              => OrdScope( 0, nil )
-#command SET SCOPETOP TO <x>          => OrdScope( 0, <x> )
+#command SET SCOPETOP TO              => OrdScope( TOPSCOPE, nil )
+#command SET SCOPETOP TO <x>          => OrdScope( TOPSCOPE, <x> )
 
-#command SET SCOPEBOTTOM TO           => OrdScope( 1, nil )
-#command SET SCOPEBOTTOM TO <x>       => OrdScope( 1, <x> )
+#command SET SCOPEBOTTOM TO           => OrdScope( BOTTOMSCOPE, nil )
+#command SET SCOPEBOTTOM TO <x>       => OrdScope( BOTTOMSCOPE, <x> )
 
-#command SET SCOPE TO                 => OrdScope( 0,  );
-                                       ; OrdScope( 1,  )
+#command SET SCOPE TO                 => OrdScope( TOPSCOPE, nil );
+                                       ; OrdScope( BOTTOMSCOPE, nil )
 
-#command SET SCOPE TO <x>, <y>        => OrdScope( 0, <x> );
-                                       ; OrdScope( 1, <y> )
+#command SET SCOPE TO <x>, <y>        => OrdScope( TOPSCOPE, <x> );
+                                       ; OrdScope( BOTTOMSCOPE, <y> )
 
-#command SET SCOPE TO <x>             => OrdScope( 0, <x> );
-                                       ; OrdScope( 1, <x> )
+#command SET SCOPE TO <x>             => OrdScope( TOPSCOPE, <x> );
+                                       ; OrdScope( BOTTOMSCOPE, <x> )
 
-#command SET SCOPE TO ,<x>            => OrdScope( 1, <x> )
+#command SET SCOPE TO ,<x>            => OrdScope( BOTTOMSCOPE, <x> )
+
+
+/*
+ * This pseudofunction is only document in CL5.3 NG but not implemented
+ * in Clipper
+ */
+#include "hbsetup.ch"
+#ifdef HB_COMPAT_C53
+
+#xtranslate ORDCOND( [FOR <for>]                                        ;
+                     [<all:ALL>] [WHILE <while>]                        ;
+                     [EVAL <eval>] [EVERY <every>]                      ;
+                     [RECORD <rec>] [NEXT <next>]                       ;
+                     [<rest:REST>] [<descend: DESCENDING>] )            ;
+      => ordCondSet( <"for">, <{for}>,                                  ;
+                     [<.all.>], <{while}>,                              ;
+                     <{eval}>, <every>,                                 ;
+                     RECNO(), <next>, <rec>,                            ;
+                     [<.rest.>], [<.descend.>] )
+
+#endif
+
 
 #include "dbinfo.ch"
 

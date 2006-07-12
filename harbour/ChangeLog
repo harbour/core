@@ -8,6 +8,45 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     ! errorlevel changed to int from byte.
+
+   * harbour/source/rtl/errorapi.c
+     * Minor formatting.
+
+2006-07-12 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbextern.ch
+    - removed ORDCOND() - it's not normal function
+
+  * harbour/include/ord.ch
+    + added documented by CL5.3 NG but not implemented in Clipper
+      pseudofunction ORDCOND()
+
+  * harbour/source/rdd/dbcmd.c
+    + added __dbOpenSDF() function
+      In Clipper dbCreate() can receive also 6-th undocumented
+      parameter: cDelim. In [x]Harbour this parameter is used
+      for code page ID. I'd like you decide if we should move
+      it and keep exact Clipper parameters. I'm also not sure
+      if __dbOpenSDF() is the exact Clipper's name. In Clipper
+      the name has only 10 characters __dbOpenSD() and this
+      function is used to open for import DELIMITED and SDF
+      files so maybe SD is not from SDF. Can anyone confirm
+      it's valid name. Maybe we should remove the last F.
+
+  * harbour/source/rdd/dbstrux.prg
+    * small speed optimization
+
+  * harbour/source/rtl/dbdelim.prg
+    * added alternatice Clipper like version of __dbDelim(). It executes
+      internally the same functions as Clipper - if someone has a while
+      and can check if it works correctly giving the same as Clipper
+      results then I'll be helpfull.
+
+  * harbour/source/rtl/dummy.prg
+    - removed ORDCOND() and __dbOpenSDF()
+
+  * harbour/source/vm/arrays.c
+    * minor optimization
 
   * harbour/source/vm/cmdarg.c
   * harbour/source/vm/itemapi.c

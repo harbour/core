@@ -69,6 +69,55 @@ PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nR
 RETURN
 
 
+#ifdef __DBDELIM_STRICT_CLIPPER_CODE__
+function __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
+local nSrcArea, nDstArea, aStruct, cRDD := "DELIM"
+
+   if lExport
+      nSrcArea := Select()
+   else
+      nDstArea := Select()
+   endif
+
+   if Empty( aStruct := __fledit( dbstruct(), aFields ) )
+      return .F.
+   endif
+
+   if lExport
+      dbcreate( cFile, aStruct, cRDD, .T., "", , , cDelimArg )
+      nDstArea := Select()
+      if nDstArea == nSrcArea
+         nDstArea := Nil
+      endif
+      select( nSrcArea )
+   else
+      if !__dbopensdf( cFile, aStruct, cRDD, .T., "", cDelimArg )
+         return .F.
+      endif
+      nSrcArea := Select()
+   endif
+
+   if nDstArea != nil
+      __dbtrans( nDstArea, aStruct, bFor, bWhile, nNext, nRecord, lRest )
+   endif
+
+   if lExport
+      if nDstArea != Nil
+         select( nDstArea )
+         close
+      endif
+      select( nSrcArea )
+   else
+      select( nSrcArea )
+      close
+      select( nDstArea )
+   endif
+
+return .T.
+
+#endif /* __DBDELIM_STRICT_CLIPPER_CODE__ */
+
+
 #ifdef __DBDELIM_OLD_CODE__
 
 #include "hbcommon.ch"

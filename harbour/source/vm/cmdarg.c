@@ -322,8 +322,8 @@ HB_FUNC( HB_ARGV )
 /* Check for command line internal arguments */
 ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 {
-	char * cFlags;
-	ULONG ulFlags = HB_VMFLAG_HARBOUR;
+   char * cFlags;
+   ULONG ulFlags = HB_VMFLAG_HARBOUR;
 	
    if( hb_cmdargCheck( "INFO" ) )
    {

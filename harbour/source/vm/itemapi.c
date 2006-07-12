@@ -213,23 +213,23 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    if( ulLen == 0 )
    {
+      pItem->item.asString.value     = hb_vm_sNull;
       pItem->item.asString.length    = 0;
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_sNull;
    }
    else if( ulLen == 1 )
    {
+      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
       pItem->item.asString.length    = 1;
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
    }
    else
    {
+      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
+      /* we used strlen() above so we know it's 0-ended string */
+      hb_xmemcpy( pItem->item.asString.value, szText, ulLen + 1 );
       pItem->item.asString.length    = ulLen;
       pItem->item.asString.allocated = ulLen + 1;
-      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
-      /* we used strlen() above so we no it's 0-ended string */
-      hb_xmemcpy( pItem->item.asString.value, szText, ulLen + 1 );
    }
 
    pItem->type = HB_IT_STRING;
@@ -254,13 +254,13 @@ HB_EXPORT PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 
    if( szText == NULL )
    {
-      pItem->item.asString.length = 0;
       pItem->item.asString.value  = "";
+      pItem->item.asString.length = 0;
    }
    else
    {
-      pItem->item.asString.length = strlen( szText );
       pItem->item.asString.value  = ( char * ) szText;
+      pItem->item.asString.length = strlen( szText );
    }
 
    return pItem;
@@ -284,23 +284,23 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
 
    if( szText == NULL || ulLen == 0 )
    {
+      pItem->item.asString.value     = hb_vm_sNull;
       pItem->item.asString.length    = 0;
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_sNull;
    }
    else if( ulLen == 1 )
    {
+      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
       pItem->item.asString.length    = 1;
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
    }
    else
    {
-      pItem->item.asString.length    = ulLen;
-      pItem->item.asString.allocated = ulLen + 1;
       pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
+      pItem->item.asString.length    = ulLen;
+      pItem->item.asString.allocated = ulLen + 1;
    }
 
    pItem->type = HB_IT_STRING;
@@ -884,7 +884,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, 
    {
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
       /* Borland C compiled app crashes if a "NaN" double is compared with another double [martin vogel] */
-      if (_isnan (dNumber))
+      if( _isnan( dNumber ) )
       {
          iWidth = 20;
       }
@@ -1443,7 +1443,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
 
             hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+                           2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
             /* break() was executed by error block */
          }
          return pItem->item.asEnum.valuePtr;

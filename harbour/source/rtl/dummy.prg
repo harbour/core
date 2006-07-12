@@ -54,13 +54,8 @@
 
 /* TODO: Dummy functions, should be removed when implemented. */
 
-#ifdef HB_COMPAT_C53
-FUNCTION ordCond()         ; RETURN NIL
-#endif
-
 FUNCTION __dbJoin()        ; RETURN NIL
 
 /* NOTE: Internal functions */
 FUNCTION __dbFList()       ; RETURN {}
-FUNCTION __dbOpenSDF()     ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL

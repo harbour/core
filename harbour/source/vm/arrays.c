@@ -555,23 +555,25 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * p
       ULONG ulStart;
       ULONG ulCount;
 
-      if( pulStart && ( *pulStart >= 1 ) )
-         ulStart = *pulStart;
+      if( pulStart && *pulStart )
+         ulStart = *pulStart - 1;
       else
-         ulStart = 1;
+         ulStart = 0;
 
-      if( ulStart <= ulLen )
+      if( ulStart < ulLen )
       {
-         if( pulCount && ( *pulCount <= ulLen - ulStart ) )
+         ulCount = ulLen - ulStart;
+         if( pulCount && *pulCount < ulCount )
             ulCount = *pulCount;
-         else
-            ulCount = ulLen - ulStart + 1;
 
-         if( ulStart + ulCount > ulLen )             /* check range */
-            ulCount = ulLen - ulStart + 1;
-
-         for( ; ulCount > 0; ulCount--, ulStart++ )     /* set value items */
-            hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
+         if( ulCount > 0 )
+         {
+            do
+            {
+               hb_itemCopy( pBaseArray->pItems + ulStart++, pValue );
+            }
+            while( --ulCount > 0 );
+         }
       }
 
       return TRUE;
