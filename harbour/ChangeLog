@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/rdd/dbsort.prg
+  * harbour/source/rdd/dbstrux.prg
+  * harbour/source/rtl/dbdelim.prg
+    * updated for strict Clipper DBCREATE() parameters
+
+2006-07-13 12:27 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/hvm.c
      ! errorlevel changed to int from byte.
 
    * harbour/source/rtl/errorapi.c

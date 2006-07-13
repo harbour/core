@@ -230,14 +230,14 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       if( usRequest == HB_QUIT_REQUESTED )
       {
          if( pResult )
-             hb_itemRelease( pResult );
+            hb_itemRelease( pResult );
          hb_errRelease( pError );
          hb_vmQuit();
       }
       else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
       {
          if( pResult )
-             hb_itemRelease( pResult );
+            hb_itemRelease( pResult );
          uiAction = E_BREAK;
       }
       else if( pResult )

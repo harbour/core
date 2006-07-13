@@ -227,7 +227,7 @@ HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", {HB_FS_MESSAGE}, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
-static BYTE     s_byErrorLevel;     /* application exit errorlevel */
+static INT      s_nErrorLevel;      /* application exit errorlevel */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 
 static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
@@ -396,7 +396,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
    /* initialize internal data structures */
    s_aStatics.type = HB_IT_NIL;
-   s_byErrorLevel = 0;
+   s_nErrorLevel = 0;
    s_bDebugging = FALSE;
    s_bDebugShowLines = FALSE;
    s_bDebuggerIsWorking = FALSE;
@@ -583,7 +583,7 @@ HB_EXPORT void hb_vmQuit( void )
 /* hb_dynsymLog(); */
    hb_xexit();
 
-   exit( s_byErrorLevel );
+   exit( s_nErrorLevel );
 }
 
 HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
@@ -5845,14 +5845,14 @@ void hb_vmForceLink( void )
 
 HB_FUNC( ERRORLEVEL )
 {
-   hb_retni( s_byErrorLevel );
+   hb_retni( s_nErrorLevel );
 
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
             accepts other types also and considers them zero. [vszakats] */
 
    if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */
-      s_byErrorLevel = hb_parni( 1 );
+      s_nErrorLevel = hb_parni( 1 );
 }
 
 void hb_vmRequestQuit( void )
