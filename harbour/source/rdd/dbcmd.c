@@ -1775,7 +1775,7 @@ static ERRCODE hb_rddCreateTable( char * szFileName, PHB_ITEM pStruct,
  * In Clipper the arguments are:
  *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg )
  * In Harbour:
- *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cCodePage, nConnection, cDelimArg )
+ *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection )
  */
 HB_FUNC( DBCREATE )
 {
@@ -1786,9 +1786,10 @@ HB_FUNC( DBCREATE )
    ULONG ulConnection;
 
    /*
-    * NOTE: 4-th and 5-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open and
+    * NOTE: 4-th, 5-th and 6-th parameters are undocumented Clipper ones
+    * 4-th is boolean flag indicating if file should stay open
     * 5-th is alias - if not given then WA is open without alias
+    * 6-th is optional DELIMITED value used by some RDDs like DELIM
     */
 
    szFileName = hb_parc( 1 );
@@ -1797,9 +1798,9 @@ HB_FUNC( DBCREATE )
    fKeepOpen = ISLOG( 4 );
    fCurrArea = fKeepOpen && !hb_parl( 4 );
    szAlias = hb_parc( 5 );
-   szCpId = hb_parc( 6 );
-   ulConnection = hb_parnl( 7 );
-   pDelim = hb_param( 8, HB_IT_ANY );
+   pDelim = hb_param( 6, HB_IT_ANY );
+   szCpId = hb_parc( 7 );
+   ulConnection = hb_parnl( 8 );
 
    /*
     * Clipper allows to use empty struct array for RDDs which does not
@@ -4716,20 +4717,26 @@ HB_FUNC( DBSKIPPER )
          nRecs = hb_parnl( 1 ) ;
       }
 
-      SELF_EOF( pArea, &bBEof );
+      if( SELF_EOF( pArea, &bBEof ) != SUCCESS )
+         return;
+
       if( nRecs == 0 )
       {
-         SELF_SKIP( pArea, 0 );
+         if( SELF_SKIP( pArea, 0 ) != SUCCESS )
+            return;
       }
       else if( nRecs > 0 && !bBEof  )
       {
          while( nSkipped < nRecs )
          {
-            SELF_SKIP( pArea, 1 );
-            SELF_EOF( pArea, &bBEof );
+            if( SELF_SKIP( pArea, 1 ) != SUCCESS )
+               return;
+            if( SELF_EOF( pArea, &bBEof ) != SUCCESS )
+               return;
             if( bBEof )
             {
-               SELF_SKIP( pArea, -1 );
+               if( SELF_SKIP( pArea, -1 ) != SUCCESS )
+                  return;
                nRecs = nSkipped ;
             }
             else
@@ -4742,8 +4749,10 @@ HB_FUNC( DBSKIPPER )
       {
          while( nSkipped > nRecs )
          {
-            SELF_SKIP( pArea, -1 );
-            SELF_BOF( pArea, &bBEof );
+            if( SELF_SKIP( pArea, -1 ) != SUCCESS )
+               return;
+            if( SELF_BOF( pArea, &bBEof ) != SUCCESS )
+               return;
             if( bBEof )
             {
                nRecs = nSkipped ;

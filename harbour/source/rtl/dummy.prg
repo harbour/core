@@ -54,8 +54,5 @@
 
 /* TODO: Dummy functions, should be removed when implemented. */
 
-FUNCTION __dbJoin()        ; RETURN NIL
-
 /* NOTE: Internal functions */
 FUNCTION __dbFList()       ; RETURN {}
-FUNCTION __dbTransRec()    ; RETURN NIL

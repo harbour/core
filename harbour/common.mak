@@ -413,6 +413,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\dbedit.obj   \
     $(OBJ_DIR)\dbdelim.obj  \
     $(OBJ_DIR)\dbsdf.obj    \
+    $(OBJ_DIR)\dbjoin.obj   \
     $(OBJ_DIR)\devoutp.obj  \
     $(OBJ_DIR)\dircmd.obj   \
     $(OBJ_DIR)\dummy.obj    \

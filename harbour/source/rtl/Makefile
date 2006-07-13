@@ -138,6 +138,7 @@ PRG_SOURCES=\
     color53.prg  \
     dbdelim.prg  \
     dbedit.prg   \
+    dbjoin.prg   \
     dbsdf.prg    \
     devoutp.prg  \
     dircmd.prg   \

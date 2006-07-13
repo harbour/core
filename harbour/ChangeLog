@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+       Memo fields only.
+     ! Fixed error when passing xFor parameter as a string.
+     ! Set(_SET_CANCEL...) calls removed.
+     + Formatting, added few comments, CA-Cl*pper differences.
+
+2006-07-13 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/dbjoin.prg
+    + added __dbJoin() - code by Pavel Tsarenko borrowed from xHarbour
+
+  * harbour/source/rdd/dbtotal.prg
+    + added __dbTransRec() and updated to use it like in Clipper
+      Can someone tell me why we have Set( _SET_CANCEL, .f. ) in this
+      function?
+
+  * harbour/source/rtl/dummy.prg
+    - removed __dbJoin() and __dbTransRec()
+      Now only one function is defined here: __dbFList()
+      I have no idea what it does - if someone knows then please
+      implement it.
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    * formatting
+
+  * harbour/source/rdd/dbcmd.c
+    * keep strict Clipper compatibility in DBCREATE() parameters
+
   * harbour/source/rdd/dbsort.prg
   * harbour/source/rdd/dbstrux.prg
   * harbour/source/rtl/dbdelim.prg

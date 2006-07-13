@@ -66,7 +66,7 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
 
    BEGIN SEQUENCE
 
-      dbCreate( cToFileName, aStruct, cRddName, .T., "", cdpID, nConnection )
+      dbCreate( cToFileName, aStruct, cRddName, .T., "", , cdpID, nConnection )
       nToArea := Select()
       dbSelectArea( nArea )
       __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )

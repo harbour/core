@@ -545,8 +545,8 @@ HB_EXPORT void hb_vmQuit( void )
      hb_pp_Free();
    #endif
 
-   s_uiActionRequest = 0;         /* EXIT procedures should be processed */
-   hb_vmDoExitFunctions();       /* process defined EXIT functions */
+   s_uiActionRequest = 0;       /* EXIT procedures should be processed */
+   hb_vmDoExitFunctions();    	/* process defined EXIT functions */
 
    /* process AtExit registered functions */
    hb_vmDoModuleExitFunctions();

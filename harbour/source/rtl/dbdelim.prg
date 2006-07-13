@@ -84,7 +84,7 @@ local nSrcArea, nDstArea, aStruct, cRDD := "DELIM"
    endif
 
    if lExport
-      dbcreate( cFile, aStruct, cRDD, .T., "", , , cDelimArg )
+      dbcreate( cFile, aStruct, cRDD, .T., "", cDelimArg )
       nDstArea := Select()
       if nDstArea == nSrcArea
          nDstArea := Nil
