@@ -227,7 +227,7 @@ HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", {HB_FS_MESSAGE}, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
-static INT      s_nErrorLevel;      /* application exit errorlevel */
+static int      s_nErrorLevel;      /* application exit errorlevel */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 
 static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
