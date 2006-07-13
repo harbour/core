@@ -50,191 +50,196 @@
  *
  */
 
-
-#include "set.ch"
+#include "common.ch"
+#include "dbstruct.ch"
 #include "error.ch"
 
-FUNCTION __DBTOTAL( cFile, xKey, aFields, ;
-                    xFor, xWhile, nNext, nRec, lRest, rdd, ;
+/* NOTE: Compared to CA-Cl*pper, Harbour:
+         - will accept character expressions for xKey, xFor and xWhile. 
+         - has two extra parameters (nConnection, cpdId).
+         - will defuault to active index key for xKey parameter.
+         - has more error handling.
+*/
+
+FUNCTION __dbTotal( cFile, xKey, aFields, ;
+                    xFor, xWhile, nNext, nRec, lRest, cRDD, ;
                     nConnection, cdpId )
 
-   LOCAL CurSelect
-   LOCAL NewSelect
+   LOCAL nOldArea
+   LOCAL nNewArea
+
    LOCAL aNewDbStruct
    LOCAL aGetField
    LOCAL aFieldsSum
    LOCAL lDbTransRecord
    LOCAL xCurKey
+
    LOCAL bKeyBlock
    LOCAL bForBlock
    LOCAL bWhileBlock
-   LOCAL cset
-   LOCAL flag_err
-   LOCAL err_block
-   LOCAL wRec
-   LOCAL err
 
-   err_block := Errorblock( { | x | Break( x ) } )
-   flag_err  := .F.
-   cset      := Set( _SET_CANCEL, .f. )
+   LOCAL lError := .F.
+   LOCAL bOldError
+   LOCAL oError
 
-   IF ( Valtype( xWhile ) == "C" )
-      bWhileBlock := "{||" + xWhile + "}"
-      bWhileBlock := &bWhileBlock
-   ELSEIF ( Valtype( xWhile ) != "B" )
-      bWhileBlock := { || .t. }
+   IF ValType( xWhile ) == "C"
+      bWhileBlock := &("{||" + xWhile + "}")
+   ELSEIF ValType( xWhile ) != "B"
+      bWhileBlock := {|| .T. }
    ELSE
       bWhileBlock := xWhile
-      lRest    := .T.
+      lRest := .T.
    ENDIF
 
-   IF ( Valtype( xFor ) == "C" )
-      bForBlock := "{||" + xFor + "}"
-      bForBlock := &xFor
-   ELSEIF ( Valtype( xFor ) != "B" )
-      bForBlock := { || .t. }
+   IF ValType( xFor ) == "C"
+      bForBlock := &("{||" + xFor + "}")
+   ELSEIF ValType( xFor ) != "B"
+      bForBlock := {|| .T. }
    ELSE
       bForBlock := xFor
    ENDIF
 
-   IF ( lRest == NIL )
-      lRest := .F.
-   ENDIF
-   IF ( nRec != NIL )
-      GOTO nRec
+   DEFAULT lRest TO .F.
+
+   IF nRec != NIL
+      dbGoto( nRec )
       nNext := 1
    ELSE
-      IF ( nNext == NIL )
-         nNext := - 1
-         IF ( !lRest )
-            GOTO TOP
+      IF nNext == NIL
+         nNext := -1
+         IF !lRest
+            dbGoTop()
          ENDIF
       ELSE
          lRest := .T.
       ENDIF
    ENDIF
 
-   CurSelect    := SELECT()
+   nOldArea := Select()
+
    aNewDbStruct := {}
-   Aeval( Dbstruct(), { | _1 | IIF( _1[ 2 ] == "M", NIL, Aadd( aNewDbStruct, _1 ) ) } )
-   IF ( Empty( aNewDbStruct ) )
+   AEval( dbStruct(), {| aField | iif( aField[ DBS_TYPE ] == "M", NIL, AAdd( aNewDbStruct, aField ) ) } )
+   IF Empty( aNewDbStruct )
       RETURN .F.
    ENDIF
 
+   bOldError := ErrorBlock( {| x | Break( x ) } )
+
    BEGIN SEQUENCE
 
-      IF ( Empty( xKey ) )
-         xKey := Indexkey()
+      IF Empty( xKey )
+         xKey := IndexKey()
+
+         IF Empty( xKey )
+            oError := ErrorNew()
+            oError:description := "Invalid argument"
+            oError:genCode     := EG_ARG
+            Break( oError )
+         ENDIF
       ENDIF
 
-      IF ( Empty( xKey ) )
-         Set( _SET_CANCEL, cset )
-         err             := errorNew()
-         err:description := "invalid argument"
-         err:genCode     := EG_ARG
-         Eval( Errorblock(), err )
-      ENDIF
-
-      IF ( Valtype( xKey ) == "C" )
-         bKeyBlock := "{||" + xKey + "}"
-         bKeyBlock := &bKeyBlock
-      ELSEIF ( Valtype( xKey ) != "B" )
-         bKeyBlock := { || .t. }
+      IF ValType( xKey ) == "C"
+         bKeyBlock := &("{||" + xKey + "}")
+      ELSEIF ValType( xKey ) != "B"
+         bKeyBlock := {|| .T. }
       ELSE
          bKeyBlock := xKey
       ENDIF
 
       aGetField := {}
-      Aeval( aFields, { | _1 | Aadd( aGetField, getfield( _1 ) ) } )
+      AEval( aFields, {| cField | AAdd( aGetField, GetField( cField ) ) } )
       aFieldsSum := Array( Len( aGetField ) )
 
-      dbCreate( cFile, aNewDbStruct, rdd, .T., "", , cdpId, nConnection )
-      NewSelect := SELECT()
-      SELECT( CurSelect )
+      // ; Keep it open after creating it.
+      dbCreate( cFile, aNewDbStruct, cRDD, .T., "", NIL, cdpId, nConnection )
+      nNewArea := Select()
 
-      WHILE ( !Eof() .and. nNext != 0 .and. Eval( bWhileBlock ) )
+      dbSelectArea( nOldArea )
+      DO WHILE !Eof() .AND. nNext != 0 .AND. Eval( bWhileBlock )
+
          lDbTransRecord := .F.
-         Afill( aFieldsSum, 0 )
+
+         AFill( aFieldsSum, 0 )
+
          xCurKey := Eval( bKeyBlock )
-         WHILE ( !Eof() .and. nNext -- != 0 .and. Eval( bWhileBlock ) .and. ;
-                 xCurKey == Eval( bKeyBlock ) )
-            IF ( Eval( bForBlock ) )
-               IF ( !lDbTransRecord )
-                  __dbTransRec( NewSelect, aNewDbStruct )
-                  SELECT( CurSelect )
+
+         DO WHILE !Eof() .AND. nNext-- != 0 .AND. Eval( bWhileBlock ) .AND. ;
+               xCurKey == Eval( bKeyBlock )
+
+            IF Eval( bForBlock )
+               IF !lDbTransRecord
+                  __dbTransRec( nNewArea, aNewDbStruct )
+                  dbSelectArea( nOldArea )
                   lDbTransRecord := .T.
                ENDIF
-               Aeval( aGetField, { | _1, _2 | ;
-                        aFieldsSum[ _2 ] := aFieldsSum[ _2 ] + Eval( _1 ) } )
+               AEval( aGetField, {| bFieldBlock, nFieldPos | aFieldsSum[ nFieldPos ] += Eval( bFieldBlock ) } )
             ENDIF
 
-            SKIP
+            dbSkip()
          ENDDO
 
-         IF ( lDbTransRecord )
-            SELECT( NewSelect )
-            Aeval( aGetField, { | _1, _2 | Eval( _1, aFieldsSum[ _2 ] ) } )
-            SELECT( CurSelect )
+         IF lDbTransRecord
+            dbSelectArea( nNewArea )
+            AEval( aGetField, {| bFieldBlock, nFieldPos | Eval( bFieldBlock, aFieldsSum[ nFieldPos ] ) } )
+            dbSelectArea( nOldArea )
          ENDIF
 
       ENDDO
 
-   RECOVER USING err
-      flag_err := .t.
-
+   RECOVER USING oError
+      lError := .T.
    ENDSEQUENCE
 
-   IF ( NewSelect != NIL )
-      SELECT( NewSelect )
-      CLOSE
+   IF nNewArea != NIL
+      dbSelectArea( nNewArea )
+      dbCloseArea()
    ENDIF
 
-   SELECT( CurSelect )
-   Set( _SET_CANCEL, cset )
-   Errorblock( err_block )
+   dbSelectArea( nOldArea )
+   ErrorBlock( bOldError )
 
-   IF ( flag_err )
-      IF ( ValType( err:operation ) == "C" )
-         err:operation += "/__DBTOTAL"
+   IF lError
+      IF ValType( oError:operation ) == "C"
+         oError:operation += "/__DBTOTAL"
       ELSE
-         err:operation := "__DBTOTAL"
+         oError:operation := "__DBTOTAL"
       ENDIF
-      Eval( Errorblock(), err )
+      Eval( ErrorBlock(), oError )
    ENDIF
 
-RETURN .T.
+   RETURN .T.
 
-STATIC FUNCTION GETFIELD( cField )
+STATIC FUNCTION GetField( cField )
+   LOCAL nCurrArea := Select()
+   LOCAL nPos
+   LOCAL oError
+   LOCAL lError
 
-    LOCAL nPos
-    LOCAL SelectFromField
-    LOCAL CurSelect
-    LOCAL err
-    LOCAL lErr
-    CurSelect := SELECT()
+   IF ( nPos := At( "->", cField ) ) > 0
 
-    IF ( ( nPos := At( "->", cField ) ) > 0 )
-        SelectFromField := Left( cField, nPos - 1 )
-        IF ( Select( SelectFromField ) != CurSelect )
-            err           := ErrorNew()
-            err:severity  := ES_ERROR
-            err:gencode   := EG_SYNTAX
-            err:subsystem := "DBCMD"
-            err:candefaul := .T.
-            err:operation := cField
-            err:subcode   := 1101
-            lErr := Eval( Errorblock(), err )
-            IF ( Valtype( lErr ) != "L" .or. lErr )
-               __errInHandler()
-            ENDIF
+      IF Select( Left( cField, nPos - 1 ) ) != nCurrArea
 
-            BREAK( err )
-        ENDIF
+         oError := ErrorNew()
+         oError:severity   := ES_ERROR
+         oError:genCode    := EG_SYNTAX
+         oError:subSystem  := "DBCMD"
+         oError:canDefault := .T.
+         oError:operation  := cField
+         oError:subCode    := 1101
 
-        cField := Substr( cField, nPos + 2 )
-    ENDIF
+         lError := Eval( ErrorBlock(), oError )
+         IF ValType( lError ) != "L" .OR. lError
+            __ErrInHandler()
+         ENDIF
 
-RETURN Fieldblock( cField )
+         Break( oError )
+      ENDIF
+
+      cField := SubStr( cField, nPos + 2 )
+
+   ENDIF
+
+   RETURN FieldBlock( cField )
 
 FUNCTION __dbTransRec( nDstArea, aFieldsStru )
-   Return __dbTrans( nDstArea, aFieldsStru, , , 1 )
+   RETURN __dbTrans( nDstArea, aFieldsStru, NIL, NIL, 1 )

@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+        error if there is no method
+
+   * doc/en/clipper.txt
+     ! Fixed not resetting the error block when used on a table containing 
+
+2006-07-13 16:49 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rdd/dbtotal.prg
+     % Unused variable removed, one other optimized out, other minor optimizations.
+     ! Fixed not resetting the error block when used on a table containing
        Memo fields only.
      ! Fixed error when passing xFor parameter as a string.
      ! Set(_SET_CANCEL...) calls removed.
