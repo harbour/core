@@ -214,8 +214,11 @@ typedef enum
    HB_P_MINUSEQ,               /* 140 subs a value from the variable reference, leave result on the stack */
    HB_P_MULTEQ,                /* 141 multiplies a variable reference by a value, leave result on the stack */
    HB_P_DIVEQ,                 /* 142 divides the var reference by a value, leave result on the stack */
+   HB_P_WITHOBJECTSTART,       /* 143 start WITH OBJECT code */
+   HB_P_WITHOBJECTMESSAGE,     /* 144 push message for WITH OBJECT */
+   HB_P_WITHOBJECTEND,         /* 145 end WITH OBJECT code */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 143 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 146 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

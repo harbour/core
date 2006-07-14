@@ -112,6 +112,7 @@ PCOMDECLARED   hb_comp_pLastMethod;
 int            hb_comp_iLine;                             /* currently processed line number (globaly) */
 char *         hb_comp_szFile;                            /* Source file name of compiled module */
 PFUNCTION      hb_comp_pInitFunc;
+PHB_FNAME      hb_comp_pMainFileName = NULL;
 PHB_FNAME      hb_comp_pFileName = NULL;
 PHB_FNAME      hb_comp_pFilePpo  = NULL;
 
@@ -172,7 +173,7 @@ static BOOL hb_comp_bExternal   = FALSE;
  */
 static PEXTERN hb_comp_pExterns = NULL;
 static PAUTOOPEN hb_comp_pAutoOpen = NULL;
-static int hb_compAutoOpen( char * szPrg, BOOL * bSkipGen );
+static int hb_compAutoOpen( char * szPrg, BOOL * bSkipGen, BOOL bSingleFile );
 
 /* -m Support */
 static BOOL hb_compAutoOpenFind( char * szName );
@@ -278,7 +279,7 @@ int main( int argc, char * argv[] )
          if( argv[ i ][ 0 ] == '@' )
             iStatus = hb_compProcessRSPFile( argv[ i ] + 1, argc, argv );
          else
-            iStatus = hb_compCompile( argv[ i ], argc, argv );
+            iStatus = hb_compCompile( argv[ i ], argc, argv, TRUE );
 
          if( iStatus != EXIT_SUCCESS )
             break;
@@ -338,7 +339,7 @@ void hb_compMainExit( void )
       hb_xfree( pAutoOpen->szName );
       hb_xfree( pAutoOpen );
    }
-      
+
    hb_xexit();
 }
 
@@ -357,7 +358,6 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
       hb_fsFNameMerge( szFile, pFileName );
       szRspName = szFile;
    }
-   hb_xfree( pFileName );
 
    inFile = fopen( szRspName, "r" );
    if( !inFile )
@@ -367,7 +367,10 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
    }
    else
    {
-      int iProcess = 1, i = 0, ch;
+      int i = 0, ch;
+      BOOL bAutoOpen = hb_comp_bAutoOpen;
+      
+      hb_comp_bAutoOpen = TRUE;
 
       do
       {
@@ -388,23 +391,16 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
                continue;
          }
 
+         while( i == 0 && HB_ISSPACE( ch ) )
+            ch = fgetc( inFile );
+            
          if( ch == EOF || HB_ISSPACE( ch ) || ch == '#' )
          {
             szFile[ i ] = '\0';
 
             if( i > 0 )
-            {
-               if( iProcess > 1 )
-                  hb_pp_Init();
-
-               iStatus = hb_compCompile( szFile, argc, argv );
-
-               if( iStatus != EXIT_SUCCESS )
-                  break;
-
-               iProcess ++;
-               i = 0;
-            }
+               hb_compAutoOpenAdd( szFile );
+            i = 0;
             while( ch != EOF && ch != '\n' )
                ch = fgetc( inFile );
          }
@@ -414,6 +410,12 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
       while( ch != EOF );
 
       fclose ( inFile );
+
+      hb_comp_bAutoOpen = bAutoOpen;
+      
+      hb_fsFNameMerge( szFile, pFileName );
+      hb_xfree( pFileName );
+      hb_compCompile( szFile, argc, argv, FALSE );
    }
 
    return iStatus;
@@ -3059,7 +3061,12 @@ void hb_compGenVarPCode( BYTE bPCode, char * szVarName )
       hb_compGenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ), ( BOOL ) 1 );
 }
 
-void hb_compGenMessage( char * szMsgName )       /* sends a message to an object */
+/* sends a message to an object */
+/* bIsObject = TRUE if we are sending a message to real object 
+   bIsObject is FALSE if we are sending a message to an object specified
+   with WITH OBJECT statement.
+*/
+void hb_compGenMessage( char * szMsgName, BOOL bIsObject )       
 {
    USHORT wSym;
    PCOMSYMBOL pSym = hb_compSymbolFind( szMsgName, &wSym, HB_SYM_MSGNAME );
@@ -3067,17 +3074,20 @@ void hb_compGenMessage( char * szMsgName )       /* sends a message to an object
    if( ! pSym )  /* the symbol was not found on the symbol table */
       pSym = hb_compSymbolAdd( szMsgName, &wSym, HB_SYM_MSGNAME );
    pSym->cScope |= HB_FS_MESSAGE;
-   hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+   if( bIsObject )
+      hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+   else
+      hb_compGenPCode3( HB_P_WITHOBJECTMESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
 }
 
-void hb_compGenMessageData( char * szMsg ) /* generates an underscore-symbol name for a data assignment */
+void hb_compGenMessageData( char * szMsg, BOOL bIsObject ) /* generates an underscore-symbol name for a data assignment */
 {
    char * szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
 
    strcpy( szResult, "_" );
    strcat( szResult, szMsg );
 
-   hb_compGenMessage( hb_compIdentifierNew( szResult, TRUE ) );
+   hb_compGenMessage( hb_compIdentifierNew( szResult, TRUE ), bIsObject );
    hb_xfree( szResult );
 }
 
@@ -4793,14 +4803,14 @@ static void hb_compOutputFile( void )
    }
 }
 
-int hb_compCompile( char * szPrg, int argc, char * argv[] )
+int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
 {
    int iStatus = EXIT_SUCCESS;
-   PHB_FNAME pFileName;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_compCompile(%s,%i)", szPrg, argc));
 
-   hb_comp_pFileName = hb_fsFNameSplit( szPrg );
+   hb_comp_pMainFileName = hb_fsFNameSplit( szPrg );
+   hb_comp_pFileName = hb_comp_pMainFileName;
 
    if( hb_comp_pFileName->szName )
    {
@@ -4812,7 +4822,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
       hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
-      if( hb_comp_bPPO )
+      if( hb_comp_bPPO && bSingleFile )
       {
          hb_comp_pFilePpo  = hb_fsFNameSplit( szPrg );
          hb_compPpoFile();
@@ -4840,58 +4850,61 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
             hb_comp_szFile = szFileName;
 
-            if( ! hb_comp_bQuiet )
+            if( bSingleFile )
             {
-               if( hb_comp_bPPO )
-                  printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-               else
-                  printf( "Compiling '%s'...\n", szFileName );
-            }
+               if( ! hb_comp_bQuiet )
+               {
+                  if( hb_comp_bPPO )
+                     printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+                  else
+                     printf( "Compiling '%s'...\n", szFileName );
+               }
 
-            /* Generate the starting procedure frame */
-            if( hb_comp_bStartProc )
-            {
-               hb_compFunctionAdd( hb_compIdentifierNew( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), FALSE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               /* Generate the starting procedure frame */
+               if( hb_comp_bStartProc )
+               {
+                  hb_compFunctionAdd( hb_compIdentifierNew( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), FALSE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               }
+               else
+               {
+                  /* Don't pass the name of module if the code for starting procedure
+                  * will be not generated. The name cannot be placed as first symbol
+                  * because this symbol can be used as function call or memvar's name.
+                  */
+                  hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               }
+
+               yyparse();
+
+               if( hb_comp_bPPO && hb_comp_yyppo )
+               {
+                  fclose( hb_comp_yyppo );
+                  hb_comp_yyppo = NULL;
+                  if( hb_comp_pFilePpo )
+                     hb_xfree( hb_comp_pFilePpo );
+                  hb_comp_pFilePpo = NULL;
+               }
             }
             else
             {
-               /* Don't pass the name of module if the code for starting procedure
-                * will be not generated. The name cannot be placed as first symbol
-                * because this symbol can be used as function call or memvar's name.
-                */
-               hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               printf( "Reading '%s'...\n", szFileName );
             }
-
-            yyparse();
-
-            if( hb_comp_bPPO && hb_comp_yyppo )
-            {
-               fclose( hb_comp_yyppo );
-               hb_comp_yyppo = NULL;
-               if( hb_comp_pFilePpo )
-                  hb_xfree( hb_comp_pFilePpo );
-               hb_comp_pFilePpo = NULL;
-            }
-
-            /* Saving main file. */
-            pFileName = hb_comp_pFileName;
-
-            /* Open refernced modules. */
+            
+            /* Open refernced modules (using DO ... WITh statement
+             * or from @.clp command line option
+            */
             while( hb_comp_pAutoOpen )
             {
                PAUTOOPEN pAutoOpen = hb_comp_pAutoOpen;
 
-               hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
-
                if( ! hb_compFunctionFind( pAutoOpen->szName ) )
-                  hb_compAutoOpen( pAutoOpen->szName, &bSkipGen );
+                  hb_compAutoOpen( pAutoOpen->szName, &bSkipGen, bSingleFile );
+
+               hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
 
                hb_xfree( pAutoOpen->szName );
                hb_xfree( pAutoOpen );
             }
-
-            /* Restoring main file. */
-            hb_comp_pFileName = pFileName;
 
             /* Begin of finalization phase. */
 
@@ -4955,17 +4968,34 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                hb_compOutputFile();
 
                if( ! hb_comp_bStartProc )
-                  --hb_comp_iFunctionCnt;
+               {
+                  /* remove function frames with no names */
+                  PFUNCTION *pFunPtr = &hb_comp_functions.pFirst;
+                  
+                  while( *pFunPtr )
+                  {
+                     if( ! (*pFunPtr)->szName[0] )
+                     {
+                        *pFunPtr = hb_compFunctionKill( *pFunPtr );
+                        hb_comp_functions.iCount--;
+                     }
+                     else
+                     {
+                        hb_compOptimizeFrames( *pFunPtr );
+
+                     if( szFirstFunction == NULL && 
+                        ! ( ( *pFunPtr )->cScope & (HB_FS_INIT || HB_FS_EXIT) ) )
+                     {
+                        szFirstFunction = ( *pFunPtr )->szName;
+                     }
+                        pFunPtr = &(*pFunPtr)->pNext;
+                     }
+                  }
+               }
 
                pFunc = hb_comp_functions.pFirst;
                while( pFunc )
                {
-                  hb_compOptimizeFrames( pFunc );
-
-                  if( szFirstFunction == NULL && pFunc->szName[0] && ! ( pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT ) )
-                  {
-                     szFirstFunction = pFunc->szName;
-                  }
 
                   pFunc = pFunc->pNext;
                }
@@ -5019,6 +5049,14 @@ static void hb_compCompileEnd( void )
    
    if( hb_comp_pFileName )
    {
+      if( hb_comp_pFileName != hb_comp_pMainFileName && hb_comp_pFileName )
+      {
+         /* currently compiled file was autoopened - close also
+          * the main module
+         */
+         hb_xfree( hb_comp_pMainFileName );
+         hb_comp_pMainFileName = NULL;
+      }
       hb_xfree( hb_comp_pFileName );
       hb_comp_pFileName = NULL;
    }
@@ -5191,9 +5229,10 @@ BOOL hb_compAutoOpenFind( char * szName )
    return FALSE;
 }
 
-int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
+int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen, BOOL bSingleFile )
 {
    int iStatus = EXIT_SUCCESS;
+   PHB_FNAME pMainFileName = hb_comp_pFileName;
 
    hb_comp_pFileName = hb_fsFNameSplit( szPrg );
 
@@ -5211,6 +5250,8 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
       {
          hb_comp_pFileName->szExtension = ".ppo";
          hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         if( hb_comp_yyppo )
+            fclose( hb_comp_yyppo );
          hb_comp_yyppo = fopen( szPpoName, "w" );
          if( ! hb_comp_yyppo )
          {
@@ -5243,7 +5284,9 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
 
             /* Generate the starting procedure frame */
             if( hb_comp_bStartProc )
-               hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               hb_compFunctionAdd( hb_compIdentifierNew( hb_strupr( hb_comp_pFileName->szName ), TRUE ) , HB_FS_PUBLIC, FUN_PROCEDURE );
+            else if( ! bSingleFile )
+               hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
 
             {
                int i = hb_comp_iExitLevel ;
@@ -5292,6 +5335,7 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
    }
 
    hb_xfree( hb_comp_pFileName );
+   hb_comp_pFileName = pMainFileName;
 
    return iStatus;
 }

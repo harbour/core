@@ -224,6 +224,8 @@ HB_SYMB  hb_symEval      = { "__EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NUL
 HB_SYMB  hb_symEnumIndex = { "__ENUMINDEX", {HB_FS_MESSAGE}, {NULL}, NULL };
 HB_SYMB  hb_symEnumBase  = { "__ENUMBASE",  {HB_FS_MESSAGE}, {NULL}, NULL };
 HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", {HB_FS_MESSAGE}, {NULL}, NULL };
+HB_SYMB  hb_symWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {NULL}, NULL };
+HB_SYMB  hb_symWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
@@ -261,8 +263,9 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
-/* Stores the position on the stack of current FOR EACh envelope
-*/
+/* Stores the position on the stack of current WITH OBJECT envelope */
+static LONG s_lWithObjectBase = 0;
+
 /* Stores level of procedures call stack
 */
 static ULONG   s_ulProcLevel = 0;
@@ -413,6 +416,8 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    hb_dynsymNew( &hb_symEnumIndex );
    hb_dynsymNew( &hb_symEnumBase );
    hb_dynsymNew( &hb_symEnumValue );
+   hb_dynsymNew( &hb_symWithObjectPush );
+   hb_dynsymNew( &hb_symWithObjectPop );
 
    hb_setInitialize();        /* initialize Sets */
    hb_conInit();              /* initialize Console */
@@ -593,6 +598,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    LONG lForEachBase = 0;  /* Stores the position on the stack of current FOR EACH envelope */
    ULONG ulPrivateBase;
    BOOL bDynCode = pSymbols == NULL || ( pSymbols->scope.value & HB_FS_DYNCODE ) != 0;
+   LONG lWithObjectBase = s_lWithObjectBase;
 #ifndef HB_NO_PROFILER
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
@@ -1837,6 +1843,33 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
          }
 
+         /* WITH OBJECT */
+         
+         case HB_P_WITHOBJECTMESSAGE:
+            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPush( hb_stackItem( s_lWithObjectBase ) );
+            w += 3;
+            break;
+
+         case HB_P_WITHOBJECTSTART:
+            {
+               /* The object is pushed directly before this pcode */
+               /* store position of current WITH OBJECT frame */
+               HB_ITEM_PTR pItem = hb_stackAllocItem();
+               pItem->type = HB_IT_LONG;
+               pItem->item.asLong.value = s_lWithObjectBase;
+               s_lWithObjectBase = hb_stackTopOffset() - 2;
+               w += 1;
+            }
+            break;
+
+         case HB_P_WITHOBJECTEND:
+            s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
+            hb_stackDec();
+            hb_stackPop();  /* remove implicit object */
+            w += 1;
+            break;
+
          /* misc */
 
          case HB_P_NOOP:
@@ -1865,16 +1898,28 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             if( bCanRecover )
             {
                /*
-                * There is the BEGIN/END sequence deifined in current
+                * There is the BEGIN/END sequence defined in current
                 * procedure/function - use it to continue opcodes execution
                 */
-               while( lForEachBase > s_lRecoverBase )
+               while( lForEachBase > s_lRecoverBase || s_lWithObjectBase >= s_lRecoverBase )
                {
-                  /* remove FOR EACH stack frame so there is no orphan
-                   * item pointers hanging
-                   */
-                  hb_stackRemove( lForEachBase );
-                  lForEachBase = hb_vmEnumEnd();
+                  if( lForEachBase > s_lWithObjectBase )
+                  {
+                     /* remove FOR EACH stack frame so there is no orphan
+                      * item pointers hanging
+                      */
+                     hb_stackRemove( lForEachBase );
+                     lForEachBase = hb_vmEnumEnd();
+                  }
+                  else if( lForEachBase < s_lWithObjectBase )
+                  {
+                     /* BREAK was issued inside the WITH OBJECT 
+                      * restore previous frame
+                     */
+                     hb_stackRemove( s_lWithObjectBase + 2 );
+                     s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
+                     hb_stackDec();
+                  }
                }
             
                /*
@@ -1910,6 +1955,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
    if( pSymbols )
       hb_memvarSetPrivatesBase( ulPrivateBase );
+
+   /* Restore previous WITH OBJECT frame if the RETURN statement
+    * was placed inside WITH OBJECT/END
+   */
+   s_lWithObjectBase = lWithObjectBase;
 }
 
 /* ------------------------------- */
@@ -4009,38 +4059,52 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    if( bNotHandled )
    {
-      PHB_SYMB pExecSym;
-      BOOL lPopSuper;
-
-      pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
-      if( pExecSym && pExecSym->value.pFunPtr )
+      if( pSym->pDynSym == hb_symWithObjectPush.pDynSym && s_lWithObjectBase )
       {
-#ifndef HB_NO_PROFILER
-         if( bProfiler )
-            pMethod = hb_mthRequested();
-#endif
-         if( hb_bTracePrgCalls )
-            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
-
-         if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-            /* Running pCode dynamic function from .HRB */
-            hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                          pExecSym->value.pCodeFunc->pSymbols );
-         else
-            pExecSym->value.pFunPtr();
-
-#ifndef HB_NO_PROFILER
-         if( bProfiler )
-            hb_mthAddTime( pMethod, clock() - ulClock );
-#endif
+         /* push current WITH OBJECT object */
+         hb_itemCopy( &hb_stack.Return, hb_stackItem( s_lWithObjectBase ) );
       }
-      else if( pSym->szName[ 0 ] == '_' )
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
+      else if( pSym->pDynSym == hb_symWithObjectPop.pDynSym && s_lWithObjectBase )
+      {
+         /* replace current WITH OBJECT object */
+         hb_itemCopy( hb_stackItem( s_lWithObjectBase ), hb_stackItemFromBase( 1 ) );
+         hb_itemCopy( &hb_stack.Return, hb_stackItem( s_lWithObjectBase ) );
+      }
       else
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
+      {
+         PHB_SYMB pExecSym;
+         BOOL lPopSuper;
 
-      if( lPopSuper )
-         hb_objPopSuperCast( pSelf );
+         pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
+         if( pExecSym && pExecSym->value.pFunPtr )
+         {
+#ifndef HB_NO_PROFILER
+            if( bProfiler )
+               pMethod = hb_mthRequested();
+#endif
+            if( hb_bTracePrgCalls )
+               HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
+
+            if( pExecSym->scope.value & HB_FS_PCODEFUNC )
+               /* Running pCode dynamic function from .HRB */
+               hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
+                          pExecSym->value.pCodeFunc->pSymbols );
+            else
+               pExecSym->value.pFunPtr();
+
+#ifndef HB_NO_PROFILER
+            if( bProfiler )
+               hb_mthAddTime( pMethod, clock() - ulClock );
+#endif
+         }
+         else if( pSym->szName[ 0 ] == '_' )
+            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
+         else
+            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
+
+         if( lPopSuper )
+            hb_objPopSuperCast( pSelf );
+      }
    }
 
    if( s_bDebugging )
@@ -5982,13 +6046,25 @@ HB_EXPORT BOOL hb_xvmSeqEnd( LONG * plForEachBase )
 {
    if( plForEachBase )
    {
-      while( *plForEachBase > s_lRecoverBase )
+      while( *plForEachBase > s_lRecoverBase || s_lWithObjectBase >= s_lRecoverBase )
       {
-         /* remove FOR EACH stack frame so there is no orphan
-          * item pointers hanging
-          */
-         hb_stackRemove( *plForEachBase );
-         *plForEachBase = hb_vmEnumEnd();
+         if( *plForEachBase > s_lWithObjectBase )
+         {
+            /* remove FOR EACH stack frame so there is no orphan
+            * item pointers hanging
+            */
+            hb_stackRemove( *plForEachBase );
+            *plForEachBase = hb_vmEnumEnd();
+         }
+         else if( *plForEachBase < s_lWithObjectBase )
+         {
+            /* BREAK was issued inside the WITH OBJECT 
+            * restore previous frame
+            */
+            hb_stackRemove( s_lWithObjectBase + 1 );
+            s_lWithObjectBase = ( hb_stackItemFromTop(-1) )->item.asLong.value;
+            hb_stackDec();
+         }
       }
    }
    /*
@@ -7786,6 +7862,35 @@ HB_EXPORT BOOL hb_xvmMacroText( void )
    HB_XVM_RETURN
 }
 
+HB_EXPORT void hb_xvmWithObjectStart( void )
+{
+   HB_ITEM_PTR pItem;
+   
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectStart()"));
+   
+   /* The object is pushed directly before this pcode */
+   /* store position of current WITH OBJECT frame */
+   pItem = hb_stackAllocItem();
+   pItem->type = HB_IT_LONG;
+   pItem->item.asLong.value = s_lWithObjectBase;
+   s_lWithObjectBase = hb_stackTopOffset() - 2;
+}
+
+HB_EXPORT void hb_xvmWithObjectEnd( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectEnd()"));
+
+   s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
+   hb_stackDec();
+   hb_stackPop();  /* remove implicit object */
+}
+
+HB_EXPORT LONG hb_xvmWithObjectBase( LONG * plWithObjectBase )
+{
+   if( plWithObjectBase )
+      s_lWithObjectBase = *plWithObjectBase;
+   return s_lWithObjectBase;      
+}
 /* ------------------------------------------------------------------------ */
 /* The debugger support functions */
 /* ------------------------------------------------------------------------ */

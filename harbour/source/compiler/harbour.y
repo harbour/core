@@ -101,6 +101,7 @@ static void hb_compSwitchStart( void );
 static void hb_compSwitchAdd( HB_EXPR_PTR );
 static void hb_compSwitchEnd( void );
 
+static HB_EXPR_PTR hb_compCheckPassByRef( HB_EXPR_PTR pExpr );
 
 #ifdef HARBOUR_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
@@ -157,6 +158,7 @@ USHORT hb_comp_wIfCounter    = 0;
 USHORT hb_comp_wWhileCounter = 0;
 USHORT hb_comp_wCaseCounter  = 0;
 USHORT hb_comp_wSwitchCounter= 0;
+USHORT hb_comp_wWithObjectCnt= 0;
 BOOL hb_comp_long_optimize = TRUE;
 BOOL hb_comp_bTextSubst = TRUE;
 
@@ -166,6 +168,12 @@ static HB_LOOPEXIT_PTR hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 static HB_SWITCHCMD_PTR hb_comp_pSwitch = NULL;
 static HB_ELSEIF_PTR hb_comp_elseif = NULL;
+
+/* Controls if passing by reference '@' is allowed */
+#define HB_PASSBYREF_OFF      0
+#define HB_PASSBYREF_FUNCALL  1
+#define HB_PASSBYREF_ARRAY    2
+static int hb_comp_bPassByRef = HB_PASSBYREF_OFF;
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
@@ -178,6 +186,7 @@ static void hb_compDebugStart( void ) { };
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
    HB_LONG lNumber;     /* to hold a temporary long number */
+   BOOL bTrue;
    struct
    {
       int    iNumber;      /* to hold a number returned by lex */
@@ -217,10 +226,10 @@ static void hb_compDebugStart( void ) { };
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
-%token PROCREQ GET
+%token PROCREQ
 %token CBSTART DOIDENT
 %token FOREACH DESCEND
-%token DOSWITCH
+%token DOSWITCH WITHOBJECT
 %token NUM_DATE
 
 /*the lowest precedence*/
@@ -262,7 +271,7 @@ static void hb_compDebugStart( void ) { };
 %type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
-%type <asExpr>  Argument ArgList ElemList BlockExpList BlockVarList BlockNoVar
+%type <asExpr>  ArgList ElemList BlockExpList BlockVarList BlockNoVar
 %type <asExpr>  DoName DoProc DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
@@ -279,7 +288,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  MacroExpr MacroExprAlias
 %type <asExpr>  AliasId AliasVar AliasExpr
 %type <asExpr>  VariableAt VariableAtAlias
-%type <asExpr>  FunCall FunCallAlias
+%type <asExpr>  FunIdentCall FunCall FunCallAlias
 %type <asExpr>  ObjectData ObjectDataAlias
 %type <asExpr>  ObjectMethod ObjectMethodAlias
 %type <asExpr>  IfInline IfInlineAlias
@@ -312,7 +321,6 @@ Source     : Crlf
            | Statement
            | Line
            | ProcReq
-           | GET {/* Dummy - We need to use the GET token which is used by harbour.sly so both will generate same harboury.h */}
            | error  Crlf  { yyclearin; yyerrok; }
            | Source Crlf
            | Source VarDefs
@@ -388,6 +396,7 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_c
  *    stop compilation if invalid syntax will be used.
  */
 Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
+           | WithObject CrlfStmnt   { }
            | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
@@ -480,7 +489,6 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                else
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
              } Crlf
-
            ;
 
 CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
@@ -586,7 +594,7 @@ SelfAlias  : SelfValue ALIASOP         { $$ = $1; }
 
 /* Literal array
  */
-Array      : '{' ElemList '}'          { $$ = hb_compExprNewArray( $2 ); }
+Array      : '{' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_ARRAY;} ElemList '}'          { $$ = hb_compExprNewArray( $3 ); hb_comp_bPassByRef=$<bTrue>2; }
            ;
 
 ArrayAlias  : Array ALIASOP            { $$ = $1; }
@@ -714,20 +722,16 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
-           | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
-           | MacroExpr '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
+FunIdentCall: IdentName '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $4 ); hb_comp_bPassByRef=$<bTrue>3; }
+           ;
+           
+FunCall    : FunIdentCall  { $$ = $1; }
+           | MacroVar '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
+           | MacroExpr '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
            ;
 
-ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
-           | ArgList ',' Argument         { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
-
-Argument   : EmptyExpression               { $$ = $1; }
-           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IdentName '(' ArgList ')' { $$ = hb_compExprNewFunRef( $2 ); hb_compExprDelete( $4 ); }
-           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
-           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
+ArgList    : EmptyExpression                     { $$ = hb_compExprNewArgList( $1 ); }
+           | ArgList ',' EmptyExpression         { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
@@ -759,6 +763,10 @@ ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
             | VariableAt ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
             | ObjectMethod ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
             | ObjectData ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
+            | ':' SendId                 { if( hb_comp_wWithObjectCnt == 0 ) 
+                                             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
+                                           $$ = hb_compExprNewSend( NULL, $2 );
+                                         }
             ;
 
 ObjectDataAlias : ObjectData ALIASOP         { $$ = $1; }
@@ -766,11 +774,12 @@ ObjectDataAlias : ObjectData ALIASOP         { $$ = $1; }
 
 /* Object's method
  */
-ObjectMethod : ObjectData '(' ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $3 ); }
+ObjectMethod : ObjectData '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
             ;
 
 ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
 ;
+
 
 /* NOTE: We have to distinguish IdentName here because it is repeated
  * in DoArgument (a part of DO <proc> WITH .. statement)
@@ -814,6 +823,10 @@ Expression : Variable         { $$ = $1; }
            | PareExpList      { $$ = $1; }
            | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | PareExpList      { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | '@' IdentName    { $$ = hb_compCheckPassByRef( hb_compExprNewVarRef( $2 ) ); }
+           | '@' FunIdentCall { $<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2 ); $$ = hb_compCheckPassByRef( hb_compExprNewFunRef( $<string>$ ) ); }
+           | '@' MacroVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
+           | '@' AliasVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
            ;
 
 EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }
@@ -1085,8 +1098,8 @@ IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr
            | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 ); }
            ;
 
-ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
-           | ElemList ',' Argument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ElemList   : EmptyExpression                { $$ = hb_compExprNewList( $1 ); }
+           | ElemList ',' EmptyExpression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock($1.string,$1.isMacro,$1.lateEval); } BlockNoVar
@@ -1139,23 +1152,23 @@ PareExpList : PareExpList1        { $$ = $1; }
 PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
 ;
 
-ExpList1   : '(' Argument             { $$ = hb_compExprNewList( $2 ); }
+ExpList1   : '(' EmptyExpression             { $$ = hb_compExprNewList( $2 ); }
 ;
 
-ExpList2   : ExpList1 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList2   : ExpList1 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
 ;
 
-ExpList3   : ExpList2 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList3   : ExpList2 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
 ;
 
-ExpList    : ExpList3 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           | ExpList  ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList    : ExpList3 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           | ExpList  ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2 ); }
-           | IF  ExpList1 ',' Argument ','
+           | IF  ExpList1 ',' EmptyExpression ','
              { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
-             Argument ')'
+             EmptyExpression ')'
              { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ) ); }
            ;
 
@@ -1400,10 +1413,11 @@ DummyArgList : DummyArgument                  {}
              ;
 
 DummyArgument : EmptyExpression                    {}
+              ;
+/*              
               | '@' IdentName                      {}
               | '@' IdentName '(' DummyArgList ')' {}
-              ;
-
+*/
 FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
            | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' );  hb_compExprDelete( $<asExpr>4 );}
@@ -1886,11 +1900,26 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
 
 DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1 ); }
            | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IdentName '(' ArgList ')' { $$ = hb_compExprNewFunRef( $2 ); hb_compExprDelete( $4 ); }
+           | '@' FunIdentCall              { $$ = $2; }
            | SimpleExpression              { $$ = $1; }
            | PareExpList                   { $$ = $1; }
            | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
            | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
+           ;
+
+WithObject : WITHOBJECT Expression Crlf
+               {
+                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                  hb_compGenPCode1( HB_P_WITHOBJECTSTART );
+                  hb_comp_wWithObjectCnt++;
+               }
+             EmptyStatements 
+             END
+               {
+                  --hb_comp_wWithObjectCnt;
+                  hb_compGenPCode1( HB_P_WITHOBJECTEND );
+                }
+           | WITHOBJECT Expression Crlf END { hb_compExprDelete( $2 ); }
            ;
 
 Crlf       : '\n'          { hb_comp_bError = FALSE; }
@@ -2666,3 +2695,11 @@ void hb_compSwitchKill( )
    }
 }
 
+static HB_EXPR_PTR hb_compCheckPassByRef( HB_EXPR_PTR pExpr )
+{
+   if( !( hb_comp_bPassByRef & (HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY) ) )
+   {
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
+   }
+   return pExpr;
+}

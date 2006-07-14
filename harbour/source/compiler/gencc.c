@@ -1551,6 +1551,32 @@ static HB_GENC_FUNC( hb_p_diveq )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_withobjectstart )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmWithObjectStart();\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_withobjectend )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmWithObjectEnd();\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_withobjectmessage )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %hu );\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   fprintf( cargo->yyc, "\thb_vmPush( hb_stackItem( s_lWithObjectBase ) );\n" );
+
+   return 3;
+}
 
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
@@ -1703,7 +1729,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pluseq,
    hb_p_minuseq,
    hb_p_multeq,
-   hb_p_diveq
+   hb_p_diveq,
+   hb_p_withobjectstart,
+   hb_p_withobjectmessage,
+   hb_p_withobjectend
 };
 
 void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
@@ -1716,7 +1745,7 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    label_info.yyc = yyc;
    label_info.fVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
-   label_info.fCondJump = label_info.fForEach = FALSE;
+   label_info.fCondJump = label_info.fForEach = label_info.fWithObject = FALSE;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
    else
@@ -1730,6 +1759,8 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    fprintf( yyc, "   ULONG ulPrivateBase = hb_memvarGetPrivatesBase();\n" );
    if( label_info.fForEach )
       fprintf( yyc, "   LONG lForEachBase = 0;\n" );
+   if( label_info.fWithObject )
+      fprintf( yyc, "   LONG lWithObjectBase = hb_xvmWithObjectBase(NULL);\n" );
    if( label_info.fCondJump )
       fprintf( yyc, "   BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
@@ -1739,6 +1770,8 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    fprintf( yyc, "   } while ( 0 );\n" );
    if( label_info.fForEach )
       fprintf( yyc, "   while( lForEachBase )\n   {\n\thb_stackRemove( lForEachBase );\n\thb_xvmEnumEnd( &lForEachBase );\n   }\n" );
+   if( label_info.fWithObject )
+      fprintf( yyc, "   hb_xvmWithObjectBase( &lWithObjectBase );\n" );
    fprintf( yyc, "   hb_xvmExitProc( ulPrivateBase );\n" );
    fprintf( yyc, "}\n" );
 

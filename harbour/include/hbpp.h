@@ -99,7 +99,7 @@ extern void   hb_pp_Init( void );
 extern void   hb_pp_Free( void );
 extern void   hb_pp_CloseInclude( void );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
-extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
+extern int    hb_pp_ParseExpression( char *, char *, BOOL ); /* Parsing a line ( without preprocessor directive ) */
 extern int    hb_pp_WrStr( FILE *, char * );
 extern int    hb_pp_RdStr( FILE *, char *, int, BOOL, char *, int *, int * );
 extern void   hb_pp_Stuff( char *, char *, int, int, int );

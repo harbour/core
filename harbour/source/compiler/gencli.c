@@ -107,9 +107,6 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
        */
       pFunc = hb_comp_functions.pFirst;
 
-      if( ! hb_comp_bStartProc )
-         pFunc = pFunc->pNext; /* No implicit starting procedure */
-
       while( pFunc )
       {
          bIsInitFunction   = ( pFunc->cScope & HB_FS_INIT ) ;

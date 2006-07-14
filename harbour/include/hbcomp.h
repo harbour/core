@@ -260,6 +260,7 @@ typedef struct _HB_LABEL_INFO
    BOOL     fSetSeqBegin;
    BOOL     fCondJump;
    BOOL     fForEach;
+   BOOL     fWithObject;
    ULONG *  pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
@@ -328,7 +329,7 @@ extern PINLINE   hb_compInlineAdd( char * szFunName );
 
 extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
 extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */
-extern void      hb_compFunCallCheck( char *, int );
+extern BOOL      hb_compFunCallCheck( char *, int );
 
 extern void hb_compVariableAdd( char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
@@ -394,8 +395,8 @@ extern void hb_compLinePush( void ); /* generates the pcode with the currently c
 extern void hb_compLinePushIfDebugger( void ); /* generates the pcode with the currently compiled source code line */
 extern void hb_compLinePushIfInside( void );   /* generates the pcode with the currently compiled source code line */
 
-extern void hb_compGenMessage( char * szMsgName );       /* sends a message to an object */
-extern void hb_compGenMessageData( char * szMsg );     /* generates an underscore-symbol name for a data assignment */
+extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject );       /* sends a message to an object */
+extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject );     /* generates an underscore-symbol name for a data assignment */
 extern void hb_compGenPopVar( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 extern void hb_compGenPushFunCall( char * );             /* generates the pcode to push function's call */
@@ -470,7 +471,7 @@ extern void hb_compFileInfo( void );
 extern void hb_compPrintLogo( void );
 extern void hb_compPrintModes( void );
 
-extern int hb_compCompile( char * szPrg, int argc, char * argv[] );
+extern int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile );
 
 #endif    /* HB_MACRO_SUPPORT */
 

@@ -106,7 +106,7 @@ static int WorkTranslate( char *, char *, COMMANDS *, int * );
 static int CommandStuff( char *, char *, char *, int *, BOOL, BOOL );
 static int RemoveSlash( char * );
 static int WorkMarkers( char **, char **, char *, int *, BOOL, BOOL );
-static int getExpReal( char *, char **, BOOL, int, BOOL );
+static int getExpReal( char *, char **, BOOL, int, BOOL, BOOL );
 static BOOL isExpres( char *, BOOL );
 static BOOL TestOptional( char *, char * );
 static BOOL CheckOptional( char *, char *, char *, int *, BOOL, BOOL );
@@ -720,8 +720,13 @@ int hb_pp_ParseDefine( char *sLine )
       }
       lastdef = hb_pp_AddDefine( defname, ( *sLine == '\0' ) ? NULL : sLine );
 
-      lastdef->npars = npars;
-      lastdef->pars = cParams;
+      if( lastdef )
+      {
+         lastdef->npars = npars;
+         lastdef->pars = cParams;
+      }
+      else if( cParams )
+         hb_xfree( cParams );
    }
    else
       hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
@@ -750,6 +755,8 @@ DEFINES *hb_pp_AddDefine( char *defname, char *value )
          if( stdef->value )
             hb_xfree( stdef->value );
       }
+      else
+         return NULL;
    }
    else
    {
@@ -1411,7 +1418,7 @@ static COMMANDS *AddTranslate( char *traname )
    return sttra;
 }
 
-int hb_pp_ParseExpression( char *sLine, char *sOutLine )
+int hb_pp_ParseExpression( char *sLine, char *sOutLine, BOOL bSplitLines )
 {
 #if !defined(HB_PP_DEBUG_MEMORY)
    static char rpatt[PATTERN_SIZE];
@@ -1442,7 +1449,10 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine )
       {
          ptro = sOutLine;
          ptri = sLine + isdvig;
-         ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE );
+         if( bSplitLines )
+            ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE, MD_STR_AT_IGNORECASE );
+         else
+            ipos = 0;
 
          if( ipos > 0 )
          {
@@ -1886,6 +1896,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
    char *ptri = inputLine, *ptr, tmpname[MAX_NAME];
    int isWordInside = 0;
    char szMatch[2];
+   char *ptrmpatt = ptrmp;
 
    /*
       printf( "MP: >%s<\nIn: >%s<\n", ptrmp, ptri );
@@ -1907,17 +1918,23 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
          HB_SKIPTABSPACES( ptrmp );
          if( *ptrmp == HB_PP_OPT_START && !s_numBrackets && !strtopti )
          {
+            /* Store start position of outermost optional in pattern */
             strtopti = ptrmp;
          }
-         if( !s_numBrackets && strtopti && strtptri != ptri && ( ISNAME( ( BYTE ) * ptri ) || *ptri == '&' ) )
+         if( !s_numBrackets && strtopti && strtptri != ptri && 
+             ( ISNAME( ( BYTE ) * ptri ) || *ptri == '&' ) )
          {
+            /* Input stream starts with a word or macro -store the position
+             * which matches the outermost optional in pattern
+             */
             strtptri = ptri;
             ptrmp = strtopti;
             ptr = ptri;
-            ipos = NextName( &ptr, tmpname );
+            ipos = NextName( &ptr, tmpname );   /* get starting keyword */
             ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE, MD_STR_AT_USESUBCASE );
             if( ipos && TestOptional( strtopti, strtopti + ipos - 2 ) )
             {
+               /* the keyword from input is found in the pattern */
                ptr = strtopti + ipos - 2;
                ptr = PrevSquare( ptr, strtopti, NULL );
                if( ptr )
@@ -1936,7 +1953,17 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                ptrmp++;
                if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                {
+                  char *ptr = ptrmp;
                   SkipOptional( &ptrmp );
+                  if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine )
+                  {
+                     /* Start scanning from the beginning 
+                      * end of pattern but still there is an input stream to parse
+                      * 
+                      */
+                     ptrmp = ptrmpatt;
+                     strtopti = NULL;
+                  }
                }
                break;
 
@@ -1979,9 +2006,18 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   }
                   else
                   {
+                     char *ptr = ptrmp;
                      if( !isWordInside )
                         strtopti = NULL;
                      ptrmp++;
+                     if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine )
+                     {
+                        /* Start scanning from the beginning 
+                         * end of pattern but still there is an input stream to parse
+                         */
+                        ptrmp = ptrmpatt;
+                        strtopti = NULL;
+                     }
                   }
                   s_numBrackets--;
                }
@@ -2287,7 +2323,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    if( *( exppatt + 2 ) == '4' )        /*  ----  extended match marker  */
    {
       if( !lenreal )
-         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE, FALSE );
       {
          SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
       }
@@ -2331,24 +2367,19 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
              */
             if( **ptri == '&' )
             {
+               char * ptrmacro = *ptri; /* save current position */
+               
                *ptri += 1;
                HB_SKIPTABSPACES( *ptri );
                if( **ptri == '(' )      /* macro expression &( expr )  */
                {
-/* Commented out this line to avoid a compiler warning. Please review. [vszakats] */
-/*               lenreal = IsMacroVar( *ptri, com_or_tra ); */
-                  *ptri += 1;
-                  lenreal = getExpReal( s_expreal + 2, ptri, FALSE, maxlenreal, FALSE );
-                  if( **ptri == ')' )
-                  {
-                     *ptri += 1;
-                  }
+                  lenreal = getExpReal( s_expreal + 2, ptri, TRUE, maxlenreal, FALSE, TRUE );
                   if( !( **ptri == '\0' || **ptri == ' ' ) && com_or_tra )
                      break;
                   s_expreal[0] = '&';
                   s_expreal[1] = '(';
-                  lenreal += 3;
-                  s_expreal[lenreal - 1] = ')';
+                  lenreal +=3;
+                  s_expreal[lenreal-1] = ')';
                   SearnRep( exppatt, s_expreal, lenreal, ptro, lenres );
                   rezrestr = 1;
                }
@@ -2357,19 +2388,63 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
                   lenreal = IsMacroVar( *ptri, com_or_tra );
                   if( lenreal > 0 )
                   {
-                     strncpy( s_expreal + 1, *ptri, lenreal );
-                     s_expreal[0] = '&';
-                     s_expreal[lenreal + 1] = '\0';
-                     *ptri += lenreal;
-                     SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
-                     rezrestr = 1;
-                     break;
+                     if( ! com_or_tra )
+                     {
+                        /* translate */
+                           strncpy( s_expreal + 1, *ptri, lenreal );
+                           s_expreal[0] = '&';
+                           s_expreal[lenreal + 1] = '\0';
+                           *ptri += lenreal;
+                           SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
+                           rezrestr = 1;
+                           break;
+                     }
+                     else
+                     {
+                        char * ptmp = *ptri + lenreal;
+                        HB_SKIPTABSPACES( ptmp );
+                        if( ! IsInStr( *ptmp, ":/+*-%^=<>[{.," ) || 
+                            (*ptmp && ptmp[0]=='+' && ptmp[1]=='+') ||
+                           (*ptmp && ptmp[0]=='-' && ptmp[1]=='-') )
+                        {
+                        /* NOTE:
+                         * Clipper usually bounds to left the '++' and '--'
+                         * operators which means that the following code:
+                         * #command XCALL <x> <y> => <x>( <y> )
+                         *  XCALL &a ++b
+                         * is preprocessed into:
+                         * &a( ++b )
+                         * However if used with restricted macro match marker:
+                         * #command MCALL <x:&> <y> => <x>( <y> )
+                         * then
+                         *  MCALL &a ++b
+                         * is preprocessed into:
+                         * &a ++( b )
+                        */
+                           strncpy( s_expreal + 1, *ptri, lenreal );
+                           s_expreal[0] = '&';
+                           s_expreal[lenreal + 1] = '\0';
+                           *ptri += lenreal;
+                           SearnRep( exppatt, s_expreal, lenreal + 1, ptro, lenres );
+                           rezrestr = 1;
+                           break;
+                        }
+                        else
+                        {
+#if defined(HB_PP_DEBUG_MEMORY)
+                           hb_xfree( ( void * ) exppatt );
+#endif
+                           *ptri = ptrmacro; /* restore '&' char */
+                           return 0;
+                        }
+                     }
                   }
                   else
                   {
 #if defined(HB_PP_DEBUG_MEMORY)
                      hb_xfree( ( void * ) exppatt );
 #endif
+                     *ptri -= 1; /* restore '&' char */
                      return 0;
                   }
                }
@@ -2409,17 +2484,6 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
       if( rezrestr == 0 )
       {
          /* If restricted match marker doesn't correspond to real parameter */
-         /* rglab: Thu Sep  2 21:27:29 2004 - I don't know why 'if' code
-            was below, anyway it is the same as the new line
-            if( s_numBrackets )
-            {
-            return 0;
-            }
-            else
-            {
-            return 0;
-            }
-          */
 #if defined(HB_PP_DEBUG_MEMORY)
          hb_xfree( ( void * ) exppatt );
 #endif
@@ -2430,7 +2494,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    {
       if( !lenreal )
       {
-         lenreal = getExpReal( s_expreal, ptri, TRUE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, TRUE, maxlenreal, FALSE, FALSE );
       }
 
       if( lenreal )
@@ -2450,7 +2514,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
       /* Copying a real expression to 's_expreal' */
       if( !lenreal )
       {
-         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE );
+         lenreal = getExpReal( s_expreal, ptri, FALSE, maxlenreal, FALSE, FALSE );
       }
 
       /*
@@ -2476,7 +2540,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, BOOL
    return 1;
 }
 
-static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL bStrict )
+static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL bStrict, BOOL bInBrackets )
 {
    int lens = 0;
    char *sZnaki = "+-=><*/$.:#%!^";
@@ -2484,16 +2548,24 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
    int StBr1 = 0, StBr2 = 0, StBr3 = 0;
    BOOL rez = FALSE;
    BOOL bMacro = FALSE;
+   BOOL bBrackets = FALSE;
    char *cStart = expreal;
    char cLastSep = '\0';
    char cLastChar = '\0';
 
-   HB_TRACE( HB_TR_DEBUG, ( "getExpReal(%s, %p, %d, %d, %d)", expreal, ptri, prlist, maxrez, bStrict ) );
+   HB_TRACE( HB_TR_DEBUG, ( "getExpReal(%s, %p, %d, %d, %d, %d)", expreal, ptri, prlist, maxrez, bStrict, bInBrackets ) );
 
    HB_SKIPTABSPACES( *ptri );
 
+   if( **ptri == '(' && bInBrackets )
+   {
+      /* scan expression including start and end brackets */
+      bBrackets = TRUE;
+      ( * ptri )++;
+      prlist = TRUE;
+   }
    State = ( **ptri == '\'' || **ptri == '\"' || **ptri == '[' ) ? STATE_EXPRES : STATE_ID;
-
+      
    while( **ptri != '\0' && !rez && lens < maxrez )
    {
       if( State == STATE_EXPRES || ( cLastChar && strchr( "({[.|,$!#=<>^%*/+-", cLastChar ) ) )
@@ -2685,7 +2757,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
                StBr1--;
                if( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )
                {
-                  State = STATE_ID_END;
+                     State = STATE_ID_END;
                }
             }
             else if( **ptri == ']' )
@@ -2729,6 +2801,46 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
                {
                   rez = TRUE;
                }
+            }
+            else if( ( **ptri == '+' && *( *ptri + 1 ) == '+' ) || ( **ptri == '-' && *( *ptri + 1 ) == '-' ) )
+            {
+               cLastChar = **ptri;
+
+               if( expreal )
+               {
+                  *expreal++ = **ptri;
+               }
+               (*ptri)++;
+               lens++;
+
+               if( expreal )
+               {
+                  *expreal++ = **ptri;
+               }
+               (*ptri)++;
+               lens++;
+
+               if( State == STATE_ID )
+               {
+                  // Prefix ONLY when lens == 0 (2) oterwise MUST be a postfix.
+                  if( lens == 2 )
+                  {
+                     while( **ptri == ' ' && lens < maxrez )
+                     {
+                        if( expreal )
+                        {
+                           *expreal++ = **ptri;
+                        }
+                        (*ptri)++;
+                        lens++;
+                     }
+                  }
+                  else
+                  {
+                     State = ( StBr1 == 0 && StBr2 == 0 && StBr3 == 0 )? STATE_ID_END: STATE_BRACKET;
+                  }
+               }
+               continue;
             }
             else if( IsInStr( **ptri, sZnaki ) )
             {
@@ -2789,6 +2901,10 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
             }
             else if( **ptri == ')' && StBr1 == 0 )
             {
+               if( bBrackets )
+               {
+                  ( *ptri )++;
+               }
                rez = TRUE;
             }
             else if( **ptri == ']' && StBr2 == 0 )
@@ -2955,7 +3071,7 @@ static BOOL isExpres( char *stroka, BOOL prlist )
 #endif
 
    l1 = strlen( stroka );
-   l2 = getExpReal( NULL, &stroka, prlist, HB_PP_STR_SIZE, TRUE );
+   l2 = getExpReal( NULL, &stroka, prlist, HB_PP_STR_SIZE, TRUE, FALSE );
 
 #if 0
    printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1 - 1] );
@@ -3276,17 +3392,42 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
       {
          if( *( ptrOut + ifou + 2 ) != '0' && *( exppatt + 1 ) )
          {
-            if( lastchar == '0' )
-               lastchar = *( ptrOut + ifou + 2 );
-            if( lastchar != *( ptrOut + ifou + 2 ) )
+            isdvig = ptrOut - ptro + ifou;
+            do
             {
-               isdvig += ifou + 3;
+               if( lastchar == '0' )
+                  lastchar = *( ptrOut + ifou + 2 );
+               if( lastchar != *( ptrOut + ifou + 2 ) )
+               {
+                  ifou +=3;
+                  ptrOut = ptrOut + ifou;
+                  continue;
+               }
+               
+               *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - ifou + 1 );
+               ptrOut = ptrOut + ifou;
+            }
+            while( ( ifou = md_strAt( exppatt, ( *( exppatt + 1 ) ) ? 2 : 1, ptrOut, FALSE, FALSE, TRUE, MD_STR_AT_USESUBCASE ) ) > 0 );
+            if( ! s_Repeate )
+            {
+               lastchar++;
                ptrOut = ptro + isdvig;
+               isdvig = 0;
                continue;
             }
+            return;
          }
-         *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - isdvig - ifou + 1 );
-         isdvig += ifou - 1;
+         else if( lastchar == '0' )
+         {
+            *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - isdvig - ifou + 1 );
+            isdvig += ifou - 1;
+
+         }
+         else
+         {
+            ptrOut += ifou + 1;
+            continue;
+         }
       }
       else if( !s_bReplacePat )
          isdvig += ifou;
@@ -3326,7 +3467,11 @@ static BOOL ScanMacro( char *expreal, int lenitem, int *pNewLen )
       {
          i++;
       }
-      if( expreal[i] == '\0' || expreal[i] == ',' || expreal[i] == ')' || expreal[i] == ' ' )
+      while( expreal[i] == ' ' || expreal[i] == '\t' )
+      {
+         i++;
+      }
+      if( expreal[i] == '\0' || expreal[i] == ',' || expreal[i] == ')' )   /* || expreal[i] == ' ' )*/
       {
          return TRUE;
       }
@@ -4120,18 +4265,21 @@ static int stroncpy( char *ptro, char *ptri, int lens )
 static BOOL truncmp( char **ptro, char **ptri, BOOL lTrunc )
 {
    char *ptrb = *ptro, co, ci;
-
+   
    HB_TRACE( HB_TR_DEBUG, ( "truncmp(%p, %p, %d)", ptro, ptri, lTrunc ) );
 
+      
    for( ;
         **ptri != ' ' && **ptri != '\t' && **ptri != ','
         && **ptri != HB_PP_OPT_START && **ptri != HB_PP_OPT_END
         && **ptri != HB_PP_MATCH_MARK && **ptri != '\0' && toupper( **ptri ) == toupper( **ptro ); ( *ptro )++, ( *ptri )++ ) ;
    co = *( *ptro - 1 );
    ci = **ptri;
+   
    if( ( ( ci == ' ' || ci == ',' || ci == HB_PP_OPT_START ||
            ci == HB_PP_OPT_END || ci == HB_PP_MATCH_MARK || ci == '\0' ) &&
-         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) || ( !ISNAME( ( BYTE ) co ) ) ) ) )
+         ( ( !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) ) || 
+         ( !ISNAME( ( BYTE ) co ) ) ) ) )
       return FALSE;
    else if( lTrunc && *ptro - ptrb >= 4 && ISNAME( ( BYTE ) ci ) && !ISNAME( ( BYTE ) ** ptro ) && ISNAME( ( BYTE ) co ) )
    {

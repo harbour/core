@@ -362,7 +362,7 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
             *s_szLine = '\0';
          else
          {
-            hb_pp_ParseExpression( ptr, s_szOutLine );
+            hb_pp_ParseExpression( ptr, s_szOutLine, TRUE );
          }
       }
       else
@@ -378,7 +378,7 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
          {
             if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
             {
-               hb_pp_ParseExpression( ptr, s_szOutLine );
+               hb_pp_ParseExpression( ptr, s_szOutLine, TRUE );
                HB_SKIPTABSPACES( ptr );
 
                bCont = ( *ptr == '#' );

@@ -98,9 +98,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       fprintf( yyc, "\n\n" );
 
-      if( ! hb_comp_bStartProc )
-         pFunc = pFunc->pNext; /* No implicit starting procedure */
-
       /* write functions prototypes for PRG defined functions */
       while( pFunc )
       {
@@ -234,9 +231,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* Generate functions data
        */
       pFunc = hb_comp_functions.pFirst;
-
-      if( ! hb_comp_bStartProc )
-         pFunc = pFunc->pNext; /* No implicit starting procedure */
 
       while( pFunc )
       {
@@ -1952,6 +1946,33 @@ static HB_GENC_FUNC( hb_p_diveq )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_withobjectstart )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_WITHOBJECTSTART,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_withobjectmessage )
+{
+   fprintf( cargo->yyc, "\tHB_P_WITHOBJECTMESSAGE, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compSymbolGetPos( HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) )->szName );
+   fprintf( cargo->yyc, "\n" );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_withobjectend )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_WITHOBJECTEND,\n" );
+   return 1;
+}
 
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
@@ -2104,7 +2125,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pluseq,
    hb_p_minuseq,
    hb_p_multeq,
-   hb_p_diveq
+   hb_p_diveq,
+   hb_p_withobjectstart,
+   hb_p_withobjectmessage,
+   hb_p_withobjectend
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

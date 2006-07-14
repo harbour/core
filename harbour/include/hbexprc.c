@@ -72,6 +72,33 @@
 /* ************************************************************************* */
 
 #if defined( HB_MACRO_SUPPORT )
+static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_MACRO_DECL )
+#else
+static void hb_compExprSendPopPush( HB_EXPR_PTR pObj )
+#endif
+{
+   if( pObj->value.asMessage.pObject )
+   {
+      /* Push _message for later use */
+      HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, TRUE );
+      /* Push object */
+      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+
+      /* Now push current value of variable */
+      HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, TRUE );
+      /* Push object */
+      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+   }
+   else
+   {
+      /* Push _message for later use */
+      HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, FALSE );
+      /* Now push current value of variable */
+      HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, FALSE );
+   }
+}
+
+#if defined( HB_MACRO_SUPPORT )
 void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 #else
 void hb_compExprDelOperator( HB_EXPR_PTR pExpr )
@@ -98,17 +125,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-
-      /* Push _message for the later assignment.  */
-      HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-
-      /* Now push current value of variable */
-      HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      /* push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it. */
       HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
 
@@ -263,17 +280,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-
-      /* Push _message for the later assignment.  */
-      HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-
-      /* Now push current value of variable */
-      HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it.*/
       HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
 
@@ -402,17 +409,7 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-
-      /* Push _message for later use */
-      HB_EXPR_PCODE1( hb_compGenMessageData, pObj->value.asMessage.szMessage );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-
-      /* Now push current value of variable */
-      HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it. */
       HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
 

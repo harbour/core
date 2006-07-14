@@ -170,8 +170,8 @@ void hb_compExprClear( HB_EXPR_PTR pExpr )
 #if defined( HB_MACRO_SUPPORT )
 void hb_compExprDelete( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete()"));
-   if( pExpr->ExprType != HB_ET_NONE )
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete(%p)",pExpr));
+   if( pExpr && pExpr->ExprType != HB_ET_NONE )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
       pExpr->ExprType = HB_ET_NONE;
@@ -180,8 +180,8 @@ void hb_compExprDelete( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 #else
 void hb_compExprDelete( HB_EXPR_PTR pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete()"));
-   if( --pExpr->Counter == 0 )
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete(%p)", pExpr));
+   if( pExpr && --pExpr->Counter == 0 )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
       HB_XFREE( pExpr );
@@ -374,7 +374,13 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
          iCount = 0;
 
 #ifndef HB_MACRO_SUPPORT
-      hb_compFunCallCheck( pName->value.asSymbol, iCount );
+      if( ! hb_compFunCallCheck( pName->value.asSymbol, iCount ) )
+      {
+         hb_compExprDelete( pName );
+         if( pParms )
+            hb_compExprDelete( pParms );
+         return NULL;
+      }
 #endif
 
       /* TODO: EMPTY() (not done by Clipper) */
@@ -1030,10 +1036,12 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr )
 #endif
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenStatement(%i)", pExpr->ExprType));
-
-   pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
-   HB_EXPR_USE( pExpr, HB_EA_STATEMENT );
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenStatement(%p)", pExpr));
+   if( pExpr )
+   {
+      pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
+      HB_EXPR_USE( pExpr, HB_EA_STATEMENT );
+   }
    return pExpr;
 }
 

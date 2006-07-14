@@ -1294,7 +1294,7 @@ void hb_compGenPushDate( HB_LONG lNumber, HB_MACRO_DECL )
 }
 
 /* sends a message to an object */
-void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )
+void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_MACRO_DECL )
 {
    /* Find the address of passed symbol - create the symbol if doesn't exist
     */
@@ -1307,11 +1307,12 @@ void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )
       HB_PUT_PTR( byBuf, pSym );
       hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_MACRO_PARAM );
    }
+   HB_SYMBOL_UNUSED( bIsObject );   /* used in full compiler only */
    /* hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM ); */
 }
 
 /* generates an underscore-symbol name for a data assignment */
-void hb_compGenMessageData( char * szMsg, HB_MACRO_DECL )
+void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_MACRO_DECL )
 {
    char * szResult;
 
@@ -1322,7 +1323,7 @@ void hb_compGenMessageData( char * szMsg, HB_MACRO_DECL )
    strcpy( szResult, "_" );
    strcat( szResult, szMsg );
 
-   hb_compGenMessage( szResult, HB_MACRO_PARAM );
+   hb_compGenMessage( szResult, bIsObject, HB_MACRO_PARAM );
    hb_xfree( szResult );
 }
 

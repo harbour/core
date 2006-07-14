@@ -112,8 +112,6 @@ void hb_compGenJava( PHB_FNAME pFileName )
    }
 
    pFunc = hb_comp_functions.pFirst;
-   if( ! hb_comp_bStartProc )
-      pFunc = pFunc->pNext;
 
    lSymbols = 0;                /* Count number of symbols */
    while( pFunc )
@@ -129,8 +127,6 @@ void hb_compGenJava( PHB_FNAME pFileName )
    /* Generate functions data
     */
    pFunc = hb_comp_functions.pFirst;
-   if( ! hb_comp_bStartProc )
-      pFunc = pFunc->pNext; /* No implicit starting procedure */
 
    while( pFunc )
    {

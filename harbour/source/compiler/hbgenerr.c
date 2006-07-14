@@ -91,7 +91,8 @@ char * hb_comp_szErrors[] =
    "String too long for SWITCH",
    "Invalid date constant \'%s\'",
    "Memory buffer overflow",
-   "Memory corruption detected"   
+   "Memory corruption detected",
+   "Implicit send operator with no WITH OBJECT in sight"
 };
 
 /* Table with parse warnings */

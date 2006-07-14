@@ -765,8 +765,9 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 'P':
                if( *( s + 1 ) == '-' )
                   hb_comp_bPPO = 0;
-               else
+               else if( ! hb_comp_bPPO )
                {
+                  /* do not set a path if option specified more then once */
                   char *szPath = hb_strdup( s + 1 );
 
                   hb_comp_pPpoPath = hb_fsFNameSplit( szPath );

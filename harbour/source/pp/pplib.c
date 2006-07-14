@@ -193,7 +193,7 @@ HB_FUNC( __PREPROCESS )
 
          if( !hb_pp_topDefine )
             hb_pp_Table();
-         if( hb_pp_ParseExpression( ptr, pOut ) > 0 )
+         if( hb_pp_ParseExpression( ptr, pOut, FALSE ) > 0 )
          {
             /* Some error here? */
          }

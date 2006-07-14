@@ -1488,7 +1488,7 @@ Separator     {SpaceTab}
                 BEGIN 0;
                 yyless( yyleng-4 );
                 if( hb_comp_iState == DO )
-                { /* DO with */
+                { /* DO with WITH */
                   hb_comp_iState =IDENTIFIER;
                   yylval.string = hb_compIdentifierNew( "WITH", TRUE );
                   return IDENTIFIER;
@@ -1499,6 +1499,21 @@ Separator     {SpaceTab}
                   return WITH;
                 }
               }
+<WITH_>"object"   {
+               BEGIN 0;
+               if( hb_comp_iState == LOOKUP )
+               {
+                  hb_comp_iState = WITHOBJECT;
+                  return WITHOBJECT;
+               }
+               else
+               {
+                  yyless( yyleng-6 );
+                  hb_comp_iState =WITH;
+                  return WITH;
+               }
+               
+               }              
 <WITH_>[\)] { /* ( with ) or with() */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );

@@ -8,6 +8,99 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      It fixes compilation of empty .prg files in C++ mode
+
+  * harbour/source/rtl/dbjoin.prg
+    - removed unused variable
+
+2006-07-14 16:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+   * include/hberrors.h
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbmacro.h
+   * include/hbpcode.h
+   * include/hbpp.h
+   * include/hbxvm.h
+   * source/common/expropt1.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/exproptc.c
+   * source/compiler/genc.c
+   * source/compiler/gencc.c
+   * source/compiler/gencli.c
+   * source/compiler/genhrb.c
+   * source/compiler/genjava.c
+   * source/compiler/genobj32.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+   * source/compiler/hbdead.c
+   * source/compiler/hbfix.c
+   * source/compiler/hbfunchk.c
+   * source/compiler/hbgenerr.c
+   * source/compiler/hblbl.c
+   * source/compiler/hbpcode.c
+   * source/compiler/hbstripl.c
+      * fixed compilation of code that uses '@' pass by 
+   * source/macro/macrob.c
+   * source/macro/macroc.c
+   * source/vm/hvm.c
+   * source/vm/macro.c
+      * fixed compilation of code that uses '@' pass by
+       reference. The following syntax is no longer supported:
+       var := IIF( .T., @var, var )
+       however you can still use the following:
+       funcall( IIF( bPassbyRef, @someVar, someVar ) )
+      +added support for the following statement:
+         WITH OBJECT <objexpression>
+            ...
+         END
+       inside this statement you can use simplified form of sending
+       messages to the object specified by <objexpression>
+         :message( )    instead objexpression:message()
+         :property      instead objexpression:property
+       The runtime error will be generated at the time of message
+       sending (or property access/assign) if <objexpression>
+       is not a value of type object.
+       You can use the reserved property:
+         :__withobject
+       to access/assign the controlling object.
+      *implicit startup functions are removed from the list of 
+       to be compatible with Clipper (Clipper genertes a single
+       obj file)
+      *fixed memory leaks when there is a fatal error in autoopened
+       module (using DO ... statement)
+      *implicit startup functions are removed from the list of
+       functions before generation of output code
+
+         #xcommand SET <var1> [, <varN>] WITH <val> => 
+   * source/pp/pplib.c
+   * source/pp/ppcore.c
+        order then declared) -this fixes the following long 
+      * fixed repeatable optional clauses
+         #xcommand SET <var1> [, <varN>] WITH <val> =>
+          <var1>:=<val>[; <varN>:=<val>]
+      * fixed compilation of optional clauses (when used in different
+        order then declared) -this fixes the following long
+        waiting bug:
+         #command MYCOMMAND [<mylist,...>] [MYCLAUSE <myval>] => ;
+            MyFunction( {<mylist>} [, <myval>] )
+         MYCOMMAND MYCLAUSE 321 "HELLO"
+      * fixed restricted macro match marker <x:&>
+
+   * tests/Makefile
+   - tests/pretest.prg
+   + utils/hbpptest
+   + utils/hbpptest/Makefile
+   + utils/hbpptest/pretest.prg
+      * moved file 'pretest.prg' from tests to separate directory
+        to make easier validation of the preprocessor
+
+   * TODO
+      * added note to fix hb_objGetMethod() so it will not generate
         error if there is no method
 
    * doc/en/clipper.txt
