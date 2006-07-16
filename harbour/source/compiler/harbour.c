@@ -4961,44 +4961,33 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
 
             if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
             {
-               PFUNCTION pFunc;
                char * szFirstFunction = NULL;
+               PFUNCTION *pFunPtr;
 
                /* we create the output file name */
                hb_compOutputFile();
 
-               if( ! hb_comp_bStartProc )
+               pFunPtr = &hb_comp_functions.pFirst;
+               while( *pFunPtr )
                {
                   /* remove function frames with no names */
-                  PFUNCTION *pFunPtr = &hb_comp_functions.pFirst;
-                  
-                  while( *pFunPtr )
+                  if( ! hb_comp_bStartProc && ! (*pFunPtr)->szName[0] )
                   {
-                     if( ! (*pFunPtr)->szName[0] )
-                     {
-                        *pFunPtr = hb_compFunctionKill( *pFunPtr );
-                        hb_comp_functions.iCount--;
-                        hb_comp_iFunctionCnt--;
-                     }
-                     else
-                     {
-                        hb_compOptimizeFrames( *pFunPtr );
+                     *pFunPtr = hb_compFunctionKill( *pFunPtr );
+                     hb_comp_functions.iCount--;
+                     hb_comp_iFunctionCnt--;
+                  }
+                  else
+                  {
+                     hb_compOptimizeFrames( *pFunPtr );
 
                      if( szFirstFunction == NULL && 
-                        ! ( ( *pFunPtr )->cScope & (HB_FS_INIT || HB_FS_EXIT) ) )
+                        ! ( ( *pFunPtr )->cScope & (HB_FS_INIT | HB_FS_EXIT) ) )
                      {
                         szFirstFunction = ( *pFunPtr )->szName;
                      }
-                        pFunPtr = &(*pFunPtr)->pNext;
-                     }
+                     pFunPtr = &(*pFunPtr)->pNext;
                   }
-               }
-
-               pFunc = hb_comp_functions.pFirst;
-               while( pFunc )
-               {
-
-                  pFunc = pFunc->pNext;
                }
 
                if( szFirstFunction )

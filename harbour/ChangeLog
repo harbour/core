@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-45 16:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+      I think that it will be much easier and also using _DEFAULT as suffix
+      does not resolve fully 10 character symbol but will work if GT name
+      is not longer then 3 characters
+
 2006-07-16 16:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.c
     ! fixed typo in binary or - || was used instead of |
