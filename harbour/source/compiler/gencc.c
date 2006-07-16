@@ -32,6 +32,7 @@
 #include "hbdate.h"
 
 extern void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc );
+extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
 
 #define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, PHB_LABEL_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
@@ -49,7 +50,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-static void hb_gencc_string_put( FILE * yyc, BYTE * pText, USHORT usLen )
+void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen )
 {
    USHORT usPos;
 
@@ -557,7 +558,7 @@ static HB_GENC_FUNC( hb_p_localname )
    usLen = strlen( ( char * ) &pFunc->pCode[ lPCodePos + 3 ] );
    fprintf( cargo->yyc, "\thb_xvmLocalName( %hu, ",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 3 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 3 ], usLen );
    fprintf( cargo->yyc, " );\n" );
    return usLen + 4;
 }
@@ -695,7 +696,7 @@ static HB_GENC_FUNC( hb_p_modulename )
 
    usLen = strlen( ( char * ) &pFunc->pCode[ lPCodePos + 1 ] );
    fprintf( cargo->yyc, "\thb_xvmModuleName( " );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], usLen );
    fprintf( cargo->yyc, " );\n" );
    return usLen + 2;
 }
@@ -976,7 +977,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
     * This version keeps double calculation compatible with RT FL functions
     */
    fprintf( cargo->yyc, "\thb_xvmPushDouble( * ( double * ) " );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], sizeof( double ) );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 1 ], sizeof( double ) );
    fprintf( cargo->yyc, ", %d, %d );\n",
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) ],
             pFunc->pCode[ lPCodePos + 1 + sizeof( double ) + sizeof( BYTE ) ] );
@@ -1149,7 +1150,7 @@ static HB_GENC_FUNC( hb_p_pushstr )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 3 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 3 ], usLen );
    fprintf( cargo->yyc, ", %hu );\n", usLen );
 
    return 4 + usLen;
@@ -1162,7 +1163,7 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ], usLen );
    fprintf( cargo->yyc, ", %hu );\n", usLen );
 
    return 3 + usLen;
@@ -1299,7 +1300,7 @@ static HB_GENC_FUNC( hb_p_staticname )
    fprintf( cargo->yyc, "\thb_xvmStaticName( %hu, %hu, ",
             ( USHORT ) pFunc->pCode[ lPCodePos + 1 ],
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] ) );
-   hb_gencc_string_put( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], usLen );
    fprintf( cargo->yyc, " );\n" );
    return usLen + 5;
 }

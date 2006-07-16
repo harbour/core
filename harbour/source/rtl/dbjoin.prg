@@ -133,7 +133,7 @@ Return aList
 
 
 static function __doJoinList(aList)
-local i, aJoin
+local aJoin
 
 if len(aList) > 0
    ( aList[1][1] )->( dbAppend() )

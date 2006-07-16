@@ -32,6 +32,7 @@
 #include "hbdate.h"
 
 extern void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc );
+extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
@@ -314,8 +315,10 @@ static void hb_writeEndInit( FILE* yyc, char * szModulname, char * szSourceFile 
    fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n\n",
                  hb_comp_szPrefix, szModulname );
 */
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, \"%s\", 0x%lx, 0x%04x )\n\n",
-                 hb_comp_szPrefix, szModulname, szSourceFile, 0L, HB_PCODE_VER );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, ",
+                 hb_comp_szPrefix, szModulname );
+   hb_compGenCString( yyc, ( BYTE * ) szSourceFile, strlen( szSourceFile ) );
+   fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
    fprintf( yyc, "#if defined(HB_PRAGMA_STARTUP)\n"
                  "   #pragma startup hb_vm_SymbolInit_%s%s\n"
@@ -1112,8 +1115,13 @@ static HB_GENC_FUNC( hb_p_popstatic )
       PVAR pVar;
       PFUNCTION pTmp = hb_comp_functions.pFirst;
       USHORT wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+      printf("\r\npTmp=%p, iStaticsBase=%d, wVar=%d\r\n", pTmp, pTmp->iStaticsBase, wVar);fflush(stdout);
       while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
+      {
+         printf("pTmp=%p, iStaticsBase=%d\r\n", pTmp, pTmp->iStaticsBase);fflush(stdout);
          pTmp = pTmp->pNext;
+      }
+      printf("pStatics=%p, var=%d\r\n", pTmp->pStatics, wVar - pTmp->iStaticsBase);fflush(stdout);
       pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
       fprintf( cargo->yyc, "\t/* %s */", pVar->szName );

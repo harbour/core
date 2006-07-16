@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/bin/hb-func.sh
+    * use by default -gc0 output when compiled as temporary workaround
+      for GPF in -gc2
+
+2006-07-16 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+    ! fixed .prg file name stored in generated .c files
+
+  * harbour/source/compiler/harbour.c
+    ! update function counter when startup function is removed
       It fixes compilation of empty .prg files in C++ mode
 
   * harbour/source/rtl/dbjoin.prg

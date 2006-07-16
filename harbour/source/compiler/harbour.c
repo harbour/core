@@ -4978,6 +4978,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
                      {
                         *pFunPtr = hb_compFunctionKill( *pFunPtr );
                         hb_comp_functions.iCount--;
+                        hb_comp_iFunctionCnt--;
                      }
                      else
                      {
