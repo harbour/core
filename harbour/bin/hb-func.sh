@@ -292,6 +292,7 @@ GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 LN_OPT="${CC_L_USR}"
 CC_OPT="${CC_C_USR}"
 HB_OPT="${CC_PRG_USR}"
+[ "\${HB_GEN}" != "" ] || HB_OPT="\${HB_OPT} -gc0"
 
 HB_GPM_LIB=""
 if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then

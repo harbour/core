@@ -1115,13 +1115,9 @@ static HB_GENC_FUNC( hb_p_popstatic )
       PVAR pVar;
       PFUNCTION pTmp = hb_comp_functions.pFirst;
       USHORT wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
-      printf("\r\npTmp=%p, iStaticsBase=%d, wVar=%d\r\n", pTmp, pTmp->iStaticsBase, wVar);fflush(stdout);
+
       while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-      {
-         printf("pTmp=%p, iStaticsBase=%d\r\n", pTmp, pTmp->iStaticsBase);fflush(stdout);
          pTmp = pTmp->pNext;
-      }
-      printf("pStatics=%p, var=%d\r\n", pTmp->pStatics, wVar - pTmp->iStaticsBase);fflush(stdout);
       pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
       fprintf( cargo->yyc, "\t/* %s */", pVar->szName );

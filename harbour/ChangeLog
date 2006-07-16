@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-16 16:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+    ! fixed typo in binary or - || was used instead of |
+    * reenabled frame optimization for compilation without -n switch
+
+2006-07-16 16:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/genc.c
+    - removed debug message I left by mistake
 
   * harbour/bin/hb-func.sh
     * use by default -gc0 output when compiled as temporary workaround
