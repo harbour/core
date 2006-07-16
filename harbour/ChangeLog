@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-16 23:26 UTC+0100 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
+   * harbour/source/rtl/typefile.prg
+     % FUNCTION -> PROCEDURE
+     + _TypeFile() XBase++ internal function added.
 
 2006-07-16 23:26 UTC+0200 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
   * source\common\expropt1.c

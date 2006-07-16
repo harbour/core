@@ -261,7 +261,6 @@ char *hb_compExprAsSymbol( HB_EXPR_PTR pExpr )
       case HB_ET_VARREF:
       case HB_ET_FUNNAME:
          return pExpr->value.asSymbol ;
-         break;
          
       case HB_ET_FUNCALL:
          return pExpr->value.asFunCall.pFunName->value.asSymbol;
