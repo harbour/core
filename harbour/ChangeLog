@@ -8,7 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2006-07-45 16:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+
+2006-07-16 23:26 UTC+0200 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
+  * source\common\expropt1.c
+    * Removed unuseful break inside hb_compExprAsSymbol function
+
+2006-07-16 19:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! fixed typo in date
+
+  * harbour/doc/gtapi.txt
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtgui/gtdef.c
+    * changed HB_GT_DEFAULT_<name> to HB_GT_<name>_DEFAULT and added
+      REQUEST posibilities so now the GT drivers can be REQUESTed and
+      the default one set in similar way.
+      F.e.:
+         REQUEST HB_GT_WIN
+         REQUEST HB_GT_WVT_DEFAULT
+         REQUEST HB_GT_STD
       I think that it will be much easier and also using _DEFAULT as suffix
       does not resolve fully 10 character symbol but will work if GT name
       is not longer then 3 characters

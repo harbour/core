@@ -97,7 +97,7 @@
 
 #define HB_GT_ANNOUNCE( id )     HB_GT_ANNOUNCE_( _HB_GT_PREF_( id ) )
 #define HB_GT_ANNOUNCE_( id )    HB_GT_ANNOUNCE__( id )
-#define HB_GT_ANNOUNCE__( id )   HB_FUNC( id ) {}
+#define HB_GT_ANNOUNCE__( id )   HB_FUNC( id ) {} HB_FUNC( id##_DEFAULT ) {}
 
 #define HB_GT_DRVNAME( id )      HB_MACRO2STRING( id )
 

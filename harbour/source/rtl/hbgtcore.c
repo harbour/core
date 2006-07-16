@@ -2751,12 +2751,12 @@ static char * hb_gtFindDefault( void )
 
    for( iPos = 0; iPos < s_iGtCount; iPos++ )
    {
-      sprintf( szFuncName, "HB_GT_DEFAULT_%s", s_gtInit[ iPos ]->id );
+      sprintf( szFuncName, "HB_GT_%s_DEFAULT", s_gtInit[ iPos ]->id );
       if( hb_dynsymFind( szFuncName ) )
          return s_gtInit[ iPos ]->id;
    }
 
-   if( hb_dynsymFind( "HB_GT_DEFAULT_NUL" ) )
+   if( hb_dynsymFind( "HB_GT_NUL_DEFAULT" ) )
       return "NUL";
    else
       return NULL;

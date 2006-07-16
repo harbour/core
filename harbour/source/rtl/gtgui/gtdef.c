@@ -85,8 +85,8 @@
 #include "hbgtcore.h"
 #include "hbinit.h"
 
-HB_GT_REQUEST( GUI );
-HB_GT_ANNOUNCE( HB_GT_NAME );
+HB_GT_REQUEST( GUI )
+HB_GT_ANNOUNCE( HB_GT_NAME )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_hack_ )
    hb_gtSetDefault( "GUI" );

@@ -192,16 +192,14 @@ and:
 Most of Windows linkers execute startup initialization code in the
 order of linked modules, so the first linked GT driver will be the
 default one. But you can control it also from your application, by
-defining HB_GT_DEFAULT_<name> symbol (I do not like this name because
+requesting HB_GT_<name>_DEFAULT symbol (I do not like this name because
 it cannot be used with 10 character symbols so I'm ready for any other
 positions). For example, if you add to your code:
 
-    ANNOUNCE HB_GT_DEFAULT_NUL
-or:
-    PROC HB_GT_DEFAULT_NUL; RETURN
+   REQUEST HB_GT_NUL_DEFAULT
 
 Then GTNUL will be the default GT driver, and even if you would not
-disable GTWIN and link it with you application, GTWIN will not be
+disable GTWIN and link it with your application, GTWIN will not be
 activated but GTNUL.
 
 It could be intentional, because if your application is linked with more
@@ -230,13 +228,12 @@ final users, because it allow to integrate GUI library with standard
 Clipper screen functions.
 
 How to create such base GUI GT driver?
-It's enough take current GTWIN or GTWVT code and remove 90% of the code
-from it. That is all, well almost, you have to also set new GT name.
-
-You can use the following as a base for your new GT driver:
-TODO: add location of the sample GT driver [Chen]
-
+See as example GTGUI in source/rtl/gtgui/gtgui.c
+It supports only TONE and CLIPBOARD operations.
+GUI libraries can use it or create other GT driver inheriting from
+this one.
+NOTE: source/rtl/gtgui/gtdef.c is a hack which overloads the default
+      Harbour build time GT driver and should not be replicated.
 
 Best regards,
 Przemek
-
