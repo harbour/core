@@ -4614,62 +4614,72 @@ HB_FUNC( __DBTRANS )
 
 HB_FUNC( __DBAPP )
 {
+   BOOL bRetVal;
+
    if( ISCHAR( 1 ) )
    {
       AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
       if( pArea )
       {
-         hb_rddTransRecords( pArea,
-               hb_parc( 1 ),                  /* file name */
-               hb_parc( 8 ),                  /* RDD */
-               hb_parnl( 9 ),                 /* connection */
-               hb_param( 2, HB_IT_ARRAY ),    /* Fields */
-               FALSE,                         /* Export? */
-               hb_param( 3, HB_IT_BLOCK ),    /* cobFor */
-               NULL,                          /* lpStrFor */
-               hb_param( 4, HB_IT_BLOCK ),    /* cobWhile */
-               NULL,                          /* lpStrWhile */
-               hb_param( 5, HB_IT_NUMERIC ),  /* Next */
+         bRetVal = ( SUCCESS == hb_rddTransRecords( pArea,
+               hb_parc( 1 ),                     /* file name */
+               hb_parc( 8 ),                     /* RDD */
+               hb_parnl( 9 ),                    /* connection */
+               hb_param( 2, HB_IT_ARRAY ),       /* Fields */
+               FALSE,                            /* Export? */
+               hb_param( 3, HB_IT_BLOCK ),       /* cobFor */
+               NULL,                             /* lpStrFor */
+               hb_param( 4, HB_IT_BLOCK ),       /* cobWhile */
+               NULL,                             /* lpStrWhile */
+               hb_param( 5, HB_IT_NUMERIC ),     /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
-               hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
-               hb_parc( 10 ),                 /* Codepage */
-               hb_param( 11, HB_IT_STRING ) );/* Delimiter */
+               hb_param( 7, HB_IT_LOGICAL ),     /* Rest */
+               hb_parc( 10 ),                    /* Codepage */
+               hb_param( 11, HB_IT_STRING ) ) ); /* Delimiter */
       }
       else
       {
          hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "APPEND FROM" );
+         bRetVal = FALSE;
       }
    }
+
+   hb_retl( bRetVal );
 }
 
 HB_FUNC( __DBCOPY )
 {
+   BOOL bRetVal;
+
    if( ISCHAR( 1 ) )
    {
       AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
       if( pArea )
       {
-         hb_rddTransRecords( pArea,
-               hb_parc( 1 ),                  /* file name */
-               hb_parc( 8 ),                  /* RDD */
-               hb_parnl( 9 ),                 /* connection */
-               hb_param( 2, HB_IT_ARRAY ),    /* Fields */
-               TRUE,                          /* Export? */
-               hb_param( 3, HB_IT_BLOCK ),    /* cobFor */
-               NULL,                          /* lpStrFor */
-               hb_param( 4, HB_IT_BLOCK ),    /* cobWhile */
-               NULL,                          /* lpStrWhile */
-               hb_param( 5, HB_IT_NUMERIC ),  /* Next */
+         bRetVal = ( SUCCESS == hb_rddTransRecords( pArea,
+               hb_parc( 1 ),                     /* file name */
+               hb_parc( 8 ),                     /* RDD */
+               hb_parnl( 9 ),                    /* connection */
+               hb_param( 2, HB_IT_ARRAY ),       /* Fields */
+               TRUE,                             /* Export? */
+               hb_param( 3, HB_IT_BLOCK ),       /* cobFor */
+               NULL,                             /* lpStrFor */
+               hb_param( 4, HB_IT_BLOCK ),       /* cobWhile */
+               NULL,                             /* lpStrWhile */
+               hb_param( 5, HB_IT_NUMERIC ),     /* Next */
                ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY ),   /* RecID */
-               hb_param( 7, HB_IT_LOGICAL ),  /* Rest */
-               hb_parc( 10 ),                 /* Codepage */
-               hb_param( 11, HB_IT_STRING ) );/* Delimiter */
+               hb_param( 7, HB_IT_LOGICAL ),     /* Rest */
+               hb_parc( 10 ),                    /* Codepage */
+               hb_param( 11, HB_IT_STRING ) ) ); /* Delimiter */
       }
       else
       {
          hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "COPY TO" );
+         bRetVal = FALSE;
       }
    }
+
+   hb_retl( bRetVal );
 }
 
 HB_EXPORT ERRCODE hb_rddGetTempAlias( char * szAliasTmp )

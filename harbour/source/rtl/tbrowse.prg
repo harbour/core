@@ -181,8 +181,8 @@ CLASS TBrowse
    METHOD PosCursor()                     // Positions the cursor to the beginning of the call, used only when autolite==.F.
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
    METHOD DispCell( nRow, nCol, nMode )   // Displays a single cell and returns cell type as a single letter like Valtype()
-   METHOD HowManyCol( nWidth )            // Counts how many cols can be displayed
-   METHOD RedrawHeaders( nWidth )         // Repaints TBrowse Headers
+   METHOD HowManyCol()                    // Counts how many cols can be displayed
+   METHOD RedrawHeaders()                 // Repaints TBrowse Headers
    METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
                                           // of TBrowse, I do these settings inside this method
 
@@ -846,9 +846,10 @@ return Self
 
 
 // Calculate how many columns fit on the browse width including ColSeps
-METHOD HowManyCol( nWidth ) CLASS TBrowse
+METHOD HowManyCol() CLASS TBrowse
 
    local nToAdd
+   local nWidth := ::nRight - ::nLeft + 1
 
    // They were locals, so now I need to clear them (should fix this)
    ::nColsWidth := 0
@@ -912,13 +913,14 @@ return Self
 
 
 // Gets TBrowse width and width of displayed columns plus colsep
-METHOD RedrawHeaders( nWidth ) CLASS TBrowse
+METHOD RedrawHeaders() CLASS TBrowse
 
    local n, nTPos, nBPos
    local cBlankBox := Space(9)
    local nScreenRowT
    local nScreenRowB
    local nLCS             // Len(ColSep)
+   local nWidth := ::nRight - ::nLeft + 1
 
    if ::lHeaders          // Drawing headers
 
@@ -1038,8 +1040,8 @@ METHOD Stabilize() CLASS TBrowse
 
    if ::lRedrawFrame
       // How may columns fit on TBrowse width?
-      ::HowManyCol( nWidth )
-      ::RedrawHeaders( nWidth )
+      ::HowManyCol()
+      ::RedrawHeaders()
 
       // Now that browser frame has been redrawn we don't need to redraw it unless
       // displayed columns change

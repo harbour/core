@@ -430,6 +430,21 @@ $(PP_LIB)
 !
 #**********************************************************
 #
+# HBPPTEST build rule
+#
+$(HBPPTEST_EXE) :: BasicLibs BasicExes StdLibs
+$(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
+    $(HIDE)IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > NUL
+    $(HIDE)$(CC) @&&!
+$(CFLAGS)
+-e$(HBPPTEST_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_HBLIBS)
+$(PP_LIB)
+!
+#**********************************************************
+#
 # HBRUN build rule
 #
 $(HBRUN_EXE)  :: BasicLibs BasicExes StdLibs

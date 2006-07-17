@@ -50,14 +50,21 @@
  *
  */
 
+#include "hbsetup.ch"
+
+/* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters 
+         (cRDD, nConnection, cCodePage). */
+
 FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
-                   cRddName, nConnection, cdpId )
-   LOCAL nArea
+                   cRDD, nConnection, cCodePage )
+   LOCAL nOldArea
    LOCAL nToArea
    LOCAL aStruct
-   LOCAL oError
 
-   nArea := Select()
+   LOCAL oError
+   LOCAL lError := .F.
+
+   nOldArea := Select()
 
    aStruct := dbStruct()
    IF Empty( aStruct )
@@ -66,12 +73,13 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
 
    BEGIN SEQUENCE
 
-      dbCreate( cToFileName, aStruct, cRddName, .T., "", , cdpID, nConnection )
+      dbCreate( cToFileName, aStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
       nToArea := Select()
-      dbSelectArea( nArea )
+      dbSelectArea( nOldArea )
       __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )
 
    RECOVER USING oError
+      lError := .T.
    END SEQUENCE
 
    IF nToArea != NIL
@@ -79,10 +87,17 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
       dbCloseArea()
    ENDIF
 
-   dbSelectArea( nArea )
+   dbSelectArea( nOldArea )
 
-   IF oError != NIL
+   IF lError
       Break( oError )
    ENDIF
 
    RETURN .T.
+
+#ifdef HB_COMPAT_XPP
+
+FUNCTION dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
+   RETURN __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
+
+#endif

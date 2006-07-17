@@ -55,10 +55,10 @@ GTGUI_DIR    = source\rtl\gtgui
 
 HARBOUR_DIR  = source\compiler
 HBPP_DIR     = utils\hbpp
+HBPPTEST_DIR = utils\hbpptest
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
-HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
 HBVER_DIR    = utils\hbver
 
@@ -95,6 +95,7 @@ $(GTWVT_DIR);\
 $(GTGUI_DIR);\
 $(HARBOUR_DIR);\
 $(HBPP_DIR);\
+$(HBPPTEST_DIR);\
 $(HBRUN_DIR);\
 $(HBTEST_DIR);\
 $(HBDOC_DIR);\
@@ -138,6 +139,7 @@ GTGUI_LIB    = $(LIB_DIR)\gtgui.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
+HBPPTEST_EXE = $(BIN_DIR)\hbpptest.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
@@ -411,9 +413,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\color53.obj  \
     $(OBJ_DIR)\date.obj     \
     $(OBJ_DIR)\dbedit.obj   \
-    $(OBJ_DIR)\dbdelim.obj  \
-    $(OBJ_DIR)\dbsdf.obj    \
-    $(OBJ_DIR)\dbjoin.obj   \
     $(OBJ_DIR)\devoutp.obj  \
     $(OBJ_DIR)\dircmd.obj   \
     $(OBJ_DIR)\dummy.obj    \
@@ -595,6 +594,9 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\delim1.obj   \
     $(OBJ_DIR)\sdf1.obj     \
     \
+    $(OBJ_DIR)\dbdelim.obj  \
+    $(OBJ_DIR)\dbsdf.obj    \
+    $(OBJ_DIR)\dbjoin.obj   \
     $(OBJ_DIR)\dbtotal.obj  \
     $(OBJ_DIR)\dbfuncs.obj  \
     $(OBJ_DIR)\dblist.obj   \
@@ -722,6 +724,11 @@ HARBOUR_EXE_OBJS = \
 
 HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpp.obj     \
+
+#**********************************************************
+
+HBPPTEST_EXE_OBJS = \
+    $(OBJ_DIR)\pretest.obj  \
 
 #**********************************************************
 
@@ -862,6 +869,7 @@ HB_BUILD_TARGETS = \
     \
     $(HBRUN_EXE)       \
     $(HBTEST_EXE)      \
+    $(HBPPTEST_EXE)    \
     $(HBDOC_EXE)       \
     $(HBMAKE_EXE)      \
     $(HBVER_EXE)       \

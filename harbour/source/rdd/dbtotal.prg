@@ -50,20 +50,22 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 #include "dbstruct.ch"
 #include "error.ch"
 
 /* NOTE: Compared to CA-Cl*pper, Harbour:
          - will accept character expressions for xKey, xFor and xWhile. 
-         - has two extra parameters (nConnection, cpdId).
-         - will defuault to active index key for xKey parameter.
-         - has more error handling.
-*/
+         - has three extra parameters (cRDD, nConnection, cCodePage).
+         - will default to active index key for xKey parameter.
+         - won't crash with "No exported method: EVAL" if xKey is not 
+           block and table is not indexed. */
 
-FUNCTION __dbTotal( cFile, xKey, aFields, ;
-                    xFor, xWhile, nNext, nRec, lRest, cRDD, ;
-                    nConnection, cdpId )
+FUNCTION __dbTotal( cFile, xKey, aFields,;
+                    xFor, xWhile, nNext, nRec, lRest,;
+                    cRDD, nConnection, cCodePage )
 
    LOCAL nOldArea
    LOCAL nNewArea
@@ -74,29 +76,29 @@ FUNCTION __dbTotal( cFile, xKey, aFields, ;
    LOCAL lDbTransRecord
    LOCAL xCurKey
 
-   LOCAL bKeyBlock
-   LOCAL bForBlock
    LOCAL bWhileBlock
+   LOCAL bForBlock
+   LOCAL bKeyBlock
 
-   LOCAL lError := .F.
-   LOCAL bOldError
    LOCAL oError
+   LOCAL lError := .F.
 
-   IF ValType( xWhile ) == "C"
+   IF ISCHARACTER( xWhile )
       bWhileBlock := &("{||" + xWhile + "}")
-   ELSEIF ValType( xWhile ) != "B"
-      bWhileBlock := {|| .T. }
-   ELSE
+      lRest := .T.
+   ELSEIF ISBLOCK( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
+   ELSE
+      bWhileBlock := {|| .T. }
    ENDIF
 
-   IF ValType( xFor ) == "C"
+   IF ISCHARACTER( xFor )
       bForBlock := &("{||" + xFor + "}")
-   ELSEIF ValType( xFor ) != "B"
-      bForBlock := {|| .T. }
-   ELSE
+   ELSEIF ISBLOCK( xFor )
       bForBlock := xFor
+   ELSE
+      bForBlock := {|| .T. }
    ENDIF
 
    DEFAULT lRest TO .F.
@@ -123,35 +125,26 @@ FUNCTION __dbTotal( cFile, xKey, aFields, ;
       RETURN .F.
    ENDIF
 
-   bOldError := ErrorBlock( {| x | Break( x ) } )
-
    BEGIN SEQUENCE
 
       IF Empty( xKey )
-         xKey := IndexKey()
-
-         IF Empty( xKey )
-            oError := ErrorNew()
-            oError:description := "Invalid argument"
-            oError:genCode     := EG_ARG
-            Break( oError )
-         ENDIF
+         xKey := ordKey()
       ENDIF
 
-      IF ValType( xKey ) == "C"
+      IF ISCHARACTER( xKey )
          bKeyBlock := &("{||" + xKey + "}")
-      ELSEIF ValType( xKey ) != "B"
-         bKeyBlock := {|| .T. }
-      ELSE
+      ELSEIF ISBLOCK( xKey )
          bKeyBlock := xKey
+      ELSE
+         bKeyBlock := {|| .T. }
       ENDIF
 
       aGetField := {}
-      AEval( aFields, {| cField | AAdd( aGetField, GetField( cField ) ) } )
+      AEval( aFields, {| cField | AAdd( aGetField, __GetField( cField ) ) } )
       aFieldsSum := Array( Len( aGetField ) )
 
-      // ; Keep it open after creating it.
-      dbCreate( cFile, aNewDbStruct, cRDD, .T., "", NIL, cdpId, nConnection )
+      /* ; Keep it open after creating it. */
+      dbCreate( cFile, aNewDbStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
       nNewArea := Select()
 
       dbSelectArea( nOldArea )
@@ -188,7 +181,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields, ;
 
    RECOVER USING oError
       lError := .T.
-   ENDSEQUENCE
+   END SEQUENCE
 
    IF nNewArea != NIL
       dbSelectArea( nNewArea )
@@ -196,25 +189,20 @@ FUNCTION __dbTotal( cFile, xKey, aFields, ;
    ENDIF
 
    dbSelectArea( nOldArea )
-   ErrorBlock( bOldError )
 
    IF lError
-      IF ValType( oError:operation ) == "C"
-         oError:operation += "/__DBTOTAL"
-      ELSE
-         oError:operation := "__DBTOTAL"
-      ENDIF
-      Eval( ErrorBlock(), oError )
+      Break( oError )
    ENDIF
 
    RETURN .T.
 
-STATIC FUNCTION GetField( cField )
+STATIC FUNCTION __GetField( cField )
    LOCAL nCurrArea := Select()
    LOCAL nPos
    LOCAL oError
    LOCAL lError
 
+   /* ; Is the field aliased? */
    IF ( nPos := At( "->", cField ) ) > 0
 
       IF Select( Left( cField, nPos - 1 ) ) != nCurrArea
@@ -228,7 +216,7 @@ STATIC FUNCTION GetField( cField )
          oError:subCode    := 1101
 
          lError := Eval( ErrorBlock(), oError )
-         IF ValType( lError ) != "L" .OR. lError
+         IF !ISLOGICAL( lError ) .OR. lError
             __ErrInHandler()
          ENDIF
 
@@ -243,3 +231,10 @@ STATIC FUNCTION GetField( cField )
 
 FUNCTION __dbTransRec( nDstArea, aFieldsStru )
    RETURN __dbTrans( nDstArea, aFieldsStru, NIL, NIL, 1 )
+
+#ifdef HB_COMPAT_XPP
+
+FUNCTION dbTotal( cFile, xKey, aFields, xFor, xWhile, nNext, nRec, lRest )
+   RETURN __dbTotal( cFile, xKey, aFields, xFor, xWhile, nNext, nRec, lRest )
+
+#endif

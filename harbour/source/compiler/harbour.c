@@ -414,9 +414,10 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
       hb_comp_bAutoOpen = bAutoOpen;
       
       hb_fsFNameMerge( szFile, pFileName );
-      hb_xfree( pFileName );
       hb_compCompile( szFile, argc, argv, FALSE );
    }
+
+   hb_xfree( pFileName );
 
    return iStatus;
 }

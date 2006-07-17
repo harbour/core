@@ -50,41 +50,93 @@
  *
  */
 
-FUNCTION DBCLEARFIL()
-   Return DBCLEARFILTER()
+#include "hbsetup.ch"
 
-FUNCTION DBSETDRIVE(cDriver)
-   Return DBSETDRIVER(cDriver)
+/* short (10 chars long) version of some functions for compatibility */
 
-FUNCTION DBSETRELAT(xArea,bRelation,cRelation,lScoped)
-   Return DBSETRELATION(xArea,bRelation,cRelation,lScoped)
+FUNCTION dbClearFil()
+   RETURN dbClearFilter()
 
-FUNCTION DBRLOCKLIS()
-    Return DBRLOCKLIST()
+FUNCTION dbSetDrive( cRDD )
+   RETURN dbSetDriver( cRDD )
 
-FUNCTION DBCLOSEARE()
-   Return DBCLOSEAREA()                         
-  
-FUNCTION RDDSETDEFA(xDriver)
-   Return RDDSETDEFAULT(xDriver)
+FUNCTION dbSetRelat( xArea, bRelation, cRelation, lScoped )
+   RETURN dbSetRelation( xArea, bRelation, cRelation, lScoped )
 
-FUNCTION DBSELECTAR(xArea)
-   Return DBSELECTAREA(xArea)
+FUNCTION dbRLockLis()
+    RETURN dbRLockList()
 
-FUNCTION DBUNLOCKAL()
-   Return DBUNLOCKALL()
+FUNCTION dbCloseAre()
+   RETURN dbCloseArea()
 
-FUNCTION DBCLEARREL()
-   Return DBCLEARRELATION()
-                            
-FUNCTION DBSETFILTE(bFilter,cFilter)
-   Return DBSETFILTER(bFilter,cFilter)
+FUNCTION dbSelectAr( xArea )
+   RETURN dbSelectArea( xArea )
 
-FUNCTION DBFIELDINF(nType,nArea,xInfo)
-   Return DBFIELDINFO(nType,nArea,xInfo)
-                           
-FUNCTION DBORDERINF(nInfo,cIndex,xOrder,xSet)
-   Return DBORDERINFO(nInfo,cIndex,xOrder,xSet)
+FUNCTION dbUnLockAl()
+   RETURN dbUnLockAll()
 
-FUNCTION DBRECORDIN(nInfo,nRecord,xSet)
-   Return DBRECORDINFO(nInfo,nRecord,xSet)
+FUNCTION dbClearRel()
+   RETURN dbClearRelation()
+
+FUNCTION dbSetFilte( bFilter, cFilter )
+   RETURN dbSetFilter( bFilter, cFilter )
+
+FUNCTION dbFieldInf( nType, nArea, xInfo )
+   RETURN dbFieldInfo( nType, nArea, xInfo )
+
+FUNCTION dbOrderInf( nInfo, cIndex, xOrder, xSet )
+   RETURN dbOrderInfo( nInfo, cIndex, xOrder, xSet )
+
+FUNCTION dbRecordIn( nInfo, nRecord, xSet )
+   RETURN dbRecordInfo( nInfo, nRecord, xSet )
+
+FUNCTION rddSetDefa( cRDD )
+   RETURN rddSetDefault( cRDD )
+
+FUNCTION __dbCopySt( cFileName, aFieldList )
+   RETURN __dbCopyStruct( cFileName, aFieldList )
+
+FUNCTION __dbCopyXS( cFileName )
+   RETURN __dbCopyXStruct( cFileName )
+
+/* ; NOTE: The created table will be kept open if lOpenMode parameter 
+           is of logical type. If .T. it will be opened in a new workarea, 
+           if .F. it will be opened in the current one. */
+/* ; NOTE: Has an identical parameter list with dbCreate() */
+
+FUNCTION __dbOpenSD( cFile, aStruct, cRDD, lOpenMode, cAlias, cDelimArg, cCodePage, nConnection )
+   RETURN __dbOpenSDF( cFile, aStruct, cRDD, lOpenMode, cAlias, cDelimArg, cCodePage, nConnection )
+
+FUNCTION __dbArrang( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )
+   RETURN __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )
+
+FUNCTION ordListCle()
+   RETURN ordListClear()
+
+FUNCTION ordListReb()
+   RETURN ordListRebuild()
+
+FUNCTION ordSetFocu( xOrder, cFile )
+   RETURN ordSetFocus( xOrder, cFile )
+
+FUNCTION ordSetRela( xArea, bRelation, cRelation )
+   RETURN ordSetRelation( xArea, bRelation, cRelation )
+
+#ifdef HB_COMPAT_XPP
+
+FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
+
+   DO CASE
+   CASE cXPP_Driver == "SDFDBE"
+      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
+/*    Alternate CA-Cl*pper compatible call:
+      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
+   CASE cXPP_Driver == "DELDBE"
+      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimiter )
+/*    Alternate CA-Cl*pper compatible call:
+      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
+   ENDCASE
+
+   RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
+
+#endif

@@ -50,13 +50,15 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
 #define BUFFER_LENGTH 2048
 
-FUNCTION __TYPEFILE( cFile, lPrint )
+PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL nHandle, cBuffer, nRead := 0, nHasRead := 0, nSize := 0, nBuffer
    LOCAL oErr, xRecover, nRetries
    LOCAL aSaveSet[ 2 ]
@@ -91,7 +93,7 @@ FUNCTION __TYPEFILE( cFile, lPrint )
          cTmp := hb_FNameMerge( aPath[ i ], cName, cExt )
          IF file( cTmp )
             cFile := cTmp
-            exit
+            EXIT
          ENDIF
       NEXT
    ENDIF
@@ -110,7 +112,7 @@ FUNCTION __TYPEFILE( cFile, lPrint )
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
       IF ISLOGICAL( xRecover ) .and. !xRecover      // user select "Default"
-         RETURN NIL
+         RETURN
       ENDIF
    ENDDO
 
@@ -145,7 +147,7 @@ FUNCTION __TYPEFILE( cFile, lPrint )
       Set( _SET_PRINTER, aSaveSet[ 2 ] )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /*----------------------------------------------------------------------------*/
 /*         Function aDvd : Divide string to tokens and put tokens into array  */
@@ -167,3 +169,10 @@ STATIC FUNCTION aDvd( cString, cDelim )
    AAdd( aProm, cString )
 
    RETURN aProm
+
+#ifdef HB_COMPAT_XPP
+
+FUNCTION _TypeFile( cFile, lPrint )
+   RETURN __TypeFile( cFile, lPrint )
+
+#endif

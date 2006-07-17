@@ -4,10 +4,15 @@
 
 /*
  * Harbour Project source code:
- * __DBUPDATE() function
+ * Copies the contents of a database to an SDF text file.
+ * Appends the contents of an SDF text file to a database.
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
+ *
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    function __dbSDF() replaced by the new one which uses
+ *    SDF RDD I've just created
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,63 +55,9 @@
  *
  */
 
-#include "hbsetup.ch"
+REQUEST SDF
 
-#include "common.ch"
-
-FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
-   LOCAL nOldArea := Select()
-   LOCAL xKey
-
-   LOCAL oError
-   LOCAL lError := .F.
-
-   DEFAULT lRandom TO .F.
-
-   dbGoTop()
-
-   BEGIN SEQUENCE
-
-      dbSelectArea( cAlias )
-      dbGoTop()
-      DO WHILE !Eof()
-
-         xKey := Eval( bKey )
-
-         dbSelectArea( nOldArea )
-         IF lRandom
-            IF dbSeek( xKey )
-               Eval( bAssign )
-            ENDIF
-         ELSE
-            DO WHILE Eval( bKey ) < xKey .AND. !Eof()
-               dbSkip()
-            ENDDO
-
-            IF Eval( bKey ) == xKey .AND. !Eof()
-               Eval( bAssign )
-            ENDIF
-         ENDIF
-
-         dbSelectArea( cAlias )
-         dbSkip()
-      ENDDO
-
-   RECOVER USING oError
-      lError := .T.
-   END SEQUENCE
-
-   dbSelectArea( nOldArea )
-
-   IF lError
-      Break( oError )
-   ENDIF
-
-   RETURN .T.
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION dbUpdate( cAlias, bAssign, bKey, lRandom )
-   RETURN __dbUpdate( cAlias, bKey, lRandom, bAssign )
-
-#endif
+FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+   RETURN iif( lExport,;
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" ) ,;
+      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" ) )

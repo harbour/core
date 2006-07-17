@@ -1,6 +1,10 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
+
+#ifndef __HARBOUR__
+   #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
+#endif
 
 #command TEXT TO VAR <v> => #pragma __stream|%s||<v>:=
 #command CTEXT TO VAR <v> => #pragma __cstream|%s||<v>:=
@@ -958,9 +962,9 @@ ENDTEXT
 /* ---------------------------------------------------------------------*/
   __PP_FREE()
   
-  ? "Total count   =", nCnt
-  ? "Valid results =", nRes
-  ? "Failed results=", nCnt - nRes
+  OutStd( "Total count   =", nCnt, hb_OSNewLine() )
+  OutStd( "Valid results =", nRes, hb_OSNewLine() )
+  OutStd( "Failed results=", nCnt - nRes, hb_OSNewLine() )
   
   RETURN
 
@@ -994,15 +998,15 @@ LOCAL i
   IF( pre == out )
     RETURN 1
   ELSE
-    ? pre
-    ? out
-    ? " => FAILED in LINE: ", PROCLINE(1)
+    OutStd( pre, hb_OSNewLine() )
+    OutStd( out, hb_OSNewLine() )
+    OutStd( " => FAILED in LINE: ", PROCLINE(1), hb_OSNewLine() )
     i := 1
     WHILE SUBSTR(pre,i,1) == SUBSTR(out,i,1)
       i++
     ENDDO
-    ? SUBSTR( pre, i )
-    ? SUBSTR( out, i )
+    OutStd( SUBSTR( pre, i ), hb_OSNewLine() )
+    OutStd( SUBSTR( out, i ), hb_OSNewLine() )
   ENDIF
   
 RETURN 0

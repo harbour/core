@@ -211,6 +211,9 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 {$(HBPP_DIR)}.c{$(OBJ_DIR)}.obj::
      $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(HBPPTEST_DIR)}.c{$(OBJ_DIR)}.obj::
+     $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(HBRUN_DIR)}.c{$(OBJ_DIR)}.obj::
      $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -330,6 +333,10 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
      $(HIDE)$(HARBOUR_EXE) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
      $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
+{$(HBPPTEST_DIR)}.prg{$(OBJ_DIR)}.obj:
+     $(HIDE)$(HARBOUR_EXE) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
+     $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
 {$(HBRUN_DIR)}.prg{$(OBJ_DIR)}.obj:
      $(HIDE)$(HARBOUR_EXE) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
      $(HIDE)$(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
@@ -427,6 +434,9 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
      $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBPP_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+     $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
+{$(HBPPTEST_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
      $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBRUN_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
@@ -545,6 +555,10 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
      $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBPP_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
+     $(HIDE)$(HARBOUR_EXE) -D__EXPORT__ $(HARBOURFLAGS) $< -o$(DLL_OBJ_DIR)\\
+     $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBPPTEST_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
      $(HIDE)$(HARBOUR_EXE) -D__EXPORT__ $(HARBOURFLAGS) $< -o$(DLL_OBJ_DIR)\\
      $(HIDE)$(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -727,6 +741,20 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(COMMON_LIB)
+$(PP_LIB)
+<<
+#**********************************************************
+#
+# HBPPTEST build rule
+#
+$(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)
+    $(HIDE)IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > NUL
+    $(HIDE)$(LINKER) @<<
+$(LDFLAGS)
+/OUT:$(HBPPTEST_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_HBLIBS)
 $(PP_LIB)
 <<
 #**********************************************************

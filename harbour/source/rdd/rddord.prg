@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 #include "dbinfo.ch"
 
@@ -67,7 +69,7 @@ FUNCTION dbClearIndex()
 FUNCTION dbReindex()
    RETURN ordListRebuild()
 
-FUNCTION dbSetOrder( nOrderNum )
+PROCEDURE dbSetOrder( nOrderNum )
 
    IF ISCHARACTER( nOrderNum ) .AND. !Empty( Val( nOrderNum ) )
       nOrderNum := Val( nOrderNum )
@@ -75,7 +77,7 @@ FUNCTION dbSetOrder( nOrderNum )
 
    ordSetFocus( nOrderNum )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION IndexExt()
    RETURN ordBagExt()
@@ -92,18 +94,19 @@ FUNCTION IndexKey( nOrder )
 
    RETURN ""
 
-FUNCTION OrdSetRelation( xArea, bRelation, cRelation )
+FUNCTION ordSetRelation( xArea, bRelation, cRelation )
    RETURN dbSetRelation( xArea, bRelation, cRelation, .T. )
 
-/* short (10 chars long) version of some ord* functions for compatibility */
-FUNCTION ORDLISTCLE()
-   RETURN ORDLISTCLEAR()
+/* NOTE: Undocumented Clipper function */
 
-FUNCTION ORDLISTREB()
-   RETURN ORDLISTREBUILD()
+#ifdef HB_C52_UNDOC
+#ifdef HB_C52_STRICT
 
-FUNCTION ORDSETFOCU( xOrder, cFile )
-   RETURN ORDSETFOCUS( xOrder, cFile )
+FUNCTION _dtxCondSet( cFor, bFor, lAll, bWhile, bEval, nEvery, xDummy, nRecNo, nNext, nRecord, lRest )
 
-FUNCTION ORDSETRELA( xArea, bRelation, cRelation )
-   RETURN ORDSETRELATION( xArea, bRelation, cRelation )
+   HB_SYMBOL_UNUSED( xDummy )
+
+   RETURN ordCondSet( cFor, bFor, lAll, bWhile, bEval, nEvery, nRecNo, nNext, nRecord, lRest )
+
+#endif
+#endif

@@ -4,10 +4,16 @@
 
 /*
  * Harbour Project source code:
- * __DBUPDATE() function
+ * Copies the contents of a database to a delimited text file.
+ * Appends the contents of a delimited text file to a database.
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 2001-2003 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
+ * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
+ *
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    function __dbDelim() replaced by the new one which uses
+ *    DELIM RDD I've just created
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,61 +58,63 @@
 
 #include "hbsetup.ch"
 
-#include "common.ch"
+REQUEST DELIM
 
-FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
-   LOCAL nOldArea := Select()
-   LOCAL xKey
+FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
 
-   LOCAL oError
-   LOCAL lError := .F.
+#ifdef HB_C52_STRICT
 
-   DEFAULT lRandom TO .F.
+   LOCAL nSrcArea
+   LOCAL nDstArea
+   LOCAL aStruct
+   LOCAL cRDD := "DELIM"
 
-   dbGoTop()
+   IF lExport
+      nSrcArea := Select()
+   ELSE
+      nDstArea := Select()
+   ENDIF
 
-   BEGIN SEQUENCE
+   IF Empty( aStruct := __dbStructFilter( dbStruct(), aFields ) )
+      RETURN .F.
+   ENDIF
 
-      dbSelectArea( cAlias )
-      dbGoTop()
-      DO WHILE !Eof()
+   IF lExport
+      dbCreate( cFile, aStruct, cRDD, .T., "", cDelimArg )
+      nDstArea := Select()
+      IF nDstArea == nSrcArea
+         nDstArea := NIL
+      ENDIF
+      dbSelectArea( nSrcArea )
+   ELSE
+      IF !__dbOpenSDF( cFile, aStruct, cRDD, .T., "", cDelimArg )
+         RETURN .F.
+      ENDIF
+      nSrcArea := Select()
+   ENDIF
 
-         xKey := Eval( bKey )
+   IF nDstArea != NIL
+      __dbTrans( nDstArea, aStruct, bFor, bWhile, nNext, nRecord, lRest )
+   ENDIF
 
-         dbSelectArea( nOldArea )
-         IF lRandom
-            IF dbSeek( xKey )
-               Eval( bAssign )
-            ENDIF
-         ELSE
-            DO WHILE Eval( bKey ) < xKey .AND. !Eof()
-               dbSkip()
-            ENDDO
-
-            IF Eval( bKey ) == xKey .AND. !Eof()
-               Eval( bAssign )
-            ENDIF
-         ENDIF
-
-         dbSelectArea( cAlias )
-         dbSkip()
-      ENDDO
-
-   RECOVER USING oError
-      lError := .T.
-   END SEQUENCE
-
-   dbSelectArea( nOldArea )
-
-   IF lError
-      Break( oError )
+   IF lExport
+      IF nDstArea != NIL
+         dbSelectArea( nDstArea )
+         dbCloseArea()
+      ENDIF
+      dbSelectArea( nSrcArea )
+   ELSE
+      dbSelectArea( nSrcArea )
+      dbCloseArea()
+      dbSelectArea( nDstArea )
    ENDIF
 
    RETURN .T.
 
-#ifdef HB_COMPAT_XPP
+#else
 
-FUNCTION dbUpdate( cAlias, bAssign, bKey, lRandom )
-   RETURN __dbUpdate( cAlias, bKey, lRandom, bAssign )
+   RETURN iif( lExport,;
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimArg ) ,;
+      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimArg ) )
 
 #endif

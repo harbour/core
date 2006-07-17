@@ -14,9 +14,12 @@ C_SOURCES=\
 	hbdbsort.c \
 
 PRG_SOURCES=\
+	dbdelim.prg \
 	dbfuncs.prg \
+	dbjoin.prg \
 	dbtotal.prg \
 	dblist.prg \
+	dbsdf.prg \
 	dbsort.prg \
 	dbstrux.prg \
 	dbupdat.prg \

@@ -8,6 +8,83 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     - Removed a strange extension which looked like a mistake
+       (besides not being CA-Cl*pper compatible).
+     * Comments reviewed/changed/added.
+     ; Review done, now 100% compatible.
+
+2006-07-17 00:41 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/common.mak
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+   * harbour/utils/Makefile
+     + Added hbpptest
+
+   * harbour/utils/hbpptest/pretest.prg
+     + Output now goes to STDOUT.
+
+   * harbour/source/compiler/harbour.c
+     ! Possible memory leak fixed.
+
+   * harbour/source/rtl/Makefile
+     ! Fixed tabs (readded them).
+
+   - harbour/source/rtl/dbdelim.prg
+   + harbour/source/rdd/dbdelim.prg
+   - harbour/source/rtl/dbjoin.prg
+   + harbour/source/rdd/dbjoin.prg
+     * Moved three RDD related internal function source files 
+       to the RDD library. (They did depend on each other 
+   * harbour/source/rtl/Makefile
+   * harbour/source/rdd/Makefile
+   * harbour/common.mak
+     * Moved three RDD related internal function source files
+       to the RDD library. (They did depend on each other
+       anyway.)
+
+   * harbour/source/rdd/dbcmd.c
+   * harbour/source/rdd/dbfuncs.prg
+   * harbour/source/rdd/dblist.prg
+   * harbour/source/rdd/dbsort.prg
+   * harbour/source/rdd/dbstrux.prg
+   * harbour/source/rdd/dbtotal.prg
+   * harbour/source/rdd/dbupdat.prg
+   * harbour/source/rdd/rddord.prg
+     ! Problem where error condition was not detected if BREAK didn't 
+   * harbour/source/rtl/dbedit.prg
+   * harbour/source/rtl/dbjoin.prg
+     % Cleanups, minor optimizations.
+     ! __dbApp(), __dbCopy() to return LOGICAL.
+     ! Problem where error condition was not detected if BREAK didn't
+       set the error object.
+     ! __dbTotal() lRest handling fixed.
+     ! __dbTotal() ErrorBlock overriding removed.
+     ! __dbCreate() now generating default alias.
+     % __dbCreate() using dbCreate() undoc param to open the tables.
+     ! __dbDelim() return value.
+     ! __dbSDF() return value.
+     + CA-Cl*pper undocumented call added: _dtxCondSet()
+     + XBase++ compatible calls implemented:
+       dbJoin(), dbList(), dbSort(), dbTotal(), dbUpdate(), _dbExport()
+       dbCopyStruct(), dbCopyExtStruct()
+     + Added some more 10 chars call stubs:
+       __dbCopySt(), __dbCopyXS(), __dbOpenSD(), __dbArrang()
+     + Comments.
+     + Formatting.
+     ; All high-level db functions seems to be compatible now.
+       DBEDIT() is left TODO for review (refix).
+
+   * harbour/source/rtl/tbrowse.prg
+     - Removed compiler+RTL __dbList() hack which 
+       made it incompatible with CA-Cl*pper. The 
+       hack targeted an XBase++ extension, but it's 
+       compatible even without the hack. Tested with 
+   * harbour/source/rdd/dblist.prg
+     - Removed compiler+RTL __dbList() hack which
+       made it incompatible with CA-Cl*pper. The
+       hack targeted an XBase++ extension, but it's
+       compatible even without the hack. Tested with
+       XBase++ 1.82.294.
 2006-07-16 23:26 UTC+0100 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
    * harbour/source/rtl/typefile.prg
      % FUNCTION -> PROCEDURE

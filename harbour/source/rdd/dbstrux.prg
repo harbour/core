@@ -60,8 +60,10 @@ FUNCTION __dbCopyStruct( cFileName, aFieldList )
 
 FUNCTION __dbCopyXStruct( cFileName )
    LOCAL nOldArea
-   LOCAL oError
    LOCAL aStruct
+
+   LOCAL oError
+   LOCAL lError := .F.
 
    IF Empty( aStruct := dbStruct() )
       RETURN .F.
@@ -72,21 +74,20 @@ FUNCTION __dbCopyXStruct( cFileName )
    BEGIN SEQUENCE
 
       dbSelectArea( 0 )
-      __dbCreate( cFileName, NIL, NIL, .F., "" )
+      __dbCreate( cFileName, NIL, NIL, .F., NIL )
 
-      AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
-         ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ) } )
-
-      AEval( aStruct, {| aField | dbAppend(),;
+      AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
+                                     ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ),;
+                                  dbAppend(),;
                                   FIELD->FIELD_NAME := aField[ DBS_NAME ],;
                                   FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
-                                  FIELD->FIELD_LEN := aField[ DBS_LEN ], ;
+                                  FIELD->FIELD_LEN := aField[ DBS_LEN ],;
                                   FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
-            used here (without the USING keyword), so oError will always be
-            NIL. */
+            used here (without the USING keyword), so oError will always be NIL. */
    RECOVER USING oError
+      lError := .T.
    END SEQUENCE
 
    IF Select() != nOldArea
@@ -94,20 +95,28 @@ FUNCTION __dbCopyXStruct( cFileName )
       dbSelectArea( nOldArea )
    ENDIF
 
-   IF oError != NIL
+   IF lError
       Break( oError )
    ENDIF
 
    RETURN .T.
 
-FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConnection )
+/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters 
+         (cCodePage, nConnection). */
+
+FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
+
    LOCAL oError
 
    DEFAULT lNew TO .F.
 
-   IF Used() .AND. ! lNew
+   IF cAlias == NIL
+      hb_FNameSplit( cFileName, NIL, @cAlias )
+   ENDIF
+
+   IF Used() .AND. !lNew
       dbCloseArea()
    ENDIF
 
@@ -119,15 +128,13 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConne
                                 { "FIELD_TYPE", "C",  1, 0 },;
                                 { "FIELD_LEN" , "N",  3, 0 },;
                                 { "FIELD_DEC" , "N",  3, 0 } },;
-                   cRDDName,,,, cdpId, nConnection )
-         dbUseArea( .F., cRDDName, cFileName, cAlias,,, cdpId, nConnection )
-
+                   cRDD, .F., cAlias, NIL, cCodePage, nConnection )
       ELSE
+         dbUseArea( lNew, NIL, cFileFrom, "" )
 
-         dbUseArea( lNew,, cFileFrom, "" )
-
-         dbEval( {|| AAdd( aStruct, { Rtrim(FIELD->FIELD_NAME) ,;
-                                      Rtrim(FIELD->FIELD_TYPE) ,;
+         /* ; Harbour does some extra RTrim()-ing here. */
+         dbEval( {|| AAdd( aStruct, { RTrim( FIELD->FIELD_NAME ) ,;
+                                      RTrim( FIELD->FIELD_TYPE ) ,;
                                       FIELD->FIELD_LEN ,;
                                       FIELD->FIELD_DEC } ) } )
          dbCloseArea()
@@ -136,12 +143,11 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId, nConne
             dbSelectArea( nOldArea )
          ENDIF
 
-         AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0, ;
-            ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256, ;
+         AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0,;
+            ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
               aField[ DBS_DEC ] := 0 ), NIL ) } )
 
-         dbCreate( cFileName, aStruct, cRDDName,,,, cdpId, nConnection )
-         dbUseArea( lNew, cRDDName, cFileName, cAlias,,, cdpId, nConnection )
+         dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, NIL, cCodePage, nConnection )
 
       ENDIF
 
@@ -178,8 +184,20 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    bFindName := {| aField | aField[ DBS_NAME ] == cName }
 
    AEval( aFieldList, {| cFieldName, nIndex | ;
-         cName := RTrim( Upper( cFieldName ) ), ;
-         nIndex := aScan( aStruct, bFindName ),;
+         cName := RTrim( Upper( cFieldName ) ),;
+         nIndex := AScan( aStruct, bFindName ),;
          iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered
+
+#ifdef HB_COMPAT_XPP
+
+/* Identical to __dbCopyStruct() */
+
+FUNCTION dbCopyStruct( cFileName, aFieldList )
+   RETURN dbCreate( cFileName, __dbStructFilter( dbStruct(), aFieldList ) )
+
+FUNCTION dbCopyExtStruct( cFileName )
+   RETURN __dbCopyXStruct( cFileName )
+
+#endif
