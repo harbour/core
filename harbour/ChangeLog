@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/TODO
+    + added new item: Clean RDD code to be safe for return from RT errors
+      assigned to me
+
+2006-07-17 13:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_tgz.sh
     * added hbpptest to list of tools rebuilt with shared library
 
   * harbour/source/rdd/dbcmd.c

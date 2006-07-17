@@ -4614,7 +4614,7 @@ HB_FUNC( __DBTRANS )
 
 HB_FUNC( __DBAPP )
 {
-   BOOL bRetVal;
+   BOOL bRetVal = FALSE;
 
    if( ISCHAR( 1 ) )
    {
@@ -4640,7 +4640,6 @@ HB_FUNC( __DBAPP )
       else
       {
          hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "APPEND FROM" );
-         bRetVal = FALSE;
       }
    }
 
@@ -4649,7 +4648,7 @@ HB_FUNC( __DBAPP )
 
 HB_FUNC( __DBCOPY )
 {
-   BOOL bRetVal;
+   BOOL bRetVal = FALSE;
 
    if( ISCHAR( 1 ) )
    {
@@ -4675,7 +4674,6 @@ HB_FUNC( __DBCOPY )
       else
       {
          hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "COPY TO" );
-         bRetVal = FALSE;
       }
    }
 
