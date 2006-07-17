@@ -11,7 +11,7 @@
     * added hbpptest to list of tools rebuilt with shared library
 
   * harbour/source/rdd/dbcmd.c
-     + Restores 100% compatible codeblock creation for STRICT mode.
+    ! fixed possible access to uninitialized variable in __dbApp()/__dbCopy()
      - Removed a strange extension which looked like a mistake 
 2006-07-17 03:43 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/dbedit.prg
