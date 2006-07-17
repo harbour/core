@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbsetup.ch"
+
 #include "common.ch"
 #include "dbedit.ch"
 #include "inkey.ch"
@@ -96,8 +98,8 @@ FUNCTION dbEdit(;
    LOCAL cAlias
    LOCAL cFieldName
    LOCAL cHeading
+   LOCAL cBlock
    LOCAL bBlock
-   LOCAL aSubArray
 
    IF !Used()
       RETURN .F.
@@ -132,21 +134,6 @@ FUNCTION dbEdit(;
 
    IF ISARRAY( acColumns )
       nColCount := Len( acColumns )
-      aSubArray:=acColumns[nColCount] // See if is an Array of Array
-
-     IF ISARRAY( aSubArray )
-        nColCount := Len( aSubArray )
-      nPos := 1
-      DO WHILE nPos <= nColCount .AND. ISCHARACTER( aSubArray[ nPos ] ) .AND. !Empty( aSubArray[ nPos ] )
-         nPos++
-      ENDDO
-      nColCount := nPos - 1
-
-      IF nColCount == 0
-         RETURN .F.
-      ENDIF
-      acColumns:=aSubArray
-      else
       nPos := 1
       DO WHILE nPos <= nColCount .AND. ISCHARACTER( acColumns[ nPos ] ) .AND. !Empty( acColumns[ nPos ] )
          nPos++
@@ -156,35 +143,14 @@ FUNCTION dbEdit(;
       IF nColCount == 0
          RETURN .F.
       ENDIF
-
-      endif
    ELSE
       nColCount := FCount()
    ENDIF
 
    // Generate the TBrowse columns
+
    FOR nPos := 1 TO nColCount
 
-      /* 09/02/2002 <maurilio.longo@libero.it>
-         NOTE: I've removed all code which was here trying to guess content of acColumns[nPos], it
-               was not needed and it was not working.
-               Clipper dbEdit() requires fully qualified field names if there are columns from more than
-               one file or throws an error
-               Clipper dbEdit() is not able to change field values
-
-         EXAMPLE: a.dbf has a single field named a
-                  b.dbf has a single field named b
-
-                  use a alias "filea" new
-                  use b alias "fileb" new
-
-                  aF := { "field->a", "field->b" }
-                  dbEdit(,,,, aF)
-
-                  throws an error with Clipper 5.2
-      */
-
-      // Column Header
       IF ISARRAY( acColumns )
          IF ( nAliasPos := At( "->", acColumns[ nPos ] ) ) > 0
             cAlias := SubStr( acColumns[ nPos ], 1, nAliasPos - 1 )
@@ -193,19 +159,58 @@ FUNCTION dbEdit(;
          ELSE
             cHeading := acColumns[ nPos ]
          ENDIF
+         cBlock := acColumns[ nPos ]
       ELSE
-         cHeading := FieldName( nPos )
+         cBlock := FieldName( nPos )
+         cHeading := cBlock
       ENDIF
 
-      IF ISARRAY( acColumns )
-         bBlock := &( "{||" + acColumns[ nPos ] + "}" )
+#ifdef HB_C52_STRICT
+
+      IF Type( cBlock ) == "M"
+
+         bBlock := {|| "  <Memo>  " }
+
+      ELSEIF "->" $ cBlock
+
+         IF Upper( cAlias ) == "M"
+            bBlock := MemvarBlock( cBlock )
+         ELSEIF Upper( cAlias ) == "FIELD"
+            bBlock := FieldWBlock( cFieldName, Select() )
+         ELSE
+            bBlock := FieldWBlock( cFieldName, Select( cAlias ) )
+         ENDIF
+
+      ELSEIF !Empty( FieldPos( cBlock ) )
+         bBlock := FieldWBlock( cBlock, Select() )
       ELSE
-         bBlock := FieldBlock( FieldName( nPos ) )
+         bBlock := NIL
       ENDIF
 
-      IF ValType(Eval(bBlock)) == "M"
+      IF bBlock == NIL
+         bBlock := &( "{||" + cBlock + "}" )
+      ENDIF
+      
+#else
+      
+      /* Simplified logic compared to CA-Cl*pper. In the latter there 
+         is logic to detect several typical cBlock types (memvar, 
+         aliased field, fiels) and using MemvarBlock()/FieldWBlock()/FieldBlock() 
+         calls to create codeblocks for them if possible. In Harbour, 
+         simple macro compilation will result in faster code for all 
+         situations. As Maurilio Longo has pointed, there is no point in 
+         creating codeblocks which are able to _assign_ values, as dbEdit() 
+         is actallu a read-only function. [vszakats] */
+      
+      bBlock := &( "{||" + cBlock + "}" )
+
+      /* NOTE: There is an extra Eval() here compared to CA-Cl*pper. */
+
+      IF ISMEMO( Eval( bBlock ) )
          bBlock := {|| "  <Memo>  " }
       ENDIF
+      
+#endif
 
       IF ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. ISCHARACTER( xColumnHeaders[ nPos ] )
          cHeading := xColumnHeaders[ nPos ]

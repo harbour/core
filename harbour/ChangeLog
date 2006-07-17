@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * added hbpptest to list of tools rebuilt with shared library
+
+  * harbour/source/rdd/dbcmd.c
+     + Restores 100% compatible codeblock creation for STRICT mode.
+     - Removed a strange extension which looked like a mistake 
+2006-07-17 03:43 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/dbedit.prg
+     % Optimized codeblock creation.
+     + Restored 100% compatible codeblock creation for STRICT mode.
      - Removed a strange extension which looked like a mistake
        (besides not being CA-Cl*pper compatible).
      * Comments reviewed/changed/added.
