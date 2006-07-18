@@ -9,6 +9,7 @@
  * Copyright 2000 Viktor Szakats <viktor.szakats@syenar.hu> (English, from msg_tpl.c)
  * Copyright 2000 Roman Masek <woodoo@iol.cz>
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
+ * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,10 +65,10 @@ static HB_LANG s_lang =
       /* Identification */
 
       "CSWIN",                        /* ID */
-      "Czech",                     /* Name (in English) */
-      "Èesky",             /* Name (in native language) */
-      "CS",                        /* RFC ID */
-      "1250",                      /* Codepage */
+      "Czech",                        /* Name (in English) */
+      "Èesky",                        /* Name (in native language) */
+      "CS",                           /* RFC ID */
+      "1250",                         /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
@@ -97,75 +98,73 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Database Files    # Records    Last Update     Size",
-      "Do you want more samples?",
-      "Page No.",
+      "Databáze          # Záznamù    Aktualizace Velikost",
+      "Chcete více pøíkladù?",
+      "Strana",
       "** Subtotal **",
       "* Subsubtotal *",
       "*** Total ***",
       "Ins",
       "   ",
-      "Invalid date",
-      "Range: ",
+      "Chybné datum",
+      "Rozsah: ",
       " - ",
       "A/N",
-      "INVALID EXPRESSION",
+      "CHYBNÝ VÝRAZ",
 
       /* Error description names */
 
-      "Unknown error",
-      "Argument error",
-      "Bound error",
-      "String overflow",
-      "Numeric overflow",
-      "Zero divisor",
-      "Numeric error",
-      "Syntax error",
-      "Operation too complex",
+      "Neznámá chyba",
+      "Chyba argumentu",
+      "Chyba mezí",
+      "Pøeteèení øetìzce",
+      "Pøeteèení èísla",
+      "Dìlìní nulou",
+      "Numerická chyba",
+      "Chyba syntaxe",
+      "Operace pøíliš komplexní",
       "",
       "",
-      "Memory low",
-      "Undefined function",
-      "No exported method",
-      "Variable does not exist",
-      "Alias does not exist",
-      "No exported variable",
-      "Illegal characters in alias",
-      "Alias already in use",
+      "Nedostatek pamìti",
+      "Nedefinovaná funkce",
+      "Neznámá metoda",
+      "Promìnná neexistuje",
+      "Alias neexistuje",
+      "Neznámá promìnná",
+      "Nepovolené znaky v aliasu",
+      "Alias již použit",
       "",
-      "Create error",
-      "Open error",
-      "Close error",
-      "Read error",
-      "Write error",
-      "Print error",
-      "",
-      "",
-      "",
-      "",
-      "Operation not supported",
-      "Limit exceeded",
-      "Corruption detected",
-      "Data type error",
-      "Data width error",
-      "Workarea not in use",
-      "Workarea not indexed",
-      "Exclusive required",
-      "Lock required",
-      "Write not allowed",
-      "Append lock failed",
-      "Lock Failure",
+      "Chyba vytvoøení",
+      "Chyba otevøení",
+      "Chyba zavøení",
+      "Chyba ètení",
+      "Chyba zápisu",
+      "Chyba tisku",
       "",
       "",
       "",
       "",
-      "array access",
-      "array assign",
-      "array dimension",
-      "not an array",
-      "conditional",
+      "Operace není podporována",
+      "Pøekorèen limit",
+      "Index poškozen",
+      "Typ dat se neshoduje",
+      "Chyba šíøky dat",
+      "Pracovní oblast není použita",
+      "Není otevøen index",
+      "Požadováno uzamknutí",
+      "Zámek pøi pøidání záznamu selhal",
+      "Zámek selhal",
+      "",
+      "",
+      "",
+      "",
+      "pøístup k poli",
+      "pøiøazení pole",
+      "zmìna dimenze pole",
+      "není pole",
+      "podmínka",
 
-      /* Internal error names */
+       /* Internal error names */
 
       "Unrecoverable error %lu: ",
       "Error recovery failure",

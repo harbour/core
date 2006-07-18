@@ -132,9 +132,8 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
       ELSE
          dbUseArea( lNew, NIL, cFileFrom, "" )
 
-         /* ; Harbour does some extra RTrim()-ing here. */
-         dbEval( {|| AAdd( aStruct, { RTrim( FIELD->FIELD_NAME ) ,;
-                                      RTrim( FIELD->FIELD_TYPE ) ,;
+         dbEval( {|| AAdd( aStruct, { FIELD->FIELD_NAME ,;
+                                      FIELD->FIELD_TYPE ,;
                                       FIELD->FIELD_LEN ,;
                                       FIELD->FIELD_DEC } ) } )
          dbCloseArea()
@@ -143,7 +142,10 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
             dbSelectArea( nOldArea )
          ENDIF
 
-         AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0,;
+         /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C" 
+            and padded/continued strings ("C ", "C...") are also accepted. */
+
+         AEval( aStruct, {| aField | iif( Upper( Left( aField[ DBS_TYPE ], 1 ) ) == "C" .AND. aField[ DBS_DEC ] != 0,;
             ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
               aField[ DBS_DEC ] := 0 ), NIL ) } )
 

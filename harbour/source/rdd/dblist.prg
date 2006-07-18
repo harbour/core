@@ -80,7 +80,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    /* Save SETs */
 
    IF !Empty( lToPrint )
-      lOldPrinter := Set(_SET_PRINTER, .T. )
+      lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF !Empty( cToFileName )
       hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )

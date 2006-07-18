@@ -64,12 +64,11 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
    LOCAL oError
    LOCAL lError := .F.
 
-   nOldArea := Select()
-
-   aStruct := dbStruct()
-   IF Empty( aStruct )
+   IF Empty( aStruct := dbStruct() )
       RETURN .F.
    ENDIF
+
+   nOldArea := Select()
 
    BEGIN SEQUENCE
 

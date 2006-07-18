@@ -8,6 +8,7 @@
  *
  * Copyright 2000 Viktor Szakats <viktor.szakats@syenar.hu> (English, from msg_tpl.c)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
+ * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,9 +65,9 @@ static HB_LANG s_lang =
 
       "CSKAM",                     /* ID */
       "Czech",                     /* Name (in English) */
-      "?esky",                     /* Name (in native language) */
+      "Äesky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
-      "KAM",                       /* Codepage */
+      "895(KAM)",                  /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
       /* Month names */
@@ -75,9 +76,9 @@ static HB_LANG s_lang =
       "£nor",
       "b©ezen",
       "duben",
-      "kv^ten",
-      "?erven",
-      "?ervenec",
+      "kvàten",
+      "áerven",
+      "áervenec",
       "srpen",
       "z†©°",
       "©°jen",
@@ -86,83 +87,81 @@ static HB_LANG s_lang =
 
       /* Day names */
 
-      "ned^le",
-      "pond^l°",
-      "£ter~",
+      "nedàle",
+      "pondàl°",
+      "£terò",
       "st©eda",
-      "?tvrtek",
+      "átvrtek",
       "p†tek",
       "sobota",
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Database Files    # Records    Last Update     Size",
-      "Do you want more samples?",
-      "Page No.",
+      "Datab†ze          # Z†znamñ    Aktualizace Velikost",
+      "Chcete v°ce p©°kladñ?",
+      "Strana",
       "** Subtotal **",
       "* Subsubtotal *",
       "*** Total ***",
       "Ins",
       "   ",
-      "Invalid date",
-      "Range: ",
+      "ChybnÇ datum",
+      "Rozsah: ",
       " - ",
       "A/N",
-      "INVALID EXPRESSION",
+      "CHYBNù VùRAZ",
 
       /* Error description names */
 
-      "Unknown error",
-      "Argument error",
-      "Bound error",
-      "String overflow",
-      "Numeric overflow",
-      "Zero divisor",
-      "Numeric error",
-      "Syntax error",
-      "Operation too complex",
+      "Nezn†m† chyba",
+      "Chyba argumentu",
+      "Chyba mez°",
+      "P©eteáen° ©etàzce",
+      "P©eteáen° á°sla",
+      "Dàlàn° nulou",
+      "Numerick† chyba",
+      "Chyba syntaxe",
+      "Operace p©°li® komplexn°",
       "",
       "",
-      "Memory low",
-      "Undefined function",
-      "No exported method",
-      "Variable does not exist",
-      "Alias does not exist",
-      "No exported variable",
-      "Illegal characters in alias",
-      "Alias already in use",
+      "Nedostatek pamàti",
+      "Nedefinovan† funkce",
+      "Nezn†m† metoda",
+      "Promànn† neexistuje",
+      "Alias neexistuje",
+      "Nezn†m† promànn†",
+      "NepovolenÇ znaky v aliasu",
+      "Alias jië pouëit",
       "",
-      "Create error",
-      "Open error",
-      "Close error",
-      "Read error",
-      "Write error",
-      "Print error",
-      "",
-      "",
-      "",
-      "",
-      "Operation not supported",
-      "Limit exceeded",
-      "Corruption detected",
-      "Data type error",
-      "Data width error",
-      "Workarea not in use",
-      "Workarea not indexed",
-      "Exclusive required",
-      "Lock required",
-      "Write not allowed",
-      "Append lock failed",
-      "Lock Failure",
+      "Chyba vytvo©en°",
+      "Chyba otev©en°",
+      "Chyba zav©en°",
+      "Chyba áten°",
+      "Chyba z†pisu",
+      "Chyba tisku",
       "",
       "",
       "",
       "",
-      "array access",
-      "array assign",
-      "array dimension",
-      "not an array",
-      "conditional",
+      "Operace nen° podporov†na",
+      "P©ekoráen limit",
+      "Index po®kozen",
+      "Typ dat se neshoduje",
+      "Chyba ®°©ky dat",
+      "Pracovn° oblast nen° pouëita",
+      "Nen° otev©en index",
+      "Poëadov†no uzamknut°",
+      "Z†mek p©i p©id†n° z†znamu selhal",
+      "Z†mek selhal",
+      "",
+      "",
+      "",
+      "",
+      "p©°stup k poli",
+      "p©i©azen° pole",
+      "zmàna dimenze pole",
+      "nen° pole",
+      "podm°nka",
 
       /* Internal error names */
 
@@ -195,7 +194,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "YYYY/MM/DD",
+      "DD.MM.YYYY",
       "A",
       "N"
    }

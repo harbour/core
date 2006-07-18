@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-18 12:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    ! fixed problems reported by Marek with EXIT procedures after my
+      last commit
+
+     + Updates/fixes and more translated texts for Czech 
+   * harbour/source/lang/msgcs852.c
+   * harbour/source/lang/msgcsiso.c
+   * harbour/source/lang/msgcskam.c
+   * harbour/source/lang/msgcswin.c
+     + Updates/fixes and more translated texts for Czech
+       language modules. Thanks to:
+       Vojtech Obrdlik <vobrdlik centrum.cz>
+   *	harbour/source/rdd/dbsort.prg
+   * harbour/source/pp/pplib.c
+     ! Fixed function names in trace calls.
+
    * harbour/source/rdd/dblist.prg
    * harbour/source/rdd/dbsort.prg
    * harbour/source/rdd/dbstrux.prg

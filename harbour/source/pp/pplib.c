@@ -222,7 +222,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
 
    HB_SYMBOL_UNUSED( cPrefix );
 
-   HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
 
    /* TOFIX: The internal buffers allocated by the preprocessor should be
              deallocated here */
@@ -237,7 +237,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
    /* NOTE: All warnings are simply ignored */
 
