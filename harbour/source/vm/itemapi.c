@@ -1096,7 +1096,8 @@ HB_EXPORT PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
 
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
-   pItem->item.asPointer.collect = FALSE;
+   pItem->item.asPointer.collect =
+   pItem->item.asPointer.single = FALSE;
 
    return pItem;
 }
@@ -1116,6 +1117,7 @@ HB_EXPORT PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
    pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
    pItem->item.asPointer.collect = TRUE;
+   pItem->item.asPointer.single = FALSE;
 
    return pItem;
 }
@@ -1328,7 +1330,12 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       else if( HB_IS_POINTER( pSource ) )
       {
          if( pSource->item.asPointer.collect )
-            hb_gcRefInc( pSource->item.asPointer.value );
+         {
+            if( pSource->item.asPointer.single )
+               pDest->item.asPointer.collect = FALSE;
+            else
+               hb_gcRefInc( pSource->item.asPointer.value );
+         }
       }
    }
 }

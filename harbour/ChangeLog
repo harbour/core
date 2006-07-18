@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      * new file to test preprocessor Preprocess both with Clipper
+        and harbour and next use diff utility to compare outputs -
+        ignore the number of white spaces (use diff -w -u ...)
+
+
+2006-07-18 21:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+      
+      BREAK - now by default we are taking the same action as after QUIT
+      what seems to be intention of Clipper authors. When HVM is compiled
+      with HB_C52_STRICT macro then we will try to emulate real Clipper
+      behavior.
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/itemapi.c
+    + added single member to hb_struPointer structure for internal HVM use.
+      The reference counter for GC collectible HB_IT_POINTER items which have
       'single' member set to TRUE is not updated in hb_itemCopy().
 
   * harbour/source/rdd/workarea.c

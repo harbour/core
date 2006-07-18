@@ -273,6 +273,7 @@ struct hb_struPointer
 {
    void * value;
    BOOL collect;
+   BOOL single;
 };
 
 struct hb_struMemvar

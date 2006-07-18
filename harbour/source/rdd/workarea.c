@@ -127,8 +127,10 @@ ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
    }
    while( lToSkip-- > 0 )
    {
-      SELF_SKIPRAW( pArea, lSkip );
-      SELF_SKIPFILTER( pArea, lSkip );
+      if( SELF_SKIPRAW( pArea, lSkip ) != SUCCESS )
+         return FAILURE;
+      if( SELF_SKIPFILTER( pArea, lSkip ) != SUCCESS )
+         return FAILURE;
       if( pArea->fBof || pArea->fEof )
          break;
    }
@@ -166,15 +168,16 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    /* remember if we are here after SLEF_GOTOP() */
    fBottom = pArea->fBottom;
 
-   while ( !pArea->fBof && !pArea->fEof )
+   while( !pArea->fBof && !pArea->fEof )
    {
       /* SET DELETED */
       if( hb_set.HB_SET_DELETED )
       {
-         SELF_DELETED( pArea, &fDeleted );
+         if( SELF_DELETED( pArea, &fDeleted ) != SUCCESS )
+            return FAILURE;
          if( fDeleted )
          {
-            if ( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
+            if( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
                return FAILURE;
             continue;
          }
@@ -186,7 +189,7 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
          pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
          if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
          {
-            if ( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
+            if( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
                return FAILURE;
             continue;
          }
@@ -275,7 +278,8 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
    HB_TRACE(HB_TR_DEBUG, ("hb_waCreateFields(%p, %p)", pArea, pStruct));
 
    uiItems = ( USHORT ) hb_arrayLen( pStruct );
-   SELF_SETFIELDEXTENT( pArea, uiItems );
+   if( SELF_SETFIELDEXTENT( pArea, uiItems ) != SUCCESS )
+      return FAILURE;
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
@@ -365,7 +369,7 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             return FAILURE;
       }
       /* Add field */
-      if( SELF_ADDFIELD( pArea, &pFieldInfo ) == FAILURE )
+      if( SELF_ADDFIELD( pArea, &pFieldInfo ) != SUCCESS )
          return FAILURE;
    }
    return SUCCESS;
@@ -849,7 +853,7 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
    if( pEvalInfo->dbsci.itmRecID )
    {
-      if( SELF_GOTOID( pArea, pEvalInfo->dbsci.itmRecID ) == FAILURE )
+      if( SELF_GOTOID( pArea, pEvalInfo->dbsci.itmRecID ) != SUCCESS )
          return FAILURE;
    }
    else if( pEvalInfo->dbsci.lNext )
@@ -859,7 +863,7 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
    else if( !pEvalInfo->dbsci.itmCobWhile &&
             !hb_itemGetL( pEvalInfo->dbsci.fRest ) )
    {
-      if( SELF_GOTOP( pArea ) == FAILURE )
+      if( SELF_GOTOP( pArea ) != SUCCESS )
          return FAILURE;
    }
 
@@ -869,7 +873,7 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
    {
       while( TRUE )
       {
-         if( SELF_EOF( pArea, &fEof ) == FAILURE )
+         if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;
 
          if( fEof )
@@ -886,7 +890,7 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
          if( pEvalInfo->dbsci.itmRecID || ( pEvalInfo->dbsci.lNext && --lNext < 1 ) )
             break;
 
-         if( SELF_SKIP( pArea, 1 ) == FAILURE )
+         if( SELF_SKIP( pArea, 1 ) != SUCCESS )
             return FAILURE;
       }
    }
@@ -909,12 +913,12 @@ ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
       if( ! pArea->dbsi.itmCobFor )
          return SUCCESS;
 
-      if ( SELF_SKIP( pArea, 1 ) == FAILURE )
+      if( SELF_SKIP( pArea, 1 ) != SUCCESS )
          return FAILURE;
    }
    else if( pArea->dbsi.itmRecID )
    {
-      if( SELF_GOTOID( pArea, pArea->dbsi.itmRecID ) == FAILURE )
+      if( SELF_GOTOID( pArea, pArea->dbsi.itmRecID ) != SUCCESS )
          return FAILURE;
    }
    else if( pArea->dbsi.lNext )
@@ -924,7 +928,7 @@ ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
    else if( !pArea->dbsi.itmCobWhile &&
             !hb_itemGetL( pArea->dbsi.fRest ) )
    {
-      if( SELF_GOTOP( pArea ) == FAILURE )
+      if( SELF_GOTOP( pArea ) != SUCCESS )
          return FAILURE;
    }
 
@@ -936,7 +940,7 @@ ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
    {
       while( TRUE )
       {
-         if( SELF_EOF( pArea, &fEof ) == FAILURE )
+         if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;
 
          if( fEof )
@@ -957,7 +961,7 @@ ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
              ( pArea->dbsi.itmRecID || ( pArea->dbsi.lNext && --lNext < 1 ) ) )
             break;
 
-         if( SELF_SKIP( pArea, 1 ) == FAILURE )
+         if( SELF_SKIP( pArea, 1 ) != SUCCESS )
             return FAILURE;
       }
    }
@@ -977,7 +981,7 @@ ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 
    if( pTransInfo->dbsci.itmRecID )
    {
-      if( SELF_GOTOID( pArea, pTransInfo->dbsci.itmRecID ) == FAILURE )
+      if( SELF_GOTOID( pArea, pTransInfo->dbsci.itmRecID ) != SUCCESS )
          return FAILURE;
    }
    else if( pTransInfo->dbsci.lNext )
@@ -987,7 +991,7 @@ ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
    else if( !pTransInfo->dbsci.itmCobWhile &&
             !hb_itemGetL( pTransInfo->dbsci.fRest ) )
    {
-      if( SELF_GOTOP( pArea ) == FAILURE )
+      if( SELF_GOTOP( pArea ) != SUCCESS )
          return FAILURE;
    }
 
@@ -997,7 +1001,7 @@ ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
    {
       while( TRUE )
       {
-         if( SELF_EOF( pArea, &fEof ) == FAILURE )
+         if( SELF_EOF( pArea, &fEof ) != SUCCESS )
             return FAILURE;
 
          if( fEof )
@@ -1010,14 +1014,14 @@ ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
          if( ! pTransInfo->dbsci.itmCobFor ||
              hb_itemGetL( hb_vmEvalBlock( pTransInfo->dbsci.itmCobFor ) ) )
          {
-            if( SELF_TRANSREC( pArea, pTransInfo ) == FAILURE )
+            if( SELF_TRANSREC( pArea, pTransInfo ) != SUCCESS )
                return FAILURE;
          }
 
          if( pTransInfo->dbsci.itmRecID || ( pTransInfo->dbsci.lNext && --lNext < 1 ) )
             break;
 
-         if( SELF_SKIP( pArea, 1 ) == FAILURE )
+         if( SELF_SKIP( pArea, 1 ) != SUCCESS )
             return FAILURE;
       }
    }
@@ -1144,7 +1148,8 @@ ERRCODE hb_waSyncChildren( AREAP pArea )
    lpdbRelation = pArea->lpdbRelations;
    while( lpdbRelation )
    {
-      SELF_CHILDSYNC( lpdbRelation->lpaChild, lpdbRelation );
+      if( SELF_CHILDSYNC( lpdbRelation->lpaChild, lpdbRelation ) != SUCCESS )
+         return FAILURE;
       lpdbRelation = lpdbRelation->lpdbriNext;
    }
 
@@ -1334,9 +1339,7 @@ ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
    lpdbRelations->abKey = lpdbRelInf->abKey;
    lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
 
-   SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild, lpdbRelations );
-
-   return SUCCESS;
+   return SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild, lpdbRelations );
 }
 
 /*
@@ -1430,7 +1433,8 @@ ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    HB_TRACE(HB_TR_DEBUG, ("hb_waSetFilter(%p, %p)", pArea, pFilterInfo));
 
    /* Clear the active filter expression */
-   SELF_CLEARFILTER( pArea );
+   if( SELF_CLEARFILTER( pArea ) != SUCCESS )
+      return FAILURE;
 
    if( pFilterInfo->itmCobExpr )
    {
@@ -1454,7 +1458,8 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
    HB_TRACE(HB_TR_DEBUG, ("hb_waSetLocate(%p, %p)", pArea, pScopeInfo));
 
    /* Clear the active locate expression */
-   SELF_CLEARLOCATE( pArea );
+   if( SELF_CLEARLOCATE( pArea ) != SUCCESS )
+      return FAILURE;
 
    if( pScopeInfo->itmCobFor )
       pArea->dbsi.itmCobFor = hb_itemNew( pScopeInfo->itmCobFor );

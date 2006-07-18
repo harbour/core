@@ -5953,12 +5953,30 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
       s_uiActionRequest = HB_BREAK_REQUESTED;
    }
    else
+   {
+#ifdef HB_C52_STRICT
       /*
-       * do not call hb_vmRequestQuit()
-       * Clipper does not execute EXIT procedures now but after leaving all
-       * functions
+       * do not execute EXIT procedures to be as close as possible
+       * buggy Clipper behavior. [druzus]
        */
+      s_fDoExitProc = FALSE;
       s_uiActionRequest = HB_QUIT_REQUESTED;
+#else
+      /*
+       * Clipper has a bug here. Tests shows that it set exception flag
+       * and then tries to execute EXIT procedures so the first one is
+       * immediately interrupted. Because Clipper does not check the
+       * exception flag often enough then it's possible to execute one
+       * function from first EXIT PROC. Using small trick with
+       * QOUT( TYPE( cPrivateVar ) ) in the EXIT procedure (TYPE() is
+       * not normal function) we can also check that it tries to execute
+       * EXIT procedures exactly here before leave current function.
+       * So to be as close as possible the Clipper intentional behavior
+       * we execute hb_vmRequestQuit() here. [druzus]
+       */
+      hb_vmRequestQuit();
+#endif
+   }
 }
 
 USHORT hb_vmRequestQuery( void )
