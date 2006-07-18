@@ -1891,6 +1891,7 @@ static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra, int *lens )
 static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
    BOOL endTranslation = FALSE;
+   BOOL bReplaced = FALSE;
    int ipos;
    char *lastopti[MAX_OPTIONALS], *strtopti = NULL, *strtptri = NULL;
    char *ptri = inputLine, *ptr, tmpname[MAX_NAME];
@@ -1955,14 +1956,14 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                {
                   char *ptr = ptrmp;
                   SkipOptional( &ptrmp );
-                  if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine )
+                  if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine && bReplaced )
                   {
                      /* Start scanning from the beginning 
                       * end of pattern but still there is an input stream to parse
                       * 
                       */
-                     ptrmp = ptrmpatt;
-                     strtopti = NULL;
+                      ptrmp = ptrmpatt;
+                      strtopti = NULL;
                   }
                }
                break;
@@ -2010,7 +2011,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                      if( !isWordInside )
                         strtopti = NULL;
                      ptrmp++;
-                     if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine )
+                     if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine && bReplaced )
                      {
                         /* Start scanning from the beginning 
                          * end of pattern but still there is an input stream to parse
@@ -2056,7 +2057,11 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   strtopti = NULL;
                if( s_numBrackets == 1 && *( ptrmp + 2 ) == '2' )
                   isWordInside = 1;     /*  restricted match marker  */
-               if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
+               if( WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
+               {
+                  bReplaced = TRUE;
+               }
+               else
                {
                   if( s_numBrackets )
                   {

@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     + Note added about __dbfList() to debugger source.
+
+   * harbour/source/rtl/dbedit.prg
+      
+
+2006-07-18 12:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/pp/ppcore.c
+      * added guard for infinite loop
 
    * utils/hbpptest/pretest.prg
       * added more test cases (3 of them fails)
