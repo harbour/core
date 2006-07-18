@@ -8,6 +8,9 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/source/rdd/dblist.prg
+   * harbour/source/rdd/dbsort.prg
+   * harbour/source/rdd/dbstrux.prg
      + Minor improvements.
 
 2006-07-18 09:55 UTC+0200 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
@@ -145,7 +148,7 @@
        hack targeted an XBase++ extension, but it's
        compatible even without the hack. Tested with
        XBase++ 1.82.294.
-2006-07-16 23:26 UTC+0100 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
+
    * harbour/source/rtl/typefile.prg
      % FUNCTION -> PROCEDURE
      + _TypeFile() XBase++ internal function added.
