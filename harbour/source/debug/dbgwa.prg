@@ -54,6 +54,10 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
+/* NOTE: CA-Cl*pper has an internal function named __dbfList() which 
+         has similar functionality. Harbour doesn't support this 
+         internal function this time. */
+
 function __dbgShowWorkAreas( oDebugger )
 
    local oDlg, oCol

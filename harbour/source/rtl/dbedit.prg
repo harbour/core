@@ -195,12 +195,12 @@ FUNCTION dbEdit(;
       
       /* Simplified logic compared to CA-Cl*pper. In the latter there 
          is logic to detect several typical cBlock types (memvar, 
-         aliased field, fiels) and using MemvarBlock()/FieldWBlock()/FieldBlock() 
+         aliased field, field) and using MemvarBlock()/FieldWBlock()/FieldBlock() 
          calls to create codeblocks for them if possible. In Harbour, 
          simple macro compilation will result in faster code for all 
          situations. As Maurilio Longo has pointed, there is no point in 
          creating codeblocks which are able to _assign_ values, as dbEdit() 
-         is actallu a read-only function. [vszakats] */
+         is actually a read-only function. [vszakats] */
       
       bBlock := &( "{||" + cBlock + "}" )
 

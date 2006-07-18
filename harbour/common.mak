@@ -433,7 +433,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\dbedit.obj   \
     $(OBJ_DIR)\devoutp.obj  \
     $(OBJ_DIR)\dircmd.obj   \
-    $(OBJ_DIR)\dummy.obj    \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\fieldbl.obj  \
     $(OBJ_DIR)\getlist.obj  \
