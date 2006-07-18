@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     ! Fixed compilation of Harbour DLL
+     ! Fixed compilation of HbPPTest.exe
+     % Improved building of customized Harbour DLL
+     % Some more minor fixes and improvements
+
+2006-07-18 03:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/doc/en/hb_vm.txt
+  * harbour/doc/es/hb_vm.txt
+  * harbour/include/hbvm.h
+  * harbour/contrib/hgf/gtk/mainlgtk.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/vm/maindll.c
+  * harbour/source/vm/mainpm.c
+  * harbour/source/vm/mainstd.c
+  * harbour/source/vm/mainwin.c
+  * harbour/source/vm/hvm.c
+    * changed hb_vmQuit() to not execute EXIT() but return s_nErrorLevel
+    ! execute EXIT procedures in hb_vmRequestQuit() - Clipper compatible
+      behavior
+    * do not exit immediately in RT errors but return from all executed
+      functions - some internal parts of RDD code will have to be fixed.
+
+  * harbour/source/vm/proc.c
+    ! fixed procname for codeblocks. Seems that we are not fully Clipper
+      compatible yet. I'll look at it closer soon.
 
   * harbour/TODO
     + added new item: Clean RDD code to be safe for return from RT errors

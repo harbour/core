@@ -1220,8 +1220,6 @@ int _mangled_main( int argc, char * argv[] )
 
    hb_cmdargInit( argc, argv );
    hb_vmInit( TRUE );
-   hb_vmQuit();
-
-   return 0;
+   return hb_vmQuit();
 }
 void * _mangled_main_address = ( void * ) _mangled_main;

@@ -76,6 +76,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 {
    LPSTR pArgs, pArg, pDst, pSrc;
    BOOL fQuoted;
+   int iErrorCode;
 
    #ifdef HB_INCLUDE_WINEXCHANDLER
    {
@@ -130,16 +131,13 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    hb_cmdargInit( s_argc, s_argv );
+
    hb_vmInit( TRUE );
-   hb_vmQuit();
+   iErrorCode = hb_vmQuit();
 
-   LocalFree( pArgs );  /* QUESTION: It seems we never reach here,
-                                     so how may we free it ? */
+   LocalFree( pArgs );
 
-   /* NOTE: The exit value is set by exit() */
-   /* NOTE: This point is never reached */
-
-   return 0;
+   return iErrorCode;
 }
 
 #if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)

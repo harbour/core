@@ -64,12 +64,7 @@ int main( int argc, char * argv[] )
 
    hb_cmdargInit( argc, argv );
    hb_vmInit( TRUE );
-   hb_vmQuit();
-
-   /* NOTE: The exit value is set by exit() */
-   /* NOTE: This point is never reached */
-
-   return 0;
+   return hb_vmQuit();
 }
 
 #if defined(__DJGPP__)

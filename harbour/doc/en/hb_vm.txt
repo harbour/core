@@ -57,11 +57,11 @@
  *      C Prototype
  *      
  *      #include <hbvm.h>
- *      hb_vmQuit( void ) --> void
+ *      hb_vmQuit( void ) --> int
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
- *      
+ *      ERRORLEVEL code
  *  $DESCRIPTION$
  *      
  *  $EXAMPLES$

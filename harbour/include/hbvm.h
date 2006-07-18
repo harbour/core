@@ -59,7 +59,7 @@ HB_EXTERN_BEGIN
 
 /* Harbour virtual machine init/exit functions */
 extern HB_EXPORT void     hb_vmInit( BOOL bStartMainProc );
-extern HB_EXPORT void     hb_vmQuit( void ); /* Immediately quits the virtual machine */
+extern HB_EXPORT int      hb_vmQuit( void ); /* Immediately quits the virtual machine, return ERRORLEVEL code */
 
 /* registration AtInit and AtExit functions - they are executed
  * just before (after) .prg INIT (EXIT) procedures.

@@ -61,6 +61,7 @@
 
 int main( int argc, char * argv[] )
 {
+   int ;
    HAB  hab;         /* Anchor Block handle */
    HMQ  hmq;         /* Message Queue handle */
 
@@ -69,13 +70,12 @@ int main( int argc, char * argv[] )
 
    hb_cmdargInit( argc, argv );
    hb_vmInit( TRUE );
+   iErrorCode = hb_vmQuit();
 
    WinDestroyMsgQueue( hmq );
    WinTerminate( hab );
 
-   hb_vmQuit();
-
-   return 0;
+   return iErrorCode;
 }
 
 

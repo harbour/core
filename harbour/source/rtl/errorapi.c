@@ -184,7 +184,6 @@ PHB_ITEM hb_errNew( void )
 USHORT hb_errLaunch( PHB_ITEM pError )
 {
    USHORT uiAction = E_DEFAULT; /* Needed to avoid GCC -O2 warning */
-   USHORT usRequest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errLaunch(%p)", pError));
 
@@ -226,15 +225,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       /* Check results */
 
-      usRequest = hb_vmRequestQuery();
-      if( usRequest == HB_QUIT_REQUESTED )
-      {
-         if( pResult )
-            hb_itemRelease( pResult );
-         hb_errRelease( pError );
-         hb_vmQuit();
-      }
-      else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
+      if( hb_vmRequestQuery() != 0 )
       {
          if( pResult )
             hb_itemRelease( pResult );
@@ -292,7 +283,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 {
    PHB_ITEM pResult;
-   USHORT usRequest;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errLaunchSubst(%p)", pError));
 
@@ -332,15 +322,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       /* Check results */
 
-      usRequest = hb_vmRequestQuery();
-      if( usRequest == HB_QUIT_REQUESTED )
-      {
-         if( pResult )
-            hb_itemRelease( pResult );
-         hb_errRelease( pError );
-         hb_vmQuit();
-      }
-      else if( usRequest == HB_BREAK_REQUESTED || usRequest == HB_ENDPROC_REQUESTED )
+      if( hb_vmRequestQuery() != 0 )
       {
          if( pResult )
             hb_itemRelease( pResult );

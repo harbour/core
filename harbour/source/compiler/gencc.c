@@ -1253,10 +1253,10 @@ static HB_GENC_FUNC( hb_p_seqend )
    HB_GENC_LABEL();
 
    if( lOffset == 4 ) /* no RECOVER clasue */
-      fprintf( cargo->yyc, "\t} while( 0 );\n\thb_xvmSeqEnd( %s );\n",
+      fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd( %s ) ) break;\n",
                cargo->fForEach ? "&lForEachBase" : "NULL" );
    else /* RECOVER exists */
-      fprintf( cargo->yyc, "\thb_xvmSeqEnd( %s );\n\tgoto lab%05ld;\n\t} while( 0 );\n",
+      fprintf( cargo->yyc, "\tif( hb_xvmSeqEnd( %s ) ) break;\n\tgoto lab%05ld;\n\t} while( 0 );\n",
                cargo->fForEach ? "&lForEachBase" : "NULL",
                HB_GENC_GETLABEL( lPCodePos + lOffset ) );
    return 4;
@@ -1266,7 +1266,7 @@ static HB_GENC_FUNC( hb_p_seqrecover )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSeqRecover( %s );\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmSeqRecover( %s ) ) break;\n",
             cargo->fForEach ? "&lForEachBase" : "NULL" );
    return 1;
 }

@@ -64,7 +64,7 @@
 
 HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
+   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %p)", hInstance, fdwReason,
              pvReserved ) );
 
    HB_SYMBOL_UNUSED( hInstance );
@@ -78,7 +78,7 @@ HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID
            break;
 
       case DLL_PROCESS_DETACH:
-           /* hb_vmQuit(); */
+           hb_vmQuit();
            break;
    }
 

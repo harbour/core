@@ -71,11 +71,11 @@
  *      C Prototype
  *      
  *      #include <hbvm.h>
- *      hb_vmQuit( void ) --> void
+ *      hb_vmQuit( void ) --> int
  *  $ARGUMENTS$
  *      Ninguno
  *  $RETURNS$
- *      Nada
+ *      ERRORLEVEL
  *  $DESCRIPTION$
  *      Ocasiona la Inmediata salida de la M quina Virtual
  *  $EXAMPLES$

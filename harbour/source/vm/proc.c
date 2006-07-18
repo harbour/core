@@ -202,7 +202,8 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
             pSelf = hb_stackItem( lOffset );
          }
 
-         if( strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
+         if( pBase->item.asSymbol.value == &hb_symEval ||
+             strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
          {
             strcpy( szName, "(b)" );
 
@@ -250,20 +251,17 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
             strcat( szName, ":" );
             strcat( szName, pSym->szName );
          }
-         else
+         else if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
          {
-            if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
-            {
-               strcpy( szName, "(b)" );
+            strcpy( szName, "(b)" );
 
-               if( HB_IS_BLOCK( pSelf ) )
-                  strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
-               else
-                  strcat( szName, pSym->szName );
-            }
+            if( HB_IS_BLOCK( pSelf ) )
+               strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
             else
-               strcpy( szName, pSym->szName );
+               strcat( szName, pSym->szName );
          }
+         else
+            strcpy( szName, pSym->szName );
       }
 
       if( puiLine )

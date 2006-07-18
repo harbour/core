@@ -542,16 +542,13 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 #endif
 }
 
-HB_EXPORT void hb_vmQuit( void )
+HB_EXPORT int hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
    #ifdef HB_MACRO_STATEMENTS
      hb_pp_Free();
    #endif
-
-   s_uiActionRequest = 0;       /* EXIT procedures should be processed */
-   hb_vmDoExitFunctions();    	/* process defined EXIT functions */
 
    /* process AtExit registered functions */
    hb_vmDoModuleExitFunctions();
@@ -588,7 +585,7 @@ HB_EXPORT void hb_vmQuit( void )
 /* hb_dynsymLog(); */
    hb_xexit();
 
-   exit( s_nErrorLevel );
+   return s_nErrorLevel;
 }
 
 HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
@@ -5921,7 +5918,17 @@ HB_FUNC( ERRORLEVEL )
 
 void hb_vmRequestQuit( void )
 {
+   static BOOL s_fDoExitProc = TRUE;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestQuit()"));
+
+   /* EXIT procedures should be processed? */
+   if( s_fDoExitProc )
+   {
+      s_fDoExitProc = FALSE;
+      s_uiActionRequest = 0;
+      hb_vmDoExitFunctions(); /* process defined EXIT functions */
+   }
 
    s_uiActionRequest = HB_QUIT_REQUESTED;
 }
@@ -5945,6 +5952,10 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
       s_uiActionRequest = HB_BREAK_REQUESTED;
    }
    else
+      /*
+       * do not call hb_vmRequestQuit()
+       * Clipper does not execute EXIT procedures when quiting by BREAK()
+       */
       s_uiActionRequest = HB_QUIT_REQUESTED;
 }
 
@@ -5976,6 +5987,10 @@ void hb_vmRequestCancel( void )
       }
       while( hb_procinfo( ++i, buffer, &uiLine, NULL ) );
 
+      /*
+       * do not call hb_vmRequestQuit()
+       * Clipper does not execute EXIT procedures when quiting using break key
+       */
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
 }
@@ -5991,17 +6006,8 @@ ULONG hb_vmFlagEnabled( ULONG flags )
 
 
 
-#define HB_XVM_RETURN   return ( s_uiActionRequest ? hb_xvmActionRequest() : FALSE );
-
-static BOOL hb_xvmActionRequest( void )
-{
-   if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED ) )
-      return TRUE;
-   else if( s_uiActionRequest & HB_QUIT_REQUESTED )
-      hb_vmQuit();
-
-   return FALSE;
-}
+#define HB_XVM_RETURN   return ( s_uiActionRequest & \
+      ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
 
 HB_EXPORT void hb_xvmExitProc( ULONG ulPrivateBase )
 {
@@ -6088,12 +6094,10 @@ HB_EXPORT BOOL hb_xvmSeqEnd( LONG * plForEachBase )
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
 
-   if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
+   if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( s_uiActionRequest & HB_BREAK_REQUESTED )
       s_uiActionRequest = 0;
-   else if( s_uiActionRequest & HB_QUIT_REQUESTED )
-      hb_vmQuit();
    return FALSE;
 }
 
@@ -6128,12 +6132,10 @@ HB_EXPORT BOOL hb_xvmSeqRecover( LONG * plForEachBase )
    hb_stackDec();
    /* 1) Leave the value returned from BREAK */
 
-   if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
+   if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
    else if( s_uiActionRequest & HB_BREAK_REQUESTED )
       s_uiActionRequest = 0;
-   else if( s_uiActionRequest & HB_QUIT_REQUESTED )
-      hb_vmQuit();
    return FALSE;
 }
 
