@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-07-18 13:25 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbextern.ch
+     ! Removed __dbfList() reference.
+
+2006-07-18 12:51 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   - harbour/source/rtl/dummy.prg
+   * harbour/source/rtl/Makefile
+   * harbour/common.mak
+   * harbour/source/debug/dbgwa.prg
+     - Removed dummy.prg
      + Note added about __dbfList() to debugger source.
 
    * harbour/source/rtl/dbedit.prg
