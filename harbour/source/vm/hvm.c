@@ -229,8 +229,9 @@ HB_SYMB  hb_symWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {NULL}, NULL
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
-static int      s_nErrorLevel;      /* application exit errorlevel */
-static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
+static BOOL     s_fDoExitProc = TRUE;  /* execute EXIT procedures */
+static int      s_nErrorLevel;         /* application exit errorlevel */
+static PHB_SYMB s_pSymStart = NULL;    /* start symbol of the application. MAIN() is not required */
 
 static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
 static ULONG       s_ulFreeSymbols = 0;/* number of free module symbols */
@@ -545,6 +546,8 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 HB_EXPORT int hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
+
+   hb_vmDoExitFunctions(); /* process defined EXIT functions */
 
    #ifdef HB_MACRO_STATEMENTS
      hb_pp_Free();
@@ -5817,30 +5820,37 @@ static void hb_vmDoExitFunctions( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDoExitFunctions()"));
 
-   while( pLastSymbols )
+   /* EXIT procedures should be processed? */
+   if( s_fDoExitProc )
    {
-      /* only if module contains some EXIT functions */
-      if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_EXIT )
+      s_fDoExitProc = FALSE;
+      s_uiActionRequest = 0;
+
+      while( pLastSymbols )
       {
-         USHORT ui;
-
-         for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
+         /* only if module contains some EXIT functions */
+         if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_EXIT )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+            USHORT ui;
 
-            if( scope == HB_FS_EXIT )
+            for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
             {
-               hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
-               hb_vmPushNil();
-               hb_vmDo( 0 );
-               if( s_uiActionRequest )
-                  /* QUIT or BREAK was issued - stop processing
-                  */
-                  return;
+               HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+
+               if( scope == HB_FS_EXIT )
+               {
+                  hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
+                  hb_vmPushNil();
+                  hb_vmDo( 0 );
+                  if( s_uiActionRequest )
+                     /* QUIT or BREAK was issued - stop processing
+                     */
+                     return;
+               }
             }
          }
+         pLastSymbols = pLastSymbols->pNext;
       }
-      pLastSymbols = pLastSymbols->pNext;
    }
 }
 
@@ -5918,18 +5928,9 @@ HB_FUNC( ERRORLEVEL )
 
 void hb_vmRequestQuit( void )
 {
-   static BOOL s_fDoExitProc = TRUE;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestQuit()"));
 
-   /* EXIT procedures should be processed? */
-   if( s_fDoExitProc )
-   {
-      s_fDoExitProc = FALSE;
-      s_uiActionRequest = 0;
-      hb_vmDoExitFunctions(); /* process defined EXIT functions */
-   }
-
+   hb_vmDoExitFunctions(); /* process defined EXIT functions */
    s_uiActionRequest = HB_QUIT_REQUESTED;
 }
 
@@ -5954,7 +5955,8 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    else
       /*
        * do not call hb_vmRequestQuit()
-       * Clipper does not execute EXIT procedures when quiting by BREAK()
+       * Clipper does not execute EXIT procedures now but after leaving all
+       * functions
        */
       s_uiActionRequest = HB_QUIT_REQUESTED;
 }
@@ -5988,9 +5990,9 @@ void hb_vmRequestCancel( void )
       while( hb_procinfo( ++i, buffer, &uiLine, NULL ) );
 
       /*
-       * do not call hb_vmRequestQuit()
        * Clipper does not execute EXIT procedures when quiting using break key
        */
+      s_fDoExitProc = FALSE;
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
 }

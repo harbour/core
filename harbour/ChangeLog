@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+   * utils/hbpptest/pretest.prg
+      * added more test cases (3 of them fails)
+
+
 2006-07-18 12:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! fixed problems reported by Marek with EXIT procedures after my
