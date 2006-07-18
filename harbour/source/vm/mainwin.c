@@ -58,9 +58,13 @@
 #if defined(HB_OS_WIN_32)
 
 #if defined(_MSC_VER)
+#ifdef __cplusplus
 extern "C" {
+#endif
    LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
+#ifdef __cplusplus
 };
+#endif
 #endif
 
 #define MAX_ARGS 128

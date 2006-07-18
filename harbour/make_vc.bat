@@ -30,15 +30,6 @@ rem ---------------------------------------------------------------
 
 :BUILD
 
-   if not exist obj\nul        md obj
-   if not exist obj\vc\nul     md obj\vc
-   if not exist obj\dll\nul    md obj\dll
-   if not exist obj\dll\vc\nul md obj\dll\vc
-   if not exist lib\nul        md lib
-   if not exist lib\vc\nul     md lib\vc
-   if not exist bin\nul        md bin
-   if not exist bin\vc\nul     md bin\vc
-
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
 
@@ -61,7 +52,7 @@ rem ---------------------------------------------------------------
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc CLEAN
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc CLEAN > make_vc.log
 
    rem In this case, the makefile handles most cleanup.
 

@@ -102,7 +102,7 @@ HB_EXTERN_BEGIN
 
 /*
  * In Harbour VM HB_IT_BYREF is never ORed with item type. It can be used
- * as stand alone type for locals and statics passed by reference or with 
+ * as stand alone type for locals and statics passed by reference or with
  * HB_IT_MEMVAR for memvars passed by reference so this macro is less usable.
  * only the hb_parinfo() function can return HB_TYPE as HB_IT_BYREF ORed
  * with real type but this value is never set as item type.
@@ -503,7 +503,7 @@ extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /*
 
 #if 0
 
-/* 
+/*
  * I used this macros only to test some speed overhead,
  * They may not be supported in the future so please do
  * not create any code which needs them. [druzus]
@@ -695,7 +695,7 @@ extern HB_EXPORT HB_HANDLE hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return wo
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
 
 /* Symbol management */
-extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
+extern HB_EXPORT PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
 
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */

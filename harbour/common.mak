@@ -11,10 +11,8 @@
 #
 # Macro to show/hide executed commands
 #
-!ifdef HB_BUILD_VERBOSE
-HIDE =
-!else
-HIDE = @
+!if "$(HB_BUILD_VERBOSE)" != "yes"
+.SILENT:
 !endif
 
 #**********************************************************
@@ -26,7 +24,18 @@ HIDE = @
 BIN_DIR = bin\$(CC_DIRNAME)
 OBJ_DIR = obj\$(CC_DIRNAME)
 LIB_DIR = lib\$(CC_DIRNAME)
-DLL_OBJ_DIR = obj\dll\$(CC_DIRNAME)
+
+DLL_ROOTDIR = obj\dll
+DLL_OBJ_DIR = $(DLL_ROOTDIR)\$(CC_DIRNAME)
+
+# Targets Destination Directories
+HB_DEST_DIRS = \
+    $(BIN_DIR)      \
+    $(OBJ_DIR)      \
+    $(LIB_DIR)      \
+    \
+    $(DLL_ROOTDIR)  \
+    $(DLL_OBJ_DIR)
 
 COMMON_DIR   = source\common
 PP_DIR       = source\pp
@@ -69,7 +78,7 @@ HBPDF_DIR   = contrib\pdflib
 #**********************************************************
 
 # Where Bcc-Make should look for C and PRG sources
-ALL_SRC_DIRS_TMP=\
+ALL_LIB_SRC_DIRS_TMP=\
 $(OBJ_DIR);\
 $(COMMON_DIR);\
 $(PP_DIR);\
@@ -92,17 +101,25 @@ $(GTPCA_DIR);\
 $(GTSTD_DIR);\
 $(GTWIN_DIR);\
 $(GTWVT_DIR);\
-$(GTGUI_DIR);\
-$(HARBOUR_DIR);\
-$(HBPP_DIR);\
+$(GTGUI_DIR)\
+
+ALL_EXE_SRC_DIRS_TMP=\
 $(HBPPTEST_DIR);\
 $(HBRUN_DIR);\
 $(HBTEST_DIR);\
 $(HBDOC_DIR);\
 $(HBMAKE_DIR);\
-$(HBVER_DIR)
+$(HBVER_DIR)\
 
-ALL_SRC_DIRS = $(ALL_SRC_DIRS_TMP: =)
+ALL_SRC_DIRS_TMP=\
+$(ALL_LIB_SRC_DIRS_TMP);\
+$(HARBOUR_DIR);\
+$(HBPP_DIR);\
+$(ALL_EXE_SRC_DIRS_TMP)\
+
+ALL_LIB_SRC_DIRS = $(ALL_LIB_SRC_DIRS_TMP: =)
+ALL_EXE_SRC_DIRS = $(ALL_EXE_SRC_DIRS_TMP: =)
+ALL_SRC_DIRS     = $(ALL_SRC_DIRS_TMP: =)
 
 #**********************************************************
 #**********************************************************
@@ -147,6 +164,7 @@ HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
 HBVER_EXE    = $(BIN_DIR)\hbverfix.exe
 
 HARBOUR_DLL  = $(BIN_DIR)\harbour-$(CC_DIRNAME).dll
+HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll.exe
 
 #**********************************************************
 
@@ -879,7 +897,7 @@ HB_BUILD_TARGETS = \
 # variable HB_BUILD_DLL to yes
 
 !if "$(HB_BUILD_DLL)" == "yes"
-HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL)
+HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE)
 !endif
 
 #**********************************************************

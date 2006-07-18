@@ -11,7 +11,7 @@ rem Instead, make a local copy and modify that one, or make a call to
 rem this batch file from your customized one. [vszakats]
 rem
 rem Set any of the below settings to customize your build process:
-rem    set HB_BUILD_MODE=C
+rem    set HB_BUILD_MODE=P
 rem    set HB_BUILD_DLL=yes
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
@@ -29,15 +29,6 @@ if "%1" == "CLEAN" goto CLEAN
 rem ---------------------------------------------------------------
 
 :BUILD
-
-   if not exist obj\nul         md obj
-   if not exist obj\b32\nul     md obj\b32
-   if not exist obj\dll\nul     md obj\dll
-   if not exist obj\dll\b32\nul md obj\dll\b32
-   if not exist lib\nul         md lib
-   if not exist lib\b32\nul     md lib\b32
-   if not exist bin\nul         md bin
-   if not exist bin\b32\nul     md bin\b32
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -r -fmakefile.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
@@ -61,24 +52,9 @@ rem ---------------------------------------------------------------
 
 :CLEAN
 
-   if exist bin\b32\*.exe     del bin\b32\*.exe
-   if exist bin\b32\*.dll     del bin\b32\*.dll
-   if exist bin\b32\*.lib     del bin\b32\*.lib
-   if exist bin\b32\*.tds     del bin\b32\*.tds
-   if exist bin\b32\*.map     del bin\b32\*.map
-                              
-   if exist lib\b32\*.lib     del lib\b32\*.lib
-   if exist lib\b32\*.bak     del lib\b32\*.bak
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.bc CLEAN > make_b32.log
 
-   if exist obj\dll\b32\*.obj del obj\dll\b32\*.obj
-   if exist obj\dll\b32\*.c   del obj\dll\b32\*.c
-   if exist obj\dll\b32\*.h   del obj\dll\b32\*.h
-
-   if exist obj\b32\*.obj     del obj\b32\*.obj
-   if exist obj\b32\*.c       del obj\b32\*.c
-   if exist obj\b32\*.h       del obj\b32\*.h
-
-   if exist lib\*.lib         del lib\*.lib
+   rem In this case, the makefile handles most cleanup.
 
    if exist make_b32.log del make_b32.log
    goto EXIT

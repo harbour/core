@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     + Minor improvements.
+
+2006-07-18 09:55 UTC+0200 Enrico Maria Giordano <e.m.giordano@emagsoftware.it>
+  * fixed time in previous updates
+
+2006-07-18 08:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/source/vm/mainwin.c
+     ! Fixed compilation in C mode under Msvc
+
+   * harbour/include/hbapi.h
+     * Added HB_EXPORT to hb_symbolNew()
+
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+   * harbour/make_b32.bat
+   * harbour/make_vc.bat
+   * harbour/Common.mak
      ! Fixed compilation of Harbour DLL
      ! Fixed compilation of HbPPTest.exe
      % Improved building of customized Harbour DLL
@@ -46,7 +63,7 @@
 
   * harbour/source/rdd/dbcmd.c
     ! fixed possible access to uninitialized variable in __dbApp()/__dbCopy()
-     - Removed a strange extension which looked like a mistake 
+
 2006-07-17 03:43 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/dbedit.prg
      % Optimized codeblock creation.
@@ -76,8 +93,8 @@
    + harbour/source/rdd/dbdelim.prg
    - harbour/source/rtl/dbjoin.prg
    + harbour/source/rdd/dbjoin.prg
-     * Moved three RDD related internal function source files 
-       to the RDD library. (They did depend on each other 
+   - harbour/source/rtl/dbsdf.prg
+   + harbour/source/rdd/dbsdf.prg
    * harbour/source/rtl/Makefile
    * harbour/source/rdd/Makefile
    * harbour/common.mak
@@ -93,7 +110,7 @@
    * harbour/source/rdd/dbtotal.prg
    * harbour/source/rdd/dbupdat.prg
    * harbour/source/rdd/rddord.prg
-     ! Problem where error condition was not detected if BREAK didn't 
+   * harbour/source/rtl/dbdelim.prg
    * harbour/source/rtl/dbedit.prg
    * harbour/source/rtl/dbjoin.prg
      % Cleanups, minor optimizations.
@@ -118,10 +135,10 @@
        DBEDIT() is left TODO for review (refix).
 
    * harbour/source/rtl/tbrowse.prg
-     - Removed compiler+RTL __dbList() hack which 
-       made it incompatible with CA-Cl*pper. The 
-       hack targeted an XBase++ extension, but it's 
-       compatible even without the hack. Tested with 
+     * Minor cleanup.
+
+   * harbour/include/hbexpra.c
+   * harbour/source/vm/arrayshb.c
    * harbour/source/rdd/dblist.prg
      - Removed compiler+RTL __dbList() hack which
        made it incompatible with CA-Cl*pper. The
@@ -212,7 +229,7 @@
    * source/compiler/hblbl.c
    * source/compiler/hbpcode.c
    * source/compiler/hbstripl.c
-      * fixed compilation of code that uses '@' pass by 
+   * source/macro/macroa.c
    * source/macro/macrob.c
    * source/macro/macroc.c
    * source/vm/hvm.c
@@ -236,7 +253,7 @@
        You can use the reserved property:
          :__withobject
        to access/assign the controlling object.
-      *implicit startup functions are removed from the list of 
+      *fixed support for command line response file (@file.clp)
        to be compatible with Clipper (Clipper genertes a single
        obj file)
       *fixed memory leaks when there is a fatal error in autoopened
@@ -244,10 +261,10 @@
       *implicit startup functions are removed from the list of
        functions before generation of output code
 
-         #xcommand SET <var1> [, <varN>] WITH <val> => 
+   * source/pp/ppcomp.c
    * source/pp/pplib.c
    * source/pp/ppcore.c
-        order then declared) -this fixes the following long 
+      * redefinition of #define no longer causes a memory leak
       * fixed repeatable optional clauses
          #xcommand SET <var1> [, <varN>] WITH <val> =>
           <var1>:=<val>[; <varN>:=<val>]
@@ -272,7 +289,7 @@
         error if there is no method
 
    * doc/en/clipper.txt
-     ! Fixed not resetting the error block when used on a table containing 
+      * added documentation for WITH OBJECT usage
 
 2006-07-13 16:49 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rdd/dbtotal.prg
@@ -371,7 +388,7 @@
   * harbour/source/vm/itemapi.c
     * make hb_itemClear() safe for not allocated stack items
 
-     + Generalized linker flags (LDFLAGS) and small exe generation 
+2006-07-10 20:43 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    By Marek Paliwoda:
 
