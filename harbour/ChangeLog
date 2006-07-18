@@ -21,7 +21,7 @@
      + Updates/fixes and more translated texts for Czech
        language modules. Thanks to:
        Vojtech Obrdlik <vobrdlik centrum.cz>
-   *	harbour/source/rdd/dbsort.prg
+
    * harbour/source/pp/pplib.c
      ! Fixed function names in trace calls.
 
