@@ -1891,13 +1891,13 @@ static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra, int *lens )
 static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
    BOOL endTranslation = FALSE;
-   BOOL bReplaced = FALSE;
    int ipos;
    char *lastopti[MAX_OPTIONALS], *strtopti = NULL, *strtptri = NULL;
    char *ptri = inputLine, *ptr, tmpname[MAX_NAME];
    int isWordInside = 0;
    char szMatch[2];
-   char *ptrmpatt = ptrmp;
+   char *cSkipped[MAX_OPTIONALS];
+   int iSkipped = 0;
 
    /*
       printf( "MP: >%s<\nIn: >%s<\n", ptrmp, ptri );
@@ -1936,10 +1936,13 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
             if( ipos && TestOptional( strtopti, strtopti + ipos - 2 ) )
             {
                /* the keyword from input is found in the pattern */
-               ptr = strtopti + ipos - 2;
-               ptr = PrevSquare( ptr, strtopti, NULL );
+               ptr = PrevSquare( strtopti + ipos - 2, strtopti, NULL );
                if( ptr )
                   ptrmp = ptr;
+               if( ptr != strtopti )
+               {
+                  cSkipped[ iSkipped++ ] = strtopti;
+               }
             }
          }
 
@@ -1954,17 +1957,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                ptrmp++;
                if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                {
-                  char *ptr = ptrmp;
                   SkipOptional( &ptrmp );
-                  if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine && bReplaced )
-                  {
-                     /* Start scanning from the beginning 
-                      * end of pattern but still there is an input stream to parse
-                      * 
-                      */
-                      ptrmp = ptrmpatt;
-                      strtopti = NULL;
-                  }
                }
                break;
 
@@ -2007,18 +2000,9 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   }
                   else
                   {
-                     char *ptr = ptrmp;
                      if( !isWordInside )
                         strtopti = NULL;
                      ptrmp++;
-                     if( !ptrmp[0] && *ptri && ptr != ptrmpatt+1 && ptri != inputLine && bReplaced )
-                     {
-                        /* Start scanning from the beginning 
-                         * end of pattern but still there is an input stream to parse
-                         */
-                        ptrmp = ptrmpatt;
-                        strtopti = NULL;
-                     }
                   }
                   s_numBrackets--;
                }
@@ -2057,11 +2041,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   strtopti = NULL;
                if( s_numBrackets == 1 && *( ptrmp + 2 ) == '2' )
                   isWordInside = 1;     /*  restricted match marker  */
-               if( WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
-               {
-                  bReplaced = TRUE;
-               }
-               else
+               if( ! WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                {
                   if( s_numBrackets )
                   {
@@ -2073,6 +2053,11 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                break;
 
             case '\0':
+               if( iSkipped )
+               {
+                  ptrmp = cSkipped[ --iSkipped ];
+                  break;
+               }
                if( com_or_tra )
                   return -1;
                else
@@ -2092,7 +2077,7 @@ static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, 
                   {
                      SkipOptional( &ptrmp );
                   }
-                  else
+                  else 
                      return -1;
                }
          }

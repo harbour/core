@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   + harbour/utils/hbpptest/.cvsignore
+   * harbour/utils/hbpptest/pp_test.prg
+     + Added batch file to compare PP results between Harbour and
+      
+
+2006-07-20 11:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+      
+      * fixed bugs which I introduced
+
+        and harbour and next use diff utility to compare outputs - 
+      * added more test cases
+
+   + utils/hbpptest/pp_test.prg
       * new file to test preprocessor Preprocess both with Clipper
         and harbour and next use diff utility to compare outputs -
         ignore the number of white spaces (use diff -w -u ...)

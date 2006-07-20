@@ -489,7 +489,12 @@ ENDTEXT
   pre := 'MyFunction({"HELLO"} ,321   )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-   
+TEXT TO VAR in
+#command MYCOMMAND2 [<myList,...>] 
+   [MYCLAUSE <myVal>] [MYOTHER <myOther>] => MyFunction( {<myList>}, <myVal>, <myOther> )
+ENDTEXT
+  __PreProcess( in )
+
   /* Special restricted macro match marker (used in SET FILTER TO command */
   in := "SET FILTER TO &cVar."
   pre := "if ( Empty(cVar) ) ;    dbClearFilter() ; else ;    dbSetFilter({||&cVar.},cVar) ; end"
@@ -1169,18 +1174,31 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON COLOR "W/N" SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):Control:guisend() ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes" COLOR "W/N"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):Control:guisend() ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes" COLOR "W/N" CAPOFF X 10 Y 10 FOCUS focus() STATE state() STYLE style() SEND send() BITMAP bitmap() CAPTION "cap"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes","W/N",{||focus()},{||state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send() ; ATail(GetList):Control:guisend() ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes","W/N",{||focus()},{||state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  
+TEXT TO VAR in
+#command DEFINE CLIPBOARD <oClp>
+   [ FORMAT <format:TEXT,OEMTEXT,BITMAP,DIF> ]
+   [ OF <oWnd> ]
+   => 
+   <oClp> := TClipboard():New( [UPPER(<(format)>)], <oWnd> )
+ENDTEXT
+  __PreProcess( in )
+  in:= "DEFINE CLIPBOARD oC OF oD FORMAT TEXT"
+  pre :='oC := TClipboard():New(UPPER("TEXT") ,oD )'   
+  nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
+
+
+    
 /* ---------------------------------------------------------------------*/
   __PP_FREE()
   
