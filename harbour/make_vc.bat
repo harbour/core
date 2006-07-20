@@ -26,19 +26,15 @@ rem ---------------------------------------------------------------
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 
+if "%1" == "install" goto INSTALL
+if "%1" == "INSTALL" goto INSTALL
+
 rem ---------------------------------------------------------------
 
 :BUILD
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc %1 %2 %3 > make_vc.log
    if errorlevel 1 goto BUILD_ERR
-
-rem ---------------------------------------------------------------
-
-:BUILD_OK
-
-   copy bin\vc\*.exe bin\*.* > nul
-   copy lib\vc\*.lib lib\*.* > nul
    goto EXIT
 
 rem ---------------------------------------------------------------
@@ -57,6 +53,19 @@ rem ---------------------------------------------------------------
    rem In this case, the makefile handles most cleanup.
 
    if exist make_vc.log del make_vc.log
+   goto EXIT
+
+rem ---------------------------------------------------------------
+
+:INSTALL
+
+   if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=.
+
+   if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+   if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+   if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc INSTALL > make_vc.log
    goto EXIT
 
 rem ---------------------------------------------------------------

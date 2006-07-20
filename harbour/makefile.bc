@@ -18,25 +18,27 @@
 #
 #       CFLAGS            - Extra C compiler options for libraries and for
 #                           executables
-#       CLIBFLAGS         - Extra C compiler options for the libraries
 #       C_USR             - Extra C compiler options for libraries and for
 #                           executables (GNU make compatible envvar)
-#       HARBOURFLAGS      - Extra Harbour compiler options
-#       HB_GT_LIB         - To override the default GT driver
-#                           (search for HB_GT_LIBS for a list of values)
+#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
+#
+#       LDFLAGS           - Extra linker options for the static libraries
+#       LDFLAGSDLL        - Extra linker options for the shared libraries
+#
+#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
 #                           (GNU make compatible envvar)
+#       HB_GT_LIB         - To override the default GT driver
+#                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
-#       BCCDLL_WITH_DYNRT - If set to -tWR causes taht harbour-bc.dll
+#       BCCDLL_WITH_DYNRT - If set to -tWR causes that harbour-bc.dll
 #                           will use dynamic runtime library (recommended)
 #
 #       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
 #                           Note that this will require the pdflib contrib.
-
-#
-# NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
-#
 
 # ---------------------------------------------------------------
 # "echo." intentionally used instead of "echo", to avoid conflicts
@@ -97,6 +99,9 @@ CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
 !if "$(HB_BUILD_DEBUG)" == "yes"
     CFLAGS     = -y -v $(CFLAGS)
 !endif
+!if "$(BCCDLL_WITH_DYNRT)" == "-tWR"
+   RTLIBSUFFIX = i
+!endif
 CLIBFLAGS      = -c -q $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   = -D__EXPORT__ -tWM $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   = -tWM $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS) $(CEXEFLAGSDLL)
@@ -107,7 +112,7 @@ HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w -es2 -gc0 $(PRG_USR)
    HBFLAGSCMN  = $(HBFLAGSCMN) -dPDF
 !endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
-HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+HARBOURFLAGSDLL= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 # Linker Flags
 LDFLAGS        = -ap -Tpe -Gn -C -L$(LIB_DIR) -L$(BIN_DIR) $(LDFLAGS)
@@ -130,7 +135,7 @@ ARFLAGS = /P32
 # Include Common Object list files
 # shared between Msvc and Borland
 
-!include Common.mak
+!include common.mak
 
 #**********************************************************
 
@@ -197,7 +202,7 @@ DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 #**********************************************************
 
 # General Library BUILD rule
-.obj.lib:
+{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
     IF EXIST "$@" $(DEL) "$@" > NUL
     $(MKLIB) "$@" $(ARFLAGS) @&&!
 +$(**: = &^
@@ -245,6 +250,21 @@ doClean:
     -if exist $(DLL_OBJ_DIR)\*.h   $(DEL) $(DLL_OBJ_DIR)\*.h   > nul
     -if exist bin\*.exe        $(DEL) bin\*.exe
     -if exist lib\*.lib        $(DEL) lib\*.lib
+
+#**********************************************************
+
+install : doInstall
+INSTALL : doInstall
+
+doInstall:
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) > nul
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) > nul
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) > nul
+!if "$(HB_INSTALL_PREFIX)" != "."
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.api $(HB_INC_INSTALL) > nul
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.ch  $(HB_INC_INSTALL) > nul
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.h   $(HB_INC_INSTALL) > nul
+!endif
 
 #**********************************************************
 
@@ -549,7 +569,7 @@ $(STANDARD_STATIC_HBLIBS)
 $(HARBOUR_DLL) :: BasicLibs BasicExes
 $(HARBOUR_DLL) :: $(DLL_OBJS)
     $(LINKER) $(LDFLAGSDLL) @&&!
-c0d32.obj $**, $@,, cw32.lib import32.lib
+c0d32.obj $**, $@,, cw32mt$(RTLIBSUFFIX).lib import32.lib
 !
 #**********************************************************
 #
@@ -559,7 +579,7 @@ c0d32.obj $**, $@,, cw32.lib import32.lib
 $(HBTESTDLL_EXE) :: BasicLibs BasicExes
 $(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)\mainstd.obj $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
     $(LINKER) $(LDFLAGS) @&&!
-c0x32.obj $**, $@,,$(HARBOUR_DLL:.dll=.lib) cw32.lib import32.lib
+c0x32.obj $**, $@,,$(HARBOUR_DLL:.dll=.lib) cw32mt$(RTLIBSUFFIX).lib import32.lib
 !
 #----------------------------------------------------------
 #$(DLL_OBJ_DIR)\hbtest.obj : $(HBTEST_DIR)\hbtest.prg

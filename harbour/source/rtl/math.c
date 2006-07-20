@@ -134,7 +134,11 @@ int hb_mathIsMathErr (void)
 /* route C math lib errors to Harbour error handling */
 #if defined(HB_MATH_HANDLER)
 
-int matherr (struct exception * err)
+int
+#ifdef __BORLANDC__
+HB_EXPORT
+#endif
+matherr (struct exception * err)
 {
    int retval;
    HB_MATH_HANDLERPROC mathHandler;
@@ -259,7 +263,7 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
          s_hb_exc.type = HB_MATH_ERR_OVERFLOW;
          s_hb_exc.error = "Calculation result too large to represent";
          break;
-#endif        
+#endif
       default:
          s_hb_exc.type = HB_MATH_ERR_UNKNOWN;
          s_hb_exc.error = "Unknown math error";

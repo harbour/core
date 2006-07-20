@@ -3,7 +3,7 @@
 #
 
 #
-# Makefile for Harbour Project for Borland C/C++ 5.x compilers
+# Makefile for Harbour Project for Msvc 6.0/7.1 compilers
 #
 
 # ---------------------------------------------------------------
@@ -16,26 +16,28 @@
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
 #
-#       CFLAGS           - Extra C compiler options for libraries and for
-#                          executables
-#       CLIBFLAGS        - Extra C compiler options for the libraries
-#       C_USR            - Extra C compiler options for libraries and for
-#                          executables (GNU make compatible envvar)
-#       HARBOURFLAGS     - Extra Harbour compiler options
-#       HB_GT_LIB        - To override the default GT driver
-#                          (search for HB_GT_LIBS for a list of values)
-#       PRG_USR          - Extra Harbour compiler options
-#                          (GNU make compatible envvar)
+#       CFLAGS            - Extra C compiler options for libraries and for
+#                           executables
+#       C_USR             - Extra C compiler options for libraries and for
+#                           executables (GNU make compatible envvar)
+#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
+#
+#       LDFLAGS           - Extra linker options for the static libraries
+#       LDFLAGSDLL        - Extra linker options for the shared libraries
+#
+#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
+#       PRG_USR           - Extra Harbour compiler options
+#                           (GNU make compatible envvar)
+#       HB_GT_LIB         - To override the default GT driver
+#                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_MODE    - If set to cpp causes to compile in C++ mode
 #       HB_BUILD_DEBUG   - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE - enables echoing commands being executed
 #
 #       HB_DOC_PDF       - Turns on the .PDF file support in the HBDOC utility.
 #                          Note that this will require the pdflib contrib.
-
-#
-# NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
-#
 
 # ---------------------------------------------------------------
 # "echo." intentionally used instead of "echo", to avoid conflicts
@@ -124,7 +126,7 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 # Include Common Object list files
 # shared between Msvc and Borland
 
-!include Common.mak
+!include common.mak
 
 #**********************************************************
 
@@ -641,6 +643,7 @@ CLEAN: doClean
 doClean:
     -if exist *.idb            $(DEL) *.idb > nul
     -if exist *.pch            $(DEL) *.pch > nul
+    -if exist *.pdb            $(DEL) *.pdb > nul
     -if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
     -if exist $(OBJ_DIR)\*.c   $(DEL) $(OBJ_DIR)\*.c > nul
     -if exist $(OBJ_DIR)\*.h   $(DEL) $(OBJ_DIR)\*.h > nul
@@ -658,6 +661,21 @@ doClean:
     -if exist $(DLL_OBJ_DIR)\*.h   $(DEL) $(DLL_OBJ_DIR)\*.h > nul
     -if exist bin\*.exe        $(DEL) bin\*.exe
     -if exist lib\*.lib        $(DEL) lib\*.lib
+
+#**********************************************************
+
+install : doInstall
+INSTALL : doInstall
+
+doInstall:
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) > nul
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) > nul
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) > nul
+!if "$(HB_INSTALL_PREFIX)" != "."
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.api $(HB_INC_INSTALL) > nul
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.ch  $(HB_INC_INSTALL) > nul
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.h   $(HB_INC_INSTALL) > nul
+!endif
 
 #**********************************************************
 

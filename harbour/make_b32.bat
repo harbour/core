@@ -26,19 +26,15 @@ rem ---------------------------------------------------------------
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 
+if "%1" == "install" goto INSTALL
+if "%1" == "INSTALL" goto INSTALL
+
 rem ---------------------------------------------------------------
 
 :BUILD
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -r -fmakefile.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
-
-rem ---------------------------------------------------------------
-
-:BUILD_OK
-
-   copy bin\b32\*.exe bin\*.* > nul
-   copy lib\b32\*.lib lib\*.* > nul
    goto EXIT
 
 rem ---------------------------------------------------------------
@@ -52,7 +48,7 @@ rem ---------------------------------------------------------------
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.bc CLEAN > make_b32.log
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f makefile.bc CLEAN > make_b32.log
 
    rem In this case, the makefile handles most cleanup.
 
@@ -61,4 +57,23 @@ rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 
+:INSTALL
+
+   if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=.
+
+   if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+   if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+   if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f makefile.bc INSTALL > make_b32.log
+   goto EXIT
+
+rem ---------------------------------------------------------------
+
 :EXIT
+
+rem set HB_MAKE_PROGRAM=
+rem set HB_INSTALL_PREFIX=
+rem set HB_BIN_INSTALL=
+rem set HB_LIB_INSTALL=
+rem set HB_INC_INSTALL=

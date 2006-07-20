@@ -8,23 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtstd/gtstd.c
+    ! redirect STDOUT() to console only when stdout is a tty device.
+
+2006-07-20 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/source/rtl/math.c
+     ! Fixed GPF when compiled under Bcc with -tWR switch
+
+   * harbour/makefile.bc
+   * harbour/make_b32.bat
+     ! Fixed compilation of Harbour DLL with dynamic RTL
+     * Added INSTALL rule.
+
    * harbour/makefile.vc
    * harbour/make_vc.bat
      ! Fixed header description of makefile
      * Added INSTALL rule.
-     + Added batch file to compare PP results between Harbour and 
+
 2006-07-20 12:36 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    + harbour/utils/hbpptest/compare.bat
    + harbour/utils/hbpptest/.cvsignore
    * harbour/utils/hbpptest/pp_test.prg
      + Added batch file to compare PP results between Harbour and
-      
+       CA-Cl*pper.
 
 2006-07-20 11:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
-      
+   * source/pp/ppcore.c
       * fixed bugs which I introduced
 
-        and harbour and next use diff utility to compare outputs - 
+   * utils/hbpptest/pretest.prg
       * added more test cases
 
    + utils/hbpptest/pp_test.prg
@@ -35,7 +49,7 @@
 
 2006-07-18 21:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
-      
+    ! fixed executing EXIT procedures after external to BEGIN SEQUENCE / END
       BREAK - now by default we are taking the same action as after QUIT
       what seems to be intention of Clipper authors. When HVM is compiled
       with HB_C52_STRICT macro then we will try to emulate real Clipper
@@ -63,7 +77,7 @@
      + Note added about __dbfList() to debugger source.
 
    * harbour/source/rtl/dbedit.prg
-      
+     ! Comment typos.
 
 2006-07-18 12:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/pp/ppcore.c
@@ -78,7 +92,7 @@
     ! fixed problems reported by Marek with EXIT procedures after my
       last commit
 
-     + Updates/fixes and more translated texts for Czech 
+2006-07-18 10:21 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/lang/msgcs852.c
    * harbour/source/lang/msgcsiso.c
    * harbour/source/lang/msgcskam.c
