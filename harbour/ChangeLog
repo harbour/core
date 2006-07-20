@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/makefile.vc
+   * harbour/make_vc.bat
+     ! Fixed header description of makefile
+     * Added INSTALL rule.
+     + Added batch file to compare PP results between Harbour and 
+2006-07-20 12:36 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   + harbour/utils/hbpptest/compare.bat
    + harbour/utils/hbpptest/.cvsignore
    * harbour/utils/hbpptest/pp_test.prg
      + Added batch file to compare PP results between Harbour and

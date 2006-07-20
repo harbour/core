@@ -1,20 +1,20 @@
 /*
  * $Id$
  */
+
 /* Test file to check the preprocessor. 
+ *
  * Usage:
- * 1) Preprocess it using:
- *     harbour -p -n pp_test.prg
- * 2) Rename generated pp_test.ppo (for example into pp_test.hpp)
- * 3) Preprocess it with Clipper using:
- *     clipper -p -n pp_test.prg
- * 4) Compare Clipper generated file pp_test.ppo with file generated
- *    with Harbour, ignoring number of white spaces, for example:
- *     diff -u -w pp_test.ppo pp_test.hpp > pp_test.diff
+ * 1) Run compare.bat for a comparison between Harbour and CA-Cl*pper.
+ * 2) Results will be stored in pp_test.diff
+ *
+ * Notes:
+ * - clipper.exe and diff.exe needs to be in the path.
  *    
  * Ignore most of errors reported during compilation.
  *
 */
+
 PROCEDURE MAIN()
 
 #ifdef __HARBOUR__
