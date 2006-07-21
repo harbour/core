@@ -205,7 +205,7 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
     */
    if( pArea->fBof && lUpDown < 0 )
    {
-      if ( fBottom )
+      if( fBottom )
       {
          /* GOTO EOF (phantom) record -
             this is the only one place where GOTO is used by xHarbour
@@ -522,13 +522,15 @@ static short hb_waCloseAux( AREAP pArea, int nChildArea )
    LPDBRELINFO lpdbRelation, lpdbRelPrev, lpdbRelTmp;
 
    uiArea = ( USHORT ) nChildArea;
-   if ( pArea->lpdbRelations )
+   if( pArea->lpdbRelations )
    {
       uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
       lpdbRelation = pArea->lpdbRelations;
       lpdbRelPrev = NULL;
-      while ( lpdbRelation ) {
-         if ( lpdbRelation->lpaChild->uiArea == uiArea ) {
+      while( lpdbRelation )
+      {
+         if( lpdbRelation->lpaChild->uiArea == uiArea )
+         {
             /* Clear this relation */
             hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea );
             SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
@@ -540,7 +542,7 @@ static short hb_waCloseAux( AREAP pArea, int nChildArea )
             if( lpdbRelation->abKey )
                hb_itemRelease( lpdbRelation->abKey );
             lpdbRelTmp = lpdbRelation;
-            if ( lpdbRelPrev )
+            if( lpdbRelPrev )
                lpdbRelPrev->lpdbriNext = lpdbRelation->lpdbriNext;
             else
                pArea->lpdbRelations = lpdbRelation->lpdbriNext;
@@ -588,7 +590,7 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
-   switch ( uiIndex )
+   switch( uiIndex )
    {
       case DBI_ISDBF:
       case DBI_CANPUTREC:
@@ -642,7 +644,7 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_DBFILTER:
-         if ( pArea->dbfi.abFilterText )
+         if( pArea->dbfi.abFilterText )
             hb_itemCopy( pItem, pArea->dbfi.abFilterText );
          else
             hb_itemPutC( pItem, "" );
@@ -659,7 +661,7 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_ALIAS:
       {
          char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
-         if ( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) != SUCCESS )
+         if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) != SUCCESS )
          {
             return FAILURE;
          }
@@ -1210,7 +1212,7 @@ ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
    lpdbRelations = pArea->lpdbRelations;
    while( lpdbRelations )
    {
-      if ( uiIndex++ == uiRelNo )
+      if( uiIndex++ == uiRelNo )
       {
          *pWA = lpdbRelations->lpaChild->uiArea;
          break;
@@ -1297,7 +1299,7 @@ ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
 
    while( lpdbRelations )
    {
-      if ( uiIndex++ == uiRelNo )
+      if( uiIndex++ == uiRelNo )
       {
          hb_strncpy( ( char* ) pExpr, hb_itemGetCPtr( lpdbRelations->abKey ),
                      HARBOUR_MAX_RDD_RELTEXT_LENGTH );
@@ -1542,7 +1544,7 @@ ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
    HB_TRACE(HB_TR_DEBUG, ("hb_waEvalBlock(%p, %p)", pArea, pBlock));
 
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   if ( iCurrArea != pArea->uiArea )
+   if( iCurrArea != pArea->uiArea )
       hb_rddSelectWorkAreaNumber( pArea->uiArea );
    else
       iCurrArea = 0;
@@ -1552,7 +1554,7 @@ ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
       pArea->valResult = hb_itemNew( NULL );
    hb_itemCopy( pArea->valResult, pItem );
 
-   if ( iCurrArea )
+   if( iCurrArea )
       hb_rddSelectWorkAreaNumber( iCurrArea );
 
    return hb_vmRequestQuery() ? FAILURE : SUCCESS;

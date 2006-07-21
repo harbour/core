@@ -492,7 +492,7 @@ static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    }
 
    HB_GTSUPER_RESIZE( iRows, iCols );
-   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
+   hb_gt_SetFlag( GTI_STDOUTCON, s_bStdoutConsole );
    hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
 
    hb_gt_pca_AnsiInit();

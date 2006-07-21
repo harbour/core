@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      * fixed to be more Clipper compatible
+      * fixed access to unallocated memory
+      * added more test cases
+
+
+2006-07-21 02:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/workarea.c
+    * code cleanup
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! do not interrupt subindexing when new record is concurrently added by
+      other station
 
   * harbour/source/rtl/gtpca/gtpca.c
   * harbour/source/rtl/gtstd/gtstd.c

@@ -403,7 +403,7 @@ static ERRCODE hb_delimGoTop( DELIMAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimGoTop(%p)", pArea));
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
       return FAILURE;
 
    pArea->fTop = TRUE;
@@ -424,7 +424,7 @@ static ERRCODE hb_delimSkipRaw( DELIMAREAP pArea, LONG lToSkip )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_delimSkipRaw(%p,%ld)", pArea, lToSkip));
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
       return FAILURE;
 
    if( lToSkip != 1 )
@@ -509,10 +509,10 @@ static ERRCODE hb_delimAppend( DELIMAREAP pArea, BOOL fUnLockAll )
 
    HB_SYMBOL_UNUSED( fUnLockAll );
 
-   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
       return FAILURE;
 
-   if( SELF_GOHOT( ( AREAP ) pArea ) == FAILURE )
+   if( SELF_GOHOT( ( AREAP ) pArea ) != SUCCESS )
       return FAILURE;
 
    pArea->ulRecordOffset = pArea->ulFileSize;
@@ -736,10 +736,9 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       hb_errPutOperation( pError, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );
       hb_errPutSubCode( pError, uiError );
       hb_errPutFlags( pError, EF_CANDEFAULT );
-      SELF_ERROR( ( AREAP ) pArea, pError );
+      uiError = SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
-      return SUCCESS;
-      /* return FAILURE; */
+      return uiError == E_DEFAULT ? SUCCESS : FAILURE;
    }
 
    return SUCCESS;
@@ -792,7 +791,11 @@ static ERRCODE hb_delimTrans( DELIMAREAP pArea, LPDBTRANSINFO pTransInfo )
       else
       {
          PHB_ITEM pPutRec = hb_itemPutL( NULL, FALSE );
-         SELF_INFO( ( AREAP ) pTransInfo->lpaDest, DBI_CANPUTREC, pPutRec );
+         if( SELF_INFO( ( AREAP ) pTransInfo->lpaDest, DBI_CANPUTREC, pPutRec ) != SUCCESS )
+         {
+            hb_itemRelease( pPutRec );
+            return FAILURE;
+         }
          if( hb_itemGetL( pPutRec ) )
             pTransInfo->uiFlags |= DBTF_PUTREC;
          else

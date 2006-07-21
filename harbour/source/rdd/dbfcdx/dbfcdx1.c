@@ -8188,6 +8188,40 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          }
          break;
 
+      case DBOI_READLOCK:
+         if( pTag )
+         {
+            if( hb_itemType( pOrderInfo->itmNewVal ) == HB_IT_LOGICAL )
+            {
+               if( hb_itemGetL( pOrderInfo->itmNewVal ) )
+                  hb_cdxIndexLockRead( pTag->pIndex );
+               else
+                  hb_cdxIndexUnLockRead( pTag->pIndex );
+            }
+            pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
+                                                 pTag->pIndex->lockRead > 0 );
+         }
+         else
+            pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult, FALSE );
+         break;
+
+      case DBOI_WRITELOCK:
+         if( pTag )
+         {
+            if( hb_itemType( pOrderInfo->itmNewVal ) == HB_IT_LOGICAL )
+            {
+               if( hb_itemGetL( pOrderInfo->itmNewVal ) )
+                  hb_cdxIndexLockWrite( pTag->pIndex );
+               else
+                  hb_cdxIndexUnLockWrite( pTag->pIndex );
+            }
+            pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
+                                                 pTag->pIndex->lockWrite > 0 );
+         }
+         else
+            pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult, FALSE );
+         break;
+
       default:
          return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
 
@@ -9060,27 +9094,18 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
 
       ulRecNo = pArea->ulRecNo;
 
-      if ( ulNextCount && ulRecCount >= ulRecNo + ulNextCount )
-         ulRecCount = ulRecNo + ulNextCount - 1;
-
-      do
+      while ( !pArea->fEof )
       {
-         if ( ulRecNo > ulRecCount )
-            pArea->fEof = TRUE;
-
-         if ( pArea->fEof )
-            break;
-
          if ( fDirectRead )
          {
             if ( iRecBuff == 0 || iRecBuff >= iRecBufSize )
             {
+               if ( ulRecNo > ulRecCount )
+                  break;
                if ( ulRecCount - ulRecNo >= (ULONG) iRecBufSize )
                   iRec = iRecBufSize;
                else
                   iRec = ulRecCount - ulRecNo + 1;
-               if ( iRec <= 0 )
-                  break;
                hb_fsSeekLarge( pArea->hDataFile,
                                ( HB_FOFFSET ) pArea->uiHeaderLen + 
                                ( HB_FOFFSET ) ( ulRecNo - 1 ) * 
@@ -9096,7 +9121,8 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
             pArea->fDeleted = pArea->pRecord[ 0 ] == '*';
             /* Force relational movement in child WorkAreas */
             if( pArea->lpdbRelations )
-               SELF_SYNCCHILDREN( ( AREAP ) pArea );
+               if( SELF_SYNCCHILDREN( ( AREAP ) pArea ) == FAILURE )
+                  break;
             iRecBuff++;
          }
 
@@ -9116,7 +9142,8 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
          if ( pWhileItem && !hb_cdxEvalCond( NULL, pWhileItem, FALSE ) )
             break;
 
-         if ( pForItem == NULL || hb_cdxEvalCond( pArea, pForItem, FALSE ) )
+         if ( ulRecNo <= ulRecCount &&
+              ( pForItem == NULL || hb_cdxEvalCond( pArea, pForItem, FALSE ) ) )
          {
             double d;
 
@@ -9196,7 +9223,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
                break;
             ulRecNo = pArea->ulRecNo;
          }
-      } while ( TRUE );
+      }
 
       hb_cdxSortOut( pSort );
       if ( pTag->nField )

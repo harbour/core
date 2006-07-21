@@ -232,7 +232,7 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0x0000 );
    }
 #endif
-   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
+   hb_gt_SetFlag( GTI_STDOUTCON, s_bStdoutConsole );
    hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
 }
 
