@@ -33,8 +33,11 @@ CCCC c
 #define RED {255,0,0}
 #ifdef __HARBOUR__
 /* ---------------------------------------------------------------------*/
+/* obligatory clause on left side used as optional clause on right side
+ * Clipper doesn't allow for it
+ */
 #xcommand SET COOLTIP TO <color> OF <form> => ;
-   SM( TTH (<"form">), 1, RGB(<color>[1], ;
+   SM( TTH (<"form">), 1, RGB(<color>\[1\], ;
    <color>\[2\], ;
    <color>[, <color>[ 3 ] ]), 0)
    
@@ -42,31 +45,50 @@ CCCC c
 #endif
 
 #xcommand SET TOOLTIP TO <color> OF <form> => ;
-   SM( TTH (<"form">), 1, RGB(<color>[1], ;
+   SM( TTH (<"form">), 1, RGB(<color>\[1\], ;
    <color>\[2\], ;
    <color>\[ 3 \]), 0)
    
    SET TOOLTIP TO RED OF form1
 
 /* ---------------------------------------------------------------------*/
+/* simple optional clause */
 #command ZZZ [<v>] => QOUT( [ <v>\[1\] ] )
    ZZZ a
    ZZZ
    ZZZ a[1]+2
+   ZZZ 1
+   ZZZ 'z'
+   ZZZ "z"
+   
+#translate TZZZ [<v>] => QOUT( [ <v>\[1\] ] )
+   TZZZ a
+   TZZZ
+   TZZZ a[1]+2
+   TZZZ 1
+   TZZZ 'z'
+   TZZZ "z"
+   
 /* ---------------------------------------------------------------------*/
 #xtranslate _HMG_a  =>  _HMG\[137\]
    ? _bro[ a( _HMG_a [i] ) ]
 
 /* ---------------------------------------------------------------------*/
-#ifdef __HARBOUR__
 #define clas( x )   (x)
+#ifdef __HARBOUR__
+/* <!name!> is harbour extension match marker used to allow identifiers
+ * only
+ */
 #xtranslate ( <!name!>{ [<p,...>] } => (<name>():New(<p>)
    a :=clas( TesT{ 1,2,3} )
+   a :=clas( a+3{ 11,2,3} )
+   a :=clas( a(){ 11,2,3} )
 #endif
 
-#define clas( x )   (x)
 #xtranslate ( <name>{ [<p,...>] } => (<name>():New(<p>)
    a :=clas( TEST{ 1,2,3} )
+   a :=clas( a+3{ 11,2,3} )
+   a :=clas( a(){ 11,2,3} )
 
 /* ---------------------------------------------------------------------*/
 #define DATENEW   1
@@ -76,6 +98,7 @@ CCCC c
   ? datediff( x, y )
 
 /* ---------------------------------------------------------------------*/
+/* test for regular match marker */
 #command _REGULAR_(<z>) => rm( <z> )
   _REGULAR_(a)
   _REGULAR_("a")
@@ -90,6 +113,7 @@ CCCC c
   _REGULAR_("['']")
 
 	//NORMAL
+/* test for normal match marker */
 #command _NORMAL_M(<z>) => nm( <"z"> )
   _NORMAL_M(a)
   _NORMAL_M("a")
@@ -104,6 +128,7 @@ CCCC c
   _NORMAL_M("['']")
 
 	//SMART
+/* test for smart match marker */
 #command _SMART_M(<z>) => sm( <(z)> )
   _SMART_M(a)
   _SMART_M("a")
@@ -118,6 +143,7 @@ CCCC c
   _SMART_M("['']")
 
 	//DUMB
+/* test for dumb match marker */
 #command _DUMB_M(<z>) => dm( #<z> )
   _DUMB_M(a)
   _DUMB_M("a")
@@ -133,30 +159,34 @@ CCCC c
 
 /* ---------------------------------------------------------------------*/
   // REGULAR list
+/* test for regular match marker */
 #command _REGULAR_L(<z,...>)	=> rl( <z> )
 _REGULAR_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &a.a,  a, a)
 
   // NORMAL list
+/* test for normal match marker */
 #command _NORMAL_L(<z,...>) => nl( <"z"> )
 _NORMAL_L(n,"n",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 
   // SMART list
+/* test for smart match marker */
 #command _SMART_L(<z,...>) => sl( <(z)> )
 _SMART_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 
   // DUMB list
+/* test for dumb match marker */
 #command _DUMB_L(<z,...>) => dl( #<z> )
 _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 
 /* ---------------------------------------------------------------------*/
-  
-index on LEFT(   f1  ,  10   )      to _tst
+/* test of preserving spaces in expressions */
+/* Notice that Clipper and Harbour doesn't remove spaces from 
+ * expressions passed for stingify
+*/
+ index on LEFT(   f1  ,  10   )      to _tst
 
 /* ---------------------------------------------------------------------*/
-#xcommand SET <var1> [, <varN>] WITH <val> => <var1>:=<val>[; <varN>:=<val>]
-  SET v1, v2, v3 WITH 0
-
-/* ---------------------------------------------------------------------*/
+/* repeated optinal clauses */
 #xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> 
 [, <uValN> ] ) => ;
 if <table>->( dbappend() ) ;;
@@ -179,6 +209,7 @@ endif
    values ( "first", "last", "street" )
 
 /* ---------------------------------------------------------------------*/
+/* test for case sensitivity in define */
 #define F1( n ) F2( n, N )
   F1( 1 )
 
@@ -186,6 +217,7 @@ endif
   F3( 1, 2 )
 
 /* ---------------------------------------------------------------------*/
+/* test for different order of optional clauses */
 #command MYCOMMAND [<mylist,...>] [MYCLAUSE <myval>] => ;
    MyFunction( {<mylist>} [, <myval>] )
   MYCOMMAND MYCLAUSE 321 "HELLO"
@@ -193,37 +225,40 @@ endif
   MYCOMMAND "HELLO","all" MYCLAUSE 321
 
 #command MYCOMMAND2 [<mylist,...>] [MYCLAUSE <myval>] [ALL] => ;
-   MyFunction( {<mylist>} [, <myval>] )
+   MyFunction2( {<mylist>} [, <myval>] )
   MYCOMMAND2 MYCLAUSE 321 "HELLO"
   MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL
   MYCOMMAND2 ALL MYCLAUSE 321 "HELLO"
   MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL 
   MYCOMMAND2 MYCLAUSE 321 ALL "HELLO"
 
-/*
-  in := 'MYCOMMAND3 ALL MYCLAUSE 321 "HELLO","WORLD"'
-  in := 'MYCOMMAND3 MYCLAUSE 321 ALL "HELLO"'
-  in := 'MYCOMMAND3 MYCLAUSE 321 "HELLO" ALL'
-  in := 'MYCOMMAND3 MYCLAUSE 321 "HELLO"'
-*/
+#xcommand MYCOMMAND3 [<myList,...>] ;
+   [MYCLAUSE <myVal>] [MYOTHER <myOther>] => MyFunction3( {<myList>}, <myVal>, <myOther> )
 
-#xcommand MYCOMMAND4 [<myList,...>] ;
-   [MYCLAUSE <myVal>] [MYOTHER <myOther>] => MyFunction4( {<myList>}, <myVal>, <myOther> )
+   MYCOMMAND3 MYCLAUSE 322 "Hello" MYOTHER 1
+   MYCOMMAND3 MYOTHER 1 MYCLAUSE 322 "Hello"
+   MYCOMMAND3 "Hello" MYOTHER 1 MYCLAUSE 322
+   MYCOMMAND3 MYOTHER 1 "Hello" MYCLAUSE 322
 
 /* ---------------------------------------------------------------------*/
   /* Special restricted macro match marker (used in SET FILTER TO command */
+  /* <x:&> is matched when &variable or &(expression) are used
+  */
   SET FILTER TO &cVar.
   SET FILTER TO &(cVar .AND. &cVar)
   SET FILTER TO &cVar. .AND. cVar
 
 /* ---------------------------------------------------------------------*/
-#xtranslate XTRANS(<x>( => normal( <(x)> )
-#xtranslate XTRANS(<x:&>( => macro( <(x)> )
+#xtranslate XTRANS(<x>( => normal_match( <(x)> )
+#xtranslate XTRANS(<x:&>( => macro_match( <(x)> )
 
   XTRANS( cVar (
   XTRANS( &cVar (
   XTRANS( &cVar+1 (
   XTRANS( &cVar. (
+  XTRANS( &cVar&cVar (
+  XTRANS( &cVar.&cVar (
+  XTRANS( &cVar.&cVar. (
   XTRANS( (&cVar.) (
   XTRANS( &(cVar) (
   XTRANS( &cVar[3] (
@@ -334,7 +369,7 @@ endif
   MCOMMAND &cVar.&(cVar)
 
 /* ---------------------------------------------------------------------*/
-   /* repeated optional clauses */
+/* repeated optional clauses */
 #xcommand SET <var1> [, <varN>] WITH <val> => <var1>:=<val> [; <varN>:=<val>]
   SET v1 WITH 0
   SET v1, v2 WITH 0
@@ -467,5 +502,76 @@ DEFINE CLIPBOARD oC OF oD FORMAT TEXT
    DEFINE WINDOW &oW ON INIT oW.Title:= "My title"
    &oW.Title := "title"
    &oW.f9 := 9
+
+/* statndard Clipper commands */
+RELEASE ALL
+RELEASE ALL LIKE A
+RELEASE ALL EXCEPT A
+SAVE ALL LIKE A TO A
+SAVE TO A ALL LIKE A
+SAVE TO A ALL
+SAVE ALL EXCEPT A TO A
+SAVE TO A ALL EXCEPT A
+
+
+LIST
+LIST TO PRINTER
+LIST TO FILE a
+LIST OFF
+LIST OFF TO PRINTER
+LIST OFF TO FILE a
+LIST a
+LIST a,b
+LIST a,b,(seek(a+b),c)
+LIST a TO PRINTER
+LIST a TO FILE a
+LIST a,b TO PRINTER
+LIST a,b,(seek(a+b),c) TO FILE a
+
+LIST a OFF TO PRINTER
+LIST a OFF TO FILE a
+LIST a,b OFF TO PRINTER
+LIST a,b,(seek(a+b),c) OFF TO FILE a
+
+LIST a TO PRINTER OFF
+LIST a TO FILE a OFF
+LIST a,b TO PRINTER OFF
+LIST a,b,(seek(a+b),c) TO FILE a OFF
+
+LIST TO PRINTER a,b,c
+LIST TO FILE a a,b,c
+
+LIST REST
+LIST REST TO PRINTER
+LIST REST TO FILE a
+LIST REST OFF
+LIST OFF REST
  
+LIST REST ALL
+LIST ALL
+LIST ALL REST
+LIST ALL OFF
+LIST ALL TO PRINTER
+LIST ALL ALL
+LIST REST REST
+LIST OFF OFF
+LIST ALL ALL TO PRINTER
+LIST REST REST TO PRINTER
+LIST OFF OFF TO PRINTER
+
+LIST (ALL) ALL
+LIST (REST) REST
+LIST (OFF) OFF
+
+LIST ALL+ALL
+LIST REST+REST
+LIST OFF+OFF
+LIST ALL+ALL ALL
+LIST REST+REST REST
+LIST OFF+OFF OFF
+
+LIST ALL+ALL REST
+LIST REST+REST OFF
+LIST OFF+OFF ALL
+
 RETURN

@@ -3409,9 +3409,8 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
          }
          else if( lastchar == '0' )
          {
-            *lenres += ReplacePattern( exppatt[2], expreal, lenreal, ptrOut + ifou - 1, *lenres - isdvig - ifou + 1 );
+            *lenres += ReplacePattern( (exppatt[1]?exppatt[2]:exppatt[1]), expreal, lenreal, ptrOut + ifou - 1, *lenres - isdvig - ifou + 1 );
             isdvig += ifou - 1;
-
          }
          else
          {
@@ -3632,9 +3631,9 @@ static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro
                {
                   int i;
                   
-                  i = ( ifou ) ? 5 : 4;
-                  hb_pp_Stuff( "{||},", ptro, i, 0, lenres );
-                  hb_pp_Stuff( expreal, ptro + 3, lenitem, 0, lenres + i );
+                  i = ( ifou ) ? 6 : 5;
+                  hb_pp_Stuff( "{|| },", ptro, i, 0, lenres );
+                  hb_pp_Stuff( expreal, ptro + 4, lenitem, 0, lenres + i );
                   ptro += i + lenitem;
                   rmlen += i + lenitem;
                }
@@ -3649,9 +3648,9 @@ static int ReplacePattern( char patttype, char *expreal, int lenreal, char *ptro
          }
          else
          {
-            hb_pp_Stuff( "{||}", ptro, 4, 4, lenres );
-            hb_pp_Stuff( expreal, ptro + 3, lenreal, 0, lenres );
-            rmlen = lenreal + 4;
+            hb_pp_Stuff( "{|| }", ptro, 5, 4, lenres );
+            hb_pp_Stuff( expreal, ptro + 4, lenreal, 0, lenres );
+            rmlen = lenreal + 5;
          }
          break;
 
@@ -4526,7 +4525,7 @@ static int NextName( char **sSource, char *sDest )
          State = STATE_QUOTE2;
       }
       /* Ron Pinkas added 2000-11-08 */
-      else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.", cLastChar ) == NULL && !ISNAME( ( BYTE ) cLastChar ) )
+      else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.\"\'", cLastChar ) == NULL && !ISNAME( ( BYTE ) cLastChar ) )
       {
          /* Ron Pinkas added 2000-11-08 */
          pString = *sSource;

@@ -251,7 +251,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___108 = {0,"SET",3,"WRAP (\1A00)","Set( _SET_WRAP, \1A00 )",&sC___107 };
    static COMMANDS sC___109 = {0,"SET",3,"MESSAGE TO \1A00 \2\1B20 CENTER, CENTRE>\3",
        "Set( _SET_MESSAGE, \1A00 ) ; Set( _SET_MCENTER, \1B50 )",&sC___108 };
-   static COMMANDS sC___110 = {0,"SET",3,"MESSAGE TO","Set( _SET_MESSAGE, 0 ) ; Set( _SET_MCENTER, .f. )",&sC___109 };
+   static COMMANDS sC___110 = {0,"SET",3,"MESSAGE TO","Set( _SET_MESSAGE, 0 ) ; Set( _SET_MCENTER, .F. )",&sC___109 };
    static COMMANDS sC___111 = {0,"@",1,"\1A00, \1B00 PROMPT \1C00 \2MESSAGE \1D00\3 \2COLOR \1E00\3",
        "__AtPrompt( \1A00, \1B00, \1C00 , \1D00 , \1E00 )",&sC___110 };
    static COMMANDS sC___112 = {0,"MENU",4,"TO \1A00","\1A00 := __MenuTo( {|_1| if(PCount() == 0, \1A00, \1A00 := _1)}, \1A10 )",&sC___111 };
@@ -275,15 +275,15 @@ void hb_pp_Table( void )
    static COMMANDS sC___128 = {0,"SET",3,"FUNCTION \1A00 \2TO\3 \2\1B00\3","__SetFunction( \1A00, \1B00 )",&sC___127 };
    static COMMANDS sC___129 = {0,"CLEAR",5,"MEMORY","__MVClear()",&sC___128 };
    static COMMANDS sC___130 = {0,"RELEASE",7," \1A10","__MVXRelease( \1A30 )",&sC___129 };
-   static COMMANDS sC___131 = {0,"RELEASE",7,"ALL","__MVRelease('*', .t.)",&sC___130 };
-   static COMMANDS sC___132 = {0,"RELEASE",7,"ALL LIKE \1A00","__MVRelease( \1A10, .t. )",&sC___131 };
-   static COMMANDS sC___133 = {0,"RELEASE",7,"ALL EXCEPT \1A00","__MVRelease( \1A10, .f. )",&sC___132 };
+   static COMMANDS sC___131 = {0,"RELEASE",7,"ALL","__MVRelease('*', .T.)",&sC___130 };
+   static COMMANDS sC___132 = {0,"RELEASE",7,"ALL LIKE \1A00","__MVRelease( \1A10, .T. )",&sC___131 };
+   static COMMANDS sC___133 = {0,"RELEASE",7,"ALL EXCEPT \1A00","__MVRelease( \1A10, .F. )",&sC___132 };
    static COMMANDS sC___134 = {0,"RESTORE",7,"\2FROM \1A40\3 \2\1B20 ADDITIVE>\3","__MVRestore( \1A30, \1B50 )",&sC___133 };
-   static COMMANDS sC___135 = {0,"SAVE",4,"ALL LIKE \1A00 TO \1B40","__MVSave( \1B30, \1A30, .t. )",&sC___134 };
-   static COMMANDS sC___136 = {0,"SAVE",4,"TO \1A40 ALL LIKE \1B00","__MVSave( \1A30, \1B30, .t. )",&sC___135 };
-   static COMMANDS sC___137 = {0,"SAVE",4,"ALL EXCEPT \1A00 TO \1B40","__MVSave( \1B30, \1A30, .f. )",&sC___136 };
-   static COMMANDS sC___138 = {0,"SAVE",4,"TO \1A40 ALL EXCEPT \1B00","__MVSave( \1A30, \1B30, .f. )",&sC___137 };
-   static COMMANDS sC___139 = {0,"SAVE",4,"\2TO \1A40\3 \2ALL\3","__MVSave( \1A30, '*', .t. )",&sC___138 };
+   static COMMANDS sC___135 = {0,"SAVE",4,"ALL LIKE \1A00 TO \1B40","__MVSave( \1B30, \1A30, .T. )",&sC___134 };
+   static COMMANDS sC___136 = {0,"SAVE",4,"TO \1A40 ALL LIKE \1B00","__MVSave( \1A30, \1B30, .T. )",&sC___135 };
+   static COMMANDS sC___137 = {0,"SAVE",4,"ALL EXCEPT \1A00 TO \1B40","__MVSave( \1B30, \1A30, .F. )",&sC___136 };
+   static COMMANDS sC___138 = {0,"SAVE",4,"TO \1A40 ALL EXCEPT \1B00","__MVSave( \1A30, \1B30, .F. )",&sC___137 };
+   static COMMANDS sC___139 = {0,"SAVE",4,"\2TO \1A40\3 \2ALL\3","__MVSave( \1A30, '*', .T. )",&sC___138 };
    static COMMANDS sC___140 = {0,"ERASE",5,"\1A40","FErase( \1A30 )",&sC___139 };
    static COMMANDS sC___141 = {0,"DELETE",6,"FILE \1A40","FErase( \1A30 )",&sC___140 };
    static COMMANDS sC___142 = {0,"RENAME",6,"\1A40 TO \1B40","FRename( \1A30, \1B30 )",&sC___141 };
@@ -384,7 +384,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___215 = {0,"AVERAGE",7,"\2 \1A00 \2, \1B00\3  TO  \1C00 \2, \1D00\3 \3 \2FOR \1E00\3 \2WHILE \1F00\3 \2NEXT \1G00\3 \2RECORD \1H00\3 \2\1I20REST>\3 \2ALL\3",
        "M->__Avg := \1C00 := \2 \1D00 := \3 0 ; DBEval( {|| M->__Avg := M->__Avg + 1, \1C00 := \1C00 + \1A00 \2, \1D00 := \1D00 + \1B00\3 }, \1E40, \1F40, \1G00, \1H00, \1I50 ) ; \1C00 := \1C00 / M->__Avg \2; \1D00 := \1D00 / M->__Avg \3",&sC___214 };
    static COMMANDS sC___216 = {0,"LIST",4,"\2\1A10\3 \2\1B20OFF>\3 \2\1C20 TO PRINTER>\3 \2TO FILE \1D40\3 \2FOR \1E00\3 \2WHILE \1F00\3 \2NEXT \1G00\3 \2RECORD \1H00\3 \2\1I20REST>\3 \2ALL\3",
-       "__dbList( \1B50, { \1A40 }, .t., \1E40, \1F40, \1G00, \1H00, \1I50, \1C50, \1D30 )",&sC___215 };
+       "__dbList( \1B50, { \1A40 }, .T., \1E40, \1F40, \1G00, \1H00, \1I50, \1C50, \1D30 )",&sC___215 };
    static COMMANDS sC___217 = {0,"DISPLAY",7,"\2\1A10\3 \2\1B20OFF>\3 \2\1C20 TO PRINTER>\3 \2TO FILE \1D40\3 \2FOR \1E00\3 \2WHILE \1F00\3 \2NEXT \1G00\3 \2RECORD \1H00\3 \2\1I20REST>\3 \2\1J20ALL>\3",
        "__DBList( \1B50, { \1A40 }, \1J50, \1E40, \1F40, \1G00, \1H00, \1I50, \1C50, \1D30 )",&sC___216 };
    static COMMANDS sC___218 = {0,"REPORT",6,"FORM \1A00 \2HEADING \1B00\3 \2\1C20 PLAIN>\3 \2\1D20 NOEJECT>\3 \2\1E20 SUMMARY>\3 \2\1F20 NOCONSOLE>\3 \2\1G20 TO PRINTER>\3 \2TO FILE \1H40\3 \2FOR \1I00\3 \2WHILE \1J00\3 \2NEXT \1K00\3 \2RECORD \1L00\3 \2\1M20REST>\3 \2ALL\3",
@@ -414,7 +414,7 @@ void hb_pp_Table( void )
        "ordCondSet( \1D20, \1D40, \2\1E50\3, \1F40, \1J40, \1K00, RECNO(), \1G00, \1H00, \2\1I50\3, \2\1N50\3,, \2\1P50\3, \2\1O50\3, \2\1R50\3, \2\1S50\3, \1F20 ) ;  ordCreate(\1C30, \1B30, \1A20, \1A40, \2\1L50\3 )",&sC___230 };
 #endif
    static COMMANDS sC___232 = {0,"INDEX",5,"ON \1A00 TO \1B40 \2\1C20 UNIQUE>\3",
-       "dbCreateIndex( \1B30, \1A20, \1A40, if( \1C50, .t., NIL ) )",&sC___231 };
+       "dbCreateIndex( \1B30, \1A20, \1A40, if( \1C50, .T., NIL ) )",&sC___231 };
    static COMMANDS sC___233 = {0,"DELETE",6,"TAG \1A40 \2 IN \1B40 \3 \2, \1C40 \2 IN \1D40 \3 \3",
        "ordDestroy( \1A30, \1B30 ) \2; ordDestroy( \1C30, \1D30 ) \3",&sC___232 };
    static COMMANDS sC___234 = {0,"REINDEX",7,"\2EVAL \1A00\3 \2EVERY \1B00\3",
