@@ -202,13 +202,12 @@ DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 #**********************************************************
 
 # General Library BUILD rule
-{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
-    IF EXIST "$@" $(DEL) "$@" > NUL
-    $(MKLIB) "$@" $(ARFLAGS) @&&!
-+$(**: = &^
-+)
-
-!
+#{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
+#    IF EXIST "$@" $(DEL) "$@" > NUL
+#    $(MKLIB) "$@" $(ARFLAGS) @&&!
+#+$(**: = &^
+#+)
+#!
 
 #**********************************************************
 #**********************************************************
@@ -231,6 +230,7 @@ StdLibs   : $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 
 clean: doClean
+Clean: doClean
 CLEAN: doClean
 
 doClean:
@@ -254,9 +254,11 @@ doClean:
 #**********************************************************
 
 install : doInstall
+Install : doInstall
 INSTALL : doInstall
 
-doInstall:
+doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B /Y $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) > nul
     -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) > nul
     -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) > nul
     -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) > nul
@@ -268,7 +270,7 @@ doInstall:
 
 #**********************************************************
 
-$(HB_DEST_DIRS):
+$(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
     !if not exist $@\nul mkdir $@
 
 #**********************************************************
