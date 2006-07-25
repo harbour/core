@@ -84,6 +84,7 @@ extern HB_EXPORT USHORT  hb_rddGetCurrentFieldPos( char * szName );
 extern HB_EXPORT void *  hb_rddAllocWorkAreaAlias( char * szAlias, int iArea );
 extern HB_EXPORT int     hb_rddGetCurrentWorkAreaNumber( void );
 extern HB_EXPORT void *  hb_rddGetCurrentWorkAreaPointer( void );
+extern HB_EXPORT ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea );
 extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
 extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
 extern HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );

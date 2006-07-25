@@ -532,7 +532,7 @@ static ERRCODE hb_rddVerifyAliasName( char * szAlias )
 /*
  * Find a WorkArea by the alias, return FAILURE if not found
  */
-static ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea )
+HB_EXPORT ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea )
 {
    BOOL fOneLetter;
    char c;
@@ -589,7 +589,7 @@ static ERRCODE hb_rddSelectFirstAvailable( void )
 
    LOCK_AREA
    uiArea = 1;
-   while ( uiArea < s_uiWaNumMax )
+   while( uiArea < s_uiWaNumMax )
    {
       if ( s_WaNums[ uiArea ] == 0 )
          break;
@@ -980,7 +980,8 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
    iArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
    if( iArea )
    {
-      bResult = hb_rddSelectWorkAreaNumber( iArea );
+      hb_rddSelectWorkAreaNumber( iArea );
+      bResult = SUCCESS;
    }
    else
    {
@@ -988,7 +989,8 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 
       if( szName[ 0 ] && ! szName[ 1 ] && toupper( szName[ 0 ] ) >= 'A' && toupper( szName[ 0 ] ) <= 'K' )
       {
-         bResult = hb_rddSelectWorkAreaNumber( toupper( szName[ 0 ] ) - 'A' + 1 );
+         hb_rddSelectWorkAreaNumber( toupper( szName[ 0 ] ) - 'A' + 1 );
+         bResult = SUCCESS;
       }
       else
       {
@@ -996,26 +998,23 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
           * generate an error with retry possibility
           * (user created error handler can open a missing database)
           */
-         USHORT uiAction = E_RETRY;
          HB_ITEM_PTR pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, EDBCMD_NOALIAS, NULL, pSymAlias->szName, 0, EF_CANRETRY );
-
          bResult = FAILURE;
-         while( uiAction == E_RETRY )
-         {
-            uiAction = hb_errLaunch( pError );
 
-            if( uiAction == E_RETRY )
+         do
+         {
+            if( hb_errLaunch( pError ) != E_RETRY )
+               break;
+            iArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
+            if( iArea )
             {
-               iArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
-               if( iArea )
-               {
-                  bResult = hb_rddSelectWorkAreaNumber( iArea );
-                  uiAction = E_DEFAULT;
-               }
+               hb_rddSelectWorkAreaNumber( iArea );
+               bResult = SUCCESS;
             }
          }
+         while( bResult == FAILURE );
 
          hb_itemRelease( pError );
       }
@@ -1047,9 +1046,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias )
       do
       {
          if( hb_errLaunch( pError ) != E_RETRY )
-         {
             break;
-         }
          bResult = hb_rddGetAliasNumber( szAlias, &iArea );
       }
       while( bResult == FAILURE );
@@ -1060,9 +1057,9 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias )
    if ( bResult == SUCCESS )
    {
       if( iArea < 1 || iArea > HARBOUR_MAX_RDD_AREA_NUM )
-         bResult = hb_rddSelectFirstAvailable();
+         hb_rddSelectFirstAvailable();
       else
-         bResult = hb_rddSelectWorkAreaNumber( iArea );
+         hb_rddSelectWorkAreaNumber( iArea );
    }
 
    return bResult;
@@ -2182,7 +2179,6 @@ HB_FUNC( DBSELECTAREA )
    if( ISCHAR( 1 ) )
    {
       hb_rddSelectWorkAreaAlias( hb_parc( 1 ) );
-      hb_rddGetCurrentWorkAreaNumber();
    }
    else
    {
