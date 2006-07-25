@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/makefile.vc
+     ! Fixed INSTALL rule.
+     ! Disabled generic library build rule which might
+       wrongly interact with normal build process.
+
+2006-07-25 10:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    ! make GOTOP() when new index is open and is set as control one
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    * added automatic destructors for FOR EACH and WITH OBJECT statement
+    * s_lWithObjectBase changed to lWithObjectBase hb_stack membera
+    * added hb_stackWithObject*() functions/macros to manipulate
+      WITH OBJECT offset/item
+    * removed setting/restoring lForEach and lWithObject in functions
+      preamble/postamble
+    ! fixed restoring s_lRecoverBase on HB_QUIT_REQUESTED
+    ! fixed possible GPF on enumerators copping
+    * moved FOR EACH / WITH OBJECT massages suport from HVM to classy.c
     ! fixed access to first stack item in hb_vmIsLocalRef()
 
   * harbour/TODO
