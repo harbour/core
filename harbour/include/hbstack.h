@@ -106,7 +106,7 @@ typedef struct
 #define hb_stackSetStaticsBase( n ) do { hb_stack.iStatics = ( n ); } while ( 0 )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 #define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
-#define hb_stackWithObjectOffset( n )     ( hb_stack.lWithObject )
+#define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )
 #define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \

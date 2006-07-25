@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-25 12:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/hvm.c
+    ! fixed typo in hb_stackWithObjectOffset() macro definition
+
+2006-07-25 11:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
    * harbour/makefile.vc
      ! Fixed INSTALL rule.
      ! Disabled generic library build rule which might
@@ -39,7 +46,7 @@
 
   * harbour/TODO
     - removed note about hb_objGetMethod() - it's already addressed
-      * fixed to be more Clipper compatible 
+
 2006-07-24 13:50 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/pp/ppcore.c
    * source/pp/pptable.c

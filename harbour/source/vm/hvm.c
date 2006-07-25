@@ -7865,12 +7865,6 @@ HB_EXPORT void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
    hb_vmPush( hb_stackWithObjectItem() );
 }
 
-HB_EXPORT LONG hb_xvmWithObjectBase( LONG * plWithObjectBase )
-{
-   if( plWithObjectBase )
-      hb_stackWithObjectSetOffset( *plWithObjectBase );
-   return hb_stackWithObjectOffset();      
-}
 /* ------------------------------------------------------------------------ */
 /* The debugger support functions */
 /* ------------------------------------------------------------------------ */
