@@ -75,17 +75,18 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT void   hb_xvmExitProc( ULONG ulPrivateBase );
 extern HB_EXPORT void   hb_xvmSeqBegin( void );
-extern HB_EXPORT BOOL   hb_xvmSeqEnd( LONG * );
-extern HB_EXPORT BOOL   hb_xvmSeqRecover( LONG * );
+extern HB_EXPORT BOOL   hb_xvmSeqEnd( void );
+extern HB_EXPORT BOOL   hb_xvmSeqEndTest( void );
+extern HB_EXPORT BOOL   hb_xvmSeqRecover( void );
 
-extern HB_EXPORT BOOL   hb_xvmEnumStart( BYTE, BYTE, LONG * );    /* prepare FOR EACH loop */
+extern HB_EXPORT BOOL   hb_xvmEnumStart( BYTE, BYTE );            /* prepare FOR EACH loop */
 extern HB_EXPORT BOOL   hb_xvmEnumNext( void );                   /* increment FOR EACH loop counter */
 extern HB_EXPORT BOOL   hb_xvmEnumPrev( void );                   /* decrement FOR EACH loop counter */
-extern HB_EXPORT void   hb_xvmEnumEnd( LONG * );                  /* rewind the stack after FOR EACH loop counter */
+extern HB_EXPORT void   hb_xvmEnumEnd( void );                    /* rewind the stack after FOR EACH loop counter */
 
-extern HB_EXPORT void   hb_xvmWithObjectStart( void );      /* prepare WITH OBJECT staement */
-extern HB_EXPORT void   hb_xvmWithObjectEnd( void );        /* rewind the stack after normal WITH OBJECT */
-extern HB_EXPORT LONG   hb_xvmWithObjectBase( LONG * );     /* get/restore previous WITH OBJECT stack frame */
+extern HB_EXPORT void   hb_xvmWithObjectStart( void );            /* prepare WITH OBJECT statement */
+extern HB_EXPORT void   hb_xvmWithObjectEnd( void );              /* rewind the stack after normal WITH OBJECT */
+extern HB_EXPORT void   hb_xvmWithObjectMessage( PHB_SYMB );      /* send WITH OBJECT message to current WITH OBJECT control variable */
 
 extern HB_EXPORT void   hb_xvmSetLine( USHORT uiLine );           /* set .prg line number information */
 

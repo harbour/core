@@ -3068,6 +3068,7 @@ static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    if( !pArea->hOrdCurrent )
    {
       pArea->hOrdCurrent = ahIndex[0];
+      return SELF_GOTOP( ( AREAP ) pArea );
    }
 
    return SUCCESS;

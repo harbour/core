@@ -166,24 +166,6 @@ static HB_LABEL_FUNC( hb_p_seqend )
    return 4;
 }
 
-static HB_LABEL_FUNC( hb_p_enumstart )
-{
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-
-   cargo->fForEach = TRUE;
-   return 3;
-}
-
-static HB_LABEL_FUNC( hb_p_withobjectstart )
-{
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-
-   cargo->fWithObject = TRUE;
-   return 1;
-}
-
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -320,7 +302,7 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_LOCALNEARADDINT,      */
    NULL,                       /* HB_P_MACROPUSHREF          */
    NULL,                       /* HB_P_PUSHLONGLONG          */
-   hb_p_enumstart,             /* HB_P_ENUMSTART             */
+   NULL,                       /* HB_P_ENUMSTART             */
    NULL,                       /* HB_P_ENUMNEXT              */
    NULL,                       /* HB_P_ENUMPREV              */
    NULL,                       /* HB_P_ENUMEND               */
@@ -335,7 +317,7 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_MINUSEQ               */
    NULL,                       /* HB_P_MULTEQ                */
    NULL,                       /* HB_P_DIVEQ                 */
-   hb_p_withobjectstart,       /* HB_P_WITHOBJECTSTART       */
+   NULL,                       /* HB_P_WITHOBJECTSTART       */
    NULL,                       /* HB_P_WITHOBJECTMESSAGE     */
    NULL                        /* HB_P_WITHOBJECTEND         */
 };

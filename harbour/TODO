@@ -223,13 +223,6 @@ Status...: Open.
 
 ***
 
-Assign to: ???
-Detail...: Remove generation of runtime error inside 'hb_objGetMethod'
-           for built-in classes (GET, TBROWSE,...)
-Status...: Open.
-
-***
-
 Assign to: Przemek
 Detail...: Clean RDD code to be safe for return from RT errors
 Status...: Open.

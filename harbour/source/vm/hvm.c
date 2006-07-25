@@ -122,10 +122,11 @@ static void    hb_vmGreater( void );         /* checks if the latest - 1 value i
 static void    hb_vmGreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 static void    hb_vmInstring( void );        /* check whether string 1 is contained in string 2 */
 static void    hb_vmForTest( void );         /* test for end condition of for */
-static LONG    hb_vmEnumStart( BYTE, BYTE, LONG ); /* prepare FOR EACH loop */
+static void    hb_vmWithObjectStart( void ); /* prepare WITH OBJECT block */
+static void    hb_vmEnumStart( BYTE, BYTE ); /* prepare FOR EACH loop */
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
 static void    hb_vmEnumPrev( void );        /* decrement FOR EACH loop counter */
-static LONG    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
+static void    hb_vmEnumEnd( void );         /* rewind the stack after FOR EACH loop counter */
 static LONG    hb_vmSwitch( const BYTE * pCode, LONG, USHORT );  /* make a SWITCH statement */
 
 /* Operators (logical) */
@@ -221,11 +222,6 @@ BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 /* virtual machine state */
 
 HB_SYMB  hb_symEval      = { "__EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
-HB_SYMB  hb_symEnumIndex = { "__ENUMINDEX", {HB_FS_MESSAGE}, {NULL}, NULL };
-HB_SYMB  hb_symEnumBase  = { "__ENUMBASE",  {HB_FS_MESSAGE}, {NULL}, NULL };
-HB_SYMB  hb_symEnumValue = { "__ENUMVALUE", {HB_FS_MESSAGE}, {NULL}, NULL };
-HB_SYMB  hb_symWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {NULL}, NULL };
-HB_SYMB  hb_symWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {NULL}, NULL };
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
@@ -263,9 +259,6 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_BASE      -2
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
-
-/* Stores the position on the stack of current WITH OBJECT envelope */
-static LONG s_lWithObjectBase = 0;
 
 /* Stores level of procedures call stack
 */
@@ -414,11 +407,6 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    hb_errInit();
 
    hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
-   hb_dynsymNew( &hb_symEnumIndex );
-   hb_dynsymNew( &hb_symEnumBase );
-   hb_dynsymNew( &hb_symEnumValue );
-   hb_dynsymNew( &hb_symWithObjectPush );
-   hb_dynsymNew( &hb_symWithObjectPop );
 
    hb_setInitialize();        /* initialize Sets */
    hb_conInit();              /* initialize Console */
@@ -595,10 +583,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
-   LONG lForEachBase = 0;  /* Stores the position on the stack of current FOR EACH envelope */
    ULONG ulPrivateBase;
    BOOL bDynCode = pSymbols == NULL || ( pSymbols->scope.value & HB_FS_DYNCODE ) != 0;
-   LONG lWithObjectBase = s_lWithObjectBase;
 #ifndef HB_NO_PROFILER
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
@@ -854,7 +840,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ENUMSTART:
-            lForEachBase = hb_vmEnumStart( pCode[ w + 1 ], pCode[ w + 2 ], lForEachBase );
+            hb_vmEnumStart( pCode[ w + 1 ], pCode[ w + 2 ] );
             w += 3;
             break;
 
@@ -869,7 +855,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
             
          case HB_P_ENUMEND:
-            lForEachBase = hb_vmEnumEnd();
+            hb_vmEnumEnd();
             w++;
             break;
             
@@ -1847,26 +1833,18 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          
          case HB_P_WITHOBJECTMESSAGE:
             hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
-            hb_vmPush( hb_stackItem( s_lWithObjectBase ) );
+            hb_vmPush( hb_stackWithObjectItem() );
             w += 3;
             break;
 
          case HB_P_WITHOBJECTSTART:
-            {
-               /* The object is pushed directly before this pcode */
-               /* store position of current WITH OBJECT frame */
-               HB_ITEM_PTR pItem = hb_stackAllocItem();
-               pItem->type = HB_IT_LONG;
-               pItem->item.asLong.value = s_lWithObjectBase;
-               s_lWithObjectBase = hb_stackTopOffset() - 2;
-               w += 1;
-            }
+            hb_vmWithObjectStart();
+            w++;
             break;
 
          case HB_P_WITHOBJECTEND:
-            s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
-            hb_stackDec();
-            hb_stackPop();  /* remove implicit object */
+            hb_stackPop();    /* remove with object envelope */
+            hb_stackPop();    /* remove implicit object */
             w += 1;
             break;
 
@@ -1901,27 +1879,6 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                 * There is the BEGIN/END sequence defined in current
                 * procedure/function - use it to continue opcodes execution
                 */
-               while( lForEachBase > s_lRecoverBase || s_lWithObjectBase >= s_lRecoverBase )
-               {
-                  if( lForEachBase > s_lWithObjectBase )
-                  {
-                     /* remove FOR EACH stack frame so there is no orphan
-                      * item pointers hanging
-                      */
-                     hb_stackRemove( lForEachBase );
-                     lForEachBase = hb_vmEnumEnd();
-                  }
-                  else if( lForEachBase < s_lWithObjectBase )
-                  {
-                     /* BREAK was issued inside the WITH OBJECT 
-                      * restore previous frame
-                     */
-                     hb_stackRemove( s_lWithObjectBase + 2 );
-                     s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
-                     hb_stackDec();
-                  }
-               }
-            
                /*
                 * remove all items placed on the stack after BEGIN code
                 */
@@ -1940,26 +1897,25 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                break;
          }
          else if( s_uiActionRequest & HB_QUIT_REQUESTED )
+         {
+            while( bCanRecover )
+            {
+               hb_stackRemove( s_lRecoverBase );
+               /* 4) Restore previous recovery state */
+               bCanRecover = hb_stackItemFromTop( -1 )->item.asLogical.value;
+               hb_stackDec();
+               /* 3) Restore previous RECOVER base */
+               s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
+               hb_stackDec();
+               /* skip other steps */
+            }
             break;
+         }
       }
-   }
-
-   while( lForEachBase )
-   {
-      /* remove FOR EACH stack frame so there is no orphan
-       * item pointers hanging
-       */
-      hb_stackRemove( lForEachBase );
-      lForEachBase = hb_vmEnumEnd();
    }
 
    if( pSymbols )
       hb_memvarSetPrivatesBase( ulPrivateBase );
-
-   /* Restore previous WITH OBJECT frame if the RETURN statement
-    * was placed inside WITH OBJECT/END
-   */
-   s_lWithObjectBase = lWithObjectBase;
 }
 
 /* ------------------------------- */
@@ -3097,12 +3053,54 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
 #endif
 }
 
+/* With object auto destructor */
+static HB_GARBAGE_FUNC( hb_withObjectDestructor )
+{
+   LONG * plWithObjectBase = ( LONG * ) Cargo;
+   hb_stackWithObjectSetOffset( * plWithObjectBase );
+}
+      
+static void hb_vmWithObjectStart( void )
+{
+   LONG * plWithObjectBase;
+   PHB_ITEM pItem;
+	 
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
+	    
+   pItem = hb_stackAllocItem();
+   plWithObjectBase = ( LONG * ) hb_gcAlloc( sizeof( LONG ),
+                                             hb_withObjectDestructor );
+   * plWithObjectBase = hb_stackWithObjectOffset();
+   pItem->type = HB_IT_POINTER;
+   pItem->item.asPointer.value = plWithObjectBase;
+   pItem->item.asPointer.collect = pItem->item.asPointer.single = TRUE;
+   /* The object is pushed directly before this pcode */
+   /* store position of current WITH OBJECT frame */
+   hb_stackWithObjectSetOffset( hb_stackTopOffset() - 2 );
+}
+
+typedef struct _HB_ENUMHOLDER
+{
+   PHB_ITEM pOldValue;
+   PHB_ITEM pEnumRef;
+} HB_ENUMHOLDER, * PHB_ENUMHOLDER;
+
+static HB_GARBAGE_FUNC( hb_enumHolderRelease )
+{
+   PHB_ENUMHOLDER pHolder = ( PHB_ENUMHOLDER ) Cargo;
+
+   hb_itemMove( hb_itemUnRefOnce( pHolder->pEnumRef ), pHolder->pOldValue );
+   hb_itemRelease( pHolder->pOldValue );
+   hb_itemRelease( pHolder->pEnumRef );
+}
+
+
 /* At this moment the eval stack should store:
  * -2 -> <array for traverse>
  * -1 -> <the reference to enumerate variable>
  */
  /* Test to check the start point of the FOR EACH loop */
-static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
+static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 {
    HB_ITEM_PTR pItem;
    ULONG ulMax;
@@ -3120,20 +3118,45 @@ static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
    else
    {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
-      return lOldBase;
+      return;
    }
    
    for( i = ( int ) nVars << 1; i > 0; i -= 2 )
    {
-      HB_ITEM_PTR pValueRef, pEnum;
+      HB_ITEM_PTR pValue, pOldValue, pEnum, pEnumRef;
+      PHB_ENUMHOLDER pHolder;
 
-      pValueRef = hb_stackItemFromTop( -i );
-      /* copy value to iterate */
-      pItem = hb_itemNew( hb_itemUnRef( pValueRef ) );
+      pValue = hb_stackItemFromTop( -i );
+      /* copy value to iterate and clear the stack item for enumerator destructor */
+      if( HB_IS_BYREF( pValue ) )
+         pItem = hb_itemNew( hb_itemUnRef( pValue ) );
+      else
+         pItem = hb_itemNew( pValue );
+      if( HB_IS_COMPLEX( pValue ) )
+         hb_itemClear( pValue );
+
+      /* store the reference to control variable */
+      pEnumRef = hb_itemNew( hb_stackItemFromTop( -i + 1 ) );
       /* the control variable */
-      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -i + 1 ) );
+      pEnum = hb_itemUnRefOnce( pEnumRef );
       /* store the old value of control variable and clear it */
-      hb_itemMove( pValueRef, pEnum );
+      pOldValue = hb_itemNew( NULL );
+      hb_itemMove( pOldValue, pEnum );
+
+      /* create enumerator destructor */
+      /*
+       * Here is a place for optimization - instead of allocating three new
+       * items we can keep them all in GC block and add mark/sweep function.
+       * I'll do that in the future when we will have final interface for it
+       * in our GC and mark/swap functions registered for extended
+       * HB_IT_POINTER items not allocated for each memory block. [druzus]
+       */
+      pHolder = ( PHB_ENUMHOLDER ) hb_gcAlloc( sizeof( HB_ENUMHOLDER ), hb_enumHolderRelease );
+      pHolder->pOldValue = pOldValue;
+      pHolder->pEnumRef  = pEnumRef;
+      pValue->type = HB_IT_POINTER;
+      pValue->item.asPointer.value = pHolder;
+      pValue->item.asPointer.collect = pValue->item.asPointer.single = TRUE;
 
       /* set the iterator value */
       pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
@@ -3167,30 +3190,25 @@ static LONG hb_vmEnumStart( BYTE nVars, BYTE nDescend, LONG lOldBase )
    }
 
    hb_vmPushLong( nVars );       /* number of iterators */
-   hb_vmPushLong( lOldBase );    /* previous FOREACH frame */
-
    /* empty array/string - do not start enumerations loop */
    hb_vmPushLogical( ulMax != 0 );
-
-   return hb_stackTopOffset() - 1;
 }
 
 
 /* Enumeration in ascending order
  * At this moment the eval stack should store:
- * -4 -> <old value of enumerator variable>
- * -3 -> <the reference to enumerate variable>
- * -2 -> <number of iterators>
- * -1 -> <previous FOREACH frame>
+ * -3 -> <old value of enumerator variable>
+ * -2 -> <the reference to enumerate variable>
+ * -1 -> <number of iterators>
  */
 static void hb_vmEnumNext( void )
 {
    HB_ITEM_PTR pEnum;
    int i;
 
-   for( i = ( int ) hb_stackItemFromTop( -2 )->item.asLong.value; i > 0; --i )
+   for( i = ( int ) hb_stackItemFromTop( -1 )->item.asLong.value; i > 0; --i )
    {
-      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
+      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
          if( ( ULONG ) ++pEnum->item.asEnum.offset >
@@ -3216,19 +3234,18 @@ static void hb_vmEnumNext( void )
 
 /* Enumeration in descending order
  * At this moment the eval stack should store:
- * -4 -> <old value of enumerator variable>
- * -3 -> <the reference to enumerate variable>
- * -2 -> <number of iterators>
- * -1 -> <previous FOREACH frame>
+ * -3 -> <old value of enumerator variable>
+ * -2 -> <the reference to enumerate variable>
+ * -1 -> <number of iterators>
  */
 static void hb_vmEnumPrev( void )
 {
    HB_ITEM_PTR pEnum;
    int i;
    
-   for( i = hb_stackItemFromTop( -2 )->item.asLong.value; i > 0; --i )
+   for( i = hb_stackItemFromTop( -1 )->item.asLong.value; i > 0; --i )
    {
-      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) - 1 ) );
+      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
          if( --pEnum->item.asEnum.offset == 0 )
@@ -3252,33 +3269,23 @@ static void hb_vmEnumPrev( void )
 
 /* Enumeration in descending order
  * At this moment the eval stack should store:
- * -4 -> <old value of enumerator variable>
- * -3 -> <the reference to enumerate variable>
- * -2 -> <number of iterators>
- * -1 -> <previous FOREACH frame>
+ * -3 -> <old value of enumerator variable>
+ * -2 -> <the reference to enumerate variable>
+ * -1 -> <number of iterators>
  */
-static LONG hb_vmEnumEnd( void )
+static void hb_vmEnumEnd( void )
 {
-   LONG lOldBase;
    LONG lVars;
    
-   /* restore stack frame offset of previous FOREACH loop */
-   lOldBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-   hb_stackDec();
-
    /* remove number of iterators */
    lVars = hb_stackItemFromTop( -1 )->item.asLong.value;
    hb_stackDec();
 
    while( --lVars >= 0 )
    {
-      /* restore the value of variable before the FOREACH loop */
-      hb_itemMove( hb_itemUnRefOnce( hb_stackItemFromTop( -1 ) ), hb_stackItemFromTop( -2 ) );
       hb_stackPop();
-      hb_stackDec();
+      hb_stackPop();
    }
-
-   return lOldBase;
 }
 
 static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
@@ -3990,10 +3997,11 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 {
    PHB_ITEM pItem;
    PHB_SYMB pSym;
+   PHB_SYMB pExecSym;
    HB_STACK_STATE sStackState;
    PHB_ITEM pSelf;
    BOOL bDebugPrevState;
-   BOOL bNotHandled = TRUE;
+   BOOL lPopSuper;
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
    void * pMethod = NULL;
@@ -4031,84 +4039,39 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
 
-   if( HB_IS_BYREF( pSelf ) )
+   pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
+   if( pExecSym && pExecSym->value.pFunPtr )
    {
-      /* method of enumerator variable from FOR EACH statement
-       */
-      HB_ITEM_PTR pEnum = hb_itemUnRefOnce( pSelf );
+#ifndef HB_NO_PROFILER
+      if( bProfiler )
+         pMethod = hb_mthRequested();
+#endif
+      if( hb_bTracePrgCalls )
+         HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
-      if( HB_IS_ENUM( pEnum ) )
-      {
-         if( pSym->pDynSym == hb_symEnumIndex.pDynSym )
-         {
-            hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
-            bNotHandled = FALSE;
-         }
-         else if( pSym->pDynSym == hb_symEnumBase.pDynSym )
-         {
-            hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
-            bNotHandled = FALSE;
-         }
-         else if( pSym->pDynSym == hb_symEnumValue.pDynSym )
-         {
-            hb_itemCopy( hb_stackReturnItem(), hb_itemUnRefOnce( pEnum ) );
-            bNotHandled = FALSE;
-         }
-      }
-   }
-
-   if( bNotHandled )
-   {
-      if( pSym->pDynSym == hb_symWithObjectPush.pDynSym && s_lWithObjectBase )
-      {
-         /* push current WITH OBJECT object */
-         hb_itemCopy( &hb_stack.Return, hb_stackItem( s_lWithObjectBase ) );
-      }
-      else if( pSym->pDynSym == hb_symWithObjectPop.pDynSym && s_lWithObjectBase )
-      {
-         /* replace current WITH OBJECT object */
-         hb_itemCopy( hb_stackItem( s_lWithObjectBase ), hb_stackItemFromBase( 1 ) );
-         hb_itemCopy( &hb_stack.Return, hb_stackItem( s_lWithObjectBase ) );
-      }
+      if( pExecSym->scope.value & HB_FS_PCODEFUNC )
+         /* Running pCode dynamic function from .HRB */
+         hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
+                    pExecSym->value.pCodeFunc->pSymbols );
       else
-      {
-         PHB_SYMB pExecSym;
-         BOOL lPopSuper;
-
-         pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
-         if( pExecSym && pExecSym->value.pFunPtr )
-         {
-#ifndef HB_NO_PROFILER
-            if( bProfiler )
-               pMethod = hb_mthRequested();
-#endif
-            if( hb_bTracePrgCalls )
-               HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
-
-            if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-               /* Running pCode dynamic function from .HRB */
-               hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
-                          pExecSym->value.pCodeFunc->pSymbols );
-            else
-               pExecSym->value.pFunPtr();
+         pExecSym->value.pFunPtr();
 
 #ifndef HB_NO_PROFILER
-            if( bProfiler )
-               hb_mthAddTime( pMethod, clock() - ulClock );
+      if( bProfiler )
+         hb_mthAddTime( pMethod, clock() - ulClock );
 #endif
-         }
-         else if( pSym->szName[ 0 ] == '_' )
-            hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
-         else
-            hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
-
-         if( lPopSuper )
-            hb_objPopSuperCast( pSelf );
-      }
    }
+   else if( pSym->szName[ 0 ] == '_' )
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
+   else
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
+
+   if( lPopSuper )
+      hb_objPopSuperCast( pSelf );
 
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
+
    hb_stackOldFrame( &sStackState );
 
    s_bDebugging = bDebugPrevState;
@@ -4163,8 +4126,8 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
  * ulArgCount = number of arguments passed to a codeblock
  * ... = the list of arguments of type PHB_ITEM
  *
- *for example:
- * retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
+ * for example:
+ *  retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
 */
 HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
 {
@@ -6068,31 +6031,8 @@ HB_EXPORT void hb_xvmSeqBegin( void )
    s_lRecoverBase = hb_stackTopOffset();
 }
 
-HB_EXPORT BOOL hb_xvmSeqEnd( LONG * plForEachBase )
+HB_EXPORT BOOL hb_xvmSeqEnd( void )
 {
-   if( plForEachBase )
-   {
-      while( *plForEachBase > s_lRecoverBase || s_lWithObjectBase >= s_lRecoverBase )
-      {
-         if( *plForEachBase > s_lWithObjectBase )
-         {
-            /* remove FOR EACH stack frame so there is no orphan
-            * item pointers hanging
-            */
-            hb_stackRemove( *plForEachBase );
-            *plForEachBase = hb_vmEnumEnd();
-         }
-         else if( *plForEachBase < s_lWithObjectBase )
-         {
-            /* BREAK was issued inside the WITH OBJECT 
-            * restore previous frame
-            */
-            hb_stackRemove( s_lWithObjectBase + 1 );
-            s_lWithObjectBase = ( hb_stackItemFromTop(-1) )->item.asLong.value;
-            hb_stackDec();
-         }
-      }
-   }
    /*
     * remove all items placed on the stack after BEGIN code
     */
@@ -6121,23 +6061,41 @@ HB_EXPORT BOOL hb_xvmSeqEnd( LONG * plForEachBase )
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_xvmSeqRecover( LONG * plForEachBase )
+HB_EXPORT BOOL hb_xvmSeqEndTest( void )
+{
+   if( ( s_uiActionRequest &
+       ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0 )
+      return TRUE;
+
+   /*
+    * remove all items placed on the stack after BEGIN code
+    */
+   hb_stackRemove( s_lRecoverBase );
+
+   /*
+    * Remove the SEQUENCE envelope
+    * This is executed either at the end of sequence or as the
+    * response to the break statement if there is no RECOVER clause
+    */
+
+   /* 4) Restore previous recovery state - not used in C code */
+   hb_stackDec();
+   /* 3) Restore previous RECOVER base */
+   s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
+   hb_stackDec();
+   /* 2) Remove RECOVER address - not used in C code */
+   hb_stackDec();
+   /* 1) Discard the value returned by BREAK statement */
+   hb_stackPop();
+   return FALSE;
+}
+
+HB_EXPORT BOOL hb_xvmSeqRecover( void )
 {
    /*
     * Execute the RECOVER code
     */
 
-   if( plForEachBase )
-   {
-      while( *plForEachBase > s_lRecoverBase )
-      {
-         /* remove FOR EACH stack frame so there is no orphan
-          * item pointers hanging
-          */
-         hb_stackRemove( *plForEachBase );
-         *plForEachBase = hb_vmEnumEnd();
-      }
-   }
    /*
     * remove all items placed on the stack after BEGIN code
     */
@@ -6159,11 +6117,11 @@ HB_EXPORT BOOL hb_xvmSeqRecover( LONG * plForEachBase )
    return FALSE;
 }
 
-HB_EXPORT BOOL hb_xvmEnumStart( BYTE nVars, BYTE nDescend, LONG * plForEachBase )
+HB_EXPORT BOOL hb_xvmEnumStart( BYTE nVars, BYTE nDescend )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEnumStart(%d,%d,%p)", nVars, nDescend, plForEachBase));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEnumStart(%d,%d)", nVars, nDescend));
 
-   *plForEachBase = hb_vmEnumStart( nVars, nDescend, *plForEachBase );
+   hb_vmEnumStart( nVars, nDescend );
 
    HB_XVM_RETURN
 }
@@ -6186,11 +6144,11 @@ HB_EXPORT BOOL hb_xvmEnumPrev( void )
    HB_XVM_RETURN
 }
 
-HB_EXPORT void hb_xvmEnumEnd( LONG * plForEachBase )
+HB_EXPORT void hb_xvmEnumEnd( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEnumEnd(%p)", plForEachBase));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEnumEnd()"));
 
-   *plForEachBase = hb_vmEnumEnd();
+   hb_vmEnumEnd();
 }
 
 HB_EXPORT void hb_xvmSetLine( USHORT uiLine )
@@ -7886,32 +7844,32 @@ HB_EXPORT BOOL hb_xvmMacroText( void )
 
 HB_EXPORT void hb_xvmWithObjectStart( void )
 {
-   HB_ITEM_PTR pItem;
-   
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectStart()"));
-   
-   /* The object is pushed directly before this pcode */
-   /* store position of current WITH OBJECT frame */
-   pItem = hb_stackAllocItem();
-   pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = s_lWithObjectBase;
-   s_lWithObjectBase = hb_stackTopOffset() - 2;
+
+   hb_vmWithObjectStart();
 }
 
 HB_EXPORT void hb_xvmWithObjectEnd( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectEnd()"));
 
-   s_lWithObjectBase = ( hb_stackItemFromTop( -1 ) )->item.asLong.value;
-   hb_stackDec();
+   hb_stackPop();  /* remove with object envelope */
    hb_stackPop();  /* remove implicit object */
+}
+
+HB_EXPORT void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectMessage(%p)", pSymbol));
+
+   hb_vmPushSymbol( pSymbol );
+   hb_vmPush( hb_stackWithObjectItem() );
 }
 
 HB_EXPORT LONG hb_xvmWithObjectBase( LONG * plWithObjectBase )
 {
    if( plWithObjectBase )
-      s_lWithObjectBase = *plWithObjectBase;
-   return s_lWithObjectBase;      
+      hb_stackWithObjectSetOffset( *plWithObjectBase );
+   return hb_stackWithObjectOffset();      
 }
 /* ------------------------------------------------------------------------ */
 /* The debugger support functions */

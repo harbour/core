@@ -357,6 +357,25 @@ void hb_stackSetStaticsBase( int iBase )
    hb_stack.iStatics = iBase;
 }
 
+#undef hb_stackWithObjectItem
+PHB_ITEM hb_stackWithObjectItem( void )
+{
+   return hb_stack.lWithObject ?
+                        * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL;
+}
+
+#undef hb_stackWithObjectOffset
+LONG hb_stackWithObjectOffset( void )
+{
+   return hb_stack.lWithObject;
+}
+
+#undef hb_stackWithObjectSetOffset
+void hb_stackWithObjectSetOffset( LONG lOffset )
+{
+   hb_stack.lWithObject = lOffset;
+}
+
 #undef hb_stackItemBasePtr
 PHB_ITEM ** hb_stackItemBasePtr( void )
 {
@@ -497,12 +516,13 @@ void hb_vmIsLocalRef( void )
    {
       /* the eval stack is not cleared yet */
       HB_ITEM_PTR * pItem = hb_stack.pPos - 1;
-      while( pItem != hb_stack.pItems )
+
+      do
       {
          if( HB_IS_GCITEM( *pItem ) )
             hb_gcItemRef( *pItem );
-         --pItem;
       }
+      while( --pItem >= hb_stack.pItems );
    }
 }
 

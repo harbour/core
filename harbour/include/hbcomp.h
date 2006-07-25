@@ -259,8 +259,6 @@ typedef struct _HB_LABEL_INFO
    BOOL     fVerbose;
    BOOL     fSetSeqBegin;
    BOOL     fCondJump;
-   BOOL     fForEach;
-   BOOL     fWithObject;
    ULONG *  pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 

@@ -1253,11 +1253,9 @@ static HB_GENC_FUNC( hb_p_seqend )
    HB_GENC_LABEL();
 
    if( lOffset == 4 ) /* no RECOVER clasue */
-      fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd( %s ) ) break;\n",
-               cargo->fForEach ? "&lForEachBase" : "NULL" );
+      fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else /* RECOVER exists */
-      fprintf( cargo->yyc, "\tif( hb_xvmSeqEnd( %s ) ) break;\n\tgoto lab%05ld;\n\t} while( 0 );\n",
-               cargo->fForEach ? "&lForEachBase" : "NULL",
+      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05ld;\n\t} while( 0 );\n",
                HB_GENC_GETLABEL( lPCodePos + lOffset ) );
    return 4;
 }
@@ -1266,8 +1264,7 @@ static HB_GENC_FUNC( hb_p_seqrecover )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmSeqRecover( %s ) ) break;\n",
-            cargo->fForEach ? "&lForEachBase" : "NULL" );
+   fprintf( cargo->yyc, "\tif( hb_xvmSeqRecover() ) break;\n" );
    return 1;
 }
 
@@ -1380,7 +1377,7 @@ static HB_GENC_FUNC( hb_p_enumstart )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmEnumStart( %d, %d, &lForEachBase ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmEnumStart( %d, %d ) ) break;\n",
             pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
    return 3;
 }
@@ -1405,7 +1402,7 @@ static HB_GENC_FUNC( hb_p_enumend )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmEnumEnd( &lForEachBase );\n" );
+   fprintf( cargo->yyc, "\thb_xvmEnumEnd();\n" );
    return 1;
 }
 
@@ -1572,9 +1569,8 @@ static HB_GENC_FUNC( hb_p_withobjectmessage )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %hu );\n",
+   fprintf( cargo->yyc, "\thb_xvmWithObjectMessage( symbols + %hu );\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-   fprintf( cargo->yyc, "\thb_vmPush( hb_stackItem( s_lWithObjectBase ) );\n" );
 
    return 3;
 }
@@ -1746,7 +1742,7 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    label_info.yyc = yyc;
    label_info.fVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
-   label_info.fCondJump = label_info.fForEach = label_info.fWithObject = FALSE;
+   label_info.fCondJump = FALSE;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
    else
@@ -1758,10 +1754,6 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
 
    fprintf( yyc, "{\n" );
    fprintf( yyc, "   ULONG ulPrivateBase = hb_memvarGetPrivatesBase();\n" );
-   if( label_info.fForEach )
-      fprintf( yyc, "   LONG lForEachBase = 0;\n" );
-   if( label_info.fWithObject )
-      fprintf( yyc, "   LONG lWithObjectBase = hb_xvmWithObjectBase(NULL);\n" );
    if( label_info.fCondJump )
       fprintf( yyc, "   BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
@@ -1769,10 +1761,6 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &label_info );
 
    fprintf( yyc, "   } while ( 0 );\n" );
-   if( label_info.fForEach )
-      fprintf( yyc, "   while( lForEachBase )\n   {\n\thb_stackRemove( lForEachBase );\n\thb_xvmEnumEnd( &lForEachBase );\n   }\n" );
-   if( label_info.fWithObject )
-      fprintf( yyc, "   hb_xvmWithObjectBase( &lWithObjectBase );\n" );
    fprintf( yyc, "   hb_xvmExitProc( ulPrivateBase );\n" );
    fprintf( yyc, "}\n" );
 

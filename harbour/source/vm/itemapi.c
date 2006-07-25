@@ -1337,6 +1337,10 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
                hb_gcRefInc( pSource->item.asPointer.value );
          }
       }
+      else if( HB_IS_ENUM( pSource ) )    /* enumerators cannnot be copied */
+      {
+         pDest->type = HB_IT_NIL;
+      }
    }
 }
 

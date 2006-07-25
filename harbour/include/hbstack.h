@@ -75,6 +75,7 @@ typedef struct
    PHB_ITEM * pBase;        /* stack frame position for the current function call */
    PHB_ITEM * pEvalBase;    /* stack frame position for the evaluated codeblock */
    int        iStatics;     /* statics base for the current function call */
+   LONG       lWithObject;  /* stack offset to base current WITH OBJECT item */
    char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
@@ -104,6 +105,9 @@ typedef struct
 #define hb_stackGetStaticsBase( )   ( hb_stack.iStatics )
 #define hb_stackSetStaticsBase( n ) do { hb_stack.iStatics = ( n ); } while ( 0 )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
+#define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
+#define hb_stackWithObjectOffset( n )     ( hb_stack.lWithObject )
+#define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \
                                         hb_stackIncrease() : (void) 0 ), \
@@ -160,6 +164,9 @@ extern char *      hb_stackDateBuffer( void );
 extern void        hb_stackSetStaticsBase( int iBase );
 extern int         hb_stackGetStaticsBase( void );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
+extern PHB_ITEM    hb_stackWithObjectItem( void );
+extern LONG        hb_stackWithObjectOffset( void );
+extern void        hb_stackWithObjectSetOffset( LONG );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 extern void        hb_stackPop( void );        /* pops an item from the stack */

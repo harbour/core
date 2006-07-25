@@ -199,6 +199,7 @@ static HARBOUR  hb___msgEvalInline( void );
 static HARBOUR  hb___msgVirtual( void );
 static HARBOUR  hb___msgSuper( void );
 static HARBOUR  hb___msgNoMethod( void );
+static HARBOUR  hb___msgNull( void );
 
 static HARBOUR  hb___msgClsH( void );
 static HARBOUR  hb___msgClsName( void );
@@ -259,6 +260,14 @@ static HB_SYMB s___msgEval       = { "EVAL",            {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {hb___msgClsParent},  NULL };
 static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {hb___msgClass},      NULL };
 */
+/* Default enumerator methods (FOR EACH) */
+static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgEnumValue  = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+
+/* WITH OBJECT base value access/asign methods (:__withobject) */
+static HB_SYMB s___msgWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
@@ -369,6 +378,12 @@ void hb_clsInit( void )
    s___msgClsParent.pDynSym = hb_dynsymGetCase( s___msgClsParent.szName );
    s___msgClass.pDynSym     = hb_dynsymGetCase( s___msgClass.szName );
 */
+   s___msgEnumIndex.pDynSym = hb_dynsymGetCase( s___msgEnumIndex.szName );
+   s___msgEnumBase.pDynSym  = hb_dynsymGetCase( s___msgEnumBase.szName );
+   s___msgEnumValue.pDynSym = hb_dynsymGetCase( s___msgEnumValue.szName );
+
+   s___msgWithObjectPush.pDynSym = hb_dynsymGetCase( s___msgWithObjectPush.szName );
+   s___msgWithObjectPop.pDynSym  = hb_dynsymGetCase( s___msgWithObjectPop.szName );
 }
 
 /*
@@ -887,7 +902,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper
 
    pMsg = pMessage->pDynSym;
 
-   if( pObject->type == HB_IT_ARRAY )
+   if( HB_IS_ARRAY( pObject ) )
    {
       USHORT uiClass = pObject->item.asArray.value->uiClass;
 
@@ -921,16 +936,70 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper
          }
       }
    }
-   else if( pObject->type == HB_IT_BLOCK )
+   else if( HB_IS_BLOCK( pObject ) )
    {
       if( pMessage == &hb_symEval )
          return pMessage;
       else if( pMsg == s___msgEval.pDynSym )
          return &hb_symEval;
    }
+   else if( HB_IS_BYREF( pObject ) )
+   {
+      /* method of enumerator variable from FOR EACH statement
+       */
+      PHB_ITEM pEnum = hb_itemUnRefOnce( pObject );
+
+      if( HB_IS_ENUM( pEnum ) )
+      {
+         /*
+          * Do actions here - we alrady have unreferences pEnum so
+          * it will be a little bit faster but in the future it'
+          * s possible that I'll move it to separate funcions when
+          * I'll add enumerators overloading. [druzus]
+          */
+         if( pMsg == s___msgEnumIndex.pDynSym )
+         {
+            hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
+            return &s___msgEnumIndex;
+         }
+         else if( pMsg == s___msgEnumBase.pDynSym )
+         {
+            hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
+            return &s___msgEnumBase;
+         }
+         else if( pMsg == s___msgEnumValue.pDynSym )
+         {
+            hb_itemCopy( hb_stackReturnItem(), hb_itemUnRefOnce( pEnum ) );
+            return &s___msgEnumValue;
+         }
+      }
+   }
 
    /* Default messages here */
-   if( pMsg == s___msgClassName.pDynSym )
+
+   if( pMsg == s___msgWithObjectPush.pDynSym )
+   {
+      PHB_ITEM pItem = hb_stackWithObjectItem();
+      if( pItem )
+      {
+         /* push current WITH OBJECT object */
+         hb_itemCopy( hb_stackReturnItem(), pItem );
+         return &s___msgWithObjectPush;
+      }
+   }
+   else if( pMsg == s___msgWithObjectPop.pDynSym )
+   {
+      PHB_ITEM pItem = hb_stackWithObjectItem();
+      if( pItem )
+      {
+         /* replace current WITH OBJECT object */
+         hb_itemCopy( pItem, hb_stackItemFromBase( 1 ) );
+         hb_itemCopy( hb_stackReturnItem(), pItem );
+         return &s___msgWithObjectPop;
+      }
+   }
+
+   else if( pMsg == s___msgClassName.pDynSym )
       return &s___msgClassName;
 
    else if( pMsg == s___msgClassH.pDynSym )
@@ -949,7 +1018,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL * pfPopSuper
    else if( pMsg == s___msgClass.pDynSym )
       return &s___msgClass;
 */
-   else if( pfPopSuper )
+   if( pfPopSuper )
    {
       if( pClass && pClass->pFunError )
          return pClass->pFunError;
@@ -2609,6 +2678,11 @@ static HARBOUR hb___msgSetData( void )
 static HARBOUR hb___msgVirtual( void )
 {
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
+   ;
+}
+
+static HARBOUR hb___msgNull( void )
+{
    ;
 }
 
