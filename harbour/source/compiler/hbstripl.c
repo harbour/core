@@ -117,7 +117,7 @@ static PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_MACROPOP,             */
    NULL,                       /* HB_P_MACROPOPALIASED,      */
    NULL,                       /* HB_P_MACROPUSH,            */
-   NULL,                       /* HB_P_MACROPUSHARG,         */
+   NULL,                       /* HB_P_MACROARRAYGEN,        */
    NULL,                       /* HB_P_MACROPUSHLIST,        */
    NULL,                       /* HB_P_MACROPUSHINDEX,       */
    NULL,                       /* HB_P_MACROPUSHPARE,        */
@@ -201,8 +201,8 @@ static PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_TRUE,                 */
    NULL,                       /* HB_P_ZERO,                 */
    NULL,                       /* HB_P_ONE,                  */
-   NULL,                       /* HB_P_MACROLIST,            */
-   NULL,                       /* HB_P_MACROLISTEND,         */
+   NULL,                       /* HB_P_MACROFUNC,            */
+   NULL,                       /* HB_P_MACRODO,              */
    NULL,                       /* HB_P_MPUSHSTR,             */
    NULL,                       /* HB_P_LOCALNEARADDINT,      */
    NULL,                       /* HB_P_MACROPUSHREF          */

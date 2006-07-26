@@ -135,6 +135,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef );
 static HB_EXPR_FUNC( hb_compExprUseIIF );
 static HB_EXPR_FUNC( hb_compExprUseList );
 static HB_EXPR_FUNC( hb_compExprUseArgList );
+static HB_EXPR_FUNC( hb_compExprUseMacroArgList );
 static HB_EXPR_FUNC( hb_compExprUseArrayAt );
 static HB_EXPR_FUNC( hb_compExprUseMacro );
 static HB_EXPR_FUNC( hb_compExprUseFunCall );
@@ -186,7 +187,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
 #endif
 #endif
 
-HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
+HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseDummy,
    hb_compExprUseNil,
    hb_compExprUseNumeric,
@@ -202,6 +203,7 @@ HB_EXPR_FUNC_PTR hb_comp_ExprTable[] = {
    hb_compExprUseIIF,
    hb_compExprUseList,
    hb_compExprUseArgList,
+   hb_compExprUseMacroArgList,
    hb_compExprUseArrayAt,
    hb_compExprUseMacro,
    hb_compExprUseFunCall,
@@ -733,9 +735,10 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
             HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, 0, 0, ( BOOL ) 1 );
          else
          {
-            BOOL bMacroList = FALSE;
+            BOOL fMacroList = FALSE;
+            USHORT usItems = 0, usGroups = 0;
 
-            /* Find out if macro is used as one of the elements- if so generate a prefix HB_P_MACROLIST. */
+            /* Find out if macro is used as one of the elements- if so generate code for HB_P_MACROARRAYGEN. */
             if( HB_SUPPORT_XBASE )
             {
                while( pElem )
@@ -743,28 +746,51 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
                   if( pElem->ExprType == HB_ET_MACRO )
                   {
                       pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
-                      bMacroList = TRUE;
+                      fMacroList = TRUE;
                   }
                   pElem = pElem->pNext;
                }
             }
 
-            if( bMacroList )
-            {
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROLIST );
-            }
             pElem = pSelf->value.asList.pExprList;
             while( pElem )
             {
+               if( fMacroList )
+               {
+                  if( pElem->ExprType == HB_ET_MACRO &&
+                      ( pElem->value.asMacro.SubType | HB_ET_MACRO_LIST ) )
+                  {
+                     if( usItems )
+                     {
+                        HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
+                        usItems = 0;
+                        ++usGroups;
+                     }
+                     ++usGroups;
+                  }
+                  else
+                  {
+                     ++usItems;
+                  }
+               }
                HB_EXPR_USE( pElem, HB_EA_PUSH_PCODE );
                pElem = pElem->pNext;
             }
-            if( bMacroList )
+            if( usItems )
             {
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROLISTEND );
+               HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
+               ++usGroups;
             }
-
-            HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, HB_LOBYTE( pSelf->ulLength ), HB_HIBYTE( pSelf->ulLength ), ( BOOL ) 1 );
+            if( fMacroList )
+            {
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_MACROARRAYGEN,
+                     HB_LOBYTE( usGroups ), HB_HIBYTE( usGroups ), TRUE );
+            }
+            else
+            {
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN,
+                     HB_LOBYTE( pSelf->ulLength ), HB_HIBYTE( pSelf->ulLength ), TRUE );
+            }
          }
       }
       break;
@@ -1186,6 +1212,75 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
    return pSelf;
 }
 
+/* NOTE: In PUSH operation it leaves all expressions on the eval stack,
+ *       the expresions are divided into macro compiled blocks
+ */
+static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+         break;
+
+      case HB_EA_ARRAY_AT:
+      case HB_EA_ARRAY_INDEX:
+      case HB_EA_LVALUE:
+         break;
+
+      case HB_EA_PUSH_PCODE:
+         {
+            HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
+            USHORT usItems = 0, usGroups = 0;
+
+            while( pExpr )
+            {
+               if( pExpr->ExprType == HB_ET_MACRO &&
+                   ( pExpr->value.asMacro.SubType | HB_ET_MACRO_LIST ) )
+               {
+                  if( usItems )
+                  {
+                     HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
+                     usItems = 0;
+                     ++usGroups;
+                  }
+                  ++usGroups;
+               }
+               else
+                  ++usItems;
+               HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+               pExpr = pExpr->pNext;
+            }
+            if( usItems )
+            {
+               HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
+               ++usGroups;
+            }
+         }
+         break;
+
+      case HB_EA_POP_PCODE:
+      case HB_EA_PUSH_POP:
+      case HB_EA_STATEMENT:
+         break;
+
+      case HB_EA_DELETE:
+         if( pSelf->value.asList.pExprList )
+         {
+            HB_EXPR_PTR pTmp, pExpr = pSelf->value.asList.pExprList;
+            while( pExpr )
+            {
+               pTmp = pExpr->pNext;    /* store next expression */
+               HB_EXPR_PCODE1( hb_compExprDelete, pExpr );
+               pExpr =pTmp;
+            }
+            pSelf->value.asList.pExprList = NULL;
+         }
+         break;
+   }
+   return pSelf;
+}
+
 /* handler for ( ( array[ idx ] )[ idx ] )[ idx ]
  */
 static HB_EXPR_FUNC( hb_compExprUseArrayAt )
@@ -1272,7 +1367,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             {
                if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
                {
-                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
+                  pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
                }
             }
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
@@ -1370,14 +1465,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 #if ! defined( HB_MACRO_SUPPORT )
 
                   BOOL bUseTextSubst;
-		            char *szDupl;
-		            szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
+                  char *szDupl;
+                  szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
 
-		            if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
-		            {
+                  if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
+                  {
                      hb_compErrorMacro( pSelf->value.asMacro.szMacro );
-		            }
-		            hb_xfree( szDupl );
+                  }
+                  hb_xfree( szDupl );
 #endif                  
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
@@ -1394,51 +1489,28 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
 		   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
 		   {
-               	if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
+                  if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
                	{
-                  	/* funCall( &macro )
-                  	*/
-                  	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
-
-                  	/* Always add add byte to pcode indicating requested macro compiler flag. */
-                  	#if defined( HB_MACRO_SUPPORT )
-                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
-                  	#else
-                     HB_EXPR_GENPCODE1( hb_compGenPData1,
-                                        (
-                                          ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-                                          ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-                                          ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-                                          ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
-                                        )
-                                      );
-                  	#endif
-
-                  	/* Generate push symbol for the symbol the possible extra macro arguments will be for. */
-                  	HB_EXPR_USE( pSelf->value.asMacro.pFunCall->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
-               	}
-               	else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
-               	{
-                  	/* { &macro }
-                  	*/
-                  	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHLIST );
+                     /* { &macro or funCall( &macro ) }
+                     */
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHLIST );
                	}
                	else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_INDEX )
                	{
-                  	/* var[ &macro ] */
-                  	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHINDEX );
+                     /* var[ &macro ] */
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHINDEX );
                	}
                	else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_PARE )
                	{
-                  	/* var := (somevalue, &macro) - in xbase compatibility mode
-                   	* EVAL( {|| &macro} ) - in all cases
-                   	*/
-                  	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHPARE );
+                     /* var := (somevalue, &macro) - in xbase compatibility mode
+                      * EVAL( {|| &macro} ) - in all cases
+                      */
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHPARE );
                	}
                	else
                	{
-                  	/* usual &macro */
-                  	HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
+                     /* usual &macro */
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
                	}
 		   }
 		   else
@@ -1446,15 +1518,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
             }
 
-            if( ( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL ) &&
-                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_REFER ) &&
-                ( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED && 
-                ! ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST ) ) )
+            if( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
+                pSelf->value.asMacro.SubType != HB_ET_MACRO_REFER &&
+                pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
                /* Always add add byte to pcode indicating requested macro compiler flag. */
-               #if defined( HB_MACRO_SUPPORT )
+#if defined( HB_MACRO_SUPPORT )
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
-               #else
+#else
                   HB_EXPR_GENPCODE1( hb_compGenPData1,
                                      (
                                        ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
@@ -1463,7 +1534,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                                        ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
                                      )
                                    );
-               #endif
+#endif
             }
 
             /* NOTE: pcode for alias context is generated in
@@ -1619,6 +1690,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
       case HB_EA_PUSH_PCODE:
          {
+            BOOL fMacroList = FALSE;
             USHORT usCount;
 
             HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
@@ -1642,22 +1714,34 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      {
                         if( pExpr->ExprType == HB_ET_MACRO )
                         {
-                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
+                           /* &macro was passed - handle it differently then in a normal statement */
+                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_LIST;
                            pExpr->value.asMacro.pFunCall = pSelf;
+                           fMacroList = TRUE;
                         }
                         pExpr = pExpr->pNext;
                      }
                   }
-                  HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  if( fMacroList )
+                  {
+                     pSelf->value.asFunCall.pParms->ExprType = HB_ET_MACROARGLIST;
+                     usCount = hb_compExprMacroListLen( pSelf->value.asFunCall.pParms );
+                     HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                     pSelf->value.asFunCall.pParms->ExprType = HB_ET_ARGLIST;
+                  }
+                  else
+                     HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                }
             }
             else
                usCount = 0;
 
-            if( usCount > 255 )
-               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
+            if( fMacroList )
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_MACROFUNC, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), TRUE );
+            else if( usCount > 255 )
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), TRUE );
             else
-               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) usCount, TRUE );
          }
          break;
 
@@ -1667,6 +1751,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          {
+            BOOL fMacroList = FALSE;
             USHORT usCount;
 
             HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
@@ -1681,29 +1766,40 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   if( HB_SUPPORT_XBASE )
                   {
-                     HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
                      /* check if &macro is used as a function call argument */
+                     HB_EXPR_PTR pExpr = pSelf->value.asFunCall.pParms->value.asList.pExprList;
                      while( pExpr )
                      {
                         if( pExpr->ExprType == HB_ET_MACRO )
                         {
-                            /* &macro was passed - handle it differently then in a normal statement */
-                            pExpr->value.asMacro.SubType |= HB_ET_MACRO_ARGLIST;
-                            pExpr->value.asMacro.pFunCall = pSelf;
+                           /* &macro was passed - handle it differently then in a normal statement */
+                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+                           pExpr->value.asMacro.pFunCall = pSelf;
+                           fMacroList = TRUE;
                         }
                         pExpr = pExpr->pNext;
                      }
                   }
-                  HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  if( fMacroList )
+                  {
+                     pSelf->value.asFunCall.pParms->ExprType = HB_ET_MACROARGLIST;
+                     usCount = hb_compExprMacroListLen( pSelf->value.asFunCall.pParms );
+                     HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                     pSelf->value.asFunCall.pParms->ExprType = HB_ET_ARGLIST;
+                  }
+                  else
+                     HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                }
             }
             else
                usCount = 0;
 
-            if( usCount > 255 )
-               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
+            if( fMacroList )
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_MACRODO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), TRUE );
+            else if( usCount > 255 )
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), TRUE );
             else
-               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_DOSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_DOSHORT, ( BYTE ) usCount, TRUE );
          }
          break;
 

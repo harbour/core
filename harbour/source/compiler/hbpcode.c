@@ -145,7 +145,7 @@ const BYTE hb_comp_pcode_len[] = {
    2,        /* HB_P_MACROPOP,             */
    2,        /* HB_P_MACROPOPALIASED,      */
    2,        /* HB_P_MACROPUSH,            */
-   2,        /* HB_P_MACROPUSHARG,         */
+   3,        /* HB_P_MACROARRAYGEN,        */
    2,        /* HB_P_MACROPUSHLIST,        */
    2,        /* HB_P_MACROPUSHINDEX,       */
    2,        /* HB_P_MACROPUSHPARE,        */
@@ -229,8 +229,8 @@ const BYTE hb_comp_pcode_len[] = {
    1,        /* HB_P_TRUE,                 */
    1,        /* HB_P_ZERO,                 */
    1,        /* HB_P_ONE,                  */
-   1,        /* HB_P_MACROLIST,            */
-   1,        /* HB_P_MACROLISTEND,         */
+   3,        /* HB_P_MACROFUNC,            */
+   3,        /* HB_P_MACRODO,              */
    0,        /* HB_P_MPUSHSTR              */
    4,        /* HB_P_LOCALNEARADDINT,      */
    1,        /* HB_P_MACROPUSHREF          */
@@ -302,7 +302,7 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_MACROPOP,             */
    NULL,                       /* HB_P_MACROPOPALIASED,      */
    NULL,                       /* HB_P_MACROPUSH,            */
-   NULL,                       /* HB_P_MACROPUSHARG,         */
+   NULL,                       /* HB_P_MACROARRAYGEN,        */
    NULL,                       /* HB_P_MACROPUSHLIST,        */
    NULL,                       /* HB_P_MACROPUSHINDEX,       */
    NULL,                       /* HB_P_MACROPUSHPARE,        */
@@ -386,8 +386,8 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_TRUE,                 */
    NULL,                       /* HB_P_ZERO,                 */
    NULL,                       /* HB_P_ONE,                  */
-   NULL,                       /* HB_P_MACROLIST,            */
-   NULL,                       /* HB_P_MACROLISTEND,         */
+   NULL,                       /* HB_P_MACROFUNC,            */
+   NULL,                       /* HB_P_MACRODO,              */
    NULL,                       /* HB_P_MPUSHSTR,             */
    NULL,                       /* HB_P_LOCALNEARADDINT,      */
    NULL,                       /* HB_P_MACROPUSHREF          */

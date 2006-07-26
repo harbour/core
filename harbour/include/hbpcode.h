@@ -109,7 +109,7 @@ typedef enum
    HB_P_MACROPOP,              /*  38 compile and run - pop a value from the stack */
    HB_P_MACROPOPALIASED,       /*  39 compile and run - pop a field value from the stack */
    HB_P_MACROPUSH,             /*  40 compile and run - leave the result on the stack */
-   HB_P_MACROPUSHARG,          /*  41 compile and run - leave the result on the stack */
+   HB_P_MACROARRAYGEN,         /*  41 generate array from arguments set(s) on HVM stack { &var } */
    HB_P_MACROPUSHLIST,         /*  42 compile and run - leave the result on the stack */
    HB_P_MACROPUSHINDEX,        /*  43 compile and run - leave the result on the stack */
    HB_P_MACROPUSHPARE,         /*  44 compile and run - leave the result on the stack */
@@ -193,8 +193,8 @@ typedef enum
    HB_P_TRUE,                  /* 120 pushes true on the virtual machine stack */
    HB_P_ZERO,                  /* 121 places a ZERO on the virtual machine stack */
    HB_P_ONE,                   /* 122 places a ONE on the virtual machine stack */
-   HB_P_MACROLIST,             /* 123 HB_P_MACROPUSHLIST envelope start. */
-   HB_P_MACROLISTEND,          /* 124 HB_P_MACROPUSHLIST envelope end. */
+   HB_P_MACROFUNC,             /* 123 execute a function saving its result */
+   HB_P_MACRODO,               /* 124 execute a function discarding its result */
    HB_P_MPUSHSTR,              /* 125 Macro compiled pushed string */
    HB_P_LOCALNEARADDINT,       /* 126 Add/Subtract specified int into specified local without using the stack. */
    HB_P_MACROPUSHREF,          /* 127 Reference to macro variable @&mvar */

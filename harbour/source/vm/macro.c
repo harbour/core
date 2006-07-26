@@ -504,7 +504,6 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * PUSH operation
  * iContext contains additional info when HB_SM_XBASE is enabled
  *  = 0 - in Clipper strict compatibility mode
- *  = HB_P_MACROPUSHARG - in xbase compatibility mode
  *  = HB_P_MACROPUSHLIST
  *  = HB_P_MACROPUSHINDEX
  *  = HB_P_MACROPUSHPARE
@@ -513,11 +512,6 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * EVAL( {|| &macro} )
  *
  */
-   /* TODO: remove these externals */
-   extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
-   extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
-
-   extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
 void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 {
@@ -552,7 +546,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
           * macro := "1,2"
           * EVAL( {|| &macro} )
           *
-         */
+          */
          struMacro.Flags |= HB_MACRO_GEN_LIST;
          if( iContext == HB_P_MACROPUSHPARE )
          {
@@ -587,12 +581,6 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 #endif
 
       iStatus = hb_macroParse( &struMacro, szString );
-
-      if( iContext && ( ( hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS ) || ( hb_vm_iExtraElementsIndex >= HB_MAX_MACRO_ARGS ) ) )
-      {
-         hb_macroSyntaxError( &struMacro );
-      }
-
 #ifdef HB_MACRO_STATEMENTS
       if( struMacro.supported & HB_SM_PREPROC )
       {
@@ -608,14 +596,9 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 
          if( iContext )
          {
-            if( iContext == HB_P_MACROPUSHARG )
+            if( iContext == HB_P_MACROPUSHLIST )
             {
-               hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex] = struMacro.iListElements;
-               hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex++] = NULL;
-            }
-            else if( iContext == HB_P_MACROPUSHLIST )
-            {
-               hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex - 1] += struMacro.iListElements;
+               hb_vmPushLong( struMacro.iListElements + 1 );
             }
             else if( iContext == HB_P_MACROPUSHINDEX )
             {

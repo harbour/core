@@ -73,7 +73,7 @@
  *    HB_ET_NIL is used for an ordinary values and post- operators
  *    HB_ET_NONE is used for invalid syntax, e.g. var := var1 += 2
  */
-static BYTE s_PrecedTable[] = {
+static BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_NONE = 0,    */
    HB_ET_NIL,                 /*   HB_ET_NIL,         */
    HB_ET_NIL,                 /*   HB_ET_NUMERIC,     */
@@ -89,6 +89,7 @@ static BYTE s_PrecedTable[] = {
    HB_ET_NIL,                 /*   HB_ET_IIF,         */
    HB_ET_NIL,                 /*   HB_ET_LIST,        */
    HB_ET_NIL,                 /*   HB_ET_ARGLIST,     */
+   HB_ET_NIL,                 /*   HB_ET_MACROARGLIST,*/
    HB_ET_NIL,                 /*   HB_ET_ARRAYAT,     */
    HB_ET_NIL,                 /*   HB_ET_MACRO,       */
    HB_ET_NIL,                 /*   HB_ET_FUNCALL,     */

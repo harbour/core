@@ -165,8 +165,9 @@ extern HB_EXPORT void   hb_xvmLocalName( USHORT uiLocal, char * szLocalName );
 extern HB_EXPORT void   hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName );
 extern HB_EXPORT void   hb_xvmModuleName( char * szModuleName );
 
-extern HB_EXPORT void   hb_xvmMacroList( void );
-extern HB_EXPORT void   hb_xvmMacroListEnd( void );
+extern HB_EXPORT BOOL   hb_xvmMacroDo( USHORT uiArgSets );
+extern HB_EXPORT BOOL   hb_xvmMacroFunc( USHORT uiArgSets );
+extern HB_EXPORT BOOL   hb_xvmMacroArrayGen( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroPush( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroPushRef( void );
 extern HB_EXPORT BOOL   hb_xvmMacroPushIndex( BYTE bFlags );

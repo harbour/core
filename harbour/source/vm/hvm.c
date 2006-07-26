@@ -141,7 +141,10 @@ static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimension
 static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
 
 /* macros */
-static void hb_vmMacroPushIndex( BYTE bFlags ); /* push macro array index {...}[ &var ] */
+static void hb_vmMacroDo( USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
+static void hb_vmMacroFunc( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
+static void hb_vmMacroArrayGen( USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
+static void hb_vmMacroPushIndex( BYTE bFlags );       /* push macro array index {...}[ &var ] */
 
 /* Database */
 static ERRCODE hb_vmSelectWorkarea( PHB_ITEM, PHB_SYMB );  /* select the workarea using a given item or a substituted value */
@@ -263,11 +266,6 @@ static LONG     s_lRecoverBase;
 /* Stores level of procedures call stack
 */
 static ULONG   s_ulProcLevel = 0;
-
-int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex = 0;
-PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
-
-int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_vm_iExtraElements = 0;
 
 /* Request for some action - stop processing of opcodes
  */
@@ -898,8 +896,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ARRAYGEN:
-            hb_vmArrayGen( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) + hb_vm_iExtraElements );
-            hb_vm_iExtraElements = 0;
+            hb_vmArrayGen( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1566,56 +1563,6 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
-         case HB_P_MACROPUSHARG:
-            /* compile and run - leave the result on the stack */
-            /* the topmost element on the stack contains a macro
-             * string for compilation
-             */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHARG, pCode[ ++w ] );
-            w++;
-
-            if( hb_vm_iExtraParamsIndex && hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] == NULL )
-            {
-               if( pCode[w] == HB_P_PUSHSYMNEAR )
-               {
-                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pSymbols + ( USHORT ) ( pCode[w + 1] );
-                  w += 2;
-               }
-               else if( pCode[w] == HB_P_MPUSHSYM )
-               {
-                  HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
-
-                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pDynSym->pSymbol;
-                  w += sizeof( HB_DYNS_PTR ) + 1;
-               }
-               else
-               {
-                  hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
-                  w += 3;
-               }
-            }
-            else
-            {
-               if( pCode[w] == HB_P_PUSHSYMNEAR )
-               {
-                  w += 2;
-               }
-               else if( pCode[w] == HB_P_MPUSHSYM )
-               {
-                  w += sizeof( HB_DYNS_PTR ) + 1;
-               }
-               else
-               {
-                  w += 3;
-               }
-            }
-            break;
-
-         case HB_P_MACROLIST:
-            hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex++] = 0;
-            w++;
-            break;
-
          case HB_P_MACROPUSHLIST:
             /* compile and run - leave the result on the stack */
             /* the topmost element on the stack contains a macro
@@ -1625,14 +1572,24 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
-         case HB_P_MACROLISTEND:
-            hb_vm_iExtraElements = hb_vm_aiExtraElements[--hb_vm_iExtraElementsIndex];
-            w++;
-            break;
-
          case HB_P_MACROPUSHINDEX:
             hb_vmMacroPushIndex( pCode[ ++w ] );
             ++w;
+            break;
+
+         case HB_P_MACROARRAYGEN:
+            hb_vmMacroArrayGen( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
+            w += 3;
+            break;
+
+         case HB_P_MACRODO:
+            hb_vmMacroDo( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
+            w += 3;
+            break;
+
+         case HB_P_MACROFUNC:
+            hb_vmMacroFunc( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
+            w += 3;
             break;
 
          case HB_P_MACROPUSHPARE:
@@ -3040,17 +2997,10 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
          return;
    }
 
-#if 0 /* This is real Clipper behavior which I'll restore when we add PCODE version checking */
    if( fBack )
       hb_vmLess();
    else
       hb_vmGreater();
-#else
-   if( fBack )
-      hb_vmGreaterEqual();
-   else
-      hb_vmLessEqual();
-#endif
 }
 
 /* With object auto destructor */
@@ -3754,6 +3704,79 @@ static void hb_vmMacroPushIndex( BYTE bFlags )
    }
 }
 
+/*
+ * On HVM stack we have sets with arguments
+ *    offset   value
+ *    (-9)     6
+ *    (-8)     7
+ *    (-7)     2 // number of arguments
+ *    (-6)     1
+ *    (-5)     2
+ *    (-4)     2 // number of arguments
+ *    (-3)     1
+ *    (-2)     2
+ *    (-1)     2 // number of arguments
+ * we should join them into one continuous list
+ */
+static LONG hb_vmArgsJoin( LONG lLevel, USHORT uiArgSets )
+{
+   LONG lArgs, lRestArgs, lOffset;
+   PHB_ITEM pArgs = hb_stackItemFromTop( lLevel ) ;
+
+
+   lArgs = hb_itemGetNL( pArgs );
+   if( HB_IS_COMPLEX( pArgs ) )
+      hb_itemClear( pArgs );
+
+   if( --uiArgSets )
+   {
+      lRestArgs = lArgs;
+      lArgs += hb_vmArgsJoin( lLevel - lArgs - 1, uiArgSets );
+      lOffset = lLevel - lRestArgs - uiArgSets;
+      while( lRestArgs-- )
+      {
+         hb_itemMove( hb_stackItemFromTop( lOffset ),
+                      hb_stackItemFromTop( lOffset + uiArgSets ) );
+         ++lOffset;
+      }
+   }
+
+   return lArgs;
+}
+
+static void hb_vmMacroDo( USHORT uiArgSets )
+{
+   LONG lArgs;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroDo(%hu)", uiArgSets));
+
+   lArgs = hb_vmArgsJoin( -1, uiArgSets );
+   hb_stackDecrease( uiArgSets );
+   hb_vmDo( lArgs );
+}
+
+static void hb_vmMacroFunc( USHORT uiArgSets )
+{
+   LONG lArgs;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroFunc(%hu)", uiArgSets));
+
+   lArgs = hb_vmArgsJoin( -1, uiArgSets );
+   hb_stackDecrease( uiArgSets );
+   hb_vmDo( lArgs );
+   hb_stackPushReturn();
+}
+
+static void hb_vmMacroArrayGen( USHORT uiArgSets )
+{
+   LONG lArgs;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroArrayGen(%hu)", uiArgSets));
+
+   lArgs = hb_vmArgsJoin( -1, uiArgSets );
+   hb_stackDecrease( uiArgSets );
+   hb_vmArrayGen( lArgs );
+}
 
 /* ------------------------------- */
 /* Database                        */
@@ -3904,22 +3927,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
-   /*
-   printf( "\VmDo nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
-   */
    s_ulProcLevel++;
-
-   if( hb_vm_iExtraParamsIndex )
-   {
-      pSelf = hb_stackItemFromTop( -( uiParams +
-                     hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) );
-      if( HB_IS_SYMBOL( pSelf ) &&
-          pSelf->item.asSymbol.value ==
-          hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
-      {
-         uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
-      }
-   }
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -4029,17 +4037,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
-   /*
-   printf( "\n VmSend nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
-   */
    s_ulProcLevel++;
-
-   if( hb_vm_iExtraParamsIndex &&
-       HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) &&
-       pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
-   {
-      uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
-   }
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -7471,8 +7469,7 @@ HB_EXPORT void hb_xvmArrayGen( ULONG ulElements )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayGen(%lu)", ulElements));
 
-   hb_vmArrayGen( ulElements + hb_vm_iExtraElements );
-   hb_vm_iExtraElements = 0;
+   hb_vmArrayGen( ulElements );
 }
 
 static void hb_vmArrayItemPush( ULONG ulIndex )
@@ -7694,18 +7691,31 @@ HB_EXPORT void hb_xvmModuleName( char * szModuleName )
    hb_vmModuleName( szModuleName );
 }
 
-HB_EXPORT void hb_xvmMacroList( void )
+HB_EXPORT BOOL hb_xvmMacroArrayGen( USHORT uiArgSets )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroList()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroArrayGen(%hu)", uiArgSets));
 
-   hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex++] = 0;
+   hb_vmMacroArrayGen( uiArgSets );
+
+   HB_XVM_RETURN
 }
 
-HB_EXPORT void hb_xvmMacroListEnd( void )
+HB_EXPORT BOOL hb_xvmMacroDo( USHORT uiArgSets )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroListEnd()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroDo(%hu)", uiArgSets));
 
-   hb_vm_iExtraElements = hb_vm_aiExtraElements[--hb_vm_iExtraElementsIndex];
+   hb_vmMacroDo( uiArgSets );
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmMacroFunc( USHORT uiArgSets )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroFunc(%hu)", uiArgSets));
+
+   hb_vmMacroFunc( uiArgSets );
+
+   HB_XVM_RETURN
 }
 
 HB_EXPORT BOOL hb_xvmMacroPush( BYTE bFlags )
@@ -7735,20 +7745,6 @@ HB_EXPORT BOOL hb_xvmMacroPushIndex( BYTE bFlags )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushIndex(%d)", bFlags));
 
    hb_vmMacroPushIndex( bFlags );
-
-   HB_XVM_RETURN
-}
-
-HB_EXPORT BOOL hb_xvmMacroPushArg( PHB_SYMB pSymbol, BYTE bFlags )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushArg(%p, %d)", pSymbol, bFlags));
-
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHARG, bFlags );
-
-   if( hb_vm_iExtraParamsIndex && hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] == NULL )
-   {
-      hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] = pSymbol;
-   }
 
    HB_XVM_RETURN
 }

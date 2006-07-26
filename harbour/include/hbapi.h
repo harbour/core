@@ -63,8 +63,6 @@
 HB_EXTERN_BEGIN
 
 
-#define HB_MAX_MACRO_ARGS 16
-
 /* this definition signals that number of decimal places for double value
  * was not specified at compile time (the value is a result of optimization
  * performed by the compiler)
@@ -792,8 +790,8 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
    USHORT uiNameLen;       /* the maximum symbol name length */
    BOOL   bShortCuts;      /* are we using logical shorcuts (in OR/AND)  */
-   int exprType;           /* type of successfully compiled expression */
-   int iListElements;
+   int    exprType;        /* type of successfully compiled expression */
+   int    iListElements;
 } HB_MACRO, * HB_MACRO_PTR;
 
 extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */

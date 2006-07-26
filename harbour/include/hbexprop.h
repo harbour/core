@@ -98,10 +98,9 @@ typedef enum
 #define  HB_ET_MACRO_SYMBOL   1   /* &fimcall() */
 #define  HB_ET_MACRO_ALIASED  2   /* &alias->&variable */
 #define  HB_ET_MACRO_EXPR     4   /* &( expr ) */
-#define  HB_ET_MACRO_ARGLIST  8   /* &variable used as a function call argument */
-#define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or parentesised expressions. */
+#define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or function call argument. */
 #define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
-#define  HB_ET_MACRO_PARE    64   /* &variable used as arrays index. */
+#define  HB_ET_MACRO_PARE    64   /* &variable used as parentesised expressions. */
 #define  HB_ET_MACRO_REFER  128   /* &macro used in @ (pass by reference) */
 
 /* types of expressions
@@ -127,6 +126,7 @@ typedef enum
    HB_ET_IIF,
    HB_ET_LIST,
    HB_ET_ARGLIST,
+   HB_ET_MACROARGLIST,
    HB_ET_ARRAYAT,
    HB_ET_MACRO,
    HB_ET_FUNCALL,
@@ -167,6 +167,8 @@ typedef enum
    HB_EO_PREINC,
    HB_EO_PREDEC      /* pre-operators -> the highest precedence */
 } HB_EXPR_OPERATOR;
+
+#define HB_EXPR_COUNT   ( HB_EO_PREDEC + 1 )
 
 typedef USHORT HB_EXPRTYPE;
 
@@ -241,9 +243,9 @@ typedef struct HB_EXPR_
    } value;
    ULONG ulLength;
    ULONG Counter;
-   HB_EXPRTYPE ExprType;  /* internal expression type */
-   USHORT ValType;          /* language level value type */
-   struct HB_EXPR_ *pNext;  /* next expression in the list of expressions */
+   HB_EXPRTYPE ExprType;      /* internal expression type */
+   USHORT ValType;            /* language level value type */
+   struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
 } HB_EXPR, *HB_EXPR_PTR;
 
 /* Definitions of function templates used in expression's message
@@ -370,6 +372,7 @@ HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 ULONG hb_compExprListLen( HB_EXPR_PTR );
+ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
 void hb_compExprClear( HB_EXPR_PTR );
 char * hb_compExprDescription( HB_EXPR_PTR );
 int hb_compExprType( HB_EXPR_PTR );

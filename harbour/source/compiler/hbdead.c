@@ -348,7 +348,7 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_MACROPOP,             */
    hb_p_default,               /* HB_P_MACROPOPALIASED,      */
    hb_p_default,               /* HB_P_MACROPUSH,            */
-   hb_p_default,               /* HB_P_MACROPUSHARG,         */
+   hb_p_default,               /* HB_P_MACROARRAYGEN,        */
    hb_p_default,               /* HB_P_MACROPUSHLIST,        */
    hb_p_default,               /* HB_P_MACROPUSHINDEX,       */
    hb_p_default,               /* HB_P_MACROPUSHPARE,        */
@@ -432,8 +432,8 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_TRUE,                 */
    hb_p_default,               /* HB_P_ZERO,                 */
    hb_p_default,               /* HB_P_ONE,                  */
-   hb_p_default,               /* HB_P_MACROLIST,            */
-   hb_p_default,               /* HB_P_MACROLISTEND,         */
+   hb_p_default,               /* HB_P_MACROFUNC,            */
+   hb_p_default,               /* HB_P_MACRODO,              */
    hb_p_default,               /* HB_P_MPUSHSTR,             */
    hb_p_default,               /* HB_P_LOCALNEARADDINT,      */
    hb_p_default,               /* HB_P_MACROPUSHREF          */

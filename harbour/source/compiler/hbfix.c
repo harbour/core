@@ -529,7 +529,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MACROPOP,             */
    NULL,                       /* HB_P_MACROPOPALIASED,      */
    NULL,                       /* HB_P_MACROPUSH,            */
-   NULL,                       /* HB_P_MACROPUSHARG,         */
+   NULL,                       /* HB_P_MACROARRAYGEN,        */
    NULL,                       /* HB_P_MACROPUSHLIST,        */
    NULL,                       /* HB_P_MACROPUSHINDEX,       */
    NULL,                       /* HB_P_MACROPUSHPARE,        */
@@ -613,8 +613,8 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    hb_p_true,                  /* HB_P_TRUE,                 */
    NULL,                       /* HB_P_ZERO,                 */
    NULL,                       /* HB_P_ONE,                  */
-   NULL,                       /* HB_P_MACROLIST,            */
-   NULL,                       /* HB_P_MACROLISTEND,         */
+   NULL,                       /* HB_P_MACROFUNC,            */
+   NULL,                       /* HB_P_MACRODO,              */
    NULL,                       /* HB_P_MPUSHSTR,             */
    hb_p_localnearaddint,       /* HB_P_LOCALNEARADDINT,      */
    NULL,                       /* HB_P_MACROPUSHREF          */

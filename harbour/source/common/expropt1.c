@@ -72,7 +72,7 @@
 #define  HB_XGRAB( size )  hb_xgrab( (size) )
 #define  HB_XFREE( pPtr )  hb_xfree( (void *)(pPtr) )
 
-static char * s_OperTable[] = {
+static char * s_OperTable[ HB_EXPR_COUNT ] = {
    "",
    "NIL",
    "Numeric",
@@ -86,6 +86,7 @@ static char * s_OperTable[] = {
    "@",
    "@",
    "IIF",
+   ",",
    ",",
    ",",
    "[",
@@ -536,6 +537,19 @@ HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR pFirstItem )
    return pExpr;
 }
 
+/* Creates a list of function call arguments
+ */
+HB_EXPR_PTR hb_compExprNewMacroArgList( HB_EXPR_PTR pFirstItem )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMacroArgList()"));
+
+   pExpr = hb_compExprNew( HB_ET_MACROARGLIST );
+   pExpr->value.asList.pExprList = pFirstItem;
+   return pExpr;
+}
+
 /* Adds new element to the list
  */
 HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR pList, HB_EXPR_PTR pNewItem )
@@ -899,6 +913,35 @@ ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
       pExpr = pExpr->pNext;
       ++ulLen;
    }
+
+   return ulLen;
+}
+
+/*  Return a number of macro gropu elements on the linked list
+ */
+ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
+{
+   ULONG ulLen = 0, ulItems = 0;
+
+   pExpr = pExpr->value.asList.pExprList;
+   while( pExpr )
+   {
+      if( pExpr->ExprType == HB_ET_MACRO &&
+          ( pExpr->value.asMacro.SubType | HB_ET_MACRO_LIST ) )
+      {
+         if( ulItems )
+         {
+            ulItems = 0;
+            ++ulLen;
+         }
+         ++ulLen;
+      }
+      else
+         ++ulItems;
+      pExpr = pExpr->pNext;
+   }
+   if( ulItems )
+      ++ulLen;
 
    return ulLen;
 }

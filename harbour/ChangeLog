@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-26 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * changed support for XBASE++ extended syntax in expressions like:
+         v:="1,2,3"
+         x := a[ &v ]
+         a := { &v }
+         f( &v )
+      Now all data is stored on HV  * stack without any external registers
+      which have to be saved/restored or updated in chosen operation.
+      This modification was necessary to make HV  * reentrant safe and it
+      also eliminated some small overhead caused by old code.
+      I hope I haven't break anything in compiler - Ryszard please fix me
+      if I made sth wrong.
+
+  * harbour/source/vm/hvm.c
+  * harbour/source/compiler/harbour.y
+    * revert FOR/NEXT stop condition to be Clipper compatible
+
+   PCODE table has been updated and all .prg code which used modified PCODEs
+   has to be recompiled
+
 2006-07-25 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapirdd.h
   * harbour/source/rdd/dbcmd.c
