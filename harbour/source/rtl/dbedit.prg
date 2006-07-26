@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "common.ch"
 #include "dbedit.ch"
 #include "inkey.ch"
@@ -164,34 +162,6 @@ FUNCTION dbEdit(;
          cBlock := FieldName( nPos )
          cHeading := cBlock
       ENDIF
-
-#ifdef HB_C52_STRICT
-
-      IF Type( cBlock ) == "M"
-
-         bBlock := {|| "  <Memo>  " }
-
-      ELSEIF "->" $ cBlock
-
-         IF Upper( cAlias ) == "M"
-            bBlock := MemvarBlock( cBlock )
-         ELSEIF Upper( cAlias ) == "FIELD"
-            bBlock := FieldWBlock( cFieldName, Select() )
-         ELSE
-            bBlock := FieldWBlock( cFieldName, Select( cAlias ) )
-         ENDIF
-
-      ELSEIF !Empty( FieldPos( cBlock ) )
-         bBlock := FieldWBlock( cBlock, Select() )
-      ELSE
-         bBlock := NIL
-      ENDIF
-
-      IF bBlock == NIL
-         bBlock := &( "{||" + cBlock + "}" )
-      ENDIF
-      
-#else
       
       /* Simplified logic compared to CA-Cl*pper. In the latter there 
          is logic to detect several typical cBlock types (memvar, 
@@ -200,17 +170,11 @@ FUNCTION dbEdit(;
          simple macro compilation will result in faster code for all 
          situations. As Maurilio Longo has pointed, there is no point in 
          creating codeblocks which are able to _assign_ values, as dbEdit() 
-         is actually a read-only function. [vszakats] */
+         is a read-only function. [vszakats] */
       
-      bBlock := &( "{||" + cBlock + "}" )
+      bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, &( "{||" + cBlock + "}" ) )
 
-      /* NOTE: There is an extra Eval() here compared to CA-Cl*pper. */
-
-      IF ISMEMO( Eval( bBlock ) )
-         bBlock := {|| "  <Memo>  " }
-      ENDIF
-      
-#endif
+      /* ; */
 
       IF ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. ISCHARACTER( xColumnHeaders[ nPos ] )
          cHeading := xColumnHeaders[ nPos ]

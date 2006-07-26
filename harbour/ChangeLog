@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-27 01:18 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/dbedit.prg
+     ! Previous non-strict compatible part made fully compatible by 
+       dropping an Eval() on the field value block. Strict branch 
+       and NOTE removed.
+
 2006-07-26 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/include/hbexpra.c
