@@ -20,6 +20,9 @@
       
    * source/pp/ppcore.c
       * fixed vertical spacing in generated ppo files
+      
+   * source/util/hbpptest/pretest.prg
+      * fixed for current state of preprocessor
 
 
 2006-07-27 01:18 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
