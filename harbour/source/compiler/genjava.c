@@ -127,6 +127,8 @@ void hb_compGenJava( PHB_FNAME pFileName )
    /* Generate functions data
     */
    pFunc = hb_comp_functions.pFirst;
+   if( ! hb_comp_bStartProc )
+      pFunc = pFunc->pNext;
 
    while( pFunc )
    {

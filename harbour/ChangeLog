@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-27 14:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+   * source/compiler/genc.c
+   * source/compiler/gencli.c
+   * source/compiler/genhrb.c
+   * source/compiler/genjava.c
+   * source/compiler/genobj32.c
+   * source/compiler/harbour.c
+      * fixed compilation of static variables with -gc2 switch
+      
+   * source/pp/ppcore.c
+      * fixed vertical spacing in generated ppo files
+
+
 2006-07-27 01:18 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/dbedit.prg
      ! Previous non-strict compatible part made fully compatible by 

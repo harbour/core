@@ -35,7 +35,7 @@
 void hb_compGenPortObj( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
-   PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
+   PFUNCTION pFunc /*= hb_comp_functions.pFirst*/;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    ULONG lPCodePos;
    LONG lSymbols;
@@ -111,6 +111,8 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    /* Generate functions data
     */
    pFunc = hb_comp_functions.pFirst;
+   if( ! hb_comp_bStartProc )
+      pFunc = pFunc->pNext;
 
    while( pFunc )
    {

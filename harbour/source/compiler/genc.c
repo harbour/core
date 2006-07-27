@@ -99,6 +99,9 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       fprintf( yyc, "\n\n" );
 
+      if( ! hb_comp_bStartProc )
+         pFunc = pFunc->pNext; /* No implicit starting procedure */
+
       /* write functions prototypes for PRG defined functions */
       while( pFunc )
       {
@@ -232,6 +235,9 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* Generate functions data
        */
       pFunc = hb_comp_functions.pFirst;
+
+      if( ! hb_comp_bStartProc )
+         pFunc = pFunc->pNext; /* No implicit starting procedure */
 
       while( pFunc )
       {
@@ -1133,15 +1139,8 @@ static HB_GENC_FUNC( hb_p_popstatic )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
    {
-      PVAR pVar;
-      PFUNCTION pTmp = hb_comp_functions.pFirst;
-      USHORT wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
-
-      while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-         pTmp = pTmp->pNext;
-      pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-
-      fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
+      char *szName = hb_compStaticGetName( HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+      fprintf( cargo->yyc, "\t/* %s */", szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1487,13 +1486,8 @@ static HB_GENC_FUNC( hb_p_pushstatic )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
    {
-      PVAR pVar;
-      PFUNCTION pTmp = hb_comp_functions.pFirst;
-      USHORT wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
-      while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-         pTmp = pTmp->pNext;
-      pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-      fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
+      char *szName = hb_compStaticGetName( HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+      fprintf( cargo->yyc, "\t/* %s */", szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1506,14 +1500,8 @@ static HB_GENC_FUNC( hb_p_pushstaticref )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
    {
-      PVAR pVar;
-      PFUNCTION pTmp = hb_comp_functions.pFirst;
-
-      USHORT wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
-      while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-         pTmp = pTmp->pNext;
-      pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-      fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
+      char *szName = hb_compStaticGetName( HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+      fprintf( cargo->yyc, "\t/* %s */", szName );
    }
    fprintf( cargo->yyc, "\n" );
 

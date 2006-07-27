@@ -2490,6 +2490,18 @@ int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
    return iVar;
 }
 
+char * hb_compStaticGetName( USHORT wVar )
+{
+   PVAR pVar = NULL;
+   PFUNCTION pTmp = hb_comp_functions.pFirst;
+   
+   while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
+      pTmp = pTmp->pNext;
+   pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
+
+   return pVar ? pVar->szName : NULL;
+}
+
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
  */
@@ -4969,6 +4981,13 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
                hb_compOutputFile();
 
                pFunPtr = &hb_comp_functions.pFirst;
+               if( ! hb_comp_bStartProc )
+               {
+                  /* skip first non-startup procedure */
+                  hb_compOptimizeFrames( *pFunPtr );
+                  pFunPtr = &(*pFunPtr)->pNext;
+               }
+
                while( *pFunPtr )
                {
                   /* remove function frames with no names */

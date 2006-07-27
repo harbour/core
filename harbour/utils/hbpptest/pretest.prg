@@ -372,7 +372,7 @@ ENDTEXT
   in := "
 index on LEFT(   f1  ,  10   )      to _tst"
 CTEXT TO VAR pre
-dbCreateIndex( "_tst", "LEFT(   f1  ,  10   )", {||LEFT(   f1  ,  10   )}, if( .F., .t., NIL ) )
+dbCreateIndex( "_tst", "LEFT(   f1  ,  10   )", {|| LEFT(   f1  ,  10   )}, if( .F., .T., NIL ) )
 ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -497,15 +497,15 @@ ENDTEXT
 
   /* Special restricted macro match marker (used in SET FILTER TO command */
   in := "SET FILTER TO &cVar."
-  pre := "if ( Empty(cVar) ) ;    dbClearFilter() ; else ;    dbSetFilter({||&cVar.},cVar) ; end"
+  pre := "if ( Empty(cVar) ) ;    dbClearFilter() ; else ;    dbSetFilter({|| &cVar.},cVar) ; end"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := "SET FILTER TO &(cVar .AND. &cVar)"
-  pre := "if ( Empty((cVar .AND. &cVar)) ) ;    dbClearFilter() ; else ;    dbSetFilter({||&(cVar .AND. &cVar)},(cVar .AND. &cVar)) ; end"
+  pre := "if ( Empty((cVar .AND. &cVar)) ) ;    dbClearFilter() ; else ;    dbSetFilter({|| &(cVar .AND. &cVar)},(cVar .AND. &cVar)) ; end"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := "SET FILTER TO &cVar. .AND. cVar"
-  pre := 'dbSetFilter( {||&cVar. .AND. cVar}, "&cVar. .AND. cVar" )'
+  pre := 'dbSetFilter( {|| &cVar. .AND. cVar}, "&cVar. .AND. cVar" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 CTEXT TO VAR in
@@ -997,23 +997,23 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := '@ 0,3 GET a PICTURE "X" VALID .T.'
-  pre := 'SetPos(0,3 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.}, ) )     ; ATail(GetList):Display()'
+  pre := 'SetPos(0,3 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := '@ 0,4 GET a PICTURE "X" VALID .T. WHEN .T.'
-  pre := 'SetPos(0,4 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.},{||.T.} ) )     ; ATail(GetList):Display()'
+  pre := 'SetPos(0,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.},{|| .T.} ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := '@ 0,5 GET a PICTURE "X" VALID .T. WHEN .T. CAPTION "myget"'
-  pre := 'SetPos(0,5 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
+  pre := 'SetPos(0,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := '@ 0,6 GET a PICTURE "X" VALID .T. WHEN .T. CAPTION "myget" MESSAGE "mymess"'
-  pre := 'SetPos(0,6 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
+  pre := 'SetPos(0,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := '@ 0,7 GET a PICTURE "X" VALID .T. WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send()'
-  pre := 'SetPos(0,7 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
+  pre := 'SetPos(0,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /* ---------------------------------------------------------------------*/
@@ -1027,23 +1027,23 @@ ENDTEXT
 
    /* NOTE: Clipper fails here */
   in :='@ 1,3 GET a PICTURE "X" VALID .T. RANGE 0,100'   
-  pre := 'SetPos(1,3 ) ; AAdd(GetList,_GET_(a,"a","X",{||.T.}, ) )     ; ATail(GetList):Display()'
+  pre := 'SetPos(1,3 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 1,4 GET a PICTURE "X" WHEN .T. RANGE 0,100'   
-  pre := 'SetPos(1,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) )     ; ATail(GetList):Display()'
+  pre := 'SetPos(1,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 1,5 GET a PICTURE "X" WHEN .T. CAPTION "myget" RANGE 0,100'   
-  pre := 'SetPos(1,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
+  pre := 'SetPos(1,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 1,6 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" RANGE 0,100'   
-  pre := 'SetPos(1,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
+  pre := 'SetPos(1,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 1,7 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send() RANGE 0,100'   
-  pre := 'SetPos(1,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
+  pre := 'SetPos(1,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 2,1 GET a'
@@ -1059,19 +1059,19 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 2,4 GET a PICTURE "X" RANGE 0,100 WHEN .T.'
-  pre := 'SetPos(2,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) )     ; ATail(GetList):Display()'
+  pre := 'SetPos(2,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 2,5 GET a PICTURE "X" RANGE 0,100 WHEN .T. CAPTION "myget"'
-  pre := 'SetPos(2,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
+  pre := 'SetPos(2,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 2,6 GET a PICTURE "X" RANGE 0,100 WHEN .T. CAPTION "myget" MESSAGE "mymess"'
-  pre := 'SetPos(2,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
+  pre := 'SetPos(2,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 2,7 GET a PICTURE "X" RANGE 0,100 WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send()'
-  pre := 'SetPos(2,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{||.T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
+  pre := 'SetPos(2,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 
@@ -1114,59 +1114,59 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid()' 
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()}, ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()}, ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap",,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap",,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send()'  
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()   ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send() GUISEND guisend()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send() GUISEND guisend() SIZE X 100 Y 100'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),100,100,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),100,100,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send() GUISEND guisend() SIZE X 100 Y 100 CAPOFF X 10 Y 10'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),100,100,10,10,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),100,100,10,10,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send() GUISEND guisend() SIZE X 100 Y 100 CAPOFF X 10 Y 10 BITMAP bitmap()'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),100,100,10,10,bitmap(),, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),100,100,10,10,bitmap(),, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send() GUISEND guisend() SIZE X 100 Y 100 CAPOFF X 10 Y 10 BITMAP bitmap() BMPOFF X 2 Y 2'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{||focus()},{||state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON COLOR "W/N"'
@@ -1174,15 +1174,15 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON COLOR "W/N" SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes" COLOR "W/N"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_(,"mes","W/N",,,,100,100,,,,2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in :='@ 4,1 GET a PUSHBUTTON SIZE X 100 Y 100 BMPOFF X 2 Y 2 VALID valid() GUISEND guisend() WHEN when() MESSAGE "mes" COLOR "W/N" CAPOFF X 10 Y 10 FOCUS focus() STATE state() STYLE style() SEND send() BITMAP bitmap() CAPTION "cap"'
-  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{||valid()},{||when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes","W/N",{||focus()},{||state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
+  pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes","W/N",{|| focus()},{|| state()},style(),100,100,10,10,bitmap(),2,2 ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()  ; ATail(GetList):Control:guisend()  ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in

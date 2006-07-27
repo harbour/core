@@ -334,6 +334,7 @@ extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a varia
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
+extern char * hb_compStaticGetName( USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   FALSE
 #define HB_SYM_MSGNAME  FALSE

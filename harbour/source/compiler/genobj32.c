@@ -129,6 +129,9 @@ static ULONG GetPCodesSize( void )
   ULONG ulTotal = 0;
   PFUNCTION pFunction = hb_comp_functions.pFirst;
 
+  if( ! hb_comp_bStartProc )
+    pFunction = pFunction->pNext;
+
   while( pFunction )
     {
       ulTotal += pFunction->lPCodePos;
@@ -278,9 +281,9 @@ static void GenerateDataSegment( FILE * hObjFile )
 
 static void GenerateCodeSegment( FILE * hObjFile )
 {
-  USHORT wFunctions = hb_comp_functions.iCount;
+  USHORT wFunctions = hb_comp_functions.iCount - ( hb_comp_bStartProc ? 0: 1 );
   ULONG ulSize    = wFunctions * sizeof( prgFunction );
-  PFUNCTION pFunc = hb_comp_functions.pFirst;
+  PFUNCTION pFunc = ( hb_comp_bStartProc ? hb_comp_functions.pFirst: hb_comp_functions.pFirst->pNext );
   USHORT w = 0;
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
@@ -466,6 +469,9 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
   PFUNCTION pFunction = hb_comp_functions.pFirst;
   ULONG ulPCodeOffset = hb_comp_symbols.iCount * sizeof( HB_SYMB );
 
+  if( ! hb_comp_bStartProc )
+    pFunction = pFunction->pNext;
+
   putbyte( 0xA0, hObjFile, &bChk );
   putword( wTotalLen, hObjFile, &bChk );
   putbyte( 1, hObjFile, &bChk ); /* 1 = _TEXT segment */
@@ -493,6 +499,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
   PFUNCTION pFunction = hb_comp_functions.pFirst;
   ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();
   ULONG ulFunctionOffset;
+
+  if( ! hb_comp_bStartProc )
+    pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile, &bChk );
   putword( wTotalLen, hObjFile, &bChk );
