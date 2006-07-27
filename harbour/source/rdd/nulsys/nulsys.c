@@ -112,6 +112,14 @@ HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
+HB_EXPORT ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea )
+{
+   HB_SYMBOL_UNUSED( szAlias );
+   HB_SYMBOL_UNUSED( iArea );
+
+   return FAILURE;
+}
+
 HB_EXPORT void hb_rddShutDown( void ) {}
 
 

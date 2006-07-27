@@ -1122,7 +1122,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_EXIT_FUNCNAME( funcname )   HB_FUN_exit_##funcname
 #define HB_INITSTATICS_FUNCNAME()      hb_INITSTATICS
 
-#if defined( __cplusplus ) && defined( HB_FUNC_NO_DECORATION )
+#if defined( __cplusplus ) && !defined( HB_FUNC_USE_DECORATION )
    #define HB_EXTERN_C_ extern "C"
    #define HB_EXTERN_
 #else

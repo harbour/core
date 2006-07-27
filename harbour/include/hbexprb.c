@@ -1254,7 +1254,6 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
             if( usItems )
             {
                HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
-               ++usGroups;
             }
          }
          break;

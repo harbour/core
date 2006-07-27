@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-28 00:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    * use extern "C" as default for HB_FUNC() declaration in C++ mode.
+      I know that this modification will interact with binary compatibility
+      but current state is worser because we were not binary compatible
+      between C and C++ mode. Now the problem should go away with some
+      reasonable for me cost. If compiler uses the same ABI for C and C++
+      mode then the backward binary compatibility problem can be resolved
+      by small tools which can strip C++ decoration from binary libraries.
+      Sometimes also linkers have necessary switches to ignore them.
+
+  * harbour/include/hbexprb.c
+    * cleaned BCC warning
+
+  * harbour/source/rdd/nulsys/nulsys.c
+    + added missing hb_rddGetAliasNumber(), thanks to Ron.
+
 2006-07-27 15:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/compiler/genc.c
    * source/compiler/gencli.c
