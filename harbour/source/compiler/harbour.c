@@ -2492,7 +2492,7 @@ int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
 
 char * hb_compStaticGetName( USHORT wVar )
 {
-   PVAR pVar = NULL;
+   PVAR pVar;
    PFUNCTION pTmp = hb_comp_functions.pFirst;
    
    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )

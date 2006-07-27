@@ -96,6 +96,8 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
       HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
    fprintf( yyc, "// Generated .NET IL source code\n\n" );
 
+   if( ! hb_comp_bStartProc )
+      hb_comp_iFunctionCnt--;
    if( hb_comp_iFunctionCnt )
    {
       fprintf( yyc, ".assembly extern mscorlib{}\n" );

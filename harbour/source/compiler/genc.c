@@ -87,6 +87,9 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
+   if( ! hb_comp_bStartProc )
+      hb_comp_iFunctionCnt--;
+      
    if( hb_comp_iFunctionCnt )
    {
       fprintf( yyc, "#include \"hbvmpub.h\"\n" );

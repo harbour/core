@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-07-27 15:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/compiler/genc.c
+   * source/compiler/gencli.c
+   * source/compiler/harbour.c
+      * generate an empty .c file if there is no valid function
+        in prg code (when -n is used)
+        (this fixes error during compilation of browdbx.prg)
+      * fixed a warning in hb_compStaticGetName
+      
+
 2006-07-27 14:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h
    * source/compiler/genc.c
