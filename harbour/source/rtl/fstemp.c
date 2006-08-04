@@ -75,9 +75,6 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    char cTempDir[ _POSIX_PATH_MAX + 1 ];
 
-   /* TODO: Implement this: */
-   HB_SYMBOL_UNUSED( pszPrefix );
-
    if ( pszDir != NULL && pszDir[0] != '\0' )
    {
       strncpy( (char *) cTempDir, (const char *) pszDir, _POSIX_PATH_MAX );
@@ -92,7 +89,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    }
    cTempDir[ _POSIX_PATH_MAX ] = '\0';
 
-   fResult = GetTempFileName( cTempDir, "xht", 0, (char *) pszBuffer );
+   fResult = GetTempFileName( cTempDir, ( const char * ) ( ( pszPrefix == NULL ) ? "hb" : pszPrefix ), 0, ( char * ) pszBuffer );
 
 #else
 
@@ -255,7 +252,6 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 #endif
 
 #ifdef HB_EXTENSION
-
 
 HB_FUNC( HB_FTEMPCREATE )
 {

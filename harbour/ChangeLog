@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-04 16:00 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/fstemp.c
+     + Implemented prefix parameter in temp file generation for Win32.
+
 2006-08-04 15:24 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/include/hbundoc.api
      + Added _tctemp() undocumented call.
