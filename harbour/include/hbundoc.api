@@ -80,6 +80,7 @@
 #define _tclose         hb_fsClose
 #define _tcommit        hb_fsCommit
 #define _tcreat         hb_fsCreate
+#define _tctemp(p,a,b)  hb_fsCreateTemp( p, "", a, b )
 #define _tcurdir        hb_fsCurDir
 #define _tcurdrv        hb_fsCurDrv
 #define _tdevraw        hb_fsSetDevMode
@@ -93,7 +94,6 @@
 #define _tread          hb_fsRead
 #define _trename        hb_fsRename
 #define _trmdir         hb_fsRmDir
-#define _tctemp(p,a,b)  hb_fsCreateTemp( p, "", a, b )
 #define _tunlink        hb_fsDelete
 #define _twrite         hb_fsWrite
 
