@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-04 15:24 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbundoc.api
+     + Added _tctemp() undocumented call.
+
+   * harbour/source/rtl/fserror.c
+     ! Fixed trace message.
+
 2006-07-28 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsetup.h
     * updated PCODE version number due to recent modifications

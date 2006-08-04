@@ -93,6 +93,7 @@
 #define _tread          hb_fsRead
 #define _trename        hb_fsRename
 #define _trmdir         hb_fsRmDir
+#define _tctemp(p,a,b)  hb_fsCreateTemp( p, "", a, b )
 #define _tunlink        hb_fsDelete
 #define _twrite         hb_fsWrite
 

@@ -185,7 +185,7 @@ HB_EXPORT USHORT hb_fsError( void )
 /* return real error code of last operation */
 HB_EXPORT USHORT hb_fsOsError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsOsError()"));
 
    return s_uiOsErrorLast;
 }
