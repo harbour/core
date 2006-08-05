@@ -5323,14 +5323,16 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
       {
          if( fDirectRead )
          {
+            if( ulRecNo > ulRecCount )
+               break;
             if( iRecBuff == 0 || iRecBuff >= iRecBufSize )
             {
-               if( ulRecNo > ulRecCount )
-                  break;
-               if( ulRecCount - ulRecNo >= (ULONG) iRecBufSize )
+               if( ulRecCount - ulRecNo >= ( ULONG ) iRecBufSize )
                   iRec = iRecBufSize;
                else
                   iRec = ulRecCount - ulRecNo + 1;
+               if( ulNextCount > 0 && ulNextCount < ( ULONG ) iRec )
+                  iRec = ( int ) ulNextCount;
                hb_fsSeekLarge( pArea->hDataFile,
                                ( HB_FOFFSET ) pArea->uiHeaderLen +
                                ( HB_FOFFSET ) ( ulRecNo - 1 ) *

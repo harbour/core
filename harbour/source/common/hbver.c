@@ -310,12 +310,15 @@ char * hb_verCompiler( void )
 {
    char * pszCompiler;
    char * pszName;
+   char szSub[ 32 ];
    int iVerMajor;
    int iVerMinor;
+   int iVerPatch;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
 
    pszCompiler = ( char * ) hb_xgrab( 80 );
+   szSub[ 0 ] = '\0';
 
 #if defined(__IBMC__) || defined(__IBMCPP__)
 
@@ -332,17 +335,56 @@ char * hb_verCompiler( void )
 
    iVerMajor /= 100;
    iVerMinor = iVerMajor % 100;
+   iVerPatch = 0;
+
+#elif defined(__POCC__)
+
+   pszName = "Pelles ISO C Compiler";
+   iVerMajor = __POCC__ / 100;
+   iVerMinor = __POCC__ % 100;
+   iVerPatch = 0;
+
+#elif defined(__XCC__)
+
+   pszName = "Pelles ISO C Compiler";
+   iVerMajor = __XCC__ / 100;
+   iVerMinor = __XCC__ % 100;
+   iVerPatch = 0;
+
+#elif defined(__LCC__)
+
+   pszName = "Logiciels/Informatique lcc-win32";
+   iVerMajor = 0 /* __LCC__ / 100 */;
+   iVerMinor = 0 /* __LCC__ % 100 */;
+   iVerPatch = 0;
+
+#elif defined(__DMC__)
+
+   pszName = __DMC_VERSION_STRING__;
+   iVerMajor = 0;
+   iVerMinor = 0;
+   iVerPatch = 0;
 
 #elif defined(_MSC_VER)
 
    #if (_MSC_VER >= 800)
-      pszName = "Microsoft Visual C/C++";
+      pszName = "Microsoft Visual C";
    #else
-      pszName = "Microsoft C/C++";
+      pszName = "Microsoft C";
+   #endif
+
+   #if defined(__cplusplus)
+      strcpy( szSub, "++" );
    #endif
 
    iVerMajor = _MSC_VER / 100;
    iVerMinor = _MSC_VER % 100;
+
+   #if defined(_MSC_FULL_VER)
+      iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
+   #else
+      iVerPatch = 0;
+   #endif
 
 #elif defined(__BORLANDC__)
 
@@ -350,12 +392,15 @@ char * hb_verCompiler( void )
    #if (__BORLANDC__ == 1040) /* Version 3.1 */
       iVerMajor = 3;
       iVerMinor = 1;
+      iVerPatch = 0;
    #elif (__BORLANDC__ >= 1280) /* Version 5.x */
       iVerMajor = __BORLANDC__ >> 8;
       iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
+      iVerPatch = __BORLANDC__ & 0xF;
    #else /* Version 4.x */
       iVerMajor = __BORLANDC__ >> 8;
       iVerMinor = ( __BORLANDC__ - 1 & 0xFF ) >> 4;
+      iVerPatch = 0;
    #endif
 
 #elif defined(__TURBOC__)
@@ -363,18 +408,35 @@ char * hb_verCompiler( void )
    pszName = "Borland Turbo C";
    iVerMajor = __TURBOC__ >> 8;
    iVerMinor = __TURBOC__ & 0xFF;
+   iVerPatch = 0;
 
 #elif defined(__MPW__)
 
    pszName = "MPW C";
    iVerMajor = __MPW__ / 100;
    iVerMinor = __MPW__ % 100;
+   iVerPatch = 0;
 
 #elif defined(__WATCOMC__)
 
-   pszName = "Watcom C/C++";
+   #if __WATCOMC__ < 1200
+      pszName = "Watcom C";
+   #else
+      pszName = "Open Watcom C";
+   #endif
+
+   #if defined(__cplusplus)
+      strcpy( szSub, "++" );
+   #endif
+
    iVerMajor = __WATCOMC__ / 100;
    iVerMinor = __WATCOMC__ % 100;
+
+   #if defined( __WATCOM_REVISION__ )
+      iVerPatch = __WATCOM_REVISION__;
+   #else
+      iVerPatch = 0;
+   #endif
 
 #elif defined(__GNUC__)
 
@@ -394,39 +456,50 @@ char * hb_verCompiler( void )
       pszName = "GNU C";
    #endif
 
+   #if defined(__cplusplus)
+      strcpy( szSub, "++" );
+   #endif
+
    iVerMajor = __GNUC__;
    iVerMinor = __GNUC_MINOR__;
-
+   #if defined(__GNUC_PATCHLEVEL__)
+      iVerPatch = __GNUC_PATCHLEVEL__;
+   #else
+      iVerPatch = 0;
+   #endif
 #else
 
    pszName = ( char * ) NULL;
-   iVerMajor = 0;
-   iVerMinor = 0;
+   iVerMajor = iVerMinor = iVerPatch = 0;
 
 #endif
 
    if( pszName )
-      sprintf( pszCompiler, "%s %hd.%hd", pszName, iVerMajor, iVerMinor );
+   {
+      if( iVerPatch != 0 )
+         sprintf( pszCompiler, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
+      else if( iVerMajor != 0 || iVerMinor != 0 )
+         sprintf( pszCompiler, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
+      else
+         sprintf( pszCompiler, "%s%s", pszName, szSub );
+   }
    else
       strcpy( pszCompiler, "(unknown)" );
 
 #if defined(__DJGPP__)
 
-   {
-      char szSub[ 32 ];
-      sprintf( szSub, " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
-      strcat( pszCompiler, szSub );
-   }
+   sprintf( szSub, " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
+   strcat( pszCompiler, szSub );
 
-#elif defined(__BORLANDC__)
+#elif defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__GNUC__)
 
-   {
-      char szSub[ 32 ];
-      /* QUESTION: Is there any better, safer, more official way to detect
-                   the bit depth of the C compiler ? [vszakats] */
-      sprintf( szSub, " (%i bit)", ( int ) ( sizeof( int ) * 8 ) );
-      strcat( pszCompiler, szSub );
-   }
+   #if defined( HB_ARCH_16BIT )
+      strcat( pszCompiler, " (16 bit)" );
+   #elif defined( HB_ARCH_32BIT )
+      strcat( pszCompiler, " (32 bit)" );
+   #elif defined( HB_ARCH_64BIT )
+      strcat( pszCompiler, " (64 bit)" );
+   #endif
 
 #endif
 
@@ -444,7 +517,7 @@ char * hb_verHarbour( void )
    pszVersion = ( char * ) hb_xgrab( 80 );
 
    sprintf( pszVersion, "Harbour Alpha build %d.%d Intl. (%s)",
-      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+            HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
 
    return pszVersion;
 }

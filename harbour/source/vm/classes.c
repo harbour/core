@@ -188,7 +188,6 @@ typedef struct
 #define HASH_KEY        ( BASE_METHODS / BUCKET )
 
 
-
 static HARBOUR  hb___msgGetData( void );
 static HARBOUR  hb___msgSetData( void );
 static HARBOUR  hb___msgGetClsData( void );

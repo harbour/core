@@ -83,9 +83,17 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fflush( stdout );
    }
 
-   fprintf( yyc, "/*\n * Harbour Compiler, Alpha build %d.%d (%s)\n",
-      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
-   fprintf( yyc, " * Generated C source code\n */\n\n" );
+   {
+      char *szCmp = hb_verCompiler();
+      char *szHrb  = hb_verHarbour();
+
+      fprintf( yyc, "/*\n * %s\n", szHrb );
+      fprintf( yyc, " * %s\n", szCmp );
+      fprintf( yyc, " * Generated C source from \"%s\"\n */\n", hb_comp_szFile );
+
+      hb_xfree( szCmp );
+      hb_xfree( szHrb );
+   }
 
    if( ! hb_comp_bStartProc )
       hb_comp_iFunctionCnt--;

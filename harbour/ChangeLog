@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-05 13:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbver.c
+    * extended C compiler information
+
+  * harbour/source/compiler/genc.c
+    * use hb_verHarbour() and hb_verCompiler() to for information
+      about Harbour build in generated .c files' headers
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed typo in my last commit - additional dummy evaluations of
+      EVAL block
+
 2006-08-04 16:00 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/fstemp.c
      + Implemented prefix parameter in temp file generation for Win32.
