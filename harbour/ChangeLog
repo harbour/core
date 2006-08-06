@@ -9,7 +9,6 @@
 */
 
 2006-08-06 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * harbour/config/linux/owatcom.cf
   * harbour/source/debug/debugger.prg
     * changed checking for static initialization functions
 
