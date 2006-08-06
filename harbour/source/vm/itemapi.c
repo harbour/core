@@ -1544,9 +1544,9 @@ PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
       char *szText = ( char* ) hb_xgrab( ulLen );
 
       hb_xmemcpy( szText, pItem->item.asString.value, ulLen );
-      pItem->item.asString.value = szText;
-      if( ! pItem->item.asString.allocated )
+      if( pItem->item.asString.allocated )
          hb_xRefDec( pItem->item.asString.value );
+      pItem->item.asString.value = szText;
       pItem->item.asString.allocated = ulLen;
    }
 

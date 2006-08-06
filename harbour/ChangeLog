@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-06 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/linux/owatcom.cf
+  * harbour/source/debug/debugger.prg
+    * changed checking for static initialization functions
+
+  * harbour/source/vm/itemapi.c
+    ! fixed stupid typo in string unsharing which caused very serious bug
+
 2006-08-05 13:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbver.c
     * extended C compiler information

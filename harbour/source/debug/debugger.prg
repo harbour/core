@@ -207,7 +207,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       // add a call to the stack but don't try to show the code yet
       cProcName := ProcName( 1 )
 
-      if cProcName == "(_INITSTATICS)"
+      if cProcName = "(_INITSTATICS"
          //module wide static variable
          AADD( __dbgStatics, { strip_path( uParam1 ), {} } )
          return  // We can not use s_oDebugger yet, so we return
@@ -230,7 +230,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       s_oDebugger:StackProc( uParam1, hb_dbg_ProcLevel()-1 )
 
    case nMode == HB_DBG_ENDPROC
-      if ProcName( 1 ) == "(_INITSTATICS)"
+      if ProcName( 1 ) = "(_INITSTATICS"
          return
       endif
       IF( s_lExit )
@@ -265,7 +265,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       nVarIndex := uParam2
       cVarName  := uParam3
       cProcName := ProcName( 1 )
-      if cProcName == "(_INITSTATICS)"
+      if cProcName = "(_INITSTATICS"
          //module wide static variable
          AAdd( ATAIL(__DbgStatics)[2], { cVarName, nVarIndex, "Static",, nSFrame } )
          return  // We can not use s_oDebugger yet, so we return
