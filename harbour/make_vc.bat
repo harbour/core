@@ -65,7 +65,7 @@ rem ---------------------------------------------------------------
    if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
    if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc INSTALL > make_vc.log
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc INSTALL > nul
    goto EXIT
 
 rem ---------------------------------------------------------------

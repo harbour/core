@@ -56,6 +56,9 @@
 /* TODO: Xbase++ has an extension where the second parameter can specify
          the required attribute. */
 
+/* TOFIX: CA-Cl*pper RTrim()s the filename before doing the existance check. 
+          [vszakats] */
+
 HB_FUNC( FILE )
 {
    hb_retl( ISCHAR( 1 ) ? hb_spFile( ( BYTE * ) hb_parc( 1 ),NULL ) : FALSE );

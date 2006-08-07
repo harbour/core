@@ -2970,7 +2970,7 @@ static BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
                   }
                   uiBaseKey = pFirst->uiKeys + iKey + 1;
                }
-               if( pFirst->uiKeys + pLast->uiKeys <= ( pTag->MaxKeys - 1 ) << 1 )
+               if( ( pFirst->uiKeys + pLast->uiKeys ) <= ( ( pTag->MaxKeys - 1 ) << 1 ) )
                {
                   hb_ntxBalancePages( pTag, pBasePage, uiFirst, pFirst, pLast );
                   if( pFirst->uiKeys >= uiBaseKey )

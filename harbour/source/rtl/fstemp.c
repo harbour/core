@@ -89,7 +89,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    }
    cTempDir[ _POSIX_PATH_MAX ] = '\0';
 
-   fResult = GetTempFileName( cTempDir, ( const char * ) ( ( pszPrefix == NULL ) ? "hb" : pszPrefix ), 0, ( char * ) pszBuffer );
+   fResult = GetTempFileName( ( LPCSTR ) cTempDir, ( ( pszPrefix == NULL ) ? ( LPCSTR ) "hb" : ( LPCSTR ) pszPrefix ), 0, ( LPSTR ) pszBuffer );
 
 #else
 
@@ -259,7 +259,7 @@ HB_FUNC( HB_FTEMPCREATE )
 
    hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                               ( BYTE * ) hb_parc( 2 ),
-                              ISNUM( 3 ) ? hb_parni( 3 ) : FC_NORMAL,
+                              ( USHORT ) ( ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FC_NORMAL ),
                               szName ) );
 
    hb_storc( ( char *) szName, 4 );

@@ -96,6 +96,7 @@
 #define _trmdir         hb_fsRmDir
 #define _tunlink        hb_fsDelete
 #define _twrite         hb_fsWrite
+#define _txopen         hb_fsExtOpen
 
 /* Undocumented CA-Cl*pper support functions */
 

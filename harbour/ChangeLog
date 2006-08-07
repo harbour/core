@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-07 02:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/make_b32.bat
+   * harbour/make_vc.bat
+     ! install call redirected to nul instead of make_b32.log to avoid 
+       overwriting the build results with less important (no) information.
+
+   * harbour/include/hbundoc.api
+     + Added _txopen() (not tested)
+
+   * harbour/source/rdd/dbfcdx/dbfcdx1.c
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     ! BCC -w warnings fixed.
+
+   * harbour/source/rtl/filehb.c
+     + Added TOFIX about a CA-Cl*pper incompatibility.
+       In CA-Cl*pper the argument of FILE() is RTrim()-ed 
+       before doing the check.
+
+   * harbour/source/rtl/fstemp.c
+     ! Fixed two BCC warnings.
+
 2006-08-06 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/debugger.prg
     * changed checking for static initialization functions
