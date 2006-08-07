@@ -417,7 +417,7 @@ HB_FUNC( SET )
 
    if( args > 1 ) hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
-   switch ( set_specifier )
+   switch( set_specifier )
    {
       case HB_SET_ALTERNATE  :
          hb_retl( hb_set.HB_SET_ALTERNATE );
@@ -875,9 +875,18 @@ HB_FUNC( SET )
             }
          }
          break;
-      default                :
+      case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
          break;
+
+#if 0 
+      /*
+       * intentionally removed default: clause to enable C compiler warning
+       * when not all HB_SET_* cases are implemented. [druzus]
+       */
+      default:
+         break;
+#endif
    }
    if( args > 1 ) hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
 }
@@ -1054,6 +1063,7 @@ int hb_setListenerRemove( int listener )
          listener = -listener;
          if( p_sl_prev ) p_sl_prev->next = p_sl->next;
          else sp_sl_first = p_sl->next;
+         if( p_sl == sp_sl_last ) sp_sl_last = p_sl_prev;
          hb_xfree( p_sl );
          p_sl = NULL;
       }

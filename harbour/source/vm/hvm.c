@@ -2093,8 +2093,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
             else
                hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+", 2, pItem1, pItem2 );
          }
-         else if( iPopCnt > 0 )
-            hb_itemMove( pResult, pItem2 );
          else
             hb_itemCopy( pResult, pItem2 );
       }
@@ -2120,7 +2118,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
 
       if( pSubst )
       {
-         hb_itemForwardValue( pResult, pSubst );
+         hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
    }
@@ -2192,7 +2190,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
 
       if( pSubst )
       {
-         hb_itemForwardValue( pResult, pSubst );
+         hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
    }
@@ -2231,7 +2229,7 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
 
       if( pSubst )
       {
-         hb_itemForwardValue( pResult, pSubst );
+         hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
    }
@@ -2259,7 +2257,7 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
 
          if( pSubst )
          {
-            hb_itemForwardValue( pResult, pSubst );
+            hb_itemMove( pResult, pSubst );
             hb_itemRelease( pSubst );
          }
       }
@@ -2279,7 +2277,7 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
 
          if( pSubst )
          {
-            hb_itemForwardValue( pResult, pSubst );
+            hb_itemMove( pResult, pSubst );
             hb_itemRelease( pSubst );
          }
       }
@@ -2303,7 +2301,7 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
 
       if( pSubst )
       {
-         hb_itemForwardValue( pResult, pSubst );
+         hb_itemMove( pResult, pSubst );
          hb_itemRelease( pSubst );
       }
    }
@@ -7301,7 +7299,7 @@ HB_EXPORT BOOL hb_xvmMultByInt( LONG lValue )
       if( pSubst )
       {
          hb_stackPop();
-         hb_itemForwardValue( pValue, pSubst );
+         hb_itemMove( pValue, pSubst );
          hb_itemRelease( pSubst );
       }
    }
@@ -7363,7 +7361,7 @@ HB_EXPORT BOOL hb_xvmDivideByInt( LONG lDivisor )
          if( pSubst )
          {
             hb_stackPop();
-            hb_itemForwardValue( pValue, pSubst );
+            hb_itemMove( pValue, pSubst );
             hb_itemRelease( pSubst );
          }
       }
@@ -7389,7 +7387,7 @@ HB_EXPORT BOOL hb_xvmDivideByInt( LONG lDivisor )
       if( pSubst )
       {
          hb_stackPop();
-         hb_itemForwardValue( pValue, pSubst );
+         hb_itemMove( pValue, pSubst );
          hb_itemRelease( pSubst );
       }
    }

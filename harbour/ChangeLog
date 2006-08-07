@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-07 11:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/set.c
+    ! fixed possible GPF after hb_setListenerRemove()
+    * removed default: clause in main SET() switch to enable C compiler
+      warning when not all HB_SET_* cases are defined.
+
+  * harbour/source/vm/hvm.c
+    ! fixed bug#1533096 reported by Chen
+
 2006-08-07 02:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/make_b32.bat
    * harbour/make_vc.bat
