@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-07 14:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * source/compiler/harbour.y
+      * fixed to support @funname() syntax in assigments
+      
+   * utils/hbpptest/pp_test.prg
+      * fixed preprocessor example
+   
+   * TODO
+      * removed 'to fix' vertical spacing in ppo files
+
+
 2006-08-07 12:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * xharbour/include/usrrdd.ch
    ! fixed RDD method order

@@ -824,7 +824,7 @@ Expression : Variable         { $$ = $1; }
            | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | PareExpList      { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
            | '@' IdentName    { $$ = hb_compCheckPassByRef( hb_compExprNewVarRef( $2 ) ); }
-           | '@' FunIdentCall { $<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2 ); $$ = hb_compCheckPassByRef( hb_compExprNewFunRef( $<string>$ ) ); }
+           | '@' FunIdentCall { int bPassByRef=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;$<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2 ); $$ = hb_compCheckPassByRef( hb_compExprNewFunRef( $<string>$ ) ); hb_comp_bPassByRef=bPassByRef; }
            | '@' MacroVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
            | '@' AliasVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
            ;

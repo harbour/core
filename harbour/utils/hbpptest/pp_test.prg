@@ -499,7 +499,7 @@ DEFINE CLIPBOARD oC OF oD FORMAT TEXT
 	DECLARE WINDOW <w>  ; _DW( <"w">, <{IProc}> )
 
    DEFINE WINDOW &oW
-   DEFINE WINDOW &oW ON INIT oW.Title:= "My title"
+   DEFINE WINDOW &oW ON INIT &oW.Title:= "My title"
    &oW.Title := "title"
    &oW.f9 := 9
 
