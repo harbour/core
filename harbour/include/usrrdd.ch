@@ -55,9 +55,9 @@
 #define UR_BOF                                  1
 #define UR_EOF                                  2
 #define UR_FOUND                                3
-#define UR_GOTO                                 4
-#define UR_GOTOID                               5
-#define UR_GOBOTTOM                             6
+#define UR_GOBOTTOM                             4
+#define UR_GOTO                                 5
+#define UR_GOTOID                               6
 #define UR_GOTOP                                7
 #define UR_SEEK                                 8
 #define UR_SKIP                                 9
