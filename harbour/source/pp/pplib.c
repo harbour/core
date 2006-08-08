@@ -187,17 +187,19 @@ HB_FUNC( __PREPROCESS )
          slen = HB_MIN( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
          memcpy( pText, hb_parc( 1 ), slen );
          pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
-         memset( pOut, 0, HB_PP_STR_SIZE );
-
-         HB_SKIPTABSPACES( ptr );
-
-         if( !hb_pp_topDefine )
-            hb_pp_Table();
-         if( hb_pp_ParseExpression( ptr, pOut, FALSE ) > 0 )
+         if( slen )
          {
-            /* Some error here? */
-         }
+            memset( pOut, 0, HB_PP_STR_SIZE );
 
+            HB_SKIPTABSPACES( ptr );
+
+            if( !hb_pp_topDefine )
+               hb_pp_Table();
+            if( *ptr && hb_pp_ParseExpression( ptr, pOut, FALSE ) > 0 )
+            {
+               /* Some error here? */
+            }
+         }
          hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
       }
       /* else

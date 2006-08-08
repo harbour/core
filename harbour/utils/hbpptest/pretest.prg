@@ -1223,7 +1223,7 @@ FUNCTION PreRun( in, pre )
 LOCAL len, i, cin, cout
 LOCAL out:=''
 
-  len := MLCOUNT( in )
+  len := MLCOUNT( in, 1024 )
   FOR i:=1 TO len
     cin := ALLTRIM( MEMOLINE(in, 1024, i) )
     out += __PreProcess( cin )
