@@ -149,7 +149,7 @@ typedef struct
    int     HB_SET_AUTOSHARE;
    BOOL    HB_SET_BELL;
    BOOL    HB_SET_CANCEL;
-   char    HB_SET_COLOR[ CLR_STRLEN ];
+   char *  HB_SET_COLOR;
    BOOL    HB_SET_CONFIRM;
    BOOL    HB_SET_CONSOLE;
    char *  HB_SET_DATEFORMAT;
@@ -190,7 +190,7 @@ typedef struct
    BOOL    HB_SET_UNIQUE;
    int     HB_SET_FILECASE;
    int     HB_SET_DIRCASE;
-   char    HB_SET_DIRSEPARATOR;
+   int     HB_SET_DIRSEPARATOR;
    int     HB_SET_VIDEOMODE;
    BOOL    HB_SET_WRAP;
    int     HB_SET_DBFLOCKSCHEME;

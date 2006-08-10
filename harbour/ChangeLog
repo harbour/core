@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-10 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+    * changed order of members in HB_FNAME structure to avoid possible
+      problems with alignment
+
+  * harbour/include/hbexprb.c
+    ! cleaned usGroups usage to avoid BCC warnings
+
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/fstemp.c
+    * code formatting and casting
+
+  * harbour/include/hbset.h
+  * harbour/source/rtl/set.c
+    * some minor updates for future incoming hb_set structure
+      modifications
+
+  * harbour/source/vm/hvm.c
+    * use HB_MACRO2STRING() macro for default lang setting
+
+  * harbour/include/hbrdddel.h
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbcmd.c
+    + extended COPY TO ... DELIMITED ... / APPEND FROM ... DELIMITED ...
+      to support some other common formats.
+          COPY TO ... DELIMITED WITH TAB
+          APPEND FROM ... DELIMITED WITH TAB
+      uses chr(9) as field separator and without string delimiters
+          COPY TO ... DELIMITED WITH PIPE
+          APPEND FROM ... DELIMITED WITH PIPE
+      uses '|' as field separator and without string delimiters
+          COPY TO ... DELIMITED WITH ( { cStrDelim, cFldSeparator } )
+          APPEND FROM ... DELIMITED WITH ( { cStrDelim, cFldSeparator } )
+      allows users to set and any character field delimiters and fields
+      separators
+
 2006-08-10 12:30 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/compiler/harbour.c
       * fixed some 'memory unreleased' errors

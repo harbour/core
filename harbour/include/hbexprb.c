@@ -1231,7 +1231,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
-            USHORT usItems = 0, usGroups = 0;
+            USHORT usItems = 0;
 
             while( pExpr )
             {
@@ -1242,9 +1242,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
                   {
                      HB_EXPR_PCODE1( hb_compGenPushLong, usItems );
                      usItems = 0;
-                     ++usGroups;
                   }
-                  ++usGroups;
                }
                else
                   ++usItems;

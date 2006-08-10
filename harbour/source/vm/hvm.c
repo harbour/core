@@ -415,9 +415,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    /* Set the language to the default */
 
    /* This trick is needed to stringify the macro value */
-   #define HB_LANG_SELECT_DEFAULT( id ) HB_LANG_SELECT_DEFAULT_( id )
-   #define HB_LANG_SELECT_DEFAULT_( id ) hb_langSelectID( #id )
-   HB_LANG_SELECT_DEFAULT( HB_LANG_DEFAULT );
+   hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
 
    /* Check for some internal switches */
    s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
@@ -447,7 +445,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
     * explicitly in VM initialization process before hb_vmDoInitFunctions()
     * and not depends on INIT clause.
     */
-   hb_vmDoInitClip();      
+   hb_vmDoInitClip();
 
    hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
    hb_vmDoInitFunctions();          /* process defined INIT functions */

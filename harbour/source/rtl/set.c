@@ -73,8 +73,6 @@ static PHB_SET_LISTENER sp_sl_first;
 static PHB_SET_LISTENER sp_sl_last;
 static int s_next_listener;
 
-static char hb_dirsep_string[2];
-
 static HB_PATHNAMES * sp_set_path;
 
 static void hb_setFreeSetPath( void )
@@ -219,15 +217,16 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    user_ferror = hb_fsError(); /* Save the current user file error code */
    /* Create full filename */
 
-
-     #if defined(OS_UNIX_COMPATIBLE)
-      if( ( bPipe = ( set_specifier == HB_SET_PRINTFILE && \
-                      (char) *file_name == '|' ) ) ) {
-         file_name++;
-         bAppend = FALSE;
-      }
-   #endif
-   if( ! bPipe ) {
+#if defined(OS_UNIX_COMPATIBLE)
+   bPipe = set_specifier == HB_SET_PRINTFILE && file_name[ 0 ] == '|';
+   if( bPipe )
+   {
+      file_name++;
+      bAppend = FALSE;
+   }
+#endif
+   if( ! bPipe )
+   {
       pFilename = hb_fsFNameSplit( file_name );
 
       if( ! pFilename->szPath && hb_set.HB_SET_DEFAULT )
@@ -856,11 +855,14 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_DIRSEPARATOR :
-         hb_dirsep_string[0] = hb_set.HB_SET_DIRSEPARATOR;
-         hb_dirsep_string[1] = '\0';
-         hb_retc( hb_dirsep_string );
-	 if( args > 1 ) hb_set.HB_SET_DIRSEPARATOR = set_char( pArg2, hb_set.HB_SET_DIRSEPARATOR );
+      {
+         char szDirSep[ 2 ];
+         szDirSep[ 0 ] = ( char ) hb_set.HB_SET_DIRSEPARATOR;
+         szDirSep[ 1 ] = '\0';
+         hb_retc( szDirSep );
+         if( args > 1 ) hb_set.HB_SET_DIRSEPARATOR = set_char( pArg2, hb_set.HB_SET_DIRSEPARATOR );
          break;
+      }
       case HB_SET_DBFLOCKSCHEME:
          hb_retni( hb_set.HB_SET_DBFLOCKSCHEME );
          if( args > 1 )
@@ -911,8 +913,8 @@ void hb_setInitialize( void )
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
    hb_set.hb_set_century = FALSE;
-   strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", sizeof( hb_set.HB_SET_COLOR ) );
-   hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
+   hb_set.HB_SET_COLOR = ( char * ) hb_xgrab( CLR_STRLEN + 1 );
+   hb_strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", CLR_STRLEN );
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
@@ -973,11 +975,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
-#ifdef HB_OS_UNIX
-   hb_set.HB_SET_DIRSEPARATOR = '/';
-#else
-   hb_set.HB_SET_DIRSEPARATOR = '\\';
-#endif
+   hb_set.HB_SET_DIRSEPARATOR = OS_PATH_DELIMITER;
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;
@@ -1016,6 +1014,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_MFILEEXT  )  hb_xfree( hb_set.HB_SET_MFILEEXT );
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
+   if( hb_set.HB_SET_COLOR )      hb_xfree( hb_set.HB_SET_COLOR );
 
    hb_set.HB_SET_TYPEAHEAD = 0;   hb_inkeyReset(); /* reset keyboard buffer */
 

@@ -106,9 +106,8 @@ typedef struct _DELIMAREA
    char *   szFileName;             /* Name of data file */
    char *   szEol;                  /* EOL marker */
    USHORT   uiEolLen;               /* Size of EOL marker */
-   BOOL     fDelim;                 /* Use character field delimiter? */
    char     cDelim;                 /* Character field delimiter */
-   char     cSeparator;             /* Field delimiter */
+   char     cSeparator;             /* Field separator */
    USHORT   uiRecordLen;            /* Size of record */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
    BYTE *   pRecord;                /* Buffer of record data */

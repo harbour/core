@@ -2350,7 +2350,7 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
    ULONG ulDirLen, ulFileLen;
 
 #ifdef __XHARBOUR__
-   if ( hb_set.HB_SET_TRIMFILENAME )
+   if( hb_set.HB_SET_TRIMFILENAME )
    {
       char *szFileTrim;
       ULONG ulLen;
@@ -2365,11 +2365,10 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
    }
 #endif
 
-   /* Look for filename (Last "\" or DIRSEPARATOR) */
    if( hb_set.HB_SET_DIRSEPARATOR != '\\' )
    {
       char *p = str;
-      while ( *p )
+      while( *p )
       {
          if( *p == '\\' )
          {
@@ -2379,7 +2378,8 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
       }
    }
 
-   if ( ( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR ) ) != NULL )
+   /* Look for filename (Last "\" or DIRSEPARATOR) */
+   if( ( filename = strrchr( str, hb_set.HB_SET_DIRSEPARATOR ) ) != NULL )
    {
       filename++;
    }
@@ -2391,7 +2391,7 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
    ulDirLen = filename - str;
 
    /* FILECASE */
-   if ( ulFileLen > 0 )
+   if( ulFileLen > 0 )
    {
       if( hb_set.HB_SET_FILECASE == HB_SET_CASE_LOWER )
          hb_strLower( filename, strlen(filename) );
@@ -2400,14 +2400,14 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
    }
 
    /* DIRCASE */
-   if ( ulDirLen > 0 )
+   if( ulDirLen > 0 )
    {
-      if ( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
          hb_strLower( str, ulDirLen );
       else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
          hb_strUpper( str, ulDirLen );
    }
-   return (( BYTE * ) str);
+   return ( BYTE * ) str;
 }
 
 HB_EXPORT BOOL hb_fsDisableWaitLocks( int iSet )

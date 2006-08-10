@@ -160,11 +160,11 @@ extern HB_EXPORT FHANDLE  hb_fsGetOsHandle( FHANDLE hFileHandle );
 /* Filename support */
 typedef struct
 {
-   char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
    char * szPath;
    char * szName;
    char * szExtension;
    char * szDrive;
+   char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
 extern HB_EXPORT PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename into path, name and extension */

@@ -130,7 +130,7 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
             uiLen = pField->uiLen;
             while( uiLen && pFieldBuf[ uiLen - 1 ] == ' ' )
                --uiLen;
-            if( pArea->fDelim )
+            if( pArea->cDelim )
             {
                pBuffer[ ulSize++ ] = pArea->cDelim;
                memcpy( pBuffer + ulSize, pFieldBuf, uiLen );
@@ -280,7 +280,7 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
          while( ch == ' ' );
 
          /* set the stop character */
-         if( pArea->fDelim && ch == pArea->cDelim )
+         if( pArea->cDelim && ch == pArea->cDelim )
          {
             cStop = pArea->cDelim;
             ch = hb_delimNextChar( pArea );
@@ -916,15 +916,54 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( hb_itemType( pItem ) & HB_IT_STRING )
          {
             char * szDelim = hb_itemGetCPtr( pItem );
+
             if( hb_stricmp( szDelim, "BLANK" ) == 0 )
             {
-               pArea->fDelim = FALSE;
                pArea->cDelim = '\0';
                pArea->cSeparator = ' ';
             }
+#ifndef HB_C52_STRICT
+            else if( hb_stricmp( szDelim, "PIPE" ) == 0 )
+            {
+               pArea->cDelim = '\0';
+               pArea->cSeparator = '|';
+            }
+            else if( hb_stricmp( szDelim, "TAB" ) == 0 )
+            {
+               pArea->cDelim = '\0';
+               pArea->cSeparator = '\t';
+            }
+            else
+#else
             else if( *szDelim )
+#endif
+            {
                pArea->cDelim = *szDelim;
+            }
          }
+         /*
+          * a small trick which allow to set character field delimiter and
+          * field separator in COPY TO ... and APPEND FROM ... commands as
+          * array. F.e.:
+          *    COPY TO test DELIMITED WITH ({"","|"})
+          */
+#ifndef HB_C52_STRICT
+         else if( hb_itemType( pItem ) & HB_IT_ARRAY )
+         {
+            PHB_ITEM pDelim, pSeparator;
+
+            pDelim = hb_arrayGetItemPtr( pItem, 1 );
+            pSeparator = hb_arrayGetItemPtr( pItem, 2 );
+            if( hb_itemType( pDelim ) & HB_IT_STRING )
+               pArea->cDelim = *hb_itemGetCPtr( pDelim );
+            if( hb_itemType( pSeparator ) & HB_IT_STRING )
+            {
+               char * szSeparator = hb_itemGetCPtr( pSeparator );
+               if( *szSeparator )
+                  pArea->cSeparator = *szSeparator;
+            }
+         }
+#endif
          break;
 
       case DBI_SEPARATOR:
@@ -1081,10 +1120,9 @@ static ERRCODE hb_delimNewArea( DELIMAREAP pArea )
    pArea->ulBufferSize = 0;
 
    /* set character field delimiter */
-   pArea->fDelim = TRUE;
    pArea->cDelim = '"';
 
-   /* set field delimiter */
+   /* set field separator */
    pArea->cSeparator = ',';
 
    return SUCCESS;
