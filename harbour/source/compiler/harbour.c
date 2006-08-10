@@ -2203,7 +2203,7 @@ void hb_compExternGen( void ) /* generates the symbols for the EXTERN names */
    PEXTERN pDelete;
 
    if( hb_comp_bDebugInfo )
-      hb_compExternAdd( hb_strdup( "__DBGENTRY" ) );
+      hb_compExternAdd( hb_compIdentifierNew( "__DBGENTRY", TRUE ) );
 
    while( hb_comp_pExterns )
    {
@@ -3045,7 +3045,7 @@ void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pF
       else if( bPCode == HB_P_PUSHFIELD )
          bPCode = HB_P_PUSHALIASEDFIELD;
 
-      hb_compGenPushSymbol( hb_strdup( pField->szAlias ), FALSE, TRUE );
+      hb_compGenPushSymbol( pField->szAlias, FALSE, TRUE );
    }
    hb_compGenVarPCode( bPCode, szVarName );
 }

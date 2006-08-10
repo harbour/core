@@ -1886,7 +1886,7 @@ static int WorkTranslate( char *ptri, char *ptro, COMMANDS * sttra, int *lens )
    return -1;
 }
 
-#define MAX_OPTIONALS 5
+#define MAX_OPTIONALS 64
 
 static int CommandStuff( char *ptrmp, char *inputLine, char *ptro, int *lenres, BOOL com_or_tra, BOOL com_or_xcom )
 {
@@ -4190,14 +4190,17 @@ void hb_pp_Stuff( char *ptri, char *ptro, int len1, int len2, int lenres )
 
    if( len1 > len2 )
    {
-      ptr1 = ptro + lenres;
+      ptr1 = ptro + lenres + 1;
       ptr2 = ptro + lenres + len1 - len2;
       /* This is a static buffer - current inserting can erase the null char
          than we need set it again.
        */
       ptr2[1] = '\0';
-      for( i = 0; i <= lenres; ptr1--, ptr2--, i++ )
+      for( i = 0; i <= lenres; ptr2--, i++ )
+      {
+         ptr1--;
          *ptr2 = *ptr1;
+      }
    }
    else
    {
