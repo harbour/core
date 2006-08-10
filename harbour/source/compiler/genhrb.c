@@ -96,6 +96,8 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    }
 
    pFunc = hb_comp_functions.pFirst;
+   if( ! hb_comp_bStartProc )
+      pFunc = pFunc->pNext;
 
    lSymbols = 0;                /* Count number of symbols */
    while( pFunc )

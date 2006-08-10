@@ -127,13 +127,15 @@ static BOOL hb_hrbReadValue( char * szBody, ULONG ulBodySize, ULONG * pulBodyOff
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%lu,%p,%p)", szBody, ulBodySize, pulBodyOffset, pulValue));
 
-   if( *pulBodyOffset + 4 > ulBodySize )
+   if( *pulBodyOffset + 4 < ulBodySize )
    {
       *pulValue = HB_PCODE_MKLONG( szBody + *pulBodyOffset );
       *pulBodyOffset += 4;
 
       if( *pulValue <= 0x00FFFFFFUL )
+      {
          return TRUE;
+      }
    }
 
    return FALSE;
@@ -323,7 +325,7 @@ PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
       if( iVersion == 0 )
       {
-         hb_errRT_BASE( EG_CORRUPTION, 9999, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9995, NULL, "__HRBLOAD", 0 );
          return NULL;
       }
 
@@ -340,7 +342,7 @@ PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             pHrbBody->ulSymbols == 0 )
       {
          hb_hrbUnLoad( pHrbBody );
-         hb_errRT_BASE( EG_CORRUPTION, 9999, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9996, NULL, "__HRBLOAD", 0 );
          return NULL;
       }
 
@@ -369,7 +371,7 @@ PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       {
          hb_hrbFreeSymbols( pSymRead, ul );
          hb_hrbUnLoad( pHrbBody );
-         hb_errRT_BASE( EG_CORRUPTION, 9999, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9997, NULL, "__HRBLOAD", 0 );
          return NULL;
       }
 
@@ -407,9 +409,10 @@ PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          {
             hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
             hb_hrbUnLoad( pHrbBody );
-            hb_errRT_BASE( EG_CORRUPTION, 9999, NULL, "__HRBLOAD", 0 );
+            hb_errRT_BASE( EG_CORRUPTION, 9998, NULL, "__HRBLOAD", 0 );
             return NULL;
          }
+
       }
 
       /* End of PCODE loading, now linking */
