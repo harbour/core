@@ -8,6 +8,7 @@
 
 #command TEXT TO VAR <v> => #pragma __stream|%s||<v>:=
 #command CTEXT TO VAR <v> => #pragma __cstream|%s||<v>:=
+#command XTEXT TO VAR <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE()||<v>:=""
 
 /* Testing preprocessor */
 
@@ -40,12 +41,9 @@ LOCAL nRes:=0
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-CTEXT TO VAR in
-#define RED {255,0,0}\n
-#xcommand SET TOOLTIP TO <color> OF <form> => 
-SM( TTH (<"form">), 1, RGB(<color>[1], 
-<color>\[2\],
-<color>[, <color>[ 3 ] ]), 0)\n
+XTEXT TO VAR in
+#define RED {255,0,0}
+#xcommand SET TOOLTIP TO <color> OF <form> => SM( TTH (<"form">), 1, RGB(<color>[1], <color>\[2\], <color>[, <color>[ 3 ] ]), 0)
 SET TOOLTIP TO RED OF form1
 ENDTEXT
 TEXT TO VAR pre    
@@ -71,29 +69,29 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-CTEXT TO VAR in
-#xtranslate _HMG_a  =>  _HMG\[137\]\n
+XTEXT TO VAR in
+#xtranslate _HMG_a  =>  _HMG\[137\]
 v:= _bro[ a( _HMG_a [i] ) ]
 ENDTEXT
   pre :="v:= _bro[ a( _HMG[137] [i] ) ]"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-CTEXT TO VAR in
-#define clas( x )   (x)\n
-#xtranslate ( <!name!>{ [<p,...>] } => (<name>():New(<p>)\n
+XTEXT TO VAR in
+#define clas( x )   (x)
+#xtranslate ( <!name!>{ [<p,...>] } => (<name>():New(<p>)
 a :=clas( TEST{ 1,2,3} )
 ENDTEXT
   pre := "a :=(TEST():New(1,2,3) )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-CTEXT TO VAR in
-#define DATENEW   1\n
-#define DATEOLD(x)   x\n
-#define datediff(x,y) ( DATEOLD(x) - DATENEW )\n
-\n
-#command datediff1(<x>,<y>) => ( DATEOLD(<x>) - DATENEW )\n
+XTEXT TO VAR in
+#define DATENEW   1
+#define DATEOLD(x)   x
+#define datediff(x,y) ( DATEOLD(x) - DATENEW )
+
+#command datediff1(<x>,<y>) => ( DATEOLD(<x>) - DATENEW )
 x := datediff( x, y )
 ENDTEXT
   pre := "x := (x - 1 )"
@@ -330,8 +328,8 @@ ENDTEXT
 
 
   // REGULAR list
-CTEXT TO VAR in
-#command _REGULAR_L(<z,...>)	=> rl( <z> )\n
+XTEXT TO VAR in
+#command _REGULAR_L(<z,...>)	=> rl( <z> )
 _REGULAR_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &a.a,  a, a)
 ENDTEXT
 CTEXT TO VAR pre
@@ -340,8 +338,8 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   // NORMAL list
-CTEXT TO VAR in
-#command _NORMAL_L(<z,...>) => nl( <"z"> )\n
+XTEXT TO VAR in
+#command _NORMAL_L(<z,...>) => nl( <"z"> )
 _NORMAL_L(n,"n",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 ENDTEXT
 CTEXT TO VAR pre
@@ -350,8 +348,8 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   // SMART list
-CTEXT TO VAR in
-#command _SMART_L(<z,...>) => sl( <(z)> )\n
+XTEXT TO VAR in
+#command _SMART_L(<z,...>) => sl( <(z)> )
 _SMART_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 ENDTEXT
 CTEXT TO VAR pre
@@ -360,8 +358,8 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   // DUMB list
-CTEXT TO VAR in
-#command _DUMB_L(<z,...>) => dl( #<z> )\n
+XTEXT TO VAR in
+#command _DUMB_L(<z,...>) => dl( #<z> )
 _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &.a, &a.a,  a, a)
 ENDTEXT
 CTEXT TO VAR pre
@@ -508,8 +506,8 @@ ENDTEXT
   pre := 'dbSetFilter( {|| &cVar. .AND. cVar}, "&cVar. .AND. cVar" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-CTEXT TO VAR in
-#xtranslate XTRANS(<x>( => normal( <(x)> )\n
+XTEXT TO VAR in
+#xtranslate XTRANS(<x>( => normal( <(x)> )
 #xtranslate XTRANS(<x:&>( => macro( <(x)> )
 ENDTEXT
   PrePrepare( in )
@@ -566,11 +564,11 @@ ENDTEXT
   pre := 'normal("&cVar. .AND. cVar" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-CTEXT TO VAR in
-#xtranslate MXCALL <x:&>  => (<x>)\n
-#xtranslate MYCALL <x:&> <y>  => <x>( <y>, 'mycall' )\n
-#xtranslate MZCALL <x> <y>  => <x>( <y>, "mzcall" )\n
-#command   FOO <x:&> FOO <y:&> => <(x)>+<(y)>\n
+XTEXT TO VAR in
+#xtranslate MXCALL <x:&>  => (<x>)
+#xtranslate MYCALL <x:&> <y>  => <x>( <y>, 'mycall' )
+#xtranslate MZCALL <x> <y>  => <x>( <y>, "mzcall" )
+#command   FOO <x:&> FOO <y:&> => <(x)>+<(y)>
 #translate BAR <x:&> BAR <y:&> => <(x)>+<(y)>
 ENDTEXT
   PrePrepare( in )
@@ -719,10 +717,10 @@ ENDTEXT
   pre := '((&cVar.1)) ++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-CTEXT TO VAR in
-#translate MTRANSLATE <x> => normal_t(<"x">)\n
-#translate MTRANSLATE <x:&>  => macro_t(<(x)>)\n
-#command MCOMMAND <x> => normal_c(<"x">)\n
+XTEXT TO VAR in
+#translate MTRANSLATE <x> => normal_t(<"x">)
+#translate MTRANSLATE <x:&>  => macro_t(<(x)>)
+#command MCOMMAND <x> => normal_c(<"x">)
 #command MCOMMAND <x:&>  => macro_c(<(x)>)
 ENDTEXT
   PrePrepare( in )

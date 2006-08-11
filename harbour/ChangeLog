@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-11 10:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * utils/hbpptest/pretest.prg
+      * fixed to use HB_OSNewLine(0 instead '\n'
+
 2006-08-10 16:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/compiler/genhrb.c
      ! fixed a bug in counting of the number of functions
