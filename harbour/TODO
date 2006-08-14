@@ -181,16 +181,6 @@ Status...: Open.
 =======================================================================
 
 Assign to: Przemek
-Detail...: Eliminate using hb_stackTopItem() it causes that HVM is not
-           safe for reentrant and automatic GC activation. To not
-           reduce the speed chance the indexes in HB_STACK structure to
-           give fastest access to the most last allocated item on the
-           stack.
-Status...: Open.
-
-***
-
-Assign to: Przemek
 Detail...: Fix setting private base for code blocks created by macro
            compiler. Maybe it should be bound with making CLEAR MEMORY
            safe.

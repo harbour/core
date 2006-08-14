@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-14 14:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    - removed eliminating hb_stackTopItem() from TOFIX - Done.
+
+  * harbour/include/hbexprc.c
+    * restore original expression type after *POPEQ optimization
+
+  * harbour/source/compiler/harbour.c
+    * removed some commented code
+
+  * harbour/source/compiler/harbour.y
+    % optimized PCODE generated for FOR/NEXT statement - it eliminates
+      one unconditional jump inside the loop - Ryszard if you can please
+      check me.
+
 2006-08-14 10:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/fserror.c
     + added translation error code for ENMFILE

@@ -1616,19 +1616,11 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
              TO Expression StepExpr                   /* 6  7  8 */
                {
                   hb_compLoopStart();
-                  $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;  /* 9 */
-                  hb_compExprGenPush( $2 );              /* counter */
-                  hb_compExprGenPush( $7 );              /* end */
-                  if( $<asExpr>8 )
-                     hb_compExprGenPush( $<asExpr>8 );   /* step */
+                  $<lNumber>$ = hb_compGenJump( 0 );  /* 9 */
                }
              Crlf                                     /* 10 */
                {
-                  if( $<asExpr>8 )
-                     hb_compGenPCode1( HB_P_FORTEST );
-                  else
-                     hb_compGenPCode1( HB_P_GREATER );
-                  $<lNumber>$ = hb_compGenJumpTrue( 0 );    /* 11 */
+                  $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;  /* 11 */
                }
              ForStatements                            /* 12 */
                {
@@ -1661,8 +1653,19 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2 ) ) );
                   }
 
-                  hb_compGenJump( $<lNumber>9 - hb_comp_functions.pLast->lPCodePos );
-                  hb_compGenJumpHere( $<lNumber>11 );
+                  hb_compGenJumpHere( $<lNumber>9 );
+
+                  hb_compExprGenPush( $2 );              /* counter */
+                  hb_compExprGenPush( $7 );              /* end */
+                  if( $<asExpr>8 )
+                  {
+                     hb_compExprGenPush( $<asExpr>8 );   /* step */
+                     hb_compGenPCode1( HB_P_FORTEST );
+                  }
+                  else
+                     hb_compGenPCode1( HB_P_GREATER );
+
+                  hb_compGenJumpFalse( $<lNumber>11 - hb_comp_functions.pLast->lPCodePos );
                   hb_compLoopEnd();
                   if( hb_compExprAsSymbol($<asExpr>2) )
                   {

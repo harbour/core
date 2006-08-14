@@ -2676,36 +2676,6 @@ static void hb_compPrepareOptimize( void )
 
 ULONG hb_compGenJump( LONG lOffset )
 {
-   /*
-    * optimizing jumps here by shorting them and setting HB_P_NOOPs
-    * only slow down the compilation process for three reasons:
-    * 1. When it's dummy jump to next instruction we need two passes
-    *    in hb_compOptimizeJumps() to fully remove it
-    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
-    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
-    *    at runtime because we will have more HVM loops: first  for the
-    *    shorter jump and next for the HB_P_NOOP PCODE(s)
-    * [druzuz]
-    */
-#if 0
-   /* Just a place holder, it might be a far jump...*/
-   if( lOffset == 0 )
-   {
-      hb_compGenPCode4( HB_P_JUMPFAR, 0, 0, 0, ( BOOL ) 1 );
-   }
-   else if( HB_LIM_INT8( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else if( HB_LIM_INT16( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else
-#endif
    if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
@@ -2722,36 +2692,6 @@ ULONG hb_compGenJump( LONG lOffset )
 
 ULONG hb_compGenJumpFalse( LONG lOffset )
 {
-   /*
-    * optimizing jumps here by shorting them and setting HB_P_NOOPs
-    * only slow down the compilation process for three reasons:
-    * 1. When it's dummy jump to next instruction we need two passes
-    *    in hb_compOptimizeJumps() to fully remove it
-    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
-    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
-    *    at runtime because we will have more HVM loops: first  for the
-    *    shorter jump and next for the HB_P_NOOP PCODE(s)
-    * [druzuz]
-    */
-#if 0
-   /* Just a place holder, it might be a far jump...*/
-   if( lOffset == 0 )
-   {
-      hb_compGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0, ( BOOL ) 1 );
-   }
-   else if( HB_LIM_INT8( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else if( HB_LIM_INT16( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else
-#endif
    if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
@@ -2768,36 +2708,6 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
 
 ULONG hb_compGenJumpTrue( LONG lOffset )
 {
-   /*
-    * optimizing jumps here by shorting them and setting HB_P_NOOPs
-    * only slow down the compilation process for three reasons:
-    * 1. When it's dummy jump to next instruction we need two passes
-    *    in hb_compOptimizeJumps() to fully remove it
-    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
-    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
-    *    at runtime because we will have more HVM loops: first  for the
-    *    shorter jump and next for the HB_P_NOOP PCODE(s)
-    * [druzuz]
-    */
-#if 0
-   /* Just a place holder, it might be a far jump...*/
-   if( lOffset == 0 )
-   {
-      hb_compGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0, ( BOOL ) 1 );
-   }
-   else if( HB_LIM_INT8( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_P_NOOP, HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else if( HB_LIM_INT16( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_P_NOOP, ( BOOL ) 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 1 );
-   }
-   else
-#endif
    if( HB_LIM_INT24( lOffset ) )
    {
       hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), ( BOOL ) 1 );
@@ -2817,94 +2727,6 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    BYTE * pCode = hb_comp_functions.pLast->pCode;
    LONG lOffset = ulTo - ulFrom + 1;
 
-   /*
-    * optimizing jumps here by shorting them and setting HB_P_NOOPs
-    * only slow down the compilation process for three reasons:
-    * 1. When it's dummy jump to next instruction we need two passes
-    *    in hb_compOptimizeJumps() to fully remove it
-    * 2. hb_compOptimizeJumps() also make jump shortcutting in each pass
-    * 3. When Jump Optimization is disabled (-kJ) then it cause slowness
-    *    at runtime because we will have more HVM loops: first  for the
-    *    shorter jump and next for the HB_P_NOOP PCODE(s)
-    * [druzuz]
-    */
-#if 0
-   if( HB_LIM_INT8( lOffset ) )
-   {
-      switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
-      {
-         case HB_P_JUMPFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPTRUEFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPFALSEFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
-            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         /* there is no shorter jump version for these PCODEs */
-         case HB_P_SEQBEGIN :
-         case HB_P_SEQEND :
-            HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
-            return;
-
-         default:
-            /* printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
-            break;
-      }
-
-      pCode[ ( ULONG ) ulFrom ] = HB_LOBYTE( lOffset );
-
-      hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
-      hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
-   }
-   else if( HB_LIM_INT16( lOffset ) )
-   {
-      switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
-      {
-         case HB_P_JUMPFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPTRUEFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         case HB_P_JUMPFALSEFAR :
-            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
-            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-            break;
-
-         /* there is no shorter jump version for these PCODEs */
-         case HB_P_SEQBEGIN :
-         case HB_P_SEQEND :
-            HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
-            return;
-
-         default:
-            /* printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
-            break;
-      }
-
-      HB_PUT_LE_UINT16( &pCode[ ulFrom ], lOffset );
-
-      hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
-   }
-   else
-#endif
    if( HB_LIM_INT24( lOffset ) )
    {
       HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );

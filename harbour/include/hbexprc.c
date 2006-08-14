@@ -308,7 +308,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
       if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
       {
-         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType;
+         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType, iOldType;
          
          if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
          {
@@ -332,6 +332,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                }
             }
             /* NOTE: direct type change */
+            iOldType = pSelf->value.asOperator.pLeft->ExprType;
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -352,6 +353,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                   break;
             }
             HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+            pSelf->value.asOperator.pLeft->ExprType = iOldType;
             return;
          }
          else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
@@ -361,6 +363,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
             if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
             {
                /* NOTE: direct type change */
+               iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -381,6 +384,8 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                      break;
                }
                HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+               pSelf->value.asOperator.pRight->ExprType = iType;
                return;
             }
          }
