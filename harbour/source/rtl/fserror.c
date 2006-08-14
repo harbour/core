@@ -76,6 +76,9 @@ static int hb_errnoToDosError( int ErrCode )
 #else
    switch ( ErrCode )
    {
+#if defined( ENMFILE )
+      case ENMFILE:
+#endif
       case ENOENT:
          iResult = 2;   /* File not found */
          break;
@@ -160,9 +163,6 @@ static int hb_WinToDosError( ULONG ulError )
          break;
       case ERROR_INVALID_HANDLE:
          iResult = 6;
-         break;
-      case 25:
-         iResult = 25;
          break;
 
       default:

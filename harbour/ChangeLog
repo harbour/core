@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-14 10:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/fserror.c
+    + added translation error code for ENMFILE
+
+  * harbour/source/rtl/hbffind.c
+    * set FERROR() code when FILE() faild - Clipper compatibility
+
 2006-08-11 10:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * utils/hbpptest/pretest.prg
       * fixed to use HB_OSNewLine(0 instead '\n'

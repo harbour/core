@@ -163,40 +163,6 @@ HB_FILE_VER( "$Id$" )
 
 #endif
 
-/* Internal funtion , Convert Windows Error Values to Dos Error Values */
-#ifdef HB_OS_WIN_32
-
-static int WinToDosError( unsigned long lError)
-{
-   int iReturn;
-
-   switch( lError )
-   {
-   case ERROR_ALREADY_EXISTS:
-      iReturn = 5;
-      break;
-   case ERROR_FILE_NOT_FOUND:
-      iReturn = 2;
-      break;
-   case ERROR_PATH_NOT_FOUND:
-      iReturn = 3;
-      break;
-   case  ERROR_TOO_MANY_OPEN_FILES:
-      iReturn = 4;
-      break;
-   case ERROR_INVALID_HANDLE:
-      iReturn = 6;
-      break;
-   default:
-      iReturn = 0;
-      break;
-   }
-
-   return iReturn;
-}
-
-#endif
-
 /* ------------------------------------------------------------- */
 
 USHORT hb_fsAttrFromRaw( ULONG raw_attr )
@@ -500,17 +466,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nSec   = ft->tm_sec;
          }
       }
-      else
-      {
-         #if defined(__DJGPP__) || defined(__RSX32__)
-            if( errno == 22 )
-               errno = 2;
-            if( errno == 4 )
-               errno = 5;
-         #endif
 
-         hb_fsSetError( errno );
-      }
+      if( !bFound ) hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_OS2)
@@ -572,6 +529,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nSec   = ft->tm_sec;
          }
       }
+
+      if( !bFound ) hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -649,12 +608,9 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                }
             }
          }
-         else
-         {
-            errno = WinToDosError( GetLastError() );
-            hb_fsSetError( errno );
-         }
       }
+
+      if( !bFound ) hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_UNIX)
@@ -754,6 +710,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nSec   = ft->tm_sec;
          }
       }
+
+      if( !bFound ) hb_fsSetIOError( bFound, 0 );
    }
 
 #else
@@ -771,6 +729,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       HB_SYMBOL_UNUSED( raw_attr );
 
       bFound = FALSE;
+
+      hb_fsSetError( (USHORT) FS_ERROR );
    }
 
 #endif
