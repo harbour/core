@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-16 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+    * strip lib prefix from CONTRIBS library list
+
+  * harbour/source/codepage/cp_tpl.c
+    * removed redundant ;
+
 2006-08-16 15:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/codepage/Makefile
