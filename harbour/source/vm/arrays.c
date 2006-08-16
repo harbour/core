@@ -915,31 +915,22 @@ HB_EXPORT PHB_ITEM hb_arrayFromStack( USHORT uiLen )
 
 PHB_ITEM hb_arrayFromParams( int iLevel )
 {
-   PHB_ITEM pArray, pBase;
+   PHB_ITEM pArray;
    USHORT uiPos, uiPCount;
    LONG lBaseOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
 
-   lBaseOffset = hb_stackBaseOffset();
-   while( iLevel-- > 0 && lBaseOffset > 1 )
-   {
-      pBase = hb_stackItem( lBaseOffset - 1 );
-      lBaseOffset = pBase->item.asSymbol.stackbase + 1;
-   }
-
-   if( iLevel < 0 )
-   {
-      pBase = hb_stackItem( lBaseOffset - 1 );
-      uiPCount = pBase->item.asSymbol.paramcnt;
-   }
+   lBaseOffset = hb_stackBaseProcOffset( iLevel );
+   if( lBaseOffset >= 0 )
+      uiPCount = hb_stackItem( lBaseOffset )->item.asSymbol.paramcnt;
    else
       uiPCount = 0;
 
    pArray = hb_itemArrayNew( uiPCount );
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
    {
-      hb_arraySet( pArray, uiPos, hb_stackItem( lBaseOffset + uiPos ) );
+      hb_arraySet( pArray, uiPos, hb_stackItem( lBaseOffset + uiPos + 1 ) );
    }
 
    return pArray;

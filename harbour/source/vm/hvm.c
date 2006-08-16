@@ -263,10 +263,6 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
-/* Stores level of procedures call stack
-*/
-static ULONG   s_ulProcLevel = 0;
-
 /* Request for some action - stop processing of opcodes
  */
 static USHORT   s_uiActionRequest;
@@ -3923,8 +3919,6 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
-   s_ulProcLevel++;
-
 #ifndef HB_NO_PROFILER
    if( bProfiler )
       ulClock = ( ULONG ) clock();
@@ -4013,7 +4007,6 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    hb_stackOldFrame( &sStackState );
 
    s_bDebugging = bDebugPrevState;
-   s_ulProcLevel--;
 }
 
 HB_EXPORT void hb_vmSend( USHORT uiParams )
@@ -4032,8 +4025,6 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
-
-   s_ulProcLevel++;
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -4088,7 +4079,6 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    hb_stackOldFrame( &sStackState );
 
    s_bDebugging = bDebugPrevState;
-   s_ulProcLevel--;
 }
 
 static HARBOUR hb_vmDoBlock( void )
@@ -7894,7 +7884,7 @@ HB_FUNC( HB_DBG_VMVARSSET )
 
 HB_FUNC( HB_DBG_PROCLEVEL )
 {
-   hb_retnl( s_ulProcLevel - 1 );   /* Don't count self */
+   hb_retnl( hb_stackCallDepth() - 1 );   /* Don't count self */
 }
 
 /* ------------------------------------------------------------------------ */

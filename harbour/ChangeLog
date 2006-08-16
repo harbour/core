@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-16 12:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/source/vm/estack.c
+    + added:
+      int hb_stackCallDepth( void )
+      LONG hb_stackBaseProcOffset( int iLevel )
+
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/proc.c
+   * use hb_stackBaseProcOffset()
+
+  * harbour/source/vm/hvm.c
+   - removed s_ulProcLevel used by HB_DBG_PROCLEVEL() - count the call
+     stack dynamically using stack data - a little bit slower but it's
+     not widely used function, now is MT safe and we eliminated some
+     small overhead in each function call so statistically we improved
+     overall performance
+
 2006-08-14 14:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/TODO
     - removed eliminating hb_stackTopItem() from TOFIX - Done.

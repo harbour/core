@@ -272,7 +272,7 @@ HB_ITEM_PTR hb_stackItem( LONG iItemPos )
    if( iItemPos < 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
-   return ( * ( hb_stack.pItems + iItemPos ) );
+   return * ( hb_stack.pItems + iItemPos );
 }
 
 #undef hb_stackItemFromTop
@@ -380,6 +380,33 @@ void hb_stackWithObjectSetOffset( LONG lOffset )
 PHB_ITEM ** hb_stackItemBasePtr( void )
 {
    return &hb_stack.pItems;
+}
+
+int hb_stackCallDepth( void )
+{
+   LONG lOffset = hb_stack.pBase - hb_stack.pItems;
+   int iLevel = 1;
+
+   while( lOffset > 0 )
+   {
+      lOffset = ( * ( hb_stack.pItems + lOffset ) )->item.asSymbol.stackbase;
+      ++iLevel;
+   }
+
+   return iLevel;
+}
+
+LONG hb_stackBaseProcOffset( int iLevel )
+{
+   LONG lOffset = hb_stack.pBase - hb_stack.pItems;
+
+   while( iLevel-- > 0 && lOffset > 0 )
+      lOffset = ( * ( hb_stack.pItems + lOffset ) )->item.asSymbol.stackbase;
+
+   if( iLevel < 0 )
+      return lOffset;
+   else
+      return -1;
 }
 
 void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )

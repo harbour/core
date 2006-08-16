@@ -176,6 +176,8 @@ extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top 
 #endif
 
 /* stack management functions */
+extern int        hb_stackCallDepth( void );
+extern LONG       hb_stackBaseProcOffset( int iLevel );
 extern void       hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine ); /* get current .PRG function name and line number */
 extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
 extern void       hb_stackDispCall( void );

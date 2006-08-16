@@ -94,14 +94,10 @@ HB_FUNC( PROCNAME )
 
 HB_FUNC( PROCLINE )
 {
-   long lOffset = hb_stackBaseOffset();
-   int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
+   long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
-   while( iLevel-- > 0 && lOffset > 1 )
-      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
-
-   if( iLevel < 0 )
-      hb_retni( hb_stackItem( lOffset - 1 )->item.asSymbol.lineno );
+   if( lOffset >= 0 )
+      hb_retni( hb_stackItem( lOffset )->item.asSymbol.lineno );
    else
       hb_retni( 0 );
 }
@@ -122,19 +118,15 @@ HB_FUNC( PROCFILE )
    }
    else
    {
-      long lOffset = hb_stackBaseOffset();
-      int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcFile() */
+      long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
-      while( iLevel-- > 0 && lOffset > 1 )
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
-
-      if( iLevel < 0 )
+      if( lOffset >= 0 )
       {
-         pSym = hb_stackItem( lOffset - 1 )->item.asSymbol.value;
+         pSym = hb_stackItem( lOffset )->item.asSymbol.value;
 
          if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
          {
-            PHB_ITEM pSelf = hb_stackItem( lOffset );
+            PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
             if( HB_IS_BLOCK( pSelf ) )
                pLocalSym = pSelf->item.asBlock.value->pDefSymb;
@@ -161,27 +153,26 @@ HB_FUNC( PROCFILE )
 
 char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
 {
-   long lOffset = hb_stackBaseOffset(), lPrevOffset = 0;
-   PHB_ITEM pBase, pSelf;
+   long lOffset = hb_stackBaseProcOffset( iLevel );
+   long lPrevOffset = 0;
 
-   while( iLevel-- > 0 && lOffset > 1 )
-      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
-
-   if( iLevel < 0 )
+   if( lOffset >= 0 )
    {
-      if( bSkipBlock && lOffset > 1 )
+      PHB_ITEM pBase, pSelf;
+
+      if( bSkipBlock && lOffset > 0 )
       {
-         char * szTstName = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName ;
+         char * szTstName = hb_stackItem( lOffset )->item.asSymbol.value->szName ;
          /* Is it an inline method ? if so back one more ... */
          if( strcmp( szTstName, "__EVAL" ) == 0 )
          {
             lPrevOffset = lOffset;
-            lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackbase;
          }
       }
 
-      pBase = hb_stackItem( lOffset - 1 );
-      pSelf = hb_stackItem( lOffset );
+      pBase = hb_stackItem( lOffset );
+      pSelf = hb_stackItem( lOffset + 1 );
       if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
       {
          strcpy( szName, hb_objGetRealClsName( pSelf, pBase->item.asSymbol.value->szName ) );
@@ -198,8 +189,8 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
          if( lPrevOffset ) /* Back to standart code block */
          {
             lOffset = lPrevOffset;
-            pBase = hb_stackItem( lOffset - 1 );
-            pSelf = hb_stackItem( lOffset );
+            pBase = hb_stackItem( lOffset );
+            pSelf = hb_stackItem( lOffset + 1 );
          }
 
          if( pBase->item.asSymbol.value == &hb_symEval ||
@@ -229,17 +220,15 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
  */
 BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 {
-   long lOffset = hb_stackBaseOffset();
-   PHB_ITEM pBase, pSelf;
-   PHB_SYMB pSym;
+   long lOffset = hb_stackBaseProcOffset( iLevel );
 
-   while( iLevel-- > 0 && lOffset > 1 )
-      lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
-
-   if( iLevel < 0 )
+   if( lOffset >= 0 )
    {
-      pBase = hb_stackItem( lOffset - 1 );
-      pSelf = hb_stackItem( lOffset );
+      PHB_ITEM pBase, pSelf;
+      PHB_SYMB pSym;
+
+      pBase = hb_stackItem( lOffset );
+      pSelf = hb_stackItem( lOffset + 1 );
 
       pSym = pBase->item.asSymbol.value;
 
