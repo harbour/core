@@ -566,11 +566,20 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpesdos.obj  \
     $(OBJ_DIR)\cpesmwi.obj  \
     $(OBJ_DIR)\cpeswin.obj  \
+    $(OBJ_DIR)\cpfrdos.obj  \
     $(OBJ_DIR)\cpgedos.obj  \
     $(OBJ_DIR)\cpgewin.obj  \
+    $(OBJ_DIR)\cphr1250.obj \
+    $(OBJ_DIR)\cphr437.obj  \
+    $(OBJ_DIR)\cphr852.obj  \
     $(OBJ_DIR)\cphu852.obj  \
     $(OBJ_DIR)\cphuiso.obj  \
     $(OBJ_DIR)\cphuwin.obj  \
+    $(OBJ_DIR)\cpit437.obj  \
+    $(OBJ_DIR)\cpit850.obj  \
+    $(OBJ_DIR)\cpitisb.obj  \
+    $(OBJ_DIR)\cpitiso.obj  \
+    $(OBJ_DIR)\cpltwin.obj  \
     $(OBJ_DIR)\cppl852.obj  \
     $(OBJ_DIR)\cppliso.obj  \
     $(OBJ_DIR)\cpplmaz.obj  \
@@ -585,6 +594,9 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpsliso.obj  \
     $(OBJ_DIR)\cpslwin.obj  \
     $(OBJ_DIR)\cpsrwin.obj  \
+    $(OBJ_DIR)\cpua866.obj  \
+    $(OBJ_DIR)\cpuakoi.obj  \
+    $(OBJ_DIR)\cpuawin.obj  \
     $(OBJ_DIR)\uc1250.obj   \
     $(OBJ_DIR)\uc1251.obj   \
     $(OBJ_DIR)\uc1253.obj   \

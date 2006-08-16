@@ -379,8 +379,8 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 {
 
 #if defined(HB_OS_OS2)
-   EXCEPTIONREGISTRATIONRECORD RegRec = {0};       /* Exception Registration Record */
-   APIRET rc = NO_ERROR;                           /* Return code                   */
+   EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
+   APIRET rc;                             /* Return code                   */
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInit()"));
@@ -409,7 +409,6 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    hb_clsInit();              /* initialize Classy/OO system */
 
    /* Set the language to the default */
-
    /* This trick is needed to stringify the macro value */
    hb_langSelectID( HB_MACRO2STRING( HB_LANG_DEFAULT ) );
 
@@ -485,10 +484,11 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    }
 
 #if defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
-
-   RegRec.ExceptionHandler = (ERR)OS2TermHandler;
+   memset( &RegRec, 0, sizeof( RegRec ) );
+   RegRec.ExceptionHandler = ( ERR ) OS2TermHandler;
    rc = DosSetExceptionHandler( &RegRec );
-   if (rc != NO_ERROR) {
+   if( rc != NO_ERROR )
+   {
       hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
 #endif
@@ -530,7 +530,7 @@ HB_EXPORT int hb_vmQuit( void )
    hb_vmDoExitFunctions(); /* process defined EXIT functions */
 
    #ifdef HB_MACRO_STATEMENTS
-     hb_pp_Free();
+      hb_pp_Free();
    #endif
 
    /* process AtExit registered functions */
@@ -558,7 +558,7 @@ HB_EXPORT int hb_vmQuit( void )
    /* hb_gcReleaseAll(); */
 
    /* release all known garbage */
-   if ( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
+   if( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
       hb_gcCollectAll();
    else
       hb_gcReleaseAll();
@@ -5830,7 +5830,7 @@ void hb_vmForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
 
-   HB_FUNCNAME( SYSINIT )();
+   HB_FUNC_EXEC( SYSINIT );
 }
 
 /* ----------------------------- */

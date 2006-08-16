@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-16 15:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/codepage/Makefile
+  + harbour/source/codepage/cpfrdos.c
+  + harbour/source/codepage/cphr1250.c
+  + harbour/source/codepage/cphr437.c
+  + harbour/source/codepage/cphr852.c
+  + harbour/source/codepage/cpit437.c
+  + harbour/source/codepage/cpit850.c
+  + harbour/source/codepage/cpitisb.c
+  + harbour/source/codepage/cpitiso.c
+  + harbour/source/codepage/cpltwin.c
+  + harbour/source/codepage/cpua866.c
+  + harbour/source/codepage/cpuakoi.c
+  + harbour/source/codepage/cpuawin.c
+    + added codepages from xHarbour
+
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/hvm.c
+    * formatting and code cleanup
+
 2006-08-16 12:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbstack.h
   * harbour/source/vm/estack.c

@@ -4,6 +4,7 @@
 
 ROOT = ../../
 
+
 C_SOURCES=\
 	cpbg866.c     \
 	cpbgiso.c     \
@@ -13,11 +14,20 @@ C_SOURCES=\
 	cpesdos.c     \
 	cpeswin.c     \
 	cpesmwi.c     \
+	cpfrdos.c     \
 	cpgedos.c     \
 	cpgewin.c     \
+	cphr1250.c    \
+	cphr437.c     \
+	cphr852.c     \
 	cphu852.c     \
 	cphuiso.c     \
 	cphuwin.c     \
+	cpit437.c     \
+	cpit850.c     \
+	cpitisb.c     \
+	cpitiso.c     \
+	cpltwin.c     \
 	cppl852.c     \
 	cppliso.c     \
 	cpplmaz.c     \
@@ -32,6 +42,9 @@ C_SOURCES=\
 	cpsliso.c     \
 	cpslwin.c     \
 	cpsrwin.c     \
+	cpua866.c     \
+	cpuakoi.c     \
+	cpuawin.c     \
 	uc1250.c      \
 	uc1251.c      \
 	uc1253.c      \
