@@ -169,7 +169,7 @@ static int getMouseKey(mouseEvent *);
 static void destroy_ioBase(InOutBase *ioBase);
 static void sig_handler(int signo);
 
-static void curs_wrkaround();
+static void curs_wrkaround( void );
 
 typedef struct ClipKeyCode {
    int key;
@@ -2993,11 +2993,11 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 #if defined(HB_GT_CRS_BCEHACK) && defined(NCURSES_VERSION) && !defined(HB_NCURSES_194)
 #include <term.h>
-static void curs_wrkaround()
+static void curs_wrkaround( void )
 {
    back_color_erase = FALSE;
    /* cur_term->type.Booleans[28] = 0; */
 }
 #else
-static void curs_wrkaround() {;}
+static void curs_wrkaround( void ) {;}
 #endif

@@ -504,7 +504,7 @@ int hb_gt_sln_mouse_CountButton( void )
 
 /* *********************************************************************** */
 
-void hb_gt_sln_mouse_FixTrash()
+void hb_gt_sln_mouse_FixTrash( void )
 {
 #ifdef HAVE_GPM_H
    if( hb_sln_UnderLinuxConsole )

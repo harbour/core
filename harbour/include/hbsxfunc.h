@@ -69,7 +69,7 @@ void hb_sxEnCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );
 void hb_sxDeCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen );
 
 BOOL hb_LZSSxDecompressMem( BYTE * pSrcBuf, ULONG ulSrcLen, BYTE * pDstBuf, ULONG ulDstLen );
-BOOL hb_LZSSxDecompressMem( BYTE * pSrcBuf, ULONG ulSrcLen, BYTE * pDstBuf, ULONG ulDstLen );
+BOOL hb_LZSSxCompressMem( BYTE * pSrcBuf, ULONG ulSrcLen, BYTE * pDstBuf, ULONG ulDstLen, ULONG * pulSize );
 BOOL hb_LZSSxCompressFile( FHANDLE hInput, FHANDLE hOutput, ULONG * pulSize );
 BOOL hb_LZSSxDecompressFile( FHANDLE hInput, FHANDLE hOutput );
 

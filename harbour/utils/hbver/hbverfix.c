@@ -68,10 +68,10 @@
 
 #define MAX_BUF_LEN 4096
 
-char * szIncrementNumber( char * szBuffer, size_t stSkipOver )
+static char * szIncrementNumber( char * szBuffer, size_t stSkipOver )
 {
    size_t i;
-   for( i = stSkipOver; i < strlen( szBuffer ) && isspace( szBuffer[ i ] ); i++ ) {}
+   for( i = stSkipOver; i < strlen( szBuffer ) && isspace( ( BYTE ) szBuffer[ i ] ); i++ ) {}
    if( i > stSkipOver && i < strlen( szBuffer ) )
    {
       int iVersion;
@@ -87,7 +87,7 @@ char * szIncrementNumber( char * szBuffer, size_t stSkipOver )
    return szBuffer;
 }
 
-char * szReplaceQuoted( char * szBuffer, const char * new_string )
+static char * szReplaceQuoted( char * szBuffer, const char * new_string )
 {
    char szOldBuf[ MAX_BUF_LEN ];
    char * szOpening = strchr( szBuffer, 34 ); /* Locate starting quote */

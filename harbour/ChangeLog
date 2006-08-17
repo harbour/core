@@ -8,6 +8,51 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-17 12:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/include/hbapi.h
+  * harbour/include/hbapigt.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbsxfunc.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rdd/hbdbsort.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hbsix/sxcompr.c
+  * harbour/source/rtl/hardcr.c
+  * harbour/source/rtl/inkey.c
+  * harbour/source/rtl/isprint.c
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/mtran.c
+  * harbour/source/rtl/natmsg.c
+  * harbour/source/rtl/gtcrs/chrmap.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtsln/keytrans.c
+  * harbour/source/rtl/gtsln/mousesln.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/runner.c
+  * harbour/utils/hbver/hbverfix.c
+    * general code cleanup, public functions declared in header files,
+      local changed to static, added mising void for functions without
+      parameters, etc.
+      We still have some public functions which are not used by core code
+      and not declared in header files, like:
+         hb_memvarValueBaseAddress(), hb_memvarGetVarHandle(),
+         hb_memvarGetValueByHandle(), hb_clsCreate(), hb_clsAdd(),
+         hb_clsAssociate(), hb_hashTableDel(), hb_hashTableSize(),
+      I haven't touched them yet though we will have to keep in mind that
+      we should make sth with them.
+
 2006-08-16 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/bsd/gcc.cf
   * harbour/config/darwin/gcc.cf

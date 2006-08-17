@@ -128,7 +128,7 @@ int hb_DeadKey = -1;
 BOOL hb_sln_UnderLinuxConsole = FALSE;
 BOOL hb_sln_UnderXterm = FALSE;
 
-static int hb_sln_try_get_Kbd_State();
+static int hb_sln_try_get_Kbd_State( void );
 
 /* key translations tables - notice problems with compilation after changes */
 #include "keytrans.c"
@@ -458,7 +458,7 @@ int hb_gt_sln_ReadKey( int iEventMask )
 
 /* *********************************************************************** */
 
-static int hb_sln_try_get_Kbd_State()
+static int hb_sln_try_get_Kbd_State( void )
 {
 #if defined(__linux__)
    unsigned char modifiers = 6;
@@ -518,7 +518,7 @@ int hb_sln_Ctrl_Pressed()
 
 /* *********************************************************************** */
 
-int hb_slngt_Alt_Pressed()
+int hb_sln_Alt_Pressed()
 {
    return ( hb_sln_try_get_Kbd_State() & ALT_PRESSED ) != 0;
 }

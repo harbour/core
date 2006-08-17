@@ -52,13 +52,6 @@
 
 #include "hbdbsort.h"
 
-#ifndef HB_CDP_SUPPORT_OFF
-#  include "hbapicdp.h"
-
-void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest );
-#endif
-
-
 BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )
 {
    /* Create temp file */

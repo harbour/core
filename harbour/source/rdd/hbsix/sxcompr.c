@@ -198,7 +198,7 @@ typedef struct _HB_LZSSX_COMPR
 HB_LZSSX_COMPR;
 typedef HB_LZSSX_COMPR * PHB_LZSSX_COMPR;
 
-void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
+static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 {
    if( pCompr->fInFree )
       hb_xfree( pCompr->inBuffer );

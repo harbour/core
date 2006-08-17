@@ -57,7 +57,7 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
 }
 
 /* returns a hash key */
-HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
+static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
 {
    ULONG ulSum = 0;
    char *szName = ( char * )Value;
@@ -72,7 +72,7 @@ HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Cargo) */
 }
 
 /* deletes an identifier */
-HB_HASH_FUNC( hb_comp_IdentDel )
+static HB_HASH_FUNC( hb_comp_IdentDel )
 {
    hb_xfree( Value );
    HB_SYMBOL_UNUSED( HashPtr );
@@ -81,7 +81,7 @@ HB_HASH_FUNC( hb_comp_IdentDel )
 }
 
 /* compares two identifiers */
-HB_HASH_FUNC( hb_comp_IdentComp )
+static HB_HASH_FUNC( hb_comp_IdentComp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
    return strcmp( (char *)Value, (char *)Cargo );

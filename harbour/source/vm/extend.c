@@ -78,8 +78,6 @@
 /* NOTE: iParam = -1 can be used to access the return value. */
 /* NOTE: iParam = 0 can be used to access the SELF object. */
 
-HB_EXTERN_BEGIN
-
 HB_EXPORT PHB_ITEM hb_param( int iParam, long lMask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_param(%d, %ld)", iParam, lMask));
@@ -725,20 +723,6 @@ HB_EXPORT void  hb_retclen_buffer( char * szText, ULONG ulLen )
    hb_itemPutCPtr( hb_stackReturnItem(), szText, ulLen );
 }
 
-#undef hb_retcAdopt
-HB_EXPORT void hb_retcAdopt( char * szText )
-{
-   /* 
-    * This functions "adopts" passed pointer to buffer containing a string
-    * as a value of item of string type
-    *
-    * Copied from xHarbour
-    */
-   HB_TRACE_STEALTH( HB_TR_INFO, ("hb_retcAdopt(%s)", szText ) );
-
-   hb_itemPutCPtr( hb_stackReturnItem(), szText, strlen( szText ) );
-}
-
 /* szDate must have YYYYMMDD format */
 
 #undef hb_retds
@@ -1233,5 +1217,3 @@ HB_EXPORT int  hb_pcount( void )
 
    return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
 }
-
-HB_EXTERN_END

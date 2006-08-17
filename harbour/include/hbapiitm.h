@@ -69,10 +69,14 @@ extern HB_EXPORT PHB_ITEM   hb_evalLaunch   ( PEVALINFO pEvalInfo );
 extern HB_EXPORT BOOL       hb_evalNew      ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern HB_EXPORT BOOL       hb_evalPutParam ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern HB_EXPORT BOOL       hb_evalRelease  ( PEVALINFO pEvalInfo );
-       
+
+extern HB_EXPORT void       hb_evalBlock( PHB_ITEM pCodeBlock, ... );
+extern HB_EXPORT void       hb_evalBlock0( PHB_ITEM pCodeBlock );
+extern HB_EXPORT void       hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam );
+
 extern HB_EXPORT PHB_ITEM   hb_itemDo       ( PHB_ITEM pItem, ULONG ulPCount, ... );
 extern HB_EXPORT PHB_ITEM   hb_itemDoC      ( char * szFunc, ULONG ulPCount, ... );
-       
+
 extern HB_EXPORT PHB_ITEM   hb_itemArrayGet ( PHB_ITEM pArray, ULONG ulIndex );
 extern HB_EXPORT PHB_ITEM   hb_itemArrayNew ( ULONG ulLen );
 extern HB_EXPORT PHB_ITEM   hb_itemArrayPut ( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );

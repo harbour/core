@@ -244,7 +244,7 @@ extern void hb_gt_sln_mouse_SetPos( int iRow, int iCol );
 extern int  hb_gt_sln_mouse_CountButton( void );
 extern BOOL hb_gt_sln_mouse_ButtonState( int iButton );
 
-extern void hb_gt_sln_mouse_FixTrash();
+extern void hb_gt_sln_mouse_FixTrash( void );
 extern int  hb_gt_sln_mouse_Inkey( int iEventMask, BOOL fCheckNew );
 extern void hb_gt_sln_mouse_ProcessTerminalEvent( void );
 

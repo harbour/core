@@ -727,7 +727,7 @@ static void hb_gt_sln_Exit( void )
 
 /* *********************************************************************** */
 
-BOOL hb_gt_sln_SetMode( int iRows, int iCols )
+static BOOL hb_gt_sln_SetMode( int iRows, int iCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetMode(%d, %d)", iRows, iCols));
 

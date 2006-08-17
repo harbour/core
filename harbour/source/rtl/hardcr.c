@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-char * hb_strHardCR( char * pszString, ULONG ulStringLen )
+static char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {
    ULONG ulStringPos;
 

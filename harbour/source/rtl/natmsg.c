@@ -86,7 +86,7 @@
 #define _LF_YN                  12      /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
 #define _INVALID_EXPR           13      /* "INVALID EXPRESSION" */
 
-char * hb_nationGetMsg( USHORT uiMsg )
+static char * hb_nationGetMsg( USHORT uiMsg )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_nationGetMsg(%hu)", uiMsg));
 

@@ -362,7 +362,7 @@ HB_EXPR_PTR hb_compExprNewFunRef( char * szFunName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunRef(%s)", szFunName));
 
-   pExpr =hb_compExprNew( HB_ET_FUNREF );
+   pExpr = hb_compExprNew( HB_ET_FUNREF );
 
    pExpr->value.asSymbol = szFunName;
    pExpr->ValType = HB_EV_FUNREF;
@@ -375,7 +375,7 @@ HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR pRefer )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewRef(%p)", pRefer));
 
-   pExpr =hb_compExprNew( HB_ET_REFERENCE );
+   pExpr = hb_compExprNew( HB_ET_REFERENCE );
 
    pExpr->value.asReference = pRefer;
    pExpr->ValType = HB_EV_VARREF;

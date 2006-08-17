@@ -55,7 +55,7 @@
 
 /* NOTE: pszResult must have an allocated buffer of at least ulStringLen */
 
-char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
+static char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
 {
    ULONG ulStringPos = 0;
    ULONG ulResultPos = 0;

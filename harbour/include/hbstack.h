@@ -89,6 +89,47 @@ typedef struct
 
 #endif
 
+extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
+extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
+extern LONG        hb_stackTopOffset( void );
+extern LONG        hb_stackBaseOffset( void );
+extern LONG        hb_stackTotalItems( void );
+extern HB_ITEM_PTR hb_stackBaseItem( void );
+extern HB_ITEM_PTR hb_stackSelfItem( void );
+extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
+extern HB_ITEM_PTR hb_stackReturnItem( void );
+extern char *      hb_stackDateBuffer( void );
+extern void        hb_stackSetStaticsBase( int iBase );
+extern int         hb_stackGetStaticsBase( void );
+extern PHB_ITEM ** hb_stackItemBasePtr( void );
+extern PHB_ITEM    hb_stackWithObjectItem( void );
+extern LONG        hb_stackWithObjectOffset( void );
+extern void        hb_stackWithObjectSetOffset( LONG );
+
+extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
+extern void        hb_stackPop( void );        /* pops an item from the stack */
+extern void        hb_stackPush( void );       /* pushes an item on to the stack */
+extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
+extern void        hb_stackPushReturn( void );
+extern void        hb_stackPopReturn( void );
+extern void        hb_stackRemove( LONG lUntilPos );
+
+/* stack management functions */
+extern int        hb_stackCallDepth( void );
+extern LONG       hb_stackBaseProcOffset( int iLevel );
+extern void       hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine ); /* get current .PRG function name and line number */
+extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
+extern void       hb_stackDispCall( void );
+extern void       hb_stackFree( void );       /* releases all memory used by the stack */
+extern void       hb_stackInit( void );       /* initializes the stack */
+extern void       hb_stackIncrease( void );   /* increase the stack size */
+
+#ifdef _HB_API_INTERNAL_
+extern void        hb_stackDecrease( ULONG ulItems );
+extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
+extern void        hb_stackOldFrame( HB_STACK_STATE * pStack );
+#endif
+
 #if defined(HB_STACK_MACROS)
 
 #define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) (n) ) )
@@ -96,7 +137,6 @@ typedef struct
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1 )
 #define hb_stackTotalItems( )       ( hb_stack.wItems )
-/*#define hb_stackTopItem( )          ( * hb_stack.pPos )*/
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
@@ -148,49 +188,8 @@ typedef struct
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
                                     } while ( 0 )
-#else
-
-extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
-extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern LONG        hb_stackTopOffset( void );
-extern LONG        hb_stackBaseOffset( void );
-extern LONG        hb_stackTotalItems( void );
-/*extern HB_ITEM_PTR hb_stackTopItem( void );*/
-extern HB_ITEM_PTR hb_stackBaseItem( void );
-extern HB_ITEM_PTR hb_stackSelfItem( void );
-extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
-extern HB_ITEM_PTR hb_stackReturnItem( void );
-extern char *      hb_stackDateBuffer( void );
-extern void        hb_stackSetStaticsBase( int iBase );
-extern int         hb_stackGetStaticsBase( void );
-extern PHB_ITEM ** hb_stackItemBasePtr( void );
-extern PHB_ITEM    hb_stackWithObjectItem( void );
-extern LONG        hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( LONG );
-
-extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
-extern void        hb_stackPop( void );        /* pops an item from the stack */
-extern void        hb_stackPush( void );       /* pushes an item on to the stack */
-extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
-
 #endif
 
-/* stack management functions */
-extern int        hb_stackCallDepth( void );
-extern LONG       hb_stackBaseProcOffset( int iLevel );
-extern void       hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine ); /* get current .PRG function name and line number */
-extern void       hb_stackDispLocal( void );  /* show the types of the items on the stack for debugging purposes */
-extern void       hb_stackDispCall( void );
-extern void       hb_stackFree( void );       /* releases all memory used by the stack */
-extern void       hb_stackInit( void );       /* initializes the stack */
-extern void       hb_stackIncrease( void );   /* increase the stack size */
-
-extern void       hb_stackRemove( LONG lUntilPos );
-
-#ifdef _HB_API_INTERNAL_
-extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
-extern void        hb_stackOldFrame( HB_STACK_STATE * pStack );
-#endif
 
 HB_EXTERN_END
 

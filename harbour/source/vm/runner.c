@@ -98,15 +98,6 @@ typedef struct
 #define SYM_EXTERN  2                           /* Prev. defined function   */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL              /* Symbol not found.        */
 
-/*
-HB_EXTERN_BEGIN
-HB_EXPORT PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize );
-HB_EXPORT PHRB_BODY hb_hrbLoadFromFile( char* szHrb );
-HB_EXPORT void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] );
-HB_EXPORT void hb_hrbUnLoad( PHRB_BODY pHrbBody );
-HB_EXTERN_END
-*/
-
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
    BYTE szHead[] = { (BYTE)192,'H','R','B' };
@@ -266,7 +257,7 @@ static void hb_hrbExit( PHRB_BODY pHrbBody )
    }
 }
 
-void hb_hrbUnLoad( PHRB_BODY pHrbBody )
+static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
 {
    ULONG ul;
 
@@ -307,7 +298,7 @@ void hb_hrbUnLoad( PHRB_BODY pHrbBody )
    hb_xfree( pHrbBody );
 }
 
-PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
+static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 {
    PHRB_BODY pHrbBody = NULL;
 
@@ -487,7 +478,7 @@ PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
    return pHrbBody;
 }
 
-PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
+static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    PHRB_BODY pHrbBody = NULL;
@@ -537,7 +528,7 @@ PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
    return pHrbBody;
 }
 
-void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
+static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
 {
    PHB_ITEM pRetVal = NULL;
    int i;

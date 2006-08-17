@@ -84,7 +84,7 @@ static RDDFUNCS adsSuper;
  * -- HELPER FUNCTIONS --
  */
 
-void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum when )
+static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum when )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsSetListener_callback (%d  %d)", setting, when));
    if( when == HB_SET_LISTENER_AFTER )  /* we don't do anything with BEFORE calls */
@@ -652,7 +652,7 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
  * -- ADS METHODS --
  */
 
-ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
+static ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
 {
    HB_TRACE(HB_TR_DEBUG, ("sixBof(%p, %p)", pArea, pBof));
 
@@ -665,7 +665,7 @@ ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
    return SUCCESS;
 }
 
-ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
+static ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsEof(%p, %p)", pArea, pEof));
 
@@ -678,7 +678,7 @@ ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
    return SUCCESS;
 }
 
-ERRCODE adsFound( ADSAREAP pArea, BOOL * pFound )
+static ERRCODE adsFound( ADSAREAP pArea, BOOL * pFound )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsFound(%p, %p)", pArea, pFound));
 
@@ -1116,7 +1116,7 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
    }
 }
 
-ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
+static ERRCODE adsSkipFilter( ADSAREAP pArea, LONG lUpDown )
 {
    BOOL fBottom;
    ERRCODE uiError;
@@ -1502,7 +1502,7 @@ static ERRCODE adsFieldCount( ADSAREAP pArea, USHORT * uiFields )
 
 #define  adsFieldDisplay          NULL
 
-ERRCODE adsFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem )
+static ERRCODE adsFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM pItem )
 {
    LPFIELD pField;
 

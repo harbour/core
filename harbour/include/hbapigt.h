@@ -259,6 +259,8 @@ extern HB_EXPORT void    hb_inkeyPoll( void );           /* Poll the console key
 extern HB_EXPORT void    hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
 extern HB_EXPORT int     hb_inkeyTranslate( int key, int iEvenMask ); /* Translation extended codes to normal codes, if needed */
 extern HB_EXPORT void    hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
+extern HB_EXPORT int     hb_setInkeyLast( int iKey );
+extern HB_EXPORT void    hb_inkeyExit( void );
 
 /* SetKey related declarations */
 

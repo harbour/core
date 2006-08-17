@@ -88,7 +88,6 @@ static PINLINE hb_compInlineNew( char * );  /* creates and initialises the _INLI
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 static int hb_compProcessRSPFile( char *, int, char * argv[] ); /* process response file */
 
-/* int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight ); */
 static void hb_compOptimizeJumps( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
 
@@ -3747,11 +3746,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
    }
 }
 
-int
-#ifdef __IBMCPP__
-extern _LNK_CONV
-#endif
-hb_compSort_ULONG( const void * pLeft, const void * pRight )
+static int hb_compSort_ULONG( const void * pLeft, const void * pRight )
 {
     ULONG ulLeft  = *( ( ULONG * ) ( pLeft ) );
     ULONG ulRight = *( ( ULONG * ) ( pRight ) );

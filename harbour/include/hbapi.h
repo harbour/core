@@ -405,6 +405,34 @@ extern HB_EXPORT BOOL       hb_extIsObject( int iParam );
 extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
+extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
+extern HB_EXPORT void   hb_ret( void );             /* post a NIL return value */
+extern HB_EXPORT void   hb_retc( const char * szText );   /* returns a string */
+extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
+extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
+extern HB_EXPORT void   hb_retclen( const char * szText, ULONG ulLen ); /* returns a string with a specific length */
+extern HB_EXPORT void   hb_retclen_buffer( char * szText, ULONG ulLen ); /* sames as above, but accepts an allocated buffer */
+extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use yyyymmdd format */
+extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
+extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
+extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer */
+extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
+extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
+extern HB_EXPORT void   hb_retnl( long lNumber );/* returns a long number */
+extern HB_EXPORT void   hb_retnint( HB_LONG lNumber );/* returns a long number */
+extern HB_EXPORT void   hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
+extern HB_EXPORT void   hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
+extern HB_EXPORT void   hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
+extern HB_EXPORT void   hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
+extern HB_EXPORT void   hb_retnintlen( HB_LONG lNumber, int iWidth ); /* returns a long long number, with specific width */
+extern HB_EXPORT void   hb_reta( ULONG ulLen );  /* returns an array with a specific length */
+extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
+extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
+#ifndef HB_LONG_LONG_OFF
+extern HB_EXPORT void   hb_retnll( LONGLONG lNumber );/* returns a long long number */
+extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
+#endif
+
 /* xHarbour compatible function */
 #define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
 #define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
@@ -439,37 +467,8 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 #define hb_retptr( pointer )                 hb_itemPutPtr( hb_stackReturnItem(), pointer )
 #define hb_retptrGC( pointer )               hb_itemPutPtrGC( hb_stackReturnItem(), pointer )
 
-#else
+#endif /* HB_API_MACROS */
 
-extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
-extern HB_EXPORT void   hb_ret( void );             /* post a NIL return value */
-extern HB_EXPORT void   hb_retc( const char * szText );   /* returns a string */
-extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
-extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
-extern HB_EXPORT void   hb_retclen( const char * szText, ULONG ulLen ); /* returns a string with a specific length */
-extern HB_EXPORT void   hb_retclen_buffer( char * szText, ULONG ulLen ); /* sames as above, but accepts an allocated buffer */
-extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use yyyymmdd format */
-extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
-extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
-extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer */
-extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
-extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
-extern HB_EXPORT void   hb_retnl( long lNumber );/* returns a long number */
-extern HB_EXPORT void   hb_retnint( HB_LONG lNumber );/* returns a long number */
-extern HB_EXPORT void   hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
-extern HB_EXPORT void   hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
-extern HB_EXPORT void   hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
-extern HB_EXPORT void   hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
-extern HB_EXPORT void   hb_retnintlen( HB_LONG lNumber, int iWidth ); /* returns a long long number, with specific width */
-extern HB_EXPORT void   hb_reta( ULONG ulLen );  /* returns an array with a specific length */
-extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
-extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
-#ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT void   hb_retnll( LONGLONG lNumber );/* returns a long long number */
-extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
-#endif
-
-#endif
 
 extern HB_EXPORT int    hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
 extern HB_EXPORT int    hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
@@ -643,7 +642,6 @@ extern HB_EXPORT BOOL     hb_strMatchWildExact( const char *szString, const char
 extern HB_EXPORT BOOL     hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
-extern HB_EXPORT char *   hb_stripOutComments( char* buffer ); /* extract uncommented part of read buffer */
 extern HB_EXPORT char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
 extern HB_EXPORT char *   hb_strUpperCopy( char * szText, ULONG ulLen );
 extern HB_EXPORT char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */

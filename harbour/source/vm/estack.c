@@ -62,8 +62,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-HB_EXTERN_BEGIN
-
 /* ------------------------------- */
 
 #if !defined( STACK_INITHB_ITEMS )
@@ -179,7 +177,6 @@ void hb_stackIncrease( void )
    EndIndex  = hb_stack.pEnd - hb_stack.pItems;
 
    /* no, make more headroom: */
-   /* hb_stackDispLocal(); */
    hb_stack.pItems = ( PHB_ITEM * ) hb_xrealloc( ( void * ) hb_stack.pItems,
             sizeof( PHB_ITEM ) * ( hb_stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
@@ -291,12 +288,6 @@ HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    return ( * ( hb_stack.pBase + nFromBase + 1 ) );
-}
-
-#undef hb_stackTopItem
-HB_ITEM_PTR hb_stackTopItem( void )
-{
-    return * hb_stack.pPos;
 }
 
 #undef hb_stackBaseItem
@@ -634,5 +625,3 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
 }
 #endif
-
-HB_EXTERN_END

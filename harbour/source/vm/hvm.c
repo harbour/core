@@ -293,10 +293,10 @@ static PHB_FUNC_LIST s_ExitFunctions = NULL;
    This Exception Handler gets called in case of an abnormal termination of an harbour program and
    displays a full stack trace at the harbour language level */
 #if defined(HB_OS_OS2)
-ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
-                             PEXCEPTIONREGISTRATIONRECORD p2,
-                             PCONTEXTRECORD               p3,
-                             PVOID                        pv);
+extern ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
+                                    PEXCEPTIONREGISTRATIONRECORD p2,
+                                    PCONTEXTRECORD               p3,
+                                    PVOID                        pv);
 #endif
 
 HB_EXPORT void hb_vmAtInit( HB_INIT_FUNC pFunc, void * cargo )

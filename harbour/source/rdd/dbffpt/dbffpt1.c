@@ -2455,8 +2455,9 @@ static ERRCODE hb_fptReadRawBlock( FPTAREAP pArea, BYTE * bBuffer, FHANDLE hFile
    return errCode;
 }
 
-ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem, FHANDLE hFile,
-                             ULONG ulBlock, USHORT uiMode )
+static ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem,
+                                    FHANDLE hFile, ULONG ulBlock,
+                                    USHORT uiMode )
 {
    ULONG ulSize;
    BYTE buffer[ 4 ];
@@ -2498,7 +2499,8 @@ ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem, FHANDLE hFile,
    return SUCCESS;
 }
 
-ERRCODE hb_fptReadSMTBlock( FPTAREAP pArea, PHB_ITEM pItem, ULONG ulBlock, ULONG ulSize )
+static ERRCODE hb_fptReadSMTBlock( FPTAREAP pArea, PHB_ITEM pItem,
+                                   ULONG ulBlock, ULONG ulSize )
 {
    if( ulBlock == 0 )
       return EDBF_CORRUPT;

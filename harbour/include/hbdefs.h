@@ -396,9 +396,13 @@
  * numeric constant. This suffix is necessary for some compilers -
  * without it they cut the number to LONG
  */
-#if __BORLANDC__ -0 >= 1328
-#  define HB_LL( num )           num##i64
-#elif defined( _MSC_VER ) || defined( __BORLANDC__ )
+#if defined( __BORLANDC__ )
+#  if __BORLANDC__ >= 1328
+#     define HB_LL( num )           num##i64
+#  else
+#     define HB_LL( num )           num
+#  endif
+#elif defined( _MSC_VER )
 #  define HB_LL( num )           num
 #else
 #  define HB_LL( num )           num##LL

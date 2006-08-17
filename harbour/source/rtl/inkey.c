@@ -367,7 +367,7 @@ HB_EXPORT int hb_inkeyLast( int iEventMask )
 }
 
 /* Force a value to s_inkeyLast and return previous value */
-int hb_setInkeyLast( int iKey )
+HB_EXPORT int hb_setInkeyLast( int iKey )
 {
    int iLast = s_inkeyLast;
 

@@ -238,7 +238,7 @@ char *hb_pp_szWarnings[] = {
    "1No directives in command definitions file"
 };
 
-void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
+void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR pIncludeFunc, BOOL bQuiet )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_pp_SetRules()" ) );
 
@@ -257,7 +257,7 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
             hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
-            if( ( *hb_compInclude ) ( szFileName, hb_comp_pIncludePath ) )
+            if( ( *pIncludeFunc ) ( szFileName, hb_comp_pIncludePath ) )
             {
                hb_pp_Init(  );
 
@@ -265,7 +265,7 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 
                if( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
                {
-                  if( !hb_comp_bQuiet )
+                  if( !bQuiet )
                      printf( "Loaded: %i Commands, %i Translates, %i Defines from: %s\n", s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3, szFileName );
                }
                else
@@ -299,7 +299,7 @@ void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
       }
       else
       {
-         if( !hb_comp_bQuiet )
+         if( !bQuiet )
             printf( "Standard command definitions excluded.\n" );
 
          hb_pp_Init(  );
@@ -1105,7 +1105,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
                   j++;
                   while( cpatt[j] == ' ' || cpatt[j] == '\t' )
                      j++;
-                  if( strchr( "*(!-{.\"", cpatt[j] ) || ISNAME( cpatt[j] ) )
+                  if( strchr( "*(!-{.\"", cpatt[j] ) || ISNAME( ( BYTE ) cpatt[j] ) )
                   {
                      bOption = TRUE;
                      continue;

@@ -279,7 +279,7 @@ static int chrmap_parse( FILE *fp, char *pszTerm, int *nTransTbl, char *pszFile 
     return isTerm;
 }
 
-int hb_gt_crs_chrmapread( char *pszFile, char *pszTerm, int *nTransTbl )
+static int hb_gt_crs_chrmapread( char *pszFile, char *pszTerm, int *nTransTbl )
 {
     FILE *fp;
     char buf[256], *ptr, *pTerm;

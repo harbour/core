@@ -459,7 +459,7 @@ static int hb_sln_FindKeyTranslation( int SlangKey )
 }
 
 /* ************************************************************************* */
-
+#if 0
 int hb_sln_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 {
    int i, Found = 0;
@@ -478,5 +478,5 @@ int hb_sln_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 
    return( Found );
 }
-
+#endif
 /* ************************************************************************* */

@@ -207,7 +207,7 @@ matherr (struct exception * err)
 
 #elif defined(HB_MATH_ERRNO)
 
-int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int errCode )
+static int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int errCode )
 {
    HB_MATH_HANDLERPROC mathHandler;
 
