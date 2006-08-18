@@ -1742,7 +1742,6 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    }
 
    fprintf( yyc, "{\n" );
-   fprintf( yyc, "   ULONG ulPrivateBase = hb_memvarGetPrivatesBase();\n" );
    if( label_info.fCondJump )
       fprintf( yyc, "   BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
@@ -1750,7 +1749,7 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &label_info );
 
    fprintf( yyc, "   } while ( 0 );\n" );
-   fprintf( yyc, "   hb_xvmExitProc( ulPrivateBase );\n" );
+   fprintf( yyc, "   hb_xvmExitProc();\n" );
    fprintf( yyc, "}\n" );
 
    if( label_info.pulLabels )

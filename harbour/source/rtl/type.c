@@ -58,7 +58,10 @@ HB_FUNC( TYPE )
    HB_ITEM_PTR pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
+   {
       hb_retc( hb_macroGetType( pItem ) );
+      hb_memvarUpdatePrivatesBase();
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE", 1, hb_paramError( 1 ) );
 }

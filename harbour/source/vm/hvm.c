@@ -538,24 +538,28 @@ HB_EXPORT int hb_vmQuit( void )
    hb_vmCleanModuleFunctions();
 
    /* release all known items stored in subsystems */
+   hb_itemClear( hb_stackReturnItem() );
+   hb_stackRemove( 0 );          /* clear stack items */
+   hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
+
+   /* intentionally here to allow executing object destructors for all
+    * cross references items before we release classy subsystem
+    */
+   hb_gcCollectAll();
+
    hb_rddShutDown();
    hb_idleShutDown();
    hb_errExit();
    hb_clsReleaseAll();
-   hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
-   hb_dynsymRelease();          /* releases the dynamic symbol table */
-   hb_conRelease();             /* releases Console */
-   hb_setRelease();             /* releases Sets */
-   hb_cdpReleaseAll();          /* releases codepages */
+   hb_itemClear( &s_aStatics );
 
    /* release all remaining items */
-   hb_stackRemove( 0 );
-   hb_itemClear( hb_stackReturnItem() );
-   hb_itemClear( &s_aStatics );
-   hb_memvarsRelease();    /* clear all PUBLIC variables */
 
-   /* release all known garbage */
-   /* hb_gcReleaseAll(); */
+   hb_conRelease();             /* releases Console */
+   hb_setRelease();             /* releases Sets */
+   hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
+   hb_dynsymRelease();          /* releases the dynamic symbol table */
+   hb_cdpReleaseAll();          /* releases codepages */
 
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
@@ -575,7 +579,6 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
-   ULONG ulPrivateBase;
    BOOL bDynCode = pSymbols == NULL || ( pSymbols->scope.value & HB_FS_DYNCODE ) != 0;
 #ifndef HB_NO_PROFILER
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
@@ -586,14 +589,6 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
-
-   /* NOTE: if pSymbols == NULL then hb_vmExecute is called from macro
-    * evaluation. In this case all PRIVATE variables created during
-    * macro evaluation belong to a function/procedure where macro
-    * compiler was called.
-    */
-   /* NOTE: Initialization with 0 is needed to avoid GCC -O2 warning */
-   ulPrivateBase = pSymbols ? hb_memvarGetPrivatesBase() : 0;
 
 #ifndef HB_NO_PROFILER
    if( hb_bProfiler )
@@ -1864,9 +1859,6 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          }
       }
    }
-
-   if( pSymbols )
-      hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 /* ------------------------------- */
@@ -4298,7 +4290,7 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSFrame(%p)", pSym));
 
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   hb_stackSetStaticsBase( pSym->value.iStaticsBase );
+   hb_stackSetStaticsBase( pSym->value.lStaticsBase );
 }
 
 static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
@@ -4307,13 +4299,13 @@ static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the g
 
    if( HB_IS_NIL( &s_aStatics ) )
    {
-      pSym->value.iStaticsBase = 0;         /* statics frame for this PRG */
+      pSym->value.lStaticsBase = 0;         /* statics frame for this PRG */
       hb_arrayNew( &s_aStatics, uiStatics );
    }
    else
    {
-      pSym->value.iStaticsBase = hb_arrayLen( &s_aStatics );
-      hb_arraySize( &s_aStatics, ( ULONG ) pSym->value.iStaticsBase + uiStatics );
+      pSym->value.lStaticsBase = hb_arrayLen( &s_aStatics );
+      hb_arraySize( &s_aStatics, ( ULONG ) pSym->value.lStaticsBase + uiStatics );
    }
 }
 
@@ -4616,7 +4608,7 @@ HB_EXPORT void hb_vmPushSymbol( PHB_SYMB pSym )
 
    pItem->type = HB_IT_SYMBOL;
    pItem->item.asSymbol.value = pSym;
-   pItem->item.asSymbol.stackbase = hb_stackTopOffset() - 1;
+   pItem->item.asSymbol.stackstate = NULL;
 }
 
 /* -3    -> HB_P_PUSHBLOCK
@@ -5950,12 +5942,10 @@ ULONG hb_vmFlagEnabled( ULONG flags )
 #define HB_XVM_RETURN   return ( s_uiActionRequest & \
       ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
 
-HB_EXPORT void hb_xvmExitProc( ULONG ulPrivateBase )
+HB_EXPORT void hb_xvmExitProc( void )
 {
    if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
       s_uiActionRequest = 0;
-
-   hb_memvarSetPrivatesBase( ulPrivateBase );
 }
 
 
@@ -6281,7 +6271,7 @@ HB_EXPORT void hb_xvmPushFuncSymbol( PHB_SYMB pSym )
    pItem = hb_stackAllocItem();
    pItem->type = HB_IT_SYMBOL;
    pItem->item.asSymbol.value = pSym;
-   pItem->item.asSymbol.stackbase = hb_stackTopOffset() - 1;
+   pItem->item.asSymbol.stackstate = NULL;
    hb_stackAllocItem()->type = HB_IT_NIL;
 }
 

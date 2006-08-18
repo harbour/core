@@ -98,9 +98,6 @@ struct mv_PUBLIC_var_info
 };
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
-static void hb_memvarAddPrivate( PHB_DYNS );
-static void hb_memvarReleasePublic( PHB_ITEM pMemVar );
-static HB_DYNS_PTR hb_memvarFindSymbol( char *, ULONG );
 
 void hb_memvarsInit( void )
 {
@@ -114,29 +111,6 @@ void hb_memvarsInit( void )
    s_privateStack = ( PHB_DYNS * ) hb_xgrab( sizeof( PHB_DYNS ) * TABLE_INITHB_VALUE );
    s_privateStackSize = TABLE_INITHB_VALUE;
    s_privateStackCnt  = s_privateStackBase = 0;
-}
-
-/* clear all variables except the detached ones
- * Should be called at application exit only
-*/
-void hb_memvarsRelease( void )
-{
-   ULONG ulCnt = s_globalLastFree;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear()"));
-
-   if( s_globalTable )
-   {
-      while( --ulCnt )
-      {
-         if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
-         {
-            hb_itemClear( s_globalTable[ ulCnt ].pVarItem );
-            hb_xfree( s_globalTable[ ulCnt ].pVarItem );
-            s_globalTable[ ulCnt ].counter = 0;
-         }
-      }
-   }
 }
 
 void hb_memvarsFree( void )
@@ -160,25 +134,27 @@ HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
  * This function creates new global value.
  *
  * pSource = item value that have to be stored or NULL
- * bTrueMemvar = TRUE | FALSE
- *    FALSE if function is called to create memvar variable for a codeblock
+ * hPrevMemvar
+ *    -1 if function is called to create memvar variable for a codeblock
  *       (to store detached local variable) - in this case we have to do
  *       exact copy of passed item (without duplicating its value and
  *       without reference decrementing)
- *    TRUE if we are creating regular memvar variable (PUBLI or PRIVATE)
+ *    else we are creating regular memvar variable (PUBLIC or PRIVATE)
  *       In this case we have to do normal item coping.
+ *       hPrevMemvar > 0 is old memvar value which will be hidden by
+ *       new PRIVATE variable
  *
  * Returns:
  *  handle to variable memory or fails
  *
 */
-HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
+static HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, HB_HANDLE hPrevMemvar )
 {
    HB_VALUE_PTR pValue;
    HB_HANDLE hValue;   /* handle 0 is reserved */
                        /* = 1 removed, since it's initialized in all branches. Caused a warning with Borland C++ */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueNew(%p, %d)", pSource, (int) bTrueMemvar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueNew(%p, %lu)", pSource, hPrevMemvar));
 
    if( s_globalFirstFree )
    {
@@ -208,28 +184,104 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 
    pValue = s_globalTable + hValue;
    pValue->pVarItem = ( HB_ITEM_PTR ) hb_xgrab( sizeof( HB_ITEM ) );
-   pValue->counter = 1;
    pValue->pVarItem->type = HB_IT_NIL;
+   pValue->hPrevMemvar = hPrevMemvar;
+   pValue->counter = 1;
    if( pSource )
    {
-      if( bTrueMemvar )
-         hb_itemCopy( pValue->pVarItem, pSource );
-      else
+      if( hPrevMemvar == ( HB_HANDLE ) -1 ) /* detached local - copy its body only */
          memcpy( pValue->pVarItem, pSource, sizeof( HB_ITEM ) );
+      else
+         hb_itemCopy( pValue->pVarItem, pSource );
    }
-
-   if( bTrueMemvar )
-      pValue->hPrevMemvar = 0;
-   else
-      pValue->hPrevMemvar = ( HB_HANDLE ) -1;    /* detached variable */
 
    HB_TRACE(HB_TR_INFO, ("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
    return hValue;
 }
 
-/* Detach local variable (swap current value with a memvar handle)
-*/
+static void hb_memvarRecycle( HB_HANDLE hValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarRecycle(%lu)", hValue));
+   
+   s_globalTable[ hValue ].hPrevMemvar = s_globalFirstFree;
+   s_globalFirstFree = hValue;
+}
+
+/*
+ * This function increases the number of references to passed global value
+ */
+void hb_memvarValueIncRef( HB_HANDLE hValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%lu)", hValue));
+
+   s_globalTable[ hValue ].counter++;
+
+   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
+}
+
+/*
+ * This function decreases the number of references to passed global value.
+ * If it is the last reference then this value is deleted.
+ */
+void hb_memvarValueDecRef( HB_HANDLE hValue )
+{
+   HB_VALUE_PTR pValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
+
+   pValue = s_globalTable + hValue;
+
+   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
+
+   if( --pValue->counter == 0 )
+   {
+      if( HB_IS_COMPLEX( pValue->pVarItem ) )
+         hb_itemClear( pValue->pVarItem );
+      hb_xfree( pValue->pVarItem );
+      hb_memvarRecycle( hValue );
+
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
+   }
+}
+
+/*
+ * Detach local variable (swap current value with a memvar handle)
+ */
+static void hb_memvarDetachDynSym( PHB_DYNS pDynSym, BOOL fRestore )
+{
+   HB_VALUE_PTR pValue;
+   HB_HANDLE hValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachDynSym(%p, %d)", pDynSym, fRestore));
+
+   hValue = pDynSym->hMemvar;
+   pValue = s_globalTable + hValue;
+   pDynSym->hMemvar = fRestore ? pValue->hPrevMemvar : 0;
+
+   if( --pValue->counter == 0 )
+   {
+      if( HB_IS_COMPLEX( pValue->pVarItem ) )
+         hb_itemClear( pValue->pVarItem );
+      hb_xfree( pValue->pVarItem );
+      hb_memvarRecycle( hValue );
+
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
+   }
+   else
+   {
+      /* memvar is still accessible by active references on HVM stack
+       * and/or as detached local in codeblocks - so we have to mark it
+       * as detached or it will be scanned in GC mark pass and if some
+       * cross references exists it will never be freed.
+       */
+      pValue->hPrevMemvar = ( HB_HANDLE ) -1;
+   }
+}
+
+/*
+ * Detach local variable (swap current value with a memvar handle)
+ */
 HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachLocal(%p, %d)", pLocal, pLocal->type ));
@@ -250,9 +302,9 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
     * In this case we have to copy the current value to a global memory
     * pool so it can be shared by codeblocks
     */
-   if ( ! HB_IS_MEMVAR( pLocal ) )
+   if( ! HB_IS_MEMVAR( pLocal ) )
    {
-      HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
+      HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, ( HB_HANDLE ) -1 );
 
       pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
       pLocal->item.asMemvar.itemsbase = &s_globalTable;
@@ -301,134 +353,33 @@ ULONG hb_memvarGetPrivatesBase( void )
 
 /*
  * This function releases PRIVATE variables created after passed base
- *
  */
 void hb_memvarSetPrivatesBase( ULONG ulBase )
 {
-   HB_HANDLE hVar, hOldValue;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%lu)", ulBase));
 
    while( s_privateStackCnt > s_privateStackBase )
    {
-      hVar = s_privateStack[ --s_privateStackCnt ]->hMemvar;
-      if( hVar )
+      if( s_privateStack[ --s_privateStackCnt ]->hMemvar )
       {
-          hOldValue = s_globalTable[ hVar ].hPrevMemvar;
-          hb_memvarValueDecRef( hVar );
-          /*
-          * Restore previous value for variables that were overridden
+         /* Restore previous value for variables that were overridden
           */
-          s_privateStack[ s_privateStackCnt ]->hMemvar = hOldValue;
+         hb_memvarDetachDynSym( s_privateStack[ s_privateStackCnt ], TRUE );
       }
    }
    s_privateStackBase = ulBase;
 }
 
 /*
- * This function increases the number of references to passed global value
- *
+ * Update PRIVATE base ofsset so they will not be removed
+ * when function return
  */
-void hb_memvarValueIncRef( HB_HANDLE hValue )
+void hb_memvarUpdatePrivatesBase( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%lu)", hValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarUpdatePrivatesBase()"));
 
-   s_globalTable[ hValue ].counter++;
-
-   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
+   s_privateStackBase = s_privateStackCnt;
 }
-
-static void hb_memvarRecycle( HB_HANDLE hValue )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarRecycle(%lu)", hValue));
-   
-   if( s_globalFirstFree )
-   {
-      s_globalTable[ hValue ].hPrevMemvar = s_globalFirstFree;
-      s_globalFirstFree = hValue;
-   }
-   else
-   {
-      /* first free value in the list */
-      s_globalFirstFree = hValue;
-      s_globalTable[ hValue ].hPrevMemvar = 0;
-   }      
-}
-
-/*
- * This function decreases the number of references to passed global value.
- * If it is the last reference then this value is deleted.
- *
- */
-void hb_memvarValueDecRef( HB_HANDLE hValue )
-{
-   HB_VALUE_PTR pValue;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
-
-   pValue = s_globalTable + hValue;
-
-   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
-
-   if( pValue->counter > 0 )
-   {
-     /* Notice that Counter can be equal to 0.
-      * This can happen if for example PUBLIC variable holds a codeblock
-      * with detached variable. When hb_memvarsRelease() is called then
-      * detached variable can be released before the codeblock. So if
-      * the codeblock will be released later then it will try to release
-      * again this detached variable.
-      */
-      if( --pValue->counter == 0 )
-      {
-         if( HB_IS_COMPLEX( pValue->pVarItem ) )
-            hb_itemClear( pValue->pVarItem );
-         hb_xfree( pValue->pVarItem );
-         hb_memvarRecycle( hValue );
-
-         HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
-      }
-   }
-}
-
-#if 0
-/* This function is called from releasing of detached local variables
- * referenced in a codeblock that is wiped out by the Garbage Collector.
- * Decrement the reference counter and clear a value stored in the memvar.
- * Don't clear arrays or codeblocks to avoid loops - these values will be
- * released by the garbage collector.
- */
-void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
-{
-   HB_VALUE_PTR pValue;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
-
-   pValue = s_globalTable + hValue;
-
-   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
-
-   if( pValue->counter > 0 )
-   {
-     /* Notice that Counter can be equal to 0.
-      * This can happen if for example PUBLIC variable holds a codeblock
-      * with detached variable. When hb_memvarsRelease() is called then
-      * detached variable can be released before the codeblock. So if
-      * the codeblock will be released later then it will try to release
-      * again this detached variable.
-      */
-      if( --pValue->counter == 0 )
-      {
-         if( HB_IS_STRING( pValue->pVarItem ) )
-            hb_itemClear( pValue->pVarItem );
-         hb_xfree( pValue->pVarItem );
-         hb_memvarRecycle( hValue );
-
-         HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
-      }
-   }
-}
-#endif
 
 /*
  * This functions copies passed item value into the memvar pointed
@@ -601,6 +552,50 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
 }
 
+static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
+{
+   HB_DYNS_PTR pDynSym = NULL;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%lu)", szArg, ulLen));
+
+   if( szArg && *szArg && ulLen )
+   {
+      char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
+      int iSize = 0;
+
+      do
+      {
+         char cChar = *szArg++;
+
+         if( cChar >= 'a' && cChar <= 'z' )
+         {
+            szUprName[ iSize++ ] = cChar - ( 'a' - 'A' );
+         }
+         else if( cChar == ' ' || cChar == '\t' || cChar == '\n' )
+         {
+            if( iSize )
+               break;
+         }
+         else if( !cChar )
+         {
+            break;
+         }
+         else
+         {
+            szUprName[ iSize++ ] = cChar;
+         }
+      }
+      while( --ulLen && iSize < HB_SYMBOL_NAME_LEN );
+
+      if( iSize )
+      {
+         szUprName[ iSize ] = '\0';
+         pDynSym = hb_dynsymFind( szUprName );
+      }
+   }
+   return pDynSym;
+}
+
 char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
 {
    HB_DYNS_PTR pDynVar;
@@ -638,7 +633,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
  *
  * pMemvar - an item that stores the name of variable - it can be either
  *          the HB_IT_SYMBOL (if created by PUBLIC statement) or HB_IT_STRING
- *          (if created by direct call to __PUBLIC function)
+ *          (if created by direct call to __MVPUBLIC function)
  * bScope - the scope of created variable - if a variable with the same name
  *          exists already then it's value is hidden by new variable with
  *          passed scope
@@ -676,7 +671,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
        */
       if( ! pDynVar->hMemvar )
       {
-         pDynVar->hMemvar = hb_memvarValueNew( pValue, TRUE );
+         pDynVar->hMemvar = hb_memvarValueNew( pValue, 0 );
          if( !pValue )
          {
             /* new PUBLIC variable - initialize it to .F.
@@ -701,10 +696,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
        * visible at this moment so later we can restore this value when
        * the new variable will be released
        */
-      HB_HANDLE hCurrentValue = pDynVar->hMemvar;
-
-      pDynVar->hMemvar = hb_memvarValueNew( pValue, TRUE );
-      s_globalTable[ pDynVar->hMemvar ].hPrevMemvar = hCurrentValue;
+      pDynVar->hMemvar = hb_memvarValueNew( pValue, pDynVar->hMemvar );
 
       /* Add this variable to the PRIVATE variables stack
        */
@@ -722,31 +714,32 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 
    if( HB_IS_STRING( pMemvar ) )
    {
-      ULONG ulBase = s_privateStackCnt;
-      PHB_DYNS pDynVar;
+      PHB_DYNS pDynSymbol = hb_memvarFindSymbol( pMemvar->item.asString.value,
+                                                 pMemvar->item.asString.length );
 
-      /* Find the variable with a requested name that is currently visible
-       * Start from the top of the stack.
-       */
-      while( ulBase > 0 )
+      if( pDynSymbol && pDynSymbol->hMemvar )
       {
-         pDynVar = s_privateStack[ --ulBase ];
+         ULONG ulBase = s_privateStackCnt;
 
-         /* reset current value to NIL - the overriden variables will be
-          * visible after exit from current procedure
+         /* Find the variable with a requested name that is currently visible
+          * Start from the top of the stack.
           */
-         if( pDynVar->hMemvar )
+         while( ulBase > 0 )
          {
-            if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
+            if( pDynSymbol == s_privateStack[ --ulBase ] )
             {
-               hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
+               /* reset current value to NIL - the overriden variables will be
+                * visible after exit from current procedure
+                */
+               hb_itemClear( s_globalTable[ pDynSymbol->hMemvar ].pVarItem );
                return;
             }
          }
+
+         /* No match found for PRIVATEs - it's PUBLIC so let's remove it.
+          */
+         hb_memvarDetachDynSym( pDynSymbol, FALSE );
       }
-      /* No match found for PRIVATEs - try PUBLICs.
-       */
-      hb_memvarReleasePublic( pMemvar );
    }
    else
       hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE", HB_ERR_ARGS_BASEPARAMS );
@@ -796,21 +789,18 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
    else
    {
       ULONG ulBase = s_privateStackCnt;    /* start from the top of the stack */
-      int iMemvar = HB_MV_PUBLIC;
 
       while( ulBase )
       {
-         --ulBase;
-         if( pDynVar == s_privateStack[ ulBase ] )
+         if( pDynVar == s_privateStack[ --ulBase ] )
          {
             if( ulBase >= s_privateStackBase )
-               iMemvar = HB_MV_PRIVATE_LOCAL;
+               return HB_MV_PRIVATE_LOCAL;
             else
-               iMemvar = HB_MV_PRIVATE_GLOBAL;
-            ulBase = 0;
+               return HB_MV_PRIVATE_GLOBAL;
          }
       }
-      return iMemvar;
+      return HB_MV_PUBLIC;
    }
 }
 
@@ -818,26 +808,16 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
  */
 int hb_memvarScope( char * szVarName, ULONG ulLength )
 {
-   int iMemvar = HB_MV_ERROR;
-   char * szName;
+   PHB_DYNS pDynVar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %lu)", szVarName, ulLength));
 
-   szName = ( char * ) hb_xalloc( ulLength );
-   if( szName )
-   {
-      PHB_DYNS pDynVar;
+   pDynVar = hb_memvarFindSymbol( szVarName, ulLength );
 
-      memcpy( szName, szVarName, ulLength );
-      pDynVar = hb_dynsymFind( hb_strUpper( szName, ulLength - 1 ) );
-      if( pDynVar )
-         iMemvar = hb_memvarScopeGet( pDynVar );
-      else
-         iMemvar = HB_MV_NOT_FOUND;
-      hb_xfree( szName );
-   }
-
-   return iMemvar;
+   if( pDynVar )
+      return hb_memvarScopeGet( pDynVar );
+   else
+      return HB_MV_NOT_FOUND;
 }
 
 /* Releases memory occupied by a variable
@@ -847,13 +827,20 @@ static HB_DYNS_FUNC( hb_memvarClear )
    HB_SYMBOL_UNUSED( Cargo );
 
    if( pDynSymbol->hMemvar )
-   {
-      s_globalTable[ pDynSymbol->hMemvar ].counter = 1;
-      hb_memvarValueDecRef( pDynSymbol->hMemvar );
-      pDynSymbol->hMemvar = 0;
-   }
+      hb_memvarDetachDynSym( pDynSymbol, FALSE );
 
    return TRUE;
+}
+
+/* Clear all memvar variables */
+void hb_memvarsClear( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsClear()"));
+
+   hb_stackClearMevarsBase();
+   s_privateStackBase = 0;
+   hb_memvarSetPrivatesBase( 0 );
+   hb_dynsymEval( hb_memvarClear, NULL );
 }
 
 /* Checks passed dynamic symbol if it is a PUBLIC variable and
@@ -865,34 +852,6 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
       ( * ( ( int * )Cargo ) )++;
 
    return TRUE;
-}
-
-/* Checks passed dynamic symbol if it is a PUBLIC variable and
- * released it eventually stoping the searching
- */
-static HB_DYNS_FUNC( hb_memvarClearPublic )
-{
-   if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC &&
-       hb_stricmp( pDynSymbol->pSymbol->szName, (char *) Cargo ) == 0 )
-   {
-      s_globalTable[ pDynSymbol->hMemvar ].counter = 1;
-      hb_memvarValueDecRef( pDynSymbol->hMemvar );
-      pDynSymbol->hMemvar = 0;
-      return FALSE;
-   }
-
-   return TRUE;
-}
-
-/* find and release if exists given public variable
- */
-static void hb_memvarReleasePublic( PHB_ITEM pMemVar )
-{
-   char *sPublic = pMemVar->item.asString.value;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleasePublic(%p)", pMemVar ));
-
-   hb_dynsymEval( hb_memvarClearPublic, ( void * ) sPublic );
 }
 
 /* Count the number of variables with given scope
@@ -979,29 +938,6 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
    return pValue;
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
-{
-   HB_DYNS_PTR pDynSym = NULL;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%lu)", szArg, ulLen));
-
-   if( szArg && *szArg && ulLen )
-   {
-      char * szName = ( char * ) hb_xgrab( ulLen + 1 );
-
-      szName[ ulLen ] = '\0';
-      do
-      {
-         --ulLen;
-         szName[ ulLen ] = toupper( szArg[ ulLen ] );
-      } while( ulLen );
-
-      pDynSym = hb_dynsymFind( szName );
-      hb_xfree( szName );
-   }
-   return pDynSym;
-}
-
 /* ************************************************************************** */
 
 HB_FUNC( __MVPUBLIC )
@@ -1065,6 +1001,7 @@ HB_FUNC( __MVPRIVATE )
                hb_memvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
          }
       }
+      hb_memvarUpdatePrivatesBase();
    }
 }
 
@@ -1141,7 +1078,7 @@ HB_FUNC( __MVSCOPE )
 
 HB_FUNC( __MVCLEAR )
 {
-   hb_dynsymEval( hb_memvarClear, NULL );
+   hb_memvarsClear();
 }
 
 HB_FUNC( __MVDBGINFO )
@@ -1277,6 +1214,7 @@ HB_FUNC( __MVPUT )
           * create the PRIVATE one
           */
          hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pValue );
+         hb_memvarUpdatePrivatesBase();
       }
       hb_itemReturn( pValue );
    }
@@ -1479,7 +1417,7 @@ HB_FUNC( __MVRESTORE )
       /* Clear all memory variables if not ADDITIVE */
 
       if( ! bAdditive )
-         hb_dynsymEval( hb_memvarClear, NULL );
+         hb_memvarsClear();
 
       /* Generate filename */
 
@@ -1508,7 +1446,7 @@ HB_FUNC( __MVRESTORE )
       if( fhnd != FS_ERROR )
       {
          char * pszMask = ISCHAR( 3 ) ? hb_parc( 3 ) : ( char * ) "*";
-         BOOL bIncludeMask = ISCHAR( 4 ) ? hb_parl( 4 ) : TRUE;
+         BOOL bIncludeMask = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
          BYTE buffer[ HB_MEM_REC_LEN ];
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
@@ -1594,6 +1532,7 @@ HB_FUNC( __MVRESTORE )
          }
 
          hb_fsClose( fhnd );
+         hb_memvarUpdatePrivatesBase();
       }
       else
          hb_retl( FALSE );

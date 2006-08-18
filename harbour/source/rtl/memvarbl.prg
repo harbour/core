@@ -56,7 +56,7 @@
 
 FUNCTION MEMVARBLOCK( cMemvar )
 
-   IF ISCHARACTER( cMemvar ) .AND. __mvSCOPE( cMemvar ) > HB_MV_ERROR
+   IF ISCHARACTER( cMemvar ) .AND. __mvEXIST( cMemvar )
       RETURN {| x | iif( x == NIL, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
    ENDIF
 

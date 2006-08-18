@@ -167,7 +167,7 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
          if( strcmp( szTstName, "__EVAL" ) == 0 )
          {
             lPrevOffset = lOffset;
-            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackbase;
+            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
          }
       }
 

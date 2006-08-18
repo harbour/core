@@ -8,6 +8,104 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-19 01:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+    * moved HB_STACK_STATE declaration from hbstack.h to hbapi.h
+      it's covered by _HB_API_INTERNAL_ macro so it should not
+      effect 3-rd party code
+    * modified hb_struSymbol structure:
+         LONG stackbase
+      replaced by:
+         PHB_STACK_STATE stackstate
+      this modification allows to keepadditional information bound with
+      function call stack accessible from different HVM modules.
+      Now it's used by memvars code to keep/update PRIVATE variables
+      stack pointers. I plan to store in HB_STACK_STATE structure
+      information additional information for classes code like super
+      casting or instance variables offsets in new OOP model I'm working on.
+      It can be also used by debugger code to retrieve some informations
+      about executed functions without active updating by main HVM loop.
+    + added hb_memvarsClear() - cleanly clears all PRIVATE and PUBLIC
+      variables
+    + added hb_memvarUpdatePrivatesBase() - updates PRIVATE stack base
+      offset so PRIVATE variables created in current function/procedure
+      will not be removed when it returns
+    - removed hb_memvarsRelease() and hb_memvarValueNew()
+
+  * harbour/include/hbstack.h
+    + added hb_stackClearMevarsBase() - helper function for hb_memvarsClear()
+      clears PRIVATE stack offsets in executed functions
+    * changed to static offset from int to long - in different places we
+      were using int or long in HVM so I cleaned the HVM code to always
+      operate on the same type
+
+  * harbour/source/vm/estack.c
+    * set/restore PRIVATE stack base offset in hb_stackNewFrame()/
+      hb_stackOldFrame()
+    * updated for new HB_IT_SYMBOL structure
+
+  * harbour/source/vm/hvm.c
+    ! removed setting/restoring PRIVATE stack base offset in hb_vmExecute()
+      It make code like:
+         eval(&("{||VAR:=1}"))
+      Clipper compatible
+    * updated for new HB_IT_SYMBOL structure
+    * changed order of execution exit procedures for clean memvars removing
+      and future destructors execution. I'll describe it better when I'll
+      add destructors.
+
+  * harbour/source/vm/memvars.c
+    ! fixed CLEAR MEMORY - now this function should be safe in Harbour
+      It's not exactly compatible with Clipper because I intentionally
+      didn't replicated some Clipper bugs like possible memory corruption.
+    + added hb_memvarsClear() - cleanly clears all PRIVATE and PUBLIC
+      variables
+    + added hb_memvarUpdatePrivatesBase() - updates PRIVATE stack base
+      offset so PRIVATE variables created in current function/procedure
+      will not be removed when it returns
+    ! fixed releasing PUBLIC and PRIVATE variables which were passed by
+      reference and are still active on HVM stack or in codeblocks as
+      detached locals (see: hb_memvarDetachDynSym())
+    * modified hb_memvarFindSymbol() to be more Clipper compatible
+    % optimized hb_memvarRelease() to operate or PHB_DYNS instead of
+      string comparison and not make linear dynamic symbol scan for
+      PUBLIC or not existing symbols
+    - removed hb_memvarReleasePublic()
+
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/pcount.c
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/pvalue.c
+    * updated for the above modifications
+
+  * harbour/source/rtl/memvarbl.prg
+  * harbour/source/rtl/menuto.prg
+    * use __mvEXIST( cMemvar ) instead of __mvSCOPE( cMemvar ) > HB_MV_ERROR
+      __mvEXIST() is much faster function
+
+  * harbour/source/rtl/type.c
+    * execute hb_memvarUpdatePrivatesBase() after macro type checking.
+      This should not be necessary but we are not Clipper compatible here
+      and this is work around for difference in our TYPE() implementation.
+      Clipper for:
+         ? TYPE("VAR:=1")
+      create PUBLIC variable VAR when [x]Harbour PRIVATE one.
+      Should we try to make it Clipper compatible?
+
+   The above should fix problems reported with memvars. We are not 100%
+   Clipper compatible but unlike in Clipper we cannot break VM internals
+   using some operation on references to memvars and detached locals
+   and/or RELEASE.../ CLEAR MEMORY. This modifications should be intensively
+   tested. If you will find any problems with current code please inform me.
+   I'd like to hear your opinions about memvars created by TYPE() (see above).
+   Should we change it? It may not be very easy operation - we will have to
+   change macro compiler and add new PCODE for that.
+
 2006-08-17 12:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
   * harbour/include/hbapi.h

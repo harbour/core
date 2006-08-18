@@ -74,18 +74,12 @@ typedef struct
    HB_ITEM    Return;       /* latest returned value */
    PHB_ITEM * pBase;        /* stack frame position for the current function call */
    PHB_ITEM * pEvalBase;    /* stack frame position for the evaluated codeblock */
-   int        iStatics;     /* statics base for the current function call */
+   LONG       lStatics;     /* statics base for the current function call */
    LONG       lWithObject;  /* stack offset to base current WITH OBJECT item */
    char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
 extern HB_STACK hb_stack;
-
-typedef struct
-{
-   LONG lBaseItem;
-   LONG iStatics;
-} HB_STACK_STATE;    /* used to save/restore stack state in hb_vmDo)_ */
 
 #endif
 
@@ -99,8 +93,8 @@ extern HB_ITEM_PTR hb_stackSelfItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
 extern HB_ITEM_PTR hb_stackReturnItem( void );
 extern char *      hb_stackDateBuffer( void );
-extern void        hb_stackSetStaticsBase( int iBase );
-extern int         hb_stackGetStaticsBase( void );
+extern void        hb_stackSetStaticsBase( LONG lBase );
+extern LONG        hb_stackGetStaticsBase( void );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern LONG        hb_stackWithObjectOffset( void );
@@ -128,6 +122,7 @@ extern void       hb_stackIncrease( void );   /* increase the stack size */
 extern void        hb_stackDecrease( ULONG ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
 extern void        hb_stackOldFrame( HB_STACK_STATE * pStack );
+extern void        hb_stackClearMevarsBase( void );
 #endif
 
 #if defined(HB_STACK_MACROS)
@@ -142,8 +137,8 @@ extern void        hb_stackOldFrame( HB_STACK_STATE * pStack );
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
-#define hb_stackGetStaticsBase( )   ( hb_stack.iStatics )
-#define hb_stackSetStaticsBase( n ) do { hb_stack.iStatics = ( n ); } while ( 0 )
+#define hb_stackGetStaticsBase( )   ( hb_stack.lStatics )
+#define hb_stackSetStaticsBase( n ) do { hb_stack.lStatics = ( n ); } while ( 0 )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 #define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
 #define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )

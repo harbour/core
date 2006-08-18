@@ -120,11 +120,11 @@ static LONG hb_stackLen( int iLevel )
 
    lBaseOffset = hb_stackBaseOffset();
    while( --iLevel > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
 
    if( lBaseOffset > 1 )
    {
-      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase;
+      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
       lLen = lBaseOffset - lPrevOffset - 3;
    }
    else
@@ -160,7 +160,7 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
    LONG lBaseOffset, lPrevOffset;
 
    lBaseOffset = hb_stackBaseOffset();
-   lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase;
+   lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
 
    ulLen = lBaseOffset - lPrevOffset - 3;
    pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
@@ -190,7 +190,7 @@ HB_FUNC( HB_DBG_VMVARLGET )
 
    lBaseOffset = hb_stackBaseOffset();
    while( iLevel-- > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
 
    if( iLevel < 0 )
    {
@@ -215,7 +215,7 @@ HB_FUNC( HB_DBG_VMVARLSET )
 
    lBaseOffset = hb_stackBaseOffset();
    while( iLevel-- > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackbase + 1;
+      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
 
    if( iLevel < 0 )
    {

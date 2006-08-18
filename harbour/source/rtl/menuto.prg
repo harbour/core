@@ -67,12 +67,9 @@ function __MenuTo( bBlock, cVariable )
    local cFrontColor
 
    // Detect if a memvar was passed
-
-   if __mvSCOPE( cVariable ) <= HB_MV_ERROR
+   lDeclared := !__mvEXIST( cVariable )
+   if lDeclared
       __mvPUBLIC( cVariable )
-      lDeclared := .T.
-   else
-      lDeclared := .F.
    endif
 
    n := eval( bBlock )

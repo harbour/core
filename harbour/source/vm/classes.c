@@ -510,28 +510,28 @@ static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
 
       while( iLevel-- > 0 && lOffset > 1 )
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
 
       szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
 
       /* Is it an inline ? if so back one more ... */
       if( strcmp( szCallerNameMsg, "__EVAL" ) == 0 && lOffset > 1 )
       {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
          szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
       }
 
       /* Is it an eval ? if so back another one more ... */
       if( ( strcmp( szCallerNameMsg, "EVAL" ) == 0 ) && lOffset > 1 )
       {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
          szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
       }
 
       /* Is it an Aeval ? if so back another one more ... */
       if ( ( strcmp( szCallerNameMsg, "AEVAL" ) == 0 ) && lOffset > 1 )
       {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackbase + 1;
+         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
          szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
       }
 
@@ -2234,7 +2234,7 @@ HB_FUNC( __CLASSSEL )
 /* to be used from Classes ERROR HANDLER method */
 HB_FUNC( __GETMESSAGE )
 {
-   hb_retc( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackbase )->item.asSymbol.value->szName );
+   hb_retc( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem )->item.asSymbol.value->szName );
 }
 
 HB_FUNC( __CLSPARENT )
@@ -2250,7 +2250,7 @@ HB_FUNC( __SENDER )
 
    while( iLevel > 0 && lOffset > 1 )
    {
-      lOffset = hb_stackItem( lOffset )->item.asSymbol.stackbase;
+      lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
       oSender = hb_stackItem( lOffset + 1 );
 
       if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || oSender->type == HB_IT_NIL )
@@ -2270,11 +2270,9 @@ HB_FUNC( __SENDER )
  */
 HB_FUNC( __CLASSH )
 {
-   PHB_ITEM pObject = hb_itemParam( 1 );
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
 
-   hb_retni( HB_IS_OBJECT( pObject ) ? pObject->item.asArray.value->uiClass : 0 );
-
-   hb_itemRelease( pObject );
+   hb_retni( pObject ? pObject->item.asArray.value->uiClass : 0 );
 }
 
 /*

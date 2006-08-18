@@ -167,7 +167,7 @@ typedef struct _HB_SYMB
    {
       PHB_FUNC       pFunPtr;       /* machine code function address for function symbol table entries */
       PHB_PCODEFUNC  pCodeFunc;     /* PCODE function address */
-      int            iStaticsBase;  /* base offset to array of statics */
+      LONG           lStaticsBase;  /* base offset to array of statics */
    } value;
    PHB_DYNS       pDynSym;          /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;

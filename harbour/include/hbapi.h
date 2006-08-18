@@ -224,6 +224,14 @@ struct _HB_BASEARRAY;
 struct _HB_ITEM;
 struct _HB_VALUE;
 
+typedef struct _HB_STACK_STATE
+{
+   LONG     lBaseItem;        /* stack base offset of previous func/proc */
+   LONG     lStatics;         /* statics offset of previous func/proc */
+   ULONG    ulPrivateBase;    /* memvars base offset of previous func/proc */
+} HB_STACK_STATE, * PHB_STACK_STATE; /* used to save/restore stack state in hb_vmDo)_ */
+
+
 /* Internal structures that holds data */
 struct hb_struArray
 {
@@ -308,10 +316,10 @@ struct hb_struString
 
 struct hb_struSymbol
 {
-   LONG stackbase;
-   USHORT lineno;
-   USHORT paramcnt;
-   PHB_SYMB value;
+   PHB_SYMB        value;
+   PHB_STACK_STATE stackstate;      /* function stack state */
+   USHORT          lineno;
+   USHORT          paramcnt;
 };
 
 /* items hold at the virtual machine stack */
@@ -717,9 +725,8 @@ extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM p
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */
-extern HB_HANDLE  hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
 extern void       hb_memvarsInit( void ); /* initialize the memvar API system */
-extern void       hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE variables */
+extern void       hb_memvarsClear( void ); /* clear all PUBLIC and PRIVATE variables */
 extern void       hb_memvarsFree( void ); /* release the memvar API system */
 extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
 extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
@@ -729,6 +736,7 @@ extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); 
 extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
 extern ULONG      hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
 extern void       hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
+extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char *     hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );

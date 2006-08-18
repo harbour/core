@@ -58,7 +58,7 @@
 HB_FUNC( HB_PVALUE )
 {
    USHORT uiParam = hb_parni( 1 );
-   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackbase; /* Skip function + self */
+   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem; /* Skip function + self */
    PHB_ITEM pBase = hb_stackItem( lOffset ); 
 
    if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt ) /* Valid number */
