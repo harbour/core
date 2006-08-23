@@ -244,6 +244,8 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
    pStack->lBaseItem = hb_stack.pBase - hb_stack.pItems;
    pStack->lStatics = hb_stack.lStatics;
    pStack->ulPrivateBase = hb_memvarGetPrivatesBase();
+   pStack->uiClass = pStack->uiMethod = 0;
+
    pItem->item.asSymbol.stackstate = pStack;
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;

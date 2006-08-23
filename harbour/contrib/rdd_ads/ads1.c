@@ -952,7 +952,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
       if( u16Found )
       {
-         /* remeber the record number for faster checking if we should update
+         /* remember the record number for faster checking if we should update
             fFound after SKIPFILTER */
          AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS, &u32RecNo );
       }
@@ -1068,10 +1068,10 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
          pArea->fTop = pArea->fBottom = FALSE;
 
          /*
-          * This causes that skip id done on the server side but it
+          * This causes that skip is done on the server side but it
           * may cause bad side effect - in multiple skip ADS respects
           * only index keys and bitmap filter so it may skip differ
-          * number of records then we asked, [druzus]
+          * number of records than we asked, [druzus]
           */
          if( pArea->dbfi.itmCobExpr == NULL || pArea->dbfi.fOptimized )
          {

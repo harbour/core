@@ -81,13 +81,6 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
 
-   /* clear object tree as needed */
-   if( pBaseArray->uiClass && pBaseArray->puiClsTree )
-   {
-      hb_xfree( pBaseArray->puiClsTree );
-      pBaseArray->puiClsTree = NULL;
-   }
-
    if( pBaseArray->pItems )
    {
       HB_ITEM_PTR pItems = pBaseArray->pItems;
@@ -138,7 +131,6 @@ HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
    pBaseArray->ulLen      = ulLen;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
-   pBaseArray->puiClsTree = NULL;
 
    pItem->type = HB_IT_ARRAY;
    pItem->item.asArray.value = pBaseArray;

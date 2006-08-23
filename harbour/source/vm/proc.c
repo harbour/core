@@ -59,7 +59,6 @@
  *
  * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
  *    Adding the MethodName() just calling Procname()
- *    call to hb_objGetRealClsName in case of object
  *    Special treatment in case of Object and __Eval (only for methodname)
  *    skipping block and adding (b) before the method name
  *
@@ -160,22 +159,20 @@ char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
    {
       PHB_ITEM pBase, pSelf;
 
-      if( bSkipBlock && lOffset > 0 )
+      if( bSkipBlock && lOffset > 0 &&
+          hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval )
       {
-         char * szTstName = hb_stackItem( lOffset )->item.asSymbol.value->szName ;
-         /* Is it an inline method ? if so back one more ... */
-         if( strcmp( szTstName, "__EVAL" ) == 0 )
-         {
-            lPrevOffset = lOffset;
-            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
-         }
+         /* it's an inline method - back one more ... */
+         lPrevOffset = lOffset;
+         lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
       }
 
       pBase = hb_stackItem( lOffset );
       pSelf = hb_stackItem( lOffset + 1 );
-      if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
+
+      if( pBase->item.asSymbol.stackstate->uiClass ) /* it is a method name */
       {
-         strcpy( szName, hb_objGetRealClsName( pSelf, pBase->item.asSymbol.value->szName ) );
+         strcpy( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
 
          if( lPrevOffset )
             strcat( szName, ":(b)" );
@@ -234,9 +231,9 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 
       if( szName )
       {
-         if( HB_IS_OBJECT( pSelf ) ) /* it is a method name */
+         if( pBase->item.asSymbol.stackstate->uiClass ) /* it is a method name */
          {
-            strcpy( szName, hb_objGetRealClsName( pSelf, pSym->szName ) );
+            strcpy( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
             strcat( szName, ":" );
             strcat( szName, pSym->szName );
          }

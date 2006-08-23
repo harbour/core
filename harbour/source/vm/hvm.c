@@ -3905,7 +3905,6 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
-   void * pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
@@ -3930,15 +3929,10 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
       PHB_SYMB pExecSym;
-      BOOL lPopSuper;
 
-      pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
+      pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
       if( pExecSym && pExecSym->value.pFunPtr )
       {
-#ifndef HB_NO_PROFILER
-         if( bProfiler )
-            pMethod = hb_mthRequested();
-#endif
          if( hb_bTracePrgCalls )
             HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
@@ -3951,16 +3945,13 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
          if( bProfiler )
-            hb_mthAddTime( pMethod, clock() - ulClock );
+            hb_mthAddTime( clock() - ulClock );
 #endif
       }
       else if( pSym->szName[ 0 ] == '_' )
          hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
       else
          hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
-
-      if( lPopSuper )
-         hb_objPopSuperCast( pSelf );
    }
    else /* it is a function */
    {
@@ -4009,10 +4000,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    HB_STACK_STATE sStackState;
    PHB_ITEM pSelf;
    BOOL bDebugPrevState;
-   BOOL lPopSuper;
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
-   void * pMethod = NULL;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
@@ -4035,13 +4024,9 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
 
-   pExecSym = hb_objGetMethod( pSelf, pSym, &lPopSuper );
+   pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
    if( pExecSym && pExecSym->value.pFunPtr )
    {
-#ifndef HB_NO_PROFILER
-      if( bProfiler )
-         pMethod = hb_mthRequested();
-#endif
       if( hb_bTracePrgCalls )
          HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
@@ -4054,16 +4039,13 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
 #ifndef HB_NO_PROFILER
       if( bProfiler )
-         hb_mthAddTime( pMethod, clock() - ulClock );
+         hb_mthAddTime( clock() - ulClock );
 #endif
    }
    else if( pSym->szName[ 0 ] == '_' )
       hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, HB_ERR_ARGS_SELFPARAMS );
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
-
-   if( lPopSuper )
-      hb_objPopSuperCast( pSelf );
 
    if( s_bDebugging )
       hb_vmDebuggerEndProc();

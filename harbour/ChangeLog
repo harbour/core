@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrdddbf.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with xHarbour
+
+  * harbour/include/hbapi.h
+    + added uiClass and uiMethod to HB_STACK_STATE structure
+    - removed puiClsTree from HB_BASEARRAY structure
+
+  * harbour/include/hbvmpub.h
+    ! fixed typo in HB_ARRAY_OBJ() declaration
+
+  * harbour/source/vm/arrays.c
+    - removed puiClsTree from HB_BASEARRAY structure
+
+  * harbour/source/vm/classes.c
+    - removed static variable s_pMethod to make classes code MT safe
+    * store information about current method index and supercasting on
+      HVM stack in HB_STACK_STATE structure
+    ! changed hb_objGetRealClsName() to not use puiClsTree - this functions
+      was never working as it should when object was supercasted.
+      Now it simply returns name of class where method was defined and
+      inherited.
+    - removed hb_objPopSuperCast() and changed last parameter in
+      hb_objGetMethod() from BOOL * to PHB_STACK_STATE
+      hb_objPopSuperCast() is not longer necessary
+    - removed hb_mthRequested() and first parameter from hb_mthAddTime()
+    + added char * hb_clsName( USHORT uiClass );
+    + added TOFIX notes in hb___msgGetData() and hb___msgSetData()
+
+  * harbour/source/vm/estack.c
+    + added uiClass and uiMethod to HB_STACK_STATE structure
+
+  * harbour/source/vm/hvm.c
+    * updated for above modifications
+
+  * harbour/source/vm/proc.c
+    ! do not use hb_objGetRealClsName() anymore but retrieve information
+       about _REAL_ class form HVM stack
+
 2006-08-19 01:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
     * moved HB_STACK_STATE declaration from hbstack.h to hbapi.h

@@ -123,7 +123,7 @@ struct _HB_SYMB;
 /* #  define HB_ITEM_TYPE( p )   ( hb_itemType( p ) ) */
 
 #  define HB_OBJ_CLASS( p )   ( hb_objGetClass( p ) )
-#  define HB_ARRAY_OBJ( p )   ( hb_arrayIsObject( pSrcArray ) )
+#  define HB_ARRAY_OBJ( p )   ( hb_arrayIsObject( p ) )
 
    /* basic types */
    typedef void *  PHB_ITEM;

@@ -229,6 +229,8 @@ typedef struct _HB_STACK_STATE
    LONG     lBaseItem;        /* stack base offset of previous func/proc */
    LONG     lStatics;         /* statics offset of previous func/proc */
    ULONG    ulPrivateBase;    /* memvars base offset of previous func/proc */
+   USHORT   uiClass;          /* class when message is sent */
+   USHORT   uiMethod;         /* number of class method */
 } HB_STACK_STATE, * PHB_STACK_STATE; /* used to save/restore stack state in hb_vmDo)_ */
 
 
@@ -348,7 +350,6 @@ typedef struct _HB_BASEARRAY
 {
    PHB_ITEM    pItems;       /* pointer to the array items */
    ULONG       ulLen;        /* number of items in the array */
-   USHORT *    puiClsTree;   /* remember array of super called ID Tree */
    USHORT      uiClass;      /* offset to the classes base if it is an object */
    USHORT      uiPrevCls;    /* for fixing after access super */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;

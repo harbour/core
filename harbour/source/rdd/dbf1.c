@@ -3385,7 +3385,7 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
 }
 
 #ifndef HB_CDP_SUPPORT_OFF
-void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
+HB_EXPORT void hb_dbfTranslateRec( DBFAREAP pArea, BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
 {
    USHORT uiIndex;
    LPFIELD pField;
