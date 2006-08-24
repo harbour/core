@@ -210,6 +210,90 @@ Assign to: Przemek
 Detail...: Clean RDD code to be safe for return from RT errors
 Status...: Open.
 
+***
+
+Assign to: <nobody>
+Detail...: When compiling PRG with a very long line (12300 characters)
+           gives the following CodeGuard warning:
+
+         ,- ( changlog 2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak )
+         | Access overrun: Attempt to access 1 byte(s) at NNN+12288,
+         | that is at offset 0+12288 in block NNN which is only 12288
+         | bytes long. Call Tree:
+         |  source\pp\PPCORE.C#3899
+         |  source\pp\PPCOMP.C#147
+         |  source\\compiler\\harbour.l#1792
+         |  obj\\b32\\harbourl.c#4546
+         |  obj\\b32\\harbourl.c#4380
+         |  obj\b32\harboury.c#3667
+         `-
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: An error in the evaluated macro cause memory leak.
+
+           --tt2.prg--
+           func test
+           local x := "user input"     // this is junk
+           local y
+           errorblock({|e|break(e)})
+           begin sequence
+           y := &x
+           end
+           return nil
+           -----------
+
+           bld_b32 tt2 /w/a/n
+           tt2
+
+           the program runs, and on exit it gives following CodeGuard
+           warning:
+
+         ,- ( changlog 2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak )
+         | Resource leak: The memory block was never freed
+         | The memory block [size: 10 bytes] was allocated with malloc
+         | Call Tree:
+         |   source\vm\FM.C#233
+         |   source\common\HBSTR.C#122
+         |   source\\macro\\macro.l#321
+         |   obj\b32\macroy.c#1790
+         |   obj\b32\macroy.c#3799
+         |   source\vm\MACRO.C#153
+         `-
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: When compiled with Harbour and then run it gives BASE/1003
+           Variable not exist: NUM1 with CA-Clipper it works as it
+           recognize NUM1 as FIELD.
+
+           --tt4.prg--
+           PROC MAIN()
+               LOCAL nRecs, nTotal
+               DBCREATE( "TEST", { { "NUM1", "N", 5, 0 } } )
+               USE TEST
+               FOR nRecs := 1 TO 10
+                  APPEND BLANK
+                  REPLACE NUM1 WITH RECN()
+               NEXT nRecs
+               nTotal := 0
+               GO TOP
+               WHILE .NOT. EOF()
+                  nTotal += NUM1       // It fail here
+                  SKIP
+               ENDDO
+               QOUT( nTotal )
+           RETURN
+           -----------
+
+           bld_b32 tt4 /n
+           tt4
+
+Status...: Open.
 
 =======================================================================
 

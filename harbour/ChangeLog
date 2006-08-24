@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-24 10:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * TODO
+    + Add three known issues to the To-Fix list
+
 2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrdddbf.h
   * harbour/source/rdd/dbf1.c
