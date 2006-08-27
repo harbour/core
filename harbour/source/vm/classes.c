@@ -818,15 +818,11 @@ char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
 
 static void hb_objRevertSuperCast( PHB_ITEM pObject )
 {
-   PHB_BASEARRAY pObjBase;
    PHB_ITEM pRealObj;
 
-   pObjBase = pObject->item.asArray.value;
-   pRealObj = hb_itemNew( pObjBase->pItems );
-   /* and take back the good pObjBase */
-   pObjBase = pRealObj->item.asArray.value;
+   pRealObj = hb_itemNew( pObject->item.asArray.value->pItems );
    /* Now I should exchnage it with the current stacked value */
-   hb_itemSwap( pObject, pRealObj );
+   hb_itemMove( pObject, pRealObj );
    /* and release the fake one */
    hb_itemRelease( pRealObj );
 }
@@ -2397,7 +2393,7 @@ static HARBOUR hb___msgClsParent( void )
 static HARBOUR hb___msgEvalInline( void )
 {
    PCLASS pClass   = s_pClasses +
-                     hb_stackSelfItem()->item.asArray.value->uiClass - 1;
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod = pClass->pMethods +
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    USHORT uiPCount = hb_pcount();
@@ -2502,7 +2498,7 @@ static HARBOUR hb___msgSuper( void )
 static HARBOUR hb___msgGetClsData( void )
 {
    PCLASS pClass   = s_pClasses +
-                     hb_stackSelfItem()->item.asArray.value->uiClass - 1;
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod = pClass->pMethods +
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 
@@ -2518,7 +2514,7 @@ static HARBOUR hb___msgGetClsData( void )
 static HARBOUR hb___msgSetClsData( void )
 {
    PCLASS pClass   = s_pClasses +
-                     hb_stackSelfItem()->item.asArray.value->uiClass - 1;
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod = pClass->pMethods +
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
@@ -2535,7 +2531,7 @@ static HARBOUR hb___msgSetClsData( void )
 static HARBOUR hb___msgGetShrData( void )
 {
    PCLASS pClass   = s_pClasses +
-                     hb_stackSelfItem()->item.asArray.value->uiClass - 1;
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod = pClass->pMethods +
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    USHORT uiSprCls = pMethod->uiSprClass;
@@ -2555,7 +2551,7 @@ static HARBOUR hb___msgGetShrData( void )
 static HARBOUR hb___msgSetShrData( void )
 {
    PCLASS pClass   = s_pClasses +
-                     hb_stackSelfItem()->item.asArray.value->uiClass - 1;
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod = pClass->pMethods +
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    USHORT uiSprCls = pMethod->uiSprClass;
@@ -2580,7 +2576,7 @@ static HARBOUR hb___msgGetData( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
    PCLASS pClass    = s_pClasses +
-                      pObject->item.asArray.value->uiClass - 1;
+                      hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod  = pClass->pMethods +
                       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    ULONG ulIndex = pMethod->uiData;
@@ -2606,7 +2602,7 @@ static HARBOUR hb___msgSetData( void )
    PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
    PHB_ITEM pObject = hb_stackSelfItem();
    PCLASS pClass    = s_pClasses +
-                      pObject->item.asArray.value->uiClass - 1;
+                      hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1;
    PMETHOD pMethod  = pClass->pMethods +
                       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    ULONG ulIndex = pMethod->uiData;
