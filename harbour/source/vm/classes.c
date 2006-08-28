@@ -2178,22 +2178,24 @@ HB_FUNC( __CLSPARENT )
 
 HB_FUNC( __SENDER )
 {
-   USHORT iLevel = 3;
-   PHB_ITEM oSender = NULL;
-   LONG lOffset = hb_stackBaseOffset();
+   LONG lOffset = hb_stackBaseProcOffset( 2 );
 
-   while( iLevel > 0 && lOffset > 1 )
+   if( lOffset >= 0 )
    {
-      lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
-      oSender = hb_stackItem( lOffset + 1 );
+      PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
-      if( ( iLevel-- == 2 && oSender->type != HB_IT_BLOCK ) || oSender->type == HB_IT_NIL )
-         break;
-   }
+      /* Is it inline method? */
+      if( lOffset > 0 && HB_IS_BLOCK( pSelf ) &&
+          hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval )
+      {
+         pSelf = hb_stackItem( hb_stackItem( lOffset )->
+                               item.asSymbol.stackstate->lBaseItem + 1 );
+      }
 
-   if( iLevel == 0 && oSender != NULL && oSender->type == HB_IT_OBJECT )
-   {
-      hb_itemReturn( oSender );
+      if( HB_IS_OBJECT( pSelf ) )
+      {
+         hb_itemReturn( pSelf );
+      }
    }
 }
 
@@ -2241,10 +2243,7 @@ HB_FUNC( __EVAL )
  */
 static HARBOUR hb___msgClsH( void )
 {
-   if( HB_IS_ARRAY( hb_stackSelfItem() ) )
-      hb_retni( ( hb_stackSelfItem() )->item.asArray.value->uiClass );
-   else
-      hb_retni( 0 );
+   hb_retni( hb_stackBaseItem()->item.asSymbol.stackstate->uiClass );
 }
 
 
@@ -2255,12 +2254,12 @@ static HARBOUR hb___msgClsH( void )
  */
 static HARBOUR hb___msgClsName( void )
 {
-   PHB_ITEM pItemRef = hb_stackSelfItem();
+   USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 
-   if( HB_IS_BYREF( pItemRef ) )            /* Variables by reference   */
-      pItemRef = hb_itemUnRef( pItemRef );
-
-   hb_retc( hb_objGetClsName( pItemRef ) );
+   if( uiClass )
+      hb_retc( ( s_pClasses + ( uiClass - 1 ) )->szName );
+   else
+      hb_retc( hb_objGetClsName( hb_stackSelfItem() ) );
 }
 
 
@@ -2271,13 +2270,7 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
-   USHORT uiClass;
-
-   if( HB_IS_BYREF( pSelf ) )
-      pSelf =  hb_itemUnRef( pSelf );
-
-   uiClass = hb_objGetClass( pSelf );
+   USHORT uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -2326,8 +2319,6 @@ static HARBOUR hb___msgClsSel( void )
          hb_arraySize( pReturn, uiPos );
       hb_itemRelease( hb_itemReturn( pReturn ) );
    }
-   else
-      hb_ret();
 }
 
 #if 0
@@ -2475,17 +2466,17 @@ static HARBOUR hb___msgSuper( void )
 {
    PHB_ITEM pObject = hb_stackSelfItem();
    PHB_ITEM pCopy = hb_itemArrayNew(1);
-   USHORT uiClass = pObject->item.asArray.value->uiClass;
 
    /* Now save the Self object as the 1st elem. */
    hb_arraySet( pCopy, 1, pObject );
 
    /* And transform it into a fake object */
    /* backup of actual handel */
-   pCopy->item.asArray.value->uiPrevCls = uiClass;
+   pCopy->item.asArray.value->uiPrevCls = pObject->item.asArray.value->uiClass;
    /* superclass handel casting */
-   pCopy->item.asArray.value->uiClass = ( ( s_pClasses + uiClass - 1 )->pMethods +
-         hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod )->uiSprClass;
+   pCopy->item.asArray.value->uiClass = ( ( s_pClasses +
+      hb_stackBaseItem()->item.asSymbol.stackstate->uiClass - 1 )->pMethods +
+      hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod )->uiSprClass;
 
    hb_itemRelease( hb_itemReturn( pCopy ) );
 }
@@ -2649,17 +2640,13 @@ HB_FUNC( __CLS_PARAM )
       array = hb_itemArrayNew( uiParam );
       for( n = 1; n <= uiParam; n++ )
       {
-         PHB_ITEM iTmp = hb_itemParam( n );
-         hb_itemArrayPut( array, n, iTmp );
-         hb_itemRelease( iTmp );
+         hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
       }
    }
    else
    {
-      PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "HBObject" );
       array = hb_itemArrayNew( 1 );
-      hb_itemArrayPut( array, 1, iTmp );
-      hb_itemRelease( iTmp );
+      hb_itemPutC( hb_arrayGetItemPtr( array, 1 ), "HBObject" );
    }
 
    hb_itemRelease( hb_itemReturn( array ) );
@@ -2675,11 +2662,9 @@ HB_FUNC( __CLS_PAR00 )
 
    array = hb_itemArrayNew( uiParam );
    for( n = 1; n <= uiParam; n++ )
-    {
-         PHB_ITEM iTmp = hb_itemParam( n );
-         hb_itemArrayPut( array, n, iTmp );
-         hb_itemRelease( iTmp );
-    }
+   {
+      hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
+   }
 
    hb_itemRelease( hb_itemReturn( array ) );
 }

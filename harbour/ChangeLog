@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-28 12:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed __SENDER() function to work with non-inline methods
+    ! respect super casting in ClassName(), ClassH(), ClassSel() methods
+    % some optimizations
+
 2006-08-27 20:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     ! fixed bug in super casting introduced in my last commit
