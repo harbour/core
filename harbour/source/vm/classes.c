@@ -163,9 +163,11 @@ typedef struct
    PHB_ITEM pInitValue;          /* Init Value for data */
    USHORT   bClsDataInitiated;   /* There is one value assigned at init time */
    USHORT   bIsPersistent;       /* persistence support */
+#ifndef HB_NO_PROFILER
    ULONG    ulCalls;             /* profiler support */
    ULONG    ulTime;              /* profiler support */
    ULONG    ulRecurse;           /* profiler support */
+#endif
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -479,17 +481,16 @@ void hb_clsIsClassRef( void )
    }
 }
 
+#if 0
 /* Currently (2004.04.02) this function is not used
  it is commented out to suppress warning message in gcc
 */
-#if 0
 static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    long lOffset = hb_stackBaseOffset();
    PHB_ITEM pCaller;
    LONG iLevel = 1;
    BOOL bRetVal = FALSE ;
-   USHORT uiScope = pMethod->uiScope;
    PHB_DYNS pMessage = pMethod->pMessage;
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
    char * szCallerNameMsg;
@@ -649,7 +650,7 @@ static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 }
 #endif
 
-ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
+static ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 {
    USHORT i;
    ULONG nRetVal = 0;
@@ -683,9 +684,10 @@ BOOL hb_clsIsParent(  USHORT uiClass, char * szParentName )
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++ )
       {
-         if( ( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS )
+         if( pClass->pMethods[ uiAt ].uiScope & HB_OO_CLSTP_CLASS )
          {
-            if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, szParentName ) == 0 )
+            if( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName,
+                szParentName ) == 0 )
                return TRUE;
          }
       }
@@ -741,10 +743,6 @@ char * hb_objGetClsName( PHB_ITEM pObject )
             szClassName = "BLOCK";
             break;
 
-         case HB_IT_SYMBOL:
-            szClassName = "SYMBOL";
-            break;
-
          case HB_IT_DATE:
             szClassName = "DATE";
             break;
@@ -761,6 +759,10 @@ char * hb_objGetClsName( PHB_ITEM pObject )
 
          case HB_IT_POINTER:
             szClassName = "POINTER";
+            break;
+
+         case HB_IT_SYMBOL:
+            szClassName = "SYMBOL";
             break;
 
          default:
@@ -827,6 +829,72 @@ static void hb_objRevertSuperCast( PHB_ITEM pObject )
    hb_itemRelease( pRealObj );
 }
 
+static BOOL hb_clsValidScope( PHB_ITEM pObject, PMETHOD pMethod )
+{
+   char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   USHORT uiScope = pMethod->uiScope;
+
+   if( uiScope & ( HB_OO_CLSTP_HIDDEN | HB_OO_CLSTP_PROTECTED ) )
+   {
+      LONG lOffset = hb_stackBaseProcOffset( 1 );
+
+      if( lOffset >=0 )
+      {
+         /* Is it inline method? */
+         if( lOffset > 0 && HB_IS_BLOCK( hb_stackItem( lOffset + 1 ) ) &&
+             ( hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval ||
+               hb_stackItem( lOffset )->item.asSymbol.value->pDynSym ==
+               s___msgEval.pDynSym ) )
+         {
+            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
+
+            /* I do not like it but Class(y) makes sth like that. [druzus] */
+            while( lOffset > 0 &&
+                   hb_stackItem( lOffset )->item.asSymbol.stackstate->uiClass == 0 )
+               lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
+         }
+
+         if( uiScope & HB_OO_CLSTP_HIDDEN )
+         {
+            /* Class(y) does not allow to write to HIDDEN+READONLY
+               instance variables, [druzus] */
+            if( ( uiScope & HB_OO_CLSTP_READONLY ) == 0 )
+            {
+               PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
+
+               if( pStack->uiClass &&
+                   ( ( s_pClasses + ( pStack->uiClass - 1 ) )->pMethods +
+                     pStack->uiMethod )->uiSprClass == pMethod->uiSprClass )
+                  return TRUE;
+            }
+         }
+         else
+         {
+            PHB_ITEM pSender = hb_stackItem( lOffset + 1 );
+
+            if( pSender->type == HB_IT_ARRAY &&
+                pSender->item.asArray.value->uiClass ==
+                pObject->item.asArray.value->uiClass )
+               return TRUE;
+         }
+      }
+
+      strcpy( szProcName, ( s_pClasses +
+              ( pObject->item.asArray.value->uiClass - 1 ) )->szName );
+      strcat( szProcName, ":" );
+      strcat( szProcName, pMethod->pMessage->pSymbol->szName );
+
+      if( uiScope & HB_OO_CLSTP_HIDDEN )
+         hb_errRT_BASE( EG_NOMETHOD, 41, "Scope violation (hidden)", szProcName, 0 );
+      else
+         hb_errRT_BASE( EG_NOMETHOD, 42, "Scope violation (protected)", szProcName, 0 );
+
+      return FALSE;
+   }
+
+   return TRUE;
+}
+
 /*
  * <pFuncSym> = hb_objGetMethod( <pObject>, <pMessage>, <fpPopSuper> )
  *
@@ -865,9 +933,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE p
          {
             if( pClass->pMethods[ uiAt ].pMessage == pMsg )
             {
-               /* hb_clsScope( pObject, pClass->pMethods + uiAt ); */
                if( pStack )
+               {
                   pStack->uiMethod = uiAt;
+                  if( ! hb_clsValidScope( pObject, pClass->pMethods + uiAt ) )
+                     return &s___msgVirtual;
+               }
                return ( pClass->pMethods + uiAt )->pFuncSym;
             }
             uiAt++;
@@ -1110,6 +1181,21 @@ BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
    }
 }
 
+static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
+{
+   if( uiScope & HB_OO_CLSTP_READONLY )
+   {
+      /* Class(y) does not allow to write to HIDDEN+READONLY
+         instance variables, [druzus] */
+      if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == 0 || !fAssign )
+         uiScope &= ~HB_OO_CLSTP_READONLY;
+
+      if( fAssign )
+         uiScope |= uiScope & HB_OO_CLSTP_PROTECTED ?
+                    HB_OO_CLSTP_HIDDEN : HB_OO_CLSTP_PROTECTED;
+   }
+   return uiScope;
+}
 
 /* ================================================ */
 
@@ -1271,10 +1357,12 @@ HB_FUNC( __CLSADDMSG )
 
       pNewMeth->uiSprClass = uiClass  ; /* now used !! */
       pNewMeth->bClsDataInitiated = 0 ; /* reset state */
+      pNewMeth->bIsPersistent = bPersistent ? 1 : 0;
+#ifndef HB_NO_PROFILER
       pNewMeth->ulCalls = 0;
       pNewMeth->ulTime = 0;
       pNewMeth->ulRecurse = 0;
-      pNewMeth->bIsPersistent = bPersistent ? 1 : 0;
+#endif
 
       /* in case of re-used message */
       if ( pNewMeth->pInitValue )
@@ -1295,7 +1383,8 @@ HB_FUNC( __CLSADDMSG )
          case HB_OO_MSG_DATA:
 
             pNewMeth->uiData = ( USHORT ) hb_parnl( 3 );
-            pNewMeth->uiScope = uiScope;
+            pNewMeth->uiScope = hb_clsUpdateScope( uiScope,
+                                       pMessage->pSymbol->szName[ 0 ] == '_' );
 
             if( pMessage->pSymbol->szName[ 0 ] == '_' )
                pNewMeth->pFuncSym   = &s___msgSetData;
@@ -1316,11 +1405,11 @@ HB_FUNC( __CLSADDMSG )
 
             pNewMeth->uiData  = ( USHORT ) hb_parnl( 3 );
             pNewMeth->uiDataShared = pNewMeth->uiData ;
+            pNewMeth->uiScope = hb_clsUpdateScope( uiScope,
+                                       pMessage->pSymbol->szName[ 0 ] == '_' );
 
-            pNewMeth->uiScope = uiScope;
-
-            if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
-              hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
+            if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
+                hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
 
             if( pMessage->pSymbol->szName[ 0 ] != '_' )
             {
@@ -1343,10 +1432,10 @@ HB_FUNC( __CLSADDMSG )
             else
             {
                if( pMessage->pSymbol->szName[ 0 ] == '_' )
-                {
+               {
                   pNewMeth->pFuncSym = &s___msgSetShrData;
                   pClass->uiDatasShared++;
-                }
+               }
                else
                   pNewMeth->pFuncSym = &s___msgGetShrData;
             }
@@ -1573,10 +1662,7 @@ HB_FUNC( __CLSNEW )
                      if( pNewCls->pMethods[ uiAt+uiBucket ].pFuncSym == &s___msgEvalInline )
                         pNewCls->pMethods[ uiAt+uiBucket ].uiData += nLenInlines;
 
-                     if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER )
-                        pNewCls->pMethods[ uiAt+uiBucket ].uiScope = ( USHORT ) ( pSprCls->pMethods[ ui ].uiScope + HB_OO_CLSTP_SUPER );
-                     else
-                        pNewCls->pMethods[ uiAt+uiBucket ].uiScope = pSprCls->pMethods[ ui ].uiScope;
+                     pNewCls->pMethods[ uiAt+uiBucket ].uiScope = pSprCls->pMethods[ ui ].uiScope | HB_OO_CLSTP_SUPER;
 
                      if( pSprCls->pMethods[ ui ].pInitValue )
                      {
