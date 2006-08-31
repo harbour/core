@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-08-31 21:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+     * Changed console output of "install" rule to inst_$(CC_DIRNAME).log
+
 2006-08-29 10:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     + added Class(y) compatible scoping - please test and report any
@@ -329,7 +334,7 @@
 2006-08-10 12:30 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/compiler/harbour.c
       * fixed some 'memory unreleased' errors
-      
+
    * source/pp/ppcore.c
       * fixed some cases of access to unallocated memory
 
@@ -337,19 +342,19 @@
 2006-08-08 11:40 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/pp/pplib.c
       * suppressed preprocessing of empty lines
-      
+
    * utils/hbpptest/pretest.prg
-      * added line length to MLCOUNT to correctly count the 
+      * added line length to MLCOUNT to correctly count the
         number of lines to process
 
 
 2006-08-07 14:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * source/compiler/harbour.y
       * fixed to support @funname() syntax in assigments
-      
+
    * utils/hbpptest/pp_test.prg
       * fixed preprocessor example
-   
+
    * TODO
       * removed 'to fix' vertical spacing in ppo files
 
@@ -370,7 +375,7 @@
 2006-08-07 02:20 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/make_b32.bat
    * harbour/make_vc.bat
-     ! install call redirected to nul instead of make_b32.log to avoid 
+     ! install call redirected to nul instead of make_b32.log to avoid
        overwriting the build results with less important (no) information.
 
    * harbour/include/hbundoc.api
@@ -382,7 +387,7 @@
 
    * harbour/source/rtl/filehb.c
      + Added TOFIX about a CA-Cl*pper incompatibility.
-       In CA-Cl*pper the argument of FILE() is RTrim()-ed 
+       In CA-Cl*pper the argument of FILE() is RTrim()-ed
        before doing the check.
 
    * harbour/source/rtl/fstemp.c
@@ -448,7 +453,7 @@
         in prg code (when -n is used)
         (this fixes error during compilation of browdbx.prg)
       * fixed a warning in hb_compStaticGetName
-      
+
 
 2006-07-27 14:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h
@@ -459,18 +464,18 @@
    * source/compiler/genobj32.c
    * source/compiler/harbour.c
       * fixed compilation of static variables with -gc2 switch
-      
+
    * source/pp/ppcore.c
       * fixed vertical spacing in generated ppo files
-      
+
    * source/util/hbpptest/pretest.prg
       * fixed for current state of preprocessor
 
 
 2006-07-27 01:18 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/rtl/dbedit.prg
-     ! Previous non-strict compatible part made fully compatible by 
-       dropping an Eval() on the field value block. Strict branch 
+     ! Previous non-strict compatible part made fully compatible by
+       dropping an Eval() on the field value block. Strict branch
        and NOTE removed.
 
 2006-07-26 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
