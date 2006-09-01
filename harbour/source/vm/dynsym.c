@@ -259,7 +259,6 @@ HB_EXPORT PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
             *pDest++ = cChar;
          }
       }
-
    }
 
    return hb_dynsymFind( szUprName );
@@ -492,6 +491,16 @@ HB_FUNC( __DYNSN2PTR )
    char * szName = hb_parc( 1 );
 
    hb_retptr( szName ? hb_dynsymGet( szName ) : NULL );
+}
+
+HB_FUNC( __DYNSN2SYM )
+{
+   char * szName = hb_parc( 1 );
+
+   if( szName )
+   {
+      hb_itemPutSymbol( hb_stackReturnItem(), hb_dynsymGet( szName )->pSymbol );
+   }
 }
 
 HB_FUNC( __DYNSP2NAME )

@@ -9,6 +9,10 @@ C_SOURCES=\
 	cpbg866.c     \
 	cpbgiso.c     \
 	cpbgwin.c     \
+	cpcs852.c     \
+	cpcsiso.c     \
+	cpcskam.c     \
+	cpcswin.c     \
 	cpeldos.c     \
 	cpelwin.c     \
 	cpesdos.c     \
@@ -57,6 +61,7 @@ C_SOURCES=\
 	uc88591b.c    \
 	uc8859_2.c    \
 	uc8859_5.c    \
+	uckam.c       \
 	uckoi8.c      \
 	uckoi8u.c     \
 	ucmaz.c       \

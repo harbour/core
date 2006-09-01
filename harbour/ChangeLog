@@ -8,6 +8,67 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-09-01 10:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/lang/msgcs852.c
+  * harbour/source/lang/msgcsiso.c
+  * harbour/source/lang/msgcskam.c
+  * harbour/source/lang/msgcswin.c
+    * typo fixed (Vojtech Obrdlik <vobrdlik centrum.cz>)
+  * harbour/include/hbapicdp.h
+  * harbour/source/codepage/Makefile
+  + harbour/source/codepage/cpcs852.c
+  + harbour/source/codepage/cpcsiso.c
+  + harbour/source/codepage/cpcskam.c
+  + harbour/source/codepage/cpcswin.c
+  + harbour/source/codepage/uckam.c
+  * harbour/doc/en/lang.txt
+  * harbour/common.mak
+    + added czech codepage support (Vojtech Obrdlik <vobrdlik centrum.cz>)
+      Vojtech many thanks.
+      We will have to fix our CDP code to work well with characters
+      with the same wight - now sorting with such codepages does not
+      work correctly, f.e. in CSISO:
+        CHR(65)+CHR(204) > CHR(65)+CHR(201)
+      but:
+        CHR(65)+CHR(201) >= CHR(65)+CHR(204)
+      as you can see comparison depends on string order:
+        s1 > s2 but not s2 < s1
+      It means that such codepages cannot be used in any sorting
+      systems like indexes until we will not fix internal CPD logic.
+      Alexander can you look at it?
+      If not then please inform me and I'll work on it in some spare
+      time.
+
+
+  * harbour/source/rtl/do.c
+    * minor RTE message simplification
+
+  * harbour/source/rtl/gtos2/gtos2.c
+    * casting
+
+  * harbour/source/vm/dynsym.c
+    + added __DYNSN2SYM( <cName> ) -> symbolItem
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added supercast and superoffset members to hb_struArray structure
+
+  * harbour/source/vm/classes.c
+  * harbour/source/rtl/tclass.prg
+    ! fixed calculation of instance area offsets
+    ! fixed accessing instance variables with super casting
+    + added selfclass casting
+    + added support for sending 'exec' and 'name' messages to
+      symbol items, f.e.:
+         funcSym := (@funcName())
+         ? "Exacuting:", funcSym:name
+         funcSym:exec( param1, param2, ... )
+    * changed __CLASSNAME() to be Clipper compatible
+    * changed __CLSINST()/__CLASSINSTANCE() now accepts as third paramter
+      function name - Clipper compatible
+    ! fixed GPF trap in __OBJGETCLSNAME() when executed with wrong parameter
+    * some other fixes and small speed improvement
+
 2006-08-31 21:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * harbour/makefile.bc
    * harbour/makefile.vc

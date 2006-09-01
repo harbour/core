@@ -561,6 +561,10 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpbg866.obj  \
     $(OBJ_DIR)\cpbgiso.obj  \
     $(OBJ_DIR)\cpbgwin.obj  \
+    $(OBJ_DIR)\cpcs852.obj  \
+    $(OBJ_DIR)\cpcsiso.obj  \
+    $(OBJ_DIR)\cpcskam.obj  \
+    $(OBJ_DIR)\cpcswin.obj  \
     $(OBJ_DIR)\cpeldos.obj  \
     $(OBJ_DIR)\cpelwin.obj  \
     $(OBJ_DIR)\cpesdos.obj  \
@@ -612,6 +616,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\uckoi8.obj   \
     $(OBJ_DIR)\uckoi8u.obj  \
     $(OBJ_DIR)\ucmaz.obj    \
+    $(OBJ_DIR)\uckam.obj    \
 
 #**********************************************************
 

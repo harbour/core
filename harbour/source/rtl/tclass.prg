@@ -195,26 +195,17 @@ STATIC PROCEDURE Create()
          ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
       NEXT
 
-      hClass := __clsNew( ::cName, nLenDatas + nlen , ahSuper )
+      hClass := __clsNew( ::cName, nLenDatas, ahSuper )
 
-      nDataBegin   += __cls_CntData( ahSuper[ 1 ] )        // Get offset for new Datas
-      nClassBegin  += __cls_CntClsData( ahSuper[ 1 ] )     // Get offset for new ClassData
-
-      FOR n := 2 TO nLen
+      __clsAddMsg( hClass, "SUPER"  , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+      __clsAddMsg( hClass, "__SUPER", nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+      FOR n := 1 TO nLen
+         __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_CLASS )
          nDataBegin   += __cls_CntData( ahSuper[ n ] )        // Get offset for new DATAs
          nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
       NEXT
-
-      __clsAddMsg( hClass, Upper( ::acSuper[ 1 ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_CLASS + 1 )
-      // nData begin stay here the same so as, SUPER and __SUPER will share the same pointer to super object with the first one.
-      __clsAddMsg( hClass, "SUPER"                , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], 1 )
-      __clsAddMsg( hClass, "__SUPER"              , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], 1 )
-
-      FOR n := 2 TO nLen
-         __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), ++nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_CLASS + 1 )
-      NEXT
-
    ENDIF
+   __clsAddMsg( hClass, ::cName  , 0, HB_OO_MSG_SUPER, hClass, HB_OO_CLSTP_EXPORTED )
 
    ::hClass := hClass
 

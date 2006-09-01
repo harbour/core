@@ -238,6 +238,8 @@ typedef struct _HB_STACK_STATE
 struct hb_struArray
 {
    struct _HB_BASEARRAY * value;
+   USHORT   supercast;
+   USHORT   superoffset;
 };
 
 struct hb_struBlock

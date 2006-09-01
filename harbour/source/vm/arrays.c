@@ -134,6 +134,7 @@ HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
 
    pItem->type = HB_IT_ARRAY;
    pItem->item.asArray.value = pBaseArray;
+   pItem->item.asArray.superoffset = 0;
 
    return TRUE;
 }

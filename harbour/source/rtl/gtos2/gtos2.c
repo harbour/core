@@ -380,17 +380,16 @@ static void hb_gt_os2_SetCursorSize( char start, char end, int visible )
    VioSetCurType( &vi, 0 );
 }
 
-static char hb_gt_os2_GetCharHeight()
+static unsigned char hb_gt_os2_GetCharHeight()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCharHeight()"));
 
-   return ( char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
+   return ( unsigned char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
 }
 
 static int hb_gt_os2_GetCursorStyle( void )
 {
    int iStyle;
-   char charheight;
    VIOCURSORINFO vi;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCursorStyle()"));
@@ -401,7 +400,7 @@ static int hb_gt_os2_GetCursorStyle( void )
       iStyle = SC_NONE;
    else
    {
-      charheight = hb_gt_os2_GetCharHeight();
+      unsigned char charheight = hb_gt_os2_GetCharHeight();
 
       if( vi.yStart == 0 && vi.cEnd == 0 )
          iStyle = SC_NONE;
@@ -432,9 +431,7 @@ static void hb_gt_os2_SetCursorStyle( int iStyle )
 
    if( iStyle != s_iCursorStyle )
    {
-      char charheight;
-
-      charheight = hb_gt_os2_GetCharHeight();
+      unsigned char charheight = hb_gt_os2_GetCharHeight();
 
       switch( iStyle )
       {

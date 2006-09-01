@@ -128,6 +128,7 @@ typedef struct _HB_CODEPAGE
 #define CPID_KOI_8      "koi-8"
 #define CPID_KOI_8U     "koi-8u"
 #define CPID_MAZ        "plmaz"
+#define CPID_KAM        "cskam"
 #define UNITB_437       &hb_uniTbl_437
 #define UNITB_737       &hb_uniTbl_737
 #define UNITB_850       &hb_uniTbl_850
@@ -144,6 +145,7 @@ typedef struct _HB_CODEPAGE
 #define UNITB_KOI_8     &hb_uniTbl_KOI_8
 #define UNITB_KOI_8U    &hb_uniTbl_KOI_8U
 #define UNITB_MAZ       &hb_uniTbl_mazovia
+#define UNITB_KAM       &hb_uniTbl_kam
 #define UNITB_UNDEF     NULL /* ((PHB_UNITABLE) (-1)) */
 
 extern HB_UNITABLE hb_uniTbl_437;
@@ -162,6 +164,7 @@ extern HB_UNITABLE hb_uniTbl_8859_5;
 extern HB_UNITABLE hb_uniTbl_KOI_8;
 extern HB_UNITABLE hb_uniTbl_KOI_8U;
 extern HB_UNITABLE hb_uniTbl_mazovia;
+extern HB_UNITABLE hb_uniTbl_kam;
 
 extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
 extern HB_EXPORT char *        hb_cdpSelectID( char * );

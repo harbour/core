@@ -103,15 +103,10 @@ HB_FUNC( DO )
    if( uiPCount > 0 )
    {
       USHORT uiParam;
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
+      for( uiParam = 2; uiParam <= uiPCount; ++uiParam )
          hb_vmPush( hb_stackItemFromBase( uiParam ) );
       hb_vmDo( uiPCount - 1 );
    }
    else
-   {
-      PHB_ITEM pArgsArray = hb_arrayBaseParams();
-
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO", 1, pArgsArray );
-      hb_itemRelease( pArgsArray );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "DO", HB_ERR_ARGS_BASEPARAMS );
 }

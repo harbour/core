@@ -279,6 +279,10 @@
  *      Bulgarian             866            BG866
  *      Bulgarian             ISO-8859-5     BGISO
  *      Bulgarian             Windows-1251   BGWIN
+ *      Czech                 852            CS852
+ *      Czech                 ISO-8859-2     CSISO
+ *      Czech                 KAM            CSKAM
+ *      Czech                 Windoes-1250   CSWIN
  *      English               437            EN
  *      German                850            DE
  *      German                ISO-8859-1     DEWIN

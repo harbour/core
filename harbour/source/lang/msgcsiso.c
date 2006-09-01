@@ -144,7 +144,7 @@ static HB_LANG s_lang =
       "",
       "",
       "Operace není podporována",
-      "Pøekorèen limit",
+      "Pøekroèen limit",
       "Index po¹kozen",
       "Typ dat se neshoduje",
       "Chyba ¹íøky dat",
