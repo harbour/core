@@ -1764,16 +1764,12 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          }
 
          case HB_P_LOCALNEARADDINT:
-         {
-            PHB_ITEM pLocal = hb_stackItemFromBase( pCode[ w + 1 ] );
-            int iAdd = HB_PCODE_MKSHORT( &( pCode[ w + 2 ] ) );
-
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
 
-            hb_vmAddInt( pLocal, iAdd );
+            hb_vmAddInt( hb_stackItemFromBase( pCode[ w + 1 ] ), 
+                         HB_PCODE_MKSHORT( &( pCode[ w + 2 ] ) ) );
             w += 4;
             break;
-         }
 
          /* WITH OBJECT */
          

@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-09-01 23:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/source/codepage/uckam.c
+    + added missing in my previous commit file
+
+  * harbour/include/hbvmpub.h
+  * harbour/source/vm/dynsym.c
+    + added USHORT uiSymNum to HB_DYNS structure - I will need it for MT
+      as index for thread local HB_DYNSYM values for MT version in the
+      future but now I use it as perfectly efficient continuous hash
+      value for all symbols. Of course PHB_DYNS address is also perfectly
+      good hash value and in classes code can be used but it does not
+      guaranties that all messages will cover well whole 16bit area used
+      as message pool without dynamic bucket size modification.
+
+  * harbour/source/vm/classes.c
+    * changed hashing method. Now it uses really unique base hash key
+      values which can cover whole 16 bit area so mathematically it's
+      not be possible to break it by any combination of method names
+      as long as our dynamic symbol table will be limited to 2^16 symbols.
+      It still consumes more memory then necessary and I'll change it in
+      the future but it's much less then before.
+      The BUCKET size is smaller (4) and all calculations are done only
+      with bit shifts so it should be also faster.
+    * use ULONG instead of USHORT to calculate maximum number of methods
+      to avoid possible overflow problems if it reach 2^16 (rather
+      impossible in normal application - it will have to create more then
+      2^15 symbols)
+    ! some other fixes and code cleanup
+
+  * harbour/source/vm/hvm.c
+    * minor modifications
+
 2006-09-01 10:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/lang/msgcs852.c
   * harbour/source/lang/msgcsiso.c

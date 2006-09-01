@@ -154,9 +154,10 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    }
 
    s_uiDynSymbols++;                   /* Got one more symbol */
-   pDynSym->pSymbol = pSymbol;
-   pDynSym->hMemvar = 0;
-   pDynSym->hArea   = 0;
+   pDynSym->pSymbol  = pSymbol;
+   pDynSym->hMemvar  = 0;
+   pDynSym->hArea    = 0;
+   pDynSym->uiSymNum = s_uiDynSymbols;
 #ifndef HB_NO_PROFILER
    pDynSym->ulCalls = 0;   /* profiler support */
    pDynSym->ulTime  = 0;   /* profiler support */
