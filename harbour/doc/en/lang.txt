@@ -279,11 +279,15 @@
  *      Bulgarian             866            BG866
  *      Bulgarian             ISO-8859-5     BGISO
  *      Bulgarian             Windows-1251   BGWIN
+ *      Croatian              437            HR437
+ *      Croatian              852            HR852
+ *      Croatian              Windows-1250   HR1250
  *      Czech                 852            CS852
  *      Czech                 ISO-8859-2     CSISO
  *      Czech                 KAM            CSKAM
  *      Czech                 Windoes-1250   CSWIN
- *      English               437            EN
+ *      Engzish               437            EN
+ *      French                850            FR
  *      German                850            DE
  *      German                ISO-8859-1     DEWIN
  *      Greek                 737            EL
@@ -291,6 +295,11 @@
  *      Hungarian             852            HU852
  *      Hungarian             ISO-8859-2     HUISO
  *      Hungarian             Windows-1250   HUWIN
+ *      Italian               437            IT437
+ *      Italian               850            IT850
+ *      Italian               ISO-8859-1b    ITISB
+ *      Italian               ISO-8859-1     ITISO
+ *      Lithuanian            Windows-1257   LT
  *      Polish                852            PL852
  *      Polish                ISO-8859-2     PLISO
  *      Polish                Mozowia        PLMAZ
@@ -308,6 +317,9 @@
  *      Spanish               850            ES
  *      Spanish               ISO-8859-1     ESWIN
  *      Spanish Modern        ISO-8859-1     ESMWIN
+ *      Ukrainian             866            UA866
+ *      Ukrainian             KOI-8U         UAKOI8
+ *      Ukrainian             Windows-1251   UA1251
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
