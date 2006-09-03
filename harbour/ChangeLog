@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/vm/classes.c
+    * stronger parameters validation and fixed some possible problems
+      in hb_objGetMethod()
+    + added support for assigning enumerator value by:
+         <enum>:__enumValue(<newVal>)
+      and enumerator index by:
+         <enum>:__enumIndex(<newIndex>)
       It's a work in progress - please do not create any code which may
       need such functionality yet
   + harbour/ChangeLog.015

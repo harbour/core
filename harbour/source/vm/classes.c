@@ -427,6 +427,35 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
    return NULL;
 }
 
+static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
+{
+   PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+   USHORT uiBucket = BUCKETSIZE;
+
+   do
+   {
+      if( ! pMethod->pMessage || pMethod->pMessage == pMsg )
+      {
+         if( pMethod->pFuncSym == &s___msgEvalInline )
+         {  /* INLINE method deleted, delete INLINE block */
+            hb_itemClear( hb_arrayGetItemPtr( pClass->pInlines,
+                                              pMethod->uiData ) );
+         }
+         /* Move messages */
+         while( --uiBucket )
+         {
+            memcpy( pMethod, pMethod + 1, sizeof( METHOD ) );
+            pMethod++;
+         }
+         memset( pMethod, 0, sizeof( METHOD ) );
+         pClass->uiMethods--;       /* Decrease number of messages */
+         return;
+      }
+      ++pMethod;
+   }
+   while( --uiBucket );
+}
+
 static void hb_clsAddInitValue( PCLASS pClass, PHB_ITEM pItem,
                                 USHORT uiType, USHORT uiData )
 {
@@ -1137,10 +1166,10 @@ BOOL hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator )
  * Function return TRUE when object class overloads given operator
  * and FALSE otherwise. [druzus]
  */
-BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult,
-                         PHB_ITEM pObject, PHB_ITEM pMsgArg )
+BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject,
+                         PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_objOperatorCall(%hu,%p,%p,%p)", uiOperator, pResult, pObject, pMsgArg));
+   HB_TRACE(HB_TR_DEBUG, ("hb_objOperatorCall(%hu,%p,%p,%p,%p)", uiOperator, pResult, pObject, pMsgArg1, pMsgArg2));
 
    if( hb_objHasOperator( pObject, uiOperator ) )
    {
@@ -1150,16 +1179,22 @@ BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult,
          hb_itemClear( hb_stackReturnItem() );
       else
          hb_stackReturnItem()->type = HB_IT_NIL;
-      if( pMsgArg )
+      if( pMsgArg1 )
       {
-         hb_vmPush( pMsgArg );
-         hb_vmSend( 1 );
+         hb_vmPush( pMsgArg1 );
+         if( pMsgArg2 )
+         {
+            hb_vmPush( pMsgArg2 );
+            hb_vmSend( 2 );
+         }
+         else
+            hb_vmSend( 1 );
       }
       else
          hb_vmSend( 0 );
 
       /* store the return value */
-      hb_itemCopy( pResult, hb_stackReturnItem() );
+      hb_itemMove( pResult, hb_stackReturnItem() );
       return TRUE;
    }
    return FALSE;
@@ -1823,32 +1858,7 @@ HB_FUNC( __CLSDELMSG )
       PHB_DYNS pMsg = hb_dynsymFindName( pString->item.asString.value );
 
       if( pMsg )
-      {
-         PCLASS  pClass  = s_pClasses + ( uiClass - 1 );
-         PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
-
-         if( pMethod )
-         {
-            PHB_SYMB pFuncSym = pMethod->pFuncSym;
-            USHORT uiPos;
-
-            if( pFuncSym == &s___msgEvalInline )
-            {  /* INLINE method deleted, delete INLINE block */
-               hb_itemClear( hb_arrayGetItemPtr( pClass->pInlines,
-                                                 pMethod->uiData ) );
-            }
-            /* Move messages */
-            uiPos = ( USHORT ) ( pMethod - pClass->pMethods ) & BUCKETMASK;
-               
-            while( uiPos++ < BUCKETSIZE && pMethod->pMessage )
-            {
-               memcpy( pMethod, pMethod + 1, sizeof( METHOD ) );
-               pMethod++;
-            }
-            memset( pMethod, 0, sizeof( METHOD ) );
-            pClass->uiMethods--;                    /* Decrease number messages */
-         }
-      }
+         hb_clsFreeMsg( s_pClasses + ( uiClass - 1 ), pMsg );
    }
 }
 

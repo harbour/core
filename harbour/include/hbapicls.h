@@ -100,7 +100,7 @@ extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK
 #endif
 
 extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
-extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg );
+extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 
 extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
 extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */

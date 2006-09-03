@@ -38,10 +38,13 @@ function Main()
    QOut( "Substring $  :", oString $ "Hello" )
    QOut( "Less than    :", oString < "Hello" )
    QOut( "Less than or Equal:", oString <= "Hello" )
-   QOut( "Greater than :", oString < "Hello" )
-   QOut( "Greater than or Equal:", oString <= "Hello" )
+   QOut( "Greater than :", oString > "Hello" )
+   QOut( "Greater than or Equal:", oString >= "Hello" )
    QOut( "Concatenation + :", oString + "Hello" )
    QOut( "Concatenation - :", oString - "Hello" )
+   QOut( "Array index[2] :", oString[2] )
+   QOut( "Array index[3] := 'X' :", oString[3]:='X' )
+   QOut( oString:cValue )
 
 return nil
 
@@ -52,6 +55,7 @@ create class tString
 
       METHOD New(cText) INLINE ::cValue := cText, self
 
+      OPERATOR "="  ARG cArg INLINE ::cValue =  cArg
       OPERATOR "==" ARG cArg INLINE ::cValue == cArg
       OPERATOR "!=" ARG cArg INLINE ::cValue != cArg
       OPERATOR "<"  ARG cArg INLINE ::cValue <  cArg
@@ -61,6 +65,9 @@ create class tString
       OPERATOR "+"  ARG cArg INLINE ::cValue +  cArg
       OPERATOR "-"  ARG cArg INLINE ::cValue -  cArg
       OPERATOR "$"  ARG cArg INLINE ::cValue $  cArg
+      OPERATOR "[]" ARG nIndex INLINE iif( pcount()>2, ;
+                     ::cValue := stuff( ::cValue, nIndex, 1, hb_pvalue(3) ), ;
+                     substr( ::cValue, nIndex, 1 ) )
 
 endclass
 
