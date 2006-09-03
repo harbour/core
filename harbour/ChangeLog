@@ -8,6 +8,77 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-09-03 16:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hboo.ch
+    + added HB_OO_CLSTP_PERSIST and HB_OO_MSG_INITIALIZED
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbvmpub.h
+  * harbour/source/vm/dynsym.c
+    % changed HB_HANDLE hArea to USHORT uiArea to reduce HB_DYNS size.
+      RDD code internally uses USHORT as area number so it's not
+      necessary to keep it as HB_HANDLE value.
+
+  * harbour/source/vm/arrays.c
+    * modified internal static function name
+
+  * harbour/source/vm/itemapi.c
+    + added missing HB_TRACE in hb_itemClone()
+
+  * harbour/source/vm/classes.c
+    ! moved initialization values to separate structure not bound with
+      methods. We can inherit the same method names from more then one
+      object so we will store only the first one but we are inheriting
+      whole instance area which is accessible with super casting (last
+      fixes) so we have to properly initialize it even if methods does
+      not exist. This modification also fixes some possible memory leaks.
+    % replaced bIsPersistent by HB_OO_CLSTP_PERSIST in uiScope in method
+      definition
+    ! added basic parameter validation to __CLSADDMSG() to avoid some
+      possible strange behavior at runtime when broken messages are
+      defined.
+    * updated __OBJHASMSG() and __OBJSENDMSG() to accept SYMBOL items
+      too (@funcName()). Using symbol items it faster then strings.
+      Also added support to use non array parametes. F.e. now
+         __OBJHASMSG( {||NIL}, "EVAL" )
+      returns TRUE
+    * some other fixes, reduced memory consumption and speed optimizations
+
+2006-09-03 16:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hboo.ch
+    + added HB_OO_CLSTP_PERSIST and HB_OO_MSG_INITIALIZED
+
+  * harbour/include/hbvmpub.h
+  * harbour/source/vm/dynsym.c
+    % changed HB_HANDLE hArea to USHORT uiArea to reduce HB_DYNS size.
+      RDD code internally uses USHORT as area number so it's not
+      necessary to keep it as HB_HANDLE value.
+
+  * harbour/source/vm/arrays.c
+    * modified internal static function name
+
+  * harbour/source/vm/itemapi.c
+    + added missing HB_TRACE in hb_itemClone()
+
+  * harbour/source/vm/classes.c
+    ! moved initialization values to separate structure not bound with
+      methods. We can inherit the same method names from more then one
+      object so we will store only the first one but we are inheriting
+      whole instance area which is accessible with super casting (last
+      fixes) so we have to properly initialize it even if methods does
+      not exist. This modification also fixes some possible memory leaks.
+    % replaced bIsPersistent by HB_OO_CLSTP_PERSIST in uiScope in method
+      definition
+    ! added basic parameter validation to __CLSADDMSG() to avoid some
+      possible strange behavior at runtime when broken messages are
+      defined.
+    * updated __OBJHASMSG() and __OBJSENDMSG() to accept SYMBOL items
+      too (@funcName()). Using symbol items it faster then strings.
+      Also added support to use non array parametes. F.e. now
+         __OBJHASMSG( {||NIL}, "EVAL" )
+      returns TRUE
+    * some other fixes, reduced memory consumption and speed optimizations
+
 2006-09-03 16:37 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt
     + Update supported codepage list for HB_SETCODEPAGE()

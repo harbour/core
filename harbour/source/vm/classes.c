@@ -154,15 +154,19 @@
 
 typedef struct
 {
+   PHB_ITEM pInitValue;          /* Init Value for data */
+   USHORT   uiType;              /* HB_OO_MSG_DATA or HB_OO_MSG_CLASSDATA */
+   USHORT   uiData;              /* Item position in instance area or in class data */
+} INITDATA, * PINITDATA;
+
+typedef struct
+{
    PHB_DYNS pMessage;            /* Method Symbolic name */
    PHB_SYMB pFuncSym;            /* Function symbol */
-   USHORT   uiData;              /* Item position for data (Harbour like, begin from 1) */
-   USHORT   uiDataShared;        /* Item position for datashared (original pos within Shared Class) */
+   USHORT   uiData;              /* Item position for instance data or shared data (Harbour like, begin from 1) or supercast offset (from 0) */
    USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;             /* Scoping value */
-   PHB_ITEM pInitValue;          /* Init Value for data */
    USHORT   bClsDataInitiated;   /* There is one value assigned at init time */
-   USHORT   bIsPersistent;       /* persistence support */
 #ifndef HB_NO_PROFILER
    ULONG    ulCalls;             /* profiler support */
    ULONG    ulTime;              /* profiler support */
@@ -172,17 +176,18 @@ typedef struct
 
 typedef struct
 {
-   char *   szName;         /* Class name */
-   USHORT   uiDatas;        /* Total Data Counter */
-   USHORT   uiDataFirst;    /* First uiData from this class */
-   PMETHOD  pMethods;
-   USHORT   uiMethods;      /* Total Method initialised Counter */
+   char *   szName;           /* Class name */
+   PMETHOD  pMethods;         /* Class methods */
+   PINITDATA pInitData;       /* Class/instance Initialization data */
+   PHB_ITEM pClassDatas;      /* Harbour Array for ClassDatas and shared */
+   PHB_ITEM pInlines;         /* Array for inline codeblocks */
+   PHB_SYMB pFunError;        /* error handler for not defined messages */
+   ULONG    ulOpFlags;        /* Flags for overloaded operators */
+   USHORT   uiMethods;        /* Total Method initialised Counter */
+   USHORT   uiInitDatas;      /* Total Method initialised Counter */
+   USHORT   uiDatas;          /* Total Data Counter */
+   USHORT   uiDataFirst;      /* First uiData from this class */
    USHORT   uiHashKey;
-   USHORT   uiDatasShared;  /* Total shared Class data within Class data */
-   PHB_ITEM pClassDatas;    /* Harbour Array for ClassDatas and shared */
-   PHB_ITEM pInlines;       /* Array for inline codeblocks */
-   PHB_SYMB pFunError;      /* error handler for not defined messages */
-   ULONG    ulOpFlags;      /* Flags for overloaded operators */
 } CLASS, * PCLASS;
 
 #define BUCKETBITS      2
@@ -191,6 +196,7 @@ typedef struct
 #define HASHBITS        3
 #define HASH_KEY        ( 1 << HASHBITS )
 #define HASH_KEYMAX     ( 1 << ( 16 - BUCKETBITS ) )
+#define hb_clsMthNum(p) ( ( ULONG ) (p)->uiHashKey << BUCKETBITS )
 
 static HARBOUR  hb___msgGetData( void );
 static HARBOUR  hb___msgSetData( void );
@@ -373,6 +379,18 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
    return TRUE;
 }
 
+static void hb_clsDictInit( PCLASS pClass, USHORT uiHashKey )
+{
+   ULONG ulSize;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsDictInit(%p,%hu)", pClass, uiHashKey));
+
+   ulSize = ( ( ULONG ) uiHashKey << BUCKETBITS ) * sizeof( METHOD );
+   pClass->uiHashKey = uiHashKey;
+   pClass->pMethods = ( PMETHOD ) hb_xgrab( ulSize );
+   memset( pClass->pMethods, 0, ulSize );
+}
+
 static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
    PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
@@ -409,6 +427,23 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
    return NULL;
 }
 
+static void hb_clsAddInitValue( PCLASS pClass, PHB_ITEM pItem,
+                                USHORT uiType, USHORT uiData )
+{
+   PINITDATA pInitData;
+
+   if( ! pClass->uiInitDatas )
+      pClass->pInitData = ( PINITDATA ) hb_xgrab( sizeof( INITDATA ) );
+   else
+      pClass->pInitData = ( PINITDATA ) hb_xrealloc( pClass->pInitData,
+                           ( pClass->uiInitDatas + 1 ) * sizeof( INITDATA ) );
+
+   pInitData = pClass->pInitData + pClass->uiInitDatas++;
+
+   pInitData->pInitValue = hb_itemClone( pItem );
+   pInitData->uiType = uiType;
+   pInitData->uiData = uiData;
+}
 
 /*
  * initialize Classy/OO system at HVM startup
@@ -449,22 +484,24 @@ void hb_clsInit( void )
  */
 static void hb_clsRelease( PCLASS pClass )
 {
-   ULONG ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS;
-   PMETHOD pMeth = pClass->pMethods;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_clsRelease(%p)", pClass));
 
-   do
+   if( pClass->uiInitDatas )
    {
-      if( pMeth->pInitValue )
-         hb_itemRelease( pMeth->pInitValue );
-      pMeth++;
+      USHORT ui = pClass->uiInitDatas;
+      PINITDATA pInitData = pClass->pInitData;
+
+      do
+      {
+         hb_itemRelease( pInitData->pInitValue );
+         ++pInitData;
+      }
+      while( --ui );
+      hb_xfree( pClass->pInitData );
    }
-   while( --ulLimit );
 
    hb_xfree( pClass->szName );
    hb_xfree( pClass->pMethods );
-
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
 }
@@ -509,8 +546,6 @@ void hb_clsIsClassRef( void )
 #if 0
    USHORT uiClass = s_uiClasses;
    PCLASS pClass = s_pClasses;
-   ULONG  ulLimit;
-   PMETHOD pMeth;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsIsClassRef()"));
 
@@ -528,20 +563,19 @@ void hb_clsIsClassRef( void )
             hb_gcItemRef( pClass->pClassDatas );
       }
 
-      pMeth = pClass->pMethods;
-      ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS;
-
-      do
+      if( pClass->uiInitDatas )
       {
-         if( pMeth->pInitValue )
-         {
-            if( HB_IS_GCITEM( pMeth->pInitValue ) )
-               hb_gcItemRef( pMeth->pInitValue );
-         }
-         pMeth++;
-      }
-      while( --ulLimit );
+         USHORT ui = pClass->uiInitDatas;
+         PINITDATA pInitData = pClass->pInitData;
 
+         do
+         {
+            if( HB_IS_GCITEM( pInitData->pInitValue ) )
+               hb_gcItemRef( pInitData->pInitValue );
+            ++pInitData;
+         }
+         while( --ui );
+      }
       ++pClass;
    }
 #endif
@@ -1082,11 +1116,131 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE p
 }
 
 /*
+ * Check if object has a given operator
+ */
+BOOL hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_objHasOperator(%p,%hu)", pObject, uiOperator));
+
+   if( pObject->type == HB_IT_ARRAY &&
+       pObject->item.asArray.value->uiClass != 0 )
+   {
+      PCLASS pClass = s_pClasses + pObject->item.asArray.value->uiClass - 1;
+      return ( pClass->ulOpFlags & ( 1UL << uiOperator ) ) != 0;
+   }
+
+   return FALSE;
+}
+
+/*
+ * Call object operator. If pMsgArg is NULL then operator is unary.
+ * Function return TRUE when object class overloads given operator
+ * and FALSE otherwise. [druzus]
+ */
+BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult,
+                         PHB_ITEM pObject, PHB_ITEM pMsgArg )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_objOperatorCall(%hu,%p,%p,%p)", uiOperator, pResult, pObject, pMsgArg));
+
+   if( hb_objHasOperator( pObject, uiOperator ) )
+   {
+      hb_vmPushSymbol( s_opSymbols + uiOperator );
+      hb_vmPush( pObject );
+      if( HB_IS_COMPLEX( hb_stackReturnItem() ) )
+         hb_itemClear( hb_stackReturnItem() );
+      else
+         hb_stackReturnItem()->type = HB_IT_NIL;
+      if( pMsgArg )
+      {
+         hb_vmPush( pMsgArg );
+         hb_vmSend( 1 );
+      }
+      else
+         hb_vmSend( 0 );
+
+      /* store the return value */
+      hb_itemCopy( pResult, hb_stackReturnItem() );
+      return TRUE;
+   }
+   return FALSE;
+}
+
+/*
  * return TRUE if object has a given message
  */
 BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
 {
    return hb_objGetMethod( pObject, pMessage->pSymbol, NULL ) != NULL;
+}
+
+/*
+ * <bool> = hb_objHasMsg( <pObject>, <szString> )
+ *
+ * Check whether <szString> is an existing message for object.
+ *
+ * <uPtr> should be read as a boolean
+ */
+BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
+{
+   PHB_DYNS pDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_objHasMsg(%p, %s)", pObject, szString));
+
+   pDynSym = hb_dynsymFindName( szString );
+   if( pDynSym )
+   {
+      return hb_objGetMethod( pObject, pDynSym->pSymbol, NULL ) != NULL;
+   }
+   else
+   {
+      return FALSE;
+   }
+}
+
+void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
+{
+   if( pObject && pMsgSym )
+   {
+      hb_vmPushSymbol( pMsgSym->pSymbol );
+      hb_vmPush( pObject );
+
+      if( ulArg )
+      {
+         unsigned long i;
+         va_list ap;
+
+         va_start( ap, ulArg );
+         for( i = 0; i < ulArg; i++ )
+         {
+            hb_vmPush( va_arg( ap, PHB_ITEM ) );
+         }
+         va_end( ap );
+      }
+      hb_vmSend( (USHORT) ulArg );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
+   }
+}
+
+void hb_objSendMsg( PHB_ITEM pObject, char *sMsg, ULONG ulArg, ... )
+{
+   hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
+   hb_vmPush( pObject );
+   if( ulArg )
+   {
+      unsigned long i;
+      va_list ap;
+
+      va_start( ap, ulArg );
+      for( i = 0; i < ulArg; i++ )
+      {
+         hb_vmPush( va_arg( ap, PHB_ITEM ) );
+      }
+      va_end( ap );
+   }
+   hb_vmSend( (USHORT) ulArg );
 }
 
 #ifndef HB_CLS_ENFORCERO
@@ -1146,77 +1300,29 @@ static PHB_SYMB hb_objFuncParam( int iParam )
    return NULL;
 }
 
-/*
- * Check if object has a given operator
- */
-BOOL hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator )
+static PHB_DYNS hb_objMsgParam( int iParam )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_objHasOperator(%p,%hu)", pObject, uiOperator));
+   PHB_ITEM pMessage = hb_param( iParam, HB_IT_STRING | HB_IT_SYMBOL );
+   PHB_DYNS pDynSym = NULL;
 
-   if( pObject->type == HB_IT_ARRAY &&
-       pObject->item.asArray.value->uiClass != 0 )
+   if( pMessage )
    {
-      PCLASS pClass = s_pClasses + pObject->item.asArray.value->uiClass - 1;
-      return ( pClass->ulOpFlags & ( 1UL << uiOperator ) ) != 0;
-   }
+      char * szMsg = NULL;
 
-   return FALSE;
-}
-
-/*
- * Call object operator. If pMsgArg is NULL then operator is unary.
- * Function return TRUE when object class overloads given operator
- * and FALSE otherwise. [druzus]
- */
-BOOL hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult,
-                         PHB_ITEM pObject, PHB_ITEM pMsgArg )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_objOperatorCall(%hu,%p,%p,%p)", uiOperator, pResult, pObject, pMsgArg));
-
-   if( hb_objHasOperator( pObject, uiOperator ) )
-   {
-      hb_vmPushSymbol( s_opSymbols + uiOperator );
-      hb_vmPush( pObject );
-      if( HB_IS_COMPLEX( hb_stackReturnItem() ) )
-         hb_itemClear( hb_stackReturnItem() );
+      if( HB_IS_STRING( pMessage ) )
+         szMsg = pMessage->item.asString.value;
       else
-         hb_stackReturnItem()->type = HB_IT_NIL;
-      if( pMsgArg )
       {
-         hb_vmPush( pMsgArg );
-         hb_vmSend( 1 );
+         pDynSym = pMessage->item.asSymbol.value->pDynSym;
+         if( !pDynSym )
+            szMsg = pMessage->item.asSymbol.value->szName;
       }
-      else
-         hb_vmSend( 0 );
 
-      /* store the return value */
-      hb_itemCopy( pResult, hb_stackReturnItem() );
-      return TRUE;
+      if( szMsg && *szMsg )
+         pDynSym = hb_dynsymGet( szMsg );
    }
-   return FALSE;
-}
 
-/*
- * <bool> = hb_objHasMsg( <pObject>, <szString> )
- *
- * Check whether <szString> is an existing message for object.
- *
- * <uPtr> should be read as a boolean
- */
-BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
-{
-   PHB_DYNS pDynSym = hb_dynsymFindName( szString );
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_objHasMsg(%p, %s)", pObject, szString));
-
-   if( pDynSym )
-   {
-      return hb_objGetMethod( pObject, pDynSym->pSymbol, NULL ) != NULL;
-   }
-   else
-   {
-      return FALSE;
-   }
+   return pDynSym;
 }
 
 static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
@@ -1254,7 +1360,7 @@ static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
  *
  * <xInit>     HB_OO_MSG_DATA      : Optional initializer for DATA
  *             HB_OO_MSG_CLASSDATA : Optional initializer for DATA
- *             HB_OO_MSG_SUPER     : Index number in array (for instance SuperObject)
+ *             HB_OO_MSG_SUPER     : Superclass handle
  *
  * <uiScope>   HB_OO_CLSTP_EXPORTED        1 : default for data and method
  *             HB_OO_CLSTP_PROTECTED       2 : method or data protected
@@ -1264,29 +1370,34 @@ static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
  *             HB_OO_CLSTP_SHARED         32 : (method or) data shared
  *             HB_OO_CLSTP_CLASS          64 : message is the name of a superclass
  *             HB_OO_CLSTP_SUPER         128 : message is herited
- *             HB_OO_CLSTP_CLASSCTOR     256 : Class method constructor
- *             HB_OO_CLSTP_CLASSMETH     512 : Class method
+ *             HB_OO_CLSTP_PERSIST       256 : message is persistent (PROPERTY)
+ *
+ *             HB_OO_CLSTP_CLASSCTOR     512 : Class method constructor
+ *             HB_OO_CLSTP_CLASSMETH    1024 : Class method
  */
 
 
 HB_FUNC( __CLSADDMSG )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
-   USHORT uiScope = ( USHORT ) ( ISNUM( 6 ) ? hb_parni( 6 ) : HB_OO_CLSTP_EXPORTED );
-   BOOL   bPersistent = hb_parl( 7 );
 
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS   pClass   = s_pClasses + ( uiClass - 1 );
 
       PHB_DYNS pMessage;
+      PMETHOD  pNewMeth;
+      USHORT   uiOperator, uiSprClass = 0, uiIndex = 0;
+      PHB_SYMB pOpSym, pFuncSym = NULL;
+      PHB_ITEM pBlock = NULL;
+      BOOL     fOK, fAssign;
+      ULONG    ulOpFlags = 0;
       char *   szMessage = hb_parc( 2 );
       USHORT   nType     = ( USHORT ) hb_parni( 4 );
-      PMETHOD  pNewMeth;
+      USHORT   uiScope   = ( USHORT ) ( ISNUM( 6 ) ? hb_parni( 6 ) : HB_OO_CLSTP_EXPORTED );
 
-      USHORT   uiOperator;
-      PHB_SYMB pOpSym;
-      ULONG    ulOpFlags = 0;
+      if( hb_parl( 7 ) )
+         uiScope |= HB_OO_CLSTP_PERSIST;
 
       /* translate names of operator overloading messages */
       if      (strcmp("+", szMessage) == 0)
@@ -1352,7 +1463,39 @@ HB_FUNC( __CLSADDMSG )
          }
       }
 
-      if( nType == HB_OO_MSG_INLINE && hb_param( 3, HB_IT_BLOCK ) == NULL )
+      /* basic parameter validation */
+      switch( nType )
+      {
+         case HB_OO_MSG_METHOD:
+         case HB_OO_MSG_ONERROR:
+            pFuncSym = hb_objFuncParam( 3 );
+            fOK = pFuncSym != NULL;
+            break;
+
+         case HB_OO_MSG_INLINE:
+            pBlock = hb_param( 3, HB_IT_BLOCK );
+            fOK = pBlock != NULL;
+            break;
+
+         case HB_OO_MSG_SUPER:
+            uiSprClass = ( USHORT ) hb_parni( 5 );
+            fOK = uiSprClass && uiSprClass <= s_uiClasses;
+            break;
+
+         case HB_OO_MSG_DATA:
+            /* This validation can break buggy .prg code which wrongly
+             * sets data offsets but IMHO it will help to clean the code.
+             * [druzus]
+             */
+            uiIndex = ( USHORT ) hb_parni( 3 );
+            fOK = uiIndex && uiIndex <= pClass->uiDatas;
+            break;
+
+         default:
+            fOK = TRUE;
+      }
+
+      if( !fOK )
       {
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );
          return;
@@ -1369,87 +1512,84 @@ HB_FUNC( __CLSADDMSG )
       }
 
       pNewMeth->uiSprClass = uiClass  ; /* now used !! */
-      pNewMeth->bClsDataInitiated = 0 ; /* reset state */
-      pNewMeth->bIsPersistent = bPersistent ? 1 : 0;
 #ifndef HB_NO_PROFILER
       pNewMeth->ulCalls = 0;
       pNewMeth->ulTime = 0;
       pNewMeth->ulRecurse = 0;
 #endif
 
-      /* in case of re-used message */
-      if( pNewMeth->pInitValue )
-      {
-         hb_itemRelease(pNewMeth->pInitValue);
-         pNewMeth->pInitValue = NULL;
-      }
+      fAssign = pMessage->pSymbol->szName[ 0 ] == '_';
 
       switch( nType )
       {
          case HB_OO_MSG_METHOD:
 
-            pNewMeth->pFuncSym = hb_objFuncParam( 3 );
+            pNewMeth->pFuncSym = pFuncSym;
             pNewMeth->uiScope = uiScope;
             pNewMeth->uiData = 0;
             break;
 
          case HB_OO_MSG_DATA:
 
-            pNewMeth->uiData = ( USHORT ) hb_parni( 3 );
-            pNewMeth->uiScope = hb_clsUpdateScope( uiScope,
-                                       pMessage->pSymbol->szName[ 0 ] == '_' );
-
-            if( pMessage->pSymbol->szName[ 0 ] == '_' )
+            pNewMeth->uiData = uiIndex;
+            pNewMeth->uiScope = hb_clsUpdateScope( uiScope, fAssign );
+            if( fAssign )
                pNewMeth->pFuncSym   = &s___msgSetData;
             else
             {
                PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
 
-               pNewMeth->pFuncSym   = &s___msgGetData;
-
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
-               {
-                  pNewMeth->pInitValue = hb_itemClone( pInit );
-               }
+                  hb_clsAddInitValue( pClass, pInit, HB_OO_MSG_DATA,
+                                      pNewMeth->uiData );
+               pNewMeth->pFuncSym   = &s___msgGetData;
             }
             break;
 
          case HB_OO_MSG_CLASSDATA:
 
             pNewMeth->uiData  = ( USHORT ) hb_parni( 3 );
-            pNewMeth->uiDataShared = pNewMeth->uiData ;
-            pNewMeth->uiScope = hb_clsUpdateScope( uiScope,
-                                       pMessage->pSymbol->szName[ 0 ] == '_' );
-
+            pNewMeth->uiScope = hb_clsUpdateScope( uiScope, fAssign );
             if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
                 hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
 
-            if( pMessage->pSymbol->szName[ 0 ] != '_' )
-            {
-               PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
-
-               if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
-               {
-                  pNewMeth->pInitValue = hb_itemClone( pInit );
-               }
-            }
-
             if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
             {
-               if( pMessage->pSymbol->szName[ 0 ] == '_' )
-               {
+               if( fAssign )
                   pNewMeth->pFuncSym = &s___msgSetShrData;
-                  pClass->uiDatasShared++;
-               }
                else
+               {
+                  PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
+
                   pNewMeth->pFuncSym = &s___msgGetShrData;
+                  if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
+                  {
+                     /* Shared Classdata need to be initialized only once
+                      * ACCESS/ASSIGN methods will be inherited by subclasses
+                      * and will operate on this value so it's not necessary
+                      * to keep the init value. [druzus]
+                      */
+                     pInit = hb_itemClone( pInit );
+                     hb_arraySet( pClass->pClassDatas, pNewMeth->uiData, pInit );
+                     hb_itemRelease( pInit );
+                  }
+               }
             }
             else
             {
-               if( pMessage->pSymbol->szName[ 0 ] == '_' )
+               if( fAssign )
+               {
                   pNewMeth->pFuncSym = &s___msgSetClsData;
+               }
                else
+               {
+                  PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
+
+                  if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
+                     hb_clsAddInitValue( pClass, pInit, HB_OO_MSG_CLASSDATA,
+                                         pNewMeth->uiData );
                   pNewMeth->pFuncSym = &s___msgGetClsData;
+               }
             }
             break;
 
@@ -1458,26 +1598,27 @@ HB_FUNC( __CLSADDMSG )
             pNewMeth->uiData = ( USHORT ) ( hb_arrayLen( pClass->pInlines ) + 1 );
             pNewMeth->uiScope = uiScope;
             hb_arraySize( pClass->pInlines, pNewMeth->uiData );
-            hb_arraySet( pClass->pInlines, pNewMeth->uiData, hb_param( 3, HB_IT_BLOCK ) );
+            hb_arraySet( pClass->pInlines, pNewMeth->uiData, pBlock );
             pNewMeth->pFuncSym = &s___msgEvalInline;
             break;
 
          case HB_OO_MSG_VIRTUAL:
 
+            pNewMeth->uiScope = uiScope;
             pNewMeth->pFuncSym = &s___msgVirtual;
             break;
 
          case HB_OO_MSG_SUPER:
 
-            pNewMeth->uiData = ( USHORT ) hb_parni( 3 );
-            pNewMeth->uiSprClass = ( USHORT ) hb_parni( 5 ); /* store the super handel */
+            pNewMeth->uiData = ( USHORT ) hb_parni( 3 ); /* offset to instance area */
+            pNewMeth->uiSprClass = uiSprClass; /* store the super handel */
             pNewMeth->uiScope = uiScope;
             pNewMeth->pFuncSym = &s___msgSuper;
             break;
 
          case HB_OO_MSG_ONERROR:
 
-            pClass->pFunError = hb_objFuncParam( 3 );
+            pClass->pFunError = pFuncSym;
             break;
 
          default:
@@ -1506,9 +1647,8 @@ HB_FUNC( __CLSNEW )
 {
    PCLASS pNewCls;
    PHB_ITEM pahSuper;
-   USHORT i, uiSuper;
-   USHORT nLenClsDatas = 0;
-   USHORT nLenInlines = 0;
+   USHORT ui, uiSuper, uiSuperCls;
+   USHORT nLenClsDatas = 0, nLenInlines = 0;
 
    pahSuper = hb_param( 3, HB_IT_ARRAY );
    uiSuper  = ( USHORT ) ( pahSuper ? hb_arrayLen( pahSuper ) : 0 );
@@ -1518,41 +1658,30 @@ HB_FUNC( __CLSNEW )
    else
       s_pClasses = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
 
-   pNewCls = s_pClasses + s_uiClasses;
+   pNewCls = s_pClasses + s_uiClasses++;
+   memset( pNewCls, 0, sizeof( CLASS ) );
    pNewCls->szName = hb_strdup( hb_parc( 1 ) );
-   pNewCls->uiDataFirst = 0;
-   pNewCls->uiDatas = 0;
-   pNewCls->uiMethods = 0;
-   pNewCls->uiDatasShared = 0;
-   pNewCls->ulOpFlags = 0;
 
-   if( uiSuper )
+   for( ui = 1; ui <= uiSuper; ++ui )
    {
-      for( i = 1; i <= uiSuper; i++ )
+      uiSuperCls = ( USHORT ) hb_arrayGetNI( pahSuper, ui );
+      if( uiSuperCls && uiSuperCls <= s_uiClasses )
       {
          PHB_DYNS pMsg;
          PHB_ITEM pClsAnyTmp;
-         USHORT nSuper;
          PCLASS pSprCls;
          ULONG  ul, ulLimit, ulLen;
 
-         nSuper  = ( USHORT ) hb_arrayGetNI( pahSuper, i );
-         pSprCls = s_pClasses + ( nSuper - 1 );
-         ulLimit = ( ULONG ) pSprCls->uiHashKey << BUCKETBITS;
-
-         if( i == 1 ) /* This is the first superclass */
+         pSprCls = s_pClasses + ( uiSuperCls - 1 );
+         ulLimit = hb_clsMthNum( pSprCls );
+         if( !pNewCls->pMethods ) /* This is the first superclass */
          {
-            ULONG ulSize;
-            pNewCls->uiHashKey = pSprCls->uiHashKey;
-            ulSize = ( ULONG ) ( pNewCls->uiHashKey << BUCKETBITS ) * sizeof( METHOD );
-            pNewCls->pMethods = ( PMETHOD ) hb_xgrab( ulSize );
-            memset( pNewCls->pMethods, 0, ulSize );
+            hb_clsDictInit( pNewCls, pSprCls->uiHashKey );
             pNewCls->pFunError = pSprCls->pFunError;
 
             /* CLASS DATA Not Shared ( new array, new value ) */
             pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas );
             pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
-            pNewCls->uiDatasShared = pSprCls->uiDatasShared;
          }
          else
          {
@@ -1561,27 +1690,60 @@ HB_FUNC( __CLSNEW )
             nLenInlines   = ( USHORT ) hb_itemSize( pNewCls->pInlines );
 
             /* ClassDatas */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas );
-            ulLen = hb_itemSize( pClsAnyTmp );
-            for( ul = 1; ul <= ulLen; ul++ )
+            ulLen = hb_itemSize( pSprCls->pClassDatas );
+            if( ulLen )
             {
-               hb_arrayAdd( pNewCls->pClassDatas,
-                            hb_arrayGetItemPtr( pClsAnyTmp, ul ) );
+               pClsAnyTmp = hb_arrayClone( pSprCls->pClassDatas );
+               hb_arraySize( pNewCls->pClassDatas, nLenClsDatas + ulLen );
+               for( ul = 1; ul <= ulLen; ul++ )
+               {
+                  hb_itemCopy( hb_arrayGetItemPtr( pNewCls->pClassDatas,
+                                                   nLenClsDatas + ul ),
+                               hb_arrayGetItemPtr( pClsAnyTmp, ul ) );
+               }
+               hb_itemRelease( pClsAnyTmp );
             }
-            hb_itemRelease( pClsAnyTmp );
 
-            /* SharedDatas */
-            pNewCls->uiDatasShared += pSprCls->uiDatasShared;
-
-            /* Inlines */
-            pClsAnyTmp = hb_arrayClone( pSprCls->pInlines );
-            ulLen = ( USHORT ) hb_itemSize( pClsAnyTmp );
-            for( ul = 1; ul <= ulLen; ul++ )
+            /* Copy Inline codeblocks */
+            ulLen = hb_arrayLen( pSprCls->pInlines );
+            if( ulLen )
             {
-                hb_arrayAdd( pNewCls->pInlines,
-                             hb_arrayGetItemPtr( pClsAnyTmp, ul ) );
+               hb_arraySize( pNewCls->pInlines, nLenInlines + ulLen );
+               for( ul = 1; ul <= ulLen; ul++ )
+               {
+                  hb_itemCopy( hb_arrayGetItemPtr( pNewCls->pInlines,
+                                                   nLenInlines + ul ),
+                               hb_arrayGetItemPtr( pSprCls->pInlines, ul ) );
+               }
             }
-            hb_itemRelease( pClsAnyTmp );
+         }
+
+         if( pSprCls->uiInitDatas )
+         {
+            USHORT uiData, uiStart = pNewCls->uiInitDatas, uiType;
+
+            pNewCls->uiInitDatas += pSprCls->uiInitDatas;
+            if( ! uiStart )
+               pNewCls->pInitData = ( PINITDATA )
+                        hb_xgrab( pNewCls->uiInitDatas * sizeof( INITDATA ) );
+            else
+               pNewCls->pInitData = ( PINITDATA ) hb_xrealloc( pNewCls->pInitData,
+                                 pNewCls->uiInitDatas * sizeof( INITDATA ) );
+
+            for( uiData = 0; uiData < pSprCls->uiInitDatas; ++uiData )
+            {
+               uiType = pSprCls->pInitData[ uiData ].uiType;
+               if( uiType == HB_OO_MSG_INITIALIZED )
+                  uiType = HB_OO_MSG_CLASSDATA;
+
+               pNewCls->pInitData[ uiData + uiStart ].pInitValue =
+                     hb_itemNew( pSprCls->pInitData[ uiData ].pInitValue );
+               pNewCls->pInitData[ uiData + uiStart ].uiType = uiType;
+               pNewCls->pInitData[ uiData + uiStart ].uiData =
+                     pSprCls->pInitData[ uiData ].uiData +
+                     ( uiType == HB_OO_MSG_CLASSDATA ? nLenClsDatas :
+                     ( uiType == HB_OO_MSG_DATA ? pNewCls->uiDatas : 0 ) );
+            }
          }
 
          /* Now working on pMethods */
@@ -1621,11 +1783,6 @@ HB_FUNC( __CLSNEW )
                   }
 
                   pMethod->uiScope = pSprCls->pMethods[ ul ].uiScope | HB_OO_CLSTP_SUPER;
-                  if( pSprCls->pMethods[ ul ].pInitValue )
-                  {
-                     pMethod->pInitValue =
-                           hb_itemClone( pSprCls->pMethods[ ul ].pInitValue );
-                  }
                }
             }
          }
@@ -1634,22 +1791,17 @@ HB_FUNC( __CLSNEW )
          pNewCls->ulOpFlags |= pSprCls->ulOpFlags;
       }
    }
-   else
-   {
-      pNewCls->pMethods = ( PMETHOD ) hb_xgrab( ( HASH_KEY << BUCKETBITS ) * sizeof( METHOD ) );
-      memset( pNewCls->pMethods, 0, ( HASH_KEY << BUCKETBITS ) * sizeof( METHOD ) );
-
-      pNewCls->uiHashKey    = HASH_KEY;
-      pNewCls->uiMethods    = 0;
-      pNewCls->uiDatasShared= 0;
-      pNewCls->pClassDatas  = hb_itemArrayNew( 0 );
-      pNewCls->pInlines     = hb_itemArrayNew( 0 );
-      pNewCls->pFunError    = NULL;
-   }
    pNewCls->uiDataFirst = pNewCls->uiDatas;
    pNewCls->uiDatas    += ( USHORT ) hb_parni( 2 );
 
-   hb_retni( ++s_uiClasses );
+   if( !pNewCls->pMethods )
+   {
+      hb_clsDictInit( pNewCls, HASH_KEY );
+      pNewCls->pClassDatas  = hb_itemArrayNew( 0 );
+      pNewCls->pInlines     = hb_itemArrayNew( 0 );
+   }
+
+   hb_retni( s_uiClasses );
 }
 
 
@@ -1682,9 +1834,9 @@ HB_FUNC( __CLSDELMSG )
 
             if( pFuncSym == &s___msgEvalInline )
             {  /* INLINE method deleted, delete INLINE block */
-               hb_arrayDel( pClass->pInlines, pMethod->uiData );
+               hb_itemClear( hb_arrayGetItemPtr( pClass->pInlines,
+                                                 pMethod->uiData ) );
             }
-
             /* Move messages */
             uiPos = ( USHORT ) ( pMethod - pClass->pMethods ) & BUCKETMASK;
                
@@ -1713,60 +1865,41 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS   pClass = s_pClasses + ( uiClass - 1 );
-      PMETHOD  pMeth = pClass->pMethods;
-      ULONG    ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS;
 
       pSelf = hb_itemNew( NULL );
       hb_arrayNew( pSelf, pClass->uiDatas );
-
       pSelf->item.asArray.value->uiClass = uiClass;
 
       /* Initialise value if initialisation was requested */
-      do
+      if( pClass->uiInitDatas )
       {
-         /* Init Classdata (inherited and not) if needed */
-         if( pMeth->pInitValue )
+         PINITDATA pInitData = pClass->pInitData;
+         USHORT ui = pClass->uiInitDatas;
+         PHB_ITEM pDestItm;
+
+         do
          {
-            if( pMeth->pFuncSym == &s___msgGetClsData && !( pMeth->bClsDataInitiated ) )
+            if( pInitData->uiType == HB_OO_MSG_DATA )
+               pDestItm = hb_arrayGetItemPtr( pSelf, pInitData->uiData );
+            else if( pInitData->uiType == HB_OO_MSG_CLASSDATA )
             {
-               PHB_ITEM pInit;
-
-               pInit = hb_arrayGetItemPtr( pClass->pClassDatas, pMeth->uiData );
-               if( HB_IS_NIL( pInit ) )
-               {
-                  pInit = hb_itemClone( pMeth->pInitValue );
-
-                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
-                  hb_itemRelease( pInit );
-                  pMeth->bClsDataInitiated = 1;
-               }
+               pDestItm = hb_arrayGetItemPtr( pClass->pClassDatas, pInitData->uiData );
+               /* do not initialize it again */
+               pInitData->uiType = HB_OO_MSG_INITIALIZED;
             }
-            else if( pMeth->pFuncSym == &s___msgGetData ) /* is a DATA but not herited */
-            {
-               PHB_ITEM pInit = hb_itemClone( pMeth->pInitValue );
+            else
+               pDestItm = NULL;
 
-               hb_arraySet( pSelf, pMeth->uiData, pInit );
+            if( pDestItm )
+            {
+               PHB_ITEM pInit = hb_itemClone( pInitData->pInitValue );
+               hb_itemCopy( pDestItm, pInit );
                hb_itemRelease( pInit );
             }
-            else if( pMeth->pFuncSym == &s___msgGetShrData && !( pMeth->bClsDataInitiated ) )
-            {
-               /* Init Shared Classdata as needed, we only need to init the first */
-               /* not inherited classdata array where all shared will point to    */
-               PHB_ITEM pInit;
-
-               pInit = hb_arrayGetItemPtr( pClass->pClassDatas, pMeth->uiData );
-               if( HB_IS_NIL( pInit ) )
-               {
-                  pInit = hb_itemClone( pMeth->pInitValue );
-                  hb_arraySet( pClass->pClassDatas, pMeth->uiData, pInit );
-                  hb_itemRelease( pInit );
-                  pMeth->bClsDataInitiated = 1;
-               }
-            }
+            ++pInitData;
          }
-         ++pMeth;
+         while( --ui );
       }
-      while( --ulLimit );
    }
 
    return pSelf;
@@ -1828,7 +1961,12 @@ HB_FUNC( __CLSMODMSG )
             }
             else                                      /* Modify METHOD */
             {
-               pMethod->pFuncSym = hb_objFuncParam( 3 );
+               PHB_SYMB pFuncSym = hb_objFuncParam( 3 );
+
+               if( pFuncSym == NULL )
+                  hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );
+               else
+                  pMethod->pFuncSym = pFuncSym;
             }
          }
       }
@@ -1862,86 +2000,12 @@ HB_FUNC( __OBJGETCLSNAME )
  */
 HB_FUNC( __OBJHASMSG )
 {
-   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
-   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
+   PHB_DYNS pMessage = hb_objMsgParam( 2 );
 
-   if( pObject && pString )
-   {
-      hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) );
-   }
+   if( pMessage )
+      hb_retl( hb_objHasMessage( hb_param( 1, HB_IT_ANY ), pMessage ) );
    else
-   {
-      /*hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG", 0 );*/
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__ObjHasMsg", HB_ERR_ARGS_BASEPARAMS );
-   }
-}
-
-
-/*
- * <oNew> := __objClone( <oOld> )
- *
- * Clone an object. Note the similarity with aClone ;-)
- */
-HB_FUNC( __OBJCLONE )
-{
-   PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
-   PHB_ITEM pDstObject ;
-
-   if( pSrcObject )
-   {
-      pDstObject = hb_arrayClone( pSrcObject );
-      hb_itemRelease( hb_itemReturn( pDstObject ) );
-   }
-   else
-   {
-      hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
-   }
-}
-
-void hb_objSendMsg( PHB_ITEM pObject, char *sMsg, ULONG ulArg, ... )
-{
-   hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
-   hb_vmPush( pObject );
-   if( ulArg )
-   {
-      unsigned long i;
-      va_list ap;
-
-      va_start( ap, ulArg );
-      for( i = 0; i < ulArg; i++ )
-      {
-         hb_vmPush( va_arg( ap, PHB_ITEM ) );
-      }
-      va_end( ap );
-   }
-   hb_vmSend( (USHORT) ulArg );
-}
-
-void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
-{
-   if( pObject && pMsgSym )
-   {
-      hb_vmPushSymbol( pMsgSym->pSymbol );
-      hb_vmPush( pObject );
-
-      if( ulArg )
-      {
-         unsigned long i;
-         va_list ap;
-
-         va_start( ap, ulArg );
-         for( i = 0; i < ulArg; i++ )
-         {
-            hb_vmPush( va_arg( ap, PHB_ITEM ) );
-         }
-         va_end( ap );
-      }
-      hb_vmSend( (USHORT) ulArg );
-   }
-   else
-   {
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__OBJHASMSG", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -1951,27 +2015,46 @@ void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
  */
 HB_FUNC( __OBJSENDMSG )
 {
-   PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
-   char * szMsg = hb_parc( 2 );
+   PHB_DYNS pMessage = hb_objMsgParam( 2 );
 
-   if( pObject && szMsg && *szMsg )    /* Object & message passed */
+   if( pMessage )
    {
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
-      hb_vmPushSymbol( hb_dynsymGet( szMsg )->pSymbol );    /* Push message symbol */
-      hb_vmPush( pObject );                                 /* Push object */
+      hb_vmPushSymbol( pMessage->pSymbol );     /* Push message symbol */
+      hb_vmPush( hb_param( 1, HB_IT_ANY ) );    /* Push object */
 
       for( uiParam = 3; uiParam <= uiPCount; ++uiParam )    /* Push arguments on stack */
       {
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
       }
-
       hb_vmSend( ( USHORT ) ( uiPCount - 2 ) );             /* Execute message */
    }
    else
    {
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG", 0 );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG", HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
+/*
+ * <oNew> := __objClone( <oOld> )
+ *
+ * Clone an object. Note the similarity with aClone ;-)
+ */
+HB_FUNC( __OBJCLONE )
+{
+   PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pDstObject;
+
+   if( pSrcObject )
+   {
+      pDstObject = hb_arrayClone( pSrcObject );
+      hb_itemRelease( hb_itemReturn( pDstObject ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
    }
 }
 
@@ -1997,6 +2080,7 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                          /* Execute super class      */
 
+         /* TODO: optimize this function */
          if( HB_IS_OBJECT( hb_stackReturnItem() ) )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
@@ -2129,7 +2213,7 @@ HB_FUNC( __CLASSSEL )
    {
       PCLASS  pClass  = s_pClasses + ( uiClass - 1 );
       PMETHOD pMethod = pClass->pMethods;
-      ULONG   ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS, ulPos = 0;
+      ULONG   ulLimit = hb_clsMthNum( pClass ), ulPos = 0;
 
       hb_arrayNew( pReturn, pClass->uiMethods ); /* Create a transfer array */
 
@@ -2266,7 +2350,7 @@ static HARBOUR hb___msgClsSel( void )
       PHB_ITEM pReturn = hb_itemNew( NULL );
       PCLASS  pClass  = s_pClasses + ( uiClass - 1 );
       PMETHOD pMethod = pClass->pMethods;
-      ULONG ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS, ulPos = 0;
+      ULONG ulLimit = hb_clsMthNum( pClass ), ulPos = 0;
       USHORT nParam;
 
       nParam = hb_pcount() > 0 ? ( USHORT ) hb_parni( 1 ) : HB_MSGLISTALL;
@@ -2303,7 +2387,7 @@ static HARBOUR hb___msgClsSel( void )
       }
       while( --ulLimit && ulPos < ( ULONG ) pClass->uiMethods );
 
-      if( ulPos < pClass->uiMethods )
+      if( ulPos < ( ULONG ) pClass->uiMethods )
          hb_arraySize( pReturn, ulPos );
       hb_itemRelease( hb_itemReturn( pReturn ) );
    }
@@ -2329,36 +2413,22 @@ static HARBOUR hb___msgClass( void )
  */
 static HARBOUR hb___msgClsParent( void )
 {
-   PHB_ITEM pItemRef;
-   PHB_ITEM pItemParam;
-   char * szParentName = 0;
-   USHORT uiClass, i;
-   BOOL lClass=FALSE;
+   char * szParentName = NULL;
+   PHB_ITEM pItem;
+   USHORT uiClass;
 
-   if( HB_IS_BYREF( hb_stackSelfItem() ) )            /* Variables by reference   */
-      pItemRef = hb_itemUnRef( hb_stackSelfItem() );
-   else
-      pItemRef = hb_stackSelfItem();
+   uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
+   pItemParam = hb_param( 1, HB_IT_ANY );
 
-   uiClass = pItemRef->item.asArray.value->uiClass;
-
-   pItemParam = hb_stackItemFromBase( 1 );
-
-   if( HB_IS_OBJECT( pItemParam ) )
-      szParentName = hb_objGetClsName( pItemParam );
-   else if( HB_IS_STRING( pItemParam ) )
+   if( pItemParam )
    {
-      szParentName = hb_itemGetC( pItemParam );
-      lClass=TRUE;
+      if( HB_IS_OBJECT( pItemParam ) )
+         szParentName = hb_objGetClsName( pItemParam );
+      else if( HB_IS_STRING( pItemParam ) )
+         szParentName = hb_parc( pItemParam );
    }
 
-   for( i = 0; szParentName[ i ] != '\0'; i++ )
-      szParentName[ i ] = ( char ) toupper( szParentName[ i ] );
-
-   hb_retl( hb_clsIsParent( uiClass , szParentName ) );
-
-   if (lClass)
-      hb_itemFreeC( szParentName );
+   hb_retl( szParentName && hb_clsIsParent( uiClass , szParentName ) );
 }
 
 #endif
@@ -2520,7 +2590,7 @@ static HARBOUR hb___msgGetShrData( void )
    if( uiSprCls && uiSprCls <= s_uiClasses )
    {
       hb_arrayGet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
-                   pMethod->uiDataShared, hb_stackReturnItem() );
+                   pMethod->uiData, hb_stackReturnItem() );
    }
 }
 
@@ -2542,7 +2612,7 @@ static HARBOUR hb___msgSetShrData( void )
    if( uiSprCls && uiSprCls <= s_uiClasses )
    {
       hb_arraySet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
-                   pMethod->uiDataShared, pReturn );
+                   pMethod->uiData, pReturn );
    }
 
    hb_itemReturn( pReturn );
@@ -2561,10 +2631,6 @@ static HARBOUR hb___msgGetData( void )
    PMETHOD pMethod  = pClass->pMethods +
                       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    ULONG ulIndex = pMethod->uiData + pObject->item.asArray.superoffset;
-
-   /* TOFIX: this code does not work correctly when super casting is used
-      for classes with multiinheritance - to ulIndex we should add additional
-      variable uiSuperInstantOffset, [druzus] */
 
    /* will arise only if the class has been modified after first instance */
    if( ulIndex > hb_arrayLen( pObject ) ) /* Resize needed */
@@ -2587,10 +2653,6 @@ static HARBOUR hb___msgSetData( void )
    PMETHOD pMethod  = pClass->pMethods +
                       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    ULONG ulIndex = pMethod->uiData + pObject->item.asArray.superoffset;
-
-   /* TOFIX: this code does not work correctly when super casting is used
-      for classes with multiinheritance - to ulIndex we should add additional
-      variable uiSuperInstantOffset, [druzus] */
 
    /* will arise only if the class has been modified after first instance */
    if( ulIndex > hb_arrayLen( pObject ) ) /* Resize needed ? */
@@ -2716,14 +2778,14 @@ HB_FUNC( __CLSGETPROPERTIES )
    {
       PCLASS  pClass  = s_pClasses + ( uiClass - 1 );
       PMETHOD pMethod = pClass->pMethods;
-      ULONG ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS;
+      ULONG ulLimit = hb_clsMthNum( pClass );
       PHB_ITEM pItem = NULL;
 
       hb_arrayNew( pReturn, 0 );
 
       do
       {
-         if( pMethod->pMessage && pMethod->bIsPersistent ) /* Hash Entry used ? */
+         if( pMethod->pMessage && ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) )
          {
             pItem = hb_itemPutC( pItem, pMethod->pMessage->pSymbol->szName );
             hb_arrayAdd( pReturn, pItem );
@@ -2794,58 +2856,4 @@ void hb_clsAssociate( USHORT usClassH )
    hb_vmPushNil();
    hb_vmPushLong( usClassH );
    hb_vmFunction( 1 );
-}
-
-HB_FUNC( HB_CLSSTAT )
-{
-   PCLASS pClass;
-   PMETHOD pMethod;
-   USHORT uiClass, ui, uiCnt, uiCntMax;
-   ULONG ulLimit;
-   PHB_ITEM pArray, pClsItm, pStat;
-   int piStat[ BUCKETSIZE ];
-
-   pArray = hb_itemArrayNew( s_uiClasses );
-   for( uiClass = 0; uiClass < s_uiClasses; ++uiClass )
-   {
-      pClass = s_pClasses + uiClass;
-      pMethod = pClass->pMethods;
-      ulLimit = ( ULONG ) pClass->uiHashKey << BUCKETBITS;
-
-      pClsItm = hb_arrayGetItemPtr( pArray, uiClass + 1 );
-      hb_arrayNew( pClsItm, 6 );
-      hb_itemPutC( hb_arrayGetItemPtr( pClsItm, 1 ),  pClass->szName );
-      hb_itemPutNI( hb_arrayGetItemPtr( pClsItm, 2 ), pClass->uiMethods );
-      hb_itemPutNI( hb_arrayGetItemPtr( pClsItm, 3 ), ulLimit );
-      hb_itemPutNI( hb_arrayGetItemPtr( pClsItm, 4 ), sizeof( METHOD ) );
-      pStat = hb_arrayGetItemPtr( pClsItm, 6 );
-      hb_arrayNew( pStat, BUCKETSIZE + 1 );
-      for( ui = 0; ui <= BUCKETSIZE; ++ui )
-         piStat[ ui ] = 0;
-      uiCntMax = 0;
-      do
-      {
-         uiCnt = 0;
-         ui = BUCKETSIZE;
-
-         do
-         {
-            if( pMethod->pMessage )
-               ++uiCnt;
-            ++pMethod;
-            --ulLimit;
-         }
-         while( --ui );
-
-         piStat[ uiCnt ]++;
-         if( uiCnt > uiCntMax )
-            uiCntMax = uiCnt;
-      }
-      while( ulLimit );
-
-      hb_itemPutNI( hb_arrayGetItemPtr( pClsItm, 5 ), uiCntMax );
-      for( ui = 0; ui <= BUCKETSIZE; ++ui )
-         hb_itemPutNI( hb_arrayGetItemPtr( pStat, ui + 1 ), piStat[ ui ] );
-   }
-   hb_itemRelease( hb_itemReturn( pArray ) );
 }

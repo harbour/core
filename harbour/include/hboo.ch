@@ -82,6 +82,7 @@
 #define HB_OO_CLSTP_CLASS      64 /* The related message is a superobject call, uidata is the superclass handle
                                      pInitValue contain one superclass object instance (absolutely needed for Inline msg and class data) */
 #define HB_OO_CLSTP_SUPER     128 /* The related message is inherited from a superclass */
+#define HB_OO_CLSTP_PERSIST   256 /* Message is persistent (PROPERTY) */
 
 /* Message types */
 #define HB_OO_MSG_METHOD        0
@@ -92,7 +93,7 @@
 #define HB_OO_MSG_SUPER         5
 #define HB_OO_MSG_ONERROR       6
 #define HB_OO_MSG_CLSMTHD       7 /* for the future */
-
+#define HB_OO_MSG_INITIALIZED   8
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
 #define HB_OO_DATA_VALUE        2

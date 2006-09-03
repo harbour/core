@@ -95,8 +95,8 @@ struct _HB_SYMB;
    typedef struct _HB_DYNS
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-      HB_HANDLE hArea;           /* Workarea number */
       HB_HANDLE hMemvar;         /* Index number into memvars ( publics & privates ) array */
+      USHORT    uiArea;          /* Workarea number */
       USHORT    uiSymNum;        /* dynamic symbol number */
 #ifndef HB_NO_PROFILER
       ULONG     ulCalls;         /* profiler support */

@@ -156,7 +156,7 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    s_uiDynSymbols++;                   /* Got one more symbol */
    pDynSym->pSymbol  = pSymbol;
    pDynSym->hMemvar  = 0;
-   pDynSym->hArea    = 0;
+   pDynSym->uiArea   = 0;
    pDynSym->uiSymNum = s_uiDynSymbols;
 #ifndef HB_NO_PROFILER
    pDynSym->ulCalls = 0;   /* profiler support */
@@ -369,18 +369,18 @@ HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym )
    return pDynSym->hMemvar;
 }
 
-HB_EXPORT HB_HANDLE hb_dynsymAreaHandle( PHB_DYNS pDynSym )
+HB_EXPORT int hb_dynsymAreaHandle( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymAreaHandle(%p)", pDynSym));
 
-   return pDynSym->hArea;
+   return pDynSym->uiArea;
 }
 
 HB_EXPORT void hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymSetAreaHandle(%p,%d)", pDynSym, iArea));
 
-   pDynSym->hArea = iArea;
+   pDynSym->uiArea = ( USHORT ) iArea;
 }
 
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )

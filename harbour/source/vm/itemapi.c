@@ -1570,6 +1570,8 @@ PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
 /* clone the given item */
 HB_EXPORT PHB_ITEM hb_itemClone( PHB_ITEM pItem )
 {
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemClone(%p)", pItem));
+
    if( HB_IS_ARRAY( pItem ) )
    {
       return hb_arrayClone( pItem );

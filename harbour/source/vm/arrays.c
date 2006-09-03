@@ -801,12 +801,12 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       return FALSE;
 }
 
-static void hb_arrayCloneTo( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBaseArray, PHB_NESTED_CLONED pClonedList )
+static void hb_arrayCloneBody( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBaseArray, PHB_NESTED_CLONED pClonedList )
 {
    PHB_ITEM pSrcItem, pDstItem;
    ULONG ulLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCloneTo(%p, %p, %p)", pSrcBaseArray, pDstBaseArray, pClonedList));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCloneBody(%p, %p, %p)", pSrcBaseArray, pDstBaseArray, pClonedList));
 
    pSrcItem = pSrcBaseArray->pItems;
    pDstItem = pDstBaseArray->pItems;
@@ -843,7 +843,7 @@ static void hb_arrayCloneTo( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBase
             pCloned->pNext         = pClonedList->pNext;
             pClonedList->pNext     = pCloned;
 
-            hb_arrayCloneTo( pBaseArray, pDstItem->item.asArray.value, pClonedList );
+            hb_arrayCloneBody( pBaseArray, pDstItem->item.asArray.value, pClonedList );
          }
       }
       else
@@ -871,7 +871,7 @@ HB_EXPORT PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       pClonedList->pDest         = pDstArray;
       pClonedList->pNext         = NULL;
 
-      hb_arrayCloneTo( pSrcBaseArray, pDstArray->item.asArray.value, pClonedList );
+      hb_arrayCloneBody( pSrcBaseArray, pDstArray->item.asArray.value, pClonedList );
 
       do
       {
