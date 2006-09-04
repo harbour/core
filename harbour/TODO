@@ -262,6 +262,13 @@ Detail...: An error in the evaluated macro cause memory leak.
          |   obj\b32\macroy.c#3799
          |   source\vm\MACRO.C#153
          `-
+           This is simpler example of the same problem:
+
+           --tt2b.prg--
+           proc test
+           ? type("user input")
+           return
+
 Status...: Open.
 
 =======================================================================

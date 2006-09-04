@@ -340,7 +340,7 @@ MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                  {
                                     /* invalid variable name
                                      */
-				    HB_TRACE(HB_TR_DEBUG, ("macro -> invalid variable name: %s", $1));
+                                    HB_TRACE(HB_TR_DEBUG, ("macro -> invalid variable name: %s", $1));
 
                                     hb_xfree( $1 );
                                     YYABORT;

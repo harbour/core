@@ -393,8 +393,13 @@ static void hb_clsDictInit( PCLASS pClass, USHORT uiHashKey )
 
 static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
-   PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
-   USHORT uiBucket = BUCKETSIZE;
+   PMETHOD pMethod;
+   USHORT uiBucket;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsFindMsg(%p,%p)", pClass, pMsg));
+
+   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+   uiBucket = BUCKETSIZE;
 
    do
    {
@@ -409,6 +414,8 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 
 static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsAllocMsg(%p,%p)", pClass, pMsg));
+
    do
    {
       PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
@@ -429,8 +436,13 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 
 static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 {
-   PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
-   USHORT uiBucket = BUCKETSIZE;
+   PMETHOD pMethod;
+   USHORT uiBucket;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsFreeMsg(%p,%p)", pClass, pMsg));
+
+   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+   uiBucket = BUCKETSIZE;
 
    do
    {
@@ -456,10 +468,13 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
    while( --uiBucket );
 }
 
+
 static void hb_clsAddInitValue( PCLASS pClass, PHB_ITEM pItem,
                                 USHORT uiType, USHORT uiData )
 {
    PINITDATA pInitData;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsAddInitValue(%p,%p,%hu,%hu)", pClass, pMsg, uiType, uiData));
 
    if( ! pClass->uiInitDatas )
       pClass->pInitData = ( PINITDATA ) hb_xgrab( sizeof( INITDATA ) );
@@ -1090,7 +1105,13 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE p
    else if( HB_IS_SYMBOL( pObject ) )
    {
       if( pMsg == s___msgExec.pDynSym )
-         return pObject->item.asSymbol.value;
+      {
+         if( ! pObject->item.asSymbol.value->value.pFunPtr &&
+               pObject->item.asSymbol.value->pDynSym )
+            return pObject->item.asSymbol.value->pDynSym->pSymbol;
+         else
+            return pObject->item.asSymbol.value;
+      }
       else if( pMsg == s___msgName.pDynSym )
       {
          hb_itemPutC( hb_stackReturnItem(),

@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-09-05 12:44 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/debug/debugger.prg
+     ! Fixed and made multiplatform the filename extension handling parts.
+
+   * harbour/source/vm/memvars.c
+     ! Comment minor fixes.
+
+   * harbour/harbour.spec
+   * harbour/make_xmingw.sh
+   * harbour/make_bsd.sh
+   * harbour/make_drw.sh
+     ! xharbour -> harbour
+
+2006-09-04 19:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
     + added simpler example for memory leak in macro compiler:
          ? type("user input")
 

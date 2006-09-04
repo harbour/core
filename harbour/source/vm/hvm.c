@@ -4273,8 +4273,8 @@ static void hb_vmFrame( BYTE bLocals, BYTE bParams )
    iTotal = bLocals + bParams;
    if( iTotal )
    {
-      int i = iTotal - hb_pcount();
-      while( i-- > 0 )
+      iTotal -= hb_pcount();
+      while( --iTotal >= 0 )
          hb_vmPushNil();
    }
 }
