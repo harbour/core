@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      of expression is undefined variable - it's possible that it will be
+      field and we will have RT error. It fixes tt4.prg example form TODO
+      file.
+
+  * harbour/TODO
+    - removed tt4.prg example from TOFIX
+
+  * harbour/source/vm/classes.c
+    ! fixed supercast message validation
+
+  * harbour/source/vm/hvm.c
+    ! fixed very bad typo in hb_vmMinus() which can cause wrong
+      results when on 64-bit integer overflow
+
+2006-09-04 09:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+  + harbour/ChangeLog.016
+    ! added ChangeLog.016 and updated number - mistake in my previous commit
+
   * harbour/source/vm/classes.c
     * stronger parameters validation and fixed some possible problems
       in hb_objGetMethod()
@@ -17,7 +36,7 @@
          <enum>:__enumIndex(<newIndex>)
       It's a work in progress - please do not create any code which may
       need such functionality yet
-  + harbour/ChangeLog.015
+
   * harbour/source/vm/debug.c
   * harbour/source/vm/hvm.c
     * minor code cleanup

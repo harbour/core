@@ -187,6 +187,7 @@ HB_FUNC( HB_DBG_VMVARLGET )
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
    LONG lBaseOffset;
+   PHB_ITEM pLocal;
 
    lBaseOffset = hb_stackBaseOffset();
    while( iLevel-- > 0 && lBaseOffset > 1 )
@@ -199,10 +200,13 @@ HB_FUNC( HB_DBG_VMVARLGET )
          iLocal -= USHRT_MAX;
          iLocal--;
       }
+
       if( iLocal >= 0 )
-         hb_itemReturn( hb_itemUnRef( hb_stackItem( lBaseOffset + iLocal ) ) );
+         pLocal = hb_stackItem( lBaseOffset + iLocal );
       else
-         hb_itemReturn( hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal ) );
+         pLocal = hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal );
+
+      hb_itemReturn( hb_itemUnRef( pLocal ) );
    }
 }
 

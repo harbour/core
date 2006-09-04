@@ -1050,32 +1050,40 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE p
    }
    else if( HB_IS_BYREF( pObject ) )
    {
-      /* method of enumerator variable from FOR EACH statement
-       */
-      PHB_ITEM pEnum = hb_itemUnRefOnce( pObject );
-
-      if( HB_IS_ENUM( pEnum ) )
+      if( pStack )
       {
-         /*
-          * Do actions here - we alrady have unreferences pEnum so
-          * it will be a little bit faster but in the future it'
-          * s possible that I'll move it to separate funcions when
-          * I'll add enumerators overloading. [druzus]
+         /* method of enumerator variable from FOR EACH statement
           */
-         if( pMsg == s___msgEnumIndex.pDynSym )
+         PHB_ITEM pEnum = hb_itemUnRefOnce( pObject );
+
+         if( HB_IS_ENUM( pEnum ) )
          {
-            hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
-            return &s___msgEnumIndex;
-         }
-         else if( pMsg == s___msgEnumBase.pDynSym )
-         {
-            hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
-            return &s___msgEnumBase;
-         }
-         else if( pMsg == s___msgEnumValue.pDynSym )
-         {
-            hb_itemCopy( hb_stackReturnItem(), hb_itemUnRefOnce( pEnum ) );
-            return &s___msgEnumValue;
+            /*
+             * Do actions here - we already have unreferenced pEnum so
+             * it will be a little bit faster but in the future it's
+             * possible that I'll move it to separate function when
+             * I'll add enumerators overloading. [druzus]
+             */
+            if( pMsg == s___msgEnumIndex.pDynSym )
+            {
+               hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
+               if( hb_pcount() > 0 && ISNUM( 1 ) )
+                  pEnum->item.asEnum.offset = hb_itemGetNL( hb_param( 1, HB_IT_ANY ) );
+               return &s___msgEnumIndex;
+            }
+            else if( pMsg == s___msgEnumBase.pDynSym )
+            {
+               hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
+               return &s___msgEnumBase;
+            }
+            else if( pMsg == s___msgEnumValue.pDynSym )
+            {
+               pEnum = hb_itemUnRef( pEnum );
+               if( hb_pcount() > 0 )
+                  hb_itemCopy( pEnum, hb_itemUnRef( hb_stackItemFromBase( 1 ) ) );
+               hb_itemCopy( hb_stackReturnItem(), hb_itemUnRef( pEnum ) );
+               return &s___msgEnumValue;
+            }
          }
       }
    }
@@ -1094,23 +1102,29 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE p
    /* Default messages here */
    if( pMsg == s___msgWithObjectPush.pDynSym )
    {
-      PHB_ITEM pItem = hb_stackWithObjectItem();
-      if( pItem )
+      if( pStack )
       {
-         /* push current WITH OBJECT object */
-         hb_itemCopy( hb_stackReturnItem(), pItem );
-         return &s___msgWithObjectPush;
+         PHB_ITEM pItem = hb_stackWithObjectItem();
+         if( pItem )
+         {
+            /* push current WITH OBJECT object */
+            hb_itemCopy( hb_stackReturnItem(), pItem );
+            return &s___msgWithObjectPush;
+         }
       }
    }
    else if( pMsg == s___msgWithObjectPop.pDynSym )
    {
-      PHB_ITEM pItem = hb_stackWithObjectItem();
-      if( pItem )
+      if( pStack )
       {
-         /* replace current WITH OBJECT object */
-         hb_itemCopy( pItem, hb_stackItemFromBase( 1 ) );
-         hb_itemCopy( hb_stackReturnItem(), pItem );
-         return &s___msgWithObjectPop;
+         PHB_ITEM pItem = hb_stackWithObjectItem();
+         if( pItem )
+         {
+            /* replace current WITH OBJECT object */
+            hb_itemCopy( pItem, hb_stackItemFromBase( 1 ) );
+            hb_itemCopy( hb_stackReturnItem(), pItem );
+            return &s___msgWithObjectPop;
+         }
       }
    }
 
@@ -1513,8 +1527,10 @@ HB_FUNC( __CLSADDMSG )
             break;
 
          case HB_OO_MSG_SUPER:
+            uiIndex = ( USHORT ) hb_parni( 3 );
             uiSprClass = ( USHORT ) hb_parni( 5 );
-            fOK = uiSprClass && uiSprClass <= s_uiClasses;
+            fOK = uiSprClass && uiSprClass <= s_uiClasses &&
+                  uiIndex < pClass->uiDatas;
             break;
 
          case HB_OO_MSG_DATA:
@@ -1526,13 +1542,22 @@ HB_FUNC( __CLSADDMSG )
             fOK = uiIndex && uiIndex <= pClass->uiDatas;
             break;
 
-         default:
+         case HB_OO_MSG_CLASSDATA:
+            uiIndex = ( USHORT ) hb_parni( 3 );
+            fOK = uiIndex != 0;
+            break;
+
+         case HB_OO_MSG_VIRTUAL:
             fOK = TRUE;
+            break;
+
+         default:
+            fOK = FALSE;
       }
 
       if( !fOK )
       {
-         hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );
+         hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", HB_ERR_ARGS_BASEPARAMS );
          return;
       }
 
@@ -1544,6 +1569,15 @@ HB_FUNC( __CLSADDMSG )
       {
          pNewMeth->pMessage = pMessage;
          pClass->uiMethods++;           /* One more message */
+      }
+      else
+      {
+         if( pNewMeth->pFuncSym == &s___msgEvalInline )
+         {  /* INLINE method deleted, delete INLINE block */
+            hb_itemClear( hb_arrayGetItemPtr( pClass->pInlines,
+                                              pNewMeth->uiData ) );
+         }
+         pNewMeth->pFuncSym = NULL;
       }
 
       pNewMeth->uiSprClass = uiClass  ; /* now used !! */
@@ -1583,7 +1617,7 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_CLASSDATA:
 
-            pNewMeth->uiData  = ( USHORT ) hb_parni( 3 );
+            pNewMeth->uiData = uiIndex;
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, fAssign );
             if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
                 hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
@@ -1596,7 +1630,6 @@ HB_FUNC( __CLSADDMSG )
                {
                   PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
 
-                  pNewMeth->pFuncSym = &s___msgGetShrData;
                   if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                   {
                      /* Shared Classdata need to be initialized only once
@@ -1608,14 +1641,13 @@ HB_FUNC( __CLSADDMSG )
                      hb_arraySet( pClass->pClassDatas, pNewMeth->uiData, pInit );
                      hb_itemRelease( pInit );
                   }
+                  pNewMeth->pFuncSym = &s___msgGetShrData;
                }
             }
             else
             {
                if( fAssign )
-               {
                   pNewMeth->pFuncSym = &s___msgSetClsData;
-               }
                else
                {
                   PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
@@ -1645,7 +1677,7 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_SUPER:
 
-            pNewMeth->uiData = ( USHORT ) hb_parni( 3 ); /* offset to instance area */
+            pNewMeth->uiData = uiIndex; /* offset to instance area */
             pNewMeth->uiSprClass = uiSprClass; /* store the super handel */
             pNewMeth->uiScope = uiScope;
             pNewMeth->pFuncSym = &s___msgSuper;
@@ -1930,7 +1962,6 @@ HB_FUNC( __CLSINST )
    {
       hb_itemRelease( hb_itemReturn( pSelf ) );
    }
-
 }
 
 /*

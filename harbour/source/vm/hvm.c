@@ -3116,6 +3116,7 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
       else
       {
          hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
+         return;
       }
    }
 
@@ -3157,6 +3158,7 @@ static void hb_vmEnumNext( void )
       else
       {
          hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pEnum->item.asEnum.basePtr );
+         return;
       }
    }
    hb_vmPushLogical( i == 0 );
@@ -3192,6 +3194,7 @@ static void hb_vmEnumPrev( void )
       else
       {
          hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pEnum->item.asEnum.basePtr );
+         return;
       }
    }
    hb_vmPushLogical( i == 0 );
