@@ -51,6 +51,7 @@
  */
 
 #include "hbclass.ch"
+
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -121,6 +122,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
    LOCAL OldMargin
+   LOCAL cExt
 // LOCAL nLen
 
    ::aBandToPrint := {} // ARRAY(5)
@@ -134,8 +136,10 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       err:subSystem := "FRMLBL"
       Eval(ErrorBlock(), err)
    ELSE
-      IF AT( ".", cLBLName ) == 0
-         cLBLName := TRIM( cLBLName ) + ".lbl"
+      cLBLName := RTrim( cLBLName ) // ; TOFIX: Not very multiplatform.
+      hb_FNameSplit( cLBLName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cLBLName += ".lbl"
       ENDIF
    ENDIF
 

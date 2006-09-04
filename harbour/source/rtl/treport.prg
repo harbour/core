@@ -51,6 +51,7 @@
  */
 
 #include "hbclass.ch"
+
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -183,6 +184,7 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
    LOCAL nCol, nGroup
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
+   LOCAL cExt
 
    LOCAL lAnyTotals
    LOCAL lAnySubTotals
@@ -195,8 +197,10 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
       err:subSystem := "FRMLBL"
       Eval(ErrorBlock(), err)
    ELSE
-      IF AT( ".", cFRMName ) == 0
-         cFRMName := TRIM( cFRMName ) + ".frm"
+      cFRMName := RTrim( cFRMName ) // ; TOFIX: Not very multiplatform.
+      hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
+      IF Empty( cExt )
+         cFRMName += ".frm"
       ENDIF
    ENDIF
 

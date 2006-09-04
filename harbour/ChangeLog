@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    + added simpler example for memory leak in macro compiler:
+         ? type("user input")
+
+     ! Made the logic multiplatform where it's decided whether to 
+    * replaced TABs with SPACEs
+       C:\PATH.A\MYFILE didn't get the default extension while 
+  * harbour/source/vm/classes.c
+    * added some TRACE() messages
     + added support for executing functions with <symItem>:EXEC()
       registered dynamically after creating <symItem>
 
