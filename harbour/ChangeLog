@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    + added support for executing functions with <symItem>:EXEC()
+      registered dynamically after creating <symItem>
+
+  * harbour/source/vm/hvm.c
+    * minor modification
+
+2006-09-04 18:10 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/tlabel.prg
+   * harbour/source/rtl/treport.prg
+     ! Made the logic multiplatform where it's decided whether to
+       add a default extension to the loaded filename.
+       C:\PATH.A\MYFILE didn't get the default extension while
+       C:\PATH\MYFILE did.
+
+2006-09-04 11:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    ! fixed bug in wrong integer negating, f.e.:
+         proc main(); local i:=0; i-=-32768; ? i; return
+    ! fixed PCODE generated for +=, -=, /=, *= expressions when right side
       of expression is undefined variable - it's possible that it will be
       field and we will have RT error. It fixes tt4.prg example form TODO
       file.

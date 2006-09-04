@@ -1961,7 +1961,7 @@ static void hb_vmNegate( void )
    if( HB_IS_INTEGER( pItem ) )
    {
 #if -HB_INT_MAX > HB_INT_MIN
-      if ( pItem->item.asInteger.value < -HB_INT_MAX )
+      if( pItem->item.asInteger.value < -HB_INT_MAX )
       {
 #if HB_LONG_MAX > HB_INT_MAX
          HB_LONG lValue = ( HB_LONG ) pItem->item.asInteger.value;
@@ -1985,7 +1985,7 @@ static void hb_vmNegate( void )
    else if( HB_IS_LONG( pItem ) )
    {
 #if -HB_LONG_MAX > HB_LONG_MIN
-      if ( pItem->item.asLong.value < -HB_LONG_MAX )
+      if( pItem->item.asLong.value < -HB_LONG_MAX )
       {
          double dValue = ( double ) pItem->item.asLong.value;
          pItem->type = HB_IT_DOUBLE;
@@ -2027,7 +2027,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       HB_LONG lNumber2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
       HB_LONG lResult = lNumber1 + lNumber2;
 
-      if ( lNumber2 >= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
+      if( lNumber2 >= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
       {
          hb_itemPutNInt( pResult, lResult );
       }
@@ -2120,7 +2120,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       HB_LONG lNumber2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
       HB_LONG lResult = lNumber1 - lNumber2;
 
-      if ( lNumber2 >= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
+      if( lNumber2 <= 0 ? lResult >= lNumber1 : lResult < lNumber1 )
       {
          hb_itemPutNInt( pResult, lResult );
       }

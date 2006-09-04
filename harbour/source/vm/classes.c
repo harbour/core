@@ -1530,7 +1530,7 @@ HB_FUNC( __CLSADDMSG )
             uiIndex = ( USHORT ) hb_parni( 3 );
             uiSprClass = ( USHORT ) hb_parni( 5 );
             fOK = uiSprClass && uiSprClass <= s_uiClasses &&
-                  uiIndex < pClass->uiDatas;
+                  (uiIndex == 0 || uiIndex < pClass->uiDatas);
             break;
 
          case HB_OO_MSG_DATA:

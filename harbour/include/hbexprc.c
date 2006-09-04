@@ -173,7 +173,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    {
       int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
 
-      if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+      if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+          iScope != HB_VS_UNDECLARED )
       {
          HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType;
          
@@ -186,18 +187,21 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 
                if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
-                  int iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
+                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
 
-                  if( bOpEq == HB_P_MINUS )
+                  if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     iIncrement = -iIncrement;
+                     if( bOpEq == HB_P_MINUS )
+                     {
+                        iIncrement = -iIncrement;
+                     }
+
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+
+                     HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+
+                     return;
                   }
-
-                  hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
-
-                  HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-
-                  return;
                }
             }
             /* NOTE: direct type change */
@@ -227,7 +231,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
          {
             int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
 
-            if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+            if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+                iScope != HB_VS_UNDECLARED )
             {
                /* NOTE: direct type change */
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
@@ -306,7 +311,8 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    {
       int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
 
-      if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+      if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+          iScope != HB_VS_UNDECLARED )
       {
          HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType, iOldType;
          
@@ -321,14 +327,16 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                {
                   short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
 
-                  if( bOpEq == HB_P_MINUS )
+                  if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     iIncrement = -iIncrement;
+                     if( bOpEq == HB_P_MINUS )
+                     {
+                        iIncrement = -iIncrement;
+                     }
+
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+                     return;
                   }
-
-                  hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
-
-                  return;
                }
             }
             /* NOTE: direct type change */
@@ -360,7 +368,8 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
          {
             int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
 
-            if( ! ( iScope == HB_VS_LOCAL_FIELD || iScope == HB_VS_GLOBAL_FIELD ) )
+            if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+                iScope != HB_VS_UNDECLARED )
             {
                /* NOTE: direct type change */
                iOldType = pSelf->value.asOperator.pLeft->ExprType;
