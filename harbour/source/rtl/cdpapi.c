@@ -711,6 +711,10 @@ HB_EXPORT int hb_cdpcmp( char* szFirst, char* szSecond, ULONG ulLen, PHB_CODEPAG
             /* printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet ); */
             break;
          }
+         if( n1 == n2 )
+         {
+            continue;
+         }
          if( cdpage->nMulti && ul )
          {
             int j, nd1 = 0, nd2 = 0;

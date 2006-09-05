@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      passing to ORDCREATE()
+
+  * harbour/source/vm/fm.c
+    ! fixed typo in memset() when HB_PARANOID_MEM_CHECK enabled
+
        - Preprocessor (PP) lib flavour is not affected by this setting.
        - Support is not full in the RDD code yet.
 
