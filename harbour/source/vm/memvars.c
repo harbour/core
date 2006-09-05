@@ -1252,7 +1252,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
    BYTE * buffer     = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
    FHANDLE fhnd      = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
 
-   /* NOTE: Harbour name lengths are not limited, but the .MEM file
+   /* NOTE: Harbour name lengths are not limited, but the .mem file
             structure is not flexible enough to allow for it.
             [vszakats] */
 
@@ -1362,7 +1362,7 @@ HB_FUNC( __MVSAVE )
       hb_fsFNameMerge( szFileName, pFileName );
       hb_xfree( pFileName );
 
-      /* Create .MEM file */
+      /* Create .mem file */
 
       do
       {
@@ -1432,7 +1432,7 @@ HB_FUNC( __MVRESTORE )
       hb_fsFNameMerge( szFileName, pFileName );
       hb_xfree( pFileName );
 
-      /* Open .MEM file */
+      /* Open .mem file */
 
       do
       {

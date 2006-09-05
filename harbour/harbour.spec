@@ -419,8 +419,8 @@ function main()
 return nil
 
 druzus@uran:~/tmp$ %{hb_pref}cmp foo
-xHarbour Compiler build 0.80.0 (SimpLex)
-Copyright 1999-2003, http://www.xharbour.org http://www.harbour-project.org/
+Harbour Compiler Alpha build 46.2 (Flex)
+Copyright 1999-2006, http://www.harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -441,8 +441,8 @@ function main()
 return nil
 
 druzus@uran:~/tmp$ %{hb_pref}mk foo
-xHarbour Compiler build 0.80.0 (SimpLex)
-Copyright 1999-2003, http://www.xharbour.org http://www.harbour-project.org/
+Harbour Compiler Alpha build 46.2 (Flex)
+Copyright 1999-2006, http://www.harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.

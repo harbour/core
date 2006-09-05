@@ -24,7 +24,7 @@ if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtstd; fi
 # Set to constant value to be consistent with the non-GNU make files.
 
 if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$PREFIX/bin/; fi
-if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$PREFIX/lib/xharbour/; fi
-if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$PREFIX/include/xharbour/; fi
+if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$PREFIX/lib/harbour/; fi
+if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$PREFIX/include/harbour/; fi
 
 . `dirname $0`/make_gnu.sh $*

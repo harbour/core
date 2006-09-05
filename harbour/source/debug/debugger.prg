@@ -1831,8 +1831,8 @@ return nil
 
 //METHOD ShowCodeLine( nLine, cPrgName ) CLASS TDebugger
 METHOD ShowCodeLine( nProc ) CLASS TDebugger
-LOCAL nPos
-LOCAL nLine, cPrgName
+   LOCAL nLine, cPrgName
+   LOCAL cDir, cName, cExt
 
    // we only update the stack window and up a new browse
    // to view the code if we have just broken execution
@@ -1854,12 +1854,8 @@ LOCAL nLine, cPrgName
       ENDIF
       
       if( ::lppo )
-         nPos :=RAT(".PRG", UPPER(cPrgName) ) 
-         IF( nPos > 0 )
-            cPrgName := LEFT( cPrgName, nPos-1 ) + ".ppo"
-         ELSE
-            cPrgName += cPrgName +".ppo"
-         ENDIF
+         hb_FNameSplit( cPrgName, @cDir, @cName, @cExt )
+         cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
       endif
 
       if ! empty( cPrgName )
@@ -1900,6 +1896,7 @@ return nil
 
 METHOD Open() CLASS TDebugger
    LOCAL cFileName := AllTrim( ::InputBox( "Please enter the filename", Space( 255 ) ) )
+   LOCAL cExt
 
    if !EMPTY(cFileName) .AND. (cFileName != ::cPrgName .OR. valtype(::cPrgName)=='U')
       if ! File( cFileName ) .and. ! Empty( ::cPathForFiles )
@@ -1910,7 +1907,8 @@ METHOD Open() CLASS TDebugger
          endif
       endif
       ::cPrgName := cFileName
-      ::lppo := RAT(".PPO", UPPER(cFileName)) > 0
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      ::lppo := ( Lower( cExt ) == ".ppo" )
       ::oPulldown:GetItemByIdent( "PPO" ):Checked := ::lppo
       ::oBrwText := nil
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
@@ -1926,26 +1924,22 @@ METHOD Open() CLASS TDebugger
 return nil
 
 METHOD OpenPPO() CLASS TDebugger
-   LOCAL nPos
-   LOCAL lSuccess:=.F.
+   LOCAL lSuccess
+   LOCAL cDir, cName, cExt
 
-   nPos := RAT(".PPO", UPPER(::cPrgName))
-   IF( nPos == 0 )
-      nPos := RAT(".PRG", UPPER(::cPrgName))
-      IF( nPos > 0 )
-         ::cPrgName := LEFT(::cPrgName,nPos-1) + ".ppo"
-      ELSE
-         ::cPrgName += ".ppo"
-      ENDIF
-      lSuccess := FILE(::cPrgName)
-      ::lppo := lSuccess
-   ELSE
-      ::cPrgName := LEFT(::cPrgName,nPos-1) + ".prg"
+   hb_FNameSplit( ::cPrgName, @cDir, @cName, @cExt )
+
+   IF Lower( cExt ) == ".ppo"
+      ::cPrgName := hb_FNameMerge( cDir, cName, ".prg" )
       lSuccess := FILE( ::cPrgName )
       ::lppo := !lSuccess
+   ELSE
+      ::cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
+      lSuccess := FILE( ::cPrgName )
+      ::lppo := lSuccess
    ENDIF
    
-   IF( lSuccess )
+   IF lSuccess
       ::oBrwText := nil
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;

@@ -3,7 +3,7 @@
 #
 # $Id$
 #
-# This script simplifies cross-compiling xHarbour for Windows from Unix systems.
+# This script simplifies cross-compiling Harbour for Windows from Unix systems.
 #
 # Copyright 2003-2005 by Phil Krylov <phil a t newstar.rinet.ru>
 #

@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+       - Preprocessor (PP) lib flavour is not affected by this setting.
+       - Support is not full in the RDD code yet.
+
+   * harbour/source/rdd/dbf1.c
+   * harbour/source/rdd/dblist.prg
+   * harbour/source/rdd/delim1.c
+   * harbour/source/rdd/sdf1.c
+   * harbour/source/rtl/tlabel.prg
+   * harbour/source/rtl/treport.prg
+   * harbour/source/rtl/set.c
+   * harbour/source/vm/memvars.c
+   * harbour/source/vm/runner.c
+     + Honoring _SET_DEFEXTENSIONS setting all over the code.
 
 2006-09-05 12:44 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * harbour/source/debug/debugger.prg
