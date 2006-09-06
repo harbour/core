@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/vm/itemapi.c
+    * modified hb_itemClear() to be reentrant safe - the new version
+      can be also better optimized by C compiler so should be also faster
+
+  * harbour/source/rdd/dbcmd.c
+    ! initialize lpdbOrdCondInfo in DBORDERINFO structure before
       passing to ORDCREATE()
 
   * harbour/source/vm/fm.c
