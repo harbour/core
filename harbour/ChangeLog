@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    ! fixed GPF in __CLSINSTSUPER() class function generate HVM exception
+    % do not inherit unaccessible inline blocks
+    * some other minor optimization, fixes and code cleanups
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! fixed HB_TRACE message
+
+  * harbour/source/rtl/errorapi.c
     ! generate internal error if ErrorNew() function does not return an object
 
 2006-09-07 16:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
