@@ -3120,7 +3120,7 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
       }
    }
 
-   hb_vmPushLong( nVars );       /* number of iterators */
+   hb_vmPushInteger( nVars );    /* number of iterators */
    /* empty array/string - do not start enumerations loop */
    hb_vmPushLogical( ulMax != 0 );
 }
@@ -3137,7 +3137,7 @@ static void hb_vmEnumNext( void )
    HB_ITEM_PTR pEnum;
    int i;
 
-   for( i = ( int ) hb_stackItemFromTop( -1 )->item.asLong.value; i > 0; --i )
+   for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
       pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
@@ -3175,7 +3175,7 @@ static void hb_vmEnumPrev( void )
    HB_ITEM_PTR pEnum;
    int i;
    
-   for( i = hb_stackItemFromTop( -1 )->item.asLong.value; i > 0; --i )
+   for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
       pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
@@ -3208,13 +3208,13 @@ static void hb_vmEnumPrev( void )
  */
 static void hb_vmEnumEnd( void )
 {
-   LONG lVars;
+   int iVars;
    
    /* remove number of iterators */
-   lVars = hb_stackItemFromTop( -1 )->item.asLong.value;
+   iVars = hb_stackItemFromTop( -1 )->item.asInteger.value;
    hb_stackDec();
 
-   while( --lVars >= 0 )
+   while( --iVars >= 0 )
    {
       hb_stackPop();
       hb_stackPop();

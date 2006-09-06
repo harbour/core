@@ -320,7 +320,7 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
          if( ulSize > ulMemSize )
          {
             memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulMemSize ) );
-            memset( ( BYTE * ) pMem + HB_ALLOC_SIZE( ulMemSize ), ulSize - ulMemSize );
+            memset( ( BYTE * ) pMem + HB_ALLOC_SIZE( ulMemSize ), HB_MEMFILER, ulSize - ulMemSize );
          }
          else
             memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulSize ) );

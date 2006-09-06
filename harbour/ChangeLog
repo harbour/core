@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    ! generate internal error if ErrorNew() function does not return an object
+
+2006-09-07 16:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    ! fixed memvar creation in __MVPUT()
+
+2006-09-07 01:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbcmd.c
+    ! always initialize all members in RDD structures to avoid GPF when
+      some RDD will try to access uninitialized data
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! added some additional validation in RDD structures <-> item conversions
+
+2006-09-06 14:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
     * modified hb_itemClear() to be reentrant safe - the new version
       can be also better optimized by C compiler so should be also faster

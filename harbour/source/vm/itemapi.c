@@ -1253,28 +1253,33 @@ HB_EXPORT void hb_itemInit( PHB_ITEM pItem )
 
 HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
 {
+   HB_TYPE type;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_itemClear(%p)", pItem));
 
-   if( HB_IS_STRING( pItem ) )
+   type = pItem->type;
+   pItem->type = HB_IT_NIL;
+
+   if( type & HB_IT_STRING )
    {
       if( pItem->item.asString.allocated )
          hb_xRefFree( pItem->item.asString.value );
    }
-   else if( HB_IS_ARRAY( pItem ) )
+   else if( type & HB_IT_ARRAY )
       hb_gcRefFree( pItem->item.asArray.value );
 
-   else if( HB_IS_BLOCK( pItem ) )
+   else if( type & HB_IT_BLOCK )
       hb_gcRefFree( pItem->item.asBlock.value );
 
-   else if( HB_IS_MEMVAR( pItem ) )
+   else if( type & HB_IT_MEMVAR )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
-   else if( HB_IS_POINTER( pItem ) )
+   else if( type & HB_IT_POINTER )
    {
       if( pItem->item.asPointer.collect )
          hb_gcRefFree( pItem->item.asPointer.value );
    }
-   else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
+   else if( type & HB_IT_ENUM )     /* FOR EACH control variable */
    {
       /*
        * pItem->item.asEnum.valuePtr is intentionally assigned to pValue to
@@ -1284,17 +1289,11 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
        */
       PHB_ITEM pValue = pItem->item.asEnum.valuePtr;
 
+      pItem->type = HB_IT_NIL;
       hb_itemRelease( pItem->item.asEnum.basePtr );
       if( pValue )
          hb_itemRelease( pValue );
    }
-
-#if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
-   else if( HB_IS_BADITEM( pItem ) )
-      hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_itemClear()", NULL );
-#endif
-
-   pItem->type = HB_IT_NIL;
 }
 
 /* Internal API, not standard Clipper */

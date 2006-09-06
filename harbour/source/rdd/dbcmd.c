@@ -2877,6 +2877,8 @@ HB_FUNC( ORDCREATE )
          dbOrderInfo.lpdbConstraintInfo = NULL;
       }
 
+      dbOrderInfo.lpdbOrdCondInfo = pArea->lpdbOrdCondInfo;
+
       SELF_ORDCREATE( pArea, &dbOrderInfo );
    }
    else
