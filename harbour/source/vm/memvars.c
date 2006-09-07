@@ -1214,8 +1214,8 @@ HB_FUNC( __MVPUT )
           * create the PRIVATE one
           */
          hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pValue );
-         hb_memvarUpdatePrivatesBase();
       }
+      hb_memvarUpdatePrivatesBase();
       hb_itemReturn( pValue );
    }
    else
