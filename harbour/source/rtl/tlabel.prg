@@ -137,9 +137,11 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       Eval(ErrorBlock(), err)
    ELSE
       cLBLName := RTrim( cLBLName ) // ; TOFIX: Not very multiplatform.
-      hb_FNameSplit( cLBLName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cLBLName += ".lbl"
+      IF Set( _SET_DEFEXTENSIONS )
+         hb_FNameSplit( cLBLName, NIL, NIL, @cExt )
+         IF Empty( cExt )
+            cLBLName += ".lbl"
+         ENDIF
       ENDIF
    ENDIF
 

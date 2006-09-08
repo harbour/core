@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour Portable Object (.HRB) file runner
+ * Harbour Portable Object (.hrb) file runner
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://www.harbour-project.org
@@ -68,6 +68,7 @@
 #include "hbapifs.h"
 #include "hbvm.h"
 #include "hbpcode.h"
+#include "hbset.h"
 #include "hb_io.h"
 
 /* TODO: Fill the error codes with valid ones (instead of 9999) */
@@ -339,7 +340,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
       pSymRead = ( PHB_SYMB ) hb_xgrab( pHrbBody->ulSymbols * sizeof( HB_SYMB ) );
 
-      for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .HRB */
+      for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )  /* Read symbols in .hrb */
       {
          pSymRead[ ul ].szName = hb_hrbReadId( szHrbBody, ulBodySize, &ulBodyOffset );
          if( pSymRead[ ul ].szName == NULL || ulBodyOffset + 2 > ulBodySize )
@@ -488,7 +489,7 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
    /* Create full filename */
 
    pFileName = hb_fsFNameSplit( szHrb );
-   if( ! pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && pFileName->szExtension == NULL )
    {
       pFileName->szExtension = ".hrb";
    }
@@ -564,7 +565,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
 /*
    __HRBRUN( <cFile> [, xParam1 [, xParamN ] ] ) -> return value.
 
-   This program will get the data from the .HRB file and run the p-code
+   This program will get the data from the .hrb file and run the p-code
    contained in it.
 
    In due time it should also be able to collect the data from the

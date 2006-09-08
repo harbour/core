@@ -42,6 +42,56 @@
   * harbour/source/vm/fm.c
     ! fixed typo in memset() when HB_PARANOID_MEM_CHECK enabled
 
+  * harbour/source/vm/hvm.c
+    ! fixed item type used for iterator
+
+2006-09-06 12:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * utils/hbrun/hbrun.prg
+    * Change Main() into _APPMAIN() to avoid collision with user function
+       Default value is .T. (CA-Cl*pper compatible). If set to .F., 
+       Harbour runtime/RDD code will never attempt to add a 
+       default extension to the filename arguments. Commands/functions 
+2006-09-05 16:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bug fixed in hb_cdpcmp(), which caused strange comparison results as
+       ( s1 > s2 ) != ( s2 > s1 ).
+
+2006-09-05 15:51 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbset.h
+   * harbour/include/set.ch
+   * harbour/source/pp/pptable.c
+   * harbour/source/rtl/set.c
+     + Added Set( _SET_DEFEXTENSIONS, <logical: .T./.F.> )
+       Default value is .T. (CA-Cl*pper compatible). If set to .F.,
+       Harbour runtime/RDD code will never attempt to add a
+       default extension to the filename arguments. Commands/functions
+       where this setting makes a difference are:
+       - SET ALTERNATE TO / Set( _SET_ALTFILE_, ... )
+       - From now on, it possible to create/load files using the 
+         above functions/commands which have no extension. This 
+       - SAVE TO / __mvSave()
+         For example on Win32, it's possible to directly print 
+       - LABEL FORM
+       - REPORT FORM
+       - COPY TO ... DELIMITED
+       - COPY TO ... SDF
+       - LIST / __dbList()
+       - USE / dbUseArea()
+       - dbCreate()
+       - SET INDEX TO / ordListAdd() (not yet implemented)
+       - __HRBLOAD(), __HRBRUN()
+     ; Notes:
+       - From now on, it possible to create/load files using the
+         above functions/commands which have no extension. This
+         might be desirable in a few platform and/or situations.
+         For example on Win32, it's possible to directly print
+         to a shared Windows printer queue, using these commands:
+             lOldValue := Set( _SET_DEFEXTENSIONS, .F. )
+             SET PRINTER TO \\myserver\myprinter
+             Set( _SET_DEFEXTENSIONS, lOldValue )
+         Or, it is possible to open a dbf file which has no extension:
+             dbUseArea(.T., NIL, "dbf_filename_with_no_extension", "w_DATA", .F., .F.)
+       - Compiler is (of course) not affected by this setting.
        - Preprocessor (PP) lib flavour is not affected by this setting.
        - Support is not full in the RDD code yet.
 

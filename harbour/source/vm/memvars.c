@@ -1353,7 +1353,7 @@ HB_FUNC( __MVSAVE )
 
       pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
 
-      if( pFileName->szExtension == NULL )
+      if( hb_set.HB_SET_DEFEXTENSIONS && pFileName->szExtension == NULL )
          pFileName->szExtension = ".mem";
 
       if( pFileName->szPath == NULL )
@@ -1423,7 +1423,7 @@ HB_FUNC( __MVRESTORE )
 
       pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
 
-      if( pFileName->szExtension == NULL )
+      if( hb_set.HB_SET_DEFEXTENSIONS && pFileName->szExtension == NULL )
          pFileName->szExtension = ".mem";
 
       if( pFileName->szPath == NULL )

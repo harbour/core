@@ -84,7 +84,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    ENDIF
    IF !Empty( cToFileName )
       hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )
-      IF Empty( cExt )
+      IF Set( _SET_DEFEXTENSIONS ) .AND. Empty( cExt )
          cExt := ".txt"
       ENDIF
       lOldExtra := Set( _SET_EXTRA, .T. )

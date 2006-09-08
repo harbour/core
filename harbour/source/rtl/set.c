@@ -229,9 +229,9 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    {
       pFilename = hb_fsFNameSplit( file_name );
 
-      if( ! pFilename->szPath && hb_set.HB_SET_DEFAULT )
+      if( pFilename->szPath == NULL && hb_set.HB_SET_DEFAULT )
          pFilename->szPath = hb_set.HB_SET_DEFAULT;
-      if( ! pFilename->szExtension && def_ext )
+      if( hb_set.HB_SET_DEFEXTENSIONS && pFilename->szExtension == NULL && def_ext )
          pFilename->szExtension = def_ext;
 
       hb_fsFNameMerge( path, pFilename );
@@ -877,6 +877,10 @@ HB_FUNC( SET )
             }
          }
          break;
+      case HB_SET_DEFEXTENSIONS:
+         hb_retni( hb_set.HB_SET_DEFEXTENSIONS );
+         if( args > 1 ) hb_set.HB_SET_DEFEXTENSIONS = set_logical( pArg2, hb_set.HB_SET_DEFEXTENSIONS );
+         break;
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -979,6 +983,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;
+   hb_set.HB_SET_DEFEXTENSIONS = TRUE;
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;

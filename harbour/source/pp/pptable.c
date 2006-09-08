@@ -128,6 +128,7 @@ void hb_pp_Table( void )
    static DEFINES sD___57 = {"_SET_HARDCOMMIT",    15,NULL,-1,"106", &sD___56 };
    static DEFINES sD___58 = {"_SET_FORCEOPT",      13,NULL,-1,"107", &sD___57 };
    static DEFINES sD___59 = {"_SET_DBFLOCKSCHEME", 18,NULL,-1,"108", &sD___58 };
+   static DEFINES sD___60 = {"_SET_DEFEXTENSIONS", 18,NULL,-1,"109", &sD___59 };
 
    static COMMANDS sC___1 = {0,"NOTE",    4,"\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO",2,"WHILE \1A00","while \1A00",&sC___1 };
@@ -450,7 +451,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___262 = {0,"SET",3,"DBFLOCKSCHEME TO \1A00","Set(_SET_DBFLOCKSCHEME, \1A00 )",&sC___261 };
    static COMMANDS sC___263 = {0,"SET",3,"DBFLOCKSCHEME TO","Set(_SET_DBFLOCKSCHEME, 0 )",&sC___262 };
 
-   hb_pp_topDefine = &sD___59;
+   hb_pp_topDefine = &sD___60;
    hb_pp_topCommand = &sC___263;
    hb_pp_topTranslate = NULL;
 }

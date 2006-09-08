@@ -198,9 +198,11 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
       Eval(ErrorBlock(), err)
    ELSE
       cFRMName := RTrim( cFRMName ) // ; TOFIX: Not very multiplatform.
-      hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFRMName += ".frm"
+      IF Set( _SET_DEFEXTENSIONS )
+         hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
+         IF Empty( cExt )
+            cFRMName += ".frm"
+         ENDIF
       ENDIF
    ENDIF
 

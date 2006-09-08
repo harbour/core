@@ -2154,7 +2154,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreate(%p, %p)", pArea, pCreateInfo));
 
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-   if( ! pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
       pItem = hb_itemPutC( pItem, "" );
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != SUCCESS )
@@ -2921,7 +2921,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
    /* Add default file name extension if necessary */
-   if( ! pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt ) != SUCCESS )

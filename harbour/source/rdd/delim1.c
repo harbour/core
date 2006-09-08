@@ -1213,7 +1213,7 @@ static ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
 #endif
 
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-   if( ! pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
       PHB_ITEM pItem = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
@@ -1305,7 +1305,7 @@ static ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
    /* Add default file name extension if necessary */
-   if( ! pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
       PHB_ITEM pFileExt = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt );
