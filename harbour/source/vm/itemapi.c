@@ -1289,7 +1289,6 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
        */
       PHB_ITEM pValue = pItem->item.asEnum.valuePtr;
 
-      pItem->type = HB_IT_NIL;
       hb_itemRelease( pItem->item.asEnum.basePtr );
       if( pValue )
          hb_itemRelease( pValue );

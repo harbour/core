@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * include/hbapicdp.h
+     * Changed declaration of hb_cdpcmp() function
+   * source/rtl/cdpapi.c
+     * hb_cdpcmp() has been changed. It accepts now additional parameters:
+       hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL bExact ),
+       also some bugs fixed.
+   * source/vm/itemapi.c
+   * source/rdd/dbfntx/dbfntx1.c
+     * Calls of hb_cdcmp() has been changed.
+
+2006-09-10 14:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * cleaned BCC warning
+
 2006-09-10 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     ! added missing changelog entry about __MVPUT() fix
@@ -75,6 +89,10 @@
 
   * harbour/source/vm/classes.c
     * updated for above modifications
+    * calculate instance area offset in supercasting dynamically - it
+      will allow to eliminate multiple instance area allocating when
+      in the inheritance tree the same class exists more then once and
+      also quite easy add support for non-virtual messages.
     ! fixed GPF in __CLSINSTSUPER() class function generate HVM exception
     % do not inherit unaccessible inline blocks
     * some other minor optimization, fixes and code cleanups
