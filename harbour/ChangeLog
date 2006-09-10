@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * source/vm/itemapi.c
+     ! Bug fixed, which was introduced while last commit
+
+2006-09-11 16:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * include/hbapicdp.h
      * Changed declaration of hb_cdpcmp() function
    * source/rtl/cdpapi.c

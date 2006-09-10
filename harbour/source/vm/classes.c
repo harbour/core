@@ -2258,8 +2258,6 @@ HB_FUNC( __CLSINSTSUPER )
 
       if( pDynSym )                                   /* Find function            */
       {
-         USHORT uiClass = 0;
-
          /* TODO: optimize this function */
 
          hb_vmPushSymbol( pDynSym->pSymbol );         /* Push function name       */
@@ -2270,6 +2268,7 @@ HB_FUNC( __CLSINSTSUPER )
          {
             if( HB_IS_OBJECT( hb_stackReturnItem() ) )
             {
+               USHORT uiClass;
                for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
                {                                /* Locate the entry */
                   if( s_pClasses[ uiClass ].pClassSym == pDynSym )
