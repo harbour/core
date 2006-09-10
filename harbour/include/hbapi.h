@@ -238,16 +238,14 @@ typedef struct _HB_STACK_STATE
 struct hb_struArray
 {
    struct _HB_BASEARRAY * value;
-   USHORT   supercast;
-   USHORT   superoffset;
 };
 
 struct hb_struBlock
 {
-   LONG statics;
+   struct _HB_CODEBLOCK * value;
    USHORT lineno;
    USHORT paramcnt;
-   struct _HB_CODEBLOCK * value;
+   USHORT hclass;
 };
 
 struct hb_struDate
@@ -363,6 +361,7 @@ typedef struct _HB_CODEBLOCK
    PHB_SYMB    pSymbols;     /* codeblocks symbols */
    PHB_SYMB    pDefSymb;     /* symbol where the codeblock was created */
    PHB_ITEM    pLocals;      /* table with referenced local variables */
+   LONG        lStatics;     /* STATICs base address */
    USHORT      uiLocals;     /* number of referenced local variables */
    SHORT       dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;

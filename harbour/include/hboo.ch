@@ -93,7 +93,13 @@
 #define HB_OO_MSG_SUPER         5
 #define HB_OO_MSG_ONERROR       6
 #define HB_OO_MSG_CLSMTHD       7 /* for the future */
-#define HB_OO_MSG_INITIALIZED   8
+#define HB_OO_MSG_ASSIGN        8
+#define HB_OO_MSG_ACCESS        9
+#define HB_OO_MSG_CLSASSIGN    10
+#define HB_OO_MSG_CLSACCESS    11
+#define HB_OO_MSG_REALCLASS    12
+#define HB_OO_MSG_INITIALIZED  13
+
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
 #define HB_OO_DATA_VALUE        2

@@ -4633,16 +4633,13 @@ static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usLen 
          usLen );
 
    pItem->type = HB_IT_BLOCK;
-
-   /* store the statics base of function where the codeblock was defined
-    */
-   pItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( pCode );
    /* store the line number where the codeblock was defined
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 }
 
 /* -2    -> HB_P_PUSHBLOCKSHORT
@@ -4666,15 +4663,13 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, USHORT u
 
    pItem->type = HB_IT_BLOCK;
 
-   /* store the statics base of function where the codeblock was defined
-    */
-   pItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pItem->item.asBlock.paramcnt = 0;
    /* store the line number where the codeblock was defined
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 }
 
 /* +0    -> HB_P_MPUSHBLOCK
@@ -4696,15 +4691,13 @@ static void hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols )
 
    pItem->type = HB_IT_BLOCK;
 
-   /* store the statics base of function where the codeblock was defined
-    */
-   pItem->item.asBlock.statics = hb_stackGetStaticsBase();
    /* store the number of expected parameters
     */
    pItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( &( pCode[ 3 ] ) );
    /* store the line number where the codeblock was defined
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
 }
 
 /* pushes current workarea number on the eval stack
@@ -5612,7 +5605,7 @@ HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymb
                                           char * szModuleName, ULONG ulID,
                                           USHORT uiPCodeVer )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPcodeVer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbolsEx(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
 
    if( uiPCodeVer != 0 )
    {

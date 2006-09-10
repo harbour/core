@@ -210,6 +210,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    pCBlock->dynBuffer = usLen != 0;
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
+   pCBlock->lStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = uiLocals;
    pCBlock->pLocals   = pLocals;
 
@@ -240,12 +241,13 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen )
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAlloc( sizeof( HB_CODEBLOCK ), hb_codeblockDeleteGarbage );
    /* Store the number of referenced local variables */
-   pCBlock->uiLocals  = 0;
-   pCBlock->pLocals   = NULL;
    pCBlock->pCode     = pCode;
    pCBlock->dynBuffer = TRUE;
    pCBlock->pDefSymb  = hb_stackBaseItem()->item.asSymbol.value;
    pCBlock->pSymbols  = NULL; /* macro-compiled codeblock cannot acces a local symbol table */
+   pCBlock->lStatics  = hb_stackGetStaticsBase();
+   pCBlock->uiLocals  = 0;
+   pCBlock->pLocals   = NULL;
 
    HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
 
@@ -262,7 +264,7 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
-   hb_stackSetStaticsBase( pItem->item.asBlock.statics );
+   hb_stackSetStaticsBase( pItem->item.asBlock.value->lStatics );
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
 }
 

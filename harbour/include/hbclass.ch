@@ -150,6 +150,10 @@ DECLARE HBClass ;
 #xtranslate CREATE CLASS => CLASS
 #xtranslate _HB_MEMBER {AS Num  => _HB_MEMBER {AS Numeric
 #xtranslate _HB_MEMBER {AS Char => _HB_MEMBER {AS Character
+
+#translate @:<MessageName>([<MsgParams,...>]) => ;
+                                ::realclass:<MessageName>([<MsgParams>])
+
 #endif
 
 #ifdef HB_CLS_ALLOWCLASS  /* DONT DECLARE IT ! WORK IN PROGRESS !!! */

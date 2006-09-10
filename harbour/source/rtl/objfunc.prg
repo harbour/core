@@ -211,8 +211,8 @@ FUNCTION __objAddData( oObject, cSymbol )
    ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. !__objHasMsg( oObject, "_" + cSymbol )
       hClass := oObject:ClassH
       nSeq   := __cls_IncData( hClass )         // Allocate new Seq#
-      __clsAddMsg( hClass,       cSymbol, nSeq, HB_OO_MSG_DATA, NIL, 1 )
-      __clsAddMsg( hClass, "_" + cSymbol, nSeq, HB_OO_MSG_DATA, NIL, 1 )
+      __clsAddMsg( hClass,       cSymbol, nSeq, HB_OO_MSG_ACCESS, NIL, 1 )
+      __clsAddMsg( hClass, "_" + cSymbol, nSeq, HB_OO_MSG_ASSIGN, NIL, 1 )
    ENDIF
 
    RETURN oObject

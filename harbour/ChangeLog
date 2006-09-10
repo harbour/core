@@ -8,6 +8,73 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-09-10 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! added missing changelog entry about __MVPUT() fix
+
+  * harbour/source/vm/itemapi.c
+    * removed redundant pItem->type = HB_IT_NIL (thanks for Manu Exposito)
+
+2006-09-10 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! added missing changelog entry about __MVPUT() fix
+
+  * harbour/source/vm/itemapi.c
+    * removed redundant pItem->type = HB_IT_NIL (thanks for Manu Exposito)
+
+2006-09-10 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/arrays.c
+    * moved static base offset from hb_struBlock structure
+      to HB_CODEBLOCK structure
+    + added hclass member to hb_struBlock - it will be used in
+      the future for checking codeblock scope in classy so we will
+      real scope checking also for messages sent from codeblocks.
+    - removed supercast and superoffset members from hb_struArray
+      structure.
+
+  * harbour/include/hbclass.ch
+    * added class(y) like
+         @:<MessageName>([<MsgParams,...>])
+      send operator. It's not exactly the same as in class(y) where
+      this operator is hardcoded to executing function directly,
+      needs method name instead of message name and is linked statically.
+      In Harbour this operator uses message name so can be used also for
+      instance variables and make dynamic casting to the class from which
+      current method is inherited. In short words sending messages to @:
+      instead of :: causes that they work like non-virtual messages in
+      C++ mode.
+      If you do not use the same method body in different classes
+      then you can also use explicitly self casting:
+         ::<myclass>:<msgname>[(...)]
+      and it will be a little bit faster
+
+  * harbour/include/hboo.ch
+    + added: HB_OO_MSG_ASSIGN, HB_OO_MSG_ACCESS,
+             HB_OO_MSG_CLSASSIGN, HB_OO_MSG_CLSACCESS
+      They should be used insted of HB_OO_MSG_DATA and HB_OO_MSG_CLSDATA
+      This resolves problems with name conflicts when we were detecting
+      type of message (ACCESS/ASSIGN) by checking the first character
+      in message name. F.e. now it's possible to create exported instance
+      variable called __WithObject and it will be used in all WITH OBJECT
+      statement instead of the base object value. It's simple and effective
+      WITH OBJECT overloading.
+      I kept backward compatibility for HB_OO_MSG_DATA and HB_OO_MSG_CLSDATA
+      but I strongly suggest to update code to use new constants.
+    + added HB_OO_MSG_REALCLASS
+
+  * harbour/source/rtl/objfunc.prg
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/rtl/tclass.prg
+    * use HB_OO_MSG_[CLS]{ASSIGN,ACCESS} instead of HB_OO_MSG_[CLS]DATA
+
+  * harbour/source/rtl/tclass.prg
+    + added REALCLASS message to creted classes - it's used for @: operator
+
+  * harbour/source/vm/classes.c
+    * updated for above modifications
     ! fixed GPF in __CLSINSTSUPER() class function generate HVM exception
     % do not inherit unaccessible inline blocks
     * some other minor optimization, fixes and code cleanups

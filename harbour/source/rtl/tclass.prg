@@ -101,28 +101,28 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
-      __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_hClass"        ,  1, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "cName"          ,  2, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_cName"         ,  2, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aDatas"         ,  3, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aDatas"        ,  3, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aMethods"       ,  4, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aMethods"      ,  4, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aClsDatas"      ,  5, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aClsDatas"     ,  5, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aClsMethods"    ,  6, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aClsMethods"   ,  6, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aInlines"       ,  7, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aInlines"      ,  7, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "aVirtuals"      ,  8, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_aVirtuals"     ,  8, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "acSuper"        ,  9, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_DATA )
-  /*  __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_DATA ) */
+      __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_hClass"        ,  1, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "cName"          ,  2, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_cName"         ,  2, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aDatas"         ,  3, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aDatas"        ,  3, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aMethods"       ,  4, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aMethods"      ,  4, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aClsDatas"      ,  5, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aClsDatas"     ,  5, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aClsMethods"    ,  6, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aClsMethods"   ,  6, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aInlines"       ,  7, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aInlines"      ,  7, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "aVirtuals"      ,  8, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aVirtuals"     ,  8, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "acSuper"        ,  9, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_ASSIGN )
+  /*  __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_ASSIGN ) */
 
    ENDIF
 
@@ -205,7 +205,8 @@ STATIC PROCEDURE Create()
          nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
       NEXT
    ENDIF
-   __clsAddMsg( hClass, ::cName  , 0, HB_OO_MSG_SUPER, hClass, HB_OO_CLSTP_EXPORTED )
+   __clsAddMsg( hClass, ::cName     , 0, HB_OO_MSG_SUPER    , hClass, HB_OO_CLSTP_EXPORTED )
+   __clsAddMsg( hClass, "REALCLASS" , 0, HB_OO_MSG_REALCLASS, 0     , HB_OO_CLSTP_EXPORTED )
 
    ::hClass := hClass
 
@@ -221,10 +222,10 @@ STATIC PROCEDURE Create()
 
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n + nDataBegin, ;
-                   HB_OO_MSG_DATA, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
+                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
                    ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ] )
       __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n + nDataBegin, ;
-                   HB_OO_MSG_DATA,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
+                   HB_OO_MSG_ASSIGN,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
    NEXT
 
    nLen := Len( ::aMethods )
@@ -236,9 +237,9 @@ STATIC PROCEDURE Create()
    nLen := Len( ::aClsDatas )
    FOR n := 1 TO nLen
       __clsAddMsg( hClass, ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ]      , n + nClassBegin,;
-                   HB_OO_MSG_CLASSDATA, ::aClsDatas[ n ][ HB_OO_CLSD_VALUE ], ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
+                   HB_OO_MSG_CLSACCESS, ::aClsDatas[ n ][ HB_OO_CLSD_VALUE ], ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
       __clsAddMsg( hClass, "_" + ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ], n + nClassBegin,;
-                   HB_OO_MSG_CLASSDATA,                                     , ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
+                   HB_OO_MSG_CLSASSIGN,                                     , ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
    NEXT
 
    nLen := Len( ::aInlines )

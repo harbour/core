@@ -176,7 +176,11 @@ PHB_ITEM hb_errNew( void )
    hb_vmPushNil();
    hb_vmDo( 0 );
 
-   hb_itemCopy( pReturn, hb_stackReturnItem() );
+   hb_itemMove( pReturn, hb_stackReturnItem() );
+   if( ! HB_IS_OBJECT( pReturn ) )
+   {
+      hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
+   }
 
    return pReturn;
 }
@@ -215,7 +219,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
           */
          s_errorHandler->Error = pError;
          s_errorHandler->ErrorBlock = s_errorBlock;
-         pResult = (s_errorHandler->Func)( s_errorHandler );
+         pResult = ( s_errorHandler->Func )( s_errorHandler );
          s_errorHandler->Error = NULL;
       }
       else

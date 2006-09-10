@@ -2305,7 +2305,7 @@ static ERRCODE hb_usrFilterText( AREAP pArea, PHB_ITEM pFilter )
 {
    LONG lOffset;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_usrFilterText(%p,%hu,%p)", pArea, uiRelNo, pFilter));
+   HB_TRACE(HB_TR_DEBUG, ("hb_usrFilterText(%p,%p)", pArea, pFilter));
 
    lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
    hb_vmPush( pFilter );
