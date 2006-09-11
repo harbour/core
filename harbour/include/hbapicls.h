@@ -57,6 +57,8 @@
 
 HB_EXTERN_BEGIN
 
+#ifdef _HB_API_INTERNAL_
+
 #define HB_OO_OP_PLUS         0
 #define HB_OO_OP_MINUS        1
 #define HB_OO_OP_MULT         2
@@ -86,36 +88,35 @@ HB_EXTERN_BEGIN
 
 #define HB_OO_MAX_OPERATOR    25
 
-/* class management */
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
 extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class internals as used */
-extern char *     hb_clsName( USHORT uiClass );
-/* has this function to be public? */
-extern BOOL       hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 
-/* object management */
-#ifdef _HB_API_INTERNAL_
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
-#endif
-
 extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
 extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
-
-extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
-extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
-extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
-
-extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
-extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
-extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
-extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */
 extern BOOL       hb_bProfiler;                 /* profiler activity status */
 extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 #endif
+
+#endif
+
+/* class management */
+HB_EXPORT extern char *     hb_clsName( USHORT uiClass );
+HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
+
+/* object management */
+HB_EXPORT extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
+HB_EXPORT extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
+HB_EXPORT extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
+
+HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
+HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
+HB_EXPORT extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
+HB_EXPORT extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
 HB_EXTERN_END
 

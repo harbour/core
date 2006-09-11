@@ -8,6 +8,119 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/vm/itemapi.c
+    + added support for FOR EACH overloading - it's work in progress
+      do not create any code which may use current solution - it may
+      change in the nearest future
+
+2006-09-12 14:48 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bug fixed
+
+2006-09-12 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed typo in adding SHARED CLASS VAR ASSIGN messages
+    * some minor cleanup
+
+2006-09-11 20:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.ch
+    * added HB_EXPORT to public functions and some internal covered by
+      _HB_API_INTERNAL_ macro
+
+  * harbour/include/hboo.ch
+    + added HB_OO_CLSTP_NONVIRTUAL and HB_OO_CLSTP_OVERLOADED
+
+  * harbour/source/rtl/tclass.prg
+    ! do not add supercast class messages - now it's done automatically
+      by __clsNew() function with proper instance area offset updating
+    ! enumerate instance class datas in __clsAddMsg() from 1 - inherited
+      instance variables are managed internally by classy code with
+      proper instance area offset updating
+    ! use __CLS_CNTCLSDATA() as start offset for class data. Do not
+      try to calculate it yourself - some of super classes can be ignored
+      when they are appear in the inheritance tree more then once so it's
+      not possible to calculate class data or instance data start offset
+      using simple sum of class or instance variables in super classes.
+
+  * harbour/source/vm/classes.c
+    ! fixed instance area casting
+    ! fixed class variables casting
+    ! fixed multi-inheritance when the same class can apear more then
+      once in super classes tree.
+    ! Do not add unnecessary instance variables for the same class when
+      it's inherited more then once.
+    ! Do not add unnecessary class variables for the same class when
+      it's inherited more then once.
+    ! Do not add unnecessary initialization class and instance variables
+    + added support for non virtual messages
+    + added support for static and casted scoping
+    + super cast messages added automatically. They are used to dynamic
+      recalculation of instance are offsets and to avoid multiple inheritance
+      of the same class so please do not overload them or you will have as
+      result something what we have before recent modifications in the
+      instance and class data area. Just simply run tests/clsccast.prg
+      and tests/clsicast.prg compiled with current CVS code and last
+      release code or with xHarbour and compare the results.
+      Also Class(y) does not pass these tests and I do not know if any
+      other dynamic OOP model in xbase languages can properly address it.
+      BTW maybe I should add RT error when .prg code will try to delete
+      or overwrite class cast message. For me it seems to be reasonable
+      and what's your opinion?
+    * make hidden class members non virtual by default. It can be disabled
+      by compiling classes.c with -DHB_VIRTUAL_HIDDEN but IMHO keeping
+      HIDDEN members as virtual causes that they are not really HIDDEN
+      because subclasses can simply overwrite them. It also means that
+      it's not possible to create class with some private data and
+      methods which will never interact with any subclass code created
+      by other programmers where name conflict can appear. So one of
+      the most important OOP features is missing in such case.
+      See tests/clsnv.prg as an example for non virtual hidden members.
+
+  + tests/clsicast.prg
+    + added test code for proper instance area allocating and casting
+
+  + tests/clsccast.prg
+    + added test code for proper class data allocating and casting
+
+  + tests/clsnv.prg
+    + added test code for non virtual hidden class members
+
+   Now we should be able to create and class model even replicate the
+   static one like in C++ using current class engine which still fully
+   supports dynamic bindings. It consumes less memory and due to much
+   more efficient hashing it should be faster then it was though some
+   other minor optimization can be add and I'll plan to make them in
+   some spare time.
+   The item type verification in assignment is still missing. I'll add
+   it when I'll collect some statistic informantion I'd like to ask
+   [x]Harbour users. I need these information to tune some internal
+   structures where I can balance between speed and memory allocation
+   to statistically optimal form.
+
+   Marek asked me to add passing object datas by reference and I'll do
+   that but I'd like to ask Ryszard to add support for:
+   Ryszard can you make necessary compiler modifications? 
+   to compiler. I'll implement all other HVM modifications. If you can
+   please also add support for:
+      <oVar>:&<cMsgName>[(...)]
+   For this we do not need any HVM modifications or new PCODEs.
+   We are supporting xBase++ macro list compilation in:
+      cList:="1,2,3"
+      x := aVar[ &cList ]
+      aVar:={ &cList }
+      func( &cList )
+   But we do not support:
+      <oVar>:<message>( &cList )
+   IMHO it looks ugly. If we have this syntax for function call then we
+   should also support it in message sending.
+   Ryszard can you make necessary compiler modifications?
+   I'm also thinking about adding support for variable parameters
+      func myfunc(...)
+      [...]
+      return xVar
+   In few cases it will help to encode some function much more efficient
+   then now.
+
    I'll add Class(y) compatible functions used in class(y) header files
    so it will be possible to use original class(y) .ch files in Harbour
    though it will not be the most efficient because we have @func() operator

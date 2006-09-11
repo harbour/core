@@ -181,8 +181,7 @@ STATIC PROCEDURE Create()
    LOCAL n
    LOCAL nLen := Len( ::acSuper )
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
-   LOCAL nDataBegin := 0
-   LOCAL nClassBegin := 0
+   LOCAL nClassBegin
    LOCAL hClass
    LOCAL ahSuper := Array( nLen )
 
@@ -194,18 +193,10 @@ STATIC PROCEDURE Create()
       FOR n := 1 TO nLen
          ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
       NEXT
-
       hClass := __clsNew( ::cName, nLenDatas, ahSuper )
-
-      __clsAddMsg( hClass, "SUPER"  , nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
-      __clsAddMsg( hClass, "__SUPER", nDataBegin, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
-      FOR n := 1 TO nLen
-         __clsAddMsg( hClass, Upper( ::acSuper[ n ] ), nDataBegin, HB_OO_MSG_SUPER, ahSuper[ n ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_CLASS )
-         nDataBegin   += __cls_CntData( ahSuper[ n ] )        // Get offset for new DATAs
-         nClassBegin  += __cls_CntClsData( ahSuper[ n ] )     // Get offset for new ClassData
-      NEXT
+      __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+      __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
    ENDIF
-   __clsAddMsg( hClass, ::cName     , 0, HB_OO_MSG_SUPER    , hClass, HB_OO_CLSTP_EXPORTED )
    __clsAddMsg( hClass, "REALCLASS" , 0, HB_OO_MSG_REALCLASS, 0     , HB_OO_CLSTP_EXPORTED )
 
    ::hClass := hClass
@@ -221,10 +212,10 @@ STATIC PROCEDURE Create()
    //Local message...
 
    FOR n := 1 TO nLenDatas
-      __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n + nDataBegin, ;
+      __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
                    HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
                    ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ] )
-      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n + nDataBegin, ;
+      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n, ;
                    HB_OO_MSG_ASSIGN,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
    NEXT
 
@@ -235,6 +226,7 @@ STATIC PROCEDURE Create()
    NEXT
 
    nLen := Len( ::aClsDatas )
+   nClassBegin := __CLS_CNTCLSDATA( hClass )
    FOR n := 1 TO nLen
       __clsAddMsg( hClass, ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ]      , n + nClassBegin,;
                    HB_OO_MSG_CLSACCESS, ::aClsDatas[ n ][ HB_OO_CLSD_VALUE ], ::aClsDatas[ n ][ HB_OO_CLSD_SCOPE ] )
