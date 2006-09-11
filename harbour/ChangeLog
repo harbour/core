@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   I'll add Class(y) compatible functions used in class(y) header files
+   so it will be possible to use original class(y) .ch files in Harbour
+   though it will not be the most efficient because we have @func() operator
+   which gives better performance then using codeblocks. Anyhow classy
    create separate meta class for each class with CLASS members and
    <clasName>() function always return such meta class object so for full
    Class(y) compatibility we need to generate differ .prg code.

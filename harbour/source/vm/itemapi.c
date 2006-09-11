@@ -1631,14 +1631,13 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
          }
          while( --ulMinLen );
 
-         if( !iRet && ulLenSecond != ulLenFirst )
+         if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulLenFirst )
          {
-            if( ulLenSecond > ulLenFirst )
-               iRet = 1;
-            else if( hb_set.HB_SET_EXACT || bForceExact )
-               iRet = -1;
+            /* Force an exact comparison */
+            if( !iRet && ulLenFirst != ulLenSecond )
+               /* If length is different ! */
+               iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
-
       }
    }
    else
