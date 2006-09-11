@@ -1591,7 +1591,6 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    ULONG ulLenFirst;
    ULONG ulLenSecond;
    ULONG ulMinLen;
-   ULONG ulCounter;
    int iRet = 0; /* Current status */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, (int) bForceExact));
@@ -1617,26 +1616,29 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    if( ulMinLen )
    {
       if( hb_cdp_page->lSort )
-         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,hb_cdp_page, &ulCounter );
+         iRet = hb_cdpcmp( szFirst,ulLenFirst,szSecond,ulLenSecond,hb_cdp_page,hb_set.HB_SET_EXACT || bForceExact );
       else
-         for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
+      {
+         do
          {
-            /* Difference found */
             if( *szFirst != *szSecond )
-               iRet = ( ( BYTE ) *szFirst < ( BYTE ) *szSecond ) ? -1 : 1;
-            else /* TODO : #define some constants */
             {
-               szFirst++;
-               szSecond++;
+               iRet = ( ( BYTE ) *szFirst < ( BYTE ) *szSecond ) ? -1 : 1;
+               break;
             }
+            szFirst++;
+            szSecond++;
+         }
+         while( --ulMinLen );
+
+         if( !iRet && ulLenSecond != ulLenFirst )
+         {
+            if( ulLenSecond > ulLenFirst )
+               iRet = 1;
+            else if( hb_set.HB_SET_EXACT || bForceExact )
+               iRet = -1;
          }
 
-      if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulCounter )
-      {
-         /* Force an exact comparison */
-         if( !iRet && ulLenFirst != ulLenSecond )
-            /* If length is different ! */
-            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
       }
    }
    else

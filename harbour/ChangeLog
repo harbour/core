@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   create separate meta class for each class with CLASS members and
+   <clasName>() function always return such meta class object so for full
+   Class(y) compatibility we need to generate differ .prg code.
+   But all such modifications now can be done on preprocessor and
+   .prg level and they will not need .c code modification.
+   We should make them to give user interface for our new OOP features.
+
+   Now I'm waiting for reports about any problems with current classy
+   code.
+
+2006-09-11 20:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/vm/itemapi.c
      ! Bug fixed, which was introduced while last commit
 

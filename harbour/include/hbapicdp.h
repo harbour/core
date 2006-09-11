@@ -172,7 +172,7 @@ extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( char * );
 extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, ULONG );
-extern HB_EXPORT int           hb_cdpcmp( char *, char *, ULONG, PHB_CODEPAGE, ULONG * );
+extern HB_EXPORT int           hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL bExact );
 extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpReleaseAll( void );
        

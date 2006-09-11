@@ -651,7 +651,7 @@ static int hb_ntxValCompare( LPTAGINFO pTag, char* val1, int len1,
       {
 #ifndef HB_CDP_SUPPORT_OFF
          if( pTag->Owner->Owner->cdPage->lSort )
-            iResult = hb_cdpcmp( val1, val2, ( ULONG ) iLimit, pTag->Owner->Owner->cdPage, NULL );
+            iResult = hb_cdpcmp( val1, ( ULONG ) iLimit, val2, ( ULONG ) iLimit, pTag->Owner->Owner->cdPage, 0 );
          else
 #endif
             iResult = memcmp( val1, val2, iLimit );
