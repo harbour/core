@@ -805,9 +805,10 @@ HB_EXPORT int hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG 
          iRet = 1;
       else if( lAcc2 )
          iRet = -1;
-      else if( bExact && ( ulLenFirst != ulLenSecond ) )
+      else if( bExact || ( ulLenSecond > ulLenFirst ) )
       {
-         iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
+         if( ulLenSecond != ulLenFirst )
+            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
       }
    }
 

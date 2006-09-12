@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * keep class shared data in separate array
+    + added __CLS_CNTSHRDATA( hClass ) -> nSharedDatas
+    % some minor optimizations
+
   * harbour/tests/clsscast.prg
     + added test code for shared class data allocating and casting
 
