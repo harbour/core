@@ -1250,14 +1250,17 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             else if( pMsg == s___msgEnumBase.pDynSym )
             {
                hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
+               if( hb_pcount() > 0 )
+                  hb_itemCopy( pEnum->item.asEnum.basePtr,
+                               hb_itemUnRef( hb_stackItemFromBase( 1 ) ) );
                return &s___msgEnumBase;
             }
             else if( pMsg == s___msgEnumValue.pDynSym )
             {
                pEnum = hb_itemUnRef( pEnum );
+               hb_itemCopy( hb_stackReturnItem(), pEnum );
                if( hb_pcount() > 0 )
                   hb_itemCopy( pEnum, hb_itemUnRef( hb_stackItemFromBase( 1 ) ) );
-               hb_itemCopy( hb_stackReturnItem(), hb_itemUnRef( pEnum ) );
                return &s___msgEnumValue;
             }
          }
@@ -1808,24 +1811,24 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ACCESS:
 
-            pNewMeth->pFuncSym = &s___msgGetData;
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, FALSE );
             pNewMeth->uiData = uiIndex;
             pNewMeth->uiOffset = pClass->uiDataFirst;
             hb_clsAddInitValue( pClass, hb_param( 5, HB_IT_ANY ), HB_OO_MSG_DATA,
                                 pNewMeth->uiData, pNewMeth->uiOffset, uiClass );
+            pNewMeth->pFuncSym = &s___msgGetData;
             break;
 
          case HB_OO_MSG_CLSASSIGN:
 
-            if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
-               pNewMeth->pFuncSym = &s___msgSetShrData;
-            else
-               pNewMeth->pFuncSym = &s___msgSetClsData;
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, TRUE );
             pNewMeth->uiData = uiIndex;
             if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
                 hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
+            if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
+               pNewMeth->pFuncSym = &s___msgSetShrData;
+            else
+               pNewMeth->pFuncSym = &s___msgSetClsData;
             break;
 
          case HB_OO_MSG_CLSACCESS:
@@ -2205,7 +2208,7 @@ static PHB_ITEM hb_clsInst( USHORT uiClass )
             if( pDestItm )
             {
                PHB_ITEM pInit = hb_itemClone( pInitData->pInitValue );
-               hb_itemCopy( pDestItm, pInit );
+               hb_itemMove( pDestItm, pInit );
                hb_itemRelease( pInit );
             }
             ++pInitData;

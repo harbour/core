@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/tests/clsscast.prg
+    + added test code for shared class data allocating and casting
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/hvm.c
   * harbour/source/vm/itemapi.c
     + added support for FOR EACH overloading - it's work in progress
       do not create any code which may use current solution - it may
