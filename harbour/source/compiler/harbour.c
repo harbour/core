@@ -4803,6 +4803,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
                   /* skip first non-startup procedure */
                   hb_compOptimizeFrames( *pFunPtr );
                   pFunPtr = &(*pFunPtr)->pNext;
+                  hb_comp_iFunctionCnt--;
                }
 
                while( *pFunPtr )

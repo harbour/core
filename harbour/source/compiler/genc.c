@@ -95,9 +95,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       hb_xfree( szHrb );
    }
 
-   if( ! hb_comp_bStartProc )
-      hb_comp_iFunctionCnt--;
-      
    if( hb_comp_iFunctionCnt )
    {
       fprintf( yyc, "#include \"hbvmpub.h\"\n" );
@@ -304,13 +301,16 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       pInline = hb_comp_inlines.pFirst;
       while( pInline )
       {
-         fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
-
-         if( pInline->szName )
+         if( pInline->pCode )
          {
-            fprintf( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName );
+            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
+
+            if( pInline->szName )
+            {
+               fprintf( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName );
+            }
+            fprintf( yyc, "%s", pInline->pCode );
          }
-         fprintf( yyc, "%s", pInline->pCode );
          pInline = pInline->pNext;
       }
    }

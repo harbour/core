@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    + added __enumStop() message for "FOR EACH" overloading
+      It's guarantied that it will be sent to base item if it is an
+      object with such message when FOR EACH ... NEXT will finish its job
+      even if it will be interrupted by EXIT or RETURN to allow base object
+      clear resources allocated for FOR EACH enumerator. The BREAK exception
       is not supported now. This is sth what I'd like to discuss soon when
       I'll add destructors. Please think now if we should allow to execute
       destructors and other cleanup user code when we are returning to
