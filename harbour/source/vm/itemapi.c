@@ -1433,28 +1433,23 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
       else if( HB_IS_ENUM( pItem ) ) /* FOR EACH control variable */
       {
          /* enumerator variable */
-         if( HB_IS_ARRAY( pItem->item.asEnum.basePtr ) )
+         if( pItem->item.asEnum.valuePtr )
+            return pItem->item.asEnum.valuePtr;
+         else if( HB_IS_ARRAY( pItem->item.asEnum.basePtr ) )
          {
             PHB_ITEM pResult = hb_arrayGetItemPtr( pItem->item.asEnum.basePtr,
                                                    pItem->item.asEnum.offset );
             if( pResult )
                return pResult;
          }
-         else if( pItem->item.asEnum.valuePtr )
-            return pItem->item.asEnum.valuePtr;
 
-         /* to avoid recursive RT error generation */
-         if( pItem->item.asEnum.offset >= 0 )
-         {
-            hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
-            pItem->item.asEnum.offset = -1;
-            if( !pItem->item.asEnum.valuePtr )
-               pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
+         /* put it here to avoid recursive RT error generation */
+         pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
+         hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
 
-            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                           2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
-            /* break() was executed by error block */
-         }
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+
          return pItem->item.asEnum.valuePtr;
       }
       else

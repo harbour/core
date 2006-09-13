@@ -182,7 +182,8 @@ typedef struct
    PHB_DYNS pClassSym;        /* Class symbolic name */
    PMETHOD  pMethods;         /* Class methods */
    PINITDATA pInitData;       /* Class/instance Initialization data */
-   PHB_ITEM pClassDatas;      /* Harbour Array for ClassDatas and shared */
+   PHB_ITEM pClassDatas;      /* Harbour Array for Class Datas */
+   PHB_ITEM pSharedDatas;     /* Harbour Array for Class Shared Datas */
    PHB_ITEM pInlines;         /* Array for inline codeblocks */
    PHB_SYMB pFunError;        /* error handler for not defined messages */
    ULONG    ulOpFlags;        /* Flags for overloaded operators */
@@ -197,9 +198,9 @@ typedef struct
 #define BUCKETSIZE      ( 1 << BUCKETBITS )
 #define BUCKETMASK      ( BUCKETSIZE - 1 )
 #define HASHBITS        3
-#define HASH_KEY        ( 1 << HASHBITS )
+#define HASH_KEY        ( ( 1 << HASHBITS ) - 1 )
 #define HASH_KEYMAX     ( 1 << ( 16 - BUCKETBITS ) )
-#define hb_clsMthNum(p) ( ( ULONG ) (p)->uiHashKey << BUCKETBITS )
+#define hb_clsMthNum(p) ( ( ( ULONG ) (p)->uiHashKey + 1 ) << BUCKETBITS )
 
 static HARBOUR  hb___msgGetData( void );
 static HARBOUR  hb___msgSetData( void );
@@ -227,32 +228,33 @@ static HARBOUR  hb___msgEval( void );
  * to HB_OO_OP_* constants in hbapicls.h, [druzus]
  */
 static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
-   { "__OPPLUS",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 01 */
-   { "__OPMINUS",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 02 */
-   { "__OPMULT",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 03 */
-   { "__OPDIVIDE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 04 */
-   { "__OPMOD",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 05 */
-   { "__OPPOWER",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 06 */
-   { "__OPINC",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 07 */
-   { "__OPDEC",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 08 */
-   { "__OPEQUAL",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 09 */
-   { "__OPEXACTEQUAL",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 10 */
-   { "__OPNOTEQUAL",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 11 */
-   { "__OPLESS",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 12 */
-   { "__OPLESSEQUAL",         {HB_FS_MESSAGE}, {NULL}, NULL },  /* 13 */
-   { "__OPGREATER",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 14 */
-   { "__OPGREATEREQUAL",      {HB_FS_MESSAGE}, {NULL}, NULL },  /* 15 */
-   { "__OPADDIGN",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 16 */
-   { "__OPINSTRING",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 17 */
-   { "__OPNOT",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 18 */
-   { "__OPAND",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 19 */
-   { "__OPOR",                {HB_FS_MESSAGE}, {NULL}, NULL },  /* 20 */
-   { "__OPARRAYINDEX",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 21 */
-   { "__ENUMNEXT",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 22 */
-   { "__ENUMPREV",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 23 */
-   { "__ENUMINDEX",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 24 */
-   { "__ENUMBASE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
-   { "__ENUMVALUE",           {HB_FS_MESSAGE}, {NULL}, NULL }   /* 26 */
+   { "__OPPLUS",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 00 */
+   { "__OPMINUS",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 01 */
+   { "__OPMULT",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 02 */
+   { "__OPDIVIDE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 03 */
+   { "__OPMOD",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 04 */
+   { "__OPPOWER",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 05 */
+   { "__OPINC",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 06 */
+   { "__OPDEC",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 07 */
+   { "__OPEQUAL",             {HB_FS_MESSAGE}, {NULL}, NULL },  /* 08 */
+   { "__OPEXACTEQUAL",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 09 */
+   { "__OPNOTEQUAL",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 10 */
+   { "__OPLESS",              {HB_FS_MESSAGE}, {NULL}, NULL },  /* 11 */
+   { "__OPLESSEQUAL",         {HB_FS_MESSAGE}, {NULL}, NULL },  /* 12 */
+   { "__OPGREATER",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 13 */
+   { "__OPGREATEREQUAL",      {HB_FS_MESSAGE}, {NULL}, NULL },  /* 14 */
+   { "__OPADDIGN",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 15 */
+   { "__OPINSTRING",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 16 */
+   { "__OPNOT",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 17 */
+   { "__OPAND",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 18 */
+   { "__OPOR",                {HB_FS_MESSAGE}, {NULL}, NULL },  /* 19 */
+   { "__OPARRAYINDEX",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 20 */
+   { "__ENUMINDEX",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 21 */
+   { "__ENUMBASE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 22 */
+   { "__ENUMVALUE",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 23 */
+   { "__ENUMSTART",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 24 */
+   { "__ENUMSKIP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
+   { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL }   /* 26 */
 };
 
 static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
@@ -334,7 +336,7 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsDictRealloc(%p)", pClass));
 
-   ulNewHashKey = pClass->uiHashKey;
+   ulNewHashKey = ( ULONG ) pClass->uiHashKey + 1;
    ulLimit = ulNewHashKey << BUCKETBITS;
 
    do
@@ -379,7 +381,7 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
    }
    while( ul < ulLimit );
 
-   pClass->uiHashKey = ( USHORT ) ulNewHashKey;
+   pClass->uiHashKey = ( USHORT ) ( ulNewHashKey - 1 );
    hb_xfree( pClass->pMethods );
    pClass->pMethods = pNewMethods;
 
@@ -392,7 +394,7 @@ static void hb_clsDictInit( PCLASS pClass, USHORT uiHashKey )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsDictInit(%p,%hu)", pClass, uiHashKey));
 
-   ulSize = ( ( ULONG ) uiHashKey << BUCKETBITS ) * sizeof( METHOD );
+   ulSize = ( ( ( ULONG ) uiHashKey + 1 ) << BUCKETBITS ) * sizeof( METHOD );
    pClass->uiHashKey = uiHashKey;
    pClass->pMethods = ( PMETHOD ) hb_xgrab( ulSize );
    memset( pClass->pMethods, 0, ulSize );
@@ -405,7 +407,7 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsFindMsg(%p,%p)", pClass, pMsg));
 
-   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey );
    uiBucket = BUCKETSIZE;
 
    do
@@ -431,6 +433,8 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
 
    /* CLASS DATA Not Shared ( new array, new value ) */
    pClsDst->pClassDatas  = hb_arrayClone( pClsSrc->pClassDatas );
+   /* do not copy shared data array - just simply create new one */
+   pClsDst->pSharedDatas = hb_itemArrayNew( 0 );
    pClsDst->pInlines = hb_arrayClone( pClsSrc->pInlines );
    pClsDst->uiDatas = pClsSrc->uiDatas;
    pClsDst->ulOpFlags = pClsSrc->ulOpFlags;
@@ -474,7 +478,7 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 
    do
    {
-      PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+      PMETHOD pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey );
       USHORT uiBucket = BUCKETSIZE;
 
       do
@@ -507,7 +511,7 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_clsFreeMsg(%p,%p)", pClass, pMsg));
 
-   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey - 1 );
+   pMethod = pClass->pMethods + hb_clsMsgBucket( pMsg, pClass->uiHashKey );
    uiBucket = BUCKETSIZE;
 
    do
@@ -636,10 +640,16 @@ static void hb_clsRelease( PCLASS pClass )
       hb_xfree( pClass->pInitData );
    }
 
-   hb_xfree( pClass->szName );
-   hb_xfree( pClass->pMethods );
-   hb_itemRelease( pClass->pClassDatas );
-   hb_itemRelease( pClass->pInlines );
+   if( pClass->szName )
+      hb_xfree( pClass->szName );
+   if( pClass->pMethods )
+      hb_xfree( pClass->pMethods );
+   if( pClass->pClassDatas )
+      hb_itemRelease( pClass->pClassDatas );
+   if( pClass->pSharedDatas )
+      hb_itemRelease( pClass->pSharedDatas );
+   if( pClass->pInlines )
+      hb_itemRelease( pClass->pInlines );
 }
 
 
@@ -688,16 +698,13 @@ void hb_clsIsClassRef( void )
    while( uiClass-- )
    {
       if( pClass->pInlines )
-      {
-         if( HB_IS_GCITEM( pClass->pInlines ) )
-            hb_gcItemRef( pClass->pInlines );
-      }
+         hb_gcItemRef( pClass->pInlines );
 
       if( pClass->pClassDatas )
-      {
-         if( HB_IS_GCITEM( pClass->pClassDatas ) )
-            hb_gcItemRef( pClass->pClassDatas );
-      }
+         hb_gcItemRef( pClass->pClassDatas );
+
+      if( pClass->pSharedDatas )
+         hb_gcItemRef( pClass->pSharedDatas );
 
       if( pClass->uiInitDatas )
       {
@@ -1823,23 +1830,30 @@ HB_FUNC( __CLSADDMSG )
 
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, TRUE );
             pNewMeth->uiData = uiIndex;
-            if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
-                hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
             if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
+            {
+               if( hb_arrayLen( pClass->pSharedDatas ) < ( ULONG ) pNewMeth->uiData )
+                   hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
                pNewMeth->pFuncSym = &s___msgSetShrData;
+            }
             else
+            {
+               if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
+                   hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
                pNewMeth->pFuncSym = &s___msgSetClsData;
+            }
             break;
 
          case HB_OO_MSG_CLSACCESS:
 
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, FALSE );
             pNewMeth->uiData = uiIndex;
-            if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
-                hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
             if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
             {
                PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
+
+               if( hb_arrayLen( pClass->pSharedDatas ) < ( ULONG ) pNewMeth->uiData )
+                   hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
 
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
@@ -1849,13 +1863,15 @@ HB_FUNC( __CLSADDMSG )
                    * to keep the init value. [druzus]
                    */
                   pInit = hb_itemClone( pInit );
-                  hb_arraySet( pClass->pClassDatas, pNewMeth->uiData, pInit );
+                  hb_arraySet( pClass->pSharedDatas, pNewMeth->uiData, pInit );
                   hb_itemRelease( pInit );
                }
                pNewMeth->pFuncSym = &s___msgGetShrData;
             }
             else
             {
+               if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
+                   hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
                pNewMeth->uiOffset = hb_clsAddInitValue( pClass,
                                  hb_param( 5, HB_IT_ANY ), HB_OO_MSG_CLASSDATA,
                                  pNewMeth->uiData, 0, uiClass );
@@ -2102,6 +2118,7 @@ HB_FUNC( __CLSNEW )
    {
       hb_clsDictInit( pNewCls, HASH_KEY );
       pNewCls->pClassDatas  = hb_itemArrayNew( 0 );
+      pNewCls->pSharedDatas = hb_itemArrayNew( 0 );
       pNewCls->pInlines     = hb_itemArrayNew( 0 );
    }
 
@@ -2437,6 +2454,20 @@ HB_FUNC( __CLS_CNTCLSDATA )
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
                   hb_arrayLen( s_pClasses[ uiClass - 1 ].pClassDatas ) : 0 );
+}
+
+
+/*
+ * <nSeq> = __cls_CntShrData( <hClass> )
+ *
+ * Return number of class datas
+ */
+HB_FUNC( __CLS_CNTSHRDATA )
+{
+   USHORT uiClass = ( USHORT ) hb_parni( 1 );
+
+   hb_retni( uiClass && uiClass <= s_uiClasses ?
+                  hb_arrayLen( s_pClasses[ uiClass - 1 ].pSharedDatas ) : 0 );
 }
 
 
@@ -2960,7 +2991,7 @@ static HARBOUR hb___msgGetShrData( void )
 
    if( uiSprCls && uiSprCls <= s_uiClasses )
    {
-      hb_arrayGet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
+      hb_arrayGet( s_pClasses[ uiSprCls - 1 ].pSharedDatas,
                    pMethod->uiData, hb_stackReturnItem() );
    }
 }
@@ -2982,7 +3013,7 @@ static HARBOUR hb___msgSetShrData( void )
 
    if( uiSprCls && uiSprCls <= s_uiClasses )
    {
-      hb_arraySet( s_pClasses[ uiSprCls - 1 ].pClassDatas,
+      hb_arraySet( s_pClasses[ uiSprCls - 1 ].pSharedDatas,
                    pMethod->uiData, pReturn );
    }
 

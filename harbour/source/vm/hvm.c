@@ -3033,25 +3033,17 @@ static HB_GARBAGE_FUNC( hb_enumHolderRelease )
 static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 {
    HB_ITEM_PTR pItem;
-   ULONG ulMax;
+   BOOL fStart = TRUE;
    int i;
 
    pItem = hb_itemUnRef( hb_stackItemFromTop( -( ( int ) nVars << 1 ) ) );
-   if( HB_IS_ARRAY( pItem ) )
-   {
-      ulMax = pItem->item.asArray.value->ulLen;
-   }
-   else if( HB_IS_STRING( pItem ) )
-   {
-      ulMax = pItem->item.asString.length;
-   }
-   else
+   if( !HB_IS_ARRAY( pItem ) && ! HB_IS_STRING( pItem ) )
    {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
       return;
    }
-   
-   for( i = ( int ) nVars << 1; i > 0; i -= 2 )
+
+   for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {
       HB_ITEM_PTR pValue, pOldValue, pEnum, pEnumRef;
       PHB_ENUMHOLDER pHolder;
@@ -3093,25 +3085,45 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
       pEnum->item.asEnum.basePtr  = pItem;
       pEnum->item.asEnum.valuePtr = NULL;
 
+      if( HB_IS_OBJECT( pItem ) && hb_objHasOperator( pItem, HB_OO_OP_ENUMSTART ) )
+      {
+         pEnum->item.asEnum.offset = 0;
+         pEnum->item.asEnum.valuePtr = hb_itemNew( NULL );
+         hb_vmPushNil();
+         hb_vmPushLogical( nDescend == 0 );
+         hb_objOperatorCall( HB_OO_OP_ENUMSTART, hb_stackItemFromTop( -2 ),
+                             pItem, pEnumRef, hb_stackItemFromTop( -1 ) );
+         hb_stackPop();
+         if( ! hb_vmPopLogical() )
+         {
+            fStart = FALSE;
+            break;
+         }
+         else if( hb_objHasOperator( pItem, HB_OO_OP_ENUMSKIP ) )
+            continue;
+         hb_itemRelease( pEnum->item.asEnum.valuePtr );
+         pEnum->item.asEnum.valuePtr = NULL;
+      }
+
       if( HB_IS_ARRAY( pItem ) )
       {
          /* the index into an array */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
                                              pItem->item.asArray.value->ulLen;
-         if( ulMax > pItem->item.asArray.value->ulLen )
-            ulMax = pItem->item.asArray.value->ulLen;
+         if( pItem->item.asArray.value->ulLen == 0 )
+            fStart = FALSE;
       }
       else if( HB_IS_STRING( pItem ) )
       {
          /* storage item for single characters */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
                                              pItem->item.asString.length;
-         if( pItem->item.asString.length ) /* TODO: RT error if not? */
+         if( pItem->item.asString.length )
             pEnum->item.asEnum.valuePtr =
                   hb_itemPutCL( NULL, pItem->item.asString.value +
                                       pEnum->item.asEnum.offset - 1, 1 );
-         if( ulMax > pItem->item.asString.length )
-            ulMax = pItem->item.asString.length;
+         else
+            fStart = FALSE;
       }
       else
       {
@@ -3122,7 +3134,7 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 
    hb_vmPushInteger( nVars );    /* number of iterators */
    /* empty array/string - do not start enumerations loop */
-   hb_vmPushLogical( ulMax != 0 );
+   hb_vmPushLogical( fStart );
 }
 
 
@@ -3134,16 +3146,30 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
  */
 static void hb_vmEnumNext( void )
 {
-   HB_ITEM_PTR pEnum;
+   HB_ITEM_PTR pEnumRef, pEnum;
    int i;
 
    for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
-      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
+      pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
+      pEnum = hb_itemUnRefOnce( pEnumRef );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
-         if( ( ULONG ) ++pEnum->item.asEnum.offset >
-             pEnum->item.asEnum.basePtr->item.asArray.value->ulLen )
+         if( HB_IS_OBJECT( pEnum->item.asEnum.basePtr ) &&
+             hb_objHasOperator( pEnum->item.asEnum.basePtr, HB_OO_OP_ENUMSKIP ) )
+         {
+            ++pEnum->item.asEnum.offset;
+            hb_vmPushNil();
+            hb_vmPushLogical( FALSE );
+            hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
+                                pEnum->item.asEnum.basePtr, pEnumRef,
+                                hb_stackItemFromTop( -1 ) );
+            hb_stackPop();
+            if( ! hb_vmPopLogical() )
+               break;
+         }
+         else if( ( ULONG ) ++pEnum->item.asEnum.offset >
+                   pEnum->item.asEnum.basePtr->item.asArray.value->ulLen )
             break;
       }
       else if( HB_IS_STRING( pEnum->item.asEnum.basePtr ) )
@@ -3172,15 +3198,29 @@ static void hb_vmEnumNext( void )
  */
 static void hb_vmEnumPrev( void )
 {
-   HB_ITEM_PTR pEnum;
+   HB_ITEM_PTR pEnumRef, pEnum;
    int i;
    
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
-      pEnum = hb_itemUnRefOnce( hb_stackItemFromTop( -( i << 1 ) ) );
+      pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
+      pEnum = hb_itemUnRefOnce( pEnumRef );
       if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
       {
-         if( --pEnum->item.asEnum.offset == 0 )
+         if( HB_IS_OBJECT( pEnum->item.asEnum.basePtr ) &&
+             hb_objHasOperator( pEnum->item.asEnum.basePtr, HB_OO_OP_ENUMSKIP ) )
+         {
+            --pEnum->item.asEnum.offset;
+            hb_vmPushNil();
+            hb_vmPushLogical( TRUE );
+            hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
+                                pEnum->item.asEnum.basePtr, pEnumRef,
+                                hb_stackItemFromTop( -1 ) );
+            hb_stackPop();
+            if( ! hb_vmPopLogical() )
+               break;
+         }
+         else if( --pEnum->item.asEnum.offset == 0 )
             break;
       }
       else if( HB_IS_STRING( pEnum->item.asEnum.basePtr ) )

@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      is not supported now. This is sth what I'd like to discuss soon when
+      I'll add destructors. Please think now if we should allow to execute
+      destructors and other cleanup user code when we are returning to
+      nearest expection trap (BEGIN SEQUENCE / [ RECOVER /] END) cleaning
+      the HVM stack.
+
+2006-09-13 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/harbour.c
+    ! fixed number of compiled functions shown in compilation status
+    ! added workaround for GPF in empty #pragma begindump/enddump
+      statement
+
+2006-09-13 03:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
     * keep class shared data in separate array
     + added __CLS_CNTSHRDATA( hClass ) -> nSharedDatas
     % some minor optimizations

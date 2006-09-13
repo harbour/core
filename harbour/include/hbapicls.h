@@ -80,13 +80,14 @@ HB_EXTERN_BEGIN
 #define HB_OO_OP_AND          18
 #define HB_OO_OP_OR           19
 #define HB_OO_OP_ARRAYINDEX   20
-#define HB_OO_OP_ENUMNEXT     21
-#define HB_OO_OP_ENUMPREV     22
-#define HB_OO_OP_ENUMINDEX    23
-#define HB_OO_OP_ENUMBASE     24
-#define HB_OO_OP_ENUMVALUE    25
+#define HB_OO_OP_ENUMINDEX    21
+#define HB_OO_OP_ENUMBASE     22
+#define HB_OO_OP_ENUMVALUE    23
+#define HB_OO_OP_ENUMSTART    24
+#define HB_OO_OP_ENUMSKIP     25
+#define HB_OO_OP_ENUMSTOP     26
 
-#define HB_OO_MAX_OPERATOR    25
+#define HB_OO_MAX_OPERATOR    26
 
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
