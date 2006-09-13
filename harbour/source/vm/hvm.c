@@ -3024,6 +3024,29 @@ static HB_GARBAGE_FUNC( hb_enumHolderRelease )
    hb_itemRelease( pHolder->pEnumRef );
 }
 
+/*
+ * Relase enumerator items - called from hb_itemClear()
+ */
+void hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEnumRelease(%p,%p)", pBase, pValue));
+
+   if( pValue )
+      hb_itemRelease( pValue );
+
+   if( HB_IS_OBJECT( pBase ) && hb_vmRequestQuery() == 0 &&
+       hb_objHasOperator( pBase, HB_OO_OP_ENUMSTOP ) )
+   {
+      hb_stackPushReturn();
+      hb_vmPushNil();
+      hb_objOperatorCall( HB_OO_OP_ENUMSTOP, hb_stackItemFromTop( -1 ),
+                          pBase, NULL, NULL );
+      hb_stackPop();
+      hb_stackPopReturn();
+   }
+
+   hb_itemRelease( pBase );
+}
 
 /* At this moment the eval stack should store:
  * -2 -> <array for traverse>
@@ -3094,7 +3117,7 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
          hb_objOperatorCall( HB_OO_OP_ENUMSTART, hb_stackItemFromTop( -2 ),
                              pItem, pEnumRef, hb_stackItemFromTop( -1 ) );
          hb_stackPop();
-         if( ! hb_vmPopLogical() )
+         if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
          {
             fStart = FALSE;
             break;
@@ -3165,7 +3188,7 @@ static void hb_vmEnumNext( void )
                                 pEnum->item.asEnum.basePtr, pEnumRef,
                                 hb_stackItemFromTop( -1 ) );
             hb_stackPop();
-            if( ! hb_vmPopLogical() )
+            if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
                break;
          }
          else if( ( ULONG ) ++pEnum->item.asEnum.offset >
@@ -3217,7 +3240,7 @@ static void hb_vmEnumPrev( void )
                                 pEnum->item.asEnum.basePtr, pEnumRef,
                                 hb_stackItemFromTop( -1 ) );
             hb_stackPop();
-            if( ! hb_vmPopLogical() )
+            if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
                break;
          }
          else if( --pEnum->item.asEnum.offset == 0 )

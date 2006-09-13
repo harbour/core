@@ -95,6 +95,7 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
@@ -1281,17 +1282,8 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    }
    else if( type & HB_IT_ENUM )     /* FOR EACH control variable */
    {
-      /*
-       * pItem->item.asEnum.valuePtr is intentionally assigned to pValue to
-       * avoid possible problems when pItem is stack item just freed which
-       * can be overwritten if hb_itemRelease( pItem->item.asEnum.basePtr )
-       * activate .prg destructor [druzus]
-       */
-      PHB_ITEM pValue = pItem->item.asEnum.valuePtr;
-
-      hb_itemRelease( pItem->item.asEnum.basePtr );
-      if( pValue )
-         hb_itemRelease( pValue );
+      hb_vmEnumRelease( pItem->item.asEnum.basePtr,
+                        pItem->item.asEnum.valuePtr );
    }
 }
 

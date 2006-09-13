@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * minor cleanup
+
+  * harbour/source/rtl/cdpapi.c
+  * harbour/include/hbextern.ch
+    + added HB_CDPLIST() - it returns array with all registered CODEPAGEs
+
+  * harbour/source/rtl/set.c
+    ! fixed typo in _SET_DEFEXTENSIONS
+
+  * harbour/tests/testrpt.prg
+    ! fixed syntax
+    ! use lower name in report name to work properly on case sensitive
+      file systems
+
+2006-09-13 20:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c
   * harbour/source/vm/itemapi.c

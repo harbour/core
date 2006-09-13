@@ -94,6 +94,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
    extern void        hb_vmExitSymbolGroup( void * hDynLib );
    extern char *      hb_vmFindModuleSymbolName( PHB_SYMB pSym );
 
+   extern void        hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
 #endif
 
 extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
