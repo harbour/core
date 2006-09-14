@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    + added support for object destructors
+
+  * harbour/source/vm/garbage.c
+    + added support for object destructors
+    + added logic to detect buggu .prg code which uses destructors
+      see doc/destruct.txt for more info.
+      It's also possible that this code will exploit some bugs
+      in other code which uses GC allocated memory blocks.
+
+2006-09-14 15:23 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/tests/testlbl.prg
+     ! use lower name in report name to work properly on case sensitive
+       file systems
+
+2006-09-14 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/garbage.c
     * minor cleanup
 
   * harbour/source/rtl/cdpapi.c

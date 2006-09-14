@@ -874,4 +874,21 @@ HB_FUNC( HB_TRANSLATE )
       hb_retc( "" );
 }
 
+HB_FUNC( HB_CDPLIST )
+{
+   int iCount, iPos;
+
+   for( iCount = 0; iCount < HB_CDP_MAX_; ++iCount )
+   {
+      if( !s_cdpList[iCount] )
+         break;
+   }
+
+   hb_reta( iCount );
+   for( iPos = 0; iPos < iCount; ++iPos )
+   {
+      hb_storc( s_cdpList[ iPos ]->id, -1, iPos + 1 );
+   }
+}
+
 #endif /* HB_CDP_SUPPORT_OFF */

@@ -6,7 +6,7 @@ FUNCTION() MAIN
 
     USE test New
 
-    Report FORM TEST
+    Report FORM test
 
     USE
 

@@ -878,7 +878,7 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_DEFEXTENSIONS:
-         hb_retni( hb_set.HB_SET_DEFEXTENSIONS );
+         hb_retl( hb_set.HB_SET_DEFEXTENSIONS );
          if( args > 1 ) hb_set.HB_SET_DEFEXTENSIONS = set_logical( pArg2, hb_set.HB_SET_DEFEXTENSIONS );
          break;
       case HB_SET_INVALID_:

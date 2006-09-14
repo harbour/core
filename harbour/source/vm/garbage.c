@@ -152,9 +152,11 @@ static void hb_gcUnlink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
    pAlloc->pPrev->pNext = pAlloc->pNext;
    pAlloc->pNext->pPrev = pAlloc->pPrev;
    if( *pList == pAlloc )
+   {
       *pList = pAlloc->pNext;
-   if( ( pAlloc->pNext == pAlloc->pPrev ) && ( *pList == pAlloc ) )
-      *pList = NULL;    /* this was the last block */
+      if( *pList == pAlloc )
+         *pList = NULL;    /* this was the last block */
+   }
 }
 
 /* allocates a memory block */
@@ -593,7 +595,6 @@ void hb_gcCollectAll( void )
       /* do we have any deleted blocks? */
       if( s_pDeletedBlock )
       {
-
          /* call a cleanup function */
          pAlloc = s_pDeletedBlock;
          do
