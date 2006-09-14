@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/include/hbclass.ch
+  * harbour/include/hboo.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
     + added support for object destructors
 
   * harbour/source/vm/garbage.c
