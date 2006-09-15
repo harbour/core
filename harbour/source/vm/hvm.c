@@ -5943,11 +5943,6 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    }
 }
 
-USHORT hb_vmRequestQuery( void )
-{
-   return s_uiActionRequest;
-}
-
 void hb_vmRequestCancel( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
@@ -5977,6 +5972,39 @@ void hb_vmRequestCancel( void )
       s_fDoExitProc = FALSE;
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
+}
+
+USHORT hb_vmRequestQuery( void )
+{
+   return s_uiActionRequest;
+}
+
+BOOL hb_vmRequestReenter( USHORT * puiAction )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenter(%p)", puiAction));
+
+   * puiAction = s_uiActionRequest;
+   s_uiActionRequest = 0;
+
+   hb_stackPushReturn();
+
+   return TRUE;
+}
+
+void hb_vmRequestRestore( USHORT uiAction )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestRestore(%hu)", uiAction));
+
+   /* Do not overwrite QUIT request */
+   if( !( s_uiActionRequest & HB_QUIT_REQUESTED ) )
+   {
+      if( uiAction & HB_QUIT_REQUESTED )
+         s_uiActionRequest = HB_QUIT_REQUESTED;
+      else if( !( s_uiActionRequest & HB_BREAK_REQUESTED ) )
+         s_uiActionRequest = uiAction;
+   }
+
+   hb_stackPopReturn();
 }
 
 #undef hb_vmFlagEnabled

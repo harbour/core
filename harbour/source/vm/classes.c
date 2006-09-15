@@ -279,6 +279,9 @@ static HB_SYMB s___msgClassSel   = { "CLASSSEL",        {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgEval       = { "EVAL",            {HB_FS_MESSAGE}, {hb___msgEval},       NULL };
 static HB_SYMB s___msgExec       = { "EXEC",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+
+static HB_SYMB s___msgNew        = { "NAME",            {HB_FS_MESSAGE}, {NULL},               NULL };
+
 /*
 static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {hb___msgClsParent},  NULL };
 static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {hb___msgClass},      NULL };
@@ -611,6 +614,7 @@ void hb_clsInit( void )
    s___msgEval.pDynSym        = hb_dynsymGetCase( s___msgEval.szName );
    s___msgExec.pDynSym        = hb_dynsymGetCase( s___msgExec.szName );
    s___msgName.pDynSym        = hb_dynsymGetCase( s___msgName.szName );
+   s___msgNew.pDynSym         = hb_dynsymGetCase( s___msgNew.szName );
 /*
    s___msgClsParent.pDynSym   = hb_dynsymGetCase( s___msgClsParent.szName );
    s___msgClass.pDynSym       = hb_dynsymGetCase( s___msgClass.szName );
@@ -1386,11 +1390,15 @@ void hb_objDestructorCall( PHB_ITEM pObject )
 
       if( pClass->pDestructor )
       {
-         hb_stackPushReturn();
-         hb_vmPushSymbol( &s___msgDestructor );
-         hb_vmPush( pObject );
-         hb_vmSend( 0 );
-         hb_stackPopReturn();
+         USHORT uiAction;
+
+         if( hb_vmRequestReenter( &uiAction ) )
+         {
+            hb_vmPushSymbol( &s___msgDestructor );
+            hb_vmPush( pObject );
+            hb_vmSend( 0 );
+            hb_vmRequestRestore( uiAction );
+         }
       }
    }
 }
@@ -2451,37 +2459,74 @@ HB_FUNC( __OBJCLONE )
 HB_FUNC( __CLSINSTSUPER )
 {
    char * szString = hb_parc( 1 );
-   USHORT uiClassH = 0;
+   USHORT uiClassH = 0, uiClass;
 
    if( szString && *szString )
    {
       PHB_DYNS pDynSym = hb_dynsymFindName( szString );
 
-      if( pDynSym )                                   /* Find function            */
+      if( pDynSym )
       {
-         /* TODO: optimize this function */
-
-         hb_vmPushSymbol( pDynSym->pSymbol );         /* Push function name       */
-         hb_vmPushNil();
-         hb_vmFunction( 0 );                          /* Execute super class      */
-
-         if( hb_vmRequestQuery() == 0 )
+         for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
          {
-            if( HB_IS_OBJECT( hb_stackReturnItem() ) )
+            if( s_pClasses[ uiClass ].pClassSym == pDynSym )
             {
-               USHORT uiClass;
-               for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
-               {                                /* Locate the entry */
-                  if( s_pClasses[ uiClass ].pClassSym == pDynSym )
-                  {
-                     uiClassH = uiClass + 1;    /* Entry + 1 = hb___msgClsH */
-                     break;
-                  }
-               }
+               uiClassH = uiClass + 1;
+               break;
             }
-            else
+         }
+
+         if( uiClassH == 0 )
+         {
+            hb_vmPushSymbol( pDynSym->pSymbol );         /* Push function name       */
+            hb_vmPushNil();
+            hb_vmFunction( 0 );                          /* Execute super class      */
+
+            if( hb_vmRequestQuery() == 0 )
             {
-               hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
+               PHB_ITEM pObject = hb_stackReturnItem();
+
+               if( HB_IS_OBJECT( pObject ) )
+               {
+                  uiClass = pObject->item.asArray.value->uiClass;
+
+                  if( s_pClasses[ uiClass - 1 ].pClassSym == pDynSym )
+                     uiClassH = uiClass;
+                  else
+                  {
+                     for( uiClass = 0; uiClass < s_uiClasses; uiClass++ )
+                     { 
+                        if( s_pClasses[ uiClass ].pClassSym == pDynSym )
+                        {
+                           uiClassH = uiClass + 1;
+                           break;
+                        }
+                     }
+                     /* still not found, try to send NEW() message */
+                     if( uiClassH == 0 )
+                     {
+                        hb_vmPushSymbol( &s___msgNew );
+                        hb_vmPush( pObject );
+                        hb_vmSend( 0 );
+
+                        pObject = hb_stackReturnItem();
+                        if( HB_IS_OBJECT( pObject ) )
+                        {
+                           uiClass = pObject->item.asArray.value->uiClass;
+                           if( s_pClasses[ uiClass - 1 ].pClassSym == pDynSym )
+                              uiClassH = uiClass;
+                        }
+                     }
+                  }
+
+                  /* This disables destructor execution for this object */
+                  if( uiClassH && HB_IS_OBJECT( pObject ) )
+                     pObject->item.asArray.value->uiClass = 0;
+               }
+               else
+               {
+                  hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
+               }
             }
          }
       }

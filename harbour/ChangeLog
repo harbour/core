@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      compiled with -DHB_REAL_BLOCK_SCOPE. I set the second (real code
+      block scopes) as default. If you think we should be strict Class(y)
+      compatible here then please inform me and I'll change default setting.
+
+  + tests/clsscope.prg
+    + added demonstration/test code for class method scoping
+
+2006-09-15 21:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
+    ! fixed multiple use of supercasted object I broke in last commit
     * removed some unused code and moved some scoping checking to
       class creation code
 
