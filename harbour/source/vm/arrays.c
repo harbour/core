@@ -108,7 +108,11 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 
    if( pBaseArray->uiClass )
    {
-      if( hb_clsHasDestructor( pBaseArray->uiClass ) )
+      /*
+       * do not execute destructor for supercasted objects [druzus]
+       */
+      if( pBaseArray->uiPrevCls == 0 &&
+          hb_clsHasDestructor( pBaseArray->uiClass ) )
       {
          PHB_ITEM pItem = hb_stackAllocItem();
 
@@ -131,6 +135,15 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
          hb_gcRefCheck( pBaseArray );
          return;
       }
+
+      /*
+       * This is only some additional protection for buggy code
+       * which can store reference to this object in other class
+       * destructor when executed from GC and it will only cause
+       * RT error when user will try to send any message to this
+       * object [druzus]
+       */
+      pBaseArray->uiClass = 0;
    }
 
    hb_arrayReleaseItems( pBaseArray );

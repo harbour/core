@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      for this method. It's a workaround which allow to break standard
+      access rights though seems reasonable when it's not possible to
+      store information where the block is created. I've added to block
+      item structure information about class and method where code block
+      was created so we can use the exact method priviladges.
+      Now Harbour classy code can work exactly like Class(y) when compiled
+      with -DHB_CLASSY_BLOCK_SCOPE and with real code block scoping when
       compiled with -DHB_REAL_BLOCK_SCOPE. I set the second (real code
       block scopes) as default. If you think we should be strict Class(y)
       compatible here then please inform me and I'll change default setting.

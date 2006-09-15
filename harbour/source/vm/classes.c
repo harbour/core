@@ -734,175 +734,6 @@ void hb_clsIsClassRef( void )
 #endif
 }
 
-#if 0
-/* Currently (2004.04.02) this function is not used
- it is commented out to suppress warning message in gcc
-*/
-static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
-{
-   long lOffset = hb_stackBaseOffset();
-   PHB_ITEM pCaller;
-   LONG iLevel = 1;
-   BOOL bRetVal = FALSE ;
-   PHB_DYNS pMessage = pMethod->pMessage;
-   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
-   char * szCallerNameMsg;
-   char * szCallerNameObject;
-   char * szSelfNameMsg;
-   char * szSelfNameObject;    /* debug */
-   char * szSelfNameRealClass;
-
-   if( ( ( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
-       ( ( uiScope & HB_OO_CLSTP_HIDDEN    ) ) ||
-       ( ( uiScope & HB_OO_CLSTP_READONLY  ) ) )
-   {
-      szSelfNameObject    = hb_objGetClsName( pObject );  /* debug */
-      szSelfNameMsg       = pMessage->pSymbol->szName  ;
-      szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
-
-      while( iLevel-- > 0 && lOffset > 1 )
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
-
-      szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
-
-      /* Is it an inline ? if so back one more ... */
-      if( strcmp( szCallerNameMsg, "__EVAL" ) == 0 && lOffset > 1 )
-      {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
-         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
-      }
-
-      /* Is it an eval ? if so back another one more ... */
-      if( ( strcmp( szCallerNameMsg, "EVAL" ) == 0 ) && lOffset > 1 )
-      {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
-         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
-      }
-
-      /* Is it an Aeval ? if so back another one more ... */
-      if ( ( strcmp( szCallerNameMsg, "AEVAL" ) == 0 ) && lOffset > 1 )
-      {
-         lOffset = hb_stackItem( lOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
-         szCallerNameMsg = hb_stackItem( lOffset - 1 )->item.asSymbol.value->szName;
-      }
-
-      if( iLevel == -1 )
-      {
-         /* Now get the callers ...  */
-         pCaller = hb_stackItem( lOffset );
-         szCallerNameObject = hb_objGetRealClsName( pCaller, szCallerNameMsg );
-
-         strcpy( szName, szCallerNameObject );
-         strcat( szName, ":" );
-         strcat( szName, szCallerNameMsg );
-         strcat( szName, ">" );
-         strcat( szName, szSelfNameRealClass );
-         strcat( szName, ">" );
-         strcat( szName, szSelfNameObject );
-         strcat( szName, ":" );
-         strcat( szName, szSelfNameMsg );
-
-         /*strcpy( szName, szSelfNameRealClass ); */
-         /*strcat( szName, ":" );                 */
-         /*strcat( szName, szSelfNameMsg );       */
-
-         if( uiScope & HB_OO_CLSTP_PROTECTED )
-         {
-            if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
-            {
-               /* Trying to access a protected Msg from outside the object ... */
-               if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-               {
-                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 1)", szName, 0 );
-                  return;
-               }
-            }
-            else
-            {
-               /* If called from a function ... protected violation !  */
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected 0)", szName, 0 );
-               return;
-            }
-         }
-
-         if( uiScope & HB_OO_CLSTP_HIDDEN )
-         {
-            if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
-            {
-               /* Trying to access a protected Msg from outside the object ... */
-               if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-               {
-                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 1)", szName, 0 );
-                  return;
-               }
-               else
-               {
-                  /* Now as it is an hidden Msg, it can only be called from */
-                  /* a method of its original class */
-                  if( !( hb_objGetRealClsName( pCaller, szCallerNameMsg ) == szSelfNameRealClass ) )
-                  {
-                     hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 2)", szName, 0 );
-                     return;
-                  }
-               }
-            }
-            else
-            {
-               /* If called from a function ... Hidden violation ! */
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (Hidden 0)", szName, 0 );
-            }
-         }
-
-         if( uiScope & HB_OO_CLSTP_READONLY )
-         {
-            if( ( pMethod->pFuncSym == &s___msgSetData    ) ||
-                ( pMethod->pFuncSym == &s___msgSetClsData ) ||
-                ( pMethod->pFuncSym == &s___msgSetShrData ) )
-               bRetVal = TRUE;
-
-            if( bRetVal )
-            {
-               if( pCaller->type == HB_IT_ARRAY )  /* is the sender an object  */
-               {
-                  /* Trying to assign a RO Msg from outside the object ... */
-                  if( strcmp( szCallerNameObject, szSelfNameRealClass ) != 0 )
-                  {
-                     hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
-                     return;
-                  }
-                  else
-                  {
-#ifdef HB_CLS_ENFORCERO  /* Not enabled by default */
-                         /* can only be called from a Constructor */
-                         /* ok Now is it a CTOR ? */
-                     PMETHOD pCallerMethod ;
-                     PHB_DYNS pCallerMsg = hb_dynsymGet( szCallerNameMsg );
-
-                     pCallerMethod = hb_objGetpMethod( pCaller, pCallerMsg->pSymbol );
-
-                     if( pCallerMethod )
-                     {
-                        if( ! ( pCallerMethod->uiScope & HB_OO_CLSTP_CTOR ) )
-                        {
-                           hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly)", szName, 0 );
-                           return;
-                        }
-                     }
-#endif
-                  }
-               }
-               else
-               {
-                  /* If called from a function ... ReadOnly violation ! */
-                  hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (ReadOnly 0)", szName, 0 );
-               }
-            }
-         }
-      }
-   }
-}
-#endif
-
 HB_EXPORT char * hb_clsName( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
@@ -922,7 +753,7 @@ static USHORT hb_clsParentInstanceOffset( PCLASS pClass, PHB_DYNS pParentSym )
 {
    PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
 
-   return ( pMethod && pMethod->pFuncSym == &s___msgSuper ) ? pMethod->uiData : 0;
+   return ( pMethod && pMethod->pFuncSym == &s___msgSuper ) ? pMethod->uiOffset : 0;
 }
 
 HB_EXPORT BOOL hb_clsIsParent( USHORT uiClass, char * szParentName )
@@ -1082,7 +913,7 @@ static LONG hb_clsSenderOffset( void )
    return -1;
 }
 
-#if 0
+#if defined( HB_CASTED_PROTECT_SCOPE )
 static USHORT hb_clsSenderClasss( void )
 {
    LONG lOffset = hb_clsSenderOffset();
@@ -1133,51 +964,33 @@ static PHB_SYMB hb_clsValidScope( PHB_ITEM pObject, PMETHOD pMethod,
 
       if( uiSenderClass )
       {
-         if( pMethod->uiScope & HB_OO_CLSTP_OVERLOADED &&
-             uiSenderClass != pMethod->uiSprClass )
+         if( uiSenderClass == pMethod->uiSprClass )
+            return pMethod->pFuncSym;
+
+         if( pMethod->uiScope & HB_OO_CLSTP_OVERLOADED )
          {
             PCLASS pClass = s_pClasses + ( uiSenderClass - 1 );
             PMETHOD pHiddenMthd = hb_clsFindMsg( pClass, pMethod->pMessage );
-            if( pHiddenMthd )
+
+            if( pHiddenMthd && pHiddenMthd->uiSprClass == uiSenderClass &&
+                pHiddenMthd->uiScope & HB_OO_CLSTP_NONVIRTUAL )
             {
-               pMethod = pHiddenMthd;
                pStack->uiClass = uiSenderClass;
-               pStack->uiMethod = pMethod - pClass->pMethods;
+               pStack->uiMethod = pHiddenMthd - pClass->pMethods;
+               return pHiddenMthd->pFuncSym;
             }
          }
 
          if( pMethod->uiScope & HB_OO_CLSTP_HIDDEN )
-         {
-            /* Class(y) does not allow to write to HIDDEN+READONLY
-               instance variables, [druzus] */
-            if( ( pMethod->uiScope & HB_OO_CLSTP_READONLY ) == 0 )
-            {
-               if( uiSenderClass == pMethod->uiSprClass )
-                  return pMethod->pFuncSym;
-            }
-         }
-         else if( pMethod->uiScope & HB_OO_CLSTP_PROTECTED )
-         {
-#ifdef HB_STATIC_PROTECT_SCOPE
-            if( uiSenderClass == pMethod->uiSprClass ||
-                hb_clsHasParent( s_pClasses + ( uiSenderClass - 1 ),
-                     ( s_pClasses + ( pMethod->uiSprClass - 1 ) )->pClassSym ) )
-#elif HB_CASTED_PROTECT_SCOPE
-            if( uiSenderClass == pMethod->uiSprClass ||
-                hb_clsHasParent( s_pClasses + ( hb_clsSenderClasss() - 1 ),
-                     ( s_pClasses + ( pMethod->uiSprClass - 1 ) )->pClassSym ) )
-#else
-            if( uiSenderClass == pMethod->uiSprClass ||
-                hb_clsHasParent( s_pClasses + ( pObject->item.asArray.value->uiClass - 1 ),
-                     ( s_pClasses + ( pMethod->uiSprClass - 1 ) )->pClassSym ) )
-#endif
-               return pMethod->pFuncSym;
-         }
-         else
-            return pMethod->pFuncSym;
-      }
+            return &s___msgScopeErr;
 
-      return &s___msgScopeErr;
+         if( pMethod->uiScope & HB_OO_CLSTP_PROTECTED &&
+             ! hb_clsHasParent( s_pClasses + ( pObject->item.asArray.value->uiClass - 1 ),
+                                ( s_pClasses + ( uiSenderClass - 1 ) )->pClassSym ) )
+            return &s___msgScopeErr;
+      }
+      else if( pMethod->uiScope & ( HB_OO_CLSTP_HIDDEN | HB_OO_CLSTP_PROTECTED ) )
+         return &s___msgScopeErr;
    }
 
    return pMethod->pFuncSym;
@@ -1208,9 +1021,6 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          if( pObject->item.asArray.value->uiPrevCls )
          {
             PHB_ITEM pRealObj;
-
-            /* clear the class handle to avoid destructor call */
-            pObject->item.asArray.value->uiClass = 0;
 
             pRealObj = hb_itemNew( pObject->item.asArray.value->pItems );
             /* Now I should exchnage it with the current stacked value */
@@ -1626,15 +1436,17 @@ static void hb_clsSetInlineClass( PCLASS pClass, USHORT uiIndex,
 
 static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
 {
-   if( uiScope & HB_OO_CLSTP_READONLY )
+   if( !fAssign )
+      uiScope &= ~HB_OO_CLSTP_READONLY;
+
+   else if( uiScope & HB_OO_CLSTP_READONLY &&
+           !( uiScope & HB_OO_CLSTP_HIDDEN ) )
    {
       /* Class(y) does not allow to write to HIDDEN+READONLY
          instance variables, [druzus] */
-      if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == 0 || !fAssign )
-         uiScope &= ~HB_OO_CLSTP_READONLY;
 
-      if( fAssign )
-         uiScope |= uiScope & HB_OO_CLSTP_PROTECTED ?
+      uiScope &= ~HB_OO_CLSTP_READONLY;
+      uiScope |= uiScope & HB_OO_CLSTP_PROTECTED ?
                     HB_OO_CLSTP_HIDDEN : HB_OO_CLSTP_PROTECTED;
    }
    return uiScope;
@@ -1864,10 +1676,18 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ASSIGN:
 
-            pNewMeth->pFuncSym = &s___msgSetData;
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, TRUE );
-            pNewMeth->uiData = uiIndex;
-            pNewMeth->uiOffset = pClass->uiDataFirst;
+            /* Class(y) does not allow to write to HIDDEN+READONLY
+               instance variables, [druzus] */
+            if( pNewMeth->uiScope & HB_OO_CLSTP_READONLY &&
+                pNewMeth->uiScope & HB_OO_CLSTP_HIDDEN )
+               pNewMeth->pFuncSym = &s___msgScopeErr;
+            else
+            {
+               pNewMeth->pFuncSym = &s___msgSetData;
+               pNewMeth->uiData = uiIndex;
+               pNewMeth->uiOffset = pClass->uiDataFirst;
+            }
             break;
 
          case HB_OO_MSG_ACCESS:
@@ -1884,16 +1704,21 @@ HB_FUNC( __CLSADDMSG )
 
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, TRUE );
             pNewMeth->uiData = uiIndex;
-            if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
+            /* Class(y) does not allow to write to HIDDEN+READONLY
+               instance variables, [druzus] */
+            if( pNewMeth->uiScope & HB_OO_CLSTP_READONLY &&
+                pNewMeth->uiScope & HB_OO_CLSTP_HIDDEN )
+               pNewMeth->pFuncSym = &s___msgScopeErr;
+            else if( pNewMeth->uiScope & HB_OO_CLSTP_SHARED )
             {
                if( hb_arrayLen( pClass->pSharedDatas ) < ( ULONG ) pNewMeth->uiData )
-                   hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
+                  hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
                pNewMeth->pFuncSym = &s___msgSetShrData;
             }
             else
             {
                if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
-                   hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
+                  hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
                pNewMeth->pFuncSym = &s___msgSetClsData;
             }
             break;
@@ -1907,7 +1732,7 @@ HB_FUNC( __CLSADDMSG )
                PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
 
                if( hb_arrayLen( pClass->pSharedDatas ) < ( ULONG ) pNewMeth->uiData )
-                   hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
+                  hb_arraySize( pClass->pSharedDatas, pNewMeth->uiData );
 
                if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                {
@@ -1925,7 +1750,7 @@ HB_FUNC( __CLSADDMSG )
             else
             {
                if( hb_arrayLen( pClass->pClassDatas ) < ( ULONG ) pNewMeth->uiData )
-                   hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
+                  hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
                pNewMeth->uiOffset = hb_clsAddInitValue( pClass,
                                  hb_param( 5, HB_IT_ANY ), HB_OO_MSG_CLASSDATA,
                                  pNewMeth->uiData, 0, uiClass );
@@ -1952,7 +1777,7 @@ HB_FUNC( __CLSADDMSG )
          case HB_OO_MSG_SUPER:
 
             pNewMeth->uiSprClass = uiSprClass; /* store the super handel */
-            pNewMeth->uiData = uiIndex; /* offset to instance area */
+            pNewMeth->uiOffset = uiIndex; /* offset to instance area */
             pNewMeth->uiScope = uiScope;
             pNewMeth->pFuncSym = &s___msgSuper;
             break;
@@ -2065,7 +1890,7 @@ HB_FUNC( __CLSNEW )
                   {
                      pNewCls->uiMethods++;
                      memcpy( pMethod, pSprCls->pMethods + ul, sizeof( METHOD ) );
-                     pMethod->uiData = pNewCls->uiDatas;
+                     pMethod->uiOffset = pNewCls->uiDatas;
                      pNewCls->uiDatas += pCls->uiDatas - pCls->uiDataFirst;
                   }
                }
@@ -2082,7 +1907,7 @@ HB_FUNC( __CLSNEW )
                pMethod->uiSprClass = uiSuperCls;
                pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
                pMethod->pFuncSym = &s___msgSuper;
-               pMethod->uiData = pNewCls->uiDatas;
+               pMethod->uiOffset = pNewCls->uiDatas;
                pNewCls->uiDatas += pSprCls->uiDatas - pSprCls->uiDataFirst;
             }
 
@@ -2192,7 +2017,7 @@ HB_FUNC( __CLSNEW )
       pMethod->uiSprClass = s_uiClasses;
       pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
       pMethod->pFuncSym = &s___msgSuper;
-      pMethod->uiData = pNewCls->uiDatas;
+      pMethod->uiOffset = pNewCls->uiDatas;
    }
 
    pNewCls->uiDataFirst = pNewCls->uiDatas;
@@ -3133,13 +2958,8 @@ static HARBOUR hb___msgGetData( void )
 
    if( uiClass != pObject->item.asArray.value->uiClass )
    {
-      PCLASS pCls1 = s_pClasses + ( uiObjClass - 1 );
-      PCLASS pCls2 = s_pClasses + ( pMethod->uiSprClass - 1 );
-      PHB_DYNS pSym = pCls2->pClassSym;
-      ulIndex += hb_clsParentInstanceOffset( pCls1, pSym );
-
-//      ulIndex += hb_clsParentInstanceOffset( s_pClasses + ( uiObjClass - 1 ),
-//                     ( s_pClasses + ( pMethod->uiSprClass - 1 ) )->pClassSym );
+      ulIndex += hb_clsParentInstanceOffset( s_pClasses + ( uiObjClass - 1 ),
+                     ( s_pClasses + ( pMethod->uiSprClass - 1 ) )->pClassSym );
    }
    else
    {
