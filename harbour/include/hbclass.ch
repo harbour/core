@@ -680,6 +680,20 @@ s_oClass:AddInline( <(op)>, {|Self, <cArg> | <Code> }, HBCLSCHOICE( <.export.>, 
      s_oClass:SetOnError( CLSMETH _CLASS_NAME_ <MethodName>() )
 #endif
 
+#ifdef STRICT_OO
+   #xcommand DESTRUCTOR <MethodName> => ;
+     _HB_MEMBER <MethodName>;;
+     #xcommand METHOD <MethodName>                      [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>;;
+     #xcommand PROCEDURE <MethodName>                      [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED PROCEDURE _CLASS_NAME_ <MethodName>;;
+     s_oClass:SetDestructor( CLSMETH _CLASS_NAME_ <MethodName>() )
+#else
+   #xcommand DESTRUCTOR <MethodName> => ;
+     _HB_MEMBER <MethodName>();;
+    #xcommand METHOD <MethodName> [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED METHOD _CLASS_NAME_ <MethodName>([<anyParams>]);;
+    #xcommand PROCEDURE <MethodName> [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED PROCEDURE _CLASS_NAME_ <MethodName>([<anyParams>]);;
+     s_oClass:SetDestructor( CLSMETH _CLASS_NAME_ <MethodName>() )
+#endif
+
 #xtranslate END CLASS => ENDCLASS
 
 #ifdef HB_CLS_ALLOWCLASS

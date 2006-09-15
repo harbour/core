@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * removed some unused code and moved some scoping checking to
+      class creation code
+
+2006-09-15 13:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    + added hb_vmRequestReenter() and hb_vmRequestRestore()
+    + added executing destructors when some exception is active
+      I forgot about it in previous commit.
+
+  + harbour/tests/destruct.prg
+    + added example/test code for object destructors
+
+2006-09-15 04:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/doc/destruct.txt
+    + added description for object destructors in Harbour
+
+  * harbour/include/error.ch
+    + added new error code EG_DESTRUCTOR
+
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgplmaz.c
+  * harbour/source/lang/msgplwin.c
+  * harbour/source/rtl/langapi.c
+    + added desription for new error code - other language modules
+      have to be updated
+
+  * harbour/include/hbapi.h
+    + added hb_gcRefCheck() and cover some hb_gc* functions by
+      _HB_API_INTERNAL_ macro
+
+  * harbour/source/vm/itemapi.c
+    ! fixed possible RT error generation when some exception is active
+
+  * harbour/include/hbapicls.h
   * harbour/include/hbclass.ch
   * harbour/include/hboo.ch
   * harbour/source/rtl/tclass.prg

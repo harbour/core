@@ -83,8 +83,8 @@ FUNCTION HBClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "HBCLASS", 10)
-/*    s_hClass := __clsNew( "HBCLASS", 11)  */
+      s_hClass := __clsNew( "HBCLASS", 11)
+/*    s_hClass := __clsNew( "HBCLASS", 12)  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -98,6 +98,7 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "AddVirtual"     , @AddVirtual()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "SetDestructor"  , @SetDestructor()  , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
@@ -121,8 +122,10 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_ASSIGN )
-  /*  __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_ASSIGN ) */
+      __clsAddMsg( s_hClass, "nDestructor"    , 11, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_nDestructor"   , 11, HB_OO_MSG_ASSIGN )
+  /*  __clsAddMsg( s_hClass, "class"          , 12, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_class"         , 12, HB_OO_MSG_ASSIGN ) */
 
    ENDIF
 
@@ -248,6 +251,10 @@ STATIC PROCEDURE Create()
 
    IF ::nOnError != NIL
       __clsAddMsg( hClass, "__OnError", ::nOnError, HB_OO_MSG_ONERROR )
+   ENDIF
+
+   IF ::nDestructor != NIL
+      __clsAddMsg( hClass, "__Destructor", ::nDestructor, HB_OO_MSG_DESTRUCTOR )
    ENDIF
 
    RETURN
@@ -417,6 +424,14 @@ STATIC PROCEDURE SetOnError( nFuncPtr )
    LOCAL Self := QSelf()
 
    ::nOnError := nFuncPtr
+
+   RETURN
+
+STATIC PROCEDURE SetDestructor( nFuncPtr )
+
+   LOCAL Self := QSelf()
+
+   ::nDestructor := nFuncPtr
 
    RETURN
 

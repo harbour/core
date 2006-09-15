@@ -71,23 +71,23 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicls.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbvm.h"
 #include "hbstack.h"
 
-/* This releases array when called from the garbage collector */
-static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+static void hb_arrayReleaseItems( PHB_BASEARRAY pBaseArray )
 {
-   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
-
-   if( pBaseArray->pItems )
+   if( pBaseArray->ulLen )
    {
       HB_ITEM_PTR pItems = pBaseArray->pItems;
       ULONG ulLen = pBaseArray->ulLen;
 
-      /* clear the pBaseArray->pItems to avoid infinit loop in cross
-       * referenced items
+      /*
+       * clear the pBaseArray->pItems to avoid infinite loop in cross
+       * referenced items when pBaseArray is not freed due to buggy
+       * object destructor [druzus]
        */
       pBaseArray->pItems = NULL;
       pBaseArray->ulLen  = 0;
@@ -99,6 +99,41 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
       }
       hb_xfree( pItems );
    }
+}
+
+/* This releases array when called from the garbage collector */
+static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+{
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
+
+   if( pBaseArray->uiClass )
+   {
+      if( hb_clsHasDestructor( pBaseArray->uiClass ) )
+      {
+         PHB_ITEM pItem = hb_stackAllocItem();
+
+         pItem->type = HB_IT_ARRAY;
+         pItem->item.asArray.value = pBaseArray;
+         hb_gcRefInc( pBaseArray );
+
+         hb_objDestructorCall( pItem );
+
+         /* Clear object properities before hb_stackPop(), [druzus] */
+         pBaseArray->uiClass = 0;
+         hb_stackPop();
+
+         /*
+          * release array items before hb_gcRefCheck() to avoid double
+          * pBaseArray freeing when it will have cross references to
+          * self after executing buggy destructor [druzus]
+          */
+         hb_arrayReleaseItems( pBaseArray );
+         hb_gcRefCheck( pBaseArray );
+         return;
+      }
+   }
+
+   hb_arrayReleaseItems( pBaseArray );
 }
 
 HB_EXPORT BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */

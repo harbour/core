@@ -98,9 +98,10 @@ typedef struct HB_GARBAGE_
 #define HB_GC_LOCKED       1  /* do not collect a memory block */
 /* flags stored in 'used' slot */
 #define HB_GC_USED_FLAG    2  /* the bit for used/unused flag */
-#define HB_GC_DELETE       4  /* item will be deleted during finalization */
+#define HB_GC_DELETE       4  /* item marked to delete */
+#define HB_GC_DELETELST    8  /* item will be deleted during finalization */
 /* flags stored in 'flags' slot */
-#define HB_GC_USERSWEEP    8  /* memory block with user defined sweep function */
+#define HB_GC_USERSWEEP   16  /* memory block with user defined sweep function */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
@@ -240,21 +241,14 @@ void hb_gcRefFree( void * pBlock )
             else
                hb_gcUnlink( &s_pCurrBlock, pAlloc );
 
+            pAlloc->used |= HB_GC_DELETE;
+
             /* execute clean-up function */
             if( pAlloc->pFunc )
-            {
-               /*
-                * we do not have to set HB_GC_DELETE flag here. If upper level
-                * code is not broken then the reference counter to this block
-                * now reach 0 so is nowhere accessible. I set this flag only
-                * as workaround for some wrong code which may want to execute
-                * hb_gcFree() for this block from clean-up function. [druzus]
-                */
-               pAlloc->used |= HB_GC_DELETE;
                ( pAlloc->pFunc )( pBlock );
-            }
 
-            HB_GARBAGE_FREE( pAlloc );
+            if( pAlloc->used & HB_GC_DELETE )
+               HB_GARBAGE_FREE( pAlloc );
          }
       }
    }
@@ -264,11 +258,33 @@ void hb_gcRefFree( void * pBlock )
    }
 }
 
+
 /* return number of references */
 #undef hb_gcRefCount
 HB_COUNTER hb_gcRefCount( void * pBlock )
 {
    return hb_xRefCount( HB_GC_PTR( pBlock ) );
+}
+
+
+/*
+ * Check if block still cannot be access after destructor execution
+ */
+void hb_gcRefCheck( void * pBlock )
+{
+   HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pBlock );
+
+   if( !( pAlloc->used & HB_GC_DELETELST ) )
+   {
+      if( hb_xRefCount( pAlloc ) != 0 )
+      {
+         if( hb_vmRequestQuery() == 0 )
+            hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
+
+         hb_gcLink( &s_pCurrBlock, pAlloc );
+         pAlloc->used = s_uUsedFlag;
+      }
+   }
 }
 
 
@@ -342,7 +358,7 @@ void * hb_gcLock( void * pBlock )
 /* Unlock a memory pointer so it can be released if there is no
    references inside of harbour variables
 */
-void *hb_gcUnlock( void * pBlock )
+void * hb_gcUnlock( void * pBlock )
 {
    if( pBlock )
    {
@@ -578,7 +594,7 @@ void hb_gcCollectAll( void )
          if( s_pCurrBlock->used == s_uUsedFlag )
          {
             pDelete = s_pCurrBlock;
-            s_pCurrBlock->used |= HB_GC_DELETE;
+            s_pCurrBlock->used |= HB_GC_DELETE | HB_GC_DELETELST;
             hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
             hb_gcLink( &s_pDeletedBlock, pDelete );
          }
@@ -611,7 +627,16 @@ void hb_gcCollectAll( void )
          {
             pDelete = s_pDeletedBlock;
             hb_gcUnlink( &s_pDeletedBlock, s_pDeletedBlock );
-            HB_GARBAGE_FREE( pDelete );
+            if( hb_xRefCount( pDelete ) != 0 )
+            {
+               if( hb_vmRequestQuery() == 0 )
+                  hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
+
+               hb_gcLink( &s_pCurrBlock, pAlloc );
+               pAlloc->used = s_uUsedFlag;
+            }
+            else
+               HB_GARBAGE_FREE( pDelete );
 
          } while( s_pDeletedBlock );
       }
@@ -642,7 +667,7 @@ void hb_gcReleaseAll( void )
          {
             HB_TRACE( HB_TR_INFO, ( "Cleanup, %p", s_pCurrBlock ) );
 
-            s_pCurrBlock->used |= HB_GC_DELETE;
+            s_pCurrBlock->used |= HB_GC_DELETE | HB_GC_DELETELST;
             ( s_pCurrBlock->pFunc )( HB_MEM_PTR( s_pCurrBlock ) );
          }
 

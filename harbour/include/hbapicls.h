@@ -92,10 +92,12 @@ HB_EXTERN_BEGIN
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
 extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class internals as used */
+extern BOOL       hb_clsHasDestructor( USHORT uiClass );
 
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
 extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
 extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
+extern void       hb_objDestructorCall( PHB_ITEM pObject );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */

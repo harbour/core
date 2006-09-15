@@ -564,6 +564,13 @@ extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated b
 extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
 extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
 #ifdef _HB_API_INTERNAL_
+extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
+extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
+extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
+extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
+extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
+
+extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
 extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
 extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
 extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
@@ -578,11 +585,6 @@ extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of reference
 #endif /* _HB_API_INTERNAL_ */
 extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
 extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
-extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
-extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
-extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
-extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
-extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
 
 /* array management */
 extern HB_EXPORT BOOL       hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */

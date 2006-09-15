@@ -156,7 +156,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "",
+       "B³ad w destruktorze obiektu",
        "Nieprawid³owa liczba argumentów",
        "pobranie elementu tablicy",
        "zmiana warto¶ci elementu tablicy",

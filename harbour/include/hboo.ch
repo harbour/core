@@ -102,7 +102,8 @@
 #define HB_OO_MSG_CLSASSIGN    10
 #define HB_OO_MSG_CLSACCESS    11
 #define HB_OO_MSG_REALCLASS    12
-#define HB_OO_MSG_INITIALIZED  13
+#define HB_OO_MSG_DESTRUCTOR   13
+#define HB_OO_MSG_INITIALIZED  14
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1

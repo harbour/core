@@ -1437,10 +1437,14 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 
          /* put it here to avoid recursive RT error generation */
          pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
-         hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
 
-         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+         if( hb_vmRequestQuery() == 0 )
+         {
+            hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
+            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                           2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+            hb_stackPop();
+         }
 
          return pItem->item.asEnum.valuePtr;
       }

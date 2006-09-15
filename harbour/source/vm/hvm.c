@@ -549,6 +549,7 @@ HB_EXPORT int hb_vmQuit( void )
 
    hb_rddShutDown();
    hb_idleShutDown();
+
    hb_errExit();
    hb_clsReleaseAll();
    hb_itemClear( &s_aStatics );

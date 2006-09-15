@@ -186,6 +186,7 @@ typedef struct
    PHB_ITEM pSharedDatas;     /* Harbour Array for Class Shared Datas */
    PHB_ITEM pInlines;         /* Array for inline codeblocks */
    PHB_SYMB pFunError;        /* error handler for not defined messages */
+   PHB_SYMB pDestructor;      /* destructor for not this class objects */
    ULONG    ulOpFlags;        /* Flags for overloaded operators */
    USHORT   uiMethods;        /* Total Method initialised Counter */
    USHORT   uiInitDatas;      /* Total Method initialised Counter */
@@ -256,6 +257,8 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
    { "__ENUMSKIP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
    { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL }   /* 26 */
 };
+
+static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
 
 static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
 static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {hb___msgGetData},    NULL };
@@ -430,6 +433,7 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
 
    hb_clsDictInit( pClsDst, pClsSrc->uiHashKey );
    pClsDst->pFunError = pClsSrc->pFunError;
+   pClsDst->pDestructor = pClsSrc->pDestructor;
 
    /* CLASS DATA Not Shared ( new array, new value ) */
    pClsDst->pClassDatas  = hb_arrayClone( pClsSrc->pClassDatas );
@@ -599,19 +603,21 @@ void hb_clsInit( void )
       pOpSym->pDynSym = hb_dynsymGetCase( pOpSym->szName );
    }
 
-   s___msgClassName.pDynSym = hb_dynsymGetCase( s___msgClassName.szName );  /* Standard messages        */
-   s___msgClassH.pDynSym    = hb_dynsymGetCase( s___msgClassH.szName );     /* Not present in classdef. */
-   s___msgClassSel.pDynSym  = hb_dynsymGetCase( s___msgClassSel.szName );
-   s___msgEval.pDynSym      = hb_dynsymGetCase( s___msgEval.szName );
-   s___msgExec.pDynSym      = hb_dynsymGetCase( s___msgExec.szName );
-   s___msgName.pDynSym      = hb_dynsymGetCase( s___msgName.szName );
+   s___msgDestructor.pDynSym  = hb_dynsymGetCase( s___msgDestructor.szName );
+
+   s___msgClassName.pDynSym   = hb_dynsymGetCase( s___msgClassName.szName );  /* Standard messages        */
+   s___msgClassH.pDynSym      = hb_dynsymGetCase( s___msgClassH.szName );     /* Not present in classdef. */
+   s___msgClassSel.pDynSym    = hb_dynsymGetCase( s___msgClassSel.szName );
+   s___msgEval.pDynSym        = hb_dynsymGetCase( s___msgEval.szName );
+   s___msgExec.pDynSym        = hb_dynsymGetCase( s___msgExec.szName );
+   s___msgName.pDynSym        = hb_dynsymGetCase( s___msgName.szName );
 /*
-   s___msgClsParent.pDynSym = hb_dynsymGetCase( s___msgClsParent.szName );
-   s___msgClass.pDynSym     = hb_dynsymGetCase( s___msgClass.szName );
+   s___msgClsParent.pDynSym   = hb_dynsymGetCase( s___msgClsParent.szName );
+   s___msgClass.pDynSym       = hb_dynsymGetCase( s___msgClass.szName );
 */
-   s___msgEnumIndex.pDynSym = hb_dynsymGetCase( s___msgEnumIndex.szName );
-   s___msgEnumBase.pDynSym  = hb_dynsymGetCase( s___msgEnumBase.szName );
-   s___msgEnumValue.pDynSym = hb_dynsymGetCase( s___msgEnumValue.szName );
+   s___msgEnumIndex.pDynSym   = hb_dynsymGetCase( s___msgEnumIndex.szName );
+   s___msgEnumBase.pDynSym    = hb_dynsymGetCase( s___msgEnumBase.szName );
+   s___msgEnumValue.pDynSym   = hb_dynsymGetCase( s___msgEnumValue.szName );
 
    s___msgWithObjectPush.pDynSym = hb_dynsymGetCase( s___msgWithObjectPush.szName );
    s___msgWithObjectPop.pDynSym  = hb_dynsymGetCase( s___msgWithObjectPop.szName );
@@ -1199,6 +1205,9 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          {
             PHB_ITEM pRealObj;
 
+            /* clear the class handle to avoid destructor call */
+            pObject->item.asArray.value->uiClass = 0;
+
             pRealObj = hb_itemNew( pObject->item.asArray.value->pItems );
             /* Now I should exchnage it with the current stacked value */
             hb_itemMove( pObject, pRealObj );
@@ -1221,6 +1230,10 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                return hb_clsValidScope( pObject, pMethod, pStack );
             }
             return pMethod->pFuncSym;
+         }
+         else if( pMsg == s___msgDestructor.pDynSym && pClass->pDestructor )
+         {
+            return pClass->pDestructor;
          }
       }
    }
@@ -1348,6 +1361,38 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
       return &s___msgNoMethod;
    }
    return NULL;
+}
+
+/*
+ * Check if class has object destructors
+ */
+BOOL hb_clsHasDestructor( USHORT uiClass )
+{
+   if( uiClass && uiClass <= s_uiClasses )
+      return ( s_pClasses + ( uiClass - 1 ) )->pDestructor != NULL;
+   else
+      return FALSE;
+}
+
+/*
+ * Call object destructor
+ */
+void hb_objDestructorCall( PHB_ITEM pObject )
+{
+   if( pObject->type == HB_IT_ARRAY &&
+       pObject->item.asArray.value->uiClass != 0 )
+   {
+      PCLASS pClass = s_pClasses + pObject->item.asArray.value->uiClass - 1;
+
+      if( pClass->pDestructor )
+      {
+         hb_stackPushReturn();
+         hb_vmPushSymbol( &s___msgDestructor );
+         hb_vmPush( pObject );
+         hb_vmSend( 0 );
+         hb_stackPopReturn();
+      }
+   }
 }
 
 /*
@@ -1720,6 +1765,7 @@ HB_FUNC( __CLSADDMSG )
       {
          case HB_OO_MSG_METHOD:
          case HB_OO_MSG_ONERROR:
+         case HB_OO_MSG_DESTRUCTOR:
             pFuncSym = hb_objFuncParam( 3 );
             fOK = pFuncSym != NULL;
             break;
@@ -1911,6 +1957,11 @@ HB_FUNC( __CLSADDMSG )
          case HB_OO_MSG_ONERROR:
 
             pClass->pFunError = pFuncSym;
+            break;
+
+         case HB_OO_MSG_DESTRUCTOR:
+
+            pClass->pDestructor = pFuncSym;
             break;
 
          default:
