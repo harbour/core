@@ -150,58 +150,53 @@ HB_FUNC( PROCFILE )
 /* NOTE: szName size must be an at least:
          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 [vszakats] */
 
-char * hb_procname( int iLevel, char * szName, BOOL bSkipBlock )
+char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
-   long lPrevOffset = 0;
 
    if( lOffset >= 0 )
    {
       PHB_ITEM pBase, pSelf;
 
-      if( bSkipBlock && lOffset > 0 &&
-          hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval )
-      {
-         /* it's an inline method - back one more ... */
-         lPrevOffset = lOffset;
-         lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
-      }
-
       pBase = hb_stackItem( lOffset );
       pSelf = hb_stackItem( lOffset + 1 );
 
-      if( pBase->item.asSymbol.stackstate->uiClass ) /* it is a method name */
+      if( fMethodName && lOffset > 0 &&
+          pBase->item.asSymbol.value == &hb_symEval &&
+          pBase->item.asSymbol.stackstate->uiClass )
       {
-         strcpy( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
+         long lPrevOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
 
-         if( lPrevOffset )
-            strcat( szName, ":(b)" );
+         if( hb_stackItem( lPrevOffset )->item.asSymbol.stackstate->uiClass ==
+             pBase->item.asSymbol.stackstate->uiClass &&
+             hb_stackItem( lPrevOffset )->item.asSymbol.stackstate->uiMethod ==
+             pBase->item.asSymbol.stackstate->uiMethod )
+         {
+            pBase = hb_stackItem( lPrevOffset );
+            pSelf = hb_stackItem( lPrevOffset + 1 );
+         }
+      }
+
+      szName[ 0 ] = '\0';
+      if( pBase->item.asSymbol.value == &hb_symEval ||
+          strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
+      {
+         strcat( szName, "(b)" );
+
+         if( HB_IS_BLOCK( pSelf ) )
+            strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
          else
-            strcat( szName, ":" );
-
-         strcat( szName, pBase->item.asSymbol.value->szName );
+            strcat( szName, pBase->item.asSymbol.value->szName );
       }
       else
       {
-         if( lPrevOffset ) /* Back to standart code block */
+         /* it is a method name? */
+         if( pBase->item.asSymbol.stackstate->uiClass )
          {
-            lOffset = lPrevOffset;
-            pBase = hb_stackItem( lOffset );
-            pSelf = hb_stackItem( lOffset + 1 );
+            strcat( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
+            strcat( szName, ":" );
          }
-
-         if( pBase->item.asSymbol.value == &hb_symEval ||
-             strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
-         {
-            strcpy( szName, "(b)" );
-
-            if( HB_IS_BLOCK( pSelf ) )
-               strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
-            else
-               strcat( szName, pBase->item.asSymbol.value->szName );
-         }
-         else
-            strcpy( szName, pBase->item.asSymbol.value->szName );
+         strcat( szName, pBase->item.asSymbol.value->szName );
       }
    }
    else
@@ -231,15 +226,10 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 
       if( szName )
       {
-         if( pBase->item.asSymbol.stackstate->uiClass ) /* it is a method name */
+         szName[ 0 ] = '\0';
+         if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
          {
-            strcpy( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
-            strcat( szName, ":" );
-            strcat( szName, pSym->szName );
-         }
-         else if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
-         {
-            strcpy( szName, "(b)" );
+            strcat( szName, "(b)" );
 
             if( HB_IS_BLOCK( pSelf ) )
                strcat( szName, pSelf->item.asBlock.value->pDefSymb->szName );
@@ -247,7 +237,14 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
                strcat( szName, pSym->szName );
          }
          else
-            strcpy( szName, pSym->szName );
+         {
+            if( pBase->item.asSymbol.stackstate->uiClass ) /* it is a method name */
+            {
+               strcat( szName, hb_clsName( pBase->item.asSymbol.stackstate->uiClass ) );
+               strcat( szName, ":" );
+            }
+            strcat( szName, pSym->szName );
+         }
       }
 
       if( puiLine )

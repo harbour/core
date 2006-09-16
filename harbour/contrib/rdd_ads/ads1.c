@@ -223,6 +223,36 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
 }
 #endif
 
+static BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 u16KeyLen )
+{
+   UNSIGNED32 u32RetVal;
+   UNSIGNED16 u16Found = FALSE;
+   UNSIGNED16 u16CurKeyLen = ADS_MAX_KEY_LENGTH;
+   UNSIGNED8  pucCurKey[ADS_MAX_KEY_LENGTH + 1];
+
+   /*
+    * test if current record has fields that match the given key expression.
+    * This is used to evaluate if a seek expression continues to eval to .t.
+    * when skipping through filtered records
+    */
+
+   u32RetVal = AdsExtractKey( hIndex, pucCurKey, &u16CurKeyLen );
+   if( u32RetVal == AE_SUCCESS )
+   {
+      if( u16CurKeyLen )
+      {
+         if( u16CurKeyLen >= u16KeyLen &&
+             memcmp( (UNSIGNED8*) pucCurKey, (UNSIGNED8*) pszKey, u16KeyLen ) == 0 )
+         {
+            u16Found = TRUE;
+         }
+      }
+   }
+
+   return  u16Found;
+}
+
+
 static int adsGetFileType( USHORT uiRddID )
 {
    return ( uiRddID == s_uiRddIdADSCDX ? ADS_CDX :
@@ -838,6 +868,8 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
               u16KeyType, u16Found, u16KeyLen;
    UNSIGNED8 *pszKey;
    double dValue;
+   UNSIGNED8  *pucSavedKey = NULL;
+   UNSIGNED16 u16SavedKeyLen = ADS_MAX_KEY_LENGTH;  // this may be longer than the actual seek expression, so we don't pass it along
 
    HB_TRACE(HB_TR_DEBUG, ("adsSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
@@ -938,27 +970,73 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
    if( pArea->lpdbRelations )
       SELF_SYNCCHILDREN( ( AREAP ) pArea );
 
-   /* -----------------5/1/2002 3:04AM BH ------------------
+   /* ----------------- BH ------------------
       If a filter is set that is not valid for ADS, we need to skip
       off of any invalid records (IOW, filter at the Harbour level if ADS can't
       because the filter has UDFs or PUBLICVAR references).
-      We could avoid calling this if we had a static set to know if the current
-      filter is not valid for ADS.
+      To make sure the skipped-to record still matches the seeked key, we need to
+      be able to construct a comparable key for the subsequent record.
+      This is annoyingly complex with the various ads key types for various table types.
+      AdsExtractKey would seem to be the api of choice, but here on the starting end the
+      key we seek on does NOT match the format of what we get back from AdsExtractKey.
+      So I'm saving off the first found record's key, and passing that to our
+      adsIndexKeyCmp() to compare to the new record's key.
+      We're relying on testing to verify that partial key searches and binary
+      raw keys all end up working right.
     --------------------------------------------------*/
    if( pArea->dbfi.itmCobExpr && !pArea->dbfi.fOptimized && !pArea->fEof )
    {
-      /* remember FOUND flag for updating after SKIPFILTER() */
+      /* Remember FOUND flag for updating after SKIPFILTER() */
       u16Found = pArea->fFound;
 
-      if( u16Found )
+      if( u16Found && u16KeyLen > 0 )
       {
-         /* remember the record number for faster checking if we should update
-            fFound after SKIPFILTER */
+         /*
+          * remember the record number for faster checking if we should update
+          * fFound after SKIPFILTER. Also get its extracted key to simplify
+          * that comparison
+          */
+         UNSIGNED32 u32RetVal;
+         pucSavedKey = (UNSIGNED8*) hb_xgrab( ADS_MAX_KEY_LENGTH + 1 );
+
          AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS, &u32RecNo );
+         u32RetVal = AdsExtractKey( pArea->hOrdCurrent, pucSavedKey, &u16SavedKeyLen );
+
+         if( u32RetVal != AE_SUCCESS )
+         {
+            u16SavedKeyLen = 0;
+         }
+         else if( u16SavedKeyLen > u16KeyLen )
+         {
+            /* Initial found key from index is longer than Seek key:
+               Did a partial search */
+            if( AdsGetKeyType( pArea->hOrdCurrent, &u16KeyType ) == AE_SUCCESS &&
+                ( u16KeyType == ADS_STRING || u16KeyType == ADS_RAW ) )
+            {
+               /*
+                * do partial comparison below on String and Raw indexes only.
+                * Note that we can search a different type index with a string
+                * expression, but ads does internal conversions and the length
+                * of our string may be drastically different than the real key
+                */
+               u16SavedKeyLen = u16KeyLen;
+            }
+         }
       }
 
+      /*
+       * TODO: Possible optimization: if !softseek, skipfilter should abort
+       * skipping once keys no longer match.
+       * Perhaps use temp replacement of scope for this -- but remember ads
+       * does scopes on client and if last good scoped record fails the filter,
+       * the server will skip to the end anyway
+       */
       if( SELF_SKIPFILTER( ( AREAP ) pArea, bFindLast ? -1 : 1 ) != SUCCESS )
       {
+         if ( pucSavedKey )
+         {
+            hb_xfree( pucSavedKey );
+         }
          return FAILURE;
       }
 
@@ -968,14 +1046,21 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          {
             u16Found = FALSE;
          }
-         else
+         /* seek empty string is synonymous with GoTop */
+         else if( u16KeyLen > 0 )
          {
             AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS, &u32NewRec );
+            /* SkipFilter moved us?  see if index key is still a match. */
             if( u32RecNo != u32NewRec )
             {
-               /* TODO: we should check here if FOUND is still TRUE by
-                  comparing curent index key expression - now dirty hack */
-               u16Found = FALSE;
+               if( u16SavedKeyLen == 0 )
+               {
+                  u16Found = FALSE;
+               }
+               else
+               {
+                  u16Found = adsIndexKeyCmp( pArea->hOrdCurrent, pucSavedKey, u16SavedKeyLen );
+               }
             }
          }
       }
@@ -988,6 +1073,11 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
     * the rule yet. Any how it's much safer to clear it, Druzus.
     */
    pArea->fBof = FALSE;
+
+   if ( pucSavedKey )
+   {
+      hb_xfree( pucSavedKey );
+   }
 
    return SUCCESS;
 }
@@ -2720,10 +2810,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->fShared        = pOpenInfo->fShared;
    pArea->fReadonly      = pOpenInfo->fReadonly;
 
-   //TraceLog( NULL, "Before count: %i \n", uiFields );
    SELF_FIELDCOUNT( ( AREAP ) pArea, &uiFields );
 
-   //TraceLog( NULL, "Before extent\n" );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pArea->maxFieldLen = 0;
@@ -2733,8 +2821,6 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pusBufLen = ADS_MAX_FIELD_NAME;
       AdsGetFieldName( pArea->hTable, uiCount, szName, &pusBufLen );
       dbFieldInfo.atomName = szName;
-
-      //TraceLog( NULL, "Field: '%s'\n", szName );
 
       * ( dbFieldInfo.atomName + pusBufLen ) = '\0';
       AdsGetFieldType( pArea->hTable, szName, &pusType );

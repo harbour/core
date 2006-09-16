@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/vm/classes.c
+    * temporary restored hb_objGetpMethod()
+    + added __ClsCntClasses()
+    ! allocated real methods for OnError and Destructor to keep
+      the same behavior in these methods as in any others, f.e.
+      scoping checking or debugging.
+
+  * harbour/common.mak
+  * harbour/utils/hbtest/Makefile
+  * harbour/utils/hbtest/hbtest.prg
+  + harbour/utils/hbtest/rt_class.prg
+    + added tests for our classy code. Now destructors and instance
+      area allocating/casting. Some other in the future.
+
+2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with recent Brian fixes in xHarbour
+
+  * harbour/include/hbapi.h
+    + added 'method' member to hb_struBlock structure
+
+  * harbour/source/vm/hvm.c
+    * initialize 'method' member in hb_struBlock structure
+
+  * harbour/source/vm/proc.c
+    * changed the name of last parameter of hb_procname() from
+      bSkipBlock to fMethodName and modified to use information
+      about the class of executed codeblock from new hb_struBlock
+      members
+
+  * harbour/source/vm/classes.c
+    * removed hb_objGetpMethod() - I hope it's not longer used
+    * added real codeblock scoping.
+      In Clipper there is no information where the codeblock where
+      created and what priviladges/scopes it should has.
+      Class(y) to resovle this problem when codeblock is executed scans
+      the HVM stack for the nearest method call and takes scopes defined
       for this method. It's a workaround which allow to break standard
       access rights though seems reasonable when it's not possible to
       store information where the block is created. I've added to block

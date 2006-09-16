@@ -4155,6 +4155,8 @@ static HARBOUR hb_vmDoBlock( void )
     */
    uiLine = hb_stackBaseItem()->item.asSymbol.lineno;
    hb_stackBaseItem()->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
+   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass = pBlock->item.asBlock.hclass;
+   hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod = pBlock->item.asBlock.method;
 
    hb_codeblockEvaluate( pBlock );
 
@@ -4704,6 +4706,7 @@ static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usLen 
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
+   pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
 
 /* -2    -> HB_P_PUSHBLOCKSHORT
@@ -4734,6 +4737,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, USHORT u
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
+   pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
 
 /* +0    -> HB_P_MPUSHBLOCK
@@ -4762,6 +4766,7 @@ static void hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols )
     */
    pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
+   pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
 
 /* pushes current workarea number on the eval stack

@@ -246,6 +246,7 @@ struct hb_struBlock
    USHORT lineno;
    USHORT paramcnt;
    USHORT hclass;
+   USHORT method;
 };
 
 struct hb_struDate
