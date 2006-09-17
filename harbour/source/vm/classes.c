@@ -167,8 +167,8 @@ typedef struct
    PHB_SYMB pFuncSym;            /* Function symbol */
    USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;             /* Scoping value */
-   USHORT   uiData;              /* Item position for instance data or shared data (Harbour like, begin from 1) or supercast offset (from 0) */
-   USHORT   uiOffset;            /* position in pInitData for class datas (from 1) or offset to instance area in inherited instance data (from 0) */
+   USHORT   uiData;              /* Item position for instance data, class or shared data (Harbour like, begin from 1) */
+   USHORT   uiOffset;            /* position in pInitData for class datas (from 1) or offset to instance area in inherited instance data and supercast messages (from 0) */
 #ifndef HB_NO_PROFILER
    ULONG    ulCalls;             /* profiler support */
    ULONG    ulTime;              /* profiler support */
@@ -185,9 +185,9 @@ typedef struct
    PHB_ITEM pClassDatas;      /* Harbour Array for Class Datas */
    PHB_ITEM pSharedDatas;     /* Harbour Array for Class Shared Datas */
    PHB_ITEM pInlines;         /* Array for inline codeblocks */
-   PHB_SYMB pFunError;        /* error handler for not defined messages */
-   PHB_SYMB pDestructor;      /* destructor for not this class objects */
    ULONG    ulOpFlags;        /* Flags for overloaded operators */
+   BOOL     fHasDestructor;   /* has the class destructor message? */
+   BOOL     fHasOnError;      /* has the class OnError message? */
    USHORT   uiMethods;        /* Total Method initialised Counter */
    USHORT   uiInitDatas;      /* Total Method initialised Counter */
    USHORT   uiDatas;          /* Total Data Counter */
@@ -269,6 +269,7 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
 };
 
 static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgOnError    = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
 
 static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
 static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {hb___msgGetData},    NULL };
@@ -420,8 +421,8 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
    HB_TRACE(HB_TR_DEBUG, ("hb_clsCopyClass(%p,%p)", pClsDst, pClsSrc));
 
    hb_clsDictInit( pClsDst, pClsSrc->uiHashKey );
-   pClsDst->pFunError = pClsSrc->pFunError;
-   pClsDst->pDestructor = pClsSrc->pDestructor;
+   pClsDst->fHasOnError = pClsSrc->fHasOnError;
+   pClsDst->fHasDestructor = pClsSrc->fHasDestructor;
 
    /* CLASS DATA Not Shared ( new array, new value ) */
    pClsDst->pClassDatas  = hb_arrayClone( pClsSrc->pClassDatas );
@@ -613,6 +614,7 @@ void hb_clsInit( void )
    }
 
    s___msgDestructor.pDynSym  = hb_dynsymGetCase( s___msgDestructor.szName );
+   s___msgOnError.pDynSym     = hb_dynsymGetCase( s___msgOnError.szName );
 
    s___msgClassName.pDynSym   = hb_dynsymGetCase( s___msgClassName.szName );  /* Standard messages        */
    s___msgClassH.pDynSym      = hb_dynsymGetCase( s___msgClassH.szName );     /* Not present in classdef. */
@@ -1053,10 +1055,6 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
             return pMethod->pFuncSym;
          }
-         else if( pMsg == s___msgDestructor.pDynSym && pClass->pDestructor )
-         {
-            return pClass->pDestructor;
-         }
       }
    }
    else if( HB_IS_BLOCK( pObject ) )
@@ -1176,8 +1174,15 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
 */
    if( pStack )
    {
-      if( pClass && pClass->pFunError )
-         return pClass->pFunError;
+      if( pClass && pClass->fHasOnError )
+      {
+         PMETHOD pMethod = hb_clsFindMsg( pClass, s___msgOnError.pDynSym );
+         if( pMethod )
+         {
+            pStack->uiMethod = pMethod - pClass->pMethods;
+            return pMethod->pFuncSym;
+         }
+      }
 
       /* remove this line if you want default HVM error message */
       return &s___msgNoMethod;
@@ -1191,7 +1196,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
 BOOL hb_clsHasDestructor( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
-      return ( s_pClasses + ( uiClass - 1 ) )->pDestructor != NULL;
+      return ( s_pClasses + ( uiClass - 1 ) )->fHasDestructor;
    else
       return FALSE;
 }
@@ -1206,7 +1211,7 @@ void hb_objDestructorCall( PHB_ITEM pObject )
    {
       PCLASS pClass = s_pClasses + pObject->item.asArray.value->uiClass - 1;
 
-      if( pClass->pDestructor )
+      if( pClass->fHasDestructor )
       {
          USHORT uiAction;
 
@@ -1489,7 +1494,11 @@ HB_FUNC( __CLSADDMSG )
          uiScope |= HB_OO_CLSTP_PERSIST;
 
       /* translate names of operator overloading messages */
-      if      (strcmp("+", szMessage) == 0)
+      if( nType == HB_OO_MSG_DESTRUCTOR )
+         pMessage = s___msgDestructor.pDynSym;
+      else if( nType == HB_OO_MSG_ONERROR )
+         pMessage = s___msgOnError.pDynSym;
+      else if (strcmp("+", szMessage) == 0)
          pMessage = ( s_opSymbols + HB_OO_OP_PLUS )->pDynSym;
       else if (strcmp("-", szMessage) == 0)
          pMessage = ( s_opSymbols + HB_OO_OP_MINUS )->pDynSym;
@@ -1762,12 +1771,14 @@ HB_FUNC( __CLSADDMSG )
 
          case HB_OO_MSG_ONERROR:
 
-            pClass->pFunError = pFuncSym;
+            pNewMeth->pFuncSym = pFuncSym;
+            pClass->fHasOnError = TRUE;
             break;
 
          case HB_OO_MSG_DESTRUCTOR:
 
-            pClass->pDestructor = pFuncSym;
+            pNewMeth->pFuncSym = pFuncSym;
+            pClass->fHasDestructor = TRUE;
             break;
 
          default:
@@ -2339,6 +2350,16 @@ HB_FUNC( __CLSINSTSUPER )
 }
 
 /*
+ * <nSeq> = __ClsCntClasses()
+ *
+ * Return number of classes
+ */
+HB_FUNC( __CLSCNTCLASSES )
+{
+   hb_retni( ( int ) s_uiClasses );
+}
+
+/*
  * <nSeq> = __cls_CntClsData( <hClass> )
  *
  * Return number of class datas
@@ -2350,7 +2371,6 @@ HB_FUNC( __CLS_CNTCLSDATA )
    hb_retni( uiClass && uiClass <= s_uiClasses ?
                   hb_arrayLen( s_pClasses[ uiClass - 1 ].pClassDatas ) : 0 );
 }
-
 
 /*
  * <nSeq> = __cls_CntShrData( <hClass> )
@@ -2365,7 +2385,6 @@ HB_FUNC( __CLS_CNTSHRDATA )
                   hb_arrayLen( s_pClasses[ uiClass - 1 ].pSharedDatas ) : 0 );
 }
 
-
 /*
  * <nSeq> = __cls_CntData( <hClass> )
  *
@@ -2378,7 +2397,6 @@ HB_FUNC( __CLS_CNTDATA )
    hb_retni( uiClass && uiClass <= s_uiClasses ?
              s_pClasses[ uiClass - 1 ].uiDatas : 0 );
 }
-
 
 /*
  * <nSeq> = __cls_DecData( <hClass> )
@@ -2394,7 +2412,6 @@ HB_FUNC( __CLS_DECDATA )
    else
       hb_retni( 0 );
 }
-
 
 /*
  * <nSeq> = __cls_IncData( <hClass> )
@@ -3175,4 +3192,17 @@ void hb_clsAssociate( USHORT usClassH )
    hb_vmPushNil();
    hb_vmPushLong( usClassH );
    hb_vmFunction( 1 );
+}
+
+/*
+ * This function is only for backward binary compatibility
+ * It will be removed in the future so please do not use it.
+ * Use hb_objHasMessage() instead.
+ */
+#if defined(__cplusplus)
+   extern "C" BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage );
+#endif
+BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
+{
+   return hb_objHasMessage( pObject, pMessage->pDynSym );
 }

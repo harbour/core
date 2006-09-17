@@ -4671,6 +4671,17 @@ HB_EXPORT void hb_vmPushSymbol( PHB_SYMB pSym )
    pItem->item.asSymbol.stackstate = NULL;
 }
 
+HB_EXPORT void hb_vmPushDynSym( PHB_DYNS pDynSym )
+{
+   PHB_ITEM pItem = hb_stackAllocItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDynSym(%p)", pDynSym));
+
+   pItem->type = HB_IT_SYMBOL;
+   pItem->item.asSymbol.value = pDynSym->pSymbol;
+   pItem->item.asSymbol.stackstate = NULL;
+}
+
 /* -3    -> HB_P_PUSHBLOCK
  * -2 -1 -> size of codeblock
  *  0 +1 -> number of expected parameters

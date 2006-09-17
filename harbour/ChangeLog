@@ -9,6 +9,28 @@
 */
 
   * harbour/source/vm/classes.c
+    + added hb_clsRealMethodName() function which I'm using in some
+      test code
+
+  * harbour/tests/clsscast.prg
+    * updated to use __CLS_CNTSHRDATA() instead of __CLS_CNTCLSDATA()
+
+  * harbour/utils/hbtest/rt_class.prg
+    + added tests for class and shared class variables/allocating
+
+2006-09-17 18:52 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/tests/testrpt.prg
+     ! Fixed fatal typo.
+
+2006-09-17 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/include/hbvm.h
+  * xharbour/source/vm/hvm.c
+    + added hb_vmPushDynSym( PHB_DYNS )
+      It should allow most applications to not use [P]HB_SYMB at all.
+      Removing PHB_SYMB from 3-rd party .c code may allow us to add
+      freeing unused symbol tables from HVM in the future.
+
+  * harbour/source/vm/classes.c
     * temporary restored hb_objGetpMethod()
     + added __ClsCntClasses()
     ! allocated real methods for OnError and Destructor to keep

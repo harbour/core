@@ -138,6 +138,7 @@ extern HB_EXPORT void     hb_vmPushString( char * szText, ULONG length );  /* pu
 extern HB_EXPORT void     hb_vmPushStringPcode( char * szText, ULONG length );  /* pushes a string from pcode on to the stack */
 extern HB_EXPORT void     hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
 extern HB_EXPORT void     hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
+extern HB_EXPORT void     hb_vmPushDynSym( PHB_DYNS pDynSym ); /* pushes a function/method pointer onto the stack */
 extern HB_EXPORT void     hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on stack */
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */

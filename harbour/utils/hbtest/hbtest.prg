@@ -151,6 +151,7 @@ FUNCTION Main( cPar1, cPar2 )
    Main_MISC()
 #ifdef __HARBOUR__
    Main_OPOVERL()
+   Main_CLASS()
 #endif
    Main_LAST()
 
