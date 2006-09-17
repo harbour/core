@@ -2,7 +2,7 @@
  * $Id$
  */
 
-FUNCTION() MAIN
+FUNCTION MAIN()
 
     USE test New
 

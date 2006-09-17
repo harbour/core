@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/tests/clsscope.prg
+    - removed some unnecessary definitions
+
+2006-09-18 02:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     + added hb_clsRealMethodName() function which I'm using in some
       test code
