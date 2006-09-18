@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * changed STATICs passed by reference to use new array item references.
+   ! block destructor execution after classy releasing on HVM exit
+
+2006-09-18 03:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added MESSAGE ... INLINE ... rule
+
+  * harbour/tests/clsccast.prg
+  * harbour/tests/clsicast.prg
+  * harbour/tests/clsnv.prg
+  * harbour/tests/clsscast.prg
   * harbour/tests/clsscope.prg
     - removed some unnecessary definitions
 

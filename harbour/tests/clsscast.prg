@@ -32,17 +32,17 @@ local o:=myclass4():new(), i, cbErr
 ? DATE(), TIME(), VERSION(), OS()
 ?
 
-? "myclass1 class vars:", str( __CLS_CNTCLSDATA(o:myclass1:classH), 3), "  => should be:   3"
-? "myclass2 class vars:", str( __CLS_CNTCLSDATA(o:myclass2:classH), 3), "  => should be:   3"
-? "myclass3 class vars:", str( __CLS_CNTCLSDATA(o:myclass3:classH), 3), "  => should be:   3"
+? "myclass1 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass1:classH), 3), "  => should be:   3"
+? "myclass2 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass2:classH), 3), "  => should be:   3"
+? "myclass3 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass3:classH), 3), "  => should be:   3"
 cbErr:=errorBlock({|oErr|break(oErr)})
 begin sequence
-   ? "myclass4 class vars:", str( __CLS_CNTCLSDATA(o:myclass4:classH), 3), "  => should be:   3"
+   ? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass4:classH), 3), "  => should be:   3"
 recover
    ? "ERROR: no selfclass casting"
 end
 errorBlock(cbErr)
-? "myclass4 class vars:", str( __CLS_CNTCLSDATA(o:classH), 3), "  => should be:   3"
+? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:classH), 3), "  => should be:   3"
 ?
 
 /* direct assignment, possible because the variables have differ names */
@@ -328,17 +328,17 @@ errorBlock(cbErr)
 for i:=1 to len(o); ?? "",o[i]; next
 ? " => shoule be [0]:"
 ?
-? "myclass1 class vars:", str( __CLS_CNTCLSDATA(o:myclass1:classH), 3), "  => should be:   3"
-? "myclass2 class vars:", str( __CLS_CNTCLSDATA(o:myclass2:classH), 3), "  => should be:   3"
-? "myclass3 class vars:", str( __CLS_CNTCLSDATA(o:myclass3:classH), 3), "  => should be:   3"
+? "myclass1 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass1:classH), 3), "  => should be:   3"
+? "myclass2 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass2:classH), 3), "  => should be:   3"
+? "myclass3 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass3:classH), 3), "  => should be:   3"
 cbErr:=errorBlock({|oErr|break(oErr)})
 begin sequence
-   ? "myclass4 class vars:", str( __CLS_CNTCLSDATA(o:myclass4:classH), 3), "  => should be:   3"
+   ? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass4:classH), 3), "  => should be:   3"
 recover
    ? "ERROR: no selfclass casting"
 end
 errorBlock(cbErr)
-? "myclass4 class vars:", str( __CLS_CNTCLSDATA(o:classH), 3), "  => should be:   3"
+? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:classH), 3), "  => should be:   3"
 ?
 
 

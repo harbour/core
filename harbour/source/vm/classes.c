@@ -271,6 +271,8 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
 static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
 static HB_SYMB s___msgOnError    = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
 
+static HB_SYMB s___msgNew        = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
+
 static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
 static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {hb___msgGetData},    NULL };
 static HB_SYMB s___msgSetClsData = { "__msgSetClsData", {HB_FS_MESSAGE}, {hb___msgSetClsData}, NULL };
@@ -290,13 +292,11 @@ static HB_SYMB s___msgClassSel   = { "CLASSSEL",        {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgEval       = { "EVAL",            {HB_FS_MESSAGE}, {hb___msgEval},       NULL };
 static HB_SYMB s___msgExec       = { "EXEC",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
-
-static HB_SYMB s___msgNew        = { "NAME",            {HB_FS_MESSAGE}, {NULL},               NULL };
-
 /*
 static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {hb___msgClsParent},  NULL };
 static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {hb___msgClass},      NULL };
 */
+
 /* Default enumerator methods (FOR EACH) */
 static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
@@ -742,14 +742,6 @@ void hb_clsIsClassRef( void )
 #endif
 }
 
-HB_EXPORT char * hb_clsName( USHORT uiClass )
-{
-   if( uiClass && uiClass <= s_uiClasses )
-      return ( s_pClasses + ( uiClass - 1 ) )->szName;
-   else
-      return NULL;
-}
-
 static BOOL hb_clsHasParent( PCLASS pClass, PHB_DYNS pParentSym )
 {
    PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
@@ -795,10 +787,7 @@ HB_EXPORT USHORT hb_objGetClass( PHB_ITEM pItem )
 /* ================================================ */
 
 /*
- * <szName> = ( pObject )
- *
  * Get the class name of an object
- *
  */
 HB_EXPORT char * hb_objGetClsName( PHB_ITEM pObject )
 {
@@ -862,13 +851,18 @@ HB_EXPORT char * hb_objGetClsName( PHB_ITEM pObject )
    return szClassName;
 }
 
+HB_EXPORT char * hb_clsName( USHORT uiClass )
+{
+   if( uiClass && uiClass <= s_uiClasses )
+      return ( s_pClasses + ( uiClass - 1 ) )->szName;
+   else
+      return NULL;
+}
+
 /*
- * <szName> = ( pObject )
- *
  * Get the real class name of an object message
  * Will return the class name from wich the message is inherited in case
  * of inheritance.
- *
  */
 HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
 {
@@ -895,6 +889,34 @@ HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
    }
 
    return hb_objGetClsName( pObject );
+}
+
+/*
+ * return real function name ignoring aliasing
+ */
+char * hb_clsRealMethodName( void )
+{
+   LONG lOffset = hb_stackBaseProcOffset( 1 );
+   char * szName = NULL;
+
+   if( lOffset >=0 )
+   {
+      PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
+
+      if( pStack->uiClass && pStack->uiClass <= s_uiClasses )
+      {
+         PCLASS pClass = ( s_pClasses + ( pStack->uiClass - 1 ) );
+
+         if( ( ULONG ) pStack->uiMethod < hb_clsMthNum( pClass ) )
+         {
+            PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
+
+            if( pMethod->pMessage )
+               szName = pMethod->pMessage->pSymbol->szName;
+         }
+      }
+   }
+   return szName;
 }
 
 #if !defined( HB_REAL_BLOCK_SCOPE )
