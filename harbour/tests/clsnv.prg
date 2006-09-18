@@ -15,15 +15,7 @@
 #xtranslate QQOUT([<x,...>]) => [OUTSTD(<x>)]
 #xtranslate QOUT([<x,...>]) => OUTSTD(EOL)[;OUTSTD(<x>)]
 
-#ifdef __HARBOUR__
 #include "hbclass.ch"
-#translate	MESSAGE <message> INLINE <*expr*> ;
-				=> ;
-				METHOD <message> INLINE <expr>
-#else
-#include "class(y).ch"
-#xtranslate __SENDER( => SENDER(
-#endif
 
 proc main()
 local o:=myclass3():new(), i, cbErr

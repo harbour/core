@@ -16,14 +16,7 @@
 #command  ? => OUTSTD(EOL)
 #xtranslate QOUT(<x,...>) => OUTSTD(EOL,<x>)
 
-#ifdef __HARBOUR__
 #include "hbclass.ch"
-#translate	MESSAGE <message> INLINE <*expr*> ;
-				=> ;
-				METHOD <message> INLINE <expr>
-#else
-#include "class(y).ch"
-#endif
 
 #xcommand MAKE_TEST(<obj>,<v>)                        ;
         =>  begin sequence                            ;;

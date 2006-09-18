@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+                          in some optimization, f.e.: a[ <exp1> ] += <exp2>
+                          or directly by: func( @a[ <exp> ] )
+                          if we add passing array elements by reference
+     Implemented in HVM and PCODE generation, the compiler has to be
+     modified yet to use them.
+   * changed last parameter in hb_codeblockGetRef() - I'd like to have
+     all variables in hb_struRefer structure in one place: hb_itemUnRefOnce()
+     for easier modifications in the future.
+   * replaced in hb_struRefer 'itemsbase' with 'array'.
+   + added hb_arrayGetItemRef() to create references to array elements.
+     Such reference updates array reference counters.
    * changed STATICs passed by reference to use new array item references.
    ! block destructor execution after classy releasing on HVM exit
 
