@@ -2241,8 +2241,9 @@ static ERRCODE hb_usrOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    pItem = hb_usrOrderInfoToItem( pOrderInfo );
 
    hb_vmPushInteger( pArea->uiArea );
+   hb_vmPushInteger( uiIndex );
    hb_vmPush( pItem );
-   hb_vmDo( 2 );
+   hb_vmDo( 3 );
 
    pResult = hb_arrayGetItemPtr( pItem, UR_ORI_RESULT );
    if( pResult && !HB_IS_NIL( pResult ) )

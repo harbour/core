@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      arguments are passed ( HB_APARAMS() == HB_APARAMS(0) )
+
+  SYNTAX for variable number of parameters
+   1) [FUNCTION|PROCEDURE] name( ... )
+   or
+   2) [FUNCTION|PROCEDURE] name( var1, var2, varN, ... )
+
+   To access passed parameters use the following:
+   PCOUNT() - returns number of passed parameters
+   HB_PVALUE( iParamNum ) - returns <iParamNum> parameter
+   HB_APARAMS() - returns array with all passed parameters
+   or usual name of parameter variable in case of syntax 2)
+
 
 2006-09-19 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c

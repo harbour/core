@@ -1657,22 +1657,22 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
                if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
                {
-						hb_compExprReduceAT( pSelf, HB_MACRO_PARAM );
+                  hb_compExprReduceAT( pSelf, HB_MACRO_PARAM );
                }
-					else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
-					{
-						hb_compExprReduceCHR( pSelf, HB_MACRO_PARAM );
-					}
-					else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
-					{
-						if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
-							hb_compExprReduceLEN( pSelf, HB_MACRO_PARAM );
-					}
-					else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
-					{
-						if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
-							hb_compExprReduceASC( pSelf, HB_MACRO_PARAM );
-					}
+               else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  hb_compExprReduceCHR( pSelf, HB_MACRO_PARAM );
+               }
+               else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+                     hb_compExprReduceLEN( pSelf, HB_MACRO_PARAM );
+               }
+               else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+                     hb_compExprReduceASC( pSelf, HB_MACRO_PARAM );
+               }
            }
          }
          break;
@@ -2197,6 +2197,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             
             if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
             {
+               BOOL fMacroList = FALSE;
                int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
                HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
                if( bIsObject )
@@ -2210,9 +2211,37 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
                if( iParms == 1 && pSelf->value.asMessage.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
                   --iParms;
                if( iParms )
-                  HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+               {
+                  if( HB_SUPPORT_XBASE )
+                  {
+                     /* check if &macro is used as a function call argument */
+                     HB_EXPR_PTR pExpr = pSelf->value.asMessage.pParms->value.asList.pExprList;
+                     while( pExpr )
+                     {
+                        if( pExpr->ExprType == HB_ET_MACRO )
+                        {
+                           /* &macro was passed - handle it differently then in a normal statement */
+                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+                           pExpr->value.asMacro.pFunCall = pSelf;
+                           fMacroList = TRUE;
+                        }
+                        pExpr = pExpr->pNext;
+                     }
+                  }
+                  if( fMacroList )
+                  {
+                     pSelf->value.asMessage.pParms->ExprType = HB_ET_MACROARGLIST;
+                     iParms = hb_compExprMacroListLen( pSelf->value.asMessage.pParms );
+                     HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+                     pSelf->value.asMessage.pParms->ExprType = HB_ET_ARGLIST;
+                  }
+                  else
+                     HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+               }
 
-               if( iParms > 255 )
+               if( fMacroList )
+                  HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_MACROSEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ), ( BOOL ) 1 );
+               else if( iParms > 255 )
                   HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_SEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ), ( BOOL ) 1 );
                else
                   HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, ( BYTE ) iParms, ( BOOL ) 1 );

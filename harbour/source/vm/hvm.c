@@ -3912,6 +3912,7 @@ static void hb_vmMacroSend( USHORT uiArgSets )
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
    hb_vmSend( lArgs );
+   hb_stackPushReturn();
 }
 
 static void hb_vmMacroArrayGen( USHORT uiArgSets )
