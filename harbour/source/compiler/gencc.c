@@ -230,6 +230,14 @@ static HB_GENC_FUNC( hb_p_arraypush )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_arraypushref )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmArrayPushRef() ) break;\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_arraypop )
 {
    HB_GENC_LABEL();
@@ -611,6 +619,15 @@ static HB_GENC_FUNC( hb_p_macrofunc )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmMacroFunc( %hu ) ) break;\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_macrosend )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroSend( %hu ) ) break;\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
    return 3;
 }
@@ -1243,6 +1260,14 @@ static HB_GENC_FUNC( hb_p_sendshort )
    return 2;
 }
 
+static HB_GENC_FUNC( hb_p_pushovarref )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmPushObjectVarRef() ) break;\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    HB_GENC_LABEL();
@@ -1564,6 +1589,7 @@ static HB_GENC_FUNC( hb_p_withobjectmessage )
    return 3;
 }
 
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -1718,7 +1744,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_diveq,
    hb_p_withobjectstart,
    hb_p_withobjectmessage,
-   hb_p_withobjectend
+   hb_p_withobjectend,
+   hb_p_macrosend,
+   hb_p_pushovarref,
+   hb_p_arraypushref
 };
 
 void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )

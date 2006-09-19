@@ -455,7 +455,10 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_DIVEQ                 */
    hb_p_default,               /* HB_P_WITHOBJECTSTART       */
    hb_p_default,               /* HB_P_WITHOBJECTMESSAGE     */
-   hb_p_default                /* HB_P_WITHOBJECTEND         */
+   hb_p_default,               /* HB_P_WITHOBJECTEND         */
+   hb_p_default,               /* HB_P_MACROSEND             */
+   hb_p_default,               /* HB_P_PUSHOVARREF           */
+   hb_p_default                /* HB_P_ARRAYPUSHREF          */
 };
 
 void hb_compCodeTraceMarkDead( PFUNCTION pFunc )

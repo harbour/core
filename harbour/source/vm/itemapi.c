@@ -1275,6 +1275,11 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    else if( type & HB_IT_MEMVAR )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
+   else if( type & HB_IT_BYREF )
+   {
+      if( pItem->item.asRefer.offset == 0 && pItem->item.asRefer.value >= 0 )
+         hb_gcRefFree( pItem->item.asRefer.BasePtr.array );
+   }
    else if( type & HB_IT_POINTER )
    {
       if( pItem->item.asPointer.collect )
@@ -1317,6 +1322,11 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       else if( HB_IS_MEMVAR( pSource ) )
          hb_memvarValueIncRef( pSource->item.asMemvar.value );
 
+      else if( HB_IS_BYREF( pSource ) )
+      {
+         if( pSource->item.asRefer.offset == 0 && pSource->item.asRefer.value >= 0 )
+            hb_gcRefInc( pSource->item.asRefer.BasePtr.array );
+      }
       else if( HB_IS_POINTER( pSource ) )
       {
          if( pSource->item.asPointer.collect )
@@ -1454,9 +1464,22 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
          {
             if( pItem->item.asRefer.offset == 0 )
             {
-               /* a reference to a static variable */
-               pItem = *( pItem->item.asRefer.BasePtr.itemsbase ) +
-                       pItem->item.asRefer.value;
+               /* a reference to a static variable or array item */
+               if( ( ULONG ) pItem->item.asRefer.value <
+                   pItem->item.asRefer.BasePtr.array->ulLen )
+               {
+                  pItem = pItem->item.asRefer.BasePtr.array->pItems +
+                          pItem->item.asRefer.value;
+               }
+               else if( hb_vmRequestQuery() == 0 )
+               {
+                  hb_arrayPushBase( pItem->item.asRefer.BasePtr.array );
+                  hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asRefer.value + 1 );
+                  hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                                 2, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
+                  hb_stackPop();
+                  hb_stackPop();
+               }
             }
             else
             {
@@ -1471,7 +1494,8 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
          else
          {
             /* local variable referenced in a codeblock */
-            pItem = hb_codeblockGetRef( pItem->item.asRefer.BasePtr.block, pItem );
+            pItem = hb_codeblockGetRef( pItem->item.asRefer.BasePtr.block,
+                                        pItem->item.asRefer.value );
          }
       }
    }

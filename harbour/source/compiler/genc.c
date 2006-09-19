@@ -399,6 +399,15 @@ static HB_GENC_FUNC( hb_p_arraypush )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_arraypushref )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_ARRAYPUSHREF,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_arraypop )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -838,6 +847,16 @@ static HB_GENC_FUNC( hb_p_macrofunc )
    HB_SYMBOL_UNUSED( lPCodePos );
 
    fprintf( cargo->yyc, "\tHB_P_MACROFUNC, %i, %i,\n",
+            pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_macrosend )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROSEND, %i, %i,\n",
             pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
    return 3;
 }
@@ -1648,6 +1667,15 @@ static HB_GENC_FUNC( hb_p_sendshort )
    return 2;
 }
 
+static HB_GENC_FUNC( hb_p_pushovarref )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHOVARREF,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    fprintf( cargo->yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
@@ -2135,7 +2163,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_diveq,
    hb_p_withobjectstart,
    hb_p_withobjectmessage,
-   hb_p_withobjectend
+   hb_p_withobjectend,
+   hb_p_macrosend,
+   hb_p_pushovarref,
+   hb_p_arraypushref
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

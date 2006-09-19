@@ -95,6 +95,7 @@ extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class in
 extern BOOL       hb_clsHasDestructor( USHORT uiClass );
 
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
+extern BOOL       hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE pStack ); /* create object variable reference */
 extern BOOL       hb_objHasOperator( PHB_ITEM pObject, USHORT uiOperator );
 extern BOOL       hb_objOperatorCall( USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 extern void       hb_objDestructorCall( PHB_ITEM pObject );

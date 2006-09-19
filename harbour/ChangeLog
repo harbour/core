@@ -8,6 +8,41 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-09-19 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+  * harbour/source/vm/hvm.c
+    + added support to compiler for sending messages with multi
+      parameters resolved by macro operator: s:="1,2,3"; o:msg(&s)
+      It works just like for functions and it also needs XBASE extension
+      support enabled during compilation, -kx switch in compiler, it's
+      enabled by default.
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! added missing DBOI_* index in parameters passed to user ORDINFO()
+      method.
+
+2006-09-19 11:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbapicls.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+   + added three new PCODEs:
+      HB_P_MACROSEND    - to use for: s:=1,2,3"; o:=send(&s)
+      HB_P_PUSHOVARREF  - to create references to object variables: @o:var
+   
                           in some optimization, f.e.: a[ <exp1> ] += <exp2>
                           or directly by: func( @a[ <exp> ] )
                           if we add passing array elements by reference

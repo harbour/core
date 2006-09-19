@@ -98,6 +98,7 @@ extern HB_EXPORT void   hb_xvmRetValue( void );                   /* pops the la
 extern HB_EXPORT BOOL   hb_xvmDo( USHORT uiParams );
 extern HB_EXPORT BOOL   hb_xvmFunction( USHORT uiParams );
 extern HB_EXPORT BOOL   hb_xvmSend( USHORT uiParams );
+extern HB_EXPORT BOOL   hb_xvmPushObjectVarRef( void );
 extern HB_EXPORT void   hb_xvmPushStatic( USHORT uiStatic );
 extern HB_EXPORT void   hb_xvmPushStaticByRef( USHORT uiStatic );
 extern HB_EXPORT void   hb_xvmPopStatic( USHORT uiStatic );
@@ -159,6 +160,7 @@ extern HB_EXPORT BOOL   hb_xvmDec( void );
 extern HB_EXPORT void   hb_xvmArrayDim( USHORT uiDimensions );    /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 extern HB_EXPORT void   hb_xvmArrayGen( ULONG ulElements );       /* generates an ulElements Array and fills it from the stack values */
 extern HB_EXPORT BOOL   hb_xvmArrayPush( void );                  /* pushes an array element to the stack, removing the array and the index from the stack */
+extern HB_EXPORT BOOL   hb_xvmArrayPushRef( void );               /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT BOOL   hb_xvmArrayPop( void );                   /* pops a value from the stack */
 
 extern HB_EXPORT void   hb_xvmLocalName( USHORT uiLocal, char * szLocalName );
@@ -167,6 +169,7 @@ extern HB_EXPORT void   hb_xvmModuleName( char * szModuleName );
 
 extern HB_EXPORT BOOL   hb_xvmMacroDo( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroFunc( USHORT uiArgSets );
+extern HB_EXPORT BOOL   hb_xvmMacroSend( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroArrayGen( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroPush( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroPushRef( void );

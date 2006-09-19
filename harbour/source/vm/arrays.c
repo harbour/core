@@ -101,6 +101,15 @@ static void hb_arrayReleaseItems( PHB_BASEARRAY pBaseArray )
    }
 }
 
+void hb_arrayPushBase( PHB_BASEARRAY pBaseArray )
+{
+   PHB_ITEM pItem = hb_stackAllocItem();
+
+   pItem->type = HB_IT_ARRAY;
+   pItem->item.asArray.value = pBaseArray;
+   hb_gcRefInc( pBaseArray );
+}
+
 /* This releases array when called from the garbage collector */
 static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 {
@@ -114,13 +123,8 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
       if( pBaseArray->uiPrevCls == 0 &&
           hb_clsHasDestructor( pBaseArray->uiClass ) )
       {
-         PHB_ITEM pItem = hb_stackAllocItem();
-
-         pItem->type = HB_IT_ARRAY;
-         pItem->item.asArray.value = pBaseArray;
-         hb_gcRefInc( pBaseArray );
-
-         hb_objDestructorCall( pItem );
+         hb_arrayPushBase( pBaseArray );
+         hb_objDestructorCall( hb_stackItemFromTop( -1 ) );
 
          /* Clear object properities before hb_stackPop(), [druzus] */
          pBaseArray->uiClass = 0;
@@ -403,6 +407,45 @@ HB_EXPORT BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
    }
 }
 
+HB_EXPORT BOOL hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemRef(%p, %lu, %p)", pArray, ulIndex, pItem));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      if( pArray != pItem )
+      {
+         if( HB_IS_COMPLEX( pItem ) )
+            hb_itemClear( pItem );
+         hb_gcRefInc( pArray->item.asArray.value );
+      }
+      pItem->type = HB_IT_BYREF;
+      pItem->item.asRefer.BasePtr.array = pArray->item.asArray.value;
+      pItem->item.asRefer.value = ulIndex - 1;
+      pItem->item.asRefer.offset = 0;
+      return TRUE;
+   }
+   else
+   {
+      hb_itemSetNil( pItem );
+      return FALSE;
+   }
+}
+
+/*
+ * This function returns a pointer to an item occupied by the specified
+ * array element - it doesn't return an item's value
+ */
+PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemPtr(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return pArray->item.asArray.value->pItems + ulIndex - 1;
+   else
+      return NULL;
+}
+
 char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
@@ -425,20 +468,6 @@ long hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
       /* NOTE: Intentionally calling it with a bad parameter in order to get
                the default value from hb_itemGetDL(). [vszakats] */
       return hb_itemGetDL( NULL );
-}
-
-/*
- * This function returns a pointer to an item occupied by the specified
- * array element - it doesn't return an item's value
- */
-PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemPtr(%p, %lu)", pArray, ulIndex));
-
-   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      return pArray->item.asArray.value->pItems + ulIndex - 1;
-   else
-      return NULL;
 }
 
 BOOL hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex )

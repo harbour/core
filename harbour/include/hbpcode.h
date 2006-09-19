@@ -217,8 +217,11 @@ typedef enum
    HB_P_WITHOBJECTSTART,       /* 143 start WITH OBJECT code */
    HB_P_WITHOBJECTMESSAGE,     /* 144 push message for WITH OBJECT */
    HB_P_WITHOBJECTEND,         /* 145 end WITH OBJECT code */
+   HB_P_MACROSEND,             /* 146 send operator with macrlist params */
+   HB_P_PUSHOVARREF,           /* 147 pushes reference to object variable */
+   HB_P_ARRAYPUSHREF,          /* 148 pushes reference to array element */
 /* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 146 this defines the number of defined pcodes */
+   HB_P_LAST_PCODE             /* 149 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

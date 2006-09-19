@@ -224,7 +224,10 @@ static PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_DIVEQ                 */
    NULL,                       /* HB_P_WITHOBJECTSTART       */
    NULL,                       /* HB_P_WITHOBJECTMESSAGE     */
-   NULL                        /* HB_P_WITHOBJECTEND         */
+   NULL,                       /* HB_P_WITHOBJECTEND         */
+   NULL,                       /* HB_P_MACROSEND             */
+   NULL,                       /* HB_P_PUSHOVARREF           */
+   NULL                        /* HB_P_ARRAYPUSHREF          */
 };
 
 void hb_compStripFuncLines( PFUNCTION pFunc )

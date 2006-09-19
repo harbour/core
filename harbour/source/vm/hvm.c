@@ -136,6 +136,7 @@ static void    hb_vmOr( void );              /* performs the logical OR on the l
 
 /* Array */
 static void    hb_vmArrayPush( void );       /* pushes an array element to the stack, removing the array and the index from the stack */
+static void    hb_vmArrayPushRef( void );    /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 static void    hb_vmArrayPop( void );        /* pops a value from the stack */
 static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
@@ -143,6 +144,7 @@ static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Arr
 /* macros */
 static void hb_vmMacroDo( USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
 static void hb_vmMacroFunc( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
+static void hb_vmMacroSend( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
 static void hb_vmMacroArrayGen( USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
 static void hb_vmMacroPushIndex( BYTE bFlags );       /* push macro array index {...}[ &var ] */
 
@@ -188,6 +190,7 @@ static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by re
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
 static void    hb_vmDuplicate( void );            /* duplicates the latest value on the stack */
 static void    hb_vmDuplTwo( void );              /* duplicates the latest two value on the stack */
+static void    hb_vmPushObjectVarRef( void );     /* pushes reference to object variable */
 
 /* Pop */
 static BOOL    hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
@@ -875,6 +878,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
+         case HB_P_ARRAYPUSHREF:
+            hb_vmArrayPushRef();
+            w++;
+            break;
+
          case HB_P_ARRAYPOP:
             hb_vmArrayPop();
             w++;
@@ -951,6 +959,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                w++;
             else
                hb_stackPushReturn();
+            break;
+
+         case HB_P_PUSHOVARREF:
+            hb_vmPushObjectVarRef();
+            w++;
             break;
 
          case HB_P_LINE:
@@ -1579,6 +1592,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MACROFUNC:
             hb_vmMacroFunc( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
+            w += 3;
+            break;
+
+         case HB_P_MACROSEND:
+            hb_vmMacroSend( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -3511,7 +3529,7 @@ static void hb_vmArrayPush( void )
          {
             /* this is a constant array { 1, 2, 3 } - we cannot use
              * the optimization here
-            */
+             */
             hb_itemMove( pIndex, pArray->item.asArray.value->pItems + ulIndex - 1 );
             hb_itemMove( pArray, pIndex );
             hb_stackDec();
@@ -3543,6 +3561,67 @@ static void hb_vmArrayPush( void )
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
 }
 
+static void hb_vmArrayPushRef( void )
+{
+   PHB_ITEM pIndex;
+   PHB_ITEM pArray;
+   ULONG ulIndex;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPushRef()"));
+
+   pIndex = hb_stackItemFromTop( -1 );
+   pArray = hb_stackItemFromTop( -2 );
+
+   if( HB_IS_INTEGER( pIndex ) )
+      ulIndex = ( ULONG ) pIndex->item.asInteger.value;
+   else if( HB_IS_LONG( pIndex ) )
+      ulIndex = ( ULONG ) pIndex->item.asLong.value;
+   else if( HB_IS_DOUBLE( pIndex ) )
+      ulIndex = ( ULONG ) pIndex->item.asDouble.value;
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+
+      return;
+   }
+
+   if( HB_IS_ARRAY( pArray ) )
+   {
+      /*
+       * TODO: operator overloading will need some deeper HVM modifications
+       *       to work well with references. It will be necessary to create
+       *       separate versions of hb_itemUnRef() for access and assign
+       *       operations, [druzus]
+       */
+#if 0
+      if( HB_IS_OBJECT( pArray ) &&
+          hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
+      {
+         hb_stackPop();
+         return;
+      }
+#endif
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      {
+         /* This function is safe for overwriting passed array, [druzus] */
+         hb_arrayGetItemRef( pArray, ulIndex, pArray );
+         hb_stackDec();
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+}
+
 static void hb_vmArrayPop( void )
 {
    PHB_ITEM pValue;
@@ -3555,9 +3634,6 @@ static void hb_vmArrayPop( void )
    pValue = hb_stackItemFromTop( -3 );
    pArray = hb_stackItemFromTop( -2 );
    pIndex = hb_stackItemFromTop( -1 );
-
-   if( HB_IS_BYREF( pArray ) )
-      pArray = hb_itemUnRef( pArray );
 
    if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
@@ -3825,6 +3901,17 @@ static void hb_vmMacroFunc( USHORT uiArgSets )
    hb_stackDecrease( uiArgSets );
    hb_vmDo( lArgs );
    hb_stackPushReturn();
+}
+
+static void hb_vmMacroSend( USHORT uiArgSets )
+{
+   LONG lArgs;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroSend(%hu)", uiArgSets));
+
+   lArgs = hb_vmArgsJoin( -1, uiArgSets );
+   hb_stackDecrease( uiArgSets );
+   hb_vmSend( lArgs );
 }
 
 static void hb_vmMacroArrayGen( USHORT uiArgSets )
@@ -4129,6 +4216,25 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    hb_stackOldFrame( &sStackState );
 
    s_bDebugging = bDebugPrevState;
+}
+
+static void hb_vmPushObjectVarRef( void )
+{
+   HB_STACK_STATE sStackState;
+   PHB_ITEM pItem;
+   PHB_SYMB pSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushObjectVarRef()"));
+
+   pItem = hb_stackNewFrame( &sStackState, 0 );   /* procedure name */
+   pSym = pItem->item.asSymbol.value;
+
+   if( !hb_objGetVarRef( hb_stackSelfItem(), pSym, &sStackState ) )
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName, 1, hb_stackSelfItem() );
+
+   hb_stackOldFrame( &sStackState );
+
+   hb_stackPushReturn();
 }
 
 static HARBOUR hb_vmDoBlock( void )
@@ -4926,7 +5032,8 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
    /* we store the offset instead of a pointer to support a dynamic stack */
    pTop->item.asRefer.value = hb_stackGetStaticsBase() + uiStatic - 1;
    pTop->item.asRefer.offset = 0;    /* 0 for static variables */
-   pTop->item.asRefer.BasePtr.itemsbase = &s_aStatics.item.asArray.value->pItems;
+   pTop->item.asRefer.BasePtr.array = s_aStatics.item.asArray.value;
+   hb_gcRefInc( s_aStatics.item.asArray.value );
 }
 
 static void hb_vmPushVariable( PHB_SYMB pVarSymb )
@@ -6244,6 +6351,15 @@ HB_EXPORT BOOL hb_xvmSend( USHORT uiParams )
    hb_itemSetNil( hb_stackReturnItem() );
    hb_vmSend( uiParams );
    hb_stackPushReturn();
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmPushObjectVarRef( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushObjectVarRef()"));
+
+   hb_vmPushObjectVarRef();
 
    HB_XVM_RETURN
 }
@@ -7627,13 +7743,10 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
    PHB_ITEM pValue;
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPop(%lu", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayItemPop(%lu", ulIndex));
 
    pValue = hb_stackItemFromTop( -2 );
    pArray = hb_stackItemFromTop( -1 );
-
-   if( HB_IS_BYREF( pArray ) )
-      pArray = hb_itemUnRef( pArray );
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -7706,6 +7819,15 @@ HB_EXPORT BOOL hb_xvmArrayPush( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayPush()"));
 
    hb_vmArrayPush();
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmArrayPushRef( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayPushRef()"));
+
+   hb_vmArrayPushRef();
 
    HB_XVM_RETURN
 }
@@ -7804,6 +7926,15 @@ HB_EXPORT BOOL hb_xvmMacroFunc( USHORT uiArgSets )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroFunc(%hu)", uiArgSets));
 
    hb_vmMacroFunc( uiArgSets );
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmMacroSend( USHORT uiArgSets )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroSend(%hu)", uiArgSets));
+
+   hb_vmMacroSend( uiArgSets );
 
    HB_XVM_RETURN
 }

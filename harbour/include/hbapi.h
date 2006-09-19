@@ -93,7 +93,7 @@ HB_EXTERN_BEGIN
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
 #define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
-#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_STRING ) )
+#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_BYREF | HB_IT_STRING ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_POINTER | HB_IT_BYREF ) )
 
 #if 0
@@ -294,9 +294,9 @@ struct hb_struMemvar
 struct hb_struRefer
 {
    union {
+      struct _HB_BASEARRAY * array;       /* array (statics and array item references) */
       struct _HB_CODEBLOCK * block;       /* codeblock */
       struct _HB_ITEM * itemPtr;          /* item pointer  */
-      struct _HB_ITEM ** itemsbase;       /* static variables */
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
    LONG offset;                           /* 0 for static variables */
@@ -600,6 +600,7 @@ extern HB_EXPORT BOOL       hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* set
 extern HB_EXPORT BOOL       hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
 extern HB_EXPORT BOOL       hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern HB_EXPORT BOOL       hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
+extern HB_EXPORT BOOL       hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
 /* hb_arrayGetItemPtr() is dangerous */
 extern HB_EXPORT PHB_ITEM   hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
 extern HB_EXPORT ULONG      hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
@@ -627,6 +628,10 @@ extern HB_EXPORT PHB_ITEM   hb_arrayBaseParams( void ); /* Creates and returns a
 extern HB_EXPORT PHB_ITEM   hb_arraySelfParams( void ); /* Creates and returns an Array of Generic Parameters for current base symbol with self item */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT LONGLONG   hb_arrayGetNLL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long long numeric value contained on an array element */
+#endif
+#ifdef _HB_API_INTERNAL_
+/* internal array API not exported */
+extern void hb_arrayPushBase( PHB_BASEARRAY pBaseArray );
 #endif
 
 /* string management */
@@ -726,7 +731,7 @@ extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeb
 extern HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer, USHORT uiLocals, const BYTE * pLocalPosTable, PHB_SYMB pSymbols, USHORT usLen ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
 extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, PHB_ITEM pRefer ); /* get local variable passed by reference */
+extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, LONG iItemPos ); /* get local variable passed by reference */
 extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
 
 /* memvars subsystem */
