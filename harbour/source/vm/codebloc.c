@@ -170,7 +170,8 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
           * TODO: If Harbour will support threads in the future then we need
           * to implement some kind of semaphores here.
           */
-         pLocal = hb_stackItemFromBase( HB_PCODE_MKUSHORT( pLocalPosTable ) );
+         int iLocal = HB_PCODE_MKUSHORT( pLocalPosTable );
+         pLocal = hb_stackLocalVariable( &iLocal );
          pLocalPosTable += 2;
 
          pLocal = hb_memvarDetachLocal( pLocal );

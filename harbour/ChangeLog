@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+     ! Fixed leak introduced in previous commit.
+
+2006-09-20 23:17 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbexprb.c
    * harbour/include/hbexprop.h
    * harbour/source/common/expropt2.c
      % Compile-time optimization added for expressions below:
