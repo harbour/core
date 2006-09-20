@@ -249,6 +249,10 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
    pItem->item.asSymbol.stackstate = pStack;
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
+   /* set default value of 'paramdeclcnt' - it will be updated
+    * in hb_vmVFrame only
+   */
+   pItem->item.asSymbol.paramdeclcnt = uiParams;
    hb_stack.pBase = pBase;
 
    return pItem;
@@ -293,6 +297,28 @@ HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    return * ( hb_stack.pBase + nFromBase + 1 );
+}
+
+#undef hb_stackLocalVariable
+HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase )
+{
+   HB_ITEM_PTR pBase = *hb_stack.pBase;
+   
+   if( *piFromBase <= 0 )
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
+
+   if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt )
+   {
+      /* function with variable number of parameters:
+       * FUNCTION foo( a,b,c,...)
+       * LOCAL x,y,z
+       * number of passed parameters is bigger then number of declared
+       * parameters - skip additional parameters only for local variables
+       */
+      if( *piFromBase > pBase->item.asSymbol.paramdeclcnt )
+         *piFromBase += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
+   }
+   return * ( hb_stack.pBase + *piFromBase + 1 );
 }
 
 #undef hb_stackBaseItem

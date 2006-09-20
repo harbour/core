@@ -638,7 +638,8 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_WITHOBJECTEND         */
    NULL,                       /* HB_P_MACROSEND             */
    NULL,                       /* HB_P_PUSHOVARREF           */
-   NULL                        /* HB_P_ARRAYPUSHREF          */
+   NULL,                       /* HB_P_ARRAYPUSHREF          */
+   NULL                        /* HB_P_VFRAME                */
 };
 
 void hb_compFixFuncPCode( PFUNCTION pFunc )

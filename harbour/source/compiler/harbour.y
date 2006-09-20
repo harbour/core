@@ -231,6 +231,7 @@ static void hb_compDebugStart( void ) { };
 %token FOREACH DESCEND
 %token DOSWITCH WITHOBJECT
 %token NUM_DATE
+%token EPSILON
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -345,8 +346,10 @@ CompTimeStr: LITERAL { hb_compAutoOpenAdd( $1 ); }
            | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( szFileName ); }
            ;
 
-Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
-           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
+Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
+           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf {}
+           | FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); hb_comp_iVarScope = VS_PARAMETER; } '(' Params ')' Crlf {}
+           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); hb_comp_iVarScope = VS_PARAMETER;} '(' Params ')' Crlf {}
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -355,9 +358,10 @@ FunScope   :                  { $$ = HB_FS_PUBLIC; }
            | EXIT             { $$ = HB_FS_EXIT; }
            ;
 
-Params     :                                                         { $$ = 0; }
-           | '(' ')'                                                 { $$ = 0; }
-           | '(' { hb_comp_iVarScope = VS_PARAMETER; } ParamList ')' { $$ = $3; }
+Params     : /*no parameters */ { $$ = 0; }
+           | EPSILON { hb_comp_functions.pLast->pCode[0] = HB_P_VFRAME; $$ = 0; }
+           | ParamList { $$ = $1; }
+           | ParamList ',' EPSILON { hb_comp_functions.pLast->pCode[0] = HB_P_VFRAME; $$ = $1; }
            ;
 
 AsType     : /* not specified */           { hb_comp_cVarType = ' '; }

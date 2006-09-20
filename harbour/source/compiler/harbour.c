@@ -3682,7 +3682,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
          }
       }
    }
-   else if( pFunc->pCode[ 0 ] == HB_P_FRAME &&
+   else if( (pFunc->pCode[ 0 ] == HB_P_FRAME || pFunc->pCode[ 0 ] == HB_P_VFRAME) &&
             pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
@@ -3713,7 +3713,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
          pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
          bSkipFRAME = FALSE;
       }
-      else
+      else if( pFunc->pCode[ 0 ] == HB_P_FRAME )
          bSkipFRAME = TRUE;
 
       if( pFunc->bFlags & FUN_USES_STATICS )

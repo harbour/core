@@ -158,6 +158,7 @@ static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals a
 static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
+static void    hb_vmVFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and variable number of params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
@@ -1783,13 +1784,16 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          }
 
          case HB_P_LOCALNEARADDINT:
+         {
+            SHORT iLocal = pCode[ w + 1 ];
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
 
-            hb_vmAddInt( hb_stackItemFromBase( pCode[ w + 1 ] ), 
+            hb_vmAddInt( hb_stackLocalVariable( &iLocal ), 
                          HB_PCODE_MKSHORT( &( pCode[ w + 2 ] ) ) );
             w += 4;
             break;
-
+         }
+         
          /* WITH OBJECT */
          
          case HB_P_WITHOBJECTMESSAGE:
@@ -1807,6 +1811,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_stackPop();    /* remove with object envelope */
             hb_stackPop();    /* remove implicit object */
             w += 1;
+            break;
+
+         case HB_P_VFRAME:
+            hb_vmVFrame( pCode[ w + 1 ], pCode[ w + 2 ] );
+            w += 3;
             break;
 
          /* misc */
@@ -4432,21 +4441,45 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
 static void hb_vmFrame( BYTE bLocals, BYTE bParams )
 {
    int iTotal, iExtra;
+   int ipcount = hb_pcount();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFrame(%d, %d)", (int) bLocals, (int) bParams));
 
-   iExtra = hb_pcount() - bParams;
+   iExtra = ipcount - bParams;
 
-   while( iExtra > 0 )
+   if( iExtra > 0 )
    {
-      hb_itemClear( hb_stackItemFromTop( -iExtra ) );
-      iExtra--;
+      hb_stackBaseItem()->item.asSymbol.paramcnt = bParams;
+      while( iExtra > 0 )
+      {
+         hb_itemClear( hb_stackItemFromTop( -iExtra ) );
+         iExtra--;
+      }
    }
 
    iTotal = bLocals + bParams;
    if( iTotal )
    {
-      iTotal -= hb_pcount();
+      iTotal -= ipcount;
+      while( --iTotal >= 0 )
+         hb_vmPushNil();
+   }
+}
+
+static void hb_vmVFrame( BYTE bLocals, BYTE bParams )
+{
+   int iTotal;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmVFrame(%d, %d)", (int) bLocals, (int) bParams));
+
+   hb_stackBaseItem()->item.asSymbol.paramdeclcnt = bParams;
+
+   if( hb_pcount() < bParams )
+      iTotal = bLocals + bParams - hb_pcount();
+   else
+      iTotal = bLocals;
+   if( iTotal )
+   {
       while( --iTotal >= 0 )
          hb_vmPushNil();
    }
@@ -4970,7 +5003,7 @@ static void hb_vmPushLocal( SHORT iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackItemFromBase( iLocal );
+      pLocal = hb_stackLocalVariable( &iLocal );
    }
    else
    {
@@ -4997,6 +5030,7 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
 
    pTop->type = HB_IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
+   hb_stackLocalVariable( &iLocal );
    pTop->item.asRefer.value = iLocal;
    pTop->item.asRefer.offset = hb_stackBaseOffset();
    if( iLocal >= 0 )
@@ -5332,7 +5366,7 @@ static void hb_vmPopLocal( SHORT iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackItemFromBase( iLocal );
+      pLocal = hb_stackLocalVariable( &iLocal );
       if( HB_IS_BYREF( pLocal ) )
          pLocal = hb_itemUnRef( pLocal );
    }
@@ -6318,6 +6352,13 @@ HB_EXPORT void hb_xvmFrame( int iLocals, int iParams )
    hb_vmFrame( ( BYTE ) iLocals, ( BYTE ) iParams );
 }
 
+HB_EXPORT void hb_xvmVFrame( int iLocals, int iParams )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmVFrame(%d, %d)", iLocals, iParams));
+
+   hb_vmVFrame( ( BYTE ) iLocals, ( BYTE ) iParams );
+}
+
 HB_EXPORT void hb_xvmSFrame( PHB_SYMB pSymbol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmSFrame(%p)", pSymbol));
@@ -6615,7 +6656,7 @@ HB_EXPORT void hb_xvmLocalSetInt( int iLocal, LONG lValue )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      pLocal = hb_stackItemFromBase( iLocal );
+      pLocal = hb_stackLocalVariable( &iLocal );
       if( HB_IS_BYREF( pLocal ) )
          pLocal = hb_itemUnRef( pLocal );
    }
@@ -6644,7 +6685,7 @@ HB_EXPORT BOOL hb_xvmLocalAddInt( int iLocal, LONG lAdd )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAddInt(%d,%ld)", iLocal, lAdd));
 
-   hb_vmAddInt( hb_stackItemFromBase( iLocal ), lAdd );
+   hb_vmAddInt( hb_stackLocalVariable( &iLocal ), lAdd );
 
    HB_XVM_RETURN
 }
@@ -6655,7 +6696,7 @@ HB_EXPORT BOOL hb_xvmLocalAdd( int iLocal )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalAdd(%d)", iLocal));
 
-   pLocal = hb_stackItemFromBase( iLocal );
+   pLocal = hb_stackLocalVariable( &iLocal );
    if( HB_IS_BYREF( pLocal ) )
       pLocal = hb_itemUnRef( pLocal );
    hb_vmPlus( pLocal, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), 2 );

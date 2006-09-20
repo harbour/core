@@ -85,6 +85,7 @@ extern HB_STACK hb_stack;
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
+extern HB_ITEM_PTR hb_stacklocalVariable( int *piFromBase );
 extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
@@ -183,6 +184,10 @@ extern void        hb_stackClearMevarsBase( void );
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
                                     } while ( 0 )
+#define hb_stackLocalVariable( p )  ((((*hb_stack.pBase)->item.asSymbol.paramcnt > (*hb_stack.pBase)->item.asSymbol.paramdeclcnt) && \
+                                     (*(p)) > (*hb_stack.pBase)->item.asSymbol.paramdeclcnt ) ? \
+                                    (* ( hb_stack.pBase + ( int ) ((*(p))+=((*hb_stack.pBase)->item.asSymbol.paramcnt - (*hb_stack.pBase)->item.asSymbol.paramdeclcnt)) + 1 ) ) : \
+                                    (* ( hb_stack.pBase + ( int ) (*(p)) + 1 ) ) )
 #endif
 
 

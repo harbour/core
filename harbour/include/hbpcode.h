@@ -220,8 +220,8 @@ typedef enum
    HB_P_MACROSEND,             /* 146 send operator with macrlist params */
    HB_P_PUSHOVARREF,           /* 147 pushes reference to object variable */
    HB_P_ARRAYPUSHREF,          /* 148 pushes reference to array element */
-/* NOTE: This have to be the last definition */
-   HB_P_LAST_PCODE             /* 149 this defines the number of defined pcodes */
+   HB_P_VFRAME,                /* 149 frame with variable number of parameters */
+   HB_P_LAST_PCODE             /* 150 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

@@ -1691,6 +1691,7 @@ Separator     {SpaceTab}
 ".or."         hb_comp_iState =OPERATOR; return OR;
 "!"|".not."    hb_comp_iState =OPERATOR; return NOT;
 "::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
+"..."          hb_comp_iState = OPERATOR; return EPSILON;
 [,\|\#\&\.\:\<\>\@] hb_comp_iState =OPERATOR; return yytext[ 0 ];
 [\{]           hb_comp_iState =LARRAY; return yytext[ 0 ];
 [\}]           hb_comp_iState =RARRAY; return yytext[ 0 ];

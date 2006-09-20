@@ -1589,6 +1589,15 @@ static HB_GENC_FUNC( hb_p_withobjectmessage )
    return 3;
 }
 
+static HB_GENC_FUNC( hb_p_vframe )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmVFrame( %hu, %hu );\n",
+            pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
+   return 3;
+}
+
 
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
@@ -1747,7 +1756,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_withobjectend,
    hb_p_macrosend,
    hb_p_pushovarref,
-   hb_p_arraypushref
+   hb_p_arraypushref,
+   hb_p_vframe
 };
 
 void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )

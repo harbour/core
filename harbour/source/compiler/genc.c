@@ -2009,6 +2009,16 @@ static HB_GENC_FUNC( hb_p_withobjectend )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_vframe )
+{
+   fprintf( cargo->yyc, "\tHB_P_VFRAME, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
+   fprintf( cargo->yyc, "\n" );
+   return 3;
+}
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -2166,7 +2176,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_withobjectend,
    hb_p_macrosend,
    hb_p_pushovarref,
-   hb_p_arraypushref
+   hb_p_arraypushref,
+   hb_p_vframe
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )

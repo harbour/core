@@ -8,6 +8,51 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      PHB_FUNC - and added translation for PHB_SYMB to not force using
+      [P]HB_SYMB in 3-rd party code
+
+      
+    * added protection against possible GPF after executing
+      hb_stackBaseProcOffset() when first item on the stack
+      
+      cases. Probably some more general solution like leaving
+      first dummy item on HVM stack for breaking stack scan
+      loops will be better. I'll think about it.
+      
+  * harbour/source/vm/itemapi.c
+    ! fixed clearing enumerators
+
+2006-09-20 14:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbpcode.h
+      + added new pcode HB_P_VFRAME
+
+   * include/hbapi.h
+      + added USHORT paramdeclcnt to asSymbol structure
+
+   * include/hbstack.h
+      + added support for variable number of parameters in 
+      + added hb_stackLocalVariable() to acces local variables
+
+   * source/compiler/genc.c
+   * source/compiler/gencc.c
+   * source/compiler/harbour.c
+      
+   * source/compiler/harbour.y
+   * source/compiler/hbdead.c
+   * source/compiler/hbfix.c
+   * source/compiler/hblbl.c
+   * source/compiler/hbpcode.c
+   * source/compiler/hbstripl.c
+   * source/vm/hvm.c
+      + added support for variable number of parameters in
+      functions/procedures
+
+   + tests/varparam.prg
+   HB_PVALUE( iParamNum ) - returns <iParamNum> parameter   
+      parameters
+
+   * source/vm/arrayshb.c
+  
       arguments are passed ( HB_APARAMS() == HB_APARAMS(0) )
 
   SYNTAX for variable number of parameters

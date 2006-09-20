@@ -330,5 +330,8 @@ HB_FUNC( ACLONE )
 
 HB_FUNC( HB_APARAMS )
 {
-   hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
+   if( hb_pcount() == 0 )
+      hb_itemRelease( hb_itemReturn( hb_arrayFromParams( 1 ) ) );
+   else
+      hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
 }
