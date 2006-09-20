@@ -60,12 +60,6 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_dateFormat()
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- *    hb_dateEncStr()
- *    hb_dateDecStr()
- *    hb_dateStrPut()
- *    hb_dateStrGet()
- *
  * See doc/license.txt for licensing terms.
  *
  */

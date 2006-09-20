@@ -1075,7 +1075,7 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
    HB_EXPR_PTR pExpr;
 
-   pExpr =pSelf->value.asList.pExprList;  /* get conditional expression */
+   pExpr = pSelf->value.asList.pExprList;  /* get conditional expression */
    if( pExpr->ExprType == HB_ET_LOGICAL )
    {
       /* the condition was reduced to a logical value: .T. or .F.
@@ -1214,10 +1214,10 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 
          if( bVal == 0 && pArg->value.asNum.lVal != 0 )
          {
-           	pExpr->value.asString.string = ( char * ) hb_xgrab( 1 );
-           	pExpr->value.asString.string[ 0 ] = '\0';
-           	pExpr->value.asString.dealloc = TRUE;
-           	pExpr->ulLength = 0;
+            pExpr->value.asString.string = ( char * ) hb_xgrab( 1 );
+            pExpr->value.asString.string[ 0 ] = '\0';
+            pExpr->value.asString.dealloc = TRUE;
+            pExpr->ulLength = 0;
          }
          else
          {
@@ -1225,20 +1225,20 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
             pExpr->value.asString.string[ 0 ] = bVal;
             pExpr->value.asString.string[ 1 ] = '\0';
             pExpr->value.asString.dealloc = TRUE;
-     	      pExpr->ulLength = 1;
+            pExpr->ulLength = 1;
          }
       }
       else
       {
-        	pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-        	pExpr->value.asString.string[ 0 ] = ( ( unsigned int ) pArg->value.asNum.dVal % 256 );
-        	pExpr->value.asString.string[ 1 ] = '\0';
-        	pExpr->value.asString.dealloc = TRUE;
-        	pExpr->ulLength = 1;
+         pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
+         pExpr->value.asString.string[ 0 ] = ( ( unsigned int ) pArg->value.asNum.dVal % 256 );
+         pExpr->value.asString.string[ 1 ] = '\0';
+         pExpr->value.asString.dealloc = TRUE;
+         pExpr->ulLength = 1;
       }
       
-     	hb_compExprFree( pParms, HB_MACRO_PARAM );
-     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      hb_compExprFree( pParms, HB_MACRO_PARAM );
+      hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
@@ -1251,13 +1251,13 @@ BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-	
+
    if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY )
    {
-   	HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ulLength );
+      HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ulLength );
 
-     	hb_compExprFree( pParms, HB_MACRO_PARAM );
-     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      hb_compExprFree( pParms, HB_MACRO_PARAM );
+      hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
@@ -1269,13 +1269,13 @@ BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-	
+
    if( pArg->ExprType == HB_ET_STRING )
    {
-   	HB_EXPR_PTR pExpr = hb_compExprNewLong( (BYTE)pArg->value.asString.string[0] );
+      HB_EXPR_PTR pExpr = hb_compExprNewLong( (BYTE)pArg->value.asString.string[0] );
 
-     	hb_compExprFree( pParms, HB_MACRO_PARAM );
-     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      hb_compExprFree( pParms, HB_MACRO_PARAM );
+      hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
@@ -1283,20 +1283,33 @@ BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
    return FALSE;
 }
 
-BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_MACRO_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-	
-   if( pArg->ExprType == HB_ET_STRING && pArg->ulLength == 8 )
+   if( usCount == 1 )
    {
-   	HB_EXPR_PTR pExpr = hb_compExprNewDate( hb_dateEncStr( pArg->value.asString.string ) );
-
-     	hb_compExprFree( pParms, HB_MACRO_PARAM );
-     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+      HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+      
+      if( pArg->ExprType == HB_ET_STRING && ( pArg->ulLength == 8 || pArg->ulLength == 0 ) )
+      {
+         HB_EXPR_PTR pExpr = hb_compExprNewDate( pArg->ulLength == 0 ? 0 : hb_dateEncStr( pArg->value.asString.string ) );
+      
+         hb_compExprFree( pSelf->value.asFunCall.pParms, HB_MACRO_PARAM );
+         hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+         memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+         hb_compExprClear( pExpr );
+         return TRUE;
+      }
+   }
+   else
+   {
+      HB_EXPR_PTR pExpr = hb_compExprNewDate( 0 );
+      
+      hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
    }
+
    return FALSE;
 }

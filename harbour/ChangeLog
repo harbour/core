@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      or generate compile time error.
+
+  * harbour/source/vm/macro.c
+    % minor optimizations
+
+2006-09-21 12:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    % minor optimization in hb_itemParam()
+    ! fixed enumerator variable clearing in hb_itemCopy()
+
+2006-09-21 09:52 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/common/expropt2.c
      ! Fixed leak introduced in previous commit.
 
 2006-09-20 23:17 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)

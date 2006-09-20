@@ -48,11 +48,19 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_dateEncStr()
  *    hb_dateDecStr()
  *    hb_dateStrPut()
  *    hb_dateStrGet()
+ *
+ * See doc/license.txt for licensing terms.
  *
  */
 

@@ -393,7 +393,7 @@ BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_MACRO_DECL );
 BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_MACRO_DECL );
 BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_MACRO_DECL );
 BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_MACRO_DECL );
-BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_MACRO_DECL );
+BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_MACRO_DECL );
 BOOL hb_compExprIsValidMacro( char *, BOOL *, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
