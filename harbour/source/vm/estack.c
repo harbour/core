@@ -244,14 +244,13 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
    pStack->lBaseItem = hb_stack.pBase - hb_stack.pItems;
    pStack->lStatics = hb_stack.lStatics;
    pStack->ulPrivateBase = hb_memvarGetPrivatesBase();
-   pStack->uiClass = pStack->uiMethod = 0;
+   pStack->uiClass = pStack->uiMethod = pStack->uiLineNo = 0;
 
    pItem->item.asSymbol.stackstate = pStack;
-   pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
    /* set default value of 'paramdeclcnt' - it will be updated
     * in hb_vmVFrame only
-   */
+    */
    pItem->item.asSymbol.paramdeclcnt = uiParams;
    hb_stack.pBase = pBase;
 
@@ -453,10 +452,10 @@ void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
     * This function is called by FM module and has to be ready for execution
     * before stack initialization, [druzus];
     */
-   if( hb_stack.pPos > hb_stack.pBase )
+   if( hb_stack.pPos > hb_stack.pBase && HB_IS_SYMBOL( * hb_stack.pBase ) )
    {
       strcpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName );
-      * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.lineno;
+      * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo;
    }
    else
    {
@@ -473,7 +472,9 @@ void hb_stackDispLocal( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispLocal()"));
 
    printf( hb_conNewLine() );
-   printf( HB_I_("Virtual Machine Stack Dump at %s(%i):"), ( *(hb_stack.pBase) )->item.asSymbol.value->szName, ( *(hb_stack.pBase) )->item.asSymbol.lineno );
+   printf( HB_I_("Virtual Machine Stack Dump at %s(%i):"),
+           ( *hb_stack.pBase )->item.asSymbol.value->szName,
+           ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
    printf( hb_conNewLine() );
    printf( "--------------------------" );
 
@@ -552,14 +553,14 @@ void hb_stackDispCall( void )
 
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
 
-      if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
+      if( HB_IS_OBJECT( *( pBase + 1 ) ) )
          sprintf( buffer, HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
             ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.lineno );
+            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
       else
          sprintf( buffer, HB_I_("Called from %s(%i)"),
             ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.lineno );
+            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
 
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
@@ -609,14 +610,14 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-      if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
+      if( HB_IS_OBJECT( *( pBase + 1 ) ) )
          sprintf( buffer, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
             ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.lineno );
+            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
       else
          sprintf( buffer, HB_I_("Called from %s(%i)\n"),
             ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.lineno );
+            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
 
       strcat( msg, buffer );
 
@@ -655,14 +656,14 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
 
       do
       {
-         if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )
+         if( HB_IS_OBJECT( *( pBase + 1 ) ) )
             fprintf( stderr, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
                      ( *pBase )->item.asSymbol.value->szName,
-                     ( *pBase )->item.asSymbol.lineno );
+                     ( *pBase )->item.asSymbol.stackstate->uiLineNo );
          else
             fprintf( stderr, HB_I_("Called from %s(%i)\n"),
                      ( *pBase )->item.asSymbol.value->szName,
-                     ( *pBase )->item.asSymbol.lineno );
+                     ( *pBase )->item.asSymbol.stackstate->uiLineNo );
 
          pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
       }

@@ -969,11 +969,13 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LINE:
 
-            HB_TRACE(HB_TR_INFO, ("Opcode: HB_P_LINE: %s (%i)", (hb_stackBaseItem())->item.asSymbol.value->szName, (hb_stackBaseItem())->item.asSymbol.lineno));
+            HB_TRACE(HB_TR_INFO, ("Opcode: HB_P_LINE: %s (%i)",
+                     hb_stackBaseItem()->item.asSymbol.value->szName,
+                     hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo));
 
-            (hb_stackBaseItem())->item.asSymbol.lineno = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
+            hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
             if( s_bDebugging && s_bDebugShowLines )
-               hb_vmDebuggerShowLine( (hb_stackBaseItem())->item.asSymbol.lineno );
+               hb_vmDebuggerShowLine( hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo );
             w += 3;
             break;
 
@@ -4250,7 +4252,6 @@ static void hb_vmPushObjectVarRef( void )
 static HARBOUR hb_vmDoBlock( void )
 {
    PHB_ITEM pBlock;
-   USHORT uiLine;
    int iParam;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDoBlock()"));
@@ -4269,15 +4270,11 @@ static HARBOUR hb_vmDoBlock( void )
 
    /* set the current line number to a line where the codeblock was defined
     */
-   uiLine = hb_stackBaseItem()->item.asSymbol.lineno;
-   hb_stackBaseItem()->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
-   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass = pBlock->item.asBlock.hclass;
+   hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = pBlock->item.asBlock.lineno;
+   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass  = pBlock->item.asBlock.hclass;
    hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod = pBlock->item.asBlock.method;
 
    hb_codeblockEvaluate( pBlock );
-
-   /* restore stack pointers */
-   hb_stackBaseItem()->item.asSymbol.lineno = uiLine;
 }
 
 /* Evaluates a passed codeblock item with no arguments passed to a codeblock
@@ -4855,7 +4852,7 @@ static void hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usLen 
    pItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( pCode );
    /* store the line number where the codeblock was defined
     */
-   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
    pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
@@ -4886,7 +4883,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, USHORT u
    pItem->item.asBlock.paramcnt = 0;
    /* store the line number where the codeblock was defined
     */
-   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
    pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
@@ -4915,7 +4912,7 @@ static void hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols )
    pItem->item.asBlock.paramcnt = HB_PCODE_MKUSHORT( &( pCode[ 3 ] ) );
    /* store the line number where the codeblock was defined
     */
-   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.lineno;
+   pItem->item.asBlock.lineno = hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo;
    pItem->item.asBlock.hclass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
    pItem->item.asBlock.method = hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 }
@@ -6340,7 +6337,7 @@ HB_EXPORT void hb_xvmSetLine( USHORT uiLine )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmSetLine(%hu)", uiLine));
 
-   hb_stackBaseItem()->item.asSymbol.lineno = uiLine;
+   hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = uiLine;
    if( s_bDebugging && s_bDebugShowLines )
       hb_vmDebuggerShowLine( uiLine );
 }

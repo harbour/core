@@ -1136,10 +1136,10 @@ HB_EXPORT PHB_ITEM hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_SYMBOL;
-   pItem->item.asSymbol.value      = pSym;
-   pItem->item.asSymbol.stackstate = NULL;
-   pItem->item.asSymbol.lineno     = 0;
-   pItem->item.asSymbol.paramcnt   = 0;
+   pItem->item.asSymbol.value        = pSym;
+   pItem->item.asSymbol.stackstate   = NULL;
+   pItem->item.asSymbol.paramcnt     =
+   pItem->item.asSymbol.paramdeclcnt = 0;
 
    return pItem;
 }

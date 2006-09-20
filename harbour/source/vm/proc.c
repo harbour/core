@@ -96,7 +96,7 @@ HB_FUNC( PROCLINE )
    long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
    if( lOffset >= 0 )
-      hb_retni( hb_stackItem( lOffset )->item.asSymbol.lineno );
+      hb_retni( hb_stackItem( lOffset )->item.asSymbol.stackstate->uiLineNo );
    else
       hb_retni( 0 );
 }
@@ -248,7 +248,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
       }
 
       if( puiLine )
-         * puiLine = pBase->item.asSymbol.lineno;
+         * puiLine = pBase->item.asSymbol.stackstate->uiLineNo;
 
       if( szFile )
       {

@@ -2508,7 +2508,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( uiFldLen == 0 )
       {
-         uiFldLen = strlen( ucBuffer );  // should have been set by sprintf above.
+         uiFldLen = strlen( ( char * ) ucBuffer );  // should have been set by sprintf above.
       }
       if( uiFldLen >= uiLen )
       {

@@ -231,6 +231,7 @@ typedef struct _HB_STACK_STATE
    ULONG    ulPrivateBase;    /* memvars base offset of previous func/proc */
    USHORT   uiClass;          /* class when message is sent */
    USHORT   uiMethod;         /* number of class method */
+   USHORT   uiLineNo;         /* current line number */
 } HB_STACK_STATE, * PHB_STACK_STATE; /* used to save/restore stack state in hb_vmDo)_ */
 
 
@@ -243,8 +244,8 @@ struct hb_struArray
 struct hb_struBlock
 {
    struct _HB_CODEBLOCK * value;
-   USHORT lineno;
    USHORT paramcnt;
+   USHORT lineno;
    USHORT hclass;
    USHORT method;
 };
@@ -321,7 +322,6 @@ struct hb_struSymbol
 {
    PHB_SYMB        value;
    PHB_STACK_STATE stackstate;      /* function stack state */
-   USHORT          lineno;
    USHORT          paramcnt;        /* number of passed parameters in function call */
    USHORT          paramdeclcnt;    /* number of declared parameters in function definition */
 };

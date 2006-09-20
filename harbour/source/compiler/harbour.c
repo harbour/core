@@ -3713,8 +3713,11 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
          pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
          bSkipFRAME = FALSE;
       }
-      else if( pFunc->pCode[ 0 ] == HB_P_FRAME )
-         bSkipFRAME = TRUE;
+      else
+         /* Skip LOCALs frame only when function is not declared with
+          * variable number of parameters (HB_P_VFRAME)
+          */
+         bSkipFRAME = pFunc->pCode[ 0 ] == HB_P_FRAME;
 
       if( pFunc->bFlags & FUN_USES_STATICS )
       {

@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * harbour/include/hbexprop.h
+   * harbour/source/common/expropt2.c
+     % Compile-time optimization added for expressions below:
+       SToD(""), SToD(), HB_SToD(<cDate>), HB_SToD(""), HB_SToD()
+     ! Tabs converted to spaces.
+
+   * harbour/source/common/hbdate.c
+   * harbour/source/rtl/dates.c
+     * Copyright cosmetic cleanup.
+
+2006-09-20 21:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/codebloc.c
+    ! fixed detaching locals in variable parameters functions
+
+2006-09-20 20:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
     ! fixed casting for C++ compilation
 
   * harbour/source/compiler/harbour.c
