@@ -1272,23 +1272,22 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
    else if( type & HB_IT_BLOCK )
       hb_gcRefFree( pItem->item.asBlock.value );
 
-   else if( type & HB_IT_MEMVAR )
-      hb_memvarValueDecRef( pItem->item.asMemvar.value );
-
    else if( type & HB_IT_BYREF )
    {
-      if( pItem->item.asRefer.offset == 0 && pItem->item.asRefer.value >= 0 )
+      if( type & HB_IT_MEMVAR )
+         hb_memvarValueDecRef( pItem->item.asMemvar.value );
+
+      else if( type & HB_IT_ENUM )     /* FOR EACH control variable */
+         hb_vmEnumRelease( pItem->item.asEnum.basePtr,
+                           pItem->item.asEnum.valuePtr );
+
+      else if( pItem->item.asRefer.offset == 0 && pItem->item.asRefer.value >= 0 )
          hb_gcRefFree( pItem->item.asRefer.BasePtr.array );
    }
    else if( type & HB_IT_POINTER )
    {
       if( pItem->item.asPointer.collect )
          hb_gcRefFree( pItem->item.asPointer.value );
-   }
-   else if( type & HB_IT_ENUM )     /* FOR EACH control variable */
-   {
-      hb_vmEnumRelease( pItem->item.asEnum.basePtr,
-                        pItem->item.asEnum.valuePtr );
    }
 }
 

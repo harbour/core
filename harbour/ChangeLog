@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    ! fixed casting for C++ compilation
+
+  * harbour/source/compiler/harbour.c
+    ! fixed removing locals frame - bSkipFrame was not initialized
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/proc.c
+    * moved current line number information from hb_struSymbol
+      to current stack state to keep 16 bytes size for HB_ITEM
+      on 32bit systems with 4 bytes alignment
+
+2006-09-20 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with recent xHarbour fixes
+
+  * harbour/include/hbdefs.h
+    * indenting
+
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt2.c
+    + added compile time optimization for STOD(cConstDateString)
+      covered by -kh compiler extension (default)
+      It allows to keep the same source code for Clipper and
+      Harbour and benefits from data constants without using
+      0dYYYYMMDD values
+
+  * harbour/source/vm/classes.c
+    * restored the original 3-rd parameter in  hb_clsAdd to void(void) -
       PHB_FUNC - and added translation for PHB_SYMB to not force using
       [P]HB_SYMB in 3-rd party code
 

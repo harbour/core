@@ -441,7 +441,7 @@ LONG hb_stackBaseProcOffset( int iLevel )
    while( iLevel-- > 0 && lOffset > 0 )
       lOffset = ( * ( hb_stack.pItems + lOffset ) )->item.asSymbol.stackstate->lBaseItem;
 
-   if( iLevel < 0 )
+   if( iLevel < 0 && ( lOffset > 0 || HB_IS_SYMBOL( * hb_stack.pItems ) ) )
       return lOffset;
    else
       return -1;

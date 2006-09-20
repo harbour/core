@@ -2341,10 +2341,10 @@ static ERRCODE adsClose( ADSAREAP pArea )
 static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    ADSHANDLE hTable, hConnection;
-   UNSIGNED32 uRetVal, u32Length;
-   UNSIGNED8 *ucfieldDefs;
+   UNSIGNED32 uRetVal, u32Length, uiFldLen, uiLen;
+   UNSIGNED8 *ucfieldDefs, *ucfieldPtr ;
    UNSIGNED8 ucBuffer[MAX_STR_LEN + 1], ucField[ADS_MAX_FIELD_NAME + 1];
-   USHORT uiCount, uiLen;
+   USHORT uiCount;
    LPFIELD pField;
    char cType[8];
 
@@ -2361,11 +2361,25 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       there are up to 4 punctuation symbols ( ,; ),
       field length (8) and number of decimals (2).
       So, per field it should be  ( 6 + 4 + 8 + 2 = 20 ):
-         uiMaxFieldNameLength + 20        */
-   uiLen = ( pArea->uiFieldCount * (pArea->uiMaxFieldNameLength + 20) ) + 1;
+         uiMaxFieldNameLength + 20
+
+    * 9/19/2006 BH: this is an oversized buffer since most fields don't have
+    * 128-byte names. But the overhead in counting up the bytes is worse than
+    * allocating a bigger buffer. We need to make sure it's not too big, though.
+    * ADS docs say max # of fields is fnameLen + 10
+    *     65135 / ( 10 + AverageFieldNameLength )
+    */
+
+   uiLen = ( UNSIGNED32 ) pArea->uiFieldCount * (pArea->uiMaxFieldNameLength + 20) + 1;
+   if ( uiLen > 65135 )
+   {
+      uiLen = 65135;
+   }
 
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
    ucfieldDefs[0]='\0';
+   ucfieldPtr = ucfieldDefs;
+
    pField = pArea->lpFields;
    for( uiCount = 0; uiCount < pArea->uiFieldCount; uiCount++ )
    {
@@ -2374,7 +2388,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
         pArea->maxFieldLen = pField->uiLen;
       }
 
-      switch ( pField->uiType )
+      switch( pField->uiType )
       {
          case HB_IT_DATE:
             if( pField->uiTypeExtended == 0 )
@@ -2453,47 +2467,62 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
                strcpy( cType, "CurD" );
             }
             break;
-     }
-     switch ( pField->uiType )
-     {
-        case HB_IT_DATE:
-        case HB_IT_LOGICAL:
-        case HB_IT_MEMO:
+      }
+
+      switch( pField->uiType )
+      {
+         case HB_IT_DATE:
+         case HB_IT_LOGICAL:
+         case HB_IT_MEMO:
             if( pField->uiTypeExtended != ADS_VARCHAR )
             {
                char * szName = hb_dynsymName( ( PHB_DYNS ) pField->sym );
                if( strlen( szName ) > (unsigned int) pArea->uiMaxFieldNameLength )
                {
-                   strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
-                   sprintf( (char*)ucBuffer, "%s,%s;", ucField, cType );
+                  strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
+                  uiFldLen = sprintf( (char*)ucBuffer, "%s,%s;", ucField, cType );
                }
                else
                {
-                   sprintf( (char*)ucBuffer, "%s,%s;", szName, cType );
+                  uiFldLen = sprintf( (char*)ucBuffer, "%s,%s;", szName, cType );
                }
                break;
             }
 
-        default:
+         default:
+         {
+            char * szName ;
+            szName = hb_dynsymName( ( PHB_DYNS ) pField->sym );
+            if( strlen( szName) > (unsigned int) pArea->uiMaxFieldNameLength )
             {
-               char * szName = hb_dynsymName( ( PHB_DYNS ) pField->sym );
-               if( strlen( szName) > (unsigned int) pArea->uiMaxFieldNameLength )
-               {
-                   strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
-                   sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
-               }
-               else
-               {
-                   sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", szName, cType, pField->uiLen, pField->uiDec );
-               }
-               break;
+               strncpy( (char*)ucField, szName, pArea->uiMaxFieldNameLength );
+               uiFldLen = sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
             }
-     }
+            else
+            {
+               uiFldLen = sprintf( (char*)ucBuffer, "%s,%s,%d,%d;", szName, cType, pField->uiLen, pField->uiDec );
+            }
+            break;
+         }
+      }
 
-     strcat( (char*)ucfieldDefs, (char*)ucBuffer );
-     pField++;
+      if( uiFldLen == 0 )
+      {
+         uiFldLen = strlen( ucBuffer );  // should have been set by sprintf above.
+      }
+      if( uiFldLen >= uiLen )
+      {
+         /* RT_ERROR; probably too many fields */
+         return FAILURE;
+      }
+      memcpy( ucfieldPtr, ucBuffer, uiFldLen );
+      uiLen -= uiFldLen;
+      ucfieldPtr += uiFldLen;
+
+      pField++;
    }
-   /* printf( "\n%s",(char*)ucfieldDefs ); */
+   *ucfieldPtr = '\0';
+
    uRetVal = AdsCreateTable( hConnection, pCreateInfo->abName, pCreateInfo->atomAlias,
                              pArea->iFileType, adsCharType,
                              adsLockType, adsRights,
@@ -2507,7 +2536,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       return FAILURE;
    }
    /*
-    * In Clipper CREATE() keeps darabase open on success [druzus]
+    * In Clipper CREATE() keeps database open on success [druzus]
     */
    pArea->hTable    = hTable;
    pArea->fShared   = FALSE;  /* pCreateInfo->fShared; */

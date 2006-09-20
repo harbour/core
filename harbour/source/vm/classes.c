@@ -3230,9 +3230,12 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
 /* Harbour equivalent for Clipper internal __mdCreate() */
 USHORT hb_clsCreate( USHORT usSize, char * szClassName )
 {
-   PHB_DYNS pDynSym = hb_dynsymGet( "__CLSNEW" );
+   static PHB_DYNS pDynSym = NULL;
 
-   hb_vmPushSymbol( pDynSym->pSymbol );
+   if( pDynSym == NULL )
+      pDynSym = hb_dynsymGet( "__CLSNEW" );
+
+   hb_vmPushDynSym( pDynSym );
    hb_vmPushNil();
    hb_vmPushString( szClassName, strlen( szClassName ) );
    hb_vmPushLong( usSize );
@@ -3242,26 +3245,41 @@ USHORT hb_clsCreate( USHORT usSize, char * szClassName )
 }
 
 /* Harbour equivalent for Clipper internal __mdAdd() */
-void hb_clsAdd( USHORT usClassH, char * szMethodName, PHB_SYMB pFuncSym )
+void hb_clsAdd( USHORT usClassH, char * szMethodName, PHB_FUNC pFuncPtr )
 {
-   PHB_DYNS pDynSym = hb_dynsymGet( "__CLSADDMSG" );
+   static PHB_DYNS pDynSym = NULL;
+   PHB_SYMB pExecSym;
 
-   hb_vmPushSymbol( pDynSym->pSymbol );
+   /*
+    * We can use empty name "" for this symbol in hb_symbolNew()
+    * It's only envelop for function with additional execution
+    * information for HVM not registered symbol. [druzus]
+    */
+   pExecSym = hb_symbolNew( "" );
+   pExecSym->value.pFunPtr = pFuncPtr;
+
+   if( pDynSym == NULL )
+      pDynSym = hb_dynsymGet( "__CLSADDMSG" );
+
+   hb_vmPushDynSym( pDynSym );
    hb_vmPushNil();
-   hb_vmPushLong( usClassH );
+   hb_vmPushInteger( usClassH );
    hb_vmPushString( szMethodName, strlen( szMethodName ) );
-   hb_vmPushSymbol( pFuncSym );
+   hb_vmPushSymbol( pExecSym );
    hb_vmFunction( 3 );
 }
 
 /* Harbour equivalent for Clipper internal __mdAssociate() */
 void hb_clsAssociate( USHORT usClassH )
 {
-   PHB_DYNS pDynSym = hb_dynsymGet( "__CLSINST" );
+   static PHB_DYNS pDynSym = NULL;
 
-   hb_vmPushSymbol( pDynSym->pSymbol );
+   if( pDynSym == NULL )
+      pDynSym = hb_dynsymGet( "__CLSINST" );
+
+   hb_vmPushDynSym( pDynSym );
    hb_vmPushNil();
-   hb_vmPushLong( usClassH );
+   hb_vmPushInteger( usClassH );
    hb_vmFunction( 1 );
 }
 

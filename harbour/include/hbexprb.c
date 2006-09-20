@@ -1673,6 +1673,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
                      hb_compExprReduceASC( pSelf, HB_MACRO_PARAM );
                }
+               else if( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+                     hb_compExprReduceSTOD( pSelf, HB_MACRO_PARAM );
+               }
            }
          }
          break;

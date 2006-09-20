@@ -192,7 +192,7 @@
          #if defined(__GNUC__)
             typedef long long LONGLONG;
          #else
-           typedef __int64 LONGLONG;
+            typedef __int64 LONGLONG;
          #endif
       #endif
       #if !defined(ULONGLONG)

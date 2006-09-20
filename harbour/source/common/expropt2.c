@@ -68,6 +68,7 @@
 #include <math.h>
 #include "hbmacro.h"
 #include "hbcomp.h"
+#include "hbdate.h"
 
 HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
@@ -1272,6 +1273,24 @@ BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
    if( pArg->ExprType == HB_ET_STRING )
    {
    	HB_EXPR_PTR pExpr = hb_compExprNewLong( (BYTE)pArg->value.asString.string[0] );
+
+     	hb_compExprFree( pParms, HB_MACRO_PARAM );
+     	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      hb_compExprClear( pExpr );
+      return TRUE;
+   }
+   return FALSE;
+}
+
+BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+	
+   if( pArg->ExprType == HB_ET_STRING && pArg->ulLength == 8 )
+   {
+   	HB_EXPR_PTR pExpr = hb_compExprNewDate( hb_dateEncStr( pArg->value.asString.string ) );
 
      	hb_compExprFree( pParms, HB_MACRO_PARAM );
      	hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );

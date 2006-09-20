@@ -322,8 +322,8 @@ struct hb_struSymbol
    PHB_SYMB        value;
    PHB_STACK_STATE stackstate;      /* function stack state */
    USHORT          lineno;
-   USHORT          paramcnt;   /* number of passed parameters in function call */
-   USHORT          paramdeclcnt;   /* number of declared parameters in function definition */
+   USHORT          paramcnt;        /* number of passed parameters in function call */
+   USHORT          paramdeclcnt;    /* number of declared parameters in function definition */
 };
 
 /* items hold at the virtual machine stack */
