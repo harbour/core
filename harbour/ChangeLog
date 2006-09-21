@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/compiler/harbour.c
+    * added note in hb_compOptimizeFrames() about exceeding maximum number
+      of local variables (255). We should add new pcode(s) HB_P_LARGE[V]FRAME
       or generate compile time error.
 
   * harbour/source/vm/macro.c

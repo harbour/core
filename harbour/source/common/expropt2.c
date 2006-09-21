@@ -1294,7 +1294,7 @@ BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_MACRO_DECL )
       {
          HB_EXPR_PTR pExpr = hb_compExprNewDate( pArg->ulLength == 0 ? 0 : hb_dateEncStr( pArg->value.asString.string ) );
       
-         hb_compExprFree( pSelf->value.asFunCall.pParms, HB_MACRO_PARAM );
+         hb_compExprFree( pParms, HB_MACRO_PARAM );
          hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
          memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
          hb_compExprClear( pExpr );
@@ -1305,6 +1305,7 @@ BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_MACRO_DECL )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewDate( 0 );
       
+      hb_compExprFree( pSelf->value.asFunCall.pParms, HB_MACRO_PARAM );
       hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
