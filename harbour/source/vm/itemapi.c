@@ -118,18 +118,9 @@ HB_EXPORT PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 
 HB_EXPORT PHB_ITEM hb_itemParam( USHORT uiParam )
 {
-   PHB_ITEM pNew;
-   PHB_ITEM pItem;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParam(%hu)", uiParam));
 
-   pNew = hb_itemNew( NULL );
-   pItem = hb_param( uiParam, HB_IT_ANY );
-
-   if( pItem )
-      hb_itemCopy( pNew, pItem );
-
-   return pNew;
+   return hb_itemNew( hb_param( uiParam, HB_IT_ANY ) );
 }
 
 /* Internal Item API. Use this with care. */
@@ -1318,12 +1309,15 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       else if( HB_IS_BLOCK( pSource ) )
          hb_gcRefInc( pSource->item.asBlock.value );
 
-      else if( HB_IS_MEMVAR( pSource ) )
-         hb_memvarValueIncRef( pSource->item.asMemvar.value );
-
       else if( HB_IS_BYREF( pSource ) )
       {
-         if( pSource->item.asRefer.offset == 0 && pSource->item.asRefer.value >= 0 )
+         if( HB_IS_MEMVAR( pSource ) )
+            hb_memvarValueIncRef( pSource->item.asMemvar.value );
+
+         else if( HB_IS_ENUM( pSource ) )    /* enumerators cannnot be copied */
+            pDest->type = HB_IT_NIL;
+
+         else if( pSource->item.asRefer.offset == 0 && pSource->item.asRefer.value >= 0 )
             hb_gcRefInc( pSource->item.asRefer.BasePtr.array );
       }
       else if( HB_IS_POINTER( pSource ) )
@@ -1336,10 +1330,6 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
                hb_gcRefInc( pSource->item.asPointer.value );
          }
       }
-      else if( HB_IS_ENUM( pSource ) )    /* enumerators cannnot be copied */
-      {
-         pDest->type = HB_IT_NIL;
-      }
    }
 }
 
@@ -1349,7 +1339,7 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
  */
 HB_EXPORT void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemMove(%p, %p)", pDest, pSource));
 
    if( pDest == pSource )
       hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemMove()", NULL );
@@ -1519,13 +1509,6 @@ PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, ULONG ulSize )
       pItem->item.asString.length    = ulSize;
       pItem->item.asString.allocated = ulSize + 1;
    }
-#if 0
-   else if( pItem->item.asString.allocated > ulSize )
-   {
-      pItem->item.asString.length = ulSize;
-      pItem->item.asString.value[ ulSize ] = '\0';
-   }
-#endif
    else
    {
       ULONG ulAlloc = ulSize + 1 +

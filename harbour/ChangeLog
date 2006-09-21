@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+         END CLASS
+
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/runner.c
+    * updated function symbols processing
 
   * harbour/source/compiler/harbour.c
     * added note in hb_compOptimizeFrames() about exceeding maximum number
