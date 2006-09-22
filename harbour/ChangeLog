@@ -8,6 +8,49 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      or:
+         hb_execFromArray( <aExecArray> )
+      where <aExecArray> is in one of the following format:
+         { <cFuncName> [, <params,...>] }
+         { @<funcName>() [, <params,...>] }
+         { <bCodeBlock> [, <params,...>] }
+         { <oObject> , <cMethodName> [, <params,...>] }
+         { <oObject> , @<msgName>() [, <params,...>] }
+
+  * harbour/source/rtl/symbol.prg
+    * removed C code inside #pragma BEGINDUMP/ENDDUMP
+      now it's only .prg code which uses variable parameters function
+      and hb_execFromArray()
+
+2006-09-22 23:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+  * harbour/include/hbvm.h
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    ! fixed bug in real codeblock scoping which was exploited by
+      dictionary resizing
+    * changed ACCESS messages to ASSIGN ones when object item
+      reference is created for proper READONLY scope checking.
+      The reference to object variable can be created only when
+      caller has sufficient ASSIGN privileges.
+    + added FRIEND CLASS and FRIEND FUNCTION support.
+      It's enough to add class definition:
+         FRIEND CLASS <classFunc1> [, <classFuncN> ]
+      and/or:
+         FRIEND FUNCTION <FuncName1> [, <FuncNameN> ]
+      and all methods of given class or given function will be able
+      to access private variables.
+      Warning!!! Friends cannot access overloaded non virtual methods.
+                 This feature is available _ONLY_ for real class members.
+    + added MODULE FRIENDLY to class definition. It causes that all other
+      functions and classes defined in the same .prg module will have
+      friend privileges. In such way works xHarbour and there is now way
+      or generate compile time error. 
+      has to explicitly enable it (until he will not change / add new
+      preprocessor rule and set it as default ;-)). Syntax:
+         CREATE CLASS .... MODULE FRIENDLY
+            ...
          END CLASS
 
   * harbour/source/vm/proc.c

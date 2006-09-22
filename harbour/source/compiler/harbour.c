@@ -3686,30 +3686,32 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
             pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
-      int bLocals = 0;
+      int iLocals = 0;
       BOOL bSkipFRAME;
       BOOL bSkipSFRAME;
 
       pLocal = pFunc->pLocals;
+
       while( pLocal )
       {
          pLocal = pLocal->pNext;
-         bLocals++;
+         iLocals++;
       }
 
-      if( bLocals || pFunc->wParamCount )
+      if( iLocals || pFunc->wParamCount )
       {
+         /* Parameters declared with PARAMETERS statement are not
+          * placed in the local variable list.
+          */
          if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
-         {
-            pFunc->pCode[ 1 ] = ( BYTE )( bLocals ) - ( BYTE )( pFunc->wParamCount );
-         }
-         else
-         {
-            /* Parameters declared with PARAMETERS statement are not
-             * placed in the local variable list.
-             */
-            pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
-         }
+            iLocals -= pFunc->wParamCount;
+
+         /* TODO: generate error when iLocals > 255 or add new
+          *       HB_P_LARGE[V]FRAME pcode(s) and replace current
+          *       pcode frame with the new one moving the pcode.
+          */
+
+         pFunc->pCode[ 1 ] = ( BYTE )( iLocals );
          pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
          bSkipFRAME = FALSE;
       }

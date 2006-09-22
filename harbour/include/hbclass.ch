@@ -175,7 +175,7 @@ DECLARE HBClass ;
       if s_oClass == NIL ;;
          s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
          if ! <.metaClass.> ;;
-          Metaclass := HBClass():new( <(ClassName)>+" class", __HB_CLS_PAR0 ( [ <SuperClass1>():class ] [ ,<SuperClassN>():class ] ) )  ;;
+          Metaclass := HBClass():new( <(ClassName)>+" class", __HB_CLS_PAR0 ( [ <SuperClass1>():class ] [ ,<SuperClassN>():class ] ) ) ;;
          endif              ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
@@ -229,6 +229,7 @@ DECLARE HBClass ;
 
 #xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
              [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
    #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <ClassName> ;;
    [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
@@ -238,7 +239,7 @@ DECLARE HBClass ;
       local nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ), @_HB_CLS_FUNCNAME() [, <.modulfriend.> ] ) ) ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;
@@ -256,6 +257,7 @@ DECLARE HBClass ;
 
 #xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
              [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+             [ <modulfriend: MODULE FRIENDLY> ] ;
              [<static: STATIC>] [ FUNCTION <FuncName> ] => ;
    #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <ClassName> ;;
    [ #undef _HB_CLS_FUNCNAME ; #define _HB_CLS_FUNCNAME <FuncName> ] ;;
@@ -265,7 +267,7 @@ DECLARE HBClass ;
       local nScope ;;
       nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
-         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
+         s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ), @_HB_CLS_FUNCNAME() [, <.modulfriend.> ] ) ) ;;
      #undef  _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #undef  _CLASS_MODE_ ;;
@@ -706,6 +708,12 @@ s_oClass:AddInline( <(op)>, {|Self, <cArg> | <Code> }, HBCLSCHOICE( <.export.>, 
     #xcommand PROCEDURE <MethodName> [([<anyParams,...>])] [DECLCLASS _CLASS_NAME_] _CLASS_IMPLEMENTATION_ => DECLARED PROCEDURE _CLASS_NAME_ <MethodName>([<anyParams>]);;
      s_oClass:SetDestructor( CLSMETH _CLASS_NAME_ <MethodName>() )
 #endif
+
+#xcommand FRIEND CLASS <ClassName1> [, <ClassNameN> ] => ;
+   s_oClass:AddFriendClass( @<ClassName1>() [, @<ClassNameN>() ] )
+
+#xcommand FRIEND FUNCTION <FuncName1> [, <FuncNameN> ] => ;
+   s_oClass:AddFriendFunc( @<FuncName1>() [, @<FuncNameN>() ] )
 
 #xtranslate END CLASS => ENDCLASS
 

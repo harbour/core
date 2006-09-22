@@ -4241,8 +4241,9 @@ static void hb_vmPushObjectVarRef( void )
    pItem = hb_stackNewFrame( &sStackState, 0 );   /* procedure name */
    pSym = pItem->item.asSymbol.value;
 
-   if( !hb_objGetVarRef( hb_stackSelfItem(), pSym, &sStackState ) )
-      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName, 1, hb_stackSelfItem() );
+   if( !hb_objGetVarRef( hb_stackSelfItem(), pSym, &sStackState ) &&
+       hb_vmRequestQuery() == 0 )
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, hb_stackSelfItem() );
 
    hb_stackOldFrame( &sStackState );
 
@@ -4971,7 +4972,7 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
       if( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' )
       {
-         if( szAlias[ 1 ] == '\0' || /* M->variable */
+         if( pAlias->item.asString.length == 1 || /* M->variable */
              ( pAlias->item.asString.length >= 4 &&
                hb_strnicmp( szAlias, "MEMVAR", /* MEMVAR-> or MEMVA-> or MEMV-> */
                                      pAlias->item.asString.length ) == 0 ) )
@@ -5325,7 +5326,7 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
 
       if( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' )
       {
-         if( szAlias[ 1 ] == '\0' || /* M->variable */
+         if( pAlias->item.asString.length == 1 || /* M->variable */
              ( pAlias->item.asString.length >= 4 &&
                hb_strnicmp( szAlias, "MEMVAR", /* MEMVAR-> or MEMVA-> or MEMV-> */
                                      pAlias->item.asString.length ) == 0 ) )
@@ -5452,6 +5453,19 @@ static double hb_vmTopNumber( void )
 /*
  * Functions to mange module symbols
  */
+
+PHB_SYMB hb_vmGetRealFuncSym( PHB_SYMB pSym )
+{
+   if( pSym && !( pSym->scope.value & HB_FS_LOCAL ) )
+   {
+      pSym = pSym->pDynSym &&
+           ( pSym->pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) ?
+             pSym->pDynSym->pSymbol : NULL;
+   }
+
+   return pSym;
+}
+
 char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
 {
    if( pSym )
@@ -5472,15 +5486,46 @@ char * hb_vmFindModuleSymbolName( PHB_SYMB pSym )
    return NULL;
 }
 
+BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
+                             USHORT * puiSymbols )
+{
+   if( pSym )
+   {
+      PHB_SYMBOLS pLastSymbols = s_pSymbols;
+
+/*
+      if( pSym->scope.value & HB_FS_PCODEFUNC )
+         * pSymbols = pSym->value.pCodeFunc->pSymbols;
+*/
+
+      while( pLastSymbols )
+      {
+         if( pLastSymbols->fActive &&
+             pSym >= pLastSymbols->pModuleSymbols &&
+             pSym < pLastSymbols->pModuleSymbols + pLastSymbols->uiModuleSymbols )
+         {
+            * pSymbols = pLastSymbols->pModuleSymbols;
+            * puiSymbols = pLastSymbols->uiModuleSymbols;
+            return TRUE;
+         }
+         pLastSymbols = pLastSymbols->pNext;
+      }
+   }
+
+   * pSymbols = NULL;
+   * puiSymbols = 0;
+   return FALSE;
+}
+
 static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
                                         char * szModuleName, ULONG ulID )
 {
-   PHB_SYMBOLS pLastSymbols = s_pSymbols;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFindFreeModule(%p,%hu,%s,%lu)", pSymbols, uiSymbols, szModuleName, ulID));
 
    if( s_ulFreeSymbols )
    {
+      PHB_SYMBOLS pLastSymbols = s_pSymbols;
+
       while( pLastSymbols )
       {
          if( !pLastSymbols->fActive &&
@@ -5721,13 +5766,10 @@ hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModule
       }
       else
       {
-         PHB_SYMBOLS pLastSymbols;
+         PHB_SYMBOLS pLastSymbols = s_pSymbols;
 
-         pLastSymbols = s_pSymbols;
          while( pLastSymbols->pNext ) /* locates the latest processed group of symbols */
-         {
             pLastSymbols = pLastSymbols->pNext;
-         }
          pLastSymbols->pNext = pNewSymbols;
       }
    }
@@ -5793,7 +5835,7 @@ hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModule
                if( pDynSym->pSymbol->value.pFunPtr )
                {
                   pSymbol->scope.value =
-                     ( pSymbol->scope.value & ~HB_FS_PCODEFUNC ) |
+                     ( pSymbol->scope.value & ~( HB_FS_PCODEFUNC | HB_FS_LOCAL ) ) |
                      ( pDynSym->pSymbol->scope.value & HB_FS_PCODEFUNC );
                   pSymbol->value.pFunPtr = pDynSym->pSymbol->value.pFunPtr;
                }

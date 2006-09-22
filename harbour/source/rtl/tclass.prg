@@ -83,8 +83,8 @@ FUNCTION HBClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "HBCLASS", 11)
-/*    s_hClass := __clsNew( "HBCLASS", 12)  */
+      s_hClass := __clsNew( "HBCLASS", 15)
+/*    s_hClass := __clsNew( "HBCLASS", 16)  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -96,6 +96,8 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "AddMethod"      , @AddMethod()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddClsMethod"   , @AddClsMethod()   , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddVirtual"     , @AddVirtual()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddFriendFunc"  , @AddFriendFunc()  , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddFriendClass" , @AddFriendClass() , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetDestructor"  , @SetDestructor()  , HB_OO_MSG_METHOD )
@@ -124,8 +126,16 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "nDestructor"    , 11, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_nDestructor"   , 11, HB_OO_MSG_ASSIGN )
-  /*  __clsAddMsg( s_hClass, "class"          , 12, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_class"         , 12, HB_OO_MSG_ASSIGN ) */
+      __clsAddMsg( s_hClass, "lModFriendly"   , 12, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_lModFriendly"  , 12, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asFriendClass"  , 13, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asFriendClass" , 13, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asFriendFunc"   , 14, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asFriendFunc"  , 14, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "sClassFunc"     , 15, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_sClassFunc"    , 15, HB_OO_MSG_ASSIGN )
+  /*  __clsAddMsg( s_hClass, "class"          , 16, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_class"         , 16, HB_OO_MSG_ASSIGN ) */
 
    ENDIF
 
@@ -138,7 +148,7 @@ FUNCTION HBClass()
 // In case of direct class creation (without the help of preprocessor) xSuper can be
 // either NIL or contain the name of the superclass.
 
-STATIC FUNCTION New( cClassName, xSuper )
+STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    LOCAL Self := QSelf()
    LOCAL nSuper, i
@@ -154,21 +164,30 @@ STATIC FUNCTION New( cClassName, xSuper )
       nSuper := 0
    ENDIF
 
-   ::cName       := Upper( cClassName )
+   ::cName         := Upper( cClassName )
+   ::sClassFunc    := sClassFunc
 
-   ::aDatas      := {}
-   ::aMethods    := {}
-   ::aClsDatas   := {}
-   ::aClsMethods := {}
-   ::aInlines    := {}
-   ::aVirtuals   := {}
+   ::aDatas        := {}
+   ::aMethods      := {}
+   ::aClsDatas     := {}
+   ::aClsMethods   := {}
+   ::aInlines      := {}
+   ::aVirtuals     := {}
+   ::asFriendClass := {}
+   ::asFriendFunc  := {}
+
+   IF ISLOGICAL( lModuleFriendly )
+      ::lModFriendly := lModuleFriendly
+   ELSE
+      ::lModFriendly := .F.
+   ENDIF
 
    FOR i := 1 TO nSuper
       IF ! ISCHARACTER( ::acSuper[ i ] )
          EXIT
       ENDIF
    NEXT
-   IF i < nSuper
+   IF i <= nSuper
       nSuper := i - 1
       ASize( ::acSuper, nSuper)
    ENDIF
@@ -182,27 +201,32 @@ STATIC PROCEDURE Create()
 
    LOCAL Self := QSelf()
    LOCAL n
-   LOCAL nLen := Len( ::acSuper )
+   LOCAL nLen
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
    LOCAL nClassBegin
    LOCAL hClass
-   LOCAL ahSuper := Array( nLen )
+   LOCAL ahSuper := {}
 
 /* Self:Class := MetaClass */
 
-   IF nLen == 0
-      hClass := __clsNew( ::cName, nLenDatas )
-   ELSE                                         // Multi inheritance
-      FOR n := 1 TO nLen
-         ahSuper[ n ] := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
-      NEXT
-      hClass := __clsNew( ::cName, nLenDatas, ahSuper )
-      __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
-      __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+   nLen := Len( ::acSuper )
+   FOR n := 1 TO nLen
+      hClass := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
+      IF hClass != 0
+         AAdd( ahSuper, hClass )
+      ENDIF
+   NEXT
+
+   hClass := __clsNew( ::cName, nLenDatas, ahSuper, ::sClassFunc, ::lModFriendly )
+   ::hClass := hClass
+
+   IF !EMPTY( ahSuper )
+      IF ahSuper[ 1 ] != 0
+         __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+         __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+      ENDIF
    ENDIF
    __clsAddMsg( hClass, "REALCLASS" , 0, HB_OO_MSG_REALCLASS, 0     , HB_OO_CLSTP_EXPORTED )
-
-   ::hClass := hClass
 
    // We will work here on the MetaClass object to add the Class Method
    // as needed
@@ -256,6 +280,18 @@ STATIC PROCEDURE Create()
    IF ::nDestructor != NIL
       __clsAddMsg( hClass, "__Destructor", ::nDestructor, HB_OO_MSG_DESTRUCTOR )
    ENDIF
+
+   //Friend Classes
+   nLen := Len( ::asFriendClass )
+   FOR n := 1 TO nLen
+      __clsAddFriend( ::hClass, ::asFriendClass[ n ] )
+   NEXT
+
+   //Friend Functions
+   nLen := Len( ::asFriendFunc )
+   FOR n := 1 TO nLen
+      __clsAddFriend( ::hClass, ::asFriendFunc[ n ] )
+   NEXT
 
    RETURN
 
@@ -404,6 +440,7 @@ STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
    RETURN
 
 //----------------------------------------------------------------------------//
+
 STATIC PROCEDURE AddVirtual( cMethod )
 
    LOCAL Self := QSelf(), nAt
@@ -414,6 +451,26 @@ STATIC PROCEDURE AddVirtual( cMethod )
    ENDIF
 
    AAdd( ::aVirtuals, cMethod )
+
+   RETURN
+
+//----------------------------------------------------------------------------//
+
+STATIC PROCEDURE AddFriendClass( ... )
+
+   LOCAL Self := QSelf()
+
+   AEval( HB_AParams(), { | sClass | AAdd( ::asFriendClass, sClass ) } )
+
+   RETURN
+
+//----------------------------------------------------------------------------//
+
+STATIC PROCEDURE AddFriendFunc( ... )
+
+   LOCAL Self := QSelf()
+
+   AEval( HB_AParams(), { | sFunc | AAdd( ::asFriendFunc, sFunc ) } )
 
    RETURN
 

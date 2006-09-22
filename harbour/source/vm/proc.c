@@ -108,7 +108,6 @@ HB_FUNC( PROCLINE )
 
 HB_FUNC( PROCFILE )
 {
-   PHB_SYMB pLocalSym = NULL;
    PHB_SYMB pSym = NULL;
 
    if( ISSYMBOL( 1 ) )
@@ -128,21 +127,12 @@ HB_FUNC( PROCFILE )
             PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
             if( HB_IS_BLOCK( pSelf ) )
-               pLocalSym = pSelf->item.asBlock.value->pDefSymb;
+               pSym = pSelf->item.asBlock.value->pDefSymb;
          }
       }
    }
 
-   if( !pLocalSym && pSym )
-   {
-      if( ( pSym->scope.value & HB_FS_LOCAL ) != 0 )
-         pLocalSym = pSym;
-      else if( pSym->pDynSym &&
-               ( pSym->pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
-         pLocalSym = pSym->pDynSym->pSymbol;
-   }
-
-   hb_retc( hb_vmFindModuleSymbolName( pLocalSym ) );
+   hb_retc( hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) ) );
 }
 
 #endif
@@ -254,17 +244,12 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
       {
          char * szModule;
 
-         if( ( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 ) &&
-             HB_IS_BLOCK( pSelf ) && pSelf->item.asBlock.value->pDefSymb )
+         if( HB_IS_BLOCK( pSelf ) &&
+             ( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 ) )
             pSym = pSelf->item.asBlock.value->pDefSymb;
-         else if( ( pSym->scope.value & HB_FS_LOCAL ) == 0 )
-         {
-            if( ( pSym->pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
-               pSym = pSym->pDynSym->pSymbol;
-            else
-               pSym = NULL;
-         }
-         szModule = hb_vmFindModuleSymbolName( pSym );
+
+         szModule = hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) );
+
          if( szModule )
             strcpy( szFile, szModule );
          else
