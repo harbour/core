@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      hidden messages
+
+2006-09-26 17:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbexprb.c
    * source/compiler/exproptb.c
    * source/compiler/harbour.y
       *added support for passing the reference to object's variable
