@@ -66,6 +66,7 @@
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbvm.h"
 
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
@@ -379,5 +380,118 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
             lStart += lStep;
          }
       }
+   }
+}
+
+/*
+ * based on xHrbour's HB_ExecFromArray() by Giancarlo Niccolai
+ * This version supports the same syntax though it's independent
+ * implementation [druzus]
+ *
+ * The following syntax is supported:
+ *    hb_execFromArray( <cFuncName> [, <aParams> ] )
+ *    hb_execFromArray( @<funcName>() [, <aParams> ] )
+ *    hb_execFromArray( <bCodeBlock> [, <aParams> ] )
+ *    hb_execFromArray( <oObject> , <cMethodName> [, <aParams> ] )
+ *    hb_execFromArray( <oObject> , @<msgName>() [, <aParams> ] )
+ * or:
+ *    hb_execFromArray( <aExecArray> )
+ * where <aExecArray> is in one of the following format:
+ *    { <cFuncName> [, <params,...>] }
+ *    { @<funcName>() [, <params,...>] }
+ *    { <bCodeBlock> [, <params,...>] }
+ *    { <oObject> , <cMethodName> [, <params,...>] }
+ *    { <oObject> , @<msgName>() [, <params,...>] }
+ */
+HB_FUNC( HB_EXECFROMARRAY )
+{
+   PHB_ITEM pFunc = NULL;
+   PHB_ITEM pSelf = NULL;
+   PHB_ITEM pArray = NULL;
+   PHB_ITEM pItem;
+   PHB_SYMB pExecSym = NULL;
+   ULONG ulParamOffset = 0;
+   USHORT usPCount = hb_pcount();
+
+   /* decode parameters */
+   if( usPCount )
+   {
+      PHB_ITEM pParam  = hb_param( 1, HB_IT_ANY );
+
+      if( usPCount == 1 )
+      {
+         if( HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
+         {
+            pArray = pParam;
+            pItem = hb_arrayGetItemPtr( pArray, 1 );
+            if( HB_IS_OBJECT( pItem ) )
+            {
+               pSelf = pItem;
+               pFunc = hb_arrayGetItemPtr( pArray, 2 );
+               ulParamOffset = 2;
+            }
+            else
+            {
+               pFunc = pItem;
+               ulParamOffset = 1;
+            }
+         }
+         else
+            pFunc = pParam;
+      }
+      else if( HB_IS_OBJECT( pParam ) && usPCount <= 3 )
+      {
+         pSelf = pParam;
+         pFunc = hb_param( 2, HB_IT_ANY );
+         pArray = hb_param( 3, HB_IT_ANY );
+      }
+      else if( usPCount == 2 )
+      {
+         pFunc = pParam;
+         pArray = hb_param( 2, HB_IT_ANY );
+      }
+   }
+
+   if( pFunc && ( !pArray || HB_IS_ARRAY( pArray ) ) )
+   {
+      if( HB_IS_SYMBOL( pFunc ) )
+         pExecSym = hb_itemGetSymbol( pFunc );
+      else if( HB_IS_STRING( pFunc ) )
+         pExecSym = hb_dynsymGet( hb_itemGetCPtr( pFunc ) )->pSymbol;
+      else if( HB_IS_BLOCK( pFunc ) && !pSelf )
+      {
+         pSelf = pFunc;
+         pExecSym = &hb_symEval;
+      }
+   }
+
+   if( pExecSym )
+   {
+      usPCount = 0;
+      hb_vmPushSymbol( pExecSym );
+      if( pSelf )
+         hb_vmPush( pSelf );
+      else
+         hb_vmPushNil();
+      if( pArray )
+      {
+         pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
+         while( pItem && usPCount < 255 )
+         {
+            hb_vmPush( pItem );
+            ++usPCount;
+            pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
+         }
+      }
+
+      if( pSelf )
+         hb_vmSend( usPCount );
+      else
+         hb_vmDo( usPCount );
+   }
+   else
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_EXECFROMARRAY", HB_ERR_ARGS_BASEPARAMS );
+      return;
    }
 }

@@ -1369,44 +1369,6 @@ HB_EXPORT void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 /* Internal API, not standard Clipper */
 /* De-references item passed by the reference */
 
-PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
-{
-   PHB_ITEM pRef = pItem;
-   
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
-
-   do
-   {
-      pItem = hb_itemUnRefOnce( pItem );
-   }
-   while( HB_IS_BYREF( pItem ) && ( pRef != pItem ) );
-
-   return pItem;
-}
-
-/* Unreference passed variable 
- * Do not unreference the last reference stored
- */
-PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
-{
-   PHB_ITEM pRef = pItem;
-   PHB_ITEM pLast;
-   
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefRefer(%p)", pItem));
-
-   do
-   {
-      pLast = pItem;
-      pItem = hb_itemUnRefOnce( pItem );
-   }
-   while( HB_IS_BYREF( pItem ) && ( pRef != pItem ) );
-
-   return pLast;
-}
-
-/* Internal API, not standard Clipper */
-/* De-references item passed by the reference */
-
 PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefOnce(%p)", pItem));
@@ -1490,6 +1452,46 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
    }
 
    return pItem;
+}
+
+/* Internal API, not standard Clipper */
+/* De-references item passed by the reference */
+
+PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
+{
+   PHB_ITEM pRef = pItem;
+   PHB_ITEM pLast;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
+
+   do
+   {
+      pLast = pItem;
+      pItem = hb_itemUnRefOnce( pItem );
+   }
+   while( HB_IS_BYREF( pItem ) && pRef != pItem && pLast != pItem );
+
+   return pItem;
+}
+
+/* Unreference passed variable 
+ * Do not unreference the last reference stored
+ */
+PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
+{
+   PHB_ITEM pRef = pItem;
+   PHB_ITEM pLast;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefRefer(%p)", pItem));
+
+   do
+   {
+      pLast = pItem;
+      pItem = hb_itemUnRefOnce( pItem );
+   }
+   while( HB_IS_BYREF( pItem ) && pRef != pItem && pLast != pItem );
+
+   return pLast;
 }
 
 /* Internal API, not standard Clipper */

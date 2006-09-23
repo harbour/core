@@ -8,6 +8,53 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   * source/compiler/exproptb.c
+   * source/compiler/harbour.y
+      *added support for passing the reference to object's variable
+      e.g.
+      foo( @obj:var )
+
+2006-09-24 21:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     * Restored hb_CdpList(), deleted accidentally while last commit.
+
+2006-09-23 19:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bugs fixed in hb_cdpcmp()
+
+2006-09-23 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    * minor modification in function order to group together the ones
+      which can operate on reference counters
+    + added additional stop condition in hb_itemUnRef() - we will have
+      to make some modifications for the code which execute hb_itemUnRef()
+      to resolve some possible conflicts with operators overloading and
+      compiler optimizations
+
+  * harbour/source/vm/classes.c
+    * do not inherit friends - seems that our classes code was too
+      friendly ;-)
+      It also effectively resolves logical problem with accessing
+      overloaded non virtual methods from friends.
+    + added __clsLock( <hClass> ) - it locks any farther class
+      modifications and can be used if programmer wants to be sure
+      that no one will try to hack his class definition. It's very
+      important when programmers work in a team on bigger project.
+      Please do not add to CVS any __clsUnLock() functions - if someone
+      needs it then he can create his own custom HVM build.
+    * code cleanup
+
+  * harbour/source/vm/eval.c
+    + added hb_execFromArray() - idea and syntax borrowed from xHarbour's
+      HB_ExecFromArray() by Giancarlo Niccolai though it's independent
+      implementation. Now when we have support for functions with variable
+      number of parameters then we need sth like this function to fully
+      benefit from new feature. The following syntax is supported:
+         hb_execFromArray( <cFuncName> [, <aParams> ] )
+         hb_execFromArray( @<funcName>() [, <aParams> ] )
+         hb_execFromArray( <bCodeBlock> [, <aParams> ] )
+         hb_execFromArray( <oObject> , <cMethodName> [, <aParams> ] )
+         hb_execFromArray( <oObject> , @<msgName>() [, <aParams> ] )
       or:
          hb_execFromArray( <aExecArray> )
       where <aExecArray> is in one of the following format:

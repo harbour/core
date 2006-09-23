@@ -58,75 +58,24 @@ CLASS Symbol
 
    METHOD New( cSymName )    // Constructor. cSymName may already exists or not
 
+   METHOD Name()             // retrieves the symbol name
+
    METHOD IsEqual( oSymbol ) // Compares two symbol objects
 
-   METHOD exec() // Executes the function referred to by the Symbol object,
-                 // with an optional parameters list
-
-   METHOD _name( cName ) VIRTUAL // name simulates a read-only DATA so it
-                                 // can't be assigned
-   METHOD name() INLINE __DynsP2Name( ::nSym ) // retrieves the symbol name
+   METHOD Exec()             // Executes the function referred to by the
+                             // Symbol object, with an optional parameters list
 
 ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
-
-   ::nSym = __DynSN2Ptr( cSymName )
-
+   ::nSym = __DynSN2Sym( cSymName )
 return Self
 
+METHOD Name() CLASS Symbol
+return ::nSym:Name
+
 METHOD IsEqual( oSymbol ) CLASS Symbol
+return ::ClassH == oSymbol:ClassH .AND. ::nSym:Name == oSymbol:nSym:Name
 
-   if ValType( oSymbol ) == "O"
-      return ::nSym == oSymbol:nSym
-   endif
-
-return .f.
-
-#pragma BEGINDUMP
-
-/* TOFIX: Not to use BEGINDUMP in Harbour core code. Move SYMBOL_EXEC to symbolc.c */
-
-#include <hbapi.h>
-#include <hbvm.h>
-
-HB_FUNC( SYMBOL_EXEC )
-{
-   PHB_ITEM pSelf = hb_param( 0, HB_IT_OBJECT ); /* we retrieve Self */
-   PHB_DYNS pSym;
-
-   static PHB_DYNS pDynSym = NULL; /* We use a static value to look for the
-                                      symbol nSym just once */
-   if( pDynSym == NULL )
-      pDynSym = hb_dynsymFindName( "nSym" );
-
-   /* Lets retrieve DATA nSym from Self,
-      first we place the nSym symbol at the HVM stack */
-   hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
-
-   /* we place the object at the HVM stack */
-   hb_vmPush( pSelf );
-
-   /* we invoke the message with no parameters */
-   hb_vmFunction( 0 );
-
-   pSym = ( PHB_DYNS ) hb_parptr( -1 );  /* we take the returned DATA value from
-                                           the HVM hb_stack.Return */
-   if( pSym != NULL && hb_dynsymSymbol( pSym )->value.pFunPtr )
-   {
-      int i;
-
-      hb_vmPushSymbol( hb_dynsymSymbol( pSym ) );
-      hb_vmPushNil(); /* No Self. We are going to execute a function or a procedure */
-
-      for( i = 1; i <= hb_pcount(); i++ ) /* number of supplied params */
-         /* pushes a generic item (supplied parameter) to the HVM */
-         hb_vmPush( hb_param( i, HB_IT_ANY ) );
-
-      hb_vmFunction( hb_pcount() ); /* executes the symbol */
-   }
-   else
-      hb_ret();  /* clean the HVM hb_stack.Return */
-}
-
-#pragma ENDDUMP
+METHOD Exec( ... ) CLASS Symbol
+return hb_execFromArray( ::nSym, hb_aParams() )
