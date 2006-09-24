@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    ! make hidden and non virtual invisible in child classes if it overloaded
+      some other non hidden method. In such case the overloaded method is used
+      and can be accessed.
+    ! make friend functions real method class oriented not (super)object for
       hidden messages
 
 2006-09-26 17:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
