@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    % separate message hash table from methods table - it will cause farther
+      reduction of allocated memory - many thanks to all people who send
+      me statistics about number of used classes and symbols from their code.
+    % use hb_symEval.pDynSym
+    + added support for object variable type scope checking like in Class(y).
+    ! fixed typo in pushing object class variables by reference
+    % s_pClasses is now indexed directly by class handle
+      
     ! make hidden and non virtual invisible in child classes if it overloaded
       some other non hidden method. In such case the overloaded method is used
       and can be accessed.

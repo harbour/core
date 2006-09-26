@@ -961,6 +961,18 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
                      hb_compErrorRefer( pSelf, szAlias );
                }
             }
+            else if( pExp->ExprType == HB_ET_SEND )
+            {
+               HB_EXPR_PTR pSend = pExp->value.asMessage.pObject;
+               if( pSend->ExprType == HB_ET_VARIABLE )
+               {
+                  HB_EXPR_PCODE2( hb_compGenMessageData, pExp->value.asMessage.szMessage, TRUE );
+                  HB_EXPR_USE( pSend, HB_EA_PUSH_PCODE );
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+               }
+               else
+                  hb_compErrorRefer( pSelf, hb_compExprDescription(pSelf) );
+            }
             else
                hb_compErrorRefer( pSelf, hb_compExprDescription(pSelf) );
          }
