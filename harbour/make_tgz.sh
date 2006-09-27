@@ -245,7 +245,7 @@ then
     export L_USR="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbpp hbdoc hbtest hbpptest
+    for utl in hbmake hbrun hbpp hbdoc hbtest
     do
         (cd "utils/${utl}"
          rm -fR "./${HB_ARCHITECTURE}"

@@ -148,8 +148,11 @@ DECLARE HBClass ;
 /* CLASSY SYNTAX */
 #IFDEF HB_CLS_CSY
 #xtranslate CREATE CLASS => CLASS
-#xtranslate _HB_MEMBER {AS Num  => _HB_MEMBER {AS Numeric
-#xtranslate _HB_MEMBER {AS Char => _HB_MEMBER {AS Character
+#xtranslate _HB_MEMBER {AS Int      => _HB_MEMBER {AS Numeric
+#xtranslate _HB_MEMBER {AS Integer  => _HB_MEMBER {AS Numeric
+#xtranslate _HB_MEMBER {AS Num      => _HB_MEMBER {AS Numeric
+#xtranslate _HB_MEMBER {AS Char     => _HB_MEMBER {AS Character
+#xtranslate _HB_MEMBER {AS Block    => _HB_MEMBER {AS CodeBlock
 
 #translate @:<MessageName>([<MsgParams,...>]) => ;
                                 ::realclass:<MessageName>([<MsgParams>])

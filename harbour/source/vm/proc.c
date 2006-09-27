@@ -59,7 +59,7 @@
  *
  * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
  *    Adding the MethodName() just calling Procname()
- *    Special treatment in case of Object and __Eval (only for methodname)
+ *    Special treatment in case of Object and Eval (only for methodname)
  *    skipping block and adding (b) before the method name
  *
  * See doc/license.txt for licensing terms.
@@ -122,7 +122,7 @@ HB_FUNC( PROCFILE )
       {
          pSym = hb_stackItem( lOffset )->item.asSymbol.value;
 
-         if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
+         if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
          {
             PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
@@ -144,6 +144,7 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
 
+   szName[ 0 ] = '\0';
    if( lOffset >= 0 )
    {
       PHB_ITEM pBase, pSelf;
@@ -167,9 +168,8 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
          }
       }
 
-      szName[ 0 ] = '\0';
       if( pBase->item.asSymbol.value == &hb_symEval ||
-          strcmp( pBase->item.asSymbol.value->szName, "EVAL" ) == 0 )
+          pBase->item.asSymbol.value->pDynSym == hb_symEval.pDynSym )
       {
          strcat( szName, "(b)" );
 
@@ -189,8 +189,6 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
          strcat( szName, pBase->item.asSymbol.value->szName );
       }
    }
-   else
-      strcpy( szName, "" );
 
    return szName;
 }
@@ -217,7 +215,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
       if( szName )
       {
          szName[ 0 ] = '\0';
-         if( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 )
+         if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
          {
             strcat( szName, "(b)" );
 
@@ -245,7 +243,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
          char * szModule;
 
          if( HB_IS_BLOCK( pSelf ) &&
-             ( pSym == &hb_symEval || strcmp( pSym->szName, "EVAL" ) == 0 ) )
+             ( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym ) )
             pSym = pSelf->item.asBlock.value->pDefSymb;
 
          szModule = hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) );

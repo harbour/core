@@ -149,14 +149,18 @@ then
             cp ${hb_filename} ${RPMDIR}/SOURCES
             cp harbour.spec ${RPMDIR}/SPECS	
         fi
+        if which rpmbuild &>/dev/null	    
+        then
+            RPMBLD="rpmbuild"
+        else
+            RPMBLD="rpm"
+        fi
+
         if [ "${BUGGY_RPM}" = "yes" ]
         then
-            rpm -ba harbour.spec ${INST_PARAM}
-        elif which rpmbuild &>/dev/null	    
-        then
-            rpmbuild -ta ${hb_filename} --rmsource ${INST_PARAM}
+            ${RPMBLD} -ba harbour.spec ${INST_PARAM}
         else
-            rpm -ta ${hb_filename} --rmsource ${INST_PARAM}
+            ${RPMBLD} -ta ${hb_filename} --rmsource ${INST_PARAM}
         fi
     else
         echo "Cannot find archive file: ${hb_filename}"

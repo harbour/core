@@ -63,7 +63,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 {
    HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
 
-   if( pItem->type == HB_IT_SYMBOL )
+   if( HB_IS_SYMBOL( pItem ) )
    {                                            /* Symbol is pushed as text */
       PHB_ITEM pArrayItem = hb_arrayGetItemPtr( pReturn, ulPos );
 

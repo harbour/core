@@ -202,6 +202,7 @@ STATIC PROCEDURE Create()
    LOCAL Self := QSelf()
    LOCAL n
    LOCAL nLen
+   LOCAL nScope
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
    LOCAL nClassBegin
    LOCAL hClass
@@ -239,17 +240,21 @@ STATIC PROCEDURE Create()
    //Local message...
 
    FOR n := 1 TO nLenDatas
+      nScope := ::aDatas[ n ][ HB_OO_DATA_SCOPE ]
+      IF ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ]
+         nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
+      ENDIF
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
-                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
-                   ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ] )
+                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], nScope )
       __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n, ;
-                   HB_OO_MSG_ASSIGN,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
+                   HB_OO_MSG_ASSIGN,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
+                   ::aDatas[ n ][ HB_OO_DATA_TYPE ] )
    NEXT
 
    nLen := Len( ::aMethods )
    FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aMethods[ n ][ HB_OO_MTHD_SYMBOL ], ::aMethods[ n ][ HB_OO_MTHD_PFUNCTION ], HB_OO_MSG_METHOD, NIL, ::aMethods[ n ][ HB_OO_MTHD_SCOPE ],;
-                   ::aMethods[ n ][ HB_OO_MTHD_PERSISTENT ] )
+      __clsAddMsg( hClass, ::aMethods[ n ][ HB_OO_MTHD_SYMBOL ], ::aMethods[ n ][ HB_OO_MTHD_PFUNCTION ],;
+                   HB_OO_MSG_METHOD, NIL, ::aMethods[ n ][ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    nLen := Len( ::aClsDatas )
@@ -264,8 +269,7 @@ STATIC PROCEDURE Create()
    nLen := Len( ::aInlines )
    FOR n := 1 TO nLen
       __clsAddMsg( hClass, ::aInlines[ n ][ HB_OO_MTHD_SYMBOL ], ::aInlines[ n ][ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_INLINE, NIL, ::aInlines[ n ][ HB_OO_MTHD_SCOPE ],;
-                   ::aInlines[ n ][ HB_OO_MTHD_PERSISTENT ] )
+                   HB_OO_MSG_INLINE, NIL, ::aInlines[ n ][ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    nLen := Len( ::aVirtuals )
@@ -309,8 +313,9 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
 
    LOCAL Self := QSelf()
 
-   if lNoInit==NIL;lNoInit:=.F.;endif
-   if lPersistent == nil; lpersistent := .f.; endif
+   DEFAULT lNoInit TO .F.
+   DEFAULT lPersistent TO .F.
+   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
    // Default Init for Logical and numeric
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -355,7 +360,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
    LOCAL Self := QSelf()
 
-   if lNoInit==NIL;lNoInit:=.F.;endif
+   DEFAULT lNoInit TO .F.
 
    // Default Init for Logical and numeric
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -400,6 +405,13 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
 
    LOCAL Self := QSelf(), nAt
 
+   DEFAULT lPersistent TO .F.
+   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+
+   IF lPersistent
+      nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
+   ENDIF
+
    /* Remove possible ( <x,...> )*/
    IF ( nAt := At( "(", cMethod ) ) > 0
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
@@ -414,6 +426,13 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
 
    LOCAL Self := QSelf(), nAt
+
+   DEFAULT lPersistent TO .F.
+   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+
+   IF lPersistent
+      nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
+   ENDIF
 
    /* Remove possible ( <x,...> )*/
    IF ( nAt := At( "(", cMethod ) ) > 0
@@ -499,5 +518,13 @@ STATIC FUNCTION InitClass()
    LOCAL Self := QSelf()
 
    RETURN Self
+
+//----------------------------------------------------------------------------//
+
+STATIC FUNCTION _SetBit( nValue1, nValue2 )
+   IF nValue1 % ( nValue2 + nValue2 ) < nValue2
+      nValue1 += nValue2
+   ENDIF
+RETURN nValue1
 
 //----------------------------------------------------------------------------//

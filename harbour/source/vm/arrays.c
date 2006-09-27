@@ -301,7 +301,7 @@ HB_EXPORT BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayAddForward(%p, %p)", pArray, pValue));
 
-   if( pArray->type == HB_IT_ARRAY )
+   if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
 
@@ -892,7 +892,7 @@ static void hb_arrayCloneBody( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBa
    for( ulLen = pSrcBaseArray->ulLen; ulLen; --ulLen, ++pSrcItem, ++pDstItem )
    {
       /* Clipper clones nested array ONLY if NOT an Object!!! */
-      if( pSrcItem->type == HB_IT_ARRAY && pSrcItem->item.asArray.value->uiClass == 0 )
+      if( HB_IS_ARRAY( pSrcItem ) && pSrcItem->item.asArray.value->uiClass == 0 )
       {
          PHB_NESTED_CLONED pCloned = pClonedList;
          PHB_BASEARRAY pBaseArray = pSrcItem->item.asArray.value;

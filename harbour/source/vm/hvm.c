@@ -228,7 +228,7 @@ BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 
 /* virtual machine state */
 
-HB_SYMB  hb_symEval      = { "__EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB  hb_symEval      = { "EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
@@ -398,18 +398,20 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    s_lRecoverBase = 0;
    s_uiActionRequest = 0;
 
+   hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
+
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
 
    hb_xinit();
    hb_stackInit();
    hb_errInit();
 
-   hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   /* initialize dynamic symbol for evaluating codeblocks */
+   hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
 
    hb_setInitialize();        /* initialize Sets */
    hb_conInit();              /* initialize Console */
    hb_memvarsInit();
-   hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
    hb_clsInit();              /* initialize Classy/OO system */
 
    /* Set the language to the default */
@@ -4326,7 +4328,7 @@ HB_EXPORT PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockOrMacro(%p)", pItem));
 
-   if( pItem->type == HB_IT_BLOCK )
+   if( HB_IS_BLOCK( pItem ) )
    {
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pItem );
@@ -4353,7 +4355,7 @@ HB_EXPORT PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
  */
 HB_EXPORT void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
 {
-   if( pItem->type == HB_IT_POINTER )
+   if( HB_IS_POINTER( pItem ) )
    {
       HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
       if( pMacro )
@@ -4817,6 +4819,17 @@ HB_EXPORT void hb_vmPushDynSym( PHB_DYNS pDynSym )
 
    pItem->type = HB_IT_SYMBOL;
    pItem->item.asSymbol.value = pDynSym->pSymbol;
+   pItem->item.asSymbol.stackstate = NULL;
+}
+
+HB_EXPORT void hb_vmPushEvalSym( void )
+{
+   PHB_ITEM pItem = hb_stackAllocItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushEvalSym()"));
+
+   pItem->type = HB_IT_SYMBOL;
+   pItem->item.asSymbol.value = &hb_symEval;
    pItem->item.asSymbol.stackstate = NULL;
 }
 
@@ -5715,8 +5728,9 @@ void hb_vmExitSymbolGroup( void * hDynLib )
    }
 }
 
-PHB_SYMBOLS 
-hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, BOOL fDynLib, BOOL fClone )
+PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols,
+                                  char * szModuleName, ULONG ulID,
+                                  BOOL fDynLib, BOOL fClone )
 {
    PHB_SYMBOLS pNewSymbols;
    BOOL fRecycled, fInitStatics = FALSE;
@@ -5800,7 +5814,8 @@ hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, USHORT uiSymbols, char * szModule
          fInitStatics = TRUE;
       }
 
-      if( ( hSymScope & HB_FS_PCODEFUNC ) != 0 && ( fRecycled || fClone ) )
+      if( ( hSymScope & HB_FS_PCODEFUNC ) && ( hSymScope & HB_FS_LOCAL ) &&
+          ( fRecycled || fClone ) )
       {
          pSymbol->value.pCodeFunc->pSymbols = pNewSymbols->pModuleSymbols;
       }

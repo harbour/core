@@ -96,6 +96,9 @@ HB_EXTERN_BEGIN
 #define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
 #define HB_ERR_ARGS_SELFPARAMS          0xFFFFFFFE
 
+/* pseudo function name in operation description */
+extern char hb_errFuncName;
+
 /* Standard API */
 
 extern char *   hb_errGetDescription    ( PHB_ITEM pError );

@@ -8,6 +8,65 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/include/hbextern.ch
+    - removed __CLS_PARAM()
+
+  * harbour/include/hbclass.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+    * replaced __CLS_PAR00() and __CLS_PARAM() functions by preprocessor
+      rules. These functions are not longer necessary though I left them
+      in classes.c for backward binary compatibility. Probably they will
+      be removed in the future.
+    ! use function pointers (@<funcname>()) instead of function names
+      with REQUEST for super classes ID. It fixes using STATIC class
+      functions.
+
+2006-09-28 00:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_rpm.sh
+    * check for rpmbuild also when BUGGY_RPM is set
+
+  * harbour/make_tgz.sh
+    * removed rebuild hbpptest with shared libraries
+
+  * harbour/include/hbapicls.h
+    + added definitions for hb_clsCreate(), hb_clsAdd(), hb_clsAssociate()
+
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    + added hb_errFuncName - pseudo function name which can be used as
+      operation description in new error object. It should help to simplify
+      some code and fix function names when RT error is generated from C
+      function which can be executed from different .prg functions.
+
+  * harbour/include/hbclass.ch
+    + added some missing Classy(y) compatible object variable type
+      descriptions: Int, Integer, Block
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! disabled early retrieving from the cache key position and key count
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added: void hb_vmPushEvalSym( void ) for the code which do not
+      want to access any [P]HB_SYMB structures
+    * changed symbol name in hb_symEval from __EVAL to EVAL and modified
+      hb_symEval registration method to not register hb_vmDoBlock as global
+      function. Having PHB_DYNS address for "EVAL" in hb_symEval.pDynSym
+      allows to eliminate some strcmp() when we are looking for EVAL public
+      symbol.
+    ! fixed symbol table updating in PCODE functions for future multi module
+      .hrb files
+
+  * harbour/source/vm/proc.c
+    * use hb_symEval.pDynSym instead of strcmp()
+
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/debug.c
+    * minor code cleanup
+
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
     % separate message hash table from methods table - it will cause farther
       reduction of allocated memory - many thanks to all people who send
       me statistics about number of used classes and symbols from their code.

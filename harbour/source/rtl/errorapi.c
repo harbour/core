@@ -86,6 +86,8 @@
    better shows what is really the problem. [vszakats] */
 #define HB_ERROR_LAUNCH_MAX 8
 
+char hb_errFuncName = 0;
+
 static HB_ERROR_INFO_PTR s_errorHandler = NULL;
 static HB_ITEM_PTR s_errorBlock;
 static int     s_iLaunchCount = 0;
@@ -439,6 +441,12 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, const char * szOperation )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutOperation(%p, %s)", pError, szOperation));
 
+   if( szOperation == &hb_errFuncName )
+   {
+      PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
+      if( pSym )
+         szOperation = pSym->szName;
+   }
    hb_vmPushSymbol( hb_dynsymGetSymbol( "_OPERATION" ) );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szOperation, strlen( szOperation ) );

@@ -5655,11 +5655,7 @@ static LONG hb_cdxDBOIKeyCount( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
    ULONG ulKeyCount = 0;
    BOOL fLogOpt = pArea->dbfi.itmCobExpr || !pArea->dbfi.fFilter;
 
-   if ( pTag && ( fFilters ? fLogOpt && CURKEY_LOGCNT( pTag ) : CURKEY_RAWCNT( pTag ) ) )
-   {
-      ulKeyCount = fFilters ? pTag->logKeyCount : pTag->rawKeyCount;
-   }
-   else if ( pTag )
+   if ( pTag )
    {
       BOOL fCheckFilter = ( fLogOpt && fFilters && pArea->dbfi.itmCobExpr );
       ULONG ulRecNo = pArea->ulRecNo;
@@ -5667,62 +5663,69 @@ static LONG hb_cdxDBOIKeyCount( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
       hb_cdxIndexLockRead( pTag->pIndex );
       hb_cdxTagRefreshScope( pTag );
 
-      if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
+      if ( pTag && ( fFilters ? fLogOpt && CURKEY_LOGCNT( pTag ) : CURKEY_RAWCNT( pTag ) ) )
       {
-         pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
-         hb_cdxTagGoTop( pTag );
-         while ( !pTag->TagEOF )
-         {
-            if ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
-               ulKeyCount++;
-            hb_cdxTagSkipNext( pTag );
-         }
-         pTag->fRePos = TRUE;
-         hb_cdxKeyCopy( pTag->CurKey, pCurKey );
-         hb_cdxKeyFree( pCurKey );
-         if ( fCheckFilter )
-            SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+         ulKeyCount = fFilters ? pTag->logKeyCount : pTag->rawKeyCount;
       }
       else
       {
-         LPCDXPAGE pPage;
-         pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
-         if ( pTag->UsrAscend )
-            hb_cdxTagGoTop( pTag );
-         else
-            hb_cdxTagGoBottom( pTag );
-         pPage = pTag->RootPage;
-         while ( pPage->Child )
-            pPage = pPage->Child;
-         ulKeyCount = pPage->iKeys;
-         if ( pPage->Right != CDX_DUMMYNODE )
+         if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
          {
-            ULONG ulPage = pPage->Right;
-            pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
-            pPage->Page = ulPage;
-            while ( pPage->Page != CDX_DUMMYNODE )
+            pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
+            hb_cdxTagGoTop( pTag );
+            while ( !pTag->TagEOF )
             {
-               hb_cdxPageLoad( pPage );
-               ulKeyCount += pPage->iKeys;
-               pPage->Page = pPage->Right;
+               if ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
+                  ulKeyCount++;
+               hb_cdxTagSkipNext( pTag );
             }
-            hb_cdxPageFree( pPage, TRUE );
+            pTag->fRePos = TRUE;
+            hb_cdxKeyCopy( pTag->CurKey, pCurKey );
+            hb_cdxKeyFree( pCurKey );
+            if ( fCheckFilter )
+               SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          }
-         pTag->fRePos = TRUE;
-         hb_cdxKeyCopy( pTag->CurKey, pCurKey );
-         hb_cdxKeyFree( pCurKey );
+         else
+         {
+            LPCDXPAGE pPage;
+            pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
+            if ( pTag->UsrAscend )
+               hb_cdxTagGoTop( pTag );
+            else
+               hb_cdxTagGoBottom( pTag );
+            pPage = pTag->RootPage;
+            while ( pPage->Child )
+               pPage = pPage->Child;
+            ulKeyCount = pPage->iKeys;
+            if ( pPage->Right != CDX_DUMMYNODE )
+            {
+               ULONG ulPage = pPage->Right;
+               pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
+               pPage->Page = ulPage;
+               while ( pPage->Page != CDX_DUMMYNODE )
+               {
+                  hb_cdxPageLoad( pPage );
+                  ulKeyCount += pPage->iKeys;
+                  pPage->Page = pPage->Right;
+               }
+               hb_cdxPageFree( pPage, TRUE );
+            }
+            pTag->fRePos = TRUE;
+            hb_cdxKeyCopy( pTag->CurKey, pCurKey );
+            hb_cdxKeyFree( pCurKey );
+         }
+         if ( !fFilters )
+         {
+            pTag->rawKeyCount = ulKeyCount;
+            pTag->curKeyState |= CDX_CURKEY_RAWCNT;
+         }
+         else if ( fLogOpt )
+         {
+            pTag->logKeyCount = ulKeyCount;
+            pTag->curKeyState |= CDX_CURKEY_LOGCNT;
+         }
       }
       hb_cdxIndexUnLockRead( pTag->pIndex );
-      if ( !fFilters )
-      {
-         pTag->rawKeyCount = ulKeyCount;
-         pTag->curKeyState |= CDX_CURKEY_RAWCNT;
-      }
-      else if ( fLogOpt )
-      {
-         pTag->logKeyCount = ulKeyCount;
-         pTag->curKeyState |= CDX_CURKEY_LOGCNT;
-      }
    }
    else  /* no filter, no order */
    {
@@ -5762,12 +5765,6 @@ static LONG hb_cdxDBOIKeyNo( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
 
    if ( !pArea->fPositioned )
       ulKeyNo = 0;
-   else if ( pTag && ( fFilters ? ( fLogOpt && CURKEY_LOGPOS( pTag ) ) : 
-                                  ( CURKEY_RAWPOS( pTag ) && 
-                                    pTag->rawKeyRec == pArea->ulRecNo ) ) )
-   {
-      ulKeyNo = fFilters ? pTag->logKeyPos : pTag->rawKeyPos;
-   }
    else if ( pTag )
    {
       BOOL fCheckFilter = ( fLogOpt && fFilters && pArea->dbfi.itmCobExpr );
@@ -5775,80 +5772,90 @@ static LONG hb_cdxDBOIKeyNo( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
 
       hb_cdxIndexLockRead( pTag->pIndex );
       hb_cdxTagRefreshScope( pTag );
-      hb_cdxTagOpen( pTag );
-      if ( hb_cdxCurKeyRefresh( pArea, pTag ) )
+
+      if ( fFilters ? ( fLogOpt && CURKEY_LOGPOS( pTag ) ) : 
+                      ( CURKEY_RAWPOS( pTag ) && 
+                                          pTag->rawKeyRec == pArea->ulRecNo ) )
       {
-         if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
+         ulKeyNo = fFilters ? pTag->logKeyPos : pTag->rawKeyPos;
+      }
+      else
+      {
+         hb_cdxTagOpen( pTag );
+         if ( hb_cdxCurKeyRefresh( pArea, pTag ) )
          {
-            if ( hb_cdxBottomScope( pTag ) && hb_cdxTopScope( pTag ) &&
-                 ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, ulRecNo ) ) )
+            if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
             {
+               if ( hb_cdxBottomScope( pTag ) && hb_cdxTopScope( pTag ) &&
+                    ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, ulRecNo ) ) )
+               {
                
-               LPCDXKEY pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
-               while ( !pTag->TagBOF )
-               {
-                  if ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
-                     ulKeyNo++;
-                  hb_cdxTagSkipPrev( pTag );
-               }
-               pTag->fRePos = TRUE;
-               hb_cdxKeyCopy( pTag->CurKey, pCurKey );
-               hb_cdxKeyFree( pCurKey );
-               if ( fCheckFilter )
-                  SELF_GOTO( ( AREAP ) pArea, ulRecNo );
-            }
-         }
-         else
-         {
-            LPCDXPAGE pPage = pTag->RootPage;
-            while ( pPage->Child )
-               pPage = pPage->Child;
-            if ( pTag->UsrAscend )
-            {
-               ulKeyNo = pPage->iCurKey + 1;
-               if ( pPage->Left != CDX_DUMMYNODE )
-               {
-                  ULONG ulPage = pPage->Left;
-                  pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
-                  pPage->Page = ulPage;
-                  while ( pPage->Page != CDX_DUMMYNODE )
+                  LPCDXKEY pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
+                  while ( !pTag->TagBOF )
                   {
-                     hb_cdxPageLoad( pPage );
-                     ulKeyNo += pPage->iKeys;
-                     pPage->Page = pPage->Left;
+                     if ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
+                        ulKeyNo++;
+                     hb_cdxTagSkipPrev( pTag );
                   }
-                  hb_cdxPageFree( pPage, TRUE );
+                  pTag->fRePos = TRUE;
+                  hb_cdxKeyCopy( pTag->CurKey, pCurKey );
+                  hb_cdxKeyFree( pCurKey );
+                  if ( fCheckFilter )
+                     SELF_GOTO( ( AREAP ) pArea, ulRecNo );
                }
             }
             else
             {
-               ulKeyNo = pPage->iKeys - pPage->iCurKey;
-               if ( pPage->Right != CDX_DUMMYNODE )
+               LPCDXPAGE pPage = pTag->RootPage;
+               while ( pPage->Child )
+                  pPage = pPage->Child;
+               if ( pTag->UsrAscend )
                {
-                  ULONG ulPage = pPage->Right;
-                  pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
-                  pPage->Page = ulPage;
-                  while ( pPage->Page != CDX_DUMMYNODE )
+                  ulKeyNo = pPage->iCurKey + 1;
+                  if ( pPage->Left != CDX_DUMMYNODE )
                   {
-                     hb_cdxPageLoad( pPage );
-                     ulKeyNo += pPage->iKeys;
-                     pPage->Page = pPage->Right;
+                     ULONG ulPage = pPage->Left;
+                     pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
+                     pPage->Page = ulPage;
+                     while ( pPage->Page != CDX_DUMMYNODE )
+                     {
+                        hb_cdxPageLoad( pPage );
+                        ulKeyNo += pPage->iKeys;
+                        pPage->Page = pPage->Left;
+                     }
+                     hb_cdxPageFree( pPage, TRUE );
                   }
-                  hb_cdxPageFree( pPage, TRUE );
+               }
+               else
+               {
+                  ulKeyNo = pPage->iKeys - pPage->iCurKey;
+                  if ( pPage->Right != CDX_DUMMYNODE )
+                  {
+                     ULONG ulPage = pPage->Right;
+                     pPage = hb_cdxPageNew( pTag, NULL, CDX_DUMMYNODE );
+                     pPage->Page = ulPage;
+                     while ( pPage->Page != CDX_DUMMYNODE )
+                     {
+                        hb_cdxPageLoad( pPage );
+                        ulKeyNo += pPage->iKeys;
+                        pPage->Page = pPage->Right;
+                     }
+                     hb_cdxPageFree( pPage, TRUE );
+                  }
                }
             }
-         }
-         if ( ulKeyNo != 0 )
-         {
-            if ( !fFilters )
+            if ( ulKeyNo != 0 )
             {
-               pTag->rawKeyPos = ulKeyNo;
-               CURKEY_SETRAWPOS( pTag );
-            }
-            else if ( fLogOpt )
-            {
-               pTag->logKeyPos = ulKeyNo;
-               CURKEY_SETLOGPOS( pTag );
+               if ( !fFilters )
+               {
+                  pTag->rawKeyPos = ulKeyNo;
+                  CURKEY_SETRAWPOS( pTag );
+               }
+               else if ( fLogOpt )
+               {
+                  pTag->logKeyPos = ulKeyNo;
+                  CURKEY_SETLOGPOS( pTag );
+               }
             }
          }
       }
@@ -5890,79 +5897,82 @@ static ERRCODE hb_cdxDBOIKeyGoto( CDXAREAP pArea, LPCDXTAG pTag, ULONG ulKeyNo, 
 
    if ( ulKeyNo == 0 )
       retval = SELF_GOTO( ( AREAP ) pArea, 0 );
-   else if ( pTag && ! pArea->lpdbPendingRel && ( fFilters ?
-               fLogOpt && CURKEY_LOGPOS( pTag ) && pTag->logKeyPos == ulKeyNo :
-               ( CURKEY_RAWPOS( pTag ) && pTag->rawKeyPos == ulKeyNo ) ) )
-   {
-      retval = SELF_GOTO( ( AREAP ) pArea, fFilters ? pTag->logKeyRec : pTag->rawKeyRec );
-   }
    else if ( pTag )
    {
       BOOL fCheckFilter = ( fLogOpt && fFilters && pArea->dbfi.itmCobExpr );
       hb_cdxIndexLockRead( pTag->pIndex );
       hb_cdxTagRefreshScope( pTag );
-      if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
+      if ( ! pArea->lpdbPendingRel && ( fFilters ?
+               fLogOpt && CURKEY_LOGPOS( pTag ) && pTag->logKeyPos == ulKeyNo :
+               ( CURKEY_RAWPOS( pTag ) && pTag->rawKeyPos == ulKeyNo ) ) )
       {
-         hb_cdxTagGoTop( pTag );
-         if ( fCheckFilter )
-            while ( !pTag->TagEOF )
-            {
-               if ( hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
-               {
-                  if ( ! --ulKeyCnt )
-                     break;
-               }
-               hb_cdxTagSkipNext( pTag );
-            }
-         else
-            while( !pTag->TagEOF && --ulKeyCnt )
-               hb_cdxTagSkipNext( pTag );
+         retval = SELF_GOTO( ( AREAP ) pArea, fFilters ? pTag->logKeyRec : pTag->rawKeyRec );
       }
       else
       {
-         LPCDXPAGE pPage, pOwnerPage = NULL;
-         ULONG ulNextPg;
-         hb_cdxTagGoTop( pTag );
-         pPage = pTag->RootPage;
-         while ( pPage->Child )
+         if ( pTag->topScopeKey || pTag->bottomScopeKey || pTag->UsrUnique || pArea->dbfi.fFilter )
          {
-            pOwnerPage = pPage;
-            pPage = pPage->Child;
-         }
-         while ( (ULONG) pPage->iKeys < ulKeyCnt && pOwnerPage &&
-                 ( ulNextPg = pTag->UsrAscend ?
-                   pPage->Right : pPage->Left ) != CDX_DUMMYNODE )
-         {
-            ulKeyCnt -= pPage->iKeys;
-            pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, ulNextPg );
-            hb_cdxPageFree( pPage, FALSE );
-            pPage = pOwnerPage->Child;
-         }
-         if ( (ULONG) pPage->iKeys >= ulKeyCnt )
-         {
-            pPage->iCurKey = pTag->UsrAscend ? ( SHORT ) ulKeyCnt - 1 : pPage->iKeys - ( SHORT ) ulKeyCnt;
-            hb_cdxSetCurKey( pPage );
+            hb_cdxTagGoTop( pTag );
+            if ( fCheckFilter )
+               while ( !pTag->TagEOF )
+               {
+                  if ( hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )
+                  {
+                     if ( ! --ulKeyCnt )
+                        break;
+                  }
+                  hb_cdxTagSkipNext( pTag );
+               }
+            else
+               while( !pTag->TagEOF && --ulKeyCnt )
+                  hb_cdxTagSkipNext( pTag );
          }
          else
          {
-            pTag->CurKey->rec = 0;
+            LPCDXPAGE pPage, pOwnerPage = NULL;
+            ULONG ulNextPg;
+            hb_cdxTagGoTop( pTag );
+            pPage = pTag->RootPage;
+            while ( pPage->Child )
+            {
+               pOwnerPage = pPage;
+               pPage = pPage->Child;
+            }
+            while ( (ULONG) pPage->iKeys < ulKeyCnt && pOwnerPage &&
+                    ( ulNextPg = pTag->UsrAscend ?
+                      pPage->Right : pPage->Left ) != CDX_DUMMYNODE )
+            {
+               ulKeyCnt -= pPage->iKeys;
+               pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, ulNextPg );
+               hb_cdxPageFree( pPage, FALSE );
+               pPage = pOwnerPage->Child;
+            }
+            if ( (ULONG) pPage->iKeys >= ulKeyCnt )
+            {
+               pPage->iCurKey = pTag->UsrAscend ? ( SHORT ) ulKeyCnt - 1 : pPage->iKeys - ( SHORT ) ulKeyCnt;
+               hb_cdxSetCurKey( pPage );
+            }
+            else
+            {
+               pTag->CurKey->rec = 0;
+            }
+         }
+         retval = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
+         if ( pArea->fPositioned )
+         {
+            if ( !fFilters )
+            {
+               pTag->rawKeyPos = ulKeyNo;
+               CURKEY_SETRAWPOS( pTag );
+            }
+            else if ( fLogOpt )
+            {
+               pTag->logKeyPos = ulKeyNo;
+               CURKEY_SETLOGPOS( pTag );
+            }
          }
       }
       hb_cdxIndexUnLockRead( pTag->pIndex );
-      retval = SELF_GOTO( ( AREAP ) pArea, pTag->CurKey->rec );
-      if ( pArea->fPositioned )
-      {
-         if ( !fFilters )
-         {
-            pTag->rawKeyPos = ulKeyNo;
-            CURKEY_SETRAWPOS( pTag );
-         }
-         else if ( fLogOpt )
-         {
-            pTag->logKeyPos = ulKeyNo;
-            CURKEY_SETLOGPOS( pTag );
-         }
-      }
    }
    else
    {

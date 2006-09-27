@@ -122,6 +122,15 @@ HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessag
 HB_EXPORT extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
 HB_EXPORT extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
+
+/* Harbour equivalent for Clipper internal __mdCreate() */
+USHORT hb_clsCreate( USHORT usSize, char * szClassName );
+/* Harbour equivalent for Clipper internal __mdAdd() */
+void hb_clsAdd( USHORT usClassH, char * szMethodName, PHB_FUNC pFuncPtr );
+/* Harbour equivalent for Clipper internal __mdAssociate() */
+void hb_clsAssociate( USHORT usClassH );
+
+
 HB_EXTERN_END
 
 #endif /* HB_APICLS_H_ */
