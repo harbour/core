@@ -156,18 +156,18 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    IF Empty( xSuper )
       ::asSuper := {}
-   ELSEIF ISCHARACTER( xSuper )
+   ELSEIF VALTYPE( xSuper ) == "C"
       ::asSuper := { __DynsN2Sym( xSuper ) }
-   ELSEIF ISSYMBOL( xSuper )
+   ELSEIF VALTYPE( xSuper ) == "S"
       ::asSuper := { xSuper }
-   ELSEIF ISARRAY( xSuper )
+   ELSEIF VALTYPE( xSuper ) == "A"
       ::asSuper := {}
       nSuper := Len( xSuper )
       FOR i := 1 TO nSuper
          IF !Empty( xSuper[ i ] )
-            IF ISCHARACTER( xSuper[ i ] )
+            IF VALTYPE( xSuper[ i ] ) == "C"
                AADD( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
-            ELSEIF ISSYMBOL( xSuper[ i ] )
+            ELSEIF VALTYPE( xSuper[ i ] ) == "S"
                AADD( ::asSuper, xSuper[ i ] )
             ENDIF
          ENDIF
@@ -306,8 +306,6 @@ RETURN oInstance
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
 
-   LOCAL Self := QSelf()
-
    DEFAULT lNoInit TO .F.
    DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
@@ -321,7 +319,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
       ENDIF
    ENDIF
 
-   AAdd( ::aDatas, { cData, xInit, cType, nScope, lPersistent } )
+   AAdd( QSelf():aDatas, { cData, xInit, cType, nScope, lPersistent } )
 
    RETURN
 
@@ -329,22 +327,13 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
 
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit, lPersistent )
 
-   LOCAL Self := QSelf()
    LOCAL i
    LOCAL nParam := Len( aData )
 
    FOR i := 1 TO nParam
-      IF ! ISCHARACTER( aData[ i ] )
-         EXIT
+      IF VALTYPE( aData[ i ] ) == "C"
+         QSelf():AddData( aData[ i ], xInit, cType, nScope, lNoInit, lPersistent )
       ENDIF
-   NEXT
-   IF i < nParam
-      nParam := i - 1
-      ASize( aData, nParam )
-   ENDIF
-
-   FOR i := 1 TO nParam
-      ::AddData( aData[ i ], xInit, cType, nScope, lNoInit, lPersistent )
    NEXT
 
    RETURN
@@ -353,20 +342,21 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit, lPersistent
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
-   LOCAL Self := QSelf()
+   LOCAL c
 
    DEFAULT lNoInit TO .F.
 
    // Default Init for Logical and numeric
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
-      IF Upper( Left( cType, 1 ) ) == "L"
+      c := Upper( Left( cType, 1 ) )
+      IF c == "L"       /* Logical */
          xInit := .F.
-      ELSEIF Upper( Left( cType, 1 ) ) $ "NI"  /* Numeric Int */
+      ELSEIF c $ "NI"   /* Numeric or Integer */
          xInit := 0
       ENDIF
    ENDIF
 
-   AAdd( ::aClsDatas, { cData, xInit, cType, nScope } )
+   AAdd( QSelf():aClsDatas, { cData, xInit, cType, nScope } )
 
    RETURN
 
@@ -374,22 +364,13 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
-   LOCAL Self := QSelf()
    LOCAL i
    LOCAL nParam := Len( aData )
 
    FOR i := 1 TO nParam
-      IF ! ISCHARACTER( aData[ i ] )
-         EXIT
+      IF VALTYPE( aData[ i ] ) == "C"
+         QSelf():AddClassData( aData[ i ], xInit, cType, nScope, lNoInit )
       ENDIF
-   NEXT
-   IF i < nParam
-      nParam := i - 1
-      ASize( aData, nParam )
-   ENDIF
-
-   FOR i := 1 TO nParam
-      ::AddClassData( aData[ i ], xInit, cType, nScope, lNoInit )
    NEXT
 
    RETURN
@@ -398,7 +379,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
 
-   LOCAL Self := QSelf(), nAt
+   LOCAL nAt
 
    DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
@@ -412,7 +393,7 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aInlines, { cMethod, bCode, nScope, lPersistent } )
+   AAdd( QSelf():aInlines, { cMethod, bCode, nScope, lPersistent } )
 
    RETURN
 
@@ -420,7 +401,7 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
 
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
 
-   LOCAL Self := QSelf(), nAt
+   LOCAL nAt
 
    DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
@@ -434,7 +415,7 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aMethods, { cMethod, nFuncPtr, nScope, lPersistent } )
+   AAdd( QSelf():aMethods, { cMethod, nFuncPtr, nScope, lPersistent } )
 
    RETURN
 
@@ -442,14 +423,14 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
 
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
-   LOCAL Self := QSelf(), nAt
+   LOCAL nAt
 
    /* Remove possible ( <x,...> )*/
    IF ( nAt := At( "(", cMethod ) ) > 0
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aClsMethods, { cMethod, nFuncPtr, nScope } )
+   AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
 
    RETURN
 
@@ -457,14 +438,14 @@ STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
 STATIC PROCEDURE AddVirtual( cMethod )
 
-   LOCAL Self := QSelf(), nAt
+   LOCAL nAt
 
    /* Remove possible ( <x,...> )*/
    IF ( nAt := At( "(", cMethod ) ) > 0
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aVirtuals, cMethod )
+   AAdd( QSelf():aVirtuals, cMethod )
 
    RETURN
 
@@ -492,17 +473,13 @@ STATIC PROCEDURE AddFriendFunc( ... )
 
 STATIC PROCEDURE SetOnError( nFuncPtr )
 
-   LOCAL Self := QSelf()
-
-   ::nOnError := nFuncPtr
+   QSelf():nOnError := nFuncPtr
 
    RETURN
 
 STATIC PROCEDURE SetDestructor( nFuncPtr )
 
-   LOCAL Self := QSelf()
-
-   ::nDestructor := nFuncPtr
+   QSelf():nDestructor := nFuncPtr
 
    RETURN
 
@@ -510,9 +487,7 @@ STATIC PROCEDURE SetDestructor( nFuncPtr )
 
 STATIC FUNCTION InitClass()
 
-   LOCAL Self := QSelf()
-
-   RETURN Self
+   RETURN QSelf()
 
 //----------------------------------------------------------------------------//
 

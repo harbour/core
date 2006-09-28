@@ -4171,10 +4171,9 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
 HB_EXPORT void hb_vmSend( USHORT uiParams )
 {
-   PHB_ITEM pItem;
+   HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
    PHB_SYMB pExecSym;
-   HB_STACK_STATE sStackState;
    PHB_ITEM pSelf;
    BOOL bDebugPrevState;
 #ifndef HB_NO_PROFILER
@@ -4195,8 +4194,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    #endif
    */
 
-   pItem = hb_stackNewFrame( &sStackState, uiParams );   /* procedure name */
-   pSym = pItem->item.asSymbol.value;
+   pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
