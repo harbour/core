@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   evaluate to a symbol that starts with underscore '_'.
+     To access a variable the macro should evaluate to a symbol
+   with no '_' char.
+
+2006-09-28 23:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/common.ch
     - removed ISSYMBOL()
   * harbour/source/rtl/tclass.prg
     * use valtype() instead of IS*()
