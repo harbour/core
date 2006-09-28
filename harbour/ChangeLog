@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    - removed ISSYMBOL()
+  * harbour/source/rtl/tclass.prg
+    * use valtype() instead of IS*()
+    * some minor modifications
+
+  * harbour/source/vm/hvm.c
+    * minor modification
+
+2006-09-28 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * updated some not enabled by default rules to use function pointers
+      instead of function names which I forgot to update in previous
+      commit
+
+2006-09-28 14:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/common.ch
+    + added ISSYMBOL()
+
   * harbour/include/hbextern.ch
     - removed __CLS_PARAM()
 

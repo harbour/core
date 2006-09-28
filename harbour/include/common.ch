@@ -69,6 +69,7 @@
 #translate ISMEMO( <xValue> )      => ( ValType( <xValue> ) == "M" )
 #translate ISNUMBER( <xValue> )    => ( ValType( <xValue> ) == "N" )
 #translate ISOBJECT( <xValue> )    => ( ValType( <xValue> ) == "O" ) 
+#translate ISSYMBOL( <xValue> )    => ( ValType( <xValue> ) == "S" ) 
 
 /* DEFAULT and UPDATE commands */
 #xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] => ;

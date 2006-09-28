@@ -102,8 +102,7 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "SetOnError"     , @SetOnError()     , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "SetDestructor"  , @SetDestructor()  , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "InitClass"      , @InitClass()      , HB_OO_MSG_METHOD )
-      __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, NIL, ::acSuper[ 1 ] ) }, HB_OO_MSG_INLINE )
-      __clsAddMsg( s_hClass, "_cSuper"        , {| Self, xVal | iif( ::acSuper == NIL .OR. Len( ::acSuper ) == 0, ( ::acSuper := { xVal } ), ::acSuper[ 1 ] := xVal ), xVal }, HB_OO_MSG_INLINE )
+      __clsAddMsg( s_hClass, "cSuper"         , {| Self | iif( Empty( ::asSuper ), NIL, ::asSuper[ 1 ]:name ) }, HB_OO_MSG_INLINE )
       __clsAddMsg( s_hClass, "hClass"         ,  1, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_hClass"        ,  1, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "cName"          ,  2, HB_OO_MSG_ACCESS )
@@ -120,8 +119,8 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "_aInlines"      ,  7, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "aVirtuals"      ,  8, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_aVirtuals"     ,  8, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "acSuper"        ,  9, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asSuper"        ,  9, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asSuper"       ,  9, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "nDestructor"    , 11, HB_OO_MSG_ACCESS )
@@ -153,19 +152,31 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL nSuper, i
 
-   IF ISARRAY( xSuper ) .AND. Len( xSuper ) >= 1
-      ::acSuper := xSuper
+   DEFAULT lModuleFriendly TO .F.
+
+   IF Empty( xSuper )
+      ::asSuper := {}
+   ELSEIF ISCHARACTER( xSuper )
+      ::asSuper := { __DynsN2Sym( xSuper ) }
+   ELSEIF ISSYMBOL( xSuper )
+      ::asSuper := { xSuper }
+   ELSEIF ISARRAY( xSuper )
+      ::asSuper := {}
       nSuper := Len( xSuper )
-   ELSEIF ISCHARACTER( xSuper ) .AND. ! empty( xSuper )
-      ::acSuper := { xSuper }
-      nSuper := 1
-   ELSE
-      ::acSuper := {}
-      nSuper := 0
+      FOR i := 1 TO nSuper
+         IF !Empty( xSuper[ i ] )
+            IF ISCHARACTER( xSuper[ i ] )
+               AADD( ::asSuper, __DynsN2Sym( xSuper[ i ] ) )
+            ELSEIF ISSYMBOL( xSuper[ i ] )
+               AADD( ::asSuper, xSuper[ i ] )
+            ENDIF
+         ENDIF
+      NEXT
    ENDIF
 
    ::cName         := Upper( cClassName )
    ::sClassFunc    := sClassFunc
+   ::lModFriendly  := lModuleFriendly
 
    ::aDatas        := {}
    ::aMethods      := {}
@@ -175,22 +186,6 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    ::aVirtuals     := {}
    ::asFriendClass := {}
    ::asFriendFunc  := {}
-
-   IF ISLOGICAL( lModuleFriendly )
-      ::lModFriendly := lModuleFriendly
-   ELSE
-      ::lModFriendly := .F.
-   ENDIF
-
-   FOR i := 1 TO nSuper
-      IF ! ISCHARACTER( ::acSuper[ i ] )
-         EXIT
-      ENDIF
-   NEXT
-   IF i <= nSuper
-      nSuper := i - 1
-      ASize( ::acSuper, nSuper)
-   ENDIF
 
    RETURN QSelf()
 
@@ -210,9 +205,9 @@ STATIC PROCEDURE Create()
 
 /* Self:Class := MetaClass */
 
-   nLen := Len( ::acSuper )
+   nLen := Len( ::asSuper )
    FOR n := 1 TO nLen
-      hClass := __clsInstSuper( Upper( ::acSuper[ n ] ) ) // Super handle available
+      hClass := __clsInstSuper( ::asSuper[ n ] ) // Super handle available
       IF hClass != 0
          AAdd( ahSuper, hClass )
       ENDIF

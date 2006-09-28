@@ -2857,82 +2857,90 @@ HB_FUNC( __OBJCLONE )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
-   char * szString = hb_parc( 1 );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
    USHORT uiClassH = 0, uiClass;
+   PHB_SYMB pClassFuncSym = NULL;
 
-   if( szString && *szString )
+   if( pItem )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( szString );
-
-      if( pDynSym )
+      if( HB_IS_SYMBOL( pItem ) )
+         pClassFuncSym = hb_itemGetSymbol( pItem );
+      else if( HB_IS_STRING( pItem ) )
       {
-         for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
+         PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
+         if( pDynSym )
+            pClassFuncSym = pDynSym->pSymbol;
+      }
+      pClassFuncSym = hb_vmGetRealFuncSym( pClassFuncSym );
+   }
+
+   if( pClassFuncSym )
+   {
+      for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
+      {
+         if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
          {
-            if( s_pClasses[ uiClass ].pClassSym == pDynSym )
-            {
-               uiClassH = uiClass;
-               break;
-            }
+            uiClassH = uiClass;
+            break;
          }
+      }
+      if( uiClassH == 0 )
+      {
+         hb_vmPushSymbol( pClassFuncSym );
+         hb_vmPushNil();
+         hb_vmFunction( 0 ); /* Execute super class */
 
-         if( uiClassH == 0 )
+         if( hb_vmRequestQuery() == 0 )
          {
-            hb_vmPushSymbol( pDynSym->pSymbol );         /* Push function name       */
-            hb_vmPushNil();
-            hb_vmFunction( 0 );                          /* Execute super class      */
+            PHB_ITEM pObject = hb_stackReturnItem();
 
-            if( hb_vmRequestQuery() == 0 )
+            if( HB_IS_OBJECT( pObject ) )
             {
-               PHB_ITEM pObject = hb_stackReturnItem();
+               uiClass = pObject->item.asArray.value->uiClass;
 
-               if( HB_IS_OBJECT( pObject ) )
-               {
-                  uiClass = pObject->item.asArray.value->uiClass;
-
-                  if( s_pClasses[ uiClass ].pClassSym == pDynSym )
-                     uiClassH = uiClass;
-                  else
-                  {
-                     for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
-                     { 
-                        if( s_pClasses[ uiClass ].pClassSym == pDynSym )
-                        {
-                           uiClassH = uiClass;
-                           break;
-                        }
-                     }
-                     /* still not found, try to send NEW() message */
-                     if( uiClassH == 0 )
-                     {
-                        hb_vmPushSymbol( &s___msgNew );
-                        hb_vmPush( pObject );
-                        hb_vmSend( 0 );
-
-                        pObject = hb_stackReturnItem();
-                        if( HB_IS_OBJECT( pObject ) )
-                        {
-                           uiClass = pObject->item.asArray.value->uiClass;
-                           if( s_pClasses[ uiClass ].pClassSym == pDynSym )
-                              uiClassH = uiClass;
-                        }
-                     }
-                  }
-
-                  /* This disables destructor execution for this object */
-                  if( uiClassH && HB_IS_OBJECT( pObject ) )
-                     pObject->item.asArray.value->uiClass = 0;
-               }
+               if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
+                  uiClassH = uiClass;
                else
                {
-                  hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
+                  for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
+                  { 
+                     if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
+                     {
+                        uiClassH = uiClass;
+                        break;
+                     }
+                  }
+                  /* still not found, try to send NEW() message */
+                  if( uiClassH == 0 )
+                  {
+                     hb_vmPushSymbol( &s___msgNew );
+                     hb_vmPush( pObject );
+                     hb_vmSend( 0 );
+
+                     pObject = hb_stackReturnItem();
+                     if( HB_IS_OBJECT( pObject ) )
+                     {
+                        uiClass = pObject->item.asArray.value->uiClass;
+                        if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
+                           uiClassH = uiClass;
+                     }
+                  }
                }
+            }
+
+            /* This disables destructor execution for this object */
+            if( uiClassH && HB_IS_OBJECT( pObject ) )
+               pObject->item.asArray.value->uiClass = 0;
+            else if( hb_vmRequestQuery() == 0 )
+            {
+               hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
             }
          }
       }
-      else
-      {
-         hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER", 0 );
-      }
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER", 0 );
    }
 
    hb_retni( uiClassH );
@@ -3754,11 +3762,14 @@ void hb_clsAssociate( USHORT usClassH )
       hb_itemRelease( hb_itemReturnForward( pSelf ) );
 }
 
-/* NOTE: Used by the preprocessor to implement Classy compatibility to Harbour
-         Receive an variable number of param and return an array of it.
-         No param will return a NULL array */
 
+#if 1
 
+/*
+ * __CLS_PARAM() and __CLS_PAR00() functions are only for backward binary
+ * compatibility. They will be removed in the future so please do not use
+ * them.
+ */
 HB_FUNC( __CLS_PARAM )
 {
    PHB_ITEM array;
@@ -3782,8 +3793,6 @@ HB_FUNC( __CLS_PARAM )
    hb_itemRelease( hb_itemReturnForward( array ) );
 }
 
-/* This one is used when HB_NOTOBJECT is defined before HBCLASS.CH */
-/* it will avoid any default object to be inherited */
 HB_FUNC( __CLS_PAR00 )
 {
    PHB_ITEM array;
@@ -3811,3 +3820,5 @@ BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 {
    return hb_objHasMessage( pObject, pMessage->pDynSym );
 }
+
+#endif
