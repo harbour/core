@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   you will notice some problems with current rules please inform me.
+
+2006-09-29 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * allow to access object variables using assign messages without
+      parameter. I do not want to add symmetric behavior for access messages
+      though it's technically possible but such things should be controlled
+      by programmer because access messages can have less restricted scoping
+      then assign ones (READONLY) so I'll add new rule for it in hbclass.ch
+
+  * harbour/source/vm/hvm.c
     * fixed warning message when object variable reference is
       generated using macro compiler without '_' as prefix.
 

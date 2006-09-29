@@ -64,6 +64,7 @@
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
 #define MAX_STR_LEN 255
+#define ADS_MAX_PARAMDEF_LEN  2048
 
 int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
@@ -2073,15 +2074,8 @@ HB_FUNC( ADSCONNECT60 )
    {
       // determine if is a DataDict
       UNSIGNED16 usType;
-      BOOL fDictionary = FALSE;
       PHB_ITEM  piByRefHandle = hb_param( 6, HB_IT_BYREF );
 
-      ulRetVal = AdsGetHandleType( hConnect, &usType);
-      if( ulRetVal == AE_SUCCESS )
-      {
-         fDictionary = ( usType == ADS_DATABASE_CONNECTION
-                      || usType == ADS_SYS_ADMIN_CONNECTION );
-      }
       adsConnectHandle = hConnect;       // set new default
 
       if ( piByRefHandle )
@@ -2101,7 +2095,7 @@ HB_FUNC( ADSDDCREATE )
 {
    UNSIGNED32 ulRetVal;
    UNSIGNED8  *pucDictionaryPath = (UNSIGNED8 *) hb_parcx( 1 );
-   UNSIGNED16 usEncrypt          = (UNSIGNED16) ISNUM( 2 ) ? hb_parnl( 0 ) : 0;
+   UNSIGNED16 usEncrypt          = (UNSIGNED16) ISNUM( 2 ) ? hb_parnl( 2 ) : (ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) ;
    UNSIGNED8  *pucDescription    = ISCHAR( 3 ) ? (UNSIGNED8 *) hb_parcx( 3 ) : NULL;
    ADSHANDLE hConnect = 0;
 
@@ -2139,11 +2133,11 @@ HB_FUNC( ADSDDCREATEUSER )
 
 HB_FUNC( ADSDDGETDATABASEPROPERTY )
 {
-   #define ADS_MAX_PARAMDEF_LEN  2048
    UNSIGNED16 ulProperty = ( UNSIGNED16 ) hb_parni( 1 );
    char sBuffer[ ADS_MAX_PARAMDEF_LEN ];
    UNSIGNED16 ulLength;
    UNSIGNED16 ulBuffer;
+   UNSIGNED32 ulRetVal;
    BOOL bChar = FALSE;
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 2 );
 
@@ -2153,11 +2147,20 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
       case ADS_DD_DEFAULT_TABLE_PATH:
       case ADS_DD_USER_DEFINED_PROP:
       case ADS_DD_TEMP_TABLE_PATH:
+      /*case ADS_DD_ADMIN_PASSWORD:  not valid to retrieve */
       case ADS_DD_VERSION:
       {
          ulLength = ADS_MAX_PARAMDEF_LEN ;
-         AdsDDGetDatabaseProperty( hConnect, ulProperty, &sBuffer, &ulLength );
          bChar = TRUE ;
+         ulRetVal = AdsDDGetDatabaseProperty( hConnect, ulProperty, &sBuffer, &ulLength );
+         if( ulRetVal != AE_SUCCESS )
+         {
+            sBuffer[0] = 0;
+            ulLength = 0;    /* Current structure of this func doesn't give a good way to handle errors */
+         }
+         else
+         {
+         }
          break;
       }
       case ADS_DD_LOG_IN_REQUIRED:
@@ -2195,7 +2198,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
    UNSIGNED16 ulBuffer;
    UNSIGNED16 ulProperty = ( UNSIGNED16 ) hb_parni( 1 );
    PHB_ITEM pParam = hb_param( 2, HB_IT_ANY ) ;
-   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 2 );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 3 );
 
    switch( ulProperty )
    {
@@ -2206,7 +2209,7 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       case ADS_DD_ADMIN_PASSWORD:
       case ADS_DD_ENCRYPT_TABLE_PASSWORD:
       {
-         ulRetVal = AdsDDSetDatabaseProperty( hConnect, ulProperty, hb_itemGetCPtr( pParam ), ( UNSIGNED16 ) hb_itemGetCLen( pParam ) );
+         ulRetVal = AdsDDSetDatabaseProperty( hConnect, ulProperty, hb_itemGetCPtr( pParam ), ( UNSIGNED16 ) hb_itemGetCLen( pParam )+1 );
          break;
       }
       case ADS_DD_MAX_FAILED_ATTEMPTS:
@@ -2245,17 +2248,36 @@ UNSIGNED32 ENTRYPOINT AdsDDGetUserProperty( ADSHANDLE  hObject,
 */
 HB_FUNC( ADSDDGETUSERPROPERTY )
 {
+
    UNSIGNED32 ulRetVal;
-   UNSIGNED8  *pucUserName      = (UNSIGNED8 *) hb_parcx( 1 );
-   UNSIGNED16 usPropertyID      = hb_parni( 2 );
-   UNSIGNED8  *pvProperty       = (UNSIGNED8 *) hb_parcx( 3 );
-   UNSIGNED16 usPropertyLen     = hb_parni( 4 );
-   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 5 );
+   UNSIGNED8  *pucUserName  = (UNSIGNED8 *) hb_parcx( 1 );
+   UNSIGNED16 usPropertyID  = hb_parni( 2 );
+   PHB_ITEM pPropertyByRef  = hb_param( 3 , HB_IT_BYREF );
+   ADSHANDLE hConnect       = HB_ADS_PARCONNECTION( 4 );
+   UNSIGNED16 usPropertyLen = ADS_MAX_PARAMDEF_LEN  ;
+   UNSIGNED8  pvProperty[ ADS_MAX_PARAMDEF_LEN   ] = { 0 };
+
+   if (! pPropertyByRef )
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSDDGETUSERPROPERTY" );
+      return;
+   }
 
    ulRetVal = AdsDDGetUserProperty( hConnect, pucUserName, usPropertyID,
                                     pvProperty, &usPropertyLen );
+
+   if (ulRetVal == AE_SUCCESS )
+   {
+      hb_storc(pvProperty, 3 );
+   }
+   else
+   {
+      hb_storc( "", 3 );
+   }
    hb_retl( ulRetVal == AE_SUCCESS );
 }
+
+
 /*
    Verify if a username/password combination is valid for this database
    Call :    ADSTESTLOGIN(serverpath,servertypes,username,password,options,

@@ -5789,8 +5789,9 @@ static LONG hb_cdxDBOIKeyNo( CDXAREAP pArea, LPCDXTAG pTag, BOOL fFilters )
                if ( hb_cdxBottomScope( pTag ) && hb_cdxTopScope( pTag ) &&
                     ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, ulRecNo ) ) )
                {
-               
                   LPCDXKEY pCurKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
+                  if ( !hb_cdxCheckRecordScope( pArea, pTag->CurKey->rec ) )
+                     hb_cdxTagSkipPrev( pTag );
                   while ( !pTag->TagBOF )
                   {
                      if ( !fCheckFilter || hb_cdxCheckRecordFilter( pArea, pTag->CurKey->rec ) )

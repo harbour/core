@@ -125,7 +125,7 @@ ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
       lSkip = -1;
       lToSkip *= -1;
    }
-   while( lToSkip-- > 0 )
+   while( --lToSkip >= 0 )
    {
       if( SELF_SKIPRAW( pArea, lSkip ) != SUCCESS )
          return FAILURE;
