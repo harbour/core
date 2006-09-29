@@ -212,6 +212,15 @@ static void hb_compDebugStart( void ) { };
       BOOL lateEval; /* Flag for early {|| &macro} (0) or late {|| &(macro)} (1) binding */
       BOOL isMacro;
    } asCodeblock;
+   struct
+   {
+      BOOL bMacro;
+      union 
+      {
+         char *string;
+         HB_EXPR_PTR macro;
+      } value;
+   } asMessage;
    void * pVoid;        /* to hold any memory structure we may need */
 };
 
@@ -258,7 +267,7 @@ static void hb_compDebugStart( void ) { };
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IdentName IDENTIFIER LITERAL SendId MACROVAR MACROTEXT CompTimeStr
+%type <string>  IdentName IDENTIFIER LITERAL MACROVAR MACROTEXT CompTimeStr
 %type <string>	DOIDENT WHILE
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
@@ -305,6 +314,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  ForVar ForList ForExpr
 %type <asCodeblock> CBSTART
 %type <asExpr>  DateValue
+%type <asMessage> SendId
 
 %%
 
@@ -743,33 +753,34 @@ FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 
 /* Object's instance variable
  */
-SendId      : IdentName      { $$ = $1; }
-            | MacroVar        { $$ = "&"; hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_SEND, "&", NULL); }
+SendId      : IdentName      { $$.value.string = $1; $$.bMacro=FALSE; }
+            | MacroVar       { $$.value.macro  = $1; $$.bMacro=TRUE;  }
+            | MacroExpr      { $$.value.macro  = $1; $$.bMacro=TRUE;  }
             ;
 
-ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | NilValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | DateValue ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | LiteralValue ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Variable ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | CodeBlock ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Logical ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | SelfValue ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Array ':' SendId           { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ArrayAt ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | AliasVar ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | AliasExpr ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | MacroVar ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | MacroExpr ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | FunCall ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | IfInline ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | PareExpList ':' SendId     { $$ = hb_compExprNewSend( $1, $3 ); }
-            | VariableAt ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ObjectMethod ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ObjectData ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
+ObjectData  : NumValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | NilValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | DateValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | LiteralValue ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | Variable ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | CodeBlock ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | Logical ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | SelfValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | Array ':' SendId           { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | ArrayAt ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | AliasVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | AliasExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | MacroVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | MacroExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | FunCall ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | IfInline ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | PareExpList ':' SendId     { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | VariableAt ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | ObjectMethod ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
+            | ObjectData ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
             | ':' SendId                 { if( hb_comp_wWithObjectCnt == 0 ) 
                                              hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
-                                           $$ = hb_compExprNewSend( NULL, $2 );
+                                           $$ = ($2.bMacro ? hb_compExprNewSend( NULL, NULL, $2.value.macro ) : hb_compExprNewSend( NULL, $2.value.string, NULL ));
                                          }
             ;
 
@@ -1906,9 +1917,7 @@ DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1 ); }
            | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
            | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
            ;
-/*
-           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
-*/
+
 WithObject : WITHOBJECT Expression Crlf
                {
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );

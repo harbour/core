@@ -499,7 +499,7 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
 /* Creates new method call
  *    pObject : identifier ( pArgList )
  *
- *    pObject = is an expression returned by hb_compExprNewSend
+ *    pObject  = is an expression returned by hb_compExprNewSend
  *    pArgList = list of passed arguments - it will be HB_ET_NONE if no arguments
  *                are passed
  */

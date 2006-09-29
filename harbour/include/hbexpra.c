@@ -392,9 +392,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
          pEval = hb_compExprNewMethodCall( 
 #ifndef HB_MACRO_SUPPORT
-            hb_compExprNewSend( pParms->value.asList.pExprList, hb_compIdentifierNew( "EVAL", TRUE ) ),
+            hb_compExprNewSend( pParms->value.asList.pExprList, hb_compIdentifierNew( "EVAL", TRUE ), NULL ),
 #else
-            hb_compExprNewSend( pParms->value.asList.pExprList, hb_strdup("EVAL") ),
+            hb_compExprNewSend( pParms->value.asList.pExprList, hb_strdup("EVAL"), NULL ),
 #endif            
             hb_compExprNewArgList( pParms->value.asList.pExprList->pNext ) );
                
@@ -651,34 +651,51 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 /* Creates new send expression
  *    pObject : szMessage
  */
-HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
+HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage, HB_EXPR_PTR pMessage )
 {
    HB_EXPR_PTR pExpr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%p, %s)", pObject, szMessage));
 
    pExpr = hb_compExprNew( HB_ET_SEND );
-   pExpr->value.asMessage.szMessage = szMessage;
    pExpr->value.asMessage.pObject   = pObject;
    pExpr->value.asMessage.pParms     = NULL;
 
-#ifndef HB_MACRO_SUPPORT 
-   if( (strcmp( "__ENUMINDEX", szMessage ) == 0) || 
-       (strcmp( "__ENUMBASE", szMessage ) == 0 ) ||
-       (strcmp( "__ENUMVALUE", szMessage ) == 0 ) )
+   if( szMessage != NULL )
    {
-      if( pObject->ExprType == HB_ET_VARIABLE )
+      pExpr->value.asMessage.szMessage = szMessage;
+      pExpr->value.asMessage.pMessage = NULL;
+#ifndef HB_MACRO_SUPPORT 
+      if( (strcmp( "__ENUMINDEX", szMessage ) == 0) || 
+          (strcmp( "__ENUMBASE", szMessage ) == 0 ) ||
+          (strcmp( "__ENUMVALUE", szMessage ) == 0 ) )
       {
-         if( ! hb_compForEachVarError( pObject->value.asSymbol ) )
+         if( pObject->ExprType == HB_ET_VARIABLE )
          {
+            if( ! hb_compForEachVarError( pObject->value.asSymbol ) )
+            {
 /*            pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol );*/
-            /* NOTE: direct type change */
-            pObject->ExprType = HB_ET_VARREF;
-            pExpr->value.asMessage.pObject = pObject;
+               /* NOTE: direct type change */
+               pObject->ExprType = HB_ET_VARREF;
+               pExpr->value.asMessage.pObject = pObject;
+            }
          }
       }
-   }
 #endif
+   }
+   else
+   {
+      pExpr->value.asMessage.pMessage = pMessage;
+      pExpr->value.asMessage.szMessage = NULL;
+      if( pMessage->ExprType == HB_ET_MACRO )
+      {
+         /* Signal that macro compiler have to generate a pcode that will
+          * return function name as symbol instead of usual value
+          */
+         pMessage->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
+      }
+   }
+   
    return pExpr;
 }
 

@@ -80,21 +80,30 @@ static void hb_compExprSendPopPush( HB_EXPR_PTR pObj )
    if( pObj->value.asMessage.pObject )
    {
       /* Push _message for later use */
-      HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, TRUE );
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-
-      /* Now push current value of variable */
-      HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, TRUE );
+      if( pObj->value.asMessage.szMessage )
+      {
+         HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, TRUE );
+      }
+      else
+      {
+         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+      }
       /* Push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
    }
    else
    {
       /* Push _message for later use */
-      HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, FALSE );
-      /* Now push current value of variable */
-      HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, FALSE );
+      if( pObj->value.asMessage.szMessage )
+      {
+         HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, FALSE );
+      }
+      else
+      {
+         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+         /* Push WITHOBJECTMESSAGE pcode */
+         HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
+      }
    }
 }
 
@@ -127,7 +136,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    {
       HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it. */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
 /* NOTE: COMPATIBILITY ISSUE:
  *  The above HB_C52_STRICT setting determines
@@ -157,10 +166,22 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
       /* increase operation */
+      switch( bOpEq )
+      {
+         case HB_P_PLUS:
+            bOpEq = HB_P_PLUSEQ;
+            break;
+         case HB_P_MINUS:
+            bOpEq = HB_P_MINUSEQ;
+            break;
+         case HB_P_MULT:
+            bOpEq = HB_P_MULTEQ;
+            break;
+         case HB_P_DIVIDE:
+            bOpEq = HB_P_DIVEQ;
+            break;
+      }
       HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-
-      /* call pop message with one argument */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
       
       return;
    }
@@ -287,18 +308,27 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    {
       HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it.*/
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-      /* increase operation */
+      /* increase operation and pop the unneeded value from the stack */
+      switch( bOpEq )
+      {
+         case HB_P_PLUS:
+            bOpEq = HB_P_PLUSEQPOP;
+            break;
+         case HB_P_MINUS:
+            bOpEq = HB_P_MINUSEQPOP;
+            break;
+         case HB_P_MULT:
+            bOpEq = HB_P_MULTEQPOP;
+            break;
+         case HB_P_DIVIDE:
+            bOpEq = HB_P_DIVEQPOP;
+            break;
+      }
       HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-
-      /* Now do the assignment - call pop message with one argument */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
-
-      /* pop the unneeded value from the stack */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
       
       return;
    }
@@ -425,13 +455,10 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
    {
       HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
       /* Do it. */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
       /* increase/decrease operation */
       HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
-
-      /* Now, do the assignment - call pop message with one argument - it leaves the value on the stack */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
    }
    else
    {

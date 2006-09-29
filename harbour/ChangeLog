@@ -8,6 +8,45 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-09-28 11:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+
+  * harbour/source/rdd/workarea.c
+    * minor modification
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * minor Clipper compatibility update
+
+2006-09-29 11:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * tests/Makefile
+      + added omacro.prg and varparam.prg
+   * ChangeLog
+      * fixed date in previous commit
+
+2006-09-29 11:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbexprop.h
+   * source/common/expropt1.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/exproptc.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/macro/macro.y
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+         
+   * source/vm/hvm.c
+      + added support for passing methods as macro
+     
+         o:&send()
+         o:&send.end()
+   and for pre/post increment operators( ++,--) the macro should 
+         o:&var++
+         o:&var := 0
+         o:&(expr)++
+         WITH OBJECT obj
             ++:&var
             :&var += :&(var2+"oo")
          END

@@ -2217,7 +2217,18 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             {
                BOOL fMacroList = FALSE;
                int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
-               HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
+               if( pSelf->value.asMessage.szMessage )
+               {
+                  HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
+               }
+               else
+               {
+                  HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+                  if( ! bIsObject )
+                  {
+                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
+                  }
+               }
                if( bIsObject )
                {
                   HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
@@ -2267,7 +2278,18 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             else
             {
                /* acces to instance variable */
-               HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
+               if( pSelf->value.asMessage.szMessage )
+               {
+                  HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
+               }
+               else
+               {
+                  HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+                  if( ! bIsObject )
+                  {
+                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
+                  }
+               }
                if( bIsObject )
                {
                   HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
@@ -2285,7 +2307,18 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             /* NOTE: This is an exception from the rule - this leaves
              *    the return value on the stack
              */
-            HB_EXPR_PCODE2( hb_compGenMessageData, pSelf->value.asMessage.szMessage, bIsObject );
+            if( pSelf->value.asMessage.szMessage )
+            {
+               HB_EXPR_PCODE2( hb_compGenMessageData, pSelf->value.asMessage.szMessage, bIsObject );
+            }
+            else
+            {
+               HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+                  if( ! bIsObject )
+                  {
+                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
+                  }
+            }
             if( bIsObject )
             {
                HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
@@ -2318,6 +2351,10 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             if( pSelf->value.asMessage.pParms )
             {
                HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMessage.pParms );
+            }
+            if( pSelf->value.asMessage.pMessage )
+            {
+               HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMessage.pMessage );
             }
 #if defined( HB_MACRO_SUPPORT )
             HB_XFREE( pSelf->value.asMessage.szMessage );

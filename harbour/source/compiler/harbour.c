@@ -2903,15 +2903,25 @@ void hb_compGenVarPCode( BYTE bPCode, char * szVarName )
 void hb_compGenMessage( char * szMsgName, BOOL bIsObject )       
 {
    USHORT wSym;
-   PCOMSYMBOL pSym = hb_compSymbolFind( szMsgName, &wSym, HB_SYM_MSGNAME );
+   PCOMSYMBOL pSym;
+   
+   if( szMsgName )
+   {
+      pSym = hb_compSymbolFind( szMsgName, &wSym, HB_SYM_MSGNAME );
 
-   if( ! pSym )  /* the symbol was not found on the symbol table */
-      pSym = hb_compSymbolAdd( szMsgName, &wSym, HB_SYM_MSGNAME );
-   pSym->cScope |= HB_FS_MESSAGE;
-   if( bIsObject )
-      hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+      if( ! pSym )  /* the symbol was not found on the symbol table */
+         pSym = hb_compSymbolAdd( szMsgName, &wSym, HB_SYM_MSGNAME );
+      pSym->cScope |= HB_FS_MESSAGE;
+      if( bIsObject )
+         hb_compGenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+      else
+         hb_compGenPCode3( HB_P_WITHOBJECTMESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+   }
    else
+   {
+      wSym = 0xFFFF;
       hb_compGenPCode3( HB_P_WITHOBJECTMESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), ( BOOL ) 1 );
+   }
 }
 
 void hb_compGenMessageData( char * szMsg, BOOL bIsObject ) /* generates an underscore-symbol name for a data assignment */

@@ -231,8 +231,9 @@ typedef struct HB_EXPR_
       struct
       {
          struct HB_EXPR_ *pObject;     /* object */
-         char * szMessage;             /* message */
          struct HB_EXPR_ *pParms;      /* method parameters */
+         char * szMessage;             /* message as string */
+         struct HB_EXPR_ *pMessage;    /* message as macro */
       } asMessage;
       struct
       {
@@ -359,7 +360,7 @@ HB_EXPR_PTR hb_compExprNewFunRef( char * );
 HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewFunCallArg( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char * );
+HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char *szMessage, HB_EXPR_PTR pMessage );
 HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR, HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR );
 HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR );

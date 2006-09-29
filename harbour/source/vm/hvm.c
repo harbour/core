@@ -1801,10 +1801,20 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* WITH OBJECT */
          
          case HB_P_WITHOBJECTMESSAGE:
-            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+         {
+            USHORT wSymPos = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
+            if( wSymPos != 0xFFFF )
+            {
+               /* NOTE: 0xFFFF is passed when ':&varmacro' syntax is used.
+                * In this case symbol is already pushed on the stack
+                * using HB_P_MACROSYMBOL.
+               */
+               hb_vmPushSymbol( pSymbols + wSymPos );
+            }
             hb_vmPush( hb_stackWithObjectItem() );
             w += 3;
             break;
+         }
 
          case HB_P_WITHOBJECTSTART:
             hb_vmWithObjectStart();
@@ -2450,6 +2460,11 @@ static void hb_vmInc( void )
 
    pItem = hb_stackItemFromTop( -1 );
 
+   if( HB_IS_BYREF( pItem ) )
+   {
+      pItem = hb_itemUnRef( pItem );
+   }
+
    if( HB_IS_DATE( pItem ) )
       pItem->item.asDate.value++;
    else if( HB_IS_NUMINT( pItem ) )
@@ -2496,6 +2511,11 @@ static void hb_vmDec( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDec()"));
 
    pItem = hb_stackItemFromTop( -1 );
+
+   if( HB_IS_BYREF( pItem ) )
+   {
+      pItem = hb_itemUnRef( pItem );
+   }
 
    if( HB_IS_DATE( pItem ) )
       pItem->item.asDate.value--;
