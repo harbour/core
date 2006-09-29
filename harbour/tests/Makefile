@@ -91,6 +91,7 @@ PRG_SOURCES=\
 	multiarg.prg \
 	nums.prg \
 	objects.prg \
+	omacro.prg \
 	onidle.prg \
 	os.prg \
 	output.prg \
@@ -143,6 +144,7 @@ PRG_SOURCES=\
 	tstcolor.prg \
 	tstdbi.prg \
 	tstdspac.prg \
+	varparam.prg \
 	version.prg \
 	vmasort.prg \
 	while.prg \

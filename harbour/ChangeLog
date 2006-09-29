@@ -8,7 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2006-09-28 11:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+    * fixed warning message when object variable reference is
+      generated using macro compiler without '_' as prefix.
+
+2006-09-29 21:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * synced with Brian fixes in xHarbour
 
   * harbour/source/rdd/workarea.c
     * minor modification
