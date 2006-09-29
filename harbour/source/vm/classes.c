@@ -3458,26 +3458,27 @@ static HARBOUR hb___msgSetClsData( void )
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
-   PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
+   PHB_ITEM pReturn = hb_param( 1, HB_IT_ANY );
 
    if( !pReturn )
-      return;
-   else if( HB_IS_BYREF( pReturn ) )
-      pReturn = hb_itemUnRef( pReturn );
+      hb_arrayGet( pClass->pClassDatas, pMethod->uiData, hb_stackReturnItem() );
 
-   if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+   else
    {
-      if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
-         hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
-      else
+      if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
       {
-         (s___msgTypeErr.value.pFunPtr)();
-         return;
+         if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
+            hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
+         else
+         {
+            (s___msgTypeErr.value.pFunPtr)();
+            return;
+         }
       }
-   }
 
-   hb_arraySet( pClass->pClassDatas, pMethod->uiData, pReturn );
-   hb_itemReturnForward( pReturn );
+      hb_arraySet( pClass->pClassDatas, pMethod->uiData, pReturn );
+      hb_itemReturnForward( pReturn );
+   }
 }
 
 /*
@@ -3507,27 +3508,28 @@ static HARBOUR hb___msgSetShrData( void )
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
    PMETHOD pMethod = pClass->pMethods +
                   hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
-   PHB_ITEM pReturn = hb_stackItemFromBase( 1 );
+   PHB_ITEM pReturn = hb_param( 1, HB_IT_ANY );
 
    if( !pReturn )
-      return;
-   else if( HB_IS_BYREF( pReturn ) )
-      pReturn = hb_itemUnRef( pReturn );
-
-   if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+      hb_arrayGet( s_pClasses[ pMethod->uiSprClass ].pSharedDatas,
+                   pMethod->uiData, hb_stackReturnItem() );
+   else
    {
-      if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
-         hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
-      else
+      if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
       {
-         (s___msgTypeErr.value.pFunPtr)();
-         return;
+         if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
+            hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
+         else
+         {
+            (s___msgTypeErr.value.pFunPtr)();
+            return;
+         }
       }
-   }
 
-   hb_arraySet( s_pClasses[ pMethod->uiSprClass ].pSharedDatas,
-                pMethod->uiData, pReturn );
-   hb_itemReturnForward( pReturn );
+      hb_arraySet( s_pClasses[ pMethod->uiSprClass ].pSharedDatas,
+                   pMethod->uiData, pReturn );
+      hb_itemReturnForward( pReturn );
+   }
 }
 
 /*
@@ -3565,7 +3567,7 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSetData( void )
 {
-   PHB_ITEM pReturn  = hb_stackItemFromBase( 1 );
+   PHB_ITEM pReturn  = hb_param( 1, HB_IT_ANY );
    PHB_ITEM pObject  = hb_stackSelfItem();
    USHORT uiObjClass = pObject->item.asArray.value->uiClass;
    USHORT uiClass    = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
@@ -3573,22 +3575,6 @@ static HARBOUR hb___msgSetData( void )
    PMETHOD pMethod   = pClass->pMethods +
                        hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
    ULONG ulIndex     = pMethod->uiData;
-
-   if( !pReturn )
-      return;
-   else if( HB_IS_BYREF( pReturn ) )
-      pReturn = hb_itemUnRef( pReturn );
-
-   if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
-   {
-      if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
-         hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
-      else
-      {
-         (s___msgTypeErr.value.pFunPtr)();
-         return;
-      }
-   }
 
    if( uiClass != uiObjClass )
    {
@@ -3600,11 +3586,28 @@ static HARBOUR hb___msgSetData( void )
       ulIndex += pMethod->uiOffset;
    }
 
-   /* will arise only if the class has been modified after first instance */
-   if( ulIndex > hb_arrayLen( pObject ) ) /* Resize needed ? */
-      hb_arraySize( pObject, ulIndex );   /* Make large enough */
-   hb_arraySet( pObject, ulIndex, pReturn );
-   hb_itemReturnForward( pReturn );
+   if( !pReturn )
+      hb_arrayGet( pObject, ulIndex, hb_stackReturnItem() );
+
+   else
+   {
+      if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+      {
+         if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
+            hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
+         else
+         {
+            (s___msgTypeErr.value.pFunPtr)();
+            return;
+         }
+      }
+
+      /* will arise only if the class has been modified after first instance */
+      if( ulIndex > hb_arrayLen( pObject ) ) /* Resize needed ? */
+         hb_arraySize( pObject, ulIndex );   /* Make large enough */
+      hb_arraySet( pObject, ulIndex, pReturn );
+      hb_itemReturnForward( pReturn );
+   }
 }
 
 /* No comment :-) */

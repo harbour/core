@@ -4263,7 +4263,7 @@ static void hb_vmPushObjectVarRef( void )
 
    if( !hb_objGetVarRef( hb_stackSelfItem(), pSym, &sStackState ) &&
        hb_vmRequestQuery() == 0 )
-      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1, 1, hb_stackSelfItem() );
+      hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + ( pSym->szName[ 0 ] == '_' ? 1 : 0 ), 1, hb_stackSelfItem() );
 
    hb_stackOldFrame( &sStackState );
 

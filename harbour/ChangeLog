@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
+      [ ; #translate Super( <SuperClass1> ): => ::<SuperClass1>: ] ;
+      [ ; #translate Super(): => ::<SuperClass1>: ] ;
+      [ ; #translate Super: => ::<SuperClass1>: ] ;
+      [ ; #translate ::Super : => ::<SuperClass1>: ]
+   These rules introduce very serious bug - they are breaking supercasting
+   in code which makes sth like:
+      ::super:super:super:msg
+   or in any other code which sends SUPER message to some other class
+   objects. I will have to remove them. At least the last three ones.
+   There were some other things I wanted to write about but it's too late
+   and I'm to tired - sorry. If you will have any question please ask. if
    you will notice some problems with current rules please inform me.
 
 2006-09-29 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
