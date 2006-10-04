@@ -458,6 +458,14 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
       HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
       /* increase/decrease operation */
+      /* We have to unreference the item on the stack, because we do not have
+         such PCODE(s) then I'll trnaslate HB_P_INC/HB_P_DEC into
+         HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
+         in differ way [druzus] */
+
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+
       HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
    }
    else

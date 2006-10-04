@@ -2460,11 +2460,6 @@ static void hb_vmInc( void )
 
    pItem = hb_stackItemFromTop( -1 );
 
-   if( HB_IS_BYREF( pItem ) )
-   {
-      pItem = hb_itemUnRef( pItem );
-   }
-
    if( HB_IS_DATE( pItem ) )
       pItem->item.asDate.value++;
    else if( HB_IS_NUMINT( pItem ) )
@@ -2511,11 +2506,6 @@ static void hb_vmDec( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDec()"));
 
    pItem = hb_stackItemFromTop( -1 );
-
-   if( HB_IS_BYREF( pItem ) )
-   {
-      pItem = hb_itemUnRef( pItem );
-   }
 
    if( HB_IS_DATE( pItem ) )
       pItem->item.asDate.value--;

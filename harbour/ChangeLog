@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      validation.
+      I created the second version of stack macros without it in
+      hbstack.h but I would like to hear other developers opinion.
+
+2006-10-05 01:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * Temporary disabled optimization with references to object variables
+      until we will not have extended reference items in our HVM.
       It can be enabled by compiling with HB_USE_OBJMSG_REF
   * common.mak 
   * harbour/include/hbclass.h
