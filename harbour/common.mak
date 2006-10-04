@@ -275,8 +275,7 @@ VM_COMMON_LIB_OBJS = \
 
 # Specific VM Objects for building STATIC library
 VM_STATIC_LIB_OBJS = \
-    $(OBJ_DIR)\mainstd.obj  \
-    $(OBJ_DIR)\mainwin.obj  \
+    $(OBJ_DIR)\main.obj
 
 # Specific VM Objects for building SHARED (DLL) library
 VM_SHARED_LIB_OBJS = \
