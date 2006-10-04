@@ -197,7 +197,6 @@ STATIC PROCEDURE Create()
    LOCAL Self := QSelf()
    LOCAL n
    LOCAL nLen
-   LOCAL nScope
    LOCAL nLenDatas := Len( ::aDatas ) //Datas local to the class !!
    LOCAL nClassBegin
    LOCAL hClass
@@ -235,15 +234,10 @@ STATIC PROCEDURE Create()
    //Local message...
 
    FOR n := 1 TO nLenDatas
-      nScope := ::aDatas[ n ][ HB_OO_DATA_SCOPE ]
-      IF ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ]
-         nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
-      ENDIF
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n, ;
-                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], nScope )
+                   HB_OO_MSG_ACCESS, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
       __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n, ;
-                   HB_OO_MSG_ASSIGN,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
-                   ::aDatas[ n ][ HB_OO_DATA_TYPE ] )
+                   HB_OO_MSG_ASSIGN, ::aDatas[ n ][ HB_OO_DATA_TYPE ] , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
    NEXT
 
    nLen := Len( ::aMethods )
@@ -304,10 +298,9 @@ RETURN oInstance
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
+STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
    DEFAULT lNoInit TO .F.
-   DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
    // Default Init for Logical and numeric
@@ -319,20 +312,20 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
       ENDIF
    ENDIF
 
-   AAdd( QSelf():aDatas, { cData, xInit, cType, nScope, lPersistent } )
+   AAdd( QSelf():aDatas, { cData, xInit, cType, nScope } )
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit, lPersistent )
+STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
    LOCAL i
    LOCAL nParam := Len( aData )
 
    FOR i := 1 TO nParam
       IF VALTYPE( aData[ i ] ) == "C"
-         QSelf():AddData( aData[ i ], xInit, cType, nScope, lNoInit, lPersistent )
+         QSelf():AddData( aData[ i ], xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -377,58 +370,27 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
+STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
-   LOCAL nAt
-
-   DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
-   IF lPersistent
-      nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
-   ENDIF
-
-   /* Remove possible ( <x,...> )*/
-   IF ( nAt := At( "(", cMethod ) ) > 0
-      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
-   ENDIF
-
-   AAdd( QSelf():aInlines, { cMethod, bCode, nScope, lPersistent } )
+   AAdd( QSelf():aInlines, { cMethod, bCode, nScope } )
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
+STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
-   LOCAL nAt
-
-   DEFAULT lPersistent TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
-   IF lPersistent
-      nScope := _SetBit( nScope, HB_OO_CLSTP_PERSIST )
-   ENDIF
-
-   /* Remove possible ( <x,...> )*/
-   IF ( nAt := At( "(", cMethod ) ) > 0
-      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
-   ENDIF
-
-   AAdd( QSelf():aMethods, { cMethod, nFuncPtr, nScope, lPersistent } )
+   AAdd( QSelf():aMethods, { cMethod, nFuncPtr, nScope } )
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
-
-   LOCAL nAt
-
-   /* Remove possible ( <x,...> )*/
-   IF ( nAt := At( "(", cMethod ) ) > 0
-      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
-   ENDIF
 
    AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
 
@@ -437,13 +399,6 @@ STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 //----------------------------------------------------------------------------//
 
 STATIC PROCEDURE AddVirtual( cMethod )
-
-   LOCAL nAt
-
-   /* Remove possible ( <x,...> )*/
-   IF ( nAt := At( "(", cMethod ) ) > 0
-      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
-   ENDIF
 
    AAdd( QSelf():aVirtuals, cMethod )
 
@@ -488,13 +443,5 @@ STATIC PROCEDURE SetDestructor( nFuncPtr )
 STATIC FUNCTION InitClass()
 
    RETURN QSelf()
-
-//----------------------------------------------------------------------------//
-
-STATIC FUNCTION _SetBit( nValue1, nValue2 )
-   IF nValue1 % ( nValue2 + nValue2 ) < nValue2
-      nValue1 += nValue2
-   ENDIF
-RETURN nValue1
 
 //----------------------------------------------------------------------------//

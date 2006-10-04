@@ -78,10 +78,10 @@ CLASS HBCHECKBOX
 
    METHOD New(nRow,nCol,cCaption)
    METHOD SetFocus()
-   MESSAGE Select()    METHOD _Select()
+   MESSAGE Select()    METHOD _Select
    METHOD KillFocus()
    METHOD DisPlay()
-   METHOD HitTest(nRow,nCol)
+   METHOD HitTest( nMouseRow, nMouseCol )
 
 ENDCLASS
 

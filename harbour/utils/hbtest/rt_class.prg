@@ -1099,7 +1099,7 @@ METHOD INIT( type ) CLASS DTORCLASS
    ::type := type
 RETURN self
 
-PROCEDURE DTOR CLASS DTORCLASS
+METHOD PROCEDURE DTOR CLASS DTORCLASS
    IF ::type == 1
       cDtorResult += "Reference to self in instance variable."
       ::var1 := self

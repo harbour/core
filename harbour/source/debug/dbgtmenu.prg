@@ -72,15 +72,15 @@ CLASS TDbMenu  /* debugger menu */
    DATA   lPopup
    DATA   cBackImage
 
-   METHOD New( aItems )
-   METHOD AddItem( oMenuItem )
+   METHOD New()
+   METHOD AddItem(oMenuItem)
    METHOD Build()
-   METHOD ClosePopup()
+   METHOD ClosePopup
    METHOD Close() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
    METHOD DeHilite()
    METHOD Display()
    METHOD EvalAction()
-   METHOD GetHotKeyPos( nKey )
+   METHOD GetHotKeyPos( cKey )
    METHOD GetItemOrdByCoors( nRow, nCol )
    METHOD GetItemByIdent( uIdent )
    METHOD GoBottom()

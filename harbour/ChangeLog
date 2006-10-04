@@ -8,6 +8,76 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-10-04 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * translate HB_P_INC / HB_P_DEC in (pre|post)(inc|dec)rementation
+      to HB_P_[PLUS|MINUS]EQ
+
+  * harbour/source/vm/hvm.c
+    - removed not necessary now hb_itemUnRef() in hb_vmInc()/hb_vmDec()
+
+2006-10-04 09:02 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+  * common.mak
+    main.c has to be used instead of mainstd.c or mainwin.c
+    as main.c select the right entry point function based on the used defines
+
+2006-10-04 02:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * most of the rules rewritten
+    ! fixed some wrong rules and general cleanup
+    + added additional code validation
+    ! fixed compilation of more then one class in single file.
+      Now it's even possible to declare all classes at beginning of
+      single file and then implementing their methods in any order
+    ! fixed using static classes and classes
+    ! fixed compilation without <ClassName>_ prefix in method names
+    + added support for HB_CLS_NO_DECORATION macro which disable
+      adding <ClassName>_ prefix to method names - this macro is
+      set by default when HB_SHORTNAMES is set.
+    + added support for declared parameters validation - it can be
+      disabled with HB_CLS_NO_PARAMS_ERR and I had to disable it
+      by default due to problems with our preprocessor.
+      Ryszard seems that our PP has serious problems with decoding
+      directives when there is no space between symbol and some other
+      non symbol character. I had to add some workarounds and even
+      introduce buggy rules to make it working. Please look at it.
+      You can remove #define HB_CLS_NO_PARAMS_ERR from hbclass.ch
+      and try to rebuild Harbour core code to see the problem.
+
+  * harbour/include/hboo.ch
+  * harbour/source/vm/classes.c
+    + added support for new primitive message: HB_OO_MSG_PERFORM
+
+  * harbour/source/rtl/tclass.prg
+    - removed <lPersistent> parameter from HBClass messages and
+      internals data. Persistent is supported as scope bit and
+      separate variable was redundant.
+    - removed stripping of () from message names. Here is not a place
+      to fix wrong preprocessor rules.
+
+  * harbour/utils/hbtest/rt_class.prg
+    * use: METHOD PROCEDURE ... CALSS ...
+      instead of: PROCEDURE ... CALSS ...
+      The first version is preferable syntax.
+
+  * harbour/source/debug/dbgtmenu.prg
+  * harbour/source/rtl/checkbox.prg
+    ! fixed some parameters in method declaration - global cleanup
+      will have to wait for preprocessor fixes
+
+   Hi all,
+   Please make test with current hbclass.ch code.
+   I hope that I haven't broken too much things ;-) but I rewrite
+   from scratch most rules and it's possible that I missed sth or
+   made some stupid typos. Current version is much shorter and should
+   be easier to updated. For sure I've intentionally changed one thing.
+   CLASSDATA was ignoring SHARED attribute and always created shared
+   class variables. Seems that it was long existing typo but the fix
+   may interact with already existing code which needs SHARED class
+   variables but does not use SHARED clause in CLASSDATA declaration.
+   In such case please update it and add missing SHARED.
+   Also in the end of CLASS declaration we have:
       [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
       [ ; #translate Super( <SuperClass1> ): => ::<SuperClass1>: ] ;
       [ ; #translate Super(): => ::<SuperClass1>: ] ;
