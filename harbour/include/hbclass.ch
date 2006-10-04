@@ -473,9 +473,11 @@ DECLARE HBClass ;
       _HB_MEMBER {[AS <type>] <DataNames>} ;;
       s_oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
 
+   /* Warning! For backward compatibility this CLASSDATA ignores the
+      SHARED clause and always create shared class variables */
    #xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
       _HB_MEMBER {[AS <type>] <DataNames>} ;;
-   s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+   s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( /* <.share.> */ .T., HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
 
 #endif /* HB_CLS_FWO */
 
@@ -511,10 +513,5 @@ DECLARE HBClass ;
 #xcommand CLASSVAR <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER {[AS <type>] <DataNames>} ;;
    s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
-
-/*
- * Why CLASSDATA was always shared?
- *    - I changed it to respect SHARED definition clause. [druzus]
- */
 
 #endif /* HB_CLASS_CH_ */

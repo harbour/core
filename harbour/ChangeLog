@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+         hb_stack.pPos <= hb_stack.pBase
+      The old condition was generating usable error message only in the
+      startup function. In deeply called functions it was only waste of
+      CPU time on one of the most often call functions. Before it was
+      activated internal stack structures were corrupted.
+      If we were leaving for many years without really working stack
+      underflow protection then maybe we should think about disabling
+      it at when HB_STACK_MACROS are used and keep it only in real
+      stack functions for HVM developers. Single protection in
+      hb_stackOldFrame() I've just added is enough for basic C code
       validation.
       I created the second version of stack macros without it in
       hbstack.h but I would like to hear other developers opinion.
