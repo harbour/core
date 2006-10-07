@@ -95,7 +95,7 @@ HB_FUNC( PROCLINE )
 {
    long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
-   if( lOffset >= 0 )
+   if( lOffset > 0 )
       hb_retni( hb_stackItem( lOffset )->item.asSymbol.stackstate->uiLineNo );
    else
       hb_retni( 0 );
@@ -118,7 +118,7 @@ HB_FUNC( PROCFILE )
    {
       long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
-      if( lOffset >= 0 )
+      if( lOffset > 0 )
       {
          pSym = hb_stackItem( lOffset )->item.asSymbol.value;
 
@@ -145,7 +145,7 @@ char * hb_procname( int iLevel, char * szName, BOOL fMethodName )
    long lOffset = hb_stackBaseProcOffset( iLevel );
 
    szName[ 0 ] = '\0';
-   if( lOffset >= 0 )
+   if( lOffset > 0 )
    {
       PHB_ITEM pBase, pSelf;
 
@@ -202,7 +202,7 @@ BOOL hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile )
 {
    long lOffset = hb_stackBaseProcOffset( iLevel );
 
-   if( lOffset >= 0 )
+   if( lOffset > 0 )
    {
       PHB_ITEM pBase, pSelf;
       PHB_SYMB pSym;

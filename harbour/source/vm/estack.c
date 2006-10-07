@@ -73,6 +73,8 @@
 
 HB_STACK hb_stack;
 
+HB_SYMB  s_initSymbol = { "hb_stackInit", {HB_FS_STATIC}, {NULL}, NULL };
+
 /* ------------------------------- */
 
 #undef hb_stackPop
@@ -80,7 +82,7 @@ void hb_stackPop( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPop()"));
 
-   if( --hb_stack.pPos < hb_stack.pItems )
+   if( --hb_stack.pPos <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    if( HB_IS_COMPLEX( * hb_stack.pPos ) )
@@ -95,7 +97,7 @@ void hb_stackPopReturn( void )
    if( HB_IS_COMPLEX( &hb_stack.Return ) )
       hb_itemClear( &hb_stack.Return );
 
-   if( --hb_stack.pPos < hb_stack.pItems )
+   if( --hb_stack.pPos <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos );
@@ -106,7 +108,7 @@ void hb_stackDec( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
 
-   if( --hb_stack.pPos < hb_stack.pItems )
+   if( --hb_stack.pPos <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 }
 
@@ -115,7 +117,7 @@ void hb_stackDecrease( ULONG ulItems )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
 
-   if( ( hb_stack.pPos -= ulItems ) < hb_stack.pItems )
+   if( ( hb_stack.pPos -= ulItems ) <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 }
 
@@ -213,6 +215,10 @@ void hb_stackInit( void )
       hb_stack.pItems[ i ] = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
       hb_stack.pItems[ i ]->type = HB_IT_NIL;
    }
+
+   hb_stack.pPos++;
+   hb_itemPutSymbol( * hb_stack.pItems, &s_initSymbol );
+   ( * hb_stack.pItems )->item.asSymbol.stackstate = &hb_stack.state;
 }
 
 void hb_stackRemove( LONG lUntilPos )
@@ -227,7 +233,7 @@ void hb_stackRemove( LONG lUntilPos )
    }
 }
 
-HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
+HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams )
 {
    HB_ITEM_PTR * pBase, pItem;
 
@@ -257,14 +263,18 @@ HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams )
    return pItem;
 }
 
-void hb_stackOldFrame( HB_STACK_STATE * pStack )
+void hb_stackOldFrame( PHB_STACK_STATE pStack )
 {
-   while( hb_stack.pPos > hb_stack.pBase )
+   if( hb_stack.pPos <= hb_stack.pBase )
+      hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
+
+   do
    {
       --hb_stack.pPos;
       if( HB_IS_COMPLEX( * hb_stack.pPos ) )
          hb_itemClear( * hb_stack.pPos );
    }
+   while( hb_stack.pPos > hb_stack.pBase );
 
    hb_stack.pBase = hb_stack.pItems + pStack->lBaseItem;
    hb_stack.lStatics = pStack->lStatics;
@@ -283,7 +293,7 @@ HB_ITEM_PTR hb_stackItem( LONG iItemPos )
 #undef hb_stackItemFromTop
 HB_ITEM_PTR hb_stackItemFromTop( int nFromTop )
 {
-   if( nFromTop > 0 )
+   if( nFromTop >= 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
    return * ( hb_stack.pPos + nFromTop );
@@ -405,24 +415,23 @@ PHB_ITEM ** hb_stackItemBasePtr( void )
 
 void hb_stackClearMevarsBase( void )
 {
+   PHB_ITEM pBase;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_stackClearMevarsBase()"));
 
-   if( hb_stack.pBase > hb_stack.pPos )
-   {
-      PHB_ITEM pBase = * hb_stack.pBase;
+   pBase = * hb_stack.pBase;
 
-      while( pBase->item.asSymbol.stackstate->ulPrivateBase != 0 )
-      {
-         pBase->item.asSymbol.stackstate->ulPrivateBase = 0;
-         pBase = * ( hb_stack.pItems + pBase->item.asSymbol.stackstate->lBaseItem );
-      }
+   while( pBase->item.asSymbol.stackstate->ulPrivateBase != 0 )
+   {
+      pBase->item.asSymbol.stackstate->ulPrivateBase = 0;
+      pBase = * ( hb_stack.pItems + pBase->item.asSymbol.stackstate->lBaseItem );
    }
 }
 
 int hb_stackCallDepth( void )
 {
    LONG lOffset = hb_stack.pBase - hb_stack.pItems;
-   int iLevel = 1;
+   int iLevel = 0;
 
    while( lOffset > 0 )
    {
@@ -452,7 +461,7 @@ void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
     * This function is called by FM module and has to be ready for execution
     * before stack initialization, [druzus];
     */
-   if( hb_stack.pPos > hb_stack.pBase && HB_IS_SYMBOL( * hb_stack.pBase ) )
+   if( hb_stack.pPos > hb_stack.pBase )
    {
       strcpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName );
       * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo;
@@ -547,11 +556,9 @@ void hb_stackDispCall( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispCall()"));
 
-   while( pBase != hb_stack.pItems )
+   while( pBase > hb_stack.pItems )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
-
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
 
       if( HB_IS_OBJECT( *( pBase + 1 ) ) )
          sprintf( buffer, HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
@@ -564,6 +571,8 @@ void hb_stackDispCall( void )
 
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
+
+      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
    }
 }
 
@@ -588,7 +597,7 @@ void hb_vmIsLocalRef( void )
          if( HB_IS_GCITEM( *pItem ) )
             hb_gcItemRef( *pItem );
       }
-      while( --pItem >= hb_stack.pItems );
+      while( --pItem > hb_stack.pItems );
    }
 }
 
@@ -606,7 +615,7 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
 
    msg[ 0 ] = '\0';
 
-   do
+   while( pBase > hb_stack.pItems )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
@@ -623,7 +632,6 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
 
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
    }
-   while( pBase != hb_stack.pItems );
 
    MessageBox( NULL, msg, HB_I_("Harbour Exception"), MB_ICONSTOP );
 
@@ -636,13 +644,11 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
 
 #if defined(HB_OS_OS2)
 
-ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
-                             PEXCEPTIONREGISTRATIONRECORD p2,
-                             PCONTEXTRECORD               p3,
-                             PVOID                        pv) {
-
-   PHB_ITEM *pBase = hb_stack.pBase;
-
+ULONG _System OS2TermHandler( PEXCEPTIONREPORTRECORD       p1,
+                              PEXCEPTIONREGISTRATIONRECORD p2,
+                              PCONTEXTRECORD               p3,
+                              PVOID                        pv )
+{
    HB_SYMBOL_UNUSED(p1);
    HB_SYMBOL_UNUSED(p2);
    HB_SYMBOL_UNUSED(p3);
@@ -650,11 +656,13 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
 
    /* Don't print stack trace if inside unwind, normal process termination or process killed or
       during debugging */
-   if (p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT) {
+   if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
+   {
+      PHB_ITEM *pBase = hb_stack.pBase;
 
       fprintf(stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress);
 
-      do
+      while( pBase > hb_stack.pItems )
       {
          if( HB_IS_OBJECT( *( pBase + 1 ) ) )
             fprintf( stderr, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
@@ -667,7 +675,6 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
 
          pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
       }
-      while( pBase != hb_stack.pItems );
    }
 
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */

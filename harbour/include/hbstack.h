@@ -76,6 +76,7 @@ typedef struct
    PHB_ITEM * pEvalBase;    /* stack frame position for the evaluated codeblock */
    LONG       lStatics;     /* statics base for the current function call */
    LONG       lWithObject;  /* stack offset to base current WITH OBJECT item */
+   HB_STACK_STATE state;    /* first (default) stack state frame */
    char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
@@ -121,8 +122,8 @@ extern void       hb_stackIncrease( void );   /* increase the stack size */
 
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDecrease( ULONG ulItems );
-extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
-extern void        hb_stackOldFrame( HB_STACK_STATE * pStack );
+extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams );
+extern void        hb_stackOldFrame( PHB_STACK_STATE pStack );
 extern void        hb_stackClearMevarsBase( void );
 #endif
 
@@ -149,34 +150,53 @@ extern void        hb_stackClearMevarsBase( void );
                                         hb_stackIncrease() : (void) 0 ), \
                                       * ( hb_stack.pPos - 1 ) )
 
+#ifdef HB_STACK_SAFEMACROS
+
 #define hb_stackDecrease( n )       do { \
-                                       if( ( hb_stack.pPos -= (n) ) < hb_stack.pItems ) \
+                                       if( ( hb_stack.pPos -= (n) ) <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                     } while ( 0 )
 
 #define hb_stackDec( )              do { \
-                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                       if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                     } while ( 0 )
 
 #define hb_stackPop( )              do { \
-                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                       if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                        if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
                                           hb_itemClear( * hb_stack.pPos ); \
                                     } while ( 0 )
 
-#define hb_stackPush( )             do { \
-                                       if( ++hb_stack.pPos == hb_stack.pEnd ) \
-                                          hb_stackIncrease(); \
-                                    } while ( 0 )
-
 #define hb_stackPopReturn( )        do { \
                                        if( HB_IS_COMPLEX( &hb_stack.Return ) ) \
                                           hb_itemClear( &hb_stack.Return ); \
-                                       if( --hb_stack.pPos < hb_stack.pItems ) \
+                                       if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                        hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
+                                    } while ( 0 )
+
+#else
+
+#define hb_stackDecrease( n )       do { hb_stack.pPos -= (n); } while ( 0 )
+#define hb_stackDec( )              do { --hb_stack.pPos; } while ( 0 )
+#define hb_stackPop( )              do { --hb_stack.pPos; \
+                                       if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
+                                          hb_itemClear( * hb_stack.pPos ); \
+                                    } while ( 0 )
+#define hb_stackPopReturn( )        do { \
+                                       if( HB_IS_COMPLEX( &hb_stack.Return ) ) \
+                                          hb_itemClear( &hb_stack.Return ); \
+                                       --hb_stack.pPos; \
+                                       hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
+                                    } while ( 0 )
+
+#endif
+
+#define hb_stackPush( )             do { \
+                                       if( ++hb_stack.pPos == hb_stack.pEnd ) \
+                                          hb_stackIncrease(); \
                                     } while ( 0 )
 
 #define hb_stackPushReturn( )       do { \
@@ -184,10 +204,13 @@ extern void        hb_stackClearMevarsBase( void );
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
                                     } while ( 0 )
-#define hb_stackLocalVariable( p )  ((((*hb_stack.pBase)->item.asSymbol.paramcnt > (*hb_stack.pBase)->item.asSymbol.paramdeclcnt) && \
-                                     (*(p)) > (*hb_stack.pBase)->item.asSymbol.paramdeclcnt ) ? \
-                                    (* ( hb_stack.pBase + ( int ) ((*(p))+=((*hb_stack.pBase)->item.asSymbol.paramcnt - (*hb_stack.pBase)->item.asSymbol.paramdeclcnt)) + 1 ) ) : \
-                                    (* ( hb_stack.pBase + ( int ) (*(p)) + 1 ) ) )
+#define hb_stackLocalVariable( p )  ( ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \
+                                          ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) && \
+                                        ( * (p) ) > ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) ? \
+                                      ( * ( hb_stack.pBase + ( int ) ( * (p) += \
+                                          ( * hb_stack.pBase )->item.asSymbol.paramcnt - \
+                                          ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) + 1 ) ) : \
+                                      ( * ( hb_stack.pBase + ( int ) ( * (p) ) + 1 ) ) )
 #endif
 
 

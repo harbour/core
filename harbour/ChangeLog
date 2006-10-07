@@ -8,6 +8,46 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-07 20:36 UTC+0200 JF Lefebvre (jflefebv at mafact com)
+   * harbour/include/hbclass.ch
+     * added one rule to support inline method with local var separated from <code> by a coma
+
+2006-11-03 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+     * Updated comment section about environment variables used by makefile
+   * harbour/makefile.vc
+     * Updated comment section about environment variables used by makefile
+     * Cleaned compilation under Visual C++ 8.0 (VS2005 compiler), including
+       64 bit platforms. To properly compile under Visual C++ 8.0 you have
+       set a new environment variable HB_VISUALC_VER to 80 before running
+       make_vc.bat.
+
+2006-10-07 04:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added validation for class data names. As additional preprocessor
+      rule to not use <!marker!>
+
+  * harbour/include/hboo.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+    + added delegate messages
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/proc.c
+    + added startup symbol to hb_stack. It gives very good stop
+      condition for all procedures which trace stack calls and
+      resolves the problem with hb_stack.pBase which was never
+      pointing to valid function/procedure symbol when no symbol
+      was put on HVM stack. Now after hb_stackInit() the first
+      item is allocated for "hb_stackInit()" symbol so hb_stack.pBase
+      is always a pointer to valid function/procedure symbol.
+    * changed the guard condition for buggy code in hb_stackPop()
+      and similar code from:
+         hb_stack.pPos < hb_stack.pItems
+      to:
          hb_stack.pPos <= hb_stack.pBase
       The old condition was generating usable error message only in the
       startup function. In deeply called functions it was only waste of

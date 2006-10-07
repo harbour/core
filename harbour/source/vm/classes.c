@@ -166,7 +166,7 @@ typedef struct
    PHB_SYMB pFuncSym;            /* Function symbol */
    USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;             /* Scoping value */
-   USHORT   uiData;              /* Item position for instance data, class or shared data (Harbour like, begin from 1) */
+   USHORT   uiData;              /* Item position for instance data, class data and shared data (Harbour like, begin from 1) or delegated message index object */
    USHORT   uiOffset;            /* position in pInitData for class datas (from 1) or offset to instance area in inherited instance data and supercast messages (from 0) */
    HB_TYPE  itemType;            /* Type of item in restricted assignment */
    USHORT   uiPrevCls;
@@ -246,6 +246,7 @@ static HARBOUR  hb___msgVirtual( void );
 static HARBOUR  hb___msgSuper( void );
 static HARBOUR  hb___msgRealClass( void );
 static HARBOUR  hb___msgPerform( void );
+static HARBOUR  hb___msgDelegate( void );
 static HARBOUR  hb___msgNoMethod( void );
 static HARBOUR  hb___msgScopeErr( void );
 static HARBOUR  hb___msgTypeErr( void );
@@ -308,6 +309,7 @@ static HB_SYMB s___msgVirtual    = { "__msgVirtual",    {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {hb___msgSuper},      NULL };
 static HB_SYMB s___msgRealClass  = { "__msgRealClass",  {HB_FS_MESSAGE}, {hb___msgRealClass},  NULL };
 static HB_SYMB s___msgPerform    = { "__msgPerform",    {HB_FS_MESSAGE}, {hb___msgPerform},    NULL };
+static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {hb___msgDelegate},   NULL };
 static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {hb___msgNoMethod},   NULL };
 static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {hb___msgScopeErr},   NULL };
 static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {hb___msgTypeErr},    NULL };
@@ -1211,7 +1213,7 @@ char * hb_clsRealMethodName( void )
    LONG lOffset = hb_stackBaseProcOffset( 1 );
    char * szName = NULL;
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
    {
       PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
 
@@ -1236,7 +1238,7 @@ static LONG hb_clsSenderOffset( void )
 {
    LONG lOffset = hb_stackBaseProcOffset( 1 );
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
    {
       /* Is it inline method? */
       if( lOffset > 0 && HB_IS_BLOCK( hb_stackItem( lOffset + 1 ) ) &&
@@ -1262,7 +1264,7 @@ static USHORT hb_clsSenderClasss( void )
 {
    LONG lOffset = hb_clsSenderOffset();
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
       return hb_stackItem( lOffset )->item.asSymbol.stackstate->uiClass;
    else
       return 0;
@@ -1273,7 +1275,7 @@ static USHORT hb_clsSenderMethodClasss( void )
 {
    LONG lOffset = hb_clsSenderOffset();
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
    {
       PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
 
@@ -1289,7 +1291,7 @@ static PHB_SYMB hb_clsSenderSymbol( void )
    PHB_SYMB pSym = NULL;
    LONG lOffset = hb_clsSenderOffset();
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
    {
       pSym = hb_stackItem( lOffset )->item.asSymbol.value;
 
@@ -1309,7 +1311,7 @@ static USHORT hb_clsSenderObjectClasss( void )
 {
    LONG lOffset = hb_clsSenderOffset();
 
-   if( lOffset >=0 )
+   if( lOffset > 0 )
    {
       PHB_ITEM pSender = hb_stackItem( lOffset + 1 );
 
@@ -1815,9 +1817,8 @@ HB_EXPORT void hb_objSendMsg( PHB_ITEM pObject, char *sMsg, ULONG ulArg, ... )
    hb_vmSend( (USHORT) ulArg );
 }
 
-static PHB_DYNS hb_objMsgParam( int iParam )
+static PHB_DYNS hb_objGetMsgSym( PHB_ITEM pMessage )
 {
-   PHB_ITEM pMessage = hb_param( iParam, HB_IT_STRING | HB_IT_SYMBOL );
    PHB_DYNS pDynSym = NULL;
 
    if( pMessage )
@@ -1826,7 +1827,7 @@ static PHB_DYNS hb_objMsgParam( int iParam )
 
       if( HB_IS_STRING( pMessage ) )
          szMsg = pMessage->item.asString.value;
-      else
+      else if( HB_IS_SYMBOL( pMessage ) )
       {
          pDynSym = pMessage->item.asSymbol.value->pDynSym;
          if( !pDynSym )
@@ -1969,6 +1970,7 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
  *             HB_OO_MSG_REALCLASS  : caller method real class casting
  *             HB_OO_MSG_PERFORM    : perform method
  *             HB_OO_MSG_VIRTUAL    : virtual method
+ *             HB_OO_MSG_DELEGATE   : delegate method
  *
  * <uiScope> * HB_OO_CLSTP_EXPORTED        1 : default for data and method
  *             HB_OO_CLSTP_PROTECTED       2 : method or data protected
@@ -1994,6 +1996,7 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
  *             HB_OO_MSG_CLSASSIGN  :  Index class data array
  *             HB_OO_MSG_CLSACCESS  : /
  *             HB_OO_MSG_SUPER      : Handle of super class
+ *             HB_OO_MSG_DELEGATE   : delegated message symbol
  *
  * <pInit>     HB_OO_MSG_ACCESS     :  Optional initializer for (Class)DATA
  *             HB_OO_MSG_CLSACCESS  : /
@@ -2127,6 +2130,18 @@ static BOOL hb_clsAddMsg( USHORT uiClass, char * szMessage,
             fOK = uiIndex != 0;
             break;
 
+         case HB_OO_MSG_DELEGATE:
+         {
+            PHB_DYNS pDelegMsg = hb_objGetMsgSym( pFunction );
+            if( pDelegMsg )
+            {
+               pNewMeth = hb_clsFindMsg( pClass, pDelegMsg );
+               if( pNewMeth )
+                  uiIndex = ( USHORT ) ( pNewMeth - pClass->pMethods );
+            }
+            fOK = uiIndex != 0;
+            break;
+         }
          case HB_OO_MSG_REALCLASS:
          case HB_OO_MSG_VIRTUAL:
          case HB_OO_MSG_PERFORM:
@@ -2300,6 +2315,12 @@ static BOOL hb_clsAddMsg( USHORT uiClass, char * szMessage,
             pNewMeth->uiScope = uiScope;
             break;
 
+         case HB_OO_MSG_DELEGATE:
+            pNewMeth->pFuncSym = &s___msgDelegate;
+            pNewMeth->uiScope = uiScope;
+            pNewMeth->uiData = uiIndex;
+            break;
+
          case HB_OO_MSG_ONERROR:
 
             pNewMeth->pFuncSym = pFuncSym;
@@ -2342,11 +2363,13 @@ static BOOL hb_clsAddMsg( USHORT uiClass, char * szMessage,
  *             HB_OO_MSG_CLSASSIGN  :  > Index class data array
  *             HB_OO_MSG_CLSACCESS  : /
  *             HB_OO_MSG_SUPER      : Handle of super class
+ *             HB_OO_MSG_DELEGATE   : delegated message symbol
  *
  * <nType>     see HB_OO_MSG_* above and:
  *             HB_OO_MSG_REALCLASS  : caller method real class casting
  *             HB_OO_MSG_PERFORM    : perform message
  *             HB_OO_MSG_VIRTUAL    : virtual message
+ *             HB_OO_MSG_DELEGATE   : delegate method
  *
  * <xInit>     HB_OO_MSG_ACCESS     : \
  *             HB_OO_MSG_CLSACCESS  :   > Optional initializer for DATA
@@ -2886,7 +2909,7 @@ HB_FUNC( __OBJGETCLSNAME )
  */
 HB_FUNC( __OBJHASMSG )
 {
-   PHB_DYNS pMessage = hb_objMsgParam( 2 );
+   PHB_DYNS pMessage = hb_objGetMsgSym( hb_param( 2, HB_IT_ANY ) );
 
    if( pMessage )
       hb_retl( hb_objHasMessage( hb_param( 1, HB_IT_ANY ), pMessage ) );
@@ -2901,7 +2924,7 @@ HB_FUNC( __OBJHASMSG )
  */
 HB_FUNC( __OBJSENDMSG )
 {
-   PHB_DYNS pMessage = hb_objMsgParam( 2 );
+   PHB_DYNS pMessage = hb_objGetMsgSym( hb_param( 2, HB_IT_ANY ) );
 
    if( pMessage )
    {
@@ -3211,7 +3234,7 @@ HB_FUNC( __SENDER )
 {
    LONG lOffset = hb_stackBaseProcOffset( 2 );
 
-   if( lOffset >= 0 )
+   if( lOffset > 0 )
    {
       PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
 
@@ -3432,6 +3455,29 @@ static HARBOUR hb___msgPerform( void )
          }
          hb_vmSend( uiPCount - 1 );
       }
+   }
+}
+
+static HARBOUR hb___msgDelegate( void )
+{
+   PCLASS pClass   = &s_pClasses[
+                  hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ];
+   PMETHOD pMethod = pClass->pMethods +
+                  hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
+   PHB_SYMB pExecSym = pClass->pMethods[ pMethod->uiData ].pFuncSym;
+
+   if( pExecSym && pExecSym->value.pFunPtr )
+   {
+      if( pExecSym->scope.value & HB_FS_PCODEFUNC )
+         /* Running pCode dynamic function from .HRB */
+         hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
+                    pExecSym->value.pCodeFunc->pSymbols );
+      else
+         pExecSym->value.pFunPtr();
+   }
+   else
+   {
+      hb___msgNoMethod();
    }
 }
 

@@ -545,7 +545,7 @@ HB_EXPORT int hb_vmQuit( void )
 
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
-   hb_stackRemove( 0 );          /* clear stack items */
+   hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
 
    /* intentionally here to allow executing object destructors for all
@@ -4174,9 +4174,9 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
-   hb_stackOldFrame( &sStackState );
-
    s_bDebugging = bDebugPrevState;
+
+   hb_stackOldFrame( &sStackState );
 }
 
 HB_EXPORT void hb_vmSend( USHORT uiParams )
@@ -4234,10 +4234,9 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
+   s_bDebugging = bDebugPrevState;
 
    hb_stackOldFrame( &sStackState );
-
-   s_bDebugging = bDebugPrevState;
 }
 
 static void hb_vmPushObjectVarRef( void )

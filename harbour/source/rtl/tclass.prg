@@ -83,8 +83,8 @@ FUNCTION HBClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "HBCLASS", 15)
-/*    s_hClass := __clsNew( "HBCLASS", 16)  */
+      s_hClass := __clsNew( "HBCLASS", 16)
+/*    s_hClass := __clsNew( "HBCLASS", 17)  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -96,6 +96,7 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "AddMethod"      , @AddMethod()      , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddClsMethod"   , @AddClsMethod()   , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddVirtual"     , @AddVirtual()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddDelegate"    , @AddDelegate()    , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddFriendFunc"  , @AddFriendFunc()  , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "AddFriendClass" , @AddFriendClass() , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Instance"       , @Instance()       , HB_OO_MSG_METHOD )
@@ -119,22 +120,25 @@ FUNCTION HBClass()
       __clsAddMsg( s_hClass, "_aInlines"      ,  7, HB_OO_MSG_ASSIGN )
       __clsAddMsg( s_hClass, "aVirtuals"      ,  8, HB_OO_MSG_ACCESS )
       __clsAddMsg( s_hClass, "_aVirtuals"     ,  8, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "asSuper"        ,  9, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_asSuper"       ,  9, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "nDestructor"    , 11, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_nDestructor"   , 11, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "lModFriendly"   , 12, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_lModFriendly"  , 12, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "asFriendClass"  , 13, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_asFriendClass" , 13, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "asFriendFunc"   , 14, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_asFriendFunc"  , 14, HB_OO_MSG_ASSIGN )
-      __clsAddMsg( s_hClass, "sClassFunc"     , 15, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_sClassFunc"    , 15, HB_OO_MSG_ASSIGN )
-  /*  __clsAddMsg( s_hClass, "class"          , 16, HB_OO_MSG_ACCESS )
-      __clsAddMsg( s_hClass, "_class"         , 16, HB_OO_MSG_ASSIGN ) */
+
+      __clsAddMsg( s_hClass, "aDelegates"     ,  9, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_aDelegates"    ,  9, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asSuper"        , 10, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asSuper"       , 10, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "nOnError"       , 11, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_nOnError"      , 11, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "nDestructor"    , 12, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_nDestructor"   , 12, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "lModFriendly"   , 13, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_lModFriendly"  , 13, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asFriendClass"  , 14, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asFriendClass" , 14, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "asFriendFunc"   , 15, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_asFriendFunc"  , 15, HB_OO_MSG_ASSIGN )
+      __clsAddMsg( s_hClass, "sClassFunc"     , 16, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_sClassFunc"    , 16, HB_OO_MSG_ASSIGN )
+  /*  __clsAddMsg( s_hClass, "class"          , 17, HB_OO_MSG_ACCESS )
+      __clsAddMsg( s_hClass, "_class"         , 17, HB_OO_MSG_ASSIGN ) */
 
    ENDIF
 
@@ -184,6 +188,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    ::aClsMethods   := {}
    ::aInlines      := {}
    ::aVirtuals     := {}
+   ::aDelegates    := {}
    ::asFriendClass := {}
    ::asFriendFunc  := {}
 
@@ -401,6 +406,20 @@ STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 STATIC PROCEDURE AddVirtual( cMethod )
 
    AAdd( QSelf():aVirtuals, cMethod )
+
+   RETURN
+
+STATIC PROCEDURE AddDelegate( xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass )
+
+   LOCAL i
+
+   IF VALTYPE( xMethod ) == "C"
+      AAdd( QSelf():aDelegates, { xMethod, nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
+   ELSEIF VALTYPE( xMethod ) == "A"
+      FOR i := 1 TO LEN( xMethod )
+         AAdd( QSelf():aDelegates, { xMethod[ i ], nAccScope, nAsgScope, cType, cDelegMsg, cDelegClass } )
+      NEXT
+   ENDIF
 
    RETURN
 

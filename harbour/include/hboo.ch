@@ -105,6 +105,7 @@
 #define HB_OO_MSG_DESTRUCTOR   13
 #define HB_OO_MSG_INITIALIZED  14
 #define HB_OO_MSG_PERFORM      15
+#define HB_OO_MSG_DELEGATE     16
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1

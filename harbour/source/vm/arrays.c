@@ -991,7 +991,7 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
 
    lBaseOffset = hb_stackBaseProcOffset( iLevel );
-   if( lBaseOffset >= 0 )
+   if( lBaseOffset > 0 )
       uiPCount = hb_stackItem( lBaseOffset )->item.asSymbol.paramcnt;
    else
       uiPCount = 0;
