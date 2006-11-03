@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      for FLEX/SIMPLEX support)
+      I also had to remove all spaces in comparison the results
+      because they were not Clipper ocmpatible at all. Ryszard please
+      look at it.
+
+2006-11-07 21:23 UTC+0200 JF Lefebvre (jflefebv at mafact com)
+   * harbour/include/hbclass.ch
+     * added one rule to support inline method with local var separated from <code> by a coma
+       Working and into the classy compatibility block
+
 2006-11-07 20:36 UTC+0200 JF Lefebvre (jflefebv at mafact com)
    * harbour/include/hbclass.ch
      * added one rule to support inline method with local var separated from <code> by a coma
@@ -67,7 +77,7 @@
     * Temporary disabled optimization with references to object variables
       until we will not have extended reference items in our HVM.
       It can be enabled by compiling with HB_USE_OBJMSG_REF
-  * common.mak 
+
   * harbour/include/hbclass.h
     * restored previous CLASSDATA behavior which ignores SHARED clause
       and always create shared class variables
@@ -198,13 +208,13 @@
    * source/macro/macro.y
    * source/macro/macroa.c
    * source/macro/macrob.c
-         
+   * source/macro/macroc.c
    * source/vm/hvm.c
       + added support for passing methods as macro
-     
+      eg:
          o:&send()
          o:&send.end()
-   and for pre/post increment operators( ++,--) the macro should 
+         o:&(expr)()
          o:&var++
          o:&var := 0
          o:&(expr)++
@@ -309,7 +319,7 @@
     + added support for object variable type scope checking like in Class(y).
     ! fixed typo in pushing object class variables by reference
     % s_pClasses is now indexed directly by class handle
-      
+    % some other optimiztions
     ! make hidden and non virtual invisible in child classes if it overloaded
       some other non hidden method. In such case the overloaded method is used
       and can be accessed.
@@ -403,7 +413,7 @@
     + added MODULE FRIENDLY to class definition. It causes that all other
       functions and classes defined in the same .prg module will have
       friend privileges. In such way works xHarbour and there is now way
-      or generate compile time error. 
+      to disable this "feature" what is IMHO bug. In Harbour programmer
       has to explicitly enable it (until he will not change / add new
       preprocessor rule and set it as default ;-)). Syntax:
          CREATE CLASS .... MODULE FRIENDLY
@@ -484,14 +494,14 @@
       PHB_FUNC - and added translation for PHB_SYMB to not force using
       [P]HB_SYMB in 3-rd party code
 
-      
+  * harbour/source/vm/estack.c
     * added protection against possible GPF after executing
       hb_stackBaseProcOffset() when first item on the stack
-      
+      was not HB_IT_SYMBOL - it can happen in some seldom
       cases. Probably some more general solution like leaving
       first dummy item on HVM stack for breaking stack scan
       loops will be better. I'll think about it.
-      
+
   * harbour/source/vm/itemapi.c
     ! fixed clearing enumerators
 
@@ -503,13 +513,13 @@
       + added USHORT paramdeclcnt to asSymbol structure
 
    * include/hbstack.h
-      + added support for variable number of parameters in 
+   * source/vm/estack.c
       + added hb_stackLocalVariable() to acces local variables
 
    * source/compiler/genc.c
    * source/compiler/gencc.c
    * source/compiler/harbour.c
-      
+   * source/compiler/harbour.l
    * source/compiler/harbour.y
    * source/compiler/hbdead.c
    * source/compiler/hbfix.c
@@ -521,11 +531,11 @@
       functions/procedures
 
    + tests/varparam.prg
-   HB_PVALUE( iParamNum ) - returns <iParamNum> parameter   
+      * example usage of new syntax for variable number of
       parameters
 
    * source/vm/arrayshb.c
-  
+      * changed HB_APARAMS() to use current stack frame if no
       arguments are passed ( HB_APARAMS() == HB_APARAMS(0) )
 
   SYNTAX for variable number of parameters
@@ -573,7 +583,7 @@
    + added three new PCODEs:
       HB_P_MACROSEND    - to use for: s:=1,2,3"; o:=send(&s)
       HB_P_PUSHOVARREF  - to create references to object variables: @o:var
-   
+      HB_P_ARRAYPUSHREF - to create references to array items, it can be used
                           in some optimization, f.e.: a[ <exp1> ] += <exp2>
                           or directly by: func( @a[ <exp> ] )
                           if we add passing array elements by reference
@@ -874,7 +884,7 @@
 
    Marek asked me to add passing object datas by reference and I'll do
    that but I'd like to ask Ryszard to add support for:
-   Ryszard can you make necessary compiler modifications? 
+      @<oVar>:<message>
    to compiler. I'll implement all other HVM modifications. If you can
    please also add support for:
       <oVar>:&<cMsgName>[(...)]
@@ -1040,9 +1050,9 @@
 2006-09-06 12:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * utils/hbrun/hbrun.prg
     * Change Main() into _APPMAIN() to avoid collision with user function
-       Default value is .T. (CA-Cl*pper compatible). If set to .F., 
-       Harbour runtime/RDD code will never attempt to add a 
-       default extension to the filename arguments. Commands/functions 
+      in HRB file with that name.
+    + Added a NOTE about this.
+
 2006-09-05 16:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rtl/cdpapi.c
      ! Bug fixed in hb_cdpcmp(), which caused strange comparison results as
@@ -1059,10 +1069,10 @@
        default extension to the filename arguments. Commands/functions
        where this setting makes a difference are:
        - SET ALTERNATE TO / Set( _SET_ALTFILE_, ... )
-       - From now on, it possible to create/load files using the 
-         above functions/commands which have no extension. This 
+       - SET PRINTER TO / Set( _SET_PRINTFILE_, ... )
+       - Set( _SET_EXTRAFILE, ... )
        - SAVE TO / __mvSave()
-         For example on Win32, it's possible to directly print 
+       - RESTORE FROM / __mvRestore()
        - LABEL FORM
        - REPORT FORM
        - COPY TO ... DELIMITED
@@ -1116,9 +1126,9 @@
     + added simpler example for memory leak in macro compiler:
          ? type("user input")
 
-     ! Made the logic multiplatform where it's decided whether to 
+  * harbour/source/macro/macro.y
     * replaced TABs with SPACEs
-       C:\PATH.A\MYFILE didn't get the default extension while 
+
   * harbour/source/vm/classes.c
     * added some TRACE() messages
     + added support for executing functions with <symItem>:EXEC()

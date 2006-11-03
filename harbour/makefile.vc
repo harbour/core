@@ -32,12 +32,20 @@
 #                           (GNU make compatible envvar)
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
-#       HB_BUILD_MODE    - If set to cpp causes to compile in C++ mode
-#       HB_BUILD_DEBUG   - If set to yes causes to compile with debug info
-#       HB_BUILD_VERBOSE - enables echoing commands being executed
+#       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
+#                           dll in addition to normal static build
+#       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
+#       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
+#       HB_BUILD_VERBOSE  - enables echoing commands being executed
+#       HB_INSTALL_PREFIX - Path to instalation directory into which
+#                           Harbour will be installed when the command
+#                           "make_vc.bat install" is lauched. Defaults
+#                           to current directory
+#       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 60).
+#                           Possible values are : 60, 70, 71, 80
 #
-#       HB_DOC_PDF       - Turns on the .PDF file support in the HBDOC utility.
-#                          Note that this will require the pdflib contrib.
+#       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
+#                           Note that this will require the pdflib contrib.
 
 # ---------------------------------------------------------------
 # "echo." intentionally used instead of "echo", to avoid conflicts
@@ -52,6 +60,13 @@
 # ---------------------------------------------------------------
 
 .SUFFIXES: .exe .lib .obj .prg .c .l .y
+
+#**********************************************************
+
+# Visual C++ version
+!ifndef HB_VISUALC_VER
+HB_VISUALC_VER = 60
+!endif
 
 #**********************************************************
 
@@ -94,13 +109,21 @@ HB_BUILD_MODE  = C
 !endif
 
 # C Compiler Flags
-CFLAGS         = -I$(INCLUDE_DIR) -Ogt2yb1p -GX- -G6 -YX -FD -Gs -T$(HB_BUILD_MODE) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+!if $(HB_VISUALC_VER) >= 80
+CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+!else
+CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
+!endif
+
+CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      = d
 !endif
+
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDLL   = -D__EXPORT__ -GD -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   = -D__EXPORT__ -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
