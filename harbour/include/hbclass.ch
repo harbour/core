@@ -403,8 +403,6 @@ DECLARE HBClass ;
    MESSAGE <MessageName> [ AS <type> ] VIRTUAL
 #xcommand METHOD <MessageName> [ AS <type> ] EXTERN <FuncName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE <MessageName> [ AS <type> ] EXTERN <FuncName> <ctor> <export> <protect> <hidde> <persistent>
-#xcommand METHOD <MessageName> [ AS <type> ] INLINE [LOCAL <v>,] <Code,...> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   MESSAGE <MessageName> [ AS <type> ] [LOCAL <v>] INLINE <Code> <export> <protect> <hidde> <persistent>
 #xcommand METHOD <MessageName> [ AS <type> ] INLINE <Code,...> [LOCAL <Locals,...>] [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE <MessageName> [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent>
 #xcommand METHOD <MessageName> [ AS <type> ] BLOCK <CodeBlock> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
@@ -444,6 +442,15 @@ DECLARE HBClass ;
    #xtranslate    VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED
    #xtranslate    HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN
    #xtranslate    PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED
+
+
+   // Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07
+   #xcommand METHOD <MethodName> [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | <Code> } [<other>]
+
+   #xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<params>] [,<v>] | <Code> } [<other>]
+
 
    /* This definitions are not Class(y) compatible - I'm leaving them as is now */
 
