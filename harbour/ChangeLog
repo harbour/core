@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/utils/hbpptest/pretest.prg
+    * updated for new PP
+      It reports 16 wrong translations but some of them are valid
+      and some others are caused by escaped string e"..." (one of hack
       for FLEX/SIMPLEX support)
       I also had to remove all spaces in comparison the results
       because they were not Clipper ocmpatible at all. Ryszard please
