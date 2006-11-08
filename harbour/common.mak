@@ -155,6 +155,7 @@ GTWVT_LIB    = $(LIB_DIR)\gtwvt.lib
 GTGUI_LIB    = $(LIB_DIR)\gtgui.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+HBPPGEN_EXE  = $(BIN_DIR)\ppgen.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
@@ -235,7 +236,6 @@ COMMON_LIB_OBJS = \
 
 PP_LIB_OBJS = \
     $(OBJ_DIR)\ppcore.obj  \
-    $(OBJ_DIR)\ppcomp.obj  \
     $(OBJ_DIR)\pplib.obj   \
     $(OBJ_DIR)\pptable.obj \
     $(OBJ_DIR)\pragma.obj  \
@@ -728,6 +728,7 @@ GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
 #**********************************************************
 
 HARBOUR_EXE_OBJS = \
+    $(OBJ_DIR)\ppcomp.obj  \
     $(OBJ_DIR)\harbour.obj  \
     $(OBJ_DIR)\harboury.obj \
     $(OBJ_DIR)\harbourl.obj \
@@ -757,6 +758,14 @@ HARBOUR_EXE_OBJS = \
 
 HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpp.obj     \
+    $(OBJ_DIR)\hbppcore.obj     \
+    $(OBJ_DIR)\hbppcomp.obj     \
+    $(OBJ_DIR)\hbpptable.obj     \
+
+#**********************************************************
+
+HBPPGEN_EXE_OBJS = \
+    $(OBJ_DIR)\ppgen.obj     \
 
 #**********************************************************
 
@@ -881,6 +890,7 @@ DISABLED_SHARED_MODULES=      \
 
 HB_BUILD_TARGETS = \
     $(COMMON_LIB)      \
+    $(HBPPGEN_EXE)     \
     $(PP_LIB)          \
     $(HARBOUR_EXE)     \
     $(HBPP_EXE)        \

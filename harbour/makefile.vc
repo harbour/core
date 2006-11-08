@@ -59,7 +59,7 @@
 # The macros are referenced in makefile.bc
 # ---------------------------------------------------------------
 
-.SUFFIXES: .exe .lib .obj .prg .c .l .y
+.SUFFIXES: .exe .lib .obj .prg .c .l .y .ch
 
 #**********************************************************
 
@@ -802,6 +802,19 @@ $(PP_LIB)
 <<
 #**********************************************************
 #
+# HBPPGEN build rule
+#
+$(HBPPGEN_EXE) : $(HBPPGEN_EXE_OBJS)
+    IF EXIST "$(HBPPGEN_EXE)" $(DEL) "$(HBPPGEN_EXE)" > NUL
+    $(LINKER) @<<
+$(LDFLAGS)
+/OUT:$(HBPPGEN_EXE)
+$(**: = ^
+)
+$(COMMON_LIB)
+<<
+#**********************************************************
+#
 # HBPP build rule
 #
 $(HBPP_EXE) : $(HBPP_EXE_OBJS)
@@ -940,6 +953,10 @@ $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
 # EXTRA Object's DEPENDENCIES
 #
 #**********************************************************
+
+$(PP_DIR)\pptable.c : include\hbstdgen.ch 
+    IF EXIST "$(PP_DIR)\pptable.c" $(DEL) "$(PP_DIR)\pptable.c" > NUL
+    bin\$(CC_DIRNAME)\ppgen include\hbstdgen.ch -o$(PP_DIR)\pptable.c -q
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_comp -d $** -o$@
