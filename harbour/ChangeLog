@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+       Someone should rename the following files into utils/hbpp
+        ppcomp.c -> hbppcomp.c
+        pplib.c -> hbpplib.c
+        ppcore.c -> hbppcore.c
+        pptable.c -> hbpptable.c
 
 2006-11-08 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c

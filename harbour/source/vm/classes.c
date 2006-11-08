@@ -1924,7 +1924,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
 
             case 'S':
             case 's':
-               return HB_IT_SYMBOL;
+               if( hb_strnicmp( hb_itemGetCPtr( pItem ), "str", 3 ) == 0 )
+                  return HB_IT_STRING;
+               else
+                  return HB_IT_SYMBOL;
          }
       }
       else if( HB_IS_ARRAY( pItem ) )
