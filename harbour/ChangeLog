@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-11-08 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed type checking for "string" type. It should be translate
       to character not symbol item type.
 
 2006-11-08 13:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)

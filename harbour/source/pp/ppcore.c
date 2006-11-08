@@ -1007,7 +1007,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          ul = 0;
       }
    }
-   while( ( pState->pFile->pLineBuf ? pState->pFile->ulLineBufLen :
+   while( ( pState->pFile->pLineBuf ? pState->pFile->ulLineBufLen != 0 :
                                       !pState->pFile->fEof ) &&
           ( pState->fCanNextLine || 
             ( pState->iStreamDump && pState->iStreamDump != HB_PP_STREAM_CLIPPER ) ) );
@@ -3879,7 +3879,7 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
 
       if( !pState->pFile->pTokenList )
       {
-         while( pState->pFile->pLineBuf ? pState->pFile->ulLineBufLen :
+         while( pState->pFile->pLineBuf ? pState->pFile->ulLineBufLen != 0 :
                                           !pState->pFile->fEof )
          {
             hb_pp_getLine( pState );
