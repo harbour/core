@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ * 
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,36 +50,37 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+/* include hbsetup.ch to set default build settings */
+#include "hbsetup.ch"
+/* include std.ch to set default rules */
+#include "std.ch"
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
+/* undefine all rules which are not necessary in default PP tables */
+#undef HB_SETUP_CH_
 
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
+#undef HB_EXTENSION
 
-#define HB_EXTENSION              /* Enable Harbour extensions */
+#undef HB_C52_UNDOC
+#undef HB_C52_STRICT
 
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
+#undef HB_COMPAT_C53
+#undef HB_COMPAT_XPP
+#undef HB_COMPAT_VO
+#undef HB_COMPAT_FLAGSHIP
+#undef HB_COMPAT_FOXPRO
+#undef HB_COMPAT_DBASE
+#undef HB_COMPAT_CLIP
 
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-#define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
+#undef HB_SHORTNAMES
+#undef HB_FILE_VER_STATIC
 
-/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
-         set to 10 explicitly and not through the HB_C52_STRICT option
-         [vszakats] */
-
-/* Turn on short names support for the class engine */
-#ifdef HB_C52_STRICT
-   #define HB_SHORTNAMES
-#endif
-
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
-
-#endif /* HB_SETUP_CH_ */
+#undef __HARBOUR__
+#undef __DATE__
+#undef __TIME__
+#undef __HB_MAIN__
+#undef __ARCH16BIT__
+#undef __ARCH32BIT__
+#undef __ARCH64BIT__
+#undef __LITTLE_ENDIAN__
+#undef __BIG_ENDIAN__
+#undef __PDP_ENDIAN__

@@ -54,9 +54,6 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_dateDOW()
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_dateFormat()
  *
@@ -64,10 +61,7 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include <ctype.h>
-#include <time.h>
 
 #include "hbapi.h"
 #include "hbdate.h"
@@ -242,52 +236,4 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    szFormattedDate[ format_count ] = '\0';
 
    return szFormattedDate;
-}
-
-HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
-{
-#if defined(HB_OS_WIN_32)
-   {
-      SYSTEMTIME st;
-      GetLocalTime( &st );
-
-      *piYear  = st.wYear;
-      *piMonth = st.wMonth;
-      *piDay   = st.wDay;
-   }
-#else
-   {
-      time_t t;
-      struct tm * oTime;
-
-      time( &t );
-      oTime = localtime( &t );
-
-      *piYear  = oTime->tm_year + 1900;
-      *piMonth = oTime->tm_mon + 1;
-      *piDay   = oTime->tm_mday;
-   }
-#endif
-}
-
-/* NOTE: The passed buffer must be at least 9 chars long */
-
-HB_EXPORT void hb_dateTimeStr( char * pszTime )
-{
-#if defined(HB_OS_WIN_32)
-   {
-      SYSTEMTIME st;
-      GetLocalTime( &st );
-      sprintf( pszTime, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
-   }
-#else
-   {
-      time_t t;
-      struct tm * oTime;
-
-      time( &t );
-      oTime = localtime( &t );
-      sprintf( pszTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
-   }
-#endif
 }

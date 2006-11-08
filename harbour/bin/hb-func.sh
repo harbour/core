@@ -409,7 +409,7 @@ FOUTE="\${FOUTE%.[oc]}${hb_exesuf}"
 
 hb_cc()
 {
-    ${CCPREFIX}\${HB_CC} "\$@" \${CC_OPT} \${GCC_PATHS}
+    ${CCPREFIX}\${HB_CC} "\$@" \${CC_OPT} \${GCC_PATHS} \${HB_USRLPATH} \${HB_USRLIBS}
 }
 
 hb_cmp()

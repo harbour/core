@@ -667,7 +667,7 @@ HB_EXPORT HB_LONG hb_strValInt( const char * szText, int * iOverflow )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
 
-   if ( hb_str2number( FALSE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
+   if ( hb_str2number( TRUE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
    {
       *iOverflow = 1;
       return 0;
@@ -853,53 +853,55 @@ HB_EXPORT char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen
 
 char * hb_strRemEscSeq( char *str, ULONG *pLen )
 {
-  char *ptr = str;
-  
-  while( *ptr )
-  {
-    if( *ptr == '\\' )
-    {
-      switch( *(ptr+1) )
+   char *ptr, *dst, ch;
+   ULONG ul = *pLen, ulStripped = 0;
+
+   ptr = dst = str;
+   while( ul )
+   {
+      if( *ptr == '\\' )
+         break;
+      ++ptr; ++dst;
+      --ul;
+   }
+
+   while( ul-- )
+   {
+      ch = *ptr++;
+      if( ch == '\\' )
       {
-        case '\\':
-        {
-          memmove( ptr, ptr+1, *pLen - (ptr - str) );
-          (*pLen)--;
-          break;
-        }
-        case 'r':
-        {
-          memmove( ptr, ptr+1, *pLen - (ptr - str) );
-          *ptr = '\r';
-          (*pLen)--;
-          break;
-        }
-        case 'n':
-        {
-          memmove( ptr, ptr+1, *pLen - (ptr - str) );
-          *ptr = '\n';
-          (*pLen)--;
-          break;
-        }
-        case 't':
-        {
-          memmove( ptr, ptr+1, *pLen - (ptr - str) );
-          *ptr = '\t';
-          (*pLen)--;
-          break;
-        }
-        case 'b':
-        {
-          memmove( ptr, ptr+1, *pLen - (ptr - str) );
-          *ptr = '\b';
-          (*pLen)--;
-          break;
-        }
-        default:
-          break;
+         ++ulStripped;
+         ch = *ptr++;
+         switch( ch )
+         {
+            case 'r':
+               ch = '\r';
+               break;
+            case 'n':
+               ch = '\n';
+               break;
+            case 't':
+               ch = '\t';
+               break;
+            case 'b':
+               ch = '\b';
+               break;
+            case 'q':
+               ch = '"';
+               break;
+            case '\\':
+            default:
+               break;
+         }
       }
-    }
-    ptr++;
-  }
-  return str;
+      *dst++ = ch;
+   }
+
+   if( ulStripped )
+   {
+      *dst = '\0';
+      *pLen -= ulStripped;
+   }
+
+   return str;
 }

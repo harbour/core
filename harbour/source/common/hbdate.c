@@ -60,9 +60,16 @@
  *    hb_dateStrPut()
  *    hb_dateStrGet()
  *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_dateDOW()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
+
+#define HB_OS_WIN_32_USED
+
+#include <time.h>
 
 #include "hbapi.h"
 #include "hbdate.h"
@@ -236,4 +243,52 @@ HB_EXPORT int hb_dateDOW( int iYear, int iMonth, int iDay )
 
    return ( iDay + 26 * iMonth / 10 +
             iYear + iYear / 4 - iYear / 100 + iYear / 400 + 6 ) % 7 + 1;
+}
+
+HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
+{
+#if defined(HB_OS_WIN_32)
+
+   SYSTEMTIME st;
+   GetLocalTime( &st );
+
+   *piYear  = st.wYear;
+   *piMonth = st.wMonth;
+   *piDay   = st.wDay;
+
+#else
+
+   time_t t;
+   struct tm * oTime;
+
+   time( &t );
+   oTime = localtime( &t );
+
+   *piYear  = oTime->tm_year + 1900;
+   *piMonth = oTime->tm_mon + 1;
+   *piDay   = oTime->tm_mday;
+
+#endif
+}
+
+/* NOTE: The passed buffer must be at least 9 chars long */
+
+HB_EXPORT void hb_dateTimeStr( char * pszTime )
+{
+#if defined(HB_OS_WIN_32)
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+      sprintf( pszTime, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
+   }
+#else
+   {
+      time_t t;
+      struct tm * oTime;
+
+      time( &t );
+      oTime = localtime( &t );
+      sprintf( pszTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+   }
+#endif
 }

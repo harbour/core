@@ -470,8 +470,6 @@ extern void hb_compFileInfo( void );
 extern void hb_compPrintLogo( void );
 extern void hb_compPrintModes( void );
 
-extern int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile );
-
 #endif    /* HB_MACRO_SUPPORT */
 
 /* Misc functions defined in harbour.c */
@@ -596,6 +594,25 @@ extern const BYTE     hb_comp_pcode_len[];
 
 /* error messages output */
 extern FILE           *hb_comp_errFile;
+
+/* Hide Strings */
+extern int            hb_comp_iHidden;
+
+/* compiler PP functions and variables */
+#define HB_PP_STR_SIZE  12288
+#define HB_PP_BUFF_SIZE 4096
+extern void hb_pp_SetRules( BOOL hb_comp_bQuiet, int argc, char * argv[] );
+extern void hb_pp_Init( void );
+extern void hb_pp_Free( void );
+extern void hb_pp_AddDefine( char *defname, char *value );
+extern void hb_pp_ParseDirective( char * );
+extern int  hb_pp_Internal( FILE *, char * );
+
+extern BOOL hb_pp_LiteralEscSeq;
+extern BOOL hb_pp_NestedLiteralString;
+extern int hb_pp_StreamBlock;
+extern unsigned int hb_pp_MaxTranslateCycles;
+
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

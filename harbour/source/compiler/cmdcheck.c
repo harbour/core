@@ -49,8 +49,6 @@
 
 #include "hbcomp.h"
 
-extern int hb_pp_ParseDefine( char * );
-
 /* TODO: Add support for this compiler switches
    -r -t || hb_getenv( "TMP" )
 */
@@ -908,7 +906,7 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
    {
       if( pszSwitch[1] == 'd' || pszSwitch[1] == 'D' )
       {
-         char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign, *sDefLine;
+         char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign, *szDefLine;
          unsigned int i = 0;
 
          while( i < strlen( szDefText ) && !HB_ISOPTSEP( szDefText[i] ) )
@@ -926,10 +924,10 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
                szDefText[pAssign - szDefText] = '\0';
 
                /* hb_pp_AddDefine( szDefText,  pAssign + 1 ); */
-               sDefLine = ( char * ) hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
-               sprintf( sDefLine, "%s %s", szDefText, pAssign + 1 );
-               hb_pp_ParseDefine( sDefLine );
-               hb_xfree( sDefLine );
+               szDefLine = ( char * ) hb_xgrab( strlen( szDefText ) + strlen( pAssign + 1 ) + 10 );
+               sprintf( szDefLine, "#define %s %s", szDefText, pAssign + 1 );
+               hb_pp_ParseDirective( szDefLine );
+               hb_xfree( szDefLine );
             }
          }
 

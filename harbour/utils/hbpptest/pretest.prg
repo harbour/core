@@ -6,9 +6,10 @@
    #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
-#command TEXT TO VAR <v> => #pragma __stream|%s||<v>:=
-#command CTEXT TO VAR <v> => #pragma __cstream|%s||<v>:=
-#command XTEXT TO VAR <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE()||<v>:=""
+/* #command TEXT TO VAR <v> => #pragma __stream|<v>:=%s */
+#command TEXT TO VAR <v> => #pragma __text|<v>+=%s;<v>:=""
+#command CTEXT TO VAR <v> => #pragma __cstream|<v>:=%s
+#command XTEXT TO VAR <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
 
 /* Testing preprocessor */
 
@@ -18,7 +19,7 @@ LOCAL nCnt:=0
 LOCAL nRes:=0
 
 /* ---------------------------------------------------------------------*/
-  in := "#xtranslate CCC <v> => QOUT( <v>[2] [, <v>[<v>][3]] )"+HB_OSNewLine()+;
+  in := "#xtranslate CCC <v> => QOUT( <v>[2] [, <v>\[<v>\]\[3\]] )"+HB_OSNewLine()+;
         "CCC b"
   pre := "QOUT(b[2] ,bb[3] )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -43,7 +44,7 @@ LOCAL nRes:=0
 /*------------*/
 XTEXT TO VAR in
 #define RED {255,0,0}
-#xcommand SET TOOLTIP TO <color> OF <form> => SM( TTH (<"form">), 1, RGB(<color>[1], <color>\[2\], <color>[, <color>[ 3 ] ]), 0)
+#xcommand SET TOOLTIP TO <color> OF <form> => SM( TTH (<"form">), 1, RGB(<color>\[1], <color>\[2\], <color>[, <color>\[ 3 \] ]), 0)
 SET TOOLTIP TO RED OF form1
 ENDTEXT
 TEXT TO VAR pre    
@@ -52,7 +53,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-  in :="#command ZZZ [<v>] => QOUT([<v>[1]])"
+  in :="#command ZZZ [<v>] => QOUT([<v>\[1\]])"
   __PreProcess( in )
   in :="ZZZ a"
   pre :="QOUT(a[1] )"
@@ -1233,6 +1234,7 @@ FUNCTION PreResult( pre, out, pCnt )
 LOCAL i
 
   pCnt++
+  pre:=strtran(pre," "); out:=strtran(out," ")
   IF( pre == out )
     RETURN 1
   ELSE

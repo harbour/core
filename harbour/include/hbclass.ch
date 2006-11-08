@@ -181,7 +181,7 @@
 #ifdef HB_CLS_NO_OO_ERR
    #xtranslate __HB_CLS_ERR([<msg,...>]) =>
 #else
-   #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [<msg>] ; #undef _DUMMY_DEF_
+   #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #undef _DUMMY_DEF_
 #endif
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name: <var> )
@@ -221,8 +221,8 @@ DECLARE HBClass ;
 #xtranslate __HB_CLS_ASARGS( <FuncName>([<Args,...>]) )     => [<Args>]
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName> )                =>
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName>([<Args,...>]) )  => [, <Args>]
-#xtranslate __HB_CLS_ISVAR( <var> )                         =>
-#xtranslate __HB_CLS_ISVAR( <var>([<params,...>]) )         => __HB_CLS_VARERR(<var>([<params>]))
+#xtranslate __HB_CLS_ISVAR( <var> )                         => __HB_CLS_VARERR(<var>)
+#xtranslate __HB_CLS_ISVAR( <!var!> )                       =>
 #xcommand __HB_CLS_CHECKVAR( <param1> [,<paramN>] )         => __HB_CLS_ISVAR( <param1> ) [;__HB_CLS_ISVAR( <paramN> )]
 
 /* #xtranslate __HB_CLS_SCOPE( <export>, <protect>, <hidde> ) => ;
@@ -257,7 +257,7 @@ DECLARE HBClass ;
 
 #xcommand ENDCLASS => ;
          s_oClass:Create() ;;
-      endif ;;
+      end ;;
       return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
 
@@ -273,7 +273,7 @@ DECLARE HBClass ;
       #undef _DUMMY_DEF_
 #else
    #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
-      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[\<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName>\[(\<xparams>)] CLASS <ClassName>
 #endif
 
@@ -286,7 +286,7 @@ DECLARE HBClass ;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    s_oClass:AddMethod( __HB_CLS_ASSTRING(<MethodName>), @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) )
 
-#xcommand ACCESS <AccessName>[()] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [_CLASS_DECLARATION_] => ;
+#xcommand ACCESS <AccessName> [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [_CLASS_DECLARATION_] => ;
    METHOD <AccessName> [ AS <type> ] <export> <protect> <hidde> <persistent> _CLASS_DECLARATION_
 
 #xcommand ASSIGN <AssignName> [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [_CLASS_DECLARATION_] => ;
@@ -385,7 +385,7 @@ DECLARE HBClass ;
    MESSAGE <MessageName> [ AS <type> ] TO <oObject> <export> <protect> <hidde> <persistent>
 
 #xcommand ACCESS <MessageName> [ AS <type> ] [LOCAL <Locals,...>] INLINE <Code,...> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   MESSAGE __HB_CLS_ASID(<MessageName>) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <export> <protect> <hidde> <persistent>
+   MESSAGE <MessageName> [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <export> <protect> <hidde> <persistent>
 
 #xcommand ASSIGN <MessageName> [ AS <type> ] [LOCAL <Locals,...>] INLINE <Code,...> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE _<MessageName> [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <export> <protect> <hidde> <persistent>
@@ -437,11 +437,11 @@ DECLARE HBClass ;
 
    /* The #xtranslate is wrongly used instead of #xcommand as
       workaround for some preprocessor problems */
-   #xtranslate    EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED
-   #xtranslate    EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED
-   #xtranslate    VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED
-   #xtranslate    HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN
-   #xtranslate    PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED
+   #xcommand EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED
+   #xcommand EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED
+   #xcommand VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED
+   #xcommand HIDDEN:     =>    nScope := HB_OO_CLSTP_HIDDEN
+   #xcommand PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED
 
 
    // Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07
@@ -456,30 +456,30 @@ DECLARE HBClass ;
 
    #xcommand VAR <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
       __HB_CLS_CHECKVAR(<DataNames>);;
-      _HB_MEMBER {[AS <type>] <DataNames>} ;;
+      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
       s_oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
 
    #xcommand VAR <DataName> [ AS <type> ] IN <SuperClass> => ;
       __HB_CLS_CHECKVAR(<DataName>);;
-      _HB_MEMBER {[AS <type>] <DataName>} ;;
+      _HB_MEMBER {[ AS <type>] <DataName> } ;;
       s_oClass:AddInline( <(DataName)>, {|Self| Self:<SuperClass>:<DataName> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       s_oClass:AddInline( "_" + <(DataName)>, {|Self, param| Self:<SuperClass>:<DataName> := param }, HB_OO_CLSTP_EXPORTED )
 
    #xcommand VAR <DataName> [ AS <type> ] IS <SprDataName> IN <SuperClass> => ;
       __HB_CLS_CHECKVAR(<DataName>);;
-      _HB_MEMBER {[AS <type>] <DataName>} ;;
+      _HB_MEMBER {[ AS <type>] <DataName> } ;;
       s_oClass:AddInline( <(DataName)>, {|Self| Self:<SuperClass>:<SprDataName> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       s_oClass:AddInline( "_" + <(DataName)>, {|Self, param| Self:<SuperClass>:<SprDataName> := param }, HB_OO_CLSTP_EXPORTED )
 
    #xcommand VAR <DataName1> [ AS <type> ] IS <DataName2> => ;
       __HB_CLS_CHECKVAR(<DataName1>);;
-      _HB_MEMBER {[AS <type>] <DataName1>} ;;
+      _HB_MEMBER {[ AS <type>] <DataName1> } ;;
       s_oClass:AddInline( <(DataName1)>, {|Self| Self:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
    #xcommand VAR <DataName1> [ AS <type> ] IS <DataName2> TO <oObject> => ;
       __HB_CLS_CHECKVAR(<DataName1>);;
-      _HB_MEMBER {[AS <type>] <DataName1>} ;;
+      _HB_MEMBER {[ AS <type>] <DataName1> } ;;
       s_oClass:AddInline( <(DataName1)>, {|Self| Self:<oObject>:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<oObject>:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
@@ -490,13 +490,13 @@ DECLARE HBClass ;
 
    #xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
       __HB_CLS_CHECKVAR(<DataNames>);;
-      _HB_MEMBER {[AS <type>] <DataNames>} ;;
+      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
       s_oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
 
    /* Warning! For backward compatibility this CLASSDATA ignores the
       SHARED clause and always create shared class variables */
    #xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
-      _HB_MEMBER {[AS <type>] <DataNames>} ;;
+      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
    s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( /* <.share.> */ .T., HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
 
 #endif /* HB_CLS_FWO */
@@ -508,20 +508,17 @@ DECLARE HBClass ;
 #xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
 #xtranslate  , <!name!>{ [<p,...>] }        =>  , <name>():New( <p> )
 
-#xcommand EXPORT <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   __HB_CLS_CHECKVAR(<DataNames>);;
-   _HB_MEMBER {[AS <type>] <DataNames>} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+#xcommand EXPORT <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
-#xcommand PROTECT <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   __HB_CLS_CHECKVAR(<DataNames>);;
-   _HB_MEMBER {[AS <type>] <DataNames>} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+#xcommand PROTECT <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_PROTECTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
-#xcommand HIDDE <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   __HB_CLS_CHECKVAR(<DataNames>);;
-   _HB_MEMBER {[AS <type>] <DataNames>} ;;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+#xcommand HIDDE <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
 #endif /* HB_CLS_VO */
 
@@ -533,9 +530,8 @@ DECLARE HBClass ;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    s_oClass:AddClsMthds( __HB_CLS_ASSTRING(<MethodName>), @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) )
 
-#xcommand CLASSVAR <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   __HB_CLS_CHECKVAR(<DataNames>);;
-   _HB_MEMBER {[AS <type>] <DataNames>} ;;
-   s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+#xcommand CLASSVAR <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+   s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
 #endif /* HB_CLASS_CH_ */

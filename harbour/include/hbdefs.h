@@ -165,6 +165,12 @@
    #undef UINT                            /* varies with platform */
    typedef unsigned int UINT;
 
+   #undef SCHAR                           /* 1 byte signed */
+   typedef signed char SCHAR;
+
+   #undef UCHAR                           /* 1 byte unsigned */
+   typedef unsigned char UCHAR;
+
    #undef BYTE                            /* 1 byte unsigned */
    typedef unsigned char BYTE;
 

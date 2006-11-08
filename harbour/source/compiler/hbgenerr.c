@@ -92,7 +92,8 @@ char * hb_comp_szErrors[] =
    "Invalid date constant \'%s\'",
    "Memory buffer overflow",
    "Memory corruption detected",
-   "Implicit send operator with no WITH OBJECT in sight"
+   "Implicit send operator with no WITH OBJECT in sight",
+   "Input buffer overflow"
 };
 
 /* Table with parse warnings */

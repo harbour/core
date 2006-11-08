@@ -60,7 +60,7 @@ extern void hb_fhnd_ForceLink( void );
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */
-void hb_fsAddSearchPath( char * szPath, HB_PATHNAMES ** pSearchList )
+void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;

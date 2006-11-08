@@ -73,6 +73,7 @@ static void hb_compGenOutput( int );
 static void hb_compOutputFile( void );
 static void hb_compPpoFile( void );
 static void hb_compCompileEnd( void );
+static int  hb_compCompile( char * szPrg, BOOL bSingleFile );
 
 
 int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
@@ -86,7 +87,7 @@ static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode 
 static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
 static PINLINE hb_compInlineNew( char * );  /* creates and initialises the _INLINE structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
-static int hb_compProcessRSPFile( char *, int, char * argv[] ); /* process response file */
+static int hb_compProcessRSPFile( char * ); /* process response file */
 
 static void hb_compOptimizeJumps( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
@@ -162,6 +163,8 @@ INLINES        hb_comp_inlines;
 ULONG          hb_comp_Supported;
 
 FILE *         hb_comp_errFile = NULL;
+
+int            hb_comp_iHidden;                 /* Hide Strings */
 
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
@@ -243,7 +246,7 @@ int main( int argc, char * argv[] )
    hb_compChkPaths();
 
    /* Set standard rules */
-   hb_pp_SetRules( hb_compInclude, hb_comp_bQuiet );
+   hb_pp_SetRules( hb_comp_bQuiet, argc, argv );
 
    /* Prepare the table of identifiers */
    hb_compIdentifierOpen();
@@ -276,9 +279,9 @@ int main( int argc, char * argv[] )
          }
 
          if( argv[ i ][ 0 ] == '@' )
-            iStatus = hb_compProcessRSPFile( argv[ i ] + 1, argc, argv );
+            iStatus = hb_compProcessRSPFile( argv[ i ] + 1 );
          else
-            iStatus = hb_compCompile( argv[ i ], argc, argv, TRUE );
+            iStatus = hb_compCompile( argv[ i ], TRUE );
 
          if( iStatus != EXIT_SUCCESS )
             break;
@@ -342,7 +345,7 @@ void hb_compMainExit( void )
    hb_xexit();
 }
 
-static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
+static int hb_compProcessRSPFile( char * szRspName )
 {
    char szFile[ _POSIX_PATH_MAX + 1 ];
    int iStatus = EXIT_SUCCESS;
@@ -413,7 +416,7 @@ static int hb_compProcessRSPFile( char * szRspName, int argc, char * argv[] )
       hb_comp_bAutoOpen = bAutoOpen;
       
       hb_fsFNameMerge( szFile, pFileName );
-      hb_compCompile( szFile, argc, argv, FALSE );
+      hb_compCompile( szFile, FALSE );
    }
 
    hb_xfree( pFileName );
@@ -4622,7 +4625,7 @@ static void hb_compPpoFile( void )
          else
          */
       }
-            hb_comp_pFilePpo->szExtension = ".ppo";
+      hb_comp_pFilePpo->szExtension = ".ppo";
    }
 }
 
@@ -4648,7 +4651,7 @@ static void hb_compOutputFile( void )
    }
 }
 
-int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
+int hb_compCompile( char * szPrg, BOOL bSingleFile )
 {
    int iStatus = EXIT_SUCCESS;
 
@@ -4684,7 +4687,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
       if( iStatus == EXIT_SUCCESS )
       {
          /* Add /D command line or envvar defines */
-         hb_compChkDefines( argc, argv );
+         /* hb_compChkDefines( argc, argv ); */
 
          /* Initialize support variables */
          hb_compInitVars();
@@ -4721,12 +4724,14 @@ int hb_compCompile( char * szPrg, int argc, char * argv[], BOOL bSingleFile )
 
                yyparse();
 
-               if( hb_comp_bPPO && hb_comp_yyppo )
+               if( hb_comp_yyppo )
                {
                   fclose( hb_comp_yyppo );
                   hb_comp_yyppo = NULL;
-                  if( hb_comp_pFilePpo )
-                     hb_xfree( hb_comp_pFilePpo );
+               }
+               if( hb_comp_pFilePpo )
+               {
+                  hb_xfree( hb_comp_pFilePpo );
                   hb_comp_pFilePpo = NULL;
                }
             }
@@ -4892,7 +4897,7 @@ static void hb_compCompileEnd( void )
    
    if( hb_comp_pFileName )
    {
-      if( hb_comp_pFileName != hb_comp_pMainFileName && hb_comp_pFileName )
+      if( hb_comp_pFileName != hb_comp_pMainFileName && hb_comp_pMainFileName )
       {
          /* currently compiled file was autoopened - close also
           * the main module
@@ -4904,12 +4909,14 @@ static void hb_compCompileEnd( void )
       hb_comp_pFileName = NULL;
    }
 
-   if( hb_comp_bPPO && hb_comp_yyppo )
+   if( hb_comp_yyppo )
    {
       fclose( hb_comp_yyppo );
       hb_comp_yyppo = NULL;
-      if( hb_comp_pFilePpo )
-         hb_xfree( hb_comp_pFilePpo );
+   }
+   if( hb_comp_pFilePpo )
+   {
+      hb_xfree( hb_comp_pFilePpo );
       hb_comp_pFilePpo = NULL;
    }
 
@@ -5137,12 +5144,14 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen, BOOL bSingleFile )
 
                yyparse();
 
-               if( hb_comp_bPPO && hb_comp_yyppo )
+               if( hb_comp_yyppo )
                {
                   fclose( hb_comp_yyppo );
                   hb_comp_yyppo = NULL;
-                  if( hb_comp_pFilePpo )
-                     hb_xfree( hb_comp_pFilePpo );
+               }
+               if( hb_comp_pFilePpo )
+               {
+                  hb_xfree( hb_comp_pFilePpo );
                   hb_comp_pFilePpo = NULL;
                }
 

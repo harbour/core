@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Preprocessor runtime library callable version
+ * 
  *
- * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,216 +50,169 @@
  *
  */
 
-/*
- * Avoid tracing in preprocessor/compiler.
- */
-#if ! defined(HB_TRACE_UTILS)
-   #if defined(HB_TRACE_LEVEL)
-      #undef HB_TRACE_LEVEL
-   #endif
-#endif
-
-#include <stdio.h>
-/* #include <setjmp.h> */
 
 #include "hbpp.h"
-#include "hbcomp.h"
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbvm.h"
 
-#ifdef HB_EXTENSION
+static PHB_PP_STATE s_pp_state = NULL;
 
-HB_PATHNAMES * hb_comp_pIncludePath = NULL;
-PHB_FNAME      hb_comp_pFileName = NULL;
-FILES          hb_comp_files;
-int            hb_comp_iLine;       /* currently parsed file line number */
-int            hb_comp_iLinePRG;
-int            hb_comp_iLineINLINE = 0;
+static void hb_pp_ErrorMessage( char * szMsgTable[], char cPrefix, int iCode,
+                                const char * szParam1, const char * szParam2 )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ErrorGen(%p, %c, %d, %s, %s)", szMsgTable, cPrefix, iCode, szParam1, szParam2));
 
-/* These are need for the PP #pragma support */
-BOOL           hb_comp_bPPO = FALSE;           /* flag indicating, is ppo output needed */
-BOOL           hb_comp_bStartProc = TRUE;      /* holds if we need to create the starting procedure */
-BOOL           hb_comp_bLineNumbers = TRUE;    /* holds if we need pcodes with line numbers */
+   /* ignore warning messages */
+   if( cPrefix != 'W' )
+   {
+      char szMsgBuf[ 1024 ];
+      PHB_ITEM pError;
+      sprintf( szMsgBuf, szMsgTable[ iCode - 1 ], szParam1, szParam2 );
+      pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iCode, szMsgBuf,
+                             NULL, 0, EF_NONE | EF_CANDEFAULT );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
+   }
+}
 
-#if 0
-BOOL           hb_comp_bShortCuts = TRUE;      /* .and. & .or. expressions shortcuts */
-#endif
+static void hb_pp_Disp( const char * szMessage )
+{
+   /* ignore stdout messages when PP used as library */
+   HB_SYMBOL_UNUSED( szMessage );
+}
 
-int            hb_comp_iWarnings = 0;                     /* enable parse warnings */
-BOOL           hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-BOOL           hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-BOOL           hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
-int            hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
-FILE *         hb_comp_yyppo = NULL;
+static PHB_PP_STATE hb_pp_stateParam( int * piParam )
+{
+   PHB_ITEM pItem = hb_parptr( 1 );
 
-/* static jmp_buf s_env; */
+   if( pItem )
+   {
+      * piParam = 2;
+      return ( PHB_PP_STATE ) hb_itemGetPtr( pItem );
+   }
+   else
+   {
+      * piParam = 1;
+      if( !s_pp_state )
+      {
+         s_pp_state = hb_pp_new();
+         hb_pp_init( s_pp_state, NULL, TRUE, NULL, NULL,
+                     hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL );
+      }
+      return s_pp_state;
+   }
+}
 
 HB_FUNC( __PP_INIT )
 {
-   hb_pp_Table();
-   hb_pp_Init();
-   hb_comp_files.iFiles = 0;
+   PHB_PP_STATE pState;
+   int iParam;
 
-   if( ISCHAR( 1 ) )
+   pState = hb_pp_stateParam( &iParam );
+   if( pState )
    {
-      hb_fsAddSearchPath( hb_parc( 1 ), &hb_comp_pIncludePath );
+      hb_pp_reset( pState );
+
+      if( ISCHAR( iParam ) )
+         hb_pp_addSearchPath( pState, hb_parc( iParam ), TRUE );
+
+      hb_retptr( pState );
+   }
+   else
+      hb_ret();
+}
+
+HB_FUNC( __PP_FREE )
+{
+   PHB_ITEM pItem = hb_parptr( 1 );
+
+   if( pItem )
+   {
+      PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_itemGetPtr( pItem );
+      if( pState )
+         hb_pp_free( pState );
+   }
+   else if( s_pp_state )
+   {
+      hb_pp_free( s_pp_state );
+      s_pp_state = NULL;
    }
 }
 
 HB_FUNC( __PP_PATH )
 {
-   if( ISLOG( 2 ) && hb_parl( 2 ) && hb_comp_pIncludePath )
-   {
-      hb_fsFreeSearchPath( hb_comp_pIncludePath );
-      hb_comp_pIncludePath = NULL;
-   }
+   PHB_PP_STATE pState;
+   int iParam;
 
-   if( ISCHAR( 1 ) )
+   pState = hb_pp_stateParam( &iParam );
+   if( pState )
    {
-      hb_fsAddSearchPath( hb_parc( 1 ), &hb_comp_pIncludePath );
-   }
-}
-
-HB_FUNC( __PP_FREE )
-{
-   if( hb_comp_pIncludePath )
-   {
-      hb_fsFreeSearchPath( hb_comp_pIncludePath );
-      hb_comp_pIncludePath = NULL;
-   }
-
-   hb_pp_Free();
-
-   if( hb_pp_aCondCompile )
-   {
-      hb_xfree( hb_pp_aCondCompile );
-      hb_pp_aCondCompile = NULL;
+      hb_pp_addSearchPath( pState, hb_parc( iParam ), hb_parl( iParam + 1 ) );
    }
 }
 
 HB_FUNC( __PPADDRULE )
 {
-   if( ISCHAR( 1 ) )
-   {
-      char * ptr = hb_parc( 1 );
-      char * hb_buffer;
+   PHB_PP_STATE pState;
+   int iParam;
 
-      HB_SKIPTABSPACES( ptr );
-      if( *ptr == '#' )
+   pState = hb_pp_stateParam( &iParam );
+   if( pState )
+   {
+      char * szText = hb_parc( iParam );
+      ULONG ulLen = hb_parclen( iParam );
+
+      if( szText )
       {
-         if( !hb_pp_aCondCompile )
+         while( ulLen && ( szText[ 0 ] == ' ' || szText[ 0 ] == '\t' ) )
          {
-            hb_pp_Table();
-            hb_pp_Init();
-            hb_comp_files.iFiles = 0;
+            ++szText;
+            --ulLen;
          }
-         hb_pp_ParseDirective( ptr );
-         if( hb_comp_files.pLast )
-         {
-            hb_buffer = ( char* ) hb_xgrab( HB_PP_STR_SIZE );
-            while( hb_pp_Internal( NULL,hb_buffer ) > 0 );
-            hb_pp_CloseInclude();
-            hb_xfree( hb_buffer );
-         }
-         hb_retl( 1 );
       }
-      else
-         hb_retl( 0 );
+
+      if( szText && ulLen && szText[ 0 ] == '#' )
+      {
+         hb_pp_reset( pState );
+         hb_pp_parseLine( pState, szText, &ulLen );
+
+         /* probably for #included files parsing the old code was making
+            sth like that */
+         do
+         {
+            if( hb_vmRequestQuery() != 0 )
+               return;
+         }
+         while( hb_pp_nextLine( pState, NULL ) );
+
+         hb_retl( TRUE );
+         return;
+      }
    }
-   else
-      hb_retl( 0 );
+   hb_retl( FALSE );
 }
 
 HB_FUNC( __PREPROCESS )
 {
-   if( ISCHAR( 1 ) )
+   PHB_PP_STATE pState;
+   int iParam;
+
+   pState = hb_pp_stateParam( &iParam );
+   if( pState )
    {
-      char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-      char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+      char * szText = hb_parc( iParam );
+      ULONG ulLen = hb_parclen( iParam );
 
-      /* if( setjmp( s_env ) == 0 ) */
-      { 
-         char * ptr = pText;
-         int slen;
-
-         /*   hb_pp_Init();   */
-
-         slen = HB_MIN( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
-         memcpy( pText, hb_parc( 1 ), slen );
-         pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
-         if( slen )
-         {
-            memset( pOut, 0, HB_PP_STR_SIZE );
-
-            HB_SKIPTABSPACES( ptr );
-
-            if( !hb_pp_topDefine )
-               hb_pp_Table();
-            if( *ptr && hb_pp_ParseExpression( ptr, pOut, FALSE ) > 0 )
-            {
-               /* Some error here? */
-            }
-         }
-         hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
+      if( szText && ulLen )
+      {
+         szText = hb_pp_parseLine( pState, szText, &ulLen );
+         hb_retclen( szText, ulLen );
+         return;
       }
-      /* else
-      {  */
-         /* an error occured during parsing.
-          * The longjmp was used in GenError()
-          */
-      /*   hb_retc( NULL );
-      } */
-
-      hb_xfree( pText );
-      hb_xfree( pOut );
    }
-   else
-      hb_retc( NULL );
+
+   hb_retc( NULL );
 }
-
-void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
-{
-   PHB_ITEM pError;
-   char buffer[ 128 ];
-
-   HB_SYMBOL_UNUSED( cPrefix );
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
-
-   /* TOFIX: The internal buffers allocated by the preprocessor should be
-             deallocated here */
-
-   sprintf( buffer, szErrors[ iError - 1 ], szError1, szError2 );
-   pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iError, buffer, NULL, 0, EF_NONE | EF_CANDEFAULT );
-   hb_errLaunch( pError );
-   hb_errRelease( pError );
-
-   /* longjmp( s_env, iError == 0 ? -1 : iError ); */
-}
-
-void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
-
-   /* NOTE: All warnings are simply ignored */
-
-   HB_SYMBOL_UNUSED( szWarnings );
-   HB_SYMBOL_UNUSED( cPrefix );
-   HB_SYMBOL_UNUSED( iWarning );
-   HB_SYMBOL_UNUSED( szWarning1 );
-   HB_SYMBOL_UNUSED( szWarning2 );
-}
-
-PINLINE   hb_compInlineAdd( char * szFunName )
-{
-   HB_SYMBOL_UNUSED( szFunName );
-   return NULL;
-}
-
-void hb_compParserStop( void  )
-{
-   ;
-}
-
-#endif
-

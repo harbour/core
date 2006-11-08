@@ -55,6 +55,7 @@ C_SOURCES=\
     hbstrong.c \
     hbusage.c \
     hbident.c \
+    ppcomp.c \
     expropta.c \
     exproptb.c \
     exproptc.c \

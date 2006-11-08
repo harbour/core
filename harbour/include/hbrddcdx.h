@@ -328,7 +328,7 @@ typedef struct _CDXTAG
 
    BOOL     UsrAscend;        /* user settable ascending/descending order flag */
    BOOL     UsrUnique;        /* user settable unique order flag */
-   
+
    BOOL     TagChanged;
    BOOL     TagBOF;
    BOOL     TagEOF;

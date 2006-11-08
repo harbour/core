@@ -134,7 +134,7 @@ FalseValue    "."[f|n]"."
 
 Separator     {SpaceTab}
 
-%x            STRING1 STRING2 STRING3 STRING4START STRING4 STRING5
+%x            STRINGEXT STRING1 STRING2 STRING3 STRING4START STRING4 STRING5
 %x            NEXT_ BREAK_ CASE_ DO_ DOIDENT_ WHILE_ WITH_ END_ FIELD_
 %x            FOR_ FOREACH_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
@@ -146,36 +146,51 @@ Separator     {SpaceTab}
 
 "&"(\x27|\x22|\[) { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL ); }
 
-\x27             BEGIN STRING1;
-\x22             BEGIN STRING2;
+"e"\x22        BEGIN STRINGEXT;
+\x27           BEGIN STRING1;
+\x22           BEGIN STRING2;
 
 \[             {
-                    if( (hb_comp_iState == OPERATOR) ||
-                        (hb_comp_iState == LSEPARATOR) ||
-                        (hb_comp_iState == LARRAY) ||
-                        (hb_comp_iState == IF) ||
-                        (hb_comp_iState == ELSEIF) ||
-                        (hb_comp_iState == CASE) ||
-                        (hb_comp_iState == BREAK) ||
-                        (hb_comp_iState == RETURN) ||
-                        (hb_comp_iState == WITH) ||
-                        (hb_comp_iState == WHILE)
-                      )
-							 {
-							 	if( hb_pp_NestedLiteralString )
-                {
-                          yy_breakFlex();
-                        	BEGIN STRING5;
-                }
-								else
-                        	BEGIN STRING3;
-							 }
-                    else
-                    {
-                        hb_comp_iState = LINDEX;
-                        return '[';
-                    }
+                  if( (hb_comp_iState == OPERATOR) ||
+                      (hb_comp_iState == LSEPARATOR) ||
+                      (hb_comp_iState == LARRAY) ||
+                      (hb_comp_iState == IF) ||
+                      (hb_comp_iState == ELSEIF) ||
+                      (hb_comp_iState == CASE) ||
+                      (hb_comp_iState == BREAK) ||
+                      (hb_comp_iState == RETURN) ||
+                      (hb_comp_iState == WITH) ||
+                      (hb_comp_iState == WHILE)
+                    )
+                  {
+                     if( hb_pp_NestedLiteralString )
+                     {
+                        yy_breakFlex();
+                        BEGIN STRING5;
+                     }
+                     else
+                        BEGIN STRING3;
                   }
+                  else
+                  {
+                     hb_comp_iState = LINDEX;
+                     return '[';
+                  }
+               }
+
+<STRINGEXT>[^\x22\n]*\x22  { BEGIN 0;
+                        yytext[--yyleng] = '\0';
+                        {
+                           ULONG len = yyleng;
+                           hb_strRemEscSeq( yytext, &len );
+                           yyleng = len;
+                        }
+                        yylval.string = hb_compIdentifierNew( yytext, TRUE );
+                        hb_comp_iState = LITERAL;
+
+                        return LITERAL;
+                     }
+
 <STRING1>[^\x27\n]*\n  { BEGIN 0;
                       unput( '\n' );
                       yytext[--yyleng] = '\0';
@@ -331,11 +346,13 @@ Separator     {SpaceTab}
 \n           {
                 hb_comp_iState = LOOKUP;
 
+/*
                 if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 )
                 {
                    printf( "\r%i", hb_comp_iLine );
                    fflush( stdout );
                 }
+*/
                 return '\n';
              }
 %{

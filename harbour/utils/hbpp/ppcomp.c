@@ -341,7 +341,7 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
 
       if( *ptr == '#' )
       {
-         BOOL bIgnore = hb_pp_ParseDirective( ptr );
+         BOOL bIgnore = hb_pp_ParseDirective_( ptr );
 
          if( pFile != hb_comp_files.pLast )
          {
@@ -604,7 +604,7 @@ int hb_pp_ReadRules( void )
 
               if( *ptr == '#' )
               {
-                 hb_pp_ParseDirective( ptr );
+                 hb_pp_ParseDirective_( ptr );
               }
 
               *s_szLine = '\0';

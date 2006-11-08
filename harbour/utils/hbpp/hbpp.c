@@ -70,7 +70,7 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
-extern int hb_pp_ParseDefine( char * );
+extern int hb_pp_ParseDefine_( char * );
 
 static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
@@ -142,16 +142,16 @@ int main( int argc, char * argv[] )
                  {
                     if( ( pAssign = strchr( szDefText, '=' ) ) == NULL )
                     {
-                       hb_pp_AddDefine( szDefText, 0 );
+                       hb_pp_AddDefine_( szDefText, 0 );
                     }
                     else
                     {
                        szDefText[ pAssign - szDefText ] = '\0';
 
-                       //hb_pp_AddDefine( szDefText,  pAssign + 1 );
+                       //hb_pp_AddDefine_( szDefText,  pAssign + 1 );
                        sDefLine = (char*) hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
                        sprintf( sDefLine, "%s %s", szDefText, pAssign + 1 );
-                       hb_pp_ParseDefine( sDefLine );
+                       hb_pp_ParseDefine_( sDefLine );
                        hb_xfree( sDefLine );
                     }
                  }
