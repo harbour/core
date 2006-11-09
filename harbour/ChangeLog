@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  + harbour/tests/hbinline.prg
+    + added test code for new hb_inLine{} syntax
+
+  * harbour/tests/inline_c.prg
     ! replaced direct access to HB_ITEM body by API function calls
 
 2006-11-09 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

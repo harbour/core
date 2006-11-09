@@ -85,6 +85,7 @@ extern HB_STACK hb_stack;
 #endif
 
 extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );  // returns Self object at C function level
+extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void );// returns RETURN Item from stack
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
@@ -94,7 +95,6 @@ extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
-extern HB_ITEM_PTR hb_stackReturnItem( void );
 extern char *      hb_stackDateBuffer( void );
 extern void        hb_stackSetStaticsBase( LONG lBase );
 extern LONG        hb_stackGetStaticsBase( void );
