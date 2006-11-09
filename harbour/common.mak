@@ -759,7 +759,7 @@ HARBOUR_EXE_OBJS = \
 
 HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpp.obj     \
-    $(OBJ_DIR)\hbpptable.obj\
+    $(OBJ_DIR)\hbpptbl.obj  \
     $(OBJ_DIR)\hbppcomp.obj \
     $(OBJ_DIR)\hbppcore.obj \
     $(OBJ_DIR)\pragma.obj   \

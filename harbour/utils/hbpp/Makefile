@@ -5,10 +5,10 @@
 ROOT = ../../
 
 C_SOURCES=\
-	ppcore.c \
-	ppcomp.c \
-	pptable.c \
-	pragma.c \
+	hbppcore.c \
+	hbppcomp.c \
+	hbpptbl.c  \
+	pragma.c   \
 
 C_MAIN=hbpp.c
 

@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    ! replaced direct access to HB_ITEM body by API function calls
+
+2006-11-09 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/include/hbstack.h
+     * Added HB_EXPORT to hb_stackReturnItem()
+
+2006-11-09 14:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    - harbour/utils/hbpp/hbpptable.c
    + harbour/utils/hbpp/hbpptbl.c
    * harbour/utils/hbpp/Makefile
