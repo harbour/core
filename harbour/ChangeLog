@@ -21,8 +21,17 @@
    * harbour/makefile.vc
    * harbour/common.mak
      * Cleaned hbpp.exe dependecies due to recent changes
-     program exit, together with logging unreleased memory
-     blocks report to fm.log file. Borrowed from xharbour.
+   * harbour/include/hbapi.h
+     * Added HB_EXPORT to hb_gcAlloc()
+   * harbour/include/hbstack.h
+     * Added HB_EXPORT to hb_stackSelfItem()
+   * harbour/source/vm/fm.c
+     * Added dipslaying contents of unreleased blocks at
+       program exit, together with logging unreleased memory
+       blocks report to fm.log file. Borrowed from xharbour.
+   - harbour/utils/hbpp/ppcomp.c
+   - harbour/utils/hbpp/ppcore.c
+   - harbour/utils/hbpp/pplib.c
    - harbour/utils/hbpp/pptable.c
    + harbour/utils/hbpp/hbppcomp.c
    + harbour/utils/hbpp/hbppcore.c
