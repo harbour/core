@@ -155,6 +155,8 @@ GTWVT_LIB    = $(LIB_DIR)\gtwvt.lib
 GTGUI_LIB    = $(LIB_DIR)\gtgui.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+# required (intermediate) utility
+#     to generate pptable.c
 HBPPGEN_EXE  = $(BIN_DIR)\ppgen.exe
 HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest.exe
@@ -235,10 +237,9 @@ COMMON_LIB_OBJS = \
 #**********************************************************
 
 PP_LIB_OBJS = \
+    $(OBJ_DIR)\pptable.obj \
     $(OBJ_DIR)\ppcore.obj  \
     $(OBJ_DIR)\pplib.obj   \
-    $(OBJ_DIR)\pptable.obj \
-    $(OBJ_DIR)\pragma.obj  \
 
 #**********************************************************
 
@@ -728,7 +729,6 @@ GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
 #**********************************************************
 
 HARBOUR_EXE_OBJS = \
-    $(OBJ_DIR)\ppcomp.obj  \
     $(OBJ_DIR)\harbour.obj  \
     $(OBJ_DIR)\harboury.obj \
     $(OBJ_DIR)\harbourl.obj \
@@ -741,7 +741,9 @@ HARBOUR_EXE_OBJS = \
     $(OBJ_DIR)\hblbl.obj    \
     $(OBJ_DIR)\hbpcode.obj  \
     $(OBJ_DIR)\hbstrong.obj \
+    $(OBJ_DIR)\hbfunchk.obj \
     $(OBJ_DIR)\hbfix.obj    \
+    $(OBJ_DIR)\ppcomp.obj   \
     $(OBJ_DIR)\genc.obj     \
     $(OBJ_DIR)\gencc.obj    \
     $(OBJ_DIR)\gencli.obj   \
@@ -752,20 +754,22 @@ HARBOUR_EXE_OBJS = \
     $(OBJ_DIR)\expropta.obj \
     $(OBJ_DIR)\exproptb.obj \
     $(OBJ_DIR)\exproptc.obj \
-    $(OBJ_DIR)\hbfunchk.obj \
 
 #**********************************************************
 
 HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpp.obj     \
-    $(OBJ_DIR)\hbppcore.obj     \
-    $(OBJ_DIR)\hbppcomp.obj     \
-    $(OBJ_DIR)\hbpptable.obj     \
+    $(OBJ_DIR)\hbpptable.obj\
+    $(OBJ_DIR)\hbppcomp.obj \
+    $(OBJ_DIR)\hbppcore.obj \
+    $(OBJ_DIR)\pragma.obj   \
+
+#    $(OBJ_DIR)\hbpplib.obj  \
 
 #**********************************************************
 
 HBPPGEN_EXE_OBJS = \
-    $(OBJ_DIR)\ppgen.obj     \
+    $(OBJ_DIR)\ppgen.obj    \
 
 #**********************************************************
 
@@ -854,31 +858,31 @@ HBVER_EXE_OBJS = \
 #
 
 TMP_DLL_OBJS = \
-    $(COMMON_LIB_OBJS)        \
-    $(PP_LIB_OBJS)            \
-    $(VM_DLL_OBJS)            \
-    $(RTL_LIB_OBJS)           \
-    $(MACRO_LIB_OBJS)         \
-    $(DEBUG_LIB_OBJS)         \
-    $(LANG_LIB_OBJS)          \
-    $(CODEPAGE_LIB_OBJS)      \
-    $(RDD_LIB_OBJS)           \
-    $(DBFNTX_LIB_OBJS)        \
-    $(DBFCDX_LIB_OBJS)        \
-    $(DBFFPT_LIB_OBJS)        \
-    $(HBSIX_LIB_OBJS)         \
-    $(HSX_LIB_OBJS)           \
-    $(USRRDD_LIB_OBJS)        \
-    $(GTCGI_LIB_OBJS)         \
-    $(GTPCA_LIB_OBJS)         \
-    $(GTSTD_LIB_OBJS)         \
-    $(GTWIN_LIB_OBJS)         \
-    $(GTWVT_LIB_OBJS)         \
-    $(GTGUI_DLL_OBJS)         \
+    $(COMMON_LIB_OBJS)      \
+    $(PP_LIB_OBJS)          \
+    $(VM_DLL_OBJS)          \
+    $(RTL_LIB_OBJS)         \
+    $(MACRO_LIB_OBJS)       \
+    $(DEBUG_LIB_OBJS)       \
+    $(LANG_LIB_OBJS)        \
+    $(CODEPAGE_LIB_OBJS)    \
+    $(RDD_LIB_OBJS)         \
+    $(DBFNTX_LIB_OBJS)      \
+    $(DBFCDX_LIB_OBJS)      \
+    $(DBFFPT_LIB_OBJS)      \
+    $(HBSIX_LIB_OBJS)       \
+    $(HSX_LIB_OBJS)         \
+    $(USRRDD_LIB_OBJS)      \
+    $(GTCGI_LIB_OBJS)       \
+    $(GTPCA_LIB_OBJS)       \
+    $(GTSTD_LIB_OBJS)       \
+    $(GTWIN_LIB_OBJS)       \
+    $(GTWVT_LIB_OBJS)       \
+    $(GTGUI_DLL_OBJS)       \
 
-DISABLED_SHARED_MODULES=      \
-    $(NULSYS_LIB_OBJS)        \
-    $(GTDOS_LIB_OBJS)         \
+DISABLED_SHARED_MODULES=    \
+    $(NULSYS_LIB_OBJS)      \
+    $(GTDOS_LIB_OBJS)       \
 
 #**********************************************************
 #**********************************************************
@@ -889,34 +893,35 @@ DISABLED_SHARED_MODULES=      \
 #
 
 HB_BUILD_TARGETS = \
-    $(COMMON_LIB)      \
-    $(HBPPGEN_EXE)     \
-    $(PP_LIB)          \
-    $(HARBOUR_EXE)     \
-    $(HBPP_EXE)        \
+    $(COMMON_LIB)           \
+    $(HBPPGEN_EXE)          \
+    $(PP_LIB)               \
     \
-    $(VM_LIB)          \
-    $(RTL_LIB)         \
-    $(MACRO_LIB)       \
-    $(DEBUG_LIB)       \
-    $(LANG_LIB)        \
-    $(CODEPAGE_LIB)    \
-    $(RDD_LIB)         \
-    $(NULSYS_LIB)      \
-    $(DBFNTX_LIB)      \
-    $(DBFCDX_LIB)      \
-    $(DBFFPT_LIB)      \
-    $(HBSIX_LIB)       \
-    $(HSX_LIB)         \
-    $(USRRDD_LIB)      \
-    $(HB_GT_LIBS)      \
+    $(HARBOUR_EXE)          \
+    $(HBPP_EXE)             \
     \
-    $(HBRUN_EXE)       \
-    $(HBTEST_EXE)      \
-    $(HBPPTEST_EXE)    \
-    $(HBDOC_EXE)       \
-    $(HBMAKE_EXE)      \
-    $(HBVER_EXE)       \
+    $(VM_LIB)               \
+    $(RTL_LIB)              \
+    $(MACRO_LIB)            \
+    $(DEBUG_LIB)            \
+    $(LANG_LIB)             \
+    $(CODEPAGE_LIB)         \
+    $(RDD_LIB)              \
+    $(NULSYS_LIB)           \
+    $(DBFNTX_LIB)           \
+    $(DBFCDX_LIB)           \
+    $(DBFFPT_LIB)           \
+    $(HBSIX_LIB)            \
+    $(HSX_LIB)              \
+    $(USRRDD_LIB)           \
+    $(HB_GT_LIBS)           \
+    \
+    $(HBRUN_EXE)            \
+    $(HBTEST_EXE)           \
+    $(HBPPTEST_EXE)         \
+    $(HBDOC_EXE)            \
+    $(HBMAKE_EXE)           \
+    $(HBVER_EXE)            \
 
 # DLL Target is disabled by default
 # It can be enabled by setting env

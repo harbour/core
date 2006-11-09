@@ -85,6 +85,7 @@
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbmemory.ch"
+#include "hbdate.h"
 
 /* #define HB_PARANOID_MEM_CHECK */
 
@@ -514,6 +515,52 @@ HB_EXPORT void hb_xinit( void ) /* Initialize fixed memory subsystem */
    HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 }
 
+/* Returns pointer to string containing printable version
+   of pMem memory block */
+
+HB_EXPORT char * hb_mem2str( void * pMem, UINT uiSize )
+{
+#define HB_MAX_MEM2STR_BLOCK 256
+
+   static BYTE cBuffer[2*HB_MAX_MEM2STR_BLOCK+1]; /* multiplied by 2 to allow hex format */
+   BYTE *cMem = (BYTE*) pMem;
+   UINT uiIndex, uiPrintable;
+
+   if( uiSize > HB_MAX_MEM2STR_BLOCK )
+      uiSize = HB_MAX_MEM2STR_BLOCK;
+
+   uiPrintable = 0;
+   for( uiIndex=0; uiIndex < uiSize; uiIndex++ )
+      if( cMem[uiIndex] >= ' ' )
+         uiPrintable++;
+
+   if( (uiPrintable*100)/uiSize > 70 ) /* more then 70% printable chars */
+   {
+      /* format as string of original chars */
+      for( uiIndex=0; uiIndex < uiSize; uiIndex++ )
+         if( cMem[uiIndex] >= ' ' )
+            cBuffer[uiIndex] = cMem[uiIndex];
+         else
+            cBuffer[uiIndex] = '.';
+      cBuffer[uiIndex] = '\0';
+   }
+   else
+   {
+     /* format as hex */
+      for( uiIndex=0; uiIndex < uiSize; uiIndex++ )
+      {
+         int lownibble, hinibble;
+         hinibble = (cMem[uiIndex])>>4;
+         lownibble = (cMem[uiIndex]) & 0x0F;
+         cBuffer[uiIndex*2] = (hinibble <= 9) ?  ('0'+hinibble) : ('A'+hinibble-10);
+         cBuffer[uiIndex*2+1] = (lownibble <= 9) ? ('0'+lownibble) : ('A'+lownibble-10);
+      }
+      cBuffer[uiIndex*2] = '\0';
+   }
+
+   return (char *)cBuffer;
+}
+
 HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
@@ -524,6 +571,10 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       PHB_MEMINFO pMemBlock;
       USHORT ui;
       char buffer[ 100 ];
+      FILE *hLog = NULL;
+
+      if( s_lMemoryBlocks )
+          hLog = fopen( "fm.log", "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
@@ -531,21 +582,58 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
+      if ( hLog )
+      {
+         char *szTime = (char *)hb_xgrab(9);
+         int iYear, iMonth, iDay;
+
+         hb_dateToday( &iYear, &iMonth, &iDay );
+         hb_dateTimeStr( szTime );
+
+         fprintf( hLog, "Memory Allocation Report : Application => %s\n", hb_cmdargARGV()[0] );
+         fprintf( hLog, "  Application terminated at : %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+         fprintf( hLog, "%s\n", buffer );
+
+         hb_xfree( szTime );
+      }
+
       if( s_lMemoryBlocks )
       {
          hb_conOutErr( hb_conNewLine(), 0 );
          sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
+
+         if ( hLog ) fprintf( hLog, "%s\n", buffer );
       }
 
       hb_conOutErr( hb_conNewLine(), 0 );
 
-      for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock )
-         HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i)",
+      for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock ) {
+         HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i), \"%s\"",
             ui++,
             pMemBlock->ulSize,
             pMemBlock->szProcName,
-            pMemBlock->uiProcLine ) );
+            pMemBlock->uiProcLine,
+            hb_mem2str( ( char * ) pMemBlock + HB_MEMINFO_SIZE, pMemBlock->ulSize )
+         ) );
+
+         if ( hLog )
+         {
+            fprintf( hLog, "Block %i %p (size %lu) %s(%i), \"%s\"\n",
+               ui-1,
+               (char *) pMemBlock + HB_MEMINFO_SIZE,
+               pMemBlock->ulSize,
+               pMemBlock->szProcName,
+               pMemBlock->uiProcLine,
+               hb_mem2str( ( char * ) pMemBlock + HB_MEMINFO_SIZE, pMemBlock->ulSize ) );
+         }
+      }
+
+      if( hLog )
+      {
+         fprintf( hLog, "--------------------------------------------------------------------------------\n");
+         fclose( hLog );
+      }
    }
 #endif
 }

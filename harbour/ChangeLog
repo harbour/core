@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+   - harbour/utils/hbpp/hbpptable.c
+   + harbour/utils/hbpp/hbpptbl.c
+   * harbour/utils/hbpp/Makefile
+   * harbour/common.mak
+     * Renamed hbpptable.c->hbpptbl.c to follow 8.3 naming convention
+
+2006-11-09 09:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+     * Adapted to the new Preprocessor utility ppgen.exe
+     * Cleaned hbpp.exe dependecies due to recent changes
+   * harbour/makefile.vc
+   * harbour/common.mak
+     * Cleaned hbpp.exe dependecies due to recent changes
+     program exit, together with logging unreleased memory
+     blocks report to fm.log file. Borrowed from xharbour.
+   - harbour/utils/hbpp/pptable.c
    + harbour/utils/hbpp/hbppcomp.c
    + harbour/utils/hbpp/hbppcore.c
    + harbour/utils/hbpp/hbpplib.c
@@ -17,7 +33,7 @@
 2006-11-08 00:39 UTC+0200 JF Lefebvre (jflefebv at mafact com)
    * harbour/makefile.vc
    * harbour/common.mak
- 
+     * Adapted to the new Preprocessor utility ppgen.exe
        Someone should rename the following files into utils/hbpp
         ppcomp.c -> hbppcomp.c
         pplib.c -> hbpplib.c
@@ -116,7 +132,7 @@
   * makefile64.nt
     * updated with recent changes
 
-         	./ppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q
+2006-02-08 18:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwin/gtwin.c
     + added PreExt() and PostExt() methods
 

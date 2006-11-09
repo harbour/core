@@ -562,7 +562,7 @@ extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
 extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
 extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
 
-extern void *     hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
+extern HB_EXPORT void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
 extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
 extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
 extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
