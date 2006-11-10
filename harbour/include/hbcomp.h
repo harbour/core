@@ -634,6 +634,7 @@ extern unsigned int hb_pp_MaxTranslateCycles;
 #define HB_COMPFLAG_ARRSTR         8    /* -ks strings as array of bytes */
 #define HB_COMPFLAG_OPTJUMP       16    /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_RT_MACRO      64    /* -kr */
+#define HB_COMPFLAG_HB_INLINE_PP 128    /* -kI hb_inLine support in PP */
 
 #ifdef HB_MACRO_SUPPORT
   #define HB_COMP_ISSUPPORTED(flag)    ( HB_MACRO_DATA->supported & (flag) )

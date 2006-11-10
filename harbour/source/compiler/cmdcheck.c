@@ -685,6 +685,10 @@ void hb_compChkEnvironVar( char *szSwitch )
                         hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
                         break;
 
+                     case 'I':
+                        hb_comp_Supported |= HB_COMPFLAG_HB_INLINE_PP;
+                        break;
+
                      case 'J':
                         hb_comp_Supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;

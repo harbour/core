@@ -100,7 +100,7 @@ static PHB_PP_STATE hb_pp_stateParam( int * piParam )
       {
          s_pp_state = hb_pp_new();
          hb_pp_init( s_pp_state, NULL, TRUE, NULL, NULL,
-                     hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL );
+                     hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
       }
       return s_pp_state;
    }

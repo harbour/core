@@ -66,7 +66,16 @@ HB_EXTERN_BEGIN
 #define HB_PP_STREAM_CLIPPER  3 /* clipper compatible TEXT/ENDTEXT */
 #define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
 #define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC seq processed */
+#define HB_PP_STREAM_INLINE_C 6 /* hb_inLIne() {...} data, should not be preprocessed */
 
+/* hb_inLine() states */
+#define HB_PP_INLINE_OFF      0
+#define HB_PP_INLINE_START    1
+#define HB_PP_INLINE_PARAM    2
+#define HB_PP_INLINE_BODY     3
+#define HB_PP_INLINE_COMMENT  4
+#define HB_PP_INLINE_QUOTE1   5
+#define HB_PP_INLINE_QUOTE2   6
 
 /* function to open included files */
 #define HB_PP_OPEN_FUNC_( func ) FILE * func( char *, BOOL, char * )
@@ -92,6 +101,11 @@ typedef HB_PP_DISP_FUNC * PHB_PP_DISP_FUNC;
 #define HB_PP_DUMP_FUNC_( func ) void func( char *, ULONG, int )
 typedef HB_PP_DUMP_FUNC_( HB_PP_DUMP_FUNC );
 typedef HB_PP_DUMP_FUNC * PHB_PP_DUMP_FUNC;
+
+/* function for catching #pragma dump data */
+#define HB_PP_INLINE_FUNC_( func ) void func( char *, char *, ULONG, int )
+typedef HB_PP_INLINE_FUNC_( HB_PP_INLINE_FUNC );
+typedef HB_PP_INLINE_FUNC * PHB_PP_INLINE_FUNC;
 
 /* function for catching #pragma dump data */
 #define HB_PP_SWITCH_FUNC_( func ) BOOL func( const char *, int )
@@ -558,6 +572,9 @@ typedef struct
    PHB_MEM_BUFFER pStreamBuffer; /* buffer for stream output */
    int      iStreamDump;         /* stream output, see HB_PP_STREAM_* */
    int      iDumpLine;           /* line where current dump output begins */
+   int      iInLineCount;        /* number of hb_inLine() functions */
+   int      iInLineState;        /* hb_inLine() state */
+   int      iInLineBraces;       /* braces counter for hb_inLine() */
 
    PHB_PP_FILE pFile;            /* currently preprocessed file structure */
    int      iFiles;              /* number of open files */
@@ -567,7 +584,8 @@ typedef struct
    PHB_PP_ERROR_FUNC pErrorFunc; /* function to generate errors */
    PHB_PP_DISP_FUNC  pDispFunc;  /* function to redirect stdout messages */
    PHB_PP_DUMP_FUNC  pDumpFunc;  /* function for catching #pragma dump data */
-   PHB_PP_SWITCH_FUNC pSwitchFunc; /* function to compiler switches with #pragma ... */
+   PHB_PP_INLINE_FUNC pInLineFunc; /* function for hb_inLine(...) {...} blocks */
+   PHB_PP_SWITCH_FUNC pSwitchFunc; /* function for compiler switches with #pragma ... */
 }
 HB_PP_STATE, * PHB_PP_STATE;
 
@@ -587,10 +605,12 @@ extern PHB_PP_STATE hb_pp_new( void );
 extern void   hb_pp_init( PHB_PP_STATE pState, char * szFileName, BOOL fQuiet,
                           PHB_PP_OPEN_FUNC  pOpenFunc,  PHB_PP_CLOSE_FUNC pCloseFunc,
                           PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
-                          PHB_PP_DUMP_FUNC  pDumpFunc,  PHB_PP_SWITCH_FUNC pSwitchFunc );
+                          PHB_PP_DUMP_FUNC  pDumpFunc,  PHB_PP_INLINE_FUNC pInLineFunc,
+                          PHB_PP_SWITCH_FUNC pSwitchFunc );
 extern void   hb_pp_free( PHB_PP_STATE pState );
 extern void   hb_pp_reset( PHB_PP_STATE pState );
 extern void   hb_pp_setStdBase( PHB_PP_STATE pState );
+extern void   hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern void   hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace );
 extern void   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, FILE * file_in );
 extern void   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );

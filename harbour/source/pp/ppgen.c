@@ -368,7 +368,7 @@ int main( int argc, char * argv[] )
 
    if( szFile )
    {
-      hb_pp_init( pState, NULL, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL );
+      hb_pp_init( pState, NULL, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
       hb_pp_inFile( pState, szFile, NULL );
       if( fWrite )
       {

@@ -120,6 +120,7 @@ void hb_compPrintModes( void )
            "\nOptions:  c               clear all flags (strict Clipper mode)",
            "\n          h               Harbour mode (default)",
            "\n          i               enable support for HB_INLINE",
+           "\n          I               enable support for HB_INLINE in PP",
            "\n          r               runtime settings enabled",
            "\n          s               string as bytes array enabled",
            "\n          x               extended xbase mode",

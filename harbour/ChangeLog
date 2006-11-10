@@ -8,6 +8,63 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/bin/hb-mkslib.sh
+    + added ${L_USR} to gcc parameters
+
+  * harbour/source/pp/ppgen.c
+    ! fixed minor typo in printf() format
+
+2006-11-10 02:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+    * restored support for old hb_inLine() syntax
+    + added support for hb_inLine() to new PP. It can be enabled by
+      -kI compiler switch. It's disabled by default.
+      The new hb_inLine{} syntax is:
+         [ <exp> ] hb_inLine [ ( [<params,...>] ) ] { [ <c_code> ] } [ <exp> ]
+      <c_code> can contain new line characters.
+      Nested hb_inLine{} in <params,...> is not supported. If you think
+      it's important I can add it in few lines.
+      This version does not break any valid Clipper syntax, hb_inLine is
+      not reserved word and hb_inLine can be repeated many times in the
+      same line. F.e. this code can be properly preprocessed and compied if
+      you disable in compiler old hb_inLine() syntax and enable the new one
+      by -kcI Harbour compiler switch:
+
+         proc main()
+         local hb_inLine := " (var) "
+         ? hb_inLine{ hb_retc("inLine"); } + hb_inLine(" parameter ") {
+              hb_retc( hb_parc( 1 ) );
+              } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
+           hb_inLine() + "{}"
+         return
+         function hb_inLine()
+         return " func() "
+
+      So from user point of view this version have real "inline" syntax.
+      To be clear: I'm not a fun of any C inline extensions. They works
+      only when we use .c code as compiler backend so the code which uses
+      them cannot be used in .hrb files and any other format we will add
+      in the future which do not support later C code compilation. F.e it
+      will not work in compiler integrated with HVM or with .NET
+      Anyhow if someone finds it useful then I think that it should be
+      properly implemented. This is the reason I added the new version.
+      The old one I left only for backward compatibility. It breaks any
+      code which uses hb_inLine keyword can be used only once in a line
+      and it does not have "inline" so IMHO it should not be enabled by
+      default.
+      I would like to hear your opinion about default compiler switches:
+         1. should we disable both: hb_inLine() and hb_inLine {}
+         2. should we disable hb_inLine() and enable hb_inLine {}
+         3. should we disable hb_inLine {} and enable hb_inLine()
+         4. should we enable both: hb_inLine() and hb_inLine {}
+
   + harbour/tests/hbinline.prg
     + added test code for new hb_inLine{} syntax
 

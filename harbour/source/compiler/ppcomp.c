@@ -151,10 +151,41 @@ static void hb_pp_PragmaDump( char * pBuffer, ULONG ulSize, int iLine )
    hb_comp_iLine = iSaveLine;
 }
 
+static void hb_pp_hb_inLine( char * szFunc, char * pBuffer, ULONG ulSize, int iLine )
+{
+   int iSaveLine = hb_comp_iLine;
+
+   /* I do not know why but compiler expect line number 1 bigger then
+      real line number */
+   hb_comp_iLine = iLine + 1;
+
+   if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
+   {
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+   }
+   else
+   {
+      PINLINE pInline = hb_compInlineAdd( hb_compIdentifierNew( szFunc, TRUE ) );
+      pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
+      memcpy( pInline->pCode, pBuffer, ulSize );
+      pBuffer[ ulSize ] = '\0';
+      pInline->lPCodeSize = ulSize;
+      /*
+       * inform genc.c that hb_inLine function was generated to
+       * generate #include ... with additional header files
+       */
+      hb_comp_cInlineID = '1';
+   }
+   hb_comp_iLine = iSaveLine;
+}
+
 static BOOL hb_pp_CompilerSwitch( const char * szSwitch, int iValue )
 {
    BOOL fError = FALSE;
    int i = strlen( szSwitch );
+
+   if( i > 1 && szSwitch[ i - 1 ] - '0' == iValue )
+      --i;
 
    if( i == 1 )
    {
@@ -214,22 +245,7 @@ static BOOL hb_pp_CompilerSwitch( const char * szSwitch, int iValue )
    }
    else if( i == 2 )
    {
-      if( szSwitch[ 1 ] - '0' == iValue && iValue >= 0 && iValue <= 3 &&
-          ( szSwitch[ 0 ] == 'w' || szSwitch[ 0 ] == 'W' ) &&
-          ( iValue >= 0 && iValue <= 3 ) )
-         hb_comp_iWarnings = iValue;
-      else if( hb_stricmp( szSwitch, "es" ) == 0 &&
-               ( iValue == HB_EXITLEVEL_DEFAULT ||
-                 iValue == HB_EXITLEVEL_SETEXIT ||
-                 iValue == HB_EXITLEVEL_DELTARGET ) )
-         hb_comp_iExitLevel = iValue;
-      else
-         fError = TRUE;
-   }
-   else if( i == 3 )
-   {
-      if( szSwitch[ 2 ] - '0' == iValue &&
-          hb_strnicmp( szSwitch, "es", 2 ) == 0 &&
+      if( hb_strnicmp( szSwitch, "es", 2 ) == 0 &&
           ( iValue == HB_EXITLEVEL_DEFAULT ||
             iValue == HB_EXITLEVEL_SETEXIT ||
             iValue == HB_EXITLEVEL_DELTARGET ) )
@@ -264,7 +280,8 @@ void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] )
       hb_pp_init( s_pp_state, szStdCh, fQuiet,
                   hb_pp_IncludeOpen, hb_pp_IncludeClose,
                   hb_pp_ErrorGen, NULL, hb_pp_PragmaDump,
-                  hb_pp_CompilerSwitch );
+                  HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE_PP ) ?
+                  hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
 
       /* Add /D and /undef: command line or envvar defines */
       hb_compChkDefines( argc, argv );
@@ -322,7 +339,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
 
-   hb_pp_StreamBlock = 0;
    hb_pp_NestedLiteralString = FALSE;
    hb_pp_LiteralEscSeq = FALSE;
 
@@ -348,6 +364,9 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
          if( handl_o == hb_comp_yyppo )
             hb_comp_yyppo = NULL;
       }
+
+      if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
+         hb_pp_setStream( s_pp_state, HB_PP_STREAM_INLINE_C );
 
       szLine = hb_pp_nextLine( s_pp_state, &ulLen );
       /* I do not know why but compiler expect line number 1 bigger then

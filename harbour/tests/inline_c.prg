@@ -36,25 +36,24 @@ FUNCTION aTokens( cLine, cDelimiter )
       HB_INLINE( aTokens, cLine, Asc( cDelimiter ) )
       {  // Note including {
          PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-         PHB_ITEM pLine  = hb_param( 2, HB_IT_STRING );
-         char cDelimiter = (char) hb_parni(3);
-         size_t i, iOffset = 0, iIndex = 1;
+         char cDelimiter = (char) hb_parni(3), * szLine = hb_parc( 2 );
+         size_t i, len = hb_parclen( 2 ), iOffset = 0, iIndex = 1;
 
          /* Comment including { */
-         for( i = 0; i < pLine->item.asString.length; i++ )
+         for( i = 0; i < len; i++ )
          {
-            if( pLine->item.asString.value[i] == cDelimiter )
+            if( szLine[i] == cDelimiter )
             {
                hb_arraySize( pArray, iIndex );
-               hb_storclen( pLine->item.asString.value + iOffset, i - iOffset, 1, iIndex );
+               hb_storclen( szLine + iOffset, i - iOffset, 1, iIndex );
                iOffset = i + 1;
                iIndex++;
             }
          }
-         if( iOffset < pLine->item.asString.length - 1 )
+         if( iOffset < len - 1 )
          {
             hb_arraySize( pArray, iIndex );
-            hb_storclen( pLine->item.asString.value + iOffset, pLine->item.asString.length - iOffset, 1, iIndex );
+            hb_storclen( szLine + iOffset, len - iOffset, 1, iIndex );
          }
       }
 

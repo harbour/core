@@ -520,6 +520,28 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
 
    pState->iSpaces = 0;
    pState->iLastType = HB_PP_TOKEN_TYPE( type );
+
+   if( pState->iInLineState != HB_PP_INLINE_OFF )
+   {
+      if( pState->iInLineState == HB_PP_INLINE_START &&
+          pState->iLastType == HB_PP_TOKEN_LEFT_PB )
+      {
+         pState->iInLineState = HB_PP_INLINE_PARAM;
+         pState->iInLineBraces = 1;
+      }
+      else if( pState->iInLineState == HB_PP_INLINE_PARAM )
+      {
+         if( pState->iLastType == HB_PP_TOKEN_LEFT_PB )
+            pState->iInLineBraces++;
+         else if( pState->iLastType == HB_PP_TOKEN_RIGHT_PB )
+         {
+            if( --pState->iInLineBraces == 0 )
+               pState->iInLineState = HB_PP_INLINE_BODY;
+         }
+      }
+      else
+         pState->iInLineState = HB_PP_INLINE_OFF;
+   }
 }
 
 static void hb_pp_tokenAddStreamFunc( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
@@ -702,16 +724,20 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
 
 static void hb_pp_getLine( PHB_PP_STATE pState )
 {
+   PHB_PP_TOKEN * pInLinePtr;
    char * pBuffer, ch;
    ULONG ulLen, ul;
    BOOL fDump = FALSE;
 
+   pInLinePtr = NULL;
    hb_pp_tokenListFree( &pState->pFile->pTokenList );
    pState->pNextTokenPtr = &pState->pFile->pTokenList;
    pState->pFile->iTokens = pState->iSpaces = 0;
    pState->fCanNextLine = pState->fDirective = FALSE;
    pState->fNewStatement = TRUE;
    pState->iLastType = HB_PP_TOKEN_NUL;
+   pState->iInLineState = HB_PP_INLINE_OFF;
+   pState->iInLineBraces = 0;
 
    do
    {
@@ -757,6 +783,83 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                         comment ends */
                      pState->iSpaces = 0;
                      ++ul;
+                  }
+               }
+            }
+            else if( pState->iStreamDump == HB_PP_STREAM_INLINE_C )
+            {
+               if( ulLen > 0 )
+               {
+                  ++ul;
+                  switch( pState->iInLineState )
+                  {
+                     case HB_PP_INLINE_QUOTE1:
+                        if( ch == '\'' )
+                           pState->iInLineState = HB_PP_INLINE_OFF;
+                        else if( ch == '\\' && ulLen > 1 )
+                           ++ul;
+                        break;
+
+                     case HB_PP_INLINE_QUOTE2:
+                        if( ch == '"' )
+                           pState->iInLineState = HB_PP_INLINE_OFF;
+                        else if( ch == '\\' && ulLen > 1 )
+                           ++ul;
+                        break;
+
+                     case HB_PP_INLINE_COMMENT:
+                        if( ulLen > 1 && ch == '*' && pBuffer[ 1 ] == '/' )
+                           pState->iInLineState = HB_PP_INLINE_OFF;
+                        break;
+
+                     default:
+                        if( ch == '\'' )
+                           pState->iInLineState = HB_PP_INLINE_QUOTE1;
+                        else if( ch == '"' )
+                           pState->iInLineState = HB_PP_INLINE_QUOTE2;
+                        else if( ch == '{' )
+                           ++pState->iInLineBraces;
+                        else if( ch == '}' )
+                        {
+                           if( --pState->iInLineBraces == 0 )
+                              pState->iStreamDump = HB_PP_STREAM_OFF;
+                        }
+                        else if( ulLen > 1 )
+                        {
+                           if( ch == '/' && pBuffer[ 1 ] == '*' )
+                              pState->iInLineState = HB_PP_INLINE_COMMENT;
+                           else if( ch == '/' && pBuffer[ 1 ] == '/' )
+                              ulLen = ul = 0;
+                        }
+                  }
+               }
+               if( ul )
+                  hb_membufAddData( pState->pStreamBuffer, pBuffer, ul );
+
+               if( ulLen == ul || pState->iStreamDump == HB_PP_STREAM_OFF )
+               {
+                  hb_membufAddCh( pState->pStreamBuffer, '\n' );
+                  if( pState->iStreamDump == HB_PP_STREAM_OFF )
+                  {
+                     if( pState->pInLineFunc )
+                     {
+                        char szFunc[ 24 ];
+                        sprintf( szFunc, "HB_INLINE_%03d", ++pState->iInLineCount );
+                        if( pInLinePtr && * pInLinePtr )
+                           hb_pp_tokenSetValue( *pInLinePtr, szFunc, strlen( szFunc ) );
+                        pState->pInLineFunc( szFunc, 
+                                    hb_membufPtr( pState->pStreamBuffer ),
+                                    hb_membufLen( pState->pStreamBuffer ),
+                                    pState->iDumpLine );
+                     }
+                     else
+                     {
+                        hb_pp_tokenAddNext( pState,
+                                   hb_membufPtr( pState->pStreamBuffer ),
+                                   hb_membufLen( pState->pStreamBuffer ),
+                                   HB_PP_TOKEN_TEXT );
+                     }
+                     hb_membufFlush( pState->pStreamBuffer );
                   }
                }
             }
@@ -890,18 +993,26 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 #else
             if( pState->fNewStatement &&
 #endif
-                ul == 4 && hb_stricmp( "NOTE", pBuffer ) == 0 )
+                ul == 4 && hb_strnicmp( "NOTE", pBuffer, 4 ) == 0 )
             {
                /* strip the rest of line */
                ul = ulLen;
             }
-            /* TODO: hb_inline support, it should be here to not preprocess
-                     the C code, anyhow so far we were living with broken
-                     implementation so probably we can leave with it yet some
-                     time longer */
             else
             {
-               hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_KEYWORD );
+               if( pState->pInLineFunc &&
+                   pState->iInLineState == HB_PP_INLINE_OFF &&
+                   ul == 9 && hb_strnicmp( "hb_inLine", pBuffer, 9 ) == 0 )
+               {
+                  if( pState->fCanNextLine )
+                     hb_pp_tokenAddCmdSep( pState );
+                  pInLinePtr = pState->pNextTokenPtr;
+                  hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_KEYWORD );
+                  pState->iInLineState = HB_PP_INLINE_START;
+                  pState->iInLineBraces = 0;
+               }
+               else
+                  hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_KEYWORD );
             }
          }
          /* This is Clipper incompatible token - such characters are illegal
@@ -986,6 +1097,23 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ++ul;
             hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_MACRO );
          }
+         else if( ch == '{' && !pState->fCanNextLine &&
+                  ( pState->iInLineState == HB_PP_INLINE_BODY ||
+                    pState->iInLineState == HB_PP_INLINE_START ) )
+         {
+            if( pState->iInLineState == HB_PP_INLINE_START )
+            {
+               hb_pp_tokenAddNext( pState, "(", 1, HB_PP_TOKEN_LEFT_PB | HB_PP_TOKEN_STATIC );
+               hb_pp_tokenAddNext( pState, ")", 1, HB_PP_TOKEN_RIGHT_PB | HB_PP_TOKEN_STATIC );
+            }
+            pState->iInLineState = HB_PP_INLINE_OFF;
+            pState->iStreamDump = HB_PP_STREAM_INLINE_C;
+            pState->iDumpLine = pState->pFile->iCurrentLine - 1;
+            if( pState->pStreamBuffer )
+               hb_membufFlush( pState->pStreamBuffer );
+            else
+               pState->pStreamBuffer = hb_membufNew();
+         }
          else
          {
             PHB_PP_OPERATOR pOperator = hb_pp_operatorFind( pState, pBuffer, ulLen );
@@ -1022,6 +1150,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                                          pState->pFile->fEof )
          hb_pp_error( pState, 'E', HB_PP_ERR_MISSING_ENDTEXT, NULL );
    }
+
    if( pState->pFile->iTokens != 0 )
    {
       hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
@@ -1273,7 +1402,7 @@ static PHB_PP_RULE hb_pp_defineFind( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 {
    PHB_PP_RULE pRule = pState->pDefinitions;
 
-   /* TODO: create binary tree or hash table - the #define keyword token has
+   /* TODO% create binary tree or hash table - the #define keyword token has
             to be unique so it's not necessary to keep the stack list,
             it will increase the speed when there is a lot of #define values */
 
@@ -1741,17 +1870,17 @@ static PHB_PP_TOKEN hb_pp_pragmaGetSwitch( PHB_PP_TOKEN pToken, int * piValue )
       {
          if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MINUS )
          {
-            pValue = pToken->pNext;
+            pValue = pToken;
             * piValue = 0;
          }
          else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PLUS )
          {
-            pValue = pToken->pNext;
+            pValue = pToken;
             * piValue = 1;
          }
          else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_NUMBER )
          {
-            pValue = pToken->pNext;
+            pValue = pToken;
             * piValue = atoi( pValue->value );
          }
       }
@@ -3908,15 +4037,15 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
          pToken = pState->pFile->pTokenList;
          fDirect = HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_DIRECTIVE;
          pToken = pToken->pNext;
-         if( !pToken || HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_KEYWORD )
+         if( !pToken )
          {
             fError = TRUE;
          }
 #ifndef HB_C52_STRICT
          /* Harbour PP extension */
-         else if( fDirect && pState->pFile->iCurrentLine &&
+         else if( fDirect && pState->pFile->iCurrentLine == 1 &&
                   HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_NOT &&
-                  pToken->spaces == 0 )
+                  pToken->spaces == 0 && pState->pFile->pTokenList->spaces == 0 )
          {
             /* ignore first line if it begins with "#!"
                minor extension which allow to use the same source code
@@ -3925,6 +4054,10 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
                add support for direct execution compiled .prg files */
          }
 #endif
+         else if( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_KEYWORD )
+         {
+            fError = TRUE;
+         }
          else if( hb_pp_tokenValueCmp( pToken, "IFDEF", HB_PP_CMP_DBASE ) )
          {
             hb_pp_condCompile( pState, pToken->pNext, TRUE );
@@ -4269,13 +4402,46 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
 }
 
 /*
+ * set stream mode
+ */
+void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
+{
+   pState->fError = FALSE;
+   switch( iMode )
+   {
+      case HB_PP_STREAM_DUMP_C:
+         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
+         if( ! pState->pDumpBuffer )
+            pState->pDumpBuffer = hb_membufNew();
+         pState->iStreamDump = iMode;
+         break;
+
+      case HB_PP_STREAM_INLINE_C:
+         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
+      case HB_PP_STREAM_CLIPPER:
+      case HB_PP_STREAM_PRG:
+      case HB_PP_STREAM_C:
+         if( ! pState->pStreamBuffer )
+            pState->pStreamBuffer = hb_membufNew();
+      case HB_PP_STREAM_OFF:
+      case HB_PP_STREAM_COMMENT:
+         pState->iStreamDump = iMode;
+         break;
+
+      default:
+         pState->fError = TRUE;
+   }
+}
+
+/*
  * initialize PP context
  */
 void 
 hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
-                 PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_SWITCH_FUNC pSwitchFunc )
+                 PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
+                 PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
    pState->fQuiet      = fQuiet;
    pState->pOpenFunc   = pOpenFunc;
@@ -4283,6 +4449,7 @@ hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
    pState->pErrorFunc  = pErrorFunc;
    pState->pDispFunc   = pDispFunc;
    pState->pDumpFunc   = pDumpFunc;
+   pState->pInLineFunc = pInLineFunc;
    pState->pSwitchFunc = pSwitchFunc;
 
    if( !szStdCh )
