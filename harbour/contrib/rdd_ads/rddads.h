@@ -55,6 +55,9 @@
 #endif
 
 #include "hbapirdd.h"
+#if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
+   #define WIN32
+#endif
 #include "ace.h"
 
 HB_EXTERN_BEGIN

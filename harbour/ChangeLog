@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-11-12 09:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+     * Fixed pptable.c dependencies
+
+2006-11-10 17:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/rddads.h
+    + added #define WIN32 when HB_OS_WIN_32 is set to not force -DWIN32
+      compiler switch
+
+  * harbour/source/pp/ppcore.c
     * cleaned BCC warnings
 
   * harbour/source/rdd/dbfcdx/dbfcdx1.c

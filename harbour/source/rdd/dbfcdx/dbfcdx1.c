@@ -5979,8 +5979,9 @@ static ERRCODE hb_cdxDBOIKeyGoto( CDXAREAP pArea, LPCDXTAG pTag, ULONG ulKeyNo, 
    {
       if ( fLogOpt && fFilters && pArea->dbfi.itmCobExpr )
       {
-         SELF_GOTOP( ( AREAP ) pArea );
-         retval = SELF_SKIP( ( AREAP ) pArea, ulKeyCnt );
+         retval = SELF_GOTOP( ( AREAP ) pArea );
+         if( retval == SUCCESS && --ulKeyCnt )
+            retval = SELF_SKIP( ( AREAP ) pArea, ulKeyCnt );
       }
       else
       {

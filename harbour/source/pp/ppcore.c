@@ -1324,7 +1324,6 @@ static BOOL hb_pp_patternAddResult( PHB_PP_RULE pRule, USHORT marker,
       while( * pResultPtr )
          pResultPtr = &( * pResultPtr )->pNext;
       * pResultPtr = pResult;
-      ++pMarker;
       return TRUE;
    }
 
@@ -1715,7 +1714,7 @@ static BOOL hb_pp_pragmaStream( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    BOOL fError = FALSE;
 
    pToken = hb_pp_streamFuncGet( pToken, &pState->pFuncOut );
-   pToken = hb_pp_streamFuncGet( pToken, &pState->pFuncEnd );
+   hb_pp_streamFuncGet( pToken, &pState->pFuncEnd );
 
    return fError;
 }
@@ -4436,8 +4435,7 @@ void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
 /*
  * initialize PP context
  */
-void 
-hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
+void hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
@@ -4466,7 +4464,6 @@ hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
       if( !pFileName->szExtension )
           pFileName->szExtension = ".ch";
       hb_fsFNameMerge( szFileName, pFileName );
-      szStdCh = szFileName;
       hb_xfree( pFileName );
 
       pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, pState->pOpenFunc );
