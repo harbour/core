@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * cleaned BCC warnings
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed ordKeyGoto() positioning when active filter is set and no
+      controlling order
+
+2006-11-10 12:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
     + added ${L_USR} to gcc parameters
 

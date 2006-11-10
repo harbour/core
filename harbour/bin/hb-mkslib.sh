@@ -128,7 +128,7 @@ else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} && \
+    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi

@@ -93,14 +93,14 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
       if( pToken->pNext )
          fprintf( fout, "   { %s +%2d", szName, iToken + iOptional + 1 );
       else
-         fprintf( fout, "   { NULL%*.s", i, "" );
+         fprintf( fout, "   { NULL%*s", i, "" );
       if( iOptional )
          fprintf( fout, ", %s +%2d", szName, iToken + 1 );
       else
-         fprintf( fout, ", NULL%*.s", i, "" );
+         fprintf( fout, ", NULL%*s", i, "" );
 
       i = 16 - strlen( pToken->value );
-      fprintf( fout, ", \"%s\", %*.s %2d,%2d, 0x%04x, %d }%s\n",
+      fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %d }%s\n",
                pToken->value,
                i < 0 ? 0 : i, "",
                pToken->len, pToken->spaces,
