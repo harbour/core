@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+         __PREPROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+            preprocess given code and return result
+
+      User can create more then one PP context and then use each of them
+      separately. Any modification in one context have no effect in other.
 
 2006-11-12 09:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * harbour/makefile.bc
