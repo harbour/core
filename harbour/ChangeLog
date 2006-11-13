@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      we may want to break Clipper compatibility and allow compilation
+      of such code.
+
+  * harbour/doc/pp.txt
+    * updated documentation for the above modification
+
+2006-11-13 11:22 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * TODO
     - Remove one TOFIX item with was fixed (PP of a long line).
     + Add 3 TOFIX items (these are all that I know of).
 

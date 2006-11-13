@@ -213,25 +213,6 @@ Status...: Open.
 ***
 
 Assign to: <nobody>
-Detail...: When compiling PRG with a very long line (12300 characters)
-           gives the following CodeGuard warning:
-
-         ,- ( changlog 2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak )
-         | Access overrun: Attempt to access 1 byte(s) at NNN+12288,
-         | that is at offset 0+12288 in block NNN which is only 12288
-         | bytes long. Call Tree:
-         |  source\pp\PPCORE.C#3899
-         |  source\pp\PPCOMP.C#147
-         |  source\\compiler\\harbour.l#1792
-         |  obj\\b32\\harbourl.c#4546
-         |  obj\\b32\\harbourl.c#4380
-         |  obj\b32\harboury.c#3667
-         `-
-Status...: Open.
-
-***
-
-Assign to: <nobody>
 Detail...: An error in the evaluated macro cause memory leak.
 
            --tt2.prg--
@@ -250,17 +231,10 @@ Detail...: An error in the evaluated macro cause memory leak.
 
            the program runs, and on exit it gives following CodeGuard
            warning:
-
-         ,- ( changlog 2006-08-23 23:12 UTC+0200 Przemyslaw Czerpak )
+         ,-
          | Resource leak: The memory block was never freed
          | The memory block [size: 10 bytes] was allocated with malloc
-         | Call Tree:
-         |   source\vm\FM.C#233
-         |   source\common\HBSTR.C#122
-         |   source\\macro\\macro.l#321
-         |   obj\b32\macroy.c#1790
-         |   obj\b32\macroy.c#3799
-         |   source\vm\MACRO.C#153
+         | NOTE: Ask me if you need the exact call tree. [Chen]
          `-
            This is simpler example of the same problem:
 
@@ -270,5 +244,67 @@ Detail...: An error in the evaluated macro cause memory leak.
            return
 
 Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: The Borland CodeGuard warn about Access overrun in some
+           of the console IO functions, it appears to be a fault in
+           the way CG works when passing a static char * to a BYTE *
+           function. Once the console IO functions would be optimozed,
+           please take a look at this too.
+
+           --tt21.prg--
+           proc main()
+           SET PRINTER TO devtest
+           SET DEVICE TO PRINTER
+           DepPos( 1, 1 )
+           return
+           ------------
+
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Access in freed memory compiling a macro array item.
+
+           --tt23.prg--
+           proc Main()
+              LOCAL   GetList := {}
+              PRIVATE cMacro := "cEarly", cEarly := {"Early"}
+              @ 12,10 GET &cMacro[1]
+              READ
+           RETURN
+           ------------
+
+           When compiling, Harbour gives the following CodeGuard warning:
+         ,-
+         | Access in freed memory: Attempt to access 2 byte(s) at NNNNNNNN+32
+         | The memory block [size: 40 bytes] was allocated with malloc
+         | NOTE: Ask me if you need the exact call tree. [Chen]
+         `-
+
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Resource leak while compiling the following:
+
+           --tt25.prg--
+           FUNCTION ()x
+           ------------
+
+           When compiling, Harbour gives the following CodeGuard warning:
+         ,-
+         | Resource leak: The memory block was never freed
+         | The memory block [size: 40 bytes] was allocated with malloc
+         | NOTE: Ask me if you need the exact call tree. [Chen]
+         `-
+
+Status...: Open.
+
+***
 
 =======================================================================
