@@ -306,8 +306,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MODEQ || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EXPEQ || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQUAL || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_LEFT_SB )
+                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQ )
 
 #define HB_PP_TOKEN_ISNEUTRAL(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC )

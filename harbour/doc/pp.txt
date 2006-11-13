@@ -71,9 +71,22 @@ making in last days.
    This implicates one important thing: PP has to read whole physical
    line from file, then convert it to tokens and if necessary (';' is the
    last token after preprocessing) read next line(s).
-   If something is not recognized by preprocessor as string token then it
-   should never become string token. It doesn't matter how it will be
-   preprocessed later, f.e.:
+   There is also one exception to the above. When Clipper PP finds '['
+   character and previous token is keyword or macro then it always checks
+   for closing bracket and if in scanned text it will find odd numbers
+   of other text delimiters ('") then ignore the type of previous token
+   and always creates strings. This behavior breaks some valid code. F.e.
+   Clipper cannot compile code like:
+      x := a[ f("]") ] $ "test"
+   or:
+      x := a[ f( "'" ) ] $ "test"
+   If it find closing ']' without odd number of other text delimiters
+   then it creates differ token then for other opening square brackets '['
+   open_array_index which has differ meaning in later preprocessing
+   and allow to convert group of tokens inside to string by compiler.
+   If something is not recognized by preprocessor as string token or
+   open_array_index then it should never become string token. It doesn't
+   matter how it will be preprocessed later, f.e.:
       #define O1 [
       #define O2 ]
       ? O1 b O2
@@ -81,17 +94,25 @@ making in last days.
       QOUT( [ b ] )
    not:
       QOUT( " b " )
+   but:
+      #command A <x> => ? <x>
+      A [ b ]
+   generate also:
+      QOUT( [ b ] )
+   and in this case Clipper compiler makes conversion to string.
    It means that only at initial line preprocessing preprocessor decides
-   what is or isn't string token. We can change it if you think it's
-   important by adding final preprocessor pass which will create string
-   items from the group of tokens when the initial conditions above are
-   passed. In fact with new PP such operation will be done still existing
+   what can or cannot be string token. I think that we do not have to
+   exactly replicate this behavior and we should allow string conversion
+   also when '[' is not marked as open_array_index in final preprocessor
+   pass which will create string token from the group of tokens inside '['
+   and ']' tokens using the initial stringify condition which checks type
+   of token before.
+   In fact with new PP such operation will be done by still existing
    lexer after preprocessing and converting the preprocessed token to string
    which is then once again divided into tokens by FLEX or SIMPLEX. It's
    redundant and because neither FLEX nor SIMPLEX are MT safe and both
    have limitations like maximum line size we will not be able to fully
    benefit from the new code (read below about it).
-
 
 4. # directives tokenization.
    In #define directive strings in result pattern cannot be quoted by [].
@@ -101,16 +122,15 @@ making in last days.
    Quoting by [] in #[x]command and #[x]translate match pattern
    produce optional clause. The left square bracket can be quoted by \ to
    disable this special meaning and in such case Clipper PP
-   generates array tokens but they are not bound with keyword before
+   generates array tokens but they are not marked as open_array_index
    when in the code they are. It causes that in code like
       #command A B\[C] => QOUT("A B[C]")
       A B[C]
-   A B[C] is not preprocessed because in #command the B[C] are not
-   bound and PP cannot find matching tokens. Probably B has some
-   additional flag or differ code which means that it's array ID.
-   Something like macro tokens. Anyhow it's possible to create passing
-   match pattern which will use []. It's enough to create matching pattern
-   for the code which have [] not translated to string and not bound
+   A B[C] is not preprocessed because in #command match pattern '[' is
+   not open_array_index and PP cannot find matching tokens.
+   Anyhow it's possible to create passing match pattern which will use [].
+   It's enough to create matching pattern for the code which have [] not
+   translated to string and not bound
    with keyword. As I wrote above it will be possible when '[' is after
    one of the closing brackets: ')', '}' or ']', f.e.:
       #command A }\[C] => QOUT("A }[C]")
@@ -208,10 +228,11 @@ making in last days.
    The groped expression list is also ended when end of line is reach or ';'
    token. The ',' and closing brackets ), ], } tokens end the expression when
    bracket counter is 0.
-   Some operators like :=, +=, -=, /=, *=, %=, ^=, **=, =, ==, [ cannot match
-   regular match marker as first token, seems that they are marked as needing
-   left side expression. Of course closing tokens ',', ';', ')', '}', ']'
-   also cannot regular match marker as first token.
+   Some operators like :=, +=, -=, /=, *=, %=, ^=, **=, =, ==, and [ if
+   is not marked as open_array_index cannot match regular match marker as
+   first token, seems that they are marked as needing left side expression.
+   Of course closing tokens ',', ';', ')', '}', ']' also cannot match
+   regular match marker as first token.
    Tokens are equal only if after preprocessing they have the same type and
    the same value. It means that "!=" is equal to "<>" but not equal with "#"
    There is exception to this rule in restricted match marker and macro token

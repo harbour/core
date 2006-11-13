@@ -617,16 +617,26 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
    }
 }
 
-static BOOL hb_pp_hasChar( char ch, char * pBuffer, ULONG ulLen, ULONG * pulAt )
+static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen, ULONG * pulAt )
 {
    ULONG ul = 0;
+   BOOL fQ1 = FALSE, fQ2 = FALSE;
+
+   /*
+    * TODO: this is Clipper compatible but it breaks valid code so we may
+    *       think about changing this condition in the future.
+    */
    while( ul < ulLen )
    {
-      if( pBuffer[ ul ] == ch )
+      if( pBuffer[ ul ] == ']' )
       {
          * pulAt = ul;
-         return TRUE;
+         return fQuote || fQ1 || fQ2;
       }
+      else if( pBuffer[ ul ] == '\'' )
+         fQ1 = !fQ1;
+      else if( pBuffer[ ul ] == '"' )
+         fQ2 = !fQ2;
       ++ul;
    }
    return FALSE;
@@ -927,10 +937,9 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ++ul;
          }
          else if( ch == '[' && !pState->fDirective &&
-                  /* Clipper supports quoting by [] for 1-st token in the line */
-                  ( pState->fCanNextLine ||
-                    HB_PP_TOKEN_CANQUOTE( pState->iLastType ) ) &&
-                  hb_pp_hasChar( ']', pBuffer + 1, ulLen - 1, &ul ) )
+                  hb_pp_canQuote( pState->fCanNextLine ||
+                                  HB_PP_TOKEN_CANQUOTE( pState->iLastType ),
+                                  pBuffer + 1, ulLen - 1, &ul ) )
          {
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul, HB_PP_TOKEN_STRING );
             ul += 2;
@@ -2896,7 +2905,6 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
       }
       else if( mode != HB_PP_CMP_ADDR &&
                ( HB_PP_TOKEN_CLOSE_BR( curtype ) ||
-                 ( prevtype == 0 && HB_PP_TOKEN_NEEDLEFT( curtype ) ) ||
                  ( ! HB_PP_TOKEN_CANJOIN( curtype ) &&
                    ! HB_PP_TOKEN_CANJOIN( prevtype ) ) ||
                  ( HB_PP_TOKEN_NEEDRIGHT( prevtype ) &&
@@ -2926,6 +2934,24 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
    return fMatch;
 }
 
+static BOOL hb_pp_tokenCanStartExp( PHB_PP_TOKEN pToken )
+{
+   if( !HB_PP_TOKEN_NEEDLEFT( pToken->type ) )
+   {
+      if( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_LEFT_SB )
+         return TRUE;
+
+      pToken = pToken->pNext;
+      while( !HB_PP_TOKEN_ISEOC( pToken ) )
+      {
+         if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_SB )
+            return TRUE;
+         pToken = pToken->pNext;
+      }
+   }
+   return FALSE;
+}
+
 static BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
                               PHB_PP_TOKEN pStop, USHORT mode )
 {
@@ -2935,30 +2961,36 @@ static BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
    type = HB_PP_TOKEN_TYPE( pMatch->type );
    if( type == HB_PP_MMARKER_REGULAR )
    {
-      if( !pStop )
+      if( hb_pp_tokenCanStartExp( * pTokenPtr ) )
       {
-         pStop = pMatch->pNext;
-         while( pStop && HB_PP_TOKEN_TYPE( pStop->type ) == HB_PP_MMARKER_OPTIONAL )
-            pStop = pStop->pNext;
+         if( !pStop )
+         {
+            pStop = pMatch->pNext;
+            while( pStop && HB_PP_TOKEN_TYPE( pStop->type ) == HB_PP_MMARKER_OPTIONAL )
+               pStop = pStop->pNext;
+         }
+         fMatch = hb_pp_tokenSkipExp( pTokenPtr, pStop, mode, NULL );
       }
-      fMatch = hb_pp_tokenSkipExp( pTokenPtr, pStop, mode, NULL );
    }
    else if( type == HB_PP_MMARKER_LIST )
    {
-      BOOL fStop = FALSE;
-      if( !pStop )
+      if( hb_pp_tokenCanStartExp( * pTokenPtr ) )
       {
-         pStop = pMatch->pNext;
-         while( pStop && HB_PP_TOKEN_TYPE( pStop->type ) == HB_PP_MMARKER_OPTIONAL )
-            pStop = pStop->pNext;
+         BOOL fStop = FALSE;
+         if( !pStop )
+         {
+            pStop = pMatch->pNext;
+            while( pStop && HB_PP_TOKEN_TYPE( pStop->type ) == HB_PP_MMARKER_OPTIONAL )
+               pStop = pStop->pNext;
+         }
+         do
+         {
+            if( ! hb_pp_tokenSkipExp( pTokenPtr, pStop, mode, &fStop ) )
+               break;
+            fMatch = TRUE;
+         }
+         while( !fStop );
       }
-      do
-      {
-         if( ! hb_pp_tokenSkipExp( pTokenPtr, pStop, mode, &fStop ) )
-            break;
-         fMatch = TRUE;
-      }
-      while( !fStop );
    }
    else if( type == HB_PP_MMARKER_RESTRICT )
    {
@@ -3049,7 +3081,7 @@ static BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
       if( HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) != HB_PP_TOKEN_RIGHT_PB &&
           HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) != HB_PP_TOKEN_RIGHT_SB &&
           HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) != HB_PP_TOKEN_COMMA &&
-          !HB_PP_TOKEN_NEEDLEFT( ( * pTokenPtr )->type ) )
+          hb_pp_tokenCanStartExp( * pTokenPtr ) )
       {
          if( HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) == HB_PP_TOKEN_LEFT_PB )
          {

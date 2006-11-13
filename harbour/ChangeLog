@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * indenting and tab to spaces conversion
+
+  * harbour/source/compiler/ppcomp.c
+    ! fixed typo which cased that dump buffer was not ended
+      with \0 character
+
+2006-11-13 20:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    ! fixed the problem reported by Enrico in code like:
+         IF ["] $ var
+      Unfortuantelly this fix also breaks some valid expressions like:
+         x := a[ f("]") ] $ "test"
+         x := a[ f( "'" ) ] $ "test"
+      what is also Clipper compatible anyhow I think that in the future
       we may want to break Clipper compatibility and allow compilation
       of such code.
 
