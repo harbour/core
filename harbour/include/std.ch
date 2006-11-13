@@ -656,4 +656,17 @@
 
 #endif /* HB_COMPAT_C53 */
 
+
+#ifdef HB_EXTENSION
+   #command SET FILECASE <(x)>            => Set( _SET_FILECASE, <(x)> )
+   #command SET FILECASE (<x>)            => Set( _SET_FILECASE, <x> )
+   #command SET DIRCASE <(x)>             => Set( _SET_DIRCASE, <(x)> )
+   #command SET DIRCASE (<x>)             => Set( _SET_DIRCASE, <x> )
+   #command SET DIRSEPARATOR <x>          => Set( _SET_DIRSEPARATOR, <x> )
+   #command SET DBFLOCKSCHEME TO <x>      => Set( _SET_DBFLOCKSCHEME, <x> )
+   #command SET DBFLOCKSCHEME TO          => Set( _SET_DBFLOCKSCHEME, 0 )
+   #command SET HARDCOMMIT <x:ON,OFF,&>   => Set( _SET_HARDCOMMIT, <(x)> )
+   #command SET HARDCOMMIT (<x>)          => Set( _SET_HARDCOMMIT, <x> )
+#endif
+
 #endif /* HB_STD_CH_ */

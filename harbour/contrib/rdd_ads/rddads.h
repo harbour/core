@@ -167,6 +167,17 @@ extern ADSAREAP hb_rddGetADSWorkAreaPointer( void );
    extern char * hb_adsOemToAnsi( char * pcString, ULONG ulLen );
    extern char * hb_adsAnsiToOem( char * pcString, ULONG ulLen );
    void hb_adsOemAnsiFree( char * pcString );
+
+   UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE  hObj,
+                                         UNSIGNED8  *pucFldName,
+                                         UNSIGNED8  *pucBuf,
+                                         UNSIGNED32 ulLen );
+
+   UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE  hTbl,
+                                         UNSIGNED8  *pucFldName,
+                                         UNSIGNED8  *pucBuf,
+                                         UNSIGNED32 *pulLen );
+
 #else
 #  define hb_adsOemToAnsi( s, l )     ( s )
 #  define hb_adsAnsiToOem( s, l )     ( s )
@@ -175,13 +186,3 @@ extern ADSAREAP hb_rddGetADSWorkAreaPointer( void );
 
 
 HB_EXTERN_END
-
-UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE  hObj,
-                                      UNSIGNED8  *pucFldName,
-                                      UNSIGNED8  *pucBuf,
-                                      UNSIGNED32 ulLen );
-
-UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE  hTbl,
-                                      UNSIGNED8  *pucFldName,
-                                      UNSIGNED8  *pucBuf,
-                                      UNSIGNED32 *pulLen );

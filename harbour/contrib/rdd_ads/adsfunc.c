@@ -2073,7 +2073,6 @@ HB_FUNC( ADSCONNECT60 )
    if( ulRetVal == AE_SUCCESS )
    {
       // determine if is a DataDict
-      UNSIGNED16 usType;
       PHB_ITEM  piByRefHandle = hb_param( 6, HB_IT_BYREF );
 
       adsConnectHandle = hConnect;       // set new default
@@ -2095,7 +2094,7 @@ HB_FUNC( ADSDDCREATE )
 {
    UNSIGNED32 ulRetVal;
    UNSIGNED8  *pucDictionaryPath = (UNSIGNED8 *) hb_parcx( 1 );
-   UNSIGNED16 usEncrypt          = (UNSIGNED16) ISNUM( 2 ) ? hb_parnl( 2 ) : (ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) ;
+   UNSIGNED16 usEncrypt          = (UNSIGNED16) ( ISNUM( 2 ) ? hb_parnl( 2 ) : ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) );
    UNSIGNED8  *pucDescription    = ISCHAR( 3 ) ? (UNSIGNED8 *) hb_parcx( 3 ) : NULL;
    ADSHANDLE hConnect = 0;
 
@@ -2268,12 +2267,13 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
 
    if (ulRetVal == AE_SUCCESS )
    {
-      hb_storc(pvProperty, 3 );
+      hb_storc( (char *) pvProperty, 3 );
    }
    else
    {
       hb_storc( "", 3 );
    }
+
    hb_retl( ulRetVal == AE_SUCCESS );
 }
 

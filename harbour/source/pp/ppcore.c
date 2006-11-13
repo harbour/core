@@ -2915,7 +2915,7 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
                                                       HB_PP_TOKEN_RIGHT_CB ) );
          ++iBraces;
       }
-      if( curtype != HB_PP_TOKEN_INC && curtype != HB_PP_TOKEN_DEC )
+      if( !HB_PP_TOKEN_ISNEUTRAL( curtype ) )
          prevtype = curtype;
       pToken = pToken->pNext;
    }

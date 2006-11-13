@@ -84,64 +84,90 @@ static void hb_pp_Disp( const char * szMessage )
    HB_SYMBOL_UNUSED( szMessage );
 }
 
+static PHB_PP_STATE hb_pp_stateNew( char * szStdCh )
+{
+   PHB_PP_STATE pState = hb_pp_new();
+
+   if( pState )
+   {
+      hb_pp_init( pState, szStdCh, TRUE, NULL, NULL,
+                  hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
+      
+      if( ! s_pp_state )
+         s_pp_state = pState;
+   }
+
+   return pState;
+}
+
+static void hb_pp_stateFree( PHB_PP_STATE pState )
+{
+   if( pState )
+   {
+      if( pState == s_pp_state )
+         s_pp_state = NULL;
+      hb_pp_free( pState );
+   }
+}
+
+
 static PHB_PP_STATE hb_pp_stateParam( int * piParam )
 {
-   PHB_ITEM pItem = hb_parptr( 1 );
+   PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_parptr( 1 );
 
-   if( pItem )
+   if( pState )
    {
       * piParam = 2;
-      return ( PHB_PP_STATE ) hb_itemGetPtr( pItem );
+      return pState;
    }
    else
    {
       * piParam = 1;
       if( !s_pp_state )
-      {
-         s_pp_state = hb_pp_new();
-         hb_pp_init( s_pp_state, NULL, TRUE, NULL, NULL,
-                     hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
-      }
-      return s_pp_state;
+         return hb_pp_stateNew( NULL );
+      else
+         return s_pp_state;
    }
 }
 
+/*
+ * initialize new PP context and return pointer to it.
+ * __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] )
+ * when <cStdChFile> is empty string ("") then no default rules are used
+ * only the dynamically created #defines like __HARBOUR__, __DATE__, __TIME__
+ */
 HB_FUNC( __PP_INIT )
 {
    PHB_PP_STATE pState;
-   int iParam;
 
-   pState = hb_pp_stateParam( &iParam );
+   hb_pp_stateFree( s_pp_state );
+   pState = hb_pp_stateNew( hb_parc( 2 ) );
    if( pState )
    {
-      hb_pp_reset( pState );
-
-      if( ISCHAR( iParam ) )
-         hb_pp_addSearchPath( pState, hb_parc( iParam ), TRUE );
-
+      if( ISCHAR( 1 ) )
+         hb_pp_addSearchPath( pState, hb_parc( 1 ), TRUE );
       hb_retptr( pState );
    }
    else
       hb_ret();
 }
 
+/*
+ * free PP context.
+ * __PP_FREE( <pPP> )
+ */
 HB_FUNC( __PP_FREE )
 {
-   PHB_ITEM pItem = hb_parptr( 1 );
-
-   if( pItem )
-   {
-      PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_itemGetPtr( pItem );
-      if( pState )
-         hb_pp_free( pState );
-   }
-   else if( s_pp_state )
-   {
-      hb_pp_free( s_pp_state );
-      s_pp_state = NULL;
-   }
+   if( hb_pcount() == 0 )
+      hb_pp_stateFree( s_pp_state );
+   else
+      hb_pp_stateFree( ( PHB_PP_STATE ) hb_parptr( 1 ) );
 }
 
+/*
+ * add new (or replace previous) include paths.
+ * __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] )
+ */
 HB_FUNC( __PP_PATH )
 {
    PHB_PP_STATE pState;
@@ -154,7 +180,27 @@ HB_FUNC( __PP_PATH )
    }
 }
 
-HB_FUNC( __PPADDRULE )
+/*
+ * reset the PP context (remove all rules added by user or preprocessed code)
+ * __PP_RESET( <pPP> )
+ */
+HB_FUNC( __PP_RESET )
+{
+   PHB_PP_STATE pState;
+   int iParam;
+
+   pState = hb_pp_stateParam( &iParam );
+   if( pState )
+   {
+      hb_pp_reset( pState );
+   }
+}
+
+/*
+ * preprocess and execute new preprocessor directive
+ * __PPADDRULE( <pPP>, <cDirective> )
+ */
+HB_FUNC( __PP_ADDRULE )
 {
    PHB_PP_STATE pState;
    int iParam;
@@ -176,10 +222,9 @@ HB_FUNC( __PPADDRULE )
 
       if( szText && ulLen && szText[ 0 ] == '#' )
       {
-         hb_pp_reset( pState );
          hb_pp_parseLine( pState, szText, &ulLen );
 
-         /* probably for #included files parsing the old code was making
+         /* probably for parsing #included files the old code was making
             sth like that */
          do
          {
@@ -195,6 +240,10 @@ HB_FUNC( __PPADDRULE )
    hb_retl( FALSE );
 }
 
+/*
+ * preprocess given code and return result
+ * __PREPROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+ */
 HB_FUNC( __PREPROCESS )
 {
    PHB_PP_STATE pState;

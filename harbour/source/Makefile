@@ -11,12 +11,12 @@ ifeq ($(HB_COMPILER),bcc16)
 # is necessary to use the DJGPP Harbour compiler.
 
 DIRS=\
-	codepage \
 	common \
 	pp \
 	rtl \
 	vm \
 	macro \
+	codepage \
 	lang \
 	rdd \
 	debug \
@@ -24,13 +24,13 @@ DIRS=\
 else
 
 DIRS=\
-	codepage \
 	common \
 	pp \
 	compiler \
 	rtl \
 	vm \
 	macro \
+	codepage \
 	lang \
 	rdd \
 	debug \

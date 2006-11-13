@@ -4273,7 +4273,7 @@ static BOOL hb_cdxTagKeyDel( LPCDXTAG pTag, LPCDXKEY pKey )
 }
 
 /*
- * Go to the first visiable record in Tag
+ * Go to the first visible record in Tag
  */
 static void hb_cdxTagGoTop( LPCDXTAG pTag )
 {
@@ -4307,7 +4307,7 @@ static void hb_cdxTagGoTop( LPCDXTAG pTag )
 }
 
 /*
- * Go to the last visiable record in Tag
+ * Go to the last visible record in Tag
  */
 static void hb_cdxTagGoBottom( LPCDXTAG pTag )
 {

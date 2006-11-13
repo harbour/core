@@ -8,6 +8,60 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    - Remove one TOFIX item with was fixed (PP of a long line).
+    + Add 3 TOFIX items (these are all that I know of).
+
+  + doc/pp.txt
+    * PP description by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+
+2006-11-13 03:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    + pass GTK paths to GCC in hb* scripts when -xbgtk switch is used
+
+  * harbour/contrib/rdd_ads/rddads.h
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * indenting and casting
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * cleaned typos in comments
+
+  + harbour/tests/speedtst.prg
+    + added speed test
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    + added HB_PP_TOKEN_ISNEUTRAL() macro to make code a little bit more
+      readable
+
+  * harbour/include/std.ch
+    + added some missing old PP commands
+
+  * harbour/source/Makefile
+    * minor modification in order of compiled libraries
+
+  * harbour/source/pp/pplib.c
+    * changed the PP interface for .prg code.
+      Now following functions are supported:
+
+         __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] ) -> <pPP>
+            initialize new PP context and return pointer to it.
+            when <cStdChFile> is empty string ("") then no default rules are
+            used  only the dynamically created #defines like __HARBOUR__,
+            __DATE__, __TIME__, __PLATFORM__*
+
+         __PP_FREE( <pPP> )
+            free PP context.
+
+         __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] )
+            add new (or replace previous) include paths.
+
+         __PP_RESET( <pPP> )
+            reset the PP context (remove all rules added by user or
+            preprocessed code)
+
+         __PP_ADDRULE( <pPP>, <cDirective> )
+            preprocess and execute new preprocessor directive
+
          __PREPROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
             preprocess given code and return result
 

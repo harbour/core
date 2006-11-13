@@ -309,6 +309,9 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQ || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_LEFT_SB )
 
+#define HB_PP_TOKEN_ISNEUTRAL(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
+                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC )
+
 /* I do not want to replicate exactly Clipper PP behavior and check if
    expression is valid.
    it's wrong and causes that potentially valid expressions are not
