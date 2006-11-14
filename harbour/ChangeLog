@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      be done in core PP code and include/hbexpr*.c files to not reduce
+      the speed. Now using HB_PP_MACROLEX for sure will have to cause
+      speed reduction in macro compiler. But if we make necessary
+      modifications then we should keep at least the same speed or
       probably reach noticeable better results.
 
 2006-11-14 16:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
