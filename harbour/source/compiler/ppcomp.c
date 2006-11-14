@@ -145,7 +145,7 @@ static void hb_pp_PragmaDump( char * pBuffer, ULONG ulSize, int iLine )
    pInline = hb_compInlineAdd( NULL );
    pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
    memcpy( pInline->pCode, pBuffer, ulSize );
-   pBuffer[ ulSize ] = '\0';
+   pInline->pCode[ ulSize ] = '\0';
    pInline->lPCodeSize = ulSize;
 
    hb_comp_iLine = iSaveLine;
@@ -168,7 +168,7 @@ static void hb_pp_hb_inLine( char * szFunc, char * pBuffer, ULONG ulSize, int iL
       PINLINE pInline = hb_compInlineAdd( hb_compIdentifierNew( szFunc, TRUE ) );
       pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
       memcpy( pInline->pCode, pBuffer, ulSize );
-      pBuffer[ ulSize ] = '\0';
+      pInline->pCode[ ulSize ] = '\0';
       pInline->lPCodeSize = ulSize;
       /*
        * inform genc.c that hb_inLine function was generated to

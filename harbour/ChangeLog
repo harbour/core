@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      probably reach noticeable better results.
+
+2006-11-14 16:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * common.mak
+    * Reverted a change of 2006-10-04 09:02
+
+2006-11-14 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    * removed to resolved problems from TODO/TOFIX list
+
+  * harbour/include/hbexprb.c
     * indenting and tab to spaces conversion
 
   * harbour/source/compiler/ppcomp.c

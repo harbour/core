@@ -388,40 +388,40 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
          {
-	         char *szDupl;
-	         BOOL bUseTextSubst;
-	         BOOL bValidMacro;
-	    
-	         szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
+            char *szDupl;
+            BOOL bUseTextSubst;
+            BOOL bValidMacro;
+
+            szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
 #if ! defined( HB_MACRO_SUPPORT )
             if( hb_comp_bTextSubst )
             {
 #endif	
-	         bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM );
-            if( bUseTextSubst )
-            {
-               if( HB_SUPPORT_HARBOUR ) 
+               bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM );
+               if( bUseTextSubst )
                {
+                  if( HB_SUPPORT_HARBOUR ) 
+                  {
         	         if( bValidMacro )
-                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                        HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                     else
+                     {
+                        hb_compErrorMacro( pSelf->value.asString.string );
+                     }
+                  }
                   else
                   {
-                     hb_compErrorMacro( pSelf->value.asString.string );
+                     /* Clipper always generates macro substitution pcode
+                      * even if it is not a valid expression
+                      */
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                     if( !bValidMacro )
+                     {
+                        hb_compErrorMacro( pSelf->value.asString.string );
+                     }
                   }
                }
-               else
-               {
-                  /* Clipper always generates macro substitution pcode
-                  * even if it is not a valid expression
-                  */
-                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-                  if( !bValidMacro )
-                  {
-                     hb_compErrorMacro( pSelf->value.asString.string );
-                  }
-               }
-            }
 #if ! defined( HB_MACRO_SUPPORT )
             }
 #endif
@@ -862,7 +862,7 @@ static HB_EXPR_FUNC( hb_compExprUseVarRef )
       case HB_EA_DELETE:
          /* NOTE: variable name should be released if macro compilation */
 #if defined( HB_MACRO_SUPPORT )
-             HB_XFREE( pSelf->value.asSymbol );
+         HB_XFREE( pSelf->value.asSymbol );
 #endif
          break;
    }
@@ -897,7 +897,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef )
       case HB_EA_DELETE:
          /* NOTE: function name should be released if macro compilation */
 #if defined( HB_MACRO_SUPPORT )
-             HB_XFREE( pSelf->value.asSymbol );
+         HB_XFREE( pSelf->value.asSymbol );
 #endif
          break;
    }
@@ -1579,14 +1579,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 #if ! defined( HB_MACRO_SUPPORT )
 
                   BOOL bUseTextSubst;
-		            char *szDupl;
-		            szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
+                  char *szDupl;
+                  szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
 
-		            if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
-		            {
+                  if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
+                  {
                      hb_compErrorMacro( pSelf->value.asMacro.szMacro );
-		            }
-		            hb_xfree( szDupl );
+                  }
+                  hb_xfree( szDupl );
 #endif                  
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
@@ -1599,18 +1599,15 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOP );
 
                /* Always add add byte to pcode indicating requested macro compiler flag. */
-               #if defined( HB_MACRO_SUPPORT )
-                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
-               #else
-                  HB_EXPR_GENPCODE1( hb_compGenPData1,
-                                     (
-                                       ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-                                       ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-                                       ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-                                       ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
-                                     )
-                                   );
-               #endif
+#if defined( HB_MACRO_SUPPORT )
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+#else
+               HB_EXPR_GENPCODE1( hb_compGenPData1,
+                      ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                      ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                      ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                      ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
+#endif
             }
          }
          break;
@@ -2064,7 +2061,7 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
          break;
       case HB_EA_DELETE:
 #if defined( HB_MACRO_SUPPORT )
-             HB_XFREE( pSelf->value.asSymbol );
+         HB_XFREE( pSelf->value.asSymbol );
 #endif
          break;
    }
@@ -2088,7 +2085,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunName )
       case HB_EA_STATEMENT:
       case HB_EA_DELETE:
 #if defined( HB_MACRO_SUPPORT )
-             HB_XFREE( pSelf->value.asSymbol );
+         HB_XFREE( pSelf->value.asSymbol );
 #endif
          break;
    }
@@ -2183,7 +2180,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
       case HB_EA_DELETE:
          /* NOTE: variable name should be released if macro compilation */
 #if defined( HB_MACRO_SUPPORT )
-             HB_XFREE( pSelf->value.asSymbol );
+         HB_XFREE( pSelf->value.asSymbol );
 #endif
          break;
    }

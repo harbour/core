@@ -37,20 +37,6 @@ Status...: Open.
 ***
 
 Assign to: <nobody>
-Detail...: Add missing preprocessor directives from CL5.3:
-           REINDEX: missing [NOOPTIMIZE]
-           SEEK: missing [LAST]
-           SET DESCENDING OFF
-           SET DESCENDING ON
-           SET SCOPE TO
-           SET SCOPETOP TO
-           SET SCOPEBOTTOM TO
-           SET VIDEOMODE TO
-Status...: Open.
-
-***
-
-Assign to: <nobody>
 Detail...: Add missing Clipper virtual memory functions.
 Status...: Open.
 
@@ -179,14 +165,6 @@ Status...: Open.
                   Harbour Project To-Fix list
 
 =======================================================================
-
-Assign to: Przemek
-Detail...: Fix setting private base for code blocks created by macro
-           compiler. Maybe it should be bound with making CLEAR MEMORY
-           safe.
-Status...: Open.
-
-***
 
 Assign to: Ryszard
 Detail...: SQLRDD.
