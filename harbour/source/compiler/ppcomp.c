@@ -277,11 +277,23 @@ void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] )
    s_pp_state = hb_pp_new();
    if( s_pp_state )
    {
-      hb_pp_init( s_pp_state, szStdCh, fQuiet,
+      hb_pp_init( s_pp_state, fQuiet,
                   hb_pp_IncludeOpen, hb_pp_IncludeClose,
                   hb_pp_ErrorGen, NULL, hb_pp_PragmaDump,
                   HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE_PP ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
+
+      if( !szStdCh )
+         hb_pp_setStdRules( s_pp_state );
+      else if( *szStdCh )
+         hb_pp_readRules( s_pp_state, szStdCh );
+      else
+      {
+         printf( "Standard command definitions excluded.\n" );
+         fflush( stdout );
+      }
+
+      hb_pp_initDynDefines( s_pp_state );
 
       /* Add /D and /undef: command line or envvar defines */
       hb_compChkDefines( argc, argv );

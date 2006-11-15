@@ -1009,9 +1009,27 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             }
             else
             {
-               if( pState->pInLineFunc &&
-                   pState->iInLineState == HB_PP_INLINE_OFF &&
-                   ul == 9 && hb_strnicmp( "hb_inLine", pBuffer, 9 ) == 0 )
+               if( ul < ulLen && pBuffer[ ul ] == '&' )
+               {
+                  /*
+                   * [<keyword>][&<keyword>[.[<nextidchars>]]]+ is a single
+                   * token in Clipper and this fact is important in later
+                   * preprocessing so we have to replicate it
+                   */
+                  while( ulLen - ul > 1 && pBuffer[ ul ] == '&' &&
+                         HB_PP_ISFIRSTIDCHAR( pBuffer[ ul + 1 ] ) )
+                  {
+                     while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+                     if( ul < ulLen && pBuffer[ ul ] == '.' )
+                        while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+                  }
+                  if( ul < ulLen && pBuffer[ ul ] == '&' )
+                     ++ul;
+                  hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_MACROTEXT );
+               }
+               else if( pState->pInLineFunc &&
+                        pState->iInLineState == HB_PP_INLINE_OFF &&
+                        ul == 9 && hb_strnicmp( "hb_inLine", pBuffer, 9 ) == 0 )
                {
                   if( pState->fCanNextLine )
                      hb_pp_tokenAddCmdSep( pState );
@@ -1090,21 +1108,28 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( ch == '&' && ulLen > 1 && HB_PP_ISFIRSTIDCHAR( pBuffer[ 1 ] ) )
          {
+            int iParts = 0;
             /*
-             * [&<keyword>[.[<nextidchars>]]]+ is a single token in Clipper
+             * [<keyword>][&<keyword>[.[<nextidchars>]]]+ is a single token in Clipper
              * and this fact is important in later preprocessing so we have
              * to replicate it
              */
             while( ulLen - ul > 1 && pBuffer[ ul ] == '&' &&
                    HB_PP_ISFIRSTIDCHAR( pBuffer[ ul + 1 ] ) )
             {
+               ++iParts;
                while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
                if( ul < ulLen && pBuffer[ ul ] == '.' )
-                  while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+                  while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) )
+                     ++iParts;
             }
             if( ul < ulLen && pBuffer[ ul ] == '&' )
+            {
+               ++iParts;
                ++ul;
-            hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_MACRO );
+            }
+            hb_pp_tokenAddNext( pState, pBuffer, ul, iParts == 1 ?
+                                HB_PP_TOKEN_MACROVAR : HB_PP_TOKEN_MACROTEXT );
          }
          else if( ch == '{' && !pState->fCanNextLine &&
                   ( pState->iInLineState == HB_PP_INLINE_BODY ||
@@ -3013,12 +3038,14 @@ static BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
          else if( HB_PP_TOKEN_TYPE( pRestrict->type ) == HB_PP_TOKEN_AMPERSAND &&
                   ( !pRestrict->pNext ||
                     HB_PP_TOKEN_TYPE( pRestrict->pNext->type ) == HB_PP_TOKEN_COMMA ) &&
-                  ( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACRO ||
+                  ( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
+                    HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT ||
                     ( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_AMPERSAND &&
                       pToken->pNext &&
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ) ) )
          {
-            if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACRO )
+            if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
+                HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT )
             {
                * pTokenPtr = pToken->pNext;
             }
@@ -3288,16 +3315,14 @@ static PHB_PP_TOKEN * hb_pp_matchResultLstAdd( PHB_PP_STATE pState,
             if( !fBlock )
                hb_pp_tokenAdd( &pResultPtr, "}", 1, 0, HB_PP_TOKEN_RIGHT_CB | HB_PP_TOKEN_STATIC );
          }
-         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACRO &&
+         else if( ( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
+                    HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT ) &&
                   ( fStop ? pToken->pNext : pToken->pNext->pNext ) == pNext )
          {
-            USHORT len = 0;
-            while( ++len < pToken->len &&
-                   HB_PP_ISNEXTIDCHAR( pToken->value[ len ] ) );
-            if( len == pToken->len ||
-                ( len == pToken->len - 1 && pToken->value[ len ] == '.' ) )
+            if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR )
             {
-               hb_pp_tokenAdd( &pResultPtr, pToken->value + 1, len - 1,
+               hb_pp_tokenAdd( &pResultPtr, pToken->value + 1, pToken->len -
+                               ( pToken->value[ pToken->len - 1 ] == '.' ? 2 : 1 ),
                                fFirst ? spaces : pToken->spaces,
                                HB_PP_TOKEN_KEYWORD );
             }
@@ -4290,7 +4315,132 @@ static PHB_PP_TOKEN hb_pp_getToken( PHB_PP_STATE pState )
    return pState->pTokenOut;
 }
 
-static void hb_pp_initDynDefines( PHB_PP_STATE pState )
+/*
+ * exported functions
+ */
+
+/*
+ * internal function to initialize predefined PP rules
+ */
+void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
+                      const HB_PP_DEFRULE pDefRules[], int iDefRules )
+{
+   PHB_PP_DEFRULE pDefRule;
+   PHB_PP_MARKER pMarkers;
+   PHB_PP_RULE pRule;
+
+   hb_pp_ruleListFree( pRulesPtr );
+   * piRules = iDefRules;
+
+   while( --iDefRules >= 0 )
+   {
+      pDefRule = ( PHB_PP_DEFRULE ) pDefRules + iDefRules;
+      if( pDefRule->markers > 0 )
+      {
+         USHORT marker;
+         ULONG ulBit;
+
+         pMarkers = ( PHB_PP_MARKER ) hb_xgrab( pDefRule->markers * sizeof( HB_PP_MARKER ) );
+         memset( pMarkers, '\0', pDefRule->markers * sizeof( HB_PP_MARKER ) );
+         for( marker = 0, ulBit = 1; marker < pDefRule->markers; ++marker, ulBit <<= 1 )
+         {
+            if( pDefRule->repeatbits & ulBit )
+               pMarkers[ marker ].canrepeat = TRUE;
+         }
+      }
+      else
+         pMarkers = NULL;
+      pRule = hb_pp_ruleNew( pDefRule->pMatch, pDefRule->pResult,
+                             pDefRule->mode, pDefRule->markers, pMarkers );
+      pRule->pPrev = * pRulesPtr;
+      * pRulesPtr = pRule;
+   }
+}
+
+
+/*
+ * create new PP context
+ */
+PHB_PP_STATE hb_pp_new( void )
+{
+   return hb_pp_stateNew();
+}
+
+/*
+ * free PP context
+ */
+void hb_pp_free( PHB_PP_STATE pState )
+{
+   hb_pp_stateFree( pState );
+}
+
+/*
+ * initialize PP context
+ */
+void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
+                 PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
+                 PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
+                 PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
+                 PHB_PP_SWITCH_FUNC pSwitchFunc )
+{
+   pState->fQuiet      = fQuiet;
+   pState->pOpenFunc   = pOpenFunc;
+   pState->pCloseFunc  = pCloseFunc;
+   pState->pErrorFunc  = pErrorFunc;
+   pState->pDispFunc   = pDispFunc;
+   pState->pDumpFunc   = pDumpFunc;
+   pState->pInLineFunc = pInLineFunc;
+   pState->pSwitchFunc = pSwitchFunc;
+}
+
+/*
+ * reset PP context, used for multiple .prg file compilation
+ * with DO ... or *.clp files
+ */
+void hb_pp_reset( PHB_PP_STATE pState )
+{
+   pState->fError = FALSE;
+
+   hb_pp_InFileFree( pState );
+   hb_pp_OutFileFree( pState );
+
+   hb_pp_ruleNonStdFree( &pState->pDefinitions );
+   hb_pp_ruleNonStdFree( &pState->pTranslations );
+   hb_pp_ruleNonStdFree( &pState->pCommands );
+}
+
+/*
+ * add search path for included files
+ */
+void hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace )
+{
+   if( fReplace && pState->pIncludePath )
+   {
+      hb_fsFreeSearchPath( pState->pIncludePath );
+      pState->pIncludePath = NULL;
+   }
+
+   if( szPath && * szPath )
+   {
+      hb_fsAddSearchPath( szPath, &pState->pIncludePath );
+   }
+}
+
+/*
+ * mark current rules as standard ones
+ */
+void hb_pp_setStdBase( PHB_PP_STATE pState )
+{
+   pState->fError = FALSE;
+   hb_pp_ruleSetStd( pState->pDefinitions );
+   hb_pp_ruleSetStd( pState->pTranslations );
+   hb_pp_ruleSetStd( pState->pCommands );
+}
+
+/*
+ * initialize dynamic definitions
+ */
+void hb_pp_initDynDefines( PHB_PP_STATE pState )
 {
    char szDefine[ 65 ];
    char szResult[ 65 ];
@@ -4369,198 +4519,37 @@ static void hb_pp_initDynDefines( PHB_PP_STATE pState )
 #endif
 }
 
-
 /*
- * exported functions
+ * read preprocess rules from file
  */
-
-/*
- * internal function to initialize predefined PP rules
- */
-void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
-                      const HB_PP_DEFRULE pDefRules[], int iDefRules )
+void hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile )
 {
-   PHB_PP_DEFRULE pDefRule;
-   PHB_PP_MARKER pMarkers;
-   PHB_PP_RULE pRule;
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   PHB_PP_FILE pFile = pState->pFile;
+   PHB_FNAME pFileName;
 
-   hb_pp_ruleListFree( pRulesPtr );
-   * piRules = iDefRules;
+   pFileName = hb_fsFNameSplit( szRulesFile );
+   if( !pFileName->szExtension )
+       pFileName->szExtension = ".ch";
+   hb_fsFNameMerge( szFileName, pFileName );
+   hb_xfree( pFileName );
 
-   while( --iDefRules >= 0 )
+   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, pState->pOpenFunc );
+   if( !pState->pFile )
    {
-      pDefRule = ( PHB_PP_DEFRULE ) pDefRules + iDefRules;
-      if( pDefRule->markers > 0 )
-      {
-         USHORT marker;
-         ULONG ulBit;
-
-         pMarkers = ( PHB_PP_MARKER ) hb_xgrab( pDefRule->markers * sizeof( HB_PP_MARKER ) );
-         memset( pMarkers, '\0', pDefRule->markers * sizeof( HB_PP_MARKER ) );
-         for( marker = 0, ulBit = 1; marker < pDefRule->markers; ++marker, ulBit <<= 1 )
-         {
-            if( pDefRule->repeatbits & ulBit )
-               pMarkers[ marker ].canrepeat = TRUE;
-         }
-      }
-      else
-         pMarkers = NULL;
-      pRule = hb_pp_ruleNew( pDefRule->pMatch, pDefRule->pResult,
-                             pDefRule->mode, pDefRule->markers, pMarkers );
-      pRule->pPrev = * pRulesPtr;
-      * pRulesPtr = pRule;
+      pState->pFile = pFile;
+      hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName );
    }
-}
-
-
-/*
- * create new PP context
- */
-PHB_PP_STATE hb_pp_new( void )
-{
-   return hb_pp_stateNew();
-}
-
-/*
- * mark current rules as standard ones
- */
-void hb_pp_setStdBase( PHB_PP_STATE pState )
-{
-   pState->fError = FALSE;
-   hb_pp_ruleSetStd( pState->pDefinitions );
-   hb_pp_ruleSetStd( pState->pTranslations );
-   hb_pp_ruleSetStd( pState->pCommands );
-}
-
-/*
- * set stream mode
- */
-void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
-{
-   pState->fError = FALSE;
-   switch( iMode )
+   else
    {
-      case HB_PP_STREAM_DUMP_C:
-         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
-         if( ! pState->pDumpBuffer )
-            pState->pDumpBuffer = hb_membufNew();
-         pState->iStreamDump = iMode;
-         break;
-
-      case HB_PP_STREAM_INLINE_C:
-         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
-      case HB_PP_STREAM_CLIPPER:
-      case HB_PP_STREAM_PRG:
-      case HB_PP_STREAM_C:
-         if( ! pState->pStreamBuffer )
-            pState->pStreamBuffer = hb_membufNew();
-      case HB_PP_STREAM_OFF:
-      case HB_PP_STREAM_COMMENT:
-         pState->iStreamDump = iMode;
-         break;
-
-      default:
-         pState->fError = TRUE;
-   }
-}
-
-/*
- * initialize PP context
- */
-void hb_pp_init( PHB_PP_STATE pState, char * szStdCh, BOOL fQuiet,
-                 PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
-                 PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
-                 PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
-                 PHB_PP_SWITCH_FUNC pSwitchFunc )
-{
-   pState->fQuiet      = fQuiet;
-   pState->pOpenFunc   = pOpenFunc;
-   pState->pCloseFunc  = pCloseFunc;
-   pState->pErrorFunc  = pErrorFunc;
-   pState->pDispFunc   = pDispFunc;
-   pState->pDumpFunc   = pDumpFunc;
-   pState->pInLineFunc = pInLineFunc;
-   pState->pSwitchFunc = pSwitchFunc;
-
-   if( !szStdCh )
-   {
-      hb_pp_initStaticRules( pState );
-   }
-   else if( * szStdCh )
-   {
-      char szFileName[ _POSIX_PATH_MAX + 1 ];
-      PHB_PP_FILE pFile = pState->pFile;
-      PHB_FNAME pFileName;
-
-      pFileName = hb_fsFNameSplit( szStdCh );
-      if( !pFileName->szExtension )
-          pFileName->szExtension = ".ch";
-      hb_fsFNameMerge( szFileName, pFileName );
-      hb_xfree( pFileName );
-
-      pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, pState->pOpenFunc );
-      if( !pState->pFile )
+      pState->iFiles++;
+      while( hb_pp_getToken( pState ) );
+      if( pState->pFile )
       {
-         pState->pFile = pFile;
-         hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName );
-      }
-      else
-      {
-         pState->iFiles++;
-         while( hb_pp_getToken( pState ) );
-         if( pState->pFile )
-            hb_pp_FileFree( pState->pFile, pState->pCloseFunc );
-         pState->pFile = pFile;
+         hb_pp_FileFree( pState->pFile, pState->pCloseFunc );
          pState->iFiles--;
       }
-   }
-   else if( !pState->fQuiet )
-   {
-      hb_pp_disp( pState, "Standard command definitions excluded.\n" );
-   }
-
-   hb_pp_initDynDefines( pState );
-   hb_pp_setStdBase( pState );
-}
-
-/*
- * free PP context
- */
-void hb_pp_free( PHB_PP_STATE pState )
-{
-   hb_pp_stateFree( pState );
-}
-
-/*
- * reset PP context, used for multiple .prg file compilation
- * with DO ... or *.clp files
- */
-void hb_pp_reset( PHB_PP_STATE pState )
-{
-   pState->fError = FALSE;
-
-   hb_pp_InFileFree( pState );
-   hb_pp_OutFileFree( pState );
-
-   hb_pp_ruleNonStdFree( &pState->pDefinitions );
-   hb_pp_ruleNonStdFree( &pState->pTranslations );
-   hb_pp_ruleNonStdFree( &pState->pCommands );
-}
-
-/*
- * add search path for included files
- */
-void hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace )
-{
-   if( fReplace && pState->pIncludePath )
-   {
-      hb_fsFreeSearchPath( pState->pIncludePath );
-      pState->pIncludePath = NULL;
-   }
-
-   if( szPath && * szPath )
-   {
-      hb_fsAddSearchPath( szPath, &pState->pIncludePath );
+      pState->pFile = pFile;
    }
 }
 
@@ -4636,6 +4625,98 @@ int hb_pp_line( PHB_PP_STATE pState )
 char * hb_pp_outFileName( PHB_PP_STATE pState )
 {
    return pState->szOutFileName;
+}
+
+/*
+ * add new define value
+ */
+void hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue )
+{
+   PHB_PP_TOKEN pMatch, pResult, pToken;
+   PHB_PP_FILE pFile;
+
+   pState->fError = FALSE;
+
+   pFile = hb_pp_FileBufNew( szDefName, strlen( szDefName ) );
+   pFile->pPrev = pState->pFile;
+   pState->pFile = pFile;
+   pState->iFiles++;
+   hb_pp_getLine( pState );
+   pMatch = pState->pFile->pTokenList;
+   pState->pFile->pTokenList = NULL;
+   pToken = hb_pp_tokenResultEnd( &pMatch, TRUE );
+   hb_pp_tokenListFree( &pToken );
+
+   if( szDefValue && !pState->fError )
+   {
+      pFile->pLineBuf = szDefValue;
+      pFile->ulLineBufLen = strlen( szDefValue );
+      hb_pp_getLine( pState );
+      pResult = pState->pFile->pTokenList;
+      pState->pFile->pTokenList = NULL;
+      pToken = hb_pp_tokenResultEnd( &pResult, TRUE );
+      hb_pp_tokenListFree( &pToken );
+   }
+   else
+      pResult = NULL;
+
+   if( pState->fError || !pMatch )
+   {
+      hb_pp_tokenListFree( &pMatch );
+      hb_pp_tokenListFree( &pResult );
+   }   
+   else
+   {
+      hb_pp_defineAdd( pState, HB_PP_CMP_CASE, 0, NULL, pMatch, pResult );
+   }
+   pState->pFile = pFile->pPrev;
+   hb_pp_FileFree( pFile, NULL );
+   pState->iFiles--;
+}
+
+/*
+ * delete define value
+ */
+void hb_pp_delDefine( PHB_PP_STATE pState, char * szDefName )
+{
+   PHB_PP_TOKEN pToken;
+
+   pToken = hb_pp_tokenNew( szDefName, strlen( szDefName ),
+                            0, HB_PP_TOKEN_KEYWORD );
+   hb_pp_defineDel( pState, pToken );
+   hb_pp_tokenFree( pToken );
+}
+
+/*
+ * set stream mode
+ */
+void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
+{
+   pState->fError = FALSE;
+   switch( iMode )
+   {
+      case HB_PP_STREAM_DUMP_C:
+         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
+         if( ! pState->pDumpBuffer )
+            pState->pDumpBuffer = hb_membufNew();
+         pState->iStreamDump = iMode;
+         break;
+
+      case HB_PP_STREAM_INLINE_C:
+         pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
+      case HB_PP_STREAM_CLIPPER:
+      case HB_PP_STREAM_PRG:
+      case HB_PP_STREAM_C:
+         if( ! pState->pStreamBuffer )
+            pState->pStreamBuffer = hb_membufNew();
+      case HB_PP_STREAM_OFF:
+      case HB_PP_STREAM_COMMENT:
+         pState->iStreamDump = iMode;
+         break;
+
+      default:
+         pState->fError = TRUE;
+   }
 }
 
 /*
@@ -4767,61 +4848,63 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen )
 }
 
 /*
- * add new define value
+ * create new PP context for macro compiler
  */
-void hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue )
+PHB_PP_STATE hb_pp_lexNew( char * pMacroString, ULONG ulLen )
 {
-   PHB_PP_TOKEN pMatch, pResult, pToken;
-   PHB_PP_FILE pFile;
+   PHB_PP_STATE pState = hb_pp_new();
 
-   pState->fError = FALSE;
-
-   pFile = hb_pp_FileBufNew( szDefName, strlen( szDefName ) );
-   pFile->pPrev = pState->pFile;
-   pState->pFile = pFile;
-   pState->iFiles++;
+   pState->fQuiet = TRUE;
+   pState->pFile = hb_pp_FileBufNew( pMacroString, ulLen );
    hb_pp_getLine( pState );
-   pMatch = pState->pFile->pTokenList;
+   pState->pTokenOut = pState->pFile->pTokenList;
    pState->pFile->pTokenList = NULL;
-   pToken = hb_pp_tokenResultEnd( &pMatch, TRUE );
-   hb_pp_tokenListFree( &pToken );
-
-   if( szDefValue && !pState->fError )
+   hb_pp_FileFree( pState->pFile, NULL );
+   pState->pFile = NULL;
+   if( pState->fError )
    {
-      pFile->pLineBuf = szDefValue;
-      pFile->ulLineBufLen = strlen( szDefValue );
-      hb_pp_getLine( pState );
-      pResult = pState->pFile->pTokenList;
-      pState->pFile->pTokenList = NULL;
-      pToken = hb_pp_tokenResultEnd( &pResult, TRUE );
-      hb_pp_tokenListFree( &pToken );
+      hb_pp_free( pState );
+      pState = NULL;
    }
    else
-      pResult = NULL;
+      pState->pNextTokenPtr = &pState->pTokenOut;
 
-   if( pState->fError || !pMatch )
-   {
-      hb_pp_tokenListFree( &pMatch );
-      hb_pp_tokenListFree( &pResult );
-   }   
-   else
-   {
-      hb_pp_defineAdd( pState, HB_PP_CMP_CASE, 0, NULL, pMatch, pResult );
-   }
-   pState->pFile = pFile->pPrev;
-   hb_pp_FileFree( pFile, NULL );
-   pState->iFiles--;
+   return pState;
+}
+
+PHB_PP_TOKEN hb_pp_lex( PHB_PP_STATE pState )
+{
+   PHB_PP_TOKEN pToken = * pState->pNextTokenPtr;
+
+   if( pToken )
+      pState->pNextTokenPtr = &pToken->pNext;
+
+   return pToken;
 }
 
 /*
- * delete define value
+ * convert token letters to upper cases
+ * strip leading '&' and trailing '.' (if any) from macrovar token
  */
-void hb_pp_delDefine( PHB_PP_STATE pState, char * szDefName )
+void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
 {
-   PHB_PP_TOKEN pToken;
-
-   pToken = hb_pp_tokenNew( szDefName, strlen( szDefName ),
-                            0, HB_PP_TOKEN_KEYWORD );
-   hb_pp_defineDel( pState, pToken );
-   hb_pp_tokenFree( pToken );
+   if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR )
+   {
+      char * value;
+      if( pToken->value[ pToken->len - 1 ] == '.' )
+         pToken->len--;
+      value = ( char * ) hb_xgrab( pToken->len );
+      memcpy( value, pToken->value + 1, pToken->len - 1 );
+      value[ pToken->len ] = '\0';
+      if( HB_PP_TOKEN_ALLOC( pToken->type ) )
+         hb_xfree( pToken->value );
+      pToken->value = value;
+   }
+   else if( !HB_PP_TOKEN_ALLOC( pToken->type ) )
+   {
+      char * value = ( char * ) hb_xgrab( pToken->len + 1 );
+      memcpy( value, pToken->value, pToken->len + 1 );
+      pToken->value = value;
+   }
+   hb_strupr( pToken->value );
 }

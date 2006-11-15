@@ -113,44 +113,6 @@ typedef HB_PP_SWITCH_FUNC_( HB_PP_SWITCH_FUNC );
 typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
 
-#ifdef _HB_PP_INTERNAL
-
-/* default maximum number of translations */
-#define HB_PP_MAX_CYCLES      4096
-/* maximum number of single token translations, in Clipper it's 18 + number
-   of used rules, we will use also constant but increased by total number
-   of rules of given type: define, [x]translate, [x]command */
-#define HB_PP_MAX_REPATS      128
-
-/* Clipper allows only 16 nested includes */
-#define HB_PP_MAX_INCLUDED_FILES    64
-
-
-/* comparision modes */
-#define HB_PP_CMP_ADDR        0 /* compare token addresses */
-#define HB_PP_CMP_STD         1 /* standard comparison, ignore the case of the characters */
-#define HB_PP_CMP_DBASE       2 /* dbase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
-#define HB_PP_CMP_CASE        3 /* case sensitive comparison */
-
-#define HB_PP_CMP_MODE(t)     ( (t) & 0xff )
-#define HB_PP_STD_RULE        0x8000
-
-
-/* conditional compilation */
-#define HB_PP_COND_ELSE       1     /* preprocessing and output stopped until corresponding #else */
-#define HB_PP_COND_DISABLE    2     /* preprocessing and output stopped until corresponding #endif(s) */
-
-/* operation precedence for #if calculation */
-#define HB_PP_PREC_NUL  0
-#define HB_PP_PREC_NOT  1
-#define HB_PP_PREC_LOG  2
-#define HB_PP_PREC_REL  3
-#define HB_PP_PREC_BIT  4
-#define HB_PP_PREC_PLUS 5
-#define HB_PP_PREC_MULT 6
-#define HB_PP_PREC_NEG  7
-
-
 /* preprocessor tokens */
 #define HB_PP_TOKEN_NUL          0
 
@@ -173,17 +135,18 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
 /* keywords, pseudo keywords and PP only tokens */
 #define HB_PP_TOKEN_KEYWORD      21
-#define HB_PP_TOKEN_MACRO        22
-#define HB_PP_TOKEN_TEXT         23
-#define HB_PP_TOKEN_OTHER        24   /* non keyword, text, or operator character */
-#define HB_PP_TOKEN_BACKSLASH    25   /* "\\" */
-#define HB_PP_TOKEN_PIPE         26   /* "|" */
-#define HB_PP_TOKEN_DOT          27   /* "." */
-#define HB_PP_TOKEN_COMMA        28   /* "," */
-#define HB_PP_TOKEN_EOC          29   /* ";" */
-#define HB_PP_TOKEN_EOL          30   /* "\n" */
-#define HB_PP_TOKEN_HASH         31   /* "\n" */
-#define HB_PP_TOKEN_DIRECTIVE    32   /* direct # directive first token */
+#define HB_PP_TOKEN_MACROVAR     22
+#define HB_PP_TOKEN_MACROTEXT    23
+#define HB_PP_TOKEN_TEXT         24
+#define HB_PP_TOKEN_OTHER        25   /* non keyword, text, or operator character */
+#define HB_PP_TOKEN_BACKSLASH    26   /* "\\" */
+#define HB_PP_TOKEN_PIPE         27   /* "|" */
+#define HB_PP_TOKEN_DOT          28   /* "." */
+#define HB_PP_TOKEN_COMMA        29   /* "," */
+#define HB_PP_TOKEN_EOC          30   /* ";" */
+#define HB_PP_TOKEN_EOL          31   /* "\n" */
+#define HB_PP_TOKEN_HASH         32   /* "#" */
+#define HB_PP_TOKEN_DIRECTIVE    33   /* direct # directive first token */
 
 /* constant values */
 #define HB_PP_TOKEN_STRING       41
@@ -231,18 +194,69 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_MOD          84
 #define HB_PP_TOKEN_POWER        85
 
+#define HB_PP_TOKEN_TYPE(t)      ( (t) & 0xff )
+
+typedef struct _HB_PP_TOKEN
+{
+   struct _HB_PP_TOKEN * pNext;     /* next token pointer */
+   struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
+
+   char * value;                    /* token value */
+   USHORT len;                      /* token value length */
+   USHORT spaces;                   /* leading spaces for stringify */
+   USHORT type;                     /* token type, see HB_PP_TOKEN_* */
+   USHORT index;                    /* index to match marker or 0 */
+}
+HB_PP_TOKEN, * PHB_PP_TOKEN;
+
+
+#ifdef _HB_PP_INTERNAL
+
+/* default maximum number of translations */
+#define HB_PP_MAX_CYCLES      4096
+/* maximum number of single token translations, in Clipper it's 18 + number
+   of used rules, we will use also constant but increased by total number
+   of rules of given type: define, [x]translate, [x]command */
+#define HB_PP_MAX_REPATS      128
+
+/* Clipper allows only 16 nested includes */
+#define HB_PP_MAX_INCLUDED_FILES    64
+
+
+/* comparision modes */
+#define HB_PP_CMP_ADDR        0 /* compare token addresses */
+#define HB_PP_CMP_STD         1 /* standard comparison, ignore the case of the characters */
+#define HB_PP_CMP_DBASE       2 /* dbase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
+#define HB_PP_CMP_CASE        3 /* case sensitive comparison */
+
+#define HB_PP_CMP_MODE(t)     ( (t) & 0xff )
+#define HB_PP_STD_RULE        0x8000
+
+
+/* conditional compilation */
+#define HB_PP_COND_ELSE       1     /* preprocessing and output stopped until corresponding #else */
+#define HB_PP_COND_DISABLE    2     /* preprocessing and output stopped until corresponding #endif(s) */
+
+/* operation precedence for #if calculation */
+#define HB_PP_PREC_NUL  0
+#define HB_PP_PREC_NOT  1
+#define HB_PP_PREC_LOG  2
+#define HB_PP_PREC_REL  3
+#define HB_PP_PREC_BIT  4
+#define HB_PP_PREC_PLUS 5
+#define HB_PP_PREC_MULT 6
+#define HB_PP_PREC_NEG  7
 
 /* bitfields */
-//#define HB_PP_TOKEN_UNARY        0x0100
-//#define HB_PP_TOKEN_BINARY       0x0200
-//#define HB_PP_TOKEN_JOINABLE     0x0400
+/* #define HB_PP_TOKEN_UNARY        0x0100 */
+/* #define HB_PP_TOKEN_BINARY       0x0200 */
+/* #define HB_PP_TOKEN_JOINABLE     0x0400 */
 #define HB_PP_TOKEN_MATCHMARKER  0x2000
 #define HB_PP_TOKEN_STATIC       0x4000
 #define HB_PP_TOKEN_PREDEFINED   0x8000
 
 #define HB_PP_TOKEN_SETTYPE(t,n) do{ (t)->type = ( (t)->type & 0xff00 ) | (n); } while(0)
 
-#define HB_PP_TOKEN_TYPE(t)      ( (t) & 0xff )
 #define HB_PP_TOKEN_ALLOC(t)     ( ( (t) & HB_PP_TOKEN_STATIC ) == 0 )
 #define HB_PP_TOKEN_ISPREDEF(t)  ( ( (t)->type & HB_PP_TOKEN_PREDEFINED ) != 0 )
 
@@ -283,7 +297,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
 #define HB_PP_TOKEN_CANJOIN(t)   ( ! HB_PP_TOKEN_CLOSE_BR(t) && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
-                                   HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACRO && \
+                                   HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
+                                   HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROTEXT && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_TEXT && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_STRING && \
                                    HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUMBER && \
@@ -362,7 +377,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #endif
 
 #define HB_PP_TOKEN_ISEXPVAL(t)     ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_KEYWORD || \
-                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MACRO || \
+                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MACROVAR || \
+                                      HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MACROTEXT || \
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_STRING || \
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_NUMBER || \
                                       HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DATE )
@@ -375,7 +391,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
    are checking for HB_PP_TOKEN_NUL in this macro */
 #define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUL && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
-                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACRO && \
+                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
+                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROTEXT && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_PB && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_SB && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_CB )
@@ -386,7 +403,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
    similar extensions in the future */
 #define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUL && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
-                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACRO && \
+                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
+                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROTEXT && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_PB && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_SB && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_CB && \
@@ -416,19 +434,6 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_ISFIRSTIDCHAR(c)   ( ( (c) >= 'A' && (c) <= 'Z' ) || \
                                    ( (c) >= 'a' && (c) <= 'z' ) || (c) == '_' )
 #define HB_PP_ISNEXTIDCHAR(c)    ( HB_PP_ISFIRSTIDCHAR(c) || HB_PP_ISDIGIT(c) )
-
-typedef struct _HB_PP_TOKEN
-{
-   struct _HB_PP_TOKEN * pNext;     /* next token pointer */
-   struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
-
-   char * value;                    /* token value */
-   USHORT len;                      /* token value length */
-   USHORT spaces;                   /* leading spaces for stringify */
-   USHORT type;                     /* token type, see HB_PP_TOKEN_* */
-   USHORT index;                    /* index to match marker or 0 */
-}
-HB_PP_TOKEN, * PHB_PP_TOKEN;
 
 typedef struct _HB_PP_RESULT
 {
@@ -594,7 +599,6 @@ HB_PP_STATE, * PHB_PP_STATE;
 extern void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
                              const HB_PP_DEFRULE pDefRules[], int iDefRules );
 
-extern void hb_pp_initStaticRules( PHB_PP_STATE pState );
 
 #else
 
@@ -604,13 +608,16 @@ typedef void * PHB_PP_STATE;
 
 /* public functions */
 extern PHB_PP_STATE hb_pp_new( void );
-extern void   hb_pp_init( PHB_PP_STATE pState, char * szFileName, BOOL fQuiet,
-                          PHB_PP_OPEN_FUNC  pOpenFunc,  PHB_PP_CLOSE_FUNC pCloseFunc,
-                          PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
-                          PHB_PP_DUMP_FUNC  pDumpFunc,  PHB_PP_INLINE_FUNC pInLineFunc,
-                          PHB_PP_SWITCH_FUNC pSwitchFunc );
 extern void   hb_pp_free( PHB_PP_STATE pState );
 extern void   hb_pp_reset( PHB_PP_STATE pState );
+extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
+                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
+                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
+                  PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
+                  PHB_PP_SWITCH_FUNC pSwitchFunc );
+extern void   hb_pp_initDynDefines( PHB_PP_STATE pState );
+extern void   hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile );
+extern void   hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void   hb_pp_setStdBase( PHB_PP_STATE pState );
 extern void   hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern void   hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace );
@@ -623,6 +630,10 @@ extern char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen );
 extern char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen );
 extern void   hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue );
 extern void   hb_pp_delDefine( PHB_PP_STATE pState, char * szDefName );
+
+extern void   hb_pp_tokenUpper( PHB_PP_TOKEN pToken );
+extern PHB_PP_STATE hb_pp_lexNew( char * pString, ULONG ulLen );
+extern PHB_PP_TOKEN hb_pp_lex( PHB_PP_STATE pState );
 
 HB_EXTERN_END
 

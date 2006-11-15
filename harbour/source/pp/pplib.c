@@ -84,15 +84,21 @@ static void hb_pp_Disp( const char * szMessage )
    HB_SYMBOL_UNUSED( szMessage );
 }
 
-static PHB_PP_STATE hb_pp_stateNew( char * szStdCh )
+static PHB_PP_STATE hb_pp_stateNew( BOOL fInit )
 {
    PHB_PP_STATE pState = hb_pp_new();
 
    if( pState )
    {
-      hb_pp_init( pState, szStdCh, TRUE, NULL, NULL,
+      hb_pp_init( pState, TRUE, NULL, NULL,
                   hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
-      
+
+      if( fInit )
+      {
+         hb_pp_setStdRules( pState );
+         hb_pp_initDynDefines( pState );
+         hb_pp_setStdBase( pState );
+      }
       if( ! s_pp_state )
          s_pp_state = pState;
    }
@@ -124,7 +130,7 @@ static PHB_PP_STATE hb_pp_stateParam( int * piParam )
    {
       * piParam = 1;
       if( !s_pp_state )
-         return hb_pp_stateNew( NULL );
+         return hb_pp_stateNew( TRUE );
       else
          return s_pp_state;
    }
@@ -141,11 +147,21 @@ HB_FUNC( __PP_INIT )
    PHB_PP_STATE pState;
 
    hb_pp_stateFree( s_pp_state );
-   pState = hb_pp_stateNew( hb_parc( 2 ) );
+   pState = hb_pp_stateNew( FALSE );
    if( pState )
    {
-      if( ISCHAR( 1 ) )
-         hb_pp_addSearchPath( pState, hb_parc( 1 ), TRUE );
+      char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
+
+      if( szPath )
+         hb_pp_addSearchPath( pState, szPath, TRUE );
+
+      if( szStdCh )
+         hb_pp_readRules( pState, szStdCh );
+      else
+         hb_pp_setStdRules( pState );
+      hb_pp_initDynDefines( pState );
+      hb_pp_setStdBase( pState );
+
       hb_retptr( pState );
    }
    else

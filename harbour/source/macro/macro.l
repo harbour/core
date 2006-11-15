@@ -235,15 +235,15 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 [\=\+\-\*\/\%\$\,\|\#\&\.\:\<\>\@] { pMacro->FlexState = SEPARATOR; return yytext[ 0 ]; }
 [\]\}\)]       { pMacro->FlexState = LOOKUP; return yytext[ 0 ]; }
 
-[\x00-\x1F]	return yytext[ 0 ]; /* see below */
-[\~\`\?\_\\]    return yytext[ 0 ]; /* see below */
-[\x7F-\xFF]	{
-	    /* This have to be the last rule - any nonstandard and unhandled
-	     * characters should go to grammar analyser instead of printing it
-	     * on stdout.
- 	     */
-	    return yytext[ 0 ];
-	}
+[\x00-\x1F]    return yytext[ 0 ]; /* see below */
+[\~\`\?\_\\]   return yytext[ 0 ]; /* see below */
+[\x7F-\xFF]    {
+                  /* This have to be the last rule - any nonstandard and
+                   * unhandled characters should go to grammar analyser
+                   * instead of printing it on stdout.
+                   */
+                  return yytext[ 0 ];
+               }
 
 %{
 /* ************************************************************************ */
@@ -261,13 +261,12 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
       yylval_ptr->valDouble.dNumber = dNumber;
       yylval_ptr->valDouble.bDec = iDec;
       yylval_ptr->valDouble.bWidth = iWidth;
-      yylval_ptr->valDouble.szValue = yytext;
       return NUM_DOUBLE;
    }
    else
    {
       yylval_ptr->valLong.lNumber = lNumber;
-      yylval_ptr->valLong.szValue = yytext;
+      yylval_ptr->valLong.bWidth = iWidth;
       return NUM_LONG;
    }
 }

@@ -65,6 +65,7 @@
 #include "hbmacro.h"
 #include "hbcomp.h"
 #include "hbdate.h"
+#include "hbpp.h"
 
 /* Compile using: bison -d -p hb_comp macro.y */
 
@@ -103,7 +104,7 @@
 #undef YYLEX_PARAM
 #define YYLEX_PARAM   ( (HB_MACRO_PTR)YYPARSE_PARAM ) /* additional parameter passed to yylex */
 
-extern int yyparse( void * );	/* to make happy some purist compiler */
+extern int yyparse( void * ); /* to make happy some purist compiler */
 extern void * hb_compFlexNew( HB_MACRO_PTR );
 extern void hb_compFlexDelete( void * );
 
@@ -119,7 +120,9 @@ extern void yyerror( char * ); /* parsing error management function */
 
 #define HB_MACRO_IFENABLED( pSet, pExpr, flag ) \
    if( HB_MACRO_DATA->supported & (flag) ) \
-     { pSet = (pExpr); }\
+   { \
+      pSet = (pExpr); \
+   }\
    else \
    { \
       YYABORT; \
@@ -129,29 +132,26 @@ extern void yyerror( char * ); /* parsing error management function */
 
 %union                  /* special structure used by lex and yacc to share info */
 {
-   char *  string;      /* to hold a string returned by lex */
-   int     iNumber;     /* to hold a temporary integer number */
-   HB_LONG lNumber;     /* to hold a temporary long number */
+   char *   string;     /* to hold a string returned by lex */
+   int      iNumber;    /* to hold a temporary integer number */
+   HB_LONG  lNumber;    /* to hold a temporary long number */
+   void *   pVoid;      /* to hold any memory structure we may need */
+   HB_EXPR_PTR asExpr;
    struct
    {
-      int    iNumber;      /* to hold a number returned by lex */
-      char * szValue;
+      int      iNumber; /* to hold a number returned by lex */
    } valInteger;
    struct
    {
-      HB_LONG lNumber;     /* to hold a long number returned by lex */
-      char *  szValue;
+      HB_LONG  lNumber; /* to hold a long number returned by lex */
+      UCHAR    bWidth;  /* to hold the width of the value */
    } valLong;
    struct
    {
-      double dNumber;      /* to hold a double number returned by lex */
-      /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
-      unsigned char bWidth; /* to hold the width of the value */
-      unsigned char bDec;  /* to hold the number of decimal points in the value */
-      char * szValue;
+      double   dNumber; /* to hold a double number returned by lex */
+      UCHAR    bWidth;  /* to hold the width of the value */
+      UCHAR    bDec;    /* to hold the number of decimal points in the value */
    } valDouble;
-   HB_EXPR_PTR asExpr;
-   void * pVoid;        /* to hold any memory structure we may need */
 };
 
 %{
@@ -176,9 +176,9 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
-%left  POST
+%left   POST
 /*assigment - from right to left*/
-%right INASSIGN
+%right  INASSIGN
 %right  PLUSEQ MINUSEQ
 %right  MULTEQ DIVEQ MODEQ
 %right  EXPEQ
@@ -192,7 +192,7 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 %right  '+' '-'
 %right  '*' '/' '%'
 %right  POWER
-%right UNARY
+%right  UNARY
 /*preincrement and predecrement*/
 %right  PRE
 /*special operators*/
@@ -260,17 +260,17 @@ Main : Expression '\n' {
                               hb_compExprGenPop( $1, HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
-     | Expression error   {
-                 HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
-                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
-		           YYABORT;
-	       }
+     | Expression error {
+                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
+                  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
+                  YYABORT;
+               }
      | error   {
-                 HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
-                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
-		           YYABORT;
-	       }
-;
+                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
+                  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
+                  YYABORT;
+               }
+     ;
 
 /* Numeric values
  */
@@ -278,55 +278,55 @@ NumValue   : NUM_DOUBLE      { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth,
            | NUM_LONG        { $$ = hb_compExprNewLong( $1.lNumber ); }
            ;
 
-DateValue  : NUM_DATE        { $$ = hb_compExprNewDate( $1.lNumber ); }
+DateValue  : NUM_DATE         { $$ = hb_compExprNewDate( $1.lNumber ); }
            ;
            
-NumAlias   : NUM_LONG ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber ); }
-;
+NumAlias   : NUM_LONG ALIASOP { $$ = hb_compExprNewLong( $1.lNumber ); }
+           ;
 
 /* NIL value
  */
-NilValue   : NIL             { $$ = hb_compExprNewNil(); }
-;
+NilValue   : NIL              { $$ = hb_compExprNewNil(); }
+           ;
 
 /* Literal string value
  */
-LiteralValue : LITERAL       { $$ = hb_compExprNewString( $1, strlen($1) ); }
-;
+LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1, strlen($1) ); }
+             ;
 
 /* Logical value
  */
-Logical    : TRUEVALUE       { $$ = hb_compExprNewLogical( TRUE ); }
-           | FALSEVALUE      { $$ = hb_compExprNewLogical( FALSE ); }
+Logical    : TRUEVALUE        { $$ = hb_compExprNewLogical( TRUE ); }
+           | FALSEVALUE       { $$ = hb_compExprNewLogical( FALSE ); }
            ;
 
 /* SELF value and expressions
  */
-SelfValue  : SELF            { $$ = hb_compExprNewSelf(); }
-;
+SelfValue  : SELF             { $$ = hb_compExprNewSelf(); }
+           ;
 
 /* Literal array
  */
-Array      : '{' ElemList '}'          { $$ = hb_compExprNewArray( $2, HB_MACRO_PARAM ); }
+Array      : '{' ElemList '}'       { $$ = hb_compExprNewArray( $2, HB_MACRO_PARAM ); }
            ;
 
 /* Literal array access
  */
-ArrayAt     : Array ArrayIndex   { $$ = $2; }
-;
+ArrayAt     : Array ArrayIndex      { $$ = $2; }
+            ;
 
 /* Variables
  */
-Variable    : IDENTIFIER         { $$ = hb_compExprNewVar( $1 ); }
-;
+Variable    : IDENTIFIER            { $$ = hb_compExprNewVar( $1 ); }
+            ;
 
-VarAlias    : IDENTIFIER ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
-;
+VarAlias    : IDENTIFIER ALIASOP    { $$ = hb_compExprNewAlias( $1 ); }
+            ;
 
 /* Macro variables - this can signal compilation errors
  */
-MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
-                                HB_MACRO_CHECK( $$ );
+MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1 );
+                                 HB_MACRO_CHECK( $$ );
                               }
             | MACROTEXT       {  ULONG ulLen = strlen( $1 );
                                  char * szVarName = hb_macroTextSubst( $1, &ulLen );
@@ -346,18 +346,18 @@ MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                     YYABORT;
                                  }
                               }
-;
+            ;
 
 MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
-;
+               ;
 
 /* Macro expressions
  */
-MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, 0, NULL ); }
-;
+MacroExpr  : '&' PareExpList        { $$ = hb_compExprNewMacro( $2, 0, NULL ); }
+           ;
 
-MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
-;
+MacroExprAlias : MacroExpr ALIASOP  { $$ = $1; }
+               ;
 
 /* Aliased variables
  */
@@ -429,7 +429,7 @@ FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compE
            | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3, HB_MACRO_PARAM );
                                             HB_MACRO_CHECK( $$ );
                                           }
-;
+           ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
            | ArgList ',' Argument         { $$ = hb_compExprAddListExpr( $1, $3 ); }
@@ -468,7 +468,7 @@ ObjectData  : NumValue ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3, 
 /* Object's method
  */
 ObjectMethod : ObjectData '(' ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $3 ); }
-            ;
+             ;
 
 SimpleExpression :
              NumValue
@@ -498,11 +498,11 @@ SimpleExpression :
            | ExprMath                         { $$ = $1; }
            | ExprBool                         { $$ = $1; }
            | ExprRelation                     { $$ = $1; }
-;
+           ;
 
 Expression : SimpleExpression                 { $$ = $1; HB_MACRO_CHECK( $$ ); }
            | PareExpList                      { $$ = $1; HB_MACRO_CHECK( $$ ); }
-;
+           ;
 
 RootParamList : EmptyExpression ',' {
                                       if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
@@ -513,18 +513,19 @@ RootParamList : EmptyExpression ',' {
                                       }
                                     }
                 EmptyExpression     {
-                                      HB_MACRO_DATA->iListElements = 1;
-                                      $$ = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( $1 ) : hb_compExprNewArgList( $1 ), $4 );
+                                       HB_MACRO_DATA->iListElements = 1;
+                                       $$ = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( $1 ) : hb_compExprNewArgList( $1 ), $4 );
                                     }
               ;
 
-AsParamList  : RootParamList                    { $$ = $1; }
-             | AsParamList ',' EmptyExpression  { HB_MACRO_DATA->iListElements++; $$ = hb_compExprAddListExpr( $1, $3 ); }
-;
+AsParamList : RootParamList                     { $$ = $1; }
+            | AsParamList ',' EmptyExpression   {  HB_MACRO_DATA->iListElements++;
+                                                   $$ = hb_compExprAddListExpr( $1, $3 ); }
+            ;
 
 EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }
-           | Expression
-;
+            | Expression
+            ;
 
 /* NOTE: PostOp can be used in one context only - it uses $0 rule
  *    (the rule that stands before PostOp)
@@ -779,8 +780,8 @@ BlockExpList : Expression                { $$ = hb_compExprAddCodeblockExpr( $<a
 /* NOTE: This is really not needed however it allows the use of $-2 item
  * in BlockExpList to refer the same rule defined in Codeblock
  */
-BlockNoVar : /* empty list */    { $$ = NULL; }
-;
+BlockNoVar : /* empty list */ { $$ = NULL; }
+           ;
 
 BlockVarList : IDENTIFIER                 { $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_MACRO_PARAM ); }
            | BlockVarList ',' IDENTIFIER  { $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_MACRO_PARAM ); HB_MACRO_CHECK( $$ ); }
@@ -788,24 +789,24 @@ BlockVarList : IDENTIFIER                 { $$ = hb_compExprCBVarAdd( $<asExpr>0
 
 ExpList    : '(' EmptyExpression          { $$ = hb_compExprNewList( $2 ); }
            | ExpList ',' EmptyExpression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
-;
+           ;
 
 PareExpList : ExpList ')'                 { $$ = $1; }
-;
+            ;
 
-PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
-;
+PareExpListAlias : PareExpList ALIASOP    { $$ = $1; }
+                 ;
 
-IfInline   : IIF '(' Expression ',' EmptyExpression ','
-             { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
-             EmptyExpression ')'
-             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
+IfInline  : IIF '(' Expression ',' EmptyExpression ','
+            { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
+            EmptyExpression ')'
+            { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
 
-           | IF '(' Expression ',' EmptyExpression ','
-             { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
-             EmptyExpression ')'
-             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
-           ;
+          | IF '(' Expression ',' EmptyExpression ','
+            { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3 ), $5 ); }
+            EmptyExpression ')'
+            { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ) ); }
+          ;
 
 %%
 
@@ -818,6 +819,17 @@ IfInline   : IIF '(' Expression ',' EmptyExpression ','
 /*
  ** ------------------------------------------------------------------------ **
  */
+
+void yyerror( char * s )
+{
+   HB_SYMBOL_UNUSED( s );
+}
+
+/* ************************************************************************* */
+
+/* #define HB_PP_MACROLEX */
+
+#ifndef HB_PP_MACROLEX
 
 int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
@@ -836,10 +848,161 @@ int hb_macroYYParse( HB_MACRO_PTR pMacro )
    return iResult;
 }
 
-/* ************************************************************************* */
+#else
 
-void yyerror( char * s )
+int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
-   HB_SYMBOL_UNUSED( s );
+   int iResult;
+
+   pMacro->pLex = ( void * ) hb_pp_lexNew( pMacro->string, pMacro->length );
+   if( pMacro->pLex )
+   {
+      pMacro->status = HB_MACRO_CONT;
+      /* NOTE: bison requires (void *) pointer */
+      iResult = yyparse( ( void * ) pMacro );
+      hb_pp_free( ( PHB_PP_STATE ) pMacro->pLex );
+      pMacro->pLex = NULL;
+   }
+   else
+      iResult = HB_MACRO_FAILURE;
+
+   return iResult;
 }
 
+int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+{
+   PHB_PP_TOKEN pToken = hb_pp_lex( ( PHB_PP_STATE ) pMacro->pLex );
+
+   if( !pToken )
+      return 0;
+
+   switch( HB_PP_TOKEN_TYPE( pToken->type ) )
+   {
+      case HB_PP_TOKEN_KEYWORD:
+         if( pToken->len >= 4 && pToken->len <= 6 &&
+             ( hb_strnicmp( "_FILED", pToken->value, pToken->len ) == 0 ||
+               hb_strnicmp( "FILED", pToken->value, pToken->len ) == 0 ) )
+            return FIELD;
+         else if( pToken->len == 3 && hb_stricmp( "IIF", pToken->value ) == 0 )
+            return IIF;
+         else if( pToken->len == 2 && hb_stricmp( "IF", pToken->value ) == 0 )
+            return IIF;
+         else if( pToken->len == 3 && hb_stricmp( "NIL", pToken->value ) == 0 )
+            return NIL;
+
+         hb_pp_tokenUpper( pToken );
+         yylval_ptr->string = hb_strdup( pToken->value );
+         return IDENTIFIER;
+
+      case HB_PP_TOKEN_MACROVAR:
+         hb_pp_tokenUpper( pToken );
+         yylval_ptr->string = hb_strdup( pToken->value );
+         return MACROVAR;
+
+      case HB_PP_TOKEN_MACROTEXT:
+         hb_pp_tokenUpper( pToken );
+         yylval_ptr->string = hb_strdup( pToken->value );
+         return MACROTEXT;
+
+      case HB_PP_TOKEN_NUMBER:
+      {
+         HB_LONG lNumber;
+         double dNumber;
+         int iDec, iWidth;
+
+         if( hb_compStrToNum( pToken->value, &lNumber, &dNumber, &iDec, &iWidth ) )
+         {
+            yylval_ptr->valDouble.dNumber = dNumber;
+            yylval_ptr->valDouble.bDec    = ( UCHAR ) iDec;
+            yylval_ptr->valDouble.bWidth  = ( UCHAR ) iWidth;
+            return NUM_DOUBLE;
+         }
+         else
+         {
+            yylval_ptr->valLong.lNumber = lNumber;
+            yylval_ptr->valLong.bWidth  = ( UCHAR ) iWidth;
+            return NUM_LONG;
+         }
+      }
+      case HB_PP_TOKEN_DATE:
+         if( pToken->len == 10 )
+         {
+            int year, month, day;
+            hb_dateStrGet( pToken->value + 2, &year, &month, &day );
+            yylval_ptr->valLong.lNumber = hb_dateEncode( year, month, day );
+         }
+         else
+            yylval_ptr->valLong.lNumber = 0;
+         return NUM_DATE;
+
+      case HB_PP_TOKEN_STRING:
+         yylval_ptr->string = hb_strdup( pToken->value );
+         return LITERAL;
+
+      case HB_PP_TOKEN_LOGICAL:
+         return pToken->value[ 1 ] == 'Y' ? TRUEVALUE : FALSEVALUE;
+
+      case HB_PP_TOKEN_HASH:
+      case HB_PP_TOKEN_DIRECTIVE:
+         return NE1;
+
+      case HB_PP_TOKEN_NE:
+         return NE2;
+
+      case HB_PP_TOKEN_ASSIGN:
+         return INASSIGN;
+
+      case HB_PP_TOKEN_EQUAL:
+         return EQ;
+
+      case HB_PP_TOKEN_INC:
+         return INC;
+
+      case HB_PP_TOKEN_DEC:
+         return DEC;
+
+      case HB_PP_TOKEN_ALIAS:
+         return ALIASOP;
+
+      case HB_PP_TOKEN_LE:
+         return LE;
+
+      case HB_PP_TOKEN_GE:
+         return GE;
+
+      case HB_PP_TOKEN_PLUSEQ:
+         return PLUSEQ;
+
+      case HB_PP_TOKEN_MINUSEQ:
+         return MINUSEQ;
+
+      case HB_PP_TOKEN_MULTEQ:
+         return MULTEQ;
+
+      case HB_PP_TOKEN_DIVEQ:
+         return DIVEQ;
+
+      case HB_PP_TOKEN_MODEQ:
+         return MODEQ;
+
+      case HB_PP_TOKEN_EXPEQ:
+         return EXPEQ;
+
+      case HB_PP_TOKEN_POWER:
+         return POWER;
+
+      case HB_PP_TOKEN_AND:
+         return AND;
+
+      case HB_PP_TOKEN_OR:
+         return OR;
+
+      case HB_PP_TOKEN_NOT:
+         return NOT;
+
+      default:
+         return pToken->value[ 0 ];
+   }
+}
+
+#endif /* HB_PP_MACROLEX */

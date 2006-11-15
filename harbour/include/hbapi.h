@@ -804,6 +804,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    HB_ITEM_PTR pError;     /* error object returned from the parser */
    ULONG  supported;       /* various flags for supported capabilities */
    int    FlexState;       /* internal flex state during parsing */
+   void * pLex;            /* lexer buffer pointer */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
    void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
    USHORT uiNameLen;       /* the maximum symbol name length */

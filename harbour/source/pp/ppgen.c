@@ -62,12 +62,6 @@ void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize )
 void hb_xfree( void * pMem ) { free( pMem ); }
 
 
-void hb_pp_initStaticRules( PHB_PP_STATE pState )
-{
-   HB_SYMBOL_UNUSED( pState );
-}
-
-
 /*
  * functions to create .c files with rules defined in given PP context
  */
@@ -223,7 +217,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState )
    if( pState->pCommands )
       iCmds = hb_pp_writeRules( fout, pState->pCommands, "cmd" );
 
-   fprintf( fout, "\nvoid hb_pp_initStaticRules( PHB_PP_STATE pState )\n{\n" );
+   fprintf( fout, "\nvoid hb_pp_setStdRules( PHB_PP_STATE pState )\n{\n" );
    hb_pp_generateInitFunc( fout, iDefs,  "Definitions",  "def" );
    hb_pp_generateInitFunc( fout, iTrans, "Translations", "trs" );
    hb_pp_generateInitFunc( fout, iCmds,  "Commands",     "cmd" );
@@ -368,7 +362,7 @@ int main( int argc, char * argv[] )
 
    if( szFile )
    {
-      hb_pp_init( pState, NULL, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+      hb_pp_init( pState, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
       hb_pp_inFile( pState, szFile, NULL );
       if( fWrite )
       {

@@ -8,6 +8,66 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    * old PP functions for backward compatibility:
+         __PPADDRULE(), __PREPROCESS(), __PP_FREE()
+      Please note that using this function is not MT safe. They should
+      work like with old PP code. Using any of this function automatically
+      forces linking __PP_STDRULES
+
+2006-11-15 14:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+    + added
+         void * pLex;
+      member to HB_MACRO structure - it will be necessary for MT safe
+      macro parser
+
+  * harbour/include/set.ch
+  * harbour/include/hbexprb.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+    * indenting, formatting and converting tabs to spaces
+
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+    * make HB_PP_TOKEN structure public for other code and changed
+      public PP API to not force including static rules by programs
+      which does not need them.
+    + added basic API for using PP as lexer
+    * divided HB_PP_TOKEN_MACRO to HB_PP_TOKEN_MACROVAR and
+      HB_PP_TOKEN_MACROTEXT and mark
+         [<keyword>][&<keyword>[.[<nextidchars>]]]+
+      as HB_PP_TOKEN_MACROTEXT not pair HB_PP_TOKEN_KEYWORD and
+      HB_PP_TOKEN_MACRO
+      It allows easier integration PP as (macro)compiler lexer and
+      fixes preprocessing [<keyword>][&<keyword>[.[<nextidchars>]]]+
+      in some patterns.
+
+  * harbour/utils/hbtest/Makefile
+    + added PP library to linked library list
+
+  * harbour/source/macro/macro.y
+    + added seaport to use PP as lexer. It's disabled by default and
+      can be enabled using by defining HB_PP_MACROLEX. It eliminates
+      using FLEX or SIMPLEX lexer in macro compiler. Now it emulates
+      the behavior of FLEX lexer because I wanted to minimize the
+      modification but in fact because parsed token are freed when
+      macro compiler finish its job then we can resolve RT memory
+      leaks which apear during parsing wrong expressions. It will be
+      enough to drop allocating memory for new terminal symbols and
+      using them as is like in compiler. It will also quite nice
+      simplify include/hbexpr*.c code and will allow to move some
+      functions to COMMON library. I want to make also pure compiler
+      code MT safe so I will have to add passing pointer to a structure
+      with compiler context just like in macro compiler. It means that
+      if we define a structure which will be common to compiler and macro
+      compiler with local (not common) data stored in other structure for
+      which will will keep only a pointer then we will be able to move most
+      of include/hbexpr*.c code to common library. But I do not want to
+      make farther modification without consultation without Ryszard.
+      Also to make PP default lexer some farther modifications should
       be done in core PP code and include/hbexpr*.c files to not reduce
       the speed. Now using HB_PP_MACROLEX for sure will have to cause
       speed reduction in macro compiler. But if we make necessary
