@@ -623,10 +623,10 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
    return fDbl;
 }
 
-HB_EXPORT BOOL hb_compStrToNum( const char* szNum, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_EXPORT BOOL hb_compStrToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %p, %p, %p, %p)", szNum, plVal, pdVal, piDec, piWidth ));
-   return hb_str2number( TRUE, szNum, strlen( szNum ), plVal, pdVal, piDec, piWidth );
+   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
+   return hb_str2number( TRUE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_EXPORT BOOL hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal, int * piDec, int * piWidth )
@@ -885,9 +885,6 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
                break;
             case 'b':
                ch = '\b';
-               break;
-            case 'q':
-               ch = '"';
                break;
             case '\\':
             default:

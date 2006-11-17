@@ -104,11 +104,8 @@
 #undef YYLEX_PARAM
 #define YYLEX_PARAM   ( (HB_MACRO_PTR)YYPARSE_PARAM ) /* additional parameter passed to yylex */
 
-extern int yyparse( void * ); /* to make happy some purist compiler */
-extern void * hb_compFlexNew( HB_MACRO_PTR );
-extern void hb_compFlexDelete( void * );
-
-extern void yyerror( char * ); /* parsing error management function */
+extern int yyparse( void * );    /* to make happy some purist compiler */
+extern void yyerror( char * );   /* parsing error management function */
 
 /* Standard checking for valid expression creation
  */
@@ -363,7 +360,7 @@ MacroExprAlias : MacroExpr ALIASOP  { $$ = $1; }
  */
 /* special case: _FIELD-> and FIELD-> can be nested
  */
-FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( hb_strdup( "FIELD") ); }
+FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( hb_strdup( "FIELD" ) ); }
             | FIELD ALIASOP FieldAlias    { $$ = $3; }
             ;
 
@@ -827,46 +824,38 @@ void yyerror( char * s )
 
 /* ************************************************************************* */
 
-/* #define HB_PP_MACROLEX */
-
-#ifndef HB_PP_MACROLEX
-
-int hb_macroYYParse( HB_MACRO_PTR pMacro )
-{
-   int iResult;
-   void * lexBuffer;
-
-   lexBuffer = hb_compFlexNew( pMacro );
-
-   pMacro->status = HB_MACRO_CONT;
-   /* NOTE: bison requires (void *) pointer
-    */
-   iResult = yyparse( ( void * ) pMacro );
-
-   hb_compFlexDelete( lexBuffer );
-
-   return iResult;
-}
-
-#else
-
 int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
    int iResult;
 
-   pMacro->pLex = ( void * ) hb_pp_lexNew( pMacro->string, pMacro->length );
-   if( pMacro->pLex )
+   if( hb_macroLexNew( pMacro ) )
    {
       pMacro->status = HB_MACRO_CONT;
       /* NOTE: bison requires (void *) pointer */
       iResult = yyparse( ( void * ) pMacro );
-      hb_pp_free( ( PHB_PP_STATE ) pMacro->pLex );
-      pMacro->pLex = NULL;
+      hb_macroLexDelete( pMacro );
    }
    else
       iResult = HB_MACRO_FAILURE;
 
    return iResult;
+}
+
+#if defined( HB_MACRO_PPLEX )
+
+BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
+{
+   pMacro->pLex = ( void * ) hb_pp_lexNew( pMacro->string, pMacro->length );
+   return pMacro->pLex != NULL;
+}
+
+void hb_macroLexDelete( HB_MACRO_PTR pMacro )
+{
+   if( pMacro->pLex )
+   {
+      hb_pp_free( ( PHB_PP_STATE ) pMacro->pLex );
+      pMacro->pLex = NULL;
+   }
 }
 
 int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
@@ -886,7 +875,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          else if( pToken->len == 3 && hb_stricmp( "IIF", pToken->value ) == 0 )
             return IIF;
          else if( pToken->len == 2 && hb_stricmp( "IF", pToken->value ) == 0 )
-            return IIF;
+            return IF;
          else if( pToken->len == 3 && hb_stricmp( "NIL", pToken->value ) == 0 )
             return NIL;
 
@@ -910,7 +899,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          double dNumber;
          int iDec, iWidth;
 
-         if( hb_compStrToNum( pToken->value, &lNumber, &dNumber, &iDec, &iWidth ) )
+         if( hb_compStrToNum( pToken->value, pToken->len, &lNumber, &dNumber, &iDec, &iWidth ) )
          {
             yylval_ptr->valDouble.dNumber = dNumber;
             yylval_ptr->valDouble.bDec    = ( UCHAR ) iDec;
@@ -1005,4 +994,4 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
    }
 }
 
-#endif /* HB_PP_MACROLEX */
+#endif /* HB_MACRO_PPLEX */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *    Clipper compatible preprocessor
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -930,7 +930,9 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 
             if( ul == ulLen )
             {
+               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
                hb_membufAddCh( pState->pBuffer, '\0' );
+               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
                hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer );
             }
             else
@@ -950,10 +952,10 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             ul = ulLen;
          }
          else if( ch == '*' && pState->pFile->iTokens == 0 )
-	   {
+         {
             /* strip the rest of line with // or && comment */
             ul = ulLen;
-	   }
+         }
          else if( ch == '/' && ulLen > 1 && pBuffer[ 1 ] == '*' )
          {
 #ifdef HB_C52_STRICT
@@ -1254,8 +1256,6 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
                   iq = ch = 'b';
                   break;
                case '"':
-                  iq = ch = 'q';
-                  break;
                case '\\':
                   iq = 1;
                   break;

@@ -8,6 +8,60 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+  * harbour/source/pp/ppcore.c
+    + added decoding C escaped strings (e"...") to PP so they can be
+      preprocessed like a normal strings, it's not enabled when
+      HB_C52_STRICT macro is set
+
+2006-11-17 13:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.slx
+  * harbour/source/compiler/harbour.slx
+    * changed parameters in function: hb_compStrToNum() now the string
+      size is passed explicitly so it can work with strings which does
+      not have trailing ASCII NUL character.
+
+  * harbour/source/macro/macro.y
+    * indenting
+
+  * harbour/include/hbmacro.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+    * added two new functions for macro compiler: hb_macroLexNew() and
+      hb_macroLexDelete() to clearly separate lexer from grammar parser.
+
+  * harbour/source/compiler/harbour.l
+  * harbour/source/common/hbstr.c
+  * harbour/source/pp/ppcore.c
+    * added error generation for wrong e"..." strings and fixed \" quoting
+    * removed \q quoting
+
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+    * added small description in headers
+
+  * harbour/common.mak
+  * harbour/source/pp/Makefile
+  * harbour/source/pp/pplib.c
+  + harbour/source/pp/pplib2.c
+  * harbour/include/hbextern.ch
+    + added auto destructor for allocated PP context, it's not longer
+      necessary to execute __PP_FREE() so this function was moved from
+      the standard .prg API to file with backward compatible functions
+    * changed __PREPROCESS() to __PP_PROCESS()
+    * moved setting std rules to separate file so now if user uses PP
+      with only his own rules we are not forcing linking static tables
+      which are quite huge (over 100kb)
+      To include stdandard rules in static binaries user should add
+      to his code:
+         REQUEST __PP_STDRULES
+
+  + harbour/source/pp/pplib3.c
     * old PP functions for backward compatibility:
          __PPADDRULE(), __PREPROCESS(), __PP_FREE()
       Please note that using this function is not MT safe. They should

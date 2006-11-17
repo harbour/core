@@ -256,7 +256,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 
    pMacro->FlexState = LOOKUP;
 
-   if( hb_compStrToNum( yytext, &lNumber, &dNumber, &iDec, &iWidth ) )
+   if( hb_compStrToNum( yytext, strlen( yytext ), &lNumber, &dNumber, &iDec, &iWidth ) )
    {
       yylval_ptr->valDouble.dNumber = dNumber;
       yylval_ptr->valDouble.bDec = iDec;
@@ -330,7 +330,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 #endif
 
 
-void * hb_compFlexNew( HB_MACRO_PTR pMacro )
+BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
 {
    /* This creates the scanner buffer based on passed string.
     * Unfortunately it creates a copy of this string - the string can be
@@ -340,12 +340,17 @@ void * hb_compFlexNew( HB_MACRO_PTR pMacro )
     */
    HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
    pMacro->FlexState = LOOKUP;
-   return (void *) yy_scan_bytes( pMacro->string, pMacro->length );
+   pMacro->pLex = ( void * ) yy_scan_bytes( pMacro->string, pMacro->length );
+   return pMacro->pLex != NULL;
 }
 
-void hb_compFlexDelete( void * pBuffer )
+void hb_macroLexDelete( HB_MACRO_PTR pMacro )
 {
-   yy_delete_buffer( ( YY_BUFFER_STATE ) pBuffer );
+   if( pMacro->pLex )
+   {
+      yy_delete_buffer( ( YY_BUFFER_STATE ) pMacro->pLex );
+      pMacro->pLex = NULL;
+   }
 }
 
 /*

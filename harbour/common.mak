@@ -240,6 +240,8 @@ PP_LIB_OBJS = \
     $(OBJ_DIR)\pptable.obj \
     $(OBJ_DIR)\ppcore.obj  \
     $(OBJ_DIR)\pplib.obj   \
+    $(OBJ_DIR)\pplib2.obj   \
+    $(OBJ_DIR)\pplib3.obj   \
 
 #**********************************************************
 

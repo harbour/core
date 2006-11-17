@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *    .prg interface to preprocessor
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -58,8 +58,6 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-static PHB_PP_STATE s_pp_state = NULL;
-
 static void hb_pp_ErrorMessage( char * szMsgTable[], char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {
@@ -84,56 +82,46 @@ static void hb_pp_Disp( const char * szMessage )
    HB_SYMBOL_UNUSED( szMessage );
 }
 
-static PHB_PP_STATE hb_pp_stateNew( BOOL fInit )
+/* PP destructor */
+static HB_GARBAGE_FUNC( hb_pp_Destructor )
 {
-   PHB_PP_STATE pState = hb_pp_new();
+   PHB_PP_STATE * pStatePtr = ( PHB_PP_STATE * ) Cargo;
 
-   if( pState )
+   if( * pStatePtr )
    {
-      hb_pp_init( pState, TRUE, NULL, NULL,
-                  hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
-
-      if( fInit )
-      {
-         hb_pp_setStdRules( pState );
-         hb_pp_initDynDefines( pState );
-         hb_pp_setStdBase( pState );
-      }
-      if( ! s_pp_state )
-         s_pp_state = pState;
-   }
-
-   return pState;
-}
-
-static void hb_pp_stateFree( PHB_PP_STATE pState )
-{
-   if( pState )
-   {
-      if( pState == s_pp_state )
-         s_pp_state = NULL;
-      hb_pp_free( pState );
+      hb_pp_free( * pStatePtr );
+      * pStatePtr = NULL;
    }
 }
 
-
-static PHB_PP_STATE hb_pp_stateParam( int * piParam )
+static void hb_pp_StdRules( PHB_PP_STATE pState )
 {
-   PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_parptr( 1 );
+   static BOOL s_fInit = TRUE;
+   static PHB_DYNS s_pDynSym;
 
-   if( pState )
+   if( s_fInit )
    {
-      * piParam = 2;
-      return pState;
+      s_pDynSym = hb_dynsymFind( "__PP_STDRULES" );
+      s_fInit = FALSE;
    }
+
+   if( s_pDynSym )
+   {
+      hb_vmPushDynSym( s_pDynSym );
+      hb_vmPushNil();
+      hb_vmPushPointer( ( void * ) &pState );
+      hb_vmDo( 1 );
+   }
+}
+
+static PHB_PP_STATE hb_pp_Param( int iParam )
+{
+   PHB_PP_STATE * pStatePtr = ( PHB_PP_STATE * ) hb_parptr( iParam );
+
+   if( pStatePtr )
+      return * pStatePtr;
    else
-   {
-      * piParam = 1;
-      if( !s_pp_state )
-         return hb_pp_stateNew( TRUE );
-      else
-         return s_pp_state;
-   }
+      return NULL;
 }
 
 /*
@@ -144,13 +132,14 @@ static PHB_PP_STATE hb_pp_stateParam( int * piParam )
  */
 HB_FUNC( __PP_INIT )
 {
-   PHB_PP_STATE pState;
+   PHB_PP_STATE * pStatePtr, pState = hb_pp_new();
 
-   hb_pp_stateFree( s_pp_state );
-   pState = hb_pp_stateNew( FALSE );
    if( pState )
    {
       char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
+
+      hb_pp_init( pState, TRUE, NULL, NULL,
+                  hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
 
       if( szPath )
          hb_pp_addSearchPath( pState, szPath, TRUE );
@@ -158,26 +147,18 @@ HB_FUNC( __PP_INIT )
       if( szStdCh )
          hb_pp_readRules( pState, szStdCh );
       else
-         hb_pp_setStdRules( pState );
+         hb_pp_StdRules( pState );
+
       hb_pp_initDynDefines( pState );
       hb_pp_setStdBase( pState );
 
-      hb_retptr( pState );
+      pStatePtr = ( PHB_PP_STATE * ) hb_gcAlloc( sizeof( PHB_PP_STATE ),
+                                                 hb_pp_Destructor );
+      * pStatePtr = pState;
+      hb_retptrGC( pStatePtr );
    }
    else
       hb_ret();
-}
-
-/*
- * free PP context.
- * __PP_FREE( <pPP> )
- */
-HB_FUNC( __PP_FREE )
-{
-   if( hb_pcount() == 0 )
-      hb_pp_stateFree( s_pp_state );
-   else
-      hb_pp_stateFree( ( PHB_PP_STATE ) hb_parptr( 1 ) );
 }
 
 /*
@@ -186,14 +167,10 @@ HB_FUNC( __PP_FREE )
  */
 HB_FUNC( __PP_PATH )
 {
-   PHB_PP_STATE pState;
-   int iParam;
+   PHB_PP_STATE pState = hb_pp_Param( 1 );
 
-   pState = hb_pp_stateParam( &iParam );
    if( pState )
-   {
-      hb_pp_addSearchPath( pState, hb_parc( iParam ), hb_parl( iParam + 1 ) );
-   }
+      hb_pp_addSearchPath( pState, hb_parc( 2 ), hb_parl( 3 ) );
 }
 
 /*
@@ -202,14 +179,10 @@ HB_FUNC( __PP_PATH )
  */
 HB_FUNC( __PP_RESET )
 {
-   PHB_PP_STATE pState;
-   int iParam;
+   PHB_PP_STATE pState = hb_pp_Param( 1 );
 
-   pState = hb_pp_stateParam( &iParam );
    if( pState )
-   {
       hb_pp_reset( pState );
-   }
 }
 
 /*
@@ -218,14 +191,12 @@ HB_FUNC( __PP_RESET )
  */
 HB_FUNC( __PP_ADDRULE )
 {
-   PHB_PP_STATE pState;
-   int iParam;
+   PHB_PP_STATE pState = hb_pp_Param( 1 );
 
-   pState = hb_pp_stateParam( &iParam );
    if( pState )
    {
-      char * szText = hb_parc( iParam );
-      ULONG ulLen = hb_parclen( iParam );
+      char * szText = hb_parc( 2 );
+      ULONG ulLen = hb_parclen( 2 );
 
       if( szText )
       {
@@ -258,22 +229,19 @@ HB_FUNC( __PP_ADDRULE )
 
 /*
  * preprocess given code and return result
- * __PREPROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+ * __PP_PROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
  */
-HB_FUNC( __PREPROCESS )
+HB_FUNC( __PP_PROCESS )
 {
-   PHB_PP_STATE pState;
-   int iParam;
+   PHB_PP_STATE pState = hb_pp_Param( 1 );
 
-   pState = hb_pp_stateParam( &iParam );
    if( pState )
    {
-      char * szText = hb_parc( iParam );
-      ULONG ulLen = hb_parclen( iParam );
+      ULONG ulLen = hb_parclen( 2 );
 
-      if( szText && ulLen )
+      if( ulLen )
       {
-         szText = hb_pp_parseLine( pState, szText, &ulLen );
+         char * szText = hb_pp_parseLine( pState, hb_parc( 2 ), &ulLen );
          hb_retclen( szText, ulLen );
          return;
       }

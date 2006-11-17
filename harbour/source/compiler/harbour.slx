@@ -712,7 +712,7 @@ static int hb_comp_SLX_Str2Num( char* szNum, HB_LONG * plVal, double * pdVal, in
 {
    BOOL fDbl;
    
-   fDbl = hb_compStrToNum( szNum, plVal, pdVal, piDec, piWidth );
+   fDbl = hb_compStrToNum( szNum, strlen( szNum ), plVal, pdVal, piDec, piWidth );
    return fDbl ? NUM_DOUBLE : NUM_LONG;
 }
 

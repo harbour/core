@@ -178,7 +178,16 @@ Separator     {SpaceTab}
                   }
                }
 
-<STRINGEXT>[^\x22\n]*\x22  { BEGIN 0;
+<STRINGEXT>([^\x22\n]|\\\x22)*\n  { BEGIN 0;
+                      unput( '\n' );
+                      yytext[--yyleng] = '\0';
+                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                      hb_comp_iState = LOOKUP;
+
+                      return NIL;
+                    }
+
+<STRINGEXT>([^\x22\n]|\\\x22)*\x22  { BEGIN 0;
                         yytext[--yyleng] = '\0';
                         {
                            ULONG len = yyleng;
@@ -1816,7 +1825,7 @@ static int yy_ConvertNumber( char * szBuffer )
    double dNumber;
    int iDec, iWidth;
 
-   if( hb_compStrToNum( szBuffer, &lNumber, &dNumber, &iDec, &iWidth ) )
+   if( hb_compStrToNum( szBuffer, strlen( szBuffer ), &lNumber, &dNumber, &iDec, &iWidth ) )
    {
       yylval.valDouble.dNumber = dNumber;
       yylval.valDouble.bDec = iDec;

@@ -105,6 +105,8 @@ extern void hb_macroError( int iError, HB_BISON_PTR pMacro );
 extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
 extern ULONG hb_macroSetMacro( BOOL bSet, ULONG ulFlag );
 extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
+extern BOOL hb_macroLexNew( HB_MACRO_PTR pMacro );
+extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );
 
 extern void hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro );
 extern void hb_compGenPData1( BYTE byte, HB_BISON_PTR pMacro );
