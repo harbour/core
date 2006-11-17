@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/source/common/expropt2.c
+    % minor modification
+
+  * harbour/source/compiler/harbour.c
+    ! fixed HB_TRACE message
+
+2006-11-17 22:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed casting - it resolves problem reported by Alexander with
+      preprocessing chr(255) from static buffer (PP used by .prg code)
+
+  * harbour/source/macro/macro.y
+    + added some comments
+
+  * harbour/source/macro/Makefile
+    * commented out compilation of FLEX based lexer for macro compiler and
+      added compilation of new small lexer written in pure .c
+
+  * harbour/common.mak
+    * replaced macrol.obj by macrolex.obj
+
+  + harbour/source/macro/macrolex.c
+    + new small lexer written in pure .c. The code is much smaller,
+      MT safe and more friendly for grammar parser. I think it should
+      be also faster but I haven't made any tests yet. When we update
+      grammar parser to not free string representation of terminal
       symbols then we should expect some farther speed improvement,
       it will also resolve some set of memory leaks like in:
          type("user input")

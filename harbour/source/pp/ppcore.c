@@ -580,7 +580,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       {
          if( pState->pFile->ulLineBufLen )
          {
-            ch = pState->pFile->pLineBuf[ 0 ];
+            ch = ( UCHAR ) pState->pFile->pLineBuf[ 0 ];
             pState->pFile->pLineBuf++;
             pState->pFile->ulLineBufLen--;
          }

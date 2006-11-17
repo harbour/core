@@ -31,7 +31,7 @@ else
 # see Flex documentation for full set of switches
 LEX_FLAGS = -Phb_comp -C
 
-LEX_SOURCE=macro.l
+#LEX_SOURCE=macro.l
 
 LEX_HEADERS=\
 	hbsetup.h \
@@ -46,6 +46,7 @@ C_SOURCES=\
 	macroa.c \
 	macrob.c \
 	macroc.c \
+	macrolex.c \
 
 
 LIBNAME=macro

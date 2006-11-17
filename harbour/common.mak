@@ -489,7 +489,7 @@ MACRO_LIB_OBJS = \
     $(OBJ_DIR)\macroa.obj   \
     $(OBJ_DIR)\macrob.obj   \
     $(OBJ_DIR)\macroc.obj   \
-    $(OBJ_DIR)\macrol.obj   \
+    $(OBJ_DIR)\macrolex.obj \
 
 #**********************************************************
 
