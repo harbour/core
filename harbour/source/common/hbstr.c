@@ -871,25 +871,32 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
       if( ch == '\\' )
       {
          ++ulStripped;
-         ch = *ptr++;
-         switch( ch )
+         if( ul )
          {
-            case 'r':
-               ch = '\r';
-               break;
-            case 'n':
-               ch = '\n';
-               break;
-            case 't':
-               ch = '\t';
-               break;
-            case 'b':
-               ch = '\b';
-               break;
-            case '\\':
-            default:
-               break;
+            ul--;
+            ch = *ptr++;
+            switch( ch )
+            {
+               case 'r':
+                  ch = '\r';
+                  break;
+               case 'n':
+                  ch = '\n';
+                  break;
+               case 't':
+                  ch = '\t';
+                  break;
+               case 'b':
+                  ch = '\b';
+                  break;
+               case '\\':
+               default:
+                  break;
+            }
          }
+         else
+            break;
+            
       }
       *dst++ = ch;
    }

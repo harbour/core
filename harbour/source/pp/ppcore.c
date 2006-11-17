@@ -938,6 +938,32 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             else
                ++ul;
          }
+#ifndef HB_C52_STRICT
+         else if( ( ch == 'e' || ch == 'E' ) && ulLen > 1 &&
+                  pBuffer[ 1 ] == '"' )
+         {
+            ULONG ulStrip;
+            ++ul;
+            while( ++ul < ulLen && pBuffer[ ul ] != '"' )
+            {
+               if( pBuffer[ ul ] == '\\' && ulLen - ul > 1 )
+                  ++ul;
+            }
+            ulStrip = ul - 2;
+            hb_strRemEscSeq( pBuffer + 2, &ulStrip );
+            hb_pp_tokenAddNext( pState, pBuffer + 2, ulStrip,
+                                HB_PP_TOKEN_STRING );
+            if( ul == ulLen )
+            {
+               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
+               hb_membufAddCh( pState->pBuffer, '\0' );
+               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
+               hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer + 1 );
+            }
+            else
+               ++ul;
+         }
+#endif
          else if( ch == '[' && !pState->fDirective &&
                   hb_pp_canQuote( pState->fCanNextLine ||
                                   HB_PP_TOKEN_CANQUOTE( pState->iLastType ),

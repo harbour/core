@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      symbols then we should expect some farther speed improvement,
+      it will also resolve some set of memory leaks like in:
+         type("user input")
+      and will allow to make some parts of grammar parser common to
+      compiler and macro compiler by removing #if[n]def HB_MACRO_SUPPORT
+
+2006-11-17 14:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbstr.c
+    ! fixed decoding strings without trailing ASCII NUL character in
+      hb_strRemEscSeq()
 
   * harbour/source/pp/ppcore.c
     + added decoding C escaped strings (e"...") to PP so they can be
