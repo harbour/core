@@ -4655,7 +4655,7 @@ int hb_compCompile( char * szPrg, BOOL bSingleFile )
 {
    int iStatus = EXIT_SUCCESS;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compCompile(%s,%i)", szPrg, argc));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compCompile(%s,%d)", szPrg, bSingleFile));
 
    hb_comp_pMainFileName = hb_fsFNameSplit( szPrg );
    hb_comp_pFileName = hb_comp_pMainFileName;

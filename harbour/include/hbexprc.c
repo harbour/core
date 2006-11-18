@@ -787,42 +787,31 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL
  * pExpr is the first expression on the list
  */
 HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_MACRO_DECL )
-#if defined( HB_MACRO_SUPPORT )
 {
-   pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
-   pLeft->value.asString.dealloc = TRUE;
-   memcpy( pLeft->value.asString.string + pLeft->ulLength,
-      pRight->value.asString.string, pRight->ulLength );
-   pLeft->ulLength += pRight->ulLength;
-   pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
-   hb_compExprFree( pRight, HB_MACRO_PARAM );
-
-   HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );  /* to suppress BCC warning */
-   return pLeft;
-}
-#else
-{
-   /* NOTE: compiler uses the hash table for storing identifiers and literals
-    * Strings passed for reduction can be referenced by other expressions
-    * then we cannot resize them or deallocate
-   */
-   char *szString;
-
-   szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
-   memcpy( szString, pLeft->value.asString.string, pLeft->ulLength );
-   memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
-   pLeft->ulLength += pRight->ulLength;
-   szString[ pLeft->ulLength ] = '\0';
    if( pLeft->value.asString.dealloc )
-      hb_xfree( pLeft->value.asString.string );
-   pLeft->value.asString.string = szString;
-   pLeft->value.asString.dealloc = TRUE;
-   hb_compExprFree( pRight, HB_MACRO_PARAM );
-
+   {
+      pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
+      memcpy( pLeft->value.asString.string + pLeft->ulLength,
+              pRight->value.asString.string, pRight->ulLength );
+      pLeft->ulLength += pRight->ulLength;
+      pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
+      hb_compExprFree( pRight, HB_MACRO_PARAM );
+   }
+   else
+   {
+      char *szString;
+      szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
+      memcpy( szString, pLeft->value.asString.string, pLeft->ulLength );
+      memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
+      pLeft->ulLength += pRight->ulLength;
+      szString[ pLeft->ulLength ] = '\0';
+      pLeft->value.asString.string = szString;
+      pLeft->value.asString.dealloc = TRUE;
+      hb_compExprFree( pRight, HB_MACRO_PARAM );
+   }
    HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );  /* to suppress BCC warning */
    return pLeft;
 }
-#endif
 
 #ifdef __WATCOMC__
 /* enable warnings for unreferenced symbols */

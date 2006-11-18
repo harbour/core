@@ -377,27 +377,20 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
 #ifndef HB_MACRO_SUPPORT
       if( ! hb_compFunCallCheck( pName->value.asSymbol, iCount ) )
       {
-         hb_compExprDelete( pName );
-         if( pParms )
-            hb_compExprDelete( pParms );
-         return NULL;
+         /* skip any farther modifications which can depend on valid number
+            of parameters */
+         ;
       }
+      else
 #endif
-
       /* TODO: EMPTY() (not done by Clipper) */
-
 	if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
          pEval = hb_compExprNewMethodCall( 
-#ifndef HB_MACRO_SUPPORT
-            hb_compExprNewSend( pParms->value.asList.pExprList, hb_compIdentifierNew( "EVAL", TRUE ), NULL ),
-#else
-            hb_compExprNewSend( pParms->value.asList.pExprList, hb_strdup("EVAL"), NULL ),
-#endif            
+            hb_compExprNewSend( pParms->value.asList.pExprList, "EVAL", NULL ),
             hb_compExprNewArgList( pParms->value.asList.pExprList->pNext ) );
-               
          pParms->value.asList.pExprList = NULL;
          HB_EXPR_PCODE1( hb_compExprDelete, pParms );
          HB_EXPR_PCODE1( hb_compExprDelete, pName ); 
@@ -421,17 +414,12 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             HB_EXPR_PTR pIndex, pVar;
             HB_EXPR_PTR pBase;
 
-#ifdef HB_MACRO_SUPPORT
-            HB_XFREE( pName->value.asSymbol );
-            pName->value.asSymbol = hb_strdup( "__GETA" );
-#else
-            pName->value.asSymbol = hb_compIdentifierNew( "__GETA", TRUE );
-#endif
+            pName->value.asSymbol = "__GETA";
             /* NOTE: a[ i, j ] is stored as: (pExprList)->(pIndex)
              * ((a->[ i ])->[ j ])
              */
             pVar = HB_EXPR_USE( pArg->value.asList.pExprList, HB_EA_REDUCE );
-            pBase = pVar;
+            pBase = pVar->ExprType == HB_ET_ARRAYAT ? pVar : NULL;
             pIndex = HB_EXPR_USE( pArg->value.asList.pIndex, HB_EA_REDUCE );
             pIndex->pNext = NULL;
             while( pVar->ExprType == HB_ET_ARRAYAT )
@@ -469,7 +457,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             hb_compExprClear( pArg );
             /* Create an array with index elements
              */
-            pIndex = HB_EXPR_PCODE1(hb_compExprNewArray, hb_compExprNewList( pIndex ) );
+            pIndex = HB_EXPR_PCODE1( hb_compExprNewArray, hb_compExprNewList( pIndex ) );
             /* The array with index elements have to be the sixth argument
              * of __GETA() call
              */
@@ -508,12 +496,15 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                }
             }
             /* clear expressions no longer used */
-            while( pBase->ExprType == HB_ET_ARRAYAT )
+            if( pBase )
             {
-               pVar = pBase->value.asList.pExprList;
-               pBase->value.asList.pExprList = NULL;
-               hb_compExprClear( pBase );
-               pBase = pVar;
+               while( pBase->ExprType == HB_ET_ARRAYAT )
+               {
+                  pVar = pBase->value.asList.pExprList;
+                  pBase->value.asList.pExprList = NULL;
+                  hb_compExprClear( pBase );
+                  pBase = pVar;
+               }
             }
          }
          else if( pArg->ExprType == HB_ET_MACRO )
@@ -521,12 +512,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             /* @ 0,0 GET &var    => __GET( NIL, var,... )
              * @ 0,0 GET var&var => __GET( NIL, "var&var",... )
              */
-#ifdef HB_MACRO_SUPPORT
-            HB_XFREE( pName->value.asSymbol );
-            pName->value.asSymbol = hb_strdup( "__GET" );
-#else
-            pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
-#endif
+            pName->value.asSymbol = "__GET";
             if( pArg->value.asMacro.pExprList == NULL )
             {
                /* Simple macro expansion (not a parenthesized expressions)
@@ -546,11 +532,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                   /* simple &variable - replace the second argument with
                    * a variable name
                    */
-#ifdef HB_MACRO_SUPPORT
-                  char *szName = hb_strdup( pFirst->value.asMacro.szMacro );
-#else
-                  char *szName = hb_compIdentifierNew( pFirst->value.asMacro.szMacro, FALSE );
-#endif
+                  char *szName = pFirst->value.asMacro.szMacro;
                   if( pFirst->pNext )
                      HB_EXPR_PCODE1( hb_compExprDelete, pFirst->pNext );  /* delete a second argument */
                   pArg->pNext = hb_compExprNewVar( szName );
@@ -565,11 +547,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                   if( pArg->pNext == NULL )
                   {
                       /* no second argument */
-#ifdef HB_MACRO_SUPPORT
-                     char *szText = hb_strdup( pFirst->value.asMacro.szMacro );
-#else
-                     char *szText = hb_compIdentifierNew( pFirst->value.asMacro.szMacro, FALSE );
-#endif
+                     char *szText = pFirst->value.asMacro.szMacro;
                      pArg->pNext = hb_compExprNewString( szText, strlen(szText) );
                      pArg->pNext->pNext = pNext;
                   }
@@ -586,12 +564,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
          else
          {
             HB_EXPR_PTR pNext;
-#ifdef HB_MACRO_SUPPORT
-            HB_XFREE( pName->value.asSymbol );
-            pName->value.asSymbol = hb_strdup( "__GET" );
-#else
-            pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
-#endif
+            pName->value.asSymbol = "__GET";
             /* store second and a rest of arguments */
             pNext = pArg->pNext;
             pArg->pNext = NULL;
@@ -714,11 +687,7 @@ HB_EXPR_PTR hb_compExprNewString( char *szValue, ULONG ulLen )
    pExpr =hb_compExprNew( HB_ET_STRING );
 
    pExpr->value.asString.string = szValue;
-#ifdef HB_MACRO_SUPPORT
-   pExpr->value.asString.dealloc = TRUE;
-#else
    pExpr->value.asString.dealloc = FALSE;
-#endif
    pExpr->ulLength = ulLen;
    pExpr->ValType = HB_EV_STRING;
 
@@ -1034,9 +1003,6 @@ void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
    {
       pDel  = pVars;
       pVars = pVars->pNext;
-#ifdef HB_MACRO_SUPPORT
-      HB_XFREE( pDel->szName );
-#endif
       HB_XFREE( pDel );
    }
 }
@@ -1066,11 +1032,10 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
     * NOTE: this is not a valid variable name so there will be no collisions
    */
    /* create var==NIL */
+   pIIF =hb_compExprNewVar( "~1" );
 #ifdef HB_MACRO_SUPPORT
-   pIIF =hb_compExprNewVar( hb_strdup("~1") );           
    pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewNil(), HB_MACRO_PARAM );
 #else
-   pIIF =hb_compExprNewVar( hb_compIdentifierNew("~1",TRUE) );           
    pIIF = hb_compExprSetOperand( hb_compExprNewEQ( pIIF ), hb_compExprNewNil() );
 #endif
    /* create ( var==NIL, */
@@ -1078,11 +1043,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    /* create ( var==NIL, <pExpr>, */
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
    /* create var */
-#ifdef HB_MACRO_SUPPORT
-   pSet =hb_compExprNewVar( hb_strdup("~1") );           
-#else
-   pSet =hb_compExprNewVar( hb_compIdentifierNew("~1",TRUE) );           
-#endif
+   pSet =hb_compExprNewVar( "~1" );           
    /* create <pExpr>:=var */
    pSet = hb_compExprAssign( hb_compExprClone( pExpr ), pSet );
    /* create ( var==nil, <pExpr>, <pExpr>:=var ) */
@@ -1092,7 +1053,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    /* create a codeblock
    */
 #ifdef HB_MACRO_SUPPORT
-   return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd( hb_compExprNewCodeBlock(NULL,0,0), hb_strdup("~1"), HB_MACRO_PARAM ), pIIF );
+   return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd( hb_compExprNewCodeBlock(NULL,0,0), "~1", HB_MACRO_PARAM ), pIIF );
 #else
    return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd( hb_compExprNewCodeBlock(NULL,0,0), "~1", ' ' ), pIIF );
 #endif

@@ -1214,9 +1214,8 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 
          if( bVal == 0 && pArg->value.asNum.lVal != 0 )
          {
-            pExpr->value.asString.string = ( char * ) hb_xgrab( 1 );
-            pExpr->value.asString.string[ 0 ] = '\0';
-            pExpr->value.asString.dealloc = TRUE;
+            pExpr->value.asString.string = "";
+            pExpr->value.asString.dealloc = FALSE;
             pExpr->ulLength = 0;
          }
          else

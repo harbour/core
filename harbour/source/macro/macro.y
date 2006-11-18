@@ -330,7 +330,6 @@ MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                  if( hb_macroIsIdent( szVarName ) )
                                  {
                                     $$ = hb_compExprNewVar( szVarName );
-                                    hb_xfree( $1 );
                                     HB_MACRO_CHECK( $$ );
                                  }
                                  else
@@ -338,8 +337,6 @@ MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                     /* invalid variable name
                                      */
                                     HB_TRACE(HB_TR_DEBUG, ("macro -> invalid variable name: %s", $1));
-
-                                    hb_xfree( $1 );
                                     YYABORT;
                                  }
                               }
@@ -360,7 +357,7 @@ MacroExprAlias : MacroExpr ALIASOP  { $$ = $1; }
  */
 /* special case: _FIELD-> and FIELD-> can be nested
  */
-FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( hb_strdup( "FIELD" ) ); }
+FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( "FIELD" ); }
             | FIELD ALIASOP FieldAlias    { $$ = $3; }
             ;
 
@@ -888,17 +885,17 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             return NIL;
 
          hb_pp_tokenUpper( pToken );
-         yylval_ptr->string = hb_strdup( pToken->value );
+         yylval_ptr->string = pToken->value;
          return IDENTIFIER;
 
       case HB_PP_TOKEN_MACROVAR:
          hb_pp_tokenUpper( pToken );
-         yylval_ptr->string = hb_strdup( pToken->value );
+         yylval_ptr->string = pToken->value;
          return MACROVAR;
 
       case HB_PP_TOKEN_MACROTEXT:
          hb_pp_tokenUpper( pToken );
-         yylval_ptr->string = hb_strdup( pToken->value );
+         yylval_ptr->string = pToken->value;
          return MACROTEXT;
 
       case HB_PP_TOKEN_NUMBER:
@@ -933,7 +930,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          return NUM_DATE;
 
       case HB_PP_TOKEN_STRING:
-         yylval_ptr->string = hb_strdup( pToken->value );
+         yylval_ptr->string = pToken->value;
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:

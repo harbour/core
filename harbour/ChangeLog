@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    to lower cases will be better. Please think about it.
+
+2006-11-20 15:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macrolex.c
+    ! fixed bad typo in NIL, IIF, .AND., .NOT. tokens parsing
+
+2006-11-18 15:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    * do not allocate separate memory in macro compiler for terminal
+      symbols which needs string representation - it fixes some set
+      of memory leaks and increase a little bit macro compilation
+    ! fixed accessing freed memory in:
+         private cMacro := "cEarly", cEarly := {"Early"}
+         @ 12,10 GET &cMacro[1]
+    ! fixed GPF in:
+         p:=@left()
+      and similar expressions
+
   * harbour/source/common/expropt2.c
     % minor modification
 

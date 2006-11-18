@@ -859,10 +859,6 @@ static HB_EXPR_FUNC( hb_compExprUseVarRef )
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( pSelf );
       case HB_EA_DELETE:
-         /* NOTE: variable name should be released if macro compilation */
-#if defined( HB_MACRO_SUPPORT )
-         HB_XFREE( pSelf->value.asSymbol );
-#endif
          break;
    }
    return pSelf;
@@ -900,10 +896,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef )
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( pSelf );
       case HB_EA_DELETE:
-         /* NOTE: function name should be released if macro compilation */
-#if defined( HB_MACRO_SUPPORT )
-         HB_XFREE( pSelf->value.asSymbol );
-#endif
          break;
    }
    return pSelf;
@@ -1622,13 +1614,6 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
       case HB_EA_DELETE:
          if( pSelf->value.asMacro.pExprList )
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMacro.pExprList );
-
-#if defined( HB_MACRO_SUPPORT )
-         if( pSelf->value.asMacro.szMacro )
-            HB_XFREE( pSelf->value.asMacro.szMacro );
-#else
-         /* NOTE: This will be released during releasing of symbols' table */
-#endif
          break;
    }
    return pSelf;
@@ -2056,9 +2041,6 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
          break;
 
       case HB_EA_DELETE:
-#if defined( HB_MACRO_SUPPORT )
-         HB_XFREE( pSelf->value.asSymbol );
-#endif
          break;
    }
    return pSelf;
@@ -2082,9 +2064,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunName )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
       case HB_EA_DELETE:
-#if defined( HB_MACRO_SUPPORT )
-         HB_XFREE( pSelf->value.asSymbol );
-#endif
          break;
    }
    return pSelf;
@@ -2176,10 +2155,6 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
          break;
 
       case HB_EA_DELETE:
-         /* NOTE: variable name should be released if macro compilation */
-#if defined( HB_MACRO_SUPPORT )
-         HB_XFREE( pSelf->value.asSymbol );
-#endif
          break;
    }
    return pSelf;
@@ -2351,9 +2326,6 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             {
                HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMessage.pMessage );
             }
-#if defined( HB_MACRO_SUPPORT )
-            HB_XFREE( pSelf->value.asMessage.szMessage );
-#endif
          }
          break;
    }
@@ -3150,7 +3122,7 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
          break;
 
       case HB_EA_STATEMENT:
-         hb_compErrorSyntax( pSelf  );
+         hb_compErrorSyntax( pSelf );
          break;
 
       case HB_EA_DELETE:
@@ -3200,8 +3172,8 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
          }
          else
          {
-             HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          }
          break;
 
@@ -3817,9 +3789,9 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
       case HB_EA_PUSH_POP:
          if( HB_SUPPORT_HARBOUR )
          {
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
          }
@@ -3886,9 +3858,9 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
       case HB_EA_PUSH_POP:
          if( HB_SUPPORT_HARBOUR )
          {
-         /* NOTE: This will not generate a runtime error if incompatible
-          * data type is used
-          */
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
          }
          else
