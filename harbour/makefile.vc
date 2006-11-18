@@ -115,7 +115,7 @@ CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 
-CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS) -Iobj\$(CC_DIRNAME)
 
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)

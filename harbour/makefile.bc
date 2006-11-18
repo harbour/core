@@ -98,7 +98,7 @@ MKLIB  = tlib.exe
 INCLUDE_DIR    = include
 
 # C Compiler Flags
-CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -Iobj\$(CC_DIRNAME)
 !ifndef BCC_NOOPTIM
    CFLAGS      = -O2 $(CFLAGS)
 !endif
