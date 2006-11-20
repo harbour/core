@@ -127,6 +127,26 @@ static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
    }
 }
 
+static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
+                             PHB_MACRO_LEX pLex, char cDelim )
+{
+   pLex->quote = FALSE;
+   yylval_ptr->string = pLex->pDst;
+   while( pLex->ulSrc < pLex->ulLen )
+   {
+      char ch = pLex->pString[ pLex->ulSrc++ ];
+      if( ch == cDelim )
+      {
+         *pLex->pDst++ = '\0';
+         return LITERAL;
+      }
+      *pLex->pDst++ = ch;
+   }
+   *pLex->pDst++ = '\0';
+   hb_macroError( EG_SYNTAX, pMacro );
+   return LITERAL;
+}
+
 static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, ULONG ulLen )
 {
    HB_LONG lNumber;
@@ -336,14 +356,14 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             {
                if( ( pLex->pString[ pLex->ulSrc + 0 ] | ('a' - 'A') ) == 'a' &&
                    ( pLex->pString[ pLex->ulSrc + 1 ] | ('a' - 'A') ) == 'n' &&
-                   ( pLex->pString[ pLex->ulSrc + 1 ] | ('a' - 'A') ) == 'd' )
+                   ( pLex->pString[ pLex->ulSrc + 2 ] | ('a' - 'A') ) == 'd' )
                {
                   pLex->ulSrc += 4;
                   return AND;
                }
                if( ( pLex->pString[ pLex->ulSrc + 0 ] | ('a' - 'A') ) == 'n' &&
                    ( pLex->pString[ pLex->ulSrc + 1 ] | ('a' - 'A') ) == 'o' &&
-                   ( pLex->pString[ pLex->ulSrc + 1 ] | ('a' - 'A') ) == 't' )
+                   ( pLex->pString[ pLex->ulSrc + 2 ] | ('a' - 'A') ) == 't' )
                {
                   pLex->ulSrc += 4;
                   return NOT;
@@ -381,60 +401,16 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 
          case '[':
             if( pLex->quote )
-            {
-               pLex->quote = FALSE;
-               yylval_ptr->string = pLex->pDst;
-               while( pLex->ulSrc < pLex->ulLen )
-               {
-                  ch = pLex->pString[ pLex->ulSrc++ ];
-                  if( ch == ']' )
-                  {
-                     *pLex->pDst++ = '\0';
-                     return LITERAL;
-                  }
-                  *pLex->pDst++ = ch;
-               }
-               *pLex->pDst++ = '\0';
-               hb_macroError( EG_SYNTAX, pMacro );
-               return LITERAL;
-            }
+               return hb_lexStringCopy( yylval_ptr, pMacro, pLex, ']' );
             pLex->quote = TRUE;
             return '[';
 
          case '`':
          case '\'':
-            pLex->quote = FALSE;
-            yylval_ptr->string = pLex->pDst;
-            while( pLex->ulSrc < pLex->ulLen )
-            {
-               ch = pLex->pString[ pLex->ulSrc++ ];
-               if( ch == '\'' )
-               {
-                  *pLex->pDst++ = '\0';
-                  return LITERAL;
-               }
-               *pLex->pDst++ = ch;
-            }
-            *pLex->pDst++ = '\0';
-            hb_macroError( EG_SYNTAX, pMacro );
-            return LITERAL;
+            return hb_lexStringCopy( yylval_ptr, pMacro, pLex, '\'' );
 
          case '"':
-            pLex->quote = FALSE;
-            yylval_ptr->string = pLex->pDst;
-            while( pLex->ulSrc < pLex->ulLen )
-            {
-               ch = pLex->pString[ pLex->ulSrc++ ];
-               if( ch == '"' )
-               {
-                  *pLex->pDst++ = '\0';
-                  return LITERAL;
-               }
-               *pLex->pDst++ = ch;
-            }
-            *pLex->pDst++ = '\0';
-            hb_macroError( EG_SYNTAX, pMacro );
-            return LITERAL;
+            return hb_lexStringCopy( yylval_ptr, pMacro, pLex, '"' );
 
          case '&':
             if( pLex->ulSrc < pLex->ulLen )
@@ -584,11 +560,11 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'I' &&
-                      yylval_ptr->string[ 1 ] == 'F' )
+                      yylval_ptr->string[ 2 ] == 'F' )
                      return IIF;
                   else if( yylval_ptr->string[ 0 ] == 'N' &&
                            yylval_ptr->string[ 1 ] == 'I' &&
-                           yylval_ptr->string[ 1 ] == 'L' )
+                           yylval_ptr->string[ 2 ] == 'L' )
                      return NIL;
                }
                else if( pLex->pDst - yylval_ptr->string > 4 )

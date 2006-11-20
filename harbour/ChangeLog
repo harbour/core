@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+    file name. It's current behavior but I'm not sure you will want
+    to keep it. Maybe compiler switch to always convert file names
+    created from
+         DO <id> [WITH <params,...>]
     to lower cases will be better. Please think about it.
 
 2006-11-20 15:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
