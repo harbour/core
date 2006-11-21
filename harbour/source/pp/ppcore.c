@@ -148,6 +148,9 @@ static const HB_PP_OPERATOR s_operators[] =
    { ".NOT.", 5, "!"    , HB_PP_TOKEN_NOT       | HB_PP_TOKEN_STATIC },
    { ".AND.", 5, ".AND.", HB_PP_TOKEN_AND       | HB_PP_TOKEN_STATIC },
    { ".OR." , 4, ".OR." , HB_PP_TOKEN_OR        | HB_PP_TOKEN_STATIC },
+#ifndef HB_C52_STRICT
+   { "..."  , 3, "..."  , HB_PP_TOKEN_EPSILON   | HB_PP_TOKEN_STATIC },
+#endif
    { "**="  , 3, "^="   , HB_PP_TOKEN_EXPEQ     | HB_PP_TOKEN_STATIC },
    { "**"   , 2, "^"    , HB_PP_TOKEN_POWER     | HB_PP_TOKEN_STATIC },
    { "++"   , 2, "++"   , HB_PP_TOKEN_INC       | HB_PP_TOKEN_STATIC },
@@ -203,7 +206,7 @@ static void hb_pp_disp( PHB_PP_STATE pState, const char * szMessage )
       fflush( stdout );
    }
    else
-      ( pState->pDispFunc )( szMessage );
+      ( pState->pDispFunc )( pState->cargo, szMessage );
 }
 
 static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char * szParam )
@@ -214,7 +217,7 @@ static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char 
    {
       if( !pState->fError )
       {
-         ( pState->pErrorFunc )( szMsgTable, type, iError, szParam, NULL );
+         ( pState->pErrorFunc )( pState->cargo, szMsgTable, type, iError, szParam, NULL );
          if( type != 'W' )
             pState->fError = TRUE;
       }
@@ -612,7 +615,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       char szLine[ 12 ];
 
       pState->pFile->iLastDisp = iLine;
-      sprintf( szLine, "\r%i00", iLine );
+      sprintf( szLine, "\r%i00\r", iLine );
       hb_pp_disp( pState, szLine );
    }
 }
@@ -685,7 +688,8 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
    pState->iStreamDump = HB_PP_STREAM_OFF;
    if( pState->pDumpFunc )
    {
-      ( pState->pDumpFunc )( hb_membufPtr( pState->pDumpBuffer ),
+      ( pState->pDumpFunc )( pState->cargo,
+                             hb_membufPtr( pState->pDumpBuffer ),
                              hb_membufLen( pState->pDumpBuffer ),
                              pState->iDumpLine );
 
@@ -857,7 +861,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                         sprintf( szFunc, "HB_INLINE_%03d", ++pState->iInLineCount );
                         if( pInLinePtr && * pInLinePtr )
                            hb_pp_tokenSetValue( *pInLinePtr, szFunc, strlen( szFunc ) );
-                        pState->pInLineFunc( szFunc, 
+                        pState->pInLineFunc( pState->cargo, szFunc, 
                                     hb_membufPtr( pState->pStreamBuffer ),
                                     hb_membufLen( pState->pStreamBuffer ),
                                     pState->iDumpLine );
@@ -1520,7 +1524,7 @@ static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
 static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
                                   BOOL fSysFile, FILE * file_in,
-                                  PHB_PP_OPEN_FUNC pOpenFunc )
+                                  BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    char szFileNameBuf[ _POSIX_PATH_MAX + 1 ];
    PHB_PP_FILE pFile;
@@ -1529,7 +1533,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
    {
       if( pOpenFunc )
       {
-         file_in = ( pOpenFunc )( szFileName, fSysFile, szFileNameBuf );
+         file_in = ( pOpenFunc )( pState->cargo, szFileName, fSysFile, szFileNameBuf );
          szFileName = szFileNameBuf;
       }
       else
@@ -1564,7 +1568,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
             file_in = fopen( szFileName, "r" );
          }
 
-         if( !file_in && errno != EMFILE && pState->pIncludePath )
+         if( !file_in && errno != EMFILE && pState->pIncludePath && fSearchPath )
          {
             HB_PATHNAMES * pPath = pState->pIncludePath;
 
@@ -1606,12 +1610,13 @@ static PHB_PP_FILE hb_pp_FileBufNew( char * pLineBuf, ULONG ulLineBufLen )
    return pFile;
 }
 
-static void hb_pp_FileFree( PHB_PP_FILE pFile, PHB_PP_CLOSE_FUNC pCloseFunc )
+static void hb_pp_FileFree( PHB_PP_STATE pState, PHB_PP_FILE pFile,
+                            PHB_PP_CLOSE_FUNC pCloseFunc )
 {
    if( pFile->file_in )
    {
       if( pCloseFunc )
-         ( pCloseFunc )( pFile->file_in );
+         ( pCloseFunc )( pState->cargo, pFile->file_in );
       else
          fclose( pFile->file_in );
    }
@@ -1644,7 +1649,7 @@ static void hb_pp_InFileFree( PHB_PP_STATE pState )
    {
       PHB_PP_FILE pFile = pState->pFile;
       pState->pFile = pFile->pPrev;
-      hb_pp_FileFree( pFile, pState->pCloseFunc );
+      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
    }
 }
 
@@ -1705,7 +1710,8 @@ static void hb_pp_includeFile( PHB_PP_STATE pState, char * szFileName, BOOL fSys
    }
    else
    {
-      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, NULL, pState->pOpenFunc );
+      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, NULL,
+                                         TRUE, pState->pOpenFunc );
       if( pFile )
       {
          pFile->pPrev = pState->pFile;
@@ -1729,7 +1735,7 @@ static void hb_pp_includeClose( PHB_PP_STATE pState )
    if( pState->pFile )
       pState->pFile->fGenLineInfo = TRUE;
 
-   hb_pp_FileFree( pFile, pState->pCloseFunc );
+   hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
 }
 
 static PHB_PP_TOKEN hb_pp_streamFuncGet( PHB_PP_TOKEN pToken, PHB_PP_TOKEN * pFuncPtr )
@@ -1859,7 +1865,7 @@ static BOOL hb_pp_setCompilerSwitch( PHB_PP_STATE pState, char * szSwitch,
    }
 
    if( pState->pSwitchFunc )
-      fError = ( pState->pSwitchFunc )( szSwitch, iValue );
+      fError = ( pState->pSwitchFunc )( pState->cargo, szSwitch, iValue );
 
    return fError;
 }
@@ -2293,8 +2299,14 @@ static BOOL hb_pp_matchMarkerNew( PHB_PP_TOKEN * pTokenPtr,
                int i = 3;
                do
                {
-                  if( !hb_pp_tokenUnQuotedGet( &pTokenPtr, &fQuoted, TRUE ) || fQuoted ||
-                      HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) != HB_PP_TOKEN_DOT )
+                  if( !hb_pp_tokenUnQuotedGet( &pTokenPtr, &fQuoted, TRUE ) || fQuoted )
+                     break;
+                  if( i == 3 && HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) == HB_PP_TOKEN_EPSILON )
+                  {
+                     i = 0;
+                     break;
+                  }
+                  if( HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) != HB_PP_TOKEN_DOT )
                      break;
                }
                while( --i > 0 );
@@ -4326,21 +4338,6 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
    }
 }
 
-static PHB_PP_TOKEN hb_pp_getToken( PHB_PP_STATE pState )
-{
-   if( pState->pTokenOut )
-   {
-      PHB_PP_TOKEN pToken = pState->pTokenOut;
-      pState->pTokenOut = pToken->pNext;
-      hb_pp_tokenFree( pToken );
-   }
-
-   if( !pState->pTokenOut )
-      hb_pp_preprocesToken( pState );
-
-   return pState->pTokenOut;
-}
-
 /*
  * exported functions
  */
@@ -4385,6 +4382,25 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
 
 
 /*
+ * get preprocessed token
+ */
+PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
+{
+   if( pState->pTokenOut )
+   {
+      PHB_PP_TOKEN pToken = pState->pTokenOut;
+      pState->pTokenOut = pToken->pNext;
+      hb_pp_tokenFree( pToken );
+   }
+
+   if( !pState->pTokenOut )
+      hb_pp_preprocesToken( pState );
+
+   return pState->pTokenOut;
+}
+
+
+/*
  * create new PP context
  */
 PHB_PP_STATE hb_pp_new( void )
@@ -4403,13 +4419,14 @@ void hb_pp_free( PHB_PP_STATE pState )
 /*
  * initialize PP context
  */
-void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
+void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, void * cargo,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                  PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
    pState->fQuiet      = fQuiet;
+   pState->cargo       = cargo;
    pState->pOpenFunc   = pOpenFunc;
    pState->pCloseFunc  = pCloseFunc;
    pState->pErrorFunc  = pErrorFunc;
@@ -4560,7 +4577,8 @@ void hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile )
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 
-   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, pState->pOpenFunc );
+   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL,
+                                  TRUE, pState->pOpenFunc );
    if( !pState->pFile )
    {
       pState->pFile = pFile;
@@ -4569,10 +4587,10 @@ void hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile )
    else
    {
       pState->iFiles++;
-      while( hb_pp_getToken( pState ) );
+      while( hb_pp_tokenGet( pState ) );
       if( pState->pFile )
       {
-         hb_pp_FileFree( pState->pFile, pState->pCloseFunc );
+         hb_pp_FileFree( pState, pState->pFile, pState->pCloseFunc );
          pState->iFiles--;
       }
       pState->pFile = pFile;
@@ -4582,29 +4600,35 @@ void hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile )
 /*
  * close all open input files and set the given one as new
  */
-void hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, FILE * file_in )
+BOOL hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearchPath,
+                   FILE * file_in, BOOL fError )
 {
    hb_pp_InFileFree( pState );
 
    pState->fError = FALSE;
 
-   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, file_in, NULL );
-   if( ! pState->pFile )
-      hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_INPUT, szFileName );
-   else
+   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, file_in,
+                                  fSearchPath, NULL );
+   if( pState->pFile )
+   {
       pState->iFiles++;
+      return TRUE;
+   }
+   if( fError )
+      hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_INPUT, szFileName );
+   return FALSE;
 }
 
 /*
  * set output (.ppo) file handle
  */
-void hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out )
+BOOL hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out )
 {
+   pState->fError = FALSE;
    hb_pp_OutFileFree( pState );
 
    if( szOutFileName )
    {
-      pState->fError = FALSE;
 
       if( file_out )
          pState->file_out = file_out;
@@ -4621,6 +4645,15 @@ void hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out )
          hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_CREATE_FILE, szOutFileName );
       }
    }
+   return !pState->fError;
+}
+
+/*
+ * check error status of last PP operation
+ */
+BOOL hb_pp_lasterror( PHB_PP_STATE pState )
+{
+   return pState->fError;
 }
 
 /*
@@ -4696,7 +4729,7 @@ void hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue )
       hb_pp_defineAdd( pState, HB_PP_CMP_CASE, 0, NULL, pMatch, pResult );
    }
    pState->pFile = pFile->pPrev;
-   hb_pp_FileFree( pFile, NULL );
+   hb_pp_FileFree( pState, pFile, NULL );
    pState->iFiles--;
 }
 
@@ -4762,7 +4795,7 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
       else
          hb_membufFlush( pState->pOutputBuffer );
 
-      while( ( pToken = hb_pp_getToken( pState ) ) != NULL )
+      while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
       {
 #if defined( HB_PP_NO_LINEINFO_TOKEN )
          int iLine;
@@ -4845,7 +4878,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen )
    pState->pFile = pFile;
    pState->iFiles++;
 
-   while( ( pToken = hb_pp_getToken( pState ) ) != NULL )
+   while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
    {
       hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE, ltype );
       ltype = HB_PP_TOKEN_TYPE( pToken->type );
@@ -4866,7 +4899,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen )
    if( pState->pFile == pFile )
    {
       pState->pFile = pFile->pPrev;
-      hb_pp_FileFree( pFile, NULL );
+      hb_pp_FileFree( pState, pFile, NULL );
       pState->iFiles--;
    }
 
@@ -4885,7 +4918,7 @@ PHB_PP_STATE hb_pp_lexNew( char * pMacroString, ULONG ulLen )
    hb_pp_getLine( pState );
    pState->pTokenOut = pState->pFile->pTokenList;
    pState->pFile->pTokenList = NULL;
-   hb_pp_FileFree( pState->pFile, NULL );
+   hb_pp_FileFree( pState, pState->pFile, NULL );
    pState->pFile = NULL;
    if( pState->fError )
    {
@@ -4898,7 +4931,7 @@ PHB_PP_STATE hb_pp_lexNew( char * pMacroString, ULONG ulLen )
    return pState;
 }
 
-PHB_PP_TOKEN hb_pp_lex( PHB_PP_STATE pState )
+PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState )
 {
    PHB_PP_TOKEN pToken = * pState->pNextTokenPtr;
 
@@ -4917,20 +4950,110 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
    if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR )
    {
       char * value;
-      if( pToken->value[ pToken->len - 1 ] == '.' )
+      if( pToken->len > HB_SYMBOL_NAME_LEN )
+         pToken->len = HB_SYMBOL_NAME_LEN;
+      else if( pToken->value[ pToken->len - 1 ] == '.' )
          pToken->len--;
       value = ( char * ) hb_xgrab( pToken->len );
-      memcpy( value, pToken->value + 1, pToken->len - 1 );
+      memcpy( value, pToken->value + 1, --pToken->len );
       value[ pToken->len ] = '\0';
       if( HB_PP_TOKEN_ALLOC( pToken->type ) )
          hb_xfree( pToken->value );
+      else
+         pToken->type &= ~HB_PP_TOKEN_STATIC;
       pToken->value = value;
    }
-   else if( !HB_PP_TOKEN_ALLOC( pToken->type ) )
+   else
    {
-      char * value = ( char * ) hb_xgrab( pToken->len + 1 );
-      memcpy( value, pToken->value, pToken->len + 1 );
-      pToken->value = value;
+      if( !HB_PP_TOKEN_ALLOC( pToken->type ) )
+      {
+         char * value = ( char * ) hb_xgrab( pToken->len + 1 );
+         memcpy( value, pToken->value, pToken->len + 1 );
+         pToken->value = value;
+         pToken->type &= ~HB_PP_TOKEN_STATIC;
+      }
+      if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD &&
+          pToken->len > HB_SYMBOL_NAME_LEN )
+      {
+         pToken->len = HB_SYMBOL_NAME_LEN;
+         pToken->value[ HB_SYMBOL_NAME_LEN ] = '\0';
+      }
    }
    hb_strupr( pToken->value );
+}
+
+/*
+ * convert tokens between '[' and ']' tokens into single string token
+ * and replace the converted tokens with the new string
+ */
+void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
+{
+   BOOL fError = TRUE;
+
+   hb_membufFlush( pState->pBuffer );
+   if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_SB )
+   {
+      PHB_PP_TOKEN pTok, pFirst, pLast = NULL;
+      pFirst = pTok = pToken->pNext;
+      while( !HB_PP_TOKEN_ISEOC( pTok ) )
+      {
+         pLast = pTok;
+         if( HB_PP_TOKEN_TYPE( pTok->type ) == HB_PP_TOKEN_RIGHT_SB )
+         {
+            fError = FALSE;
+            pTok = pTok->pNext;
+            break;
+         }
+         hb_pp_tokenStr( pTok, pState->pBuffer, TRUE, FALSE, 0 );
+         pTok = pTok->pNext;
+      }
+      if( pLast )
+      {
+         pLast->pNext = NULL;
+         pToken->pNext = pTok;
+         hb_pp_tokenListFree( &pFirst );
+      }
+      hb_pp_tokenSetValue( pToken, hb_membufPtr( pState->pBuffer ),
+                                   hb_membufLen( pState->pBuffer ) );
+      HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_STRING );
+   }
+
+   if( fError )
+   {
+      hb_membufAddCh( pState->pBuffer, '\0' );
+      hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR,
+                   hb_membufPtr( pState->pBuffer ) );
+   }
+}
+
+char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
+                               int * piType )
+{
+   * piType = 0;
+   hb_membufFlush( pState->pBuffer );
+   if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
+   {
+      int iBraces = 1;
+      pToken = pToken->pNext;
+      while( iBraces && !HB_PP_TOKEN_ISEOC( pToken ) )
+      {
+         if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_AMPERSAND )
+         {
+            if( pToken->pNext &&
+                HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_PB )
+               * piType |= 2;
+         }
+         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
+                  HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT )
+            * piType |= 1;
+         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
+            --iBraces;
+         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
+            ++iBraces;
+         hb_pp_tokenStr( pToken, pState->pBuffer, TRUE, FALSE, 0 );
+         pToken = pToken->pNext;
+      }
+   }
+   hb_membufAddCh( pState->pBuffer, '\0' );
+   return hb_membufPtr( pState->pBuffer );
 }

@@ -59,7 +59,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
-
+   BOOL bIsInlineFunction = FALSE;
    BOOL bIsInitStatics;
    BOOL bIsInitFunction;
    BOOL bIsExitFunction;
@@ -140,7 +140,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       while( pInline )
       {
          if( pInline->szName )
+         {
+            bIsInlineFunction = TRUE;
             fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pInline->szName );
+         }
          pInline = pInline->pNext;
       }
 
@@ -287,7 +290,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       /* Generate codeblocks data
        */
-      if( hb_comp_cInlineID > '0' )
+      if( bIsInlineFunction )
       {
          fprintf( yyc, "#include \"hbapi.h\"\n" );
          fprintf( yyc, "#include \"hbstack.h\"\n" );

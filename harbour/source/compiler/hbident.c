@@ -52,6 +52,8 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
 
       hb_hashTableAdd( s_comp_Identifiers, (void *)szIdent, (void *)szIdent );
    }
+   else if( !bCopy )
+      hb_xfree( szName );
 
    return szIdent;
 }

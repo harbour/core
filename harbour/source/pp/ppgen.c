@@ -364,21 +364,25 @@ int main( int argc, char * argv[] )
 
    if( szFile )
    {
-      hb_pp_init( pState, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
-      hb_pp_inFile( pState, szFile, NULL );
-      if( fWrite )
+      hb_pp_init( pState, fQuiet, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+      if( hb_pp_inFile( pState, szFile, TRUE, NULL, TRUE ) )
       {
-         char szFileName[ _POSIX_PATH_MAX + 1 ];
-         PHB_FNAME pFileName;
+         if( fWrite )
+         {
+            char szFileName[ _POSIX_PATH_MAX + 1 ];
+            PHB_FNAME pFileName;
 
-         pFileName = hb_fsFNameSplit( szFile );
-         pFileName->szExtension = ".ppo";
-         hb_fsFNameMerge( szFileName, pFileName );
-         hb_xfree( pFileName );
+            pFileName = hb_fsFNameSplit( szFile );
+            pFileName->szExtension = ".ppo";
+            hb_fsFNameMerge( szFileName, pFileName );
+            hb_xfree( pFileName );
 
-         hb_pp_outFile( pState, szFileName, NULL );
+            hb_pp_outFile( pState, szFileName, NULL );
+         }
+         iResult = hb_pp_preprocesfile( pState, szRuleFile );
       }
-      iResult = hb_pp_preprocesfile( pState, szRuleFile );
+      else
+         iResult = 1;
    }
    else
    {

@@ -1529,13 +1529,13 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                /* Always add add byte to pcode indicating requested macro compiler flag. */
 #if defined( HB_MACRO_SUPPORT )
-                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
 #else
-                  HB_EXPR_GENPCODE1( hb_compGenPData1,
-                     ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-                     ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-                     ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-                     ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
+               HB_EXPR_GENPCODE1( hb_compGenPData1,
+                  ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                  ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                  ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                  ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
 #endif
             }
 
@@ -1596,10 +1596,10 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
 #else
                HB_EXPR_GENPCODE1( hb_compGenPData1,
-                      ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-                      ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-                      ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-                      ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
+                  ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
+                  ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
+                  ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
+                  ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
 #endif
             }
          }
@@ -2759,7 +2759,6 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_OR );
          }
          break;
-
 
       case HB_EA_POP_PCODE:
          break;

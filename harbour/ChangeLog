@@ -8,6 +8,103 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2006-11-21 05:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/complex.c
+  + harbour/source/compiler/hbcomp.c
+    * added missing header and file in my previous commit
+
+2006-11-21 03:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/compiler/Makefile
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.slx
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/ppcomp.c
+  + harbour/source/compiler/complex.c
+    + added new PP based compiler lexer - it's smaller, MT safe and a
+      little bit faster then then the FLEX version.
+    + added HB_COMP structure to hold compiler data in future MT version
+    + added global variable HB_COMP_PTR hb_comp_data to make conversion
+      to MT easier - now it holds only PP and lexer data.
+    * update PP related code in compiler to be MT safe
+    + added %pure-parser, %parse-param and %lex-param for bison to generate
+      MT safe grammar parser.
+    * updated FLEX to work with recent compiler modifications and pure-parser
+      bison API
+
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/source/macro/Makefile
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    * use hb_macro prefix instead of hb_comp in bison/flex parser/lexer
+      used in macro compiler to avoid possible conflicts in the future
+    * separated lexer data
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/vm/macro.c
+    * removed not used members from HB_MACRO structure to make it
+      cleaner before creating common to compiler and macro compiler
+      structure
+    + added new token HB_PP_TOKEN_EPSILON
+    + added void * cargo parameters passed to executed user functions
+    + hb_pp_tokenGet(), hb_pp_tokenToString(), hb_pp_tokenBlockString()
+      functions for new PP based compiler lexer
+
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbpp.h
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+    * updated to compile with recent compiler header file modifications
+
+
+    PP, new lexer and most of grammar parser should be MT safe. Now we should
+    update all compiler functions to pass pointer to HB_COMP data structure
+    where we should all current global variables. This structure as first
+    member should have HB_CMPCOMMON structure which will hold common to
+    compiler and macro compiler data. Ryszard I think you are the best person
+    to define this structure.
+
+    We have new lexer which is MT safe but please note that it has to be
+    extensively tested so I would like to ask everybody to compile as much
+    as possible different code and check if the final programs work as
+    expected. Working on new code I removed some limitations existing in
+    FLEX though not all. At the beginning I tried to replicate the exact
+    FLEX behavior but I've found that in few places it does not work as
+    it should so I begin to encode rules in a way which remove some
+    limitations. In fact now it's much easier to control some things.
+    I kept the FLEX code working and made all necessary modifications
+    so it still can be used but keeping FLEX working cost us IMHO too
+    much. It's not possible to introduce some improvements to grammar
+    parser. All identifiers, keyword and macros returned by new lexer
+    are converted to upper letters, do not have to be freed by hb_xfree()
+    and is guarantied that will be always accessible. So from grammar file
+    we can remove all hb_compIdentifierNew( hb_strupr($1), TRUE ) what
+    should give noticeable speed improvement but will break the FLEX code.
+    Ryszard and other you will have to decide if we will support FLEX in
+    the future. We can also clean the code and remove most of other
+    redundant hb_strupr() and hb_strdup() used in many places. BTW only
+    one terminal symbol can be returned with lower letters: DOIDENT
+    and I make it intentionally so it's possible to use:
+         DO prog1 WITH "sth"
+    on case sensitive file systems so this symbol should be cloned in
+    upper cases as function symbol but used without modification as
     file name. It's current behavior but I'm not sure you will want
     to keep it. Maybe compiler switch to always convert file names
     created from

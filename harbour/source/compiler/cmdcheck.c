@@ -648,7 +648,7 @@ void hb_compChkEnvironVar( char *szSwitch )
                 */
             case 'i':
             case 'I':
-               hb_fsAddSearchPath( s + 1, &hb_comp_pIncludePath );
+               hb_pp_addSearchPath( hb_comp_data->pLex->pPP, s + 1, FALSE );
                break;
 
             case 'k':
@@ -899,7 +899,7 @@ void hb_compChkPaths( void )
    if( szInclude )
    {
       if( szInclude[0] != '\0' )
-         hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
+         hb_pp_addSearchPath( hb_comp_data->pLex->pPP, szInclude, FALSE );
       hb_xfree( ( void * ) szInclude );
    }
 }
@@ -910,7 +910,7 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
    {
       if( pszSwitch[1] == 'd' || pszSwitch[1] == 'D' )
       {
-         char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign, *szDefLine;
+         char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign;
          unsigned int i = 0;
 
          while( i < strlen( szDefText ) && !HB_ISOPTSEP( szDefText[i] ) )
@@ -919,22 +919,11 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
          szDefText[i] = '\0';
          if( szDefText )
          {
-            if( ( pAssign = strchr( szDefText, '=' ) ) == NULL )
-            {
-               hb_pp_AddDefine( szDefText, 0 );
-            }
-            else
-            {
-               szDefText[pAssign - szDefText] = '\0';
-
-               /* hb_pp_AddDefine( szDefText,  pAssign + 1 ); */
-               szDefLine = ( char * ) hb_xgrab( strlen( szDefText ) + strlen( pAssign + 1 ) + 10 );
-               sprintf( szDefLine, "#define %s %s", szDefText, pAssign + 1 );
-               hb_pp_ParseDirective( szDefLine );
-               hb_xfree( szDefLine );
-            }
+            pAssign = strchr( szDefText, '=' );
+            if( pAssign )
+               *pAssign++ = '\0';
+            hb_pp_addDefine( hb_comp_data->pLex->pPP, szDefText, pAssign );
          }
-
          hb_xfree( szDefText );
       }
       else if( pszSwitch[1] && toupper( pszSwitch[1] ) == 'U' &&
@@ -945,23 +934,16 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
                pszSwitch[6] == ':' )
       {
          char *szDefText = hb_strdup( pszSwitch + 7 );
-         char *szDefLine;
          unsigned int i = 0;
 
          while( szDefText[i] && !HB_ISOPTSEP( szDefText[i] ) )
          {
             i++;
          }
-
          szDefText[i] = '\0';
 
          if( szDefText[0] )
-         {
-            szDefLine = ( char * ) hb_xgrab( 7 + strlen( szDefText ) + 1 );
-            sprintf( szDefLine, "#undef %s", szDefText );
-            hb_pp_ParseDirective( szDefLine );
-            hb_xfree( szDefLine );
-         }
+            hb_pp_delDefine( hb_comp_data->pLex->pPP, szDefText );
          hb_xfree( szDefText );
       }
    }

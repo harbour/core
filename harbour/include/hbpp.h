@@ -78,37 +78,37 @@ HB_EXTERN_BEGIN
 #define HB_PP_INLINE_QUOTE2   6
 
 /* function to open included files */
-#define HB_PP_OPEN_FUNC_( func ) FILE * func( char *, BOOL, char * )
+#define HB_PP_OPEN_FUNC_( func ) FILE * func( void *, char *, BOOL, char * )
 typedef HB_PP_OPEN_FUNC_( HB_PP_OPEN_FUNC );
 typedef HB_PP_OPEN_FUNC * PHB_PP_OPEN_FUNC;
 
 /* function to close included files */
-#define HB_PP_CLOSE_FUNC_( func ) void func( FILE * )
+#define HB_PP_CLOSE_FUNC_( func ) void func( void *, FILE * )
 typedef HB_PP_CLOSE_FUNC_( HB_PP_CLOSE_FUNC );
 typedef HB_PP_CLOSE_FUNC * PHB_PP_CLOSE_FUNC;
 
 /* function to generate errors */
-#define HB_PP_ERROR_FUNC_( func ) void func( char **, char, int, const char *, const char * )
+#define HB_PP_ERROR_FUNC_( func ) void func( void *, char **, char, int, const char *, const char * )
 typedef HB_PP_ERROR_FUNC_( HB_PP_ERROR_FUNC );
 typedef HB_PP_ERROR_FUNC * PHB_PP_ERROR_FUNC;
 
 /* function to redirect stdout messages */
-#define HB_PP_DISP_FUNC_( func ) void func( const char * )
+#define HB_PP_DISP_FUNC_( func ) void func( void *, const char * )
 typedef HB_PP_DISP_FUNC_( HB_PP_DISP_FUNC );
 typedef HB_PP_DISP_FUNC * PHB_PP_DISP_FUNC;
 
 /* function for catching #pragma dump data */
-#define HB_PP_DUMP_FUNC_( func ) void func( char *, ULONG, int )
+#define HB_PP_DUMP_FUNC_( func ) void func( void *, char *, ULONG, int )
 typedef HB_PP_DUMP_FUNC_( HB_PP_DUMP_FUNC );
 typedef HB_PP_DUMP_FUNC * PHB_PP_DUMP_FUNC;
 
 /* function for catching #pragma dump data */
-#define HB_PP_INLINE_FUNC_( func ) void func( char *, char *, ULONG, int )
+#define HB_PP_INLINE_FUNC_( func ) void func( void *, char *, char *, ULONG, int )
 typedef HB_PP_INLINE_FUNC_( HB_PP_INLINE_FUNC );
 typedef HB_PP_INLINE_FUNC * PHB_PP_INLINE_FUNC;
 
 /* function for catching #pragma dump data */
-#define HB_PP_SWITCH_FUNC_( func ) BOOL func( const char *, int )
+#define HB_PP_SWITCH_FUNC_( func ) BOOL func( void *, const char *, int )
 typedef HB_PP_SWITCH_FUNC_( HB_PP_SWITCH_FUNC );
 typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
@@ -193,60 +193,9 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_DIV          83
 #define HB_PP_TOKEN_MOD          84
 #define HB_PP_TOKEN_POWER        85
+#define HB_PP_TOKEN_EPSILON      86
 
 #define HB_PP_TOKEN_TYPE(t)      ( (t) & 0xff )
-
-typedef struct _HB_PP_TOKEN
-{
-   struct _HB_PP_TOKEN * pNext;     /* next token pointer */
-   struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
-
-   char * value;                    /* token value */
-   USHORT len;                      /* token value length */
-   USHORT spaces;                   /* leading spaces for stringify */
-   USHORT type;                     /* token type, see HB_PP_TOKEN_* */
-   USHORT index;                    /* index to match marker or 0 */
-}
-HB_PP_TOKEN, * PHB_PP_TOKEN;
-
-
-#ifdef _HB_PP_INTERNAL
-
-/* default maximum number of translations */
-#define HB_PP_MAX_CYCLES      4096
-/* maximum number of single token translations, in Clipper it's 18 + number
-   of used rules, we will use also constant but increased by total number
-   of rules of given type: define, [x]translate, [x]command */
-#define HB_PP_MAX_REPATS      128
-
-/* Clipper allows only 16 nested includes */
-#define HB_PP_MAX_INCLUDED_FILES    64
-
-
-/* comparision modes */
-#define HB_PP_CMP_ADDR        0 /* compare token addresses */
-#define HB_PP_CMP_STD         1 /* standard comparison, ignore the case of the characters */
-#define HB_PP_CMP_DBASE       2 /* dbase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
-#define HB_PP_CMP_CASE        3 /* case sensitive comparison */
-
-#define HB_PP_CMP_MODE(t)     ( (t) & 0xff )
-#define HB_PP_STD_RULE        0x8000
-
-
-/* conditional compilation */
-#define HB_PP_COND_ELSE       1     /* preprocessing and output stopped until corresponding #else */
-#define HB_PP_COND_DISABLE    2     /* preprocessing and output stopped until corresponding #endif(s) */
-
-/* operation precedence for #if calculation */
-#define HB_PP_PREC_NUL  0
-#define HB_PP_PREC_NOT  1
-#define HB_PP_PREC_LOG  2
-#define HB_PP_PREC_REL  3
-#define HB_PP_PREC_BIT  4
-#define HB_PP_PREC_PLUS 5
-#define HB_PP_PREC_MULT 6
-#define HB_PP_PREC_NEG  7
-
 /* bitfields */
 /* #define HB_PP_TOKEN_UNARY        0x0100 */
 /* #define HB_PP_TOKEN_BINARY       0x0200 */
@@ -413,6 +362,58 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_DATE && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_LOGICAL )
 #endif
+
+typedef struct _HB_PP_TOKEN
+{
+   struct _HB_PP_TOKEN * pNext;     /* next token pointer */
+   struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
+
+   char * value;                    /* token value */
+   USHORT len;                      /* token value length */
+   USHORT spaces;                   /* leading spaces for stringify */
+   USHORT type;                     /* token type, see HB_PP_TOKEN_* */
+   USHORT index;                    /* index to match marker or 0 */
+}
+HB_PP_TOKEN, * PHB_PP_TOKEN;
+
+
+#ifdef _HB_PP_INTERNAL
+
+/* default maximum number of translations */
+#define HB_PP_MAX_CYCLES      4096
+/* maximum number of single token translations, in Clipper it's 18 + number
+   of used rules, we will use also constant but increased by total number
+   of rules of given type: define, [x]translate, [x]command */
+#define HB_PP_MAX_REPATS      128
+
+/* Clipper allows only 16 nested includes */
+#define HB_PP_MAX_INCLUDED_FILES    64
+
+
+/* comparision modes */
+#define HB_PP_CMP_ADDR        0 /* compare token addresses */
+#define HB_PP_CMP_STD         1 /* standard comparison, ignore the case of the characters */
+#define HB_PP_CMP_DBASE       2 /* dbase keyword comparison (accepts at least four character shortcuts) ignore the case of the characters */
+#define HB_PP_CMP_CASE        3 /* case sensitive comparison */
+
+#define HB_PP_CMP_MODE(t)     ( (t) & 0xff )
+#define HB_PP_STD_RULE        0x8000
+
+
+/* conditional compilation */
+#define HB_PP_COND_ELSE       1     /* preprocessing and output stopped until corresponding #else */
+#define HB_PP_COND_DISABLE    2     /* preprocessing and output stopped until corresponding #endif(s) */
+
+/* operation precedence for #if calculation */
+#define HB_PP_PREC_NUL  0
+#define HB_PP_PREC_NOT  1
+#define HB_PP_PREC_LOG  2
+#define HB_PP_PREC_REL  3
+#define HB_PP_PREC_BIT  4
+#define HB_PP_PREC_PLUS 5
+#define HB_PP_PREC_MULT 6
+#define HB_PP_PREC_NEG  7
+
 /* For platforms which does not use ASCII based character tables this macros
    have to be changed to use valid C functions, f.e.:
       isalpha(), isdigit(), ... */
@@ -586,6 +587,7 @@ typedef struct
    PHB_PP_FILE pFile;            /* currently preprocessed file structure */
    int      iFiles;              /* number of open files */
 
+   void *   cargo;               /* parameter passed to user functions */
    PHB_PP_OPEN_FUNC  pOpenFunc;  /* function to open files */
    PHB_PP_CLOSE_FUNC pCloseFunc; /* function to close files */
    PHB_PP_ERROR_FUNC pErrorFunc; /* function to generate errors */
@@ -610,7 +612,7 @@ typedef void * PHB_PP_STATE;
 extern PHB_PP_STATE hb_pp_new( void );
 extern void   hb_pp_free( PHB_PP_STATE pState );
 extern void   hb_pp_reset( PHB_PP_STATE pState );
-extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
+extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, void * cargo,
                   PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                   PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
                   PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
@@ -621,8 +623,8 @@ extern void   hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void   hb_pp_setStdBase( PHB_PP_STATE pState );
 extern void   hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern void   hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace );
-extern void   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, FILE * file_in );
-extern void   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );
+extern BOOL   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearchPath, FILE * file_in, BOOL fError );
+extern BOOL   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );
 extern char * hb_pp_fileName( PHB_PP_STATE pState );
 extern int    hb_pp_line( PHB_PP_STATE pState );
 extern char * hb_pp_outFileName( PHB_PP_STATE pState );
@@ -630,10 +632,15 @@ extern char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen );
 extern char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen );
 extern void   hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue );
 extern void   hb_pp_delDefine( PHB_PP_STATE pState, char * szDefName );
+extern BOOL   hb_pp_lasterror( PHB_PP_STATE pState );
+extern BOOL   hb_pp_eof( PHB_PP_STATE pState );
 
 extern void   hb_pp_tokenUpper( PHB_PP_TOKEN pToken );
+extern void   hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken );
+extern char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, int *piType );
 extern PHB_PP_STATE hb_pp_lexNew( char * pString, ULONG ulLen );
-extern PHB_PP_TOKEN hb_pp_lex( PHB_PP_STATE pState );
+extern PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState );
+extern PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState );
 
 HB_EXTERN_END
 

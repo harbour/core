@@ -964,10 +964,10 @@ $(PP_DIR)\pptable.c    : $(BIN_DIR)\ppgen.exe include\hbstdgen.ch
 #**********************************************************
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-    bison --no-line -p hb_comp -d $** -o$@
+    bison --no-line -p hb_macro -d $** -o$@
 
 $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-    flex -Phb_comp -i -8 -o$@ $**
+    flex -Phb_macro -i -8 -o$@ $**
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
@@ -992,10 +992,10 @@ $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
 #**********************************************************
 
 $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-    bison --no-line -p hb_comp -d $** -o$@
+    bison --no-line -p hb_macro -d $** -o$@
 
 $(DLL_OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-    flex -Phb_comp -i -8 -o$@ $**
+    flex -Phb_macro -i -8 -o$@ $**
 
 $(DLL_OBJ_DIR)\macroy.obj : $(DLL_OBJ_DIR)\macroy.c
 $(DLL_OBJ_DIR)\macrol.obj : $(DLL_OBJ_DIR)\macrol.c

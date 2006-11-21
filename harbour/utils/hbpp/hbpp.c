@@ -252,7 +252,7 @@ int main( int argc, char * argv[] )
   }
 
   hb_buffer = ( char* ) hb_xgrab( HB_PP_STR_SIZE );
-  while( hb_pp_Internal( handl_o,hb_buffer ) > 0 );
+  while( hb_pp_Internal_( handl_o,hb_buffer ) > 0 );
   fclose( hb_comp_files.pLast->handle );
   hb_xfree( hb_comp_files.pLast->pBuffer );
   hb_xfree( hb_comp_files.pLast );
@@ -534,15 +534,4 @@ BOOL hb_pp_fopen( char * szFileName )
    hb_comp_files.iFiles = 1;
 
    return TRUE;
-}
-
-PINLINE   hb_compInlineAdd( char * szFunName )
-{
-   HB_SYMBOL_UNUSED( szFunName );
-   return NULL;
-}
-
-void hb_compParserStop( void  )
-{
-   ;
 }

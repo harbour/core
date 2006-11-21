@@ -1,4 +1,7 @@
 %pure_parser
+%parse-param { HB_MACRO_PTR pMacro }
+%lex-param   { HB_MACRO_PTR pMacro }
+
 %{
 /*
  * $Id$
@@ -85,27 +88,9 @@
 #undef YYMALLOC
 #define YYMALLOC hb_xgrab
 
-/* This is workaround of yyparse() declaration bug in bison.simple
-*/
-
-#if !defined(__GNUC__) && !defined(__IBMCPP__)
-   #if 0
-      /* This makes BCC 551 fail with Bison 1.30, even with the
-         supplied harbour.simple file, which makes Bison 1.30 blow.
-         [vszakats] */
-      void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
-   #endif
-#endif
-
 /* yacc/lex related definitions
  */
-#undef YYPARSE_PARAM
-#define YYPARSE_PARAM HB_MACRO_PARAM    /* parameter passed to yyparse function - it have to be of 'void *' type */
-#undef YYLEX_PARAM
-#define YYLEX_PARAM   ( (HB_MACRO_PTR)YYPARSE_PARAM ) /* additional parameter passed to yylex */
 
-extern int yyparse( void * );    /* to make happy some purist compiler */
-extern void yyerror( char * );   /* parsing error management function */
 
 /* Standard checking for valid expression creation
  */
@@ -155,7 +140,9 @@ extern void yyerror( char * );   /* parsing error management function */
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
  */
-int yylex( YYSTYPE *, HB_MACRO_PTR );
+extern int  yylex( YYSTYPE *, HB_MACRO_PTR );   /* main lex token function, called by yyparse() */
+extern int  yyparse( HB_MACRO_PTR );            /* main yacc parsing function */
+extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management function */
 %}
 
 %{
@@ -507,13 +494,13 @@ RootParamList : EmptyExpression ',' {
                                       }
                                     }
                 EmptyExpression     {
-                                       HB_MACRO_DATA->iListElements = 1;
+                                       HB_MACRO_DATA->uiListElements = 1;
                                        $$ = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( $1 ) : hb_compExprNewArgList( $1 ), $4 );
                                     }
               ;
 
 AsParamList : RootParamList                     { $$ = $1; }
-            | AsParamList ',' EmptyExpression   {  HB_MACRO_DATA->iListElements++;
+            | AsParamList ',' EmptyExpression   {  HB_MACRO_DATA->uiListElements++;
                                                    $$ = hb_compExprAddListExpr( $1, $3 ); }
             ;
 
@@ -814,8 +801,9 @@ IfInline  : IIF '(' Expression ',' EmptyExpression ','
  ** ------------------------------------------------------------------------ **
  */
 
-void yyerror( char * s )
+void yyerror( HB_MACRO_PTR pMacro, char * s )
 {
+   HB_SYMBOL_UNUSED( pMacro );
    HB_SYMBOL_UNUSED( s );
 }
 
@@ -830,7 +818,7 @@ int hb_macroYYParse( HB_MACRO_PTR pMacro )
       pMacro->status = HB_MACRO_CONT;
 
       /* NOTE: bison requires (void *) pointer */
-      iResult = yyparse( ( void * ) pMacro );
+      iResult = yyparse( pMacro );
 
       /* TODO: we should free HB_EXPR list here when it will be bound
                with one of pMacro structure member not with static
@@ -863,9 +851,9 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
    }
 }
 
-int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
-   PHB_PP_TOKEN pToken = hb_pp_lex( ( PHB_PP_STATE ) pMacro->pLex );
+   PHB_PP_TOKEN pToken = hb_pp_lexGet( ( PHB_PP_STATE ) pMacro->pLex );
 
    if( !pToken )
       return 0;
@@ -934,7 +922,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:
-         return pToken->value[ 1 ] == 'Y' ? TRUEVALUE : FALSEVALUE;
+         return pToken->value[ 1 ] == 'T' ? TRUEVALUE : FALSEVALUE;
 
       case HB_PP_TOKEN_HASH:
       case HB_PP_TOKEN_DIRECTIVE:

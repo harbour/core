@@ -59,7 +59,7 @@
  *
  * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
  *
- * hb_pp_SetRules() and related code for supportting
+ * hb_pp_SetRules_() and related code for supportting
  * replaceable rules with -w switch
  *
  * See doc/license.txt for licensing terms.
@@ -276,10 +276,6 @@ void hb_pp_SetRules_( HB_INCLUDE_FUNC_PTR pIncludeFunc, BOOL bQuiet )
                fclose( hb_comp_files.pLast->handle );
                hb_xfree( hb_comp_files.pLast->pBuffer );
                hb_xfree( hb_comp_files.pLast->szFileName );
-               if( hb_comp_files.pLast->yyBuffer )
-               {
-                  hb_compParserStop(  );        /* uses hb_comp_files.pLast */
-               }
                hb_xfree( hb_comp_files.pLast );
                hb_comp_files.pLast = NULL;
                hb_comp_files.iFiles = 0;
@@ -362,7 +358,7 @@ void hb_pp_Free( void )
       hb_xfree( ( void * ) hb_pp_aCondCompile );
       hb_pp_aCondCompile = NULL;
    }
-   hb_pp_InternalFree(  );
+   hb_pp_InternalFree();
    
    if( s_expreal )
    {

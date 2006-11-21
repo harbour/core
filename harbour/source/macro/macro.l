@@ -106,6 +106,14 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 
 #define LOOKUP          0       /* scan from the begining of line */
 #define SEPARATOR       -1
+#define HB_FLEX_STATE   ( ( PHB_MACRO_FLEX ) pMacro->pLex )->FlexState
+typedef struct
+{
+   ULONG  pos;              /* current position inside of compiled string */
+   int    FlexState;        /* internal flex state during parsing */
+   YY_BUFFER_STATE pBuffer; /* FLEX buffer */
+}
+HB_MACRO_FLEX, * PHB_MACRO_FLEX;
 
 %}
 
@@ -138,7 +146,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 \"             BEGIN STRING2;
 
 \[             {
-                   if( pMacro->FlexState == SEPARATOR )
+                   if( HB_FLEX_STATE == SEPARATOR )
                       BEGIN STRING3;
                    else
                       return '[';
@@ -150,7 +158,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 <STRING3>[^\]]*\n   { hb_macroError( EG_SYNTAX, YYLEX_PARAM ); BEGIN 0; }
 
 <STRING1>[^']*'   { BEGIN 0;
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     yyleng--;
     yytext[yyleng] = 0;
     yylval_ptr->string = hb_strdup( yytext );
@@ -158,7 +166,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 }
 
 <STRING2>[^\"]*\" { BEGIN 0;
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     yyleng--;
     yytext[yyleng] = 0;
     yylval_ptr->string = hb_strdup( yytext );
@@ -166,7 +174,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 }
 
 <STRING3>[^\]]*\] { BEGIN 0;
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     yyleng--;
     yytext[yyleng] = 0;
     yylval_ptr->string = hb_strdup( yytext );
@@ -175,65 +183,65 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 
 {SpaceTab}     ;
 
-\n           { pMacro->FlexState = LOOKUP; return '\n'; }
+\n           { HB_FLEX_STATE = LOOKUP; return '\n'; }
 
 %{
 /* ************************************************************************ */
 %}
 
 "_fie"|"_fiel"|"_field" {
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return FIELD;
 }
 
 "fiel"|"field"   {
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return FIELD;
 }
 
 "iif"        {
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return IIF;
 }
 
 "if"         {
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return IF;
 }
 
-"nil"        { pMacro->FlexState = LOOKUP; return NIL; }
+"nil"        { HB_FLEX_STATE = LOOKUP; return NIL; }
 
-"qself"{SpaceTab}*\({SpaceTab}*\)    { pMacro->FlexState = LOOKUP; return SELF; }
+"qself"{SpaceTab}*\({SpaceTab}*\)    { HB_FLEX_STATE = LOOKUP; return SELF; }
 
 %{
 /* ************************************************************************ */
 %}
 
-"#"            { pMacro->FlexState = SEPARATOR; return NE1; }
-"<>"|"!="      { pMacro->FlexState = SEPARATOR; return NE2; }
-":="           { pMacro->FlexState = SEPARATOR; return INASSIGN; }
-"=="           { pMacro->FlexState = SEPARATOR; return EQ; }
-"++"           { pMacro->FlexState = SEPARATOR; return INC; }
-"--"           { pMacro->FlexState = SEPARATOR; return DEC; }
-"->"           { pMacro->FlexState = SEPARATOR; return ALIASOP; }
-"<="           { pMacro->FlexState = SEPARATOR; return LE; }
-">="           { pMacro->FlexState = SEPARATOR; return GE; }
-"+="           { pMacro->FlexState = SEPARATOR; return PLUSEQ; }
-"-="           { pMacro->FlexState = SEPARATOR; return MINUSEQ; }
-"*="           { pMacro->FlexState = SEPARATOR; return MULTEQ; }
-"/="           { pMacro->FlexState = SEPARATOR; return DIVEQ; }
-"^="           { pMacro->FlexState = SEPARATOR; return EXPEQ; }
-"%="           { pMacro->FlexState = SEPARATOR; return MODEQ; }
-"**"|"^"       { pMacro->FlexState = SEPARATOR; return POWER; }
-".and."        { pMacro->FlexState = SEPARATOR; return AND; }
-".or."         { pMacro->FlexState = SEPARATOR; return OR; }
-"."[t|y]"."    { pMacro->FlexState = SEPARATOR; return TRUEVALUE; }
-"."[f|n]"."    { pMacro->FlexState = SEPARATOR; return FALSEVALUE; }
-"!"|".not."    { pMacro->FlexState = SEPARATOR; return NOT; }
-"::"           { pMacro->FlexState = SEPARATOR; unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' ); }
-[\{\(]         { pMacro->FlexState = SEPARATOR; return yytext[ 0 ]; }
-[\=\+\-\*\/\%\$\,\|\#\&\.\:\<\>\@] { pMacro->FlexState = SEPARATOR; return yytext[ 0 ]; }
-[\]\}\)]       { pMacro->FlexState = LOOKUP; return yytext[ 0 ]; }
+"#"            { HB_FLEX_STATE = SEPARATOR; return NE1; }
+"<>"|"!="      { HB_FLEX_STATE = SEPARATOR; return NE2; }
+":="           { HB_FLEX_STATE = SEPARATOR; return INASSIGN; }
+"=="           { HB_FLEX_STATE = SEPARATOR; return EQ; }
+"++"           { HB_FLEX_STATE = SEPARATOR; return INC; }
+"--"           { HB_FLEX_STATE = SEPARATOR; return DEC; }
+"->"           { HB_FLEX_STATE = SEPARATOR; return ALIASOP; }
+"<="           { HB_FLEX_STATE = SEPARATOR; return LE; }
+">="           { HB_FLEX_STATE = SEPARATOR; return GE; }
+"+="           { HB_FLEX_STATE = SEPARATOR; return PLUSEQ; }
+"-="           { HB_FLEX_STATE = SEPARATOR; return MINUSEQ; }
+"*="           { HB_FLEX_STATE = SEPARATOR; return MULTEQ; }
+"/="           { HB_FLEX_STATE = SEPARATOR; return DIVEQ; }
+"^="           { HB_FLEX_STATE = SEPARATOR; return EXPEQ; }
+"%="           { HB_FLEX_STATE = SEPARATOR; return MODEQ; }
+"**"|"^"       { HB_FLEX_STATE = SEPARATOR; return POWER; }
+".and."        { HB_FLEX_STATE = SEPARATOR; return AND; }
+".or."         { HB_FLEX_STATE = SEPARATOR; return OR; }
+"."[t|y]"."    { HB_FLEX_STATE = SEPARATOR; return TRUEVALUE; }
+"."[f|n]"."    { HB_FLEX_STATE = SEPARATOR; return FALSEVALUE; }
+"!"|".not."    { HB_FLEX_STATE = SEPARATOR; return NOT; }
+"::"           { HB_FLEX_STATE = SEPARATOR; unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' ); }
+[\{\(]         { HB_FLEX_STATE = SEPARATOR; return yytext[ 0 ]; }
+[\=\+\-\*\/\%\$\,\|\#\&\.\:\<\>\@] { HB_FLEX_STATE = SEPARATOR; return yytext[ 0 ]; }
+[\]\}\)]       { HB_FLEX_STATE = LOOKUP; return yytext[ 0 ]; }
 
 [\x00-\x1F]    return yytext[ 0 ]; /* see below */
 [\~\`\?\_\\]   return yytext[ 0 ]; /* see below */
@@ -254,7 +262,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
    double dNumber;
    int iDec, iWidth;
 
-   pMacro->FlexState = LOOKUP;
+   HB_FLEX_STATE = LOOKUP;
 
    if( hb_compStrToNum( yytext, strlen( yytext ), &lNumber, &dNumber, &iDec, &iWidth ) )
    {
@@ -285,28 +293,28 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
     if( yytext[ yyleng-1 ] == '.' )
     yytext[ yyleng-1 ] = '\0';
     yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return MACROVAR;
 }
 
 {MacroEnd}     {
     HB_TRACE(HB_TR_DEBUG, ("{MacroEnd}(%s)", yytext));
     yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return MACROTEXT;
 }
 
 {MacroId}      {
     HB_TRACE(HB_TR_DEBUG, ("{MacroId}(%s)", yytext));
     yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return MACROTEXT;
 }
 
 {MacroTxt}     {
     HB_TRACE(HB_TR_DEBUG, ("{MacroTxt}(%s)", yytext));
     yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return MACROTEXT;
 }
 
@@ -318,7 +326,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
         yyleng = YYLEX_PARAM->uiNameLen;
     }
     yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-    pMacro->FlexState = LOOKUP;
+    HB_FLEX_STATE = LOOKUP;
     return IDENTIFIER;
 }
 
@@ -332,15 +340,27 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 
 BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
 {
+   PHB_MACRO_FLEX pLex;
+   YY_BUFFER_STATE pBuffer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
+
    /* This creates the scanner buffer based on passed string.
     * Unfortunately it creates a copy of this string - the string can be
     * modified during scanning and the string have to end with TWO zero bytes
     * NOTE: It must be used in macro.l because yy_scan_bytes is not
     * visible in macro.y
     */
-   HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
-   pMacro->FlexState = LOOKUP;
-   pMacro->pLex = ( void * ) yy_scan_bytes( pMacro->string, pMacro->length );
+   pBuffer = yy_scan_bytes( pMacro->string, pMacro->length );
+   if( pBuffer )
+   {
+      pLex = ( PHB_MACRO_FLEX ) hb_xgrab( sizeof( HB_MACRO_FLEX ) );
+      pLex->pos = 0;
+      pLex->FlexState = LOOKUP;
+      pLex->pBuffer = pBuffer;
+      pMacro->pLex = ( void * ) pLex;
+   }
+
    return pMacro->pLex != NULL;
 }
 
@@ -348,46 +368,9 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
 {
    if( pMacro->pLex )
    {
-      yy_delete_buffer( ( YY_BUFFER_STATE ) pMacro->pLex );
+      PHB_MACRO_FLEX pLex = ( PHB_MACRO_FLEX ) pMacro->pLex;
       pMacro->pLex = NULL;
+      yy_delete_buffer( pLex->pBuffer );
+      hb_xfree( pLex );
    }
 }
-
-/*
-static int hb_compInput( char * buf, int max_size, HB_MACRO_PTR pMacro )
-{
-   int iRead;
-
-   if( pMacro->length < max_size )
-   {
-      memcpy( buf, pMacro->string, pMacro->length );
-      buf[ pMacro->length++ ] = '\n';
-      buf[ pMacro->length ] = 0;
-      iRead = pMacro->length;
-   }
-   else
-   {
-      int iLen = pMacro->length - pMacro->pos;
-      if( iLen <= 0 )
-      {
-        iRead = 0;
-      }
-      else if( iLen >= max_size )
-      {
-        iRead = max_size;
-        memcpy( buf, pMacro->string + pMacro->pos, iRead );
-        pMacro->pos += iRead;
-      }
-      else
-      {
-        memcpy( buf, pMacro->string + pMacro->pos, iLen );
-        buf[ iLen++ ] = '\n';
-        buf[ iLen ] = 0;
-        iRead = iLen;
-        pMacro->pos += iRead;
-      }
-   }
-   return iRead;
-}
-*/
-

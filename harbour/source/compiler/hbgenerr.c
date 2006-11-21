@@ -137,13 +137,14 @@ char * hb_comp_szWarnings[] =
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
-   int iLine = hb_comp_iLine - 1;
+   int iLine = hb_pp_line( hb_comp_data->pLex->pPP );
+   char * szFile = hb_pp_fileName( hb_comp_data->pLex->pPP );
 
    if( cPrefix != 'F' && hb_comp_bError )
       return;
 
-   if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName )
-      fprintf( hb_comp_errFile, "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
+   if( szFile )
+      fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
 
    fprintf( hb_comp_errFile, "Error %c%04i  ", cPrefix, iError );
    fprintf( hb_comp_errFile, szErrors[ iError - 1 ], szError1, szError2 );
@@ -163,12 +164,13 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
-   int iLine = hb_comp_iLine - 1;
+   int iLine = hb_pp_line( hb_comp_data->pLex->pPP );
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
-      if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName )
-         fprintf( hb_comp_errFile, "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
+      char * szFile = hb_pp_fileName( hb_comp_data->pLex->pPP );
+      if( szFile )
+         fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
 
       fprintf( hb_comp_errFile, "Warning %c%04i  ", cPrefix, iWarning );
       fprintf( hb_comp_errFile, szText + 1, szWarning1, szWarning2 );

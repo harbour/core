@@ -30,8 +30,6 @@
 #include "hbcomp.h"
 #include <errno.h>
 
-static PHB_PP_STATE s_pp_state = NULL;
-
 BOOL hb_pp_NestedLiteralString = FALSE;
 BOOL hb_pp_LiteralEscSeq = FALSE;
 int hb_pp_StreamBlock = 0;
@@ -40,14 +38,17 @@ char *hb_pp_STD_CH = NULL;
 
 
 
-static void hb_pp_ErrorGen( char * szMsgTable[], char cPrefix, int iErrorCode,
+static void hb_pp_ErrorGen( void * cargo,
+                            char * szMsgTable[], char cPrefix, int iErrorCode,
                             const char * szParam1, const char * szParam2 )
 {
    int iLine = hb_comp_iLine;
 
+   HB_SYMBOL_UNUSED( cargo );
+
    /* I do not know why but compiler expect line number 1 bigger then
       real line number */
-   hb_comp_iLine = hb_pp_line( s_pp_state ) + 1;
+   hb_comp_iLine = hb_pp_line( hb_comp_data->pLex->pPP ) + 1;
    if( cPrefix == 'W' )
       hb_compGenWarning( szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    else
@@ -55,134 +56,45 @@ static void hb_pp_ErrorGen( char * szMsgTable[], char cPrefix, int iErrorCode,
    hb_comp_iLine = iLine;
 }
 
-static FILE * hb_pp_IncludeOpen( char *szFileName, BOOL fSysFile, char * szFNameBuf )
+static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
+                              int iLine )
 {
-   PHB_FNAME pFileName;
-   FILE *file = NULL;
-   PFILE pFile;
-   BOOL fPath;
-
-   pFileName = hb_fsFNameSplit( szFileName );
-   fPath = pFileName->szPath && pFileName->szPath[ 0 ];
-   errno = 0;
-   if( !fSysFile )
-   {
-      if( !fPath && hb_comp_pFileName )
-         pFileName->szPath = hb_comp_pFileName->szPath;
-
-      hb_fsFNameMerge( szFNameBuf, pFileName );
-
-      file = fopen( szFNameBuf, "r" );
-   }
-
-   if( !file && errno != EMFILE && hb_comp_pIncludePath )
-   {
-      HB_PATHNAMES * pSearch = hb_comp_pIncludePath;
-
-      pFileName->szName = szFileName;
-      pFileName->szExtension = NULL;
-      while( pSearch && !file )
-      {
-         pFileName->szPath = pSearch->szPath;
-         hb_fsFNameMerge( szFNameBuf, pFileName );
-         file = fopen( szFNameBuf, "r" );
-         pSearch = pSearch->pNext;
-      }
-   }
-   hb_xfree( pFileName );
-
-   if( file )
-   {
-      pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
-      pFile->handle = file;
-      pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
-      pFile->iBuffer = pFile->lenBuffer = 10;
-      pFile->yyBuffer = NULL;
-      pFile->szFileName = hb_strdup( szFNameBuf );
-      if( hb_comp_files.pLast )
-         hb_comp_files.pLast->iLine = hb_comp_iLine;
-      hb_comp_iLine = 1;
-      pFile->iLine = 1;
-      pFile->pPrev = hb_comp_files.pLast;
-      hb_comp_files.pLast = pFile;
-      hb_comp_files.iFiles++;
-   }
-
-   return file;
-}
-
-static void hb_pp_IncludeClose( FILE * file )
-{
-   if( hb_comp_files.iFiles > 0 && hb_comp_files.pLast &&
-       file == hb_comp_files.pLast->handle )
-   {
-      PFILE pFile;
-      fclose( hb_comp_files.pLast->handle );
-      hb_xfree( hb_comp_files.pLast->pBuffer );
-      hb_xfree( hb_comp_files.pLast->szFileName );
-      pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
-#if 0
-      if( hb_comp_files.pLast->yyBuffer && hb_comp_files.iFiles == 1 )
-         hb_compParserStop(); /* uses hb_comp_files.pLast */
-#endif
-      hb_xfree( hb_comp_files.pLast );
-      hb_comp_files.pLast = pFile;
-      if( hb_comp_files.pLast )
-         hb_comp_iLine = hb_comp_files.pLast->iLine;
-      hb_comp_files.iFiles--;
-   }
-}
-
-static void hb_pp_PragmaDump( char * pBuffer, ULONG ulSize, int iLine )
-{
-   int iSaveLine = hb_comp_iLine;
    PINLINE pInline;
 
-   /* I do not know why but compiler expect line number 1 bigger then
-      real line number */
-   hb_comp_iLine = iLine + 1;
+   HB_SYMBOL_UNUSED( cargo );
 
-   pInline = hb_compInlineAdd( NULL );
+   pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo, NULL, iLine );
    pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
    memcpy( pInline->pCode, pBuffer, ulSize );
    pInline->pCode[ ulSize ] = '\0';
    pInline->lPCodeSize = ulSize;
-
-   hb_comp_iLine = iSaveLine;
 }
 
-static void hb_pp_hb_inLine( char * szFunc, char * pBuffer, ULONG ulSize, int iLine )
+static void hb_pp_hb_inLine( void * cargo, char * szFunc,
+                             char * pBuffer, ULONG ulSize, int iLine )
 {
-   int iSaveLine = hb_comp_iLine;
-
-   /* I do not know why but compiler expect line number 1 bigger then
-      real line number */
-   hb_comp_iLine = iLine + 1;
-
    if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
    {
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
    }
    else
    {
-      PINLINE pInline = hb_compInlineAdd( hb_compIdentifierNew( szFunc, TRUE ) );
+      PINLINE pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo,
+                                 hb_compIdentifierNew( szFunc, TRUE ), iLine );
       pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
       memcpy( pInline->pCode, pBuffer, ulSize );
       pInline->pCode[ ulSize ] = '\0';
       pInline->lPCodeSize = ulSize;
-      /*
-       * inform genc.c that hb_inLine function was generated to
-       * generate #include ... with additional header files
-       */
-      hb_comp_cInlineID = '1';
    }
-   hb_comp_iLine = iSaveLine;
 }
 
-static BOOL hb_pp_CompilerSwitch( const char * szSwitch, int iValue )
+static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
+                                  int iValue )
 {
    BOOL fError = FALSE;
    int i = strlen( szSwitch );
+
+   HB_SYMBOL_UNUSED( cargo );
 
    if( i > 1 && szSwitch[ i - 1 ] - '0' == iValue )
       --i;
@@ -273,33 +185,30 @@ void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] )
    if( szStdCh && * szStdCh <= ' ' )
       szStdCh = "";
 
-   hb_pp_Free();
-   s_pp_state = hb_pp_new();
-   if( s_pp_state )
+   if( hb_comp_data->pLex->pPP )
    {
-      hb_pp_init( s_pp_state, fQuiet,
-                  hb_pp_IncludeOpen, hb_pp_IncludeClose,
+      hb_pp_init( hb_comp_data->pLex->pPP, fQuiet, hb_comp_data, NULL, NULL,
                   hb_pp_ErrorGen, NULL, hb_pp_PragmaDump,
                   HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE_PP ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
 
       if( !szStdCh )
-         hb_pp_setStdRules( s_pp_state );
+         hb_pp_setStdRules( hb_comp_data->pLex->pPP );
       else if( *szStdCh )
-         hb_pp_readRules( s_pp_state, szStdCh );
+         hb_pp_readRules( hb_comp_data->pLex->pPP, szStdCh );
       else
       {
          printf( "Standard command definitions excluded.\n" );
          fflush( stdout );
       }
 
-      hb_pp_initDynDefines( s_pp_state );
+      hb_pp_initDynDefines( hb_comp_data->pLex->pPP );
 
       /* Add /D and /undef: command line or envvar defines */
       hb_compChkDefines( argc, argv );
 
       /* mark current rules as standard ones */
-      hb_pp_setStdBase( s_pp_state );
+      hb_pp_setStdBase( hb_comp_data->pLex->pPP );
    }
 
    if( hb_comp_pFileName )
@@ -314,39 +223,9 @@ void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] )
    }
 }
 
-void hb_pp_Init( void )
+int hb_pp_Internal( char * sOut )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_Init()" ) );
-
-   if( s_pp_state )
-   {
-      hb_pp_reset( s_pp_state );
-   }
-}
-
-void hb_pp_Free( void )
-{
-   if( s_pp_state )
-   {
-      hb_pp_free( s_pp_state );
-      s_pp_state = NULL;
-   }
-}
-
-void hb_pp_AddDefine( char *defname, char *value )
-{
-   if( s_pp_state )
-      hb_pp_addDefine( s_pp_state, defname, value );
-}
-
-void hb_pp_ParseDirective( char * szLine )
-{
-   if( s_pp_state && szLine )
-      hb_pp_parseLine( s_pp_state, szLine, NULL );
-}
-
-int hb_pp_Internal( FILE * handl_o, char * sOut )
-{
+   char * szLine;
    ULONG ulLen = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
@@ -354,48 +233,20 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
    hb_pp_NestedLiteralString = FALSE;
    hb_pp_LiteralEscSeq = FALSE;
 
-   if( s_pp_state && hb_comp_files.iFiles > 0 )
-   {
-      char * szLine;
+   if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
+      hb_pp_setStream( hb_comp_data->pLex->pPP, HB_PP_STREAM_INLINE_C );
 
-      if( ! hb_pp_fileName( s_pp_state ) )
-      {
-         hb_pp_inFile( s_pp_state, hb_comp_files.pLast->szFileName,
-                                   hb_comp_files.pLast->handle );
-      }
-      if( handl_o && ! hb_pp_outFileName( s_pp_state ) )
-      {
-         char szOutFileName[ _POSIX_PATH_MAX + 1 ];
-         if( hb_comp_pFilePpo )
-            hb_fsFNameMerge( szOutFileName, hb_comp_pFilePpo );
-         else
-            szOutFileName[ 0 ] = '\0';
-         hb_pp_outFile( s_pp_state, szOutFileName, handl_o );
-         /* dirty hack but works as workaround for pure PP and compiler
-            API integration */
-         if( handl_o == hb_comp_yyppo )
-            hb_comp_yyppo = NULL;
-      }
+   szLine = hb_pp_nextLine( hb_comp_data->pLex->pPP, &ulLen );
+   /* I do not know why but compiler expect line number 1 bigger then
+      real line number */
+   hb_comp_iLine = hb_pp_line( hb_comp_data->pLex->pPP ) + 1;
 
-      if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
-         hb_pp_setStream( s_pp_state, HB_PP_STREAM_INLINE_C );
-
-      szLine = hb_pp_nextLine( s_pp_state, &ulLen );
-      /* I do not know why but compiler expect line number 1 bigger then
-         real line number */
-      hb_comp_iLine = hb_pp_line( s_pp_state ) + 1;
-
-      if( ulLen >= HB_PP_STR_SIZE )
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BUFFER_OVERFLOW, NULL, NULL );
-      else if( szLine )
-         memcpy( sOut, szLine, ulLen + 1 );
-      else
-         * sOut = '\0';
-   }
+   if( ulLen >= HB_PP_STR_SIZE )
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+   else if( szLine )
+      memcpy( sOut, szLine, ulLen + 1 );
    else
-   {
       * sOut = '\0';
-   }
 
    if( hb_comp_iLineINLINE && hb_pp_StreamBlock == 0 )
    {

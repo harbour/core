@@ -1135,7 +1135,7 @@ int yy_lex_input( char *buffer, int iBufferSize )
       fflush( stdout );
    }
 
-   return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
+   return hb_pp_Internal( buffer );
 }
 
 char * hb_comp_SLX_LastBlock( BOOL bReset )

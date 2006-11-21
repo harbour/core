@@ -71,6 +71,12 @@ static BOOL s_bTracePragma = FALSE;
           RequestLib    /R
 */
 
+static PINLINE hb_compInlineAdd_( char * szFunName )
+{
+   HB_SYMBOL_UNUSED( szFunName );
+   return NULL;
+}
+
 BOOL hb_pp_ParsePragma( char * szLine )
 {
    BOOL bIgnore = TRUE;
@@ -199,11 +205,11 @@ BOOL hb_pp_ParsePragma( char * szLine )
 
          hb_pp_StreamBlock = HB_PP_STREAM_DUMP_C;
 
-         pInline = hb_compInlineAdd( NULL );
+         pInline = hb_compInlineAdd_( NULL );
 
        DigestInline :
 
-         iSize = hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, sBuffer );
+         iSize = hb_pp_Internal_( hb_comp_bPPO ? hb_comp_yyppo : NULL, sBuffer );
          if( iSize == 0 )
          {
             hb_pp_StreamBlock = 0;

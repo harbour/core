@@ -118,7 +118,7 @@ void hb_pp_InternalFree( void )
    }
 }
 
-int hb_pp_Internal( FILE * handl_o, char * sOut )
+int hb_pp_Internal_( FILE * handl_o, char * sOut )
 {
   PFILE pFile;
   char * ptr, * ptrOut, * tmpPtr;
@@ -127,7 +127,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   ULONG lens;
   int lLine = 0;
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal_(%p, %s)", handl_o, sOut));
 
 #if defined(HB_PP_DEBUG_MEMORY)
   if( ! s_szLine )

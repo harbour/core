@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-YACC_FLAGS = -p hb_comp
+YACC_FLAGS = -p hb_macro
 
 YACC_SOURCE=macro.y
 
@@ -29,7 +29,7 @@ else
 # -Ce
 # -Cem  - slowest/smallest
 # see Flex documentation for full set of switches
-LEX_FLAGS = -Phb_comp -C
+LEX_FLAGS = -Phb_macro -C
 
 #LEX_SOURCE=macro.l
 

@@ -60,6 +60,9 @@
 
 HB_EXTERN_BEGIN
 
+typedef void * PHB_PP_STATE;
+typedef void * PHB_PP_TOKEN;
+
 struct _DEFINES;
 typedef struct _DEFINES
 {
@@ -81,6 +84,28 @@ typedef struct _COMMANDS
    char * value;
    struct _COMMANDS * last;
 } COMMANDS;
+
+/* #include support */
+typedef struct
+{
+   FILE * handle;               /* handle of the opened file */
+   void * pBuffer;              /* file buffer */
+   char * yyBuffer;             /* buffer used by yyac */
+   int    iBuffer;              /* current position in file buffer */
+   int    lenBuffer;            /* current length of data in file buffer */
+   char * szFileName;           /* name of the file */
+   void * pPrev;                /* pointer to the previous opened file */
+   void * pNext;                /* pointer to the next opened file */
+   int    iLine;                /* currently processed line number */
+} _FILE, * PFILE;               /* structure to hold an opened PRG or CH */
+
+/* structure to control several opened PRGs and CHs */
+typedef struct
+{
+   PFILE pLast;                 /* pointer to the last opened file */
+   int   iFiles;                /* number of files currently opened */
+} FILES;
+
 
 #define HB_PP_STR_SIZE  12288
 #define HB_PP_BUFF_SIZE 4096
@@ -116,11 +141,14 @@ extern int    hb_pp_LastOutLine;
 extern int    hb_pp_StreamBlock;
 extern BOOL   hb_pp_NestedLiteralString;
 extern BOOL   hb_pp_LiteralEscSeq;
-extern unsigned int  hb_pp_MaxTranslateCycles;
+extern unsigned int hb_pp_MaxTranslateCycles;
+extern HB_PATHNAMES * hb_comp_pIncludePath;
+extern FILES  hb_comp_files;
+extern BOOL   hb_comp_bPPO;
+extern FILE * hb_comp_yyppo;
 
 /* PPCOMP.C exported functions */
-
-extern int    hb_pp_Internal( FILE *, char * );
+extern int    hb_pp_Internal_( FILE *, char * );
 extern void   hb_pp_InternalFree( void );
 
 #if 0

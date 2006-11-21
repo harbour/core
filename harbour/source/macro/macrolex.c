@@ -171,7 +171,7 @@ static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, ULONG ulLen )
    }
 }
 
-int hb_complex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
    PHB_MACRO_LEX pLex = ( PHB_MACRO_LEX ) pMacro->pLex;
 

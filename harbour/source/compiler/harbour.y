@@ -1,3 +1,6 @@
+%pure-parser
+%parse-param { HB_COMP_PTR pComp }
+%lex-param   { HB_COMP_PTR pComp }
 %{
 /*
  * $Id$
@@ -43,38 +46,6 @@
 #define free    hb_xfree
 
 /* Compile using: bison -d -v harbour.y */
-
-extern FILE *yyin;      /* currently yacc parsed file */
-extern char *yytext;
-
-#ifdef __cplusplus
-typedef struct yy_buffer_state *YY_BUFFER_STATE;
-extern YY_BUFFER_STATE yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-extern void yy_switch_to_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-extern void yy_delete_buffer( YY_BUFFER_STATE ); /* yacc functions to manage multiple files */
-#else
-extern void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
-extern void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files */
-extern void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
-#endif
-
-/* lex & yacc related prototypes */
-#if !defined(__GNUC__) && !defined(__IBMCPP__)
-   #if 0
-      /* This makes BCC 551 fail with Bison 1.30, even with the
-         supplied harbour.simple file, which makes Bison 1.30 blow.
-         [vszakats] */
-      void __yy_memcpy ( char*, const char*, unsigned int ); /* to satisfy Borland compiler */
-   #endif
-#endif
-extern int yyparse( void );    /* main yacc parsing function */
-extern void yyerror( char * ); /* parsing error management function */
-extern int yylex( void );      /* main lex token function, called by yyparse() */
-#ifdef __cplusplus
-extern "C" int yywrap( void );
-#else
-extern int yywrap( void );     /* manages the EOF of current processed file */
-#endif
 
 static void hb_compLoopStart( void );
 static void hb_compLoopEnd( void );
@@ -161,8 +132,6 @@ USHORT hb_comp_wWithObjectCnt= 0;
 BOOL hb_comp_long_optimize = TRUE;
 BOOL hb_comp_bTextSubst = TRUE;
 
-char * hb_comp_buffer; /* yacc input buffer */
-
 static HB_LOOPEXIT_PTR hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 static HB_SWITCHCMD_PTR hb_comp_pSwitch = NULL;
@@ -193,15 +162,16 @@ static void hb_compDebugStart( void ) { };
    } valInteger;
    struct
    {
-      HB_LONG lNumber;     /* to hold a long number returned by lex */
-      char *  szValue;
+      HB_LONG  lNumber;    /* to hold a long number returned by lex */
+      UCHAR    bWidth;     /* to hold the width of the value */
+      char *   szValue;
    } valLong;
    struct
    {
-      double dNumber;   /* to hold a double number returned by lex */
+      double   dNumber;    /* to hold a double number returned by lex */
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
-      unsigned char bWidth; /* to hold the width of the value */
-      unsigned char bDec; /* to hold the number of decimal points in the value */
+      UCHAR    bWidth;     /* to hold the width of the value */
+      UCHAR    bDec;       /* to hold the number of decimal points in the value */
       char * szValue;
    } valDouble;
    HB_EXPR_PTR asExpr;
@@ -223,6 +193,16 @@ static void hb_compDebugStart( void ) { };
    } asMessage;
    void * pVoid;        /* to hold any memory structure we may need */
 };
+
+%{
+/* This must be placed after the above union - the union is
+ * typedef-ined to YYSTYPE
+ */
+extern int  yylex( YYSTYPE *, HB_COMP_PTR );    /* main lex token function, called by yyparse() */
+extern int  yyparse( HB_COMP_PTR );             /* main yacc parsing function */
+extern void yyerror( HB_COMP_PTR, char * );     /* parsing error management function */
+%}
+
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
@@ -1952,97 +1932,6 @@ Crlf       : '\n'          { hb_comp_bError = FALSE; }
    #endif
 #endif
 
-void yyerror( char * s )
-{
-   if( yytext[ 0 ] == '\n' )
-   {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
-   }
-   else
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, yytext );
-}
-
-
-BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearch )
-{
-   PFILE pFile;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_compInclude(%s,%p)", szFileName, pSearch));
-
-   yyin = fopen( szFileName, "r" );
-   if( ! yyin )
-   {
-      if( pSearch )
-      {
-         PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
-
-         while( pSearch && !yyin )
-         {
-            char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
-
-            pFileName->szPath = pSearch->szPath;
-            hb_fsFNameMerge( szFName, pFileName );
-            yyin = fopen( szFName, "r" );
-            if( ! yyin )
-            {
-               pSearch = pSearch->pNext;
-               if( ! pSearch )
-                  return FALSE;
-            }
-         }
-
-         hb_xfree( ( void * ) pFileName );
-      }
-      else
-         return FALSE;
-   }
-
-   pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
-   pFile->handle = yyin;
-   pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
-   pFile->iBuffer = pFile->lenBuffer = 10;
-   pFile->szFileName = hb_strdup( szFileName );
-   pFile->iLine = 0;
-   pFile->pPrev = hb_comp_files.pLast;
-
-   hb_comp_files.pLast = pFile;
-
-#ifdef __cplusplus
-   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( pFile->yyBuffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
-#else
-   yy_switch_to_buffer( pFile->yyBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
-#endif
-   hb_comp_files.iFiles++;
-
-   return TRUE;
-}
-
-int yywrap( void )   /* handles the EOF of the currently processed file */
-{
-   HB_TRACE(HB_TR_DEBUG, ("yywrap()"));
-
-   if( hb_comp_files.iFiles == 1 )
-   {
-      hb_xfree( hb_comp_files.pLast->pBuffer );
-      hb_comp_files.pLast->pBuffer = NULL;
-      return 1;      /* we have reached the main EOF */
-   }
-
-   return 0;
-}
-
-void hb_compParserStop( void )
-{
-   if( hb_comp_files.pLast && hb_comp_files.pLast->yyBuffer )
-   {
-#ifdef __cplusplus   
-      yy_delete_buffer( (YY_BUFFER_STATE) hb_comp_files.pLast->yyBuffer );
-#else
-      yy_delete_buffer( (void *) hb_comp_files.pLast->yyBuffer );
-#endif      
-      hb_comp_files.pLast->yyBuffer = NULL;
-   }
-}
 
 /* ************************************************************************* */
 
@@ -2713,4 +2602,16 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_EXPR_PTR pExpr )
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
    }
    return pExpr;
+}
+
+/* ************************************************************************* */
+
+void yyerror( HB_COMP_PTR pComp, char * s )
+{
+   HB_SYMBOL_UNUSED( pComp );
+
+   if( !pComp->pLex->lasttok || pComp->pLex->lasttok[ 0 ] == '\n' )
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
+   else
+      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, pComp->pLex->lasttok );
 }

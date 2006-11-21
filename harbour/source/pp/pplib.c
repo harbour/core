@@ -58,10 +58,13 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-static void hb_pp_ErrorMessage( char * szMsgTable[], char cPrefix, int iCode,
+static void hb_pp_ErrorMessage( void * cargo, char * szMsgTable[],
+                                char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ErrorGen(%p, %c, %d, %s, %s)", szMsgTable, cPrefix, iCode, szParam1, szParam2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ErrorGen(%p, %p, %c, %d, %s, %s)", cargo, szMsgTable, cPrefix, iCode, szParam1, szParam2));
+
+   HB_SYMBOL_UNUSED( cargo );
 
    /* ignore warning messages */
    if( cPrefix != 'W' )
@@ -76,9 +79,10 @@ static void hb_pp_ErrorMessage( char * szMsgTable[], char cPrefix, int iCode,
    }
 }
 
-static void hb_pp_Disp( const char * szMessage )
+static void hb_pp_Disp( void * cargo, const char * szMessage )
 {
    /* ignore stdout messages when PP used as library */
+   HB_SYMBOL_UNUSED( cargo );
    HB_SYMBOL_UNUSED( szMessage );
 }
 
@@ -138,7 +142,7 @@ HB_FUNC( __PP_INIT )
    {
       char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
 
-      hb_pp_init( pState, TRUE, NULL, NULL,
+      hb_pp_init( pState, TRUE, NULL, NULL, NULL,
                   hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
 
       if( szPath )

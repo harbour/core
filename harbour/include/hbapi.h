@@ -798,19 +798,15 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 {
    char * string;          /* compiled string */
    ULONG  length;          /* length of the string */
-   ULONG  pos;             /* current position inside of compiled string */
    int    Flags;           /* some flags we may need */
    int    status;          /* status of compilation */
-   HB_ITEM_PTR pError;     /* error object returned from the parser */
    ULONG  supported;       /* various flags for supported capabilities */
-   int    FlexState;       /* internal flex state during parsing */
-   void * pLex;            /* lexer buffer pointer */
+   HB_ITEM_PTR pError;     /* error object returned from the parser */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
-   void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
-   USHORT uiNameLen;       /* the maximum symbol name length */
-   BOOL   bShortCuts;      /* are we using logical shorcuts (in OR/AND)  */
+   void * pLex;            /* lexer buffer pointer */
    int    exprType;        /* type of successfully compiled expression */
-   int    iListElements;
+   USHORT uiListElements;  /* number of elements in macro list expression */
+   USHORT uiNameLen;       /* the maximum symbol name length */
 } HB_MACRO, * HB_MACRO_PTR;
 
 extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */

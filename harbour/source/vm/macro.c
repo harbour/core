@@ -80,9 +80,6 @@ typedef struct HB_MEXPR_ {
 static ULONG s_macroFlags = HB_SM_SHORTCUTS;
 static HB_MEXPR_PTR s_macroAlloc = NULL;
 
-static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int, BYTE );
-static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
-
 /* ************************************************************************* */
 
 /* Allocates memory for Expression holder structure and stores it
@@ -127,9 +124,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
    pMacro->length = strlen( szString );
-   pMacro->pos    = 0;
-   pMacro->bShortCuts = hb_comp_bShortCuts;
-   pMacro->pError   = NULL;
+   pMacro->pError = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s)", pMacro, szString));
 
@@ -526,11 +521,11 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       char * pText;
       char * pOut;
 #endif
-      struMacro.Flags         = HB_MACRO_GEN_PUSH;
-      struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
-      struMacro.status        = HB_MACRO_CONT;
-      struMacro.iListElements = 0;
-      struMacro.supported     = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
+      struMacro.Flags          = HB_MACRO_GEN_PUSH;
+      struMacro.uiNameLen      = HB_SYMBOL_NAME_LEN;
+      struMacro.status         = HB_MACRO_CONT;
+      struMacro.uiListElements = 0;
+      struMacro.supported      = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
 
       if( iContext != 0 )
       {
@@ -598,11 +593,11 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
          {
             if( iContext == HB_P_MACROPUSHLIST )
             {
-               hb_vmPushLong( struMacro.iListElements + 1 );
+               hb_vmPushLong( struMacro.uiListElements + 1 );
             }
             else if( iContext == HB_P_MACROPUSHINDEX )
             {
-               hb_vmPushLong( struMacro.iListElements );
+               hb_vmPushLong( struMacro.uiListElements );
             }
          }
       }
@@ -640,30 +635,6 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
       else
          hb_macroSyntaxError( &struMacro );
    }
-}
-
-/* Compiles and run an aliased macro expression - generated pcode
- * pops a value from the stack
- *    &alias->var := any
- *    alias->&var := any
- */
-void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
-
-   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP, flags );
-}
-
-/* Compiles and run an aliased macro expression - generated pcode
- * pushes a value onto the stack
- *    any := &alias->var
- *    any := alias->&var
- */
-void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
-
-   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH, flags );
 }
 
 /*
@@ -738,6 +709,30 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       else
          hb_macroSyntaxError( &struMacro );
    }
+}
+
+/* Compiles and run an aliased macro expression - generated pcode
+ * pops a value from the stack
+ *    &alias->var := any
+ *    alias->&var := any
+ */
+void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
+
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP, flags );
+}
+
+/* Compiles and run an aliased macro expression - generated pcode
+ * pushes a value onto the stack
+ *    any := &alias->var
+ *    any := alias->&var
+ */
+void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
+
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH, flags );
 }
 
 /* Check for '&' operator and replace it with a macro variable value

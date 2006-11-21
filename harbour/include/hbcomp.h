@@ -85,27 +85,6 @@ typedef enum
    LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
 } LANGUAGES;                    /* supported Harbour output languages */
 
-/* #include support */
-typedef struct
-{
-   FILE * handle;               /* handle of the opened file */
-   void * pBuffer;              /* file buffer */
-   char * yyBuffer;             /* buffer used by yyac */
-   int    iBuffer;              /* current position in file buffer */
-   int    lenBuffer;            /* current length of data in file buffer */
-   char * szFileName;           /* name of the file */
-   void * pPrev;                /* pointer to the previous opened file */
-   void * pNext;                /* pointer to the next opened file */
-   int    iLine;                /* currently processed line number */
-} _FILE, * PFILE;               /* structure to hold an opened PRG or CH */
-
-/* structure to control several opened PRGs and CHs */
-typedef struct
-{
-   PFILE pLast;                 /* pointer to the last opened file */
-   int   iFiles;                /* number of files currently opened */
-} FILES;
-
 struct _COMCLASS;    /* forward declaration */
 
 /* Declared Function/Method support structure */
@@ -274,6 +253,34 @@ extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 
+
+typedef struct _HB_COMP_LEX
+{
+   PHB_PP_STATE   pPP;
+   int            iState;
+   char *         lasttok;
+}
+HB_COMP_LEX, * PHB_COMP_LEX;
+
+typedef struct _HB_COMP
+{
+   PHB_COMP_LEX   pLex;
+}
+HB_COMP, * HB_COMP_PTR;
+
+extern HB_COMP_PTR hb_comp_new( void );
+extern void hb_comp_free( HB_COMP_PTR );
+
+
+/* compiler PP functions and variables */
+#define HB_PP_STR_SIZE  12288
+#define HB_PP_BUFF_SIZE 4096
+extern void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] );
+extern int  hb_pp_Internal( char * );
+extern void hb_compParserStop( HB_COMP_PTR pComp );
+
+
+
 #define VS_NONE       0
 #define VS_LOCAL      1
 #define VS_STATIC     2
@@ -323,7 +330,7 @@ extern PINLINE   hb_compInlineFind( char * szFunName );
 extern USHORT    hb_compFunctionGetPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 extern PFUNCTION hb_compFunctionKill( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 extern void      hb_compAnnounce( char * );
-extern PINLINE   hb_compInlineAdd( char * szFunName );
+extern PINLINE   hb_compInlineAdd( HB_COMP_PTR pComp, char * szFunName, int iLine );
 
 extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
 extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */
@@ -484,15 +491,6 @@ extern void hb_compStripFuncLines( PFUNCTION pFunc );
 /* Misc functions defined in hbdead.c */
 extern void hb_compCodeTraceMarkDead( PFUNCTION pFunc );
 
-/* Misc functions defined in harbour.y */
-#if 0
-extern int hb_compYACCMain( char * szName );
-#endif
-extern BOOL hb_compInclude( char * szFileName, HB_PATHNAMES * pSearchPath );  /* end #include support */
-extern void hb_compParserStop( void ); /* cleanup the bison parser */
-
-extern char * hb_comp_buffer; /* yacc input buffer */
-
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
 extern void hb_compGenILCode( PHB_FNAME );     /* generates the .NET IL language output */
@@ -508,6 +506,8 @@ extern void hb_compIdentifierClose( void ); /* release the table of identifiers 
 
 /* variable used by compiler
  */
+extern HB_COMP_PTR    hb_comp_data;
+
 extern int            hb_comp_iLine;
 extern FUNCTIONS      hb_comp_functions;
 extern FUNCTIONS      hb_comp_funcalls;
@@ -520,12 +520,10 @@ extern PCOMCLASS      hb_comp_pLastClass;
 extern PCOMCLASS      hb_comp_pReleaseClass;
 extern char *         hb_comp_szFromClass;
 extern PCOMDECLARED   hb_comp_pLastMethod;
-extern HB_PATHNAMES * hb_comp_pIncludePath;
 extern PFUNCTION      hb_comp_pInitFunc;
 extern PHB_FNAME      hb_comp_pFileName;
 extern PHB_FNAME      hb_comp_pFilePpo;
 extern BOOL           hb_comp_bPPO;
-extern FILE *         hb_comp_yyppo;
 extern BOOL           hb_comp_bStartProc;
 extern BOOL           hb_comp_bLineNumbers;
 extern BOOL           hb_comp_bQuiet;
@@ -545,7 +543,6 @@ extern char           hb_comp_cDataListType;
 extern char           hb_comp_cCastType;
 extern int            hb_comp_iVarScope;
 extern BOOL           hb_comp_bDontGenLineNum;
-extern FILES          hb_comp_files;
 extern int            hb_comp_iStaticCnt;
 extern int            hb_comp_iErrorCount;
 
@@ -598,15 +595,6 @@ extern FILE           *hb_comp_errFile;
 /* Hide Strings */
 extern int            hb_comp_iHidden;
 
-/* compiler PP functions and variables */
-#define HB_PP_STR_SIZE  12288
-#define HB_PP_BUFF_SIZE 4096
-extern void hb_pp_SetRules( BOOL hb_comp_bQuiet, int argc, char * argv[] );
-extern void hb_pp_Init( void );
-extern void hb_pp_Free( void );
-extern void hb_pp_AddDefine( char *defname, char *value );
-extern void hb_pp_ParseDirective( char * );
-extern int  hb_pp_Internal( FILE *, char * );
 
 extern BOOL hb_pp_LiteralEscSeq;
 extern BOOL hb_pp_NestedLiteralString;

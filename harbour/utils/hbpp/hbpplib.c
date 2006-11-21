@@ -250,16 +250,5 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const c
    HB_SYMBOL_UNUSED( szWarning2 );
 }
 
-PINLINE   hb_compInlineAdd( char * szFunName )
-{
-   HB_SYMBOL_UNUSED( szFunName );
-   return NULL;
-}
-
-void hb_compParserStop( void  )
-{
-   ;
-}
-
 #endif
 

@@ -734,7 +734,7 @@ GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
 HARBOUR_EXE_OBJS = \
     $(OBJ_DIR)\harbour.obj  \
     $(OBJ_DIR)\harboury.obj \
-    $(OBJ_DIR)\harbourl.obj \
+    $(OBJ_DIR)\complex.obj  \
     $(OBJ_DIR)\cmdcheck.obj \
     $(OBJ_DIR)\hbdead.obj   \
     $(OBJ_DIR)\hbstripl.obj \
