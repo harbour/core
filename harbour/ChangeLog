@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+      YYSTYPE using hack in a lexer but it will force really huge number
+      modifications in existing bison rules so probably it will be much
+      easier to fix bison or write a small tool to update generated parser.
+    * other modifications - the total size of patch is nearly 1MB and
       detail description will have to take me few days.
 
 2006-11-21 14:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
