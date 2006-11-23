@@ -608,6 +608,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
          hb_membufAddCh( pState->pBuffer, ch );
       }
    }
+   ++pState->iLineTot;
    iLine = ++pState->pFile->iCurrentLine / 100;
    if( !pState->fQuiet &&
        iLine != pState->pFile->iLastDisp )
@@ -4396,6 +4397,36 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
    if( !pState->pTokenOut )
       hb_pp_preprocesToken( pState );
 
+   if( pState->fWritePreprocesed && pState->pTokenOut )
+   {
+      hb_membufFlush( pState->pBuffer );
+#if defined( HB_PP_NO_LINEINFO_TOKEN )
+      if( pState->pFile->fGenLineInfo )
+      {
+         fprintf( pState->file_out, "#line %d", pState->pFile->iCurrentLine );
+         if( pState->pFile->szFileName )
+            fprintf( pState->file_out, " \"%s\"", pState->pFile->szFileName );
+         fputc( '\n', pState->file_out );
+         pState->pFile->fGenLineInfo = FALSE;
+      }
+      else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
+      {
+         do
+            fputc( '\n', pState->file_out );
+         while( ++pState->pFile->iLastLine < pState->pFile->iCurrentLine );
+      }
+      pState->pFile->iLastLine = pState->pFile->iCurrentLine +
+               hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, TRUE, TRUE,
+                               pState->iLastType );
+#else
+      hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, TRUE, TRUE,
+                      pState->iLastType );
+#endif
+      pState->iLastType = pState->pTokenOut->type;
+      fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+              hb_membufLen( pState->pBuffer ), pState->file_out );
+   }
+
    return pState->pTokenOut;
 }
 
@@ -4419,13 +4450,14 @@ void hb_pp_free( PHB_PP_STATE pState )
 /*
  * initialize PP context
  */
-void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, void * cargo,
+void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, int iCycles, void * cargo,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                  PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
    pState->fQuiet      = fQuiet;
+   pState->iMaxCycles  = ( iCycles > 0 ) ? iCycles : HB_PP_MAX_CYCLES;
    pState->cargo       = cargo;
    pState->pOpenFunc   = pOpenFunc;
    pState->pCloseFunc  = pCloseFunc;
@@ -4587,6 +4619,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, char * szRulesFile )
    else
    {
       pState->iFiles++;
+      pState->iLastType = HB_PP_TOKEN_NUL;
       while( hb_pp_tokenGet( pState ) );
       if( pState->pFile )
       {
@@ -4676,6 +4709,11 @@ int hb_pp_line( PHB_PP_STATE pState )
       return pState->pFile->iCurrentLine;
    else
       return 0;
+}
+
+int hb_pp_lineTot( PHB_PP_STATE pState )
+{
+   return pState->iLineTot;
 }
 
 /*
@@ -4786,7 +4824,6 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
    if( pState->pFile )
    {
       PHB_PP_TOKEN pToken;
-      USHORT ltype = 0;
 
       pState->fError = FALSE;
 
@@ -4795,51 +4832,15 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
       else
          hb_membufFlush( pState->pOutputBuffer );
 
+      pState->iLastType = HB_PP_TOKEN_NUL;
       while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
       {
-#if defined( HB_PP_NO_LINEINFO_TOKEN )
-         int iLine;
-         if( pState->fWritePreprocesed )
-         {
-            if( pState->pFile->fGenLineInfo )
-            {
-               fprintf( pState->file_out, "#line %d", pState->pFile->iCurrentLine );
-               if( pState->pFile->szFileName )
-               {
-                  fprintf( pState->file_out, " \"%s\"", pState->pFile->szFileName );
-               }
-               fputc( '\n', pState->file_out );
-               pState->pFile->fGenLineInfo = FALSE;
-            }
-            else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
-            {
-               do
-                  fputc( '\n', pState->file_out );
-               while( ++pState->pFile->iLastLine < pState->pFile->iCurrentLine );
-            }
-         }
-         pState->pFile->iLastLine = pState->pFile->iCurrentLine;
-         iLine = hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE, ltype );
-         if( iLine )
-         {
-            pState->pFile->iLastLine += iLine;
+         if( hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE,
+                             pState->iLastType ) )
             break;
-         }
-#else
-         if( hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE, ltype ) )
-            break;
-#endif
          /* only single command in one call */
          if( !pState->pTokenOut->pNext )
             break;
-
-         ltype = HB_PP_TOKEN_TYPE( pToken->type );
-      }
-
-      if( pState->fWritePreprocesed )
-      {
-         fwrite( hb_membufPtr( pState->pOutputBuffer ), sizeof( char ),
-                 hb_membufLen( pState->pOutputBuffer ), pState->file_out );
       }
 
       if( pulLen )
@@ -4861,7 +4862,6 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen )
 {
    PHB_PP_TOKEN pToken;
    PHB_PP_FILE pFile;
-   USHORT ltype = 0;
    ULONG ulLen;
 
    pState->fError = FALSE;
@@ -4878,10 +4878,11 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen )
    pState->pFile = pFile;
    pState->iFiles++;
 
+   pState->iLastType = HB_PP_TOKEN_NUL;
    while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
    {
-      hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE, ltype );
-      ltype = HB_PP_TOKEN_TYPE( pToken->type );
+      hb_pp_tokenStr( pToken, pState->pOutputBuffer, TRUE, TRUE,
+                      pState->iLastType );
    }
 
    if( ( ulLen && pLine[ ulLen - 1 ] == '\n' ) ||

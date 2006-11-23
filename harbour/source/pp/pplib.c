@@ -142,7 +142,7 @@ HB_FUNC( __PP_INIT )
    {
       char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
 
-      hb_pp_init( pState, TRUE, NULL, NULL, NULL,
+      hb_pp_init( pState, TRUE, 0, NULL, NULL, NULL,
                   hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
 
       if( szPath )

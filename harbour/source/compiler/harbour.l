@@ -88,7 +88,11 @@ int yy_lex_input( char *, int );
 #define RINDEX          -16
 #define LARRAY          -32
 #define RARRAY          -64
+
 static int hb_comp_iState = LOOKUP;
+static int hb_comp_iLineINLINE = 0;
+static int hb_comp_iLinePRG;
+
 
 #define YY_OPERATOR_RET(t)    hb_comp_iState = OPERATOR; pComp->pLex->lasttok = yytext; return (t)
 #define YY_TOKEN_RET(s,t)     hb_comp_iState = (s); pComp->pLex->lasttok = yytext; return (t)
@@ -359,14 +363,6 @@ Separator     {SpaceTab}
 
 \n           {
                 hb_comp_iState = LOOKUP;
-
-/*
-                if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 )
-                {
-                   printf( "\r%i", hb_comp_iLine );
-                   fflush( stdout );
-                }
-*/
                 pComp->pLex->lasttok = "\n";
                 return '\n';
              }
@@ -912,7 +908,7 @@ Separator     {SpaceTab}
          int iSize, iBraces = 0;
          PINLINE pInline;
 
-         hb_comp_iLineINLINE = hb_comp_iLine;
+         hb_comp_iLineINLINE = hb_pp_line( HB_COMP_PARAM->pLex->pPP ) + 1;
          hb_pp_StreamBlock = HB_PP_STREAM_DUMP_C;
 
          sInlineSym[10] = hb_comp_cInlineID++;
@@ -935,7 +931,7 @@ Separator     {SpaceTab}
          YY_INPUT( (char*) sBuffer, iSize, YY_BUF_SIZE );
          if( iSize == 0 )
          {
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, hb_comp_functions.pLast->szName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_INVALID_INLINE, HB_MARCO_PARAM->functions.pLast->szName, NULL );
             hb_pp_StreamBlock = 0;
             return '\n';
          }
@@ -1040,9 +1036,7 @@ Separator     {SpaceTab}
                hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
             }
 
-            hb_comp_iLinePRG = hb_comp_iLine - 1;
-            hb_comp_iLine = hb_comp_iLineINLINE;
-
+            hb_comp_iLinePRG = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
             pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( sInlineSym, TRUE );
             return IDENTIFIER;
          }
@@ -1864,9 +1858,29 @@ Separator     {SpaceTab}
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
-   HB_SYMBOL_UNUSED( iBufferSize );
+   /* FLEX is not MT safe :-( */
+   HB_COMP_DECL = hb_comp_data;
+   char * szLine;
+   ULONG ulLen = 0;
 
-   return hb_pp_Internal( buffer );
+   hb_pp_NestedLiteralString = FALSE;
+   hb_pp_LiteralEscSeq = FALSE;
+
+   if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
+      hb_pp_setStream( HB_COMP_PARAM->pLex->pPP, HB_PP_STREAM_INLINE_C );
+
+   szLine = hb_pp_nextLine( HB_COMP_PARAM->pLex->pPP, &ulLen );
+
+   if( ulLen >= iBufferSize )
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+   else if( szLine )
+      memcpy( buffer, szLine, ulLen + 1 );
+   else
+      * buffer = '\0';
+   if( hb_comp_iLineINLINE && hb_pp_StreamBlock == 0 )
+      hb_comp_iLineINLINE = 0;
+
+   return ulLen;
 }
 
 static int yy_ConvertNumber( YYSTYPE *yylval_ptr, char * szBuffer )

@@ -71,11 +71,7 @@
 
 /* ************************************************************************* */
 
-#if defined( HB_MACRO_SUPPORT )
-static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_MACRO_DECL )
-#else
-static void hb_compExprSendPopPush( HB_EXPR_PTR pObj )
-#endif
+static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
 {
    if( pObj->value.asMessage.pObject )
    {
@@ -133,11 +129,7 @@ static void hb_compExprSendPopPush( HB_EXPR_PTR pObj )
    }
 }
 
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
-#else
-void hb_compExprDelOperator( HB_EXPR_PTR pExpr )
-#endif
+void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
    if( pExpr->value.asOperator.pLeft )
       HB_EXPR_PCODE1( hb_compExprDelete, pExpr->value.asOperator.pLeft );
@@ -150,11 +142,7 @@ void hb_compExprDelOperator( HB_EXPR_PTR pExpr )
  *
  * pExpr is an expression created by hb_compExprNew<operator>Eq functions
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_MACRO_DECL )
-#else
-void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
-#endif
+void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
    /* NOTE: an object instance variable needs special handling
     */
@@ -195,7 +183,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       if( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
           bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE )
       {
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
@@ -215,18 +203,18 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                bOpEq = HB_P_DIVEQ;
                break;
          }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
       }
       else
 #endif
       {
-         HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          /* increase operation */
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
          /* call pop message with one argument */
-         HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
       }
       return;
    }
@@ -237,7 +225,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
+      int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
       if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
           iScope != HB_VS_UNDECLARED )
@@ -249,7 +237,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
             if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
             {
-               int iLocal = hb_compLocalGetPos( pSelf->value.asOperator.pLeft->value.asSymbol ); 
+               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
 
                if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
@@ -262,7 +250,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                         iIncrement = -iIncrement;
                      }
 
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), HB_COMP_PARAM );
 
                      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
 
@@ -290,12 +278,12 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                   bOpEq = HB_P_DIVEQ;
                   break;
             }
-            HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
             return;
          }
          else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
          {
-            int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
+            int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
 
             if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
                 iScope != HB_VS_UNDECLARED )
@@ -320,7 +308,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                      bOpEq = HB_P_DIVEQ;
                      break;
                }
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+               HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
                return;
             }
          }
@@ -332,8 +320,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    /* push increment value */
    HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
    /* perform operation and duplicate the new value */
-   HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
-   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+   HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
    /* pop the new value into variable and leave the copy on the stack */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
@@ -341,11 +329,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 /* Generates pcodes for <operator>= syntax
  * used standalone as a statement (it cannot leave the value on the stack)
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_MACRO_DECL )
-#else
-void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
-#endif
+void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
    /* NOTE: an object instance variable needs special handling
     */
@@ -360,7 +344,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       if( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
           bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE )
       {
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
@@ -380,20 +364,20 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                bOpEq = HB_P_DIVEQPOP;
                break;
          }
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
       }
       else
 #endif
       {
-         HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          /* increase operation */
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
          /* Now do the assignment - call pop message with one argument */
-         HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
          /* pop the unneeded value from the stack */
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
       }
       return;
    }
@@ -404,19 +388,19 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
               bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
             ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
    {
-      int iScope = hb_compVariableScope( pSelf->value.asOperator.pLeft->value.asSymbol );
+      int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
       if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
           iScope != HB_VS_UNDECLARED )
       {
          HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType, iOldType;
-         
+
          if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
          {
             if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
             {
-               int iLocal = hb_compLocalGetPos( pSelf->value.asOperator.pLeft->value.asSymbol ); 
+               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
 
                if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
@@ -429,7 +413,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                         iIncrement = -iIncrement;
                      }
 
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), ( BOOL ) 0 );
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), HB_COMP_PARAM );
                      return;
                   }
                }
@@ -455,13 +439,13 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                   bOpEq = HB_P_DIVEQPOP;
                   break;
             }
-            HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
             pSelf->value.asOperator.pLeft->ExprType = iOldType;
             return;
          }
          else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
          {
-            int iScope = hb_compVariableScope( pSelf->value.asOperator.pRight->value.asSymbol );
+            int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
 
             if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
                 iScope != HB_VS_UNDECLARED )
@@ -487,7 +471,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
                      bOpEq = HB_P_DIVEQPOP;
                      break;
                }
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+               HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
                pSelf->value.asOperator.pLeft->ExprType = iOldType;
                pSelf->value.asOperator.pRight->ExprType = iType;
                return;
@@ -501,18 +485,14 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
    /* push increment value */
    HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
    /* add */
-   HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
    /* pop the new value into variable and remove it from the stack */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generates the pcodes for pre- increment/decrement expressions
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_MACRO_DECL )
-#else
-void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
-#endif
+void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 {
    /* NOTE: an object instance variable needs special handling
     */
@@ -524,7 +504,7 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
       /* Temporary disabled optimization with references to object variables
          untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
       /* increase/decrease operation */
       /* We have to unreference the item on the stack, because we do not have
@@ -532,16 +512,16 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
          HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
          in differ way [druzus] */
 
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ONE );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
       bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
 
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
 #else
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0, ( BOOL ) 1 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
       /* increase/decrease operation */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       /* Now, do the assignment - call pop message with one argument - it leaves the value on the stack */
-      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1, ( BOOL ) 1 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
 #endif
    }
    else
@@ -549,9 +529,9 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Increment */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       /* duplicate a value */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
       /* pop new value and leave the duplicated copy of it on the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -559,11 +539,7 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
 
 /* Generates the pcodes for post- increment/decrement expressions
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_MACRO_DECL )
-#else
-void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper )
-#endif
+void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 {
    /* NOTE: an object instance variable needs special handling
     */
@@ -574,16 +550,16 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper )
       /* now increment the value */
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
    }
    else
    {
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Duplicate value */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
       /* Increment */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       /* pop new value from the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -592,11 +568,7 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper )
 /* Generates the pcodes for increment/decrement operations
  * used standalone as a statement
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_MACRO_DECL )
-#else
-void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper )
-#endif
+void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 {
    /* NOTE: an object instance variable needs special handling
     */
@@ -604,14 +576,14 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper )
    {
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
    }
    else
    {
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Increment */
-      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       /* pop new value from the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -621,11 +593,7 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper )
  * the left or right side of the alias operator
  * expression->&macro or &macro->expression or &macro->&macro
  */
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_MACRO_DECL )
-#else
-void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
-#endif
+void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DECL )
 {
    HB_EXPR_PTR pAlias, pVar;
 
@@ -645,9 +613,9 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
       HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen(pAlias->value.asSymbol) + 1 );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
    else if( pVar->ExprType == HB_ET_VARIABLE )
    {
@@ -657,31 +625,22 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen(pVar->value.asSymbol) + 1 );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
    else
    {
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
 
-   /* Always add add byte to pcode indicating requested macro compiler flag. */
-#if defined( HB_MACRO_SUPPORT )
-   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
-#else
-   HB_EXPR_GENPCODE1( hb_compGenPData1,
-          ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-          ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-          ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-          ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 ) );
-#endif
-
+   /* Always add byte to pcode indicating requested macro compiler flag. */
+   HB_EXPR_PCODE1( hb_compGenPCode1, HB_MACRO_GENFLAGS );
 }
 
 
@@ -689,11 +648,7 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
  *
  * pExpr is the first expression on the list
  */
-#if defined( HB_MACRO_SUPPORT )
-ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
-#else
-ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
-#endif
+ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
    HB_EXPR_PTR pNext;
    HB_EXPR_PTR * pPrev;
@@ -718,7 +673,7 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
    return ulCnt;
 }
 
-BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL )
+BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_COMP_DECL )
 {
    char * pTmp = szText;
    BOOL bTextSubst;
@@ -768,13 +723,13 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL
          cSave = *pTmp;
          *pTmp = '\0';
 	
-         bMacroText &= hb_compIsValidMacroVar( pStart );
+         bMacroText &= hb_compIsValidMacroVar( pStart, HB_COMP_PARAM );
          *pTmp = cSave;
 #endif
       }
       *pbUseTextSubst |= bTextSubst;
    }
-   HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );  /* to suppress BCC warning */
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );  /* to suppress BCC warning */
 
    return bMacroText;
 }
@@ -783,7 +738,7 @@ BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_MACRO_DECL
  *
  * pExpr is the first expression on the list
  */
-HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_MACRO_DECL )
+HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
 {
    if( pLeft->value.asString.dealloc )
    {
@@ -792,7 +747,7 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
               pRight->value.asString.string, pRight->ulLength );
       pLeft->ulLength += pRight->ulLength;
       pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
-      hb_compExprFree( pRight, HB_MACRO_PARAM );
+      hb_compExprFree( pRight, HB_COMP_PARAM );
    }
    else
    {
@@ -804,9 +759,9 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
       szString[ pLeft->ulLength ] = '\0';
       pLeft->value.asString.string = szString;
       pLeft->value.asString.dealloc = TRUE;
-      hb_compExprFree( pRight, HB_MACRO_PARAM );
+      hb_compExprFree( pRight, HB_COMP_PARAM );
    }
-   HB_SYMBOL_UNUSED( HB_MACRO_VARNAME );  /* to suppress BCC warning */
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );  /* to suppress BCC warning */
    return pLeft;
 }
 

@@ -796,14 +796,18 @@ typedef struct HB_PCODE_INFO_   /* compiled pcode container */
 
 typedef struct HB_MACRO_    /* a macro compiled pcode container */
 {
+   /* common to compiler members */
+   ULONG  supported;       /* various flags for supported capabilities */
+
+   /* macro compiler only members */
    char * string;          /* compiled string */
    ULONG  length;          /* length of the string */
    int    Flags;           /* some flags we may need */
    int    status;          /* status of compilation */
-   ULONG  supported;       /* various flags for supported capabilities */
    HB_ITEM_PTR pError;     /* error object returned from the parser */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
    void * pLex;            /* lexer buffer pointer */
+   void * pExprLst;        /* list with allocated expressions */
    int    exprType;        /* type of successfully compiled expression */
    USHORT uiListElements;  /* number of elements in macro list expression */
    USHORT uiNameLen;       /* the maximum symbol name length */

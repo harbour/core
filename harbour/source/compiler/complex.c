@@ -253,21 +253,21 @@ static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
    return IDENTIFIER;
 }
 
-static char * hb_comp_tokenIdentifer( PHB_PP_TOKEN pToken )
+static char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
 {
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
    {
-      pToken->value = hb_compIdentifierNew( pToken->value, FALSE );
+      pToken->value = hb_compIdentifierNew( HB_COMP_PARAM, pToken->value, FALSE );
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
 
    return pToken->value;
 }
 
-//int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
-int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
+//int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
+int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
-   PHB_COMP_LEX pLex = ( PHB_COMP_LEX ) pComp->pLex;
+   PHB_COMP_LEX pLex = ( PHB_COMP_LEX ) HB_COMP_PARAM->pLex;
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
 
    if( !pToken )
@@ -312,7 +312,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
 
       case HB_PP_TOKEN_STRING:
          pLex->iState = LITERAL;
-         pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+         pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:
@@ -322,13 +323,15 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
       case HB_PP_TOKEN_MACROVAR:
          pLex->iState = MACROVAR;
          hb_pp_tokenUpper( pToken );
-         pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+         pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
          return MACROVAR;
 
       case HB_PP_TOKEN_MACROTEXT:
          pLex->iState = MACROTEXT;
          hb_pp_tokenUpper( pToken );
-         pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+         pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
          return MACROTEXT;
 
       case HB_PP_TOKEN_LEFT_SB:
@@ -346,7 +349,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
             case WHILE:
                pLex->iState = LITERAL;
                hb_pp_tokenToString( pLex->pPP, pToken );
-               pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+               pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
                return LITERAL;
 
             default:
@@ -367,8 +371,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                hb_strdup( hb_pp_tokenBlockString( pLex->pPP, pToken, &iType ) );
             yylval_ptr->asCodeblock.length =
                strlen( yylval_ptr->asCodeblock.string );
-		yylval_ptr->asCodeblock.isMacro = iType > 0;
-		yylval_ptr->asCodeblock.lateEval = iType > 1;
+            yylval_ptr->asCodeblock.isMacro = iType > 0;
+            yylval_ptr->asCodeblock.lateEval = iType > 1;
             hb_pp_tokenGet( pLex->pPP );
             return CBSTART;
          }
@@ -509,7 +513,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
          int iType;
          hb_pp_tokenUpper( pToken );
          iType = hb_comp_keywordType( pToken );
-         pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+         pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
          switch( iType )
          {
             case FUNCTION:
@@ -517,8 +522,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                /* Clipper needs PROCEDURE in one context only */
                if( !pToken->pNext ||
                    HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_KEYWORD )
-                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX,
-                                   pToken->value, NULL );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                   HB_COMP_ERR_SYNTAX, pToken->value, NULL );
                pLex->iState = iType;
                return pLex->iState;
 
@@ -563,8 +568,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                       pToken->pNext->len >= 4 && pToken->pNext->len <= 8 &&
                       hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
                   {
-                     if( hb_comp_wSeqCounter == 0 )
-                        hb_compGenError( hb_comp_szErrors, 'E',
+                     if( HB_COMP_PARAM->wSeqCounter == 0 )
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_ENDIF, NULL, NULL );
                      hb_pp_tokenGet( pLex->pPP );
                      pLex->iState = END;
@@ -584,7 +589,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
-                     hb_compGenError( hb_comp_szErrors, 'E',
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                       HB_COMP_ERR_ENDIF, NULL, NULL );
                }
                iType = IDENTIFIER;
@@ -592,38 +597,38 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
 
             case ELSE:
                /* ELSE can be used in one context only */
-               if( hb_comp_wIfCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+               if( HB_COMP_PARAM->wIfCounter == 0 )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSE, NULL, NULL );
                pLex->iState = ELSE;
                return ELSE;
 
             case ELSEIF:
                /* ELSEIF can be used in one context only */
-               if( hb_comp_wIfCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+               if( HB_COMP_PARAM->wIfCounter == 0 )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSEIF, NULL, NULL );
                pLex->iState = ELSEIF;
                return ELSEIF;
 
             case ENDIF:
                /* ENDIF can be used in one context only */
-               if( hb_comp_wIfCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+               if( HB_COMP_PARAM->wIfCounter == 0 )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDIF, NULL, NULL );
                break;
 
             case ENDCASE:
                /* ENDCASE can be used in one context only */
-               if( hb_comp_wCaseCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+               if( HB_COMP_PARAM->wCaseCounter == 0 )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDCASE, NULL, NULL );
                break;
 
             case ENDDO:
                /* ENDDO can be used in one context only */
-               if( hb_comp_wWhileCounter == 0 )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+               if( HB_COMP_PARAM->wWhileCounter == 0 )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDDO, NULL, NULL );
                break;
 
@@ -676,8 +681,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                    ( HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
                      ( iType == CASE && !HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) ) )
                {
-                  if( hb_comp_wCaseCounter == 0 && hb_comp_wSwitchCounter == 0 )
-                     hb_compGenError( hb_comp_szErrors, 'E',
+                  if( HB_COMP_PARAM->wCaseCounter == 0 && HB_COMP_PARAM->wSwitchCounter == 0 )
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                       HB_COMP_ERR_CASE, NULL, NULL );
                   pLex->iState = iType;
                   return iType;
@@ -714,9 +719,9 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                   if( HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
                   {
-                     if( hb_comp_wForCounter == 0 )
-                        hb_compGenError( hb_comp_szErrors, 'E',
-                        HB_COMP_ERR_NEXTFOR, NULL, NULL );
+                     if( HB_COMP_PARAM->wForCounter == 0 )
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                         HB_COMP_ERR_NEXTFOR, NULL, NULL );
                      pLex->iState = iType;
                      return iType;
                   }
@@ -727,7 +732,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
-                     hb_compGenError( hb_comp_szErrors, 'E',
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                       HB_COMP_ERR_NEXTFOR, NULL, NULL );
                }
                iType = IDENTIFIER;
@@ -802,7 +807,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                      pToken = hb_pp_tokenGet( pLex->pPP );
                      /* do not upper next token for case sensitive file systems */
                      /* hb_pp_tokenUpper( pToken ); */
-                     pLex->lasttok = yylval_ptr->string = hb_comp_tokenIdentifer( pToken );
+                     pLex->lasttok = yylval_ptr->string =
+                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
                      pLex->iState = IDENTIFIER;
                      return DOIDENT;
                   }
@@ -854,11 +860,11 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
             case IIF:
                if( pLex->iState == FUNCTION || pLex->iState == PROCEDURE ||
                    HB_PP_TOKEN_ISEOC( pToken->pNext ) )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IIF", NULL );
                else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_LEFT_PB )
-                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX,
-                                   pToken->pNext->value, NULL );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                   HB_COMP_ERR_SYNTAX, pToken->pNext->value, NULL );
                else
                {
                   pLex->iState = IIF;
@@ -870,7 +876,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
             case IF:
                if( pLex->iState == FUNCTION || pLex->iState == PROCEDURE ||
                    HB_PP_TOKEN_ISEOC( pToken->pNext ) )
-                  hb_compGenError( hb_comp_szErrors, 'E',
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IF", NULL );
                else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
@@ -878,8 +884,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
                   return pLex->iState;
                }
                else if( HB_PP_LEX_NEEDLEFT( pToken->pNext ) )
-                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX2,
-                                   pToken->pNext->value, "IF" );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                   HB_COMP_ERR_SYNTAX2, pToken->pNext->value, "IF" );
                else
                {
                   pLex->iState = IF;
@@ -966,7 +972,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_PTR pComp )
    }
 }
 
-void hb_compParserStop( HB_COMP_PTR pComp )
+void hb_compParserStop( HB_COMP_DECL )
 {
-   HB_SYMBOL_UNUSED( pComp );
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
 }

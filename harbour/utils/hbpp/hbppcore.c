@@ -270,7 +270,7 @@ void hb_pp_SetRules_( HB_INCLUDE_FUNC_PTR pIncludeFunc, BOOL bQuiet )
                }
                else
                {
-                  hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_NO_DIRECTIVES, NULL /*szFileName */ , NULL );
+                  hb_compGenWarning( NULL, hb_pp_szWarnings, 'I', HB_PP_WARN_NO_DIRECTIVES, NULL /*szFileName */ , NULL );
                }
 
                fclose( hb_comp_files.pLast->handle );
@@ -285,12 +285,12 @@ void hb_pp_SetRules_( HB_INCLUDE_FUNC_PTR pIncludeFunc, BOOL bQuiet )
             }
             else
             {
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName, NULL );
             }
          }
          else
          {
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
          }
       }
       else
@@ -513,7 +513,7 @@ int hb_pp_ParseDirective_( char *sLine )
    if( i == 4 && memcmp( sDirective, "ELSE", 4 ) == 0 )
    {                            /* ---  #else  --- */
       if( hb_pp_nCondCompile == 0 )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ELSE, NULL, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ELSE, NULL, NULL );
       else if( hb_pp_nCondCompile == 1 || hb_pp_aCondCompile[hb_pp_nCondCompile - 2] )
          hb_pp_aCondCompile[hb_pp_nCondCompile - 1] = 1 - hb_pp_aCondCompile[hb_pp_nCondCompile - 1];
    }
@@ -521,7 +521,7 @@ int hb_pp_ParseDirective_( char *sLine )
    else if( i >= 4 && i <= 5 && memcmp( sDirective, "ENDIF", i ) == 0 )
    {                            /* --- #endif  --- */
       if( hb_pp_nCondCompile == 0 )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ENDIF, NULL, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_DIRECTIVE_ENDIF, NULL, NULL );
       else
          hb_pp_nCondCompile--;
    }
@@ -539,7 +539,7 @@ int hb_pp_ParseDirective_( char *sLine )
          char cDelimChar;
 
          if( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
 
          cDelimChar = *sLine;
          if( cDelimChar == '<' )
@@ -552,19 +552,19 @@ int hb_pp_ParseDirective_( char *sLine )
          while( *( sLine + i ) != '\0' && *( sLine + i ) != cDelimChar )
             i++;
          if( *( sLine + i ) != cDelimChar )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
          *( sLine + i ) = '\0';
 
          if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
          {
             if( errno == 0 || errno == EMFILE )
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
             {
 #if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__)
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
 #else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
 #endif
             }
          }
@@ -591,7 +591,7 @@ int hb_pp_ParseDirective_( char *sLine )
 
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "ERROR", i ) == 0 )
          /* --- #error  --- */
-         hb_compGenError( hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'E', HB_PP_ERR_EXPLICIT, sLine, NULL );
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
          return -1;
@@ -602,7 +602,7 @@ int hb_pp_ParseDirective_( char *sLine )
          bIgnore = hb_pp_ParsePragma( sParse ); /* --- #pragma  --- */
       }
       else
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE, sDirective, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_DIRECTIVE, sDirective, NULL );
    }
    return bIgnore;
 }
@@ -651,7 +651,7 @@ int hb_pp_ParseDefine_( char *sLine )
                   {
                      cPos--;
                      if( *cPos == '\001' )
-                        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_DUPL_IN_DEFINE, defname, pars );
+                        hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_DUPL_IN_DEFINE, defname, pars );
                   }
                   cParams = ( char * ) hb_xrealloc( cParams, iParLen + iLen + 3 );
                   cParams[iParLen++] = ',';
@@ -664,19 +664,19 @@ int hb_pp_ParseDefine_( char *sLine )
                HB_SKIPTABSPACES( sLine );
             }
             else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
 
             if( *sLine == ',' )
             {
                sLine++;
                HB_SKIPTABSPACES( sLine );
                if( *sLine == ')' )
-                  hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
+                  hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_LABEL_MISSING_IN_DEFINE, defname, NULL );
             }
          }
          HB_SKIPTABSPACES( sLine );
          if( *sLine == '\0' )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PARE_MISSING_IN_DEFINE, defname, NULL );
 
          sLine++;
       }
@@ -725,7 +725,7 @@ int hb_pp_ParseDefine_( char *sLine )
          hb_xfree( cParams );
    }
    else
-      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
+      hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
 
    return 0;
 }
@@ -742,7 +742,7 @@ DEFINES *hb_pp_AddDefine_( char *defname, char *value )
 
    if( stdef != NULL )
    {
-      hb_compGenWarning( hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
+      hb_compGenWarning( NULL, hb_pp_szWarnings, 'I', HB_PP_WARN_DEFINE_REDEF, defname, NULL );
 
       if( isNew )
       {
@@ -815,7 +815,7 @@ static int ParseIfdef( char *sLine, int usl )
    {
       len = NextWord( &sLine, defname, FALSE );
       if( *defname == '\0' )
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_DEFINE_ABSENT, NULL, NULL );
    }
    if( hb_pp_nCondCompile == s_maxCondCompile )
    {
@@ -1042,7 +1042,7 @@ static void ParseCommand( char *sLine, BOOL com_or_xcom, BOOL com_or_tra )
    else
    {
       sLine -= ( ipos + 1 );
-      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
+      hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
    }
 #if defined(HB_PP_DEBUG_MEMORY)
    hb_xfree( ( void * ) mpatt );
@@ -1122,7 +1122,7 @@ static int ConvertOptional( char *cpatt, int len, BOOL bLeft )
 
             if( iOpenBrackets )
             {
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, cpatt + i, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, cpatt + i, NULL );
             }
          }
       }
@@ -1255,7 +1255,7 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
          {
             if( *ptr == '\0' || *ptr == '<' || *ptr == '[' || *ptr == ']' )
             {
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
                return;
             }
             ptr++;
@@ -1286,21 +1286,21 @@ static void ConvertPatterns( char *mpatt, int mlen, char *rpatt, int rlen )
             if( *( exppatt + explen - 1 ) == '*' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
          else if( exptype == '4' )
          {
             if( *( exppatt + explen - 1 ) == ')' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
          else if( exptype == '5' )
          {
             if( *( exppatt + explen - 1 ) == '!' )
                explen--;
             else
-               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
+               hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PATTERN_DEFINITION, NULL, NULL );
          }
 
          rmlen = i - ipos + 1;
@@ -1659,7 +1659,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine, BOOL bSplitLines )
 
       if( kolpass > hb_pp_MaxTranslateCycles && ( rezDef || rezTra || rezCom ) )
       {
-         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
+         hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
          break;
       }
    }
@@ -3016,7 +3016,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
    }
    if( !rez && lens >= maxrez )
    {
-      hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+      hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
    }
 
    if( expreal != NULL && expreal > cStart )
@@ -3341,7 +3341,7 @@ static void SearnRep( char *exppatt, char *expreal, int lenreal, char *ptro, int
                }
                else
                {
-                  hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+                  hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
                   return;
                }
                *( s_expcopy + lennew++ ) = ' ';

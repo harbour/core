@@ -8,6 +8,93 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-24 03:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/Makefile
+    * commented out YACC_FLAGS = -p hb_comp
+      this should not/hbgtcore.c
+   * include/hbapigt.h
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtstd/gtstd.c
+     ! Fixed recent compiler warnings.
+
+2006-02-05 09:47 UTC+0200 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/gtos2/gtos2.c
+     * Restore my copyright notice for functions used to be in mouseos2.c
+
+2006-02-04 17:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/make_bsd.sh
+  * harbour/make_drw.sh
+  * harbour/make_gnu.sh
+  * harbour/make_rpm.sh
+  * harbour/make_tgz.sh.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbfunchk.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/macro/macro.y
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/macro.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbpp.h
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+    * changed the internal compiler API to be MT safe.
+      All global and static non constant variables replaced by
+      HB_COMP structure which have all compiler context settings.
+      It's possible to allocate simultaneously many compiler contexts
+      and compile code. Only constant/read only variables are shared.
+      In macro compiler HB_COMP is replaced by HB_MACRO.
+      In source code I everywhere used to macros: HB_COMP_DECL and
+      HB_COMP_PARAM which are equivalents of old HB_MACRO_DECL and
+      HB_MACRO_PARAM definitions.
+      We will only have to change compiler FATAL errors support to
+      not execute exit() for non batch systems.
+    * make macro compiler fully MT safe
+    * removed not longer used definitions and variables
+    ! add direct accessing to PP line number information - it fixes missing
+      line numbers reported recently
+    ! added generating .ppo files when tokens are teken directly by compiler
+      - it fixes empty .ppo file problem
+    ! clear hb_stack internall variables after removing hb_stack to avoid
+      possible GPF if application still works and try to access unexsiting
+      hb_stack
+    ! do not allocate new memory block when final FM statistic report is
+      generated - it fixes problem with GPF when application compiled with
+      FM statistic exits and CLIPPER envvar is set.
+    ! fixed memory leak hb_cmdargCheck()
+    ! added to harbour.y symbol destructors - it should fixes memory leaks
+      in syntax errors but it uses quite new bison feature which is not
+      fully supported yet. Unfortunately it's also not MT safe and the
+      destructors implementation in 1.875c does not respect %parse-param.
+      Bison documentation says that it should so I hope it will be fixed
+      soon (or maybe even already is in the newest bison versions) before
+      I'll add multi context compilation support. If not then I will have
+      to add some workaround. I can pass compiler context pointer inside
       YYSTYPE using hack in a lexer but it will force really huge number
       modifications in existing bison rules so probably it will be much
       easier to fix bison or write a small tool to update generated parser.

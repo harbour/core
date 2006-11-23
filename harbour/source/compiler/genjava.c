@@ -39,11 +39,11 @@ static void hb_fputs( char * szName );
 static FILE * s_yyc;
 static int s_nChar = 0;
 
-void hb_compGenJava( PHB_FNAME pFileName )
+void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
-   PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
-   PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+   PFUNCTION pFunc /*= HB_COMP_PARAM->functions.pFirst */;
+   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    ULONG lPCodePos;
    LONG lSymbols;
    ULONG ulCodeLength;
@@ -55,11 +55,11 @@ void hb_compGenJava( PHB_FNAME pFileName )
    s_yyc = fopen( szFileName, "wb" );
    if( ! s_yyc )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
-   if( ! hb_comp_bQuiet )
+   if( ! HB_COMP_PARAM->fQuiet )
    {
       printf( "Generating Java source output to \'%s\'... ", szFileName );
       fflush( stdout );
@@ -90,7 +90,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
    hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ) );
    hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ) );
 
-   pSym = hb_comp_symbols.pFirst;
+   pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
       hb_fputs( pSym->szName );
@@ -99,11 +99,11 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
       /* specify the function address if it is a defined function or a
          external called function */
-      if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
+      if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a defined function ? */
          hb_fputc( SYM_FUNC );
       else
       {
-         if( hb_compFunCallFind( pSym->szName ) )
+         if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
             hb_fputc( SYM_EXTERN );
          else
             hb_fputc( SYM_NOLINK );
@@ -111,7 +111,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
       pSym = pSym->pNext;
    }
 
-   pFunc = hb_comp_functions.pFirst;
+   pFunc = HB_COMP_PARAM->functions.pFirst;
 
    lSymbols = 0;                /* Count number of symbols */
    while( pFunc )
@@ -126,8 +126,8 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    /* Generate functions data
     */
-   pFunc = hb_comp_functions.pFirst;
-   if( ! hb_comp_bStartProc )
+   pFunc = HB_COMP_PARAM->functions.pFirst;
+   if( ! HB_COMP_PARAM->fStartProc )
       pFunc = pFunc->pNext;
 
    while( pFunc )
@@ -156,7 +156,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    fclose( s_yyc );
 
-   if( ! hb_comp_bQuiet )
+   if( ! HB_COMP_PARAM->fQuiet )
       printf( "Done.\n" );
 }
 

@@ -40,7 +40,7 @@ static char * hb_searchpath( const char *, char *, char * );
 /*--------------------------------------------------------------------------*/
 
 /* Builds platform dependant object module from Harbour C output */
-void hb_compGenCObj( PHB_FNAME pFileName )
+void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
    char szLine[ HB_CFG_LINE_LEN ];
@@ -66,12 +66,14 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    BOOL bDelTmp = TRUE;     /* Delete intermediate C file (default). */
    int iSuccess;
 
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+
    /* First pass: build the C output */
 
    /* Force file extension to avoid collisions when called from a make utility */
    pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
-   hb_compGenCCode( hb_comp_pFileName );
+   hb_compGenCCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
 
    /* Begin second pass */
 
@@ -161,20 +163,20 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    #endif
 
 
-   if( ! hb_comp_bQuiet )
+   if( ! HB_COMP_PARAM->fQuiet )
    {
       printf( "Building object module output for \'%s\'...", szFileName );
       fflush( stdout );
    }
 
    /* Check if -o<path> was used */
-   if( hb_comp_pOutPath )
+   if( HB_COMP_PARAM->pOutPath )
    {
       PHB_FNAME pOut = hb_fsFNameSplit( ( char * ) szFileName );
       char pszTemp[ _POSIX_PATH_MAX ] = "";
 
-      if( hb_comp_pOutPath->szPath )
-         pOut->szPath = hb_comp_pOutPath->szPath;
+      if( HB_COMP_PARAM->pOutPath->szPath )
+         pOut->szPath = HB_COMP_PARAM->pOutPath->szPath;
 
 #if defined(__BORLANDC__) || defined(_MSC_VER) || defined(__WATCOMC__)
       pOut->szExtension = ".obj";
@@ -217,7 +219,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
       if( bDelTmp ) /* && iSuccess ) */
          unlink( ( char * ) szFileName );
 
-      if( ! hb_comp_bQuiet )
+      if( ! HB_COMP_PARAM->fQuiet )
       {
          if( iSuccess )
             printf( "Done.\n" );

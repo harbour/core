@@ -57,6 +57,7 @@
 /* helper structure to pass information */
 typedef struct HB_stru_fix_info
 {
+   HB_COMP_DECL;
    USHORT iNestedCodeblock;
 } HB_FIX_INFO, * HB_FIX_INFO_PTR;
 
@@ -122,13 +123,15 @@ static HB_FIX_FUNC( hb_p_poplocal )
     */
    if( cargo->iNestedCodeblock == 0 )
    {
+      HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
       BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
       iVar += pFunc->wParamCount;
       pVar[ 0 ] = HB_LOBYTE( iVar );
       pVar[ 1 ] = HB_HIBYTE( iVar );
-      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
       {
          pFunc->pCode[ lPCodePos ] = HB_P_POPLOCALNEAR;
          hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
@@ -144,6 +147,7 @@ static HB_FIX_FUNC( hb_p_pushlocal )
     */
    if( cargo->iNestedCodeblock == 0 )
    {
+      HB_COMP_DECL = cargo->HB_COMP_PARAM;
       BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
@@ -199,7 +203,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
 
          sprintf( sTemp, "%i", pFunc->wParamCount );
          sprintf( sTemp2, "%i", iVar );
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
+         hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
@@ -228,7 +232,7 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
 
          sprintf( sTemp, "%i", pFunc->wParamCount );
          sprintf( sTemp2, "%i", iVar );
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
+         hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
@@ -256,7 +260,7 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
 
          sprintf( sTemp, "%i", pFunc->wParamCount );
          sprintf( sTemp2, "%i", uiVar );
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
+         hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
 
@@ -276,7 +280,7 @@ static HB_FIX_FUNC( hb_p_false )
          case HB_P_JUMPTRUENEAR:
          case HB_P_JUMPTRUE:
          case HB_P_JUMPTRUEFAR:
-            if( ! hb_compIsJump( pFunc, lPCodePos + 1 ) )
+            if( ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
             {
                int iCount = 1;
 
@@ -326,7 +330,7 @@ static HB_FIX_FUNC( hb_p_true )
          case HB_P_JUMPFALSENEAR:
          case HB_P_JUMPFALSE:
          case HB_P_JUMPFALSEFAR:
-            if( ! hb_compIsJump( pFunc, lPCodePos + 1 ) )
+            if( ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
             {
                int iCount = 1;
    
@@ -396,7 +400,8 @@ static HB_FIX_FUNC( hb_p_not )
             break;
       }
 
-      if( opcode < HB_P_LAST_PCODE && ! hb_compIsJump( pFunc, lPCodePos + 1 ) )
+      if( opcode < HB_P_LAST_PCODE &&
+          ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
       {
          hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
          if( opcode == HB_P_NOOP )
@@ -410,6 +415,8 @@ static HB_FIX_FUNC( hb_p_not )
 
 static HB_FIX_FUNC( hb_p_jumpfar )
 {
+   HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
    if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
    {
       BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
@@ -447,6 +454,8 @@ static HB_FIX_FUNC( hb_p_jumpfar )
 
 static HB_FIX_FUNC( hb_p_jumpfalsefar )
 {
+   HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
    if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
    {
       BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
@@ -466,6 +475,8 @@ static HB_FIX_FUNC( hb_p_jumpfalsefar )
 
 static HB_FIX_FUNC( hb_p_jumptruefar )
 {
+   HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
    if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
    {
       BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
@@ -642,11 +653,12 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL                        /* HB_P_VFRAME                */
 };
 
-void hb_compFixFuncPCode( PFUNCTION pFunc )
+void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )
 {
    HB_FIX_INFO fix_info;
 
    fix_info.iNestedCodeblock = 0;
+   fix_info.HB_COMP_PARAM = HB_COMP_PARAM;
 
    assert( HB_P_LAST_PCODE == sizeof( s_fixlocals_table ) / sizeof( HB_FIX_FUNC_PTR ) );
 

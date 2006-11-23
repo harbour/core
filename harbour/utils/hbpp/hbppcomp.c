@@ -153,7 +153,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
 
       if( lens >= HB_PP_STR_SIZE-2 )
       {
-        hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
+        hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_BUFFER_OVERFLOW, NULL, NULL );
       }
 
       if( hb_pp_StreamBlock )

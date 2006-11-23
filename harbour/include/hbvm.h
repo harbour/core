@@ -148,7 +148,7 @@ extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from st
 
 /* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */
-#define  HB_VMFLAG_ARRSTR     2     /* support for string as array of bytes -ks */
+#define  HB_VMFLAG_ARRSTR    16     /* support for string as array of bytes -ks */
 extern HB_EXPORT ULONG    hb_vmFlagEnabled( ULONG flag );
 
 HB_EXTERN_END

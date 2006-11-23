@@ -154,9 +154,6 @@ HB_EXTERN_BEGIN
 #define HB_COMP_WARN_FORVAR_DUPL                30
 #define HB_COMP_WARN_ENUM_INVALID               31
 
-extern void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
-extern void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
-
 HB_EXTERN_END
 
 #endif /* HB_ERRORS_H_ */

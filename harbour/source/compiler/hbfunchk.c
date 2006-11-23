@@ -115,7 +115,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { 0           , 0,  0 }
 };
 
-BOOL hb_compFunCallCheck( char * szFuncCall, int iArgs )
+BOOL hb_compFunCallCheck( HB_COMP_DECL, char * szFuncCall, int iArgs )
 {
    HB_FUNCINFO * f = hb_StdFunc;
    int i = 0;
@@ -151,13 +151,13 @@ BOOL hb_compFunCallCheck( char * szFuncCall, int iArgs )
          else
             sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
 
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
          return FALSE;
        }
        else
        {
          /* Clipper way */
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
          return FALSE;
        }
      }

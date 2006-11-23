@@ -124,7 +124,7 @@ BOOL hb_pp_ParsePragma( char * szLine )
                      break;
 
                   default:
-                     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+                     hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
                }
                DebugPragma( szLine, hb_comp_iExitLevel, FALSE );
             }
@@ -168,7 +168,7 @@ BOOL hb_pp_ParsePragma( char * szLine )
                   /* There is -w<0,1,2,3> probably */
                   hb_comp_iWarnings = szLine[ 2 ] - '0';
                   if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-                     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+                     hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
 
                   DebugPragma( szLine, -1, hb_comp_iWarnings );
                }
@@ -277,7 +277,7 @@ BOOL hb_pp_ParsePragma( char * szLine )
          if( hb_comp_iExitLevel != HB_EXITLEVEL_DEFAULT   &&
              hb_comp_iExitLevel != HB_EXITLEVEL_SETEXIT   &&
              hb_comp_iExitLevel != HB_EXITLEVEL_DELTARGET )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
          DebugPragma( szLine, hb_comp_iExitLevel, FALSE );
       }
       else if( hb_strnicmp( szLine, "DYNAMICMEMVAR", PRAGMAS_LEN ) == 0 )
@@ -309,7 +309,7 @@ BOOL hb_pp_ParsePragma( char * szLine )
       {
          hb_comp_iWarnings = StringToInt( szLine, hb_comp_iWarnings );
          if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+            hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_PRAGMA_BAD_VALUE, NULL, NULL );
          DebugPragma( szLine, hb_comp_iWarnings, FALSE );
       }
       else if( hb_strnicmp( szLine, "TRACEPRAGMAS", PRAGMAS_LEN ) == 0 )

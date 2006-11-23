@@ -525,30 +525,9 @@ void hb_compPCodeTrace( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * 
    }
 }
 
-void hb_compGenPCode1( BYTE byte )
+void hb_compGenPCode1( BYTE byte, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
-
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
-   {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
-   }
-   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
-
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
-
-#if defined(HB_COMP_STRONG_TYPES)
-   if( hb_comp_iWarnings >= 3 )
-      hb_compStrongType( 1 );
-#endif
-}
-
-void hb_compGenPData1( BYTE byte )
-{
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -562,9 +541,25 @@ void hb_compGenPData1( BYTE byte )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
-void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected )
+void hb_compGenPData1( BYTE byte, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+
+   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   {
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
+      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->lPCodePos  = 0;
+   }
+   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+
+   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
+}
+
+void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_COMP_DECL )
+{
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -577,18 +572,11 @@ void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected )
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
-
-#if defined(HB_COMP_STRONG_TYPES)
-   if( hb_comp_iWarnings >= 3 && bStackAffected )
-      hb_compStrongType( 2 );
-#else
-   HB_SYMBOL_UNUSED( bStackAffected );
-#endif
 }
 
-void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected )
+void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -602,18 +590,11 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
-
-#if defined(HB_COMP_STRONG_TYPES)
-   if( hb_comp_iWarnings >= 3 && bStackAffected  )
-      hb_compStrongType( 3 );
-#else
-   HB_SYMBOL_UNUSED( bStackAffected );
-#endif
 }
 
-void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected )
+void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -628,18 +609,11 @@ void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bSta
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
-
-#if defined(HB_COMP_STRONG_TYPES)
-   if( hb_comp_iWarnings >= 3 && bStackAffected  )
-      hb_compStrongType( 4 );
-#else
-   HB_SYMBOL_UNUSED( bStackAffected );
-#endif
 }
 
-void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected )
+void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
@@ -656,11 +630,4 @@ void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected )
 
    memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
    pFunc->lPCodePos += ulSize;
-
-#if defined(HB_COMP_STRONG_TYPES)
-   if( hb_comp_iWarnings >= 3 && bStackAffected  )
-      hb_compStrongType( ulSize );
-#else
-   HB_SYMBOL_UNUSED( bStackAffected );
-#endif
 }

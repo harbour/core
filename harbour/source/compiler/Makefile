@@ -10,6 +10,7 @@ YACC_SOURCE=harbour.sly
 
 else
 
+YACC_FLAGS = -p hb_comp
 YACC_SOURCE=harbour.y
 
 endif
@@ -54,7 +55,6 @@ C_SOURCES=\
     hbdead.c   \
     hblbl.c    \
     hbstripl.c \
-    hbstrong.c \
     hbusage.c  \
     hbident.c  \
     ppcomp.c   \

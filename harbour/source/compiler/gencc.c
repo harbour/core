@@ -31,9 +31,6 @@
 #include "hbcomp.h"
 #include "hbdate.h"
 
-extern void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc );
-extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
-
 #define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, PHB_LABEL_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
@@ -1760,7 +1757,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_vframe
 };
 
-void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
+void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
 {
    HB_LABEL_INFO label_info;
 
@@ -1768,7 +1765,7 @@ void hb_compGenCRealCode( PFUNCTION pFunc, FILE * yyc )
    assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( HB_GENC_FUNC_PTR ) );
 
    label_info.yyc = yyc;
-   label_info.fVerbose = ( hb_comp_iGenCOutput == HB_COMPGENC_VERBOSE );
+   label_info.fVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
    label_info.fCondJump = FALSE;
    if( pFunc->lPCodePos == 0 )

@@ -217,11 +217,12 @@ HB_FUNC( __PREPROCESS )
       hb_retc( NULL );
 }
 
-void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
+void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
    PHB_ITEM pError;
    char buffer[ 128 ];
 
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
    HB_SYMBOL_UNUSED( cPrefix );
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
@@ -237,12 +238,13 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
    /* longjmp( s_env, iError == 0 ? -1 : iError ); */
 }
 
-void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
+void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
    /* NOTE: All warnings are simply ignored */
 
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
    HB_SYMBOL_UNUSED( szWarnings );
    HB_SYMBOL_UNUSED( cPrefix );
    HB_SYMBOL_UNUSED( iWarning );

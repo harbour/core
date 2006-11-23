@@ -30,38 +30,22 @@
 #include "hbcomp.h"
 #include <errno.h>
 
-BOOL hb_pp_NestedLiteralString = FALSE;
-BOOL hb_pp_LiteralEscSeq = FALSE;
-int hb_pp_StreamBlock = 0;
-unsigned int hb_pp_MaxTranslateCycles = 1024;
-char *hb_pp_STD_CH = NULL;
-
-
-
 static void hb_pp_ErrorGen( void * cargo,
                             char * szMsgTable[], char cPrefix, int iErrorCode,
                             const char * szParam1, const char * szParam2 )
 {
-   int iLine = hb_comp_iLine;
-
-   HB_SYMBOL_UNUSED( cargo );
-
    /* I do not know why but compiler expect line number 1 bigger then
       real line number */
-   hb_comp_iLine = hb_pp_line( hb_comp_data->pLex->pPP ) + 1;
    if( cPrefix == 'W' )
-      hb_compGenWarning( szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
+      hb_compGenWarning( ( HB_COMP_PTR ) cargo, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    else
-      hb_compGenError( szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
-   hb_comp_iLine = iLine;
+      hb_compGenError( ( HB_COMP_PTR ) cargo, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
 }
 
 static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
                               int iLine )
 {
    PINLINE pInline;
-
-   HB_SYMBOL_UNUSED( cargo );
 
    pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo, NULL, iLine );
    pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
@@ -73,14 +57,16 @@ static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
 static void hb_pp_hb_inLine( void * cargo, char * szFunc,
                              char * pBuffer, ULONG ulSize, int iLine )
 {
-   if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
+   HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
+
+   if( HB_COMP_PARAM->iLanguage != LANG_C && HB_COMP_PARAM->iLanguage != LANG_OBJ_MODULE )
    {
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+      hb_compGenError( ( HB_COMP_PTR ) cargo, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
    }
    else
    {
       PINLINE pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo,
-                                 hb_compIdentifierNew( szFunc, TRUE ), iLine );
+                  hb_compIdentifierNew( HB_COMP_PARAM, szFunc, TRUE ), iLine );
       pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
       memcpy( pInline->pCode, pBuffer, ulSize );
       pInline->pCode[ ulSize ] = '\0';
@@ -91,10 +77,9 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
 static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                                   int iValue )
 {
+   HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
    BOOL fError = FALSE;
    int i = strlen( szSwitch );
-
-   HB_SYMBOL_UNUSED( cargo );
 
    if( i > 1 && szSwitch[ i - 1 ] - '0' == iValue )
       --i;
@@ -105,50 +90,53 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
       {
          case 'a':
          case 'A':
-            hb_comp_bAutoMemvarAssume = iValue != 0;
+            HB_COMP_PARAM->fAutoMemvarAssume = iValue != 0;
             break;
 
          case 'b':
          case 'B':
-            hb_comp_bDebugInfo = iValue != 0;
+            HB_COMP_PARAM->fDebugInfo = iValue != 0;
             break;
 
          case 'l':
          case 'L':
-            hb_comp_bLineNumbers = iValue != 0;
+            HB_COMP_PARAM->fLineNumbers = iValue != 0;
             break;
 
          case 'n':
          case 'N':
-            hb_comp_bStartProc = iValue != 0;
+            HB_COMP_PARAM->fStartProc = iValue != 0;
             break;
 
          case 'p':
          case 'P':
-            hb_comp_bPPO = iValue != 0;
+            HB_COMP_PARAM->fPPO = iValue != 0;
             break;
 
          case 'q':
          case 'Q':
-            hb_comp_bQuiet = iValue != 0;
+            HB_COMP_PARAM->fQuiet = iValue != 0;
             break;
 
          case 'v':
          case 'V':
-            hb_comp_bForceMemvars = iValue != 0;
+            HB_COMP_PARAM->fForceMemvars = iValue != 0;
             break;
 
          case 'w':
          case 'W':
             if( iValue >= 0 && iValue <= 3 )
-               hb_comp_iWarnings = iValue;
+               HB_COMP_PARAM->iWarnings = iValue;
             else
                fError = TRUE;
             break;
 
          case 'z':
          case 'Z':
-            hb_comp_bShortCuts = iValue != 0;
+            if( iValue )
+               HB_COMP_PARAM->supported &= ~HB_COMPFLAG_SHORTCUTS;
+            else
+               HB_COMP_PARAM->supported |= HB_COMPFLAG_SHORTCUTS;
             break;
 
          default:
@@ -161,14 +149,14 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
           ( iValue == HB_EXITLEVEL_DEFAULT ||
             iValue == HB_EXITLEVEL_SETEXIT ||
             iValue == HB_EXITLEVEL_DELTARGET ) )
-         hb_comp_iExitLevel = iValue;
+         HB_COMP_PARAM->iExitLevel = iValue;
       else
          fError = TRUE;
    }
    /* xHarbour extension */
    else if( i >= 4 && hb_strnicmp( szSwitch, "TEXTHIDDEN", i ) == 0 &&
             iValue >= 0 && iValue <= 1 )
-      hb_comp_iHidden = iValue;
+      HB_COMP_PARAM->iHidden = iValue;
    else
       fError = TRUE;
 
@@ -176,82 +164,41 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
 }
 
 
-void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] )
+void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] )
 {
-   char * szStdCh = hb_pp_STD_CH;
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_SetRules()" ) );
-
-   if( szStdCh && * szStdCh <= ' ' )
-      szStdCh = "";
-
-   if( hb_comp_data->pLex->pPP )
+   if( HB_COMP_PARAM->pLex->pPP )
    {
-      hb_pp_init( hb_comp_data->pLex->pPP, fQuiet, hb_comp_data, NULL, NULL,
+      hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
+                  HB_COMP_PARAM->iMaxTransCycles,
+                  HB_COMP_PARAM, NULL, NULL,
                   hb_pp_ErrorGen, NULL, hb_pp_PragmaDump,
                   HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE_PP ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
 
-      if( !szStdCh )
-         hb_pp_setStdRules( hb_comp_data->pLex->pPP );
-      else if( *szStdCh )
-         hb_pp_readRules( hb_comp_data->pLex->pPP, szStdCh );
-      else
+      if( ! HB_COMP_PARAM->szStdCh )
+         hb_pp_setStdRules( HB_COMP_PARAM->pLex->pPP );
+      else if( HB_COMP_PARAM->szStdCh[ 0 ] > ' ' )
+         hb_pp_readRules( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->szStdCh );
+      else if( ! HB_COMP_PARAM->fQuiet )
       {
          printf( "Standard command definitions excluded.\n" );
          fflush( stdout );
       }
 
-      hb_pp_initDynDefines( hb_comp_data->pLex->pPP );
+      hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP );
 
       /* Add /D and /undef: command line or envvar defines */
-      hb_compChkDefines( argc, argv );
+      hb_compChkDefines( HB_COMP_PARAM, argc, argv );
 
       /* mark current rules as standard ones */
-      hb_pp_setStdBase( hb_comp_data->pLex->pPP );
+      hb_pp_setStdBase( HB_COMP_PARAM->pLex->pPP );
    }
 
-   if( hb_comp_pFileName )
+   if( HB_COMP_PARAM->pFileName )
    {
-      hb_xfree( ( void * ) hb_comp_pFileName );
-      hb_comp_pFileName = NULL;
+      hb_xfree( ( void * ) HB_COMP_PARAM->pFileName );
+      HB_COMP_PARAM->pFileName = NULL;
    }
-   if( hb_pp_STD_CH )
-   {
-      hb_xfree( hb_pp_STD_CH );
-      hb_pp_STD_CH = NULL;
-   }
-}
-
-int hb_pp_Internal( char * sOut )
-{
-   char * szLine;
-   ULONG ulLen = 0;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
-
-   hb_pp_NestedLiteralString = FALSE;
-   hb_pp_LiteralEscSeq = FALSE;
-
-   if( hb_pp_StreamBlock == HB_PP_STREAM_DUMP_C )
-      hb_pp_setStream( hb_comp_data->pLex->pPP, HB_PP_STREAM_INLINE_C );
-
-   szLine = hb_pp_nextLine( hb_comp_data->pLex->pPP, &ulLen );
-   /* I do not know why but compiler expect line number 1 bigger then
-      real line number */
-   hb_comp_iLine = hb_pp_line( hb_comp_data->pLex->pPP ) + 1;
-
-   if( ulLen >= HB_PP_STR_SIZE )
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BUFFER_OVERFLOW, NULL, NULL );
-   else if( szLine )
-      memcpy( sOut, szLine, ulLen + 1 );
-   else
-      * sOut = '\0';
-
-   if( hb_comp_iLineINLINE && hb_pp_StreamBlock == 0 )
-   {
-      hb_comp_iLineINLINE = 0;
-   }
-
-   return ulLen;
 }

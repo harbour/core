@@ -462,11 +462,11 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default                /* HB_P_VFRAME                */
 };
 
-void hb_compCodeTraceMarkDead( PFUNCTION pFunc )
+void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
 {
    HB_CODETRACE_INFO code_info;
 
-   if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) || pFunc->lPCodePos < 2 )
+   if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || pFunc->lPCodePos < 2 )
       return;
 
    assert( HB_P_LAST_PCODE == sizeof( s_codeTraceFuncTable ) / sizeof( PHB_CODETRACE_FUNC ) );

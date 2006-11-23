@@ -60,12 +60,7 @@
 #include <ctype.h>
 #include <time.h>
 
-/* Standard parameters passed to macro aware functions
- */
-#define HB_BISON_PTR void *
-#define HB_MACRO_PARAM  pMacro
-#define HB_MACRO_DECL   HB_BISON_PTR HB_MACRO_PARAM
-
+#include "hbcompdf.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -101,60 +96,60 @@ HB_EXTERN_BEGIN
 
 /* Global functions
  */
-extern void hb_macroError( int iError, HB_BISON_PTR pMacro );
+extern void hb_macroError( int iError, HB_COMP_DECL );
 extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
 extern ULONG hb_macroSetMacro( BOOL bSet, ULONG ulFlag );
 extern ULONG hb_macroAutoSetMacro( ULONG ulFlag );
 extern BOOL hb_macroLexNew( HB_MACRO_PTR pMacro );
 extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );
 
-extern void hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro );
-extern void hb_compGenPData1( BYTE byte, HB_BISON_PTR pMacro );
-extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro );
-extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_BISON_PTR pMacro );
-extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_BISON_PTR pMacro );
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_BISON_PTR pMacro );
-
 /* Size of pcode buffer incrementation
  */
 #define HB_PCODE_SIZE  512
 
-/* Bison requires (void *) pointer  - some code needs HB_MACRO_PTR pointer
- */
-#define HB_MACRO_DATA     ( (HB_MACRO_PTR) HB_MACRO_PARAM )
-#define HB_PCODE_DATA     ( HB_MACRO_DATA->pCodeInfo )
-
 /* Declarations for functions macro.c */
+#if defined( HB_MACRO_SUPPORT )
 
-extern int hb_compLocalVarGetPos( char * szVarName, HB_BISON_PTR pMacro );
-extern ULONG hb_compGenJump( LONG lOffset, HB_BISON_PTR pMacro );
-extern ULONG hb_compGenJumpFalse( LONG lOffset, HB_BISON_PTR pMacro );
-extern void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_BISON_PTR pMacro );
-extern void hb_compGenJumpHere( ULONG ulOffset, HB_BISON_PTR pMacro );
-extern ULONG hb_compGenJumpTrue( LONG lOffset, HB_BISON_PTR pMacro );
-extern void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_BISON_PTR pMacro );
-extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_BISON_PTR pMacro );
-extern void hb_compGenPushLong( HB_LONG lNumber, HB_BISON_PTR pMacro );
-extern void hb_compGenPushDate( HB_LONG lNumber, HB_BISON_PTR pMacro );
-extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_BISON_PTR pMacro );
-extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_BISON_PTR pMacro );
-extern void hb_compGenPopVar( char * szVarName, HB_BISON_PTR pMacro );
+extern void hb_compGenPCode1( BYTE byte, HB_COMP_DECL );
+extern void hb_compGenPData1( BYTE byte, HB_COMP_DECL );
+extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_COMP_DECL );
+extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_COMP_DECL );
+extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_COMP_DECL );
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL );
+
+extern int hb_compLocalVarGetPos( char * szVarName, HB_COMP_DECL );
+extern ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL );
+extern ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL );
+extern void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL );
+extern void hb_compGenJumpHere( ULONG ulOffset, HB_COMP_DECL );
+extern ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL );
+
+extern void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL );
+
+extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL );
+extern void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL );
+extern void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL );
+extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );
+extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );
+extern void hb_compGenPopVar( char * szVarName, HB_COMP_DECL );
 extern void hb_compGenPopAliasedVar( char * szVarName,
                                      BOOL bPushAliasValue,
                                      char * szAlias,
-                                     long lWorkarea, HB_BISON_PTR pMacro );
-extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_BISON_PTR pMacro );
-extern void hb_compGenPushVarRef( char * szVarName, HB_BISON_PTR pMacro );
+                                     long lWorkarea, HB_COMP_DECL );
+extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL );
+extern void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL );
 extern void hb_compGenPushAliasedVar( char * szVarName,
                                       BOOL bPushAliasValue,
                                       char * szAlias,
-                                      long lWorkarea, HB_BISON_PTR pMacro );
-extern void hb_compGenPushLogical( int iTrueFalse, HB_BISON_PTR pMacro );
-extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_BISON_PTR pMacro );
-extern void hb_compGenPushFunCall( char * szFunName, HB_BISON_PTR pMacro );
-extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_BISON_PTR pMacro );
-extern void hb_compCodeBlockStart( HB_BISON_PTR pMacro );
-extern void hb_compCodeBlockEnd( HB_BISON_PTR pMacro );
+                                      long lWorkarea, HB_COMP_DECL );
+extern void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL );
+extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL );
+extern void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL );
+extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL );
+extern void hb_compCodeBlockStart( HB_COMP_DECL );
+extern void hb_compCodeBlockEnd( HB_COMP_DECL );
+
+#endif /* HB_MACRO_SUPPORT */
 
 HB_EXTERN_END
 

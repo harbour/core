@@ -102,7 +102,7 @@ static ULONG PackDateTime( void )
    return HB_MKLONG( szString[3], szString[2], szString[1], szString[0] );
 }
 
-void hb_compChkCompilerSwitch( int iArg, char *Args[] )
+void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char *Args[] )
 {
    /* If iArg is passed check the command line options */
    if( iArg )
@@ -133,7 +133,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                   Switch[2] = '-';
                   Switch[3] = '\0';
 
-                  hb_compChkEnvironVar( ( char * ) Switch );
+                  hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                   j += 2;
                   continue;
@@ -155,7 +155,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                            Switch[5] = 'D';
                            Switch[6] = '\0';
 
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                            j += 5;
                            continue;
@@ -163,7 +163,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         else if( !Args[i][j + 1] )
                         {
                            Switch[2] = '\0';
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                            j += 1;
                            continue;
                         }
@@ -195,20 +195,20 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                               }
                            }
 
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                            continue;
                         }
                         else
                         {
                            Switch[2] = '\0';
-                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
                         }
 
                      case 'd':
                      case 'D':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as part of #define and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -222,7 +222,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                            Switch[3] = Args[i][j + 2];
                            Switch[4] = '\0';
 
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                            j += 3;
                            continue;
@@ -230,7 +230,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         else
                         {
                            Switch[2] = '\0';
-                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
                         }
 
                         break;
@@ -254,16 +254,16 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                               Switch[3] = '\0';
                               j += 2;
                            }
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                            continue;
                         }
                         else
-                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, ( char * ) Switch, NULL );
 
                      case 'i':
                      case 'I':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as IncludePath and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -272,7 +272,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                      case 'k':
                      case 'K':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as part of #define and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -294,13 +294,13 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                            Switch[2] = '\0';
                            j += 1;
                         }
-                        hb_compChkEnvironVar( ( char * ) Switch );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                         continue;
 
                      case 'o':
                      case 'O':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as OutputPath and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -311,7 +311,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         if( Args[i][j + 1] )
                         {
                            Args[i] += ( j - 1 );
-                           hb_compChkEnvironVar( Args[i] );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                            /* Accept rest as PPOPath and continue with next Args[]. */
                            j += strlen( Args[i] ) - 1;
@@ -319,7 +319,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         else
                         {
                            Switch[2] = '\0';
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                            j++;
                         }
                         continue;
@@ -331,7 +331,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                            Switch[2] = Args[i][j + 1];
                            Switch[3] = '\0';
 
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                            j += 2;
                            continue;
@@ -339,21 +339,21 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         else
                         {
                            Switch[2] = '\0';
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                         }
 
                         break;
 
                      case 'r':
                      case 'R':
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
                         j = strlen( Args[i] ) - 1;
                         break;
 
                      case 'u':
                      case 'U':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as part of .CH Path or "undef:<id>" and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -366,7 +366,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                            Switch[2] = Args[i][j + 1];
                            Switch[3] = '\0';
 
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
 
                            j += 2;
                            continue;
@@ -374,7 +374,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                         else
                         {
                            Switch[2] = '\0';
-                           hb_compChkEnvironVar( ( char * ) Switch );
+                           hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                         }
 
                         break;
@@ -382,7 +382,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
                      case 'x':
                      case 'X':
                         Args[i] += ( j - 1 );
-                        hb_compChkEnvironVar( Args[i] );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                         /* Accept rest as INIT Symbol and continue with next Args[]. */
                         j = strlen( Args[i] );
@@ -390,7 +390,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
 
                      default:
                         Switch[2] = '\0';
-                        hb_compChkEnvironVar( ( char * ) Switch );
+                        hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
                   }
                }
 
@@ -413,7 +413,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
 
                Args[i][j] = 0;
 
-               hb_compChkEnvironVar( Args[i] );
+               hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
 
                Args[i] += j;
                Args[i][0] = cSep;
@@ -422,7 +422,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
             }
             else
             {
-               hb_compChkEnvironVar( Args[i] );
+               hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
             }
          }
       }
@@ -452,7 +452,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
           */
          while( szSwitch != NULL )
          {
-            hb_compChkEnvironVar( szSwitch );
+            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
             szSwitch = strtok( NULL, " " );
          }
       }
@@ -462,7 +462,7 @@ void hb_compChkCompilerSwitch( int iArg, char *Args[] )
    }
 }
 
-void hb_compChkEnvironVar( char *szSwitch )
+void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
 {
    if( szSwitch )
    {
@@ -477,7 +477,7 @@ void hb_compChkEnvironVar( char *szSwitch )
        */
 
       if( !HB_ISOPTSEP( *s ) )
-         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
       else
       {
          s++;
@@ -486,9 +486,9 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 'a':
             case 'A':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bAutoMemvarAssume = FALSE;
+                  HB_COMP_PARAM->fAutoMemvarAssume = FALSE;
                else
-                  hb_comp_bAutoMemvarAssume = TRUE;
+                  HB_COMP_PARAM->fAutoMemvarAssume = TRUE;
                break;
 
             case 'b':
@@ -502,15 +502,15 @@ void hb_compChkEnvironVar( char *szSwitch )
                szOption[i] = '\0';
 
                if( strcmp( szOption, "BUILD" ) == 0 )
-                  hb_comp_bBuildInfo = TRUE;
+                  HB_COMP_PARAM->fBuildInfo = TRUE;
                else
                {
                   if( *( s + 1 ) == '-' )
-                     hb_comp_bDebugInfo = FALSE;
+                     HB_COMP_PARAM->fDebugInfo = FALSE;
                   else
                   {
-                     hb_comp_bDebugInfo = TRUE;
-                     hb_comp_bLineNumbers = TRUE;
+                     HB_COMP_PARAM->fDebugInfo = TRUE;
+                     HB_COMP_PARAM->fLineNumbers = TRUE;
                   }
                }
 
@@ -530,9 +530,9 @@ void hb_compChkEnvironVar( char *szSwitch )
 
                if( strcmp( szOption, "CREDITS" ) == 0 ||
                    strcmp( szOption, "CREDIT" ) == 0 || strcmp( szOption, "CREDI" ) == 0 || strcmp( szOption, "CRED" ) == 0 )
-                  hb_comp_bCredits = TRUE;
+                  HB_COMP_PARAM->fCredits = TRUE;
                else
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szOption, NULL );
 
                hb_xfree( szOption );
             }
@@ -551,23 +551,23 @@ void hb_compChkEnvironVar( char *szSwitch )
                   {
                      case '\0':
                      case '0':
-                        hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT;
+                        HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DEFAULT;
                         break;
 
                      case '1':
-                        hb_comp_iExitLevel = HB_EXITLEVEL_SETEXIT;
+                        HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_SETEXIT;
                         break;
 
                      case '2':
-                        hb_comp_iExitLevel = HB_EXITLEVEL_DELTARGET;
+                        HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DELTARGET;
                         break;
 
                      default:
-                        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                   }
                }
                else
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
 
                break;
 
@@ -577,55 +577,55 @@ void hb_compChkEnvironVar( char *szSwitch )
                {
                   case 'c':
                   case 'C':
-                     hb_comp_iLanguage = LANG_C;
+                     HB_COMP_PARAM->iLanguage = LANG_C;
 
                      switch( *( s + 2 ) )
                      {
                         case '3':
-                           hb_comp_iGenCOutput = HB_COMPGENC_REALCODE;
+                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_REALCODE;
                            break;
 
                         case '\0':
                         case '2':
-                           hb_comp_iGenCOutput = HB_COMPGENC_VERBOSE;
+                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_VERBOSE;
                            break;
 
                         case '1':
-                           hb_comp_iGenCOutput = HB_COMPGENC_NORMAL;
+                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_NORMAL;
                            break;
 
                         case '0':
-                           hb_comp_iGenCOutput = HB_COMPGENC_COMPACT;
+                           HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
                            break;
 
                         default:
-                           hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                      }
                      break;
 
                   case 'j':
                   case 'J':
-                     hb_comp_iLanguage = LANG_JAVA;
+                     HB_COMP_PARAM->iLanguage = LANG_JAVA;
                      break;
 
                   case 'h':
                   case 'H':
-                     hb_comp_iLanguage = LANG_PORT_OBJ;
+                     HB_COMP_PARAM->iLanguage = LANG_PORT_OBJ;
                      break;
 
                   case 'i':
                   case 'I':
-                     hb_comp_iLanguage = LANG_CLI;
+                     HB_COMP_PARAM->iLanguage = LANG_CLI;
                      break;
 
                   case 'o':
                   case 'O':
-                     hb_comp_iLanguage = LANG_OBJ_MODULE;
+                     HB_COMP_PARAM->iLanguage = LANG_OBJ_MODULE;
                      break;
 
                   case 'w':
                   case 'W':
-                     hb_comp_iLanguage = LANG_OBJ32;
+                     HB_COMP_PARAM->iLanguage = LANG_OBJ32;
                      break;
 
                   default:
@@ -648,7 +648,7 @@ void hb_compChkEnvironVar( char *szSwitch )
                 */
             case 'i':
             case 'I':
-               hb_pp_addSearchPath( hb_comp_data->pLex->pPP, s + 1, FALSE );
+               hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, FALSE );
                break;
 
             case 'k':
@@ -663,46 +663,47 @@ void hb_compChkEnvironVar( char *szSwitch )
                      case '?':
                         hb_compPrintLogo(  );
                         hb_compPrintModes(  );
-                        hb_comp_bLogo = FALSE;
-                        hb_comp_bQuiet = TRUE;
+                        HB_COMP_PARAM->fLogo = FALSE;
+                        HB_COMP_PARAM->fQuiet = TRUE;
                         break;
 
                      case 'h':
                         /* default Harbour mode */
-                        hb_comp_Supported |= HB_COMPFLAG_HARBOUR;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HARBOUR;
                         break;
 
                      case 'c':
                         /* clear all flags - minimal set of features */
-                        hb_comp_Supported = HB_COMPFLAG_OPTJUMP;
+                        HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP;
                         break;
 
                      case 'x':
-                        hb_comp_Supported |= HB_COMPFLAG_XBASE;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_XBASE;
                         break;
 
                      case 'i':
-                        hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE;
                         break;
 
                      case 'I':
-                        hb_comp_Supported |= HB_COMPFLAG_HB_INLINE_PP;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE_PP;
                         break;
 
                      case 'J':
-                        hb_comp_Supported &= ~HB_COMPFLAG_OPTJUMP;
+                        HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;
 
                      case 'r':
-                        hb_comp_Supported |= HB_COMPFLAG_RT_MACRO;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_RT_MACRO;
                         break;
 
                      case 's':
-                        hb_comp_Supported |= HB_COMPFLAG_ARRSTR;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_ARRSTR;
                         break;
 
                      default:
-                        hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                         break;
                   }
                }
@@ -712,17 +713,17 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 'l':
             case 'L':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bLineNumbers = TRUE;
+                  HB_COMP_PARAM->fLineNumbers = TRUE;
                else
-                  hb_comp_bLineNumbers = FALSE;
+                  HB_COMP_PARAM->fLineNumbers = FALSE;
                break;
 
             case 'm':
             case 'M':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bAutoOpen = TRUE;
+                  HB_COMP_PARAM->fAutoOpen = TRUE;
                else
-                  hb_comp_bAutoOpen = FALSE;
+                  HB_COMP_PARAM->fAutoOpen = FALSE;
                break;
 
             case 'n':
@@ -732,24 +733,24 @@ void hb_compChkEnvironVar( char *szSwitch )
                 */
                if( *( s + 1 ) == '1' )
                {
-                  hb_comp_bStartProc = FALSE;
-                  hb_comp_bNoStartUp = TRUE;
+                  HB_COMP_PARAM->fStartProc = FALSE;
+                  HB_COMP_PARAM->fNoStartUp = TRUE;
                }
                /*
                   -n or -n0 no implicit start up procedure
                 */
                else if( ( *( s + 1 ) == '0' ) || ( *( s + 1 ) == '\0' ) )
-                  hb_comp_bStartProc = FALSE;
+                  HB_COMP_PARAM->fStartProc = FALSE;
                /*
                   -n- ceates implicit start up procedure
                 */
                else if( *( s + 1 ) == '-' )
-                  hb_comp_bStartProc = TRUE;
+                  HB_COMP_PARAM->fStartProc = TRUE;
                /*
                   invalid command
                 */
                else
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                break;
 
             case 'o':
@@ -757,7 +758,7 @@ void hb_compChkEnvironVar( char *szSwitch )
             {
                char *szPath = hb_strdup( s + 1 );
 
-               hb_comp_pOutPath = hb_fsFNameSplit( szPath );
+               HB_COMP_PARAM->pOutPath = hb_fsFNameSplit( szPath );
                hb_xfree( szPath );
             }
                break;
@@ -766,25 +767,25 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 'p':
             case 'P':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bPPO = 0;
-               else if( ! hb_comp_bPPO )
+                  HB_COMP_PARAM->fPPO = 0;
+               else if( ! HB_COMP_PARAM->fPPO )
                {
                   /* do not set a path if option specified more then once */
                   char *szPath = hb_strdup( s + 1 );
 
-                  hb_comp_pPpoPath = hb_fsFNameSplit( szPath );
+                  HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( szPath );
                   hb_xfree( szPath );
 
-                  hb_comp_bPPO = 1;
+                  HB_COMP_PARAM->fPPO = 1;
                }
                break;
 
             case 'q':
             case 'Q':
                if( *( s + 1 ) == '0' )
-                  hb_comp_bLogo = FALSE;
+                  HB_COMP_PARAM->fLogo = FALSE;
 
-               hb_comp_bQuiet = TRUE;
+               HB_COMP_PARAM->fQuiet = TRUE;
                break;
 
             case 'r':
@@ -792,10 +793,10 @@ void hb_compChkEnvironVar( char *szSwitch )
                if( *( s + 1 ) == '=' )
                {
                   int iOverflow;
-                  int iCycles = hb_strValInt( s + 2, &iOverflow );
+                  int iCycles = ( int ) hb_strValInt( s + 2, &iOverflow );
 
                   if( !iOverflow && iCycles > 0 )
-                     hb_pp_MaxTranslateCycles = ( unsigned int ) iCycles;
+                     HB_COMP_PARAM->iMaxTransCycles = iCycles;
                }
                else
                {
@@ -807,9 +808,9 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 's':
             case 'S':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bSyntaxCheckOnly = FALSE;
+                  HB_COMP_PARAM->fSyntaxCheckOnly = FALSE;
                else
-                  hb_comp_bSyntaxCheckOnly = TRUE;
+                  HB_COMP_PARAM->fSyntaxCheckOnly = TRUE;
                break;
 
             case 't':
@@ -826,25 +827,25 @@ void hb_compChkEnvironVar( char *szSwitch )
                   /* NOTE: Ignore these -undef: switches will be processed separately */
                   break;
                }
-               hb_pp_STD_CH = hb_strdup( s + 1 );
+               HB_COMP_PARAM->szStdCh = hb_strdup( s + 1 );
                break;
 
             case 'v':
             case 'V':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bForceMemvars = FALSE;
+                  HB_COMP_PARAM->fForceMemvars = FALSE;
                else
-                  hb_comp_bForceMemvars = TRUE;
+                  HB_COMP_PARAM->fForceMemvars = TRUE;
                break;
 
             case 'w':
             case 'W':
-               hb_comp_iWarnings = 1;
+               HB_COMP_PARAM->iWarnings = 1;
                if( s[1] )
                {                /*there is -w<0,1,2,3> probably */
-                  hb_comp_iWarnings = s[1] - '0';
-                  if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 4 )
-                     hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+                  HB_COMP_PARAM->iWarnings = s[1] - '0';
+                  if( HB_COMP_PARAM->iWarnings < 0 || HB_COMP_PARAM->iWarnings > 4 )
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                }
                break;
 
@@ -859,15 +860,14 @@ void hb_compChkEnvironVar( char *szSwitch )
                szPrefix[i] = '\0';
 
                if( strlen( szPrefix ) == 0 )
-                  sprintf( szPrefix, "%08lX_", PackDateTime(  ) );
+                  sprintf( szPrefix, "%08lX_", PackDateTime() );
 
-               strncpy( hb_comp_szPrefix, szPrefix, 16 );
-               hb_comp_szPrefix[16] = '\0';
-               strcat( hb_comp_szPrefix, "_" );
-
+               strncpy( HB_COMP_PARAM->szPrefix, szPrefix, 16 );
+               HB_COMP_PARAM->szPrefix[ 16 ] = '\0';
+               strcat( HB_COMP_PARAM->szPrefix, "_" );
                hb_xfree( szPrefix );
-            }
                break;
+            }
 
 #ifdef YYDEBUG
             case 'y':
@@ -879,32 +879,31 @@ void hb_compChkEnvironVar( char *szSwitch )
             case 'z':
             case 'Z':
                if( *( s + 1 ) == '-' )
-                  hb_comp_bShortCuts = TRUE;
+                  HB_COMP_PARAM->supported |= HB_COMPFLAG_SHORTCUTS;
                else
-                  hb_comp_bShortCuts = FALSE;
-               break;
+                  HB_COMP_PARAM->supported &= ~HB_COMPFLAG_SHORTCUTS;
 
             default:
-               hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
+               hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                break;
          }
       }
    }
 }
 
-void hb_compChkPaths( void )
+void hb_compChkPaths( HB_COMP_DECL )
 {
    char *szInclude = hb_getenv( "INCLUDE" );
 
    if( szInclude )
    {
       if( szInclude[0] != '\0' )
-         hb_pp_addSearchPath( hb_comp_data->pLex->pPP, szInclude, FALSE );
+         hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, szInclude, FALSE );
       hb_xfree( ( void * ) szInclude );
    }
 }
 
-static void hb_compChkDefineSwitch( char *pszSwitch )
+static void hb_compChkDefineSwitch( HB_COMP_DECL, char *pszSwitch )
 {
    if( pszSwitch && HB_ISOPTSEP( pszSwitch[0] ) )
    {
@@ -922,7 +921,7 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
             pAssign = strchr( szDefText, '=' );
             if( pAssign )
                *pAssign++ = '\0';
-            hb_pp_addDefine( hb_comp_data->pLex->pPP, szDefText, pAssign );
+            hb_pp_addDefine( HB_COMP_PARAM->pLex->pPP, szDefText, pAssign );
          }
          hb_xfree( szDefText );
       }
@@ -943,13 +942,13 @@ static void hb_compChkDefineSwitch( char *pszSwitch )
          szDefText[i] = '\0';
 
          if( szDefText[0] )
-            hb_pp_delDefine( hb_comp_data->pLex->pPP, szDefText );
+            hb_pp_delDefine( HB_COMP_PARAM->pLex->pPP, szDefText );
          hb_xfree( szDefText );
       }
    }
 }
 
-void hb_compChkDefines( int iArg, char *Args[] )
+void hb_compChkDefines( HB_COMP_DECL, int iArg, char *Args[] )
 {
    /* Chech the environment variables */
    {
@@ -972,7 +971,7 @@ void hb_compChkDefines( int iArg, char *Args[] )
          /* Check the environment var while it isn't empty. */
          while( szSwitch != NULL )
          {
-            hb_compChkDefineSwitch( szSwitch );
+            hb_compChkDefineSwitch( HB_COMP_PARAM, szSwitch );
             szSwitch = strtok( NULL, " " );
          }
       }
@@ -988,6 +987,6 @@ void hb_compChkDefines( int iArg, char *Args[] )
       /* Check all switches in command line They start with an OS_OPT_DELIMITER
          char */
       for( i = 0; i < iArg; i++ )
-         hb_compChkDefineSwitch( Args[i] );
+         hb_compChkDefineSwitch( HB_COMP_PARAM, Args[i] );
    }
 }

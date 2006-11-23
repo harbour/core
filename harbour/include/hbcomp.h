@@ -62,184 +62,17 @@
 #include <malloc.h>     /* alloca prototype */
 #endif
 
+#include "hbmacro.ch"
 #include "hbapi.h"
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbver.h"
+#include "hbmacro.h"
 #include "hbexprop.h"
 #include "hbpcode.h"
 #include "hbhash.h"
 
 HB_EXTERN_BEGIN
-
-/* compiler related declarations */
-
-/* Output types */
-typedef enum
-{
-   LANG_C,                      /* C language (by default) <file.c> */
-   LANG_CLI,                    /* .NET IL language */
-   LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
-   LANG_JAVA,                   /* Java <file.java> */
-   LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
-   LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
-} LANGUAGES;                    /* supported Harbour output languages */
-
-struct _COMCLASS;    /* forward declaration */
-
-/* Declared Function/Method support structure */
-typedef struct _COMDECLARED
-{
-   char                * szName;              /* the name of the symbol */
-   BYTE                  cType;
-   USHORT                iParamCount;
-   BYTE                * cParamTypes;
-   struct _COMCLASS    * pClass;
-   struct _COMCLASS    * ( * pParamClasses );
-   struct _COMDECLARED * pNext;               /* pointer to the next declared function */
-} COMDECLARED, * PCOMDECLARED;
-
-/* Declared Class support structure */
-typedef struct _COMCLASS
-{
-   char             * szName;
-   PCOMDECLARED       pMethod;
-   PCOMDECLARED       pLastMethod;
-   struct _COMCLASS * pNext;
-} COMCLASS, * PCOMCLASS;
-
-/* locals, static, public variables support */
-typedef struct _VAR
-{
-   char *    szName;               /* variable name */
-   char *    szAlias;              /* variable alias namespace */
-   int       iUsed;                /* number of times used */
-   int       iDeclLine;            /* declaration line number */
-   BYTE      cType;                /* optional strong typing */
-   PCOMCLASS pClass;
-   struct _VAR * pNext;            /* pointer to next defined variable */
-} VAR, * PVAR;
-
-typedef struct HB_ENUMERATOR_
-{
-   char *szName;
-   BOOL bForEach;
-   struct HB_ENUMERATOR_ *pNext;
-} HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
-
-/*Support for traversing of linked list */
-#define  HB_CARGO_FUNC( proc )  void proc( void *cargo )
-typedef  HB_CARGO_FUNC( HB_CARGO_FUNC_ );
-typedef  HB_CARGO_FUNC_ *HB_CARGO_FUNC_PTR;
-
-#define  HB_CARGO2_FUNC( proc )  void proc( void *cargo, void *dummy )
-typedef  HB_CARGO2_FUNC( HB_CARGO2_FUNC_ );
-typedef  HB_CARGO2_FUNC_ *HB_CARGO2_FUNC_PTR;
-
-/* pcode chunks bytes size */
-#define HB_PCODE_CHUNK   100
-
-/* structure to hold a Clipper defined function */
-typedef struct __FUNC
-{
-   char *       szName;                   /* name of a defined Clipper function */
-   HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
-   BYTE         bFlags;                   /* some flags we may need */
-   USHORT       wParamCount;              /* number of declared parameters */
-   USHORT       wParamNum;                /* current parameter number */
-   PVAR         pLocals;                  /* pointer to local variables list */
-   PVAR         pStatics;                 /* pointer to static variables list */
-   PVAR         pFields;                  /* pointer to fields variables list */
-   PVAR         pMemvars;                 /* pointer to memvar variables list */
-   PVAR         pPrivates;                /* pointer to private variables list */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
-   ULONG        lPCodePos;                /* actual pcode offset */
-   int          iStaticsBase;             /* base for this function statics */
-   ULONG *      pNOOPs;                   /* pointer to the NOOP array */
-   ULONG *      pJumps;                   /* pointer to the Jumps array */
-   ULONG        iNOOPs;                   /* NOOPs Counter */
-   ULONG        iJumps;                   /* Jumps Counter */
-   BYTE *       pStack;                   /* Compile Time Stack */
-   USHORT       iStackSize;               /* Compile Time Stack size */
-   int          iStackIndex;              /* Compile Time Stack index */
-   PCOMDECLARED pStackFunctions[ 8 ];     /* Declared Functions on the Compile Time Stack */
-   int          iStackFunctions;          /* Index into DEclared Functions on Compile Time Stack */
-   PCOMCLASS    pStackClasses[ 8 ];       /* Declared Classes on the Compile Time Stack */
-   int          iStackClasses;            /* Index into Declared Classes on Compile Time Stack */
-   BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
-   struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;                 /* pointer to the next defined function */
-   HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
-} _FUNC, * PFUNCTION;
-
-/* structure to hold an INLINE block of source */
-typedef struct __INLINE
-{
-   char *       szName;                   /* name of a inline function */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
-   char *       szFileName;               /* Source file name */
-   int          iLine;                    /* Source line number */
-   struct __INLINE * pNext;               /* pointer to the next defined inline */
-} _INLINE, * PINLINE;
-
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PFUNCTION pFirst;            /* pointer to the first defined funtion */
-   PFUNCTION pLast;             /* pointer to the last defined function */
-   int       iCount;            /* number of defined functions */
-} FUNCTIONS;
-
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PINLINE pFirst;            /* pointer to the first defined inline */
-   PINLINE pLast;             /* pointer to the last defined inline */
-   int     iCount;            /* number of defined inlines */
-} INLINES;
-
-/* compiler symbol support structure */
-typedef struct _COMSYMBOL
-{
-   char *         szName;               /* the name of the symbol */
-   HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
-   BYTE           cType;
-   BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
-   PCOMCLASS      pClass;
-   struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
-} COMSYMBOL, * PCOMSYMBOL;
-
-/* symbol table support structures */
-typedef struct
-{
-   PCOMSYMBOL pFirst;           /* pointer to the first defined symbol */
-   PCOMSYMBOL pLast;            /* pointer to the last defined symbol */
-   int        iCount;           /* number of defined symbols */
-} SYMBOLS;
-
-typedef struct __EXTERN
-{
-   char * szName;
-   struct __EXTERN * pNext;
-} _EXTERN, * PEXTERN;      /* support structure for extern symbols */
-/* as they have to be placed on the symbol table later than the first public symbol */
-
-typedef struct _AUTOOPEN
-{
-   char * szName;
-   struct _AUTOOPEN * pNext;
-} AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
-
-typedef struct _HB_LABEL_INFO
-{
-   FILE *   yyc;
-   BOOL     fVerbose;
-   BOOL     fSetSeqBegin;
-   BOOL     fCondJump;
-   ULONG *  pulLabels;
-} HB_LABEL_INFO, * PHB_LABEL_INFO;
 
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
@@ -253,33 +86,9 @@ extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 
-
-typedef struct _HB_COMP_LEX
-{
-   PHB_PP_STATE   pPP;
-   int            iState;
-   char *         lasttok;
-}
-HB_COMP_LEX, * PHB_COMP_LEX;
-
-typedef struct _HB_COMP
-{
-   PHB_COMP_LEX   pLex;
-}
-HB_COMP, * HB_COMP_PTR;
-
-extern HB_COMP_PTR hb_comp_new( void );
-extern void hb_comp_free( HB_COMP_PTR );
-
-
 /* compiler PP functions and variables */
-#define HB_PP_STR_SIZE  12288
-#define HB_PP_BUFF_SIZE 4096
-extern void hb_pp_SetRules( BOOL fQuiet, int argc, char * argv[] );
-extern int  hb_pp_Internal( char * );
-extern void hb_compParserStop( HB_COMP_PTR pComp );
-
-
+extern void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] );
+extern void hb_compParserStop( HB_COMP_DECL );
 
 #define VS_NONE       0
 #define VS_LOCAL      1
@@ -291,7 +100,7 @@ extern void hb_compParserStop( HB_COMP_PTR pComp );
 #define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
 
 /* return detailed information about a class of variable  */
-int hb_compVariableScope( char * );
+extern int hb_compVariableScope( HB_COMP_DECL, char * );
 #define HB_VS_UNDECLARED	0
 /* variables declared in a current codeblock/function/procedure */
 #define HB_VS_CBLOCAL_VAR	1	/* local parameter of a codeblock */
@@ -324,152 +133,159 @@ int hb_compVariableScope( char * );
 
 extern void      hb_compMainExit( void ); /* main cleanup function */
 
-extern void      hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
-extern PFUNCTION hb_compFunctionFind( char * szFunName ); /* locates a previously defined function */
-extern PINLINE   hb_compInlineFind( char * szFunName );
-extern USHORT    hb_compFunctionGetPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
-extern PFUNCTION hb_compFunctionKill( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
-extern void      hb_compAnnounce( char * );
-extern PINLINE   hb_compInlineAdd( HB_COMP_PTR pComp, char * szFunName, int iLine );
+extern void      hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
+extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined function */
+extern PINLINE   hb_compInlineFind( HB_COMP_DECL, char * szFunName );
+extern USHORT    hb_compFunctionGetPos( HB_COMP_DECL, char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
+extern PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION );    /* releases all memory allocated by function and returns the next one */
+extern void      hb_compAnnounce( HB_COMP_DECL, char * );
+extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine );
 
-extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
-extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */
-extern BOOL      hb_compFunCallCheck( char *, int );
+extern PFUNCTION hb_compFunCallAdd( HB_COMP_DECL, char * szFuntionName );
+extern PFUNCTION hb_compFunCallFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined called function */
+extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, char *, int );
 
-extern void hb_compVariableAdd( char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
+extern void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
 extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
 extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
-extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
-extern char * hb_compStaticGetName( USHORT wVar );   /* returns the name of static variable */
+extern int hb_compLocalGetPos( HB_COMP_DECL, char * szVarName );   /* returns the order + 1 of a local variable */
+extern char * hb_compStaticGetName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   FALSE
 #define HB_SYM_MSGNAME  FALSE
 #define HB_SYM_FUNCNAME TRUE
-extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT *, BOOL );
+extern PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, char *, USHORT *, BOOL );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
-extern PCOMSYMBOL hb_compSymbolFind( char *, USHORT *, BOOL ); /* returns a symbol pointer from the symbol table */
-extern PCOMSYMBOL hb_compSymbolGetPos( USHORT );   /* returns a symbol based on its index on the symbol table */
+extern PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, char *, USHORT *, BOOL ); /* returns a symbol pointer from the symbol table */
+extern PCOMSYMBOL hb_compSymbolGetPos( HB_COMP_DECL, USHORT );   /* returns a symbol based on its index on the symbol table */
 
-extern PCOMDECLARED hb_compDeclaredAdd( char * );
-extern PCOMDECLARED hb_compDeclaredFind( char * );
+extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * );
+extern PCOMDECLARED hb_compDeclaredFind( HB_COMP_DECL, char * );
 
-extern PCOMCLASS hb_compClassAdd( char * );
-extern PCOMCLASS hb_compClassFind( char * );
-extern PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * );
+extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * );
+extern PCOMCLASS hb_compClassFind( HB_COMP_DECL, char * );
+extern PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * );
 extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * );
-extern void hb_compDeclaredParameterAdd( char * szVarName, BYTE cValueType );
+extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType );
 
-extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
+extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK statement */
 
-extern void hb_compExternGen( void ); /* generates the symbols for the EXTERN names */
-extern void hb_compExternAdd( char * szExternName ); /* defines a new extern name */
+extern void hb_compExternGen( HB_COMP_DECL ); /* generates the symbols for the EXTERN names */
+extern void hb_compExternAdd( HB_COMP_DECL, char * szExternName ); /* defines a new extern name */
 
-extern void hb_compAutoOpenAdd( char * szName );
+extern void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName );
 
-extern void hb_compSwitchKill( void );
-extern void hb_compLoopKill( void );
-extern void hb_compRTVariableKill( void );
-extern void hb_compElseIfKill( void );
+extern void hb_compSwitchKill( HB_COMP_DECL );
+extern void hb_compLoopKill( HB_COMP_DECL );
+extern void hb_compRTVariableKill( HB_COMP_DECL );
+extern void hb_compElseIfKill( HB_COMP_DECL );
+
+extern void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
+extern void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
+
+extern BOOL hb_compIsValidMacroVar( char *, HB_COMP_DECL ); /* checks if passed variable can be used in macro */
+extern BOOL hb_compForEachVarError( HB_COMP_DECL, char * ); /* checks if it is FOR EACH enumerator variable and generates a warning */
+
+extern ULONG hb_compGenJump( LONG, HB_COMP_DECL );              /* generates the pcode to jump to a specific offset */
+extern ULONG hb_compGenJumpFalse( LONG, HB_COMP_DECL );         /* generates the pcode to jump if false */
+extern ULONG hb_compGenJumpTrue( LONG, HB_COMP_DECL );          /* generates the pcode to jump if true */
+extern void  hb_compGenJumpHere( ULONG, HB_COMP_DECL );         /* returns the pcode pos where to set a jump offset */
+extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL ); /* sets a jump offset */
+
+extern void hb_compLinePush( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
+extern void hb_compLinePushIfDebugger( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
+extern void hb_compLinePushIfInside( HB_COMP_DECL );   /* generates the pcode with the currently compiled source code line */
+
+extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );       /* sends a message to an object */
+extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );     /* generates an underscore-symbol name for a data assignment */
+extern void hb_compGenPopVar( char * szVarName, HB_COMP_DECL );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
+extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL ); /* Pushes a number on the virtual machine stack */
+extern void hb_compGenPushFunCall( char *, HB_COMP_DECL );             /* generates the pcode to push function's call */
+extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL );       /* generates the pcode to push a variable value to the virtual machine stack */
+extern void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL );    /* generates the pcode to push a variable by reference to the virtual machine stack */
+extern void hb_compGenPushInteger( int iNumber, HB_COMP_DECL );        /* Pushes a integer number on the virtual machine stack */
+extern void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL );     /* pushes a logical value on the virtual machine stack */
+extern void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL );       /* Pushes a long number on the virtual machine stack */
+extern void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL );       /* Pushes a date constant on the virtual machine stack */
+extern void hb_compGenPushNil( HB_COMP_DECL );                   /* Pushes nil on the virtual machine stack */
+extern void hb_compGenPushString( char * szText, ULONG ulLen, HB_COMP_DECL );       /* Pushes a string on the virtual machine stack */
+extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
+extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
+extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
+extern void hb_compGenPushFunRef( char *, HB_COMP_DECL );
+extern void hb_compGenVarPCode( BYTE, char *, HB_COMP_DECL );
+extern void hb_compGenPCode1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode */
+extern void hb_compGenPData1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode argument */
+extern void hb_compGenPCode2( BYTE, BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
+extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL ); /* copy bytes to a pcode buffer + flag for optional StrongType() */
+
+extern ULONG hb_compSequenceBegin( HB_COMP_DECL );
+extern ULONG hb_compSequenceEnd( HB_COMP_DECL );
+extern void hb_compSequenceFinish( ULONG, int, HB_COMP_DECL );
+
+/* support for FIELD declaration */
+extern void hb_compFieldSetAlias( HB_COMP_DECL, char *, int );
+extern int  hb_compFieldsCount( HB_COMP_DECL );
+
+/* Static variables */
+extern void hb_compStaticDefStart( HB_COMP_DECL );
+extern void hb_compStaticDefEnd( HB_COMP_DECL );
+extern void hb_compGenStaticName( char *, HB_COMP_DECL );
+
 
 #ifdef HB_MACRO_SUPPORT
 
-#define hb_compErrorType( p )    hb_macroError( EG_ARG, HB_MACRO_PARAM )
-#define hb_compErrorIndex( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
-#define hb_compErrorSyntax( p )  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
-#define hb_compErrorLValue( p )  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
-#define hb_compErrorBound( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
-#define hb_compErrorAlias( p )   hb_macroError( EG_NOALIAS, HB_MACRO_PARAM )
-#define hb_compErrorDuplVar( c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
-#define hb_compErrorRefer( p,c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
-#define hb_compWarnMeaningless( p )
-#define hb_compErrorMacro( p )
+#define hb_compErrorType( p, x )          hb_macroError( EG_ARG, ( p ) )
+#define hb_compErrorIndex( p, x )         hb_macroError( EG_BOUND, ( p ) )
+#define hb_compErrorSyntax( p, x )        hb_macroError( EG_SYNTAX, ( p ) )
+#define hb_compErrorLValue( p, x )        hb_macroError( EG_SYNTAX, ( p ) )
+#define hb_compErrorBound( p, x )         hb_macroError( EG_BOUND, ( p ) )
+#define hb_compErrorAlias( p, x )         hb_macroError( EG_NOALIAS, ( p ) )
+#define hb_compErrorDuplVar( p, c )       hb_macroError( EG_SYNTAX, ( p ) )
+#define hb_compErrorRefer( p, x, c )      hb_macroError( EG_SYNTAX, ( p ) )
+#define hb_compWarnMeaningless( p, x )
+#define hb_compErrorMacro( p, x )
+
+/* Codeblocks */
+extern void hb_compCodeBlockStart( HB_COMP_DECL ); /* starts a codeblock creation */
 
 #else /* HB_MACRO_SUPPORT */
 
-extern BOOL hb_compIsValidMacroVar( char * ); /* checks if passed variable can be used in macro */
-extern BOOL hb_compForEachVarError( char * );  /* checks if it is FOR EACH enumerator variable and generates a warning */
+extern HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorIndex( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorLValue( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorBound( HB_COMP_DECL, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compErrorAlias( HB_COMP_DECL, HB_EXPR_PTR );
+extern void        hb_compErrorDuplVar( HB_COMP_DECL, const char * );
+extern HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR, const char * );
+extern HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR );
+extern void        hb_compErrorMacro( HB_COMP_DECL, const char * );
 
-extern ULONG hb_compGenJump( LONG );                /* generates the pcode to jump to a specific offset */
-extern ULONG hb_compGenJumpFalse( LONG );           /* generates the pcode to jump if false */
-extern ULONG hb_compGenJumpTrue( LONG );            /* generates the pcode to jump if true */
-extern void hb_compGenJumpHere( ULONG  );             /* returns the pcode pos where to set a jump offset */
-extern void hb_compGenJumpThere( ULONG, ULONG ); /* sets a jump offset */
-
-
-extern void hb_compLinePush( void ); /* generates the pcode with the currently compiled source code line */
-extern void hb_compLinePushIfDebugger( void ); /* generates the pcode with the currently compiled source code line */
-extern void hb_compLinePushIfInside( void );   /* generates the pcode with the currently compiled source code line */
-
-extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject );       /* sends a message to an object */
-extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject );     /* generates an underscore-symbol name for a data assignment */
-extern void hb_compGenPopVar( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
-extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec ); /* Pushes a number on the virtual machine stack */
-extern void hb_compGenPushFunCall( char * );             /* generates the pcode to push function's call */
-extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar );       /* generates the pcode to push a variable value to the virtual machine stack */
-extern void hb_compGenPushVarRef( char * szVarName );    /* generates the pcode to push a variable by reference to the virtual machine stack */
-extern void hb_compGenPushInteger( int iNumber );        /* Pushes a integer number on the virtual machine stack */
-extern void hb_compGenPushLogical( int iTrueFalse );     /* pushes a logical value on the virtual machine stack */
-extern void hb_compGenPushLong( HB_LONG lNumber );       /* Pushes a long number on the virtual machine stack */
-extern void hb_compGenPushDate( HB_LONG lNumber );       /* Pushes a date constant on the virtual machine stack */
-extern void hb_compGenPushNil( void );                   /* Pushes nil on the virtual machine stack */
-extern void hb_compGenPushString( char * szText, ULONG ulLen );       /* Pushes a string on the virtual machine stack */
-extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias ); /* Pushes a symbol on to the Virtual machine stack */
-extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
-extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
-extern void hb_compGenPushFunRef( char * );
-extern void hb_compGenVarPCode( BYTE, char * );
-extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
-extern void hb_compGenPData1( BYTE );             /* generates 1 byte of pcode argument */
-extern void hb_compGenPCode2( BYTE, BYTE, BOOL );       /* generates 2 bytes of pcode + flag for optional StrongType(). */
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
-extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL );  /* copy bytes to a pcode buffer + flag for optional StrongType() */
-
-#if defined(HB_COMP_STRONG_TYPES)
-extern void hb_compStrongType( int iSize );
-#endif
-
-
-extern ULONG hb_compSequenceBegin( void );
-extern ULONG hb_compSequenceEnd( void );
-extern void hb_compSequenceFinish( ULONG, int );
+extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
+extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * );
 
 /* Codeblocks */
-extern void hb_compCodeBlockStart( BOOL );        /* starts a codeblock creation */
-extern void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
-extern void hb_compCodeBlockStop( void );          /* end of fake codeblock */
-extern void hb_compCodeBlockRewind( void );          /* restart of fake codeblock */
+extern void hb_compCodeBlockStart( BOOL, HB_COMP_DECL ); /* starts a codeblock creation */
 
-/* support for FIELD declaration */
-extern void hb_compFieldSetAlias( char *, int );
-extern int hb_compFieldsCount( void );
+#endif    /* HB_MACRO_SUPPORT */
 
-/* Static variables */
-extern void hb_compStaticDefStart( void );
-extern void hb_compStaticDefEnd( void );
-extern void hb_compGenStaticName( char * );
+/* Codeblocks */
+extern void hb_compCodeBlockEnd( HB_COMP_DECL );         /* end of codeblock creation */
+extern void hb_compCodeBlockStop( HB_COMP_DECL );        /* end of fake codeblock */
+extern void hb_compCodeBlockRewind( HB_COMP_DECL );      /* restart of fake codeblock */
 
-extern HB_EXPR_PTR hb_compErrorStatic( char *, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorAlias( HB_EXPR_PTR );
-extern void hb_compErrorDuplVar( char * );
-extern HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
-extern void hb_compErrorCodeblock( char * );
-extern void hb_compErrorMacro( char * );
-extern HB_EXPR_PTR hb_compErrorRefer( HB_EXPR_PTR, char * );
 
-extern ULONG hb_compExprListEval( HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval );
-extern ULONG hb_compExprListEval2( HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
+extern ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval );
+extern ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
 
-extern void hb_compChkCompilerSwitch( int, char * Args[] );
-extern void hb_compChkEnvironVar( char * );
-extern void hb_compChkPaths( void );
-extern void hb_compChkDefines( int iArg, char * Args[] );
+extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int, char * Args[] );
+extern void hb_compChkEnvironVar( HB_COMP_DECL, char * );
+extern void hb_compChkPaths( HB_COMP_DECL );
+extern void hb_compChkDefines( HB_COMP_DECL, int iArg, char * Args[] );
 
 extern void hb_compPrintUsage( char * );
 extern void hb_compPrintCredits( void );
@@ -477,129 +293,46 @@ extern void hb_compFileInfo( void );
 extern void hb_compPrintLogo( void );
 extern void hb_compPrintModes( void );
 
-#endif    /* HB_MACRO_SUPPORT */
 
 /* Misc functions defined in harbour.c */
-extern void hb_compFinalizeFunction( void ); /* fixes all last defined function returns jumps offsets */
+extern void hb_compFinalizeFunction( HB_COMP_DECL ); /* fixes all last defined function returns jumps offsets */
 extern void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos );
 extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );
-extern BOOL hb_compIsJump( PFUNCTION pFunc, ULONG ulPos );
+extern BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos );
 /* Misc functions defined in hbfix.c */
-extern void hb_compFixFuncPCode( PFUNCTION );
+extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION );
 /* Misc functions defined in hbstripl.c */
 extern void hb_compStripFuncLines( PFUNCTION pFunc );
 /* Misc functions defined in hbdead.c */
-extern void hb_compCodeTraceMarkDead( PFUNCTION pFunc );
+extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc );
 
 /* output related functions defined in gen*.c */
-extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
-extern void hb_compGenILCode( PHB_FNAME );     /* generates the .NET IL language output */
-extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
-extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
-extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
-extern void hb_compGenCObj( PHB_FNAME );       /* generates platform dependant object module */
+extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */
+extern void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME );     /* generates the .NET IL language output */
+extern void hb_compGenJava( HB_COMP_DECL, PHB_FNAME );       /* generates the Java language output */
+extern void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME );    /* generates the portable objects */
+extern void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME );      /* generates OBJ 32 bits */
+extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platform dependant object module */
+
+extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
+extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
 
 /* hbident.c   */
-extern char * hb_compIdentifierNew( char * szName, BOOL bCopy ); /* create the reusable identifier */
-extern void hb_compIdentifierOpen( void ); /* prepare the table of identifiers */
-extern void hb_compIdentifierClose( void ); /* release the table of identifiers */
+extern char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy ); /* create the reusable identifier */
+extern void hb_compIdentifierOpen( HB_COMP_DECL ); /* prepare the table of identifiers */
+extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of identifiers */
 
-/* variable used by compiler
+/* global readonly variables used by compiler
  */
-extern HB_COMP_PTR    hb_comp_data;
-
-extern int            hb_comp_iLine;
-extern FUNCTIONS      hb_comp_functions;
-extern FUNCTIONS      hb_comp_funcalls;
-extern SYMBOLS        hb_comp_symbols;
-extern PCOMDECLARED   hb_comp_pFirstDeclared;
-extern PCOMDECLARED   hb_comp_pLastDeclared;
-extern PCOMDECLARED   hb_comp_pReleaseDeclared;
-extern PCOMCLASS      hb_comp_pFirstClass;
-extern PCOMCLASS      hb_comp_pLastClass;
-extern PCOMCLASS      hb_comp_pReleaseClass;
-extern char *         hb_comp_szFromClass;
-extern PCOMDECLARED   hb_comp_pLastMethod;
-extern PFUNCTION      hb_comp_pInitFunc;
-extern PHB_FNAME      hb_comp_pFileName;
-extern PHB_FNAME      hb_comp_pFilePpo;
-extern BOOL           hb_comp_bPPO;
-extern BOOL           hb_comp_bStartProc;
-extern BOOL           hb_comp_bLineNumbers;
-extern BOOL           hb_comp_bQuiet;
-extern BOOL           hb_comp_bShortCuts;
-extern int            hb_comp_iWarnings;
-extern BOOL           hb_comp_bAnyWarning;
-extern BOOL           hb_comp_bAutoMemvarAssume;
-extern BOOL           hb_comp_bForceMemvars;
-extern BOOL           hb_comp_bDebugInfo;
-extern char           hb_comp_szPrefix[ 20 ];
-extern int            hb_comp_iGenCOutput;
-extern BOOL           hb_comp_bNoStartUp;
-extern int            hb_comp_iExitLevel;
-extern int            hb_comp_iFunctionCnt;
-extern char           hb_comp_cVarType;
-extern char           hb_comp_cDataListType;
-extern char           hb_comp_cCastType;
-extern int            hb_comp_iVarScope;
-extern BOOL           hb_comp_bDontGenLineNum;
-extern int            hb_comp_iStaticCnt;
-extern int            hb_comp_iErrorCount;
-
-extern char *         hb_comp_szAnnounce;
-
-extern PHB_FNAME      hb_comp_pOutPath;
-extern PHB_FNAME      hb_comp_pPpoPath;
-extern BOOL           hb_comp_bCredits;
-extern BOOL           hb_comp_bBuildInfo;
-
-extern BOOL           hb_comp_bLogo;
-extern BOOL           hb_comp_bSyntaxCheckOnly;
-extern int            hb_comp_iLanguage;
-
-extern USHORT         hb_comp_wSeqCounter;
-extern USHORT         hb_comp_wForCounter;
-extern USHORT         hb_comp_wIfCounter;
-extern USHORT         hb_comp_wWhileCounter;
-extern USHORT         hb_comp_wCaseCounter;
-extern USHORT         hb_comp_wSwitchCounter;
-extern BOOL           hb_comp_long_optimize;
-extern BOOL           hb_comp_bTextSubst;
-
-extern char *         hb_comp_szDeclaredFun;
-
-extern char *         hb_comp_szLastMethod;
 
 extern char *         hb_comp_szErrors[];
 extern char *         hb_comp_szWarnings[];
 
-extern char *         hb_pp_STD_CH;
-extern BOOL           hb_comp_bAutoOpen;
-extern BOOL           hb_comp_bError;
-extern char           hb_comp_cInlineID;
-
-extern INLINES        hb_comp_inlines;
-extern int            hb_comp_iLineINLINE;
-extern int            hb_comp_iLinePRG;
-
-extern ULONG          hb_comp_Supported;
-
-extern char *         hb_comp_szFile; 
-
 /* table with PCODEs' length */
 extern const BYTE     hb_comp_pcode_len[];
 
-/* error messages output */
+/* file handle for error messages */
 extern FILE           *hb_comp_errFile;
-
-/* Hide Strings */
-extern int            hb_comp_iHidden;
-
-
-extern BOOL hb_pp_LiteralEscSeq;
-extern BOOL hb_pp_NestedLiteralString;
-extern int hb_pp_StreamBlock;
-extern unsigned int hb_pp_MaxTranslateCycles;
 
 
 /* /GC command line setting types */
@@ -616,18 +349,25 @@ extern unsigned int hb_pp_MaxTranslateCycles;
 /* /kx command line setting types - compatibility modes
  * (turn on a bit in ULONG word)
 */
-#define HB_COMPFLAG_HARBOUR        1    /* -kh */
-#define HB_COMPFLAG_XBASE          2    /* -kx */
-#define HB_COMPFLAG_HB_INLINE      4    /* -ki */
-#define HB_COMPFLAG_ARRSTR         8    /* -ks strings as array of bytes */
-#define HB_COMPFLAG_OPTJUMP       16    /* -kj turn off jump optimalization */
-#define HB_COMPFLAG_RT_MACRO      64    /* -kr */
-#define HB_COMPFLAG_HB_INLINE_PP 128    /* -kI hb_inLine support in PP */
+#define HB_COMPFLAG_HARBOUR      HB_SM_HARBOUR     /* 1 -kh */
+#define HB_COMPFLAG_XBASE        HB_SM_XBASE       /* 2 -kx */
+#define HB_COMPFLAG_SHORTCUTS    HB_SM_SHORTCUTS   /* 8 -z enable sortcuts for logical operators */
+#define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
+#define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
+#define HB_COMPFLAG_OPTJUMP      256               /* -kj turn off jump optimalization */
+#define HB_COMPFLAG_HB_INLINE_PP 512               /* -kI hb_inLine support in PP */
+#define HB_COMPFLAG_HB_INLINE    1024              /* -ki */
 
-#ifdef HB_MACRO_SUPPORT
-  #define HB_COMP_ISSUPPORTED(flag)    ( HB_MACRO_DATA->supported & (flag) )
+#define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
+
+#if defined( HB_MACRO_SUPPORT )
+#  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
 #else
-  #define HB_COMP_ISSUPPORTED(flag)    ( hb_comp_Supported & (flag) )
+#  define HB_MACRO_GENFLAGS   ( HB_COMP_PARAM->supported & \
+                                ( HB_COMPFLAG_HARBOUR | \
+                                  HB_COMPFLAG_XBASE | \
+                                  HB_COMPFLAG_SHORTCUTS | \
+                                  HB_COMPFLAG_RT_MACRO ) )
 #endif
 
 HB_EXTERN_END

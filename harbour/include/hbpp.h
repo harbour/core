@@ -548,6 +548,7 @@ typedef struct
    PHB_MEM_BUFFER pDumpBuffer;   /* buffer for dump output */
    PHB_MEM_BUFFER pOutputBuffer; /* buffer for preprocessed line */
 
+   int      iLineTot;            /* total number of parsed lines */
    int      iCycle;              /* translation counter */
    int      iMaxCycles;          /* maximum number of translations */
    int      iHideStrings;        /* hidden string mode */
@@ -612,7 +613,8 @@ typedef void * PHB_PP_STATE;
 extern PHB_PP_STATE hb_pp_new( void );
 extern void   hb_pp_free( PHB_PP_STATE pState );
 extern void   hb_pp_reset( PHB_PP_STATE pState );
-extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, void * cargo,
+extern void   hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet,
+                  int iCycles, void * cargo,
                   PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                   PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
                   PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
@@ -627,6 +629,7 @@ extern BOOL   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearch
 extern BOOL   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );
 extern char * hb_pp_fileName( PHB_PP_STATE pState );
 extern int    hb_pp_line( PHB_PP_STATE pState );
+extern int    hb_pp_lineTot( PHB_PP_STATE pState );
 extern char * hb_pp_outFileName( PHB_PP_STATE pState );
 extern char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen );
 extern char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen );

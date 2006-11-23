@@ -32,11 +32,11 @@
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-void hb_compGenPortObj( PHB_FNAME pFileName )
+void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
-   PFUNCTION pFunc /*= hb_comp_functions.pFirst*/;
-   PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+   PFUNCTION pFunc /*= HB_COMP_PARAM->functions.pFirst*/;
+   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    ULONG lPCodePos;
    LONG lSymbols;
    ULONG ulCodeLength;
@@ -49,11 +49,11 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
-   if( ! hb_comp_bQuiet )
+   if( ! HB_COMP_PARAM->fQuiet )
    {
       printf( "Generating Harbour Portable Object output to \'%s\'... ", szFileName );
       fflush( stdout );
@@ -77,7 +77,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
    fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
    fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
 
-   pSym = hb_comp_symbols.pFirst;
+   pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
       fputs( pSym->szName, yyc );
@@ -86,17 +86,17 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
 
       /* specify the function address if it is a defined function or a
          external called function */
-      if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
+      if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a defined function ? */
          fputc( SYM_FUNC, yyc );
-      else if( hb_compFunCallFind( pSym->szName ) )
+      else if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
          fputc( SYM_EXTERN, yyc );
       else
          fputc( SYM_NOLINK, yyc );
       pSym = pSym->pNext;
    }
 
-   pFunc = hb_comp_functions.pFirst;
-   if( ! hb_comp_bStartProc )
+   pFunc = HB_COMP_PARAM->functions.pFirst;
+   if( ! HB_COMP_PARAM->fStartProc )
       pFunc = pFunc->pNext;
 
    lSymbols = 0;                /* Count number of symbols */
@@ -112,8 +112,8 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
 
    /* Generate functions data
     */
-   pFunc = hb_comp_functions.pFirst;
-   if( ! hb_comp_bStartProc )
+   pFunc = HB_COMP_PARAM->functions.pFirst;
+   if( ! HB_COMP_PARAM->fStartProc )
       pFunc = pFunc->pNext;
 
    while( pFunc )
@@ -135,7 +135,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
 
    fclose( yyc );
 
-   if( ! hb_comp_bQuiet )
+   if( ! HB_COMP_PARAM->fQuiet )
       printf( "Done.\n" );
 }
 

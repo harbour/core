@@ -33,16 +33,14 @@
 
 #define HB_IDENT_TABLE_SIZE    509UL
 
-/* table of identifiers for reuse */
-static HB_HASH_TABLE_PTR s_comp_Identifiers = NULL;    
-
 /* create a new identifier or return the existing one 
 */
-char * hb_compIdentifierNew( char * szName, BOOL bCopy )
+char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy )
 {
    char * szIdent;
 
-   szIdent = ( char * )hb_hashTableFind( s_comp_Identifiers, (void *) szName );
+   szIdent = ( char * ) hb_hashTableFind( HB_COMP_PARAM->pIdentifiers,
+                                          ( void * ) szName );
    if( !szIdent )
    {
       if( bCopy )
@@ -50,7 +48,8 @@ char * hb_compIdentifierNew( char * szName, BOOL bCopy )
       else
          szIdent = szName;
 
-      hb_hashTableAdd( s_comp_Identifiers, (void *)szIdent, (void *)szIdent );
+      hb_hashTableAdd( HB_COMP_PARAM->pIdentifiers,
+                       ( void * ) szIdent, ( void * ) szIdent );
    }
    else if( !bCopy )
       hb_xfree( szName );
@@ -90,18 +89,18 @@ static HB_HASH_FUNC( hb_comp_IdentComp )
 }
 
 /* initialize the hash table for identifiers */
-void hb_compIdentifierOpen( )
+void hb_compIdentifierOpen( HB_COMP_DECL )
 {
-   s_comp_Identifiers = hb_hashTableCreate( HB_IDENT_TABLE_SIZE, hb_comp_IdentKey, 
-                           hb_comp_IdentDel, hb_comp_IdentComp );   
+   HB_COMP_PARAM->pIdentifiers = hb_hashTableCreate( HB_IDENT_TABLE_SIZE,
+                     hb_comp_IdentKey, hb_comp_IdentDel, hb_comp_IdentComp );
 }
 
 /* release identifiers table */
-void hb_compIdentifierClose( )
+void hb_compIdentifierClose( HB_COMP_DECL )
 {
-   if( s_comp_Identifiers )
+   if( HB_COMP_PARAM->pIdentifiers )
    {
-      hb_hashTableKill( s_comp_Identifiers );
-      s_comp_Identifiers = NULL;
+      hb_hashTableKill( HB_COMP_PARAM->pIdentifiers );
+      HB_COMP_PARAM->pIdentifiers = NULL;
    }
 }

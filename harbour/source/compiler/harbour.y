@@ -47,103 +47,40 @@
 
 /* Compile using: bison -d -v harbour.y */
 
-static void hb_compLoopStart( void );
-static void hb_compLoopEnd( void );
-static void hb_compLoopLoop( void );
-static void hb_compLoopExit( void );
-static void hb_compLoopHere( void );
+static void hb_compLoopStart( HB_COMP_DECL );
+static void hb_compLoopEnd( HB_COMP_DECL );
+static void hb_compLoopLoop( HB_COMP_DECL );
+static void hb_compLoopExit( HB_COMP_DECL );
+static void hb_compLoopHere( HB_COMP_DECL );
 
-static void * hb_compElseIfGen( void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
-static void hb_compElseIfFix( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
+static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
-static void hb_compRTVariableAdd( HB_EXPR_PTR, BOOL );
-static void hb_compRTVariableGen( char * );
+static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, BOOL );
+static void hb_compRTVariableGen( HB_COMP_DECL, char * );
 
-static void hb_compVariableDim( char *, HB_EXPR_PTR );
+static void hb_compVariableDim( char *, HB_EXPR_PTR, HB_COMP_DECL );
 
-static void hb_compForStart( char *szVarName, BOOL bForEach );
-static void hb_compForEnd( char *szVarName );
-static void hb_compEnumStart( HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
-static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend );
-static void hb_compEnumEnd( HB_EXPR_PTR pExpr );
+static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach );
+static void hb_compForEnd( HB_COMP_DECL, char *szVarName );
+static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
+static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend );
+static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 
-static void hb_compSwitchStart( void );
-static void hb_compSwitchAdd( HB_EXPR_PTR );
-static void hb_compSwitchEnd( void );
+static void hb_compSwitchStart( HB_COMP_DECL );
+static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR );
+static void hb_compSwitchEnd( HB_COMP_DECL );
 
-static HB_EXPR_PTR hb_compCheckPassByRef( HB_EXPR_PTR pExpr );
+static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 
 #ifdef HARBOUR_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
 
-/* support structure for else if pcode fixups */
-typedef struct HB_ELSEIF_
-{
-   ULONG ulOffset;
-   struct HB_ELSEIF_ * pElseif; /* next ELSEIF in the current IF statement */
-   struct HB_ELSEIF_ * pPrev;   /* previous IF statement */
-} HB_ELSEIF, * HB_ELSEIF_PTR;      
-
-/* support structure for EXIT and LOOP statements */
-typedef struct HB_LOOPEXIT_
-{
-   ULONG ulOffset;
-   int iLine;
-   USHORT wSeqCounter;
-   struct HB_LOOPEXIT_ * pLoopList;
-   struct HB_LOOPEXIT_ * pExitList;
-   struct HB_LOOPEXIT_ * pNext;
-} HB_LOOPEXIT, * HB_LOOPEXIT_PTR;  
-
-/* support structure for SWITCH statement */
-typedef struct HB_SWITCHCASE_
-{
-   ULONG ulOffset;
-   HB_EXPR_PTR pExpr;
-   struct HB_SWITCHCASE_ *pNext;
-} HB_SWITCHCASE, * HB_SWITCHCASE_PTR;
-
-typedef struct HB_SWITCHCMD_
-{
-   ULONG ulOffset;
-   int iCount;
-   HB_SWITCHCASE_PTR pCases;
-   HB_SWITCHCASE_PTR pLast;
-   ULONG ulDefault;
-   struct HB_SWITCHCMD_ *pPrev;
-} HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
-
-typedef struct HB_RTVAR_
-{
-   HB_EXPR_PTR pVar;
-   BOOL bPopValue;
-   struct HB_RTVAR_ *pNext;
-   struct HB_RTVAR_ *pPrev;
-} HB_RTVAR, *HB_RTVAR_PTR; /* support structure for PUBLIC and PRIVATE statements */
-
-USHORT hb_comp_wSeqCounter   = 0;
-USHORT hb_comp_wForCounter   = 0;
-USHORT hb_comp_wIfCounter    = 0;
-USHORT hb_comp_wWhileCounter = 0;
-USHORT hb_comp_wCaseCounter  = 0;
-USHORT hb_comp_wSwitchCounter= 0;
-USHORT hb_comp_wWithObjectCnt= 0;
-BOOL hb_comp_long_optimize = TRUE;
-BOOL hb_comp_bTextSubst = TRUE;
-
-static HB_LOOPEXIT_PTR hb_comp_pLoops = NULL;
-static HB_RTVAR_PTR hb_comp_rtvars = NULL;
-static HB_SWITCHCMD_PTR hb_comp_pSwitch = NULL;
-static HB_ELSEIF_PTR hb_comp_elseif = NULL;
-
 /* Controls if passing by reference '@' is allowed */
 #define HB_PASSBYREF_OFF      0
 #define HB_PASSBYREF_FUNCALL  1
 #define HB_PASSBYREF_ARRAY    2
-static int hb_comp_bPassByRef = HB_PASSBYREF_OFF;
-
-char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 
 static void hb_compDebugStart( void ) { };
 
@@ -198,9 +135,9 @@ static void hb_compDebugStart( void ) { };
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
  */
-extern int  yylex( YYSTYPE *, HB_COMP_PTR );    /* main lex token function, called by yyparse() */
-extern int  yyparse( HB_COMP_PTR );             /* main yacc parsing function */
-extern void yyerror( HB_COMP_PTR, char * );     /* parsing error management function */
+extern int  yylex( YYSTYPE *, HB_COMP_DECL );    /* main lex token function, called by yyparse() */
+extern int  yyparse( HB_COMP_DECL );             /* main yacc parsing function */
+extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management function */
 %}
 
 
@@ -248,7 +185,7 @@ extern void yyerror( HB_COMP_PTR, char * );     /* parsing error management func
 /*the highest precedence*/
 
 %type <string>  IdentName IDENTIFIER LITERAL MACROVAR MACROTEXT CompTimeStr
-%type <string>	DOIDENT WHILE
+%type <string>  DOIDENT WHILE
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
@@ -296,9 +233,56 @@ extern void yyerror( HB_COMP_PTR, char * );     /* parsing error management func
 %type <asExpr>  DateValue
 %type <asMessage> SendId
 
+%destructor { 
+               /* NOTE: direct using of hb_comp_data is not MT safe but
+                  the version of bison (1.875c) I'm using now does not
+                  support %parse-param for destructors. I can create a
+                  work around for it but documentation says that %destructor
+                  should respect pure parser parameters so probably it will
+                  be (already is?) fixed in next releases do now I'm leaving 
+                  it as is. [druzus]
+                */
+               hb_compExprDelete( $$, hb_comp_data );
+            }
+            ArgList ElemList BlockExpList BlockVarList BlockNoVar
+            DoName DoProc DoArgument DoArgList
+            PareExpList1 PareExpList2 PareExpList3 PareExpListN
+            ExpList ExpList1 ExpList2 ExpList3
+            NumValue NumAlias
+            NilValue NilAlias
+            DateValue
+            LiteralValue LiteralAlias
+            CodeBlock CodeBlockAlias
+            Logical LogicalAlias
+            SelfValue SelfAlias
+            Array ArrayAlias
+            ArrayAt ArrayAtAlias
+            Variable VarAlias
+            MacroVar MacroVarAlias
+            MacroExpr MacroExprAlias
+            AliasId AliasVar AliasExpr
+            VariableAt VariableAtAlias
+            FunIdentCall FunCall FunCallAlias
+            ObjectData ObjectDataAlias
+            ObjectMethod ObjectMethodAlias
+            IfInline IfInlineAlias
+            PareExpList PareExpListAlias
+            Expression SimpleExpression LValue
+            EmptyExpression
+            ExprAssign ExprOperEq ExprPreOp ExprPostOp
+            ExprEqual ExprMath ExprBool ExprRelation ExprUnary
+            ExprPlusEq ExprMinusEq ExprMultEq ExprDivEq ExprModEq ExprExpEq
+            ArrayIndex IndexList
+            DimIndex DimList
+            FieldAlias FieldVarAlias
+            PostOp
+            ForVar ForList ForExpr
+
+%destructor { hb_xfree( $$.string ); } CBSTART
+
 %%
 
-Main       : { hb_compLinePush(); } Source       { }
+Main       : { hb_compLinePush( HB_COMP_PARAM ); } Source       { }
            | /* empty file */
            ;
 
@@ -328,17 +312,17 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
 
-ProcReq    : PROCREQ CompTimeStr ')' Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
-CompTimeStr: LITERAL { hb_compAutoOpenAdd( $1 ); }
-           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( szFileName ); }
+CompTimeStr: LITERAL { hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); }
+           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( HB_COMP_PARAM, szFileName ); }
            ;
 
-Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
-           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf {}
-           | FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); hb_comp_iVarScope = VS_PARAMETER; } '(' Params ')' Crlf {}
-           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); hb_comp_iVarScope = VS_PARAMETER;} '(' Params ')' Crlf {}
+Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
+           | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf {}
+           | FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = VS_PARAMETER; } '(' Params ')' Crlf {}
+           | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); HB_COMP_PARAM->iVarScope = VS_PARAMETER;} '(' Params ')' Crlf {}
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -348,39 +332,39 @@ FunScope   :                  { $$ = HB_FS_PUBLIC; }
            ;
 
 Params     : /*no parameters */ { $$ = 0; }
-           | EPSILON { hb_comp_functions.pLast->pCode[0] = HB_P_VFRAME; $$ = 0; }
+           | EPSILON { HB_COMP_PARAM->functions.pLast->pCode[0] = HB_P_VFRAME; $$ = 0; }
            | ParamList { $$ = $1; }
-           | ParamList ',' EPSILON { hb_comp_functions.pLast->pCode[0] = HB_P_VFRAME; $$ = $1; }
+           | ParamList ',' EPSILON { HB_COMP_PARAM->functions.pLast->pCode[0] = HB_P_VFRAME; $$ = $1; }
            ;
 
-AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
+AsType     : /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
            | StrongType
            ;
 
-StrongType : AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
-           | AS_CHARACTER                  { hb_comp_cVarType = 'C'; }
-           | AS_DATE                       { hb_comp_cVarType = 'D'; }
-           | AS_LOGICAL                    { hb_comp_cVarType = 'L'; }
-           | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
-           | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
-           | AS_CLASS IdentName            { hb_comp_cVarType = 'S'; hb_comp_szFromClass = $2; }
-           | AS_VARIANT                    { hb_comp_cVarType = ' '; }
+StrongType : AS_NUMERIC                    { HB_COMP_PARAM->cVarType = 'N'; }
+           | AS_CHARACTER                  { HB_COMP_PARAM->cVarType = 'C'; }
+           | AS_DATE                       { HB_COMP_PARAM->cVarType = 'D'; }
+           | AS_LOGICAL                    { HB_COMP_PARAM->cVarType = 'L'; }
+           | AS_BLOCK                      { HB_COMP_PARAM->cVarType = 'B'; }
+           | AS_OBJECT                     { HB_COMP_PARAM->cVarType = 'O'; }
+           | AS_CLASS IdentName            { HB_COMP_PARAM->cVarType = 'S'; HB_COMP_PARAM->szFromClass = $2; }
+           | AS_VARIANT                    { HB_COMP_PARAM->cVarType = ' '; }
            | AsArray
            ;
 
-AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
-           | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
-           | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
-           | AS_DATE_ARRAY                 { hb_comp_cVarType = 'd'; }
-           | AS_LOGICAL_ARRAY              { hb_comp_cVarType = 'l'; }
-           | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
-           | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
-           | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_CLASS_ARRAY IdentName      { hb_comp_cVarType = 's'; hb_comp_szFromClass = $2; }
+AsArray    : AS_ARRAY                      { HB_COMP_PARAM->cVarType = 'A'; }
+           | AS_NUMERIC_ARRAY              { HB_COMP_PARAM->cVarType = 'n'; }
+           | AS_CHARACTER_ARRAY            { HB_COMP_PARAM->cVarType = 'c'; }
+           | AS_DATE_ARRAY                 { HB_COMP_PARAM->cVarType = 'd'; }
+           | AS_LOGICAL_ARRAY              { HB_COMP_PARAM->cVarType = 'l'; }
+           | AS_ARRAY_ARRAY                { HB_COMP_PARAM->cVarType = 'a'; }
+           | AS_BLOCK_ARRAY                { HB_COMP_PARAM->cVarType = 'b'; }
+           | AS_OBJECT_ARRAY               { HB_COMP_PARAM->cVarType = 'o'; }
+           | AS_CLASS_ARRAY IdentName      { HB_COMP_PARAM->cVarType = 's'; HB_COMP_PARAM->szFromClass = $2; }
            ;
 
-ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
-           | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
+ParamList  : IdentName AsType                { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); $$ = 1; }
+           | ParamList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); $$++; }
            ;
 
 /* NOTE: This allows the use of Expression as a statement.
@@ -388,106 +372,106 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_c
  *    hb_compExprGenStatement(). With this solution we don't have to
  *    stop compilation if invalid syntax will be used.
  */
-Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
+Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt     { }
            | WithObject CrlfStmnt   { }
-           | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | AliasExpr CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ObjectMethod CrlfStmnt { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | MacroVar CrlfStmnt     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
-                                         hb_compExprDelete( hb_compExprGenStatement( $1 ) );
+                                         hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM );
                                       else
-                                         hb_compExprDelete( hb_compErrorSyntax( $1 ) );
-                                       hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                                         hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, $1 ), HB_COMP_PARAM );
+                                       HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                      }
            | MacroExpr CrlfStmnt    { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
-                                         hb_compExprDelete( hb_compExprGenStatement( $1 ) );
+                                         hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM );
                                       else
-                                         hb_compExprDelete( hb_compErrorSyntax( $1 ) );
-                                       hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                                         hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, $1 ), HB_COMP_PARAM );
+                                       HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                      }
-           | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0, ( BOOL ) 1 );
-                                      hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | BREAK { hb_compLinePushIfInside(); } Expression Crlf  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
-                                           hb_compGenPCode2( HB_P_DOSHORT, 1, ( BOOL ) 1 );
-                                           hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
+           | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           | BREAK CrlfStmnt        { hb_compGenBreak( HB_COMP_PARAM ); hb_compGenPCode2( HB_P_DOSHORT, 0, HB_COMP_PARAM );
+                                      HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | BREAK { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf  { hb_compGenBreak( HB_COMP_PARAM ); hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );
+                                           hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
+                                           HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
            | RETURN CrlfStmnt {
-                     if( hb_comp_wSeqCounter )
+                     if( HB_COMP_PARAM->wSeqCounter )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        hb_compGenPCode1( HB_P_ENDPROC );
-                        if( (hb_comp_functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
+                        hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                        if( (HB_COMP_PARAM->functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
                         { /* return from a function without a return value */
-                           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NO_RETURN_VALUE, NULL, NULL );
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NO_RETURN_VALUE, NULL, NULL );
                         }
-                        hb_comp_functions.pLast->bFlags |= FUN_WITH_RETURN;
-                        hb_comp_bDontGenLineNum = TRUE;
-                        hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
+                        HB_COMP_PARAM->functions.pLast->bFlags |= FUN_WITH_RETURN;
+                        HB_COMP_PARAM->fDontGenLineNum = TRUE;
+                        HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | RETURN { hb_compLinePushIfInside(); hb_comp_cVarType = ' '; } Expression Crlf {
+           | RETURN { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; } Expression Crlf {
 
-                        hb_comp_cCastType = hb_comp_cVarType;
-                        hb_comp_cVarType = ' ';
+                        HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
+                        HB_COMP_PARAM->cVarType = ' ';
 
-                        if( hb_comp_wSeqCounter )
+                        if( HB_COMP_PARAM->wSeqCounter )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        hb_compExprDelete( hb_compExprGenPush( $3 ) );   /* TODO: check if return value agree with declared value */
-                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, ( BOOL ) 1 );
-                        if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
+                        hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );   /* TODO: check if return value agree with declared value */
+                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
+                        if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
-                           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
                         }
-                        hb_comp_functions.pLast->bFlags |= FUN_WITH_RETURN;
-                        hb_comp_bDontGenLineNum = TRUE;
-                        hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
+                        HB_COMP_PARAM->functions.pLast->bFlags |= FUN_WITH_RETURN;
+                        HB_COMP_PARAM->fDontGenLineNum = TRUE;
+                        HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
+           | PUBLIC { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPUBLIC",TRUE) ); 
-                      hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; 
-                      hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                    { hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" ); 
+                      HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE; 
+                      HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                     } Crlf
-           | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
+           | PRIVATE { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( hb_compIdentifierNew("__MVPRIVATE",TRUE) ); 
-                      hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; 
-                      hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                    { hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" ); 
+                      HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
+                      HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                     } Crlf
 
-           | EXIT { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | LOOP { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | EXIT { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | LOOP { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
-               if( hb_comp_szAnnounce == NULL )
+               if( HB_COMP_PARAM->szAnnounce == NULL )
                {
                   /* check for reserved name
                   * NOTE: Clipper doesn't check for it
                   */
                   char * szFunction = hb_compReservedName( $2 );
                   if( szFunction )
-                     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
-                  hb_comp_szAnnounce = $2;
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
+                  HB_COMP_PARAM->szAnnounce = $2;
                }
                else
-                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
+                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
              } Crlf
            ;
 
-CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
+CrlfStmnt  : { hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf
            ;
 
-LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
+LineStat   : Crlf          { $<lNumber>$ = 0; HB_COMP_PARAM->fDontGenLineNum = TRUE; }
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 1; }
@@ -497,17 +481,17 @@ Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
            | Statements LineStat       { $<lNumber>$ += $<lNumber>2; }
            ;
 
-ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
-           | ExtList ',' IdentName          { hb_compExternAdd( $3 ); }
+ExtList    : IdentName                      { hb_compExternAdd( HB_COMP_PARAM, $1 ); }
+           | ExtList ',' IdentName          { hb_compExternAdd( HB_COMP_PARAM, $3 ); }
            ;
 
 IdentName  : IDENTIFIER       { $$ = $1; }
-           | STEP             { $$ = hb_compIdentifierNew( "STEP", TRUE ); }
-           | TO               { $$ = hb_compIdentifierNew( "TO", TRUE ); }
+           | STEP             { $$ = "STEP"; }
+           | TO               { $$ = "TO"; }
            | OPTIONAL         { $$ = $<string>1; }
-           | LOOP             { $$ = hb_compIdentifierNew( "LOOP", TRUE ); }
-           | EXIT             { $$ = hb_compIdentifierNew( "EXIT", TRUE ); }
-           | IN               { $$ = hb_compIdentifierNew( "IN", TRUE ); }
+           | LOOP             { $$ = "LOOP"; }
+           | EXIT             { $$ = "EXIT"; }
+           | IN               { $$ = "IN"; }
            | EXTERN           { $$ = $<string>1; }
            | ANNOUNCE         { $$ = $<string>1; }
            | LOCAL            { $$ = $<string>1; }
@@ -522,27 +506,27 @@ IdentName  : IDENTIFIER       { $$ = $1; }
 
 /* Numeric values
  */
-NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ); }
-           | NUM_INTEGER         { $$ = hb_compExprNewLong( $1.iNumber ); }
-           | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber ); }
+NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ); }
+           | NUM_INTEGER         { $$ = hb_compExprNewLong( $1.iNumber, HB_COMP_PARAM ); }
+           | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
-DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber );
+DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_PARAM );
                                    if( $1.lNumber == 0 )
                                    {
-                                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, $1.szValue, NULL );
+                                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, $1.szValue, NULL );
                                    }
                                   }
            ;
            
-NumAlias   : NUM_INTEGER ALIASOP      { $$ = hb_compExprNewLong( $1.iNumber ); }
-           | NUM_LONG    ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber ); }
-           | NUM_DOUBLE  ALIASOP      { $$ = hb_compErrorAlias( hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec ) ); }
+NumAlias   : NUM_INTEGER ALIASOP      { $$ = hb_compExprNewLong( $1.iNumber, HB_COMP_PARAM ); }
+           | NUM_LONG    ALIASOP      { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
+           | NUM_DOUBLE  ALIASOP      { $$ = hb_compErrorAlias( HB_COMP_PARAM, hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ) ); }
            ;
 
 /* NIL value
  */
-NilValue   : NIL                       { $$ = hb_compExprNewNil(); }
+NilValue   : NIL                       { $$ = hb_compExprNewNil( HB_COMP_PARAM ); }
 ;
 
 NilAlias   : NilValue ALIASOP          { $$ = $1; }
@@ -550,14 +534,10 @@ NilAlias   : NilValue ALIASOP          { $$ = $1; }
 
 /* Literal string value
  */
-LiteralValue : LITERAL         {
+LiteralValue : LITERAL        {
                                  ULONG len = strlen( $1 );
-                                 if( hb_pp_LiteralEscSeq )
-                                 {
-                                   hb_strRemEscSeq( $1, &len );
-                                 }
-                                 $$ = hb_compExprNewString( $1, len );
-                               }
+                                 $$ = hb_compExprNewString( $1, len, HB_COMP_PARAM );
+                              }
 ;
 
 LiteralAlias : LiteralValue ALIASOP       { $$ = $1; }
@@ -570,8 +550,8 @@ CodeBlockAlias : CodeBlock ALIASOP     { $$ = $1; }
 
 /* Logical value
  */
-Logical    : TRUEVALUE                    { $$ = hb_compExprNewLogical( TRUE ); }
-           | FALSEVALUE                   { $$ = hb_compExprNewLogical( FALSE ); }
+Logical    : TRUEVALUE                    { $$ = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); }
+           | FALSEVALUE                   { $$ = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); }
            ;
 
 LogicalAlias : Logical ALIASOP      { $$ = $1; }
@@ -579,7 +559,7 @@ LogicalAlias : Logical ALIASOP      { $$ = $1; }
 
 /* SELF value and expressions
  */
-SelfValue  : SELF             { $$ = hb_compExprNewSelf(); }
+SelfValue  : SELF             { $$ = hb_compExprNewSelf( HB_COMP_PARAM ); }
 ;
 
 SelfAlias  : SelfValue ALIASOP         { $$ = $1; }
@@ -587,7 +567,7 @@ SelfAlias  : SelfValue ALIASOP         { $$ = $1; }
 
 /* Literal array
  */
-Array      : '{' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_ARRAY;} ElemList '}'          { $$ = hb_compExprNewArray( $3 ); hb_comp_bPassByRef=$<bTrue>2; }
+Array      : '{' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_ARRAY;} ElemList '}'          { $$ = hb_compExprNewArray( $3, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>2; }
            ;
 
 ArrayAlias  : Array ALIASOP            { $$ = $1; }
@@ -603,16 +583,16 @@ ArrayAtAlias : ArrayAt ALIASOP      { $$ = $1; }
 
 /* Variables
  */
-Variable    : IdentName         { $$ = hb_compExprNewVar( $1 ); }
+Variable    : IdentName         { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
 ;
 
-VarAlias    : IdentName ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
+VarAlias    : IdentName ALIASOP      { $$ = hb_compExprNewAlias( $1, HB_COMP_PARAM ); }
 ;
 
 /* Macro variables
  */
-MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 ); }
-            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 ); }
+MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COMP_PARAM ); }
+            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1, HB_COMP_PARAM ); }
 ;
 
 MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
@@ -620,7 +600,7 @@ MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
 
 /* Macro expressions
  */
-MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, 0, NULL ); }
+MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, 0, NULL, HB_COMP_PARAM ); }
 ;
 
 MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
@@ -630,51 +610,51 @@ MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
  */
 /* special case: _FIELD-> and FIELD-> can be nested
  */
-FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( "FIELD" ); }
+FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( "FIELD", HB_COMP_PARAM ); }
             | FIELD ALIASOP FieldAlias    { $$ = $3; }
             ;
 
 /* ignore _FIELD-> or FIELD-> if a real alias is specified
  */
-FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1 ); $$ = $2; }
-               | FieldAlias NumAlias            { hb_compExprDelete( $1 ); $$ = $2; }
-               | FieldAlias PareExpListAlias    { hb_compExprDelete( $1 ); $$ = $2; }
-               | FieldAlias MacroVarAlias       { hb_compExprDelete( $1 ); $$ = $2; }
-               | FieldAlias MacroExprAlias      { hb_compExprDelete( $1 ); $$ = $2; }
-               | FieldAlias NilAlias            { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias LiteralAlias        { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias LogicalAlias        { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias CodeBlockAlias      { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias SelfAlias           { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias ArrayAlias          { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias ArrayAtAlias        { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
-               | FieldAlias IfInlineAlias       { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
+FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = $2; }
+               | FieldAlias NumAlias            { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = $2; }
+               | FieldAlias PareExpListAlias    { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = $2; }
+               | FieldAlias MacroVarAlias       { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = $2; }
+               | FieldAlias MacroExprAlias      { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = $2; }
+               | FieldAlias NilAlias            { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias LiteralAlias        { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias LogicalAlias        { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias CodeBlockAlias      { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias SelfAlias           { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias ArrayAlias          { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias ArrayAtAlias        { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias IfInlineAlias       { hb_compExprDelete( $1, HB_COMP_PARAM ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
                ;
 
-AliasId     : IdentName      { $$ = hb_compExprNewVar( $1 ); }
+AliasId     : IdentName       { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
             | MacroVar        { $$ = $1; }
             | MacroExpr       { $$ = $1; }
             ;
 
-AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | MacroVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | MacroExprAlias AliasId    { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | PareExpListAlias AliasId  { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | NilAlias AliasId          { $$ = hb_compErrorAlias( $1 ); }
-           | LiteralAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }
-           | LogicalAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }
-           | CodeBlockAlias AliasId    { $$ = hb_compErrorAlias( $1 ); }
-           | SelfAlias AliasId         { $$ = hb_compErrorAlias( $1 ); }
-           | ArrayAlias AliasId        { $$ = hb_compErrorAlias( $1 ); }
-           | ArrayAtAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | VariableAtAlias AliasId   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | IfInlineAlias AliasId     { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | FunCallAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | ObjectDataAlias AliasId   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | ObjectMethodAlias AliasId { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | VarAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | FieldAlias AliasId        { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | FieldVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | MacroVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | MacroExprAlias AliasId    { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | PareExpListAlias AliasId  { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | NilAlias AliasId          { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | LiteralAlias AliasId      { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | LogicalAlias AliasId      { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | CodeBlockAlias AliasId    { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | SelfAlias AliasId         { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | ArrayAlias AliasId        { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | ArrayAtAlias AliasId      { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | VariableAtAlias AliasId   { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | IfInlineAlias AliasId     { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | FunCallAlias AliasId      { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | ObjectDataAlias AliasId   { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | ObjectMethodAlias AliasId { $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | VarAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | FieldAlias AliasId        { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
+           | FieldVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
            ;
 
 /* Aliased expressions
@@ -683,12 +663,12 @@ AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); 
  * alias->( Expression )
  * alias always selects a workarea at runtime
  */
-AliasExpr  : NumAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
-           | VarAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
-           | MacroVarAlias PareExpList    { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
-           | MacroExprAlias PareExpList   { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
-           | PareExpListAlias PareExpList { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
-           | FieldAlias PareExpList       { $$ = hb_compErrorAlias( $2 ); } /* QUESTION: Clipper reports error here - we can handle it */
+AliasExpr  : NumAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2, HB_COMP_PARAM ); }
+           | VarAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2, HB_COMP_PARAM ); }
+           | MacroVarAlias PareExpList    { $$ = hb_compExprNewAliasExpr( $1, $2, HB_COMP_PARAM ); }
+           | MacroExprAlias PareExpList   { $$ = hb_compExprNewAliasExpr( $1, $2, HB_COMP_PARAM ); }
+           | PareExpListAlias PareExpList { $$ = hb_compExprNewAliasExpr( $1, $2, HB_COMP_PARAM ); }
+           | FieldAlias PareExpList       { $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); } /* QUESTION: Clipper reports error here - we can handle it */
            ;
 
 /* Array expressions access
@@ -715,15 +695,15 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunIdentCall: IdentName '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $4 ); hb_comp_bPassByRef=$<bTrue>3; }
+FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
            ;
            
 FunCall    : FunIdentCall  { $$ = $1; }
-           | MacroVar '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
-           | MacroExpr '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
+           | MacroVar '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+           | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
            ;
 
-ArgList    : EmptyExpression                     { $$ = hb_compExprNewArgList( $1 ); }
+ArgList    : EmptyExpression                     { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ArgList ',' EmptyExpression         { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
@@ -738,38 +718,38 @@ SendId      : IdentName      { $$.value.string = $1; $$.bMacro=FALSE; }
             | MacroExpr      { $$.value.macro  = $1; $$.bMacro=TRUE;  }
             ;
 
-ObjectData  : NumValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | NilValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | DateValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | LiteralValue ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | Variable ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | CodeBlock ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | Logical ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | SelfValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | Array ':' SendId           { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | ArrayAt ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | AliasVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | AliasExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | MacroVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | MacroExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | FunCall ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | IfInline ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | PareExpList ':' SendId     { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | VariableAt ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | ObjectMethod ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | ObjectData ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro ) : hb_compExprNewSend( $1, $3.value.string, NULL )); }
-            | ':' SendId                 { if( hb_comp_wWithObjectCnt == 0 ) 
-                                             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
-                                           $$ = ($2.bMacro ? hb_compExprNewSend( NULL, NULL, $2.value.macro ) : hb_compExprNewSend( NULL, $2.value.string, NULL ));
+ObjectData  : NumValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | NilValue ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | DateValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | LiteralValue ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | Variable ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | CodeBlock ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | Logical ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | SelfValue ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | Array ':' SendId           { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | ArrayAt ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | AliasVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | AliasExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | MacroVar ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | MacroExpr ':' SendId       { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | FunCall ':' SendId         { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | IfInline ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | PareExpList ':' SendId     { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | VariableAt ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | ObjectMethod ':' SendId    { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | ObjectData ':' SendId      { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | ':' SendId                 { if( HB_COMP_PARAM->wWithObjectCnt == 0 ) 
+                                             hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
+                                           $$ = ($2.bMacro ? hb_compExprNewSend( NULL, NULL, $2.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( NULL, $2.value.string, NULL, HB_COMP_PARAM ));
                                          }
             ;
 
-ObjectDataAlias : ObjectData ALIASOP         { $$ = $1; }
+ObjectDataAlias : ObjectData ALIASOP            { $$ = $1; }
 ;
 
 /* Object's method
  */
-ObjectMethod : ObjectData '(' {$<bTrue>$=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); hb_comp_bPassByRef=$<bTrue>3; }
+ObjectMethod : ObjectData '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
             ;
 
 ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
@@ -788,7 +768,7 @@ SimpleExpression :
            | CodeBlock                        { $$ = $1; }
            | Logical                          { $$ = $1; }
            | SelfValue                        { $$ = $1; }
-           | SelfValue    {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | SelfValue    {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | Array                            { $$ = $1; }
            | ArrayAt                          { $$ = $1; }
            | AliasVar                         { $$ = $1; }
@@ -796,12 +776,12 @@ SimpleExpression :
            | MacroExpr                        { $$ = $1; }
            | VariableAt                       { $$ = $1; }
            | FunCall                          { $$ = $1; }
-           | FunCall      {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | FunCall      {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | IfInline                         { $$ = $1; }
            | ObjectData                       { $$ = $1; }
-           | ObjectData   {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | ObjectData   {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | ObjectMethod                     { $$ = $1; }
-           | ObjectMethod {hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
+           | ObjectMethod {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | AliasExpr                        { $$ = $1; }
            | ExprAssign                       { $$ = $1; }
            | ExprOperEq                       { $$ = $1; }
@@ -816,20 +796,20 @@ SimpleExpression :
 Expression : Variable         { $$ = $1; }
            | SimpleExpression { $$ = $1; }
            | PareExpList      { $$ = $1; }
-           | Variable         { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
-           | PareExpList      { hb_comp_cVarType = ' ';} StrongType { $$ = $1; }
-           | '@' IdentName    { $$ = hb_compCheckPassByRef( hb_compExprNewVarRef( $2 ) ); }
-           | '@' FunIdentCall { int bPassByRef=hb_comp_bPassByRef;hb_comp_bPassByRef=HB_PASSBYREF_FUNCALL;$<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2 ); $$ = hb_compCheckPassByRef( hb_compExprNewFunRef( $<string>$ ) ); hb_comp_bPassByRef=bPassByRef; }
-           | '@' MacroVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
-           | '@' AliasVar     { $$ = hb_compCheckPassByRef( hb_compExprNewRef( $2 ) ); }
-           | '@' ObjectData   { $$ = hb_compExprNewRef( $2 ); }
+           | Variable         { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | PareExpList      { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | '@' IdentName    { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( $2, HB_COMP_PARAM ) ); }
+           | '@' FunIdentCall { int bPassByRef=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;$<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2, HB_COMP_PARAM ); $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewFunRef( $<string>$, HB_COMP_PARAM ) ); HB_COMP_PARAM->iPassByRef=bPassByRef; }
+           | '@' MacroVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+           | '@' AliasVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+           | '@' ObjectData   { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
            ;
 
-EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }
+EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty( HB_COMP_PARAM ); }
            | Expression
            ;
 
-LValue      : IdentName                     { $$ = hb_compExprNewVar( $1 ); }
+LValue      : IdentName                     { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
             | AliasVar
             | MacroVar
             | MacroExpr
@@ -841,8 +821,8 @@ LValue      : IdentName                     { $$ = hb_compExprNewVar( $1 ); }
 /* NOTE: PostOp can be used in one context only - it uses $0 rule
  *    (the rule that stands before PostOp)
  */
-PostOp      : INC    { $$ = hb_compExprNewPostInc( $<asExpr>0 ); }
-            | DEC    { $$ = hb_compExprNewPostDec( $<asExpr>0 ); }
+PostOp      : INC    { $$ = hb_compExprNewPostInc( $<asExpr>0, HB_COMP_PARAM ); }
+            | DEC    { $$ = hb_compExprNewPostDec( $<asExpr>0, HB_COMP_PARAM ); }
             ;
 
 /* NOTE: The rule: Expression Operator Expression
@@ -870,186 +850,186 @@ ExprPostOp  : NumValue     PostOp %prec POST  { $$ = $2; }
             | ObjectMethod PostOp %prec POST  { $$ = $2; }
             ;
 
-ExprPreOp   : INC Expression  %prec PRE      { $$ = hb_compExprNewPreInc( $2 ); }
-            | DEC Expression  %prec PRE      { $$ = hb_compExprNewPreDec( $2 ); }
+ExprPreOp   : INC Expression  %prec PRE      { $$ = hb_compExprNewPreInc( $2, HB_COMP_PARAM ); }
+            | DEC Expression  %prec PRE      { $$ = hb_compExprNewPreDec( $2, HB_COMP_PARAM ); }
             ;
 
-ExprUnary   : NOT Expression                 { $$ = hb_compExprNewNot( $2 ); }
-            | '-' Expression  %prec UNARY    { $$ = hb_compExprNewNegate( $2 ); }
+ExprUnary   : NOT Expression                 { $$ = hb_compExprNewNot( $2, HB_COMP_PARAM ); }
+            | '-' Expression  %prec UNARY    { $$ = hb_compExprNewNegate( $2, HB_COMP_PARAM ); }
             | '+' Expression  %prec UNARY    { $$ = $2; }
             ;
 /*
-ExprAssign  : Expression INASSIGN Expression    { $$ = hb_compExprAssign( $1, $3 ); }
+ExprAssign  : Expression INASSIGN Expression    { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
 ;
 */
 
-ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | NilValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | LiteralValue INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | CodeBlock    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | Logical      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | SelfValue    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | Array        INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | ArrayAt      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
-            | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | MacroExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | AliasVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
-            | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
-            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); hb_comp_cCastType = hb_comp_cVarType; hb_comp_cVarType = ' ';}
-            | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3 ); }
+ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | NilValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | LiteralValue INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | CodeBlock    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Logical      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | SelfValue    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Array        INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ArrayAt      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
+            | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | MacroExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
+            | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
+            | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
-ExprEqual   : NumValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | NilValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | DateValue    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | LiteralValue '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | CodeBlock    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | Logical      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | SelfValue    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | Array        '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | ArrayAt      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | Variable     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | MacroVar     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | MacroExpr    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | AliasVar     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | AliasExpr    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | VariableAt   '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | PareExpList  '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | IfInline     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | FunCall      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | ObjectData   '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
-            | ObjectMethod '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3 ); }
+ExprEqual   : NumValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | NilValue     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | DateValue    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | LiteralValue '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | CodeBlock    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Logical      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | SelfValue    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Array        '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ArrayAt      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Variable     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | MacroVar     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | MacroExpr    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasVar     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | AliasExpr    '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | VariableAt   '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | PareExpList  '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | IfInline     '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | FunCall      '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ObjectData   '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | ObjectMethod '=' Expression %prec INASSIGN  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
-ExprPlusEq  : NumValue     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | NilValue     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | LiteralValue PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | CodeBlock    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | Logical      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | SelfValue    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | Array        PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | ArrayAt      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | Variable     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | MacroVar     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | MacroExpr    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | AliasVar     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | AliasExpr    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | VariableAt   PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | PareExpList  PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | IfInline     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | FunCall      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | ObjectData   PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
-            | ObjectMethod PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1 ), $3 ); }
+ExprPlusEq  : NumValue     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod PLUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprMinusEq : NumValue     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | NilValue     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | LiteralValue MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | CodeBlock    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | Logical      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | SelfValue    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | Array        MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | ArrayAt      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | Variable     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | MacroVar     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | MacroExpr    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | AliasVar     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | AliasExpr    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | VariableAt   MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | PareExpList  MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | IfInline     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | FunCall      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | ObjectData   MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
-            | ObjectMethod MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1 ), $3 ); }
+ExprMinusEq : NumValue     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod MINUSEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinusEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprMultEq  : NumValue     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | NilValue     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | LiteralValue MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | CodeBlock    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | Logical      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | SelfValue    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | Array        MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | ArrayAt      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | Variable     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | MacroVar     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | MacroExpr    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | AliasVar     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | AliasExpr    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | VariableAt   MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | PareExpList  MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | IfInline     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | FunCall      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | ObjectData   MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
-            | ObjectMethod MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1 ), $3 ); }
+ExprMultEq  : NumValue     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod MULTEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMultEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprDivEq   : NumValue     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | NilValue     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | LiteralValue DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | CodeBlock    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | Logical      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | SelfValue    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | Array        DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | ArrayAt      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | Variable     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | MacroVar     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | MacroExpr    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | AliasVar     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | AliasExpr    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | VariableAt   DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | PareExpList  DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | IfInline     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | FunCall      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | ObjectData   DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
-            | ObjectMethod DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1 ), $3 ); }
+ExprDivEq   : NumValue     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod DIVEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDivEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprModEq   : NumValue     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | NilValue     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | LiteralValue MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | CodeBlock    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | Logical      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | SelfValue    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | Array        MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | ArrayAt      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | Variable     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | MacroVar     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | MacroExpr    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | AliasVar     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | AliasExpr    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | VariableAt   MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | PareExpList  MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | IfInline     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | FunCall      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | ObjectData   MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
-            | ObjectMethod MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1 ), $3 ); }
+ExprModEq   : NumValue     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod MODEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewModEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprExpEq   : NumValue     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | NilValue     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | LiteralValue EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | CodeBlock    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | Logical      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | SelfValue    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | Array        EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | ArrayAt      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | Variable     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | MacroVar     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | MacroExpr    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | AliasVar     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | AliasExpr    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | VariableAt   EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | PareExpList  EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | IfInline     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | FunCall      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | ObjectData   EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
-            | ObjectMethod EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1 ), $3 ); }
+ExprExpEq   : NumValue     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | NilValue     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | LiteralValue EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | CodeBlock    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Logical      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | SelfValue    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Array        EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ArrayAt      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Variable     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroVar     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | MacroExpr    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasVar     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | AliasExpr    EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | VariableAt   EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | PareExpList  EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | IfInline     EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | FunCall      EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectData   EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | ObjectMethod EXPEQ Expression   { $$ = hb_compExprSetOperand( hb_compExprNewExpEq( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
 ExprOperEq  : ExprPlusEq        { $$ = $1; }
@@ -1060,27 +1040,27 @@ ExprOperEq  : ExprPlusEq        { $$ = $1; }
             | ExprExpEq         { $$ = $1; }
             ;
 
-ExprMath    : Expression '+' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewPlus( $1 ), $3 ); }
-            | Expression '-' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMinus( $1 ), $3 ); }
-            | Expression '*' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMult( $1 ), $3 ); }
-            | Expression '/' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewDiv( $1 ), $3 ); }
-            | Expression '%' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMod( $1 ), $3 ); }
-            | Expression POWER Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPower( $1 ), $3 ); }
+ExprMath    : Expression '+' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewPlus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '-' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMinus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '*' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMult( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '/' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewDiv( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '%' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMod( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression POWER Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPower( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprBool    : Expression AND Expression   { $$ = hb_compExprSetOperand( hb_compExprNewAnd( $1 ), $3 ); }
-            | Expression OR  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewOr( $1 ), $3 ); }
+ExprBool    : Expression AND Expression   { $$ = hb_compExprSetOperand( hb_compExprNewAnd( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression OR  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewOr( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ExprRelation: Expression EQ  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewEQ( $1 ), $3 ); }
-            | Expression '<' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewLT( $1 ), $3 ); }
-            | Expression '>' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewGT( $1 ), $3 ); }
-            | Expression LE  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewLE( $1 ), $3 ); }
-            | Expression GE  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewGE( $1 ), $3 ); }
-            | Expression NE1 Expression   { $$ = hb_compExprSetOperand( hb_compExprNewNE( $1 ), $3 ); }
-            | Expression NE2 Expression   { $$ = hb_compExprSetOperand( hb_compExprNewNE( $1 ), $3 ); }
-            | Expression '$' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewIN( $1 ), $3 ); }
-            | Expression '=' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewEqual( $1 ), $3 ); }
+ExprRelation: Expression EQ  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewEQ( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '<' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewLT( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '>' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewGT( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression LE  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewLE( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression GE  Expression   { $$ = hb_compExprSetOperand( hb_compExprNewGE( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression NE1 Expression   { $$ = hb_compExprSetOperand( hb_compExprNewNE( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression NE2 Expression   { $$ = hb_compExprSetOperand( hb_compExprNewNE( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '$' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewIN( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '=' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewEqual( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
 ArrayIndex : IndexList ']'                   { $$ = $1; }
@@ -1089,18 +1069,18 @@ ArrayIndex : IndexList ']'                   { $$ = $1; }
 /* NOTE: $0 represents the expression before ArrayIndex
  *    Don't use ArrayIndex in other context than as an array index!
  */
-IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2 ); }
-           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3 ); }
-           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 ); }
+IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
+           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
+           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
-ElemList   : EmptyExpression                { $$ = hb_compExprNewList( $1 ); }
+ElemList   : EmptyExpression                { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
            | ElemList ',' EmptyExpression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock($1.string,$1.isMacro,$1.lateEval); } BlockNoVar
+CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.isMacro, $1.lateEval, HB_COMP_PARAM ); } BlockNoVar
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
-           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock($1.string,$1.isMacro,$1.lateEval); } BlockVarList
+           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.isMacro, $1.lateEval, HB_COMP_PARAM ); } BlockVarList
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
            ;
 
@@ -1116,8 +1096,8 @@ BlockExpList : Expression                { $$ = hb_compExprAddCodeblockExpr( $<a
 BlockNoVar : /* empty list */    { $$ = NULL; }
 ;
 
-BlockVarList : IdentName AsType                 { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, hb_comp_cVarType ); hb_comp_cVarType = ' '; }
-           | BlockVarList ',' IdentName AsType  { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, hb_comp_cVarType ); hb_comp_cVarType = ' '; }
+BlockVarList : IdentName AsType                 { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+           | BlockVarList ',' IdentName AsType  { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
            ;
 
 /* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
@@ -1148,7 +1128,7 @@ PareExpList : PareExpList1        { $$ = $1; }
 PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
 ;
 
-ExpList1   : '(' EmptyExpression             { $$ = hb_compExprNewList( $2 ); }
+ExpList1   : '(' EmptyExpression             { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
 ;
 
 ExpList2   : ExpList1 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
@@ -1161,23 +1141,23 @@ ExpList    : ExpList3 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, 
            | ExpList  ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2 ); }
+IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2, HB_COMP_PARAM ); }
            | IF  ExpList1 ',' EmptyExpression ','
              { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
              EmptyExpression ')'
-             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ) ); }
+             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ), HB_COMP_PARAM ); }
            ;
 
 IfInlineAlias : IfInline ALIASOP      { $$ = $1; }
 ;
 
-VarDefs    : LOCAL { hb_comp_iVarScope = VS_LOCAL; hb_compLinePush(); } VarList Crlf { hb_comp_cVarType = ' '; }
-           | STATIC { hb_comp_iVarScope = VS_STATIC; hb_compLinePush(); } VarList Crlf { hb_comp_cVarType = ' '; }
-           | PARAMETERS { if( hb_comp_functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
-                             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
+VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); } VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); } VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
+                             hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                           else
-                             hb_comp_functions.pLast->wParamNum=0; hb_comp_iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
-                             MemvarList Crlf { hb_comp_iVarScope = VS_NONE; }
+                             HB_COMP_PARAM->functions.pLast->wParamNum=0; HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
+                             MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -1195,71 +1175,71 @@ ExtVarList : ExtVarDef                               { $$ = 1; }
  */
 ExtVarDef  : VarDef
            | MacroVar AsType
-               { hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), FALSE ); }
+               { hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), FALSE ); }
            | MacroVar AsType INASSIGN Expression
-               { hb_compExprDelete( hb_compExprGenPush( $4 ) );
-                 hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+               { hb_compExprDelete( hb_compExprGenPush( $4, HB_COMP_PARAM ), HB_COMP_PARAM );
+                 hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
                }
            | MacroVar DimList
                {
                   USHORT uCount = (USHORT) hb_compExprListLen( $2 );
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
-                  hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+                  hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
                }
            | MacroVar DimList AsArray
                {
                   USHORT uCount = (USHORT) hb_compExprListLen( $2 );
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
-                  hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
+                  hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
                }
            ;
 
-VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
+VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
                {
-                  if( hb_comp_iVarScope == VS_STATIC )
+                  if( HB_COMP_PARAM->iVarScope == VS_STATIC )
                   {
-                     hb_compStaticDefStart();   /* switch to statics pcode buffer */
-                     hb_compStaticDefEnd();
-                     hb_compGenStaticName( $1 );
+                     hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
+                     hb_compStaticDefEnd( HB_COMP_PARAM );
+                     hb_compGenStaticName( $1, HB_COMP_PARAM );
                   }
-                  else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
                   {
-                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), FALSE );
+                     hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), FALSE );
                   }
                }
 
-           | IdentName AsType { $<iNumber>$ = hb_comp_iVarScope;
-                                hb_compVariableAdd( $1, hb_comp_cVarType );
+           | IdentName AsType { $<iNumber>$ = HB_COMP_PARAM->iVarScope;
+                                hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType );
                               }
-             INASSIGN {hb_comp_cVarType = ' ';} Expression
+             INASSIGN {HB_COMP_PARAM->cVarType = ' ';} Expression
                {
-                  hb_comp_cCastType = hb_comp_cVarType;
-                  hb_comp_cVarType = ' ';
+                  HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
+                  HB_COMP_PARAM->cVarType = ' ';
 
-                  hb_comp_iVarScope = $<iNumber>3;
-                  if( hb_comp_iVarScope == VS_STATIC )
+                  HB_COMP_PARAM->iVarScope = $<iNumber>3;
+                  if( HB_COMP_PARAM->iVarScope == VS_STATIC )
                   {
-                     hb_compStaticDefStart();   /* switch to statics pcode buffer */
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $6 ) ) );
-                     hb_compStaticDefEnd();
-                     hb_compGenStaticName( $1 );
+                     hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1, HB_COMP_PARAM ), $6, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     hb_compStaticDefEnd( HB_COMP_PARAM );
+                     hb_compGenStaticName( $1, HB_COMP_PARAM );
                   }
-                  else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+                  else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
                   {
-                     hb_compExprDelete( hb_compExprGenPush( $6 ) );
-                     hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
+                     hb_compExprDelete( hb_compExprGenPush( $6, HB_COMP_PARAM ), HB_COMP_PARAM );
+                     hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), TRUE );
                   }
                   else
                   {
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $6 ) ) );
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1, HB_COMP_PARAM ), $6, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
                   }
-                  hb_comp_iVarScope = $<iNumber>3;
+                  HB_COMP_PARAM->iVarScope = $<iNumber>3;
                }
 
-           | IdentName DimList          { hb_compVariableDim( $1, $2 ); }
-           | IdentName DimList AsArray  { hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList          { hb_compVariableDim( $1, $2, HB_COMP_PARAM ); }
+           | IdentName DimList AsArray  { hb_compVariableDim( $1, $2, HB_COMP_PARAM ); }
            ;
 
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList
@@ -1268,54 +1248,54 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
 DimList    : DimIndex ']'                   { $$ = $1; }
            ;
 
-DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2 ); }
+DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2, HB_COMP_PARAM ); }
            | DimIndex ',' Expression      { $$ = hb_compExprAddListExpr( $1, $3 ); }
            | DimIndex ']' '[' Expression  { $$ = hb_compExprAddListExpr( $1, $4 ); }
            ;
 
 
-FieldsDef  : FIELD { hb_comp_iVarScope = VS_FIELD; } FieldList Crlf { hb_comp_cVarType = ' '; }
+FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = VS_FIELD; } FieldList Crlf { HB_COMP_PARAM->cVarType = ' '; }
            ;
 
-FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, hb_comp_cVarType ); }
-           | FieldList ',' IdentName AsType { hb_compVariableAdd( $3, hb_comp_cVarType ); }
-           | FieldList IN IdentName { hb_compFieldSetAlias( $3, $<iNumber>1 ); }
+FieldList  : IdentName AsType               { $$=hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+           | FieldList ',' IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+           | FieldList IN IdentName { hb_compFieldSetAlias( HB_COMP_PARAM, $3, $<iNumber>1 ); }
            ;
 
-MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf { hb_comp_cVarType = ' '; }
+MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = VS_MEMVAR; } MemvarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
            ;
 
-MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_comp_cVarType ); }
-           | MemvarList ',' IdentName AsType      { hb_compVariableAdd( $3, hb_comp_cVarType ); }
+MemvarList : IdentName AsType                     { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+           | MemvarList ',' IdentName AsType      { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
            ;
 
-Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecList ')' AsType Crlf
+Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB_COMP_PARAM->szDeclaredFun = $2; } DecList ')' AsType Crlf
              {
-               if( hb_comp_pLastDeclared )
+               if( HB_COMP_PARAM->pLastDeclared )
                {
-                 hb_comp_pLastDeclared->cType = hb_comp_cVarType;
+                 HB_COMP_PARAM->pLastDeclared->cType = HB_COMP_PARAM->cVarType;
 
-                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
                  {
-                   hb_comp_pLastDeclared->pClass = hb_compClassFind( hb_comp_szFromClass );
-                   if( ! hb_comp_pLastDeclared->pClass )
+                   HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                   if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
-                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastDeclared->szName );
-                     hb_comp_pLastDeclared->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' : 'o' );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
                    }
 
                    /* Resetting */
-                   hb_comp_szFromClass = NULL;
+                   HB_COMP_PARAM->szFromClass = NULL;
                  }
                }
-               hb_comp_szDeclaredFun = NULL;
-               hb_comp_cVarType = ' ';
-               hb_comp_iVarScope = VS_NONE;
+               HB_COMP_PARAM->szDeclaredFun = NULL;
+               HB_COMP_PARAM->cVarType = ' ';
+               HB_COMP_PARAM->iVarScope = VS_NONE;
              }
-           | DECLARE IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
-           | DECLARE_CLASS IdentName Crlf { hb_comp_pLastClass = hb_compClassAdd( $2 ); hb_comp_iVarScope = VS_NONE; }
-           | DECLARE_MEMBER DecMethod Crlf { hb_comp_iVarScope = VS_NONE; }
-           | DECLARE_MEMBER '{' AsType { hb_comp_cDataListType = hb_comp_cVarType; } DecDataList '}' Crlf { hb_comp_cDataListType = 0; hb_comp_iVarScope = VS_NONE; }
+           | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2 ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2 ); HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_MEMBER DecMethod Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = HB_COMP_PARAM->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
 
 DecDataList: DecData
@@ -1328,47 +1308,47 @@ ClassInfo  : DecMethod
            | ClassInfo DecData
            ;
 
-DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType
+DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, $1 ); } DecList ')' AsType
              {
-               if( hb_comp_pLastMethod )
+               if( HB_COMP_PARAM->pLastMethod )
                {
-                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
-                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
                  {
-                   hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szFromClass );
-                   if( ! hb_comp_pLastMethod->pClass )
+                   HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                   if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
-                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-                     hb_comp_pLastMethod->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' : 'o' );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
+                     HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
                    }
 
-                   hb_comp_szFromClass = NULL;
+                   HB_COMP_PARAM->szFromClass = NULL;
                  }
                }
-               hb_comp_pLastMethod = NULL;
-               hb_comp_cVarType = ' ';
+               HB_COMP_PARAM->pLastMethod = NULL;
+               HB_COMP_PARAM->cVarType = ' ';
              }
            ;
 
-DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType
+DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, $1 ); } AsType
              {
-               if( hb_comp_pLastMethod )
+               if( HB_COMP_PARAM->pLastMethod )
                {
                  PCOMCLASS pClass;
                  char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
 
                  /* List Type overrides if exists. */
-                 if( hb_comp_cDataListType ) hb_comp_cVarType = hb_comp_cDataListType;
+                 if( HB_COMP_PARAM->cDataListType ) HB_COMP_PARAM->cVarType = HB_COMP_PARAM->cDataListType;
 
-                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
-                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
                  {
-                   pClass = hb_compClassFind( hb_comp_szFromClass );
-                   hb_comp_pLastMethod->pClass = pClass;
-                   if( ! hb_comp_pLastMethod->pClass )
+                   pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                   HB_COMP_PARAM->pLastMethod->pClass = pClass;
+                   if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
-                     hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szFromClass, hb_comp_pLastMethod->szName );
-                     hb_comp_pLastMethod->cType = ( isupper(  ( int ) hb_comp_cVarType ) ? 'O' :'o' );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
+                     HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
                    }
                  }
                  else
@@ -1376,25 +1356,25 @@ DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastCl
 
                  sprintf( szSetData, "_%s", $1 );
 
-                 hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, szSetData );
-                 hb_comp_pLastMethod->cType = hb_comp_cVarType;
-                 hb_comp_pLastMethod->iParamCount = 1;
+                 HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, szSetData );
+                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                 HB_COMP_PARAM->pLastMethod->iParamCount = 1;
 
-                 hb_comp_pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-                 hb_comp_pLastMethod->cParamTypes[0] = hb_comp_cVarType;
+                 HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+                 HB_COMP_PARAM->pLastMethod->cParamTypes[0] = HB_COMP_PARAM->cVarType;
 
-                 hb_comp_pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
-                 hb_comp_pLastMethod->pParamClasses[0] = pClass;
+                 HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+                 HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                 if ( toupper( hb_comp_cVarType ) == 'S' )
+                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
                  {
-                   hb_comp_pLastMethod->pClass = pClass;
-                   hb_comp_szFromClass = NULL;
+                   HB_COMP_PARAM->pLastMethod->pClass = pClass;
+                   HB_COMP_PARAM->szFromClass = NULL;
                  }
                }
 
-               hb_comp_pLastMethod = NULL;
-               hb_comp_cVarType = ' ';
+               HB_COMP_PARAM->pLastMethod = NULL;
+               HB_COMP_PARAM->cVarType = ' ';
              }
            ;
 
@@ -1414,20 +1394,20 @@ DummyArgument : EmptyExpression                    {}
               | '@' IdentName                      {}
               | '@' IdentName '(' DummyArgList ')' {}
 */
-FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( $1, hb_comp_cVarType ); }
-           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( $2, 'F' );  hb_compExprDelete( $<asExpr>4 );}
-           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType ); }
-           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
-           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $4, 'F' ); hb_compExprDelete( $<asExpr>6 ); }
+FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); }
+           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, 'F' );  hb_compExprDelete( $<asExpr>4, HB_COMP_PARAM );}
+           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); }
+           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, 'F' ); hb_compExprDelete( $<asExpr>6, HB_COMP_PARAM ); }
            ;
 
-OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( $2, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
-           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); }
+           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
            ;
 
 ExecFlow   : IfEndif
@@ -1439,10 +1419,10 @@ ExecFlow   : IfEndif
            | DoSwitch
            ;
 
-IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
-           | IfBegin IfElse EndIf             { hb_compGenJumpHere( $1 ); }
-           | IfBegin IfElseIf EndIf           { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
-           | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1 ); hb_compElseIfFix( $2 ); }
+IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1, HB_COMP_PARAM ); }
+           | IfBegin IfElse EndIf             { hb_compGenJumpHere( $1, HB_COMP_PARAM ); }
+           | IfBegin IfElseIf EndIf           { hb_compGenJumpHere( $1, HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
+           | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1, HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
            ;
 
 EmptyStatements : LineStat             { $<lNumber>$ = $<lNumber>1; }
@@ -1453,59 +1433,59 @@ EmptyStats : /* empty */           { $<lNumber>$ = 0; }
            | EmptyStatements       { $<lNumber>$ = $<lNumber>1; }
            ;
 
-IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
+IfBegin    : IF SimpleExpression { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
-                { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
+                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF Variable { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
+           | IF Variable { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
-                { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
+                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpList1 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
+           | IF PareExpList1 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
-                { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
+                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpList2 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
+           | IF PareExpList2 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
-                { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
+                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpListN { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
+           | IF PareExpListN { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
-                { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
+                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
            ;
 
-IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
 
-IfElseIf   : ELSEIF { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); } 
+IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); } 
                 Expression Crlf
-                { hb_compExprDelete( hb_compExprGenPush( $3 ) );
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
+                { hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 }
                 EmptyStats
-                { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>5 );
+                { $$ = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
+                  hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM );
                 }
 
-           | IfElseIf ELSEIF { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); } 
+           | IfElseIf ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); } 
                 Expression Crlf
-                { hb_compExprDelete( hb_compExprGenPush( $4 ) );
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
+                { hb_compExprDelete( hb_compExprGenPush( $4, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 }
                 EmptyStats
-                { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>6 );
+                { $$ = hb_compElseIfGen( HB_COMP_PARAM, $1, hb_compGenJump( 0, HB_COMP_PARAM ) );
+                  hb_compGenJumpHere( $<iNumber>6, HB_COMP_PARAM );
                 }
            ;
 
-EndIf      : ENDIF    { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
-           | END      { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+EndIf      : ENDIF    { --HB_COMP_PARAM->wIfCounter; HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+           | END      { --HB_COMP_PARAM->wIfCounter; HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
            ;
 
 DoCase     : DoCaseBegin
                 Cases
-             EndCase                  { hb_compElseIfFix( $2 ); }
+             EndCase                  { hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
 
            | DoCaseBegin
                 Otherwise
@@ -1517,112 +1497,112 @@ DoCase     : DoCaseBegin
            | DoCaseBegin
                 Cases
                 Otherwise
-             EndCase                   { hb_compElseIfFix( $2 ); }
+             EndCase                   { hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
            ;
 
 EndCase    : ENDCASE
-               { --hb_comp_wCaseCounter;
-                  hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               { --HB_COMP_PARAM->wCaseCounter;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 }
            | END
-               { --hb_comp_wCaseCounter;
-                  hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               { --HB_COMP_PARAM->wCaseCounter;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
 
-DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; hb_compLinePushIfDebugger();} Crlf
+DoCaseStart : DOCASE { ++HB_COMP_PARAM->wCaseCounter; hb_compLinePushIfDebugger( HB_COMP_PARAM );} Crlf
             ;
 
 DoCaseBegin : DoCaseStart            { }
             | DoCaseStart Statements {
                         if( $<lNumber>2 > 0 )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                         }
                      }
            ;
 
-Cases      : CASE { hb_compLinePush(); } Expression Crlf
+Cases      : CASE { hb_compLinePush( HB_COMP_PARAM ); } Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $3 ) );
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
+                  hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
              EmptyStats
                {
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>5 );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  $$ = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
+                  hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM );
                }
 
-           | Cases CASE { hb_compLinePush(); } Expression Crlf
+           | Cases CASE { hb_compLinePush( HB_COMP_PARAM ); } Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $4 ) );
-                  $<iNumber>$ = hb_compGenJumpFalse( 0 );
+                  hb_compExprDelete( hb_compExprGenPush( $4, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
              EmptyStats
                {
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>6 );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  $$ = hb_compElseIfGen( HB_COMP_PARAM, $1, hb_compGenJump( 0, HB_COMP_PARAM ) );
+                  hb_compGenJumpHere( $<iNumber>6, HB_COMP_PARAM );
                }
            ;
 
-Otherwise  : OTHERWISE {hb_compLinePushIfDebugger(); } Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+Otherwise  : OTHERWISE {hb_compLinePushIfDebugger( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
-           | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
+           | Otherwise OTHERWISE { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats
            ;
 
 DoWhile    : WhileBegin Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  $<lNumber>$ = hb_compGenJumpFalse( 0 );
+                  hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $<lNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 }
              EmptyStats
                {
-                  hb_compLoopHere();
-                  hb_compGenJump( $1 - hb_comp_functions.pLast->lPCodePos );
+                  hb_compLoopHere( HB_COMP_PARAM );
+                  hb_compGenJump( $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                }
              EndWhile
                {
-                  hb_compGenJumpHere( $<lNumber>4 ); --hb_comp_wWhileCounter;
-                  hb_compLoopEnd();
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                  hb_compGenJumpHere( $<lNumber>4, HB_COMP_PARAM ); --HB_COMP_PARAM->wWhileCounter;
+                  hb_compLoopEnd( HB_COMP_PARAM );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                 }
            ;
 
-WhileBegin : WHILE    { $$ = hb_comp_functions.pLast->lPCodePos; hb_compLinePushIfInside(); ++hb_comp_wWhileCounter; hb_compLoopStart(); }
+WhileBegin : WHILE    { $$ = HB_COMP_PARAM->functions.pLast->lPCodePos; hb_compLinePushIfInside( HB_COMP_PARAM ); ++HB_COMP_PARAM->wWhileCounter; hb_compLoopStart( HB_COMP_PARAM ); }
            ;
 
-EndWhile   : END   { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
-           | ENDDO { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+EndWhile   : END   { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+           | ENDDO { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
            ;
 
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
-                  hb_compLinePush();
+                  hb_compLinePush( HB_COMP_PARAM );
                   hb_compDebugStart();
-                  ++hb_comp_wForCounter;              /* 5 */
-                  $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4 ) );
+                  ++HB_COMP_PARAM->wForCounter;              /* 5 */
+                  $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4, HB_COMP_PARAM ), HB_COMP_PARAM );
                   if( hb_compExprAsSymbol($<asExpr>2) )
                   {
-                     hb_compForStart( hb_compExprAsSymbol($<asExpr>2), FALSE );
+                     hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol($<asExpr>2), FALSE );
                   }
                }
              TO Expression StepExpr                   /* 6  7  8 */
                {
-                  hb_compLoopStart();
-                  $<lNumber>$ = hb_compGenJump( 0 );  /* 9 */
+                  hb_compLoopStart( HB_COMP_PARAM );
+                  $<lNumber>$ = hb_compGenJump( 0, HB_COMP_PARAM );  /* 9 */
                }
              Crlf                                     /* 10 */
                {
-                  $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;  /* 11 */
+                  $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* 11 */
                }
              ForStatements                            /* 12 */
                {
                   short iStep, iLocal;
 
-                  hb_compLoopHere();
+                  hb_compLoopHere( HB_COMP_PARAM );
 
                   if( $<asExpr>8 )
                   {
@@ -1636,42 +1616,42 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      iStep = 1;
                   }
 
-                  if( iStep && ( iLocal = hb_compLocalGetPos( hb_compExprAsSymbol($<asExpr>2) ) ) > 0 && iLocal < 256 )
+                  if( iStep && ( iLocal = hb_compLocalGetPos( HB_COMP_PARAM, hb_compExprAsSymbol($<asExpr>2) ) ) > 0 && iLocal < 256 )
                   {
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), ( BOOL ) 0 );
+                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), HB_COMP_PARAM );
                   }
                   else if( $<asExpr>8 )
                   {
-                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2 ), $<asExpr>8 ) ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2, HB_COMP_PARAM ), $<asExpr>8, HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
                   else
                   {
-                     hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2 ) ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
 
-                  hb_compGenJumpHere( $<lNumber>9 );
+                  hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
 
-                  hb_compExprGenPush( $2 );              /* counter */
-                  hb_compExprGenPush( $7 );              /* end */
+                  hb_compExprGenPush( $2, HB_COMP_PARAM );              /* counter */
+                  hb_compExprGenPush( $7, HB_COMP_PARAM );              /* end */
                   if( $<asExpr>8 )
                   {
-                     hb_compExprGenPush( $<asExpr>8 );   /* step */
-                     hb_compGenPCode1( HB_P_FORTEST );
+                     hb_compExprGenPush( $<asExpr>8, HB_COMP_PARAM );   /* step */
+                     hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
                   else
-                     hb_compGenPCode1( HB_P_GREATER );
+                     hb_compGenPCode1( HB_P_GREATER, HB_COMP_PARAM );
 
-                  hb_compGenJumpFalse( $<lNumber>11 - hb_comp_functions.pLast->lPCodePos );
-                  hb_compLoopEnd();
+                  hb_compGenJumpFalse( $<lNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol($<asExpr>2) )
                   {
-                     hb_compForEnd( hb_compExprAsSymbol($<asExpr>2) );
+                     hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol($<asExpr>2) );
                   }
-                  hb_compExprDelete( $7 );
-                  hb_compExprDelete( $<asExpr>5 ); /* deletes $5, $2, $4 */
+                  hb_compExprDelete( $7, HB_COMP_PARAM );
+                  hb_compExprDelete( $<asExpr>5, HB_COMP_PARAM ); /* deletes $5, $2, $4 */
                   if( $<asExpr>8 )
-                     hb_compExprDelete( $<asExpr>8 );
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                     hb_compExprDelete( $<asExpr>8, HB_COMP_PARAM );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                }
            ;
 
@@ -1680,60 +1660,60 @@ ForAssign  : '='
            ;
 
 StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
-           | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2 ); }
+           | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2, HB_COMP_PARAM ); }
            ;
 
-ForStatements : EmptyStats NEXT                     { hb_compLinePush(); --hb_comp_wForCounter; }
-           | EmptyStats NEXT IdentName              { hb_compLinePush(); --hb_comp_wForCounter; }
-           | EmptyStats END                         { hb_compLinePush(); --hb_comp_wForCounter; }
-           | EmptyStats END IdentName               { hb_compLinePush(); --hb_comp_wForCounter; }
+ForStatements : EmptyStats NEXT                     { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats NEXT IdentName              { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats END                         { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats END IdentName               { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
            ;
 
-ForVar     : IdentName     { $$ = hb_compExprNewVarRef($1); }
-           | AliasVar      { $$ = hb_compExprNewRef($1); }
+ForVar     : IdentName     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
+           | AliasVar      { $$ = hb_compExprNewRef( $1, HB_COMP_PARAM ); }
            ;
            
-ForList    : ForVar                { $$ = hb_compExprNewArgList( $1 ); }
+ForList    : ForVar                { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ForList ',' ForVar    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1 ); }
+ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ForExpr ',' Expression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;           
            
 ForEach    : FOREACH ForList IN ForExpr          /* 1  2  3  4 */
              {
-                ++hb_comp_wForCounter;              /* 5 */
-                hb_compLinePush();
+                ++HB_COMP_PARAM->wForCounter;              /* 5 */
+                hb_compLinePush( HB_COMP_PARAM );
                 hb_compDebugStart();
              }
              Descend    /* 6 */
              {
                 /* 7
                 */
-                hb_compEnumStart( $2, $4, $6 );
+                hb_compEnumStart( HB_COMP_PARAM, $2, $4, $6 );
                 
-                hb_compLoopStart();
-                $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
+                hb_compLoopStart( HB_COMP_PARAM );
+                $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
              }
              Crlf                                     /* 8 */
              {
                 /* 9
                 */
-                $<lNumber>$ = hb_compGenJumpFalse( 0 );
+                $<lNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
              }
              ForStatements                            /* 10 */
              {
-                hb_compLoopHere();
-                hb_compEnumNext( $2, $6 );
-                hb_compGenJump( $<lNumber>7 - hb_comp_functions.pLast->lPCodePos );
+                hb_compLoopHere( HB_COMP_PARAM );
+                hb_compEnumNext( HB_COMP_PARAM, $2, $6 );
+                hb_compGenJump( $<lNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
 
-                hb_compGenJumpHere( $<lNumber>9 );
-                hb_compLoopEnd();
-                hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                hb_compEnumEnd( $2 );
-                hb_compExprDelete( $2 );
-                hb_compExprDelete( $4 );
+                hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
+                hb_compLoopEnd( HB_COMP_PARAM );
+                HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                hb_compEnumEnd( HB_COMP_PARAM, $2 );
+                hb_compExprDelete( $2, HB_COMP_PARAM );
+                hb_compExprDelete( $4, HB_COMP_PARAM );
              }
            ;
 
@@ -1743,39 +1723,39 @@ Descend    : /* default up */     { $$ =  1; }
 
 DoSwitch   : SwitchBegin
               {
-                 hb_compLoopStart();
-                 hb_compSwitchStart();
-                 hb_compGenJump( 0 );
+                 hb_compLoopStart( HB_COMP_PARAM );
+                 hb_compSwitchStart( HB_COMP_PARAM );
+                 hb_compGenJump( 0, HB_COMP_PARAM );
               }
                 SwitchCases
              EndSwitch
              {
-               hb_compSwitchEnd();
-               hb_compLoopEnd();
+               hb_compSwitchEnd( HB_COMP_PARAM );
+               hb_compLoopEnd( HB_COMP_PARAM );
              }
 
            | SwitchBegin
              EndSwitch
              {
-               hb_compGenPData1( HB_P_POP );
+               hb_compGenPData1( HB_P_POP, HB_COMP_PARAM );
              }
 
            ;
            
 EndSwitch  : END
              {
-               --hb_comp_wSwitchCounter; 
-               hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               --HB_COMP_PARAM->wSwitchCounter; 
+               HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
              }
            ;
 
 SwitchStart : DOSWITCH 
-              { ++hb_comp_wSwitchCounter; 
-                 hb_compLinePush();
+              { ++HB_COMP_PARAM->wSwitchCounter; 
+                 hb_compLinePush( HB_COMP_PARAM );
               } 
                Expression Crlf
               {
-                 hb_compExprDelete( hb_compExprGenPush( $3 ) );
+                 hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );
               }
             ;
 
@@ -1783,15 +1763,15 @@ SwitchBegin : SwitchStart            { }
             | SwitchStart Statements {
                         if( $<lNumber>2 > 0 )
                         {
-                           hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
                         }
                      }
            ;
 
-SwitchCases : CASE Expression { hb_compSwitchAdd( $2 ); hb_compLinePush(); } Crlf
+SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLinePush( HB_COMP_PARAM ); } Crlf
              EmptyStats
 
-           | SwitchCases CASE Expression { hb_compSwitchAdd( $3 ); hb_compLinePush(); }Crlf
+           | SwitchCases CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $3 ); hb_compLinePush( HB_COMP_PARAM ); }Crlf
              EmptyStats
 
            | SwitchDefault
@@ -1799,18 +1779,18 @@ SwitchCases : CASE Expression { hb_compSwitchAdd( $2 ); hb_compLinePush(); } Crl
            | SwitchCases SwitchDefault
            ;
 
-SwitchDefault : OTHERWISE {hb_compSwitchAdd(NULL); hb_compLinePush(); } Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
            
-BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf
+BeginSeq   : BEGINSEQ { ++HB_COMP_PARAM->wSeqCounter; $<lNumber>$ = hb_compSequenceBegin( HB_COMP_PARAM ); } Crlf
                 EmptyStats
                 {
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
                    * will be used in BREAK code if there is no RECOVER clause
                    */
-                  hb_compGenJumpHere( $<lNumber>2 );
-                  $<lNumber>$ = hb_compSequenceEnd();
+                  hb_compGenJumpHere( $<lNumber>2, HB_COMP_PARAM );
+                  $<lNumber>$ = hb_compSequenceEnd( HB_COMP_PARAM );
                 }
                 RecoverSeq
                 {
@@ -1818,7 +1798,7 @@ BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegi
                     * HB_P_SEQBEGIN opcode if there is RECOVER clause
                     */
                    if( $<lNumber>6 )
-                      hb_compGenJumpThere( $<lNumber>2, $<lNumber>6 );
+                      hb_compGenJumpThere( $<lNumber>2, $<lNumber>6, HB_COMP_PARAM );
                 }
              END
              {
@@ -1826,11 +1806,11 @@ BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegi
                  * There is no line number after HB_P_SEQEND in case no
                  * RECOVER clause is used
                  */
-                hb_compGenJumpThere( $<lNumber>5, hb_comp_functions.pLast->lPCodePos );
+                hb_compGenJumpThere( $<lNumber>5, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                 if( !$<lNumber>6 )   /* only if there is no RECOVER clause */
-                   --hb_comp_wSeqCounter;  /* RECOVER is also considered as end of sequence */
-                hb_compSequenceFinish( $<lNumber>2, $<lNumber>4 );
-                hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                   --HB_COMP_PARAM->wSeqCounter;  /* RECOVER is also considered as end of sequence */
+                hb_compSequenceFinish( $<lNumber>2, $<lNumber>4, HB_COMP_PARAM );
+                HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
              }
            ;
 
@@ -1841,22 +1821,22 @@ RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
 
 RecoverEmpty : RECOVER
                {
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
-                  --hb_comp_wSeqCounter;
-                  hb_compLinePush();
-                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, ( BOOL ) 0 );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  --HB_COMP_PARAM->wSeqCounter;
+                  hb_compLinePush( HB_COMP_PARAM );
+                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, HB_COMP_PARAM );
                }
            ;
 
 RecoverUsing : RECOVERUSING IdentName
                {
-                  hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
-                  $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
-                  --hb_comp_wSeqCounter;
-                  hb_compLinePush();
-                  hb_compGenPCode1( HB_P_SEQRECOVER );
-                  hb_compGenPopVar( $2 );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
+                  $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  --HB_COMP_PARAM->wSeqCounter;
+                  hb_compLinePush( HB_COMP_PARAM );
+                  hb_compGenPCode1( HB_P_SEQRECOVER, HB_COMP_PARAM );
+                  hb_compGenPopVar( $2, HB_COMP_PARAM );
                }
            ;
 
@@ -1866,55 +1846,60 @@ RecoverUsing : RECOVERUSING IdentName
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); hb_compAutoOpenAdd( $1 ); }
+DoName     : IdentName        { $$ = hb_compExprNewFunName( $1, HB_COMP_PARAM ); hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); }
            | MacroVar         { $$ = $1; }
-           | MacroExpr    { $$ = $1; }
+           | MacroExpr        { $$ = $1; }
            ;
 
 DoProc     : DO DoName
-               { $$ = hb_compExprNewFunCall( $2, NULL ); }
+               { $$ = hb_compExprNewFunCall( $2, NULL, HB_COMP_PARAM ); }
            | DO DoName WITH DoArgList
-               { $$ = hb_compExprNewFunCall( $2, $4 ); }
-			  | DOIDENT { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strupr($1) ), NULL ); }
+               { $$ = hb_compExprNewFunCall( $2, $4, HB_COMP_PARAM ); }
+           | DOIDENT
+               { 
+                  /* DOIDENT is the only one identifier which can be returned in lower letters */
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), FALSE ), HB_COMP_PARAM ), NULL, HB_COMP_PARAM );
+               }
            | DOIDENT WITH DoArgList
-               { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName(hb_strupr($1)), $3 ); }
-           | WHILE WITH DoArgList
-               { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew(hb_strupr($1), TRUE) ), $3 ); }
+               {
+                  /* DOIDENT is the only one identifier which can be returned in lower letters */
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), FALSE ), HB_COMP_PARAM ), $3, HB_COMP_PARAM );
+               }
            ;
 
-DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
-           | ',' DoArgument            { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), $2 ); }
-           | DoArgument                { $$ = hb_compExprNewArgList( $1 ); }
-           | DoArgList ','             { $$ = hb_compExprAddListExpr( $1, hb_compExprNewNil() ); }
+DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), hb_compExprNewNil( HB_COMP_PARAM ) ); }
+           | ',' DoArgument            { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), $2 ); }
+           | DoArgument                { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
+           | DoArgList ','             { $$ = hb_compExprAddListExpr( $1, hb_compExprNewNil( HB_COMP_PARAM ) ); }
            | DoArgList ',' DoArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1 ); }
+DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
            | '@' FunIdentCall              { $$ = $2; }
-           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
            | SimpleExpression              { $$ = $1; }
            | PareExpList                   { $$ = $1; }
-           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2 ); }
-           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2 ); }
+           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
            ;
 
 WithObject : WITHOBJECT Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode1( HB_P_WITHOBJECTSTART );
-                  hb_comp_wWithObjectCnt++;
+                  hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
+                  hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
+                  HB_COMP_PARAM->wWithObjectCnt++;
                }
              EmptyStatements 
              END
                {
-                  --hb_comp_wWithObjectCnt;
-                  hb_compGenPCode1( HB_P_WITHOBJECTEND );
+                  --HB_COMP_PARAM->wWithObjectCnt;
+                  hb_compGenPCode1( HB_P_WITHOBJECTEND, HB_COMP_PARAM );
                 }
-           | WITHOBJECT Expression Crlf END { hb_compExprDelete( $2 ); }
+           | WITHOBJECT Expression Crlf END { hb_compExprDelete( $2, HB_COMP_PARAM ); }
            ;
 
-Crlf       : '\n'          { hb_comp_bError = FALSE; }
-           | ';'           { hb_comp_bDontGenLineNum = TRUE; }
+Crlf       : '\n'          { HB_COMP_PARAM->fError = FALSE; }
+           | ';'           { HB_COMP_PARAM->fDontGenLineNum = TRUE; }
            ;
 
 %%
@@ -1939,37 +1924,36 @@ Crlf       : '\n'          { hb_comp_bError = FALSE; }
  * This function stores the position in pcode buffer where the FOR/WHILE
  * loop starts. It will be used to fix any LOOP/EXIT statements
  */
-static void hb_compLoopStart( void )
+static void hb_compLoopStart( HB_COMP_DECL )
 {
    HB_LOOPEXIT_PTR pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
-   if( hb_comp_pLoops )
+   if( HB_COMP_PARAM->pLoops )
    {
-      HB_LOOPEXIT_PTR pLast = hb_comp_pLoops;
+      HB_LOOPEXIT_PTR pLast = HB_COMP_PARAM->pLoops;
 
       while( pLast->pNext )
          pLast = pLast->pNext;
       pLast->pNext = pLoop;
    }
    else
-      hb_comp_pLoops = pLoop;
+      HB_COMP_PARAM->pLoops = pLoop;
 
    pLoop->pNext       = NULL;
    pLoop->pExitList   = NULL;
    pLoop->pLoopList   = NULL;
-   pLoop->ulOffset    = hb_comp_functions.pLast->lPCodePos;  /* store the start position */
-   pLoop->iLine       = hb_comp_iLine;
-   pLoop->wSeqCounter = hb_comp_wSeqCounter;  /* store current SEQUENCE counter */
+   pLoop->ulOffset    = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->wSeqCounter = HB_COMP_PARAM->wSeqCounter;  /* store current SEQUENCE counter */
 }
 
 /*
  * Stores the position of LOOP statement to fix it later at the end of loop
  */
-static void hb_compLoopLoop( void )
+static void hb_compLoopLoop( HB_COMP_DECL )
 {
-   if( ! hb_comp_pLoops )
+   if( ! HB_COMP_PARAM->pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
    }
    else
    {
@@ -1978,19 +1962,19 @@ static void hb_compLoopLoop( void )
       pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
       pLoop->pLoopList = NULL;
-      pLoop->ulOffset = hb_comp_functions.pLast->lPCodePos;  /* store the position to fix */
+      pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
 
-      pLast = hb_comp_pLoops;
+      pLast = HB_COMP_PARAM->pLoops;
       while( pLast->pNext )
          pLast = pLast->pNext;
 
-      if( pLast->wSeqCounter != hb_comp_wSeqCounter )
+      if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
          /* Attempt to LOOP from BEGIN/END sequence
          * Current SEQUENCE counter is different then at the beginning of loop
          * Notice that LOOP is allowed in RECOVER code.
          */
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
       }
       else
       {
@@ -1999,7 +1983,7 @@ static void hb_compLoopLoop( void )
 
          pLast->pLoopList = pLoop;
 
-         hb_compGenJump( 0 );
+         hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
 }
@@ -2007,11 +1991,11 @@ static void hb_compLoopLoop( void )
 /*
  * Stores the position of EXIT statement to fix it later at the end of loop
  */
-static void hb_compLoopExit( void )
+static void hb_compLoopExit( HB_COMP_DECL )
 {
-   if( ! hb_comp_pLoops )
+   if( ! HB_COMP_PARAM->pLoops )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
    }
    else
    {
@@ -2020,19 +2004,19 @@ static void hb_compLoopExit( void )
       pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
       pLoop->pExitList = NULL;
-      pLoop->ulOffset = hb_comp_functions.pLast->lPCodePos;  /* store the position to fix */
+      pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
 
-      pLast = hb_comp_pLoops;
+      pLast = HB_COMP_PARAM->pLoops;
       while( pLast->pNext )
          pLast = pLast->pNext;
 
-      if( pLast->wSeqCounter != hb_comp_wSeqCounter )
+      if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
          /* Attempt to LOOP from BEGIN/END sequence
          * Current SEQUENCE counter is different then at the beginning of loop
          * Notice that LOOP is allowed in RECOVER code.
          */
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
       }
       else
       {
@@ -2041,7 +2025,7 @@ static void hb_compLoopExit( void )
 
          pLast->pExitList = pLoop;
 
-         hb_compGenJump( 0 );
+         hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
 }
@@ -2049,9 +2033,9 @@ static void hb_compLoopExit( void )
 /*
  * Fixes the LOOP statement
  */
-static void hb_compLoopHere( void )
+static void hb_compLoopHere( HB_COMP_DECL )
 {
-   HB_LOOPEXIT_PTR pLoop = hb_comp_pLoops, pFree, pLast;
+   HB_LOOPEXIT_PTR pLoop = HB_COMP_PARAM->pLoops, pFree, pLast;
 
    if( pLoop )
    {
@@ -2062,7 +2046,7 @@ static void hb_compLoopHere( void )
       pLoop = pLoop->pLoopList;
       while( pLoop )
       {
-         hb_compGenJumpHere( pLoop->ulOffset + 1 );
+         hb_compGenJumpHere( pLoop->ulOffset + 1, HB_COMP_PARAM );
          pFree = pLoop;
          pLoop = pLoop->pLoopList;
          hb_xfree( ( void * ) pFree );
@@ -2074,9 +2058,9 @@ static void hb_compLoopHere( void )
 /*
  * Fixes the EXIT statements and releases memory allocated for current loop
  */
-static void hb_compLoopEnd( void )
+static void hb_compLoopEnd( HB_COMP_DECL )
 {
-   HB_LOOPEXIT_PTR pExit, pLoop = hb_comp_pLoops, pLast = hb_comp_pLoops, pFree;
+   HB_LOOPEXIT_PTR pExit, pLoop = HB_COMP_PARAM->pLoops, pLast = HB_COMP_PARAM->pLoops, pFree;
 
    if( pLoop )
    {
@@ -2089,39 +2073,39 @@ static void hb_compLoopEnd( void )
       pExit = pLoop->pExitList;
       while( pExit )
       {
-         hb_compGenJumpHere( pExit->ulOffset + 1 );
+         hb_compGenJumpHere( pExit->ulOffset + 1, HB_COMP_PARAM );
          pFree = pExit;
          pExit = pExit->pExitList;
          hb_xfree( ( void * ) pFree );
       }
 
       pLast->pNext = NULL;
-      if( pLoop == hb_comp_pLoops )
-         hb_comp_pLoops = NULL;
+      if( pLoop == HB_COMP_PARAM->pLoops )
+         HB_COMP_PARAM->pLoops = NULL;
       hb_xfree( ( void * ) pLoop );
    }
 }
 
-void hb_compLoopKill( void )
+void hb_compLoopKill( HB_COMP_DECL )
 {
    HB_LOOPEXIT_PTR pLoop;
    HB_LOOPEXIT_PTR pExit;
    
-   while( hb_comp_pLoops )   
+   while( HB_COMP_PARAM->pLoops )   
    {
-      pLoop = hb_comp_pLoops;
+      pLoop = HB_COMP_PARAM->pLoops;
       while( pLoop->pExitList )
       {
          pExit = pLoop->pExitList;
          pLoop->pExitList = pExit->pExitList;
          hb_xfree( ( void * ) pExit );
       }
-      hb_comp_pLoops = pLoop->pNext;
+      HB_COMP_PARAM->pLoops = pLoop->pNext;
       hb_xfree( ( void * ) pLoop );
    }
 }
 
-static void * hb_compElseIfGen( void * pFirst, ULONG ulOffset )
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, ULONG ulOffset )
 {
    HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
 
@@ -2138,41 +2122,41 @@ static void * hb_compElseIfGen( void * pFirst, ULONG ulOffset )
    }
    else
    {
-      if( hb_comp_elseif )
+      if( HB_COMP_PARAM->elseif )
       {
-         pElseIf->pPrev = hb_comp_elseif;
+         pElseIf->pPrev = HB_COMP_PARAM->elseif;
       }
       pFirst = pElseIf;
-      hb_comp_elseif = pElseIf;
+      HB_COMP_PARAM->elseif = pElseIf;
    }
    return pFirst;
 }
 
 
-static void hb_compElseIfFix( void * pFixElseIfs )
+static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
 {
    HB_ELSEIF_PTR pFix = ( HB_ELSEIF_PTR ) pFixElseIfs;
    HB_ELSEIF_PTR pDel;
    
-   hb_comp_elseif = pFix->pPrev;
+   HB_COMP_PARAM->elseif = pFix->pPrev;
    while( pFix )
    {
-      hb_compGenJumpHere( pFix->ulOffset );
+      hb_compGenJumpHere( pFix->ulOffset, HB_COMP_PARAM );
       pDel = pFix;
       pFix = pFix->pElseif;
       hb_xfree( pDel );
    }
 }
 
-void hb_compElseIfKill( void )
+void hb_compElseIfKill( HB_COMP_DECL )
 {
    HB_ELSEIF_PTR pFix;
    HB_ELSEIF_PTR pDel;
    
-   while( hb_comp_elseif )
+   while( HB_COMP_PARAM->elseif )
    {
-      pFix = hb_comp_elseif;
-      hb_comp_elseif = pFix->pPrev;
+      pFix = HB_COMP_PARAM->elseif;
+      HB_COMP_PARAM->elseif = pFix->pPrev;
       while( pFix )
       {
          pDel = pFix;
@@ -2182,7 +2166,7 @@ void hb_compElseIfKill( void )
    }
 }
 
-static void hb_compRTVariableAdd( HB_EXPR_PTR pVar, BOOL bPopInitValue )
+static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, BOOL bPopInitValue )
 {
    HB_RTVAR_PTR pRTvar = ( HB_RTVAR_PTR ) hb_xgrab( sizeof( HB_RTVAR ) );
 
@@ -2191,123 +2175,123 @@ static void hb_compRTVariableAdd( HB_EXPR_PTR pVar, BOOL bPopInitValue )
    pRTvar->pNext = NULL;
    pRTvar->pPrev = NULL;
 
-   if( hb_comp_rtvars )
+   if( HB_COMP_PARAM->rtvars )
    {
-      HB_RTVAR_PTR pLast = hb_comp_rtvars;
+      HB_RTVAR_PTR pLast = HB_COMP_PARAM->rtvars;
       while( pLast->pNext )
          pLast = pLast->pNext;
       pLast->pNext = pRTvar;
       pRTvar->pPrev = pLast;
    }
    else
-      hb_comp_rtvars = pRTvar;
+      HB_COMP_PARAM->rtvars = pRTvar;
 }
 
-static void hb_compRTVariableGen( char * szCreateFun )
+static void hb_compRTVariableGen( HB_COMP_DECL, char * szCreateFun )
 {
    USHORT usCount = 0;
-   HB_RTVAR_PTR pVar = hb_comp_rtvars;
+   HB_RTVAR_PTR pVar = HB_COMP_PARAM->rtvars;
    HB_RTVAR_PTR pDel;
 
    /* generate the function call frame */
-   hb_compGenPushSymbol( szCreateFun, TRUE, FALSE );
-   hb_compGenPushNil();
+   hb_compGenPushSymbol( szCreateFun, TRUE, FALSE, HB_COMP_PARAM );
+   hb_compGenPushNil( HB_COMP_PARAM );
 
    /* push variable names to create */
    while( pVar->pNext )
    {
-      hb_compExprGenPush( pVar->pVar );
+      hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
       pVar = pVar->pNext;
       ++usCount;
    }
-   hb_compExprGenPush( pVar->pVar );
+   hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
    ++usCount;
 
    /* call function that will create either PUBLIC or PRIVATE variables */
    if( usCount > 255 )
-      hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
+      hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), HB_COMP_PARAM );
    else
-      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
+      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount, HB_COMP_PARAM );
 
    /* pop initial values */
    while( pVar )
    {
       if( pVar->bPopValue )
-         hb_compExprDelete( hb_compExprGenPop( pVar->pVar ) );
+         hb_compExprDelete( hb_compExprGenPop( pVar->pVar, HB_COMP_PARAM ), HB_COMP_PARAM );
       else
-         hb_compExprDelete( pVar->pVar );
+         hb_compExprDelete( pVar->pVar, HB_COMP_PARAM );
       pDel = pVar;
       pVar = pVar->pPrev;
       hb_xfree( pDel );
    }
-   hb_comp_rtvars = NULL;
+   HB_COMP_PARAM->rtvars = NULL;
 }
 
-void hb_compRTVariableKill( void )
+void hb_compRTVariableKill( HB_COMP_DECL )
 {
    HB_RTVAR_PTR pVar;
    
-   while( hb_comp_rtvars )
+   while( HB_COMP_PARAM->rtvars )
    {
-      pVar = hb_comp_rtvars;
+      pVar = HB_COMP_PARAM->rtvars;
 
-      hb_compExprDelete( pVar->pVar );
-      hb_comp_rtvars = pVar->pPrev;
+      hb_compExprDelete( pVar->pVar, HB_COMP_PARAM );
+      HB_COMP_PARAM->rtvars = pVar->pPrev;
       hb_xfree( pVar );
    }
-   hb_comp_rtvars = NULL;
+   HB_COMP_PARAM->rtvars = NULL;
 }
 
-static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
+static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
-  if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
+  if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
   {
      USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
-     hb_compVariableAdd( szName, 'A' );
-     hb_compExprDelete( hb_compExprGenPush( pInitValue ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
-     hb_compRTVariableAdd( hb_compExprNewRTVar( szName, NULL ), TRUE );
+     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+     hb_compExprDelete( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ), HB_COMP_PARAM );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+     hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
   }
-  else if( hb_comp_iVarScope == VS_STATIC )
+  else if( HB_COMP_PARAM->iVarScope == VS_STATIC )
   {
      USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
-     HB_EXPR_PTR pVar = hb_compExprNewVar( szName );
+     HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
      HB_EXPR_PTR pAssign;
 
      /* create a static variable */
-     hb_compVariableAdd( szName, 'A' );
-     hb_compStaticDefStart();   /* switch to statics pcode buffer */
+     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+     hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
      /* create an array */
-     hb_compExprGenPush( pInitValue );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
+     hb_compExprGenPush( pInitValue, HB_COMP_PARAM );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
      /* check if valid initializers were used but don't generate any code */
-     pAssign = hb_compExprAssignStatic( pVar, pInitValue );
+     pAssign = hb_compExprAssignStatic( pVar, pInitValue, HB_COMP_PARAM );
      /* now pop an array */
-     hb_compExprGenPop( pVar );
+     hb_compExprGenPop( pVar, HB_COMP_PARAM );
      /* delete all used expressions */
-     hb_compExprDelete( pAssign );
-     hb_compStaticDefEnd();
+     hb_compExprDelete( pAssign, HB_COMP_PARAM );
+     hb_compStaticDefEnd( HB_COMP_PARAM );
   }
   else
   {
      USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
 
-     hb_compVariableAdd( szName, 'A' );
-     hb_compExprDelete( hb_compExprGenPush( pInitValue ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
-     hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName ) ) );
+     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+     hb_compExprDelete( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ), HB_COMP_PARAM );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+     hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
   }
 }
 
-static void hb_compForStart( char *szVarName, BOOL bForEach )
+static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
-   pEnumVar = hb_comp_functions.pLast->pEnum;
+   pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar == NULL )
    {
-      hb_comp_functions.pLast->pEnum = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
-      pEnumVar = hb_comp_functions.pLast->pEnum;
+      HB_COMP_PARAM->functions.pLast->pEnum = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
+      pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    }
    else
    {
@@ -2321,7 +2305,7 @@ static void hb_compForStart( char *szVarName, BOOL bForEach )
             /* Enumerator variable exists already - throw warning */
             if( bWarn == TRUE )
             {
-               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FORVAR_DUPL, szVarName, NULL );
+               hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FORVAR_DUPL, szVarName, NULL );
                bWarn = FALSE;
             }
          }
@@ -2336,11 +2320,11 @@ static void hb_compForStart( char *szVarName, BOOL bForEach )
    pEnumVar->pNext    = NULL;
 }
 
-BOOL hb_compForEachVarError( char *szVarName )
+BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
-   pEnumVar = hb_comp_functions.pLast->pEnum;
+   pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar )
    {
       while( pEnumVar )
@@ -2359,17 +2343,18 @@ BOOL hb_compForEachVarError( char *szVarName )
       }
    }
 
-   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ENUM_INVALID, szVarName, NULL );
+   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_ENUM_INVALID, szVarName, NULL );
    return TRUE;            
 }
 
-static void hb_compForEnd( char *szVar )
+static void hb_compForEnd( HB_COMP_DECL, char *szVar )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
    HB_SYMBOL_UNUSED( szVar );
    
-   pEnumVar = hb_comp_functions.pLast->pEnum;
+   pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar->pNext )
    {
       HB_ENUMERATOR_PTR pLast = pEnumVar;
@@ -2385,7 +2370,7 @@ static void hb_compForEnd( char *szVar )
    else
    {
       hb_xfree( pEnumVar );
-      hb_comp_functions.pLast->pEnum = NULL;
+      HB_COMP_PARAM->functions.pLast->pEnum = NULL;
    }
 }
 
@@ -2393,45 +2378,45 @@ static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 {
    char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
    if( szName )
-      hb_compForStart( szName, TRUE );
+      hb_compForStart( HB_COMP_PARAM, szName, TRUE );
       
-   hb_compExprGenPush( (HB_EXPR_PTR)dummy );  /* expression */
-   hb_compExprGenPush( (HB_EXPR_PTR)cargo );  /* variable */
+   hb_compExprGenPush( (HB_EXPR_PTR)dummy, HB_COMP_PARAM );  /* expression */
+   hb_compExprGenPush( (HB_EXPR_PTR)cargo, HB_COMP_PARAM );  /* variable */
 }
 
-static void hb_compEnumStart( HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
+static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
 {
    ULONG ulLen;
    
    if( hb_compExprListLen(pVars) != hb_compExprListLen(pExprs) )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
    }
 
-   ulLen = hb_compExprListEval2( pVars, pExprs, hb_compEnumEvalStart );
+   ulLen = hb_compExprListEval2( HB_COMP_PARAM, pVars, pExprs, hb_compEnumEvalStart );
    
    if( ulLen > 255 )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_TOOMANY, NULL, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_TOOMANY, NULL, NULL );
    }
    else
    {
       BYTE Len;
       Len = (BYTE) (ulLen & 0xFF);
-      hb_compGenPCode3( HB_P_ENUMSTART, Len, ((descend>0)?1:0), FALSE );
+      hb_compGenPCode3( HB_P_ENUMSTART, Len, descend > 0 ? 1 : 0, HB_COMP_PARAM );
    }
 }
 
-static void hb_compEnumNext( HB_EXPR_PTR pExpr, int descend )
+static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 {
    HB_SYMBOL_UNUSED( pExpr );
    if( descend > 0 )
    {
-      hb_compGenPCode1( HB_P_ENUMNEXT );
+      hb_compGenPCode1( HB_P_ENUMNEXT, HB_COMP_PARAM );
    }
    else
    {
-      hb_compGenPCode1( HB_P_ENUMPREV );
+      hb_compGenPCode1( HB_P_ENUMPREV, HB_COMP_PARAM );
    }
 }
 
@@ -2440,29 +2425,29 @@ static HB_CARGO_FUNC( hb_compEnumEvalEnd )
    char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
 
    if( szName )
-      hb_compForEnd( szName );
+      hb_compForEnd( HB_COMP_PARAM, szName );
 }
 
-static void hb_compEnumEnd( HB_EXPR_PTR pExpr )
+static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   hb_compExprListEval( pExpr, hb_compEnumEvalEnd );
-   hb_compGenPCode1( HB_P_ENUMEND );
+   hb_compExprListEval( HB_COMP_PARAM, pExpr, hb_compEnumEvalEnd );
+   hb_compGenPCode1( HB_P_ENUMEND, HB_COMP_PARAM );
 }
 
-static void hb_compSwitchStart()
+static void hb_compSwitchStart( HB_COMP_DECL )
 {
-   HB_SWITCHCMD_PTR pLast = hb_comp_pSwitch;
+   HB_SWITCHCMD_PTR pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof(HB_SWITCHCMD) );
 
-   hb_comp_pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof(HB_SWITCHCMD) );
-   hb_comp_pSwitch->pPrev = pLast;
-   hb_comp_pSwitch->pCases = NULL;
-   hb_comp_pSwitch->pLast  = NULL;
-   hb_comp_pSwitch->ulDefault = 0;
-   hb_comp_pSwitch->ulOffset = hb_comp_functions.pLast->lPCodePos;
-   hb_comp_pSwitch->iCount = 0;
+   pSwitch->pCases = NULL;
+   pSwitch->pLast  = NULL;
+   pSwitch->ulDefault = 0;
+   pSwitch->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;
+   pSwitch->iCount = 0;
+   pSwitch->pPrev = HB_COMP_PARAM->pSwitch;
+   HB_COMP_PARAM->pSwitch = pSwitch;
 }
 
-static void hb_compSwitchAdd( HB_EXPR_PTR pExpr )
+static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SWITCHCASE_PTR pCase;
    
@@ -2470,52 +2455,52 @@ static void hb_compSwitchAdd( HB_EXPR_PTR pExpr )
    {
       /* normal CASE */
       pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof(HB_SWITCHCASE) );
-      pCase->ulOffset = hb_comp_functions.pLast->lPCodePos;
+      pCase->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;
       pCase->pNext = NULL;
-      pExpr = hb_compExprReduce( pExpr );
+      pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
       if( !(hb_compExprIsLong(pExpr) || hb_compExprIsString(pExpr)) )
       {
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
       }
       pCase->pExpr = pExpr;
 
-      if( hb_comp_pSwitch->pLast )
+      if( HB_COMP_PARAM->pSwitch->pLast )
       {
-         hb_comp_pSwitch->pLast->pNext = pCase;
-         hb_comp_pSwitch->pLast = pCase;
+         HB_COMP_PARAM->pSwitch->pLast->pNext = pCase;
+         HB_COMP_PARAM->pSwitch->pLast = pCase;
       }
       else
       {
-         hb_comp_pSwitch->pCases = hb_comp_pSwitch->pLast = pCase;
+         HB_COMP_PARAM->pSwitch->pCases = HB_COMP_PARAM->pSwitch->pLast = pCase;
       }
-      hb_comp_pSwitch->iCount++;
+      HB_COMP_PARAM->pSwitch->iCount++;
       if( hb_compExprIsString( pExpr ) && hb_compExprAsStringLen(pExpr) > 255 )
       {
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_STR, NULL, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_STR, NULL, NULL );
       }
    }
    else
    {
       /* DEFAULT */
-      if( hb_comp_pSwitch->ulDefault )
+      if( HB_COMP_PARAM->pSwitch->ulDefault )
       {
          /* more than one default clause */
-         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
       }
       else
       {
-         hb_comp_pSwitch->ulDefault = hb_comp_functions.pLast->lPCodePos;
-         hb_comp_pSwitch->iCount++;
+         HB_COMP_PARAM->pSwitch->ulDefault = HB_COMP_PARAM->functions.pLast->lPCodePos;
+         HB_COMP_PARAM->pSwitch->iCount++;
       }
    }
    
 }
 
-static void hb_compSwitchEnd( void )
+static void hb_compSwitchEnd( HB_COMP_DECL )
 { 
-   BOOL longOptimize = hb_comp_long_optimize;
-   BOOL bTextSubst = hb_comp_bTextSubst;
-   HB_SWITCHCASE_PTR pCase = hb_comp_pSwitch->pCases;
+   BOOL fLongOptimize = HB_COMP_PARAM->fLongOptimize;
+   BOOL fTextSubst = HB_COMP_PARAM->fTextSubst;
+   HB_SWITCHCASE_PTR pCase = HB_COMP_PARAM->pSwitch->pCases;
    HB_SWITCHCASE_PTR pTmp;
    HB_SWITCHCMD_PTR pTmpSw;
    ULONG ulExitPos;
@@ -2524,94 +2509,94 @@ static void hb_compSwitchEnd( void )
    /* skip switch pcode if there was no EXIT in the last CASE
     * or in the DEFAULT case
    */
-   ulExitPos = hb_compGenJump( 0 ); 
+   ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM ); 
    
-   hb_compGenJumpHere( hb_comp_pSwitch->ulOffset + 1 );
-   hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE(hb_comp_pSwitch->iCount), HB_HIBYTE(hb_comp_pSwitch->iCount), FALSE );
-   hb_comp_long_optimize = FALSE;   
-   hb_comp_bTextSubst = FALSE;
+   hb_compGenJumpHere( HB_COMP_PARAM->pSwitch->ulOffset + 1, HB_COMP_PARAM );
+   hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE(HB_COMP_PARAM->pSwitch->iCount), HB_HIBYTE(HB_COMP_PARAM->pSwitch->iCount), HB_COMP_PARAM );
+   HB_COMP_PARAM->fLongOptimize = FALSE;   
+   HB_COMP_PARAM->fTextSubst = FALSE;
    while( pCase )
    {
       if( pCase->pExpr )
       {
          if( hb_compExprIsLong(pCase->pExpr) || hb_compExprIsString(pCase->pExpr) )
          {
-            hb_compExprDelete( hb_compExprGenPush( pCase->pExpr ) );
-            hb_compGenJumpThere( hb_compGenJump( 0 ), pCase->ulOffset );
+            hb_compExprDelete( hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM ), HB_COMP_PARAM );
+            hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ), pCase->ulOffset, HB_COMP_PARAM );
          }
          else
          {
-            hb_compExprDelete( pCase->pExpr );
+            hb_compExprDelete( pCase->pExpr, HB_COMP_PARAM );
          }
       }
       pCase = pCase->pNext;
    }
-   hb_compGenPData1( HB_P_PUSHNIL );    /* end of cases */
-   ulDef = hb_compGenJump( 0 );
+   hb_compGenPData1( HB_P_PUSHNIL, HB_COMP_PARAM );    /* end of cases */
+   ulDef = hb_compGenJump( 0, HB_COMP_PARAM );
    
-   if( hb_comp_pSwitch->ulDefault )
+   if( HB_COMP_PARAM->pSwitch->ulDefault )
    {
-      hb_compGenJumpThere( ulDef, hb_comp_pSwitch->ulDefault );
+      hb_compGenJumpThere( ulDef, HB_COMP_PARAM->pSwitch->ulDefault, HB_COMP_PARAM );
    }
    else
-      hb_compGenJumpHere( ulDef );
+      hb_compGenJumpHere( ulDef, HB_COMP_PARAM );
 
-   hb_comp_long_optimize = longOptimize;
-   hb_comp_bTextSubst = bTextSubst;
+   HB_COMP_PARAM->fLongOptimize = fLongOptimize;
+   HB_COMP_PARAM->fTextSubst = fTextSubst;
 
-   hb_compGenJumpHere( ulExitPos );
+   hb_compGenJumpHere( ulExitPos, HB_COMP_PARAM );
    
-   pCase = hb_comp_pSwitch->pCases;
+   pCase = HB_COMP_PARAM->pSwitch->pCases;
    while( pCase )
    {
       pTmp = pCase->pNext;
       hb_xfree( (void *)pCase );
       pCase = pTmp;
    }
-   pTmpSw = hb_comp_pSwitch;
-   hb_comp_pSwitch = hb_comp_pSwitch->pPrev;
+   pTmpSw = HB_COMP_PARAM->pSwitch;
+   HB_COMP_PARAM->pSwitch = HB_COMP_PARAM->pSwitch->pPrev;
    hb_xfree( pTmpSw );
 }
 
 /* Release all switch statements
 */
-void hb_compSwitchKill( )
+void hb_compSwitchKill( HB_COMP_DECL )
 {
    HB_SWITCHCASE_PTR pCase;
    HB_SWITCHCMD_PTR pSwitch;
 
-   while( hb_comp_pSwitch )
+   while( HB_COMP_PARAM->pSwitch )
    {
-      while( hb_comp_pSwitch->pCases )
+      while( HB_COMP_PARAM->pSwitch->pCases )
       {
-         pCase = hb_comp_pSwitch->pCases;
-         hb_compExprDelete( pCase->pExpr );
-         hb_comp_pSwitch->pCases = pCase->pNext;
+         pCase = HB_COMP_PARAM->pSwitch->pCases;
+         hb_compExprDelete( pCase->pExpr, HB_COMP_PARAM );
+         HB_COMP_PARAM->pSwitch->pCases = pCase->pNext;
          hb_xfree( (void *) pCase );
       }
-      pSwitch = hb_comp_pSwitch;
-      hb_comp_pSwitch = pSwitch->pPrev;
+      pSwitch = HB_COMP_PARAM->pSwitch;
+      HB_COMP_PARAM->pSwitch = pSwitch->pPrev;
       hb_xfree( (void *) pSwitch );
    }
 }
 
-static HB_EXPR_PTR hb_compCheckPassByRef( HB_EXPR_PTR pExpr )
+static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   if( !( hb_comp_bPassByRef & (HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY) ) )
+   if( !( HB_COMP_PARAM->iPassByRef & (HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY) ) )
    {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
    }
    return pExpr;
 }
 
 /* ************************************************************************* */
 
-void yyerror( HB_COMP_PTR pComp, char * s )
+void yyerror( HB_COMP_DECL, char * s )
 {
    HB_SYMBOL_UNUSED( pComp );
 
-   if( !pComp->pLex->lasttok || pComp->pLex->lasttok[ 0 ] == '\n' )
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
+   if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
    else
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, pComp->pLex->lasttok );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }

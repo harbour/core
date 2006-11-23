@@ -131,6 +131,7 @@ void hb_stackFree( void )
    while( i >= 0 )
       hb_xfree( hb_stack.pItems[ i-- ] );
    hb_xfree( hb_stack.pItems );
+   hb_stack.pItems = hb_stack.pPos = hb_stack.pBase = NULL;
 }
 
 #undef hb_stackPush

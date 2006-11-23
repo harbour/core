@@ -28,26 +28,26 @@
 
 #include "hbcomp.h"
 
-static ULONG GetSymbolsSize( void );
-static PCOMSYMBOL GetFirstSymbol( void );
-static char * GetSymbolName( ULONG ulPos );
-static ULONG GetPCodesSize( void );
-static ULONG GetSymbolsAmount( void );
-static BOOL IsExternal( ULONG ulSymbol );
+static ULONG GetSymbolsSize( HB_COMP_DECL );
+static PCOMSYMBOL GetFirstSymbol( HB_COMP_DECL );
+static char * GetSymbolName( HB_COMP_DECL, ULONG ulPos );
+static ULONG GetPCodesSize( HB_COMP_DECL );
+static ULONG GetSymbolsAmount( HB_COMP_DECL );
+static BOOL IsExternal( HB_COMP_DECL, ULONG ulSymbol );
 static USHORT GetExternalPos( char * szExternal );
 static void GenerateLocalNames( FILE * hObjFile );
-static void GenerateSymbolsSegment( FILE * hObjFile );
-static void GenerateDataSegment( FILE * hObjFile );
-static void GenerateCodeSegment( FILE * hObjFile );
-static void GenerateExternals( FILE * hObjFile );
+static void GenerateSymbolsSegment( HB_COMP_DECL, FILE * hObjFile );
+static void GenerateDataSegment( HB_COMP_DECL, FILE * hObjFile );
+static void GenerateCodeSegment( HB_COMP_DECL, FILE * hObjFile );
+static void GenerateExternals( HB_COMP_DECL, FILE * hObjFile );
 static void putbyte( BYTE b, FILE * hObjFile, BYTE * pbChecksum );
 static void putword( USHORT w, FILE * hObjFile, BYTE * pbChecksum );
 static void CompiledFileName( FILE * hObjFile, char * szFileName );
 static void CompilerVersion( FILE * hObjFile, char * szVersion );
 static void LocalNames( FILE * hObjFile, char * szNames[] );
 static void ExternalNames( FILE * hObjFile, char * szNames[] );
-static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions );
-static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols, ULONG ulTotalSize );
+static void CodeSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions );
+static void DataSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols, ULONG ulTotalSize );
 static void DefineSegment( FILE * hObjFile, BYTE bName, BYTE bClass, USHORT wLen );
 static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOffset );
 static void Fixup( FILE * hObjFile, BYTE bType, USHORT wOffset, BYTE bFlags, BYTE bSymbol );
@@ -62,7 +62,7 @@ static char * * externNames = 0;
 static USHORT wExternals = 1; /* _hb_vmExecute is always added */
 static char * szPrefix = "_HB_FUN_";
 
-void hb_compGenObj32( PHB_FNAME pFileName )
+void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
   char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */
@@ -74,11 +74,11 @@ void hb_compGenObj32( PHB_FNAME pFileName )
 
   if( ( hObjFile = fopen( szFileName, "wb" ) ) == NULL )
     {
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 
-  if( ! hb_comp_bQuiet )
+  if( ! HB_COMP_PARAM->fQuiet )
   {
     printf( "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
     fflush( stdout );
@@ -90,32 +90,32 @@ void hb_compGenObj32( PHB_FNAME pFileName )
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, compiler );
   GenerateLocalNames( hObjFile );
-  GenerateExternals( hObjFile );
-  GenerateCodeSegment( hObjFile );
-  GenerateDataSegment( hObjFile );
-  GenerateSymbolsSegment( hObjFile );
+  GenerateExternals( HB_COMP_PARAM, hObjFile );
+  GenerateCodeSegment( HB_COMP_PARAM, hObjFile );
+  GenerateDataSegment( HB_COMP_PARAM, hObjFile );
+  GenerateSymbolsSegment( HB_COMP_PARAM, hObjFile );
   End( hObjFile );
 
   fclose( hObjFile );
 
-  if( ! hb_comp_bQuiet )
+  if( ! HB_COMP_PARAM->fQuiet )
     printf( "Done.\n" );
 }
 
-static ULONG GetSymbolsSize( void )
+static ULONG GetSymbolsSize( HB_COMP_DECL )
 {
-  return hb_comp_symbols.iCount * sizeof( HB_SYMB );
+  return HB_COMP_PARAM->symbols.iCount * sizeof( HB_SYMB );
 }
 
-static PCOMSYMBOL GetFirstSymbol( void )
+static PCOMSYMBOL GetFirstSymbol( HB_COMP_DECL )
 {
-  PCOMSYMBOL pSymbol = hb_comp_symbols.pFirst;
+  PCOMSYMBOL pSymbol = HB_COMP_PARAM->symbols.pFirst;
   return pSymbol;
 }
 
-static char * GetSymbolName( ULONG ulPos )
+static char * GetSymbolName( HB_COMP_DECL, ULONG ulPos )
 {
-  PCOMSYMBOL pSymbol = GetFirstSymbol();
+  PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
   ULONG ul = 0;
 
   while( pSymbol && ( ul++ < ulPos ) )
@@ -124,12 +124,12 @@ static char * GetSymbolName( ULONG ulPos )
   return pSymbol->szName;
 }
 
-static ULONG GetPCodesSize( void )
+static ULONG GetPCodesSize( HB_COMP_DECL )
 {
   ULONG ulTotal = 0;
-  PFUNCTION pFunction = hb_comp_functions.pFirst;
+  PFUNCTION pFunction = HB_COMP_PARAM->functions.pFirst;
 
-  if( ! hb_comp_bStartProc )
+  if( ! HB_COMP_PARAM->fStartProc )
     pFunction = pFunction->pNext;
 
   while( pFunction )
@@ -140,9 +140,9 @@ static ULONG GetPCodesSize( void )
   return ulTotal;
 }
 
-static ULONG GetSymbolsAmount( void )
+static ULONG GetSymbolsAmount( HB_COMP_DECL )
 {
-  PCOMSYMBOL pSymbol = GetFirstSymbol();
+  PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
   ULONG ulAmount = 1;
 
   while( pSymbol->pNext )
@@ -153,15 +153,15 @@ static ULONG GetSymbolsAmount( void )
   return ulAmount;
 }
 
-static BOOL IsExternal( ULONG ulSymbol )
+static BOOL IsExternal( HB_COMP_DECL, ULONG ulSymbol )
 {
-  PCOMSYMBOL pSymbol = GetFirstSymbol();
+  PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
   ULONG ul = 0;
 
   while( ul++ < ulSymbol )
     pSymbol = pSymbol->pNext;
 
-  return ! hb_compFunctionFind( pSymbol->szName );
+  return ! hb_compFunctionFind( HB_COMP_PARAM, pSymbol->szName );
 }
 
 static USHORT GetExternalPos( char * szExternal )
@@ -190,7 +190,7 @@ static void GenerateLocalNames( FILE * hObjFile )
   LocalNames( hObjFile, localNames );
 }
 
-static void GenerateSymbolsSegment( FILE * hObjFile )
+static void GenerateSymbolsSegment( HB_COMP_DECL, FILE * hObjFile )
 {
   BYTE symbolsData[]   = { 0, 0, 0, 0, 0, 0, 0, 0 };
   BYTE groupDGroup[]   = { 2, 3, 4, 0 }; /* segments defined order for DGROUP */
@@ -221,7 +221,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
   GroupDef( hObjFile, 12, groupSymGroup ); /* "SYMGROUP" localNames position - 1 */
   GroupDef( hObjFile, 17, groupInitData ); /* "BORLAND" localNames position - 1 */
 
-  * ( USHORT * ) symbolsData = (USHORT) GetSymbolsAmount();
+  * ( USHORT * ) symbolsData = (USHORT) GetSymbolsAmount( HB_COMP_PARAM );
 
   EnumeratedData( hObjFile, 6, symbolsData, sizeof( symbolsData ), 0 ); /* HB_SYMBOLS defined order segment */
 
@@ -230,12 +230,12 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
                          4 ); /* DATA segment defined order */
 }
 
-static void GenerateDataSegment( FILE * hObjFile )
+static void GenerateDataSegment( HB_COMP_DECL, FILE * hObjFile )
 {
   HB_SYMB symbol;
-  ULONG ulSize = GetSymbolsSize();
-  PCOMSYMBOL pSymbol = GetFirstSymbol();
-  ULONG ulSymbols = GetSymbolsAmount(), ul;
+  ULONG ulSize = GetSymbolsSize( HB_COMP_PARAM );
+  PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
+  ULONG ulSymbols = GetSymbolsAmount( HB_COMP_PARAM ), ul;
 
   while( pSymbol )
     {
@@ -243,7 +243,7 @@ static void GenerateDataSegment( FILE * hObjFile )
       pSymbol = pSymbol->pNext;
     }
 
-  ulSize += GetPCodesSize();
+  ulSize += GetPCodesSize( HB_COMP_PARAM );
 
   DefineSegment( hObjFile,  4,   /* _NULL position + 1 into localnames */
                             6,   /* "DATA" position + 1 into localNames */
@@ -256,19 +256,19 @@ static void GenerateDataSegment( FILE * hObjFile )
                     (USHORT) ulSize ); /* segment length */
 
   memset( &symbol, 0, sizeof( symbol ) );
-  DataSegment( hObjFile, (BYTE *) &symbol,
-               sizeof( symbol ), GetSymbolsAmount(), ulSize );
+  DataSegment( HB_COMP_PARAM, hObjFile, (BYTE *) &symbol,
+               sizeof( symbol ), GetSymbolsAmount( HB_COMP_PARAM ), ulSize );
 
-  pSymbol = GetFirstSymbol();
+  pSymbol = GetFirstSymbol( HB_COMP_PARAM );
   for( ul = 0; ul < ulSymbols; ul++ )
     {
       Fixup( hObjFile, 0xE4, (USHORT) ( ul * sizeof( HB_SYMB ) ), 0x54, 4 ); /* 4 = Data symbol name location */
 
-      if( IsExternal( ul ) )
+      if( IsExternal( HB_COMP_PARAM, ul ) )
         {
           if( ! ( pSymbol->cScope & HB_FS_MESSAGE ) )
             Fixup( hObjFile, 0xE4, (USHORT) ( ul * sizeof( HB_SYMB ) ) + 8, 0x56,
-                   GetExternalPos( GetSymbolName( ul ) ) + 1 );
+                   GetExternalPos( GetSymbolName( HB_COMP_PARAM, ul ) ) + 1 );
         }
       else
         {
@@ -279,11 +279,11 @@ static void GenerateDataSegment( FILE * hObjFile )
     }
 }
 
-static void GenerateCodeSegment( FILE * hObjFile )
+static void GenerateCodeSegment( HB_COMP_DECL, FILE * hObjFile )
 {
-  USHORT wFunctions = hb_comp_functions.iCount - ( hb_comp_bStartProc ? 0: 1 );
+  USHORT wFunctions = HB_COMP_PARAM->functions.iCount - ( HB_COMP_PARAM->fStartProc ? 0: 1 );
   ULONG ulSize    = wFunctions * sizeof( prgFunction );
-  PFUNCTION pFunc = ( hb_comp_bStartProc ? hb_comp_functions.pFirst: hb_comp_functions.pFirst->pNext );
+  PFUNCTION pFunc = ( HB_COMP_PARAM->fStartProc ? HB_COMP_PARAM->functions.pFirst: HB_COMP_PARAM->functions.pFirst->pNext );
   USHORT w = 0;
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
@@ -298,7 +298,7 @@ static void GenerateCodeSegment( FILE * hObjFile )
       pFunc = pFunc->pNext;
     }
 
-  CodeSegment( hObjFile, prgFunction, sizeof( prgFunction ), wFunctions );
+  CodeSegment( HB_COMP_PARAM, hObjFile, prgFunction, sizeof( prgFunction ), wFunctions );
 
   for( w = 0; w < wFunctions; w++ )
     {
@@ -314,16 +314,16 @@ static void GenerateCodeSegment( FILE * hObjFile )
     }
 }
 
-static void GenerateExternals( FILE * hObjFile )
+static void GenerateExternals( HB_COMP_DECL, FILE * hObjFile )
 {
   USHORT w;
   PFUNCTION pFunc, pFTemp;
 
   /* calculate amount of externals */
-  pFunc = hb_comp_funcalls.pFirst;
+  pFunc = HB_COMP_PARAM->funcalls.pFirst;
   while( pFunc )
     {
-      if( ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) == NULL || pFTemp == hb_comp_functions.pFirst )
+      if( ( pFTemp = hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName ) ) == NULL || pFTemp == HB_COMP_PARAM->functions.pFirst )
         wExternals++;
       pFunc = pFunc->pNext;
     }
@@ -333,10 +333,10 @@ static void GenerateExternals( FILE * hObjFile )
       w = 1;
       externNames[ 0 ] = "_hb_vmExecute";
 
-      pFunc = hb_comp_funcalls.pFirst;
+      pFunc = HB_COMP_PARAM->funcalls.pFirst;
       while( pFunc )
         {
-          if( ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) == NULL || pFTemp == hb_comp_functions.pFirst )
+          if( ( pFTemp = hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName ) ) == NULL || pFTemp == HB_COMP_PARAM->functions.pFirst )
             externNames[ w++ ] = pFunc->szName;
           pFunc = pFunc->pNext;
         }
@@ -460,16 +460,16 @@ static void ExternalNames( FILE * hObjFile, char * szNames[] )
   putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
+static void CodeSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT wFunctions )
 {
   BYTE bChk = 0;
   USHORT y;
   USHORT wTotalLen = (USHORT) ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
-  PFUNCTION pFunction = hb_comp_functions.pFirst;
-  ULONG ulPCodeOffset = hb_comp_symbols.iCount * sizeof( HB_SYMB );
+  PFUNCTION pFunction = HB_COMP_PARAM->functions.pFirst;
+  ULONG ulPCodeOffset = HB_COMP_PARAM->symbols.iCount * sizeof( HB_SYMB );
 
-  if( ! hb_comp_bStartProc )
+  if( ! HB_COMP_PARAM->fStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile, &bChk );
@@ -489,18 +489,18 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
   putbyte( 256 - bChk, hObjFile, &bChk );
 }
 
-static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols,
+static void DataSegment( HB_COMP_DECL, FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wSymbols,
                          ULONG ulSize )
 {
   BYTE bChk = 0;
   ULONG w, y;
   USHORT wTotalLen = 4 + (USHORT) ulSize;
-  PCOMSYMBOL pSymbol = GetFirstSymbol();
-  PFUNCTION pFunction = hb_comp_functions.pFirst;
-  ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();
+  PCOMSYMBOL pSymbol = GetFirstSymbol( HB_COMP_PARAM );
+  PFUNCTION pFunction = HB_COMP_PARAM->functions.pFirst;
+  ULONG ulSymbolNameOffset = GetSymbolsSize( HB_COMP_PARAM ) + GetPCodesSize( HB_COMP_PARAM );
   ULONG ulFunctionOffset;
 
-  if( ! hb_comp_bStartProc )
+  if( ! HB_COMP_PARAM->fStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile, &bChk );
@@ -512,9 +512,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
     {
       * ( ULONG * ) symbol = ulSymbolNameOffset;
 
-      if( ! IsExternal( y ) )
+      if( ! IsExternal( HB_COMP_PARAM, y ) )
         {
-          ulFunctionOffset = ( hb_compFunctionGetPos( pSymbol->szName ) - 1 ) *
+          ulFunctionOffset = ( hb_compFunctionGetPos( HB_COMP_PARAM, pSymbol->szName ) - 1 ) *
             sizeof( prgFunction );
           * ( ( ULONG * ) &symbol[ 8 ] ) = ulFunctionOffset; /* 8 offset of function pointer into symbol */
         }
@@ -542,7 +542,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
       pFunction = pFunction->pNext;
     }
 
-  pSymbol = GetFirstSymbol();
+  pSymbol = GetFirstSymbol( HB_COMP_PARAM );
 
   while( pSymbol )
     {

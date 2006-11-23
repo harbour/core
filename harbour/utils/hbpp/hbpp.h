@@ -131,6 +131,19 @@ extern void   hb_pp_Stuff( char *, char *, int, int, int );
 extern int    hb_pp_strocpy( char *, char * );
 extern DEFINES * hb_pp_AddDefine_( char *, char * );         /* Add new #define to a linked list */
 
+extern PHB_FNAME hb_comp_pFileName;
+extern BOOL   hb_comp_bQuiet;
+extern BOOL   hb_comp_bStartProc;
+extern BOOL   hb_comp_bAutoMemvarAssume;
+extern BOOL   hb_comp_bForceMemvars;
+extern BOOL   hb_comp_bShortCuts;
+extern BOOL   hb_comp_bDebugInfo;
+extern BOOL   hb_comp_bLineNumbers;
+extern int    hb_comp_iExitLevel;
+extern int    hb_comp_iWarnings;
+extern int    hb_comp_iLine;
+extern int    hb_comp_iLineINLINE;
+extern int    hb_comp_iLinePRG;
 extern int    hb_pp_lInclude;
 extern int *  hb_pp_aCondCompile;
 extern int    hb_pp_nCondCompile;
@@ -151,17 +164,10 @@ extern FILE * hb_comp_yyppo;
 extern int    hb_pp_Internal_( FILE *, char * );
 extern void   hb_pp_InternalFree( void );
 
-#if 0
 #define HB_PP_STREAM_DUMP_C   1 /* pragma BEGINDUMP */
 #define HB_PP_STREAM_CLIPPER  2 /* clipper compatible TEXT/ENDTEXT */
 #define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
 #define HB_PP_STREAM_C        8 /* TEXT/ENDTEXT lines joined and ESC seq processed */
-#else
-#define HB_PP_STREAM_DUMP_C   2 /* pragma BEGINDUMP */
-#define HB_PP_STREAM_CLIPPER  3 /* clipper compatible TEXT/ENDTEXT */
-#define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
-#define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC seq processed */
-#endif
 
 extern BOOL   hb_pp_StreamBlockBegin( char *, int );
 extern void   hb_pp_BlockEnd( void );

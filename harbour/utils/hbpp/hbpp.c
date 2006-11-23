@@ -449,9 +449,11 @@ static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
   pPath->szPath = szPath;
 }
 
-void hb_compGenError( char * _szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
+void hb_compGenError( HB_COMP_DECL, char * _szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
+
+  HB_SYMBOL_UNUSED( HB_COMP_PARAM );
 
   printf( "\r(%i) ", hb_comp_iLine );
   printf( "Error %c%04i  ", cPrefix, iError );
@@ -463,9 +465,11 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, const char *
   */
 }
 
-void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
+void hb_compGenWarning( HB_COMP_DECL, char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+
+  HB_SYMBOL_UNUSED( HB_COMP_PARAM );
 
   if( s_iWarnings )
     {
@@ -488,7 +492,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
   if( ! pMem )
-    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMALLOC, NULL, NULL );
+    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMALLOC, NULL, NULL );
 
   return pMem;
 }
@@ -500,7 +504,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
   if( ! pResult )
-    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMREALLOC, NULL, NULL );
+    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMREALLOC, NULL, NULL );
 
   return pResult;
 }
@@ -512,7 +516,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
   if( pMem )
     free( pMem );
   else
-    hb_compGenError( hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
+    hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
 }
 
 BOOL hb_pp_fopen( char * szFileName )

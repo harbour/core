@@ -125,9 +125,8 @@ BOOL hb_cmdargIsInternal( const char * szArg )
 
 static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 {
+   char * pszRetVal = NULL, * pszEnvVar;
    int i;
-   char * pszEnvVar;
-   char * tmp;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargGet(%s, %d)", pszName, (int) bRetValue));
 
@@ -141,25 +140,19 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
          if( bRetValue )
          {
             char * pszPos = s_argv[ i ] + 2 + strlen( pszName );
-            char * pszRetVal;
 
             if( *pszPos == ':' )
                pszPos++;
 
-            pszRetVal = ( char * ) hb_xgrab( strlen( pszPos ) + 1 );
-            strcpy( pszRetVal, pszPos );
-
-            return pszRetVal;
+            return hb_strdup( pszPos );
          }
          else
-            return s_argv[ i ] + 2;
+            return "";
       }
    }
 
    /* Check the environment variable */
-
    pszEnvVar = hb_getenv( "HARBOUR" );
-
    if( !pszEnvVar || pszEnvVar[ 0 ] == '\0' )
    {
       if( pszEnvVar )
@@ -168,11 +161,9 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
       pszEnvVar = hb_getenv( "CLIPPER" );
    }
 
-   tmp = pszEnvVar;
-
    if( pszEnvVar && pszEnvVar[ 0 ] != '\0' )
    {
-      char * pszNext;
+      char * pszNext = pszEnvVar;
 
       /* Step through all envvar switches. */
 
@@ -180,63 +171,56 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
                chars at all, Harbour is more strict/standard in this respect,
                it requires the switches to be separated. */
 
-      pszNext = pszEnvVar;
-
+      i = strlen( pszName );
       while( *pszNext )
       {
          static const char * szSeparator = " ;,\t";
          char * pszEnd;
 
-         /* Search for the end of this switch */
-         while( *pszNext && strchr( szSeparator, *pszNext ) == NULL )
-            pszNext++;
-
-         pszEnd = pszNext;
-
-         /* Skip the separators after the switch */
+         /* Skip the separators */
          while( *pszNext && strchr( szSeparator, *pszNext ) )
             pszNext++;
 
-         /* Check the switch */
-
          /* The // is optional in the envvar */
-         if( hb_cmdargIsInternal( pszEnvVar ) )
-            pszEnvVar += 2;
+         if( hb_cmdargIsInternal( pszNext ) )
+            pszNext += 2;
 
-         if( hb_strnicmp( pszEnvVar, pszName, strlen( pszName ) ) == 0 )
+         pszEnd = pszNext;
+         /* Search for the end of this switch */
+         while( *pszEnd && strchr( szSeparator, *pszEnd ) == NULL )
+            pszEnd++;
+
+         /* Check the switch */
+         if( hb_strnicmp( pszNext, pszName, i ) == 0 )
          {
             if( bRetValue )
             {
-               char * pszPos = pszEnvVar + strlen( pszName );
-               char * pszRetVal;
-
-               ULONG ulLen; /* NOTE: Use this variable as a workaround for MSC 8 internal error. [vszakats] */
+               ULONG ulLen;
+               pszNext += i;
 
                /* Skip value separator colon. */
-               if( *pszPos == ':' )
-                  pszPos++;
+               if( *pszNext == ':' )
+                  pszNext++;
 
-               ulLen = pszEnd - pszPos;
-
+               ulLen = pszEnd > pszNext ? pszEnd - pszNext : 0;
                pszRetVal = ( char * ) hb_xgrab( ulLen + 1 );
-               strncpy( pszRetVal, pszPos, ulLen );
+               strncpy( pszRetVal, pszNext, ulLen );
                pszRetVal[ ulLen ] = '\0';
-
-               return pszRetVal;
             }
             else
-               return pszEnvVar;
+               pszRetVal = "";
+            break;
          }
 
          /* Step to the next switch */
-         pszEnvVar = pszNext;
+         pszNext = pszEnd;
       }
    }
 
-   if( tmp )
-      hb_xfree( ( void * ) tmp );
+   if( pszEnvVar )
+      hb_xfree( ( void * ) pszEnvVar );
 
-   return NULL;
+   return pszRetVal;
 }
 
 BOOL hb_cmdargCheck( const char * pszName )
