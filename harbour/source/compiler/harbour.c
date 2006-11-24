@@ -91,20 +91,45 @@ static void hb_compDeclaredInit( HB_COMP_DECL );
 static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * bSkipGen, BOOL bSingleFile );
 
 /* global variables */
-HB_COMP_PTR    hb_comp_data;
-
 FILE *         hb_comp_errFile = NULL;
 
+
 extern int  yyparse( HB_COMP_DECL );    /* main yacc parsing function */
+HB_COMP_PTR hb_comp_data = NULL;
 
 /* ************************************************************************* */
+
+static void hb_compMainExit( HB_COMP_DECL )
+{
+   hb_compCompileEnd( HB_COMP_PARAM );
+   hb_compParserStop( HB_COMP_PARAM );
+   hb_compIdentifierClose( HB_COMP_PARAM );
+
+   if( HB_COMP_PARAM->pOutPath )
+      hb_xfree( HB_COMP_PARAM->pOutPath );
+
+   if( HB_COMP_PARAM->pPpoPath )
+      hb_xfree( HB_COMP_PARAM->pPpoPath );
+
+   while( HB_COMP_PARAM->autoopen )
+   {
+      PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
+
+      HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
+      hb_xfree( pAutoOpen );
+   }
+
+   hb_comp_free( HB_COMP_PARAM );
+
+   hb_xexit();
+}
 
 int main( int argc, char * argv[] )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
+   BOOL bAnyFiles = FALSE;
    int i;
-   BOOL bAnyFiles;
 
 #if defined( HOST_OS_UNIX_COMPATIBLE )
    hb_comp_errFile = stderr;
@@ -114,7 +139,8 @@ int main( int argc, char * argv[] )
 
    HB_TRACE(HB_TR_DEBUG, ("main()"));
 
-   hb_comp_data = HB_COMP_PARAM = hb_comp_new();
+   HB_COMP_PARAM = hb_comp_new();
+   hb_comp_data = HB_COMP_PARAM;
 
    HB_COMP_PARAM->pOutPath = NULL;
 
@@ -124,41 +150,40 @@ int main( int argc, char * argv[] )
    /* Then check command line arguments
       This will override duplicated environment settings */
    hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
-
-   if( HB_COMP_PARAM->fLogo )
-      hb_compPrintLogo();
-
-   if( HB_COMP_PARAM->fBuildInfo )
+   if( !HB_COMP_PARAM->fExit )
    {
-      printf( "\n" );
-      hb_verBuildInfo();
-      return iStatus;
+      if( HB_COMP_PARAM->fLogo )
+         hb_compPrintLogo();
+
+      if( HB_COMP_PARAM->fBuildInfo )
+      {
+         printf( "\n" );
+         hb_verBuildInfo();
+         return iStatus;
+      }
+
+      if( HB_COMP_PARAM->fCredits )
+      {
+         hb_compPrintCredits();
+         return iStatus;
+      }
+
+      /* Set Search Path */
+      hb_compChkPaths( HB_COMP_PARAM );
+
+      /* Set standard rules */
+      hb_compInitPP( HB_COMP_PARAM, argc, argv );
+
+      /* Prepare the table of identifiers */
+      hb_compIdentifierOpen( HB_COMP_PARAM );
+
+      /* Load standard Declarations. */
+      if( HB_COMP_PARAM->iWarnings >= 3 )
+         hb_compDeclaredInit( HB_COMP_PARAM );
    }
-
-   if( HB_COMP_PARAM->fCredits )
-   {
-      hb_compPrintCredits();
-      return iStatus;
-   }
-
-   /* Set Search Path */
-   hb_compChkPaths( HB_COMP_PARAM );
-
-   /* Set standard rules */
-   hb_compInitPP( HB_COMP_PARAM, argc, argv );
-
-   /* Prepare the table of identifiers */
-   hb_compIdentifierOpen( HB_COMP_PARAM );
-
-   /* Load standard Declarations. */
-   if( HB_COMP_PARAM->iWarnings >= 3 )
-      hb_compDeclaredInit( HB_COMP_PARAM );
 
    /* Process all files passed via the command line. */
-
-   bAnyFiles = FALSE;
-
-   for( i = 1; i < argc; i++ )
+   for( i = 1; i < argc && !HB_COMP_PARAM->fExit; i++ )
    {
       HB_TRACE(HB_TR_DEBUG, ("main LOOP(%i,%s)", i, argv[i]));
       if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
@@ -184,49 +209,10 @@ int main( int argc, char * argv[] )
    if( HB_COMP_PARAM->iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
 
-   hb_compMainExit();
+   hb_compMainExit( HB_COMP_PARAM );
+   hb_comp_data = NULL;
 
    return iStatus;
-}
-
-void hb_compMainExit( void )
-{
-   HB_COMP_DECL = hb_comp_data;
-   static BOOL inProcess = FALSE;
-   
-   if( inProcess || !HB_COMP_PARAM )
-      return;
-
-   inProcess = TRUE;
-
-   hb_compCompileEnd( HB_COMP_PARAM );
-   hb_compIdentifierClose( HB_COMP_PARAM );
-   hb_compParserStop( HB_COMP_PARAM );
-
-   if( HB_COMP_PARAM->pOutPath )
-   {
-      hb_xfree( HB_COMP_PARAM->pOutPath );
-      HB_COMP_PARAM->pOutPath = NULL;
-   }
-
-   if( HB_COMP_PARAM->pPpoPath )
-   {
-      hb_xfree( HB_COMP_PARAM->pPpoPath );
-      HB_COMP_PARAM->pPpoPath = NULL;
-   }
-
-   while( HB_COMP_PARAM->autoopen )
-   {
-      PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
-
-      HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
-      hb_xfree( pAutoOpen->szName );
-      hb_xfree( pAutoOpen );
-   }
-
-   hb_comp_free( HB_COMP_PARAM );
-   hb_comp_data = NULL;
-   hb_xexit();
 }
 
 static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
@@ -255,7 +241,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
    {
       int i = 0, ch;
       BOOL bAutoOpen = HB_COMP_PARAM->fAutoOpen;
-      
+
       HB_COMP_PARAM->fAutoOpen = TRUE;
 
       do
@@ -285,7 +271,8 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
             szFile[ i ] = '\0';
 
             if( i > 0 )
-               hb_compAutoOpenAdd( HB_COMP_PARAM, szFile );
+               hb_compAutoOpenAdd( HB_COMP_PARAM,
+                        hb_compIdentifierNew( HB_COMP_PARAM, szFile, TRUE ) );
             i = 0;
             while( ch != EOF && ch != '\n' )
                ch = fgetc( inFile );
@@ -652,8 +639,8 @@ void hb_compExternAdd( HB_COMP_DECL, char * szExternName ) /* defines a new exte
    if( strcmp( "_GET_", szExternName ) == 0 )
    {
       /* special function to implement @ GET statement */
-      hb_compExternAdd( HB_COMP_PARAM, hb_strdup("__GETA") );
-      pExtern->szName = hb_strdup("__GET");
+      hb_compExternAdd( HB_COMP_PARAM, "__GETA" );
+      pExtern->szName = "__GET";
    }
    else
    {
@@ -1271,7 +1258,7 @@ PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
    return NULL;
 }
 
-void hb_compDeclaredInit( HB_COMP_DECL )
+static void hb_compDeclaredInit( HB_COMP_DECL )
 {
   #define _DECL static COMDECLARED
 
@@ -1821,7 +1808,8 @@ static PINLINE hb_compInlineNew( HB_COMP_DECL, char * szName, int iLine )
    pInline->pCode      = NULL;
    pInline->lPCodeSize = 0;
    pInline->pNext      = NULL;
-   pInline->szFileName = hb_strdup( hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ) );
+   pInline->szFileName = hb_compIdentifierNew( HB_COMP_PARAM,
+                           hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), TRUE );
    pInline->iLine      = iLine;
 
    return pInline;
@@ -2016,7 +2004,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pLocals;
       pFunc->pLocals = pVar->pNext;
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -2024,7 +2011,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pStatics;
       pFunc->pStatics = pVar->pNext;
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -2032,7 +2018,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pFields;
       pFunc->pFields = pVar->pNext;
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -2040,7 +2025,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pMemvars;
       pFunc->pMemvars = pVar->pNext;
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -2048,7 +2032,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pPrivates;
       pFunc->pPrivates = pVar->pNext;
-
       hb_xfree( ( void * ) pVar );
    }
 
@@ -2068,7 +2051,6 @@ PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
       hb_xfree( ( void * ) pFunc->pJumps );
 
    hb_xfree( ( void * ) pFunc->pCode );
-/* hb_xfree( ( void * ) pFunc->szName ); The name will be released in hb_compSymbolKill() */
    hb_xfree( ( void * ) pFunc );
 
    hb_compLoopKill( HB_COMP_PARAM );
@@ -2572,15 +2554,10 @@ static void hb_compPrepareOptimize( HB_COMP_DECL )
 
 ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
 {
-   if( HB_LIM_INT24( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   }
-   else
-   {
+   if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-   }
 
+   hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareOptimize( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
@@ -2588,15 +2565,10 @@ ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
 
 ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
 {
-   if( HB_LIM_INT24( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   }
-   else
-   {
+   if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-   }
 
+   hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareOptimize( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
@@ -2604,15 +2576,10 @@ ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
 
 ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
 {
-   if( HB_LIM_INT24( lOffset ) )
-   {
-      hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
-   }
-   else
-   {
+   if( !HB_LIM_INT24( lOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
-   }
 
+   hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareOptimize( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
@@ -2641,7 +2608,8 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
    if( HB_COMP_PARAM->fLineNumbers && ! HB_COMP_PARAM->fDontGenLineNum )
    {
       int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
-      if( ( ( HB_COMP_PARAM->functions.pLast->lPCodePos - HB_COMP_PARAM->lastLinePos ) > 3 ) || HB_COMP_PARAM->fDebugInfo )
+      if( HB_COMP_PARAM->functions.pLast->lPCodePos - HB_COMP_PARAM->lastLinePos > 3 ||
+          HB_COMP_PARAM->fDebugInfo )
       {
          HB_COMP_PARAM->lastLinePos = HB_COMP_PARAM->functions.pLast->lPCodePos;
          hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( iLine ), HB_HIBYTE( iLine ), HB_COMP_PARAM );
@@ -3749,7 +3717,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
    hb_compCodeTraceMarkDead( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
 
-   for( iPass = 0; iPass < 3; ++iPass )
+   for( iPass = 0; iPass < 3 && !HB_COMP_PARAM->fExit; ++iPass )
    {
       LONG lOffset;
 
@@ -4631,7 +4599,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             /* Open refernced modules (using DO ... WITh statement
              * or from @.clp command line option
             */
-            while( HB_COMP_PARAM->autoopen )
+            while( HB_COMP_PARAM->autoopen && !HB_COMP_PARAM->fExit )
             {
                PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
 
@@ -4639,8 +4607,6 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                   hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, bSingleFile );
 
                HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
-
-               hb_xfree( pAutoOpen->szName );
                hb_xfree( pAutoOpen );
             }
 
@@ -4698,7 +4664,8 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                }
             }
 
-            if( ! HB_COMP_PARAM->fSyntaxCheckOnly && ! bSkipGen && ( HB_COMP_PARAM->iErrorCount == 0 ) )
+            if( ! HB_COMP_PARAM->fSyntaxCheckOnly && ! bSkipGen &&
+                HB_COMP_PARAM->iErrorCount == 0 )
             {
                char * szFirstFunction = NULL;
                PFUNCTION *pFunPtr;
@@ -4715,7 +4682,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                   HB_COMP_PARAM->iFunctionCnt--;
                }
 
-               while( *pFunPtr )
+               while( *pFunPtr && !HB_COMP_PARAM->fExit )
                {
                   /* remove function frames with no names */
                   if( ! HB_COMP_PARAM->fStartProc && ! (*pFunPtr)->szName[0] )
@@ -4812,16 +4779,12 @@ static void hb_compCompileEnd( HB_COMP_DECL )
       HB_COMP_PARAM->functions.pFirst = NULL;
    }
 
-   if( HB_COMP_PARAM->funcalls.pFirst )
+   while( HB_COMP_PARAM->funcalls.pFirst )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->funcalls.pFirst;
-      while( pFunc )
-      {
-         HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
-         hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
-         pFunc = HB_COMP_PARAM->funcalls.pFirst;
-      }
-      HB_COMP_PARAM->funcalls.pFirst = NULL;
+
+      HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
+      hb_xfree( ( void * ) pFunc );
    }
 
    while( HB_COMP_PARAM->externs )
@@ -4832,68 +4795,45 @@ static void hb_compCompileEnd( HB_COMP_DECL )
       hb_xfree( pExtern );
    }
 
-   if( HB_COMP_PARAM->inlines.pFirst )
+   while( HB_COMP_PARAM->inlines.pFirst )
    {
       PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
 
-      while( pInline )
-      {
-         HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
-         if( pInline->pCode )
-         {
-            hb_xfree( ( void * ) pInline->pCode );
-         }
-         hb_xfree( ( void * ) pInline->szFileName );
-         hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
-         pInline = HB_COMP_PARAM->inlines.pFirst;
-      }
-      HB_COMP_PARAM->inlines.pFirst = NULL;
+      HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
+      if( pInline->pCode )
+         hb_xfree( pInline->pCode );
+      hb_xfree( ( void * ) pInline );
    }
 
-   if( HB_COMP_PARAM->pReleaseDeclared )
+   while( HB_COMP_PARAM->pReleaseDeclared )
    {
       PCOMDECLARED pDeclared = HB_COMP_PARAM->pReleaseDeclared;
-
-      while( pDeclared )
-      {
-         HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
-         hb_xfree( ( void * ) pDeclared );
-         pDeclared = HB_COMP_PARAM->pFirstDeclared;
-      }
-      HB_COMP_PARAM->pFirstDeclared = NULL;
+      HB_COMP_PARAM->pReleaseDeclared = pDeclared->pNext;
+      hb_xfree( ( void * ) pDeclared );
    }
+   HB_COMP_PARAM->pFirstDeclared = HB_COMP_PARAM->pLastDeclared = NULL;
 
-   if( HB_COMP_PARAM->pReleaseClass )
+   while( HB_COMP_PARAM->pReleaseClass )
    {
       PCOMCLASS pClass = HB_COMP_PARAM->pReleaseClass;
-      PCOMDECLARED pDeclared;
-
-      while( pClass )
+      HB_COMP_PARAM->pReleaseClass = pClass->pNext;
+      while( pClass->pMethod )
       {
-         HB_COMP_PARAM->pFirstClass = pClass->pNext;
-         pDeclared = pClass->pMethod;
-         while ( pDeclared )
-         {
-            HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
-            hb_xfree( ( void * ) pDeclared );
-            pDeclared = HB_COMP_PARAM->pFirstDeclared;
-         }
-
-         hb_xfree( ( void * ) pClass );
-         pClass = HB_COMP_PARAM->pFirstClass;
+         PCOMDECLARED pDeclared = pClass->pMethod;
+         pClass->pMethod = pDeclared->pNext;
+         hb_xfree( ( void * ) pDeclared );
       }
-      HB_COMP_PARAM->pReleaseClass = NULL;
+      hb_xfree( ( void * ) pClass );
    }
+   HB_COMP_PARAM->pFirstClass = HB_COMP_PARAM->pLastClass = NULL;
 
    if( HB_COMP_PARAM->symbols.pFirst )
    {
       PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
       while( pSym )
          pSym = hb_compSymbolKill( pSym );
-
       HB_COMP_PARAM->symbols.pFirst = NULL;
    }
-
 }
 
 static BOOL hb_compAutoOpenFind( HB_COMP_DECL, char * szName )
@@ -4928,7 +4868,7 @@ void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName )
    {
       PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
 
-      pAutoOpen->szName = hb_strdup( szName );
+      pAutoOpen->szName = szName;
       pAutoOpen->pNext  = NULL;
 
       if( HB_COMP_PARAM->autoopen == NULL )
@@ -4973,7 +4913,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
             iStatus = EXIT_FAILURE;
       }
 
-      if( iStatus == EXIT_SUCCESS )
+      if( iStatus == EXIT_SUCCESS && !HB_COMP_PARAM->fExit )
       {
          /* Minimal Init. */
          if( hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
@@ -4992,6 +4932,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
             else if( ! bSingleFile )
                hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
 
+            if( !HB_COMP_PARAM->fExit )
             {
                int i = HB_COMP_PARAM->iExitLevel ;
                BOOL b = HB_COMP_PARAM->fAnyWarning;
@@ -5037,5 +4978,5 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
    hb_xfree( HB_COMP_PARAM->pFileName );
    HB_COMP_PARAM->pFileName = pMainFileName;
 
-   return iStatus;
+   return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
 }

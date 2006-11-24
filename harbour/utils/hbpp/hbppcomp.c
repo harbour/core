@@ -311,9 +311,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
   if( hb_comp_iLineINLINE && hb_pp_StreamBlock == 0 )
   {
      hb_comp_iLine = hb_comp_iLinePRG + ( hb_comp_iLine - hb_comp_iLineINLINE );
-     #ifndef SIMPLEX
-        hb_comp_iLine++;
-     #endif
+     hb_comp_iLine++;
      hb_comp_iLineINLINE = 0;
   }
 

@@ -316,7 +316,7 @@ ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFla
            ;
 
 CompTimeStr: LITERAL { hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); }
-           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); hb_compAutoOpenAdd( HB_COMP_PARAM, szFileName ); }
+           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX + 1 ]; hb_strncat( hb_strncpy( szFileName, $1, _POSIX_PATH_MAX ), $3, _POSIX_PATH_MAX ); hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, TRUE ) ); }
            ;
 
 Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}

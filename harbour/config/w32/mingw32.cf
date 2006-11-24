@@ -14,9 +14,6 @@ CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE) -mno-cygwin
 CFLAGS = -Wall -W
-ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
-endif
 
 LD = $(CCPREFIX)gcc
 LD_OUT = -o

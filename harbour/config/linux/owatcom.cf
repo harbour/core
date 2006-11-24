@@ -31,10 +31,6 @@ ifneq ($(HB_LIB_COMPILE),)
    CPPFLAGS += -i$(HB_INC_COMPILE)
 endif
 
-ifeq ($(HB_LEX),SIMPLEX)
-   CFLAGS += -DSIMPLEX
-endif
-
 empty:=
 space:= $(empty) $(empty)
 comma:= ,

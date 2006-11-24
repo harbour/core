@@ -8,6 +8,67 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-02-08 20:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.nt
+  * makefile64.nt
+    * updated with recent changes
+
+2006-02-08 18:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwin/gtwin.c
+    + added PreExt() and PostExt() methods
+
+2006-02-08 15:17 UTC+0100 Przemyslaw32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/mingw32.cf
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * h may no flush data in PreExt()
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    ! fixed Init() code by adding missing SUPER_INIT()
+    * modified a little bit PreExt() and PostExt() methods
+
+2006-02-08 20:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.nt
+  * makefile64.nt
+    * updated with recent changes
+
+2006-02-08 18:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwin/gtwin.c
+    + added PreExt() and PostExt() methods
+
+2006-02-08 15:17 UTC+0100 Przemyslawurce/compiler/harbour.y
+  * harbour/source/compiler/hbgenerr.c
+  - harbour/source/compiler/hbslex.c
+  - harbour/source/compiler/hbstrong.c
+  * harbour/source/compiler/hbusage.c
+  - harbour/source/compiler/simplex.c
+  * harbour/source/macro/Makefile
+  - harbour/source/macro/macro.slx
+  - harbour/source/macro/macroslx.c
+  * harbour/source/pp/ppcore.c
+  * harbour/utils/hbpp/hbppcomp.c
+    - removed SIMPLEX references
+    ! fixed memory leak in request _GET_
+    * use hb_compIdentifiersNew() in INLINE and AUTOOPEN structures
+      members
+    * eliminated all internal exit() calls. Now hb_compGenError() with
+      fatal errors does not interrupt application but only sets
+         HB_COMP_PARAM->fExit = TRUE;
+      What should cause silent clean application close.
+      Please keep it in mind making future modifications and do not
+      introduce and exit() function call.
+    + added support for \x<hex> and \<oct> quoting in extended strings
+      (just like in C). Warning !!!. Embedded 0 bytes are supported by
+      PP, lexer and expression optimizer but not by bison. To make them
+      working it will be necessary to change Literal terminal symbol
+      holder and add length field in bison rules and also change the hash
+      table used to hold identifiers, literals and macros to store and use
+      real string length. If /hbgtcore.c
+   * include/hbapigt.h
+   * source/rtl/gtpca/gtpca.c
    * source/rtl/gtstd/gtstd.c
      ! Fixed recent compiler warnings.
 

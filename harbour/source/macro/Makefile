@@ -4,22 +4,6 @@
 
 ROOT = ../../
 
-YACC_FLAGS = -p hb_macro
-
-YACC_SOURCE=macro.y
-
-YACC_HEADERS=\
-	hbmacro.h \
-	hbsetup.h \
-	hbpcode.h \
-	hbdefs.h \
-
-ifeq ($(HB_LEX),SIMPLEX)
-
-C_EXTRA=macroslx.c
-
-else
-
 #NOTE: You can pass additional parameters that control the speed/size
 # ratio of generated flex scanner. These parameters are:
 # -Cf   - fastest/biggest
@@ -29,20 +13,23 @@ else
 # -Ce
 # -Cem  - slowest/smallest
 # see Flex documentation for full set of switches
-LEX_FLAGS = -Phb_macro -C
-
+#LEX_FLAGS = -Phb_macro -C
 #LEX_SOURCE=macro.l
+#LEX_HEADERS=\
+#	hbsetup.h \
+#	hberrors.h \
+#	hbdefs.h \
+#	hbmacro.h \
 
-LEX_HEADERS=\
-	hbsetup.h \
-	hberrors.h \
-	hbdefs.h \
+YACC_FLAGS = -p hb_macro
+YACC_SOURCE=macro.y
+YACC_HEADERS=\
 	hbmacro.h \
-
-endif
+	hbsetup.h \
+	hbpcode.h \
+	hbdefs.h \
 
 C_SOURCES=\
-	$(C_EXTRA) \
 	macroa.c \
 	macrob.c \
 	macroc.c \

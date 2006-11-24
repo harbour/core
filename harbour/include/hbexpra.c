@@ -378,8 +378,6 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_EXPR_PCODE1( hb_compExprDelete, pName ); 
          return pEval;
       }
-#ifndef SIMPLEX
-
       else if( ( strcmp( "_GET_", pName->value.asSymbol ) == 0 ) && iCount )
       {
          /* Reserved Clipper function used to handle GET variables
@@ -578,9 +576,6 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             pParms->value.asList.pExprList = pArg;
          }
       }
-
-#endif
-
    }
 
    else if( pName->ExprType == HB_ET_MACRO )
@@ -969,7 +964,6 @@ HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 }
 #endif
 
-#ifndef SIMPLEX
 /* Creates a set/get codeblock for passed expression used in __GET
  *
  * {|var| IIF( var==NIL, <pExpr>, <pExpr>:=var )}
@@ -1003,5 +997,3 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
                      hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ),
                      "~1", ' ', HB_COMP_PARAM ), pIIF );
 }
-
-#endif

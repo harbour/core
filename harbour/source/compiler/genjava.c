@@ -41,7 +41,7 @@ static int s_nChar = 0;
 
 void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-   char szFileName[ _POSIX_PATH_MAX ];
+   char szFileName[ _POSIX_PATH_MAX ], * szVer;
    PFUNCTION pFunc /*= HB_COMP_PARAM->functions.pFirst */;
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    ULONG lPCodePos;
@@ -67,9 +67,9 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 
    s_nChar = 0;
 
-   fprintf( s_yyc, "/*\n * Harbour Compiler, Alpha build %d.%d (%s)\n",
-      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
-   fprintf( s_yyc, " * Generated JAVA source code\n */\n\n" );
+   szVer = hb_verHarbour();
+   fprintf( s_yyc, "/*\n * %s\n * Generated JAVA source code\n */\n\n", szVer );
+   hb_xfree( szVer );
 
    fprintf( s_yyc, "public class %s\n", pFileName->szName );
    fprintf( s_yyc, "{\n" );

@@ -20,10 +20,6 @@ CFLAGS = -W -Wall -O2 -DHB_OS_OS2 -fsigned-char
 # to be removed if compiled on a tcp/ip stack >= 4.1 (eComStation, for example)
 CFLAGS += -DTCPV40HDRS
 
-ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
-endif
-
 LD = gcc
 LDFLAGS =
 LD_OUT = -o $(SPACE)

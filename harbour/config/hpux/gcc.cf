@@ -20,10 +20,6 @@ CFLAGS = -DHB_OS_HPUX -Wall -W -fsigned-char
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
-ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
-endif
-
 
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o

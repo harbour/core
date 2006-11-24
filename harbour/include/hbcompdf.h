@@ -527,6 +527,7 @@ typedef struct _HB_COMP
    int               iLanguage;           /* default Harbour generated output language */
    int               iGenCOutput;         /* C code generation should be verbose (use comments) or not */
 
+   BOOL              fExit;               /* force breaking compilation process */
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
    BOOL              fPPO;                /* flag indicating, is ppo output needed */
    BOOL              fStartProc;          /* holds if we need to create the starting procedure */
@@ -563,15 +564,15 @@ extern void hb_comp_free( HB_COMP_PTR );
 
 extern HB_COMP_PTR hb_comp_data;
 
-#  define HB_COMP_PARAM       pComp
-#  define HB_COMP_DECL        HB_COMP_PTR HB_COMP_PARAM
+#define HB_COMP_PARAM         pComp
+#define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
 
 #else
 
-#  define HB_COMP_PARAM       pMacro
-#  define HB_COMP_DECL        HB_MACRO_PTR HB_COMP_PARAM
+#define HB_COMP_PARAM         pMacro
+#define HB_COMP_DECL          HB_MACRO_PTR HB_COMP_PARAM
 
-#endif
+#endif /* !HB_MACRO_SUPPORT  */
 
 #define HB_MACRO_DATA         HB_COMP_PARAM
 #define HB_PCODE_DATA         ( HB_MACRO_DATA->pCodeInfo )

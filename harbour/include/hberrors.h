@@ -121,6 +121,7 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_MEMCORRUPT                  59
 #define HB_COMP_ERR_WITHOBJECT                  60
 #define HB_COMP_ERR_BUFFER_OVERFLOW             61
+#define HB_COMP_ERR_UNSUPPORTED_LANG            62
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

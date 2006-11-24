@@ -53,12 +53,6 @@
 #ifndef HB_VER_H_
 #define HB_VER_H_
 
-#if defined(SIMPLEX)
-   #define HB_VER_LEX "SimpLex"
-#else
-   #define HB_VER_LEX "Flex"
-#endif
-
 /* NOTE: One of these next three fields can be incremented by the hbverfix program */
 
 #define HB_VER_MAJOR    0       /* Major version number */

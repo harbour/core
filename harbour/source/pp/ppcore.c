@@ -951,8 +951,11 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             ++ul;
             while( ++ul < ulLen && pBuffer[ ul ] != '"' )
             {
-               if( pBuffer[ ul ] == '\\' && ulLen - ul > 1 )
-                  ++ul;
+               if( pBuffer[ ul ] == '\\' )
+               {
+                  if( ++ul == ulLen )
+                     break;
+               }
             }
             ulStrip = ul - 2;
             hb_strRemEscSeq( pBuffer + 2, &ulStrip );
@@ -1230,8 +1233,8 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
 {
    int iLines = 0, iSpace = fSpaces ? pToken->spaces : 0;
 
-   /* This is workaround for stringify token list and later decoding by
-      FLEX/SIMPLEX which breaks Clipper compatible code */
+   /* This is workaround for stringify token list and later decoding by FLEX
+      which breaks Clipper compatible code */
    if( iSpace == 0 && fQuote && ltype &&
        ltype >= HB_PP_TOKEN_ASSIGN &&
        HB_PP_TOKEN_TYPE( pToken->type ) >= HB_PP_TOKEN_ASSIGN )
@@ -1251,14 +1254,23 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
 
       for( i = 0; iq && i < pToken->len; ++i )
       {
-         if( pToken->value[ i ] == '"' )
-            iq &= ~1;
-         else if( pToken->value[ i ] == '\'' )
-            iq &= ~2;
-         else if( pToken->value[ i ] == ']' )
-            iq &= ~4;
-         else if( pToken->value[ i ] == '\n' )
-            iq = 0;
+         switch( pToken->value[ i ] )
+         {
+            case '"':
+               iq &= ~1;
+               break;
+            case '\'':
+               iq &= ~2;
+               break;
+            case ']':
+               iq &= ~4;
+               break;
+            case '\n':
+            case '\r':
+            case '\0':
+               iq = 0;
+               break;
+         }
       }
       if( iq == 0 && fQuote )
       {
@@ -1285,6 +1297,9 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
                   break;
                case '\b':
                   iq = ch = 'b';
+                  break;
+               case '\0':
+                  iq = ch = '0';
                   break;
                case '"':
                case '\\':

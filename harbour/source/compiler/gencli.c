@@ -58,7 +58,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
 void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL output */
 {
-   char szFileName[ _POSIX_PATH_MAX ];
+   char szFileName[ _POSIX_PATH_MAX ], * szVer;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    PCOMDECLARED pDeclared;
@@ -74,7 +74,6 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
 
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( pSym );
-   HB_SYMBOL_UNUSED( pInline );
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".il";
@@ -93,8 +92,9 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
       fflush( stdout );
    }
 
-   fprintf( yyc, "// Harbour Compiler, Alpha build %d.%d (%s)\n",
-      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+   szVer = hb_verHarbour();
+   fprintf( yyc, "// %s\n", szVer );
+   hb_xfree( szVer );
    fprintf( yyc, "// Generated .NET IL source code\n\n" );
 
    if( HB_COMP_PARAM->iFunctionCnt )
@@ -187,19 +187,6 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
       HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
       hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pFunc = HB_COMP_PARAM->funcalls.pFirst;
-   }
-
-   pInline = HB_COMP_PARAM->inlines.pFirst;
-   while( pInline )
-   {
-      HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
-      if( pInline->pCode )
-      {
-         hb_xfree( ( void * ) pInline->pCode );
-      }
-      hb_xfree( ( void * ) pInline->szFileName );
-      hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
-      pInline = HB_COMP_PARAM->inlines.pFirst;
    }
 
    if ( HB_COMP_PARAM->iWarnings >= 3 )
@@ -1329,7 +1316,6 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
    HB_SYMBOL_UNUSED( lPCodePos );
 
    fprintf( cargo->yyc, "LONG LONG unsupported\n" );
-   exit(1);
 
    return 9;
 }

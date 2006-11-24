@@ -33,10 +33,6 @@ ifneq ($(HB_LIB_COMPILE),)
 	CPPFLAGS += -i$(HB_INC_COMPILE)
 endif
 
-ifeq ($(HB_LEX),SIMPLEX)
-   CFLAGS += -DSIMPLEX
-endif
-
 # work arround to DOS command line size limit
 export WPP386 := $(strip $(CPPFLAGS))
 CPPFLAGS =

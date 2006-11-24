@@ -66,7 +66,7 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
   char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */
-  char compiler[ 70 ];
+  char compiler[ 70 ], * szVer;
 
   if( ! pFileName->szExtension )
     pFileName->szExtension = ".obj";
@@ -84,8 +84,9 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
     fflush( stdout );
   }
 
-  sprintf( compiler, "Harbour Compiler Alpha build %d.%d (%s)",
-     HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+  szVer = hb_verHarbour();
+  sprintf( compiler, "%s\n", szVer );
+  hb_xfree( szVer );
 
   CompiledFileName( hObjFile, szFileName );
   CompilerVersion( hObjFile, compiler );

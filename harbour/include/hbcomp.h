@@ -131,8 +131,6 @@ extern int hb_compVariableScope( HB_COMP_DECL, char * );
 #define FUN_USES_LOCAL_PARAMS 16  /* parameters are declared using () */
 #define FUN_WITH_RETURN       32  /* there was RETURN statement in previous line */
 
-extern void      hb_compMainExit( void ); /* main cleanup function */
-
 extern void      hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined function */
 extern PINLINE   hb_compInlineFind( HB_COMP_DECL, char * szFunName );
@@ -283,7 +281,6 @@ extern ULONG hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC
 extern ULONG hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval );
 
 extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int, char * Args[] );
-extern void hb_compChkEnvironVar( HB_COMP_DECL, char * );
 extern void hb_compChkPaths( HB_COMP_DECL );
 extern void hb_compChkDefines( HB_COMP_DECL, int iArg, char * Args[] );
 

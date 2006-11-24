@@ -270,7 +270,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
    PHB_COMP_LEX pLex = ( PHB_COMP_LEX ) HB_COMP_PARAM->pLex;
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
 
-   if( !pToken )
+   if( !pToken || HB_COMP_PARAM->fExit )
       return 0;
 
    pLex->lasttok = pToken->value;

@@ -146,9 +146,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
     static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_COMP_DECL );
 #else
     static void hb_compExprCodeblockPush( HB_EXPR_PTR, BOOL, HB_COMP_DECL );
-#if !defined(SIMPLEX)
     static void hb_compExprCodeblockEarly( HB_EXPR_PTR, HB_COMP_DECL );
-#endif
 #endif
 
 const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
@@ -426,15 +424,11 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 #if defined(HB_MACRO_SUPPORT)	 
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
-# if defined(SIMPLEX) 	 
-         HB_EXPR_PCODE2( hb_compExprCodeblockPush, pSelf, TRUE, HB_COMP_PARAM );
-# else       
          if( !pSelf->value.asCodeblock.isMacro || pSelf->value.asCodeblock.lateEval )
             hb_compExprCodeblockPush( pSelf, TRUE, HB_COMP_PARAM );
          else
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
-# endif       
 #endif
          break;
       }
@@ -557,7 +551,6 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
 
 /* This generates a push pcode for early evaluation of a macro
 */
-#if !defined(SIMPLEX)
 #if !defined(HB_MACRO_SUPPORT) 
 static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
@@ -599,7 +592,6 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    }
 }
 #endif      /*HB_MACRO_SUPPORT*/
-#endif      /*SIMPLEX*/
 
 /* actions for HB_ET_LOGICAL expression
  */

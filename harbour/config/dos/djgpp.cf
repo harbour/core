@@ -17,9 +17,6 @@ ifneq ($(HB_INC_COMPILE),)
    CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 endif
 CFLAGS = -Wall -W
-ifeq ($(HB_LEX),SIMPLEX)
-   CFLAGS += -DSIMPLEX
-endif
 
 LD = gcc
 LD_OUT = -o

@@ -853,8 +853,8 @@ HB_EXPORT char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen
 
 char * hb_strRemEscSeq( char *str, ULONG *pLen )
 {
-   char *ptr, *dst, ch;
    ULONG ul = *pLen, ulStripped = 0;
+   char *ptr, *dst, ch;
 
    ptr = dst = str;
    while( ul )
@@ -888,6 +888,40 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
                   break;
                case 'b':
                   ch = '\b';
+                  break;
+               case '0':
+               case '1':
+               case '2':
+               case '3':
+               case '4':
+               case '5':
+               case '6':
+               case '7':
+                  ch -= '0';
+                  if( ul && *ptr >= '0' && *ptr <= '7' )
+                  {
+                     ch = ( ch << 3 ) | ( *ptr++ - '0' );
+                     if( --ul && *ptr >= '0' && *ptr <= '7' )
+                     {
+                        ch = ( ch << 3 ) | ( *ptr++ - '0' );
+                        --ul;
+                     }
+                  }
+                  break;
+               case 'x':
+                  ch = 0;
+                  while( ul )
+                  {
+                     if( *ptr >= '0' && *ptr <= '9' )
+                        ch = ch << 4 | ( *ptr++ - '0' );
+                     else if( *ptr >= 'A' && *ptr <= 'F' )
+                        ch = ch << 4 | ( *ptr++ - 'A' + 10 );
+                     else if( *ptr >= 'a' && *ptr <= 'f' )
+                        ch = ch << 4 | ( *ptr++ - 'a' + 10 );
+                     else
+                        break;
+                     --ul;
+                  }
                   break;
                case '\\':
                default:

@@ -25,9 +25,6 @@ CFLAGS = -fno-common -fsigned-char -Wall -W
 # remove it if you have newer compiler version
 CFLAGS += -Wno-long-double
 
-ifeq ($(HB_LEX),SIMPLEX)
-CFLAGS += -DSIMPLEX
-endif
 CFLAGS += -DHB_OS_DARWIN
 
 LD = cc

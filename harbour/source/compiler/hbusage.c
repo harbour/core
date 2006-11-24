@@ -189,7 +189,9 @@ void hb_compPrintCredits( void )
  */
 void hb_compPrintLogo( void )
 {
-   printf( "Harbour Compiler Alpha build %d.%d (%s)\n",
-      HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
+   char * szVer = hb_verHarbour();
+
+   printf( "%s\n", szVer );
    printf( "Copyright 1999-2006, http://www.harbour-project.org/\n" );
+   hb_xfree( szVer );
 }

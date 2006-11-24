@@ -91,7 +91,8 @@ char * hb_comp_szErrors[] =
    "Memory buffer overflow",
    "Memory corruption detected",
    "Implicit send operator with no WITH OBJECT in sight",
-   "Input buffer overflow"
+   "Input buffer overflow",
+   "Unsupported output language option"
 };
 
 /* Table with parse warnings */
@@ -135,38 +136,36 @@ char * hb_comp_szWarnings[] =
 
 void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
-   int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
-   char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-
-   if( cPrefix != 'F' && HB_COMP_PARAM->fError )
-      return;
-
-   if( szFile )
-      fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
-
-   fprintf( hb_comp_errFile, "Error %c%04i  ", cPrefix, iError );
-   fprintf( hb_comp_errFile, szErrors[ iError - 1 ], szError1, szError2 );
-   fprintf( hb_comp_errFile, "\n" );
-
-   HB_COMP_PARAM->iErrorCount++;
-   HB_COMP_PARAM->fError = TRUE;
-
-   /* fatal error - exit immediately */
-   if( cPrefix == 'F' )
+   if( !HB_COMP_PARAM->fExit && ( cPrefix == 'F' || !HB_COMP_PARAM->fError ) )
    {
-      hb_compMainExit();
-      exit( EXIT_FAILURE );
+      char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
+      int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
+
+      if( szFile )
+         fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
+
+      fprintf( hb_comp_errFile, "Error %c%04i  ", cPrefix, iError );
+      fprintf( hb_comp_errFile, szErrors[ iError - 1 ], szError1, szError2 );
+      fprintf( hb_comp_errFile, "\n" );
+
+      HB_COMP_PARAM->iErrorCount++;
+      HB_COMP_PARAM->fError = TRUE;
+
+      /* fatal error - exit immediately */
+      if( cPrefix == 'F' )
+         HB_COMP_PARAM->fExit = TRUE;
    }
 }
 
 void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
-   int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
 
-   if( ( szText[ 0 ] - '0' ) <= HB_COMP_PARAM->iWarnings )
+   if( !HB_COMP_PARAM->fExit && ( szText[ 0 ] - '0' <= HB_COMP_PARAM->iWarnings ) )
    {
       char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
+      int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
+
       if( szFile )
          fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
 
