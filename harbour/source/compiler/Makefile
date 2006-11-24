@@ -10,7 +10,7 @@ YACC_SOURCE=harbour.sly
 
 else
 
-YACC_FLAGS = -p hb_comp
+#YACC_FLAGS = -p hb_comp
 YACC_SOURCE=harbour.y
 
 endif

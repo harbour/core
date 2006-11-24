@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+  * harbour/make_gnu.sh
+  * harbour/make_rpm.sh
+  * harbour/make_tgz.shrser.
+    * indenting
+
 2006-11-24 03:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/Makefile
     * commented out YACC_FLAGS = -p hb_comp
