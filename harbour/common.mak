@@ -744,7 +744,6 @@ HARBOUR_EXE_OBJS = \
     $(OBJ_DIR)\hbgenerr.obj \
     $(OBJ_DIR)\hblbl.obj    \
     $(OBJ_DIR)\hbpcode.obj  \
-    $(OBJ_DIR)\hbstrong.obj \
     $(OBJ_DIR)\hbfunchk.obj \
     $(OBJ_DIR)\hbfix.obj    \
     $(OBJ_DIR)\ppcomp.obj   \
