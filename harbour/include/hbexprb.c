@@ -884,7 +884,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
             {
                char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
                int iLen = strlen( szAlias );
-               if( ( iLen == 1 ) || ( iLen >= 4 && iLen <= 6 ) &&
+               if( ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
                    memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
                    pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
                {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */

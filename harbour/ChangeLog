@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-25 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    ! fixed parenthesis in expression
+
+  * harbour/source/pp/ppcore.c
+    ! fixed code block tokens stringify
+
 2006-11-25 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexpra.c
   * harbour/include/hbexprb.c

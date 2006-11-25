@@ -5049,10 +5049,10 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
    hb_membufFlush( pState->pBuffer );
    if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
    {
-      int iBraces = 1;
-      pToken = pToken->pNext;
-      while( iBraces && !HB_PP_TOKEN_ISEOC( pToken ) )
+      int iBraces = 0;
+      do
       {
+         hb_pp_tokenStr( pToken, pState->pBuffer, iBraces != 0, FALSE, 0 );
          if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_AMPERSAND )
          {
             if( pToken->pNext &&
@@ -5066,9 +5066,9 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
             --iBraces;
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
             ++iBraces;
-         hb_pp_tokenStr( pToken, pState->pBuffer, TRUE, FALSE, 0 );
          pToken = pToken->pNext;
       }
+      while( iBraces && !HB_PP_TOKEN_ISEOC( pToken ) );
    }
    hb_membufAddCh( pState->pBuffer, '\0' );
    return hb_membufPtr( pState->pBuffer );
