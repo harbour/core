@@ -59,13 +59,12 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL output */
 {
    char szFileName[ _POSIX_PATH_MAX ], * szVer;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
-   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+   PFUNCTION    pFunc = HB_COMP_PARAM->functions.pFirst;
+   PCOMSYMBOL   pSym = HB_COMP_PARAM->symbols.pFirst;
+   PINLINE      pInline;
    PCOMDECLARED pDeclared;
    PCOMCLASS    pClass;
    FILE * yyc; /* file handle for IL output */
-   PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
-
    BOOL bIsPublicFunction ;
    BOOL bIsInitFunction   ;
    BOOL bIsExitFunction   ;

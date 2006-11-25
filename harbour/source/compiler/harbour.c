@@ -1082,19 +1082,15 @@ BOOL hb_compIsValidMacroVar( char * szVarName, HB_COMP_DECL )
     ;/*  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
    else if( ! HB_COMP_PARAM->fStartProc )
    {
-      if( hb_compMemvarGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) == 0 )
-      {
-         /* This is not a local MEMVAR
-          */
-         if( hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
-            ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-         else if( hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
-            ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-         else
-            bValid = TRUE;    /* undeclared variable */
-      }
-      else
+      /* Is it a local MEMVAR ? */
+      if( hb_compMemvarGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) )
          bValid = TRUE;
+      else if( hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
+         ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
+      else if( hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
+         ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
+      else
+         bValid = TRUE;    /* undeclared variable */
    }
    else
       bValid = TRUE;    /* undeclared variable */

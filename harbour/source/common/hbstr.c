@@ -901,9 +901,11 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
                   if( ul && *ptr >= '0' && *ptr <= '7' )
                   {
                      ch = ( ch << 3 ) | ( *ptr++ - '0' );
+                     ++ulStripped;
                      if( --ul && *ptr >= '0' && *ptr <= '7' )
                      {
                         ch = ( ch << 3 ) | ( *ptr++ - '0' );
+                        ++ulStripped;
                         --ul;
                      }
                   }
@@ -920,6 +922,7 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
                         ch = ch << 4 | ( *ptr++ - 'a' + 10 );
                      else
                         break;
+                     ++ulStripped;
                      --ul;
                   }
                   break;

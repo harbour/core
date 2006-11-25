@@ -1,4 +1,4 @@
-%pure_parser
+%pure-parser
 %parse-param { HB_MACRO_PTR pMacro }
 %lex-param   { HB_MACRO_PTR pMacro }
 
@@ -275,7 +275,7 @@ NilValue   : NIL              { $$ = hb_compExprNewNil( HB_COMP_PARAM ); }
 
 /* Literal string value
  */
-LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1, strlen($1), HB_COMP_PARAM ); }
+LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1, strlen($1), FALSE, HB_COMP_PARAM ); }
              ;
 
 /* Logical value

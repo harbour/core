@@ -673,65 +673,66 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    return ulCnt;
 }
 
-BOOL hb_compExprIsValidMacro( char * szText, BOOL *pbUseTextSubst, HB_COMP_DECL )
+BOOL hb_compExprIsValidMacro( char * szText, ULONG ulLen, BOOL *pfUseTextSubst, HB_COMP_DECL )
 {
-   char * pTmp = szText;
-   BOOL bTextSubst;
-   BOOL bMacroText = TRUE;
+   BOOL fValid = TRUE;
 
-   *pbUseTextSubst = FALSE;	/* no valid macro expression */
-   while( ((pTmp = strchr( pTmp, '&' )) != NULL) && bMacroText )
+   *pfUseTextSubst = FALSE;   /* no valid macro expression */
+
+   while( ulLen-- && fValid )
    {
-      /* Check if macro operator is used inside a string
-       * Macro operator is ignored if it is the last char or
-       * next char is '(' e.g. "this is &(ignored)"
-       * (except if strict Clipper compatibility mode is enabled)
-       *
-       * NOTE: This uses _a-zA-Z pattern to check for
-       * beginning of a variable name
-       */
-
-      if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
-         *pbUseTextSubst = TRUE;	/* always macro substitution in Clipper */
-         
-      ++pTmp;
-      bTextSubst = ( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') );
-      /* NOTE: All variables are assumed memvars in macro compiler -
-       * there is no need to check for a valid name
-       */
-      if( bTextSubst )
+      if( *szText++ == '&' && ulLen )
       {
+         char ch = *szText;
+         /* Check if macro operator is used inside a string
+          * Macro operator is ignored if it is the last char or
+          * next char is '(' e.g. "this is &(ignored)"
+          * (except if strict Clipper compatibility mode is enabled)
+          *
+          * NOTE: This uses _a-zA-Z pattern to check for
+          * beginning of a variable name
+          */
+
+         if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) || ( ch >= 'a' && ch <= 'z' ) )
 #if defined( HB_MACRO_SUPPORT )
-         HB_SYMBOL_UNUSED( bMacroText );
-	      *pbUseTextSubst = TRUE;	/* valid macro expression */
-         return TRUE;    /*there is no need to check all '&' occurences */
+         {
+            HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+            *pfUseTextSubst = TRUE; /* valid macro expression */
+            return TRUE;            /*there is no need to check all '&' occurences */
+         }
 #else
-         /* There is a valid character after '&' that can be used in
-          * variable name - check if the whole variable name is valid
-          * (local, static and field  variable names are invalid because
-          * they are not visible at runtime)
-          */
-         char * pStart = pTmp;
-         char cSave;
+         {
+            char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
+            int iSize = 0;
+            do
+            {
+               if( ch >= 'a' && ch <= 'z' )
+                  szSymName[ iSize++ ] = ch - ( 'a' - 'A' );
+               else if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) ||
+                                     ( ch >= '0' && ch <= '9' ) )
+                  szSymName[ iSize++ ] = ch;
+               else
+                  break;
+               ch = *(++szText);
+            }
+            while( --ulLen && iSize < HB_SYMBOL_NAME_LEN );
+            szSymName[ iSize ] = '\0';
 
-         /* NOTE: This uses _a-zA-Z0-9 pattern to check for
-          * variable name
-          */
-         while( *pTmp && (*pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') || (*pTmp >= '0' && *pTmp <= '9')) )
-            ++pTmp;
-
-         cSave = *pTmp;
-         *pTmp = '\0';
-	
-         bMacroText &= hb_compIsValidMacroVar( pStart, HB_COMP_PARAM );
-         *pTmp = cSave;
+            /* NOTE: All variables are assumed memvars in macro compiler -
+             * there is no need to check for a valid name but to be Clipper
+             * compatible we should check if local, static or field name
+             * is not use and generate error in such case
+             */
+            *pfUseTextSubst = TRUE;
+            fValid = hb_compIsValidMacroVar( szSymName, HB_COMP_PARAM );
+         }
+         else if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+            *pfUseTextSubst = TRUE;	/* always macro substitution in Clipper */
 #endif
       }
-      *pbUseTextSubst |= bTextSubst;
    }
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );  /* to suppress BCC warning */
 
-   return bMacroText;
+   return fValid;
 }
 
 /* Reduces the list of expressions

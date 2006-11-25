@@ -264,6 +264,23 @@ static char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
    return pToken->value;
 }
 
+static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOKEN pToken )
+{
+   yylval_ptr->valChar.length = pToken->len;
+   yylval_ptr->valChar.string = pToken->value;
+   yylval_ptr->valChar.dealloc = FALSE;
+   if( HB_PP_TOKEN_ALLOC( pToken->type ) )
+   {
+      yylval_ptr->valChar.dealloc = ( ULONG ) pToken->len != strlen( pToken->value );
+      pToken->value = hb_compIdentifierNew( HB_COMP_PARAM, pToken->value,
+                                            yylval_ptr->valChar.dealloc );
+      if( !yylval_ptr->valChar.dealloc )
+         yylval_ptr->valChar.string = pToken->value;
+      pToken->type |= HB_PP_TOKEN_STATIC;
+   }
+   return pToken->value;
+}
+
 //int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
@@ -271,7 +288,10 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
 
    if( !pToken || HB_COMP_PARAM->fExit )
+   {
+      pLex->lasttok = NULL;
       return 0;
+   }
 
    pLex->lasttok = pToken->value;
 
@@ -312,8 +332,7 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 
       case HB_PP_TOKEN_STRING:
          pLex->iState = LITERAL;
-         pLex->lasttok = yylval_ptr->string =
-                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
+         pLex->lasttok = hb_comp_tokenString( yylval_ptr, HB_COMP_PARAM, pToken );
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:
@@ -349,8 +368,8 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             case WHILE:
                pLex->iState = LITERAL;
                hb_pp_tokenToString( pLex->pPP, pToken );
-               pLex->lasttok = yylval_ptr->string =
-                              hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
+               pLex->lasttok = hb_comp_tokenString( yylval_ptr, HB_COMP_PARAM,
+                                                    pToken );
                return LITERAL;
 
             default:

@@ -94,14 +94,8 @@ static void hb_compDebugStart( void ) { };
    BOOL    bTrue;
    struct
    {
-      int      iNumber;      /* to hold a number returned by lex */
-      char *   szValue;
-   } valInteger;
-   struct
-   {
       HB_LONG  lNumber;    /* to hold a long number returned by lex */
       UCHAR    bWidth;     /* to hold the width of the value */
-      char *   szValue;
    } valLong;
    struct
    {
@@ -109,9 +103,14 @@ static void hb_compDebugStart( void ) { };
       /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
       UCHAR    bWidth;     /* to hold the width of the value */
       UCHAR    bDec;       /* to hold the number of decimal points in the value */
-      char *   szValue;
    } valDouble;
    HB_EXPR_PTR asExpr;
+   struct
+   {
+      char *   string;
+      int      length;
+      BOOL     dealloc;
+   } valChar;
    struct
    {
       char *   string;
@@ -141,7 +140,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %}
 
 
-%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
+%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
 %token ANNOUNCE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
@@ -184,12 +183,12 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IdentName IDENTIFIER LITERAL MACROVAR MACROTEXT CompTimeStr
+%type <string>  IdentName IDENTIFIER MACROVAR MACROTEXT CompTimeStr
 %type <string>  DOIDENT WHILE
+%type <valChar> LITERAL
 %type <valDouble>  NUM_DOUBLE
-%type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
-%type <valLong> NUM_DATE
+%type <valLong>    NUM_DATE
 %type <iNumber> FunScope
 %type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
@@ -279,6 +278,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
             ForVar ForList ForExpr
 
 %destructor { hb_xfree( $$.string ); } CBSTART
+%destructor { if( $$.dealloc ) hb_xfree( $$.string ); } LITERAL
 
 %%
 
@@ -308,15 +308,32 @@ Source     : Crlf
            | Source error Crlf  { yyclearin; yyerrok; }
            ;
 
-Line       : LINE NUM_INTEGER LITERAL Crlf
-           | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* Xbase++ style */
+Line       : LINE NUM_LONG LITERAL Crlf
+           | LINE NUM_LONG LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
 
 ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
-CompTimeStr: LITERAL { hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); }
-           | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX + 1 ]; hb_strncat( hb_strncpy( szFileName, $1, _POSIX_PATH_MAX ), $3, _POSIX_PATH_MAX ); hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, TRUE ) ); }
+CompTimeStr: LITERAL {
+               if( $1.dealloc )
+               {
+                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, FALSE );
+                  $1.dealloc = FALSE;
+               }
+               hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
+            }
+           | LITERAL '+' LITERAL {
+               {
+                  char szFileName[ _POSIX_PATH_MAX + 1 ];
+                  hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, TRUE ) );
+                  if( $1.dealloc )
+                     hb_xfree( $1.string );
+                  if( $3.dealloc )
+                     hb_xfree( $3.string );
+               }
+            }
            ;
 
 Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
@@ -383,13 +400,13 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt     {
                                       else
                                          hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, $1 ), HB_COMP_PARAM );
                                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                                     }
+                                    }
            | MacroExpr CrlfStmnt    { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM );
                                       else
                                          hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, $1 ), HB_COMP_PARAM );
                                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                                     }
+                                    }
            | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
@@ -507,20 +524,18 @@ IdentName  : IDENTIFIER       { $$ = $1; }
 /* Numeric values
  */
 NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ); }
-           | NUM_INTEGER         { $$ = hb_compExprNewLong( $1.iNumber, HB_COMP_PARAM ); }
            | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
 DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_PARAM );
                                     if( $1.lNumber == 0 )
                                     {
-                                       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, $1.szValue, NULL );
+                                       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, HB_COMP_PARAM->pLex->lasttok, NULL );
                                     }
                                  }
            ;
            
-NumAlias   : NUM_INTEGER ALIASOP    { $$ = hb_compExprNewLong( $1.iNumber, HB_COMP_PARAM ); }
-           | NUM_LONG    ALIASOP    { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
+NumAlias   : NUM_LONG    ALIASOP    { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            | NUM_DOUBLE  ALIASOP    { $$ = hb_compErrorAlias( HB_COMP_PARAM, hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ) ); }
            ;
 
@@ -535,8 +550,7 @@ NilAlias   : NilValue ALIASOP       { $$ = $1; }
 /* Literal string value
  */
 LiteralValue : LITERAL        {
-                                 ULONG len = strlen( $1 );
-                                 $$ = hb_compExprNewString( $1, len, HB_COMP_PARAM );
+                                 $$ = hb_compExprNewString( $1.string, $1.length, $1.dealloc, HB_COMP_PARAM );
                               }
              ;
 

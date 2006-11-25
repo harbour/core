@@ -350,15 +350,15 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
       {
-         char * szDupl = hb_strupr( hb_strdup( pSelf->value.asString.string ) );
-
-         HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength + 1 );
+         HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string,
+                         pSelf->ulLength + 1 );
 #if ! defined( HB_MACRO_SUPPORT )
          if( HB_COMP_PARAM->fTextSubst )
 #endif	
          {
             BOOL bUseTextSubst;
-            BOOL bValidMacro = hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_COMP_PARAM );
+            BOOL bValidMacro = hb_compExprIsValidMacro( pSelf->value.asString.string,
+                                    pSelf->ulLength, &bUseTextSubst, HB_COMP_PARAM );
             if( bUseTextSubst )
             {
                if( HB_SUPPORT_HARBOUR ) 
@@ -383,7 +383,6 @@ static HB_EXPR_FUNC( hb_compExprUseString )
                }
             }
          }
-         hb_xfree( szDupl );
          break;
       }
       case HB_EA_POP_PCODE:
@@ -567,9 +566,9 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_EXPR_PTR pVar, pNew;
 
       pVar = hb_compExprNewVar( pExpr->value.asMacro.szMacro, HB_COMP_PARAM );
-      pNew = hb_compExprNewString( "{||", 3, HB_COMP_PARAM );
+      pNew = hb_compExprNewString( "{||", 3, FALSE, HB_COMP_PARAM );
       pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew, HB_COMP_PARAM ), pVar, HB_COMP_PARAM );
-      pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew, HB_COMP_PARAM ), hb_compExprNewString( "}", 1, HB_COMP_PARAM ), HB_COMP_PARAM );
+      pNew = hb_compExprSetOperand( hb_compExprNewPlus( pNew, HB_COMP_PARAM ), hb_compExprNewString( "}", 1, FALSE, HB_COMP_PARAM ), HB_COMP_PARAM );
       pNew = hb_compExprNewMacro( pNew, 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
       hb_compExprDelete( pNew, HB_COMP_PARAM );
@@ -585,7 +584,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       hb_compExprCodeblockPush( pSelf, FALSE, HB_COMP_PARAM );
 
       cStr = pSelf->value.asCodeblock.string;
-      pNew = hb_compExprNewMacro( hb_compExprNewString( cStr, strlen( cStr ), HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
+      pNew = hb_compExprNewMacro( hb_compExprNewString( cStr, strlen( cStr ), FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
       hb_compExprDelete( pNew, HB_COMP_PARAM );
       HB_EXPR_PCODE0( hb_compCodeBlockStop );
@@ -884,35 +883,19 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
             else if( pExp->ExprType == HB_ET_ALIASVAR )
             {
                char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
-               if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
-               {  /* @M->variable */
-                  if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
-                  {
+               int iLen = strlen( szAlias );
+               if( ( iLen == 1 ) || ( iLen >= 4 && iLen <= 6 ) &&
+                   memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
+                   pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+               {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
 #if !defined(HB_MACRO_SUPPORT) 
-                     HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+                  HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
 #else
-                     HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
+                  HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
 #endif                  
-                  }
-                  else /* @M->&l,  @M->&l.1,  @&m->l, etc. */
-                     hb_compErrorRefer( HB_COMP_PARAM, pSelf, szAlias );
                }
                else
-               {
-                  int iCmp = strncmp( szAlias, "MEMVAR", 4 );
-                  if( iCmp == 0 )
-                     iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
-                  if( iCmp == 0 && pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
-                  {  /* @MEMVAR-> or @MEMVA-> or @MEMV-> */
-#if !defined(HB_MACRO_SUPPORT) 
-                     HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
-#else
-                     HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
-#endif                  
-                  }
-                  else
-                     hb_compErrorRefer( HB_COMP_PARAM, pSelf, szAlias );
-               }
+                  hb_compErrorRefer( HB_COMP_PARAM, pSelf, szAlias );
             }
             else if( pExp->ExprType == HB_ET_SEND )
             {
@@ -1426,14 +1409,12 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    */
 #if ! defined( HB_MACRO_SUPPORT )
                   BOOL bUseTextSubst;
-                  char *szDupl;
-                  szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
-
-                  if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_COMP_PARAM ) )
+                  if( !hb_compExprIsValidMacro( pSelf->value.asMacro.szMacro,
+                                                strlen( pSelf->value.asMacro.szMacro ),
+                                                &bUseTextSubst, HB_COMP_PARAM ) )
                   {
                      hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
                   }
-                  hb_xfree( szDupl );
 #endif                  
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
@@ -1518,18 +1499,15 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    * be compiled after text susbstitution
                    */
 #if ! defined( HB_MACRO_SUPPORT )
-
                   BOOL bUseTextSubst;
-                  char *szDupl;
-                  szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
-
-                  if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_COMP_PARAM ) )
+                  if( !hb_compExprIsValidMacro( pSelf->value.asMacro.szMacro,
+                                                strlen( pSelf->value.asMacro.szMacro ),
+                                                &bUseTextSubst, HB_COMP_PARAM ) )
                   {
                      hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
                   }
-                  hb_xfree( szDupl );
 #endif                  
-                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
+                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
                }
             }
             /* compile & run - macro compiler will generate pcode to pop a value

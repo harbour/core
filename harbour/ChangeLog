@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-25 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/macro/macro.y
+    + added support for strings with with ASCII NUL character
+      Strings with ASCII NUL character are not stored with hash table
+      but dynamically allocated/deallocated
+    ! fixed compilation of strings with ASCII NUL character which
+      can appear in escaped strings e"..." or after compiler chr(0)
+      optimization
+    % removed some not longer necessary memory allocations
+
+  * harbour/source/vm/macro.c
+    ! fixed GPF caused by HB_MACRO structure double freeing
+    - removed some code which was added as workaround for the old
+      behavior of HVM QUIT and false FM stat memory leak reports.
+      It's not longer necessary in current HVM.
+
+  * harbour/source/common/hbstr.c
+    ! fixed final string size calculation in extended strings
+
+  * harbour/source/compiler/gencli.c
+    * cleaned Bh may no flush data in PreExt()
+
   * harbour/source/rtl/gtwin/gtwin.c
     ! fixed Init() code by adding missing SUPER_INIT()
     * modified a little bit PreExt() and PostExt() methods

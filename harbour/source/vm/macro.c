@@ -124,6 +124,8 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 
    hb_xfree( (void *) pMacro->pCodeInfo->pCode );
    hb_xfree( (void *) pMacro->pCodeInfo );
+   if( pMacro->pError )
+      hb_errRelease( pMacro->pError );
    if( pMacro->Flags & HB_MACRO_DEALLOCATE )
       hb_xfree( pMacro );
 }
@@ -152,35 +154,22 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
    return bValid;
 }
 
-/* It handles an error generated during macro evaluation
- */
-static HB_ERROR_HANDLE( hb_macroErrorEvaluation )
-{
-   HB_ITEM_PTR pResult = hb_itemDo( ErrorInfo->ErrorBlock, 1, ErrorInfo->Error );
-
-   /* In a special case when QUIT is requested then there is no return
-    * to code where macro evaluation was called. We have to
-    * release all used memory here.
-    */
-   if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
-      hb_macroDelete( ( HB_MACRO_PTR ) ErrorInfo->Cargo );
-
-   return pResult;
-}
-
 /* It handles an error generated during checking of expression type
  */
 static HB_ERROR_HANDLE( hb_macroErrorType )
 {
    HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) ErrorInfo->Cargo;
 
-   /* copy error object for later diagnostic usage */   
+   /* copy error object for later diagnostic usage */
+   if( pMacro->pError )
+      hb_itemRelease( pMacro->pError );
    pMacro->pError = hb_itemNew( ErrorInfo->Error );
    pMacro->status &= ~HB_MACRO_CONT;
-   /* ignore rest of compiled code
-    */
+
+   /* ignore rest of compiled code */
    hb_vmRequestEndProc();
-   return NULL;      /* ignore this error */
+
+   return NULL;   /* ignore this error */
 }
 
 
@@ -196,45 +185,21 @@ void hb_macroRun( HB_MACRO_PTR pMacro )
    hb_vmExecute( pMacro->pCodeInfo->pCode, NULL );
 }
 
-/* evaluate a macro-cmpiled code and discard it
- */
-static void hb_macroEvaluate( HB_MACRO_PTR pMacro )
-{
-   HB_ERROR_INFO struErr;
-   HB_ERROR_INFO_PTR pOld;
-
-   struErr.Func  = hb_macroErrorEvaluation;
-   struErr.Cargo = ( void * ) pMacro;
-   pOld = hb_errorHandler( &struErr );
-   hb_macroRun( pMacro );
-   hb_errorHandler( pOld );
-   hb_macroDelete( pMacro );
-}
-
-
 static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 {
-   HB_ITEM_PTR pResult;
-   HB_ITEM_PTR pError = NULL;
-   
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
 
-   if( pMacro )
+   if( pMacro && pMacro->pError )
    {
       HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError.(%s)", pMacro->string));
 
-      pError = pMacro->pError;
-      hb_macroDelete( pMacro );
-   }
-
-   if( pError )
-   {
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errLaunch( pMacro->pError );
+      hb_errRelease( pMacro->pError );
+      pMacro->pError = NULL;
    }
    else
    {
-      pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
 
       if( pResult )
       {
@@ -531,22 +496,20 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
-         hb_macroEvaluate( &struMacro );
+         hb_macroRun( &struMacro );
 
          if( iContext )
          {
             if( iContext == HB_P_MACROPUSHLIST )
-            {
                hb_vmPushLong( struMacro.uiListElements + 1 );
-            }
             else if( iContext == HB_P_MACROPUSHINDEX )
-            {
                hb_vmPushLong( struMacro.uiListElements );
-            }
          }
       }
       else
          hb_macroSyntaxError( &struMacro );
+
+      hb_macroDelete( &struMacro );
    }
 }
 
@@ -573,11 +536,11 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
-      {
-         hb_macroEvaluate( &struMacro );
-      }
+         hb_macroRun( &struMacro );
       else
          hb_macroSyntaxError( &struMacro );
+
+      hb_macroDelete( &struMacro );
    }
 }
 
@@ -623,11 +586,11 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       hb_stackPop();    /* remove compiled alias */
 
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
-      {
-         hb_macroEvaluate( &struMacro );
-      }
+         hb_macroRun( &struMacro );
       else
          hb_macroSyntaxError( &struMacro );
+
+      hb_macroDelete( &struMacro );
    }
    else if( hb_macroCheckParam( pVar ) )
    {
@@ -647,11 +610,11 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       hb_stackPop();    /* remove compiled string */
 
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
-      {
-         hb_macroEvaluate( &struMacro );
-      }
+         hb_macroRun( &struMacro );
       else
          hb_macroSyntaxError( &struMacro );
+
+      hb_macroDelete( &struMacro );
    }
 }
 
@@ -718,7 +681,6 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    if( ! ( iStatus == HB_MACRO_OK && ( pMacro->status & HB_MACRO_CONT ) ) )
    {
       hb_macroDelete( pMacro );
-      hb_xfree( pMacro );
       pMacro = NULL;
    }
 
@@ -893,9 +855,6 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       else
          szType = "UE";  /* syntax error during compilation */
 
-      if( struMacro.pError )
-         hb_itemRelease( struMacro.pError );
-      struMacro.pError = NULL;
       hb_macroDelete( &struMacro );
    }
    else

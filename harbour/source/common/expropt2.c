@@ -463,7 +463,10 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       {
          /* Do not reduce strings with the macro operator '&'
          */
-         if( strchr(pLeft->value.asString.string, '&') == NULL )
+         BOOL fSubst;
+         hb_compExprIsValidMacro( pLeft->value.asString.string, pLeft->ulLength,
+                                  &fSubst, HB_COMP_PARAM );
+         if( !fSubst && pLeft->value.asString.string[ pLeft->ulLength - 1 ] != '&' )
          {
             pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
             hb_compExprFree( pSelf, HB_COMP_PARAM );
