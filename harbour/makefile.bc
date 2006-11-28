@@ -628,23 +628,23 @@ $(PP_DIR)\pptable.c    : $(BIN_DIR)\ppgen.exe include\hbstdgen.ch
 
 #**********************************************************
 
-!if "$(HB_REBUILD_PARSER)" == "no"
-
-$(OBJ_DIR)\macroy.c : $(HARBOUR_DIR)\macro.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
-
-$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
-
-!else
+!if "$(HB_REBUILD_PARSER)" != "no"
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
 $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
     bison --no-line -d $** -o$@
+
+!else
+
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
 
 !endif
 
@@ -672,23 +672,23 @@ $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
 
 #**********************************************************
 
-!if "$(HB_REBUILD_PARSER)" == "no"
-
-$(DLL_OBJ_DIR)\macroy.c : $(HARBOUR_DIR)\macro.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
-
-$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
-
-!else
+!if "$(HB_REBUILD_PARSER)" != "no"
 
 $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
 $(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
     bison --no-line -d $** -o$@
+
+!else
+
+$(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
 
 !endif
 

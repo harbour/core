@@ -27,16 +27,16 @@ ALL_C_OBJS = $(YACC_OBJ) $(LEX_OBJ) $(C_OBJS) $(C_MAIN_OBJ)
 
 $(YACC_OBJ) : $(YACC_C)
 
-ifeq ($(HB_REBUILD_PARSER),no)
+ifneq ($(HB_REBUILD_PARSER),no)
+$(YACC_C) : ../../$(YACC_SOURCE) $(YACC_HB_H)
+	$(YACC) $(YACC_FLAGS) -o$@ $<
+else
 ifeq ($(DIRSEP),)
 DIRSEP = /
 endif
 %y.c : ../../%.yyc
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 	$(CP) $(subst /,$(DIRSEP),$(<:.yyc=.yyh)) $(@:.c=.h)
-else
-$(YACC_C) : ../../$(YACC_SOURCE) $(YACC_HB_H)
-	$(YACC) $(YACC_FLAGS) -o$@ $<
 endif
 
 $(LEX_OBJ) : $(LEX_C)
