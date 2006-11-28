@@ -541,22 +541,6 @@ void hb_compGenPCode1( BYTE byte, HB_COMP_DECL )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
 
-void hb_compGenPData1( BYTE byte, HB_COMP_DECL )
-{
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
-
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
-   {
-      pFunc->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
-      pFunc->lPCodePos  = 0;
-   }
-   else if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
-
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
-}
-
 void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */

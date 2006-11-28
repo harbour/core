@@ -214,7 +214,6 @@ extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
 extern void hb_compGenPushFunRef( char *, HB_COMP_DECL );
 extern void hb_compGenVarPCode( BYTE, char *, HB_COMP_DECL );
 extern void hb_compGenPCode1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode */
-extern void hb_compGenPData1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode argument */
 extern void hb_compGenPCode2( BYTE, BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
 extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_COMP_DECL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
@@ -315,7 +314,7 @@ extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
 
 /* hbident.c   */
-extern char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy ); /* create the reusable identifier */
+extern char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType ); /* create the reusable identifier */
 extern void hb_compIdentifierOpen( HB_COMP_DECL ); /* prepare the table of identifiers */
 extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of identifiers */
 
@@ -331,6 +330,10 @@ extern const BYTE     hb_comp_pcode_len[];
 /* file handle for error messages */
 extern FILE           *hb_comp_errFile;
 
+/* identifier types for hb_compIdentifierNew() */
+#define HB_IDENT_STATIC       0
+#define HB_IDENT_FREE         1
+#define HB_IDENT_COPY         2
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

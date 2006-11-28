@@ -1728,6 +1728,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
  */
 static HB_EXPR_FUNC( hb_compExprUseAliasVar )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprUseAliasVar()"));
+
    switch( iMessage )
    {
       case HB_EA_REDUCE:

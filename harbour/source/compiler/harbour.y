@@ -318,7 +318,7 @@ ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFla
 CompTimeStr: LITERAL {
                if( $1.dealloc )
                {
-                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, FALSE );
+                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
                   $1.dealloc = FALSE;
                }
                hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
@@ -327,7 +327,7 @@ CompTimeStr: LITERAL {
                {
                   char szFileName[ _POSIX_PATH_MAX + 1 ];
                   hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, TRUE ) );
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
                   if( $1.dealloc )
                      hb_xfree( $1.string );
                   if( $3.dealloc )
@@ -389,7 +389,7 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( HB_COMP_PARAM
  *    hb_compExprGenStatement(). With this solution we don't have to
  *    stop compilation if invalid syntax will be used.
  */
-Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt     { }
+Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt { }
            | WithObject CrlfStmnt   { }
            | IfInline CrlfStmnt     { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            | FunCall CrlfStmnt      { hb_compExprDelete( hb_compExprGenStatement( $1, HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
@@ -434,8 +434,9 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt     {
                         HB_COMP_PARAM->fDontGenLineNum = TRUE;
                         HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | RETURN { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; } Expression Crlf {
-
+           | RETURN  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+             Expression Crlf
+                     {
                         HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
                         HB_COMP_PARAM->cVarType = ' ';
 
@@ -492,6 +493,19 @@ LineStat   : Crlf          { $<lNumber>$ = 0; HB_COMP_PARAM->fDontGenLineNum = T
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 1; }
+           | ControlError  { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, NULL, NULL ); }
+           ;
+
+ControlError : FunScopeId FUNCTION  IdentName Crlf {}
+             | FunScopeId FUNCTION  IdentName '(' Params ')' Crlf {}
+             | FunScopeId PROCEDURE IdentName Crlf {}
+             | FunScopeId PROCEDURE IdentName '(' Params ')' Crlf {}
+             ;
+
+FunScopeId :
+           | STATIC
+           | INIT
+           | EXIT
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
@@ -505,10 +519,10 @@ ExtList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1 ); 
 IdentName  : IDENTIFIER       { $$ = $1; }
            | STEP             { $$ = "STEP"; }
            | TO               { $$ = "TO"; }
-           | OPTIONAL         { $$ = $<string>1; }
            | LOOP             { $$ = "LOOP"; }
            | EXIT             { $$ = "EXIT"; }
            | IN               { $$ = "IN"; }
+           | OPTIONAL         { $$ = $<string>1; }
            | EXTERN           { $$ = $<string>1; }
            | ANNOUNCE         { $$ = $<string>1; }
            | LOCAL            { $$ = $<string>1; }
@@ -534,7 +548,7 @@ DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_
                                     }
                                  }
            ;
-           
+
 NumAlias   : NUM_LONG    ALIASOP    { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            | NUM_DOUBLE  ALIASOP    { $$ = hb_compErrorAlias( HB_COMP_PARAM, hb_compExprNewDouble( $1.dNumber, $1.bWidth, $1.bDec, HB_COMP_PARAM ) ); }
            ;
@@ -1054,12 +1068,12 @@ ExprOperEq  : ExprPlusEq        { $$ = $1; }
             | ExprExpEq         { $$ = $1; }
             ;
 
-ExprMath    : Expression '+' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewPlus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
-            | Expression '-' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMinus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
-            | Expression '*' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMult( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
-            | Expression '/' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewDiv( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
-            | Expression '%' Expression     { $$ = hb_compExprSetOperand( hb_compExprNewMod( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
-            | Expression POWER Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPower( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+ExprMath    : Expression '+' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewPlus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '-' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMinus( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '*' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMult( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '/' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewDiv( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression '%' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewMod( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
+            | Expression POWER Expression { $$ = hb_compExprSetOperand( hb_compExprNewPower( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
 ExprBool    : Expression AND Expression   { $$ = hb_compExprSetOperand( hb_compExprNewAnd( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
@@ -1077,7 +1091,7 @@ ExprRelation: Expression EQ  Expression   { $$ = hb_compExprSetOperand( hb_compE
             | Expression '=' Expression   { $$ = hb_compExprSetOperand( hb_compExprNewEqual( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM ); }
             ;
 
-ArrayIndex : IndexList ']'                   { $$ = $1; }
+ArrayIndex : IndexList ']'                { $$ = $1; }
            ;
 
 /* NOTE: $0 represents the expression before ArrayIndex
@@ -1088,8 +1102,8 @@ IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr
            | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
-ElemList   : EmptyExpression                { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
-           | ElemList ',' EmptyExpression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ElemList   : EmptyExpression              { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
+           | ElemList ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.isMacro, $1.lateEval, HB_COMP_PARAM ); } BlockNoVar
@@ -1107,12 +1121,12 @@ BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr(
 /* NOTE: This is really not needed however it allows the use of $-2 item
  * in BlockExpList to refer the same rule defined in Codeblock
  */
-BlockNoVar : /* empty list */    { $$ = NULL; }
+BlockNoVar : /* empty list */       { $$ = NULL; }
            ;
 
-BlockVarList : IdentName AsType                 { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
-           | BlockVarList ',' IdentName AsType  { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
-           ;
+BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+             | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
+             ;
 
 /* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
  * and parenthesized expression ( Expr1, Expr2, Expr3 )
@@ -1121,48 +1135,48 @@ BlockVarList : IdentName AsType                 { HB_COMP_PARAM->iVarScope = VS_
  *   Also the generation of pcodes have to be delayed and moved to the
  * end of whole parenthesized expression.
  */
-PareExpList1: ExpList1 ')'        { $$ = $1; }
+PareExpList1: ExpList1 ')'          { $$ = $1; }
             ;
 
-PareExpList2: ExpList2 ')'        { $$ = $1; }
+PareExpList2: ExpList2 ')'          { $$ = $1; }
             ;
 
-PareExpList3: ExpList3 ')'        { $$ = $1; }
+PareExpList3: ExpList3 ')'          { $$ = $1; }
             ;
 
-PareExpListN: ExpList ')'         { $$ = $1; }
+PareExpListN: ExpList ')'           { $$ = $1; }
             ;
 
-PareExpList : PareExpList1        { $$ = $1; }
-            | PareExpList2        { $$ = $1; }
-            | PareExpList3        { $$ = $1; }
-            | PareExpListN        { $$ = $1; }
+PareExpList : PareExpList1          { $$ = $1; }
+            | PareExpList2          { $$ = $1; }
+            | PareExpList3          { $$ = $1; }
+            | PareExpListN          { $$ = $1; }
             ;
 
-PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
+PareExpListAlias : PareExpList ALIASOP    { $$ = $1; }
                  ;
 
-ExpList1   : '(' EmptyExpression             { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
+ExpList1   : '(' EmptyExpression          { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
            ;
 
-ExpList2   : ExpList1 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList2   : ExpList1 ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-ExpList3   : ExpList2 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList3   : ExpList2 ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-ExpList    : ExpList3 ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           | ExpList  ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ExpList    : ExpList3 ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           | ExpList  ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2, HB_COMP_PARAM ); }
+IfInline   : IIF PareExpList3             { $$ = hb_compExprNewIIF( $2, HB_COMP_PARAM ); }
            | IF  ExpList1 ',' EmptyExpression ','
              { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
              EmptyExpression ')'
              { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ), HB_COMP_PARAM ); }
            ;
 
-IfInlineAlias : IfInline ALIASOP      { $$ = $1; }
+IfInlineAlias : IfInline ALIASOP          { $$ = $1; }
               ;
 
 VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); } VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
@@ -1174,12 +1188,12 @@ VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_CO
                              MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
 
-VarList    : VarDef                                  { $$ = 1; }
-           | VarList ',' VarDef                      { $$++; }
+VarList    : VarDef                       { $$ = 1; }
+           | VarList ',' VarDef           { $$++; }
            ;
 
-ExtVarList : ExtVarDef                               { $$ = 1; }
-           | ExtVarList ',' ExtVarDef                { $$++; }
+ExtVarList : ExtVarDef                    { $$ = 1; }
+           | ExtVarList ',' ExtVarDef     { $$++; }
            ;
 
 /* NOTE: if STATIC or LOCAL variables are declared and initialized then we can
@@ -1259,7 +1273,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList
  *       however we are using quite different actions here
  */
-DimList    : DimIndex ']'                   { $$ = $1; }
+DimList    : DimIndex ']'                 { $$ = $1; }
            ;
 
 DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2, HB_COMP_PARAM ); }
@@ -1348,43 +1362,51 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
              {
                if( HB_COMP_PARAM->pLastMethod )
                {
-                 PCOMCLASS pClass;
-                 char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
+                  PCOMCLASS pClass;
+                  char szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
+                  int iLen;
 
-                 /* List Type overrides if exists. */
-                 if( HB_COMP_PARAM->cDataListType ) HB_COMP_PARAM->cVarType = HB_COMP_PARAM->cDataListType;
+                  /* List Type overrides if exists. */
+                  if( HB_COMP_PARAM->cDataListType ) HB_COMP_PARAM->cVarType = HB_COMP_PARAM->cDataListType;
 
-                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
-                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
-                 {
-                   pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
-                   HB_COMP_PARAM->pLastMethod->pClass = pClass;
-                   if( ! HB_COMP_PARAM->pLastMethod->pClass )
-                   {
-                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
-                   }
-                 }
-                 else
-                   pClass = NULL;
+                  HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                  if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                  {
+                     pClass = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
+                     HB_COMP_PARAM->pLastMethod->pClass = pClass;
+                     if( ! HB_COMP_PARAM->pLastMethod->pClass )
+                     {
+                        hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
+                        HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
+                     }
+                  }
+                  else
+                     pClass = NULL;
 
-                 sprintf( szSetData, "_%s", $1 );
+                  iLen = strlen( $1 );
+                  if( iLen >= HB_SYMBOL_NAME_LEN )
+                     iLen = HB_SYMBOL_NAME_LEN - 1;
+                  szSetData[ 0 ] = '_';
+                  memcpy( szSetData + 1, $1, iLen );
+                  szSetData[ iLen + 1 ] = '\0';
 
-                 HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, szSetData );
-                 HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
-                 HB_COMP_PARAM->pLastMethod->iParamCount = 1;
+                  HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass,
+                     hb_compIdentifierNew( HB_COMP_PARAM, szSetData, HB_IDENT_COPY ) );
+                  HB_COMP_PARAM->pLastMethod->cType = HB_COMP_PARAM->cVarType;
+                  HB_COMP_PARAM->pLastMethod->iParamCount = 1;
 
-                 HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-                 HB_COMP_PARAM->pLastMethod->cParamTypes[0] = HB_COMP_PARAM->cVarType;
+                  /* TOFIX: these allocations causes memory leaks */
+                  HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+                  HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
 
-                 HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
-                 HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
+                  HB_COMP_PARAM->pLastMethod->cParamTypes[0] = HB_COMP_PARAM->cVarType;
+                  HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                 if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
-                 {
-                   HB_COMP_PARAM->pLastMethod->pClass = pClass;
-                   HB_COMP_PARAM->szFromClass = NULL;
-                 }
+                  if ( toupper( HB_COMP_PARAM->cVarType ) == 'S' )
+                  {
+                     HB_COMP_PARAM->pLastMethod->pClass = pClass;
+                     HB_COMP_PARAM->szFromClass = NULL;
+                  }
                }
 
                HB_COMP_PARAM->pLastMethod = NULL;
@@ -1751,7 +1773,7 @@ DoSwitch   : SwitchBegin
            | SwitchBegin
              EndSwitch
              {
-                hb_compGenPData1( HB_P_POP, HB_COMP_PARAM );
+                hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
              }
 
            ;
@@ -1872,12 +1894,12 @@ DoProc     : DO DoName
            | DOIDENT
                { 
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), FALSE ), HB_COMP_PARAM ), NULL, HB_COMP_PARAM );
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), NULL, HB_COMP_PARAM );
                }
            | DOIDENT WITH DoArgList
                {
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), FALSE ), HB_COMP_PARAM ), $3, HB_COMP_PARAM );
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), $3, HB_COMP_PARAM );
                }
            ;
 
@@ -1908,7 +1930,7 @@ WithObject : WITHOBJECT Expression Crlf
                {
                   --HB_COMP_PARAM->wWithObjectCnt;
                   hb_compGenPCode1( HB_P_WITHOBJECTEND, HB_COMP_PARAM );
-                }
+               }
            | WITHOBJECT Expression Crlf END { hb_compExprDelete( $2, HB_COMP_PARAM ); }
            ;
 
@@ -2326,7 +2348,7 @@ static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
          pLast = pEnumVar;
          pEnumVar = pEnumVar->pNext;
       }
-      pLast->pNext = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
+      pLast->pNext = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = pLast->pNext;
    }
    pEnumVar->szName   = szVarName;
@@ -2450,7 +2472,7 @@ static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 static void hb_compSwitchStart( HB_COMP_DECL )
 {
-   HB_SWITCHCMD_PTR pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof(HB_SWITCHCMD) );
+   HB_SWITCHCMD_PTR pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof( HB_SWITCHCMD ) );
 
    pSwitch->pCases = NULL;
    pSwitch->pLast  = NULL;
@@ -2468,7 +2490,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    if( pExpr )
    {
       /* normal CASE */
-      pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof(HB_SWITCHCASE) );
+      pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
       pCase->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
@@ -2545,7 +2567,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       }
       pCase = pCase->pNext;
    }
-   hb_compGenPData1( HB_P_PUSHNIL, HB_COMP_PARAM );    /* end of cases */
+   hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );    /* end of cases */
    ulDef = hb_compGenJump( 0, HB_COMP_PARAM );
    
    if( HB_COMP_PARAM->pSwitch->ulDefault )

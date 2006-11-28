@@ -66,6 +66,7 @@ HB_COMP_PTR hb_comp_new( void )
       memset( pComp->pLex, 0, sizeof( HB_COMP_LEX ) );
 
       /* initialize default settings */
+      pComp->mode = HB_MODE_COMPILER;
 
       pComp->pLex->pPP = pPP;
 

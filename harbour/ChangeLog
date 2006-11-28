@@ -8,6 +8,82 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-27 02:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/codebl.prg
+  * harbour/tests/langmsg.prg
+  * harbour/utils/hbpptest/pp_test.prg
+  * harbour/utils/hbpptest/pretest.prg
+  * harbour/samples/pe/license.txt
+    * removed carriage return (\r) characters
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbapi.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/vm/macro.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/ppcomp.c
+    * separated HB_COMP and HB_MACRO definitions and added HB_COMMON
+      structure used when HB_COMMON_SUPPORT macro is set
+    * hide HB_MACRO internal definitions in hbapi.h when HB_MACRO_SUPPORT
+      is not set
+    These modifications should help in future compiler and macro compiler
+    integration into single binary.
+
+    + added clipper compatible error message in unclosed structures
+      In general we should cleanup rules to make error reporting more
+      user friendly and Clipper compatible
+    % eliminated unnecessary allocations
+    + added int mode member to common part of HB_COMP and HB_MACRO
+      structure. It's initialized to HB_MODE_MACRO or HB_MODE_COMPILER
+    + add TOFIX note about memory leaks in cParamTypes and pParamClasses
+      members of COMDECLARED structure. It's a part of unfinished strong
+      typing code. I do not know what Ryszard plan to do with it so I'm
+      leaving it as is. The part of strong typing which were operating
+      on emulated HVM stack has been removed.
+    * removed static variables from genjava.c. Also gencli.c and genobj32.c
+      should be fixed but this will not make this code working so I haven't
+      touched it.
+    * changed 3-rd parameter of hb_compIdentifierNew() from BOOL to int.
+      Now it can have the following values: HB_IDENT_STATIC, HB_IDENT_FREE,
+      HB_IDENT_COPY. This modification will allow in the future using common
+      for static and dynamic symbol hash table without additional source code
+      changes. I also plan to use identifier hash table in PP the reduce
+      number of memory allocations and speed-up preprocessing by using
+      second level hashing for hash keys.
+
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    * changed HB_MACRO_SUPPORT to HB_COMMON_SUPPORT to automatically detect
+      possible conflicts between compiler and macro compiler
+    ! removed first detected conflict which existed for long time
+    + added hb_compExprMacroAsAlias() function to convert HB_ET_VARIABLE
+      expression to HB_ET_ALIAS.
+
+  * harbour/source/macro/macro.y
+    ! fixed using prefix&macro-> and &macro.sufix-> when macro cannot be
+      substituted by compiler, f.e.:
+         M->v := NIL
+         x := "&v.1->fld"
+         M->v := "v"
+         M->v1:= "data"
+         ? &x
+    ! fixed memory leak in macro substituted expression compilation
+
+  * harbour/source/vm/macro.c
+    ! fixed initialization of some HB_MACRO members
+    ! fixed value returned for type("&V->F") when alias does not exist
+    - removed not longer used hb_comp_bShortCuts global variable
+
 2006-11-25 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     ! fixed parenthesis in expression

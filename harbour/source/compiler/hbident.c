@@ -35,7 +35,7 @@
 
 /* create a new identifier or return the existing one 
 */
-char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy )
+char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType )
 {
    char * szIdent;
 
@@ -43,7 +43,11 @@ char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy )
                                           ( void * ) szName );
    if( !szIdent )
    {
-      if( bCopy )
+      /*
+       * In the future we may want direct support for static identifiers
+       * so it will not be necessary to allocate separate buffer for them
+       */
+      if( iType == HB_IDENT_COPY || iType == HB_IDENT_STATIC )
          szIdent = hb_strdup( szName );
       else
          szIdent = szName;
@@ -51,7 +55,7 @@ char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, BOOL bCopy )
       hb_hashTableAdd( HB_COMP_PARAM->pIdentifiers,
                        ( void * ) szIdent, ( void * ) szIdent );
    }
-   else if( !bCopy )
+   else if( iType == HB_IDENT_FREE )
       hb_xfree( szName );
 
    return szIdent;

@@ -63,7 +63,7 @@
 /* NOTE: This must be the first definition
  *    This is a common code shared by macro and standalone compiler
  */
-#define  HB_MACRO_SUPPORT
+#define  HB_COMMON_SUPPORT
 
 #include <math.h>
 #include "hbmacro.h"

@@ -776,43 +776,12 @@ extern char *   hb_procname( int iLevel, char * szName, BOOL bskipBlock ); /* re
 extern BOOL     hb_procinfo( int iLevel, char * szName, USHORT * puiLine, char * szFile );
 
 /* macro compiler */
-
-typedef struct HB_CBVAR_  /* This structure holds local variables declared in a codeblock */
-{
-   char * szName;
-   BYTE bType;
-   BOOL bUsed;
-   struct HB_CBVAR_ * pNext;
-} HB_CBVAR, * HB_CBVAR_PTR;
-
-typedef struct HB_PCODE_INFO_   /* compiled pcode container */
-{
-   BYTE * pCode;           /* pointer to a memory block where pcode is stored */
-   ULONG  lPCodeSize;      /* total memory size for pcode */
-   ULONG  lPCodePos;       /* actual pcode offset */
-   struct HB_PCODE_INFO_ * pPrev;
-   HB_CBVAR_PTR pLocals;
-} HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
-
-typedef struct HB_MACRO_    /* a macro compiled pcode container */
-{
-   /* common to compiler members */
-   ULONG  supported;       /* various flags for supported capabilities */
-
-   /* macro compiler only members */
-   char * string;          /* compiled string */
-   ULONG  length;          /* length of the string */
-   int    Flags;           /* some flags we may need */
-   int    status;          /* status of compilation */
-   HB_ITEM_PTR pError;     /* error object returned from the parser */
-   HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
-   void * pLex;            /* lexer buffer pointer */
-   void * pExprLst;        /* list with allocated expressions */
-   int    exprType;        /* type of successfully compiled expression */
-   USHORT uiListElements;  /* number of elements in macro list expression */
-   USHORT uiNameLen;       /* the maximum symbol name length */
-} HB_MACRO, * HB_MACRO_PTR;
-
+#if defined( HB_MACRO_SUPPORT )
+struct HB_MACRO_;
+typedef struct HB_MACRO_ * HB_MACRO_PTR;
+#else
+typedef void * HB_MACRO_PTR;
+#endif
 extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */
 extern void   hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags ); /* assign a value to a macro-expression item */
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
@@ -858,5 +827,9 @@ extern char * hb_getenv( const char * name );
 #define HB_I_( x ) x
 
 HB_EXTERN_END
+
+#if defined( HB_MACRO_SUPPORT )
+#include "hbcompdf.h"
+#endif
 
 #endif /* HB_APIEXT_H_ */

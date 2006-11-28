@@ -111,7 +111,6 @@ extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );
 #if defined( HB_MACRO_SUPPORT )
 
 extern void hb_compGenPCode1( BYTE byte, HB_COMP_DECL );
-extern void hb_compGenPData1( BYTE byte, HB_COMP_DECL );
 extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_COMP_DECL );
 extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_COMP_DECL );
 extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_COMP_DECL );

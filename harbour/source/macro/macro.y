@@ -143,6 +143,9 @@
 extern int  yylex( YYSTYPE *, HB_MACRO_PTR );   /* main lex token function, called by yyparse() */
 extern int  yyparse( HB_MACRO_PTR );            /* main yacc parsing function */
 extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management function */
+
+static void hb_macroIdentNew( HB_COMP_DECL, char * );
+
 %}
 
 %{
@@ -314,6 +317,8 @@ MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COM
                               }
             | MACROTEXT       {  ULONG ulLen = strlen( $1 );
                                  char * szVarName = hb_macroTextSubst( $1, &ulLen );
+                                 if( szVarName != $1 )
+                                    hb_macroIdentNew( HB_COMP_PARAM, szVarName );
                                  if( hb_macroIsIdent( szVarName ) )
                                  {
                                     $$ = hb_compExprNewVar( szVarName, HB_COMP_PARAM );
@@ -329,7 +334,7 @@ MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COM
                               }
             ;
 
-MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
+MacroVarAlias  : MacroVar ALIASOP   { hb_compExprMacroAsAlias( $1 ); }
                ;
 
 /* Macro expressions
@@ -816,6 +821,13 @@ typedef struct HB_MEXPR_
 }
 HB_MEXPR, * HB_MEXPR_PTR;
 
+typedef struct HB_MIDENT_
+{
+   char * Identifier;
+   struct HB_MIDENT_ *pPrev;
+}
+HB_MIDENT, * HB_MIDENT_PTR;
+
 /* Allocates memory for Expression holder structure and stores it
  * on the linked list
 */
@@ -827,8 +839,16 @@ HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL )
    return &pMExpr->Expression;
 }
 
+static void hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
+{
+   HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) hb_xgrab( sizeof( HB_MIDENT ) );
+   pMIdent->Identifier = szIdent;
+   pMIdent->pPrev = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
+   HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
+}
+
 /* Deallocate all memory used by expression optimizer */
-static void hb_macroExprLstFree( HB_MACRO_PTR pMacro )
+static void hb_macroLstFree( HB_MACRO_PTR pMacro )
 {
    if( pMacro->pExprLst )
    {
@@ -847,6 +867,14 @@ static void hb_macroExprLstFree( HB_MACRO_PTR pMacro )
       }
       while( pMacro->pExprLst );
    }
+
+   while( pMacro->pIdentLst )
+   {
+      HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;;
+      HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent->pPrev;
+      hb_xfree( pMIdent->Identifier );
+      hb_xfree( pMIdent );
+   }
 }
 
 int hb_macroYYParse( HB_MACRO_PTR pMacro )
@@ -857,10 +885,11 @@ int hb_macroYYParse( HB_MACRO_PTR pMacro )
    {
       pMacro->status = HB_MACRO_CONT;
       pMacro->pExprLst = NULL;
+      pMacro->pIdentLst = NULL;
 
       iResult = yyparse( pMacro );
 
-      hb_macroExprLstFree( pMacro );
+      hb_macroLstFree( pMacro );
       hb_macroLexDelete( pMacro );
    }
    else

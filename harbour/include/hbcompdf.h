@@ -54,13 +54,11 @@
 #ifndef HB_COMPDF_H_
 #define HB_COMPDF_H_
 
-#include "hbdefs.h"
-#include "hbpp.h"
 #include "hbapi.h"
+#include "hbpp.h"
 #include "hbhash.h"
 
 HB_EXTERN_BEGIN
-
 
 /* compiler related declarations */
 
@@ -110,6 +108,15 @@ typedef struct _VAR
    struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
 
+/* local variables declared in a codeblock */
+typedef struct HB_CBVAR_
+{
+   char * szName;
+   BYTE bType;
+   BOOL bUsed;
+   struct HB_CBVAR_ * pNext;
+} HB_CBVAR, * HB_CBVAR_PTR;
+
 typedef struct HB_ENUMERATOR_
 {
    char *szName;
@@ -138,13 +145,6 @@ typedef struct __FUNC
    ULONG *      pJumps;                   /* pointer to the Jumps array */
    ULONG        iNOOPs;                   /* NOOPs Counter */
    ULONG        iJumps;                   /* Jumps Counter */
-   BYTE *       pStack;                   /* Compile Time Stack */
-   USHORT       iStackSize;               /* Compile Time Stack size */
-   int          iStackIndex;              /* Compile Time Stack index */
-   PCOMDECLARED pStackFunctions[ 8 ];     /* Declared Functions on the Compile Time Stack */
-   int          iStackFunctions;          /* Index into DEclared Functions on Compile Time Stack */
-   PCOMCLASS    pStackClasses[ 8 ];       /* Declared Classes on the Compile Time Stack */
-   int          iStackClasses;            /* Index into Declared Classes on Compile Time Stack */
    BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
@@ -351,11 +351,11 @@ typedef struct HB_EXPR_
       } asNum;
       struct
       {
-         unsigned char cMacroOp;       /* macro operator */
-         unsigned char SubType;        /* context in which macro is used */
          char * szMacro;               /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
          struct HB_EXPR_ *pFunCall;    /* pointer to a function if used as function's call argument */
+         unsigned char cMacroOp;       /* macro operator */
+         unsigned char SubType;        /* context in which macro is used */
       } asMacro;
       struct
       {
@@ -364,11 +364,11 @@ typedef struct HB_EXPR_
       } asList;
       struct
       {
-         BOOL isMacro;			/* TRUE=codeblock contains macro expression */
-	      BOOL lateEval;			/* TRUE=late evaluation of macro */
-         char *string;			/* source code of a codeblock */
-         struct HB_EXPR_ *pExprList;    /* list elements */
-         HB_CBVAR_PTR pLocals;      	/* list of local variables */
+         char *string;                 /* source code of a codeblock */
+         struct HB_EXPR_ *pExprList;   /* list elements */
+         HB_CBVAR_PTR pLocals;         /* list of local variables */
+         USHORT isMacro;               /* TRUE=codeblock contains macro expression */
+         USHORT lateEval;              /* TRUE=late evaluation of macro */
       } asCodeblock;
       struct
       {
@@ -447,7 +447,6 @@ typedef struct HB_RTVAR_
    struct HB_RTVAR_ *pPrev;
 } HB_RTVAR, *HB_RTVAR_PTR;
 
-
 typedef struct _HB_LABEL_INFO
 {
    FILE *   yyc;
@@ -457,8 +456,61 @@ typedef struct _HB_LABEL_INFO
    ULONG *  pulLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
+#define HB_MODE_COMPILER      1
+#define HB_MODE_MACRO         2
 
-#if !defined( HB_MACRO_SUPPORT )
+#if defined( HB_COMMON_SUPPORT )
+
+typedef struct _HB_COMMON
+{
+   /* common to macro compiler members */
+   int    mode;               /* HB_MODE_* */
+   ULONG  supported;          /* various flags for supported capabilities */
+}
+HB_COMMON, * HB_COMMON_PTR;
+
+#define HB_COMP_PARAM         pCommon
+#define HB_COMP_DECL          HB_COMMON_PTR HB_COMP_PARAM
+
+#elif defined( HB_MACRO_SUPPORT )
+
+#define HB_COMP_PARAM         pMacro
+#define HB_COMP_DECL          HB_MACRO_PTR HB_COMP_PARAM
+
+typedef struct HB_PCODE_INFO_   /* compiled pcode container */
+{
+   BYTE * pCode;           /* pointer to a memory block where pcode is stored */
+   ULONG  lPCodeSize;      /* total memory size for pcode */
+   ULONG  lPCodePos;       /* actual pcode offset */
+   struct HB_PCODE_INFO_ * pPrev;
+   HB_CBVAR_PTR pLocals;
+} HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
+
+typedef struct HB_MACRO_    /* a macro compiled pcode container */
+{
+   /* common to compiler members */
+   int    mode;
+   ULONG  supported;       /* various flags for supported capabilities */
+
+   /* macro compiler only members */
+   char * string;          /* compiled string */
+   ULONG  length;          /* length of the string */
+   int    Flags;           /* some flags we may need */
+   int    status;          /* status of compilation */
+   HB_ITEM_PTR pError;     /* error object returned from the parser */
+   HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
+   void * pLex;            /* lexer buffer pointer */
+   void * pExprLst;        /* list with allocated expressions */
+   void * pIdentLst;       /* list with allocated identifiers */
+   int    exprType;        /* type of successfully compiled expression */
+   USHORT uiListElements;  /* number of elements in macro list expression */
+   USHORT uiNameLen;       /* the maximum symbol name length */
+} HB_MACRO;
+
+#else
+
+#define HB_COMP_PARAM         pComp
+#define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
 
 typedef struct _HB_COMP_LEX
 {
@@ -471,6 +523,7 @@ HB_COMP_LEX, * PHB_COMP_LEX;
 typedef struct _HB_COMP
 {
    /* common to macro compiler members */
+   int    mode;
    ULONG  supported;       /* various flags for supported capabilities */
 
    /* compiler only members */
@@ -563,14 +616,6 @@ extern HB_COMP_PTR hb_comp_new( void );
 extern void hb_comp_free( HB_COMP_PTR );
 
 extern HB_COMP_PTR hb_comp_data;
-
-#define HB_COMP_PARAM         pComp
-#define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
-
-#else
-
-#define HB_COMP_PARAM         pMacro
-#define HB_COMP_DECL          HB_MACRO_PTR HB_COMP_PARAM
 
 #endif /* !HB_MACRO_SUPPORT  */
 

@@ -106,24 +106,16 @@ FUNCTION DetachToStatic( n )
 RETURN NIL
 
 // ------------------------------------------------------------
-
 Function ReferParam()
-
 Local bResult
 
-
-? "Test for 
-codeblock parameter passed by reference"
+? "Test for codeblock parameter passed by reference"
 
 PassByValue( {|lEnd| ;
-
    bResult := GetBlock( @lEnd ), ;  
-
    SetByRef( @lEnd ) } )
-
 // Clipper & xHarbour it's .T.
 //In Harbour it is .F. 
-
 ? "Printed value in Clipper  .T. =", Eval( bResult )           
 ?
 // Notice the Clipper bug: GetBlock is receiving the reference to
@@ -131,78 +123,49 @@ PassByValue( {|lEnd| ;
 // depend on the order of block creation/value changing (GetBlock/SetRef).
 
 PassByRef( {|lEnd| ;
-
    bResult := GetBlock( @lEnd ), ;  
-
    SetByRef( @lEnd ) } )
-
 // Clipper & xHarbour it's .T.
 //In Harbour it is .F. 
-
 ? "Printed value in Clipper  .T. =", Eval( bResult )           
 ?
 
-? "2nd test for 
-codeblock parameter passed by reference"
+? "2nd test for codeblock parameter passed by reference"
 
 PassByValue( {|lEnd| ;
-   SetByRef( @lEnd )
-, ;
+   SetByRef( @lEnd ), ;
    bResult := GetBlock( @lEnd ) } )
-
 // Clipper & xHarbour it's .T.
 //In Harbour it is .F. 
-
 ? "Printed value in Clipper  .F. =", Eval( bResult )           
 ?
 
 PassByRef( {|lEnd| ;
-
    SetByRef( @lEnd ), ;
    bResult := GetBlock( @lEnd ) } )
-
 // Clipper & xHarbour it's .T.
 //In Harbour it is .F. 
-
 ? "Printed value in Clipper  .F. =", Eval( bResult )           
 ?
 
 Return Nil
 
-
-
 Static Function PassByValue( bBlock )
-
 Local lSomeVar := .T.
-
 Eval( bBlock, lSomeVar )
-
 ? "lSomeVar value in Clipper .T. =", lSomeVar
 Return .T.
 
-
 Static Function PassByRef( bBlock )
-
 Local lSomeVar := .T.
-
 Eval( bBlock, @lSomeVar )
-
 ? "lSomeVar value in Clipper .F. =", lSomeVar
 Return .T.
 
-
-
 Static Function SetByRef( lVar )
-
 lVar := .F.
-
 Return Nil
 
-
-
 Static Function GetBlock( lVar )
-
 Return {|| lVar }
-
 // ------------------------------------------------------------
-

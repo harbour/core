@@ -200,7 +200,7 @@ Separator     {SpaceTab}
                            hb_strRemEscSeq( yytext, &len );
                            yyleng = len;
                         }
-                        pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+                        pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                         hb_comp_iState = LITERAL;
 
                         return LITERAL;
@@ -218,7 +218,7 @@ Separator     {SpaceTab}
 
 <STRING1>[^\x27\n]*\x27   { BEGIN 0;
                       yytext[--yyleng] = '\0';
-                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                       hb_comp_iState = LITERAL;
 
                       return LITERAL;
@@ -226,7 +226,7 @@ Separator     {SpaceTab}
 
 <STRING2>[^\x22\n]*\x22  { BEGIN 0;
                       yytext[--yyleng] = '\0';
-                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                       hb_comp_iState = LITERAL;
 
                       return LITERAL;
@@ -272,7 +272,7 @@ Separator     {SpaceTab}
                /* "] or '] terminator was found */
                yyless( i+2 );
                yytext[ i+1 ] = '\0';
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                hb_comp_iState = LITERAL;
 
                return LITERAL;
@@ -284,7 +284,7 @@ Separator     {SpaceTab}
        {
            yyless( iFirstPos+1 );
            yytext[ iFirstPos ] = '\0';
-           pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+           pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
            hb_comp_iState = LITERAL;
 
            return LITERAL;
@@ -300,7 +300,7 @@ Separator     {SpaceTab}
             {
                yyless( i+1 );
                yytext[ i ] = '\0';
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                hb_comp_iState = LITERAL;
 
                return LITERAL;
@@ -332,7 +332,7 @@ Separator     {SpaceTab}
           /* ] terminator was found */
           yyless( i+1 );
           yytext[ i ] = '\0';
-          pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+          pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
           hb_comp_iState = LITERAL;
 
           return LITERAL;
@@ -348,7 +348,7 @@ Separator     {SpaceTab}
                       unput( ')' );
                       yyleng -= 3;
                       yytext[ yyleng ] = '\0';
-                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+                      pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                       hb_comp_iState = LITERAL;
 
                       return LITERAL;
@@ -384,7 +384,7 @@ Separator     {SpaceTab}
 %}
 "announce"|"announc"|"announ"|"annou"|"anno"        {
                   hb_comp_iState =IDENTIFIER;
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   return ANNOUNCE;
                 }
 %{
@@ -401,7 +401,7 @@ Separator     {SpaceTab}
                     BEGIN BREAK_;
                  else
                  {
-                    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                     hb_comp_iState =IDENTIFIER;
                     return IDENTIFIER;
                  }
@@ -419,7 +419,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-1 ] );
                if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
                {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", HB_IDENT_STATIC );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                }
@@ -428,7 +428,7 @@ Separator     {SpaceTab}
              }
 <BREAK_>(":="|"+="|"-="|"->"|"*="|"/="|"^="|"==") { /* operators */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                hb_comp_iState =IDENTIFIER;
@@ -440,7 +440,7 @@ Separator     {SpaceTab}
                 * For this reason we are allowing the BREAK statement only
                 */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                hb_comp_iState =BREAK;
@@ -448,7 +448,7 @@ Separator     {SpaceTab}
              }
 <BREAK_>[\=\(] { /* operators = ( */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "BREAK", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
@@ -468,14 +468,14 @@ Separator     {SpaceTab}
 <CASE_>{Separator}*    ;
 <CASE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <CASE_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -502,7 +502,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "CASE", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -511,7 +511,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "_procreq_("    {
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "_PROCREQ_", TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "_PROCREQ_", HB_IDENT_STATIC );
                    hb_comp_iState =IDENTIFIER;
                    return PROCREQ;
                }
@@ -520,7 +520,7 @@ Separator     {SpaceTab}
 %}
 
 "decl"|"decla"|"declar"|"declare" {
-    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
     if( hb_comp_iState == DO )
     {
         hb_comp_iState = IDENTIFIER;
@@ -570,7 +570,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "opti"|"optio"|"option"|"optiona"|"optional"    {
-    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+    pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
     return OPTIONAL;
 }
 %{
@@ -610,7 +610,7 @@ Separator     {SpaceTab}
                 }
                 else
                 { /* there is another item in line already */
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", HB_IDENT_STATIC );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -623,7 +623,7 @@ Separator     {SpaceTab}
                 }
                 else
                 { /* there is another item in line already */
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", HB_IDENT_STATIC );
                   hb_comp_iState =IDENTIFIER;
                   BEGIN 0;
                   return IDENTIFIER;
@@ -632,13 +632,13 @@ Separator     {SpaceTab}
 <DO_>{Separator}*(.|\n)         { /* end of line or any operator */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
-                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", TRUE );
+                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DO", HB_IDENT_STATIC );
                 hb_comp_iState =IDENTIFIER;
                 return IDENTIFIER;
               }
 <DOIDENT_>{Identifier}			{ /* DO identifier WITH */
                 BEGIN 0;
-                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE );
+                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY );
                 hb_comp_iState =IDENTIFIER;
                 return DOIDENT;
 					}
@@ -646,7 +646,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "descend"    {
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DESCEND", TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "DESCEND", HB_IDENT_STATIC );
                    hb_comp_iState =IDENTIFIER;
                    return DESCEND;
                }
@@ -706,7 +706,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like end[] & end() at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ENDIF, NULL, NULL );
                }
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -717,7 +717,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like end-> & end++ at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ENDIF, NULL, NULL );
                }
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -725,7 +725,7 @@ Separator     {SpaceTab}
              }
 <END_>[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -740,7 +740,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "END", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -758,7 +758,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "exte"|"exter"|"extern"|"externa"|"external" {
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                    hb_comp_iState =IDENTIFIER;
                    return EXTERN;
                }
@@ -766,11 +766,11 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "_fie"|"_fiel"|"_field" { BEGIN FIELD_;
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                  }
 
 "fiel"|"field"   { BEGIN FIELD_;
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                  }
 <FIELD_>{Separator}+[_a-zA-Z] { /* an identifier after the FIELD */
                  BEGIN 0;
@@ -816,7 +816,7 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* for example: DO for WITH variable */
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", HB_IDENT_STATIC );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -832,14 +832,14 @@ Separator     {SpaceTab}
                }
                else
                {
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", HB_IDENT_STATIC );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                }
              }
 <FOR_>.|\n { /* there is no identifier after "FOR" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "FOR", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                hb_comp_iState =IDENTIFIER;
                return IDENTIFIER;
@@ -924,7 +924,7 @@ Separator     {SpaceTab}
                break;
          }
 
-         pInline = hb_compInlineAdd( pComp, hb_compIdentifierNew( sInlineSym, TRUE ), hb_pp_line( pComp->pLex->pPP ) + 1 );
+         pInline = hb_compInlineAdd( pComp, hb_compIdentifierNew( sInlineSym, HB_IDENT_COPY ), hb_pp_line( pComp->pLex->pPP ) + 1 );
 
       DigestInline:
 
@@ -1037,7 +1037,7 @@ Separator     {SpaceTab}
             }
 
             hb_comp_iLinePRG = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
-            pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( sInlineSym, TRUE );
+            pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( sInlineSym, HB_IDENT_COPY );
             return IDENTIFIER;
          }
       }
@@ -1126,7 +1126,7 @@ Separator     {SpaceTab}
                  }
                  else
                  { /* there is another item in line already */
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "INIT", TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "INIT", HB_IDENT_STATIC );
                    hb_comp_iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
@@ -1134,7 +1134,7 @@ Separator     {SpaceTab}
 <INIT_>.|\n { /* any character (not identifier) after INIT */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "INIT", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "INIT", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -1146,7 +1146,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "loca"|"local"  {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState =IDENTIFIER;
                   return LOCAL;
                 }
@@ -1159,7 +1159,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "memv"|"memva"|"memvar" {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState =IDENTIFIER;
                   return MEMVAR;
                 }
@@ -1181,7 +1181,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -1192,7 +1192,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NEXTFOR, NULL, NULL );
                }
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -1203,7 +1203,7 @@ Separator     {SpaceTab}
                { /* Clipper does not like next-> & next++ at the begining of line */
                   hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NEXTFOR, NULL, NULL );
                }
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -1211,7 +1211,7 @@ Separator     {SpaceTab}
              }
 <NEXT_>[^_a-zA-Z] { /* there is no identifier after "next" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
@@ -1228,7 +1228,7 @@ Separator     {SpaceTab}
                }
                else
                {
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "NEXT", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -1242,7 +1242,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "othe"|"other"|"otherw"|"otherwi"|"otherwis"|"otherwise"    {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   BEGIN OTHERWISE_;
                }
 <OTHERWISE_>{Separator}*   ;
@@ -1272,7 +1272,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "para"|"param"|"parame"|"paramet"|"paramete"|"parameter"|"parameters"   {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState =IDENTIFIER;
                   return PARAMETERS;
                 }
@@ -1280,7 +1280,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "priv"("ate"|"at"|"a")? {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState =IDENTIFIER;
                   return PRIVATE;
                 }
@@ -1303,7 +1303,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "publ"("ic"|"i")? {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState =IDENTIFIER;
                   return PUBLIC;
                }
@@ -1315,7 +1315,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "reco"|"recov"|"recove"|"recover"   {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   BEGIN RECOVER_;
                 }
 <RECOVER_>{Separator}*    ;
@@ -1348,7 +1348,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "retu"|"retur"|"return"  {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   BEGIN RETURN_;
                 }
 <RETURN_>{Separator}*
@@ -1420,7 +1420,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "stat"|"stati"|"static"  {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState = IDENTIFIER;
                   return STATIC;
                }
@@ -1435,14 +1435,14 @@ Separator     {SpaceTab}
 <SWITCH_>{Separator}*    ;
 <SWITCH_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "switch" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <SWITCH_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", HB_IDENT_STATIC );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
@@ -1467,7 +1467,7 @@ Separator     {SpaceTab}
                }
                else
                { /* there is another item in line already */
-                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", TRUE );
+                 pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "SWITCH", HB_IDENT_STATIC );
                  hb_comp_iState =IDENTIFIER;
                  return IDENTIFIER;
                }
@@ -1482,7 +1482,7 @@ Separator     {SpaceTab}
 %}
 "while"|"whil"  { BEGIN WHILE_; 
                   /* store it for later use */
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, TRUE ); 
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( yytext, HB_IDENT_COPY ); 
                 }
 <WHILE_>{Separator}*        ;
 <WHILE_>\n      { /* end of line */
@@ -1494,19 +1494,19 @@ Separator     {SpaceTab}
                 }
 					 else
 					 {
-                	pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", TRUE );
+                	pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", HB_IDENT_STATIC );
                 	return IDENTIFIER;
 					 }
               }
 <WHILE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "while" */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
 <WHILE_>("+="|"-="|"->") { /* operators */
                BEGIN 0;
-               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", TRUE );
+               pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", HB_IDENT_STATIC );
                unput( yytext[ yyleng-1 ] );
                unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
@@ -1528,7 +1528,7 @@ Separator     {SpaceTab}
                 }
                 else
                 { /* there is another item in line already */
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WHILE", HB_IDENT_STATIC );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1541,7 +1541,7 @@ Separator     {SpaceTab}
 <WITH_>\n           { /* at the end of line */
                 BEGIN 0;
                 unput( '\n' );
-                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", TRUE );
+                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", HB_IDENT_STATIC );
                 return IDENTIFIER;
               }
 <WITH_>"with"       {
@@ -1550,7 +1550,7 @@ Separator     {SpaceTab}
                 if( hb_comp_iState == DO )
                 { /* DO with WITH */
                   hb_comp_iState =IDENTIFIER;
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", HB_IDENT_STATIC );
                   return IDENTIFIER;
                 }
                 else
@@ -1581,7 +1581,7 @@ Separator     {SpaceTab}
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 hb_comp_iState =IDENTIFIER;
-                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", TRUE );
+                pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", HB_IDENT_STATIC );
                 return IDENTIFIER;
               }
 <WITH_>.            {
@@ -1600,7 +1600,7 @@ Separator     {SpaceTab}
                 }
                 else
                 {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( "WITH", HB_IDENT_STATIC );
                   hb_comp_iState =IDENTIFIER;
                   return IDENTIFIER;
                 }
@@ -1812,25 +1812,25 @@ Separator     {SpaceTab}
 {MacroVar}     {
                   if( yytext[ yyleng-1 ] == '.' )
                      yytext[ yyleng-1 ] = '\0';
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext+1 ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext+1 ), HB_IDENT_COPY );
                   hb_comp_iState = MACROVAR;
                   return MACROVAR;
                }
 
 {MacroEnd}     {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
-                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                  pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
@@ -1842,7 +1842,7 @@ Separator     {SpaceTab}
                       yytext[ HB_SYMBOL_NAME_LEN ] = '\0';
                       yyleng = HB_SYMBOL_NAME_LEN;
                    }
-                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
+                   pComp->pLex->lasttok = yylval_ptr->string = hb_compIdentifierNew( hb_strupr( yytext ), HB_IDENT_COPY )
                    hb_comp_iState = IDENTIFIER;
                    return IDENTIFIER;
                 }

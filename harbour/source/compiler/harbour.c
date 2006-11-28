@@ -272,7 +272,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
 
             if( i > 0 )
                hb_compAutoOpenAdd( HB_COMP_PARAM,
-                        hb_compIdentifierNew( HB_COMP_PARAM, szFile, TRUE ) );
+                        hb_compIdentifierNew( HB_COMP_PARAM, szFile, HB_IDENT_COPY ) );
             i = 0;
             while( ch != EOF && ch != '\n' )
                ch = fgetc( inFile );
@@ -679,6 +679,8 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
       {
          pDeclared->iParamCount++;
 
+
+         /* TOFIX: these allocations causes memory leaks */
          if ( pDeclared->cParamTypes )
          {
             pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
@@ -709,6 +711,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
 
       HB_COMP_PARAM->pLastMethod->iParamCount++;
 
+      /* TOFIX: these allocations causes memory leaks */
       if ( HB_COMP_PARAM->pLastMethod->cParamTypes )
       {
          HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->cParamTypes, HB_COMP_PARAM->pLastMethod->iParamCount );
@@ -981,19 +984,8 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
                }
                if( HB_COMP_PARAM->fDebugInfo )
                {
-                  BYTE * pBuffer;
-
-                  pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 4 );
-
-                  pBuffer[0] = HB_P_LOCALNAME;
-                  pBuffer[1] = HB_LOBYTE( wLocal );
-                  pBuffer[2] = HB_HIBYTE( wLocal );
-
-                  memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), szVarName, strlen( szVarName ) + 1 );
-
-                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 4 , HB_COMP_PARAM );
-
-                  hb_xfree( pBuffer );
+                  hb_compGenPCode3( HB_P_LOCALNAME, HB_LOBYTE( wLocal ), HB_HIBYTE( wLocal ), HB_COMP_PARAM );
+                  hb_compGenPCodeN( ( BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
                }
             }
             break;
@@ -1035,7 +1027,6 @@ void hb_compGenStaticName( char *szVarName, HB_COMP_DECL )
   {
       BYTE bGlobal = 0;
       PFUNCTION pFunc;
-      BYTE * pBuffer;
       int iVar;
       
       if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
@@ -1047,20 +1038,11 @@ void hb_compGenStaticName( char *szVarName, HB_COMP_DECL )
          bGlobal = 1;
       }
       pFunc = HB_COMP_PARAM->functions.pLast;
-      pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 5 );
       iVar = hb_compStaticGetPos( szVarName, pFunc );
 
-      pBuffer[0] = HB_P_STATICNAME;
-      pBuffer[1] = bGlobal;
-      pBuffer[2] = HB_LOBYTE( iVar );
-      pBuffer[3] = HB_HIBYTE( iVar );
+      hb_compGenPCode4( HB_P_STATICNAME, bGlobal, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szVarName, strlen( szVarName ) + 1, HB_COMP_PARAM );
 
-      memcpy( ( BYTE * ) ( & ( pBuffer[4] ) ), szVarName, strlen( szVarName ) + 1 );
-
-      hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 5, HB_COMP_PARAM );
-
-      hb_xfree( pBuffer );
-      
       if( bGlobal )
          hb_compStaticDefEnd( HB_COMP_PARAM );
    }
@@ -1783,11 +1765,6 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, char * szName, HB_SYMBOLSCOPE
    pFunc->iJumps          = 0;
    pFunc->pNOOPs          = NULL;
    pFunc->pJumps          = NULL;
-   pFunc->pStack          = NULL;
-   pFunc->iStackSize      = 0;
-   pFunc->iStackIndex     = 0;
-   pFunc->iStackFunctions = 0;
-   pFunc->iStackClasses   = 0;
    pFunc->bLateEval       = TRUE;
    pFunc->pEnum           = NULL;
 
@@ -1805,7 +1782,7 @@ static PINLINE hb_compInlineNew( HB_COMP_DECL, char * szName, int iLine )
    pInline->lPCodeSize = 0;
    pInline->pNext      = NULL;
    pInline->szFileName = hb_compIdentifierNew( HB_COMP_PARAM,
-                           hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), TRUE );
+                           hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), HB_IDENT_COPY );
    pInline->iLine      = iLine;
 
    return pInline;
@@ -1827,15 +1804,16 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
 
    if( cScope & (HB_FS_INIT | HB_FS_EXIT) )
    {
-      char *szNewName;
+      char szNewName[ HB_SYMBOL_NAME_LEN + 1 ];
       int iLen;
-      
+
       iLen = strlen( szFunName );
-      szNewName = ( char * ) hb_xgrab( iLen + 2 );
-      strcpy( szNewName, szFunName );
+      if( iLen >= HB_SYMBOL_NAME_LEN )
+         iLen = HB_SYMBOL_NAME_LEN - 1;
+      memcpy( szNewName, szFunName, iLen );
       szNewName[ iLen ] ='$';
       szNewName[ iLen + 1 ] = '\0';
-      szFunName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, FALSE );
+      szFunName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
    }
    pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
    if( pFunc )
@@ -1891,18 +1869,12 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
 
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      BYTE * pBuffer;
       char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-      int iLen = strlen( szFile );
 
-      pBuffer = ( BYTE * ) hb_xgrab( 3 + iLen + strlen( szFunName ) );
-      pBuffer[0] = HB_P_MODULENAME;
-      memcpy( pBuffer + 1, szFile, iLen );
-      pBuffer[ iLen + 1 ] = ':';
-      memcpy( &pBuffer[ iLen + 2 ], szFunName, strlen( szFunName ) + 1 );
-      hb_compGenPCodeN( pBuffer, 3 + iLen + strlen( szFunName ), HB_COMP_PARAM );
-
-      hb_xfree( pBuffer );
+      hb_compGenPCode1( HB_P_MODULENAME, HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szFile, strlen( szFile ), HB_COMP_PARAM );
+      hb_compGenPCode1( ':', HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szFunName, strlen( szFunName ) + 1, HB_COMP_PARAM );
    }
    HB_COMP_PARAM->fDontGenLineNum = FALSE; /* reset the flag */
 }
@@ -2625,11 +2597,6 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
    HB_COMP_PARAM->fDontGenLineNum = FALSE;
    /* clear RETURN/BREAK flag */
    HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );
-
-   /* Resting Compile Time Stack */
-   HB_COMP_PARAM->functions.pLast->iStackIndex = 0;
-   HB_COMP_PARAM->functions.pLast->iStackFunctions = 0;
-   HB_COMP_PARAM->functions.pLast->iStackClasses = 0;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -2788,12 +2755,16 @@ void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 
 void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL ) /* generates an underscore-symbol name for a data assignment */
 {
-   char * szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
+   char szResult[ HB_SYMBOL_NAME_LEN + 1 ];
+   int iLen = strlen( szMsg );
 
-   strcpy( szResult, "_" );
-   strcat( szResult, szMsg );
+   if( iLen >= HB_SYMBOL_NAME_LEN )
+      iLen = HB_SYMBOL_NAME_LEN - 1;
+   szResult[ 0 ] = '_';
+   memcpy( szResult + 1, szMsg, iLen );
+   szResult[ iLen + 1 ] = '\0';
 
-   hb_compGenMessage( hb_compIdentifierNew( HB_COMP_PARAM, szResult, FALSE ), bIsObject, HB_COMP_PARAM );
+   hb_compGenMessage( hb_compIdentifierNew( HB_COMP_PARAM, szResult, HB_IDENT_COPY ), bIsObject, HB_COMP_PARAM );
 }
 
 static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, char *szVarName )
@@ -3332,33 +3303,11 @@ void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
 {
-   BYTE * pBuffer;
-
    if( ulStrLen > 255 )
-   {
-      pBuffer = ( BYTE * ) hb_xgrab( ulStrLen + 3 );
-
-      pBuffer[0] = HB_P_PUSHSTR;
-      pBuffer[1] = HB_LOBYTE( ulStrLen );
-      pBuffer[2] = HB_HIBYTE( ulStrLen );
-
-      memcpy( ( BYTE *)( &( pBuffer[3] ) ), ( BYTE * ) szText, ulStrLen );
-
-      hb_compGenPCodeN( pBuffer, ulStrLen + 3, HB_COMP_PARAM );
-   }
+      hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
    else
-   {
-      pBuffer = ( BYTE * ) hb_xgrab( ulStrLen + 3 );
-
-      pBuffer[0] = HB_P_PUSHSTRSHORT;
-      pBuffer[1] = ( BYTE ) ulStrLen;
-
-      memcpy( ( BYTE *)( &( pBuffer[2] ) ), ( BYTE * ) szText, ulStrLen );
-
-      hb_compGenPCodeN( pBuffer, ulStrLen + 2, HB_COMP_PARAM );
-   }
-
-   hb_xfree( pBuffer );
+      hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( BYTE ) ulStrLen, HB_COMP_PARAM );
+   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -3486,15 +3435,6 @@ void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined function 
              (pFunc->bFlags & FUN_PROCEDURE) == 0 )
             hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                                pFunc->szName, NULL );
-
-         /* Compile Time Strong Type Checking is not needed any more. */
-         if ( pFunc->pStack )
-            hb_xfree( ( void * ) pFunc->pStack );
-
-         pFunc->iStackSize      = 0;
-         pFunc->iStackIndex     = 0;
-         pFunc->iStackFunctions = 0;
-         pFunc->iStackClasses   = 0;
       }
    }
 }
@@ -4129,15 +4069,10 @@ void hb_compStaticDefStart( HB_COMP_DECL )
       
       if( HB_COMP_PARAM->fDebugInfo )
       {
-         BYTE * pBuffer;
          char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-         int iFileLen = strlen( szFile );
 
-         pBuffer = ( BYTE * ) hb_xgrab( 2 + iFileLen );
-         pBuffer[0] = HB_P_MODULENAME;
-         memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) szFile, iFileLen + 1 );
-         hb_compGenPCodeN( pBuffer, 2 + iFileLen, HB_COMP_PARAM );
-         hb_xfree( pBuffer );
+         hb_compGenPCode1( HB_P_MODULENAME, HB_COMP_PARAM );
+         hb_compGenPCodeN( ( BYTE * ) szFile, strlen( szFile ) + 1, HB_COMP_PARAM );
       }
    }
    else
@@ -4255,38 +4190,22 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      BYTE * pBuffer;
       char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-      int iLen = strlen( szFile );
 
-      pBuffer = ( BYTE * ) hb_xgrab( 3 + iLen + strlen( pFunc->szName ) );
-      pBuffer[0] = HB_P_MODULENAME;
-      memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) szFile, iLen );
-      pBuffer[ iLen + 1 ] = ':';
-      memcpy( ( BYTE * ) ( &( pBuffer[ iLen + 2 ] ) ), ( BYTE * ) pFunc->szName, strlen( pFunc->szName ) + 1 );
-      hb_compGenPCodeN( pBuffer, 3 + iLen + strlen( pFunc->szName ), HB_COMP_PARAM );
-      hb_xfree( pBuffer );
+      hb_compGenPCode1( HB_P_MODULENAME, HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szFile, strlen( szFile ), HB_COMP_PARAM );
+      hb_compGenPCode1( ':', HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) pFunc->szName, strlen( pFunc->szName ) + 1, HB_COMP_PARAM );
 
       /* generate the name of referenced local variables */
       pVar = pCodeblock->pStatics;
       iLocalPos = -1;
       while( wLocalsCnt-- )
       {
-         pBuffer = ( BYTE * ) hb_xgrab( strlen( pVar->szName ) + 4 );
-
-         pBuffer[0] = HB_P_LOCALNAME;
-         pBuffer[1] = HB_LOBYTE( iLocalPos );
-         pBuffer[2] = HB_HIBYTE( iLocalPos );
+         hb_compGenPCode3( HB_P_LOCALNAME, HB_LOBYTE( iLocalPos ), HB_HIBYTE( iLocalPos ), HB_COMP_PARAM );
+         hb_compGenPCodeN( ( BYTE * ) pVar->szName, strlen( pVar->szName ) + 1, HB_COMP_PARAM );
          iLocalPos--;
-
-         memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), pVar->szName, strlen( pVar->szName ) + 1 );
-
-         hb_compGenPCodeN( pBuffer, strlen( pVar->szName ) + 4, HB_COMP_PARAM );
-
-         hb_xfree( pBuffer );
-
          pFree = pVar;
-
          pVar = pVar->pNext;
          hb_xfree( ( void * ) pFree );
       }
@@ -4326,15 +4245,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    /* Release the Jumps array. */
    if( pCodeblock->pJumps )
       hb_xfree( ( void * ) pCodeblock->pJumps );
-
-   /* Compile Time Strong Type Checking Stack is not needed any more. */
-   if ( pCodeblock->pStack )
-      hb_xfree( ( void * ) pCodeblock->pStack );
-
-   pCodeblock->iStackSize      = 0;
-   pCodeblock->iStackIndex     = 0;
-   pCodeblock->iStackFunctions = 0;
-   pCodeblock->iStackClasses   = 0;
 
    hb_xfree( ( void * ) pCodeblock );
 }
@@ -4389,10 +4299,6 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
    /* Release the Jumps array. */
    if( pCodeblock->pJumps )
       hb_xfree( ( void * ) pCodeblock->pJumps );
-
-   /* Compile Time Strong Type Checking Stack is not needed any more. */
-   if ( pCodeblock->pStack )
-      hb_xfree( ( void * ) pCodeblock->pStack );
 }
 
 
@@ -4568,7 +4474,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                /* Generate the starting procedure frame */
                if( HB_COMP_PARAM->fStartProc )
                {
-                  hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), FALSE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+                  hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
                }
                else
                {
@@ -4625,7 +4531,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                /* Update pseudo function name */
                szNewName = ( char * ) hb_xgrab( 25 );
                sprintf( szNewName, "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
-               HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, FALSE );
+               HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
 
                pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, NULL, HB_SYM_FUNCNAME );
                pSym->cScope |= HB_COMP_PARAM->pInitFunc->cScope;
@@ -4924,7 +4830,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
 
             /* Generate the starting procedure frame */
             if( HB_COMP_PARAM->fStartProc )
-               hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), FALSE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+               hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
             else if( ! bSingleFile )
                hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
 

@@ -33,11 +33,31 @@
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-static void hb_fputc( BYTE b );
-static void hb_fputs( char * szName );
+static int hb_fputc( BYTE b, FILE * fOut, int nChar )
+{
+   if( ++nChar > 1 )
+      fprintf( fOut, ", " );
 
-static FILE * s_yyc;
-static int s_nChar = 0;
+   if( nChar == 9 )
+   {
+      fprintf( fOut, "\n      " );
+      nChar = 1;
+   }
+
+   fprintf( fOut, "0x%02X", ( int ) b );
+
+   return nChar;
+}
+
+static int hb_fputs( char * szName, FILE * fOut, int nChar )
+{
+   unsigned int nPos = 0;
+
+   while( nPos < strlen( szName ) )
+      nChar = hb_fputc( szName[ nPos++ ], fOut, nChar );
+
+   return nChar;
+}
 
 void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 {
@@ -47,13 +67,15 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
    ULONG lPCodePos;
    LONG lSymbols;
    ULONG ulCodeLength;
+   FILE * fOut;
+   int nChar;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".java";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   s_yyc = fopen( szFileName, "wb" );
-   if( ! s_yyc )
+   fOut = fopen( szFileName, "wb" );
+   if( ! fOut )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
@@ -65,17 +87,16 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
       fflush( stdout );
    }
 
-   s_nChar = 0;
-
+   nChar = 0;
    szVer = hb_verHarbour();
-   fprintf( s_yyc, "/*\n * %s\n * Generated JAVA source code\n */\n\n", szVer );
+   fprintf( fOut, "/*\n * %s\n * Generated JAVA source code\n */\n\n", szVer );
    hb_xfree( szVer );
 
-   fprintf( s_yyc, "public class %s\n", pFileName->szName );
-   fprintf( s_yyc, "{\n" );
-   fprintf( s_yyc, "   public static int[] pCode =\n" );
-   fprintf( s_yyc, "   {\n" );
-   fprintf( s_yyc, "      " );
+   fprintf( fOut, "public class %s\n", pFileName->szName );
+   fprintf( fOut, "{\n" );
+   fprintf( fOut, "   public static int[] pCode =\n" );
+   fprintf( fOut, "   {\n" );
+   fprintf( fOut, "      " );
 
    /* writes the symbol table */
 
@@ -85,28 +106,28 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
       lSymbols++;
       pSym = pSym->pNext;
    }
-   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ) ); /* Write number symbols */
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ) );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ) );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ) );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), fOut, nChar ); /* Write number symbols */
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), fOut, nChar );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), fOut, nChar );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), fOut, nChar );
 
    pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
-      hb_fputs( pSym->szName );
-      hb_fputc( 0 );
-      hb_fputc( pSym->cScope );
+      nChar = hb_fputs( pSym->szName, fOut, nChar );
+      nChar = hb_fputc( 0, fOut, nChar );
+      nChar = hb_fputc( pSym->cScope, fOut, nChar );
 
       /* specify the function address if it is a defined function or a
          external called function */
       if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a defined function ? */
-         hb_fputc( SYM_FUNC );
+         nChar = hb_fputc( SYM_FUNC, fOut, nChar );
       else
       {
          if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
-            hb_fputc( SYM_EXTERN );
+            nChar = hb_fputc( SYM_EXTERN, fOut, nChar );
          else
-            hb_fputc( SYM_NOLINK );
+            nChar = hb_fputc( SYM_NOLINK, fOut, nChar );
       }
       pSym = pSym->pNext;
    }
@@ -119,10 +140,10 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
       lSymbols++;
       pFunc = pFunc->pNext;
    }
-   hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ) ); /* Write number symbols */
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ) );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ) );
-   hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ) );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), fOut, nChar ); /* Write number symbols */
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), fOut, nChar );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), fOut, nChar );
+   nChar = hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), fOut, nChar );
 
    /* Generate functions data
     */
@@ -132,52 +153,30 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 
    while( pFunc )
    {
-      hb_fputs( pFunc->szName );
-      hb_fputc( 0 );
+      nChar = hb_fputs( pFunc->szName, fOut, nChar );
+      nChar = hb_fputc( 0, fOut, nChar );
       ulCodeLength = pFunc->lPCodePos;
-      hb_fputc( ( BYTE ) ( ( ulCodeLength       ) & 255 ) ); /* Write size */
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ) );
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ) );
-      hb_fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ) );
+      nChar = hb_fputc( ( BYTE ) ( ( ulCodeLength       ) & 255 ), fOut, nChar ); /* Write size */
+      nChar = hb_fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ), fOut, nChar );
+      nChar = hb_fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ), fOut, nChar );
+      nChar = hb_fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ), fOut, nChar );
 
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
-         hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+         nChar = hb_fputc( pFunc->pCode[ lPCodePos++ ], fOut, nChar );
 
       pFunc = pFunc->pNext;
    }
 
-   fprintf( s_yyc, "\n   };\n\n" );
-   fprintf( s_yyc, "   static public void main( String argv[] )\n" );
-   fprintf( s_yyc, "   {\n" );
-   fprintf( s_yyc, "      Harbour.Run( %s.pCode ); \n", pFileName->szName );
-   fprintf( s_yyc, "   }\n\n" );
-   fprintf( s_yyc, "}\n" );
+   fprintf( fOut, "\n   };\n\n" );
+   fprintf( fOut, "   static public void main( String argv[] )\n" );
+   fprintf( fOut, "   {\n" );
+   fprintf( fOut, "      Harbour.Run( %s.pCode ); \n", pFileName->szName );
+   fprintf( fOut, "   }\n\n" );
+   fprintf( fOut, "}\n" );
 
-   fclose( s_yyc );
+   fclose( fOut );
 
    if( ! HB_COMP_PARAM->fQuiet )
       printf( "Done.\n" );
-}
-
-static void hb_fputc( BYTE b )
-{
-   if( ++s_nChar > 1 )
-      fprintf( s_yyc, ", " );
-
-   if( s_nChar == 9 )
-   {
-      fprintf( s_yyc, "\n      " );
-      s_nChar = 1;
-   }
-
-   fprintf( s_yyc, "0x%02X", ( int ) b );
-}
-
-static void hb_fputs( char * szName )
-{
-   unsigned int nPos = 0;
-
-   while( nPos < strlen( szName ) )
-      hb_fputc( szName[ nPos++ ] );
 }

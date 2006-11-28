@@ -187,19 +187,15 @@ _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a
 
 /* ---------------------------------------------------------------------*/
 /* repeated optinal clauses */
-#xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> 
-[, <uValN> ] ) => ;
+#xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => ;
 if <table>->( dbappend() ) ;;
-
  replace <table>-><uField1> with <uVal1> ;;
  [ replace <table>-><uFieldN> with <uValN> ; ] ;
  <table>->( dbunlock() ) ;;
 endif
-
    insert into test ( FIRST, LAST, STREET ) values ( "first", "last", "street" )
 
-#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> 
-[, <uValN> ] ) => ;
+#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => ;
 if <table>->( dbappend() ) ;;
  <table>-><uField1> := <uVal1> ;;
  [ <table>-><uFieldN> := <uValN> ; ] ;
@@ -490,12 +486,9 @@ endif
 DEFINE CLIPBOARD oC OF oD FORMAT TEXT
 
 #xcommand DECLARE WINDOW <w> ;
-
 =>;
-
 #xtranslate <w>	. <p:Name,Title,f1,f2,f3,f4,f5,f6,f7,f8,f9> := <n> => SProp( <"w">, <"p"> , <n> )
 #xcommand DEFINE WINDOW <w> [ON INIT <IProc>] =>;
-
 	DECLARE WINDOW <w>  ; _DW( <"w">, <{IProc}> )
 
    DEFINE WINDOW &oW

@@ -66,7 +66,7 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
    else
    {
       PINLINE pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo,
-                  hb_compIdentifierNew( HB_COMP_PARAM, szFunc, TRUE ), iLine );
+         hb_compIdentifierNew( HB_COMP_PARAM, szFunc, HB_IDENT_COPY ), iLine );
       pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
       memcpy( pInline->pCode, pBuffer, ulSize );
       pInline->pCode[ ulSize ] = '\0';

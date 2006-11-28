@@ -61,7 +61,7 @@
 /* NOTE: This must be the first definition
  *    This is a common code shared by macro and standalone compiler
  */
-#define  HB_MACRO_SUPPORT
+#define  HB_COMMON_SUPPORT
 
 #include <math.h>
 #include "hbmacro.h"
@@ -413,23 +413,6 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr,
       pExpr->value.asMacro.szMacro   = szName;   /* variable name or macro text */
       pExpr->value.asMacro.pExprList = NULL;     /* this is not a parenthesized expressions */
       pExpr->value.asMacro.SubType   = HB_ET_MACRO_VAR;
-
-      if( cMacroOp == 0 )
-      {
-         /* check if variable with valid scope is used in macro text
-          * (local, static and field variables are not allowed)
-          * e.g.
-          * LOCAL var
-          * ? &var      // this is OK
-          * ? &var.ext  // this is invalid
-          */
-         BOOL bUseTextSubst;
-         if( ! hb_compExprIsValidMacro( szName, strlen( szName ),
-                                        &bUseTextSubst, HB_COMP_PARAM ) )
-         {
-            hb_compErrorMacro( szName, HB_COMP_PARAM );
-         }
-      }
    }
    else
    {
@@ -490,10 +473,10 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList,
    
    if( pAlias->ExprType == HB_ET_MACRO )
    {
-       /* Is it a special case &variable->( expressionList ) */
-       if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR ||
-           pAlias->value.asMacro.SubType == HB_ET_MACRO_EXPR )
-           pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
+      /* Is it a special case &variable->( expressionList ) */
+      if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR ||
+          pAlias->value.asMacro.SubType == HB_ET_MACRO_EXPR )
+        pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
    }
 
    return pExpr;
@@ -890,6 +873,19 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr, HB_COMP_DECL )
 }
 
 /* ************************************************************************* */
+
+/* Handles prefix&macro-> and &macro.sufix-> in macro compiler
+ * Clipper uses macro var directly as alias name in such case
+ */
+HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprMacroAsAlias()"));
+
+   if( pExpr->ExprType == HB_ET_VARIABLE )
+      pExpr->ExprType = HB_ET_ALIAS;
+
+   return pExpr;
+}
 
 /* Handles (expression := expression) syntax
  */

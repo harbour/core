@@ -368,8 +368,7 @@ dl([a,"a","a",["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [
 ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "
-index on LEFT(   f1  ,  10   )      to _tst"
+  in := "index on LEFT(   f1  ,  10   )      to _tst"
 CTEXT TO VAR pre
 dbCreateIndex( "_tst", "LEFT(   f1  ,  10   )", {|| LEFT(   f1  ,  10   )}, if( .F., .T., NIL ) )
 ENDTEXT
@@ -385,9 +384,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> 
-[, <uValN> ] ) => if <table>->( dbappend() ) <table>-><uField1> := <uVal1> [ <table>-><uFieldN> := <uValN> ] <table>->( dbunlock() ) endif
-
+#xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => if <table>->( dbappend() ) <table>-><uField1> := <uVal1> [ <table>-><uFieldN> := <uValN> ] <table>->( dbunlock() ) endif
 ENDTEXT  
   __PreProcess( in )
 TEXT TO VAR in
@@ -399,8 +396,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> 
-[, <uValN> ] ) => 
+#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => 
 if <table>->( dbappend() ) ;
  <table>-><uField1> := <uVal1> ;
  [ <table>-><uFieldN> := <uValN> ; ] 
