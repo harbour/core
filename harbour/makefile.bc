@@ -628,25 +628,41 @@ $(PP_DIR)\pptable.c    : $(BIN_DIR)\ppgen.exe include\hbstdgen.ch
 
 #**********************************************************
 
+!if "$(HB_REBUILD_PARSER)" == "no"
+
+$(OBJ_DIR)\macroy.c : $(HARBOUR_DIR)\macro.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+!else
+
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
+$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
+    bison --no-line -d $** -o$@
+
+!endif
+
+#**********************************************************
+
 $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
     flex -Phb_macro -i -8 -o$@ $**
+
+$(OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
+    flex  -i -8 -o$@ $**
+
+#**********************************************************
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
     $(ECHO) > $(OBJ_DIR)\unistd.h
     $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -o$@ $**
     $(DEL) $(OBJ_DIR)\unistd.h
-
-#**********************************************************
-
-$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-    bison --no-line -d $** -o$@
-
-$(OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-    flex  -i -8 -o$@ $**
 
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
 $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
@@ -656,25 +672,41 @@ $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
 
 #**********************************************************
 
+!if "$(HB_REBUILD_PARSER)" == "no"
+
+$(DLL_OBJ_DIR)\macroy.c : $(HARBOUR_DIR)\macro.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
+    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
+    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+
+!else
+
 $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
+$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
+    bison --no-line -d $** -o$@
+
+!endif
+
+#**********************************************************
+
 $(DLL_OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
     flex -Phb_macro -i -8 -o$@ $**
+
+$(DLL_OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
+    flex  -i -8 -o$@ $**
+
+#**********************************************************
 
 $(DLL_OBJ_DIR)\macroy.obj : $(DLL_OBJ_DIR)\macroy.c
 $(DLL_OBJ_DIR)\macrol.obj : $(DLL_OBJ_DIR)\macrol.c
     $(ECHO) > $(DLL_OBJ_DIR)\unistd.h
     $(CC) $(CLIBFLAGS) -I$(DLL_OBJ_DIR) -o$@ $**
     $(DEL) $(DLL_OBJ_DIR)\unistd.h
-
-#**********************************************************
-
-$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-    bison --no-line -d $** -o$@
-
-$(DLL_OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-    flex  -i -8 -o$@ $**
 
 $(DLL_OBJ_DIR)\harboury.obj : $(DLL_OBJ_DIR)\harboury.c
 $(DLL_OBJ_DIR)\harbourl.obj : $(DLL_OBJ_DIR)\harbourl.c

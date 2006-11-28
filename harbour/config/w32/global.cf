@@ -25,6 +25,8 @@ ifeq ($(SHLVL),) # COMMAND.COM
 # and some DOS commands require '\' (ARCH_DOS)
 ARCH_DIR = $(subst \,/,$(HB_ARCH))
 ARCH_DOS = $(subst /,\,$(HB_ARCH))
+DIRSEP = $(subst /,\,\)
+
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
 
 ifeq ($(COMSPEC),) #location of command.com
@@ -44,7 +46,7 @@ endif
 RM = del
 RD = rmdir
 MD = md
-CP = copy
+CP = $(COMSPEC) /C copy
 MV = move
 
 ifeq ($(CMD_EXE),yes)

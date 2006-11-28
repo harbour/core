@@ -241,7 +241,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
    it as is. [druzus]
  */
 %destructor { 
-               hb_compExprDelete( $$, hb_comp_data );
+               hb_compExprDelete( $$, HB_COMP_PARAM );
             }
             ArgList ElemList BlockExpList BlockVarList BlockNoVar
             DoName DoProc DoArgument DoArgList
