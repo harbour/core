@@ -57,6 +57,13 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 #include "hbstack.h"
+#include "hbpcode.h"
+
+/* Dummy returning NIL for buggy code which may store references
+   to freed by GC codeblock in .prg destructors and then (after
+   catching RT EG_DESTRUCTOR error) try to execute them
+ */
+static const BYTE s_pCode[] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
 
 /* Release all allocated memory when called from the garbage collector
  */
@@ -70,9 +77,10 @@ static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
     */
    if( pCBlock->pCode && pCBlock->dynBuffer )
    {
+      pCBlock->dynBuffer = FALSE;
       hb_xfree( pCBlock->pCode );
-      pCBlock->pCode = NULL;
    }
+   pCBlock->pCode = ( BYTE * ) s_pCode;
 
    /* free space allocated for local variables
     */

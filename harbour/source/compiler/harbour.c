@@ -4522,14 +4522,13 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             if( HB_COMP_PARAM->pInitFunc )
             {
                PCOMSYMBOL pSym;
-               char * szNewName;
+               char szNewName[ 25 ];
 
                /* Fix the number of static variables */
                HB_COMP_PARAM->pInitFunc->pCode[ 3 ] = HB_LOBYTE( HB_COMP_PARAM->iStaticCnt );
                HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );
                HB_COMP_PARAM->pInitFunc->iStaticsBase = HB_COMP_PARAM->iStaticCnt;
                /* Update pseudo function name */
-               szNewName = ( char * ) hb_xgrab( 25 );
                sprintf( szNewName, "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
                HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
 

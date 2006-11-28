@@ -8,7 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2006-11-27 02:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+2006-11-28 05:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+    ! fixed typo in last modification which caused memory leak
+
+  * harbour/source/vm/codebloc.c
+    + initialize freed codeblock structure with pointer to static PCODE
+      which returns NIL for buggy .prg destructors.
+
+  * harbour/ChangeLog
+    ! fixed date of my last commit
+
+2006-11-28 02:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/codebl.prg
   * harbour/tests/langmsg.prg
   * harbour/utils/hbpptest/pp_test.prg
