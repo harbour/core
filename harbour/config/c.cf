@@ -27,7 +27,7 @@ ALL_C_OBJS = $(YACC_OBJ) $(LEX_OBJ) $(C_OBJS) $(C_MAIN_OBJ)
 
 $(YACC_OBJ) : $(YACC_C)
 
-ifneq ($(HB_REBUILD_PARSER),no)
+ifeq ($(HB_REBUILD_PARSER),yes)
 $(YACC_C) : ../../$(YACC_SOURCE) $(YACC_HB_H)
 	$(YACC) $(YACC_FLAGS) -o$@ $<
 else

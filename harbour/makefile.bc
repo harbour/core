@@ -628,7 +628,7 @@ $(PP_DIR)\pptable.c    : $(BIN_DIR)\ppgen.exe include\hbstdgen.ch
 
 #**********************************************************
 
-!if "$(HB_REBUILD_PARSER)" != "no"
+!if "$(HB_REBUILD_PARSER)" == "yes"
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
@@ -672,7 +672,7 @@ $(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
 
 #**********************************************************
 
-!if "$(HB_REBUILD_PARSER)" != "no"
+!if "$(HB_REBUILD_PARSER)" == "yes"
 
 $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
