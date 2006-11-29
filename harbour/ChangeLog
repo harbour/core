@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-29 16:11 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * makefile.bc
+  * make_b32.bat
+    ! Fixed the COPY command to work on Windows-NT (/Y flag isn't supported)
+
+  * TODO
+    - Remove TOFIX item with were fixed
+
 2006-11-29 10:30 UTC+0100 J. Lefebvre (jfl/at/mafact.com)
   * harbour/makefile.vc
     * Sync. with makefile.bc for msvc compiler.

@@ -15,11 +15,17 @@ rem    set HB_BUILD_MODE=P
 rem    set HB_BUILD_DLL=yes
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
+rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
+
+rem Save the user value, force silent file overwrite with COPY
+rem (not all Windows versions support the COPY /Y flag)
+set HB_ORGENV_COPYCMD=%COPYCMD%
+set COPYCMD=/Y
 
 rem ---------------------------------------------------------------
 
@@ -71,3 +77,6 @@ rem ---------------------------------------------------------------
 rem ---------------------------------------------------------------
 
 :EXIT
+rem Restore user value
+set COPYCMD=%HB_ORGENV_COPYCMD%
+set HB_ORGENV_COPYCMD=

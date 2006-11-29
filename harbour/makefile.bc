@@ -36,6 +36,8 @@
 #                           dll in addition to normal static build
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
+#       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
+#                           bison (you must use bison 2.3 or later)
 #       BCCDLL_WITH_DYNRT - If set to -tWR causes that harbour-bc.dll
 #                           will use dynamic runtime library (recommended)
 #       HB_INSTALL_PREFIX - Path to instalation directory into which
@@ -266,14 +268,14 @@ Install : doInstall
 INSTALL : doInstall
 
 doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B /Y $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(CC_DIRNAME).log
-    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(CC_DIRNAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
-    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(CC_DIRNAME).log
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
 !if "$(HB_INSTALL_PREFIX)" != "."
-    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.api $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.ch  $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.h   $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.api $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.ch  $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.h   $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
 !endif
 
 #**********************************************************
@@ -639,12 +641,12 @@ $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
 !else
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 !endif
 
@@ -683,12 +685,12 @@ $(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
 !else
 
 $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 $(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 !endif
 

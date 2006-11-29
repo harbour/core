@@ -191,41 +191,6 @@ Status...: Open.
 ***
 
 Assign to: <nobody>
-Detail...: An error in the evaluated macro cause memory leak.
-
-           --tt2.prg--
-           func test
-           local x := "user input"     // this is junk
-           local y
-           errorblock({|e|break(e)})
-           begin sequence
-           y := &x
-           end
-           return nil
-           -----------
-
-           bld_b32 tt2 /w/a/n
-           tt2
-
-           the program runs, and on exit it gives following CodeGuard
-           warning:
-         ,-
-         | Resource leak: The memory block was never freed
-         | The memory block [size: 10 bytes] was allocated with malloc
-         | NOTE: Ask me if you need the exact call tree. [Chen]
-         `-
-           This is simpler example of the same problem:
-
-           --tt2b.prg--
-           proc test
-           ? type("user input")
-           return
-
-Status...: Open.
-
-***
-
-Assign to: <nobody>
 Detail...: The Borland CodeGuard warn about Access overrun in some
            of the console IO functions, it appears to be a fault in
            the way CG works when passing a static char * to a BYTE *
@@ -239,47 +204,6 @@ Detail...: The Borland CodeGuard warn about Access overrun in some
            DepPos( 1, 1 )
            return
            ------------
-
-Status...: Open.
-
-***
-
-Assign to: <nobody>
-Detail...: Access in freed memory compiling a macro array item.
-
-           --tt23.prg--
-           proc Main()
-              LOCAL   GetList := {}
-              PRIVATE cMacro := "cEarly", cEarly := {"Early"}
-              @ 12,10 GET &cMacro[1]
-              READ
-           RETURN
-           ------------
-
-           When compiling, Harbour gives the following CodeGuard warning:
-         ,-
-         | Access in freed memory: Attempt to access 2 byte(s) at NNNNNNNN+32
-         | The memory block [size: 40 bytes] was allocated with malloc
-         | NOTE: Ask me if you need the exact call tree. [Chen]
-         `-
-
-Status...: Open.
-
-***
-
-Assign to: <nobody>
-Detail...: Resource leak while compiling the following:
-
-           --tt25.prg--
-           FUNCTION ()x
-           ------------
-
-           When compiling, Harbour gives the following CodeGuard warning:
-         ,-
-         | Resource leak: The memory block was never freed
-         | The memory block [size: 40 bytes] was allocated with malloc
-         | NOTE: Ask me if you need the exact call tree. [Chen]
-         `-
 
 Status...: Open.
 
