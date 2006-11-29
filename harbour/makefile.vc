@@ -974,12 +974,12 @@ $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
 !else
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-    copy /A /Y $** $@ >> inst_$(CC_DIRNAME).log
-    copy /A /Y $(**:.yyc=.yyh) $(@:.c=.h) >> inst_$(CC_DIRNAME).log
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 !endif
 
