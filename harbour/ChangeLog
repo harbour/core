@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-28 16:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added hbcompdf.h and hbstdgen.ch
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/macro/macro.y
+    + added #define __STDC__ as workaround for __BORLANDC__ which seems
+      to not properly understand ANSI C declarations. It should pacify
+      some of BCC warning messages about undeclared functions
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+    * updated generated grammar parser files for above modification
+      in parser definition files (.y)
+
 2006-11-29 16:11 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * makefile.bc
   * make_b32.bat

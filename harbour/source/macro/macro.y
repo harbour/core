@@ -72,8 +72,11 @@
 
 /* Compile using: bison -d -p hb_comp macro.y */
 
-/* NOTE: these symbols are used internally in bison.simple
- */
+/* to pacify some warnings in BCC */
+#if defined( __BORLANDC__ ) && !defined( __STDC__ )
+#  define __STDC__
+#endif
+
 #undef alloca
 #define alloca  hb_xgrab
 #undef malloc
@@ -83,6 +86,8 @@
 #undef free
 #define free    hb_xfree
 
+/* NOTE: these symbols are used internally in bison.simple
+ */
 #undef YYFREE
 #define YYFREE hb_xfree
 #undef YYMALLOC

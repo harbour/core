@@ -36,6 +36,14 @@
  */
 
 #include "hbcomp.h"
+
+/* Compile using: bison -d -v harbour.y */
+
+/* to pacify some warnings in BCC */
+#if defined( __BORLANDC__ ) && !defined( __STDC__ )
+#  define __STDC__
+#endif
+
 #undef alloca
 #define alloca  hb_xgrab
 #undef malloc
@@ -45,7 +53,12 @@
 #undef free
 #define free    hb_xfree
 
-/* Compile using: bison -d -v harbour.y */
+/* NOTE: these symbols are used internally in bison.simple
+ */
+#undef YYFREE
+#define YYFREE hb_xfree
+#undef YYMALLOC
+#define YYMALLOC hb_xgrab
 
 static void hb_compLoopStart( HB_COMP_DECL );
 static void hb_compLoopEnd( HB_COMP_DECL );

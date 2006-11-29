@@ -17,6 +17,7 @@ C_HEADERS=\
 	hbapilng.h   \
 	hbapirdd.h   \
 	hbcomp.h     \
+	hbcompdf.h   \
 	hbdate.h     \
 	hbdbf.h      \
 	hbdbferr.h   \
@@ -85,6 +86,7 @@ PRG_HEADERS=\
 	hboo.ch      \
 	hbpers.ch    \
 	hbsetup.ch   \
+	hbstdgen.ch  \
 	inkey.ch     \
 	memoedit.ch  \
 	ord.ch       \
