@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-29 10:30 UTC+0100 J. Lefebvre (jfl/at/mafact.com)
+  * harbour/makefile.vc
+    * Sync. with makefile.bc for msvc compiler.
+
 2006-11-28 21:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/makefile.bc
   * harbour/config/c.cf
