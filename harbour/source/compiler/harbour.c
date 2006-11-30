@@ -93,9 +93,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * bSkipGen, BOOL bS
 /* global variables */
 FILE *         hb_comp_errFile = NULL;
 
-
 extern int  yyparse( HB_COMP_DECL );    /* main yacc parsing function */
-HB_COMP_PTR hb_comp_data = NULL;
 
 /* ************************************************************************* */
 
@@ -140,7 +138,6 @@ int main( int argc, char * argv[] )
    HB_TRACE(HB_TR_DEBUG, ("main()"));
 
    HB_COMP_PARAM = hb_comp_new();
-   hb_comp_data = HB_COMP_PARAM;
 
    HB_COMP_PARAM->pOutPath = NULL;
 
@@ -210,7 +207,6 @@ int main( int argc, char * argv[] )
       iStatus = EXIT_FAILURE;
 
    hb_compMainExit( HB_COMP_PARAM );
-   hb_comp_data = NULL;
 
    return iStatus;
 }

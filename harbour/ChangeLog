@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-11-30 03:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+    * removed declaration and all references to global variable hb_comp_data
+      it's not longer necessary after last modifications
+
+  * harbour/source/compiler/harbour.yyc
+    * synced compiler grammar parser
+
+  * harbour/source/macro/macro.yyc
+    ! regenerated macro compiler grammar parser with -p hb_macro - I forgot
+      about this prefix before last commit
+
 2006-11-29 23:30 UTC+0100 J. Lefebvre (jfl/at/mafact.com)
   * makefile.vc
   * make_vc.bat

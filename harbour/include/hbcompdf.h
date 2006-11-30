@@ -615,8 +615,6 @@ HB_COMP, * HB_COMP_PTR;
 extern HB_COMP_PTR hb_comp_new( void );
 extern void hb_comp_free( HB_COMP_PTR );
 
-extern HB_COMP_PTR hb_comp_data;
-
 #endif /* !HB_MACRO_SUPPORT  */
 
 #define HB_MACRO_DATA         HB_COMP_PARAM

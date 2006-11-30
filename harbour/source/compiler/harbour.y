@@ -245,15 +245,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  DateValue
 %type <asMessage> SendId
 
-/* NOTE: direct using of hb_comp_data is not MT safe but
-   the version of bison (1.875c) I'm using now does not
-   support %parse-param for destructors. I can create a
-   work around for it but documentation says that %destructor
-   should respect pure parser parameters so probably it will
-   be (already is?) fixed in next releases do now I'm leaving 
-   it as is. [druzus]
- */
-%destructor { 
+%destructor {
                hb_compExprDelete( $$, HB_COMP_PARAM );
             }
             ArgList ElemList BlockExpList BlockVarList BlockNoVar

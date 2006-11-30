@@ -58,6 +58,14 @@
 /* Using locations.  */
 #define YYLSP_NEEDED 0
 
+/* Substitute the variable and function names.  */
+#define yyparse hb_macroparse
+#define yylex   hb_macrolex
+#define yyerror hb_macroerror
+#define yylval  hb_macrolval
+#define yychar  hb_macrochar
+#define yydebug hb_macrodebug
+#define yynerrs hb_macronerrs
 
 
 /* Tokens.  */
@@ -306,7 +314,7 @@ typedef union YYSTYPE
    } valDouble;
 }
 /* Line 193 of yacc.c.  */
-#line 310 "macroy.c"
+#line 318 "macroy.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -336,7 +344,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 
 /* Line 216 of yacc.c.  */
-#line 340 "macroy.c"
+#line 348 "macroy.c"
 
 #ifdef short
 # undef short
@@ -3890,7 +3898,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 3894 "macroy.c"
+#line 3902 "macroy.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
