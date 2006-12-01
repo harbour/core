@@ -3813,7 +3813,7 @@ yyreduce:
 
   case 313:
 #line 755 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, FALSE, FALSE, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); ;}
     break;
 
   case 314:
@@ -3823,7 +3823,7 @@ yyreduce:
 
   case 315:
 #line 759 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, FALSE, FALSE, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); ;}
     break;
 
   case 316:

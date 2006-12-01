@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-01 18:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    + added packing *.yy[ch] files
+
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbpp.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/pp/ppcore.c
+    + added hb_comp prefix to grammar/lexer compiler public functions to
+      reduce possible conflict with 3-rd party code which may use default
+      yy prefix.
+    ! do not use bison destructors for expressions. Internal bison logic
+      cannot properly detect if expression was used or not in some of our
+      grammar rules and it's possible that some expressions will not be freed
+      and some other freed twice.
+    ! added protection against multiple destructors execution for CBSTART
+      and LITERAL tokens
+    * added small garbage collector for deallocating expressions which were
+      not freed (such situation can happen in syntax errors)
+    % some optimizations in used structures to reduce their sizes
+    + added protection against execution PCODE optimizations for functions
+      which were not cleanly compiled.
+
+  * harbour/source/rtl/idle.c
+    * use const in nanosec() timeout declaration
+
 2006-11-30 03:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/harbour.l

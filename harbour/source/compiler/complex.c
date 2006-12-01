@@ -141,8 +141,7 @@ static const HB_LEX_KEY s_keytable[] =
    { "PRIVATE",     4,  7, PRIVATE        },
    { "PROCEDURE",   4,  9, PROCEDURE      },
    { "PUBLIC",      4,  6, PUBLIC         },
-   { "QSELF",       4,  5, SELF           },
-   { "_PROCREQ_",   4,  9, PROCREQ        },
+   { "QSELF",       5,  5, SELF           },
    { "RECOVER",     4,  7, RECOVER        },
    { "RETURN",      4,  6, RETURN         },
    { "STATIC",      4,  6, STATIC         },
@@ -151,6 +150,7 @@ static const HB_LEX_KEY s_keytable[] =
    { "TO",          2,  2, TO             },
    { "WHILE",       4,  5, WHILE          },
    { "WITH",        4,  4, WITH           },
+   { "_PROCREQ_",   9,  9, PROCREQ        },
    { "AS",          2,  2, AS_TYPE        },
    { "_HB_CLASS",   9,  9, DECLARE_CLASS  },
    { "_HB_MEMBER", 10, 10, DECLARE_MEMBER }
@@ -281,8 +281,7 @@ static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOK
    return pToken->value;
 }
 
-//int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
-int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
+int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
    PHB_COMP_LEX pLex = ( PHB_COMP_LEX ) HB_COMP_PARAM->pLex;
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
@@ -385,13 +384,10 @@ int yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          if( pToken->pNext &&
              HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PIPE )
          {
-            int iType = 0;
-            yylval_ptr->asCodeblock.string =
-               hb_strdup( hb_pp_tokenBlockString( pLex->pPP, pToken, &iType ) );
-            yylval_ptr->asCodeblock.length =
-               strlen( yylval_ptr->asCodeblock.string );
-            yylval_ptr->asCodeblock.isMacro = iType > 0;
-            yylval_ptr->asCodeblock.lateEval = iType > 1;
+            yylval_ptr->asCodeblock.string = hb_strdup( 
+                  hb_pp_tokenBlockString( pLex->pPP, pToken,
+                                          &yylval_ptr->asCodeblock.flags,
+                                          &yylval_ptr->asCodeblock.length ) );
             hb_pp_tokenGet( pLex->pPP );
             return CBSTART;
          }

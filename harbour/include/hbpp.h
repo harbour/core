@@ -59,6 +59,9 @@
 
 HB_EXTERN_BEGIN
 
+#define HB_BLOCK_MACRO     1
+#define HB_BLOCK_LATEEVAL  2
+
 /* #pragma {__text,__stream,__cstream}|functionOut|functionEnd|functionStart */
 #define HB_PP_STREAM_OFF      0 /* standard preprocessing */
 #define HB_PP_STREAM_COMMENT  1 /* multiline comment */
@@ -640,7 +643,7 @@ extern BOOL   hb_pp_eof( PHB_PP_STATE pState );
 
 extern void   hb_pp_tokenUpper( PHB_PP_TOKEN pToken );
 extern void   hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken );
-extern char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, int *piType );
+extern char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, int * piType, int * piLen );
 extern PHB_PP_STATE hb_pp_lexNew( char * pString, ULONG ulLen );
 extern PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState );
 extern PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState );

@@ -143,7 +143,7 @@ void hb_releaseCPU( void )
       }
    #else
       {
-         static struct timespec nanosecs = { 0, 1000 };
+         static const struct timespec nanosecs = { 0, 1000 };
          /* NOTE: it will sleep at least 10 miliseconds (forced by kernel) */
          nanosleep( &nanosecs, NULL );
       }

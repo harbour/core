@@ -146,6 +146,7 @@ typedef struct __FUNC
    ULONG        iNOOPs;                   /* NOOPs Counter */
    ULONG        iJumps;                   /* Jumps Counter */
    BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
+   BOOL         bError;                   /* error during function compilation */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
    HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
@@ -333,21 +334,23 @@ typedef struct HB_EXPR_
       BOOL asLogical;      /* logical value */
       struct
       {
-         char *string;      /* literal strings */
-         BOOL dealloc;      /* automatic deallocate on expresion deletion */
+         char *string;        /* literal strings */
+         BOOL dealloc;        /* automatic deallocate on expresion deletion */
       } asString;
       struct
       {
-        struct HB_EXPR_ *pMacro;  /* macro variable */
-        char *szName;             /* variable name  */
-      } asRTVar;      /* PUBLIC or PRIVATE variable declaration */
+         struct HB_EXPR_ *pMacro;   /* macro variable */
+         char *szName;              /* variable name  */
+      } asRTVar;                 /* PUBLIC or PRIVATE variable declaration */
       struct
       {
-         HB_LONG lVal;        /* long value */
-         double dVal;         /* double value */
-         unsigned char bWidth; /* unsigned char used intentionally */
-         unsigned char bDec;  /* unsigned char used intentionally */
-         unsigned char NumType;    /* used to distinguish LONG and DOUBLE */
+         union {
+            HB_LONG  l;             /* long value */
+            double   d;             /* double value */
+         } val;
+         unsigned char bWidth;   /* unsigned char used intentionally */
+         unsigned char bDec;     /* unsigned char used intentionally */
+         unsigned char NumType;  /* used to distinguish LONG and DOUBLE */
       } asNum;
       struct
       {
@@ -359,16 +362,16 @@ typedef struct HB_EXPR_
       } asMacro;
       struct
       {
-         struct HB_EXPR_ *pExprList;    /* list elements */
-         struct HB_EXPR_ *pIndex;       /* array index, others */
+         struct HB_EXPR_ *pExprList;   /* list elements */
+         struct HB_EXPR_ *pIndex;      /* array index, others */
       } asList;
       struct
       {
-         char *string;                 /* source code of a codeblock */
+         char     *string;             /* source code of a codeblock */
+         USHORT   length;
+         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL */
          struct HB_EXPR_ *pExprList;   /* list elements */
          HB_CBVAR_PTR pLocals;         /* list of local variables */
-         USHORT isMacro;               /* TRUE=codeblock contains macro expression */
-         USHORT lateEval;              /* TRUE=late evaluation of macro */
       } asCodeblock;
       struct
       {
@@ -520,6 +523,14 @@ typedef struct _HB_COMP_LEX
 }
 HB_COMP_LEX, * PHB_COMP_LEX;
 
+typedef struct _HB_EXPRLST
+{
+   HB_EXPR Expression;
+   struct _HB_EXPRLST *pPrev;
+   struct _HB_EXPRLST *pNext;
+}
+HB_EXPRLST, * PHB_EXPRLST;
+
 typedef struct _HB_COMP
 {
    /* common to macro compiler members */
@@ -528,6 +539,7 @@ typedef struct _HB_COMP
 
    /* compiler only members */
    PHB_COMP_LEX      pLex;
+   PHB_EXPRLST       pExprLst;
 
    HB_HASH_TABLE_PTR pIdentifiers;
    FUNCTIONS         functions;

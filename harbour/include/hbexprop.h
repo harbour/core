@@ -77,7 +77,9 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DE
 #define HB_EXPR_PCODE4( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), HB_COMP_PARAM )
 
 #ifdef HB_MACRO_SUPPORT
-extern  HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL );
+extern HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL );
+#else
+extern void        hb_compExprLstDealloc( HB_COMP_DECL );
 #endif
 
 extern HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE, HB_COMP_DECL );
@@ -89,7 +91,7 @@ extern HB_EXPR_PTR hb_compExprNewDate( HB_LONG, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewString( char *, ULONG, BOOL, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewLogical( int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewSelf( HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, BOOL, BOOL, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, int, int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewVar( char *, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
@@ -150,7 +152,7 @@ extern HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DE
 extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 extern ULONG hb_compExprListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
-extern void hb_compExprClear( HB_EXPR_PTR );
+extern void hb_compExprClear( HB_EXPR_PTR, HB_COMP_DECL );
 extern const char * hb_compExprDescription( HB_EXPR_PTR );
 extern int hb_compExprType( HB_EXPR_PTR );
 extern int hb_compExprIsInteger( HB_EXPR_PTR );

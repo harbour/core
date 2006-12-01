@@ -1645,8 +1645,7 @@ Separator     {SpaceTab}
 		int iCode=1;
 		char cMark='\0';
 		
-		yylval_ptr->asCodeblock.isMacro = FALSE;
-		yylval_ptr->asCodeblock.lateEval = FALSE;
+		yylval_ptr->asCodeblock.flags = 0;
 		cText = yytext+1;
 		iLen = 1;
 
@@ -1665,12 +1664,12 @@ Separator     {SpaceTab}
 				iPos = iLen;
 		    else if( *cText == '&' && cMark == '\0' )
 		    {
-				yylval_ptr->asCodeblock.isMacro = TRUE;
+				yylval_ptr->asCodeblock.falgs |= HB_BLOCK_MACRO;
 				++cText;
 				while( *cText == ' ' || *cText == '\t' )
 			    	++cText;
 				if( *cText == '(' )
-			    	yylval_ptr->asCodeblock.lateEval = TRUE;
+			    	yylval_ptr->asCodeblock.flags |= HB_BLOCK_LATEEVAL;
 				--cText;
 		    }
 		    else if( *cText == '{' && cMark == '\0' )

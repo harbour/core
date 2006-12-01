@@ -4,17 +4,18 @@
 
 ROOT = ../../
 
-#LEX_FLAGS = -Phb_macro -C
+#LEX_FLAGS = -Phb_comp -C
 #LEX_SOURCE=harbour.l
 #LEX_HEADERS=\
 #	hbsetup.h \
 #	hberrors.h \
 #	hbdefs.h
 
-#YACC_FLAGS = -p hb_comp
+YACC_FLAGS = -p hb_comp
 YACC_SOURCE=harbour.y
 YACC_HEADERS=\
 	hbcomp.h   \
+	hbcompdf.h \
 	hbsetup.h  \
 	hbpcode.h  \
 	hbdefs.h   \

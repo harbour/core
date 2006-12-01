@@ -66,8 +66,6 @@
 
 /* memory allocation
  */
-#define  HB_XGRAB( size )  hb_xgrab( (size) )
-#define  HB_XFREE( pPtr )  hb_xfree( (void *)(pPtr) )
 
 /* Forward declarations
  */
@@ -284,9 +282,9 @@ static HB_EXPR_FUNC( hb_compExprUseNumeric )
          break;
       case HB_EA_PUSH_PCODE:
          if( pSelf->value.asNum.NumType == HB_ET_DOUBLE )
-            HB_EXPR_PCODE3( hb_compGenPushDouble, pSelf->value.asNum.dVal, pSelf->value.asNum.bWidth, pSelf->value.asNum.bDec );
+            HB_EXPR_PCODE3( hb_compGenPushDouble, pSelf->value.asNum.val.d, pSelf->value.asNum.bWidth, pSelf->value.asNum.bDec );
          else
-            HB_EXPR_PCODE1( hb_compGenPushLong, pSelf->value.asNum.lVal );
+            HB_EXPR_PCODE1( hb_compGenPushLong, pSelf->value.asNum.val.l );
          break;
       case HB_EA_POP_PCODE:
          break;
@@ -317,7 +315,7 @@ static HB_EXPR_FUNC( hb_compExprUseDate )
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE1( hb_compGenPushDate, pSelf->value.asNum.lVal );
+         HB_EXPR_PCODE1( hb_compGenPushDate, pSelf->value.asNum.val.l );
          break;
       case HB_EA_POP_PCODE:
          break;
@@ -395,7 +393,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
 
       case HB_EA_DELETE:
          if( pSelf->value.asString.dealloc )
-            HB_XFREE( pSelf->value.asString.string );
+            hb_xfree( pSelf->value.asString.string );
          break;
    }
    return pSelf;
@@ -423,11 +421,12 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 #if defined(HB_MACRO_SUPPORT)	 
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
-         if( !pSelf->value.asCodeblock.isMacro || pSelf->value.asCodeblock.lateEval )
-            hb_compExprCodeblockPush( pSelf, TRUE, HB_COMP_PARAM );
-         else
+         if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACRO ) &&
+            !( pSelf->value.asCodeblock.flags & HB_BLOCK_LATEEVAL ) )
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
+         else
+            hb_compExprCodeblockPush( pSelf, TRUE, HB_COMP_PARAM );
 #endif
          break;
       }
@@ -445,7 +444,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          hb_compExprCBVarDel( pSelf->value.asCodeblock.pLocals );
 
          if( pSelf->value.asCodeblock.string )
-            HB_XFREE( pSelf->value.asCodeblock.string );
+            hb_xfree( pSelf->value.asCodeblock.string );
 
          /* Delete all expressions of the block. */
          while( pExp )
@@ -579,12 +578,9 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
        * {|| &variable+1} => &( '{|| &variable+1}' )
        */
       HB_EXPR_PTR pNew;
-      char *cStr;
 
       hb_compExprCodeblockPush( pSelf, FALSE, HB_COMP_PARAM );
-
-      cStr = pSelf->value.asCodeblock.string;
-      pNew = hb_compExprNewMacro( hb_compExprNewString( cStr, strlen( cStr ), FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
+      pNew = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->value.asCodeblock.length, FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
       hb_compExprDelete( pNew, HB_COMP_PARAM );
       HB_EXPR_PCODE0( hb_compCodeBlockStop );
@@ -1249,9 +1245,9 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
                   pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = ( LONG ) pIdx->value.asNum.lVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.val.l;
                   else
-                     lIndex = ( LONG ) pIdx->value.asNum.dVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.val.d;
 
                   if( lIndex > 0 )
                   {
@@ -1287,9 +1283,9 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   LONG lIndex;
 
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = ( LONG ) pIdx->value.asNum.lVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.val.l;
                   else
-                     lIndex = ( LONG ) pIdx->value.asNum.dVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.val.d;
 
                   if( lIndex > 0 )
                      HB_EXPR_USE( pExpr, HB_EA_ARRAY_AT );
@@ -1777,7 +1773,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
              * NOTE: only integer (long) values are allowed
              */
             if( pAlias->value.asNum.NumType == HB_ET_LONG )
-               HB_EXPR_PCODE4( hb_compGenPushAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, TRUE, NULL, pAlias->value.asNum.lVal );
+               HB_EXPR_PCODE4( hb_compGenPushAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, TRUE, NULL, pAlias->value.asNum.val.l );
             else
                hb_compErrorAlias( HB_COMP_PARAM, pAlias );
          }
@@ -1831,7 +1827,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
              * NOTE: only integer (long) values are allowed
              */
             if( pAlias->value.asNum.NumType == HB_ET_LONG )
-               HB_EXPR_PCODE4( hb_compGenPopAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, TRUE, NULL, pAlias->value.asNum.lVal );
+               HB_EXPR_PCODE4( hb_compGenPopAliasedVar, pSelf->value.asAlias.pVar->value.asSymbol, TRUE, NULL, pAlias->value.asNum.val.l );
             else
                hb_compErrorAlias( HB_COMP_PARAM, pAlias );
          }
@@ -2911,17 +2907,17 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
                      switch( pLeft->value.asNum.NumType & pRight->value.asNum.NumType )
                      {
                         case HB_ET_LONG:
-                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.lVal == pRight->value.asNum.lVal) );
+                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.l == pRight->value.asNum.val.l) );
                            break;
                         case HB_ET_DOUBLE:
-                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.dVal == pRight->value.asNum.dVal) );
+                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.d == pRight->value.asNum.val.d) );
                            break;
                         default:
                            {
                               if( pLeft->value.asNum.NumType == HB_ET_LONG )
-                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.lVal == pRight->value.asNum.dVal) );
+                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.l == pRight->value.asNum.val.d) );
                               else
-                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.dVal == pRight->value.asNum.lVal) );
+                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.d == pRight->value.asNum.val.l) );
                            }
                            break;
                      }
@@ -3746,9 +3742,9 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
          if( pExpr->ExprType == HB_ET_NUMERIC )
          {
             if( pExpr->value.asNum.NumType == HB_ET_DOUBLE )
-               pExpr->value.asNum.dVal = - pExpr->value.asNum.dVal;
+               pExpr->value.asNum.val.d = - pExpr->value.asNum.val.d;
             else
-               pExpr->value.asNum.lVal = - pExpr->value.asNum.lVal;
+               pExpr->value.asNum.val.l = - pExpr->value.asNum.val.l;
             pSelf->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
             pSelf = pExpr;

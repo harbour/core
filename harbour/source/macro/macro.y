@@ -752,11 +752,11 @@ ElemList   : EmptyExpression                 { $$ = hb_compExprNewList( $1, HB_C
            ;
 
 CodeBlock  : '{' '|'
-                  { $<asExpr>$ = hb_compExprNewCodeBlock( NULL, FALSE, FALSE, HB_COMP_PARAM ); } BlockNoVar
+                  { $<asExpr>$ = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); } BlockNoVar
              '|' BlockExpList '}'
                   { $$ = $<asExpr>3; }
            | '{' '|'
-                  { $<asExpr>$ = hb_compExprNewCodeBlock( NULL, FALSE, FALSE, HB_COMP_PARAM ); }
+                  { $<asExpr>$ = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); }
              BlockVarList
              '|' BlockExpList '}'
                   { $$ = $<asExpr>3; }

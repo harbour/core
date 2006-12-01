@@ -138,6 +138,7 @@ void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError,
 {
    if( !HB_COMP_PARAM->fExit && ( cPrefix == 'F' || !HB_COMP_PARAM->fError ) )
    {
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
       char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
       int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
 
@@ -150,7 +151,11 @@ void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError,
 
       HB_COMP_PARAM->iErrorCount++;
       HB_COMP_PARAM->fError = TRUE;
-
+      while( pFunc )
+      {
+         pFunc->bError = TRUE;
+         pFunc = pFunc->pOwner;
+      }
       /* fatal error - exit immediately */
       if( cPrefix == 'F' )
          HB_COMP_PARAM->fExit = TRUE;

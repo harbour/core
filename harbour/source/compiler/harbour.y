@@ -105,6 +105,8 @@ static void hb_compDebugStart( void ) { };
    int     iNumber;     /* to hold a temporary integer number */
    HB_LONG lNumber;     /* to hold a temporary long number */
    BOOL    bTrue;
+   HB_EXPR_PTR asExpr;
+   void * pVoid;        /* to hold any memory structure we may need */
    struct
    {
       HB_LONG  lNumber;    /* to hold a long number returned by lex */
@@ -117,7 +119,6 @@ static void hb_compDebugStart( void ) { };
       UCHAR    bWidth;     /* to hold the width of the value */
       UCHAR    bDec;       /* to hold the number of decimal points in the value */
    } valDouble;
-   HB_EXPR_PTR asExpr;
    struct
    {
       char *   string;
@@ -128,8 +129,7 @@ static void hb_compDebugStart( void ) { };
    {
       char *   string;
       int      length;
-      BOOL     lateEval; /* Flag for early {|| &macro} (0) or late {|| &(macro)} (1) binding */
-      BOOL     isMacro;
+      int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
    struct
    {
@@ -140,7 +140,6 @@ static void hb_compDebugStart( void ) { };
          HB_EXPR_PTR macro;
       } value;
    } asMessage;
-   void * pVoid;        /* to hold any memory structure we may need */
 };
 
 %{
@@ -148,7 +147,6 @@ static void hb_compDebugStart( void ) { };
  * typedef-ined to YYSTYPE
  */
 extern int  yylex( YYSTYPE *, HB_COMP_DECL );    /* main lex token function, called by yyparse() */
-extern int  yyparse( HB_COMP_DECL );             /* main yacc parsing function */
 extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management function */
 %}
 
@@ -245,6 +243,13 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  DateValue
 %type <asMessage> SendId
 
+/*
+   We cannot use destructors for expressions. The internal bison logic cannot
+   detect properly if the expression was used or not in our grammar definition
+   so it's possible that destructors will never be executed or executed for
+   expressions which we freed ourself.
+ */
+/*
 %destructor {
                hb_compExprDelete( $$, HB_COMP_PARAM );
             }
@@ -281,8 +286,8 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
             FieldAlias FieldVarAlias
             PostOp
             ForVar ForList ForExpr
-
-%destructor { hb_xfree( $$.string ); } CBSTART
+*/
+%destructor { if( $$.string )  hb_xfree( $$.string ); } CBSTART
 %destructor { if( $$.dealloc ) hb_xfree( $$.string ); } LITERAL
 
 %%
@@ -320,7 +325,7 @@ Line       : LINE NUM_LONG LITERAL Crlf
 ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
-CompTimeStr: LITERAL {
+CompTimeStr : LITERAL {
                if( $1.dealloc )
                {
                   $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
@@ -328,7 +333,7 @@ CompTimeStr: LITERAL {
                }
                hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
             }
-           | LITERAL '+' LITERAL {
+            | LITERAL '+' LITERAL {
                {
                   char szFileName[ _POSIX_PATH_MAX + 1 ];
                   hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
@@ -339,7 +344,7 @@ CompTimeStr: LITERAL {
                      hb_xfree( $3.string );
                }
             }
-           ;
+            ;
 
 Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
            | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf {}
@@ -498,7 +503,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; HB_COMP_PARAM->fDontGenLineNum = T
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 1; }
-           | ControlError  { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, NULL, NULL ); }
+           | ControlError  { $<lNumber>$ = 0; hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, NULL, NULL ); }
            ;
 
 ControlError : FunScopeId FUNCTION  IdentName Crlf {}
@@ -570,6 +575,7 @@ NilAlias   : NilValue ALIASOP       { $$ = $1; }
  */
 LiteralValue : LITERAL        {
                                  $$ = hb_compExprNewString( $1.string, $1.length, $1.dealloc, HB_COMP_PARAM );
+                                 $1.dealloc = FALSE;
                               }
              ;
 
@@ -1111,9 +1117,9 @@ ElemList   : EmptyExpression              { $$ = hb_compExprNewList( $1, HB_COMP
            | ElemList ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.isMacro, $1.lateEval, HB_COMP_PARAM ); } BlockNoVar
+CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockNoVar
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
-           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.isMacro, $1.lateEval, HB_COMP_PARAM ); } BlockVarList
+           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); } BlockVarList
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
            ;
 
@@ -1598,7 +1604,7 @@ DoWhile    : WhileBegin Expression Crlf
                {
                   hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
                   $<lNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
-                }
+               }
              EmptyStats
                {
                   hb_compLoopHere( HB_COMP_PARAM );
@@ -1663,11 +1669,11 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   }
                   else if( $<asExpr>8 )
                   {
-                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2, HB_COMP_PARAM ), $<asExpr>8, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprSetOperand( hb_compExprNewPlusEq( $2, HB_COMP_PARAM ), $<asExpr>8, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
                   }
                   else
                   {
-                     hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+                     hb_compExprClear( hb_compExprGenStatement( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
                   }
 
                   hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
@@ -1780,7 +1786,6 @@ DoSwitch   : SwitchBegin
              {
                 hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
              }
-
            ;
            
 EndSwitch  : END

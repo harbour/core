@@ -93,14 +93,13 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * bSkipGen, BOOL bS
 /* global variables */
 FILE *         hb_comp_errFile = NULL;
 
-extern int  yyparse( HB_COMP_DECL );    /* main yacc parsing function */
-
 /* ************************************************************************* */
 
 static void hb_compMainExit( HB_COMP_DECL )
 {
    hb_compCompileEnd( HB_COMP_PARAM );
    hb_compParserStop( HB_COMP_PARAM );
+   hb_compExprLstDealloc( HB_COMP_PARAM );
    hb_compIdentifierClose( HB_COMP_PARAM );
 
    if( HB_COMP_PARAM->pOutPath )
@@ -1762,6 +1761,7 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, char * szName, HB_SYMBOLSCOPE
    pFunc->pNOOPs          = NULL;
    pFunc->pJumps          = NULL;
    pFunc->bLateEval       = TRUE;
+   pFunc->bError          = FALSE;
    pFunc->pEnum           = NULL;
 
    return pFunc;
@@ -3369,31 +3369,34 @@ void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined function 
          hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
       }
 
-      if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+      if( !pFunc->bError )
       {
-         int PCount = pFunc->wParamCount;
+         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+         {
+            int PCount = pFunc->wParamCount;
 
-         /* do not adjust if local parameters are used -remove NOOPs only */
-         pFunc->wParamCount = 0;
-         /* There was a PARAMETERS statement used.
-          * NOTE: This fixes local variables references in a case when
-          * there is PARAMETERS statement after a LOCAL variable declarations.
-          * All local variables are numbered from 1 - which means use first
-          * item from the eval stack. However if PARAMETERS statement is used
-          * then there are additional items on the eval stack - the
-          * function arguments. Then first local variable is at the position
-          * (1 + <number of arguments>). We cannot fix this numbering
-          * because the PARAMETERS statement can be used even at the end
-          * of function body when all local variables are already created.
-          */
+            /* do not adjust if local parameters are used -remove NOOPs only */
+            pFunc->wParamCount = 0;
+            /* There was a PARAMETERS statement used.
+             * NOTE: This fixes local variables references in a case when
+             * there is PARAMETERS statement after a LOCAL variable declarations.
+             * All local variables are numbered from 1 - which means use first
+             * item from the eval stack. However if PARAMETERS statement is used
+             * then there are additional items on the eval stack - the
+             * function arguments. Then first local variable is at the position
+             * (1 + <number of arguments>). We cannot fix this numbering
+             * because the PARAMETERS statement can be used even at the end
+             * of function body when all local variables are already created.
+             */
 
-         hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
-         pFunc->wParamCount = PCount;
+            hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
+            pFunc->wParamCount = PCount;
+         }
+         else
+            hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
+
+         hb_compOptimizeJumps( HB_COMP_PARAM );
       }
-      else
-         hb_compFixFuncPCode( HB_COMP_PARAM, pFunc );
-
-     hb_compOptimizeJumps( HB_COMP_PARAM );
 
       if( HB_COMP_PARAM->iWarnings )
       {
@@ -4481,7 +4484,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                   hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
                }
 
-               yyparse( HB_COMP_PARAM );
+               hb_compparse( HB_COMP_PARAM );
 
                if( HB_COMP_PARAM->pFilePpo )
                {
@@ -4834,7 +4837,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
                int i = HB_COMP_PARAM->iExitLevel ;
                BOOL b = HB_COMP_PARAM->fAnyWarning;
 
-               yyparse( HB_COMP_PARAM );
+               hb_compparse( HB_COMP_PARAM );
 
                if( HB_COMP_PARAM->pFilePpo )
                {

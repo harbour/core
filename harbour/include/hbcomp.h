@@ -86,8 +86,9 @@ extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 
-/* compiler PP functions and variables */
 extern void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] );
+
+extern int  hb_compparse( HB_COMP_DECL );
 extern void hb_compParserStop( HB_COMP_DECL );
 
 #define VS_NONE       0

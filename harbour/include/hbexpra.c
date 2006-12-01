@@ -65,8 +65,6 @@
 
 /* memory allocation
  */
-#define  HB_XGRAB( size )  hb_xgrab( (size) )
-#define  HB_XFREE( pPtr )  hb_xfree( (void *)(pPtr) )
 
 /* Table with operators precedence
  * NOTE:
@@ -135,6 +133,69 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char *, BYTE );
 
 /* ************************************************************************ */
 
+#if !defined( HB_MACRO_SUPPORT )
+static HB_EXPR_PTR hb_compExprAlloc( HB_COMP_DECL )
+{
+   PHB_EXPRLST pExpItm = ( PHB_EXPRLST ) hb_xgrab( sizeof( HB_EXPRLST ) );
+
+   pExpItm->pNext = HB_COMP_PARAM->pExprLst;
+   HB_COMP_PARAM->pExprLst = pExpItm;
+   if( pExpItm->pNext )
+   {
+      pExpItm->pPrev = pExpItm->pNext->pPrev;
+      pExpItm->pNext->pPrev = pExpItm;
+      pExpItm->pPrev->pNext = pExpItm;
+   }
+   else
+      pExpItm->pPrev = pExpItm->pNext = pExpItm;
+
+   return &pExpItm->Expression;
+}
+
+static void hb_compExprDealloc( HB_EXPR_PTR pExpr, HB_COMP_DECL )
+{
+   if( HB_COMP_PARAM->pExprLst )
+   {
+      PHB_EXPRLST pExpItm = ( PHB_EXPRLST ) pExpr;
+
+      pExpItm->pNext->pPrev = pExpItm->pPrev;
+      pExpItm->pPrev->pNext = pExpItm->pNext;
+      if( pExpItm == HB_COMP_PARAM->pExprLst )
+      {
+         if( pExpItm->pNext == pExpItm )
+            HB_COMP_PARAM->pExprLst = NULL;
+         else
+            HB_COMP_PARAM->pExprLst = pExpItm->pNext;
+      }
+      hb_xfree( pExpItm );
+   }
+}
+
+void hb_compExprLstDealloc( HB_COMP_DECL )
+{
+   if( HB_COMP_PARAM->pExprLst )
+   {
+      PHB_EXPRLST pExpItm, pExp;
+      pExpItm = pExp = HB_COMP_PARAM->pExprLst;
+      HB_COMP_PARAM->pExprLst = NULL;
+      do
+      {
+         hb_compExprDelete( &pExp->Expression, HB_COMP_PARAM );
+         pExp = pExp->pNext;
+      }
+      while( pExp != pExpItm );
+      do
+      {
+         PHB_EXPRLST pFree = pExp;
+         pExp = pExp->pNext;
+         hb_xfree( pFree );
+      }
+      while( pExp != pExpItm );
+   }
+}
+
+#endif
+
 HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE iType, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
@@ -144,8 +205,7 @@ HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE iType, HB_COMP_DECL )
 #if defined( HB_MACRO_SUPPORT )
    pExpr = hb_macroExprNew( HB_COMP_PARAM );
 #else
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-   pExpr = ( HB_EXPR_PTR ) HB_XGRAB( sizeof( HB_EXPR ) );
+   pExpr = hb_compExprAlloc( HB_COMP_PARAM );
 #endif
    pExpr->ExprType = iType;
    pExpr->pNext    = NULL;
@@ -157,13 +217,14 @@ HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE iType, HB_COMP_DECL )
 
 /* Delete self - all components will be deleted somewhere else
  */
-void hb_compExprClear( HB_EXPR_PTR pExpr )
+void hb_compExprClear( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-#if defined( HB_MACRO_SUPPORT )
-   pExpr->ExprType = HB_ET_NONE;
-#else
    if( --pExpr->Counter == 0 )
-      HB_XFREE( pExpr );
+#if defined( HB_MACRO_SUPPORT )
+      pExpr->ExprType = HB_ET_NONE;
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+#else
+      hb_compExprDealloc( pExpr, HB_COMP_PARAM );
 #endif
 }
 
@@ -172,19 +233,15 @@ void hb_compExprClear( HB_EXPR_PTR pExpr )
 void hb_compExprDelete( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete(%p,%p)", pExpr, HB_COMP_PARAM));
-#if defined( HB_MACRO_SUPPORT )
-   if( pExpr && pExpr->ExprType != HB_ET_NONE )
-   {
-      HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      pExpr->ExprType = HB_ET_NONE;
-   }
-#else
    if( pExpr && --pExpr->Counter == 0 )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
-      HB_XFREE( pExpr );
-   }
+#if defined( HB_MACRO_SUPPORT )
+      pExpr->ExprType = HB_ET_NONE;
+#else
+      hb_compExprDealloc( pExpr, HB_COMP_PARAM );
 #endif
+   }
 }
 
 /* Delete all components and delete self
@@ -198,7 +255,7 @@ void hb_compExprFree( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 #if defined( HB_MACRO_SUPPORT )
       pExpr->ExprType = HB_ET_NONE;
 #else
-      HB_XFREE( pExpr );
+      hb_compExprDealloc( pExpr, HB_COMP_PARAM );
 #endif
    }
 }
@@ -434,7 +491,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
              */
             pArg->value.asList.pIndex = NULL;
             pArg->value.asList.pExprList = NULL;
-            hb_compExprClear( pArg );
+            hb_compExprClear( pArg, HB_COMP_PARAM );
             /* Create an array with index elements
              */
             pIndex = HB_EXPR_PCODE1( hb_compExprNewArray, hb_compExprNewList( pIndex, HB_COMP_PARAM ) );
@@ -482,7 +539,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                {
                   pVar = pBase->value.asList.pExprList;
                   pBase->value.asList.pExprList = NULL;
-                  hb_compExprClear( pBase );
+                  hb_compExprClear( pBase, HB_COMP_PARAM );
                   pBase = pVar;
                }
             }
@@ -933,7 +990,7 @@ static HB_CBVAR_PTR hb_compExprCBVarNew( char * szVarName, BYTE bType )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprCBVarNew(%s)", szVarName));
 
-   pVar = ( HB_CBVAR_PTR ) HB_XGRAB( sizeof( HB_CBVAR ) );
+   pVar = ( HB_CBVAR_PTR ) hb_xgrab( sizeof( HB_CBVAR ) );
 
    pVar->szName = szVarName;
    pVar->bType  = bType;
@@ -953,7 +1010,7 @@ void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
    {
       pDel  = pVars;
       pVars = pVars->pNext;
-      HB_XFREE( pDel );
+      hb_xfree( pDel );
    }
 }
 

@@ -256,6 +256,8 @@ typedef union YYSTYPE
    int     iNumber;     /* to hold a temporary integer number */
    HB_LONG lNumber;     /* to hold a temporary long number */
    BOOL    bTrue;
+   HB_EXPR_PTR asExpr;
+   void * pVoid;        /* to hold any memory structure we may need */
    struct
    {
       HB_LONG  lNumber;    /* to hold a long number returned by lex */
@@ -268,7 +270,6 @@ typedef union YYSTYPE
       UCHAR    bWidth;     /* to hold the width of the value */
       UCHAR    bDec;       /* to hold the number of decimal points in the value */
    } valDouble;
-   HB_EXPR_PTR asExpr;
    struct
    {
       char *   string;
@@ -279,8 +280,7 @@ typedef union YYSTYPE
    {
       char *   string;
       int      length;
-      BOOL     lateEval; /* Flag for early {|| &macro} (0) or late {|| &(macro)} (1) binding */
-      BOOL     isMacro;
+      int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
    struct
    {
@@ -291,10 +291,9 @@ typedef union YYSTYPE
          HB_EXPR_PTR macro;
       } value;
    } asMessage;
-   void * pVoid;        /* to hold any memory structure we may need */
 }
 /* Line 1529 of yacc.c.  */
-#line 298 "harboury.h"
+#line 297 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

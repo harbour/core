@@ -636,7 +636,7 @@ $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
 $(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-    bison --no-line -d $** -o$@
+    bison --no-line -p hb_comp -d $** -o$@
 
 !else
 
@@ -656,7 +656,7 @@ $(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
     flex -Phb_macro -i -8 -o$@ $**
 
 $(OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-    flex  -i -8 -o$@ $**
+    flex -Phb_comp -i -8 -o$@ $**
 
 #**********************************************************
 
@@ -680,7 +680,7 @@ $(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
     bison --no-line -p hb_macro -d $** -o$@
 
 $(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-    bison --no-line -d $** -o$@
+    bison --no-line -p hb_comp -d $** -o$@
 
 !else
 
@@ -700,7 +700,7 @@ $(DLL_OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
     flex -Phb_macro -i -8 -o$@ $**
 
 $(DLL_OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-    flex  -i -8 -o$@ $**
+    flex -Phb_comp -i -8 -o$@ $**
 
 #**********************************************************
 

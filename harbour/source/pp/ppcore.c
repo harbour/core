@@ -5043,7 +5043,7 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
-                               int * piType )
+                               int * piType, int * piLen )
 {
    * piType = 0;
    hb_membufFlush( pState->pBuffer );
@@ -5057,11 +5057,11 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
          {
             if( pToken->pNext &&
                 HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_PB )
-               * piType |= 2;
+               * piType |= HB_BLOCK_LATEEVAL;
          }
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
                   HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT )
-            * piType |= 1;
+            * piType |= HB_BLOCK_LATEEVAL | HB_BLOCK_MACRO;
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
             --iBraces;
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
@@ -5070,6 +5070,7 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       }
       while( iBraces && !HB_PP_TOKEN_ISEOC( pToken ) );
    }
+   * piLen = ( int ) hb_membufLen( pState->pBuffer );
    hb_membufAddCh( pState->pBuffer, '\0' );
    return hb_membufPtr( pState->pBuffer );
 }

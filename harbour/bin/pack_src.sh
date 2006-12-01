@@ -76,8 +76,7 @@ $hb_collect source/Makefile
 # SOURCE\COMPILER
 $hb_collect source/compiler/Makefile
 $hb_collect source/compiler/*.[cylh]
-$hb_collect source/compiler/*.sl[xy]
-$hb_collect source/compiler/*.simple
+$hb_collect source/compiler/*.yy[ch]
 
 # SOURCE\DEBUG
 $hb_collect source/debug/Makefile
@@ -94,7 +93,7 @@ $hb_collect source/codepage/*.[ch]
 # SOURCE\MACRO
 $hb_collect source/macro/Makefile
 $hb_collect source/macro/*.[cylh]
-$hb_collect source/macro/*.slx
+$hb_collect source/macro/*.yy[ch]
 
 # SOURCE\PP
 $hb_collect source/pp/Makefile

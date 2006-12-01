@@ -241,7 +241,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
                if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
-                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
+                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.val.l;
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
@@ -404,7 +404,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
                if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
-                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.lVal;
+                  short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.val.l;
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
