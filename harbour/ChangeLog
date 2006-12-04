@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-04 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+    * added support for extended string (e"...") to macro compiler and
+      strings with embedded ASCII NUL character (chr(0))
+
+  * harbour/source/rtl/valtostr.c
+    * added HB_STRTOEXP() function which converts string item to valid
+      expression which can be compiled by macro compiler. String may
+      contain any characters.
+
+  * harbour/source/rtl/persist.prg
+    * use HB_STRTOEXP() for sting conversion and 0d....... for date
+      constants
+
+  * harbour/source/rtl/readvar.prg
+  * harbour/source/rtl/xsavescr.c
+    * minor cleanup
+
 2006-12-01 18:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/pack_src.sh
     + added packing *.yy[ch] files

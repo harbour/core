@@ -83,12 +83,10 @@ HB_FUNC( __XSAVESCREEN )
 {
    ULONG ulSize;
 
+   hb_gtGetPos( &s_iRow, &s_iCol );
+   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
    if( s_pBuffer != NULL )
       hb_xfree( s_pBuffer );
-
-   hb_gtGetPos( &s_iRow, &s_iCol );
-
-   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
    s_pBuffer = hb_xgrab( ulSize );
    hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), s_pBuffer );
 }

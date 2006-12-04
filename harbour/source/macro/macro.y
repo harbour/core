@@ -126,6 +126,11 @@
    HB_EXPR_PTR asExpr;
    struct
    {
+      char *   string;
+      int      length;
+   } valChar;
+   struct
+   {
       int      iNumber; /* to hold a number returned by lex */
    } valInteger;
    struct
@@ -192,7 +197,8 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %right ','
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER LITERAL MACROVAR MACROTEXT
+%type <string>  IDENTIFIER MACROVAR MACROTEXT
+%type <valChar>    LITERAL
 %type <valDouble>  NUM_DOUBLE
 %type <valLong>    NUM_LONG
 %type <valLong>    NUM_DATE
@@ -283,7 +289,7 @@ NilValue   : NIL              { $$ = hb_compExprNewNil( HB_COMP_PARAM ); }
 
 /* Literal string value
  */
-LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1, strlen($1), FALSE, HB_COMP_PARAM ); }
+LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1.string, $1.length, FALSE, HB_COMP_PARAM ); }
              ;
 
 /* Logical value
@@ -990,7 +996,8 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          return NUM_DATE;
 
       case HB_PP_TOKEN_STRING:
-         yylval_ptr->string = pToken->value;
+         yylval_ptr->valChar.string = pToken->value;
+         yylval_ptr->valChar.length = pToken->len;
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:

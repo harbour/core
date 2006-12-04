@@ -211,26 +211,17 @@ static function ValToText( uValue )
 
    local cType := ValType( uValue )
    local cText
-   local cQuote := '"'
 
    do case
       case cType == "C"
-           if cQuote $ uValue
-              cQuote := "'"
-              if cQuote $ uValue
-                 cText := "["+ uValue + "]"
-              else
-                 cText := cQuote + uValue + cQuote
-              endif
-           else
-              cText := cQuote + uValue + cQuote
-           endif
+           cText := HB_StrToExp( uValue )
 
       case cType == "N"
            cText := AllTrim( Str( uValue ) )
 
       case cType == "D"
-           cText := 'HB_STOD( "' + DToS( uValue ) + '" )'
+           cText := DToS( uValue )
+           cText := "0d" + iif( Empty( cText ), "00000000", cText )
 
       otherwise
            cText := HB_ValToStr( uValue )

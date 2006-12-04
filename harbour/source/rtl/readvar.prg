@@ -56,9 +56,11 @@ FUNCTION ReadVar( cVarName )
    STATIC s_cVarName := ""
 
    LOCAL cOldVarName
+   LOCAL oGetList
 
-   IF __GetListActive() != NIL
-      RETURN __GetListActive():ReadVar( cVarName )
+   oGetList := __GetListActive()
+   IF oGetList != NIL
+      RETURN oGetList:ReadVar( cVarName )
    ENDIF
 
    cOldVarName := s_cVarName

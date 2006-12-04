@@ -299,6 +299,11 @@ typedef union YYSTYPE
    HB_EXPR_PTR asExpr;
    struct
    {
+      char *   string;
+      int      length;
+   } valChar;
+   struct
+   {
       int      iNumber; /* to hold a number returned by lex */
    } valInteger;
    struct
@@ -314,7 +319,7 @@ typedef union YYSTYPE
    } valDouble;
 }
 /* Line 193 of yacc.c.  */
-#line 318 "macroy.c"
+#line 323 "macroy.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -324,7 +329,7 @@ typedef union YYSTYPE
 
 
 /* Copy the second part of user declarations.  */
-#line 144 "macro.y"
+#line 149 "macro.y"
 
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
@@ -335,7 +340,7 @@ extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management func
 
 static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
-#line 156 "macro.y"
+#line 161 "macro.y"
 
 #ifdef __WATCOMC__
 /* disable warnings for unreachable code */
@@ -344,7 +349,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 
 /* Line 216 of yacc.c.  */
-#line 348 "macroy.c"
+#line 353 "macroy.c"
 
 #ifdef short
 # undef short
@@ -773,39 +778,39 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   230,   230,   239,   247,   255,   260,   269,   270,   273,
-     276,   281,   286,   291,   292,   297,   302,   307,   312,   315,
-     320,   323,   342,   347,   350,   357,   358,   363,   364,   365,
-     366,   367,   370,   371,   374,   375,   376,   377,   378,   379,
-     380,   389,   390,   391,   392,   393,   398,   399,   400,   401,
-     402,   403,   404,   405,   406,   407,   408,   409,   410,   411,
-     412,   417,   420,   425,   426,   429,   430,   431,   432,   437,
-     438,   439,   440,   441,   442,   443,   444,   445,   446,   447,
-     448,   449,   450,   451,   452,   453,   454,   455,   456,   461,
-     465,   466,   467,   468,   469,   470,   471,   472,   473,   474,
-     475,   476,   477,   478,   479,   480,   481,   482,   483,   484,
-     485,   486,   487,   488,   489,   490,   491,   494,   495,   498,
-     498,   512,   513,   517,   518,   524,   525,   531,   532,   533,
-     534,   535,   536,   537,   538,   539,   540,   541,   542,   543,
-     544,   545,   546,   547,   548,   549,   552,   553,   556,   557,
-     558,   561,   562,   563,   564,   565,   566,   567,   568,   569,
-     570,   571,   572,   573,   574,   575,   576,   577,   578,   579,
-     582,   583,   584,   585,   586,   587,   588,   589,   590,   591,
-     592,   593,   594,   595,   596,   597,   598,   599,   600,   603,
-     604,   605,   606,   607,   608,   609,   610,   611,   612,   613,
-     614,   615,   616,   617,   618,   619,   620,   621,   624,   625,
-     626,   627,   628,   629,   630,   631,   632,   633,   634,   635,
-     636,   637,   638,   639,   640,   641,   642,   645,   646,   647,
-     648,   649,   650,   651,   652,   653,   654,   655,   656,   657,
-     658,   659,   660,   661,   662,   663,   666,   667,   668,   669,
-     670,   671,   672,   673,   674,   675,   676,   677,   678,   679,
-     680,   681,   682,   683,   684,   687,   688,   689,   690,   691,
-     692,   693,   694,   695,   696,   697,   698,   699,   700,   701,
-     702,   703,   704,   705,   708,   709,   710,   711,   712,   713,
-     716,   717,   718,   719,   720,   721,   724,   725,   728,   729,
-     730,   731,   732,   733,   734,   735,   736,   739,   745,   746,
-     747,   750,   751,   755,   754,   759,   758,   767,   768,   774,
-     777,   778,   781,   782,   785,   788,   792,   791,   797,   796
+       0,   236,   236,   245,   253,   261,   266,   275,   276,   279,
+     282,   287,   292,   297,   298,   303,   308,   313,   318,   321,
+     326,   329,   348,   353,   356,   363,   364,   369,   370,   371,
+     372,   373,   376,   377,   380,   381,   382,   383,   384,   385,
+     386,   395,   396,   397,   398,   399,   404,   405,   406,   407,
+     408,   409,   410,   411,   412,   413,   414,   415,   416,   417,
+     418,   423,   426,   431,   432,   435,   436,   437,   438,   443,
+     444,   445,   446,   447,   448,   449,   450,   451,   452,   453,
+     454,   455,   456,   457,   458,   459,   460,   461,   462,   467,
+     471,   472,   473,   474,   475,   476,   477,   478,   479,   480,
+     481,   482,   483,   484,   485,   486,   487,   488,   489,   490,
+     491,   492,   493,   494,   495,   496,   497,   500,   501,   504,
+     504,   518,   519,   523,   524,   530,   531,   537,   538,   539,
+     540,   541,   542,   543,   544,   545,   546,   547,   548,   549,
+     550,   551,   552,   553,   554,   555,   558,   559,   562,   563,
+     564,   567,   568,   569,   570,   571,   572,   573,   574,   575,
+     576,   577,   578,   579,   580,   581,   582,   583,   584,   585,
+     588,   589,   590,   591,   592,   593,   594,   595,   596,   597,
+     598,   599,   600,   601,   602,   603,   604,   605,   606,   609,
+     610,   611,   612,   613,   614,   615,   616,   617,   618,   619,
+     620,   621,   622,   623,   624,   625,   626,   627,   630,   631,
+     632,   633,   634,   635,   636,   637,   638,   639,   640,   641,
+     642,   643,   644,   645,   646,   647,   648,   651,   652,   653,
+     654,   655,   656,   657,   658,   659,   660,   661,   662,   663,
+     664,   665,   666,   667,   668,   669,   672,   673,   674,   675,
+     676,   677,   678,   679,   680,   681,   682,   683,   684,   685,
+     686,   687,   688,   689,   690,   693,   694,   695,   696,   697,
+     698,   699,   700,   701,   702,   703,   704,   705,   706,   707,
+     708,   709,   710,   711,   714,   715,   716,   717,   718,   719,
+     722,   723,   724,   725,   726,   727,   730,   731,   734,   735,
+     736,   737,   738,   739,   740,   741,   742,   745,   751,   752,
+     753,   756,   757,   761,   760,   765,   764,   773,   774,   780,
+     783,   784,   787,   788,   791,   794,   798,   797,   803,   802
 };
 #endif
 
@@ -2205,7 +2210,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 230 "macro.y"
+#line 236 "macro.y"
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (2)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
@@ -2217,7 +2222,7 @@ yyreduce:
     break;
 
   case 3:
-#line 239 "macro.y"
+#line 245 "macro.y"
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (1)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
@@ -2229,7 +2234,7 @@ yyreduce:
     break;
 
   case 4:
-#line 247 "macro.y"
+#line 253 "macro.y"
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (1)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
@@ -2241,7 +2246,7 @@ yyreduce:
     break;
 
   case 5:
-#line 255 "macro.y"
+#line 261 "macro.y"
     {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
@@ -2250,7 +2255,7 @@ yyreduce:
     break;
 
   case 6:
-#line 260 "macro.y"
+#line 266 "macro.y"
     {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
@@ -2259,79 +2264,79 @@ yyreduce:
     break;
 
   case 7:
-#line 269 "macro.y"
+#line 275 "macro.y"
     { (yyval.asExpr) = hb_compExprNewDouble( (yyvsp[(1) - (1)].valDouble).dNumber, (yyvsp[(1) - (1)].valDouble).bWidth, (yyvsp[(1) - (1)].valDouble).bDec, HB_COMP_PARAM ); ;}
     break;
 
   case 8:
-#line 270 "macro.y"
+#line 276 "macro.y"
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 9:
-#line 273 "macro.y"
+#line 279 "macro.y"
     { (yyval.asExpr) = hb_compExprNewDate( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 10:
-#line 276 "macro.y"
+#line 282 "macro.y"
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[(1) - (2)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 11:
-#line 281 "macro.y"
+#line 287 "macro.y"
     { (yyval.asExpr) = hb_compExprNewNil( HB_COMP_PARAM ); ;}
     break;
 
   case 12:
-#line 286 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewString( (yyvsp[(1) - (1)].string), strlen((yyvsp[(1) - (1)].string)), FALSE, HB_COMP_PARAM ); ;}
+#line 292 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewString( (yyvsp[(1) - (1)].valChar).string, (yyvsp[(1) - (1)].valChar).length, FALSE, HB_COMP_PARAM ); ;}
     break;
 
   case 13:
-#line 291 "macro.y"
+#line 297 "macro.y"
     { (yyval.asExpr) = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); ;}
     break;
 
   case 14:
-#line 292 "macro.y"
+#line 298 "macro.y"
     { (yyval.asExpr) = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); ;}
     break;
 
   case 15:
-#line 297 "macro.y"
+#line 303 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSelf( HB_COMP_PARAM ); ;}
     break;
 
   case 16:
-#line 302 "macro.y"
+#line 308 "macro.y"
     { (yyval.asExpr) = hb_compExprNewArray( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 17:
-#line 307 "macro.y"
+#line 313 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 18:
-#line 312 "macro.y"
+#line 318 "macro.y"
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 19:
-#line 315 "macro.y"
+#line 321 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAlias( (yyvsp[(1) - (2)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 20:
-#line 320 "macro.y"
+#line 326 "macro.y"
     {  (yyval.asExpr) = hb_compExprNewMacro( NULL, '&', (yyvsp[(1) - (1)].string), HB_COMP_PARAM );
                                  HB_MACRO_CHECK( (yyval.asExpr) );
                               ;}
     break;
 
   case 21:
-#line 323 "macro.y"
+#line 329 "macro.y"
     {  ULONG ulLen = strlen( (yyvsp[(1) - (1)].string) );
                                  char * szVarName = hb_macroTextSubst( (yyvsp[(1) - (1)].string), &ulLen );
                                  if( szVarName != (yyvsp[(1) - (1)].string) )
@@ -2352,491 +2357,491 @@ yyreduce:
     break;
 
   case 22:
-#line 342 "macro.y"
+#line 348 "macro.y"
     { hb_compExprMacroAsAlias( (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 23:
-#line 347 "macro.y"
+#line 353 "macro.y"
     { (yyval.asExpr) = hb_compExprNewMacro( (yyvsp[(2) - (2)].asExpr), 0, NULL, HB_COMP_PARAM ); ;}
     break;
 
   case 24:
-#line 350 "macro.y"
+#line 356 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (2)].asExpr); ;}
     break;
 
   case 25:
-#line 357 "macro.y"
+#line 363 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAlias( "FIELD", HB_COMP_PARAM ); ;}
     break;
 
   case 26:
-#line 358 "macro.y"
+#line 364 "macro.y"
     { (yyval.asExpr) = (yyvsp[(3) - (3)].asExpr); ;}
     break;
 
   case 27:
-#line 363 "macro.y"
+#line 369 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 28:
-#line 364 "macro.y"
+#line 370 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 29:
-#line 365 "macro.y"
+#line 371 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 30:
-#line 366 "macro.y"
+#line 372 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 31:
-#line 367 "macro.y"
+#line 373 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 32:
-#line 370 "macro.y"
+#line 376 "macro.y"
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 33:
-#line 371 "macro.y"
+#line 377 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 34:
-#line 374 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 35:
-#line 375 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 36:
-#line 376 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 37:
-#line 377 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 38:
-#line 378 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 39:
-#line 379 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 40:
 #line 380 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
+  case 35:
+#line 381 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 36:
+#line 382 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 37:
+#line 383 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 38:
+#line 384 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 39:
+#line 385 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 40:
+#line 386 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
   case 41:
-#line 389 "macro.y"
+#line 395 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 42:
-#line 390 "macro.y"
+#line 396 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 43:
-#line 391 "macro.y"
+#line 397 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 44:
-#line 392 "macro.y"
+#line 398 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 45:
-#line 393 "macro.y"
+#line 399 "macro.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 46:
-#line 398 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 47:
-#line 399 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 48:
-#line 400 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 49:
-#line 401 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 50:
-#line 402 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 51:
-#line 403 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 52:
 #line 404 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 53:
+  case 47:
 #line 405 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 54:
+  case 48:
 #line 406 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 55:
+  case 49:
 #line 407 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 56:
+  case 50:
 #line 408 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 57:
+  case 51:
 #line 409 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 58:
+  case 52:
 #line 410 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 59:
+  case 53:
 #line 411 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 60:
+  case 54:
 #line 412 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 61:
+  case 55:
+#line 413 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 56:
+#line 414 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 57:
+#line 415 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 58:
+#line 416 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 59:
 #line 417 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 60:
+#line 418 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 61:
+#line 423 "macro.y"
     { (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( (yyvsp[(1) - (4)].string), HB_COMP_PARAM ), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
                                             HB_MACRO_CHECK( (yyval.asExpr) );
                                           ;}
     break;
 
   case 62:
-#line 420 "macro.y"
+#line 426 "macro.y"
     { (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[(1) - (4)].asExpr), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
                                             HB_MACRO_CHECK( (yyval.asExpr) );
                                           ;}
     break;
 
   case 63:
-#line 425 "macro.y"
+#line 431 "macro.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 64:
-#line 426 "macro.y"
+#line 432 "macro.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 65:
-#line 429 "macro.y"
+#line 435 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 66:
-#line 430 "macro.y"
+#line 436 "macro.y"
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[(2) - (2)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 67:
-#line 431 "macro.y"
+#line 437 "macro.y"
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 68:
-#line 432 "macro.y"
+#line 438 "macro.y"
     { (yyval.asExpr) = hb_compExprNewFunRef( (yyvsp[(2) - (4)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 69:
-#line 437 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 70:
-#line 438 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 71:
-#line 439 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 72:
-#line 440 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 73:
-#line 441 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 74:
-#line 442 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
-    break;
-
-  case 75:
 #line 443 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 76:
+  case 70:
 #line 444 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 77:
+  case 71:
 #line 445 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 78:
+  case 72:
 #line 446 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 79:
+  case 73:
 #line 447 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 80:
+  case 74:
 #line 448 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 81:
+  case 75:
 #line 449 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 82:
+  case 76:
 #line 450 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 83:
+  case 77:
 #line 451 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 84:
+  case 78:
 #line 452 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 85:
+  case 79:
 #line 453 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 86:
+  case 80:
 #line 454 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 87:
+  case 81:
 #line 455 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 88:
+  case 82:
 #line 456 "macro.y"
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
-  case 89:
+  case 83:
+#line 457 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 84:
+#line 458 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 85:
+#line 459 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 86:
+#line 460 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 87:
 #line 461 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 88:
+#line 462 "macro.y"
+    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    break;
+
+  case 89:
+#line 467 "macro.y"
     { (yyval.asExpr) = hb_compExprNewMethodCall( (yyvsp[(1) - (4)].asExpr), (yyvsp[(3) - (4)].asExpr) ); ;}
     break;
 
   case 91:
-#line 466 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 92:
-#line 467 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 93:
-#line 468 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 94:
-#line 469 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 95:
-#line 470 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 96:
-#line 471 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
-    break;
-
-  case 97:
 #line 472 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 98:
+  case 92:
 #line 473 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 99:
+  case 93:
 #line 474 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 100:
+  case 94:
 #line 475 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 101:
+  case 95:
 #line 476 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 102:
+  case 96:
 #line 477 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 103:
+  case 97:
 #line 478 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 104:
+  case 98:
 #line 479 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 105:
+  case 99:
 #line 480 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 106:
+  case 100:
 #line 481 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 107:
+  case 101:
 #line 482 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 108:
+  case 102:
 #line 483 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 109:
+  case 103:
 #line 484 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 110:
+  case 104:
 #line 485 "macro.y"
-    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 111:
+  case 105:
 #line 486 "macro.y"
-    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 112:
+  case 106:
 #line 487 "macro.y"
-    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 113:
+  case 107:
 #line 488 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 114:
+  case 108:
 #line 489 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 115:
+  case 109:
 #line 490 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
-  case 116:
+  case 110:
 #line 491 "macro.y"
+    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    break;
+
+  case 111:
+#line 492 "macro.y"
+    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    break;
+
+  case 112:
+#line 493 "macro.y"
+    { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[(1) - (1)].asExpr), HB_SM_HARBOUR ); ;}
+    break;
+
+  case 113:
+#line 494 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
+    break;
+
+  case 114:
+#line 495 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
+    break;
+
+  case 115:
+#line 496 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
+    break;
+
+  case 116:
+#line 497 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 117:
-#line 494 "macro.y"
+#line 500 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); HB_MACRO_CHECK( (yyval.asExpr) ); ;}
     break;
 
   case 118:
-#line 495 "macro.y"
+#line 501 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); HB_MACRO_CHECK( (yyval.asExpr) ); ;}
     break;
 
   case 119:
-#line 498 "macro.y"
+#line 504 "macro.y"
     {
                                       if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
                                       {
@@ -2848,7 +2853,7 @@ yyreduce:
     break;
 
   case 120:
-#line 506 "macro.y"
+#line 512 "macro.y"
     {
                                        HB_MACRO_DATA->uiListElements = 1;
                                        (yyval.asExpr) = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( (yyvsp[(1) - (4)].asExpr), HB_COMP_PARAM ) : hb_compExprNewArgList( (yyvsp[(1) - (4)].asExpr), HB_COMP_PARAM ), (yyvsp[(4) - (4)].asExpr) );
@@ -2856,1049 +2861,1049 @@ yyreduce:
     break;
 
   case 121:
-#line 512 "macro.y"
+#line 518 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 122:
-#line 513 "macro.y"
+#line 519 "macro.y"
     {  HB_MACRO_DATA->uiListElements++;
                                                    (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 123:
-#line 517 "macro.y"
+#line 523 "macro.y"
     { (yyval.asExpr) = hb_compExprNewEmpty( HB_COMP_PARAM ); ;}
     break;
 
   case 125:
-#line 524 "macro.y"
+#line 530 "macro.y"
     { (yyval.asExpr) = hb_compExprNewPostInc( (yyvsp[(0) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 126:
-#line 525 "macro.y"
+#line 531 "macro.y"
     { (yyval.asExpr) = hb_compExprNewPostDec( (yyvsp[(0) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 127:
-#line 531 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 128:
-#line 532 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 129:
-#line 533 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 130:
-#line 534 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 131:
-#line 535 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 132:
-#line 536 "macro.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 133:
 #line 537 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 134:
+  case 128:
 #line 538 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 135:
+  case 129:
 #line 539 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 136:
+  case 130:
 #line 540 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 137:
+  case 131:
 #line 541 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 138:
+  case 132:
 #line 542 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 139:
+  case 133:
 #line 543 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 140:
+  case 134:
 #line 544 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 141:
+  case 135:
 #line 545 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 142:
+  case 136:
 #line 546 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 143:
+  case 137:
 #line 547 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 144:
+  case 138:
 #line 548 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 145:
+  case 139:
 #line 549 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 146:
+  case 140:
+#line 550 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 141:
+#line 551 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 142:
 #line 552 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 143:
+#line 553 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 144:
+#line 554 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 145:
+#line 555 "macro.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
+  case 146:
+#line 558 "macro.y"
     { (yyval.asExpr) = hb_compExprNewPreInc( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 147:
-#line 553 "macro.y"
+#line 559 "macro.y"
     { (yyval.asExpr) = hb_compExprNewPreDec( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 148:
-#line 556 "macro.y"
+#line 562 "macro.y"
     { (yyval.asExpr) = hb_compExprNewNot( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 149:
-#line 557 "macro.y"
+#line 563 "macro.y"
     { (yyval.asExpr) = hb_compExprNewNegate( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 150:
-#line 558 "macro.y"
+#line 564 "macro.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 151:
-#line 561 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 152:
-#line 562 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 153:
-#line 563 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 154:
-#line 564 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 155:
-#line 565 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 156:
-#line 566 "macro.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 157:
 #line 567 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 158:
+  case 152:
 #line 568 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 159:
+  case 153:
 #line 569 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 160:
+  case 154:
 #line 570 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 161:
+  case 155:
 #line 571 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 162:
+  case 156:
 #line 572 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 163:
+  case 157:
 #line 573 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 164:
+  case 158:
 #line 574 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 165:
+  case 159:
 #line 575 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 166:
+  case 160:
 #line 576 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 167:
+  case 161:
 #line 577 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 168:
+  case 162:
 #line 578 "macro.y"
-    { HB_MACRO_IFENABLED( (yyval.asExpr), hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ), HB_SM_HARBOUR ); ;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 169:
+  case 163:
 #line 579 "macro.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 170:
+  case 164:
+#line 580 "macro.y"
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 165:
+#line 581 "macro.y"
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 166:
 #line 582 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 171:
+  case 167:
 #line 583 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 172:
+  case 168:
 #line 584 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { HB_MACRO_IFENABLED( (yyval.asExpr), hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ), HB_SM_HARBOUR ); ;}
     break;
 
-  case 173:
+  case 169:
 #line 585 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 174:
-#line 586 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 175:
-#line 587 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 176:
+  case 170:
 #line 588 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 177:
+  case 171:
 #line 589 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 178:
+  case 172:
 #line 590 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 179:
+  case 173:
 #line 591 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 180:
+  case 174:
 #line 592 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 181:
+  case 175:
 #line 593 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 182:
+  case 176:
 #line 594 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 183:
+  case 177:
 #line 595 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 184:
+  case 178:
 #line 596 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 185:
+  case 179:
 #line 597 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 186:
+  case 180:
 #line 598 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 187:
+  case 181:
 #line 599 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 188:
+  case 182:
 #line 600 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 189:
+  case 183:
+#line 601 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 184:
+#line 602 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 185:
 #line 603 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 190:
+  case 186:
 #line 604 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 191:
+  case 187:
 #line 605 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 192:
+  case 188:
 #line 606 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 193:
-#line 607 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 194:
-#line 608 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 195:
+  case 189:
 #line 609 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 196:
+  case 190:
 #line 610 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 197:
+  case 191:
 #line 611 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 198:
+  case 192:
 #line 612 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 199:
+  case 193:
 #line 613 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 200:
+  case 194:
 #line 614 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 201:
+  case 195:
 #line 615 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 202:
+  case 196:
 #line 616 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 203:
+  case 197:
 #line 617 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 204:
+  case 198:
 #line 618 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 205:
+  case 199:
 #line 619 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 206:
+  case 200:
 #line 620 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 207:
+  case 201:
 #line 621 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 208:
+  case 202:
+#line 622 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 203:
+#line 623 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 204:
 #line 624 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 209:
+  case 205:
 #line 625 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 210:
+  case 206:
 #line 626 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 211:
+  case 207:
 #line 627 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 212:
-#line 628 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 213:
-#line 629 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 214:
+  case 208:
 #line 630 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 215:
+  case 209:
 #line 631 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 216:
+  case 210:
 #line 632 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 217:
+  case 211:
 #line 633 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 218:
+  case 212:
 #line 634 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 219:
+  case 213:
 #line 635 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 220:
+  case 214:
 #line 636 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 221:
+  case 215:
 #line 637 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 222:
+  case 216:
 #line 638 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 223:
+  case 217:
 #line 639 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 224:
+  case 218:
 #line 640 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 225:
+  case 219:
 #line 641 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 226:
+  case 220:
 #line 642 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 227:
+  case 221:
+#line 643 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 222:
+#line 644 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 223:
 #line 645 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 228:
+  case 224:
 #line 646 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 229:
+  case 225:
 #line 647 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 230:
+  case 226:
 #line 648 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 231:
-#line 649 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 232:
-#line 650 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 233:
+  case 227:
 #line 651 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 234:
+  case 228:
 #line 652 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 235:
+  case 229:
 #line 653 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 236:
+  case 230:
 #line 654 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 237:
+  case 231:
 #line 655 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 238:
+  case 232:
 #line 656 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 239:
+  case 233:
 #line 657 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 240:
+  case 234:
 #line 658 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 241:
+  case 235:
 #line 659 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 242:
+  case 236:
 #line 660 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 243:
+  case 237:
 #line 661 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 244:
+  case 238:
 #line 662 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 245:
+  case 239:
 #line 663 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 246:
+  case 240:
+#line 664 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 241:
+#line 665 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 242:
 #line 666 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 247:
+  case 243:
 #line 667 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 248:
+  case 244:
 #line 668 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 249:
+  case 245:
 #line 669 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 250:
-#line 670 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 251:
-#line 671 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 252:
+  case 246:
 #line 672 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 253:
+  case 247:
 #line 673 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 254:
+  case 248:
 #line 674 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 255:
+  case 249:
 #line 675 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 256:
+  case 250:
 #line 676 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 257:
+  case 251:
 #line 677 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 258:
+  case 252:
 #line 678 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 259:
+  case 253:
 #line 679 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 260:
+  case 254:
 #line 680 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 261:
+  case 255:
 #line 681 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 262:
+  case 256:
 #line 682 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 263:
+  case 257:
 #line 683 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 264:
+  case 258:
 #line 684 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 265:
+  case 259:
+#line 685 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 260:
+#line 686 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 261:
 #line 687 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 266:
+  case 262:
 #line 688 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 267:
+  case 263:
 #line 689 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 268:
+  case 264:
 #line 690 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 269:
-#line 691 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 270:
-#line 692 "macro.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 271:
+  case 265:
 #line 693 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 272:
+  case 266:
 #line 694 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 273:
+  case 267:
 #line 695 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 274:
+  case 268:
 #line 696 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 275:
+  case 269:
 #line 697 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 276:
+  case 270:
 #line 698 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 277:
+  case 271:
 #line 699 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 278:
+  case 272:
 #line 700 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 279:
+  case 273:
 #line 701 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 280:
+  case 274:
 #line 702 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 281:
+  case 275:
 #line 703 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 282:
+  case 276:
 #line 704 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 283:
+  case 277:
 #line 705 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 284:
+  case 278:
+#line 706 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 279:
+#line 707 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 280:
 #line 708 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 281:
+#line 709 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 282:
+#line 710 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 283:
+#line 711 "macro.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 284:
+#line 714 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 285:
-#line 709 "macro.y"
+#line 715 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 286:
-#line 710 "macro.y"
+#line 716 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 287:
-#line 711 "macro.y"
+#line 717 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 288:
-#line 712 "macro.y"
+#line 718 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 289:
-#line 713 "macro.y"
+#line 719 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr); ;}
     break;
 
   case 290:
-#line 716 "macro.y"
+#line 722 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlus( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 291:
-#line 717 "macro.y"
+#line 723 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinus( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 292:
-#line 718 "macro.y"
+#line 724 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMult( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 293:
-#line 719 "macro.y"
+#line 725 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDiv( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 294:
-#line 720 "macro.y"
+#line 726 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMod( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 295:
-#line 721 "macro.y"
+#line 727 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPower( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 296:
-#line 724 "macro.y"
+#line 730 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewAnd( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 297:
-#line 725 "macro.y"
+#line 731 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewOr( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 298:
-#line 728 "macro.y"
+#line 734 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEQ( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 299:
-#line 729 "macro.y"
+#line 735 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLT( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 300:
-#line 730 "macro.y"
+#line 736 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGT( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 301:
-#line 731 "macro.y"
+#line 737 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 302:
-#line 732 "macro.y"
+#line 738 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 303:
-#line 733 "macro.y"
+#line 739 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 304:
-#line 734 "macro.y"
+#line 740 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 305:
-#line 735 "macro.y"
+#line 741 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewIN( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 306:
-#line 736 "macro.y"
+#line 742 "macro.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEqual( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 307:
-#line 739 "macro.y"
+#line 745 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (2)].asExpr); ;}
     break;
 
   case 308:
-#line 745 "macro.y"
+#line 751 "macro.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(0) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 309:
-#line 746 "macro.y"
+#line 752 "macro.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 310:
-#line 747 "macro.y"
+#line 753 "macro.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 311:
-#line 750 "macro.y"
+#line 756 "macro.y"
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 312:
-#line 751 "macro.y"
+#line 757 "macro.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 313:
-#line 755 "macro.y"
+#line 761 "macro.y"
     { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); ;}
     break;
 
   case 314:
-#line 757 "macro.y"
+#line 763 "macro.y"
     { (yyval.asExpr) = (yyvsp[(3) - (7)].asExpr); ;}
     break;
 
   case 315:
-#line 759 "macro.y"
+#line 765 "macro.y"
     { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); ;}
     break;
 
   case 316:
-#line 762 "macro.y"
+#line 768 "macro.y"
     { (yyval.asExpr) = (yyvsp[(3) - (7)].asExpr); ;}
     break;
 
   case 317:
-#line 767 "macro.y"
+#line 773 "macro.y"
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-2) - (1)].asExpr), (yyvsp[(1) - (1)].asExpr) ); ;}
     break;
 
   case 318:
-#line 768 "macro.y"
+#line 774 "macro.y"
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-2) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 319:
-#line 774 "macro.y"
+#line 780 "macro.y"
     { (yyval.asExpr) = NULL; ;}
     break;
 
   case 320:
-#line 777 "macro.y"
+#line 783 "macro.y"
     { (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[(0) - (1)].asExpr), (yyvsp[(1) - (1)].string), ' ', HB_COMP_PARAM ); ;}
     break;
 
   case 321:
-#line 778 "macro.y"
+#line 784 "macro.y"
     { (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[(0) - (3)].asExpr), (yyvsp[(3) - (3)].string), ' ', HB_COMP_PARAM ); HB_MACRO_CHECK( (yyval.asExpr) ); ;}
     break;
 
   case 322:
-#line 781 "macro.y"
+#line 787 "macro.y"
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 323:
-#line 782 "macro.y"
+#line 788 "macro.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 324:
-#line 785 "macro.y"
+#line 791 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (2)].asExpr); ;}
     break;
 
   case 325:
-#line 788 "macro.y"
+#line 794 "macro.y"
     { (yyval.asExpr) = (yyvsp[(1) - (2)].asExpr); ;}
     break;
 
   case 326:
-#line 792 "macro.y"
+#line 798 "macro.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[(3) - (6)].asExpr), HB_COMP_PARAM ), (yyvsp[(5) - (6)].asExpr) ); ;}
     break;
 
   case 327:
-#line 794 "macro.y"
+#line 800 "macro.y"
     { (yyval.asExpr) = hb_compExprNewIIF( hb_compExprAddListExpr( (yyvsp[(7) - (9)].asExpr), (yyvsp[(8) - (9)].asExpr) ), HB_COMP_PARAM ); ;}
     break;
 
   case 328:
-#line 797 "macro.y"
+#line 803 "macro.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[(3) - (6)].asExpr), HB_COMP_PARAM ), (yyvsp[(5) - (6)].asExpr) ); ;}
     break;
 
   case 329:
-#line 799 "macro.y"
+#line 805 "macro.y"
     { (yyval.asExpr) = hb_compExprNewIIF( hb_compExprAddListExpr( (yyvsp[(7) - (9)].asExpr), (yyvsp[(8) - (9)].asExpr) ), HB_COMP_PARAM ); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 3902 "macroy.c"
+#line 3907 "macroy.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -4112,7 +4117,7 @@ yyreturn:
 }
 
 
-#line 802 "macro.y"
+#line 808 "macro.y"
 
 
 #ifdef __WATCOMC__
@@ -4304,7 +4309,8 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          return NUM_DATE;
 
       case HB_PP_TOKEN_STRING:
-         yylval_ptr->string = pToken->value;
+         yylval_ptr->valChar.string = pToken->value;
+         yylval_ptr->valChar.length = pToken->len;
          return LITERAL;
 
       case HB_PP_TOKEN_LOGICAL:

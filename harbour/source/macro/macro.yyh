@@ -129,6 +129,11 @@ typedef union YYSTYPE
    HB_EXPR_PTR asExpr;
    struct
    {
+      char *   string;
+      int      length;
+   } valChar;
+   struct
+   {
       int      iNumber; /* to hold a number returned by lex */
    } valInteger;
    struct
@@ -144,7 +149,7 @@ typedef union YYSTYPE
    } valDouble;
 }
 /* Line 1529 of yacc.c.  */
-#line 148 "macroy.h"
+#line 153 "macroy.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

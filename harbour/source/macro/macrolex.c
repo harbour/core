@@ -131,18 +131,55 @@ static int hb_lexStringCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
                              PHB_MACRO_LEX pLex, char cDelim )
 {
    pLex->quote = FALSE;
-   yylval_ptr->string = pLex->pDst;
+   yylval_ptr->valChar.string = pLex->pDst;
    while( pLex->ulSrc < pLex->ulLen )
    {
       char ch = pLex->pString[ pLex->ulSrc++ ];
       if( ch == cDelim )
       {
+         yylval_ptr->valChar.length = pLex->pDst - yylval_ptr->valChar.string;
          *pLex->pDst++ = '\0';
          return LITERAL;
       }
       *pLex->pDst++ = ch;
    }
+   yylval_ptr->valChar.length = pLex->pDst - yylval_ptr->valChar.string;
    *pLex->pDst++ = '\0';
+   hb_macroError( EG_SYNTAX, pMacro );
+   return LITERAL;
+}
+
+static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
+                                PHB_MACRO_LEX pLex )
+{
+   ULONG ulLen;
+   pLex->quote = FALSE;
+   yylval_ptr->valChar.string = pLex->pDst;
+   while( pLex->ulSrc < pLex->ulLen )
+   {
+      char ch = pLex->pString[ pLex->ulSrc++ ];
+      if( ch == '\\' )
+      {
+         if( pLex->ulSrc < pLex->ulLen )
+         {
+            *pLex->pDst++ = ch;
+            ch = pLex->pString[ pLex->ulSrc++ ];
+         }
+      }
+      else if( ch == '"' )
+      {
+         ulLen = pLex->pDst - yylval_ptr->valChar.string;
+         *pLex->pDst++ = '\0';
+         hb_strRemEscSeq( yylval_ptr->valChar.string, &ulLen );
+         yylval_ptr->valChar.length = ( int ) ulLen;
+         return LITERAL;
+      }
+      *pLex->pDst++ = ch;
+   }
+   ulLen = pLex->pDst - yylval_ptr->valChar.string;
+   *pLex->pDst++ = '\0';
+   hb_strRemEscSeq( yylval_ptr->valChar.string, &ulLen );
+   yylval_ptr->valChar.length = ( int ) ulLen;
    hb_macroError( EG_SYNTAX, pMacro );
    return LITERAL;
 }
@@ -550,7 +587,17 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   return MACROTEXT;
                }
                *pLex->pDst++ = '\0';
-               if( pLex->pDst - yylval_ptr->string == 3 )
+               if( pLex->pDst - yylval_ptr->string == 2 )
+               {
+                  if( yylval_ptr->string[ 0 ] == 'E' &&
+                      pLex->ulLen > pLex->ulSrc &&
+                      pLex->pString[ pLex->ulSrc ] == '"' )
+                  {
+                     pLex->ulSrc++;
+                     return hb_lexStringExtCopy( yylval_ptr, pMacro, pLex );
+                  }
+               }
+               else if( pLex->pDst - yylval_ptr->string == 3 )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'F' )

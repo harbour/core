@@ -67,5 +67,88 @@ HB_FUNC( HB_VALTOSTR )
       hb_retclen( buffer, ulLen );
 }
 
+HB_FUNC( HB_STRTOEXP )
+{
+   char * pszString = hb_parc( 1 );
+   if( pszString )
+   {
+      ULONG ulLen = hb_parclen( 1 ), ulRet, ul;
+      int iType = 0, iQ = 0;
+      char ch, * pDst, * pszResult;
+
+      for( ul = 0; ul < ulLen; ++ul )
+      {
+         if( pszString[ ul ] == '"' )
+         {
+            ++iQ;
+            iType |= 1;
+         }
+         else if( pszString[ ul ] == '\\' )
+            ++iQ;
+         else if( pszString[ ul ] == '\'' )
+            iType |= 2;
+         else if( pszString[ ul ] == ']' )
+            iType |= 4;
+         else if( pszString[ ul ] == '\r' ||
+                  pszString[ ul ] == '\n' ||
+                  pszString[ ul ] == '\0' )
+         {
+            iType |= 7;
+            iQ += 3;
+         }
+      }
+      if( iType == 7 )
+      {
+         ulRet = ulLen + 3 + iQ;
+         pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );
+         *pDst++ = 'e';
+         *pDst++ = '"';
+         for( ul = 0; ul < ulLen; ++ul )
+         {
+            ch = pszString[ ul ];
+            if( ch == '"' )
+            {
+               *pDst++ = '\\';
+               *pDst++ = '"';
+            }
+            else if( ch == '\\' )
+            {
+               *pDst++ = '\\';
+               *pDst++ = '\\';
+            }
+            else if( ch == '\r' || ch == '\n' || ch == '\0' )
+            {
+               *pDst++ = '\\';
+               *pDst++ = '0';
+               *pDst++ = '0' + ( ch >> 3 );
+               *pDst++ = '0' + ( ch & 7 );
+            }
+            else
+               *pDst++ = ch;
+         }
+         *pDst++ = '"';
+      }
+      else
+      {
+         ulRet = ulLen + 2;
+         pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );
+         if( ( iType & 1 ) == 0 )
+            *pDst++ = ch = '"';
+         else if( ( iType & 2 ) == 0 )
+            *pDst++ = ch = '\'';
+         else
+         {
+            *pDst++ = '[';
+            ch = ']';
+         }
+         memcpy( pDst, pszString, ulLen );
+         pDst += ulLen;
+         *pDst++ = ch;
+      }
+      *pDst = '\0';
+      hb_retclen_buffer( pszResult, ulRet );
+   }
+}
+
 #endif
 
