@@ -101,8 +101,13 @@
 #if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) ) && !defined(__WATCOMC__)
 # if defined( HB_OS_LINUX )
 #  include <pty.h>  /* for openpty and forkpty */
-# elif defined( HB_OS_DARWIN )
+# elif defined( HB_OS_DARWIN ) || defined( __NetBSD__ ) || defined( __OpenBSD__ )
 #  include <util.h> /* for openpty and forkpty */
+#  if defined( __NetBSD__ )
+#   include <termcap.h>
+#   define tigetnum(id)       tgetnum(id)
+#   define tigetstr(id)       tgetstr(id,NULL)
+#  endif
 # elif defined( HB_OS_BSD )
 #  include <libutil.h> /* for openpty and forkpty */
 # endif

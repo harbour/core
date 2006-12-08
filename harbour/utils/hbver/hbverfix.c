@@ -78,7 +78,7 @@ static char * szIncrementNumber( char * szBuffer, size_t stSkipOver )
       char szIntBuf[ 8 ];
       size_t stStart = i;
       iVersion = atoi( &szBuffer[ stStart ] ) + 1;
-      sprintf( szIntBuf, "%-7d", iVersion );
+      snprintf( szIntBuf, sizeof( szIntBuf ), "%-7d", iVersion );
       for( i = 0; i < strlen( szIntBuf ); i++ )
       {
          szBuffer[ stStart + i ] = szIntBuf[ i ];
@@ -204,7 +204,7 @@ int main( int argc, char * argv[] )
       BOOL bFoundLog = FALSE;
       FILE * fhChangeLog;
 
-      sprintf( szErrBuf, "Opening %s", cszChangeLogName );
+      snprintf( szErrBuf, sizeof( szErrBuf ), "Opening %s", cszChangeLogName );
       fhChangeLog = fopen( cszChangeLogName, "rt" );
       if( fhChangeLog == NULL )
       {
@@ -220,7 +220,7 @@ int main( int argc, char * argv[] )
       }
       while( ! ( bFoundID && bFoundLog ) && ! feof( fhChangeLog ) )
       {
-         sprintf( szErrBuf, "Reading from %s", cszChangeLogName );
+         snprintf( szErrBuf, sizeof( szErrBuf ), "Reading from %s", cszChangeLogName );
          fgets( szInputBuffer, MAX_BUF_LEN, fhChangeLog );
          if( ferror( fhChangeLog ) )
          {
@@ -275,14 +275,14 @@ int main( int argc, char * argv[] )
          FILE * fhRewrite;
          FILE * fhVersion;
 
-         sprintf( szErrBuf, "Opening %s", cszVersionName );
+         snprintf( szErrBuf, sizeof( szErrBuf ), "Opening %s", cszVersionName );
          fhVersion = fopen( cszVersionName, "rt" );
          if( fhVersion == NULL )
          {
             perror( szErrBuf );
             return 9;
          }
-         sprintf( szErrBuf, "Creating %s", cszRewriteName );
+         snprintf( szErrBuf, sizeof( szErrBuf ), "Creating %s", cszRewriteName );
          fhRewrite = fopen( cszRewriteName, "wt" );
          if( fhRewrite == NULL )
          {
@@ -291,7 +291,7 @@ int main( int argc, char * argv[] )
          }
          while( ! feof( fhVersion ) )
          {
-            sprintf( szErrBuf, "Reading from %s", cszVersionName );
+            snprintf( szErrBuf, sizeof( szErrBuf ), "Reading from %s", cszVersionName );
             fgets( szInputBuffer, MAX_BUF_LEN, fhVersion );
             if( iDebugLevel > 0 ) fprintf( stderr, "\n==> %u <==> %s <==", ( unsigned ) strlen( szInputBuffer ), szInputBuffer );
             if( ferror( fhVersion ) )
@@ -327,7 +327,7 @@ int main( int argc, char * argv[] )
             }
             if( !feof( fhVersion ) )
             {
-               sprintf( szErrBuf, "Writing to %s", cszRewriteName );
+               snprintf( szErrBuf, sizeof( szErrBuf ), "Writing to %s", cszRewriteName );
                fputs( szInputBuffer, fhRewrite );
                if( ferror( fhRewrite ) )
                {
@@ -338,13 +338,13 @@ int main( int argc, char * argv[] )
          }
          fclose( fhVersion );
          fclose( fhRewrite );
-         sprintf( szErrBuf, "Deleting %s", cszVersionName );
+         snprintf( szErrBuf, sizeof( szErrBuf ), "Deleting %s", cszVersionName );
          if( remove( cszVersionName ) )
          {
             perror( szErrBuf );
             return 11;
          }
-         sprintf( szErrBuf, "Renaming %s to %s", cszRewriteName, cszVersionName );
+         snprintf( szErrBuf, sizeof( szErrBuf ), "Renaming %s to %s", cszRewriteName, cszVersionName );
          if( rename( cszRewriteName, cszVersionName ) )
          {
             perror( szErrBuf );

@@ -3439,11 +3439,11 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    HB_PUT_LE_UINT16( tagHeader.forExpLen, uiForLen + 1 );
    if ( uiKeyLen > 0 )
    {
-      strcpy( ( char * ) tagHeader.keyExpPool, pTag->KeyExpr );
+      memcpy( tagHeader.keyExpPool, pTag->KeyExpr, uiKeyLen + 1 );
    }
    if ( uiForLen > 0 )
    {
-      strcpy( ( char * ) tagHeader.keyExpPool + uiKeyLen + 1, pTag->ForExpr );
+      memcpy( tagHeader.keyExpPool + uiKeyLen + 1, pTag->ForExpr, uiForLen + 1 );
    }
    hb_cdxIndexPageWrite( pTag->pIndex, pTag->TagBlock, (BYTE *) &tagHeader, sizeof( CDXTAGHEADER ) );
 }
@@ -7427,7 +7427,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
    else
    {
-      strcpy( szTagName, szCpndTagName );
+      hb_strncpy( szTagName, szCpndTagName, CDX_MAXTAGNAMELEN );
       fNewFile = TRUE;
    }
 

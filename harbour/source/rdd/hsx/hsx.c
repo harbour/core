@@ -1961,7 +1961,7 @@ HB_FUNC( HS_VERSION )
    pszHBVersion = hb_verHarbour();
    iLen = strlen( szVer ) + strlen( pszHBVersion ) + 2;
    pszVersion = ( char * ) hb_xgrab( iLen + 1 );
-   sprintf( pszVersion, "%s: %s", szVer, pszHBVersion );
+   snprintf( pszVersion, iLen + 1, "%s: %s", szVer, pszHBVersion );
    hb_retclen_buffer( pszVersion, iLen );
    hb_xfree( pszHBVersion );
 }

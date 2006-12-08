@@ -246,16 +246,16 @@ BOOL hb_pp_ParsePragma( char * szLine )
             }
          }
 
+         iSize = strlen( (char*) sBuffer );
          if( pInline->pCode == NULL )
          {
-            pInline->pCode = (BYTE *) hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-            strcpy( (char*) pInline->pCode, (char*) sBuffer );
+            pInline->pCode = (BYTE *) hb_xgrab( iSize + 1 );
          }
          else
          {
-            pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
-            strcpy( (char *) (pInline->pCode + pInline->lPCodeSize), (char*) sBuffer );
+            pInline->pCode = (BYTE *) hb_xrealloc( pInline->pCode, pInline->lPCodeSize + iSize + 1 );
          }
+         memcpy( pInline->pCode + pInline->lPCodeSize, sBuffer, iSize + 1 );
          pInline->lPCodeSize += iSize;
 
          goto DigestInline;

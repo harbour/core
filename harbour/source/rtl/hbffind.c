@@ -635,36 +635,36 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          dirname[ 0 ] = '\0';
          info->pattern[ 0 ] = '\0';
          
-/*         strcpy( string, pszFileName ); */
-         strcpy( string, ffind->pszFileMask ); 
+         /* hb_strncpy( string, pszFileName, sizeof( string ) - 1 ); */
+         hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 ); 
          pos = strrchr( string, OS_PATH_DELIMITER );
          if( pos )
          {
-            strcpy( info->pattern, pos + 1 );
+            hb_strncpy( info->pattern, pos + 1, sizeof( info->pattern ) - 1 );
             *( pos + 1 ) = '\0';
-            strcpy( dirname, string );
+            hb_strncpy( dirname, string, sizeof( dirname ) - 1 );
          }
          else
          {
-            strcpy( info->pattern, string );
-            strcpy( dirname, ".X" );
+            hb_strncpy( info->pattern, string, sizeof( info->pattern ) - 1 );
+            hb_strncpy( dirname, ".X", sizeof( dirname ) - 1 );
             dirname[ 1 ] = OS_PATH_DELIMITER;
          }
          
          if( info->pattern[ 0 ] == '\0' )
-            strcpy( info->pattern, "*" );
+            hb_strncpy( info->pattern, "*", sizeof( info->pattern ) - 1 );
 
          tzset();
 
          info->dir = opendir( dirname );
-         strcpy( info->path, dirname );
+         hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
       }
 
       if( info->dir != NULL)
       {
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
-            strcpy( string, info->entry->d_name );
+            hb_strncpy( string, info->entry->d_name, sizeof( string ) - 1 );
       
 #if defined( __WATCOMC__ )
             if( hb_strMatchWild( string, info->pattern ) )
@@ -684,8 +684,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          struct stat sStat;
 
-         strcpy( dirname, info->path );
-         strcat( dirname, info->entry->d_name );
+         hb_strncpy( dirname, info->path, sizeof( dirname ) - 1 );
+         hb_strncat( dirname, info->entry->d_name, sizeof( dirname ) - 1 );
          if( stat( dirname, &sStat ) != 0 )
             printf("\n%s (%i)", dirname, errno );
 
@@ -749,7 +749,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
       ffind->szDate[ 8 ] = '\0';
       
-      sprintf( ffind->szTime, "%02d:%02d:%02d", nHour, nMin, nSec );
+      snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
    }
 
    return bFound;

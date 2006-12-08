@@ -151,7 +151,7 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
    if ( pszTempDir != NULL && *pszTempDir != '\0' )
    {
       bOk = TRUE;
-      strcpy( ( char * ) pszName, ( char * ) pszTempDir );
+      hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, _POSIX_PATH_MAX );
       if ( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER || hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
       {
          /* check to see if temp directory already upper or lower. If not use current directory ( "." ) */
@@ -187,12 +187,12 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 
       if( pszDir != NULL && pszDir[0] != '\0' )
       {
-         strcpy( ( char * ) pszName, ( char * ) pszDir );
+         hb_strncpy( ( char * ) pszName, ( char * ) pszDir, _POSIX_PATH_MAX );
       }
       else if( !fsGetTempDirByCase( pszName, getenv( "TMPDIR" ) ) &&
                !fsGetTempDirByCase( pszName, P_tmpdir ) )
       {
-         strcpy( ( char * ) pszName, "." );
+         hb_strncpy( ( char * ) pszName, ".", _POSIX_PATH_MAX );
       }
       if( pszName[0] != '\0' )
       {
@@ -204,7 +204,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 
       if ( pszPrefix != NULL )
       {
-         strcat( ( char * ) pszName, ( char * ) pszPrefix );
+         hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, _POSIX_PATH_MAX );
       }
 
       iLen = strlen( ( char * ) pszName );
@@ -234,7 +234,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 #if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
       else
       {
-         strcat( ( char * ) pszName, "XXXXXX" );
+         hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
          fd = (FHANDLE) mkstemp( ( char * ) pszName );
          hb_fsSetIOError( fd != (FHANDLE) -1, 0 );
       }

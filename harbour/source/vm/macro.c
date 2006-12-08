@@ -1187,11 +1187,7 @@ void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compGenMessageData(%s)", szMsg));
 
-   szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
-
-   strcpy( szResult, "_" );
-   strcat( szResult, szMsg );
-
+   szResult = hb_xstrcpy( NULL, "_", szMsg, NULL );
    hb_compGenMessage( szResult, bIsObject, HB_COMP_PARAM );
    hb_xfree( szResult );
 }

@@ -125,6 +125,8 @@ mk_hbtools()
         if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
             HB_CRS_LIB="curses"
+        elif [ -n "${HB_CURSES_VER}" ]; then
+            HB_CRS_LIB="${HB_CURSES_VER}"
         elif [ "${HB_NCURSES_194}" = "yes" ]; then
             HB_CRS_LIB="ncur194"
         else

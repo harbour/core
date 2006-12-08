@@ -92,8 +92,7 @@ char * hb_getenv( const char * szName )
 
       if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
       {
-         pszBuffer = ( char * ) hb_xgrab( strlen( EnvValue ) + 1 );
-         strcpy( pszBuffer, ( char * ) EnvValue );
+         pszBuffer = hb_strdup( EnvValue );
       }
    }
 
@@ -104,8 +103,7 @@ char * hb_getenv( const char * szName )
 
       if( pszTemp != NULL )
       {
-         pszBuffer = ( char * ) hb_xgrab( strlen( pszTemp ) + 1 );
-         strcpy( pszBuffer, pszTemp );
+         pszBuffer = hb_strdup( pszTemp );
       }
    }
 

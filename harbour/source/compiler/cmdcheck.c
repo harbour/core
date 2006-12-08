@@ -488,20 +488,24 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
             case 'x':
             case 'X':
             {
-               unsigned int i = 0;
-               char *szPrefix = hb_strdup( s + 1 );
-
-               while( i < strlen( szPrefix ) && !HB_ISOPTSEP( szPrefix[i] ) )
-                  i++;
-               szPrefix[i] = '\0';
-
-               if( strlen( szPrefix ) == 0 )
-                  sprintf( szPrefix, "%08lX_", PackDateTime() );
-
-               strncpy( HB_COMP_PARAM->szPrefix, szPrefix, 16 );
-               HB_COMP_PARAM->szPrefix[ 16 ] = '\0';
-               strcat( HB_COMP_PARAM->szPrefix, "_" );
-               hb_xfree( szPrefix );
+               unsigned int i = 1;
+               while( s[i] && !HB_ISOPTSEP( s[i] ) &&
+                      i < sizeof( HB_COMP_PARAM->szPrefix ) - 1 )
+               {
+                  ++i;
+               }
+               if( i > 1 )
+               {
+                  memcpy( HB_COMP_PARAM->szPrefix, s + 1, i - 1 );
+                  HB_COMP_PARAM->szPrefix[ i - 1 ] = '_';
+                  HB_COMP_PARAM->szPrefix[ i ] = '\0';
+               }
+               else
+               {
+                  snprintf( HB_COMP_PARAM->szPrefix,
+                            sizeof( HB_COMP_PARAM->szPrefix ),
+                            "%08lX_", PackDateTime() );
+               }
                break;
             }
 

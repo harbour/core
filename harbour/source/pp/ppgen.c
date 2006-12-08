@@ -142,13 +142,13 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, char * szName )
       ++iRule;
       if( pRule->pMatch )
       {
-         sprintf( szMatch, "s_%cm%03d", szName[0], iRule );
+         snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
          hb_pp_writeTokenList( fout, pRule->pMatch, szMatch );
       }
 
       if( pRule->pResult )
       {
-         sprintf( szResult, "s_%cr%03d", szName[0], iRule );
+         snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
          hb_pp_writeTokenList( fout, pRule->pResult, szResult );
       }
       pRule = pRule->pPrev;
@@ -163,13 +163,13 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, char * szName )
    {
       ++iRule;
       if( pRule->pMatch )
-         sprintf( szMatch, "s_%cm%03d", szName[0], iRule );
+         snprintf( szMatch, sizeof( szMatch ), "s_%cm%03d", szName[0], iRule );
       else
-         strcpy( szMatch, "NULL   " );
+         strncpy( szMatch, "NULL   ", sizeof( szResult ) );
       if( pRule->pResult )
-         sprintf( szResult, "s_%cr%03d", szName[0], iRule );
+         snprintf( szResult, sizeof( szResult ), "s_%cr%03d", szName[0], iRule );
       else
-         strcpy( szResult, "NULL   " );
+         strncpy( szResult, "NULL   ", sizeof( szResult ) );
 
       ulRepeatBits = 0;
       for( u = 0, ulBit = 1; u < pRule->markers; ++u, ulBit <<= 1 )

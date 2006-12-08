@@ -313,6 +313,10 @@ int isatty( int handle )
 #define HB_MEMINFO_SIGNATURE  0xDEADBEAF
 #define HB_MEMSTR_BLOCK_MAX   256
 
+#ifndef HB_MEMFILER
+#  define HB_MEMFILER  0xff
+#endif
+
 typedef struct _HB_MEMINFO
 {
    struct _HB_MEMINFO * pPrevBlock;
@@ -363,6 +367,9 @@ void * hb_xgrab( ULONG ulSize )        /* allocates fixed memory, exits on failu
       if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
          s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
       pMem = ( BYTE * ) pMem + HB_MEMINFO_SIZE;
+#ifdef HB_PARANOID_MEM_CHECK
+      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
+#endif
    }
    else
 #else
@@ -539,13 +546,13 @@ void hb_xexit( void )
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      sprintf( szBuffer, "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
+      snprintf( szBuffer, sizeof( szBuffer ), "Total memory allocated: %lu bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
       hb_conOutErr( szBuffer, 0 );
 
       if( s_ulMemoryBlocks )
       {
          hb_conOutErr( hb_conNewLine(), 0 );
-         sprintf( szBuffer, "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
+         snprintf( szBuffer, sizeof( szBuffer ), "WARNING! Memory allocated but not released: %lu bytes (%lu blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
          hb_conOutErr( szBuffer, 0 );
       }
 
@@ -582,11 +589,11 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
    hb_conOutErr( hb_conNewLine(), 0 );
-   sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
+   snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
    hb_conOutErr( buffer, 0 );
    if( szText )
    {
-      sprintf( buffer, szText, szPar1, szPar2 );
+      snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
       hb_conOutErr( buffer, 0 );
    }
    hb_conOutErr( hb_conNewLine(), 0 );
@@ -3408,7 +3415,7 @@ void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined function 
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
             {
                char szFun[ 256 ];
-               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
             }
 
@@ -3421,7 +3428,7 @@ void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined function 
             if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
             {
                char szFun[ 256 ];
-               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               snprintf( szFun, sizeof( szFun ), "%s(%i)", pFunc->szName, pVar->iDeclLine );
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
             }
 
@@ -4528,7 +4535,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );
                HB_COMP_PARAM->pInitFunc->iStaticsBase = HB_COMP_PARAM->iStaticCnt;
                /* Update pseudo function name */
-               sprintf( szNewName, "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
+               snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
                HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
 
                pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, NULL, HB_SYM_FUNCNAME );

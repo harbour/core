@@ -119,7 +119,7 @@ char * hb_verPlatform( void )
       regs.h.ah = 0x30;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      sprintf( pszPlatform, "DOS %d.%02d", regs.h.al, regs.h.ah );
+      snprintf( pszPlatform, 256, "DOS %d.%02d", regs.h.al, regs.h.ah );
 
       /* Host OS detection: Windows 2.x, 3.x, 95/98 */
 
@@ -132,11 +132,11 @@ char * hb_verPlatform( void )
             char szHost[ 128 ];
 
             if( regs.h.al == 0x01 || regs.h.al == 0xFF )
-               sprintf( szHost, " (Windows 2.x)" );
+               snprintf( szHost, sizeof( szHost ), " (Windows 2.x)" );
             else
-               sprintf( szHost, " (Windows %d.%02d)", regs.h.al, regs.h.ah );
+               snprintf( szHost, sizeof( szHost ), " (Windows %d.%02d)", regs.h.al, regs.h.ah );
 
-            strcat( pszPlatform, szHost );
+            hb_strncat( pszPlatform, szHost, 255 );
          }
       }
 
@@ -147,7 +147,7 @@ char * hb_verPlatform( void )
          HB_DOS_INT86( 0x21, &regs, &regs );
 
          if( regs.HB_XREGS.bx == 0x3205 )
-            strcat( pszPlatform, " (Windows NT/2000)" );
+            hb_strncat( pszPlatform, " (Windows NT/2000)", 255 );
       }
 
       /* Host OS detection: OS/2 */
@@ -161,11 +161,11 @@ char * hb_verPlatform( void )
             char szHost[ 128 ];
 
             if( regs.h.al == 20 && regs.h.ah > 20 )
-               sprintf( szHost, " (OS/2 %d.%02d)", regs.h.ah / 10, regs.h.ah % 10 );
+               snprintf( szHost, sizeof( szHost ), " (OS/2 %d.%02d)", regs.h.ah / 10, regs.h.ah % 10 );
             else
-               sprintf( szHost, " (OS/2 %d.%02d)", regs.h.al / 10, regs.h.ah );
+               snprintf( szHost, sizeof( szHost ), " (OS/2 %d.%02d)", regs.h.al / 10, regs.h.ah );
 
-            strcat( pszPlatform, szHost );
+            hb_strncat( pszPlatform, szHost, 255 );
          }
       }
    }
@@ -183,16 +183,16 @@ char * hb_verPlatform( void )
          /* is this OS/2 2.x ? */
          if( aulQSV[ QSV_VERSION_MINOR - 1 ] < 30 )
          {
-            sprintf( pszPlatform, "OS/2 %ld.%02ld",
-               aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
-               aulQSV[ QSV_VERSION_MINOR - 1 ] );
+            snprintf( pszPlatform, 256, "OS/2 %ld.%02ld",
+                      aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
+                      aulQSV[ QSV_VERSION_MINOR - 1 ] );
          }
          else
-            sprintf( pszPlatform, "OS/2 %2.2f",
-               ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
+            snprintf( pszPlatform, 256, "OS/2 %2.2f",
+                      ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
       }
       else
-         sprintf( pszPlatform, "OS/2" );
+         snprintf( pszPlatform, 256, "OS/2" );
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -239,11 +239,11 @@ char * hb_verPlatform( void )
                break;
          }
 
-         sprintf( pszPlatform, "%s %lu.%lu.%04d",
-            pszName,
-            ( ULONG ) osVer.dwMajorVersion,
-            ( ULONG ) osVer.dwMinorVersion,
-            ( USHORT ) LOWORD( osVer.dwBuildNumber ) );
+         snprintf( pszPlatform, 256, "%s %lu.%lu.%04d",
+                   pszName,
+                   ( ULONG ) osVer.dwMajorVersion,
+                   ( ULONG ) osVer.dwMinorVersion,
+                   ( USHORT ) LOWORD( osVer.dwBuildNumber ) );
 
          /* Add service pack/other info */
 
@@ -256,13 +256,13 @@ char * hb_verPlatform( void )
 
             if( osVer.szCSDVersion[ i ] != '\0' )
             {
-               strcat( pszPlatform, " " );
-               strcat( pszPlatform, osVer.szCSDVersion + i );
+               hb_strncat( pszPlatform, " ", 255 );
+               hb_strncat( pszPlatform, osVer.szCSDVersion + i, 255 );
             }
          }
       }
       else
-         sprintf( pszPlatform, "Windows" );
+         snprintf( pszPlatform, 256, "Windows" );
    }
 
 #elif defined(HB_OS_UNIX)
@@ -271,19 +271,19 @@ char * hb_verPlatform( void )
       struct utsname un;
 
       uname( &un );
-      sprintf( pszPlatform, "%s %s %s", un.sysname, un.release, un.machine );
+      snprintf( pszPlatform, 256, "%s %s %s", un.sysname, un.release, un.machine );
    }
 
 #elif defined(HB_OS_MAC)
 
    {
-      strcpy( pszPlatform, "MacOS compatible" );
+      hb_strncpy( pszPlatform, "MacOS compatible", 255 );
    }
 
 #else
 
    {
-      strcpy( pszPlatform, "(unknown)" );
+      hb_strncpy( pszPlatform, "(unknown)", 255 );
    }
 
 #endif
@@ -291,16 +291,23 @@ char * hb_verPlatform( void )
    return pszPlatform;
 }
 
-HB_EXPORT BOOL hb_iswinnt(void)
+HB_EXPORT BOOL hb_iswinnt( void )
 {
 #if defined(HB_OS_WIN_32)
+   static BOOL s_fWinNT = FALSE;
+   static BOOL s_fInited = FALSE;
 
-  OSVERSIONINFO osvi ;
-  osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-  GetVersionEx (&osvi);
-  return(osvi.dwPlatformId == VER_PLATFORM_WIN32_NT); /* && osvi.dwMajorVersion >= 4); */
+   if( ! s_fInited )
+   {
+      OSVERSIONINFO osvi ;
+      osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+      GetVersionEx (&osvi);
+      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
+      s_fInited = TRUE;
+   }
+   return s_fWinNT;
 #else
-  return FALSE ;
+   return FALSE ;
 #endif
 }
 
@@ -374,7 +381,7 @@ char * hb_verCompiler( void )
    #endif
 
    #if defined(__cplusplus)
-      strcpy( szSub, "++" );
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
    iVerMajor = _MSC_VER / 100;
@@ -426,7 +433,7 @@ char * hb_verCompiler( void )
    #endif
 
    #if defined(__cplusplus)
-      strcpy( szSub, "++" );
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
    iVerMajor = __WATCOMC__ / 100;
@@ -457,7 +464,7 @@ char * hb_verCompiler( void )
    #endif
 
    #if defined(__cplusplus)
-      strcpy( szSub, "++" );
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
    #endif
 
    iVerMajor = __GNUC__;
@@ -477,28 +484,28 @@ char * hb_verCompiler( void )
    if( pszName )
    {
       if( iVerPatch != 0 )
-         sprintf( pszCompiler, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
+         snprintf( pszCompiler, 80, "%s%s %hd.%hd.%hd", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
       else if( iVerMajor != 0 || iVerMinor != 0 )
-         sprintf( pszCompiler, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
+         snprintf( pszCompiler, 80, "%s%s %hd.%hd", pszName, szSub, iVerMajor, iVerMinor );
       else
-         sprintf( pszCompiler, "%s%s", pszName, szSub );
+         snprintf( pszCompiler, 80, "%s%s", pszName, szSub );
    }
    else
-      strcpy( pszCompiler, "(unknown)" );
+      hb_strncpy( pszCompiler, "(unknown)", 79 );
 
 #if defined(__DJGPP__)
 
-   sprintf( szSub, " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
-   strcat( pszCompiler, szSub );
+   snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );
+   hb_strncat( pszCompiler, szSub, 79 );
 
 #elif defined(__BORLANDC__) || defined(__WATCOMC__) || defined(__GNUC__)
 
    #if defined( HB_ARCH_16BIT )
-      strcat( pszCompiler, " (16 bit)" );
+      hb_strncat( pszCompiler, " (16 bit)", 79 );
    #elif defined( HB_ARCH_32BIT )
-      strcat( pszCompiler, " (32 bit)" );
+      hb_strncat( pszCompiler, " (32 bit)", 79 );
    #elif defined( HB_ARCH_64BIT )
-      strcat( pszCompiler, " (64 bit)" );
+      hb_strncat( pszCompiler, " (64 bit)", 79 );
    #endif
 
 #endif
@@ -516,8 +523,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
 
-   sprintf( pszVersion, "Harbour Alpha build %d.%d Intl.",
-            HB_VER_MINOR, HB_VER_REVISION );
+   snprintf( pszVersion, 80, "Harbour Alpha build %d.%d Intl.",
+             HB_VER_MINOR, HB_VER_REVISION );
 
    return pszVersion;
 }

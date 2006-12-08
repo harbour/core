@@ -35,21 +35,21 @@ static char * hb_searchpath( const char *, char *, char * );
 #define HB_CFG_FILENAME    "harbour.cfg"
 
 /* QUESTION: Allocate buffer dynamically ? */
-#define HB_CFG_LINE_LEN    100
+#define HB_CFG_LINE_LEN    ( _POSIX_PATH_MAX )
 
 /*--------------------------------------------------------------------------*/
 
 /* Builds platform dependant object module from Harbour C output */
 void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-   char szFileName[ _POSIX_PATH_MAX ];
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
    char szLine[ HB_CFG_LINE_LEN ];
-   char szCompiler[ HB_CFG_LINE_LEN ] = "";
-   char szOptions[ HB_CFG_LINE_LEN ] = "";
-   char szCommandLine[ HB_CFG_LINE_LEN * 2 ];
-   char szOutPath[ _POSIX_PATH_MAX ] = "\0";
+   char szCompiler[ HB_CFG_LINE_LEN + 1 ] = "";
+   char szOptions[ HB_CFG_LINE_LEN + 1 ] = "";
+   char szCommandLine[ HB_CFG_LINE_LEN * 2 + 1 ];
+   char szOutPath[ _POSIX_PATH_MAX + 1 ] = "\0";
 #if defined( HOST_OS_UNIX_COMPATIBLE )
-   char szDefaultUnixPath[ _POSIX_PATH_MAX ] = "/etc:/usr/local/etc";
+   char szDefaultUnixPath[ _POSIX_PATH_MAX + 1 ] = "/etc:/usr/local/etc";
    char * pszEnv = szDefaultUnixPath;
    #define HB_NULL_STR " > /dev/null"
    #define HB_ACCESS_FLAG F_OK
@@ -80,7 +80,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Set up things  */
 
    /* Grab space */
-   pszCfg = ( char * ) hb_xgrab( /*strlen( pszEnv )*/ _POSIX_PATH_MAX );
+   pszCfg = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
    if( pszEnv && pszEnv[ 0 ] != '\0' && *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg ) )
    {
@@ -128,12 +128,12 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
                      /* Checks compiler name */
                      if( ! hb_stricmp( szStr, "CC" ) )
                      {
-                        sprintf( szCompiler, "%s", szToken );
+                        snprintf( szCompiler, sizeof( szCompiler ), "%s", szToken );
                      }
                      /* Checks optional switches */
                      else if( ! hb_stricmp( szStr, "CFLAGS" ) )
                      {
-                        sprintf( szOptions, "%s", szToken );
+                        snprintf( szOptions, sizeof( szCompiler ), "%s", szToken );
                      }
                      /* Wanna see C compiler output ? */
                      else if( ! hb_stricmp( szStr, "VERBOSE" ) )
@@ -186,21 +186,21 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       hb_fsFNameMerge( pszTemp, pOut );
 
 #if defined(_MSC_VER)
-      strcat( szOutPath, "-Fo" );
+      hb_strncat( szOutPath, "-Fo", sizeof( szOutPath ) - 1 );
 #elif defined(__WATCOMC__)
-      strcat( szOutPath, "-fo=" );      
+      hb_strncat( szOutPath, "-fo=", sizeof( szOutPath ) - 1 );      
 #else
-      strcat( szOutPath, "-o" );
+      hb_strncat( szOutPath, "-o", sizeof( szOutPath ) - 1 );
 #endif
 
-      strcat( szOutPath, pszTemp );
+      hb_strncat( szOutPath, pszTemp, sizeof( szOutPath ) - 1 );
 
       hb_xfree( pOut );
    }
 
    if( *szCompiler )
    {
-      sprintf( szCommandLine, "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
+      snprintf( szCommandLine, sizeof( szCommandLine ), "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
       
       if( bVerbose )
       {
@@ -208,7 +208,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       }
       else
       {
-         strcat( szCommandLine, HB_NULL_STR );
+         hb_strncat( szCommandLine, HB_NULL_STR, sizeof( szCommandLine ) );
       }
 
       /* Compile it! */
@@ -245,7 +245,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
    /* Check current dir first  */
    if( access( ( const char * ) pszFile, HB_ACCESS_FLAG ) == 0 )
    {
-      sprintf( pszCfg, "%s", pszFile );
+      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
       return ( char * ) pszFile;
    }
    else
@@ -256,7 +256,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
       {
          while( pszPath )
          {
-            sprintf( pszCfg, "%s%c%s", pszPath, OS_PATH_DELIMITER, pszFile );
+            snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, OS_PATH_DELIMITER, pszFile );
             if( access( ( const char * ) pszCfg, HB_ACCESS_FLAG ) == 0 )
             {
                bFound = TRUE;
@@ -270,7 +270,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
 
    /* If not found, make sure to return a NULL string */
    if( ! bFound )
-      sprintf( pszCfg, "%s", "" );
+      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", "" );
 
    return ( char * ) pszCfg;
 }

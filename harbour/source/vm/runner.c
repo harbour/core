@@ -72,7 +72,6 @@
 #include "hb_io.h"
 
 /* TODO: Fill the error codes with valid ones (instead of 9999) */
-/* TOFIX: Fix the memory leak on error. */
 
 typedef struct
 {

@@ -70,9 +70,9 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
       if( pArrayItem )
       {
          ULONG ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
-         char * szBuff = ( char * ) hb_xgrab( ulLen );
+         char * szBuff = ( char * ) hb_xgrab( ulLen + 1 );
 
-         sprintf( szBuff, "[%s]", pItem->item.asSymbol.value->szName );
+         snprintf( szBuff, ulLen + 1, "[%s]", pItem->item.asSymbol.value->szName );
          hb_itemPutCPtr( pArrayItem, szBuff, ulLen );
       }
    }

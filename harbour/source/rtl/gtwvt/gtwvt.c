@@ -153,7 +153,7 @@ static void hb_gt_wvt_InitStatics( void )
    _s.fontWidth        = 10;
    _s.fontWeight       = FW_NORMAL;
    _s.fontQuality      = DEFAULT_QUALITY;
-   strcpy( _s.fontFace,"Courier New" );
+   hb_strncpy( _s.fontFace, "Courier New", sizeof( _s.fontFace ) - 1 );
 
    _s.CentreWindow     = TRUE;            /* Default is to always display window in centre of screen */
    _s.CodePage         = OEM_CHARSET;     /* GetACP(); - set code page to default system */
@@ -201,7 +201,7 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth ;
 
-      strcpy( logfont.lfFaceName,pszFace );
+      hb_strncpy( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &logfont );
    }

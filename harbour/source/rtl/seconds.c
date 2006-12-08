@@ -130,16 +130,8 @@ HB_FUNC( HB_CLOCKS2SECS )
 HB_EXPORT double hb_secondsCPU( int n )
 {
    double d = 0.0;
-
 #if defined( HB_OS_WIN_32 )
    FILETIME Create, Exit, Kernel, User;
-   static BOOL s_fInit = FALSE, s_fWinNT = FALSE;
-
-   if( !s_fInit )
-   {
-      s_fInit = TRUE ;
-      s_fWinNT = hb_iswinnt() ;
-   }
 #endif
 
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
@@ -172,7 +164,7 @@ HB_EXPORT double hb_secondsCPU( int n )
    if( n > 10 )
       n -= 10;
 #if defined( HB_OS_WIN_32 )
-   if( s_fWinNT &&
+   if( hb_iswinnt() &&
        GetProcessTimes( GetCurrentProcess(), &Create, &Exit, &Kernel, &User ) )
    {
       if( n & 1 )

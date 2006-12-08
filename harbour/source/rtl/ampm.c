@@ -57,11 +57,14 @@ HB_FUNC( AMPM )
    char * pszTime = hb_parc( 1 );
    ULONG  ulTimeLen = hb_parclen( 1 );
    char * pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
-   USHORT uiHour = ( USHORT ) hb_strVal( pszTime, ulTimeLen );
+   USHORT uiHour = 0;
    BOOL   bAM;
 
-   memset( pszResult, '\0', 3 );
-   memcpy( pszResult, pszTime, ulTimeLen );
+   if( ulTimeLen )
+   {
+      memcpy( pszResult, pszTime, ulTimeLen );
+      uiHour = ( USHORT ) hb_strVal( pszTime, ulTimeLen );
+   }
 
    if( uiHour == 0 || uiHour == 24 )
    {
@@ -89,7 +92,7 @@ HB_FUNC( AMPM )
    else
       bAM = ( uiHour != 12 );
 
-   strcpy( pszResult + ulTimeLen, bAM ? " am" : " pm" );
+   memcpy( pszResult + ulTimeLen, bAM ? " am" : " pm", 4 );
 
    hb_retclen_buffer( pszResult, ulTimeLen + 3 );
 }

@@ -66,7 +66,7 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
   char szFileName[ _POSIX_PATH_MAX ];
   FILE * hObjFile;  /* file handle for OBJ output */
-  char compiler[ 70 ], * szVer;
+  char * szVer;
 
   if( ! pFileName->szExtension )
     pFileName->szExtension = ".obj";
@@ -84,12 +84,10 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
     fflush( stdout );
   }
 
-  szVer = hb_verHarbour();
-  sprintf( compiler, "%s\n", szVer );
-  hb_xfree( szVer );
-
   CompiledFileName( hObjFile, szFileName );
-  CompilerVersion( hObjFile, compiler );
+  szVer = hb_verHarbour();
+  CompilerVersion( hObjFile, szVer );
+  hb_xfree( szVer );
   GenerateLocalNames( hObjFile );
   GenerateExternals( HB_COMP_PARAM, hObjFile );
   GenerateCodeSegment( HB_COMP_PARAM, hObjFile );

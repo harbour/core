@@ -748,7 +748,6 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
               pRight->value.asString.string, pRight->ulLength );
       pLeft->ulLength += pRight->ulLength;
       pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
-      hb_compExprFree( pRight, HB_COMP_PARAM );
    }
    else
    {
@@ -760,9 +759,8 @@ HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight,
       szString[ pLeft->ulLength ] = '\0';
       pLeft->value.asString.string = szString;
       pLeft->value.asString.dealloc = TRUE;
-      hb_compExprFree( pRight, HB_COMP_PARAM );
    }
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );  /* to suppress BCC warning */
+   hb_compExprFree( pRight, HB_COMP_PARAM );
    return pLeft;
 }
 

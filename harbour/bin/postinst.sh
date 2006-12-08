@@ -48,7 +48,9 @@ then
         AR="${CCPREFIX}ar -crs"
     fi
     if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
-        install -m 755 -f "${HB_BIN_INSTALL}" "${hb_root}/bin/hb-mkslib.sh"
+        rm -f "${HB_BIN_INSTALL}/hb-mkslib"
+        cp "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib" && \
+        chmod 755 "${HB_BIN_INSTALL}/hb-mkslib"
     elif [ "${HB_ARCHITECTURE}" != "dos" ]; then
         # Without -c some OSes _move_ the file instead of copying it!
         install -c -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"

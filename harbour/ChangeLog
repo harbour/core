@@ -8,6 +8,114 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-08 05:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/postinst.sh
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/watcom.cf
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/include/hbapifs.h
+  * harbour/include/hbexprc.c
+  * harbour/include/hbsetup.h
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbdate.c
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+  * harbour/source/common/hbverdsp.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/fixflex.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbfunchk.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rtl/accept.c
+  * harbour/source/rtl/ampm.c
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/defpath.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/fkmax.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/langapi.c
+  * harbour/source/rtl/seconds.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/rtl/gtcrs/chrmap.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/runner.c
+  * harbour/utils/hbmake/hbmlang.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+  * harbour/utils/hbver/hbverfix.c
+    * general code cleanup: all strcpy() and strcat() replaced hb strn*()
+      and hb_strn*(), sprintf() by snprintf(), etc.
+      It fixed some possible buffer overflow but it's also possible that
+      it will exploit some some hidden so far problems but I strongly
+      prefer to know about them ASAP to fix them before final 1.0 release.
+    ! fixed bug I introduce in codeblock falgs which disabled early macro
+      evaluation in codeblocks.
+    ! added missing protection against execution by bison destructor for
+      used CBSTART token on syntax error.
+    % use PP stringify logik added for FLEX support to remove all redundant
+      spaces in stringified for early macro evaluation codeblocks and add
+      spaces between operators if after preprocessing they were removed.
+      Now we are supporting also some code which cannot be compiled by
+      Clipper.
+    % cleaned and improved the speed of printer redirecting in console code.
+      Chen please check if CG still reports problems and if not ubdate
+      TODO/TOFIX or inform me about them.
+    * some cleanups in building process for different *nixes: MacOSX, SunOS,
+      *BSD, etc.
+    * removed not longer necessary (I hope) compiler flag to force default
+      'char' type as signed. Now Harbour should work with signed and unsigned
+      char without any problems. To other developers: please remember that
+      when you are using 'char' as 8 bytes signed integer then it's a bug.
+      Always explicitly use: 'signed char' in such case. On some platforms
+      it's not possible to set default type for 'char' so if you hardcode
+      that 'char' is signed or unsigned somewhere then code will not be
+      portable. Chen if you will find a while to also rebuild Harbour with
+      BCC and -K switch to make some tests with CG then I'll be thankful.
+
 2006-12-04 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/macro/macro.y
   * harbour/source/macro/macro.yyc

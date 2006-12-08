@@ -145,11 +145,11 @@ BOOL hb_compFunCallCheck( HB_COMP_DECL, char * szFuncCall, int iArgs )
          char szMsg[ 40 ];
 
          if( f[ iPos ].iMaxParam == -1 )
-            sprintf( szMsg, "\nPassed: %i, expected: at least %i", iArgs, f[ iPos ].iMinParam );
+            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: at least %i", iArgs, f[ iPos ].iMinParam );
          else if( f[ iPos ].iMinParam == f[ iPos ].iMaxParam )
-            sprintf( szMsg, "\nPassed: %i, expected: %i", iArgs, f[ iPos ].iMinParam );
+            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i", iArgs, f[ iPos ].iMinParam );
          else
-            sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
+            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
 
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
          return FALSE;

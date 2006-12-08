@@ -21,7 +21,7 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 # We are under linux
-CFLAGS = -DHB_OS_LINUX -Wall -W -fsigned-char
+CFLAGS = -DHB_OS_LINUX -Wall -W
 
 # uncomment this if you want to force relocateable code for .so libs
 # it's necessary on some platforms but can reduce performance

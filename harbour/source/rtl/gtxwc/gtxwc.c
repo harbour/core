@@ -456,7 +456,7 @@ static int s_errorHandler( Display *dpy, XErrorEvent *e )
 {
    char errorText[1024];
 
-   sprintf( errorText, "%s", "Xlib error: " );
+   snprintf( errorText, sizeof( errorText ), "%s", "Xlib error: " );
    XGetErrorText( dpy, e->error_code,
                   errorText + strlen( errorText ),
                   sizeof(errorText) - strlen( errorText ) );

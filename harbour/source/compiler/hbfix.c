@@ -201,8 +201,8 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
          char sTemp[16];
          char sTemp2[16];
 
-         sprintf( sTemp, "%i", pFunc->wParamCount );
-         sprintf( sTemp2, "%i", iVar );
+         snprintf( sTemp, sizeof( sTemp ), "%i", pFunc->wParamCount );
+         snprintf( sTemp2, sizeof( sTemp2 ), "%i", iVar );
          hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
@@ -230,8 +230,8 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
          char sTemp[16];
          char sTemp2[16];
 
-         sprintf( sTemp, "%i", pFunc->wParamCount );
-         sprintf( sTemp2, "%i", iVar );
+         snprintf( sTemp, sizeof( sTemp ), "%i", pFunc->wParamCount );
+         snprintf( sTemp2, sizeof( sTemp2 ), "%i", iVar );
          hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }
@@ -258,8 +258,8 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
          char sTemp[16];
          char sTemp2[16];
 
-         sprintf( sTemp, "%i", pFunc->wParamCount );
-         sprintf( sTemp2, "%i", uiVar );
+         snprintf( sTemp, sizeof( sTemp ), "%i", pFunc->wParamCount );
+         snprintf( sTemp2, sizeof( sTemp2 ), "%i", uiVar );
          hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, sTemp2, sTemp );
       }
    }

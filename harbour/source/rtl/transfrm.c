@@ -395,6 +395,7 @@ HB_FUNC( TRANSFORM )
          int      iWidth;                             /* Width of string          */
          int      iDec;                               /* Number of decimals       */
          ULONG    i;
+         ULONG    ulBufSize;
          int      iCount = 0;
 
          char *   szStr;
@@ -423,7 +424,8 @@ HB_FUNC( TRANSFORM )
          }
 
          /* TODO: maybe replace this 16 with something else */
-         szResult = ( char * ) hb_xgrab( ulPicLen + (ULONG) iOrigWidth + (ULONG) iOrigDec + 16 );   /* Grab enough */
+         ulBufSize = ulPicLen + (ULONG) iOrigWidth + (ULONG) iOrigDec + 16;
+         szResult = ( char * ) hb_xgrab( ulBufSize );   /* Grab enough */
          *szResult = '\0';
 
          for( i = 0; i < ulPicLen && !bFound; i++ )      /* Count number in front    */
@@ -570,8 +572,8 @@ HB_FUNC( TRANSFORM )
                }
             else
             {
-               strcpy( szResult, szStr );
-               i = strlen( szStr );
+               hb_strncpy( szResult, szStr, ulBufSize - 1 );
+               i = strlen( szResult );
             }
 
             if( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) )

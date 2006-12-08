@@ -395,7 +395,7 @@ void hb_pp_Init( void )
       char *szPlatform = hb_verPlatform(  );
       int n;
 
-      strcpy( sOS, "__PLATFORM__" );
+      hb_strncpy( sOS, "__PLATFORM__", sizeof( sOS ) - 1 );
 
       pSrc = szPlatform;
       n = strlen( sOS );
@@ -424,7 +424,7 @@ void hb_pp_Init( void )
 
       hb_pp_AddDefine_( sOS, sVer );
 #ifdef HB_OS_UNIX
-      strcpy( &sOS[12], "UNIX" );
+      hb_strncpy( &sOS[12], "UNIX", sizeof( sOS ) - 13 );
       hb_pp_AddDefine_( sOS, sVer );
 #endif
       hb_xfree( szPlatform );
@@ -441,7 +441,7 @@ void hb_pp_Init( void )
          The check below is to ensure that __HARBOUR__ gets the
          value of 1 by default
        */
-      sprintf( szResult, "%05d", ( usHarbour ? usHarbour : 1 ) );
+      snprintf( szResult, sizeof( szResult ), "%05d", ( usHarbour ? usHarbour : 1 ) );
       hb_pp_AddDefine_( "__HARBOUR__", szResult );
    }
 
@@ -453,17 +453,17 @@ void hb_pp_Init( void )
       time( &t );
       oTime = localtime( &t );
 
-      sprintf( szResult, "\"%04d%02d%02d\"", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      snprintf( szResult, sizeof( szResult ), "\"%04d%02d%02d\"", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
       hb_pp_AddDefine_( "__DATE__", szResult );
 
-      sprintf( szResult, "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      snprintf( szResult, sizeof( szResult ), "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
       hb_pp_AddDefine_( "__TIME__", szResult );
    }
 
    {
       char szResult[11];
 
-      sprintf( szResult, "%d", ( int ) sizeof( void * ) );
+      snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
       hb_pp_AddDefine_( "__ARCH16BIT__", szResult );
 #elif defined( HB_ARCH_32BIT )
@@ -658,7 +658,7 @@ int hb_pp_ParseDefine_( char *sLine )
                   cParams[iParLen] = '\0';
                }
                cParams[iParLen] = '\001';
-               strcpy( cParams + iParLen + 1, pars );
+               memcpy( cParams + iParLen + 1, pars, iLen + 1 );
                iParLen += iLen + 1;
                npars++;
                HB_SKIPTABSPACES( sLine );
@@ -1461,7 +1461,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine, BOOL bSplitLines )
          {
             int bIgnore;
 
-            strcpy( rpatt, ptri );
+            hb_strncpy( rpatt, ptri, PATTERN_SIZE - 1 );
             bIgnore = hb_pp_ParseDirective_( rpatt );
 
             if( ipos > 0 )

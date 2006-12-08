@@ -460,11 +460,13 @@ void hb_stackBaseProcInfo( char * szProcName, USHORT * puiProcLine )
 {
    /*
     * This function is called by FM module and has to be ready for execution
-    * before stack initialization, [druzus];
+    * before hb_stack initialization, [druzus]
+    * szProcName should be at least HB_SYMBOL_NAME_LEN + 1 bytes buffer
     */
    if( hb_stack.pPos > hb_stack.pBase )
    {
-      strcpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName );
+      hb_strncpy( szProcName, ( * hb_stack.pBase )->item.asSymbol.value->szName,
+                  HB_SYMBOL_NAME_LEN );
       * puiProcLine = ( * hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo;
    }
    else
@@ -562,13 +564,13 @@ void hb_stackDispCall( void )
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
       if( HB_IS_OBJECT( *( pBase + 1 ) ) )
-         sprintf( buffer, HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
-            ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
+         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
+                   ( *pBase )->item.asSymbol.value->szName,
+                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
       else
-         sprintf( buffer, HB_I_("Called from %s(%i)"),
-            ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
+         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s(%i)"),
+                   ( *pBase )->item.asSymbol.value->szName,
+                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
 
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
@@ -621,15 +623,15 @@ LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionI
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
       if( HB_IS_OBJECT( *( pBase + 1 ) ) )
-         sprintf( buffer, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
-            ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
+         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
+                   ( *pBase )->item.asSymbol.value->szName,
+                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
       else
-         sprintf( buffer, HB_I_("Called from %s(%i)\n"),
-            ( *pBase )->item.asSymbol.value->szName,
-            ( *pBase )->item.asSymbol.stackstate->uiLineNo );
+         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s(%i)\n"),
+                   ( *pBase )->item.asSymbol.value->szName,
+                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
 
-      strcat( msg, buffer );
+      hb_strncat( msg, buffer, sizeof( msg ) - 1 );
 
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
    }

@@ -321,26 +321,38 @@ HB_FUNC( QOUT )
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
       USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
-      USHORT uiCount;
+      BYTE buf[ 80 ];
 
       s_uiPRow++;
-
-      uiCount = s_uiPCol = hb_set.HB_SET_MARGIN;
-      while( uiCount-- > 0 )
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
-
+      s_uiPCol = hb_set.HB_SET_MARGIN;
+      if( s_uiPCol )
+      {
+         if( s_uiPCol > sizeof( buf ) )
+         {
+            BYTE * pBuf = ( BYTE * ) hb_xgrab( s_uiPCol );
+            memset( pBuf, ' ', s_uiPCol );
+            hb_fsWrite( hb_set.hb_set_printhan, pBuf, s_uiPCol );
+            hb_xfree( pBuf );
+         }
+         else
+         {
+            memset( buf, ' ', s_uiPCol );
+            hb_fsWrite( hb_set.hb_set_printhan, buf, s_uiPCol );
+         }
+      }
       hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
-   HB_FUNCNAME( QQOUT )();
+   HB_FUNC_EXEC( QQOUT );
 }
 
 HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
-   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan != FS_ERROR )
+   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
+      static const BYTE byEop[ 2 ] = { 0x0C, 0x0D };
       USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
-      hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
+      hb_fsWrite( hb_set.hb_set_printhan, byEop, 2 );
       hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
@@ -366,42 +378,64 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       USHORT uiPRow = ( USHORT ) iRow;
       USHORT uiPCol = ( USHORT ) iCol + hb_set.HB_SET_MARGIN;
 
-      if( s_uiPRow != uiPRow )
+      if( s_uiPRow != uiPRow || s_uiPCol != uiPCol )
       {
-         if( ++s_uiPRow > uiPRow )
+         USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
+         BYTE buf[ 256 ];
+         int iPtr = 0;
+
+         if( s_uiPRow != uiPRow )
          {
-            hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
-            s_uiPRow = 0;
+            if( ++s_uiPRow > uiPRow )
+            {
+               memcpy( &buf[ iPtr ], "\x0C\x0D", 2 );
+               iPtr += 2;
+               s_uiPRow = 0;
+            }
+            else
+            {
+               memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
+               iPtr += s_iCrLfLen;
+            }
+
+            while( s_uiPRow < uiPRow )
+            {
+               if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
+               {
+                  hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
+                  iPtr = 0;
+               }
+               memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
+               iPtr += s_iCrLfLen;
+               ++s_uiPRow;
+            }
+            s_uiPCol = 0;
          }
-         else
+         else if( s_uiPCol > uiPCol )
          {
-            hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, s_iCrLfLen );
+            buf[ iPtr++ ] = '\x0D';
+            s_uiPCol = 0;
          }
 
-         while( s_uiPRow < uiPRow )
+         while( s_uiPCol < uiPCol )
          {
-            hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, s_iCrLfLen );
-            ++s_uiPRow;
+            if( iPtr == ( int ) sizeof( buf ) )
+            {
+               hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
+               iPtr = 0;
+            }
+            buf[ iPtr++ ] = ' ';
+            ++s_uiPCol;
          }
-         s_uiPCol = 0;
-      }
-      else if( s_uiPCol > uiPCol )
-      {
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0D", 1 );
-         s_uiPCol = 0;
-      }
 
-      while( s_uiPCol < uiPCol )
-      {
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
-         ++s_uiPCol;
-      }
+         if( iPtr )
+            hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
 
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
+         hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
+      }
    }
    else
       hb_gtSetPos( iRow, iCol );

@@ -1527,7 +1527,7 @@ ERRCODE hb_waError( AREAP pArea, PHB_ITEM pError )
    if( pArea && pArea->lprfsHost->sysName )
       SELF_SYSNAME( pArea, ( BYTE * ) szRddName );
    else
-      strcpy( szRddName, "???DRIVER" );
+      strncpy( szRddName, "???DRIVER", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
    hb_errPutSeverity( pError, ES_ERROR );
    hb_errPutSubSystem( pError, szRddName );
    hb_xfree( szRddName );

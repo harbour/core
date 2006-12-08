@@ -350,7 +350,7 @@ static char * hb_rddDefaultDrv( char * szDriver )
       {
          return NULL;
       }
-      strcpy( s_szDefDriver, szNewDriver );
+      hb_strncpy( s_szDefDriver, szNewDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
    }
    else if( !fInit && !s_szDefDriver[ 0 ] && s_uiRddMax )
    {
@@ -361,7 +361,7 @@ static char * hb_rddDefaultDrv( char * szDriver )
       {
          if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
          {
-            strcpy( s_szDefDriver, szDrvTable[ i ] );
+            hb_strncpy( s_szDefDriver, szDrvTable[ i ], HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
             break;
          }
       }
@@ -378,7 +378,7 @@ HB_EXPORT int hb_rddRegister( char * szDriver, USHORT uiType )
 {
    LPRDDNODE pRddNewNode;
    PHB_DYNS pGetFuncTable;
-   char * szGetFuncTable;
+   char szGetFuncTable[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 14 ];
    USHORT uiFunctions;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddRegister(%s, %hu)", szDriver, uiType));
@@ -388,11 +388,9 @@ HB_EXPORT int hb_rddRegister( char * szDriver, USHORT uiType )
       return 1;
    }
 
-   szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
-   strcpy( szGetFuncTable, szDriver );
-   strcat( szGetFuncTable, "_GETFUNCTABLE" );
+   snprintf( szGetFuncTable, sizeof( szGetFuncTable ), "%s_GETFUNCTABLE",
+             szDriver );
    pGetFuncTable = hb_dynsymFindName( szGetFuncTable );
-   hb_xfree( szGetFuncTable );
    if( !pGetFuncTable )
    {
       return 2;              /* Not valid RDD */
@@ -4675,7 +4673,7 @@ HB_EXPORT ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
 
    for( i = 1 ; i < 1000 ; i++ )
    {
-      sprintf( szAliasTmp, "__HBTMP%03i", i);
+      snprintf( szAliasTmp, 11, "__HBTMP%03i", i);
 
       if( hb_rddGetAliasNumber( szAliasTmp, &iArea ) != SUCCESS )
       {

@@ -6700,7 +6700,7 @@ yyreduce:
 
   case 528:
 #line 1122 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewCodeBlock( (yyvsp[(1) - (1)].asCodeblock).string, (yyvsp[(1) - (1)].asCodeblock).length, (yyvsp[(1) - (1)].asCodeblock).flags, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewCodeBlock( (yyvsp[(1) - (1)].asCodeblock).string, (yyvsp[(1) - (1)].asCodeblock).length, (yyvsp[(1) - (1)].asCodeblock).flags, HB_COMP_PARAM ); (yyvsp[(1) - (1)].asCodeblock).string = NULL; ;}
     break;
 
   case 529:

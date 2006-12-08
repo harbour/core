@@ -14,7 +14,7 @@ CC_IN = -c
 CC_OUT = -o 
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-CFLAGS = -DHB_OS_SUNOS -Wall -W -fsigned-char
+CFLAGS = -DHB_OS_SUNOS -Wall -W
 
 # uncomment this if you want to farce relocateable code for .so libs
 # it's necessary on some platforms but can reduce performance

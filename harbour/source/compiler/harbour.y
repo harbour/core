@@ -1119,7 +1119,7 @@ ElemList   : EmptyExpression              { $$ = hb_compExprNewList( $1, HB_COMP
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockNoVar
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
-           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); } BlockVarList
+           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockVarList
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
            ;
 

@@ -15,9 +15,8 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 
-# important: -j is necessary for proper build
 #CPPFLAGS = -j -w3 -d1 -5s -5r -fp5 -oehtz -s -zq -zt0 -bt=linux
-CPPFLAGS = -j -w2 -d1 -zq -bt=linux
+CPPFLAGS = -w2 -d1 -zq -bt=linux
 
 #architecture flags
 CPPFLAGS += -5 -fp5

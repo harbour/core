@@ -1870,7 +1870,7 @@ static void setDispTrans( InOutBase * ioBase, char *src, char *dst, int box )
       ioBase->std_chmap[i] |= ch;
       ioBase->box_chmap[i] |= ch;
 
-      if ( ( unsigned int ) i != ( ch & A_CHARTEXT ) &&
+      if ( i != ( int ) ( ch & A_CHARTEXT ) &&
            ( ioBase->std_chmap[i] & A_ALTCHARSET ) == 0 )
       {
          if ( ioBase->out_transtbl == NULL )

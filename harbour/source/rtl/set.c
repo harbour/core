@@ -388,14 +388,14 @@ HB_FUNC( __SETCENTURY )
          int format_len;
          if( y_start > 0 ) memcpy( szNewFormat, szDateFormat, y_start );
          szNewFormat[ y_start ] = '\0';
-         strcat( szNewFormat, "YY" );
-         if( hb_set.hb_set_century ) strcat( szNewFormat, "YY" );
+         hb_strncat( szNewFormat, "YY", size );
+         if( hb_set.hb_set_century ) hb_strncat( szNewFormat, "YY", size );
          format_len = strlen( szDateFormat );
-         if( y_stop < format_len ) strcat( szNewFormat, szDateFormat + y_stop );
-         hb_xfree( szDateFormat );
+         if( y_stop < format_len ) hb_strncat( szNewFormat, szDateFormat + y_stop, size );
          /* DATE FORMAT is under direct control of SET, so notify when it
             it is changed indirectly via __SETCENTURY() */
          hb_setListenerNotify( HB_SET_DATEFORMAT, HB_SET_LISTENER_BEFORE );
+         hb_xfree( szDateFormat );
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
          hb_setListenerNotify( HB_SET_DATEFORMAT, HB_SET_LISTENER_AFTER );
       }

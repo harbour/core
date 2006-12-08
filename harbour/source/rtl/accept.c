@@ -124,7 +124,7 @@ HB_FUNC( __ACCEPT )
    szAcceptResult[ ulLen ] = '\0';
 
 #ifdef HB_C52_UNDOC
-   strcpy( s_szAcceptResult, szAcceptResult );
+   hb_strncpy( s_szAcceptResult, szAcceptResult, sizeof( s_szAcceptResult ) - 1 );
 #endif
 
    hb_retc( szAcceptResult );

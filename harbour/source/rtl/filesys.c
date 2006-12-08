@@ -920,7 +920,7 @@ HB_EXPORT USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiRead;
 }
 
-HB_EXPORT USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+HB_EXPORT USHORT  hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
@@ -1051,7 +1051,7 @@ HB_EXPORT ULONG hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
    return ulRead;
 }
 
-HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
+HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWritten;
 
@@ -1085,7 +1085,7 @@ HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCoun
             ULONG ulLeftToWrite = ulCount;
             USHORT uiToWrite;
             USHORT uiWritten;
-            BYTE * pPtr = pBuff;
+            BYTE * pPtr = ( BYTE * ) pBuff;
 
             ulWritten = 0;
 
@@ -1232,56 +1232,47 @@ HB_EXPORT  BOOL hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
 
 #if defined(HB_WIN32_IO)
+   switch( uiMode & FL_MASK )
    {
-     static BOOL s_bInit = 0, s_bWinNt ;
-     if ( !s_bInit )
-     {
-        s_bInit = TRUE ;
-        s_bWinNt = hb_iswinnt() ;
+      case FL_LOCK:
+      {
+         if( hb_iswinnt() )
+         {
+            OVERLAPPED sOlap ;
+            DWORD dwFlags ;
+            memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
+            sOlap.Offset = ( ULONG ) ulStart ;
+            dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK ;
+            if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
+            {
+               dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
+            }
+            bResult = LockFileEx( DostoWinHandle( hFileHandle ), dwFlags, 0, ulLength, 0, &sOlap );
+         }
+         else
+         {
+             bResult = LockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
+         }
+         break;
+      }
+      case FL_UNLOCK:
+      {
+         if( hb_iswinnt() )
+         {
+            OVERLAPPED sOlap ;
+            memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
+            sOlap.Offset = ( ULONG ) ulStart ;
+            bResult = UnlockFileEx( DostoWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
+         }
+         else
+         {
+            bResult = UnlockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
+         }
+         break;
 
-     }
-     switch( uiMode & FL_MASK )
-     {
-        case FL_LOCK:
-        {
-           if ( s_bWinNt )
-           {
-              OVERLAPPED sOlap ;
-              DWORD dwFlags ;
-              memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
-              sOlap.Offset = ( ULONG ) ulStart ;
-              dwFlags = ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK ;
-              if ( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
-              {
-                 dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
-              }
-              bResult = LockFileEx( DostoWinHandle( hFileHandle ), dwFlags, 0, ulLength, 0, &sOlap );
-           }
-           else
-           {
-               bResult = LockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
-           }
-           break;
-        }
-        case FL_UNLOCK:
-        {
-           if ( s_bWinNt )
-           {
-              OVERLAPPED sOlap ;
-              memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
-              sOlap.Offset = ( ULONG ) ulStart ;
-              bResult = UnlockFileEx( DostoWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
-           }
-           else
-           {
-              bResult = UnlockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
-           }
-           break;
-
-        }
-        default:
-           bResult = FALSE;
-     }
+      }
+      default:
+         bResult = FALSE;
    }
    hb_fsSetIOError( bResult, 0 );
 #elif defined(HB_OS_OS2)
@@ -1437,24 +1428,16 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
             dwLengthLo = ( DWORD ) ( ulLength & 0xFFFFFFFF ),
             dwLengthHi = ( DWORD ) ( ulLength >> 32 );
 
-      static BOOL s_bInit = 0, s_bWinNt ;
-
-      if ( !s_bInit )
-      {
-         s_bInit = TRUE ;
-         s_bWinNt = hb_iswinnt() ;
-      }
-
       switch( uiMode & FL_MASK )
       {
          case FL_LOCK:
-            if ( s_bWinNt )
+            if( hb_iswinnt() )
             {
                OVERLAPPED sOlap ;
                DWORD dwFlags ;
 
                dwFlags = ( ( uiMode & FLX_SHARED ) ? 0 : LOCKFILE_EXCLUSIVE_LOCK );
-               if ( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
+               if( !s_fUseWaitLocks || !( uiMode & FLX_WAIT ) )
                {
                   dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
                }
@@ -1475,7 +1458,7 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
             break;
 
          case FL_UNLOCK:
-            if ( s_bWinNt )
+            if( hb_iswinnt() )
             {
                OVERLAPPED sOlap ;
 
@@ -1498,7 +1481,6 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
             bResult = FALSE;
       }
       hb_fsSetIOError( bResult, 0 );
-
    }
 #elif defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
    /*
@@ -2301,7 +2283,7 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    }
 
    if( uiExFlags & FXO_COPYNAME && hFile != FS_ERROR )
-      strcpy( ( char * ) pFilename, ( char * ) szPath );
+      hb_strncpy( ( char * ) pFilename, ( char * ) szPath, _POSIX_PATH_MAX );
 
    hb_xfree( szPath );
    return hFile;

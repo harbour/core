@@ -123,6 +123,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
     SYSLIBS="${SYSLIBS} -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32"
     ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \
+        rm -f "${DSTDIR}${FULLNAME}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"

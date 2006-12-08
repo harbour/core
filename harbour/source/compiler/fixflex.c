@@ -90,17 +90,17 @@ void fixup( char * inbuf, char * outbuf, int c_plus_plus )
    if( c_plus_plus )
    {
       /* If compiling for C++, the arrays need to be extern "C" in both modules */
-      static char tempbuf[ BUF_SIZE ];
-      strcpy( tempbuf, "extern \"C\" " );
-      strcpy( outbuf, tempbuf );
-      strcat( outbuf, inbuf + 7 );
-      strcat( tempbuf, inbuf + 7 );
-      strcpy( inbuf, tempbuf );
+      static char tempbuf[ BUF_SIZE + 1 ];
+      hb_strncpy( tempbuf, "extern \"C\" ", BUF_SIZE );
+      hb_strncpy( outbuf, tempbuf, BUF_SIZE );
+      hb_strncat( outbuf, inbuf + 7, BUF_SIZE );
+      hb_strncat( tempbuf, inbuf + 7, BUF_SIZE );
+      hb_strncpy( inbuf, tempbuf, BUF_SIZE );
    }
    else
    {
       /* if compiling for C, the arrays only need to be extern in lexyy.c */
-      strcpy( outbuf, inbuf + 7 );
+      hb_strncpy( outbuf, inbuf + 7, BUF_SIZE );
       memcpy( inbuf, "extern", 6 );
    }
    ptr = strchr( inbuf, '=' );
@@ -133,10 +133,10 @@ int main( int argc, char * argv [] )
          if( strcmp( argv[ i ], "-P-" ) == 0 ) c_plus_plus = 0;
       }      
       /* Rename source to backup. */
-      strcpy( backup, argv[ 1 ] );
+      hb_strncpy( backup, argv[ 1 ], sizeof( backup ) - 1 );
       len = strlen( backup );
       for( i = 1; i < 4; i++ ) if( backup[ len - i ] == '.' ) backup[ len - i ] = 0;
-      strcat( backup, ".bak" );
+      hb_strncat( backup, ".bak", sizeof( backup ) - 1 );
       if( rename( argv[ 1 ], backup ) )
       {
          rc = 10;
@@ -205,7 +205,7 @@ int main( int argc, char * argv [] )
                   else
                   {
                      char * ptr;
-                     strcpy( outbuf, inbuf );
+                     hb_strncpy( outbuf, inbuf, BUF_SIZE );
 
                      /* Check for stuff to copy or move to dest. */
                      if( check_count > 0 && !move1 && !move2 && !move3 && !copy )

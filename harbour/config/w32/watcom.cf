@@ -17,8 +17,7 @@ CC = wpp386
 CC_IN =
 CC_OUT = -fo=
 
-# important: -j is necessary for proper build
-CPPFLAGS = -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT
+CPPFLAGS = -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT
 CFLAGS := -i$(subst /,\,$(HB_INC_COMPILE)) -i.
 
 # work arround to DOS command line size limit

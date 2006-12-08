@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(TOP)include -I$(HB_INC_COMPILE)
-CFLAGS = -W -Wall -O2 -DHB_OS_OS2 -fsigned-char
+CFLAGS = -W -Wall -DHB_OS_OS2 -O2
 
 # 26/03/2004 - <maurilio.longo@libero.it>
 # added -DTCPV40HDRS to compile with GCC 3.2.2 on OS/2 v4.0 with mixed 16/32 bit tcp/ip stack

@@ -69,15 +69,15 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
 
    hb_conOutErr( hb_conNewLine(), 0 );
    if( fLang )
-      sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
+      snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
    else
-      sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
+      snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
 
    hb_conOutErr( buffer, 0 );
    if( szText )
-      sprintf( buffer, szText, szPar1, szPar2 );
+      snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
    else if( fLang )
-      sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
+      snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    else
       buffer[ 0 ] = '\0';
    hb_conOutErr( buffer, 0 );

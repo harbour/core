@@ -1892,7 +1892,21 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
             case 'C':
             case 'c':
             case '\0':
-               return HB_IT_STRING;
+               if( hb_strnicmp( hb_itemGetCPtr( pItem ), "code", 4 ) == 0 )
+                  return HB_IT_BLOCK;
+               else
+                  return HB_IT_STRING;
+
+            case 'S':
+            case 's':
+               if( hb_strnicmp( hb_itemGetCPtr( pItem ), "str", 3 ) == 0 )
+                  return HB_IT_STRING;
+               else
+                  return HB_IT_SYMBOL;
+
+            case 'B':
+            case 'b':
+               return HB_IT_BLOCK;
 
             case 'D':
             case 'd':
@@ -1914,20 +1928,9 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
             case 'a':
                return HB_IT_ARRAY;
 
-            case 'B':
-            case 'b':
-               return HB_IT_BLOCK;
-
             case 'P':
             case 'p':
                return HB_IT_POINTER;
-
-            case 'S':
-            case 's':
-               if( hb_strnicmp( hb_itemGetCPtr( pItem ), "str", 3 ) == 0 )
-                  return HB_IT_STRING;
-               else
-                  return HB_IT_SYMBOL;
          }
       }
       else if( HB_IS_ARRAY( pItem ) )
@@ -3503,12 +3506,12 @@ static HARBOUR hb___msgNoMethod( void )
 
    if( pSym->szName[ 0 ] == '_' )
    {
-      sprintf( szDesc, "Class: '%s' has no property", hb_objGetClsName( hb_stackSelfItem() ) );
+      snprintf( szDesc, sizeof( szDesc ), "Class: '%s' has no property", hb_objGetClsName( hb_stackSelfItem() ) );
       hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, szDesc, pSym->szName + 1, HB_ERR_ARGS_BASEPARAMS );
    }
    else
    {
-      sprintf( szDesc, "Class: '%s' has no exported method", hb_objGetClsName( hb_stackSelfItem() ) );
+      snprintf( szDesc, sizeof( szDesc ), "Class: '%s' has no exported method", hb_objGetClsName( hb_stackSelfItem() ) );
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, szDesc, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
    }
 #endif
@@ -3521,36 +3524,35 @@ static HARBOUR hb___msgNoMethod( void )
  */
 static HARBOUR hb___msgScopeErr( void )
 {
-   char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   char * pszProcName;
    PHB_ITEM pObject = hb_stackSelfItem();
    PMETHOD pMethod = s_pClasses[
       hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ].pMethods +
       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 
-   strcpy( szProcName, s_pClasses[
-                           pObject->item.asArray.value->uiClass ].szName );
-   strcat( szProcName, ":" );
-   strcat( szProcName, pMethod->pMessage->pSymbol->szName );
-
+   pszProcName = hb_xstrcpy( NULL,
+                     s_pClasses[ pObject->item.asArray.value->uiClass ].szName,
+                     ":", pMethod->pMessage->pSymbol->szName, NULL );
    if( pMethod->uiScope & HB_OO_CLSTP_HIDDEN )
-      hb_errRT_BASE( EG_NOMETHOD, 41, "Scope violation (hidden)", szProcName, 0 );
+      hb_errRT_BASE( EG_NOMETHOD, 41, "Scope violation (hidden)", pszProcName, 0 );
    else
-      hb_errRT_BASE( EG_NOMETHOD, 42, "Scope violation (protected)", szProcName, 0 );
+      hb_errRT_BASE( EG_NOMETHOD, 42, "Scope violation (protected)", pszProcName, 0 );
+   hb_xfree( pszProcName );
 }
 
 static HARBOUR hb___msgTypeErr( void )
 {
-   char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   char * pszProcName;
    PHB_ITEM pObject = hb_stackSelfItem();
    PMETHOD pMethod = s_pClasses[
       hb_stackBaseItem()->item.asSymbol.stackstate->uiClass ].pMethods +
       hb_stackBaseItem()->item.asSymbol.stackstate->uiMethod;
 
-   strcpy( szProcName, s_pClasses[
-                              pObject->item.asArray.value->uiClass ].szName );
-   strcat( szProcName, ":" );
-   strcat( szProcName, pMethod->pMessage->pSymbol->szName + 1 );
-   hb_errRT_BASE( EG_NOMETHOD, 44, "Assigned value is wrong class", szProcName, HB_ERR_ARGS_BASEPARAMS );
+   pszProcName = hb_xstrcpy( NULL,
+                     s_pClasses[ pObject->item.asArray.value->uiClass ].szName,
+                     ":", pMethod->pMessage->pSymbol->szName + 1, NULL );
+   hb_errRT_BASE( EG_NOMETHOD, 44, "Assigned value is wrong class", pszProcName, HB_ERR_ARGS_BASEPARAMS );
+   hb_xfree( pszProcName );
 }
 
 /*

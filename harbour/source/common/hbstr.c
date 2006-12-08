@@ -214,9 +214,9 @@ AJ: 2004-02-23
 Concatenates multiple strings into a single result.
 Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
 */
-HB_EXPORT char * hb_xstrcat ( char *szDest, const char *szSrc, ... )
+HB_EXPORT char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 {
-   char *szResult = szDest;
+   char * szResult = szDest;
    va_list va;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xstrcat(%p, %p, ...)", szDest, szSrc));
@@ -224,18 +224,17 @@ HB_EXPORT char * hb_xstrcat ( char *szDest, const char *szSrc, ... )
    while( *szDest )
       szDest++;
 
-   va_start(va, szSrc);
-
+   va_start( va, szSrc );
    while( szSrc )
    {
       while ( *szSrc )
          *szDest++ = *szSrc++;
-      szSrc = va_arg ( va, char* );
+      szSrc = va_arg( va, char * );
    }
-
    *szDest = '\0';
-   va_end ( va );
-   return ( szResult );
+   va_end( va );
+
+   return szResult;
 }
 
 /*
@@ -248,39 +247,39 @@ allocates a new buffer with the required length and returns that. The
 buffer is allocated using hb_xgrab(), and should eventually be freed
 using hb_xfree().
 */
-HB_EXPORT char * hb_xstrcpy ( char *szDest, const char *szSrc, ...)
+HB_EXPORT char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
 {
-   const char *szSrc_Ptr;
+   char * szResult;
    va_list va;
-   size_t dest_size;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xstrcpy(%p, %p, ...)", szDest, szSrc));
 
-   if (szDest == NULL)
+   if( szDest == NULL )
    {
-       va_start (va, szSrc);
-       szSrc_Ptr = szSrc;
-       dest_size = 1;
-       while (szSrc_Ptr)
-       {
-          dest_size += strlen (szSrc_Ptr);
-          szSrc_Ptr = va_arg (va, char *);
-       }
-       va_end (va);
-
-       szDest = (char *) hb_xgrab( dest_size );
+      const char * szSrcPtr = szSrc;
+      ULONG ulSize = 1;
+      va_start( va, szSrc );
+      while( szSrcPtr )
+      {
+         ulSize += strlen( szSrcPtr );
+         szSrcPtr = va_arg( va, char * );
+      }
+      va_end( va );
+      szDest = ( char * ) hb_xgrab( ulSize );
    }
+   szResult = szDest;
 
-   va_start (va, szSrc);
-   szSrc_Ptr  = szSrc;
-   szDest [0] = '\0';
-   while (szSrc_Ptr)
+   va_start( va, szSrc );
+   while( szSrc )
    {
-      hb_xstrcat (szDest, szSrc_Ptr, NULL );
-      szSrc_Ptr = va_arg (va, char *);
+      while ( *szSrc )
+         *szDest++ = *szSrc++;
+      szSrc = va_arg( va, char * );
    }
-   va_end (va);
-   return (szDest);
+   *szDest = '\0';
+   va_end( va );
+
+   return szResult;
 }
 
 static double hb_numPow10( int nPrecision )

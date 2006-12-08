@@ -279,7 +279,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
    {
       SYSTEMTIME st;
       GetLocalTime( &st );
-      sprintf( pszTime, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
+      snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
    }
 #else
    {
@@ -288,7 +288,7 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
 
       time( &t );
       oTime = localtime( &t );
-      sprintf( pszTime, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      snprintf( pszTime, 9, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
    }
 #endif
 }

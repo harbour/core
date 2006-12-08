@@ -19,7 +19,7 @@ CC_OUT = -o
 CPPFLAGS = -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)
 
 # -fno-common enables building .dylib files
-CFLAGS = -fno-common -fsigned-char -Wall -W
+CFLAGS = -fno-common -Wall -W
 
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
@@ -105,4 +105,5 @@ LIBTOOL = libtool
 LIBTOOLFLAGS = $(LIBTOOL_USR)
 AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $@ $(^F) || $(RM) $@
 RANLIB = ranlib
+
 include $(TOP)$(ROOT)config/rules.cf

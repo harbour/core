@@ -345,14 +345,34 @@
    #endif
 #endif
 
-#ifdef HB_OS_DARWIN
-   #if ! defined(HB_OS_BSD)
+#ifndef HB_OS_LINUX
+   #if defined(linux) || defined(__linux) || defined(__linux__)
+      #define HB_OS_LINUX
+   #endif
+#endif
+
+#ifndef HB_OS_SUNOS
+   #if defined(sun) || defined(__sun)
+      #define HB_OS_SUNOS
+   #endif
+#endif
+
+#ifndef HB_OS_HPUX
+   #if defined(__hpux)
+      #define HB_OS_HPUX
+   #endif
+#endif
+
+#ifndef HB_OS_BSD
+   #if defined( __FreeBSD__ ) || defined( __NetBSD__ ) || defined( __OpenBSD__ ) || \
+       defined( __APPLE__ ) || defined( HB_OS_DARWIN )
       #define HB_OS_BSD
    #endif
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || defined(HB_OS_BSD) || defined(HB_OS_SUNOS) || defined(HB_OS_HPUX)
+   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || \
+       defined(HB_OS_BSD) || defined(HB_OS_SUNOS) || defined(HB_OS_HPUX)
       #define HB_OS_UNIX
    #endif
 #endif

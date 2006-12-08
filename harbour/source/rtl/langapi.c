@@ -337,15 +337,18 @@ char * hb_langID( void )
 
 char * hb_langName( void )
 {
-   char * pszName = ( char * ) hb_xgrab( 128 );
+   char * pszName;
 
    if( s_lang )
-      sprintf( pszName, "Harbour Language: %s %s (%s)",
+   {
+      pszName = ( char * ) hb_xgrab( 128 );
+      snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
          ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
+   }
    else
-      strcpy( pszName, "Harbour Language: (not installed)" );
+      pszName = hb_strdup( "Harbour Language: (not installed)" );
 
    return pszName;
 }

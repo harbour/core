@@ -57,7 +57,7 @@
 
 HB_FUNC( DEFPATH )
 {
-   char buffer[ _POSIX_PATH_MAX +1 ];
+   char buffer[ _POSIX_PATH_MAX + 1 ];
    char delimiter[ 2 ] = ":";
    int size;
 
@@ -85,7 +85,7 @@ HB_FUNC( DEFPATH )
    {
       if( size > 1 || OS_PATH_LIST_SEPARATOR == ':' )
          delimiter[ 0 ] = OS_PATH_DELIMITER;
-      strcat( buffer, delimiter );
+      hb_strncat( buffer, delimiter, _POSIX_PATH_MAX );
    }
 
    hb_retc( buffer );

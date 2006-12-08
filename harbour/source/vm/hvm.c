@@ -5896,7 +5896,7 @@ HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymb
           uiPCodeVer < HB_PCODE_VER_MIN )  /* the module is compiled with olde compiler version */
       {
          char szPCode[ 10 ];
-         sprintf( szPCode, "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
+         snprintf( szPCode, sizeof( szPCode ), "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
 
          hb_errInternal( HB_EI_ERRUNRECOV, "Module '%s'\n"
                          "was compiled with unsupported PCODE version %s.\n"
@@ -6170,7 +6170,7 @@ void hb_vmRequestCancel( void )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       USHORT uiLine;
-      int i = 0;
+      int i = 0, l;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "Cancelled at: ", 0 );
@@ -6178,7 +6178,8 @@ void hb_vmRequestCancel( void )
 
       do
       {
-         sprintf( buffer + strlen( buffer ), " (%hu)", uiLine );
+         l = strlen( buffer );
+         snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)", uiLine );
 
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );

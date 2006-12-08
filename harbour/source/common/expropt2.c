@@ -1218,10 +1218,8 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       pExpr->ValType = HB_EV_STRING;
       if( pArg->value.asNum.NumType == HB_ET_LONG )
       {
-         BYTE bVal;
-         bVal = ( pArg->value.asNum.val.l % 256 );
-
-         if( bVal == 0 && pArg->value.asNum.val.l != 0 )
+         if( ( pArg->value.asNum.val.l & 0xff ) == 0 &&
+               pArg->value.asNum.val.l != 0 )
          {
             pExpr->value.asString.string = "";
             pExpr->value.asString.dealloc = FALSE;
@@ -1230,7 +1228,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          else
          {
             pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-            pExpr->value.asString.string[ 0 ] = bVal;
+            pExpr->value.asString.string[ 0 ] = ( char ) pArg->value.asNum.val.l;
             pExpr->value.asString.string[ 1 ] = '\0';
             pExpr->value.asString.dealloc = TRUE;
             pExpr->ulLength = 1;
@@ -1239,7 +1237,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       else
       {
          pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-         pExpr->value.asString.string[ 0 ] = ( ( unsigned int ) pArg->value.asNum.val.d % 256 );
+         pExpr->value.asString.string[ 0 ] = ( char ) ( ( unsigned int ) pArg->value.asNum.val.d & 0xff );
          pExpr->value.asString.string[ 1 ] = '\0';
          pExpr->value.asString.dealloc = TRUE;
          pExpr->ulLength = 1;

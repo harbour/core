@@ -255,7 +255,7 @@ void hb_verBuildInfo( void )
 
    {
       char buffer[ 64 ];
-      sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
+      snprintf( buffer, sizeof( buffer ), "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
    }

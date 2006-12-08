@@ -273,7 +273,7 @@ int hb_pp_Internal_( FILE * handl_o, char * sOut )
      if( hb_comp_files.iFiles == 1 )
         hb_pp_LastOutLine = hb_comp_iLine;
 
-     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
+     snprintf( ptrOut, HB_PP_STR_SIZE, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
 
      while( *ptrOut ) ptrOut++;
 
@@ -347,13 +347,14 @@ static void pp_ParseBuffer( PFILE pFile, int *plLine )
 
             if( *plLine )
             {
-               sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
+               snprintf( s_szLine, HB_PP_STR_SIZE, "#line %d \"%s\"\n", pFile->iLine, pFile->szFileName );
                *plLine = 0;
             }
             else
                *s_szLine = '\0';
 
-            sprintf( s_szLine + strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
+            snprintf( s_szLine + strlen(s_szLine), HB_PP_STR_SIZE - strlen(s_szLine),
+                      "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
             bCont = FALSE;
          }
          else if( bIgnore )
@@ -431,7 +432,7 @@ static void pp_TextBlockFinish( void )
    hb_pp_StreamBlock = 0;
    if( s_TextEndFunc )
    {
-      strcpy( s_szLine, s_TextEndFunc );
+      hb_strncpy( s_szLine, s_TextEndFunc, sizeof( s_szLine ) - 1 );
       hb_xfree( (void *)s_TextEndFunc );
       s_TextEndFunc = NULL;
    }
@@ -523,16 +524,16 @@ static void pp_StreamBlockFinish( void )
    s_szLine[ 0 ] = '\0';
    if( s_TextStartFunc )
    {
-      strcat( s_szLine, s_TextStartFunc );
+      hb_strncat( s_szLine, s_TextStartFunc, HB_PP_STR_SIZE - 1 );
       hb_xfree( (void *)s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
-   strcat( s_szLine, "[" );
-   strcat( s_szLine, s_szOutLine );
-   strcat( s_szLine, "]" );
+   hb_strncat( s_szLine, "[", HB_PP_STR_SIZE - 1 );
+   hb_strncat( s_szLine, s_szOutLine, HB_PP_STR_SIZE - 1 );
+   hb_strncat( s_szLine, "]", HB_PP_STR_SIZE - 1 );
    if( s_TextEndFunc )
    {
-      strcat( s_szLine, s_TextEndFunc );
+      hb_strncat( s_szLine, s_TextEndFunc, HB_PP_STR_SIZE - 1 );
       hb_xfree( (void *)s_TextEndFunc );
       s_TextEndFunc = NULL;
    }

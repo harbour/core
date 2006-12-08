@@ -616,7 +616,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       char szLine[ 12 ];
 
       pState->pFile->iLastDisp = iLine;
-      sprintf( szLine, "\r%i00\r", iLine );
+      snprintf( szLine, sizeof( szLine ), "\r%i00\r", iLine );
       hb_pp_disp( pState, szLine );
    }
 }
@@ -859,7 +859,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      if( pState->pInLineFunc )
                      {
                         char szFunc[ 24 ];
-                        sprintf( szFunc, "HB_INLINE_%03d", ++pState->iInLineCount );
+                        snprintf( szFunc, sizeof( szFunc ), "HB_INLINE_%03d", ++pState->iInLineCount );
                         if( pInLinePtr && * pInLinePtr )
                            hb_pp_tokenSetValue( *pInLinePtr, szFunc, strlen( szFunc ) );
                         pState->pInLineFunc( pState->cargo, szFunc, 
@@ -1092,7 +1092,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             char szCh[3];
 
             hb_pp_tokenAddNext( pState, pBuffer, ++ul, HB_PP_TOKEN_NUL );
-            sprintf( szCh, "%02x", ch & 0xff );
+            snprintf( szCh, sizeof( szCh ), "%02x", ch & 0xff );
             hb_pp_error( pState, 'E', HB_PP_ERR_ILLEGAL_CHAR, szCh );
          }
          else if( HB_PP_ISDIGIT( ch ) )
@@ -2145,7 +2145,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    {
       char szLine[ 12 ];
 
-      sprintf( szLine, "%d", pState->pFile->iCurrentLine );
+      snprintf( szLine, sizeof( szLine ), "%d", pState->pFile->iCurrentLine );
       hb_membufFlush( pState->pBuffer );
       hb_membufAddCh( pState->pBuffer, '(' );
       hb_membufAddStr( pState->pBuffer, szLine );
@@ -4086,9 +4086,9 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
 #else
    if( pState->pFile->fGenLineInfo )
    {
-      char szLine[ 10 ];
+      char szLine[ 12 ];
 
-      sprintf( szLine, "%d", pState->pFile->iCurrentLine );
+      snprintf( szLine, sizeof( szLine ), "%d", pState->pFile->iCurrentLine );
       hb_pp_tokenAdd( &pState->pNextTokenPtr, "#", 1, 0, HB_PP_TOKEN_DIRECTIVE | HB_PP_TOKEN_STATIC );
       hb_pp_tokenAdd( &pState->pNextTokenPtr, "line", 4, 0, HB_PP_TOKEN_KEYWORD | HB_PP_TOKEN_STATIC );
       hb_pp_tokenAdd( &pState->pNextTokenPtr, szLine, strlen( szLine ), 1, HB_PP_TOKEN_NUMBER );
@@ -4437,7 +4437,7 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
       hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, TRUE, TRUE,
                       pState->iLastType );
 #endif
-      pState->iLastType = pState->pTokenOut->type;
+      pState->iLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
       fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
               hb_membufLen( pState->pBuffer ), pState->file_out );
    }
@@ -4539,7 +4539,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 
    /* __PLATFORM__* */
    pSrc = szPlatform = hb_verPlatform();
-   pDst = strcpy( szDefine, "__PLATFORM__" );
+   pDst = strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) );
    i = 12;
    while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
    {
@@ -4564,12 +4564,12 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 
    hb_pp_addDefine( pState, szDefine, szResult );
 #ifdef HB_OS_UNIX
-   strcpy( szDefine + 12, "UNIX" );
+   strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) );
    hb_pp_addDefine( pState, szDefine, szResult );
 #endif
 
    /* __HARBOUR__ */
-   sprintf( szResult, "%05d", HB_MAX( ( HB_VER_MAJOR << 8 ) | HB_VER_MINOR, 1 ) );
+   snprintf( szResult, sizeof( szResult ), "%05d", HB_MAX( ( HB_VER_MAJOR << 8 ) | HB_VER_MINOR, 1 ) );
    hb_pp_addDefine( pState, "__HARBOUR__", szResult );
 
    /* __DATE__ */
@@ -4587,7 +4587,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    szResult[ 10 ] = '\0';
    hb_pp_addDefine( pState, "__TIME__", szResult );
 
-   sprintf( szResult, "%d", ( int ) sizeof( void * ) );
+   snprintf( szResult, sizeof( szResult ), "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
    hb_pp_addDefine( pState, "__ARCH16BIT__", szResult );
 #elif defined( HB_ARCH_32BIT )
@@ -5049,19 +5049,21 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
    hb_membufFlush( pState->pBuffer );
    if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
    {
+      USHORT ltype = HB_PP_TOKEN_NUL;
       int iBraces = 0;
       do
       {
-         hb_pp_tokenStr( pToken, pState->pBuffer, iBraces != 0, FALSE, 0 );
+         hb_pp_tokenStr( pToken, pState->pBuffer, FALSE, TRUE, ltype );
+         ltype = HB_PP_TOKEN_TYPE( pToken->type );
          if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_AMPERSAND )
          {
             if( pToken->pNext &&
-                HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_PB )
-               * piType |= HB_BLOCK_LATEEVAL;
+                HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
+               * piType |= HB_BLOCK_MACRO | HB_BLOCK_LATEEVAL;
          }
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
                   HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT )
-            * piType |= HB_BLOCK_LATEEVAL | HB_BLOCK_MACRO;
+            * piType |= HB_BLOCK_MACRO;
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
             --iBraces;
          else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )

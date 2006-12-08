@@ -332,8 +332,8 @@ int hb_gt_crs_chrmapinit( int *piTransTbl, char *pszTerm )
 	    if ( pszFile != NULL && sizeof(szFile) > 
 		             strlen(pszFile) + strlen(s_szDefaultCharMapFile) )
 	    {
-		strcpy(szFile, pszFile);
-		strcat(szFile, s_szDefaultCharMapFile);
+		hb_strncpy(szFile, pszFile, _POSIX_PATH_MAX);
+		hb_strncat(szFile, s_szDefaultCharMapFile, _POSIX_PATH_MAX);
 		nRet = hb_gt_crs_chrmapread( szFile, pszTerm, piTransTbl );
 	    }
 	}

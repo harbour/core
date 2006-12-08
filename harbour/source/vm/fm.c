@@ -197,7 +197,7 @@ HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
       * hb_xalloc/hb_xgrab
       */
       pMem->uiProcLine = hb_tr_line_; /* C line number */
-      strcpy( pMem->szProcName, hb_tr_file_ );
+      hb_strncpy( pMem->szProcName, hb_tr_file_, HB_SYMBOL_NAME_LEN );
    }
    else
    {
@@ -262,7 +262,7 @@ HB_EXPORT void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
       * hb_xalloc/hb_xgrab
       */
       pMem->uiProcLine = hb_tr_line_; /* C line number */
-      strcpy( pMem->szProcName, hb_tr_file_ );
+      hb_strncpy( pMem->szProcName, hb_tr_file_, HB_SYMBOL_NAME_LEN );
    }
    else
    {
@@ -577,7 +577,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
+      snprintf( buffer, sizeof( buffer ), "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
       if ( hLog )
@@ -596,7 +596,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       if( s_lMemoryBlocks )
       {
          hb_conOutErr( hb_conNewLine(), 0 );
-         sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
+         snprintf( buffer, sizeof( buffer ), "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
          if ( hLog ) fprintf( hLog, "%s\n", buffer );
