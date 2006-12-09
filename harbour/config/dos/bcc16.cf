@@ -65,6 +65,11 @@ LD_RULE = $(link_exe_file)
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+ifneq ($(HB_GT_DEFAULT),)
+ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
+LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)/$(HB_GT_DEFAULT)$(LIB_EXT)
+endif
+endif
 endif
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang

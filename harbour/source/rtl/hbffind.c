@@ -741,7 +741,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       /* Do the conversions common for all platforms */
       
-      ffind->szName[ _POSIX_PATH_MAX ] = '\0';
+      ffind->szName[ _POSIX_PATH_MAX + 1 ] = '\0';
       
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
       

@@ -8,6 +8,51 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-09 17:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/bcc16.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/os2/icc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/mingw32.cf
+  * harbour/config/w32/msvc.cf
+  * harbour/config/w32/rsxnt.cf
+  * harbour/config/w32/watcom.cf
+    * added respecting HB_GT_DEFAULT, though it's quite possible that I'll
+      remove it at all soon.
+    * some other cleanup
+
+  * harbour/source/compiler/complex.c
+    ! fixed wrongly replicated from FLEX lexer condition used to DECLARE.
+      Now they should be the same as in FLEX lexer but IMHO they are not
+      Clipper compatible.
+
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rdd/workarea.c
+    ! fixed sizes of some C stack buffers and strncpy() parameters
+    * use hb_strn*() instead of strn*() in few places to be sure that 0
+      is always stored in destination buffer
+
+  * harbour/source/rtl/gtcgi/gtcgi.c
+    * change reported GT name from "Standard stream console" to
+      "Raw stream console" to make it differ then GTSTD one.
+
 2006-12-08 05:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
   * harbour/bin/hb-mkslib.sh

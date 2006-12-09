@@ -62,6 +62,14 @@ LINKLIBS += -lgtos2
 else
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
+
+ifneq ($(HB_GT_DEFAULT),)
+ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)
+LINKLIBS += -l$(HB_GT_DEFAULT)
+endif
+endif
+
 endif
 endif
 endif

@@ -34,7 +34,7 @@
 
 void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-   char szFileName[ _POSIX_PATH_MAX ];
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
    PFUNCTION pFunc /*= HB_COMP_PARAM->functions.pFirst*/;
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    ULONG lPCodePos;

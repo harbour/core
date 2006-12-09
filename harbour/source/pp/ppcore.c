@@ -4539,7 +4539,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 
    /* __PLATFORM__* */
    pSrc = szPlatform = hb_verPlatform();
-   pDst = strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) );
+   pDst = hb_strncpy( szDefine, "__PLATFORM__", sizeof( szDefine ) - 1 );
    i = 12;
    while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
    {
@@ -4564,7 +4564,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 
    hb_pp_addDefine( pState, szDefine, szResult );
 #ifdef HB_OS_UNIX
-   strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) );
+   hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
    hb_pp_addDefine( pState, szDefine, szResult );
 #endif
 

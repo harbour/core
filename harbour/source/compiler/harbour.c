@@ -4800,8 +4800,8 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
 
    if( HB_COMP_PARAM->pFileName->szName )
    {
-      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-      char szPpoName[ _POSIX_PATH_MAX ];
+      char szFileName[ _POSIX_PATH_MAX + 1 ];    /* filename to parse */
+      char szPpoName[ _POSIX_PATH_MAX + 1 ];
 
       /* Clear and reinitialize preprocessor state */
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );

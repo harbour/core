@@ -766,24 +766,30 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                break;
 
             case DECLARE:
-               if( pLex->iState == LOOKUP )
+               if( pLex->iState == LOOKUP &&
+                   !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
                {
-                  if( !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
-                      ( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROVAR ||
-                        HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROTEXT ||
-                        ( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                          ( HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) ||
-                            HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
-                            HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_COMMA ||
-                            HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_SEND ||
-                            ( HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                              hb_stricmp( "AS", pToken->pNext->pNext->value ) == 0 ) ) ) ) )
+                  if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROVAR ||
+                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROTEXT )
                   {
                      pLex->iState = PRIVATE;
                      return PRIVATE;
                   }
-                  pLex->iState = DECLARE;
-                  return DECLARE;
+                  else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+                  {
+                     if( HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_COMMA ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_ASSIGN ||
+                         ( HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                           hb_stricmp( "AS", pToken->pNext->pNext->value ) == 0 ) )
+                     {
+                        pLex->iState = PRIVATE;
+                        return PRIVATE;
+                     }
+                     pLex->iState = DECLARE;
+                     return DECLARE;
+                  }
                }
                iType = IDENTIFIER;
                break;

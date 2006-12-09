@@ -61,7 +61,7 @@ static int hb_fputs( char * szName, FILE * fOut, int nChar )
 
 void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-   char szFileName[ _POSIX_PATH_MAX ], * szVer;
+   char szFileName[ _POSIX_PATH_MAX + 1 ], * szVer;
    PFUNCTION pFunc /*= HB_COMP_PARAM->functions.pFirst */;
    PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    ULONG lPCodePos;

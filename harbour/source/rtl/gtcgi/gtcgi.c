@@ -176,7 +176,7 @@ static char * hb_gt_cgi_Version( int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Standard stream console";
+   return "Harbour Terminal: Raw stream console";
 }
 
 static void hb_gt_cgi_Scroll( int iTop, int iLeft, int iBottom, int iRight,

@@ -64,7 +64,7 @@ static char * szPrefix = "_HB_FUN_";
 
 void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-  char szFileName[ _POSIX_PATH_MAX ];
+  char szFileName[ _POSIX_PATH_MAX + 1 ];
   FILE * hObjFile;  /* file handle for OBJ output */
   char * szVer;
 

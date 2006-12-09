@@ -73,10 +73,11 @@ endif
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
    ifeq ($(HB_LIB_COMPILE),)
-      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv))
    else
-      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(HB_LIB_COMPILE)/$(drv)))
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
    endif
+   RDDLIBS := $(subst /,\,$(RDDLIBS))
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
@@ -84,6 +85,15 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
       GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
    else
       GTLIBS := $(HB_LIB_COMPILE)/$(HB_GT_LIB)
+   endif
+   ifneq ($(HB_GT_DEFAULT),)
+      ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
+         ifeq ($(HB_LIB_COMPILE),)
+            GTLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)/$(HB_GT_DEFAULT)
+         else
+            GTLIBS += $(HB_LIB_COMPILE)/$(HB_GT_DEFAULT)
+         endif
+      endif
    endif
    GTLIBS := $(subst /,\,$(GTLIBS))
 endif

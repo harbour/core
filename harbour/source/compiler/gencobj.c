@@ -173,7 +173,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    if( HB_COMP_PARAM->pOutPath )
    {
       PHB_FNAME pOut = hb_fsFNameSplit( ( char * ) szFileName );
-      char pszTemp[ _POSIX_PATH_MAX ] = "";
+      char pszTemp[ _POSIX_PATH_MAX + 1 ] = "";
 
       if( HB_COMP_PARAM->pOutPath->szPath )
          pOut->szPath = HB_COMP_PARAM->pOutPath->szPath;
