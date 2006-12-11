@@ -59,10 +59,10 @@ HB_FUNC( MEMOLINE )
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
    ULONG  ulLineNumber = ISNUM( 3 ) ? hb_parni( 3 ) : 1;
    ULONG  ulTabLength  = ISNUM( 4 ) ? hb_parni( 4 ) : 4;
-   ULONG  ulLastSpace  = 0;
-   ULONG  ulCurLength  = 0;
    BOOL   bWordWrap    = ISLOG( 5 ) ? hb_parl( 5 ) : TRUE;
    ULONG  ulLen        = hb_parclen( 1 );
+   ULONG  ulLastSpace  = 0;
+   ULONG  ulCurLength  = 0;
    ULONG  ulLines      = 0;
    ULONG  ulPos        = 0;
    ULONG  ulLineBegin;
@@ -85,10 +85,8 @@ HB_FUNC( MEMOLINE )
 
    while( ulPos < ulLen && ulLines < ulLineNumber )
    {
-
       switch( pszString[ ulPos ] )
       {
-
          case HB_CHAR_HT:
             ulCurLength = ( ( ULONG ) ( ulCurLength / ulTabLength ) * ulTabLength ) + ulTabLength;
             ulLastSpace = ulCurLength;
@@ -147,6 +145,9 @@ HB_FUNC( MEMOLINE )
 
          if( ulLines < ulLineNumber )
          {
+            if( ulPos < ulLen && pszString[ ulPos ] == ' ' )
+               ulPos++;  /* Ignore a single trailing blank (same as Cl*pper) */
+
             ulLineBegin = ulPos - ulCurLength + 1;
             ulLineEnd   = 0;
          }
@@ -189,4 +190,3 @@ HB_FUNC( MEMOLINE )
    else
       hb_retc( NULL );
 }
-

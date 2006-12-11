@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-11 22:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/memoline.c
+    ! added fix sent to me by Randy Portnoff - it's a little bit differ
+      then the one Randy sent to list but this one seems to be correct.
+      I never used this function in Clipper and made only very basic
+      tests. I believe that Randy make better tests and this fix will
+      not break some other constructions.
+
 2006-12-11 14:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
   * harbour/contrib/rdd_ads/adsfunc.c
