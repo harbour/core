@@ -1956,12 +1956,9 @@ HB_FUNC( HS_VERSION )
 {
    static const char szVer[] = "HiPer-SEEK / FTS library emulation";
    char * pszHBVersion, * pszVersion;
-   int iLen;
 
    pszHBVersion = hb_verHarbour();
-   iLen = strlen( szVer ) + strlen( pszHBVersion ) + 2;
-   pszVersion = ( char * ) hb_xgrab( iLen + 1 );
-   snprintf( pszVersion, iLen + 1, "%s: %s", szVer, pszHBVersion );
-   hb_retclen_buffer( pszVersion, iLen );
+   pszVersion = hb_xstrcat( NULL, szVer, ": ", pszHBVersion );
+   hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
    hb_xfree( pszHBVersion );
 }

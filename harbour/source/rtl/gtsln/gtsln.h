@@ -87,10 +87,10 @@
  * need to modified it for your slang version because UTF-8 patches
  * are still unoficial
  */
-#if ( UTF8 && SLSMG_HLINE_CHAR_TERM )
-    #define HB_SLN_UNICODE
-#elif SLANG_VERSION >= 20000
+#if SLANG_VERSION >= 20000
     #define HB_SLN_UTF8
+#elif defined( UTF8 ) && defined( SLSMG_HLINE_CHAR_TERM )
+    #define HB_SLN_UNICODE
 #endif
 
 /* missing defines in previous versions of Slang - this may not work ok ! */

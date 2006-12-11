@@ -68,7 +68,7 @@
 
 int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
-int adsRights = 1;
+int adsRights = ADS_CHECKRIGHTS;
 int adsCharType = ADS_ANSI;
 BOOL bTestRecLocks = FALSE;             /* Debug Implicit locks */
 ADSHANDLE  adsConnectHandle = 0;
@@ -375,11 +375,11 @@ HB_FUNC( ADSLOCKING )
 
 HB_FUNC( ADSRIGHTSCHECK )
 {
-   int oldType = ( adsRights == 1 ) ? 1 : 0;
+   int oldType = ( adsRights == ADS_CHECKRIGHTS ) ? 1 : 0;
 
    if( hb_pcount() > 0 )
    {
-      adsRights = ( hb_parl( 1 ) ) ? 1 : 2;
+      adsRights = ( hb_parl( 1 ) ) ? ADS_CHECKRIGHTS : ADS_IGNORERIGHTS;
    }
 
    hb_retl( oldType );
@@ -2031,6 +2031,25 @@ HB_FUNC( ADSDDADDTABLE )
    }
 }
 
+HB_FUNC( ADSDDREMOVETABLE )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pTableName     = (UNSIGNED8 *) hb_parcx( 1 );
+   UNSIGNED16 usDeleteFiles  = (UNSIGNED16) ( ISNUM( 2 ) ? hb_parnl( 2 ) : ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 ) );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 4 );
+
+   ulRetVal = AdsDDRemoveTable( hConnect, pTableName, usDeleteFiles );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      hb_retl( 1 );
+   }
+   else
+   {
+      hb_retl( 0 );
+   }
+}
+
 HB_FUNC( ADSDDADDUSERTOGROUP )
 {
    UNSIGNED32 ulRetVal;
@@ -2038,9 +2057,27 @@ HB_FUNC( ADSDDADDUSERTOGROUP )
    UNSIGNED8 *pName  = (UNSIGNED8 *) hb_parcx( 2 );
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 3 );
 
-   ulRetVal = AdsDDAddUserToGroup( hConnect,
-                                   pGroup,
-                                   pName );
+   ulRetVal = AdsDDAddUserToGroup( hConnect, pGroup, pName );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      hb_retl( 1 );
+   }
+   else
+   {
+      hb_retl( 0 );
+   }
+
+}
+
+HB_FUNC( ADSDDREMOVEUSERFROMGROUP )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pGroup = (UNSIGNED8 *) hb_parcx( 1 );
+   UNSIGNED8 *pName  = (UNSIGNED8 *) hb_parcx( 2 );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 3 );
+
+   ulRetVal = AdsDDRemoveUserFromGroup( hConnect, pGroup, pName );
 
    if( ulRetVal == AE_SUCCESS )
    {
@@ -2114,7 +2151,6 @@ HB_FUNC( ADSDDCREATE )
    }
 }
 
-
 HB_FUNC( ADSDDCREATEUSER )
 {
    UNSIGNED32 ulRetVal;
@@ -2129,6 +2165,15 @@ HB_FUNC( ADSDDCREATEUSER )
    hb_retl( ulRetVal == AE_SUCCESS );
 }
 
+HB_FUNC( ADSDDDELETEUSER )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pucUserName      = ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parcx( 1 ) : NULL;
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 5 );
+
+   ulRetVal = AdsDDDeleteUser( hConnect, pucUserName );
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
 
 HB_FUNC( ADSDDGETDATABASEPROPERTY )
 {
@@ -2413,13 +2458,14 @@ HB_FUNC( ADSDIRECTORY )
    ulRetVal = AdsFindFirstTable( hConnect, ( UNSIGNED8* ) ( ISCHAR( 1 ) ? hb_parcx( 1 ) : "" ), ucFileName, &usFileNameLen, &sHandle );
    if ( ulRetVal == AE_SUCCESS || ulRetVal == AE_NO_FILE_FOUND )
    {
-      do {
+      while( ulRetVal == AE_SUCCESS )
+      {
          pitmFileName = hb_itemPutCL( NULL, (char *) ucFileName, usFileNameLen );
          hb_arrayAddForward( pitmDir, pitmFileName );
 
          usFileNameLen = ADS_MAX_TABLE_NAME;
          ulRetVal = AdsFindNextTable( hConnect, sHandle, ucFileName, &usFileNameLen );
-      } while( ulRetVal == AE_SUCCESS );
+      }
 
       AdsFindClose( hConnect, sHandle );
    }

@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-11 14:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/hsx/hsx.c
+    * synced with xHarbour
+
+  * harbour/source/rtl/gtsln/gtsln.h
+    * changed #if to #ifdef to avoid problems with some unofficially
+      patched slang versions
+
 2006-12-09 17:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/bsd/gcc.cf
   * harbour/config/darwin/gcc.cf

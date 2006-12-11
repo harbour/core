@@ -3908,23 +3908,35 @@ static BOOL hb_cdxPageReadPrevKey( LPCDXPAGE pPage )
       pPage = pPage->Child;
    }
 
-   pPage->iCurKey--;
-   while ( pPage->iCurKey < 0 )
+   do
    {
-      if ( pPage->Left == CDX_DUMMYNODE || !pOwnerPage )
+      pPage->iCurKey--;
+      while ( pPage->iCurKey < 0 )
       {
-         pPage->iCurKey = 0;
-         if ( pPage->iKeys > 0 )
-            hb_cdxSetCurKey( pPage );
-         return FALSE;
+         if ( pPage->Left == CDX_DUMMYNODE || !pOwnerPage )
+         {
+            pPage->iCurKey = 0;
+            if ( pPage->iKeys > 0 )
+               hb_cdxSetCurKey( pPage );
+            return FALSE;
+         }
+         pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, pPage->Left );
+         hb_cdxPageFree( pPage, !pPage->fChanged );
+         pPage = pOwnerPage->Child;
+         pPage->iCurKey = pPage->iKeys - 1;
       }
-      pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, pPage->Left );
-      hb_cdxPageFree( pPage, !pPage->fChanged );
-      pPage = pOwnerPage->Child;
-      pPage->iCurKey = pPage->iKeys - 1;
+      if( pPage->iCurKey == 0 )
+      {
+         hb_cdxSetCurKey( pPage );
+         if( !hb_cdxTopScope( pPage->TagParent ) ||
+             !hb_cdxBottomScope( pPage->TagParent ) )
+            break;
+      }
    }
-
-   hb_cdxSetCurKey( pPage );
+   while( !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
+                                   hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) ) );
+   if( pPage->iCurKey != 0 )
+      hb_cdxSetCurKey( pPage );
    return TRUE;
 }
 
@@ -3941,21 +3953,33 @@ static BOOL hb_cdxPageReadNextKey( LPCDXPAGE pPage )
       pPage = pPage->Child;
    }
 
-   pPage->iCurKey++;
-   while ( pPage->iCurKey >= pPage->iKeys )
+   do
    {
-      if ( pPage->Right == CDX_DUMMYNODE || !pOwnerPage )
+      pPage->iCurKey++;
+      while ( pPage->iCurKey >= pPage->iKeys )
       {
-         pPage->iCurKey = pPage->iKeys;
-         return FALSE;
+         if ( pPage->Right == CDX_DUMMYNODE || !pOwnerPage )
+         {
+            pPage->iCurKey = pPage->iKeys;
+            return FALSE;
+         }
+         pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, pPage->Right );
+         hb_cdxPageFree( pPage, !pPage->fChanged );
+         pPage = pOwnerPage->Child;
+         pPage->iCurKey = 0;
       }
-      pOwnerPage->Child = hb_cdxPageNew( pPage->TagParent, pPage->Owner, pPage->Right );
-      hb_cdxPageFree( pPage, !pPage->fChanged );
-      pPage = pOwnerPage->Child;
-      pPage->iCurKey = 0;
+      if( pPage->iCurKey == 0 )
+      {
+         hb_cdxSetCurKey( pPage );
+         if( !hb_cdxTopScope( pPage->TagParent ) ||
+             !hb_cdxBottomScope( pPage->TagParent ) )
+            break;
+      }
    }
-
-   hb_cdxSetCurKey( pPage );
+   while( !hb_cdxCheckRecordScope( pPage->TagParent->pIndex->pArea,
+                                   hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) ) );
+   if( pPage->iCurKey != 0 )
+      hb_cdxSetCurKey( pPage );
    return TRUE;
 }
 
