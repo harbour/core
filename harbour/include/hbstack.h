@@ -80,7 +80,9 @@ typedef struct
    char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
+#if defined(HB_STACK_MACROS)
 extern HB_STACK hb_stack;
+#endif
 
 #endif
 
@@ -89,7 +91,7 @@ extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void );// returns RETURN Item f
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern HB_ITEM_PTR hb_stacklocalVariable( int *piFromBase );
+extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
 extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
@@ -102,6 +104,7 @@ extern PHB_ITEM ** hb_stackItemBasePtr( void );
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern LONG        hb_stackWithObjectOffset( void );
 extern void        hb_stackWithObjectSetOffset( LONG );
+extern void *      hb_stackId( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 extern void        hb_stackPop( void );        /* pops an item from the stack */
@@ -146,6 +149,8 @@ extern void        hb_stackClearMevarsBase( void );
 #define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
 #define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )
 #define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )
+
+#define hb_stackId( )               ( ( void * ) &hb_stack )
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \
                                         hb_stackIncrease() : (void) 0 ), \
@@ -205,6 +210,7 @@ extern void        hb_stackClearMevarsBase( void );
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
                                     } while ( 0 )
+
 #define hb_stackLocalVariable( p )  ( ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \
                                           ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) && \
                                         ( * (p) ) > ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) ? \
@@ -212,6 +218,7 @@ extern void        hb_stackClearMevarsBase( void );
                                           ( * hb_stack.pBase )->item.asSymbol.paramcnt - \
                                           ( * hb_stack.pBase )->item.asSymbol.paramdeclcnt ) + 1 ) ) : \
                                       ( * ( hb_stack.pBase + ( int ) ( * (p) ) + 1 ) ) )
+
 #endif
 
 

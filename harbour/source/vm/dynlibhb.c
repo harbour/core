@@ -87,7 +87,7 @@ HB_FUNC( HB_LIBLOAD )
       }
 
       /* use stack address as first level marker */
-      hb_vmBeginSymbolGroup( ( void * ) &hb_stack, TRUE );
+      hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
       hDynLib = ( void * ) LoadLibrary( hb_parc( 1 ) );
       /* set real marker */
       hb_vmInitSymbolGroup( hDynLib, argc, argv );
@@ -112,7 +112,7 @@ HB_FUNC( HB_LIBLOAD )
       }
 
       /* use stack address as first level marker */
-      hb_vmBeginSymbolGroup( ( void * ) &hb_stack, TRUE );
+      hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
       hDynLib = ( void * ) dlopen( hb_parc( 1 ), RTLD_LAZY | RTLD_GLOBAL );
       /* set real marker */
       hb_vmInitSymbolGroup( hDynLib, argc, argv );

@@ -174,9 +174,9 @@ static void    hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usL
 static void    hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, USHORT usLen ); /* creates a codeblock */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
-static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
-static void    hb_vmPushLocalByRef( SHORT iLocal );    /* pushes a local by refrence onto the stack */
-static void    hb_vmPushLongConst( long lNumber );  /* Pushes a long constant (pcode) */
+static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a local onto the stack */
+static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
+static void    hb_vmPushLongConst( long lNumber ); /* Pushes a long constant (pcode) */
 static void    hb_vmPushHBLong( HB_LONG lNumber ); /* pushes a HB_LONG number onto the stack */
 #if !defined( HB_LONG_LONG_OFF )
    static void hb_vmPushLongLongConst( LONGLONG lNumber );  /* Pushes a long long constant (pcode) */
@@ -202,7 +202,7 @@ static double  hb_vmPopDouble( int * );           /* pops the stack latest value
 static void    hb_vmPopAlias( void );             /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
 static void    hb_vmPopAliasedVar( PHB_SYMB );    /* pops an aliased variable from the eval stack*/
-static void    hb_vmPopLocal( SHORT iLocal );     /* pops the stack latest value onto a local */
+static void    hb_vmPopLocal( int iLocal );       /* pops the stack latest value onto a local */
 static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
 
 /* Take the value from stack top without POP */
@@ -1397,7 +1397,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHLOCAL:
-            hb_vmPushLocal( HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushLocal( HB_PCODE_MKSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1407,12 +1407,12 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHLOCALREF:
-            hb_vmPushLocalByRef( HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushLocalByRef( HB_PCODE_MKSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
          case HB_P_PUSHSTATIC:
-            hb_vmPushStatic( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushStatic( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1789,7 +1789,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LOCALNEARADDINT:
          {
-            SHORT iLocal = pCode[ w + 1 ];
+            int iLocal = pCode[ w + 1 ];
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
 
             hb_vmAddInt( hb_stackLocalVariable( &iLocal ), 
@@ -5012,11 +5012,11 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
    hb_vmPushAliasedField( pSym );
 }
 
-static void hb_vmPushLocal( SHORT iLocal )
+static void hb_vmPushLocal( int iLocal )
 {
    PHB_ITEM pLocal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocal(%hd)", iLocal));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocal(%d)", iLocal));
 
    if( iLocal >= 0 )
    {
@@ -5041,18 +5041,17 @@ static void hb_vmPushLocal( SHORT iLocal )
    }
 }
 
-static void hb_vmPushLocalByRef( SHORT iLocal )
+static void hb_vmPushLocalByRef( int iLocal )
 {
    HB_ITEM_PTR pTop = hb_stackAllocItem();
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocalByRef(%hd)", iLocal));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocalByRef(%d)", iLocal));
 
-   pTop->type = HB_IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
-   hb_stackLocalVariable( &iLocal );
-   pTop->item.asRefer.value = iLocal;
-   pTop->item.asRefer.offset = hb_stackBaseOffset();
    if( iLocal >= 0 )
+   {
+      hb_stackLocalVariable( &iLocal );
       pTop->item.asRefer.BasePtr.itemsbasePtr = hb_stackItemBasePtr();
+   }
    else
    {
       /* store direct codeblock address because an item where a codeblock
@@ -5061,6 +5060,9 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
       */
       pTop->item.asRefer.BasePtr.block = hb_stackSelfItem()->item.asBlock.value;
    }
+   pTop->type = HB_IT_BYREF;
+   pTop->item.asRefer.value = iLocal;
+   pTop->item.asRefer.offset = hb_stackBaseOffset();
 }
 
 static void hb_vmPushStatic( USHORT uiStatic )
@@ -5370,11 +5372,11 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
    hb_vmPopAliasedField( pSym );
 }
 
-static void hb_vmPopLocal( SHORT iLocal )
+static void hb_vmPopLocal( int iLocal )
 {
    PHB_ITEM pLocal, pVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPopLocal(%hd)", iLocal));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPopLocal(%d)", iLocal));
 
    pVal = hb_stackItemFromTop( -1 );
 

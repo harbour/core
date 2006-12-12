@@ -77,6 +77,14 @@ HB_SYMB  s_initSymbol = { "hb_stackInit", {HB_FS_STATIC}, {NULL}, NULL };
 
 /* ------------------------------- */
 
+#undef hb_stackId
+void * hb_stackId( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackId()"));
+
+   return ( void * ) &hb_stack;
+}
+
 #undef hb_stackPop
 void hb_stackPop( void )
 {
@@ -292,31 +300,32 @@ HB_ITEM_PTR hb_stackItem( LONG iItemPos )
 }
 
 #undef hb_stackItemFromTop
-HB_ITEM_PTR hb_stackItemFromTop( int nFromTop )
+HB_ITEM_PTR hb_stackItemFromTop( int iFromTop )
 {
-   if( nFromTop >= 0 )
+   if( iFromTop >= 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
-   return * ( hb_stack.pPos + nFromTop );
+   return * ( hb_stack.pPos + iFromTop );
 }
 
 #undef hb_stackItemFromBase
-HB_ITEM_PTR hb_stackItemFromBase( int nFromBase )
+HB_ITEM_PTR hb_stackItemFromBase( int iFromBase )
 {
-   if( nFromBase <= 0 )
+   if( iFromBase < 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 
-   return * ( hb_stack.pBase + nFromBase + 1 );
+   return * ( hb_stack.pBase + iFromBase + 1 );
 }
 
 #undef hb_stackLocalVariable
 HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase )
 {
    HB_ITEM_PTR pBase = *hb_stack.pBase;
-   
+
+/*   
    if( *piFromBase <= 0 )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
-
+*/
    if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt )
    {
       /* function with variable number of parameters:
