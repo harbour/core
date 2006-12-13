@@ -190,23 +190,4 @@ Status...: Open.
 
 ***
 
-Assign to: <nobody>
-Detail...: The Borland CodeGuard warn about Access overrun in some
-           of the console IO functions, it appears to be a fault in
-           the way CG works when passing a static char * to a BYTE *
-           function. Once the console IO functions would be optimozed,
-           please take a look at this too.
-
-           --tt21.prg--
-           proc main()
-           SET PRINTER TO devtest
-           SET DEVICE TO PRINTER
-           DepPos( 1, 1 )
-           return
-           ------------
-
-Status...: Open.
-
-***
-
 =======================================================================

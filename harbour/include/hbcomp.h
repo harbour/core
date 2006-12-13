@@ -361,6 +361,10 @@ extern FILE           *hb_comp_errFile;
 
 #define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
 
+#define HB_SUPPORT_XBASE            ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
+#define HB_SUPPORT_HARBOUR          ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+#define HB_SUPPORT_ARRSTR           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
+
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
 #else

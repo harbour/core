@@ -281,7 +281,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
             HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
             return;
          }
-         else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+         else if( iType == HB_ET_VARIABLE )
          {
             int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
 
@@ -291,6 +291,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
                /* NOTE: direct type change */
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
+
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
                switch( bOpEq )
@@ -314,7 +315,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          }
       }
    }
-#endif   
+#endif
    /* push old value */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
    /* push increment value */
@@ -443,7 +444,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
             pSelf->value.asOperator.pLeft->ExprType = iOldType;
             return;
          }
-         else if( pSelf->value.asOperator.pRight->ExprType == HB_ET_VARIABLE )
+         else if( iType == HB_ET_VARIABLE )
          {
             int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
 

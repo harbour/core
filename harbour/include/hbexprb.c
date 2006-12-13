@@ -70,16 +70,6 @@
 /* Forward declarations
  */
 
-#if defined( HB_MACRO_SUPPORT )
-   #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_SM_XBASE) )
-   #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_SM_HARBOUR) )
-   #define HB_SUPPORT_ARRSTR    ( HB_COMP_ISSUPPORTED(HB_SM_ARRSTR) )
-#else
-   #define HB_SUPPORT_XBASE     ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
-   #define HB_SUPPORT_HARBOUR   ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
-   #define HB_SUPPORT_ARRSTR    ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_ARRSTR) )
-#endif
-
 /* forward declaration of callback functions
  */
 static HB_EXPR_FUNC( hb_compExprUseDummy );
@@ -884,7 +874,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
                    memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
                    pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
                {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
-#if !defined(HB_MACRO_SUPPORT) 
+#if !defined(HB_MACRO_SUPPORT)
                   HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
 #else
                   HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
@@ -1559,9 +1549,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                }
             }
 
-            #ifndef HB_MACRO_SUPPORT
-               hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount );
-            #endif
+#ifndef HB_MACRO_SUPPORT
+            hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount );
+#endif
 
             if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
             {

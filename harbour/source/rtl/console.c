@@ -77,14 +77,29 @@
 #include "hbset.h"
 #include "hb_io.h"
 
+/* NOTE: Some C compilers like BCC32 optimize the call of small static buffers
+ *       into an integer to read it faster. Later, programs like CodeGuard
+ *       complain if the given buffer was smaller than an int. [ckedem]
+ */
+
 /* length of buffer for CR/LF characters */
-#define CRLF_BUFFER_LEN   OS_EOL_LEN + 1
+#if !defined(OS_EOL_LEN) || OS_EOL_LEN < 4
+#  define CRLF_BUFFER_LEN   4
+#else
+#  define CRLF_BUFFER_LEN   OS_EOL_LEN + 1
+#endif
+
+#if defined(OS_UNIX_COMPATIBLE) && !defined(HB_EOL_CRLF)
+   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
+   static const int  s_iCrLfLen = 1;
+#else
+   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_CR, HB_CHAR_LF, 0 };
+   static const int  s_iCrLfLen = 2;
+#endif
 
 static BOOL    s_bInit = FALSE;
 static USHORT  s_uiPRow;
 static USHORT  s_uiPCol;
-static char    s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
-static int     s_iCrLfLen = 1;
 static FHANDLE s_hFilenoStdin  = 0;
 static FHANDLE s_hFilenoStdout = 1;
 static FHANDLE s_hFilenoStderr = 2;
@@ -115,17 +130,6 @@ void hb_conInit( void )
       else if( hStderr > 0 ) /* //STDERR:x */
          s_hFilenoStderr = hStderr;
    }
-#endif
-
-#if defined(OS_UNIX_COMPATIBLE) && !defined(HB_EOL_CRLF)
-   s_szCrLf[ 0 ] = HB_CHAR_LF;
-   s_szCrLf[ 1 ] = '\0';
-   s_iCrLfLen = 1;
-#else
-   s_szCrLf[ 0 ] = HB_CHAR_CR;
-   s_szCrLf[ 1 ] = HB_CHAR_LF;
-   s_szCrLf[ 2 ] = '\0';
-   s_iCrLfLen = 2;
 #endif
 
    /*
@@ -171,7 +175,7 @@ char * hb_conNewLine( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conNewLine()"));
 
-   return s_szCrLf;
+   return ( char * ) s_szCrLf;
 }
 
 HB_FUNC( HB_OSNEWLINE )

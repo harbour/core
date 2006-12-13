@@ -391,6 +391,7 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr,
 {
    HB_EXPR_PTR pExpr;
 
+   pExpr = hb_compExprNew( HB_ET_MACRO, HB_COMP_PARAM );
    if( szName )
    {
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewMacro(%s)", szName));
@@ -407,7 +408,6 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr,
        * is pushed as:
        * "MY&VAR.1"
        */
-      pExpr = hb_compExprNew( HB_ET_MACRO, HB_COMP_PARAM );
       pExpr->value.asMacro.cMacroOp  = cMacroOp; /* '&' if variable or 0 if text */
       pExpr->value.asMacro.szMacro   = szName;   /* variable name or macro text */
       pExpr->value.asMacro.pExprList = NULL;     /* this is not a parenthesized expressions */
@@ -419,9 +419,9 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr,
 
       /* Macro expression:  &( expression_list )
        */
-      pExpr = hb_compExprNew( HB_ET_MACRO, HB_COMP_PARAM );
-      pExpr->value.asMacro.pExprList = pMacroExpr;
+      pExpr->value.asMacro.cMacroOp  = 0;
       pExpr->value.asMacro.szMacro   = NULL; /* this is used to distinguish &(...) from &ident */
+      pExpr->value.asMacro.pExprList = pMacroExpr;
       pExpr->value.asMacro.SubType   = HB_ET_MACRO_EXPR;
    }
 
