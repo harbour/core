@@ -50,19 +50,12 @@
  *
  */
 
-/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
-
-/* TODO:
- *    - Correct post- and pre- operations to correctly handle the following code
- *    a[ i++ ]++
- *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
- *    two times! This causes that the new value (after incrementation) is
- *    stored in next element of the array.
- */
-
 #include <math.h>
 #include "hbcomp.h"
 #include "hbmacro.ch"
+
+#define HB_USE_ARRAYAT_REF
+/* #define HB_USE_OBJMSG_REF */
 
 #ifdef __WATCOMC__
 /* disable warnings for 'no reference to symbol' */
@@ -144,6 +137,35 @@ void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
+#if ! defined( HB_MACRO_SUPPORT )
+   BYTE bNewOp;
+
+   switch( bOpEq )
+   {
+      case HB_P_PLUS:
+         bNewOp = HB_P_PLUSEQ;
+         break;
+      case HB_P_MINUS:
+         bNewOp = HB_P_MINUSEQ;
+         break;
+      case HB_P_MULT:
+         bNewOp = HB_P_MULTEQ;
+         break;
+      case HB_P_DIVIDE:
+         bNewOp = HB_P_DIVEQ;
+         break;
+      case HB_P_MODULUS:
+         bNewOp = HB_P_MODEQ;
+         break;
+      case HB_P_POWER:
+         bNewOp = HB_P_EXPEQ;
+         break;
+      default:
+         bNewOp = bOpEq;
+         break;
+   }
+#endif
+
    /* NOTE: an object instance variable needs special handling
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
@@ -180,30 +202,12 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       /* Temporary disabled optimization with references to object variables
          untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
-          bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE )
+      if( bOpEq != bNewOp )
       {
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         /* increase operation */
-         switch( bOpEq )
-         {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQ;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQ;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQ;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQ;
-               break;
-         }
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
       }
       else
 #endif
@@ -218,42 +222,58 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       }
       return;
    }
-   /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
-    */
 #if ! defined( HB_MACRO_SUPPORT )
-   else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
-              bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
-            ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
+   else if( bOpEq != bNewOp )
    {
-      int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
-
-      if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
-          iScope != HB_VS_UNDECLARED )
+#ifdef HB_USE_ARRAYAT_REF
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
       {
-         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType;
-         
-         if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
+         if( HB_SUPPORT_HARBOUR  )
          {
-            if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
+            /* Note: change type to array reference */
+            pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+   
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+            return;
+         }
+      }
+      else
+#endif
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+
+         if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+             iScope != HB_VS_UNDECLARED )
+         {
+            if( iScope == HB_VS_LOCAL_VAR &&
+                pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC &&
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
             {
-               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
-
-               if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
+               if( hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
                   short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.val.l;
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     if( bOpEq == HB_P_MINUS )
-                     {
-                        iIncrement = -iIncrement;
-                     }
+                     int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
+                     BYTE buffer[ 5 ];
 
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), HB_COMP_PARAM );
+                     if( bOpEq == HB_P_MINUS )
+                        iIncrement = -iIncrement;
+
+                     buffer[ 0 ] = HB_P_LOCALADDINT;
+                     buffer[ 1 ] = HB_LOBYTE( iLocal );
+                     buffer[ 2 ] = HB_HIBYTE( iLocal );
+                     buffer[ 3 ] = HB_LOBYTE( iIncrement );
+                     buffer[ 4 ] = HB_HIBYTE( iIncrement );
+                     hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
 
                      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-
                      return;
                   }
                }
@@ -263,55 +283,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            switch( bOpEq )
-            {
-               case HB_P_PLUS:
-                  bOpEq = HB_P_PLUSEQ;
-                  break;
-               case HB_P_MINUS:
-                  bOpEq = HB_P_MINUSEQ;
-                  break;
-               case HB_P_MULT:
-                  bOpEq = HB_P_MULTEQ;
-                  break;
-               case HB_P_DIVIDE:
-                  bOpEq = HB_P_DIVEQ;
-                  break;
-            }
-            HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
             return;
-         }
-         else if( iType == HB_ET_VARIABLE )
-         {
-            int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
-
-            if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
-                iScope != HB_VS_UNDECLARED )
-            {
-               /* NOTE: direct type change */
-               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
-               pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
-
-               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-               switch( bOpEq )
-               {
-                  case HB_P_PLUS:
-                     bOpEq = HB_P_PLUSEQ;
-                     break;
-                  case HB_P_MINUS:
-                     bOpEq = HB_P_MINUSEQ;
-                     break;
-                  case HB_P_MULT:
-                     bOpEq = HB_P_MULTEQ;
-                     break;
-                  case HB_P_DIVIDE:
-                     bOpEq = HB_P_DIVEQ;
-                     break;
-               }
-               HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
-               return;
-            }
          }
       }
    }
@@ -332,6 +305,35 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  */
 void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
+#if ! defined( HB_MACRO_SUPPORT )
+   BYTE bNewOp;
+
+   switch( bOpEq )
+   {
+      case HB_P_PLUS:
+         bNewOp = HB_P_PLUSEQPOP;
+         break;
+      case HB_P_MINUS:
+         bNewOp = HB_P_MINUSEQPOP;
+         break;
+      case HB_P_MULT:
+         bNewOp = HB_P_MULTEQPOP;
+         break;
+      case HB_P_DIVIDE:
+         bNewOp = HB_P_DIVEQPOP;
+         break;
+      case HB_P_MODULUS:
+         bNewOp = HB_P_MODEQPOP;
+         break;
+      case HB_P_POWER:
+         bNewOp = HB_P_EXPEQPOP;
+         break;
+      default:
+         bNewOp = bOpEq;
+         break;
+   }
+#endif
+
    /* NOTE: an object instance variable needs special handling
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
@@ -342,30 +344,12 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       /* Temporary disabled optimization with references to object variables
          untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
-          bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE )
+      if( bOpEq != bNewOp )
       {
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         /* increase operation and pop the unneeded value from the stack */
-         switch( bOpEq )
-         {
-            case HB_P_PLUS:
-               bOpEq = HB_P_PLUSEQPOP;
-               break;
-            case HB_P_MINUS:
-               bOpEq = HB_P_MINUSEQPOP;
-               break;
-            case HB_P_MULT:
-               bOpEq = HB_P_MULTEQPOP;
-               break;
-            case HB_P_DIVIDE:
-               bOpEq = HB_P_DIVEQPOP;
-               break;
-         }
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
       }
       else
 #endif
@@ -382,39 +366,58 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       }
       return;
    }
-   /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
-    */
 #if ! defined( HB_MACRO_SUPPORT )
-   else if( ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ||
-              bOpEq == HB_P_MULT || bOpEq == HB_P_DIVIDE ) &&
-            ( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE ) )
+   else if( bOpEq != bNewOp )
    {
-      int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
-
-      if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
-          iScope != HB_VS_UNDECLARED )
+#ifdef HB_USE_ARRAYAT_REF
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
       {
-         HB_EXPRTYPE iType = pSelf->value.asOperator.pRight->ExprType, iOldType;
-
-         if( iType == HB_ET_NUMERIC || iType == HB_ET_STRING )
+         if( HB_SUPPORT_HARBOUR  )
          {
-            if( iScope == HB_VS_LOCAL_VAR && iType == HB_ET_NUMERIC && 
+            /* Note: change type to array reference */
+            pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+            return;
+         }
+      }
+      else
+#endif
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+
+         if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+             iScope != HB_VS_UNDECLARED )
+         {
+            HB_EXPRTYPE iOldType;
+
+            if( iScope == HB_VS_LOCAL_VAR &&
+                pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC &&
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
             {
-               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
-
-               if( iLocal < 256 && hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
+               if( hb_compExprIsInteger( pSelf->value.asOperator.pRight ) )
                {
                   short iIncrement = ( short ) pSelf->value.asOperator.pRight->value.asNum.val.l;
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     if( bOpEq == HB_P_MINUS )
-                     {
-                        iIncrement = -iIncrement;
-                     }
+                     int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
+                     BYTE buffer[ 5 ];
 
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iIncrement ), HB_HIBYTE( iIncrement ), HB_COMP_PARAM );
+                     if( bOpEq == HB_P_MINUS )
+                        iIncrement = -iIncrement;
+
+                     buffer[ 0 ] = HB_P_LOCALADDINT;
+                     buffer[ 1 ] = HB_LOBYTE( iLocal );
+                     buffer[ 2 ] = HB_HIBYTE( iLocal );
+                     buffer[ 3 ] = HB_LOBYTE( iIncrement );
+                     buffer[ 4 ] = HB_HIBYTE( iIncrement );
+                     hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
                      return;
                   }
                }
@@ -425,58 +428,9 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            switch( bOpEq )
-            {
-               case HB_P_PLUS:
-                  bOpEq = HB_P_PLUSEQPOP;
-                  break;
-               case HB_P_MINUS:
-                  bOpEq = HB_P_MINUSEQPOP;
-                  break;
-               case HB_P_MULT:
-                  bOpEq = HB_P_MULTEQPOP;
-                  break;
-               case HB_P_DIVIDE:
-                  bOpEq = HB_P_DIVEQPOP;
-                  break;
-            }
-            HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
             pSelf->value.asOperator.pLeft->ExprType = iOldType;
             return;
-         }
-         else if( iType == HB_ET_VARIABLE )
-         {
-            int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pRight->value.asSymbol );
-
-            if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
-                iScope != HB_VS_UNDECLARED )
-            {
-               /* NOTE: direct type change */
-               iOldType = pSelf->value.asOperator.pLeft->ExprType;
-               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
-               pSelf->value.asOperator.pRight->ExprType = HB_ET_VARREF;
-               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-               switch( bOpEq )
-               {
-                  case HB_P_PLUS:
-                     bOpEq = HB_P_PLUSEQPOP;
-                     break;
-                  case HB_P_MINUS:
-                     bOpEq = HB_P_MINUSEQPOP;
-                     break;
-                  case HB_P_MULT:
-                     bOpEq = HB_P_MULTEQPOP;
-                     break;
-                  case HB_P_DIVIDE:
-                     bOpEq = HB_P_DIVEQPOP;
-                     break;
-               }
-               HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
-               pSelf->value.asOperator.pLeft->ExprType = iOldType;
-               pSelf->value.asOperator.pRight->ExprType = iType;
-               return;
-            }
          }
       }
    }
@@ -507,15 +461,13 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 #ifdef HB_USE_OBJMSG_REF
       HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
-      /* increase/decrease operation */
+      /* increase/decrease operation, leave unreferenced value on stack */
       /* We have to unreference the item on the stack, because we do not have
          such PCODE(s) then I'll trnaslate HB_P_INC/HB_P_DEC into
          HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
          in differ way [druzus] */
-
       HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
       bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-
       HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
 #else
       HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
@@ -525,6 +477,23 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
       HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
 #endif
    }
+#ifdef HB_USE_ARRAYAT_REF
+   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+   else if( HB_SUPPORT_HARBOUR &&
+            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   {
+      /* push reference to current value */
+      /* Note: change type to array reference */
+      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+
+      /* increase/decrease operation, leave unreferenced value on stack */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
+#endif
    else
    {
       /* Push current value */
@@ -546,13 +515,47 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+#ifdef HB_USE_OBJMSG_REF
+      /* push reference to current value */
+      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+      /* Duplicate the reference and unref the original one -
+       * it will be the result of whole expression
+       */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+      /* increment/decrement the value */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+#else
       /* push current value - it will be a result of whole expression */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* now increment the value */
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
       HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+#endif
    }
+#ifdef HB_USE_ARRAYAT_REF
+   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   {
+      /* push reference to current value */
+      /* Note: change type to array reference */
+      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+
+      /* Duplicate the reference and unref the original one -
+       * it will be the result of whole expression
+       */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+      /* increase/decrease operation */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
+#endif
    else
    {
       /* Push current value */
@@ -575,10 +578,37 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+      /* Temporary disabled optimization with references to object variables
+         untill we will not have extended reference items in our HVM [druzus] */
+#ifdef HB_USE_OBJMSG_REF
+      /* push reference to current value */
+      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+      /* increment/decrement the value */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+#else
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
       HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+#endif
    }
+#ifdef HB_USE_ARRAYAT_REF
+   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   {
+      /* push reference to current value */
+      /* Note: change type to array reference */
+      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+      /* increase/decrease operation */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
+#endif
    else
    {
       /* Push current value */
@@ -611,7 +641,7 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DE
        *    ALIAS->&var is the same as &( "ALIAS->" + var )
        *
        */
-      HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen(pAlias->value.asSymbol) + 1 );
+      HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen( pAlias->value.asSymbol ) + 1 );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
@@ -624,7 +654,7 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DE
        *    &macro->var is the  same as: &( macro + "->var" )
        */
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
-      HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen(pVar->value.asSymbol) + 1 );
+      HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen( pVar->value.asSymbol ) + 1 );
       if( bAction == HB_EA_PUSH_PCODE )
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
@@ -727,7 +757,7 @@ BOOL hb_compExprIsValidMacro( char * szText, ULONG ulLen, BOOL *pfUseTextSubst, 
             *pfUseTextSubst = TRUE;
             fValid = hb_compIsValidMacroVar( szSymName, HB_COMP_PARAM );
          }
-         else if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+         else if( ! HB_SUPPORT_HARBOUR )
             *pfUseTextSubst = TRUE;	/* always macro substitution in Clipper */
 #endif
       }

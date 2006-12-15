@@ -857,7 +857,7 @@ static ULONG BranchGet( struct hb_BTree * pBTree, ULONG ulNode, int iPosition )
   return pBTree->ioBuffer->pulBranch[ iPosition ];
 }
 
-#ifdef DEBUG
+#if defined( DEBUG )
 static void Chk4Loop( struct hb_BTree * pBTree, ULONG ulNode, int iPosition, ULONG ulBranch )
 {
 /*

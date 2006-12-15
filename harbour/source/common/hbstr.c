@@ -945,3 +945,33 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
 
    return str;
 }
+
+char * hb_compEncodeString( int iMethod, const char * szText, ULONG * pulLen )
+{
+   char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
+
+   memcpy( pBuffer, szText, *pulLen );
+   pBuffer[ *pulLen ] = '\0';
+   if( iMethod == 1 )
+   {
+      ULONG ul;
+      for( ul = 0; ul < *pulLen; ul++ )
+         pBuffer[ ul ] ^= 0xF3;
+   }
+   return pBuffer;
+}
+
+char * hb_compDecodeString( int iMethod, const char * szText, ULONG * pulLen )
+{
+   char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
+
+   memcpy( pBuffer, szText, *pulLen );
+   pBuffer[ *pulLen ] = '\0';
+   if( iMethod == 1 )
+   {
+      ULONG ul;
+      for( ul = 0; ul < *pulLen; ul++ )
+         pBuffer[ ul ] ^= 0xF3;
+   }
+   return pBuffer;
+}

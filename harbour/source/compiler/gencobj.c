@@ -29,15 +29,67 @@
 #include "hbcomp.h"
 #include "hb_io.h"
 
-/* Prototype */
-static char * hb_searchpath( const char *, char *, char * );
-
 #define HB_CFG_FILENAME    "harbour.cfg"
 
 /* QUESTION: Allocate buffer dynamically ? */
 #define HB_CFG_LINE_LEN    ( _POSIX_PATH_MAX )
 
+#if defined( HOST_OS_UNIX_COMPATIBLE )
+   #define HB_NULL_STR " > /dev/null"
+   #define HB_ACCESS_FLAG F_OK
+#elif defined( OS_DOS_COMPATIBLE )
+   #define HB_NULL_STR " >nul"      
+   #define HB_ACCESS_FLAG 0
+#else
+   #define HB_ACCESS_FLAG 0
+#endif
+
 /*--------------------------------------------------------------------------*/
+
+static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg )
+{
+   char * pszPath;
+   BOOL bFound = FALSE;
+
+   /* Check current dir first  */
+   if( access( ( const char * ) pszFile, HB_ACCESS_FLAG ) == 0 )
+   {
+      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
+      return ( char * ) pszFile;
+   }
+   else
+   {
+      /* Check if pszFile exists somewhere in the path */
+      while( * pszEnv )
+      {
+         pszPath = pszEnv;
+         while( *pszEnv )
+         {
+            if( *pszEnv == OS_PATH_LIST_SEPARATOR )
+            {
+               *pszEnv++ = '\0';
+               break;
+            }
+            pszEnv++;
+         }
+         if( *pszPath )
+         {
+            snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, OS_PATH_DELIMITER, pszFile );
+            if( access( ( const char * ) pszCfg, HB_ACCESS_FLAG ) == 0 )
+            {
+               bFound = TRUE;
+               break;
+            }
+         }
+      }
+   }
+
+   /* If not found, make sure to return a NULL string */
+   if( ! bFound )
+      *pszCfg = '\0';
+
+   return ( char * ) pszCfg;
+}
 
 /* Builds platform dependant object module from Harbour C output */
 void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
@@ -48,20 +100,15 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    char szOptions[ HB_CFG_LINE_LEN + 1 ] = "";
    char szCommandLine[ HB_CFG_LINE_LEN * 2 + 1 ];
    char szOutPath[ _POSIX_PATH_MAX + 1 ] = "\0";
+   char pszTemp[ _POSIX_PATH_MAX + 1 ] = "";
 #if defined( HOST_OS_UNIX_COMPATIBLE )
-   char szDefaultUnixPath[ _POSIX_PATH_MAX + 1 ] = "/etc:/usr/local/etc";
-   char * pszEnv = szDefaultUnixPath;
-   #define HB_NULL_STR " > /dev/null"
-   #define HB_ACCESS_FLAG F_OK
+   char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );
 #elif defined( OS_DOS_COMPATIBLE )
    char * pszEnv = hb_getenv( "PATH" );
-   #define HB_NULL_STR " >nul"      
-   #define HB_ACCESS_FLAG 0
 #else
    char * pszEnv = NULL;
 #endif
-   FILE * yyc;
-   char * pszCfg;
+   FILE * filecfg;
    BOOL bVerbose = FALSE;   /* Don't show C compiler messages (default). */
    BOOL bDelTmp = TRUE;     /* Delete intermediate C file (default). */
    int iSuccess;
@@ -78,27 +125,18 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-
-   /* Grab space */
-   pszCfg = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-
-   if( pszEnv && pszEnv[ 0 ] != '\0' && *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg ) )
+   if( pszEnv && *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszTemp ) )
    {
-
-      yyc = fopen( pszCfg, "rt" );
-      if( ! yyc )
+      filecfg = fopen( pszTemp, "rt" );
+      if( ! filecfg )
       {
-#if 0
-         /* QUESTION: Add a new error to Harbour ?
-            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
-         */
-#else
-         printf( "\nError: Can't find %s file.\n", HB_CFG_FILENAME );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
+         if( pszEnv )
+            hb_xfree( ( void * ) pszEnv );
          return;
-#endif
       }
 
-      while( fgets( szLine, HB_CFG_LINE_LEN, yyc ) != NULL )
+      while( fgets( szLine, HB_CFG_LINE_LEN, filecfg ) != NULL )
       {
          ULONG ulLen;
          char * szStr = szLine;
@@ -117,55 +155,49 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
          /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
 
          if( *szStr )
+         {
+            szToken = strchr( szStr, '=' );
+         
+            if( szToken )
             {
-               szToken = strchr( szStr, '=' );
-            
-               if( szToken )
+               *szToken++ = '\0';
+               if ( *szToken )
                {
-                  *szToken++ = '\0';
-                  if ( *szToken )
+                  /* Checks compiler name */
+                  if( ! hb_stricmp( szStr, "CC" ) )
                   {
-                     /* Checks compiler name */
-                     if( ! hb_stricmp( szStr, "CC" ) )
-                     {
-                        snprintf( szCompiler, sizeof( szCompiler ), "%s", szToken );
-                     }
-                     /* Checks optional switches */
-                     else if( ! hb_stricmp( szStr, "CFLAGS" ) )
-                     {
-                        snprintf( szOptions, sizeof( szCompiler ), "%s", szToken );
-                     }
-                     /* Wanna see C compiler output ? */
-                     else if( ! hb_stricmp( szStr, "VERBOSE" ) )
-                     {
-                        if( ! hb_stricmp( szToken, "YES" ) )
-                           bVerbose = TRUE;
-                     }
-                     /* Delete intermediate C file ? */
-                     else if( ! hb_stricmp( szStr, "DELTMP" ) )
-                     {
-                        if( ! hb_stricmp( szToken, "NO" ) )
-                           bDelTmp = FALSE;
-                     }
+                     snprintf( szCompiler, sizeof( szCompiler ), "%s", szToken );
+                  }
+                  /* Checks optional switches */
+                  else if( ! hb_stricmp( szStr, "CFLAGS" ) )
+                  {
+                     snprintf( szOptions, sizeof( szCompiler ), "%s", szToken );
+                  }
+                  /* Wanna see C compiler output ? */
+                  else if( ! hb_stricmp( szStr, "VERBOSE" ) )
+                  {
+                     if( ! hb_stricmp( szToken, "YES" ) )
+                        bVerbose = TRUE;
+                  }
+                  /* Delete intermediate C file ? */
+                  else if( ! hb_stricmp( szStr, "DELTMP" ) )
+                  {
+                     if( ! hb_stricmp( szToken, "NO" ) )
+                        bDelTmp = FALSE;
                   }
                }
             }
+         }
       }
-
-      fclose( yyc );
+      fclose( filecfg );
    }
 
-   #if defined( OS_DOS_COMPATIBLE ) 
-   {
-      if( pszEnv )
-         hb_xfree( ( void * ) pszEnv );
-   }
-   #endif
-
+   if( pszEnv )
+      hb_xfree( ( void * ) pszEnv );
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "Building object module output for \'%s\'...", szFileName );
+      printf( "Building object module output for '%s'...", szFileName );
       fflush( stdout );
    }
 
@@ -173,7 +205,6 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    if( HB_COMP_PARAM->pOutPath )
    {
       PHB_FNAME pOut = hb_fsFNameSplit( ( char * ) szFileName );
-      char pszTemp[ _POSIX_PATH_MAX + 1 ] = "";
 
       if( HB_COMP_PARAM->pOutPath->szPath )
          pOut->szPath = HB_COMP_PARAM->pOutPath->szPath;
@@ -208,7 +239,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       }
       else
       {
-         hb_strncat( szCommandLine, HB_NULL_STR, sizeof( szCommandLine ) );
+         hb_strncat( szCommandLine, HB_NULL_STR, sizeof( szCommandLine ) - 1 );
       }
 
       /* Compile it! */
@@ -231,46 +262,4 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    {
       printf( "\nError: No compiler defined in %s\n", HB_CFG_FILENAME );
    }
-
-   if( pszCfg )
-      hb_xfree( pszCfg );
-}
-
-static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg )
-{
-   char * pszPath;
-   char pszDelim[2] = { OS_PATH_LIST_SEPARATOR, '\0'};
-   BOOL bFound = FALSE;
-
-   /* Check current dir first  */
-   if( access( ( const char * ) pszFile, HB_ACCESS_FLAG ) == 0 )
-   {
-      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", pszFile );
-      return ( char * ) pszFile;
-   }
-   else
-   {
-      /* Check if pszFile exists somewhere in the path */
-      pszPath = strtok( pszEnv, pszDelim );
-      if( pszPath )
-      {
-         while( pszPath )
-         {
-            snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s%c%s", pszPath, OS_PATH_DELIMITER, pszFile );
-            if( access( ( const char * ) pszCfg, HB_ACCESS_FLAG ) == 0 )
-            {
-               bFound = TRUE;
-               break;
-            }
-            else
-               pszPath = strtok( NULL, pszDelim );
-         }
-      }
-   }
-
-   /* If not found, make sure to return a NULL string */
-   if( ! bFound )
-      snprintf( pszCfg, _POSIX_PATH_MAX + 1, "%s", "" );
-
-   return ( char * ) pszCfg;
 }

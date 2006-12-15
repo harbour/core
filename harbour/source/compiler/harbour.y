@@ -1663,9 +1663,15 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      iStep = 1;
                   }
 
-                  if( iStep && ( iLocal = hb_compLocalGetPos( HB_COMP_PARAM, hb_compExprAsSymbol($<asExpr>2) ) ) > 0 && iLocal < 256 )
+                  if( iStep && ( iLocal = hb_compLocalGetPos( HB_COMP_PARAM, hb_compExprAsSymbol($<asExpr>2) ) ) > 0 )
                   {
-                     hb_compGenPCode4( HB_P_LOCALNEARADDINT, ( BYTE ) iLocal, HB_LOBYTE( iStep ), HB_HIBYTE( iStep ), HB_COMP_PARAM );
+                     BYTE buffer[ 5 ];
+                     buffer[ 0 ] = HB_P_LOCALADDINT;
+                     buffer[ 1 ] = HB_LOBYTE( iLocal );
+                     buffer[ 2 ] = HB_HIBYTE( iLocal );
+                     buffer[ 3 ] = HB_LOBYTE( iStep );
+                     buffer[ 4 ] = HB_HIBYTE( iStep );
+                     hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
                   }
                   else if( $<asExpr>8 )
                   {

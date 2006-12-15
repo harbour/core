@@ -75,6 +75,16 @@ static HB_FIX_FUNC( hb_p_endblock )
    return 1;
 }
 
+static HB_FIX_FUNC( hb_p_pushblockshort )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   ++cargo->iNestedCodeblock;
+
+   return 2;
+}
+
 static HB_FIX_FUNC( hb_p_pushblock )
 {
    USHORT wVar;
@@ -82,7 +92,7 @@ static HB_FIX_FUNC( hb_p_pushblock )
 
    ++cargo->iNestedCodeblock;
 
-   wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 5 ] ) );
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 5 ] );
 
    /* opcode + codeblock size + number of parameters + number of local variables */
    lPCodePos += 7;
@@ -107,14 +117,36 @@ static HB_FIX_FUNC( hb_p_pushblock )
    return (lPCodePos - ulStart);
 }
 
-static HB_FIX_FUNC( hb_p_pushblockshort )
+static HB_FIX_FUNC( hb_p_pushblocklarge )
 {
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
+   USHORT wVar;
+   ULONG ulStart = lPCodePos;
 
    ++cargo->iNestedCodeblock;
 
-   return 2;
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 6 ] );
+
+   /* opcode + codeblock size + number of parameters + number of local variables */
+   lPCodePos += 8;
+   if( pFunc->wParamCount == 0 )
+   {
+      lPCodePos += wVar << 1;
+   }
+   else
+   {
+      /* fix local variable's reference */
+      while( wVar-- )
+      {
+         BYTE * pLocal = &( pFunc->pCode[ lPCodePos ] );
+         USHORT wLocal = HB_PCODE_MKUSHORT( pLocal );
+
+         wLocal += pFunc->wParamCount;
+         pLocal[ 0 ] = HB_LOBYTE( wLocal );
+         pLocal[ 1 ] = HB_HIBYTE( wLocal );
+         lPCodePos += 2;
+      }
+   }
+   return (lPCodePos - ulStart);
 }
 
 static HB_FIX_FUNC( hb_p_poplocal )
@@ -124,7 +156,6 @@ static HB_FIX_FUNC( hb_p_poplocal )
    if( cargo->iNestedCodeblock == 0 )
    {
       HB_COMP_DECL = cargo->HB_COMP_PARAM;
-
       BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
       SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
@@ -237,6 +268,33 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
    }
 
    return 2;
+}
+
+static HB_FIX_FUNC( hb_p_localaddint )
+{
+   /* only local variables used outside of a codeblock need fixing
+    */
+   if( cargo->iNestedCodeblock == 0 )
+   {
+      HB_COMP_DECL = cargo->HB_COMP_PARAM;
+      BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+      SHORT iVar = HB_PCODE_MKSHORT( pVar );
+
+      iVar += pFunc->wParamCount;
+      if( HB_LIM_INT8( iVar ) && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+      {
+         pVar[ 0 ] = HB_P_LOCALNEARADDINT;
+         pVar[ 1 ] = HB_LOBYTE( iVar );
+         hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+      }
+      else
+      {
+         pVar[ 0 ] = HB_LOBYTE( iVar );
+         pVar[ 1 ] = HB_HIBYTE( iVar );
+      }
+   }
+
+   return 5;
 }
 
 static HB_FIX_FUNC( hb_p_localnearaddint )
@@ -650,7 +708,20 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MACROSEND             */
    NULL,                       /* HB_P_PUSHOVARREF           */
    NULL,                       /* HB_P_ARRAYPUSHREF          */
-   NULL                        /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_LARGEFRAME            */
+   NULL,                       /* HB_P_LARGEVFRAME           */
+   NULL,                       /* HB_P_PUSHSTRHIDDEN         */
+   hb_p_localaddint,           /* HB_P_LOCALADDINT           */
+   NULL,                       /* HB_P_MODEQPOP              */
+   NULL,                       /* HB_P_EXPEQPOP              */
+   NULL,                       /* HB_P_MODEQ                 */
+   NULL,                       /* HB_P_EXPEQ                 */
+   NULL,                       /* HB_P_DUPLUNREF             */
+   NULL,                       /* HB_P_MPUSHBLOCKLARGE       */
+   NULL,                       /* HB_P_MPUSHSTRLARGE         */
+   hb_p_pushblocklarge,        /* HB_P_PUSHBLOCKLARGE        */
+   NULL                        /* HB_P_PUSHSTRLARGE          */
 };
 
 void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )

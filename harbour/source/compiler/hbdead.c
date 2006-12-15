@@ -459,7 +459,20 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_MACROSEND             */
    hb_p_default,               /* HB_P_PUSHOVARREF           */
    hb_p_default,               /* HB_P_ARRAYPUSHREF          */
-   hb_p_default                /* HB_P_VFRAME                */
+   hb_p_default,               /* HB_P_VFRAME                */
+   hb_p_default,               /* HB_P_LARGEFRAME            */
+   hb_p_default,               /* HB_P_LARGEVFRAME           */
+   hb_p_default,               /* HB_P_PUSHSTRHIDDEN         */
+   hb_p_default,               /* HB_P_LOCALADDINT           */
+   hb_p_default,               /* HB_P_MODEQPOP              */
+   hb_p_default,               /* HB_P_EXPEQPOP              */
+   hb_p_default,               /* HB_P_MODEQ                 */
+   hb_p_default,               /* HB_P_EXPEQ                 */
+   hb_p_default,               /* HB_P_DUPLUNREF             */
+   hb_p_default,               /* HB_P_MPUSHBLOCKLARGE       */
+   hb_p_default,               /* HB_P_MPUSHSTRLARGE         */
+   hb_p_default,               /* HB_P_PUSHBLOCKLARGE        */
+   hb_p_default                /* HB_P_PUSHSTRLARGE          */
 };
 
 void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )

@@ -313,6 +313,19 @@
 #  endif
 #endif
 
+#if !defined( UCHAR_MAX )
+#  define UCHAR_MAX     0x0FF
+#endif
+#if !defined( UINT24_MAX )
+#  define UINT24_MAX    0x0FFFFFFL
+#endif
+#if !defined( INT24_MAX )
+#  define INT24_MAX     8388607L
+#endif
+#if !defined( INT24_MIN )
+#  define INT24_MIN     -8388608L
+#endif
+
 #if defined( HB_ARCH_64BIT ) && !defined( _WIN64 )
 #   if !defined( UINT64 )
       typedef ULONG        UINT64;
@@ -388,12 +401,12 @@
 
 #define HB_DBL_LIM_INT8(d)    ( -128 <= (d) && (d) <= 127 )
 #define HB_DBL_LIM_INT16(d)   ( INT16_MIN <= (d) && (d) <= INT16_MAX )
-#define HB_DBL_LIM_INT24(d)   ( -8388608.0 <= (d) && (d) <= 8388607.0 )
+#define HB_DBL_LIM_INT24(d)   ( INT24_MIN <= (d) && (d) <= INT24_MAX )
 #define HB_DBL_LIM_INT32(d)   ( INT32_MIN <= (d) && (d) <= INT32_MAX )
 #define HB_DBL_LIM_INT64(d)   ( (HB_MAXDBL) INT64_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) INT64_MAX )
 #define HB_LIM_INT8(l)        ( -128 <= (l) && (l) <= 127 )
 #define HB_LIM_INT16(l)       ( INT16_MIN <= (l) && (l) <= INT16_MAX )
-#define HB_LIM_INT24(l)       ( -8388608L <= (l) && (l) <= 8388607L )
+#define HB_LIM_INT24(l)       ( INT24_MIN <= (l) && (l) <= INT24_MAX )
 #define HB_LIM_INT32(l)       ( INT32_MIN <= (l) && (l) <= INT32_MAX )
 #define HB_LIM_INT64(l)       ( INT64_MIN <= (l) && (l) <= INT64_MAX )
 
@@ -543,7 +556,9 @@ typedef unsigned long HB_COUNTER;
 #define HB_MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 
 #define HB_LOBYTE( w )          ( ( BYTE ) ( w ) )
-#define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 8 ) & 0xFF ) )
+#define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( w ) >>  8 ) & 0xFF ) )
+#define HB_ULBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 16 ) & 0xFF ) )
+#define HB_UHBYTE( w )          ( ( BYTE ) ( ( ( w ) >> 24 ) & 0xFF ) )
 #define HB_LOWORD( l )          ( ( UINT16 ) ( l ) )
 #define HB_HIWORD( l )          ( ( UINT16 ) ( ( ( l ) >> 16 ) & 0xFFFF ) )
 #define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( INT16 ) ( hi ) ) << 8 ) | ( lo ) )
@@ -898,7 +913,7 @@ typedef unsigned long HB_COUNTER;
 #  endif
 
    #define HB_USHORT_FROM_LE( w )   HB_MKUSHORT( HB_HIBYTE( w ), HB_LOBYTE( w ) )
-   #define HB_ULONG_FROM_LE( l )    HB_MKULONG( HB_HIBYTE( HB_HIWORD( l ) ), HB_LOBYTE( HB_HIWORD( l ) ), HB_HIBYTE( l ), HB_LOBYTE( l ) )
+   #define HB_ULONG_FROM_LE( l )    HB_MKULONG( HB_UHBYTE( l ), HB_ULBYTE( l ), HB_HIBYTE( l ), HB_LOBYTE( l ) )
    #define HB_USHORT_TO_LE( w )     HB_USHORT_FROM_LE( w )
    #define HB_ULONG_TO_LE( l )      HB_ULONG_FROM_LE( l )
 

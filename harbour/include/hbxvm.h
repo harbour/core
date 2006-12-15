@@ -91,6 +91,7 @@ extern HB_EXPORT void   hb_xvmWithObjectMessage( PHB_SYMB );      /* send WITH O
 extern HB_EXPORT void   hb_xvmSetLine( USHORT uiLine );           /* set .prg line number information */
 
 extern HB_EXPORT void   hb_xvmFrame( int iLocals, int iParams );  /* increases the stack pointer for the amount of locals and params suplied */
+extern HB_EXPORT void   hb_xvmVFrame( int iLocals, int iParams ); /* increases the stack pointer for the amount of locals and variable params */
 extern HB_EXPORT void   hb_xvmSFrame( PHB_SYMB pSymbol );
 extern HB_EXPORT void   hb_xvmStatics( PHB_SYMB pSymbol, USHORT uiStatics );
 extern HB_EXPORT void   hb_xvmParameter( PHB_SYMB pSymbol, int iParams );
@@ -106,6 +107,7 @@ extern HB_EXPORT BOOL   hb_xvmPushVariable( PHB_SYMB pSymbol );
 extern HB_EXPORT BOOL   hb_xvmPopVariable( PHB_SYMB pSymbol );
 extern HB_EXPORT void   hb_xvmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void   hb_xvmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+extern HB_EXPORT void   hb_xvmPushBlockLarge( const BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern HB_EXPORT void   hb_xvmPushSelf( void );
 extern HB_EXPORT void   hb_xvmPushLocal( SHORT iLocal );          /* pushes the containts of a local onto the stack */
 extern HB_EXPORT void   hb_xvmPushLocalByRef( SHORT iLocal );     /* pushes a local by refrence onto the stack */
@@ -129,8 +131,8 @@ extern HB_EXPORT BOOL   hb_xvmAnd( void );
 extern HB_EXPORT BOOL   hb_xvmOr( void );
 extern HB_EXPORT BOOL   hb_xvmNot( void );
 extern HB_EXPORT BOOL   hb_xvmNegate( void );
-extern HB_EXPORT BOOL   hb_xvmPower( void );
 extern HB_EXPORT void   hb_xvmDuplicate( void );
+extern HB_EXPORT void   hb_xvmDuplUnRef( void );
 extern HB_EXPORT void   hb_xvmDuplTwo( void );
 extern HB_EXPORT BOOL   hb_xvmForTest( void );
 extern HB_EXPORT void   hb_xvmFuncPtr( void );
@@ -154,6 +156,11 @@ extern HB_EXPORT BOOL   hb_xvmDivide( void );                     /* divides the
 extern HB_EXPORT BOOL   hb_xvmDivEq( void );
 extern HB_EXPORT BOOL   hb_xvmDivEqPop( void );
 extern HB_EXPORT BOOL   hb_xvmModulus( void );                    /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
+extern HB_EXPORT BOOL   hb_xvmModEq( void );
+extern HB_EXPORT BOOL   hb_xvmModEqPop( void );
+extern HB_EXPORT BOOL   hb_xvmPower( void );
+extern HB_EXPORT BOOL   hb_xvmExpEq( void );
+extern HB_EXPORT BOOL   hb_xvmExpEqPop( void );
 extern HB_EXPORT BOOL   hb_xvmInc( void );
 extern HB_EXPORT BOOL   hb_xvmDec( void );
 
@@ -183,6 +190,7 @@ extern HB_EXPORT BOOL   hb_xvmMacroPopAliased( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroSymbol( void );
 extern HB_EXPORT BOOL   hb_xvmMacroText( void );
 
+extern HB_EXPORT void   hb_xvmPushStringHidden( char * szText, ULONG length );
 extern HB_EXPORT void   hb_xvmPushDouble( double dNumber, int iWidth, int iDec );
 #ifdef HB_LONG_LONG_OFF
 extern HB_EXPORT void   hb_xvmPushLongLong( double dNumber );

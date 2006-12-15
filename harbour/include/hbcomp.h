@@ -312,7 +312,7 @@ extern void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME );      /* generates OBJ 32
 extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platform dependant object module */
 
 extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
-extern void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen );
+extern void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen );
 
 /* hbident.c   */
 extern char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType ); /* create the reusable identifier */

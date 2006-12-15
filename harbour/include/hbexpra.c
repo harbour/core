@@ -50,15 +50,6 @@
  *
  */
 
-/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
-
-/* TODO:
- *    - Correct post- and pre- operations to correctly handle the following code
- *    a[ i++ ]++
- *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
- *    two times! This causes that the new value (after incrementation) is
- *    stored in next element of the array.
- */
 
 #include <math.h>
 #include "hbcomp.h"
@@ -666,8 +657,8 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%p,%s,%p,%p)", pObject, szMessage, pMessage, HB_COMP_PARAM));
 
    pExpr = hb_compExprNew( HB_ET_SEND, HB_COMP_PARAM );
-   pExpr->value.asMessage.pObject   = pObject;
-   pExpr->value.asMessage.pParms     = NULL;
+   pExpr->value.asMessage.pObject = pObject;
+   pExpr->value.asMessage.pParms = NULL;
 
    if( szMessage != NULL )
    {
@@ -789,6 +780,7 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
    HB_EXPR_USE( pIndex, HB_EA_ARRAY_INDEX );
    pExpr->value.asList.pExprList = pArray;
    pExpr->value.asList.pIndex = pIndex;
+   pExpr->value.asList.reference = FALSE;
 
    return pExpr;
 }

@@ -8,6 +8,70 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-15 16:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/isprint.c
+  * harbour/source/rtl/left.c
+  * harbour/source/rtl/right.c
+  * harbour/source/rtl/strtran.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * general PCODE cleanup and address most of TODO/TOFIX notes in
+      source code:
+      ! fixed GPF traps when too long string or codeblock is generatd
+      + added support for 16MB codeblocks and strings
+      ! removed macrocompiler limitation for jumps range
+      ! fixed GPF when more then 255 local variables is used and added
+        support for 2^15 locals
+      ! removed all strtok() functions
+      % added optimization for all +=, -=, *=, %=, ^=, **= operations
+        when left side of expression is variable or array item
+      % added optimization for all +=, -=, *=, %=, ^=, **= operations
+        when left side of expression is object method and updated ++, --
+        for new code. It's still disabled until we will not add support
+        for late evaluated reference items to HVM
+      ! fixed a[++i]++ and similar operations (a[++i]*=2, ...). Now ++i is
+        executed only once. It's not Clipper compatible but it was in
+        TODO note in source code. It can be disabled by -kc option
+      * finished support to xHarbour like #pragma TEXTHIDDEN(1)
+      ! fixed local add int optimization when PARAMETERS used after
+        optimization changed local variable number over 255
+      ! fixed GPF trap when in HB_P_<op>EQ PCODEs when executed for
+        direct values
+      * others
+    ! fixed problems reported by Chen
+    * optimized strtran(), left(), right() to not create new string copy
+      when the same value is returned
+
 2006-12-13 18:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/console.c
     * pacify false CG error messages - Chen Kedem modifications (sizeof(int)

@@ -50,16 +50,6 @@
  *
  */
 
-/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
-
-/* TODO:
- *    - Correct post- and pre- operations to correctly handle the following code
- *    a[ i++ ]++
- *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
- *    two times! This causes that the new value (after incrementation) is
- *    stored in next element of the array.
- */
-
 /* NOTE: This must be the first definition
  *    This is a common code shared by macro and standalone compiler
  */
@@ -364,7 +354,7 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
    {
       /* TODO:
-         */
+       */
    }
    else
    {

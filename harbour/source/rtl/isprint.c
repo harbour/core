@@ -327,7 +327,7 @@ static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;
   OSVERSIONINFO osv;
-  TCHAR cBuffer[MAXBUFFERSIZE];
+  TCHAR cBuffer[MAXBUFFERSIZE], *ptr;
   PRINTER_INFO_2 *ppi2 = NULL;
   DWORD dwNeeded = 0;
   DWORD dwReturned = 0;
@@ -396,7 +396,16 @@ static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
         return FALSE;
 
       /* Printer name precedes first "," character... */
-      strtok(cBuffer, ",");
+      ptr = cBuffer;
+      while( *ptr )
+      {
+         if( *ptr == ',' )
+         {
+            *ptr = '\0';
+            break;
+         }
+         ++ptr;
+      }   
 
       /* If given buffer too small, set required size and fail... */
       if ((DWORD)lstrlen(cBuffer) >= *pdwBufferSize)

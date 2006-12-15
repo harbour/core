@@ -63,16 +63,17 @@ HB_FUNC( RIGHT )
    if( pText && ISNUM( 2 ) )
    {
       long lLen = hb_parnl( 2 );
-      long lTextLen = ( long ) hb_itemGetCLen( pText );
-
-      if( lLen > lTextLen )
-         lLen = lTextLen;
-      else if( lLen < 0 )
-         lLen = 0;
-
-      hb_retclen( hb_itemGetCPtr( pText ) + lTextLen - lLen, lLen );
+      if( lLen < 0 )
+         hb_retc( NULL );
+      else
+      {
+         ULONG ulText = hb_itemGetCLen( pText );
+         if( ( ULONG ) lLen >= ulText )
+            hb_itemReturn( pText );
+         else
+            hb_retclen( hb_itemGetCPtr( pText ) + ulText - lLen, lLen );
+      }
    }
    else
       hb_retc( NULL ); /* Clipper doesn't error */
 }
-

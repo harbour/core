@@ -63,13 +63,16 @@ HB_FUNC( LEFT )
    if( pText && ISNUM( 2 ) )
    {
       long lLen = hb_parnl( 2 );
-
-      if( lLen > ( long ) hb_itemGetCLen( pText ) )
-         lLen = ( long ) hb_itemGetCLen( pText );
-      else if( lLen < 0 )
-         lLen = 0;
-
-      hb_retclen( hb_itemGetCPtr( pText ), lLen );
+      if( lLen < 0 )
+         hb_retc( NULL );
+      else
+      {
+         ULONG ulText = hb_itemGetCLen( pText );
+         if( ( ULONG ) lLen >= ulText )
+            hb_itemReturn( pText );
+         else
+            hb_retclen( hb_itemGetCPtr( pText ), lLen );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );

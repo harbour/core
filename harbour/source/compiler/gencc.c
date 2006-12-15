@@ -47,14 +47,14 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-void hb_compGenCString( FILE * yyc, BYTE * pText, USHORT usLen )
+void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
 {
-   USHORT usPos;
+   ULONG ulPos;
 
    fputc( '"', yyc );
-   for( usPos = 0; usPos < usLen; usPos++ )
+   for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
-      BYTE uchr = ( BYTE ) pText[ usPos ];
+      BYTE uchr = ( BYTE ) pText[ ulPos ];
       /*
        * NOTE: After optimization some CHR(n) can be converted
        *    into a string containing nonprintable characters.
@@ -291,6 +291,14 @@ static HB_GENC_FUNC( hb_p_duplicate )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmDuplicate();\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_duplunref )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmDuplUnRef();\n" );
    return 1;
 }
 
@@ -933,30 +941,6 @@ static HB_GENC_FUNC( hb_p_pushaliasedvar )
    return 3;
 }
 
-static HB_GENC_FUNC( hb_p_pushblock )
-{
-   USHORT usSize, us;
-
-   HB_GENC_LABEL();
-
-   usSize = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) - 3;
-
-   fprintf( cargo->yyc, "\t{\n\t\tstatic const BYTE codeblock[ %hd ] = {", usSize );
-
-   for( us = 0; us < usSize; ++us )
-   {
-      if( ( us & 0x0f ) == 0 )
-         fprintf( cargo->yyc, "\n\t\t\t" );
-      if( us == usSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + 3 + us ] );
-      else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + 3 + us ] );
-   }
-   fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlock( codeblock, symbols );\n\t}\n" );
-
-   return 3 + usSize;
-}
-
 static HB_GENC_FUNC( hb_p_pushblockshort )
 {
    USHORT usSize, us;
@@ -964,6 +948,7 @@ static HB_GENC_FUNC( hb_p_pushblockshort )
    HB_GENC_LABEL();
 
    usSize = pFunc->pCode[ lPCodePos + 1 ] - 2;
+   lPCodePos += 2;
 
    fprintf( cargo->yyc, "\t{\n\t\tstatic const BYTE codeblock[ %hd ] = {", usSize );
 
@@ -972,13 +957,63 @@ static HB_GENC_FUNC( hb_p_pushblockshort )
       if( ( us & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( us == usSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + 2 + us ] );
+         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + us ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + 2 + us ] );
+         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + us ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlockShort( codeblock, symbols );\n\t}\n" );
 
    return 2 + usSize;
+}
+
+static HB_GENC_FUNC( hb_p_pushblock )
+{
+   USHORT usSize, us;
+
+   HB_GENC_LABEL();
+
+   usSize = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) - 3;
+   lPCodePos += 3;
+
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const BYTE codeblock[ %hd ] = {", usSize );
+
+   for( us = 0; us < usSize; ++us )
+   {
+      if( ( us & 0x0f ) == 0 )
+         fprintf( cargo->yyc, "\n\t\t\t" );
+      if( us == usSize - 1 )
+         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + us ] );
+      else
+         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + us ] );
+   }
+   fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlock( codeblock, symbols );\n\t}\n" );
+
+   return 3 + usSize;
+}
+
+static HB_GENC_FUNC( hb_p_pushblocklarge )
+{
+   ULONG ulSize, ul;
+
+   HB_GENC_LABEL();
+
+   ulSize = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 4;
+   lPCodePos += 4;
+
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const BYTE codeblock[ %lu ] = {", ulSize );
+
+   for( ul = 0; ul < ulSize; ++ul )
+   {
+      if( ( ul & 0x0f ) == 0 )
+         fprintf( cargo->yyc, "\n\t\t\t" );
+      if( ul == ulSize - 1 )
+         fprintf( cargo->yyc, "%d", pFunc->pCode[ lPCodePos + ul ] );
+      else
+         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ lPCodePos + ul ] );
+   }
+   fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlock( codeblock, symbols );\n\t}\n" );
+
+   return 4 + ulSize;
 }
 
 static HB_GENC_FUNC( hb_p_pushdouble )
@@ -1162,6 +1197,19 @@ static HB_GENC_FUNC( hb_p_pushstaticref )
    return 3;
 }
 
+static HB_GENC_FUNC( hb_p_pushstrshort )
+{
+   USHORT usLen = pFunc->pCode[ lPCodePos + 1 ] - 1;
+
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ], usLen );
+   fprintf( cargo->yyc, ", %hu );\n", usLen );
+
+   return 3 + usLen;
+}
+
 static HB_GENC_FUNC( hb_p_pushstr )
 {
    USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
@@ -1175,17 +1223,30 @@ static HB_GENC_FUNC( hb_p_pushstr )
    return 4 + usLen;
 }
 
-static HB_GENC_FUNC( hb_p_pushstrshort )
+static HB_GENC_FUNC( hb_p_pushstrlarge )
 {
-   USHORT usLen = pFunc->pCode[ lPCodePos + 1 ] - 1;
+   ULONG ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
 
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
-   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ], usLen );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], ulLen );
+   fprintf( cargo->yyc, ", %lu );\n", ulLen );
+
+   return 5 + ulLen;
+}
+
+static HB_GENC_FUNC( hb_p_pushstrhidden )
+{
+   USHORT usLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushStringHidden( " );
+   hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], usLen );
    fprintf( cargo->yyc, ", %hu );\n", usLen );
 
-   return 3 + usLen;
+   return 4 + usLen;
 }
 
 static HB_GENC_FUNC( hb_p_pushsym )
@@ -1496,6 +1557,16 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
    return 4;
 }
 
+static HB_GENC_FUNC( hb_p_localaddint )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmLocalAddInt( %d, %d ) ) break;\n",
+            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
+   return 5;
+}
+
 static HB_GENC_FUNC( hb_p_pluseqpop )
 {
    HB_GENC_LABEL();
@@ -1528,6 +1599,22 @@ static HB_GENC_FUNC( hb_p_diveqpop )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_modeqpop )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmModEqPop() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_expeqpop )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmExpEqPop() ) break;\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_pluseq )
 {
    HB_GENC_LABEL();
@@ -1557,6 +1644,22 @@ static HB_GENC_FUNC( hb_p_diveq )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmDivEq() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_modeq )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmModEq() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_expeq )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmExpEq() ) break;\n" );
    return 1;
 }
 
@@ -1593,6 +1696,26 @@ static HB_GENC_FUNC( hb_p_vframe )
    fprintf( cargo->yyc, "\thb_xvmVFrame( %hu, %hu );\n",
             pFunc->pCode[ lPCodePos + 1 ], pFunc->pCode[ lPCodePos + 2 ] );
    return 3;
+}
+
+static HB_GENC_FUNC( hb_p_largeframe )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmFrame( %hu, %hu );\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+            pFunc->pCode[ lPCodePos + 3 ] );
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_largevframe )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmVFrame( %hu, %hu );\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+            pFunc->pCode[ lPCodePos + 3 ] );
+   return 4;
 }
 
 
@@ -1754,7 +1877,20 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_macrosend,
    hb_p_pushovarref,
    hb_p_arraypushref,
-   hb_p_vframe
+   hb_p_vframe,
+   hb_p_largeframe,
+   hb_p_largevframe,
+   hb_p_pushstrhidden,
+   hb_p_localaddint,
+   hb_p_modeqpop,
+   hb_p_expeqpop,
+   hb_p_modeq,
+   hb_p_expeq,
+   hb_p_duplunref,
+   hb_p_dummy,
+   hb_p_dummy,
+   hb_p_pushblocklarge,
+   hb_p_pushstrlarge
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

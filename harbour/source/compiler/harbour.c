@@ -3306,11 +3306,30 @@ void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
 {
-   if( ulStrLen > 255 )
-      hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+   if( HB_COMP_PARAM->iHidden )
+   {
+      --ulStrLen;
+      szText = hb_compEncodeString( HB_COMP_PARAM->iHidden, szText, &ulStrLen );
+      hb_compGenPCode4( HB_P_PUSHSTRHIDDEN, ( BYTE ) HB_COMP_PARAM->iHidden,
+                        HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+      hb_xfree( szText );
+   }
    else
-      hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( BYTE ) ulStrLen, HB_COMP_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+   {
+      if( ulStrLen > UINT24_MAX )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TOO_LONG, NULL, NULL );
+      else
+      {
+         if( ulStrLen > USHRT_MAX )
+            hb_compGenPCode4( HB_P_PUSHSTRLARGE, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_ULBYTE( ulStrLen ), HB_COMP_PARAM );
+         else if( ulStrLen > UCHAR_MAX )
+            hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+         else
+            hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( BYTE ) ulStrLen, HB_COMP_PARAM );
+         hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+      }
+   }
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
@@ -3500,7 +3519,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
             pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
-      int iLocals = 0;
+      int iLocals = 0, iOffset = 0;
       BOOL bSkipFRAME;
       BOOL bSkipSFRAME;
 
@@ -3512,29 +3531,6 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
          iLocals++;
       }
 
-      if( iLocals || pFunc->wParamCount )
-      {
-         /* Parameters declared with PARAMETERS statement are not
-          * placed in the local variable list.
-          */
-         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
-            iLocals -= pFunc->wParamCount;
-
-         /* TODO: generate error when iLocals > 255 or add new
-          *       HB_P_LARGE[V]FRAME pcode(s) and replace current
-          *       pcode frame with the new one moving the pcode.
-          */
-
-         pFunc->pCode[ 1 ] = ( BYTE )( iLocals );
-         pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
-         bSkipFRAME = FALSE;
-      }
-      else
-         /* Skip LOCALs frame only when function is not declared with
-          * variable number of parameters (HB_P_VFRAME)
-          */
-         bSkipFRAME = pFunc->pCode[ 0 ] == HB_P_FRAME;
-
       if( pFunc->bFlags & FUN_USES_STATICS )
       {
          hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, &w, HB_SYM_FUNCNAME );
@@ -3545,22 +3541,61 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
       else
          bSkipSFRAME = TRUE;
 
+      if( iLocals || pFunc->wParamCount )
+      {
+         /* Parameters declared with PARAMETERS statement are not
+          * placed in the local variable list.
+          */
+         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+            iLocals -= pFunc->wParamCount;
+
+         if( iLocals > 255 )
+         {
+            /* more then 255 local variables,
+             * make a room for HB_P_LARGE[V]FRAME
+             */
+            hb_compGenPCode1( 0, HB_COMP_PARAM );
+            memmove( pFunc->pCode + 4, pFunc->pCode + 3, pFunc->lPCodePos - 4 );
+            pFunc->pCode[ 0 ] = pFunc->pCode[ 0 ] == HB_P_FRAME ?
+                                          HB_P_LARGEFRAME : HB_P_LARGEVFRAME;
+            pFunc->pCode[ 1 ] = HB_LOBYTE( iLocals );
+            pFunc->pCode[ 2 ] = HB_HIBYTE( iLocals );
+            pFunc->pCode[ 3 ] = ( BYTE )( pFunc->wParamCount );
+            iOffset = 1;
+         }
+         else
+         {
+            pFunc->pCode[ 1 ] = ( BYTE )( iLocals );
+            pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
+         }
+         bSkipFRAME = FALSE;
+      }
+      else
+         /* Skip LOCALs frame only when function is not declared with
+          * variable number of parameters (HB_P_VFRAME)
+          */
+         bSkipFRAME = pFunc->pCode[ 0 ] == HB_P_FRAME;
+
       /* Remove the frame pcodes if they are not needed */
 
-      if( bSkipFRAME && bSkipSFRAME )
+      if( bSkipFRAME )
       {
-         pFunc->lPCodePos -= 6;
-         memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
-      }
-      else if( bSkipFRAME )
-      {
-         pFunc->lPCodePos -= 3;
-         memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
+         if( bSkipSFRAME )
+         {
+            pFunc->lPCodePos -= 6;
+            memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
+         }
+         else
+         {
+            pFunc->lPCodePos -= 3;
+            memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
+         }
       }
       else if( bSkipSFRAME )
       {
          pFunc->lPCodePos -= 3;
-         memmove( pFunc->pCode + 3, pFunc->pCode + 6, pFunc->lPCodePos - 3 );
+         memmove( pFunc->pCode + 3 + iOffset, pFunc->pCode + 6 + iOffset,
+                  pFunc->lPCodePos - 3 - iOffset );
       }
    }
 }
@@ -4118,7 +4153,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
    PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
-   USHORT wSize;
+   ULONG  ulSize;
    USHORT wLocals = 0;   /* number of referenced local variables */
    USHORT wLocalsCnt, wLocalsLen;
    USHORT wPos;
@@ -4156,28 +4191,37 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    while( pVar )
    {
       if( HB_COMP_PARAM->fDebugInfo )
-         wLocalsLen += (4 + strlen(pVar->szName));
+         wLocalsLen += 4 + strlen( pVar->szName );
       pVar = pVar->pNext;
       ++wLocals;
    }
    wLocalsCnt = wLocals;
    
-   /* NOTE: 2 = HB_P_PUSHBLOCK + BYTE( size ) */
-   wSize = ( USHORT ) pCodeblock->lPCodePos + 2;
+   ulSize = pCodeblock->lPCodePos + 2;
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      wSize += (3 + strlen( hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ) ) + strlen( pFunc->szName ));
-      wSize += wLocalsLen;
+      ulSize += 3 + strlen( hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ) ) + strlen( pFunc->szName );
+      ulSize += wLocalsLen;
    }
-   if( wSize <= 255 && pCodeblock->wParamCount == 0 && wLocals == 0 )
+
+   if( ulSize <= 255 && pCodeblock->wParamCount == 0 && wLocals == 0 )
    {
-      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) wSize, HB_COMP_PARAM );
+      /* NOTE: 2 = HB_P_PUSHBLOCK + BYTE( size ) */
+      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) ulSize, HB_COMP_PARAM );
    }
    else
    {
       /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
-      wSize += (5+ wLocals * 2);
-      hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), HB_COMP_PARAM );
+      ulSize += 5 + wLocals * 2;
+      if( ulSize <= USHRT_MAX )
+         hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_COMP_PARAM );
+      else if( ulSize < UINT24_MAX )
+      {
+         ++ulSize;
+         hb_compGenPCode4( HB_P_PUSHBLOCKLARGE, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_ULBYTE( ulSize ), HB_COMP_PARAM );
+      }
+      else
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK_TOO_BIG, NULL, NULL );
 
       /* generate the number of local parameters */
       hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), HB_COMP_PARAM );

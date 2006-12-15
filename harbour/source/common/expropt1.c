@@ -50,14 +50,6 @@
  *
  */
 
-/* TODO:
- *    - Correct post- and pre- operations to correctly handle the following code
- *    a[ i++ ]++
- *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
- *    two times! This causes that the new value (after incrementation) is
- *    stored in next element of the array.
- */
-
 /* NOTE: This must be the first definition
  *    This is a common code shared by macro and standalone compiler
  */

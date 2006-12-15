@@ -964,26 +964,50 @@ int hb_compLocalVarGetPos( char * szVarName, HB_COMP_DECL )
 
 ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
 {
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if ( ! HB_LIM_INT16( lOffset ) )
+   if( lOffset == 0 )
+      hb_compGenPCode4( HB_P_JUMPFAR, 0, 0, 0, HB_COMP_PARAM );
+   else if( HB_LIM_INT8( lOffset ) )
+      hb_compGenPCode2( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( lOffset ) )
+      hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( lOffset ) )
+      hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
-   hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
-
-   return HB_PCODE_DATA->lPCodePos - 2;
+   return HB_PCODE_DATA->lPCodePos - 3;
 }
 
 ULONG hb_compGenJumpFalse( LONG lOffset, HB_COMP_DECL )
 {
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if ( ! HB_LIM_INT16( lOffset ) )
+   if( lOffset == 0 )
+      hb_compGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0, HB_COMP_PARAM );
+   else if( HB_LIM_INT8( lOffset ) )
+      hb_compGenPCode2( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( lOffset ) )
+      hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( lOffset ) )
+      hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
-   hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
+   return HB_PCODE_DATA->lPCodePos - 3;
+}
 
-   return HB_PCODE_DATA->lPCodePos - 2;
+ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
+{
+   if( lOffset == 0 )
+      hb_compGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0, HB_COMP_PARAM );
+   else if( HB_LIM_INT8( lOffset ) )
+      hb_compGenPCode2( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( lOffset ) )
+      hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( lOffset ) )
+      hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else
+      hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
+
+   return HB_PCODE_DATA->lPCodePos - 3;
 }
 
 void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL )
@@ -991,30 +1015,15 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL )
    BYTE * pCode = HB_PCODE_DATA->pCode;
    LONG lOffset = ulTo - ulFrom + 1;
 
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if ( ! HB_LIM_INT16( lOffset ) )
+   if( HB_LIM_INT24( lOffset ) )
+      HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
+   else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
-
-   pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
-   pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
 }
 
 void hb_compGenJumpHere( ULONG ulOffset, HB_COMP_DECL )
 {
    hb_compGenJumpThere( ulOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
-}
-
-ULONG hb_compGenJumpTrue( LONG lOffset, HB_COMP_DECL )
-{
-   /* TODO: We need a longer offset (longer then two bytes)
-    */
-   if ( ! HB_LIM_INT16( lOffset ) )
-      hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
-
-   hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
-
-   return HB_PCODE_DATA->lPCodePos - 2;
 }
 
 /* Checks if there is a visible memvar variable
@@ -1392,8 +1401,16 @@ void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
 {
-   hb_compGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
-   hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+   if( ulStrLen <= UINT24_MAX )
+   {
+      if( ulStrLen <= USHRT_MAX )
+         hb_compGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+      else 
+         hb_compGenPCode4( HB_P_MPUSHSTRLARGE, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_ULBYTE( ulStrLen ), HB_COMP_PARAM );
+      hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+   }
+   else
+      hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 }
 
 
@@ -1492,7 +1509,7 @@ void hb_compCodeBlockStart( HB_COMP_DECL )
 void hb_compCodeBlockEnd( HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pCodeblock;   /* pointer to the current codeblock */
-   USHORT wSize;
+   ULONG ulSize;
    USHORT wParms = 0;   /* number of codeblock parameters */
    HB_CBVAR_PTR pVar;
 
@@ -1509,9 +1526,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    /* generate a proper codeblock frame with a codeblock size and with
     * a number of expected parameters
     */
-   /*QUESTION: would be 64kB enough for a codeblock size?
-    * we are assuming now a USHORT for a size of codeblock
-    */
 
    /* Count the number of codeblock parameters */
    pVar = pCodeblock->pLocals;
@@ -1525,14 +1539,19 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */
-   wSize = ( USHORT ) pCodeblock->lPCodePos + 6;
+   ulSize = ( ULONG ) pCodeblock->lPCodePos + 6;
 
    /*NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
     */
-   hb_compGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), HB_COMP_PARAM );
-   hb_compGenPCode1( HB_LOBYTE( wParms ), HB_COMP_PARAM );
-   hb_compGenPCode1( HB_HIBYTE( wParms ), HB_COMP_PARAM );
+   if( ulSize <= USHRT_MAX )
+      hb_compGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_COMP_PARAM );
+   else
+   {
+      ++ulSize;
+      hb_compGenPCode4( HB_P_MPUSHBLOCKLARGE, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_ULBYTE( ulSize ), HB_COMP_PARAM );
+   }
+   hb_compGenPCode2( HB_LOBYTE( wParms ), HB_HIBYTE( wParms ), HB_COMP_PARAM );
 
    /* copy a codeblock pcode buffer */
    hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_COMP_PARAM );

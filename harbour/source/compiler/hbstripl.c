@@ -228,7 +228,20 @@ static PHB_STRIP_FUNC s_stripLines_table[] =
    NULL,                       /* HB_P_MACROSEND             */
    NULL,                       /* HB_P_PUSHOVARREF           */
    NULL,                       /* HB_P_ARRAYPUSHREF          */
-   NULL                        /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_LARGEFRAME            */
+   NULL,                       /* HB_P_LARGEVFRAME           */
+   NULL,                       /* HB_P_PUSHSTRHIDDEN         */
+   NULL,                       /* HB_P_LOCALADDINT           */
+   NULL,                       /* HB_P_MODEQPOP              */
+   NULL,                       /* HB_P_EXPEQPOP              */
+   NULL,                       /* HB_P_MODEQ                 */
+   NULL,                       /* HB_P_EXPEQ                 */
+   NULL,                       /* HB_P_DUPLUNREF             */
+   NULL,                       /* HB_P_MPUSHBLOCKLARGE       */
+   NULL,                       /* HB_P_MPUSHSTRLARGE         */
+   NULL,                       /* HB_P_PUSHBLOCKLARGE        */
+   NULL                        /* HB_P_PUSHSTRLARGE          */
 };
 
 void hb_compStripFuncLines( PFUNCTION pFunc )

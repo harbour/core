@@ -46,16 +46,28 @@
 /*
  * functions for variable size PCODE tracing
  */
+static HB_PSIZE_FUNC( hb_p_pushstrshort )
+{
+   HB_SYMBOL_UNUSED( cargo );
+   return 2 + pFunc->pCode[ lPCodePos + 1 ];
+}
+
 static HB_PSIZE_FUNC( hb_p_pushstr )
 {
    HB_SYMBOL_UNUSED( cargo );
    return 3 + HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 }
 
-static HB_PSIZE_FUNC( hb_p_pushstrshort )
+static HB_PSIZE_FUNC( hb_p_pushstrlarge )
 {
    HB_SYMBOL_UNUSED( cargo );
-   return 2 + pFunc->pCode[ lPCodePos + 1 ];
+   return 4 + HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+}
+
+static HB_PSIZE_FUNC( hb_p_pushstrhidden )
+{
+   HB_SYMBOL_UNUSED( cargo );
+   return 4 + HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
 }
 
 static HB_PSIZE_FUNC( hb_p_pushblock )
@@ -68,6 +80,12 @@ static HB_PSIZE_FUNC( hb_p_pushblockshort )
 {
    HB_SYMBOL_UNUSED( cargo );
    return pFunc->pCode[ lPCodePos + 1 ];
+}
+
+static HB_PSIZE_FUNC( hb_p_pushblocklarge )
+{
+   HB_SYMBOL_UNUSED( cargo );
+   return HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 }
 
 static HB_PSIZE_FUNC( hb_p_localname )
@@ -256,7 +274,20 @@ const BYTE hb_comp_pcode_len[] = {
    3,        /* HB_P_MACROSEND,            */
    1,        /* HB_P_PUSHOVARREF,          */
    1,        /* HB_P_ARRAYPUSHREF          */
-   3         /* HB_P_VFRAME                */
+   3,        /* HB_P_VFRAME                */
+   4,        /* HB_P_LARGEFRAME            */
+   4,        /* HB_P_LARGEVFRAME           */
+   0,        /* HB_P_PUSHSTRHIDDEN         */
+   5,        /* HB_P_LOCALADDINT           */
+   1,        /* HB_P_MODEQPOP              */
+   1,        /* HB_P_EXPEQPOP              */
+   1,        /* HB_P_MODEQ                 */
+   1,        /* HB_P_EXPEQ                 */
+   1,        /* HB_P_DUPLUNREF             */
+   0,        /* HB_P_MPUSHBLOCKLARGE,      */
+   0,        /* HB_P_MPUSHSTRLARGE         */
+   0,        /* HB_P_PUSHBLOCKLAREG,       */
+   0         /* HB_P_PUSHSTRLARGE          */
 };
 
 /*
@@ -417,7 +448,20 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_MACROSEND             */
    NULL,                       /* HB_P_PUSHOVARREF           */
    NULL,                       /* HB_P_ARRAYPUSHREF          */
-   NULL                        /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_VFRAME                */
+   NULL,                       /* HB_P_LARGEFRAME            */
+   NULL,                       /* HB_P_LARGEVFRAME           */
+   hb_p_pushstrhidden,         /* HB_P_PUSHSTRHIDDEN         */
+   NULL,                       /* HB_P_LOCALADDINT           */
+   NULL,                       /* HB_P_MODEQPOP              */
+   NULL,                       /* HB_P_EXPEQPOP              */
+   NULL,                       /* HB_P_MODEQ                 */
+   NULL,                       /* HB_P_EXPEQ                 */
+   NULL,                       /* HB_P_DUPLUNREF             */
+   NULL,                       /* HB_P_MPUSHBLOCKLARGE       */
+   NULL,                       /* HB_P_MPUSHSTRLARGE         */
+   hb_p_pushblocklarge,        /* HB_P_PUSHBLOCKLARGE,       */
+   hb_p_pushstrlarge           /* HB_P_PUSHSTRLARGE          */
 };
 
 LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )

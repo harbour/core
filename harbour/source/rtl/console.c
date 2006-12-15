@@ -354,7 +354,7 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
-      static const BYTE byEop[ 2 ] = { 0x0C, 0x0D };
+      static const BYTE byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 };
       USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set.hb_set_printhan, byEop, 2 );
       hb_fsSetError( uiErrorOld ); /* Restore last user file error code */

@@ -865,22 +865,31 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char *Args[] )
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
 
-      if( szStrEnv && szStrEnv[0] != '\0' )
-      {
-         char *szSwitch = strtok( szStrEnv, " " );
-
-         /* Check the environment var
-            while it isn't empty.
-          */
-         while( szSwitch != NULL && !HB_COMP_PARAM->fExit )
-         {
-            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
-            szSwitch = strtok( NULL, " " );
-         }
-      }
-
       if( szStrEnv )
+      {
+         char *szSwitch, *szPtr;
+
+         szPtr = szStrEnv;
+         while( *szPtr && !HB_COMP_PARAM->fExit )
+         {
+            while( *szPtr == ' ' )
+               ++szPtr;
+            szSwitch = szPtr;
+            if( *szSwitch )
+            {
+               while( *++szPtr )
+               {
+                  if( *szPtr == ' ' )
+                  {
+                     *szPtr++ = '\0';
+                     break;
+                  }
+               }
+               hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
+            }
+         }
          hb_xfree( ( void * ) szStrEnv );
+      }
    }
 }
 
@@ -943,7 +952,7 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, char *pszSwitch )
 
 void hb_compChkDefines( HB_COMP_DECL, int iArg, char *Args[] )
 {
-   /* Chech the environment variables */
+   /* Check the environment variables */
    {
       /* NOTE: CLIPPERCMD enviroment variable is overriden
          if HARBOURCMD exists */
@@ -957,20 +966,31 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, char *Args[] )
          szStrEnv = hb_getenv( "CLIPPERCMD" );
       }
 
-      if( szStrEnv && szStrEnv[0] != '\0' )
-      {
-         char *szSwitch = strtok( szStrEnv, " " );
-
-         /* Check the environment var while it isn't empty. */
-         while( szSwitch != NULL )
-         {
-            hb_compChkDefineSwitch( HB_COMP_PARAM, szSwitch );
-            szSwitch = strtok( NULL, " " );
-         }
-      }
-
       if( szStrEnv )
+      {
+         char *szSwitch, *szPtr;
+
+         szPtr = szStrEnv;
+         while( *szPtr && !HB_COMP_PARAM->fExit )
+         {
+            while( *szPtr == ' ' )
+               ++szPtr;
+            szSwitch = szPtr;
+            if( *szSwitch )
+            {
+               while( *++szPtr )
+               {
+                  if( *szPtr == ' ' )
+                  {
+                     *szPtr++ = '\0';
+                     break;
+                  }
+               }
+               hb_compChkDefineSwitch( HB_COMP_PARAM, szSwitch );
+            }
+         }
          hb_xfree( ( void * ) szStrEnv );
+      }
    }
 
    /* Check the command line options */

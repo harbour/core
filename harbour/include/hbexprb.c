@@ -50,16 +50,6 @@
  *
  */
 
-/* TOFIX: Split the code, since MSC8 can't compile it, even in Huge model. */
-
-/* TODO:
- *    - Correct post- and pre- operations to correctly handle the following code
- *    a[ i++ ]++
- *    Notice: in current implementation (an in Clipper too) 'i++' is evaluated
- *    two times! This causes that the new value (after incrementation) is
- *    stored in next element of the array.
- */
-
 #include <math.h>
 #include "hbcomp.h"
 #include "hbmacro.ch"
@@ -1302,8 +1292,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                }
             }
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
-
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
+            if( pSelf->value.asList.reference )
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSHREF );
+            else
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
          }
          break;
 
@@ -1402,7 +1394,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                      hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
                   }
 #endif                  
-                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
+                  HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
                }
             }
             /* compile & run - leave a result on the eval stack
@@ -1415,7 +1407,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
-		   if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_XBASE) )
+		   if( HB_SUPPORT_XBASE )
 		   {
                   if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
                	{
@@ -1563,18 +1555,18 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             }
             else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
             {
-               if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+               if( HB_SUPPORT_HARBOUR )
                   hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
             }
             else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
             {
-               if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+               if( HB_SUPPORT_HARBOUR )
                   hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
             }
             else if( ( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ) || 
                        ( strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) ) && usCount < 2 )
             {
-               if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_HARBOUR) )
+               if( HB_SUPPORT_HARBOUR )
                   hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
             }
          }

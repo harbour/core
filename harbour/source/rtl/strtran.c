@@ -122,10 +122,12 @@ HB_FUNC( STRTRAN )
                   long lReplaced = 0;
                   ULONG i = 0;
                   ULONG ulLength = ulText;
+                  ULONG ulStop = ulText - ulSeek + 1;
 
-                  while( i < ulText )
+                  while( i < ulStop )
                   {
-                     if( ( bAll || lReplaced < ( long ) ulCount ) && ! memcmp( szText + i, szSeek, ulSeek ) )
+                     if( ( bAll || lReplaced < ( long ) ulCount ) &&
+                         ! memcmp( szText + i, szSeek, ulSeek ) )
                      {
                         ulFound++;
                         if( ulFound >= ulStart )
@@ -177,16 +179,16 @@ HB_FUNC( STRTRAN )
                      hb_retclen_buffer( szResult, ulLength );
                   }
                   else
-                     hb_retclen( szText, ulText );
+                     hb_itemReturn( pText );
                }
                else
-                  hb_retclen( szText, ulText );
+                  hb_itemReturn( pText );
             }
             else
-               hb_retclen( szText, ulText );
+               hb_itemReturn( pText );
          }
          else
-            hb_retclen( szText, ulText );
+            hb_itemReturn( pText );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 1126, NULL, "STRTRAN", HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */

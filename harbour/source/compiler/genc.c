@@ -382,6 +382,27 @@ static void hb_compGenCFunc( FILE * yyc, char *cDecor, char *szName, int iStrip 
    }
 }
 
+static void hb_compGenCByteStr( FILE * yyc, BYTE * pText, ULONG ulLen )
+{
+   ULONG ulPos;
+   for( ulPos = 0; ulPos < ulLen; ulPos++ )
+   {
+      BYTE uchr = ( BYTE ) pText[ ulPos ];
+      /*
+       * NOTE: After optimization some CHR(n) can be converted
+       *    into a string containing nonprintable characters.
+       *
+       * TODO: add switch to use hexadecimal format "%#04x"
+       */
+      if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
+         fprintf( yyc, "%i, ", uchr );
+      else if( strchr( "\'\\\"", uchr ) )
+         fprintf( yyc, "%i, ", uchr );
+      else
+         fprintf( yyc, "\'%c\', ", uchr );
+   }
+}
+
 static HB_GENC_FUNC( hb_p_and )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -466,6 +487,15 @@ static HB_GENC_FUNC( hb_p_duplicate )
    HB_SYMBOL_UNUSED( lPCodePos );
 
    fprintf( cargo->yyc, "\tHB_P_DUPLICATE,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_duplunref )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_DUPLUNREF,\n" );
    return 1;
 }
 
@@ -1234,6 +1264,20 @@ static HB_GENC_FUNC( hb_p_pushaliasedvar )
    return 3;
 }
 
+static HB_GENC_FUNC( hb_p_pushblockshort )
+{
+   ++cargo->iNestedCodeblock;
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHBLOCKSHORT, %i,",
+            pFunc->pCode[ lPCodePos + 1 ] );
+   if( cargo->bVerbose )
+      fprintf( cargo->yyc, "\t/* %i */",
+               pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\n" );
+
+   return 2;
+}
+
 static HB_GENC_FUNC( hb_p_pushblock )
 {
    USHORT wVar, w;
@@ -1246,17 +1290,17 @@ static HB_GENC_FUNC( hb_p_pushblock )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
       fprintf( cargo->yyc, "\t/* %i */",
-               HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+               HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
    fprintf( cargo->yyc, "\n" );
 
-   w = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 3 ] ) );
+   w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 3 ] );
    fprintf( cargo->yyc, "\t%i, %i,",
             pFunc->pCode[ lPCodePos + 3 ],
             pFunc->pCode[ lPCodePos + 4 ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* number of local parameters (%i) */", w );
    fprintf( cargo->yyc, "\n" );
 
-   wVar = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 5 ] ) );
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 5 ] );
    fprintf( cargo->yyc, "\t%i, %i,",
             pFunc->pCode[ lPCodePos + 5 ],
             pFunc->pCode[ lPCodePos + 6 ] );
@@ -1267,7 +1311,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
    /* create the table of referenced local variables */
    while( wVar-- )
    {
-      w = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos ] ) );
+      w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
       fprintf( cargo->yyc, "\t%i, %i,",
                pFunc->pCode[ lPCodePos ],
                pFunc->pCode[ lPCodePos + 1 ] );
@@ -1285,18 +1329,56 @@ static HB_GENC_FUNC( hb_p_pushblock )
    return (lPCodePos - ulStart);
 }
 
-static HB_GENC_FUNC( hb_p_pushblockshort )
+static HB_GENC_FUNC( hb_p_pushblocklarge )
 {
+   USHORT wVar, w;
+   ULONG ulStart = lPCodePos;
+
    ++cargo->iNestedCodeblock;
 
-   fprintf( cargo->yyc, "\tHB_P_PUSHBLOCKSHORT, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\tHB_P_PUSHBLOCKLARGE, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
    if( cargo->bVerbose )
-      fprintf( cargo->yyc, "\t/* %i */",
-               pFunc->pCode[ lPCodePos + 1 ] );
+      fprintf( cargo->yyc, "\t/* %lu */",
+               HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) );
    fprintf( cargo->yyc, "\n" );
 
-   return 2;
+   w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] );
+   fprintf( cargo->yyc, "\t%i, %i,",
+            pFunc->pCode[ lPCodePos + 4 ],
+            pFunc->pCode[ lPCodePos + 5 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* number of local parameters (%i) */", w );
+   fprintf( cargo->yyc, "\n" );
+
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 6 ] );
+   fprintf( cargo->yyc, "\t%i, %i,",
+            pFunc->pCode[ lPCodePos + 6 ],
+            pFunc->pCode[ lPCodePos + 7 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* number of local variables (%i) */", wVar );
+   fprintf( cargo->yyc, "\n" );
+
+   lPCodePos += 8;  /* codeblock size + number of parameters + number of local variables */
+   /* create the table of referenced local variables */
+   while( wVar-- )
+   {
+      w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
+      fprintf( cargo->yyc, "\t%i, %i,",
+               pFunc->pCode[ lPCodePos ],
+               pFunc->pCode[ lPCodePos + 1 ] );
+      /* NOTE:
+         * When a codeblock is used to initialize a static variable
+         * the names of local variables cannot be determined
+         * because at the time of C code generation we don't know
+         * in which function was defined this local variable
+         */
+      if( ( pFunc->cScope & HB_FS_INITEXIT ) != HB_FS_INITEXIT )
+         if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, w )->szName );
+      fprintf( cargo->yyc, "\n" );
+      lPCodePos +=2;
+   }
+   return (lPCodePos - ulStart);
 }
 
 static HB_GENC_FUNC( hb_p_pushdouble )
@@ -1535,14 +1617,30 @@ static HB_GENC_FUNC( hb_p_pushstaticref )
       fprintf( cargo->yyc, "\t/* %s */", szName );
    }
    fprintf( cargo->yyc, "\n" );
-
    return 3;
+}
+
+static HB_GENC_FUNC( hb_p_pushstrshort )
+{
+   USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
+
+   if( cargo->bVerbose )
+         fprintf( cargo->yyc, "\t/* %i */", wLen );
+
+   if( wLen > 0 )
+   {
+      fprintf( cargo->yyc, "\n\t" );
+      hb_compGenCByteStr( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ], wLen );
+   }
+   fprintf( cargo->yyc, "\n" );
+   return wLen + 2;
 }
 
 static HB_GENC_FUNC( hb_p_pushstr )
 {
-   ULONG ulStart = lPCodePos;
-   USHORT wLen = HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    fprintf( cargo->yyc, "\tHB_P_PUSHSTR, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
@@ -1551,66 +1649,55 @@ static HB_GENC_FUNC( hb_p_pushstr )
    if( cargo->bVerbose )
          fprintf( cargo->yyc, "\t/* %i */", wLen );
 
-   lPCodePos += 3;
    if( wLen > 0 )
    {
       fprintf( cargo->yyc, "\n\t" );
-      while( wLen-- )
-      {
-         BYTE uchr = ( BYTE ) pFunc->pCode[ lPCodePos++ ];
-         /*
-          * NOTE: After optimization some CHR(n) can be converted
-          *    into a string containing nonprintable characters.
-          *
-          * TODO: add switch to use hexadecimal format "%#04x"
-          */
-         if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else if( strchr( "\'\\\"", uchr ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else
-            fprintf( cargo->yyc, "\'%c\', ", uchr );
-      }
+      hb_compGenCByteStr( cargo->yyc, &pFunc->pCode[ lPCodePos + 3 ], wLen );
    }
    fprintf( cargo->yyc, "\n" );
-
-   return ( lPCodePos - ulStart );
+   return wLen + 3;
 }
 
-static HB_GENC_FUNC( hb_p_pushstrshort )
+static HB_GENC_FUNC( hb_p_pushstrlarge )
 {
-   ULONG ulStart = lPCodePos;
-   USHORT wLen = pFunc->pCode[ lPCodePos + 1 ];
+   ULONG ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 
-   fprintf( cargo->yyc, "\tHB_P_PUSHSTRSHORT, %i,", pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\tHB_P_PUSHSTRLARGE, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+
+   if( cargo->bVerbose )
+         fprintf( cargo->yyc, "\t/* %lu */", ulLen );
+
+   if( ulLen > 0 )
+   {
+      fprintf( cargo->yyc, "\n\t" );
+      hb_compGenCByteStr( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], ulLen );
+   }
+   fprintf( cargo->yyc, "\n" );
+   return ulLen + 4;
+}
+
+static HB_GENC_FUNC( hb_p_pushstrhidden )
+{
+   USHORT wLen = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHSTRHIDDEN, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
 
    if( cargo->bVerbose )
          fprintf( cargo->yyc, "\t/* %i */", wLen );
 
-   lPCodePos += 2;
    if( wLen > 0 )
    {
       fprintf( cargo->yyc, "\n\t" );
-      while( wLen-- )
-      {
-         BYTE uchr = ( BYTE ) pFunc->pCode[ lPCodePos++ ];
-         /*
-            * NOTE: After optimization some CHR(n) can be converted
-            *    into a string containing nonprintable characters.
-            *
-            * TODO: add switch to use hexadecimal format "%#04x"
-            */
-         if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else if( strchr( "\'\\\"", uchr ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else
-            fprintf( cargo->yyc, "\'%c\', ", uchr );
-      }
+      hb_compGenCByteStr( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], wLen );
    }
    fprintf( cargo->yyc, "\n" );
-
-   return ( lPCodePos - ulStart );
+   return wLen + 4;
 }
 
 static HB_GENC_FUNC( hb_p_pushsym )
@@ -1910,6 +1997,24 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
    return 4;
 }
 
+static HB_GENC_FUNC( hb_p_localaddint )
+{
+   fprintf( cargo->yyc, "\tHB_P_LOCALADDINT, %i, %i, %i, %i,", pFunc->pCode[ lPCodePos + 1 ],
+                                                               pFunc->pCode[ lPCodePos + 2 ],
+                                                               pFunc->pCode[ lPCodePos + 3 ],
+                                                               pFunc->pCode[ lPCodePos + 4 ] );
+
+   if( cargo->bVerbose )
+   {
+      fprintf( cargo->yyc, "\t/* %s %i*/", hb_compLocalVariableFind( pFunc, HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) )->szName,
+               HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 3 ] ) ) );
+   }
+
+   fprintf( cargo->yyc, "\n" );
+
+   return 5;
+}
+
 static HB_GENC_FUNC( hb_p_pluseqpop )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -1943,6 +2048,24 @@ static HB_GENC_FUNC( hb_p_diveqpop )
    HB_SYMBOL_UNUSED( lPCodePos );
 
    fprintf( cargo->yyc, "\tHB_P_DIVEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_modeqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MODEQPOP,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_expeqpop )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_EXPEQPOP,\n" );
    return 1;
 }
 
@@ -1982,6 +2105,24 @@ static HB_GENC_FUNC( hb_p_diveq )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_modeq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MODEQ,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_expeq )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_EXPEQ,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_withobjectstart )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -2018,6 +2159,28 @@ static HB_GENC_FUNC( hb_p_vframe )
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
    fprintf( cargo->yyc, "\n" );
    return 3;
+}
+
+static HB_GENC_FUNC( hb_p_largeframe )
+{
+   fprintf( cargo->yyc, "\tHB_P_LARGEFRAME, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
+   fprintf( cargo->yyc, "\n" );
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_largevframe )
+{
+   fprintf( cargo->yyc, "\tHB_P_LARGEVFRAME, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* locals, params */" );
+   fprintf( cargo->yyc, "\n" );
+   return 4;
 }
 
 /* NOTE: The  order of functions have to match the order of opcodes
@@ -2178,7 +2341,20 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_macrosend,
    hb_p_pushovarref,
    hb_p_arraypushref,
-   hb_p_vframe
+   hb_p_vframe,
+   hb_p_largeframe,
+   hb_p_largevframe,
+   hb_p_pushstrhidden,
+   hb_p_localaddint,
+   hb_p_modeqpop,
+   hb_p_expeqpop,
+   hb_p_modeq,
+   hb_p_expeq,
+   hb_p_duplunref,
+   hb_p_dummy,
+   hb_p_dummy,
+   hb_p_pushblocklarge,
+   hb_p_pushstrlarge
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
