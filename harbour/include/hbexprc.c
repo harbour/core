@@ -145,61 +145,6 @@ void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    }
 }
 
-static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
-{
-   if( pObj->value.asMessage.pObject )
-   {
-      /* Push _message for later use */
-      if( pObj->value.asMessage.szMessage )
-      {
-         HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, TRUE );
-      }
-      else
-      {
-         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-      }
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-      /* Now push current value of variable */
-      if( pObj->value.asMessage.szMessage )
-      {
-         HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, TRUE );
-      }
-      else
-      {
-         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-      }
-      /* Push object */
-      HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-   }
-   else
-   {
-      if( pObj->value.asMessage.szMessage )
-      {
-         /* Push _message and object for later use */
-         HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, FALSE );
-      }
-      else
-      {
-         /* Push message for later use */
-         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-         /* Push object using WITHOBJECTMESSAGE pcode */
-         HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
-      }
-      /* Now push current value of variable */
-      if( pObj->value.asMessage.szMessage )
-      {
-         HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, FALSE );
-      }
-      else
-      {
-         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-         /* Push WITHOBJECTMESSAGE pcode */
-         HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
-      }
-   }
-}
-
 static void hb_compExprPushSendPopPush( HB_EXPR_PTR pObj, HB_EXPR_PTR pValue,
                                         BOOL fPreOp, BYTE bOper, HB_COMP_DECL )
 {
@@ -234,7 +179,8 @@ static void hb_compExprPushSendPopPush( HB_EXPR_PTR pObj, HB_EXPR_PTR pValue,
          /* push current value - it will be a result of whole expression */
          HB_EXPR_USE( pObj, HB_EA_PUSH_PCODE );
       }
-      hb_compExprSendPopPush( pObj, HB_COMP_PARAM );
+      hb_compExprPushSendPop( pObj, HB_COMP_PARAM );
+      hb_compExprPushSendPush( pObj, HB_COMP_PARAM );
       HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
    }
    /* push increment value */

@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-19 00:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * added support _" prefix when macro message is used in assignment context
+      also when -kc is used. We can block this feature for -kc but as long
+      as is not blocked it should work in the same way for -kc and -kh
+
 2006-12-18 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/w32/bcc32.cf
     * cleanup
