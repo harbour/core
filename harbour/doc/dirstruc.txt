@@ -14,258 +14,269 @@ there is no simple way to remove them completely (you can use: cvs update -d
 in order to remove empty directories)
 
 
-<harbour>              - Main Harbour directory. Contain all the various make
-|                        file and Changelog (=changes history) files.
+<harbour>               - Main Harbour directory. Contain all the various
+|                         make file and Changelog (=changes history) files.
 |
-+---bin                - Executable and build scripts.
-|   |                    Should contain HARBOUR.EXE and other executable. (*)
++---bin                 - Executable and build scripts.
+|   |                     Should contain HARBOUR.EXE and other executable. (*)
 |   |
-|   +---b16            -
+|   +---b16             -
 |   |
-|   +---b32            -
+|   +---b32             -
 |   |
-|   +---vc             -
+|   +---vc              -
 |
-+---config             - Configuration Files (.cf) for the GNU Make system.
++---config              - Configuration Files (.cf) for the GNU Make system.
 |   |
-|   +---bsd            - Configuration files specific to FreeBSD.
+|   +---bsd             - Configuration files specific to FreeBSD.
 |   |
-|   +---darwin         - Configuration files specific to BSD/Darwin.
+|   +---darwin          - Configuration files specific to BSD/Darwin.
 |   |
-|   +---dos            - Configuration files specific to DOS.
+|   +---dos             - Configuration files specific to DOS.
 |   |
-|   +---hpux           - Configuration files specific to HP-UX.
+|   +---hpux            - Configuration files specific to HP-UX.
 |   |
-|   +---linux          - Configutation files specific to GNU/Linux.
+|   +---linux           - Configutation files specific to GNU/Linux.
 |   |
-|   +---os2            - Configutation files specific to OS/2.
+|   +---os2             - Configutation files specific to OS/2.
 |   |
-|   +---sunos          - Configutation files specific to SunOS.
+|   +---sunos           - Configutation files specific to SunOS.
 |   |
-|   +---w32            - Configutation files specific to MS-Win32.
+|   +---w32             - Configutation files specific to MS-Win32.
 |
-+---contrib            - Miscellaneous contribution files. Those are not part
-|   |                    of the official Harbour project.
++---contrib             - Miscellaneous contribution files. Those are not
+|   |                     part of the official Harbour project.
 |   |
-|   +---apollo         - Wrapper functions for VistaSoftware's Apollo
-|   |   |                database driver.
+|   +---apollo          - Wrapper functions for VistaSoftware's Apollo
+|   |   |                 database driver.
 |   |   |
-|   |   +---test       - Test programs.
+|   |   +---test        - Test programs.
 |   |
-|   +---btree          - BTree library.
+|   +---btree           - BTree library.
 |   |   |
-|   |   +---doc        - HB_BTree C and Harbour API documentation.
+|   |   +---doc         - HB_BTree C and Harbour API documentation.
 |   |   |
-|   |   +---test       - HB_BTree api test programs.
+|   |   +---test        - HB_BTree api test programs.
 |   |
-|   +---delphi         - Integration with Borland Delphi.
+|   +---delphi          - Integration with Borland Delphi.
 |   |   |
-|   |   +---hbdll      - Accessing Harbour DLL from Delphi.
+|   |   +---hbdll       - Accessing Harbour DLL from Delphi.
 |   |
-|   +---directx        - DirectDraw implementation for Windows.
+|   +---directx         - DirectDraw implementation for Windows.
 |   |   |
-|   |   +---lib        -
+|   |   +---lib         -
 |   |   |   |
-|   |   |   +---vc     -
+|   |   |   +---vc      -
 |   |   |
-|   |   +---media      -
+|   |   +---media       -
 |   |   |
-|   |   +---samples    -
+|   |   +---samples     -
 |   |
-|   +---dot            - Pre-Processor/Dot prompt environment.
+|   +---dot             - Pre-Processor/Dot prompt environment.
 |   |
-|   +---hbclip         - Harbour Compatibility Library (HCL) for CA-Clipper 5.x
+|   +---hbclip          - Harbour Compatibility Library (HCL) for
+|   |                     CA-Clipper 5.x
 |   |
-|   +---hbzlib         - Interface for 'zlib' general purpose compression
-|   |   |                library to work with ZIP files.
+|   +---hbzlib          - Interface for 'zlib' general purpose compression
+|   |   |                 library to work with ZIP files.
 |   |   |
-|   |   +---doc        - Documents for the ZIP functions.
+|   |   +---doc         - Documents for the ZIP functions.
 |   |   |
-|   |   +---include    - Include files used by the library.
+|   |   +---include     - Include files used by the library.
 |   |   |
-|   |   +---Linux      - Some source files for the Linux platform.
+|   |   +---Linux       - Some source files for the Linux platform.
 |   |
-|   +---hb_struc       - Base Class for internal handling of class creation
-|   |                    as structures.
+|   +---hb_struc        - Base Class for internal handling of class creation
+|   |                     as structures.
 |   |
-|   +---hgf            - Harbour GUI framework.
+|   +---hgf             - Harbour GUI framework.
 |   |   |
-|   |   +---gtk        - Implementation for GTK+ environment.
+|   |   +---gtk         - Implementation for GTK+ environment.
 |   |   |
-|   |   +---os2pm      - Implementation for OS/2 Presentation Manager
-|   |   |                environment.
+|   |   +---os2pm       - Implementation for OS/2 Presentation Manager
+|   |   |                 environment.
 |   |   |
-|   |   +---tests      - Test programs.
+|   |   +---tests       - Test programs.
 |   |   |
-|   |   +---win32      - Implementation for Win32 environment.
+|   |   +---win32       - Implementation for Win32 environment.
 |   |
-|   +---htmllib        - HTMLLIB (HTML classes) port for Harbour
+|   +---htmllib         - HTMLLIB (HTML classes) port for Harbour
 |   |
-|   +---libct          - CA-T**ls Compatible Library for Harbour.
+|   +---libct           - CA-T**ls Compatible Library for Harbour.
 |   |   |
-|   |   +---alt        - Alternate version of CT function.
+|   |   +---alt         - Alternate version of CT function.
 |   |   |
-|   |   +---tests      - Test programs.
+|   |   +---tests       - Test programs.
 |   |
-|   +---libgt          - GT library port to Harbour.
+|   +---libgt           - GT library port to Harbour.
 |   |   |
-|   |   +---doc        - Documents for the GT library.
+|   |   +---doc         - Documents for the GT library.
 |   |       |
-|   |       +---en     - English documentation.
+|   |       +---en      - English documentation.
 |   |
-|   +---libmisc        - Miscellaneous contribution.
+|   +---libmisc         - Miscellaneous contribution.
 |   |   |
-|   |   +---doc        - Documents for above contribution.
+|   |   +---doc         - Documents for above contribution.
 |   |   |   |
-|   |   |   +---en     - English documentation.
+|   |   |   +---en      - English documentation.
 |   |   |
-|   |   +---tests      - Test programs.
+|   |   +---tests       - Test programs.
 |   |
-|   +---libnf          - Nanforum library port for Harbour.
+|   +---libnf           - Nanforum library port for Harbour.
 |   |
-|   +---msql           - Harbour mSQL access classes.
+|   +---msql            - Harbour mSQL access classes.
 |   |
-|   +---mysql          - Harbour MySQL access classes.
+|   +---mysql           - Harbour MySQL access classes.
 |   |
-|   +---odbc           - ODBS Access Class Demonstration.
+|   +---odbc            - ODBS Access Class Demonstration.
 |   |
-|   +---ole            - Win32 OLE Automation library.
+|   +---ole             - Win32 OLE Automation library.
 |   |
-|   +---pdflib         - PDF low level Api for HBDOC to inteface with PDFlib.
+|   +---pdflib          - PDF low level Api for HBDOC to inteface with PDFlib.
 |   |
-|   +---rdd_ads        - RDD for Advantage Database Server.
+|   +---rdd_ads         - RDD for Advantage Database Server.
 |   |   |
-|   |   +---doc        - Documents for Advantage Database Server RDD.
+|   |   +---doc         - Documents for Advantage Database Server RDD.
 |   |       |
-|   |       +---en     - English documentation.
+|   |       +---en      - English documentation.
 |   |
-|   +---runjava        - JAVA runner for Harbour Portable Object (.HRB) files.
+|   +---runjava         - JAVA runner for Harbour Portable Object (.HRB)
+|   |                     files.
 |   |
-|   +---samples        - Miscellaneous contribution files.
+|   +---samples         - Miscellaneous contribution files.
 |   |
-|   +---tprepro        - PreProcessor class based on Harbour Preprocessor
-|                        runtime library.
+|   +---tprepro         - PreProcessor class based on Harbour Preprocessor
+|                         runtime library.
 |
-+---doc                - Documentation and white-paper.
++---doc                 - Documentation and white-paper.
 |   |
-|   +---en             - English documentation.
+|   +---en              - English documentation.
 |   |
-|   +---es             - Spanish documentation.
+|   +---es              - Spanish documentation.
 |
-+---include            - Include files for both Harbour and C.
++---include             - Include files for both Harbour and C.
 |
-+---lib                - Run-Time libraries binaries for each platform. (*)
++---lib                 - Run-Time libraries binaries for each platform. (*)
 |   |
-|   +---b16            -
+|   +---b16             -
 |   |
-|   +---b32            -
+|   +---b32             -
 |   |
-|   +---vc             -
+|   +---vc              -
 |
-+---obj                - Object files. (*)
++---obj                 - Object files. (*)
 |   |
-|   +---b16            -
+|   +---b16             -
 |   |
-|   +---b32            -
+|   +---b32             -
 |   |
-|   +---vc             -
+|   +---vc              -
 |
-+---samples            - Sample files and small applications.
++---samples             - Sample files and small applications.
 |   |
-|   +---guestbk        - Harbour Guests Book.
+|   +---guestbk         - Harbour Guests Book.
 |   |
-|   +---hscript        - Harbour Script.
+|   +---hscript         - Harbour Script.
 |   |
-|   +---misc           - A few humble demonstration.
+|   +---misc            - A few humble demonstration.
 |   |
-|   +---pe             - Editor.
+|   +---pe              - Editor.
 |
-+---source             - All source files reside underneath.
++---source              - All source files reside underneath.
 |   |
-|   +---codepage       - National codepage collection.
+|   +---codepage        - National codepage collection.
 |   |
-|   +---common         - Common function and Expression Optimizer.
+|   +---common          - Common function and Expression Optimizer.
 |   |
-|   +---compiler       - Harbour compiler module.
+|   +---compiler        - Harbour compiler module.
 |   |
-|   +---debug          - Debugger.
+|   +---debug           - Debugger.
 |   |
-|   +---lang           - National language message support files.
+|   +---lang            - National language message support files.
 |   |
-|   +---macro          - Macro compiler.
+|   +---macro           - Macro compiler.
 |   |
-|   +---pp             - Harbour Preprocessor.
+|   +---pp              - Harbour Preprocessor.
 |   |
-|   +---rdd            - Replaceable Database Driver (RDD).
+|   +---rdd             - Replaceable Database Driver (RDD).
 |   |   |
-|   |   +---dbfcdx     - DBFCDX RDD.
+|   |   +---dbfcdx      - DBFCDX RDD.
 |   |   |
-|   |   +---dbfdbt     - DBFDBT RDD.
+|   |   +---dbfdbt      - DBFDBT RDD.
 |   |   |
-|   |   +---dbffpt     - DBFFPT RDD.
+|   |   +---dbffpt      - DBFFPT RDD.
 |   |   |
-|   |   +---dbfntx     - DBFNTX RDD.
+|   |   +---dbfntx      - DBFNTX RDD.
 |   |   |
-|   |   +---hbsix      - SIX compatible functions.
+|   |   +---hbsix       - SIX compatible functions.
 |   |   |
-|   |   +---hsx        - HiPer-SEEK / CFTS compatible library.
+|   |   +---hsx         - HiPer-SEEK / CFTS compatible library.
 |   |   |
-|   |   +---nulsys     - NULL RDD.
+|   |   +---nulsys      - NULL RDD.
+|   |   |
+|   |   +---usrrdd      - USRRDD which allows to create a new RDD at PRG level.
+|   |       |
+|   |       +---example - Usage examples.
+|   |       |
+|   |       +---rdds    - A set of simple RDD's all written in PRG.
 |   |
-|   +---rtl            - Run-Time libraries functions and various General
-|   |   |                Terminal (GT) implementation
+|   +---rtl             - Run-Time libraries functions and various General
+|   |   |                 Terminal (GT) implementation
 |   |   |
-|   |   +---gtalleg    - GT subsystem based on Allegro with graphic extensions.
+|   |   +---gtalleg     - GT subsystem based on Allegro with graphic
+|   |   |                 extensions.
 |   |   |
-|   |   +---gtcgi      - GT subsystem aimed at cgi-bin applications.
+|   |   +---gtcgi       - GT subsystem aimed at cgi-bin applications.
 |   |   |
-|   |   +---gtcrs      - GT subsystem based on ncurses.
+|   |   +---gtcrs       - GT subsystem based on ncurses.
 |   |   |
-|   |   +---gtdos      - GT subsystem for DOS compilers.
+|   |   +---gtdos       - GT subsystem for DOS compilers.
 |   |   |
-|   |   +---gtos2      - GT subsystem for OS/2 compilers.
+|   |   +---gtgui       - Minimal GT for W32 GUI programs.
 |   |   |
-|   |   +---gtpca      - GT subsystem for ANSI terminals.
+|   |   +---gtos2       - GT subsystem for OS/2 compilers.
 |   |   |
-|   |   +---gtsln      - GT subsystem based on slang.
+|   |   +---gtpca       - GT subsystem for ANSI terminals.
 |   |   |
-|   |   +---gtstd      - GT subsystem for plain ANSI C stream IO.
+|   |   +---gtsln       - GT subsystem based on slang.
 |   |   |
-|   |   +---gtwin      - GT subsystem for Win32 compilers (Console).
+|   |   +---gtstd       - GT subsystem for plain ANSI C stream IO.
 |   |   |
-|   |   +---gtwvt      - GT subsystem for Win32 using GUI windows instead of
-|   |   |                Console.
+|   |   +---gtwin       - GT subsystem for Win32 compilers (Console).
 |   |   |
-|   |   +---gtxwc      - GT subsystem for XWindow Console.
+|   |   +---gtwvt       - GT subsystem for Win32 using GUI windows instead of
+|   |   |                 Console.
 |   |   |
-|   |   +---gt_tpl     - GT subsystem template.
+|   |   +---gtxwc       - GT subsystem for XWindow Console.
+|   |   |
+|   |   +---gt_tpl      - GT subsystem template.
 |   |
-|   +---vm             - Harbour Virtual Machine and internal Run-Time
-|       |                library functions.
+|   +---vm              - Harbour Virtual Machine and internal Run-Time
+|       |                 library functions.
 |       |
-|       +---mainstd    - mainstd library for MinGW32 build.
+|       +---mainstd     - mainstd library for MinGW32 build.
 |
 |
-+---tests              - Test programs.
++---tests               - Test programs.
 |   |
-|   +---bldtest        - Simple C program to check if Harbour can be compiled
-|                        on the current machine, system and C compiler.
+|   +---bldtest         - Simple C program to check if Harbour can be compiled
+|                         on the current machine, system and C compiler.
 |
-+---utils              - Utilities and tools that are part of Harbour.
++---utils               - Utilities and tools that are part of Harbour.
     |
-    +---hbdoc          - Documentation generation tool.
+    +---hbdoc           - Documentation generation tool.
     |
-    +---hbextern       - HBEXTERN.CH generator.
+    +---hbextern        - HBEXTERN.CH generator.
     |
-    +---hbmake         - Harbour Make utility.
+    +---hbmake          - Harbour Make utility.
     |
-    +---hbpp           - Harbour Preprocessor as a standalone module.
+    +---hbpp            - Harbour Preprocessor as a standalone module.
     |
-    +---hbrun          - Standalone Harbour Portable Object file runner.
+    +---hbrun           - Standalone Harbour Portable Object file runner.
     |
-    +---hbtest         - Regression tests for the Run-Time library.
+    +---hbtest          - Regression tests for the Run-Time library.
     |
-    +---hbver          - Harbour Version Updater.
+    +---hbver           - Harbour Version Updater.
 
 
 Legend:
