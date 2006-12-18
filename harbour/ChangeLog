@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-18 18:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+      + added extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
+      
+   * include/hbcompdf.h
+      + added 'int iLastLineErr' to HB_COMP structure
+      
+   * include/hbpp.h
+      + added extern BOOL hb_pp_eof( PHB_PP_STATE )
+      
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/harbour.yyc
+   * source/compiler/harbour.yyh
+   * source/compiler/hbgenerr.c
+      * fixed reporting errors in cases of unclosed delimiters or
+      unclosed control structures IF/WHILE/FOR/etc
+
+   * source/pp/ppcore.c
+      + added hb_pp_eof() function
+
 2006-12-18 14:19 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/dirstruc.txt
     + Add a oneliner description for: source/rdd/usrrdd, source/rtl/gtgui

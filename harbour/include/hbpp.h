@@ -632,6 +632,7 @@ extern BOOL   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearch
 extern BOOL   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );
 extern char * hb_pp_fileName( PHB_PP_STATE pState );
 extern int    hb_pp_line( PHB_PP_STATE pState );
+extern BOOL   hb_pp_eof( PHB_PP_STATE pState );
 extern int    hb_pp_lineTot( PHB_PP_STATE pState );
 extern char * hb_pp_outFileName( PHB_PP_STATE pState );
 extern char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen );

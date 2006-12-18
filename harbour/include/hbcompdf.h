@@ -592,6 +592,7 @@ typedef struct _HB_COMP
    int               iVarScope;           /* holds the scope for next variables to be defined */
    int               iLanguage;           /* default Harbour generated output language */
    int               iGenCOutput;         /* C code generation should be verbose (use comments) or not */
+   int               ilastLineErr;        /* line numer with last syntax error */
 
    BOOL              fExit;               /* force breaking compilation process */
    BOOL              fQuiet;              /* be quiet during compilation (-q) */

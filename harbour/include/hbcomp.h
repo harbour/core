@@ -233,6 +233,7 @@ extern void hb_compStaticDefStart( HB_COMP_DECL );
 extern void hb_compStaticDefEnd( HB_COMP_DECL );
 extern void hb_compGenStaticName( char *, HB_COMP_DECL );
 
+extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 

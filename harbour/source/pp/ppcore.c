@@ -4740,6 +4740,14 @@ char * hb_pp_outFileName( PHB_PP_STATE pState )
 }
 
 /*
+ * return if EOF was reached
+ */
+BOOL hb_pp_eof( PHB_PP_STATE pState )
+{
+   return pState->pFile->fEof;
+}
+
+/*
  * add new define value
  */
 void hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue )

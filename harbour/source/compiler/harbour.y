@@ -304,7 +304,6 @@ Source     : Crlf
            | Function
            | Statement
            | Line
-           | ProcReq
            | error  Crlf  { yyclearin; yyerrok; }
            | Source Crlf
            | Source VarDefs
@@ -314,37 +313,12 @@ Source     : Crlf
            | Source Function
            | Source Statement
            | Source Line
-           | Source ProcReq
            | Source error Crlf  { yyclearin; yyerrok; }
            ;
 
 Line       : LINE NUM_LONG LITERAL Crlf
            | LINE NUM_LONG LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
-
-ProcReq    : PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
-           ;
-
-CompTimeStr : LITERAL {
-               if( $1.dealloc )
-               {
-                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
-                  $1.dealloc = FALSE;
-               }
-               hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
-            }
-            | LITERAL '+' LITERAL {
-               {
-                  char szFileName[ _POSIX_PATH_MAX + 1 ];
-                  hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
-                  if( $1.dealloc )
-                     hb_xfree( $1.string );
-                  if( $3.dealloc )
-                     hb_xfree( $3.string );
-               }
-            }
-            ;
 
 Function   : FunScope FUNCTION  IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf {}
            | FunScope PROCEDURE IdentName { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf {}
@@ -494,6 +468,28 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt { }
                else
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
              } Crlf
+           | PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
+           ;
+
+CompTimeStr : LITERAL {
+               if( $1.dealloc )
+               {
+                  $1.string = hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
+                  $1.dealloc = FALSE;
+               }
+               hb_compAutoOpenAdd( HB_COMP_PARAM, $1.string );
+            }
+            | LITERAL '+' LITERAL {
+               {
+                  char szFileName[ _POSIX_PATH_MAX + 1 ];
+                  hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
+                  if( $1.dealloc )
+                     hb_xfree( $1.string );
+                  if( $3.dealloc )
+                     hb_xfree( $3.string );
+               }
+            }
            ;
 
 CrlfStmnt  : { hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf
@@ -503,7 +499,18 @@ LineStat   : Crlf          { $<lNumber>$ = 0; HB_COMP_PARAM->fDontGenLineNum = T
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 1; }
-           | ControlError  { $<lNumber>$ = 0; hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, NULL, NULL ); }
+           | ControlError  { $<lNumber>$ = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM ); }
+           | error         { int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
+                             if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == iLine )
+                             {
+                                 yyclearin; 
+                             }
+                             else
+                             {
+                                 yyerrok;
+                                 HB_COMP_PARAM->ilastLineErr = iLine;
+                             }
+                            }                             
            ;
 
 ControlError : FunScopeId FUNCTION  IdentName Crlf {}
@@ -1526,8 +1533,12 @@ IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE
                 }
            ;
 
-EndIf      : ENDIF    { --HB_COMP_PARAM->wIfCounter; HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
-           | END      { --HB_COMP_PARAM->wIfCounter; HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+EndIf      : ENDIF    { if( HB_COMP_PARAM->wIfCounter )
+                           --HB_COMP_PARAM->wIfCounter; 
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+           | END      { if( HB_COMP_PARAM->wIfCounter )
+                           --HB_COMP_PARAM->wIfCounter; 
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
            ;
 
 DoCase     : DoCaseBegin
@@ -1548,11 +1559,13 @@ DoCase     : DoCaseBegin
            ;
 
 EndCase    : ENDCASE
-               { --HB_COMP_PARAM->wCaseCounter;
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
-                }
+               { if( HB_COMP_PARAM->wCaseCounter )
+                    --HB_COMP_PARAM->wCaseCounter;
+                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               }
            | END
-               { --HB_COMP_PARAM->wCaseCounter;
+               { if( HB_COMP_PARAM->wCaseCounter )
+                  --HB_COMP_PARAM->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
@@ -1612,7 +1625,9 @@ DoWhile    : WhileBegin Expression Crlf
                }
              EndWhile
                {
-                  hb_compGenJumpHere( $<lNumber>4, HB_COMP_PARAM ); --HB_COMP_PARAM->wWhileCounter;
+                  hb_compGenJumpHere( $<lNumber>4, HB_COMP_PARAM ); 
+                  if( HB_COMP_PARAM->wWhileCounter )
+                     --HB_COMP_PARAM->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                 }
@@ -1716,10 +1731,18 @@ StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
            | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2, HB_COMP_PARAM ); }
            ;
 
-ForStatements : EmptyStats NEXT                     { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
-           | EmptyStats NEXT IdentName              { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
-           | EmptyStats END                         { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
-           | EmptyStats END IdentName               { hb_compLinePush( HB_COMP_PARAM ); --HB_COMP_PARAM->wForCounter; }
+ForStatements : EmptyStats NEXT                     { hb_compLinePush( HB_COMP_PARAM ); 
+                                                      if( HB_COMP_PARAM->wForCounter )
+                                                         --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats NEXT IdentName              { hb_compLinePush( HB_COMP_PARAM );
+                                                      if( HB_COMP_PARAM->wForCounter )
+                                                         --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats END                         { hb_compLinePush( HB_COMP_PARAM );
+                                                      if( HB_COMP_PARAM->wForCounter )
+                                                         --HB_COMP_PARAM->wForCounter; }
+           | EmptyStats END IdentName               { hb_compLinePush( HB_COMP_PARAM );
+                                                      if( HB_COMP_PARAM->wForCounter )
+                                                         --HB_COMP_PARAM->wForCounter; }
            ;
 
 ForVar     : IdentName     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
@@ -1795,8 +1818,8 @@ DoSwitch   : SwitchBegin
            ;
            
 EndSwitch  : END
-             {
-                --HB_COMP_PARAM->wSwitchCounter; 
+             { if( HB_COMP_PARAM->wSwitchCounter )
+                  --HB_COMP_PARAM->wSwitchCounter; 
                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
              }
            ;
@@ -1859,7 +1882,7 @@ BeginSeq   : BEGINSEQ { ++HB_COMP_PARAM->wSeqCounter; $<lNumber>$ = hb_compSeque
                  * RECOVER clause is used
                  */
                 hb_compGenJumpThere( $<lNumber>5, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
-                if( !$<lNumber>6 )   /* only if there is no RECOVER clause */
+                if( !$<lNumber>6 && HB_COMP_PARAM->wSeqCounter )   /* only if there is no RECOVER clause */
                    --HB_COMP_PARAM->wSeqCounter;  /* RECOVER is also considered as end of sequence */
                 hb_compSequenceFinish( $<lNumber>2, $<lNumber>4, HB_COMP_PARAM );
                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
@@ -1875,7 +1898,8 @@ RecoverEmpty : RECOVER
                {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
-                  --HB_COMP_PARAM->wSeqCounter;
+                  if( HB_COMP_PARAM->wSeqCounter )
+                     --HB_COMP_PARAM->wSeqCounter;
                   hb_compLinePush( HB_COMP_PARAM );
                   hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, HB_COMP_PARAM );
                }
@@ -1885,7 +1909,8 @@ RecoverUsing : RECOVERUSING IdentName
                {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
-                  --HB_COMP_PARAM->wSeqCounter;
+                  if( HB_COMP_PARAM->wSeqCounter )
+                     --HB_COMP_PARAM->wSeqCounter;
                   hb_compLinePush( HB_COMP_PARAM );
                   hb_compGenPCode1( HB_P_SEQRECOVER, HB_COMP_PARAM );
                   hb_compGenPopVar( $2, HB_COMP_PARAM );
@@ -1943,8 +1968,8 @@ WithObject : WITHOBJECT Expression Crlf
                }
              EmptyStatements 
              END
-               {
-                  --HB_COMP_PARAM->wWithObjectCnt;
+               { if( HB_COMP_PARAM->wWithObjectCnt )
+                    --HB_COMP_PARAM->wWithObjectCnt;
                   hb_compGenPCode1( HB_P_WITHOBJECTEND, HB_COMP_PARAM );
                }
            | WITHOBJECT Expression Crlf END { hb_compExprDelete( $2, HB_COMP_PARAM ); }
@@ -2643,12 +2668,60 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 /* ************************************************************************* */
 
+BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
+{
+   BOOL fUnclosed = TRUE;
+   
+   if( HB_COMP_PARAM->wIfCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "IF", NULL );
+      HB_COMP_PARAM->wIfCounter = 0;
+   }
+   else if( HB_COMP_PARAM->wForCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "FOR", NULL );
+      HB_COMP_PARAM->wForCounter = 0;
+   }
+   else if( HB_COMP_PARAM->wWhileCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "WHILE", NULL );
+      HB_COMP_PARAM->wWhileCounter = 0;
+   }
+   else if( HB_COMP_PARAM->wCaseCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "CASE", NULL );
+      HB_COMP_PARAM->wCaseCounter = 0;
+   }
+   else if( HB_COMP_PARAM->wSwitchCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "SWITCH", NULL );
+      HB_COMP_PARAM->wSwitchCounter = 0;
+   }
+   else if( HB_COMP_PARAM->wWithObjectCnt )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "WITH OBJECT", NULL );
+      HB_COMP_PARAM->wWithObjectCnt = 0;
+   }
+   else if( HB_COMP_PARAM->wSeqCounter )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "BEGIN SEQUENCE", NULL );
+      HB_COMP_PARAM->wSeqCounter = 0;
+   }
+   else
+      fUnclosed = FALSE;
+
+   return fUnclosed;
+}
+
 void yyerror( HB_COMP_DECL, char * s )
 {
    HB_SYMBOL_UNUSED( pComp );
 
    if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
+   {
+      if( ! hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INCOMPLETE_STMT, NULL, NULL );
+   }
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
