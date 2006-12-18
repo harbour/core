@@ -67,7 +67,7 @@
    #include <malloc.h>
 */
 
-#include "hbpp.h"
+#include "hbppdef.h"
 #include "hbcomp.h"
 
 extern int hb_pp_ParseDefine_( char * );
@@ -518,7 +518,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
     hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
 }
 
-BOOL hb_pp_fopen( char * szFileName )
+static BOOL hb_pp_fopen( char * szFileName )
 {
    PFILE pFile;
    FILE * handl_i = fopen( szFileName, "r" );

@@ -234,7 +234,8 @@ typedef enum
    HB_P_MPUSHSTRLARGE,         /* 160 Macro compiled pushed string */
    HB_P_PUSHBLOCKLARGE,        /* 161 start of a codeblock definition */
    HB_P_PUSHSTRLARGE,          /* 162 places a string on the virtual machine stack */
-   HB_P_LAST_PCODE             /* 163 this defines the number of defined pcodes */
+   HB_P_SWAP,                  /* 163 swap n+1 times two items starting from the most top one on the virtual machine stack */
+   HB_P_LAST_PCODE             /* 164 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

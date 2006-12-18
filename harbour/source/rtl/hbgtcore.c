@@ -651,7 +651,7 @@ static int hb_gt_def_DispCount( void )
    return s_uiDispCount;
 }
 
-static BOOL hb_gt_def_PreExt()
+static BOOL hb_gt_def_PreExt( void )
 {
    if( s_uiExtCount == 0 )
    {
@@ -662,7 +662,7 @@ static BOOL hb_gt_def_PreExt()
    return TRUE;
 }
 
-static BOOL hb_gt_def_PostExt()
+static BOOL hb_gt_def_PostExt( void )
 {
    if( s_uiExtCount )
       --s_uiExtCount;
@@ -670,12 +670,12 @@ static BOOL hb_gt_def_PostExt()
    return TRUE;
 }
 
-static BOOL hb_gt_def_Suspend()
+static BOOL hb_gt_def_Suspend( void )
 {
    return hb_gt_PreExt();
 }
 
-static BOOL hb_gt_def_Resume()
+static BOOL hb_gt_def_Resume( void )
 {
    return hb_gt_PostExt();
 }

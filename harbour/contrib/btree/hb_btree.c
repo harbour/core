@@ -179,6 +179,7 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
 
 #include "extend.api"
 #include "item.api"
+#include "hbvm.h"
 #include "hbapifs.h"
 #include "hbtrace.h"
 #include "hbinit.h"
@@ -1991,19 +1992,25 @@ HB_FUNB( HB_BTREEEVAL )  /* hb_BTreeEval( hb_BTree_Handle, bBlock, [bForConditio
 #endif
 
 
-static void hb_BTree_Initialize()
+static void hb_BTree_Initialize( void * cargo )
 {
-  HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   /* TODO: initialization code */
+
+  HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
+
+  HB_SYMBOL_UNUSED( cargo );
+
 }
 
-static void hb_BTree_Terminate( void )
+static void hb_BTree_Terminate( void * cargo )
 {
   /* TODO: termination (cleanup) code */
 
   int n;
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
+
+  HB_SYMBOL_UNUSED( cargo );
 
   for ( n = 0; n < s_BTree_List_Count; n++ )
   {
@@ -2014,9 +2021,22 @@ static void hb_BTree_Terminate( void )
     BufferRelease( s_BTree_List );
 }
 
-HB_INIT_SYMBOLS_BEGIN( hb_BTree_Initialize_Terminate )
-  { "hb_BTree_Initialize", {HB_FS_INIT}, {hb_BTree_Initialize}, NULL },
-  { "hb_BTree_Terminate" , {HB_FS_EXIT}, {hb_BTree_Terminate} , NULL },
-HB_INIT_SYMBOLS_END( hb_BTree_Initialize_Terminate )
+HB_CALL_ON_STARTUP_BEGIN( _hb_BTree_Initialize_ )
+   hb_vmAtInit( hb_BTree_Initialize, NULL );
+   hb_vmAtExit( hb_BTree_Terminate, NULL );
+HB_CALL_ON_STARTUP_END( _hb_BTree_Initialize_ )
+
+#if defined(HB_PRAGMA_STARTUP)
+#  pragma startup _hb_BTree_Initialize_
+#elif defined(HB_MSC_STARTUP)
+#  if _MSC_VER >= 1010
+#     pragma data_seg( ".CRT$XIY" )
+#     pragma comment( linker, "/Merge:.CRT=.data" )
+#  else
+#     pragma data_seg( "XIY" )
+#  endif
+   static HB_$INITSYM hb_vm_auto_hb_BTree_Initialize_ = _hb_BTree_Initialize_;
+#  pragma data_seg()
+#endif
 
 HB_EXTERN_END

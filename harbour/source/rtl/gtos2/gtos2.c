@@ -821,14 +821,14 @@ static BOOL hb_gt_os2_SetMode( int iRows, int iCols )
    return fResult;
 }
 
-static BOOL hb_gt_os2_PreExt()
+static BOOL hb_gt_os2_PreExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PreExt()"));
 
    return TRUE;
 }
 
-static BOOL hb_gt_os2_PostExt()
+static BOOL hb_gt_os2_PostExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt()"));
 
@@ -839,14 +839,14 @@ static BOOL hb_gt_os2_PostExt()
    return TRUE;
 }
 
-static BOOL hb_gt_os2_Suspend()
+static BOOL hb_gt_os2_Suspend( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Suspend()"));
 
    return TRUE;
 }
 
-static BOOL hb_gt_os2_Resume()
+static BOOL hb_gt_os2_Resume( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume()"));
 

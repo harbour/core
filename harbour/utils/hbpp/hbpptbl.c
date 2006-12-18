@@ -61,7 +61,7 @@
 
 #include <stdio.h>
 
-#include "hbpp.h"
+#include "hbppdef.h"
 
 COMMANDS * hb_pp_topCommand = NULL;
 COMMANDS * hb_pp_topTranslate = NULL;

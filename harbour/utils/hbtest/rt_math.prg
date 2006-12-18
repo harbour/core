@@ -57,6 +57,10 @@
 
 FUNCTION Main_MATH()
 
+   LOCAL l, s, o
+   MEMVAR s0, s1, v2
+   PRIVATE s0:="V2", s1:="V", v2
+
    /* LOG() */
 
    TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG A:1:C:A F:S" )
@@ -400,6 +404,126 @@ FUNCTION Main_MATH()
    TEST_LINE( Str( MOD( -1, -3 ) )            , "        -1.00"                    )
    TEST_LINE( Str( MOD( -2, -3 ) )            , "        -2.00"                    )
    TEST_LINE( Str( MOD( -3, -3 ) )            , "         0.00"                    )
+
+   /* <OP>assign and (pre/post)(inc/dec)rementation */
+   o:=errornew()
+   o:oscode := 1
+   TEST_LINE( o:oscode                        , 1   )
+   o:oscode++
+   TEST_LINE( o:oscode                        , 2   )
+   TEST_LINE( o:oscode++                      , 2   )
+   ++o:oscode
+   TEST_LINE( o:oscode                        , 4   )
+   TEST_LINE( ++o:oscode                      , 5   )
+   o:oscode+=10
+   TEST_LINE( o:oscode                        , 15  )
+   TEST_LINE( o:oscode+=200                   , 215 )
+
+   l := 1
+   TEST_LINE( l                               , 1   )
+   l++
+   TEST_LINE( l                               , 2   )
+   TEST_LINE( l++                             , 2   )
+   ++l
+   TEST_LINE( l                               , 4   )
+   TEST_LINE( ++l                             , 5   )
+   l+=10
+   TEST_LINE( l                               , 15  )
+   TEST_LINE( l+=200                          , 215 )
+
+   mnIntN := 1
+   TEST_LINE( mnIntN                          , 1   )
+   mnIntN++
+   TEST_LINE( mnIntN                          , 2   )
+   TEST_LINE( mnIntN++                        , 2   )
+   ++mnIntN
+   TEST_LINE( mnIntN                          , 4   )
+   TEST_LINE( ++mnIntN                        , 5   )
+   mnIntN+=10
+   TEST_LINE( mnIntN                          , 15  )
+   TEST_LINE( mnIntN+=200                     , 215 )
+
+   snIntN := 1
+   TEST_LINE( snIntN                          , 1   )
+   snIntN++
+   TEST_LINE( snIntN                          , 2   )
+   TEST_LINE( snIntN++                        , 2   )
+   ++snIntN
+   TEST_LINE( snIntN                          , 4   )
+   TEST_LINE( ++snIntN                        , 5   )
+   snIntN+=10
+   TEST_LINE( snIntN                          , 15  )
+   TEST_LINE( snIntN+=200                     , 215 )
+
+#ifdef __HARBOUR__
+
+   o:=errornew()
+   s:="oscode"
+   o:&s := 1
+   TEST_LINE( o:&(s)                          , 1   )
+   o:&s++
+   TEST_LINE( o:&(s)                          , 2   )
+   TEST_LINE( o:&(s)++                        , 2   )
+   ++o:&s
+   TEST_LINE( o:&(s)                          , 4   )
+   TEST_LINE( ++o:&(s)                        , 5   )
+   o:&s+=10
+   TEST_LINE( o:&(s)                          , 15  )
+   TEST_LINE( o:&(s)+=200                     , 215 )
+
+   WITH OBJECT errornew()
+      :&(s) := 1
+      TEST_LINE( :&(s)                           , 1   )
+      :&(s)++
+      TEST_LINE( :&(s)                           , 2   )
+      TEST_LINE( :&(s)++                         , 2   )
+      ++:&(s)
+      TEST_LINE( :&(s)                           , 4   )
+      TEST_LINE( ++:&(s)                         , 5   )
+      :&(s)+=10
+      TEST_LINE( :&(s)                           , 15  )
+      TEST_LINE( :&(s)+=200                      , 215 )
+   END
+
+   WITH OBJECT errornew()
+      :oscode := 1
+      TEST_LINE( :oscode                         , 1   )
+      :oscode++
+      TEST_LINE( :oscode                         , 2   )
+      TEST_LINE( :oscode++                       , 2   )
+      ++:oscode
+      TEST_LINE( :oscode                         , 4   )
+      TEST_LINE( ++:oscode                       , 5   )
+      :oscode+=10
+      TEST_LINE( :oscode                         , 15  )
+      TEST_LINE( :oscode+=200                    , 215 )
+   END
+
+   &s0 := 1
+   TEST_LINE( &s0                             , 1   )
+   &s0++
+   TEST_LINE( &s0                             , 2   )
+   TEST_LINE( &s0++                           , 2   )
+   ++&s0
+   TEST_LINE( &s0                             , 4   )
+   TEST_LINE( ++&s0                           , 5   )
+   &s0+=10
+   TEST_LINE( &s0                             , 15  )
+   TEST_LINE( &s0+=200                        , 215 )
+
+   &s1.2 := 1
+   TEST_LINE( &s1.2                           , 1   )
+   &s1.2++
+   TEST_LINE( &s1.2                           , 2   )
+   TEST_LINE( &s1.2++                         , 2   )
+   ++&s1.2
+   TEST_LINE( &s1.2                           , 4   )
+   TEST_LINE( ++&s1.2                         , 5   )
+   &s1.2+=10
+   TEST_LINE( &s1.2                           , 15  )
+   TEST_LINE( &s1.2+=200                      , 215 )
+
+#endif
 
    RETURN NIL
 

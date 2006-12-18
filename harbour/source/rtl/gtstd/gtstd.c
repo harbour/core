@@ -366,7 +366,7 @@ static char * hb_gt_std_Version( int iType )
    return "Harbour Terminal: Standard stream console";
 }
 
-static BOOL hb_gt_std_Suspend()
+static BOOL hb_gt_std_Suspend( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend()" ) );
 #if defined( OS_UNIX_COMPATIBLE )
@@ -378,7 +378,7 @@ static BOOL hb_gt_std_Suspend()
    return TRUE;
 }
 
-static BOOL hb_gt_std_Resume()
+static BOOL hb_gt_std_Resume( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume()" ) );
 

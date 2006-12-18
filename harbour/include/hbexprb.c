@@ -849,46 +849,44 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
          break;
       case HB_EA_PUSH_PCODE:
+      {
+         HB_EXPR_PTR pExp = pSelf->value.asReference;
+         if( pExp->ExprType == HB_ET_MACRO )
          {
-            HB_EXPR_PTR pExp = pSelf->value.asReference;
-            if( pExp->ExprType == HB_ET_MACRO )
-            {
-               pExp->value.asMacro.SubType = HB_ET_MACRO_REFER;
-               HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
-            }
-            else if( pExp->ExprType == HB_ET_ALIASVAR )
-            {
-               char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
-               int iLen = strlen( szAlias );
-               if( ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
-                   memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
-                   pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
-               {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
+            pExp->value.asMacro.SubType = HB_ET_MACRO_REFER;
+            HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+            break;
+         }
+         else if( pExp->ExprType == HB_ET_ALIASVAR )
+         {
+            char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
+            int iLen = strlen( szAlias );
+            if( ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
+                memcmp( szAlias, "MEMVAR", iLen ) == 0 &&
+                pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+            {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
 #if !defined(HB_MACRO_SUPPORT)
                   HB_EXPR_PCODE2( hb_compGenVarPCode, HB_P_PUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
 #else
                   HB_EXPR_PCODE2( hb_compMemvarGenPCode, HB_P_MPUSHMEMVARREF, pExp->value.asAlias.pVar->value.asSymbol );
 #endif                  
-               }
-               else
-                  hb_compErrorRefer( HB_COMP_PARAM, pSelf, szAlias );
+               break;
             }
-            else if( pExp->ExprType == HB_ET_SEND )
-            {
-               HB_EXPR_PTR pSend = pExp->value.asMessage.pObject;
-               if( pSend->ExprType == HB_ET_VARIABLE )
-               {
-                  HB_EXPR_PCODE2( hb_compGenMessageData, pExp->value.asMessage.szMessage, TRUE );
-                  HB_EXPR_USE( pSend, HB_EA_PUSH_PCODE );
-                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-               }
-               else
-                  hb_compErrorRefer( HB_COMP_PARAM, pSelf, hb_compExprDescription(pSelf) );
-            }
-            else
-               hb_compErrorRefer( HB_COMP_PARAM, pSelf, hb_compExprDescription(pSelf) );
          }
+         else if( pExp->ExprType == HB_ET_SEND )
+         {
+            HB_EXPR_PTR pSend = pExp->value.asMessage.pObject;
+            if( !pSend || pSend->ExprType == HB_ET_VARIABLE )
+            {
+               hb_compExprPushSendPop( pExp, HB_COMP_PARAM );
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+               break;
+            }
+         }
+
+         hb_compErrorRefer( HB_COMP_PARAM, pSelf, hb_compExprDescription(pSelf) );
          break;
+      }
          
       case HB_EA_POP_PCODE:
          break;
@@ -1363,6 +1361,9 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
          break;
       case HB_EA_PUSH_PCODE:
          {
+            if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ASSIGN )
+               HB_EXPR_PCODE2( hb_compGenPushString, "_", 2 );
+
             if( pSelf->value.asMacro.pExprList )
             {
                /* macro expression: &( expressions_list )
@@ -1393,10 +1394,17 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   {
                      hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
                   }
-#endif                  
+#endif
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
                }
             }
+
+            if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ASSIGN )
+            {
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PLUS );
+               pSelf->value.asMacro.SubType &= ~HB_ET_MACRO_ASSIGN;
+            }
+
             /* compile & run - leave a result on the eval stack
              */
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
@@ -2077,123 +2085,68 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          break;
 
       case HB_EA_PUSH_PCODE:
+         if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
          {
-            BOOL bIsObject = (pSelf->value.asMessage.pObject != NULL);
-            /* pSelf->value.asMessage.pObject is NULL if WITH OBJECT is used */
-            
-            if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
-            {
-               BOOL fMacroList = FALSE;
-               int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
-               if( pSelf->value.asMessage.szMessage )
-               {
-                  HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
-               }
-               else
-               {
-                  HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-                  if( ! bIsObject )
-                  {
-                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
-                  }
-               }
-               if( bIsObject )
-               {
-                  HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-               }
-               /* NOTE: if method with no parameters is called then the list
-                * of parameters contain only one expression of type HB_ET_NONE
-                * There is no need to push this parameter
-                */
-               if( iParms == 1 && pSelf->value.asMessage.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-                  --iParms;
-               if( iParms )
-               {
-                  if( HB_SUPPORT_XBASE )
-                  {
-                     /* check if &macro is used as a function call argument */
-                     HB_EXPR_PTR pExpr = pSelf->value.asMessage.pParms->value.asList.pExprList;
-                     while( pExpr )
-                     {
-                        if( pExpr->ExprType == HB_ET_MACRO )
-                        {
-                           /* &macro was passed - handle it differently then in a normal statement */
-                           pExpr->value.asMacro.SubType |= HB_ET_MACRO_LIST;
-                           pExpr->value.asMacro.pFunCall = pSelf;
-                           fMacroList = TRUE;
-                        }
-                        pExpr = pExpr->pNext;
-                     }
-                  }
-                  if( fMacroList )
-                  {
-                     pSelf->value.asMessage.pParms->ExprType = HB_ET_MACROARGLIST;
-                     iParms = hb_compExprMacroListLen( pSelf->value.asMessage.pParms );
-                     HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-                     pSelf->value.asMessage.pParms->ExprType = HB_ET_ARGLIST;
-                  }
-                  else
-                     HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-               }
+            BOOL fMacroList = FALSE;
+            int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
 
-               if( fMacroList )
-                  HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROSEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
-               else if( iParms > 255 )
-                  HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_SEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
-               else
-                  HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, ( BYTE ) iParms );
-            }
-            else
+            hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
+
+            /* NOTE: if method with no parameters is called then the list
+             * of parameters contain only one expression of type HB_ET_NONE
+             * There is no need to push this parameter
+             */
+            if( iParms == 1 && pSelf->value.asMessage.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
+               --iParms;
+            if( iParms )
             {
-               /* acces to instance variable */
-               if( pSelf->value.asMessage.szMessage )
+               if( HB_SUPPORT_XBASE )
                {
-                  HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, bIsObject );
-               }
-               else
-               {
-                  HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-                  if( ! bIsObject )
+                  /* check if &macro is used as a function call argument */
+                  HB_EXPR_PTR pExpr = pSelf->value.asMessage.pParms->value.asList.pExprList;
+                  while( pExpr )
                   {
-                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
+                     if( pExpr->ExprType == HB_ET_MACRO )
+                     {
+                        /* &macro was passed - handle it differently then in a normal statement */
+                        pExpr->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+                        pExpr->value.asMacro.pFunCall = pSelf;
+                        fMacroList = TRUE;
+                     }
+                     pExpr = pExpr->pNext;
                   }
                }
-               if( bIsObject )
+               if( fMacroList )
                {
-                  HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+                  /* Note: direct type change */
+                  pSelf->value.asMessage.pParms->ExprType = HB_ET_MACROARGLIST;
+                  iParms = hb_compExprMacroListLen( pSelf->value.asMessage.pParms );
+                  HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+                  pSelf->value.asMessage.pParms->ExprType = HB_ET_ARGLIST;
                }
-               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
+               else
+                  HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
             }
+
+            if( fMacroList )
+               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROSEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+            else if( iParms > 255 )
+               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_SEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+            else
+               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, ( BYTE ) iParms );
+         }
+         else
+         {
+            /* acces to instance variable */
+            hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
+            HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
          }
          break;
 
       case HB_EA_POP_PCODE:
-         {
-            BOOL bIsObject = (pSelf->value.asMessage.pObject != NULL);
-            /* pSelf->value.asMessage.pObject if WITH OBJECT is used */
-            
-            /* NOTE: This is an exception from the rule - this leaves
-             *    the return value on the stack
-             */
-            if( pSelf->value.asMessage.szMessage )
-            {
-               HB_EXPR_PCODE2( hb_compGenMessageData, pSelf->value.asMessage.szMessage, bIsObject );
-            }
-            else
-            {
-               HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-                  if( ! bIsObject )
-                  {
-                     HB_EXPR_PCODE2( hb_compGenMessage, NULL, bIsObject );
-                  }
-            }
-            if( bIsObject )
-            {
-               HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-            }
-            HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
-         }
+         hb_compExprPushSendPop( pSelf, HB_COMP_PARAM );
+         HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
          break;
 
       case HB_EA_PUSH_POP:

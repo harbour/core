@@ -1,0 +1,83 @@
+#
+# $Id$
+#
+# The Harbour Project
+# GNU MAKE file for Borland C/C++ 32bit (4.x, 5.x)
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+CC = xcc.exe
+CC_IN = -c
+CC_OUT = -Fo
+CPPFLAGS = -I. -I$(TOP) -I$(TOP)$(ROOT)
+# disabled - it produces bad code
+#CPPFLAGS += -Ot
+
+ifneq ($(HB_INC_COMPILE),)
+CPPFLAGS += -I$(HB_INC_COMPILE)
+endif
+
+CFLAGS = 
+
+LD = xlink.exe
+LD_OUT = -OUT:
+
+# Add all libraries specified in CONTRIBS and LIBS.
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += $(foreach lib, $(CONTRIBS), -LIBPATH:$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
+LINKPATHS += $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH))
+else
+LINKPATHS += -LIBPATH:$(HB_LIB_COMPILE)
+endif
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -LIBPATH:$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
+endif
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
+endif
+
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
+endif
+LINKLIBS += $(HB_GT_LIB)$(LIB_EXT)
+ifneq ($(HB_GT_DEFAULT),)
+ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)
+endif
+LINKLIBS += $(HB_GT_DEFAULT)$(LIB_EXT)
+endif
+endif
+endif
+
+LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib \
+          winspool.lib ole32.lib oleaut32.lib uuid.lib \
+          comctl32.lib mapi32.lib advapi32.lib \
+          gdi32.lib
+
+ifeq ($(HB_GT_DEFAULT),gtgui)
+LDFLAGS += /SUBSYSTEM:WINDOWS
+else
+ifeq ($(HB_GT_LIB),gtgui)
+LDFLAGS += /SUBSYSTEM:WINDOWS
+endif
+endif
+
+# mpr wsock32 ws2_32 mapi32
+
+AR = xlib.exe
+ARFLAGS = $(A_USR)
+AR_RULE = $(AR) $(ARFLAGS) /out:$@ $(^F)
+
+include $(TOP)$(ROOT)config/rules.cf

@@ -98,7 +98,7 @@ HB_FUNC_EXTERN( ERRORNEW );
 /* NOTE: This is called via its symbol name, so we should make sure
          that it gets linked. WARNING ! DON'T make this function static.
          [vszakats] */
-void hb_errForceLink()
+void hb_errForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errForceLink()"));
 

@@ -70,10 +70,6 @@
 #  include "hbapicdp.h"
 #endif
 
-#if defined( __XCC__ ) || defined( __MINGW32__ )
-   #include <stdint.h>
-#endif
-
 static USHORT s_uiRddId = ( USHORT ) -1;
 static RDDFUNCS dbfSuper;
 static RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,

@@ -845,14 +845,14 @@ static char * hb_gt_win_Version( int iType )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_PreExt()
+static BOOL hb_gt_win_PreExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PreExt()"));
 
    return HB_GTSUPER_PREEXT();
 }
 
-static BOOL hb_gt_win_PostExt()
+static BOOL hb_gt_win_PostExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_PostExt()"));
 
@@ -864,7 +864,7 @@ static BOOL hb_gt_win_PostExt()
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_win_Suspend()
+static BOOL hb_gt_win_Suspend( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Suspend()"));
 
@@ -878,7 +878,7 @@ static BOOL hb_gt_win_Suspend()
    return TRUE;
 }
 
-static BOOL hb_gt_win_Resume()
+static BOOL hb_gt_win_Resume( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_Resume()"));
 

@@ -694,7 +694,7 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
          pMessage->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
       }
    }
-   
+
    return pExpr;
 }
 

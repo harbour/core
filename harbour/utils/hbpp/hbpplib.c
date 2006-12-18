@@ -62,7 +62,7 @@
 #include <stdio.h>
 /* #include <setjmp.h> */
 
-#include "hbpp.h"
+#include "hbppdef.h"
 #include "hbcomp.h"
 #include "hbapi.h"
 #include "hbapierr.h"

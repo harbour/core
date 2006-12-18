@@ -55,6 +55,8 @@
 #include "hbmacro.ch"
 
 #define HB_USE_ARRAYAT_REF
+/* Temporary disabled optimization with references to object variables
+   until we will not have extended reference items in our HVM [druzus] */
 /* #define HB_USE_OBJMSG_REF */
 
 #ifdef __WATCOMC__
@@ -63,6 +65,85 @@
 #endif
 
 /* ************************************************************************* */
+
+void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   if( pSelf->value.asMessage.pObject )
+   {
+      /* Push _message */
+      if( pSelf->value.asMessage.szMessage )
+      {
+         HB_EXPR_PCODE2( hb_compGenMessageData, pSelf->value.asMessage.szMessage, TRUE );
+      }
+      else
+      {
+         if( pSelf->value.asMessage.pMessage->ExprType == HB_ET_MACRO )
+            /* o:&macro := value
+             * set ASSIGN flag in macro expression
+             * it's cleared just after use
+             */
+            pSelf->value.asMessage.pMessage->value.asMacro.SubType |= HB_ET_MACRO_ASSIGN;
+
+         HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+      }
+      /* Push object */
+      HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+   }
+   else /* WITH OBJECT */
+   {
+      /* Push _message and object */
+      if( pSelf->value.asMessage.szMessage )
+      {
+         HB_EXPR_PCODE2( hb_compGenMessageData, pSelf->value.asMessage.szMessage, FALSE );
+      }
+      else
+      {
+         if( pSelf->value.asMessage.pMessage->ExprType == HB_ET_MACRO )
+            /* o:&macro := value
+             * set ASSIGN flag in macro expression
+             * it's cleared just after use
+             */
+            pSelf->value.asMessage.pMessage->value.asMacro.SubType |= HB_ET_MACRO_ASSIGN;
+
+         HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+         /* Push object using WITHOBJECTMESSAGE pcode */
+         HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
+      }
+   }
+}
+
+void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   if( pSelf->value.asMessage.pObject )
+   {
+      /* Push message */
+      if( pSelf->value.asMessage.szMessage )
+      {
+         HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, TRUE );
+      }
+      else
+      {
+         HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+      }
+      /* Push object */
+      HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
+   }
+   else /* WITH OBJECT */
+   {
+      if( pSelf->value.asMessage.szMessage )
+      {
+         /* Push message and object */
+         HB_EXPR_PCODE2( hb_compGenMessage, pSelf->value.asMessage.szMessage, FALSE );
+      }
+      else
+      {
+         /* Push message */
+         HB_EXPR_USE( pSelf->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+         /* Push object using WITHOBJECTMESSAGE pcode */
+         HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
+      }
+   }
+}
 
 static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
 {
@@ -79,7 +160,6 @@ static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
       }
       /* Push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-#ifndef HB_USE_OBJMSG_REF
       /* Now push current value of variable */
       if( pObj->value.asMessage.szMessage )
       {
@@ -91,22 +171,21 @@ static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
       }
       /* Push object */
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
-#endif
    }
    else
    {
-      /* Push _message for later use */
       if( pObj->value.asMessage.szMessage )
       {
+         /* Push _message and object for later use */
          HB_EXPR_PCODE2( hb_compGenMessageData, pObj->value.asMessage.szMessage, FALSE );
       }
       else
       {
+         /* Push message for later use */
          HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
-         /* Push WITHOBJECTMESSAGE pcode */
+         /* Push object using WITHOBJECTMESSAGE pcode */
          HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
       }
-#ifndef HB_USE_OBJMSG_REF
       /* Now push current value of variable */
       if( pObj->value.asMessage.szMessage )
       {
@@ -118,7 +197,59 @@ static void hb_compExprSendPopPush( HB_EXPR_PTR pObj, HB_COMP_DECL )
          /* Push WITHOBJECTMESSAGE pcode */
          HB_EXPR_PCODE2( hb_compGenMessage, NULL, FALSE );
       }
-#endif
+   }
+}
+
+static void hb_compExprPushSendPopPush( HB_EXPR_PTR pObj, HB_EXPR_PTR pValue,
+                                        BOOL fPreOp, BYTE bOper, HB_COMP_DECL )
+{
+   if( HB_SUPPORT_HARBOUR )
+   {
+      hb_compExprPushSendPop( pObj, HB_COMP_PARAM );
+      /* duplicate object variable */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      /* Push message */
+      if( pObj->value.asMessage.szMessage )
+      {
+         /* TRUE used intnetionally to not push object variable in WITH OBJECT */
+         HB_EXPR_PCODE2( hb_compGenMessage, pObj->value.asMessage.szMessage, TRUE );
+      }
+      else
+      {
+         HB_EXPR_USE( pObj->value.asMessage.pMessage, HB_EA_PUSH_PCODE );
+      }
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SWAP, 0 );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
+      if( fPreOp )
+      {
+         /* push the result on the stack */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SWAP, 2 );
+      }
+   }
+   else
+   {
+      if( fPreOp )
+      {
+         /* push current value - it will be a result of whole expression */
+         HB_EXPR_USE( pObj, HB_EA_PUSH_PCODE );
+      }
+      hb_compExprSendPopPush( pObj, HB_COMP_PARAM );
+      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
+   }
+   /* push increment value */
+   if( pValue )
+   {
+      HB_EXPR_USE( pValue, HB_EA_PUSH_PCODE );
+   }
+   /* do operation */
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   /* Now do the assignment - call pop message with one argument */
+   HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
+   if( fPreOp )
+   {
+      /* pop the unneeded value left by assignment message from the stack */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
    }
 }
 
@@ -137,7 +268,6 @@ void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
-#if ! defined( HB_MACRO_SUPPORT )
    BYTE bNewOp;
 
    switch( bOpEq )
@@ -164,7 +294,6 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          bNewOp = bOpEq;
          break;
    }
-#endif
 
    /* NOTE: an object instance variable needs special handling
     */
@@ -172,7 +301,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
    {
 
 /* NOTE: COMPATIBILITY ISSUE:
- *  The above HB_C52_STRICT setting determines
+ * The HB_SUPPORT_HARBOUR in code below determines
  * the way the chained send messages are handled.
  * For example, the following code:
  *
@@ -182,12 +311,13 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  *
  * a:b( COUNT() ):c := a:b( COUNT() ):c + 1
  *
- * in strict Clipper compatibility mode and
+ * in strict Clipper compatibility mode 
+ * (HB_SUPPORT_HARBOUR is not set: -kc compiler switch ) and
  *
  * temp := a:b( COUNT() ), temp:c += 1
  *
- * in non-strict mode.
- *   In practice in Clipper it will call COUNT() function two times: the
+ * in non-strict mode (-kh).
+ * In practice in Clipper it will call COUNT() function two times: the
  * first time before addition and the second one after addition - in Harbour,
  * COUNT() function will be called only once, before addition.
  * The Harbour (non-strict) method is:
@@ -196,14 +326,10 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  *   be changed
  */
 
-      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
-      /* Do it. */
-
-      /* Temporary disabled optimization with references to object variables
-         untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq != bNewOp )
+      if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
       {
+         hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
@@ -212,17 +338,12 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       else
 #endif
       {
-         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
-         /* push increment value */
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         /* increase operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
-         /* call pop message with one argument */
-         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
+         hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft,
+                                     pSelf->value.asOperator.pRight,
+                                     FALSE, bOpEq, HB_COMP_PARAM );
       }
       return;
    }
-#if ! defined( HB_MACRO_SUPPORT )
    else if( bOpEq != bNewOp )
    {
 #ifdef HB_USE_ARRAYAT_REF
@@ -243,8 +364,25 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       }
       else
 #endif
-      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
+         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         if( usType == HB_ET_MACRO_VAR )
+         {
+            /* NOTE: direct type change */
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+            return;
+         }
+      }
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+#if defined( HB_MACRO_SUPPORT )
+         {
+#else
          int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
@@ -278,6 +416,7 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
                   }
                }
             }
+#endif
             /* NOTE: direct type change */
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
 
@@ -288,7 +427,6 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          }
       }
    }
-#endif
    /* push old value */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
    /* push increment value */
@@ -305,7 +443,6 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  */
 void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
-#if ! defined( HB_MACRO_SUPPORT )
    BYTE bNewOp;
 
    switch( bOpEq )
@@ -332,20 +469,15 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          bNewOp = bOpEq;
          break;
    }
-#endif
 
    /* NOTE: an object instance variable needs special handling
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
-      /* Do it.*/
-
-      /* Temporary disabled optimization with references to object variables
-         untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      if( bOpEq != bNewOp )
+      if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
       {
+         hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
          /* push increment value */
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
@@ -354,19 +486,14 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       else
 #endif
       {
-         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
-         /* push increment value */
-         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-         /* increase operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
-         /* Now do the assignment - call pop message with one argument */
-         HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
+         hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft,
+                                     pSelf->value.asOperator.pRight,
+                                     FALSE, bOpEq, HB_COMP_PARAM );
          /* pop the unneeded value from the stack */
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
       }
       return;
    }
-#if ! defined( HB_MACRO_SUPPORT )
    else if( bOpEq != bNewOp )
    {
 #ifdef HB_USE_ARRAYAT_REF
@@ -387,15 +514,31 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
       }
       else
 #endif
-      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
+         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         if( usType == HB_ET_MACRO_VAR )
+         {
+            /* NOTE: direct type change */
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+            return;
+         }
+      }
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         HB_EXPRTYPE iOldType;
+#if defined( HB_MACRO_SUPPORT )
+         {
+#else
          int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
-            HB_EXPRTYPE iOldType;
-
             if( iScope == HB_VS_LOCAL_VAR &&
                 pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC &&
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )
@@ -422,6 +565,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
                   }
                }
             }
+#endif
             /* NOTE: direct type change */
             iOldType = pSelf->value.asOperator.pLeft->ExprType;
             pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
@@ -434,7 +578,6 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          }
       }
    }
-#endif
    /* push old value */
    HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
    /* push increment value */
@@ -453,29 +596,27 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
-      /* Do it. */
-
-      /* Temporary disabled optimization with references to object variables
-         untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+      if( HB_SUPPORT_HARBOUR )
+      {
+         hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
 
-      /* increase/decrease operation, leave unreferenced value on stack */
-      /* We have to unreference the item on the stack, because we do not have
-         such PCODE(s) then I'll trnaslate HB_P_INC/HB_P_DEC into
-         HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
-         in differ way [druzus] */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-#else
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 0 );
-      /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-      /* Now, do the assignment - call pop message with one argument - it leaves the value on the stack */
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_SENDSHORT, 1 );
+         /* increase/decrease operation, leave unreferenced value on stack */
+         /* We have to unreference the item on the stack, because we do not have
+            such PCODE(s) then I'll trnaslate HB_P_INC/HB_P_DEC into
+            HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
+            in differ way [druzus] */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      }
+      else
 #endif
+      {
+         hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
+                                     FALSE, bOper, HB_COMP_PARAM );
+      }
    }
 #ifdef HB_USE_ARRAYAT_REF
    /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
@@ -494,6 +635,20 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
       HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
    }
 #endif
+   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+   {
+      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+      /* NOTE: direct type change */
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+
+      /* increase/decrease operation, leave unreferenced value on stack */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
    else
    {
       /* Push current value */
@@ -516,29 +671,31 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
 #ifdef HB_USE_OBJMSG_REF
-      /* push reference to current value */
-      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-      /* Duplicate the reference and unref the original one -
-       * it will be the result of whole expression
-       */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
-      /* increment/decrement the value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-#else
-      /* push current value - it will be a result of whole expression */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* now increment the value */
-      HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
-      /* pop the value from the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      if( HB_SUPPORT_HARBOUR )
+      {
+         /* push reference to current value */
+         hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+         /* Duplicate the reference and unref the original one -
+          * it will be the result of whole expression
+          */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+         /* increment/decrement the value */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      }
+      else
 #endif
+      {
+         hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
+                                     TRUE, bOper, HB_COMP_PARAM );
+      }
    }
 #ifdef HB_USE_ARRAYAT_REF
    /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   else if( HB_SUPPORT_HARBOUR &&
+            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
    {
       /* push reference to current value */
       /* Note: change type to array reference */
@@ -556,6 +713,24 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
       HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
    }
 #endif
+   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+   {
+      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+      /* NOTE: direct type change */
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+
+      /* Duplicate the reference and unref the original one -
+       * it will be the result of whole expression
+       */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+      /* increase/decrease operation */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
    else
    {
       /* Push current value */
@@ -578,25 +753,30 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
-      /* Temporary disabled optimization with references to object variables
-         untill we will not have extended reference items in our HVM [druzus] */
 #ifdef HB_USE_OBJMSG_REF
-      /* push reference to current value */
-      HB_EXPR_PCODE1( hb_compExprSendPopPush, pSelf->value.asOperator.pLeft );
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-      /* increment/decrement the value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-#else
-      HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
-      /* pop the value from the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      if( HB_SUPPORT_HARBOUR )
+      {
+         /* push reference to current value */
+         hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
+         /* increment/decrement the value */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      }
+      else
 #endif
+      {
+         hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
+                                     FALSE, bOper, HB_COMP_PARAM );
+         /* pop the value from the stack */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      }
    }
 #ifdef HB_USE_ARRAYAT_REF
    /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   else if( HB_SUPPORT_HARBOUR &&
+            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
    {
       /* push reference to current value */
       /* Note: change type to array reference */
@@ -609,6 +789,20 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
       HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
    }
 #endif
+   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+   {
+      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+      /* NOTE: direct type change */
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+
+      /* increase/decrease operation */
+      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   }
    else
    {
       /* Push current value */

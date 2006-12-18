@@ -2315,7 +2315,7 @@ int hb_compLocalGetPos( HB_COMP_DECL, char * szVarName ) /* returns the order + 
  * All static variables are hold in a single array at runtime then positions
  * are numbered for whole PRG module.
  */
-int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
+static int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 
@@ -2355,7 +2355,7 @@ char * hb_compStaticGetName( HB_COMP_DECL, USHORT wVar )
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
  */
-int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
+static int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 
@@ -2377,7 +2377,7 @@ int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
 /* Checks if passed variable name is declared as MEMVAR
  * Returns 0 if not found in MEMVAR list or its position in this list if found
  */
-int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
+static int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
 {
    int iVar;
 

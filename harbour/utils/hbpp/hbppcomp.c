@@ -63,7 +63,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "hbpp.h"
+#include "hbppdef.h"
 #include "hbcomp.h"
 
 static void pp_ParseBuffer( PFILE, int * );
@@ -617,7 +617,7 @@ int hb_pp_ReadRules( void )
      {
         if( hb_comp_files.iFiles == 1 )
         {
-           return 0;      /* we have reached the main EOF */
+           break;      /* we have reached the main EOF */
         }
         else
         {
@@ -628,5 +628,6 @@ int hb_pp_ReadRules( void )
         *s_szLine = '\0';
      }
   }
-}
 
+  return 0;
+}

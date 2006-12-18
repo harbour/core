@@ -256,6 +256,7 @@ typedef enum
 #define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
 #define  HB_ET_MACRO_PARE    64   /* &variable used as parentesised expressions. */
 #define  HB_ET_MACRO_REFER  128   /* &macro used in @ (pass by reference) */
+#define  HB_ET_MACRO_ASSIGN 256   /* o:&msgname := value */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully
@@ -357,8 +358,8 @@ typedef struct HB_EXPR_
          char * szMacro;               /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
          struct HB_EXPR_ *pFunCall;    /* pointer to a function if used as function's call argument */
+         USHORT SubType;               /* context in which macro is used */
          unsigned char cMacroOp;       /* macro operator */
-         unsigned char SubType;        /* context in which macro is used */
       } asMacro;
       struct
       {

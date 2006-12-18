@@ -73,7 +73,6 @@
 #endif
 
 #include <limits.h>
-#include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>

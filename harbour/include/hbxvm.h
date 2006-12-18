@@ -134,6 +134,7 @@ extern HB_EXPORT BOOL   hb_xvmNegate( void );
 extern HB_EXPORT void   hb_xvmDuplicate( void );
 extern HB_EXPORT void   hb_xvmDuplUnRef( void );
 extern HB_EXPORT void   hb_xvmDuplTwo( void );
+extern HB_EXPORT void   hb_xvmSwap( int iCount );
 extern HB_EXPORT BOOL   hb_xvmForTest( void );
 extern HB_EXPORT void   hb_xvmFuncPtr( void );
 extern HB_EXPORT BOOL   hb_xvmEqual( BOOL fExact );               /* checks if the two latest values on the stack are equal, removes both and leaves result */

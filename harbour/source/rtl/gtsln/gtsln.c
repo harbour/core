@@ -822,7 +822,7 @@ static char * hb_gt_sln_Version( int iType )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Suspend()
+static BOOL hb_gt_sln_Suspend( void )
 {
    if( ! s_bSuspended )
    {
@@ -838,7 +838,7 @@ static BOOL hb_gt_sln_Suspend()
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Resume()
+static BOOL hb_gt_sln_Resume( void )
 {
    if( s_bSuspended && SLsmg_resume_smg() != -1 &&
        hb_sln_Init_Terminal( 1 ) != -1 )
@@ -855,7 +855,7 @@ static BOOL hb_gt_sln_Resume()
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PreExt()
+static BOOL hb_gt_sln_PreExt( void )
 {
     SLsmg_refresh();
 #ifdef HAVE_GPM_H
@@ -866,7 +866,7 @@ static BOOL hb_gt_sln_PreExt()
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PostExt()
+static BOOL hb_gt_sln_PostExt( void )
 {
     return TRUE;
 }

@@ -229,10 +229,10 @@ HB_FUNC (TABEXPAND)
         sTabCnt--;
         sIndex++;
       }
-      else if ((unsigned char)cChar == 141)
+      else if ((unsigned char)cChar == 0x8d)
       {
         /* soft carriage return */
-        *(pcRet+sRetLen) = 141;
+        *(pcRet+sRetLen) = '\x8d';
         sRetLen++;
         sIndex++;
         if (iIgnore141)
@@ -495,7 +495,7 @@ HB_FUNC (TABPACK)
           *(pcRet+sRetLen) = cFill;
           sRetLen++;
         }  
-        *(pcRet+sRetLen) = 141;
+        *(pcRet+sRetLen) = '\x8d';
         sRetLen++;
         sTabIndex = 0;
         sIndex++;

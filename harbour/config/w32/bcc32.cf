@@ -11,20 +11,15 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-_HB_INC_COMPILE = $(subst /,\,$(HB_INC_COMPILE))
-_HL = $(notdir $(HB_LIB_COMPILE))
-ifeq ($(_HL),)
-#there is an ending slash
-_HB_LIB_COMPILE = $(subst /,\,$(HB_LIB_COMPILE))
-else
-_HB_LIB_COMPILE = $(subst /,\,$(HB_LIB_COMPILE)/)
-endif
-
 CC = bcc32
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I$(GRANDP) -I$(HB_INC_COMPILE)
+CPPFLAGS = -I. -I$(TOP) -I$(TOP)$(ROOT)
 CFLAGS = -O2 -d
+
+ifneq ($(HB_INC_COMPILE),)
+CPPFLAGS += -I$(HB_INC_COMPILE)
+endif
 
 LD = bcc32
 LDFLAGS = -O2

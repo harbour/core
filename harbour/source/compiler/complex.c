@@ -860,10 +860,11 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                {
                   if( pLex->iState == LOOKUP &&
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                      ( pToken->pNext->pNext->len >= 4 ||
-                        hb_strnicmp( "OBJECT", pToken->pNext->value,
-                                     pToken->pNext->len ) != 0 ) )
+                      pToken->pNext->len >= 4 &&
+                      hb_strnicmp( "OBJECT", pToken->pNext->value,
+                                   pToken->pNext->len ) == 0 )
                   {
+                     hb_pp_tokenGet( pLex->pPP );
                      pLex->iState = WITHOBJECT;
                      return WITHOBJECT;
                   }

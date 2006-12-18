@@ -8,6 +8,104 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-18 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/bcc32.cf
+    * cleanup
+  + harbour/config/w32/xcc.cf
+    + added XCC support
+
+  * harbour/contrib/btree/hb_btree.c
+    * use hb_vmAtInit()/hb_vmAtExit() instead of INIT/EXIT functions defined
+      from C code
+
+  * harbour/contrib/libct/tab.c
+    * casting
+
+  * harbour/contrib/odbc/odbc.c
+    ! removed #include <malloc.h> - it should not be used with new C
+      compilers
+      I think that we should replace this library with hbodbc from xHarbour.
+
+  * harbour/contrib/ole/ole2.c
+    * updated for XCC
+
+  * harbour/include/hbdefs.h
+    * include stdint.h if available
+
+  * harbour/source/compiler/complex.c
+    ! fixed yet another stupid mistake in WITHOBJECT token
+
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+    + added HB_P_SWAP <n> PCODE
+
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+    ! fixed GPF during compilation of @:var, @:&var, @o:&var
+    + added support for @o:&var and @:var, @:&var inside WITH OBJECT
+      statement
+    * changed PCODE generated of ++,--,+=,-=,... 
+      Now left side expression is evaluated _ONLY_ once and when object
+      messages are used it's guarantied that exactly the same object
+      variable will be used. It also fixes some problems which exists
+      in Clipper. This optimization is enabled by -kh flag (by default)
+      and can be disabled with -kc.
+    % optimize ald macros in ++,--,+=,-=,... operations
+    * add automatically "_" prefix when macro message is used in assignment
+      context, f.e.:
+         s:="osCode"
+         o:=errorNew()
+         ? o:&s
+         o:&s := 100
+         ? ++o:&s
+         ? o:&s *= 5
+
+  * harbour/include/hblang.ch
+    - removed #xtranslate - this file is included by C code and some C
+      compiler do not like unknown directives
+
+  * harbour/utils/hbtest/rt_math.prg
+    + added test code for <op>assign and (pre/post)(inc/dec)rementation,
+      macro messages and WITH OBJECT
+
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtwin/gtwin.c
+    * casting and warning cleanup
+
+  * harbour/utils/Makefile
+    + added $(HB_UTILS)
+
+  - harbour/utils/hbpp/hbpp.h
+  + harbour/utils/hbpp/hbppdef.h
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/hbpptbl.c
+  * harbour/utils/hbpp/pragma.c
+    * renamed hbpp.h to hbppdef.h to avoid possible conflict with hbpp.h
+      in include directory
+    * casting and warning cleanup
+
 2006-12-18 18:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h
       + added extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )

@@ -54,7 +54,7 @@
  * See doc/pragma.txt to learn more about Harbour pragmas.
  */
 
-#include "hbpp.h"
+#include "hbppdef.h"
 #include "hbcomp.h"
 
 static BOOL StringToBool( char *, BOOL );

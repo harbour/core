@@ -1274,14 +1274,14 @@ static BOOL hb_gt_dos_SetMode( int iRows, int iCols )
    return bSuccess;
 }
 
-static BOOL hb_gt_dos_PreExt()
+static BOOL hb_gt_dos_PreExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_PreExt()"));
 
    return TRUE;
 }
 
-static BOOL hb_gt_dos_PostExt()
+static BOOL hb_gt_dos_PostExt( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_PostExt()"));
 
@@ -1292,14 +1292,14 @@ static BOOL hb_gt_dos_PostExt()
    return TRUE;
 }
 
-static BOOL hb_gt_dos_Suspend()
+static BOOL hb_gt_dos_Suspend( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Suspend()"));
 
    return TRUE;
 }
 
-static BOOL hb_gt_dos_Resume()
+static BOOL hb_gt_dos_Resume( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Resume()"));
 

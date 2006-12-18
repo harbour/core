@@ -186,8 +186,10 @@ extern void hb_compExprUseOperEq( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
 extern void hb_compExprPushPreOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
 extern void hb_compExprPushPostOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
 extern void hb_compExprUsePreOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-extern void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
 extern void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL );
+extern void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL );
+extern void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
+extern void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
 extern ULONG hb_compExprReduceList( HB_EXPR_PTR, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL );

@@ -744,7 +744,7 @@ static char * hb_gt_pca_Version( int iType )
    return "Harbour Terminal: PC ANSI";
 }
 
-static BOOL hb_gt_pca_Suspend()
+static BOOL hb_gt_pca_Suspend( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend()" ) );
 #if defined( OS_UNIX_COMPATIBLE )
@@ -758,7 +758,7 @@ static BOOL hb_gt_pca_Suspend()
    return TRUE;
 }
 
-static BOOL hb_gt_pca_Resume()
+static BOOL hb_gt_pca_Resume( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume()" ) );
 

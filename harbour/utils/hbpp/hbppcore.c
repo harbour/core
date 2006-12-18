@@ -78,7 +78,7 @@
 #include <time.h>
 #include <errno.h>
 
-#include "hbpp.h"
+#include "hbppdef.h"
 #include "hbcomp.h"
 
 #if defined( OS_UNIX_COMPATIBLE )

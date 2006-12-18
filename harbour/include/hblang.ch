@@ -62,8 +62,4 @@
 #define HB_LANG_ITEM_BASE_TEXT          115
 #define HB_LANG_ITEM_MAX_               118
 
-#ifndef HB_APILNG_H_
-   #translate HB_LANG_REQUEST <id>    =>   REQUEST HB_LANG_<id>
-#endif
-
 #endif /* HB_LANG_CH_ */
