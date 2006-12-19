@@ -151,6 +151,7 @@ extern HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 extern ULONG hb_compExprListLen( HB_EXPR_PTR );
+extern ULONG hb_compExprParamListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
 extern void hb_compExprClear( HB_EXPR_PTR, HB_COMP_DECL );
 extern const char * hb_compExprDescription( HB_EXPR_PTR );

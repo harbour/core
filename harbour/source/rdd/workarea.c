@@ -332,8 +332,10 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'I':
+         case 'Y':
             pFieldInfo.uiType = HB_IT_INTEGER;
-            pFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen != 8 ) ? uiLen : 4;
+            pFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
+            pFieldInfo.uiDec = uiDec;
             break;
 
          case '2':

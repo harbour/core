@@ -391,18 +391,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol));
 
-      if( pParms )
-      {
-         iCount = hb_compExprListLen( pParms );
-         /* Check the special case when no parameters are passed - in this case
-         * pParms is an expression of type HB_ET_NONE and we shouldn't
-         * replace it with NIL value
-         */
-         if( iCount == 1 && pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-            --iCount;
-      }
-      else
-         iCount = 0;
+      iCount = ( int ) hb_compExprParamListLen( pParms );
 
 #ifndef HB_MACRO_SUPPORT
       if( ! hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, iCount ) )

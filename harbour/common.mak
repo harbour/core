@@ -555,6 +555,8 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgsr852.obj \
     $(OBJ_DIR)\msgsriso.obj \
     $(OBJ_DIR)\msgsrwin.obj \
+    $(OBJ_DIR)\msgtrdos.obj \
+    $(OBJ_DIR)\msgtrwin.obj \
     $(OBJ_DIR)\msgzhb5.obj  \
     $(OBJ_DIR)\msgzhgb.obj  \
 
@@ -601,16 +603,20 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpsliso.obj  \
     $(OBJ_DIR)\cpslwin.obj  \
     $(OBJ_DIR)\cpsrwin.obj  \
+    $(OBJ_DIR)\cptrdos.obj  \
+    $(OBJ_DIR)\cptrwin.obj  \
     $(OBJ_DIR)\cpua866.obj  \
     $(OBJ_DIR)\cpuakoi.obj  \
     $(OBJ_DIR)\cpuawin.obj  \
     $(OBJ_DIR)\uc1250.obj   \
     $(OBJ_DIR)\uc1251.obj   \
     $(OBJ_DIR)\uc1253.obj   \
+    $(OBJ_DIR)\uc1254.obj   \
     $(OBJ_DIR)\uc1257.obj   \
     $(OBJ_DIR)\uc737.obj    \
     $(OBJ_DIR)\uc850.obj    \
     $(OBJ_DIR)\uc852.obj    \
+    $(OBJ_DIR)\uc857.obj    \
     $(OBJ_DIR)\uc866.obj    \
     $(OBJ_DIR)\uc8859_1.obj \
     $(OBJ_DIR)\uc8859_2.obj \

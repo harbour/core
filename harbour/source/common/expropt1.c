@@ -909,7 +909,32 @@ ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
    return ulLen;
 }
 
-/*  Return a number of macro gropu elements on the linked list
+/*  Return a number of parameters passed to function or method
+ */
+ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
+{
+   ULONG ulLen = 0;
+
+   if( pExpr )
+   {
+      HB_EXPR_PTR pParam = pExpr->value.asList.pExprList;
+      while( pParam )
+      {
+         pParam = pParam->pNext;
+         ++ulLen;
+      }
+      /* NOTE: if method or function with no parameters is called then the
+       * list of parameters contain only one expression of type HB_ET_NONE
+       * There is no need to calculate this parameter
+       */
+      if( ulLen == 1 && pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
+         --ulLen;
+   }
+
+   return ulLen;
+}
+
+/*  Return a number of macro group elements on the linked list
  */
 ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
 {

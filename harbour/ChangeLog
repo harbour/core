@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-19 22:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+    + added hb_compExprParamListLen()
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+    * use hb_compExprParamListLen()
+
+  * harbour/include/hbexprc.c
+    * generate error message for syntax like:
+         o:var()++ or o:var()+=10
+      only:
+         o:var++ and o:var+=10
+      is supported, just like for @o:var
+
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbstr.c
+    + hb_numDecConv() used to convert double value to/from binary integer
+      fields with fixed number of decimal places
+
+  * harbour/common.mak
+  * harbour/include/hbapicdp.h
+  * harbour/source/codepage/Makefile
+  + harbour/source/codepage/cptrdos.c
+  + harbour/source/codepage/cptrwin.c
+  * harbour/source/lang/Makefile
+  + harbour/source/lang/msgtrdos.c
+  + harbour/source/lang/msgtrwin.c
+    + added Turkish CPs and MSGs created by Bicahi Esgici
+  + harbour/source/codepage/uc1254.c
+  + harbour/source/codepage/uc857.c
+    + added unicode tables for Turkish CPs
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+    + added support for decimal places in binary integer fields ("I")
+    ! fixed currency field decoding ("Y") - it's integer binary value
+      not IEEE758 double. Warning: on write the value is rounded not
+      truncated like in VFP.
+
 2006-12-19 00:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprc.c
     * added support _" prefix when macro message is used in assignment context

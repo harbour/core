@@ -46,16 +46,20 @@ C_SOURCES=\
 	cpsliso.c     \
 	cpslwin.c     \
 	cpsrwin.c     \
+	cptrdos.c     \
+	cptrwin.c     \
 	cpua866.c     \
 	cpuakoi.c     \
 	cpuawin.c     \
 	uc1250.c      \
 	uc1251.c      \
 	uc1253.c      \
+	uc1254.c      \
 	uc1257.c      \
 	uc737.c       \
 	uc850.c       \
 	uc852.c       \
+	uc857.c       \
 	uc866.c       \
 	uc8859_1.c    \
 	uc88591b.c    \

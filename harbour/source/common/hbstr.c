@@ -457,6 +457,18 @@ HB_EXPORT double hb_numInt( double dNum )
    return dInt;
 }
 
+HB_EXPORT double hb_numDecConv( double dNum, int iDec )
+{
+   if( iDec > 0 )
+      return hb_numRound( dNum / hb_numPow10( iDec ), iDec );
+
+   else if( iDec < 0 )
+      return hb_numRound( dNum * hb_numPow10( -iDec ), 0 );
+
+   else
+      return hb_numRound( dNum, 0 );
+}
+
 static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG * lVal, double * dVal, int * piDec, int * piWidth )
 {
    BOOL fDbl = FALSE, fDec = FALSE, fNeg, fHex = FALSE;

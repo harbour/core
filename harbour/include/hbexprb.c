@@ -1537,17 +1537,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          {
             HB_EXPR_PTR pName = pSelf->value.asFunCall.pFunName;
             HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-            USHORT usCount = 0;
-
-            if( pParms )
-            {
-               usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
-
-               if( usCount == 1 && pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               {
-                  --usCount;
-               }
-            }
+            USHORT usCount = ( USHORT ) hb_compExprParamListLen( pParms );
 
 #ifndef HB_MACRO_SUPPORT
             hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount );
@@ -1601,9 +1591,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             /* NOTE: pParms will be NULL in 'DO procname' (if there is
              * no WITH keyword)
              */
-            usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
-            if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               --usCount;
+            usCount = ( USHORT ) hb_compExprParamListLen( pSelf->value.asFunCall.pParms );
             if( usCount )
             {
                if( HB_SUPPORT_XBASE )
@@ -1658,9 +1646,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
          if( pSelf->value.asFunCall.pParms )
          {
-            usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
-            if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               --usCount;
+            usCount = ( USHORT ) hb_compExprParamListLen( pSelf->value.asFunCall.pParms );
             if( usCount )
             {
                if( HB_SUPPORT_XBASE )
@@ -2088,16 +2074,9 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
          {
             BOOL fMacroList = FALSE;
-            int iParms = hb_compExprListLen( pSelf->value.asMessage.pParms );
+            int iParms = ( int ) hb_compExprParamListLen( pSelf->value.asMessage.pParms );
 
             hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
-
-            /* NOTE: if method with no parameters is called then the list
-             * of parameters contain only one expression of type HB_ET_NONE
-             * There is no need to push this parameter
-             */
-            if( iParms == 1 && pSelf->value.asMessage.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               --iParms;
             if( iParms )
             {
                if( HB_SUPPORT_XBASE )

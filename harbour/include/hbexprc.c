@@ -272,8 +272,12 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  *   be changed
  */
 
+      if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
+      {
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
+      }
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
+      else if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
@@ -281,8 +285,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
       }
-      else
 #endif
+      else
       {
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft,
                                      pSelf->value.asOperator.pRight,
@@ -420,8 +424,12 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+      if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
+      {
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
+      }
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
+      else if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
@@ -429,8 +437,8 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
          HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
       }
-      else
 #endif
+      else
       {
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft,
                                      pSelf->value.asOperator.pRight,
@@ -542,8 +550,12 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+      if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
+      {
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
+      }
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      else if( HB_SUPPORT_HARBOUR )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
@@ -557,8 +569,8 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
          HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       }
-      else
 #endif
+      else
       {
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
                                      FALSE, bOper, HB_COMP_PARAM );
@@ -616,8 +628,12 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+      if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
+      {
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
+      }
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      else if( HB_SUPPORT_HARBOUR )
       {
          /* push reference to current value */
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
@@ -631,8 +647,8 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
          HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       }
-      else
 #endif
+      else
       {
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
                                      TRUE, bOper, HB_COMP_PARAM );
@@ -699,8 +715,12 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
    {
+      if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
+      {
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
+      }
 #ifdef HB_USE_OBJMSG_REF
-      if( HB_SUPPORT_HARBOUR )
+      else if( HB_SUPPORT_HARBOUR )
       {
          /* push reference to current value */
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
@@ -710,8 +730,8 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
          HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
       }
-      else
 #endif
+      else
       {
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
                                      FALSE, bOper, HB_COMP_PARAM );
