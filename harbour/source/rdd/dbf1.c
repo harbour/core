@@ -1882,6 +1882,7 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                lVal = ( HB_LONG ) dVal;
                if( ! HB_DBL_LIM_INT64( dVal ) )
                   iSize = 99;
+               else
 #ifndef HB_LONG_LONG_OFF
                   iSize = HB_LIM_INT8( lVal ) ? 1 :
                         ( HB_LIM_INT16( lVal ) ? 2 :
@@ -1916,7 +1917,9 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             else
             {
                lVal = ( HB_LONG ) hb_itemGetNInt( pItem );
-               dVal = 0.0;
+#ifdef HB_LONG_LONG_OFF
+               dVal = ( double ) lVal;
+#endif
                iSize = HB_LIM_INT8( lVal ) ? 1 :
                      ( HB_LIM_INT16( lVal ) ? 2 :
                      ( HB_LIM_INT24( lVal ) ? 3 :
