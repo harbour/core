@@ -1926,7 +1926,6 @@ void hb_compAnnounce( HB_COMP_DECL, char * szFunName )
 
    pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName );
    if( pFunc )
-
    {
       /* there is a function/procedure defined already - ANNOUNCEd procedure
        * have to be a public symbol - check if existing symbol is public
