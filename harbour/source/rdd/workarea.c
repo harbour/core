@@ -271,6 +271,7 @@ ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    USHORT uiItems, uiCount, uiLen, uiDec;
+   ERRCODE errCode = SUCCESS;
    DBFIELDINFO pFieldInfo;
    PHB_ITEM pFieldDesc;
    int iData;
@@ -354,6 +355,7 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          case 'N':
          case 'F':
             pFieldInfo.uiType = HB_IT_LONG;
+            pFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
              * but Clipper alows to create longer fileds so I remove this
              * limit, Druzus
@@ -362,16 +364,21 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             if( uiLen > 20 )
             */
             if( uiLen > 255 )
-               return FAILURE;
-            else
-               pFieldInfo.uiDec = uiDec;
+               errCode = FAILURE;
             break;
 
          default:
-            return FAILURE;
+            errCode = FAILURE;
+            break;
+      }
+
+      if( errCode != SUCCESS )
+      {
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, &hb_errFuncName );
+         return errCode;
       }
       /* Add field */
-      if( SELF_ADDFIELD( pArea, &pFieldInfo ) != SUCCESS )
+      else if( SELF_ADDFIELD( pArea, &pFieldInfo ) != SUCCESS ) 
          return FAILURE;
    }
    return SUCCESS;

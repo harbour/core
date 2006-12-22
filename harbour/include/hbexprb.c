@@ -1207,138 +1207,132 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+      {
+         HB_EXPR_PTR pIdx;
+
+         pSelf->value.asList.pExprList = HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_REDUCE );
+         pSelf->value.asList.pIndex = HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_REDUCE );
+         pIdx = pSelf->value.asList.pIndex;
+         if( pIdx->ExprType == HB_ET_NUMERIC )
          {
-            HB_EXPR_PTR pIdx;
+            HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList; /* the expression that holds an array */
 
-            pSelf->value.asList.pExprList = HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_REDUCE );
-            pSelf->value.asList.pIndex = HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_REDUCE );
-            pIdx = pSelf->value.asList.pIndex;
-            if( pIdx->ExprType == HB_ET_NUMERIC )
+            if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
-               HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList; /* the expression that holds an array */
+               LONG lIndex;
 
-               if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
+               pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
+               if( pIdx->value.asNum.NumType == HB_ET_LONG )
+                  lIndex = ( LONG ) pIdx->value.asNum.val.l;
+               else
+                  lIndex = ( LONG ) pIdx->value.asNum.val.d;
+
+               if( lIndex > 0 )
                {
-                  LONG lIndex;
+                  while( --lIndex && pExpr )
+                     pExpr = pExpr->pNext;
+               }
+               else
+                  pExpr = NULL;  /* index is <= 0 - generate bound error */
 
-                  pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
-                  if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = ( LONG ) pIdx->value.asNum.val.l;
-                  else
-                     lIndex = ( LONG ) pIdx->value.asNum.val.d;
-
-                  if( lIndex > 0 )
-                  {
-                     while( --lIndex && pExpr )
-                        pExpr = pExpr->pNext;
-                  }
-                  else
-                     pExpr = NULL;  /* index is <= 0 - generate bound error */
-
-                  if( pExpr ) /* found ? */
-                  {
-                     /* extract a single expression from the array
-                      */
-                     HB_EXPR_PTR pNew = hb_compExprNew( HB_ET_NONE, HB_COMP_PARAM );
-                     memcpy( pNew, pExpr, sizeof(  HB_EXPR ) );
-                     /* This will suppres releasing of memory occupied by components of
-                     * the expression - we have just copied them into the new expression.
-                     * This method is simpler then traversing the list and releasing all
-                     * but this choosen one.
-                     */
-                     pExpr->ExprType = HB_ET_NONE;
-                     /* Here comes the magic */
-                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
-                     pSelf = pNew;
-                  }
-                  else
-                  {
-                     hb_compErrorBound( HB_COMP_PARAM, pIdx );
-                  }
+               if( pExpr ) /* found ? */
+               {
+                  /* extract a single expression from the array
+                   */
+                  HB_EXPR_PTR pNew = hb_compExprNew( HB_ET_NONE, HB_COMP_PARAM );
+                  memcpy( pNew, pExpr, sizeof(  HB_EXPR ) );
+                  /* This will suppres releasing of memory occupied by components of
+                  * the expression - we have just copied them into the new expression.
+                  * This method is simpler then traversing the list and releasing all
+                  * but this choosen one.
+                  */
+                  pExpr->ExprType = HB_ET_NONE;
+                  /* Here comes the magic */
+                  HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+                  pSelf = pNew;
                }
                else
                {
-                  LONG lIndex;
-
-                  if( pIdx->value.asNum.NumType == HB_ET_LONG )
-                     lIndex = ( LONG ) pIdx->value.asNum.val.l;
-                  else
-                     lIndex = ( LONG ) pIdx->value.asNum.val.d;
-
-                  if( lIndex > 0 )
-                     HB_EXPR_USE( pExpr, HB_EA_ARRAY_AT );
-                  else
-                     hb_compErrorBound( HB_COMP_PARAM, pIdx ); /* index <= 0 - bound error */
+                  hb_compErrorBound( HB_COMP_PARAM, pIdx );
                }
+            }
+            else
+            {
+               LONG lIndex;
+
+               if( pIdx->value.asNum.NumType == HB_ET_LONG )
+                  lIndex = ( LONG ) pIdx->value.asNum.val.l;
+               else
+                  lIndex = ( LONG ) pIdx->value.asNum.val.d;
+
+               if( lIndex > 0 )
+                  HB_EXPR_USE( pExpr, HB_EA_ARRAY_AT );
+               else
+                  hb_compErrorBound( HB_COMP_PARAM, pIdx ); /* index <= 0 - bound error */
             }
          }
          break;
+      }
 
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
       case HB_EA_LVALUE:
          break;
       case HB_EA_PUSH_PCODE:
+         HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+         if( HB_SUPPORT_XBASE )
          {
-            HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-
-            if( HB_SUPPORT_XBASE )
-            {
-               if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
-               {
-                  pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
-               }
-            }
-            HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
-            if( pSelf->value.asList.reference )
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSHREF );
-            else
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
+            if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
+               pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
          }
+         HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
+         if( pSelf->value.asList.reference )
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSHREF );
+         else
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
          break;
 
       case HB_EA_POP_PCODE:
+      {
+         BOOL bRemoveRef = FALSE;
+/* #ifndef HB_C52_STRICT */
+         if( HB_SUPPORT_ARRSTR )
          {
-            BOOL bRemoveRef = FALSE;
-/*         #ifndef HB_C52_STRICT */
-            if( HB_SUPPORT_ARRSTR )
-               /* to manage strings as bytes arrays, they must be pushed by reference */
-               /* arrays also are passed by reference */
-               if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
-               {
-                  pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
-                  bRemoveRef = TRUE;
-               }
-/*         #endif */
-
-            HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
-            HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
-
-/*         #ifndef HB_C52_STRICT */
-            if( HB_SUPPORT_ARRSTR )
-               if( bRemoveRef )
-               {
-                  pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
-               }
-/*         #endif */
-
+            /* to manage strings as bytes arrays, they must be pushed by reference */
+            /* arrays also are passed by reference */
+            if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+            {
+               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
+               bRemoveRef = TRUE;
+            }
          }
+/* #endif */
+
+         HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+         HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
+
+/* #ifndef HB_C52_STRICT */
+         if( HB_SUPPORT_ARRSTR && bRemoveRef )
+         {
+            pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+         }
+/* #endif */
          break;
+      }
 
       case HB_EA_PUSH_POP:
-         {
-            /* NOTE: This is highly optimized code - this will work even
-             * if accessed value isn't an array. It will work also if
-             * the index is invalid
-             */
-            HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_POP );
-            HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_POP );
-         }
+         /* NOTE: This is highly optimized code - this will work even
+          * if accessed value isn't an array. It will work also if
+          * the index is invalid
+          */
+         HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_POP );
+         HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_POP );
          /* no break */
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
          break;
+
       case HB_EA_DELETE:
          HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asList.pExprList );
          HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asList.pIndex );
@@ -2252,26 +2246,28 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
          break;
 
       case HB_EA_PUSH_PCODE:
+         /* NOTE: assigment to an object instance variable needs special handling
+          */
+         if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
-            /* NOTE: assigment to an object instance variable needs special handling
-             */
-            if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
+            HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
+            if( pObj->value.asMessage.pParms )
             {
-               HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-               pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
-               HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
-               pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
+               hb_compErrorLValue( HB_COMP_PARAM, pObj );
             }
-            else
-            {
-               /* it assigns a value and leaves it on the stack */
+            pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
+            HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
+            pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
+         }
+         else
+         {
+            /* it assigns a value and leaves it on the stack */
 
-               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-               /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
-               */
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-            }
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
+            */
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
          }
          break;
 
@@ -2280,24 +2276,26 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
+         /* NOTE: assigment to an object instance variable needs special handling
+          */
+         if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
-            /* NOTE: assigment to an object instance variable needs special handling
-             */
-            if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
+            HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
+            if( pObj->value.asMessage.pParms )
             {
-               HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-               pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
-               HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
-               pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
-               /* Remove the return value */
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+               hb_compErrorLValue( HB_COMP_PARAM, pObj );
             }
-            else
-            {
-               /* it assigns a value and removes it from the stack */
-               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-            }
+            pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
+            HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
+            pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
+            /* Remove the return value */
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         }
+         else
+         {
+            /* it assigns a value and removes it from the stack */
+            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
          }
          break;
 
@@ -2578,8 +2576,8 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
             lEndPos = HB_EXPR_PCODE1( hb_compGenJumpTrue, 0 );
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_OR );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
@@ -2594,13 +2592,16 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
          break;
 
       case HB_EA_PUSH_POP:
-         if( HB_SUPPORT_HARBOUR )
+         if( HB_SUPPORT_HARBOUR && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
+            LONG lEndPos;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpTrue, 0 );
             /* NOTE: This will not generate a runtime error if incompatible
              * data type is used
              */
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+            HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
          {
@@ -2650,8 +2651,8 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
             lEndPos = HB_EXPR_PCODE1( hb_compGenJumpFalse, 0 );
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_AND );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
@@ -2666,13 +2667,16 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
          break;
 
       case HB_EA_PUSH_POP:
-         if( HB_SUPPORT_HARBOUR )
+         if( HB_SUPPORT_HARBOUR && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
+            LONG lEndPos;
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpFalse, 0 );
             /* NOTE: This will not generate a runtime error if incompatible
              * data type is used
              */
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_POP );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+            HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
          {

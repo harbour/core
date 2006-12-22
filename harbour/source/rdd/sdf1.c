@@ -811,6 +811,11 @@ static ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
       case HB_IT_INTEGER:
          pFieldInfo->uiType = HB_IT_LONG;
          pFieldInfo->uiLen = s_uiNumLength[ pFieldInfo->uiLen ];
+         if( pFieldInfo->uiDec )
+         {
+            pFieldInfo->uiDec = 0;
+            pFieldInfo->uiLen++;
+         }
          pArea->fTransRec = FALSE;
          break;
 

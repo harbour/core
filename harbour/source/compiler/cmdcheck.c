@@ -522,6 +522,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                   HB_COMP_PARAM->supported |= HB_COMPFLAG_SHORTCUTS;
                else
                   HB_COMP_PARAM->supported &= ~HB_COMPFLAG_SHORTCUTS;
+               break;
 
             default:
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );

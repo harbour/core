@@ -1118,7 +1118,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
       #define HB_EXPORT __attribute__ (( dllexport ))
 
-   #elif defined( __GNUC__ ) &&  defined( HB_OS_LINUX )
+   #elif defined( __GNUC__ ) && defined( HB_OS_LINUX )
       #define HB_EXPORT __attribute__ ((visibility ("default")))
 
    #elif defined( __BORLANDC__ )

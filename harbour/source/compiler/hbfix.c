@@ -471,6 +471,53 @@ static HB_FIX_FUNC( hb_p_not )
    return 1;
 }
 
+static HB_FIX_FUNC( hb_p_duplicate )
+{
+   HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
+   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   {
+      switch( pFunc->pCode[ lPCodePos + 1 ] )
+      {
+         case HB_P_JUMPTRUEFAR:
+         case HB_P_JUMPFALSEFAR:
+            if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
+            {
+               BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
+               LONG lOffset = HB_PCODE_MKINT24( pAddr );
+               ULONG ulNewPos = lPCodePos + 1 + lOffset;
+
+               if( lOffset > 0 && pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE )
+               {
+                  hb_p_duplicate( pFunc, ulNewPos, cargo );
+                  if( pFunc->pCode[ ulNewPos ] == HB_P_NOOP )
+                  {
+                     ulNewPos++;
+                     lOffset++;
+                  }
+               }
+
+               if( ( pFunc->pCode[ ulNewPos ] == HB_P_JUMPTRUEFAR ||
+                     pFunc->pCode[ ulNewPos ] == HB_P_JUMPFALSEFAR ) &&
+                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) &&
+                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 5 ) )
+               {
+                  if( pFunc->pCode[ ulNewPos ] == pFunc->pCode[ lPCodePos + 1 ] )
+                     lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+                  else
+                     lOffset += 4;
+
+                  HB_PUT_LE_UINT24( pAddr, lOffset );
+                  hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+                  hb_compNOOPfill( pFunc, lPCodePos + 5, 1, FALSE, FALSE );
+               }
+            }
+            break;
+      }
+   }
+   return 1;
+}
+
 static HB_FIX_FUNC( hb_p_jumpfar )
 {
    HB_COMP_DECL = cargo->HB_COMP_PARAM;
@@ -578,7 +625,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_DIVIDE,               */
    NULL,                       /* HB_P_DO,                   */
    NULL,                       /* HB_P_DOSHORT,              */
-   NULL,                       /* HB_P_DUPLICATE,            */
+   hb_p_duplicate,             /* HB_P_DUPLICATE,            */
    NULL,                       /* HB_P_DUPLTWO,              */
    NULL,                       /* HB_P_INC,                  */
    NULL,                       /* HB_P_INSTRING,             */

@@ -8,6 +8,56 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-22 11:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * do not use hb_param( pItem, HB_IT_BYREF ) but ISBYREF() macro
+
+  * harbour/include/hbdefs.h
+    * formatting
+
+  * harbour/include/hbexprb.c
+    ! fixed code generated for logical expressions when shortcutting
+      is enabled to be Clipper compatible
+
+  * harbour/source/compiler/cmdcheck.c
+    ! added missing break in -z compiler switch decoding
+
+  * harbour/source/compiler/hbfix.c
+    % added optimizations for code generated for logical expressions,
+      it strips a chain of HB_P_DUPLICATE -> HB_P_JUMP[TRUFALES] ->
+      HB_P_DUPLICATE -> HB_P_JUMP[TRUFALES] -> ...
+      In fact it should not be done here but because we do not have
+      any metacode level where such optimizations should be done and
+      PCODE is generated online then it will have to be here. Maybe
+      in the future we will add metacode.
+
+  * harbour/source/rdd/dbcmd.c
+    * make "M" alias Clipper compatible. After some thoughts I decided
+      that in some cases it can be usable so now "M" will set WA number
+      to 65535 like in Clipper.
+
+  * harbour/source/rdd/dbf1.c
+    * allow to open VFP DBFs with _NullFlags system command
+
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+    ! updated field size calculation for some some extended types.
+
+  * harbour/source/rdd/workarea.c
+    * generate RT error when CREATEFIELD() method does not accept some
+      parameters to avoid silent DBCREATE() failing.
+
+  * harbour/source/vm/macro.c
+    * removed hb_compMemvarCheck() - this function was not dooing
+      anything - only slows the TYPE() by calling hb_dynsymFind()
+      one or two times.
+    + added TODO note: memvars create by TYPE() have PUBLIC scope
+      in Clipper. Clipper also always tries to evaluate valid expressions
+      inside TYPE even if the contain UDF. UDF only stops evaluation
+      so:
+         TYPE( "(val:=1) + f() + (val2:=2)" )
+      creates in clipper public variable VAL but not VAL2.
+
 2006-12-19 23:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
     ! added missing 'else' and cleaned BCC warnings

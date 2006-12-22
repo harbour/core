@@ -2109,16 +2109,12 @@ HB_FUNC( ADSCONNECT60 )
 
    if( ulRetVal == AE_SUCCESS )
    {
-      // determine if is a DataDict
-      PHB_ITEM  piByRefHandle = hb_param( 6, HB_IT_BYREF );
+      adsConnectHandle = hConnect;       /* set new default */
 
-      adsConnectHandle = hConnect;       // set new default
-
-      if ( piByRefHandle )
+      if( ISBYREF( 6 ) )
       {
          hb_stornl( hConnect, 6 );
       }
-
       hb_retl( 1 );
    }
    else
@@ -2296,12 +2292,12 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
    UNSIGNED32 ulRetVal;
    UNSIGNED8  *pucUserName  = (UNSIGNED8 *) hb_parcx( 1 );
    UNSIGNED16 usPropertyID  = hb_parni( 2 );
-   PHB_ITEM pPropertyByRef  = hb_param( 3 , HB_IT_BYREF );
+   BOOL fPropertyByRef      = ISBYREF( 3 );
    ADSHANDLE hConnect       = HB_ADS_PARCONNECTION( 4 );
    UNSIGNED16 usPropertyLen = ADS_MAX_PARAMDEF_LEN  ;
    UNSIGNED8  pvProperty[ ADS_MAX_PARAMDEF_LEN   ] = { 0 };
 
-   if (! pPropertyByRef )
+   if( ! fPropertyByRef )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSDDGETUSERPROPERTY" );
       return;

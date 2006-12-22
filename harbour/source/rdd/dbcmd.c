@@ -559,7 +559,7 @@ HB_EXPORT ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea )
    }
    else if ( fOneLetter && c == 'M' )
    {
-      *iArea = 0;
+      *iArea = HARBOUR_MAX_RDD_AREA_NUM;
    }
    else
    {
@@ -807,6 +807,9 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( char *szDriver )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddInsertAreaNode(%s)", szDriver));
 
+   if( s_uiCurrArea && s_pCurrArea )
+      return 0;
+
    pRddNode = hb_rddFindNode( szDriver, &uiRddID );
    if( !pRddNode )
       return 0;
@@ -827,10 +830,6 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( char *szDriver )
          uiArea++;
       }
       HB_SET_WA( uiArea );
-   }
-   else if( s_pCurrArea )
-   {
-      return 0;
    }
 
    if ( s_uiCurrArea >= s_uiWaNumMax )
@@ -951,7 +950,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaNumber(%d)", iArea));
 
    LOCK_AREA
-   if ( iArea < 1 || iArea > HARBOUR_MAX_RDD_AREA_NUM )
+   if( iArea < 1 || iArea > HARBOUR_MAX_RDD_AREA_NUM )
    {
       HB_SET_WA( 0 );
    }
@@ -988,6 +987,11 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
       if( szName[ 0 ] && ! szName[ 1 ] && toupper( szName[ 0 ] ) >= 'A' && toupper( szName[ 0 ] ) <= 'K' )
       {
          hb_rddSelectWorkAreaNumber( toupper( szName[ 0 ] ) - 'A' + 1 );
+         bResult = SUCCESS;
+      }
+      else if( szName[ 0 ] && ! szName[ 1 ] && toupper( szName[ 0 ] ) == 'M' )
+      {
+         hb_rddSelectWorkAreaNumber( HARBOUR_MAX_RDD_AREA_NUM );
          bResult = SUCCESS;
       }
       else
@@ -2182,7 +2186,11 @@ HB_FUNC( DBSELECTAREA )
    {
       LONG lNewArea = hb_parnl( 1 );
 
-      if( lNewArea < 1 || lNewArea > HARBOUR_MAX_RDD_AREA_NUM )
+      /*
+       * NOTE: lNewArea >= HARBOUR_MAX_RDD_AREA_NUM used intentionally
+       * In Clipper area 65535 is reserved for "M" alias [druzus]
+       */
+      if( lNewArea < 1 || lNewArea >= HARBOUR_MAX_RDD_AREA_NUM )
       {
          hb_rddSelectFirstAvailable();
       }

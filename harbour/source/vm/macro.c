@@ -58,7 +58,6 @@
 #include "hbmacro.h"
 #include "hbcomp.h"
 #include "hbstack.h"
-#include "hbmemvar.ch"   /* for values returned by hb_memvarScope() */
 
 #ifdef HB_MACRO_STATEMENTS
   #include "hbpp.h"
@@ -1026,37 +1025,12 @@ void hb_compGenJumpHere( ULONG ulOffset, HB_COMP_DECL )
    hb_compGenJumpThere( ulOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
 }
 
-/* Checks if there is a visible memvar variable
- * szVarName = variable name
-*/
-static void hb_compMemvarCheck( char * szVarName, HB_COMP_DECL )
-{
-   if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
-   {
-      /* Test if variable exist if called from TYPE() function only */
-      if( !( HB_MACRO_DATA->status & (HB_MACRO_UNKN_VAR | HB_MACRO_UNKN_SYM) ) )
-      {
-         /* checking for variable is quite expensive than don't check it
-          * if there are already some undefined symbols or variables
-         */
-         if( hb_memvarScope( szVarName, strlen( szVarName ) + 1 ) <= HB_MV_ERROR )
-         {
-            if( ! hb_dynsymFind( szVarName ) )
-            {
-               /* there is no memvar or field variable visible at this moment */
-                HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
-                HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
-            }
-         }
-      }
-   }
-}
-
 /*
  * Function generates pcode for passed memvar name
  */
 void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL )
 {
+   BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
@@ -1065,26 +1039,26 @@ void hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL )
        * then we shouldn't create the requested variable if it doesn't exist
        */
       pSym = hb_dynsymFind( szVarName );
-      if( ! pSym )
+      if( !pSym )
+      {
          HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
+         pSym = hb_dynsymGet( szVarName );
+      }
    }
-   /* Find the address of passed symbol - 
-    * create the symbol if doesn't exist (Clipper compatibility)
-   */
-   pSym = hb_dynsymGet( szVarName );
-   hb_compGenPCode1( bPCode, HB_COMP_PARAM );
-   {
-      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
+   else
+      /* Find the address of passed symbol - create the symbol if doesn't exist
+       * (Clipper compatibility). */
+      pSym = hb_dynsymGet( szVarName );
 
-      HB_PUT_PTR( byBuf, pSym );
-      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_COMP_PARAM );
-   }
-   /* hb_compGenPCodeN( ( BYTE * )( &pSym ), sizeof( pSym ), HB_COMP_PARAM ); */
+   byBuf[ 0 ] = bPCode;
+   HB_PUT_PTR( &byBuf[ 1 ], pSym );
+   hb_compGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
 void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL )
 {
+   BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
 
    HB_SYMBOL_UNUSED( bAlias );
@@ -1116,14 +1090,9 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
    else
       pSym = hb_dynsymGet( szSymbolName );     
 
-   hb_compGenPCode1( HB_P_MPUSHSYM, HB_COMP_PARAM );
-   {
-      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
-
-      HB_PUT_PTR( byBuf, pSym );
-      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_COMP_PARAM );
-   }
-   /* hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_COMP_PARAM ); */
+   byBuf[ 0 ] = HB_P_MPUSHSYM;
+   HB_PUT_PTR( &byBuf[ 1 ], pSym );
+   hb_compGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -1174,19 +1143,17 @@ void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL )
 /* sends a message to an object */
 void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 {
+   BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
+
    /* Find the address of passed symbol - create the symbol if doesn't exist
     */
    HB_DYNS_PTR pSym = hb_dynsymGet( szMsgName );
 
-   hb_compGenPCode1( HB_P_MMESSAGE, HB_COMP_PARAM );
-   {
-      BYTE byBuf[ sizeof( HB_DYNS_PTR ) ];
+   byBuf[ 0 ] = HB_P_MMESSAGE;
+   HB_PUT_PTR( &byBuf[ 1 ], pSym );
+   hb_compGenPCodeN( byBuf, sizeof( byBuf ), HB_COMP_PARAM );
 
-      HB_PUT_PTR( byBuf, pSym );
-      hb_compGenPCodeN( byBuf, sizeof( pSym ), HB_COMP_PARAM );
-   }
    HB_SYMBOL_UNUSED( bIsObject );   /* used in full compiler only */
-   /* hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_COMP_PARAM ); */
 }
 
 /* generates an underscore-symbol name for a data assignment */
@@ -1214,8 +1181,8 @@ void hb_compGenPopVar( char * szVarName, HB_COMP_DECL )
    }
    else
    {
+      /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
       hb_compMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
-      hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
    }
 }
 
@@ -1238,8 +1205,8 @@ void hb_compGenPopAliasedVar( char * szVarName,
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
          {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
+            /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
             hb_compMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
-            hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 5 && strncmp( szAlias, "FIELD", iLen ) == 0 )
          {  /* FIELD-> */
@@ -1263,8 +1230,8 @@ void hb_compGenPopAliasedVar( char * szVarName,
        * NOTE: An alias will be determined at runtime then we cannot decide
        * here if passed name is either a field or a memvar
        */
+      /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
       hb_compMemvarGenPCode( HB_P_MPOPALIASEDVAR, szVarName, HB_COMP_PARAM );
-      hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
    }
 }
 
@@ -1286,7 +1253,6 @@ void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
    else
    {
       hb_compMemvarGenPCode( HB_P_MPUSHVARIABLE, szVarName, HB_COMP_PARAM );
-      hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
    }
 }
 
@@ -1301,7 +1267,6 @@ void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL )
    else
    {
       hb_compMemvarGenPCode( HB_P_MPUSHMEMVARREF, szVarName, HB_COMP_PARAM );
-      hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
    }
 }
 
@@ -1329,7 +1294,6 @@ void hb_compGenPushAliasedVar( char * szVarName,
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
          {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
             hb_compMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_COMP_PARAM );
-            hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 5 && strncmp( szAlias, "FIELD", iLen ) == 0 )
          {  /* FIELD-> */
@@ -1354,7 +1318,6 @@ void hb_compGenPushAliasedVar( char * szVarName,
        * here if passed name is either a field or a memvar
        */
       hb_compMemvarGenPCode( HB_P_MPUSHALIASEDVAR, szVarName, HB_COMP_PARAM );
-      hb_compMemvarCheck( szVarName, HB_COMP_PARAM );
    }
 }
 
