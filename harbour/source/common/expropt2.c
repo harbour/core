@@ -371,67 +371,125 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
 
-   if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
+   if( pLeft->ExprType == HB_ET_NUMERIC )
    {
-      BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
-
-      switch( bType )
+      if( pRight->ExprType == HB_ET_NUMERIC )
       {
-         case HB_ET_LONG:
-         {
-            HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l + ( HB_MAXDBL ) pRight->value.asNum.val.l;
+         BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
 
-            if ( HB_DBL_LIM_LONG( dVal ) )
+         switch( bType )
+         {
+            case HB_ET_LONG:
             {
-               pSelf->value.asNum.val.l = ( HB_LONG ) dVal;
-               pSelf->value.asNum.bDec = 0;
-               pSelf->value.asNum.NumType = HB_ET_LONG;
+               HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l + ( HB_MAXDBL ) pRight->value.asNum.val.l;
+
+               if ( HB_DBL_LIM_LONG( dVal ) )
+               {
+                  pSelf->value.asNum.val.l = ( HB_LONG ) dVal;
+                  pSelf->value.asNum.bDec = 0;
+                  pSelf->value.asNum.NumType = HB_ET_LONG;
+               }
+               else
+               {
+                  pSelf->value.asNum.val.d = ( double ) dVal;
+                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+                  pSelf->value.asNum.bDec = 0;
+                  pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+               }
+               break;
             }
-            else
-            {
-               pSelf->value.asNum.val.d = ( double ) dVal;
+
+            case HB_ET_DOUBLE:
+               pSelf->value.asNum.val.d = pLeft->value.asNum.val.d + pRight->value.asNum.val.d;
                pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = 0;
+               if( pLeft->value.asNum.bDec < pRight->value.asNum.bDec )
+                  pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
+               else
+                  pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
                pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-            }
+               break;
 
-            break;
+            default:
+               if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
+               {
+                  pSelf->value.asNum.val.d = pLeft->value.asNum.val.d + ( double ) pRight->value.asNum.val.l;
+                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+                  pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
+               }
+               else
+               {
+                  pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l + pRight->value.asNum.val.d;
+                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+                  pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
+               }
+               pSelf->value.asNum.NumType = HB_ET_DOUBLE;
          }
-
-         case HB_ET_DOUBLE:
-         {
-            pSelf->value.asNum.val.d = pLeft->value.asNum.val.d + pRight->value.asNum.val.d;
-            pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-            if( pLeft->value.asNum.bDec < pRight->value.asNum.bDec )
-               pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
-            else
-               pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
-            pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-
-            break;
-         }
-
-         default:
-         {
-            if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
-            {
-               pSelf->value.asNum.val.d = pLeft->value.asNum.val.d + ( double ) pRight->value.asNum.val.l;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
-            }
-            else
-            {
-               pSelf->value.asNum.val.d = ( double ) pLeft->value.asNum.val.l + pRight->value.asNum.val.d;
-               pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-               pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
-            }
-            pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-         }
+         pSelf->ExprType = HB_ET_NUMERIC;
+         pSelf->ValType  = HB_EV_NUMERIC;
+         hb_compExprFree( pLeft, HB_COMP_PARAM );
+         hb_compExprFree( pRight, HB_COMP_PARAM );
       }
-      pSelf->ExprType = HB_ET_NUMERIC;
-      pSelf->ValType  = HB_EV_NUMERIC;
-      hb_compExprFree( pLeft, HB_COMP_PARAM );
-      hb_compExprFree( pRight, HB_COMP_PARAM );
+      else if( pRight->ExprType == HB_ET_DATE )
+      {
+         if( pLeft->value.asNum.NumType == HB_ET_LONG )
+            pSelf->value.asNum.val.l = pRight->value.asNum.val.l + pLeft->value.asNum.val.l;
+         else
+            pSelf->value.asNum.val.l = pRight->value.asNum.val.l + ( HB_LONG ) pLeft->value.asNum.val.d;
+         pSelf->ExprType = HB_ET_DATE;
+         pSelf->ValType  = HB_EV_DATE;
+         hb_compExprFree( pLeft, HB_COMP_PARAM );
+         hb_compExprFree( pRight, HB_COMP_PARAM );
+      }
+      else if( HB_SUPPORT_HARBOUR &&
+               ( pLeft->value.asNum.NumType == HB_ET_LONG ?
+                 pLeft->value.asNum.val.l == 0 :
+                 pLeft->value.asNum.val.d == 0 ) )
+      {
+         /* NOTE: This will not generate a runtime error if incompatible
+          * data type is used
+          */
+         pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+         hb_compExprFree( pSelf, HB_COMP_PARAM );
+         pSelf = pRight;
+         hb_compExprFree( pLeft, HB_COMP_PARAM );
+      }
+      else
+      {
+         /* TODO: Check for incompatible types e.g. "txt" + 3
+         */
+      }
+   }
+   else if( pRight->ExprType == HB_ET_NUMERIC )
+   {
+      if( pLeft->ExprType == HB_ET_DATE )
+      {
+         if( pRight->value.asNum.NumType == HB_ET_LONG )
+            pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + pRight->value.asNum.val.l;
+         else
+            pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + ( HB_LONG ) pRight->value.asNum.val.d;
+         pSelf->ExprType = HB_ET_DATE;
+         pSelf->ValType  = HB_EV_DATE;
+         hb_compExprFree( pLeft, HB_COMP_PARAM );
+         hb_compExprFree( pRight, HB_COMP_PARAM );
+      }
+      else if( HB_SUPPORT_HARBOUR &&
+               ( pRight->value.asNum.NumType == HB_ET_LONG ?
+                 pRight->value.asNum.val.l == 0 :
+                 pRight->value.asNum.val.d == 0 ) )
+      {
+         /* NOTE: This will not generate a runtime error if incompatible
+          * data type is used
+          */
+         pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+         hb_compExprFree( pSelf, HB_COMP_PARAM );
+         pSelf = pLeft;
+         hb_compExprFree( pRight, HB_COMP_PARAM );
+      }
+      else
+      {
+         /* TODO: Check for incompatible types e.g. "txt" + 3
+         */
+      }
    }
    else if( pLeft->ExprType == HB_ET_STRING && pRight->ExprType == HB_ET_STRING )
    {
@@ -463,21 +521,6 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          	pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_COMP_PARAM );
          }
       }
-   }
-   else if( pLeft->ExprType == HB_ET_DATE && pRight->ExprType == HB_ET_NUMERIC )
-   {
-      if( pRight->value.asNum.NumType == HB_ET_LONG )
-      {
-         pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + pRight->value.asNum.val.l;
-      }
-      else
-      {
-         pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + ( HB_LONG ) pRight->value.asNum.val.d;
-      }
-      pSelf->ExprType = HB_ET_DATE;
-      pSelf->ValType  = HB_EV_DATE;
-      hb_compExprFree( pLeft, HB_COMP_PARAM );
-      hb_compExprFree( pRight, HB_COMP_PARAM );
    }
    else
    {

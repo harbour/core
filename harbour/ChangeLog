@@ -8,6 +8,40 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-23 06:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * do not generate HB_P_FUNCPTR - it's not longer necessary
+    + added optimization for <exp> + 1, <exp> - 1 - disabled by default
+      because it changes error messages in hbtest, code like NIL + 1
+      generates 'argument error ++' instead of 'argument error +'. I'd like
+      you will decide what you prefer - faster code or strict Clipper error
+      messaged.
+
+  * harbour/source/common/expropt2.c
+    + added optimizations for <num> + <date>
+    + added ooptimizations for <exp> + 0, 0 + <exp>, <exp> - 0
+      This is also sth what may interact with operators overloading in object
+      system. When we will have strong typing then we should think about an
+      option which will optionally disable some optimizations - someone may
+      want to define arithmetic where <obj> + 0 gives differ then <obj>
+      results.
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    + added hb_compStatmentStart()
+    ! restrict MEMVAR and FIELD usage - now they have to be located before
+      executable statements like in Clipper.
+    ! generate error when PARAMETERS is used as file wide declaration.
+    ! generate errors when different executable statements are used before
+      first procedure - now such code was simply ignored without any errors.
+    ! generate valid error messages when some declarations are used in
+      wrong places
+    ! fixed setting begin of executable statement flag in different .prg
+      constructions.
+
 2006-12-22 11:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/adsfunc.c
     * do not use hb_param( pItem, HB_IT_BYREF ) but ISBYREF() macro

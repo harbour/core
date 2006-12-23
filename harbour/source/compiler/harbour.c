@@ -749,7 +749,9 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
    
    HB_SYMBOL_UNUSED( cValueType );
 
-   if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 && HB_COMP_PARAM->iVarScope == VS_LOCAL )
+   if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
+       ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
+         HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
    {
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
@@ -759,11 +761,32 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
 
    /* check if we are declaring local/static variable after some
     * executable statements
-    * Note: FIELD and MEMVAR are executable statements
     */
-   if( ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS ) && !( HB_COMP_PARAM->iVarScope == VS_FIELD || ( HB_COMP_PARAM->iVarScope & VS_MEMVAR ) ) )
+   if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS )
    {
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FOLLOWS_EXEC, ( HB_COMP_PARAM->iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
+      char * szVarScope;
+      switch( HB_COMP_PARAM->iVarScope )
+      {
+         case VS_LOCAL:
+            szVarScope = "LOCAL";
+            break;
+         case VS_STATIC:
+            szVarScope = "STATIC";
+            break;
+         case VS_FIELD:
+            szVarScope = "FIELD";
+            break;
+         case VS_MEMVAR:
+            szVarScope = "MEMVAR";
+            break;
+         default:
+            szVarScope = NULL;
+      }
+      if( szVarScope )
+      {
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FOLLOWS_EXEC, szVarScope, NULL );
+         return;
+      }
    }
 
    /* Check if a declaration of duplicated variable name is requested */
@@ -772,9 +795,9 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
       /* variable defined in a function/procedure */
       hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pFields, szVarName );
       hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pStatics, szVarName );
-      /*NOTE: Clipper warns if PARAMETER variable duplicates the MEMVAR
+      /* NOTE: Clipper warns if PARAMETER variable duplicates the MEMVAR
        * declaration
-      */
+       */
       if( !( HB_COMP_PARAM->iVarScope == VS_PRIVATE || HB_COMP_PARAM->iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pMemvars, szVarName );
    }
@@ -809,7 +832,7 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
       HB_COMP_PARAM->szFromClass = NULL;
    }
 
-   if ( HB_COMP_PARAM->iVarScope & VS_PARAMETER )
+   if( HB_COMP_PARAM->iVarScope & VS_PARAMETER )
       pVar->iUsed = VU_INITIALIZED;
 
    if( HB_COMP_PARAM->iVarScope & VS_MEMVAR )
@@ -2602,11 +2625,30 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
    HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );
 }
 
+/*
+ * Test if we can generate statement (without line pushing)
+ */
+void hb_compStatmentStart( HB_COMP_DECL )
+{
+//   if( ! HB_COMP_PARAM->fExternal )
+   if( ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS ) == 0 )
+   {
+      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
+      {
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
+         return;
+      }
+      HB_COMP_PARAM->functions.pLast->bFlags |= FUN_STATEMENTS;
+   }
+}
+
 /* Generates the pcode with the currently compiled source code line
  * if debug code was requested only
  */
 void hb_compLinePushIfDebugger( HB_COMP_DECL )
 {
+   hb_compStatmentStart( HB_COMP_PARAM );
+
    if( HB_COMP_PARAM->fDebugInfo )
       hb_compLinePush( HB_COMP_PARAM );
    else
@@ -2622,18 +2664,7 @@ void hb_compLinePushIfDebugger( HB_COMP_DECL )
 
 void hb_compLinePushIfInside( HB_COMP_DECL ) /* generates the pcode with the currently compiled source code line */
 {
-   /* This line can be placed inside a procedure or function only
-    * except EXTERNAL
-    */
-   if( ! HB_COMP_PARAM->fExternal )
-   {
-      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
-      {
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
-      }
-   }
-
-   HB_COMP_PARAM->functions.pLast->bFlags |= FUN_STATEMENTS;
+   hb_compStatmentStart( HB_COMP_PARAM );
    hb_compLinePush( HB_COMP_PARAM );
 }
 
@@ -3687,6 +3718,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
    BYTE * pCode = HB_COMP_PARAM->functions.pLast->pCode;
    ULONG * pNOOPs, * pJumps;
    ULONG ulOptimized, ulNextByte, ulBytes2Copy, ulJumpAddr, iNOOP, iJump;
+   BOOL fLineStrip = !HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->fLineNumbers;
    int iPass;
 
    if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
@@ -3698,8 +3730,11 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
    {
       LONG lOffset;
 
-      if( iPass == 2 && ! HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->fLineNumbers )
+      if( iPass == 2 && fLineStrip )
+      {
          hb_compStripFuncLines( HB_COMP_PARAM->functions.pLast );
+         fLineStrip = FALSE;
+      }
 
       if( HB_COMP_PARAM->functions.pLast->iJumps > 0 )
       {
@@ -3839,7 +3874,12 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       }
 
       if( HB_COMP_PARAM->functions.pLast->iNOOPs == 0 )
-         return;
+      {
+         if( fLineStrip )
+            hb_compStripFuncLines( HB_COMP_PARAM->functions.pLast );
+         if( HB_COMP_PARAM->functions.pLast->iNOOPs == 0 )
+            return;
+      }
 
       pNOOPs = HB_COMP_PARAM->functions.pLast->pNOOPs;
 

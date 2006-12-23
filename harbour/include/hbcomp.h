@@ -195,6 +195,7 @@ extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL ); /* sets a jump o
 extern void hb_compLinePush( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
 extern void hb_compLinePushIfDebugger( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
 extern void hb_compLinePushIfInside( HB_COMP_DECL );   /* generates the pcode with the currently compiled source code line */
+extern void hb_compStatmentStart( HB_COMP_DECL );      /* Check if we can start statement (without line pushing) */
 
 extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );       /* sends a message to an object */
 extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );     /* generates an underscore-symbol name for a data assignment */

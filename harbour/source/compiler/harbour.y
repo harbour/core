@@ -297,18 +297,12 @@ Main       : { hb_compLinePush( HB_COMP_PARAM ); } Source       { }
            ;
 
 Source     : Crlf
-           | VarDefs
-           | FieldsDef
-           | MemvarDef
            | Declaration
            | Function
            | Statement
            | Line
            | error  Crlf  { yyclearin; yyerrok; }
            | Source Crlf
-           | Source VarDefs
-           | Source FieldsDef
-           | Source MemvarDef
            | Source Declaration
            | Source Function
            | Source Statement
@@ -404,6 +398,8 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt { }
                                            hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
                                            HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
+           | EXIT { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | LOOP { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | RETURN CrlfStmnt {
                      if( HB_COMP_PARAM->wSeqCounter )
                         {
@@ -450,9 +446,9 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt { }
                       HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
                       HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                     } Crlf
-
-           | EXIT { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | LOOP { HB_COMP_PARAM->fDontGenLineNum = !HB_COMP_PARAM->fDebugInfo; } CrlfStmnt { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | VarDefs
+           | FieldsDef
+           | MemvarDef
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
                if( HB_COMP_PARAM->szAnnounce == NULL )
@@ -510,7 +506,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; HB_COMP_PARAM->fDontGenLineNum = T
                                  yyerrok;
                                  HB_COMP_PARAM->ilastLineErr = iLine;
                              }
-                            }                             
+                           }
            ;
 
 ControlError : FunScopeId FUNCTION  IdentName Crlf {}
@@ -1197,13 +1193,15 @@ IfInline   : IIF PareExpList3             { $$ = hb_compExprNewIIF( $2, HB_COMP_
 IfInlineAlias : IfInline ALIASOP          { $$ = $1; }
               ;
 
-VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); } VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
-           | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); } VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
+             VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+           | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+             VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
            | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                              hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                           else
                              HB_COMP_PARAM->functions.pLast->wParamNum=0; HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
-                             MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+             MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
 
 VarList    : VarDef                       { $$ = 1; }
@@ -1487,23 +1485,23 @@ EmptyStats : /* empty */           { $<lNumber>$ = 0; }
            | EmptyStatements       { $<lNumber>$ = $<lNumber>1; }
            ;
 
-IfBegin    : IF SimpleExpression { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+IfBegin    : IF SimpleExpression { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF Variable { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+           | IF Variable { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpList1 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+           | IF PareExpList1 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpList2 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+           | IF PareExpList2 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
 
-           | IF PareExpListN { ++HB_COMP_PARAM->wIfCounter; hb_compLinePush( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+           | IF PareExpListN { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
            ;
@@ -1582,7 +1580,7 @@ DoCaseBegin : DoCaseStart            { }
                      }
            ;
 
-Cases      : CASE { hb_compLinePush( HB_COMP_PARAM ); } Expression Crlf
+Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
                {
                   hb_compExprDelete( hb_compExprGenPush( $3, HB_COMP_PARAM ), HB_COMP_PARAM );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1594,7 +1592,7 @@ Cases      : CASE { hb_compLinePush( HB_COMP_PARAM ); } Expression Crlf
                   hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM );
                }
 
-           | Cases CASE { hb_compLinePush( HB_COMP_PARAM ); } Expression Crlf
+           | Cases CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
                {
                   hb_compExprDelete( hb_compExprGenPush( $4, HB_COMP_PARAM ), HB_COMP_PARAM );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1642,7 +1640,7 @@ EndWhile   : END   { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
 
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
-                  hb_compLinePush( HB_COMP_PARAM );
+                  hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compDebugStart();
                   ++HB_COMP_PARAM->wForCounter;              /* 5 */
                   $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4, HB_COMP_PARAM ), HB_COMP_PARAM );
@@ -1760,7 +1758,7 @@ ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1, HB_COMP_P
 ForEach    : FOREACH ForList IN ForExpr          /* 1  2  3  4 */
              {
                 ++HB_COMP_PARAM->wForCounter;              /* 5 */
-                hb_compLinePush( HB_COMP_PARAM );
+                hb_compLinePushIfInside( HB_COMP_PARAM );
                 hb_compDebugStart();
              }
              Descend    /* 6 */
@@ -1826,7 +1824,7 @@ EndSwitch  : END
 
 SwitchStart : DOSWITCH 
               { ++HB_COMP_PARAM->wSwitchCounter; 
-                 hb_compLinePush( HB_COMP_PARAM );
+                 hb_compLinePushIfInside( HB_COMP_PARAM );
               } 
               Expression Crlf
               {
@@ -1844,21 +1842,21 @@ SwitchBegin : SwitchStart            { }
             ;
 
 SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLinePush( HB_COMP_PARAM ); } Crlf
-             EmptyStats
+              EmptyStats
 
-           | SwitchCases CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $3 ); hb_compLinePush( HB_COMP_PARAM ); }Crlf
-             EmptyStats
+            | SwitchCases CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $3 ); hb_compLinePush( HB_COMP_PARAM ); }Crlf
+              EmptyStats
 
-           | SwitchDefault
+            | SwitchDefault
 
-           | SwitchCases SwitchDefault
-           ;
+            | SwitchCases SwitchDefault
+            ;
 
 SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
            
-BeginSeq   : BEGINSEQ { ++HB_COMP_PARAM->wSeqCounter; $<lNumber>$ = hb_compSequenceBegin( HB_COMP_PARAM ); } Crlf
+BeginSeq   : BEGINSEQ { ++HB_COMP_PARAM->wSeqCounter; hb_compStatmentStart( HB_COMP_PARAM ); $<lNumber>$ = hb_compSequenceBegin( HB_COMP_PARAM ); } Crlf
                 EmptyStats
                 {
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
@@ -1900,7 +1898,7 @@ RecoverEmpty : RECOVER
                   $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
                   if( HB_COMP_PARAM->wSeqCounter )
                      --HB_COMP_PARAM->wSeqCounter;
-                  hb_compLinePush( HB_COMP_PARAM );
+                  hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, HB_COMP_PARAM );
                }
              ;
@@ -1911,7 +1909,7 @@ RecoverUsing : RECOVERUSING IdentName
                   $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
                   if( HB_COMP_PARAM->wSeqCounter )
                      --HB_COMP_PARAM->wSeqCounter;
-                  hb_compLinePush( HB_COMP_PARAM );
+                  hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compGenPCode1( HB_P_SEQRECOVER, HB_COMP_PARAM );
                   hb_compGenPopVar( $2, HB_COMP_PARAM );
                }
@@ -1962,6 +1960,7 @@ DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1, HB_C
 
 WithObject : WITHOBJECT Expression Crlf
                {
+                  hb_compLinePushIfInside( HB_COMP_PARAM ); 
                   hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM );
                   hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
                   HB_COMP_PARAM->wWithObjectCnt++;
