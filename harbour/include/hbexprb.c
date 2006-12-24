@@ -3330,29 +3330,49 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          break;
 
       case HB_EA_PUSH_PCODE:
-#if HB_ADD_SUB_ONE_OPT
+#if defined( HB_ADD_SUB_ONE_OPT )
          if( HB_SUPPORT_HARBOUR )
          {
             HB_EXPR_PTR pLeft, pRight;
             pLeft  = pSelf->value.asOperator.pLeft;
             pRight = pSelf->value.asOperator.pRight;
-            if( pLeft->ExprType == HB_ET_NUMERIC &&
-                ( pLeft->value.asNum.NumType == HB_ET_LONG ?
-                  pLeft->value.asNum.val.l == 1 :
-                  pLeft->value.asNum.val.d == 1 ) )
+            if( pLeft->ExprType == HB_ET_NUMERIC )
             {
-               HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INC );
-               break;
+               if( pLeft->value.asNum.NumType == HB_ET_LONG ?
+                   pLeft->value.asNum.val.l == 1 :
+                   pLeft->value.asNum.val.d == 1 )
+               {
+                  HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INC );
+                  break;
+               }
+               else if( pLeft->value.asNum.NumType == HB_ET_LONG ?
+                   pLeft->value.asNum.val.l == -1 :
+                   pLeft->value.asNum.val.d == -1 )
+               {
+                  HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DEC );
+                  break;
+               }
             }
-            else if( pRight->ExprType == HB_ET_NUMERIC &&
-                     ( pRight->value.asNum.NumType == HB_ET_LONG ?
-                       pRight->value.asNum.val.l == 1 :
-                       pRight->value.asNum.val.d == 1 ) )
+            else if( pRight->ExprType == HB_ET_NUMERIC )
             {
-               HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INC );
-               break;
+               if( pRight->value.asNum.NumType == HB_ET_LONG ?
+                   pRight->value.asNum.val.l == 1 :
+                   pRight->value.asNum.val.d == 1 )
+               {
+                  HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INC );
+                  break;
+               }
+               else if( pRight->value.asNum.NumType == HB_ET_LONG ?
+                   pRight->value.asNum.val.l == -1 :
+                   pRight->value.asNum.val.d == -1 )
+               {
+                  HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DEC );
+                  break;
+               }
             }
          }
 #endif
@@ -3413,18 +3433,28 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          break;
 
       case HB_EA_PUSH_PCODE:
-#if HB_ADD_SUB_ONE_OPT
+#if defined( HB_ADD_SUB_ONE_OPT )
          if( HB_SUPPORT_HARBOUR )
          {
             HB_EXPR_PTR pRight = pSelf->value.asOperator.pRight;
-            if( pRight->ExprType == HB_ET_NUMERIC &&
-                ( pRight->value.asNum.NumType == HB_ET_LONG ?
-                  pRight->value.asNum.val.l == 1 :
-                  pRight->value.asNum.val.d == 1 ) )
+            if( pRight->ExprType == HB_ET_NUMERIC )
             {
-               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DEC );
-               break;
+               if( pRight->value.asNum.NumType == HB_ET_LONG ?
+                   pRight->value.asNum.val.l == 1 :
+                   pRight->value.asNum.val.d == 1 )
+               {
+                  HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DEC );
+                  break;
+               }
+               else if( pRight->value.asNum.NumType == HB_ET_LONG ?
+                   pRight->value.asNum.val.l == -1 :
+                   pRight->value.asNum.val.d == -1 )
+               {
+                  HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INC );
+                  break;
+               }
             }
          }
 #endif

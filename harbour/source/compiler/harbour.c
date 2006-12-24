@@ -659,7 +659,6 @@ void hb_compExternAdd( HB_COMP_DECL, char * szExternName ) /* defines a new exte
          pLast = pLast->pNext;
       pLast->pNext = pExtern;
    }
-   HB_COMP_PARAM->fExternal = TRUE;
 }
 
 void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
@@ -2630,10 +2629,11 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
  */
 void hb_compStatmentStart( HB_COMP_DECL )
 {
-//   if( ! HB_COMP_PARAM->fExternal )
    if( ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS ) == 0 )
    {
-      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 )
+      if( ! HB_COMP_PARAM->fStartProc && HB_COMP_PARAM->functions.iCount <= 1 &&
+          HB_COMP_PARAM->functions.pLast != HB_COMP_PARAM->pInitFunc &&
+          HB_COMP_PARAM->functions.pLast->szName )
       {
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
          return;
@@ -4725,8 +4725,6 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             /* printf( "No code generated\n" ); */
             iStatus = EXIT_FAILURE;
          }
-
-         HB_COMP_PARAM->fExternal = FALSE;
       }
    }
    else

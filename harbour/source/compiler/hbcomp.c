@@ -95,9 +95,6 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fSyntaxCheckOnly = FALSE;    /* syntax check only */
       pComp->fAutoOpen        = TRUE;
       pComp->fError           = FALSE;
-      /* EXTERNAL statement can be placed into any place in a function - this flag is
-         used to suppress error report generation */
-      pComp->fExternal        = FALSE;
 
       pComp->iWarnings  = 0;                    /* enable parse warnings */
       pComp->iGenCOutput= HB_COMPGENC_VERBOSE;  /* C code generation should be verbose (use comments) or not */

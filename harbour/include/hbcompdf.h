@@ -614,7 +614,6 @@ typedef struct _HB_COMP
    BOOL              fLongOptimize;       /* optimize PCODEs generated for integers */
    BOOL              fAutoOpen;           /* automatically compile DO...[WITH...] external modules (-m) */
    BOOL              fError;              /* error appeared during compilation */
-   BOOL              fExternal;           /* suppress error report generation for EXTERNAL statement */
 
    USHORT            wSeqCounter;
    USHORT            wForCounter;

@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-24 16:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbcomp.c
+    - removed not longer used fExternal from compiler structure
+    * allow to pass array items by reference ( func(@a[1]) ) and some
+      cleanups in reference rules. Probably we should also block using:
+         @func(param1 [,param2,[,...paramN]])
+      and accept only @func()
+    ! fixed using statements in codeblocks used to initialize static
+      variables and some other cleanups (f.e. allow to use as static
+      initializers any functions which are later eliminated by expression
+      optimizer.
+
 2006-12-23 06:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * do not generate HB_P_FUNCPTR - it's not longer necessary

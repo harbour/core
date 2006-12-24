@@ -434,36 +434,36 @@ Statement  : ExecFlow { HB_COMP_PARAM->fDontGenLineNum = TRUE; } CrlfStmnt { }
                         HB_COMP_PARAM->fDontGenLineNum = TRUE;
                         HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                      }
-           | PUBLIC { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
+           | PUBLIC  { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" ); 
-                      HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE; 
-                      HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                    } Crlf
-           | PRIVATE { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
-                     ExtVarList
-                    { hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" ); 
-                      HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
-                      HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                    } Crlf
+                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" ); 
+                        HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE; 
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                     } Crlf
+           | PRIVATE {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
+                        ExtVarList
+                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" ); 
+                        HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                     } Crlf
            | VarDefs
            | FieldsDef
            | MemvarDef
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
-               if( HB_COMP_PARAM->szAnnounce == NULL )
-               {
-                  /* check for reserved name
-                  * NOTE: Clipper doesn't check for it
-                  */
-                  char * szFunction = hb_compReservedName( $2 );
-                  if( szFunction )
-                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
-                  HB_COMP_PARAM->szAnnounce = $2;
-               }
-               else
-                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
-             } Crlf
+                  if( HB_COMP_PARAM->szAnnounce == NULL )
+                  {
+                     /* check for reserved name
+                     * NOTE: Clipper doesn't check for it
+                     */
+                     char * szFunction = hb_compReservedName( $2 );
+                     if( szFunction )
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_RESERVED, szFunction, $2 );
+                     HB_COMP_PARAM->szAnnounce = $2;
+                  }
+                  else
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUPL_ANNOUNCE, $2, NULL );
+               } Crlf
            | PROCREQ CompTimeStr ')' Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; }
            ;
 
@@ -739,7 +739,7 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
  */
 FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
             ;
-           
+
 FunCall    : FunIdentCall  { $$ = $1; }
            | MacroVar '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
            | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
@@ -840,11 +840,15 @@ Expression : Variable         { $$ = $1; }
            | PareExpList      { $$ = $1; }
            | Variable         { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | PareExpList      { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
+           | '@' FunIdentCall { 
+                                $$ = hb_compExprNewFunRef( hb_compExprAsSymbol( $2 ), HB_COMP_PARAM );
+                                hb_compExprDelete( $2, HB_COMP_PARAM );
+                              }
            | '@' IdentName    { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( $2, HB_COMP_PARAM ) ); }
-           | '@' FunIdentCall { int bPassByRef=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;$<string>$ = hb_compExprAsSymbol( $2 ); hb_compExprDelete( $2, HB_COMP_PARAM ); $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewFunRef( $<string>$, HB_COMP_PARAM ) ); HB_COMP_PARAM->iPassByRef=bPassByRef; }
            | '@' MacroVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
            | '@' AliasVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
-           | '@' ObjectData   { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+           | '@' ObjectData   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+           | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
            ;
 
 EmptyExpression : /* nothing => nil */    { $$ = hb_compExprNewEmpty( HB_COMP_PARAM ); }
@@ -2455,7 +2459,7 @@ static HB_CARGO2_FUNC( hb_compEnumEvalStart )
    char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, TRUE );
-      
+
    hb_compExprGenPush( (HB_EXPR_PTR)dummy, HB_COMP_PARAM );  /* expression */
    hb_compExprGenPush( (HB_EXPR_PTR)cargo, HB_COMP_PARAM );  /* variable */
 }
