@@ -365,7 +365,7 @@ typedef struct HB_EXPR_
       {
          struct HB_EXPR_ *pExprList;   /* list elements */
          struct HB_EXPR_ *pIndex;      /* array index, others */
-         BOOL     reference;           /* push array item by reference */
+         BOOL     reference;           /* push array item by reference or pass variable parameters to called function or method */
       } asList;
       struct
       {

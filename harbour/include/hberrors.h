@@ -124,7 +124,8 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_UNSUPPORTED_LANG            62
 #define HB_COMP_ERR_STRING_TOO_LONG             63
 #define HB_COMP_ERR_BLOCK_TOO_BIG               64
-#define HB_COMP_ERR_OPEN_CFG                    65
+#define HB_COMP_ERR_NOT_VPARAMS                 65
+#define HB_COMP_ERR_OPEN_CFG                    66
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

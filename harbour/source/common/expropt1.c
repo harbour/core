@@ -511,6 +511,7 @@ HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
 
    pExpr = hb_compExprNew( HB_ET_ARGLIST, HB_COMP_PARAM );
    pExpr->value.asList.pExprList = pFirstItem;
+   pExpr->value.asList.reference = FALSE;
    return pExpr;
 }
 
@@ -524,6 +525,7 @@ HB_EXPR_PTR hb_compExprNewMacroArgList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
 
    pExpr = hb_compExprNew( HB_ET_MACROARGLIST, HB_COMP_PARAM );
    pExpr->value.asList.pExprList = pFirstItem;
+   pExpr->value.asList.reference = FALSE;
    return pExpr;
 }
 
@@ -928,7 +930,7 @@ ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
        * There is no need to calculate this parameter
        */
       if( ulLen == 1 && pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
-         --ulLen;
+         ulLen = 0;
    }
 
    return ulLen;

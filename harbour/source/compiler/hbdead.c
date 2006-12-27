@@ -473,7 +473,8 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_MPUSHSTRLARGE         */
    hb_p_default,               /* HB_P_PUSHBLOCKLARGE        */
    hb_p_default,               /* HB_P_PUSHSTRLARGE          */
-   hb_p_default                /* HB_P_SWAP                  */
+   hb_p_default,               /* HB_P_SWAP                  */
+   hb_p_default                /* HB_P_PUSHVPARAMS           */
 };
 
 void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )

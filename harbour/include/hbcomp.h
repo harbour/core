@@ -246,6 +246,7 @@ extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
 #define hb_compErrorAlias( p, x )         hb_macroError( EG_NOALIAS, ( p ) )
 #define hb_compErrorDuplVar( p, c )       hb_macroError( EG_SYNTAX, ( p ) )
 #define hb_compErrorRefer( p, x, c )      hb_macroError( EG_SYNTAX, ( p ) )
+#define hb_compErrorVParams( p, x )       hb_macroError( EG_SYNTAX, ( p ) )
 #define hb_compWarnMeaningless( p, x )
 #define hb_compErrorMacro( p, x )
 
@@ -264,6 +265,7 @@ extern void        hb_compErrorDuplVar( HB_COMP_DECL, const char * );
 extern HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR, const char * );
 extern HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR );
 extern void        hb_compErrorMacro( HB_COMP_DECL, const char * );
+extern void        hb_compErrorVParams( HB_COMP_DECL, HB_EXPR_PTR );
 
 extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
 extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * );

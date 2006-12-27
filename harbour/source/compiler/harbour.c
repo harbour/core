@@ -1850,7 +1850,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    }
 
    szFunction = hb_compReservedName( szFunName );
-   if( szFunction && !( HB_COMP_PARAM->functions.iCount==0 && !HB_COMP_PARAM->fStartProc ) )
+   if( szFunction && !( HB_COMP_PARAM->functions.iCount == 0 && !HB_COMP_PARAM->fStartProc ) )
    {
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
@@ -1887,11 +1887,11 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    }
    HB_COMP_PARAM->functions.iCount++;
 
-   HB_COMP_PARAM->lastLinePos = 0;   /* optimization of line numbers opcode generation */
-   HB_COMP_PARAM->ilastLineErr = 0;   /* position of last syntax error (line number) */
+   HB_COMP_PARAM->lastLinePos = 0;  /* optimization of line numbers opcode generation */
+   HB_COMP_PARAM->ilastLineErr = 0; /* position of last syntax error (line number) */
 
-   hb_compGenPCode3( HB_P_FRAME, 0, 0, HB_COMP_PARAM );   /* frame for locals and parameters */
-   hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM );     /* frame for statics variables */
+   hb_compGenPCode3( HB_P_FRAME, 0, 0, HB_COMP_PARAM );     /* frame for locals and parameters */
+   hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM );    /* frame for statics variables */
 
    if( HB_COMP_PARAM->fDebugInfo )
    {

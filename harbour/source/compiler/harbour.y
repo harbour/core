@@ -207,7 +207,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
-%type <asExpr>  ArgList ElemList BlockExpList BlockVarList BlockNoVar
+%type <asExpr>  Args ArgList ElemList BlockExpList BlockVarList BlockNoVar
 %type <asExpr>  DoName DoProc DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
@@ -737,16 +737,27 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
             ;
 
 FunCall    : FunIdentCall  { $$ = $1; }
-           | MacroVar '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
-           | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+           | MacroVar  '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+           | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
            ;
 
 ArgList    : EmptyExpression                     { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ArgList ',' EmptyExpression         { $$ = hb_compExprAddListExpr( $1, $3 ); }
+           ;
+
+Args       : EPSILON {
+                  $$ = hb_compExprNewArgList( hb_compExprNewEmpty( HB_COMP_PARAM ), HB_COMP_PARAM );
+                  $$->value.asList.reference = TRUE;
+               }
+           | ArgList { $$ = $1; }
+           | ArgList ',' EPSILON {
+                  $$ = $1;
+                  $$->value.asList.reference = TRUE;
+               }
            ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
@@ -791,7 +802,7 @@ ObjectDataAlias : ObjectData ALIASOP            { $$ = $1; }
 
 /* Object's method
  */
-ObjectMethod : ObjectData '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+ObjectMethod : ObjectData '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
              ;
 
 ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
@@ -840,10 +851,7 @@ Expression : Variable         { $$ = $1; }
            | PareExpList      { $$ = $1; }
            | Variable         { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | PareExpList      { HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
-           | '@' FunIdentCall { 
-                                $$ = hb_compExprNewFunRef( hb_compExprAsSymbol( $2 ), HB_COMP_PARAM );
-                                hb_compExprDelete( $2, HB_COMP_PARAM );
-                              }
+           | '@' FunIdentCall { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); }
            | '@' IdentName    { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( $2, HB_COMP_PARAM ) ); }
            | '@' MacroVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
            | '@' AliasVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
@@ -1446,7 +1454,7 @@ DummyArgList : DummyArgument                    {}
 
 DummyArgument : EmptyExpression                 {}
               ;
-/*              
+/*
               | '@' IdentName                      {}
               | '@' IdentName '(' DummyArgList ')' {}
 */
@@ -1953,13 +1961,15 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            | DoArgList ',' DoArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-DoArgument : IdentName                     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
-           | '@' FunIdentCall              { $$ = $2; }
-           | '@' IdentName                 { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
-           | SimpleExpression              { $$ = $1; }
-           | PareExpList                   { $$ = $1; }
-           | '@' MacroVar                  { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
-           | '@' AliasVar                  { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+DoArgument : IdentName        { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
+           | '@' FunIdentCall { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); }
+           | '@' IdentName    { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
+           | '@' MacroVar     { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+           | '@' AliasVar     { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+           | '@' ObjectData   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+           | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
+           | SimpleExpression { $$ = $1; }
+           | PareExpList      { $$ = $1; }
            ;
 
 WithObject : WITHOBJECT Expression Crlf
@@ -2662,7 +2672,20 @@ void hb_compSwitchKill( HB_COMP_DECL )
 
 static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   if( !( HB_COMP_PARAM->iPassByRef & (HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY) ) )
+   if( pExpr->ExprType == HB_ET_FUNCALL )
+   {
+      if( hb_compExprParamListLen( pExpr->value.asFunCall.pParms ) > 0 )
+      {
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
+      }
+      else
+      {
+         HB_EXPR_PTR pDelExpr = pExpr;
+         pExpr = hb_compExprNewFunRef( hb_compExprAsSymbol( pExpr ), HB_COMP_PARAM );
+         hb_compExprDelete( pDelExpr, HB_COMP_PARAM );
+      }
+   }
+   else if( !( HB_COMP_PARAM->iPassByRef & (HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY) ) )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, hb_compExprAsSymbol( pExpr ), NULL );
    }

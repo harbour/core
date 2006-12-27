@@ -534,7 +534,16 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          {
             case FUNCTION:
             case PROCEDURE:
-               /* Clipper needs PROCEDURE in one context only */
+               if( HB_SUPPORT_HARBOUR && ( pLex->iState != LOOKUP ||
+                   ( !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
+                     HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) ) &&
+                   pLex->iState != INIT && pLex->iState != EXIT &&
+                   pLex->iState != STATIC )
+               {
+                  iType = IDENTIFIER;
+                  break;
+               }
+               /* Clipper accepts FUNCTION and PROCEDURE in one context only */
                if( !pToken->pNext ||
                    HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_KEYWORD )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
@@ -597,21 +606,33 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                      pLex->iState = END;
                      return END;
                   }
-                  /* Clipper does not like end[], end(), end->, end-- & end++ at
-                     the begining of line */
-                  if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
-                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
-                                      HB_COMP_ERR_ENDIF, NULL, NULL );
+                  if( !HB_SUPPORT_HARBOUR )
+                  {
+                     /* Clipper does not like end[], end(), end->, end-- & end++ at
+                        the begining of line */
+                     if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                         HB_COMP_ERR_ENDIF, NULL, NULL );
+                  }
                }
                iType = IDENTIFIER;
                break;
 
             case ELSE:
-               /* ELSE can be used in one context only */
+               if( HB_SUPPORT_HARBOUR )
+               {
+                  if( pLex->iState != LOOKUP ||
+                      !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                  {
+                     iType = IDENTIFIER;
+                     break;
+                  }
+               }
+               /* Clipper accepts ELSE in one context only */
                if( HB_COMP_PARAM->wIfCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSE, NULL, NULL );
@@ -619,7 +640,17 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                return ELSE;
 
             case ELSEIF:
-               /* ELSEIF can be used in one context only */
+               if( HB_SUPPORT_HARBOUR )
+               {
+                  if( pLex->iState != LOOKUP ||
+                      ( !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
+                        HB_PP_LEX_NEEDLEFT( pToken->pNext ) ) )
+                  {
+                     iType = IDENTIFIER;
+                     break;
+                  }
+               }
+               /* Clipper accepts ELSEIF in one context only */
                if( HB_COMP_PARAM->wIfCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_UNMATCHED_ELSEIF, NULL, NULL );
@@ -627,21 +658,48 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                return ELSEIF;
 
             case ENDIF:
-               /* ENDIF can be used in one context only */
+               if( HB_SUPPORT_HARBOUR )
+               {
+                  if( pLex->iState != LOOKUP ||
+                      !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                  {
+                     iType = IDENTIFIER;
+                     break;
+                  }
+               }
+               /* Clipper accepts ENDIF in one context only */
                if( HB_COMP_PARAM->wIfCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDIF, NULL, NULL );
                break;
 
             case ENDCASE:
-               /* ENDCASE can be used in one context only */
+               if( HB_SUPPORT_HARBOUR )
+               {
+                  if( pLex->iState != LOOKUP ||
+                      !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                  {
+                     iType = IDENTIFIER;
+                     break;
+                  }
+               }
+               /* Clipper accepts ENDCASE in one context only */
                if( HB_COMP_PARAM->wCaseCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDCASE, NULL, NULL );
                break;
 
             case ENDDO:
-               /* ENDDO can be used in one context only */
+               if( HB_SUPPORT_HARBOUR )
+               {
+                  if( pLex->iState != LOOKUP ||
+                      !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                  {
+                     iType = IDENTIFIER;
+                     break;
+                  }
+               }
+               /* Clipper accepts ENDDO in one context only */
                if( HB_COMP_PARAM->wWhileCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDDO, NULL, NULL );
@@ -740,15 +798,18 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                      pLex->iState = iType;
                      return iType;
                   }
-                  /* Clipper does not like NEXT[], NEXT(), NEXT->,
-                     NEXT++ & NEXT-- at the begining of line */
-                  if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
-                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
-                                      HB_COMP_ERR_NEXTFOR, NULL, NULL );
+                  if( ! HB_SUPPORT_HARBOUR )
+                  {
+                     /* Clipper does not like NEXT[], NEXT(), NEXT->,
+                        NEXT++ & NEXT-- at the begining of line */
+                     if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_SB ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_INC ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_DEC ||
+                         HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS )
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                         HB_COMP_ERR_NEXTFOR, NULL, NULL );
+                  }
                }
                iType = IDENTIFIER;
                break;
@@ -969,6 +1030,14 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                return iType;
 
             case EXIT:
+            case STATIC:
+               if( pLex->iState == LOOKUP )
+               {
+                  pLex->iState = iType;
+                  return iType;
+               }
+               break;
+
             case IN:
             case LOOP:
             case NIL:
@@ -983,7 +1052,6 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             case PARAMETERS:
             case PRIVATE:
             case PUBLIC:
-            case STATIC:
                break;
          }
          pLex->iState = IDENTIFIER;

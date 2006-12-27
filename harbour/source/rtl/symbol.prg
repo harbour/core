@@ -78,4 +78,4 @@ METHOD IsEqual( oSymbol ) CLASS Symbol
 return ::ClassH == oSymbol:ClassH .AND. ::nSym:Name == oSymbol:nSym:Name
 
 METHOD Exec( ... ) CLASS Symbol
-return hb_execFromArray( ::nSym, hb_aParams() )
+return ::nSym:exec( ... )

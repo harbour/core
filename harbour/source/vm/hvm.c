@@ -189,11 +189,12 @@ static void    hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
 static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
+static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object variable */
+static void    hb_vmPushVParams( void );        /* pusges variable parameters */
 static void    hb_vmDuplicate( void );          /* duplicates the latest value on the stack */
 static void    hb_vmDuplTwo( void );            /* duplicates the latest two value on the stack */
 static void    hb_vmDuplUnRef( void );          /* duplicates the latest value on the stack and unref the source one */
 static void    hb_vmSwap( BYTE bCount );        /* swap bCount+1 time two items on HVM stack starting from the most top one */
-static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object variable */
 
 /* Pop */
 static BOOL    hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
@@ -1558,6 +1559,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DUPLUNREF:
             hb_vmDuplUnRef();
+            w++;
+            break;
+
+         case HB_P_PUSHVPARAMS:
+            hb_vmPushVParams();
             w++;
             break;
 
@@ -4044,6 +4050,22 @@ static void hb_vmMacroArrayGen( USHORT uiArgSets )
    hb_vmArrayGen( lArgs );
 }
 
+static void hb_vmPushVParams( void )
+{
+   int iPCount, iFirst, i = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushVParams()"));
+
+   iFirst = hb_stackBaseItem()->item.asSymbol.paramdeclcnt;
+   iPCount = hb_pcount();
+   while( ++iFirst <= iPCount )
+   {
+      hb_vmPush( hb_stackItemFromBase( iFirst ) );
+      i++;
+   }
+   hb_vmPushInteger( i );
+}
+
 /* ------------------------------- */
 /* Database                        */
 /* ------------------------------- */
@@ -4368,6 +4390,8 @@ static HARBOUR hb_vmDoBlock( void )
 
    /* Check for valid count of parameters */
    iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
+   hb_stackBaseItem()->item.asSymbol.paramdeclcnt =
+               pBlock->item.asBlock.paramcnt;
 
    /* add missing parameters */
    while( --iParam >= 0 )
@@ -8324,6 +8348,12 @@ HB_EXPORT BOOL hb_xvmMacroText( void )
    HB_XVM_RETURN
 }
 
+HB_EXPORT void hb_xvmPushVParams( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushVParams()"));
+
+   hb_vmPushVParams();
+}
 HB_EXPORT void hb_xvmWithObjectStart( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectStart()"));

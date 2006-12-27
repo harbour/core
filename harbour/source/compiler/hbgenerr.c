@@ -95,6 +95,7 @@ char * hb_comp_szErrors[] =
    "Unsupported output language option",
    "String too long",
    "Code block size too big",
+   "Not a function with variable parameters",
    "Can't find %s file"
 };
 
@@ -254,7 +255,7 @@ void hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock )
 
 void hb_compErrorMacro( HB_COMP_DECL, const char *szText )
 {
-    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
 }
 
 HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR pExpr, const char *szAlias )
@@ -262,4 +263,10 @@ HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR pExpr, const char *szAl
    const char * szDesc = hb_compExprDescription( pExpr );
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szAlias, szDesc );
    return pExpr;
+}
+
+void hb_compErrorVParams( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_SYMBOL_UNUSED( pExpr );
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_VPARAMS, NULL, NULL );
 }

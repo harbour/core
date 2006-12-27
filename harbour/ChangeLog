@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-27 15:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+    + added support for passing optional parameters to called function, f.e.:
+         proc p( a, b, ... )
+         qout( a, b, "X", ... )
+    * forbid creating function pointer when function is used with parameters,
+      f.e.: x:=@f1(1,2,3)
+
+  * harbour/source/compiler/complex.c
+    * cleaned all restrictions on reserved words I've found - if I missed
+      sth then please inform me. The previous behavior and some error
+      messages are used with -kc compiler switch
+
+  * harbour/source/rtl/symbol.prg
+  * harbour/source/rtl/tobject.prg
+    ! eliminated limitations in number of constructor parameters
+      (new syntax with passing optional parameters used)
+
 2006-12-24 16:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/include/hbexprb.c

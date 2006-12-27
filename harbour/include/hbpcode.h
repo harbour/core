@@ -235,7 +235,8 @@ typedef enum
    HB_P_PUSHBLOCKLARGE,        /* 161 start of a codeblock definition */
    HB_P_PUSHSTRLARGE,          /* 162 places a string on the virtual machine stack */
    HB_P_SWAP,                  /* 163 swap n+1 times two items starting from the most top one on the virtual machine stack */
-   HB_P_LAST_PCODE             /* 164 this defines the number of defined pcodes */
+   HB_P_PUSHVPARAMS,           /* 164 push variable function/method parameters on HVM stack */
+   HB_P_LAST_PCODE             /* 165 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

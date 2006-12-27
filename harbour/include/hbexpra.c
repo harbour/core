@@ -403,7 +403,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       else
 #endif
       /* TODO: EMPTY() (not done by Clipper) */
-	if( ( strcmp( "EVAL", pName->value.asSymbol ) == 0 ) && iCount )
+
+	if( strcmp( "EVAL", pName->value.asSymbol ) == 0 && iCount )
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
@@ -415,7 +416,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_EXPR_PCODE1( hb_compExprDelete, pName ); 
          return pEval;
       }
-      else if( ( strcmp( "_GET_", pName->value.asSymbol ) == 0 ) && iCount )
+      else if( strcmp( "_GET_", pName->value.asSymbol ) == 0 && iCount )
       {
          /* Reserved Clipper function used to handle GET variables
           */

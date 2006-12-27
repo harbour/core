@@ -858,6 +858,12 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
             HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
             break;
          }
+         else if( pExp->ExprType == HB_ET_ARRAYAT )
+         {
+            pExp->value.asList.reference = TRUE;
+            HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
+            break;
+         }
          else if( pExp->ExprType == HB_ET_ALIASVAR )
          {
             char *szAlias = pExp->value.asAlias.pAlias->value.asSymbol;
@@ -1619,7 +1625,29 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          else
             usCount = 0;
 
-         if( fMacroList )
+         if( pSelf->value.asFunCall.pParms &&
+             pSelf->value.asFunCall.pParms->value.asList.reference )
+         {
+#if !defined( HB_MACRO_SUPPORT )
+            if( HB_COMP_PARAM->functions.pLast->szName &&
+                HB_COMP_PARAM->functions.pLast->pCode[0] != HB_P_VFRAME )
+            {
+               hb_compErrorVParams( HB_COMP_PARAM, pSelf );
+            }
+#endif
+            if( fMacroList )
+               usCount++;
+            else if( usCount )
+            {
+               HB_EXPR_PCODE1( hb_compGenPushLong, usCount );
+               usCount = 2;
+            }
+            else
+               usCount = 1;
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHVPARAMS );
+            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROFUNC, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+         }
+         else if( fMacroList )
             HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROFUNC, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
          else if( usCount > 255 )
             HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
@@ -1674,7 +1702,29 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          else
             usCount = 0;
 
-         if( fMacroList )
+         if( pSelf->value.asFunCall.pParms &&
+             pSelf->value.asFunCall.pParms->value.asList.reference )
+         {
+#if !defined( HB_MACRO_SUPPORT )
+            if( HB_COMP_PARAM->functions.pLast->szName &&
+                HB_COMP_PARAM->functions.pLast->pCode[0] != HB_P_VFRAME )
+            {
+               hb_compErrorVParams( HB_COMP_PARAM, pSelf );
+            }
+#endif
+            if( fMacroList )
+               usCount++;
+            else if( usCount )
+            {
+               HB_EXPR_PCODE1( hb_compGenPushLong, usCount );
+               usCount = 2;
+            }
+            else
+               usCount = 1;
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHVPARAMS );
+            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACRODO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+         }
+         else if( fMacroList )
             HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACRODO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
          else if( usCount > 255 )
             HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
@@ -2102,7 +2152,28 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
                   HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
             }
 
-            if( fMacroList )
+            if( pSelf->value.asMessage.pParms->value.asList.reference )
+            {
+#if !defined( HB_MACRO_SUPPORT )
+               if( HB_COMP_PARAM->functions.pLast->szName &&
+                   HB_COMP_PARAM->functions.pLast->pCode[0] != HB_P_VFRAME )
+               {
+                  hb_compErrorVParams( HB_COMP_PARAM, pSelf );
+               }
+#endif
+               if( fMacroList )
+                  iParms++;
+               else if( iParms )
+               {
+                  HB_EXPR_PCODE1( hb_compGenPushLong, iParms );
+                  iParms = 2;
+               }
+               else
+                  iParms = 1;
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHVPARAMS );
+               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROSEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+            }
+            else if( fMacroList )
                HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_MACROSEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
             else if( iParms > 255 )
                HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_SEND, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );

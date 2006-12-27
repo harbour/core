@@ -1726,6 +1726,14 @@ static HB_GENC_FUNC( hb_p_largevframe )
    return 4;
 }
 
+static HB_GENC_FUNC( hb_p_pushvparams )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushVParams();\n" );
+   return 1;
+}
+
 
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
@@ -1899,7 +1907,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_dummy,
    hb_p_pushblocklarge,
    hb_p_pushstrlarge,
-   hb_p_swap
+   hb_p_swap,
+   hb_p_pushvparams
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
