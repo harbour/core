@@ -498,6 +498,7 @@ HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
 
    pExpr = hb_compExprNew( HB_ET_LIST, HB_COMP_PARAM );
    pExpr->value.asList.pExprList = pFirstItem;
+   pExpr->value.asList.reference = FALSE;
    return pExpr;
 }
 
@@ -512,6 +513,20 @@ HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR pFirstItem, HB_COMP_DECL )
    pExpr = hb_compExprNew( HB_ET_ARGLIST, HB_COMP_PARAM );
    pExpr->value.asList.pExprList = pFirstItem;
    pExpr->value.asList.reference = FALSE;
+   return pExpr;
+}
+
+/* Creates a reference to variable arguments
+ */
+HB_EXPR_PTR hb_compExprNewArgRef( HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArgRef()"));
+
+   pExpr = hb_compExprNew( HB_ET_ARGLIST, HB_COMP_PARAM );
+   pExpr->value.asList.pExprList = NULL;
+   pExpr->value.asList.reference = TRUE;
    return pExpr;
 }
 
@@ -961,6 +976,57 @@ ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
    }
    if( ulItems )
       ++ulLen;
+
+   return ulLen;
+}
+
+ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   ULONG ulLen = 0, ulItems = 0;
+   if( pExpr )
+   {
+      HB_EXPR_PTR pElem;
+
+      pElem = pExpr->value.asList.pExprList;
+      while( pElem )
+      {
+         if( ( pElem->ExprType == HB_ET_MACRO && HB_SUPPORT_XBASE ) ||
+             ( pElem->ExprType == HB_ET_ARGLIST && pElem->value.asList.reference ) )
+         {
+            /* &macro was passed
+               or optional parameters list passed, f.e.: f(a,b,...)
+               - handle it differently then in a normal statement */
+            if( pElem->ExprType == HB_ET_MACRO )
+               pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+            if( ulItems )
+            {
+               ulItems = 0;
+               ++ulLen;
+            }
+            ++ulLen;
+         }
+         else
+            ++ulItems;
+         pElem = pElem->pNext;
+      }
+
+      if( ulLen )
+      {
+         if( ulItems )
+            ++ulLen;
+         /* Note: direct type change */
+         pExpr->ExprType = HB_ET_MACROARGLIST;
+      }
+      /* NOTE: if method or function with no parameters is called then the
+       * list of parameters contain only one expression of type HB_ET_NONE
+       * There is no need to calculate this parameter
+       */
+      else if( ulItems == 1 &&
+               pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
+         ulLen = 0;
+      else
+         ulLen = ulItems;
+   }
 
    return ulLen;
 }

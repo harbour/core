@@ -722,6 +722,7 @@ HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
    pArrList->ExprType = HB_ET_ARRAY;   /* change type from ET_LIST */
    pArrList->ValType  = HB_EV_ARRAY;
    pArrList->ulLength = 0;
+   pArrList->value.asList.reference = FALSE;
 
    pExpr = pArrList->value.asList.pExprList;   /* get first element on the list */
    /* Now we need to replace all EO_NONE expressions with ET_NIL expressions

@@ -357,7 +357,6 @@ typedef struct HB_EXPR_
       {
          char * szMacro;               /* identifier after the macro operator */
          struct HB_EXPR_ *pExprList;   /* list elements if &(...) was used */
-         struct HB_EXPR_ *pFunCall;    /* pointer to a function if used as function's call argument */
          USHORT SubType;               /* context in which macro is used */
          unsigned char cMacroOp;       /* macro operator */
       } asMacro;

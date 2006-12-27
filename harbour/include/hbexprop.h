@@ -138,6 +138,7 @@ extern HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char *szMessage, HB_EXPR_PTR
 extern HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewArgRef( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -153,6 +154,7 @@ extern HB_EXPR_PTR hb_compExprClone( HB_EXPR_PTR pSrc );
 extern ULONG hb_compExprListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprParamListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
+extern ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR );
 extern void hb_compExprClear( HB_EXPR_PTR, HB_COMP_DECL );
 extern const char * hb_compExprDescription( HB_EXPR_PTR );
 extern int hb_compExprType( HB_EXPR_PTR );

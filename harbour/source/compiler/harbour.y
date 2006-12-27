@@ -207,7 +207,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
-%type <asExpr>  Args ArgList ElemList BlockExpList BlockVarList BlockNoVar
+%type <asExpr>  ArgList ElemList BlockExpList BlockVarList BlockNoVar
 %type <asExpr>  DoName DoProc DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
@@ -229,8 +229,8 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  ObjectMethod ObjectMethodAlias
 %type <asExpr>  IfInline IfInlineAlias
 %type <asExpr>  PareExpList PareExpListAlias
-%type <asExpr>  Expression SimpleExpression LValue
-%type <asExpr>  EmptyExpression
+%type <asExpr>  Expression ExtExpression SimpleExpression LValue
+%type <asExpr>  EmptyExpression EmptyExtExpression
 %type <asExpr>  ExprAssign ExprOperEq ExprPreOp ExprPostOp
 %type <asExpr>  ExprEqual ExprMath ExprBool ExprRelation ExprUnary
 %type <asExpr>  ExprPlusEq ExprMinusEq ExprMultEq ExprDivEq ExprModEq ExprExpEq
@@ -277,7 +277,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
             IfInline IfInlineAlias
             PareExpList PareExpListAlias
             Expression SimpleExpression LValue
-            EmptyExpression
+            EmptyExpression EmptyExtExpression
             ExprAssign ExprOperEq ExprPreOp ExprPostOp
             ExprEqual ExprMath ExprBool ExprRelation ExprUnary
             ExprPlusEq ExprMinusEq ExprMultEq ExprDivEq ExprModEq ExprExpEq
@@ -737,27 +737,16 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+FunIdentCall: IdentName '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
             ;
 
 FunCall    : FunIdentCall  { $$ = $1; }
-           | MacroVar  '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
-           | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+           | MacroVar  '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+           | MacroExpr '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
            ;
 
-ArgList    : EmptyExpression                     { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
-           | ArgList ',' EmptyExpression         { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
-
-Args       : EPSILON {
-                  $$ = hb_compExprNewArgList( hb_compExprNewEmpty( HB_COMP_PARAM ), HB_COMP_PARAM );
-                  $$->value.asList.reference = TRUE;
-               }
-           | ArgList { $$ = $1; }
-           | ArgList ',' EPSILON {
-                  $$ = $1;
-                  $$->value.asList.reference = TRUE;
-               }
+ArgList    : EmptyExtExpression              { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
+           | ArgList ',' EmptyExtExpression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
@@ -802,7 +791,7 @@ ObjectDataAlias : ObjectData ALIASOP            { $$ = $1; }
 
 /* Object's method
  */
-ObjectMethod : ObjectData '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} Args ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
+ObjectMethod : ObjectData '(' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'    { $$ = hb_compExprNewMethodCall( $1, $4 ); HB_COMP_PARAM->iPassByRef=$<bTrue>3; }
              ;
 
 ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
@@ -859,9 +848,17 @@ Expression : Variable         { $$ = $1; }
            | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
            ;
 
+ExtExpression : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }
+              | Expression
+              ;
+
 EmptyExpression : /* nothing => nil */    { $$ = hb_compExprNewEmpty( HB_COMP_PARAM ); }
                 | Expression
                 ;
+
+EmptyExtExpression : /* nothing => nil */ { $$ = hb_compExprNewEmpty( HB_COMP_PARAM ); }
+                   | ExtExpression
+                   ;
 
 LValue      : IdentName                   { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
             | AliasVar
@@ -1128,8 +1125,8 @@ IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr
            | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
-ElemList   : EmptyExpression              { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
-           | ElemList ',' EmptyExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ElemList   : EmptyExtExpression              { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
+           | ElemList ',' EmptyExtExpression { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockNoVar

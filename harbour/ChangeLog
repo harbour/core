@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-27 21:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+    * removed not longer used pFunCall from asMacro expression.
+      This item was used only in a very old s:="1,2";f(&s) implementation.
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * a little bit more simple implementation of passing optional arguments
+      and simplified some code. Now they can be used in any place in argument
+      list (also repeated). It's also possible to create arrays using "..."
+      as array element(s), f.e.: func f(...); return { "{", ..., "}" }
+      If you think it will be usable then I can also add support for accessing
+      array items with optional parameters, f.e.: ? a[ ... ]
+      so it can be used in the same context as xbase++ like macro lists
+      but for this I will need new PCODE so I'd like to hear your opinion
+      ASAP - I'm closing any extensions today.
+
 2006-12-27 15:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h
