@@ -922,8 +922,8 @@ static HB_GENC_FUNC( hb_p_macropushindex )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROPUSHINDEX, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHINDEX,\n" );
+   return 1;
 }
 
 static HB_GENC_FUNC( hb_p_macropushpare )

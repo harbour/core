@@ -212,40 +212,6 @@ void hb_compExprDelOperator( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  *
  * pExpr is an expression created by hb_compExprNew<operator>Eq functions
  */
-void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
-{
-   BYTE bNewOp;
-
-   switch( bOpEq )
-   {
-      case HB_P_PLUS:
-         bNewOp = HB_P_PLUSEQ;
-         break;
-      case HB_P_MINUS:
-         bNewOp = HB_P_MINUSEQ;
-         break;
-      case HB_P_MULT:
-         bNewOp = HB_P_MULTEQ;
-         break;
-      case HB_P_DIVIDE:
-         bNewOp = HB_P_DIVEQ;
-         break;
-      case HB_P_MODULUS:
-         bNewOp = HB_P_MODEQ;
-         break;
-      case HB_P_POWER:
-         bNewOp = HB_P_EXPEQ;
-         break;
-      default:
-         bNewOp = bOpEq;
-         break;
-   }
-
-   /* NOTE: an object instance variable needs special handling
-    */
-   if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
-   {
-
 /* NOTE: COMPATIBILITY ISSUE:
  * The HB_SUPPORT_HARBOUR in code below determines
  * the way the chained send messages are handled.
@@ -272,12 +238,51 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
  *   be changed
  */
 
+void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
+{
+   BYTE bNewOp;
+
+   if( HB_SUPPORT_HARBOUR )
+   {
+      switch( bOpEq )
+      {
+         case HB_P_PLUS:
+            bNewOp = HB_P_PLUSEQ;
+            break;
+         case HB_P_MINUS:
+            bNewOp = HB_P_MINUSEQ;
+            break;
+         case HB_P_MULT:
+            bNewOp = HB_P_MULTEQ;
+            break;
+         case HB_P_DIVIDE:
+            bNewOp = HB_P_DIVEQ;
+            break;
+         case HB_P_MODULUS:
+            bNewOp = HB_P_MODEQ;
+            break;
+         case HB_P_POWER:
+            bNewOp = HB_P_EXPEQ;
+            break;
+         default:
+            bNewOp = bOpEq;
+            break;
+      }
+   }
+   else
+      bNewOp = bOpEq;
+
+   /* NOTE: an object instance variable needs special handling
+    */
+   if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
+   {
+
       if( pSelf->value.asOperator.pLeft->value.asMessage.pParms )
       {
          hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
       }
 #ifdef HB_USE_OBJMSG_REF
-      else if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
+      else if( bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
@@ -296,24 +301,6 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
    }
    else if( bOpEq != bNewOp )
    {
-#ifdef HB_USE_ARRAYAT_REF
-      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
-      {
-         if( HB_SUPPORT_HARBOUR  )
-         {
-            /* Note: change type to array reference */
-            pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-            pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
-   
-            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
-            return;
-         }
-      }
-      else
-#endif
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
@@ -328,6 +315,20 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
             return;
          }
       }
+#ifdef HB_USE_ARRAYAT_REF
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+      {
+         /* Note: change type to array reference */
+         pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+         return;
+      }
+#endif
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
 #if defined( HB_MACRO_SUPPORT )
@@ -395,30 +396,35 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 {
    BYTE bNewOp;
 
-   switch( bOpEq )
+   if( HB_SUPPORT_HARBOUR )
    {
-      case HB_P_PLUS:
-         bNewOp = HB_P_PLUSEQPOP;
-         break;
-      case HB_P_MINUS:
-         bNewOp = HB_P_MINUSEQPOP;
-         break;
-      case HB_P_MULT:
-         bNewOp = HB_P_MULTEQPOP;
-         break;
-      case HB_P_DIVIDE:
-         bNewOp = HB_P_DIVEQPOP;
-         break;
-      case HB_P_MODULUS:
-         bNewOp = HB_P_MODEQPOP;
-         break;
-      case HB_P_POWER:
-         bNewOp = HB_P_EXPEQPOP;
-         break;
-      default:
-         bNewOp = bOpEq;
-         break;
+      switch( bOpEq )
+      {
+         case HB_P_PLUS:
+            bNewOp = HB_P_PLUSEQPOP;
+            break;
+         case HB_P_MINUS:
+            bNewOp = HB_P_MINUSEQPOP;
+            break;
+         case HB_P_MULT:
+            bNewOp = HB_P_MULTEQPOP;
+            break;
+         case HB_P_DIVIDE:
+            bNewOp = HB_P_DIVEQPOP;
+            break;
+         case HB_P_MODULUS:
+            bNewOp = HB_P_MODEQPOP;
+            break;
+         case HB_P_POWER:
+            bNewOp = HB_P_EXPEQPOP;
+            break;
+         default:
+            bNewOp = bOpEq;
+            break;
+      }
    }
+   else
+      bNewOp = bOpEq;
 
    /* NOTE: an object instance variable needs special handling
     */
@@ -429,7 +435,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
          hb_compErrorLValue( HB_COMP_PARAM, pSelf->value.asOperator.pLeft );
       }
 #ifdef HB_USE_OBJMSG_REF
-      else if( HB_SUPPORT_HARBOUR && bOpEq != bNewOp )
+      else if( bOpEq != bNewOp )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
@@ -450,24 +456,6 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
    }
    else if( bOpEq != bNewOp )
    {
-#ifdef HB_USE_ARRAYAT_REF
-      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
-      {
-         if( HB_SUPPORT_HARBOUR  )
-         {
-            /* Note: change type to array reference */
-            pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-            pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
-
-            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
-            return;
-         }
-      }
-      else
-#endif
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
@@ -482,6 +470,20 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
             return;
          }
       }
+#ifdef HB_USE_ARRAYAT_REF
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+      {
+         /* Note: change type to array reference */
+         pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         HB_EXPR_PCODE1( hb_compGenPCode1, bNewOp );
+         return;
+      }
+#endif
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
          HB_EXPRTYPE iOldType;
@@ -575,49 +577,52 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
                                      FALSE, bOper, HB_COMP_PARAM );
       }
+      return;
    }
+   else if( HB_SUPPORT_HARBOUR )
+   {
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+      {
+         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         /* NOTE: direct type change */
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+
+         /* increase/decrease operation, leave unreferenced value on stack */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
 #ifdef HB_USE_ARRAYAT_REF
-   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-   else if( HB_SUPPORT_HARBOUR &&
-            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
-   {
-      /* push reference to current value */
-      /* Note: change type to array reference */
-      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+      {
+         /* push reference to current value */
+         /* Note: change type to array reference */
+         pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
 
-      /* increase/decrease operation, leave unreferenced value on stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-   }
+         /* increase/decrease operation, leave unreferenced value on stack */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
 #endif
-   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
-   {
-      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-      /* NOTE: direct type change */
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+   }
 
-      /* increase/decrease operation, leave unreferenced value on stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-   }
-   else
-   {
-      /* Push current value */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-      /* duplicate a value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-      /* pop new value and leave the duplicated copy of it on the stack */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-   }
+   /* Push current value */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+   /* Increment */
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   /* duplicate a value */
+   HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+   /* pop new value and leave the duplicated copy of it on the stack */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generates the pcodes for post- increment/decrement expressions
@@ -653,57 +658,60 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          hb_compExprPushSendPopPush( pSelf->value.asOperator.pLeft, NULL,
                                      TRUE, bOper, HB_COMP_PARAM );
       }
+      return;
    }
+   else if( HB_SUPPORT_HARBOUR )
+   {
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+      {
+         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         /* NOTE: direct type change */
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+
+         /* Duplicate the reference and unref the original one -
+          * it will be the result of whole expression
+          */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+         /* increase/decrease operation */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
 #ifdef HB_USE_ARRAYAT_REF
-   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-   else if( HB_SUPPORT_HARBOUR &&
-            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
-   {
-      /* push reference to current value */
-      /* Note: change type to array reference */
-      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+      {
+         /* push reference to current value */
+         /* Note: change type to array reference */
+         pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
 
-      /* Duplicate the reference and unref the original one -
-       * it will be the result of whole expression
-       */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
-      /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-   }
+         /* Duplicate the reference and unref the original one -
+          * it will be the result of whole expression
+          */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+         /* increase/decrease operation */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
 #endif
-   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
-   {
-      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-      /* NOTE: direct type change */
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+   }
 
-      /* Duplicate the reference and unref the original one -
-       * it will be the result of whole expression
-       */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
-      /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-   }
-   else
-   {
-      /* Push current value */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* Duplicate value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-      /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-      /* pop new value from the stack */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-   }
+   /* Push current value */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+   /* Duplicate value */
+   HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+   /* Increment */
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   /* pop new value from the stack */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generates the pcodes for increment/decrement operations
@@ -738,46 +746,49 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          /* pop the value from the stack */
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
       }
+      return;
    }
-#ifdef HB_USE_ARRAYAT_REF
-   /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
-   else if( HB_SUPPORT_HARBOUR &&
-            pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+   else if( HB_SUPPORT_HARBOUR )
    {
-      /* push reference to current value */
-      /* Note: change type to array reference */
-      pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
-      /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-   }
-#endif
-   else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-            pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
-   {
-      USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-      /* NOTE: direct type change */
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
+      if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+      {
+         USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
+         /* NOTE: direct type change */
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = HB_ET_MACRO_REFER;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
-      /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-      bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         /* increase/decrease operation */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
+#ifdef HB_USE_ARRAYAT_REF
+      /* NOTE: code for arrays is differ to correctly handle a[ i++ ]++ */
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_ARRAYAT )
+      {
+         /* push reference to current value */
+         /* Note: change type to array reference */
+         pSelf->value.asOperator.pLeft->value.asList.reference = TRUE;
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
+         /* increase/decrease operation */
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
+         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
+         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         return;
+      }
+#endif
    }
-   else
-   {
-      /* Push current value */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-      /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
-      /* pop new value from the stack */
-      HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-   }
+
+   /* Push current value */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+   /* Increment */
+   HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+   /* pop new value from the stack */
+   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
 }
 
 /* Generate pcode for aliased expression which contains macro operator on

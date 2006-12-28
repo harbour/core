@@ -182,7 +182,7 @@ extern HB_EXPORT BOOL   hb_xvmMacroSend( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroArrayGen( USHORT uiArgSets );
 extern HB_EXPORT BOOL   hb_xvmMacroPush( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroPushRef( void );
-extern HB_EXPORT BOOL   hb_xvmMacroPushIndex( BYTE bFlags );
+extern HB_EXPORT BOOL   hb_xvmMacroPushIndex( void );
 extern HB_EXPORT BOOL   hb_xvmMacroPushArg( PHB_SYMB pSymbol, BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroPushList( BYTE bFlags );
 extern HB_EXPORT BOOL   hb_xvmMacroPushAliased( BYTE bFlags );

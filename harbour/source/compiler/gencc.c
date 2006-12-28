@@ -667,9 +667,8 @@ static HB_GENC_FUNC( hb_p_macropushindex )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushIndex( %d ) ) break;\n",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushIndex() ) break;\n" );
+   return 1;
 }
 
 static HB_GENC_FUNC( hb_p_macropushpare )

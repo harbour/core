@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-28 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbpp.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * changed HB_P_MACROPUSHINDEX PCODE behavior - now it does not evaluated
+      macro expression
+    * eliminated HB_ET_MACRO_INDEX - HB_ET_MACRO_LIST can be used instead
+    * accept ... in codeblocks only when codeblocks parameters are defined
+      as variables, f.e: {|a,b,...|qout(a+b,...)}
+    ! fixed error in a[&s]:=100
+    + added support for a[...] - now ... can be used in the same context as
+      xbase++ like multivalue macro (a[&s])
+    * disabled ++, --, <op>= optimizations when -kc (strict Clipper
+      compatibility mode) compiler switch is used
+
 2006-12-27 21:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
     * removed not longer used pFunCall from asMacro expression.

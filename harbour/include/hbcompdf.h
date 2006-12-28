@@ -146,6 +146,7 @@ typedef struct __FUNC
    ULONG        iNOOPs;                   /* NOOPs Counter */
    ULONG        iJumps;                   /* Jumps Counter */
    BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
+   BOOL         fVParams;                 /* TRUE if variable number of parameters is used */
    BOOL         bError;                   /* error during function compilation */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
@@ -253,10 +254,9 @@ typedef enum
 #define  HB_ET_MACRO_ALIASED  2   /* &alias->&variable */
 #define  HB_ET_MACRO_EXPR     4   /* &( expr ) */
 #define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or function call argument. */
-#define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
-#define  HB_ET_MACRO_PARE    64   /* &variable used as parentesised expressions. */
-#define  HB_ET_MACRO_REFER  128   /* &macro used in @ (pass by reference) */
-#define  HB_ET_MACRO_ASSIGN 256   /* o:&msgname := value */
+#define  HB_ET_MACRO_PARE    32   /* &variable used as parentesised expressions. */
+#define  HB_ET_MACRO_REFER   64   /* &macro used in @ (pass by reference) */
+#define  HB_ET_MACRO_ASSIGN 128   /* o:&msgname := value */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully
@@ -370,7 +370,7 @@ typedef struct HB_EXPR_
       {
          char     *string;             /* source code of a codeblock */
          USHORT   length;
-         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL */
+         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
          struct HB_EXPR_ *pExprList;   /* list elements */
          HB_CBVAR_PTR pLocals;         /* list of local variables */
       } asCodeblock;

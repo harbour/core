@@ -165,7 +165,7 @@ const BYTE hb_comp_pcode_len[] = {
    2,        /* HB_P_MACROPUSH,            */
    3,        /* HB_P_MACROARRAYGEN,        */
    2,        /* HB_P_MACROPUSHLIST,        */
-   2,        /* HB_P_MACROPUSHINDEX,       */
+   1,        /* HB_P_MACROPUSHINDEX,       */
    2,        /* HB_P_MACROPUSHPARE,        */
    2,        /* HB_P_MACROPUSHALIASED,     */
    1,        /* HB_P_MACROSYMBOL,          */

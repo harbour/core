@@ -146,7 +146,7 @@ static void hb_vmMacroDo( USHORT uiArgSets );         /* execute function passin
 static void hb_vmMacroFunc( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
 static void hb_vmMacroSend( USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
 static void hb_vmMacroArrayGen( USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
-static void hb_vmMacroPushIndex( BYTE bFlags );       /* push macro array index {...}[ &var ] */
+static void hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
 static ERRCODE hb_vmSelectWorkarea( PHB_ITEM, PHB_SYMB );  /* select the workarea using a given item or a substituted value */
@@ -1703,8 +1703,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MACROPUSHINDEX:
-            hb_vmMacroPushIndex( pCode[ ++w ] );
-            ++w;
+            hb_vmMacroPushIndex();
+            w++;
             break;
 
          case HB_P_MACROARRAYGEN:
@@ -3919,49 +3919,43 @@ static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Ar
 /* Macros                          */
 /* ------------------------------- */
 
-static void hb_vmMacroPushIndex( BYTE bFlags )
+static void hb_vmMacroPushIndex( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroPushIndex(%d)", ( int ) bFlags));
+   ULONG ulIndexes;
 
-   /* compile and run - leave the result on the stack
-    * the topmost element on the stack contains a macro
-    * string for compilation
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroPushIndex()"));
+
+   /*
+    * Now the top most element on the stack points to number of
+    * additional indexes to generated array
     */
-   hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX, bFlags );
+   ulIndexes = hb_itemGetNL( hb_stackItemFromTop( -1 ) );
+   hb_stackDec();
 
-   /* If no RT errors during compilation */
-   if( s_uiActionRequest == 0 )
+   if( ulIndexes > 1 )
    {
-      /*
-       * Now the top most element on the stack points to number of
-       * additional indexes to generated array
-       */
-      ULONG ulIndexes = hb_itemGetNL( hb_stackItemFromTop( -1 ) );
-      hb_stackDec();
+      PHB_ITEM pIndexArray;
+      ULONG ul = 1;
 
-      if( ulIndexes )
+      hb_vmArrayGen( ulIndexes - 1 );
+      pIndexArray = hb_itemNew( hb_stackItemFromTop( -1 ) );
+      hb_stackPop();
+
+      /* First index is still on stack.*/
+      do
       {
-         PHB_ITEM pIndexArray;
-         ULONG ul = 1;
-
-         hb_vmArrayGen( ulIndexes );
-         pIndexArray = hb_itemNew( hb_stackItemFromTop( -1 ) );
-         hb_stackPop();
-
-         /* First index is still on stack.*/
-         do
-         {
-            hb_vmArrayPush();
-            /* RT error? */
-            if( s_uiActionRequest != 0 )
-               break;
-            hb_vmPush( hb_arrayGetItemPtr( pIndexArray, ul ) );
-         }
-         while( ++ul <= ulIndexes );
-
-         hb_itemRelease( pIndexArray );
+         hb_vmArrayPush();
+         /* RT error? */
+         if( s_uiActionRequest != 0 )
+            break;
+         hb_vmPush( hb_arrayGetItemPtr( pIndexArray, ul ) );
       }
+      while( ++ul < ulIndexes );
+
+      hb_itemRelease( pIndexArray );
    }
+   else if( ulIndexes == 0 )
+      hb_vmPushNil();   /* It will force RT error later in array push or pop */
 }
 
 /*
@@ -8276,11 +8270,11 @@ HB_EXPORT BOOL hb_xvmMacroPushRef( void )
    HB_XVM_RETURN
 }
 
-HB_EXPORT BOOL hb_xvmMacroPushIndex( BYTE bFlags )
+HB_EXPORT BOOL hb_xvmMacroPushIndex( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushIndex(%d)", bFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmMacroPushIndex()"));
 
-   hb_vmMacroPushIndex( bFlags );
+   hb_vmMacroPushIndex();
 
    HB_XVM_RETURN
 }

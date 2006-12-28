@@ -1790,6 +1790,7 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, char * szName, HB_SYMBOLSCOPE
    pFunc->pNOOPs          = NULL;
    pFunc->pJumps          = NULL;
    pFunc->bLateEval       = TRUE;
+   pFunc->fVParams        = FALSE;
    pFunc->bError          = FALSE;
    pFunc->pEnum           = NULL;
 
@@ -3546,8 +3547,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
          }
       }
    }
-   else if( (pFunc->pCode[ 0 ] == HB_P_FRAME || pFunc->pCode[ 0 ] == HB_P_VFRAME) &&
-            pFunc->pCode[ 3 ] == HB_P_SFRAME )
+   else if( pFunc->pCode[ 0 ] == HB_P_FRAME && pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
       int iLocals = 0, iOffset = 0;
@@ -3587,8 +3587,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
              */
             hb_compGenPCode1( 0, HB_COMP_PARAM );
             memmove( pFunc->pCode + 4, pFunc->pCode + 3, pFunc->lPCodePos - 4 );
-            pFunc->pCode[ 0 ] = pFunc->pCode[ 0 ] == HB_P_FRAME ?
-                                          HB_P_LARGEFRAME : HB_P_LARGEVFRAME;
+            pFunc->pCode[ 0 ] = HB_P_LARGEFRAME;
             pFunc->pCode[ 1 ] = HB_LOBYTE( iLocals );
             pFunc->pCode[ 2 ] = HB_HIBYTE( iLocals );
             pFunc->pCode[ 3 ] = ( BYTE )( pFunc->wParamCount );
@@ -3603,12 +3602,11 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
       }
       else
          /* Skip LOCALs frame only when function is not declared with
-          * variable number of parameters (HB_P_VFRAME)
+          * variable number of parameters (HB_P_[LARGE]VFRAME)
           */
-         bSkipFRAME = pFunc->pCode[ 0 ] == HB_P_FRAME;
+         bSkipFRAME = !pFunc->fVParams;
 
       /* Remove the frame pcodes if they are not needed */
-
       if( bSkipFRAME )
       {
          if( bSkipSFRAME )
@@ -3622,11 +3620,17 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
             memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
          }
       }
-      else if( bSkipSFRAME )
+      else
       {
-         pFunc->lPCodePos -= 3;
-         memmove( pFunc->pCode + 3 + iOffset, pFunc->pCode + 6 + iOffset,
-                  pFunc->lPCodePos - 3 - iOffset );
+         if( pFunc->fVParams )
+            pFunc->pCode[ 0 ] = iOffset ? HB_P_LARGEVFRAME : HB_P_VFRAME;
+
+         if( bSkipSFRAME )
+         {
+            pFunc->lPCodePos -= 3;
+            memmove( pFunc->pCode + 3 + iOffset, pFunc->pCode + 6 + iOffset,
+                     pFunc->lPCodePos - 3 - iOffset );
+         }
       }
    }
 }

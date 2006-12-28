@@ -399,7 +399,6 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * iContext contains additional info when HB_SM_XBASE is enabled
  *  = 0 - in Clipper strict compatibility mode
  *  = HB_P_MACROPUSHLIST
- *  = HB_P_MACROPUSHINDEX
  *  = HB_P_MACROPUSHPARE
  *
  * iContext contains HB_P_MACROPUSHPARE if a macro is used inside a codeblock
@@ -488,13 +487,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       {
          hb_macroRun( &struMacro );
 
-         if( iContext )
-         {
-            if( iContext == HB_P_MACROPUSHLIST )
-               hb_vmPushLong( struMacro.uiListElements + 1 );
-            else if( iContext == HB_P_MACROPUSHINDEX )
-               hb_vmPushLong( struMacro.uiListElements );
-         }
+         if( iContext == HB_P_MACROPUSHLIST )
+            hb_vmPushLong( struMacro.uiListElements + 1 );
       }
       else
          hb_macroSyntaxError( &struMacro );

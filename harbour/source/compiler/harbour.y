@@ -207,7 +207,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
-%type <asExpr>  ArgList ElemList BlockExpList BlockVarList BlockNoVar
+%type <asExpr>  ArgList ElemList BlockExpList BlockVars BlockVarList BlockNoVar
 %type <asExpr>  DoName DoProc DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
@@ -327,9 +327,9 @@ FunScope   :                  { $$ = HB_FS_PUBLIC; }
            ;
 
 Params     : /*no parameters */ { $$ = 0; }
-           | EPSILON { HB_COMP_PARAM->functions.pLast->pCode[0] = HB_P_VFRAME; $$ = 0; }
+           | EPSILON { HB_COMP_PARAM->functions.pLast->fVParams = TRUE; $$ = 0; }
            | ParamList { $$ = $1; }
-           | ParamList ',' EPSILON { HB_COMP_PARAM->functions.pLast->pCode[0] = HB_P_VFRAME; $$ = $1; }
+           | ParamList ',' EPSILON { HB_COMP_PARAM->functions.pLast->fVParams = TRUE; $$ = $1; }
            ;
 
 AsType     : /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
@@ -1120,9 +1120,9 @@ ArrayIndex : IndexList ']'                { $$ = $1; }
 /* NOTE: $0 represents the expression before ArrayIndex
  *    Don't use ArrayIndex in other context than as an array index!
  */
-IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
-           | IndexList ',' Expression     { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
-           | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
+IndexList  : '[' ExtExpression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
+           | IndexList ',' ExtExpression     { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
+           | IndexList ']' '[' ExtExpression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
 ElemList   : EmptyExtExpression              { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
@@ -1131,7 +1131,7 @@ ElemList   : EmptyExtExpression              { $$ = hb_compExprNewList( $1, HB_C
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockNoVar
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
-           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockVarList
+           | CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; } BlockVars
              '|' BlockExpList '}'   { $$ = $<asExpr>2; }
            ;
 
@@ -1145,6 +1145,11 @@ BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr(
  * in BlockExpList to refer the same rule defined in Codeblock
  */
 BlockNoVar : /* empty list */       { $$ = NULL; }
+           ;
+
+BlockVars  : EPSILON                   { $<asExpr>0->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; $$ = NULL; }
+           | BlockVarList              { $$ = $1; }
+           | BlockVarList ',' EPSILON  { $<asExpr>0->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; $$ = $1; }
            ;
 
 BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }

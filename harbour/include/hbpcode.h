@@ -111,7 +111,7 @@ typedef enum
    HB_P_MACROPUSH,             /*  40 compile and run - leave the result on the stack */
    HB_P_MACROARRAYGEN,         /*  41 generate array from arguments set(s) on HVM stack { &var } */
    HB_P_MACROPUSHLIST,         /*  42 compile and run - leave the result on the stack */
-   HB_P_MACROPUSHINDEX,        /*  43 compile and run - leave the result on the stack */
+   HB_P_MACROPUSHINDEX,        /*  43 push array items using macro array index */
    HB_P_MACROPUSHPARE,         /*  44 compile and run - leave the result on the stack */
    HB_P_MACROPUSHALIASED,      /*  45 compile and run - leave the field value on the stack */
    HB_P_MACROSYMBOL,           /*  46 compile into a symbol name (used in function calls) */

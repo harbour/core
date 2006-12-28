@@ -265,7 +265,7 @@ extern void        hb_compErrorDuplVar( HB_COMP_DECL, const char * );
 extern HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR, const char * );
 extern HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR );
 extern void        hb_compErrorMacro( HB_COMP_DECL, const char * );
-extern void        hb_compErrorVParams( HB_COMP_DECL, HB_EXPR_PTR );
+extern void        hb_compErrorVParams( HB_COMP_DECL, const char * );
 
 extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
 extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * );
