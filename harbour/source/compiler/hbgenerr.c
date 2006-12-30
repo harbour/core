@@ -259,10 +259,9 @@ void hb_compErrorMacro( HB_COMP_DECL, const char *szText )
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
 }
 
-HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR pExpr, const char *szAlias )
+HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR pExpr, const char * szDesc )
 {
-   const char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szAlias, szDesc );
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szDesc, NULL );
    return pExpr;
 }
 

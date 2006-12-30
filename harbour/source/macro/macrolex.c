@@ -433,6 +433,11 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   pLex->ulSrc += 2;
                   return FALSEVALUE;
                }
+               if( pLex->pString[ pLex->ulSrc ] == '.' )
+               {
+                  pLex->ulSrc += 2;
+                  return EPSILON;
+               }
             }
             return '.';
 
@@ -601,7 +606,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'F' )
-                     return IF;
+                     return IIF;
                }
                else if( pLex->pDst - yylval_ptr->string == 4 )
                {

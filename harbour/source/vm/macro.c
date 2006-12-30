@@ -89,6 +89,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->pCodeInfo = (HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
    pMacro->pCodeInfo->lPCodeSize = HB_PCODE_SIZE;
    pMacro->pCodeInfo->lPCodePos  = 0;
+   pMacro->pCodeInfo->fVParams   = FALSE;
    pMacro->pCodeInfo->pLocals    = NULL;
    pMacro->pCodeInfo->pPrev      = NULL;
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s)", pMacro, szString));
@@ -1355,6 +1356,16 @@ void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
    }
 }
 
+void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
+{
+   char * szFunction;
+
+   /* if abbreviated function name was used - change it for whole name */
+   szFunction = hb_compReservedName( szFunName );
+   hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
+                         TRUE, FALSE, HB_COMP_PARAM );
+}
+
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
 {
@@ -1460,6 +1471,7 @@ void hb_compCodeBlockStart( HB_COMP_DECL )
    pCB->pCode = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
    pCB->lPCodeSize = HB_PCODE_SIZE;
    pCB->lPCodePos  = 0;
+   pCB->fVParams   = FALSE;
    pCB->pLocals    = NULL;
 }
 

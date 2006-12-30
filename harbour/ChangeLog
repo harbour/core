@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2006-12-30 22:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+  * harbour/source/vm/macro.c
+    * final grammar cleanup: removed unused and/or unnecessary grammar
+      expressions in *.y files, fixed some differences between compiler
+      and macrocompiler, fixed some other bugs, typos, clipper
+      incompatibilities, etc.
+      It's end of year, it's late and sorry but I'd like to begin making
+      something absolutely differ then creating detail description ;-)
+      If you will have any questions then I'll answer in new year.
+
+  * harbour/source/rdd/dbffpt/Makefile
+    * small hack for XCC compilation
+
 2006-12-28 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h

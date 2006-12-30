@@ -206,7 +206,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 
 "if"         {
     HB_FLEX_STATE = LOOKUP;
-    return IF;
+    return IIF;
 }
 
 "nil"        { HB_FLEX_STATE = LOOKUP; return NIL; }

@@ -486,6 +486,7 @@ typedef struct HB_PCODE_INFO_   /* compiled pcode container */
    BYTE * pCode;           /* pointer to a memory block where pcode is stored */
    ULONG  lPCodeSize;      /* total memory size for pcode */
    ULONG  lPCodePos;       /* actual pcode offset */
+   BOOL   fVParams;        /* function/codeblock with variable parameters */
    struct HB_PCODE_INFO_ * pPrev;
    HB_CBVAR_PTR pLocals;
 } HB_PCODE_INFO, * HB_PCODE_INFO_PTR;

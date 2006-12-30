@@ -990,8 +990,12 @@ ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       pElem = pExpr->value.asList.pExprList;
       while( pElem )
       {
-         if( ( pElem->ExprType == HB_ET_MACRO && HB_SUPPORT_XBASE ) ||
-             ( pElem->ExprType == HB_ET_ARGLIST && pElem->value.asList.reference ) )
+         if( ( pElem->ExprType == HB_ET_MACRO && HB_SUPPORT_XBASE &&
+               pElem->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
+               pElem->value.asMacro.SubType != HB_ET_MACRO_REFER &&
+               pElem->value.asMacro.SubType != HB_ET_MACRO_ALIASED ) ||
+             ( pElem->ExprType == HB_ET_ARGLIST &&
+               pElem->value.asList.reference ) )
          {
             /* &macro was passed
                or optional parameters list passed, f.e.: f(a,b,...)

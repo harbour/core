@@ -3128,7 +3128,7 @@ void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL ) /* generates the pco
          if( iVar )
          {
             /* pushing fields by reference is not allowed */
-            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
+            hb_compErrorRefer( HB_COMP_PARAM, NULL, szVarName );
          }
          else
          {
@@ -3157,7 +3157,7 @@ void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL ) /* generates the pco
                   if( iVar )
                   {
                      /* pushing fields by reference is not allowed */
-                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
+                     hb_compErrorRefer( HB_COMP_PARAM, NULL, szVarName );
                   }
                   else
                   {
@@ -3278,6 +3278,17 @@ void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
    hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
                          TRUE, FALSE, HB_COMP_PARAM );
 }
+
+void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
+{
+   char * szFunction;
+
+   /* if abbreviated function name was used - change it for whole name */
+   szFunction = hb_compReservedName( szFunName );
+   hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
+                         TRUE, FALSE, HB_COMP_PARAM );
+}
+
 
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL )

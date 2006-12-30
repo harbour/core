@@ -202,6 +202,7 @@ extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_compGenPopVar( char * szVarName, HB_COMP_DECL );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL ); /* Pushes a number on the virtual machine stack */
 extern void hb_compGenPushFunCall( char *, HB_COMP_DECL );             /* generates the pcode to push function's call */
+extern void hb_compGenPushFunRef( char *, HB_COMP_DECL );              /* generates the pcode to push function's reference symbol */
 extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL );       /* generates the pcode to push a variable value to the virtual machine stack */
 extern void hb_compGenPushVarRef( char * szVarName, HB_COMP_DECL );    /* generates the pcode to push a variable by reference to the virtual machine stack */
 extern void hb_compGenPushInteger( int iNumber, HB_COMP_DECL );        /* Pushes a integer number on the virtual machine stack */
