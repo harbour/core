@@ -8,6 +8,55 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-05 08:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+     + added comment
+
+  * harbour/include/hbexpra.c
+     * change expression type for <exp> = <exp> from HB_EO_EQUAL
+       to HB_EO_ASSIGN in hb_compExprGenStatement() function so
+       later we can safely make all optimization in hb_compExprUseEqual()
+       during reduce process - optimization only when PCODE is generated
+       is too late and causes that expressions like:
+         iif( 1 = 1, <exp>, <exp> )
+       are not reduces (Clipper reduce them)
+     * do not execute hb_compFunCallCheck() in hb_compExprNewFunCall()
+       to avoid repeating the same error message in hb_compExprUseFunCall()
+
+  * harbour/include/hbexprb.c
+     * enabled reduction for hb_compExprUseEqual() and generate errors
+       when it's used as statement
+
+  * harbour/source/common/expropt2.c
+     * added some missing reductions for expressions like: NIL == NIL
+
+  * harbour/source/common/reserved.c
+     % very basic optimization: use binary search instead of linear
+       scanning for reserved words and shortcuts - it gives noticeable
+       speed improvement in macro compiler
+
+  * harbour/source/compiler/complex.c
+     * changed the order of special keywords to keep alphabetic sorting
+
+  * harbour/source/compiler/harbour.c
+     % some minor optimizations in aliased expressions
+     ! added protection in hb_compIsJump() to avoid possible problems
+       when this function is executed after replacing some code with
+       jumps by series of NOOPs in optimizations process
+
+  * harbour/source/compiler/hbfix.c
+     * better optimization of PCODE generated for logical expressions
+
+  * harbour/source/compiler/hbfunchk.c
+     % use binary search instead of linear scan
+
+  * harbour/source/rtl/minmax.c
+     ! fixed GPF when MIN() or MAX() function is called with less then
+       two parameters
+
+  * harbour/source/vm/itemapi.c
+     * minor optimization and formatting
+
 2006-12-30 22:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h

@@ -424,6 +424,89 @@ static HB_FIX_FUNC( hb_p_true )
    return 1;
 }
 
+static HB_FIX_FUNC( hb_p_duplicate )
+{
+   HB_COMP_DECL = cargo->HB_COMP_PARAM;
+
+   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   {
+      switch( pFunc->pCode[ lPCodePos + 1 ] )
+      {
+         case HB_P_JUMPTRUEFAR:
+         case HB_P_JUMPFALSEFAR:
+            if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
+            {
+               BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
+               LONG lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
+               ULONG ulNewPos = lPCodePos + 1 + lOffset;
+               BOOL fNot = FALSE, fRepeat = TRUE;
+
+               do
+               {
+                  if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE )
+                  {
+                     if( lOffset > 0 )
+                        hb_p_duplicate( pFunc, ulNewPos, cargo );
+                  }
+
+                  if( pFunc->pCode[ ulNewPos ] == HB_P_NOOP )
+                  {
+                     ulNewPos++;
+                     lOffset++;
+                  }
+                  else if( pFunc->pCode[ ulNewPos ] == HB_P_NOT )
+                  {
+                     ulNewPos++;
+                     lOffset++;
+                     fNot = !fNot;
+                  }
+                  else if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE &&
+                           ( pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPTRUEFAR ||
+                             pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPFALSEFAR ) )
+                  {
+                     LONG lJump;
+                     if( pFunc->pCode[ ulNewPos + 1 ] != pFunc->pCode[ lPCodePos + 1 ] )
+                        fNot = !fNot;
+                     lJump = fNot ? 4 : HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 2 ] );
+                     lOffset += lJump + 1;
+                     ulNewPos = lPCodePos + 1 + lOffset;
+                     fRepeat = lJump > 0;
+                  }
+                  else
+                     fRepeat = FALSE;
+
+                  if( !fNot )
+                     lLastOffset = lOffset;
+               }
+               while( fRepeat );
+
+               if( ( pFunc->pCode[ ulNewPos ] == HB_P_JUMPTRUEFAR ||
+                     pFunc->pCode[ ulNewPos ] == HB_P_JUMPFALSEFAR ) &&
+                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) &&
+                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 5 ) )
+               {
+                  if( pFunc->pCode[ ulNewPos ] != pFunc->pCode[ lPCodePos + 1 ] )
+                     fNot = !fNot;
+                  if( fNot )
+                     lOffset += 4;
+                  else
+                     lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+
+                  HB_PUT_LE_UINT24( pAddr, lOffset );
+                  hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+                  hb_compNOOPfill( pFunc, lPCodePos + 5, 1, FALSE, FALSE );
+               }
+               else if( lLastOffset )
+               {
+                  HB_PUT_LE_UINT24( pAddr, lLastOffset );
+               }
+            }
+            break;
+      }
+   }
+   return 1;
+}
+
 static HB_FIX_FUNC( hb_p_not )
 {
    if( cargo->iNestedCodeblock == 0 )
@@ -453,6 +536,41 @@ static HB_FIX_FUNC( hb_p_not )
          case HB_P_JUMPFALSEFAR:
             opcode = HB_P_JUMPTRUEFAR;
             break;
+/* This optimization will be enabled in the future in a little bit differ form */
+#if 0
+         case HB_P_DUPLICATE:
+            if( ( pFunc->pCode[ lPCodePos + 2 ] == HB_P_JUMPTRUEFAR ||
+                  pFunc->pCode[ lPCodePos + 2 ] == HB_P_JUMPFALSEFAR ) &&
+                pFunc->pCode[ lPCodePos + 6 ] == HB_P_POP )
+            {
+               BYTE * pAddr = &pFunc->pCode[ lPCodePos + 3 ];
+               LONG lOffset = HB_PCODE_MKINT24( pAddr );
+
+               if( lOffset > 0 )
+               {
+                  hb_p_duplicate( pFunc, lPCodePos + 1, cargo );
+                  lOffset = HB_PCODE_MKINT24( pAddr );
+               }
+
+               if( ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_NOT ||
+                     ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_DUPLICATE &&
+                       pFunc->pCode[ lPCodePos + lOffset + 2 ] == HB_P_NOT ) ) &&
+                   ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+               {
+                  hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+                  if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_JUMPTRUEFAR )
+                     pFunc->pCode[ lPCodePos + 2 ] = HB_P_JUMPFALSEFAR;
+                  else
+                     pFunc->pCode[ lPCodePos + 2 ] = HB_P_JUMPTRUEFAR;
+                  if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_DUPLICATE )
+                  {
+                     ++lOffset;
+                     HB_PUT_LE_UINT24( pAddr, lOffset );
+                  }
+               }
+            }
+            /* no break; */
+#endif
          default:
             opcode = HB_P_LAST_PCODE;
             break;
@@ -466,53 +584,6 @@ static HB_FIX_FUNC( hb_p_not )
             hb_compNOOPfill( pFunc, lPCodePos + 1, 1, FALSE, FALSE );
          else
             pFunc->pCode[ lPCodePos + 1 ] = opcode;
-      }
-   }
-   return 1;
-}
-
-static HB_FIX_FUNC( hb_p_duplicate )
-{
-   HB_COMP_DECL = cargo->HB_COMP_PARAM;
-
-   if( cargo->iNestedCodeblock == 0 && HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
-   {
-      switch( pFunc->pCode[ lPCodePos + 1 ] )
-      {
-         case HB_P_JUMPTRUEFAR:
-         case HB_P_JUMPFALSEFAR:
-            if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
-            {
-               BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
-               LONG lOffset = HB_PCODE_MKINT24( pAddr );
-               ULONG ulNewPos = lPCodePos + 1 + lOffset;
-
-               if( lOffset > 0 && pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE )
-               {
-                  hb_p_duplicate( pFunc, ulNewPos, cargo );
-                  if( pFunc->pCode[ ulNewPos ] == HB_P_NOOP )
-                  {
-                     ulNewPos++;
-                     lOffset++;
-                  }
-               }
-
-               if( ( pFunc->pCode[ ulNewPos ] == HB_P_JUMPTRUEFAR ||
-                     pFunc->pCode[ ulNewPos ] == HB_P_JUMPFALSEFAR ) &&
-                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) &&
-                   !hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 5 ) )
-               {
-                  if( pFunc->pCode[ ulNewPos ] == pFunc->pCode[ lPCodePos + 1 ] )
-                     lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-                  else
-                     lOffset += 4;
-
-                  HB_PUT_LE_UINT24( pAddr, lOffset );
-                  hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
-                  hb_compNOOPfill( pFunc, lPCodePos + 5, 1, FALSE, FALSE );
-               }
-            }
-            break;
       }
    }
    return 1;

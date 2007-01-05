@@ -2709,13 +2709,15 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         {
-            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ), HB_COMP_PARAM );
-            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ), HB_COMP_PARAM );
-         }
+         pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ), HB_COMP_PARAM );
+         pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ), HB_COMP_PARAM );
+         pSelf = hb_compExprReduceEQ( pSelf, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
+         hb_compErrorType( HB_COMP_PARAM, pSelf );
+         break;
+
       case HB_EA_ARRAY_INDEX:
          break;
 
@@ -2723,81 +2725,9 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         {
-            /* '=' used in an expression - compare values
-             */
-            /* Try to optimize expression - we cannot optimize in HB_EA_REDUCE
-             * because it is not decided yet if it is assigment or comparision
-             */
-            HB_EXPR_PTR pLeft, pRight;
-
-            pLeft  = pSelf->value.asOperator.pLeft;
-            pRight = pSelf->value.asOperator.pRight;
-
-            if( pLeft->ExprType == pRight->ExprType )
-               switch( pLeft->ExprType )
-               {
-                  case HB_ET_LOGICAL:
-                     HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asLogical == pRight->value.asLogical) );
-                     break;
-
-                  case HB_ET_STRING:
-                     /* NOTE: the result depends on SET EXACT setting then it
-                     * cannot be optimized except the case when NULL string are
-                     * compared - the result is always TRUE regardless of EXACT
-                     * setting
-                     */
-                     if( (pLeft->ulLength | pRight->ulLength) == 0 )
-                        HB_EXPR_PCODE1( hb_compGenPushLogical, TRUE ); /* NOTE: COMPATIBILITY: Clipper doesn't optimize this */
-                     else
-                     {
-                        HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
-                        HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-                        HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
-                     }
-                     break;
-
-                  case HB_ET_NIL:
-                     /* NOTE: COMPATIBILITY: Clipper doesn't optimize this */
-                     HB_EXPR_PCODE1( hb_compGenPushLogical, TRUE ); /* NIL = NIL is always TRUE */
-                     break;
-
-                  case HB_ET_NUMERIC:
-                     switch( pLeft->value.asNum.NumType & pRight->value.asNum.NumType )
-                     {
-                        case HB_ET_LONG:
-                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.l == pRight->value.asNum.val.l) );
-                           break;
-                        case HB_ET_DOUBLE:
-                           HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.d == pRight->value.asNum.val.d) );
-                           break;
-                        default:
-                           {
-                              if( pLeft->value.asNum.NumType == HB_ET_LONG )
-                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.l == pRight->value.asNum.val.d) );
-                              else
-                                 HB_EXPR_PCODE1( hb_compGenPushLogical, (pLeft->value.asNum.val.d == pRight->value.asNum.val.l) );
-                           }
-                           break;
-                     }
-                     break;
-
-                  default:
-                     {
-                        HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
-                        HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-                        HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
-                     }
-               }
-            else
-            {
-               /* TODO: check for incompatible types
-                */
-               HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
-               HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
-            }
-         }
+         HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
+         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
          break;
 
       case HB_EA_POP_PCODE:
@@ -2820,25 +2750,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
          break;
 
       case HB_EA_STATEMENT:
-         /* '=' used standalone in a statement - assign a value
-          * it assigns a value and removes it from the stack
-          * */
-         if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
-         {
-            /* Send messages are implemented as function calls
-             */
-            HB_EXPR_PTR pObj = pSelf->value.asOperator.pLeft;
-            pObj->value.asMessage.pParms = pSelf->value.asOperator.pRight;
-            HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
-            pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
-            /* Remove the return value */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
-         }
-         else
-         {
-            HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
-         }
+         hb_compErrorSyntax( HB_COMP_PARAM, pSelf );
          break;
 
       case HB_EA_DELETE:

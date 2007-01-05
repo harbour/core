@@ -481,7 +481,7 @@ HB_COMMON, * HB_COMMON_PTR;
 #define HB_COMP_PARAM         pMacro
 #define HB_COMP_DECL          HB_MACRO_PTR HB_COMP_PARAM
 
-typedef struct HB_PCODE_INFO_   /* compiled pcode container */
+typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
    BYTE * pCode;           /* pointer to a memory block where pcode is stored */
    ULONG  lPCodeSize;      /* total memory size for pcode */

@@ -28,7 +28,7 @@
 
 #include "hbcomp.h"
 
-/* NOTE: iMinParam = -1, means no checking
+/* NOTE: iMinParam = -1, means no lower limit
  *       iMaxParam = -1, means no upper limit
  */
 
@@ -37,8 +37,11 @@ typedef struct
    char * cFuncName;                /* function name              */
    int    iMinParam;                /* min no of parms it needs   */
    int    iMaxParam;                /* max no of parms need       */
-} HB_FUNCINFO, * HB_PFUNCINFO;
+} HB_FUNCINFO, * PHB_FUNCINFO;
 
+
+/* NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
+ */
 static HB_FUNCINFO hb_StdFunc[] =
 {
    { "AADD"      , 2,  2 },
@@ -111,56 +114,64 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "VAL"       , 1,  1 },
    { "VALTYPE"   , 1,  1 },
    { "WORD"      , 1,  1 },
-   { "YEAR"      , 1,  1 },
-   { 0           , 0,  0 }
+   { "YEAR"      , 1,  1 }
 };
+
+#define HB_STD_FUNCOUNT    sizeof( hb_StdFunc ) / sizeof( HB_FUNCINFO )
 
 BOOL hb_compFunCallCheck( HB_COMP_DECL, char * szFuncCall, int iArgs )
 {
-   HB_FUNCINFO * f = hb_StdFunc;
-   int i = 0;
-   int iPos = -1;
-   int iCmp;
+   unsigned int uiFirst = 0, uiLast = HB_STD_FUNCOUNT - 1, uiMiddle;
+   int iLen = ( int ) strlen( szFuncCall ), iCmp;
 
-   while( f[ i ].cFuncName )
+   /* Respect 4 or more letters shortcuts
+    * SECO() is not allowed because of Clipper function SECONDS()
+    * however SECO32() is a valid name.
+    */
+   if( iLen < 4 )
+      iLen = 4;
+   do
    {
-      iCmp = strncmp( szFuncCall, f[ i ].cFuncName, 4 );
-      if( iCmp == 0 )
-         iCmp = strncmp( szFuncCall, f[ i ].cFuncName, strlen( szFuncCall ) );
-      if( iCmp == 0 )
-      {
-         iPos = i;
-         break;
-      }
+      uiMiddle = ( uiFirst + uiLast ) >> 1;
+      iCmp = strncmp( szFuncCall, hb_StdFunc[ uiMiddle ].cFuncName, iLen );
+      if( iCmp <= 0 )
+         uiLast = uiMiddle;
       else
-         ++i;
+         uiFirst = uiMiddle + 1;
    }
+   while( uiFirst < uiLast );
 
-   if( iPos >= 0 && ( f[ iPos ].iMinParam != -1 ) )
+   if( uiFirst != uiMiddle )
+      iCmp = strncmp( szFuncCall, hb_StdFunc[ uiFirst ].cFuncName, iLen );
+
+   if( iCmp == 0 )
    {
-      if( iArgs < f[ iPos ].iMinParam || ( f[ iPos ].iMaxParam != -1 && iArgs > f[ iPos ].iMaxParam ) )
-      {
-        if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
-        {
-         char szMsg[ 40 ];
+      PHB_FUNCINFO pFunc = &hb_StdFunc[ uiFirst ];
 
-         if( f[ iPos ].iMaxParam == -1 )
-            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: at least %i", iArgs, f[ iPos ].iMinParam );
-         else if( f[ iPos ].iMinParam == f[ iPos ].iMaxParam )
-            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i", iArgs, f[ iPos ].iMinParam );
+      if( ( pFunc->iMinParam != -1 && iArgs < pFunc->iMinParam ) ||
+          ( pFunc->iMaxParam != -1 && iArgs > pFunc->iMaxParam ) )
+      {
+         char szMsg[ 64 ];
+
+         if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
+         {
+            if( pFunc->iMinParam == pFunc->iMaxParam )
+               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i", iArgs, pFunc->iMinParam );
+            else if( pFunc->iMaxParam == -1 )
+               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected at least: %i", iArgs, pFunc->iMinParam );
+            else if( pFunc->iMinParam == -1 )
+               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected less then: %i", iArgs, pFunc->iMaxParam );
+            else
+               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected from: %i to: %i", iArgs, pFunc->iMinParam, pFunc->iMaxParam );
+         }
          else
-            snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
+            szMsg[ 0 ] = '\0';
 
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, szMsg );
+
          return FALSE;
-       }
-       else
-       {
-         /* Clipper way */
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CHECKING_ARGS, szFuncCall, NULL );
-         return FALSE;
-       }
-     }
+      }
    }
+
    return TRUE;
 }

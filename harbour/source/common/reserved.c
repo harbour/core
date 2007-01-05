@@ -54,8 +54,8 @@
 
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
-*/
-#if(!defined( HB_RESERVED_OFF ))
+ */
+#if !defined( HB_RESERVED_OFF )
 static const char * s_szReservedFun[] = {
    "AADD"      ,
    "ABS"       ,
@@ -128,26 +128,34 @@ static const char * s_szReservedFun[] = {
 
 char * hb_compReservedName( char * szName )
 {
-#if(!defined( HB_RESERVED_OFF ))
-   unsigned int wNum = 0;
-   int iFound = 1;
+#if !defined( HB_RESERVED_OFF )
+   unsigned int uiFirst = 0, uiLast = RESERVED_FUNCTIONS - 1, uiMiddle;
+   int iLen = ( int ) strlen( szName ), iCmp;
 
-   while( wNum < RESERVED_FUNCTIONS && iFound )
+   /* Respect 4 or more letters shortcuts
+    * SECO() is not allowed because of Clipper function SECONDS()
+    * however SECO32() is a valid name.
+    */
+   if( iLen < 4 )
+      iLen = 4;
+   do
    {
-      /* Compare first 4 characters
-      * If they are the same then compare the whole name
-      * SECO() is not allowed because of Clipper function SECONDS()
-      * however SECO32() is a valid name.
-      */
-      iFound = strncmp( szName, s_szReservedFun[ wNum ], 4 );
-      if( iFound == 0 )
-         iFound = strncmp( szName, s_szReservedFun[ wNum ], strlen( szName ) );
-      ++wNum;
+      uiMiddle = ( uiFirst + uiLast ) >> 1;
+      iCmp = strncmp( szName, s_szReservedFun[ uiMiddle ], iLen );
+      if( iCmp <= 0 )
+         uiLast = uiMiddle;
+      else
+         uiFirst = uiMiddle + 1;
    }
+   while( uiFirst < uiLast );
 
-   return iFound == 0 ? ( char * ) s_szReservedFun[ wNum - 1 ] : NULL;
-#else
-   return NULL;
+   if( uiFirst != uiMiddle )
+      iCmp = strncmp( szName, s_szReservedFun[ uiFirst ], iLen );
+
+   if( iCmp == 0 )
+      return ( char * ) s_szReservedFun[ uiFirst ];
 #endif
+
+   return NULL;
 }
 

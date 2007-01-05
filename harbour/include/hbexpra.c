@@ -393,17 +393,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
       iCount = ( int ) hb_compExprParamListLen( pParms );
 
-#ifndef HB_MACRO_SUPPORT
-      if( ! hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, iCount ) )
-      {
-         /* skip any farther modifications which can depend on valid number
-            of parameters */
-         ;
-      }
-      else
-#endif
       /* TODO: EMPTY() (not done by Clipper) */
-
 	if( iCount && strcmp( "EVAL", pName->value.asSymbol ) == 0 )
       {
          HB_EXPR_PTR pEval;
@@ -935,6 +925,12 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenStatement(%p)", pExpr));
    if( pExpr )
    {
+      if( pExpr->ExprType == HB_EO_EQUAL )
+      {
+         /* NOTE: direct type change */
+         pExpr->ExprType = HB_EO_ASSIGN;
+      }
+
       pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
       HB_EXPR_USE( pExpr, HB_EA_STATEMENT );
    }

@@ -2949,34 +2949,22 @@ void hb_compGenPopAliasedVar( char * szVarName,
    {
       if( szAlias )
       {
-         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
-         {  /* M->variable */
+         int iLen = strlen( szAlias );
+         if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
+             ( iLen >= 4 && iLen <= 6 &&
+               memcmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
+         {  /* M->variable or MEMV[A[R]]->variable */
             hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName, HB_COMP_PARAM );
          }
+         else if( iLen >= 4 && iLen <= 5 &&
+                  memcmp( szAlias, "FIELD", iLen ) == 0 )
+         {  /* FIEL[D]->variable */
+            hb_compGenVarPCode( HB_P_POPFIELD, szVarName, HB_COMP_PARAM );
+         }
          else
-         {
-            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
-            if( iCmp == 0 )
-               iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
-            if( iCmp == 0 )
-            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-               hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName, HB_COMP_PARAM );
-            }
-            else
-            {  /* field variable */
-               iCmp = strncmp( szAlias, "FIELD", 4 );
-               if( iCmp == 0 )
-                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
-               if( iCmp == 0 )
-               {  /* FIELD-> */
-                  hb_compGenVarPCode( HB_P_POPFIELD, szVarName, HB_COMP_PARAM );
-               }
-               else
-               {  /* database alias */
-                  hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
-                  hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName, HB_COMP_PARAM );
-               }
-            }
+         {  /* database alias */
+            hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
       else
@@ -3197,38 +3185,26 @@ void hb_compGenPushAliasedVar( char * szVarName,
    {
       if( szAlias )
       {
+         int iLen = strlen( szAlias );
          /* myalias->var
           * FIELD->var
           * MEMVAR->var
           */
-         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
-         {  /* M->variable */
+         if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
+             ( iLen >= 4 && iLen <= 6 &&
+               memcmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
+         {  /* M->variable or MEMV[A[R]]->variable */
             hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName, HB_COMP_PARAM );
          }
+         else if( iLen >= 4 && iLen <= 5 &&
+                  memcmp( szAlias, "FIELD", iLen ) == 0 )
+         {  /* FIEL[D]->variable */
+            hb_compGenVarPCode( HB_P_PUSHFIELD, szVarName, HB_COMP_PARAM );
+         }
          else
-         {
-            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
-            if( iCmp == 0 )
-               iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
-            if( iCmp == 0 )
-            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-               hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName, HB_COMP_PARAM );
-            }
-            else
-            {  /* field variable */
-               iCmp = strncmp( szAlias, "FIELD", 4 );
-               if( iCmp == 0 )
-                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
-               if( iCmp == 0 )
-               {  /* FIELD-> */
-                  hb_compGenVarPCode( HB_P_PUSHFIELD, szVarName, HB_COMP_PARAM );
-               }
-               else
-               {  /* database alias */
-                  hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
-                  hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
-               }
-            }
+         {  /* database alias */
+            hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
       else
@@ -3288,7 +3264,6 @@ void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
    hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
                          TRUE, FALSE, HB_COMP_PARAM );
 }
-
 
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL )
@@ -3714,6 +3689,14 @@ BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos )
          case HB_P_JUMPFALSE:
          case HB_P_JUMPTRUE:
             ulJumpAddr += HB_PCODE_MKSHORT( &pFunc->pCode[ ulJumpAddr + 1 ] );
+            break;
+
+         /* Jump can be replaced by series of NOOPs or POP and NOOPs
+          * and not stripped yet
+          */
+         case HB_P_NOOP:
+         case HB_P_POP:
+            ulJumpAddr = ulPos + 1;
             break;
 
          default:

@@ -108,27 +108,26 @@ HB_LEX_KEY, * PHB_LEX_KEY;
 static const HB_LEX_KEY s_keytable[] = 
 {
    { "ANNOUNCE",    4,  8, ANNOUNCE       },
+   { "AS",          2,  2, AS_TYPE        },
    { "BEGIN",       4,  5, BEGINSEQ       },
    { "BREAK",       4,  5, BREAK          },
    { "CASE",        4,  4, CASE           },
    { "DECLARE",     4,  7, DECLARE        },
-   { "OPTIONAL",    4,  8, OPTIONAL       },
-   { "DO",          2,  2, DO             },
    { "DESCEND",     7,  7, DESCEND        },
+   { "DO",          2,  2, DO             },
    { "ELSE",        4,  4, ELSE           },
    { "ELSEIF",      5,  6, ELSEIF         },
    { "END",         3,  3, END            },
-   { "ENDIF",       4,  5, ENDIF          },
    { "ENDCASE",     4,  7, ENDCASE        },
    { "ENDDO",       4,  5, ENDDO          },
+   { "ENDIF",       4,  5, ENDIF          },
    { "EXIT",        4,  4, EXIT           },
    { "EXTERNAL",    4,  8, EXTERN         },
-   { "_FIELD",      4,  6, FIELD          },
    { "FIELD",       4,  5, FIELD          },
    { "FOR",         3,  3, FOR            },
    { "FUNCTION",    4,  8, FUNCTION       },
-   { "IIF",         3,  3, IIF            },
    { "IF",          2,  2, IF             },
+   { "IIF",         3,  3, IIF            },
    { "IN",          2,  2, IN             },
    { "INIT",        4,  4, INIT           },
    { "LOCAL",       4,  5, LOCAL          },
@@ -136,6 +135,7 @@ static const HB_LEX_KEY s_keytable[] =
    { "MEMVAR",      4,  6, MEMVAR         },
    { "NEXT",        4,  4, NEXT           },
    { "NIL",         3,  3, NIL            },
+   { "OPTIONAL",    4,  8, OPTIONAL       },
    { "OTHERWISE",   4,  9, OTHERWISE      },
    { "PARAMETERS",  4, 10, PARAMETERS     },
    { "PRIVATE",     4,  7, PRIVATE        },
@@ -150,10 +150,10 @@ static const HB_LEX_KEY s_keytable[] =
    { "TO",          2,  2, TO             },
    { "WHILE",       4,  5, WHILE          },
    { "WITH",        4,  4, WITH           },
-   { "_PROCREQ_",   9,  9, PROCREQ        },
-   { "AS",          2,  2, AS_TYPE        },
+   { "_FIELD",      4,  6, FIELD          },
    { "_HB_CLASS",   9,  9, DECLARE_CLASS  },
-   { "_HB_MEMBER", 10, 10, DECLARE_MEMBER }
+   { "_HB_MEMBER", 10, 10, DECLARE_MEMBER },
+   { "_PROCREQ_",   9,  9, PROCREQ        }
 };
 
 #define _AS_ARRAY       1
@@ -196,17 +196,17 @@ static const int s_asArrayTypes[] =
 
 static const HB_LEX_KEY s_typetable[] = 
 {
+   { "ANYTYPE",     4,  7, _AS_VARIANT    },
    { "ARRAY",       4,  5, _AS_ARRAY      },
-   { "CODEBLOCK",   4,  9, _AS_BLOCK      },
-   { "STRING",      4,  6, _AS_CHARACTER  },
    { "CHARACTER",   4,  9, _AS_CHARACTER  },
    { "CLASS",       4,  5, _AS_CLASS      },
+   { "CODEBLOCK",   4,  9, _AS_BLOCK      },
    { "DATE",        4,  4, _AS_DATE       },
    { "LOGICAL",     4,  7, _AS_LOGICAL    },
    { "NUMERIC",     4,  7, _AS_NUMERIC    },
    { "OBJECT",      4,  6, _AS_OBJECT     },
-   { "USUAL",       4,  5, _AS_VARIANT    },
-   { "ANYTYPE",     4,  7, _AS_VARIANT    }
+   { "STRING",      4,  6, _AS_CHARACTER  },
+   { "USUAL",       4,  5, _AS_VARIANT    }
 };
 
 static int hb_comp_asType( PHB_PP_TOKEN pToken, BOOL fArray )

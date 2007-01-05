@@ -1615,7 +1615,8 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
    if( ulMinLen )
    {
       if( hb_cdp_page->lSort )
-         iRet = hb_cdpcmp( szFirst,ulLenFirst,szSecond,ulLenSecond,hb_cdp_page,hb_set.HB_SET_EXACT || bForceExact );
+         iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
+                           hb_cdp_page, hb_set.HB_SET_EXACT || bForceExact );
       else
       {
          do
@@ -1630,11 +1631,11 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
          }
          while( --ulMinLen );
 
-         if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulLenFirst )
+         /* If equal and length is different ! */
+         if( !iRet && ulLenFirst != ulLenSecond )
          {
-            /* Force an exact comparison */
-            if( !iRet && ulLenFirst != ulLenSecond )
-               /* If length is different ! */
+            /* Force an exact comparison? */
+            if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulLenFirst )
                iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
          }
       }
