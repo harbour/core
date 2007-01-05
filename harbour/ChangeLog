@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-05 16:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * make function call optimizations only when hb_compFunCallCheck()
+      do not report errors
+
+  * harbour/source/common/reserved.c
+    + added VALTYPE to list of reserved words and shortcuts (Clipper
+      compatible)
+
+  * harbour/source/compiler/hbfunchk.c
+    * checking for number of parameters in FILE() function call is Harbour
+      extension - do not enable it when HB_C52_STRICT macro is set
+
+  * harbour/source/rtl/filehb.c
+    * formatting
+
 2007-01-05 08:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
      + added comment

@@ -61,5 +61,7 @@
 
 HB_FUNC( FILE )
 {
-   hb_retl( ISCHAR( 1 ) ? hb_spFile( ( BYTE * ) hb_parc( 1 ),NULL ) : FALSE );
+   BYTE * szFile = ( BYTE * ) hb_parc( 1 );
+
+   hb_retl( szFile ? hb_spFile( szFile, NULL ) : FALSE );
 }

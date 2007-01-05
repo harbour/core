@@ -72,7 +72,9 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "EXP"       , 1,  1 },
    { "FCOUNT"    , 0,  0 },
    { "FIELDNAME" , 1,  1 },
+#if !defined( HB_C52_STRICT )
    { "FILE"      , 1,  1 },
+#endif
    { "FLOCK"     , 0,  0 },
    { "FOUND"     , 0,  0 },
    { "INKEY"     , 0,  2 },

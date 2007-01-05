@@ -119,6 +119,7 @@ static const char * s_szReservedFun[] = {
    "TYPE"      ,
    "UPPER"     ,
    "VAL"       ,
+   "VALTYPE"   ,
    "WORD"      ,
    "YEAR"
 };

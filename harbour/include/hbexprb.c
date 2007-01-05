@@ -1541,32 +1541,33 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             USHORT usCount = ( USHORT ) hb_compExprParamListLen( pParms );
 
 #ifndef HB_MACRO_SUPPORT
-            hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount );
+            if( hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount ) )
 #endif
-
-            if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
             {
-               hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
-            }
-            else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
-            {
-               hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
-            }
-            else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
-            {
-               if( HB_SUPPORT_HARBOUR )
-                  hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
-            }
-            else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
-            {
-               if( HB_SUPPORT_HARBOUR )
-                  hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
-            }
-            else if( ( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ) || 
-                       ( strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) ) && usCount < 2 )
-            {
-               if( HB_SUPPORT_HARBOUR )
-                  hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
+               if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
+               {
+                  hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
+               }
+               else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
+               }
+               else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  if( HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
+               }
+               else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
+               {
+                  if( HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
+               }
+               else if( ( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ) || 
+                          ( strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) ) && usCount < 2 )
+               {
+                  if( HB_SUPPORT_HARBOUR )
+                     hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
+               }
             }
          }
          break;
