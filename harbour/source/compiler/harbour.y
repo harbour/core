@@ -227,7 +227,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  AliasId AliasVar AliasExpr
 %type <asExpr>  VariableAt VariableAtAlias
 %type <asExpr>  FunIdentCall FunCall FunCallAlias FunRef
-%type <asExpr>  ObjectData ObjectDataAlias
+%type <asExpr>  ObjectData ObjectDataAlias ObjectRef
 %type <asExpr>  ObjectMethod ObjectMethodAlias
 %type <asExpr>  IfInline IfInlineAlias IfExpression
 %type <asExpr>  PareExpList PareExpListAlias
@@ -745,17 +745,21 @@ ExtArgument : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }
 
 /* Object's instance variable
  */
-SendId      : IdentName      { $$.value.string = $1; $$.bMacro=FALSE; }
-            | MacroVar       { $$.value.macro  = $1; $$.bMacro=TRUE;  }
-            | MacroExpr      { $$.value.macro  = $1; $$.bMacro=TRUE;  }
-            ;
-
 ObjectData  : LeftExpression ':' SendId   { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
+            | ObjectRef ':' SendId        { $$ = ($3.bMacro ? hb_compExprNewSend( $1, NULL, $3.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( $1, $3.value.string, NULL, HB_COMP_PARAM )); }
             | ':' SendId                  {  if( HB_COMP_PARAM->wWithObjectCnt == 0 )
                                                 hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
                                              $$ = ($2.bMacro ? hb_compExprNewSend( NULL, NULL, $2.value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( NULL, $2.value.string, NULL, HB_COMP_PARAM ));
                                           }
             ;
+
+SendId      : IdentName      { $$.value.string = $1; $$.bMacro=FALSE; }
+            | MacroVar       { $$.value.macro  = $1; $$.bMacro=TRUE;  }
+            | MacroExpr      { $$.value.macro  = $1; $$.bMacro=TRUE;  }
+            ;
+
+ObjectRef   : '(' '@' IdentName ')'       { $$ = hb_compExprNewVarRef( $3, HB_COMP_PARAM ); }
+
 
 ObjectDataAlias : ObjectData ALIASOP
                 ;

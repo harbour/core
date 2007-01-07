@@ -618,18 +618,21 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
    {
       pExpr->value.asMessage.szMessage = szMessage;
       pExpr->value.asMessage.pMessage = NULL;
-#ifndef HB_MACRO_SUPPORT 
-      if( (strcmp( "__ENUMINDEX", szMessage ) == 0) || 
-          (strcmp( "__ENUMBASE", szMessage ) == 0 ) ||
-          (strcmp( "__ENUMVALUE", szMessage ) == 0 ) )
+#ifndef HB_MACRO_SUPPORT
+      if( pObject && szMessage[ 0 ] == '_' )
       {
-         if( pObject->ExprType == HB_ET_VARIABLE )
+         if( strcmp( "__ENUMINDEX", szMessage ) == 0 ||
+             strcmp( "__ENUMBASE",  szMessage ) == 0 ||
+             strcmp( "__ENUMVALUE", szMessage ) == 0 )
          {
-            if( ! hb_compForEachVarError( HB_COMP_PARAM, pObject->value.asSymbol ) )
+            if( pObject->ExprType == HB_ET_VARIABLE )
             {
-               /* pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol, HB_COMP_PARAM ); */
-               /* NOTE: direct type change */
-               pObject->ExprType = HB_ET_VARREF;
+               if( ! hb_compForEachVarError( HB_COMP_PARAM, pObject->value.asSymbol ) )
+               {
+                  /* pExpr->value.asMessage.pObject = hb_compExprNewVarRef( pObject->value.asSymbol, HB_COMP_PARAM ); */
+                  /* NOTE: direct type change */
+                  pObject->ExprType = HB_ET_VARREF;
+               }
             }
          }
       }
