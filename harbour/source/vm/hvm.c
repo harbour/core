@@ -5154,12 +5154,18 @@ static void hb_vmPushLocal( int iLocal )
 static void hb_vmPushLocalByRef( int iLocal )
 {
    HB_ITEM_PTR pTop = hb_stackAllocItem();
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocalByRef(%d)", iLocal));
 
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    if( iLocal >= 0 )
    {
-      hb_stackLocalVariable( &iLocal );
+      PHB_ITEM pLocal = hb_stackLocalVariable( &iLocal );
+      if( HB_IS_BYREF( pLocal ) && !HB_IS_ENUM( pLocal ) )
+      {
+         hb_itemCopy( pTop, pLocal );
+         return;
+      }
       pTop->item.asRefer.BasePtr.itemsbasePtr = hb_stackItemBasePtr();
    }
    else
@@ -5167,7 +5173,7 @@ static void hb_vmPushLocalByRef( int iLocal )
       /* store direct codeblock address because an item where a codeblock
        * is stored can be no longer placed on the eval stack at the time
        * of a codeblock evaluation or variable access
-      */
+       */
       pTop->item.asRefer.BasePtr.block = hb_stackSelfItem()->item.asBlock.value;
    }
    pTop->type = HB_IT_BYREF;
