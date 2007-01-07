@@ -334,31 +334,11 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          if( HB_COMP_PARAM->fTextSubst )
 #endif	
          {
-            BOOL bUseTextSubst;
-            BOOL bValidMacro = hb_compExprIsValidMacro( pSelf->value.asString.string,
-                                    pSelf->ulLength, &bUseTextSubst, HB_COMP_PARAM );
-            if( bUseTextSubst )
+            if( hb_compIsValidMacroText( HB_COMP_PARAM,
+                                         pSelf->value.asString.string,
+                                         pSelf->ulLength ) )
             {
-               if( HB_SUPPORT_HARBOUR ) 
-               {
-     	            if( bValidMacro )
-                     HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-                  else
-                  {
-                     hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asString.string );
-                  }
-               }
-               else
-               {
-                  /* Clipper always generates macro substitution pcode
-                   * even if it is not a valid expression
-                   */
-                  HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-                  if( !bValidMacro )
-                  {
-                     hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asString.string );
-                  }
-               }
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
             }
          }
          break;
@@ -645,7 +625,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -887,7 +867,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
          pSelf = hb_compExprReduceIIF( pSelf, HB_COMP_PARAM );
          break;
 
@@ -971,7 +951,7 @@ static HB_EXPR_FUNC( hb_compExprUseList )
                }
             }
 
-            HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+            hb_compExprReduceList( pSelf, HB_COMP_PARAM );
             /* NOTE: if the list contains a single expression then the list
              * is not reduced to this expression - if you need that reduction
              * then call hb_compExprListStrip() additionaly
@@ -1081,7 +1061,7 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -1145,7 +1125,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -1401,14 +1381,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * all components should be placed as a string that will
                 * be compiled after text susbstitution
                 */
+
+               /* Check if macrotext variable does not refer to
+                * local, static or field.
+                */
 #if ! defined( HB_MACRO_SUPPORT )
-               BOOL bUseTextSubst;
-               if( !hb_compExprIsValidMacro( pSelf->value.asMacro.szMacro,
-                                             strlen( pSelf->value.asMacro.szMacro ),
-                                             &bUseTextSubst, HB_COMP_PARAM ) )
-               {
-                  hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
-               }
+               hb_compIsValidMacroText( HB_COMP_PARAM,
+                                        pSelf->value.asMacro.szMacro,
+                                        strlen( pSelf->value.asMacro.szMacro ) );
 #endif
                HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
             }
@@ -1486,15 +1466,15 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * all components should be placed as a string that will
                 * be compiled after text susbstitution
                 */
+
+               /* Check if macrotext variable does not refer to
+                * local, static or field.
+                */
 #if ! defined( HB_MACRO_SUPPORT )
-               BOOL bUseTextSubst;
-               if( !hb_compExprIsValidMacro( pSelf->value.asMacro.szMacro,
-                                             strlen( pSelf->value.asMacro.szMacro ),
-                                             &bUseTextSubst, HB_COMP_PARAM ) )
-               {
-                  hb_compErrorMacro( HB_COMP_PARAM, pSelf->value.asMacro.szMacro );
-               }
-#endif                  
+               hb_compIsValidMacroText( HB_COMP_PARAM,
+                                        pSelf->value.asMacro.szMacro,
+                                        strlen( pSelf->value.asMacro.szMacro ) );
+#endif
                HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
             }
          }
@@ -2014,7 +1994,8 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
    {
       case HB_EA_REDUCE:
          {
-            if( pSelf->value.asMessage.pObject )
+            /* Clipper does not reduce object expressions */
+            if( HB_SUPPORT_HARBOUR && pSelf->value.asMessage.pObject )
                pSelf->value.asMessage.pObject = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_REDUCE ), HB_COMP_PARAM );
             if( pSelf->value.asMessage.pParms )  /* Is it a method call ? */
                pSelf->value.asMessage.pParms = HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_REDUCE );

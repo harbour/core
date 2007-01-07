@@ -1,6 +1,7 @@
 %pure-parser
 %parse-param { HB_COMP_PTR pComp }
 %lex-param   { HB_COMP_PTR pComp }
+%name-prefix = "hb_comp"
 %{
 /*
  * $Id$
@@ -207,9 +208,9 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <iNumber> Descend
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
-%type <asExpr>  Argument ExtArgument ArgList ElemList
+%type <asExpr>  Argument ExtArgument RefArgument ArgList ElemList
 %type <asExpr>  BlockExpList BlockVars BlockVarList
-%type <asExpr>  DoName DoProc DoArgument DoArgList
+%type <asExpr>  DoName DoProc DoArgs DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
 %type <asExpr>  NumValue NumAlias
@@ -228,7 +229,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  FunIdentCall FunCall FunCallAlias FunRef
 %type <asExpr>  ObjectData ObjectDataAlias
 %type <asExpr>  ObjectMethod ObjectMethodAlias
-%type <asExpr>  IfInline IfInlineAlias
+%type <asExpr>  IfInline IfInlineAlias IfExpression
 %type <asExpr>  PareExpList PareExpListAlias
 %type <asExpr>  Expression ExtExpression SimpleExpression LValue LeftExpression
 %type <asExpr>  EmptyExpression
@@ -260,7 +261,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 
 %%
 
-Main       : { hb_compLinePush( HB_COMP_PARAM ); } Source       { }
+Main       : { hb_compLinePush( HB_COMP_PARAM ); } Source   { }
            | /* empty file */
            ;
 
@@ -723,17 +724,20 @@ FunRef      : '@' FunIdentCall   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2
 FunCallAlias : FunCall ALIASOP
              ;
 
-ArgList    : ExtArgument               { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
-           | ArgList ',' ExtArgument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
+ArgList     : ExtArgument               { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
+            | ArgList ',' ExtArgument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
+            ;
 
-Argument   : EmptyExpression
-           | '@' IdentName    { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( $2, HB_COMP_PARAM ) ); }
-           | '@' MacroVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
-           | '@' AliasVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
-           | '@' ObjectData   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
-           | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
-           ;
+Argument    : EmptyExpression
+            | RefArgument
+            ;
+
+RefArgument : '@' IdentName    { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( $2, HB_COMP_PARAM ) ); }
+            | '@' MacroVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+            | '@' AliasVar     { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+            | '@' ObjectData   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
+            | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
+            ;
 
 ExtArgument : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }
             | Argument
@@ -871,11 +875,6 @@ ExprUnary   : NOT Expression                 { $$ = hb_compExprNewNot( $2, HB_CO
             | '-' Expression  %prec UNARY    { $$ = hb_compExprNewNegate( $2, HB_COMP_PARAM ); }
             | '+' Expression  %prec UNARY    { $$ = $2; }
             ;
-
-/*
-ExprAssign  : Expression INASSIGN Expression    { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            ;
-*/
 
 ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | NilValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
@@ -1016,24 +1015,33 @@ PareExpList : PareExpList1
 PareExpListAlias : PareExpList ALIASOP
                  ;
 
-ExpList1   : '(' Argument           { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
-           ;
+/* NOTE: Clipper allows to pass variable by reference only as
+ * function argument, IIF() 2-nd and 3-rd argument and as
+ * explicit array item {...@var...}
+ * AFAIK these are also the only one places where empty expressions in
+ * the parenthesis expressions list are accepted
+ */
+ExpList1  : '(' Expression          { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
+          ;
 
-ExpList2   : ExpList1 ',' Argument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
+ExpList2  : ExpList1 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+          ;
 
-ExpList3   : ExpList2 ',' Argument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
+ExpList3  : ExpList2 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+          ;
 
-ExpList    : ExpList3 ',' Argument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           | ExpList  ',' Argument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
-           ;
+ExpList   : ExpList3 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+          | ExpList  ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
+          ;
 
-IfInline   : IIF PareExpList3       { $$ = hb_compExprNewIIF( $2, HB_COMP_PARAM ); }
-           | IF  ExpList1 ',' Argument ','
-             { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
-             Argument ')'
-             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ), HB_COMP_PARAM ); }
+IfInline   : IIF '(' Expression ',' Argument ',' Argument ')'
+               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $3, HB_COMP_PARAM ), $5 ), $7 ) ); }
+           | IF  ExpList1 ',' Expression ',' Argument ')'
+               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), $4 ), $6 ) ); }
+           | IF  ExpList1 ',' RefArgument ',' Argument ')'
+               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), $4 ), $6 ) ); }
+           | IF  ExpList1 ',' ',' Argument ')'
+               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), hb_compExprNewEmpty( HB_COMP_PARAM ) ), $5 ) ); }
            ;
 
 IfInlineAlias : IfInline ALIASOP
@@ -1328,26 +1336,20 @@ EmptyStats : /* empty */           { $<lNumber>$ = 0; }
            | EmptyStatements       { $<lNumber>$ = $<lNumber>1; }
            ;
 
-IfBegin    : IF SimpleExpression { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-                EmptyStats
-                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
-
-           | IF Variable { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-                EmptyStats
-                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
-
-           | IF PareExpList1 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-                EmptyStats
-                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
-
-           | IF PareExpList2 { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-                EmptyStats
-                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
-
-           | IF PareExpListN { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
-                EmptyStats
-                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
+IfBegin    : IF IfExpression
+               { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); }
+             Crlf
+               { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
+             EmptyStats
+               { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
            ;
+
+IfExpression: SimpleExpression
+            | Variable
+            | PareExpList1
+            | PareExpList2
+            | PareExpListN
+            ;
 
 IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
@@ -1589,7 +1591,7 @@ ForStatements : EmptyStats NEXT                     { hb_compLinePush( HB_COMP_P
 ForVar     : IdentName     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
            | AliasVar      { $$ = hb_compExprNewRef( $1, HB_COMP_PARAM ); }
            ;
-           
+
 ForList    : ForVar                { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ForList ',' ForVar    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
@@ -1597,7 +1599,7 @@ ForList    : ForVar                { $$ = hb_compExprNewArgList( $1, HB_COMP_PAR
 ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
            | ForExpr ',' Expression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;           
-           
+
 ForEach    : FOREACH ForList IN ForExpr          /* 1  2  3  4 */
              {
                 ++HB_COMP_PARAM->wForCounter;              /* 5 */
@@ -1657,7 +1659,7 @@ DoSwitch   : SwitchBegin
                 hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
              }
            ;
-           
+
 EndSwitch  : END
              { if( HB_COMP_PARAM->wSwitchCounter )
                   --HB_COMP_PARAM->wSwitchCounter; 
@@ -1698,7 +1700,7 @@ SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLi
 SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
-           
+
 BeginSeq   : BEGINSEQ
                {
                   ++HB_COMP_PARAM->wSeqCounter;
@@ -1770,25 +1772,30 @@ RecoverUsing : RECOVERUSING IdentName
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoName     : IdentName        { $$ = hb_compExprNewFunName( $1, HB_COMP_PARAM ); hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); }
-           | MacroVar
+DoName     : MacroVar
            | MacroExpr
            ;
 
 DoProc     : DO DoName
-               { $$ = hb_compExprNewFunCall( $2, NULL, HB_COMP_PARAM ); }
-           | DO DoName WITH DoArgList
-               { $$ = hb_compExprNewFunCall( $2, $4, HB_COMP_PARAM ); }
-           | DOIDENT
-               { 
-                  /* DOIDENT is the only one identifier which can be returned in lower letters */
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), NULL, HB_COMP_PARAM );
-               }
-           | DOIDENT WITH DoArgList
+               {  $<bTrue>$ = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL; }
+             DoArgs
                {
-                  /* DOIDENT is the only one identifier which can be returned in lower letters */
-                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), $3, HB_COMP_PARAM );
+                  $$ = hb_compExprNewFunCall( $2, $4, HB_COMP_PARAM );
+                  HB_COMP_PARAM->iPassByRef = $<bTrue>3;
                }
+           | DOIDENT
+               {  $<bTrue>$ = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL; }
+             DoArgs
+               {
+                  hb_compAutoOpenAdd( HB_COMP_PARAM, $1 );
+                  /* DOIDENT is the only one identifier which can be returned in lower letters */
+                  $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( $1 ) ), HB_IDENT_FREE ), HB_COMP_PARAM ), $3, HB_COMP_PARAM );
+                  HB_COMP_PARAM->iPassByRef = $<bTrue>2;
+               }
+           ;
+
+DoArgs     : /* empty */      { $$ = NULL; }
+           | WITH DoArgList   { $$ = $2; }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), hb_compExprNewNil( HB_COMP_PARAM ) ); }
@@ -1799,11 +1806,7 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            ;
 
 DoArgument : IdentName        { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
-           | '@' IdentName    { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
-           | '@' MacroVar     { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
-           | '@' AliasVar     { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
-           | '@' ObjectData   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( $2, HB_COMP_PARAM ) ); }
-           | '@' VariableAt   { $$ = hb_compCheckPassByRef( HB_COMP_PARAM, $2 ); $$->value.asList.reference = TRUE; }
+           | RefArgument
            | FunRef
            | SimpleExpression
            | PareExpList

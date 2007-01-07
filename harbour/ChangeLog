@@ -8,6 +8,59 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-07 05:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/macro/Makefile
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/memvclip.c
+    * keep prefix definition for bison public symbols in *.y files instead
+      of passing them as bison arguments to avoid possible mistakes during
+      *.yy[hc] file generation
+    ! fixed iif() reduction when used as single function parameter
+    + add -kM compiler switch - turn off macrotext substitution
+    * updated <string> + <string> optimization and other macrotext usage
+      to keep more Clipper compatible behavior
+    ! fixed typo in expression type checking in IIF() reduction - it was
+      working because wrongly used macros has the same values as the valid
+      ones
+    - removed compiler switches and macros for old HB_INLINE() syntax - it
+      was not supported after last months modifications. Only:
+         HB_INLINE([params,...]) { C code }
+      is supported.
+    ! fixed passing parameters by reference in IIF() statement and macro
+      compiler. The following valid Clipper code:
+         &("myfunc(<exp>, @var1, @var2)")
+      was not supported
+    ! do not allow to use references or empty expressions in expression list
+      AFAIK it's Clipper compatible. If I'm wrong then please fix me but
+      Clipper allows to use references only as function arguments, 2-nd and
+      3-rd IIF() argument and as directly created array items ( {...@var...} )
+      DO ... WITH ... is a special case of function call.
+    ! Changed grammar rules to accept only Clipper compatible parameters.
+    ! fixed typo in macro name in hb_memvarNewParameter() function.
+    * use HB_FUNC_EXEC(...) instead of HB_FUNCNAME(...)()
+
 2007-01-05 16:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * make function call optimizations only when hb_compFunCallCheck()

@@ -183,14 +183,14 @@ extern void hb_compElseIfKill( HB_COMP_DECL );
 extern void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
-extern BOOL hb_compIsValidMacroVar( char *, HB_COMP_DECL ); /* checks if passed variable can be used in macro */
-extern BOOL hb_compForEachVarError( HB_COMP_DECL, char * ); /* checks if it is FOR EACH enumerator variable and generates a warning */
+extern BOOL hb_compIsValidMacroText( HB_COMP_DECL, char *, ULONG );
+extern BOOL hb_compForEachVarError( HB_COMP_DECL, char * );       /* checks if it is FOR EACH enumerator variable and generates a warning */
 
-extern ULONG hb_compGenJump( LONG, HB_COMP_DECL );              /* generates the pcode to jump to a specific offset */
-extern ULONG hb_compGenJumpFalse( LONG, HB_COMP_DECL );         /* generates the pcode to jump if false */
-extern ULONG hb_compGenJumpTrue( LONG, HB_COMP_DECL );          /* generates the pcode to jump if true */
-extern void  hb_compGenJumpHere( ULONG, HB_COMP_DECL );         /* returns the pcode pos where to set a jump offset */
-extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL ); /* sets a jump offset */
+extern ULONG hb_compGenJump( LONG, HB_COMP_DECL );                /* generates the pcode to jump to a specific offset */
+extern ULONG hb_compGenJumpFalse( LONG, HB_COMP_DECL );           /* generates the pcode to jump if false */
+extern ULONG hb_compGenJumpTrue( LONG, HB_COMP_DECL );            /* generates the pcode to jump if true */
+extern void  hb_compGenJumpHere( ULONG, HB_COMP_DECL );           /* returns the pcode pos where to set a jump offset */
+extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL );   /* sets a jump offset */
 
 extern void hb_compLinePush( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
 extern void hb_compLinePushIfDebugger( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
@@ -361,8 +361,8 @@ extern FILE           *hb_comp_errFile;
 #define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
 #define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
 #define HB_COMPFLAG_OPTJUMP      256               /* -kj turn off jump optimalization */
-#define HB_COMPFLAG_HB_INLINE_PP 512               /* -kI hb_inLine support in PP */
-#define HB_COMPFLAG_HB_INLINE    1024              /* -ki */
+#define HB_COMPFLAG_HB_INLINE    512               /* -ki hb_inLine(...) { ... } support */
+#define HB_COMPFLAG_MACROTEXT    1024              /* -kM turn off macrotext substitution */
 
 #define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
 

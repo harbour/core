@@ -59,11 +59,6 @@
    until we will not have extended reference items in our HVM [druzus] */
 /* #define HB_USE_OBJMSG_REF */
 
-#ifdef __WATCOMC__
-/* disable warnings for 'no reference to symbol' */
-#pragma warning 14 9
-#endif
-
 /* ************************************************************************* */
 
 void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL )
@@ -864,7 +859,7 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    pExpr = pExpr->value.asList.pExprList;
    while( pExpr )
    {
-      pNext  = pExpr->pNext; /* store next expression in case the current  will be reduced */
+      pNext  = pExpr->pNext; /* store next expression in case the current will be reduced */
       pExpr  = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
       *pPrev = pExpr;   /* store a new expression into the previous one */
       pExpr->pNext = pNext;  /* restore the link to next expression */
@@ -874,99 +869,3 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    }
    return ulCnt;
 }
-
-BOOL hb_compExprIsValidMacro( char * szText, ULONG ulLen, BOOL *pfUseTextSubst, HB_COMP_DECL )
-{
-   BOOL fValid = TRUE;
-
-   *pfUseTextSubst = FALSE;   /* no valid macro expression */
-
-   while( ulLen-- && fValid )
-   {
-      if( *szText++ == '&' && ulLen )
-      {
-         char ch = *szText;
-         /* Check if macro operator is used inside a string
-          * Macro operator is ignored if it is the last char or
-          * next char is '(' e.g. "this is &(ignored)"
-          * (except if strict Clipper compatibility mode is enabled)
-          *
-          * NOTE: This uses _a-zA-Z pattern to check for
-          * beginning of a variable name
-          */
-
-         if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) || ( ch >= 'a' && ch <= 'z' ) )
-#if defined( HB_MACRO_SUPPORT )
-         {
-            HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-            *pfUseTextSubst = TRUE; /* valid macro expression */
-            return TRUE;            /*there is no need to check all '&' occurences */
-         }
-#else
-         {
-            char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
-            int iSize = 0;
-            do
-            {
-               if( ch >= 'a' && ch <= 'z' )
-                  szSymName[ iSize++ ] = ch - ( 'a' - 'A' );
-               else if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) ||
-                                     ( ch >= '0' && ch <= '9' ) )
-                  szSymName[ iSize++ ] = ch;
-               else
-                  break;
-               ch = *(++szText);
-            }
-            while( --ulLen && iSize < HB_SYMBOL_NAME_LEN );
-            szSymName[ iSize ] = '\0';
-
-            /* NOTE: All variables are assumed memvars in macro compiler -
-             * there is no need to check for a valid name but to be Clipper
-             * compatible we should check if local, static or field name
-             * is not use and generate error in such case
-             */
-            *pfUseTextSubst = TRUE;
-            fValid = hb_compIsValidMacroVar( szSymName, HB_COMP_PARAM );
-         }
-         else if( ! HB_SUPPORT_HARBOUR )
-            *pfUseTextSubst = TRUE;	/* always macro substitution in Clipper */
-#endif
-      }
-   }
-
-   return fValid;
-}
-
-/* Reduces the list of expressions
- *
- * pExpr is the first expression on the list
- */
-HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
-{
-   if( pLeft->value.asString.dealloc )
-   {
-      pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
-      memcpy( pLeft->value.asString.string + pLeft->ulLength,
-              pRight->value.asString.string, pRight->ulLength );
-      pLeft->ulLength += pRight->ulLength;
-      pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
-   }
-   else
-   {
-      char *szString;
-      szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
-      memcpy( szString, pLeft->value.asString.string, pLeft->ulLength );
-      memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
-      pLeft->ulLength += pRight->ulLength;
-      szString[ pLeft->ulLength ] = '\0';
-      pLeft->value.asString.string = szString;
-      pLeft->value.asString.dealloc = TRUE;
-   }
-   hb_compExprFree( pRight, HB_COMP_PARAM );
-   return pLeft;
-}
-
-#ifdef __WATCOMC__
-/* enable warnings for unreferenced symbols */
-#pragma warning 14 2
-#endif

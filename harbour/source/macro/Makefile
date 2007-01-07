@@ -21,7 +21,7 @@ ROOT = ../../
 #	hbdefs.h \
 #	hbmacro.h \
 
-YACC_FLAGS = -p hb_macro
+#YACC_FLAGS = -p hb_macro
 YACC_SOURCE=macro.y
 YACC_HEADERS=\
 	hbmacro.h \

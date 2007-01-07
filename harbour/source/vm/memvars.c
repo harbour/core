@@ -549,7 +549,7 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarNewParameter(%p, %p)", pSymbol, pValue));
 
-   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
+   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
 }
 
 static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
@@ -558,7 +558,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( char * szArg, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%lu)", szArg, ulLen));
 
-   if( szArg && *szArg && ulLen )
+   if( ulLen && szArg && *szArg )
    {
       char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
       int iSize = 0;
@@ -653,11 +653,11 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
       pDynVar = pMemvar->item.asSymbol.value->pDynSym;
    else if( HB_IS_STRING( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
-   else
-      hb_errRT_BASE( EG_ARG, 3008, NULL, "&", HB_ERR_ARGS_BASEPARAMS );
 
    if( pDynVar )
       hb_memvarCreateFromDynSymbol( pDynVar, bScope, pValue );
+   else
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "&", HB_ERR_ARGS_BASEPARAMS );
 }
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
@@ -1070,7 +1070,8 @@ HB_FUNC( __MVSCOPE )
       PHB_ITEM pVarName = hb_param( 1, HB_IT_STRING );
 
       if( pVarName )
-         iMemvar = hb_memvarScope( pVarName->item.asString.value, pVarName->item.asString.length + 1 );
+         iMemvar = hb_memvarScope( pVarName->item.asString.value,
+                                   pVarName->item.asString.length );
    }
 
    hb_retni( iMemvar );

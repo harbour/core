@@ -487,6 +487,16 @@ HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR pObject, HB_EXPR_PTR pArgList 
    return pObject;
 }
 
+/* Create a new IIF() expression
+ * pExpr is a list of three expressions
+ */
+HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR pExpr )
+{
+   pExpr->ExprType = HB_ET_IIF;
+
+   return pExpr;
+}
+
 /* Creates a list - all elements will be used
  * This list can be used to create an array or function's call arguments
  */

@@ -955,6 +955,26 @@ int hb_compLocalVarGetPos( char * szVarName, HB_COMP_DECL )
    return 0;
 }
 
+BOOL hb_compIsValidMacroText( HB_COMP_DECL, char * szText, ULONG ulLen )
+{
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+
+   if( ulLen )
+   {
+      while( --ulLen )
+      {
+         if( *szText++ == '&' )
+         {
+            char ch = *szText;
+            if( ( ch >= 'A' && ch <= 'Z' ) ||
+                ( ch >= 'a' && ch <= 'z' ) || ch == '_' )
+               return TRUE;
+         }
+      }
+   }
+
+   return FALSE;
+}
 
 ULONG hb_compGenJump( LONG lOffset, HB_COMP_DECL )
 {

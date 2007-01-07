@@ -76,10 +76,11 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_XBASE     |
                          HB_COMPFLAG_HB_INLINE |
                          HB_COMPFLAG_OPTJUMP   |
+                         HB_COMPFLAG_MACROTEXT |
                          HB_COMPFLAG_SHORTCUTS;
 
-      pComp->fTextSubst = pComp->fLongOptimize = TRUE;
-
+      pComp->fTextSubst       = ( pComp->supported & HB_COMPFLAG_MACROTEXT ) != 0;
+      pComp->fLongOptimize    = TRUE;
       pComp->fPPO             = FALSE;    /* flag indicating, is ppo output needed */
       pComp->fStartProc       = TRUE;     /* holds if we need to create the starting procedure */
       pComp->fLineNumbers     = TRUE;     /* holds if we need pcodes with line numbers */

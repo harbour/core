@@ -1072,35 +1072,77 @@ void hb_compGenStaticName( char *szVarName, HB_COMP_DECL )
    }
 }
 
-/* Generate an error if passed variable name cannot be used in macro
- * expression.
- * Only MEMVAR or undeclared (memvar will be assumed) variables can be used.
+/* Check if macrotext variable does not refer to local, static or field.
+ * Only MEMVAR or undeclared (memvar will be assumed) variables can be used
+ * in macro text
  */
-BOOL hb_compIsValidMacroVar( char * szVarName, HB_COMP_DECL )
+static BOOL hb_compIsValidMacroVar( char * szVarName, HB_COMP_DECL )
 {
-   BOOL bValid = FALSE;
+   return !hb_compLocalGetPos( HB_COMP_PARAM, szVarName ) &&
+          !hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) &&
+          !hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) &&
+      ( HB_COMP_PARAM->fStartProc ||
+        hb_compMemvarGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) ||
+        ( !hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) &&
+          !hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) ) );
+}
 
-   if( hb_compLocalGetPos( HB_COMP_PARAM, szVarName ) )
-    ;/*      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-   else if( hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) > 0 )
-    ;/*  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-   else if( hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) > 0 )
-    ;/*  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-   else if( ! HB_COMP_PARAM->fStartProc )
+BOOL hb_compIsValidMacroText( HB_COMP_DECL, char * szText, ULONG ulLen )
+{
+   BOOL fFound = FALSE;
+   ULONG ul = 0;
+
+   while( ul < ulLen )
    {
-      /* Is it a local MEMVAR ? */
-      if( hb_compMemvarGetPos( szVarName, HB_COMP_PARAM->functions.pLast ) )
-         bValid = TRUE;
-      else if( hb_compFieldGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
-         ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-      else if( hb_compStaticGetPos( szVarName, HB_COMP_PARAM->functions.pFirst ) > 0 )
-         ; /*hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szVarName, NULL );*/
-      else
-         bValid = TRUE;    /* undeclared variable */
+      if( szText[ ul++ ] == '&' )
+      {
+         char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
+         int iSize = 0;
+
+         /* Check if macro operator is used inside a string
+          * Macro operator is ignored if it is the last char or
+          * next char is '(' e.g. "this is &(ignored)"
+          * (except if strict Clipper compatibility mode is enabled)
+          *
+          * NOTE: This uses _a-zA-Z pattern to check for
+          * beginning of a variable name
+          */
+
+         while( ul < ulLen && iSize < HB_SYMBOL_NAME_LEN )
+         {
+            char ch = szText[ ul ];
+            if( ch >= 'a' && ch <= 'z' )
+               szSymName[ iSize++ ] = ch - ( 'a' - 'A' );
+            else if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) ||
+                                  ( ch >= '0' && ch <= '9' ) )
+               szSymName[ iSize++ ] = ch;
+            else
+               break;
+            ++ul;
+         }
+   
+         if( iSize )
+         {
+            szSymName[ iSize ] = '\0';
+
+            /* NOTE: All variables are assumed memvars in macro compiler -
+             * there is no need to check for a valid name but to be Clipper
+             * compatible we should check if local, static or field name
+             * is not use and generate error in such case
+             */
+            fFound = TRUE;
+            if( ! hb_compIsValidMacroVar( szSymName, HB_COMP_PARAM ) )
+            {
+               hb_compErrorMacro( HB_COMP_PARAM, szText );
+               break;
+            }
+         }
+         else if( ! HB_SUPPORT_HARBOUR )
+            fFound = TRUE;    /* always macro substitution in Clipper */
+      }
    }
-   else
-      bValid = TRUE;    /* undeclared variable */
-   return bValid;
+
+   return fFound;
 }
 
 int hb_compVariableScope( HB_COMP_DECL, char * szVarName )
@@ -4402,7 +4444,7 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->funcalls.pFirst  = NULL;
    HB_COMP_PARAM->funcalls.pLast   = NULL;
    HB_COMP_PARAM->szAnnounce       = NULL;
-   HB_COMP_PARAM->fTextSubst       = TRUE;
+   HB_COMP_PARAM->fTextSubst       = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
    HB_COMP_PARAM->fLongOptimize    = TRUE;
 
    HB_COMP_PARAM->symbols.iCount   = 0;

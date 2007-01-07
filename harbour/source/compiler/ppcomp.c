@@ -174,7 +174,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] )
                   HB_COMP_PARAM->iMaxTransCycles,
                   HB_COMP_PARAM, NULL, NULL,
                   hb_pp_ErrorGen, NULL, hb_pp_PragmaDump,
-                  HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE_PP ) ?
+                  HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) ?
                   hb_pp_hb_inLine : NULL, hb_pp_CompilerSwitch );
 
       if( ! HB_COMP_PARAM->szStdCh )

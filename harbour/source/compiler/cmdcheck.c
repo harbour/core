@@ -325,12 +325,12 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE;
                         break;
 
-                     case 'I':
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE_PP;
-                        break;
-
                      case 'J':
                         HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
+                        break;
+
+                     case 'M':
+                        HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
                         break;
 
                      case 'r':

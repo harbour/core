@@ -346,32 +346,6 @@ HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR pCB, char * szVarName, BYTE bType,
    return pCB;
 }
 
-/* Create a new IIF() expression or set arguments
- *
- * pIIF is a list of three expressions
- */
-HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR pExpr, HB_COMP_DECL )
-{
-#ifndef HB_MACRO_SUPPORT
-   HB_EXPR_PTR pTmp;
-
-   pExpr->ExprType = HB_ET_IIF;
-
-   pTmp = pExpr->value.asList.pExprList;  /* get first expression */
-   if( pTmp->ExprType == HB_ET_NONE )
-   {
-      /* there is no conditional expression e.g. IIF( , true, false )
-       */
-      hb_compErrorSyntax( HB_COMP_PARAM, pExpr );
-   }
-#else
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-   pExpr->ExprType = HB_ET_IIF;
-#endif
-
-   return pExpr;
-}
-
 /* Create function call
  */
 HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COMP_DECL )
@@ -1025,7 +999,7 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    /* create ( var==nil, <pExpr>, <pExpr>:=var ) */
    pIIF = hb_compExprAddListExpr( pIIF, pSet );
    /* create IIF() expression */
-   pIIF = hb_compExprNewIIF( pIIF, HB_COMP_PARAM );
+   pIIF = hb_compExprNewIIF( pIIF );
    /* create a codeblock
    */
    return hb_compExprAddCodeblockExpr( hb_compExprCBVarAdd(

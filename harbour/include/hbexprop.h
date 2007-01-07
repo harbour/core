@@ -133,7 +133,6 @@ extern HB_EXPR_PTR hb_compExprNewFunRef( char *, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewRef( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compExprNewFunCallArg( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char *szMessage, HB_EXPR_PTR pMessage, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR, HB_COMP_DECL );
@@ -144,8 +143,7 @@ extern HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL
 extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
@@ -163,19 +161,13 @@ extern int hb_compExprIsLong( HB_EXPR_PTR );
 extern int hb_compExprAsInteger( HB_EXPR_PTR );
 extern int hb_compExprIsString( HB_EXPR_PTR );
 extern int hb_compExprAsStringLen( HB_EXPR_PTR );
-extern char *hb_compExprAsString( HB_EXPR_PTR );
-extern char *hb_compExprAsSymbol( HB_EXPR_PTR );
+extern char * hb_compExprAsString( HB_EXPR_PTR );
+extern char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
 extern void hb_compExprFree( HB_EXPR_PTR, HB_COMP_DECL );
 extern void hb_compExprErrorType( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_COMP_DECL );
 extern void hb_compExprCBVarDel( HB_CBVAR_PTR );
-extern HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL );
 extern BOOL hb_compExprIsValidMacro( char *, ULONG, BOOL *, HB_COMP_DECL );
 extern void hb_compExprDelete( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
@@ -193,6 +185,8 @@ extern void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 extern void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
+
+extern HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR, HB_COMP_DECL );
 extern ULONG hb_compExprReduceList( HB_EXPR_PTR, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL );
@@ -211,6 +205,11 @@ extern HB_EXPR_PTR hb_compExprReduceAnd( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprReduceOr( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR, HB_COMP_DECL );
 
+extern BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL );
 
 HB_EXTERN_END
 

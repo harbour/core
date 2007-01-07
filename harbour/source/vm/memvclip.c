@@ -50,11 +50,9 @@
  *
  */
 
-#include "hbvmopt.h"
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbcomp.h" /* for VS_* macros */
 
+HB_FUNC_EXTERN( __MVPUBLIC );
 HB_FUNC_EXTERN( __MVCLEAR );
 HB_FUNC_EXTERN( __MVRELEASE );
 HB_FUNC_EXTERN( __MVXRELEASE );
@@ -67,10 +65,15 @@ HB_FUNC_EXTERN( __MVRESTORE );
 
 HB_FUNC( __QQPUB )
 {
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-
-   if( pItem )
-      hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
+   if( hb_pcount() == 1 )
+   {
+      /* In Clipper __QQPUB function does not check number of parameters
+         or parameter type - just simply takes directly the top item from
+         VM stack */
+      PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+      if( pItem )
+         HB_FUNC_EXEC( __MVPUBLIC );
+   }
 }
 
 #endif
@@ -79,25 +82,25 @@ HB_FUNC( __QQPUB )
 
 HB_FUNC( __MCLEAR )
 {
-   HB_FUNCNAME( __MVCLEAR )();
+   HB_FUNC_EXEC( __MVCLEAR );
 }
 
 HB_FUNC( __MRELEASE )
 {
-   HB_FUNCNAME( __MVRELEASE )();
+   HB_FUNC_EXEC( __MVRELEASE );
 }
 
 HB_FUNC( __MXRELEASE )
 {
-   HB_FUNCNAME( __MVXRELEASE )();
+   HB_FUNC_EXEC( __MVXRELEASE );
 }
 
 HB_FUNC( __MSAVE )
 {
-   HB_FUNCNAME( __MVSAVE )();
+   HB_FUNC_EXEC( __MVSAVE );
 }
 
 HB_FUNC( __MRESTORE )
 {
-   HB_FUNCNAME( __MVRESTORE )();
+   HB_FUNC_EXEC( __MVRESTORE );
 }

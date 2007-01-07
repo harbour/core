@@ -60,6 +60,31 @@
 #include "hbcomp.h"
 #include "hbdate.h"
 
+static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
+{
+   if( pLeft->value.asString.dealloc )
+   {
+      pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
+      memcpy( pLeft->value.asString.string + pLeft->ulLength,
+              pRight->value.asString.string, pRight->ulLength );
+      pLeft->ulLength += pRight->ulLength;
+      pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
+   }
+   else
+   {
+      char *szString;
+      szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
+      memcpy( szString, pLeft->value.asString.string, pLeft->ulLength );
+      memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
+      pLeft->ulLength += pRight->ulLength;
+      szString[ pLeft->ulLength ] = '\0';
+      pLeft->value.asString.string = szString;
+      pLeft->value.asString.dealloc = TRUE;
+   }
+   hb_compExprFree( pRight, HB_COMP_PARAM );
+   return pLeft;
+}
+
 HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pLeft, pRight;
@@ -511,10 +536,23 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       {
          /* Do not reduce strings with the macro operator '&'
          */
-         BOOL fSubst;
-         hb_compExprIsValidMacro( pLeft->value.asString.string, pLeft->ulLength,
-                                  &fSubst, HB_COMP_PARAM );
-         if( !fSubst && pLeft->value.asString.string[ pLeft->ulLength - 1 ] != '&' )
+         char * szText = pLeft->value.asString.string;
+         ULONG ulLen = pLeft->ulLength;
+         BOOL fReduce = TRUE;
+
+         while( ulLen-- )
+         {
+            if( *szText++ == '&' )
+            {
+               char ch = ulLen ? *szText : *pRight->value.asString.string;
+               if( ( ch >= 'A' && ch <= 'Z' ) ||
+                   ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
+                   ! HB_SUPPORT_HARBOUR )
+                  fReduce = FALSE;
+            }
+         }
+
+         if( fReduce )
          {
             pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
             hb_compExprFree( pSelf, HB_COMP_PARAM );
@@ -1184,16 +1222,24 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          hb_compExprFree( pExpr, HB_COMP_PARAM );   /* delete TRUE expr */
          pSelf->pNext = NULL;
       }
+
+      if( pSelf->ExprType == HB_ET_NONE )
+      {
+         pSelf->ExprType = HB_ET_NIL;
+         pSelf->ValType = HB_EV_NIL;
+      }
    }
    /* check if valid expression is passed
    */
-   else if( ( pExpr->ExprType == HB_ET_DOUBLE ) ||
-         ( pExpr->ExprType == HB_ET_LONG ) ||
-         ( pExpr->ExprType == HB_ET_NIL ) ||
-         ( pExpr->ExprType == HB_ET_STRING ) ||
-         ( pExpr->ExprType == HB_ET_CODEBLOCK ) ||
-         ( pExpr->ExprType == HB_ET_SELF ) ||
-         ( pExpr->ExprType == HB_ET_ARRAY ) )
+   else if( pExpr->ExprType == HB_ET_NIL ||
+            pExpr->ExprType == HB_ET_NUMERIC ||
+            pExpr->ExprType == HB_ET_DATE ||
+            pExpr->ExprType == HB_ET_STRING ||
+            pExpr->ExprType == HB_ET_CODEBLOCK ||
+            pExpr->ExprType == HB_ET_ARRAY ||
+            pExpr->ExprType == HB_ET_VARREF ||
+            pExpr->ExprType == HB_ET_REFERENCE ||
+            pExpr->ExprType == HB_ET_FUNREF )
    {
       hb_compExprErrorType( pExpr, HB_COMP_PARAM );
    }
@@ -1214,7 +1260,7 @@ HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       {
          /* replace the list with a simple expression
           *  ( EXPR ) -> EXPR
-         */
+          */
          HB_EXPR_PTR pExpr = pSelf;
 
          pSelf = pSelf->value.asList.pExprList;

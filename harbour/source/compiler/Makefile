@@ -11,7 +11,7 @@ ROOT = ../../
 #	hberrors.h \
 #	hbdefs.h
 
-YACC_FLAGS = -p hb_comp
+#YACC_FLAGS = -p hb_comp
 YACC_SOURCE=harbour.y
 YACC_HEADERS=\
 	hbcomp.h   \

@@ -1,6 +1,7 @@
 %pure-parser
 %parse-param { HB_MACRO_PTR pMacro }
 %lex-param   { HB_MACRO_PTR pMacro }
+%name-prefix = "hb_macro"
 
 %{
 /*
@@ -686,10 +687,8 @@ PareExpListAlias : PareExpList ALIASOP
                  ;
 
 /* Lexer should return IIF for "if" symbol */
-IfInline    : IIF '(' Expression ',' EmptyExpression ','
-               { $<asExpr>$ = hb_compExprAddListExpr( hb_compExprNewList( $3, HB_COMP_PARAM ), $5 ); }
-              EmptyExpression ')'
-               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>7, $8 ), HB_COMP_PARAM ); }
+IfInline    : IIF '(' Expression ',' Argument ',' Argument ')'
+               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $3, HB_COMP_PARAM ), $5 ), $7 ) ); }
             ;
 
 %%
