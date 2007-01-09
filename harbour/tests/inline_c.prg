@@ -1,6 +1,12 @@
-/*
- * $Id$
- */
+//NOTEST
+//
+// $Id$
+//
+
+// This file use the old HB_INLINE syntax which is no longer supported.
+// It was replace with more intuitve syntax, see hbinline.prg
+// [ckedem]
+
 PROCEDURE MAIN( cLine, cDelim )
 
    LOCAL a, i

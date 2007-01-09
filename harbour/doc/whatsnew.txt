@@ -3,10 +3,72 @@
  */
 
 ----------------------------------------------------------------------
+Version 0.?? ????? Build ?? (2007-01-??) tag: ?
+
+The compiler
+==============================
+syntax:
+-------
+- Added support for variable number of parameters functions.
+- reimplemented xbase++ multi-value macro support.
+- Added support for WITH OBJECT.
+- Changed HB_INLINE() syntax.
+- Added support for macro compiled messages.
+- Added support for passing array items and object variables by reference.
+internals:
+----------
+- Preprocessor, compiler and macrocompiler code are fully MT safe.
+- New lexer which translate preprocessor tokens to grammar parser
+  terminal symbols - FLEX is not longer used by Harbour.
+- Added prebuild grammar parser source code to CVS - BISON is no
+  longer needed to build Harbour from source code - only developers
+  which want to change Harbour grammar rules need BISON.
+- Cleaned grammar rules with many small fixes
+- Added PCODE version information to compiled files - it's checked at
+  runtime by HVM to detect problems when files with old unsupported
+  PCODE are linked with current HVM.
+- Fixes in memvar core code (memory leaks, GPF, Clipper compatibility, etc.)
+- Added POINTER items which inspected by GC.
+- Added SYMBOL items with support for :exec() and :name() messages.
+- Changed function references to use SYMBOL item instead of POINTER item.
+- Added support for loading and unloading dynamic libraries with PCODE
+  and HRB files.
+- Many new different optimizations.
+preprocessor:
+-------------
+- New written from scratch preprocessor code.
+- Added std.ch file with standard preprocessor definitions.
+
+The runtime modules
+=============================
+- Modifications to make HVM code reentrant safe.
+- Class code extensively changed with many extensions like nonvirtual
+  methods and members, scopes, friend classes and functions,
+  destructors, etc.
+- Added support for PROCFILE()
+- Profiler code disabled in default build.
+GT:
+---
+- Added GTGUI.
+- Added support for: REQUEST HB_GT_<name>_DEFAULT
+
+RDD
+=============================
+- New USRRDD library. It allows to create new RDD from scratch
+  or by inheriting from any other RDDs (except USRRDDs) and
+  overloading any of their methods at PRG level.
+- Added missing undocumented Clipper RDD functions.
+
+General
+=============================
+- New non GNU make files with common dependencies list.
+- Many speed improvements and fixes.
+
+----------------------------------------------------------------------
 Version 0.46 Alpha Build 46 (2006-05-29) tag: build46
 
 The compiler
-============================================================
+=============================
 syntax:
 -------
 - Added support for DATE type constants in the format 0dYYYYMMDD
@@ -85,7 +147,7 @@ preprocessor:
 - Added #pragma __stream and #pragma __cstream (see doc/pragma.txt)
 
 The runtime modules
-============================================================
+=============================
 API
 ---
 - Separated internal and external API. Now the definitions for
@@ -203,7 +265,7 @@ Multilangual:
 - Added BG language support.
 
 RDD
-============================================================
+=============================
 - DBT, FPT, SMT memos are fully support and automatically detected in
   USE command. For newly created tables the memo type can be set with
   rddInfo(RDDI_MEMOTYPE,<DB_MEMO_DBT|DB_MEMO_FPT|DB_MEMO_SMT> [,<cRdd>])
@@ -259,7 +321,7 @@ RDD
 - Fixed possible memory leak when APPEND failed in TRANSREC method.
 
 Contrib
-============================================================
+=============================
 - ADS: Added ADSCDX, ADSNTX and ADT RDDs. ADS RDD should not be longer
   used, it's only for backward compatibility.
 - ADS: Call AdsFlushFileBuffers() only when _SET_HARDCOMMIT is set.
@@ -276,11 +338,11 @@ Contrib
   Now NF dir functions works on all platforms.
 
 Utilities
-============================================================
+=============================
 - HbExtern: Heavily modified to produce more accurate output.
 
 General
-============================================================
+=============================
 - Fixed for popper compilation with GNU C++ and OpenWatcom on Linux.
 - Added support for cross compilation (Windows binaries at Linux) with
   MinGW (borrowed from xHarbour).
