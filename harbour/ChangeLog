@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-09 16:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/include/hbver.h
+    * updated version number to 1.1.0
+
 2007-01-09 15:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
   + harbour/ChangeLog.017
