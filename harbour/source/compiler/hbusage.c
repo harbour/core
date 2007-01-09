@@ -192,6 +192,6 @@ void hb_compPrintLogo( void )
    char * szVer = hb_verHarbour();
 
    printf( "%s\n", szVer );
-   printf( "Copyright 1999-2006, http://www.harbour-project.org/\n" );
+   printf( "Copyright 1999-2007, http://www.harbour-project.org/\n" );
    hb_xfree( szVer );
 }

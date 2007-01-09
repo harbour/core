@@ -381,8 +381,31 @@ void * hb_gcUnlock( void * pBlock )
 */
 void hb_gcItemRef( HB_ITEM_PTR pItem )
 {
-   if( HB_IS_BYREF( pItem ) )
-      pItem = hb_itemUnRef( pItem );
+   while( HB_IS_BYREF( pItem ) )
+   {
+      if( HB_IS_ENUM( pItem ) )
+         return;
+      else if( ! HB_IS_MEMVAR( pItem ) &&
+               pItem->item.asRefer.offset == 0 &&
+               pItem->item.asRefer.value >= 0 )
+      {
+         /* array item reference */
+         HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pItem->item.asRefer.BasePtr.array );
+         if( pAlloc->used == s_uUsedFlag )
+         {
+            ULONG ulSize = pItem->item.asRefer.BasePtr.array->ulLen;
+            pAlloc->used ^= HB_GC_USED_FLAG;
+            pItem = pItem->item.asRefer.BasePtr.array->pItems;
+            while( ulSize )
+            {
+               hb_gcItemRef( pItem++ );
+               --ulSize;
+            }
+         }
+         return;
+      }
+      pItem = hb_itemUnRefOnce( pItem );
+   }
 
    if( HB_IS_ARRAY( pItem ) )
    {
