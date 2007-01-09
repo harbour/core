@@ -1,0 +1,3121 @@
+/*
+ * $Id$
+ */
+
+/* Use this format for the entry headers:
+   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+   For example:
+   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
+*/
+
+2007-01-09 15:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbusage.c
+    * update the year in hb_compPrintLogo() from 2006 to 2007
+
+  * harbour/source/vm/garbage.c
+    ! fixed potentially very serious bug - when I added array items
+      references I forgot to update GC. Fortunately it was caught
+      by code to detect bugs in object destructors so only RT error
+      was reported instead of internal HVM memory corruption
+
+  * harbour/tests/hbinline.prg
+    * updated comments
+
+2007-01-09 10:56 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * doc/whatsnew.txt
+    + Add changes for the new beta build.
+
+  * tests/inline_c.prg
+    ! Add //NOTEST and a comment since this file uses old,
+      unsupported syntax.
+
+2007-01-08 00:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+    ! fixed GPF which can appear on syntax error during compilation
+      one of enumerator message
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * accept the folowing syntax: (@var):msg
+      With this modification FOR EACH overloading is completed.
+
+2007-01-07 19:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * small modification to protect against creating long references chains
+      which can hardly reduce the performance in some cases
+
+2007-01-07 05:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/macro/Makefile
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/memvars.c
+  * harbour/source/vm/memvclip.c
+    * keep prefix definition for bison public symbols in *.y files instead
+      of passing them as bison arguments to avoid possible mistakes during
+      *.yy[hc] file generation
+    ! fixed iif() reduction when used as single function parameter
+    + add -kM compiler switch - turn off macrotext substitution
+    * updated <string> + <string> optimization and other macrotext usage
+      to keep more Clipper compatible behavior
+    ! fixed typo in expression type checking in IIF() reduction - it was
+      working because wrongly used macros has the same values as the valid
+      ones
+    - removed compiler switches and macros for old HB_INLINE() syntax - it
+      was not supported after last months modifications. Only:
+         HB_INLINE([params,...]) { C code }
+      is supported.
+    ! fixed passing parameters by reference in IIF() statement and macro
+      compiler. The following valid Clipper code:
+         &("myfunc(<exp>, @var1, @var2)")
+      was not supported
+    ! do not allow to use references or empty expressions in expression list
+      AFAIK it's Clipper compatible. If I'm wrong then please fix me but
+      Clipper allows to use references only as function arguments, 2-nd and
+      3-rd IIF() argument and as directly created array items ( {...@var...} )
+      DO ... WITH ... is a special case of function call.
+    ! Changed grammar rules to accept only Clipper compatible parameters.
+    ! fixed typo in macro name in hb_memvarNewParameter() function.
+    * use HB_FUNC_EXEC(...) instead of HB_FUNCNAME(...)()
+
+2007-01-05 16:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * make function call optimizations only when hb_compFunCallCheck()
+      do not report errors
+
+  * harbour/source/common/reserved.c
+    + added VALTYPE to list of reserved words and shortcuts (Clipper
+      compatible)
+
+  * harbour/source/compiler/hbfunchk.c
+    * checking for number of parameters in FILE() function call is Harbour
+      extension - do not enable it when HB_C52_STRICT macro is set
+
+  * harbour/source/rtl/filehb.c
+    * formatting
+
+2007-01-05 08:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+     + added comment
+
+  * harbour/include/hbexpra.c
+     * change expression type for <exp> = <exp> from HB_EO_EQUAL
+       to HB_EO_ASSIGN in hb_compExprGenStatement() function so
+       later we can safely make all optimization in hb_compExprUseEqual()
+       during reduce process - optimization only when PCODE is generated
+       is too late and causes that expressions like:
+         iif( 1 = 1, <exp>, <exp> )
+       are not reduces (Clipper reduce them)
+     * do not execute hb_compFunCallCheck() in hb_compExprNewFunCall()
+       to avoid repeating the same error message in hb_compExprUseFunCall()
+
+  * harbour/include/hbexprb.c
+     * enabled reduction for hb_compExprUseEqual() and generate errors
+       when it's used as statement
+
+  * harbour/source/common/expropt2.c
+     * added some missing reductions for expressions like: NIL == NIL
+
+  * harbour/source/common/reserved.c
+     % very basic optimization: use binary search instead of linear
+       scanning for reserved words and shortcuts - it gives noticeable
+       speed improvement in macro compiler
+
+  * harbour/source/compiler/complex.c
+     * changed the order of special keywords to keep alphabetic sorting
+
+  * harbour/source/compiler/harbour.c
+     % some minor optimizations in aliased expressions
+     ! added protection in hb_compIsJump() to avoid possible problems
+       when this function is executed after replacing some code with
+       jumps by series of NOOPs in optimizations process
+
+  * harbour/source/compiler/hbfix.c
+     * better optimization of PCODE generated for logical expressions
+
+  * harbour/source/compiler/hbfunchk.c
+     % use binary search instead of linear scan
+
+  * harbour/source/rtl/minmax.c
+     ! fixed GPF when MIN() or MAX() function is called with less then
+       two parameters
+
+  * harbour/source/vm/itemapi.c
+     * minor optimization and formatting
+
+2006-12-30 22:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+  * harbour/source/vm/macro.c
+    * final grammar cleanup: removed unused and/or unnecessary grammar
+      expressions in *.y files, fixed some differences between compiler
+      and macrocompiler, fixed some other bugs, typos, clipper
+      incompatibilities, etc.
+      It's end of year, it's late and sorry but I'd like to begin making
+      something absolutely differ then creating detail description ;-)
+      If you will have any questions then I'll answer in new year.
+
+  * harbour/source/rdd/dbffpt/Makefile
+    * small hack for XCC compilation
+
+2006-12-28 16:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbpp.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * changed HB_P_MACROPUSHINDEX PCODE behavior - now it does not evaluated
+      macro expression
+    * eliminated HB_ET_MACRO_INDEX - HB_ET_MACRO_LIST can be used instead
+    * accept ... in codeblocks only when codeblocks parameters are defined
+      as variables, f.e: {|a,b,...|qout(a+b,...)}
+    ! fixed error in a[&s]:=100
+    + added support for a[...] - now ... can be used in the same context as
+      xbase++ like multivalue macro (a[&s])
+    * disabled ++, --, <op>= optimizations when -kc (strict Clipper
+      compatibility mode) compiler switch is used
+
+2006-12-27 21:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+    * removed not longer used pFunCall from asMacro expression.
+      This item was used only in a very old s:="1,2";f(&s) implementation.
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * a little bit more simple implementation of passing optional arguments
+      and simplified some code. Now they can be used in any place in argument
+      list (also repeated). It's also possible to create arrays using "..."
+      as array element(s), f.e.: func f(...); return { "{", ..., "}" }
+      If you think it will be usable then I can also add support for accessing
+      array items with optional parameters, f.e.: ? a[ ... ]
+      so it can be used in the same context as xbase++ like macro lists
+      but for this I will need new PCODE so I'd like to hear your opinion
+      ASAP - I'm closing any extensions today.
+
+2006-12-27 15:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+    + added support for passing optional parameters to called function, f.e.:
+         proc p( a, b, ... )
+         qout( a, b, "X", ... )
+    * forbid creating function pointer when function is used with parameters,
+      f.e.: x:=@f1(1,2,3)
+
+  * harbour/source/compiler/complex.c
+    * cleaned all restrictions on reserved words I've found - if I missed
+      sth then please inform me. The previous behavior and some error
+      messages are used with -kc compiler switch
+
+  * harbour/source/rtl/symbol.prg
+  * harbour/source/rtl/tobject.prg
+    ! eliminated limitations in number of constructor parameters
+      (new syntax with passing optional parameters used)
+
+2006-12-24 16:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbcomp.c
+    - removed not longer used fExternal from compiler structure
+    * allow to pass array items by reference ( func(@a[1]) ) and some
+      cleanups in reference rules. Probably we should also block using:
+         @func(param1 [,param2,[,...paramN]])
+      and accept only @func()
+    ! fixed using statements in codeblocks used to initialize static
+      variables and some other cleanups (f.e. allow to use as static
+      initializers any functions which are later eliminated by expression
+      optimizer.
+
+2006-12-23 06:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * do not generate HB_P_FUNCPTR - it's not longer necessary
+    + added optimization for <exp> + 1, <exp> - 1 - disabled by default
+      because it changes error messages in hbtest, code like NIL + 1
+      generates 'argument error ++' instead of 'argument error +'. I'd like
+      you will decide what you prefer - faster code or strict Clipper error
+      messaged.
+
+  * harbour/source/common/expropt2.c
+    + added optimizations for <num> + <date>
+    + added ooptimizations for <exp> + 0, 0 + <exp>, <exp> - 0
+      This is also sth what may interact with operators overloading in object
+      system. When we will have strong typing then we should think about an
+      option which will optionally disable some optimizations - someone may
+      want to define arithmetic where <obj> + 0 gives differ then <obj>
+      results.
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    + added hb_compStatmentStart()
+    ! restrict MEMVAR and FIELD usage - now they have to be located before
+      executable statements like in Clipper.
+    ! generate error when PARAMETERS is used as file wide declaration.
+    ! generate errors when different executable statements are used before
+      first procedure - now such code was simply ignored without any errors.
+    ! generate valid error messages when some declarations are used in
+      wrong places
+    ! fixed setting begin of executable statement flag in different .prg
+      constructions.
+
+2006-12-22 11:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * do not use hb_param( pItem, HB_IT_BYREF ) but ISBYREF() macro
+
+  * harbour/include/hbdefs.h
+    * formatting
+
+  * harbour/include/hbexprb.c
+    ! fixed code generated for logical expressions when shortcutting
+      is enabled to be Clipper compatible
+
+  * harbour/source/compiler/cmdcheck.c
+    ! added missing break in -z compiler switch decoding
+
+  * harbour/source/compiler/hbfix.c
+    % added optimizations for code generated for logical expressions,
+      it strips a chain of HB_P_DUPLICATE -> HB_P_JUMP[TRUFALES] ->
+      HB_P_DUPLICATE -> HB_P_JUMP[TRUFALES] -> ...
+      In fact it should not be done here but because we do not have
+      any metacode level where such optimizations should be done and
+      PCODE is generated online then it will have to be here. Maybe
+      in the future we will add metacode.
+
+  * harbour/source/rdd/dbcmd.c
+    * make "M" alias Clipper compatible. After some thoughts I decided
+      that in some cases it can be usable so now "M" will set WA number
+      to 65535 like in Clipper.
+
+  * harbour/source/rdd/dbf1.c
+    * allow to open VFP DBFs with _NullFlags system command
+
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+    ! updated field size calculation for some some extended types.
+
+  * harbour/source/rdd/workarea.c
+    * generate RT error when CREATEFIELD() method does not accept some
+      parameters to avoid silent DBCREATE() failing.
+
+  * harbour/source/vm/macro.c
+    * removed hb_compMemvarCheck() - this function was not dooing
+      anything - only slows the TYPE() by calling hb_dynsymFind()
+      one or two times.
+    + added TODO note: memvars create by TYPE() have PUBLIC scope
+      in Clipper. Clipper also always tries to evaluate valid expressions
+      inside TYPE even if the contain UDF. UDF only stops evaluation
+      so:
+         TYPE( "(val:=1) + f() + (val2:=2)" )
+      creates in clipper public variable VAL but not VAL2.
+
+2006-12-19 23:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbf1.c
+    ! added missing 'else' and cleaned BCC warnings
+
+2006-12-19 22:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+    + added hb_compExprParamListLen()
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+    * use hb_compExprParamListLen()
+
+  * harbour/include/hbexprc.c
+    * generate error message for syntax like:
+         o:var()++ or o:var()+=10
+      only:
+         o:var++ and o:var+=10
+      is supported, just like for @o:var
+
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbstr.c
+    + hb_numDecConv() used to convert double value to/from binary integer
+      fields with fixed number of decimal places
+
+  * harbour/common.mak
+  * harbour/include/hbapicdp.h
+  * harbour/source/codepage/Makefile
+  + harbour/source/codepage/cptrdos.c
+  + harbour/source/codepage/cptrwin.c
+  * harbour/source/lang/Makefile
+  + harbour/source/lang/msgtrdos.c
+  + harbour/source/lang/msgtrwin.c
+    + added Turkish CPs and MSGs created by Bicahi Esgici
+  + harbour/source/codepage/uc1254.c
+  + harbour/source/codepage/uc857.c
+    + added unicode tables for Turkish CPs
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+    + added support for decimal places in binary integer fields ("I")
+    ! fixed currency field decoding ("Y") - it's integer binary value
+      not IEEE758 double. Warning: on write the value is rounded not
+      truncated like in VFP.
+
+2006-12-19 00:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * added support _" prefix when macro message is used in assignment context
+      also when -kc is used. We can block this feature for -kc but as long
+      as is not blocked it should work in the same way for -kc and -kh
+
+2006-12-18 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/bcc32.cf
+    * cleanup
+  + harbour/config/w32/xcc.cf
+    + added XCC support
+
+  * harbour/contrib/btree/hb_btree.c
+    * use hb_vmAtInit()/hb_vmAtExit() instead of INIT/EXIT functions defined
+      from C code
+
+  * harbour/contrib/libct/tab.c
+    * casting
+
+  * harbour/contrib/odbc/odbc.c
+    ! removed #include <malloc.h> - it should not be used with new C
+      compilers
+      I think that we should replace this library with hbodbc from xHarbour.
+
+  * harbour/contrib/ole/ole2.c
+    * updated for XCC
+
+  * harbour/include/hbdefs.h
+    * include stdint.h if available
+
+  * harbour/source/compiler/complex.c
+    ! fixed yet another stupid mistake in WITHOBJECT token
+
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+    + added HB_P_SWAP <n> PCODE
+
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+    ! fixed GPF during compilation of @:var, @:&var, @o:&var
+    + added support for @o:&var and @:var, @:&var inside WITH OBJECT
+      statement
+    * changed PCODE generated of ++,--,+=,-=,... 
+      Now left side expression is evaluated _ONLY_ once and when object
+      messages are used it's guarantied that exactly the same object
+      variable will be used. It also fixes some problems which exists
+      in Clipper. This optimization is enabled by -kh flag (by default)
+      and can be disabled with -kc.
+    % optimize ald macros in ++,--,+=,-=,... operations
+    * add automatically "_" prefix when macro message is used in assignment
+      context, f.e.:
+         s:="osCode"
+         o:=errorNew()
+         ? o:&s
+         o:&s := 100
+         ? ++o:&s
+         ? o:&s *= 5
+
+  * harbour/include/hblang.ch
+    - removed #xtranslate - this file is included by C code and some C
+      compiler do not like unknown directives
+
+  * harbour/utils/hbtest/rt_math.prg
+    + added test code for <op>assign and (pre/post)(inc/dec)rementation,
+      macro messages and WITH OBJECT
+
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtwin/gtwin.c
+    * casting and warning cleanup
+
+  * harbour/utils/Makefile
+    + added $(HB_UTILS)
+
+  - harbour/utils/hbpp/hbpp.h
+  + harbour/utils/hbpp/hbppdef.h
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/hbpptbl.c
+  * harbour/utils/hbpp/pragma.c
+    * renamed hbpp.h to hbppdef.h to avoid possible conflict with hbpp.h
+      in include directory
+    * casting and warning cleanup
+
+2006-12-18 18:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbcomp.h
+      + added extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
+      
+   * include/hbcompdf.h
+      + added 'int iLastLineErr' to HB_COMP structure
+      
+   * include/hbpp.h
+      + added extern BOOL hb_pp_eof( PHB_PP_STATE )
+      
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/compiler/harbour.yyc
+   * source/compiler/harbour.yyh
+   * source/compiler/hbgenerr.c
+      * fixed reporting errors in cases of unclosed delimiters or
+      unclosed control structures IF/WHILE/FOR/etc
+
+   * source/pp/ppcore.c
+      + added hb_pp_eof() function
+
+2006-12-18 14:19 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * doc/dirstruc.txt
+    + Add a oneliner description for: source/rdd/usrrdd, source/rtl/gtgui
+
+  * source/rtl/console.c
+    * Pacify false CG error messages in one more place, with a comment.
+
+2006-12-15 16:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/isprint.c
+  * harbour/source/rtl/left.c
+  * harbour/source/rtl/right.c
+  * harbour/source/rtl/strtran.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * general PCODE cleanup and address most of TODO/TOFIX notes in
+      source code:
+      ! fixed GPF traps when too long string or codeblock is generatd
+      + added support for 16MB codeblocks and strings
+      ! removed macrocompiler limitation for jumps range
+      ! fixed GPF when more then 255 local variables is used and added
+        support for 2^15 locals
+      ! removed all strtok() functions
+      % added optimization for all +=, -=, *=, %=, ^=, **= operations
+        when left side of expression is variable or array item
+      % added optimization for all +=, -=, *=, %=, ^=, **= operations
+        when left side of expression is object method and updated ++, --
+        for new code. It's still disabled until we will not add support
+        for late evaluated reference items to HVM
+      ! fixed a[++i]++ and similar operations (a[++i]*=2, ...). Now ++i is
+        executed only once. It's not Clipper compatible but it was in
+        TODO note in source code. It can be disabled by -kc option
+      * finished support to xHarbour like #pragma TEXTHIDDEN(1)
+      ! fixed local add int optimization when PARAMETERS used after
+        optimization changed local variable number over 255
+      ! fixed GPF trap when in HB_P_<op>EQ PCODEs when executed for
+        direct values
+      * others
+    ! fixed problems reported by Chen
+    * optimized strtran(), left(), right() to not create new string copy
+      when the same value is returned
+
+2006-12-13 18:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/console.c
+    * pacify false CG error messages - Chen Kedem modifications (sizeof(int)
+      in #if replaced by hardcoded 4 for compilers which does not allow to
+      use sizeof() in #if directives)
+
+  * harbour/TODO
+    - removed console.c cleanup note from TOFIX
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/source/common/expropt1.c
+    * minor code cleanup
+
+2006-12-12 14:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+    ! fixed typo in function name, should be: hb_stackLocalVariable()
+      not hb_stacklocalVariable()
+    + added hb_stackId()
+    * hide hb_stack declaration when HB_STACK_MACROS is not set
+
+  * harbour/source/vm/dynlibhb.c
+    * use hb_stackId()
+
+  * harbour/source/vm/estack.c
+    + added hb_stackId()
+    ! fixed some condition used to check stack access - they were
+      reporting internal errors for valid code
+
+  * harbour/source/vm/hvm.c
+    ! fixed code which executed hb_stackLocalVariable() with pointer
+      to SHORT not int
+
+2006-12-11 22:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/memoline.c
+    ! added fix sent to me by Randy Portnoff - it's a little bit differ
+      then the one Randy sent to list but this one seems to be correct.
+      I never used this function in Clipper and made only very basic
+      tests. I believe that Randy make better tests and this fix will
+      not break some other constructions.
+
+2006-12-11 14:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/hsx/hsx.c
+    * synced with xHarbour
+
+  * harbour/source/rtl/gtsln/gtsln.h
+    * changed #if to #ifdef to avoid problems with some unofficially
+      patched slang versions
+
+2006-12-09 17:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/bcc16.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/os2/icc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/mingw32.cf
+  * harbour/config/w32/msvc.cf
+  * harbour/config/w32/rsxnt.cf
+  * harbour/config/w32/watcom.cf
+    * added respecting HB_GT_DEFAULT, though it's quite possible that I'll
+      remove it at all soon.
+    * some other cleanup
+
+  * harbour/source/compiler/complex.c
+    ! fixed wrongly replicated from FLEX lexer condition used to DECLARE.
+      Now they should be the same as in FLEX lexer but IMHO they are not
+      Clipper compatible.
+
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rdd/workarea.c
+    ! fixed sizes of some C stack buffers and strncpy() parameters
+    * use hb_strn*() instead of strn*() in few places to be sure that 0
+      is always stored in destination buffer
+
+  * harbour/source/rtl/gtcgi/gtcgi.c
+    * change reported GT name from "Standard stream console" to
+      "Raw stream console" to make it differ then GTSTD one.
+
+2006-12-08 05:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/postinst.sh
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/watcom.cf
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/include/hbapifs.h
+  * harbour/include/hbexprc.c
+  * harbour/include/hbsetup.h
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbdate.c
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+  * harbour/source/common/hbverdsp.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/fixflex.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbfunchk.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rtl/accept.c
+  * harbour/source/rtl/ampm.c
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/defpath.c
+  * harbour/source/rtl/errorint.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/fkmax.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/langapi.c
+  * harbour/source/rtl/seconds.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/rtl/gtcrs/chrmap.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/runner.c
+  * harbour/utils/hbmake/hbmlang.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+  * harbour/utils/hbver/hbverfix.c
+    * general code cleanup: all strcpy() and strcat() replaced hb strn*()
+      and hb_strn*(), sprintf() by snprintf(), etc.
+      It fixed some possible buffer overflow but it's also possible that
+      it will exploit some some hidden so far problems but I strongly
+      prefer to know about them ASAP to fix them before final 1.0 release.
+    ! fixed bug I introduce in codeblock falgs which disabled early macro
+      evaluation in codeblocks.
+    ! added missing protection against execution by bison destructor for
+      used CBSTART token on syntax error.
+    % use PP stringify logik added for FLEX support to remove all redundant
+      spaces in stringified for early macro evaluation codeblocks and add
+      spaces between operators if after preprocessing they were removed.
+      Now we are supporting also some code which cannot be compiled by
+      Clipper.
+    % cleaned and improved the speed of printer redirecting in console code.
+      Chen please check if CG still reports problems and if not ubdate
+      TODO/TOFIX or inform me about them.
+    * some cleanups in building process for different *nixes: MacOSX, SunOS,
+      *BSD, etc.
+    * removed not longer necessary (I hope) compiler flag to force default
+      'char' type as signed. Now Harbour should work with signed and unsigned
+      char without any problems. To other developers: please remember that
+      when you are using 'char' as 8 bytes signed integer then it's a bug.
+      Always explicitly use: 'signed char' in such case. On some platforms
+      it's not possible to set default type for 'char' so if you hardcode
+      that 'char' is signed or unsigned somewhere then code will not be
+      portable. Chen if you will find a while to also rebuild Harbour with
+      BCC and -K switch to make some tests with CG then I'll be thankful.
+
+2006-12-04 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+    * added support for extended string (e"...") to macro compiler and
+      strings with embedded ASCII NUL character (chr(0))
+
+  * harbour/source/rtl/valtostr.c
+    * added HB_STRTOEXP() function which converts string item to valid
+      expression which can be compiled by macro compiler. String may
+      contain any characters.
+
+  * harbour/source/rtl/persist.prg
+    * use HB_STRTOEXP() for sting conversion and 0d....... for date
+      constants
+
+  * harbour/source/rtl/readvar.prg
+  * harbour/source/rtl/xsavescr.c
+    * minor cleanup
+
+2006-12-01 18:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    + added packing *.yy[ch] files
+
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbpp.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/pp/ppcore.c
+    + added hb_comp prefix to grammar/lexer compiler public functions to
+      reduce possible conflict with 3-rd party code which may use default
+      yy prefix.
+    ! do not use bison destructors for expressions. Internal bison logic
+      cannot properly detect if expression was used or not in some of our
+      grammar rules and it's possible that some expressions will not be freed
+      and some other freed twice.
+    ! added protection against multiple destructors execution for CBSTART
+      and LITERAL tokens
+    * added small garbage collector for deallocating expressions which were
+      not freed (such situation can happen in syntax errors)
+    % some optimizations in used structures to reduce their sizes
+    + added protection against execution PCODE optimizations for functions
+      which were not cleanly compiled.
+
+  * harbour/source/rtl/idle.c
+    * use const in nanosec() timeout declaration
+
+2006-11-30 03:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+    * removed declaration and all references to global variable hb_comp_data
+      it's not longer necessary after last modifications
+
+  * harbour/source/compiler/harbour.yyc
+    * synced compiler grammar parser
+
+  * harbour/source/macro/macro.yyc
+    ! regenerated macro compiler grammar parser with -p hb_macro - I forgot
+      about this prefix before last commit
+
+2006-11-29 23:30 UTC+0100 J. Lefebvre (jfl/at/mafact.com)
+  * makefile.vc
+  * make_vc.bat
+    ! Fixed the COPY command to work on Windows-NT (/Y flag isn't supported)
+    * Sync. with makefile.bc & make_b32.bat.
+
+2006-11-28 16:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added hbcompdf.h and hbstdgen.ch
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/macro/macro.y
+    + added #define __STDC__ as workaround for __BORLANDC__ which seems
+      to not properly understand ANSI C declarations. It should pacify
+      some of BCC warning messages about undeclared functions
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+    * updated generated grammar parser files for above modification
+      in parser definition files (.y)
+
+2006-11-29 16:11 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * makefile.bc
+  * make_b32.bat
+    ! Fixed the COPY command to work on Windows-NT (/Y flag isn't supported)
+
+  * TODO
+    - Remove TOFIX item with were fixed
+
+2006-11-29 10:30 UTC+0100 J. Lefebvre (jfl/at/mafact.com)
+  * harbour/makefile.vc
+    * Sync. with makefile.bc for msvc compiler.
+
+2006-11-28 21:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.bc
+  * harbour/config/c.cf
+    ! fixed typo in last modification - I have bad day today.
+
+2006-11-28 21:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.bc
+  * harbour/config/c.cf
+    * changed default settings to not use bison for generation new
+      grammar files. Now developers who will want to update our
+      grammar definition files for compiler and macro compiler
+      should set environment variable HB_REBUILD_PARSER=yes
+      to force preprocessing new rules by bison and should
+      remember to update before committing modifications in *.y
+      file(s) corresponding *.yy[ch] files by copping the new
+      ones generated by parser.
+    ! fixed typo in makefile.bc - instead of $(HARBOUR_DIR)\macro.yyc
+      should be $(MACRO_DIR)\macro.yyc
+
+2006-11-28 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.y
+    * use HB_COMP_PARAM macro in expression destructor instead of
+      direct accessing hb_comp_data global variable to make compiler
+      code MT safe
+
+  + harbour/source/compiler/harbour.yyc
+  + harbour/source/compiler/harbour.yyh
+  + harbour/source/macro/macro.yyc
+  + harbour/source/macro/macro.yyh
+    + added generated by bison 2.3 grammar parsers for compiler and
+      macro compiler
+
+  * harbour/config/dos/global.cf
+  * harbour/config/dos/install.cf
+  * harbour/config/w32/global.cf
+    * changed CP definition for COMMAND.COM so it can work as standalone
+      command and added DIRSEP macro
+
+  * harbour/config/c.cf
+    + added support for HB_REBUILD_PARSER=no environment variable.
+      When it's set then during build process grammars parsers
+      will not be generated from grammar definitions files (.y)
+      but instead the predefined ones (.yyc) used.
+      Tested and works well in Linux and DOS
+
+  * harbour/makefile.bc
+    + added support for HB_REBUILD_PARSER=no environment variable.
+      Not tested. It's even possible that I've just broken the BCC
+      compilation with this modification. Please check it and fix
+      me if necessary.
+
+2006-11-28 05:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.c
+    ! fixed typo in last modification which caused memory leak
+
+  * harbour/source/vm/codebloc.c
+    + initialize freed codeblock structure with pointer to static PCODE
+      which returns NIL for buggy .prg destructors.
+
+  * harbour/ChangeLog
+    ! fixed date of my last commit
+
+2006-11-28 02:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/codebl.prg
+  * harbour/tests/langmsg.prg
+  * harbour/utils/hbpptest/pp_test.prg
+  * harbour/utils/hbpptest/pretest.prg
+  * harbour/samples/pe/license.txt
+    * removed carriage return (\r) characters
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbapi.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/vm/macro.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/ppcomp.c
+    * separated HB_COMP and HB_MACRO definitions and added HB_COMMON
+      structure used when HB_COMMON_SUPPORT macro is set
+    * hide HB_MACRO internal definitions in hbapi.h when HB_MACRO_SUPPORT
+      is not set
+    These modifications should help in future compiler and macro compiler
+    integration into single binary.
+
+    + added clipper compatible error message in unclosed structures
+      In general we should cleanup rules to make error reporting more
+      user friendly and Clipper compatible
+    % eliminated unnecessary allocations
+    + added int mode member to common part of HB_COMP and HB_MACRO
+      structure. It's initialized to HB_MODE_MACRO or HB_MODE_COMPILER
+    + add TOFIX note about memory leaks in cParamTypes and pParamClasses
+      members of COMDECLARED structure. It's a part of unfinished strong
+      typing code. I do not know what Ryszard plan to do with it so I'm
+      leaving it as is. The part of strong typing which were operating
+      on emulated HVM stack has been removed.
+    * removed static variables from genjava.c. Also gencli.c and genobj32.c
+      should be fixed but this will not make this code working so I haven't
+      touched it.
+    * changed 3-rd parameter of hb_compIdentifierNew() from BOOL to int.
+      Now it can have the following values: HB_IDENT_STATIC, HB_IDENT_FREE,
+      HB_IDENT_COPY. This modification will allow in the future using common
+      for static and dynamic symbol hash table without additional source code
+      changes. I also plan to use identifier hash table in PP the reduce
+      number of memory allocations and speed-up preprocessing by using
+      second level hashing for hash keys.
+
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    * changed HB_MACRO_SUPPORT to HB_COMMON_SUPPORT to automatically detect
+      possible conflicts between compiler and macro compiler
+    ! removed first detected conflict which existed for long time
+    + added hb_compExprMacroAsAlias() function to convert HB_ET_VARIABLE
+      expression to HB_ET_ALIAS.
+
+  * harbour/source/macro/macro.y
+    ! fixed using prefix&macro-> and &macro.sufix-> when macro cannot be
+      substituted by compiler, f.e.:
+         M->v := NIL
+         x := "&v.1->fld"
+         M->v := "v"
+         M->v1:= "data"
+         ? &x
+    ! fixed memory leak in macro substituted expression compilation
+
+  * harbour/source/vm/macro.c
+    ! fixed initialization of some HB_MACRO members
+    ! fixed value returned for type("&V->F") when alias does not exist
+    - removed not longer used hb_comp_bShortCuts global variable
+
+2006-11-25 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    ! fixed parenthesis in expression
+
+  * harbour/source/pp/ppcore.c
+    ! fixed code block tokens stringify
+
+2006-11-25 19:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/macro/macro.y
+    + added support for strings with with ASCII NUL character
+      Strings with ASCII NUL character are not stored with hash table
+      but dynamically allocated/deallocated
+    ! fixed compilation of strings with ASCII NUL character which
+      can appear in escaped strings e"..." or after compiler chr(0)
+      optimization
+    % removed some not longer necessary memory allocations
+
+  * harbour/source/vm/macro.c
+    ! fixed GPF caused by HB_MACRO structure double freeing
+    - removed some code which was added as workaround for the old
+      behavior of HVM QUIT and false FM stat memory leak reports.
+      It's not longer necessary in current HVM.
+
+  * harbour/source/common/hbstr.c
+    ! fixed final string size calculation in extended strings
+
+  * harbour/source/compiler/gencli.c
+    * cleaned BCC warning
+
+2006-11-25 09:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * common.mak
+    ! hbstrong.c is removed
+
+2006-11-24 19:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/mingw32.cf
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbver.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/common/hbver.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  - harbour/source/compiler/harbour.simple
+  - harbour/source/compiler/harbour.slx
+  - harbour/source/compiler/harbour.sly
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbgenerr.c
+  - harbour/source/compiler/hbslex.c
+  - harbour/source/compiler/hbstrong.c
+  * harbour/source/compiler/hbusage.c
+  - harbour/source/compiler/simplex.c
+  * harbour/source/macro/Makefile
+  - harbour/source/macro/macro.slx
+  - harbour/source/macro/macroslx.c
+  * harbour/source/pp/ppcore.c
+  * harbour/utils/hbpp/hbppcomp.c
+    - removed SIMPLEX references
+    ! fixed memory leak in request _GET_
+    * use hb_compIdentifiersNew() in INLINE and AUTOOPEN structures
+      members
+    * eliminated all internal exit() calls. Now hb_compGenError() with
+      fatal errors does not interrupt application but only sets
+         HB_COMP_PARAM->fExit = TRUE;
+      What should cause silent clean application close.
+      Please keep it in mind making future modifications and do not
+      introduce and exit() function call.
+    + added support for \x<hex> and \<oct> quoting in extended strings
+      (just like in C). Warning !!!. Embedded 0 bytes are supported by
+      PP, lexer and expression optimizer but not by bison. To make them
+      working it will be necessary to change Literal terminal symbol
+      holder and add length field in bison rules and also change the hash
+      table used to hold identifiers, literals and macros to store and use
+      real string length. If someone will try to use strings with embedded
+      0 now then they will be cut but nothing worser should happen.
+
+2006-11-24 07:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.y
+    * fixed some memory leaks which cannot be addressed by destructor
+      because they are inside our own code which were not freeing
+      properly passed expressions, f.e.:
+         x:=1->f
+      or:
+         x:=field->(1)
+      This should close the memory leaks problem in grammar parser.
+    * indenting
+
+2006-11-24 03:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/Makefile
+    * commented out YACC_FLAGS = -p hb_comp
+      this should not be committed, it will be used in the future.
+
+2006-11-23 20:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbcomp.h
+  + harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbpp.h
+  * harbour/include/hbvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbfunchk.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/macro/macro.y
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/macro.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbpp.h
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+    * changed the internal compiler API to be MT safe.
+      All global and static non constant variables replaced by
+      HB_COMP structure which have all compiler context settings.
+      It's possible to allocate simultaneously many compiler contexts
+      and compile code. Only constant/read only variables are shared.
+      In macro compiler HB_COMP is replaced by HB_MACRO.
+      In source code I everywhere used to macros: HB_COMP_DECL and
+      HB_COMP_PARAM which are equivalents of old HB_MACRO_DECL and
+      HB_MACRO_PARAM definitions.
+      We will only have to change compiler FATAL errors support to
+      not execute exit() for non batch systems.
+    * make macro compiler fully MT safe
+    * removed not longer used definitions and variables
+    ! add direct accessing to PP line number information - it fixes missing
+      line numbers reported recently
+    ! added generating .ppo files when tokens are teken directly by compiler
+      - it fixes empty .ppo file problem
+    ! clear hb_stack internall variables after removing hb_stack to avoid
+      possible GPF if application still works and try to access unexsiting
+      hb_stack
+    ! do not allocate new memory block when final FM statistic report is
+      generated - it fixes problem with GPF when application compiled with
+      FM statistic exits and CLIPPER envvar is set.
+    ! fixed memory leak hb_cmdargCheck()
+    ! added to harbour.y symbol destructors - it should fixes memory leaks
+      in syntax errors but it uses quite new bison feature which is not
+      fully supported yet. Unfortunately it's also not MT safe and the
+      destructors implementation in 1.875c does not respect %parse-param.
+      Bison documentation says that it should so I hope it will be fixed
+      soon (or maybe even already is in the newest bison versions) before
+      I'll add multi context compilation support. If not then I will have
+      to add some workaround. I can pass compiler context pointer inside
+      YYSTYPE using hack in a lexer but it will force really huge number
+      modifications in existing bison rules so probably it will be much
+      easier to fix bison or write a small tool to update generated parser.
+    * other modifications - the total size of patch is nearly 1MB and
+      detail description will have to take me few days.
+
+2006-11-21 14:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    + added missing compiler/hbcomp.c file
+
+2006-11-21 05:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/complex.c
+  + harbour/source/compiler/hbcomp.c
+    * added missing header and file in my previous commit
+
+2006-11-21 03:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/compiler/Makefile
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/harbour.slx
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbident.c
+  * harbour/source/compiler/ppcomp.c
+  + harbour/source/compiler/complex.c
+    + added new PP based compiler lexer - it's smaller, MT safe and a
+      little bit faster then then the FLEX version.
+    + added HB_COMP structure to hold compiler data in future MT version
+    + added global variable HB_COMP_PTR hb_comp_data to make conversion
+      to MT easier - now it holds only PP and lexer data.
+    * update PP related code in compiler to be MT safe
+    + added %pure-parser, %parse-param and %lex-param for bison to generate
+      MT safe grammar parser.
+    * updated FLEX to work with recent compiler modifications and pure-parser
+      bison API
+
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/source/macro/Makefile
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    * use hb_macro prefix instead of hb_comp in bison/flex parser/lexer
+      used in macro compiler to avoid possible conflicts in the future
+    * separated lexer data
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+  * harbour/source/vm/macro.c
+    * removed not used members from HB_MACRO structure to make it
+      cleaner before creating common to compiler and macro compiler
+      structure
+    + added new token HB_PP_TOKEN_EPSILON
+    + added void * cargo parameters passed to executed user functions
+    + hb_pp_tokenGet(), hb_pp_tokenToString(), hb_pp_tokenBlockString()
+      functions for new PP based compiler lexer
+
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbpp.h
+  * harbour/utils/hbpp/hbppcomp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpplib.c
+  * harbour/utils/hbpp/pragma.c
+    * updated to compile with recent compiler header file modifications
+
+
+    PP, new lexer and most of grammar parser should be MT safe. Now we should
+    update all compiler functions to pass pointer to HB_COMP data structure
+    where we should all current global variables. This structure as first
+    member should have HB_CMPCOMMON structure which will hold common to
+    compiler and macro compiler data. Ryszard I think you are the best person
+    to define this structure.
+
+    We have new lexer which is MT safe but please note that it has to be
+    extensively tested so I would like to ask everybody to compile as much
+    as possible different code and check if the final programs work as
+    expected. Working on new code I removed some limitations existing in
+    FLEX though not all. At the beginning I tried to replicate the exact
+    FLEX behavior but I've found that in few places it does not work as
+    it should so I begin to encode rules in a way which remove some
+    limitations. In fact now it's much easier to control some things.
+    I kept the FLEX code working and made all necessary modifications
+    so it still can be used but keeping FLEX working cost us IMHO too
+    much. It's not possible to introduce some improvements to grammar
+    parser. All identifiers, keyword and macros returned by new lexer
+    are converted to upper letters, do not have to be freed by hb_xfree()
+    and is guarantied that will be always accessible. So from grammar file
+    we can remove all hb_compIdentifierNew( hb_strupr($1), TRUE ) what
+    should give noticeable speed improvement but will break the FLEX code.
+    Ryszard and other you will have to decide if we will support FLEX in
+    the future. We can also clean the code and remove most of other
+    redundant hb_strupr() and hb_strdup() used in many places. BTW only
+    one terminal symbol can be returned with lower letters: DOIDENT
+    and I make it intentionally so it's possible to use:
+         DO prog1 WITH "sth"
+    on case sensitive file systems so this symbol should be cloned in
+    upper cases as function symbol but used without modification as
+    file name. It's current behavior but I'm not sure you will want
+    to keep it. Maybe compiler switch to always convert file names
+    created from
+         DO <id> [WITH <params,...>]
+    to lower cases will be better. Please think about it.
+
+2006-11-20 15:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macrolex.c
+    ! fixed bad typo in NIL, IIF, .AND., .NOT. tokens parsing
+
+2006-11-18 15:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    * do not allocate separate memory in macro compiler for terminal
+      symbols which needs string representation - it fixes some set
+      of memory leaks and increase a little bit macro compilation
+    ! fixed accessing freed memory in:
+         private cMacro := "cEarly", cEarly := {"Early"}
+         @ 12,10 GET &cMacro[1]
+    ! fixed GPF in:
+         p:=@left()
+      and similar expressions
+
+  * harbour/source/common/expropt2.c
+    % minor modification
+
+  * harbour/source/compiler/harbour.c
+    ! fixed HB_TRACE message
+
+2006-11-17 22:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed casting - it resolves problem reported by Alexander with
+      preprocessing chr(255) from static buffer (PP used by .prg code)
+
+  * harbour/source/macro/macro.y
+    + added some comments
+
+  * harbour/source/macro/Makefile
+    * commented out compilation of FLEX based lexer for macro compiler and
+      added compilation of new small lexer written in pure .c
+
+  * harbour/common.mak
+    * replaced macrol.obj by macrolex.obj
+
+  + harbour/source/macro/macrolex.c
+    + new small lexer written in pure .c. The code is much smaller,
+      MT safe and more friendly for grammar parser. I think it should
+      be also faster but I haven't made any tests yet. When we update
+      grammar parser to not free string representation of terminal
+      symbols then we should expect some farther speed improvement,
+      it will also resolve some set of memory leaks like in:
+         type("user input")
+      and will allow to make some parts of grammar parser common to
+      compiler and macro compiler by removing #if[n]def HB_MACRO_SUPPORT
+
+2006-11-17 14:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbstr.c
+    ! fixed decoding strings without trailing ASCII NUL character in
+      hb_strRemEscSeq()
+
+  * harbour/source/pp/ppcore.c
+    + added decoding C escaped strings (e"...") to PP so they can be
+      preprocessed like a normal strings, it's not enabled when
+      HB_C52_STRICT macro is set
+
+2006-11-17 13:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.slx
+  * harbour/source/compiler/harbour.slx
+    * changed parameters in function: hb_compStrToNum() now the string
+      size is passed explicitly so it can work with strings which does
+      not have trailing ASCII NUL character.
+
+  * harbour/source/macro/macro.y
+    * indenting
+
+  * harbour/include/hbmacro.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+    * added two new functions for macro compiler: hb_macroLexNew() and
+      hb_macroLexDelete() to clearly separate lexer from grammar parser.
+
+  * harbour/source/compiler/harbour.l
+  * harbour/source/common/hbstr.c
+  * harbour/source/pp/ppcore.c
+    * added error generation for wrong e"..." strings and fixed \" quoting
+    * removed \q quoting
+
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+    * added small description in headers
+
+  * harbour/common.mak
+  * harbour/source/pp/Makefile
+  * harbour/source/pp/pplib.c
+  + harbour/source/pp/pplib2.c
+  * harbour/include/hbextern.ch
+    + added auto destructor for allocated PP context, it's not longer
+      necessary to execute __PP_FREE() so this function was moved from
+      the standard .prg API to file with backward compatible functions
+    * changed __PREPROCESS() to __PP_PROCESS()
+    * moved setting std rules to separate file so now if user uses PP
+      with only his own rules we are not forcing linking static tables
+      which are quite huge (over 100kb)
+      To include stdandard rules in static binaries user should add
+      to his code:
+         REQUEST __PP_STDRULES
+
+  + harbour/source/pp/pplib3.c
+    * old PP functions for backward compatibility:
+         __PPADDRULE(), __PREPROCESS(), __PP_FREE()
+      Please note that using this function is not MT safe. They should
+      work like with old PP code. Using any of this function automatically
+      forces linking __PP_STDRULES
+
+2006-11-15 14:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+    + added
+         void * pLex;
+      member to HB_MACRO structure - it will be necessary for MT safe
+      macro parser
+
+  * harbour/include/set.ch
+  * harbour/include/hbexprb.c
+  * harbour/source/macro/macro.l
+  * harbour/source/macro/macro.y
+    * indenting, formatting and converting tabs to spaces
+
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+    * make HB_PP_TOKEN structure public for other code and changed
+      public PP API to not force including static rules by programs
+      which does not need them.
+    + added basic API for using PP as lexer
+    * divided HB_PP_TOKEN_MACRO to HB_PP_TOKEN_MACROVAR and
+      HB_PP_TOKEN_MACROTEXT and mark
+         [<keyword>][&<keyword>[.[<nextidchars>]]]+
+      as HB_PP_TOKEN_MACROTEXT not pair HB_PP_TOKEN_KEYWORD and
+      HB_PP_TOKEN_MACRO
+      It allows easier integration PP as (macro)compiler lexer and
+      fixes preprocessing [<keyword>][&<keyword>[.[<nextidchars>]]]+
+      in some patterns.
+
+  * harbour/utils/hbtest/Makefile
+    + added PP library to linked library list
+
+  * harbour/source/macro/macro.y
+    + added seaport to use PP as lexer. It's disabled by default and
+      can be enabled using by defining HB_PP_MACROLEX. It eliminates
+      using FLEX or SIMPLEX lexer in macro compiler. Now it emulates
+      the behavior of FLEX lexer because I wanted to minimize the
+      modification but in fact because parsed token are freed when
+      macro compiler finish its job then we can resolve RT memory
+      leaks which apear during parsing wrong expressions. It will be
+      enough to drop allocating memory for new terminal symbols and
+      using them as is like in compiler. It will also quite nice
+      simplify include/hbexpr*.c code and will allow to move some
+      functions to COMMON library. I want to make also pure compiler
+      code MT safe so I will have to add passing pointer to a structure
+      with compiler context just like in macro compiler. It means that
+      if we define a structure which will be common to compiler and macro
+      compiler with local (not common) data stored in other structure for
+      which will will keep only a pointer then we will be able to move most
+      of include/hbexpr*.c code to common library. But I do not want to
+      make farther modification without consultation without Ryszard.
+      Also to make PP default lexer some farther modifications should
+      be done in core PP code and include/hbexpr*.c files to not reduce
+      the speed. Now using HB_PP_MACROLEX for sure will have to cause
+      speed reduction in macro compiler. But if we make necessary
+      modifications then we should keep at least the same speed or
+      probably reach noticeable better results.
+
+2006-11-14 16:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * common.mak
+    * Reverted a change of 2006-10-04 09:02
+
+2006-11-14 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    * removed to resolved problems from TODO/TOFIX list
+
+  * harbour/include/hbexprb.c
+    * indenting and tab to spaces conversion
+
+  * harbour/source/compiler/ppcomp.c
+    ! fixed typo which cased that dump buffer was not ended
+      with \0 character
+
+2006-11-13 20:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    ! fixed the problem reported by Enrico in code like:
+         IF ["] $ var
+      Unfortuantelly this fix also breaks some valid expressions like:
+         x := a[ f("]") ] $ "test"
+         x := a[ f( "'" ) ] $ "test"
+      what is also Clipper compatible anyhow I think that in the future
+      we may want to break Clipper compatibility and allow compilation
+      of such code.
+
+  * harbour/doc/pp.txt
+    * updated documentation for the above modification
+
+2006-11-13 11:22 UTC+0200 Chen Kedem <niki@actcom.co.il>
+  * TODO
+    - Remove one TOFIX item with was fixed (PP of a long line).
+    + Add 3 TOFIX items (these are all that I know of).
+
+  + doc/pp.txt
+    * PP description by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+
+2006-11-13 03:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    + pass GTK paths to GCC in hb* scripts when -xbgtk switch is used
+
+  * harbour/contrib/rdd_ads/rddads.h
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * indenting and casting
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * cleaned typos in comments
+
+  + harbour/tests/speedtst.prg
+    + added speed test
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    + added HB_PP_TOKEN_ISNEUTRAL() macro to make code a little bit more
+      readable
+
+  * harbour/include/std.ch
+    + added some missing old PP commands
+
+  * harbour/source/Makefile
+    * minor modification in order of compiled libraries
+
+  * harbour/source/pp/pplib.c
+    * changed the PP interface for .prg code.
+      Now following functions are supported:
+
+         __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] ) -> <pPP>
+            initialize new PP context and return pointer to it.
+            when <cStdChFile> is empty string ("") then no default rules are
+            used  only the dynamically created #defines like __HARBOUR__,
+            __DATE__, __TIME__, __PLATFORM__*
+
+         __PP_FREE( <pPP> )
+            free PP context.
+
+         __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] )
+            add new (or replace previous) include paths.
+
+         __PP_RESET( <pPP> )
+            reset the PP context (remove all rules added by user or
+            preprocessed code)
+
+         __PP_ADDRULE( <pPP>, <cDirective> )
+            preprocess and execute new preprocessor directive
+
+         __PREPROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+            preprocess given code and return result
+
+      User can create more then one PP context and then use each of them
+      separately. Any modification in one context have no effect in other.
+
+2006-11-12 09:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+     * Fixed pptable.c dependencies
+
+2006-11-10 17:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/rddads.h
+    + added #define WIN32 when HB_OS_WIN_32 is set to not force -DWIN32
+      compiler switch
+
+  * harbour/source/pp/ppcore.c
+    * cleaned BCC warnings
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed ordKeyGoto() positioning when active filter is set and no
+      controlling order
+
+2006-11-10 12:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+    + added ${L_USR} to gcc parameters
+
+  * harbour/source/pp/ppgen.c
+    ! fixed minor typo in printf() format
+
+2006-11-10 02:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/pplib.c
+    * restored support for old hb_inLine() syntax
+    + added support for hb_inLine() to new PP. It can be enabled by
+      -kI compiler switch. It's disabled by default.
+      The new hb_inLine{} syntax is:
+         [ <exp> ] hb_inLine [ ( [<params,...>] ) ] { [ <c_code> ] } [ <exp> ]
+      <c_code> can contain new line characters.
+      Nested hb_inLine{} in <params,...> is not supported. If you think
+      it's important I can add it in few lines.
+      This version does not break any valid Clipper syntax, hb_inLine is
+      not reserved word and hb_inLine can be repeated many times in the
+      same line. F.e. this code can be properly preprocessed and compied if
+      you disable in compiler old hb_inLine() syntax and enable the new one
+      by -kcI Harbour compiler switch:
+
+         proc main()
+         local hb_inLine := " (var) "
+         ? hb_inLine{ hb_retc("inLine"); } + hb_inLine(" parameter ") {
+              hb_retc( hb_parc( 1 ) );
+              } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
+           hb_inLine() + "{}"
+         return
+         function hb_inLine()
+         return " func() "
+
+      So from user point of view this version have real "inline" syntax.
+      To be clear: I'm not a fun of any C inline extensions. They works
+      only when we use .c code as compiler backend so the code which uses
+      them cannot be used in .hrb files and any other format we will add
+      in the future which do not support later C code compilation. F.e it
+      will not work in compiler integrated with HVM or with .NET
+      Anyhow if someone finds it useful then I think that it should be
+      properly implemented. This is the reason I added the new version.
+      The old one I left only for backward compatibility. It breaks any
+      code which uses hb_inLine keyword can be used only once in a line
+      and it does not have "inline" so IMHO it should not be enabled by
+      default.
+      I would like to hear your opinion about default compiler switches:
+         1. should we disable both: hb_inLine() and hb_inLine {}
+         2. should we disable hb_inLine() and enable hb_inLine {}
+         3. should we disable hb_inLine {} and enable hb_inLine()
+         4. should we enable both: hb_inLine() and hb_inLine {}
+
+  + harbour/tests/hbinline.prg
+    + added test code for new hb_inLine{} syntax
+
+  * harbour/tests/inline_c.prg
+    ! replaced direct access to HB_ITEM body by API function calls
+
+2006-11-09 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/include/hbstack.h
+     * Added HB_EXPORT to hb_stackReturnItem()
+
+2006-11-09 14:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   - harbour/utils/hbpp/hbpptable.c
+   + harbour/utils/hbpp/hbpptbl.c
+   * harbour/utils/hbpp/Makefile
+   * harbour/common.mak
+     * Renamed hbpptable.c->hbpptbl.c to follow 8.3 naming convention
+
+2006-11-09 09:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+     * Adapted to the new Preprocessor utility ppgen.exe
+     * Cleaned hbpp.exe dependecies due to recent changes
+   * harbour/makefile.vc
+   * harbour/common.mak
+     * Cleaned hbpp.exe dependecies due to recent changes
+   * harbour/include/hbapi.h
+     * Added HB_EXPORT to hb_gcAlloc()
+   * harbour/include/hbstack.h
+     * Added HB_EXPORT to hb_stackSelfItem()
+   * harbour/source/vm/fm.c
+     * Added dipslaying contents of unreleased blocks at
+       program exit, together with logging unreleased memory
+       blocks report to fm.log file. Borrowed from xharbour.
+   - harbour/utils/hbpp/ppcomp.c
+   - harbour/utils/hbpp/ppcore.c
+   - harbour/utils/hbpp/pplib.c
+   - harbour/utils/hbpp/pptable.c
+   + harbour/utils/hbpp/hbppcomp.c
+   + harbour/utils/hbpp/hbppcore.c
+   + harbour/utils/hbpp/hbpplib.c
+   + harbour/utils/hbpp/hbpptable.c
+     * Rename harbour/utils/hbpp/pp*.c to harbour/utils/hbpp/hbpp*.c
+
+2006-11-08 00:39 UTC+0200 JF Lefebvre (jflefebv at mafact com)
+   * harbour/makefile.vc
+   * harbour/common.mak
+     * Adapted to the new Preprocessor utility ppgen.exe
+       Someone should rename the following files into utils/hbpp
+        ppcomp.c -> hbppcomp.c
+        pplib.c -> hbpplib.c
+        ppcore.c -> hbppcore.c
+        pptable.c -> hbpptable.c
+
+2006-11-08 17:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed type checking for "string" type. It should be translate
+      to character not symbol item type.
+
+2006-11-08 13:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    * cleaned two warnings generated by old GCC versions
+
+2006-11-08 12:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    + added linker parametrs to hbcc
+
+  * harbour/include/hbapi.h
+    + added hb_retclenAdoptRaw()
+
+  * harbour/include/hbapifs.h
+  * harbour/source/common/hbfsapi.c
+    * changed first parameters of hb_fsAddSearchPath() to const char *
+
+  * harbour/include/hbclass.ch
+    * update for new PP. I think that now we can try to create final
+      version of our OOP rules.
+
+  * harbour/include/hbdefs.h
+    + added UCHAR and SCHAR typedefs
+
+  * harbour/include/hbrddcdx.h
+    * indenting
+
+  * harbour/source/rdd/workarea.c
+    ! fixed minor typo
+
+  * harbour/source/common/hbdate.c
+  * harbour/source/rtl/dates.c
+    * moved hb_dateToday() and hb_dateTimeStr() from RTL to COMMON library
+
+  - harbour/include/hbpp.h
+  - harbour/source/pp/ppcomp.c
+  - harbour/source/pp/ppcore.c
+  - harbour/source/pp/pplib.c
+  - harbour/source/pp/pptable.c
+  - harbour/source/pp/pragma.c
+  * harbour/utils/hbpp/Makefile
+  * harbour/utils/hbpp/hbpp.c
+  + harbour/utils/hbpp/hbpp.h
+  + harbour/utils/hbpp/ppcomp.c
+  + harbour/utils/hbpp/ppcore.c
+  + harbour/utils/hbpp/pplib.c
+  + harbour/utils/hbpp/pptable.c
+  + harbour/utils/hbpp/pragma.c
+    * moved all PP code to harbour/utils/hbpp
+      It's interesting and working preprocessor and the code can be
+      usable for some other things so I do not want to remove it.
+      Probablly we should move it to contrib/hbpptext
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbsetup.ch
+  + harbour/include/hbpp.h
+  + harbour/include/hbstdgen.ch
+  * harbour/source/common/hbstr.c
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/hbgenerr.c
+  + harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/Makefile
+  + harbour/source/pp/ppcore.c
+  + harbour/source/pp/pplib.c
+  + harbour/source/pp/ppgen.c
+    + New PP code written from scratch. It works in similar way to
+      Clipper PP even the error codes are replicated. The code is MT
+      safe does not have any limitation on size of preprocessed code,
+      line, etc. It's also Clipper compatible lexer. It means that
+      we do not longer need FLEX or SIMPLEX which can be replaced
+      by new PP after some small modifications. Anyhow I haven't
+      decided to make it myself. I would like to agree with with the
+      rest of developers. I will be very happy if such modifications
+      will be done by someone else, Ryszard?
+      Meanwhile I current PP join on output the line tokens and give
+      the string line to FLEX/SIMPLEX. It does not have any sense and
+      all FLEX/SIMPLEX limitations are still existing. Ryszard, even
+      if we keep it then I hope you can remove at least FLEX line buffer
+      and use the one returned from PP.
+      Because string tokens in parsed line are converted to text which is
+      later once again decoded to tokens by FLEX I had to introduce new
+      string format which supports embedded string delimiters. I chose
+      modified version of xHarbour extension with escaped strings e"<sting>"
+      so now FLEX understand such strings and decode them like C escaped
+      strings. It means that you can use them also in the .prg code f.e.:
+         outstd( e"Hello\n\rWorld" )
+      The new PP is also noticeable faster. You should see the difference
+      compiling long files. The build in PP rules are generated automatically
+      by ppgen program created from source/pp/ppgen.c
+      I had to add to GNU source/pp/Makefile these two lines:
+         pptable.c : ppgen$(EXE_EXT)
+            ./ppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q
+      Sth like that will have to be done also in non GNU make system.
+      Now Harbour can be compiled only using GNU make.
+      Marek can you update non GNU make files? I would like to leave this
+      modification to you or other developers who can test it.
+      It was quite big modification and I do not believe that I haven't
+      make any mistakes but I hope that in few weeks I'll fix any reported
+      bugs and it will resolve any PP problems.
+      TODO:
+         * error messages
+           create one common list of errors and warnings and keep it
+           in common library. PP and compiler can still generate different
+           errors with the same number. It can be confusing for the users
+           and hard to document and add i18n translations.
+           If possible we should also try to keep Clipper error numbers.
+           In new PP code I added Clipper error numbers but I cannot use
+           them until compiler code is not updated.
+           We should aslo remove the ctype passed to error functions and
+           hack with first character in warning messages and use only
+           error number. The codes from 1000 to 1999 should be warnings
+           where range 1000:1099 is activated by -w, 1100:1199 by -w1,
+           1200:1299 by -w2, etc. 2000:2999 are errors and 3000:3999
+           fatal errors. All compiler functions which generate an error
+           should expect that error function will not stop the compiler
+           but return and cleanly finished their job. It's necessary for
+           MT support in compiler and making compiler part of some other
+           programs which may still work and compile different source code.
+         * FLEX/SIMPLEX
+           remove them at all and add some final pass to PP to create
+           more precise tokens for grammar parser or at least add better
+           integration to remove some redundant code and existing limits.
+         * hb_inLine() support - it's broken in new PP but as I can see
+           it was never working correctly. I can add a hack to PP to support
+           hb_inLine() but I'm not sure it's worth to do. Maybe in few days.
+
+  + harbour/include/std.ch
+    + added new std.ch. It was created without using Clipper's std.ch.
+      It's quite possible that some rules are wrong and should be fixed
+      so please help. Anyhow I created a set of programs based on new PP
+      code generating all possible combinations of different commands I
+      collected from different source code, documentation and match patterns
+      of rules I was adding to new std.ch and then I was comparing .ppo
+      files generated by Clipper and Harbour so I do not expect any bigger
+      problems then some minor typos. I had to introduce some modifications
+      in spacing as workaround for FLEX/SIMPLEX which cannot properly decode
+      text preprocessed by Clipper after stringify.
+
+  * harbour/utils/hbpptest/pretest.prg
+    * updated for new PP
+      It reports 16 wrong translations but some of them are valid
+      and some others are caused by escaped string e"..." (one of hack
+      for FLEX/SIMPLEX support)
+      I also had to remove all spaces in comparison the results
+      because they were not Clipper ocmpatible at all. Ryszard please
+      look at it.
+
+2006-11-07 21:23 UTC+0200 JF Lefebvre (jflefebv at mafact com)
+   * harbour/include/hbclass.ch
+     * added one rule to support inline method with local var separated from <code> by a coma
+       Working and into the classy compatibility block
+
+2006-11-07 20:36 UTC+0200 JF Lefebvre (jflefebv at mafact com)
+   * harbour/include/hbclass.ch
+     * added one rule to support inline method with local var separated from <code> by a coma
+
+2006-11-03 22:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/makefile.bc
+     * Updated comment section about environment variables used by makefile
+   * harbour/makefile.vc
+     * Updated comment section about environment variables used by makefile
+     * Cleaned compilation under Visual C++ 8.0 (VS2005 compiler), including
+       64 bit platforms. To properly compile under Visual C++ 8.0 you have
+       set a new environment variable HB_VISUALC_VER to 80 before running
+       make_vc.bat.
+
+2006-10-07 04:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added validation for class data names. As additional preprocessor
+      rule to not use <!marker!>
+
+  * harbour/include/hboo.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+    + added delegate messages
+
+  * harbour/include/hbstack.h
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/proc.c
+    + added startup symbol to hb_stack. It gives very good stop
+      condition for all procedures which trace stack calls and
+      resolves the problem with hb_stack.pBase which was never
+      pointing to valid function/procedure symbol when no symbol
+      was put on HVM stack. Now after hb_stackInit() the first
+      item is allocated for "hb_stackInit()" symbol so hb_stack.pBase
+      is always a pointer to valid function/procedure symbol.
+    * changed the guard condition for buggy code in hb_stackPop()
+      and similar code from:
+         hb_stack.pPos < hb_stack.pItems
+      to:
+         hb_stack.pPos <= hb_stack.pBase
+      The old condition was generating usable error message only in the
+      startup function. In deeply called functions it was only waste of
+      CPU time on one of the most often call functions. Before it was
+      activated internal stack structures were corrupted.
+      If we were leaving for many years without really working stack
+      underflow protection then maybe we should think about disabling
+      it at when HB_STACK_MACROS are used and keep it only in real
+      stack functions for HVM developers. Single protection in
+      hb_stackOldFrame() I've just added is enough for basic C code
+      validation.
+      I created the second version of stack macros without it in
+      hbstack.h but I would like to hear other developers opinion.
+
+2006-10-05 01:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * Temporary disabled optimization with references to object variables
+      until we will not have extended reference items in our HVM.
+      It can be enabled by compiling with HB_USE_OBJMSG_REF
+
+  * harbour/include/hbclass.h
+    * restored previous CLASSDATA behavior which ignores SHARED clause
+      and always create shared class variables
+
+2006-10-04 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    * translate HB_P_INC / HB_P_DEC in (pre|post)(inc|dec)rementation
+      to HB_P_[PLUS|MINUS]EQ
+
+  * harbour/source/vm/hvm.c
+    - removed not necessary now hb_itemUnRef() in hb_vmInc()/hb_vmDec()
+
+2006-10-04 09:02 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+  * common.mak
+    main.c has to be used instead of mainstd.c or mainwin.c
+    as main.c select the right entry point function based on the used defines
+
+2006-10-04 02:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * most of the rules rewritten
+    ! fixed some wrong rules and general cleanup
+    + added additional code validation
+    ! fixed compilation of more then one class in single file.
+      Now it's even possible to declare all classes at beginning of
+      single file and then implementing their methods in any order
+    ! fixed using static classes and classes
+    ! fixed compilation without <ClassName>_ prefix in method names
+    + added support for HB_CLS_NO_DECORATION macro which disable
+      adding <ClassName>_ prefix to method names - this macro is
+      set by default when HB_SHORTNAMES is set.
+    + added support for declared parameters validation - it can be
+      disabled with HB_CLS_NO_PARAMS_ERR and I had to disable it
+      by default due to problems with our preprocessor.
+      Ryszard seems that our PP has serious problems with decoding
+      directives when there is no space between symbol and some other
+      non symbol character. I had to add some workarounds and even
+      introduce buggy rules to make it working. Please look at it.
+      You can remove #define HB_CLS_NO_PARAMS_ERR from hbclass.ch
+      and try to rebuild Harbour core code to see the problem.
+
+  * harbour/include/hboo.ch
+  * harbour/source/vm/classes.c
+    + added support for new primitive message: HB_OO_MSG_PERFORM
+
+  * harbour/source/rtl/tclass.prg
+    - removed <lPersistent> parameter from HBClass messages and
+      internals data. Persistent is supported as scope bit and
+      separate variable was redundant.
+    - removed stripping of () from message names. Here is not a place
+      to fix wrong preprocessor rules.
+
+  * harbour/utils/hbtest/rt_class.prg
+    * use: METHOD PROCEDURE ... CALSS ...
+      instead of: PROCEDURE ... CALSS ...
+      The first version is preferable syntax.
+
+  * harbour/source/debug/dbgtmenu.prg
+  * harbour/source/rtl/checkbox.prg
+    ! fixed some parameters in method declaration - global cleanup
+      will have to wait for preprocessor fixes
+
+   Hi all,
+   Please make test with current hbclass.ch code.
+   I hope that I haven't broken too much things ;-) but I rewrite
+   from scratch most rules and it's possible that I missed sth or
+   made some stupid typos. Current version is much shorter and should
+   be easier to updated. For sure I've intentionally changed one thing.
+   CLASSDATA was ignoring SHARED attribute and always created shared
+   class variables. Seems that it was long existing typo but the fix
+   may interact with already existing code which needs SHARED class
+   variables but does not use SHARED clause in CLASSDATA declaration.
+   In such case please update it and add missing SHARED.
+   Also in the end of CLASS declaration we have:
+      [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
+      [ ; #translate Super( <SuperClass1> ): => ::<SuperClass1>: ] ;
+      [ ; #translate Super(): => ::<SuperClass1>: ] ;
+      [ ; #translate Super: => ::<SuperClass1>: ] ;
+      [ ; #translate ::Super : => ::<SuperClass1>: ]
+   These rules introduce very serious bug - they are breaking supercasting
+   in code which makes sth like:
+      ::super:super:super:msg
+   or in any other code which sends SUPER message to some other class
+   objects. I will have to remove them. At least the last three ones.
+   There were some other things I wanted to write about but it's too late
+   and I'm to tired - sorry. If you will have any question please ask. if
+   you will notice some problems with current rules please inform me.
+
+2006-09-29 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * allow to access object variables using assign messages without
+      parameter. I do not want to add symmetric behavior for access messages
+      though it's technically possible but such things should be controlled
+      by programmer because access messages can have less restricted scoping
+      then assign ones (READONLY) so I'll add new rule for it in hbclass.ch
+
+  * harbour/source/vm/hvm.c
+    * fixed warning message when object variable reference is
+      generated using macro compiler without '_' as prefix.
+
+2006-09-29 21:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * synced with Brian fixes in xHarbour
+
+  * harbour/source/rdd/workarea.c
+    * minor modification
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * minor Clipper compatibility update
+
+2006-09-29 11:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * tests/Makefile
+      + added omacro.prg and varparam.prg
+   * ChangeLog
+      * fixed date in previous commit
+
+2006-09-29 11:10 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbexpra.c
+   * include/hbexprb.c
+   * include/hbexprc.c
+   * include/hbexprop.h
+   * source/common/expropt1.c
+   * source/compiler/expropta.c
+   * source/compiler/exproptb.c
+   * source/compiler/exproptc.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.y
+   * source/macro/macro.y
+   * source/macro/macroa.c
+   * source/macro/macrob.c
+   * source/macro/macroc.c
+   * source/vm/hvm.c
+      + added support for passing methods as macro
+      eg:
+         o:&send()
+         o:&send.end()
+         o:&(expr)()
+         o:&var++
+         o:&var := 0
+         o:&(expr)++
+         WITH OBJECT obj
+            ++:&var
+            :&var += :&(var2+"oo")
+         END
+
+   + tests/omacro.prg
+      + sample file to test the new syntax
+
+   NOTICE:
+   For simple assigments (=,:=), compound assignments (+=,-=,*=,/=)
+   and for pre/post increment operators( ++,--) the macro should
+   evaluate to a symbol that starts with underscore '_'.
+     To access a variable the macro should evaluate to a symbol
+   with no '_' char.
+
+2006-09-28 23:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/common.ch
+    - removed ISSYMBOL()
+  * harbour/source/rtl/tclass.prg
+    * use valtype() instead of IS*()
+    * some minor modifications
+
+  * harbour/source/vm/hvm.c
+    * minor modification
+
+2006-09-28 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * updated some not enabled by default rules to use function pointers
+      instead of function names which I forgot to update in previous
+      commit
+
+2006-09-28 14:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/common.ch
+    + added ISSYMBOL()
+
+  * harbour/include/hbextern.ch
+    - removed __CLS_PARAM()
+
+  * harbour/include/hbclass.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+    * replaced __CLS_PAR00() and __CLS_PARAM() functions by preprocessor
+      rules. These functions are not longer necessary though I left them
+      in classes.c for backward binary compatibility. Probably they will
+      be removed in the future.
+    ! use function pointers (@<funcname>()) instead of function names
+      with REQUEST for super classes ID. It fixes using STATIC class
+      functions.
+
+2006-09-28 00:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_rpm.sh
+    * check for rpmbuild also when BUGGY_RPM is set
+
+  * harbour/make_tgz.sh
+    * removed rebuild hbpptest with shared libraries
+
+  * harbour/include/hbapicls.h
+    + added definitions for hb_clsCreate(), hb_clsAdd(), hb_clsAssociate()
+
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    + added hb_errFuncName - pseudo function name which can be used as
+      operation description in new error object. It should help to simplify
+      some code and fix function names when RT error is generated from C
+      function which can be executed from different .prg functions.
+
+  * harbour/include/hbclass.ch
+    + added some missing Classy(y) compatible object variable type
+      descriptions: Int, Integer, Block
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! disabled early retrieving from the cache key position and key count
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    + added: void hb_vmPushEvalSym( void ) for the code which do not
+      want to access any [P]HB_SYMB structures
+    * changed symbol name in hb_symEval from __EVAL to EVAL and modified
+      hb_symEval registration method to not register hb_vmDoBlock as global
+      function. Having PHB_DYNS address for "EVAL" in hb_symEval.pDynSym
+      allows to eliminate some strcmp() when we are looking for EVAL public
+      symbol.
+    ! fixed symbol table updating in PCODE functions for future multi module
+      .hrb files
+
+  * harbour/source/vm/proc.c
+    * use hb_symEval.pDynSym instead of strcmp()
+
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/debug.c
+    * minor code cleanup
+
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+    % separate message hash table from methods table - it will cause farther
+      reduction of allocated memory - many thanks to all people who send
+      me statistics about number of used classes and symbols from their code.
+    % use hb_symEval.pDynSym
+    + added support for object variable type scope checking like in Class(y).
+    ! fixed typo in pushing object class variables by reference
+    % s_pClasses is now indexed directly by class handle
+    % some other optimiztions
+    ! make hidden and non virtual invisible in child classes if it overloaded
+      some other non hidden method. In such case the overloaded method is used
+      and can be accessed.
+    ! make friend functions real method class oriented not (super)object for
+      hidden messages
+
+2006-09-26 17:00 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbexprb.c
+   * source/compiler/exproptb.c
+   * source/compiler/harbour.y
+      *added support for passing the reference to object's variable
+      e.g.
+      foo( @obj:var )
+
+2006-09-24 21:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     * Restored hb_CdpList(), deleted accidentally while last commit.
+
+2006-09-23 19:58 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bugs fixed in hb_cdpcmp()
+
+2006-09-23 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    * minor modification in function order to group together the ones
+      which can operate on reference counters
+    + added additional stop condition in hb_itemUnRef() - we will have
+      to make some modifications for the code which execute hb_itemUnRef()
+      to resolve some possible conflicts with operators overloading and
+      compiler optimizations
+
+  * harbour/source/vm/classes.c
+    * do not inherit friends - seems that our classes code was too
+      friendly ;-)
+      It also effectively resolves logical problem with accessing
+      overloaded non virtual methods from friends.
+    + added __clsLock( <hClass> ) - it locks any farther class
+      modifications and can be used if programmer wants to be sure
+      that no one will try to hack his class definition. It's very
+      important when programmers work in a team on bigger project.
+      Please do not add to CVS any __clsUnLock() functions - if someone
+      needs it then he can create his own custom HVM build.
+    * code cleanup
+
+  * harbour/source/vm/eval.c
+    + added hb_execFromArray() - idea and syntax borrowed from xHarbour's
+      HB_ExecFromArray() by Giancarlo Niccolai though it's independent
+      implementation. Now when we have support for functions with variable
+      number of parameters then we need sth like this function to fully
+      benefit from new feature. The following syntax is supported:
+         hb_execFromArray( <cFuncName> [, <aParams> ] )
+         hb_execFromArray( @<funcName>() [, <aParams> ] )
+         hb_execFromArray( <bCodeBlock> [, <aParams> ] )
+         hb_execFromArray( <oObject> , <cMethodName> [, <aParams> ] )
+         hb_execFromArray( <oObject> , @<msgName>() [, <aParams> ] )
+      or:
+         hb_execFromArray( <aExecArray> )
+      where <aExecArray> is in one of the following format:
+         { <cFuncName> [, <params,...>] }
+         { @<funcName>() [, <params,...>] }
+         { <bCodeBlock> [, <params,...>] }
+         { <oObject> , <cMethodName> [, <params,...>] }
+         { <oObject> , @<msgName>() [, <params,...>] }
+
+  * harbour/source/rtl/symbol.prg
+    * removed C code inside #pragma BEGINDUMP/ENDDUMP
+      now it's only .prg code which uses variable parameters function
+      and hb_execFromArray()
+
+2006-09-22 23:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+  * harbour/include/hbvm.h
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    ! fixed bug in real codeblock scoping which was exploited by
+      dictionary resizing
+    * changed ACCESS messages to ASSIGN ones when object item
+      reference is created for proper READONLY scope checking.
+      The reference to object variable can be created only when
+      caller has sufficient ASSIGN privileges.
+    + added FRIEND CLASS and FRIEND FUNCTION support.
+      It's enough to add class definition:
+         FRIEND CLASS <classFunc1> [, <classFuncN> ]
+      and/or:
+         FRIEND FUNCTION <FuncName1> [, <FuncNameN> ]
+      and all methods of given class or given function will be able
+      to access private variables.
+      Warning!!! Friends cannot access overloaded non virtual methods.
+                 This feature is available _ONLY_ for real class members.
+    + added MODULE FRIENDLY to class definition. It causes that all other
+      functions and classes defined in the same .prg module will have
+      friend privileges. In such way works xHarbour and there is now way
+      to disable this "feature" what is IMHO bug. In Harbour programmer
+      has to explicitly enable it (until he will not change / add new
+      preprocessor rule and set it as default ;-)). Syntax:
+         CREATE CLASS .... MODULE FRIENDLY
+            ...
+         END CLASS
+
+  * harbour/source/vm/proc.c
+  * harbour/source/vm/runner.c
+    * updated function symbols processing
+
+  * harbour/source/compiler/harbour.c
+    * added note in hb_compOptimizeFrames() about exceeding maximum number
+      of local variables (255). We should add new pcode(s) HB_P_LARGE[V]FRAME
+      or generate compile time error.
+
+  * harbour/source/vm/macro.c
+    % minor optimizations
+
+2006-09-21 12:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    % minor optimization in hb_itemParam()
+    ! fixed enumerator variable clearing in hb_itemCopy()
+
+2006-09-21 09:52 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/common/expropt2.c
+     ! Fixed leak introduced in previous commit.
+
+2006-09-20 23:17 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbexprb.c
+   * harbour/include/hbexprop.h
+   * harbour/source/common/expropt2.c
+     % Compile-time optimization added for expressions below:
+       SToD(""), SToD(), HB_SToD(<cDate>), HB_SToD(""), HB_SToD()
+     ! Tabs converted to spaces.
+
+   * harbour/source/common/hbdate.c
+   * harbour/source/rtl/dates.c
+     * Copyright cosmetic cleanup.
+
+2006-09-20 21:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/codebloc.c
+    ! fixed detaching locals in variable parameters functions
+
+2006-09-20 20:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    ! fixed casting for C++ compilation
+
+  * harbour/source/compiler/harbour.c
+    ! fixed removing locals frame - bSkipFrame was not initialized
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/proc.c
+    * moved current line number information from hb_struSymbol
+      to current stack state to keep 16 bytes size for HB_ITEM
+      on 32bit systems with 4 bytes alignment
+
+2006-09-20 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with recent xHarbour fixes
+
+  * harbour/include/hbdefs.h
+    * indenting
+
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt2.c
+    + added compile time optimization for STOD(cConstDateString)
+      covered by -kh compiler extension (default)
+      It allows to keep the same source code for Clipper and
+      Harbour and benefits from data constants without using
+      0dYYYYMMDD values
+
+  * harbour/source/vm/classes.c
+    * restored the original 3-rd parameter in  hb_clsAdd to void(void) -
+      PHB_FUNC - and added translation for PHB_SYMB to not force using
+      [P]HB_SYMB in 3-rd party code
+
+  * harbour/source/vm/estack.c
+    * added protection against possible GPF after executing
+      hb_stackBaseProcOffset() when first item on the stack
+      was not HB_IT_SYMBOL - it can happen in some seldom
+      cases. Probably some more general solution like leaving
+      first dummy item on HVM stack for breaking stack scan
+      loops will be better. I'll think about it.
+
+  * harbour/source/vm/itemapi.c
+    ! fixed clearing enumerators
+
+2006-09-20 14:15 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
+   * include/hbpcode.h
+      + added new pcode HB_P_VFRAME
+
+   * include/hbapi.h
+      + added USHORT paramdeclcnt to asSymbol structure
+
+   * include/hbstack.h
+   * source/vm/estack.c
+      + added hb_stackLocalVariable() to acces local variables
+
+   * source/compiler/genc.c
+   * source/compiler/gencc.c
+   * source/compiler/harbour.c
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+   * source/compiler/hbdead.c
+   * source/compiler/hbfix.c
+   * source/compiler/hblbl.c
+   * source/compiler/hbpcode.c
+   * source/compiler/hbstripl.c
+   * source/vm/hvm.c
+      + added support for variable number of parameters in
+      functions/procedures
+
+   + tests/varparam.prg
+      * example usage of new syntax for variable number of
+      parameters
+
+   * source/vm/arrayshb.c
+      * changed HB_APARAMS() to use current stack frame if no
+      arguments are passed ( HB_APARAMS() == HB_APARAMS(0) )
+
+  SYNTAX for variable number of parameters
+   1) [FUNCTION|PROCEDURE] name( ... )
+   or
+   2) [FUNCTION|PROCEDURE] name( var1, var2, varN, ... )
+
+   To access passed parameters use the following:
+   PCOUNT() - returns number of passed parameters
+   HB_PVALUE( iParamNum ) - returns <iParamNum> parameter
+   HB_APARAMS() - returns array with all passed parameters
+   or usual name of parameter variable in case of syntax 2)
+
+
+2006-09-19 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+  * harbour/source/vm/hvm.c
+    + added support to compiler for sending messages with multi
+      parameters resolved by macro operator: s:="1,2,3"; o:msg(&s)
+      It works just like for functions and it also needs XBASE extension
+      support enabled during compilation, -kx switch in compiler, it's
+      enabled by default.
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! added missing DBOI_* index in parameters passed to user ORDINFO()
+      method.
+
+2006-09-19 11:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbapicls.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+   + added three new PCODEs:
+      HB_P_MACROSEND    - to use for: s:=1,2,3"; o:=send(&s)
+      HB_P_PUSHOVARREF  - to create references to object variables: @o:var
+      HB_P_ARRAYPUSHREF - to create references to array items, it can be used
+                          in some optimization, f.e.: a[ <exp1> ] += <exp2>
+                          or directly by: func( @a[ <exp> ] )
+                          if we add passing array elements by reference
+     Implemented in HVM and PCODE generation, the compiler has to be
+     modified yet to use them.
+   * changed last parameter in hb_codeblockGetRef() - I'd like to have
+     all variables in hb_struRefer structure in one place: hb_itemUnRefOnce()
+     for easier modifications in the future.
+   * replaced in hb_struRefer 'itemsbase' with 'array'.
+   + added hb_arrayGetItemRef() to create references to array elements.
+     Such reference updates array reference counters.
+   * changed STATICs passed by reference to use new array item references.
+   ! block destructor execution after classy releasing on HVM exit
+
+2006-09-18 03:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added MESSAGE ... INLINE ... rule
+
+  * harbour/tests/clsccast.prg
+  * harbour/tests/clsicast.prg
+  * harbour/tests/clsnv.prg
+  * harbour/tests/clsscast.prg
+  * harbour/tests/clsscope.prg
+    - removed some unnecessary definitions
+
+2006-09-18 02:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    + added hb_clsRealMethodName() function which I'm using in some
+      test code
+
+  * harbour/tests/clsscast.prg
+    * updated to use __CLS_CNTSHRDATA() instead of __CLS_CNTCLSDATA()
+
+  * harbour/utils/hbtest/rt_class.prg
+    + added tests for class and shared class variables/allocating
+
+2006-09-17 18:52 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/tests/testrpt.prg
+     ! Fixed fatal typo.
+
+2006-09-17 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * xharbour/include/hbvm.h
+  * xharbour/source/vm/hvm.c
+    + added hb_vmPushDynSym( PHB_DYNS )
+      It should allow most applications to not use [P]HB_SYMB at all.
+      Removing PHB_SYMB from 3-rd party .c code may allow us to add
+      freeing unused symbol tables from HVM in the future.
+
+  * harbour/source/vm/classes.c
+    * temporary restored hb_objGetpMethod()
+    + added __ClsCntClasses()
+    ! allocated real methods for OnError and Destructor to keep
+      the same behavior in these methods as in any others, f.e.
+      scoping checking or debugging.
+
+  * harbour/common.mak
+  * harbour/utils/hbtest/Makefile
+  * harbour/utils/hbtest/hbtest.prg
+  + harbour/utils/hbtest/rt_class.prg
+    + added tests for our classy code. Now destructors and instance
+      area allocating/casting. Some other in the future.
+
+2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * synced with recent Brian fixes in xHarbour
+
+  * harbour/include/hbapi.h
+    + added 'method' member to hb_struBlock structure
+
+  * harbour/source/vm/hvm.c
+    * initialize 'method' member in hb_struBlock structure
+
+  * harbour/source/vm/proc.c
+    * changed the name of last parameter of hb_procname() from
+      bSkipBlock to fMethodName and modified to use information
+      about the class of executed codeblock from new hb_struBlock
+      members
+
+  * harbour/source/vm/classes.c
+    * removed hb_objGetpMethod() - I hope it's not longer used
+    * added real codeblock scoping.
+      In Clipper there is no information where the codeblock where
+      created and what priviladges/scopes it should has.
+      Class(y) to resovle this problem when codeblock is executed scans
+      the HVM stack for the nearest method call and takes scopes defined
+      for this method. It's a workaround which allow to break standard
+      access rights though seems reasonable when it's not possible to
+      store information where the block is created. I've added to block
+      item structure information about class and method where code block
+      was created so we can use the exact method priviladges.
+      Now Harbour classy code can work exactly like Class(y) when compiled
+      with -DHB_CLASSY_BLOCK_SCOPE and with real code block scoping when
+      compiled with -DHB_REAL_BLOCK_SCOPE. I set the second (real code
+      block scopes) as default. If you think we should be strict Class(y)
+      compatible here then please inform me and I'll change default setting.
+
+  + tests/clsscope.prg
+    + added demonstration/test code for class method scoping
+
+2006-09-15 21:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
+    ! fixed multiple use of supercasted object I broke in last commit
+    * removed some unused code and moved some scoping checking to
+      class creation code
+
+2006-09-15 13:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    + added hb_vmRequestReenter() and hb_vmRequestRestore()
+    + added executing destructors when some exception is active
+      I forgot about it in previous commit.
+
+  + harbour/tests/destruct.prg
+    + added example/test code for object destructors
+
+2006-09-15 04:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/doc/destruct.txt
+    + added description for object destructors in Harbour
+
+  * harbour/include/error.ch
+    + added new error code EG_DESTRUCTOR
+
+  * harbour/source/lang/msgpl852.c
+  * harbour/source/lang/msgpliso.c
+  * harbour/source/lang/msgplmaz.c
+  * harbour/source/lang/msgplwin.c
+  * harbour/source/rtl/langapi.c
+    + added desription for new error code - other language modules
+      have to be updated
+
+  * harbour/include/hbapi.h
+    + added hb_gcRefCheck() and cover some hb_gc* functions by
+      _HB_API_INTERNAL_ macro
+
+  * harbour/source/vm/itemapi.c
+    ! fixed possible RT error generation when some exception is active
+
+  * harbour/include/hbapicls.h
+  * harbour/include/hbclass.ch
+  * harbour/include/hboo.ch
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/classes.c
+    + added support for object destructors
+
+  * harbour/source/vm/garbage.c
+    + added support for object destructors
+    + added logic to detect buggu .prg code which uses destructors
+      see doc/destruct.txt for more info.
+      It's also possible that this code will exploit some bugs
+      in other code which uses GC allocated memory blocks.
+
+2006-09-14 15:23 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/tests/testlbl.prg
+     ! use lower name in report name to work properly on case sensitive
+       file systems
+
+2006-09-14 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/garbage.c
+    * minor cleanup
+
+  * harbour/source/rtl/cdpapi.c
+  * harbour/include/hbextern.ch
+    + added HB_CDPLIST() - it returns array with all registered CODEPAGEs
+
+  * harbour/source/rtl/set.c
+    ! fixed typo in _SET_DEFEXTENSIONS
+
+  * harbour/tests/testrpt.prg
+    ! fixed syntax
+    ! use lower name in report name to work properly on case sensitive
+      file systems
+
+2006-09-13 20:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    + added __enumStop() message for "FOR EACH" overloading
+      It's guarantied that it will be sent to base item if it is an
+      object with such message when FOR EACH ... NEXT will finish its job
+      even if it will be interrupted by EXIT or RETURN to allow base object
+      clear resources allocated for FOR EACH enumerator. The BREAK exception
+      is not supported now. This is sth what I'd like to discuss soon when
+      I'll add destructors. Please think now if we should allow to execute
+      destructors and other cleanup user code when we are returning to
+      nearest expection trap (BEGIN SEQUENCE / [ RECOVER /] END) cleaning
+      the HVM stack.
+
+2006-09-13 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/harbour.c
+    ! fixed number of compiled functions shown in compilation status
+    ! added workaround for GPF in empty #pragma begindump/enddump
+      statement
+
+2006-09-13 03:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * keep class shared data in separate array
+    + added __CLS_CNTSHRDATA( hClass ) -> nSharedDatas
+    % some minor optimizations
+
+  * harbour/tests/clsscast.prg
+    + added test code for shared class data allocating and casting
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    + added support for FOR EACH overloading - it's work in progress
+      do not create any code which may use current solution - it may
+      change in the nearest future
+
+2006-09-12 14:48 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bug fixed
+
+2006-09-12 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    ! fixed typo in adding SHARED CLASS VAR ASSIGN messages
+    * some minor cleanup
+
+2006-09-11 20:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.ch
+    * added HB_EXPORT to public functions and some internal covered by
+      _HB_API_INTERNAL_ macro
+
+  * harbour/include/hboo.ch
+    + added HB_OO_CLSTP_NONVIRTUAL and HB_OO_CLSTP_OVERLOADED
+
+  * harbour/source/rtl/tclass.prg
+    ! do not add supercast class messages - now it's done automatically
+      by __clsNew() function with proper instance area offset updating
+    ! enumerate instance class datas in __clsAddMsg() from 1 - inherited
+      instance variables are managed internally by classy code with
+      proper instance area offset updating
+    ! use __CLS_CNTCLSDATA() as start offset for class data. Do not
+      try to calculate it yourself - some of super classes can be ignored
+      when they are appear in the inheritance tree more then once so it's
+      not possible to calculate class data or instance data start offset
+      using simple sum of class or instance variables in super classes.
+
+  * harbour/source/vm/classes.c
+    ! fixed instance area casting
+    ! fixed class variables casting
+    ! fixed multi-inheritance when the same class can apear more then
+      once in super classes tree.
+    ! Do not add unnecessary instance variables for the same class when
+      it's inherited more then once.
+    ! Do not add unnecessary class variables for the same class when
+      it's inherited more then once.
+    ! Do not add unnecessary initialization class and instance variables
+    + added support for non virtual messages
+    + added support for static and casted scoping
+    + super cast messages added automatically. They are used to dynamic
+      recalculation of instance are offsets and to avoid multiple inheritance
+      of the same class so please do not overload them or you will have as
+      result something what we have before recent modifications in the
+      instance and class data area. Just simply run tests/clsccast.prg
+      and tests/clsicast.prg compiled with current CVS code and last
+      release code or with xHarbour and compare the results.
+      Also Class(y) does not pass these tests and I do not know if any
+      other dynamic OOP model in xbase languages can properly address it.
+      BTW maybe I should add RT error when .prg code will try to delete
+      or overwrite class cast message. For me it seems to be reasonable
+      and what's your opinion?
+    * make hidden class members non virtual by default. It can be disabled
+      by compiling classes.c with -DHB_VIRTUAL_HIDDEN but IMHO keeping
+      HIDDEN members as virtual causes that they are not really HIDDEN
+      because subclasses can simply overwrite them. It also means that
+      it's not possible to create class with some private data and
+      methods which will never interact with any subclass code created
+      by other programmers where name conflict can appear. So one of
+      the most important OOP features is missing in such case.
+      See tests/clsnv.prg as an example for non virtual hidden members.
+
+  + tests/clsicast.prg
+    + added test code for proper instance area allocating and casting
+
+  + tests/clsccast.prg
+    + added test code for proper class data allocating and casting
+
+  + tests/clsnv.prg
+    + added test code for non virtual hidden class members
+
+   Now we should be able to create and class model even replicate the
+   static one like in C++ using current class engine which still fully
+   supports dynamic bindings. It consumes less memory and due to much
+   more efficient hashing it should be faster then it was though some
+   other minor optimization can be add and I'll plan to make them in
+   some spare time.
+   The item type verification in assignment is still missing. I'll add
+   it when I'll collect some statistic informantion I'd like to ask
+   [x]Harbour users. I need these information to tune some internal
+   structures where I can balance between speed and memory allocation
+   to statistically optimal form.
+
+   Marek asked me to add passing object datas by reference and I'll do
+   that but I'd like to ask Ryszard to add support for:
+      @<oVar>:<message>
+   to compiler. I'll implement all other HVM modifications. If you can
+   please also add support for:
+      <oVar>:&<cMsgName>[(...)]
+   For this we do not need any HVM modifications or new PCODEs.
+   We are supporting xBase++ macro list compilation in:
+      cList:="1,2,3"
+      x := aVar[ &cList ]
+      aVar:={ &cList }
+      func( &cList )
+   But we do not support:
+      <oVar>:<message>( &cList )
+   IMHO it looks ugly. If we have this syntax for function call then we
+   should also support it in message sending.
+   Ryszard can you make necessary compiler modifications?
+   I'm also thinking about adding support for variable parameters
+      func myfunc(...)
+      [...]
+      return xVar
+   In few cases it will help to encode some function much more efficient
+   then now.
+
+   I'll add Class(y) compatible functions used in class(y) header files
+   so it will be possible to use original class(y) .ch files in Harbour
+   though it will not be the most efficient because we have @func() operator
+   which gives better performance then using codeblocks. Anyhow classy
+   create separate meta class for each class with CLASS members and
+   <clasName>() function always return such meta class object so for full
+   Class(y) compatibility we need to generate differ .prg code.
+   But all such modifications now can be done on preprocessor and
+   .prg level and they will not need .c code modification.
+   We should make them to give user interface for our new OOP features.
+
+   Now I'm waiting for reports about any problems with current classy
+   code.
+
+2006-09-11 20:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/vm/itemapi.c
+     ! Bug fixed, which was introduced while last commit
+
+2006-09-11 16:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbapicdp.h
+     * Changed declaration of hb_cdpcmp() function
+   * source/rtl/cdpapi.c
+     * hb_cdpcmp() has been changed. It accepts now additional parameters:
+       hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL bExact ),
+       also some bugs fixed.
+   * source/vm/itemapi.c
+   * source/rdd/dbfntx/dbfntx1.c
+     * Calls of hb_cdcmp() has been changed.
+
+2006-09-10 14:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * cleaned BCC warning
+
+2006-09-10 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! added missing changelog entry about __MVPUT() fix
+
+  * harbour/source/vm/itemapi.c
+    * removed redundant pItem->type = HB_IT_NIL (thanks for Manu Exposito)
+
+2006-09-10 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! added missing changelog entry about __MVPUT() fix
+
+  * harbour/source/vm/itemapi.c
+    * removed redundant pItem->type = HB_IT_NIL (thanks for Manu Exposito)
+
+2006-09-10 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/arrays.c
+    * moved static base offset from hb_struBlock structure
+      to HB_CODEBLOCK structure
+    + added hclass member to hb_struBlock - it will be used in
+      the future for checking codeblock scope in classy so we will
+      real scope checking also for messages sent from codeblocks.
+    - removed supercast and superoffset members from hb_struArray
+      structure.
+
+  * harbour/include/hbclass.ch
+    * added class(y) like
+         @:<MessageName>([<MsgParams,...>])
+      send operator. It's not exactly the same as in class(y) where
+      this operator is hardcoded to executing function directly,
+      needs method name instead of message name and is linked statically.
+      In Harbour this operator uses message name so can be used also for
+      instance variables and make dynamic casting to the class from which
+      current method is inherited. In short words sending messages to @:
+      instead of :: causes that they work like non-virtual messages in
+      C++ mode.
+      If you do not use the same method body in different classes
+      then you can also use explicitly self casting:
+         ::<myclass>:<msgname>[(...)]
+      and it will be a little bit faster
+
+  * harbour/include/hboo.ch
+    + added: HB_OO_MSG_ASSIGN, HB_OO_MSG_ACCESS,
+             HB_OO_MSG_CLSASSIGN, HB_OO_MSG_CLSACCESS
+      They should be used insted of HB_OO_MSG_DATA and HB_OO_MSG_CLSDATA
+      This resolves problems with name conflicts when we were detecting
+      type of message (ACCESS/ASSIGN) by checking the first character
+      in message name. F.e. now it's possible to create exported instance
+      variable called __WithObject and it will be used in all WITH OBJECT
+      statement instead of the base object value. It's simple and effective
+      WITH OBJECT overloading.
+      I kept backward compatibility for HB_OO_MSG_DATA and HB_OO_MSG_CLSDATA
+      but I strongly suggest to update code to use new constants.
+    + added HB_OO_MSG_REALCLASS
+
+  * harbour/source/rtl/objfunc.prg
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/rtl/tclass.prg
+    * use HB_OO_MSG_[CLS]{ASSIGN,ACCESS} instead of HB_OO_MSG_[CLS]DATA
+
+  * harbour/source/rtl/tclass.prg
+    + added REALCLASS message to creted classes - it's used for @: operator
+
+  * harbour/source/vm/classes.c
+    * updated for above modifications
+    * calculate instance area offset in supercasting dynamically - it
+      will allow to eliminate multiple instance area allocating when
+      in the inheritance tree the same class exists more then once and
+      also quite easy add support for non-virtual messages.
+    ! fixed GPF in __CLSINSTSUPER() class function generate HVM exception
+    % do not inherit unaccessible inline blocks
+    * some other minor optimization, fixes and code cleanups
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! fixed HB_TRACE message
+
+  * harbour/source/rtl/errorapi.c
+    ! generate internal error if ErrorNew() function does not return an object
+
+2006-09-07 16:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    ! fixed memvar creation in __MVPUT()
+
+2006-09-07 01:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbcmd.c
+    ! always initialize all members in RDD structures to avoid GPF when
+      some RDD will try to access uninitialized data
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    ! added some additional validation in RDD structures <-> item conversions
+
+2006-09-06 14:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    * modified hb_itemClear() to be reentrant safe - the new version
+      can be also better optimized by C compiler so should be also faster
+
+  * harbour/source/rdd/dbcmd.c
+    ! initialize lpdbOrdCondInfo in DBORDERINFO structure before
+      passing to ORDCREATE()
+
+  * harbour/source/vm/fm.c
+    ! fixed typo in memset() when HB_PARANOID_MEM_CHECK enabled
+
+  * harbour/source/vm/hvm.c
+    ! fixed item type used for iterator
+
+2006-09-06 12:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * utils/hbrun/hbrun.prg
+    * Change Main() into _APPMAIN() to avoid collision with user function
+      in HRB file with that name.
+    + Added a NOTE about this.
+
+2006-09-05 16:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rtl/cdpapi.c
+     ! Bug fixed in hb_cdpcmp(), which caused strange comparison results as
+       ( s1 > s2 ) != ( s2 > s1 ).
+
+2006-09-05 15:51 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/include/hbset.h
+   * harbour/include/set.ch
+   * harbour/source/pp/pptable.c
+   * harbour/source/rtl/set.c
+     + Added Set( _SET_DEFEXTENSIONS, <logical: .T./.F.> )
+       Default value is .T. (CA-Cl*pper compatible). If set to .F.,
+       Harbour runtime/RDD code will never attempt to add a
+       default extension to the filename arguments. Commands/functions
+       where this setting makes a difference are:
+       - SET ALTERNATE TO / Set( _SET_ALTFILE_, ... )
+       - SET PRINTER TO / Set( _SET_PRINTFILE_, ... )
+       - Set( _SET_EXTRAFILE, ... )
+       - SAVE TO / __mvSave()
+       - RESTORE FROM / __mvRestore()
+       - LABEL FORM
+       - REPORT FORM
+       - COPY TO ... DELIMITED
+       - COPY TO ... SDF
+       - LIST / __dbList()
+       - USE / dbUseArea()
+       - dbCreate()
+       - SET INDEX TO / ordListAdd() (not yet implemented)
+       - __HRBLOAD(), __HRBRUN()
+     ; Notes:
+       - From now on, it possible to create/load files using the
+         above functions/commands which have no extension. This
+         might be desirable in a few platform and/or situations.
+         For example on Win32, it's possible to directly print
+         to a shared Windows printer queue, using these commands:
+             lOldValue := Set( _SET_DEFEXTENSIONS, .F. )
+             SET PRINTER TO \\myserver\myprinter
+             Set( _SET_DEFEXTENSIONS, lOldValue )
+         Or, it is possible to open a dbf file which has no extension:
+             dbUseArea(.T., NIL, "dbf_filename_with_no_extension", "w_DATA", .F., .F.)
+       - Compiler is (of course) not affected by this setting.
+       - Preprocessor (PP) lib flavour is not affected by this setting.
+       - Support is not full in the RDD code yet.
+
+   * harbour/source/rdd/dbf1.c
+   * harbour/source/rdd/dblist.prg
+   * harbour/source/rdd/delim1.c
+   * harbour/source/rdd/sdf1.c
+   * harbour/source/rtl/tlabel.prg
+   * harbour/source/rtl/treport.prg
+   * harbour/source/rtl/set.c
+   * harbour/source/vm/memvars.c
+   * harbour/source/vm/runner.c
+     + Honoring _SET_DEFEXTENSIONS setting all over the code.
+
+2006-09-05 12:44 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/debug/debugger.prg
+     ! Fixed and made multiplatform the filename extension handling parts.
+
+   * harbour/source/vm/memvars.c
+     ! Comment minor fixes.
+
+   * harbour/harbour.spec
+   * harbour/make_xmingw.sh
+   * harbour/make_bsd.sh
+   * harbour/make_drw.sh
+     ! xharbour -> harbour
+
+2006-09-04 19:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    + added simpler example for memory leak in macro compiler:
+         ? type("user input")
+
+  * harbour/source/macro/macro.y
+    * replaced TABs with SPACEs
+
+  * harbour/source/vm/classes.c
+    * added some TRACE() messages
+    + added support for executing functions with <symItem>:EXEC()
+      registered dynamically after creating <symItem>
+
+  * harbour/source/vm/hvm.c
+    * minor modification
+
+2006-09-04 18:10 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
+   * harbour/source/rtl/tlabel.prg
+   * harbour/source/rtl/treport.prg
+     ! Made the logic multiplatform where it's decided whether to
+       add a default extension to the loaded filename.
+       C:\PATH.A\MYFILE didn't get the default extension while
+       C:\PATH\MYFILE did.
+
+2006-09-04 11:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprc.c
+    ! fixed bug in wrong integer negating, f.e.:
+         proc main(); local i:=0; i-=-32768; ? i; return
+    ! fixed PCODE generated for +=, -=, /=, *= expressions when right side
+      of expression is undefined variable - it's possible that it will be
+      field and we will have RT error. It fixes tt4.prg example form TODO
+      file.
+
+  * harbour/TODO
+    - removed tt4.prg example from TOFIX
+
+  * harbour/source/vm/classes.c
+    ! fixed supercast message validation
+
+  * harbour/source/vm/hvm.c
+    ! fixed very bad typo in hb_vmMinus() which can cause wrong
+      results when on 64-bit integer overflow
+
+2006-09-04 09:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+  + harbour/ChangeLog.016
+    ! added ChangeLog.016 and updated number - mistake in my previous commit
+
+  * harbour/source/vm/classes.c
+    * stronger parameters validation and fixed some possible problems
+      in hb_objGetMethod()
+    + added support for assigning enumerator value by:
+         <enum>:__enumValue(<newVal>)
+      and enumerator index by:
+         <enum>:__enumIndex(<newIndex>)
+      It's a work in progress - please do not create any code which may
+      need such functionality yet
+
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/hvm.c
+    * minor code cleanup
+
+2006-09-03 18:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+  * harbour/tests/overload.prg
+    + added support for overloading [] in assignment operation
+
+2006-09-03 16:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+  + harbour/ChangeLog.016
+    * new ChangeLog file created

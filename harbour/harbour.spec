@@ -56,7 +56,7 @@
 
 %define name     harbour
 %define dname    Harbour
-%define version  0.46.2
+%define version  0.47.0
 %define releasen 0
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
