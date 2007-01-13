@@ -148,8 +148,8 @@ typedef struct _HB_CODEPAGE
 #define UNITB_8859_5    &hb_uniTbl_8859_5
 #define UNITB_KOI_8     &hb_uniTbl_KOI_8
 #define UNITB_KOI_8U    &hb_uniTbl_KOI_8U
-#define UNITB_MAZ       &hb_uniTbl_mazovia
 #define UNITB_KAM       &hb_uniTbl_kam
+#define UNITB_MAZ       &hb_uniTbl_mazovia
 #define UNITB_UNDEF     NULL /* ((PHB_UNITABLE) (-1)) */
 
 extern HB_UNITABLE hb_uniTbl_437;
@@ -178,17 +178,17 @@ extern HB_EXPORT PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE );
 extern HB_EXPORT PHB_CODEPAGE  hb_cdpFind( char * );
 extern HB_EXPORT void          hb_cdpTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpnTranslate( char *, PHB_CODEPAGE, PHB_CODEPAGE, ULONG );
-extern HB_EXPORT int           hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL bExact );
+extern HB_EXPORT int           hb_cdpcmp( char *, ULONG, char *, ULONG, PHB_CODEPAGE, BOOL );
 extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpReleaseAll( void );
        
 extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, BYTE );
-extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BYTE ch, int *, USHORT * );
+extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, BYTE, int *, USHORT * );
 extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, BYTE *, ULONG, BYTE * );
 extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, BYTE *, ULONG, BYTE * );
-extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( BYTE *, ULONG );
 extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, BYTE *, ULONG );
-extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BYTE *, ULONG, BYTE *, ULONG );
+extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, BYTE *, ULONG, BYTE *, ULONG );
+extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( BYTE *, ULONG );
 
 extern PHB_CODEPAGE hb_cdp_page;
 

@@ -428,7 +428,7 @@ int hb_gt_sln_ReadKey( int iEventMask )
       int n = 0;
       USHORT uc = 0;
 
-      if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, (BYTE) ch, &n, &uc ) )
+      if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, FALSE, (BYTE) ch, &n, &uc ) )
       {
          unsigned int buf[ 10 ], i = 0;
 
@@ -438,7 +438,7 @@ int hb_gt_sln_ReadKey( int iEventMask )
                                          - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if ( !hb_cdpGetFromUTF8( hb_sln_cdpIN, (BYTE) buf[ i - 1 ], &n, &uc ) )
+            if ( !hb_cdpGetFromUTF8( hb_sln_cdpIN, FALSE, (BYTE) buf[ i - 1 ], &n, &uc ) )
                break;
          }
          if ( n > 0 )

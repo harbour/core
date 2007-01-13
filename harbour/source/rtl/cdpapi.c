@@ -105,13 +105,13 @@ PHB_CODEPAGE hb_cdp_page = &s_en_codepage;
 
 static int utf8Size( USHORT uc )
 {
-   if ( uc <  0x0080 )
+   if( uc <  0x0080 )
       return 1;
 
-   else if ( uc <  0x0800 )
+   else if( uc <  0x0800 )
       return 2;
 
-   else /* if ( uc <= 0xffff ) */
+   else /* if( uc <= 0xffff ) */
       return 3;
 }
 
@@ -119,18 +119,18 @@ static int u16toutf8( BYTE *szUTF8, USHORT uc )
 {
    int n;
 
-   if ( uc <  0x0080 )
+   if( uc <  0x0080 )
    {
       szUTF8[0] = uc & 0xff;
       n = 1;
    }
-   else if ( uc <  0x0800 )
+   else if( uc <  0x0800 )
    {
       szUTF8[0] = 0xc0 | ( ( uc >> 6 ) & 0x1f );
       szUTF8[1] = 0x80 | ( uc & 0x3f );
       n = 2;
    }
-   else /* if ( uc <= 0xffff ) */
+   else /* if( uc <= 0xffff ) */
    {
       szUTF8[0] = 0xe0 | ( ( uc >> 12 ) & 0x0f);
       szUTF8[1] = 0x80 | ( ( uc >> 6 ) & 0x3f);
@@ -148,9 +148,9 @@ static int u16toutf8( BYTE *szUTF8, USHORT uc )
 
 static BOOL utf8tou16nextchar( BYTE byChar, int * n, USHORT * uc )
 {
-   if ( *n > 0 )
+   if( *n > 0 )
    {
-      if ( ( byChar & 0xc0 ) != 0x80 )
+      if( ( byChar & 0xc0 ) != 0x80 )
          return FALSE;
       *uc = ( *uc << 6 ) | ( byChar & 0x3f );
       (*n)--;
@@ -159,29 +159,29 @@ static BOOL utf8tou16nextchar( BYTE byChar, int * n, USHORT * uc )
 
    *n = 0;
    *uc = byChar;
-   if ( byChar >= 0xc0 )
+   if( byChar >= 0xc0 )
    {
-      if ( byChar < 0xe0 )
+      if( byChar < 0xe0 )
       {
          *uc &= 0x1f;
          *n = 1;
       }
-      else if ( byChar < 0xf0 )
+      else if( byChar < 0xf0 )
       {
          *uc &= 0x0f;
          *n = 2;
       }
-      else if ( byChar < 0xf8 )
+      else if( byChar < 0xf8 )
       {
          *uc &= 0x07;
          *n = 3;
       }
-      else if ( byChar < 0xfc )
+      else if( byChar < 0xfc )
       {
          *uc &= 0x03;
          *n = 4;
       }
-      else if ( byChar < 0xfe )
+      else if( byChar < 0xfe )
       {
          *uc &= 0x01;
          *n = 5;
@@ -197,38 +197,38 @@ static int utf8tou16( BYTE *szUTF8, USHORT *uc )
    UINT32 u32;
 
    u32 = *szUTF8;
-   if ( u32 >= 0xc0 )
+   if( u32 >= 0xc0 )
    {
-      if ( u32 < 0xe0 )
+      if( u32 < 0xe0 )
       {
          u32 &= 0x1f;
          m = 2;
       }
-      else if ( u32 < 0xf0 )
+      else if( u32 < 0xf0 )
       {
          u32 &= 0x0f;
          m = 3;
       }
-      else if ( u32 < 0xf8 )
+      else if( u32 < 0xf8 )
       {
          u32 &= 0x07;
          m = 4;
       }
-      else if ( u32 < 0xfc )
+      else if( u32 < 0xfc )
       {
          u32 &= 0x03;
          m = 5;
       }
-      else if ( u32 < 0xfe )
+      else if( u32 < 0xfe )
       {
          u32 &= 0x01;
          m = 6;
       }
-      while ( n < m && ( szUTF8[n] & 0xc0 ) == 0x80 )
+      while( n < m && ( szUTF8[n] & 0xc0 ) == 0x80 )
       {
          u32 = ( u32 << 6 ) | ( szUTF8[n++] & 0x3f );
       }
-      if ( n < m )
+      if( n < m )
       {
          u32 <<= 6 * (m - n);
       }
@@ -505,7 +505,7 @@ HB_EXPORT USHORT hb_cdpGetU16( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE ch )
 {
    USHORT u;
 
-   if ( ( fCtrl || ch >= 32 ) && cdp && cdp->uniTable &&
+   if( ( fCtrl || ch >= 32 ) && cdp && cdp->uniTable &&
         cdp->uniTable->uniCodes && ch < cdp->uniTable->nChars )
    {
       u = cdp->uniTable->uniCodes[ ch ];
@@ -547,7 +547,7 @@ HB_EXPORT ULONG hb_cdpStringInUTF8Length( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE * p
    return ulDst;
 }
 
-HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp,
+HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp, BOOL fCtrl,
                                   BYTE * pSrc, ULONG ulSrc,
                                   BYTE * pDst, ULONG ulDst )
 {
@@ -563,12 +563,13 @@ HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp,
          {
             if( ulD < ulDst )
             {
-               if( cdp->uniTable && cdp->uniTable->uniCodes )
+               if( ( fCtrl || uc >= 32 ) &&
+                   cdp->uniTable && cdp->uniTable->uniCodes )
                {
                   int i;
-                  for ( i = 0; i < cdp->uniTable->nChars; i++ )
+                  for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
                   {
-                     if ( cdp->uniTable->uniCodes[ i ] == uc )
+                     if( cdp->uniTable->uniCodes[ i ] == uc )
                      {
                         uc = ( USHORT ) i;
                         break;
@@ -588,16 +589,17 @@ HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp,
    return ulD;
 }
 
-HB_EXPORT BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BYTE ch, int * n, USHORT * uc )
+HB_EXPORT BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE ch, int * n, USHORT * uc )
 {
-   if ( utf8tou16nextchar( ch, n, uc ) )
+   if( utf8tou16nextchar( ch, n, uc ) )
    {
-      if ( *n == 0 && cdp && cdp->uniTable && cdp->uniTable->uniCodes )
+      if( *n == 0 && cdp && ( fCtrl || *uc >= 32 ) &&
+          cdp->uniTable && cdp->uniTable->uniCodes )
       {
          int i;
-         for ( i = 0; i < cdp->uniTable->nChars; i++ )
+         for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
          {
-            if ( cdp->uniTable->uniCodes[ i ] == *uc )
+            if( cdp->uniTable->uniCodes[ i ] == *uc )
             {
                *uc = ( USHORT ) i;
                break;
@@ -614,14 +616,14 @@ HB_EXPORT ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE* pSrc, ULON
    USHORT u, *uniCodes, nChars;
    ULONG i, n;
 
-   if ( cdp && cdp->uniTable )
+   if( cdp && cdp->uniTable )
    {
-      if ( cdp->nMulti || cdp->uniTable->lMulti )
+      if( cdp->nMulti || cdp->uniTable->lMulti )
       {
          /*
           * TODO: this translation is bad, please fix me!!!
           */
-         for ( i = 0, n = 0; i < ulLen; i++ )
+         for( i = 0, n = 0; i < ulLen; i++ )
          {
             u = hb_cdpGetU16( cdp, fCtrl, pSrc[ i ] );
             n += u16toutf8( &pDst[n], u );
@@ -640,10 +642,10 @@ HB_EXPORT ULONG hb_cdpStrnToUTF8( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE* pSrc, ULON
       uniCodes = NULL;
    }
 
-   for ( i = 0, n = 0; i < ulLen; i++ )
+   for( i = 0, n = 0; i < ulLen; i++ )
    {
       u = pSrc[ i ];
-      if ( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
          u = uniCodes[ u ];
       n += u16toutf8( &pDst[n], u );
    }
@@ -657,14 +659,14 @@ HB_EXPORT ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE* pSrc, ULONG
    USHORT u, *uniCodes, nChars;
    ULONG i;
 
-   if ( cdp && cdp->uniTable )
+   if( cdp && cdp->uniTable )
    {
-      if ( cdp->nMulti || cdp->uniTable->lMulti )
+      if( cdp->nMulti || cdp->uniTable->lMulti )
       {
          /*
           * TODO: this translation is bad, please fix me!!!
           */
-         for ( i = 0; i < ulLen; i++, pDst += 2 )
+         for( i = 0; i < ulLen; i++, pDst += 2 )
          {
             u = hb_cdpGetU16( cdp, fCtrl, pSrc[ i ] );
             HB_PUT_BE_UINT16( pDst, u );
@@ -683,10 +685,10 @@ HB_EXPORT ULONG hb_cdpStrnToU16( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE* pSrc, ULONG
       uniCodes = NULL;
    }
 
-   for ( i = 0; i < ulLen; i++, pDst += 2 )
+   for( i = 0; i < ulLen; i++, pDst += 2 )
    {
       u = pSrc[ i ];
-      if ( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
+      if( uniCodes && u < nChars && ( fCtrl || u >= 32 ) )
          u = uniCodes[ u ];
       HB_PUT_BE_UINT16( pDst, u );
    }
@@ -794,7 +796,7 @@ HB_EXPORT int hb_cdpcmp( char* szFirst, ULONG ulLenFirst, char* szSecond, ULONG 
                 )
             {
                /* printf( "\nhb_cdpcmp-3A %d %d",a1,a2 ); */
-               if ( a1 == *((BYTE*)szSecond) || a1 == a2 )
+               if( a1 == *((BYTE*)szSecond) || a1 == a2 )
                   nAcc1 = n1;
                if( a2 == *((BYTE*)szFirst) || a1 == a2 )
                   nAcc2 = n2;

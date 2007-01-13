@@ -1223,11 +1223,14 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          pSelf->pNext = NULL;
       }
 
+      /* this will cause warning when IIF is used as statement */
+      /*
       if( pSelf->ExprType == HB_ET_NONE )
       {
          pSelf->ExprType = HB_ET_NIL;
          pSelf->ValType = HB_EV_NIL;
       }
+      */
    }
    /* check if valid expression is passed
    */

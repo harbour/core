@@ -2164,8 +2164,8 @@ HB_FUNC( ADSDDCREATEUSER )
 HB_FUNC( ADSDDDELETEUSER )
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED8 *pucUserName      = ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parcx( 1 ) : NULL;
-   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 5 );
+   UNSIGNED8 *pucUserName = ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parcx( 1 ) : NULL;
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 2 );
 
    ulRetVal = AdsDDDeleteUser( hConnect, pucUserName );
    hb_retl( ulRetVal == AE_SUCCESS );
@@ -2445,7 +2445,7 @@ HB_FUNC( ADSDIRECTORY )
    UNSIGNED16 usFileNameLen;
    SIGNED32   sHandle = 0;
    PHB_ITEM   pitmDir, pitmFileName;
-   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 2 );
+   ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 2 );
 
    pitmDir = hb_itemNew( NULL );
    hb_arrayNew( pitmDir, 0 );

@@ -2128,7 +2128,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      hb_xfree( wnd->ClipboardData );
                   wnd->ClipboardData = ( unsigned char * ) hb_xgrab( nItem + 1 );
                   wnd->ClipboardSize = nItem;
-                  hb_cdpUTF8ToStrn( wnd->hostCDP, text.value, text.nitems,
+                  hb_cdpUTF8ToStrn( wnd->hostCDP, FALSE, text.value, text.nitems,
                                     wnd->ClipboardData, nItem + 1 );
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = TRUE;

@@ -337,8 +337,8 @@ HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
          else
          {
             for( ; ulIndex < ulLen; ++ulIndex )       /* move items */
-               hb_itemMove( pBaseArray->pItems + ulIndex - 1,
-                            pBaseArray->pItems + ulIndex );
+               hb_itemMoveRef( pBaseArray->pItems + ulIndex - 1,
+                               pBaseArray->pItems + ulIndex );
          }
       }
 
@@ -367,8 +367,8 @@ HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
          else
          {
             while( --ulLen >= ulIndex )                     /* move items */
-               hb_itemMove( pBaseArray->pItems + ulLen,
-                            pBaseArray->pItems + ulLen - 1 );
+               hb_itemMoveRef( pBaseArray->pItems + ulLen,
+                               pBaseArray->pItems + ulLen - 1 );
          }
       }
 

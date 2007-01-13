@@ -664,7 +664,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmPlus( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -694,7 +694,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmMinus( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -724,7 +724,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmMult( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -754,7 +754,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmDivide( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -784,7 +784,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmModulus( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -814,7 +814,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_vmPower( pResult, pResult, pValue );
                hb_itemCopy( pValue, pResult );
                hb_itemMove( hb_stackItemFromTop( -2 ), pValue );
-               hb_stackPop();
+               hb_stackDec();
             }
             w++;
             break;
@@ -3216,10 +3216,7 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 
       pValue = hb_stackItemFromTop( -i );
       /* copy value to iterate and clear the stack item for enumerator destructor */
-      if( HB_IS_BYREF( pValue ) )
-         pItem = hb_itemNew( hb_itemUnRef( pValue ) );
-      else
-         pItem = hb_itemNew( pValue );
+      pItem = hb_itemNew( pValue );
       if( HB_IS_COMPLEX( pValue ) )
          hb_itemClear( pValue );
 
@@ -3250,6 +3247,9 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
       pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
       pEnum->item.asEnum.basePtr  = pItem;
       pEnum->item.asEnum.valuePtr = NULL;
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_OBJECT( pItem ) && hb_objHasOperator( pItem, HB_OO_OP_ENUMSTART ) )
       {
@@ -3286,8 +3286,8 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
                                              pItem->item.asString.length;
          if( pItem->item.asString.length )
             pEnum->item.asEnum.valuePtr =
-                  hb_itemPutCL( NULL, pItem->item.asString.value +
-                                      pEnum->item.asEnum.offset - 1, 1 );
+                        hb_itemPutCL( NULL, pItem->item.asString.value +
+                                            pEnum->item.asEnum.offset - 1, 1 );
          else
             fStart = FALSE;
       }
@@ -3312,44 +3312,57 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
  */
 static void hb_vmEnumNext( void )
 {
-   HB_ITEM_PTR pEnumRef, pEnum;
+   HB_ITEM_PTR pEnumRef, pEnum, pBase;
    int i;
 
    for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
-      if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
+      pBase = pEnum->item.asEnum.basePtr;
+      if( HB_IS_BYREF( pBase ) )
+         pBase = hb_itemUnRef( pBase );
+      if( HB_IS_ARRAY( pBase ) )
       {
-         if( HB_IS_OBJECT( pEnum->item.asEnum.basePtr ) &&
-             hb_objHasOperator( pEnum->item.asEnum.basePtr, HB_OO_OP_ENUMSKIP ) )
+         if( HB_IS_OBJECT( pBase ) &&
+             hb_objHasOperator( pBase, HB_OO_OP_ENUMSKIP ) )
          {
             ++pEnum->item.asEnum.offset;
             hb_vmPushNil();
             hb_vmPushLogical( FALSE );
             hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
-                                pEnum->item.asEnum.basePtr, pEnumRef,
-                                hb_stackItemFromTop( -1 ) );
+                                pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
             hb_stackPop();
             if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
                break;
          }
-         else if( ( ULONG ) ++pEnum->item.asEnum.offset >
-                   pEnum->item.asEnum.basePtr->item.asArray.value->ulLen )
-            break;
+         else
+         {
+            /* Clear the item value which can be set with RT error
+               when enumerator was out of array size during unreferencing
+             */
+            if( pEnum->item.asEnum.valuePtr )
+            {
+               hb_itemRelease( pEnum->item.asEnum.valuePtr );
+               pEnum->item.asEnum.valuePtr = NULL;
+            }
+            if( ( ULONG ) ++pEnum->item.asEnum.offset >
+                pBase->item.asArray.value->ulLen )
+               break;
+         }
       }
-      else if( HB_IS_STRING( pEnum->item.asEnum.basePtr ) )
+      else if( HB_IS_STRING( pBase ) )
       {
          if( ( ULONG ) ++pEnum->item.asEnum.offset >
-             pEnum->item.asEnum.basePtr->item.asString.length )
+             pBase->item.asString.length )
             break;
          hb_itemPutCL( pEnum->item.asEnum.valuePtr,
-                       pEnum->item.asEnum.basePtr->item.asString.value +
+                       pBase->item.asString.value +
                        pEnum->item.asEnum.offset - 1, 1 );
       }
       else
       {
-         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pEnum->item.asEnum.basePtr );
+         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pBase );
          return;
       }
    }
@@ -3364,42 +3377,55 @@ static void hb_vmEnumNext( void )
  */
 static void hb_vmEnumPrev( void )
 {
-   HB_ITEM_PTR pEnumRef, pEnum;
+   HB_ITEM_PTR pEnumRef, pEnum, pBase;
    int i;
    
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
-      if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
+      pBase = pEnum->item.asEnum.basePtr;
+      if( HB_IS_BYREF( pBase ) )
+         pBase = hb_itemUnRef( pBase );
+      if( HB_IS_ARRAY( pBase ) )
       {
-         if( HB_IS_OBJECT( pEnum->item.asEnum.basePtr ) &&
-             hb_objHasOperator( pEnum->item.asEnum.basePtr, HB_OO_OP_ENUMSKIP ) )
+         if( HB_IS_OBJECT( pBase ) &&
+             hb_objHasOperator( pBase, HB_OO_OP_ENUMSKIP ) )
          {
             --pEnum->item.asEnum.offset;
             hb_vmPushNil();
             hb_vmPushLogical( TRUE );
             hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
-                                pEnum->item.asEnum.basePtr, pEnumRef,
-                                hb_stackItemFromTop( -1 ) );
+                                pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
             hb_stackPop();
             if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
                break;
          }
-         else if( --pEnum->item.asEnum.offset == 0 )
-            break;
+         else
+         {
+            /* Clear the item value which can be set with RT error
+               when enumerator was out of array size during unreferencing
+             */
+            if( pEnum->item.asEnum.valuePtr )
+            {
+               hb_itemRelease( pEnum->item.asEnum.valuePtr );
+               pEnum->item.asEnum.valuePtr = NULL;
+            }
+            if( --pEnum->item.asEnum.offset == 0 )
+               break;
+         }
       }
-      else if( HB_IS_STRING( pEnum->item.asEnum.basePtr ) )
+      else if( HB_IS_STRING( pBase ) )
       {
          if( --pEnum->item.asEnum.offset == 0 )
             break;
          hb_itemPutCL( pEnum->item.asEnum.valuePtr,
-                       pEnum->item.asEnum.basePtr->item.asString.value +
+                       pBase->item.asString.value +
                        pEnum->item.asEnum.offset - 1, 1 );
       }
       else
       {
-         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pEnum->item.asEnum.basePtr );
+         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pBase );
          return;
       }
    }
@@ -3474,7 +3500,7 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
             ++offset;
             break;
       }
-      
+
       switch( pCode[ offset ] )
       {
          case HB_P_JUMPNEAR:
@@ -5138,17 +5164,11 @@ static void hb_vmPushLocal( int iLocal )
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      pLocal = hb_codeblockGetVar( hb_stackSelfItem(), ( LONG ) iLocal );
+      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( LONG ) iLocal );
    }
 
-   if( HB_IS_BYREF( pLocal ) )
-   {
-      hb_itemCopy( hb_stackAllocItem(), hb_itemUnRef( pLocal ) );
-   }
-   else
-   {
-      hb_itemCopy( hb_stackAllocItem(), pLocal );
-   }
+   hb_itemCopy( hb_stackAllocItem(),
+                HB_IS_BYREF( pLocal ) ? hb_itemUnRef( pLocal ) : pLocal );
 }
 
 static void hb_vmPushLocalByRef( int iLocal )
@@ -5188,10 +5208,8 @@ static void hb_vmPushStatic( USHORT uiStatic )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStatic(%hu)", uiStatic));
 
    pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
-   if( HB_IS_BYREF( pStatic ) )
-      hb_itemCopy( hb_stackAllocItem(), hb_itemUnRef( pStatic ) );
-   else
-      hb_itemCopy( hb_stackAllocItem(), pStatic );
+   hb_itemCopy( hb_stackAllocItem(),
+                HB_IS_BYREF( pStatic ) ? hb_itemUnRef( pStatic ) : pStatic );
 }
 
 static void hb_vmPushStaticByRef( USHORT uiStatic )
@@ -5258,8 +5276,8 @@ static void hb_vmDuplUnRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDuplUnRef()"));
 
    pItem = hb_stackItemFromTop( -1 );
-   hb_itemCopy( hb_stackAllocItem(), pItem );
-   hb_itemCopy( pItem, hb_itemUnRef( pItem ) );
+   hb_itemCopy( hb_stackAllocItem(),
+                HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );
 }
 
 static void hb_vmDuplTwo( void )
@@ -5528,25 +5546,17 @@ static void hb_vmPopLocal( int iLocal )
    {
       /* local variable or local parameter */
       pLocal = hb_stackLocalVariable( &iLocal );
-      if( HB_IS_BYREF( pLocal ) )
-         pLocal = hb_itemUnRef( pLocal );
    }
    else
    {
       /* local variable referenced in a codeblock
        * hb_stackSelfItem() points to a codeblock that is currently evaluated
        */
-      pLocal = hb_codeblockGetVar( hb_stackSelfItem(), iLocal );
+      pLocal = hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, iLocal );
    }
 
-   if( HB_IS_OBJECT( pLocal ) &&
-       hb_objOperatorCall( HB_OO_OP_ASSIGN, pLocal, pLocal, pVal, NULL ) )
-   {
-      hb_stackPop();
-      return;
-   }
+   hb_itemMoveToRef( pLocal, pVal );
 
-   hb_itemMove( pLocal, pVal );
    hb_stackDec();
 }
 
@@ -5562,18 +5572,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
    pVal->type &= ~HB_IT_MEMOFLAG;
    pStatic = s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + uiStatic - 1;
 
-   /* Is it Clipper compatible? */
-   if( HB_IS_BYREF( pStatic ) )
-      pStatic = hb_itemUnRef( pStatic );
-
-   if( HB_IS_OBJECT( pStatic ) &&
-       hb_objOperatorCall( HB_OO_OP_ASSIGN, pStatic, pStatic, pVal, NULL ) )
-   {
-      hb_stackPop();
-      return;
-   }
-
-   hb_itemMove( pStatic, pVal );
+   hb_itemMoveToRef( pStatic, pVal );
    hb_stackDec();
 }
 

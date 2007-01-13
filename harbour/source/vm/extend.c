@@ -1210,6 +1210,40 @@ HB_EXPORT int hb_storptr( void * pointer, int iParam, ... )
    return 0;
 }
 
+HB_EXPORT int hb_storptrGC( void * pointer, int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_storptrGC(%p, %d, ...)", pointer, iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+      BOOL bByRef = HB_IS_BYREF( pItem );
+
+      if( bByRef  )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         PHB_ITEM pItemNew = hb_itemPutPtrGC( NULL, pointer );
+         va_start( va, iParam );
+         hb_arraySet( pItem, va_arg( va, ULONG ), pItemNew );
+         va_end( va );
+         hb_itemRelease( pItemNew );
+         return 1;
+      }
+      else if( bByRef || iParam == -1 )
+      {
+         hb_itemPutPtrGC( pItem, pointer );
+         return 1;
+      }
+
+      return 0;
+   }
+
+   return 0;
+}
+
 #undef hb_pcount
 HB_EXPORT int  hb_pcount( void )
 {

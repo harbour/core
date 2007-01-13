@@ -204,9 +204,12 @@ HB_FUNC( HB_DBG_VMVARLGET )
       if( iLocal >= 0 )
          pLocal = hb_stackItem( lBaseOffset + iLocal );
       else
-         pLocal = hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal );
+         pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
 
-      hb_itemReturn( hb_itemUnRef( pLocal ) );
+      if( HB_IS_BYREF( pLocal ) )
+         pLocal = hb_itemUnRef( pLocal );
+
+      hb_itemReturn( pLocal );
    }
 }
 
@@ -232,9 +235,9 @@ HB_FUNC( HB_DBG_VMVARLSET )
       if( iLocal >= 0 )
          pLocal = hb_stackItem( lBaseOffset + iLocal );
       else
-         pLocal = hb_codeblockGetVar( hb_stackItem( lBaseOffset ), ( LONG ) iLocal );
+         pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
 
-      hb_itemCopy( hb_itemUnRef( pLocal ), hb_stackItemFromBase( 3 ) );
+      hb_itemCopyToRef( pLocal, hb_stackItemFromBase( 3 ) );
    }
 }
 

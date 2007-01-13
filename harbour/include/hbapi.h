@@ -382,6 +382,13 @@ typedef struct _HB_NESTED_CLONED
    struct _HB_NESTED_CLONED * pNext;
 } HB_NESTED_CLONED, * PHB_NESTED_CLONED;
 
+typedef struct _HB_GRIP
+{
+   HB_ITEM     value;
+   HB_COUNTER  counter;
+} HB_GRIP, * PHB_GRIP, * HB_GRIP_PTR;
+
+
 #endif
 
 
@@ -492,6 +499,7 @@ extern HB_EXPORT int    hb_stornl( long lValue, int iParam, ... ); /* stores a l
 extern HB_EXPORT int    hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 extern HB_EXPORT int    hb_stornint( HB_LONG lValue, int iParam, ... ); /* stores a HB_LONG on a variable by reference */
 extern HB_EXPORT int    hb_storptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
+extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam, ... ); /* stores a pointer to GC block on a variable by reference */
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
 #endif

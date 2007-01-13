@@ -8,6 +8,107 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-13 14:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/adsfunc.c
+  * harbour/source/rdd/workarea.c
+    * formatting
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/extend.c
+    + added missing hb_storptrGC()
+
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    + added parameter to unicode translation function to protect control
+      code translation
+    * formatting
+
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * use new unicode translation function format. It also fixes problem
+      with space translation in GTLSN used in UTF8 mode
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + added hb_itemCopyToRef(), hb_itemMoveToRef(), hb_itemMoveRef(),
+      hb_itemUnRefWrite()
+
+  * harbour/include/hbexprb.c
+    ! use HB_P_DUPLUNREF instead of HB_P_DUPLICATE when assign is used in
+      push context - Clipper compatible behavior, see:
+         x:=10
+         f(y:=iif(.t.,@x,))
+         ? x, y
+         func f(x)
+         x+=100
+         return nil
+
+  * harbour/include/hbver.h
+  * harbour/source/common/hbver.c
+    * changed status to "devel"
+
+  * harbour/source/common/expropt2.c
+    * disabled setting NIL when iif(.t.,,sth()) is optimized to avoid
+      warning when iif() is used as statement - to fix number of parameters
+      passed to function in code like f(iif(.t.,,sth())) we will need a
+      little bit deeper modification
+
+  * harbour/source/compiler/complex.c
+    * added hack for potential problems caused by WITH OBJECT syntax, f.e.
+      in code like:
+         proc p(obj,x)
+         case:=myCaseClass():new()
+         retu:=myCaseClass():new()
+         WITH OBJECT obj
+            do case
+               case x==nil
+               case:value()
+               case:action()
+                  retu:sth()
+            end
+         END
+         case:action()
+         retu:sth()
+         return
+      case:action(), case:value(), retu:sth() can means two different things
+      and compiler cannot guess which one should use. It cannot be fixed
+      because it's caused by bad WITH OBJECT syntax. In xHarbour constractions
+      like case:value() or retu:sth() are always used as in  WITH OBJECT
+      context what is not Clipper compatible. I do not want to introduce
+      such limitations. We have two choices: change WITH OBJECT syntax or
+      add some hack to "hide" the problem a little bit. Now I intorduce
+      ugly hack which check number of spaces between ':' so
+         case :action()
+      is compiled as case condition using WITH OBJECT message and
+      case:action() as sending message to object in case variable
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    + added support for passing base value to FOR EACH by reference.
+  
+  * harbour/source/vm/arrays.c
+    * use hb_itemMoveRef() in AINS()/ADEL() to avoid creation of cyclic
+      reference chains
+
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/memvars.c
+    * use hb_itemCopyToRef() to avoid creation of cyclic reference chains
+
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    * use hb_itemMoveToRef() to avoid creation of cyclic reference chains
+    + added support for for writable string enumerators, f.e.:
+         proc main()
+         local s, c
+         s:="abcdefghijklmnopqrst"
+         for each c in @s
+            if c$"aeio"
+               c:="*"
+            endif
+         next
+         ? s // "*bcd*fgh*jklmn*pqrst"
+         return
+
 2007-01-09 16:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/include/hbver.h

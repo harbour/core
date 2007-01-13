@@ -58,7 +58,7 @@
 #include "harboury.h"
 
 #define HB_PP_LEX_SELF(t)     ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_SEND && \
-                                (t)->pNext && t->pNext->spaces == 0 && \
+                                (t)->pNext && (t)->pNext->spaces == 0 && \
                                 HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_SEND )
 
 #define HB_PP_LEX_NEEDLEFT(t) ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_ASSIGN || \
@@ -83,7 +83,7 @@
                                 HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_RIGHT_SB || \
                                 HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_RIGHT_CB || \
                                 ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_SEND && \
-                                  !HB_PP_LEX_SELF(t) ) )
+                                  (t)->spaces == 0 && !HB_PP_LEX_SELF(t) ) )
 
 #define LOOKUP           0
 #define OPERATOR        -2
@@ -942,23 +942,24 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 
             case IIF:
                if( pLex->iState == FUNCTION || pLex->iState == PROCEDURE ||
-                   HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                   ( !HB_SUPPORT_HARBOUR && HB_PP_TOKEN_ISEOC( pToken->pNext ) ) )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IIF", NULL );
-               else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_LEFT_PB )
-                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
-                                   HB_COMP_ERR_SYNTAX, pToken->pNext->value, NULL );
-               else
+               else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
                   pLex->iState = IIF;
                   return IIF;
                }
+               else if( ! HB_SUPPORT_HARBOUR )
+                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                   HB_COMP_ERR_SYNTAX, pToken->pNext->value, NULL );
+               else
                iType = IDENTIFIER;
                break;
 
             case IF:
                if( pLex->iState == FUNCTION || pLex->iState == PROCEDURE ||
-                   HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                   ( !HB_SUPPORT_HARBOUR && HB_PP_TOKEN_ISEOC( pToken->pNext ) ) )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_SYNTAX, "IF", NULL );
                else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
@@ -966,9 +967,12 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                   pLex->iState = pLex->iState == LOOKUP ? IF : IIF;
                   return pLex->iState;
                }
-               else if( HB_PP_LEX_NEEDLEFT( pToken->pNext ) )
-                  hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
-                                   HB_COMP_ERR_SYNTAX2, pToken->pNext->value, "IF" );
+               else if( HB_PP_LEX_NEEDLEFT( pToken->pNext ) || pLex->iState != LOOKUP )
+               {
+                  if( !HB_SUPPORT_HARBOUR )
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
+                                      HB_COMP_ERR_SYNTAX2, pToken->pNext->value, "IF" );
+               }
                else
                {
                   pLex->iState = IF;

@@ -523,8 +523,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
 
-   snprintf( pszVersion, 80, "Harbour Alpha build %d.%d Intl.",
-             HB_VER_MINOR, HB_VER_REVISION );
+   snprintf( pszVersion, 80, "Harbour %s build %d.%d-%d Intl.",
+             HB_VER_STATUS, HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION );
 
    return pszVersion;
 }

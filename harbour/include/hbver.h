@@ -58,6 +58,7 @@
 #define HB_VER_MAJOR    1       /* Major version number */
 #define HB_VER_MINOR    1       /* Minor version number */
 #define HB_VER_REVISION 0       /* Revision number */
+#define HB_VER_STATUS   "devel" /* Build status */
 
 /* NOTE: The next two fields are automatically updated by the hbverfix program */
 

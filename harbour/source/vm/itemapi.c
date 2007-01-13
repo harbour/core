@@ -97,6 +97,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
+#include "hbapicls.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
 #include "hbapierr.h"
@@ -1333,6 +1334,39 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    }
 }
 
+/* Internal API, not standard Clipper */
+
+void hb_itemCopyToRef( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyToRef(%p, %p)", pDest, pSource));
+
+   if( HB_IS_BYREF( pDest ) )
+   {
+      pDest = hb_itemUnRefWrite( pDest, pSource );
+      if( !pDest || pDest == pSource )
+         /* extended reference or pDest is a reference to pSource
+            - do not copy */
+         return;
+   }
+
+   if( HB_IS_BYREF( pSource ) )
+   {
+      if( hb_itemUnRef( pSource ) == pDest )
+         /*
+          * assign will create cyclic reference
+          * pSource and pDest reference to the same item
+          * we can simply drop coping
+          */
+         return;
+   }
+
+   if( HB_IS_OBJECT( pDest ) &&
+       hb_objOperatorCall( HB_OO_OP_ASSIGN, pDest, pDest, pSource, NULL ) )
+      return;
+
+   hb_itemCopy( pDest, pSource );
+}
+
 /*
  * copy (transfer) the value of item without increasing 
  * a reference counters, the pSource item is cleared
@@ -1350,6 +1384,81 @@ HB_EXPORT void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pSource->type = HB_IT_NIL;
 }
+
+/* Internal API, not standard Clipper */
+
+void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemMoveRef(%p, %p)", pDest, pSource));
+
+   if( HB_IS_COMPLEX( pDest ) )
+      hb_itemClear( pDest );
+
+   if( HB_IS_BYREF( pSource ) )
+   {
+      if( hb_itemUnRef( pSource ) == pDest )
+      {
+         /*
+          * assign will create cyclic reference
+          * pSource is a reference to pDest
+          * we can simply drop coping
+          */
+         hb_itemClear( pDest );
+         return;
+      }
+   }
+
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   pSource->type = HB_IT_NIL;
+}
+
+/* Internal API, not standard Clipper */
+
+void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemMoveToRef(%p, %p)", pDest, pSource));
+
+   if( HB_IS_BYREF( pDest ) )
+   {
+      pDest = hb_itemUnRefWrite( pDest, pSource );
+      if( !pDest || pDest == pSource )
+      {
+         /* extended reference or pDest is a reference to pSource
+            - do not copy */
+         hb_itemSetNil( pSource );
+         return;
+      }
+   }
+
+   if( HB_IS_BYREF( pSource ) )
+   {
+      if( hb_itemUnRef( pSource ) == pDest )
+      {
+         /*
+          * assign will create cyclic reference
+          * pSource and pDest reference to the same item
+          * we can simply drop coping
+          */
+         hb_itemSetNil( pSource );
+         return;
+      }
+   }
+
+   if( HB_IS_OBJECT( pDest ) &&
+       hb_objOperatorCall( HB_OO_OP_ASSIGN, pDest, pDest, pSource, NULL ) )
+   {
+      hb_itemSetNil( pSource );
+      return;
+   }
+
+   if( HB_IS_COMPLEX( pDest ) )
+      hb_itemClear( pDest );
+
+   memcpy( pDest, pSource, sizeof( HB_ITEM ) );
+   pSource->type = HB_IT_NIL;
+}
+
+/* Internal API, not standard Clipper */
 
 HB_EXPORT void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
@@ -1430,6 +1539,21 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                                  2, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
                   hb_stackPop();
                   hb_stackPop();
+
+                  /* check it again - user error handler can resize the array */
+                  if( ( ULONG ) pItem->item.asRefer.value <
+                      pItem->item.asRefer.BasePtr.array->ulLen )
+                  {
+                     pItem = pItem->item.asRefer.BasePtr.array->pItems +
+                             pItem->item.asRefer.value;
+                  }
+                  else
+                     /* It's safe to clear the item - if we are here then
+                        the reference chain to this item does not start in
+                        one of the pItem->item.asRefer.BasePtr.array items
+                        or more then one reference to this array exists
+                        so it will not be freed [druzus] */
+                     hb_itemClear( pItem );
                }
             }
             else
@@ -1459,17 +1583,48 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 {
-   PHB_ITEM pRef = pItem;
-   PHB_ITEM pLast;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
 
    do
    {
-      pLast = pItem;
       pItem = hb_itemUnRefOnce( pItem );
    }
-   while( HB_IS_BYREF( pItem ) && pRef != pItem && pLast != pItem );
+   while( HB_IS_BYREF( pItem ) );
+
+   return pItem;
+}
+
+/* Unreference passed variable for writing
+ * Do not unreference string enumerators
+ */
+PHB_ITEM hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefWrite(%p,%p)", pItem, pSource));
+
+   if( HB_IS_STRING( pSource ) &&
+       pSource->item.asString.length == 1 )
+   {
+      do
+      {
+         if( HB_IS_ENUM( pItem ) && HB_IS_BYREF( pItem->item.asEnum.basePtr ) &&
+             pItem->item.asEnum.offset >= 1 )
+         {
+            PHB_ITEM pBase = hb_itemUnRef( pItem->item.asEnum.basePtr );
+            if( HB_IS_STRING( pBase ) &&
+                ( ULONG ) pItem->item.asEnum.offset <= pBase->item.asString.length )
+            {
+               hb_itemUnShareString( pBase );
+               pBase->item.asString.value[ pItem->item.asEnum.offset - 1 ] =
+                                             pSource->item.asString.value[ 0 ];
+               return pItem->item.asEnum.valuePtr;
+            }
+         }
+         pItem = hb_itemUnRefOnce( pItem );
+      }
+      while( HB_IS_BYREF( pItem ) );
+   }
+   else
+      pItem = hb_itemUnRef( pItem );
 
    return pItem;
 }
@@ -1479,7 +1634,6 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
  */
 PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 {
-   PHB_ITEM pRef = pItem;
    PHB_ITEM pLast;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefRefer(%p)", pItem));
@@ -1489,7 +1643,7 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
       pLast = pItem;
       pItem = hb_itemUnRefOnce( pItem );
    }
-   while( HB_IS_BYREF( pItem ) && pRef != pItem && pLast != pItem );
+   while( HB_IS_BYREF( pItem ) );
 
    return pLast;
 }
@@ -1611,13 +1765,15 @@ HB_EXPORT int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact
 
    ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
 
-   /* One of the strings is empty */
+   /* Both strings not empty */
    if( ulMinLen )
    {
+#ifndef HB_CDP_SUPPORT_OFF
       if( hb_cdp_page->lSort )
          iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
                            hb_cdp_page, hb_set.HB_SET_EXACT || bForceExact );
       else
+#endif
       {
          do
          {

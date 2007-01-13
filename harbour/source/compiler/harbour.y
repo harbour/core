@@ -240,7 +240,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
-%type <asExpr>  ForVar ForList ForExpr
+%type <asExpr>  ForVar ForList ForExpr ForArgs
 %type <asCodeblock> CBSTART
 %type <asExpr>  DateValue
 %type <asMessage> SendId
@@ -1596,15 +1596,20 @@ ForVar     : IdentName     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
            | AliasVar      { $$ = hb_compExprNewRef( $1, HB_COMP_PARAM ); }
            ;
 
-ForList    : ForVar                { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
-           | ForList ',' ForVar    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ForList    : ForVar              { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
+           | ForList ',' ForVar  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-ForExpr    : Expression              { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
-           | ForExpr ',' Expression  { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ForExpr    : '@' IdentName       { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
+           | Expression
+           ;
+
+ForArgs    : ForExpr             { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
+           | ForArgs ',' ForExpr { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;           
 
-ForEach    : FOREACH ForList IN ForExpr          /* 1  2  3  4 */
+
+ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
              {
                 ++HB_COMP_PARAM->wForCounter;              /* 5 */
                 hb_compLinePushIfInside( HB_COMP_PARAM );

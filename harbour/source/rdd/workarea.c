@@ -378,7 +378,7 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          return errCode;
       }
       /* Add field */
-      else if( SELF_ADDFIELD( pArea, &pFieldInfo ) != SUCCESS ) 
+      else if( SELF_ADDFIELD( pArea, &pFieldInfo ) != SUCCESS )
          return FAILURE;
    }
    return SUCCESS;

@@ -1502,7 +1502,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
             else if( pMsg == s___msgEnumBase.pDynSym )
             {
-               hb_itemCopy( hb_stackReturnItem(), pEnum->item.asEnum.basePtr );
+               if( HB_IS_BYREF( pEnum->item.asEnum.basePtr ) )
+                  hb_itemCopy( hb_stackReturnItem(),
+                               hb_itemUnRef( pEnum->item.asEnum.basePtr ) );
+               else
+                  hb_itemCopy( hb_stackReturnItem(),
+                               pEnum->item.asEnum.basePtr );
                if( hb_pcount() > 0 )
                   hb_itemCopy( pEnum->item.asEnum.basePtr,
                                hb_itemUnRef( hb_stackItemFromBase( 1 ) ) );

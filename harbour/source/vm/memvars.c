@@ -403,16 +403,11 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       if( pDyn->hMemvar )
       {
          /* value is already created */
-         HB_ITEM_PTR pSetItem = s_globalTable[ pDyn->hMemvar ].pVarItem;
-         if( HB_IS_BYREF( pSetItem ) )
-            hb_itemCopy( hb_itemUnRef( pSetItem ), pItem );
-         else
-            hb_itemCopy( pSetItem, pItem );
+         hb_itemCopyToRef( s_globalTable[ pDyn->hMemvar ].pVarItem, pItem );
       }
       else
       {
-         /* assignment to undeclared memvar - PRIVATE is assumed
-          */
+         /* assignment to undeclared memvar - PRIVATE is assumed */
          hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
 
