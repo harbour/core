@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-14 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macro.y
+    * formatting
+  * harbour/source/vm/macro.c
+    ! fixed macrocompiler for proper compilation of string with embedded
+      ASCII NUL byte (chr(0)), f.e.:
+         ? &("'["+chr(0)+"]'")
+
 2007-01-13 14:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/adsfunc.c
   * harbour/source/rdd/workarea.c

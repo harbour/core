@@ -235,7 +235,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 %%
 
-Main : Expression '\n' {
+Main : Expression '\n'  {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprGenPush( $1, HB_COMP_PARAM );
@@ -244,7 +244,7 @@ Main : Expression '\n' {
                            hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
 
-     | Expression      {
+     | Expression       {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprGenPush( $1, HB_COMP_PARAM );
