@@ -79,29 +79,53 @@ static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCo
 {
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
    {
+      LONG lOffset = 0;
+      BOOL fNot = FALSE;
+      int iSize = 0;
+
       switch( pFunc->pCode[ lPCodePos + 1 ] )
       {
          case HB_P_JUMPFALSENEAR:
-            fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
-                     szFunc, lValue );
-            fprintf( cargo->yyc, "\tif( !fValue )\n\t\tgoto lab%05ld;\n",
-                     HB_GENC_GETLABEL( lPCodePos + 1 +
-                                       ( signed char ) ( pFunc->pCode[ lPCodePos + 2 ] ) ) );
-            return 3;
+            lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 2 ] );
+            fNot = TRUE;
+            iSize = 3;
+            break;
+
          case HB_P_JUMPFALSE:
-            fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
-                     szFunc, lValue );
-            fprintf( cargo->yyc, "\tif( !fValue )\n\t\tgoto lab%05ld;\n",
-                     HB_GENC_GETLABEL( lPCodePos + 1 +
-                                       HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 2 ] ) ) );
-            return 4;
+            lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+            fNot = TRUE;
+            iSize = 4;
+            break;
+
          case HB_P_JUMPFALSEFAR:
-            fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
-                     szFunc, lValue );
-            fprintf( cargo->yyc, "\tif( !fValue )\n\t\tgoto lab%05ld;\n",
-                     HB_GENC_GETLABEL( lPCodePos + 1 +
-                                       HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 2 ] ) ) );
-            return 5;
+            lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 2 ] );
+            fNot = TRUE;
+            iSize = 5;
+            break;
+
+         case HB_P_JUMPTRUENEAR:
+            lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 2 ] );
+            iSize = 3;
+            break;
+
+         case HB_P_JUMPTRUE:
+            lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 2 ] );
+            iSize = 4;
+            break;
+
+         case HB_P_JUMPTRUEFAR:
+            lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 2 ] );
+            iSize = 5;
+            break;
+      }
+
+      if( iSize )
+      {
+         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
+                  szFunc, lValue );
+         fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05ld;\n",
+                  fNot ? "!" : "", HB_GENC_GETLABEL( lPCodePos + 1 + lOffset ) );
+         return iSize;
       }
    }
    fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ld ) ) break;\n",
@@ -1688,10 +1712,14 @@ static HB_GENC_FUNC( hb_p_withobjectend )
 
 static HB_GENC_FUNC( hb_p_withobjectmessage )
 {
+   USHORT usSym = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmWithObjectMessage( symbols + %hu );\n",
-            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   if( usSym == 0xFFFF )
+      fprintf( cargo->yyc, "\thb_xvmWithObjectMessage( NULL );\n" );
+   else
+      fprintf( cargo->yyc, "\thb_xvmWithObjectMessage( symbols + %hu );\n",
+               usSym );
 
    return 3;
 }

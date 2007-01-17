@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-17 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/gencc.c
+  * harbour/source/vm/hvm.c
+    ! fixed typo in hb_xvmGreaterEqualThenIntIs() - <= was used instead
+      of >=
+    ! fixed :&macro() messages used in WITH OBJECT structure and -gc3
+      output
+    + added some missing optimizations in -gc3 output
+
 2007-01-17 03:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/ctc.c
   * harbour/contrib/libct/files.c

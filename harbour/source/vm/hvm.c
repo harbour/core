@@ -574,6 +574,8 @@ HB_EXPORT int hb_vmQuit( void )
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_cdpReleaseAll();          /* releases codepages */
 
+   hb_itemClear( hb_stackReturnItem() );
+
    /* release all known garbage */
    if( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
       hb_gcCollectAll();
@@ -7096,7 +7098,7 @@ HB_EXPORT BOOL hb_xvmEqualIntIs( LONG lValue, BOOL * pfValue )
    if( HB_IS_NIL( pItem ) )
    {
       * pfValue = FALSE;
-      hb_stackPop();
+      hb_stackDec();
    }
    else if( HB_IS_NUMINT( pItem ) )
    {
@@ -7201,7 +7203,7 @@ HB_EXPORT BOOL hb_xvmNotEqualIntIs( LONG lValue, BOOL * pfValue )
    if( HB_IS_NIL( pItem ) )
    {
       * pfValue = TRUE;
-      hb_stackPop();
+      hb_stackDec();
    }
    else if( HB_IS_NUMINT( pItem ) )
    {
@@ -7257,13 +7259,11 @@ HB_EXPORT BOOL hb_xvmLessThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_NUMINT( pItem ) )
    {
-      HB_LONG lNumber = hb_vmPopHBLong();
-      hb_vmPushLogical( lNumber < ( HB_LONG ) lValue );
+      hb_vmPushLogical( hb_vmPopHBLong() < ( HB_LONG ) lValue );
    }
    else if( HB_IS_NUMERIC( pItem ) )
    {
-      double dNumber = hb_vmPopNumber();
-      hb_vmPushLogical( dNumber < ( double ) lValue );
+      hb_vmPushLogical( hb_vmPopNumber() < ( double ) lValue );
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESS ) )
    {
@@ -7352,13 +7352,11 @@ HB_EXPORT BOOL hb_xvmLessEqualThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_NUMINT( pItem ) )
    {
-      HB_LONG lNumber = hb_vmPopHBLong();
-      hb_vmPushLogical( lNumber <= ( HB_LONG ) lValue );
+      hb_vmPushLogical( hb_vmPopHBLong() <= ( HB_LONG ) lValue );
    }
    else if( HB_IS_NUMERIC( pItem ) )
    {
-      double dNumber = hb_vmPopNumber();
-      hb_vmPushLogical( dNumber <= ( double ) lValue );
+      hb_vmPushLogical( hb_vmPopNumber() <= ( double ) lValue );
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_LESSEQUAL ) )
    {
@@ -7447,13 +7445,11 @@ HB_EXPORT BOOL hb_xvmGreaterThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_NUMINT( pItem ) )
    {
-      HB_LONG lNumber = hb_vmPopHBLong();
-      hb_vmPushLogical( lNumber > ( HB_LONG ) lValue );
+      hb_vmPushLogical( hb_vmPopHBLong() > ( HB_LONG ) lValue );
    }
    else if( HB_IS_NUMERIC( pItem ) )
    {
-      double dNumber = hb_vmPopNumber();
-      hb_vmPushLogical( dNumber > ( double ) lValue );
+      hb_vmPushLogical( hb_vmPopNumber() > ( double ) lValue );
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATER ) )
    {
@@ -7542,13 +7538,11 @@ HB_EXPORT BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_NUMINT( pItem ) )
    {
-      HB_LONG lNumber = hb_vmPopHBLong();
-      hb_vmPushLogical( lNumber >= ( HB_LONG ) lValue );
+      hb_vmPushLogical( hb_vmPopHBLong() >= ( HB_LONG ) lValue );
    }
    else if( HB_IS_NUMERIC( pItem ) )
    {
-      double dNumber = hb_vmPopNumber();
-      hb_vmPushLogical( dNumber >= ( double ) lValue );
+      hb_vmPushLogical( hb_vmPopNumber() >= ( double ) lValue );
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATEREQUAL ) )
    {
@@ -7585,11 +7579,11 @@ HB_EXPORT BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, BOOL * pfValue )
    pItem = hb_stackItemFromTop( -1 );
    if( HB_IS_NUMINT( pItem ) )
    {
-      * pfValue = hb_vmPopHBLong() <= ( HB_LONG ) lValue;
+      * pfValue = hb_vmPopHBLong() >= ( HB_LONG ) lValue;
    }
    else if( HB_IS_NUMERIC( pItem ) )
    {
-      * pfValue = hb_vmPopNumber() <= ( double ) lValue;
+      * pfValue = hb_vmPopNumber() >= ( double ) lValue;
    }
    else if( hb_objHasOperator( pItem, HB_OO_OP_GREATEREQUAL ) )
    {
@@ -8417,7 +8411,8 @@ HB_EXPORT void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmWithObjectMessage(%p)", pSymbol));
 
-   hb_vmPushSymbol( pSymbol );
+   if( pSymbol )
+      hb_vmPushSymbol( pSymbol );
    hb_vmPush( hb_stackWithObjectItem() );
 }
 
