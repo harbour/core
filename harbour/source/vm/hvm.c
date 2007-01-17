@@ -539,6 +539,8 @@ HB_EXPORT int hb_vmQuit( void )
       hb_pp_Free();
    #endif
 
+   hb_idleShutDown();
+
    /* process AtExit registered functions */
    hb_vmDoModuleExitFunctions();
    hb_vmCleanModuleFunctions();
@@ -546,6 +548,7 @@ HB_EXPORT int hb_vmQuit( void )
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
+
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
 
    /* intentionally here to allow executing object destructors for all
@@ -553,8 +556,11 @@ HB_EXPORT int hb_vmQuit( void )
     */
    hb_gcCollectAll();
 
+   /* Clear any pending actions so RDD shutdown process
+    * can be cleanly executed
+    */
+   s_uiActionRequest = 0;
    hb_rddShutDown();
-   hb_idleShutDown();
 
    hb_errExit();
    hb_clsReleaseAll();
@@ -3063,6 +3069,17 @@ static void hb_vmInstring( void )
    else if( hb_objOperatorCall( HB_OO_OP_INSTRING, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
 
+#if defined( HB_COMPAT_XHB )
+   else if( HB_IS_ARRAY( pItem2 ) )
+   {
+      BOOL fResult = hb_arrayScan( pItem2, pItem1, NULL, NULL, TRUE );
+
+      hb_stackPop();
+      hb_stackPop();
+
+      hb_vmPushLogical( fResult );
+   }
+#endif
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1109, NULL, "$", 2, pItem1, pItem2 );
@@ -3665,7 +3682,7 @@ static void hb_vmArrayPush( void )
          return;
       }
 
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          if( hb_gcRefCount( pArray->item.asArray.value ) > 1 )
          {
@@ -3691,16 +3708,20 @@ static void hb_vmArrayPush( void )
 /* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
-      BYTE b = 0;
-
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
-         b = ( BYTE ) pArray->item.asString.value[ ulIndex - 1 ];
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
+      {
+         UCHAR uc = ( UCHAR ) pArray->item.asString.value[ ulIndex - 1 ];
+#if defined( HB_COMPAT_XHB )
+         hb_itemPutCL( pArray, hb_vm_acAscii[ uc ], 1 );
+#else
+         hb_itemPutNI( pArray, uc );
+#endif
+         hb_stackPop();
+      }
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                         2, pArray, pIndex );
 
-      hb_itemPutNI( pArray, b );
-      hb_stackPop();
       return;
    }
 /* #endif */
@@ -3759,7 +3780,7 @@ static void hb_vmArrayPushRef( void )
          return;
       }
 #endif
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          /* This function is safe for overwriting passed array, [druzus] */
          hb_arrayGetItemRef( pArray, ulIndex, pArray );
@@ -3797,6 +3818,9 @@ static void hb_vmArrayPop( void )
       return;
    }
 
+   if( HB_IS_BYREF( pArray ) )
+      pArray = hb_itemUnRef( pArray );
+
    if( HB_IS_ARRAY( pArray ) )
    {
       if( HB_IS_OBJECT( pArray ) &&
@@ -3808,7 +3832,7 @@ static void hb_vmArrayPop( void )
          return;
       }
 
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
          hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
@@ -3822,14 +3846,22 @@ static void hb_vmArrayPop( void )
 /* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
       {
+#if defined( HB_COMPAT_XHB )
+         char cValue = HB_IS_STRING( pValue ) ? pValue->item.asString.value[ 0 ] :
+                                                hb_itemGetNI( pValue );
+#else
+         char cValue = hb_itemGetNI( pValue );
+#endif
          if( pArray->item.asString.length == 1 )
-            hb_itemPutCL( pArray, hb_vm_acAscii[ ( unsigned char ) hb_itemGetNI( pValue ) ], 1 );
+         {
+            hb_itemPutCL( pArray, hb_vm_acAscii[ ( unsigned char ) cValue ], 1 );
+         }
          else
          {
             hb_itemUnShareString( pArray );
-            pArray->item.asString.value[ ulIndex - 1 ] = ( char ) hb_itemGetNI( pValue );
+            pArray->item.asString.value[ ulIndex - 1 ] = ( char ) cValue;
          }
 
          hb_stackPop();
@@ -6002,7 +6034,7 @@ HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiModuleSymb
    if( uiPCodeVer != 0 )
    {
       if( uiPCodeVer > HB_PCODE_VER || /* the module is compiled with newer compiler version then HVM */
-          uiPCodeVer < HB_PCODE_VER_MIN )  /* the module is compiled with olde compiler version */
+          uiPCodeVer < HB_PCODE_VER_MIN )  /* the module is compiled with old not longer supported by HVM compiler version */
       {
          char szPCode[ 10 ];
          snprintf( szPCode, sizeof( szPCode ), "%i.%i", uiPCodeVer>>8, uiPCodeVer &0xff );
@@ -7992,7 +8024,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
          return;
       }
 
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          if( hb_gcRefCount( pArray->item.asArray.value ) > 1 )
          {
@@ -8022,19 +8054,21 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
 /* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
-      BYTE b = 0;
-
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
-         b = pArray->item.asString.value[ ulIndex - 1 ];
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
+      {
+         UCHAR uc = ( UCHAR ) pArray->item.asString.value[ ulIndex - 1 ];
+#if defined( HB_COMPAT_XHB )
+         hb_itemPutCL( pArray, hb_vm_acAscii[ uc ], 1 );
+#else
+         hb_itemPutNI( pArray, uc );
+#endif
+      }
       else
       {
          hb_vmPushNumInt( ulIndex );
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                         2, pArray, hb_stackItemFromTop( -1 ) );
-         hb_stackPop();
       }
-      hb_stackPop();
-      hb_vmPushInteger( b );
       return;
    }
 /* #endif */
@@ -8062,6 +8096,9 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
    pValue = hb_stackItemFromTop( -2 );
    pArray = hb_stackItemFromTop( -1 );
 
+   if( HB_IS_BYREF( pArray ) )
+      pArray = hb_itemUnRef( pArray );
+
    if( HB_IS_ARRAY( pArray ) )
    {
       if( HB_IS_OBJECT( pArray ) && hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
@@ -8075,7 +8112,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
          return;
       }
 
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
          hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
@@ -8089,16 +8126,24 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       }
    }
 /* #ifndef HB_C52_STRICT */
-   else if( hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) && HB_IS_STRING( pArray ) )
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
       {
+#if defined( HB_COMPAT_XHB )
+         char cValue = HB_IS_STRING( pValue ) ? pValue->item.asString.value[ 0 ] :
+                                                hb_itemGetNI( pValue );
+#else
+         char cValue = hb_itemGetNI( pValue );
+#endif
          if( pArray->item.asString.length == 1 )
-            hb_itemPutCL( pArray, hb_vm_acAscii[ ( BYTE ) hb_itemGetNI( pValue ) ], 1 );
+         {
+            hb_itemPutCL( pArray, hb_vm_acAscii[ ( unsigned char ) cValue ], 1 );
+         }
          else
          {
             hb_itemUnShareString( pArray );
-            pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
+            pArray->item.asString.value[ ulIndex - 1 ] = ( char ) cValue;
          }
          hb_stackPop();
          hb_stackPop();    /* remove the value from the stack just like other POP operations */

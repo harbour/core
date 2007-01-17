@@ -328,7 +328,7 @@ HB_FUNC(SETFATTR)
 
 HB_FUNC(FILESEEK)
 {
-   #if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
+#if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
    {
       LPCTSTR szFile;
       DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
@@ -352,6 +352,7 @@ HB_FUNC(FILESEEK)
    
          if( iAttr & FA_SYSTEM )
             dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+
          if( iAttr & FA_NORMAL )
             dwFlags |=    FILE_ATTRIBUTE_NORMAL;
 

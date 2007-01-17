@@ -1283,7 +1283,8 @@ BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
    {
-   	if( pSub->value.asString.string[0] == '\0' )
+      /* This is CA-Clipper optimizer behavior */
+      if( pSub->ulLength == 0 )
       {
          pReduced = hb_compExprNewLong( 1, HB_COMP_PARAM );
       }

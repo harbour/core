@@ -70,6 +70,7 @@
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
+/* #define HB_COMPAT_XHB */       /* Enable xHarbour extensions */
 
 /* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
          set to 10 explicitly and not through the HB_C52_STRICT option

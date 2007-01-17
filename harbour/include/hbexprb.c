@@ -318,7 +318,8 @@ static HB_EXPR_FUNC( hb_compExprUseString )
       case HB_EA_REDUCE:
          break;
       case HB_EA_ARRAY_AT:
-         hb_compErrorType( HB_COMP_PARAM, pSelf );
+         if( ! HB_SUPPORT_ARRSTR )
+            hb_compErrorType( HB_COMP_PARAM, pSelf );
          break;
       case HB_EA_ARRAY_INDEX:
          hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* string cannot be used as index element */
@@ -1208,34 +1209,66 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             else
                lIndex = ( LONG ) pIdx->value.asNum.val.d;
 
+#if !defined( HB_COMPAT_XHB )
             if( lIndex <= 0 )
                hb_compErrorBound( HB_COMP_PARAM, pIdx ); /* index <= 0 - bound error */
-            else if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
+            else
+#endif
+            if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
-               pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
-               while( --lIndex && pExpr )
-                  pExpr = pExpr->pNext;
+               ULONG ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
 
-               if( pExpr ) /* found ? */
-               {
-                  /* extract a single expression from the array
-                   */
-                  HB_EXPR_PTR pNew = hb_compExprNew( HB_ET_NONE, HB_COMP_PARAM );
-                  memcpy( pNew, pExpr, sizeof(  HB_EXPR ) );
-                  /* This will suppres releasing of memory occupied by components of
-                  * the expression - we have just copied them into the new expression.
-                  * This method is simpler then traversing the list and releasing all
-                  * but this choosen one.
-                  */
-                  pExpr->ExprType = HB_ET_NONE;
-                  /* Here comes the magic */
-                  HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
-                  pSelf = pNew;
-               }
+               if( pExpr->ExprType == HB_ET_MACROARGLIST )
+                  /* restore original expression type */
+                  pExpr->ExprType = HB_ET_ARRAY;
+               else if( !HB_IS_VALID_INDEX( lIndex, ulSize ) )
+                  hb_compErrorBound( HB_COMP_PARAM, pIdx );
                else
                {
-                  hb_compErrorBound( HB_COMP_PARAM, pIdx );
+                  pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
+                  while( --lIndex && pExpr )
+                     pExpr = pExpr->pNext;
+
+                  if( pExpr ) /* found ? */
+                  {
+                     /* extract a single expression from the array
+                      */
+                     HB_EXPR_PTR pNew = hb_compExprNew( HB_ET_NONE, HB_COMP_PARAM );
+                     memcpy( pNew, pExpr, sizeof( HB_EXPR ) );
+                     /* This will suppres releasing of memory occupied by components of
+                      * the expression - we have just copied them into the new expression.
+                      * This method is simpler then traversing the list and releasing all
+                      * but this choosen one.
+                      */
+                     pExpr->ExprType = HB_ET_NONE;
+                     /* Here comes the magic */
+                     HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+                     pSelf = pNew;
+                  }
+                  else
+                     hb_compErrorBound( HB_COMP_PARAM, pIdx );
                }
+            }
+            else if( pExpr->ExprType == HB_ET_STRING && HB_SUPPORT_ARRSTR )   /* is it a literal string */
+            {
+               if( HB_IS_VALID_INDEX( lIndex, pExpr->ulLength ) )
+               {
+#if defined( HB_COMPAT_XHB )
+                  char * pszValue = ( char * ) hb_xgrab( 2 );
+                  pszValue[ 0 ] = pExpr->value.asString.string[ lIndex - 1 ];
+                  pszValue[ 1 ] = '\0';
+
+                  HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+                  pSelf = hb_compExprNewString( pszValue, 1, TRUE, HB_COMP_PARAM );
+#else
+                  UCHAR ucValue = ( UCHAR ) pExpr->value.asString.string[ lIndex - 1 ];
+
+                  HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+                  pSelf = hb_compExprNewLong( ucValue, HB_COMP_PARAM );
+#endif
+               }
+               else
+                  hb_compErrorBound( HB_COMP_PARAM, pIdx );
             }
             else
             {
@@ -1281,6 +1314,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
          break;
       }
+
       case HB_EA_POP_PCODE:
       {
          BOOL fMacroIndex = FALSE, bRemoveRef = FALSE;

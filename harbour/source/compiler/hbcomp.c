@@ -77,6 +77,9 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_HB_INLINE |
                          HB_COMPFLAG_OPTJUMP   |
                          HB_COMPFLAG_MACROTEXT |
+#if defined( HB_COMPAT_XHB )
+                         HB_COMPFLAG_ARRSTR    |
+#endif
                          HB_COMPFLAG_SHORTCUTS;
 
       pComp->fTextSubst       = ( pComp->supported & HB_COMPFLAG_MACROTEXT ) != 0;

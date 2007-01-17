@@ -76,6 +76,13 @@ void hb_verBuildInfo( void )
    }
 
    {
+      char * pszPCode = hb_verPCode();
+      hb_conOutErr( pszPCode, 0 );
+      hb_conOutErr( hb_conNewLine(), 0 );
+      hb_xfree( pszPCode );
+   }
+
+   {
       char * pszVersion = hb_verCompiler();
       hb_conOutErr( "Compiler: ", 0 );
       hb_conOutErr( pszVersion, 0 );
@@ -156,6 +163,14 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( "CA-Clipper 5.3x compatible extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
+   hb_conOutErr( "Yes", 0 );
+#else
+   hb_conOutErr( "No", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "xHarbour compatible extensions: ", 0 );
+#if defined( HB_COMPAT_XHB )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );

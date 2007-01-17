@@ -8,9 +8,66 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-17 03:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/ctc.c
+  * harbour/contrib/libct/files.c
+  * harbour/contrib/libnf/ftattr.c
+  * harbour/contrib/libnf/n2color.c
+    * cleaned some BCC warnings
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbsetup.ch
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbver.c
+  * harbour/source/common/hbverdsp.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/arrayshb.c
+  * harbour/source/vm/cmdarg.c
+  * harbour/source/vm/hvm.c
+    ! fixed Harbour support for accessing string characters with array
+      index operators []
+    + added support for #define HB_COMPAT_XHB - it's disabled by default.
+      When set it enables some of xHarbour features like negative array
+      indexes calculated from tail, accessing string characters with []
+      operators (warning it's not compatible with default Harbour version
+      enabled by -ks during compilation and //flags:s at runtime - in
+      xHarbour compatibility mode "ABC"[2] returns "B" when in Harbour 66)
+      and some other minor features.
+
+  * harbour/source/compiler/cmdcheck.c
+    * added support for optional setting C output type in -go switch
+      Now it accepts optional digit [0123] after -go in the same way
+      as -gc, f.e.: -go3
+
+  * harbour/source/compiler/harbour.c
+    * call hb_compExprLstDealloc() only when errors appeared during
+      compilation - it disable automatic freeing all allocated expressions
+      in clean compilation. I make it intentionally for easier detecting
+      problems one some expressions are not freed. So far the final cleanup
+      code always deallocated expressions what can hide some real bugs.
+
+  * harbour/source/vm/hvm.c
+    ! fixed very serious bug in HVM closing. The s_uiActionRequest flag
+      was not cleared before hb_rddShutDown() so when RDD buffers were
+      hot and flushing required some PCODE evaluation (f.e. index KEY
+      or FOR expression) then they were not properly evaluated.
+
+  * harbour/source/vm/macro.c
+    * minor improvement
+
+  * harbour/utils/hbtest/rt_misc.prg
+    ! fixed one of expected result, it was neither Harbour nor Clipper
+      result (I've just made some test with Clipper), I do not know why
+      it existed
+
 2007-01-14 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/macro/macro.y
     * formatting
+
   * harbour/source/vm/macro.c
     ! fixed macrocompiler for proper compilation of string with embedded
       ASCII NUL byte (chr(0)), f.e.:

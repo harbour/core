@@ -262,6 +262,65 @@ HB_EXPR_PTR hb_compExprNewDate( HB_LONG lValue, HB_COMP_DECL )
    return pExpr;
 }
 
+HB_EXPR_PTR hb_compExprNewString( char *szValue, ULONG ulLen, BOOL fDealloc, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewString(%s)", szValue));
+
+   pExpr = hb_compExprNew( HB_ET_STRING, HB_COMP_PARAM );
+
+   pExpr->value.asString.string = szValue;
+   pExpr->value.asString.dealloc = fDealloc;
+   pExpr->ulLength = ulLen;
+   pExpr->ValType = HB_EV_STRING;
+
+   return pExpr;
+}
+
+/* Creates a new literal array { item1, item2, ... itemN }
+ *    'pArrList' is a list of array elements
+ */
+HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArray()"));
+
+   pArrList->ExprType = HB_ET_ARRAY;   /* change type from ET_LIST */
+   pArrList->ValType  = HB_EV_ARRAY;
+   pArrList->ulLength = 0;
+   pArrList->value.asList.reference = FALSE;
+
+   pExpr = pArrList->value.asList.pExprList;   /* get first element on the list */
+   /* Now we need to replace all EO_NONE expressions with ET_NIL expressions
+    * If EO_NONE is the first expression and there is no more expressions
+    * then it is an empty array {} and ET_NIL cannot be used
+    */
+   if( pExpr->ExprType == HB_ET_NONE && pExpr->pNext == NULL )
+   {
+      pArrList->value.asList.pExprList = NULL;
+      HB_EXPR_PCODE1( hb_compExprDelete, pExpr );
+   }
+   else
+   {
+      /* there are at least one non-empty element specified
+       */
+      while( pExpr )
+      {
+         /* if empty element was specified replace it with NIL value */
+         if( pExpr->ExprType == HB_ET_NONE )
+            pExpr->ExprType = HB_ET_NIL;
+         pExpr = pExpr->pNext;
+         ++pArrList->ulLength;
+      }
+   }
+   pArrList->value.asList.pIndex = NULL;
+
+   return pArrList;
+}
+
+
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, int iLen, int iFlags, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;

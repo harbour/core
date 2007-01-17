@@ -137,9 +137,7 @@ PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
   va_start (va, uiArgCount);
   for (uiArgPos = 1; uiArgPos <= uiArgCount; uiArgPos++)
   {
-    PHB_ITEM pTemp;
-    hb_itemArrayPut (pArray, uiArgPos, pTemp = va_arg (va, PHB_ITEM));
-    HB_TRACE(HB_TR_DEBUG, ("\t%p,",pTemp));
+    hb_itemArrayPut (pArray, uiArgPos, va_arg (va, PHB_ITEM));
   }
   va_end (va);
   HB_TRACE(HB_TR_DEBUG, (")"));

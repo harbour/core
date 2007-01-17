@@ -340,12 +340,12 @@ HB_EXPORT BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
                hb_itemMoveRef( pBaseArray->pItems + ulIndex - 1,
                                pBaseArray->pItems + ulIndex );
          }
-      }
 
-      return TRUE;
+         return TRUE;
+      }
    }
-   else
-      return FALSE;
+
+   return FALSE;
 }
 
 HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
@@ -370,12 +370,12 @@ HB_EXPORT BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
                hb_itemMoveRef( pBaseArray->pItems + ulLen,
                                pBaseArray->pItems + ulLen - 1 );
          }
-      }
 
-      return TRUE;
+         return TRUE;
+      }
    }
-   else
-      return FALSE;
+
+   return FALSE;
 }
 
 HB_EXPORT BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
@@ -651,9 +651,9 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * p
       return FALSE;
 }
 
-ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount )
+ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayScan(%p, %p, %p, %p)", pArray, pValue, pulStart, pulCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayScan(%p, %p, %p, %p, %d)", pArray, pValue, pulStart, pulCount, (int) fExact));
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -701,7 +701,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
 
                   /* NOTE: The order of the pItem and pValue parameters passed to
                            hb_itemStrCmp() is significant, please don't change it. [vszakats] */
-                  if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
+                  if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
                      return ulStart;
                }
                while( --ulCount > 0 );

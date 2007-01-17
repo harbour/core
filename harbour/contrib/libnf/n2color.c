@@ -87,7 +87,7 @@ HB_FUNC(FT_N2COLOR )
 
 static void _ftI2Color( int iColor, char * cColor )
 {
-   unsigned int iBack = 0, iFore = 0, i = 0;
+   unsigned int iBack, iFore, i = 0;
 
    // check for blink attribute
 

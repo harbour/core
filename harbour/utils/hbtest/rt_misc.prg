@@ -237,16 +237,11 @@ FUNCTION Main_MISC()
 
    TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
    TEST_LINE( Eval( 1 )                       , "E BASE 1004 No exported method EVAL A:1:N:1 F:S"   )
-#ifdef __HARBOUR__
-   TEST_LINE( Eval( @sbBlock )                , NIL                                       ) /* Bug in CA-Cl*pper, it will return: "E BASE 1004 No exported method EVAL F:S" */
-#endif
+   TEST_LINE( Eval( @sbBlock )                , "E BASE 1004 No exported method EVAL A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E BASE 1004 No exported method EVAL A:1:U:{||...} F:S" */
    TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
    TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
    TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
-/* Harbour compiler not yet handles these */
-#ifndef __HARBOUR__
    TEST_LINE( suNIL:Eval()                    , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
-#endif
    TEST_LINE( scString:Eval()                 , "E BASE 1004 No exported method EVAL A:1:C:HELLO F:S"    )
    TEST_LINE( snIntP:Eval()                   , "E BASE 1004 No exported method EVAL A:1:N:10 F:S"       )
    TEST_LINE( sdDateE:Eval()                  , "E BASE 1004 No exported method EVAL A:1:D:         F:S" )
@@ -254,9 +249,7 @@ FUNCTION Main_MISC()
    TEST_LINE( sbBlock:Eval()                  , NIL                                       )
    TEST_LINE( saArray:Eval()                  , "E BASE 1004 No exported method EVAL A:1:A:{.[1].} F:S"      )
    TEST_LINE( soObject:Eval()                 , "E BASE 1004 No exported method EVAL A:1:O:ERROR Object F:S" )
-#ifndef __HARBOUR__
    TEST_LINE( suNIL:Eval                      , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
-#endif
    TEST_LINE( scString:Eval                   , "E BASE 1004 No exported method EVAL A:1:C:HELLO F:S"    )
    TEST_LINE( snIntP:Eval                     , "E BASE 1004 No exported method EVAL A:1:N:10 F:S"       )
    TEST_LINE( sdDateE:Eval                    , "E BASE 1004 No exported method EVAL A:1:D:         F:S" )

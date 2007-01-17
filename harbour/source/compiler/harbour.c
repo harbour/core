@@ -99,7 +99,8 @@ static void hb_compMainExit( HB_COMP_DECL )
 {
    hb_compCompileEnd( HB_COMP_PARAM );
    hb_compParserStop( HB_COMP_PARAM );
-   hb_compExprLstDealloc( HB_COMP_PARAM );
+   if( HB_COMP_PARAM->iErrorCount != 0 )
+      hb_compExprLstDealloc( HB_COMP_PARAM );
    hb_compIdentifierClose( HB_COMP_PARAM );
 
    if( HB_COMP_PARAM->pOutPath )
@@ -761,7 +762,7 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
    /* check if we are declaring local/static variable after some
     * executable statements
     */
-   if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_STATEMENTS )
+   if( pFunc->bFlags & FUN_STATEMENTS )
    {
       char * szVarScope;
       switch( HB_COMP_PARAM->iVarScope )
@@ -867,9 +868,9 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
 
          case ( VS_PARAMETER | VS_PRIVATE ):
             {
-               if( ++HB_COMP_PARAM->functions.pLast->wParamNum > HB_COMP_PARAM->functions.pLast->wParamCount )
+               if( ++pFunc->wParamNum > pFunc->wParamCount )
                {
-                  HB_COMP_PARAM->functions.pLast->wParamCount = HB_COMP_PARAM->functions.pLast->wParamNum;
+                  pFunc->wParamCount = pFunc->wParamNum;
                }
 
                pSym = hb_compSymbolFind( HB_COMP_PARAM, szVarName, &wPos, HB_SYM_MEMVAR ); /* check if symbol exists already */
@@ -880,7 +881,7 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
 
                /*printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );*/
 
-               hb_compGenPCode4( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_LOBYTE( HB_COMP_PARAM->functions.pLast->wParamNum ), HB_COMP_PARAM );
+               hb_compGenPCode4( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_LOBYTE( pFunc->wParamNum ), HB_COMP_PARAM );
             }
 
             if ( HB_COMP_PARAM->iWarnings >= 3 )
@@ -1003,8 +1004,8 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
                }
                if( HB_COMP_PARAM->iVarScope == VS_PARAMETER )
                {
-                  ++HB_COMP_PARAM->functions.pLast->wParamCount;
-                  HB_COMP_PARAM->functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
+                  ++pFunc->wParamCount;
+                  pFunc->bFlags |= FUN_USES_LOCAL_PARAMS;
                }
                if( HB_COMP_PARAM->fDebugInfo )
                {
@@ -4437,6 +4438,9 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
 /* initialize support variables */
 static void hb_compInitVars( HB_COMP_DECL )
 {
+   if( HB_COMP_PARAM->iErrorCount != 0 )
+      hb_compExprLstDealloc( HB_COMP_PARAM );
+
    HB_COMP_PARAM->functions.iCount = 0;
    HB_COMP_PARAM->functions.pFirst = NULL;
    HB_COMP_PARAM->functions.pLast  = NULL;

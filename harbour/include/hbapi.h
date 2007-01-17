@@ -452,6 +452,18 @@ extern HB_EXPORT void   hb_retnll( LONGLONG lNumber );/* returns a long long num
 extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 #endif
 
+/*
+ * check if array/string index is in valid range, update it if necessary
+ * in xHarbour compatibility mode where negative indexes are used to access
+ * data from tail
+ */
+#if defined( HB_COMPAT_XHB )
+#  define HB_IS_VALID_INDEX( idx, max )  ( ( ( LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( ULONG ) (idx) <= (max) )
+#else
+#  define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( ULONG ) (idx) <= (max) )
+#endif
+
+
 /* xHarbour compatible function */
 #define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
 #define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
@@ -627,7 +639,7 @@ extern HB_EXPORT char *     hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char 
 extern HB_EXPORT long       hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
 extern HB_EXPORT HB_TYPE    hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern HB_EXPORT BOOL       hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
-extern HB_EXPORT ULONG      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* scan an array for a given item, or until code-block item returns TRUE */
+extern HB_EXPORT ULONG      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern HB_EXPORT BOOL       hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
 extern HB_EXPORT BOOL       hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
 extern HB_EXPORT PHB_ITEM   hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
@@ -819,7 +831,9 @@ extern void   hb_idleShutDown( void ); /* closes all background tasks */
 extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer containing platform version */
 extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
 extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
+extern char * hb_verPCode( void ); /* retrieves a newly allocated buffer containing PCode version */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
+
 extern HB_EXPORT BOOL   hb_iswinnt(void); /* return .T. if OS == WinNt, 2000, XP */
 
 /* environment variables access */
