@@ -31,6 +31,8 @@
 # please add your distro suffix if it not belong to the one recognized below
 # and remember that order checking can be important
 
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-One 2>/dev/null) && echo "mdk$release"|tr -d ".")
+%if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
@@ -46,6 +48,7 @@
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' aurox-release 2>/dev/null) && echo "aur$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
+%endif
 %endif
 %endif
 %endif

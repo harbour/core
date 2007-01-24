@@ -7,6 +7,11 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2007-01-24 23:10 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * harbour.spec
+    * Aded Mandriva One distro to platforms 
+  * bin/hb-func.sh
+    * Aded Mandriva and Mandriva One distro to platforms 
 
 2007-01-24 10:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/w32/bcc32.cf
