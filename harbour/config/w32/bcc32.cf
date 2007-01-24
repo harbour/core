@@ -11,7 +11,7 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-CC = bcc32
+CC = bcc32.exe
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(TOP) -I$(TOP)$(ROOT)
@@ -21,7 +21,7 @@ ifneq ($(HB_INC_COMPILE),)
 CPPFLAGS += -I$(HB_INC_COMPILE)
 endif
 
-LD = bcc32
+LD = bcc32.exe
 LDFLAGS = -O2
 LD_OUT = -e
 
@@ -77,7 +77,7 @@ endif
 
 LDFLAGS = $(LINKPATHS)
 
-AR = tlib
+AR = tlib.exe
 ARFLAGS = $(A_USR)
 AROBJS = $(foreach file, $(^F), -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,

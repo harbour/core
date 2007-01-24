@@ -508,6 +508,15 @@ static HB_GENC_FUNC( hb_p_dupltwo )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_pushunref )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_PUSHUNREF,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_swap )
 {
    fprintf( cargo->yyc, "\tHB_P_SWAP, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
@@ -2371,7 +2380,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushblocklarge,
    hb_p_pushstrlarge,
    hb_p_swap,
-   hb_p_pushvparams
+   hb_p_pushvparams,
+   hb_p_pushunref
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

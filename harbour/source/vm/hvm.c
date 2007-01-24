@@ -191,6 +191,7 @@ static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by re
 static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
 static void    hb_vmPushObjectVarRef( void );   /* pushes reference to object variable */
 static void    hb_vmPushVParams( void );        /* pusges variable parameters */
+static void    hb_vmPushUnRef( void );          /* push the unreferenced latest value on the stack */
 static void    hb_vmDuplicate( void );          /* duplicates the latest value on the stack */
 static void    hb_vmDuplTwo( void );            /* duplicates the latest two value on the stack */
 static void    hb_vmDuplUnRef( void );          /* duplicates the latest value on the stack and unref the source one */
@@ -1567,6 +1568,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DUPLUNREF:
             hb_vmDuplUnRef();
+            w++;
+            break;
+
+         case HB_P_PUSHUNREF:
+            hb_vmPushUnRef();
             w++;
             break;
 
@@ -5310,8 +5316,9 @@ static void hb_vmDuplUnRef( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDuplUnRef()"));
 
    pItem = hb_stackItemFromTop( -1 );
-   hb_itemCopy( hb_stackAllocItem(),
-                HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );
+   hb_itemCopy( hb_stackAllocItem(), pItem );
+   if( HB_IS_BYREF( pItem ) )
+      hb_itemCopy( pItem, hb_itemUnRef( pItem ) );
 }
 
 static void hb_vmDuplTwo( void )
@@ -5324,6 +5331,17 @@ static void hb_vmDuplTwo( void )
    hb_itemCopy( hb_stackAllocItem(), pItem );
    pItem = hb_stackItemFromTop( -2 );
    hb_itemCopy( hb_stackAllocItem(), pItem );
+}
+
+static void hb_vmPushUnRef( void )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushUnRef()"));
+
+   pItem = hb_stackItemFromTop( -1 );
+   hb_itemCopy( hb_stackAllocItem(),
+                HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );
 }
 
 static void hb_vmSwap( BYTE bCount )
@@ -7006,6 +7024,13 @@ HB_EXPORT void hb_xvmDuplTwo( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmDuplTwo()"));
 
    hb_vmDuplTwo();
+}
+
+HB_EXPORT void hb_xvmPushUnRef( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushUnRef()"));
+
+   hb_vmPushUnRef();
 }
 
 HB_EXPORT void hb_xvmSwap( int iCount )

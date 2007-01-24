@@ -338,7 +338,8 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_PUSHBLOCKLARGE        */
    NULL,                       /* HB_P_PUSHSTRLARGE          */
    NULL,                       /* HB_P_SWAP                  */
-   NULL                        /* HB_P_PUSHVPARAMS           */
+   NULL,                       /* HB_P_PUSHVPARAMS           */
+   NULL                        /* HB_P_PUSHUNREF             */
 };
 
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )

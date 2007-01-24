@@ -122,21 +122,20 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       ENDCASE
 
       cOld:= xMessage
-      if Len(cOld) > 60 .AND. AT(';',cOld) == 0  //Dont do this  if ; exist
+      IF Len(cOld) > 60 .AND. ! ';' $ cOld   //Dont do this  if ; exist
          cNew := ""
          WHILE LEN(cOld) > 60
             cTemp := SubStr( cOld, 1, 60 )
             nPos  := Rat(' ',cTemp)
 
-            IF( nPos = 0 )
+            IF( nPos == 0 )
                nPos := 60
             ENDIF
             cNew += SubStr( cTemp, 1, nPos ) + ';'
             cOld := SubStr( cOld, nPos + 1 )
          ENDDO
          xMessage := cNew + cOld
-      endif
-
+      ENDIF
 
       DO WHILE ( nPos := At( ';', xMessage ) ) != 0
          AAdd( aSay, Left( xMessage, nPos - 1 ) )
@@ -152,9 +151,9 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       aOptions := {}
    ENDIF
 
-   IF !ISCHARACTER( cColorNorm )
-      cColorNorm := "W+/R"
-      cColorHigh := "W+/B"
+   IF !ISCHARACTER( cColorNorm ) .or. EMPTY( cColorNorm )
+      cColorNorm := "W+/R" // first pair color (Box line and Text)
+      cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
       cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" +;
                                       iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
@@ -284,9 +283,6 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       /* choice loop */
       DO WHILE .T.
 
-         IF DispCount() == 0
-            DispBegin()
-         ENDIF
          FOR nEval := 1 TO Len( aOptionsOK )
             DispOutAt( nInitRow + Len( aSay ) + 2, aPos[ nEval ], " " + aOptionsOK[ nEval ] + " ",;
                iif( nEval == nChoice, cColorHigh, cColorNorm ) )
@@ -354,6 +350,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
             EXIT
 
          ENDCASE
+
+         DispBegin()
 
       ENDDO
 

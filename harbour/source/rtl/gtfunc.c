@@ -64,7 +64,7 @@ HB_FUNC( HB_SETDISPCP )
          hb_gtSetDispCP( hb_parc( 1 ), hb_parc( 2 ), hb_parl( 3 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETDISPCP", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETDISPCP", HB_ERR_ARGS_BASEPARAMS );
 
    hb_ret();  /* return NIL */
 }
@@ -76,7 +76,7 @@ HB_FUNC( HB_SETKEYCP )
       hb_gtSetKeyCP( hb_parc( 1 ), hb_parc( 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETKEYCP", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETKEYCP", HB_ERR_ARGS_BASEPARAMS );
 
    hb_ret();  /* return NIL */
 }
@@ -118,8 +118,7 @@ HB_FUNC( HB_GTINFO )
          hb_ret();
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_GTINFO", 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_GTINFO", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_GTVERSION )

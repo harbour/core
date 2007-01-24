@@ -4,12 +4,14 @@
 
 ROOT = ../../
 
-C_SOURCES=\
+C_SOURCES= \
 	odbc.c \
 
-PRG_SOURCES=\
-	todbc.prg\
-	browodbc.prg\
+
+PRG_SOURCES= \
+	todbc.prg \
+	browodbc.prg \
+
 
 LIBNAME=hbodbc
 

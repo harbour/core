@@ -334,6 +334,14 @@ static HB_GENC_FUNC( hb_p_dupltwo )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_pushunref )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushUnRef();\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_swap )
 {
    HB_GENC_LABEL();
@@ -1935,7 +1943,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushblocklarge,
    hb_p_pushstrlarge,
    hb_p_swap,
-   hb_p_pushvparams
+   hb_p_pushvparams,
+   hb_p_pushunref
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

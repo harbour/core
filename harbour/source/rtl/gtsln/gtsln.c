@@ -236,6 +236,7 @@ static void hb_sln_setACSCtrans( void )
       SLsmg_Char_Type SLch;
       int i, len = strlen( ( char * ) p );
 
+      memset( &SLch, 0, sizeof( SLsmg_Char_Type ) );
       for( i = 0; i < len; i += 2 )
       {
          ch = *p++;

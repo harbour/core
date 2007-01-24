@@ -135,6 +135,7 @@ extern HB_EXPORT BOOL   hb_xvmNegate( void );
 extern HB_EXPORT void   hb_xvmDuplicate( void );
 extern HB_EXPORT void   hb_xvmDuplUnRef( void );
 extern HB_EXPORT void   hb_xvmDuplTwo( void );
+extern HB_EXPORT void   hb_xvmPushUnRef( void );
 extern HB_EXPORT void   hb_xvmSwap( int iCount );
 extern HB_EXPORT BOOL   hb_xvmForTest( void );
 extern HB_EXPORT void   hb_xvmFuncPtr( void );

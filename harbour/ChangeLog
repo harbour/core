@@ -8,6 +8,57 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-24 10:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/bcc32.cf
+  * harbour/include/hbexprb.c
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/vm/hvm.c
+    * recent fixes from Beta1
+
+  * harbour/contrib/libct/Makefile
+  - harbour/contrib/libct/bit1.c
+  - harbour/contrib/libct/bit2.c
+  - harbour/contrib/libct/bit3.c
+  + harbour/contrib/libct/bitnum.c
+    ! rewritten bit functions
+
+  * harbour/contrib/libct/addascii.c
+    * cleanup
+
+  * harbour/contrib/odbc/Makefile
+  * harbour/contrib/odbc/odbc.c
+  * harbour/contrib/odbc/sql.ch
+  - harbour/contrib/odbc/sql.h
+  - harbour/contrib/odbc/sqlext.h
+  - harbour/contrib/odbc/sqltypes.h
+  * harbour/contrib/odbc/todbc.prg
+    ! synced with xHarbour
+
+  * harbour/contrib/rdd_ads/ads1.c
+    ! fixed typo in DBI_GETHEADERSIZE
+
+  * harbour/contrib/rdd_ads/adsfunc.c
+    + added ADSDDREMOVEINDEXFILE - borrowed from xHarbour
+
+  * harbour/source/rtl/alert.prg
+    * minor cleanup
+
+  * harbour/source/rtl/gtfunc.c
+    * use HB_ERR_ARGS_BASEPARAMS in error messages
+
+  * harbour/source/rtl/transfrm.c
+    * casting
+
 2007-01-17 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/gencc.c
   * harbour/source/vm/hvm.c

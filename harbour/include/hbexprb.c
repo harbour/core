@@ -2223,7 +2223,7 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
             */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHUNREF );
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
          }
          break;

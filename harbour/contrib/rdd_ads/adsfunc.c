@@ -2050,6 +2050,26 @@ HB_FUNC( ADSDDREMOVETABLE )
    }
 }
 
+HB_FUNC( ADSDDREMOVEINDEXFILE )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pTableName     = (UNSIGNED8 *) hb_parcx( 1 );
+   UNSIGNED8 *pIndexName     = (UNSIGNED8 *) hb_parcx( 2 );
+   UNSIGNED16 usDeleteFiles  = (UNSIGNED16) ( ISNUM( 3 ) ? hb_parnl( 3 ) : ( ISLOG( 3 ) ? hb_parl( 3 ) : 0 ) );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 4 );
+
+   ulRetVal = AdsDDRemoveIndexFile( hConnect, pTableName, pIndexName, usDeleteFiles );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      hb_retl( 1 );
+   }
+   else
+   {
+      hb_retl( 0 );
+   }
+}
+
 HB_FUNC( ADSDDADDUSERTOGROUP )
 {
    UNSIGNED32 ulRetVal;

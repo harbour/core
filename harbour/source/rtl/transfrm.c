@@ -87,7 +87,7 @@
 #define PF_PARNEGWOS  0x1000   /* @) Similar to PF_PARNEG but without leading spaces */
 
 extern PHB_CODEPAGE hb_cdp_page;
-#define TOUPPER(c)    ((hb_cdp_page->nChars)? (char)hb_cdp_page->s_upper[c&255] : (char)toupper(c))
+#define TOUPPER(c)    ((hb_cdp_page->nChars)? (char)hb_cdp_page->s_upper[(UCHAR)c] : (char)toupper((UCHAR)(c)))
 
 HB_FUNC( TRANSFORM )
 {
@@ -132,7 +132,7 @@ HB_FUNC( TRANSFORM )
 
          while( ulPicLen && ! bDone )
          {
-            switch( toupper( *szPic ) )
+            switch( toupper( ( UCHAR ) *szPic ) )
             {
                case HB_CHAR_HT:
                case '9':

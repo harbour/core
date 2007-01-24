@@ -923,7 +923,22 @@ void hb_setInitialize( void )
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
    memcpy( hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9 );
-   hb_set.HB_SET_DEBUG = FALSE;
+   /*
+    * Tests shows that Clipper has two different flags to control ALT+D
+    * and ALTD() behavior and on startup these flags are not synchronized.
+    * When application starts _SET_DEBUG is set to FALSE but debugger
+    * can be activated by hitting K_ALT_D or calling ALTD() function without
+    * parameter. It means that some other internal flag enables these
+    * operations.
+    * Because Harbour is using _SET_DEBUG flag only then we have to
+    * initialize it to TRUE when debugger is linked to keep real Clipper
+    * behavior or we will have to add second flag too and try to replicate
+    * exactly unsynchronized behavior of these flags which exists in Clipper.
+    * IMHO it's a bug in Clipper (side effect of some internal solutions) and
+    * we should not try to emulate it [druzus].
+    */
+   /* hb_set.HB_SET_DEBUG = FALSE; */
+   hb_set.HB_SET_DEBUG = hb_dynsymFind( "__DBGENTRY" ) ? TRUE : FALSE;
    hb_set.HB_SET_DECIMALS = 2;
    hb_set.HB_SET_DEFAULT = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_DEFAULT[ 0 ] = '\0';

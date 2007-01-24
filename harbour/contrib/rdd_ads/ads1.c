@@ -2566,7 +2566,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_GETHEADERSIZE:
-         hb_itemPutNL( pItem, pArea->iFileType != ADS_ADT ? 0 :
+         hb_itemPutNL( pItem, pArea->iFileType == ADS_ADT ? 0 :
                        32 + pArea->uiFieldCount * 32 + 2 );
          break;
 
