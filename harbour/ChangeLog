@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-09 00:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/common/hbstr.c
+     ! Fixed three BCC5.5 warnings.
+
 2007-02-08 23:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtinfo.ch
   * harbour/contrib/libct/ctwin.c

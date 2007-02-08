@@ -943,11 +943,11 @@ char * hb_strRemEscSeq( char *str, ULONG *pLen )
                   while( ul )
                   {
                      if( *ptr >= '0' && *ptr <= '9' )
-                        ch = ch << 4 | ( *ptr++ - '0' );
+                        ch = ( ch << 4 ) | ( *ptr++ - '0' );
                      else if( *ptr >= 'A' && *ptr <= 'F' )
-                        ch = ch << 4 | ( *ptr++ - 'A' + 10 );
+                        ch = ( ch << 4 ) | ( *ptr++ - 'A' + 10 );
                      else if( *ptr >= 'a' && *ptr <= 'f' )
-                        ch = ch << 4 | ( *ptr++ - 'a' + 10 );
+                        ch = ( ch << 4 ) | ( *ptr++ - 'a' + 10 );
                      else
                         break;
                      ++ulStripped;

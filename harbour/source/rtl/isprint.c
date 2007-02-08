@@ -80,7 +80,7 @@
    static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
 #endif
 
-static BOOL hb_printerIsReady( char * pszPrinterName )
+BOOL hb_printerIsReady( char * pszPrinterName )
 {
    BOOL bIsPrinter;
 
