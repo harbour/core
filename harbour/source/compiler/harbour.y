@@ -36,6 +36,7 @@
  *    The major problem to solve is how to support QSELF() inside a codeblock.
  */
 
+
 #include "hbcomp.h"
 
 /* Compile using: bison -d -v harbour.y */
@@ -158,7 +159,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE LOOP FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ
-%token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
+%token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING ALWAYS DO WITH SELF LINE
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
@@ -1708,49 +1709,74 @@ SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLi
 
 SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
-           ;
+              ;
 
-BeginSeq   : BEGINSEQ
-               {
+BeginSeq    : BEGINSEQ        /* 1 */
+               {              /* 2 */
                   ++HB_COMP_PARAM->wSeqCounter;
                   hb_compStatmentStart( HB_COMP_PARAM );
                   $<lNumber>$ = hb_compSequenceBegin( HB_COMP_PARAM );
                }
-               Crlf
-               EmptyStats
-               {
+               Crlf           /* 3 */
+               EmptyStats     /* 4 */
+               {              /* 5 */
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
                    * will be used in BREAK code if there is no RECOVER clause
                    */
                   hb_compGenJumpHere( $<lNumber>2, HB_COMP_PARAM );
                   $<lNumber>$ = hb_compSequenceEnd( HB_COMP_PARAM );
                }
-               RecoverSeq
-               {
+               RecoverSeq     /* 6 */
+               {              /* 7 */
                   /* Replace END address with RECOVER address in
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
                    */
                   if( $<lNumber>6 )
                      hb_compGenJumpThere( $<lNumber>2, $<lNumber>6, HB_COMP_PARAM );
+                  else if( HB_COMP_PARAM->wSeqCounter )
+                     --HB_COMP_PARAM->wSeqCounter;
                }
-             END
-               {
-                  /* Fix END address
-                   * There is no line number after HB_P_SEQEND in case no
-                   * RECOVER clause is used
-                   */
-                  hb_compGenJumpThere( $<lNumber>5, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
-                  if( !$<lNumber>6 && HB_COMP_PARAM->wSeqCounter )   /* only if there is no RECOVER clause */
-                     --HB_COMP_PARAM->wSeqCounter;  /* RECOVER is also considered as end of sequence */
-                  hb_compSequenceFinish( $<lNumber>2, $<lNumber>4, HB_COMP_PARAM );
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+               AlwaysSeq      /* 8 */
+               {              /* 9 */
+                  if( $<lNumber>8 )
+                  {
+                     /* replace END address with ALWAYS address in
+                        HB_P_SEQEND opcode */
+                     hb_compGenJumpThere( $<lNumber>5, $<lNumber>8, HB_COMP_PARAM );
+                     /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
+                     hb_compGenJumpThere( $<lNumber>2 - 4, $<lNumber>8, HB_COMP_PARAM );
+                     /* Fix ALWAYSEND address in HB_P_ALWAYSBEGIN opcode */
+                     hb_compGenJumpHere( $<lNumber>8 + 1, HB_COMP_PARAM );
+                     hb_compGenPCode1( HB_P_ALWAYSEND, HB_COMP_PARAM );
+                  }
+                  else
+                  {
+                     /* Fix END address in HB_P_SEQEND opcode */
+                     hb_compGenJumpHere( $<lNumber>5, HB_COMP_PARAM );
+                  }
+                  hb_compSequenceFinish( HB_COMP_PARAM, $<lNumber>2, $<lNumber>5, $<lNumber>8,
+                                         $<lNumber>4 != 0, $<lNumber>6 != 0 );
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_WITH_RETURN;
                }
-           ;
+               END            /* 10 */
+            ;
 
-RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
-           | RecoverEmpty Crlf EmptyStats
-           | RecoverUsing Crlf EmptyStats
-           ;
+AlwaysSeq   : /* no always */    { $<lNumber>$ = 0; }
+            | Always Crlf EmptyStats
+            ;
+
+Always      : ALWAYS
+               {
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_BREAK_CODE;
+                  $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  hb_compSequenceAlways( HB_COMP_PARAM );
+               }
+            ;
+
+RecoverSeq  : /* no recover */   { $<lNumber>$ = 0; }
+            | RecoverEmpty Crlf EmptyStats
+            | RecoverUsing Crlf EmptyStats
+            ;
 
 RecoverEmpty : RECOVER
                {

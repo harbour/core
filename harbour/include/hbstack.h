@@ -67,17 +67,19 @@ HB_EXTERN_BEGIN
 /* stack managed by the virtual machine */
 typedef struct
 {
-   PHB_ITEM * pItems;       /* pointer to the stack items */
-   PHB_ITEM * pPos;         /* pointer to the latest used item */
-   PHB_ITEM * pEnd;         /* pointer to the end of stack items */
-   LONG       wItems;       /* total items that may be holded on the stack */
-   HB_ITEM    Return;       /* latest returned value */
-   PHB_ITEM * pBase;        /* stack frame position for the current function call */
-   PHB_ITEM * pEvalBase;    /* stack frame position for the evaluated codeblock */
-   LONG       lStatics;     /* statics base for the current function call */
-   LONG       lWithObject;  /* stack offset to base current WITH OBJECT item */
-   HB_STACK_STATE state;    /* first (default) stack state frame */
-   char       szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
+   PHB_ITEM * pItems;         /* pointer to the stack items */
+   PHB_ITEM * pPos;           /* pointer to the latest used item */
+   PHB_ITEM * pEnd;           /* pointer to the end of stack items */
+   LONG       wItems;         /* total items that may be holded on the stack */
+   HB_ITEM    Return;         /* latest returned value */
+   PHB_ITEM * pBase;          /* stack frame position for the current function call */
+   PHB_ITEM * pEvalBase;      /* stack frame position for the evaluated codeblock */
+   LONG       lStatics;       /* statics base for the current function call */
+   LONG       lWithObject;    /* stack offset to base current WITH OBJECT item */
+   LONG       lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
+   USHORT     uiActionRequest;/* Request for some action - stop processing of opcodes */
+   HB_STACK_STATE state;      /* first (default) stack state frame */
+   char       szDate[ 9 ];    /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
 #if defined(HB_STACK_MACROS)
@@ -91,19 +93,12 @@ extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void );// returns RETURN Item f
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
 extern LONG        hb_stackTopOffset( void );
 extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
 extern char *      hb_stackDateBuffer( void );
-extern void        hb_stackSetStaticsBase( LONG lBase );
-extern LONG        hb_stackGetStaticsBase( void );
-extern PHB_ITEM ** hb_stackItemBasePtr( void );
-extern PHB_ITEM    hb_stackWithObjectItem( void );
-extern LONG        hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( LONG );
 extern void *      hb_stackId( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
@@ -129,6 +124,21 @@ extern void        hb_stackDecrease( ULONG ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pStack );
 extern void        hb_stackClearMevarsBase( void );
+
+extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
+extern PHB_ITEM ** hb_stackItemBasePtr( void );
+
+extern LONG        hb_stackGetRecoverBase( void );
+extern void        hb_stackSetRecoverBase( LONG lBase );
+extern USHORT      hb_stackGetActionRequest( void );
+extern void        hb_stackSetActionRequest( USHORT uiAction );
+
+extern void        hb_stackSetStaticsBase( LONG lBase );
+extern LONG        hb_stackGetStaticsBase( void );
+
+extern PHB_ITEM    hb_stackWithObjectItem( void );
+extern LONG        hb_stackWithObjectOffset( void );
+extern void        hb_stackWithObjectSetOffset( LONG );
 #endif
 
 #if defined(HB_STACK_MACROS)
@@ -143,9 +153,13 @@ extern void        hb_stackClearMevarsBase( void );
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( iItemPos ) ) )
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
+#define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 #define hb_stackGetStaticsBase( )   ( hb_stack.lStatics )
 #define hb_stackSetStaticsBase( n ) do { hb_stack.lStatics = ( n ); } while ( 0 )
-#define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
+#define hb_stackGetRecoverBase( )   ( hb_stack.lRecoverBase )
+#define hb_stackSetRecoverBase( n ) do { hb_stack.lRecoverBase = ( n ); } while( 0 )
+#define hb_stackGetActionRequest( ) ( hb_stack.uiActionRequest )
+#define hb_stackSetActionRequest( n )     do { hb_stack.uiActionRequest = ( n ); } while( 0 )
 #define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
 #define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )
 #define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )

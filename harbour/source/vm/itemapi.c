@@ -106,10 +106,6 @@
 #include "hbmath.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE hb_cdp_page;
-extern char *hb_vm_sNull;
-extern char *hb_vm_acAscii[256];
-
 HB_EXPORT PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemNew(%p)", pNull));
@@ -206,13 +202,13 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    if( ulLen == 0 )
    {
-      pItem->item.asString.value     = hb_vm_sNull;
+      pItem->item.asString.value     = "";
       pItem->item.asString.length    = 0;
       pItem->item.asString.allocated = 0;
    }
    else if( ulLen == 1 )
    {
-      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
       pItem->item.asString.length    = 1;
       pItem->item.asString.allocated = 0;
    }
@@ -277,13 +273,13 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
 
    if( szText == NULL || ulLen == 0 )
    {
-      pItem->item.asString.value     = hb_vm_sNull;
+      pItem->item.asString.value     = "";
       pItem->item.asString.length    = 0;
       pItem->item.asString.allocated = 0;
    }
    else if( ulLen == 1 )
    {
-      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
       pItem->item.asString.length    = 1;
       pItem->item.asString.allocated = 0;
    }
@@ -318,13 +314,13 @@ HB_EXPORT PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    if( ulLen == 0 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_sNull;
+      pItem->item.asString.value     = "";
       hb_xfree( szText );
    }
    else if( ulLen == 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = hb_vm_acAscii[ (unsigned char) ( szText[0] ) ];
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
       hb_xfree( szText );
    }
    else
@@ -1367,6 +1363,25 @@ void hb_itemCopyToRef( PHB_ITEM pDest, PHB_ITEM pSource )
    hb_itemCopy( pDest, pSource );
 }
 
+#if 0
+/* Internal API, not standard Clipper */
+
+void hb_itemCopyFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyFromRef(%p, %p)", pDest, pSource));
+
+   if( HB_IS_BYREF( pSource ) )
+   {
+      pSource = hb_itemUnRef( pSource );
+      if( pDest == pSource )
+         /* pSource is a reference to pDest - do not copy */
+         return;
+   }
+
+   hb_itemCopy( pDest, pSource );
+}
+#endif
+
 /*
  * copy (transfer) the value of item without increasing 
  * a reference counters, the pSource item is cleared
@@ -1391,22 +1406,23 @@ void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemMoveRef(%p, %p)", pDest, pSource));
 
-   if( HB_IS_COMPLEX( pDest ) )
-      hb_itemClear( pDest );
-
    if( HB_IS_BYREF( pSource ) )
    {
-      if( hb_itemUnRef( pSource ) == pDest )
+      if( hb_itemUnRef( pSource ) == ( HB_IS_BYREF( pDest ) ?
+                                             hb_itemUnRef( pDest ) : pDest ) )
       {
          /*
           * assign will create cyclic reference
           * pSource is a reference to pDest
           * we can simply drop coping
           */
-         hb_itemClear( pDest );
+         hb_itemSetNil( pSource );
          return;
       }
    }
+
+   if( HB_IS_COMPLEX( pDest ) )
+      hb_itemClear( pDest );
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
    pSource->type = HB_IT_NIL;
@@ -1497,26 +1513,40 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
          /* enumerator variable */
          if( pItem->item.asEnum.valuePtr )
             return pItem->item.asEnum.valuePtr;
-         else if( HB_IS_ARRAY( pItem->item.asEnum.basePtr ) )
+         else
          {
-            PHB_ITEM pResult = hb_arrayGetItemPtr( pItem->item.asEnum.basePtr,
-                                                   pItem->item.asEnum.offset );
-            if( pResult )
-               return pResult;
+            PHB_ITEM pBase = HB_IS_BYREF( pItem->item.asEnum.basePtr ) ?
+                                 hb_itemUnRef( pItem->item.asEnum.basePtr ) :
+                                 pItem->item.asEnum.basePtr;
+            if( HB_IS_ARRAY( pBase ) )
+            {
+               pBase = hb_arrayGetItemPtr( pBase, pItem->item.asEnum.offset );
+               if( pBase )
+                  return pBase;
+            }
+            else if( HB_IS_STRING( pBase ) )
+            {
+               if( pItem->item.asEnum.offset > 0 &&
+                   ( ULONG ) pItem->item.asEnum.offset <= pBase->item.asString.length )
+               {
+                  pItem->item.asEnum.valuePtr = hb_itemPutCL( NULL,
+                     pBase->item.asString.value + pItem->item.asEnum.offset - 1, 1 );
+                  return pItem->item.asEnum.valuePtr;
+               }
+            }
+
+            /* put it here to avoid recursive RT error generation */
+            pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
+
+            if( hb_vmRequestQuery() == 0 )
+            {
+               hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
+               hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                              2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
+               hb_stackPop();
+            }
+            return pItem->item.asEnum.valuePtr;
          }
-
-         /* put it here to avoid recursive RT error generation */
-         pItem->item.asEnum.valuePtr = hb_itemNew( NULL );
-
-         if( hb_vmRequestQuery() == 0 )
-         {
-            hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
-            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                           2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
-            hb_stackPop();
-         }
-
-         return pItem->item.asEnum.valuePtr;
       }
       else
       {

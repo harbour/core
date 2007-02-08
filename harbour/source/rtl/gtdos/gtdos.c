@@ -94,6 +94,7 @@
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapicdp.h"
+#include "hbapiitm.h"
 #include "inkey.ch"
 
 #include <string.h>
@@ -1452,6 +1453,23 @@ static void hb_gt_dos_Refresh( void )
    hb_gt_dos_SetCursorStyle( iStyle );
 }
 
+static BOOL hb_gt_dos_Info( int iType, PHB_GT_INFO pInfo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Info(%d,%p)", iType, pInfo ) );
+
+   switch ( iType )
+   {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
+      default:
+         return HB_GTSUPER_INFO( iType, pInfo );
+   }
+
+   return TRUE;
+}
 
 /* *********************************************************************** */
 
@@ -1473,6 +1491,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->PreExt                     = hb_gt_dos_PreExt;
    pFuncTable->PostExt                    = hb_gt_dos_PostExt;
    pFuncTable->Tone                       = hb_gt_dos_Tone;
+   pFuncTable->Info                       = hb_gt_dos_Info;
    pFuncTable->SetDispCP                  = hb_gt_dos_SetDispCP;
    pFuncTable->SetKeyCP                   = hb_gt_dos_SetKeyCP;
 

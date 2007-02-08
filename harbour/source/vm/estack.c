@@ -211,13 +211,13 @@ void hb_stackInit( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackInit()"));
 
+   memset( &hb_stack, 0, sizeof( HB_STACK ) );
+
    hb_stack.pItems = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * STACK_INITHB_ITEMS );
    hb_stack.pBase  = hb_stack.pItems;
    hb_stack.pPos   = hb_stack.pItems;     /* points to the first stack item */
    hb_stack.wItems = STACK_INITHB_ITEMS;
    hb_stack.pEnd   = hb_stack.pItems + hb_stack.wItems;
-
-   hb_stack.Return.type = HB_IT_NIL;
 
    for( i = 0; i < hb_stack.wItems; ++i )
    {
@@ -396,6 +396,30 @@ LONG hb_stackGetStaticsBase( void )
 void hb_stackSetStaticsBase( LONG lBase )
 {
    hb_stack.lStatics = lBase;
+}
+
+#undef hb_stackGetRecoverBase
+LONG hb_stackGetRecoverBase( void )
+{
+   return hb_stack.lRecoverBase;
+}
+
+#undef hb_stackSetRecoverBase
+void hb_stackSetRecoverBase( LONG lBase )
+{
+   hb_stack.lRecoverBase = lBase;
+}
+
+#undef hb_stackGetActionRequest
+USHORT hb_stackGetActionRequest( void )
+{
+   return hb_stack.uiActionRequest;
+}
+
+#undef hb_stackSetActionRequest
+void hb_stackSetActionRequest( USHORT uiAction )
+{
+   hb_stack.uiActionRequest = uiAction;
 }
 
 #undef hb_stackWithObjectItem

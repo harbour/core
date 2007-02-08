@@ -103,6 +103,7 @@
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 #include "inkey.ch"
 
 #ifdef _HB_OS2_H
@@ -908,6 +909,24 @@ static void hb_gt_os2_Refresh( void )
    hb_gt_os2_SetCursorStyle( iStyle );
 }
 
+static BOOL hb_gt_os2_Info( int iType, PHB_GT_INFO pInfo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%d,%p)", iType, pInfo ) );
+
+   switch ( iType )
+   {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
+      default:
+         return HB_GTSUPER_INFO( iType, pInfo );
+   }
+
+   return TRUE;
+}
+
 
 /* *********************************************************************** */
 
@@ -929,6 +948,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->PreExt                     = hb_gt_os2_PreExt;
    pFuncTable->PostExt                    = hb_gt_os2_PostExt;
    pFuncTable->Tone                       = hb_gt_os2_Tone;
+   pFuncTable->Info                       = hb_gt_os2_Info;
 
    pFuncTable->ReadKey                    = hb_gt_os2_ReadKey;
 

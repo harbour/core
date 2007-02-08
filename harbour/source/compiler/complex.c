@@ -107,6 +107,7 @@ HB_LEX_KEY, * PHB_LEX_KEY;
 
 static const HB_LEX_KEY s_keytable[] = 
 {
+   { "ALWAYS",      4,  6, ALWAYS         },
    { "ANNOUNCE",    4,  8, ANNOUNCE       },
    { "AS",          2,  2, AS_TYPE        },
    { "BEGIN",       4,  5, BEGINSEQ       },
@@ -580,6 +581,15 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                      pLex->iState = RECOVERUSING;
                      return RECOVERUSING;
                   }
+               }
+               iType = IDENTIFIER;
+               break;
+
+            case ALWAYS:
+               if( pLex->iState == LOOKUP && HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+               {
+                  pLex->iState = ALWAYS;
+                  return ALWAYS;
                }
                iType = IDENTIFIER;
                break;

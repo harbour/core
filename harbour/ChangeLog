@@ -7,6 +7,128 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-02-08 23:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtinfo.ch
+  * harbour/contrib/libct/ctwin.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    + added support for GTI_FULLSCREEN, GTI_KBDSUPPORT, GTI_ISCTWIN
+
+  * harbour/source/rtl/hbgtcore.c
+    ! fixed line and box drawing when the coordinates are out of screen size
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbvm.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/estack.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+    ! added protection against cyclic references in arrays
+    * eliminated action parameter from hb_vmRequestReenter() /
+      hb_vmRequestRestore()
+    * moved s_lRecoverBase and s_uiActionRequest to HB_STACK structure
+      for future MT HVM version
+    + added internal item structure hb_struRecover - it's not real item
+      but this structure is used to keep information about BEGIN SEQUENCE
+      data - it reduce HB_STACK usage
+    + added support for ALWAYS clause in BEGIN SEQUENCE
+      The syntax is:
+         BEGIN SEQUENCE
+            <code>
+         [ RECOVER [ USING oErr ] ]
+            <recoverCode>
+         [ ALWAYS ]
+            <alwaysCode>
+         END [ SEQUENCE ]
+      It's guaranteed that <alwaysCode> is _ALWAYS_ executed even if
+      inside <code> or <recoverCode> some new exceptions like RETURN,
+      BREAK or QUIT will appear.
+      Please note that when the following code is executed:
+         BEGIN SEQUENCE
+            <code>
+         ALWAYS
+            <alwaysCode>
+         END
+      (without RECOVER clause) then BREAK exception inside <code> is not
+      recovered, <alwaysCode> is executed and then BREAK exception is
+      passed to outer BEGIN SEQUENCE. This is the same semantic as
+      used in TRY / [ CATCH ] / FINALLY / END
+      Those of you who prefer to use TRY / CATCH / FINALLY / END instead
+      of BEGIN SEQUENCE / RECOVER / ALWAYS / END can simply add to your
+      source code:
+         #command TRY               => BEGIN SEQUENCE
+         #command CATCH [ oErr ]    => RECOVER [ USING <oErr> ]
+      and:
+         errorBlock( {|oErr| break( oErr ) } )
+      Though instead of 'break( oErr )' I suggest to use some small function
+      which will support some basic recovery/substitute operations like in
+      default errorsys() and LockErrHandler() to not break existing code
+      which may depends on the default behavior.
+      If you want I can add direct support for TRY / CATCH / FINALLY / END
+      but I'm not sure it's really necessary.
+      Please note also that in Harbour ALWAYS code is execute even for QUIT
+      excpetion.
+      When <alwaysCode> is executed current exception is stored and restored
+      when is finished. If new exception appears inside <alwaysCode> then
+      restored exception depends on the priority in the following order:
+         QUIT     // highest priority
+         BREAK
+         RETURN
+      If both exceptions have the same priority and contain additional value
+      (error object in BREAK or return value in RETURN) then the recently set
+      one is restored. It's similar behavior to destructor code.
+
+  * harbour/source/common/hbstr.c
+    * moved one character length string table (hb_szAscii) from hvm.c
+      to use it also in compiler and preprocessor
+
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/pplib.c
+    * tuned error messages to be more Clipper compatible
+    % use static strings from hb_szAscii
+
+  * harbour/source/rtl/alert.prg
+    * use hb_gtInfo( GTI_FULLSCREEN ) to detect type of GT driver
+    ! some minor fixes
+      TOFIX: we have to also use GTI_ISCTWIN or add window allocation
+             to standard GT drivers to be Clipper compatible when CTWIN
+	     is used - In Clipper Tools ALERT() works in differ way then
+	     the standard one. It creates separate window box to display
+	     data, supports SETKEY(), etc. I'll think about adding some
+	     extended support for ALERT() and similar operations (f.e.
+	     separate debugger windows) to GT API so it will be also
+	     possible to overload standard alert() command by GUI message
+	     box in GTGUI and similar GT drivers.
+
+  * harbour/source/rtl/binnumx.c
+    ! fixed U2BIN() - wrong casting
+
 2007-01-24 23:10 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * harbour.spec
     * Aded Mandriva One distro to platforms 

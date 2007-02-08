@@ -1820,6 +1820,52 @@ static HB_GENC_FUNC( hb_p_seqrecover )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_seqalways )
+{
+   fprintf( cargo->yyc, "\tHB_P_SEQALWAYS, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+   if( cargo->bVerbose )
+   {
+      LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", lOffset, lPCodePos + lOffset );
+   }
+   fprintf( cargo->yyc, "\n" );
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_alwaysbegin )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05li */ ", lPCodePos );
+   else fprintf( cargo->yyc, "\t" );
+
+   fprintf( cargo->yyc, "HB_P_ALWAYSBEGIN, %i, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ],
+            pFunc->pCode[ lPCodePos + 3 ] );
+   if( cargo->bVerbose )
+   {
+      LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", lOffset, lPCodePos + lOffset );
+   }
+   fprintf( cargo->yyc, "\n" );
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_alwaysend )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05li */ ", lPCodePos );
+   else fprintf( cargo->yyc, "\t" );
+
+   fprintf( cargo->yyc, "HB_P_ALWAYSEND,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_sframe )
 {
    fprintf( cargo->yyc, "\tHB_P_SFRAME, %i, %i,",
@@ -2381,7 +2427,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushstrlarge,
    hb_p_swap,
    hb_p_pushvparams,
-   hb_p_pushunref
+   hb_p_pushunref,
+   hb_p_seqalways,
+   hb_p_alwaysbegin,
+   hb_p_alwaysend
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

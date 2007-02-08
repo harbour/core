@@ -1592,6 +1592,11 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
       case GTI_WINTITLE:
       {
          char szBuff[ 256 ];

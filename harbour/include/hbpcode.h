@@ -237,7 +237,10 @@ typedef enum
    HB_P_SWAP,                  /* 163 swap n+1 times two items starting from the most top one on the virtual machine stack */
    HB_P_PUSHVPARAMS,           /* 164 push variable function/method parameters on HVM stack */
    HB_P_PUSHUNREF,             /* 165 push unreferenced top item on HVM stack */
-   HB_P_LAST_PCODE             /* 166 this defines the number of defined pcodes */
+   HB_P_SEQALWAYS,             /* 166 set BEGIN SEQUENCE/ALWAYS section */
+   HB_P_ALWAYSBEGIN,           /* 167 start ALWAYS section */
+   HB_P_ALWAYSEND,             /* 168 finish ALWAYS section */
+   HB_P_LAST_PCODE             /* 169 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

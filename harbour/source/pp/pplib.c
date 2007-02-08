@@ -66,8 +66,8 @@ static void hb_pp_ErrorMessage( void * cargo, char * szMsgTable[],
 
    HB_SYMBOL_UNUSED( cargo );
 
-   /* ignore warning messages */
-   if( cPrefix != 'W' )
+   /* ignore all warning messages and errors when break or quit request */
+   if( cPrefix != 'W' && hb_vmRequestQuery() == 0 )
    {
       char szMsgBuf[ 1024 ];
       PHB_ITEM pError;

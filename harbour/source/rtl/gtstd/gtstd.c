@@ -58,6 +58,7 @@
 #include "hbinit.h"
 #include "hbapifs.h"
 #include "hbapicdp.h"
+#include "hbapiitm.h"
 #include "hbdate.h"
 #include "hb_io.h"
 
@@ -641,6 +642,25 @@ static void hb_gt_std_Refresh( void )
    }
 }
 
+static BOOL hb_gt_std_Info( int iType, PHB_GT_INFO pInfo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Info(%d,%p)", iType, pInfo ) );
+
+   switch ( iType )
+   {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
+      default:
+         return HB_GTSUPER_INFO( iType, pInfo );
+   }
+
+   return TRUE;
+}
+
+
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
@@ -658,6 +678,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetKeyCP                   = hb_gt_std_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_std_Tone;
    pFuncTable->Bell                       = hb_gt_std_Bell;
+   pFuncTable->Info                       = hb_gt_std_Info;
 
    pFuncTable->ReadKey                    = hb_gt_std_ReadKey;
 

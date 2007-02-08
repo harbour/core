@@ -381,6 +381,8 @@ static HB_GENC_FUNC( hb_p_endproc )
    fprintf( cargo->yyc, "\t/* *** END PROC *** */\n" );
    if( lPCodePos < pFunc->lPCodePos - 1 )
    {
+      if( cargo->iNestedBlock )
+         fprintf( cargo->yyc, "\thb_xvmEndProc();\n" );
       fprintf( cargo->yyc, "\tbreak;\n" );
    }
    return 1;
@@ -1365,11 +1367,38 @@ static HB_GENC_FUNC( hb_p_pushovarref )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_seqalways )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmSeqAlways();\n\tdo {\n" );
+   cargo->iNestedBlock++;
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_alwaysbegin )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmAlwaysBegin() ) break;\n\tdo {\n" );
+   return 4;
+}
+
+static HB_GENC_FUNC( hb_p_alwaysend )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmAlwaysEnd() ) break;\n" );
+   cargo->iNestedBlock--;
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tdo {\n" );
+   cargo->iNestedBlock++;
    return 4;
 }
 
@@ -1384,6 +1413,7 @@ static HB_GENC_FUNC( hb_p_seqend )
    else /* RECOVER exists */
       fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05ld;\n\t} while( 0 );\n",
                HB_GENC_GETLABEL( lPCodePos + lOffset ) );
+   cargo->iNestedBlock--;
    return 4;
 }
 
@@ -1944,7 +1974,10 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushstrlarge,
    hb_p_swap,
    hb_p_pushvparams,
-   hb_p_pushunref
+   hb_p_pushunref,
+   hb_p_seqalways,
+   hb_p_alwaysbegin,
+   hb_p_alwaysend
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
@@ -1958,6 +1991,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    label_info.fVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
    label_info.fSetSeqBegin = FALSE;
    label_info.fCondJump = FALSE;
+   label_info.iNestedBlock = 0;
    if( pFunc->lPCodePos == 0 )
       label_info.pulLabels = NULL;
    else
@@ -1974,7 +2008,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
 
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &label_info );
 
-   fprintf( yyc, "   } while ( 0 );\n" );
+   fprintf( yyc, "   } while( 0 );\n" );
    fprintf( yyc, "   hb_xvmExitProc();\n" );
    fprintf( yyc, "}\n" );
 

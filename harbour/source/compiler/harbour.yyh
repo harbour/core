@@ -101,45 +101,46 @@
      BREAK = 317,
      RECOVER = 318,
      RECOVERUSING = 319,
-     DO = 320,
-     WITH = 321,
-     SELF = 322,
-     LINE = 323,
-     MACROVAR = 324,
-     MACROTEXT = 325,
-     AS_ARRAY = 326,
-     AS_BLOCK = 327,
-     AS_CHARACTER = 328,
-     AS_CLASS = 329,
-     AS_DATE = 330,
-     AS_LOGICAL = 331,
-     AS_NUMERIC = 332,
-     AS_OBJECT = 333,
-     AS_VARIANT = 334,
-     DECLARE = 335,
-     OPTIONAL = 336,
-     DECLARE_CLASS = 337,
-     DECLARE_MEMBER = 338,
-     AS_ARRAY_ARRAY = 339,
-     AS_BLOCK_ARRAY = 340,
-     AS_CHARACTER_ARRAY = 341,
-     AS_CLASS_ARRAY = 342,
-     AS_DATE_ARRAY = 343,
-     AS_LOGICAL_ARRAY = 344,
-     AS_NUMERIC_ARRAY = 345,
-     AS_OBJECT_ARRAY = 346,
-     PROCREQ = 347,
-     CBSTART = 348,
-     DOIDENT = 349,
-     FOREACH = 350,
-     DESCEND = 351,
-     DOSWITCH = 352,
-     WITHOBJECT = 353,
-     NUM_DATE = 354,
-     EPSILON = 355,
-     POST = 356,
-     UNARY = 357,
-     PRE = 358
+     ALWAYS = 320,
+     DO = 321,
+     WITH = 322,
+     SELF = 323,
+     LINE = 324,
+     MACROVAR = 325,
+     MACROTEXT = 326,
+     AS_ARRAY = 327,
+     AS_BLOCK = 328,
+     AS_CHARACTER = 329,
+     AS_CLASS = 330,
+     AS_DATE = 331,
+     AS_LOGICAL = 332,
+     AS_NUMERIC = 333,
+     AS_OBJECT = 334,
+     AS_VARIANT = 335,
+     DECLARE = 336,
+     OPTIONAL = 337,
+     DECLARE_CLASS = 338,
+     DECLARE_MEMBER = 339,
+     AS_ARRAY_ARRAY = 340,
+     AS_BLOCK_ARRAY = 341,
+     AS_CHARACTER_ARRAY = 342,
+     AS_CLASS_ARRAY = 343,
+     AS_DATE_ARRAY = 344,
+     AS_LOGICAL_ARRAY = 345,
+     AS_NUMERIC_ARRAY = 346,
+     AS_OBJECT_ARRAY = 347,
+     PROCREQ = 348,
+     CBSTART = 349,
+     DOIDENT = 350,
+     FOREACH = 351,
+     DESCEND = 352,
+     DOSWITCH = 353,
+     WITHOBJECT = 354,
+     NUM_DATE = 355,
+     EPSILON = 356,
+     POST = 357,
+     UNARY = 358,
+     PRE = 359
    };
 #endif
 /* Tokens.  */
@@ -205,52 +206,53 @@
 #define BREAK 317
 #define RECOVER 318
 #define RECOVERUSING 319
-#define DO 320
-#define WITH 321
-#define SELF 322
-#define LINE 323
-#define MACROVAR 324
-#define MACROTEXT 325
-#define AS_ARRAY 326
-#define AS_BLOCK 327
-#define AS_CHARACTER 328
-#define AS_CLASS 329
-#define AS_DATE 330
-#define AS_LOGICAL 331
-#define AS_NUMERIC 332
-#define AS_OBJECT 333
-#define AS_VARIANT 334
-#define DECLARE 335
-#define OPTIONAL 336
-#define DECLARE_CLASS 337
-#define DECLARE_MEMBER 338
-#define AS_ARRAY_ARRAY 339
-#define AS_BLOCK_ARRAY 340
-#define AS_CHARACTER_ARRAY 341
-#define AS_CLASS_ARRAY 342
-#define AS_DATE_ARRAY 343
-#define AS_LOGICAL_ARRAY 344
-#define AS_NUMERIC_ARRAY 345
-#define AS_OBJECT_ARRAY 346
-#define PROCREQ 347
-#define CBSTART 348
-#define DOIDENT 349
-#define FOREACH 350
-#define DESCEND 351
-#define DOSWITCH 352
-#define WITHOBJECT 353
-#define NUM_DATE 354
-#define EPSILON 355
-#define POST 356
-#define UNARY 357
-#define PRE 358
+#define ALWAYS 320
+#define DO 321
+#define WITH 322
+#define SELF 323
+#define LINE 324
+#define MACROVAR 325
+#define MACROTEXT 326
+#define AS_ARRAY 327
+#define AS_BLOCK 328
+#define AS_CHARACTER 329
+#define AS_CLASS 330
+#define AS_DATE 331
+#define AS_LOGICAL 332
+#define AS_NUMERIC 333
+#define AS_OBJECT 334
+#define AS_VARIANT 335
+#define DECLARE 336
+#define OPTIONAL 337
+#define DECLARE_CLASS 338
+#define DECLARE_MEMBER 339
+#define AS_ARRAY_ARRAY 340
+#define AS_BLOCK_ARRAY 341
+#define AS_CHARACTER_ARRAY 342
+#define AS_CLASS_ARRAY 343
+#define AS_DATE_ARRAY 344
+#define AS_LOGICAL_ARRAY 345
+#define AS_NUMERIC_ARRAY 346
+#define AS_OBJECT_ARRAY 347
+#define PROCREQ 348
+#define CBSTART 349
+#define DOIDENT 350
+#define FOREACH 351
+#define DESCEND 352
+#define DOSWITCH 353
+#define WITHOBJECT 354
+#define NUM_DATE 355
+#define EPSILON 356
+#define POST 357
+#define UNARY 358
+#define PRE 359
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 104 "harbour.y"
+#line 105 "harbour.y"
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -293,7 +295,7 @@ typedef union YYSTYPE
    } asMessage;
 }
 /* Line 1529 of yacc.c.  */
-#line 297 "harboury.h"
+#line 299 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

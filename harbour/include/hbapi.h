@@ -326,6 +326,14 @@ struct hb_struSymbol
    USHORT          paramdeclcnt;    /* number of declared parameters in function definition */
 };
 
+struct hb_struRecover
+{
+   ULONG    recover;    /* address of recover code */
+   ULONG    base;       /* previous recover base */
+   USHORT   flags;      /* previous recovery state and recover type */
+   USHORT   request;    /* requested action */
+};
+
 /* items hold at the virtual machine stack */
 typedef struct _HB_ITEM
 {
@@ -345,6 +353,7 @@ typedef struct _HB_ITEM
       struct hb_struEnum      asEnum;
       struct hb_struString    asString;
       struct hb_struSymbol    asSymbol;
+      struct hb_struRecover   asRecover;
    } item;
 } HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
 
@@ -662,6 +671,8 @@ extern void hb_arrayPushBase( PHB_BASEARRAY pBaseArray );
                           ( c ) == HB_CHAR_HT || \
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR )
+
+extern const char * hb_szAscii[256];      /* array of 1 character length strings */
 
 extern HB_EXPORT int      hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
 extern HB_EXPORT int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */

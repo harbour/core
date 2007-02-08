@@ -145,6 +145,26 @@ static HB_LABEL_FUNC( hb_p_jumptruefar )
    return 4;
 }
 
+static HB_LABEL_FUNC( hb_p_seqalways )
+{
+   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   ULONG ulAlwaysPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+
+   if( cargo->fSetSeqBegin )
+      cargo->pulLabels[ ulAlwaysPos ]++;
+   return 4;
+}
+
+static HB_LABEL_FUNC( hb_p_alwaysbegin )
+{
+   BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
+   ULONG ulAlwaysEndPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+
+   if( cargo->fSetSeqBegin )
+      cargo->pulLabels[ ulAlwaysEndPos ]++;
+   return 4;
+}
+
 static HB_LABEL_FUNC( hb_p_seqbegin )
 {
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
@@ -339,7 +359,10 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_PUSHSTRLARGE          */
    NULL,                       /* HB_P_SWAP                  */
    NULL,                       /* HB_P_PUSHVPARAMS           */
-   NULL                        /* HB_P_PUSHUNREF             */
+   NULL,                       /* HB_P_PUSHUNREF             */
+   hb_p_seqalways,             /* HB_P_SEQALWAYS             */
+   hb_p_alwaysbegin,           /* HB_P_ALWAYSBEGIN           */
+   NULL                        /* HB_P_ALWAYSEND             */
 };
 
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )

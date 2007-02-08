@@ -1679,14 +1679,12 @@ void hb_objDestructorCall( PHB_ITEM pObject )
 
       if( pClass->fHasDestructor )
       {
-         USHORT uiAction;
-
-         if( hb_vmRequestReenter( &uiAction ) )
+         if( hb_vmRequestReenter() )
          {
             hb_vmPushSymbol( &s___msgDestructor );
             hb_vmPush( pObject );
             hb_vmSend( 0 );
-            hb_vmRequestRestore( uiAction );
+            hb_vmRequestRestore();
          }
       }
    }

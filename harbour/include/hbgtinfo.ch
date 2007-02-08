@@ -83,6 +83,8 @@
                                      key handling.
                                      Default is Enabled.
                                    */
+#define GTI_FULLSCREEN        13  /* Is it full screen GT driver? */
+#define GTI_KBDSUPPORT        14  /* Is it keyboard input supported? */
 #define GTI_CLIPBOARDDATA     15  /* Get/Set clipboard */
 #define GTI_CLIPBOARDPAST     16  /* Paste clipboard data into keyboard buffer */
 #define GTI_CURSORBLINKRATE   19  /* Get/Set cursor blinking rate in milliseconds */
@@ -113,6 +115,8 @@
 
 #define GTI_STDOUTCON         38  /* redirect STDOUT to console */
 #define GTI_STDERRCON         39  /* redirect STDERR to console */
+
+#define GTI_ISCTWIN           40  /* is CTWIN supported? */
 
 /* these are used _by_ MaxRow/Col */
 #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */

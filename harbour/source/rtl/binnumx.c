@@ -104,9 +104,9 @@ HB_FUNC( U2BIN )
       ULONG ulValue = ( ULONG ) hb_parnl( 1 );
 
       szString[ 0 ] = ( char ) ( ulValue & 0x000000FF );
-      szString[ 1 ] = ( char ) ( ulValue & 0x0000FF00 ) >> 8;
-      szString[ 2 ] = ( char ) ( ulValue & 0x00FF0000 ) >> 16;
-      szString[ 3 ] = ( char ) ( ulValue & 0xFF000000 ) >> 24;
+      szString[ 1 ] = ( char ) ( ( ulValue & 0x0000FF00 ) >> 8 );
+      szString[ 2 ] = ( char ) ( ( ulValue & 0x00FF0000 ) >> 16 );
+      szString[ 3 ] = ( char ) ( ( ulValue & 0xFF000000 ) >> 24 );
    }
    else
    {

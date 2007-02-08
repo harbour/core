@@ -801,6 +801,14 @@ static void hb_gt_def_PutText( int iRow, int iCol, BYTE bColor, BYTE * pText, UL
 static void hb_gt_def_Replicate( int iRow, int iCol, BYTE bColor, BYTE bAttr,
                                  USHORT usChar, ULONG ulLen )
 {
+   if( iCol < 0 )
+   {
+      if( ulLen < ( ULONG ) -iCol )
+         ulLen = 0;
+      else
+         ulLen += iCol;
+      iCol = 0;
+   }
    while( ulLen-- )
    {
       if( !hb_gt_PutChar( iRow, iCol, bColor, bAttr, usChar ) )
@@ -1275,7 +1283,7 @@ static void hb_gt_def_ScrollUp( int iRows, BYTE bColor, BYTE bChar )
 static void hb_gt_def_Box( int iTop, int iLeft, int iBottom, int iRight,
                            BYTE * pbyFrame, BYTE bColor )
 {
-   int iMaxRow, iMaxCol, iRows, iCols, i;
+   int iMaxRow, iMaxCol, iRows, iCols, iFirst, i;
 
    if( iTop > iBottom )
    {
@@ -1315,19 +1323,20 @@ static void hb_gt_def_Box( int iTop, int iLeft, int iBottom, int iRight,
       else
       {
          BYTE bAttr = HB_GT_ATTR_BOX;
-         iRows = ( iBottom > iMaxRow ? iMaxRow : iBottom ) -
-                 ( iTop < 0 ? 0 : iTop ) - 1;
-         iCols = ( iRight > iMaxCol ? iMaxCol : iRight ) -
-                 ( iLeft < 0 ? 0 : iLeft ) - 1;
+         iRows = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
+                 ( iTop < 0 ? -1 : iTop ) - 1;
+         iCols = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
+                 ( iLeft < 0 ? -1 : iLeft ) - 1;
+         iFirst = iLeft < 0 ? 0 : iLeft + 1;
 
          if( iTop >= 0 )
          {
             if( iLeft >= 0 )
                hb_gt_PutChar( iTop, iLeft, bColor, bAttr, szBox[ 0 ] );
             if( iCols )
-               hb_gt_Replicate( iTop, iLeft + 1, bColor, bAttr, szBox[ 1 ], iCols );
+               hb_gt_Replicate( iTop, iFirst, bColor, bAttr, szBox[ 1 ], iCols );
             if( iRight <= iMaxCol )
-               hb_gt_PutChar( iTop, iLeft + iCols + 1, bColor, bAttr, szBox[ 2 ] );
+               hb_gt_PutChar( iTop, iFirst + iCols, bColor, bAttr, szBox[ 2 ] );
             iTop++;
          }
          else
@@ -1337,18 +1346,18 @@ static void hb_gt_def_Box( int iTop, int iLeft, int iBottom, int iRight,
             if( iLeft >= 0 )
                hb_gt_PutChar( iTop + i, iLeft, bColor, bAttr, szBox[ 7 ] );
             if( iCols && szBox[ 8 ] )
-               hb_gt_Replicate( iTop + i, iLeft + 1, bColor, bAttr, szBox[ 8 ], iCols );
+               hb_gt_Replicate( iTop + i, iFirst, bColor, bAttr, szBox[ 8 ], iCols );
             if( iRight <= iMaxCol )
-               hb_gt_PutChar( iTop + i, iLeft + iCols + 1, bColor, bAttr, szBox[ 3 ] );
+               hb_gt_PutChar( iTop + i, iFirst + iCols, bColor, bAttr, szBox[ 3 ] );
          }
          if( iBottom <= iMaxRow )
          {
             if( iLeft >= 0 )
                hb_gt_PutChar( iBottom, iLeft, bColor, bAttr, szBox[ 6 ] );
             if( iCols )
-               hb_gt_Replicate( iBottom, iLeft + 1, bColor, bAttr, szBox[ 5 ], iCols );
+               hb_gt_Replicate( iBottom, iFirst, bColor, bAttr, szBox[ 5 ], iCols );
             if( iRight <= iMaxCol )
-               hb_gt_PutChar( iBottom, iLeft + iCols + 1, bColor, bAttr, szBox[ 4 ] );
+               hb_gt_PutChar( iBottom, iFirst + iCols, bColor, bAttr, szBox[ 4 ] );
          }
       }
    }
@@ -1403,13 +1412,18 @@ static void hb_gt_def_VertLine( int iCol, int iTop, int iBottom,
       iRow = iBottom;
    }
 
-   do
+   if( iRow < 0 )
+   {
+      iLength += iRow;
+      iRow = 0;
+   }
+
+   while( --iLength >= 0 )
    {
       if( !hb_gt_PutChar( iRow, iCol, bColor, HB_GT_ATTR_BOX, bChar ) )
          break;
       ++iRow;
    }
-   while( --iLength );
 }
 
 static BOOL hb_gt_def_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
@@ -1434,6 +1448,9 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
    switch ( iType )
    {
       case GTI_ISGRAPHIC:
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+      case GTI_ISCTWIN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
          break;
 

@@ -3569,6 +3569,8 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
    {
       switch( iType )
       {
+         case GTI_FULLSCREEN:
+         case GTI_KBDSUPPORT:
          case GTI_ISGRAPHIC:
             hb_gt_xwc_ConnectX( s_wnd, FALSE );
             break;
@@ -3588,6 +3590,8 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
       case GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_wnd->dpy != NULL );
          break;

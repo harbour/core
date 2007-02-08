@@ -57,6 +57,7 @@
 
 #include "hbgtcore.h"
 #include "hbinit.h"
+#include "hbapiitm.h"
 
 #include "ctwin.h"
 
@@ -1349,6 +1350,23 @@ static BOOL hb_ctw_gt_Resize( int iRows, int iCols )
    return FALSE;
 }
 
+static BOOL hb_ctw_gt_Info( int iType, PHB_GT_INFO pInfo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ctw_gt_Info(%d,%p)", iType, pInfo ) );
+
+   switch ( iType )
+   {
+      case GTI_ISCTWIN:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
+      default:
+         return HB_GTSUPER_INFO( iType, pInfo );
+   }
+
+   return TRUE;
+}
+
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
@@ -1374,6 +1392,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->GetChar                    = hb_ctw_gt_GetChar;
    pFuncTable->PutChar                    = hb_ctw_gt_PutChar;
    pFuncTable->Resize                     = hb_ctw_gt_Resize;
+   pFuncTable->Info                       = hb_ctw_gt_Info;
 
    return TRUE;
 }

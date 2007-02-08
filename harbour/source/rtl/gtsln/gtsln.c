@@ -880,6 +880,11 @@ static BOOL hb_gt_sln_Info( int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
       case GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_sln_escDelay );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )

@@ -108,8 +108,8 @@ extern HB_EXPORT void     hb_vmRequestCancel( void );
 extern HB_EXPORT void     hb_vmRequestQuit( void );
 extern HB_EXPORT void     hb_vmRequestEndProc( void );
 extern HB_EXPORT USHORT   hb_vmRequestQuery( void );
-extern HB_EXPORT BOOL     hb_vmRequestReenter( USHORT * puiAction );
-extern HB_EXPORT void     hb_vmRequestRestore( USHORT uiAction );
+extern HB_EXPORT BOOL     hb_vmRequestReenter( void );
+extern HB_EXPORT void     hb_vmRequestRestore( void );
 
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED       1   /* immediately quit the application */

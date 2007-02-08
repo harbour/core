@@ -290,7 +290,10 @@ const BYTE hb_comp_pcode_len[] = {
    0,        /* HB_P_PUSHSTRLARGE          */
    2,        /* HB_P_SWAP                  */
    1,        /* HB_P_PUSHVPARAMS           */
-   1         /* HB_P_PUSHUNREF             */
+   1,        /* HB_P_PUSHUNREF             */
+   4,        /* HB_P_SEQALWAYS             */
+   4,        /* HB_P_ALWAYSBEGIN           */
+   1         /* HB_P_ALWAYSEND             */
 };
 
 /*
@@ -467,7 +470,10 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    hb_p_pushstrlarge,          /* HB_P_PUSHSTRLARGE          */
    NULL,                       /* HB_P_SWAP                  */
    NULL,                       /* HB_P_PUSHVPARAMS           */
-   NULL                        /* HB_P_PUSHUNREF             */
+   NULL,                       /* HB_P_PUSHUNREF             */
+   NULL,                       /* HB_P_SEQALWAYS             */
+   NULL,                       /* HB_P_ALWAYSBEGIN           */
+   NULL                        /* HB_P_ALWAYSEND             */
 };
 
 LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )

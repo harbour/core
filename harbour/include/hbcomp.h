@@ -224,7 +224,8 @@ extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL ); /* c
 
 extern ULONG hb_compSequenceBegin( HB_COMP_DECL );
 extern ULONG hb_compSequenceEnd( HB_COMP_DECL );
-extern void hb_compSequenceFinish( ULONG, int, HB_COMP_DECL );
+extern ULONG hb_compSequenceAlways( HB_COMP_DECL );
+extern void hb_compSequenceFinish( HB_COMP_DECL, ULONG, ULONG, ULONG, BOOL, BOOL );
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( HB_COMP_DECL, char *, int );
@@ -298,9 +299,9 @@ extern void hb_compPrintModes( void );
 
 /* Misc functions defined in harbour.c */
 extern void hb_compFinalizeFunction( HB_COMP_DECL ); /* fixes all last defined function returns jumps offsets */
-extern void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos );
 extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );
 extern BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos );
+
 /* Misc functions defined in hbfix.c */
 extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION );
 /* Misc functions defined in hbstripl.c */

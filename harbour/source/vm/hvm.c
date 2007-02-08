@@ -234,7 +234,7 @@ HB_SYMB  hb_symEval      = { "EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 
 static BOOL     s_fDoExitProc = TRUE;  /* execute EXIT procedures */
-static int      s_nErrorLevel;         /* application exit errorlevel */
+static int      s_nErrorLevel = 0;     /* application exit errorlevel */
 static PHB_SYMB s_pSymStart = NULL;    /* start symbol of the application. MAIN() is not required */
 
 static PHB_SYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
@@ -259,37 +259,13 @@ static ULONG	s_VMFlags = HB_VMFLAG_HARBOUR;
 static int 		s_VMCancelKey = K_ALT_C;
 static int		s_VMCancelKeyEx = HB_K_ALT_C;
 
-/* Stores the position on the stack of current SEQUENCE envelope or 0 if no
- * SEQUENCE is active
+/* SEQUENCE envelope items position from stack top active
  */
-static LONG     s_lRecoverBase;
-#define  HB_RECOVER_STATE     -1
-#define  HB_RECOVER_BASE      -2
-#define  HB_RECOVER_ADDRESS   -3
-#define  HB_RECOVER_VALUE     -4
+#define HB_RECOVER_STATE     -1
+#define HB_RECOVER_VALUE     -2
 
-/* Request for some action - stop processing of opcodes
- */
-static USHORT   s_uiActionRequest;
-
-char *hb_vm_sNull = "";
-
-char *hb_vm_acAscii[256] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0A", "\x0B", "\x0C", "\x0D", "\x0E", "\x0F",
-                             "\x10", "\x11", "\x12", "\x13", "\x14", "\x15", "\x16", "\x17", "\x18", "\x19", "\x1A", "\x1B", "\x1C", "\x1D", "\x1E", "\x1F",
-                             "\x20", "\x21", "\x22", "\x23", "\x24", "\x25", "\x26", "\x27", "\x28", "\x29", "\x2A", "\x2B", "\x2C", "\x2D", "\x2E", "\x2F",
-                             "\x30", "\x31", "\x32", "\x33", "\x34", "\x35", "\x36", "\x37", "\x38", "\x39", "\x3A", "\x3B", "\x3C", "\x3D", "\x3E", "\x3F",
-                             "\x40", "\x41", "\x42", "\x43", "\x44", "\x45", "\x46", "\x47", "\x48", "\x49", "\x4A", "\x4B", "\x4C", "\x4D", "\x4E", "\x4F",
-                             "\x50", "\x51", "\x52", "\x53", "\x54", "\x55", "\x56", "\x57", "\x58", "\x59", "\x5A", "\x5B", "\x5C", "\x5D", "\x5E", "\x5F",
-                             "\x60", "\x61", "\x62", "\x63", "\x64", "\x65", "\x66", "\x67", "\x68", "\x69", "\x6A", "\x6B", "\x6C", "\x6D", "\x6E", "\x6F",
-                             "\x70", "\x71", "\x72", "\x73", "\x74", "\x75", "\x76", "\x77", "\x78", "\x79", "\x7A", "\x7B", "\x7C", "\x7D", "\x7E", "\x7F",
-                             "\x80", "\x81", "\x82", "\x83", "\x84", "\x85", "\x86", "\x87", "\x88", "\x89", "\x8A", "\x8B", "\x8C", "\x8D", "\x8E", "\x8F",
-                             "\x90", "\x91", "\x92", "\x93", "\x94", "\x95", "\x96", "\x97", "\x98", "\x99", "\x9A", "\x9B", "\x9C", "\x9D", "\x9E", "\x9F",
-                             "\xA0", "\xA1", "\xA2", "\xA3", "\xA4", "\xA5", "\xA6", "\xA7", "\xA8", "\xA9", "\xAA", "\xAB", "\xAC", "\xAD", "\xAE", "\xAF",
-                             "\xB0", "\xB1", "\xB2", "\xB3", "\xB4", "\xB5", "\xB6", "\xB7", "\xB8", "\xB9", "\xBA", "\xBB", "\xBC", "\xBD", "\xBE", "\xBF",
-                             "\xC0", "\xC1", "\xC2", "\xC3", "\xC4", "\xC5", "\xC6", "\xC7", "\xC8", "\xC9", "\xCA", "\xCB", "\xCC", "\xCD", "\xCE", "\xCF",
-                             "\xD0", "\xD1", "\xD2", "\xD3", "\xD4", "\xD5", "\xD6", "\xD7", "\xD8", "\xD9", "\xDA", "\xDB", "\xDC", "\xDD", "\xDE", "\xDF",
-                             "\xE0", "\xE1", "\xE2", "\xE3", "\xE4", "\xE5", "\xE6", "\xE7", "\xE8", "\xE9", "\xEA", "\xEB", "\xEC", "\xED", "\xEE", "\xEF",
-                             "\xF0", "\xF1", "\xF2", "\xF3", "\xF4", "\xF5", "\xF6", "\xF7", "\xF8", "\xF9", "\xFA", "\xFB", "\xFC", "\xFD", "\xFE", "\xFF" };
+#define HB_SEQ_CANRECOVER    64
+#define HB_SEQ_DOALWAYS     128
 
 static PHB_FUNC_LIST s_InitFunctions = NULL;
 static PHB_FUNC_LIST s_ExitFunctions = NULL;
@@ -392,12 +368,10 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
    /* initialize internal data structures */
    s_aStatics.type = HB_IT_NIL;
-   s_nErrorLevel = 0;
+
    s_bDebugging = FALSE;
    s_bDebugShowLines = FALSE;
    s_bDebuggerIsWorking = FALSE;
-   s_lRecoverBase = 0;
-   s_uiActionRequest = 0;
 
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
@@ -560,7 +534,7 @@ HB_EXPORT int hb_vmQuit( void )
    /* Clear any pending actions so RDD shutdown process
     * can be cleanly executed
     */
-   s_uiActionRequest = 0;
+   hb_stackSetActionRequest( 0 );
    hb_rddShutDown();
 
    hb_errExit();
@@ -643,7 +617,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          set it to 0 (or if he doesn't need any inkey poll) and
          when ALT+C/ALT+D is pressed (or any other platform dependent
          key combination) they should set proper flags in
-         s_uiActionRequest so we can serve it in main VM loop without
+         ActionRequest so we can serve it in main VM loop without
          performance decrease or ignore depending on
          hb_set.HB_SET_CANCEL, hb_set.HB_SET_DEBUG flags
          */
@@ -922,7 +896,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
             
          case HB_P_SWITCH:
-            w = hb_vmSwitch( pCode, w+3, HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            w = hb_vmSwitch( pCode, w+3, HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             break;
             
          /* Operators (logical) */
@@ -1115,8 +1089,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* manually inlined hb_vmRequestEndProc() for some C compilers
              * which does not make such optimisation
              */
-            s_uiActionRequest = HB_ENDPROC_REQUESTED; 
-            
+            hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
             break;
 
          case HB_P_ENDPROC:
@@ -1124,20 +1097,18 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* manually inlined hb_vmRequestEndProc() for some C compilers
              * which does not make such optimisation
              */
-            s_uiActionRequest = HB_ENDPROC_REQUESTED; 
+            hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
             break;
 
-         /* BEGIN SEQUENCE/RECOVER/END SEQUENCE */
+         /* BEGIN SEQUENCE/RECOVER/ALWAYS/END SEQUENCE */
 
-         case HB_P_SEQBEGIN:
+         case HB_P_SEQALWAYS:
          {
             /*
              * Create the SEQUENCE envelope
-             * [ break return value      ]  -4
-             * [ address of recover code ]  -3
-             * [ previous recover base   ]  -2
-             * [ current recovery state  ]  -1
-             * [                         ] <- new recover base
+             * [ break return value ]  -2
+             * [ recover envelope   ]  -1
+             * [                    ] <- new recover base
              */
 
             PHB_ITEM pItem;
@@ -1146,29 +1117,116 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * 1) clear the storage for value returned by BREAK statement
              */
             hb_stackAllocItem()->type = HB_IT_NIL;
+
             /*
-             * 2) store the address of RECOVER or END opcode
+             * 2) recover data
              */
             pItem = hb_stackAllocItem();
-            pItem->type = HB_IT_LONG;
-            pItem->item.asLong.value = w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );
-            /*
-             * 3) store current RECOVER base
-             */
-            pItem = hb_stackAllocItem();
-            pItem->type = HB_IT_LONG;
-            pItem->item.asLong.value = s_lRecoverBase;
-            /*
-             * 4) store current bCanRecover flag - in a case of nested sequences
-             * in the same procedure/function
-             */
-            pItem = hb_stackAllocItem();
-            pItem->type = HB_IT_LOGICAL;
-            pItem->item.asLogical.value = bCanRecover;
+            /* mark type as NIL - it's not real item */
+            pItem->type = HB_IT_NIL;
+            /* store the address of RECOVER or END opcode */
+            pItem->item.asRecover.recover = w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );
+            /* store current RECOVER base */
+            pItem->item.asRecover.base = hb_stackGetRecoverBase();
+            /* store current bCanRecover flag - in a case of nested sequences */
+            pItem->item.asRecover.flags = HB_SEQ_DOALWAYS | ( bCanRecover ? HB_SEQ_CANRECOVER : 0 );
+            /* clear new recovery state */
+            pItem->item.asRecover.request = 0;
+
             /*
              * set new recover base
              */
-            s_lRecoverBase = hb_stackTopOffset();
+            hb_stackSetRecoverBase( hb_stackTopOffset() );
+            /*
+             * we are now inside a valid SEQUENCE envelope
+             */
+            bCanRecover = TRUE;
+            w += 4;
+            break;
+         }
+
+         case HB_P_ALWAYSBEGIN:
+            /* change the recover address to ALWAYSEND opcode */
+            hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover =
+               w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );
+            /* store and reset action */
+            hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags |=
+               hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request;
+            hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = 0;
+            /* store RETURN value */
+            if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_ENDPROC_REQUESTED )
+               hb_itemMove( hb_stackItemFromTop( HB_RECOVER_VALUE ), hb_stackReturnItem() );
+            w += 4;
+            break;
+
+         case HB_P_ALWAYSEND:
+         {
+            USHORT uiPrevAction, uiCurrAction;
+
+            uiPrevAction = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags;
+            uiCurrAction = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request;
+
+            /* restore previous recovery base */
+            bCanRecover = ( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_CANRECOVER ) != 0;
+            hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
+
+            /* restore requested action */
+            if( ( uiCurrAction | uiPrevAction ) & HB_QUIT_REQUESTED )
+               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+            else if( ( uiCurrAction | uiPrevAction ) & HB_BREAK_REQUESTED )
+               hb_stackSetActionRequest( HB_BREAK_REQUESTED );
+            else if( ( uiCurrAction | uiPrevAction ) & HB_ENDPROC_REQUESTED )
+               hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
+            else
+               hb_stackSetActionRequest( 0 );
+
+            /* Remove the ALWAYS envelope */
+            hb_stackDec();
+
+            /* restore RETURN value if not overloaded inside ALWAYS code */
+            if( !( uiCurrAction & HB_ENDPROC_REQUESTED ) &&
+                 ( uiPrevAction & HB_ENDPROC_REQUESTED ) )
+               hb_stackPopReturn();
+            else
+               hb_stackPop();
+            w++;
+            break;
+         }
+         case HB_P_SEQBEGIN:
+         {
+            /*
+             * Create the SEQUENCE envelope
+             * [ break return value ]  -2
+             * [ recover envelope   ]  -1
+             * [                    ] <- new recover base
+             */
+
+            PHB_ITEM pItem;
+
+            /*
+             * 1) clear the storage for value returned by BREAK statement
+             */
+            hb_stackAllocItem()->type = HB_IT_NIL;
+
+            /*
+             * 2) recover data
+             */
+            pItem = hb_stackAllocItem();
+            /* mark type as NIL - it's not real item */
+            pItem->type = HB_IT_NIL;
+            /* store the address of RECOVER or END opcode */
+            pItem->item.asRecover.recover = w + HB_PCODE_MKINT24( &pCode[ w + 1 ] );
+            /* store current RECOVER base */
+            pItem->item.asRecover.base = hb_stackGetRecoverBase();
+            /* store current bCanRecover flag - in a case of nested sequences */
+            pItem->item.asRecover.flags = bCanRecover ? HB_SEQ_CANRECOVER : 0;
+            /* clear new recovery state */
+            pItem->item.asRecover.request = 0;
+
+            /*
+             * set new recover base
+             */
+            hb_stackSetRecoverBase( hb_stackTopOffset() );
             /*
              * we are now inside a valid SEQUENCE envelope
              */
@@ -1183,21 +1241,16 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
              * This is executed either at the end of sequence or as the
              * response to the break statement if there is no RECOVER clause
              */
+
             /*
-             * 4) Restore previous recovery state
+             * 2) Restore previous recovery state
              */
-            bCanRecover = hb_stackItemFromTop( -1 )->item.asLogical.value;
+            bCanRecover = ( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_CANRECOVER ) != 0;
+            hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
             hb_stackDec();
+
             /*
-             * 3) Restore previous RECOVER base
-             */
-            s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-            hb_stackDec();
-            /*
-             * 2) Remove RECOVER address
-             */
-            hb_stackDec();
-            /* 1) Discard the value returned by BREAK statement - there
+             * 1) Discard the value returned by BREAK statement - there
              * was no RECOVER clause or there was no BREAK statement
              */
             hb_stackPop();
@@ -1211,19 +1264,12 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * Execute the RECOVER code
              */
+
             /*
-             * 4) Restore previous recovery state
+             * 2) Restore previous recovery state
              */
-            bCanRecover = hb_stackItemFromTop( -1 )->item.asLogical.value;
-            hb_stackDec();
-            /*
-             * 3) Restore previous RECOVER base
-             */
-            s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-            hb_stackDec();
-            /*
-             * 2) Remove RECOVER address
-             */
+            bCanRecover = ( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_CANRECOVER ) != 0;
+            hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
             hb_stackDec();
             /*
              * 1) Leave the value returned from BREAK  - it will be popped
@@ -2016,17 +2062,45 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
       }
 
-      if( s_uiActionRequest )
+      if( hb_stackGetActionRequest() )
       {
-         if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
+         if( hb_stackGetActionRequest() & HB_ENDPROC_REQUESTED )
          {
             /* request to stop current procedure was issued
              * (from macro evaluation)
              */
-            s_uiActionRequest = 0;
+
+            /* This code allow to use RETURN inside BEGIN/END sequence
+             * or in RECOVER code when ALWAYS clause is used
+             */
+            if( bCanRecover )
+            {
+               do
+               {
+                  hb_stackRemove( hb_stackGetRecoverBase() );
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS )
+                     break;
+                  /* Restore previous recovery state */
+                  bCanRecover = ( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_CANRECOVER ) != 0;
+                  hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
+               }
+               while( bCanRecover );
+
+               /* ALWAYS found? */
+               if( bCanRecover )
+               {
+                  /* reload the address of ALWAYS code */
+                  w = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
+                  /* store and reset action */
+                  hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = hb_stackGetActionRequest();
+                  hb_stackSetActionRequest( 0 );
+                  continue;
+               }
+            }
+            hb_stackSetActionRequest( 0 );
             break;
          }
-         else if( s_uiActionRequest & HB_BREAK_REQUESTED )
+         else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
          {
             if( bCanRecover )
             {
@@ -2037,32 +2111,49 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * remove all items placed on the stack after BEGIN code
                 */
-               hb_stackRemove( s_lRecoverBase );
+               hb_stackRemove( hb_stackGetRecoverBase() );
                /*
                 * reload the address of recovery code
                 */
-               w = ( hb_stackItem( s_lRecoverBase + HB_RECOVER_ADDRESS ) )->item.asLong.value;
+               w = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode
                 */
-               s_uiActionRequest = 0;
+
+               /* store and reset action */
+               hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = hb_stackGetActionRequest();
+               hb_stackSetActionRequest( 0 );
             }
             else
                break;
          }
-         else if( s_uiActionRequest & HB_QUIT_REQUESTED )
+         else if( hb_stackGetActionRequest() & HB_QUIT_REQUESTED )
          {
-            while( bCanRecover )
+            if( bCanRecover )
             {
-               hb_stackRemove( s_lRecoverBase );
-               /* 4) Restore previous recovery state */
-               bCanRecover = hb_stackItemFromTop( -1 )->item.asLogical.value;
-               hb_stackDec();
-               /* 3) Restore previous RECOVER base */
-               s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-               hb_stackDec();
-               /* skip other steps */
+               do
+               {
+                  hb_stackRemove( hb_stackGetRecoverBase() );
+                  if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS )
+                     break;
+                  /* Restore previous recovery state */
+                  bCanRecover = ( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_CANRECOVER ) != 0;
+                  hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
+                  /* skip other steps */
+               }
+               while( bCanRecover );
+
+               /* ALWAYS found? */
+               if( bCanRecover )
+               {
+                  /* reload the address of ALWAYS code */
+                  w = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.recover;
+                  /* store and reset action */
+                  hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = hb_stackGetActionRequest();
+                  hb_stackSetActionRequest( 0 );
+                  continue;
+               }
             }
             break;
          }
@@ -3487,15 +3578,11 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
    {
       HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
 
-      if( pResult )
-      {
-         hb_stackPop();
-         hb_vmPush( pResult );
-         hb_itemRelease( pResult );
-         pSwitch = hb_stackItemFromTop( -1 );
-      }
-      else
+      if( !pResult )
          return offset;
+
+      hb_itemMove( pSwitch, pResult );
+      hb_itemRelease( pResult );
    }
 
    while( !fFound && casesCnt-- )
@@ -3696,7 +3783,7 @@ static void hb_vmArrayPush( void )
          {
             /* this is a temporary copy of an array - we can overwrite
              * it with no problem
-            */
+             */
             hb_itemCopy( pArray, pArray->item.asArray.value->pItems + ulIndex - 1 );
             hb_stackPop();
          }
@@ -3720,7 +3807,7 @@ static void hb_vmArrayPush( void )
       {
          UCHAR uc = ( UCHAR ) pArray->item.asString.value[ ulIndex - 1 ];
 #if defined( HB_COMPAT_XHB )
-         hb_itemPutCL( pArray, hb_vm_acAscii[ uc ], 1 );
+         hb_itemPutCL( pArray, hb_szAscii[ uc ], 1 );
 #else
          hb_itemPutNI( pArray, uc );
 #endif
@@ -3843,7 +3930,7 @@ static void hb_vmArrayPop( void )
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
-         hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
+         hb_itemMoveRef( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
          hb_stackPop();
          hb_stackPop();
          hb_stackDec();    /* value was moved above hb_stackDec() is enough */
@@ -3864,7 +3951,7 @@ static void hb_vmArrayPop( void )
 #endif
          if( pArray->item.asString.length == 1 )
          {
-            hb_itemPutCL( pArray, hb_vm_acAscii[ ( unsigned char ) cValue ], 1 );
+            hb_itemPutCL( pArray, hb_szAscii[ ( unsigned char ) cValue ], 1 );
          }
          else
          {
@@ -4012,7 +4099,7 @@ static void hb_vmMacroPushIndex( void )
       {
          hb_vmArrayPush();
          /* RT error? */
-         if( s_uiActionRequest != 0 )
+         if( hb_stackGetActionRequest() != 0 )
             break;
          hb_vmPush( hb_arrayGetItemPtr( pIndexArray, ul ) );
       }
@@ -6168,7 +6255,7 @@ static void hb_vmDoExitFunctions( void )
    if( s_fDoExitProc )
    {
       s_fDoExitProc = FALSE;
-      s_uiActionRequest = 0;
+      hb_stackSetActionRequest( 0 );
 
       while( pLastSymbols )
       {
@@ -6186,7 +6273,7 @@ static void hb_vmDoExitFunctions( void )
                   hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                   hb_vmPushNil();
                   hb_vmDo( 0 );
-                  if( s_uiActionRequest )
+                  if( hb_stackGetActionRequest() )
                      /* QUIT or BREAK was issued - stop processing
                      */
                      return;
@@ -6245,56 +6332,43 @@ static void hb_vmDoInitFunctions( void )
    }
 }
 
-/* NOTE: We should make sure that these get linked.
-         Don't make this function static, because it's not called from
-         this file. [vszakats] */
-
-void hb_vmForceLink( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
-
-   HB_FUNC_EXEC( SYSINIT );
-}
-
 /* ----------------------------- */
-
-HB_FUNC( ERRORLEVEL )
-{
-   hb_retni( s_nErrorLevel );
-
-   /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
-            accepts other types also and considers them zero. [vszakats] */
-
-   if( hb_pcount() >= 1 )
-      /* Only replace the error level if a parameter was passed */
-      s_nErrorLevel = hb_parni( 1 );
-}
 
 void hb_vmRequestQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestQuit()"));
 
    hb_vmDoExitFunctions(); /* process defined EXIT functions */
-   s_uiActionRequest = HB_QUIT_REQUESTED;
+   hb_stackSetActionRequest( HB_QUIT_REQUESTED );
 }
 
 void hb_vmRequestEndProc( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestEndProc()"));
 
-   s_uiActionRequest = HB_ENDPROC_REQUESTED;
+   hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
 }
 
 void hb_vmRequestBreak( PHB_ITEM pItem )
 {
+   ULONG ulRecoverBase;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestBreak(%p)", pItem));
 
-   if( s_lRecoverBase )
+   ulRecoverBase = hb_stackGetRecoverBase();
+   while( ulRecoverBase && ( hb_stackItem( ulRecoverBase +
+               HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS ) )
+   {
+      ulRecoverBase = hb_stackItem( ulRecoverBase +
+                                    HB_RECOVER_STATE )->item.asRecover.base;
+   }
+
+   if( ulRecoverBase )
    {
       if( pItem )
-         hb_itemCopy( hb_stackItem( s_lRecoverBase + HB_RECOVER_VALUE ), pItem );
+         hb_itemCopy( hb_stackItem( ulRecoverBase + HB_RECOVER_VALUE ), pItem );
 
-      s_uiActionRequest = HB_BREAK_REQUESTED;
+      hb_stackSetActionRequest( HB_BREAK_REQUESTED );
    }
    else
    {
@@ -6304,7 +6378,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
        * buggy Clipper behavior. [druzus]
        */
       s_fDoExitProc = FALSE;
-      s_uiActionRequest = HB_QUIT_REQUESTED;
+      hb_stackSetActionRequest( HB_QUIT_REQUESTED );
 #else
       /*
        * Clipper has a bug here. Tests shows that it set exception flag
@@ -6351,57 +6425,65 @@ void hb_vmRequestCancel( void )
        * Clipper does not execute EXIT procedures when quiting using break key
        */
       s_fDoExitProc = FALSE;
-      s_uiActionRequest = HB_QUIT_REQUESTED;
+      hb_stackSetActionRequest( HB_QUIT_REQUESTED );
    }
 }
 
 USHORT hb_vmRequestQuery( void )
 {
-   return s_uiActionRequest;
+   return hb_stackGetActionRequest();
 }
 
-BOOL hb_vmRequestReenter( USHORT * puiAction )
+BOOL hb_vmRequestReenter( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenter(%p)", puiAction));
-
-   * puiAction = s_uiActionRequest;
-   s_uiActionRequest = 0;
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenter()"));
 
    hb_stackPushReturn();
+
+   hb_vmPushInteger( hb_stackGetActionRequest() );
+   hb_stackSetActionRequest( 0 );
 
    return TRUE;
 }
 
-void hb_vmRequestRestore( USHORT uiAction )
+void hb_vmRequestRestore( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestRestore(%hu)", uiAction));
+   USHORT uiAction;
 
-   /* Do not overwrite QUIT request */
-   if( !( s_uiActionRequest & HB_QUIT_REQUESTED ) )
-   {
-      if( uiAction & HB_QUIT_REQUESTED )
-         s_uiActionRequest = HB_QUIT_REQUESTED;
-      else if( !( s_uiActionRequest & HB_BREAK_REQUESTED ) )
-         s_uiActionRequest = uiAction;
-   }
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestRestore()"));
 
+   uiAction = ( USHORT ) hb_stackItemFromTop( -1 )->item.asInteger.value |
+              hb_stackGetActionRequest();
+   if( uiAction & HB_QUIT_REQUESTED )
+      hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+   else if( uiAction & HB_BREAK_REQUESTED )
+      hb_stackSetActionRequest( HB_BREAK_REQUESTED );
+   else if( uiAction & HB_ENDPROC_REQUESTED )
+      hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
+   else
+      hb_stackSetActionRequest( 0 );
+
+   hb_stackDec();
    hb_stackPopReturn();
 }
 
 
 
 
-
-
-#define HB_XVM_RETURN   return ( s_uiActionRequest & \
+#define HB_XVM_RETURN   return ( hb_stackGetActionRequest() & \
       ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
 
 HB_EXPORT void hb_xvmExitProc( void )
 {
-   if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
-      s_uiActionRequest = 0;
+   if( hb_stackGetActionRequest() & HB_ENDPROC_REQUESTED )
+      hb_stackSetActionRequest( 0 );
 }
 
+HB_EXPORT void hb_xvmEndProc( void )
+{
+   if( !( hb_stackGetActionRequest() & ( HB_QUIT_REQUESTED | HB_BREAK_REQUESTED ) ) )
+      hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
+}
 
 HB_EXPORT void hb_xvmSeqBegin( void )
 {
@@ -6412,25 +6494,28 @@ HB_EXPORT void hb_xvmSeqBegin( void )
     * use exactly the same SEQUENCE envelope or hb_vmRequestBreak()
     * will not work as expected.
     *
-    * [ break return value      ]  -4
-    * [ address of recover code ]  -3
-    * [ previous recover base   ]  -2
-    * [ current recovery state  ]  -1
-    * [                         ] <- new recover base
+    * [ break return value ]  -2
+    * [ recover envelope   ]  -1
+    * [                    ] <- new recover base
     */
 
    /* 1) clear the storage for value returned by BREAK statement */
    hb_stackAllocItem()->type = HB_IT_NIL;
-   /* 2) the address of RECOVER or END opcode - not used in C code */
-   hb_stackAllocItem()->type = HB_IT_NIL;
-   /* 3) store current RECOVER base */
+   /* 2) recovery state */
    pItem = hb_stackAllocItem();
-   pItem->type = HB_IT_LONG;
-   pItem->item.asLong.value = s_lRecoverBase;
-   /* 4) current bCanRecover flag - not used in C code */
-   hb_stackAllocItem()->type = HB_IT_NIL;
+   /* mark type as NIL - it's not real item */
+   pItem->type = HB_IT_NIL;
+   /* address of RECOVER or END opcode - not used in C code */
+   pItem->item.asRecover.recover = 0;
+   /* store current RECOVER base */
+   pItem->item.asRecover.base = hb_stackGetRecoverBase();
+   /* store current bCanRecover flag - not used in C code */
+   pItem->item.asRecover.flags = 0;
+   /* clear new recovery state */
+   pItem->item.asRecover.request = 0;
+
    /* set new recover base */
-   s_lRecoverBase = hb_stackTopOffset();
+   hb_stackSetRecoverBase( hb_stackTopOffset() );
 }
 
 HB_EXPORT BOOL hb_xvmSeqEnd( void )
@@ -6438,7 +6523,7 @@ HB_EXPORT BOOL hb_xvmSeqEnd( void )
    /*
     * remove all items placed on the stack after BEGIN code
     */
-   hb_stackRemove( s_lRecoverBase );
+   hb_stackRemove( hb_stackGetRecoverBase() );
 
    /*
     * Remove the SEQUENCE envelope
@@ -6446,33 +6531,29 @@ HB_EXPORT BOOL hb_xvmSeqEnd( void )
     * response to the break statement if there is no RECOVER clause
     */
 
-   /* 4) Restore previous recovery state - not used in C code */
-   hb_stackDec();
-   /* 3) Restore previous RECOVER base */
-   s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-   hb_stackDec();
-   /* 2) Remove RECOVER address - not used in C code */
+   /* 2) Restore previous recovery base address */
+   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
    hb_stackDec();
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
 
-   if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
+   if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
-   else if( s_uiActionRequest & HB_BREAK_REQUESTED )
-      s_uiActionRequest = 0;
+   else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
+      hb_stackSetActionRequest( 0 );
    return FALSE;
 }
 
 HB_EXPORT BOOL hb_xvmSeqEndTest( void )
 {
-   if( ( s_uiActionRequest &
+   if( ( hb_stackGetActionRequest() &
        ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0 )
       return TRUE;
 
    /*
     * remove all items placed on the stack after BEGIN code
     */
-   hb_stackRemove( s_lRecoverBase );
+   hb_stackRemove( hb_stackGetRecoverBase() );
 
    /*
     * Remove the SEQUENCE envelope
@@ -6480,12 +6561,8 @@ HB_EXPORT BOOL hb_xvmSeqEndTest( void )
     * response to the break statement if there is no RECOVER clause
     */
 
-   /* 4) Restore previous recovery state - not used in C code */
-   hb_stackDec();
-   /* 3) Restore previous RECOVER base */
-   s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-   hb_stackDec();
-   /* 2) Remove RECOVER address - not used in C code */
+   /* 2) Restore previous recovery base address */
+   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
    hb_stackDec();
    /* 1) Discard the value returned by BREAK statement */
    hb_stackPop();
@@ -6501,22 +6578,94 @@ HB_EXPORT BOOL hb_xvmSeqRecover( void )
    /*
     * remove all items placed on the stack after BEGIN code
     */
-   hb_stackRemove( s_lRecoverBase );
+   hb_stackRemove( hb_stackGetRecoverBase() );
 
-   /* 4) Restore previous recovery state - not used in C code */
-   hb_stackDec();
-   /* 3) Restore previous RECOVER base */
-   s_lRecoverBase = hb_stackItemFromTop( -1 )->item.asLong.value;
-   hb_stackDec();
-   /* 2) Remove RECOVER address - not used in C code */
+   /* 2) Restore previous recovery base address */
+   hb_stackSetRecoverBase( hb_stackItemFromTop( -1 )->item.asRecover.base );
    hb_stackDec();
    /* 1) Leave the value returned from BREAK */
 
-   if( s_uiActionRequest & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
+   if( hb_stackGetActionRequest() & ( HB_ENDPROC_REQUESTED | HB_QUIT_REQUESTED ) )
       return TRUE;
-   else if( s_uiActionRequest & HB_BREAK_REQUESTED )
-      s_uiActionRequest = 0;
+   else if( hb_stackGetActionRequest() & HB_BREAK_REQUESTED )
+      hb_stackSetActionRequest( 0 );
    return FALSE;
+}
+
+HB_EXPORT void hb_xvmSeqAlways( void )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmSeqAlways()"));
+
+   /* Create the SEQUENCE ALWAYS envelope */
+   /* 1) clear the storage for RETURN value */
+   hb_stackAllocItem()->type = HB_IT_NIL;
+   /* 2) recovery state */
+   pItem = hb_stackAllocItem();
+   /* mark type as NIL - it's not real item */
+   pItem->type = HB_IT_NIL;
+   /* address of RECOVER or END opcode - not used in C code */
+   pItem->item.asRecover.recover = 0;
+   /* store current RECOVER base */
+   pItem->item.asRecover.base = hb_stackGetRecoverBase();
+   /* store current bCanRecover flag - not used in C code */
+   pItem->item.asRecover.flags = 0;
+   /* clear new recovery state */
+   pItem->item.asRecover.request = 0;
+   /* set sequence type */
+   pItem->item.asRecover.flags = HB_SEQ_DOALWAYS;
+   /* set new recover base */
+   hb_stackSetRecoverBase( hb_stackTopOffset() );
+}
+
+HB_EXPORT BOOL hb_xvmAlwaysBegin( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmAlwaysBegin()"));
+
+   /* remove all items placed on the stack after BEGIN code */
+   hb_stackRemove( hb_stackGetRecoverBase() );
+   /* store and reset action */
+   hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request = hb_stackGetActionRequest();
+   hb_stackSetActionRequest( 0 );
+   /* store RETURN value */
+   if( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request & HB_ENDPROC_REQUESTED )
+      hb_itemMove( hb_stackItemFromTop( HB_RECOVER_VALUE ), hb_stackReturnItem() );
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmAlwaysEnd( void )
+{
+   USHORT uiPrevAction, uiCurrAction;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmAlwaysEnd()"));
+
+   /* remove all items placed on the stack after ALWAYSBEGIN code */
+   hb_stackRemove( hb_stackGetRecoverBase() );
+   /* restore previous recovery base address */
+   hb_stackSetRecoverBase( hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.base );
+   uiCurrAction = hb_stackGetActionRequest();
+   uiPrevAction = hb_stackItemFromTop( HB_RECOVER_STATE )->item.asRecover.request;
+   /* restore requested action */
+   if( ( uiCurrAction | uiPrevAction ) & HB_QUIT_REQUESTED )
+      hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+   else if( ( uiCurrAction | uiPrevAction ) & HB_BREAK_REQUESTED )
+      hb_stackSetActionRequest( HB_BREAK_REQUESTED );
+   else if( ( uiCurrAction | uiPrevAction ) & HB_ENDPROC_REQUESTED )
+      hb_stackSetActionRequest( HB_ENDPROC_REQUESTED );
+   else
+      hb_stackSetActionRequest( 0 );
+   /* remove the ALWAYS envelope */
+   hb_stackDec();
+   /* restore RETURN value if not overloaded inside ALWAYS code */
+   if( !( uiCurrAction & HB_ENDPROC_REQUESTED ) &&
+        ( uiPrevAction & HB_ENDPROC_REQUESTED ) )
+      hb_stackPopReturn();
+   else
+      hb_stackPop();
+
+   HB_XVM_RETURN
 }
 
 HB_EXPORT BOOL hb_xvmEnumStart( BYTE nVars, BYTE nDescend )
@@ -8077,7 +8226,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
       {
          UCHAR uc = ( UCHAR ) pArray->item.asString.value[ ulIndex - 1 ];
 #if defined( HB_COMPAT_XHB )
-         hb_itemPutCL( pArray, hb_vm_acAscii[ uc ], 1 );
+         hb_itemPutCL( pArray, hb_szAscii[ uc ], 1 );
 #else
          hb_itemPutNI( pArray, uc );
 #endif
@@ -8134,7 +8283,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
-         hb_itemMove( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
+         hb_itemMoveRef( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
          hb_stackPop();
          hb_stackDec();    /* value was moved above hb_stackDec() is enough */
       }
@@ -8157,7 +8306,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
 #endif
          if( pArray->item.asString.length == 1 )
          {
-            hb_itemPutCL( pArray, hb_vm_acAscii[ ( unsigned char ) cValue ], 1 );
+            hb_itemPutCL( pArray, hb_szAscii[ ( unsigned char ) cValue ], 1 );
          }
          else
          {
@@ -8607,6 +8756,31 @@ HB_FUNC( __VMVARSGET )
 HB_FUNC( __VMVARSSET )
 {
    HB_FUNCNAME(HB_DBG_VMVARSSET)();
+}
+
+
+HB_FUNC( ERRORLEVEL )
+{
+   hb_retni( s_nErrorLevel );
+
+   /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
+            accepts other types also and considers them zero. [vszakats] */
+
+   if( hb_pcount() >= 1 )
+      /* Only replace the error level if a parameter was passed */
+      s_nErrorLevel = hb_parni( 1 );
+}
+
+
+/* NOTE: We should make sure that these get linked.
+         Don't make this function static, because it's not called from
+         this file. [vszakats] */
+
+void hb_vmForceLink( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
+
+   HB_FUNC_EXEC( SYSINIT );
 }
 
 

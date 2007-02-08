@@ -34,12 +34,14 @@ static void hb_pp_ErrorGen( void * cargo,
                             char * szMsgTable[], char cPrefix, int iErrorCode,
                             const char * szParam1, const char * szParam2 )
 {
-   /* I do not know why but compiler expect line number 1 bigger then
-      real line number */
+   HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
+
    if( cPrefix == 'W' )
-      hb_compGenWarning( ( HB_COMP_PTR ) cargo, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
+      hb_compGenWarning( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    else
-      hb_compGenError( ( HB_COMP_PTR ) cargo, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
+      hb_compGenError( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
+
+   HB_COMP_PARAM->fError = FALSE;
 }
 
 static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,
@@ -61,11 +63,12 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
 
    if( HB_COMP_PARAM->iLanguage != LANG_C && HB_COMP_PARAM->iLanguage != LANG_OBJ_MODULE )
    {
-      hb_compGenError( ( HB_COMP_PTR ) cargo, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
+      HB_COMP_PARAM->fError = FALSE;
    }
    else
    {
-      PINLINE pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo,
+      PINLINE pInline = hb_compInlineAdd( HB_COMP_PARAM,
          hb_compIdentifierNew( HB_COMP_PARAM, szFunc, HB_IDENT_COPY ), iLine );
       pInline->pCode = ( BYTE * ) hb_xgrab( ulSize + 1 );
       memcpy( pInline->pCode, pBuffer, ulSize );

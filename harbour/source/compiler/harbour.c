@@ -2551,8 +2551,9 @@ USHORT hb_compFunctionGetPos( HB_COMP_DECL, char * szFunctionName ) /* return 0 
    return 0;
 }
 
-void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
+static void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
 {
+   pFunc->pCode[ ulPos ] = HB_P_NOOP;
    pFunc->iNOOPs++;
 
    if( pFunc->pNOOPs )
@@ -2653,8 +2654,8 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
       }
       else
       {
-         HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos +1 ] = HB_LOBYTE( iLine );
-         HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos +2 ] = HB_HIBYTE( iLine );
+         HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos + 1 ] = HB_LOBYTE( iLine );
+         HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos + 2 ] = HB_HIBYTE( iLine );
       }
    }
 
@@ -3677,6 +3678,50 @@ static int hb_compSort_ULONG( const void * pLeft, const void * pRight )
        return 1;
 }
 
+/*
+ * Warning - when jump optimization is disabled this function can be used
+ * _ONLY_ in very limited situations when there is no jumps over the
+ * removed block
+ */
+static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount )
+{
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   ULONG ul;
+
+   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
+   {
+      /*
+       * We can safely remove the dead code when Jump Optimization
+       * is enabled by replacing it with HB_P_NOOP opcodes - which
+       * will be later eliminated and jump data updated.
+       */
+      hb_compNOOPfill( pFunc, ulPos, ulCount, FALSE, TRUE );
+   }
+   else
+   {
+      memmove( pFunc->pCode + ulPos, pFunc->pCode + ulPos + ulCount,
+               pFunc->lPCodePos - ulPos - ulCount );
+      pFunc->lPCodePos -= ulCount;
+
+      for( ul = pFunc->iNOOPs; ul; --ul )
+      {
+         if( pFunc->pNOOPs[ ul ] >= ulPos )
+         {
+            if( pFunc->pNOOPs[ ul ] < ulPos + ulCount )
+            {
+               memmove( &pFunc->pNOOPs[ ul ], &pFunc->pNOOPs[ ul + 1 ],
+                        pFunc->iNOOPs - ul );
+               pFunc->iNOOPs--;
+            }
+            else
+            {
+               pFunc->pNOOPs[ ul ] -= ulCount;
+            }
+         }
+      }
+   }
+}
+
 void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck )
 {
    ULONG ul;
@@ -3699,10 +3744,7 @@ void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL
             hb_compNOOPadd( pFunc, ulFrom );
       }
       else
-      {
-         pFunc->pCode[ ulFrom ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, ulFrom );
-      }
       ++ulFrom;
    }
 }
@@ -3965,6 +4007,8 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
                   case HB_P_JUMPFAR:
                   case HB_P_JUMPTRUEFAR:
                   case HB_P_JUMPFALSEFAR:
+                  case HB_P_ALWAYSBEGIN:
+                  case HB_P_SEQALWAYS:
                   case HB_P_SEQBEGIN:
                   case HB_P_SEQEND:
                      lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
@@ -4066,8 +4110,10 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
  */
 ULONG hb_compSequenceBegin( HB_COMP_DECL )
 {
-   hb_compGenPCode4( HB_P_SEQBEGIN, 0, 0, 0, HB_COMP_PARAM );
+   hb_compGenPCode4( HB_P_SEQALWAYS, 0, 0, 0, HB_COMP_PARAM );
+   hb_compPrepareOptimize( HB_COMP_PARAM );
 
+   hb_compGenPCode4( HB_P_SEQBEGIN, 0, 0, 0, HB_COMP_PARAM );
    hb_compPrepareOptimize( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
@@ -4089,35 +4135,49 @@ ULONG hb_compSequenceEnd( HB_COMP_DECL )
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
+ULONG hb_compSequenceAlways( HB_COMP_DECL )
+{
+   hb_compGenPCode4( HB_P_ALWAYSBEGIN, 0, 0, 0, HB_COMP_PARAM );
+
+   hb_compPrepareOptimize( HB_COMP_PARAM );
+
+   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+}
+
 /* Remove unnecessary opcodes in case there were no executable statements
  * beetwen BEGIN and RECOVER sequence
  */
-void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts, HB_COMP_DECL )
+void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
+                            ULONG ulAlways, BOOL fUsualStmts, BOOL fRecover )
 {
+   --ulStartPos;  /* remove also HB_P_SEQBEGIN */
+
+   if( !ulAlways )
+   {
+      /* remove HB_P_SEQALWAYS */
+      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
+   }
+   else if( !fRecover )
+   {
+      /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
+      hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4 );
+      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4 );
+      if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
+      {
+         /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
+         hb_compGenJumpThere( ulStartPos - 3, ulAlways - 8, HB_COMP_PARAM );
+      }
+   }
+
    if( ! HB_COMP_PARAM->fDebugInfo ) /* only if no debugger info is required */
    {
-      if( ! bUsualStmts )
+      if( !fUsualStmts && !ulAlways )
       {
-         if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
-         {
-            HB_COMP_PARAM->functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
-            HB_COMP_PARAM->lastLinePos = ulStartPos - 5;
-         }
-         else
-         {
-            /*
-             * We can safely remove the dead code when Jump Optimization
-             * is enabled by replacing it with HB_P_NOOP PCODEs - which
-             * will be later eliminated and jump data updated.
-             */
-            while( ulStartPos <= HB_COMP_PARAM->functions.pLast->lPCodePos )
-            {
-               HB_COMP_PARAM->functions.pLast->pCode[ ulStartPos - 1 ] = HB_P_NOOP;
-               hb_compNOOPadd( HB_COMP_PARAM->functions.pLast, ulStartPos - 1 );
-               ++ulStartPos;
-            }
-            HB_COMP_PARAM->lastLinePos = ulStartPos - 5;
-         }
+         HB_COMP_PARAM->lastLinePos = ulStartPos - 5;
+
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
+                             HB_COMP_PARAM->functions.pLast->lPCodePos -
+                             ulStartPos );
       }
    }
 }

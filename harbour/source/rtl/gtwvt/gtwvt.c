@@ -1462,6 +1462,8 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
+      case GTI_FULLSCREEN:
+      case GTI_KBDSUPPORT:
       case GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
