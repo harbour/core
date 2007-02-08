@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-09 00:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/isprint.c
+   * harbour/include/hbapi.h
+     ! hb_printerIsReady() C level function made public again.
+     + Added proper declaration for it.
+
+   * harbour/bin/bld.bat
+     ! Mistakenly committed change undone.
+
 2007-02-09 00:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/common/hbstr.c
      ! Fixed three BCC5.5 warnings.

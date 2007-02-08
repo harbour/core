@@ -845,7 +845,8 @@ extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer conta
 extern char * hb_verPCode( void ); /* retrieves a newly allocated buffer containing PCode version */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
 
-extern HB_EXPORT BOOL   hb_iswinnt(void); /* return .T. if OS == WinNt, 2000, XP */
+extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == WinNt, 2000, XP */
+extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
 
 /* environment variables access */
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */
