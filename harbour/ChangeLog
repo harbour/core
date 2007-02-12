@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-12 16:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * do not release FLOCK() after DBAPPEND() - only RLOCKs should be
+      removed
+  * harbour/contrib/rdd_ads/rddads.h
+    * set ADS_REQUIRE_VERSION when not set by user scripts
+
 2007-02-12 10:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     ! fix line numbering when preprocess static buffers, f.e. by

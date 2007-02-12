@@ -1294,7 +1294,7 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
       AdsAtEOF( pArea->hTable, &u16Eof );
    }
 
-   if( fUnLockAll )
+   if( fUnLockAll && pArea->fShared && !pArea->fFLocked )
    {
       SELF_RAWLOCK( ( AREAP ) pArea, FILE_UNLOCK, 0 );
    }
@@ -1302,22 +1302,25 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
    u32RetVal = AdsAppendRecord( pArea->hTable );
    if( u32RetVal == AE_SUCCESS )
    {
-      ULONG ulRecNo;
-      /*
-       * Brian, please ask about it ExtSys guys.
-       * Does it create race condition (the implicit lock is removed
-       * and then the explicit one set) or just simply the flag indicating
-       * lock type is changed only. We have to know that.
-       * Without explicit locking the lock on appended record will be
-       * removed on any record movement or flushing. It may cause very
-       * serious synchronization problems in programs written for other
-       * RDDs and then ported to ADS. Druzus.
-       */
-      if( SELF_RECNO( ( AREAP ) pArea, &ulRecNo ) == SUCCESS )
+      if( pArea->fShared && !pArea->fFLocked )
       {
-         /* to avoid unnecessary record refreshing after locking */
-         pArea->fPositioned = TRUE;
-         SELF_RAWLOCK( ( AREAP ) pArea, REC_LOCK, ulRecNo );
+         ULONG ulRecNo;
+         /*
+          * Brian, please ask about it ExtSys guys.
+          * Does it create race condition (the implicit lock is removed
+          * and then the explicit one set) or just simply the flag indicating
+          * lock type is changed only. We have to know that.
+          * Without explicit locking the lock on appended record will be
+          * removed on any record movement or flushing. It may cause very
+          * serious synchronization problems in programs written for other
+          * RDDs and then ported to ADS. Druzus.
+          */
+         if( SELF_RECNO( ( AREAP ) pArea, &ulRecNo ) == SUCCESS )
+         {
+            /* to avoid unnecessary record refreshing after locking */
+            pArea->fPositioned = TRUE;
+            SELF_RAWLOCK( ( AREAP ) pArea, REC_LOCK, ulRecNo );
+         }
       }
       pArea->fBof = FALSE;
       pArea->fEof = FALSE;

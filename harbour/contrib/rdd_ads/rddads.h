@@ -51,7 +51,7 @@
  */
 
 #ifndef ADS_REQUIRE_VERSION
-/*#define ADS_REQUIRE_VERSION 6*/
+   #define ADS_REQUIRE_VERSION 5
 #endif
 
 #include "hbapirdd.h"
@@ -59,6 +59,13 @@
    #define WIN32
 #endif
 #include "ace.h"
+
+#undef ADS_MAX_KEY_LENGTH
+#if ADS_REQUIRE_VERSION >= 8
+   #define ADS_MAX_KEY_LENGTH   4082   /* maximum key value length.  This is the max key length */
+#else                                  /* of ADI indexes.  Max CDX key length is 240.  Max */
+   #define ADS_MAX_KEY_LENGTH    256   /* NTX key length is 256 */
+#endif
 
 HB_EXTERN_BEGIN
 
