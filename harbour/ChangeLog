@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-12 10:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fix line numbering when preprocess static buffers, f.e. by
+       __PP_PROCESS()
+
+  * harbour/source/rtl/strcase.c
+  * harbour/source/rtl/transfrm.c
+    - removed unnecessary extern PHB_CODEPAGE hb_cdp_page;
+
 2007-02-09 00:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/isprint.c
    * harbour/include/hbapi.h

@@ -57,8 +57,6 @@
 #include "hbapierr.h"
 #include "hbapicdp.h"
 
-extern PHB_CODEPAGE hb_cdp_page;
-
 /* converts szText to lower case. Does not create a new string! */
 char * hb_strLower( char * szText, ULONG ulLen )
 {

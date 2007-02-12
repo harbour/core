@@ -86,7 +86,6 @@
 #define PF_WIDTH      0x0800   /* @S */
 #define PF_PARNEGWOS  0x1000   /* @) Similar to PF_PARNEG but without leading spaces */
 
-extern PHB_CODEPAGE hb_cdp_page;
 #define TOUPPER(c)    ((hb_cdp_page->nChars)? (char)hb_cdp_page->s_upper[(UCHAR)c] : (char)toupper((UCHAR)(c)))
 
 HB_FUNC( TRANSFORM )
