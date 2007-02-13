@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-14 00:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/ctwfunc.c
+  * harbour/contrib/libct/ctwin.c
+  * harbour/contrib/libct/ctwin.h
+    + added CTWIN compatible ALERT - it works in differ way then the
+      standard Clipper one. In the moment when CTWIN is activated
+      (it's enough to call any CTWIN function like WOPEN()/WBOARD(),...
+      or CTWINIT()) standard ALERT() is replaced by CTWIN one build
+      in inside CTWIN GT driver. It allocates separate window for ALERT
+      box and makes differ formatting of passed text.
+      TODO: add support for SET KEY blocks
+
 2007-02-13 21:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * do not pass linking parameters to GCC/G++ when is used for

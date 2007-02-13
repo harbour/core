@@ -61,7 +61,7 @@ extern int  hb_ctw_SetMoveMode( int iMode );
 extern int  hb_ctw_SetMoveStep( int iVertical, int iHorizontal );
 extern int  hb_ctw_SetWindowBoard( int iTop, int iLeft, int iBottom, int iRight );
 extern int  hb_ctw_SetBorderMode( int iTop, int iLeft, int iBottom, int iRight );
-extern int  hb_ctw_CreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fClear );
+extern int  hb_ctw_CreateWindow( int iTop, int iLeft, int iBottom, int iRight, BOOL fClear, int iColor );
 extern int  hb_ctw_CloseAllWindows( void );
 extern int  hb_ctw_CloseWindow( int iWindow );
 extern int  hb_ctw_CurrentWindow( void );
@@ -72,7 +72,7 @@ extern int  hb_ctw_GetWindowCords( int iWindow, BOOL fCenter, int * piTop, int *
 extern int  hb_ctw_GetFormatCords( int iWindow, BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
 extern int  hb_ctw_MoveWindow( int iWindow, int iRow, int iCol );
 extern int  hb_ctw_CenterWindow( int iWindow, BOOL fCenter );
-extern int  hb_ctw_AddWindowBox( int iWindow, BYTE * szBox );
+extern int  hb_ctw_AddWindowBox( int iWindow, BYTE * szBox, int iColor );
 
 HB_EXTERN_END
 

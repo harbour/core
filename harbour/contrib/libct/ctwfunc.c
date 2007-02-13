@@ -130,11 +130,12 @@ HB_FUNC( WBOARD )
 
 HB_FUNC( WOPEN )
 {
-   int iResult;
+   int iResult, iColor;
 
+   iColor = ISCHAR( 6 ) ? hb_gtColorToN( hb_parc( 6 ) ) : hb_parni( 6 );
    iResult = hb_ctw_CreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                   hb_parni( 3 ), hb_parni( 4 ),
-                                  hb_parl( 5 ) );
+                                  hb_parl( 5 ), iColor );
    hb_gt_Flush();
    hb_retni( iResult );
 }
@@ -198,7 +199,7 @@ HB_FUNC( WBOX )
             "лллллллл"  };    /* 15 WB_FULL */
 
    BYTE * szBox, szBoxBuf[ 10 ];
-   int iResult;
+   int iResult, iColor;
 
    if( ISCHAR( 1 ) )
    {
@@ -219,7 +220,8 @@ HB_FUNC( WBOX )
       szBox = szBoxBuf;
    }
 
-   iResult = hb_ctw_AddWindowBox( hb_ctw_CurrentWindow(), szBox );
+   iColor = ISCHAR( 2 ) ? hb_gtColorToN( hb_parc( 2 ) ) : hb_parni( 2 );
+   iResult = hb_ctw_AddWindowBox( hb_ctw_CurrentWindow(), szBox, iColor );
    hb_gt_Flush();
    hb_retni( iResult );
 }
