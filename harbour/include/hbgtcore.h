@@ -179,6 +179,7 @@ typedef struct
    void     (* Tone) ( double, double );
    void     (* Bell) ( void );
    BOOL     (* Info) ( int, PHB_GT_INFO );
+   int      (* Alert) ( PHB_ITEM, PHB_ITEM, int, int, double );
    BOOL     (* SetFlag) ( int, int );
 
    /* internationalization */
@@ -376,6 +377,7 @@ extern void   hb_gt_OutErr( BYTE * pbyStr, ULONG ulLen );
 extern BOOL   hb_gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox );
 extern BOOL   hb_gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP );
 extern BOOL   hb_gt_Info( int iType, PHB_GT_INFO pInfo );
+extern int    hb_gt_Alert( PHB_ITEM pMessage, PHB_ITEM pOptions, int iClrNorm, int iClrHigh, double dDelay );
 extern int    hb_gt_SetFlag( int iType, int iNewValue );
 extern int    hb_gt_ReadKey( int iEventMask );
 extern void   hb_mouse_Init( void );
@@ -479,7 +481,8 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_SETDISPCP(t,h,b)          (HB_GTSUPER)->SetDispCP(t,h,b)
 #define HB_GTSUPER_SETKEYCP(t,h)             (HB_GTSUPER)->SetKeyCP(t,h)
 #define HB_GTSUPER_INFO(i,p)                 (HB_GTSUPER)->Info(i,p)
-#define HB_GTSUPER_SETFLAG(i,f)              (HB_GTSUPER)->Info(i,f)
+#define HB_GTSUPER_ALERT(m,o,n,h,d)          (HB_GTSUPER)->Alert(m,o,n,h,d)
+#define HB_GTSUPER_SETFLAG(i,f)              (HB_GTSUPER)->SetFlag(i,f)
 #define HB_GTSUPER_READKEY(m)                (HB_GTSUPER)->ReadKey(m)
 #define HB_GTSUPER_MOUSEINIT()               (HB_GTSUPER)->MouseInit()
 #define HB_GTSUPER_MOUSEEXIT()               (HB_GTSUPER)->MouseExit()

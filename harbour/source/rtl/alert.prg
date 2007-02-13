@@ -49,29 +49,10 @@ STATIC s_lNoAlert
 #endif
 
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
-   LOCAL nChoice
-   LOCAL aSay
-   LOCAL nPos, nMaxWidth, nDefWidth, nWidth, nOpWidth, nInitRow, nInitCol, nEval
-   LOCAL nKey, cKey, aPos, nCurrent, aHotkey, aOptionsOK
-   LOCAL cColorHigh
-
-   LOCAL nOldRow
-   LOCAL nOldCol
-   LOCAL nOldCursor
-   LOCAL cOldScreen
-
-   LOCAL nOldDispCount
-   LOCAL nCount
-   Local cLine
-
-#ifdef HB_COMPAT_C53
-   LOCAL nMRow, nMCol
-#endif
-
-   /* TOFIX: Clipper decides at runtime, whether the full screen GT is
-             linked. if it is not, the pure tty mode is choosen here.
-             [vszakats] */
-   LOCAL lTTY := !hb_gtInfo( GTI_FULLSCREEN )
+   LOCAL cMessage, cLine, cColorHigh
+   LOCAL aOptionsOK
+   LOCAL nEval
+   LOCAL lFirst
 
 #ifdef HB_C52_UNDOC
 
@@ -83,45 +64,13 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #endif
 
-   aSay := {}
-
-   nMaxWidth := MaxCol() - 3
-   nDefWidth := Int( nMaxWidth / 4 * 3 )
-
 #ifdef HB_C52_STRICT
 
    IF !ISCHARACTER( xMessage )
       RETURN NIL
    ENDIF
 
-   DO WHILE Len( xMessage ) != 0
-      nPos := At( ';', xMessage )
-      IF nPos == 0
-         cLine := xMessage
-         xMessage := ""
-      ELSE
-         cLine := Left( xMessage, nPos - 1 )
-         xMessage := SubStr( xMessage, nPos + 1 )
-      ENDIF
-      IF !lTTY
-         DO WHILE Len( cLine ) > nDefWidth
-            nPos := Rat( ' ', Left( cLine, nDefWidth + 1 ) )
-            IF nPos == 0
-               nPos := Rat( ' ', Left( cLine, nMaxWidth + 1 ) )
-            ENDIF
-            IF nPos == 0
-               cLine := NIL
-               EXIT
-            ELSE
-               AAdd( aSay, Left( cLine, nPos - 1 ) )
-               cLine := SubStr( cLine, nPos + 1 )
-            ENDIF
-         ENDDO
-      ENDIF
-      IF cLine != NIL
-         AAdd( aSay, cLine )
-      ENDIF
-   ENDDO
+   cMessage := StrTran( xMessage, ";", Chr( 10 ) )
 
 #else
 
@@ -129,67 +78,30 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
+   cMessage := ""
+
    IF ISARRAY( xMessage )
 
+      lFirst := .T.
       FOR nEval := 1 TO Len( xMessage )
          IF ISCHARACTER( cLine := xMessage[ nEval ] )
-            IF !lTTY
-               DO WHILE Len( cLine ) > nDefWidth
-                  nPos := Rat( ' ', Left( cLine, nDefWidth + 1 ) )
-                  IF nPos == 0
-                     nPos := Rat( ' ', Left( cLine, nMaxWidth + 1 ) )
-                  ENDIF
-                  IF nPos == 0
-                     AAdd( aSay, Left( cLine, nMaxWidth ) )
-                     cLine := SubStr( cLine, nMaxWidth + 1 )
-                  ELSE
-                     AAdd( aSay, Left( cLine, nPos - 1 ) )
-                     cLine := SubStr( cLine, nPos + 1 )
-                  ENDIF
-               ENDDO
-            ENDIF
-            AAdd( aSay, cLine )
+            cMessage += IIF( lFirst, "", Chr( 10 ) ) + cLine
+            lFirst := .F.
          ENDIF
       NEXT
 
    ELSE
 
       DO CASE
-      CASE ValType( xMessage ) $ "CM" /* Do nothing, just speed up things */
-      CASE ValType( xMessage ) == "N" ; xMessage := LTrim( Str( xMessage ) )
-      CASE ValType( xMessage ) == "D" ; xMessage := DToC( xMessage )
-      CASE ValType( xMessage ) == "L" ; xMessage := iif( xMessage, ".T.", ".F." )
-      CASE ValType( xMessage ) == "O" ; xMessage := xMessage:className + " Object"
-      CASE ValType( xMessage ) == "B" ; xMessage := "{||...}"
-      OTHERWISE                       ; xMessage := "NIL"
+      CASE ValType( xMessage ) $ "CM" ; cMessage := StrTran( xMessage, ";", Chr( 10 ) )
+      CASE ValType( xMessage ) == "N" ; cMessage := LTrim( Str( xMessage ) )
+      CASE ValType( xMessage ) == "D" ; cMessage := DToC( xMessage )
+      CASE ValType( xMessage ) == "L" ; cMessage := iif( xMessage, ".T.", ".F." )
+      CASE ValType( xMessage ) == "O" ; cMessage := xMessage:className + " Object"
+      CASE ValType( xMessage ) == "S" ; cMessage := "@" + xMessage:Name + "()"
+      CASE ValType( xMessage ) == "B" ; cMessage := "{||...}"
+      OTHERWISE                       ; cMessage := "NIL"
       ENDCASE
-
-      DO WHILE Len( xMessage ) != 0
-         nPos := At( ';', xMessage )
-         IF nPos == 0
-            cLine := xMessage
-            xMessage := ""
-         ELSE
-            cLine := Left( xMessage, nPos - 1 )
-            xMessage := SubStr( xMessage, nPos + 1 )
-         ENDIF
-         IF !lTTY
-            DO WHILE Len( cLine ) > nDefWidth
-               nPos := Rat( ' ', Left( cLine, nDefWidth + 1 ) )
-               IF nPos == 0
-                  nPos := Rat( ' ', Left( cLine, nMaxWidth + 1 ) )
-               ENDIF
-               IF nPos == 0
-                  AAdd( aSay, Left( cLine, nMaxWidth ) )
-                  cLine := SubStr( cLine, nMaxWidth + 1 )
-               ELSE
-                  AAdd( aSay, Left( cLine, nPos - 1 ) )
-                  cLine := SubStr( cLine, nPos + 1 )
-               ENDIF
-            ENDDO
-         ENDIF
-         AAdd( aSay, cLine )
-      ENDDO
 
    ENDIF
 
@@ -211,11 +123,6 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       nDelay := 0
    ENDIF
 
-   /* The longest line */
-   nWidth := 0
-   AEval( aSay, {| x | nWidth := Max( Len( x ), nWidth ) } )
-
-   /* Cleanup the button array */
    aOptionsOK := {}
    FOR nEval := 1 TO Len( aOptions )
       IF ISCHARACTER( aOptions[ nEval ] ) .AND. !Empty( aOptions[ nEval ] )
@@ -232,200 +139,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 #endif
    ENDIF
 
-   /* Total width of the botton line (the one with choices) */
-   nOpWidth := 0
-   AEval( aOptionsOK, {| x | nOpWidth += Len( x ) + 4 } )
-
-   /* what's wider ? */
-   nWidth := Max( nWidth + 2 + iif( Len( aSay ) == 1, 4, 0 ), nOpWidth + 2 )
-
-   /* box coordinates */
-   nInitRow := Int( ( ( MaxRow() - ( Len( aSay ) + 4 ) ) / 2 ) + .5 )
-   nInitCol := Int( ( ( MaxCol() - ( nWidth + 2 ) ) / 2 ) + .5 )
-
-   /* detect prompts positions */
-   aPos := {}
-   aHotkey := {}
-   nCurrent := nInitCol + Int( ( nWidth - nOpWidth ) / 2 ) + 2
-   IF nCurrent < 0
-      nCurrent := 0
-   ENDIF
-   AEval( aOptionsOK, {| x | AAdd( aPos, nCurrent ), AAdd( aHotKey, Upper( Left( x, 1 ) ) ), nCurrent += Len( x ) + 4 } )
-
-   nChoice := 1
-
-   IF lTTY
-
-      FOR nEval := 1 TO Len( aSay )
-         OutStd( aSay[ nEval ] )
-         IF nEval < Len( aSay )
-            OutStd( hb_OSNewLine() )
-         ENDIF
-      NEXT
-
-      OutStd( " (" )
-      FOR nEval := 1 TO Len( aOptionsOK )
-         OutStd( aOptionsOK[ nEval ] )
-         IF nEval < Len( aOptionsOK )
-            OutStd( ", " )
-         ENDIF
-      NEXT
-      OutStd( ") " )
-
-      /* choice loop */
-      DO WHILE .T.
-
-         nKey := iif( hb_gtInfo( GTI_KBDSUPPORT ), ;
-                      Inkey( nDelay, INKEY_ALL ), 0 )
-
-         DO CASE
-
-         CASE nKey == 0
-            IF Len( aHotkey ) > 0
-               nChoice := 1
-            ENDIF
-            EXIT
-
-         CASE nKey == K_ESC
-
-            nChoice := 0
-            EXIT
-
-         CASE nKey >= 32 .AND. nKey <= 255
-
-            cKey := Upper( Chr( nKey ) )
-            nChoice := aScan( aHotkey, {| x | x == cKey } )
-            IF nChoice != 0
-               EXIT
-            ENDIF
-
-         ENDCASE
-
-      ENDDO
-
-      IF nKey >= 32 && nKey <= 255
-         OutStd( Chr( nKey ) )
-      ENDIF
-
-   ELSE
-
-      /* PreExt */
-      nCount := nOldDispCount := DispCount()
-
-      DO WHILE nCount-- != 0
-         DispEnd()
-      ENDDO
-
-      /* save status */
-      nOldRow := Row()
-      nOldCol := Col()
-      nOldCursor := SetCursor( SC_NONE )
-      cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
-
-      DispBegin()
-      /* draw box */
-      //Fixed box characters cannot be displayed correctly on some terminals
-      //(e.g. xterm)
-      //DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
-
-      @ nInitRow, nInitCol TO nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 COLOR cColorNorm
-      DispBox( nInitRow + 1, nInitCol + 1, nInitRow + Len( aSay ) + 2, nInitCol + nWidth, "         ", cColorNorm )
-
-      FOR nEval := 1 TO Len( aSay )
-         DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
-      NEXT
-
-      /* choice loop */
-      DO WHILE .T.
-
-         FOR nEval := 1 TO Len( aOptionsOK )
-            DispOutAt( nInitRow + Len( aSay ) + 2, aPos[ nEval ], " " + aOptionsOK[ nEval ] + " ",;
-               iif( nEval == nChoice, cColorHigh, cColorNorm ) )
-         NEXT
-         DispEnd()
-
-         nKey := Inkey( nDelay, INKEY_ALL )
-
-         DO CASE
-         CASE nKey == K_ENTER .OR. ;
-              nKey == K_SPACE .OR. ;
-              nKey == 0
-
-            EXIT
-
-         CASE nKey == K_ESC
-
-            nChoice := 0
-            EXIT
-
-#ifdef HB_COMPAT_C53
-
-         CASE nKey == K_LBUTTONDOWN
-
-            nMRow := MRow()
-            nMCol := MCol()
-
-            FOR nEval := 1 TO Len( aOptionsOK )
-               IF nMRow == nInitRow + Len( aSay ) + 2 .AND. ;
-                  nMCol >= aPos[ nEval ] .AND. nMCol <= aPos[ nEval ] + ;
-                  Len( aOptionsOK[ nEval ] ) + 2 - 1
-                  nChoice := nEval
-                  EXIT
-               ENDIF
-            NEXT
-
-            IF nChoice == nEval
-               nChoice := 0
-               EXIT
-            ENDIF
-
-#endif
-
-         CASE ( nKey == K_LEFT .OR. nKey == K_SH_TAB ) .AND. Len( aOptionsOK ) > 1
-
-            nChoice--
-            IF nChoice == 0
-               nChoice := Len( aOptionsOK )
-            ENDIF
-
-            nDelay := 0
-
-         CASE ( nKey == K_RIGHT .OR. nKey == K_TAB ) .AND. Len( aOptionsOK ) > 1
-
-            nChoice++
-            IF nChoice > Len( aOptionsOK )
-               nChoice := 1
-            ENDIF
-
-            nDelay := 0
-
-         CASE nKey > 32 .AND. nKey <= 255
-
-            cKey := Upper( Chr( nKey ) )
-            nChoice := aScan( aHotkey, {| x | x == cKey } )
-            IF nChoice != 0
-               EXIT
-            ENDIF
-
-         ENDCASE
-
-         DispBegin()
-
-      ENDDO
-
-      /* Restore status */
-      RestScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, cOldScreen )
-      SetCursor( nOldCursor )
-      SetPos( nOldRow, nOldCol )
-
-      /* PostExt */
-      DO WHILE nOldDispCount-- != 0
-         DispBegin()
-      ENDDO
-
-   ENDIF
-
-   RETURN nChoice
+   RETURN HB_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay );
 
 #ifdef HB_C52_UNDOC
 

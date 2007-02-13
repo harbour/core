@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-13 21:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * do not pass linking parameters to GCC/G++ when is used for
+      compilation only
+
+  * harbour/contrib/rdd_ads/Makefile
+    * set -DWIN32 for W32 compilation
+  * harbour/contrib/rdd_ads/makefile.bc
+    * formatting
+
+  * harbour/include/hbapi.h
+  * harbour/source/rtl/strcase.c
+    + added hb_charUpper() and hb_charLower()
+
+  * harbour/include/hbapigt.h
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/hbgtcore.c
+    + added support for ALERT() on GT level - C functions: hb_gtAlert()/
+      hb_gt_Alert()
+      To replicate some details of Clipper and CT3 behavior ALERT() cannot
+      be implement only on upper level as .prg function
+  * harbour/source/rtl/gtfunc.c
+    + added .prg function HB_GTALLERT()
+  * harbour/source/rtl/alert.prg
+    * redirected ALERT() to HB_GTALLERT()
+
+  * harbour/source/rtl/fstemp.c
+    * use the same case conversion as in low level hb_fs*() functions to
+      avoid possible problems with national characters
+
+  * harbour/source/rtl/dates.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/strmatch.c
+  * harbour/source/rtl/transfrm.c
+    * use hb_charUpper()
+    * casting
+
 2007-02-12 16:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
     * do not release FLOCK() after DBAPPEND() - only RLOCKs should be

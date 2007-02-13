@@ -126,6 +126,15 @@ HB_FUNC( HB_GTVERSION )
    hb_retc( hb_gtVersion( hb_parni( 1 ) ) );
 }
 
+HB_FUNC( HB_GTALERT )
+{
+   int iClrNorm = ISCHAR( 3 ) ? hb_gtColorToN( hb_parc( 3 ) ) : hb_parni( 3 ),
+       iClrHigh = ISCHAR( 4 ) ? hb_gtColorToN( hb_parc( 4 ) ) : hb_parni( 4 );
+
+   hb_retni( hb_gtAlert( hb_param( 1, HB_IT_ANY ), hb_param( 2, HB_IT_ANY ),
+                         iClrNorm, iClrHigh, hb_parnd( 5 ) ) );
+}
+
 HB_FUNC( HB_GFXPRIMITIVE )
 {
    PHB_ITEM pType   = hb_param( 1, HB_IT_NUMERIC );

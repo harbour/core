@@ -413,7 +413,19 @@ FOUTE="\${FOUTE%.[oc]}${hb_exesuf}"
 
 hb_cc()
 {
-    ${CCPREFIX}\${HB_CC} "\$@" \${CC_OPT} \${GCC_PATHS} \${HB_USRLPATH} \${HB_USRLIBS}
+    local LNK_OPT P n
+
+    LNK_OPT="\${LN_OPT} \${HB_USRLPATH} \${HB_USRLIBS} \${HARBOUR_LIBS} \${SYSTEM_LIBS}"
+    P=( "\$@" ); n=0
+    while [ \$n -lt \${#P[@]} ]; do
+        if [ "\${P[\$n]}" = "-c" ]; then
+            LNK_OPT=""
+            n=\${#P[@]}
+        fi
+        n=\$[\$n + 1]
+    done
+
+    ${CCPREFIX}\${HB_CC} "\$@" \${CC_OPT} \${GCC_PATHS} \${LNK_OPT}
 }
 
 hb_cmp()
@@ -438,7 +450,7 @@ hb_link()
         hb_lnk_request > \${_TMP_FILE_}
         LN_OPT="\${_TMP_FILE_} \${LN_OPT}"
     fi
-    hb_cc "\$@" \${LN_OPT} \${GCC_PATHS} \${HB_USRLPATH} \${HB_USRLIBS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
+    hb_cc "\$@" -o "\${FOUTE}"
 }
 
 hb_lnk_request()

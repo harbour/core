@@ -599,6 +599,12 @@ ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
       return FAILURE;
 }
 
+int hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions,
+                int iClrNorm, int iClrHigh, double dDelay )
+{
+   return hb_gt_Alert( pMessage, pOptions, iClrNorm, iClrHigh, dDelay );
+}
+
 int hb_gtSetFlag( int iType, int iNewValue )
 {
    return hb_gt_SetFlag( iType, iNewValue );

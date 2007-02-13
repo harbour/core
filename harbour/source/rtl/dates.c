@@ -94,10 +94,10 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
 
       while( format_count < size )
       {
-         digit = toupper( *szPtr );
+         digit = toupper( ( UCHAR ) *szPtr );
          szPtr++;
          digit_count = 1;
-         while( toupper( *szPtr ) == digit && format_count < size )
+         while( toupper( ( UCHAR ) *szPtr ) == digit && format_count < size )
          {
             szPtr++;
             if( format_count + digit_count < size ) digit_count++;
@@ -144,14 +144,14 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                   case 4:
                      if( ! used_m && format_count < size )
                      {
-/*                        szFormattedDate[ format_count++ ] = '0'; */
+                        /* szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 4 ];
                         digit_count--;
                      }
                   case 3:
                      if( ! used_m && format_count < size )
                      {
-/*                        szFormattedDate[ format_count++ ] = '0'; */
+                        /* szFormattedDate[ format_count++ ] = '0'; */
                         szFormattedDate[ format_count++ ] = szDate[ 4 ];
                         digit_count--;
                      }

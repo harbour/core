@@ -14,6 +14,9 @@ PRG_HEADERS=\
 
 LIBNAME=rddads
 
+ifeq ($(HB_ARCHITECTURE),w32)
+  C_USR += -DWIN32
+endif
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

@@ -116,13 +116,13 @@ static BOOL set_logical( PHB_ITEM pItem, BOOL bDefault )
       ULONG ulLen = hb_itemGetCLen( pItem );
 
       if( ulLen >= 2
-       && toupper( szString[ 0 ] ) == 'O'
-       && toupper( szString[ 1 ] ) == 'N' )
+       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
+       && toupper( ( UCHAR ) szString[ 1 ] ) == 'N' )
          bLogical = TRUE;
       else if( ulLen >= 3
-       && toupper( szString[ 0 ] ) == 'O'
-       && toupper( szString[ 1 ] ) == 'F'
-       && toupper( szString[ 2 ] ) == 'F' )
+       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
+       && toupper( ( UCHAR ) szString[ 1 ] ) == 'F'
+       && toupper( ( UCHAR ) szString[ 2 ] ) == 'F' )
          bLogical = FALSE;
    }
 
@@ -335,13 +335,13 @@ HB_FUNC( __SETCENTURY )
       ULONG ulLen = hb_parclen( 1 );
 
       if( ulLen >= 2
-       && toupper( szString[ 0 ] ) == 'O'
-       && toupper( szString[ 1 ] ) == 'N' )
+       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
+       && toupper( ( UCHAR ) szString[ 1 ] ) == 'N' )
          hb_set.hb_set_century = TRUE;
       else if( ulLen >= 3
-       && toupper( szString[ 0 ] ) == 'O'
-       && toupper( szString[ 1 ] ) == 'F'
-       && toupper( szString[ 2 ] ) == 'F' )
+       && toupper( ( UCHAR ) szString[ 0 ] ) == 'O'
+       && toupper( ( UCHAR ) szString[ 1 ] ) == 'F'
+       && toupper( ( UCHAR ) szString[ 2 ] ) == 'F' )
          hb_set.hb_set_century = FALSE;
    }
 
@@ -360,7 +360,7 @@ HB_FUNC( __SETCENTURY )
       size = strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = toupper( szDateFormat[ count ] );
+         digit = toupper( ( UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 ) y_start = count;

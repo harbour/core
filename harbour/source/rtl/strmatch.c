@@ -71,12 +71,12 @@ static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
             pszString++;
          else
          {
-            while( toupper( *pszString ) != toupper( *pszMask ) )
+            while( hb_charUpper( *pszString ) != hb_charUpper( *pszMask ) )
             {
                if( *( ++pszString ) == '\0' )
                   return FALSE;
             }
-            while( toupper( *pszString ) == toupper( *pszMask ) )
+            while( hb_charUpper( *pszString ) == hb_charUpper( *pszMask ) )
             {
                if( *( ++pszString ) == '\0' )
                   break;
@@ -84,7 +84,7 @@ static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
             pszMask++;
          }
       }
-      else if( toupper( *pszMask ) != toupper( *pszString ) && *pszMask != '?' )
+      else if( hb_charUpper( *pszMask ) != hb_charUpper( *pszString ) && *pszMask != '?' )
          return FALSE;
       else
       {

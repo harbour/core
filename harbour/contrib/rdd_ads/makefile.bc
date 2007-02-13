@@ -25,4 +25,4 @@ $(OBJ_DIR)\adsmgmnt.obj : adsmgmnt.c
   tlib $(LIB_DIR)\rddads.lib -+$@,,
 
 .prg.c:
-  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@ 
+  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@

@@ -142,35 +142,30 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 }
 #else
 
-#include <ctype.h> /* isupper()/islower() */
 #include "hbset.h"
 
 static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
 {
-   BOOL bOk= FALSE;
-   if ( pszTempDir != NULL && *pszTempDir != '\0' )
+   BOOL fOK = FALSE;
+
+   if( pszTempDir != NULL && *pszTempDir != '\0' )
    {
-      bOk = TRUE;
       hb_strncpy( ( char * ) pszName, ( char * ) pszTempDir, _POSIX_PATH_MAX );
-      if ( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER || hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
+      if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
       {
-         /* check to see if temp directory already upper or lower. If not use current directory ( "." ) */
-         char *psZ = ( char * ) pszName ;
-         int iChar ;
-         BOOL bLower =  hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER  ;
-         while( *psZ )
-         {
-            iChar = ( int ) *psZ;
-            if( isalpha( iChar ) && !( bLower ? islower( iChar ) : isupper( iChar ) ) )
-            {
-               bOk = FALSE;
-               break;
-            }
-            psZ++ ;
-         }
+         hb_strLower( ( char * ) pszName, strlen( ( char * ) pszName ) );
+         fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
       }
+      else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
+      {
+         hb_strUpper( ( char * ) pszName, strlen( ( char * ) pszName ) );
+         fOK = strcmp( ( char * ) pszName, pszTempDir ) == 0;
+      }
+      else
+         fOK = TRUE;
    }
-   return( bOk ) ;
+
+   return fOK;
 }
 
 HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName )
@@ -202,26 +197,32 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
          pszName[ len + 1 ] = '\0';
       }
 
-      if ( pszPrefix != NULL )
+      if( pszPrefix != NULL )
       {
          hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, _POSIX_PATH_MAX );
       }
 
       iLen = strlen( ( char * ) pszName );
-      if ( iLen > _POSIX_PATH_MAX - 6 )
+      if( iLen > _POSIX_PATH_MAX - 6 )
          return FS_ERROR;
 
 #if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
-      if( hb_set.HB_SET_FILECASE == HB_SET_CASE_LOWER ||
-          hb_set.HB_SET_FILECASE == HB_SET_CASE_UPPER ||
-          hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER ||
-          hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER )
+      if( hb_set.HB_SET_FILECASE != HB_SET_CASE_LOWER &&
+          hb_set.HB_SET_FILECASE != HB_SET_CASE_UPPER &&
+          hb_set.HB_SET_DIRCASE != HB_SET_CASE_LOWER &&
+          hb_set.HB_SET_DIRCASE != HB_SET_CASE_UPPER )
+      {
+         hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
+         fd = (FHANDLE) mkstemp( ( char * ) pszName );
+         hb_fsSetIOError( fd != (FHANDLE) -1, 0 );
+      }
+      else
 #endif
       {
          int i, n;
          double d = hb_random_num(), x;
 
-         for ( i = 0; i < 6; i++ )
+         for( i = 0; i < 6; i++ )
          {
             d = d * 36;
             n = ( int ) d;
@@ -231,18 +232,9 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
          hb_fileNameConv( ( char * ) pszName );
          fd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE | FO_EXCL );
       }
-#if !defined(__WATCOMC__) && ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) )
-      else
-      {
-         hb_strncat( ( char * ) pszName, "XXXXXX", _POSIX_PATH_MAX );
-         fd = (FHANDLE) mkstemp( ( char * ) pszName );
-         hb_fsSetIOError( fd != (FHANDLE) -1, 0 );
-      }
-#endif
-      if ( fd != (FHANDLE) -1 )
-      {
+
+      if( fd != (FHANDLE) FS_ERROR )
          return fd;
-      }
    }
    while( --iAttemptLeft );
 
