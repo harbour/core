@@ -38,6 +38,7 @@ C_SOURCES=\
 	hbfix.c    \
 	hbdead.c   \
 	hblbl.c    \
+	hbopt.c    \
 	hbstripl.c \
 	hbusage.c  \
 	hbident.c  \

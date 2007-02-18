@@ -522,6 +522,7 @@ typedef struct _HB_COMP_LEX
 {
    PHB_PP_STATE   pPP;
    int            iState;
+   BOOL           fEol;
    char *         lasttok;
 }
 HB_COMP_LEX, * PHB_COMP_LEX;
@@ -571,6 +572,10 @@ typedef struct _HB_COMP
    PHB_FNAME         pPpoPath;
 
    ULONG             lastLinePos;         /* position of last opcode with line number */
+   int               lastLine;            /* last generated in PCODE line number */
+   int               currLine;            /* currently compiled line number */
+   char *            lastModule;          /* last generated in PCODE module name */
+   char *            currModule;          /* currently compiled module name */
 
    char *            szAnnounce;
    char *            szStdCh;             /* standard definitions file name (-u) */
@@ -606,7 +611,6 @@ typedef struct _HB_COMP
    BOOL              fForceMemvars;       /* holds if memvars are assumed when accesing undeclared variable (-v)*/
    BOOL              fDebugInfo;          /* holds if generate debugger required info */
    BOOL              fNoStartUp;          /* C code generation embed HB_FS_FIRST or not */
-   BOOL              fDontGenLineNum;     /* suppress line number generation */
    BOOL              fCredits;            /* print credits */
    BOOL              fBuildInfo;          /* print build info */
    BOOL              fLogo;               /* print logo */

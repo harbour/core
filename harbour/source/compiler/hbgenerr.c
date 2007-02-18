@@ -143,11 +143,9 @@ void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError,
    if( !HB_COMP_PARAM->fExit && ( cPrefix == 'F' || !HB_COMP_PARAM->fError ) )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
-      char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-      int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
 
-      if( szFile )
-         fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
+      if( HB_COMP_PARAM->currModule )
+         fprintf( hb_comp_errFile, "\r%s(%i) ", HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
 
       fprintf( hb_comp_errFile, "Error %c%04i  ", cPrefix, iError );
       fprintf( hb_comp_errFile, szErrors[ iError - 1 ], szError1, szError2 );
@@ -172,11 +170,8 @@ void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWa
 
    if( !HB_COMP_PARAM->fExit && ( szText[ 0 ] - '0' <= HB_COMP_PARAM->iWarnings ) )
    {
-      char * szFile = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
-      int iLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
-
-      if( szFile )
-         fprintf( hb_comp_errFile, "\r%s(%i) ", szFile, iLine );
+      if( HB_COMP_PARAM->currModule )
+         fprintf( hb_comp_errFile, "\r%s(%i) ", HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
 
       fprintf( hb_comp_errFile, "Warning %c%04i  ", cPrefix, iWarning );
       fprintf( hb_comp_errFile, szText + 1, szWarning1, szWarning2 );

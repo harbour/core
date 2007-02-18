@@ -92,7 +92,6 @@ HB_COMP_PTR hb_comp_new( void )
       pComp->fForceMemvars    = FALSE;    /* holds if memvars are assumed when accesing undeclared variable (-v)*/
       pComp->fDebugInfo       = FALSE;    /* holds if generate debugger required info */
       pComp->fNoStartUp       = FALSE;    /* C code generation embed HB_FS_FIRST or not */
-      pComp->fDontGenLineNum  = FALSE;    /* suppress line number generation */
       pComp->fCredits         = FALSE;    /* print credits */
       pComp->fBuildInfo       = FALSE;    /* print build info */
       pComp->fLogo            = TRUE;     /* print logo */

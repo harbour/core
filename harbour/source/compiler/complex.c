@@ -284,8 +284,14 @@ static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOK
 
 int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
-   PHB_COMP_LEX pLex = ( PHB_COMP_LEX ) HB_COMP_PARAM->pLex;
+   PHB_COMP_LEX pLex = HB_COMP_PARAM->pLex;
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
+
+   if( pLex->fEol )
+   {
+      pLex->fEol = FALSE;
+      HB_COMP_PARAM->currLine++;
+   }
 
    if( !pToken || HB_COMP_PARAM->fExit )
    {
@@ -520,6 +526,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          return pToken->value[ 0 ];
 
       case HB_PP_TOKEN_EOL:
+         pLex->fEol = TRUE;
       case HB_PP_TOKEN_EOC:
          pLex->iState = LOOKUP;
          return pToken->value[ 0 ];

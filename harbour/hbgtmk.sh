@@ -14,7 +14,7 @@
 
 # ssh is not necessary for anonymous access on SourceForge
 # export CVS_RSH=ssh
-export CVSROOT=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/harbour-project"
+export CVSROOT=":pserver:anonymous@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project"
 export PROJECT=harbour
 
 test_reqrpm()

@@ -192,10 +192,11 @@ extern ULONG hb_compGenJumpTrue( LONG, HB_COMP_DECL );            /* generates t
 extern void  hb_compGenJumpHere( ULONG, HB_COMP_DECL );           /* returns the pcode pos where to set a jump offset */
 extern void  hb_compGenJumpThere( ULONG, ULONG, HB_COMP_DECL );   /* sets a jump offset */
 
-extern void hb_compLinePush( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
-extern void hb_compLinePushIfDebugger( HB_COMP_DECL ); /* generates the pcode with the currently compiled source code line */
-extern void hb_compLinePushIfInside( HB_COMP_DECL );   /* generates the pcode with the currently compiled source code line */
-extern void hb_compStatmentStart( HB_COMP_DECL );      /* Check if we can start statement (without line pushing) */
+extern void hb_compGenModuleName( HB_COMP_DECL, char * szFunName );  /* generates the pcode with the currently compiled module and function name */
+extern void hb_compLinePush( HB_COMP_DECL );             /* generates the pcode with the currently compiled source code line */
+extern void hb_compLinePushIfDebugger( HB_COMP_DECL );   /* generates the pcode with the currently compiled source code line */
+extern void hb_compLinePushIfInside( HB_COMP_DECL );     /* generates the pcode with the currently compiled source code line */
+extern void hb_compStatmentStart( HB_COMP_DECL );        /* Check if we can start statement (without line pushing) */
 
 extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );       /* sends a message to an object */
 extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );     /* generates an underscore-symbol name for a data assignment */
@@ -303,11 +304,13 @@ extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPo
 extern BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos );
 
 /* Misc functions defined in hbfix.c */
-extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION );
-/* Misc functions defined in hbstripl.c */
-extern void hb_compStripFuncLines( PFUNCTION pFunc );
+extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc );
 /* Misc functions defined in hbdead.c */
 extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc );
+/* Misc functions defined in hbopt.c */
+extern void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc );
+/* Misc functions defined in hbstripl.c */
+extern void hb_compStripFuncLines( PFUNCTION pFunc );
 
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */

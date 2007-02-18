@@ -8,6 +8,49 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-18 12:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/hbfix.c
+  + harbour/source/compiler/hbopt.c
+    * divided hbfix.c into two separated functions:
+      - hb_compFixFuncPCode() which only fix generated PCODE updating
+        local parameters numbers when PARAMETERS is used
+      - hb_compOptimizePCode() which makes PCODE optimization
+      It allows to not execute hb_compFixFuncPCode() when PARAMETERS
+      is not use and execute hb_compOptimizePCode() more then once in
+      optimization process.
+
+  * harbour/hbgtmk.sh
+    * updated CVS server name
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/hbident.c
+    * changed code for generating in PCODE line numbers and module names
+      there was serious problem with line numbers and module names in old
+      code - in many cases line numbers were not generated at all or
+      generated in wrong places. Also file module name was not updated
+      when inside of function some code was included with #include
+      For such situation now modified version of HB_P_MODULE is generated
+      with module name only but without function name, f.e.:
+         HB_P_MODULE    "test.prg:"
+      exactly the same form of HB_P_MODULE is used in xHarbour.
+      Debugger code should be updated to recognize such HB_P_MODULE version
+      Ryszard any chance that you can look at it?
+      And what about syncing with xHarbour debugger?
+      I can add some missing functions to compiler and HVM but I do not
+      want to update next peace of code myself. Sorry but I do not have
+      enough time. I'd prefer to finish some other things I'm working.
+      If Ryszard is busy can someone else try to port xHarbour debugger
+      to Harbour?
+
 2007-02-14 00:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/ctwfunc.c
   * harbour/contrib/libct/ctwin.c

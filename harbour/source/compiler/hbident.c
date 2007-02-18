@@ -44,7 +44,7 @@ char * hb_compIdentifierNew( HB_COMP_DECL, char * szName, int iType )
    if( !szIdent )
    {
       /*
-       * In the future we may want direct support for static identifiers
+       * In the future we may add direct support for static identifiers
        * so it will not be necessary to allocate separate buffer for them
        */
       if( iType == HB_IDENT_COPY || iType == HB_IDENT_STATIC )
