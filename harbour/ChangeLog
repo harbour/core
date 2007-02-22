@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-22 13:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/contrib/libct/makefile.bc 
+   * harbour/contrib/libct/makefile.vc 
+     ! Synced with GNU makefile changes.
+
 2007-02-22 08:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprop.h
   * harbour/source/common/expropt1.c
