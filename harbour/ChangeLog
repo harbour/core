@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-22 03:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tget.prg
+     ! Fixed :Type to not return NIL right after the GetNew() call.
+
 2007-02-21 22:37 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/include/common.ch
      + Changed HB_SYMBOL_UNUSED() to also work in codeblock.
