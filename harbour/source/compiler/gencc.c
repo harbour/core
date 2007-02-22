@@ -354,7 +354,7 @@ static HB_GENC_FUNC( hb_p_equal )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmEqual( FALSE ) ) break;\n" );
+   fprintf( cargo->yyc, "\tif( hb_xvmEqual() ) break;\n" );
    return 1;
 }
 
@@ -362,7 +362,7 @@ static HB_GENC_FUNC( hb_p_exactlyequal )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmEqual( TRUE ) ) break;\n" );
+   fprintf( cargo->yyc, "\tif( hb_xvmExactlyEqual() ) break;\n" );
    return 1;
 }
 

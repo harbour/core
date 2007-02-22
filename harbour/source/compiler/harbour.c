@@ -1182,7 +1182,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
 
    /*printf( "Declaring Class: %s\n", szClassName );*/
 
-   if ( HB_COMP_PARAM->iWarnings < 3 )
+   if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
 
    if ( ( pClass = hb_compClassFind( HB_COMP_PARAM, szClassName ) ) != NULL )
@@ -3690,6 +3690,33 @@ static int hb_compSort_ULONG( const void * pLeft, const void * pRight )
        return 1;
 }
 
+void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck )
+{
+   ULONG ul;
+
+   while( iCount-- )
+   {
+      if( fPop )
+      {
+         pFunc->pCode[ ulFrom ] = HB_P_POP;
+         fPop = FALSE;
+      }
+      else if( fCheck && pFunc->pCode[ ulFrom ] == HB_P_NOOP && pFunc->iNOOPs )
+      {
+         for( ul = 0; ul < pFunc->iNOOPs; ++ul )
+         {
+            if( pFunc->pNOOPs[ ul ] == ulFrom )
+               break;
+         }
+         if( ul == pFunc->iNOOPs )
+            hb_compNOOPadd( pFunc, ulFrom );
+      }
+      else
+         hb_compNOOPadd( pFunc, ulFrom );
+      ++ulFrom;
+   }
+}
+
 /*
  * Warning - when jump optimization is disabled this function can be used
  * _ONLY_ in very limited situations when there is no jumps over the
@@ -3731,33 +3758,6 @@ static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount )
             }
          }
       }
-   }
-}
-
-void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck )
-{
-   ULONG ul;
-
-   while( iCount-- )
-   {
-      if( fPop )
-      {
-         pFunc->pCode[ ulFrom ] = HB_P_POP;
-         fPop = FALSE;
-      }
-      else if( fCheck && pFunc->pCode[ ulFrom ] == HB_P_NOOP && pFunc->iNOOPs )
-      {
-         for( ul = 0; ul < pFunc->iNOOPs; ++ul )
-         {
-            if( pFunc->pNOOPs[ ul ] == ulFrom )
-               break;
-         }
-         if( ul == pFunc->iNOOPs )
-            hb_compNOOPadd( pFunc, ulFrom );
-      }
-      else
-         hb_compNOOPadd( pFunc, ulFrom );
-      ++ulFrom;
    }
 }
 
@@ -4202,8 +4202,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
    {
       if( !fUsualStmts && !ulAlways )
       {
-         HB_COMP_PARAM->lastLinePos = ulStartPos - 5;
-
+         HB_COMP_PARAM->lastLinePos = ulStartPos - 3;
          hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
                              HB_COMP_PARAM->functions.pLast->lPCodePos -
                              ulStartPos );

@@ -159,6 +159,7 @@ extern int hb_compExprType( HB_EXPR_PTR );
 extern int hb_compExprIsInteger( HB_EXPR_PTR );
 extern int hb_compExprIsLong( HB_EXPR_PTR );
 extern int hb_compExprAsInteger( HB_EXPR_PTR );
+extern int hb_compExprAsNumSign( HB_EXPR_PTR );
 extern int hb_compExprIsString( HB_EXPR_PTR );
 extern int hb_compExprAsStringLen( HB_EXPR_PTR );
 extern char * hb_compExprAsString( HB_EXPR_PTR );

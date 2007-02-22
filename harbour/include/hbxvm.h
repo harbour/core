@@ -143,7 +143,8 @@ extern HB_EXPORT void   hb_xvmPushUnRef( void );
 extern HB_EXPORT void   hb_xvmSwap( int iCount );
 extern HB_EXPORT BOOL   hb_xvmForTest( void );
 extern HB_EXPORT void   hb_xvmFuncPtr( void );
-extern HB_EXPORT BOOL   hb_xvmEqual( BOOL fExact );               /* checks if the two latest values on the stack are equal, removes both and leaves result */
+extern HB_EXPORT BOOL   hb_xvmEqual( void );                      /* checks if the two latest values on the stack are equal, removes both and leaves result */
+extern HB_EXPORT BOOL   hb_xvmExactlyEqual( void );               /* checks if the two latest values on the stack are exactly equal, removes both and leaves result */
 extern HB_EXPORT BOOL   hb_xvmNotEqual( void );                   /* checks if the two latest values on the stack are not equal, removes both and leaves result */
 extern HB_EXPORT BOOL   hb_xvmLess( void );                       /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 extern HB_EXPORT BOOL   hb_xvmLessEqual( void );                  /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */

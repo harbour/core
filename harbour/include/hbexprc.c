@@ -608,6 +608,28 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          return;
       }
 #endif
+#if !defined( HB_MACRO_SUPPORT )
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         if( hb_compVariableScope( HB_COMP_PARAM,
+                  pSelf->value.asOperator.pLeft->value.asSymbol ) == HB_VS_LOCAL_VAR )
+         {
+            int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ),
+                iValue = ( bOper == HB_P_INC ) ? 1 : -1;
+            BYTE buffer[ 5 ];
+
+            buffer[ 0 ] = HB_P_LOCALADDINT;
+            buffer[ 1 ] = HB_LOBYTE( iLocal );
+            buffer[ 2 ] = HB_HIBYTE( iLocal );
+            buffer[ 3 ] = HB_LOBYTE( iValue );
+            buffer[ 4 ] = HB_HIBYTE( iValue );
+            hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
+            /* Push current value */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+            return;
+         }
+      }
+#endif
    }
 
    /* Push current value */
@@ -695,6 +717,29 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
          HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
          return;
+      }
+#endif
+#if !defined( HB_MACRO_SUPPORT )
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         if( hb_compVariableScope( HB_COMP_PARAM,
+                  pSelf->value.asOperator.pLeft->value.asSymbol ) == HB_VS_LOCAL_VAR )
+         {
+            int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ),
+                iValue = ( bOper == HB_P_INC ) ? 1 : -1;
+            BYTE buffer[ 5 ];
+
+            /* Push current value */
+            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+
+            buffer[ 0 ] = HB_P_LOCALADDINT;
+            buffer[ 1 ] = HB_LOBYTE( iLocal );
+            buffer[ 2 ] = HB_HIBYTE( iLocal );
+            buffer[ 3 ] = HB_LOBYTE( iValue );
+            buffer[ 4 ] = HB_HIBYTE( iValue );
+            hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
+            return;
+         }
       }
 #endif
    }

@@ -84,15 +84,54 @@ static HB_OPT_FUNC( hb_p_pushlocal )
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
-   HB_SYMBOL_UNUSED( cargo );
-
-   if( HB_LIM_INT8( iVar ) )
+   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPLOCAL &&
+      HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) == iVar &&
+      ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPLOCALNEAR &&
+            ( SCHAR ) pFunc->pCode[ lPCodePos + 4 ] == iVar &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 5, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
+   }
+   else if( HB_LIM_INT8( iVar ) )
    {
       pFunc->pCode[ lPCodePos ] = HB_P_PUSHLOCALNEAR;
       hb_compNOOPfill( pFunc, lPCodePos + 2, 1, FALSE, FALSE );
    }
 
    return 3;
+}
+
+static HB_OPT_FUNC( hb_p_pushlocalnear )
+{
+   if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POPLOCAL &&
+      ( SCHAR ) pFunc->pCode[ lPCodePos + 1 ] ==
+      HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) &&
+      ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 5, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POPLOCALNEAR &&
+            pFunc->pCode[ lPCodePos + 1 ] == pFunc->pCode[ lPCodePos + 3 ] &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_POP &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 2 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 3, FALSE, FALSE );
+   }
+
+   return 2;
 }
 
 static HB_OPT_FUNC( hb_p_localaddint )
@@ -110,6 +149,53 @@ static HB_OPT_FUNC( hb_p_localaddint )
    }
 
    return 5;
+}
+
+static HB_OPT_FUNC( hb_p_pushstatic )
+{
+   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPSTATIC &&
+       HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) ==
+       HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
+   }
+
+   return 3;
+}
+
+static HB_OPT_FUNC( hb_p_pushmemvar )
+{
+   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POPMEMVAR &&
+       HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) ==
+       HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 6, FALSE, FALSE );
+   }
+   else if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_POP &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
+   }
+
+   return 3;
+}
+
+static HB_OPT_FUNC( hb_p_pushnil )
+{
+   if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_POP &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 2, FALSE, FALSE );
+   }
+
+   return 1;
 }
 
 static HB_OPT_FUNC( hb_p_false )
@@ -552,15 +638,15 @@ static HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_PUSHBYTE,             */
    NULL,                       /* HB_P_PUSHINT,              */
    hb_p_pushlocal,             /* HB_P_PUSHLOCAL,            */
-   NULL,                       /* HB_P_PUSHLOCALNEAR,        */
+   hb_p_pushlocalnear,         /* HB_P_PUSHLOCALNEAR,        */
    NULL,                       /* HB_P_PUSHLOCALREF,         */
    NULL,                       /* HB_P_PUSHLONG,             */
-   NULL,                       /* HB_P_PUSHMEMVAR,           */
+   hb_p_pushmemvar,            /* HB_P_PUSHMEMVAR,           */
    NULL,                       /* HB_P_PUSHMEMVARREF,        */
-   NULL,                       /* HB_P_PUSHNIL,              */
+   hb_p_pushnil,               /* HB_P_PUSHNIL,              */
    NULL,                       /* HB_P_PUSHDOUBLE,           */
    NULL,                       /* HB_P_PUSHSELF,             */
-   NULL,                       /* HB_P_PUSHSTATIC,           */
+   hb_p_pushstatic,            /* HB_P_PUSHSTATIC,           */
    NULL,                       /* HB_P_PUSHSTATICREF,        */
    NULL,                       /* HB_P_PUSHSTR,              */
    NULL,                       /* HB_P_PUSHSTRSHORT,         */

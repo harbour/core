@@ -114,7 +114,8 @@ static void    hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PT
 static void    hb_vmPower( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );       /* power given values */
 
 /* Operators (relational) */
-static void    hb_vmEqual( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
+static void    hb_vmEqual( void );           /* checks if the two latest values on the stack are equal, removes both and leaves result */
+static void    hb_vmExactlyEqual( void );    /* checks if the two latest values on the stack are exactly equal, removes both and leaves result */
 static void    hb_vmNotEqual( void );        /* checks if the two latest values on the stack are not equal, removes both and leaves result */
 static void    hb_vmLess( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 static void    hb_vmLessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
@@ -202,7 +203,6 @@ static BOOL    hb_vmPopLogical( void );           /* pops the stack latest value
 static long    hb_vmPopDate( void );              /* pops the stack latest value and returns its date value as a long */
 static HB_LONG hb_vmPopHBLong( void );            /* pops the stack latest value and returns its HB_LONG value */
 static double  hb_vmPopNumber( void );            /* pops the stack latest value and returns its numeric value */
-static double  hb_vmPopDouble( int * );           /* pops the stack latest value and returns its double numeric format value */
 static void    hb_vmPopAlias( void );             /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
 static void    hb_vmPopAliasedVar( PHB_SYMB );    /* pops an aliased variable from the eval stack*/
@@ -831,12 +831,12 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Operators (relational) */
 
          case HB_P_EQUAL:
-            hb_vmEqual( FALSE );
+            hb_vmEqual();
             w++;
             break;
 
          case HB_P_EXACTLYEQUAL:
-            hb_vmEqual( TRUE );
+            hb_vmExactlyEqual();
             w++;
             break;
 
@@ -1012,12 +1012,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_LINE:
-
             HB_TRACE(HB_TR_INFO, ("Opcode: HB_P_LINE: %s (%i)",
                      hb_stackBaseItem()->item.asSymbol.value->szName,
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo));
 
-            hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) );
+            hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
             if( s_bDebugging && s_bDebugShowLines )
                hb_vmDebuggerShowLine( hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo );
             w += 3;
@@ -2314,8 +2313,7 @@ static void hb_vmNegate( void )
 
       if( pResult )
       {
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -2666,25 +2664,40 @@ static void hb_vmInc( void )
 
    pItem = hb_stackItemFromTop( -1 );
 
-   if( HB_IS_DATE( pItem ) )
-      pItem->item.asDate.value++;
-   else if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_NUMINT( pItem ) )
    {
-      if( HB_IS_INTEGER( pItem ) && pItem->item.asInteger.value < HB_INT_MAX )
+      if( HB_IS_INTEGER( pItem ) )
       {
-         pItem->item.asInteger.value++;
-         pItem->item.asInteger.length = HB_INT_LENGTH( pItem->item.asInteger.value );
+         if( pItem->item.asInteger.value < HB_INT_MAX )
+         {
+            pItem->item.asInteger.value++;
+            pItem->item.asInteger.length = HB_INT_LENGTH( pItem->item.asInteger.value );
+         }
+         else
+         {
+#if HB_INT_MAX < HB_LONG_MAX
+            pItem->type = HB_IT_LONG;
+            pItem->item.asLong.value = ( HB_LONG ) pItem->item.asInteger.value + 1;
+            pItem->item.asLong.length = HB_LONG_LENGTH( pItem->item.asLong.value );
+#else
+            pItem->type = HB_IT_DOUBLE;
+            pItem->item.asDouble.value = ( double ) pItem->item.asInteger.value + 1;
+            pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
+            pItem->item.asDouble.decimal = 0;
+#endif
+         }
       }
-      else if( HB_IS_LONG( pItem ) && pItem->item.asLong.value < HB_LONG_MAX )
+      else if( pItem->item.asLong.value < HB_LONG_MAX )
       {
          pItem->item.asLong.value++;
          pItem->item.asLong.length = HB_LONG_LENGTH( pItem->item.asLong.value );
       }
       else
       {
-         int iType = pItem->type, iDec;
-         double dNumber = hb_vmPopDouble( &iDec );
-         hb_vmPushNumType( ++dNumber, 0, iType, iType );
+         pItem->type = HB_IT_DOUBLE;
+         pItem->item.asDouble.value = ( double ) pItem->item.asLong.value + 1;
+         pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
+         pItem->item.asDouble.decimal = 0;
       }
    }
    else if( HB_IS_DOUBLE( pItem ) )
@@ -2692,14 +2705,17 @@ static void hb_vmInc( void )
       pItem->item.asDouble.value++;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
+   else if( HB_IS_DATE( pItem ) )
+   {
+      pItem->item.asDate.value++;
+   }
    else if( ! hb_objOperatorCall( HB_OO_OP_INC, pItem, pItem, NULL, NULL ) )
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1086, NULL, "++", 1, pItem );
 
       if( pResult )
       {
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -2713,25 +2729,40 @@ static void hb_vmDec( void )
 
    pItem = hb_stackItemFromTop( -1 );
 
-   if( HB_IS_DATE( pItem ) )
-      pItem->item.asDate.value--;
-   else if( HB_IS_NUMINT( pItem ) )
+   if( HB_IS_NUMINT( pItem ) )
    {
-      if( HB_IS_INTEGER( pItem ) && pItem->item.asInteger.value > HB_INT_MIN )
+      if( HB_IS_INTEGER( pItem ) )
       {
-         pItem->item.asInteger.value--;
-         pItem->item.asInteger.length = HB_INT_LENGTH( pItem->item.asInteger.value );
+         if( pItem->item.asInteger.value > HB_INT_MIN )
+         {
+            pItem->item.asInteger.value--;
+            pItem->item.asInteger.length = HB_INT_LENGTH( pItem->item.asInteger.value );
+         }
+         else
+         {
+#if HB_INT_MIN > HB_LONG_MIN
+            pItem->type = HB_IT_LONG;
+            pItem->item.asLong.value = ( HB_LONG ) pItem->item.asInteger.value - 1;
+            pItem->item.asLong.length = HB_LONG_LENGTH( pItem->item.asLong.value );
+#else
+            pItem->type = HB_IT_DOUBLE;
+            pItem->item.asDouble.value = ( double ) pItem->item.asInteger.value - 1;
+            pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
+            pItem->item.asDouble.decimal = 0;
+#endif
+         }
       }
-      else if( HB_IS_LONG( pItem ) && pItem->item.asLong.value > HB_LONG_MIN )
+      else if( pItem->item.asLong.value > HB_LONG_MIN )
       {
          pItem->item.asLong.value--;
          pItem->item.asLong.length = HB_LONG_LENGTH( pItem->item.asLong.value );
       }
       else
       {
-         int iType = pItem->type, iDec;
-         double dNumber = hb_vmPopDouble( &iDec );
-         hb_vmPushNumType( --dNumber, 0, iType, iType );
+         pItem->type = HB_IT_DOUBLE;
+         pItem->item.asDouble.value = ( double ) pItem->item.asLong.value - 1;
+         pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
+         pItem->item.asDouble.decimal = 0;
       }
    }
    else if( HB_IS_DOUBLE( pItem ) )
@@ -2739,14 +2770,17 @@ static void hb_vmDec( void )
       pItem->item.asDouble.value--;
       pItem->item.asDouble.length = HB_DBL_LENGTH( pItem->item.asDouble.value );
    }
+   else if( HB_IS_DATE( pItem ) )
+   {
+      pItem->item.asDate.value--;
+   }
    else if( ! hb_objOperatorCall( HB_OO_OP_DEC, pItem, pItem, NULL, NULL ) )
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--", 1, pItem );
 
       if( pResult )
       {
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -2776,12 +2810,12 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
 /* Operators (relational)          */
 /* ------------------------------- */
 
-static void hb_vmEqual( BOOL bExact )
+static void hb_vmExactlyEqual( void )
 {
    PHB_ITEM pItem2;
    PHB_ITEM pItem1;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmEqual(%d)", (int) bExact));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmExactlyEqual()"));
 
    pItem2 = hb_stackItemFromTop( -1 );
    pItem1 = hb_stackItemFromTop( -2 );
@@ -2801,10 +2835,13 @@ static void hb_vmEqual( BOOL bExact )
    }
    else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
-      int i = hb_itemStrCmp( pItem1, pItem2, bExact );
+      BOOL fResult = pItem1->item.asString.length == pItem2->item.asString.length &&
+                     memcmp( pItem1->item.asString.value,
+                             pItem2->item.asString.value,
+                             pItem1->item.asString.length ) == 0;
       hb_stackPop();
       hb_stackPop();
-      hb_vmPushLogical( i == 0 );
+      hb_vmPushLogical( fResult );
    }
    else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
       hb_vmPushLogical( hb_vmPopHBLong() == hb_vmPopHBLong() );
@@ -2816,38 +2853,90 @@ static void hb_vmEqual( BOOL bExact )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
    else if( HB_IS_POINTER( pItem1 ) && HB_IS_POINTER( pItem2 ) )
    {
-      BOOL fValue = pItem1->item.asPointer.value ==
+      BOOL fResult = pItem1->item.asPointer.value ==
                     pItem2->item.asPointer.value;
       hb_stackPop();
       hb_stackPop();
-      hb_vmPushLogical( fValue );
+      hb_vmPushLogical( fResult );
    }
-   else if( bExact && HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) &&
+   else if( HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) &&
             ! hb_objHasOperator( pItem1, HB_OO_OP_EXACTEQUAL ) )
    {
-      BOOL bResult = ( pItem1->item.asArray.value == pItem2->item.asArray.value );
+      BOOL fResult = ( pItem1->item.asArray.value == pItem2->item.asArray.value );
 
       hb_stackPop();
       hb_stackPop();
-      hb_vmPushLogical( bResult );
+      hb_vmPushLogical( fResult );
    }
-   else if( hb_objOperatorCall( bExact ? HB_OO_OP_EXACTEQUAL : HB_OO_OP_EQUAL,
-                                pItem1, pItem1, pItem2, NULL ) )
+   else if( hb_objOperatorCall( HB_OO_OP_EXACTEQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
    else
    {
-      PHB_ITEM pResult;
-
-      if( bExact )
-         pResult = hb_errRT_BASE_Subst( EG_ARG, 1070, NULL, "==", 2, pItem1, pItem2 );
-      else
-         pResult = hb_errRT_BASE_Subst( EG_ARG, 1071, NULL, "=", 2, pItem1, pItem2 );
-
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1070, NULL, "==", 2, pItem1, pItem2 );
       if( pResult )
       {
          hb_stackPop();
+         hb_itemMove( pItem1, pResult );
+         hb_itemRelease( pResult );
+      }
+   }
+}
+
+static void hb_vmEqual( void )
+{
+   PHB_ITEM pItem2;
+   PHB_ITEM pItem1;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEqual()"));
+
+   pItem2 = hb_stackItemFromTop( -1 );
+   pItem1 = hb_stackItemFromTop( -2 );
+
+   if( HB_IS_NIL( pItem1 ) )
+   {
+      /* pItem1 is NIL so this is safe */
+      pItem1->type = HB_IT_LOGICAL;
+      pItem1->item.asLogical.value = HB_IS_NIL( pItem2 );
+      hb_stackPop();    /* clear the pItem2 */
+   }
+   else if( HB_IS_NIL( pItem2 ) )
+   {
+      hb_stackDec();    /* pItem2 is already NIL */
+      hb_stackPop();    /* clear the pItem1 */
+      hb_vmPushLogical( FALSE );
+   }
+   else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
+   {
+      BOOL fResult = hb_itemStrCmp( pItem1, pItem2, FALSE ) == 0;
+      hb_stackPop();
+      hb_stackPop();
+      hb_vmPushLogical( fResult );
+   }
+   else if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopHBLong() == hb_vmPopHBLong() );
+   else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopNumber() == hb_vmPopNumber() );
+   else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopDate() == hb_vmPopDate() );
+   else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
+      hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
+   else if( HB_IS_POINTER( pItem1 ) && HB_IS_POINTER( pItem2 ) )
+   {
+      BOOL fResult = pItem1->item.asPointer.value ==
+                    pItem2->item.asPointer.value;
+      hb_stackPop();
+      hb_stackPop();
+      hb_vmPushLogical( fResult );
+   }
+   else if( hb_objOperatorCall( HB_OO_OP_EQUAL, pItem1, pItem1, pItem2, NULL ) )
+      hb_stackPop();
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1071, NULL, "=", 2, pItem1, pItem2 );
+      if( pResult )
+      {
          hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -2908,8 +2997,7 @@ static void hb_vmNotEqual( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -2966,8 +3054,7 @@ static void hb_vmLess( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3024,8 +3111,7 @@ static void hb_vmLessEqual( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3082,8 +3168,7 @@ static void hb_vmGreater( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3140,8 +3225,7 @@ static void hb_vmGreaterEqual( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3186,8 +3270,7 @@ static void hb_vmInstring( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3601,7 +3684,10 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
             if( HB_IS_STRING( pSwitch ) )
             {
                /*fFound = hb_itemStrCmp( pItem1, pItem2, bExact );*/
-               fFound = strcmp( pSwitch->item.asString.value, ( char * ) pCode + offset + 2 ) == 0;
+               fFound = ( ULONG ) pCode[ offset + 1 ] - 1 == pSwitch->item.asString.length &&
+                        memcmp( pSwitch->item.asString.value,
+                                ( char * ) &pCode[ offset + 2 ],
+                                pSwitch->item.asString.length ) == 0;
             }
             offset += 2 + pCode[ offset + 1 ];
             break;
@@ -3659,8 +3745,7 @@ static void hb_vmNot( void )
 
       if( pResult )
       {
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3692,8 +3777,7 @@ static void hb_vmAnd( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3725,8 +3809,7 @@ static void hb_vmOr( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem1, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -3760,11 +3843,9 @@ static void hb_vmArrayPush( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pArray, pResult );
          hb_itemRelease( pResult );
       }
-
       return;
    }
 
@@ -3851,11 +3932,9 @@ static void hb_vmArrayPushRef( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pArray, pResult );
          hb_itemRelease( pResult );
       }
-
       return;
    }
 
@@ -5558,45 +5637,6 @@ static HB_LONG hb_vmPopHBLong( void )
    return lNumber;
 }
 
-/* NOTE: Type checking should be done by the caller. */
-
-static double hb_vmPopDouble( int * piDec )
-{
-   PHB_ITEM pItem;
-   double dNumber;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPopDouble(%p)", piDec));
-
-   pItem = hb_stackItemFromTop( -1 );
-
-   switch( pItem->type )
-   {
-      case HB_IT_INTEGER:
-         dNumber = ( double ) pItem->item.asInteger.value;
-         *piDec = 0;
-         break;
-
-      case HB_IT_LONG:
-         dNumber = ( double ) pItem->item.asLong.value;
-         *piDec = 0;
-         break;
-
-      case HB_IT_DOUBLE:
-         dNumber = pItem->item.asDouble.value;
-         *piDec = pItem->item.asDouble.decimal;
-         break;
-
-      default:
-         hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
-         *piDec = 0; /* To avoid GCC -O3 warning */
-         return 0.0; /* To avoid GCC -O2 warning */
-   }
-
-   hb_stackDec();
-
-   return dNumber;
-}
-
 /* Pops the item from the eval stack and uses it to select the current
  * workarea
  */
@@ -7205,11 +7245,20 @@ HB_EXPORT void hb_xvmFuncPtr( void )
    hb_vmFuncPtr();
 }
 
-HB_EXPORT BOOL hb_xvmEqual( BOOL fExact )
+HB_EXPORT BOOL hb_xvmEqual( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEqual(%d)", (int) fExact));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmEqual()"));
 
-   hb_vmEqual( fExact );
+   hb_vmEqual();
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmExactlyEqual( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmExactlyEqual()"));
+
+   hb_vmExactlyEqual();
 
    HB_XVM_RETURN
 }
@@ -7253,8 +7302,7 @@ HB_EXPORT BOOL hb_xvmEqualInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7300,8 +7348,7 @@ HB_EXPORT BOOL hb_xvmEqualIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }
@@ -7358,8 +7405,7 @@ HB_EXPORT BOOL hb_xvmNotEqualInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7405,8 +7451,7 @@ HB_EXPORT BOOL hb_xvmNotEqualIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }
@@ -7456,8 +7501,7 @@ HB_EXPORT BOOL hb_xvmLessThenInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7498,8 +7542,7 @@ HB_EXPORT BOOL hb_xvmLessThenIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }
@@ -7549,8 +7592,7 @@ HB_EXPORT BOOL hb_xvmLessEqualThenInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7591,8 +7633,7 @@ HB_EXPORT BOOL hb_xvmLessEqualThenIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }
@@ -7642,8 +7683,7 @@ HB_EXPORT BOOL hb_xvmGreaterThenInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7684,8 +7724,7 @@ HB_EXPORT BOOL hb_xvmGreaterThenIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }
@@ -7735,8 +7774,7 @@ HB_EXPORT BOOL hb_xvmGreaterEqualThenInt( LONG lValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
       }
    }
@@ -7777,8 +7815,7 @@ HB_EXPORT BOOL hb_xvmGreaterEqualThenIntIs( LONG lValue, BOOL * pfValue )
       if( pResult )
       {
          hb_stackPop();
-         hb_stackPop();
-         hb_vmPush( pResult );
+         hb_itemMove( pItem, pResult );
          hb_itemRelease( pResult );
          return hb_xvmPopLogical( pfValue );
       }

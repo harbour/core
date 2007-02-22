@@ -145,9 +145,9 @@ HB_EXPORT void hb_dateStrPut( char * szDate, int iYear, int iMonth, int iDay )
 
    if( iYear >= 0 && iMonth > 0 && iDay > 0 )
    {
-      szDate[ 0 ] = ( ( iYear % 10000 ) / 1000 ) + '0';
-      szDate[ 1 ] = ( ( iYear % 1000 ) / 100 ) + '0';
-      szDate[ 2 ] = ( ( iYear % 100 ) / 10 ) + '0';
+      szDate[ 0 ] = ( ( iYear / 1000 ) % 10 ) + '0';
+      szDate[ 1 ] = ( ( iYear / 100 ) % 10 ) + '0';
+      szDate[ 2 ] = ( ( iYear / 10 ) % 10 ) + '0';
       szDate[ 3 ] = ( iYear % 10 ) + '0';
 
       szDate[ 4 ] = ( iMonth / 10 ) + '0';

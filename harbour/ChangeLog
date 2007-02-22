@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-22 08:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+    + added hb_compExprAsNumSign()
+
+  * harbour/include/hbexprc.c
+    * optimize lValue++ and ++lValue
+
+  * harbour/source/common/hbdate.c
+    * minor optimization
+
+  * harbour/source/compiler/cmdcheck.c
+    * maximum supported warning level should be 3 not 4
+
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/vm/hvm.c
+    * use separate functions for equal and exactly equal operations
+    * cleanup and some other minor optimizations
+
+  * harbour/source/compiler/hbopt.c
+    * optimize PCODEs for code like: lVar:=lVar, sVar:=sVar, mVar:=mVar, ...
+  * harbour/include/common.ch
+    * changed HB_SYMBOL_UNUSED( symbol ) to ( symbol := ( symbol ) )
+      It's a little bit simpler version and now it's also stripped by
+      PCODE optimizer
+
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * eliminated some redundant rules
+    * optimized PCODEs generated for FOR/NEXT code and removed some old
+      hardcoded optimization for local variables - if it will be worth
+      to optimize then such optimization will be done by expression
+      optimizer
+    * chaned a little bit WITHOBJECT syntax.
+      Now WITHOBJECT somefunc(); END is not silently ignored and call
+      to somefunc() is left. This optimization also works when there
+      are empty line between WITHOBJECT and END
+
+  * harbour/source/rdd/dbf1.c
+    ! fixed for GPF in DBRI_RAWDATA, DBRI_RAWMEMOS (Peter Rees fix in
+      xHarbour)
+
 2007-02-22 03:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tget.prg
      ! Fixed :Type to not return NIL right after the GetNew() call.

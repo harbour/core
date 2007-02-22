@@ -176,6 +176,28 @@ int hb_compExprAsStringLen( HB_EXPR_PTR pExpr )
    return 0;
 }
 
+int hb_compExprAsNumSign( HB_EXPR_PTR pExpr )
+{
+   if( pExpr->ExprType == HB_ET_NUMERIC )
+   {
+      if( pExpr->value.asNum.NumType == HB_ET_DOUBLE )
+      {
+         if( pExpr->value.asNum.val.d > 0 )
+            return 1;
+         else if( pExpr->value.asNum.val.d < 0 )
+            return -1;
+      }
+      else
+      {
+         if( pExpr->value.asNum.val.l > 0 )
+            return 1;
+         else if( pExpr->value.asNum.val.l < 0 )
+            return -1;
+      }
+   }
+   return 0;
+}
+
 int hb_compExprAsInteger( HB_EXPR_PTR pExpr )
 {
    if( pExpr->ExprType == HB_ET_NUMERIC && pExpr->value.asNum.NumType == HB_ET_LONG )

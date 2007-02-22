@@ -503,7 +503,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                if( s[1] )
                {                /*there is -w<0,1,2,3> probably */
                   HB_COMP_PARAM->iWarnings = s[1] - '0';
-                  if( HB_COMP_PARAM->iWarnings < 0 || HB_COMP_PARAM->iWarnings > 4 )
+                  if( HB_COMP_PARAM->iWarnings < 0 || HB_COMP_PARAM->iWarnings > 3 )
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                }
                break;

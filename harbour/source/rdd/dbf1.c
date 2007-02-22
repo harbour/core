@@ -2891,7 +2891,7 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
                   ulLen = hb_itemGetCLen( pInfo );
                   if( ulLen > 0 )
                   {
-                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + ulLen );
+                     pResult = ( BYTE * ) hb_xrealloc( pResult, ulLength + ulLen + 1 );
                      memcpy( pResult + ulLength, hb_itemGetCPtr( pInfo ), ulLen );
                      ulLength += ulLen;
                   }
