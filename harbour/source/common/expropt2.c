@@ -1176,7 +1176,16 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
-   pExpr = pSelf->value.asList.pExprList;  /* get conditional expression */
+   /* get conditional expression */
+   pExpr = pSelf->value.asList.pExprList;
+   if( pExpr->ExprType == HB_ET_LIST )
+   {
+      HB_EXPR_PTR pNext = pExpr->pNext;
+      pExpr = hb_compExprListStrip( pExpr, HB_COMP_PARAM );
+      pExpr->pNext = pNext;
+      pSelf->value.asList.pExprList = pExpr;
+   }
+
    if( pExpr->ExprType == HB_ET_LOGICAL )
    {
       /* the condition was reduced to a logical value: .T. or .F.
@@ -1255,22 +1264,20 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
-   if( pSelf->ExprType == HB_ET_LIST )
+   while( pSelf->ExprType == HB_ET_LIST &&
+          pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE &&
+          hb_compExprListLen( pSelf ) == 1 )
    {
-      ULONG ulCount = hb_compExprListLen( pSelf );
+      /* replace the list with a simple expression
+       *  ( EXPR ) -> EXPR
+       */
+      HB_EXPR_PTR pExpr = pSelf;
 
-      if( ulCount == 1 && pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
-      {
-         /* replace the list with a simple expression
-          *  ( EXPR ) -> EXPR
-          */
-         HB_EXPR_PTR pExpr = pSelf;
-
-         pSelf = pSelf->value.asList.pExprList;
-         pExpr->value.asList.pExprList = NULL;
-         hb_compExprFree( pExpr, HB_COMP_PARAM );
-      }
+      pSelf = pSelf->value.asList.pExprList;
+      pExpr->value.asList.pExprList = NULL;
+      hb_compExprFree( pExpr, HB_COMP_PARAM );
    }
+
    return pSelf;
 }
 
