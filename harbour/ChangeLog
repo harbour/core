@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-25 17:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstdgen.ch
+    * added #undef HB_COMPAT_XHB
+  * harbour/source/common/hbstr.c
+    * indenting
+  * harbour/source/compiler/ppcomp.c
+    * updated line numbering in #pragma dump code and error messages
+      executed for disabled code
+  * harbour/source/pp/ppcore.c
+    * changed the precedence of #pragma BEGINDIUMP/ENDDUMP - now
+      it has higher precedence then conditional compilation with
+      #IF[DEF]/#ENDIF
+    * added support for defined() pseudo function in #IF / #ELIF
+      directives, f.e.:
+         #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+            #stdout "Harbour compiler compiled without xHarbour extensions."
+         #endif
+
 2007-02-22 13:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/contrib/libct/makefile.bc 
    * harbour/contrib/libct/makefile.vc 

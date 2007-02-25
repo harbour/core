@@ -683,7 +683,7 @@ HB_EXPORT double hb_strVal( const char * szText, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s, %lu)", szText, ulLen));
 
-   if ( ! hb_str2number( FALSE, szText, ulLen, &lVal, &dVal, NULL, NULL ) )
+   if( ! hb_str2number( FALSE, szText, ulLen, &lVal, &dVal, NULL, NULL ) )
       dVal = ( double ) lVal;
    return dVal;
 }
@@ -695,7 +695,7 @@ HB_EXPORT HB_LONG hb_strValInt( const char * szText, int * iOverflow )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strValInt(%s)", szText));
 
-   if ( hb_str2number( TRUE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
+   if( hb_str2number( TRUE, szText, strlen( szText ), &lVal, &dVal, NULL, NULL ) )
    {
       *iOverflow = 1;
       return 0;
