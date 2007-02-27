@@ -102,7 +102,7 @@ HB_FUNC( LTRIM )
       hb_retclen( szText, ulLen );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1101, NULL, "LTRIM", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1101, NULL, "LTRIM", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* trims trailing spaces from a string */
@@ -126,7 +126,7 @@ HB_FUNC( RTRIM )
    }
    else
       /* NOTE: "TRIM" is right here [vszakats] */
-      hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* synonymn for RTRIM */
@@ -154,7 +154,7 @@ HB_FUNC( ALLTRIM )
    }
    else
 #ifdef HB_COMPAT_C53
-      hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", 1, hb_paramError( 1 ) ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
+      hb_errRT_BASE_SubstR( EG_ARG, 2022, NULL, "ALLTRIM", HB_ERR_ARGS_BASEPARAMS ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
 #else
       hb_retc( NULL );
 #endif

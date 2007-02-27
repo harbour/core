@@ -144,6 +144,8 @@ extern void hb_compGenPushAliasedVar( char * szVarName,
 extern void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL );
 extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL );
 extern void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL );
+extern void hb_compGenPushFunSym( char * szFunName, HB_COMP_DECL );
+extern void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL );
 extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL );
 extern void hb_compCodeBlockStart( HB_COMP_DECL );
 extern void hb_compCodeBlockEnd( HB_COMP_DECL );

@@ -852,5 +852,5 @@ HB_FUNC( TRANSFORM )
    /* If there was any parameter error, launch a runtime error */
 
    if( bError )
-      hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM", 2, pValue, hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM", HB_ERR_ARGS_BASEPARAMS );
 }

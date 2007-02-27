@@ -556,15 +556,8 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
       {
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
-
          /* increase/decrease operation, leave unreferenced value on stack */
-         /* We have to unreference the item on the stack, because we do not have
-            such PCODE(s) then I'll trnaslate HB_P_INC/HB_P_DEC into
-            HB_P_[PLUS|MINUS]EQ, Maybe in the future we will make it
-            in differ way [druzus] */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ, HB_COMP_PARAM );
       }
 #endif
       else
@@ -586,9 +579,7 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation, leave unreferenced value on stack */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ, HB_COMP_PARAM );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -602,30 +593,41 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
 
          /* increase/decrease operation, leave unreferenced value on stack */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQ : HB_P_MINUSEQ;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ, HB_COMP_PARAM );
          return;
       }
 #endif
 #if !defined( HB_MACRO_SUPPORT )
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         if( hb_compVariableScope( HB_COMP_PARAM,
-                  pSelf->value.asOperator.pLeft->value.asSymbol ) == HB_VS_LOCAL_VAR )
-         {
-            int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ),
-                iValue = ( bOper == HB_P_INC ) ? 1 : -1;
-            BYTE buffer[ 5 ];
+         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
-            buffer[ 0 ] = HB_P_LOCALADDINT;
-            buffer[ 1 ] = HB_LOBYTE( iLocal );
-            buffer[ 2 ] = HB_HIBYTE( iLocal );
-            buffer[ 3 ] = HB_LOBYTE( iValue );
-            buffer[ 4 ] = HB_HIBYTE( iValue );
-            hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
-            /* Push current value */
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+         if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+             iScope != HB_VS_UNDECLARED )
+         {
+            if( iScope == HB_VS_LOCAL_VAR )
+            {
+               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+               if( bOper == HB_P_INC )
+               {
+                  hb_compGenPCode3( HB_P_LOCALINCPUSH, HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ), HB_COMP_PARAM );
+               }
+               else
+               {
+                  hb_compGenPCode3( HB_P_LOCALDEC, HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ), HB_COMP_PARAM );
+                  /* Push current value */
+                  HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               }
+            }
+            else
+            {
+               /* NOTE: direct type change */
+               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ, HB_COMP_PARAM );
+               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+            }
             return;
          }
       }
@@ -665,9 +667,7 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
           */
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
          /* increment/decrement the value */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
       }
 #endif
       else
@@ -693,9 +693,7 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
           */
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
          /* increase/decrease operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -713,31 +711,37 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
           */
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
          /* increase/decrease operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
          return;
       }
 #endif
 #if !defined( HB_MACRO_SUPPORT )
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         if( hb_compVariableScope( HB_COMP_PARAM,
-                  pSelf->value.asOperator.pLeft->value.asSymbol ) == HB_VS_LOCAL_VAR )
+         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+
+         if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+             iScope != HB_VS_UNDECLARED )
          {
-            int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ),
-                iValue = ( bOper == HB_P_INC ) ? 1 : -1;
-            BYTE buffer[ 5 ];
+            if( iScope == HB_VS_LOCAL_VAR )
+            {
+               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
 
-            /* Push current value */
-            HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-
-            buffer[ 0 ] = HB_P_LOCALADDINT;
-            buffer[ 1 ] = HB_LOBYTE( iLocal );
-            buffer[ 2 ] = HB_HIBYTE( iLocal );
-            buffer[ 3 ] = HB_LOBYTE( iValue );
-            buffer[ 4 ] = HB_HIBYTE( iValue );
-            hb_compGenPCodeN( buffer, 5, HB_COMP_PARAM );
+               /* Push current value */
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               hb_compGenPCode3( ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
+                                 HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ), HB_COMP_PARAM );
+            }
+            else
+            {
+               /* NOTE: direct type change */
+               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLUNREF );
+               hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
+               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+            }
             return;
          }
       }
@@ -774,9 +778,7 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHOVARREF );
          /* increment/decrement the value */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
       }
 #endif
       else
@@ -800,9 +802,7 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -815,10 +815,36 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
          pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
          /* increase/decrease operation */
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ONE );
-         bOper = ( bOper == HB_P_INC ) ? HB_P_PLUSEQPOP : HB_P_MINUSEQPOP;
-         HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+         hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
          return;
+      }
+#endif
+#if !defined( HB_MACRO_SUPPORT )
+      else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
+      {
+         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+
+         if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
+             iScope != HB_VS_UNDECLARED )
+         {
+            if( iScope == HB_VS_LOCAL_VAR )
+            {
+               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+
+               hb_compGenPCode3( ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
+                                 HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ), HB_COMP_PARAM );
+            }
+            else
+            {
+               /* NOTE: direct type change */
+               HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
+               pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
+               hb_compGenPCode1( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP, HB_COMP_PARAM );
+               pSelf->value.asOperator.pLeft->ExprType = iOldType;
+            }
+            return;
+         }
       }
 #endif
    }

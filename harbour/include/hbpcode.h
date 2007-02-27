@@ -240,7 +240,15 @@ typedef enum
    HB_P_SEQALWAYS,             /* 166 set BEGIN SEQUENCE/ALWAYS section */
    HB_P_ALWAYSBEGIN,           /* 167 start ALWAYS section */
    HB_P_ALWAYSEND,             /* 168 finish ALWAYS section */
-   HB_P_LAST_PCODE             /* 169 this defines the number of defined pcodes */
+   HB_P_DECEQPOP,              /* 169 decrements the var reference */
+   HB_P_INCEQPOP,              /* 170 increments the var reference */
+   HB_P_DECEQ,                 /* 171 decrements the var reference, leave result on the stack */
+   HB_P_INCEQ,                 /* 172 increments the var reference, leave result on the stack */
+   HB_P_LOCALDEC,              /* 173 decrements the local variable */
+   HB_P_LOCALINC,              /* 174 increments the local variable */
+   HB_P_LOCALINCPUSH,          /* 175 increments the local variable, push result on the stack */
+   HB_P_PUSHFUNCSYM,           /* 176 places a symbol on the virtual machine stack */
+   HB_P_LAST_PCODE             /* 177 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

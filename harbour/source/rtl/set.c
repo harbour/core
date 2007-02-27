@@ -460,7 +460,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_AUTORDER ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_AUTORDER = set_number( pArg2, hb_set.HB_SET_AUTORDER );
          }
@@ -470,7 +470,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_AUTOSHARE ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_MARGIN = set_number( pArg2, hb_set.HB_SET_AUTOSHARE );
          }
@@ -542,7 +542,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_DECIMALS ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_DECIMALS = set_number( pArg2, hb_set.HB_SET_DECIMALS );
          }
@@ -586,7 +586,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_EPOCH ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_EPOCH = set_number( pArg2, hb_set.HB_SET_EPOCH );
          }
@@ -662,7 +662,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_MARGIN ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_MARGIN = set_number( pArg2, hb_set.HB_SET_MARGIN );
          }
@@ -672,7 +672,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_MBLOCKSIZE ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_MBLOCKSIZE = set_number( pArg2, hb_set.HB_SET_MBLOCKSIZE );
          }
@@ -686,7 +686,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_MESSAGE ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_MESSAGE = set_number( pArg2, hb_set.HB_SET_MESSAGE );
          }
@@ -774,7 +774,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             if( set_number( pArg2, hb_set.HB_SET_VIDEOMODE ) < 0 )
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
                hb_set.HB_SET_VIDEOMODE = set_number( pArg2, hb_set.HB_SET_VIDEOMODE );
          }
@@ -807,17 +807,17 @@ HB_FUNC( SET )
                else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "MIXED" ) )
                   hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
                else
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             }
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
                if( set_number( pArg2, hb_set.HB_SET_FILECASE ) < 0 )
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
                else
                   hb_set.HB_SET_FILECASE = set_number( pArg2, hb_set.HB_SET_FILECASE );
             }
             else
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
          }
          /*
          if( hb_set.HB_SET_FILECASE )
@@ -841,17 +841,17 @@ HB_FUNC( SET )
                else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "MIXED" ) )
                   hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
                else
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             }
             else if( HB_IS_NUMERIC( pArg2 ) )
             {
                if( set_number( pArg2, hb_set.HB_SET_DIRCASE ) < 0 )
-                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+                  hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
                else
                   hb_set.HB_SET_DIRCASE = set_number( pArg2, hb_set.HB_SET_DIRCASE );
             }
             else
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
          }
          break;
       case HB_SET_DIRSEPARATOR :
@@ -869,7 +869,7 @@ HB_FUNC( SET )
          {
             if( set_number( pArg2, hb_set.HB_SET_DBFLOCKSCHEME ) < 0 )
             {
-               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             }
             else
             {

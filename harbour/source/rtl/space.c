@@ -80,5 +80,5 @@ HB_FUNC( SPACE )
          hb_retc( NULL );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1105, NULL, "SPACE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1105, NULL, "SPACE", HB_ERR_ARGS_BASEPARAMS );
 }

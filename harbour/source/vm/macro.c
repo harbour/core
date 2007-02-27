@@ -1366,7 +1366,7 @@ void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL 
    hb_compGenPCodeN( pBuffer, 1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ), HB_COMP_PARAM );
 }
 
-void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
+void hb_compGenPushFunSym( char * szFunName, HB_COMP_DECL )
 {
    char * szFunction;
 
@@ -1382,6 +1382,12 @@ void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
       hb_compGenPushSymbol( szFunName, TRUE, FALSE, HB_COMP_PARAM );
    }
+}
+
+void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
+{
+   hb_compGenPushFunSym( szFunName, HB_COMP_PARAM );
+   hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
 }
 
 void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
@@ -1408,7 +1414,6 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 }
-
 
 void hb_compGenPCode1( BYTE byte, HB_COMP_DECL )
 {

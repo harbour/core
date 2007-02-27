@@ -93,7 +93,7 @@ HB_EXPORT LONG hb_dateEncode( int iYear, int iMonth, int iDay )
    {
       /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
-      static int auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      static const int auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
       if( iDay <= auiDayLimit[ iMonth - 1 ] ||
           ( iDay == 29 && iMonth == 2 &&

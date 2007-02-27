@@ -97,7 +97,7 @@ HB_FUNC( HB_SETTERMCP )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETTERMCP", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETTERMCP", HB_ERR_ARGS_BASEPARAMS );
 
    hb_ret();  /* return NIL */
 }

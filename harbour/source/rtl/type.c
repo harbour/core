@@ -63,6 +63,6 @@ HB_FUNC( TYPE )
       hb_memvarUpdatePrivatesBase();
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1121, NULL, "TYPE", HB_ERR_ARGS_BASEPARAMS );
 }
 

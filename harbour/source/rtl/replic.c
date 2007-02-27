@@ -82,12 +82,12 @@ HB_FUNC( REPLICATE )
             hb_retclen_buffer( szResult, ulLen * lTimes );
          }
          else
-            hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+            hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, "REPLICATE", HB_ERR_ARGS_BASEPARAMS );
       }
       else
          hb_retc( NULL );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, "REPLICATE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1106, NULL, "REPLICATE", HB_ERR_ARGS_BASEPARAMS );
 }
 

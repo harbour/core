@@ -388,7 +388,15 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_PUSHUNREF             */
    NULL,                       /* HB_P_SEQALWAYS             */
    NULL,                       /* HB_P_ALWAYSBEGIN           */
-   NULL                        /* HB_P_ALWAYSEND             */
+   NULL,                       /* HB_P_ALWAYSEND             */
+   NULL,                       /* HB_P_DECEQPOP              */
+   NULL,                       /* HB_P_INCEQPOP              */
+   NULL,                       /* HB_P_DECEQ                 */
+   NULL,                       /* HB_P_INCEQ                 */
+   NULL,                       /* HB_P_LOCALDEC              */
+   NULL,                       /* HB_P_LOCALINC              */
+   NULL,                       /* HB_P_LOCALINCPUSH          */
+   NULL                        /* HB_P_PUSHFUNCSYM           */
 };
 
 void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )

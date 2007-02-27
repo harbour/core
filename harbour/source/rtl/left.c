@@ -75,6 +75,6 @@ HB_FUNC( LEFT )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, "LEFT", HB_ERR_ARGS_BASEPARAMS );
 }
 

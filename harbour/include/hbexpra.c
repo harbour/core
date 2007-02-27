@@ -794,22 +794,9 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem, HB_COMP
        * precedence rules
        */
       BYTE ucLeft = s_PrecedTable[ pExpr->ExprType ];
-      if( ucLeft >= ucRight )
-      {
-         /* Left operator has the same or lower precedence then the right one
-          * e.g.  a * b + c
-          *    pItem -> b + c   -> L=b  R=c  O=+
-          *    pExpr -> a *     -> l=a  r=   o=*
-          *
-          *    -> (a * b) + c    -> Lelf=(a * b)  Right=c  Oper=+
-          *             Left  := l (o) L
-          *             Right := R
-          *             Oper  := O
-          */
-         pItem->value.asOperator.pLeft = hb_compExprSetOperand( pExpr, pItem->value.asOperator.pLeft, HB_COMP_PARAM );
-         pExpr = pItem;
-      }
-      else
+      if( ucLeft < ucRight ||
+          ( ucLeft == ucRight && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) &&
+            ( ucLeft == HB_EO_OR || ucLeft == HB_EO_AND ) ) )
       {
          /* Left operator has a lower precedence then the right one
           * e.g.  a + b * c
@@ -822,6 +809,21 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem, HB_COMP
           *             Oper  := o
           */
          pExpr->value.asOperator.pRight = pItem;
+      }
+      else
+      {
+         /* Left operator has the same or higer precedence then the right one
+          * e.g.  a * b + c
+          *    pItem -> b + c   -> L=b  R=c  O=+
+          *    pExpr -> a *     -> l=a  r=   o=*
+          *
+          *    -> (a * b) + c    -> Lelf=(a * b)  Right=c  Oper=+
+          *             Left  := l (o) L
+          *             Right := R
+          *             Oper  := O
+          */
+         pItem->value.asOperator.pLeft = hb_compExprSetOperand( pExpr, pItem->value.asOperator.pLeft, HB_COMP_PARAM );
+         pExpr = pItem;
       }
    }
 

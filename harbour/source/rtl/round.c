@@ -87,7 +87,7 @@ HB_FUNC( INT )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( ROUND )
@@ -104,5 +104,5 @@ HB_FUNC( ROUND )
          hb_retnlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", HB_ERR_ARGS_BASEPARAMS );
 }

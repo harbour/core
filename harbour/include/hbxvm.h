@@ -131,6 +131,9 @@ extern HB_EXPORT BOOL   hb_xvmPopAlias( void );                   /* select the 
 extern HB_EXPORT BOOL   hb_xvmPopLogical( BOOL * );               /* pops the stack latest value and returns its logical value */
 extern HB_EXPORT BOOL   hb_xvmSwapAlias( void );                  /* swaps items on the eval stack and pops the workarea number */
 extern HB_EXPORT BOOL   hb_xvmLocalAddInt( int iLocal, LONG lAdd ); /* add integer to given local variable */
+extern HB_EXPORT BOOL   hb_xvmLocalInc( int iLocal );             /* increment given local variable */
+extern HB_EXPORT BOOL   hb_xvmLocalDec( int iLocal );             /* decrement given local variable */
+extern HB_EXPORT BOOL   hb_xvmLocalIncPush( int iLocal );         /* increment given local variable and pussh it on HVM stack */
 
 extern HB_EXPORT BOOL   hb_xvmAnd( void );
 extern HB_EXPORT BOOL   hb_xvmOr( void );
@@ -170,7 +173,11 @@ extern HB_EXPORT BOOL   hb_xvmPower( void );
 extern HB_EXPORT BOOL   hb_xvmExpEq( void );
 extern HB_EXPORT BOOL   hb_xvmExpEqPop( void );
 extern HB_EXPORT BOOL   hb_xvmInc( void );
+extern HB_EXPORT BOOL   hb_xvmIncEq( void );
+extern HB_EXPORT BOOL   hb_xvmIncEqPop( void );
 extern HB_EXPORT BOOL   hb_xvmDec( void );
+extern HB_EXPORT BOOL   hb_xvmDecEq( void );
+extern HB_EXPORT BOOL   hb_xvmDecEqPop( void );
 
 extern HB_EXPORT void   hb_xvmArrayDim( USHORT uiDimensions );    /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 extern HB_EXPORT void   hb_xvmArrayGen( ULONG ulElements );       /* generates an ulElements Array and fills it from the stack values */

@@ -1938,9 +1938,9 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM );    /* frame for statics variables */
 
    if( HB_COMP_PARAM->fDebugInfo )
-   {
       hb_compGenModuleName( HB_COMP_PARAM, szFunName );
-   }
+   else
+      HB_COMP_PARAM->lastLine = -1;
 }
 
 PINLINE hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine )
@@ -3310,6 +3310,35 @@ void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL 
 }
 
 void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
+{
+   char * szFunction;
+   PCOMSYMBOL pSym;
+   USHORT wSym;
+
+   /* if abbreviated function name was used - change it for whole name */
+   szFunction = hb_compReservedName( szFunName );
+   if( szFunction )
+      szFunName = szFunction;
+
+   if( ( pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, TRUE ) ) != NULL )
+   {
+      if( ! hb_compFunCallFind( HB_COMP_PARAM, szFunName ) )
+         hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
+   }
+   else
+   {
+      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, TRUE );
+      if( pSym )
+      {
+         /* reset symbol scope because the real scope is unknown now */
+         pSym->cScope = 0;
+      }
+      hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
+   }
+   hb_compGenPCode3( HB_P_PUSHFUNCSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
+}
+
+void hb_compGenPushFunSym( char * szFunName, HB_COMP_DECL )
 {
    char * szFunction;
 

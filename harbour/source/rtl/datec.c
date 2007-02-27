@@ -82,7 +82,7 @@ HB_FUNC( CMONTH )
       hb_retc( hb_dateCMonth( iMonth ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1116, NULL, "CMONTH", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1116, NULL, "CMONTH", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CDOW )
@@ -104,6 +104,6 @@ HB_FUNC( CDOW )
          hb_retc( NULL );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, "CDOW", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, "CDOW", HB_ERR_ARGS_BASEPARAMS );
 }
 

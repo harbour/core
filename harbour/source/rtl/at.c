@@ -69,7 +69,7 @@ HB_FUNC( AT )
                           hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
 }
 
 #else
@@ -100,7 +100,7 @@ HB_FUNC( AT )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif

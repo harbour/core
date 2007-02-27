@@ -61,36 +61,34 @@ HB_FUNC( CHR )
 {
    if( ISNUM( 1 ) )
    {
-      char szChar[ 2 ];
-
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
                CHR() cases where the passed parameter is a constant which
                can be divided by 256 but it's not zero, in this case it
                will return an empty string instead of a Chr(0). [vszakats] */
 
       /* Believe it or not, clipper does this! */
+#ifdef HB_C52_STRICT
+      char szChar[ 2 ];
       szChar[ 0 ] = hb_parnl( 1 ) % 256;
       szChar[ 1 ] = '\0';
-
       hb_retclen( szChar, 1 );
+#else
+      hb_retclen( hb_szAscii[ hb_parni( 1 ) & 0xff ], 1 );
+#endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1104, NULL, "CHR", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1104, NULL, "CHR", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* converts a character value to an ASCII code */
 HB_FUNC( ASC )
 {
-   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   char * szValue = hb_parc( 1 );
 
-   if( pText )
+   if( szValue )
    {
-      if( hb_itemGetCLen( pText ) > 0 )
-         hb_retni( ( BYTE ) * ( hb_itemGetCPtr( pText ) ) );
-      else
-         hb_retni( 0 );
+      hb_retni( ( UCHAR ) szValue[ 0 ] );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, "ASC", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, "ASC", HB_ERR_ARGS_BASEPARAMS );
 }
-

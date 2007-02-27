@@ -661,7 +661,7 @@ HB_FUNC( EXP )
    }
    else
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 1096, NULL, "EXP", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1096, NULL, "EXP", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -714,7 +714,7 @@ HB_FUNC( LOG )
    }
    else
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -755,6 +755,6 @@ HB_FUNC( SQRT )
    }
    else
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT", HB_ERR_ARGS_BASEPARAMS );
    }
 }

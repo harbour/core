@@ -8,6 +8,65 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-02-27 12:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprc.c
+  * harbour/include/hbmacro.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/hbdate.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbopt.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/rtl/abs.c
+  * harbour/source/rtl/at.c
+  * harbour/source/rtl/chrasc.c
+  * harbour/source/rtl/datec.c
+  * harbour/source/rtl/dateshb.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/gtfunc.c
+  * harbour/source/rtl/left.c
+  * harbour/source/rtl/len.c
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/minmax.c
+  * harbour/source/rtl/mod.c
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/philesx.c
+  * harbour/source/rtl/replic.c
+  * harbour/source/rtl/round.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/space.c
+  * harbour/source/rtl/strcase.c
+  * harbour/source/rtl/strpeek.c
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/rtl/trim.c
+  * harbour/source/rtl/type.c
+  * harbour/source/rtl/val.c
+  * harbour/source/rtl/word.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+    * added some PCODEs to cover all possible combination of ++, --, <op>=
+      operations in the same way and keep Clipper compatible RT errors.
+    * added some other PCODEs to optimize some commonly used expressions/
+      statements
+    * use HB_ERR_ARGS_BASEPARAMS instead of hb_paramError()
+    * some other cleanups and minor optimizations
+  * harbour/utils/hbtest/rt_math.prg
+    * update expected result for MOD() - it was not Clipper compatible and
+      it will be hard to make it compatible without introducing some Clipper's
+      side effects
+
 2007-02-25 19:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/expropt2.c
     % strip nested parenthesis in expressions like: (((<exp>)))

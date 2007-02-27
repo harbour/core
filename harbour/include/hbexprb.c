@@ -1599,8 +1599,15 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          BOOL fArgsList = FALSE;
          USHORT usCount = 0;
 
-         HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
+         {
+            hb_compGenPushFunCall( pSelf->value.asFunCall.pFunName->value.asSymbol, HB_COMP_PARAM );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         }
 
          /* NOTE: pParms will be NULL in 'DO procname' (if there is
           * no WITH keyword)
@@ -1634,8 +1641,15 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          BOOL fArgsList = FALSE;
          USHORT usCount = 0;
 
-         HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
+         {
+            hb_compGenPushFunCall( pSelf->value.asFunCall.pFunName->value.asSymbol, HB_COMP_PARAM );
+         }
+         else
+         {
+            HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
+            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         }
 
          if( pSelf->value.asFunCall.pParms )
          {
@@ -1919,7 +1933,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunName )
          break;
 
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE1( hb_compGenPushFunCall, pSelf->value.asSymbol );
+         HB_EXPR_PCODE1( hb_compGenPushFunSym, pSelf->value.asSymbol );
          break;
 
       case HB_EA_POP_PCODE:
@@ -2549,7 +2563,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
          break;
 
       case HB_EA_PUSH_POP:
-         if( HB_SUPPORT_HARBOUR && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
+         if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
             LONG lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -2624,7 +2638,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
          break;
 
       case HB_EA_PUSH_POP:
-         if( HB_SUPPORT_HARBOUR && HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
+         if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
             LONG lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
@@ -2658,22 +2672,31 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+      {
+         HB_EXPR_PTR pExpr;
+
+         pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ), HB_COMP_PARAM );
+         pExpr = pSelf->value.asOperator.pLeft;
+
+         if( pExpr->ExprType == HB_ET_LOGICAL )
          {
-            HB_EXPR_PTR pExpr;
-
-            pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ), HB_COMP_PARAM );
-            pExpr = pSelf->value.asOperator.pLeft;
-
-            if( pExpr->ExprType == HB_ET_LOGICAL )
-            {
-               pExpr->value.asLogical = ! pExpr->value.asLogical;
-               pSelf->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
-               HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
-               pSelf = pExpr;
-            }
+            pExpr->value.asLogical = ! pExpr->value.asLogical;
+            pSelf->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
+            HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+            pSelf = pExpr;
+         }
+         else if( pExpr->ExprType == HB_EO_NOT && HB_SUPPORT_HARBOUR )
+         {
+            /* NOTE: This will not generate a runtime error if incompatible
+             * data type is used
+             */
+            pExpr->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
+            pExpr = pExpr->value.asOperator.pLeft;
+            HB_EXPR_PCODE1( hb_compExprDelete, pSelf );
+            pSelf = pExpr;
          }
          break;
-
+      }
       case HB_EA_ARRAY_AT:
          hb_compErrorType( HB_COMP_PARAM, pSelf );
          break;

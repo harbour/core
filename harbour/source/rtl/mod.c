@@ -84,7 +84,7 @@ HB_FUNC( MOD )
       }
       else
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", HB_ERR_ARGS_BASEPARAMS );
 
          if( pResult )
          {
@@ -99,7 +99,7 @@ HB_FUNC( MOD )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*

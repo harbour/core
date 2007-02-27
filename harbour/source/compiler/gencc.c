@@ -1324,6 +1324,15 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
    return 2;
 }
 
+static HB_GENC_FUNC( hb_p_pushfuncsym )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 3;
+}
+
 static HB_GENC_FUNC( hb_p_pushvariable )
 {
    HB_GENC_LABEL();
@@ -1636,6 +1645,44 @@ static HB_GENC_FUNC( hb_p_localaddint )
    return 5;
 }
 
+static HB_GENC_FUNC( hb_p_localinc )
+{
+   int iLocal = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_GENC_LABEL();
+
+   if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 &&
+       ( ( pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHLOCAL &&
+           iLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) ) ||
+         ( pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHLOCALNEAR &&
+           iLocal == pFunc->pCode[ lPCodePos + 4 ] ) ) )
+   {
+      fprintf( cargo->yyc, "\tif( hb_xvmLocalIncPush( %d ) ) break;\n", iLocal );
+      return ( pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHLOCAL ) ? 6 : 5;
+   }
+
+   fprintf( cargo->yyc, "\tif( hb_xvmLocalInc( %d ) ) break;\n", iLocal );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_localdec )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmLocalDec( %d ) ) break;\n",
+            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_localincpush )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmLocalIncPush( %d ) ) break;\n",
+            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+
+   return 3;
+}
+
 static HB_GENC_FUNC( hb_p_pluseqpop )
 {
    HB_GENC_LABEL();
@@ -1684,6 +1731,22 @@ static HB_GENC_FUNC( hb_p_expeqpop )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_deceqpop )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmDecEqPop() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_inceqpop )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmIncEqPop() ) break;\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_pluseq )
 {
    HB_GENC_LABEL();
@@ -1729,6 +1792,22 @@ static HB_GENC_FUNC( hb_p_expeq )
    HB_GENC_LABEL();
 
    fprintf( cargo->yyc, "\tif( hb_xvmExpEq() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_deceq )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmDecEq() ) break;\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_inceq )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmIncEq() ) break;\n" );
    return 1;
 }
 
@@ -1977,7 +2056,15 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushunref,
    hb_p_seqalways,
    hb_p_alwaysbegin,
-   hb_p_alwaysend
+   hb_p_alwaysend,
+   hb_p_deceqpop,
+   hb_p_inceqpop,
+   hb_p_deceq,
+   hb_p_inceq,
+   hb_p_localdec,
+   hb_p_localinc,
+   hb_p_localincpush,
+   hb_p_pushfuncsym
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
