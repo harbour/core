@@ -5065,6 +5065,18 @@ PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState )
    return pToken;
 }
 
+BOOL hb_pp_tokenNextExp( PHB_PP_TOKEN * pTokenPtr )
+{
+   if( hb_pp_tokenCanStartExp( * pTokenPtr ) )
+   {
+      BOOL fStop = FALSE;
+      if( hb_pp_tokenSkipExp( pTokenPtr, NULL, HB_PP_CMP_STD, &fStop ) && !fStop )
+         return TRUE;
+   }
+
+   return FALSE;
+}
+
 /*
  * convert token letters to upper cases
  * strip leading '&' and trailing '.' (if any) from macrovar token

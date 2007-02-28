@@ -649,6 +649,7 @@ extern char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, 
 extern PHB_PP_STATE hb_pp_lexNew( char * pString, ULONG ulLen );
 extern PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState );
 extern PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState );
+extern BOOL   hb_pp_tokenNextExp( PHB_PP_TOKEN * pTokenPtr );
 
 HB_EXTERN_END
 

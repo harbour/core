@@ -212,8 +212,6 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  Argument ExtArgument RefArgument ArgList ElemList
 %type <asExpr>  BlockExpList BlockVars BlockVarList
 %type <asExpr>  DoName DoProc DoArgs DoArgument DoArgList
-%type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
-%type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
 %type <asExpr>  NumValue NumAlias
 %type <asExpr>  NilValue NilAlias
 %type <asExpr>  LiteralValue LiteralAlias
@@ -231,8 +229,8 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  FunIdentCall FunCall FunCallAlias FunRef
 %type <asExpr>  ObjectData ObjectDataAlias ObjectRef
 %type <asExpr>  ObjectMethod ObjectMethodAlias
-%type <asExpr>  IfInline IfInlineAlias IfExpression
-%type <asExpr>  PareExpList PareExpListAlias
+%type <asExpr>  IfInline IfInlineAlias
+%type <asExpr>  PareExpList PareExpListAlias ExpList
 %type <asExpr>  Expression ExtExpression SimpleExpression LValue LeftExpression
 %type <asExpr>  EmptyExpression
 %type <asExpr>  ExprAssign ExprOperEq ExprPreOp ExprPostOp
@@ -969,7 +967,7 @@ ArrayIndex : IndexList ']'
  */
 IndexList  : '[' ExtExpression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
            | IndexList ',' ExtExpression     { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
-           | IndexList ']' '[' ExtExpression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
+           | IndexList ']' '[' ExtExpression    { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
 ElemList   : ExtArgument               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
@@ -977,7 +975,7 @@ ElemList   : ExtArgument               { $$ = hb_compExprNewList( $1, HB_COMP_PA
            ;
 
 CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; }
-             BlockVars '|' BlockExpList '}'     { $$ = $<asExpr>2; }
+             BlockVars '|' BlockExpList '}'  { $$ = $<asExpr>2; }
            ;
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
@@ -998,84 +996,46 @@ BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = 
              | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
              ;
 
-/* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
- * and parenthesized expression ( Expr1, Expr2, Expr3 )
- * To solve this conflict we have to split the definitions into more
- * atomic ones.
- *   Also the generation of pcodes have to be delayed and moved to the
- * end of whole parenthesized expression.
- */
-PareExpList1: ExpList1 ')'
-            ;
+ExpList     : Expression               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
+            | ExpList ',' Expression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
 
-PareExpList2: ExpList2 ')'
-            ;
-
-PareExpList3: ExpList3 ')'
-            ;
-
-PareExpListN: ExpList ')'
-            ;
-
-PareExpList : PareExpList1
-            | PareExpList2
-            | PareExpList3
-            | PareExpListN
+PareExpList : '(' ExpList ')'          { $$ = $2 };
             ;
 
 PareExpListAlias : PareExpList ALIASOP
                  ;
 
 /* NOTE: Clipper allows to pass variable by reference only as
- * function argument, IIF() 2-nd and 3-rd argument and as
- * explicit array item {...@var...}
+ * function arguments, IIF() 2-nd and 3-rd arguments and as
+ * explicit array items {...@var...}
  * AFAIK these are also the only one places where empty expressions in
  * the parenthesis expressions list are accepted
  */
-ExpList1  : '(' Expression          { $$ = hb_compExprNewList( $2, HB_COMP_PARAM ); }
-          ;
-
-ExpList2  : ExpList1 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
-          ;
-
-ExpList3  : ExpList2 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
-          ;
-
-ExpList   : ExpList3 ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
-          | ExpList  ',' Expression { $$ = hb_compExprAddListExpr( $1, $3 ); }
-          ;
-
-IfInline   : IIF '(' Expression ',' Argument ',' Argument ')'
-               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $3, HB_COMP_PARAM ), $5 ), $7 ) ); }
-           | IF  ExpList1 ',' Expression ',' Argument ')'
-               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), $4 ), $6 ) ); }
-           | IF  ExpList1 ',' RefArgument ',' Argument ')'
-               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), $4 ), $6 ) ); }
-           | IF  ExpList1 ',' ',' Argument ')'
-               { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $2, HB_COMP_PARAM ), hb_compExprNewEmpty( HB_COMP_PARAM ) ), $5 ) ); }
-           ;
+IfInline : IIF '(' Expression ',' Argument ',' Argument ')'
+            { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( $3, HB_COMP_PARAM ), $5 ), $7 ) ); }
+         ;
 
 IfInlineAlias : IfInline ALIASOP
               ;
 
-VarDefs    : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
-             VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
-           | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
-             VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
-           | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
-                             hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
-                          else
-                             HB_COMP_PARAM->functions.pLast->wParamNum=0; HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
-             MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
-           ;
+VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
+           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+         | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+           VarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+         | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
+                        else
+                           HB_COMP_PARAM->functions.pLast->wParamNum=0; HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
+           MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+         ;
 
-VarList    : VarDef                       { $$ = 1; }
-           | VarList ',' VarDef           { $$++; }
-           ;
+VarList  : VarDef                         { $$ = 1; }
+         | VarList ',' VarDef             { $$++; }
+         ;
 
-ExtVarList : ExtVarDef                    { $$ = 1; }
-           | ExtVarList ',' ExtVarDef     { $$++; }
-           ;
+ExtVarList  : ExtVarDef                   { $$ = 1; }
+            | ExtVarList ',' ExtVarDef    { $$++; }
+            ;
 
 /* NOTE: if STATIC or LOCAL variables are declared and initialized then we can
  * assign a value immediately - however for PRIVATE and PUBLIC variables
@@ -1305,7 +1265,7 @@ DummyArgList : DummyArgument
              | DummyArgList ',' DummyArgument
              ;
 
-DummyArgument : EmptyExpression                 { hb_compExprDelete( $1, HB_COMP_PARAM ); }
+DummyArgument : EmptyExpression     { hb_compExprDelete( $1, HB_COMP_PARAM ); }
               ;
 
 FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
@@ -1340,20 +1300,13 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1, HB_COMP_
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1, HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
            ;
 
-IfBegin    : IF IfExpression
+IfBegin    : IF Expression
                { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); }
              Crlf
                { hb_compExprDelete( hb_compExprGenPush( $2, HB_COMP_PARAM ), HB_COMP_PARAM ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
              EmptyStats
                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM ); }
            ;
-
-IfExpression: SimpleExpression
-            | Variable
-            | PareExpList1
-            | PareExpList2
-            | PareExpListN
-            ;
 
 IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats

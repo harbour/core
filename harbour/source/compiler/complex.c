@@ -981,7 +981,24 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                                    HB_COMP_ERR_SYNTAX, "IF", NULL );
                else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
                {
-                  pLex->iState = pLex->iState == LOOKUP ? IF : IIF;
+                  if( pLex->iState == LOOKUP )
+                  {
+                     PHB_PP_TOKEN pNext = pToken->pNext->pNext;   /* COND EXP */
+
+                     pLex->iState = IF;
+                     if( hb_pp_tokenNextExp( &pNext ) )  /* TRUE EXP */
+                     {
+                        if( hb_pp_tokenNextExp( &pNext ) )  /* FALSE EXP */
+                        {
+                           if( !hb_pp_tokenNextExp( &pNext ) && pNext &&
+                               HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_RIGHT_PB )
+                              pLex->iState = IIF;
+                        }
+                     }
+                  }
+                  else
+                     pLex->iState = IIF;
+   
                   return pLex->iState;
                }
                else if( HB_PP_LEX_NEEDLEFT( pToken->pNext ) || pLex->iState != LOOKUP )
