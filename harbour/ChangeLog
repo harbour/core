@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-01 14:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/os2/global.cf
+  * harbour/contrib/hgf/os2pm/os2pm.c
+  * harbour/include/hbdefs.h
+  * harbour/include/hbgtcore.h
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/vm/mainpm.c
+    * cleaned OS2 build errors and warnings reported by David Macias.
+      Modifications not tested - OS2 users will have to make tests and
+      reports problems.
+
 2007-03-01 05:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     ! fixed comments like /*/*/

@@ -291,8 +291,8 @@ HB_FUNC( WINSETOWNER )
 HB_FUNC( WINSENDMSG )
 {
    hb_retnl( ( LONG ) WinSendMsg( ( HWND ) hb_parnl( 1 ), hb_parnl( 2 ),
-             ( MPARAM ) IF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), hb_parnl( 3 ) ),
-             ( MPARAM ) IF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), hb_parnl( 4 ) ) ) );
+             ( MPARAM ) IF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), (ULONG) hb_parnl( 3 ) ),
+             ( MPARAM ) IF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), (ULONG) hb_parnl( 4 ) ) ) );
 }
 
 

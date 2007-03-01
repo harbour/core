@@ -180,7 +180,7 @@ typedef struct
    void     (* Bell) ( void );
    BOOL     (* Info) ( int, PHB_GT_INFO );
    int      (* Alert) ( PHB_ITEM, PHB_ITEM, int, int, double );
-   BOOL     (* SetFlag) ( int, int );
+   int      (* SetFlag) ( int, int );
 
    /* internationalization */
    BOOL     (* SetDispCP) ( char *, char *, BOOL );

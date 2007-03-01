@@ -61,7 +61,7 @@
 
 int main( int argc, char * argv[] )
 {
-   int ;
+   int  iErrorCode;
    HAB  hab;         /* Anchor Block handle */
    HMQ  hmq;         /* Message Queue handle */
 
@@ -77,6 +77,3 @@ int main( int argc, char * argv[] )
 
    return iErrorCode;
 }
-
-
-

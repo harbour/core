@@ -2155,7 +2155,7 @@ HB_FUNC( DBSEEK )
       if( !ISNIL( 1 ) )
       {
          pKey = hb_param( 1, HB_IT_ANY );
-         bSoftSeek = ISLOG( 2 ) ? hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
+         bSoftSeek = ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
          bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == SUCCESS )
          {
@@ -2853,7 +2853,7 @@ HB_FUNC( ORDCREATE )
       dbOrderInfo.abBagName = ( BYTE * ) hb_parcx( 1 );
       dbOrderInfo.atomBagName = ( BYTE * ) hb_parcx( 2 );
       dbOrderInfo.itmOrder = NULL;
-      dbOrderInfo.fUnique = ISLOG( 5 ) ? hb_parl( 5 ) : hb_set.HB_SET_UNIQUE;
+      dbOrderInfo.fUnique = ISLOG( 5 ) ? ( BOOL ) hb_parl( 5 ) : hb_set.HB_SET_UNIQUE;
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
       if( ( ( dbOrderInfo.abBagName == NULL || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
             ( dbOrderInfo.atomBagName == NULL || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||

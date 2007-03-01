@@ -18,6 +18,8 @@ ifeq ($(SHLVL),) # An OS/2 command shell
 
 ARCH_DIR = $(HB_ARCH)
 OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
+DIRSEP = $(subst /,\,\)
+
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
 
 ifeq ($(OS2_SHELL),)
