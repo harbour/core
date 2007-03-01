@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-01 01:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * cleaned scope error message
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    * added hack for accepting expressions which start with ':' character
+      as regular/list match markers
+
 2007-02-28 08:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/source/compiler/complex.c

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * 
+ *
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -198,6 +198,9 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_MOD          84
 #define HB_PP_TOKEN_POWER        85
 #define HB_PP_TOKEN_EPSILON      86
+#define HB_PP_TOKEN_SHIFTL       87
+#define HB_PP_TOKEN_SHIFTR       88
+#define HB_PP_TOKEN_BITXOR       89
 
 #define HB_PP_TOKEN_TYPE(t)      ( (t) & 0xff )
 /* bitfields */
@@ -266,18 +269,23 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_RIGHT_SB || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_RIGHT_CB )
 
-#define HB_PP_TOKEN_NEEDLEFT(t)  ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_ASSIGN || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_PLUSEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUSEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MULTEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DIVEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MODEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EXPEQ || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQUAL || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_EQ )
-
 #define HB_PP_TOKEN_ISNEUTRAL(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC )
+
+#define HB_PP_TOKEN_NEEDLEFT(t)  ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_ASSIGN || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_PLUSEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_MINUSEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_MULTEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_DIVEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_MODEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EXPEQ || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EQUAL || \
+                                   HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EQ || \
+                                   ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_SEND && \
+                                     (t)->spaces == 0 && (t)->pNext && \
+                                     ( HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_KEYWORD || \
+                                       HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_MACROVAR || \
+                                       HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_MACROTEXT ) ) )
 
 /* I do not want to replicate exactly Clipper PP behavior and check if
    expression is valid.
@@ -340,7 +348,7 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
                                         HB_PP_TOKEN_ISEXPVAL( (t)->pNext->type ) ) )
 
 #ifdef HB_C52_STRICT
-/* Clipper supports quoting by [] for 1-st token in the line so we 
+/* Clipper supports quoting by [] for 1-st token in the line so we
    are checking for HB_PP_TOKEN_NUL in this macro */
 #define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUL && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \

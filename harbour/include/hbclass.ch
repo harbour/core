@@ -181,7 +181,7 @@
 #ifdef HB_CLS_NO_OO_ERR
    #xtranslate __HB_CLS_ERR([<msg,...>]) =>
 #else
-   #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #undef _DUMMY_DEF_
+   #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #line
 #endif
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name: <var> )
@@ -229,7 +229,7 @@ DECLARE HBClass ;
       iif( <export>, HB_OO_CLSTP_EXPORTED , ;
       iif( <protect>, HB_OO_CLSTP_PROTECTED, ;
       iif( <hidde>, HB_OO_CLSTP_HIDDEN, nScope ) ) ) */
-#xtranslate __HB_CLS_SCOPE( <x,...> )        => __HB_CLS_ERR( Can not use multiple scope qualifiers! )
+#xtranslate __HB_CLS_SCOPE( <x,...> )        => ) __HB_CLS_ERR( Can not use multiple scope qualifiers! )
 #xtranslate __HB_CLS_SCOPE( .T., .F., .F. )  => HB_OO_CLSTP_EXPORTED
 #xtranslate __HB_CLS_SCOPE( .F., .T., .F. )  => HB_OO_CLSTP_PROTECTED
 #xtranslate __HB_CLS_SCOPE( .F., .F., .T. )  => HB_OO_CLSTP_HIDDEN
@@ -266,16 +266,9 @@ DECLARE HBClass ;
       static <type> __HB_CLS_MTHNAME <ClassName> <MethodName> ;;
       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
-#ifdef __XHARBOUR__
-   #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
-      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[\<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
-         DECLARED METHOD \<type> <MethodName>\[(\<xparams>)] CLASS <ClassName> ;;
-      #undef _DUMMY_DEF_
-#else
-   #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
-      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[\<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+#xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
+   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>\[(\[\<xparams,...>])] CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName>\[(\<xparams>)] CLASS <ClassName>
-#endif
 
 #xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
    __HB_CLS_ERR( Method <MethodName> not declared or declaration mismatch in class: <ClassName> ) ;;
