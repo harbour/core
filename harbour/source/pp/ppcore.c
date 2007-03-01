@@ -847,7 +847,10 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 
                      case HB_PP_INLINE_COMMENT:
                         if( ulLen > 1 && ch == '*' && pBuffer[ 1 ] == '/' )
+                        {
                            pState->iInLineState = HB_PP_INLINE_OFF;
+                           ++ul;
+                        }
                         break;
 
                      default:
@@ -865,7 +868,10 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                         else if( ulLen > 1 )
                         {
                            if( ch == '/' && pBuffer[ 1 ] == '*' )
+                           {
                               pState->iInLineState = HB_PP_INLINE_COMMENT;
+                              ++ul;
+                           }
                            else if( ch == '/' && pBuffer[ 1 ] == '/' )
                               ulLen = ul = 0;
                         }
@@ -1028,6 +1034,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                hb_pp_tokenAddCmdSep( pState );
 #endif
             pState->iStreamDump = HB_PP_STREAM_COMMENT;
+            ul += 2;
          }
          else if( ch == ' ' || ch == '\t' )
          {
