@@ -600,8 +600,8 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, BYTE *pKey, BOOL *fDeleted )
 
 static void hb_hsxGetRecCount( LPHSXINFO pHSX )
 {
-   pHSX->ulRecCount = ( hb_fsSeekLarge( pHSX->hFile, 0, FS_END ) - 
-                        HSXHEADER_LEN ) / pHSX->uiRecordSize;
+   pHSX->ulRecCount = ( ULONG ) ( ( hb_fsSeekLarge( pHSX->hFile, 0, FS_END ) - 
+                                    HSXHEADER_LEN ) / pHSX->uiRecordSize );
 }
 
 static int hb_hsxHdrFlush( int iHandle )

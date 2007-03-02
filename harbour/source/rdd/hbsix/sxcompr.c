@@ -481,7 +481,7 @@ static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
    {
       if( ( c = hb_LZSSxRead( pCompr ) ) == -1 )
          break;
-      pCompr->ring_buffer[ r + len ] = c;
+      pCompr->ring_buffer[ r + len ] = ( BYTE ) c;
    }
    if( len == 0 )
       return ulSize;
@@ -523,9 +523,9 @@ static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
                         ( c = hb_LZSSxRead( pCompr ) ) != -1; i++ )
       {
          hb_LZSSxNodeDelete( pCompr, s );
-         pCompr->ring_buffer[ s ] = c;
+         pCompr->ring_buffer[ s ] = ( BYTE ) c;
          if( s < MAXLENGTH - 1 )
-            pCompr->ring_buffer[ s + RBUFLENGTH ] = c;
+            pCompr->ring_buffer[ s + RBUFLENGTH ] = ( BYTE ) c;
          s = RBUFINDEX( s + 1 );
          r = RBUFINDEX( r + 1 );
          hb_LZSSxNodeInsert( pCompr, r );

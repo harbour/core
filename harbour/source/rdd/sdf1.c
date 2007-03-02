@@ -121,8 +121,8 @@ static ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
    {
       pArea->fEof = FALSE;
       pArea->fPositioned = TRUE;
-      uiEolPos = hb_strAt( pArea->szEol, pArea->uiEolLen,
-                           ( char * ) pArea->pRecord, uiRead );
+      uiEolPos = ( USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
+                                      ( char * ) pArea->pRecord, uiRead );
       if( uiEolPos )
       {
          --uiEolPos;
@@ -177,8 +177,8 @@ static ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;
 
-            uiEolPos = hb_strAt( pArea->szEol, pArea->uiEolLen,
-                                 ( char * ) pArea->pRecord, uiRead );
+            uiEolPos = ( USHORT ) hb_strAt( pArea->szEol, pArea->uiEolLen,
+                                            ( char * ) pArea->pRecord, uiRead );
             if( uiEolPos )
             {
                --uiEolPos;

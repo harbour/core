@@ -1447,7 +1447,7 @@ static ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem )
             return EDBF_READ;
          ulLen = HB_GET_LE_UINT16( buffer );
          pBuffer = ( BYTE * ) hb_xgrab( ulLen + 1 );
-         if( hb_fsRead( pArea->hMemoFile, pBuffer, ulLen ) != ( USHORT ) ulLen )
+         if( hb_fsRead( pArea->hMemoFile, pBuffer, ( USHORT ) ulLen ) != ( USHORT ) ulLen )
          {
             hb_xfree( pBuffer );
             return EDBF_READ;
@@ -3411,7 +3411,7 @@ static ULONG hb_fptPutVarFile( FPTAREAP pArea, ULONG ulBlock, BYTE * szFile )
       if( ( HB_FOFFSET ) ( size & 0xFFFFFFFFUL ) == size )
          ulSize = HB_MIN( ( ULONG ) size, 0xFFFFFFFFUL - sizeof( FPTBLOCK ) );
       else
-         ulSize = HB_MIN( size, ( HB_FOFFSET ) ( 0xFFFFFFFFUL - sizeof( FPTBLOCK ) ) );
+         ulSize = ( ULONG ) HB_MIN( size, ( HB_FOFFSET ) ( 0xFFFFFFFFUL - sizeof( FPTBLOCK ) ) );
 
       if( hb_fptFileLockEx( pArea, TRUE ) )
       {
@@ -4175,7 +4175,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          hb_fsSeek( hFile, 0, FS_SET );
          ulSize = ( ULONG ) HB_MIN( size, HB_VF_CHAR );
          pAlloc = ( BYTE * ) hb_xgrab( ulSize + 1 );
-         if( hb_fsRead( hFile, pAlloc, ulSize ) != ( USHORT ) ulSize )
+         if( hb_fsRead( hFile, pAlloc, ( USHORT ) ulSize ) != ( USHORT ) ulSize )
          {
             uiError = EDBF_READ;
             hb_xfree( pAlloc );
@@ -4205,7 +4205,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          }
          else
          {
-            ulSize = HB_MIN( size, ( HB_FOFFSET ) ( 0xFFFFFFFFUL - sizeof( FPTBLOCK ) ) );
+            ulSize = ( ULONG ) HB_MIN( size, ( HB_FOFFSET ) ( 0xFFFFFFFFUL - sizeof( FPTBLOCK ) ) );
          }
 
          if( pArea->bMemoType == DB_MEMO_SMT )

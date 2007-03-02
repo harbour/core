@@ -1499,7 +1499,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                   iLen = 10;
                   break;
                case 8:
-                  dValue = HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+                  dValue = ( double ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
                   iLen = 20;
                   break;
                default:

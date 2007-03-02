@@ -201,21 +201,21 @@ static int hb_delimNextChar( DELIMAREAP pArea )
        ( pArea->ulBufferRead == 0 ||
          pArea->ulBufferRead >= pArea->ulBufferSize - 1 ) )
    {
-      USHORT uiLeft = ( USHORT ) pArea->ulBufferRead - pArea->ulBufferIndex;
+      ULONG ulLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
 
-      if( uiLeft )
+      if( ulLeft )
          memcpy( pArea->pBuffer,
-                 pArea->pBuffer + pArea->ulBufferIndex, uiLeft );
+                 pArea->pBuffer + pArea->ulBufferIndex, ulLeft );
       pArea->ulBufferStart += pArea->ulBufferIndex;
       pArea->ulBufferIndex = 0;
-      hb_fsSeekLarge( pArea->hFile, pArea->ulBufferStart + uiLeft, FS_SET );
+      hb_fsSeekLarge( pArea->hFile, pArea->ulBufferStart + ulLeft, FS_SET );
       pArea->ulBufferRead = hb_fsReadLarge( pArea->hFile,
-                                            pArea->pBuffer + uiLeft,
-                                            pArea->ulBufferSize - uiLeft );
+                                            pArea->pBuffer + ulLeft,
+                                            pArea->ulBufferSize - ulLeft );
       if( pArea->ulBufferRead > 0 &&
-          pArea->pBuffer[ pArea->ulBufferRead + uiLeft - 1 ] == '\032' )
+          pArea->pBuffer[ pArea->ulBufferRead + ulLeft - 1 ] == '\032' )
          pArea->ulBufferRead--;
-      pArea->ulBufferRead += uiLeft;
+      pArea->ulBufferRead += ulLeft;
    }
 
    if( pArea->ulBufferIndex + pArea->uiEolLen <= pArea->ulBufferRead &&
@@ -252,7 +252,7 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    if( pArea->ulBufferStart <= pArea->ulRecordOffset &&
        pArea->ulBufferStart + ( HB_FOFFSET ) pArea->ulBufferRead > pArea->ulRecordOffset )
    {
-      pArea->ulBufferIndex = pArea->ulRecordOffset - pArea->ulBufferStart;
+      pArea->ulBufferIndex = ( ULONG ) ( pArea->ulRecordOffset - pArea->ulBufferStart );
    }
    else
    {

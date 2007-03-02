@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-02 03:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hbsix/sxcompr.c
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rdd/usrrdd/usrrdd.c
+  * harbour/source/rtl/cdpapi.c
+    * casting
+
 2007-03-02 00:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     * clear included file counter in hb_pp_reset()

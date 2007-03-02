@@ -576,7 +576,7 @@ HB_EXPORT ULONG hb_cdpUTF8ToStrn( PHB_CODEPAGE cdp, BOOL fCtrl,
                      }
                   }
                }
-               pDst[ ulD ] = uc >= 0x100 ? '?' : uc;
+               pDst[ ulD ] = uc >= 0x100 ? '?' : ( BYTE ) uc;
             }
             ++ulD;
          }
