@@ -483,10 +483,20 @@ static void hb_gt_os2_GetScreenContents( void )
    hb_gt_ColdArea( 0, 0, s_vi.row, s_vi.col );
 }
 
+static PVOID hb_gt_os2_allocMem( int iSize )
+{
+   APIRET rc;     /* return code from DosXXX api call */
+   PVOID pMem;
+
+   rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | OBJ_TILE | PAG_WRITE );
+   if( rc != NO_ERROR )
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL );
+
+   return pMem;
+}
+
 static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   APIRET rc;           /* return code from DosXXX api call */
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
@@ -503,22 +513,10 @@ static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    }
 
    /* Alloc tileable memory for calling a 16 subsystem */
-   rc = DosAllocMem( ( PPVOID ) &s_hk, sizeof( HKBD ),
-                     PAG_COMMIT | OBJ_TILE | PAG_WRITE );
-   if( rc != NO_ERROR )
-   {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL );
-   }
-
+   s_hk = ( PHKBD ) hb_gt_os2_allocMem( sizeof( HKBD ) );
    /* it is a long after all, so I set it to zero only one time since it never changes */
    memset( s_hk, 0, sizeof( HKBD ) );
-
-   rc = DosAllocMem( ( PPVOID ) &s_key, sizeof( KBDKEYINFO ),
-                     PAG_COMMIT | OBJ_TILE | PAG_WRITE);
-   if( rc != NO_ERROR )
-   {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL);
-   }
+   s_key = ( PKBDKEYINFO ) hb_gt_os2_allocMem( sizeof( KBDKEYINFO ) );
 
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
@@ -570,7 +568,6 @@ static void hb_gt_os2_Exit( void )
    DosFreeMem( s_hk );
    VioSetCp( 0, s_usOldCodePage, 0 );
 }
-
 
 static int hb_gt_os2_ReadKey( int iEventMask )
 {
@@ -741,7 +738,6 @@ static BOOL hb_gt_os2_GetBlink()
    VioGetState( &vi, 0 );
    return vi.fs == 0;                   /* 0 = blink, 1 = intens      */
 }
-
 
 static void hb_gt_os2_SetBlink( BOOL fBlink )
 {

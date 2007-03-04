@@ -197,6 +197,21 @@
    #undef TRUE
    #define TRUE   (!0)
 
+#else  /* HB_DONT_DEFINE_BASIC_TYPES */
+
+   /*
+    * if HB_DONT_DEFINE_BASIC_TYPES excluded some types which are not
+    * defined in included platform dependent header files then please
+    * add necessary definitions here.
+    */
+
+   /* SCHAR is needed using GCC on OS/2 */
+   #if ! defined( SCHAR )
+      typedef signed char SCHAR;          /* 1 byte signed */
+   #endif
+
+#endif /* HB_DONT_DEFINE_BASIC_TYPES */
+
 #ifndef HB_LONG_LONG_OFF
 
    #if ! defined(_WINNT_H)
@@ -249,22 +264,8 @@
          #define LONGLONG_MIN       (-LONGLONG_MAX - 1LL)
       #endif
    #endif
+
 #endif /* HB_LONG_LONG_OFF */
-
-#else  /* HB_DONT_DEFINE_BASIC_TYPES */
-
-   /*
-    * if HB_DONT_DEFINE_BASIC_TYPES excluded some types which are not
-    * defined in included platform dependent header files then please
-    * add necessary definitions here.
-    */
-
-   /* SCHAR is needed using GCC on OS/2 */
-   #if ! defined( SCHAR )
-      typedef signed char SCHAR;          /* 1 byte signed */
-   #endif
-
-#endif /* HB_DONT_DEFINE_BASIC_TYPES */
 
 /*
  * below are some hacks which don't have to be true on some machines

@@ -110,7 +110,7 @@ void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 }
 
 /* Split given filename into path, name and extension, plus determine drive */
-PHB_FNAME hb_fsFNameSplit( char * pszFileName )
+PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
    char * pszPos;

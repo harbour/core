@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-04 14:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbpp.h
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+    * cleanup .ppo file creation
+    + new compiler switch: p+ to enable preprocessor tracing
+      when used information about applied rules is stored in .ppt file
+  * harbour/include/hbdefs.h
+  * harbour/source/rtl/gtos2/gtos2.c
+    * OS2 build cleanup
+
 2007-03-02 03:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
   * harbour/source/rdd/delim1.c

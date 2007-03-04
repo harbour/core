@@ -567,7 +567,6 @@ typedef struct _HB_COMP
    PFUNCTION         pInitFunc;
    PHB_FNAME         pMainFileName;
    PHB_FNAME         pFileName;
-   PHB_FNAME         pFilePpo;
    PHB_FNAME         pOutPath;
    PHB_FNAME         pPpoPath;
 
@@ -604,6 +603,7 @@ typedef struct _HB_COMP
    BOOL              fExit;               /* force breaking compilation process */
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
    BOOL              fPPO;                /* flag indicating, is ppo output needed */
+   BOOL              fPPT;                /* flag indicating, is ppt output needed */
    BOOL              fStartProc;          /* holds if we need to create the starting procedure */
    BOOL              fLineNumbers;        /* holds if we need pcodes with line numbers */
    BOOL              fAnyWarning;         /* holds if there was any warning during the compilation process */

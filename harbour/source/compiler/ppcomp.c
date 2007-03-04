@@ -158,6 +158,8 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             iValue == HB_EXITLEVEL_SETEXIT ||
             iValue == HB_EXITLEVEL_DELTARGET ) )
          HB_COMP_PARAM->iExitLevel = iValue;
+      else if( hb_stricmp( szSwitch, "p+" ) == 0 )
+         HB_COMP_PARAM->fPPT = iValue != 0;
       else
          fError = TRUE;
    }
@@ -202,11 +204,5 @@ void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] )
 
       /* mark current rules as standard ones */
       hb_pp_setStdBase( HB_COMP_PARAM->pLex->pPP );
-   }
-
-   if( HB_COMP_PARAM->pFileName )
-   {
-      hb_xfree( ( void * ) HB_COMP_PARAM->pFileName );
-      HB_COMP_PARAM->pFileName = NULL;
    }
 }

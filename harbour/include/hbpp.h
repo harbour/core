@@ -566,11 +566,14 @@ typedef struct
    int      iHideStrings;        /* hidden string mode */
    BOOL     fTracePragmas;       /* display information about set pragmas */
    BOOL     fWritePreprocesed;   /* write preprocessed data to file (.ppo) */
+   BOOL     fWriteTrace;         /* write translation to file (.ppt) */
 
    HB_PATHNAMES * pIncludePath;  /* search path(s) for included files */
 
    char *   szOutFileName;       /* output file name */
    FILE *   file_out;            /* output file handle */
+   char *   szTraceFileName;     /* trace output file name */
+   FILE *   file_trace;          /* trace output file handle */
 
    BOOL     fError;              /* error during preprocessing */
    BOOL     fQuiet;              /* do not show standard information */
@@ -578,7 +581,6 @@ typedef struct
    int      iCondCount;          /* number of nested #if[n]def directive */
    int      iCondStackSize;      /* size of conditional compilation stack */
    int *    pCondStack;          /* conditional compilation stack */
-   FILE *   file_in;             /* file handle */
 
    /* used to divide line per tokens and tokens manipulations */
    PHB_MEM_BUFFER pBuffer;       /* buffer for input and output line */
@@ -639,11 +641,13 @@ extern void   hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern void   hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplace );
 extern BOOL   hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearchPath, FILE * file_in, BOOL fError );
 extern BOOL   hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out );
+extern BOOL   hb_pp_traceFile( PHB_PP_STATE pState, char * szTraceFileName, FILE * file_trace );
 extern char * hb_pp_fileName( PHB_PP_STATE pState );
 extern int    hb_pp_line( PHB_PP_STATE pState );
 extern BOOL   hb_pp_eof( PHB_PP_STATE pState );
 extern int    hb_pp_lineTot( PHB_PP_STATE pState );
 extern char * hb_pp_outFileName( PHB_PP_STATE pState );
+extern char * hb_pp_traceFileName( PHB_PP_STATE pState );
 extern char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen );
 extern char * hb_pp_parseLine( PHB_PP_STATE pState, char * pLine, ULONG * pulLen );
 extern void   hb_pp_addDefine( PHB_PP_STATE pState, char * szDefName, char * szDefValue );

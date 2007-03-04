@@ -167,7 +167,7 @@ typedef struct
    char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
-extern HB_EXPORT PHB_FNAME hb_fsFNameSplit( char * pszFileName ); /* Split given filename into path, name and extension */
+extern HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName ); /* Split given filename into path, name and extension */
 extern HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 /* Searchable path support */

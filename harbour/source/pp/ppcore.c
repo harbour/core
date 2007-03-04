@@ -1690,6 +1690,17 @@ static void hb_pp_FileFree( PHB_PP_STATE pState, PHB_PP_FILE pFile,
    hb_xfree( pFile );
 }
 
+static void hb_pp_InFileFree( PHB_PP_STATE pState )
+{
+   while( pState->pFile )
+   {
+      PHB_PP_FILE pFile = pState->pFile;
+      pState->pFile = pFile->pPrev;
+      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
+   }
+   pState->iFiles = 0;
+}
+
 static void hb_pp_OutFileFree( PHB_PP_STATE pState )
 {
    if( pState->file_out )
@@ -1705,15 +1716,19 @@ static void hb_pp_OutFileFree( PHB_PP_STATE pState )
    pState->fWritePreprocesed = FALSE;
 }
 
-static void hb_pp_InFileFree( PHB_PP_STATE pState )
+static void hb_pp_TraceFileFree( PHB_PP_STATE pState )
 {
-   while( pState->pFile )
+   if( pState->file_trace )
    {
-      PHB_PP_FILE pFile = pState->pFile;
-      pState->pFile = pFile->pPrev;
-      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
+      fclose( pState->file_trace );
+      pState->file_trace = NULL;
    }
-   pState->iFiles = 0;
+   if( pState->szTraceFileName )
+   {
+      hb_xfree( pState->szTraceFileName );
+      pState->szTraceFileName = NULL;
+   }
+   pState->fWriteTrace = FALSE;
 }
 
 static PHB_PP_STATE hb_pp_stateNew( void )
@@ -1735,6 +1750,7 @@ static void hb_pp_stateFree( PHB_PP_STATE pState )
 {
    hb_pp_InFileFree( pState );
    hb_pp_OutFileFree( pState );
+   hb_pp_TraceFileFree( pState );
 
    if( pState->pIncludePath )
       hb_fsFreeSearchPath( pState->pIncludePath );
@@ -1909,22 +1925,30 @@ static BOOL hb_pp_setCompilerSwitch( PHB_PP_STATE pState, char * szSwitch,
 {
    BOOL fError = TRUE;
 
-   if( strlen( szSwitch ) == 1 )
+   switch( szSwitch[ 0 ] )
    {
-      switch( szSwitch[ 0 ] )
-      {
-         case 'p':
-         case 'P':
+      case 'p':
+      case 'P':
+         if( szSwitch[ 1 ] == '\0' )
+         {
             pState->fWritePreprocesed = pState->file_out != NULL && iValue != 0;
             fError = FALSE;
-            break;
+         }
+         else if( szSwitch[ 1 ] == '+' && szSwitch[ 2 ] == '\0' )
+         {
+            pState->fWriteTrace = pState->file_trace != NULL && iValue != 0;
+            fError = FALSE;
+         }
+         break;
 
-         case 'q':
-         case 'Q':
+      case 'q':
+      case 'Q':
+         if( szSwitch[ 1 ] == '\0' )
+         {
             pState->fQuiet = iValue != 0;
             fError = FALSE;
-            break;
-      }
+         }
+         break;
    }
 
    if( pState->pSwitchFunc )
@@ -2172,6 +2196,14 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          else
             fError = TRUE;
       }
+      else if( hb_pp_tokenValueCmp( pToken, "TRACE", HB_PP_CMP_DBASE ) )
+      {
+         pValue = hb_pp_pragmaGetLogical( pToken->pNext, &fValue );
+         if( pValue )
+            fError = hb_pp_setCompilerSwitch( pState, "p+", fValue );
+         else
+            fError = TRUE;
+      }
       else if( hb_pp_tokenValueCmp( pToken, "TRACEPRAGMAS", HB_PP_CMP_DBASE ) )
       {
          pValue = hb_pp_pragmaGetLogical( pToken->pNext, &pState->fTracePragmas );
@@ -2199,7 +2231,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    {
       hb_pp_error( pState, 'E', HB_PP_ERR_PRAGMA, NULL );
    }
-   else if( pState->fTracePragmas )
+   else if( pState->fTracePragmas || pState->fWriteTrace )
    {
       char szLine[ 12 ];
 
@@ -2216,9 +2248,16 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          hb_membufAddCh( pState->pBuffer, '\'' );
       }
       hb_membufAddCh( pState->pBuffer, '\n' );
-      hb_membufAddCh( pState->pBuffer, '\0' );
-
-      hb_pp_disp( pState, hb_membufPtr( pState->pBuffer ) );
+      if( pState->fWriteTrace )
+      {
+         fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                 hb_membufLen( pState->pBuffer ), pState->file_trace );
+      }
+      if( pState->fTracePragmas )
+      {
+         hb_membufAddCh( pState->pBuffer, '\0' );
+         hb_pp_disp( pState, hb_membufPtr( pState->pBuffer ) );
+      }
    }
 }
 
@@ -3640,27 +3679,68 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
    return pResultPtr;
 }
 
-static void hb_pp_patternReplace( PHB_PP_STATE pState, PHB_PP_RULE pRule,
-                                  PHB_PP_TOKEN * pTokenPtr )
+static char * hb_pp_tokenListStr( PHB_PP_TOKEN pToken, PHB_PP_TOKEN pStop,
+                                  BOOL fStop, PHB_MEM_BUFFER pBuffer,
+                                  BOOL fQuote, BOOL fEol )
 {
-   PHB_PP_TOKEN pFinalResult = NULL, * pResultPtr, pToken, pStop;
+   USHORT ltype = HB_PP_TOKEN_NUL;
+   BOOL fSpaces = FALSE;
+
+   hb_membufFlush( pBuffer );
+   while( pToken && ( fStop ? pToken != pStop : !HB_PP_TOKEN_ISEOC( pToken ) ) )
+   {
+      hb_pp_tokenStr( pToken, pBuffer, fSpaces, fQuote, ltype );
+      ltype = HB_PP_TOKEN_TYPE( pToken->type );
+      fSpaces = TRUE;
+      pToken = pToken->pNext;
+   }
+   if( fEol )
+      hb_membufAddCh( pBuffer, '\n' );
+   hb_membufAddCh( pBuffer, '\0' );
+
+   return hb_membufPtr( pBuffer );
+}
+
+static void hb_pp_patternReplace( PHB_PP_STATE pState, PHB_PP_RULE pRule,
+                                  PHB_PP_TOKEN * pTokenPtr, char * szType )
+{
+   PHB_PP_TOKEN pFinalResult = NULL, * pResultPtr, pToken, pSource;
 
    pResultPtr = hb_pp_patternStuff( pState, pRule, 0, pRule->pResult, &pFinalResult );
 
    /* store original matched token pointer */
-   pStop = * pTokenPtr;
+   pSource = * pTokenPtr;
+
+   /* Copy number of leading spaces from the first matched token
+      to the first result token */
+   if( pFinalResult && pSource )
+      pFinalResult->spaces = pSource->spaces;
+
+   /* Write trace information */
+   if( pState->fWriteTrace )
+   {
+      fprintf( pState->file_trace, "%s(%d) >%s<\n",
+               pState->pFile && pState->pFile->szFileName ? pState->pFile->szFileName : "",
+               pState->pFile ? pState->pFile->iCurrentLine : 0,
+               /* the source string */
+               hb_pp_tokenListStr( pSource, pRule->pNextExpr, TRUE,
+                                   pState->pBuffer, TRUE, FALSE ) );
+      fprintf( pState->file_trace, "#%s%s >%s<\n",
+               pRule->mode == HB_PP_CMP_STD ? "x" : "", szType,
+               /* the result string */
+               hb_pp_tokenListStr( pFinalResult, * pResultPtr, TRUE,
+                                   pState->pBuffer, TRUE, FALSE ) );
+   }
+
    /* Replace matched tokens with result pattern */
    * pResultPtr = pRule->pNextExpr;
    * pTokenPtr = pFinalResult;
-   /* Copy number of leading spaces from the first matched token
-      to the first result token */
-   if( pFinalResult && pStop )
-      pFinalResult->spaces = pStop->spaces;
+
    /* Free the matched tokens */
-   while( pStop != pRule->pNextExpr )
+   while( pSource != pRule->pNextExpr )
    {
-      pToken = pStop;
-      pStop = pStop->pNext;
+      pToken = pSource;
+      pSource = pSource->pNext;
       hb_pp_tokenFree( pToken );
    }
 
@@ -3711,7 +3791,7 @@ static BOOL hb_pp_processDefine( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr )
             {
                if( hb_pp_patternCmp( pRule, * pFirstPtr, FALSE ) )
                {
-                  hb_pp_patternReplace( pState, pRule, pFirstPtr );
+                  hb_pp_patternReplace( pState, pRule, pFirstPtr, "define" );
                   fSubst = fRepeat = TRUE;
                   if( ++pState->iCycle > pState->iMaxCycles ||
                       ++iCycle > HB_PP_MAX_REPATS + pState->iDefinitions )
@@ -3753,7 +3833,7 @@ static BOOL hb_pp_processTranslate( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPt
          {
             if( hb_pp_patternCmp( pRule, * pTokenPtr, FALSE ) )
             {
-               hb_pp_patternReplace( pState, pRule, pTokenPtr );
+               hb_pp_patternReplace( pState, pRule, pTokenPtr, "translate" );
                fSubst = fRepeat = TRUE;
                if( ++pState->iCycle > pState->iMaxCycles ||
                    ++iCycle > HB_PP_MAX_REPATS + pState->iTranslations )
@@ -3790,7 +3870,7 @@ static BOOL hb_pp_processCommand( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr 
       {
          if( hb_pp_patternCmp( pRule, * pFirstPtr, TRUE ) )
          {
-            hb_pp_patternReplace( pState, pRule, pFirstPtr );
+            hb_pp_patternReplace( pState, pRule, pFirstPtr, "command" );
             fSubst = fRepeat = TRUE;
             if( ++pState->iCycle > pState->iMaxCycles ||
                 ++iCycle > HB_PP_MAX_REPATS + pState->iCommands )
@@ -3859,6 +3939,17 @@ static BOOL hb_pp_concatenateKeywords( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirs
          hb_membufFlush( pState->pBuffer );
          hb_membufAddData( pState->pBuffer, pToken->value, pToken->len );
          hb_membufAddData( pState->pBuffer, pNext->value, pNext->len );
+
+         /* Write trace information */
+         if( pState->fWriteTrace )
+         {
+            fprintf( pState->file_trace, "%s(%d) >%s %s<\n(concatenate) >%s%s<\n",
+                     pState->pFile && pState->pFile->szFileName ? pState->pFile->szFileName : "",
+                     pState->pFile ? pState->pFile->iCurrentLine : 0,
+                     pToken->value, pNext->value,
+                     pToken->value, pNext->value );
+         }
+
          hb_pp_tokenSetValue( pToken, hb_membufPtr( pState->pBuffer ),
                                       hb_membufLen( pState->pBuffer ) );
          pToken->pNext = pNext->pNext;
@@ -4177,25 +4268,6 @@ static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    }
 }
 
-static char * hb_pp_tokenListStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
-                                  BOOL fEol )
-{
-   BOOL fSpaces = FALSE;
-
-   hb_membufFlush( pBuffer );
-   while( !HB_PP_TOKEN_ISEOC( pToken ) )
-   {
-      hb_pp_tokenStr( pToken, pBuffer, fSpaces, FALSE, 0 );
-      pToken = pToken->pNext;
-      fSpaces = TRUE;
-   }
-   if( fEol )
-      hb_membufAddCh( pBuffer, '\n' );
-   hb_membufAddCh( pBuffer, 0 );
-
-   return hb_membufPtr( pBuffer );
-}
-
 static void hb_pp_genLineTokens( PHB_PP_STATE pState )
 {
    pState->pNextTokenPtr = &pState->pTokenOut;
@@ -4363,13 +4435,14 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
          }
          else if( hb_pp_tokenValueCmp( pToken, "STDOUT", HB_PP_CMP_DBASE ) )
          {
-            hb_pp_disp( pState, hb_pp_tokenListStr( pToken->pNext,
-                                                    pState->pBuffer, TRUE ) );
+            hb_pp_disp( pState, hb_pp_tokenListStr( pToken->pNext, NULL, FALSE,
+                                                    pState->pBuffer, FALSE, TRUE ) );
          }
          else if( hb_pp_tokenValueCmp( pToken, "ERROR", HB_PP_CMP_DBASE ) )
          {
             hb_pp_error( pState, 'E', HB_PP_ERR_EXPLICIT,
-                         hb_pp_tokenListStr( pToken->pNext, pState->pBuffer, FALSE ) );
+                         hb_pp_tokenListStr( pToken->pNext, NULL, FALSE,
+                                             pState->pBuffer, FALSE, FALSE ) );
          }
          else if( hb_pp_tokenValueCmp( pToken, "DEFINE", HB_PP_CMP_DBASE ) )
          {
@@ -4614,6 +4687,7 @@ void hb_pp_reset( PHB_PP_STATE pState )
 
    hb_pp_InFileFree( pState );
    hb_pp_OutFileFree( pState );
+   hb_pp_TraceFileFree( pState );
 
    hb_pp_ruleNonStdFree( &pState->pDefinitions );
    hb_pp_ruleNonStdFree( &pState->pTranslations );
@@ -4804,7 +4878,7 @@ BOOL hb_pp_inFile( PHB_PP_STATE pState, char * szFileName, BOOL fSearchPath,
 }
 
 /*
- * set output (.ppo) file handle
+ * set output (.ppo) file
  */
 BOOL hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out )
 {
@@ -4827,6 +4901,35 @@ BOOL hb_pp_outFile( PHB_PP_STATE pState, char * szOutFileName, FILE * file_out )
       else
       {
          hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_CREATE_FILE, szOutFileName );
+      }
+   }
+   return !pState->fError;
+}
+
+/*
+ * set trace (.ppt) file
+ */
+BOOL hb_pp_traceFile( PHB_PP_STATE pState, char * szTraceFileName, FILE * file_trace )
+{
+   pState->fError = FALSE;
+   hb_pp_TraceFileFree( pState );
+
+   if( szTraceFileName )
+   {
+
+      if( file_trace )
+         pState->file_trace = file_trace;
+      else
+         pState->file_trace = fopen( szTraceFileName, "w" );
+
+      if( pState->file_trace )
+      {
+         pState->szTraceFileName = hb_strdup( szTraceFileName );
+         pState->fWriteTrace = TRUE;
+      }
+      else
+      {
+         hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_CREATE_FILE, szTraceFileName );
       }
    }
    return !pState->fError;
@@ -4868,11 +4971,19 @@ int hb_pp_lineTot( PHB_PP_STATE pState )
 }
 
 /*
- * return currently preprocessed file name
+ * return output file name (.ppo)
  */
 char * hb_pp_outFileName( PHB_PP_STATE pState )
 {
    return pState->szOutFileName;
+}
+
+/*
+ * return trace output file name (.ppt)
+ */
+char * hb_pp_traceFileName( PHB_PP_STATE pState )
+{
+   return pState->szTraceFileName;
 }
 
 /*

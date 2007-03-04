@@ -419,23 +419,26 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
 
                HB_COMP_PARAM->pOutPath = hb_fsFNameSplit( szPath );
                hb_xfree( szPath );
-            }
                break;
+            }
 
                /* Added for preprocessor needs */
             case 'p':
             case 'P':
-               if( *( s + 1 ) == '-' )
-                  HB_COMP_PARAM->fPPO = 0;
-               else if( ! HB_COMP_PARAM->fPPO )
+               if( s[ 1 ] == '+' && s[ 2 ] == '\0' )
+                  HB_COMP_PARAM->fPPT = TRUE;
+               else if( s[ 1 ] == '-' && s[ 2 ] == '\0' )
+                  HB_COMP_PARAM->fPPO = FALSE;
+               else
                {
-                  /* do not set a path if option specified more then once */
-                  char *szPath = hb_strdup( s + 1 );
-
-                  HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( szPath );
-                  hb_xfree( szPath );
-
-                  HB_COMP_PARAM->fPPO = 1;
+                  if( HB_COMP_PARAM->pPpoPath )
+                  {
+                     HB_COMP_PARAM->pPpoPath = NULL;
+                     hb_xfree( HB_COMP_PARAM->pPpoPath );
+                  }
+                  if( s[ 1 ] )
+                     HB_COMP_PARAM->pPpoPath = hb_fsFNameSplit( s + 1 );
+                  HB_COMP_PARAM->fPPO = TRUE;
                }
                break;
 

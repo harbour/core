@@ -4613,30 +4613,23 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
    }
 }
 
-static void hb_compPpoFile( HB_COMP_DECL )
+static void hb_compPpoFile( HB_COMP_DECL, const char * szPrg, const char * szExt,
+                            char * szPpoName )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compPpoFile()"));
+   PHB_FNAME pFilePpo = hb_fsFNameSplit( szPrg );
 
-   HB_COMP_PARAM->pFilePpo->szPath = NULL;
-   HB_COMP_PARAM->pFilePpo->szExtension = NULL;
-
-   /* we create the output file name */
+   pFilePpo->szExtension = ( char * ) szExt;
    if( HB_COMP_PARAM->pPpoPath )
    {
-      if( HB_COMP_PARAM->pPpoPath->szPath )
-         HB_COMP_PARAM->pFilePpo->szPath = HB_COMP_PARAM->pPpoPath->szPath;
-
+      pFilePpo->szPath = HB_COMP_PARAM->pPpoPath->szPath;
       if( HB_COMP_PARAM->pPpoPath->szName )
       {
-         HB_COMP_PARAM->pFilePpo->szName = HB_COMP_PARAM->pPpoPath->szName;
-         /*
-         if( HB_COMP_PARAM->pPpoPath->szExtension )
-            HB_COMP_PARAM->pFilePpo->szExtension = HB_COMP_PARAM->pPpoPath->szExtension;
-         else
-         */
+         pFilePpo->szName = HB_COMP_PARAM->pPpoPath->szName;
+         pFilePpo->szExtension = HB_COMP_PARAM->pPpoPath->szExtension;
       }
-      HB_COMP_PARAM->pFilePpo->szExtension = ".ppo";
    }
+   hb_fsFNameMerge( szPpoName, pFilePpo );
+   hb_xfree( pFilePpo );
 }
 
 static void hb_compOutputFile( HB_COMP_DECL )
@@ -4675,216 +4668,210 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
       char szFileName[ _POSIX_PATH_MAX + 1 ];    /* filename to parse */
       char szPpoName[ _POSIX_PATH_MAX + 1 ];
 
+      /* Add /D command line or envvar defines */
+      /* hb_compChkDefines( argc, argv ); */
+
+      /* Initialize support variables */
+      hb_compInitVars( HB_COMP_PARAM );
+
       /* Clear and reinitialize preprocessor state */
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );
 
       if( !HB_COMP_PARAM->pFileName->szExtension )
          HB_COMP_PARAM->pFileName->szExtension = ".prg";
-
       hb_fsFNameMerge( szFileName, HB_COMP_PARAM->pFileName );
 
-      if( HB_COMP_PARAM->fPPO && bSingleFile )
+      if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
       {
-         HB_COMP_PARAM->pFilePpo  = hb_fsFNameSplit( szPrg );
-         hb_compPpoFile( HB_COMP_PARAM );
-         /*HB_COMP_PARAM->pFileName->szExtension = ".ppo";*/
-         hb_fsFNameMerge( szPpoName, HB_COMP_PARAM->pFilePpo );
-         if( !hb_pp_outFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
-            iStatus = EXIT_FAILURE;
+         fprintf( hb_comp_errFile, "Cannot open input file: %s\n", szFileName );
+         iStatus = EXIT_FAILURE;
+      }
+      else if( bSingleFile )
+      {
+         if( HB_COMP_PARAM->fPPT )
+         {
+            hb_compPpoFile( HB_COMP_PARAM, szPrg, ".ppt", szPpoName );
+            if( !hb_pp_traceFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
+               iStatus = EXIT_FAILURE;
+         }
+
+         if( HB_COMP_PARAM->fPPO && iStatus == EXIT_SUCCESS )
+         {
+            hb_compPpoFile( HB_COMP_PARAM, szPrg, ".ppo", szPpoName );
+            if( !hb_pp_outFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
+               iStatus = EXIT_FAILURE;
+         }
       }
 
-      if( iStatus == EXIT_SUCCESS )
+      if( iStatus == EXIT_SUCCESS && !HB_COMP_PARAM->fExit )
       {
-         /* Add /D command line or envvar defines */
-         /* hb_compChkDefines( argc, argv ); */
+         BOOL bSkipGen = FALSE ;
 
-         /* Initialize support variables */
-         hb_compInitVars( HB_COMP_PARAM );
+         HB_COMP_PARAM->szFile = HB_COMP_PARAM->currModule =
+            hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
+         HB_COMP_PARAM->currLine = 1;
 
-         if( hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
+         if( bSingleFile )
          {
-            BOOL bSkipGen = FALSE ;
-
-            HB_COMP_PARAM->szFile = HB_COMP_PARAM->currModule =
-               hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
-            HB_COMP_PARAM->currLine = 1;
-
-            if( bSingleFile )
+            if( ! HB_COMP_PARAM->fQuiet )
             {
-               if( ! HB_COMP_PARAM->fQuiet )
-               {
-                  if( HB_COMP_PARAM->fPPO )
-                     printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-                  else
-                     printf( "Compiling '%s'...\n", szFileName );
-               }
-
-               /* Generate the starting procedure frame */
-               if( HB_COMP_PARAM->fStartProc )
-               {
-                  hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
-               }
+               if( HB_COMP_PARAM->fPPO )
+                  printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
                else
-               {
-                  /* Don't pass the name of module if the code for starting procedure
-                  * will be not generated. The name cannot be placed as first symbol
-                  * because this symbol can be used as function call or memvar's name.
-                  */
-                  hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
-               }
+                  printf( "Compiling '%s'...\n", szFileName );
+            }
 
-               if( !HB_COMP_PARAM->fExit )
-               {
-                  hb_compparse( HB_COMP_PARAM );
-                  hb_compCheckUnclosedStru( HB_COMP_PARAM );
-               }
-
-               if( HB_COMP_PARAM->pFilePpo )
-               {
-                  hb_xfree( HB_COMP_PARAM->pFilePpo );
-                  HB_COMP_PARAM->pFilePpo = NULL;
-               }
+            /* Generate the starting procedure frame */
+            if( HB_COMP_PARAM->fStartProc )
+            {
+               hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
             }
             else
             {
-               printf( "Reading '%s'...\n", szFileName );
+               /* Don't pass the name of module if the code for starting procedure
+               * will be not generated. The name cannot be placed as first symbol
+               * because this symbol can be used as function call or memvar's name.
+               */
+               hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
             }
-            
-            /* Open refernced modules (using DO ... WITh statement
-             * or from @.clp command line option
-            */
-            while( HB_COMP_PARAM->autoopen && !HB_COMP_PARAM->fExit )
+
+            if( !HB_COMP_PARAM->fExit )
             {
-               PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
-
-               if( ! hb_compFunctionFind( HB_COMP_PARAM, pAutoOpen->szName ) )
-                  hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, bSingleFile );
-
-               HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
-               hb_xfree( pAutoOpen );
+               hb_compparse( HB_COMP_PARAM );
+               hb_compCheckUnclosedStru( HB_COMP_PARAM );
             }
-
-            /* Begin of finalization phase. */
-
-            /* fix all previous function returns offsets */
-            hb_compFinalizeFunction( HB_COMP_PARAM );
-
-            hb_compExternGen( HB_COMP_PARAM );       /* generates EXTERN symbols names */
-
-            if( HB_COMP_PARAM->pInitFunc )
-            {
-               PCOMSYMBOL pSym;
-               char szNewName[ 25 ];
-
-               /* Fix the number of static variables */
-               HB_COMP_PARAM->pInitFunc->pCode[ 3 ] = HB_LOBYTE( HB_COMP_PARAM->iStaticCnt );
-               HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );
-               HB_COMP_PARAM->pInitFunc->iStaticsBase = HB_COMP_PARAM->iStaticCnt;
-               /* Update pseudo function name */
-               snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
-               HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
-
-               pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, NULL, HB_SYM_FUNCNAME );
-               pSym->cScope |= HB_COMP_PARAM->pInitFunc->cScope;
-               HB_COMP_PARAM->functions.pLast->pNext = HB_COMP_PARAM->pInitFunc;
-               HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
-               hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-               ++HB_COMP_PARAM->functions.iCount;
-            }
-
-            if( HB_COMP_PARAM->szAnnounce )
-               hb_compAnnounce( HB_COMP_PARAM, HB_COMP_PARAM->szAnnounce );
-
-            /* End of finalization phase. */
-
-            if( HB_COMP_PARAM->iErrorCount || HB_COMP_PARAM->fAnyWarning )
-            {
-               if( HB_COMP_PARAM->iErrorCount )
-               {
-                  iStatus = EXIT_FAILURE;
-                  bSkipGen = TRUE;
-                  printf( "\r%i error%s\n\nNo code generated\n", HB_COMP_PARAM->iErrorCount, ( HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" ) );
-               }
-               else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )
-               {
-                  iStatus = EXIT_FAILURE;
-               }
-               else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_DELTARGET )
-               {
-                  iStatus = EXIT_FAILURE;
-                  bSkipGen = TRUE;
-                  printf( "\nNo code generated.\n" );
-               }
-            }
-
-            if( ! HB_COMP_PARAM->fSyntaxCheckOnly && ! bSkipGen &&
-                HB_COMP_PARAM->iErrorCount == 0 )
-            {
-               char * szFirstFunction = NULL;
-               PFUNCTION *pFunPtr;
-
-               /* we create the output file name */
-               hb_compOutputFile( HB_COMP_PARAM );
-
-               pFunPtr = &HB_COMP_PARAM->functions.pFirst;
-               if( ! HB_COMP_PARAM->fStartProc )
-               {
-                  /* skip first non-startup procedure */
-                  hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
-                  pFunPtr = &(*pFunPtr)->pNext;
-                  HB_COMP_PARAM->iFunctionCnt--;
-               }
-
-               while( *pFunPtr && !HB_COMP_PARAM->fExit )
-               {
-                  /* remove function frames with no names */
-                  if( ! HB_COMP_PARAM->fStartProc && ! (*pFunPtr)->szName[0] )
-                  {
-                     *pFunPtr = hb_compFunctionKill( HB_COMP_PARAM, *pFunPtr );
-                     HB_COMP_PARAM->functions.iCount--;
-                     HB_COMP_PARAM->iFunctionCnt--;
-                  }
-                  else
-                  {
-                     hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
-
-                     if( szFirstFunction == NULL && 
-                        ! ( ( *pFunPtr )->cScope & (HB_FS_INIT | HB_FS_EXIT) ) )
-                     {
-                        szFirstFunction = ( *pFunPtr )->szName;
-                     }
-                     pFunPtr = &(*pFunPtr)->pNext;
-                  }
-               }
-
-               if( szFirstFunction )
-               {
-                  PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
-
-                  while( pSym )
-                  {
-                     if( strcmp( pSym->szName, szFirstFunction ) == 0 )
-                     {
-                        pSym->cScope |= HB_FS_FIRST;
-                        break;
-                     }
-                     pSym = pSym->pNext;
-                  }
-               }
-
-               if( ! HB_COMP_PARAM->fQuiet )
-                  printf( "\rLines %i, Functions/Procedures %i\n", hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ), HB_COMP_PARAM->iFunctionCnt );
-
-               hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );
-            }
-            hb_compCompileEnd( HB_COMP_PARAM );
          }
          else
          {
-            fprintf( hb_comp_errFile, "Cannot open input file: %s\n", szFileName );
+            printf( "Reading '%s'...\n", szFileName );
+         }
 
-            /* printf( "No code generated\n" ); */
-            iStatus = EXIT_FAILURE;
+         /* Open refernced modules (using DO ... WITh statement
+          * or from @.clp command line option
+         */
+         while( HB_COMP_PARAM->autoopen && !HB_COMP_PARAM->fExit )
+         {
+            PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
+
+            if( ! hb_compFunctionFind( HB_COMP_PARAM, pAutoOpen->szName ) )
+               hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, bSingleFile );
+
+            HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
+            hb_xfree( pAutoOpen );
+         }
+
+         /* Begin of finalization phase. */
+
+         /* fix all previous function returns offsets */
+         hb_compFinalizeFunction( HB_COMP_PARAM );
+
+         hb_compExternGen( HB_COMP_PARAM );       /* generates EXTERN symbols names */
+
+         if( HB_COMP_PARAM->pInitFunc )
+         {
+            PCOMSYMBOL pSym;
+            char szNewName[ 25 ];
+
+            /* Fix the number of static variables */
+            HB_COMP_PARAM->pInitFunc->pCode[ 3 ] = HB_LOBYTE( HB_COMP_PARAM->iStaticCnt );
+            HB_COMP_PARAM->pInitFunc->pCode[ 4 ] = HB_HIBYTE( HB_COMP_PARAM->iStaticCnt );
+            HB_COMP_PARAM->pInitFunc->iStaticsBase = HB_COMP_PARAM->iStaticCnt;
+            /* Update pseudo function name */
+            snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
+            HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
+
+            pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, NULL, HB_SYM_FUNCNAME );
+            pSym->cScope |= HB_COMP_PARAM->pInitFunc->cScope;
+            HB_COMP_PARAM->functions.pLast->pNext = HB_COMP_PARAM->pInitFunc;
+            HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
+            hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+            ++HB_COMP_PARAM->functions.iCount;
+         }
+
+         if( HB_COMP_PARAM->szAnnounce )
+            hb_compAnnounce( HB_COMP_PARAM, HB_COMP_PARAM->szAnnounce );
+
+         /* End of finalization phase. */
+
+         if( HB_COMP_PARAM->iErrorCount || HB_COMP_PARAM->fAnyWarning )
+         {
+            if( HB_COMP_PARAM->iErrorCount )
+            {
+               iStatus = EXIT_FAILURE;
+               bSkipGen = TRUE;
+               printf( "\r%i error%s\n\nNo code generated\n", HB_COMP_PARAM->iErrorCount, ( HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" ) );
+            }
+            else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )
+            {
+               iStatus = EXIT_FAILURE;
+            }
+            else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_DELTARGET )
+            {
+               iStatus = EXIT_FAILURE;
+               bSkipGen = TRUE;
+               printf( "\nNo code generated.\n" );
+            }
+         }
+
+         if( ! HB_COMP_PARAM->fSyntaxCheckOnly && ! bSkipGen &&
+             HB_COMP_PARAM->iErrorCount == 0 )
+         {
+            char * szFirstFunction = NULL;
+            PFUNCTION *pFunPtr;
+
+            /* we create the output file name */
+            hb_compOutputFile( HB_COMP_PARAM );
+
+            pFunPtr = &HB_COMP_PARAM->functions.pFirst;
+            if( ! HB_COMP_PARAM->fStartProc )
+            {
+               /* skip first non-startup procedure */
+               hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
+               pFunPtr = &(*pFunPtr)->pNext;
+               HB_COMP_PARAM->iFunctionCnt--;
+            }
+
+            while( *pFunPtr && !HB_COMP_PARAM->fExit )
+            {
+               /* remove function frames with no names */
+               if( ! HB_COMP_PARAM->fStartProc && ! (*pFunPtr)->szName[0] )
+               {
+                  *pFunPtr = hb_compFunctionKill( HB_COMP_PARAM, *pFunPtr );
+                  HB_COMP_PARAM->functions.iCount--;
+                  HB_COMP_PARAM->iFunctionCnt--;
+               }
+               else
+               {
+                  hb_compOptimizeFrames( HB_COMP_PARAM, *pFunPtr );
+
+                  if( szFirstFunction == NULL && 
+                     ! ( ( *pFunPtr )->cScope & (HB_FS_INIT | HB_FS_EXIT) ) )
+                  {
+                     szFirstFunction = ( *pFunPtr )->szName;
+                  }
+                  pFunPtr = &(*pFunPtr)->pNext;
+               }
+            }
+
+            if( szFirstFunction )
+            {
+               PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+
+               while( pSym )
+               {
+                  if( strcmp( pSym->szName, szFirstFunction ) == 0 )
+                  {
+                     pSym->cScope |= HB_FS_FIRST;
+                     break;
+                  }
+                  pSym = pSym->pNext;
+               }
+            }
+
+            if( ! HB_COMP_PARAM->fQuiet )
+               printf( "\rLines %i, Functions/Procedures %i\n", hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ), HB_COMP_PARAM->iFunctionCnt );
+
+            hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );
          }
       }
    }
@@ -4894,7 +4881,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
       iStatus = EXIT_FAILURE;
    }
 
-   return iStatus;
+   return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
 }
 
 static void hb_compCompileEnd( HB_COMP_DECL )
@@ -4913,12 +4900,6 @@ static void hb_compCompileEnd( HB_COMP_DECL )
       }
       hb_xfree( HB_COMP_PARAM->pFileName );
       HB_COMP_PARAM->pFileName = NULL;
-   }
-
-   if( HB_COMP_PARAM->pFilePpo )
-   {
-      hb_xfree( HB_COMP_PARAM->pFilePpo );
-      HB_COMP_PARAM->pFilePpo = NULL;
    }
 
    if( HB_COMP_PARAM->functions.pFirst )
@@ -5055,72 +5036,69 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
 
       hb_fsFNameMerge( szFileName, HB_COMP_PARAM->pFileName );
 
-      if( HB_COMP_PARAM->fPPO )
+      if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
+      {
+         fprintf( hb_comp_errFile, "Cannot open %s, assumed external\n", szFileName );
+         iStatus = EXIT_FAILURE;
+      }
+      else if( HB_COMP_PARAM->fPPT )
+      {
+         HB_COMP_PARAM->pFileName->szExtension = ".ppt";
+         hb_fsFNameMerge( szPpoName, HB_COMP_PARAM->pFileName );
+         if( !hb_pp_traceFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
+            iStatus = EXIT_FAILURE;
+      }
+      if( HB_COMP_PARAM->fPPO && iStatus == EXIT_SUCCESS )
       {
          HB_COMP_PARAM->pFileName->szExtension = ".ppo";
          hb_fsFNameMerge( szPpoName, HB_COMP_PARAM->pFileName );
-         
          if( !hb_pp_outFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
             iStatus = EXIT_FAILURE;
       }
 
       if( iStatus == EXIT_SUCCESS && !HB_COMP_PARAM->fExit )
       {
-         /* Minimal Init. */
-         if( hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
+         HB_COMP_PARAM->currModule =
+            hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
+         HB_COMP_PARAM->currLine = 1;
+
+         if( ! HB_COMP_PARAM->fQuiet )
          {
-            HB_COMP_PARAM->currModule =
-               hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
-            HB_COMP_PARAM->currLine = 1;
-
-            if( ! HB_COMP_PARAM->fQuiet )
-            {
-               if( HB_COMP_PARAM->fPPO )
-                  printf( "Compiling module '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-               else
-                  printf( "Compiling module '%s'...\n", szFileName );
-            }
-
-            /* Generate the starting procedure frame */
-            if( HB_COMP_PARAM->fStartProc )
-               hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
-            else if( ! bSingleFile )
-               hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
-
-            if( !HB_COMP_PARAM->fExit )
-            {
-               int i = HB_COMP_PARAM->iExitLevel ;
-               BOOL b = HB_COMP_PARAM->fAnyWarning;
-
-               hb_compparse( HB_COMP_PARAM );
-
-               HB_COMP_PARAM->iExitLevel = ( i > HB_COMP_PARAM->iExitLevel ? i : HB_COMP_PARAM->iExitLevel );
-               HB_COMP_PARAM->fAnyWarning = ( b ? b : HB_COMP_PARAM->fAnyWarning );
-            }
-
-            if( HB_COMP_PARAM->pFilePpo )
-            {
-               hb_xfree( HB_COMP_PARAM->pFilePpo );
-               HB_COMP_PARAM->pFilePpo = NULL;
-            }
-
-            if( HB_COMP_PARAM->fAnyWarning )
-            {
-               if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )
-               {
-                  iStatus = EXIT_FAILURE;
-               }
-               else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_DELTARGET )
-               {
-                  iStatus = EXIT_FAILURE;
-                  *pbSkipGen = TRUE;
-                  printf( "\nNo code generated.\n" );
-               }
-            }
+            if( HB_COMP_PARAM->fPPO )
+               printf( "Compiling module '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+            else
+               printf( "Compiling module '%s'...\n", szFileName );
          }
-         else
+
+         /* Generate the starting procedure frame */
+         if( HB_COMP_PARAM->fStartProc )
+            hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+         else if( ! bSingleFile )
+            hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
+
+         if( !HB_COMP_PARAM->fExit )
          {
-            fprintf( hb_comp_errFile, "Cannot open %s, assumed external\n", szFileName );
+            int i = HB_COMP_PARAM->iExitLevel ;
+            BOOL b = HB_COMP_PARAM->fAnyWarning;
+
+            hb_compparse( HB_COMP_PARAM );
+
+            HB_COMP_PARAM->iExitLevel = ( i > HB_COMP_PARAM->iExitLevel ? i : HB_COMP_PARAM->iExitLevel );
+            HB_COMP_PARAM->fAnyWarning = ( b ? b : HB_COMP_PARAM->fAnyWarning );
+         }
+
+         if( HB_COMP_PARAM->fAnyWarning )
+         {
+            if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )
+            {
+               iStatus = EXIT_FAILURE;
+            }
+            else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_DELTARGET )
+            {
+               iStatus = EXIT_FAILURE;
+               *pbSkipGen = TRUE;
+               printf( "\nNo code generated.\n" );
+            }
          }
       }
    }

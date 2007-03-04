@@ -83,6 +83,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n                                   1=no starting procedure at all",
            "\n          %co<path>         object file drive and/or path",
            "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
+           "\n          %cp+              generate pre-processor trace (.ppt) file",
            "\n          %cq               quiet",
            "\n          %cq0              quiet and don't display program header",
            "\n          %cr=<max>         set maximum number of preprocessor iterations",
@@ -97,7 +98,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cy               trace lex & yacc activity",
 #endif
            "\n          %cz               suppress shortcutting (.and. & .or.)",
-/* TODO:   "\n           @<file>         compile list of modules in <file>", */
+           "\n          @<file>          compile list of modules in <file>",
            "\n"
    };
 
