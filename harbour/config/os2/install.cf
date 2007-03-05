@@ -4,10 +4,15 @@
 
 ifeq ($(SHLVL),) # An OS/2 command shell
 
+define inst_file
+ECHO $(CP) $(file) $(INSTALL_OS2_DIR) >> _NSTALL.CMD
+
+endef
+
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
-OS2_INSTALL_DIR = $(subst /,\,$(INSTALL_DIR))
-INSTALL_RULE =\
-	CMD.EXE /c FOR %f IN ($(INSTALL_LIST)) DO IF EXIST $(OS2_INSTALL_DIR). COPY %f $(OS2_INSTALL_DIR)
+INSTALL_OS2_DIR = $(subst /,\,$(INSTALL_DIR))
+INSTALL_RULE = $(foreach file, $(INSTALL_LIST), $(inst_file)) \
+	$(COMSPEC) /c _NSTALL.CMD & $(RM) _NSTALL.CMD
 
 else  # bash
 
