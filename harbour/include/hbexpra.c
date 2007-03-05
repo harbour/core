@@ -384,8 +384,20 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       {
          /* Reserved Clipper function used to handle GET variables
           */
-         HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+         HB_EXPR_PTR pArg, pNext;
          USHORT uiCount;
+
+         hb_compExprReduceList( pParms, HB_COMP_PARAM );
+         pArg = pParms->value.asList.pExprList;
+
+         if( pArg->ExprType == HB_ET_LIST )
+         {
+            pNext = pArg->pNext;
+            pArg->pNext = NULL;
+            pArg = pParms->value.asList.pExprList = hb_compExprListStrip( pArg, HB_COMP_PARAM );
+            pArg->pNext = pNext;
+         }
+
          if( pArg->ExprType == HB_ET_ARRAYAT )
          {
             /* replace:
@@ -499,7 +511,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             {
                /* Simple macro expansion (not a parenthesized expressions)
                 */
-               HB_EXPR_PTR pFirst, pNext;
+               HB_EXPR_PTR pFirst;
 
                pFirst = pArg;                /* first argument  */
                pNext  = pFirst->pNext;       /* second argument */
@@ -545,8 +557,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          }
          else
          {
-            HB_EXPR_PTR pNext;
             pName->value.asSymbol = "__GET";
+
             /* store second and a rest of arguments */
             pNext = pArg->pNext;
             pArg->pNext = NULL;

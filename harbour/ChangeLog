@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-05 04:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+    ! fixed GPF when _GET_() parameter is passed in parenthesis
+
 2007-03-04 14:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapifs.h
   * harbour/include/hbcompdf.h
