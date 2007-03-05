@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-05 23:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/compiler/hbgenerr.c
+    * do not generate warnings about meaningless expression usage
+      in code optimized by short logical expression evaluation, f.e.:
+         proc main()
+         (f1() .or. (f2(), .t.))
+         return
+
 2007-03-05 14:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/os2/install.cf
     * workaround for command line size limitation borrowed from xHarbour

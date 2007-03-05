@@ -237,8 +237,11 @@ void hb_compErrorDuplVar( HB_COMP_DECL, const char * szVarName )
 
 HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   const char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEANINGLESS, szDesc, NULL );
+   if( !HB_COMP_PARAM->fMeaningful )
+   {
+      const char * szDesc = hb_compExprDescription( pExpr );
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEANINGLESS, szDesc, NULL );
+   }
    return pExpr;
 }
 

@@ -2571,7 +2571,17 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             /* NOTE: This will not generate a runtime error if incompatible
              * data type is used
              */
+#if defined( HB_MACRO_SUPPORT )
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+#else
+            {
+               BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
+               /* do not generate warning about meaningless expression usage */
+               HB_COMP_PARAM->fMeaningful = TRUE;
+               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+               HB_COMP_PARAM->fMeaningful = fMeaningful;
+            }
+#endif
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
@@ -2646,7 +2656,17 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
             /* NOTE: This will not generate a runtime error if incompatible
              * data type is used
              */
+#if defined( HB_MACRO_SUPPORT )
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+#else
+            {
+               BOOL fMeaningful = HB_COMP_PARAM->fMeaningful;
+               /* do not generate warning about meaningless expression usage */
+               HB_COMP_PARAM->fMeaningful = TRUE;
+               HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_POP );
+               HB_COMP_PARAM->fMeaningful = fMeaningful;
+            }
+#endif
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
