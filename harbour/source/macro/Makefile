@@ -32,7 +32,6 @@ YACC_HEADERS=\
 C_SOURCES=\
 	macroa.c \
 	macrob.c \
-	macroc.c \
 	macrolex.c \
 
 

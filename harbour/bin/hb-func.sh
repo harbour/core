@@ -64,7 +64,7 @@ mk_hbgetlibs()
 {
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler"
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler compiler"
     else
         echo -n "$@"
     fi

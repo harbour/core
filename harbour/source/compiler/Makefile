@@ -45,14 +45,8 @@ C_SOURCES=\
 	ppcomp.c   \
 	expropta.c \
 	exproptb.c \
-	exproptc.c \
 	complex.c  \
+	hbmain.c \
 
-
-C_MAIN=harbour.c
-
-LIBS=\
-	pp     \
-	common \
-
-include $(TOP)$(ROOT)config/bin.cf
+LIBNAME=compiler
+include $(TOP)$(ROOT)config/lib.cf

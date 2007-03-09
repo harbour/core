@@ -4277,30 +4277,30 @@ yyreduce:
 
   case 57:
 #line 348 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 58:
 #line 349 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 59:
 #line 350 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 60:
 #line 351 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 61:
 #line 352 "harbour.y"
     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
-                                         hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                                         HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) );
                                       else
-                                         hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ), HB_COMP_PARAM );
+                                         HB_COMP_EXPR_DELETE( HB_COMP_ERROR_SYNTAX( (yyvsp[(1) - (2)].asExpr) ) );
                                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                     ;}
     break;
@@ -4308,46 +4308,46 @@ yyreduce:
   case 62:
 #line 358 "harbour.y"
     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
-                                         hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                                         HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) );
                                       else
-                                         hb_compExprDelete( hb_compErrorSyntax( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ), HB_COMP_PARAM );
+                                         HB_COMP_EXPR_DELETE( HB_COMP_ERROR_SYNTAX( (yyvsp[(1) - (2)].asExpr) ) );
                                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                                     ;}
     break;
 
   case 63:
 #line 364 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 64:
 #line 365 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 65:
 #line 366 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 66:
 #line 367 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 67:
 #line 368 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 68:
 #line 369 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 69:
 #line 370 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 70:
@@ -4364,7 +4364,7 @@ yyreduce:
   case 72:
 #line 374 "harbour.y"
     {
-                                       hb_compGenBreak( HB_COMP_PARAM ); hb_compExprDelete( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                                       hb_compGenBreak( HB_COMP_PARAM ); HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                                        hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
                                        HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE;
                                     ;}
@@ -4411,7 +4411,7 @@ yyreduce:
                         {
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        hb_compExprDelete( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );   /* TODO: check if return value agree with declared value */
+                        HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );   /* TODO: check if return value agree with declared value */
                         hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
                         if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
@@ -4751,67 +4751,67 @@ yyreduce:
 
   case 161:
 #line 638 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 162:
 #line 639 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 163:
 #line 640 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 164:
 #line 641 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 165:
 #line 642 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 166:
 #line 643 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 167:
 #line 644 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 168:
 #line 645 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 169:
 #line 646 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 170:
 #line 647 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 171:
 #line 648 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 172:
 #line 649 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 173:
 #line 650 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 174:
@@ -4841,62 +4841,62 @@ yyreduce:
 
   case 181:
 #line 662 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 182:
 #line 663 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 183:
 #line 664 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 184:
 #line 665 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 185:
 #line 666 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 186:
 #line 667 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 187:
 #line 668 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 188:
 #line 669 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 189:
 #line 670 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 190:
 #line 671 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 191:
 #line 672 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 192:
 #line 673 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
   case 193:
@@ -4941,7 +4941,7 @@ yyreduce:
 
   case 201:
 #line 690 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 202:
@@ -5647,7 +5647,7 @@ yyreduce:
 
   case 416:
 #line 1049 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenPush( (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+    { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ) );
                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[(1) - (4)].asExpr), HB_COMP_PARAM ), TRUE );
                ;}
     break;
@@ -5656,7 +5656,7 @@ yyreduce:
 #line 1053 "harbour.y"
     {
                   USHORT uCount = (USHORT) hb_compExprListLen( (yyvsp[(2) - (2)].asExpr) );
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) );
                   hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
                   hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), TRUE );
                ;}
@@ -5666,7 +5666,7 @@ yyreduce:
 #line 1060 "harbour.y"
     {
                   USHORT uCount = (USHORT) hb_compExprListLen( (yyvsp[(2) - (3)].asExpr) );
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
                   hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
                   hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), TRUE );
                ;}
@@ -5715,18 +5715,18 @@ yyreduce:
                   if( HB_COMP_PARAM->iVarScope == VS_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( (yyvsp[(1) - (6)].string), HB_COMP_PARAM ), (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     HB_COMP_EXPR_DELETE( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( (yyvsp[(1) - (6)].string), HB_COMP_PARAM ), (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
                      hb_compStaticDefEnd( HB_COMP_PARAM );
                      hb_compGenStaticName( (yyvsp[(1) - (6)].string), HB_COMP_PARAM );
                   }
                   else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
                   {
-                     hb_compExprDelete( hb_compExprGenPush( (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ) );
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( (yyvsp[(1) - (6)].string), NULL, HB_COMP_PARAM ), TRUE );
                   }
                   else
                   {
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( (yyvsp[(1) - (6)].string), HB_COMP_PARAM ), (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     HB_COMP_EXPR_DELETE( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( (yyvsp[(1) - (6)].string), HB_COMP_PARAM ), (yyvsp[(6) - (6)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
                   HB_COMP_PARAM->iVarScope = (yyvsp[(3) - (6)].iNumber);
                ;}
@@ -5955,7 +5955,7 @@ yyreduce:
 
   case 463:
 #line 1268 "harbour.y"
-    { hb_compExprDelete( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (1)].asExpr) ); ;}
     break;
 
   case 464:
@@ -6045,7 +6045,7 @@ yyreduce:
 
   case 489:
 #line 1306 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenPush( (yyvsp[(2) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ); (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); ;}
+    { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (4)].asExpr), HB_COMP_PARAM ) ); (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); ;}
     break;
 
   case 490:
@@ -6065,7 +6065,7 @@ yyreduce:
 
   case 494:
 #line 1317 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+    { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 ;}
     break;
@@ -6084,7 +6084,7 @@ yyreduce:
 
   case 497:
 #line 1327 "harbour.y"
-    { hb_compExprDelete( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+    { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 ;}
     break;
@@ -6159,7 +6159,7 @@ yyreduce:
   case 512:
 #line 1386 "harbour.y"
     {
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                ;}
     break;
@@ -6181,7 +6181,7 @@ yyreduce:
   case 515:
 #line 1398 "harbour.y"
     {
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                ;}
     break;
@@ -6213,7 +6213,7 @@ yyreduce:
   case 522:
 #line 1417 "harbour.y"
     {
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
                   (yyval.lNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                ;}
     break;
@@ -6295,9 +6295,9 @@ yyreduce:
 
                   iSign = (yyvsp[(8) - (12)].asExpr) ? hb_compExprAsNumSign( (yyvsp[(8) - (12)].asExpr) ) : 1;
                   if( (yyvsp[(8) - (12)].asExpr) )
-                     hb_compExprClear( hb_compExprGenPush( hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), (yyvsp[(8) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), (yyvsp[(8) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   else
-                     hb_compExprClear( hb_compExprGenPush( hb_compExprNewPreInc( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+                     HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[(9) - (12)].lNumber), HB_COMP_PARAM );
                   hb_compExprGenPush( (yyvsp[(7) - (12)].asExpr), HB_COMP_PARAM );              /* end */
                   if( iSign )
@@ -6312,10 +6312,10 @@ yyreduce:
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) );
-                  hb_compExprDelete( (yyvsp[(7) - (12)].asExpr), HB_COMP_PARAM );
-                  hb_compExprDelete( (yyvsp[(5) - (12)].asExpr), HB_COMP_PARAM ); /* deletes $5, $2, $4 */
+                  HB_COMP_EXPR_DELETE( (yyvsp[(7) - (12)].asExpr) );
+                  HB_COMP_EXPR_DELETE( (yyvsp[(5) - (12)].asExpr) );  /* deletes $5, $2, $4 */
                   if( (yyvsp[(8) - (12)].asExpr) )
-                     hb_compExprDelete( (yyvsp[(8) - (12)].asExpr), HB_COMP_PARAM );
+                     HB_COMP_EXPR_DELETE( (yyvsp[(8) - (12)].asExpr) );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                ;}
     break;
@@ -6434,8 +6434,8 @@ yyreduce:
                 hb_compLoopEnd( HB_COMP_PARAM );
                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                 hb_compEnumEnd( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr) );
-                hb_compExprDelete( (yyvsp[(2) - (10)].asExpr), HB_COMP_PARAM );
-                hb_compExprDelete( (yyvsp[(4) - (10)].asExpr), HB_COMP_PARAM );
+                HB_COMP_EXPR_DELETE( (yyvsp[(2) - (10)].asExpr) );
+                HB_COMP_EXPR_DELETE( (yyvsp[(4) - (10)].asExpr) );
              ;}
     break;
 
@@ -6491,7 +6491,7 @@ yyreduce:
   case 559:
 #line 1612 "harbour.y"
     {
-                 hb_compExprDelete( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                 HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
               ;}
     break;
 
@@ -6699,7 +6699,7 @@ yyreduce:
 #line 1778 "harbour.y"
     {
                   hb_compLinePushIfInside( HB_COMP_PARAM );
-                  hb_compExprDelete( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
                   hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
                   HB_COMP_PARAM->wWithObjectCnt++;
@@ -7257,9 +7257,9 @@ static void hb_compRTVariableGen( HB_COMP_DECL, char * szCreateFun )
    while( pVar )
    {
       if( pVar->bPopValue )
-         hb_compExprDelete( hb_compExprGenPop( pVar->pVar, HB_COMP_PARAM ), HB_COMP_PARAM );
+         HB_COMP_EXPR_DELETE( hb_compExprGenPop( pVar->pVar, HB_COMP_PARAM ) );
       else
-         hb_compExprDelete( pVar->pVar, HB_COMP_PARAM );
+         HB_COMP_EXPR_DELETE( pVar->pVar );
       pDel = pVar;
       pVar = pVar->pPrev;
       hb_xfree( pDel );
@@ -7275,7 +7275,7 @@ void hb_compRTVariableKill( HB_COMP_DECL )
    {
       pVar = HB_COMP_PARAM->rtvars;
 
-      hb_compExprDelete( pVar->pVar, HB_COMP_PARAM );
+      HB_COMP_EXPR_DELETE( pVar->pVar );
       HB_COMP_PARAM->rtvars = pVar->pPrev;
       hb_xfree( pVar );
    }
@@ -7288,7 +7288,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
   {
      USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
-     hb_compExprDelete( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ), HB_COMP_PARAM );
+     HB_COMP_EXPR_DELETE( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ) );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
   }
@@ -7309,7 +7309,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
      /* now pop an array */
      hb_compExprGenPop( pVar, HB_COMP_PARAM );
      /* delete all used expressions */
-     hb_compExprDelete( pAssign, HB_COMP_PARAM );
+     HB_COMP_EXPR_DELETE( pAssign );
      hb_compStaticDefEnd( HB_COMP_PARAM );
   }
   else
@@ -7317,9 +7317,9 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
      USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
 
      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
-     hb_compExprDelete( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ), HB_COMP_PARAM );
+     HB_COMP_EXPR_DELETE( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ) );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-     hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ), HB_COMP_PARAM );
+     HB_COMP_EXPR_DELETE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
   }
 }
 
@@ -7561,12 +7561,12 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       {
          if( hb_compExprIsLong(pCase->pExpr) || hb_compExprIsString(pCase->pExpr) )
          {
-            hb_compExprDelete( hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM ), HB_COMP_PARAM );
+            HB_COMP_EXPR_DELETE( hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM ) );
             hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ), pCase->ulOffset, HB_COMP_PARAM );
          }
          else
          {
-            hb_compExprDelete( pCase->pExpr, HB_COMP_PARAM );
+            HB_COMP_EXPR_DELETE( pCase->pExpr );
          }
       }
       pCase = pCase->pNext;
@@ -7610,7 +7610,7 @@ void hb_compSwitchKill( HB_COMP_DECL )
       while( HB_COMP_PARAM->pSwitch->pCases )
       {
          pCase = HB_COMP_PARAM->pSwitch->pCases;
-         hb_compExprDelete( pCase->pExpr, HB_COMP_PARAM );
+         HB_COMP_EXPR_DELETE( pCase->pExpr );
          HB_COMP_PARAM->pSwitch->pCases = pCase->pNext;
          hb_xfree( (void *) pCase );
       }
@@ -7632,12 +7632,12 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          if( pExpr->value.asFunCall.pFunName->ExprType == HB_ET_MACRO )
          {
             pExpr = pExpr->value.asFunCall.pFunName;
-            hb_compExprClear( pDelExpr, HB_COMP_PARAM );
+            HB_COMP_EXPR_CLEAR( pDelExpr );
          }
          else
          {
             pExpr = hb_compExprNewFunRef( hb_compExprAsSymbol( pExpr ), HB_COMP_PARAM );
-            hb_compExprDelete( pDelExpr, HB_COMP_PARAM );
+            HB_COMP_EXPR_DELETE( pDelExpr );
          }
          return pExpr;
       }
@@ -7649,7 +7649,7 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    {
       HB_EXPR_PTR pDelExpr = pExpr;
       pExpr = pExpr->value.asReference;
-      hb_compExprClear( pDelExpr, HB_COMP_PARAM );
+      HB_COMP_EXPR_CLEAR( pDelExpr );
    }
 
    szDesc = hb_compExprAsSymbol( pExpr );

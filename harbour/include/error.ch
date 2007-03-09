@@ -136,4 +136,7 @@
 #define HB_EI_XREALLOCNULLSIZE  9024 /* "hb_xrealloc requested to resize to zero byte" */
 #define HB_EI_XALLOCNULLSIZE    9025 /* "hb_xalloc requested to allocate zero byte" */
 
+#define HB_EI_COMPBADOPCODE     9100 /* "Unsupported VM opcode" */
+#define HB_EI_COMPBADOPSIZE     9101 /* "Invalid opcode size" */
+
 #endif /* _ERROR_CH */

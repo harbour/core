@@ -188,13 +188,6 @@ HB_EXPR_PTR hb_compErrorLValue( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
-{
-   const char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_TYPE, szDesc, NULL );
-   return pExpr;
-}
-
 HB_EXPR_PTR hb_compErrorIndex( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
@@ -206,13 +199,6 @@ HB_EXPR_PTR hb_compErrorBound( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_BOUND, szDesc, NULL );
-   return pExpr;
-}
-
-HB_EXPR_PTR hb_compErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
-{
-   const char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, szDesc, NULL );
    return pExpr;
 }
 
@@ -228,11 +214,6 @@ HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char * szVarName, HB_EXPR_PT
    const char * szDesc = hb_compExprDescription( pExpr );
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, szVarName, szDesc );
    return pExpr;
-}
-
-void hb_compErrorDuplVar( HB_COMP_DECL, const char * szVarName )
-{
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_VAR_DUPL, szVarName, NULL );
 }
 
 HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR pExpr )

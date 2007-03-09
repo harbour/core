@@ -8,6 +8,46 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-09 04:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/bin/hb-func.sh
+  * harbour/config/global.cf
+  * harbour/include/error.ch
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  - harbour/include/hbexprc.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbmacro.h
+  * harbour/source/Makefile
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/Makefile
+  - harbour/source/compiler/exproptc.c
+  - harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbgenerr.c
+  + harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/macro/Makefile
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  - harbour/source/macro/macroc.c
+  + harbour/source/main/Makefile
+  + harbour/source/main/harbour.c
+  * harbour/source/vm/macro.c
+    * resolved name conflicts between compiler and macro compiler.
+      Now new compiler library is created.
+      There are some things which can be improved and cleaned yet
+      but it's enough to create single binaries with compiler+HVM+RTLs.
+      I updated non GNU make files but I cannot tested the modifications
+      - please check and fix me if necessary
+
 2007-03-05 23:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/include/hbexprb.c

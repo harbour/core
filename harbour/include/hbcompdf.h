@@ -464,6 +464,8 @@ typedef struct _HB_LABEL_INFO
 #define HB_MODE_COMPILER      1
 #define HB_MODE_MACRO         2
 
+struct _HB_COMP_FUNCS;
+
 #if defined( HB_COMMON_SUPPORT )
 
 typedef struct _HB_COMMON
@@ -471,6 +473,7 @@ typedef struct _HB_COMMON
    /* common to macro compiler members */
    int    mode;               /* HB_MODE_* */
    ULONG  supported;          /* various flags for supported capabilities */
+   const struct _HB_COMP_FUNCS * funcs;
 }
 HB_COMMON, * HB_COMMON_PTR;
 
@@ -497,6 +500,7 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    /* common to compiler members */
    int    mode;
    ULONG  supported;       /* various flags for supported capabilities */
+   const struct _HB_COMP_FUNCS * funcs;
 
    /* macro compiler only members */
    char * string;          /* compiled string */
@@ -540,6 +544,7 @@ typedef struct _HB_COMP
    /* common to macro compiler members */
    int    mode;
    ULONG  supported;       /* various flags for supported capabilities */
+   const struct _HB_COMP_FUNCS * funcs;
 
    /* compiler only members */
    PHB_COMP_LEX      pLex;
@@ -636,6 +641,19 @@ extern HB_COMP_PTR hb_comp_new( void );
 extern void hb_comp_free( HB_COMP_PTR );
 
 #endif /* !HB_MACRO_SUPPORT  */
+
+typedef struct _HB_COMP_FUNCS
+{
+   HB_EXPR_PTR ( * ExprNew )        ( HB_COMP_DECL, HB_EXPRTYPE iType );
+   void        ( * ExprClear )      ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+   void        ( * ExprFree )       ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+   void        ( * ExprDelete )     ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+
+   HB_EXPR_PTR ( * ErrorType )      ( HB_COMP_DECL, HB_EXPR_PTR );
+   HB_EXPR_PTR ( * ErrorSyntax )    ( HB_COMP_DECL, HB_EXPR_PTR );
+   void        ( * ErrorDuplVar )   ( HB_COMP_DECL, const char* );
+} HB_COMP_FUNCS, * PHB_COMP_FUNCS;
+
 
 #define HB_MACRO_DATA         HB_COMP_PARAM
 #define HB_PCODE_DATA         ( HB_MACRO_DATA->pCodeInfo )

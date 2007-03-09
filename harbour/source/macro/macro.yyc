@@ -2022,10 +2022,10 @@ yyreduce:
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (2)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM );
+                              hb_macroExprGenPush( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         ;}
     break;
 
@@ -2034,10 +2034,10 @@ yyreduce:
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (1)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
+                              hb_macroExprGenPush( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         ;}
     break;
 
@@ -2046,10 +2046,10 @@ yyreduce:
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[(1) - (1)].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
+                              hb_macroExprGenPush( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         ;}
     break;
 
@@ -2361,14 +2361,14 @@ yyreduce:
 
   case 63:
 #line 427 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( (yyvsp[(1) - (4)].string), HB_COMP_PARAM ), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
+    { (yyval.asExpr) = hb_macroExprNewFunCall( hb_compExprNewFunName( (yyvsp[(1) - (4)].string), HB_COMP_PARAM ), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
                                             HB_MACRO_CHECK( (yyval.asExpr) );
                                           ;}
     break;
 
   case 64:
 #line 430 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[(1) - (4)].asExpr), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
+    { (yyval.asExpr) = hb_macroExprNewFunCall( (yyvsp[(1) - (4)].asExpr), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
                                              HB_MACRO_CHECK( (yyval.asExpr) );
                                           ;}
     break;
@@ -2405,17 +2405,17 @@ yyreduce:
 
   case 73:
 #line 453 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].string), NULL, HB_COMP_PARAM ); ;}
     break;
 
   case 74:
 #line 454 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 75:
 #line 455 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 76:
@@ -2741,17 +2741,17 @@ yyreduce:
 
   case 193:
 #line 646 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(0) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[(0) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 194:
 #line 647 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 195:
 #line 648 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[(1) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 196:
@@ -3083,7 +3083,7 @@ HB_MIDENT, * HB_MIDENT_PTR;
 /* Allocates memory for Expression holder structure and stores it
  * on the linked list
 */
-HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL )
+static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 {
    HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
    pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
@@ -3099,6 +3099,54 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
    HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
 }
 
+static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType));
+
+   pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
+   pExpr->ExprType = iType;
+   pExpr->pNext    = NULL;
+   pExpr->ValType  = HB_EV_UNKNOWN;
+   pExpr->Counter  = 1;
+
+   return pExpr;
+}
+
+/* Delete self - all components will be deleted somewhere else
+ */
+static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+   if( --pExpr->Counter == 0 )
+      pExpr->ExprType = HB_ET_NONE;
+}
+
+/* Delete all components and delete self
+ */
+static void hb_macroExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprDelete(%p,%p)", HB_COMP_PARAM, pExpr));
+   if( pExpr && --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      pExpr->ExprType = HB_ET_NONE;
+   }
+}
+
+/* Delete all components and delete self
+ */
+static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprFree()"));
+   if( --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      pExpr->ExprType = HB_ET_NONE;
+   }
+}
+
 /* Deallocate all memory used by expression optimizer */
 static void hb_macroLstFree( HB_MACRO_PTR pMacro )
 {
@@ -3107,7 +3155,7 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
       HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) pMacro->pExprLst;
       do
       {
-         hb_compExprDelete( &pMExpr->Expression, pMacro );
+         hb_macroExprDelete( pMacro, &pMExpr->Expression );
          pMExpr = pMExpr->pPrev;
       }
       while( pMExpr );
@@ -3129,9 +3177,42 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
    }
 }
 
+static HB_EXPR_PTR hb_macroErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   hb_macroError( EG_ARG, HB_COMP_PARAM );
+   return pExpr;
+}
+
+static HB_EXPR_PTR hb_macroErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
+   return pExpr;
+}
+
+static void hb_macroErrorDuplVar( HB_COMP_DECL, const char * szVarName )
+{
+   HB_SYMBOL_UNUSED( szVarName );
+   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
+}
+
+
+static const HB_COMP_FUNCS s_macro_funcs =
+{
+   hb_macroExprNew,
+   hb_macroExprClear,
+   hb_macroExprFree,
+   hb_macroExprDelete,
+
+   hb_macroErrorType,
+   hb_macroErrorSyntax,
+   hb_macroErrorDuplVar,
+};
+
 int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
    int iResult;
+
+   pMacro->funcs = &s_macro_funcs;
 
    if( hb_macroLexNew( pMacro ) )
    {

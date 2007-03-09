@@ -231,7 +231,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 # Helper targets
 #
 
-BasicLibs : $(COMMON_LIB) $(PP_LIB)
+BasicLibs : $(COMMON_LIB) $(COMPILER_LIB) $(PP_LIB)
 BasicExes : $(HARBOUR_EXE)
 StdLibs   : $(STANDARD_STATIC_HBLIBS)
 
@@ -298,6 +298,13 @@ $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
 $(PP_LIB)       : $(PP_LIB_OBJS)
     IF EXIST "$(PP_LIB)" $(DEL) "$(PP_LIB)" > NUL
     $(MKLIB) "$(PP_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
+$(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
+    IF EXIST "$(COMPILER_LIB)" $(DEL) "$(COMPILER_LIB)" > NUL
+    $(MKLIB) "$(COMPILER_LIB)" $(ARFLAGS) @&&!
 +$(**: = &^
 +)
 !
@@ -469,6 +476,7 @@ $(CFLAGS)
 -e$(HARBOUR_EXE)
 $(**: = ^
 )
+$(COMPILER_LIB)
 $(COMMON_LIB)
 $(PP_LIB)
 !

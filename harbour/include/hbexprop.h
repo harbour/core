@@ -64,11 +64,6 @@ HB_EXTERN_BEGIN
 typedef  HB_EXPR_FUNC( HB_EXPR_FUNC_ );
 typedef  HB_EXPR_FUNC_ *HB_EXPR_FUNC_PTR;
 
-extern const HB_EXPR_FUNC_PTR hb_comp_ExprTable[];
-
-#define  HB_EXPR_USE( pSelf, iMessage )  \
-         hb_comp_ExprTable[ (pSelf)->ExprType ]( (pSelf), (iMessage), HB_COMP_PARAM )
-
 typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DECL );
 #define HB_EXPR_PCODE0( action ) action( HB_COMP_PARAM )
 #define HB_EXPR_PCODE1( action, p1 ) action( (p1), HB_COMP_PARAM )
@@ -76,13 +71,16 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DE
 #define HB_EXPR_PCODE3( action, p1, p2, p3 ) action( (p1), (p2), (p3), HB_COMP_PARAM )
 #define HB_EXPR_PCODE4( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), HB_COMP_PARAM )
 
-#ifdef HB_MACRO_SUPPORT
-extern HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL );
-#else
-extern void        hb_compExprLstDealloc( HB_COMP_DECL );
+#if defined( HB_MACRO_SUPPORT )
+#define hb_comp_ExprTable     hb_macro_ExprTable
 #endif
 
-extern HB_EXPR_PTR hb_compExprNew( HB_EXPRTYPE, HB_COMP_DECL );
+#if !defined( HB_COMMON_SUPPORT )
+extern const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ];
+#define  HB_EXPR_USE( pSelf, iMessage )  \
+         hb_comp_ExprTable[ (pSelf)->ExprType ]( (pSelf), (iMessage), HB_COMP_PARAM )
+#endif
+
 extern HB_EXPR_PTR hb_compExprNewEmpty( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewNil( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDouble( double, BYTE, BYTE, HB_COMP_DECL );
@@ -142,6 +140,7 @@ extern HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE, HB_COMP_DECL );
+extern void hb_compExprCBVarDel( HB_CBVAR_PTR );
 extern HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR );
@@ -153,7 +152,7 @@ extern ULONG hb_compExprListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprParamListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprMacroListLen( HB_EXPR_PTR );
 extern ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR );
-extern void hb_compExprClear( HB_EXPR_PTR, HB_COMP_DECL );
+
 extern const char * hb_compExprDescription( HB_EXPR_PTR );
 extern int hb_compExprType( HB_EXPR_PTR );
 extern int hb_compExprIsInteger( HB_EXPR_PTR );
@@ -165,30 +164,13 @@ extern int hb_compExprAsStringLen( HB_EXPR_PTR );
 extern char * hb_compExprAsString( HB_EXPR_PTR );
 extern char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
-extern void hb_compExprFree( HB_EXPR_PTR, HB_COMP_DECL );
-extern void hb_compExprErrorType( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR, HB_COMP_DECL );
-extern void hb_compExprCBVarDel( HB_CBVAR_PTR );
 extern BOOL hb_compExprIsValidMacro( char *, ULONG, BOOL *, HB_COMP_DECL );
-extern void hb_compExprDelete( HB_EXPR_PTR, HB_COMP_DECL );
+
 extern HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr, HB_COMP_DECL );
 
 extern void hb_compExprDelOperator( HB_EXPR_PTR, HB_COMP_DECL );
-extern void hb_compExprUseOperEq( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-extern void hb_compExprPushPreOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-extern void hb_compExprPushPostOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-extern void hb_compExprUsePreOp( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-extern void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL );
-extern void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL );
-extern void hb_compExprPushSendPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
-extern void hb_compExprUseAliasMacro( HB_EXPR_PTR, BYTE, HB_COMP_DECL );
-
-extern HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR, HB_COMP_DECL );
-extern ULONG hb_compExprReduceList( HB_EXPR_PTR, HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL );

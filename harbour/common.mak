@@ -37,7 +37,9 @@ HB_DEST_DIRS = \
     $(DLL_ROOTDIR)  \
     $(DLL_OBJ_DIR)
 
+MAIN_DIR     = source\main
 COMMON_DIR   = source\common
+COMPILER_DIR = source\compiler
 PP_DIR       = source\pp
 VM_DIR       = source\vm
 RTL_DIR      = source\rtl
@@ -80,7 +82,9 @@ HBPDF_DIR   = contrib\pdflib
 # Where Bcc-Make should look for C and PRG sources
 ALL_LIB_SRC_DIRS_TMP=\
 $(OBJ_DIR);\
+$(MAIN_DIR);\
 $(COMMON_DIR);\
+$(COMPILER_DIR);\
 $(PP_DIR);\
 $(VM_DIR);\
 $(RTL_DIR);\
@@ -130,6 +134,7 @@ ALL_SRC_DIRS     = $(ALL_SRC_DIRS_TMP: =)
 #
 
 COMMON_LIB   = $(LIB_DIR)\common.lib
+COMPILER_LIB = $(LIB_DIR)\compiler.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
@@ -242,6 +247,35 @@ PP_LIB_OBJS = \
     $(OBJ_DIR)\pplib.obj   \
     $(OBJ_DIR)\pplib2.obj   \
     $(OBJ_DIR)\pplib3.obj   \
+
+#**********************************************************
+
+COMPILER_LIB_OBJS = \
+    $(OBJ_DIR)\hbmain.obj   \
+    $(OBJ_DIR)\harboury.obj \
+    $(OBJ_DIR)\complex.obj  \
+    $(OBJ_DIR)\cmdcheck.obj \
+    $(OBJ_DIR)\hbcomp.obj   \
+    $(OBJ_DIR)\hbdead.obj   \
+    $(OBJ_DIR)\hbstripl.obj \
+    $(OBJ_DIR)\hbusage.obj  \
+    $(OBJ_DIR)\hbident.obj  \
+    $(OBJ_DIR)\hbgenerr.obj \
+    $(OBJ_DIR)\hblbl.obj    \
+    $(OBJ_DIR)\hbpcode.obj  \
+    $(OBJ_DIR)\hbfunchk.obj \
+    $(OBJ_DIR)\hbfix.obj    \
+    $(OBJ_DIR)\hbopt.obj    \
+    $(OBJ_DIR)\ppcomp.obj   \
+    $(OBJ_DIR)\genc.obj     \
+    $(OBJ_DIR)\gencc.obj    \
+    $(OBJ_DIR)\gencli.obj   \
+    $(OBJ_DIR)\gencobj.obj  \
+    $(OBJ_DIR)\genobj32.obj \
+    $(OBJ_DIR)\genjava.obj  \
+    $(OBJ_DIR)\genhrb.obj   \
+    $(OBJ_DIR)\expropta.obj \
+    $(OBJ_DIR)\exproptb.obj \
 
 #**********************************************************
 
@@ -488,7 +522,6 @@ MACRO_LIB_OBJS = \
     $(OBJ_DIR)\macroy.obj   \
     $(OBJ_DIR)\macroa.obj   \
     $(OBJ_DIR)\macrob.obj   \
-    $(OBJ_DIR)\macroc.obj   \
     $(OBJ_DIR)\macrolex.obj \
 
 #**********************************************************
@@ -739,31 +772,6 @@ GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
 
 HARBOUR_EXE_OBJS = \
     $(OBJ_DIR)\harbour.obj  \
-    $(OBJ_DIR)\harboury.obj \
-    $(OBJ_DIR)\complex.obj  \
-    $(OBJ_DIR)\cmdcheck.obj \
-    $(OBJ_DIR)\hbcomp.obj   \
-    $(OBJ_DIR)\hbdead.obj   \
-    $(OBJ_DIR)\hbstripl.obj \
-    $(OBJ_DIR)\hbusage.obj  \
-    $(OBJ_DIR)\hbident.obj  \
-    $(OBJ_DIR)\hbgenerr.obj \
-    $(OBJ_DIR)\hblbl.obj    \
-    $(OBJ_DIR)\hbpcode.obj  \
-    $(OBJ_DIR)\hbfunchk.obj \
-    $(OBJ_DIR)\hbfix.obj    \
-    $(OBJ_DIR)\hbopt.obj    \
-    $(OBJ_DIR)\ppcomp.obj   \
-    $(OBJ_DIR)\genc.obj     \
-    $(OBJ_DIR)\gencc.obj    \
-    $(OBJ_DIR)\gencli.obj   \
-    $(OBJ_DIR)\gencobj.obj  \
-    $(OBJ_DIR)\genobj32.obj \
-    $(OBJ_DIR)\genjava.obj  \
-    $(OBJ_DIR)\genhrb.obj   \
-    $(OBJ_DIR)\expropta.obj \
-    $(OBJ_DIR)\exproptb.obj \
-    $(OBJ_DIR)\exproptc.obj \
 
 #**********************************************************
 
@@ -907,6 +915,7 @@ HB_BUILD_TARGETS = \
     $(HBPPGEN_EXE)          \
     $(PP_LIB)               \
     \
+    $(COMPILER_LIB)         \
     $(HARBOUR_EXE)          \
     $(HBPP_EXE)             \
     \

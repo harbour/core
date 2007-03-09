@@ -544,7 +544,9 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
 
          if( ulSkip == 0 )
          {
-            fprintf( hb_comp_errFile, "--- Invalid (zero) opcode %i size in hb_compPCodeEval() ---\n", opcode );
+            char szOpcode[ 16 ];
+            snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
+            hb_errInternal( HB_EI_COMPBADOPSIZE, "Invalid (zero) opcode %s size in hb_compPCodeEval()", szOpcode, NULL );
             ++ulPos;
          }
 #if 0
@@ -555,15 +557,18 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
           */
          if( hb_comp_pcode_len[ opcode ] != 0 && hb_comp_pcode_len[ opcode ] != ulSkip )
          {
-            fprintf( stderr, "Wrong PCODE (%d) size (%ld!=%d)\n", opcode, ulSkip, hb_comp_pcode_len[ opcode ] );
-            fflush(stderr);
+            char szMsg[ 100 ];
+            snprintf( szMsg, sizeof( szMsg ), "Wrong PCODE (%d) size (%ld!=%d)", opcode, ulSkip, hb_comp_pcode_len[ opcode ] );
+            hb_errInternal( HB_EI_COMPBADOPSIZE, szMsg, NULL, NULL );
          }
 #endif
          ulPos += ulSkip;
       }
       else
       {
-         fprintf( hb_comp_errFile, "--- Invalid opcode %i in hb_compPCodeEval() ---\n", opcode );
+         char szOpcode[ 16 ];
+         snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
+         hb_errInternal( HB_EI_COMPBADOPCODE, "Invalid opcode: %s in hb_compPCodeEval()", szOpcode, NULL );
          ++ulPos;
       }
    }
@@ -591,7 +596,9 @@ void hb_compPCodeTrace( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * 
       }
       else
       {
-         fprintf( hb_comp_errFile, "--- Invalid opcode %i in hb_compPCodeTrace() ---\n", opcode );
+         char szOpcode[ 16 ];
+         snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
+         hb_errInternal( HB_EI_COMPBADOPCODE, "Invalid opcode: %s in hb_compPCodeTrace()", szOpcode, NULL );
          ++ulPos;
       }
    }

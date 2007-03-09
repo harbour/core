@@ -27,6 +27,7 @@ DIRS=\
 	common \
 	pp \
 	compiler \
+	main \
 	rtl \
 	vm \
 	macro \

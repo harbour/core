@@ -238,27 +238,27 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 Main : Expression '\n'  {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( $1, HB_COMP_PARAM );
+                              hb_macroExprGenPush( $1, HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( $1, HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( $1, HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
 
      | Expression       {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( $1, HB_COMP_PARAM );
+                              hb_macroExprGenPush( $1, HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( $1, HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( $1, HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
      | AsParamList      {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
-                              hb_compExprGenPush( $1, HB_COMP_PARAM );
+                              hb_macroExprGenPush( $1, HB_COMP_PARAM );
                            else
-                              hb_compExprGenPop( $1, HB_COMP_PARAM );
-                           hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+                              hb_macroExprGenPop( $1, HB_COMP_PARAM );
+                           hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
      | Expression error {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
@@ -424,10 +424,10 @@ VariableAt  : NumValue      ArrayIndex    { $$ = $2; }
 
 /* Function call
  */
-FunCall     : IDENTIFIER '(' ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM );
+FunCall     : IDENTIFIER '(' ArgList ')'  { $$ = hb_macroExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $3, HB_COMP_PARAM );
                                             HB_MACRO_CHECK( $$ );
                                           }
-            | MacroVar '(' ArgList ')'    { $$ = hb_compExprNewFunCall( $1, $3, HB_COMP_PARAM );
+            | MacroVar '(' ArgList ')'    { $$ = hb_macroExprNewFunCall( $1, $3, HB_COMP_PARAM );
                                              HB_MACRO_CHECK( $$ );
                                           }
             ;
@@ -450,9 +450,9 @@ ExtArgument : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }
 
 /* Object's instance variable
  */
-ObjectData  : LeftExpression ':' IDENTIFIER  { $$ = hb_compExprNewSend( $1, $3, NULL, HB_COMP_PARAM ); }
-            | LeftExpression ':' MacroVar    { $$ = hb_compExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
-            | LeftExpression ':' MacroExpr   { $$ = hb_compExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
+ObjectData  : LeftExpression ':' IDENTIFIER  { $$ = hb_macroExprNewSend( $1, $3, NULL, HB_COMP_PARAM ); }
+            | LeftExpression ':' MacroVar    { $$ = hb_macroExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
+            | LeftExpression ':' MacroExpr   { $$ = hb_macroExprNewSend( $1, NULL, $3, HB_COMP_PARAM ); }
             ;
 
 /* Object's method
@@ -643,9 +643,9 @@ ArrayIndex  : IndexList ']'
 /* NOTE: $0 represents the expression before ArrayIndex
  *    Don't use ArrayIndex in other context than as an array index!
  */
-IndexList   : '[' ExtExpression                 { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
-            | IndexList ',' ExtExpression       { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
-            | IndexList ']' '[' ExtExpression   { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
+IndexList   : '[' ExtExpression                 { $$ = hb_macroExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
+            | IndexList ',' ExtExpression       { $$ = hb_macroExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
+            | IndexList ']' '[' ExtExpression   { $$ = hb_macroExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
             ;
 
 ElemList    : ExtArgument              { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
@@ -728,7 +728,7 @@ HB_MIDENT, * HB_MIDENT_PTR;
 /* Allocates memory for Expression holder structure and stores it
  * on the linked list
 */
-HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL )
+static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 {
    HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
    pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
@@ -744,6 +744,54 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
    HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
 }
 
+static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType));
+
+   pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
+   pExpr->ExprType = iType;
+   pExpr->pNext    = NULL;
+   pExpr->ValType  = HB_EV_UNKNOWN;
+   pExpr->Counter  = 1;
+
+   return pExpr;
+}
+
+/* Delete self - all components will be deleted somewhere else
+ */
+static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+   if( --pExpr->Counter == 0 )
+      pExpr->ExprType = HB_ET_NONE;
+}
+
+/* Delete all components and delete self
+ */
+static void hb_macroExprDelete( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprDelete(%p,%p)", HB_COMP_PARAM, pExpr));
+   if( pExpr && --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      pExpr->ExprType = HB_ET_NONE;
+   }
+}
+
+/* Delete all components and delete self
+ */
+static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprFree()"));
+   if( --pExpr->Counter == 0 )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      pExpr->ExprType = HB_ET_NONE;
+   }
+}
+
 /* Deallocate all memory used by expression optimizer */
 static void hb_macroLstFree( HB_MACRO_PTR pMacro )
 {
@@ -752,7 +800,7 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
       HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) pMacro->pExprLst;
       do
       {
-         hb_compExprDelete( &pMExpr->Expression, pMacro );
+         hb_macroExprDelete( pMacro, &pMExpr->Expression );
          pMExpr = pMExpr->pPrev;
       }
       while( pMExpr );
@@ -774,9 +822,42 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
    }
 }
 
+static HB_EXPR_PTR hb_macroErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   hb_macroError( EG_ARG, HB_COMP_PARAM );
+   return pExpr;
+}
+
+static HB_EXPR_PTR hb_macroErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+{
+   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
+   return pExpr;
+}
+
+static void hb_macroErrorDuplVar( HB_COMP_DECL, const char * szVarName )
+{
+   HB_SYMBOL_UNUSED( szVarName );
+   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
+}
+
+
+static const HB_COMP_FUNCS s_macro_funcs =
+{
+   hb_macroExprNew,
+   hb_macroExprClear,
+   hb_macroExprFree,
+   hb_macroExprDelete,
+
+   hb_macroErrorType,
+   hb_macroErrorSyntax,
+   hb_macroErrorDuplVar,
+};
+
 int hb_macroYYParse( HB_MACRO_PTR pMacro )
 {
    int iResult;
+
+   pMacro->funcs = &s_macro_funcs;
 
    if( hb_macroLexNew( pMacro ) )
    {

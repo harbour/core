@@ -20,7 +20,7 @@ HB_DB_DRIVERS += $(HB_DB_DRVEXT)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)
-HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(HB_ARCH)
+HB_BIN_COMPILE := $(TOP)$(ROOT)source/main/$(HB_ARCH)
 endif
 
 ifeq ($(HB_INC_COMPILE),)

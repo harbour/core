@@ -174,7 +174,13 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 {$(OBJ_DIR)}.c{$(OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(MAIN_DIR)}.c{$(OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(COMMON_DIR)}.c{$(OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
+{$(COMPILER_DIR)}.c{$(OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
 {$(PP_DIR)}.c{$(OBJ_DIR)}.obj::
@@ -399,7 +405,13 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 {$(DLL_OBJ_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(MAIN_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(COMMON_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
+{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(PP_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
@@ -654,7 +666,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 # Helper targets - disabled for Msvc
 #
 
-#BasicLibs : $(COMMON_LIB) $(PP_LIB)
+#BasicLibs : $(COMMON_LIB) $(COMPILER_LIB) $(PP_LIB)
 #BasicExes : $(HARBOUR_EXE)
 #StdLibs   : $(STANDARD_STATIC_HBLIBS)
 
@@ -719,6 +731,9 @@ $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
+    $(MKLIB) /out:$@ $**
+#**********************************************************
+$(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
@@ -799,6 +814,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(COMMON_LIB)
+$(COMPILER_LIB)
 $(PP_LIB)
 <<
 #**********************************************************
