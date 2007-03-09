@@ -61,7 +61,6 @@
 
 #include "hbcomp.h"
 #include "hbhash.h"
-#include "hbmemory.ch"
 
 #if defined(HB_OS_DOS) && defined(__BORLANDC__)
    #include <limits.h>

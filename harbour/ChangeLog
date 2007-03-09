@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-09 13:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+    * removed #include "hbmemory.ch"
+  * harbour/source/main/harbour.c
+    * added #include "hbmemory.ch"
+
 2007-03-09 04:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/makefile.bc

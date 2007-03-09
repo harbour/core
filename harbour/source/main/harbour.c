@@ -51,6 +51,7 @@
  */
 
 #include "hbcomp.h"
+#include "hbmemory.ch"
 
 int main( int argc, char * argv[] )
 {
