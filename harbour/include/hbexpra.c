@@ -135,7 +135,29 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       iCount = ( int ) hb_compExprParamListLen( pParms );
 
       /* TODO: EMPTY() (not done by Clipper) */
-	if( iCount && strcmp( "EVAL", pName->value.asSymbol ) == 0 )
+	if( iCount == 0 )
+      {
+#if !defined( HB_MACRO_SUPPORT ) && defined( HB_COMPAT_XHB )
+         if( strcmp( "HB_ENUMINDEX", pName->value.asSymbol ) == 0 )
+         {
+            HB_ENUMERATOR_PTR pEnumVar;
+            pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
+            if( pEnumVar )
+            {
+               while( pEnumVar->pNext )
+                  pEnumVar = pEnumVar->pNext;
+
+               HB_COMP_EXPR_DELETE( pParms );
+               HB_COMP_EXPR_DELETE( pName ); 
+               return hb_compExprNewMethodCall( hb_compExprNewSend(
+                           hb_compExprNewVar( pEnumVar->szName, HB_COMP_PARAM ),
+                                 "__ENUMINDEX", NULL, HB_COMP_PARAM ), NULL );
+            }
+         }
+#endif
+      }
+      /* TODO: EMPTY() (not done by Clipper) */
+	else if( strcmp( "EVAL", pName->value.asSymbol ) == 0 )
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
@@ -153,7 +175,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_COMP_EXPR_DELETE( pName ); 
          return pEval;
       }
-      else if( iCount && strcmp( "_GET_", pName->value.asSymbol ) == 0 )
+      else if( strcmp( "_GET_", pName->value.asSymbol ) == 0 )
       {
          /* Reserved Clipper function used to handle GET variables
           */

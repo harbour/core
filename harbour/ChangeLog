@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-12 14:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+    * emulate xHarbour HB_ENUMINDEX() inside FOR EACH loop when
+      HB_COMPAT_XHB macro is set
+      It's only for compatibility - I strongly suggest to use
+            <unumvar>:__enumIndex()
+      which is more flexible and allow to chose the enumerator
+      variable not only the one from last loop
+
+  * harbour/include/hbexprb.c
+    * added comment removed from hbexpra.c
+
+  * harbour/source/compiler/hbmain.c
+    ! fixed GPF which can appear when -b option is used in line numbering
+      inside codeblocks
+
 2007-03-11 11:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/main/Makefile
     * Changed order of linked libraries for linkers with linear library

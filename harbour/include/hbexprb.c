@@ -1434,6 +1434,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             if( hb_compFunCallCheck( HB_COMP_PARAM, pName->value.asSymbol, usCount ) )
 #endif
             {
+               /* TODO: EMPTY() (not done by Clipper) */
                if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
                {
                   hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
