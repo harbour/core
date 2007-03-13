@@ -621,6 +621,43 @@ HB_EXPORT void * hb_parptr( int iParam, ... )
    return NULL;
 }
 
+HB_EXPORT void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d, ...)", pFunc, iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_POINTER( pItem ) )
+      {
+         if( pItem->item.asPointer.collect &&
+             hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+            return pItem->item.asPointer.value;
+      }
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
+         if( pItem && HB_IS_POINTER( pItem ) &&
+             pItem->item.asPointer.collect &&
+             hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+            return pItem->item.asPointer.value;
+      }
+   }
+
+   return NULL;
+}
+
 HB_EXPORT ULONG  hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
    PHB_ITEM pArray;

@@ -206,6 +206,12 @@ void hb_gcFree( void *pBlock )
    }
 }
 
+/* return cleanup function pointer */
+HB_GARBAGE_FUNC_PTR hb_gcFunc( void *pBlock )
+{
+   return HB_GC_PTR( pBlock )->pFunc;
+}
+
 /* increment reference counter */
 #undef hb_gcRefInc
 void hb_gcRefInc( void * pBlock )

@@ -143,9 +143,7 @@
 #include "hbmath.h"
 #include "hbrddntx.h"
 #include "rddsys.ch"
-#ifdef __XHARBOUR__
 #include "hbregex.h"
-#endif
 #ifndef HB_CDP_SUPPORT_OFF
    #include "hbapicdp.h"
 #endif
@@ -4281,8 +4279,6 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    return fFound;
 }
 
-#if defined(__XHARBOUR__)
-
 static BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
 {
 #ifndef HB_CDP_SUPPORT_OFF
@@ -4307,11 +4303,11 @@ static BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
 {
    NTXAREAP pArea = pTag->Owner->Owner;
    BOOL fFound = FALSE;
-   HB_REGEX RegEx;
+   PHB_REGEX pRegEx;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrdSkipRegEx(%p, %d, %p)", pTag, fForward, pRegExItm));
 
-   if( pTag->KeyType != 'C' || !hb_regexGet( &RegEx, pRegExItm, 0, 0 ) )
+   if( pTag->KeyType != 'C' || ( pRegEx = hb_regexGet( pRegExItm, 0 ) ) == NULL )
    {
       if( SELF_SKIP( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS )
          return FALSE;
@@ -4341,12 +4337,12 @@ static BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
             if( SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra ) != SUCCESS )
                break;
 
-            if( hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
+            if( hb_ntxRegexMatch( pTag, pRegEx, ( char * ) pTag->CurKeyInfo->key ) )
             {
                ULONG ulRecNo = pArea->ulRecNo;
                if( SELF_SKIPFILTER( ( AREAP ) pArea, fForward ? 1 : -1 ) != SUCCESS ||
                    pArea->ulRecNo == ulRecNo ||
-                   hb_ntxRegexMatch( pTag, &RegEx, ( char * ) pTag->CurKeyInfo->key ) )
+                   hb_ntxRegexMatch( pTag, pRegEx, ( char * ) pTag->CurKeyInfo->key ) )
                {
                   fFound = TRUE;
                   break;
@@ -4378,11 +4374,10 @@ static BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pRegExIt
    else
       pArea->fEof = FALSE;
 
-   hb_regexFree( &RegEx );
+   hb_regexFree( pRegEx );
 
    return fFound;
 }
-#endif
 
 /*
  * add key to custom tag (ordKeyAdd())
@@ -6945,13 +6940,11 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdSkipWild( pTag,
                               uiIndex == DBOI_SKIPWILD, pInfo->itmNewVal ) );
             break;
-#if defined(__XHARBOUR__)
          case DBOI_SKIPREGEX:
          case DBOI_SKIPREGEXBACK:
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdSkipRegEx( pTag,
                               uiIndex == DBOI_SKIPREGEX, pInfo->itmNewVal ) );
             break;
-#endif
          case DBOI_FINDREC:
          case DBOI_FINDRECCONT:
             hb_itemPutL( pInfo->itmResult, hb_ntxOrdFindRec( pTag,

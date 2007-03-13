@@ -408,6 +408,101 @@ typedef USHORT ERRCODE;
 
 extern HB_SYMB  hb_symEval;
 
+extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
+extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
+extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
+extern HB_EXPORT void * hb_xgrab( ULONG ulSize );                   /* allocates memory, exits on failure */
+extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees memory */
+extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocates memory */
+extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
+extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
+
+#ifdef _HB_API_INTERNAL_
+extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
+extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return TRUE when 0 reached */
+extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
+extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
+extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /* reallocates memory, create copy if reference counter greater then 1 */
+
+#if 0
+
+/*
+ * I used this macros only to test some speed overhead,
+ * They may not be supported in the future so please do
+ * not create any code which needs them. [druzus]
+ */
+
+#define hb_xRefInc( p )             (++(*HB_COUNTER_PTR( p )))
+#define hb_xRefDec( p )             (--(*HB_COUNTER_PTR( p ))==0)
+#define hb_xRefFree( p )            do { \
+                                       if( hb_xRefDec( p ) ) \
+                                          hb_xfree( p ); \
+                                    } while( 0 )
+#define hb_xRefCount( p )           (*HB_COUNTER_PTR( p ))
+
+#endif
+
+#endif /* _HB_API_INTERNAL_ */
+
+/* #if UINT_MAX == ULONG_MAX */
+/* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
+   we need these functions only when max(size_t) < max(long)
+   and only on 16bit platforms, so the below condition seems to be
+   more reasonable. */
+#if UINT_MAX > USHRT_MAX
+   /* NOTE: memcpy/memset can work with ULONG data blocks */
+   #define  hb_xmemcpy  memcpy
+   #define  hb_xmemset  memset
+#else
+   /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
+            will be used to copy and/or set ULONG data blocks */
+extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
+extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
+#endif
+
+/* garbage collector */
+#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
+typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
+typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
+
+#define HB_GARBAGE_SWEEPER( hbfunc )   BOOL hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
+typedef HB_GARBAGE_SWEEPER( HB_GARBAGE_SWEEPER_ );
+typedef HB_GARBAGE_SWEEPER_ * HB_GARBAGE_SWEEPER_PTR;
+
+extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
+
+extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
+extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
+
+extern HB_EXPORT void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
+extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
+extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
+extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
+#ifdef _HB_API_INTERNAL_
+HB_GARBAGE_FUNC_PTR hb_gcFunc( void *pBlock );  /* return cleanup function pointer */
+extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
+extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
+extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
+extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
+extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
+
+extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
+extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
+extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
+extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
+extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
+
+#if 0
+#define hb_gcRefInc( p )      hb_xRefInc( HB_GC_PTR( p ) )
+#define hb_gcRefDec( p )      hb_xRefDec( HB_GC_PTR( p ) )
+#define hb_gcRefCount( p )    hb_xRefCount( HB_GC_PTR( p ) )
+#define hb_gcFunc( p )        ( HB_GC_PTR( p )->pFunc )
+#endif
+
+#endif /* _HB_API_INTERNAL_ */
+extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
+extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
+
 /* Extend API */
 extern HB_EXPORT char *     hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern HB_EXPORT char *     hb_parcx( int iParam, ... );  /* retrieve a string parameter */
@@ -424,6 +519,7 @@ extern HB_EXPORT int        hb_parni( int iParam, ... ); /* retrieve a numeric p
 extern HB_EXPORT long       hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern HB_EXPORT HB_LONG    hb_parnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_LONG */
 extern HB_EXPORT void *     hb_parptr( int iParam, ... ); /* retrieve a parameter as a pointer */
+extern HB_EXPORT void *     hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 extern HB_EXPORT PHB_ITEM   hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM   hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern HB_EXPORT BOOL       hb_extIsArray( int iParam );
@@ -524,99 +620,6 @@ extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam, ... ); /* stor
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT int    hb_stornll( LONGLONG lValue, int iParam, ... ); /* stores a long long on a variable by reference */
 #endif
-
-extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
-extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
-extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
-extern HB_EXPORT void * hb_xgrab( ULONG ulSize );                   /* allocates memory, exits on failure */
-extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees memory */
-extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocates memory */
-extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
-extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
-
-#ifdef _HB_API_INTERNAL_
-extern void       hb_xRefInc( void * pMem );    /* increment reference counter */
-extern BOOL       hb_xRefDec( void * pMem );    /* decrement reference counter, return TRUE when 0 reached */
-extern void       hb_xRefFree( void * pMem );   /* decrement reference counter and free the block when 0 reached */
-extern HB_COUNTER hb_xRefCount( void * pMem );  /* return number of references */
-extern void *     hb_xRefResize( void * pMem, ULONG ulSave, ULONG ulSize );   /* reallocates memory, create copy if reference counter greater then 1 */
-
-#if 0
-
-/*
- * I used this macros only to test some speed overhead,
- * They may not be supported in the future so please do
- * not create any code which needs them. [druzus]
- */
-
-#define hb_xRefInc( p )             (++(*HB_COUNTER_PTR( p )))
-#define hb_xRefDec( p )             (--(*HB_COUNTER_PTR( p ))==0)
-#define hb_xRefFree( p )            do { \
-                                       if( hb_xRefDec( p ) ) \
-                                          hb_xfree( p ); \
-                                    } while( 0 )
-#define hb_xRefCount( p )           (*HB_COUNTER_PTR( p ))
-
-#endif
-
-#endif /* _HB_API_INTERNAL_ */
-
-/* #if UINT_MAX == ULONG_MAX */
-/* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
-   we need these functions only when max(size_t) < max(long)
-   and only on 16bit platforms, so the below condition seems to be
-   more reasonable. */
-#if UINT_MAX > USHRT_MAX
-   /* NOTE: memcpy/memset can work with ULONG data blocks */
-   #define  hb_xmemcpy  memcpy
-   #define  hb_xmemset  memset
-#else
-   /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
-            will be used to copy and/or set ULONG data blocks */
-extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
-extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
-#endif
-
-/* garbage collector */
-#define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
-typedef HB_GARBAGE_FUNC_ * HB_GARBAGE_FUNC_PTR;
-
-#define HB_GARBAGE_SWEEPER( hbfunc )   BOOL hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_SWEEPER( HB_GARBAGE_SWEEPER_ );
-typedef HB_GARBAGE_SWEEPER_ * HB_GARBAGE_SWEEPER_PTR;
-
-extern void  hb_gcRegisterSweep( HB_GARBAGE_SWEEPER_PTR pSweep, void * Cargo );
-
-extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
-extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
-
-extern HB_EXPORT void *hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
-extern void       hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
-extern void *     hb_gcLock( void *pAlloc ); /* do not release passed memory block */
-extern void *     hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
-#ifdef _HB_API_INTERNAL_
-extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
-extern void       hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
-extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
-extern void       hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
-extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
-
-extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
-extern void       hb_gcRefInc( void * pAlloc );  /* increment reference counter */
-extern BOOL       hb_gcRefDec( void * pAlloc );  /* decrement reference counter, return TRUE when 0 reached */
-extern void       hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
-extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
-
-#if 0
-#define hb_gcRefInc( p )      hb_xRefInc( HB_GC_PTR( p ) )
-#define hb_gcRefDec( p )      hb_xRefDec( HB_GC_PTR( p ) )
-#define hb_gcRefCount( p )    hb_xRefCount( HB_GC_PTR( p ) )
-#endif
-
-#endif /* _HB_API_INTERNAL_ */
-extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
-extern void       hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
 
 /* array management */
 extern HB_EXPORT BOOL       hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */

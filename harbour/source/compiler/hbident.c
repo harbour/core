@@ -72,7 +72,7 @@ static HB_HASH_FUNC( hb_comp_IdentKey )    /* ULONG func (void *Value, void *Car
 
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
-     
+
    return ulSum % HB_IDENT_TABLE_SIZE;
 }
 

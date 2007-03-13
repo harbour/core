@@ -4,12 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    .prg interface to preprocessor
- *    __PP_STDRULE() function
- *       intentionally in separate file to not force linking
- *       standard PP rules table when user does not need them
+ * 
  *
- * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,15 +50,83 @@
  *
  */
 
-#include "hbpp.h"
+#ifndef HB_REGEX_H_
+#define HB_REGEX_H_
+
 #include "hbapi.h"
 
-extern PHB_PP_STATE hb_pp_Param( int iParam );
+#if defined( _HB_REGEX_INTERNAL_ )
 
-HB_FUNC( __PP_STDRULES )
+#if defined( __BORLANDC__ )
+#  if __BORLANDC__ >= 0x550 && !defined( HB_PCRE_REGEX_BCC )
+#     define HB_PCRE_REGEX_BCC
+#  endif
+#elif defined( OS_UNIX_COMPATIBLE ) && !defined( __WATCOMC__ )
+#  if !defined( HB_POSIX_REGEX )
+#     define HB_POSIX_REGEX
+#  endif
+#endif
+
+#if defined( HB_PCRE_REGEX_BCC )
+#  include <pcre.h>
+#  include <pcreposi.h>
+#  if !defined( HB_PCRE_REGEX )
+#     define HB_PCRE_REGEX
+#  endif
+#elif defined( HB_PCRE_REGEX )
+#  include <pcre/pcre.h>
+#  include <pcre/pcreposix.h>
+#elif defined( HB_POSIX_REGEX )
+#  include <regex.h>
+#else
+#  undef _HB_REGEX_INTERNAL_
+#endif
+
+#endif /* _HB_REGEX_INTERNAL_ */
+
+#if defined( _HB_REGEX_INTERNAL_ )
+
+typedef struct
 {
-   PHB_PP_STATE pState = hb_pp_Param( 1 );
+   regex_t     reg;
+   regmatch_t  aMatches[1];
+   BOOL        fFree;
+   int         iCFlags;
+   int         iEFlags;
+} HB_REGEX;
+typedef HB_REGEX * PHB_REGEX;
 
-   if( pState )
-      hb_pp_setStdRules( pState );
-}
+#ifndef REG_EXTENDED
+#  define REG_EXTENDED  0x00
+#endif
+#ifndef REG_NOSUB
+#  define REG_NOSUB     0x00
+#endif
+
+#else
+
+typedef void * PHB_REGEX;
+
+#endif /* _HB_REGEX_INTERNAL_ */
+
+#define HBREG_ICASE     0x01
+#define HBREG_NEWLINE   0x02
+#define HBREG_NOTBOL    0x04
+#define HBREG_NOTEOL    0x08
+#define HBREG_EXTENDED  0x10
+#define HBREG_NOSUB     0x20
+
+#ifndef REGEX_MAX_GROUPS
+#  define REGEX_MAX_GROUPS 16
+#endif
+
+HB_EXTERN_BEGIN
+
+extern HB_EXPORT PHB_REGEX hb_regexCompile( const char *szRegEx, ULONG ulLen, int iFlags );
+extern HB_EXPORT PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags );
+extern HB_EXPORT void      hb_regexFree( PHB_REGEX pRegEx );
+extern HB_EXPORT BOOL      hb_regexMatch( PHB_REGEX pRegEx, const char *szString, BOOL fFull );
+
+HB_EXTERN_END
+
+#endif /* HB_REGEX_H_ */

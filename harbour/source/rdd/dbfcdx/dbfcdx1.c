@@ -80,9 +80,7 @@
 #include "hbrddcdx.h"
 #include "hbmath.h"
 #include "rddsys.ch"
-#ifdef __XHARBOUR__
 #include "hbregex.h"
-#endif
 
 #ifndef HB_CDP_SUPPORT_OFF
    /* for nation sorting support */
@@ -5508,8 +5506,6 @@ static BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    return fFound;
 }
 
-#if defined(__XHARBOUR__)
-
 static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
 {
    char * szKey = ( char * ) pKey->val;
@@ -5535,14 +5531,14 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
                                  PHB_ITEM pRegExItm )
 {
    BOOL fFound = FALSE, fFirst = TRUE;
-   HB_REGEX RegEx;
+   PHB_REGEX pRegEx;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxDBOISkipRegEx(%p, %p, %i, %p)", pArea, pTag, fForward, pRegExItm));
 
    if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FALSE;
 
-   if( !pTag || pTag->uiType != 'C' || !hb_regexGet( &RegEx, pRegExItm, 0, 0 ) )
+   if( !pTag || pTag->uiType != 'C' || ( pRegEx = hb_regexGet( pRegExItm, 0 ) ) == NULL )
    {
       if ( SELF_SKIP( ( AREAP ) pArea, fForward ? 1 : -1 ) == FAILURE )
          return FALSE;
@@ -5569,12 +5565,12 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
          hb_cdxTagSkipNext( pTag );
       while ( !pTag->TagEOF )
       {
-         if( hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
+         if( hb_cdxRegexMatch( pArea, pRegEx, pTag->CurKey ) )
          {
             ULONG ulRecNo = pArea->ulRecNo;
             SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
             if ( pArea->ulRecNo == ulRecNo ||
-                 hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
+                 hb_cdxRegexMatch( pArea, pRegEx, pTag->CurKey ) )
             {
                fFound = TRUE;
                break;
@@ -5590,12 +5586,12 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
          hb_cdxTagSkipPrev( pTag );
       while ( !pTag->TagBOF )
       {
-         if( hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
+         if( hb_cdxRegexMatch( pArea, pRegEx, pTag->CurKey ) )
          {
             ULONG ulRecNo = pArea->ulRecNo;
             SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
             if ( pArea->ulRecNo == ulRecNo ||
-                 hb_cdxRegexMatch( pArea, &RegEx, pTag->CurKey ) )
+                 hb_cdxRegexMatch( pArea, pRegEx, pTag->CurKey ) )
             {
                fFound = TRUE;
                break;
@@ -5619,11 +5615,10 @@ static BOOL hb_cdxDBOISkipRegEx( CDXAREAP pArea, LPCDXTAG pTag, BOOL fForward,
    else
       pArea->fEof = FALSE;
 
-   hb_regexFree( &RegEx );
+   hb_regexFree( pRegEx );
 
    return fFound;
 }
-#endif
 
 /*
  * evaluate given C function in given scope
@@ -7953,7 +7948,6 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
                hb_cdxDBOISkipWild( pArea, pTag, FALSE, pOrderInfo->itmNewVal ) );
          break;
 
-#if defined(__XHARBOUR__)
       case DBOI_SKIPREGEX:
          pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
             hb_cdxDBOISkipRegEx( pArea, pTag, TRUE, pOrderInfo->itmNewVal ) );
@@ -7963,7 +7957,6 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
          pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
             hb_cdxDBOISkipRegEx( pArea, pTag, FALSE, pOrderInfo->itmNewVal ) );
          break;
-#endif
 
       case DBOI_SCOPEEVAL:
          if ( pTag && pOrderInfo->itmNewVal &&

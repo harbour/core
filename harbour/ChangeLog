@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-13 19:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/itemapi.c
+    + added hb_gcFunc(), hb_parptrGC(), hb_itemGetPtrGC()
+      hb_parptrGC() and hb_itemGetPtrGC() uses GC cleanup function address
+      to validate if pointer item points to expected memory block type
+
+  * harbour/source/common/hbhash.c
+  * harbour/source/compiler/hbident.c
+    * formatting and minor modifications
+
+  * harbour/source/pp/pplib.c
+  * harbour/source/pp/pplib2.c
+    * use hb_parptrGC() to be sure that given pointer item points
+      to PP structure
+
+  + harbour/include/hbregex.h
+  + harbour/source/rtl/hbregex.c
+  * harbour/source/rtl/Makefile
+  * harbour/common.mak
+    + added support for regular expressions. Now it's enabled by default
+      only in *nixes (POSIX regex) and BCC 5.5 (PCRE regex). Setting
+      HB_PCRE_REGEX macro enables Perl-Compatible Regular Expressions
+      and HB_POSIX_REGEX - POSIX regular expressions. In xHarbour regex
+      support is enabled for all builds because PCRE source code is stored
+      in CVS. If you will want we can make the same.
+    + the following C functions are available:
+      hb_regexCompile(), hb_regexGet(), hb_regexFree(), hb_regexMatch()
+    + the following PGR functions are available:
+      HB_REGEXCOMP(), HB_ISREGEX(), HB_ATX(), HB_REGEX(), HB_REGEXMATCH(),
+      HB_REGEXSPLIT(), HB_REGEXATX(), HB_REGEXALL()
+      They are working in similar way to the ones in xHarbour with the
+      exception to some bug fixes and form of compiled regular expression.
+      In Harbour it's pointer item for which HB_ISREGEX() returns TRUE when
+      in xHarbour it's binary string.
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * enabled code to seek in index using regular expressions
+      (DBOI_SKIPREGEX[BACK])
+
 2007-03-12 14:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexpra.c
     * emulate xHarbour HB_ENUMINDEX() inside FOR EACH loop when

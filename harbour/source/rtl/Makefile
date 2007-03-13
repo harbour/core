@@ -51,6 +51,7 @@ C_SOURCES=\
 	hbffind.c    \
 	hbgtcore.c   \
 	hbrandom.c   \
+	hbregex.c    \
 	idle.c       \
 	inkey.c      \
 	is.c         \

@@ -603,6 +603,18 @@ HB_EXPORT void * hb_itemGetPtr( PHB_ITEM pItem )
       return NULL;
 }
 
+HB_EXPORT void * hb_itemGetPtrGC( PHB_ITEM pItem, HB_GARBAGE_FUNC_PTR pFunc )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetPtrGC(%p,%p)", pItem, pFunc));
+
+   if( pItem && HB_IS_POINTER( pItem ) &&
+       pItem->item.asPointer.collect &&
+       hb_gcFunc( pItem->item.asPointer.value ) == pFunc )
+      return pItem->item.asPointer.value;
+   else
+      return NULL;
+}
+
 HB_EXPORT PHB_SYMB hb_itemGetSymbol( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetSymbol(%p)", pItem));

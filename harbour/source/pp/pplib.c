@@ -119,9 +119,10 @@ static void hb_pp_StdRules( PHB_PP_STATE pState )
    }
 }
 
-static PHB_PP_STATE hb_pp_Param( int iParam )
+PHB_PP_STATE hb_pp_Param( int iParam )
 {
-   PHB_PP_STATE * pStatePtr = ( PHB_PP_STATE * ) hb_parptr( iParam );
+   PHB_PP_STATE * pStatePtr =
+                  ( PHB_PP_STATE * ) hb_parptrGC( hb_pp_Destructor, iParam );
 
    if( pStatePtr )
       return * pStatePtr;
