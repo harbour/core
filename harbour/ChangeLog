@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-13 23:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/pplib.c
+    ! fixed std rules initialization - now it should also use GC pointer
+      item or __PP_STDRULES will ignore it
+
 2007-03-13 19:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/include/hbapiitm.h
