@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-14 14:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/eval.c
+    + added C function hb_execFromArray()
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbinet.c
+    + added xHarbour compatible INET*() functions - code borrowed
+      from xHarbour with some minor modifications and fixes
+
+  * harbour/include/hbextern.ch
+    + added regex functions
+    + added INET*() functions when compiled with HB_COMPAT_XHB
+
 2007-03-13 23:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/pplib.c
     ! fixed std rules initialization - now it should also use GC pointer

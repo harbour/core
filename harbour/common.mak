@@ -378,8 +378,9 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hardcr.obj   \
     $(OBJ_DIR)\hbffind.obj  \
     $(OBJ_DIR)\hbgtcore.obj \
+    $(OBJ_DIR)\hbinet.obj   \
     $(OBJ_DIR)\hbrandom.obj \
-    $(OBJ_DIR)\hbregex.obj \
+    $(OBJ_DIR)\hbregex.obj  \
     $(OBJ_DIR)\idle.obj     \
     $(OBJ_DIR)\inkey.obj    \
     $(OBJ_DIR)\is.obj       \

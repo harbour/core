@@ -50,6 +50,7 @@ C_SOURCES=\
 	hardcr.c     \
 	hbffind.c    \
 	hbgtcore.c   \
+	hbinet.c     \
 	hbrandom.c   \
 	hbregex.c    \
 	idle.c       \

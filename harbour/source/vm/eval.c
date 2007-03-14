@@ -495,3 +495,74 @@ HB_FUNC( HB_EXECFROMARRAY )
       return;
    }
 }
+
+BOOL hb_execFromArray( PHB_ITEM pParam )
+{
+   PHB_ITEM pFunc = NULL;
+   PHB_ITEM pSelf = NULL;
+   PHB_ITEM pArray = NULL;
+   PHB_ITEM pItem;
+   PHB_SYMB pExecSym = NULL;
+   ULONG ulParamOffset = 0;
+
+   if( HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
+   {
+      pArray = pParam;
+      pItem = hb_arrayGetItemPtr( pArray, 1 );
+      if( HB_IS_OBJECT( pItem ) )
+      {
+         pSelf = pItem;
+         pFunc = hb_arrayGetItemPtr( pArray, 2 );
+         ulParamOffset = 2;
+      }
+      else
+      {
+         pFunc = pItem;
+         ulParamOffset = 1;
+      }
+   }
+   else
+      pFunc = pParam;
+
+   if( pFunc )
+   {
+      if( HB_IS_SYMBOL( pFunc ) )
+         pExecSym = hb_itemGetSymbol( pFunc );
+      else if( HB_IS_STRING( pFunc ) )
+         pExecSym = hb_dynsymGet( hb_itemGetCPtr( pFunc ) )->pSymbol;
+      else if( HB_IS_BLOCK( pFunc ) && !pSelf )
+      {
+         pSelf = pFunc;
+         pExecSym = &hb_symEval;
+      }
+   }
+
+   if( pExecSym )
+   {
+      USHORT usPCount = 0;
+      hb_vmPushSymbol( pExecSym );
+      if( pSelf )
+         hb_vmPush( pSelf );
+      else
+         hb_vmPushNil();
+      if( pArray )
+      {
+         pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
+         while( pItem && usPCount < 255 )
+         {
+            hb_vmPush( pItem );
+            ++usPCount;
+            pItem = hb_arrayGetItemPtr( pArray, ++ulParamOffset );
+         }
+      }
+
+      if( pSelf )
+         hb_vmSend( usPCount );
+      else
+         hb_vmDo( usPCount );
+      return TRUE;
+   }
+
+   hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_EXECFROMARRAY", HB_ERR_ARGS_BASEPARAMS );
+   return FALSE;
+}
