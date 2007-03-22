@@ -60,4 +60,8 @@ endif
 endif
 endif
 
+#ifneq ($(HB_ARCHITECTURE),dos)
+#DIRS += tip
+#endif
+
 include $(ROOT)config/dir.cf

@@ -60,6 +60,8 @@
 #include "hbvm.h"
 #include "hbapiitm.h"
 
+HB_EXTERN_BEGIN
+
 typedef PHB_SYMB ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
                                                 USHORT uiModuleSymbols );
 typedef PHB_SYMB ( * VM_PROCESS_SYMBOLS_EX )
@@ -138,5 +140,7 @@ typedef void *   ( * HB_XGRAB)( ULONG ulSize );                 /* allocates mem
 typedef void     ( * HB_XFREE)( void * pMem );                  /* frees memory */
 typedef void *   ( * HB_XREALLOC)( void * pMem, ULONG ulSize ); /* reallocates memory */
 typedef ULONG    ( * HB_XSIZE)( void * pMem );                  /* returns the size of an allocated memory block */
+
+HB_EXTERN_END
 
 #endif /* HB_TYPES_H_ */

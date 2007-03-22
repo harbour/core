@@ -167,7 +167,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
 %token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE
 %token IIF LITERAL TRUEVALUE FALSEVALUE
-%token AND OR NOT EQ NE1 NE2 INC DEC ALIASOP SELF
+%token AND OR NOT EQ NE1 NE2 INC DEC ALIASOP HASHOP SELF
 %token LE GE FIELD MACROVAR MACROTEXT
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ
 %token EPSILON 
@@ -213,6 +213,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %type <asExpr>  SelfValue
 %type <asExpr>  Array
 %type <asExpr>  ArrayAt
+%type <asExpr>  Hash HashList
 %type <asExpr>  Variable VarAlias
 %type <asExpr>  MacroVar MacroVarAlias
 %type <asExpr>  MacroExpr MacroExprAlias
@@ -296,24 +297,35 @@ LiteralValue : LITERAL        { $$ = hb_compExprNewString( $1.string, $1.length,
 
 /* Logical value
  */
-Logical    : TRUEVALUE        { $$ = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); }
-           | FALSEVALUE       { $$ = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); }
-           ;
+Logical     : TRUEVALUE       { $$ = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); }
+            | FALSEVALUE      { $$ = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); }
+            ;
 
 /* SELF value and expressions
  */
-SelfValue  : SELF             { $$ = hb_compExprNewSelf( HB_COMP_PARAM ); }
-           ;
+SelfValue   : SELF            { $$ = hb_compExprNewSelf( HB_COMP_PARAM ); }
+            ;
 
 /* Literal array
  */
-Array      : '{' ElemList '}'       { $$ = hb_compExprNewArray( $2, HB_COMP_PARAM ); }
-           ;
+Array       : '{' ElemList '}'      { $$ = hb_compExprNewArray( $2, HB_COMP_PARAM ); }
+            ;
 
 /* Literal array access
  */
 ArrayAt     : Array ArrayIndex      { $$ = $2; }
             ;
+
+/* Literal hash
+ */
+Hash        : '{' HASHOP '}'        { $$ = hb_compExprNewHash( NULL, HB_COMP_PARAM ); }
+            | '{' HashList '}'      { $$ = hb_compExprNewHash( $2, HB_COMP_PARAM ); }
+            ;
+
+HashList    : Expression HASHOP EmptyExpression                { $$ = hb_compExprAddListExpr( hb_compExprNewList( $1, HB_COMP_PARAM ), $3 ); }
+            | HashList ',' Expression HASHOP EmptyExpression   { $$ = hb_compExprAddListExpr( hb_compExprAddListExpr( $1, $3 ), $5 ); }
+            ;
+
 
 /* Variables
  */
@@ -470,6 +482,7 @@ SimpleExpression :
             | SelfValue
             | Array
             | ArrayAt
+            | Hash
             | AliasVar
             | AliasExpr
             | MacroVar
@@ -531,6 +544,7 @@ LeftExpression : NumValue
                | SelfValue
                | Array
                | ArrayAt
+               | Hash
                | AliasVar
                | AliasExpr
                | MacroVar
@@ -575,6 +589,7 @@ ExprAssign  : NumValue     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3
             | SelfValue    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | Array        INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | ArrayAt      INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Hash         INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | AliasVar     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | AliasExpr    INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroVar     INASSIGN Expression  { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }

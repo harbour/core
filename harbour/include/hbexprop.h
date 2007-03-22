@@ -137,6 +137,7 @@ extern HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArgRef( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE, HB_COMP_DECL );

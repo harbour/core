@@ -141,6 +141,7 @@ static void    hb_vmArrayPushRef( void );    /* pushes a reference to an array e
 static void    hb_vmArrayPop( void );        /* pops a value from the stack */
 static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
+static void    hb_vmHashGen( ULONG ulElements ); /* generates an ulElements Hash and fills it from the stack values */
 
 /* macros */
 static void hb_vmMacroDo( USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
@@ -978,6 +979,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_ARRAYGEN:
             hb_vmArrayGen( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
+            w += 3;
+            break;
+
+         case HB_P_HASHGEN:
+            hb_vmHashGen( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -2452,6 +2458,28 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    {
       hb_itemPutDL( pResult, hb_itemGetNL( pItem1 ) + hb_itemGetDL( pItem2 ) );
    }
+#if defined( HB_COMPAT_XHB )
+   else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
+   {
+      /*
+       * This is not xHarbour compatible but the idea of using +/- operators
+       * for complex items like hashes with automatic cloning is horrible
+       * for me. People may expect that it will be faster then calling
+       * function like HMERGE() when it fact it can be many times slower due
+       * to cost of clone operation so I added this to reduce the overhead
+       * for += / -= operations, [druzus]
+       */
+      if( pResult == pItem1 )
+         hb_hashJoin( pItem1, pItem2, HB_HASH_UNION );
+      else
+      {
+         PHB_ITEM pHash = hb_hashClone( pItem1 );
+         hb_hashJoin( pHash, pItem2, HB_HASH_UNION );
+         hb_itemMove( pResult, pHash );
+         hb_itemRelease( pHash );
+      }
+   }
+#endif
    else if( ! hb_objOperatorCall( HB_OO_OP_PLUS, pResult, pItem1, pItem2, NULL ) )
    {
       PHB_ITEM pSubst = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pItem1, pItem2 );
@@ -2520,6 +2548,22 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-", 2, pItem1, pItem2 );
    }
+#if defined( HB_COMPAT_XHB )
+   else if( HB_IS_HASH( pItem1 ) )
+   {
+      /* This is not xHarbour compatible - see note above in hb_vmPlus() */
+      if( pResult == pItem1 )
+         hb_hashRemove( pItem1, pItem2 );
+      else
+      {
+         PHB_ITEM pHash = hb_hashClone( pItem1 );
+
+         hb_hashRemove( pHash, pItem2 );
+         hb_itemMove( pResult, pHash );
+         hb_itemRelease( pHash );
+      }
+   }
+#endif
    else if( ! hb_objOperatorCall( HB_OO_OP_MINUS, pResult, pItem1, pItem2, NULL ) )
    {
       PHB_ITEM pSubst = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pItem1, pItem2 );
@@ -2911,8 +2955,16 @@ static void hb_vmExactlyEqual( void )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
    else if( HB_IS_POINTER( pItem1 ) && HB_IS_POINTER( pItem2 ) )
    {
-      BOOL fResult = pItem1->item.asPointer.value ==
-                    pItem2->item.asPointer.value;
+      BOOL fResult = pItem1->item.asPointer.value == pItem2->item.asPointer.value;
+
+      hb_stackPop();
+      hb_stackPop();
+      hb_vmPushLogical( fResult );
+   }
+   else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
+   {
+      BOOL fResult = pItem1->item.asHash.value == pItem2->item.asHash.value;
+
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( fResult );
@@ -2920,7 +2972,7 @@ static void hb_vmExactlyEqual( void )
    else if( HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) &&
             ! hb_objHasOperator( pItem1, HB_OO_OP_EXACTEQUAL ) )
    {
-      BOOL fResult = ( pItem1->item.asArray.value == pItem2->item.asArray.value );
+      BOOL fResult = pItem1->item.asArray.value == pItem2->item.asArray.value;
 
       hb_stackPop();
       hb_stackPop();
@@ -2990,8 +3042,14 @@ static void hb_vmEqual( void )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
    else if( HB_IS_POINTER( pItem1 ) && HB_IS_POINTER( pItem2 ) )
    {
-      BOOL fResult = pItem1->item.asPointer.value ==
-                    pItem2->item.asPointer.value;
+      BOOL fResult = pItem1->item.asPointer.value == pItem2->item.asPointer.value;
+      hb_stackPop();
+      hb_stackPop();
+      hb_vmPushLogical( fResult );
+   }
+   else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
+   {
+      BOOL fResult = pItem1->item.asHash.value == pItem2->item.asHash.value;
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( fResult );
@@ -3065,6 +3123,13 @@ static void hb_vmNotEqual( void )
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( fValue );
+   }
+   else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
+   {
+      BOOL fResult = pItem1->item.asHash.value != pItem2->item.asHash.value;
+      hb_stackPop();
+      hb_stackPop();
+      hb_vmPushLogical( fResult );
    }
    else if( hb_objOperatorCall( HB_OO_OP_NOTEQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
@@ -3329,11 +3394,11 @@ static void hb_vmInstring( void )
 
    if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
-      BOOL bResult = ( hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
+      BOOL fResult = ( hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
                                  pItem2->item.asString.value, pItem2->item.asString.length ) != 0 );
       hb_stackPop();
       hb_stackPop();
-      hb_vmPushLogical( bResult );
+      hb_vmPushLogical( fResult );
    }
    else if( hb_objOperatorCall( HB_OO_OP_INSTRING, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
@@ -3345,7 +3410,15 @@ static void hb_vmInstring( void )
 
       hb_stackPop();
       hb_stackPop();
+      hb_vmPushLogical( fResult );
+   }
+   else if( HB_IS_HASH( pItem2 ) &&
+            ( HB_IS_HASHKEY( pItem1 ) || hb_hashLen( pItem1 ) == 1 ) )
+   {
+      BOOL fResult = hb_hashScan( pItem2, pItem1, NULL );
 
+      hb_stackPop();
+      hb_stackPop();
       hb_vmPushLogical( fResult );
    }
 #endif
@@ -3487,12 +3560,14 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
    BOOL fStart = TRUE;
    int i;
 
+/*
    pItem = hb_itemUnRef( hb_stackItemFromTop( -( ( int ) nVars << 1 ) ) );
-   if( !HB_IS_ARRAY( pItem ) && ! HB_IS_STRING( pItem ) )
+   if( ( pItem->type & ( HB_IT_ARRAY | HB_IT_HASH | HB_IT_STRING ) ) == 0 )
    {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
       return;
    }
+*/
 
    for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {
@@ -3562,6 +3637,14 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
                                              pItem->item.asArray.value->ulLen;
          if( pItem->item.asArray.value->ulLen == 0 )
+            fStart = FALSE;
+      }
+      else if( HB_IS_HASH( pItem ) )
+      {
+         ULONG ulLen = hb_hashLen( pItem );
+         /* the index into a hash */
+         pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 : ulLen;
+         if( ulLen == 0 )
             fStart = FALSE;
       }
       else if( HB_IS_STRING( pItem ) )
@@ -3636,6 +3719,19 @@ static void hb_vmEnumNext( void )
                break;
          }
       }
+      else if( HB_IS_HASH( pBase ) )
+      {
+         /* Clear the item value which can be set with RT error
+            when enumerator was out of array size during unreferencing
+          */
+         if( pEnum->item.asEnum.valuePtr )
+         {
+            hb_itemRelease( pEnum->item.asEnum.valuePtr );
+            pEnum->item.asEnum.valuePtr = NULL;
+         }
+         if( ( ULONG ) ++pEnum->item.asEnum.offset > hb_hashLen( pBase ) )
+            break;
+      }
       else if( HB_IS_STRING( pBase ) )
       {
          if( ( ULONG ) ++pEnum->item.asEnum.offset >
@@ -3699,6 +3795,19 @@ static void hb_vmEnumPrev( void )
             if( --pEnum->item.asEnum.offset == 0 )
                break;
          }
+      }
+      else if( HB_IS_HASH( pBase ) )
+      {
+         /* Clear the item value which can be set with RT error
+            when enumerator was out of array size during unreferencing
+          */
+         if( pEnum->item.asEnum.valuePtr )
+         {
+            hb_itemRelease( pEnum->item.asEnum.valuePtr );
+            pEnum->item.asEnum.valuePtr = NULL;
+         }
+         if( --pEnum->item.asEnum.offset == 0 )
+            break;
       }
       else if( HB_IS_STRING( pBase ) )
       {
@@ -3916,7 +4025,20 @@ static void hb_vmArrayPush( void )
    pIndex = hb_stackItemFromTop( -1 );
    pArray = hb_stackItemFromTop( -2 );
 
-   if( HB_IS_INTEGER( pIndex ) )
+   if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
+   {
+      PHB_ITEM pValue = hb_hashGetItemPtr( pArray, pIndex );
+      if( pValue )
+      {
+         hb_itemCopy( pIndex, pValue );
+         hb_itemMove( pArray, pIndex );
+         hb_stackDec();
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+      return;
+   }
+   else if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
    else if( HB_IS_LONG( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
@@ -4005,7 +4127,20 @@ static void hb_vmArrayPushRef( void )
    pIndex = hb_stackItemFromTop( -1 );
    pArray = hb_stackItemFromTop( -2 );
 
-   if( HB_IS_INTEGER( pIndex ) )
+   if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
+   {
+      PHB_ITEM pValue = hb_hashGetItemRefPtr( pArray, pIndex );
+      if( pValue )
+      {
+         hb_itemCopy( pIndex, pValue );
+         hb_itemMove( pArray, pIndex );
+         hb_stackDec();
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+      return;
+   }
+   else if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
    else if( HB_IS_LONG( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
@@ -4066,7 +4201,24 @@ static void hb_vmArrayPop( void )
    pArray = hb_stackItemFromTop( -2 );
    pIndex = hb_stackItemFromTop( -1 );
 
-   if( HB_IS_INTEGER( pIndex ) )
+   if( HB_IS_BYREF( pArray ) )
+      pArray = hb_itemUnRef( pArray );
+
+   if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
+   {
+      PHB_ITEM pDest = hb_hashGetItemPtr( pArray, pIndex );
+      if( pDest )
+      {
+         hb_itemMoveFromRef( pDest, pValue );
+         hb_stackPop();
+         hb_stackPop();
+         hb_stackDec();    /* value was moved above hb_stackDec() is enough */
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pArray, pIndex, pValue );
+      return;
+   }
+   else if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
    else if( HB_IS_LONG( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
@@ -4077,9 +4229,6 @@ static void hb_vmArrayPop( void )
       hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
       return;
    }
-
-   if( HB_IS_BYREF( pArray ) )
-      pArray = hb_itemUnRef( pArray );
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -4130,7 +4279,7 @@ static void hb_vmArrayPop( void )
       }
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pArray, pIndex );
+                        3, pArray, pIndex, pValue );
    }
 /* #endif */
    else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, pValue ) )
@@ -4232,6 +4381,36 @@ static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Ar
    }
    while( --uiDimensions );
 }
+
+static void hb_vmHashGen( ULONG ulElements ) /* generates an ulElements Hash and fills it from the stack values */
+{
+   PHB_ITEM pHash, pKey, pVal;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmHashGen(%lu)", ulElements));
+
+   /* create new hash item */
+   pHash = hb_hashNew( NULL );
+   hb_hashPreallocate( pHash, ulElements );
+   while( ulElements-- )
+   {
+      pKey = hb_stackItemFromTop( -2 );
+      pVal = hb_stackItemFromTop( -1 );
+      if( HB_IS_HASHKEY( pKey ) )
+      {
+         hb_hashAdd( pHash, pKey, pVal );
+         hb_stackPop();
+         hb_stackPop();
+      }
+      else
+      {
+         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pHash, pKey, pVal );
+         break;
+      }
+   }
+   hb_itemMove( hb_stackAllocItem(), pHash );
+   hb_itemRelease( pHash );
+}
+
 
 /* ------------------------------- */
 /* Macros                          */
@@ -4547,6 +4726,8 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
       PHB_SYMB pExecSym;
 
       pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
+      if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
+         pExecSym = pExecSym->pDynSym->pSymbol;
       if( pExecSym && pExecSym->value.pFunPtr )
       {
          if( hb_bTracePrgCalls )
@@ -4571,6 +4752,8 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    }
    else /* it is a function */
    {
+      if( ( pSym->scope.value & HB_FS_DEFERRED ) && pSym->pDynSym )
+         pSym = pSym->pDynSym->pSymbol;
       if( pSym->value.pFunPtr )
       {
          if( hb_bTracePrgCalls )
@@ -4639,6 +4822,8 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    s_bDebugging = FALSE;
 
    pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
+   if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
+      pExecSym = pExecSym->pDynSym->pSymbol;
    if( pExecSym && pExecSym->value.pFunPtr )
    {
       if( hb_bTracePrgCalls )
@@ -4726,7 +4911,7 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( pBlock );
-   hb_vmDo( 0 );
+   hb_vmSend( 0 );
    return hb_stackReturnItem();
 }
 
@@ -4755,7 +4940,7 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
 
    /* take care here, possible loss of data long to short ... */
    /* added an explicit casting here for VC++ JFL */
-   hb_vmDo( (USHORT) ulArgCount );
+   hb_vmSend( ( USHORT ) ulArgCount );
 
    return hb_stackReturnItem();
 }
@@ -8350,6 +8535,13 @@ HB_EXPORT void hb_xvmArrayGen( ULONG ulElements )
    hb_vmArrayGen( ulElements );
 }
 
+HB_EXPORT void hb_xvmHashGen( ULONG ulElements )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmHashGen(%lu)", ulElements));
+
+   hb_vmHashGen( ulElements );
+}
+
 static void hb_vmArrayItemPush( ULONG ulIndex )
 {
    PHB_ITEM pArray;
@@ -8396,6 +8588,22 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, hb_stackItemFromTop( -1 ) );
       }
    }
+   else if( HB_IS_HASH( pArray ) )
+   {
+      PHB_ITEM pValue;
+
+      hb_vmPushNumInt( ulIndex );
+      pValue = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ) );
+
+      if( pValue )
+      {
+         hb_itemCopy( hb_stackItemFromTop( -1 ), pValue );
+         hb_itemMove( pArray, hb_stackItemFromTop( -1 ) );
+         hb_stackDec();
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, hb_stackItemFromTop( -1 ) );
+   }
 /* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
@@ -8414,7 +8622,6 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                         2, pArray, hb_stackItemFromTop( -1 ) );
       }
-      return;
    }
 /* #endif */
    else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
@@ -8470,6 +8677,23 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, hb_stackItemFromTop( -1 ) );
       }
    }
+   else if( HB_IS_HASH( pArray ) )
+   {
+      PHB_ITEM pDest;
+
+      hb_vmPushNumInt( ulIndex );
+      pDest = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ) );
+
+      if( pDest )
+      {
+         hb_itemMoveRef( pDest, pValue );
+         hb_stackPop();
+         hb_stackPop();
+         hb_stackDec();    /* value was moved above hb_stackDec() is enough */
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pArray, hb_stackItemFromTop( -1 ), pValue );
+   }
 /* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
@@ -8497,7 +8721,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       {
          hb_vmPushNumInt( ulIndex );
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
-                        2, pArray, hb_stackItemFromTop( -1 ) );
+                        3, pArray, hb_stackItemFromTop( -1 ), pValue );
       }
    }
 /* #endif */

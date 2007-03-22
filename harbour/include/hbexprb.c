@@ -54,6 +54,10 @@
 #include "hbcomp.h"
 #include "hbmacro.ch"
 
+#if !defined( HB_HASH_USES_ARRAY_INDEXES ) /* && defined( HB_COMPAT_XHB ) */
+#  define HB_HASH_USES_ARRAY_INDEXES
+#endif
+
 #define HB_USE_ARRAYAT_REF
 /* Temporary disabled optimization with references to object variables
    until we will not have extended reference items in our HVM [druzus] */
@@ -74,6 +78,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock );
 static HB_EXPR_FUNC( hb_compExprUseLogical );
 static HB_EXPR_FUNC( hb_compExprUseSelf );
 static HB_EXPR_FUNC( hb_compExprUseArray );
+static HB_EXPR_FUNC( hb_compExprUseHash );
 static HB_EXPR_FUNC( hb_compExprUseVarRef );
 static HB_EXPR_FUNC( hb_compExprUseRef );
 static HB_EXPR_FUNC( hb_compExprUseFunRef );
@@ -151,6 +156,7 @@ const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseLogical,
    hb_compExprUseSelf,
    hb_compExprUseArray,
+   hb_compExprUseHash,
    hb_compExprUseVarRef,
    hb_compExprUseRef,
    hb_compExprUseFunRef,
@@ -303,7 +309,10 @@ static HB_EXPR_FUNC( hb_compExprUseDate )
          HB_COMP_ERROR_TYPE( pSelf );
          break;
       case HB_EA_ARRAY_INDEX:
-         hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* Date cannot be used as index element */
+#ifdef HB_HASH_USES_ARRAY_INDEXES
+         if( !HB_SUPPORT_HARBOUR )
+#endif
+            hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* Date cannot be used as index element */
          break;
       case HB_EA_LVALUE:
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
@@ -336,7 +345,10 @@ static HB_EXPR_FUNC( hb_compExprUseString )
             HB_COMP_ERROR_TYPE( pSelf );
          break;
       case HB_EA_ARRAY_INDEX:
-         hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* string cannot be used as index element */
+#ifdef HB_HASH_USES_ARRAY_INDEXES
+         if( !HB_SUPPORT_HARBOUR )
+#endif
+            hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* string cannot be used as index element */
          break;
       case HB_EA_LVALUE:
          hb_compErrorLValue( HB_COMP_PARAM, pSelf );
@@ -563,6 +575,78 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
          HB_EXPR_PTR pElem = pSelf->value.asList.pExprList;
          /* Push non-constant values only
           */
+         while( pElem )
+         {
+            HB_EXPR_USE( pElem, HB_EA_PUSH_POP );
+            pElem = pElem->pNext;
+         }
+      }
+      break;
+
+      case HB_EA_STATEMENT:
+         hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
+         break;
+
+      case HB_EA_DELETE:
+      {
+         HB_EXPR_PTR pElem = pSelf->value.asList.pExprList;
+         /* Delete all elements of the array
+         */
+         HB_EXPR_PTR pNext;
+         while( pElem )
+         {
+            pNext = pElem->pNext;
+            HB_COMP_EXPR_DELETE( pElem );
+            pElem = pNext;
+         }
+      }
+      break;
+   }
+
+   return pSelf;
+}
+
+/* actions for HB_ET_HASH literal hash
+ *    { key1=>val1, key2=>val2, ... keyN=>valN }
+ */
+static HB_EXPR_FUNC( hb_compExprUseHash )
+{
+   switch( iMessage )
+   {
+      case HB_EA_REDUCE:
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         break;
+
+      case HB_EA_ARRAY_AT:
+         break;
+
+      case HB_EA_ARRAY_INDEX:
+         hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* array cannot be used as index element */
+         break;
+
+      case HB_EA_LVALUE:
+         hb_compErrorLValue( HB_COMP_PARAM, pSelf );
+         break;
+
+      case HB_EA_PUSH_PCODE:
+      {
+         USHORT usItems = ( USHORT ) ( pSelf->ulLength >> 1 );
+         /* Note: direct type change */
+         pSelf->ExprType = HB_ET_ARGLIST;
+         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+         /* restore original expression type */
+         pSelf->ExprType = HB_ET_HASH;
+         HB_GEN_FUNC3( PCode3, HB_P_HASHGEN, HB_LOBYTE( usItems ), HB_HIBYTE( usItems ) );
+         break;
+      }
+
+      case HB_EA_POP_PCODE:
+         break;
+
+      case HB_EA_PUSH_POP:
+      {
+         HB_EXPR_PTR pElem = pSelf->value.asList.pExprList;
+         /* Push non-constant values only */
          while( pElem )
          {
             HB_EXPR_USE( pElem, HB_EA_PUSH_POP );
@@ -1785,7 +1869,7 @@ static HB_EXPR_FUNC( hb_compExprUseAlias )
          break;
 
       case HB_EA_PUSH_PCODE:
-         HB_GEN_FUNC3( PushSymbol, pSelf->value.asSymbol, FALSE, TRUE );
+         HB_GEN_FUNC2( PushSymbol, pSelf->value.asSymbol, HB_SYM_ALIAS );
          break;
 
       case HB_EA_POP_PCODE:
@@ -1833,7 +1917,7 @@ static HB_EXPR_FUNC( hb_compExprUseRTVariable )
          break;
       case HB_EA_PUSH_PCODE:
          if( pSelf->value.asRTVar.szName )
-            HB_GEN_FUNC3( PushSymbol, pSelf->value.asRTVar.szName, FALSE, FALSE );  /* this is not a functio */
+            HB_GEN_FUNC2( PushSymbol, pSelf->value.asRTVar.szName, HB_SYM_MEMVAR );  /* this is not a function */
          else
             HB_EXPR_USE( pSelf->value.asRTVar.pMacro, HB_EA_PUSH_PCODE );
          break;

@@ -120,14 +120,19 @@ HB_EXPORT PHB_ITEM  hb_paramError( int iParam )
 
 HB_EXPORT BOOL hb_extIsArray( int iParam )
 {
+   PHB_ITEM pItem;
+
    if( iParam == -1 )
-      return HB_IS_ARRAY( hb_stackReturnItem() );
-
+      pItem = hb_stackReturnItem();
    else if( iParam >= 0 && iParam <= hb_pcount() )
-      return HB_IS_ARRAY( hb_stackItemFromBase( iParam ) );
-
+      pItem = hb_stackItemFromBase( iParam );
    else
       return FALSE;
+   
+   if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemUnRef( pItem );
+
+   return HB_IS_ARRAY( pItem ) && !HB_ARRAY_OBJ( pItem );
 }
 
 /* function to be called from pcode DLLs to detect if the extend system
@@ -135,14 +140,18 @@ HB_EXPORT BOOL hb_extIsArray( int iParam )
 
 HB_EXPORT BOOL hb_extIsObject( int iParam )
 {
+   PHB_ITEM pItem;
+
    if( iParam == -1 )
-      return HB_IS_OBJECT( hb_stackReturnItem() );
-
+      pItem = hb_stackReturnItem();
    else if( iParam >= 0 && iParam <= hb_pcount() )
-      return HB_IS_OBJECT( hb_stackItemFromBase( iParam ) );
-
+      pItem = hb_stackItemFromBase( iParam );
    else
       return FALSE;
+
+   if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemUnRef( pItem );
+   return HB_IS_OBJECT( pItem );
 }
 
 /* NOTE: Caller should not modify the buffer returned by this function.

@@ -297,6 +297,8 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\extend.obj   \
     $(OBJ_DIR)\fm.obj       \
     $(OBJ_DIR)\garbage.obj  \
+    $(OBJ_DIR)\hashes.obj   \
+    $(OBJ_DIR)\hashfunc.obj \
     $(OBJ_DIR)\hvm.obj      \
     $(OBJ_DIR)\initexit.obj \
     $(OBJ_DIR)\initsymb.obj \
@@ -385,6 +387,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\inkey.obj    \
     $(OBJ_DIR)\is.obj       \
     $(OBJ_DIR)\isprint.obj  \
+    $(OBJ_DIR)\itemseri.obj \
     $(OBJ_DIR)\langapi.obj  \
     $(OBJ_DIR)\left.obj     \
     $(OBJ_DIR)\len.obj      \

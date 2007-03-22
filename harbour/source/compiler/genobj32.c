@@ -316,7 +316,8 @@ static void GenerateCodeSegment( HB_COMP_DECL, FILE * hObjFile )
 static void GenerateExternals( HB_COMP_DECL, FILE * hObjFile )
 {
   USHORT w;
-  PFUNCTION pFunc, pFTemp;
+  PFUNCALL pFunc;
+  PFUNCTION pFTemp;
 
   /* calculate amount of externals */
   pFunc = HB_COMP_PARAM->funcalls.pFirst;

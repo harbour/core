@@ -53,10 +53,11 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ];
    char szModulname[ _POSIX_PATH_MAX + 1 ];
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
-   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+   PCOMSYMBOL pSym;
+   PFUNCTION pFunc;
+   PINLINE pInline;
+   PFUNCALL pFuncall;
    FILE * yyc; /* file handle for C output */
-   PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
    BOOL bIsInlineFunction = FALSE;
    BOOL bIsInitStatics;
    BOOL bIsInitFunction;
@@ -105,10 +106,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
       fprintf( yyc, "\n\n" );
 
+      /* write functions prototypes for PRG defined functions */
+      pFunc = HB_COMP_PARAM->functions.pFirst;
       if( ! HB_COMP_PARAM->fStartProc )
          pFunc = pFunc->pNext; /* No implicit starting procedure */
-
-      /* write functions prototypes for PRG defined functions */
       while( pFunc )
       {
          bIsInitStatics    = ( pFunc == HB_COMP_PARAM->pInitFunc );
@@ -135,6 +136,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       }
 
       /* write functions prototypes for inline blocks */
+      pInline = HB_COMP_PARAM->inlines.pFirst;
       while( pInline )
       {
          if( pInline->szName )
@@ -146,14 +148,13 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       }
 
       /* write functions prototypes for called functions outside this PRG */
-      pFunc = HB_COMP_PARAM->funcalls.pFirst;
-      while( pFunc )
+      pFuncall = HB_COMP_PARAM->funcalls.pFirst;
+      while( pFuncall )
       {
-         if( hb_compFunctionFind( HB_COMP_PARAM, pFunc->szName ) == NULL &&
-             hb_compInlineFind( HB_COMP_PARAM, pFunc->szName ) == NULL )
-            fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFunc->szName );
-
-         pFunc = pFunc->pNext;
+         if( hb_compFunctionFind( HB_COMP_PARAM, pFuncall->szName ) == NULL &&
+             hb_compInlineFind( HB_COMP_PARAM, pFuncall->szName ) == NULL )
+            fprintf( yyc, "HB_FUNC_EXTERN( %s );\n", pFuncall->szName );
+         pFuncall = pFuncall->pNext;
       }
 
       /* writes the symbol table */
@@ -179,6 +180,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       }
       fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", HB_COMP_PARAM->szPrefix, szModulname );
 
+      pSym = HB_COMP_PARAM->symbols.pFirst;
       while( pSym )
       {
          if( pSym->szName[ 0 ] == '(' )
@@ -216,7 +218,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
             /* specify the function address if it is a defined function or an
                external called function */
-            if( pSym->bFunc && hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a function defined in this module */
+            if( pSym->cScope & HB_FS_LOCAL ) /* is it a function defined in this module */
             {
                fprintf( yyc, " | HB_FS_LOCAL" );
 
@@ -227,10 +229,12 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                else
                   fprintf( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
             }
+            else if( pSym->cScope & HB_FS_DEFERRED ) /* is it a function declared as dynamic */
+               fprintf( yyc, " | HB_FS_DEFERRED}, {NULL}, NULL }" );
             else if( pSym->bFunc && hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a function called from this module */
                fprintf( yyc, "}, {HB_FUNCNAME( %s )}, NULL }", pSym->szName );
             else
-               fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar */
+               fprintf( yyc, "}, {NULL}, NULL }" );   /* memvar | alias | message */
          }
 
          if( pSym != HB_COMP_PARAM->symbols.pLast )
@@ -244,10 +248,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       /* Generate functions data
        */
       pFunc = HB_COMP_PARAM->functions.pFirst;
-
       if( ! HB_COMP_PARAM->fStartProc )
          pFunc = pFunc->pNext; /* No implicit starting procedure */
-
       while( pFunc )
       {
          bIsInitStatics    = ( pFunc == HB_COMP_PARAM->pInitFunc );
@@ -614,6 +616,16 @@ static HB_GENC_FUNC( hb_p_functionshort )
 static HB_GENC_FUNC( hb_p_arraygen )
 {
    fprintf( cargo->yyc, "\tHB_P_ARRAYGEN, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+   fprintf( cargo->yyc, "\n" );
+   return 3;
+}
+
+static HB_GENC_FUNC( hb_p_hashgen )
+{
+   fprintf( cargo->yyc, "\tHB_P_HASHGEN, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */", HB_PCODE_MKUSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
@@ -2530,7 +2542,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localdec,
    hb_p_localinc,
    hb_p_localincpush,
-   hb_p_pushfuncsym
+   hb_p_pushfuncsym,
+   hb_p_hashgen
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

@@ -74,6 +74,11 @@ HB_FUNC( LEN )
          hb_retnl( hb_arrayLen( pItem ) );
          return;
       }
+      else if( HB_IS_HASH( pItem ) )
+      {
+         hb_retnl( hb_hashLen( pItem ) );
+         return;
+      }
    }
 
    hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "LEN", HB_ERR_ARGS_BASEPARAMS );

@@ -184,6 +184,7 @@ extern HB_EXPORT void   hb_xvmArrayGen( ULONG ulElements );       /* generates a
 extern HB_EXPORT BOOL   hb_xvmArrayPush( void );                  /* pushes an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT BOOL   hb_xvmArrayPushRef( void );               /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT BOOL   hb_xvmArrayPop( void );                   /* pops a value from the stack */
+extern HB_EXPORT void   hb_xvmHashGen( ULONG ulElements );        /* generates an ulElements Hash and fills it from the stack values */
 
 extern HB_EXPORT void   hb_xvmLocalName( USHORT uiLocal, char * szLocalName );
 extern HB_EXPORT void   hb_xvmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName );

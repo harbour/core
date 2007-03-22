@@ -61,6 +61,7 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szVer;
    PFUNCTION    pFunc = HB_COMP_PARAM->functions.pFirst;
    PCOMSYMBOL   pSym = HB_COMP_PARAM->symbols.pFirst;
+   PFUNCALL     pFuncall;
    PINLINE      pInline;
    PCOMDECLARED pDeclared;
    PCOMCLASS    pClass;
@@ -180,12 +181,11 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    while( pFunc )
       pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
 
-   pFunc = HB_COMP_PARAM->funcalls.pFirst;
-   while( pFunc )
+   pFuncall = HB_COMP_PARAM->funcalls.pFirst;
+   while( pFuncall )
    {
-      HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
-      hb_xfree( ( void * ) pFunc );  /* NOTE: szName will be released by hb_compSymbolKill() */
-      pFunc = HB_COMP_PARAM->funcalls.pFirst;
+      HB_COMP_PARAM->funcalls.pFirst = pFuncall->pNext;
+      pFuncall = HB_COMP_PARAM->funcalls.pFirst;
    }
 
    if ( HB_COMP_PARAM->iWarnings >= 3 )

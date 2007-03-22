@@ -69,6 +69,7 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
    "Logical",
    "SELF",
    "Array",
+   "Hash",
    "@",
    "@",
    "@",
@@ -132,6 +133,7 @@ static const BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_ET_LOGICAL,     */
    HB_ET_NIL,                 /*   HB_ET_SELF,        */
    HB_ET_NIL,                 /*   HB_ET_ARRAY,       */
+   HB_ET_NIL,                 /*   HB_ET_HASH,        */
    HB_ET_NIL,                 /*   HB_ET_VARREF,      */
    HB_ET_NIL,                 /*   HB_ET_REFERENCE,   */
    HB_ET_NIL,                 /*   HB_ET_FUNREF,      */
@@ -400,6 +402,42 @@ HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
    return pArrList;
 }
 
+/* Creates a new literal hash { key1=>val1, key2=>val2, ... keyN=>valN }
+ *    'pHashList' is a list of hash items
+ */
+HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewHash()"));
+
+   if( pHashList )
+      pHashList->ExprType = HB_ET_HASH;   /* change type from ET_LIST */
+   else
+   {
+      pHashList = HB_COMP_EXPR_NEW( HB_ET_HASH );
+      pHashList->value.asList.pExprList = NULL;
+   }
+   pHashList->ValType = HB_EV_HASH;
+   pHashList->ulLength = 0;
+   pHashList->value.asList.reference = FALSE;
+   pHashList->value.asList.pIndex = NULL;
+
+   /*
+    * replace all EO_NONE expressions with ET_NIL expressions and
+    * calculate the list length
+    */
+   pExpr = pHashList->value.asList.pExprList;
+   while( pExpr )
+   {
+      if( pExpr->ExprType == HB_ET_NONE )
+         pExpr->ExprType = HB_ET_NIL;
+      pExpr = pExpr->pNext;
+      ++pHashList->ulLength;
+   }
+
+   return pHashList;
+}
 
 HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, int iLen, int iFlags, HB_COMP_DECL )
 {

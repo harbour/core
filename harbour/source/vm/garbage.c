@@ -435,6 +435,22 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
          }
       }
    }
+   else if( HB_IS_HASH( pItem ) )
+   {
+      HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pItem->item.asHash.value );
+
+      /* Check this hash table only if it was not checked yet */
+      if( pAlloc->used == s_uUsedFlag )
+      {
+         /* mark this block as used so it will be no re-checked from
+          * other references
+          */
+         pAlloc->used ^= HB_GC_USED_FLAG;
+
+         /* mark also all array elements */
+         hb_hashRefGrabage( pItem );
+      }
+   }
    else if( HB_IS_BLOCK( pItem ) )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pItem->item.asBlock.value );

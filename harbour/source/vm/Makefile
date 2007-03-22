@@ -36,6 +36,8 @@ C_SOURCES=\
 	extend.c     \
 	fm.c         \
 	garbage.c    \
+	hashes.c     \
+	hashfunc.c   \
 	hvm.c        \
 	initexit.c   \
 	initsymb.c   \

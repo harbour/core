@@ -246,4 +246,3 @@ HB_FUNC( ASORT )
       hb_itemReturn( pArray ); /* ASort() returns the array itself */
    }
 }
-

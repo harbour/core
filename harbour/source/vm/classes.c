@@ -323,10 +323,13 @@ static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {hb___msgClassParent},NULL };
 static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {hb___msgClass},      NULL };
 */
+static HB_SYMB s___msgKeys       = { "KEYS",            {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgValues     = { "VALUES",          {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 
 /* Default enumerator methods (FOR EACH) */
 static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
+static HB_SYMB s___msgEnumKey    = { "__ENUMKEY",       {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 static HB_SYMB s___msgEnumValue  = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {hb___msgNull},       NULL };
 
 /* WITH OBJECT base value access/asign methods (:__withobject) */
@@ -965,12 +968,15 @@ void hb_clsInit( void )
    s___msgName.pDynSym        = hb_dynsymGetCase( s___msgName.szName );
    s___msgNew.pDynSym         = hb_dynsymGetCase( s___msgNew.szName );
    s___msgSymbol.pDynSym      = hb_dynsymGetCase( s___msgSymbol.szName );
+   s___msgKeys.pDynSym        = hb_dynsymGetCase( s___msgKeys.szName );
+   s___msgValues.pDynSym      = hb_dynsymGetCase( s___msgValues.szName );
 /*
    s___msgClsParent.pDynSym   = hb_dynsymGetCase( s___msgClsParent.szName );
    s___msgClass.pDynSym       = hb_dynsymGetCase( s___msgClass.szName );
 */
    s___msgEnumIndex.pDynSym   = hb_dynsymGetCase( s___msgEnumIndex.szName );
    s___msgEnumBase.pDynSym    = hb_dynsymGetCase( s___msgEnumBase.szName );
+   s___msgEnumKey.pDynSym     = hb_dynsymGetCase( s___msgEnumKey.szName );
    s___msgEnumValue.pDynSym   = hb_dynsymGetCase( s___msgEnumValue.szName );
 
    s___msgWithObjectPush.pDynSym = hb_dynsymGetCase( s___msgWithObjectPush.szName );
@@ -1154,6 +1160,9 @@ HB_EXPORT char * hb_objGetClsName( PHB_ITEM pObject )
 
    else if( HB_IS_BLOCK( pObject ) )
       return "BLOCK";
+
+   else if( HB_IS_HASH( pObject ) )
+      return "HASH";
 
    else if( HB_IS_POINTER( pObject ) )
       return "POINTER";
@@ -1500,6 +1509,19 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                   pEnum->item.asEnum.offset = hb_itemGetNL( hb_param( 1, HB_IT_ANY ) );
                return &s___msgEnumIndex;
             }
+            else if( pMsg == s___msgEnumKey.pDynSym )
+            {
+               PHB_ITEM pBase = HB_IS_BYREF( pEnum->item.asEnum.basePtr ) ?
+                                hb_itemUnRef( pEnum->item.asEnum.basePtr ) :
+                                pEnum->item.asEnum.basePtr;
+               if( HB_IS_HASH( pBase ) )
+               {
+                  pBase = hb_hashGetKeyAt( pBase, pEnum->item.asEnum.offset );
+                  if( pBase )
+                     hb_itemCopy( hb_stackReturnItem(), pBase );
+               }
+               return &s___msgEnumKey;
+            }
             else if( pMsg == s___msgEnumBase.pDynSym )
             {
                if( HB_IS_BYREF( pEnum->item.asEnum.basePtr ) )
@@ -1539,6 +1561,19 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          hb_itemPutC( hb_stackReturnItem(),
                       pObject->item.asSymbol.value->szName );
          return &s___msgName;
+      }
+   }
+   else if( HB_IS_HASH( pObject ) )
+   {
+      if( pMsg == s___msgKeys.pDynSym )
+      {
+         hb_itemRelease( hb_itemReturnForward( hb_hashGetKeys( pObject ) ) );
+         return &s___msgKeys;
+      }
+      else if( pMsg == s___msgValues.pDynSym )
+      {
+         hb_itemRelease( hb_itemReturnForward( hb_hashGetValues( pObject ) ) );
+         return &s___msgValues;
       }
    }
 
@@ -1934,6 +1969,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
             case 'P':
             case 'p':
                return HB_IT_POINTER;
+
+            case 'H':
+            case 'h':
+               return HB_IT_HASH;
          }
       }
       else if( HB_IS_ARRAY( pItem ) )

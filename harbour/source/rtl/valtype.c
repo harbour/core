@@ -64,35 +64,114 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbstack.h"
+#include "hbapierr.h"
+/* #include "hbstack.h" */
 
 HB_FUNC( VALTYPE )
 {
    hb_retc( hb_itemTypeStr( hb_param( 1, HB_IT_ANY ) ) );
 }
 
+/*
 HB_FUNC( HB_ISBYREF )
 {
-   PHB_ITEM pItem;
-
    if( hb_pcount() )
    {
-      pItem = hb_stackItemFromBase( 1 );
-
+      PHB_ITEM pItem = hb_stackItemFromBase( 1 );
       if( HB_IS_BYREF( pItem ) )
       {
-         pItem = hb_itemUnRefOnce( pItem );
-
-         if( HB_IS_BYREF( pItem ) )
-
-            hb_retl( TRUE );
-
-         else
-
-            hb_retl( FALSE );
+         hb_retl( HB_IS_BYREF( hb_itemUnRefOnce( pItem ) ) );
       }
-      else
-         hb_ret( );
    }
 }
+*/
 
+HB_FUNC( HB_ISNIL )
+{
+   hb_retl( ISNIL( 1 ) );
+}
+
+HB_FUNC( HB_ISNUMERIC )
+{
+   hb_retl( ISNUM( 1 ) );
+}
+
+HB_FUNC( HB_ISLOGICAL )
+{
+   hb_retl( ISLOG( 1 ) );
+}
+
+HB_FUNC( HB_ISDATE )
+{
+   hb_retl( ISDATE( 1 ) );
+}
+
+HB_FUNC( HB_ISBLOCK )
+{
+   hb_retl( ISBLOCK( 1 ) );
+}
+
+HB_FUNC( HB_ISPOINTER )
+{
+   hb_retl( ISPOINTER( 1 ) );
+}
+
+HB_FUNC( HB_ISSYMBOL )
+{
+   hb_retl( ISSYMBOL( 1 ) );
+}
+
+HB_FUNC( HB_ISSTRING )
+{
+   hb_retl( ISCHAR( 1 ) );
+}
+
+HB_FUNC( HB_ISCHAR )
+{
+   hb_retl( ( hb_parinfo( 1 ) & HB_IT_MEMO ) == HB_IT_STRING );
+}
+
+HB_FUNC( HB_ISMEMO )
+{
+   hb_retl( ( hb_parinfo( 1 ) & HB_IT_MEMOFLAG ) != 0 );
+}
+
+HB_FUNC( HB_ISARRAY )
+{
+   hb_retl( hb_extIsArray( 1 ) );
+}
+
+HB_FUNC( HB_ISOBJECT )
+{
+   hb_retl( ISOBJECT( 1 ) );
+}
+
+HB_FUNC( HB_ISHASH )
+{
+   hb_retl( ISHASH( 1 ) );
+}
+
+HB_FUNC( HB_ISNULL )
+{
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+
+   if( pItem )
+   {
+      if( HB_IS_STRING( pItem ) )
+      {
+         hb_retl( hb_itemGetCLen( pItem ) == 0 );
+         return;
+      }
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         hb_retl( hb_arrayLen( pItem ) == 0 );
+         return;
+      }
+      else if( HB_IS_HASH( pItem ) )
+      {
+         hb_retl( hb_hashLen( pItem ) == 0 );
+         return;
+      }
+   }
+   hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "HB_ISNULL", 1, hb_paramError( 1 ) );
+}

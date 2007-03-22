@@ -429,11 +429,12 @@ HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage,
       pExpr->value.asMessage.szMessage = szMessage;
       pExpr->value.asMessage.pMessage = NULL;
 #ifndef HB_MACRO_SUPPORT
-      if( pObject && szMessage[ 0 ] == '_' )
+      if( pObject && szMessage[ 0 ] == '_' && strncmp( "__ENUM", szMessage, 6 ) == 0 )
       {
-         if( strcmp( "__ENUMINDEX", szMessage ) == 0 ||
-             strcmp( "__ENUMBASE",  szMessage ) == 0 ||
-             strcmp( "__ENUMVALUE", szMessage ) == 0 )
+         if( strcmp( "INDEX", szMessage + 6 ) == 0 ||
+             strcmp( "KEY",   szMessage + 6 ) == 0 ||
+             strcmp( "BASE",  szMessage + 6 ) == 0 ||
+             strcmp( "VALUE", szMessage + 6 ) == 0 )
          {
             if( pObject->ExprType == HB_ET_VARIABLE )
             {

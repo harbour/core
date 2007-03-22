@@ -140,8 +140,7 @@ extern PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION );    /* releases 
 extern void      hb_compAnnounce( HB_COMP_DECL, char * );
 extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine );
 
-extern PFUNCTION hb_compFunCallAdd( HB_COMP_DECL, char * szFuntionName );
-extern PFUNCTION hb_compFunCallFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined called function */
+extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined called function */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, char *, int );
 
 extern void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
@@ -152,6 +151,7 @@ extern int hb_compLocalGetPos( HB_COMP_DECL, char * szVarName );   /* returns th
 extern char * hb_compStaticGetName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   FALSE
+#define HB_SYM_ALIAS    FALSE
 #define HB_SYM_MSGNAME  FALSE
 #define HB_SYM_FUNCNAME TRUE
 extern PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, char *, USHORT *, BOOL );
@@ -171,8 +171,7 @@ extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cV
 extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK statement */
 
 extern void hb_compExternGen( HB_COMP_DECL ); /* generates the symbols for the EXTERN names */
-extern void hb_compExternAdd( HB_COMP_DECL, char * szExternName ); /* defines a new extern name */
-
+extern void hb_compExternAdd( HB_COMP_DECL, char * szExternName, HB_SYMBOLSCOPE cScope ); /* defines a new extern name */
 extern void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName );
 
 extern void hb_compSwitchKill( HB_COMP_DECL );
@@ -213,7 +212,7 @@ extern void hb_compGenPushLong( HB_LONG lNumber, HB_COMP_DECL );       /* Pushes
 extern void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL );       /* Pushes a date constant on the virtual machine stack */
 extern void hb_compGenPushNil( HB_COMP_DECL );                   /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( char * szText, ULONG ulLen, HB_COMP_DECL );       /* Pushes a string on the virtual machine stack */
-extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
+extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
 extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
 extern void hb_compGenPushFunRef( char *, HB_COMP_DECL );

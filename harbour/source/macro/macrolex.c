@@ -282,6 +282,11 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                pLex->ulSrc++;
                return EQ;
             }
+            else if( pLex->pString[ pLex->ulSrc ] == '>' && HB_SUPPORT_HARBOUR )
+            {
+               pLex->ulSrc++;
+               return HASHOP;
+            }
             return '=';
 
          case '+':

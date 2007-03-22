@@ -164,6 +164,13 @@ typedef struct __INLINE
    struct __INLINE * pNext;               /* pointer to the next defined inline */
 } _INLINE, * PINLINE;
 
+/* structure to hold a called functions */
+typedef struct __FUNCALL
+{
+   char *       szName;                   /* name of a called function */
+   struct __FUNCALL * pNext;              /* pointer to the next called function */
+} _FUNCALL, * PFUNCALL;
+
 /* structure to control all Clipper defined functions */
 typedef struct
 {
@@ -179,6 +186,14 @@ typedef struct
    PINLINE pLast;             /* pointer to the last defined inline */
    int     iCount;            /* number of defined inlines */
 } INLINES;
+
+/* structure to control all Clipper defined functions */
+typedef struct
+{
+   PFUNCALL  pFirst;            /* pointer to the first called funtion */
+   PFUNCALL  pLast;             /* pointer to the last called function */
+   int       iCount;            /* number of defined functions */
+} FUNCALLS;
 
 /* compiler symbol support structure */
 typedef struct _COMSYMBOL
@@ -201,7 +216,8 @@ typedef struct
 
 typedef struct __EXTERN
 {
-   char * szName;
+   char * szName;               /* name of the extern function */
+   HB_SYMBOLSCOPE cScope;       /* the scope of the function */
    struct __EXTERN * pNext;
 } _EXTERN, * PEXTERN;      /* support structure for extern symbols */
 /* as they have to be placed on the symbol table later than the first public symbol */
@@ -214,18 +230,19 @@ typedef struct _AUTOOPEN
 
 /* value types seen at language level
  */
-#define  HB_EV_UNKNOWN     0
-#define  HB_EV_NIL         1
-#define  HB_EV_NUMERIC     2
-#define  HB_EV_STRING      4
-#define  HB_EV_CODEBLOCK   8
-#define  HB_EV_LOGICAL     16
-#define  HB_EV_OBJECT      32
-#define  HB_EV_ARRAY       64
-#define  HB_EV_SYMBOL      128
-#define  HB_EV_VARREF      256
-#define  HB_EV_FUNREF      512
-#define  HB_EV_DATE        1024
+#define  HB_EV_UNKNOWN     0x0000
+#define  HB_EV_NIL         0x0001
+#define  HB_EV_NUMERIC     0x0002
+#define  HB_EV_STRING      0x0004
+#define  HB_EV_CODEBLOCK   0x0008
+#define  HB_EV_LOGICAL     0x0010
+#define  HB_EV_OBJECT      0x0020
+#define  HB_EV_ARRAY       0x0040
+#define  HB_EV_SYMBOL      0x0080
+#define  HB_EV_VARREF      0x0100
+#define  HB_EV_FUNREF      0x0200
+#define  HB_EV_DATE        0x0400
+#define  HB_EV_HASH        0x0800
 
 /* messages sent to expressions
  */
@@ -275,6 +292,7 @@ typedef enum
    HB_ET_LOGICAL,
    HB_ET_SELF,
    HB_ET_ARRAY,
+   HB_ET_HASH,
    HB_ET_VARREF,
    HB_ET_REFERENCE,
    HB_ET_FUNREF,
@@ -552,7 +570,7 @@ typedef struct _HB_COMP
 
    HB_HASH_TABLE_PTR pIdentifiers;
    FUNCTIONS         functions;
-   FUNCTIONS         funcalls;
+   FUNCALLS          funcalls;
    HB_LOOPEXIT_PTR   pLoops;
    HB_SWITCHCMD_PTR  pSwitch;
    HB_ELSEIF_PTR     elseif;

@@ -363,7 +363,7 @@ then
 fi
 
 # remove unused files
-rm -f ${HB_BIN_INSTALL}/hbdoc ${HB_BIN_INSTALL}/hbtest
+rm -f ${HB_BIN_INSTALL}/{hbdoc,hbtest,hbverfix,pretest}
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
@@ -535,6 +535,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libcodepage.a
 %{_libdir}/%{name}/libcommon.a
+%{_libdir}/%{name}/libcompiler.a
 %{_libdir}/%{name}/libdb*.a
 %{_libdir}/%{name}/libdebug.a
 %{_libdir}/%{name}/libfm*.a
@@ -559,6 +560,7 @@ rm -rf $RPM_BUILD_ROOT
 %{!?_without_adsrdd: %{_libdir}/%{name}/librddads*.a}
 #%{?_with_mysql: %{_libdir}/%{name}/libmysql*.a}
 #%{?_with_pgsql: %{_libdir}/%{name}/libpgsql*.a}
+#%{_libdir}/%{name}/libtip.a
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhtml.a
 %{_libdir}/%{name}/libmisc.a

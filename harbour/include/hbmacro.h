@@ -129,7 +129,7 @@ extern void hb_macroGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_COMP_DECL );
 extern void hb_macroGenJumpHere( ULONG ulOffset, HB_COMP_DECL );
 extern ULONG hb_macroGenJumpTrue( LONG lOffset, HB_COMP_DECL );
 
-extern void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL );
+extern void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL );
 extern void hb_macroGenPushLong( HB_LONG lNumber, HB_COMP_DECL );
 extern void hb_macroGenPushDate( HB_LONG lNumber, HB_COMP_DECL );
 extern void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );

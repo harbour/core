@@ -63,7 +63,7 @@
 
 
 /* HB_INET_H_ */
-#if !defined( HB_COMPAT_XHB ) || defined( HB_OS_DOS )
+#if defined( HB_OS_DOS )
 
    #ifndef HB_NO_DEFAULT_INET
       #define HB_NO_DEFAULT_INET
@@ -491,7 +491,7 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
 * Socket Initialization
 ***/
 
-HB_FUNC( INETINIT )
+HB_FUNC( HB_INETINIT )
 {
    if( s_iSessions )
    {
@@ -509,7 +509,7 @@ HB_FUNC( INETINIT )
    }
 }
 
-HB_FUNC( INETCLEANUP )
+HB_FUNC( HB_INETCLEANUP )
 {
    if( --s_iSessions == 0 )
    {
@@ -523,31 +523,24 @@ HB_FUNC( INETCLEANUP )
 * Socket Creation and destruction
 ***/
 
-HB_FUNC( INETCREATE )
+HB_FUNC( HB_INETCREATE )
 {
    PHB_ITEM pSocket = NULL;
    HB_SOCKET_STRUCT *Socket;
    HB_SOCKET_INIT( Socket, pSocket );
 
    if( ISNUM( 1 ) )
-   {
       Socket->timeout = hb_parni(1);
-   }
-
    hb_itemRelease( hb_itemReturnForward( pSocket ) );
 }
 
-HB_FUNC( INETCLOSE )
+HB_FUNC( HB_INETCLOSE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   if( Socket->com )
+   else if( Socket->com )
    {
       #if defined( HB_OS_WIN_32 )
          shutdown( Socket->com, SD_BOTH );
@@ -565,21 +558,10 @@ HB_FUNC( INETCLOSE )
       #endif
    }
    else
-   {
       hb_retni( -1 );
-   }
 }
 
-
-/* Kept for backward compatibility */
-
-HB_FUNC( INETDESTROY )
-{
-   if( HB_PARSOCKET( 1 ) )
-      HB_FUNC_EXEC( INETCLOSE );
-}
-
-HB_FUNC( INETFD )
+HB_FUNC( HB_INETFD )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
@@ -597,22 +579,19 @@ HB_FUNC( INETFD )
 * Socket data access & management
 ***/
 
-HB_FUNC( INETSTATUS )
+HB_FUNC( HB_INETSTATUS )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   /* TODO: hb_retni( Socket->status ); */
-   hb_retni( Socket->com == 0 ? -1 : 1 );
+   else
+      /* TODO: hb_retni( Socket->status ); */
+      hb_retni( Socket->com == 0 ? -1 : 1 );
 }
 
 /* Prepared, but still not used; being in wait for comments
-HB_FUNC( INETSTATUSDESC )
+HB_FUNC( HB_INETSTATUSDESC )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
@@ -632,20 +611,17 @@ HB_FUNC( INETSTATUSDESC )
 }
 */
 
-HB_FUNC( INETERRORCODE )
+HB_FUNC( HB_INETERRORCODE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   hb_retni( Socket->errorCode );
+   else
+      hb_retni( Socket->errorCode );
 }
 
-HB_FUNC( INETERRORDESC )
+HB_FUNC( HB_INETERRORDESC )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
@@ -658,193 +634,129 @@ HB_FUNC( INETERRORDESC )
    hb_retc( Socket->errorDesc );
 }
 
-HB_FUNC( INETCLEARERROR )
+HB_FUNC( HB_INETCLEARERROR )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   HB_SOCKET_ZERO_ERROR( Socket );
+   else
+      HB_SOCKET_ZERO_ERROR( Socket );
 }
 
 
-HB_FUNC( INETCOUNT )
+HB_FUNC( HB_INETCOUNT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   hb_retni( Socket->count );
+   else
+      hb_retni( Socket->count );
 }
 
-HB_FUNC( INETADDRESS )
+HB_FUNC( HB_INETADDRESS )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    char *addr;
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
+   else
+   {
+      addr = inet_ntoa( Socket->remote.sin_addr );
+      hb_retc( addr );
    }
-
-   addr = inet_ntoa( Socket->remote.sin_addr );
-
-   hb_retc( addr );
 }
 
-HB_FUNC( INETPORT )
+HB_FUNC( HB_INETPORT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-
-   hb_retni( ntohs( Socket->remote.sin_port ) );
+   else
+      hb_retni( ntohs( Socket->remote.sin_port ) );
 }
 
 
-HB_FUNC( INETSETTIMEOUT )
+HB_FUNC( HB_INETTIMEOUT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
-   if( Socket != NULL && ISNUM( 2 ) )
-      Socket->timeout = hb_parni( 2 );
+   if( Socket != NULL )
+   {
+      hb_retni( Socket->timeout );
+      if( ISNUM( 2 ) )
+         Socket->timeout = hb_parni( 2 );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( INETGETTIMEOUT )
+HB_FUNC( HB_INETCLEARTIMEOUT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   hb_retni( Socket->timeout );
+   else
+      Socket->timeout = -1;
 }
 
-
-HB_FUNC( INETCLEARTIMEOUT )
+HB_FUNC( HB_INETTIMELIMIT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   Socket->timeout = -1;
-}
-
-HB_FUNC( INETSETTIMELIMIT )
-{
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-
-   if( Socket == NULL || !ISNUM(2) )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   Socket->timelimit = hb_parnl(2);
-}
-
-HB_FUNC( INETGETTIMELIMIT )
-{
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-
-   if( Socket == NULL )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   hb_retni( Socket->timelimit );
-}
-
-
-HB_FUNC( INETCLEARTIMELIMIT )
-{
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-
-   if( Socket == NULL )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   Socket->timelimit = -1;
-}
-
-HB_FUNC( INETSETPERIODCALLBACK )
-{
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
-
-   if( Socket == NULL )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   if( Socket->caPeriodic != NULL )
-   {
-	  hb_itemRelease( Socket->caPeriodic );
-   }
-
-   Socket->caPeriodic = hb_arrayClone( pArray );
-}
-
-
-HB_FUNC( INETGETPERIODCALLBACK )
-{
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-
-   if( Socket == NULL )
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-
-   if(  Socket->caPeriodic == NULL )
-   {
-      hb_ret();
-   }
    else
    {
-      hb_itemReturn( Socket->caPeriodic );
+      hb_retnl( Socket->timelimit );
+      if( ISNUM( 2 ) )
+         Socket->timelimit = hb_parnl(2);
    }
 }
 
-HB_FUNC( INETCLEARPERIODCALLBACK )
+HB_FUNC( HB_INETCLEARTIMELIMIT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-   }
+   else
+      Socket->timelimit = -1;
+}
 
-   if( Socket->caPeriodic != NULL )
+HB_FUNC( HB_INETPERIODCALLBACK )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   PHB_ITEM pExec = hb_param( 2, HB_IT_ARRAY | HB_IT_BLOCK | HB_IT_SYMBOL );
+
+   if( Socket == NULL )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+   else
    {
-	  hb_itemRelease( Socket->caPeriodic );
+      if( Socket->caPeriodic )
+         hb_itemReturn( Socket->caPeriodic );
+      if( pExec )
+      {
+         if( Socket->caPeriodic )
+   	      hb_itemRelease( Socket->caPeriodic );
+         Socket->caPeriodic = hb_itemClone( pExec );
+      }
+   }
+}
+
+HB_FUNC( HB_INETCLEARPERIODCALLBACK )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+
+   if( Socket == NULL )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+   else if( Socket->caPeriodic )
+   {
+      hb_itemRelease( Socket->caPeriodic );
       Socket->caPeriodic = NULL;
    }
 }
@@ -951,13 +863,13 @@ static void s_inetRecvInternal( int iMode )
       hb_retni( iReceived );
 }
 
-HB_FUNC( INETRECV )
+HB_FUNC( HB_INETRECV )
 {
    s_inetRecvInternal( 0 );
 }
 
 
-HB_FUNC( INETRECVALL )
+HB_FUNC( HB_INETRECVALL )
 {
    s_inetRecvInternal( 1 );
 }
@@ -1114,12 +1026,12 @@ static void s_inetRecvPattern( char *szPattern )
    }
 }
 
-HB_FUNC( INETRECVLINE )
+HB_FUNC( HB_INETRECVLINE )
 {
    s_inetRecvPattern( "\r\n" );
 }
 
-HB_FUNC( INETRECVENDBLOCK )
+HB_FUNC( HB_INETRECVENDBLOCK )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pProto      = hb_param( 2, HB_IT_ARRAY | HB_IT_STRING );
@@ -1320,7 +1232,7 @@ HB_FUNC( INETRECVENDBLOCK )
    hb_xfree( iprotosize );
 }
 
-HB_FUNC( INETDATAREADY )
+HB_FUNC( HB_INETDATAREADY )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    int iLen;
@@ -1424,12 +1336,12 @@ static void s_inetSendInternal( int iMode )
    }
 }
 
-HB_FUNC( INETSEND )
+HB_FUNC( HB_INETSEND )
 {
    s_inetSendInternal( 0 );
 }
 
-HB_FUNC( INETSENDALL )
+HB_FUNC( HB_INETSENDALL )
 {
    s_inetSendInternal( 1 );
 }
@@ -1439,7 +1351,7 @@ HB_FUNC( INETSENDALL )
 * Name resolution interface functions
 ***/
 
-HB_FUNC( INETGETHOSTS )
+HB_FUNC( HB_INETGETHOSTS )
 {
    char * szHost = hb_parc( 1 );
    struct hostent *Host;
@@ -1481,7 +1393,7 @@ HB_FUNC( INETGETHOSTS )
 }
 
 
-HB_FUNC( INETGETALIAS )
+HB_FUNC( HB_INETGETALIAS )
 {
    char * szHost = hb_parc( 1 );
    struct hostent *Host;
@@ -1527,7 +1439,7 @@ HB_FUNC( INETGETALIAS )
 * Server Specific functions
 ****/
 
-HB_FUNC( INETSERVER )
+HB_FUNC( HB_INETSERVER )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 2 );
    PHB_ITEM pSocket = NULL;
@@ -1602,7 +1514,7 @@ HB_FUNC( INETSERVER )
       hb_itemReturn( hb_param( 2, HB_IT_ANY ) );
 }
 
-HB_FUNC( INETACCEPT )
+HB_FUNC( HB_INETACCEPT )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    HB_SOCKET_STRUCT *NewSocket;
@@ -1685,7 +1597,7 @@ HB_FUNC( INETACCEPT )
 * Client specific (connection functions)
 ****/
 
-HB_FUNC( INETCONNECT )
+HB_FUNC( HB_INETCONNECT )
 {
    char * szHost = hb_parc( 1 );
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 3 );
@@ -1744,7 +1656,7 @@ HB_FUNC( INETCONNECT )
 }
 
 
-HB_FUNC( INETCONNECTIP )
+HB_FUNC( HB_INETCONNECTIP )
 {
    char * szHost = hb_parc( 1 );
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 3 );
@@ -1798,7 +1710,7 @@ HB_FUNC( INETCONNECTIP )
 * Datagram functions
 ************************************************************/
 
-HB_FUNC( INETDGRAMBIND )
+HB_FUNC( HB_INETDGRAMBIND )
 {
    HB_SOCKET_STRUCT *Socket;
    PHB_ITEM pSocket = NULL;
@@ -1895,7 +1807,7 @@ HB_FUNC( INETDGRAMBIND )
    hb_itemRelease( hb_itemReturnForward( pSocket ) );
 }
 
-HB_FUNC( INETDGRAM )
+HB_FUNC( HB_INETDGRAM )
 {
    HB_SOCKET_STRUCT *Socket;
    PHB_ITEM pSocket = NULL;
@@ -1930,7 +1842,7 @@ HB_FUNC( INETDGRAM )
    hb_itemRelease( hb_itemReturnForward( pSocket ) );
 }
 
-HB_FUNC( INETDGRAMSEND )
+HB_FUNC( HB_INETDGRAMSEND )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    char * szAddress = hb_parc( 2 );
@@ -1984,7 +1896,7 @@ HB_FUNC( INETDGRAMSEND )
 }
 
 
-HB_FUNC( INETDGRAMRECV )
+HB_FUNC( HB_INETDGRAMRECV )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
@@ -2066,9 +1978,61 @@ HB_FUNC( INETDGRAMRECV )
 * Generic utility(?) functions
 ************************************************************/
 
-HB_FUNC( INETCRLF )
+HB_FUNC( HB_INETCRLF )
 {
    hb_retc( "\r\n" );
 }
+
+HB_FUNC( HB_ISINETSOCKET )
+{
+   hb_retl( HB_PARSOCKET( 1 ) != NULL );
+}
+
+#ifdef HB_COMPAT_XHB
+
+HB_FUNC( INETINIT )                 { HB_FUNC_EXEC( HB_INETINIT ); }
+HB_FUNC( INETCLEANUP )              { HB_FUNC_EXEC( HB_INETCLEANUP ); }
+HB_FUNC( INETCREATE )               { HB_FUNC_EXEC( HB_INETCREATE ); }
+HB_FUNC( INETCLOSE )                { HB_FUNC_EXEC( HB_INETCLOSE ); }
+HB_FUNC( INETFD )                   { HB_FUNC_EXEC( HB_INETFD ); }
+HB_FUNC( INETSTATUS )               { HB_FUNC_EXEC( HB_INETSTATUS ); }
+HB_FUNC( INETERRORCODE )            { HB_FUNC_EXEC( HB_INETERRORCODE ); }
+HB_FUNC( INETERRORDESC )            { HB_FUNC_EXEC( HB_INETERRORDESC ); }
+HB_FUNC( INETCLEARERROR )           { HB_FUNC_EXEC( HB_INETCLEARERROR ); }
+HB_FUNC( INETCOUNT )                { HB_FUNC_EXEC( HB_INETCOUNT ); }
+HB_FUNC( INETADDRESS )              { HB_FUNC_EXEC( HB_INETADDRESS ); }
+HB_FUNC( INETPORT )                 { HB_FUNC_EXEC( HB_INETPORT ); }
+HB_FUNC( INETSETTIMEOUT )           { HB_FUNC_EXEC( HB_INETTIMEOUT ); }
+HB_FUNC( INETGETTIMEOUT )           { HB_FUNC_EXEC( HB_INETTIMEOUT ); }
+HB_FUNC( INETCLEARTIMEOUT )         { HB_FUNC_EXEC( HB_INETCLEARTIMEOUT ); }
+HB_FUNC( INETSETTIMELIMIT )         { HB_FUNC_EXEC( HB_INETTIMELIMIT ); }
+HB_FUNC( INETGETTIMELIMIT )         { HB_FUNC_EXEC( HB_INETTIMELIMIT ); }
+HB_FUNC( INETCLEARTIMELIMIT )       { HB_FUNC_EXEC( HB_INETCLEARTIMELIMIT ); }
+HB_FUNC( INETSETPERIODCALLBACK )    { HB_FUNC_EXEC( HB_INETPERIODCALLBACK ); }
+HB_FUNC( INETGETPERIODCALLBACK )    { HB_FUNC_EXEC( HB_INETPERIODCALLBACK ); }
+HB_FUNC( INETCLEARPERIODCALLBACK )  { HB_FUNC_EXEC( HB_INETCLEARPERIODCALLBACK ); }
+HB_FUNC( INETRECV )                 { HB_FUNC_EXEC( HB_INETRECV ); }
+HB_FUNC( INETRECVALL )              { HB_FUNC_EXEC( HB_INETRECVALL ); }
+HB_FUNC( INETRECVLINE )             { HB_FUNC_EXEC( HB_INETRECVLINE ); }
+HB_FUNC( INETRECVENDBLOCK )         { HB_FUNC_EXEC( HB_INETRECVENDBLOCK ); }
+HB_FUNC( INETDATAREADY )            { HB_FUNC_EXEC( HB_INETDATAREADY ); }
+HB_FUNC( INETSEND )                 { HB_FUNC_EXEC( HB_INETSEND ); }
+HB_FUNC( INETSENDALL )              { HB_FUNC_EXEC( HB_INETSENDALL ); }
+HB_FUNC( INETGETHOSTS )             { HB_FUNC_EXEC( HB_INETGETHOSTS ); }
+HB_FUNC( INETGETALIAS )             { HB_FUNC_EXEC( HB_INETGETALIAS ); }
+HB_FUNC( INETSERVER )               { HB_FUNC_EXEC( HB_INETSERVER ); }
+HB_FUNC( INETACCEPT )               { HB_FUNC_EXEC( HB_INETACCEPT ); }
+HB_FUNC( INETCONNECT )              { HB_FUNC_EXEC( HB_INETCONNECT ); }
+HB_FUNC( INETCONNECTIP )            { HB_FUNC_EXEC( HB_INETCONNECTIP ); }
+HB_FUNC( INETDGRAMBIND )            { HB_FUNC_EXEC( HB_INETDGRAMBIND ); }
+HB_FUNC( INETDGRAM )                { HB_FUNC_EXEC( HB_INETDGRAM ); }
+HB_FUNC( INETDGRAMSEND )            { HB_FUNC_EXEC( HB_INETDGRAMSEND ); }
+HB_FUNC( INETDGRAMRECV )            { HB_FUNC_EXEC( HB_INETDGRAMRECV ); }
+HB_FUNC( INETCRLF )                 { HB_FUNC_EXEC( HB_INETCRLF ); }
+HB_FUNC( ISINETSOCKET )             { HB_FUNC_EXEC( HB_ISINETSOCKET ); }
+/* Kept for backward compatibility */
+HB_FUNC( INETDESTROY )              { if( HB_PARSOCKET( 1 ) ) HB_FUNC_EXEC( HB_INETCLOSE ); }
+
+#endif /* HB_COMPAT_XHB */
 
 #endif /* !HB_NO_DEFAULT_INET */

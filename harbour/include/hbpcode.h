@@ -248,7 +248,8 @@ typedef enum
    HB_P_LOCALINC,              /* 174 increments the local variable */
    HB_P_LOCALINCPUSH,          /* 175 increments the local variable, push result on the stack */
    HB_P_PUSHFUNCSYM,           /* 176 places a symbol on the virtual machine stack */
-   HB_P_LAST_PCODE             /* 177 this defines the number of defined pcodes */
+   HB_P_HASHGEN,               /* 177 instructs the virtual machine to build a hash and load element from the stack */
+   HB_P_LAST_PCODE             /* 178 this defines the number of defined pcodes */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

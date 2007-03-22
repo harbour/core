@@ -84,14 +84,19 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
       fputc( 0, yyc );
       fputc( pSym->cScope, yyc );
 
-      /* specify the function address if it is a defined function or a
+      /* specify the function address if it is a defined function or an
          external called function */
-      if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) /* is it a defined function ? */
-         fputc( SYM_FUNC, yyc );
+
+#if 0
+      if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) )
+#else
+      if( pSym->cScope & HB_FS_LOCAL )
+#endif
+         fputc( SYM_FUNC, yyc );    /* function defined in this module */
       else if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
-         fputc( SYM_EXTERN, yyc );
+         fputc( SYM_EXTERN, yyc );  /* external function */
       else
-         fputc( SYM_NOLINK, yyc );
+         fputc( SYM_NOLINK, yyc );  /* other symbol */
       pSym = pSym->pNext;
    }
 

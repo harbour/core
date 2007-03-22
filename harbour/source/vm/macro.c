@@ -64,7 +64,11 @@
 #endif
 
 /* various flags for macro compiler */
+#ifdef HB_C52_STRICT
 static ULONG s_macroFlags = HB_SM_SHORTCUTS;
+#else
+static ULONG s_macroFlags = HB_SM_SHORTCUTS | HB_SM_HARBOUR;
+#endif
 
 /* ************************************************************************* */
 
@@ -1077,12 +1081,10 @@ static void hb_macroMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL 
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */
-void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL )
+void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
 {
    BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
    HB_DYNS_PTR pSym;
-
-   HB_SYMBOL_UNUSED( bAlias );
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
    {
@@ -1235,7 +1237,7 @@ void hb_macroGenPopAliasedVar( char * szVarName,
          }
          else
          {  /* database alias */
-            hb_macroGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_macroGenPushSymbol( szAlias, FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -1328,7 +1330,7 @@ void hb_macroGenPushAliasedVar( char * szVarName,
          }
          else
          {  /* database alias */
-            hb_macroGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_macroGenPushSymbol( szAlias, FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -1379,12 +1381,12 @@ void hb_macroGenPushFunSym( char * szFunName, HB_COMP_DECL )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_macroGenPushSymbol( szFunction, TRUE, FALSE, HB_COMP_PARAM );
+      hb_macroGenPushSymbol( szFunction, TRUE, HB_COMP_PARAM );
    }
    else
    {
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
-      hb_macroGenPushSymbol( szFunName, TRUE, FALSE, HB_COMP_PARAM );
+      hb_macroGenPushSymbol( szFunName, TRUE, HB_COMP_PARAM );
    }
 }
 
@@ -1400,8 +1402,7 @@ void hb_macroGenPushFunRef( char * szFunName, HB_COMP_DECL )
 
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
-   hb_macroGenPushSymbol( szFunction ? szFunction : szFunName,
-                         TRUE, FALSE, HB_COMP_PARAM );
+   hb_macroGenPushSymbol( szFunction ? szFunction : szFunName, TRUE, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a string on the virtual machine stack */

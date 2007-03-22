@@ -8,6 +8,206 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-22 12:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    * updated for new files - please check
+
+  * harbour/harbour.spec
+    * added compiler library
+
+  * harbour/bin/pack_src.sh
+  * harbour/bin/hb-func.sh
+    * updated for new files and libraries
+
+  * harbour/config/w32/mingw32.cf
+  * harbour/config/w32/watcom.cf
+  * harbour/config/w32/xcc.cf
+    * added winsock libraries
+
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    + added hb_cdpicmp() - not case sensitive version of hb_cdpcmp()
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + hb_itemStrICmp(), hb_itemCopyFromRef(), hb_itemMoveFromRef()
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbpcode.h
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbxvm.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbopt.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/macro/macrolex.c
+  * harbour/source/vm/Makefile
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/asort.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/macro.c
+  + harbour/source/vm/hashes.c
+  + harbour/source/vm/hashfunc.c
+    + added hash items, f.e.:
+         local h1 := {=>}, h2 := { "a"=>1.234, "b"=>2.345 }
+         ? h2[ "a" ], h2[ "b ]
+    + added support for DYNAMIC function declaration - it allow to define
+      functions which are lately bound at runtime, f.e.:
+         /*** t01.prg ***/
+         dynamic func1
+         proc main()
+         local h:=__hrbload("t02.hrb")
+         ? func1()
+         return
+
+         /*** t02.prg ***/
+         func func1
+         return "Hello!!!"
+
+    % use new FUNCALL structure to hold EXTERNAL and DYNAMIC functions,
+      it reduce memory usage, FUNCALL is much smaller then FUNCTION
+    % use symbol scope bits when possible instead of making some linear scan
+    + added new enumarator message: __ENUMKEY - it allow to access
+      key value when hash item is base enumerator value, f.e.:
+         proc main()
+         local v, h:={"a"=>1.000,"b"=>2.000,"c"=>3.000}
+         heval( h, { |k,v,i| qout( k, v, i ) } ); ?
+         for each v in h
+            ? v, "=>", v:__enumKey(), v:__enumValue(), v:__enumIndex(), ;
+                       valtype(v:__enumBase())
+            v += 0.123
+         next
+         ? ;heval( h, { |k,v,i| qout( k, v, i ) } )
+         return
+    + added C level hb_hash*() functions
+    + added support for full HASH item cloning and updated array cloning
+      to also clone nested hashes - please note that xHarbour does not do
+      that, in xHarbour ACLONE() clones _ONLY_ nested arrays and HCLONE()
+      _DOES_NOT_ clone _ANY_ nested items.
+
+  * harbour/include/hbextern.ch
+    + added hash functions HB_H*()
+    * changed INET*() functions to HB_INET*()
+    + added hash functions H*() and socket functions INET*() when
+      HB_COMPAT_XHB is set
+
+  * harbour/include/hbtypes.h
+    + added missing HB_EXTERN_BEGIN / HB_EXTERN_END
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    ! added protection against automatic word concatenation in some cases
+    ! fixed preprocessing expressions when match marker matches ';' token
+
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/itemseri.c
+    + added functions for item serialization: HB_SERIALIZE() and
+      HB_DESERIALIZE() - these function are not binary compatible
+      with xHarbour functions with the same names but make very
+      similar job with the exception to serialization of codeblock
+      and object variables - Harbour does not allow to serialize
+      codeblocks and serialize objects as arrays.
+      In most cases these functions can replace the xHarbour ones
+    + added HB_DESERIALBEGIN() and HB_DESERIALIZE() functions covered
+      by HB_COMPAT_XHB macro - this functions are only for compatibility
+      with existing xHarbour code, In Harbour HB_DESERIALBEGIN() is
+      dummy function which returns first parameter and HB_DESERIALNEXT()
+      is a simple wrapper to HB_DESERIALIZE() so it's not necessary to
+      use them.
+
+  * harbour/source/rtl/hbinet.c
+    * changed INET*() functions to HB_INET*() and enable them for default
+      build
+    + added INET*() functions wrappers covered by HB_COMPAT_XHB macro
+
+  * harbour/source/rtl/hbrandom.c
+    + added HB_RANDOMINT() - xHarbour compatible
+
+  * harbour/source/rtl/len.c
+    + added support for HASHes
+
+  * harbour/source/rtl/valtype.c
+    + added support for HASHes
+    + added set of HB_IS*() functions - they are a little bit faster then
+      calling VALTYPE( v ) == <cVal>
+    - removed HB_ISBYREF() - this function cannot longer work, it was using
+      a Clipper incompatible anomalies in passing variables by reference I
+      fixed so it has to stop to work. If it will be realy necessary to
+      implement HB_ISBYREF() function then please inform me - it will have
+      to be done at compiler level or with some much deeper HVM stack
+      checking.
+
+  * harbour/source/vm/extend.c
+    ! fixed hb_extIsArray() and hb_extIsObject() to work well with
+      parameters passed by reference.
+      Please note that now hb_extIsArray() return TRUE only for pure arrays
+      not object values.
+
+  * harbour/contrib/Makefile
+  + harbour/contrib/tip/Changelog
+  + harbour/contrib/tip/Makefile
+  + harbour/contrib/tip/atokens.c
+  + harbour/contrib/tip/base64x.c
+  + harbour/contrib/tip/cgi.prg
+  + harbour/contrib/tip/client.prg
+  + harbour/contrib/tip/credent.prg
+  + harbour/contrib/tip/cstr.prg
+  + harbour/contrib/tip/encb64.prg
+  + harbour/contrib/tip/encmthd.c
+  + harbour/contrib/tip/encoder.prg
+  + harbour/contrib/tip/encqp.prg
+  + harbour/contrib/tip/encurl.prg
+  + harbour/contrib/tip/ftpcln.prg
+  + harbour/contrib/tip/hbhex2n.c
+  + harbour/contrib/tip/httpcln.prg
+  + harbour/contrib/tip/mail.prg
+  + harbour/contrib/tip/popcln.prg
+  + harbour/contrib/tip/smtpcln.prg
+  + harbour/contrib/tip/tip.ch
+  + harbour/contrib/tip/url.prg
+  + harbour/contrib/tip/utils.c
+    + added TIP library - code borrowed from xHarbour
+
+
+
+   Please test - a lot of above code is not well tested, also some peaces
+   were written over year ago for different things (f.e. serialization for
+   NETRDD) and now I collected them and committed.
+   The TIP library was not tested at all. It can be compiled but I cannot
+   say if it works - I hope that people familiar with it can make necessary
+   test and fixes.
+   It's also not the final version of low level HASH item code. I'm working
+   on more efficient structure which uses binary tries but I cannot say when
+   I'll finish it (maybe in this weekend or maybe in next year) so I committed
+   working version now even if I'm not happy with overall performance (BTW
+   not worser then in xHarbour)
+
 2007-03-14 14:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapiitm.h
   * harbour/source/vm/eval.c

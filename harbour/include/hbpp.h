@@ -586,6 +586,7 @@ typedef struct
    PHB_MEM_BUFFER pBuffer;       /* buffer for input and output line */
    int      iSpaces;             /* leading spaces for next token */
    int      iSpacesNL;           /* leading spaces ';' token (fCanNextLine) if it will not be line concatenator */
+   int      iSpacesMin;          /* minimal number of leading spaces for next token */
    int      iLastType;           /* last token type */
    BOOL     fCanNextLine;        /* ';' token found and we do not know yet if it's command separator or line concatenator */
    BOOL     fDirective;          /* # directives is parsed */

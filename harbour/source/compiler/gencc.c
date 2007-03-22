@@ -448,6 +448,15 @@ static HB_GENC_FUNC( hb_p_arraygen )
    return 3;
 }
 
+static HB_GENC_FUNC( hb_p_hashgen )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\thb_xvmHashGen( %hu );\n",
+            HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 3;
+}
+
 static HB_GENC_FUNC( hb_p_greater )
 {
    HB_GENC_LABEL();
@@ -2064,7 +2073,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localdec,
    hb_p_localinc,
    hb_p_localincpush,
-   hb_p_pushfuncsym
+   hb_p_pushfuncsym,
+   hb_p_hashgen
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

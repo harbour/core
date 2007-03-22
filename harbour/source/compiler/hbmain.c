@@ -290,17 +290,8 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
    return iStatus;
 }
 
-/*
-#if defined(__IBMCPP__) || defined(_MSC_VER) || (defined(__BORLANDC__) && defined(__cplusplus))
-int isatty( int handle )
-{
-   return ( handle < 4 ) ? 1 : 0;
-}
-#endif
-*/
-
 /* ------------------------------------------------------------------------- */
-/**                          ACTIONS                                        **/
+/*                           ACTIONS                                         */
 /* ------------------------------------------------------------------------- */
 
 
@@ -309,10 +300,12 @@ int isatty( int handle )
  * as they have to be placed on the symbol table later than the first
  * public symbol
  */
-PFUNCTION hb_compFunCallAdd( HB_COMP_DECL, char * szFunctionName )
+static PFUNCALL hb_compFunCallAdd( HB_COMP_DECL, char * szFunctionName )
 {
-   PFUNCTION pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunctionName, 0 );
+   PFUNCALL pFunc = ( PFUNCALL ) hb_xgrab( sizeof( _FUNCALL ) );
 
+   pFunc->szName = szFunctionName;
+   pFunc->pNext  = NULL;
    if( ! HB_COMP_PARAM->funcalls.iCount )
    {
       HB_COMP_PARAM->funcalls.pFirst = pFunc;
@@ -320,7 +313,7 @@ PFUNCTION hb_compFunCallAdd( HB_COMP_DECL, char * szFunctionName )
    }
    else
    {
-      ( ( PFUNCTION ) HB_COMP_PARAM->funcalls.pLast )->pNext = pFunc;
+      HB_COMP_PARAM->funcalls.pLast->pNext = pFunc;
       HB_COMP_PARAM->funcalls.pLast = pFunc;
    }
    HB_COMP_PARAM->funcalls.iCount++;
@@ -333,20 +326,21 @@ PFUNCTION hb_compFunCallAdd( HB_COMP_DECL, char * szFunctionName )
  * as they have to be placed on the symbol table later than the first
  * public symbol
  */
-void hb_compExternAdd( HB_COMP_DECL, char * szExternName ) /* defines a new extern name */
+void hb_compExternAdd( HB_COMP_DECL, char * szExternName, HB_SYMBOLSCOPE cScope ) /* defines a new extern name */
 {
    PEXTERN pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) ), pLast;
 
    if( strcmp( "_GET_", szExternName ) == 0 )
    {
       /* special function to implement @ GET statement */
-      hb_compExternAdd( HB_COMP_PARAM, "__GETA" );
+      hb_compExternAdd( HB_COMP_PARAM, "__GETA", 0 );
       pExtern->szName = "__GET";
    }
    else
    {
       pExtern->szName = szExternName;
    }
+   pExtern->cScope = cScope;
    pExtern->pNext  = NULL;
 
    if( HB_COMP_PARAM->externs == NULL )
@@ -1476,7 +1470,7 @@ PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, char * szSymbolName, USHORT * pwPos, 
       pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
       pSym->szName = szSymbolName;
-      pSym->cScope = 0;    /* HB_FS_PUBLIC; */
+      pSym->cScope = 0;
       pSym->cType = HB_COMP_PARAM->cVarType;
       pSym->pNext = NULL;
       pSym->bFunc = bFunction;
@@ -1586,7 +1580,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    if( pFunc )
    {
       /* The name of a function/procedure is already defined */
-      if( ( pFunc != HB_COMP_PARAM->functions.pFirst ) || HB_COMP_PARAM->fStartProc )
+      if( pFunc != HB_COMP_PARAM->functions.pFirst || HB_COMP_PARAM->fStartProc )
          /* it is not a starting procedure that was automatically created */
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
    }
@@ -1607,12 +1601,9 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    {
       /* there is not a symbol on the symbol table for this function name */
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-      if( pSym )
-         pSym->cScope = cScope;
    }
-
-   if( pSym && cScope != HB_FS_PUBLIC )
-      pSym->cScope |= cScope; /* we may have a non public function and a object message */
+   if( pSym )
+      pSym->cScope |= cScope | HB_FS_LOCAL;
 
    pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, cScope );
    pFunc->bFlags |= iType;
@@ -1655,7 +1646,7 @@ PINLINE hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine )
       }
       if( pSym )
       {
-         pSym->cScope |= HB_FS_STATIC;
+         pSym->cScope |= HB_FS_STATIC | HB_FS_LOCAL;
       }
    }
    pInline = hb_compInlineNew( pComp, szFunName, iLine );
@@ -1698,9 +1689,9 @@ void hb_compAnnounce( HB_COMP_DECL, char * szFunName )
       /* create a new procedure
        */
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
-      pSym->cScope = HB_FS_PUBLIC;
+      pSym->cScope = HB_FS_PUBLIC | HB_FS_LOCAL;
 
-      pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, HB_FS_PUBLIC );
+      pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, pSym->cScope );
       pFunc->bFlags |= FUN_PROCEDURE;
 
       if( HB_COMP_PARAM->functions.iCount == 0 )
@@ -1801,7 +1792,7 @@ PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL pSym )
 
 void hb_compGenBreak( HB_COMP_DECL )
 {
-   hb_compGenPushSymbol( "BREAK", TRUE, FALSE, HB_COMP_PARAM );
+   hb_compGenPushSymbol( "BREAK", HB_SYM_FUNCNAME, HB_COMP_PARAM );
    hb_compGenPushNil( HB_COMP_PARAM );
 }
 
@@ -1810,43 +1801,39 @@ void hb_compExternGen( HB_COMP_DECL ) /* generates the symbols for the EXTERN na
    PEXTERN pDelete;
 
    if( HB_COMP_PARAM->fDebugInfo )
-      hb_compExternAdd( HB_COMP_PARAM, "__DBGENTRY" );
+      hb_compExternAdd( HB_COMP_PARAM, "__DBGENTRY", 0 );
 
    while( HB_COMP_PARAM->externs )
    {
-      if( hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME ) )
+      PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
+      if( pSym )
       {
          if( ! hb_compFunCallFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName ) )
             hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName );
       }
       else
       {
-          hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
+          pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
           hb_compFunCallAdd( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName );
       }
-      pDelete  = HB_COMP_PARAM->externs;
+      pSym->cScope |= HB_COMP_PARAM->externs->cScope;
+      pDelete = HB_COMP_PARAM->externs;
       HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
       hb_xfree( ( void * ) pDelete );
    }
 }
 
-PFUNCTION hb_compFunCallFind( HB_COMP_DECL, char * szFunctionName ) /* returns a previously called defined function */
+PFUNCALL hb_compFunCallFind( HB_COMP_DECL, char * szFunctionName ) /* returns a previously called defined function */
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->funcalls.pFirst;
+   PFUNCALL pFunc = HB_COMP_PARAM->funcalls.pFirst;
 
    while( pFunc )
    {
       if( ! strcmp( pFunc->szName, szFunctionName ) )
-         return pFunc;
-      else
-      {
-         if( pFunc->pNext )
-            pFunc = pFunc->pNext;
-         else
-            return NULL;
-      }
+         break;
+      pFunc = pFunc->pNext;
    }
-   return NULL;
+   return pFunc;
 }
 
 PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunctionName ) /* returns a previously defined function */
@@ -1856,16 +1843,10 @@ PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunctionName ) /* returns 
    while( pFunc )
    {
       if( ! strcmp( pFunc->szName, szFunctionName ) )
-         return pFunc;
-      else
-      {
-         if( pFunc->pNext )
-            pFunc = pFunc->pNext;
-         else
-            return NULL;
-      }
+         break;
+      pFunc = pFunc->pNext;
    }
-   return NULL;
+   return pFunc;
 }
 
 PINLINE hb_compInlineFind( HB_COMP_DECL, char * szFunctionName )
@@ -1875,16 +1856,10 @@ PINLINE hb_compInlineFind( HB_COMP_DECL, char * szFunctionName )
    while( pInline )
    {
       if( pInline->szName && strcmp( pInline->szName, szFunctionName ) == 0 )
-         return pInline;
-      else
-      {
-         if( pInline->pNext )
-            pInline = pInline->pNext;
-         else
-            return NULL;
-      }
+         break;
+      pInline = pInline->pNext;
    }
-   return NULL;
+   return pInline;
 }
 
 /* return variable using its order after final fixing */
@@ -2516,7 +2491,7 @@ static void hb_compGenFieldPCode( HB_COMP_DECL, BYTE bPCode, int wVar, char * sz
       else if( bPCode == HB_P_PUSHFIELD )
          bPCode = HB_P_PUSHALIASEDFIELD;
 
-      hb_compGenPushSymbol( pField->szAlias, FALSE, TRUE, HB_COMP_PARAM );
+      hb_compGenPushSymbol( pField->szAlias, HB_SYM_ALIAS, HB_COMP_PARAM );
    }
    hb_compGenVarPCode( bPCode, szVarName, HB_COMP_PARAM );
 }
@@ -2725,7 +2700,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
          }
          else
          {  /* database alias */
-            hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_compGenPushSymbol( szAlias, HB_SYM_ALIAS, HB_COMP_PARAM );
             hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -2970,7 +2945,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
          }
          else
          {  /* database alias */
-            hb_compGenPushSymbol( szAlias, FALSE, TRUE, HB_COMP_PARAM );
+            hb_compGenPushSymbol( szAlias, HB_SYM_ALIAS, HB_COMP_PARAM );
             hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
       }
@@ -3015,7 +2990,6 @@ void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL 
 void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
 {
    char * szFunction;
-   PCOMSYMBOL pSym;
    USHORT wSym;
 
    /* if abbreviated function name was used - change it for whole name */
@@ -3023,19 +2997,14 @@ void hb_compGenPushFunCall( char * szFunName, HB_COMP_DECL )
    if( szFunction )
       szFunName = szFunction;
 
-   if( ( pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, TRUE ) ) != NULL )
+   if( hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) != NULL )
    {
       if( ! hb_compFunCallFind( HB_COMP_PARAM, szFunName ) )
          hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
    }
    else
    {
-      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, TRUE );
-      if( pSym )
-      {
-         /* reset symbol scope because the real scope is unknown now */
-         pSym->cScope = 0;
-      }
+      hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
       hb_compFunCallAdd( HB_COMP_PARAM, szFunName );
    }
    hb_compGenPCode3( HB_P_PUSHFUNCSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
@@ -3048,7 +3017,7 @@ void hb_compGenPushFunSym( char * szFunName, HB_COMP_DECL )
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
    hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
-                         TRUE, FALSE, HB_COMP_PARAM );
+                         HB_SYM_FUNCNAME, HB_COMP_PARAM );
 }
 
 void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
@@ -3058,7 +3027,30 @@ void hb_compGenPushFunRef( char * szFunName, HB_COMP_DECL )
    /* if abbreviated function name was used - change it for whole name */
    szFunction = hb_compReservedName( szFunName );
    hb_compGenPushSymbol( szFunction ? szFunction : szFunName,
-                         TRUE, FALSE, HB_COMP_PARAM );
+                         HB_SYM_FUNCNAME, HB_COMP_PARAM );
+}
+
+/* generates the pcode to push a symbol on the virtual machine stack */
+void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
+{
+   USHORT wSym;
+
+   if( hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) != NULL )  /* the symbol was found on the symbol table */
+   {
+      if( bFunction && ! hb_compFunCallFind( HB_COMP_PARAM, szSymbolName ) )
+         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
+   }
+   else
+   {
+      hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
+      if( bFunction )
+         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
+   }
+
+   if( wSym > 255 )
+      hb_compGenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
+   else
+      hb_compGenPCode2( HB_P_PUSHSYMNEAR, ( BYTE ) wSym, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -3144,41 +3136,6 @@ void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_COMP_DECL )
          hb_compGenPCodeN( ( BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
       }
    }
-}
-
-/* generates the pcode to push a symbol on the virtual machine stack */
-void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_COMP_DECL )
-{
-   PCOMSYMBOL pSym;
-   USHORT wSym;
-
-   if( ( pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) ) != NULL )  /* the symbol was found on the symbol table */
-   {
-      if( bFunction && ! hb_compFunCallFind( HB_COMP_PARAM, szSymbolName ) )
-         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
-
-      if( bAlias )
-         pSym->cScope |= HB_FS_PUBLIC;
-   }
-   else
-   {
-      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
-
-      if( bFunction )
-      {
-         if( pSym )
-         {
-            /* reset symbol scope because the real scope is unknown now */
-            pSym->cScope = 0;
-         }
-         hb_compFunCallAdd( HB_COMP_PARAM, szSymbolName );
-      }
-   }
-
-   if( wSym > 255 )
-      hb_compGenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
-   else
-      hb_compGenPCode2( HB_P_PUSHSYMNEAR, ( BYTE ) wSym, HB_COMP_PARAM );
 }
 
 static void hb_compCheckDuplVars( HB_COMP_DECL, PVAR pVar, char * szVarName )
@@ -3996,7 +3953,7 @@ void hb_compStaticDefStart( HB_COMP_DECL )
       HB_COMP_PARAM->pInitFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITSTATICS)", HB_FS_INITEXIT );
       HB_COMP_PARAM->pInitFunc->pOwner = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->pInitFunc->bFlags = FUN_USES_STATICS | FUN_PROCEDURE;
-      HB_COMP_PARAM->pInitFunc->cScope = HB_FS_INITEXIT;
+      HB_COMP_PARAM->pInitFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
       HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
 
       pBuffer[ 0 ] = HB_P_STATICS;
@@ -4042,7 +3999,7 @@ void hb_compCodeBlockStart( HB_COMP_DECL, BOOL bLateEval )
 {
    PFUNCTION pBlock;
 
-   pBlock               = hb_compFunctionNew( HB_COMP_PARAM, NULL, HB_FS_STATIC );
+   pBlock               = hb_compFunctionNew( HB_COMP_PARAM, NULL, HB_FS_STATIC | HB_FS_LOCAL );
    pBlock->pOwner       = HB_COMP_PARAM->functions.pLast;
    pBlock->iStaticsBase = HB_COMP_PARAM->functions.pLast->iStaticsBase;
    pBlock->bLateEval    = bLateEval;
@@ -4436,7 +4393,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
                * will be not generated. The name cannot be placed as first symbol
                * because this symbol can be used as function call or memvar's name.
                */
-               hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
+               hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
             }
 
             if( !HB_COMP_PARAM->fExit )
@@ -4617,7 +4574,7 @@ static void hb_compCompileEnd( HB_COMP_DECL )
 
    while( HB_COMP_PARAM->funcalls.pFirst )
    {
-      PFUNCTION pFunc = HB_COMP_PARAM->funcalls.pFirst;
+      PFUNCALL pFunc = HB_COMP_PARAM->funcalls.pFirst;
 
       HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
       hb_xfree( ( void * ) pFunc );
@@ -4778,7 +4735,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
          if( HB_COMP_PARAM->fStartProc )
             hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
          else if( ! bSingleFile )
-            hb_compFunctionAdd( HB_COMP_PARAM, "", HB_FS_PUBLIC, FUN_PROCEDURE );
+            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
 
          if( !HB_COMP_PARAM->fExit )
          {

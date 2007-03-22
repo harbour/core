@@ -64,7 +64,7 @@ endif
 LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib \
           winspool.lib ole32.lib oleaut32.lib uuid.lib \
           comctl32.lib mapi32.lib advapi32.lib \
-          gdi32.lib
+          gdi32.lib mpr.lib wsock32.lib
 
 ifeq ($(HB_GT_DEFAULT),gtgui)
 LDFLAGS += /SUBSYSTEM:WINDOWS

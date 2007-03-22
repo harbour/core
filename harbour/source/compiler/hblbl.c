@@ -370,7 +370,8 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
    NULL,                       /* HB_P_LOCALDEC              */
    NULL,                       /* HB_P_LOCALINC              */
    NULL,                       /* HB_P_LOCALINCPUSH          */
-   NULL                        /* HB_P_PUSHFUNCSYM           */
+   NULL,                       /* HB_P_PUSHFUNCSYM           */
+   NULL                        /* HB_P_HASHGEN               */
 };
 
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )

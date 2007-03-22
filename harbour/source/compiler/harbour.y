@@ -155,7 +155,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
-%token ANNOUNCE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
+%token ANNOUNCE EXTERN DYNAMIC INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE LOOP FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ
@@ -168,7 +168,8 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %token FOREACH DESCEND
 %token DOSWITCH WITHOBJECT
 %token NUM_DATE
-%token EPSILON 
+%token EPSILON
+%token HASHOP
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -221,6 +222,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <asExpr>  SelfValue SelfAlias
 %type <asExpr>  Array ArrayAlias
 %type <asExpr>  ArrayAt ArrayAtAlias
+%type <asExpr>  Hash HashList HashAlias
 %type <asExpr>  Variable VarAlias
 %type <asExpr>  MacroVar MacroVarAlias
 %type <asExpr>  MacroExpr MacroExprAlias
@@ -424,6 +426,7 @@ Statement  : ExecFlow CrlfStmnt
            | FieldsDef
            | MemvarDef
            | EXTERN ExtList Crlf
+           | DYNAMIC DynList Crlf
            | ANNOUNCE IdentName {
                   if( HB_COMP_PARAM->szAnnounce == NULL )
                   {
@@ -502,8 +505,12 @@ EmptyStats : /* empty */               { $<lNumber>$ = 0; }
            | Statements
            ;
 
-ExtList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1 ); }
-           | ExtList ',' IdentName     { hb_compExternAdd( HB_COMP_PARAM, $3 ); }
+ExtList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1, 0 ); }
+           | ExtList ',' IdentName     { hb_compExternAdd( HB_COMP_PARAM, $3, 0 ); }
+           ;
+
+DynList    : IdentName                 { hb_compExternAdd( HB_COMP_PARAM, $1, HB_FS_DEFERRED ); }
+           | DynList ',' IdentName     { hb_compExternAdd( HB_COMP_PARAM, $3, HB_FS_DEFERRED ); }
            ;
 
 IdentName  : IDENTIFIER
@@ -514,6 +521,7 @@ IdentName  : IDENTIFIER
            | IN               { $$ = "IN"; }
            | OPTIONAL         { $$ = $<string>1; }
            | EXTERN           { $$ = $<string>1; }
+           | DYNAMIC          { $$ = $<string>1; }
            | ANNOUNCE         { $$ = $<string>1; }
            | LOCAL            { $$ = $<string>1; }
            | MEMVAR           { $$ = $<string>1; }
@@ -569,25 +577,31 @@ CodeBlockAlias : CodeBlock ALIASOP
 
 /* Logical value
  */
-Logical    : TRUEVALUE              { $$ = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); }
-           | FALSEVALUE             { $$ = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); }
-           ;
+Logical  : TRUEVALUE          { $$ = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); }
+         | FALSEVALUE         { $$ = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); }
+         ;
 
 LogicalAlias : Logical ALIASOP
-;
+             ;
 
 /* SELF value and expressions
  */
-SelfValue  : SELF                   { $$ = hb_compExprNewSelf( HB_COMP_PARAM ); }
-;
+SelfValue : SELF              { $$ = hb_compExprNewSelf( HB_COMP_PARAM ); }
+          ;
 
 SelfAlias  : SelfValue ALIASOP
            ;
 
 /* Literal array
  */
-Array      : '{' {$<bTrue>$=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_ARRAY;} ElemList '}'          { $$ = hb_compExprNewArray( $3, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>2; }
-           ;
+/*
+Array    : '{' { $<bTrue>$=HB_COMP_PARAM->iPassByRef; HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_ARRAY; }
+               ElemList
+           '}' { $$ = hb_compExprNewArray( $3, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef=$<bTrue>2; }
+         ;
+*/
+Array    : '{' ElemList '}'         { $$ = hb_compExprNewArray( $2, HB_COMP_PARAM ); }
+         ;
 
 ArrayAlias  : Array ALIASOP
             ;
@@ -600,27 +614,38 @@ ArrayAt     : Array ArrayIndex      { $$ = $2; }
 ArrayAtAlias : ArrayAt ALIASOP
              ;
 
+Hash     : '{' HASHOP '}'           { $$ = hb_compExprNewHash( NULL, HB_COMP_PARAM ); }
+         | '{' HashList '}'         { $$ = hb_compExprNewHash( $2, HB_COMP_PARAM ); }
+         ;
+
+HashAlias: Hash ALIASOP
+         ;
+
+HashList : Expression HASHOP EmptyExpression                { $$ = hb_compExprAddListExpr( hb_compExprNewList( $1, HB_COMP_PARAM ), $3 ); }
+         | HashList ',' Expression HASHOP EmptyExpression   { $$ = hb_compExprAddListExpr( hb_compExprAddListExpr( $1, $3 ), $5 ); }
+         ;
+
 /* Variables
  */
-Variable    : IdentName             { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
-            ;
+Variable : IdentName          { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
+         ;
 
-VarAlias    : IdentName ALIASOP     { $$ = hb_compExprNewAlias( $1, HB_COMP_PARAM ); }
-            ;
+VarAlias : IdentName ALIASOP  { $$ = hb_compExprNewAlias( $1, HB_COMP_PARAM ); }
+         ;
 
 /* Macro variables
  */
-MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COMP_PARAM ); }
-            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1, HB_COMP_PARAM ); }
-            ;
+MacroVar : MACROVAR           { $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COMP_PARAM ); }
+         | MACROTEXT          { $$ = hb_compExprNewMacro( NULL, 0, $1, HB_COMP_PARAM ); }
+         ;
 
 MacroVarAlias  : MacroVar ALIASOP
                ;
 
 /* Macro expressions
  */
-MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, 0, NULL, HB_COMP_PARAM ); }
-           ;
+MacroExpr : '&' PareExpList   { $$ = hb_compExprNewMacro( $2, 0, NULL, HB_COMP_PARAM ); }
+          ;
 
 MacroExprAlias : MacroExpr ALIASOP
                ;
@@ -647,6 +672,7 @@ FieldVarAlias  : FieldAlias VarAlias            { HB_COMP_EXPR_DELETE( $1 ); $$ 
                | FieldAlias SelfAlias           { HB_COMP_EXPR_DELETE( $1 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
                | FieldAlias ArrayAlias          { HB_COMP_EXPR_DELETE( $1 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
                | FieldAlias ArrayAtAlias        { HB_COMP_EXPR_DELETE( $1 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
+               | FieldAlias HashAlias           { HB_COMP_EXPR_DELETE( $1 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
                | FieldAlias IfInlineAlias       { HB_COMP_EXPR_DELETE( $1 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $2 ); }
                ;
 
@@ -663,6 +689,7 @@ AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2, HB
            | LiteralAlias AliasId      { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
            | LogicalAlias AliasId      { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
            | CodeBlockAlias AliasId    { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
+           | HashAlias AliasId         { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
            | SelfAlias AliasId         { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
            | ArrayAlias AliasId        { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }
            | ArrayAtAlias AliasId      { HB_COMP_EXPR_DELETE( $2 ); $$ = hb_compErrorAlias( HB_COMP_PARAM, $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
@@ -698,6 +725,7 @@ VariableAt  : NumValue      ArrayIndex    { $$ = $2; }
             | LiteralValue  ArrayIndex    { $$ = $2; }
             | CodeBlock     ArrayIndex    { $$ = $2; }
             | Logical       ArrayIndex    { $$ = $2; }
+            | Hash          ArrayIndex    { $$ = $2; }
             | SelfValue     ArrayIndex    { $$ = $2; }
             | Variable      ArrayIndex    { $$ = $2; }
             | AliasVar      ArrayIndex    { $$ = $2; }
@@ -793,6 +821,7 @@ SimpleExpression :
            | SelfValue    {HB_COMP_PARAM->cVarType = ' ';} StrongType { $$ = $1; }
            | Array
            | ArrayAt
+           | Hash
            | AliasVar
            | AliasExpr
            | MacroVar
@@ -853,6 +882,7 @@ LeftExpression : NumValue
                | SelfValue
                | Array
                | ArrayAt
+               | Hash
                | AliasVar
                | AliasExpr
                | MacroVar
@@ -894,6 +924,7 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
             | SelfValue    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | Array        INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | ArrayAt      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
+            | Hash         INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | AliasVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
@@ -967,7 +998,7 @@ ArrayIndex : IndexList ']'
  */
 IndexList  : '[' ExtExpression               { $$ = hb_compExprNewArrayAt( $<asExpr>0, $2, HB_COMP_PARAM ); }
            | IndexList ',' ExtExpression     { $$ = hb_compExprNewArrayAt( $1, $3, HB_COMP_PARAM ); }
-           | IndexList ']' '[' ExtExpression    { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
+           | IndexList ']' '[' ExtExpression { $$ = hb_compExprNewArrayAt( $1, $4, HB_COMP_PARAM ); }
            ;
 
 ElemList   : ExtArgument               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }

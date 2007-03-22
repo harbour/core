@@ -536,11 +536,16 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
       type = HB_PP_TOKEN_DIRECTIVE | HB_PP_TOKEN_STATIC;
    }
 
+#ifndef HB_C52_STRICT
+   if( pState->iSpacesMin != 0 && pState->iSpaces == 0 &&
+       HB_PP_TOKEN_TYPE( type ) == HB_PP_TOKEN_KEYWORD )
+      pState->iSpaces = pState->iSpacesMin;
+#endif
    hb_pp_tokenAdd( &pState->pNextTokenPtr, value, ulLen, pState->iSpaces, type );
    pState->pFile->iTokens++;
    pState->fNewStatement = FALSE;
 
-   pState->iSpaces = 0;
+   pState->iSpaces = pState->iSpacesMin = 0;
    pState->iLastType = HB_PP_TOKEN_TYPE( type );
 
    if( pState->iInLineState != HB_PP_INLINE_OFF )
@@ -770,7 +775,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
    pInLinePtr = NULL;
    hb_pp_tokenListFree( &pState->pFile->pTokenList );
    pState->pNextTokenPtr = &pState->pFile->pTokenList;
-   pState->pFile->iTokens = pState->iSpaces = 0;
+   pState->pFile->iTokens = pState->iSpaces = pState->iSpacesMin = 0;
    pState->fCanNextLine = pState->fDirective = FALSE;
    pState->fNewStatement = TRUE;
    pState->iLastType = HB_PP_TOKEN_NUL;
@@ -785,6 +790,11 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
       if( pState->fCanNextLine )
       {
          pState->iSpaces = pState->iSpacesNL;
+         /*
+          * set minimum number of leading spaces to 1 to avoid problems
+          * with automatic word concatenation which is not Clipper compatible
+          */
+         pState->iSpacesMin = 1;
          pState->fCanNextLine = FALSE;
          /* Clipper left only last leading blank character from
             concatenated lines */
@@ -819,17 +829,14 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      pState->iStreamDump = HB_PP_STREAM_OFF;
                      /* Clipper clear number of leading spaces when multiline
                         comment ends */
-#ifdef HB_C52_STRICT
                      pState->iSpaces = 0;
-#else
                      /*
                       * but we cannot make the same because we have automatic
                       * word concatenation which is not Clipper compatible and
                       * will break code like:
                       */
                       //   if /**/lVar; endif
-                     pState->iSpaces = 1;
-#endif
+                     pState->iSpacesMin = 1;
                      ++ul;
                   }
                }
@@ -3113,7 +3120,7 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
 
 static BOOL hb_pp_tokenCanStartExp( PHB_PP_TOKEN pToken )
 {
-   if( !HB_PP_TOKEN_NEEDLEFT( pToken ) )
+   if( !HB_PP_TOKEN_NEEDLEFT( pToken ) && !HB_PP_TOKEN_ISEOC( pToken ) )
    {
       if( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_LEFT_SB )
          return TRUE;
