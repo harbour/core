@@ -1,0 +1,31 @@
+
+# makefile for Borland C/C++ 32 bits
+# Building of libhbpg.lib - Harbour API to postgres
+
+# Postgresql running under Cygwin/Windows, unmark the line bellow to compile.
+# PG_DIR = ..\..\..\cygwin\usr\src\postgresql-7.4.5
+
+PG_DIR = C:\PostgreSQL
+
+INCLUDE_DIR = ..\..\include
+INCLUDE_PQ = $(PG_DIR)\include
+
+BIN_DIR = c:\xharbour\bin
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+$(LIB_DIR)\libhbpg.lib : \
+  $(OBJ_DIR)\TPostgres.obj \
+  $(OBJ_DIR)\postgres.obj
+
+$(OBJ_DIR)\TPostgres.c    : TPostgres.prg
+$(OBJ_DIR)\TPostgres.obj  : $(OBJ_DIR)\TPostgres.c
+$(OBJ_DIR)\postgres.obj   : postgres.c
+
+.c.obj:
+  bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -I$(INCLUDE_PQ) -DHB_OS_WIN_32_USED -DPG_DIAG_INTERNAL_POSITION -o$@ $<
+  tlib $(LIB_DIR)\libhbpg.lib -+$@,,
+
+.prg.c:
+  $(BIN_DIR)\harbour.exe $< -q0 -a -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+

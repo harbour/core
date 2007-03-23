@@ -338,6 +338,24 @@ $hb_collect contrib/odbc/*.ch
 $hb_collect contrib/odbc/*.prg
 $hb_collect contrib/odbc/*.txt
 
+# CONTRIB\PGSQL
+$hb_collect contrib/pgsql/[mM]akefile*
+$hb_collect contrib/pgsql/Changelog
+$hb_collect contrib/pgsql/README
+$hb_collect contrib/pgsql/*.[ch]
+$hb_collect contrib/pgsql/*.ch
+$hb_collect contrib/pgsql/*.prg
+$hb_collect contrib/pgsql/*.txt
+$hb_collect contrib/pgsql/*.bat
+
+# CONTRIB\MYSQL
+$hb_collect contrib/mysql/[mM]akefile*
+$hb_collect contrib/mysql/*.[ch]
+$hb_collect contrib/mysql/*.ch
+$hb_collect contrib/mysql/*.prg
+$hb_collect contrib/mysql/*.txt
+$hb_collect contrib/mysql/*.bat
+
 # CONTRIB\BTREE
 $hb_collect contrib/btree/[mM]akefile*
 $hb_collect contrib/btree/*.[ch]

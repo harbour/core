@@ -79,6 +79,7 @@ UCHAR [ 1 ] - item type
   18. HASH16            2+n
   19. HASH32            4+n
   20. CYCLIC REFERENCE  4
+  21. SYMBOL		1+n
 */
 
 #define HB_SERIAL_NIL         0
@@ -102,6 +103,7 @@ UCHAR [ 1 ] - item type
 #define HB_SERIAL_HASH16     18
 #define HB_SERIAL_HASH32     19
 #define HB_SERIAL_REF        20
+#define HB_SERIAL_SYMBOL     21
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -148,6 +150,10 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem )
             ulSize = 1;
          else
             ulSize = 9;
+         break;
+
+      case HB_IT_SYMBOL:
+         ulSize = 2 + strlen( hb_itemGetSymbol( pItem )->szName );
          break;
 
       case HB_IT_STRING:
@@ -202,6 +208,7 @@ static UCHAR * hb_serializeItem( PHB_ITEM pItem, UCHAR * pBuffer )
    ULONG ulLen, u;
    LONG l;
    double d;
+   char * szVal;
 
    switch( hb_itemType( pItem ) )
    {
@@ -270,6 +277,17 @@ static UCHAR * hb_serializeItem( PHB_ITEM pItem, UCHAR * pBuffer )
             HB_PUT_LE_DOUBLE( pBuffer, d );
             pBuffer += 8;
          }
+         break;
+
+      case HB_IT_SYMBOL:
+         szVal = hb_itemGetSymbol( pItem )->szName;
+         ulLen = strlen( szVal );
+         if( ulLen > 0xFF )
+            ulLen = 0xFF;
+         *pBuffer++ = HB_SERIAL_SYMBOL;
+         *pBuffer++ = ( UCHAR ) ulLen;
+         memcpy( pBuffer, szVal, ulLen );
+         pBuffer += ulLen;
          break;
 
       case HB_IT_STRING:
@@ -391,6 +409,7 @@ static UCHAR * hb_deserializeArray( PHB_ITEM pItem, UCHAR * pBuffer, ULONG ulLen
 static UCHAR * hb_deserializeItem( PHB_ITEM pItem, UCHAR * pBuffer )
 {
    ULONG ulLen;
+   char * szVal;
 
    switch( *pBuffer++ )
    {
@@ -442,6 +461,14 @@ static UCHAR * hb_deserializeItem( PHB_ITEM pItem, UCHAR * pBuffer )
       case HB_SERIAL_DATE:
          hb_itemPutDL( pItem, HB_GET_LE_UINT24( pBuffer ) );
          pBuffer += 3;
+         break;
+
+      case HB_SERIAL_SYMBOL:
+         ulLen = *pBuffer++;
+         szVal = hb_strndup( ( char * ) pBuffer, ulLen );
+         hb_itemPutSymbol( pItem, hb_dynsymGetSymbol( szVal ) );
+         hb_xfree( szVal );
+         pBuffer += ulLen;
          break;
 
       case HB_SERIAL_STRING8:
@@ -530,6 +557,7 @@ static BOOL hb_deserializeTest( UCHAR ** pBufferPtr, ULONG * pulSize )
       case HB_SERIAL_DOUBLE:
          ulSize = 9;
          break;
+      case HB_SERIAL_SYMBOL:
       case HB_SERIAL_STRING8:
          ulSize = 1 + ( ulSize >= 2 ? *pBuffer : ulSize );
          break;

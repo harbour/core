@@ -63,6 +63,10 @@ HB_FUNC( EMPTY )
          hb_retl( hb_arrayLen( pItem ) == 0 );
          break;
 
+      case HB_IT_HASH:
+         hb_retl( hb_hashLen( pItem ) == 0 );
+         break;
+
       case HB_IT_STRING:
       case HB_IT_MEMO:
          hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );

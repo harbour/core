@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-23 04:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+  + harbour/contrib/pgsql/Changelog
+  + harbour/contrib/pgsql/Makefile
+  + harbour/contrib/pgsql/README
+  + harbour/contrib/pgsql/make_b32.bat
+  + harbour/contrib/pgsql/makefile.bc
+  + harbour/contrib/pgsql/pgrdd.prg
+  + harbour/contrib/pgsql/postgres.c
+  + harbour/contrib/pgsql/postgres.ch
+  + harbour/contrib/pgsql/tpostgre.prg
+  + harbour/contrib/pgsql/tstpgrdd.prg
+  + harbour/contrib/pgsql/tests/Makefile
+  + harbour/contrib/pgsql/tests/async.prg
+  + harbour/contrib/pgsql/tests/cache.prg
+  + harbour/contrib/pgsql/tests/dbf2pg.prg
+  + harbour/contrib/pgsql/tests/simple.prg
+  + harbour/contrib/pgsql/tests/stress.prg
+  + harbour/contrib/pgsql/tests/test.prg
+    + added Postgres SQL library - code borrowed from xHarbour
+
+  * harbour/source/rtl/empty.c
+    + added support for HASH items
+
+  * harbour/source/rtl/itemseri.c
+    + added SYMBOL items serialization
+
 2007-03-22 12:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
     * updated for new files - please check
