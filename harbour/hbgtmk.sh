@@ -23,7 +23,7 @@ test_reqrpm()
 }
 
 TOINST_LST=""
-for i in cvs make gcc binutils bison flex bash ncurses ncurses-devel
+for i in cvs make gcc binutils bash ncurses ncurses-devel
 do
     test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done

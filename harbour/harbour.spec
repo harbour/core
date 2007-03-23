@@ -97,7 +97,7 @@ Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       Przemysaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
-BuildPrereq:    gcc binutils bison flex bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
+BuildPrereq:    gcc binutils bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{version}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -583,6 +583,9 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 
 %changelog
+* Fri Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
+- removed bison and flex from dependences list
+
 * Sat Aug 09 2003 Przemyslaw Czerpak <druzus@polbox.com>
 - removed ${RPM_OPT_FLAGS} from C_USR
 
