@@ -159,7 +159,7 @@ CLASS TBrowse
    METHOD Invalidate()                                      // Forces entire redraw during next stabilization
    METHOD RefreshAll()                                      // Causes all data to be recalculated during the next stabilize
    METHOD RefreshCurrent() INLINE;                          // Causes the current row to be refilled and repainted on next stabilize
-          If( ! Empty( ::aRedraw ), ::aRedraw[ ::RowPos ] := .T., Nil ), ::stable := .F., Self
+          If( ! Empty( ::aRedraw ), ::aRedraw[ ::RowPos ] := .T., ), ::stable := .F., Self
    METHOD Stabilize()                                       // Performs incremental stabilization
 
 #ifdef HB_COMPAT_C53

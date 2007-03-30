@@ -3124,13 +3124,31 @@ static BOOL hb_pp_tokenCanStartExp( PHB_PP_TOKEN pToken )
    {
       if( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_LEFT_SB )
          return TRUE;
-
-      pToken = pToken->pNext;
-      while( !HB_PP_TOKEN_ISEOC( pToken ) )
+      else
       {
-         if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_SB )
-            return TRUE;
+         PHB_PP_TOKEN pEoc = NULL;
+
          pToken = pToken->pNext;
+         while( !HB_PP_TOKEN_ISEOL( pToken ) )
+         {
+            if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_SB )
+            {
+               if( pEoc )
+               {
+                  do
+                  {
+                     if( HB_PP_TOKEN_TYPE( pEoc->type ) == HB_PP_TOKEN_EOC )
+                        HB_PP_TOKEN_SETTYPE( pEoc, HB_PP_TOKEN_TEXT );
+                     pEoc = pEoc->pNext;
+                  }
+                  while( pEoc != pToken );
+               }
+               return TRUE;
+            }
+            if( !pEoc && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_EOC )
+               pEoc = pToken;
+            pToken = pToken->pNext;
+         }
       }
    }
    return FALSE;
@@ -5323,14 +5341,28 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    {
       PHB_PP_TOKEN pTok, pFirst, pLast = NULL;
       pFirst = pTok = pToken->pNext;
-      while( !HB_PP_TOKEN_ISEOC( pTok ) )
+      while( !HB_PP_TOKEN_ISEOL( pTok ) )
       {
          pLast = pTok;
          if( HB_PP_TOKEN_TYPE( pTok->type ) == HB_PP_TOKEN_RIGHT_SB )
          {
+            while( pTok->spaces > 0 )
+            {
+               hb_membufAddCh( pState->pBuffer, ' ' );
+               pTok->spaces--;
+            }
             fError = FALSE;
             pTok = pTok->pNext;
             break;
+         }
+         else if( HB_PP_TOKEN_TYPE( pTok->type ) == HB_PP_TOKEN_EOC &&
+                  !pTok->pNext && pState->pFile->pTokenList )
+         {
+#if !defined( HB_PP_NO_LINEINFO_TOKEN )
+            pState->pFile->iLastLine = pState->pFile->iCurrentLine +
+#endif
+               hb_pp_tokenMoveCommand( &pTok->pNext,
+                                       &pState->pFile->pTokenList );
          }
          hb_pp_tokenStr( pTok, pState->pBuffer, TRUE, FALSE, 0 );
          pTok = pTok->pNext;
@@ -5344,6 +5376,13 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       hb_pp_tokenSetValue( pToken, hb_membufPtr( pState->pBuffer ),
                                    hb_membufLen( pState->pBuffer ) );
       HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_STRING );
+      if( pState->fWritePreprocesed )
+      {
+         if( !fError )
+            hb_membufAddCh( pState->pBuffer, ']' );
+         fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
+                 hb_membufLen( pState->pBuffer ), pState->file_out );
+      }
    }
 
    if( fError )

@@ -318,7 +318,11 @@ HB_EXPORT PHB_ITEM hb_hashNew( PHB_ITEM pItem )
    pBaseHash->pPairs   = NULL;
    pBaseHash->ulSize   = 0;
    pBaseHash->ulLen    = 0;
+#ifdef HB_COMPAT_XHB
+   pBaseHash->iFlags   = HB_HASH_AUTOADD;
+#else
    pBaseHash->iFlags   = 0;
+#endif
    pBaseHash->pDefault = NULL;
 
    pItem->type = HB_IT_HASH;

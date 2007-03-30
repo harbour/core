@@ -522,7 +522,7 @@ HB_FUNC( HB_REGEX )
 /* Returns just .T. if match found or .F. otherwise. */
 HB_FUNC( HB_REGEXMATCH )
 {
-   hb_retl( hb_regex( hb_parl( 3 ) ? 1 : 2 ) );
+   hb_retl( hb_regex( hb_parl( 3 ) ? 1 /* LIKE */ : 2 /* HAS */ ) );
 }
 
 /* Splits the string in an array of matched expressions */

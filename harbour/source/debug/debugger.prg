@@ -396,7 +396,7 @@ CLASS TDebugger
    METHOD LocatePrgPath( cPrgName )
    METHOD Sort() INLINE ASort( ::aVars,,, {|x,y| x[1] < y[1] } ),;
                         ::lSortVars := .t.,;
-                        iif( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), nil ),;
+                        iif( ::oBrwVars != nil, ::oBrwVars:RefreshAll(), ),;
           iif( ::oWndVars != nil .and. ::oWndVars:lVisible, iif(!::lGo,::oBrwVars:ForceStable(),),)
 
    METHOD Speed() INLINE ;
@@ -1733,12 +1733,12 @@ METHOD ShowVars() CLASS TDebugger
       ::oWndVars:bPainted     := { || if(Len( ::aVars ) > 0, ( ::obrwVars:refreshAll():ForceStable(),RefreshVarsS(::oBrwVars) ),) }
 
       ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
-      , ::oBrwVars:Down(), nil ), iif( nKey == K_UP, ::oBrwVars:Up(), nil ) ;
-      , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), nil ) ;
-      , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), nil ) ;
-      , iif( nKey == K_HOME, ::oBrwVars:GoTop(), nil ) ;
-      , iif( nKey == K_END, ::oBrwVars:GoBottom(), nil ) ;
-      , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), IIF(LEN(::aVars)>0,::oBrwVars:ForceStable(),nil) ) }
+      , ::oBrwVars:Down(), ), iif( nKey == K_UP, ::oBrwVars:Up(), ) ;
+      , iif( nKey == K_PGDN, ::oBrwVars:PageDown(), ) ;
+      , iif( nKey == K_PGUP, ::oBrwVars:PageUp(), ) ;
+      , iif( nKey == K_HOME, ::oBrwVars:GoTop(), ) ;
+      , iif( nKey == K_END, ::oBrwVars:GoBottom(), ) ;
+      , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), ), IIF(LEN(::aVars)>0,::oBrwVars:ForceStable(),) ) }
       
       AAdd( ::aWindows, ::oWndVars )
       ::oWndVars:Show()
@@ -2810,13 +2810,13 @@ METHOD WatchPointsShow() CLASS TDebugger
       ::oWndPnt:bPainted := { || if(Len(::aWatch) > 0, ( ::oBrwPnt:refreshAll():ForceStable(),RefreshVarsS(::oBrwPnt) ),) }
 
       ::oWndPnt:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
-      , ::oBrwPnt:Down(), nil ), iif( nKey == K_UP, ::oBrwPnt:Up(), nil ) ;
-      , iif( nKey == K_PGDN, ::oBrwPnt:PageDown(), nil ) ;
-      , iif( nKey == K_PGUP, ::oBrwPnt:PageUp(), nil ) ;
-      , iif( nKey == K_HOME, ::oBrwPnt:GoTop(), nil ) ;
-      , iif( nKey == K_END, ::oBrwPnt:GoBottom(), nil ) ;
-      , iif( nKey == K_DEL, ::WatchpointDel( ::oBrwPnt:Cargo[1] ), nil ) ;
-      , iif( nKey == K_ENTER, ::WatchpointEdit( ::oBrwPnt:Cargo[1] ), nil ), ::oBrwPnt:ForceStable() ) }
+      , ::oBrwPnt:Down(), ), iif( nKey == K_UP, ::oBrwPnt:Up(), ) ;
+      , iif( nKey == K_PGDN, ::oBrwPnt:PageDown(), ) ;
+      , iif( nKey == K_PGUP, ::oBrwPnt:PageUp(), ) ;
+      , iif( nKey == K_HOME, ::oBrwPnt:GoTop(), ) ;
+      , iif( nKey == K_END, ::oBrwPnt:GoBottom(), ) ;
+      , iif( nKey == K_DEL, ::WatchpointDel( ::oBrwPnt:Cargo[1] ), ) ;
+      , iif( nKey == K_ENTER, ::WatchpointEdit( ::oBrwPnt:Cargo[1] ), ), ::oBrwPnt:ForceStable() ) }
 
       AAdd( ::aWindows, ::oWndPnt )
       ::oWndPnt:Show()

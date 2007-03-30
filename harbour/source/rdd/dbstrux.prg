@@ -77,7 +77,7 @@ FUNCTION __dbCopyXStruct( cFileName )
       __dbCreate( cFileName, NIL, NIL, .F., NIL )
 
       AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
-                                     ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ),;
+                                     ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ),;
                                   dbAppend(),;
                                   FIELD->FIELD_NAME := aField[ DBS_NAME ],;
                                   FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;

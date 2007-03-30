@@ -841,37 +841,72 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
          break;
 
       case HB_EA_PUSH_PCODE:
-         {
-            /* this is called if all three parts of IIF expression should be generated
-            */
-            LONG lPosFalse, lPosEnd;
-            HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
+      {
+         /* this is called if all three parts of IIF expression should be generated
+         */
+         LONG lPosFalse, lPosEnd;
+         HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
-            HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-            lPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
-            pExpr =pExpr->pNext;
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         lPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
+         pExpr =pExpr->pNext;
 
-            HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-            lPosEnd = HB_GEN_FUNC1( Jump, 0 );
-            pExpr =pExpr->pNext;
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         lPosEnd = HB_GEN_FUNC1( Jump, 0 );
+         pExpr =pExpr->pNext;
 
-            HB_GEN_FUNC1( JumpHere, lPosFalse );
-            HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-            HB_GEN_FUNC1( JumpHere, lPosEnd );
-         }
+         HB_GEN_FUNC1( JumpHere, lPosFalse );
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         HB_GEN_FUNC1( JumpHere, lPosEnd );
          break;
-
+      }
       case HB_EA_POP_PCODE:
          break;
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         {
-            HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-            HB_GEN_FUNC1( PCode1, HB_P_POP );  /* remove a value if used in statement */
-         }
-         break;
+      {
+#ifdef HB_C52_STRICT
+         HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
+         HB_GEN_FUNC1( PCode1, HB_P_POP );  /* remove a value if used in statement */
+#else
+         ULONG ulPosFalse, ulPosEnd;
+         HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         ulPosFalse = HB_GEN_FUNC1( JumpFalse, 0 );
+         pExpr =pExpr->pNext;
+
+         /* do not generate warning about meaningless use of expression NIL */
+         if( pExpr->ExprType != HB_ET_NIL )
+            HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
+         pExpr =pExpr->pNext;
+
+#if defined( HB_MACRO_SUPPORT )
+         if( HB_PCODE_DATA->lPCodePos == ulPosFalse + 3 )
+         {
+            HB_PCODE_DATA->pCode[ ulPosFalse - 1 ] = HB_P_JUMPTRUEFAR;
+            ulPosEnd = ulPosFalse;
+         }
+#else
+         if( HB_COMP_PARAM->functions.pLast->lPCodePos == ulPosFalse + 3 )
+         {
+            HB_COMP_PARAM->functions.pLast->pCode[ ulPosFalse - 1 ] = HB_P_JUMPTRUEFAR;
+            ulPosEnd = ulPosFalse;
+         }
+#endif
+         else
+         {
+            ulPosEnd = HB_GEN_FUNC1( Jump, 0 );
+            HB_GEN_FUNC1( JumpHere, ulPosFalse );
+         }
+         /* do not generate warning about meaningless use of expression NIL */
+         if( pExpr->ExprType != HB_ET_NIL )
+            HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
+         HB_GEN_FUNC1( JumpHere, ulPosEnd );
+#endif
+         break;
+      }
       case HB_EA_DELETE:
          if( pSelf->value.asList.pExprList )
          {

@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-30 15:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    % optimize PCODE generated for IIF() used as statement
+
+  * harbour/include/hbpp.h
+    * fixed typo in comment
+
+  * harbour/source/pp/ppcore.c
+    * fixed .ppo output in some string expressions inside []
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    + added some missing DBOI_* actions
+
+  * harbour/source/rtl/hbregex.c
+    + added comment
+
+  * harbour/source/vm/hashes.c
+    * set autoadd by default when compiled with HB_COMPAT_XHB macro
+
+  * harbour/source/debug/debugger.prg
+  * harbour/source/rdd/dbstrux.prg
+  * harbour/source/rtl/tbrowse.prg
+    * removed unnecessary NIL in in IIF() statements
+  * harbour/utils/hbtest/rt_misc.prg
+    * removed unnecessary ::cValue in in IIF() statements
+
 2007-03-23 04:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/hbgtmk.sh
