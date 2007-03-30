@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-30 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    + added support for multiline string concatenated by ';'
+      f.e.:
+         cVar := "line 1;
+         line 2;
+         line 3"
+      To enable the above it's necessary to build PP with
+      HB_PP_MULTILINE_STRING macro.
+      It's not Clipper compatible extension and it's not enabled by default
+      anyhow old PP worked in such way so I'm leaving the decision to Harbour
+      community if the above should be enabled by default or not.
+
 2007-03-30 15:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     % optimize PCODE generated for IIF() used as statement

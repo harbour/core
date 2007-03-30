@@ -50,6 +50,7 @@
  *
  */
 
+/* #define HB_PP_MULTILINE_STRING */
 /* #define HB_C52_STRICT */
 /* #define HB_PP_NO_LINEINFO_TOKEN */
 
@@ -301,6 +302,12 @@ static void hb_membufFree( PHB_MEM_BUFFER pBuffer )
 static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
 {
    pBuffer->ulLen = 0;
+}
+
+static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, ULONG ulLeft )
+{
+   if( ulLeft < pBuffer->ulLen )
+      pBuffer->ulLen = ulLeft;
 }
 
 static ULONG hb_membufLen( PHB_MEM_BUFFER pBuffer )
@@ -599,8 +606,6 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
 {
    int ch, iLine;
 
-   hb_membufFlush( pState->pBuffer );
-
    while( TRUE )
    {
       if( pState->pFile->pLineBuf )
@@ -784,6 +789,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 
    do
    {
+      hb_membufFlush( pState->pBuffer );
       hb_pp_readLine( pState );
       pBuffer = hb_membufPtr( pState->pBuffer );
       ulLen = hb_membufLen( pState->pBuffer );
@@ -979,7 +985,30 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( ch == '`' )
                ch = '\'';
             while( ++ul < ulLen && pBuffer[ ul ] != ch );
-
+#ifdef HB_PP_MULTILINE_STRING
+            while( ul == ulLen )
+            {
+               ULONG u = 1;
+               while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
+               if( ul >= u && pBuffer[ ul - u ] == ';' )
+               {
+                  ul -= u;
+                  ulLen -= u;
+                  u = hb_membufLen( pState->pBuffer ) - u;
+                  hb_membufRemove( pState->pBuffer, u );
+                  hb_pp_readLine( pState );
+                  ulLen += hb_membufLen( pState->pBuffer ) - u;
+                  pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
+                  --ul;
+                  while( ++ul < ulLen && pBuffer[ ul ] != ch );
+               }
+               else
+               {
+                  ul = ulLen;
+                  break;
+               }
+            }
+#endif
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1,
                                 HB_PP_TOKEN_STRING );
 
