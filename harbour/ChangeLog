@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-03-31 12:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+  + harbour/include/hbchksum.h
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbadler.c
+  + harbour/source/rtl/hbcrc.c
+  + harbour/source/rtl/hbmd5.c
+    + added functions to calculate different checksums
+         HB_ADLER( <cValue> [, <nStart> ] ) -> <nCC>
+         HB_CRC32( <cValue> [, <nStart> ] ) -> <nCRC>
+         HB_CRC16( <cValue> [, <nStart> ] ) -> <nCRC>
+         HB_CRC  ( <cValue> [, <nStart> ] [, <nPolynomial> ] ) -> <nCRC>
+         HB_CRCCT( <cValue> [, <nStart> ] [, <nPolynomial> ] ) -> <nCRC>
+         HB_MD5( <cString> ) -> <cMD5>
+         HB_MD5FILE( <cFileName> ) -> <cMD5>
+      HB_CRC() is general CRC function which can be used for any polynomial
+      given as second argument, f.e.: 0x104C11DB7 is CRC32 polynomial,
+      0x18005 -> CRC16, 0x11021 -> CRC16 X.26, 0x1393 -> CRC12, 0x101 -> LCR8
+      HB_CRCCT() makes exactly the same job but it uses broken algorithm.
+      Unfortunately it seems that this broken version is widely used by many
+      other projects, f.e. HB_CRCCT() gives exactly the same results as
+      COM_CRC() from CT3. Generated results are usually "good enough" but
+      if you do not need compatibility with some other tools which uses
+      broken CRC algorithm then I suggest to not use it.
+      HB_ADLER() is ADLER32 check sum - this function gives the same results
+      as HB_CHECKSUM in xHarbour.
+      HB_MD5*() functions are from Dmitry V. Korzhov code modified a
+      little bit by me for other then x86@32 machines files and buffers
+      longer then 2^32. I also fixed possible problems with wrong results
+      in some cases.
+
+  * harbour/source/compiler/hbmain.c
+    * increase number of optimization passes
+
+  * harbour/source/pp/ppcore.c
+    * cleaned C compiler warning
+
 2007-03-30 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     + added support for multiline string concatenated by ';'

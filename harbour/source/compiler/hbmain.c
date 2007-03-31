@@ -3511,11 +3511,11 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
    hb_compOptimizePCode( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
    hb_compCodeTraceMarkDead( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
 
-   for( iPass = 0; iPass < 3 && !HB_COMP_PARAM->fExit; ++iPass )
+   for( iPass = 0; iPass < 4 && !HB_COMP_PARAM->fExit; ++iPass )
    {
       LONG lOffset;
 
-      if( iPass == 2 && fLineStrip )
+      if( iPass == 3 && fLineStrip )
       {
          hb_compStripFuncLines( HB_COMP_PARAM->functions.pLast );
          fLineStrip = FALSE;
@@ -3814,7 +3814,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       HB_COMP_PARAM->functions.pLast->pNOOPs = NULL;
       HB_COMP_PARAM->functions.pLast->iNOOPs = 0;
 
-      if( iPass == 0 )
+      if( iPass <= 1 )
       {
          hb_compOptimizePCode( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
       }

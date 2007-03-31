@@ -48,6 +48,9 @@ C_SOURCES=\
 	gtfunc.c     \
 	gx.c         \
 	hardcr.c     \
+	hbadler.c    \
+	hbcrc.c      \
+	hbmd5.c      \
 	hbffind.c    \
 	hbgtcore.c   \
 	hbinet.c     \

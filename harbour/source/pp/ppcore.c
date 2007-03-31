@@ -304,11 +304,13 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
    pBuffer->ulLen = 0;
 }
 
+#ifdef HB_PP_MULTILINE_STRING
 static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, ULONG ulLeft )
 {
    if( ulLeft < pBuffer->ulLen )
       pBuffer->ulLen = ulLeft;
 }
+#endif
 
 static ULONG hb_membufLen( PHB_MEM_BUFFER pBuffer )
 {
