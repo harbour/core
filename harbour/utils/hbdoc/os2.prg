@@ -280,7 +280,7 @@ METHOD WriteLink( cLink ) CLASS TOs2
    IF Self:Scanlink( cLink ) == 0
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cLink) } )                // Again.
    ELSE
-      nItem := ASCAN( Self:aLinkRef, { | a, b | upper(a[ 1 ]) == upper(cLink) } )
+      nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cLink) } )
 
    ENDIF
 
@@ -298,7 +298,7 @@ METHOD ScanLink( cLink ) CLASS TOs2
 
    LOCAL nItem
 
-   nItem := ASCAN( Self:aLinkRef, { | a, b | Upper(a[ 1 ] )== upper(cLink) } )
+   nItem := ASCAN( Self:aLinkRef, { | a | Upper(a[ 1 ] )== upper(cLink) } )
 
    IF nItem == 0
       AADD( Self:aLinkRef, { upper(cLink), Self:nRef } )

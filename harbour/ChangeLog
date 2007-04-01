@@ -8,6 +8,54 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-01 13:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/makefile.bc
+   * harbour/makefile.vc
+   * harbour/config/rules.cf
+   * harbour/contrib/btree/makefile.bc
+   * harbour/contrib/htmllib/Makefile.bc
+   * harbour/contrib/htmllib/makefile.vc
+   * harbour/contrib/libct/makefile.bc
+   * harbour/contrib/libct/makefile.vc
+   * harbour/contrib/libgt/makefile.bc
+   * harbour/contrib/libgt/makefile.vc
+   * harbour/contrib/libmisc/makefile.bc
+   * harbour/contrib/libmisc/makefile.vc
+   * harbour/contrib/libnf/makefile.vc
+   * harbour/contrib/libnf/nanfor.bc
+   * harbour/contrib/samples/makefile.bc
+   * harbour/contrib/samples/makefile.vc
+   + harbour/contrib/samples/make_b32.bat
+   + harbour/contrib/samples/make_vc.bat
+   - harbour/contrib/samples/makevc.bat
+     + -w default Harbour build switch changed to -w2, 
+       to further maintain code quality.
+     ; Notice that CONTRIB might need some fixing here.
+     + Added proper BC/VC make batch files for "samples".
+
+   * harbour/include/hbclass.ch
+   * harbour/source/debug/dbgmenu.prg
+   * harbour/source/debug/debugger.prg
+   * harbour/source/rtl/teditor.prg
+   * harbour/utils/hbdoc/genchm.prg
+   * harbour/utils/hbdoc/genhtm.prg
+   * harbour/utils/hbdoc/genng.prg
+   * harbour/utils/hbdoc/genos2.prg
+   * harbour/utils/hbdoc/genpdf1.prg
+   * harbour/utils/hbdoc/genrtf.prg
+   * harbour/utils/hbdoc/os2.prg
+   * harbour/utils/hbmake/hbmake.prg
+   * harbour/utils/hbmake/radios.prg
+   * harbour/utils/hbpptest/pretest.prg
+   * harbour/utils/hbtest/rt_misc.prg
+     + Added HB_SYMBOL_UNUSED() inside codeblocks.
+     ! Removed a few uneeded codeblock parameters.
+     + Added HB_SYMBOL_UNUSED() to some class syntax generated 
+       code to avoid unused "Self" var warnings.
+
+   * harbour/ChangeLog.017
+     ! Typos.
+
 2007-03-31 12:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/Makefile
   + harbour/include/hbchksum.h

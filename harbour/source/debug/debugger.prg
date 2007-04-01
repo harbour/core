@@ -1527,7 +1527,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Calls" )
       ::oWndStack:bKeyPressed  := { | nKey | ::CallStackProcessKey( nKey ) }
-      ::oWndStack:bLButtonDown := { | nKey | ::CallStackProcessKey( K_LBUTTONDOWN ) }
+      ::oWndStack:bLButtonDown := { | nKey | HB_SYMBOL_UNUSED( nKey ), ::CallStackProcessKey( K_LBUTTONDOWN ) }
 
       AAdd( ::aWindows, ::oWndStack )
 //      ::nCurrentWindow = Len( ::aWindows )
@@ -1699,7 +1699,7 @@ METHOD ShowVars() CLASS TDebugger
          iif( ::lShowPublics, " Public", "" ) )
 
       ::oWndVars:bLButtonDown := { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
-      ::oWndVars:bLDblClick   := { | nMRow, nMCol | ::EditVar( ::oBrwVars:Cargo[ 1 ] ) }
+      ::oWndVars:bLDblClick   := { | nMRow, nMCol | HB_SYMBOL_UNUSED( nMRow ), HB_SYMBOL_UNUSED( nMCol ), ::EditVar( ::oBrwVars:Cargo[ 1 ] ) }
 
       ::oBrwVars := TDbgBrowser():New( nTop+1, 1, ::oWndVars:nBottom - 1, MaxCol() - iif( ::oWndStack != nil,;
                                ::oWndStack:nWidth(), 0 ) - 1 )

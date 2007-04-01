@@ -76,7 +76,7 @@ HARBOUR_EXE    = ..\..\bin\b32\harbour.exe
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -DHB_LANG_DEFAULT=$(HB_LANG_DEFAULT)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 #
 # Macros to access our library names

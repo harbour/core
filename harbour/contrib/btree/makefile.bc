@@ -24,5 +24,5 @@ $(OBJ_DIR)\hb_btree.obj   : hb_btree.c
   tlib $(LIB_DIR)\hb_btree.lib -+$@,,
 
 .prg.c:
-  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+  $(BIN_DIR)\harbour.exe $< -q0 -w2 -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
 

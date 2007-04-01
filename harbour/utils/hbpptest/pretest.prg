@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "common.ch"
+
 #ifndef __HARBOUR__
    #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
@@ -14,7 +16,7 @@
 /* Testing preprocessor */
 
 PROCEDURE MAIN()
-LOCAL in, out, pre
+LOCAL in, pre
 LOCAL nCnt:=0
 LOCAL nRes:=0
 
@@ -1204,7 +1206,7 @@ ENDTEXT
   RETURN
 
 PROCEDURE PrePrepare( in )
-LOCAL len, i, cin, cout
+LOCAL len, i, cin
 
   len := MLCOUNT( in )
   FOR i:=1 TO len
@@ -1215,8 +1217,12 @@ LOCAL len, i, cin, cout
 RETURN
 
 FUNCTION PreRun( in, pre )
-LOCAL len, i, cin, cout
+LOCAL len, i, cin
 LOCAL out:=''
+
+#ifdef __HARBOUR__
+  HB_SYMBOL_UNUSED( pre )
+#endif
 
   len := MLCOUNT( in, 1024 )
   FOR i:=1 TO len

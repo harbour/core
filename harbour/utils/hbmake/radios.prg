@@ -64,7 +64,8 @@ LOCAL nRow := Row(), nCol := Col()
 LOCAL nGets := Len(aChoices)
 LOCAL nGet
 LOCAL nStartGet := Len(aGetList) + 1
-   default bvalid to {||.t.}
+
+  default bvalid to {||.t.}
 
   // For each element in aChoices
   FOR nGet := 1 To nGets
@@ -77,12 +78,12 @@ LOCAL nStartGet := Len(aGetList) + 1
     oGet := GetNew(nRow++,ncol+4,t(aChoices[nGet]),cvar)
     Aadd(aGetList, oGet)
 
-    oGet:cargo := Array(RADIO_NUM_IVARS)
-   oGet:PostBlock:=bValid
+    oGet:cargo     := Array(RADIO_NUM_IVARS)
+    oGet:PostBlock := bValid
     oGet:radioGsb  := bVar
     oGet:radioGets := Array(nGets)
 
-    Aeval(oGet:radioGets, {|x, n| oGet:radioGets[n] := nStartGet + n - 1})
+    Aeval(oGet:radioGets, {|x, n| HB_SYMBOL_UNUSED( x ), oGet:radioGets[n] := nStartGet + n - 1})
 
     // Radio gets have their own reader, of course
     oGet:reader := {|o| RadioReader(o, aGetList) }
@@ -95,7 +96,7 @@ RETURN oGet
 
 FUNCTION t(c)
 
-RETURN {|x| c }
+RETURN {|| c }
 
 
 // The reader for radio buttons

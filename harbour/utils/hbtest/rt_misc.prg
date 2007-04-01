@@ -50,6 +50,8 @@
  *
  */
 
+#include "common.ch"
+
 #include "rt_main.ch"
 
 /* Don't change the position of this #include. */
@@ -240,7 +242,11 @@ FUNCTION Main_MISC()
    TEST_LINE( Eval( @sbBlock )                , "E BASE 1004 No exported method EVAL A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E BASE 1004 No exported method EVAL A:1:U:{||...} F:S" */
    TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
    TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
+#ifdef __HARBOUR__
+   TEST_LINE( Eval( {|p1,p2,p3| HB_SYMBOL_UNUSED(p2), HB_SYMBOL_UNUSED(p3), p1 },"A","B") , "A"                                       )
+#else
    TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
+#endif
    TEST_LINE( suNIL:Eval()                    , "E BASE 1004 No exported method EVAL A:1:U:NIL F:S" )
    TEST_LINE( scString:Eval()                 , "E BASE 1004 No exported method EVAL A:1:C:HELLO F:S"    )
    TEST_LINE( snIntP:Eval()                   , "E BASE 1004 No exported method EVAL A:1:N:10 F:S"       )
@@ -778,7 +784,7 @@ STATIC FUNCTION HB_TString()
       oClass:AddInline( ".AND.", {| self, cTest | ::cValue + " AND " + cTest } )
       oClass:AddInline( ".OR." , {| self, cTest | ::cValue + " OR " + cTest } )
 
-      oClass:AddInline( "HasMsg", {| self, cMsg | __ObjHasMsg( QSelf(), cMsg ) } )
+      oClass:AddInline( "HasMsg", {| self, cMsg | HB_SYMBOL_UNUSED( self ), __ObjHasMsg( QSelf(), cMsg ) } )
 
       oClass:Create()
    ENDIF

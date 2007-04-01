@@ -3010,13 +3010,13 @@
      ; Notes:
        - From now on, it possible to create/load files using the
          above functions/commands which have no extension. This
-         might be desirable in a few platform and/or situations.
+         might be desirable in a few platforms and/or situations.
          For example on Win32, it's possible to directly print
          to a shared Windows printer queue, using these commands:
              lOldValue := Set( _SET_DEFEXTENSIONS, .F. )
              SET PRINTER TO \\myserver\myprinter
              Set( _SET_DEFEXTENSIONS, lOldValue )
-         Or, it is possible to open a dbf file which has no extension:
+         Or, it is possible to open a dbf file which have no extension:
              dbUseArea(.T., NIL, "dbf_filename_with_no_extension", "w_DATA", .F., .F.)
        - Compiler is (of course) not affected by this setting.
        - Preprocessor (PP) lib flavour is not affected by this setting.

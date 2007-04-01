@@ -1467,7 +1467,7 @@ FUNC crtmakfile( cFile )
     aOut := Aclone( aIn )
     pickarry( 11, 15, 20, 64, aIn, aOut )
     nLenaOut := Len( aOut )
-    Aeval( aout, { | x, y | aout[ y ] := Trim( Substr( aOut[ y ], 1, At( ' ', aout[ y ] ) ) ) } )
+    Aeval( aout, { | x, y | HB_SYMBOL_UNUSED( x ), aout[ y ] := Trim( Substr( aOut[ y ], 1, At( ' ', aout[ y ] ) ) ) } )
     aOut := Asort( aOut )
 
     IF Len( aOut ) == 1
@@ -1536,7 +1536,7 @@ FUNC crtmakfile( cFile )
 
     IF !lextended
 
-        Aeval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), If( !lGcc, Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 2 ) ), Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 1 ) ) ) } )
+        Aeval( aOutc, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), If( !lGcc, Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 2 ) ), Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 1 ) ) ) } )
         Aeval( aout, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cExt := Substr( cExt, 2 ), Aadd( aCs, cObjDir + cTest + "." + exte( cExt, 1 ) ) } )
 
     ELSE
@@ -2539,7 +2539,7 @@ FUNC crtlibmakfile( cFile )
     pickarry( 10, 15, 19, 64, aIn, aOut )
     nLenaOut := Len( aOut )
 
-    Aeval( aout, { | x, y | aout[ y ] := Trim( Substr( aOut[ y ], 1, At( ' ', aout[ y ] ) ) ) } )
+    Aeval( aout, { | x, y | HB_SYMBOL_UNUSED( x ), aout[ y ] := Trim( Substr( aOut[ y ], 1, At( ' ', aout[ y ] ) ) ) } )
     Aeval( aout, { | xItem | If( At( '.c', xItem ) > 0 .or. At( '.C', xItem ) > 0, Aadd( aoutc, xitem ), ) } )
     Aeval( aoutc, { | x, z | citem := x, z := Ascan( aout, { | t | t = citem } ), If( z > 0, Asize( Adel( aout, z ), Len( aout ) - 1 ), ) } )
 
@@ -2552,7 +2552,7 @@ FUNC crtlibmakfile( cFile )
 
     IF !lextended
 
-        Aeval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), If( !lGcc, Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 2 ) ), Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 1 ) ) ) } )
+        Aeval( aOutc, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), If( !lGcc, Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 2 ) ), Aadd( aObjs, cObjDir + cTest + "." + exten( cExt, 1 ) ) ) } )
         Aeval( aout, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cExt := Substr( cExt, 2 ), Aadd( aCs, cObjDir + cTest + "." + exte( cExt, 1 ) ) } )
 
     ELSE

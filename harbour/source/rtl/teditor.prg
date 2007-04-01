@@ -115,7 +115,7 @@ CLASS HBEditor
    METHOD RefreshWindow()                                // Redraw a window
    METHOD RefreshLine()                                  // Redraw a line
    METHOD RefreshColumn()                                // Redraw a column of text
-   METHOD LineColor(nRow) INLINE ::cColorSpec            // Returns color string to use to draw nRow (current line if nRow is empty)
+   METHOD LineColor(nRow) INLINE HB_SYMBOL_UNUSED(nRow), ::cColorSpec // Returns color string to use to draw nRow (current line if nRow is empty)
 
    METHOD MoveCursor(nKey)                               // Move cursor inside text / window (needs a movement key)
    METHOD InsertState(lInsState)                         // Changes lInsert value and insertion / overstrike mode of editor
