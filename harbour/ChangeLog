@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-01 16:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tgetlist.prg
+     ! Fixed bug #1692268. The fix simply removes two strange lines 
+       of code which tried to modify the internal TGet() var "Type",
+       after it read the value contained in the TGet(). Since this would 
+       be the job of TGet() alone, and Type() is not an assignable 
+       var in CA-Cl*pper, it very much looks like a workaround 
+       for something (maybe a shortcoming of an earlier version of 
+       TGet()). If anyone knows what was to be achieved with that, 
+       pls shout.
+
 2007-04-01 13:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/makefile.bc
    * harbour/makefile.vc

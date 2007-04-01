@@ -363,8 +363,8 @@ METHOD GetPreValidate() CLASS HBGetList
    local xValue
 
    if oGet:PreBlock != NIL
+
       xValue    := oGet:VarGet()
-      oGet:type := ValType( xValue )
       lUpdated  := ::lUpdated
 
       lWhen     := Eval( oGet:PreBlock, oGet )
@@ -1068,7 +1068,6 @@ METHOD GUIPreValidate( oGUI ) CLASS HBGetList
 
    if !( oGet:preBlock == NIL )
       xValue      := oGet:VarGet()
-      oGet:type   := ValType( xValue )
       lUpdated := ::lUpdated
 
       lWhen := eval( oGet:preBlock, oGet )
