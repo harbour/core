@@ -88,6 +88,10 @@
 
 #elif defined(HB_OS_UNIX)
 
+   #if !defined(__WATCOMC__)
+      #include <pwd.h>
+      #include <sys/types.h>
+   #endif
    #include <unistd.h>
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */
 
@@ -100,19 +104,31 @@
 
 HB_FUNC( NETNAME )
 {
+   BOOL fGetUser = hb_parni( 1 ) == 1;
+
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
    {
 #if defined(__WATCOMC__)
-      char * pszValue = hb_getenv( "HOSTNAME" );
+      char * pszValue = hb_getenv( fGetUser ? "USER" : "HOSTNAME" );
       hb_retc_buffer( pszValue );
 #else
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = '\0';
-
-      gethostname( szValue, MAXGETHOSTNAME );
-
-      hb_retc( szValue );
+      if( fGetUser )
+      {
+         struct passwd * pwd;
+         pwd = getpwuid( getuid() );
+         if( pwd )
+            hb_retc( pwd->pw_name );
+         else
+            hb_retc_buffer( hb_getenv( "USER" ) );
+      }
+      else
+      {
+         char szValue[ MAXGETHOSTNAME + 1 ];
+         szValue[ 0 ] = '\0';
+         gethostname( szValue, MAXGETHOSTNAME );
+         hb_retc( szValue );
+      }
 #endif
    }
 
@@ -155,7 +171,10 @@ HB_FUNC( NETNAME )
       char szValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
       szValue[ 0 ] = '\0';
 
-      GetComputerName( szValue, &ulLen );
+      if( fGetUser )
+         GetUserName( pszValue, &ulLen );
+      else
+         GetComputerName( szValue, &ulLen );
 
       hb_retc( szValue );
    }

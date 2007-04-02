@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-02 19:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbregex.c
+    + added HB_REGEXHAS() and HB_REGEXLIKE()
+  * harbour/source/rtl/net.c
+    * added support for <nType> parameter in NETNAME() like in xHarbour
+      when nType == 1 NETNAME() returns user name instead of host name.
+
 2007-04-02 16:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/htmllib/counter.prg
   * harbour/contrib/htmllib/htmbrows.prg

@@ -323,7 +323,7 @@ static BOOL hb_regex( int iRequest )
                       ( ULONG ) aMatches[0].rm_eo == ulLen;
             break;
 
-         case 2: /* MATCH */
+         case 2: /* MATCH ( HAS ) */
             fResult = TRUE;
             break;
 
@@ -523,6 +523,16 @@ HB_FUNC( HB_REGEX )
 HB_FUNC( HB_REGEXMATCH )
 {
    hb_retl( hb_regex( hb_parl( 3 ) ? 1 /* LIKE */ : 2 /* HAS */ ) );
+}
+
+HB_FUNC( HB_REGEXLIKE )
+{
+   hb_retl( hb_regex( 1 ) );
+}
+
+HB_FUNC( HB_REGEXHAS )
+{
+   hb_retl( hb_regex( 2 ) );
 }
 
 /* Splits the string in an array of matched expressions */
