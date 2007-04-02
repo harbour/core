@@ -139,8 +139,6 @@ RETURN uObj
 
 METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOleAuto
 
-   LOCAL uObj
-
    IF uParam6 != NIL
       OLESetProperty( ::hObj, cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
    ELSEIF uParam5 != NIL

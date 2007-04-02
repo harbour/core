@@ -172,7 +172,7 @@ HB_FUNC( NETNAME )
       szValue[ 0 ] = '\0';
 
       if( fGetUser )
-         GetUserName( pszValue, &ulLen );
+         GetUserName( szValue, &ulLen );
       else
          GetComputerName( szValue, &ulLen );
 
