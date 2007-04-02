@@ -301,6 +301,10 @@ METHOD New( cFile, cTitle, cLinkTitle, cCharSet, aScriptSRC,;
 
 LOCAL i
 
+HB_SYMBOL_UNUSED( cLinkClr )
+HB_SYMBOL_UNUSED( cVLinkClr )
+HB_SYMBOL_UNUSED( cALinkClr )
+
 DEFAULT cFile      := "file1.htm"
 DEFAULT cTitle     := "test HTML page"
 DEFAULT cLinkTitle := cTitle
@@ -447,10 +451,9 @@ METHOD CGINew( cTitle, cLinkTitle, cCharSet, aScriptSRC,;
                cLinkClr, cVLinkClr, cALinkClr, ;
                cStyle, aImages, aServerSrc, ;
                cBaseURL, cBaseTarget,;
-               nRefresh, cRefreshURL,cStyleScr ,lNocache) CLASS Html
+               nRefresh, cRefreshURL, cStyleScr ,lNocache) CLASS Html
 
 LOCAL i
-
 
 //DEFAULT lAuthenticate := .F.
 DEFAULT cTitle        := "CGI HTML page"
@@ -1631,6 +1634,7 @@ RETURN Self
 */
 
 METHOD FormImage( cText, name, File ) CLASS Html
+HB_SYMBOL_UNUSED( cText )
 FWrite( ::nH, '<INPUT TYPE="IMAGE" NAME="'+name+'" SRC="'+file+'">'+CRLF() )
 RETURN Self
 

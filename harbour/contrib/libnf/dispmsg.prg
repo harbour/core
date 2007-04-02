@@ -205,9 +205,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
          aPos := {},       ;
          nLeft,            ;
          nTop,             ;
-         aLeft,            ;
-         cLeftMarker,      ;
-         cRightMarker
+         aLeft
 
    FOR i := 1 TO LEN( aInfo[1] )
       AADD( aPos, {} )

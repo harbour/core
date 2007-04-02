@@ -172,6 +172,8 @@ ENDCLASS
 method Put(lPut)   CLASS HControl 
 LOCAL i, cStr := ""
 
+HB_SYMBOL_UNUSED( lPut )
+
 ::nH   := pageHandle()
 ::form := currentForm()
 
@@ -467,6 +469,8 @@ ENDCLASS
 
 
 method New( cName, cAction, cMethod, lFrame, cCaption, nWidth ) CLASS Form 
+
+HB_SYMBOL_UNUSED( cAction )
 
 DEFAULT cName    := "Form1"
 DEFAULT cMethod  := "POST"

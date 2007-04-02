@@ -430,7 +430,6 @@ RETURN ( ( nRet == SQL_SUCCESS ) )
 // Only executes the SQL Statement
 
 METHOD ExecSQL() CLASS TODBC
-   LOCAL lRet
    LOCAL xBuf
    LOCAL nRet
 
@@ -502,7 +501,6 @@ RETURN ( xRet )
 METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
    LOCAL nRows
-   LOCAL nRowStatus
    LOCAL nResult
    LOCAL nPos:=NIL
 

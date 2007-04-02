@@ -221,7 +221,7 @@ RETURN Self
 */
 
 METHOD Get( cSection, cEntry, uDefault ) CLASS oIni 
-LOCAL cRet, nPos, nSection, nEntry
+LOCAL cRet, nSection, nEntry
 
 DEFAULT uDefault := ""
 
@@ -263,7 +263,7 @@ RETURN( cRet )
 
 METHOD Put( cSection, cEntry, uValue ) CLASS oIni 
 LOCAL cRet := ""
-LOCAL cComment, nPos, nSection, nEntry
+LOCAL cComment, nSection, nEntry
 
 DEFAULT uValue := ""
 

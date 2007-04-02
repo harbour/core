@@ -109,7 +109,7 @@ xx := 1
 setcolor('w/r')
 SINGLEBOX(22, 31, 24, 48)
 @ 23, 33 say "Your move:"
-aeval(board_, { | a, x | drawbox(x) } )
+aeval(board_, { | a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
 do while lastkey() != K_ESC .and. moremoves()
    move := 1
    setcolor('w/n')

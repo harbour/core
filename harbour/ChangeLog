@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-02 16:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/htmllib/counter.prg
+  * harbour/contrib/htmllib/htmbrows.prg
+  * harbour/contrib/htmllib/jwindow.prg
+  * harbour/contrib/htmllib/ocgi.prg
+  * harbour/contrib/htmllib/oedit.prg
+  * harbour/contrib/htmllib/ofile.prg
+  * harbour/contrib/htmllib/ohtm.prg
+  * harbour/contrib/htmllib/oini.prg
+  * harbour/contrib/libnf/aading.prg
+  * harbour/contrib/libnf/aredit.prg
+  * harbour/contrib/libnf/clrsel.prg
+  * harbour/contrib/libnf/dispmsg.prg
+  * harbour/contrib/libnf/eltime.prg
+  * harbour/contrib/libnf/floptst.prg
+  * harbour/contrib/libnf/menu1.prg
+  * harbour/contrib/libnf/pegs.prg
+  * harbour/contrib/libnf/popadder.prg
+  * harbour/contrib/libnf/savesets.prg
+  * harbour/contrib/libnf/tbwhile.prg
+  * harbour/contrib/libnf/xbox.prg
+  * harbour/contrib/odbc/todbc.prg
+    * cleaned unused variable warnings
+
 2007-04-01 16:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tgetlist.prg
      ! Fixed bug #1692268. The fix simply removes two strange lines 

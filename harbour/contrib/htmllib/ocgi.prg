@@ -99,7 +99,7 @@ ENDCLASS
 */
 
 METHOD New( cInBuffer ) Class oCgi
-LOCAL cBuff, i, nBuff
+LOCAL i
 LOCAL aTemp := {}
 LOCAL aVar  := {}
 
@@ -176,11 +176,9 @@ RETURN ::ToObject()  //Self
 */
 
 METHOD ToObject() CLAss ocgi
-local i, bBlock
-local cFldName
+local i
 LOCAL nScope:=1
-LOCAL aDb, oDb, hNewClass, oNew, n
-LOCAL hNew
+LOCAL aDb, oNew
 STATIC sn := 0
 
 // --> create new oObject class from this one...

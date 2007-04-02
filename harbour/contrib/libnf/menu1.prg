@@ -308,7 +308,7 @@ STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
 
 
 FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
-   LOCAL nTtlWid, nTtlUsed, i, j, nPad
+   LOCAL nTtlWid, nTtlUsed
    LOCAL sMainScrn, lCancMode, lLooping := .t.
 
    // column position for each item on the menu bar
@@ -353,30 +353,30 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    aBarCol[1] := 0
    nTtlUsed := LEN( aBar[1] ) + 1
    AEVAL( aBar, ;
-          {|x,i| aBarcol[i]:= nTtlUsed,nTtlUsed+= (LEN(aBar[i]) +1 )}, ;
+          {|x,i| HB_SYMBOL_UNUSED( x ), aBarcol[i]:= nTtlUsed,nTtlUsed+= (LEN(aBar[i]) +1 )}, ;
           2, LEN(aBar) -1 )
 
    // calculates widest element for each pulldown menu
    // see below for _ftWidest()
    AFILL(aBarWidth,1)
-   AEVAL( aChoices, { |x,i| _ftWidest( @i, aChoices, @aBarWidth ) } )
+   AEVAL( aChoices, { |x,i| HB_SYMBOL_UNUSED( x ), _ftWidest( @i, aChoices, @aBarWidth ) } )
 
    // box location for each pulldown menu
    // see below for _ftLocat()
-   AEVAL( aChoices, { |x,i| _ftLocat( i, aBarCol, aBarWidth, @aBoxLoc, nMaxCol ) } )
+   AEVAL( aChoices, { |x,i| HB_SYMBOL_UNUSED( x ), _ftLocat( i, aBarCol, aBarWidth, @aBoxLoc, nMaxCol ) } )
 
    // valid keys for each pulldown menu
    // see below for _ftValKeys()
-   AEVAL( aChoices,{|x,i| AADD( aValidkeys,"" ),;
+   AEVAL( aChoices,{|x,i| HB_SYMBOL_UNUSED( x ), AADD( aValidkeys,"" ),;
                           _ftValKeys( i,aChoices,@aValidKeys ) } )
 
    // display the menu bar
    SETCOLOR( cBar )
    @ nTopRow, 0
-   AEVAL( aBar, { |x,i| Devpos(nTopRow, aBarCol[i]), Devout(aBar[i]) })
+   AEVAL( aBar, { |x,i| HB_SYMBOL_UNUSED( x ), Devpos(nTopRow, aBarCol[i]), Devout(aBar[i]) })
 
    // store inkey code for each item on menu bar to aBarKeys
-   AEVAL( aBarKeys, {|x,i| aBarKeys[i] := ;
+   AEVAL( aBarKeys, {|x,i| HB_SYMBOL_UNUSED( x ), aBarKeys[i] := ;
           aKeyCodes[ ASC( UPPER( LTRIM( aBar[i] ) ) ) - 64 ] } )
 
    // disable Alt-C and Alt-D
@@ -448,7 +448,7 @@ FUNCTION __ftAcUdf( nMode )
    RETURN nRtnVal
 
 STATIC FUNCTION _ftWidest( i, aChoices, aBarWidth )
-   AEVAL(aChoices[i,1],{|a,b| aBarWidth[i] := ;
+   AEVAL(aChoices[i,1],{|a,b| HB_SYMBOL_UNUSED( a ), aBarWidth[i] := ;
             MAX( aBarWidth[i],LEN(aChoices[i,1,b])) })
    RETURN NIL
 
@@ -458,7 +458,7 @@ STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, nMaxCol )
    RETURN NIL
 
 STATIC FUNCTION _ftBailOut( cBorder, cBox )
-   LOCAL cOldColor, sOldScreen, nKeyPress, nOldCursor, nCenter
+   LOCAL cOldColor, sOldScreen, nKeyPress, nOldCursor
    nOldCursor := SETCURSOR( SCNONE )
    sOldScreen := SAVESCREEN(nMaxRow/2-1, 24, nMaxRow/2+2, 55)
    cOldColor := SETCOLOR( cBorder )

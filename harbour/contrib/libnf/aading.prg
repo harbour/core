@@ -128,7 +128,7 @@ FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
                         ALLTRIM( x ) == ;
                         ALLTRIM( aList2[ nElement ]) }
       ELSE
-         bScanCode := { |x| ( aList2[ nElement ]) }
+         bScanCode := { |x| x == ( aList2[ nElement ]) }
       ENDIF
 
    ELSE                                   // Ignore case.

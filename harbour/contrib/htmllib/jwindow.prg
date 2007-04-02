@@ -83,8 +83,8 @@ METHOD setOnLoad( c )     INLINE ::onLoad := c
 METHOD setOnUnLoad( c )   INLINE ::onUnLoad := c
 
 
-METHOD Alert( c )         INLINE ::QOut( "alert('c')" )
-METHOD confirm(c)         INLINE ::QOut( "confirm('c')" )
+METHOD Alert( c )         INLINE HB_SYMBOL_UNUSED( c ), ::QOut( "alert('c')" )
+METHOD confirm( c )       INLINE HB_SYMBOL_UNUSED( c ), ::QOut( "confirm('c')" )
 METHOD SetSize(x,y,h,w)
 METHOD Write( c )
 METHOD lineBreak()        INLINE ::QOut( "<BR>" )

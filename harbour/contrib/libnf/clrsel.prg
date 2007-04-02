@@ -254,7 +254,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
 LOCAL aClrOld := aClone( aClrs )
 LOCAL aOptions
-LOCAL nF, nB, nT, nL, nR
+LOCAL nB, nT, nL, nR
 LOCAL nChoice := 1
 LOCAL nLen    := 0
 LOCAL aPrompt := {}
@@ -343,7 +343,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 // Colour selection for specific type of colour setting
 // Return -> aOpt with modified colour strings
 
-LOCAL nF, nB, nT, nL, nR
+LOCAL nB, nT, nL, nR
 LOCAL nX      := 0
 LOCAL aClrs   := {}
 LOCAL cClr    := ""

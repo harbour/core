@@ -198,7 +198,6 @@ RETURN( nLength )
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 METHOD _Read( nSize, cBuff ) CLASS FileBase 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-LOCAL nBytesRead
 
 DEFAULT nSize := 1024
 DEFAULT cBuff := SPACE(nSize)
@@ -219,7 +218,7 @@ RETURN( cBuff ) //nBytesRead )
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 METHOD ReadAhead( nSize, cBuff ) CLASS FileBase 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-LOCAL nBytesRead, nCurrent
+LOCAL nCurrent
 
 DEFAULT nSize := 1024
 DEFAULT cBuff := SPACE(nSize)
@@ -273,7 +272,7 @@ RETURN ::Buffer
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 METHOD ReadByte() CLASS FileBase 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-LOCAL nRet, nBytes
+LOCAL nBytes
 LOCAL cBuff := SPACE( 1 )
 
 nBytes := FRead( ::Handle, @cBuff, 1 )
@@ -289,7 +288,7 @@ RETURN( IF( nBytes > 0, ASC(cBuff), -1 ) )
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 METHOD ReadInt() CLASS FileBase 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-LOCAL nRet, nBytes
+LOCAL nBytes
 LOCAL cBuff := SPACE( 2 )
 
 nBytes := FRead( ::Handle, @cBuff, 2 )
@@ -305,7 +304,7 @@ RETURN( IF( nBytes > 0, BIN2I(cBuff), -1 )  )
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 METHOD ReadLong() CLASS FileBase 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-LOCAL nRet, nBytes
+LOCAL nBytes
 LOCAL cBuff := SPACE( 4 )
 
 nBytes := FRead( ::Handle, @cBuff, 4 )

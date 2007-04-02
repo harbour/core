@@ -7,7 +7,7 @@
 PROC CounterCGI()
 LOCAL lIsPost := .F.
 LOCAL cCounterDat := "counter.dat"
-LOCAL oFrm, oEd, oSub
+LOCAL oFrm
 
 LOCAL oHtm, oCgi
 

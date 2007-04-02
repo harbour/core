@@ -1400,6 +1400,10 @@ RETURN xVarVal
 FUNCTION _ftAdderTapeUDF(mode,cur_elem,rel_pos)
   LOCAL nKey,nRtnVal
   STATIC ac_exit_ok := .F.
+
+  HB_SYMBOL_UNUSED( cur_elem )
+  HB_SYMBOL_UNUSED( rel_pos )
+
   DO CASE
     CASE mode == AC_EXCEPT
       nKey := LASTKEY()

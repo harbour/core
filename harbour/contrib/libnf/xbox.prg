@@ -143,7 +143,6 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
         nTRow,      ;
         nBRow,      ;
         nLoop,      ;
-        cSayStr,    ;
         nSayRow,    ;
         nSayCol,    ;
         nNumRows,   ;

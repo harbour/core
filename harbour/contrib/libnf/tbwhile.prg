@@ -258,7 +258,7 @@
 FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
                     cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
 
-   LOCAL b, column, cType, i
+   LOCAL b, column, i
    LOCAL cHead, bField, lKeepScrn, cScrnSave
    LOCAL cColorSave, cColorBack, nCursSave
    LOCAL lMore, nKey, nPassRec

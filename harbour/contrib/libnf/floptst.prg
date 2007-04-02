@@ -119,7 +119,6 @@ RETURN
 FUNCTION FT_FLOPTST(			;	// error code defined by ERR_*
 				nDriveNum_i	;	// letter of floppy drive.
 				)
-	LOCAL cDrive
 	LOCAL cBuffer
 	LOCAL nErrorCode
 	LOCAL nRetCode

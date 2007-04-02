@@ -48,7 +48,7 @@
  */
 
 function FT_ELTIME(cTIME1,cTIME2)
-  local  nTIME1, nTIME2, nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
+  local  nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
 
   nSECS1   := (val(substr(cTIME1,1,2)) * 3600) +;
               (val(substr(cTIME1,4,2)) * 60) + (val(substr(cTIME1,7)))

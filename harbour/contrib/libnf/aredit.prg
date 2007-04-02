@@ -194,7 +194,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
 
    LOCAL exit_requested := .F., nKey, meth_no, ;
          cSaveWin, i, b, column
-   LOCAL nDim, nWorkRow, cType, cVal
+   LOCAL nDim, cType, cVal
    LOCAL tb_methods := ;
          { ;
            {K_DOWN,       {|b| b:down()}}, ;

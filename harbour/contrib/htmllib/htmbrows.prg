@@ -74,6 +74,9 @@ LOCAL i, n    := 0
 LOCAL aFlds   := dbStruct()
 LOCAL cAlign
 
+HB_SYMBOL_UNUSED( cTarget )
+HB_SYMBOL_UNUSED( cAlias )
+
 DEFAULT cAction   := "confirm('RECORD: '+this.name+'\nPlace your action here !!!')"
 DEFAULT lUseLinks := .F.
 
