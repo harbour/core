@@ -2308,11 +2308,11 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
                pError = hb_errNew();
                hb_errPutGenCode( pError, EG_CREATE );
                hb_errPutSubCode( pError, EDBF_CREATE_DBF );
-               hb_errPutOsCode( pError, hb_fsError() );
                hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
                hb_errPutFileName( pError, ( char * ) szFileName );
                hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
             }
+            hb_errPutOsCode( pError, hb_fsError() );
             fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
          }
          else
@@ -3041,11 +3041,11 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                pError = hb_errNew();
                hb_errPutGenCode( pError, EG_OPEN );
                hb_errPutSubCode( pError, EDBF_OPEN_DBF );
-               hb_errPutOsCode( pError, hb_fsError() );
                hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
                hb_errPutFileName( pError, ( char * ) szFileName );
                hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
             }
+            hb_errPutOsCode( pError, hb_fsError() );
             fRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
          }
          else
