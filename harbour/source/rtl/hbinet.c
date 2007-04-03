@@ -237,13 +237,15 @@ static int hb_selectReadSocket( HB_SOCKET_STRUCT *Socket )
 
    if( Socket->timeout == -1 )
    {
-      select(Socket->com + 1, &set, NULL, NULL, NULL);
+      if( select( Socket->com + 1, &set, NULL, NULL, NULL ) < 0 )
+         return 0;
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      select(Socket->com + 1, &set, NULL, NULL, &tv);
+      if( select( Socket->com + 1, &set, NULL, NULL, &tv ) < 0 )
+         return 0;
    }
 
    return FD_ISSET( Socket->com, &set );
@@ -259,13 +261,15 @@ static int hb_selectWriteSocket( HB_SOCKET_STRUCT *Socket )
 
    if( Socket->timeout == -1 )
    {
-      select(Socket->com + 1, NULL, &set, NULL, NULL);
+      if( select( Socket->com + 1, NULL, &set, NULL, NULL ) < 0 )
+         return 0;
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      select(Socket->com + 1, NULL, &set, NULL, &tv);
+      if( select( Socket->com + 1, NULL, &set, NULL, &tv ) < 0 )
+         return 0;
    }
 
    return FD_ISSET( Socket->com, &set );
@@ -284,13 +288,15 @@ static int hb_selectWriteExceptSocket( HB_SOCKET_STRUCT *Socket )
 
    if( Socket->timeout == -1 )
    {
-      select(Socket->com + 1, NULL, &set, &eset, NULL);
+      if( select( Socket->com + 1, NULL, &set, &eset, NULL ) < 0 )
+         return 2;
    }
    else
    {
       tv.tv_sec = Socket->timeout/ 1000;
       tv.tv_usec = (Socket->timeout % 1000) * 1000;
-      select(Socket->com + 1, NULL, &set, &eset, &tv);
+      if( select(Socket->com + 1, NULL, &set, &eset, &tv) < 0 )
+         return 2;
    }
 
    if( FD_ISSET( Socket->com, &eset) )
