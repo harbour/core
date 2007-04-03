@@ -286,20 +286,40 @@ HB_FUNC( ASCAN )
       ULONG ulCount = hb_parnl( 4 );
 
 #if defined( HB_COMPAT_XHB )
-      hb_retnl( hb_arrayScan( pArray, pValue,
-                              ISNUM( 3 ) ? &ulStart : NULL,
-                              ISNUM( 4 ) ? &ulCount : NULL,
-                              hb_parl( 5 ) ) );
+      hb_retnint( hb_arrayScan( pArray, pValue,
+                                ISNUM( 3 ) ? &ulStart : NULL,
+                                ISNUM( 4 ) ? &ulCount : NULL,
+                                hb_parl( 5 ) ) );
 #else
-      hb_retnl( hb_arrayScan( pArray, pValue,
-                              ISNUM( 3 ) ? &ulStart : NULL,
-                              ISNUM( 4 ) ? &ulCount : NULL,
-                              FALSE ) );
+      hb_retnint( hb_arrayScan( pArray, pValue,
+                                ISNUM( 3 ) ? &ulStart : NULL,
+                                ISNUM( 4 ) ? &ulCount : NULL,
+                                FALSE ) );
 #endif
    }
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
 }
+
+#if defined( HB_COMPAT_XHB )
+HB_FUNC( RASCAN )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
+
+   if( pArray && pValue )
+   {
+      ULONG ulStart = hb_parnl( 3 );
+      ULONG ulCount = hb_parnl( 4 );
+      hb_retnint( hb_arrayRevScan( pArray, pValue,
+                                   ISNUM( 3 ) ? &ulStart : NULL,
+                                   ISNUM( 4 ) ? &ulCount : NULL,
+                                   hb_parl( 5 ) ) );
+   }
+   else
+      hb_retni( 0 );
+}
+#endif
 
 /* TODO: In Xbase++ fifth parameter determines whether array elements
          are passed by reference to the code block. [vszakats] */

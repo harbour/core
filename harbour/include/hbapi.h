@@ -677,6 +677,7 @@ extern HB_EXPORT long      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* r
 extern HB_EXPORT HB_TYPE   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
 extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
 extern HB_EXPORT ULONG     hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
+extern HB_EXPORT ULONG     hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
 extern HB_EXPORT BOOL      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
 extern HB_EXPORT BOOL      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
 extern HB_EXPORT PHB_ITEM  hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */

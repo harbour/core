@@ -799,6 +799,154 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
    return 0;
 }
 
+ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayRevScan(%p, %p, %p, %p, %d)", pArray, pValue, pulStart, pulCount, (int) fExact));
+
+   if( HB_IS_ARRAY( pArray ) )
+   {
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
+      ULONG ulLen = pBaseArray->ulLen;
+      ULONG ulStart;
+      ULONG ulCount;
+
+      if( pulStart && *pulStart )
+         ulStart = *pulStart - 1;
+      else
+         ulStart = ulLen - 1;
+
+      if( ulStart < ulLen )
+      {
+         ulCount = ulStart + 1;
+         if( pulCount && *pulCount < ulCount )
+            ulCount = *pulCount;
+
+         if( ulCount > 0 )
+         {
+            /* Make separate search loops for different types to find, so that
+               the loop can be faster. */
+
+            if( HB_IS_BLOCK( pValue ) )
+            {
+               do
+               {
+                  hb_vmPushSymbol( &hb_symEval );
+                  hb_vmPush( pValue );
+                  hb_vmPush( pBaseArray->pItems + ulStart );
+                  hb_vmPushLong( ulStart + 1 );
+                  hb_vmDo( 2 );
+
+                  if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
+                     return ulStart;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_STRING( pValue ) )
+            {
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  /* NOTE: The order of the pItem and pValue parameters passed to
+                           hb_itemStrCmp() is significant, please don't change it. [vszakats] */
+                  if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_NUMERIC( pValue ) )
+            {
+               double dValue = hb_itemGetND( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_DATE( pValue ) )
+            {
+               long lValue = hb_itemGetDL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_DATE( pItem ) && hb_itemGetDL( pItem ) == lValue )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_LOGICAL( pValue ) )
+            {
+               BOOL bValue = hb_itemGetL( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == bValue )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_NIL( pValue ) )
+            {
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_NIL( pItem ) )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( HB_IS_POINTER( pValue ) )
+            {
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_POINTER( pItem ) &&
+                      pItem->item.asPointer.value == pValue->item.asPointer.value )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( fExact && HB_IS_ARRAY( pValue ) )
+            {
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_ARRAY( pItem ) &&
+                      pItem->item.asArray.value == pValue->item.asArray.value )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+            else if( fExact && HB_IS_HASH( pValue ) )
+            {
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+                  if( HB_IS_HASH( pItem ) &&
+                      pItem->item.asHash.value == pValue->item.asHash.value )
+                     return ulStart + 1;
+               }
+               while( --ulCount && ulStart-- );
+            }
+         }
+      }
+   }
+
+   return 0;
+}
+
 BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayEval(%p, %p, %p, %p)", pArray, bBlock, pulStart, pulCount));
