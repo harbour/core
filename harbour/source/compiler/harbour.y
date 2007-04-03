@@ -2379,7 +2379,9 @@ static void hb_compSwitchStart( HB_COMP_DECL )
 static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SWITCHCASE_PTR pCase;
-   
+
+   HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_BREAK_CODE;
+
    if( pExpr )
    {
       /* normal CASE */
@@ -2511,8 +2513,6 @@ void hb_compSwitchKill( HB_COMP_DECL )
 
 static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   const char * szDesc;
-
    if( pExpr->ExprType == HB_ET_FUNCALL )
    {
       if( hb_compExprParamListLen( pExpr->value.asFunCall.pParms ) == 0 )
@@ -2531,21 +2531,25 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          return pExpr;
       }
    }
-   else if( HB_COMP_PARAM->iPassByRef & ( HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY ) )
-      return pExpr;
-
-   if( pExpr->ExprType == HB_ET_REFERENCE )
+#if 0
+   else if( !( HB_COMP_PARAM->iPassByRef & ( HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY ) ) )
    {
-      HB_EXPR_PTR pDelExpr = pExpr;
-      pExpr = pExpr->value.asReference;
-      HB_COMP_EXPR_CLEAR( pDelExpr );
+      const char * szDesc;
+      if( pExpr->ExprType == HB_ET_REFERENCE )
+      {
+         HB_EXPR_PTR pDelExpr = pExpr;
+         pExpr = pExpr->value.asReference;
+         HB_COMP_EXPR_CLEAR( pDelExpr );
+      }
+
+      szDesc = hb_compExprAsSymbol( pExpr );
+      if( ! szDesc )
+         szDesc = hb_compExprDescription( pExpr );
+
+      return hb_compErrorRefer( HB_COMP_PARAM, pExpr, szDesc );
    }
-
-   szDesc = hb_compExprAsSymbol( pExpr );
-   if( ! szDesc )
-      szDesc = hb_compExprDescription( pExpr );
-
-   return hb_compErrorRefer( HB_COMP_PARAM, pExpr, szDesc );
+#endif
+   return pExpr;
 }
 
 /* ************************************************************************* */

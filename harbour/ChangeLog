@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-03 13:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! fixed false warning about unreachable code in
+         switch ...; case ...; exit; case ...
+      statement
+    * disabled some error messages about illegal pass by reference
+      now HVM should not allow to create cyclic reference chain
+
 2007-04-02 19:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/ole/oleauto.prg
     * removed unused local variable
