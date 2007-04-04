@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-04 12:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    ! typos
+  * harbour/source/vm/extend.c
+    * formatting
+
 2007-04-04 10:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/tip/Makefile
   - harbour/contrib/tip/atokens.c
@@ -33,9 +39,11 @@
       accept as delimiters string longer then one character. By default
       they are using " " as delimiter. " " delimiter has special mening
       Unlike other delimiters repeted ' ' characters does not create empty
-      tokens, f.e.: HB_ATOKENS( "    1     2 3  " ) returns array { "1", "2" }
-      Any other delimiters are restrictly counted, f.e. HB_ATOKENS( ",,1,,2,")
-      return array: { "", "", "1", "", "2", "" }.
+      tokens, f.e.: HB_ATOKENS( "    1     2 3  " ) returns array:
+         { "1", "2", "3" }
+      Any other delimiters are restrictly counted, f.e.:
+      HB_ATOKENS( ",,1,,2,") returns array:
+         { "", "", "1", "", "2", "" }
 
     + added emulation for old __STRTOKEN(), __STRTKPTR() and xHarbour's
       __STRTOKENCOUNT() by HB_TOKEN*() functions. They do not return
@@ -195,7 +203,7 @@
          HB_MD5FILE( <cFileName> ) -> <cMD5>
       HB_CRC() is general CRC function which can be used for any polynomial
       given as second argument, f.e.: 0x104C11DB7 is CRC32 polynomial,
-      0x18005 -> CRC16, 0x11021 -> CRC16 X.26, 0x1393 -> CRC12, 0x101 -> LCR8
+      0x18005 -> CRC16, 0x11021 -> CRC16 X.25, 0x1393 -> CRC12, 0x101 -> LCR8
       HB_CRCCT() makes exactly the same job but it uses broken algorithm.
       Unfortunately it seems that this broken version is widely used by many
       other projects, f.e. HB_CRCCT() gives exactly the same results as

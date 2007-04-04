@@ -151,6 +151,7 @@ HB_EXPORT BOOL hb_extIsObject( int iParam )
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
+
    return HB_IS_OBJECT( pItem );
 }
 
