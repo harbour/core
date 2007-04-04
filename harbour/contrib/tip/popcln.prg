@@ -278,7 +278,7 @@ RETURN cRet
 METHOD Retreive( nId, nLen ) CLASS tIPClientPOP
 
    LOCAL nPos
-   LOCAL cStr, cRet, nRetLen, cBuffer, nRead
+   LOCAL cRet, nRetLen, cBuffer, nRead
    LOCAL cEOM := ::cCRLF + "." + ::cCRLF        // End Of Mail
 
    IF .not. ::bInitialized

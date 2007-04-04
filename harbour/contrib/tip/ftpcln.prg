@@ -344,8 +344,6 @@ RETURN NIL
 
 METHOD Stor( cFile ) CLASS tIPClientFTP
 
-   LOCAL nTimeout
-
    IF ::bUsePasv
       IF .not. ::Pasv()
          //::bUsePasv := .F.
@@ -463,8 +461,7 @@ METHOD Write( cData, nLen ) CLASS tIPClientFTP
 
 RETURN ::super:Write( cData, nLen, .F. )
 
-METHOD Retr( cFile,cLocalFile ) CLASS tIPClientFTP
-   LOCAL nTimeout,cRet
+METHOD Retr( cFile ) CLASS tIPClientFTP
 
    IF ::bUsePasv
       IF .not. ::Pasv()
@@ -541,7 +538,7 @@ RETURN lRet
 
 METHOD LS( cSpec ) CLASS tIPClientFTP
 
-    LOCAL cStr,cfile,x,y
+    LOCAL cStr
 
     IF cSpec == nil
        cSpec := ''
@@ -580,7 +577,6 @@ METHOD Rename( cFrom, cTo ) CLASS tIPClientFTP
 Return lResult
 
 METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS tIPClientFTP
-   LOCAL cFileData
    LOCAL lRet,xRet 
 
    Local nHandle

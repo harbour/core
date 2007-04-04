@@ -51,6 +51,7 @@
  *
  */
 
+#include "common.ch"
 #include "hbclass.ch"
 
 CLASS TipMail
@@ -273,7 +274,6 @@ RETURN ::aAttachments[ ::nAttachPos ]
 
 METHOD ToString() CLASS TipMail
    LOCAL cBoundary, cElem, i
-   LOCAL oSubPart
    LOCAL cRet := ""
    // this is a multipart message; we need a boundary
     IF Len( ::aAttachments ) > 0

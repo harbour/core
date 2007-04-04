@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-04 15:30 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/contrib/pgsql/tpostgre.prg
+    * removed unused vars
+  * harbour/contrib/tip/cgi.prg
+    * used new hb_serialize/hb_deserialize
+    * removed unused vars
+  * harbour/contrib/tip/ftpcln.prg
+  * harbour/contrib/tip/httpcln.prg
+  * harbour/contrib/tip/mail.prg
+  * harbour/contrib/tip/popcln.prg
+    * removed unused vars
+
 2007-04-04 12:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     ! typos

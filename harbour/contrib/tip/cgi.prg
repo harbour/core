@@ -212,7 +212,7 @@ METHOD Flush() CLASS TIpCgi
    local cSID := ::cSID
    local cSession
 
-   hEval( ::hCookies, { |k,v,n| ::cCgiHeader += 'Set-Cookie: ' + k + '=' + v + ';' + _CRLF } )
+   hEval( ::hCookies, { |k,v| ::cCgiHeader += 'Set-Cookie: ' + k + '=' + v + ';' + _CRLF } )
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
@@ -249,6 +249,10 @@ METHOD DestroySession( cID ) CLASS TIpCgi
    local cFile
    local cSID := ::cSID
    local lRet
+
+   if !empty( cID )
+      cSID := cID 
+   endif
 
    if !empty( cSID )
 
@@ -423,38 +427,13 @@ METHOD StartSession() CLASS TIpCgi
 
 METHOD SessionEncode() CLASS TIpCgi
 
-   local aSerial := {}
-   local cKey, xVal
-
-   for each cKey in ::hSession:Keys
-      xVal := ::hSession[ cKey ]
-      if xVal != nil
-         aAdd( aSerial, { cKey, xVal } )
-      endif
-   next
-
-   RETURN HB_Serialize( aSerial )
+   RETURN HB_Serialize( ::hSession )
 
 METHOD SessionDecode( cData ) CLASS TIpCgi
 
-   local lRet := .t.
-   local cSerial := HB_DeserialBegin( cData )
-   local xVal, cKey, aElem
+   ::hSession := HB_Deserialize( cData )
 
-   do while ( xVal := HB_DeserialNext( @cSerial ) ) != nil
-      switch ValType( xVal )
-          case 'A'  // Vars are stored in array { VarName, Value }
-            for each aElem in xVal
-               ::hSession[ aElem[1] ] := aElem[2]
-            next
-            exit
-          otherwise
-            lRet := .f.
-            exit
-         end
-   enddo
-
-   RETURN lRet
+   RETURN Valtype( ::hSession ) == "H"
 
 STATIC FUNCTION HtmlTag( xVal, cKey )
 
@@ -478,7 +457,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    DEFAULT cSep TO ' '
 
-   hEval( hTags, { |key,value,pos| cVal += HtmlTag( hTags, key ) + cSep } )
+   hEval( hTags, { |k,v,p| cVal += HtmlTag( hTags, k, v, p ) + cSep } )
 
    return cVal
 
@@ -511,7 +490,7 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
    DEFAULT cSep TO ' '
 
    if !empty( hOptions )
-      hEval( hOptions, { |key,value,pos| cVal += HtmlOption( hOptions, key,,, .t. ) + cSep } )
+      hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .t. ) + cSep } )
    endif
 
    return cVal
@@ -540,7 +519,7 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
    DEFAULT cSep TO ' '
 
    if !empty( hValues )
-      hEval( hValues, { |key,value,pos| cVal += HtmlValue( hValues, key ) + cSep } )
+      hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
    endif
 
    return cVal

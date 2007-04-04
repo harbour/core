@@ -51,6 +51,7 @@
  *
  */
 
+#include "common.ch"
 #include "hbclass.ch"
 #include "tip.ch"
 
@@ -92,7 +93,7 @@ HIDDEN:
 
 ENDCLASS
 
-METHOD New(lTrace) CLASS tIPClientHTTP
+METHOD New() CLASS tIPClientHTTP
    ::nDefaultPort := 80
    ::nConnTimeout := 5000
    ::bChunked := .F.
@@ -219,7 +220,7 @@ RETURN .T.
 
 METHOD ReadHeaders(lClear) CLASS tIPClientHTTP
    LOCAL cLine, nPos, aVersion
-   LOCAL aHead, aCookie, cCookie
+   LOCAL aHead
 
    // Now reads the fields and set the content lenght
    cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
@@ -376,9 +377,8 @@ METHOD ReadAll() CLASS tIPClientHTTP
 
 METHOD setCookie(cLine) CLASS tIPClientHTTP
    //docs from http://www.ietf.org/rfc/rfc2109.txt
-   local aParam,cParam
-   local cCookie,aCookies
-   local cHost,cPath,cName,cValue,hHost,hPath, aElements, cElement
+   local aParam
+   local cHost,cPath,cName,cValue,aElements, cElement
    local cDefaultHost:=::oUrl:cServer, cDefaultPath:=::oUrl:cPath
    local x,y
    IF empty(cDefaultPath)
@@ -424,7 +424,7 @@ return NIL
 
 METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    local x,y,aDomKeys:={},aKeys,z,cKey,aPathKeys,nPath
-   local a,b,cOut:='',cX,cY,c,d
+   local a,b,cOut:='',c,d
    IF cHost=nil
       cHost:=::oUrl:cServer
    ENDIF

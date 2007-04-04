@@ -552,10 +552,7 @@ METHOD Refresh(lQuery,lMeta) CLASS TPQquery
     Local aStruct := {}
     Local aTemp := {}
     Local i
-    Local n
-    Local temp
-    Local cQuery
-    Local cType, nType, nDec, nSize
+    Local cType, nDec, nSize
 
     Default lQuery To .T.
     Default lMeta To .T.
@@ -962,7 +959,6 @@ RETURN ! ::lError
 
 METHOD FieldGet( nField, nRow ) CLASS TPQquery
     Local result
-    Local i
     Local cType
     Local nSize
     Local tmp
@@ -1093,7 +1089,6 @@ METHOD SetKey() CLASS TPQquery
     Local i, x
     Local nTableId, xTableId := -1
     Local nCount := 0
-    Local cTable
     Local res
     Local nPos
 
