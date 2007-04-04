@@ -56,6 +56,7 @@ C_SOURCES=\
 	hbinet.c     \
 	hbrandom.c   \
 	hbregex.c    \
+	hbtoken.c    \
 	idle.c       \
 	inkey.c      \
 	is.c         \
@@ -118,7 +119,6 @@ C_SOURCES=\
 	strzero.c    \
 	stuff.c      \
 	substr.c     \
-	teditorl.c   \
 	tone.c       \
 	trace.c      \
 	transfrm.c   \

@@ -383,6 +383,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbinet.obj   \
     $(OBJ_DIR)\hbrandom.obj \
     $(OBJ_DIR)\hbregex.obj  \
+    $(OBJ_DIR)\hbtoken.obj  \
     $(OBJ_DIR)\idle.obj     \
     $(OBJ_DIR)\inkey.obj    \
     $(OBJ_DIR)\is.obj       \
@@ -445,7 +446,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\strzero.obj  \
     $(OBJ_DIR)\stuff.obj    \
     $(OBJ_DIR)\substr.obj   \
-    $(OBJ_DIR)\teditorl.obj \
     $(OBJ_DIR)\tone.obj     \
     $(OBJ_DIR)\trace.obj    \
     $(OBJ_DIR)\transfrm.obj \

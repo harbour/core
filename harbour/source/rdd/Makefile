@@ -9,8 +9,9 @@ C_SOURCES=\
 	workarea.c \
 	dbf1.c \
 	dbnubs.c \
-	sdf1.c \
+	dbsql.c \
 	delim1.c \
+	sdf1.c \
 	hbdbsort.c \
 
 PRG_SOURCES=\

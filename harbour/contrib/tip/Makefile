@@ -5,7 +5,6 @@
 ROOT = ../../
 
 C_SOURCES = \
-	atokens.c \
 	base64x.c \
 	encmthd.c \
 	hbhex2n.c \

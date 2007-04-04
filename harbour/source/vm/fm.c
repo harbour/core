@@ -87,9 +87,19 @@
 #include "hbmemory.ch"
 #include "hbdate.h"
 
+/* #define HB_FM_WIN32_ALLOC */
 /* #define HB_PARANOID_MEM_CHECK */
 
-/*#undef HB_FM_STATISTICS*/
+#ifndef HB_OS_WIN_32
+#  undef HB_FM_WIN32_ALLOC
+#endif
+
+#ifdef HB_FM_WIN32_ALLOC
+#  define malloc( n )         (void *) LocalAlloc( LMEM_FIXED, ( n ) )
+#  define realloc( p, n )     (void *) LocalReAlloc( (HLOCAL) ( p ), ( n ), LMEM_MOVEABLE )
+#  define free( p )           LocalFree( (HLOCAL) ( p ) )
+#endif
+
 #ifndef HB_FM_STATISTICS
 #  undef HB_PARANOID_MEM_CHECK
 #endif

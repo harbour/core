@@ -145,7 +145,7 @@
 
 /* ***********************************************************************
  * Use native Windows memory allocation functions (HB_OS_WIN_32)
- * This option can disabled compiler memory allocation optimization
+ * This option can disable compiler memory allocation optimization
  * so you should really have a good reason to enable it
  */
 

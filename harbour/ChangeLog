@@ -8,6 +8,53 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-04 10:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/tip/Makefile
+  - harbour/contrib/tip/atokens.c
+    * removed HB_ATOKENS()
+
+  - harbour/source/rtl/teditorl.c
+    - removed __STRTOKEN(), __STRTKPTR()
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  * harbour/include/hbextern.ch
+  + harbour/source/rtl/hbtoken.c
+    + added set of functions to manipulate string tokens:
+         HB_TOKENCOUNT( <cString>, [ <cDelim> ], [ <lSkipStrings> ],
+                        [ <lDoubleQuoteOnly> ] ) -> <nTokens>
+         HB_TOKENGET( <cString>, <nToken>, [ <cDelim> ], [ <lSkipStrings> ],
+                      [ <lDoubleQuoteOnly> ] ) -> <cToken>
+         HB_TOKENPTR( <cString>, @<nSkip>, [ <cDelim> ], [ <lSkipStrings> ],
+                      [ <lDoubleQuoteOnly> ] ) -> <cToken>
+         HB_ATOKENS( <cString>, [ <cDelim> ], [ <lSkipStrings> ],
+                     [ <lDoubleQuoteOnly> ] ) -> <aTokens>
+      All these functions use the same method of tokenization. They can
+      accept as delimiters string longer then one character. By default
+      they are using " " as delimiter. " " delimiter has special mening
+      Unlike other delimiters repeted ' ' characters does not create empty
+      tokens, f.e.: HB_ATOKENS( "    1     2 3  " ) returns array { "1", "2" }
+      Any other delimiters are restrictly counted, f.e. HB_ATOKENS( ",,1,,2,")
+      return array: { "", "", "1", "", "2", "" }.
+
+    + added emulation for old __STRTOKEN(), __STRTKPTR() and xHarbour's
+      __STRTOKENCOUNT() by HB_TOKEN*() functions. They do not return
+      exactly the same result as __STRT*() functions which in some cases
+      ignored some delimiters and return wrong results.
+
+  * harbour/source/rdd/Makefile
+  + harbour/source/rdd/dbsql.c
+    + added __DBSQL() function
+
+  * harbour/include/hbsetup.h
+  * harbour/source/vm/fm.c
+    + added support for native Windows memory allocation functions
+      It can be enabled by HB_FM_WIN32_ALLOC macro and disable C-RTL
+      memory manager.
+
+  * harbour/tests/mousetst.prg
+    * touch screen output before MPRESENT() to work with GTXWC
+
 2007-04-03 20:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
     ! fixed OS code in error message
