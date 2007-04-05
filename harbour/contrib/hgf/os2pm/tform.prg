@@ -122,6 +122,8 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
 
    local oMenuItem, nAt, oControl
 
+   HB_SYMBOL_UNUSED( hWndCtl )
+
    do case
       case nNotifyCode == CMDSRC_MENU   // Menu command
          if ::Menu != nil
@@ -158,6 +160,8 @@ return nil
 
 
 METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS HBForm
+
+   HB_SYMBOL_UNUSED( nKeyFlags )
 
    if ::OnClick != nil
       return __ObjSendMsg( Self, ::OnClick, Self, nXPos, nYPos )

@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-05 13:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/include/hbclass.ch
+   * harbour/include/common.ch
+     ! Using locally declared __HB_SYMBOL_UNUSED() instead of HB_SYMBOL_UNUSED()
+
+   * harbour/contrib/hgf/os2pm/tform.prg
+     ! Fixed unused symbol.
+
 2007-04-04 15:30 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/pgsql/tpostgre.prg
     * removed unused vars
