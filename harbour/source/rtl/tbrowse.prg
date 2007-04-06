@@ -536,8 +536,8 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
          endcase
 
-         cHeading := oCol:Heading + ";"
-         while ( nL := Len( __StrTkPtr( @cHeading, @nTokenPos, ";" ) ) ) > 0
+         cHeading := oCol:Heading
+         while ( nL := Len( hb_TokenPtr( @cHeading, @nTokenPos, ";" ) ) ) > 0
             nColWidth := Max( nL, nColWidth )
          enddo
       endif
@@ -1484,7 +1484,7 @@ return Self
 
 METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
 
-   local n, cS
+   local n
    local nCol := Col()
    local nRow := Row()
 
@@ -1496,12 +1496,9 @@ METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
          DispOut( PadR( cStr, nPadLen ), cColor )
 
       else
-         // __StrToken needs that even last token be ended with token separator
-         cS := cStr + ";"
-
          for n := ::nHeaderHeight to 1 step -1
             SetPos( nRow + n - 1, nCol )
-            DispOut( PadR( __StrToken( @cS, n, ";" ), nPadLen ), cColor )
+            DispOut( PadR( hb_TokenGet( @cStr, n, ";" ), nPadLen ), cColor )
          next
 
          SetPos( nRow, nCol + nPadLen )
@@ -1516,12 +1513,9 @@ METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
          DispOut( PadR( cStr, nPadLen ), cColor )
 
       else
-         // __StrToken needs that even last token be ended with token separator
-         cS := cStr + ";"
-
          for n := 0 to ( ::nFooterHeight - 1 )
             SetPos( nRow - n, nCol )
-            DispOut( PadR( __StrToken( @cS, ::nFooterHeight - n, ";" ), nPadLen ), cColor )
+            DispOut( PadR( hb_TokenGet( @cStr, ::nFooterHeight - n, ";" ), nPadLen ), cColor )
          next
 
          SetPos( nRow, nCol + nPadLen )

@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-06 15:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/persist.prg
+   * harbour/source/rtl/tbrowse.prg
+   * harbour/source/rtl/teditor.prg
+     % Replaced __StrT*() internal functions with native Harbour 
+       extensions hb_Token*().
+     % Removed workarounds for problems with the previous implementation 
+       of the __StrT*() functions.
+       Please test TEditor (all) and TBrowse class (header/footer line splitting).
+
 2007-04-06 14:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbtoken.c
     ! fixed using delimiters longer then 1 character
