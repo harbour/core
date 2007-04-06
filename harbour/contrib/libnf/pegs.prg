@@ -48,6 +48,8 @@
  */
 
 #include "inkey.ch"
+#include "common.ch"
+
 #translate SINGLEBOX(<top>, <left>, <bottom>, <right>) => ;
            @ <top>, <left>, <bottom>, <right> BOX "ÚÄ¿³ÙÄÀ³ "
 #translate DOUBLEBOX(<top>, <left>, <bottom>, <right>) => ;

@@ -53,6 +53,7 @@
 
 
 #include "set.ch"
+#include "common.ch"
 
 #Define FT_EXTRA_SETS    2
 #DEFINE FT_SET_CENTURY   _SET_COUNT + 1

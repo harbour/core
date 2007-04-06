@@ -22,6 +22,9 @@ rem set PRG_USR=
 rem set C_USR= 
 rem set L_USR=
 
+rem Uncomment for GCC 3.2.2 on OS/2 v4.0 with mixed 16/32 bit tcp/ip stack
+rem set C_USR=-DTCPV40HDRS %C_USR%
+
 rem Set to constant value to be consistent with the non-GNU make files.
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=bin\

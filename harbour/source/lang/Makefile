@@ -35,6 +35,7 @@ C_SOURCES=\
 	msgis850.c   \
 	msgit.c      \
 	msgko.c      \
+	msgnl.c      \
 	msgpl852.c   \
 	msgpliso.c   \
 	msgplmaz.c   \

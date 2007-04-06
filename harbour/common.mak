@@ -577,6 +577,7 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgis850.obj \
     $(OBJ_DIR)\msgit.obj    \
     $(OBJ_DIR)\msgko.obj    \
+    $(OBJ_DIR)\msgnl.obj    \
     $(OBJ_DIR)\msgpl852.obj \
     $(OBJ_DIR)\msgpliso.obj \
     $(OBJ_DIR)\msgplmaz.obj \

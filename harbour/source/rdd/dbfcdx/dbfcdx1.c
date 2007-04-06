@@ -4948,7 +4948,7 @@ static LPCDXINDEX hb_cdxFindBag( CDXAREAP pArea, char * szBagName )
    if ( szBasePath )
       hb_xfree( szBasePath );
    if ( szBaseExt )
-       hb_xfree( szBaseExt );
+      hb_xfree( szBaseExt );
    return pIndex;
 }
 

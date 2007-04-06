@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-06 02:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/lang/Makefile
+  + harbour/source/lang/msgnl.c
+    + added Dutch language module by Rene Koot
+
+  * harbour/config/os2/gcc.cf
+    * commented out -DTCPV40HDRS in CFLAGS
+  * harbour/make_gnu.cmd
+    * added commented by default: set C_USR=-DTCPV40HDRS %C_USR%
+
+  * harbour/contrib/libnf/menu1.prg
+  * harbour/contrib/libnf/pegs.prg
+  * harbour/contrib/libnf/popadder.prg
+  * harbour/contrib/libnf/savesets.prg
+  * harbour/source/debug/dbgmenu.prg
+    + added missing #include "common.ch" for HB_SYMBOL_UNUSED()
+
+  * harbour/include/hbclass.ch
+    * renamed __HB_SYMBOL_UNUSED() to __HB_CLS_SYMBOL_UNUSED() to keep
+      the same name convention as for other hbclass definitions/commands
+
+  * harbour/include/hbsetup.h
+    * added commented by default #define HB_PP_MULTILINE_STRING
+      with small description
+
+  * harbour/source/rtl/net.c
+    * added missing #include(s) for OS2 build
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * formatting
+
 2007-04-05 13:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/include/hbclass.ch
    * harbour/include/common.ch

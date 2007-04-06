@@ -51,6 +51,7 @@
  */
 
 #include "hbclass.ch"
+#include "common.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;

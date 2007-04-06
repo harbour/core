@@ -149,7 +149,7 @@
  */
 
 
-
+#include "common.ch"
 
 #define LEFTARROW  19
 #define RIGHTARROW  4

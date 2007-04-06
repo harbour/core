@@ -194,6 +194,18 @@
 #endif
 
 /* ***********************************************************************
+ * You can  enable here support for multiline strings concatenated by ';'
+ * f.e.:
+ *       cVar := "line 1;
+ *       line 2;
+ *       line 3"
+ * It's not Clipper compatible extension and it's not enabled by default
+ * anyhow old Harbour PP worked in such way and people may have some code
+ * which needs it
+*/
+/* #define HB_PP_MULTILINE_STRING */
+
+/* ***********************************************************************
  * You can select here, if the preprocessor should be linked
  * for commands preprocessing passed to the macro compiler.
  * (Note, that if it is linked then commands preprocessing can be
