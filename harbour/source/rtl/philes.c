@@ -169,11 +169,11 @@ HB_FUNC( FRENAME )
 HB_FUNC( FSEEK )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_retnl( hb_fsSeek( hb_parni( 1 ),
-                           hb_parnl( 2 ),
-                           ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
+      hb_retnint( hb_fsSeekLarge( hb_parni( 1 ),
+                                  hb_parnint( 2 ),
+                                  ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
 }
 
 HB_FUNC( FREADSTR )

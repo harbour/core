@@ -134,7 +134,7 @@ METHOD Edit() CLASS TMemoEditor
             ::HandleUserKey(nKey, nUserKey)
 
          else
-            super:Edit(nKey)
+            ::super:Edit(nKey)
 
          endif
 
@@ -143,7 +143,7 @@ METHOD Edit() CLASS TMemoEditor
    else
       // If I can't edit text buffer or there is not a user function enter standard HBEditor
       // ::Edit() method which is able to handle everything
-      super:Edit()
+      ::super:Edit()
 
    endif
 
@@ -203,18 +203,18 @@ METHOD HandleUserKey(nKey, nUserKey) CLASS TMemoEditor
          // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
          // that user wants to save text
          if (nKey <= 256 .OR. nKey == K_ALT_W) .AND. AScan(aUnHandledKeys, nKey) == 0
-            super:Edit(nKey)
+            ::super:Edit(nKey)
          endif
 
       // TOFIX: Not clipper compatible, see teditor.prg
       case (nUserKey >= 1 .AND. nUserKey <= 31) .OR. nUserKey == K_ALT_W
          if AScan(aUnHandledKeys, nUserKey) == 0
-            super:Edit(nUserKey)
+            ::super:Edit(nUserKey)
          endif
 
       case nUserKey == ME_DATA
          if nKey <= 256 .AND. AScan(aUnHandledKeys, nKey) == 0
-            super:Edit(nKey)
+            ::super:Edit(nKey)
          endif
 
       case nUserKey == ME_TOGGLEWRAP
@@ -257,7 +257,7 @@ METHOD MoveCursor(nKey) CLASS TMemoEditor
       ::lSaved = .t.
       ::lExitEdit := .T.
    else
-      return Super:MoveCursor( nKey )
+      return ::Super:MoveCursor( nKey )
    endif
 
 return .f.

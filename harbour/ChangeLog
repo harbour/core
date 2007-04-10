@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-10 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added hbregex.h
+
+  * harbour/include/hbclass.ch
+    + added support for ENDCLASS LOCK[ED]
+    + := <clasname> { <constructorParams,...> }
+
+  * harbour/source/debug/tbrwtext.prg
+  * harbour/source/rtl/memoedit.prg
+  * harbour/utils/hbdoc/ffile1.prg
+  * harbour/utils/hbmake/ffile1.prg
+    * changed code with:
+         super:<msg>
+      to
+         ::super:<msg>
+      I will want to remove lines with:
+         [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
+         [ ; #translate Super( <SuperClass1> ): => ::<SuperClass1>: ] ;
+         [ ; #translate Super(): => ::<SuperClass1>: ] ;
+         [ ; #translate Super: => ::<SuperClass1>: ] ;
+         [ ; #translate ::Super : => ::<SuperClass1>: ]
+      from our hbclass.ch (at least the last three ones) because they beaks
+      code which uses SUPER identifier
+
+  * harbour/source/rtl/philes.c
+    * changed FSEEK() to use hb_fsSeekLarge() for OSes which supports
+      large (64bit) files
+
+  * harbour/source/vm/classes.c
+    ! updated some comments about function syntax
+
 2007-04-10 13:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/common.mak
    * harbour/source/codepage/Makefile

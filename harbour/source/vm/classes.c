@@ -295,9 +295,6 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
 static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
 static HB_SYMB s___msgOnError    = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
 
-static HB_SYMB s___msgNew        = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
-static HB_SYMB s___msgSymbol     = { "SYMBOL",          {HB_FS_MESSAGE}, {NULL},               NULL };
-
 static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {hb___msgSetData},    NULL };
 static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {hb___msgGetData},    NULL };
 static HB_SYMB s___msgSetClsData = { "__msgSetClsData", {HB_FS_MESSAGE}, {hb___msgSetClsData}, NULL };
@@ -313,6 +310,9 @@ static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {hb___m
 static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {hb___msgNoMethod},   NULL };
 static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {hb___msgScopeErr},   NULL };
 static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {hb___msgTypeErr},    NULL };
+
+static HB_SYMB s___msgNew        = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgSymbol     = { "SYMBOL",          {HB_FS_MESSAGE}, {NULL},               NULL };
 
 static HB_SYMB s___msgClassName  = { "CLASSNAME",       {HB_FS_MESSAGE}, {hb___msgClassName},  NULL };
 static HB_SYMB s___msgClassH     = { "CLASSH",          {HB_FS_MESSAGE}, {hb___msgClassH},     NULL };
@@ -2776,12 +2776,12 @@ HB_FUNC( __CLSADDFRIEND )
 }
 
 /*
- * __clsDelMsg( <oObj>, <cMessage> )
+ * __clsDelMsg( <hClass>, <cMessage> )
  *
  * Delete message (only for INLINE and METHOD)
  *
- * <oObj>     Object
- * <cMessage> Message
+ * <hClass>   class handle
+ * <cMessage> message
  */
 HB_FUNC( __CLSDELMSG )
 {
@@ -2879,7 +2879,7 @@ HB_FUNC( __CLSLOCK )
 }
 
 /*
- * __clsModMsg( <oObj>, <cMessage>, <pFunc> )
+ * __clsModMsg( <hClass>, <cMessage>, <pFunc> )
  *
  * Modify message (only for INLINE and METHOD)
  */
@@ -2932,9 +2932,9 @@ HB_FUNC( __CLSMODMSG )
 
 
 /*
- * <cClassName> := ClassName( <hClass> )
+ * <cClassName> := __objGetClsName( <hClass> | <oObj> )
  *
- * Returns class name of <hClass>
+ * Returns class name of <oObj> or <hClass>
  */
 HB_FUNC( __OBJGETCLSNAME )
 {

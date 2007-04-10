@@ -42,6 +42,7 @@ C_HEADERS=\
 	hbrddntx.h   \
 	hbrddsdf.h   \
 	hbrddwrk.h   \
+	hbregex.h    \
 	hbset.h      \
 	hbsetup.h    \
 	hbstack.h    \

@@ -116,17 +116,17 @@ METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers) CLASS 
 
    ::lLineNumbers := lLineNumbers
 
-   Super:New("", nTop, nLeft, nBottom, nRight, .T.)
-   Super:SetColor(cColor)
+   ::Super:New("", nTop, nLeft, nBottom, nRight, .T.)
+   ::Super:SetColor(cColor)
 
-   Super:LoadFile(cFileName)
+   ::Super:LoadFile(cFileName)
 
 return Self
 
 
 METHOD LoadFile(cFileName) CLASS TBrwText
 
-   Super:LoadFile(cFileName)
+   ::Super:LoadFile(cFileName)
 
 return Self
 
@@ -189,14 +189,14 @@ return Self
 
 METHOD GotoLine(n) CLASS TBrwText
 
-   Super:GotoLine(n)
+   ::Super:GotoLine(n)
 
 return Self
 
 
 METHOD GetLine(nRow) CLASS TBrwText
 
-return iif(::lLineNumbers, AllTrim(Str(nRow)) + ": ", "") + Super:GetLine(nRow)
+return iif(::lLineNumbers, AllTrim(Str(nRow)) + ": ", "") + ::Super:GetLine(nRow)
 
 
 METHOD LineColor(nRow) CLASS TBrwText

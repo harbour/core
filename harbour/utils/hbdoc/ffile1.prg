@@ -104,7 +104,7 @@ ENDCLASS
 */
 METHOD new( cName ) CLASS FileBase
 
-   super:new()
+   ::super:new()
    // first thing to do is check to see if there is a valid file
 
    ::nSkipLength := 1
