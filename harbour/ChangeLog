@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-10 13:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/common.mak
+   * harbour/source/codepage/Makefile
+   * harbour/source/codepage/cphu852.c
+   + harbour/source/codepage/cphu852s.c
+     ! Default Hungarian 852 codepage made 100% compatible with 
+       ntxhu852.obj for CA-Cl*pper 5.x.
+     + Added Hungarian 852 codepage 100% compatible with 
+       sixhu852.obj for S*ccessWare SIx Driver.
+       (this was formerly used as the default Hungarian 852 
+       codepage for Harbour, the only change now is the ID and 
+       comment cleanup.)
+
 2007-04-10 11:20 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/gd
     * added new directory

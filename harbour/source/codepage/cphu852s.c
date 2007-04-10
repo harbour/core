@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (HU852)
+ * National Collation Support Module (HU852S)
  *
  * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
@@ -52,13 +52,13 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: 852 (ntxhu852 compatible) */
+/* Codepage: 852 (sixhu852 compatible) */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  42    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  36    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -83,27 +83,20 @@
    same excepting the characters case, of course.
  */
 
-/* NOTE: Several chars have been added above the standard 852 Hungarian 
-         ones to make it 100% compatible with ntxhu852.obj for CA-Cl*pper 5.x.
+/* NOTE: Ž/„ has been added to make it fully compatible with sixhu852.obj for 
+         S*ccessWare SIx Driver.
          [vszakats] */
 
-/* NOTE: Since there is no possibility in Harbour to have different number 
-         of uppercase and lowercase accented chars, a simple workaround 
-         was used to solve the problem; notice that some uppercase chars 
-         have the same lowercase values. Testing showed that both the 
-         ordering and Lower()/Upper() functions worked alright.
-         [20070410] [vszakats] */
-
-static HB_CODEPAGE s_codepage = { "HU852",
+static HB_CODEPAGE s_codepage = { "HU852S",
     CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
-    "AµŽBCDEFGHIÖJKLMNO•à™§ŠPQRSTU—éš˜ëVWXYZ",
-    "a  „bcde‚fghi¡¡jklmno¢¢”“‹pqrstu££–ûvwxyz",
+    "AµŽBCDEFGHIÖJKLMNOà™ŠPQRSTUéšëVWXYZ",
+    "a „bcde‚fghi¡jklmno¢”‹pqrstu£ûvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( HU852 )
+HB_CODEPAGE_INIT( HU852S )
 
 #if defined(HB_PRAGMA_STARTUP)
-   #pragma startup hb_codepage_Init_HU852
+   #pragma startup hb_codepage_Init_HU852S
 #elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -111,6 +104,6 @@ HB_CODEPAGE_INIT( HU852 )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HU852 = hb_codepage_Init_HU852;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HU852S = hb_codepage_Init_HU852S;
    #pragma data_seg()
 #endif

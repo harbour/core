@@ -25,6 +25,7 @@ C_SOURCES=\
 	cphr437.c     \
 	cphr852.c     \
 	cphu852.c     \
+	cphu852s.c    \
 	cphuiso.c     \
 	cphuwin.c     \
 	cpit437.c     \
