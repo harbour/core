@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * xHarbour Project source code:
  * CodeBar engine library class
  *

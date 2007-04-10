@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * xHarbour Project source code:
  * BAR engine library class
  *
