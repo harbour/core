@@ -201,6 +201,7 @@ HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 # Standard Libs for HB-based executables
 STANDARD_STATIC_HBLIBS = \
     $(COMMON_LIB)     \
+    $(COMPILER_LIB)   \
     $(PP_LIB)         \
     $(VM_LIB)         \
     $(RTL_LIB)        \
