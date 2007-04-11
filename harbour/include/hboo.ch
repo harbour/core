@@ -107,6 +107,11 @@
 #define HB_OO_MSG_PERFORM      15
 #define HB_OO_MSG_DELEGATE     16
 
+/* to make xHarbour users happy ;-) */
+#define HB_OO_PROPERTY          32
+#define HB_OO_MSG_PROPERTY      HB_OO_PROPERTY + HB_OO_MSG_DATA      /* Auto management of DATA */
+#define HB_OO_MSG_CLASSPROPERTY HB_OO_PROPERTY + HB_OO_MSG_CLASSDATA /* Auto management of CLASSDATA */
+
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
 #define HB_OO_DATA_VALUE        2

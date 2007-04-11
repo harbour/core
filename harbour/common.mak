@@ -256,6 +256,7 @@ COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\complex.obj  \
     $(OBJ_DIR)\cmdcheck.obj \
     $(OBJ_DIR)\hbcomp.obj   \
+    $(OBJ_DIR)\hbcmplib.obj \
     $(OBJ_DIR)\hbdead.obj   \
     $(OBJ_DIR)\hbstripl.obj \
     $(OBJ_DIR)\hbusage.obj  \

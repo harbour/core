@@ -8,6 +8,39 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-11 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! fixed some possible false warning messages
+
+  * harbour/include/hboo.ch
+  * harbour/source/vm/classes.c
+    + added support for HB_OO_MSG_PROPERTY and HB_OO_MSG_CLASSPROPERTY
+      to make some xHarbour users happy ;-)
+
+  * harbour/common.mak
+  * harbour/harbour.spec
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/Makefile
+  + harbour/source/compiler/hbcmplib.c
+    + added HB_COMPILE() function - it accepts exactly the same parameters
+      as harbour compiler and makes the same job :-)
+
+  * harbour/utils/hbrun/Makefile
+  * harbour/utils/hbrun/hbrun.prg
+    + added support for compilation and direct execution of .prg files
+      Now hbrun can accept as first parameter .hrb or .prg file and if
+      it's .prg file it's compiled and then executed just like .hrb one.
+      In *nixes if you copy compiled hbrun to /usr/bin directory then
+      you can add to your .prg files as first line:
+         #!/usr/bin/hbrun
+      and then after setting executable attribute you can directly
+      execute them, f.e.:
+         ./test.prg
+      If you are using Linux then you can also chose default gt driver
+      by dding to above line: //gt<name>
+      F.e.
+         #!/usr/bin/hbrun //gtstd
 
 2007-04-11 15:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/contrib/libnf/mouse1.prg

@@ -31,6 +31,7 @@ C_SOURCES=\
 	genjava.c  \
 	genobj32.c \
 	gencli.c   \
+	hbcmplib.c \
 	hbcomp.c   \
 	hbfunchk.c \
 	hbgenerr.c \

@@ -25,5 +25,6 @@ LIBS=\
 	macro \
 	pp \
 	common \
+	compiler \
 
 include $(TOP)$(ROOT)config/bin.cf

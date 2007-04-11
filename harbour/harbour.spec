@@ -455,23 +455,25 @@ druzus@uran:~/tmp$ ls -l foo
 ----------------------------------------------------------------------
 
 
-In this RPM you will find additional wonderful tools: /usr/bin/pprun
+In this RPM you will find additional wonderful tools: /usr/bin/hbrun
 You can run clipper/xbase compatible source files with it if you only
 put in their first line:
-#!/usr/bin/pprun
+#!/usr/bin/hbrun
 
 For example:
 ----------------------------------------------------------------------
 druzus@uran:~/tmp$ cat foo.prg
-#!/usr/bin/pprun
+#!/usr/bin/hbrun
 function main()
 ? "Hello, World!, This is a script !!! :-)"
+?
 return nil
 
 druzus@uran:~/tmp$ chmod +x foo.prg
 
 druzus@uran:~/tmp$ ./foo.prg
 
+Hello, World!, This is a script !!! :-)
 
 I hope this RPM is useful. Have fun with %{dname}.
 

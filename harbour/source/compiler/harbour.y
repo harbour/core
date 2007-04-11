@@ -1390,13 +1390,13 @@ DoCase     : DoCaseBegin
            ;
 
 EndCase    : ENDCASE
-               { if( HB_COMP_PARAM->wCaseCounter )
-                    --HB_COMP_PARAM->wCaseCounter;
-                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               {  if( HB_COMP_PARAM->wCaseCounter )
+                     --HB_COMP_PARAM->wCaseCounter;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            | END
-               { if( HB_COMP_PARAM->wCaseCounter )
-                  --HB_COMP_PARAM->wCaseCounter;
+               {  if( HB_COMP_PARAM->wCaseCounter )
+                     --HB_COMP_PARAM->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
@@ -1461,7 +1461,7 @@ DoWhile    : WhileBegin Expression Crlf
                      --HB_COMP_PARAM->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                }
+               }
            ;
 
 WhileBegin : WHILE    { $$ = HB_COMP_PARAM->functions.pLast->lPCodePos; hb_compLinePushIfInside( HB_COMP_PARAM ); ++HB_COMP_PARAM->wWhileCounter; hb_compLoopStart( HB_COMP_PARAM ); }
@@ -1525,7 +1525,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   HB_COMP_EXPR_DELETE( $<asExpr>5 );  /* deletes $5, $2, $4 */
                   if( $<asExpr>8 )
                      HB_COMP_EXPR_DELETE( $<asExpr>8 );
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
 
@@ -1597,7 +1597,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
 
                 hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
-                HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, $2 );
                 HB_COMP_EXPR_DELETE( $2 );
                 HB_COMP_EXPR_DELETE( $4 );
@@ -1696,6 +1696,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                }
                AlwaysSeq      /* 8 */
                {              /* 9 */
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   if( $<lNumber>8 )
                   {
                      /* replace END address with ALWAYS address in
@@ -1714,7 +1715,6 @@ BeginSeq    : BEGINSEQ        /* 1 */
                   }
                   hb_compSequenceFinish( HB_COMP_PARAM, $<lNumber>2, $<lNumber>5, $<lNumber>8,
                                          $<lNumber>4 != 0, $<lNumber>6 != 0 );
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_WITH_RETURN;
                }
                END            /* 10 */
             ;
@@ -1725,13 +1725,13 @@ AlwaysSeq   : /* no always */    { $<lNumber>$ = 0; }
 
 Always      : ALWAYS
                {
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                }
             ;
 
-RecoverSeq  : /* no recover */   { $<lNumber>$ = 0; }
+RecoverSeq  : /* no recover */   { $<lNumber>$ = 0; HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
             | RecoverEmpty Crlf EmptyStats
             | RecoverUsing Crlf EmptyStats
             ;

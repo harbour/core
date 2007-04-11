@@ -4,13 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Standalone Harbour Portable Object file runner
- *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * www - http://www.harbour-project.org
+ *    HB_COMPILE() - compiler interface
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *   added support for dynamic compilation and execution of .prg files
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,57 +50,22 @@
  *
  */
 
-/*
- * Please remember that in *nixes if you copy compiled version
- * of this program to /usr/bin directory then you can add to your
- * .prg files as first line:
- *    #!/usr/bin/hbrun
- * and then after setting executable attribute you can directly execute
- * your .prg files
- * If you are using Linux then you can also chose default gt driver by
- * adding to above line: //gt<name>
- * F.e.
- *    #!/usr/bin/hbrun //gtstd
- */
+#include "hbapi.h"
+#include "hbcomp.h"
 
-#include "hbextern.ch"
+HB_FUNC( HB_COMPILE )
+{
+   int iPCount = hb_pcount(), argc = 0, i;
+   char ** argv, * szParam;
 
-/* NOTE: Undocumented CA-Clipper _APPMAIN is used instead of Main to avoid
-         collision with user function in HRB file with that name. [ckedem]
-*/
-FUNCTION _APPMAIN( cHRBFile, ... )
-   LOCAL xRetVal, cPRGFile, cRMFile, cPath, cName, cExt, cDrive
-
-   IF Empty( cHRBFile )
-      OutStd( "Harbour Runner" + HB_OSNewLine() +;
-              "Copyright 1999-2006, http://www.harbour-project.org" + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Syntax:  hbrun <hrbfile[.hrb|.prg]> [parameters]" + HB_OSNewLine() + ;
-              HB_OSNewLine() +;
-              "Note:  Linked with " + Version() + HB_OSNewLine() )
-   ELSE
-      HB_FNAMESPLIT( cHRBFile, @cPath, @cName, @cExt, @cDrive )
-      IF LOWER( cExt ) == ".prg"
-         cPRGFile := cHRBFile
-         xRetVal := HB_FTEMPCREATE(,,, @cHRBFile )
-         IF xRetVal == -1
-            RETURN xRetVal
-         ENDIF
-         FCLOSE( xRetVal )
-         FERASE( cHRBFile )
-         HB_FNAMESPLIT( cHRBFile, @cPath, @cName, @cExt, @cDrive )
-         cRMFile := cHRBFile := HB_FNAMEMERGE( cPath, cName, ".hrb", cDrive )
-         xRetVal := HB_COMPILE( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
-                                "-gh", "-o"+cHRBFile, cPRGFile )
-         IF xRetVal != 0
-            RETURN xRetVal
-         ENDIF
-      ENDIF
-      xRetVal := __hrbRun( cHRBFile, ... )
-   ENDIF
-
-   IF !EMPTY( cRMFile )
-      FERASE( cRMFile )
-   ENDIF
-
-   RETURN xRetVal
+   argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( iPCount + 1 ) );
+   for( i = 1; i <= iPCount; ++i )
+   {
+      szParam = hb_parc( i );
+      if( szParam )
+         argv[ argc++ ] = szParam;
+   }
+   argv[ argc ] = NULL;
+   hb_retni( compMain( argc, argv ) );
+   hb_xfree( argv );
+}

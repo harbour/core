@@ -6247,16 +6247,16 @@ yyreduce:
 
   case 519:
 #line 1393 "harbour.y"
-    { if( HB_COMP_PARAM->wCaseCounter )
-                    --HB_COMP_PARAM->wCaseCounter;
-                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+    {  if( HB_COMP_PARAM->wCaseCounter )
+                     --HB_COMP_PARAM->wCaseCounter;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                ;}
     break;
 
   case 520:
 #line 1398 "harbour.y"
-    { if( HB_COMP_PARAM->wCaseCounter )
-                  --HB_COMP_PARAM->wCaseCounter;
+    {  if( HB_COMP_PARAM->wCaseCounter )
+                     --HB_COMP_PARAM->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                ;}
     break;
@@ -6359,7 +6359,7 @@ yyreduce:
                      --HB_COMP_PARAM->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-                ;}
+               ;}
     break;
 
   case 539:
@@ -6441,7 +6441,7 @@ yyreduce:
                   HB_COMP_EXPR_DELETE( (yyvsp[(5) - (12)].asExpr) );  /* deletes $5, $2, $4 */
                   if( (yyvsp[(8) - (12)].asExpr) )
                      HB_COMP_EXPR_DELETE( (yyvsp[(8) - (12)].asExpr) );
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                ;}
     break;
 
@@ -6557,7 +6557,7 @@ yyreduce:
 
                 hb_compGenJumpHere( (yyvsp[(9) - (10)].lNumber), HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
-                HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
+                HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr) );
                 HB_COMP_EXPR_DELETE( (yyvsp[(2) - (10)].asExpr) );
                 HB_COMP_EXPR_DELETE( (yyvsp[(4) - (10)].asExpr) );
@@ -6686,6 +6686,7 @@ yyreduce:
   case 588:
 #line 1698 "harbour.y"
     {              /* 9 */
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   if( (yyvsp[(8) - (8)].lNumber) )
                   {
                      /* replace END address with ALWAYS address in
@@ -6704,7 +6705,6 @@ yyreduce:
                   }
                   hb_compSequenceFinish( HB_COMP_PARAM, (yyvsp[(2) - (8)].lNumber), (yyvsp[(5) - (8)].lNumber), (yyvsp[(8) - (8)].lNumber),
                                          (yyvsp[(4) - (8)].lNumber) != 0, (yyvsp[(6) - (8)].lNumber) != 0 );
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_WITH_RETURN;
                ;}
     break;
 
@@ -6716,7 +6716,7 @@ yyreduce:
   case 592:
 #line 1727 "harbour.y"
     {
-                  HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                ;}
@@ -6724,7 +6724,7 @@ yyreduce:
 
   case 593:
 #line 1734 "harbour.y"
-    { (yyval.lNumber) = 0; ;}
+    { (yyval.lNumber) = 0; HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
   case 596:

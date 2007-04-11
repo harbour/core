@@ -2202,7 +2202,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, char * szMessage,
 
       if( !fOK )
       {
-         hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_ARG, 3000, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
          return FALSE;
       }
 
@@ -2460,10 +2460,37 @@ HB_FUNC( __CLSADDMSG )
       {
          nType = szMessage[ 0 ] == '_' ? HB_OO_MSG_ASSIGN : HB_OO_MSG_ACCESS;
       }
-      if( nType == HB_OO_MSG_CLASSDATA )
+      else if( nType == HB_OO_MSG_CLASSDATA )
       {
             nType = szMessage[ 0 ] == '_' ? HB_OO_MSG_CLSASSIGN :
                                             HB_OO_MSG_CLSACCESS;
+      }
+      /* to make xHarbour users happy ;-) */
+      else if( nType == HB_OO_MSG_PROPERTY ||
+               nType == HB_OO_MSG_CLASSPROPERTY )
+      {
+         char szAssign[ HB_SYMBOL_NAME_LEN + 1 ];
+         int iLen = ( int ) hb_parclen( 1 );
+         if( iLen >= HB_SYMBOL_NAME_LEN )
+            iLen = HB_SYMBOL_NAME_LEN - 1;
+         szAssign[ 0 ] = '_';
+         memcpy( szAssign + 1, szMessage, iLen );
+         szAssign[ iLen ] = '\0';
+
+         uiScope = ( uiScope | HB_OO_CLSTP_EXPORTED ) &
+                  ~( HB_OO_CLSTP_PROTECTED | HB_OO_CLSTP_HIDDEN );
+         if( nType == HB_OO_MSG_PROPERTY )
+         {
+            hb_clsAddMsg( uiClass, szAssign, HB_OO_MSG_ASSIGN,
+                          uiScope & ~HB_OO_CLSTP_PERSIST, pFunction, pInit );
+            nType = HB_OO_MSG_ACCESS;
+         }
+         else
+         {
+            hb_clsAddMsg( uiClass, szAssign, HB_OO_MSG_CLSASSIGN,
+                          uiScope & ~HB_OO_CLSTP_PERSIST, pFunction, pInit );
+            nType = HB_OO_MSG_CLSACCESS;
+         }
       }
 
       hb_clsAddMsg( uiClass, szMessage, nType, uiScope, pFunction, pInit );

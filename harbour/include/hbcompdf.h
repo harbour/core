@@ -623,8 +623,8 @@ typedef struct _HB_COMP
    int               iGenCOutput;         /* C code generation should be verbose (use comments) or not */
    int               ilastLineErr;        /* line numer with last syntax error */
 
-   BOOL              fExit;               /* force breaking compilation process */
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
+   BOOL              fExit;               /* force breaking compilation process */
    BOOL              fPPO;                /* flag indicating, is ppo output needed */
    BOOL              fPPT;                /* flag indicating, is ppt output needed */
    BOOL              fStartProc;          /* holds if we need to create the starting procedure */
