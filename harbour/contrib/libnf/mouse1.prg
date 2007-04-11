@@ -730,8 +730,7 @@ RETURN NIL
  * $END$
  */
 
-FUNCTION FT_MGETPAGE(nPage)
-
+FUNCTION FT_MGETPAGE()
 
 // Set up register
 /*

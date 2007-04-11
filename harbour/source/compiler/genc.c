@@ -2572,7 +2572,7 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
    ULONG lPCodePos = 0;
    int nChar;
 
-   fprintf( yyc, "{\n   static const BYTE pcode[] =\n   {\n\t" );
+   fprintf( yyc, "{\n\tstatic const BYTE pcode[] =\n\t{\n\t\t" );
 
    nChar = 0;
    while( lPCodePos < pFunc->lPCodePos )
@@ -2580,11 +2580,11 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
       ++nChar;
 
       if( nChar > 1 )
-         fprintf( yyc, ", " );
+         fprintf( yyc, "," );
 
       if( nChar == 15 )
       {
-         fprintf( yyc, "\n\t" );
+         fprintf( yyc, "\n\t\t" );
          nChar = 1;
       }
 
@@ -2595,6 +2595,6 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
    if( nChar != 0)
       fprintf( yyc, "\n" );
 
-   fprintf( yyc, "   };\n\n" );
-   fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n" );
+   fprintf( yyc, "\t};\n\n" );
+   fprintf( yyc, "\thb_vmExecute( pcode, symbols );\n}\n" );
 }

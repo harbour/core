@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2007-04-11 15:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/contrib/libnf/mouse1.prg
+     ! Fixed unused variable.
+
+   * harbour/source/compiler/genc.c
+     % Compact compiler output (-gc0) made even more compact
+       (~20% size reduction).
+
 2007-04-10 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/Makefile
     + added hbregex.h
