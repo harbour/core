@@ -51,8 +51,8 @@
  */
 
 /* Language name: Turkish */
-/* ISO language code : TR  */
-/* Codepage: 1254 */
+/* ISO language code : TR */
+/* Codepage: 1254         */
 
 #include "hbapilng.h"
 
@@ -61,7 +61,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "TR",                        /* ID */
+      "TRWIN",                     /* ID */
       "Turkish",                   /* Name (in English) */
       "Türkçe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */

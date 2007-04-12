@@ -180,6 +180,7 @@
  *      Czech                 ISO-8859-2     CSISO
  *      Czech                 KAM            CSKAM
  *      Czech                 Windows-1250   CSWIN
+ *      Dutch                 437            NL
  *      English               437            EN
  *      Esperanto             850            EO
  *      French                850            FR
@@ -216,6 +217,8 @@
  *      Slovenian             Windows-1250   SLWIN
  *      Spanish               850            ES
  *      Spanish ANSI          ANSI           ESWIN
+ *      Turkish               857            TR857
+ *      Turkish               Windows-1254   TRWIN
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
@@ -292,7 +295,8 @@
  *      German                ISO-8859-1     DEWIN
  *      Greek                 737            EL
  *      Greek                 Windows-1253   ELWIN
- *      Hungarian             852            HU852
+ *      Hungarian (ntxhu852)  852            HU852
+ *      Hungarian (sixhu852)  852            HU852S
  *      Hungarian             ISO-8859-2     HUISO
  *      Hungarian             Windows-1250   HUWIN
  *      Italian               437            IT437
@@ -317,6 +321,8 @@
  *      Spanish               850            ES
  *      Spanish               ISO-8859-1     ESWIN
  *      Spanish Modern        ISO-8859-1     ESMWIN
+ *      Turkish               857            TR857
+ *      Turkish               Windows-1254   TRWIN
  *      Ukrainian             866            UA866
  *      Ukrainian             KOI-8U         UAKOI8
  *      Ukrainian             Windows-1251   UA1251

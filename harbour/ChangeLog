@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-12 11:14 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/tget.prg
+    ! Fix bug#1672233 - Picture masks for Logical GET variables.
+
+  * source/lang/msgtrdos.c
+  * source/lang/msgtrwin.c
+    ! Change ID from TR to TR857 and TRWIN.
+
+  * doc/en/lang.txt
+    + Update language and codepage lists with the latests additions.
+
+  * doc/dirstruc.txt
+    + Add short description to the newly added directories.
+
 2007-04-11 22:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
     + added compiler.lib to linked libraries

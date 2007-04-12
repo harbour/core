@@ -376,9 +376,9 @@ METHOD Display( lForced ) CLASS Get
 
    DEFAULT lForced TO .t.
 
-   // ; TOFIX: VarGet() has to be called everytime here to stay 
+   // ; TOFIX: VarGet() has to be called everytime here to stay
    //          CA-Cl*pper compatible.
-   //          Currently the caller needs to set :buffer to NIL 
+   //          Currently the caller needs to set :buffer to NIL
    //          to force that in Harbour. [vszakats]
 
    if ::buffer == nil
@@ -578,7 +578,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
          NEXT
          aValue[ aSubs[ i ] ] := xValue
       ENDIF
-   
+
       if lReFormat
          if !::hasfocus
             ::Original := xValue
@@ -614,7 +614,7 @@ METHOD VarGet() CLASS Get
    ELSE
       xValue := NIL
    ENDIF
-   
+
 return xValue
 
 //---------------------------------------------------------------------------//
@@ -1106,7 +1106,7 @@ METHOD IsEditable( nPos ) CLASS Get
       case ::cType == "D"
          return cChar == "9"
       case ::cType == "L"
-         return cChar $ "TFYN"
+         return cChar $ "LY#"   /* Clipper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
    endcase
 
 return .f.
@@ -1175,15 +1175,16 @@ METHOD Input( cChar ) CLASS Get
             cChar := ""
          endif
 
-      case cPic == "#"
-         if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ ".+-" )
-            cChar := ""
-         endif
-
-      case cPic == "L"
+         /* Clipper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
+      case cPic == "L" .or. ( cPic == "#" .and. ::cType == "L" )
          if !( Upper( cChar ) $ "YNTF" + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 2 ) )
+            cChar := ""
+         endif
+
+      case cPic == "#"
+         if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ ".+-" )
             cChar := ""
          endif
 

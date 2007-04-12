@@ -74,6 +74,14 @@ in order to remove empty directories)
 |   |
 |   +---dot             - Pre-Processor/Dot prompt environment.
 |   |
+|   +---gd              - HBGD wrapper for gdLibrary.
+|   |   |
+|   |   +---tests       - Test programs and samples.
+|   |       |
+|   |       +-images_in -
+|   |       |
+|   |       +-images_out-
+|   |
 |   +---hbclip          - Harbour Compatibility Library (HCL) for
 |   |                     CA-Clipper 5.x
 |   |
@@ -134,6 +142,10 @@ in order to remove empty directories)
 |   |
 |   +---pdflib          - PDF low level Api for HBDOC to inteface with PDFlib.
 |   |
+|   +---pgsql           - Harbour Low Level API for Postgres RDBMS.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
 |   +---rdd_ads         - RDD for Advantage Database Server.
 |   |   |
 |   |   +---doc         - Documents for Advantage Database Server RDD.
@@ -144,6 +156,8 @@ in order to remove empty directories)
 |   |                     files.
 |   |
 |   +---samples         - Miscellaneous contribution files.
+|   |
+|   +---tip             - TIP Class oriented Internet Protocol library.
 |   |
 |   +---tprepro         - PreProcessor class based on Harbour Preprocessor
 |                         runtime library.
@@ -195,6 +209,8 @@ in order to remove empty directories)
 |   +---lang            - National language message support files.
 |   |
 |   +---macro           - Macro compiler.
+|   |
+|   +---main            - Harbour compiler main source.
 |   |
 |   +---pp              - Harbour Preprocessor.
 |   |
@@ -271,6 +287,8 @@ in order to remove empty directories)
     +---hbmake          - Harbour Make utility.
     |
     +---hbpp            - Harbour Preprocessor as a standalone module.
+    |
+    +---hbpptest        - Regression tests for the preprocessor.
     |
     +---hbrun           - Standalone Harbour Portable Object file runner.
     |
