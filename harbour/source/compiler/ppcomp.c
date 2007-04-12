@@ -31,7 +31,7 @@
 #include <errno.h>
 
 static void hb_pp_ErrorGen( void * cargo,
-                            char * szMsgTable[], char cPrefix, int iErrorCode,
+                            const char * szMsgTable[], char cPrefix, int iErrorCode,
                             const char * szParam1, const char * szParam2 )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;

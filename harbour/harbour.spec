@@ -351,6 +351,7 @@ if [ "%{!?_with_static:1}" ]
 then
     unset HB_GTALLEG
     export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
+    export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
     for utl in hbmake hbrun hbpp hbdoc
     do

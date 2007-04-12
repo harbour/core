@@ -72,7 +72,7 @@
          collision with user function in HRB file with that name. [ckedem]
 */
 FUNCTION _APPMAIN( cHRBFile, ... )
-   LOCAL xRetVal, cPRGFile, cRMFile, cPath, cName, cExt, cDrive
+   LOCAL xRetVal, cPath, cName, cExt, cDrive, aIncDir
 
    IF Empty( cHRBFile )
       OutStd( "Harbour Runner" + HB_OSNewLine() +;
@@ -81,29 +81,33 @@ FUNCTION _APPMAIN( cHRBFile, ... )
               "Syntax:  hbrun <hrbfile[.hrb|.prg]> [parameters]" + HB_OSNewLine() + ;
               HB_OSNewLine() +;
               "Note:  Linked with " + Version() + HB_OSNewLine() )
+      ERRORLEVEL( 1 )
    ELSE
       HB_FNAMESPLIT( cHRBFile, @cPath, @cName, @cExt, @cDrive )
-      IF LOWER( cExt ) == ".prg"
-         cPRGFile := cHRBFile
-         xRetVal := HB_FTEMPCREATE(,,, @cHRBFile )
-         IF xRetVal == -1
-            RETURN xRetVal
-         ENDIF
-         FCLOSE( xRetVal )
-         FERASE( cHRBFile )
-         HB_FNAMESPLIT( cHRBFile, @cPath, @cName, @cExt, @cDrive )
-         cRMFile := cHRBFile := HB_FNAMEMERGE( cPath, cName, ".hrb", cDrive )
-         xRetVal := HB_COMPILE( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
-                                "-gh", "-o"+cHRBFile, cPRGFile )
-         IF xRetVal != 0
-            RETURN xRetVal
-         ENDIF
-      ENDIF
-      xRetVal := __hrbRun( cHRBFile, ... )
-   ENDIF
 
-   IF !EMPTY( cRMFile )
-      FERASE( cRMFile )
+      IF LOWER( cExt ) == ".prg"
+         aIncDir := {}
+#ifdef _DEFAULT_INC_DIR
+         AADD( aIncDir, "-I" + _DEFAULT_INC_DIR )
+#endif
+         cPath := getenv( "HB_INC_INSTALL" )
+         IF !EMPTY( cPath )
+            AADD( aIncDir, "-I" + cPath )
+         ENDIF
+#ifdef __PLATFORM__UNIX
+         AADD( aIncDir, "-I/usr/include/harbour" )
+         AADD( aIncDir, "-I/usr/local/include/harbour" )
+#endif
+         cHRBFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
+                                    aIncDir, cHRBFile )
+         IF cHRBFile == NIL
+            ERRORLEVEL( 1 )
+         ELSE
+            xRetVal := __hrbRun( cHRBFile, ... )
+         ENDIF
+      ELSE
+         xRetVal := __hrbRun( cHRBFile, ... )
+      ENDIF
    ENDIF
 
    RETURN xRetVal

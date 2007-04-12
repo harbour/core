@@ -67,7 +67,6 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-static void hb_compGenOutput( HB_COMP_DECL, int );
 static void hb_compCompileEnd( HB_COMP_DECL );
 static int  hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile );
 
@@ -116,12 +115,13 @@ static void hb_compMainExit( HB_COMP_DECL )
       hb_xfree( pAutoOpen );
    }
 
-   hb_comp_free( HB_COMP_PARAM );
+   if( HB_COMP_PARAM->pOutBuf )
+      hb_xfree( HB_COMP_PARAM->pOutBuf );
 
-   hb_xexit();
+   hb_comp_free( HB_COMP_PARAM );
 }
 
-int compMain( int argc, char * argv[] )
+int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
@@ -130,7 +130,7 @@ int compMain( int argc, char * argv[] )
 
 #if defined( HOST_OS_UNIX_COMPATIBLE )
    hb_comp_errFile = stderr;
-#else 
+#else
    hb_comp_errFile = stdout;
 #endif
 
@@ -148,6 +148,11 @@ int compMain( int argc, char * argv[] )
    hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
    if( !HB_COMP_PARAM->fExit )
    {
+      if( pBufPtr && pulSize )
+      {
+         HB_COMP_PARAM->iLanguage = LANG_PORT_OBJ_BUF;
+      }
+
       if( HB_COMP_PARAM->fLogo )
          hb_compPrintLogo();
 
@@ -204,6 +209,22 @@ int compMain( int argc, char * argv[] )
 
    if( HB_COMP_PARAM->iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
+
+   if( pBufPtr && pulSize )
+   {
+      if( iStatus == EXIT_SUCCESS )
+      {
+         * pBufPtr = HB_COMP_PARAM->pOutBuf;
+         * pulSize = HB_COMP_PARAM->ulOutBufSize;
+         HB_COMP_PARAM->pOutBuf = NULL;
+         HB_COMP_PARAM->ulOutBufSize = 0;
+      }
+      else
+      {
+         * pBufPtr = NULL;
+         * pulSize = 0;
+      }
+   }
 
    hb_compMainExit( HB_COMP_PARAM );
 
@@ -4266,6 +4287,10 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
 
       case LANG_PORT_OBJ:
          hb_compGenPortObj( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
+         break;
+
+      case LANG_PORT_OBJ_BUF:
+         hb_compGenBufPortObj( HB_COMP_PARAM, &HB_COMP_PARAM->pOutBuf, &HB_COMP_PARAM->ulOutBufSize );
          break;
 
       case LANG_OBJ_MODULE:

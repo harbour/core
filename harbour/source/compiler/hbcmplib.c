@@ -53,19 +53,83 @@
 #include "hbapi.h"
 #include "hbcomp.h"
 
-HB_FUNC( HB_COMPILE )
+static void hb_compGenArgList( int iFirst, int * pArgC, char *** pArgV )
 {
+   PHB_ITEM pParam, pItem;
+   ULONG ul;
    int iPCount = hb_pcount(), argc = 0, i;
-   char ** argv, * szParam;
+   char ** argv;
 
-   argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( iPCount + 1 ) );
-   for( i = 1; i <= iPCount; ++i )
+   for( i = iFirst; i <= iPCount; ++i )
    {
-      szParam = hb_parc( i );
-      if( szParam )
-         argv[ argc++ ] = szParam;
+      pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
+      if( pParam )
+      {
+         if( HB_IS_ARRAY( pParam ) )
+         {
+            ul = hb_arrayLen( pParam );
+            if( ul ) do
+            {
+               pItem = hb_arrayGetItemPtr( pParam, ul );
+               if( pItem && HB_IS_STRING( pItem ) )
+                  ++argc;
+            }
+            while( --ul );
+         }
+         else if( HB_IS_STRING( pParam ) )
+            ++argc;
+      }
+   }
+
+   argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
+   argc = 0;
+   for( i = iFirst; i <= iPCount; ++i )
+   {
+      pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
+      if( pParam )
+      {
+         if( HB_IS_ARRAY( pParam ) )
+         {
+            ul = hb_arrayLen( pParam );
+            if( ul ) do
+            {
+               pItem = hb_arrayGetItemPtr( pParam, ul );
+               if( pItem && HB_IS_STRING( pItem ) )
+                  argv[ argc++ ] = hb_itemGetCPtr( pItem );
+            }
+            while( --ul );
+         }
+         else if( HB_IS_STRING( pParam ) )
+            argv[ argc++ ] = hb_itemGetCPtr( pParam );
+      }
    }
    argv[ argc ] = NULL;
-   hb_retni( compMain( argc, argv ) );
+
+   * pArgC = argc;
+   * pArgV = argv;
+}
+
+HB_FUNC( HB_COMPILE )
+{
+   int argc;
+   char ** argv;
+
+   hb_compGenArgList( 1, &argc, &argv );
+
+   hb_retni( hb_compMain( argc, argv, NULL, NULL ) );
    hb_xfree( argv );
+}
+
+HB_FUNC( HB_COMPILEBUF )
+{
+   int iResult, argc;
+   char ** argv;
+   BYTE * pBuffer;
+   ULONG ulLen;
+
+   hb_compGenArgList( 1, &argc, &argv );
+   iResult = hb_compMain( argc, argv, &pBuffer, &ulLen );
+   hb_xfree( argv );
+   if( iResult == EXIT_SUCCESS && pBuffer )
+      hb_retclen_buffer( ( char * ) pBuffer, ulLen );
 }

@@ -70,6 +70,7 @@ typedef enum
    LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
    LANG_JAVA,                   /* Java <file.java> */
    LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
+   LANG_PORT_OBJ_BUF,           /* Portable objects in memory buffer */
    LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
 } LANGUAGES;                    /* supported Harbour output languages */
 
@@ -592,6 +593,9 @@ typedef struct _HB_COMP
    PHB_FNAME         pFileName;
    PHB_FNAME         pOutPath;
    PHB_FNAME         pPpoPath;
+
+   ULONG             ulOutBufSize;        /* memory output buffer size */
+   BYTE *            pOutBuf;             /* memory output buffer address */
 
    ULONG             lastLinePos;         /* position of last opcode with line number */
    int               lastLine;            /* last generated in PCODE line number */

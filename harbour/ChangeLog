@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-12 13:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbgenerr.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/pplib.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbppdef.h
+    * changed error and warning messages to const char *
+
+  * harbour/source/compiler/genhrb.c
+    * rewritten to work on memory buffers and with new compiler code
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/main/harbour.c
+    + added LANG_PORT_OBJ_BUF which allow to generate .hrb files into
+      memory buffers
+
+  * harbour/source/compiler/hbcmplib.c
+    + added HB_COMPILEBUF() functions which returns compiled .hrb file
+      as string item
+
+  * harbour/source/vm/runner.c
+    + added support for executing compiled .hrb files stored in string
+      items in __HRBRUN() function - it works just like in __HRBLOAD()
+
+  * harbour/harbour.spec
+  * harbour/utils/hbrun/hbrun.prg
+    + added default include directories to hbrun
+    * use HB_COMPILEBUF() instead of HB_COMPILE() to eliminate temporary
+      files
+
 2007-04-12 11:14 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * source/rtl/tget.prg
     ! Fix bug#1672233 - Picture masks for Logical GET variables.

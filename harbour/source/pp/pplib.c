@@ -58,7 +58,7 @@
 #include "hbapierr.h"
 #include "hbvm.h"
 
-static void hb_pp_ErrorMessage( void * cargo, char * szMsgTable[],
+static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
                                 char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {

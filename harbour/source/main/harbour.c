@@ -55,7 +55,12 @@
 
 int main( int argc, char * argv[] )
 {
-   return compMain( argc, argv );
+   int iResult;
+
+   iResult = hb_compMain( argc, argv, NULL, NULL );
+   hb_xexit();
+
+   return iResult;
 }
 
 /* ------------------------------------------------------------------------- */

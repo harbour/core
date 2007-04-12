@@ -92,6 +92,8 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
+static const BYTE szHead[] = { 192,'H','R','B' };
+
 
 #define SYM_NOLINK  0                           /* Symbol does not have to be linked */
 #define SYM_FUNC    1                           /* Defined function         */
@@ -100,7 +102,6 @@ typedef struct
 
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
-   BYTE szHead[] = { (BYTE)192,'H','R','B' };
    char * pVersion;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%lu,%p)", szBody, ulBodySize, pulBodyOffset ));
@@ -108,7 +109,7 @@ static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffse
    if( ulBodySize < 6 || memcmp( szHead, szBody, 4 ) )
       return 0;
 
-   pVersion = szBody + *pulBodyOffset + 4;
+   pVersion = szBody + 4;
    *pulBodyOffset += 6;
 
    return HB_PCODE_MKSHORT( pVersion );
@@ -572,47 +573,43 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
 */
 HB_FUNC( __HRBRUN )
 {
-   int argc = hb_pcount();
+   ULONG ulLen = hb_parclen( 1 );
 
-   if( argc >= 1 && ISCHAR( 1 ) )
+   if( ulLen > 0 )
    {
-      PHRB_BODY pHrbBody = hb_hrbLoadFromFile( hb_parc( 1 ) );
+      char * fileOrBody = hb_parc( 1 );
+      PHRB_BODY pHrbBody;
+
+      if( ulLen > 4 && memcmp( szHead, fileOrBody, 4 ) == 0 )
+         pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
+      else
+         pHrbBody = hb_hrbLoadFromFile( fileOrBody );
 
       if( pHrbBody )
       {
+         int argc = hb_pcount(), i;
          char **argv = NULL;
-         int i;
 
          if( argc > 1 )
          {
             argv = (char**) hb_xgrab( sizeof(char*) * (argc-1) );
-
             for( i=0; i<argc-1; i++ )
-            {
                argv[i] = hb_parcx( i+2 );
-            }
          }
 
          hb_hrbDo( pHrbBody, argc-1, argv );
 
          if( argv )
-         {
             hb_xfree( argv );
-         }
 
          hb_hrbUnLoad( pHrbBody );
-
          hb_retl( TRUE );
       }
       else
-      {
          hb_retl( FALSE );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN", HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( __HRBLOAD )
@@ -621,19 +618,13 @@ HB_FUNC( __HRBLOAD )
 
    if( ulLen > 0 )
    {
-      BYTE szHead[] = { 192,'H','R','B' };
       char * fileOrBody = hb_parc( 1 );
       PHRB_BODY pHrbBody;
 
-      /* If parameter string */
-      if( fileOrBody && ulLen > 4 && memcmp( szHead, fileOrBody, 4 ) == 0 )
-      {
+      if( ulLen > 4 && memcmp( szHead, fileOrBody, 4 ) == 0 )
          pHrbBody = hb_hrbLoad( fileOrBody, ulLen );
-      }
       else
-      {
          pHrbBody = hb_hrbLoadFromFile( fileOrBody );
-      }
 
       if( pHrbBody )
       {
@@ -646,24 +637,18 @@ HB_FUNC( __HRBLOAD )
             argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc - 1 ) );
 
             for( i = 0; i < argc - 1; i++ )
-            {
                argv[i] = hb_parcx( i + 2 );
-            }
          }
 
          hb_hrbInit( pHrbBody, argc - 1, argv );
 
          if( argv )
-         {
             hb_xfree( argv );
-         }
       }
       hb_retptr( ( void *) pHrbBody );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9998, NULL, "__HRBLOAD", HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( __HRBDO )
@@ -681,22 +666,16 @@ HB_FUNC( __HRBDO )
          argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc - 1 ) );
 
          for( i = 0; i < argc - 1; i++ )
-         {
             argv[i] = hb_parcx( i + 2 );
-         }
       }
 
       hb_hrbDo( pHrbBody, argc - 1, argv );
 
       if( argv )
-      {
          hb_xfree( argv );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDO", HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( __HRBUNLOAD )
@@ -704,13 +683,9 @@ HB_FUNC( __HRBUNLOAD )
    PHRB_BODY pHrbBody = ( PHRB_BODY ) hb_parptr( 1 );
 
    if( pHrbBody )
-   {
       hb_hrbUnLoad( pHrbBody );
-   }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBUNLOAD", HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( __HRBGETFU )
@@ -731,14 +706,10 @@ HB_FUNC( __HRBGETFU )
       hb_xfree( szName );
 
       if( ulPos < pHrbBody->ulSymbols )
-      {
          hb_itemPutSymbol( hb_stackReturnItem(), pHrbBody->pSymRead + ulPos );
-      }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBGETFU", HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( __HRBDOFU )
@@ -754,14 +725,10 @@ HB_FUNC( __HRBDOFU )
       hb_vmPushNil();
 
       for( i = 2; i <= argc; i++ )  /* Push other  params  */
-      {
          hb_vmPush( hb_stackItemFromBase( i ) );
-      }
 
       hb_vmDo( argc - 1 );          /* Run function        */
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDOFU", HB_ERR_ARGS_BASEPARAMS );
-   }
 }

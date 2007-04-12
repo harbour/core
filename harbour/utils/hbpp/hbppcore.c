@@ -208,7 +208,7 @@ char *hb_pp_STD_CH = NULL;
 static BOOL s_bArray = FALSE;
 
 /* Table with parse errors */
-char *hb_pp_szErrors[] = {
+const char *hb_pp_szErrors[] = {
    "Can\'t open #include file: \'%s\'; %s",
    "#else does not match #ifdef",
    "#endif does not match #ifdef",
@@ -233,7 +233,7 @@ char *hb_pp_szErrors[] = {
 };
 
 /* Table with warnings */
-char *hb_pp_szWarnings[] = {
+const char *hb_pp_szWarnings[] = {
    "1Redefinition or duplicate definition of #define %s",
    "1No directives in command definitions file"
 };

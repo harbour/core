@@ -29,7 +29,7 @@
 #include "hbcomp.h"
 
 /* Table with parse errors */
-char * hb_comp_szErrors[] =
+const char * hb_comp_szErrors[] =
 {
    "Statement not allowed outside of procedure or function",
    "Redefinition of procedure or function: '%s'",
@@ -103,7 +103,7 @@ char * hb_comp_szErrors[] =
 /* NOTE: The first character stores the warning's level that triggers this
  * warning. The warning's level is set by -w<n> command line option.
  */
-char * hb_comp_szWarnings[] =
+const char * hb_comp_szWarnings[] =
 {
    "1Ambiguous reference: '%s'",
    "1Ambiguous reference, assuming memvar: '%s'",
@@ -138,7 +138,7 @@ char * hb_comp_szWarnings[] =
    "0Invalid variable '%s' for enumerator message"
 };
 
-void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
+void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
    if( !HB_COMP_PARAM->fExit && ( cPrefix == 'F' || !HB_COMP_PARAM->fError ) )
    {
@@ -164,9 +164,9 @@ void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError,
    }
 }
 
-void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
+void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
-   char * szText = szWarnings[ iWarning - 1 ];
+   const char * szText = szWarnings[ iWarning - 1 ];
 
    if( !HB_COMP_PARAM->fExit && ( szText[ 0 ] - '0' <= HB_COMP_PARAM->iWarnings ) )
    {

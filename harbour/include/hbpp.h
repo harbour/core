@@ -92,7 +92,7 @@ typedef HB_PP_CLOSE_FUNC_( HB_PP_CLOSE_FUNC );
 typedef HB_PP_CLOSE_FUNC * PHB_PP_CLOSE_FUNC;
 
 /* function to generate errors */
-#define HB_PP_ERROR_FUNC_( func ) void func( void *, char **, char, int, const char *, const char * )
+#define HB_PP_ERROR_FUNC_( func ) void func( void *, const char **, char, int, const char *, const char * )
 typedef HB_PP_ERROR_FUNC_( HB_PP_ERROR_FUNC );
 typedef HB_PP_ERROR_FUNC * PHB_PP_ERROR_FUNC;
 

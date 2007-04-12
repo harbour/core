@@ -448,7 +448,7 @@ static void AddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList )
   pPath->szPath = szPath;
 }
 
-void hb_compGenError( HB_COMP_DECL, char * _szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
+void hb_compGenError( HB_COMP_DECL, const char * _szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
@@ -464,7 +464,7 @@ void hb_compGenError( HB_COMP_DECL, char * _szErrors[], char cPrefix, int iError
   */
 }
 
-void hb_compGenWarning( HB_COMP_DECL, char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
+void hb_compGenWarning( HB_COMP_DECL, const char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
@@ -472,7 +472,7 @@ void hb_compGenWarning( HB_COMP_DECL, char* _szWarnings[], char cPrefix, int iWa
 
   if( s_iWarnings )
     {
-      char *szText = _szWarnings[ iWarning - 1 ];
+      const char *szText = _szWarnings[ iWarning - 1 ];
 
       if( (szText[ 0 ] - '0') <= s_iWarnings )
         {

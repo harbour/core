@@ -179,8 +179,8 @@ extern void hb_compLoopKill( HB_COMP_DECL );
 extern void hb_compRTVariableKill( HB_COMP_DECL );
 extern void hb_compElseIfKill( HB_COMP_DECL );
 
-extern void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
-extern void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
+extern void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
+extern void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
 extern BOOL hb_compForEachVarError( HB_COMP_DECL, char * );       /* checks if it is FOR EACH enumerator variable and generates a warning */
 
@@ -270,7 +270,7 @@ extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
 #define HB_GEN_FUNC3( func, p1,p2,p3 )    hb_compGen##func( p1, p2, p3, HB_COMP_PARAM )
 #define HB_GEN_FUNC4( func, p1,p2,p3,p4 ) hb_compGen##func( p1, p2, p3, p4, HB_COMP_PARAM )
 
-extern int  compMain( int argc, char * argv[] );
+extern int  hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize );
 extern void hb_compExprLstDealloc( HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_COMP_DECL );
@@ -331,11 +331,13 @@ extern void hb_compStripFuncLines( PFUNCTION pFunc );
 
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */
+extern void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME );    /* generates the portable objects */
 extern void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME );     /* generates the .NET IL language output */
 extern void hb_compGenJava( HB_COMP_DECL, PHB_FNAME );       /* generates the Java language output */
-extern void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME );    /* generates the portable objects */
 extern void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME );      /* generates OBJ 32 bits */
 extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platform dependant object module */
+
+extern void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize ); /* generates the portable objects to memory buffer */
 
 extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 extern void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen );
@@ -348,14 +350,14 @@ extern void hb_compIdentifierClose( HB_COMP_DECL ); /* release the table of iden
 /* global readonly variables used by compiler
  */
 
-extern char *         hb_comp_szErrors[];
-extern char *         hb_comp_szWarnings[];
+extern const char *  hb_comp_szErrors[];
+extern const char *  hb_comp_szWarnings[];
 
 /* table with PCODEs' length */
-extern const BYTE     hb_comp_pcode_len[];
+extern const BYTE    hb_comp_pcode_len[];
 
 /* file handle for error messages */
-extern FILE           *hb_comp_errFile;
+extern FILE          * hb_comp_errFile;
 
 /* identifier types for hb_compIdentifierNew() */
 #define HB_IDENT_STATIC       0
