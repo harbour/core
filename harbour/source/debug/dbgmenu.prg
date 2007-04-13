@@ -51,28 +51,19 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;
           [ IDENT <nIdent> ] [ ACTION <uAction,...> ] ;
           [ CHECKED <bChecked> ] => ;
    [ <oMenuItem> := ] TDbMenu():AddItem( TDbMenuItem():New( <cPrompt>,;
-   [{|Self| HB_SYMBOL_UNUSED(Self), <uAction>}], [<bChecked>], [<nIdent>] ) )
+   [{||<uAction>}], [<bChecked>], [<nIdent>] ) )
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
 function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    local oMenu
-   local oLineNumbers
-   local oCaseSensitive
-   local oMonoDisplay
-   local oPublic, oPrivate, oStatic, oLocal, oAll
-   local oCallStack
-   local oCBTrace
-   local oPPo
-   local oRunAtStartup
 
    MENU oMenu
       MENUITEM " ~File "
@@ -91,7 +82,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~Previous"        ACTION oDebugger:FindPrevious()
          MENUITEM " ~Goto line..."    ACTION oDebugger:SearchLine()
          SEPARATOR
-         MENUITEM oCaseSensitive PROMPT " ~Case sensitive " IDENT "CASE" ;
+         MENUITEM " ~Case sensitive " IDENT "CASE" ;
             ACTION oDebugger:ToggleCaseSensitive() ;
             CHECKED oDebugger:lCaseSensitive
       ENDMENU
@@ -102,7 +93,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~WorkAreas   F6"  ACTION oDebugger:ShowWorkAreas()
          MENUITEM " ~App Screen  F4 " ACTION oDebugger:ShowAppScreen()
          SEPARATOR
-         MENUITEM oCallStack PROMPT " ~CallStack" IDENT "CALLSTACK";
+         MENUITEM " ~CallStack" IDENT "CALLSTACK";
             ACTION oDebugger:Stack() ;
             CHECKED oDebugger:lShowCallStack
       ENDMENU
@@ -123,59 +114,68 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Point "
       MENU
-         MENUITEM " ~Watchpoint..."         ACTION oDebugger:WatchpointAdd()
-         MENUITEM " ~Tracepoint..."         ACTION oDebugger:TracepointAdd()
+         MENUITEM " ~Watchpoint..."         ACTION oDebugger:WatchPointAdd()
+         MENUITEM " ~Tracepoint..."         ACTION oDebugger:TracePointAdd()
          MENUITEM " ~Breakpoint   F9 "      ACTION oDebugger:ToggleBreakPoint()
-         MENUITEM " ~Delete..."             ACTION oDebugger:WatchpointDel()
+         MENUITEM " ~Delete..."             ACTION oDebugger:WatchPointDel()
       ENDMENU
 
       MENUITEM " ~Monitor "
       MENU
-         MENUITEM oPublic PROMPT " ~Public" IDENT "PUBLIC" ;
+         MENUITEM " ~Public" IDENT "PUBLIC" ;
             ACTION oDebugger:Public() ;
             CHECKED oDebugger:lShowPublics
 
-         MENUITEM oPrivate PROMPT " pri~Vate " IDENT "PRIVATE" ;
+         MENUITEM " pri~Vate " IDENT "PRIVATE" ;
             ACTION oDebugger:Private() ;
             CHECKED oDebugger:lShowPrivates
             
-         MENUITEM oStatic PROMPT " ~Static" IDENT "STATIC" ;
+         MENUITEM " ~Static" IDENT "STATIC" ;
             ACTION oDebugger:Static() ;
             CHECKED oDebugger:lShowStatics
            
-         MENUITEM oLocal PROMPT " ~Local" IDENT "LOCAL" ;
+         MENUITEM " ~Local" IDENT "LOCAL" ;
             ACTION oDebugger:Local() ;
             CHECKED oDebugger:lShowLocals
             
+         MENUITEM " ~Global" IDENT "GLOBAL" ;
+            ACTION oDebugger:Global() ;
+            CHECKED oDebugger:lShowGlobals
+
          SEPARATOR
-         MENUITEM oAll PROMPT " ~All" IDENT "ALL" ;
+         
+         MENUITEM " ~All" IDENT "ALL" ;
             ACTION oDebugger:All() ;
             CHECKED oDebugger:lAll
+
+         MENUITEM " S~how all Globals" IDENT "SHOWALLGLOBALS" ;
+            ACTION oDebugger:ShowAllGlobals() ;
+            CHECKED oDebugger:lShowAllGlobals
 
          MENUITEM " s~Ort" ACTION oDebugger:Sort()
       ENDMENU
 
       MENUITEM " ~Options "
       MENU
-         MENUITEM oPPo PROMPT " ~Preprocessed Code" IDENT "PPO" ;
+         MENUITEM " ~Preprocessed Code" IDENT "PPO" ;
             ACTION oDebugger:OpenPPO() ;
             CHECKED oDebugger:lPPO
-         MENUITEM oLineNumbers PROMPT " ~Line Numbers" IDENT "LINE" ;
+         MENUITEM " ~Line Numbers" IDENT "LINE" ;
             ACTION oDebugger:LineNumbers() ;
             CHECKED oDebugger:lLineNumbers
          MENUITEM " ~Exchange Screens"      ACTION oDebugger:NotSupported()
          MENUITEM " swap on ~Input"         ACTION oDebugger:NotSupported()
-         MENUITEM oCBTrace PROMPT " code~Block Trace" IDENT "CODEBLOCK" ;
+         MENUITEM " code~Block Trace" IDENT "CODEBLOCK" ;
             ACTION oDebugger:CodeblockTrace() ;
             CHECKED oDebugger:lCBTrace
          MENUITEM " ~Menu Bar"              ACTION oDebugger:NotSupported()
-         MENUITEM oMonoDisplay PROMPT " mono ~Display" IDENT "MONO";
+         MENUITEM " mono ~Display" IDENT "MONO";
             ACTION oDebugger:MonoDisplay() ;
             CHECKED oDebugger:lMonoDisplay
          MENUITEM " ~Colors..."             ACTION oDebugger:Colors()
          MENUITEM " ~Tab Width..."          ACTION oDebugger:TabWidth()
          MENUITEM " path for ~Files..."     ACTION oDebugger:PathForFiles()
-         MENUITEM oRunAtStartup PROMPT " R~un at startup" IDENT "ALTD" ;
+         MENUITEM " R~un at startup" IDENT "ALTD" ;
             ACTION oDebugger:RunAtStartup() ;
             CHECKED oDebugger:lRunAtStartup
          SEPARATOR

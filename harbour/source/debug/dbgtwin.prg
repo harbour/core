@@ -64,8 +64,8 @@
 CLASS TDbWindow  // Debugger windows and dialogs
 
    DATA   nTop, nLeft, nBottom, nRight
-   DATA   cCaption, cMark
-   DATA   cBackImage, cColor, cColorFocus
+   DATA   cCaption
+   DATA   cBackImage, cColor
    DATA   lFocused, bGotFocus, bLostFocus
    DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
    DATA   lShadow, lVisible
@@ -85,7 +85,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD ShowModal()
    METHOD LButtonDown( nMRow, nMCol )
    METHOD LDblClick( nMRow, nMCol )
-   METHOD LoadColors() 
+   METHOD LoadColors()
 
    METHOD Move()
    METHOD KeyPressed( nKey )
@@ -93,6 +93,13 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD Resize()
 
 ENDCLASS
+
+METHOD Clear() CLASS TDbWindow
+  
+  SetColor( ::cColor )
+  Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+
+RETURN nil
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
 
@@ -104,12 +111,9 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::nRight   := nRight
    ::cCaption := cCaption
    ::cColor   := cColor
-   ::cColorFocus := __DbgColors()[ 12 ]
    ::lShadow  := .f.
    ::lVisible := .f.
    ::lFocused := .f.
-   //Check mark should be different under xterm terminal
-   ::cMark    := '['+ IIF( AT("TERM",UPPER(GETENV("TERM")))>0, 'X', CHR(254) )+ ']'
 
 return Self
 
@@ -136,14 +140,6 @@ METHOD ScrollUp( nLines ) CLASS TDbWindow
 
 return nil
 
-METHOD Clear() CLASS TDbWindow
-
-   SetColor( ::cColor )
-   Scroll( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
-
-RETURN nil
-
-
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 
    ::cCaption := cCaption
@@ -153,39 +149,18 @@ METHOD ShowCaption CLASS TDbWindow
    if ! Empty( ::cCaption )
       DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
          ( ( Len( ::cCaption ) + 2 ) / 2 ),;
-         " " + ::cCaption + " ", ;
-         IIF( ::lFocused, ::cColorFocus, ::cColor ) )
+         " " + ::cCaption + " ", ::cColor )
    endif
 
 return nil
 
 METHOD SetFocus( lOnOff ) CLASS TDbWindow
-
+  
    if ! lOnOff .and. ::bLostFocus != nil
       Eval( ::bLostFocus, Self )
    endif
 
-   DispBegin()
-
    ::lFocused := lOnOff
-
-   IF( lOnOff )
-      @ ::nTop, ::nLeft TO ::nBottom, ::nRight DOUBLE COLOR ::cColorFocus
-   ELSE
-      @ ::nTop, ::nLeft TO ::nBottom, ::nRight COLOR ::cColor
-   ENDIF
-
-   DispOutAt( ::nTop, ::nLeft + 1, ::cMark, IIF(lOnOff,::cColorFocus,::cColor) )
-
-   if ! Empty( ::cCaption )
-      ::ShowCaption( ::cCaption )
-   endif
-
-   if ::bPainted != nil
-      Eval( ::bPainted, Self )
-   endif
-
-   DispEnd()
 
    if lOnOff .and. ::bGotFocus != nil
       Eval( ::bGotFocus, Self )
@@ -197,30 +172,29 @@ METHOD Refresh() CLASS TDbWindow
 
    DispBegin()
 
-   IF( ::lFocused )
-      @ ::nTop, ::nLeft TO ::nBottom, ::nRight DOUBLE COLOR ::cColorFocus
-   ELSE
-      @ ::nTop, ::nLeft TO ::nBottom, ::nRight COLOR ::cColor
-   ENDIF
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX iif( ::lFocused, B_DOUBLE, B_SINGLE ) ;
+      COLOR ::cColor
 
-   DispOutAt( ::nTop, ::nLeft + 1, ::cMark, IIF(::lFocused,::cColorFocus,::cColor) )
+   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
-   if ! Empty( ::cCaption )
-      ::ShowCaption( ::cCaption )
-   endif
+   ::ShowCaption( ::cCaption )
 
    if ::bPainted != nil
       Eval( ::bPainted, Self )
    endif
-
+   
    DispEnd()
 
 return nil
 
 METHOD Show( lFocused ) CLASS TDbWindow
+   LOCAL nRow, nCol
 
    DEFAULT lFocused TO ::lFocused
 
+   nRow := Row()
+   nCol := Col()
+   
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                               ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
@@ -231,9 +205,10 @@ METHOD Show( lFocused ) CLASS TDbWindow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
-   ::ShowCaption()
+   ::Refresh()
    ::lVisible := .t.
 
+   SetPos( nRow, nCol )
 return nil
 
 METHOD ShowModal() CLASS TDbWindow
@@ -351,40 +326,45 @@ METHOD KeyPressed( nKey ) CLASS TDbWindow
 return nil
 
 METHOD LoadColors() CLASS TDbWindow
-LOCAL aClr:=__DbgColors()
-
+   LOCAL aClr:=__DbgColors()
+  
    ::cColor := aClr[ 1 ]
    IF( ::Browser!=NIL )
       ::Browser:ColorSpec := aClr[ 2 ] + "," + aClr[ 5 ] + "," + aClr[ 3 ]
    ENDIF
-   
+
 RETURN nil
 
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS TDbWindow
-LOCAL lShow
-   
-   IF( lShow:=::lVisible )
-      ::Hide()
-   ENDIF
-   IF( nTop != NIL )
-      ::nTop := nTop
-   ENDIF
-   IF( nBottom != NIL )
-      ::nBottom := nBottom
-   ENDIF
-   IF( nLeft != NIL )
-      ::nLeft := nLeft
-   ENDIF
-   IF( nRight != NIL )
-      ::nRight := nRight
-   ENDIF
-   
-   IF( ::Browser != NIL )
-      ::Browser:Resize( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
-   ENDIF
+  LOCAL lShow
 
-   IF( lShow )
-      ::Show( ::lFocused )
-   ENDIF
-   
+  IF ( nTop == NIL .OR. nTop == ::nTop ) .AND. ( nLeft == NIL .OR. nLeft == ::nLeft ) ;
+    .AND. ( nBottom == NIL .OR. nBottom == ::nBottom ) .AND. ( nRight == NIL .OR. nRight == ::nRight )
+    RETURN Self
+  ENDIF
+
+  IF lShow:=::lVisible
+    ::Hide()
+  ENDIF
+  IF nTop != NIL
+    ::nTop := nTop
+  ENDIF
+  IF nBottom != NIL
+    ::nBottom := nBottom
+  ENDIF
+  IF nLeft != NIL
+    ::nLeft := nLeft
+  ENDIF
+  IF nRight != NIL
+    ::nRight := nRight
+  ENDIF
+
+  IF ::Browser != NIL
+    ::Browser:Resize( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
+  ENDIF
+
+  IF lShow
+    ::Show( ::lFocused )
+  ENDIF
+
 RETURN self

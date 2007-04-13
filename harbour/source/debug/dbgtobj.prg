@@ -56,7 +56,7 @@
 #include "hbclass.ch"
 #include "inkey.ch"
 
-#pragma -es0
+//#pragma -es0
 
 Class TDBGobject
 //export:
@@ -76,22 +76,19 @@ method SetsKeyPressed
 endclass
 
 method new(aArray,pArName,lEditable) class tdbgObject
-Local nPos
-local aTempvars:=   __objGetValueList(aArray)
-Local aTempMethods:=  __objGetMethodList(aArray)
+Local aTemp
 
 DEFAULT lEditable TO .t.
-
 ::pItems:={}
 ::AllNames:={}
-for nPos :=1 to len(aTempvars)
-   aadd(::pItems,{aTempvars[nPos,1],aTempvars[nPos,2]})
-   aadd(::AllNames,aTempvars[nPos,1])
+for each aTemp in __objGetValueList(aArray)
+   aadd(::pItems,{aTemp[1],aTemp[2]})
+   aadd(::AllNames,aTemp[1])
 next
-for nPos :=1 to len(aTempMethods)
-   if !empty(aTempMethods[nPos])
-      aadd(::pItems,{aTempMethods[nPos],"Method"})
-      aadd(::AllNames,aTempMethods[nPos])
+for each aTemp in __objGetMethodList(aArray)
+   if !empty(aTemp)
+      aadd(::pItems,{aTemp,"Method"})
+      aadd(::AllNames,aTemp)
    endif
 next
 ::aWindows:={}
@@ -104,7 +101,6 @@ next
 ::lEditable = lEditable
 
 ::addWindows(::pItems)
-
 Return Self
 
 Method addWindows(aArray,nRow) class tdbgObject
@@ -140,6 +136,7 @@ Local owndsets
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := ::arrayindex,;
                           ::arrayindex := iif( nSkip > 0, Min( ::arrayindex+nSkip, Len(::arrayreference)),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
+
    nMaxElem := maxelem(::AllNames)
    oBrwSets:AddColumn( ocol := TBColumnNew( "",;
                     { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxElem ) } ) )
@@ -167,70 +164,82 @@ Local owndsets
 
 return self
 
-method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, LenArr, aArray ) class tdbgObject
+method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class tdbgObject
 
    local nSet := oBrwSets:Cargo
-   local cTemp := str(nSet, 4)
-   local cOldname := ::objname
+   local cTemp:=str(nSet,4)
+   local cOldname:= ::objname
 
+   HB_SYMBOL_UNUSED( nSets )
    HB_SYMBOL_UNUSED( oWnd )
    HB_SYMBOL_UNUSED( cName )
    HB_SYMBOL_UNUSED( LenArr )
 
-   do case
-      case nKey == K_UP
+   Switch nKey
+      case K_UP
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo--
               oBrwSets:RefreshCurrent()
               oBrwSets:Up()
               oBrwSets:ForceStable()
            endif
+           exit
 
-      case nKey == K_DOWN
+      case K_DOWN
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo++
               oBrwSets:RefreshCurrent()
               oBrwSets:Down()
               oBrwSets:ForceStable()
            endif
+           exit
 
-      case nKey == K_HOME
+      case K_HOME
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo := 1
               oBrwSets:GoTop()
               oBrwSets:ForceStable()
            endif
+           exit
 
-      case nKey == K_END
+      case K_END
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo := nSets
               oBrwSets:GoBottom()
               oBrwSets:ForceStable()
            endif
+           exit
 
-      case nKey == K_PGUP
+      case K_PGUP
            oBrwSets:PageUp()
            oBrwSets:Cargo := ::ArrayIndex
            oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
+           exit
 
-      case nKey == K_PGDN
+      case K_PGDN
            oBrwSets:PageDown()
            oBrwSets:Cargo := ::ArrayIndex
            oBrwSets:RefreshCurrent()
            oBrwSets:ForceStable()
+           exit
 
-      Case nKey ==13
+      Case K_ENTER
             if nSet==oBrwSets:Cargo
                if valtype(aArray[nSet,2])=="A"
                   if len(   aArray[nSet,2])>0
                      TDBGArray():New(aArray[nSet,2],::pitems[nSet,1])
                   endif
+               elseif valtype(aArray[nSet,2])=="H"
+                  if len(   aArray[nSet,2])>0
+                     TDBGHash():New(aArray[nSet,2],::pitems[nSet,1])
+                  endif
                elseif valtype(aArray[nSet,2])=="O"
                   tdbgObject():New(aArray[nSet,2],::pitems[nSet,1])
-/*               elseif __objHasMethod(::theObj,aArray[nSet,2])
-                  Alert("Value cannot be edited")*/
-               elseif valtype(aArray[nSet,2])=="B"
+	       elseif ( ( ValType( aArray[ nSet, 2 ] ) == "C" ;
+	                  .AND. aArray[ nSet, 2 ] == "Method" ) ;
+			.OR. ValType( aArray[ nSet, 2 ] ) == "B";
+                        .OR. ValType( aArray[ nSet, 2 ] ) == "P" )
                   Alert("Value cannot be edited")
 
               else
@@ -246,8 +255,9 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, LenArr, aArray ) clas
                endif
 
             endif
+            exit
 
-   endcase
+   end
 
 return nil
 
@@ -256,31 +266,49 @@ static function ValToStr( uVal )
    local cType := ValType( uVal )
    local cResult := "U"
 
-   do case
-      case uVal == nil
+   Switch cType
+      case "U"
            cResult := "NIL"
+           exit
 
-      case cType == "A"
+      case "A"
            cResult := "{ ... }"
+           exit
 
-      case cType $ "CM"
+      case "H"
+           cResult := "Hash of " + AllTrim( Str( Len( uVal ) ) ) + " elements"
+           exit
+
+      case "C"
+      case "M"
            cResult := '"' + uVal + '"'
+           exit
 
-      case cType == "L"
+      case "L"
            cResult := iif( uVal, ".T.", ".F." )
+           exit
 
-      case cType == "D"
+      case "D"
            cResult := DToC( uVal )
+           exit
 
-      case cType == "N"
+      case "N"
            cResult := AllTrim( Str( uVal ) )
+           exit
 
-      case cType == "O"
+      case "O"
            cResult := "Class " + uVal:ClassName() + " object"
-      Case cType  =="B"
-         cResult:= "{ || ... }"
+           exit
 
-   endcase
+      case "B"
+           cResult:= "{ || ... }"
+           exit
+
+      case "P"
+           cResult := "Pointer"
+           exit
+
+   end
 
 return cResult
 
@@ -309,13 +337,14 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     column := oBro:getColumn( oBro:colPos )
 
     // create a corresponding GET
-    cValue := PadR( ValToStr( pitem[ nSet, 2 ] ), column:Width + 2 )
-
+    cValue := PadR( ValToStr( pitem[nSet,2] ), column:Width )
     @ row(),col() GET cValue ;
         VALID If( Type( cValue ) == "UE", ( Alert( "Expression error" ), .f. ), .t. )
 
-    READ
 
+    // read it
+    ReadModal(getlist )
+//    eval(column:block,get:Buffer)
     // restore state
     SetCursor( 0 )
     Set( _SET_SCOREBOARD, lScoreSave )
@@ -335,13 +364,12 @@ RETURN nil
 
 static FUNC maxelem( a )
 
-   LOCAL nSize   := LEN( a )
    LOCAL max     := 0
    LOCAL tam     := 0
-   LOCAL nCount
+   LOCAL elem
 
-   FOR nCount := 1 TO nSize
-      tam := LEN( a[ nCount ] )
+   for each elem in a
+      tam := LEN( elem )
       max := IF( tam > max, tam, max )
    NEXT
 

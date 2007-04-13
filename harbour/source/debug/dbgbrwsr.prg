@@ -58,6 +58,8 @@ CLASS TDbgBrowser FROM TBrowse  // Debugger browser
 
    METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow )
    METHOD Resize( nTop, nLeft, nBottom, nRight )
+   METHOD ForceStable() INLINE IIf( ::RowCount > 0, ::Super:ForceStable(), )
+   METHOD RefreshAll() INLINE IIf( ::RowCount > 0, ::Super:RefreshAll(), )
 
 ENDCLASS
 
@@ -71,24 +73,28 @@ RETURN Self
 METHOD Resize( nTop, nLeft, nBottom, nRight )
 LOCAL lResize:=.F.
 
-   IF( nTop != ::nTop )
+   IF( nTop != NIL .AND. nTop != ::nTop )
       ::nTop := nTop
       lResize := .T.
    ENDIF
-   IF( nLeft != ::nLeft )
+   IF( nLeft != NIL .AND. nLeft != ::nLeft )
       ::nLeft := nLeft
       lResize := .T.
    ENDIF
-   IF( nBottom != ::nBottom )
+   IF( nBottom != NIL .AND. nBottom != ::nBottom )
       ::nBottom := nBottom
       lResize := .T.
    ENDIF
-   IF( nRight != ::nRight )
+   IF( nRight != NIL .AND. nRight != ::nRight )
       ::nRight := nRight
       lResize := .T.
    ENDIF
    IF( lResize )
-      ::configure()
+      /* The following check prevents a "High limit exceeded" error. Maybe it
+       * would be wiser to make TBrowse handle height of 0 rows -- Ph.K. */
+      IF ::nBottom >= ::nTop
+         ::configure()
+      ENDIF
    ENDIF
       
 RETURN self

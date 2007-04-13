@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * The Debugger (TDbMenuItem Class)
+ * xHarbour Project source code:
+ * ALTD() debuger function
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,52 +50,19 @@
  *
  */
 
-/* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
-         the debugger output may interfere with the applications output
-         redirection, and is also slower. [vszakats] */
+#define ALTD_DISABLE   0
+#define ALTD_ENABLE    1
 
-#include "hbclass.ch"
-#include "common.ch"
-
-CLASS TDbMenuItem
-
-   DATA nRow, nCol
-   DATA cPrompt
-   DATA bAction
-   DATA lChecked
-   DATA Ident
-
-   ACCESS Checked() INLINE ::lChecked
-   ASSIGN Checked(lOnOff) INLINE ::lChecked:=lOnOff
-
-   METHOD New( cPrompt, bAction, lChecked, xIdent )
-   METHOD Display( cClrText, cClrHotKey )
-   METHOD Toggle() INLINE ::lChecked := ! ::lChecked
-
-ENDCLASS
-
-METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS TDbMenuItem
-
-   DEFAULT lChecked TO .f.
-
-   ::cPrompt  := cPrompt
-   ::bAction  := bAction
-   ::lChecked := lChecked
-   ::Ident    := xIdent
-
-return Self
-
-METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
-
-   local nAt
-
-   DispOutAt( ::nRow, ::nCol ,;
-      StrTran( ::cPrompt, "~", "" ), cClrText )
-
-   DispOutAt( ::nRow, ::nCol + ;
-     ( nAt := At( "~", ::cPrompt ) ) - 1,;
-     SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
-
-   DispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
-
-return Self
+function ALTD( nAction )
+   if pcount() == 0
+      if SET( _SET_DEBUG ) .AND. TYPE( "__DBGALTDENTRY()" ) == "UI"
+         &("__DBGALTDENTRY()")
+      endif
+   elseif valtype( nAction ) == "N"
+      if nAction == ALTD_DISABLE
+         SET( _SET_DEBUG, .F. )
+      elseif nAction == ALTD_ENABLE
+         SET( _SET_DEBUG, .T. )
+      endif
+   endif
+return nil

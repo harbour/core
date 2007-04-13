@@ -72,17 +72,17 @@ CLASS TDbMenu  /* debugger menu */
    DATA   lPopup
    DATA   cBackImage
 
-   METHOD New()
-   METHOD AddItem(oMenuItem)
+   METHOD New( aItems )
+   METHOD AddItem( oMenuItem )
    METHOD Build()
-   METHOD ClosePopup
+   METHOD ClosePopup()
    METHOD Close() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
    METHOD DeHilite()
    METHOD Display()
    METHOD EvalAction()
-   METHOD GetHotKeyPos( cKey )
-   METHOD GetItemOrdByCoors( nRow, nCol )
+   METHOD GetHotKeyPos( nKey )
    METHOD GetItemByIdent( uIdent )
+   METHOD GetItemOrdByCoors( nRow, nCol )
    METHOD GoBottom()
    METHOD GoDown() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoRight()
    METHOD GoLeft()
@@ -210,15 +210,14 @@ METHOD Display() CLASS TDbMenu
       SetPos( 0, 0 )
    else
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
-      @ ::nTop, ::nLeft TO ::nBottom, ::nRight
+      @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
    for n := 1 to Len( ::aItems )
       if ::aItems[ n ]:cPrompt == "-"  // Separator
-         @ ::aItems[ n ]:nRow, ::nLeft+1 TO ::aItems[ n ]:nRow, ::nRight - 1
-//         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
-//            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
+         DispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
+            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
       else
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
       endif
@@ -267,9 +266,9 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
 return 0
 
 METHOD GetItemByIdent( uIdent ) CLASS TDbMenu
-
+  
    local n, oItem
-
+  
    for n := 1 to Len( ::aItems )
       IF( VALTYPE(::aItems[n]:bAction) == 'O' )
          oItem := ::aItems[n]:bAction:GetItemByIdent( uIdent )

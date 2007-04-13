@@ -54,18 +54,13 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-/* NOTE: CA-Cl*pper has an internal function named __dbfList() which 
-         has similar functionality. Harbour doesn't support this 
-         internal function this time. */
-
-function __dbgShowWorkAreas( oDebugger )
+function __dbgShowWorkAreas()
 
    local oDlg, oCol
    local aAlias, aBrw, aStruc, aInfo
    local cColor
    local n1, n2, n3, cur_id
-
-   HB_SYMBOL_UNUSED( oDebugger )
+   LOCAL nOldArea := Select()
 
    aAlias := {}
    aBrw   := Array(3)
@@ -81,7 +76,7 @@ function __dbgShowWorkAreas( oDebugger )
    for n1 := 1 to 512
      if ( n1 )->( Used() )
        AAdd(aAlias, { n1, Alias(n1) })
-       if n1 == Select()
+       if n1 == nOldArea
 	 cur_id = Len(aAlias)
        endif
      endif
@@ -91,6 +86,10 @@ function __dbgShowWorkAreas( oDebugger )
       Alert( "No workareas in use")
       return nil
    endif
+
+   IF !Used()
+      SELECT ( aAlias[1][1] )
+   ENDIF
 
    /*
    Window creation
@@ -113,7 +112,8 @@ function __dbgShowWorkAreas( oDebugger )
    aBrw[1]:GoBottomBlock := { || n1 := Len( aAlias ) }
    aBrw[1]:SkipBlock     := { | nSkip, nPos | nPos := n1,;
                                  n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ),;
-                                          Max( 1, n1 + nSkip ) ), n1 - nPos }
+                                          Max( 1, n1 + nSkip ) ),;
+                                 n1 - nPos }
 
    aBrw[1]:AddColumn( oCol := TBColumnNew( "", { || PadR( aAlias[n1][2], 11 ) } ) )
 
@@ -129,7 +129,7 @@ function __dbgShowWorkAreas( oDebugger )
 
    aBrw[2]:Cargo         := ( n2 := 1 )
    aBrw[2]:ColorSpec     := oDlg:cColor
-   aBrw[2]:GoTopBlock    := { || n2 := 1 }
+   aBrw[2]:GoTopBlock    := { || aBrw[2]:Cargo := n2 := 1 }
    aBrw[2]:GoBottomBlock := { || n2 := Len( aInfo ) }
    aBrw[2]:SkipBlock     := { | nSkip, nPos | nPos := n2,;
                                  n2 := iif( nSkip > 0, Min( Len( aInfo ), n2 + nSkip ),;
@@ -149,7 +149,7 @@ function __dbgShowWorkAreas( oDebugger )
 
    aBrw[3]:Cargo         := 1
    aBrw[3]:ColorSpec     := oDlg:cColor
-   aBrw[3]:GoTopBlock    := { || n3 := 1 }
+   aBrw[3]:GoTopBlock    := { || aBrw[3]:Cargo := n3 := 1 }
    aBrw[3]:GoBottomBlock := { || n3 := Len( aStruc ) }
    aBrw[3]:SkipBlock     := { | nSkip, nPos | nPos := n3,;
                                  n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
@@ -165,7 +165,8 @@ function __dbgShowWorkAreas( oDebugger )
    */
 
    oDlg:ShowModal()
-
+   
+   SELECT ( nOldArea )
 return nil
 
 static function DlgWorkAreaPaint( oDlg, aBrw )
@@ -365,14 +366,14 @@ return aInfo
 
 static function UpdateInfo( oDlg, cAlias )
 
-   local cOldAlias
+   local nOldArea
 
    if empty(cAlias)
      return NIL
    endif
    
-   cOldAlias := Alias()
-
+   nOldArea := Select()
+   
    SELECT (cAlias)
 
    DispOutAt( oDlg:nTop + 1 , oDlg:nLeft + 20 , Padr( cAlias, 11 ), oDlg:cColor )
@@ -382,12 +383,12 @@ static function UpdateInfo( oDlg, cAlias )
 
    DispOutAt( oDlg:nTop + 2 , oDlg:nLeft + 21 , iif( Bof(),"Yes" , "No "), oDlg:cColor )
    DispOutAt( oDlg:nTop + 2 , oDlg:nLeft + 38 , iif( Deleted(),"Yes" , "No "), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3 , oDlg:nLeft + 21 , iif( Bof(),"Yes" , "No "), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 3 , oDlg:nLeft + 21 , iif( Eof(),"Yes" , "No "), oDlg:cColor )
    DispOutAt( oDlg:nTop + 3 , oDlg:nLeft + 38 , iif( Found(),"Yes" , "No "), oDlg:cColor )
    DispOutAt( oDlg:nTop + 4 , oDlg:nLeft + 21 , Padr( DbFilter(), 29 ), oDlg:cColor )
    DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21 , Padr( OrdKey(), 29 ), oDlg:cColor )
 
-   SELECT (cOldAlias)
+   SELECT (nOldArea)
 
 return nil
 

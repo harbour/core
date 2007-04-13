@@ -105,11 +105,9 @@ static procedure PaintWindow( oDlg, oBrw, aTopics )
 
 return
 
-static procedure ProcessKey( nKey, oDlg, oBrw, aTopics, cColor )
+static procedure ProcessKey( nKey, oDlg, oBrw, aTopics )
 
    local n, nSkip
-
-   HB_SYMBOL_UNUSED( cColor )
 
    do case
       case nKey == K_UP
@@ -140,10 +138,10 @@ static procedure ProcessKey( nKey, oDlg, oBrw, aTopics, cColor )
               ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
            endif
 
-      case nKey == K_PGUP
+      case nKey == K_PGUP .OR. nKey == K_CTRL_B
            ShowTopic( oDlg, aTopics, oBrw:Cargo, -1 ) // Skip to prev page
 
-      case nKey == K_PGDN
+      case nKey == K_PGDN .OR. nKey == K_CTRL_F .OR. nKey == K_SPACE
            ShowTopic( oDlg, aTopics, oBrw:Cargo, 1 )  // Skip to next page
 
       case nKey == K_LBUTTONDOWN
@@ -459,7 +457,9 @@ static function GetTopics()
         "expressions, and their current values.",;
         "",;
         "Watchpoints and Tracepoints may be defined and deleted via",;
-        "options on the Point menu.",;
+        "options on the Point menu. You can edit a Watchpoint or",;
+        "Tracepoint expression by selecting it in the Watch window",;
+        "and pressing CTRL-ENTER.",;
         "",;
         "If the Watch window is active, pressing ENTER will inspect",;
         "the value of the selected expression. The navigation keys",;
@@ -670,6 +670,9 @@ static function GetTopics()
         "    Static",;
         "    Monitor Static variables.",;
         "",;
+        "    Global",;
+        "    Monitor Global variables.",;
+        "",;
         "    All",;
         "    Monitor All variables.",;
         "",;
@@ -818,7 +821,7 @@ static function GetTopics()
         "    Toggle display of CallStack window",;
         "",;
         "DELETE ALL [WP|TP|BP]",;
-        "DELETE WB|TP|BP <nNumber>",;
+        "DELETE WP|TP|BP <nNumber>",;
         "    Delete all or particular Watchpoint, Tracepoint",;
         "    or Breakpoint.",;
         "",;
