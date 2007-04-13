@@ -846,8 +846,6 @@ extern void             hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a
 extern void       hb_memvarsInit( void ); /* initialize the memvar API system */
 extern void       hb_memvarsClear( void ); /* clear all PUBLIC and PRIVATE variables */
 extern void       hb_memvarsFree( void ); /* release the memvar API system */
-extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
-extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
 extern void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern ERRCODE    hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
@@ -861,8 +859,12 @@ extern void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_IT
 extern int        hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 extern PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 #ifdef _HB_API_INTERNAL_
+extern void       hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
+extern void       hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
 extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
 #endif
+extern HB_HANDLE  hb_memvarGetVarHandle( char *szName );
+extern PHB_ITEM   hb_memvarGetValueByHandle( HB_HANDLE hMemvar );
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */

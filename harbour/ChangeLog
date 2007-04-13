@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 03:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  + harbour/include/hbapidbg.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbdebug.ch
+  * harbour/include/hbdefs.h
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/genc.c
+  + harbour/source/compiler/hbdbginf.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/debug/debugger.prg
+  * harbour/source/rtl/altd.prg
+  * harbour/source/vm/Makefile
+  + harbour/source/vm/dbgentry.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/hvm.c
+    + added xHarbour compatible low level debugger code
+      Without some small exceptions like my hbdbginf.c most of
+      the code created by Phil Krylov <phil a t newstar.rinet.ru>
+      and borrowed from xHarbour with some small modifications.
+
+  * harbour/source/rtl/gete.c
+    ! fixed memory leak in GETENV()
+
+  * harbour/source/compiler/hbmain.c
+    ! fixed memory leak when -build or -credit switches were used
+
 2007-04-12 13:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbcomp.h

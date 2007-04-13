@@ -115,7 +115,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
    LOCAL aTrace, uValue, lSuccess, nLen
 
 
-   IF( __MVSCOPE( "__DBGSTATICS" ) != HB_MV_PUBLIC )   
+   IF( __MVSCOPE( "__DBGSTATICS" ) != HB_MV_PUBLIC )
       public __DbgStatics
       __DbgStatics := {}
    ENDIF

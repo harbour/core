@@ -60,20 +60,22 @@
 
 PROCEDURE AltD( nAction )
 
-   DO CASE
-   CASE nAction == nil
+   IF PCOUNT() == 0
+
       /* do not activate the debugger imediatelly because the module
          where ALTD() was called can have no debugger info - stop
          on first LINE with debugged info 
       */
       HB_DBG_INVOKEDEBUG( SET( _SET_DEBUG ) )
-         
-   CASE nAction == ALTD_DISABLE
-      SET( _SET_DEBUG, .F. )
 
-   CASE nAction == ALTD_ENABLE
-      SET( _SET_DEBUG, .T. )
-   ENDCASE
+   ELSEIF HB_ISNUMERIC( nAction )
+
+      IF nAction == ALTD_DISABLE
+         SET( _SET_DEBUG, .F. )
+      ELSEIF nAction == ALTD_ENABLE
+         SET( _SET_DEBUG, .T. )
+      ENDIF
+
+   ENDIF
 
 RETURN
-

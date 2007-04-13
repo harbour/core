@@ -74,6 +74,7 @@
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapicls.h"
+#include "hbapidbg.h"
 #include "hbapiitm.h"
 #include "hbapilng.h"
 #include "hbapirdd.h"
@@ -156,6 +157,7 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
+static void    hb_vmDebuggerExit( void );        /* shuts down the debugger */
 static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
 static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
@@ -242,10 +244,11 @@ static void *      s_hDynLibID = NULL; /* unique identifer to mark symbol tables
 static BOOL        s_fCloneSym = FALSE;/* clone registered symbol tables */
 
 static BOOL     s_bDebugging;
-static BOOL     s_bDebugRequest;    /* debugger invoked via the VM */
-static BOOL     s_bDebugShowLines;  /* update source code line on the debugger display */
-static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invoked */
-static PHB_DYNS s_pDynsDbgEntry = NULL; /* Cached __DBGENTRY symbol */
+static BOOL     s_bDebugRequest;          /* debugger invoked via the VM */
+static BOOL     s_bDebugShowLines;        /* update source code line on the debugger display */
+static BOOL     s_bDebuggerIsWorking;     /* to know when __DBGENTRY is beeing invoked */
+static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
+HB_EXPORT HB_DBGENTRY_FUNC hb_vm_pFunDbgEntry = NULL; /* C level debugger entry */
 
 /* Various compatibility flags
 */
@@ -409,6 +412,15 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    }
 #endif
 
+   if( s_pDynsDbgEntry && !hb_vm_pFunDbgEntry )
+   {
+      /* Try to get C dbgEntry() function pointer */
+      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+      hb_vmPushNil();
+      hb_vmPushLongConst( HB_DBG_GETENTRY );
+      hb_vmDo( 1 );
+   }
+
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
     * because INIT function can use static variables
@@ -519,6 +531,9 @@ HB_EXPORT int hb_vmQuit( void )
    hb_vmDoModuleExitFunctions();
    hb_vmCleanModuleFunctions();
 
+   /* deactivate debugger */
+   hb_vmDebuggerExit();
+
    /* release all known items stored in subsystems */
    hb_itemClear( hb_stackReturnItem() );
    hb_stackRemove( 1 );          /* clear stack items, leave only initial symbol item */
@@ -526,7 +541,7 @@ HB_EXPORT int hb_vmQuit( void )
    hb_memvarsClear();            /* clear all PUBLIC (and PRIVATE if any) variables */
 
    /* intentionally here to allow executing object destructors for all
-    * cross references items before we release classy subsystem
+    * cross referenced items before we release classy subsystem
     */
    hb_gcCollectAll();
 
@@ -4999,6 +5014,41 @@ void hb_vmFunction( USHORT uiParams )
    hb_vmDo( uiParams );
 }
 
+
+static void hb_vmDummyDebugEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDummyDebugEntry"));
+
+   HB_SYMBOL_UNUSED( nMode );
+   HB_SYMBOL_UNUSED( nLine );
+   HB_SYMBOL_UNUSED( szName );
+   HB_SYMBOL_UNUSED( nIndex );
+   HB_SYMBOL_UNUSED( nFrame );
+}
+
+static void hb_vmDebuggerExit( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerExit"));
+
+   /* is debugger linked ? */
+   if( s_pDynsDbgEntry )
+   {
+      /* inform debugger that we are quitting now */
+      if ( hb_vm_pFunDbgEntry )
+         hb_vm_pFunDbgEntry( HB_DBG_VMQUIT, 0, NULL, 0, 0 );
+      else
+      {
+         hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+         hb_vmPushNil();
+         hb_vmPushLongConst( HB_DBG_VMQUIT );
+         hb_vmDo( 1 );
+      }
+      /* set dummy debugger function to avoid debugger activation in .prg
+       *       destructors if any */
+      hb_vm_pFunDbgEntry = hb_vmDummyDebugEntry;
+   }
+}
+
 static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and parameters index and name information for the debugger */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmLocalName(%hu, %s)", uiLocal, szLocalName));
@@ -5007,13 +5057,18 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
    {
       s_bDebugging = TRUE;
       s_bDebugShowLines = FALSE;
-      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
-      hb_vmPushNil();
-      hb_vmPushLongConst( HB_DBG_LOCALNAME );
-      hb_vmPushLongConst( uiLocal );
-      hb_vmPushString( szLocalName, strlen( szLocalName ) );
       s_bDebuggerIsWorking = TRUE;
-      hb_vmDo( 3 );
+      if ( hb_vm_pFunDbgEntry )
+         hb_vm_pFunDbgEntry( HB_DBG_LOCALNAME, 0, szLocalName, uiLocal, 0 );
+      else
+      {
+         hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+         hb_vmPushNil();
+         hb_vmPushLongConst( HB_DBG_LOCALNAME );
+         hb_vmPushLongConst( uiLocal );
+         hb_vmPushString( szLocalName, strlen( szLocalName ) );
+         hb_vmDo( 3 );
+      }
       s_bDebuggerIsWorking = FALSE;
       s_bDebugShowLines = TRUE;
    }
@@ -5029,14 +5084,19 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
    {
       s_bDebugging = TRUE;
       s_bDebugShowLines = FALSE;
-      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
-      hb_vmPushNil();
-      hb_vmPushLongConst( HB_DBG_STATICNAME );
-      hb_vmPushLongConst( hb_stackGetStaticsBase() );  /* current static frame */
-      hb_vmPushLongConst( uiStatic );  /* variable index */
-      hb_vmPushString( szStaticName, strlen( szStaticName ) );
       s_bDebuggerIsWorking = TRUE;
-      hb_vmDo( 4 );
+      if ( hb_vm_pFunDbgEntry )
+         hb_vm_pFunDbgEntry( HB_DBG_STATICNAME, 0, szStaticName, uiStatic, hb_stackGetStaticsBase() );
+      else
+      {
+         hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+         hb_vmPushNil();
+         hb_vmPushLongConst( HB_DBG_STATICNAME );
+         hb_vmPushLongConst( hb_stackGetStaticsBase() );  /* current static frame */
+         hb_vmPushLongConst( uiStatic );  /* variable index */
+         hb_vmPushString( szStaticName, strlen( szStaticName ) );
+         hb_vmDo( 4 );
+      }
       s_bDebuggerIsWorking = FALSE;
       s_bDebugShowLines = TRUE;
    }
@@ -5050,12 +5110,17 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
    {
       s_bDebugging = TRUE;
       s_bDebugShowLines = FALSE;
-      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
-      hb_vmPushNil();
-      hb_vmPushLongConst( HB_DBG_MODULENAME );
-      hb_vmPushString( szModuleName, strlen( szModuleName ) );
       s_bDebuggerIsWorking = TRUE;
-      hb_vmDo( 2 );
+      if ( hb_vm_pFunDbgEntry )
+         hb_vm_pFunDbgEntry( HB_DBG_MODULENAME, 0, szModuleName, 0, 0 );
+      else
+      {
+         hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+         hb_vmPushNil();
+         hb_vmPushLongConst( HB_DBG_MODULENAME );
+         hb_vmPushString( szModuleName, strlen( szModuleName ) );
+         hb_vmDo( 2 );
+      }
       s_bDebuggerIsWorking = FALSE;
       s_bDebugShowLines = TRUE;
    }
@@ -5153,15 +5218,19 @@ static void hb_vmDebuggerEndProc( void )
    s_bDebugShowLines = FALSE;
    s_bDebuggerIsWorking = TRUE;
 
-   hb_stackPushReturn();      /* saves the previous returned value */
+   if( hb_vm_pFunDbgEntry )
+      hb_vm_pFunDbgEntry( HB_DBG_ENDPROC, 0, NULL, 0, 0 );
+   else
+   {
+      hb_stackPushReturn();      /* saves the previous returned value */
 
-   hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
-   hb_vmPushNil();
-   hb_vmPushLongConst( HB_DBG_ENDPROC );
-   hb_vmDo( 1 );
+      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+      hb_vmPushNil();
+      hb_vmPushLongConst( HB_DBG_ENDPROC );
+      hb_vmDo( 1 );
 
-   hb_stackPopReturn();       /* restores the previous returned value */
-
+      hb_stackPopReturn();       /* restores the previous returned value */
+   }
    s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
@@ -5171,12 +5240,18 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerShowLine(%hu)", uiLine));
 
    s_bDebugShowLines = FALSE;
-   hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
-   hb_vmPushNil();
-   hb_vmPushLongConst( HB_DBG_SHOWLINE );
-   hb_vmPushInteger( uiLine );
    s_bDebuggerIsWorking = TRUE;
-   hb_vmDo( 2 );
+
+   if ( hb_vm_pFunDbgEntry )
+      hb_vm_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, 0 );
+   else
+   {
+      hb_vmPushSymbol( s_pDynsDbgEntry->pSymbol );
+      hb_vmPushNil();
+      hb_vmPushLongConst( HB_DBG_SHOWLINE );
+      hb_vmPushInteger( uiLine );
+      hb_vmDo( 2 );
+   }
    s_bDebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
@@ -9009,14 +9084,33 @@ void hb_vmRequestDebug( void )
    s_bDebugRequest = TRUE;
 }
 
-/* check if the debugger activation was requested or request the debugger
-activation if .T. is passed
-*/
+HB_EXPORT BOOL hb_dbg_InvokeDebug( BOOL bInvoke )
+{
+   BOOL bRequest = s_bDebugRequest;
+
+   s_bDebugRequest = bInvoke;
+   return bRequest;
+}
+
+HB_EXPORT PHB_ITEM hb_dbg_vmVarSGet( int nStatic, int nOffset )
+{
+   return hb_arrayGetItemPtr( &s_aStatics, nStatic + nOffset );
+}
+
+HB_EXPORT ULONG hb_dbg_ProcLevel( void )
+{
+   return hb_stackCallDepth();
+}
+
+/*
+ * check if the debugger activation was requested or request the debugger
+ * activation if .T. is passed
+ */
 HB_FUNC( HB_DBG_INVOKEDEBUG )
 {
    BOOL bRequest = s_bDebugRequest;
    if( hb_pcount() > 0 )
-      s_bDebugRequest = hb_parl(1);
+      s_bDebugRequest = hb_parl( 1 );
    else
       s_bDebugRequest = FALSE;
    hb_retl( bRequest );
@@ -9030,7 +9124,7 @@ HB_FUNC( HB_DBG_VMVARSLIST )
 {
    PHB_ITEM pStatics = hb_itemClone( &s_aStatics );
 
-   hb_itemRelease( hb_itemReturn( pStatics ) );
+   hb_itemRelease( hb_itemReturnForward( pStatics ) );
 }
 
 /* $Doc$
@@ -9039,7 +9133,7 @@ HB_FUNC( HB_DBG_VMVARSLIST )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSLEN )
 {
-   hb_retnl( s_aStatics.item.asArray.value->ulLen );
+   hb_retnl( hb_arrayLen( &s_aStatics ) );
 }
 
 /* $Doc$
@@ -9048,7 +9142,7 @@ HB_FUNC( HB_DBG_VMVARSLEN )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSGET )
 {
-   hb_arrayGet( &s_aStatics, hb_parni(1) + hb_parni(2), hb_stackReturnItem() );
+   hb_itemReturn( hb_dbg_vmVarSGet( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 
 /* $Doc$
@@ -9057,13 +9151,70 @@ HB_FUNC( HB_DBG_VMVARSGET )
  * $End$ */
 HB_FUNC( HB_DBG_VMVARSSET )
 {
-   hb_arraySet( &s_aStatics, hb_parni(1) + hb_parni(2), hb_itemParamPtr( 3, HB_IT_ANY ) );
+   PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
+   if( pItem )
+      hb_arraySet( &s_aStatics, hb_parni( 1 ) + hb_parni( 2 ), pItem );
 }
 
 HB_FUNC( HB_DBG_PROCLEVEL )
 {
-   hb_retnl( hb_stackCallDepth() - 1 );   /* Don't count self */
+   hb_retnl( hb_dbg_ProcLevel() - 1 );   /* Don't count self */
 }
+
+/*
+ * These functions are for GLOBAL variables - now they are only for
+ * compatibility with xHarbour debugger - Harbour does not support
+ * GLOBALs
+ */
+HB_EXPORT ULONG hb_dbg_vmVarGCount( void )
+{
+#if 0
+   return hb_arrayLen( &s_aGlobals );
+#else
+   return 0;
+#endif
+}
+
+HB_EXPORT PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset )
+{
+#if 0
+   return hb_arrayGetItemPtr( &s_aGlobals, nGlobal + nOffset );
+#else
+   HB_SYMBOL_UNUSED( nGlobal );
+   HB_SYMBOL_UNUSED( nOffset );
+   return NULL;
+#endif
+}
+
+/* $Doc$
+ * $FuncName$     <aStat> __vmVarGList()
+ * $Description$  Return a clone of the globals array.
+ * $End$ */
+HB_FUNC( HB_DBG_VMVARGLIST )
+{
+#if 0
+   PHB_ITEM pGlobals = hb_itemClone( &s_aGlobals );
+#else
+   PHB_ITEM pGlobals = hb_itemArrayNew( 0 );
+#endif
+
+   hb_itemRelease( hb_itemReturnForward( pGlobals ) );
+}
+
+HB_FUNC( HB_DBG_VMVARGGET )
+{
+   hb_itemReturn( hb_dbg_vmVarGGet( hb_parni( 1 ), hb_parni( 2 ) ) );
+}
+
+HB_FUNC( HB_DBG_VMVARGSET )
+{
+#if 0
+   PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
+   if( pItem )
+      hb_arraySet( &s_aGlobals, hb_parni( 1 ) + hb_parni( 2 ), pItem );
+#endif
+}
+
 
 /* ------------------------------------------------------------------------ */
 /* The garbage collector interface */
@@ -9139,24 +9290,29 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
 }
 
 
+HB_FUNC( __VMVARGLIST )
+{
+   HB_FUNC_EXEC( HB_DBG_VMVARGLIST );
+}
+
 HB_FUNC( __VMVARSLIST )
 {
-   HB_FUNCNAME(HB_DBG_VMVARSLIST)();
+   HB_FUNC_EXEC( HB_DBG_VMVARSLIST );
 }
 
 HB_FUNC( __VMVARSLEN )
 {
-   HB_FUNCNAME(HB_DBG_VMVARSLEN)();
+   HB_FUNC_EXEC( HB_DBG_VMVARSLEN );
 }
 
 HB_FUNC( __VMVARSGET )
 {
-   HB_FUNCNAME(HB_DBG_VMVARSGET)();
+   HB_FUNC_EXEC( HB_DBG_VMVARSGET );
 }
 
 HB_FUNC( __VMVARSSET )
 {
-   HB_FUNCNAME(HB_DBG_VMVARSSET)();
+   HB_FUNC_EXEC( HB_DBG_VMVARSSET );
 }
 
 

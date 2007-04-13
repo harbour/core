@@ -33,6 +33,7 @@ C_SOURCES=\
 	gencli.c   \
 	hbcmplib.c \
 	hbcomp.c   \
+	hbdbginf.c \
 	hbfunchk.c \
 	hbgenerr.c \
 	hbpcode.c  \

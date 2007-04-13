@@ -85,6 +85,7 @@ extern void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
+extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
 extern void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] );
 

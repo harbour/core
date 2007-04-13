@@ -1182,6 +1182,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
 #define HB_FUNC_INIT( funcname )   static HARBOUR HB_FUN_init_##funcname ( void )
 #define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_exit_##funcname ( void )
 #define HB_FUNC_INITSTATICS( )     static HARBOUR hb_INITSTATICS( void )
+#define HB_FUNC_INITLINES( )       static HARBOUR hb_INITLINES( void )
 
 typedef ULONG HB_HANDLE;        /* handle to memvar value */
 typedef SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */

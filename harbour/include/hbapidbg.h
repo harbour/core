@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * GETENV(), GETE() functions
+ *    debugger C API
  *
- * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,78 +50,40 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- *    GETE()
- *
- * See doc/license.txt for licensing terms.
- *
- */
+#ifndef HB_APIDBG_H_
+#define HB_APIDBG_H_
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 
-/* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the
-         function will return an empty string if called with more than one
-         parameter. [vszakats] */
+HB_EXTERN_BEGIN
 
-HB_FUNC( GETENV )
-{
-   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+/* Debugger API */
+typedef void (*HB_DBGENTRY_FUNC) ( int , int , char *, int , int );
+HB_EXPORT extern HB_DBGENTRY_FUNC hb_vm_pFunDbgEntry;
+HB_EXPORT extern BOOL hb_dbg_InvokeDebug( BOOL bInvoke );
+HB_EXPORT extern ULONG hb_dbg_ProcLevel( void );
+HB_EXPORT extern PHB_ITEM hb_dbg_vmVarSGet( int nStatic, int nOffset );
+HB_EXPORT extern PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal );
+HB_EXPORT extern ULONG hb_dbg_vmVarGCount( void );
+HB_EXPORT extern PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset );
+HB_EXPORT extern void hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame );
+HB_EXPORT extern void hb_dbgAddBreak( void *handle, char *cModule, int nLine, char *szFunction );
+HB_EXPORT extern void hb_dbgAddWatch( void *handle, char *szExpr, BOOL bTrace );
+HB_EXPORT extern void hb_dbgDelBreak( void *handle, int nBreak );
+HB_EXPORT extern void hb_dbgDelWatch( void *handle, int nWatch );
+HB_EXPORT extern PHB_ITEM hb_dbgGetExpressionValue( void *handle, char *expression );
+HB_EXPORT extern PHB_ITEM hb_dbgGetSourceFiles( void *handle );
+HB_EXPORT extern PHB_ITEM hb_dbgGetWatchValue( void *handle, int nWatch );
+HB_EXPORT extern BOOL hb_dbgIsValidStopLine( void *handle, char *szModule, int nLine );
+HB_EXPORT extern void hb_dbgSetCBTrace( void *handle, BOOL bCBTrace );
+HB_EXPORT extern void hb_dbgSetGo( void *handle );
+HB_EXPORT extern void hb_dbgSetInvoke( void *handle, BOOL ( *pFunInvoke )( void ) );
+HB_EXPORT extern void hb_dbgSetNextRoutine( void *handle );
+HB_EXPORT extern void hb_dbgSetQuit( void *handle );
+HB_EXPORT extern void hb_dbgSetToCursor( void *handle, char *szModule, int nLine );
+HB_EXPORT extern void hb_dbgSetTrace( void *handle );
+HB_EXPORT extern void hb_dbgSetWatch( void *handle, int nWatch, char *szExpr, BOOL bTrace );
 
-   if( pName )
-   {
-      char * pszName = hb_itemGetC( pName );
-      ULONG ulName = strlen( pszName );
-      ULONG ulPos;
+HB_EXTERN_END
 
-      /* strip the '=' or else it will clear the variable! */
-
-      for( ulPos = 0; ulPos < ulName; ulPos++ )
-      {
-         if( pszName[ ulPos ] == '=' )
-         {
-            pszName[ ulPos ] = '\0';
-            break;
-         }
-      }
-
-      if( pszName[ 0 ] != '\0' )
-      {
-         char * szValue;
-
-         /* NOTE: Convert the envvar name to uppercase. This is required for
-                  DOS and OS/2 systems. [vszakats] */
-
-         #if defined(HB_OS_DOS) || defined(HB_OS_OS2)
-            hb_strupr( pszName );
-         #endif
-
-         szValue = hb_getenv( pszName );
-         if( szValue && szValue[ 0 ] != '\0' )
-            hb_retc_buffer( szValue );
-         else
-         {
-            if( szValue )
-               hb_xfree( szValue );
-            hb_retc( hb_parcx( 2 ) );
-         }
-      }
-      else
-         hb_retc( NULL );
-
-      hb_itemFreeC( pszName );
-   }
-   else
-      hb_retc( NULL );
-}
-
-/* NOTE: Undocumented Clipper function. [vszakats] */
-
-HB_FUNC( GETE )
-{
-   HB_FUNC_EXEC( GETENV );
-}
+#endif /* HB_APICLS_H_ */

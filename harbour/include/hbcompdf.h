@@ -470,6 +470,16 @@ typedef struct HB_RTVAR_
    struct HB_RTVAR_ *pPrev;
 } HB_RTVAR, *HB_RTVAR_PTR;
 
+typedef struct _HB_DEBUGINFO
+{
+   char *   pszModuleName;
+   ULONG    ulFirstLine;
+   ULONG    ulLastLine;
+   ULONG    ulAllocated;
+   BYTE *   pLineMap;
+   struct _HB_DEBUGINFO * pNext;
+} HB_DEBUGINFO, * PHB_DEBUGINFO;
+
 typedef struct _HB_LABEL_INFO
 {
    FILE *   yyc;
@@ -589,6 +599,7 @@ typedef struct _HB_COMP
    PCOMCLASS         pLastClass;
    PCOMCLASS         pReleaseClass;
    PFUNCTION         pInitFunc;
+   PFUNCTION         pLineFunc;
    PHB_FNAME         pMainFileName;
    PHB_FNAME         pFileName;
    PHB_FNAME         pOutPath;

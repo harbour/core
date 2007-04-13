@@ -52,7 +52,9 @@
 
 #include "hbvmopt.h"
 #include "hbapi.h"
+#include "hbapidbg.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbstack.h"
 
 /* $Doc$
@@ -182,12 +184,10 @@ HB_FUNC( HB_DBG_VMPARLLIST )
    hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
 }
 
-HB_FUNC( HB_DBG_VMVARLGET )
+HB_EXPORT PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
 {
-   int iLevel = hb_parni( 1 ) + 1;
-   int iLocal = hb_parni( 2 );
+   PHB_ITEM pLocal = NULL;
    LONG lBaseOffset;
-   PHB_ITEM pLocal;
 
    lBaseOffset = hb_stackBaseOffset();
    while( iLevel-- > 0 && lBaseOffset > 1 )
@@ -208,9 +208,21 @@ HB_FUNC( HB_DBG_VMVARLGET )
 
       if( HB_IS_BYREF( pLocal ) )
          pLocal = hb_itemUnRef( pLocal );
-
-      hb_itemReturn( pLocal );
    }
+
+   return pLocal;
+}
+
+HB_FUNC( HB_DBG_VMVARLGET )
+{
+   int iLevel = hb_parni( 1 ) + 1;
+   int iLocal = hb_parni( 2 );
+   PHB_ITEM pLocal = hb_dbg_vmVarLGet( iLevel, iLocal );
+
+   if( pLocal )
+      hb_itemReturn( pLocal );
+   else
+      hb_errRT_BASE( EG_ARG, 9999, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_DBG_VMVARLSET )

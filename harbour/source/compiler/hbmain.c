@@ -160,12 +160,14 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
       {
          printf( "\n" );
          hb_verBuildInfo();
+         hb_compMainExit( HB_COMP_PARAM );
          return iStatus;
       }
 
       if( HB_COMP_PARAM->fCredits )
       {
          hb_compPrintCredits();
+         hb_compMainExit( HB_COMP_PARAM );
          return iStatus;
       }
 
@@ -2338,7 +2340,7 @@ void hb_compGenModuleName( HB_COMP_DECL, char * szFunName )
    hb_compGenPCode1( ':', HB_COMP_PARAM );
    if( szFunName && *szFunName )
       hb_compGenPCodeN( ( BYTE * ) szFunName, strlen( szFunName ) + 1, HB_COMP_PARAM );
-   else /* special version for included files */
+   else /* special version "filename:" when the file changes within function */
       hb_compGenPCode1( '\0', HB_COMP_PARAM );
    HB_COMP_PARAM->lastModule = HB_COMP_PARAM->currModule;
    HB_COMP_PARAM->lastLine = -1;
@@ -3992,7 +3994,7 @@ void hb_compStaticDefStart( HB_COMP_DECL )
          /* uncomment this if you want to always set main module name
             not the one where first static variable was declared */
          /* HB_COMP_PARAM->currModule = HB_COMP_PARAM->szFile; */
-         hb_compGenModuleName( HB_COMP_PARAM, "" );
+         hb_compGenModuleName( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName );
       }
    }
    else
@@ -4011,6 +4013,43 @@ void hb_compStaticDefEnd( HB_COMP_DECL )
    HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc->pOwner;
    HB_COMP_PARAM->pInitFunc->pOwner = NULL;
    ++HB_COMP_PARAM->iStaticCnt;
+}
+
+/*
+ * Start of stop line number info generation
+ */
+static void hb_compLineNumberDefStart( HB_COMP_DECL )
+{
+   if( ! HB_COMP_PARAM->pLineFunc )
+   {
+      HB_COMP_PARAM->pLineFunc = hb_compFunctionNew( HB_COMP_PARAM, "(_INITLINES)", HB_FS_INITEXIT );
+      HB_COMP_PARAM->pLineFunc->pOwner = HB_COMP_PARAM->functions.pLast;
+      HB_COMP_PARAM->pLineFunc->bFlags = 0;
+      HB_COMP_PARAM->pLineFunc->cScope = HB_FS_INITEXIT | HB_FS_LOCAL;
+      HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pLineFunc;
+
+      if( HB_COMP_PARAM->fDebugInfo )
+      {
+         /* set main module name */
+         HB_COMP_PARAM->currModule = HB_COMP_PARAM->szFile;
+         hb_compGenModuleName( HB_COMP_PARAM, HB_COMP_PARAM->pLineFunc->szName );
+      }
+   }
+   else
+   {
+      HB_COMP_PARAM->pLineFunc->pOwner = HB_COMP_PARAM->functions.pLast;
+      HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pLineFunc;
+   }
+}
+
+/*
+ * End of stop line number info generation
+ * Return to previously pcoded function.
+ */
+static void hb_compLineNumberDefEnd( HB_COMP_DECL )
+{
+   HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pLineFunc->pOwner;
+   HB_COMP_PARAM->pLineFunc->pOwner = NULL;
 }
 
 /*
@@ -4249,6 +4288,7 @@ static void hb_compInitVars( HB_COMP_DECL )
    HB_COMP_PARAM->symbols.pFirst   = NULL;
    HB_COMP_PARAM->symbols.pLast    = NULL;
    HB_COMP_PARAM->pInitFunc        = NULL;
+   HB_COMP_PARAM->pLineFunc        = NULL;
    HB_COMP_PARAM->fAnyWarning      = FALSE;
 
    HB_COMP_PARAM->iFunctionCnt     = 0;
@@ -4338,6 +4378,17 @@ static void hb_compOutputFile( HB_COMP_DECL )
             HB_COMP_PARAM->pFileName->szExtension = HB_COMP_PARAM->pOutPath->szExtension;
       }
    }
+}
+
+static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
+{
+   PCOMSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+
+   pSym->cScope |= pFunc->cScope;
+   HB_COMP_PARAM->functions.pLast->pNext = pFunc;
+   HB_COMP_PARAM->functions.pLast = pFunc;
+   hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+   ++HB_COMP_PARAM->functions.iCount;
 }
 
 static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
@@ -4455,7 +4506,6 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
 
          if( HB_COMP_PARAM->pInitFunc )
          {
-            PCOMSYMBOL pSym;
             char szNewName[ 25 ];
 
             /* Fix the number of static variables */
@@ -4466,12 +4516,40 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             snprintf( szNewName, sizeof( szNewName ), "(_INITSTATICS%05d)", HB_COMP_PARAM->iStaticCnt );
             HB_COMP_PARAM->pInitFunc->szName = hb_compIdentifierNew( HB_COMP_PARAM, szNewName, HB_IDENT_COPY );
 
-            pSym = hb_compSymbolAdd( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName, NULL, HB_SYM_FUNCNAME );
-            pSym->cScope |= HB_COMP_PARAM->pInitFunc->cScope;
-            HB_COMP_PARAM->functions.pLast->pNext = HB_COMP_PARAM->pInitFunc;
-            HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
-            hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-            ++HB_COMP_PARAM->functions.iCount;
+            hb_compAddInitFunc( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc );
+         }
+
+         if( HB_COMP_PARAM->fLineNumbers && HB_COMP_PARAM->fDebugInfo )
+         {
+            PHB_DEBUGINFO pInfo = hb_compGetDebugInfo( HB_COMP_PARAM ), pNext;
+            if( pInfo )
+            {
+               int iModules = 0;
+               hb_compLineNumberDefStart( HB_COMP_PARAM );
+               do
+               {
+                  ULONG ulSkip = pInfo->ulFirstLine >> 3;
+                  ULONG ulLen = ( ( pInfo->ulLastLine + 7 ) >> 3 ) - ulSkip;
+
+                  hb_compGenPushString( pInfo->pszModuleName, strlen( pInfo->pszModuleName ) + 1, HB_COMP_PARAM );
+                  hb_compGenPushLong( ulSkip << 3, HB_COMP_PARAM );
+                  hb_compGenPushString( ( char * ) pInfo->pLineMap + ulSkip, ulLen + 1, HB_COMP_PARAM );
+                  hb_compGenPCode3( HB_P_ARRAYGEN, 3, 0, HB_COMP_PARAM );
+                  iModules++;
+
+                  pNext = pInfo->pNext;
+                  hb_xfree( pInfo->pszModuleName );
+                  hb_xfree( pInfo->pLineMap );
+                  hb_xfree( pInfo );
+                  pInfo = pNext;
+               }
+               while( pInfo );
+
+               hb_compGenPCode3( HB_P_ARRAYGEN, HB_LOBYTE( iModules ), HB_HIBYTE( iModules ), HB_COMP_PARAM );
+               hb_compGenPCode1( HB_P_RETVALUE, HB_COMP_PARAM );
+               hb_compLineNumberDefEnd( HB_COMP_PARAM );
+               hb_compAddInitFunc( HB_COMP_PARAM, HB_COMP_PARAM->pLineFunc );
+            }
          }
 
          if( HB_COMP_PARAM->szAnnounce )
