@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 19:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/include/Makefile
+    ! added install of hbcompat.ch
+  * harbour/source/debug/dbgtarr.prg
+  * harbour/source/debug/dbgtobj.prg  
+  * harbour/source/debug/dbgthsh.prg     
+    * added missed #ifndef HB_NO_READDBG
+
 2007-04-13 18:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile

@@ -100,6 +100,7 @@ PRG_HEADERS=\
 	std.ch       \
 	tbrowse.ch   \
 	usrrdd.ch    \
+	hbcompat.ch
 
 API_HEADERS=\
 	error.api    \

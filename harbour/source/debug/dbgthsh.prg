@@ -283,6 +283,8 @@ return cResult
 
 METHOD doGet( oBro, pItem, nSet ) Class TDBGHash
 
+#ifndef HB_NO_READDBG
+
     LOCAL nKey
     local getlist := {}
     // save state
@@ -323,6 +325,14 @@ METHOD doGet( oBro, pItem, nSet ) Class TDBGHash
     IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
         KEYBOARD CHR( nKey )
     END
+
+#else
+
+    HB_SYMBOL_UNUSED( oBro )
+    HB_SYMBOL_UNUSED( pItem )
+    HB_SYMBOL_UNUSED( nSet )
+
+#endif
 
 RETURN  nil
 

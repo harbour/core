@@ -313,6 +313,9 @@ static function ValToStr( uVal )
 return cResult
 
 METHOD doGet(oBro,pItem,nSet) class tdbgObject
+
+#ifndef HB_NO_READDBG
+
     LOCAL column,  nKey
     local getlist:={}
     // save state
@@ -324,6 +327,8 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     // make sure browse is stable
     obro:forcestable()
     // if confirming new record, append blank
+
+
 
     // set insert key to toggle insert mode and cursor
     SetKey( K_INS, ;
@@ -360,6 +365,15 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
         KEYBOARD CHR( nKey )
     END
+
+#else
+
+    HB_SYMBOL_UNUSED( oBro )
+    HB_SYMBOL_UNUSED( pItem )
+    HB_SYMBOL_UNUSED( nSet )
+
+#endif
+
 RETURN nil
 
 static FUNC maxelem( a )
