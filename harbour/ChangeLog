@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 17:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tget.prg
+     ! Get method UpdateBuffer() fixed to be effective only 
+       when the object has focus (as per the C52 docs and 
+       Lorenzo's report).
+
 2007-04-13 12:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/debug/debugger.prg
      ! Fixed a few compile errors.

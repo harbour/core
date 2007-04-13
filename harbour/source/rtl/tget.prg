@@ -135,7 +135,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform( cBuffer )
-   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask( ), iif(::lEdit, ::Assign(),), ::Display(), Self
+   METHOD UpdateBuffer()
 
    METHOD VarGet()
    METHOD VarPut(xValue, lReFormat)
@@ -363,6 +363,24 @@ METHOD Assign() CLASS Get
 
    if ::hasFocus
       ::VarPut( ::unTransform(), .f.  )
+   endif
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD UpdateBuffer() CLASS Get
+
+   if ::hasFocus
+
+      ::buffer := ::PutMask()
+
+      IF ::lEdit
+         ::Assign()
+      ENDIF
+
+      ::Display()
+
    endif
 
 return Self
@@ -1214,7 +1232,6 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    local cMask
    local nFor
    local nNoEditable := 0
-
 
    if ::cType == NIL
       //not initialized yet
