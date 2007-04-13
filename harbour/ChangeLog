@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 18:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/valtoexp.prg
+    + added HB_VALTOEXP() and HB_CSTR()
+
+  * harbour/source/debug/dbgthsh.prg
+  * harbour/source/debug/debugger.prg
+    * replaced CSTR() with HB_CSTR() and SETLASTKEY() with HB_SETLASTKEY()
+      now debugger can be used without CT and TIP libraries
+
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/hbgtcore.c
+    + added GTI_ISMULTIWIN, GTI_GETWIN, GTI_SETWIN, GTI_NEWWIN
+      and TODO note - it's not finished yet, work in progress
+
 2007-04-13 17:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tget.prg
      ! Get method UpdateBuffer() fixed to be effective only 

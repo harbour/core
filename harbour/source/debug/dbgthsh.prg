@@ -372,7 +372,7 @@ static function HashKeyString( hHash, nAt )
      CASE cType == "N"
           cString := AllTrim( Str( xVal ) )
      OTHERWISE
-          cString := AllTrim( cStr( xVal ) )
+          cString := AllTrim( HB_CStr( xVal ) )
   ENDCASE
 
 RETURN cString

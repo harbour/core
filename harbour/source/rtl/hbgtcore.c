@@ -1451,6 +1451,7 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_FULLSCREEN:
       case GTI_KBDSUPPORT:
       case GTI_ISCTWIN:
+      case GTI_ISMULTIWIN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
          break;
 
@@ -1479,6 +1480,15 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, hb_gt_MaxRow() );
          break;
+/*
+   TODO:
+      case GTI_GETWIN:
+         // save screen buffer, cursor shape and possition
+      case GTI_SETWIN:
+         // restore screen buffer, cursor shape and possition
+      case GTI_NEWWIN:
+         // clear screen area, set default cursor shape and position
+*/
 
       default:
          return FALSE;

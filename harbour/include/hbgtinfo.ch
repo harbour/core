@@ -117,6 +117,10 @@
 #define GTI_STDERRCON         39  /* redirect STDERR to console */
 
 #define GTI_ISCTWIN           40  /* is CTWIN supported? */
+#define GTI_ISMULTIWIN        41  /* is multi window supported? */
+#define GTI_GETWIN            42  /* get current window handle or screen settings */
+#define GTI_SETWIN            43  /* restore window or screen settings */
+#define GTI_NEWWIN            44  /* create new window */
 
 /* these are used _by_ MaxRow/Col */
 #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */

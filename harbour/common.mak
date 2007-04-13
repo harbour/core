@@ -456,6 +456,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\trim.obj     \
     $(OBJ_DIR)\type.obj     \
     $(OBJ_DIR)\val.obj      \
+    $(OBJ_DIR)\valtoexp.obj \
     $(OBJ_DIR)\valtostr.obj \
     $(OBJ_DIR)\valtype.obj  \
     $(OBJ_DIR)\version.obj  \

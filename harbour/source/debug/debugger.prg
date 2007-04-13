@@ -1264,7 +1264,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS TDebugger
     xResult := oErr:operation + ": " + oErr:description
     IF ValType( oErr:args ) == 'A'
       xResult += "; arguments:"
-      AEval( oErr:args, {|x| xResult += " " + AllTrim( CStr( x ) ) } )
+      AEval( oErr:args, {|x| xResult += " " + AllTrim( HB_CStr( x ) ) } )
     ENDIF
     lValid := .F.
   END SEQUENCE
@@ -2277,7 +2277,7 @@ METHOD RestoreAppState() CLASS TDebugger
   Set( _SET_DIRCASE, ::nAppDirCase )
   Set( _SET_FILECASE, ::nAppFileCase )
   Set( _SET_TYPEAHEAD, ::nAppTypeAhead )
-  SetLastKey( ::nAppLastKey )
+  HB_SetLastKey( ::nAppLastKey )
 #ifdef __XHARBOUR__
   SetInkeyAfterBlock( ::bAppInkeyAfter )
   SetInkeyBeforeBlock( ::bAppInkeyBefore )

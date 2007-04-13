@@ -185,6 +185,7 @@ PRG_SOURCES=\
 	ttextlin.prg \
 	ttopbar.prg  \
 	typefile.prg \
+	valtoexp.prg \
 	wait.prg     \
 
 LIBNAME=rtl
