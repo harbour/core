@@ -68,7 +68,7 @@
 
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible.
-         ADDITION: Same goes for DevPos(), always use SetPod() instead.
+         ADDITION: Same goes for DevPos(), always use SetPos() instead.
          [vszakats] */
 
 /* TODO: :firstScrCol() --> nScreenCol

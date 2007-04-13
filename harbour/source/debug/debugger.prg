@@ -64,14 +64,12 @@
 
 //#pragma -es0
 
-
 #pragma BEGINDUMP
 
 #include "hbapigt.h"
 #include "hbapidbg.h"
 
 #pragma ENDDUMP
-
 
 #include "hbclass.ch"
 #include "hbmemvar.ch"
@@ -1575,6 +1573,10 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS TDebugger
    local lExit
    local oWndInput := TDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
+#ifndef HB_NO_READDBG
+   local bMouseSave
+   local oGet
+#endif
 
    DEFAULT lEditable TO .t.
 
@@ -1964,6 +1966,7 @@ METHOD Open() CLASS TDebugger
    LOCAL cFileName
    LOCAL cRealName
    LOCAL aFiles := ::GetSourceFiles()
+   LOCAL cExt
 
    ASort( aFiles )
    ASize( aFiles, Len( aFiles ) + 1 )
@@ -1990,7 +1993,8 @@ METHOD Open() CLASS TDebugger
          cFileName := cRealName
       endif
       ::cPrgName := cFileName
-      ::lppo := RAT(".PPO", UPPER(cFileName)) > 0
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      ::lppo := ( Lower( cExt ) == ".ppo" )
       ::oPulldown:GetItemByIdent( "PPO" ):Checked := ::lppo
       ::oBrwText := nil
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
@@ -2007,27 +2011,23 @@ return nil
 
 
 METHOD OpenPPO() CLASS TDebugger
-   LOCAL nPos
    LOCAL lSuccess:=.F.
+   LOCAL cDir, cName, cExt
 
    IF Empty( ::cPrgName )
       RETURN .F.
    ENDIF
 
-   nPos := RAT(".PPO", UPPER(::cPrgName))
-   IF( nPos == 0 )
-      nPos := RAT(".PRG", UPPER(::cPrgName))
-      IF( nPos > 0 )
-         ::cPrgName := LEFT(::cPrgName,nPos-1) + ".ppo"
-      ELSE
-         ::cPrgName += ".ppo"
-      ENDIF
-      lSuccess := FILE(::cPrgName)
-      ::lppo := lSuccess
-   ELSE
-      ::cPrgName := LEFT(::cPrgName,nPos-1) + ".prg"
+   hb_FNameSplit( ::cPrgName, @cDir, @cName, @cExt )
+
+   IF Lower( cExt ) == ".ppo"
+      ::cPrgName := hb_FNameMerge( cDir, cName, ".prg" )
       lSuccess := FILE( ::cPrgName )
       ::lppo := !lSuccess
+   ELSE
+      ::cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
+      lSuccess := FILE( ::cPrgName )
+      ::lppo := lSuccess
    ENDIF
 
    IF( lSuccess )
@@ -2597,7 +2597,7 @@ return nil
 
 
 METHOD ShowCodeLine( nProc ) CLASS TDebugger
-   LOCAL nPos
+   LOCAL cDir, cName
    LOCAL nLine, cPrgName
 
    // we only update the stack window and up a new browse
@@ -2619,12 +2619,8 @@ METHOD ShowCodeLine( nProc ) CLASS TDebugger
       ENDIF
 
       if( ::lppo )
-         nPos :=RAT(".PRG", UPPER(cPrgName) )
-         IF( nPos > 0 )
-            cPrgName := LEFT( cPrgName, nPos-1 ) + ".ppo"
-         ELSE
-            cPrgName += cPrgName +".ppo"
-         ENDIF
+         hb_FNameSplit( cPrgName, @cDir, @cName, NIL )
+         cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
       endif
 
       if ! empty( cPrgName )

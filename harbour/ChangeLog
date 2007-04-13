@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 12:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/debug/debugger.prg
+     ! Fixed a few compile errors.
+     ! Reapplied (and extended) a former fix regarding 
+       the proper handling of the filenames.
+
+   * harbour/source/rtl/tbrowse.prg
+     ; Cosmetic.
+
 2007-04-13 11:50 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/common.mak
     ! updated for new files
