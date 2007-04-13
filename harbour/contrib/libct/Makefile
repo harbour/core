@@ -25,6 +25,7 @@ C_SOURCES = \
 	count.c \
 	ctc.c \
 	ctmath.c \
+	ctmath2.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
@@ -37,7 +38,6 @@ C_SOURCES = \
 	ftoc.c \
 	justify.c \
 	keyset.c \
-	math.c \
 	misc1.c \
 	num1.c \
 	numat.c \

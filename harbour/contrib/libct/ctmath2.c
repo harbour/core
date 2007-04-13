@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code: 
  *
  *   CT3 mathematical functions
@@ -107,7 +111,7 @@ HB_FUNC( FLOOR )
     hb_mathResetError();
     dResult = floor (dInput);  
       
-    hb_retni( (int)dResult );
+    hb_retnlen( dResult, 0, 0 );
   }
   else
   {
@@ -121,8 +125,7 @@ HB_FUNC( FLOOR )
     
     if (pSubst != NULL)
     {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
+      hb_itemRelease( hb_itemReturnForward( pSubst ) );
     }
     else
     {
@@ -179,7 +182,7 @@ HB_FUNC( CEILING )
     hb_mathResetError();
     dResult = ceil (dInput);  
      
-    hb_retni( (int)dResult );
+    hb_retnlen( dResult, 0, 0 );
   }
   else
   {
@@ -193,8 +196,7 @@ HB_FUNC( CEILING )
     
     if (pSubst != NULL)
     {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
+      hb_itemRelease( hb_itemReturnForward( pSubst ) );
     }
     else
     {
@@ -274,8 +276,7 @@ HB_FUNC( SIGN )
     
     if (pSubst != NULL)
     {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
+      hb_itemRelease( hb_itemReturnForward( pSubst ) );
     }
     else
     {
@@ -375,8 +376,7 @@ HB_FUNC( LOG10 )
     
     if (pSubst != NULL)
     {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
+      hb_itemRelease( hb_itemReturnForward( pSubst ) );
     }
     else
     {
@@ -459,8 +459,7 @@ HB_FUNC( FACT )
     
     if (pSubst != NULL)
     {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
+      hb_itemRelease( hb_itemReturnForward( pSubst ) );
     }
     else
     {

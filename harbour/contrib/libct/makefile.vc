@@ -130,6 +130,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
+   $(OBJ_DIR)\ctmath2.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -139,7 +140,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ftoc.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
-   $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
@@ -201,6 +201,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\count.* del $(OBJ_DIR)\count.*
    -@if exist $(OBJ_DIR)\ctc.* del $(OBJ_DIR)\ctc.*
    -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
+   -@if exist $(OBJ_DIR)\ctmath2.* del $(OBJ_DIR)\ctmath2.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
@@ -209,7 +210,6 @@ CLEAN:
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
    -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
-   -@if exist $(OBJ_DIR)\math.* del $(OBJ_DIR)\math.*
    -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
    -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*

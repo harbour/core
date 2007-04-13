@@ -258,6 +258,7 @@ COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\cmdcheck.obj \
     $(OBJ_DIR)\hbcomp.obj   \
     $(OBJ_DIR)\hbcmplib.obj \
+    $(OBJ_DIR)\hbdbginf.obj \
     $(OBJ_DIR)\hbdead.obj   \
     $(OBJ_DIR)\hbstripl.obj \
     $(OBJ_DIR)\hbusage.obj  \
@@ -290,6 +291,7 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\classes.obj  \
     $(OBJ_DIR)\cmdarg.obj   \
     $(OBJ_DIR)\codebloc.obj \
+    $(OBJ_DIR)\dbgentry.obj \
     $(OBJ_DIR)\debug.obj    \
     $(OBJ_DIR)\dynlibhb.obj \
     $(OBJ_DIR)\dynsym.obj   \

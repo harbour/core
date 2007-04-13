@@ -110,6 +110,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
+   $(OBJ_DIR)\ctmath2.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
@@ -122,7 +123,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ftoc.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
-   $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
@@ -252,6 +252,10 @@ $(OBJ_DIR)\ctmath.obj : $(TOOLS_DIR)\ctmath.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\ctmath2.obj : $(TOOLS_DIR)\ctmath2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ctset.obj : $(TOOLS_DIR)\ctset.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -297,10 +301,6 @@ $(OBJ_DIR)\justify.obj : $(TOOLS_DIR)\justify.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\keyset.obj : $(TOOLS_DIR)\keyset.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\math.obj : $(TOOLS_DIR)\math.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

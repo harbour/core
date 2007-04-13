@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-13 11:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    ! updated for new files
+
+  * harbour/contrib/libct/Makefile
+  - harbour/contrib/libct/math.c
+  + harbour/contrib/libct/ctmath2.c
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * renamed math.c to ctmath2.c
+
 2007-04-13 03:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   + harbour/include/hbapidbg.h
