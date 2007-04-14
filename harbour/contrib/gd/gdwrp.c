@@ -175,6 +175,23 @@ static void SaveImageToFile( char *szFile, void *iptr, int sz )
 
 /* ---------------------------------------------------------------------------*/
 
+static void AddImageToFile( char *szFile, void *iptr, int sz )
+{
+   FHANDLE fhandle;
+
+   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
+   {
+      /* move to end of file */
+      hb_fsSeek(fhandle, 0, FS_END);
+
+      /* Write Image */
+      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
+
+      /* Close file */
+      hb_fsClose( fhandle );
+   }
+}
+
 static void GDImageCreateFrom( int nType )
 {
    gdImagePtr im;
@@ -413,13 +430,28 @@ static void GDImageSaveTo( int nType )
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 
-HB_FUNC( GDVERSION ) // gdImagePtr gdImageCreate(sx, sy)
+HB_FUNC( GDVERSION )
 {
-#if ( GD_VERS >= 2033 )
+#if ( GD_VERS >= 2034 )
+   char szVer[ 30 ];
+   sprintf( szVer, "GD Version %s", GD_VERSION_STRING );
+   hb_retc( szVer );
+#elif ( GD_VERS >= 2033 )
    hb_retc( "GD Version 2.0.33" );
 #else
    hb_retc( "GD Version 2.0.28" );
-#endif   
+#endif
+}
+
+HB_FUNC( GDVERSIONNUMBER )
+{
+#if ( GD_VERS >= 2034 )
+   hb_retni( GD_MAJOR_VERSION * 1000 + GD_MINOR_VERSION * 100 + GD_RELEASE_VERSION );
+#elif ( GD_VERS >= 2033 )
+   hb_retni( 2033 );
+#else
+   hb_retni( 2028 );
+#endif
 }
 
 /* ---------------------------------------------------------------------------*/
@@ -443,7 +475,7 @@ HB_FUNC( GDIMAGECREATE ) // gdImagePtr gdImageCreate(sx, sy)
 
       /* Create the image */
       im = gdImageCreate( sx, sy );
-      
+
       /* Return image pointer */
       hb_retptr( im );
    }
@@ -1246,6 +1278,52 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) // void gdImageFillToBorder(gdImagePtr im, int x,
       }
    }
 }
+
+/* ---------------------------------------------------------------------------*/
+#if ( GD_VERS >= 2035 )
+HB_FUNC( GDIMAGEELLIPSE ) // void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color)
+{
+   if ( hb_pcount() == 6 &&
+        hb_parinfo( 1 ) & HB_IT_POINTER &&
+        hb_parinfo( 2 ) & HB_IT_NUMERIC &&
+        hb_parinfo( 3 ) & HB_IT_NUMERIC &&
+        hb_parinfo( 4 ) & HB_IT_NUMERIC &&
+        hb_parinfo( 5 ) & HB_IT_NUMERIC &&
+        hb_parinfo( 6 ) & HB_IT_NUMERIC
+      )
+   {
+      gdImagePtr im;
+      int cx, cy, w, h, color;
+
+      /* Retrieve image pointer */
+      im = (gdImagePtr)hb_parptr( 1 );
+
+      /* Retrieve point values */
+      cx = hb_parni( 2 );
+      cy = hb_parni( 3 );
+      /* Retrieve width and height values */
+      w  = hb_parni( 4 );
+      h  = hb_parni( 5 );
+      /* Retrieve color value */
+      color = hb_parni( 6 );
+
+      /* Draw a filled ellipse */
+      gdImageEllipse(im, cx, cy, w, h, color);
+
+   }
+   else
+   {
+      // Parameter error
+      {
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+            "GDIMAGEELLIPSE", 6,
+            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
+            hb_paramError( 5 ), hb_paramError( 6 ) );
+         return;
+      }
+   }
+}
+#endif // ( GD_VERS >= 2035 )
 
 /* ---------------------------------------------------------------------------*/
 
@@ -2534,11 +2612,14 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       if ( !( err ) )
       {
          /* Save in array the correct text rectangle dimensions */
-         PHB_ITEM pRect;
+         PHB_ITEM pArray;
+         pArray = hb_itemArrayNew( 8 );
          for( i = 0; i < 8; i ++ )
          {
-            hb_itemPutNI( hb_arrayGetItemPtr( pRect, i+1 ), aRect[i] );
+            hb_itemPutNI( hb_arrayGetItemPtr( pArray, i+1 ), aRect[i] );
          }
+         hb_itemCopy( pRect, pArray );
+         hb_itemRelease( pArray );
       }
       hb_retc( err );
 
@@ -3929,22 +4010,4 @@ HB_FUNC( GDIMAGEGIFANIMEND )
 
 
 /* ---------------------------------------------------------------------------*/
-
-static void AddImageToFile( char *szFile, void *iptr, int sz )
-{
-   FHANDLE fhandle;
-
-   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
-   {
-      /* move to end of file */
-      hb_fsSeek(fhandle, 0, FS_END);
-
-      /* Write Image */
-      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
-
-      /* Close file */
-      hb_fsClose( fhandle );
-   }
-}
-
 #endif // ( GD_VERS >= 2033 )

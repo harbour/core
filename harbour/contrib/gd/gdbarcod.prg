@@ -175,7 +175,7 @@ METHOD Draw( cText ) CLASS TCode
       ::DrawI25( cText )
    endif
 
-Return NIL 
+Return NIL
 
 METHOD Draw13(cText)  CLASS TCode
 
@@ -215,7 +215,11 @@ METHOD Draw13(cText)  CLASS TCode
 			// If we have to write text, we moved the barcode to the right to have space to put digit
          ::positionX = If( ::textfont == 0 , 0, 10 )
 
+         #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+         xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
+         #else
          xParity := ::Parity[ Val( ::text[1] ) ]
+         #endif
 
    		// First Bar
    		::positionX := 10
@@ -405,7 +409,7 @@ METHOD DrawText8() CLASS TCode
 
 Return NIL
 
-METHOD FIndCharCode( cstring, cchar ) CLASS TCode
+METHOD FindCharCode( cstring, cchar ) CLASS TCode
 
    LOCAL i
    LOCAL nC   := 0
@@ -457,24 +461,42 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
 		If cModeCode == "C"
 
+         #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+         npos := AsCAn( ::KeysmodeC, { |x| x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i+1, 1 ) } )
+         #else
          npos := AsCAn( ::KeysmodeC, { |x| x ==::Text[i]+::Text[i+1] } )
+         #endif
 
 			If npos == 0
-				::DrawError("With Code C, you must provide always pair of two integers. Char "+::text[i]+::text[i+1]+" not allowed." )
-				lerror := .T.
-		   EndIf
+				 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+				 ::DrawError("With Code C, you must provide always pair of two integers. Char "+SubStr( ::text, i, 1 )+SubStr( ::text, i+1, 1 )+" not allowed." )
+				 #else
+				 ::DrawError("With Code C, you must provide always pair of two integers. Char "+::text[i]+::text[i+1]+" not allowed." )
+				 #endif
+				 lerror := .T.
+		  EndIf
 
 		ElseIf cModeCode == "B"
 
-			 If ::FIndCharCode( ::KeysmodeB, ::Text[i] ) == 0
+  		 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+			 If ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
+		       ::DrawError('Char '+ SubStr( ::text, i, 1 )+" not allowed.")
+  		 #else
+			 If ::FindCharCode( ::KeysmodeB, ::Text[i] ) == 0
 		       ::DrawError('Char '+::text[i]+" not allowed.")
+			 #endif
 			    lerror = .T.
 			 EndIf
 
 		ElseiF cModeCode == "A"
 
-		   If ::FIndCharCode( ::KeysmodeA, ::text[i] ) == 0
+  		 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+		   If ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
+		      ::DrawError('Char '+ SubStr( ::text, i, 1 ) +" not allowed.")
+  		 #else
+		   If ::FindCharCode( ::KeysmodeA, ::text[i] ) == 0
 		      ::DrawError('Char '+::text[i]+" not allowed.")
+  		 #endif
 		      lerror := .T.
 		   EndIf
 
@@ -577,7 +599,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
        next
 
        nSum  := nSum%103 +1
-       cconc := cconc + ::aCode[ nSum ] +::aCode[107] 
+       cconc := cconc + ::aCode[ nSum ] +::aCode[107]
 
        For n:=1 To Len(cconc) STEP 2
            cBarCode +=Replicate('1', Val( Substr( cconc, n,1 ) ) )
@@ -647,7 +669,7 @@ Return NIL
 */
 METHOD MixCode(value) CLASS TCode
 
-   LOCAL l,i,k 
+   LOCAL l,i,k
    LOCAL s
    LOCAL bar_string := ""
    LOCAL cfirst

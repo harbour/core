@@ -1,3 +1,6 @@
+
+#define IMAGES_OUT "images_out/"
+
 Function Main()
 
    local bar
@@ -64,7 +67,7 @@ Function Main()
 
    bar:Configure( 50 , black, white, 2 , 1 )
 
-   bar:CreateBar( 300, 400,"Bar128",white)
+   bar:CreateBar( 300, 400, IMAGES_OUT + "Bar128",white)
 
    // 1- code bar
    // 2- barcode types A/B/C
@@ -80,7 +83,7 @@ Function Main()
 
    bar:Configure( 25 , black, white, 1 , 1, , .T. )
 
-   bar:CreateBar( 560 ,60, "febraban", white )
+   bar:CreateBar( 560 ,60, IMAGES_OUT + "febraban", white )
    bar:DrawI25("104995628545723070285700000008218000")
    bar:Finish(8)
 

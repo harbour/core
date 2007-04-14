@@ -1,0 +1,45 @@
+#
+# $Id$
+#
+
+# makefile for Borland C/C++ 32 bits
+# Building of mysql.lib - Harbour API to mySQL
+
+INCLUDE_DIR = include;..\..\include
+
+BIN_DIR = ..\..\bin\b32
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+$(LIB_DIR)\hbgd.lib : \
+   $(OBJ_DIR)\gdwrp.obj \
+   $(OBJ_DIR)\gd.obj \
+   $(OBJ_DIR)\gdimage.obj \
+   $(OBJ_DIR)\gdchart.obj \
+   $(OBJ_DIR)\gdbar.obj \
+   $(OBJ_DIR)\gdbarcod.obj
+
+$(OBJ_DIR)\gd.c           : gd.prg
+$(OBJ_DIR)\gd.obj         : $(OBJ_DIR)\gd.c
+
+$(OBJ_DIR)\gdimage.c      : gdimage.prg
+$(OBJ_DIR)\gdimage.obj    : $(OBJ_DIR)\gdimage.c
+
+$(OBJ_DIR)\gdchart.c      : gdchart.prg
+$(OBJ_DIR)\gdchart.obj    : $(OBJ_DIR)\gdchart.c
+
+$(OBJ_DIR)\gdbar.c        : gdbar.prg
+$(OBJ_DIR)\gdbar.obj      : $(OBJ_DIR)\gdbar.c
+
+$(OBJ_DIR)\gdbarcod.c     : gdbarcod.prg
+$(OBJ_DIR)\gdbarcod.obj   : $(OBJ_DIR)\gdbarcod.c
+
+$(OBJ_DIR)\gdwrp.obj      : gdwrp.c
+
+.c.obj:
+  bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -DHB_OS_WIN_32_USED -o$@ $<
+  tlib $(LIB_DIR)\hbgd.lib -+$@,,
+
+.prg.c:
+  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+

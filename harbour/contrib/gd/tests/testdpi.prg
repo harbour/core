@@ -13,7 +13,7 @@
 
 PROCEDURE Main()
 
- oI := GDImage:Create( 600, 300 )
+ oI := GDImage():Create( 600, 300 )
 
  white := oI:SetColor( 255, 255, 255 )
  black := oI:SetColor( 0, 0, 0 )

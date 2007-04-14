@@ -8,6 +8,83 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-14 13:36 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
+   * harbour/bin/bld.bat
+     * added HB_USER_LIB var to bcc link line to make usable bldtest.bat
+       Question: Is there a way to build from bcc adding contrib libs ?
+
+   - harbour/contrib/gd/hbgd.txt
+   + harbour/contrib/gd/doc/hbgd.txt
+     * moved in doc dir
+
+   + harbour/contrib/gd/doc/COPYING
+     + gd copyright text (it's free for any use, but this file has to be
+                          reported)
+
+   + harbour/contrib/gd/include/entities.h
+   + harbour/contrib/gd/include/gd.h
+   + harbour/contrib/gd/include/gd_io.h
+   + harbour/contrib/gd/include/gdcache.h
+   + harbour/contrib/gd/include/gdfontg.h
+   + harbour/contrib/gd/include/gdfontl.h
+   + harbour/contrib/gd/include/gdfontmb.h
+   + harbour/contrib/gd/include/gdfonts.h
+   + harbour/contrib/gd/include/gdfontt.h
+   + harbour/contrib/gd/include/gdfx.h
+   + harbour/contrib/gd/include/gdhelpers.h
+   + harbour/contrib/gd/include/jisx0208.h
+   + harbour/contrib/gd/include/wbmp.h
+     + include files for compiling in windows environment
+
+   + harbour/contrib/gd/tests/digits/57chevy.gif
+   + harbour/contrib/gd/tests/digits/7seg.gif
+   + harbour/contrib/gd/tests/digits/brsd.gif
+   + harbour/contrib/gd/tests/digits/digib.gif
+   + harbour/contrib/gd/tests/digits/fdb.gif
+   + harbour/contrib/gd/tests/digits/jelly.gif
+   + harbour/contrib/gd/tests/digits/odb.gif
+   + harbour/contrib/gd/tests/digits/odw.gif
+   + harbour/contrib/gd/tests/digits/pdg.gif
+   + harbour/contrib/gd/tests/digits/pdw.gif
+     + digits images for counter.prg sample
+
+   + harbour/contrib/gd/gdexternal.ch
+     + external declarations for use with linker
+
+   + harbour/contrib/gd/make_b32.bat
+   + harbour/contrib/gd/makefile.bc
+   + harbour/contrib/gd/tests/bldtest.bat
+   + harbour/contrib/gd/tests/bldtest.sh
+     + make files
+
+   * harbour/contrib/gd/tests/images_in/conv_test.jpeg
+   * harbour/contrib/gd/tests/images_in/gdlogobig.png
+   * harbour/contrib/gd/tests/images_in/theclipper.gif
+     * updated images (I got them corrupted, probably is CVS ?)
+
+   * harbour/contrib/gd/README
+   * harbour/contrib/gd/gd.prg
+   * harbour/contrib/gd/gdbar.prg
+   * harbour/contrib/gd/gdbarcod.prg
+   * harbour/contrib/gd/gdchart.prg
+   * harbour/contrib/gd/gdimage.prg
+   * harbour/contrib/gd/gdwrp.c
+   * harbour/contrib/gd/tests/animgif.prg
+   * harbour/contrib/gd/tests/antialiased.prg
+   * harbour/contrib/gd/tests/barms.prg
+   * harbour/contrib/gd/tests/bartest.prg
+   * harbour/contrib/gd/tests/counter.prg
+   * harbour/contrib/gd/tests/gdtestcls.prg
+   * harbour/contrib/gd/tests/test_out.prg
+   * harbour/contrib/gd/tests/testdpi.prg
+   * harbour/contrib/gd/tests/tostring.prg
+     * fixed hbgd files
+
+     ! Please test in other environment.
+       I have built harbour as downloaded from CVS,
+       no HB_COMPAT_XHB defined
+
+
 2007-04-14 12:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/include/hbstdgen.ch
    * harbour/include/box.ch
@@ -49,9 +126,9 @@
    * harbour/source/vm/harbinit.prg
    * harbour/utils/hbrun/external.prg
    * harbour/utils/hbtest/rt_main.ch
-     + Following #defines are now available by default without 
-       the need to #include "hbsetup.ch". These are of course 
-       also available for applications as defined at Harbour 
+     + Following #defines are now available by default without
+       the need to #include "hbsetup.ch". These are of course
+       also available for applications as defined at Harbour
        build time:
        HB_EXTENSION
        HB_C52_UNDOC
@@ -76,15 +153,15 @@
        Question: What does HB_NO_READDBG do?
 
    * harbour/source/rtl/tget.prg
-     ! Removed :Assign() call from :UpdateBuffer() to close 
+     ! Removed :Assign() call from :UpdateBuffer() to close
        the functionality to CA-Cl*pper.
 
 2007-04-13 19:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/include/Makefile
     ! added install of hbcompat.ch
   * harbour/source/debug/dbgtarr.prg
-  * harbour/source/debug/dbgtobj.prg  
-  * harbour/source/debug/dbgthsh.prg     
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgthsh.prg
     * added missed #ifndef HB_NO_READDBG
 
 2007-04-13 18:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -105,14 +182,14 @@
 
 2007-04-13 17:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tget.prg
-     ! Get method UpdateBuffer() fixed to be effective only 
-       when the object has focus (as per the C52 docs and 
+     ! Get method UpdateBuffer() fixed to be effective only
+       when the object has focus (as per the C52 docs and
        Lorenzo's report).
 
 2007-04-13 12:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/debug/debugger.prg
      ! Fixed a few compile errors.
-     ! Reapplied (and extended) a former fix regarding 
+     ! Reapplied (and extended) a former fix regarding
        the proper handling of the filenames.
 
    * harbour/source/rtl/tbrowse.prg
@@ -128,12 +205,12 @@
   * harbour/source/debug/dbgtarr.prg
   * harbour/source/debug/dbgtmenu.prg
   * harbour/source/debug/dbgtmitm.prg
-  * harbour/source/debug/dbgtobj.prg  
-  * harbour/source/debug/dbgtwin.prg    
-  * harbour/source/debug/dbgwa.prg    
-  * harbour/source/debug/debugger.prg 
-  + harbour/source/debug/dbgaltd.prg   
-  + harbour/source/debug/dbgthsh.prg     
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgtwin.prg
+  * harbour/source/debug/dbgwa.prg
+  * harbour/source/debug/debugger.prg
+  + harbour/source/debug/dbgaltd.prg
+  + harbour/source/debug/dbgthsh.prg
     * debugger code borrowed from xHarbour
   + harbour/include/hbcompat.ch
     * xHarbour compatibility defines
@@ -310,12 +387,12 @@
    * harbour/source/codepage/Makefile
    * harbour/source/codepage/cphu852.c
    + harbour/source/codepage/cphu852s.c
-     ! Default Hungarian 852 codepage made 100% compatible with 
+     ! Default Hungarian 852 codepage made 100% compatible with
        ntxhu852.obj for CA-Cl*pper 5.x.
-     + Added Hungarian 852 codepage 100% compatible with 
+     + Added Hungarian 852 codepage 100% compatible with
        sixhu852.obj for S*ccessWare SIx Driver.
-       (this was formerly used as the default Hungarian 852 
-       codepage for Harbour, the only change now is the ID and 
+       (this was formerly used as the default Hungarian 852
+       codepage for Harbour, the only change now is the ID and
        comment cleanup.)
 
 2007-04-10 11:20 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
@@ -328,9 +405,9 @@
    * harbour/source/rtl/persist.prg
    * harbour/source/rtl/tbrowse.prg
    * harbour/source/rtl/teditor.prg
-     % Replaced __StrT*() internal functions with native Harbour 
+     % Replaced __StrT*() internal functions with native Harbour
        extensions hb_Token*().
-     % Removed workarounds for problems with the previous implementation 
+     % Removed workarounds for problems with the previous implementation
        of the __StrT*() functions.
        Please test TEditor (all) and TBrowse class (header/footer line splitting).
 
@@ -515,13 +592,13 @@
 
 2007-04-01 16:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tgetlist.prg
-     ! Fixed bug #1692268. The fix simply removes two strange lines 
+     ! Fixed bug #1692268. The fix simply removes two strange lines
        of code which tried to modify the internal TGet() var "Type",
-       after it read the value contained in the TGet(). Since this would 
-       be the job of TGet() alone, and Type() is not an assignable 
-       var in CA-Cl*pper, it very much looks like a workaround 
-       for something (maybe a shortcoming of an earlier version of 
-       TGet()). If anyone knows what was to be achieved with that, 
+       after it read the value contained in the TGet(). Since this would
+       be the job of TGet() alone, and Type() is not an assignable
+       var in CA-Cl*pper, it very much looks like a workaround
+       for something (maybe a shortcoming of an earlier version of
+       TGet()). If anyone knows what was to be achieved with that,
        pls shout.
 
 2007-04-01 13:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -544,7 +621,7 @@
    + harbour/contrib/samples/make_b32.bat
    + harbour/contrib/samples/make_vc.bat
    - harbour/contrib/samples/makevc.bat
-     + -w default Harbour build switch changed to -w2, 
+     + -w default Harbour build switch changed to -w2,
        to further maintain code quality.
      ; Notice that CONTRIB might need some fixing here.
      + Added proper BC/VC make batch files for "samples".
@@ -566,7 +643,7 @@
    * harbour/utils/hbtest/rt_misc.prg
      + Added HB_SYMBOL_UNUSED() inside codeblocks.
      ! Removed a few uneeded codeblock parameters.
-     + Added HB_SYMBOL_UNUSED() to some class syntax generated 
+     + Added HB_SYMBOL_UNUSED() to some class syntax generated
        code to avoid unused "Self" var warnings.
 
    * harbour/ChangeLog.017
@@ -1181,8 +1258,8 @@
          #endif
 
 2007-02-22 13:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
-   * harbour/contrib/libct/makefile.bc 
-   * harbour/contrib/libct/makefile.vc 
+   * harbour/contrib/libct/makefile.bc
+   * harbour/contrib/libct/makefile.vc
      ! Synced with GNU makefile changes.
 
 2007-02-22 08:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -1483,9 +1560,9 @@
 
 2007-01-24 23:10 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * harbour.spec
-    * Aded Mandriva One distro to platforms 
+    * Aded Mandriva One distro to platforms
   * bin/hb-func.sh
-    * Aded Mandriva and Mandriva One distro to platforms 
+    * Aded Mandriva and Mandriva One distro to platforms
 
 2007-01-24 10:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/w32/bcc32.cf
@@ -1689,7 +1766,7 @@
   * harbour/source/compiler/harbour.y
   * harbour/source/compiler/harbour.yyc
     + added support for passing base value to FOR EACH by reference.
-  
+
   * harbour/source/vm/arrays.c
     * use hb_itemMoveRef() in AINS()/ADEL() to avoid creation of cyclic
       reference chains

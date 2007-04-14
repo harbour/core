@@ -89,6 +89,12 @@ CLASS GDChart FROM GDImage
    METHOD HorizontalBarChart()
    METHOD LineChart()
 
+   // clone method for gdchart
+   METHOD Clone()
+
+   PROTECTED:
+   METHOD CloneDataFrom()
+
 ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDChart
@@ -98,7 +104,7 @@ METHOD New( sx, sy ) CLASS GDChart
 
    ::cTitle := "Chart"
    ::aSeries        := {}
-   ::hDefs          := Hash()
+   ::hDefs          := {=>}
    ::aDataOfHashes  := {}
 
    ::Create( sx, sy )
@@ -118,7 +124,11 @@ RETURN Self
 
 METHOD AddDef( cDefKey, xDefVal ) CLASS GDChart
    IF ValType( cDefKey ) == "C"
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       hSet( ::hDefs, Upper( cDefKey ), xDefVal )
+      #else
+      HB_hSet( ::hDefs, Upper( cDefKey ), xDefVal )
+      #endif
    ENDIF
 RETURN Self
 
@@ -332,7 +342,11 @@ METHOD VerticalBarChart() CLASS GDChart
   nMaxLabel := 0
   nMax      := 0
   FOR EACH hElement IN aDataOfHash
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       IF HB_EnumIndex() == 1
+      #else
+      IF hElement:__enumIndex() == 1
+      #endif
          nMax := hElement["VALUE"]
       ELSE
          nMax := Max( nMax, hElement["VALUE"] )
@@ -425,7 +439,11 @@ METHOD VerticalBarChart() CLASS GDChart
       DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       nPosX   := x + ( nSize * ( HB_EnumIndex() - 1 ) )
+      #else
+      nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
+      #endif
       nPosY   := y
       IF pTile <> NIL
          ::SetTile( pTile )
@@ -519,7 +537,11 @@ METHOD HorizontalBarChart() CLASS GDChart
   nMaxLabel := 0
   nMax      := 0
   FOR EACH hElement IN aDataOfHash
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       IF HB_EnumIndex() == 1
+      #else
+      IF hElement:__enumIndex() == 1
+      #endif
          nMax := hElement["VALUE"]
       ELSE
          nMax := Max( nMax, hElement["VALUE"] )
@@ -610,7 +632,11 @@ METHOD HorizontalBarChart() CLASS GDChart
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
       nPosX   := x
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       nPosY   := y + ( nSize * ( HB_EnumIndex() - 1 ) )
+      #else
+      nPosY   := y + ( nSize * ( hElement:__enumIndex() - 1 ) )
+      #endif
 
       IF pTile <> NIL
          ::SetTile( pTile )
@@ -706,7 +732,11 @@ METHOD LineChart() CLASS GDChart
   nMaxLabel := 0
   nMax      := 0
   FOR EACH hElement IN aDataOfHash
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       IF HB_EnumIndex() == 1
+      #else
+      IF hElement:__enumIndex() == 1
+      #endif
          nMax := hElement["VALUE"]
       ELSE
          nMax := Max( nMax, hElement["VALUE"] )
@@ -719,7 +749,11 @@ METHOD LineChart() CLASS GDChart
   nMinLabel := 0
   nMin      := 0
   FOR EACH hElement IN aDataOfHash
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       IF HB_EnumIndex() == 1
+      #else
+      IF hElement:__enumIndex() == 1
+      #endif
          nMin := hElement["VALUE"]
       ELSE
          nMin := Min( nMin, hElement["VALUE"] )
@@ -729,7 +763,7 @@ METHOD LineChart() CLASS GDChart
   NEXT
 
   DEFAULT nLeftLabelSpace    TO nBorder + Max( Len( LTrim( Transform( nMax, cAxisPict ) ) ), Len( LTrim( Transform( nMin, cAxisPict ) ) ) ) * ::GetFontWidth() + nBorder
-  DEFAULT nRightLabelSpace   TO nLeftLabelSpace 
+  DEFAULT nRightLabelSpace   TO nLeftLabelSpace
   DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
   DEFAULT nMaxValue          TO nMax
   DEFAULT nMinValue          TO nMin
@@ -770,7 +804,7 @@ METHOD LineChart() CLASS GDChart
   nCeiling := 10 ^ nCeiling
 
   nMaxValue := ceiling( nMaxValue / nCeiling ) * nCeiling
-  nMinValue := iif( nMinValue < 0, -ceiling( abs( nMinValue ) / nCeiling ) * nCeiling, ceiling( nMinValue / nCeiling ) * nCeiling ) 
+  nMinValue := iif( nMinValue < 0, -ceiling( abs( nMinValue ) / nCeiling ) * nCeiling, ceiling( nMinValue / nCeiling ) * nCeiling )
 
   nTotRange := nMaxValue + iif( nMinValue < 0, abs( nMinValue ), 0 )
 
@@ -796,7 +830,11 @@ METHOD LineChart() CLASS GDChart
          ::Line( x, ::Height() - ( y + nPosY), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
      NEXT
      FOR EACH hElement IN aDataOfHash
+         #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
          nPosX   := x + ( nSize * ( HB_EnumIndex() - 1 ) )
+         #else
+         nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
+         #endif
          ::Line( nPosX, ::Height() - y, nPosX, ::Height() - ( y + nHeight ), gdStyled )
      NEXT
       ::SetThickness( nThick )
@@ -837,7 +875,11 @@ METHOD LineChart() CLASS GDChart
       DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
 
+      #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
       nPosX   := x + ( nSize * ( HB_EnumIndex() - 1 ) )
+      #else
+      nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
+      #endif
       nPosY   := y
       IF pTile <> NIL
          ::SetTile( pTile )
@@ -879,11 +921,67 @@ METHOD LineChart() CLASS GDChart
 
 RETURN Self
 
+METHOD Clone() CLASS GDChart
+  LOCAL oDestImage
+  LOCAL pImage
+
+  IF ::IsTrueColor()
+     oDestImage := GDChart():CreateTrueColor( ::Width, ::Height )
+  ELSE
+     oDestImage := GDChart():Create( ::Width, ::Height )
+  ENDIF
+
+  pImage := oDestImage:pImage
+  oDestImage := oDestImage:CloneDataFrom( Self )
+  //oDestImage := __objClone( Self )
+  oDestImage:pImage := pImage
+  ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
+
+
+  //pImage := oDestImage:pImage
+  //// Signal that this image must not be destroyed
+  //oDestImage:lDestroy := FALSE
+  //oDestImage := NIL
+  //oDestImage:pImage := pImage
+
+RETURN oDestImage
+
+
+METHOD CloneDataFrom( oSrc )
+   // copy values from Source to Dest
+   // please update in case of new datas
+
+   ::Super:CloneDataFrom( oSrc )
+
+   ::cTitle        := oSrc:cTitle
+   ::cAxisX        := oSrc:cAxisX
+   ::cAxisY        := oSrc:cAxisY
+   ::nWidth        := oSrc:nWidth
+   ::nHeight       := oSrc:nHeight
+   ::nScaleX       := oSrc:nScaleX
+   ::nScaleY       := oSrc:nScaleY
+
+   ::aSeries       := AClone( oSrc:aSeries )
+   ::aDataOfHashes := AClone( oSrc:aDataOfHashes )
+   #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
+   ::hDefs         := HClone( oSrc:hDefs )
+   #else
+   ::hDefs         := HB_HClone( oSrc:hDefs )
+   #endif
+
+RETURN Self
+
+
 STATIC FUNCTION HGetValue( hHash, cKey )
   LOCAL nPos
   LOCAL xVal
   IF hHash <> NIL
+     #if defined( __XHARBOUR ) .or. ( defined( __HARBOUR__ ) .and. defined( HB_COMPAT_XHB ) )
      xVal := IIF( ( nPos := HGetPos( hHash, cKey )) == 0, NIL, HGetValueAt( hHash, nPos) )
+     #else
+     xVal := IIF( ( nPos := HB_HPos( hHash, cKey )) == 0, NIL, HB_HValueAt( hHash, nPos) )
+     #endif
   ENDIF
  //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
 RETURN xVal
+

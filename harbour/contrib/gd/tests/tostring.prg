@@ -24,13 +24,15 @@ PROCEDURE Main()
    LOCAL oI5
    LOCAL oB
 
+   /*
    // Check output directory
    IF !ISDirectory( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
+   */
 
    /* Load an image from file */
-   oI := GDImage():LoadFromFile( IMAGES_IN + "xharbour.jpg" )
+   oI := GDImage():LoadFromFile( IMAGES_IN + "conv_test.jpeg" )
 
    oI:SaveJpeg( IMAGES_OUT + "testfile.jpg" )
 

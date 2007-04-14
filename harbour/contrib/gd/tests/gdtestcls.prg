@@ -197,8 +197,8 @@ PROCEDURE Main()
       NEXT
       ? "end", Seconds() - nSecs
       oI4:SetTransparent( blue )
-      oI4:SayFreeType( oI4:CenterWidth()-4, oI4:CenterHeight()+4, "xHarbour", "verdana", 70, n, gray )
-      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "xHarbour", "verdana", 70, n, blue )
+      oI4:SayFreeType( oI4:CenterWidth()-4, oI4:CenterHeight()+4, "GD", "verdana", 70, n, gray )
+      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD", "verdana", 70, n, blue )
    ENDIF
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
 
@@ -223,11 +223,11 @@ PROCEDURE Main()
    oI5:Zoom( 40 )
    //oI5:Rotate( 90 )
    blue := oI5:SetColor(0, 0, 200)
-   oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "xHarbour", "verdana", 20, 0, blue )
-   oI5:SaveJpeg( IMAGES_OUT + "xh_zoom.jpg" )
+   oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "GD", "verdana", 20, 0, blue )
+   oI5:SaveJpeg( IMAGES_OUT + "gd_zoom.jpg" )
 
 
-   oI5 := GDChart( 400, 400 )
+   oI5 := GDChart():New( 400, 400 )
    // Set background
    white := oI5:SetColor(255, 255, 255)
    // Define piece colors
@@ -237,7 +237,7 @@ PROCEDURE Main()
    red   := oI5:SetColor(250, 0, 0)
 
    // Load an image as brush
-   oB := GDImage():LoadFromGif( IMAGES_IN + "italia.gif" )
+   oB := GDImage():LoadFromGif( IMAGES_IN + "theclipper.gif" )
    oB:Zoom(15)
 
    //oI5:Circle( 200, 200, oI5:Width() )
@@ -261,7 +261,7 @@ PROCEDURE Main()
 
    oI5:SaveJpeg( IMAGES_OUT + "pie.jpg" )
 
-   oI5 := GDChart( 640, 480 )
+   oI5 := GDChart():New( 640, 480 )
    // Set background
    white := oI5:SetColor(255, 255, 255)
    // Define piece colors
@@ -271,7 +271,7 @@ PROCEDURE Main()
    red   := oI5:SetColor(250, 0, 0)
 
    // Load an image as brush
-   oB := GDImage():LoadFromJpeg( IMAGES_IN + "fsg.jpg" )
+   oB := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpeg" )
    oB:Zoom(15)
 
 //   oI5:AddDef( "MAXVALUE", 150 )
@@ -311,12 +311,12 @@ PROCEDURE Main()
                 } )
 
 
-   //oI5:VerticalBarChart()
-   //oI5:HorizontalBarChart()
+   oI5:Clone():VerticalBarChart():SaveJpeg( IMAGES_OUT + "vertbars.jpg" )
+
+   oI5:Clone():HorizontalBarChart():SaveJpeg( IMAGES_OUT + "horzbars.jpg" )
+
    oI5:LineChart()
    oI5:SaveJpeg( IMAGES_OUT + "hystogram1.jpg" )
-   //oI5:LineChart()
-   //oI5:SaveJpeg( IMAGES_OUT + "hystogram.jpg" )
 
    //oI4 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
    //oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI2:Width, oI2:Height, oI4 )

@@ -22,10 +22,12 @@ PROCEDURE Main()
    LOCAL black, white, trans
    LOCAL hFile
 
+   /*
    // Check output directory
    IF !ISDirectory( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
+   */
 
    /* Create the image */
    im = gdImageCreate(100, 100)

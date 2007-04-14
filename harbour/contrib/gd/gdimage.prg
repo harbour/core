@@ -64,7 +64,7 @@
 
 CLASS GDImage
 
-   HIDDEN:
+   PROTECTED:
    DATA pImage
    DATA pBrush
    DATA pTile
@@ -93,25 +93,25 @@ CLASS GDImage
    METHOD CreateTrueColor( sx, sy )        INLINE ::pImage := gdImageCreateTrueColor( sx, sy ), Self
 
    // Load From File
-   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile ), Self
-   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile ), Self
-   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile ), Self
-   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile ), Self
-   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile ), Self
+   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , IIF( ::pImage <> NIL, Self, NIL )
 
    // Load From a specific File handle
-   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ), Self
-   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), Self
-   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), Self
-   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize ), Self
-   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ), Self
+   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), IIF( ::pImage <> NIL, Self, NIL )
+   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), IIF( ::pImage <> NIL, Self, NIL )
+   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
 
    // Create from an image pointer in memory
-   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize ), Self
-   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ), Self
-   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ), Self
-   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize ), Self
-   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize ), Self
+   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
 
    METHOD LoadFromFile( cFile )
 
@@ -130,6 +130,8 @@ CLASS GDImage
    METHOD OutputWBmp( nHandle, nFG )       INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageWBmp( ::pImage, nHandle, nFG )
    METHOD OutputGd( nHandle )              INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageGd( ::pImage, nHandle )
    METHOD OutputGif( nHandle )             INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageGif( ::pImage, nHandle )
+
+   METHOD Output( nHandle )                INLINE gdImageToHandle( ::pImage, nHandle )
 
    // Output To a string
    METHOD ToStringPng( nLevel )            INLINE gdImagePng( ::pImage, NIL, nLevel )
@@ -296,6 +298,9 @@ CLASS GDImage
 
    METHOD Version()                        INLINE gdVersion()
 
+   PROTECTED:
+   METHOD CloneDataFrom()
+
 ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDImage
@@ -362,8 +367,10 @@ RETURN Self
 METHOD LoadFromFile( cFile ) CLASS GDImage
    LOCAL aLoad
    aLoad := gdImageFromFile( cFile )
-   Self  := aLoad[1]:Clone()
+   //Self  := aLoad[1]:Clone()
    ::Destroy()
+   Self := ::CloneDataFrom( aLoad[1] )
+   //Self := __objClone( aLoad[1] )
    aLoad[1]:lDestroy := FALSE
    aLoad[1] := NIL
 
@@ -545,7 +552,8 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
       ::CopyRotated( ,,,,,, nAngle, oDestImage )
   ENDIF
   ::Destroy()
-  Self := __ObjCLone( oDestImage )
+  Self := ::CloneDataFrom( oDestImage )
+  //Self := __ObjClone( oDestImage ) // non funziona
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
@@ -559,7 +567,8 @@ METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
 
   oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
   ::Destroy()
-  Self := __ObjClone( oDestImage )
+  Self := ::CloneDataFrom( oDestImage )
+  //Self := __ObjClone( oDestImage ) // non funziona
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
@@ -573,7 +582,8 @@ METHOD Resize( nWidth, nHeight ) CLASS GDImage
 
   oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
   ::Destroy()
-  Self := __ObjClone( oDestImage )
+  Self := ::CloneDataFrom( oDestImage )
+  //Self := __ObjClone( oDestImage ) // non funziona
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
@@ -587,7 +597,8 @@ METHOD Zoom( nPerc ) CLASS GDImage
 
   oDestImage := ::CopyZoomed( nPerc )
   ::Destroy()
-  Self := __ObjClone( oDestImage )
+  Self := ::CloneDataFrom( oDestImage )
+  //Self := __ObjClone( oDestImage ) // non funziona
 
   // Move new image to existing one
   // Signal that this image must not be destroyed
@@ -598,6 +609,7 @@ RETURN Self
 
 METHOD Clone() CLASS GDImage
   LOCAL oDestImage
+  LOCAL pImage
 
   IF ::IsTrueColor()
      oDestImage := GDImage():CreateTrueColor( ::Width, ::Height )
@@ -605,9 +617,18 @@ METHOD Clone() CLASS GDImage
      oDestImage := GDImage():Create( ::Width, ::Height )
   ENDIF
 
+  pImage := oDestImage:pImage
+  oDestImage := oDestImage:CloneDataFrom( Self )
+  //oDestImage := __objClone( Self )
+  oDestImage:pImage := pImage
   ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
-//  ::Destroy()
-  // Self := __ObjClone( oDestImage )
+
+
+  //pImage := oDestImage:pImage
+  //// Signal that this image must not be destroyed
+  //oDestImage:lDestroy := FALSE
+  //oDestImage := NIL
+  //oDestImage:pImage := pImage
 
 RETURN oDestImage
 
@@ -659,6 +680,30 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
 
   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
                    cString, nLineSpacing, nCharMap, nResolution )
+
+RETURN Self
+
+METHOD CloneDataFrom( oSrc )
+   // copy values from Source to Dest
+   // please update in case of new datas
+
+   ::pImage      := oSrc:pImage
+   ::pBrush      := oSrc:pBrush
+   ::pTile       := oSrc:pTile
+   ::pFont       := oSrc:pFont
+   ::pColor      := oSrc:pColor
+
+   ::cFontName   := oSrc:cFontName
+   ::nFontPitch  := oSrc:nFontPitch
+   ::nFontAngle  := oSrc:nFontAngle
+
+   ::aPoints     := AClone( oSrc:aPoints )
+   ::aStyles     := AClone( oSrc:aStyles )
+   ::lDestroy    := oSrc:lDestroy
+
+   ::hFile       := oSrc:hFile
+   ::cType       := oSrc:cType
+   ::cMime       := oSrc:cMime
 
 RETURN Self
 

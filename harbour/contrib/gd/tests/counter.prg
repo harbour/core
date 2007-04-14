@@ -46,7 +46,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    cValue := StrZero( nValue, DISPLAY_NUM )
 
-   Tracelog( "Value", cValue )
+   ? "Value = ", cValue
 
    // To set fonts run this command:
    // for windows: SET GDFONTPATH=c:\windows\fonts
@@ -61,9 +61,11 @@ PROCEDURE Main( cValue, cBaseImage )
    //ENDIF
 
    // Check output directory
+   /*
    IF !ISDirectory( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
+   */
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
@@ -87,7 +89,7 @@ PROCEDURE Main( cValue, cBaseImage )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
-   Tracelog( "nNumWidth, nWidth, nHeight, nDigits", nNumWidth, nWidth, nHeight, nDigits )
+   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
 
    /* extracts single digits */
    FOR n := 1 TO nDigits
@@ -99,8 +101,8 @@ PROCEDURE Main( cValue, cBaseImage )
    NEXT
 
    /* Create counter image in memory */
-   oI := GDImage( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
-   Tracelog( "Image dimensions: ", oI:Width(), oI:Height() )
+   oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
+   ? "Image dimensions: ", oI:Width(), oI:Height()
 
    /* Allocate background */
    white := oI:SetColor( 255, 255, 255 )
@@ -118,7 +120,11 @@ PROCEDURE Main( cValue, cBaseImage )
    /* Draw Digits */
    FOR n := 1 TO Len( cValue )
        // Retrieve the number from array in memory
+       #if ( defined( __HARBOUR__ ) .and. !defined( __COMP_FLAG_HB_COMPAT_XHB__ ) )
+       oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
+       #else
        oTemp := aNumberImages[ Val( cValue[ n ] ) + 1 ]:Clone()
+       #endif
        // Save it to show the number for a position
        oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
        // Set the digit as tile that I have to use to fill position in counter

@@ -139,6 +139,10 @@ FUNCTION gdImageFromFile( cFile )
   LOCAL hFile := {=>}
   LOCAL oImage
 
+  #if ( defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB ) )
+  HB_HAUTOADD( hFile, .T.)
+  #endif
+
   IF File( cFile )
      HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
      //TraceLog( cFile, cPath, cName, cExt, cDrive )
@@ -228,6 +232,31 @@ PROCEDURE gdImageToFile( oImage, cFile )
            IF cString <> NIL
               MemoWrit( cFile + "." + cExt, cString )
            ENDIF
+        ENDIF
+     END
+  ENDIF
+
+RETURN
+
+PROCEDURE gdImageToHandle( oImage, nHandle )
+  LOCAL cString, cExt
+
+  DEFAULT nHandle TO 1
+
+  //Tracelog( "oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' )", ;
+  //          oImage, oImage:ClassName, oImage:IsDerivedFrom( 'GDIMAGE' ) )
+
+  IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+     WITH OBJECT oImage
+        IF :cType <> NIL
+           DO CASE
+              CASE :cType == "jpeg"
+                   :OutputJpeg( nHandle )
+              CASE :cType == "gif"
+                   :OutputGif( nHandle )
+              CASE :cType == "png"
+                   :OutputPng( nHandle )
+           ENDCASE
         ENDIF
      END
   ENDIF

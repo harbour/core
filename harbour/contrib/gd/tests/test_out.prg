@@ -10,6 +10,7 @@
 
 #include "gd.ch"
 #include "common.ch"
+#include "hbcompat.ch"
 
 #command WRITE <c> => FWrite( 1, <c> + CHR(13)+CHR(10) )
 #command OutHTML <c> => WRITE <c>

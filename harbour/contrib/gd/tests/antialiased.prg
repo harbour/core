@@ -19,10 +19,12 @@ PROCEDURE Main()
    LOCAL im
    LOCAL white, blue, black
 
+   /*
    // Check output directory
    IF !ISDirectory( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
+   */
 
    /*
      This sample shows differences on use of antiliased command between a

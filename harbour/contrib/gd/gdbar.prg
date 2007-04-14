@@ -300,8 +300,13 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL i
 
    For i := 1 To Len( ::text )
+       #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+       If( !IsInt( ::CheckValInArray( SubStr( ::text, i, 1 ) ) ) )
+           ::DrawError("Character  "+SubStr( ::text, i, 1 )+" not allowed .")
+       #else
        If( !IsInt( ::CheckValInArray( ::text[i] ) ) )
            ::DrawError("Character  "+::text[i]+" not allowed .")
+       #endif
            lRet := .F.
        EndIf
    Next
@@ -313,7 +318,11 @@ METHOD CheckValInArray(cchar) CLASS TBarCode
   LOCAL npos
   LOCAL uret
 
+  #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
+  npos := ASCAN( ::keys, { |x| SubStr( x, 1, 1 ) == cchar } )
+  #else
   npos := ASCAN( ::keys, { |x| x[1]== cchar } )
+  #endif
 
   If npos > 0
      uret := npos
@@ -330,24 +339,47 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
    DEFAULT nFG         TO {255,255,255}
 
    If Empty( ::filename ) .OR. ::filename = NIL
-      ::filename := ::text
-   EndIf
 
-   If image_style == IMG_FORMAT_PNG
+      // Output std handle == 1
 
-     ::SavePng(  ::filename )
+      //::filename := ::text
+      If image_style == IMG_FORMAT_PNG
 
-   Elseif image_style == IMG_FORMAT_JPEG
+         ::OutputPng()
 
-      ::Savejpeg( ::filename, quality )
+      Elseif image_style == IMG_FORMAT_JPEG
 
-   ElseIf image_style == IMG_FORMAT_WBMP
+         ::OutputJpeg( , quality )
 
-      ::SaveWBmp( ::filename, nFG )
+      ElseIf image_style == IMG_FORMAT_WBMP
 
-   ElseIf image_style == IMG_FORMAT_GIF
+         ::OutputWBmp( , nFG )
 
-      ::SaveGif( ::filename )
+      ElseIf image_style == IMG_FORMAT_GIF
+
+         ::OutputGif()
+
+      EndIf
+
+   else
+
+      If image_style == IMG_FORMAT_PNG
+
+         ::SavePng(  ::filename )
+
+      Elseif image_style == IMG_FORMAT_JPEG
+
+         ::Savejpeg( ::filename, quality )
+
+      ElseIf image_style == IMG_FORMAT_WBMP
+
+         ::SaveWBmp( ::filename, nFG )
+
+      ElseIf image_style == IMG_FORMAT_GIF
+
+         ::SaveGif( ::filename )
+
+      EndIf
 
    EndIf
 
