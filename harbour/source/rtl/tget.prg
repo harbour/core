@@ -372,15 +372,8 @@ return Self
 METHOD UpdateBuffer() CLASS Get
 
    if ::hasFocus
-
       ::buffer := ::PutMask()
-
-      IF ::lEdit
-         ::Assign()
-      ENDIF
-
       ::Display()
-
    endif
 
 return Self

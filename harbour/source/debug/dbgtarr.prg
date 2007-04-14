@@ -313,7 +313,9 @@ METHOD doGet( oBro, pItem, nSet ) Class TDBGArray
     HB_SYMBOL_UNUSED( pItem )
     HB_SYMBOL_UNUSED( nSet )
 
-RETURN  nil
+#endif
+
+RETURN nil
 
 function __DbgArrays( aArray, cArrayName, lEditable )
 

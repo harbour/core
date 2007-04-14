@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-14 11:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/debug/dbgtarr.prg
+     ! Fixed unclosed #if construct.
+       Question: What does HB_NO_READDBG do?
+
+   * harbour/source/rtl/tget.prg
+     ! Removed :Assign() call from :UpdateBuffer() to close 
+       the functionality to CA-Cl*pper.
+
 2007-04-13 19:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/include/Makefile
     ! added install of hbcompat.ch
