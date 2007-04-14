@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-14 14:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/include/hbcompat.ch
+     ! Added copyright and CVS header.
+     ! Indentation fixes.
+
 2007-04-14 13:47 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
    * harbour/include/hbcompat.ch
      * added xharbour compatible hash translations
@@ -87,7 +92,6 @@
      ! Please test in other environment.
        I have built harbour as downloaded from CVS,
        no HB_COMPAT_XHB defined
-
 
 2007-04-14 12:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/include/hbstdgen.ch
