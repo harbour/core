@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #ifdef HB_C52_UNDOC
 
 FUNCTION __Input( xPrompt )
@@ -60,4 +58,3 @@ FUNCTION __Input( xPrompt )
    RETURN iif( Empty( cString ), NIL, &cString )
 
 #endif
-

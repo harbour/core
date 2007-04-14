@@ -53,8 +53,6 @@
 #ifndef HB_HBCOMMON_CH_
 #define HB_HBCOMMON_CH_
 
-#include "hbsetup.ch"
-
 #ifdef HB_FILE_VER_STATIC
    #define HB_FILE_VER( id ) STATIC s_hb_file_ver := id
 #else

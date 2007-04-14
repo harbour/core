@@ -68,9 +68,7 @@
 #define TEST_RESULT_COL4_WIDTH  85
 #define TEST_RESULT_COL5_WIDTH  85
 
-#ifdef __HARBOUR__
-   #include "hbsetup.ch"
-#else
+#ifndef __HARBOUR__
    #define HB_C52_STRICT
 #endif
 

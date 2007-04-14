@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "common.ch"
 #include "error.ch"
 #include "fileio.ch"

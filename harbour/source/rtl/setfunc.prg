@@ -52,7 +52,6 @@
 
 #include "inkey.ch"
 #include "common.ch"
-#include "hbsetup.ch"
 
 PROCEDURE __SetFunction( nFunctionKey, cString )
 

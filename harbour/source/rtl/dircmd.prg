@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "directry.ch"
 #include "fileio.ch"
 

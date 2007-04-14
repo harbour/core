@@ -62,7 +62,6 @@
  */
 
 #include "common.ch"
-#include "hbsetup.ch"
 
 #ifdef HB_COMPAT_C53
 FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )

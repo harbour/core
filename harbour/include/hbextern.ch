@@ -53,8 +53,6 @@
 #ifndef HB_EXTERN_CH_
 #define HB_EXTERN_CH_
 
-#include "hbsetup.ch"
-
 /* CA-Cl*pper compatible standard functions */
 
 EXTERNAL AADD
@@ -169,9 +167,9 @@ EXTERNAL FIELDNAME
 EXTERNAL FIELDPOS
 EXTERNAL FIELDPUT
 #ifdef HB_EXTENSION
-EXTERNAL FIELDLEN   /* harbour extension */
-EXTERNAL FIELDDEC   /* harbour extension */
-EXTERNAL FIELDTYPE  /* harbour extension */
+EXTERNAL FIELDLEN
+EXTERNAL FIELDDEC
+EXTERNAL FIELDTYPE
 #endif
 EXTERNAL FIELDWBLOCK
 EXTERNAL FILE

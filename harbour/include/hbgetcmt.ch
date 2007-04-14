@@ -53,8 +53,6 @@
 #ifndef HB_GETCMT_CH_
 #define HB_GETCMT_CH_
 
-#include "hbsetup.ch"
-
 #ifdef HB_COMPAT_C53
 
 #command @ <row>, <col> GET <var>                                       ;

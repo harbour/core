@@ -73,7 +73,6 @@
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_
 
-#include "hbsetup.ch"
 #include "hboo.ch"
 
 /* You can actually define one or all the syntax, they do not collide each other */

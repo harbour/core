@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )

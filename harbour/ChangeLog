@@ -8,6 +8,68 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-14 12:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/include/hbstdgen.ch
+   * harbour/include/box.ch
+   * harbour/include/hbclass.ch
+   * harbour/include/hbcommon.ch
+   * harbour/include/hbextern.ch
+   * harbour/include/hbgetcmt.ch
+   * harbour/include/hbsetup.ch
+   * harbour/include/ord.ch
+   * harbour/source/rdd/dbdelim.prg
+   * harbour/source/rdd/dbfuncs.prg
+   * harbour/source/rdd/dbjoin.prg
+   * harbour/source/rdd/dblist.prg
+   * harbour/source/rdd/dbsort.prg
+   * harbour/source/rdd/dbstrux.prg
+   * harbour/source/rdd/dbtotal.prg
+   * harbour/source/rdd/dbupdat.prg
+   * harbour/source/rdd/rddord.prg
+   * harbour/source/rtl/alert.prg
+   * harbour/source/rtl/browdb.prg
+   * harbour/source/rtl/browdbx.prg
+   * harbour/source/rtl/checkbox.prg
+   * harbour/source/rtl/dircmd.prg
+   * harbour/source/rtl/getsys.prg
+   * harbour/source/rtl/input.prg
+   * harbour/source/rtl/mssgline.prg
+   * harbour/source/rtl/pushbtn.prg
+   * harbour/source/rtl/radiobtn.prg
+   * harbour/source/rtl/radiogrp.prg
+   * harbour/source/rtl/setfunc.prg
+   * harbour/source/rtl/setta.prg
+   * harbour/source/rtl/tbcolumn.prg
+   * harbour/source/rtl/tget.prg
+   * harbour/source/rtl/tgetint.prg
+   * harbour/source/rtl/tmenuitm.prg
+   * harbour/source/rtl/tpopup.prg
+   * harbour/source/rtl/ttopbar.prg
+   * harbour/source/rtl/typefile.prg
+   * harbour/source/vm/harbinit.prg
+   * harbour/utils/hbrun/external.prg
+   * harbour/utils/hbtest/rt_main.ch
+     + Following #defines are now available by default without 
+       the need to #include "hbsetup.ch". These are of course 
+       also available for applications as defined at Harbour 
+       build time:
+       HB_EXTENSION
+       HB_C52_UNDOC
+       HB_C52_STRICT
+       HB_COMPAT_C53
+       HB_COMPAT_XPP
+       HB_COMPAT_VO
+       HB_COMPAT_FLAGSHIP
+       HB_COMPAT_FOXPRO
+       HB_COMPAT_DBASE
+       HB_COMPAT_CLIP
+       HB_COMPAT_XHB
+       HB_SHORTNAMES
+       HB_FILE_VER_STATIC
+
+   * harbour/source/compiler/hbusage.c
+     * Mail address update.
+
 2007-04-14 11:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/debug/dbgtarr.prg
      ! Fixed unclosed #if construct.

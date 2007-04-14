@@ -58,7 +58,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbsetup.ch"
 
 REQUEST HB_PVALUE
 REQUEST PCOUNT

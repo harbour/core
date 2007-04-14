@@ -50,7 +50,6 @@
  *
  */
 
-#include 'hbsetup.ch'
 #include 'hbclass.ch'
 #include "common.ch"
 

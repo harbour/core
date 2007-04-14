@@ -50,8 +50,6 @@
  *
 */
 
-#include "hbsetup.ch"
-
 /* NOTE: lAll is a dummy parameter, nothing seems to depend on it. [vszakats] */
 
 PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )

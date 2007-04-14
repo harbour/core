@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbsetup.ch"
 #include "common.ch"
 #include "tbrowse.ch"
 

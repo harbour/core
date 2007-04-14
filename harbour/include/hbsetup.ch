@@ -50,7 +50,8 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+/* NOTE: This file is used by C code and at Harbour build time. 
+         Normally you never need to #include it in any .prg code. */
 
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_

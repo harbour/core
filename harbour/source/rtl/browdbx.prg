@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 /* NOTE: Xbase++ has a standard function named dbSkipper(), it's not a
          standard CA-Cl*pper 5.x function, though. */
 

@@ -53,8 +53,6 @@
 #ifndef _BOX_CH
 #define _BOX_CH
 
-#include "hbsetup.ch"
-
 /* #defines for DISPBOX() */
 
 /* Single-line */
@@ -84,4 +82,3 @@
 #endif
 
 #endif /* _BOX_CH */
-

@@ -50,7 +50,5 @@
  *
  */
 
-#include "hbsetup.ch"
-
 /* Fill it as needed */
 

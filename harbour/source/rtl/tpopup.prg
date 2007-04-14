@@ -54,7 +54,6 @@
 #include "button.ch"
 #include "color.ch"
 #include "common.ch"
-#include "hbsetup.ch"
 
 #ifdef HB_COMPAT_C53
 

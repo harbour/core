@@ -53,7 +53,6 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbsetup.ch"
 
 #ifdef HB_COMPAT_C53
 CLASS HBRadioButton

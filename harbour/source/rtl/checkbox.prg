@@ -51,7 +51,6 @@
  */
 
 #include "common.ch"
-#include "hbsetup.ch"
 #include "hbclass.ch"
 #include "button.ch"
 

@@ -180,7 +180,7 @@ void hb_compPrintCredits( void )
            "Ron Pinkas <ron@profit-master.com>\n"
            "Ryszard Glab <rglab@imid.med.pl>\n"
            "Tim Stone <timstone@mstrlink.com>\n"
-           "Viktor Szakats <viktor.szakats@syenar.hu>\n"
+           "Viktor Szakats <harbour.01@syenar.hu>\n"
            "Vladimir Kazimirchik <v_kazimirchik@yahoo.com>\n"
            );
 }

@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #ifdef HB_C52_UNDOC
 
 FUNCTION SetTypeahead( nSize )

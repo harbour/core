@@ -80,7 +80,7 @@
  * This pseudofunction is only document in CL5.3 NG but not implemented
  * in Clipper
  */
-#include "hbsetup.ch"
+
 #ifdef HB_COMPAT_C53
 
 #xtranslate ORDCOND( [FOR <for>]                                        ;
@@ -95,7 +95,6 @@
                      [<.rest.>], [<.descend.>] )
 
 #endif
-
 
 #include "dbinfo.ch"
 

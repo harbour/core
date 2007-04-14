@@ -50,7 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
 #include "hbclass.ch"
 
 #ifdef HB_COMPAT_C53

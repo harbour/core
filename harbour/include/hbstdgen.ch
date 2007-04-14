@@ -58,23 +58,6 @@
 /* undefine all rules which are not necessary in default PP tables */
 #undef HB_SETUP_CH_
 
-#undef HB_EXTENSION
-
-#undef HB_C52_UNDOC
-#undef HB_C52_STRICT
-
-#undef HB_COMPAT_C53
-#undef HB_COMPAT_XPP
-#undef HB_COMPAT_VO
-#undef HB_COMPAT_FLAGSHIP
-#undef HB_COMPAT_FOXPRO
-#undef HB_COMPAT_DBASE
-#undef HB_COMPAT_CLIP
-#undef HB_COMPAT_XHB
-
-#undef HB_SHORTNAMES
-#undef HB_FILE_VER_STATIC
-
 #undef __HARBOUR__
 #undef __DATE__
 #undef __TIME__

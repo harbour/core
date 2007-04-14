@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "common.ch"
 
 FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )

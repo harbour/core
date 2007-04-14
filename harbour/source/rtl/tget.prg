@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbsetup.ch"
 
 #include "color.ch"
 #include "common.ch"

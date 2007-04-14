@@ -57,7 +57,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "getexit.ch"
-#include "hbsetup.ch"
 #include "hbclass.ch"
 
 #ifdef HB_COMPAT_C53

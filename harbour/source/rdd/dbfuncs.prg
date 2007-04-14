@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 /* short (10 chars long) version of some functions for compatibility */
 
 FUNCTION dbClearFil()

@@ -50,8 +50,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 #include "dbstruct.ch"
 
 /* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters 

@@ -56,8 +56,6 @@
  *
  */
 
-#include "hbsetup.ch"
-
 REQUEST DELIM
 
 FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
