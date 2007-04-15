@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 01:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/debugger.prg
+    * removed some not longer necessary GTWVW extensions
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/contrib/libct/ctwin.c
+    + added support for GTI_{NEW,GET,SET}WIN in CTWIN
+      Now debugger can be used with CTWIN without any problems
+
 2007-04-16 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/bin/pack_src.sh

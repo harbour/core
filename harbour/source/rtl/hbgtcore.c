@@ -1499,7 +1499,7 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
 
          if( !pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
-         hb_arrayNew( pInfo->pResult, 7 );
+         hb_arrayNew( pInfo->pResult, 8 );
          hb_gt_GetPos( &iRow, &iCol );
          hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 1 ), iRow );
          hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 2 ), iCol );
@@ -1522,7 +1522,7 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
          break;
       }
       case GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
-         if( hb_arrayLen( pInfo->pNewVal ) == 7 )
+         if( hb_arrayLen( pInfo->pNewVal ) == 8 )
          {
             hb_gt_DispBegin();
             if( hb_arrayGetCLen( pInfo->pNewVal, 7 ) > 0 )

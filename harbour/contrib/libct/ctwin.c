@@ -1366,6 +1366,39 @@ static BOOL hb_ctw_gt_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
+      case GTI_NEWWIN:
+      {
+         BOOL fResult;
+
+         hb_ctw_SelectWindow( 0 );
+         fResult = HB_GTSUPER_INFO( iType, pInfo );
+
+         if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
+            hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 8 ),
+                          s_iCurrWindow );
+         return fResult;
+      }
+      case GTI_GETWIN:
+      {
+         BOOL fResult;
+         int iWindow = s_iCurrWindow;
+
+         hb_ctw_SelectWindow( 0 );
+         fResult = HB_GTSUPER_INFO( iType, pInfo );
+         if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
+            hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 8 ), iWindow );
+         return fResult;
+      }
+      case GTI_SETWIN:
+      {
+         BOOL fResult;
+
+         hb_ctw_SelectWindow( 0 );
+         fResult = HB_GTSUPER_INFO( iType, pInfo );
+         if( hb_arrayLen( pInfo->pNewVal ) == 8 )
+            hb_ctw_SelectWindow( hb_arrayGetNI( pInfo->pNewVal, 8 ) );
+         return fResult;
+      }
       default:
          return HB_GTSUPER_INFO( iType, pInfo );
    }

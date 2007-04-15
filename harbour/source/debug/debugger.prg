@@ -129,13 +129,10 @@
 
 
 * The dimension of the debugger window
-//#IFDEF __GTWVW__
 #define DEBUGGER_MINROW  0
 #define DEBUGGER_MINCOL  0
 #define DEBUGGER_MAXROW 22
 #define DEBUGGER_MAXCOL 77
-
-//#ENDIF
 
 static s_oDebugger
 
@@ -214,9 +211,6 @@ CLASS TDebugger
    DATA   lPPO INIT .F.
    DATA   lRunAtStartup
    DATA   lLineNumbers INIT .T.
-
-   //x for gtwvw:
-   DATA   cGTVersion INIT ' '
 
    METHOD New()
    METHOD Activate()
@@ -397,20 +391,8 @@ METHOD New() CLASS TDebugger
    ::lGo               := ::lRunAtStartup
 
    /* Store the initial screen dimensions for now */
-   #ifdef __XHARBOUR__
-      if hb_gt_Version() == 'WVW' .and. ;
-         !( type( 'WVW_NOPENWINDOW()' ) == 'U' .OR. Type( 'WVW_NSETCURWINDOW()' ) == 'U' )
-         ::cGTVersion := 'WVW'
-         ::nMaxRow := DEBUGGER_MAXROW
-         ::nMaxCol := DEBUGGER_MAXCOL
-      else
-         ::nMaxRow := MaxRow()
-         ::nMaxCol := MaxCol()
-      endif
-   #else
-      ::nMaxRow := MaxRow()
-      ::nMaxCol := MaxCol()
-   #endif
+   ::nMaxRow := MaxRow()
+   ::nMaxCol := MaxCol()
 
    ::oPullDown      := __dbgBuildMenu( Self )
 
