@@ -537,7 +537,7 @@ char * hb_verPCode( void )
 
    pszPCode = ( char * ) hb_xgrab( 24 );
 
-   snprintf( pszPCode, 32, "PCode version: %d.%d",
+   snprintf( pszPCode, 24, "PCode version: %d.%d",
              HB_PCODE_VER >> 8, HB_PCODE_VER & 0xff );
 
    return pszPCode;

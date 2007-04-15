@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-15 14:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbver.c
+    ! fixed typo in buffer size passed to snprintf()
+
 2007-04-15 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
   * harbour/source/vm/dbgentry.c
