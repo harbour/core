@@ -424,6 +424,7 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
 
          if ( szName[ strlen( szName ) - 1 ] == ':' )
             return;
+
          hb_procinfo( 0, szProcName, NULL, NULL );
          if ( !strncmp( szProcName, "(_INITSTATICS", 13 ) )
              info->bInitStatics = TRUE;
@@ -431,12 +432,14 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
              info->bInitGlobals = TRUE;
          else if ( !strncmp( szProcName, "(_INITLINES", 11 ) )
              info->bInitLines = TRUE;
+
          if ( info->bInitStatics || info->bInitGlobals )
             hb_dbgAddModule( info, szName );
          else if ( !strncmp( szProcName, "(b)", 3 ) )
             info->bCodeBlock = TRUE;
          else if ( info->bNextRoutine )
             info->bNextRoutine = FALSE;
+
          hb_dbgAddStack( info, szName, hb_dbg_ProcLevel() );
          for ( i = 0; i < info->nBreakPoints; i++ )
          {
@@ -678,7 +681,7 @@ hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
       else
       {
          /* We're in an (_INITSTATICSnnnnn) pseudo-function */
-         char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5];
+         char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
          hb_procinfo( 0, szName, NULL, NULL );
          top->szFunction = STRDUP( szName );
@@ -925,7 +928,7 @@ hb_dbgEndProc( HB_DEBUGINFO *info )
    if ( !info->nCallStackLen )
       return;
 
-   top = &info->aCallStack[ info->nCallStackLen - 1 ];
+   top = &info->aCallStack[ --info->nCallStackLen ];
    FREE( top->szFunction );
    FREE( top->szModule );
    if ( top->nLocals )
@@ -936,10 +939,10 @@ hb_dbgEndProc( HB_DEBUGINFO *info )
    {
       FREE( top->aStatics );
    }
-   info->nCallStackLen--;
    if ( !info->nCallStackLen )
    {
       FREE( info->aCallStack );
+      info->aCallStack = NULL;
    }
 }
 
@@ -1480,12 +1483,13 @@ hb_dbgQuit( HB_DEBUGINFO *info )
    }
    while ( info->nModules )
    {
-      HB_MODULEINFO *module = &info->aModules[ info->nModules - 1 ];
+      int nModules = info->nModules - 1;
+      HB_MODULEINFO *module = &info->aModules[ nModules ];
       if ( module->nStatics )
       {
          FREE( module->aStatics );
       }
-      ARRAY_DEL( HB_MODULEINFO, info->aModules, info->nModules, info->nModules - 1 );
+      ARRAY_DEL( HB_MODULEINFO, info->aModules, info->nModules, nModules );
    }
 }
 

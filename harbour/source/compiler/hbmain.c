@@ -4072,6 +4072,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
    PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
+   char * pFuncName;
    ULONG  ulSize;
    USHORT wLocals = 0;   /* number of referenced local variables */
    USHORT wLocalsCnt, wLocalsLen;
@@ -4092,8 +4093,13 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    /* find the function that owns the codeblock */
    pFunc = pCodeblock->pOwner;
+   pFuncName = pFunc->szName;
    while( pFunc->pOwner )
+   {
       pFunc = pFunc->pOwner;
+      if( pFunc->szName && *pFunc->szName )
+         pFuncName = pFunc->szName;
+   }
 
    pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
 
@@ -4119,7 +4125,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    ulSize = pCodeblock->lPCodePos + 2;
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      ulSize += 3 + strlen( hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ) ) + strlen( pFunc->szName );
+      ulSize += 3 + strlen( HB_COMP_PARAM->currModule ) + strlen( pFuncName );
       ulSize += wLocalsLen;
    }
 
@@ -4159,7 +4165,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      hb_compGenModuleName( HB_COMP_PARAM, pFunc->szName );
+      hb_compGenModuleName( HB_COMP_PARAM, pFuncName );
 
       /* generate the name of referenced local variables */
       pVar = pCodeblock->pStatics;

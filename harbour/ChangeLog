@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-15 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/vm/dbgentry.c
+  * harbour/source/vm/hvm.c
+    ! fixed GPF in debugger
 
 2007-04-15 11:20 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
    + harbour/contrib/gd/tests/images_in/conv_test.jpeg

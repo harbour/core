@@ -5053,7 +5053,7 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmLocalName(%hu, %s)", uiLocal, szLocalName));
 
-   if( s_pDynsDbgEntry )
+   if( s_pDynsDbgEntry && s_bDebugging )
    {
       s_bDebugging = TRUE;
       s_bDebugShowLines = FALSE;
@@ -5080,7 +5080,7 @@ static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticNam
 
    HB_SYMBOL_UNUSED( bIsGlobal );
 
-   if( s_pDynsDbgEntry )
+   if( s_pDynsDbgEntry && s_bDebugging )
    {
       s_bDebugging = TRUE;
       s_bDebugShowLines = FALSE;
