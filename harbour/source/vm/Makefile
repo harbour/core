@@ -26,7 +26,6 @@ C_SOURCES=\
 	break.c      \
 	classes.c    \
 	cmdarg.c     \
-	dbgentry.c   \
 	debug.c      \
 	dynlibhb.c   \
 	dynsym.c     \

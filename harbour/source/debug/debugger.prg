@@ -80,6 +80,7 @@
 #include "setcurs.ch"
 #include "getexit.ch"
 #include "hbdebug.ch"   // for "nMode" of __dbgEntry
+#include "hbgtinfo.ch"
 
 
 #define  NTRIM(x)    (ALLTRIM(STR(x)))
@@ -153,9 +154,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )  // d
 
   DO CASE
     CASE nMode == HB_DBG_GETENTRY
-      HB_INLINE(){
-         hb_vm_pFunDbgEntry = hb_dbgEntry;
-      }
+      HB_DBG_SetEntry()
 
     CASE nMode == HB_DBG_ACTIVATE
       IF s_oDebugger == NIL
@@ -169,9 +168,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )  // d
       s_oDebugger:aBreakPoints := uParam5
       IF bStartup
         IF s_oDebugger:lRunAtStartup
-          HB_INLINE( uParam1 ){
-            hb_dbgSetGo( hb_parptr( 1 ) );
-          }
+          HB_DBG_SetGo( uParam1 )
           RETURN
         ENDIF
       ENDIF
@@ -188,16 +185,13 @@ CLASS TDebugger
    DATA   oPullDown
    DATA   oWndCode, oWndCommand, oWndStack, oWndVars
    DATA   oBar, oBrwText, cPrgName, oBrwStack, oBrwVars, aVars
-   DATA   cImage
-   DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor, nAppDispCount
+   DATA   nAppDispCount
    DATA   nAppLastKey, bAppInkeyAfter, bAppInkeyBefore, bAppClassScope
-   DATA   nAppCTWindow, nAppDirCase, nAppFileCase, oAppGetList, nAppTypeAhead
+   DATA   nAppDirCase, nAppFileCase, oAppGetList, nAppTypeAhead
    DATA   nMaxRow, nMaxCol
 
-   DATA   nAppMaxRow, nAppMaxCol  //x new: app's maxrow/col
-   DATA   nAppWindow
-
-   DATA   nDebuggerWindow
+   DATA   hUserWindow, hDebuggerWindow
+   DATA   lDebuggerWindowIsOpen INIT .F.
 
    DATA   aBreakPoints
    DATA   aCallStack    //stack of procedures with debug info
@@ -222,7 +216,6 @@ CLASS TDebugger
    DATA   lLineNumbers INIT .T.
 
    //x for gtwvw:
-   DATA   lDebuggerWindowIsOpen INIT .F.
    DATA   cGTVersion INIT ' '
 
    METHOD New()
@@ -293,7 +286,7 @@ CLASS TDebugger
    METHOD RestoreAppState()
    METHOD RestoreSettings()
    METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := !::lRunAtStartup
-   METHOD SaveAppScreen( lRestore )
+   METHOD SaveAppScreen()
    METHOD SaveAppState()
    METHOD SaveSettings()
    METHOD Show()
@@ -354,7 +347,6 @@ CLASS TDebugger
    METHOD ResizeWindows( oWindow )
    METHOD NotSupported() INLINE Alert( "Not implemented yet!" )
 
-   //x for gtwvw:
    METHOD OpenDebuggerWindow()
    METHOD CloseDebuggerWindow()
 
@@ -420,10 +412,6 @@ METHOD New() CLASS TDebugger
       ::nMaxCol := MaxCol()
    #endif
 
-   /* Store the initial screen dimensions for now */
-   ::nAppMaxRow := MaxRow()
-   ::nAppMaxCol := MaxCol()
-
    ::oPullDown      := __dbgBuildMenu( Self )
 
    ::oWndCode       := TDbWindow():New( 1, 0, ::nMaxRow - 6, ::nMaxCol )
@@ -445,38 +433,30 @@ METHOD New() CLASS TDebugger
    ::lGo := ::lRunAtStartup
 return Self
 
-//x new
+
 METHOD OpenDebuggerWindow() CLASS TDebugger
-  if ::cGTVersion == 'WVW'
-    IF !::lDebuggerWindowIsOpen
-      ::nAppMaxRow := maxrow()
-      ::nAppMaxCol := maxcol()
-      ::nAppWindow := hb_ExecFromArray( 'WVW_NSETCURWINDOW' )
-      ::nDebuggerWindow := hb_ExecFromArray( 'WVW_NOPENWINDOW', ;
-                      { "Debugger", DEBUGGER_MINROW, DEBUGGER_MINCOL, ;
-                        DEBUGGER_MAXROW, DEBUGGER_MAXCOL } )
-      ::lDebuggerWindowIsOpen := .t.
-    ENDIF
-    
-    hb_ExecFromArray( 'WVW_NSETCURWINDOW', { ::nDebuggerWindow } )
-    return nil
+
+  if !::lDebuggerWindowIsOpen
+    ::hUserWindow = hb_gtInfo( GTI_GETWIN )
+    if ::hDebuggerWindow == NIL
+      ::hDebuggerWindow := hb_gtInfo( GTI_GETWIN, ;
+                              { "Debugger", DEBUGGER_MINROW, DEBUGGER_MINCOL, ;
+                                DEBUGGER_MAXROW, DEBUGGER_MAXCOL } )
+    else
+      hb_gtInfo( GTI_SETWIN, ::hDebuggerWindow )
+    endif
+    ::lDebuggerWindowIsOpen := .t.
   endif
+
 return nil
 
-//x new
+
 METHOD CloseDebuggerWindow() CLASS Tdebugger
 
-  if ::cGTVersion == 'WVW'
-    //if !::lDebuggerWindowIsOpen
-      hb_ExecFromArray( 'WVW_NSETCURWINDOW', { ::nAppWindow } )
-      return nil
-    //endif
-
-    /*hb_ExecFromArray( 'WVW_LCLOSEWINDOW' )
+  if ::lDebuggerWindowIsOpen
+    ::hDebuggerWindow = hb_gtInfo( GTI_GETWIN )
+    hb_gtInfo( GTI_SETWIN, ::hUserWindow )
     ::lDebuggerWindowIsOpen := .f.
-    if !( type( 'WVW_SHOWWINDOW()' ) == 'U' )
-      hb_ExecFromArray('WVW_SHOWWINDOW')
-    endif*/
   endif
 
 return nil
@@ -676,9 +656,7 @@ return nil
 
 METHOD CodeblockTrace()
   ::oPullDown:GetItemByIdent( "CODEBLOCK" ):checked := ::lCBTrace := ! ::lCBTrace
-  HB_INLINE( ::pInfo, ::lCBTrace ){
-    hb_dbgSetCBTrace( hb_parptr( 1 ), hb_parl( 2 ) );
-  }
+  HB_DBG_SetCBTrace( ::pInfo, ::lCBTrace )
 RETURN NIL
 
 
@@ -1234,29 +1212,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS TDebugger
   lValid := .F.
   bOldErrorBlock := ErrorBlock( {|oErr| Break( oErr ) } )
   BEGIN SEQUENCE
-    xResult := HB_INLINE( ::pInfo, xExpr, @lValid ){
-      PHB_ITEM item;
-
-      if ( ISCHAR( 2 ) )
-      {
-        item = hb_dbgGetExpressionValue( hb_parptr( 1 ), hb_parc( 2 ) );
-      }
-      else
-      {
-        item = hb_dbgGetWatchValue( hb_parptr( 1 ), hb_parni( 2 ) - 1 );
-      }
-
-      if ( item )
-      {
-        hb_itemRelease( hb_itemReturn( item ) );
-        hb_storl( TRUE, 3 );
-      }
-      else
-      {
-        hb_storl( FALSE, 3 );
-        hb_ret();
-      }
-    }
+    xResult := HB_DBG_GetExprValue( ::pInfo, xExpr, @lValid )
     IF !lValid
       xResult := "Syntax error"
     ENDIF
@@ -1273,17 +1229,13 @@ RETURN xResult
 
 
 METHOD GetSourceFiles() CLASS TDebugger
-RETURN HB_INLINE( ::pInfo ){
-          hb_itemRelease( hb_itemReturn( hb_dbgGetSourceFiles( hb_parptr( 1 ) ) ) );
-       }
+RETURN HB_DBG_GetSourceFiles( ::pInfo )
 
 
 METHOD Global() CLASS TDebugger
-
    ::lShowGlobals := ! ::lShowGlobals
    ::RefreshVars()
-
-return nil
+RETURN NIL
 
 
 METHOD Go() CLASS TDebugger
@@ -1294,9 +1246,7 @@ METHOD Go() CLASS TDebugger
   ENDIF
   ::RestoreAppScreen()
   ::RestoreAppState()
-  HB_INLINE( ::pInfo ){
-    hb_dbgSetGo( hb_parptr( 1 ) );
-  }
+  HB_DBG_SetGo( ::pInfo )
   ::Exit()
 RETURN NIL
 
@@ -1488,17 +1438,7 @@ METHOD HandleEvent() CLASS TDebugger
 return nil
 
 METHOD Hide() CLASS TDebugger
-   ::CloseDebuggerWindow() //x gtwvw
-
-   if !(::cGTVersion=='WVW') //#IFNDEF __GTWVW__
-      //x was: RestScreen( ,,,, ::cAppImage )
-      RestScreen( 0,0,::nAppMaxRow,::nAppMaxCol, ::cAppImage )
-   endif //#ENDIF
-
-   ::cAppImage := nil
-   SetColor( ::cAppColors )
-   SetCursor( ::nAppCursor )
-
+   ::CloseDebuggerWindow()
 return nil
 
 
@@ -1685,9 +1625,7 @@ return nil
 
 
 METHOD IsValidStopLine( cName, nLine ) CLASS TDebugger
-RETURN HB_INLINE( ::pInfo, cName, nLine ){
-          hb_retl( hb_dbgIsValidStopLine( hb_parptr( 1 ), hb_parc( 2 ), hb_parni( 3 ) ) );
-       }
+RETURN HB_DBG_IsValidStopLine( ::pInfo, cName, nLine )
 
 
 METHOD LineNumbers( lLineNumbers ) CLASS TDebugger
@@ -1931,9 +1869,7 @@ return nil
 METHOD NextRoutine() CLASS TDebugger
   ::RestoreAppScreen()
   ::RestoreAppState()
-  HB_INLINE( ::pInfo ){
-    hb_dbgSetNextRoutine( hb_parptr( 1 ) );
-  }
+  HB_DBG_SetNextRoutine( ::pInfo )
   ::Exit()
 RETURN self
 
@@ -2089,9 +2025,7 @@ return nil
 METHOD Quit() CLASS TDebugger
   ::Exit()
   ::Hide()
-  HB_INLINE( ::pInfo ){
-    hb_dbgSetQuit( hb_parptr( 1 ) );
-  }
+  HB_DBG_SetQuit( ::pInfo )
   s_oDebugger := NIL
   __QUIT()
 RETURN NIL
@@ -2243,30 +2177,9 @@ RETURN self
 
 METHOD RestoreAppScreen() CLASS TDebugger
   LOCAL i
-  local lWindowed := ::lDebuggerWindowIsOpen
 
-  ::cImage := SaveScreen()
+  ::CloseDebuggerWindow()
 
-  if !lWindowed //x
-    DispBegin()
-    RestScreen( 0, 0, ::nMaxRow, ::nMaxCol, ::cAppImage )
-    IF !Empty( ::nAppCTWindow )
-      /* Don't link libct automatically... */
-      HB_INLINE( ::nAppCTWindow ){
-         /* hb_ctWSelect( hb_parni( 1 ) ); */
-      }
-    ENDIF
-  else                        //x
-    ::CloseDebuggerWindow()   //x
-  endif
-
-  SetPos( ::nAppRow, ::nAppCol )
-  SetColor( ::cAppColors )
-  SetCursor( ::nAppCursor )
-
-  if !lWindowed //x
-    DispEnd()
-  endif
   FOR i := 1 TO ::nAppDispCount
     DispBegin()
   NEXT
@@ -2299,52 +2212,18 @@ METHOD RestoreSettings() CLASS TDebugger
 return nil
 
 
-METHOD SaveAppScreen( lRestore ) CLASS TDebugger
+METHOD SaveAppScreen() CLASS TDebugger
   LOCAL nRight, nTop, i
-
-  IF lRestore == NIL
-    lRestore := .T.
-  ENDIF
 
   ::nAppDispCount := DispCount()
   FOR i := 1 TO ::nAppDispCount
     DispEnd()
   NEXT
 
-  //x these two lines are moved to after SetCursor()
-  //x DispBegin()
-  //x ::cAppImage  := SaveScreen()
+  ::OpenDebuggerWindow()
 
-  /* Get cursor coordinates INSIDE ct window */
-  ::nAppRow    := Row()
-  ::nAppCol    := Col()
-  ::cAppColors := SetColor()
-
-  /* We don't want to auto-link libct... */
-  ::nAppCTWindow := HB_INLINE(){
-     /* hb_retni( hb_ctWSelect( -1 ) ); */
-     /* hb_ctWSelect( 0 ); */
-  }
-
-  ::nAppCursor := SetCursor( SC_NONE )
-
-  //x more...
-  ::nAppMaxRow := maxrow()
-  ::nAppMaxCol := maxcol()
-
-  if !( ::cGTVersion == 'WVW' )
-    ::cAppImage  := SaveScreen()
-  endif
-
-  ::OpenDebuggerWindow() //x this will also assign ::nMaxRow/col
-
-  DispBegin()
-
-  IF lRestore
-    //x was: RestScreen( 0, 0, ::nMaxRow, ::nMaxCol, ::cImage )
-    RestScreen( , , , , ::cImage )
-  ENDIF
   IF ::nMaxRow != MaxRow() .OR. ::nMaxCol != MaxCol()
+    DispBegin()
     ::nMaxRow := MaxRow()
     ::nMaxCol := MaxCol()
     nTop := 1
@@ -2371,8 +2250,8 @@ METHOD SaveAppScreen( lRestore ) CLASS TDebugger
     ::oWndCode:Resize( nTop, 0, ::nMaxRow - 6, nRight )
     ::oPullDown:Refresh()
     ::BarDisplay()
+    DispEnd()
   ENDIF
-  DispEnd()
 return nil
 
 
@@ -2497,8 +2376,7 @@ return nil
 
 METHOD Show() CLASS TDebugger
 
-   ::SaveAppScreen( .F. )
-
+   ::SaveAppScreen()
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
@@ -2519,29 +2397,15 @@ RETURN NIL
 
 METHOD ShowAppScreen() CLASS TDebugger
 
-   ::cImage := SaveScreen()
-
-   ::CloseDebuggerWindow() //x gtwvw
-
-   if !( ::cGTVersion == 'WVW' )
-     RestScreen( 0, 0, ::nAppMaxRow, ::nAppMaxCol, ::cAppImage )
-   endif
+   ::CloseDebuggerWindow()
 
    if LastKey() == K_LBUTTONDOWN
       InKey( 0, INKEY_ALL )
-      InKey( 0, INKEY_ALL )
-   else
-      InKey( 0, INKEY_ALL )
    endif
-
-   while LastKey() == K_MOUSEMOVE
-      InKey( 0, INKEY_ALL )
+   while InKey( 0, INKEY_ALL ) == K_MOUSEMOVE
    end
 
-   ::OpenDebuggerWindow() //x
-
-   //x was: RestScreen( 0, 0, ::nMaxRow, ::nMaxCol, ::cImage )
-   RestScreen( , , , , ::cImage )
+   ::OpenDebuggerWindow()
 
 return nil
 
@@ -2859,9 +2723,7 @@ METHOD ToCursor() CLASS TDebugger
   LOCAL cName := strip_path( ::cPrgName ), nLine := ::oBrwText:nRow
 
   IF ::IsValidStopLine( cName, nLine )
-    HB_INLINE( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:nRow ){
-      hb_dbgSetToCursor( hb_parptr( 1 ), hb_parc( 2 ), hb_parni( 3 ) );
-    }
+    HB_DBG_SetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:nRow )
     ::RestoreAppScreen()
     ::RestoreAppState()
     ::Exit()
@@ -2893,18 +2755,14 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS TDebugger
 
   if nAt == 0
     AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
-    HB_INLINE( ::pInfo, cFileName, nLine ){
-       hb_dbgAddBreak( hb_parptr( 1 ), hb_parc( 2 ), hb_parni( 3 ), NULL );
-    }
+    HB_DBG_AddBreak( ::pInfo, cFileName, nLine )
     IF FILENAME_EQUAL( cFileName, strip_path( ::cPrgName ) )
       ::oBrwText:ToggleBreakPoint( nLine, .T. )
     ENDIF
   else
     ADel( ::aBreakPoints, nAt )
     ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
-    HB_INLINE( ::pInfo, nAt - 1 ){
-       hb_dbgDelBreak( hb_parptr( 1 ), hb_parni( 2 ) );
-    }
+    HB_DBG_DelBreak( ::pInfo, nAt - 1 )
     IF FILENAME_EQUAL( cFileName, strip_path( ::cPrgName ) )
       ::oBrwText:ToggleBreakPoint( nLine, .F. )
     ENDIF
@@ -2916,9 +2774,7 @@ return nil
 
 
 METHOD Trace() CLASS TDebugger
-  HB_INLINE( ::pInfo ){
-    hb_dbgSetTrace( hb_parptr( 1 ) );
-  }
+  HB_DBG_SetTrace( ::pInfo )
   ::Step() //forces a Step()
 RETURN Self
 
@@ -2939,9 +2795,7 @@ METHOD TracepointAdd( cExpr ) CLASS TDebugger
    ENDIF
    aWatch := {"tp", cExpr, NIL}
    ::RestoreAppState()
-   HB_INLINE( ::pInfo, cExpr ){
-     hb_dbgAddWatch( hb_parptr( 1 ), hb_parc( 2 ), TRUE );
-   }
+   HB_DBG_AddWatch( ::pInfo, cExpr, .T. )
    ::SaveAppState()
    AADD( ::aWatch, aWatch )
    ::WatchpointsShow()
@@ -3104,9 +2958,7 @@ METHOD WatchpointAdd( cExpr ) CLASS TDebugger
       RETURN self
    ENDIF
    aWatch := { "wp", cExpr }
-   HB_INLINE( ::pInfo, cExpr ){
-      hb_dbgAddWatch( hb_parptr( 1 ), hb_parc( 2 ), FALSE );
-   }
+   HB_DBG_AddWatch( ::pInfo, cExpr, .F. )
    AADD( ::aWatch, aWatch )
    ::WatchpointsShow()
 
@@ -3125,9 +2977,7 @@ METHOD WatchpointDel( nPos ) CLASS TDebugger
       IF( LastKey() != K_ESC )
          IF( nPos >=0 .AND. nPos < LEN(::aWatch) )
             ::oBrwPnt:gotop()
-            HB_INLINE( ::pInfo, nPos ){
-               hb_dbgDelWatch( hb_parptr( 1 ), hb_parni( 2 ) );
-            }
+            HB_DBG_DelWatch( ::pInfo, nPos )
             ADEL( ::aWatch, nPos+1 )
             ASIZE( ::aWatch, LEN(::aWatch)-1 )
             IF( LEN(::aWatch) == 0 )
@@ -3156,9 +3006,7 @@ METHOD WatchpointEdit( nPos ) CLASS TDebugger
       RETURN self
    ENDIF
    aWatch := { "wp", cExpr }
-   HB_INLINE( ::pInfo, nPos - 1, cExpr ){
-      hb_dbgSetWatch( hb_parptr( 1 ), hb_parni( 2 ), hb_parc( 3 ), FALSE );
-   }
+   HB_DBG_SetWatch( ::pInfo, nPos - 1, cExpr, .F. )
    ::aWatch[ nPos ] := aWatch
    ::WatchpointsShow()
 
@@ -3282,8 +3130,8 @@ METHOD WatchpointsShow() CLASS TDebugger
       if ! ::oWndPnt:lVisible .OR. lRepaint
          ::ResizeWindows( ::oWndPnt )
       endif
+      DispEnd()
    endif
-   DispEnd()
 return nil
 
 

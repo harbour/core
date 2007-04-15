@@ -92,6 +92,7 @@ $hb_collect source/pp/*.[ch]
 
 # SOURCE\DEBUG
 $hb_collect source/debug/Makefile
+$hb_collect source/debug/*.[ch]
 $hb_collect source/debug/*.prg
 
 # SOURCE\LANG

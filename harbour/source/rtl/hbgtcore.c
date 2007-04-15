@@ -1480,15 +1480,65 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, hb_gt_MaxRow() );
          break;
-/*
-   TODO:
-      case GTI_GETWIN:
-         // save screen buffer, cursor shape and possition
-      case GTI_SETWIN:
-         // restore screen buffer, cursor shape and possition
-      case GTI_NEWWIN:
-         // clear screen area, set default cursor shape and position
-*/
+
+      case GTI_NEWWIN:  /* clear screen area, set default cursor shape and position */
+      {
+         /* Clear screen */
+         hb_gt_DispBegin();
+         hb_gt_Scroll( 0, 0, hb_gt_MaxRow(), hb_gt_MaxCol(), ( BYTE ) hb_gt_GetColor(), hb_gt_GetClearChar(), 0, 0 );
+         hb_gt_SetPos( 0, 0 );
+         hb_gt_SetCursorStyle( SC_NORMAL );
+         hb_gt_DispEnd();
+         hb_gt_Flush();
+         /* no break; */
+      }
+      case GTI_GETWIN:  /* save screen buffer, cursor shape and possition */
+      {
+         int iRow, iCol;
+         ULONG ulSize;
+
+         if( !pInfo->pResult )
+            pInfo->pResult = hb_itemNew( NULL );
+         hb_arrayNew( pInfo->pResult, 7 );
+         hb_gt_GetPos( &iRow, &iCol );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 1 ), iRow );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 2 ), iCol );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 3 ), hb_gt_GetCursorStyle() );
+         hb_itemPutC( hb_arrayGetItemPtr( pInfo->pResult, 4 ), hb_conSetColor( NULL ) );
+
+         iRow = hb_gt_MaxRow();
+         iCol = hb_gt_MaxCol();
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 5 ), iRow );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 6 ), iCol );
+
+         ulSize = hb_gt_RectSize( 0, 0, iRow, iCol );
+         if( ulSize )
+         {
+            BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
+            hb_gt_Save( 0, 0, iRow, iCol, pBuffer );
+            hb_itemPutCPtr( hb_arrayGetItemPtr( pInfo->pResult, 7 ),
+                            ( char * ) pBuffer, ulSize );
+         }
+         break;
+      }
+      case GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
+         if( hb_arrayLen( pInfo->pNewVal ) == 7 )
+         {
+            hb_gt_DispBegin();
+            if( hb_arrayGetCLen( pInfo->pNewVal, 7 ) > 0 )
+            {
+               hb_gt_Rest( 0, 0, hb_arrayGetNI( pInfo->pNewVal, 5 ),
+                           hb_arrayGetNI( pInfo->pNewVal, 6 ),
+                           ( BYTE * ) hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
+            }
+            hb_gt_SetPos( hb_arrayGetNI( pInfo->pNewVal, 1 ),
+                          hb_arrayGetNI( pInfo->pNewVal, 2 ) );
+            hb_gt_SetCursorStyle( hb_arrayGetNI( pInfo->pNewVal, 3 ) );
+            hb_conSetColor( hb_arrayGetCPtr( pInfo->pNewVal, 4 ) );
+            hb_gt_DispEnd();
+            hb_gt_Flush();
+         }
+         break;
 
       default:
          return FALSE;

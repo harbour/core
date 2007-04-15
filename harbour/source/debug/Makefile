@@ -4,6 +4,9 @@
 
 ROOT = ../../
 
+C_SOURCES=\
+	dbgentry.c   \
+
 PRG_SOURCES=\
 	dbgmenu.prg  \
 	dbghelp.prg  \
@@ -17,7 +20,7 @@ PRG_SOURCES=\
 	dbgtobj.prg  \
 	tbrwtext.prg \
 	dbgwa.prg    \
-  dbgbrwsr.prg
+	dbgbrwsr.prg \
 
 LIBNAME=debug
 

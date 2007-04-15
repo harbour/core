@@ -291,7 +291,6 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\classes.obj  \
     $(OBJ_DIR)\cmdarg.obj   \
     $(OBJ_DIR)\codebloc.obj \
-    $(OBJ_DIR)\dbgentry.obj \
     $(OBJ_DIR)\debug.obj    \
     $(OBJ_DIR)\dynlibhb.obj \
     $(OBJ_DIR)\dynsym.obj   \
@@ -537,6 +536,7 @@ MACRO_LIB_OBJS = \
 #**********************************************************
 
 DEBUG_LIB_OBJS = \
+    $(OBJ_DIR)\dbgentry.obj \
     $(OBJ_DIR)\dbgbrwsr.obj \
     $(OBJ_DIR)\dbghelp.obj  \
     $(OBJ_DIR)\dbgmenu.obj  \

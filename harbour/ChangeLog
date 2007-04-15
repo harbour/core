@@ -8,6 +8,29 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/bin/pack_src.sh
+  * harbour/source/vm/Makefile
+  - harbour/source/vm/dbgentry.c
+  * harbour/source/debug/Makefile
+  + harbour/source/debug/dbgentry.c
+    * moved dbgentry.c from HVM to DEBUG library
+
+  * harbour/source/rtl/hbgtcore.c
+    + added basic version of GTI_{NEW,GET,SET}WIN
+
+  * harbour/include/hbapidbg.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/debug/debugger.prg
+  * harbour/source/debug/dbgentry.c
+    + added set of .prg level functions (HB_DBG_*()) to control
+      debugger internals
+    * eliminated HB_INLINE() calls
+    * use  to switch between user and debugger screen
+    * cleaned debugger interface in HVM, removed unused variables
+      added one common debug function
+
 2007-04-15 14:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbver.c
     ! fixed typo in buffer size passed to snprintf()
