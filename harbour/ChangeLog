@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2007-04-15 11:20 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
+   + harbour/contrib/gd/tests/images_in/conv_test.jpeg
+   + harbour/contrib/gd/tests/images_in/gdlogobig.png
+   + harbour/contrib/gd/tests/images_in/theclipper.gif
+     + uploaded in binary form
+
 2007-04-15 11:17 UTC+0200 Francesco Saverio Giudice (info/at/fsgiudice.com)
    - harbour/contrib/gd/tests/images_in/empty.jpeg
    - harbour/contrib/gd/tests/images_in/conv_test.jpeg
