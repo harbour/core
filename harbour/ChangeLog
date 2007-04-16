@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 01:17 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   + contrib/ole2
+   + contrib/ole2/win32ole.prg
+   + contrib/ole2/w32ole.c
+     * win32ole.prg borrowed from xharbour, source modifications by Przemek
+
+win32ole.prg borrowed from xharbour, with source modifications from Przemek
+
 2007-04-16 22:45 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/hbinet.c
      ! Warnings fixed for Darwin (gcc 4.0.1 OSX 10.4.9 PPC)
