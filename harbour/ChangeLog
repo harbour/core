@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 21:25 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/source/rtl/tget.prg
+  * harbour/source/rtl/tgetlist.prg
+    * fixed ::UpdateBuffer()
+  * source/codepage/uc88591b.c
+  * source/rtl/gtxwc/gtxwc.c
+    * added support for Euro sign
+
 2007-04-16 11:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
   * harbour/source/compiler/ppcomp.c

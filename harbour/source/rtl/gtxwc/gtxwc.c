@@ -1846,6 +1846,11 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt)
          buf[0] = (BYTE) (outISO & 0xff);
          n = 1;
       }
+      if ( outISO == 0x20ac )
+      {
+         buf[0] = (BYTE) 0x80;
+         n = 1;
+      }
    }
    if( n > 0 )
    {

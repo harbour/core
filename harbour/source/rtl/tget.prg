@@ -113,7 +113,7 @@ CLASS Get
 
    DATA cPicMask, cPicFunc, nMaxLen, lEdit, lDecRev, lPicComplex
    DATA nDispLen, nDispPos, nOldPos, lCleanZero, cDelimit, nMaxEdit
-   DATA lMinusPrinted
+   DATA lMinusPrinted, xVarGet
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
@@ -286,7 +286,7 @@ METHOD ParsePict( cPicture ) CLASS Get
    endif
 
    if ::cType == nil
-      ::Original := ::VarGet()
+      ::Original := ::xVarGet
       ::cType    := ValType( ::Original )
    endif
 
@@ -315,7 +315,7 @@ METHOD ParsePict( cPicture ) CLASS Get
 
       case ::cType == "N"
 
-         cNum := Str( ::VarGet() )
+         cNum := Str( ::xVarGet )
          if ( nAt := At( iif( ::lDecRev, ",", "." ), cNum ) ) > 0
             ::cPicMask := Replicate( "9", nAt - 1 ) + iif( ::lDecRev, ",", "." )
             ::cPicMask += Replicate( "9", Len( cNum ) - Len( ::cPicMask ) )
@@ -324,7 +324,7 @@ METHOD ParsePict( cPicture ) CLASS Get
          endif
 
       case ::cType == "C" .and. ::cPicFunc == "@9"
-         ::cPicMask := Replicate( "9", Len( ::VarGet() ) )
+         ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
          ::cPicFunc := ""
 
       endcase
@@ -371,8 +371,11 @@ return Self
 METHOD UpdateBuffer() CLASS Get
 
    if ::hasFocus
-      ::buffer := ::PutMask()
+
+      ::buffer := ::PutMask( ::VarGet() )
+
       ::Display()
+
    endif
 
 return Self
@@ -392,7 +395,7 @@ METHOD Display( lForced ) CLASS Get
    //          to force that in Harbour. [vszakats]
 
    if ::buffer == nil
-      ::Original := ::VarGet()
+      ::Original := ::xVarGet
       ::cType    := ValType( ::Original )
       ::picture  := ::cPicture    //this sets also ::buffer
 // else
@@ -503,15 +506,16 @@ return Self
 METHOD SetFocus() CLASS Get
 
    local lWasNil := ::buffer == NIL
+   local xVarGet := ::VarGet()
 
    ::hasfocus   := .t.
    ::rejected   := .f.
    ::TypeOut    := .f.
 
-   ::Original   := ::VarGet()
-   ::cType      := ValType( ::Original )
+   ::Original   := xVarGet
+   ::cType      := ValType( xVarGet )
    ::Picture    := ::cPicture
-   ::buffer     := ::PutMask( ::Original, .f. )
+   ::buffer     := ::PutMask( xVarGet, .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::cType == "N")
 //   ::nMaxLen    := iif( ::buffer == NIL, 0, Len( ::buffer ) )
@@ -520,13 +524,13 @@ METHOD SetFocus() CLASS Get
 
    ::pos := ::FirstEditable()
 
-   if ::pos = 0
-      ::TypeOut = .t.
-   endif
+  if ::pos = 0
+     ::TypeOut = .t.
+  endif
 
    if ::cType == "N"
       ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )
-      ::minus := ( ::VarGet() < 0 )
+      ::minus := ( xVarGet < 0 )
    else
       ::decpos := NIL
       ::minus  := .f.
@@ -564,6 +568,7 @@ METHOD KillFocus() CLASS Get
    ::pos      := NIL
 
    ::Display()
+   ::xVarGet := NIL
 
 return Self
 
@@ -594,6 +599,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
             ::Original := xValue
          endif
          ::cType := ValType( xValue )
+         ::xVarGet := xValue
          ::lEdit := .f.
          ::Picture( ::cPicture )
       endif
@@ -624,6 +630,8 @@ METHOD VarGet() CLASS Get
    ELSE
       xValue := NIL
    ENDIF
+
+   ::xVarGet := xValue
 
 return xValue
 
@@ -776,7 +784,7 @@ METHOD overstrike( cChar ) CLASS Get
 
    if ! ::lEdit
       ::lEdit  := .t.
-      ::buffer := ::PutMask( ::VarGet(), .t. )
+//      ::buffer := ::PutMask( ::xVarGet, .t. )
    endif
 
    if ::pos == 0
@@ -799,7 +807,7 @@ METHOD overstrike( cChar ) CLASS Get
 // accepted.
 //   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
 //                !( ::unTransform() == ::Original )
-   ::Assign()
+   // ::Assign()
    ::Right( .f. )
 
    if ::cType == "D"
@@ -845,7 +853,7 @@ METHOD Insert( cChar ) CLASS Get
 
    if ! ::lEdit
       ::lEdit  := .t.
-      ::buffer := ::PutMask( ::VarGet(), .t. )
+      // ::buffer := ::PutMask( ::VarGet(), .t. )
    endif
 
    if ::pos == 0
@@ -883,7 +891,7 @@ METHOD Insert( cChar ) CLASS Get
 // accepted.
 //   ::Changed := ValType( ::Original ) != ValType( ::unTransform() ) .or.;
 //                !( ::unTransform() == ::Original )
-   ::Assign()
+   // ::Assign()
    ::Right( .f. )
 
    if ::cType == "D"
@@ -1348,7 +1356,7 @@ METHOD BackSpace( lDisplay ) CLASS Get
                      SubStr( ::buffer, nMinus + 1 )
 
          ::Changed = .t.
-         ::Assign()
+         // ::Assign()
 
          if lDisplay
             ::Display()
@@ -1404,7 +1412,7 @@ METHOD _Delete( lDisplay ) CLASS Get
    endif
 
    ::Changed = .t.
-   ::Assign()
+   // ::Assign()
 
    if lDisplay
       ::Display()
@@ -1435,7 +1443,7 @@ METHOD DeleteAll() CLASS Get
 
    ::buffer := ::PutMask( xValue, .t. )
    ::Pos    := ::FirstEditable( )
-   ::Assign()
+   // ::Assign()
 
 return Self
 
@@ -1600,7 +1608,7 @@ return ::cPicture
 METHOD Type() CLASS Get
 
    if ::cType == NIL
-      ::Original := ::VarGet()
+      ::Original := ::xVarGet
       ::cType    := ValType( ::Original )
    endif
 
@@ -1622,7 +1630,7 @@ METHOD Block( bBlock ) CLASS Get
    if bBlock != NIL .AND. !::HasFocus
 
       ::bBlock   := bBlock
-      ::Original := ::VarGet()
+      ::Original := ::xVarGet
       ::cType    := ValType( ::Original )
 
       ::Picture( ::Picture )
