@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 01:55 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   + contrib/ole2/make_b32.bat
+   + contrib/ole2/makefile.bc
+     * Borland makefile for HBOleAut.lib
+     
+   * contrib/ole2/win32ole.prg
+     * minor fix  
+
 2007-04-17 01:32 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/ole2/win32ole.prg
    * contrib/ole2/w32ole.c
