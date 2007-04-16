@@ -62,10 +62,13 @@
 
 
 #ifdef __XHARBOUR__
+
    #xtranslate hb_gtSys                => gtSys
    #xtranslate hb_gtInfo([<xx,...>])   => gtInfo([<xx>])
    #xtranslate hb_gtVersion([<xx>])    => hb_gt_Version([<xx>])
+
 #else
+
    #xtranslate gtSys                   => hb_gtSys
    #xtranslate gtInfo([<xx,...>])      => hb_gtInfo([<xx>])
    #xtranslate hb_gt_Version([<xx>])   => hb_gtVersion([<xx>])
@@ -75,13 +78,9 @@
    #xtranslate gtPasteClipBoard([<n>]) => hb_gtInfo( GTI_CLIPBOARDPAST )
    #xtranslate gfxPrimitive([<xx,...>])=> hb_gfxPrimitive([<xx>])
    #xtranslate gfxText([<xx,...>])     => hb_gfxText([<xx>])
-#endif
 
-#ifndef __XHARBOUR__
+   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE
-#endif
-
-#if !defined( HB_COMPAT_XHB )
 
    #xtranslate HASH([<x,...>])          => HB_HASH([<x>])
    #xtranslate HHASKEY([<x,...>])       => HB_HHASKEY([<x>])

@@ -4521,6 +4521,12 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, FALSE, fDirect, FALSE );
          }
+#ifndef HB_C52_STRICT
+         else if( hb_pp_tokenValueCmp( pToken, "YTRANSLATE", HB_PP_CMP_DBASE ) )
+         {
+            hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, FALSE, fDirect, FALSE );
+         }
+#endif
          else if( hb_pp_tokenValueCmp( pToken, "COMMAND", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_DBASE, TRUE, fDirect, FALSE );
@@ -4530,6 +4536,10 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, TRUE, fDirect, FALSE );
          }
 #ifndef HB_C52_STRICT
+         else if( hb_pp_tokenValueCmp( pToken, "YCOMMAND", HB_PP_CMP_DBASE ) )
+         {
+            hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, TRUE, fDirect, FALSE );
+         }
          /* xHarbour PP extensions */
          else if( hb_pp_tokenValueCmp( pToken, "UNTRANSLATE", HB_PP_CMP_DBASE ) )
          {
@@ -4539,6 +4549,10 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, FALSE, fDirect, TRUE );
          }
+         else if( hb_pp_tokenValueCmp( pToken, "YUNTRANSLATE", HB_PP_CMP_DBASE ) )
+         {
+            hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, FALSE, fDirect, TRUE );
+         }
          else if( hb_pp_tokenValueCmp( pToken, "UNCOMMAND", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_DBASE, TRUE, fDirect, TRUE );
@@ -4546,6 +4560,10 @@ static void hb_pp_preprocesToken( PHB_PP_STATE pState )
          else if( hb_pp_tokenValueCmp( pToken, "XUNCOMMAND", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_STD, TRUE, fDirect, TRUE );
+         }
+         else if( hb_pp_tokenValueCmp( pToken, "YUNCOMMAND", HB_PP_CMP_DBASE ) )
+         {
+            hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, TRUE, fDirect, TRUE );
          }
          /* Clipper PP does not accept #line and generate error */
          else if( hb_pp_tokenValueCmp( pToken, "LINE", HB_PP_CMP_DBASE ) )

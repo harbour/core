@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 21:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    * always translate hash H*() function to HB_H*() ones even if
+      HB_COMPAT_XHB is set. Code which uses HB_H*() functions can
+      be linked with any Harbour builds
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashes.c
+    + added hb_hashId()
+
+  * harbour/source/pp/ppcore.c
+    + added #ytranslate, #ycommand, #yuntranslate, #yuncommand
+      case sensitive version of corresponding #x* directives
+
+  * harbour/source/rtl/itemseri.c
+    + added support for serialization arrays and/or hashes with cyclic
+      references
+
 2007-04-16 21:25 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/source/rtl/tget.prg
   * harbour/source/rtl/tgetlist.prg

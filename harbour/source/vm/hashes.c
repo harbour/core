@@ -580,6 +580,17 @@ HB_EXPORT BOOL hb_hashDelAt( PHB_ITEM pHash, ULONG ulPos )
       return FALSE;
 }
 
+/* retrives the hash unique ID */
+HB_EXPORT void * hb_hashId( PHB_ITEM pHash )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashId(%p)", pHash));
+
+   if( HB_IS_HASH( pHash ) )
+      return ( void * ) pHash->item.asHash.value;
+   else
+      return NULL;
+}
+
 void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pClonedList )
 {
    ULONG ulPos;
