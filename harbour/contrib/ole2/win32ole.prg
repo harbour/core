@@ -72,7 +72,7 @@
 
 #define HB_CLS_NOTOBJECT
 
-
+#include "common.ch"
 #include "hbclass.ch"
 #include "error.ch"
 
