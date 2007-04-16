@@ -36,14 +36,17 @@ static void hb_pp_ErrorGen( void * cargo,
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
    int iCurrLine = HB_COMP_PARAM->currLine;
+   char * currModule = HB_COMP_PARAM->currModule;
 
    HB_COMP_PARAM->currLine = hb_pp_line( HB_COMP_PARAM->pLex->pPP );
+   HB_COMP_PARAM->currModule = hb_pp_fileName( HB_COMP_PARAM->pLex->pPP );
    if( cPrefix == 'W' )
       hb_compGenWarning( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    else
       hb_compGenError( HB_COMP_PARAM, szMsgTable, cPrefix, iErrorCode, szParam1, szParam2 );
    HB_COMP_PARAM->fError = FALSE;
    HB_COMP_PARAM->currLine = iCurrLine;
+   HB_COMP_PARAM->currModule = currModule;
 }
 
 static void hb_pp_PragmaDump( void * cargo, char * pBuffer, ULONG ulSize,

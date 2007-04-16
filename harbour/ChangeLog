@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 11:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/ppcomp.c
+    ! fixed file name in errors/warnings generated from PP just after
+      including some file
+
 2007-04-16 01:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/debugger.prg
     * removed some not longer necessary GTWVW extensions

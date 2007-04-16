@@ -1566,7 +1566,7 @@ static PINLINE hb_compInlineNew( HB_COMP_DECL, char * szName, int iLine )
    pInline->lPCodeSize = 0;
    pInline->pNext      = NULL;
    pInline->szFileName = hb_compIdentifierNew( HB_COMP_PARAM,
-                           hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), HB_IDENT_COPY );
+                  hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), HB_IDENT_COPY );
    pInline->iLine      = iLine;
 
    return pInline;
