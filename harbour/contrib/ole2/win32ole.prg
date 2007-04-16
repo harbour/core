@@ -72,6 +72,7 @@
 
 #define HB_CLS_NOTOBJECT
 
+
 #include "hbclass.ch"
 #include "error.ch"
 
@@ -82,20 +83,29 @@ FUNCTION CreateObject( cString )
 RETURN TOleAuto():New( cString )
 
 //----------------------------------------------------------------------------//
+
 FUNCTION GetActiveObject( cString )
 
 RETURN TOleAuto():GetActiveObject( cString )
 
 //----------------------------------------------------------------------------//
-//----------------------------------------------------------------------------//
-// Called by hb_vmInit() by means of hb_vmDoInitOle() ONLY if OLE is linked-in
-PROCEDURE HB_OleInit()
+
+init PROCEDURE HB_OleInit()
 
    __HB_OLE_INIT()
 
 RETURN
 
 //----------------------------------------------------------------------------//
+
+exit procedure HB_OleExit()
+
+   __HB_OLE_EXIT()
+   
+return   
+
+//----------------------------------------------------------------------------//
+
 CLASS VTWrapper
    DATA vt
    DATA Value
@@ -205,7 +215,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
    IF ::hObj != NIL
       RETURN HB_ExecFromArray( Self, "_New", HB_aParams() )
    ENDIF
-
+   
    IF ValType( uObj ) = 'C'
       ::hObj := CreateOleObject( uObj )
 

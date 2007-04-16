@@ -108,6 +108,8 @@ static DISPPARAMS s_EmptyDispParams;
 
 static VARIANTARG RetVal, OleVal;
 
+static BOOL bInit = FALSE;
+
 // -----------------------------------------------------------------------
 
 #define EG_OLEEXECPTION 1001
@@ -151,10 +153,36 @@ PHB_ITEM HB_EXPORT hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, UL
    return pItem;
 }
 
-static void TraceLog( char * cFile, ... )
+static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 {
-   HB_SYMBOL_UNUSED( cFile );
+   FILE *hFile;
+
+   if( !sTraceMsg )
+   {
+      return;
+   }
+
+   if( sFile == NULL )
+   {
+      hFile = fopen( "trace.log", "a" );
+   }
+   else
+   {
+      hFile = fopen( sFile, "a" );
+   }
+
+   if( hFile )
+   {
+      va_list ap;
+
+      va_start( ap, sTraceMsg );
+      vfprintf( hFile, sTraceMsg, ap );
+      va_end( ap );
+
+      fclose( hFile );
+   }
 }
+
 
   // -----------------------------------------------------------------------
   static EXCEPINFO excep;
@@ -211,6 +239,7 @@ static void TraceLog( char * cFile, ... )
   }
 
   //---------------------------------------------------------------------------//
+
   HB_FUNC( __HB_OLE_INIT )
   {
      if( s_pSym_TOleAuto == NULL )
@@ -230,12 +259,26 @@ static void TraceLog( char * cFile, ... )
          s_EmptyDispParams.rgdispidNamedArgs = 0;
          s_EmptyDispParams.cNamedArgs        = 0;
 
+         if( ! bInit )
+         {
+            OleInitialize( NULL );
+            bInit = TRUE;
+         }   	
+
          VariantInit( &RetVal );
          VariantInit( &OleVal );
      }
   }
 
-  //---------------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
+
+HB_FUNC( __HB_OLE_EXIT )
+{
+   OleUninitialize();
+}	
+
+//---------------------------------------------------------------------------//
+
   HB_FUNC( ANSITOWIDE )  // ( cAnsiStr ) -> cWideStr
   {
      char *cString = hb_parc( 1 );
@@ -1486,7 +1529,7 @@ static void TraceLog( char * cFile, ... )
 
      SysFreeString( bstrClassID );
 
-     //TraceLog( NULL, "Result: %p\n", s_nOleError );
+     // TraceLog( NULL, "Result: %p\n", s_nOleError );
 
      if( hb_pcount() == 2 )
      {
@@ -1506,11 +1549,11 @@ static void TraceLog( char * cFile, ... )
 
      if( SUCCEEDED( s_nOleError ) )
      {
-        //TraceLog( NULL, "Class: %i\n", ClassID );
+        // TraceLog( NULL, "Class: %i\n", ClassID );
         s_nOleError = CoCreateInstance( (REFCLSID) &ClassID, NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
-        //TraceLog( NULL, "Result: %p\n", s_nOleError );
+        // TraceLog( NULL, "Result: %p\n", s_nOleError );
      }
-
+     	 
      hb_retnl( ( LONG ) pDisp );
   }
 
