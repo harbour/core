@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-16 22:45 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/hbinet.c
+     ! Warnings fixed for Darwin (gcc 4.0.1 OSX 10.4.9 PPC)
+
+   * harbour/source/rtl/idle.c
+     ! Fixed releasing idle CPU cycles. (thanks Przemek)
+       The committed method was tested against usleep( 1 ) 
+       and usleep( 100 ) and found to work perfect as 
+       opposed to the usleep() calls.
+
+   * harbour/source/rtl/tget.prg
+     ! Adjusted my old TOFIX note.
+
 2007-04-16 21:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompat.ch
     * always translate hash H*() function to HB_H*() ones even if

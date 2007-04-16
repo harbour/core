@@ -392,14 +392,15 @@ METHOD Display( lForced ) CLASS Get
    // ; TOFIX: VarGet() has to be called everytime here to stay
    //          CA-Cl*pper compatible.
    //          Currently the caller needs to set :buffer to NIL
-   //          to force that in Harbour. [vszakats]
+   //          to force that in Harbour.
+   //          Update: Not everytime actually, but the logic is yet 
+   //          to be found out.
+   //          [vszakats]
 
    if ::buffer == nil
       ::Original := ::xVarGet
       ::cType    := ValType( ::Original )
       ::picture  := ::cPicture    //this sets also ::buffer
-// else
-//    xBuffer := ::VarGet() // ; Dummy call, to be CA-Cl*pper compatible. It doesn't work though for some reason. [vszakats]
    endif
 
    xBuffer := ::buffer     //::PutMask( ::VarGet(), .f. )
@@ -524,9 +525,9 @@ METHOD SetFocus() CLASS Get
 
    ::pos := ::FirstEditable()
 
-  if ::pos = 0
-     ::TypeOut = .t.
-  endif
+   if ::pos = 0
+      ::TypeOut = .t.
+   endif
 
    if ::cType == "N"
       ::decpos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::buffer )

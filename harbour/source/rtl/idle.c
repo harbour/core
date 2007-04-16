@@ -139,7 +139,10 @@ void hb_releaseCPU( void )
 
    #if defined(HB_OS_DARWIN)
       {
-         usleep( 1 );
+         struct timeval tv;
+         tv.tv_sec = 0;
+         tv.tv_usec = 1000;
+         select( 0, NULL, NULL, NULL, &tv );
       }
    #else
       {

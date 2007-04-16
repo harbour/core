@@ -96,11 +96,6 @@
 
       extern int h_errno;
       #define HB_INET_CLOSE( x )    close( x )
-      #ifdef HB_OS_DARWIN
-         #ifndef socklen_t
-            #define socklen_t int
-         #endif
-      #endif
       #include <errno.h>
    #endif
 
