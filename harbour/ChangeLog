@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/common/hbver.c
+     + Added Vista and 2003 Windows versions.
+     * Updated Cygwin/Mingw compiler names.
+
 2007-04-17 04:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/dynsym.c

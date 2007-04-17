@@ -221,7 +221,11 @@ char * hb_verPlatform( void )
 
             case VER_PLATFORM_WIN32_NT:
 
-               if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
+               if( osVer.dwMajorVersion == 6 )
+                  pszName = "Windows Vista";
+               else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
+                  pszName = "Windows 2003";
+               else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
                   pszName = "Windows XP";
                else if( osVer.dwMajorVersion == 5 )
                   pszName = "Windows 2000";
@@ -450,9 +454,9 @@ char * hb_verCompiler( void )
    #if defined(__DJGPP__)
       pszName = "Delorie GNU C";
    #elif defined(__CYGWIN__)
-      pszName = "Cygnus Cygwin GNU C";
+      pszName = "Cygwin GNU C";
    #elif defined(__MINGW32__)
-      pszName = "Cygnus MinGW GNU C";
+      pszName = "MinGW GNU C";
    #elif defined(__RSX32__)
       pszName = "EMX/RSXNT/DOS GNU C";
    #elif defined(__RSXNT__)
