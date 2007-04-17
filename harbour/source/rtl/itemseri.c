@@ -219,7 +219,6 @@ static void hb_itemSerialOffsetSet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
       if( pRef->ulOffset == ulOffset )
       {
          pRef->value = ( void * ) pItem;
-         return;
          break;
       }
       pRef = pRef->pNext;
@@ -234,7 +233,6 @@ static void hb_itemSerialOffsetGet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
       if( pRef->ulOffset == ulOffset )
       {
          hb_itemCopy( pItem, ( PHB_ITEM ) pRef->value );
-         return;
          break;
       }
       pRef = pRef->pNext;
