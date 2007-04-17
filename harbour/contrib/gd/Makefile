@@ -7,6 +7,9 @@ ROOT = ../../
 C_SOURCES=\
 	gdwrp.c \
 
+PRG_HEADERS=\
+	gd.ch \
+
 PRG_SOURCES=\
 	gd.prg  \
 	gdbar.prg \
@@ -23,3 +26,6 @@ ifeq ($(HB_COMPILER),mingw32)
 else
    CFLAGS := $(CFLAGS) -I/usr/include
 endif
+
+include $(TOP)$(ROOT)config/header.cf
+

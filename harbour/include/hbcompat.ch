@@ -76,6 +76,7 @@
    #xtranslate gtGetClipboard()        => hb_gtInfo( GTI_CLIPBOARDDATA )
    #xtranslate gtGetClipBoardSize()    => len( hb_gtInfo( GTI_CLIPBOARDDATA ) )
    #xtranslate gtPasteClipBoard([<n>]) => hb_gtInfo( GTI_CLIPBOARDPAST )
+   #xtranslate gtProcessMessages()     => nextkey()
    #xtranslate gfxPrimitive([<xx,...>])=> hb_gfxPrimitive([<xx>])
    #xtranslate gfxText([<xx,...>])     => hb_gfxText([<xx>])
 

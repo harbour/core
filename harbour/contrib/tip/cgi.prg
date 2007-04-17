@@ -372,13 +372,14 @@ METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
    RETURN lSuccess
 
-METHOD StartSession() CLASS TIpCgi
+METHOD StartSession( cSID ) CLASS TIpCgi
 
-   local cSID
    local nH
    local cFile
    local nFileSize
    local cBuffer
+
+   if empty( cSID )
 
    if ( nH := hGetPos( ::hGets, 'SESSIONID' ) ) != 0
       cSID := hGetValueAt( ::hGets, nH )
@@ -386,6 +387,8 @@ METHOD StartSession() CLASS TIpCgi
       cSID := hGetValueAt( ::hPosts, nH )
    elseif ( nH := hGetPos( ::hCookies, 'SESSIONID' ) ) != 0 
       cSID := hGetValueAt( ::hCookies, nH )
+      endif
+
    endif
 
    if empty( ::cSessionSavePath )

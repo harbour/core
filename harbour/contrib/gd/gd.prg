@@ -239,7 +239,6 @@ PROCEDURE gdImageToFile( oImage, cFile )
 RETURN
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
-  LOCAL cString, cExt
 
   DEFAULT nHandle TO 1
 

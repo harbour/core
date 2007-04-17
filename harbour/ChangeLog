@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 23:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/contrib/gd/Makefile
+    * added install of gd.ch
+  * harbour/contrib/gd/gd.prg
+    * removed two unused vars
+  * harbour/contrib/libct/ctnet.c
+  * harbour/contrib/libct/Makefile
+    * added ctnet.c borrowed from xHarbour
+  * harbour/contrib/pgsql/postgres.c
+    * fixes some warnings
+  * harbour/contrib/tip/cgi.prg
+    * added session name parameter
+  * harbour/include/hbcompat.ch
+    * added gtProcessMessages() translate
+
 2007-04-17 20:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbcmd.c
     ! update NetErr() in ordListAdd()

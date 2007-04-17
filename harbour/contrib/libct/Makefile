@@ -26,6 +26,7 @@ C_SOURCES = \
 	ctc.c \
 	ctmath.c \
 	ctmath2.c \
+	ctnet.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
