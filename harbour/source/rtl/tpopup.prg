@@ -50,6 +50,7 @@
  *
  */
 
+#include "hbclass.ch"
 #include "box.ch"
 #include "button.ch"
 #include "color.ch"
@@ -68,9 +69,57 @@
          and small functions. [jlalin]
 */
 //--------------------------------------------------------------------------//
-function PopUp( nTop, nLeft, nBottom, nRight )
+FUNCTION PopUp( nTop, nLeft, nBottom, nRight )
+RETURN PopUpMenu():New( nTop, nLeft, nBottom, nRight )
+//--------------------------------------------------------------------------//
+CLASS PopUpMenu STATIC FUNCTION PopUpMenu
 
-   LOCAL oClass
+   DATA aItems          init    {}
+   DATA border          init    B_SINGLE + SEPARATOR_SINGLE
+   DATA bottom
+   DATA cargo
+   DATA colorSpec       init    "N/W,W/N,W+/W,W+/N,N+/W,W/N"
+   DATA current         init    0
+   DATA itemCount       init    0
+   DATA left
+   DATA opened          init    FALSE PROTECTED
+   DATA right
+   DATA saveScr         init    ""    PROTECTED
+   DATA top
+   DATA width           init    0
+
+#ifdef HB_EXTENSION
+   DATA shadowed        init    FALSE
+#endif
+
+   METHOD New( nTop, nLeft, nBottom, nRight )
+
+   METHOD AddItem( oItem )
+   METHOD Close( lClose )
+   METHOD DelItem( nPos )
+   METHOD Display()
+   METHOD GetAccel( nKey )
+   METHOD GetFirst()
+   METHOD GetItem( nPos )
+   METHOD GetLast()
+   METHOD GetNext()
+   METHOD GetPrev()
+   METHOD GetShortct( nKey )
+   METHOD HitTest( nRow, nCol )
+   METHOD InsItem( nPos, oItem )
+   METHOD IsOpen()
+   METHOD Open()
+   MESSAGE Select( nPos )       METHOD _Select( nPos )
+   METHOD SetItem( nPos, oItem )
+
+   /* NOTE: This method is new in Harbour */
+#ifdef HB_EXTENSION
+   METHOD SetCoors( nRow, nCol, lTop )
+#endif
+
+ENDCLASS
+//--------------------------------------------------------------------------//
+METHOD New( nTop, nLeft, nBottom, nRight ) CLASS PopUpMenu
 
    /* NOTE: When a PopUp is created and attached to a TopBar object, its
             coords are initialized to -1, so the TopBar can update them
@@ -81,54 +130,20 @@ function PopUp( nTop, nLeft, nBottom, nRight )
    DEFAULT nBottom TO  0
    DEFAULT nRight  TO  0
 
-   oClass := HBClass():New( "POPUPMENU" )
-
-   oClass:AddData( "aItems"      ,  {} )
-   oClass:AddData( "border"      ,  B_SINGLE + SEPARATOR_SINGLE )
-   oClass:AddData( "bottom"      ,  nBottom )
-   oClass:AddData( "cargo" )
-   oClass:AddData( "colorSpec"   ,  "N/W,W/N,W+/W,W+/N,N+/W,W/N" )
-   oClass:AddData( "current"     ,  0 )
-   oClass:AddData( "itemCount"   ,  0 )
-   oClass:AddData( "left"        ,  nLeft )
-   oClass:AddData( "opened"      ,  FALSE )
-   oClass:AddData( "right"       ,  nRight )
-   oClass:AddData( "saveScr"     ,  "" )
-   oClass:AddData( "top"         ,  nTop )
-   oClass:AddData( "width"       ,  0 )
+   ::bottom    := nBottom
+   ::left      := nLeft
+   ::opened    := FALSE
+   ::right     := nRight
+   ::top       := nTop
 
 #ifdef HB_EXTENSION
-   oClass:AddData( "shadowed"    ,  FALSE )
+   ::shadowed  := FALSE
 #endif
 
-   oClass:AddMethod( "AddItem"   ,  @AddItem() )
-   oClass:AddMethod( "Close"     ,  @Close() )
-   oClass:AddMethod( "DelItem"   ,  @DelItem() )
-   oClass:AddMethod( "Display"   ,  @Display() )
-   oClass:AddMethod( "GetAccel"  ,  @GetAccel() )
-   oClass:AddMethod( "GetFirst"  ,  @GetFirst() )
-   oClass:AddMethod( "GetItem"   ,  @GetItem() )
-   oClass:AddMethod( "GetLast"   ,  @GetLast() )
-   oClass:AddMethod( "GetNext"   ,  @GetNext() )
-   oClass:AddMethod( "GetPrev"   ,  @GetPrev() )
-   oClass:AddMethod( "GetShortct",  @GetShortct() )
-   oClass:AddMethod( "HitTest"   ,  @HitTest() )
-   oClass:AddMethod( "InsItem"   ,  @InsItem() )
-   oClass:AddMethod( "IsOpen"    ,  @IsOpen() )
-   oClass:AddMethod( "Open"      ,  @Open() )
-   oClass:AddMethod( "Select"    ,  @_Select() )
-   oClass:AddMethod( "SetItem"   ,  @SetItem() )
-
-   /* NOTE: This method is new in Harbour */
-   oClass:AddMethod( "SetCoors"  ,  @SetCoors() )
-
-   oClass:Create()
-
-return oClass:Instance()
+return Self
 //--------------------------------------------------------------------------//
-static function AddItem( oItem )
+METHOD AddItem( oItem ) CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL nLen
 
    aAdd( ::aItems, oItem )
@@ -139,9 +154,7 @@ static function AddItem( oItem )
 
 return Self
 //--------------------------------------------------------------------------//
-static function Close( lClose )
-
-   LOCAL Self  := QSelf()
+METHOD Close( lClose ) CLASS PopUpMenu
 
    DEFAULT lClose TO TRUE
 
@@ -161,9 +174,7 @@ static function Close( lClose )
 
 return Self
 //--------------------------------------------------------------------------//
-static function DelItem( nPos )
-
-   LOCAL Self  := QSelf()
+METHOD DelItem( nPos ) CLASS PopUpMenu
 
    if nPos > 0 .and. nPos <= ::itemCount
       aDel( ::aItems, nPos )
@@ -182,9 +193,8 @@ return Self
             first item is disabled
          2) when a menuitem is disabled it will ignore the key [jlalin]
 */
-static function GetAccel( nKey )
+METHOD GetAccel( nKey ) CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL nAt   := 0
    LOCAL cKey  := Upper( Chr( nKey ) )
    LOCAL n
@@ -199,9 +209,8 @@ static function GetAccel( nKey )
 
 return 0
 //--------------------------------------------------------------------------//
-static function GetFirst()
+METHOD GetFirst() CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL n
 
    for n := 1 to ::itemCount
@@ -212,9 +221,8 @@ static function GetFirst()
 
 return 0
 //--------------------------------------------------------------------------//
-static function GetItem( nPos )
+METHOD GetItem( nPos ) CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL oItem
 
    if nPos > 0 .and. nPos <= ::itemCount
@@ -223,9 +231,8 @@ static function GetItem( nPos )
 
 return oItem
 //--------------------------------------------------------------------------//
-static function GetLast()
+METHOD GetLast() CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL n
 
    for n := ::itemCount to 1 step -1
@@ -236,9 +243,8 @@ static function GetLast()
 
 return 0
 //--------------------------------------------------------------------------//
-static function GetNext()
+METHOD GetNext() CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL n
 
    if ::current < ::itemCount
@@ -251,9 +257,8 @@ static function GetNext()
 
 return 0
 //--------------------------------------------------------------------------//
-static function GetPrev()
+METHOD GetPrev() CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL n
 
    if ::current > 1
@@ -269,9 +274,8 @@ return 0
 /* NOTE: This method corrects a bug in Cl*pper:
          1) when a menuitem is disabled it will ignore the key [jlalin]
 */
-static function GetShortct( nKey )
+METHOD GetShortct( nKey ) CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL n
 
    for n := 1 to ::itemCount
@@ -287,9 +291,8 @@ return 0
             is disabled
          2) when a menuitem is disabled it will ignore the click [jlalin]
 */
-static function HitTest( nRow, nCol )
+METHOD HitTest( nRow, nCol ) CLASS PopUpMenu
 
-   LOCAL Self  := QSelf()
    LOCAL nHit  := HTNOWHERE
 
    do case
@@ -325,9 +328,7 @@ static function HitTest( nRow, nCol )
 
 return nHit
 //--------------------------------------------------------------------------//
-static function InsItem( nPos, oItem )
-
-   LOCAL Self  := QSelf()
+METHOD InsItem( nPos, oItem ) CLASS PopUpMenu
 
    if nPos > 0 .and. nPos <= ::itemCount
       aSize( ::aItems, ::itemCount )
@@ -342,15 +343,11 @@ static function InsItem( nPos, oItem )
 
 return Self
 //--------------------------------------------------------------------------//
-static function IsOpen()
-
-   LOCAL Self  := QSelf()
+METHOD IsOpen() CLASS PopUpMenu
 
 return ::opened
 //--------------------------------------------------------------------------//
-static function Open()
-
-   LOCAL Self  := QSelf()
+METHOD Open() CLASS PopUpMenu
 
    if !::opened
       ::opened := TRUE
@@ -360,9 +357,7 @@ static function Open()
 
 return Self
 //--------------------------------------------------------------------------//
-static function _Select( nPos )
-
-   LOCAL Self  := QSelf()
+METHOD _Select( nPos ) CLASS PopUpMenu
 
    if ( nPos > 0 .and. nPos <= ::itemCount ) .and. ;
          ::current != nPos .and. ::aItems[ nPos ]:enabled
@@ -378,9 +373,7 @@ static function _Select( nPos )
 
 return Self
 //--------------------------------------------------------------------------//
-static function SetItem( nPos, oItem )
-
-   LOCAL Self  := QSelf()
+METHOD SetItem( nPos, oItem ) CLASS PopUpMenu
 
    if nPos > 0 .and. nPos <= ::itemCount
       ::aItems[ nPos ] := oItem
@@ -389,9 +382,8 @@ static function SetItem( nPos, oItem )
 
 return Self
 //--------------------------------------------------------------------------//
-static function Display()
+METHOD Display() CLASS PopUpMenu
 
-   LOCAL Self     := QSelf()
    LOCAL nTop     := ::top
    LOCAL nAt      := 0
    LOCAL lPopup   := FALSE
@@ -453,9 +445,8 @@ static function Display()
 
 return Self
 //--------------------------------------------------------------------------//
-static function SetCoors( nItem, nRow, nCol )
-
-   LOCAL Self  := QSelf()
+#ifdef HB_EXTENSION
+METHOD SetCoors( nItem, nRow, nCol ) CLASS PopUpMenu
 
    if ::top == -1 .or. ::left == -1
       ::top    := nRow
@@ -464,7 +455,7 @@ static function SetCoors( nItem, nRow, nCol )
       ::right  := ::left + ::width - 1
 
       /* Just to avoid the warning by now (compiling with -w2) */
-      nItem := nItem
+      HB_SYMBOL_UNUSED( nItem )
 
 /* UNTESTED: I will wait until the bug in the classes.c module is fixed.
              However it should work this way.
@@ -477,6 +468,7 @@ static function SetCoors( nItem, nRow, nCol )
    endif
 
 return Self
+#endif
 //--------------------------------------------------------------------------//
 
 #endif

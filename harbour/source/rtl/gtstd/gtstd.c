@@ -68,6 +68,7 @@
    #include <sys/ioctl.h>
    #include <signal.h>
    #include <errno.h>
+   #include <sys/time.h>
    #include <sys/types.h>
    #include <sys/wait.h>
 #else
@@ -187,7 +188,6 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_ulCrLf = strlen( (char *) s_szCrLf );
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
-
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 #if defined( OS_UNIX_COMPATIBLE )
@@ -199,10 +199,11 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       s_fRestTTY = TRUE;
 
       /* if( s_saved_TIO.c_lflag & TOSTOP ) != 0 */
-      sigaction( SIGTTOU, 0, &old );
+      sigaction( SIGTTOU, NULL, &old );
       memcpy( &act, &old, sizeof( struct sigaction ) );
       act.sa_handler = sig_handler;
-      act.sa_flags = SA_RESTART;
+      /* do not use SA_RESTART - new Linux kernels will repeat the operation */
+      act.sa_flags = SA_ONESHOT;
       sigaction( SIGTTOU, &act, 0 );
 
       tcgetattr( hFilenoStdin, &s_saved_TIO );
@@ -215,7 +216,7 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       tcsetattr( hFilenoStdin, TCSAFLUSH, &s_curr_TIO );
       act.sa_handler = SIG_DFL;
 
-      sigaction( SIGTTOU, &old, 0 );
+      sigaction( SIGTTOU, &old, NULL );
    }
 
    if( s_bStdoutConsole )
@@ -303,11 +304,20 @@ static int hb_gt_std_ReadKey( int iEventMask )
    }
 #elif defined( OS_UNIX_COMPATIBLE )
    {
-      USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
-      BYTE bChar;
-      if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
-         ch = s_keyTransTbl[ bChar ];
-      hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
+      struct timeval tv;
+      fd_set rfds;
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      FD_ZERO( &rfds );
+      FD_SET( s_hFilenoStdin, &rfds);
+      if( select( s_hFilenoStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      {
+         USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
+         BYTE bChar;
+         if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
+            ch = s_keyTransTbl[ bChar ];
+         hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
+      }
    }
 #else
 

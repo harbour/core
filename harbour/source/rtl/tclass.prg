@@ -83,8 +83,8 @@ FUNCTION HBClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "HBCLASS", 16)
-/*    s_hClass := __clsNew( "HBCLASS", 17)  */
+      s_hClass := __clsNew( "HBCLASS", 16,, @HBClass() )
+/*    s_hClass := __clsNew( "HBCLASS", 17,, @HBClass())  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )

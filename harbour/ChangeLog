@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 20:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbcmd.c
+    ! update NetErr() in ordListAdd()
+      If you know other then dbCreate()/dbUseArea() functions which reset
+      NetErr() flag in Clipper then please report them. We will have to
+      update our functions (dbSetIndex() is a wrapper to ordListAdd() so
+      you nay not report it ;))
+
+  * harbour/source/rtl/gtstd/gtstd.c
+    * do not stop Harbour process when controlling terminal has TOSTOP
+      attribute set (as long as no direct out is done)
+
+  * harbour/source/rtl/tclass.prg
+  * harbour/source/rtl/terror.prg
+  * harbour/source/rtl/tobject.prg
+    * set valid class function
+
+  * harbour/source/rtl/tmenuitm.prg
+  * harbour/source/rtl/tpopup.prg
+    ! I think that no one has been checking what these code does for
+      very long time. Both MenuItem() and PopUp() on each call tries
+      to create new _CLASSES_ called "MenuItem" and "PopUpMenu"
+      instead of creating only new instance of these classes (new objects)
+      Updated to use standard hbclass.ch commands. If possible try
+      to not create classes manually and always use documented commands
+      from hbclass.ch
+
 2007-04-17 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/common/hbver.c
      + Added Vista and 2003 Windows versions.
