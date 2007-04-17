@@ -1098,7 +1098,7 @@ void hb_clsIsClassRef( void )
 #endif
 }
 
-HB_EXPORT BOOL hb_clsIsParent( USHORT uiClass, char * szParentName )
+HB_EXPORT BOOL hb_clsIsParent( USHORT uiClass, const char * szParentName )
 {
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -1124,6 +1124,20 @@ HB_EXPORT USHORT hb_objGetClass( PHB_ITEM pItem )
       return pItem->item.asArray.value->uiClass;
    else
       return 0;
+}
+
+/* get object class handle using class name and class function name */
+HB_EXPORT USHORT hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc )
+{
+   USHORT uiClass = 0;
+
+   if( pItem && HB_IS_ARRAY( pItem ) &&
+       pItem->item.asArray.value->uiClass == 0 )
+   {
+      uiClass = pItem->item.asArray.value->uiClass =
+                                          hb_clsFindClass( szClass, szFunc );
+   }
+   return uiClass;
 }
 
 /* ================================================ */
@@ -1182,12 +1196,37 @@ HB_EXPORT char * hb_clsName( USHORT uiClass )
       return NULL;
 }
 
+HB_EXPORT char * hb_clsFuncName( USHORT uiClass )
+{
+   if( uiClass && uiClass <= s_uiClasses )
+      return s_pClasses[ uiClass ].pClassFuncSym ?
+             s_pClasses[ uiClass ].pClassFuncSym->szName : ( char * ) "";
+   else
+      return NULL;
+}
+
+HB_EXPORT USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
+{
+   USHORT uiClass;
+
+   for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
+   {
+      if( strcmp( szClass, s_pClasses[ uiClass ].szName ) == 0 &&
+          ( !szFunc || ( !s_pClasses[ uiClass ].pClassFuncSym ? !*szFunc :
+            strcmp( szFunc, s_pClasses[ uiClass ].pClassFuncSym->szName ) == 0 ) ) )
+      {
+         return uiClass;
+      }
+   }
+   return 0;
+}
+
 /*
  * Get the real class name of an object message
  * Will return the class name from wich the message is inherited in case
  * of inheritance.
  */
-HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, char * szName )
+HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p)", pObject));
 
@@ -1792,7 +1831,7 @@ HB_EXPORT BOOL hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage )
  *
  * <uPtr> should be read as a boolean
  */
-HB_EXPORT BOOL hb_objHasMsg( PHB_ITEM pObject, char *szString )
+HB_EXPORT BOOL hb_objHasMsg( PHB_ITEM pObject, const char *szString )
 {
    PHB_DYNS pDynSym;
 
@@ -1836,7 +1875,7 @@ HB_EXPORT void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulAr
    }
 }
 
-HB_EXPORT void hb_objSendMsg( PHB_ITEM pObject, char *sMsg, ULONG ulArg, ... )
+HB_EXPORT void hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
 {
    hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
    hb_vmPush( pObject );
@@ -2052,7 +2091,7 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
  *             HB_OO_MSG_CLSASSIGN  : /
  *             HB_OO_MSG_SUPER      : Superclass handle
  */
-static BOOL hb_clsAddMsg( USHORT uiClass, char * szMessage,
+static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
                           USHORT uiType, USHORT uiScope,
                           PHB_ITEM pFunction, PHB_ITEM pInit )
 {
@@ -2512,7 +2551,7 @@ HB_FUNC( __CLSADDMSG )
  * <fModuleFriendly> when true all functions and classes from the same
  *                   module as pClassFunc are defined as friends
  */
-static USHORT hb_clsNew( char * szClassName, USHORT uiDatas,
+static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
                          PHB_ITEM pSuperArray, PHB_SYMB pClassFunc,
                          BOOL fModuleFriendly )
 {
@@ -3954,13 +3993,13 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
 }
 
 /* Harbour equivalent for Clipper internal __mdCreate() */
-USHORT hb_clsCreate( USHORT usSize, char * szClassName )
+USHORT hb_clsCreate( USHORT usSize, const char * szClassName )
 {
    return hb_clsNew( szClassName, usSize, NULL, NULL, FALSE );
 }
 
 /* Harbour equivalent for Clipper internal __mdAdd() */
-void hb_clsAdd( USHORT usClassH, char * szMethodName, PHB_FUNC pFuncPtr )
+void hb_clsAdd( USHORT usClassH, const char * szMethodName, PHB_FUNC pFuncPtr )
 {
    PHB_SYMB pExecSym;
    PHB_ITEM pFuncItem;

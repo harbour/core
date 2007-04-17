@@ -802,24 +802,24 @@ extern HB_EXPORT void      hb_put_le_uint64( BYTE * ptr, double d );
 #endif
 
 /* dynamic symbol table management */
-extern HB_EXPORT PHB_DYNS  hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
-extern HB_EXPORT PHB_DYNS  hb_dynsymGetCase( char * szName );    /* finds and creates a dynamic symbol if not found - case sensitive */
+extern HB_EXPORT PHB_DYNS  hb_dynsymGet( const char * szName );    /* finds and creates a dynamic symbol if not found */
+extern HB_EXPORT PHB_DYNS  hb_dynsymGetCase( const char * szName );    /* finds and creates a dynamic symbol if not found - case sensitive */
 extern HB_EXPORT PHB_DYNS  hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbol based on a local one */
-extern HB_EXPORT PHB_DYNS  hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
-extern HB_EXPORT PHB_DYNS  hb_dynsymFindName( char * szName ); /* converts to uppercase and finds a dynamic symbol */
+extern HB_EXPORT PHB_DYNS  hb_dynsymFind( const char * szName );   /* finds a dynamic symbol */
+extern HB_EXPORT PHB_DYNS  hb_dynsymFindName( const char * szName ); /* converts to uppercase and finds a dynamic symbol */
 extern HB_EXPORT void      hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern HB_EXPORT void      hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 extern HB_EXPORT void      hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
-extern HB_EXPORT PHB_SYMB  hb_dynsymGetSymbol( char * szName ); /* finds and creates a dynamic symbol if not found and return pointer to its HB_SYMB structure */
-extern HB_EXPORT PHB_SYMB  hb_dynsymFindSymbol( char * szName ); /* finds a dynamic symbol and return pointer to its HB_SYMB structure */
+extern HB_EXPORT PHB_SYMB  hb_dynsymGetSymbol( const char * szName ); /* finds and creates a dynamic symbol if not found and return pointer to its HB_SYMB structure */
+extern HB_EXPORT PHB_SYMB  hb_dynsymFindSymbol( const char * szName ); /* finds a dynamic symbol and return pointer to its HB_SYMB structure */
 extern HB_EXPORT PHB_SYMB  hb_dynsymSymbol( PHB_DYNS pDynSym );
-extern HB_EXPORT char *    hb_dynsymName( PHB_DYNS pDynSym ); /* return dynamic symbol name */
+extern HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym ); /* return dynamic symbol name */
 extern HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym ); /* return memvar handle number bound with given dynamic symbol */
 extern HB_EXPORT int       hb_dynsymAreaHandle( PHB_DYNS pDynSym ); /* return work area number bound with given dynamic symbol */
 extern HB_EXPORT void      hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea ); /* set work area number for a given dynamic symbol */
 
 /* Symbol management */
-extern HB_EXPORT PHB_SYMB  hb_symbolNew( char * szName ); /* create a new symbol */
+extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new symbol */
 
 /* Command line and environment argument management */
 extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */

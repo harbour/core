@@ -110,23 +110,26 @@ extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 
 /* class management */
 HB_EXPORT extern char *     hb_clsName( USHORT uiClass );
-HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
+HB_EXPORT extern char *     hb_clsFuncName( USHORT uiClass );
+HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
+HB_EXPORT extern USHORT     hb_clsFindClass( const char * szClass, const char * szFunc );
 
 /* object management */
 HB_EXPORT extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
+HB_EXPORT extern USHORT     hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* get object class handle using class name and class function name */
 HB_EXPORT extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
-HB_EXPORT extern char *     hb_objGetRealClsName( PHB_ITEM pObject, char * szString  ); /* retrieves an object class name for a specific message */
+HB_EXPORT extern char *     hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 
-HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
+HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
-HB_EXPORT extern void       hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... );
+HB_EXPORT extern void       hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
 HB_EXPORT extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
 
 /* Harbour equivalent for Clipper internal __mdCreate() */
-USHORT hb_clsCreate( USHORT usSize, char * szClassName );
+USHORT hb_clsCreate( USHORT usSize, const char * szClassName );
 /* Harbour equivalent for Clipper internal __mdAdd() */
-void hb_clsAdd( USHORT usClassH, char * szMethodName, PHB_FUNC pFuncPtr );
+void hb_clsAdd( USHORT usClassH, const char * szMethodName, PHB_FUNC pFuncPtr );
 /* Harbour equivalent for Clipper internal __mdAssociate() */
 void hb_clsAssociate( USHORT usClassH );
 

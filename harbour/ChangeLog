@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-17 04:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/dynsym.c
+    * changed some declarations from 'char *' to 'const char *'
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    * changed some declarations from 'char *' to 'const char *'
+    + added hb_clsFuncName(), hb_clsFindClass(), hb_objSetClass()
+
+  * harbour/source/rtl/itemseri.c
+    ! fixed some stupid typos in previous commit
+    * added support for serialization of object variables - I'm
+      not sure it's good idea anyhow people ask about it so we
+      have it. Probably we should add some special method like
+      OnError(), f.e.: OnRestore() or sth like that and execute
+      it after deserialization or object cloning.
+
 2007-04-17 01:55 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    + contrib/ole2/make_b32.bat
    + contrib/ole2/makefile.bc

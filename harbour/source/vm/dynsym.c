@@ -89,7 +89,7 @@ void hb_dynsymLog( void )
       printf( "%i %s\n", uiPos + 1, s_pDynItems[ uiPos ].pDynSym->pSymbol->szName );
 }
 
-HB_EXPORT PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
+HB_EXPORT PHB_SYMB hb_symbolNew( const char * szName )      /* Create a new symbol */
 {
    PHB_SYM_HOLDER pHolder;
    int iLen;
@@ -168,7 +168,7 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    return pDynSym;
 }
 
-HB_EXPORT PHB_DYNS hb_dynsymGetCase( char * szName )  /* finds and creates a symbol if not found */
+HB_EXPORT PHB_DYNS hb_dynsymGetCase( const char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
 
@@ -181,7 +181,7 @@ HB_EXPORT PHB_DYNS hb_dynsymGetCase( char * szName )  /* finds and creates a sym
    return pDynSym;
 }
 
-HB_EXPORT PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
+HB_EXPORT PHB_DYNS hb_dynsymGet( const char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -226,7 +226,7 @@ HB_EXPORT PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol 
    return pDynSym;
 }
 
-HB_EXPORT PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
+HB_EXPORT PHB_DYNS hb_dynsymFindName( const char * szName )  /* finds a symbol */
 {
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
 
@@ -265,7 +265,7 @@ HB_EXPORT PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
    return hb_dynsymFind( szUprName );
 }
 
-HB_EXPORT PHB_DYNS hb_dynsymFind( char * szName )
+HB_EXPORT PHB_DYNS hb_dynsymFind( const char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFind(%s)", szName));
 
@@ -331,14 +331,14 @@ HB_EXPORT PHB_DYNS hb_dynsymFind( char * szName )
    return NULL;
 }
 
-HB_EXPORT PHB_SYMB hb_dynsymGetSymbol( char * szName )
+HB_EXPORT PHB_SYMB hb_dynsymGetSymbol( const char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGetSymbol(%s)", szName));
 
    return hb_dynsymGet( szName )->pSymbol;
 }
 
-HB_EXPORT PHB_SYMB hb_dynsymFindSymbol( char * szName )
+HB_EXPORT PHB_SYMB hb_dynsymFindSymbol( const char * szName )
 {
    PHB_DYNS pDynSym;
 
@@ -355,7 +355,7 @@ HB_EXPORT PHB_SYMB hb_dynsymSymbol( PHB_DYNS pDynSym )
    return pDynSym->pSymbol;
 }
 
-HB_EXPORT char * hb_dynsymName( PHB_DYNS pDynSym )
+HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymName(%p)", pDynSym));
 
