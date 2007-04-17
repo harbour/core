@@ -355,7 +355,7 @@ HB_EXPORT PHB_SYMB hb_dynsymSymbol( PHB_DYNS pDynSym )
    return pDynSym->pSymbol;
 }
 
-HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym )
+HB_EXPORT char * hb_dynsymName( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymName(%p)", pDynSym));
 
