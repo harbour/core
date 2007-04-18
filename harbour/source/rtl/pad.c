@@ -57,5 +57,5 @@ HB_FUNC_EXTERN( PADR );
 /* synonymn for PADR */
 HB_FUNC( PAD )
 {
-   HB_FUNCNAME( PADR )();
+   HB_FUNC_EXEC( PADR );
 }

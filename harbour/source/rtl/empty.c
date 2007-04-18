@@ -56,6 +56,7 @@
 HB_FUNC( EMPTY )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   PHB_SYMB pSym;
 
    switch( hb_itemType( pItem ) )
    {
@@ -101,7 +102,8 @@ HB_FUNC( EMPTY )
          break;
 
       case HB_IT_SYMBOL:
-         hb_retl( hb_itemGetSymbol( pItem ) == NULL );
+         pSym = hb_itemGetSymbol( pItem );
+         hb_retl( pSym == NULL || pSym->value.pFunPtr == NULL );
          break;
 
       default:

@@ -303,7 +303,7 @@ HB_FUNC( HB_FLASTREC )
    old_offset = offset[area];
    bIsEof  = isEof[area];
 
-   HB_FUNCNAME( HB_FGOBOTTOM )();
+   HB_FUNC_EXEC( HB_FGOBOTTOM );
    hb_retnl( last_rec[area] );
 
    recno[area]  = old_rec;

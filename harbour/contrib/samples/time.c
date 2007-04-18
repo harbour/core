@@ -65,35 +65,35 @@ HB_FUNC_EXTERN( ELAPTIME );
 */
 HB_FUNC( SECONDSASDAYS )
 {
-   HB_FUNCNAME( DAYS )();
+   HB_FUNC_EXEC( DAYS );
 }
 
 /* TIMEASAMPM( <cTime> ) --> <cTime> + " am" / " pm"
 */
 HB_FUNC( TIMEASAMPM )
 {
-   HB_FUNCNAME( AMPM )();
+   HB_FUNC_EXEC( AMPM );
 }
 
 /* TIMEASSECONDS( <cTime> ) --> <nSecondsFromMidnight>
 */
 HB_FUNC( TIMEASSECONDS )
 {
-   HB_FUNCNAME( SECS )();
+   HB_FUNC_EXEC( SECS );
 }
 
 /* TIMEASSTRING( <nSeconds> ) --> <cTime>
 */
 HB_FUNC( TIMEASSTRING )
 {
-   HB_FUNCNAME( TSTRING )();
+   HB_FUNC_EXEC( TSTRING );
 }
 
 /* TIMEDIFF( <cStartTime>, <cEndTime> ) --> <cDiffTime>
 */
 HB_FUNC( TIMEDIFF )
 {
-   HB_FUNCNAME( ELAPTIME )();
+   HB_FUNC_EXEC( ELAPTIME );
 }
 
 /* TIMEISVALID( <cTime> ) --> <lValid>

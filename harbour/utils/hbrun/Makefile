@@ -24,7 +24,7 @@ LIBS=\
 	vm \
 	macro \
 	pp \
-	common \
 	compiler \
+	common \
 
 include $(TOP)$(ROOT)config/bin.cf

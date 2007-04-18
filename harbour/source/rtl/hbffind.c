@@ -52,6 +52,10 @@
  *
  */
 
+#if defined(HB_OS_LINUX)
+#  define _LARGEFILE64_SOURCE
+#endif
+
 #define INCL_DOSFILEMGR
 #define INCL_DOSERRORS
 #define HB_OS_WIN_32_USED
@@ -60,6 +64,7 @@
 #include "hbapifs.h"
 #include "hbdate.h"
 #include "hb_io.h"
+
 
 HB_FILE_VER( "$Id$" )
 
@@ -682,21 +687,29 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( bFound )
       {
-         struct stat sStat;
-
          hb_strncpy( dirname, info->path, sizeof( dirname ) - 1 );
          hb_strncat( dirname, info->entry->d_name, sizeof( dirname ) - 1 );
-         if( stat( dirname, &sStat ) != 0 )
-            printf("\n%s (%i)", dirname, errno );
-
-         strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
-         ffind->size = sStat.st_size;
-
-         raw_attr = sStat.st_mode;
-
          {
             time_t ftime;
             struct tm * ft;
+#if defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
+            /*
+             * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+             * define and efectively enables lseek64/flock64/ftruncate64 functions
+             * on 32bit machines.
+             */
+            struct stat64 sStat;
+            if( stat64( dirname, &sStat ) != 0 )
+#else
+            struct stat sStat;
+            if( stat( dirname, &sStat ) != 0 )
+#endif
+               printf("\n%s (%i)", dirname, errno );
+
+            strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+            ffind->size = sStat.st_size;
+
+            raw_attr = sStat.st_mode;
 
             ftime = sStat.st_mtime;
             ft = localtime( &ftime );

@@ -110,14 +110,14 @@ HB_FUNC( HB_OEMTOANSI )
 
 HB_FUNC( CONVTOOEMCP )
 {
-   HB_FUNCNAME( HB_ANSITOOEM )();
+   HB_FUNC_EXEC( HB_ANSITOOEM );
 }
 
 /* NOTE: Xbase++ compatible function */
 
 HB_FUNC( CONVTOANSICP )
 {
-   HB_FUNCNAME( HB_OEMTOANSI )();
+   HB_FUNC_EXEC( HB_OEMTOANSI );
 }
 
 #endif

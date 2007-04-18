@@ -89,7 +89,7 @@ HB_FUNC( __ACCEPT )
 
    /* cPrompt(s) passed ? */
    if( hb_pcount() >= 1 )
-      HB_FUNCNAME( QOUT )();
+      HB_FUNC_EXEC( QOUT );
 
    ulLen = 0;
    input = 0;

@@ -93,6 +93,36 @@ static HB_ITEM_PTR s_errorBlock;
 static int     s_iLaunchCount = 0;
 static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
+static PHB_DYNS s_msgErrorNew;
+static PHB_DYNS s_msg_ARGS;
+static PHB_DYNS s_msg_CANDEFAULT;
+static PHB_DYNS s_msgCANDEFAULT;
+static PHB_DYNS s_msg_CANRETRY;
+static PHB_DYNS s_msgCANRETRY;
+static PHB_DYNS s_msg_CANSUBSTITUTE;
+static PHB_DYNS s_msgCANSUBSTITUTE;
+static PHB_DYNS s_msg_DESCRIPTION;
+static PHB_DYNS s_msgDESCRIPTION;
+static PHB_DYNS s_msg_FILENAME;
+static PHB_DYNS s_msgFILENAME;
+static PHB_DYNS s_msg_GENCODE;
+static PHB_DYNS s_msgGENCODE;
+static PHB_DYNS s_msg_OPERATION;
+static PHB_DYNS s_msgOPERATION;
+static PHB_DYNS s_msg_OSCODE;
+static PHB_DYNS s_msgOSCODE;
+static PHB_DYNS s_msg_SEVERITY;
+static PHB_DYNS s_msgSEVERITY;
+static PHB_DYNS s_msg_SUBCODE;
+static PHB_DYNS s_msgSUBCODE;
+static PHB_DYNS s_msg_SUBSYSTEM;
+static PHB_DYNS s_msgSUBSYSTEM;
+static PHB_DYNS s_msg_TRIES;
+static PHB_DYNS s_msgTRIES;
+
+#define HB_MSGSYM_INIT( s )         s_msg##s = hb_dynsymGetCase( HB_MACRO2STRING( s ) )
+
+
 HB_FUNC_EXTERN( ERRORNEW );
 
 /* NOTE: This is called via its symbol name, so we should make sure
@@ -102,7 +132,7 @@ void hb_errForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errForceLink()"));
 
-   HB_FUNCNAME( ERRORNEW )();
+   HB_FUNC_EXEC( ERRORNEW );
 }
 
 /* There's a similar undocumented, internal functions in CA-Cl*pper named
@@ -152,10 +182,37 @@ void hb_errInit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errInit()"));
 
-   /* initialize an item
-    * NOTE: hb_itemClear() cannot be used to initialize an item because
-    * memory occupied by the item can contain garbage bits
-   */
+   /* error function */
+   s_msgErrorNew = hb_dynsymGetCase( "ERRORNEW" );
+
+   /* initialize message symbols */
+   HB_MSGSYM_INIT( _ARGS          );
+   HB_MSGSYM_INIT( _CANDEFAULT    );
+   HB_MSGSYM_INIT( CANDEFAULT     );
+   HB_MSGSYM_INIT( _CANRETRY      );
+   HB_MSGSYM_INIT( CANRETRY       );
+   HB_MSGSYM_INIT( _CANSUBSTITUTE );
+   HB_MSGSYM_INIT( CANSUBSTITUTE  );
+   HB_MSGSYM_INIT( _DESCRIPTION   );
+   HB_MSGSYM_INIT( DESCRIPTION    );
+   HB_MSGSYM_INIT( _FILENAME      );
+   HB_MSGSYM_INIT( FILENAME       );
+   HB_MSGSYM_INIT( _GENCODE       );
+   HB_MSGSYM_INIT( GENCODE        );
+   HB_MSGSYM_INIT( _OPERATION     );
+   HB_MSGSYM_INIT( OPERATION      );
+   HB_MSGSYM_INIT( _OSCODE        );
+   HB_MSGSYM_INIT( OSCODE         );
+   HB_MSGSYM_INIT( _SEVERITY      );
+   HB_MSGSYM_INIT( SEVERITY       );
+   HB_MSGSYM_INIT( _SUBCODE       );
+   HB_MSGSYM_INIT( SUBCODE        );
+   HB_MSGSYM_INIT( _SUBSYSTEM     );
+   HB_MSGSYM_INIT( SUBSYSTEM      );
+   HB_MSGSYM_INIT( _TRIES         );
+   HB_MSGSYM_INIT( TRIES          );
+
+   /* initialize an item for error block */
    s_errorBlock = hb_itemNew( NULL );
 }
 
@@ -174,7 +231,7 @@ PHB_ITEM hb_errNew( void )
 
    pReturn = hb_itemNew( NULL );
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "ERRORNEW" ) );
+   hb_vmPushDynSym( s_msgErrorNew );
    hb_vmPushNil();
    hb_vmDo( 0 );
 
@@ -361,7 +418,7 @@ char * hb_errGetDescription( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetDescription(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "DESCRIPTION" ) );
+   hb_vmPushDynSym( s_msgDESCRIPTION );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -372,7 +429,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, const char * szDescription )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutDescription(%p, %s)", pError, szDescription));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_DESCRIPTION" ) );
+   hb_vmPushDynSym( s_msg_DESCRIPTION );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szDescription, strlen( szDescription ) );
    hb_vmSend( 1 );
@@ -384,7 +441,7 @@ char * hb_errGetFileName( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetFileName(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "FILENAME" ) );
+   hb_vmPushDynSym( s_msgFILENAME );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -395,7 +452,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, const char * szFileName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutFileName(%p, %s)", pError, szFileName));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_FILENAME" ) );
+   hb_vmPushDynSym( s_msg_FILENAME );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szFileName, strlen( szFileName ) );
    hb_vmSend( 1 );
@@ -407,7 +464,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetGenCode(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "GENCODE" ) );
+   hb_vmPushDynSym( s_msgGENCODE );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -418,7 +475,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %hu)", pError, uiGenCode));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_GENCODE" ) );
+   hb_vmPushDynSym( s_msg_GENCODE );
    hb_vmPush( pError );
    hb_vmPushInteger( uiGenCode );
    hb_vmSend( 1 );
@@ -430,7 +487,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetOperation(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "OPERATION" ) );
+   hb_vmPushDynSym( s_msgOPERATION );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -447,7 +504,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, const char * szOperation )
       if( pSym )
          szOperation = pSym->szName;
    }
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_OPERATION" ) );
+   hb_vmPushDynSym( s_msg_OPERATION );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szOperation, strlen( szOperation ) );
    hb_vmSend( 1 );
@@ -459,7 +516,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetOsCode(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "OSCODE" ) );
+   hb_vmPushDynSym( s_msgOSCODE );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -470,7 +527,7 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %hu)", pError, uiOsCode));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_OSCODE" ) );
+   hb_vmPushDynSym( s_msg_OSCODE );
    hb_vmPush( pError );
    hb_vmPushInteger( uiOsCode );
    hb_vmSend( 1 );
@@ -482,7 +539,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSeverity(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "SEVERITY" ) );
+   hb_vmPushDynSym( s_msgSEVERITY );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -493,7 +550,7 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutSeverity(%p, %hu)", pError, uiSeverity));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_SEVERITY" ) );
+   hb_vmPushDynSym( s_msg_SEVERITY );
    hb_vmPush( pError );
    hb_vmPushInteger( uiSeverity );
    hb_vmSend( 1 );
@@ -505,7 +562,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubCode(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "SUBCODE" ) );
+   hb_vmPushDynSym( s_msgSUBCODE );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -516,7 +573,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %hu)", pError, uiSubCode));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_SUBCODE" ) );
+   hb_vmPushDynSym( s_msg_SUBCODE );
    hb_vmPush( pError );
    hb_vmPushInteger( uiSubCode );
    hb_vmSend( 1 );
@@ -528,7 +585,7 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubSytem(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "SUBSYSTEM" ) );
+   hb_vmPushDynSym( s_msgSUBSYSTEM );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -539,7 +596,7 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, const char * szSubSystem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubSytem(%p, %s)", pError, szSubSystem));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_SUBSYSTEM" ) );
+   hb_vmPushDynSym( s_msg_SUBSYSTEM );
    hb_vmPush( pError );
    hb_vmPushString( ( char * ) szSubSystem, strlen( szSubSystem ) );
    hb_vmSend( 1 );
@@ -551,7 +608,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errGetTries(%p)", pError));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "TRIES" ) );
+   hb_vmPushDynSym( s_msgTRIES );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -562,7 +619,7 @@ PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutTries(%p, %hu)", pError, uiTries));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_TRIES" ) );
+   hb_vmPushDynSym( s_msg_TRIES );
    hb_vmPush( pError );
    hb_vmPushInteger( uiTries );
    hb_vmSend( 1 );
@@ -578,7 +635,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "CANRETRY" ) );
+   hb_vmPushDynSym( s_msgCANRETRY );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -587,7 +644,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "CANSUBSTITUTE" ) );
+   hb_vmPushDynSym( s_msgCANSUBSTITUTE );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -596,7 +653,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "CANDEFAULT" ) );
+   hb_vmPushDynSym( s_msgCANDEFAULT );
    hb_vmPush( pError );
    hb_vmSend( 0 );
 
@@ -612,21 +669,21 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutFlags(%p, %hu)", pError, uiFlags));
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANRETRY" ) );
+   hb_vmPushDynSym( s_msg_CANRETRY );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANRETRY ) ? TRUE : FALSE );
    hb_vmSend( 1 );
 
    /* ; */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANSUBSTITUTE" ) );
+   hb_vmPushDynSym( s_msg_CANSUBSTITUTE );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANSUBSTITUTE ) ? TRUE : FALSE );
    hb_vmSend( 1 );
 
    /* ; */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_CANDEFAULT" ) );
+   hb_vmPushDynSym( s_msg_CANDEFAULT );
    hb_vmPush( pError );
    hb_vmPushLogical( ( uiFlags & EF_CANDEFAULT ) ? TRUE : FALSE );
    hb_vmSend( 1 );
@@ -655,7 +712,7 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, ULONG ulArgCount, ... )
 
    /* Assign the new array to the object data item. */
 
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+   hb_vmPushDynSym( s_msg_ARGS );
    hb_vmPush( pError );
    hb_vmPush( pArray );
    hb_vmSend( 1 );
@@ -729,7 +786,7 @@ PHB_ITEM hb_errRT_SubstParams( const char *szSubSystem, ULONG ulGenCode, ULONG u
    pArray = hb_arrayBaseParams();
 
    /* Assign the new array to the object data item. */
-   hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+   hb_vmPushDynSym( s_msg_ARGS );
    hb_vmPush( pError );
    hb_vmPush( pArray );
    hb_vmSend( 1 );
@@ -809,7 +866,7 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
-      hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+      hb_vmPushDynSym( s_msg_ARGS );
       hb_vmPush( pError );
       hb_vmPush( pArray );
       hb_vmSend( 1 );
@@ -868,7 +925,7 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
-      hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+      hb_vmPushDynSym( s_msg_ARGS );
       hb_vmPush( pError );
       hb_vmPush( pArray );
       hb_vmSend( 1 );
@@ -926,7 +983,7 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
-      hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+      hb_vmPushDynSym( s_msg_ARGS );
       hb_vmPush( pError );
       hb_vmPush( pArray );
       hb_vmSend( 1 );
@@ -983,7 +1040,7 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
    if ( pArray )
    {
       /* Assign the new array to the object data item. */
-      hb_vmPushSymbol( hb_dynsymGetSymbol( "_ARGS" ) );
+      hb_vmPushDynSym( s_msg_ARGS );
       hb_vmPush( pError );
       hb_vmPush( pArray );
       hb_vmSend( 1 );

@@ -594,7 +594,7 @@
  *      #define HB_LANG_REQUEST_( id )    extern HB_FUNC( HB_LANG_##id ); \
  *                                      void hb_lang_ForceLink( void ) \
  *                                      { \
- *                                         HB_FUNCNAME( HB_LANG_##id )(); \
+ *                                         HB_FUNC_EXEC( HB_LANG_##id ); \
  *                                      }
  *
  *      // Macro to publish a specific language module, for both C 

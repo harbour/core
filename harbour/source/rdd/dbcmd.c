@@ -164,7 +164,7 @@ static ERRCODE hb_waUnsupported( AREAP pArea )
 
    if( !pArea )
    {
-      HB_FUNCNAME( RDDSYS )();
+      HB_FUNC_EXEC( RDDSYS );
    }
 
    pError = hb_errNew();
@@ -3551,7 +3551,7 @@ HB_FUNC( RDDREGISTER )
 /* Same as LASTREC() */
 HB_FUNC( RECCOUNT )
 {
-   HB_FUNCNAME( LASTREC )();
+   HB_FUNC_EXEC( LASTREC );
 }
 
 HB_FUNC( RECNO )

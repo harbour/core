@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
 #define HB_CODEPAGE_REQUEST_( id )     HB_FUNC_EXTERN( HB_CODEPAGE_##id ); \
                                        void hb_codepage_ForceLink_##id( void ) \
                                        { \
-                                          HB_FUNCNAME( HB_CODEPAGE_##id )(); \
+                                          HB_FUNC_EXEC( HB_CODEPAGE_##id ); \
                                        }
 #define HB_CODEPAGE_ANNOUNCE( id )     HB_FUNC( HB_CODEPAGE_##id ) {}
 

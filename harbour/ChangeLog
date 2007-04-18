@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-19 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gd/gdwrp.c
+  * harbour/contrib/libmisc/hb_f.c
+  * harbour/contrib/samples/dbf.c
+  * harbour/contrib/samples/time.c
+  * harbour/doc/es/hb_apiln.txt
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbapilng.h
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbnubs.c
+  * harbour/source/rdd/hsx/cftsfunc.c
+  * harbour/source/rtl/accept.c
+  * harbour/source/rtl/defpath.c
+  * harbour/source/rtl/oemansi.c
+  * harbour/source/rtl/pad.c
+  * harbour/source/rtl/shadow.c
+  * harbour/source/rtl/trim.c
+  * harbour/source/vm/debug.c
+    * changed HB_FUNCNAME( <name> )() to HB_FUNC_EXEC( <name> )
+
+  * harbour/utils/hbrun/Makefile
+    * changed order of linked libraries
+
+  * harbour/source/rtl/empty.c
+    * changed EMPTY( <symboItem> ) - not it returns .T. when <symboItem>
+      is not a function symbol
+
+  * harbour/source/rtl/errorapi.c
+    % replaced all hb_dynsym{Find,Get}*() by static variables initialized
+      at HVM startup variables - it reduce the cost of creating and
+      initializing error object about 50%
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbffind.c
+    * changed to use 64bit file API
+
+  + harbour/contrib/libct/ctextern.ch
+    + added list with EXTERN requests for our CT3 function. List generated
+      automatically from final binary CT lib created on Linux.
+
 2007-04-18 10:43 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/codepage/cp_tpl.c
      + Added NOTE about the fact that hb_Translate() 

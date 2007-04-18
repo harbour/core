@@ -93,7 +93,7 @@ HB_FUNC( DEFPATH )
 
 HB_FUNC( __DEFPATH )
 {
-   HB_FUNCNAME( DEFPATH )();
+   HB_FUNC_EXEC( DEFPATH );
 }
 
 #endif
