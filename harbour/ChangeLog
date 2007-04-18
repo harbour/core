@@ -8,10 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-18 09:43 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/source/compiler/gencobj.c
+    * fixed declaration
+
 2007-04-18 09:23 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/source/compiler/gencobj.c
     * added support of HB_CFG_FILE envvar which define the file name to use
-	 for -go compiler switch
+	 for -go compiler switch borrowed from xHarbour
   * harbour/config/w32/mingw32.cf
     * fixed a typo
 
