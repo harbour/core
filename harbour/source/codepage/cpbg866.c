@@ -84,7 +84,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "BG866",
-    CPID_866, UNITB_866, NUMBER_OF_CHARACTERS,
+    HB_CPID_866, HB_UNITB_866, NUMBER_OF_CHARACTERS,
     "€‚ƒ„…†‡‰‹‘’“”•–—™›",
     " ΅Ά£¤¥¦§¨©ª«¬­®―ΰαβγδεζηθικλμνξο",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

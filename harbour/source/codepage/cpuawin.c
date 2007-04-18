@@ -59,7 +59,7 @@
 #include "hbapicdp.h"
 
 static HB_CODEPAGE s_codepage = { "UA1251",
-    CPID_1251,UNITB_1251,36,
+    HB_CPID_1251,HB_UNITB_1251,36,
     "ÀÁÂÃÄÅ¨×ÆÇÈ²¯ÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞ‗",
     "אבגדהו¸÷זחט³¿יךכלםמןנסעףפץצקרשתûü‎‏ÿ",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };

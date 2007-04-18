@@ -630,7 +630,9 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cphu852.obj  \
     $(OBJ_DIR)\cphu852s.obj \
     $(OBJ_DIR)\cphuiso.obj  \
+    $(OBJ_DIR)\cphuisos.obj \
     $(OBJ_DIR)\cphuwin.obj  \
+    $(OBJ_DIR)\cphuwins.obj \
     $(OBJ_DIR)\cpit437.obj  \
     $(OBJ_DIR)\cpit850.obj  \
     $(OBJ_DIR)\cpitisb.obj  \

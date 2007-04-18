@@ -52,13 +52,13 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: Windows-1250 */
+/* Codepage: Windows-1250 (ntxhu852 compatible) */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  42    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -83,10 +83,23 @@
    same excepting the characters case, of course.
  */
 
+/* NOTE: Several chars have been added above the standard 852 Hungarian 
+         ones to make it 100% compatible with ntxhu852.obj for CA-Cl*pper 5.x.
+         Moreover the extra chars had to be replicated in the alternative 
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         work. [vszakats] */
+
+/* NOTE: Since there is no possibility in Harbour to have different number 
+         of uppercase and lowercase accented chars, a simple workaround 
+         was used to solve the problem; notice that some uppercase chars 
+         have the same lowercase values. Testing showed that both the 
+         ordering and Lower()/Upper() functions worked alright.
+         [20070410] [vszakats] */
+
 static HB_CODEPAGE s_codepage = { "HUWIN",
-    CPID_1250, UNITB_1250, NUMBER_OF_CHARACTERS,
-    "AÁBCDEÉFGHIÍJKLMNOÓÖÕPQRSTUÚÜÛVWXYZ",
-    "aábcdeéfghiíjklmnoóöõpqrstuúüûvwxyz",
+    HB_CPID_1250, HB_UNITB_1250, NUMBER_OF_CHARACTERS,
+    "AÁÁÄBCDEÉFGHIÍÍJKLMNOÓÓÖÕÕPQRSTUÚÚÜÛÛVWXYZ",
+    "aááäbcdeéfghiííjklmnoóóöõõpqrstuúúüûûvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 HB_CODEPAGE_INIT( HUWIN )

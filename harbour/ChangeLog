@@ -8,6 +8,116 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-18 10:43 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/codepage/cp_tpl.c
+     + Added NOTE about the fact that hb_Translate() 
+       (and hb_cdpTranslate()) would only work properly 
+       if all codepages for the same language are using the 
+       exact same number of lowercase/uppercase cp chars 
+       in the exact same order.
+
+   * harbour/source/codepage/Makefile
+   * harbour/common.mak
+   * harbour/source/codepage/cphu852.c
+   * harbour/source/codepage/cphu852s.c
+   * harbour/source/codepage/cphuiso.c
+   + harbour/source/codepage/cphuisos.c
+   * harbour/source/codepage/cphuwin.c
+   + harbour/source/codepage/cphuwins.c
+     ! Synced HU WIN and HU ISO codepage lower/uppercase 
+       strings with HU 852, so that hb_Translate() works 
+       properly. (this means there are now several duplicate 
+       chars included in the WIN/ISO versions, along with 
+       a non-HU char, all just needed to stay compatible with 
+       original CA-Cl*pper HU/852 index ordering and keep 
+       hb_Translate() working at the same time.)
+       IMO, we'd need to introduce a separate "collation" 
+       string in each cp file to detach index ordering 
+       from upper/lowercase and codepage translation without 
+       any hacks, since as this example shows these two 
+       are not always in sync. (or, as an alternative we might 
+       want to make codepage translation more sophisticated, 
+       like converting first to unicode and convert back to 
+       the other codepage from unicode, but that leads a bit 
+       further.). (If I'm missing something, pls don't hesitate 
+       to clarify)
+     + Added SixDriver compatible HU ISO/WIN codepage files 
+       for the reasons described above.
+
+   * harbour/include/hbapicdp.h
+   * harbour/source/rtl/cdpapi.c
+   * harbour/source/codepage/cpbg866.c
+   * harbour/source/codepage/cpbgiso.c
+   * harbour/source/codepage/cpbgwin.c
+   * harbour/source/codepage/cpcs852.c
+   * harbour/source/codepage/cpcsiso.c
+   * harbour/source/codepage/cpcskam.c
+   * harbour/source/codepage/cpcswin.c
+   * harbour/source/codepage/cpeldos.c
+   * harbour/source/codepage/cpelwin.c
+   * harbour/source/codepage/cpesdos.c
+   * harbour/source/codepage/cpesmwi.c
+   * harbour/source/codepage/cpeswin.c
+   * harbour/source/codepage/cpfrdos.c
+   * harbour/source/codepage/cpgedos.c
+   * harbour/source/codepage/cpgewin.c
+   * harbour/source/codepage/cphr1250.c
+   * harbour/source/codepage/cphr437.c
+   * harbour/source/codepage/cphr852.c
+   * harbour/source/codepage/cphu852.c
+   * harbour/source/codepage/cphu852s.c
+   * harbour/source/codepage/cphuiso.c
+   * harbour/source/codepage/cphuwin.c
+   * harbour/source/codepage/cpit437.c
+   * harbour/source/codepage/cpit850.c
+   * harbour/source/codepage/cpitisb.c
+   * harbour/source/codepage/cpitiso.c
+   * harbour/source/codepage/cpltwin.c
+   * harbour/source/codepage/cppl852.c
+   * harbour/source/codepage/cppliso.c
+   * harbour/source/codepage/cpplmaz.c
+   * harbour/source/codepage/cpplwin.c
+   * harbour/source/codepage/cppt850.c
+   * harbour/source/codepage/cpptiso.c
+   * harbour/source/codepage/cpru866.c
+   * harbour/source/codepage/cprukoi.c
+   * harbour/source/codepage/cpruwin.c
+   * harbour/source/codepage/cpsl437.c
+   * harbour/source/codepage/cpsl852.c
+   * harbour/source/codepage/cpsliso.c
+   * harbour/source/codepage/cpslwin.c
+   * harbour/source/codepage/cpsrwin.c
+   * harbour/source/codepage/cptrdos.c
+   * harbour/source/codepage/cptrwin.c
+   * harbour/source/codepage/cpua866.c
+   * harbour/source/codepage/cpuakoi.c
+   * harbour/source/codepage/cpuawin.c
+   * harbour/source/codepage/uc1250.c
+   * harbour/source/codepage/uc1251.c
+   * harbour/source/codepage/uc1253.c
+   * harbour/source/codepage/uc1254.c
+   * harbour/source/codepage/uc1257.c
+   * harbour/source/codepage/uc737.c
+   * harbour/source/codepage/uc850.c
+   * harbour/source/codepage/uc852.c
+   * harbour/source/codepage/uc857.c
+   * harbour/source/codepage/uc866.c
+   * harbour/source/codepage/uc88591b.c
+   * harbour/source/codepage/uc8859_1.c
+   * harbour/source/codepage/uc8859_2.c
+   * harbour/source/codepage/uc8859_5.c
+   * harbour/source/codepage/uckam.c
+   * harbour/source/codepage/uckoi8.c
+   * harbour/source/codepage/uckoi8u.c
+   * harbour/source/codepage/ucmaz.c
+     ! #define namespace issue in public API header file 
+       corrected:
+       CPID_* -> HB_CPID_*
+       UNITB_* -> HB_UNITB_*
+
+   * harbour/source/compiler/gencobj.c
+     ! Fixed warning.
+
 2007-04-18 09:43 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/source/compiler/gencobj.c
     * fixed declaration

@@ -108,7 +108,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 #else
    char * pszEnv = NULL;
 #endif
-   char * pszCfgFileName = NULL;
+   char * pszCfgFileName = hb_getenv( "HB_CFG_FILE" );
    FILE * filecfg;
    BOOL bVerbose = FALSE;   /* Don't show C compiler messages (default). */
    BOOL bDelTmp = TRUE;     /* Delete intermediate C file (default). */
@@ -126,8 +126,6 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-
-   pszCfgFileName = hb_getenv( "HB_CFG_FILE" );
 
    if( !pszCfgFileName )
    {

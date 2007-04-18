@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "CSWIN",
-    CPID_1250, UNITB_1250, NUMBER_OF_CHARACTERS,
+    HB_CPID_1250, HB_UNITB_1250, NUMBER_OF_CHARACTERS,
     "A~Á~ÄBCÈD~ÏE~É~Ì~ËFGH.CH.I~ÍJKLMN~ÒO~Ó~ÖPQRØSŠT~U~Ú~Ù~ÜVWXY~ÝZŽ",
     "a~á~äbcèd~ïe~é~ì~ëfgh.ch.i~íjklmn~òo~ó~öpqrøsšt~u~ú~ù~üvwxy~ýzž",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "CS852",
-    CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
+    HB_CPID_852, HB_UNITB_852, NUMBER_OF_CHARACTERS,
     "A~µ~éBC¨D~“E~ê~∑~”FGH.CH.I~÷JKLMN~’O~‡~ôPQR¸SÊT~õU~È~ﬁ~öVWXY~ÌZ¶",
     "a~†~Ñbcüd~‘e~Ç~ÿ~âfgh.ch.i~°jklmn~Âo~¢~îpqr˝sÁt~úu~£~Ö~Åvwxy~Ïzß",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

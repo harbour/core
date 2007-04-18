@@ -58,6 +58,12 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
+/* NOTE: In order to codepage translate work in Harbour, you must 
+         ensure that the NUMBER_OF_CHARACTERS and the order of the 
+         lowercase/uppercase chars are exactly matching in every 
+         codepage that belong to the same language.
+         [vszakats] */
+
 #define NUMBER_OF_CHARACTERS  26    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
@@ -84,7 +90,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "EN",
-    CPID_437,UNITB_437,NUMBER_OF_CHARACTERS,
+    HB_CPID_437,HB_UNITB_437,NUMBER_OF_CHARACTERS,
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     "abcdefghijklmnopqrstuvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

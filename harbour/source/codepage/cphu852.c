@@ -85,7 +85,9 @@
 
 /* NOTE: Several chars have been added above the standard 852 Hungarian 
          ones to make it 100% compatible with ntxhu852.obj for CA-Cl*pper 5.x.
-         [vszakats] */
+         Moreover the extra chars had to be replicated in the alternative 
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         work. [vszakats] */
 
 /* NOTE: Since there is no possibility in Harbour to have different number 
          of uppercase and lowercase accented chars, a simple workaround 
@@ -95,7 +97,7 @@
          [20070410] [vszakats] */
 
 static HB_CODEPAGE s_codepage = { "HU852",
-    CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
+    HB_CPID_852, HB_UNITB_852, NUMBER_OF_CHARACTERS,
     "AèµéBCDEêFGHIç÷JKLMNOï‡ôßäPQRSTUóÈöòÎVWXYZ",
     "a††ÑbcdeÇfghi°°jklmno¢¢îìãpqrstu££Åñ˚vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

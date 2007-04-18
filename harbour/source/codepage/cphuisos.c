@@ -4,11 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( PLISO )
+ * National Collation Support Module (HUISOS)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 1999-2005 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
- * Polish collating sequence (PLISO) done by Jacek Kubica <kubica@wssk.wroc.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,15 +50,15 @@
  *
  */
 
-/* Language name: Polish */
-/* ISO language code (2 chars): PL */
-/* Codepage: ISO-8859-2 */
+/* Language name: Hungarian */
+/* ISO language code (2 chars): HU */
+/* Codepage: ISO-8859-2 (sixhu852 compatible) */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  36    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -84,16 +83,22 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "PLISO",
+/* NOTE: Ž/„ has been added to make it fully compatible with sixhu852.obj for 
+         S*ccessWare SIx Driver.
+         Moreover the extra chars had to be replicated in the alternative 
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         work. [vszakats] */
+
+static HB_CODEPAGE s_codepage = { "HUISOS",
     HB_CPID_8859_2, HB_UNITB_8859_2, NUMBER_OF_CHARACTERS,
-    "A¡BCÆDEÊFGHIJKL£MNÑOÓPQRS¦TUVWXYZ¬¯",
-    "a±bcædeêfghijkl³mnñoópqrs¶tuvwxyz¼¿",
+    "AÁÄBCDEÉFGHIÍJKLMNOÓÖÕPQRSTUÚÜÛVWXYZ",
+    "aáäbcdeéfghiíjklmnoóöõpqrstuúüûvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( PLISO )
+HB_CODEPAGE_INIT( HUISOS )
 
 #if defined(HB_PRAGMA_STARTUP)
-   #pragma startup hb_codepage_Init_PLISO
+   #pragma startup hb_codepage_Init_HUISOS
 #elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -101,6 +106,6 @@ HB_CODEPAGE_INIT( PLISO )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_PLISO = hb_codepage_Init_PLISO;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_HUISOS = hb_codepage_Init_HUISOS;
    #pragma data_seg()
 #endif

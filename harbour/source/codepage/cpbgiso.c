@@ -84,7 +84,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "BGISO",
-    CPID_8859_5, UNITB_8859_5, NUMBER_OF_CHARACTERS,
+    HB_CPID_8859_5, HB_UNITB_8859_5, NUMBER_OF_CHARACTERS,
     "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
     "абвгдежзийклмнопрстуфхцчшщъыьэюя",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

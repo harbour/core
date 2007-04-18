@@ -85,10 +85,12 @@
 
 /* NOTE: é/Ñ has been added to make it fully compatible with sixhu852.obj for 
          S*ccessWare SIx Driver.
-         [vszakats] */
+         Moreover the extra chars had to be replicated in the alternative 
+         codepages (WIN, ISO) too, to keep the Harbour codepage translation 
+         work. [vszakats] */
 
 static HB_CODEPAGE s_codepage = { "HU852S",
-    CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
+    HB_CPID_852, HB_UNITB_852, NUMBER_OF_CHARACTERS,
     "AµéBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ",
     "a†ÑbcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

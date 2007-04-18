@@ -59,7 +59,7 @@
 #include "hbapicdp.h"
 
 static HB_CODEPAGE s_codepage = { "RUKOI8",
-    CPID_KOI_8, UNITB_KOI_8, 32,
+    HB_CPID_KOI_8, HB_UNITB_KOI_8, 32,
     "бвчздецъйклмнопртуфхжигюыэящшьас",
     "БВЧЗДЕЦЪЙКЛМНОПРТУФХЖИГЮЫЭЯЩШЬАС",
     0,0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };

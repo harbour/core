@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "CSISO",
-    CPID_8859_2, UNITB_8859_2, NUMBER_OF_CHARACTERS,
+    HB_CPID_8859_2, HB_UNITB_8859_2, NUMBER_OF_CHARACTERS,
     "A~Á~ÄBCÈD~ÏE~É~Ì~ËFGH.CH.I~ÍJKLMN~ÒO~Ó~ÖPQRØS©T~«U~Ú~Ù~ÜVWXY~ÝZ®",
     "a~á~äbcèd~ïe~é~ì~ëfgh.ch.i~íjklmn~òo~ó~öpqrøs¹t~»u~ú~ù~üvwxy~ýz¾",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };

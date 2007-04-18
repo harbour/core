@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "IT850",
-    CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
+    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
     "A∑µ∂«éèBCDE‘êFGHIﬁ÷JKLMNO„‡PQRSTUÎÈVWXYZ",
     "aÖ†É∆ÑÜbcdeäÇfghiç°jklmnoï¢pqrstuó£vwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
