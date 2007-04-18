@@ -125,7 +125,15 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-   if( pszEnv && *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszTemp ) )
+
+   char * pszCfgFileName = hb_getenv( "HB_CFG_FILE" );
+
+   if( !pszCfgFileName )
+   {
+       pszCfgFileName = HB_CFG_FILENAME;
+   }
+
+   if( pszEnv && *hb_searchpath( pszCfgFileName, pszEnv, pszTemp ) )
    {
       filecfg = fopen( pszTemp, "rt" );
       if( ! filecfg )
@@ -133,6 +141,10 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
          if( pszEnv )
             hb_xfree( ( void * ) pszEnv );
+
+         if( pszCfgFileName )
+            hb_xfree( ( void * ) pszCfgFileName );
+         
          return;
       }
 
@@ -189,15 +201,39 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
             }
          }
       }
+
       fclose( filecfg );
+
+   } else {
+     
+      printf( "\nError: Can't find %s file in %s.\n", pszCfgFileName, pszEnv ); 
+      printf( "%s should be a text file that contains:\n", pszCfgFileName ); 
+      printf( "CC=C compiler binary name eg. CC=gcc\n" );
+      printf( "CFLAGS=C compiler options eg. -c -I<includes>\n" );
+      printf( "       ( 'compile only' and harbour include dir are mandatory )\n" );
+      printf( "VERBOSE=NO|YES to show steps messages default is NO\n" );
+      printf( "DELTMP=NO|YES to delete generated C source default is YES\n" );
+      printf( "remember also to properly set the C compiler env.\n" );
+
+      if( pszEnv )
+         hb_xfree( ( void * ) pszEnv );
+
+      if( pszCfgFileName )
+         hb_xfree( ( void * ) pszCfgFileName );
+      
+      return;
+      
    }
 
    if( pszEnv )
       hb_xfree( ( void * ) pszEnv );
 
+   if( pszCfgFileName )
+      hb_xfree( ( void * ) pszCfgFileName );
+
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "Building object module output for '%s'...", szFileName );
+      printf( "\nBuilding object module for \'%s\'\nusing C compiler \'%s\' as defined in \'%s\'...\n", szFileName, szCompiler, pszCfgFileName );               
       fflush( stdout );
    }
 
@@ -235,7 +271,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       
       if( bVerbose )
       {
-         printf( "\n%s\n", szCommandLine ) ;
+         printf( "Exec: %s\n", szCommandLine ) ;         
       }
       else
       {
@@ -248,7 +284,15 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       /* Delete intermediate .c file */
       /* QUESTION: Leave this file if C compiler fails ? */
       if( bDelTmp ) /* && iSuccess ) */
-         unlink( ( char * ) szFileName );
+      {
+         if( bVerbose )
+         {
+            printf( "Deleting: \"%s\"\n", szFileName );            
+         }
+
+         remove( ( char * ) szFileName );
+
+      }
 
       if( ! HB_COMP_PARAM->fQuiet )
       {
@@ -260,6 +304,6 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    }
    else
    {
-      printf( "\nError: No compiler defined in %s\n", HB_CFG_FILENAME );
+      printf( "\nError: No compiler defined in %s\n", pszCfgFileName );
    }
 }
