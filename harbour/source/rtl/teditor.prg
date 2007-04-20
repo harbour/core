@@ -61,39 +61,38 @@
 
 CLASS HBEditor
 
-   DATA  cFile          INIT ""     // name of file being edited
-
-   DATA  aText          INIT {}     // array with lines of text being edited
-   DATA  naTextLen      INIT 0      // number of lines of text inside aText.
-
-   DATA  nTop                       // boundaries of editor window, without box around
-   DATA  nLeft
-   DATA  nBottom
-   DATA  nRight
-
-   DATA  nFirstCol      INIT 1      // FirstCol/Row of current text visible inside editor window
-   DATA  nFirstRow      INIT 1
-   DATA  nRow           INIT 1      // Cursor position inside aText (nRow) and inside current line of text (nCol)
-   DATA  nCol           INIT 1
-
-   DATA  nPhysRow       INIT 0      // Hardware cursor position, I cannot rely on Row()/Col() because I could be inside another
-   DATA  nPhysCol       INIT 0      // application/object and this one could be moving real cursor. If I'm running full
-                                    // screen nPhysRow will always have the same value as Row() and nPhysCol as Col()
-
-   DATA  nNumCols       INIT 1      // How many columns / rows can be displayed inside editor window
-   DATA  nNumRows       INIT 1
-
-   DATA  lInsert        INIT .F.    // Is editor in Insert mode or in Overstrike one?
-   DATA  nTabWidth      INIT 8      // Size of Tab chars
-   DATA  lEditAllow     INIT .T.    // Are changes to text allowed?
-   DATA  lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
-   DATA  lWordWrap      INIT .F.    // True if word wrapping is active
-   DATA  nWordWrapCol   INIT 0      // At which column word wrapping occurs
-   DATA  lDirty                     // .T. if there are changes not saved
-   DATA  lExitEdit      INIT .F.    // .T. if user requested to end Edit() method
-
-   DATA  cColorSpec     INIT SetColor()     // Color string used for screen writes
-
+   DATA  cFile          INIT ""                          // name of file being edited
+                                                         
+   DATA  aText          INIT {}                          // array with lines of text being edited
+   DATA  naTextLen      INIT 0                           // number of lines of text inside aText.
+                                                         
+   DATA  nTop                                            // boundaries of editor window, without box around
+   DATA  nLeft                                           
+   DATA  nBottom                                         
+   DATA  nRight                                          
+                                                         
+   DATA  nFirstCol      INIT 1                           // FirstCol/Row of current text visible inside editor window
+   DATA  nFirstRow      INIT 1                           
+   DATA  nRow           INIT 1                           // Cursor position inside aText (nRow) and inside current line of text (nCol)
+   DATA  nCol           INIT 1                           
+                                                         
+   DATA  nPhysRow       INIT 0                           // Hardware cursor position, I cannot rely on Row()/Col() because I could be inside another
+   DATA  nPhysCol       INIT 0                           // application/object and this one could be moving real cursor. If I'm running full
+                                                         // screen nPhysRow will always have the same value as Row() and nPhysCol as Col()
+                                                         
+   DATA  nNumCols       INIT 1                           // How many columns / rows can be displayed inside editor window
+   DATA  nNumRows       INIT 1                           
+                                                         
+   DATA  lInsert        INIT .F.                         // Is editor in Insert mode or in Overstrike one?
+   DATA  nTabWidth      INIT 8                           // Size of Tab chars
+   DATA  lEditAllow     INIT .T.                         // Are changes to text allowed?
+   DATA  lSaved         INIT .F.                         // True if user exited editor with K_CTRL_W
+   DATA  lWordWrap      INIT .F.                         // True if word wrapping is active
+   DATA  nWordWrapCol   INIT 0                           // At which column word wrapping occurs
+   DATA  lDirty                                          // .T. if there are changes not saved
+   DATA  lExitEdit      INIT .F.                         // .T. if user requested to end Edit() method
+                                                         
+   DATA  cColorSpec     INIT SetColor()                  // Color string used for screen writes
 
    METHOD New(cString, nTop, nLeft, nBottom,;            // Converts a string to an array of strings splitting input string at EOL boundaries
               nRight, lEditMode, nLineLength, nTabSize)
@@ -106,7 +105,7 @@ CLASS HBEditor
    METHOD InsertLine(cLine, lSoftCR, nRow)               // Insert a line of text at a defined row
    METHOD RemoveLine(nRow)                               // Remove a line of text
    METHOD GetLine(nRow)                                  // Return line n of text
-   METHOD LineLen(nRow) INLINE Len(::aText[nRow]:cText)  // Return text length of line n
+   METHOD LineLen(nRow)                                  // Return text length of line n
    METHOD SplitLine(nRow)                                // If a line of text is longer than nWordWrapCol divides it into multiple lines
    METHOD GotoLine(nRow)                                 // Put line nRow at cursor position
 
@@ -115,7 +114,7 @@ CLASS HBEditor
    METHOD RefreshWindow()                                // Redraw a window
    METHOD RefreshLine()                                  // Redraw a line
    METHOD RefreshColumn()                                // Redraw a column of text
-   METHOD LineColor(nRow) INLINE HB_SYMBOL_UNUSED(nRow), ::cColorSpec // Returns color string to use to draw nRow (current line if nRow is empty)
+   METHOD LineColor(nRow)                                // Returns color string to use to draw nRow (current line if nRow is empty)
 
    METHOD MoveCursor(nKey)                               // Move cursor inside text / window (needs a movement key)
    METHOD InsertState(lInsState)                         // Changes lInsert value and insertion / overstrike mode of editor
@@ -130,8 +129,8 @@ CLASS HBEditor
    METHOD DeHilite()                                     // Stop Hilighting
 
    METHOD SetPos(nRow, nCol)                             // Updates ::nPhysRow, ::nPhysCol and then calls SetPos() to move hardware cursor
-   METHOD Row() INLINE ::nPhysRow                        // Same as clipper ones, returns ::nPhysRow value
-   METHOD Col() INLINE ::nPhysCol                        // Same as clipper ones, returns ::nPhysCol value
+   METHOD Row()                                          // Same as clipper ones, returns ::nPhysRow value
+   METHOD Col()                                          // Same as clipper ones, returns ::nPhysCol value
 
 ENDCLASS
 
@@ -245,14 +244,14 @@ return cString
 
 METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize) CLASS HBEditor
 
-   default  cString     to ""
-   default  nTop        to 0
-   default  nLeft       to 0
-   default  nBottom     to MaxRow()
-   default  nRight      to MaxCol()
-   default  lEditMode   to .T.
-   default  nLineLength to nil
-   default  nTabSize    to nil
+   default cString     to ""
+   default nTop        to 0
+   default nLeft       to 0
+   default nBottom     to MaxRow()
+   default nRight      to MaxCol()
+   default lEditMode   to .T.
+   default nLineLength to nil
+   default nTabSize    to nil
 
    ::aText := Text2Array(cString, nLineLength)
    ::naTextLen := Len(::aText)
@@ -431,6 +430,10 @@ METHOD GetLine(nRow) CLASS HBEditor
    endif
 
 return Self
+
+// Return text length of line n
+METHOD LineLen(nRow)
+return Len(::aText[nRow]:cText)
 
 
 METHOD GotoLine(nRow) CLASS HBEditor
@@ -632,6 +635,12 @@ METHOD RefreshColumn() CLASS HBEditor
 
 return Self
 
+// Returns color string to use to draw nRow (current line if nRow is empty)
+METHOD LineColor(nRow) CLASS HBEditor
+
+   HB_SYMBOL_UNUSED(nRow)
+
+return ::cColorSpec
 
 // Handles cursor movements inside text array
 METHOD MoveCursor(nKey) CLASS HBEditor
@@ -1081,6 +1090,17 @@ METHOD SetPos(nRow, nCol) CLASS HBEditor
    SetPos(::nPhysRow, ::nPhysCol)
 
 return ::nPhysRow
+
+// Same as clipper ones, returns ::nPhysRow value
+METHOD Row() CLASS HBEditor
+
+return ::nPhysRow
+
+
+// Same as clipper ones, returns ::nPhysCol value
+METHOD Col() CLASS HBEditor
+
+return ::nPhysCol
 
 
 /*METHOD LineColor(nRow) CLASS HBEditor

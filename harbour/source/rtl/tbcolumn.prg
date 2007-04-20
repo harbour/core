@@ -56,35 +56,37 @@
 
 CLASS TBColumn
 
-   DATA  Block                // Code block to retrieve data for the column
-   DATA  Cargo                // User-definable variable
-   DATA  ColorBlock           // Code block that determines color of data items
-   DATA  ColSep               // Column separator character
-   DATA  DefColor             // Array of numeric indexes into the color table
-   DATA  Heading              // Column heading
-   DATA  Footing              // Column footing
-   DATA  FootSep              // Footing separator character
-   DATA  HeadSep              // Heading separator character
-   DATA  Picture              // Column picture string
-#ifdef HB_COMPAT_C53
-   DATA  PreBlock             // Code block determining editing
-   DATA  PostBlock            // Code block validating values
-#endif
-
-   ACCESS Width INLINE ::nWidth           // Column display width
-   ASSIGN Width(n) INLINE ::SetWidth(n)
+   DATA  Block                           // Code block to retrieve data for the column
+   DATA  Cargo                           // User-definable variable
+   DATA  ColorBlock                      // Code block that determines color of data items
+   DATA  ColSep                          // Column separator character
+   DATA  DefColor    INIT { 1, 2, 1, 1 } // Array of numeric indexes into the color table
+   DATA  Heading                         // Column heading
+   /* NOTE: ::Footing needs to be initialized to an empty string or TBrowse()::WriteMLineText() does not work
+            if there are columns which have a footing and others which don't. */
+   DATA  Footing     INIT ""             // Column footing
+   DATA  FootSep     INIT ""             // Footing separator character
+   DATA  HeadSep                         // Heading separator character
+   DATA  Picture                         // Column picture string
+#ifdef HB_COMPAT_C53                     
+   DATA  PreBlock                        // Code block determining editing
+   DATA  PostBlock                       // Code block validating values
+#endif                                   
+                                         
+   ACCESS Width INLINE ::nWidth          // Column display width
+   ASSIGN Width( n ) INLINE ::SetWidth( n )
 
    // NOTE: 17/08/01 - <maurilio.longo@libero.it>
    //       It is not correct in my opinion that this instance variable be exported
-   DATA  ColPos               // Temporary column position on screen needed by TBrowse class
-
-   METHOD New(cHeading, bBlock)  // Constructor
+   DATA  ColPos      INIT 1              // Temporary column position on screen needed by TBrowse class
+                                         
+   METHOD New( cHeading, bBlock )        // Constructor
 
 #ifdef HB_COMPAT_C53
    METHOD SetStyle( nMode, lSetting )
 #endif
 
-   HIDDEN:     /* H I D D E N */
+   HIDDEN:
 
    DATA  nWidth
    METHOD SetWidth( n )
@@ -99,17 +101,7 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
 
    DEFAULT cHeading TO ""
 
-   ::DefColor := { 1, 2, 1, 1 }
-   ::FootSep  := ""
-   ::ColPos   := 1
-
-   ::nWidth   := nil
    ::Heading  := cHeading
-
-   /* NOTE: needs to be initialized to an empty string or TBrowse()::WriteMLineText() does not work
-            if there are columns which have a footing and others which don't
-   */
-   ::Footing  := ""
    ::block    := bBlock
 
    #ifdef HB_COMPAT_C53

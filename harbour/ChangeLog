@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-20 21:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tbcolumn.prg
+   * harbour/source/rtl/tbrowse.prg
+   * harbour/source/rtl/teditor.prg
+   * harbour/source/rtl/tget.prg
+   * harbour/source/rtl/tgetlist.prg
+     % Avoiding INLINE for speed.
+     % Using INIT for quicker object initialization.
+     + Added TGet() NOTEs, TOFIX.
+     ! Fixed some problems in TGetList. (Two GetApplyKey() 
+       potential RTEs.)
+     ! Fixed a few missing "CLASS TBrowse"-es.
+     ; Some formatting, code cleaning.
+
 2007-04-20 04:05 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tget.prg
    * harbour/tests/Makefile

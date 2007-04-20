@@ -66,6 +66,7 @@
          Xbase++ compatible method */
 
 /* TOFIX: ::Minus [vszakats] */
+/* TOFIX: ::DecPos [vszakats] */
 
 #define GET_CLR_UNSELECTED      0
 #define GET_CLR_ENHANCED        1
@@ -76,32 +77,32 @@ CLASS Get
 
    EXPORTED:
 
-   DATA BadDate
+   DATA BadDate        INIT .f.
    DATA Buffer
    DATA Cargo
-   DATA Changed
-   DATA Clear
+   DATA Changed        INIT .f.
+   DATA Clear          INIT .f.
    DATA Col
-   DATA DecPos
+   DATA DecPos         INIT 0 // ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero.
    DATA ExitState
-   DATA HasFocus
-   DATA Minus
+   DATA HasFocus       INIT .f.
+   DATA Minus          INIT .f.
    DATA Name
    DATA Original
-   DATA Pos
+   DATA Pos            INIT 0
    DATA PostBlock
    DATA PreBlock
    DATA Reader
-   DATA Rejected
+   DATA Rejected       INIT .f.
    DATA Row
    DATA SubScript
-   DATA TypeOut
+   DATA TypeOut        INIT .f.
 #ifdef HB_COMPAT_C53
    DATA Control
    DATA Message
-   DATA Caption
-   DATA CapRow
-   DATA CapCol
+   DATA Caption        INIT ""
+   DATA CapRow         INIT 0
+   DATA CapCol         INIT 0
 #endif
 
    PROTECTED:
@@ -111,24 +112,25 @@ CLASS Get
    DATA bBlock
    DATA cType
 
-   DATA cPicMask
-   DATA cPicFunc
+   DATA cPicMask       INIT ""
+   DATA cPicFunc       INIT ""
    DATA nMaxLen
-   DATA lEdit
-   DATA lDecRev
-   DATA lPicComplex
+   DATA lEdit          INIT .f.
+   DATA lDecRev        INIT .f.
+   DATA lPicComplex    INIT .f.
    DATA nDispLen
-   DATA nDispPos
-   DATA nOldPos
-   DATA lCleanZero
+   DATA nDispPos       INIT 1
+   DATA nOldPos        INIT 0
+   DATA lCleanZero     INIT .f.
    DATA cDelimit
    DATA nMaxEdit
-   DATA lMinus
-   DATA lMinusPrinted
+   DATA lMinus         INIT .f.
+   DATA lMinusPrinted  INIT .f.
    DATA xVarGet
 
    VISIBLE:
 
+   /* NOTE: This method is a Harbour extension */
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
    METHOD Assign()
@@ -139,11 +141,12 @@ CLASS Get
 #ifdef HB_COMPAT_C53
    METHOD HitTest( nMRow, nMCol )
 #endif
-   METHOD Block( bBlock )         SETGET  // Replace to DATA bBlock
-   METHOD ColorSpec( cColorSpec ) SETGET  // Replace to DATA cColorSpec
-   METHOD Picture( cPicture )     SETGET  // Replace to DATA cPicture
+   METHOD Block( bBlock ) SETGET
+   METHOD ColorSpec( cColorSpec ) SETGET
+   METHOD Picture( cPicture ) SETGET
+   /* NOTE: lForced is an undocumented Harbour parameter. Should not be used by app code. */
    METHOD Display( lForced )
-   METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
+   METHOD ColorDisp( cColorSpec )
    METHOD KillFocus()
    METHOD Reset()
    METHOD SetFocus()
@@ -155,6 +158,7 @@ CLASS Get
 #endif
 
    METHOD VarGet()
+   /* NOTE: lReFormat is an undocumented Harbour parameter. Should not be used by app code. */
    METHOD VarPut( xValue, lReFormat )
 
    METHOD End()
@@ -168,6 +172,7 @@ CLASS Get
    METHOD WordLeft()
    METHOD WordRight()
 
+   /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. */
    METHOD BackSpace( lDisplay )
    MESSAGE Delete() METHOD _Delete()
    METHOD DelEnd()
@@ -187,7 +192,6 @@ CLASS Get
    METHOD PutMask( xValue, lEdit )
    METHOD FirstEditable()
    METHOD LastEditable()
-// METHOD HasScroll() INLINE ::nDispLen != ::nMaxLen
 
 ENDCLASS
 
@@ -198,51 +202,18 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col()
    DEFAULT cVarName   TO ""
-   DEFAULT bVarBlock  TO iif( ValType( cVarName ) == "C", MemvarBlock( cVarName ), NIL )
+   DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
-   /* NIL assigments commented for speed */
-
-   ::HasFocus      := .f.
-   ::BadDate       := .f.
-   ::bBlock        := bVarBlock
-// ::Buffer        := NIL
-// ::Cargo         := NIL
-   ::Changed       := .f.
-   ::Clear         := .f.
-   ::Col           := nCol
-   ::ColorSpec     := cColorSpec
-   ::DecPos        := 0 // ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero.
-// ::ExitState     := NIL
-   ::Minus         := .f.
-   ::Name          := cVarName
-// ::Original      := NIL
-   ::Picture       := cPicture
-   ::Pos           := 0
-// ::PostBlock     := NIL
-// ::PreBlock      := NIL
-// ::Reader        := NIL
-   ::Rejected      := .f.
    ::Row           := nRow
-// ::SubScript     := NIL
-   ::TypeOut       := .f.
-                   
-   ::nDispPos      := 1
-   ::nOldPos       := 0
-   ::lCleanZero    := .f.
-   ::cDelimit      := iif( SET(_SET_DELIMITERS), SET(_SET_DELIMCHARS), NIL )
-   ::lMinus        := .f.
-   ::lMinusPrinted := .f.
-   ::lEdit         := .f.
-   ::cPicFunc      := ""
-   ::cPicMask      := ""
-   ::lDecRev       := .f.
-   ::lPicComplex   := .f.
-   #ifdef HB_COMPAT_C53
-   ::Caption       := ""
-   ::CapRow        := 0
-   ::CapCol        := 0
-   #endif
+   ::Col           := nCol
+   ::bBlock        := bVarBlock
+   ::Name          := cVarName
+   ::Picture       := cPicture
+   ::ColorSpec     := cColorSpec
+   if Set( _SET_DELIMITERS )
+      ::cDelimit      := Set( _SET_DELIMCHARS )
+   endif
 
 return Self
 
@@ -347,6 +318,15 @@ METHOD Display( lForced ) CLASS Get
    ::nOldPos := nDispPos
 
    SetCursor( nOldCursor )
+
+return Self
+
+/* ------------------------------------------------------------------------- */
+
+METHOD ColorDisp( cColorSpec ) CLASS Get
+
+   ::ColorSpec := cColorSpec
+   ::Display()
 
 return Self
 
@@ -505,7 +485,7 @@ METHOD VarPut( xValue, lReFormat ) CLASS Get
 
    DEFAULT lReFormat TO .t.
 
-   if ValType( ::bBlock ) == "B"
+   if ISBLOCK( ::bBlock )
       if ::SubScript == NIL
          Eval( ::bBlock, xValue )
       else
@@ -536,7 +516,7 @@ METHOD VarGet() CLASS Get
    local i
    local xValue
 
-   if ValType( ::bBlock ) == "B"
+   if ISBLOCK( ::bBlock )
       if ::SubScript == NIL
          xValue := Eval( ::bBlock )
       else
