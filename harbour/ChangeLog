@@ -8,6 +8,49 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-20 04:05 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tget.prg
+   * harbour/tests/Makefile
+   + harbour/tests/rto_get.prg
+     ; Fixed lots of minor bugs and differences between 
+       CA-Cl*pper and Harbour Get system. The following 
+       methods got most of the fixes:
+     + ::Reform() undocumented C52 method added.
+     ! ::Display() fixed when not having focus. (old TOFIX)
+     ! ::UpdateBuffer() fixed when not having focus.
+     ! ::SetFocus() fixed to do nothing when already having focus.      
+     ! ::KillFocus() made almost fully compatible.
+       (the ::Assign() call is still raising questions)
+     ! ::Reset() made compatible.
+     ! ::VarPut() fixed when not having focus.
+     ! ::Undo() made compatible.
+     ! ::Type() behaviour now fully C5x compatible.
+     ! ::Block() assignment now fully C5x compatible.
+     ! ::OverStrike() fixed RTE when not having focus.
+     ! ::Insert() fixed RTE when not having focus.
+     ! ::ToDecPos() fixed to set ::Changed.
+     ! ::PutMask() fixed to not pad the string to ::nMaxLen to 
+       be fully compatible with C5x.
+     ! ::DecPos, ::Pos initialization made compatible.
+       (here the CA-Cl*pper NG is wrong in stating that these 
+       vars ever hold NIL, they don't and they hold 0s instead)
+     ! ::Minus more compatible but still far from perfect.
+     % ::ParsePict() integrated into ::Picture()
+     - ::HasScroll() internal method removed.
+     ! ::HitTest() guarded with HB_COMPAT_C53.
+     + Propely marked Get vars/methods as PROTECTED/VISIBLE.
+     % Several minor optimizations, meaningless code elimination.
+     ; Formatting, removed many old commented code snippets.
+     + Added regression style tests for basic Get methods.
+       All the above fixes was the result of comparing 
+       Get object var dumps after calling different methods 
+       in different order.
+     ; Notice that there could be new/rare cases when any of 
+       the above methods would need more fixes, in that case 
+       the regression test is there to check if the existing 
+       behaviour stayed the same after the fix and it's also 
+       very useful to add the new cases to the test.
+
 2007-04-19 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gd/gdwrp.c
   * harbour/contrib/libmisc/hb_f.c
