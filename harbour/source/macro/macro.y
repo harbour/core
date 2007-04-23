@@ -99,7 +99,7 @@
 
 /* Standard checking for valid expression creation
  */
-#define  HB_MACRO_CHECK( pExpr ) \
+#define HB_MACRO_CHECK( pExpr ) \
    if( ! ( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) \
    { \
       YYABORT; \
@@ -114,6 +114,13 @@
    { \
       YYABORT; \
    }
+
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
+/* The if() inside this macro is always TRUE but it's used to hide BCC warning */
+#define HB_MACRO_ABORT if( !( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) { YYABORT; }
+#else
+#define HB_MACRO_ABORT { YYABORT; }
+#endif
 
 %}
 
@@ -156,13 +163,6 @@ extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management func
 
 static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
-%}
-
-%{
-#ifdef __WATCOMC__
-/* disable warnings for unreachable code */
-#pragma warning 13 9
-#endif
 %}
 
 %token IDENTIFIER NIL NUM_DOUBLE INASSIGN NUM_LONG NUM_DATE
@@ -264,12 +264,12 @@ Main : Expression '\n'  {
      | Expression error {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
-                  YYABORT;
+                  HB_MACRO_ABORT;
                }
      | error   {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
-                  YYABORT;
+                  HB_MACRO_ABORT;
                }
      ;
 
@@ -707,11 +707,6 @@ IfInline    : IIF '(' Expression ',' Argument ',' Argument ')'
             ;
 
 %%
-
-#ifdef __WATCOMC__
-/* enable warnings for unreachable code */
-#pragma warning 13 1
-#endif
 
 
 /*

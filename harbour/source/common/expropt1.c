@@ -439,7 +439,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
    return pHashList;
 }
 
-HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, int iLen, int iFlags, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, ULONG ulLen, int iFlags, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -450,9 +450,9 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, int iLen, int iFlags, HB_COMP
    pExpr->value.asCodeblock.pExprList = NULL;
    pExpr->value.asCodeblock.pLocals   = NULL;  /* this will hold local variables declarations */
    pExpr->ValType = HB_EV_CODEBLOCK;
-   pExpr->value.asCodeblock.string = string;
-   pExpr->value.asCodeblock.length = ( USHORT ) iLen;
    pExpr->value.asCodeblock.flags  = ( USHORT ) iFlags;
+   pExpr->value.asCodeblock.string = string;
+   pExpr->ulLength = ulLen;
    return pExpr;
 }
 

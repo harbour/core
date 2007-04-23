@@ -89,7 +89,7 @@ extern HB_EXPR_PTR hb_compExprNewDate( HB_LONG, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewString( char *, ULONG, BOOL, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewLogical( int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewSelf( HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, int, int, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewCodeBlock( char *, ULONG, int, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewVar( char *, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );

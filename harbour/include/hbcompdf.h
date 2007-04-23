@@ -387,11 +387,10 @@ typedef struct HB_EXPR_
       } asList;
       struct
       {
-         char     *string;             /* source code of a codeblock */
-         USHORT   length;
-         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
          struct HB_EXPR_ *pExprList;   /* list elements */
          HB_CBVAR_PTR pLocals;         /* list of local variables */
+         char     *string;             /* source code of a codeblock */
+         USHORT   flags;               /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
       } asCodeblock;
       struct
       {

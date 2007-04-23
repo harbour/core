@@ -298,7 +298,7 @@ typedef union YYSTYPE
       } value;
    } asMessage;
 }
-/* Line 1529 of yacc.c.  */
+/* Line 1533 of yacc.c.  */
 #line 303 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

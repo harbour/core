@@ -566,6 +566,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 
    return pExpr;
 }
+
 #endif
 
 /* ************************************************************************* */

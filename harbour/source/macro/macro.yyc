@@ -253,7 +253,7 @@
 
 /* Standard checking for valid expression creation
  */
-#define  HB_MACRO_CHECK( pExpr ) \
+#define HB_MACRO_CHECK( pExpr ) \
    if( ! ( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) \
    { \
       YYABORT; \
@@ -268,6 +268,13 @@
    { \
       YYABORT; \
    }
+
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
+/* The if() inside this macro is always TRUE but it's used to hide BCC warning */
+#define HB_MACRO_ABORT if( !( HB_MACRO_DATA->status & HB_MACRO_CONT ) ) { YYABORT; }
+#else
+#define HB_MACRO_ABORT { YYABORT; }
+#endif
 
 
 
@@ -291,7 +298,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 121 "macro.y"
+#line 128 "macro.y"
 {
    char *   string;     /* to hold a string returned by lex */
    int      iNumber;    /* to hold a temporary integer number */
@@ -320,7 +327,7 @@ typedef union YYSTYPE
    } valDouble;
 }
 /* Line 193 of yacc.c.  */
-#line 324 "macroy.c"
+#line 331 "macroy.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -330,7 +337,7 @@ typedef union YYSTYPE
 
 
 /* Copy the second part of user declarations.  */
-#line 149 "macro.y"
+#line 156 "macro.y"
 
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
@@ -341,16 +348,10 @@ extern void yyerror( HB_MACRO_PTR, char * );    /* parsing error management func
 
 static void hb_macroIdentNew( HB_COMP_DECL, char * );
 
-#line 161 "macro.y"
-
-#ifdef __WATCOMC__
-/* disable warnings for unreachable code */
-#pragma warning 13 9
-#endif
 
 
 /* Line 216 of yacc.c.  */
-#line 354 "macroy.c"
+#line 355 "macroy.c"
 
 #ifdef short
 # undef short
@@ -1739,6 +1740,7 @@ yydestruct (yymsg, yytype, yyvaluep, pMacro)
 
   if (!yymsg)
     yymsg = "Deleting";
+  YYUSE (yymsg);
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
   switch (yytype)
@@ -1927,6 +1929,7 @@ int yynerrs;
 	  goto yyexhaustedlab;
 	YYSTACK_RELOCATE (yyss);
 	YYSTACK_RELOCATE (yyvs);
+	YYUSE (yyptr);
 
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
@@ -2090,7 +2093,7 @@ yyreduce:
     {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
-                  YYABORT;
+                  HB_MACRO_ABORT;
                ;}
     break;
 
@@ -2099,7 +2102,7 @@ yyreduce:
     {
                   HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
-                  YYABORT;
+                  HB_MACRO_ABORT;
                ;}
     break;
 
@@ -2887,8 +2890,8 @@ yyreduce:
     break;
 
 
-/* Line 1267 of yacc.c.  */
-#line 2892 "macroy.c"
+/* Line 1268 of yacc.c.  */
+#line 2895 "macroy.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2923,6 +2926,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
+      YYUSE (yynerrs);
 #if ! YYERROR_VERBOSE
       yyerror (pMacro, YY_("syntax error"));
 #else
@@ -2994,8 +2998,10 @@ yyerrorlab:
   /* Pacify compilers like GCC when the user code never invokes
      YYERROR and the label yyerrorlab therefore never appears in user
      code.  */
+#if ! defined( __BORLANDC__ ) && ! defined( __WATCOMC__ )
   if (/*CONSTCOND*/ 0)
      goto yyerrorlab;
+#endif
 
   /* Do not reclaim the symbols of the rule which action triggered
      this YYERROR.  */
@@ -3104,11 +3110,6 @@ yyreturn:
 
 #line 709 "macro.y"
 
-
-#ifdef __WATCOMC__
-/* enable warnings for unreachable code */
-#pragma warning 13 1
-#endif
 
 
 /*

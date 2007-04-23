@@ -1522,7 +1522,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    }
    else if( HB_IS_BLOCK( pObject ) )
    {
-      if( pMessage == &hb_symEval || pMsg == hb_symEval.pDynSym )
+      if( pMsg == hb_symEval.pDynSym )
          return &hb_symEval;
    }
    else if( HB_IS_BYREF( pObject ) )
@@ -1587,7 +1587,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    }
    else if( HB_IS_SYMBOL( pObject ) )
    {
-      if( pMsg == s___msgExec.pDynSym )
+      if( pMsg == s___msgExec.pDynSym || pMsg == hb_symEval.pDynSym )
       {
          if( ! pObject->item.asSymbol.value->value.pFunPtr &&
                pObject->item.asSymbol.value->pDynSym )

@@ -4446,7 +4446,8 @@ static ERRCODE hb_rddTransRecords( AREAP pArea,
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
    if( szDriver == NULL )
-      szDriver = SELF_RDDNODE( pArea )->szName;
+      /* szDriver = SELF_RDDNODE( pArea )->szName; */
+      szDriver = hb_rddDefaultDrv( NULL );
 
    if( fExport )
    {

@@ -402,7 +402,8 @@ Statement  : ExecFlow CrlfStmnt
                         {
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
-                        HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );   /* TODO: check if return value agree with declared value */
+                        /* TODO: check if return value agree with declared value */
+                        HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
                         hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
                         if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
@@ -743,7 +744,7 @@ VariableAtAlias : VariableAt ALIASOP
                 ;
 
 FunIdentCall: IdentName '('   { $<bTrue>$ = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1, HB_COMP_PARAM ), $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef = $<bTrue>3; }
-/* Function call
+/* function call
  */
 FunCall     : FunIdentCall
             | MacroVar  '('   { $<bTrue>$ = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;} ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $4, HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef = $<bTrue>3; }
@@ -1056,8 +1057,11 @@ VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP
          | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
-                           HB_COMP_PARAM->functions.pLast->wParamNum=0; HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER ); }
-           MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+                        {
+                           HB_COMP_PARAM->functions.pLast->wParamNum = 0;
+                           HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER );
+                        }
+                      } MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
          ;
 
 VarList  : VarDef                         { $$ = 1; }
@@ -1366,10 +1370,10 @@ IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE
 
 EndIf      : ENDIF    { if( HB_COMP_PARAM->wIfCounter )
                            --HB_COMP_PARAM->wIfCounter; 
-                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
            | END      { if( HB_COMP_PARAM->wIfCounter )
                            --HB_COMP_PARAM->wIfCounter; 
-                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE ); }
+                        HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
            ;
 
 DoCase     : DoCaseBegin
@@ -2280,7 +2284,6 @@ static void hb_compForEnd( HB_COMP_DECL, char *szVar )
 {
    HB_ENUMERATOR_PTR pEnumVar;
    
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
    HB_SYMBOL_UNUSED( szVar );
    
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
@@ -2557,7 +2560,7 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
 {
    BOOL fUnclosed = TRUE;
-   
+
    if( HB_COMP_PARAM->wIfCounter )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "IF", NULL );
@@ -2601,8 +2604,6 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
 
 void yyerror( HB_COMP_DECL, char * s )
 {
-   HB_SYMBOL_UNUSED( pComp );
-
    if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
    {
       if( ! hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )

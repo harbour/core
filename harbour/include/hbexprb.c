@@ -356,7 +356,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
       case HB_EA_PUSH_PCODE:
       {
          HB_GEN_FUNC2( PushString, pSelf->value.asString.string,
-                         pSelf->ulLength + 1 );
+                       pSelf->ulLength + 1 );
 #if ! defined( HB_MACRO_SUPPORT )
          if( HB_COMP_PARAM->fTextSubst &&
              hb_compIsValidMacroText( HB_COMP_PARAM,
@@ -410,8 +410,8 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
          if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACRO ) &&
-            !( pSelf->value.asCodeblock.flags &
-               ( HB_BLOCK_LATEEVAL | HB_BLOCK_VPARAMS ) ) )
+             !( pSelf->value.asCodeblock.flags &
+                ( HB_BLOCK_LATEEVAL | HB_BLOCK_VPARAMS ) ) )
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
          else
@@ -3903,7 +3903,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_EXPR_PTR pNew;
 
       hb_compExprCodeblockPush( pSelf, FALSE, HB_COMP_PARAM );
-      pNew = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->value.asCodeblock.length, FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
+      pNew = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->ulLength, FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
       HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
       HB_COMP_EXPR_DELETE( pNew );
       hb_compCodeBlockStop( HB_COMP_PARAM );

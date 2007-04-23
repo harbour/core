@@ -8,6 +8,58 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-23 18:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbopt.c
+    ! reverted fix for unnecessary -W2 warning:
+         Function '...' does not end with RETURN statement
+      in code like:
+            func f(v)
+            if v
+               return "TRUE"
+            else
+               return "FALSE"
+            endif
+      Sorry but I had to make it because this fix was wrong and causes
+      that code like:
+            func f(v)
+            if v
+               ? v
+            else
+               return "FALSE"
+            endif
+      was compiled without any warnings but wrong PCODE was generated.
+      In some spare time I'll try to implement valid RETURN detection,
+      now simply add RETURN NIL at the end of such functions - it will
+      be removed by dead code eliminator.
+    ! fixed memory leak when more then one .prg file was given as compiler
+      parameter
+    + cleaned some code for future modifications
+
+  * harbour/source/macro/macro.y
+    + added small hack for two BCC/OW warnings
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+    * regenerated with modified Bison version which should give code
+      without BCC warnings - I cannot promise I'll keep it in the
+      future but I will try.
+
+  * harbour/source/rdd/dbcmd.c
+    ! use default RDD instead of current one in COPY TO and APPEND FROM
+
+  * harbour/source/vm/classes.c
+    * added support for (@func()):eval(...)
+
 2007-04-20 21:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tbcolumn.prg
    * harbour/source/rtl/tbrowse.prg

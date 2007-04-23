@@ -67,7 +67,6 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-static void hb_compCompileEnd( HB_COMP_DECL );
 static int  hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile );
 
 static int hb_compStaticGetPos( char *, PFUNCTION ); /* return if passed name is a static variable */
@@ -95,7 +94,6 @@ FILE *         hb_comp_errFile = NULL;
 
 static void hb_compMainExit( HB_COMP_DECL )
 {
-   hb_compCompileEnd( HB_COMP_PARAM );
    hb_compParserStop( HB_COMP_PARAM );
    if( HB_COMP_PARAM->iErrorCount != 0 )
       hb_compExprLstDealloc( HB_COMP_PARAM );
@@ -2244,18 +2242,12 @@ USHORT hb_compFunctionGetPos( HB_COMP_DECL, char * szFunctionName ) /* return 0 
 static void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
 {
    pFunc->pCode[ ulPos ] = HB_P_NOOP;
-   pFunc->iNOOPs++;
 
-   if( pFunc->pNOOPs )
-   {
-      pFunc->pNOOPs = ( ULONG * ) hb_xrealloc( pFunc->pNOOPs, sizeof( ULONG ) * pFunc->iNOOPs );
-      pFunc->pNOOPs[ pFunc->iNOOPs - 1 ] = ulPos;
-   }
+   if( pFunc->iNOOPs )
+      pFunc->pNOOPs = ( ULONG * ) hb_xrealloc( pFunc->pNOOPs, sizeof( ULONG ) * ( pFunc->iNOOPs + 1 ) );
    else
-   {
       pFunc->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-      pFunc->pNOOPs[ pFunc->iNOOPs - 1 ] = ulPos;
-   }
+   pFunc->pNOOPs[ pFunc->iNOOPs++ ] = ulPos;
 }
 
 /* NOTE: To disable jump optimization, just make this function a dummy one.
@@ -2265,18 +2257,13 @@ static void hb_compPrepareOptimize( HB_COMP_DECL )
 {
    if( HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
    {
-      HB_COMP_PARAM->functions.pLast->iJumps++;
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
-      if( HB_COMP_PARAM->functions.pLast->pJumps )
-      {
-         HB_COMP_PARAM->functions.pLast->pJumps = ( ULONG * ) hb_xrealloc( HB_COMP_PARAM->functions.pLast->pJumps, sizeof( ULONG ) * HB_COMP_PARAM->functions.pLast->iJumps );
-         HB_COMP_PARAM->functions.pLast->pJumps[ HB_COMP_PARAM->functions.pLast->iJumps - 1 ] = ( ULONG ) ( HB_COMP_PARAM->functions.pLast->lPCodePos - 4 );
-      }
+      if( pFunc->iJumps )
+         pFunc->pJumps = ( ULONG * ) hb_xrealloc( pFunc->pJumps, sizeof( ULONG ) * ( pFunc->iJumps + 1 ) );
       else
-      {
-         HB_COMP_PARAM->functions.pLast->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
-         HB_COMP_PARAM->functions.pLast->pJumps[ HB_COMP_PARAM->functions.pLast->iJumps - 1 ] = ( ULONG ) ( HB_COMP_PARAM->functions.pLast->lPCodePos - 4 );
-      }
+         pFunc->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
+      pFunc->pJumps[ pFunc->iJumps++ ] = ( ULONG ) ( pFunc->lPCodePos - 4 );
    }
 }
 
@@ -4071,20 +4058,21 @@ void hb_compCodeBlockStart( HB_COMP_DECL, BOOL bLateEval )
 void hb_compCodeBlockEnd( HB_COMP_DECL )
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
-   PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
+   PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
    char * pFuncName;
    ULONG  ulSize;
-   USHORT wLocals = 0;   /* number of referenced local variables */
+   USHORT wLocals = 0;     /* number of referenced local variables */
    USHORT wLocalsCnt, wLocalsLen;
    USHORT wPos;
    int iLocalPos;
    PVAR pVar, pFree;
 
+   pCodeblock = HB_COMP_PARAM->functions.pLast;
+
    hb_compGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM ); /* finish the codeblock */
 
-   hb_compOptimizeJumps( HB_COMP_PARAM );
-
-   pCodeblock = HB_COMP_PARAM->functions.pLast;
+   if( !pCodeblock->bError )
+      hb_compOptimizeJumps( HB_COMP_PARAM );
 
    /* return to pcode buffer of function/codeblock in which the current
     * codeblock was defined
@@ -4105,9 +4093,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    /* generate a proper codeblock frame with a codeblock size and with
     * a number of expected parameters
-    */
-   /* QUESTION: would be 64kB enough for a codeblock size?
-    * we are assuming now a USHORT for a size of codeblock
     */
 
    /* Count the number of referenced local variables */
@@ -4264,11 +4249,18 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
 
    /* Release the NOOP array. */
    if( pCodeblock->pNOOPs )
+   {
       hb_xfree( ( void * ) pCodeblock->pNOOPs );
-
+      pCodeblock->pNOOPs = NULL;
+      pCodeblock->iNOOPs = 0;
+   }
    /* Release the Jumps array. */
    if( pCodeblock->pJumps )
+   {
       hb_xfree( ( void * ) pCodeblock->pJumps );
+      pCodeblock->pJumps = NULL;
+      pCodeblock->iJumps = 0;
+   }
 }
 
 
@@ -4395,6 +4387,90 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
    HB_COMP_PARAM->functions.pLast = pFunc;
    hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
    ++HB_COMP_PARAM->functions.iCount;
+}
+
+static void hb_compCompileEnd( HB_COMP_DECL )
+{
+   hb_compRTVariableKill( HB_COMP_PARAM );
+   
+   if( HB_COMP_PARAM->pMainFileName && HB_COMP_PARAM->pFileName != HB_COMP_PARAM->pMainFileName )
+   {
+      /* currently compiled file was autoopened - close also
+       * the main module
+      */
+      hb_xfree( HB_COMP_PARAM->pMainFileName );
+      HB_COMP_PARAM->pMainFileName = NULL;
+   }
+   if( HB_COMP_PARAM->pFileName )
+   {
+      hb_xfree( HB_COMP_PARAM->pFileName );
+      HB_COMP_PARAM->pFileName = NULL;
+   }
+
+   if( HB_COMP_PARAM->functions.pFirst )
+   {
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
+      while( pFunc )
+         pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
+
+      HB_COMP_PARAM->functions.pFirst = NULL;
+   }
+
+   while( HB_COMP_PARAM->funcalls.pFirst )
+   {
+      PFUNCALL pFunc = HB_COMP_PARAM->funcalls.pFirst;
+
+      HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
+      hb_xfree( ( void * ) pFunc );
+   }
+
+   while( HB_COMP_PARAM->externs )
+   {
+      PEXTERN pExtern = HB_COMP_PARAM->externs;
+
+      HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
+      hb_xfree( pExtern );
+   }
+
+   while( HB_COMP_PARAM->inlines.pFirst )
+   {
+      PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
+
+      HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
+      if( pInline->pCode )
+         hb_xfree( pInline->pCode );
+      hb_xfree( ( void * ) pInline );
+   }
+
+   while( HB_COMP_PARAM->pReleaseDeclared )
+   {
+      PCOMDECLARED pDeclared = HB_COMP_PARAM->pReleaseDeclared;
+      HB_COMP_PARAM->pReleaseDeclared = pDeclared->pNext;
+      hb_xfree( ( void * ) pDeclared );
+   }
+   HB_COMP_PARAM->pFirstDeclared = HB_COMP_PARAM->pLastDeclared = NULL;
+
+   while( HB_COMP_PARAM->pReleaseClass )
+   {
+      PCOMCLASS pClass = HB_COMP_PARAM->pReleaseClass;
+      HB_COMP_PARAM->pReleaseClass = pClass->pNext;
+      while( pClass->pMethod )
+      {
+         PCOMDECLARED pDeclared = pClass->pMethod;
+         pClass->pMethod = pDeclared->pNext;
+         hb_xfree( ( void * ) pDeclared );
+      }
+      hb_xfree( ( void * ) pClass );
+   }
+   HB_COMP_PARAM->pFirstClass = HB_COMP_PARAM->pLastClass = NULL;
+
+   if( HB_COMP_PARAM->symbols.pFirst )
+   {
+      PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+      while( pSym )
+         pSym = hb_compSymbolKill( pSym );
+      HB_COMP_PARAM->symbols.pFirst = NULL;
+   }
 }
 
 static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
@@ -4650,92 +4726,9 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
       iStatus = EXIT_FAILURE;
    }
+   hb_compCompileEnd( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
-}
-
-static void hb_compCompileEnd( HB_COMP_DECL )
-{
-   hb_compRTVariableKill( HB_COMP_PARAM );
-   
-   if( HB_COMP_PARAM->pFileName )
-   {
-      if( HB_COMP_PARAM->pFileName != HB_COMP_PARAM->pMainFileName && HB_COMP_PARAM->pMainFileName )
-      {
-         /* currently compiled file was autoopened - close also
-          * the main module
-         */
-         hb_xfree( HB_COMP_PARAM->pMainFileName );
-         HB_COMP_PARAM->pMainFileName = NULL;
-      }
-      hb_xfree( HB_COMP_PARAM->pFileName );
-      HB_COMP_PARAM->pFileName = NULL;
-   }
-
-   if( HB_COMP_PARAM->functions.pFirst )
-   {
-      PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
-      while( pFunc )
-         pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
-
-      HB_COMP_PARAM->functions.pFirst = NULL;
-   }
-
-   while( HB_COMP_PARAM->funcalls.pFirst )
-   {
-      PFUNCALL pFunc = HB_COMP_PARAM->funcalls.pFirst;
-
-      HB_COMP_PARAM->funcalls.pFirst = pFunc->pNext;
-      hb_xfree( ( void * ) pFunc );
-   }
-
-   while( HB_COMP_PARAM->externs )
-   {
-      PEXTERN pExtern = HB_COMP_PARAM->externs;
-
-      HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
-      hb_xfree( pExtern );
-   }
-
-   while( HB_COMP_PARAM->inlines.pFirst )
-   {
-      PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
-
-      HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
-      if( pInline->pCode )
-         hb_xfree( pInline->pCode );
-      hb_xfree( ( void * ) pInline );
-   }
-
-   while( HB_COMP_PARAM->pReleaseDeclared )
-   {
-      PCOMDECLARED pDeclared = HB_COMP_PARAM->pReleaseDeclared;
-      HB_COMP_PARAM->pReleaseDeclared = pDeclared->pNext;
-      hb_xfree( ( void * ) pDeclared );
-   }
-   HB_COMP_PARAM->pFirstDeclared = HB_COMP_PARAM->pLastDeclared = NULL;
-
-   while( HB_COMP_PARAM->pReleaseClass )
-   {
-      PCOMCLASS pClass = HB_COMP_PARAM->pReleaseClass;
-      HB_COMP_PARAM->pReleaseClass = pClass->pNext;
-      while( pClass->pMethod )
-      {
-         PCOMDECLARED pDeclared = pClass->pMethod;
-         pClass->pMethod = pDeclared->pNext;
-         hb_xfree( ( void * ) pDeclared );
-      }
-      hb_xfree( ( void * ) pClass );
-   }
-   HB_COMP_PARAM->pFirstClass = HB_COMP_PARAM->pLastClass = NULL;
-
-   if( HB_COMP_PARAM->symbols.pFirst )
-   {
-      PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
-      while( pSym )
-         pSym = hb_compSymbolKill( pSym );
-      HB_COMP_PARAM->symbols.pFirst = NULL;
-   }
 }
 
 static BOOL hb_compAutoOpenFind( HB_COMP_DECL, char * szName )

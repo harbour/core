@@ -537,6 +537,30 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
    return 4;
 }
 
+static HB_OPT_FUNC( hb_p_endblock )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( lPCodePos + 1 < pFunc->lPCodePos &&
+       pFunc->pCode[ lPCodePos + 1 ] == HB_P_ENDBLOCK )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+   }
+   return 1;
+}
+
+static HB_OPT_FUNC( hb_p_endproc )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( lPCodePos + 1 < pFunc->lPCodePos &&
+       pFunc->pCode[ lPCodePos + 1 ] == HB_P_ENDPROC )
+   {
+      hb_compNOOPfill( pFunc, lPCodePos, 1, FALSE, FALSE );
+   }
+   return 1;
+}
+
 /* NOTE: The  order of functions have to match the order of opcodes mnemonics
  */
 static HB_OPT_FUNC_PTR s_opt_table[] =
@@ -547,8 +571,8 @@ static HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_ARRAYDIM,             */
    NULL,                       /* HB_P_ARRAYGEN,             */
    NULL,                       /* HB_P_EQUAL,                */
-   NULL,                       /* HB_P_ENDBLOCK,             */
-   NULL,                       /* HB_P_ENDPROC,              */
+   hb_p_endblock,              /* HB_P_ENDBLOCK,             */
+   hb_p_endproc,               /* HB_P_ENDPROC,              */
    NULL,                       /* HB_P_EXACTLYEQUAL,         */
    hb_p_false,                 /* HB_P_FALSE,                */
    NULL,                       /* HB_P_FORTEST,              */
