@@ -8,6 +8,92 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-23 23:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/diskspac.c
+     ! Fixed to return free space instead of disk size under Unix OSes.
+
+   * harbour/source/rtl/tget.prg
+     ! Fixed checking for invalid GET var types.
+     ! More C5x compatible behaviour for invalid types.
+     ! ::UnTransform() fixed when not in focus.
+     - ::UnTransform() cBuffer incompatible parameter removed.
+     ! ::Reform() probably made more compatible.
+     + ::PosInBuffer() XBase++ compatible method implemented.
+       (but not tested or compared with XBase++)
+     ! ::Minus assignment fixed.
+     ! ::Clear assignment fixed.
+     ! ::Changed assignment fixed.
+     ! ::Buffer assignment fixed.
+     ! ::Block assignment fixed.
+     ! ::Name assignment fixed.
+     ! ::UnTransform() extra parameter removed.
+     ! ::UpdateBuffer() minor fix when not in focus.
+     ! ::Reform() made more compatible.
+     % ::SetFocus() some superfluous stuff removed.
+     % ::SetFocus() some fixes, cleanups.
+     ! ::KillFocus() now sets ::TypeOut properly.
+     ! ::VarPut(), ::VarGet() fixed for invalid ::Subscript contents.
+     ! ::VarPut(), ::VarGet() fixed for invalid ::Block content.
+     ! ::Pos rewritten to be fully compatible.
+     ! ::ColorSpec made fully compatible.
+     ! ::UnTransform() fixed when not in focus.
+     ! ::UnTransform() fixed handling "YL" in string pictures.
+     % ::UnTransform() minor optimization.
+     % ::PutMask() some hacks removed.
+     ! ::PutMask() invalid types handling.
+     ! ::BackSpace() fixed when not in focus.
+     ! ::Delete() fixed when not in focus.
+     ! ::DeleteAll() fixed when not in focus.
+     ! ::IsEditable() fixes.
+     ! ::Picture fixes for invalid types, assignment behaviour.
+     ! ::Picture hacks removed.
+     ! Non-assignable vars made READONLY. (will generate 
+       different RTEs than in CA-Cl*pper due to the more 
+       refined oo engine in Harbour.)
+     ! ::BadDate changed to be a METHOD.
+     ! ::ToDecPos fixes.
+     ! ::Row assigment and behaviour fixes.
+     ! ::Col assigment and behaviour fixes.
+     + Several comments and NOTEs added.
+
+   * harbour/include/hbapigt.h
+   * harbour/source/rtl/gtapi.c
+   * harbour/source/rtl/setcolor.c
+     + hb_gtColorsToString() public API added.
+     + hb_NToColor() function added to convert a single color 
+       value (returned by hb_ColorToN()) back to a string.
+       Used in TGet():ColorSpec implementation.
+
+   * harbour/source/vm/fm.c
+     * "Blocks" -> "Block(s)"
+
+   * harbour/tests/rto_get.prg
+     + Added many test cases.
+
+   * harbour/source/vm/cmdarg.c
+     + Added support to use "--" instead of "//" for internal 
+       command line options.
+
+   * harbour/source/rtl/tbcolumn.prg
+     + Formatting.
+
+   * harbour/source/rtl/tbrowse.prg
+     + Added Harbour (undocumented) extension NOTE.
+
+   * harbour/include/Makefile
+   - harbour/include/usrrdd.ch
+   + harbour/include/hbusrrdd.ch
+   * harbour/source/rdd/usrrdd/usrrdd.c
+   * harbour/source/rdd/usrrdd/rdds/dbtcdx.prg
+   * harbour/source/rdd/usrrdd/rdds/fcomma.prg
+   * harbour/source/rdd/usrrdd/rdds/fptcdx.prg
+   * harbour/source/rdd/usrrdd/rdds/hscdx.prg
+   * harbour/source/rdd/usrrdd/rdds/rlcdx.prg
+   * harbour/source/rdd/usrrdd/rdds/smtcdx.prg
+   * harbour/contrib/pgsql/pgrdd.prg
+     ! Changed public header filename to comply with the "hb*.ch" rule.
+       (namespace protection)
+
 2007-04-23 18:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h

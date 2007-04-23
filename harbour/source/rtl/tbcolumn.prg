@@ -74,7 +74,7 @@ CLASS TBColumn
 #endif                                   
                                          
    ACCESS Width INLINE ::nWidth          // Column display width
-   ASSIGN Width( n ) INLINE ::SetWidth( n )
+   ASSIGN Width( nWidth ) INLINE ::SetWidth( nWidth )
 
    // NOTE: 17/08/01 - <maurilio.longo@libero.it>
    //       It is not correct in my opinion that this instance variable be exported
@@ -117,34 +117,34 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
 return Self
 
 
-METHOD SetWidth(n) CLASS TBColumn
+METHOD SetWidth( nWidth ) CLASS TBColumn
 
-   // From a TOFIX inside TBrowse.prg:
-   // "Also Clipper will not allow the user to assign a NIL to the :width variable."
-   if n <> nil
-      ::nWidth := n
+   /* NOTE: CA-Cl*pper won't allow the user to assign NIL to the :width variable. */
+   if nWidth != NIL
+      ::nWidth := nWidth
    endif
 
-return n
+return nWidth
 
 
 #ifdef HB_COMPAT_C53
 
 METHOD SetStyle( nMode, lSetting ) CLASS TBColumn
-  LOCAL lRet := .F.
 
-  IF nMode > LEN( ::aSetStyle )
-     ASize( ::aSetStyle, nMode )
-     ::aSetStyle[ nMode ] := .F.
-  ENDIF
+   local lRet := .F.
+  
+   if nMode > Len( ::aSetStyle )
+      ASize( ::aSetStyle, nMode )
+      ::aSetStyle[ nMode ] := .F.
+   endif
+  
+   lRet := ::aSetStyle[ nMode ]
+  
+   if ISLOGICAL( lSetting )
+      ::aSetStyle[ nMode ] := lSetting
+   endif
 
-  lRet := ::aSetStyle[ nMode ]
-
-  IF ISLOGICAL( lSetting )
-     ::aSetStyle[ nMode ] := lSetting
-  ENDIF
-
-RETURN lRet
+return lRet
 
 #endif
 

@@ -154,6 +154,7 @@ CLASS TBrowse
    METHOD ColWidth( nColumn )                               // Returns the display width of a particular column
    METHOD ColCount()
    METHOD ColorRect()                                       // Alters the color of a rectangular group of cells
+   /* NOTE: nMode is an undocumented Harbour parameter. Should not be used by app code. */
    METHOD Configure( nMode )                                // Reconfigures the internal settings of the TBrowse object
                                                             // nMode is an undocumented parameter in CA-Cl*pper
    METHOD DeHilite()                                        // Dehighlights the current cell

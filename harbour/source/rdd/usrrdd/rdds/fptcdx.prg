@@ -51,7 +51,7 @@
  */
 
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 #include "dbinfo.ch"
 
 /*

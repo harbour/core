@@ -60,7 +60,7 @@
  */
 
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "dbinfo.ch"
 

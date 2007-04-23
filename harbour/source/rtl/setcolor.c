@@ -99,4 +99,21 @@ HB_FUNC( HB_COLORTON )
       hb_retni( 0 );
 }
 
+HB_FUNC( HB_NTOCOLOR )
+{
+   if( ISNUM( 1 ) )
+   {
+      char szColorString[ 10 ];
+      int colors[ 1 ];
+
+      colors[ 0 ] = hb_parni( 1 );
+
+      hb_gtColorsToString( colors, 1, szColorString, 10 );
+
+      hb_retc( szColorString );
+   }
+   else
+      hb_retc( "N/N" );
+}
+
 #endif

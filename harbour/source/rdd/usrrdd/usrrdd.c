@@ -61,7 +61,7 @@
 #include "hbstack.h"
 #include "hbinit.h"
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 
 #define SELF_USRNODE( w )     ( s_pUsrRddNodes[ (w)->rddID ] )
 #define SELF_USRDATA( w )     ( ( LPUSRRDDDATA ) ( ( BYTE * )( w ) + \

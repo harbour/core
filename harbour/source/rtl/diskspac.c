@@ -209,12 +209,12 @@ HB_FUNC( DISKSPACE )
       char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) "/";
 #if defined(HB_OS_SUNOS)
       struct statvfs st;
-      if ( statvfs( szName, &st) == 0 )
+      if ( statvfs( szName, &st ) == 0 )
 #else
       struct statfs st;
-      if ( statfs( szName, &st) == 0 )
+      if ( statfs( szName, &st ) == 0 )
 #endif
-         dSpace = ( double ) st.f_blocks * ( double ) st.f_bsize;
+         dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
       else
          bError = TRUE;
 

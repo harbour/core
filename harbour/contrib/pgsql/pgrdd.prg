@@ -58,7 +58,7 @@
  */
 
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "error.ch"
 #include "dbstruct.ch"
@@ -391,5 +391,3 @@ RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
 INIT PROC PG_INIT()
    rddRegister( "PGRDD", RDT_FULL )
 RETURN
-
-

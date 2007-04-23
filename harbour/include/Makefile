@@ -73,6 +73,7 @@ PRG_HEADERS=\
 	getexit.ch   \
 	hbclass.ch   \
 	hbcommon.ch  \
+	hbcompat.ch  \
 	hbdebug.ch   \
 	hbextern.ch  \
 	hbgetcmt.ch  \
@@ -89,6 +90,7 @@ PRG_HEADERS=\
 	hbpers.ch    \
 	hbsetup.ch   \
 	hbstdgen.ch  \
+	hbusrrdd.ch  \
 	inkey.ch     \
 	memoedit.ch  \
 	ord.ch       \
@@ -98,9 +100,7 @@ PRG_HEADERS=\
 	setcurs.ch   \
 	simpleio.ch  \
 	std.ch       \
-	tbrowse.ch   \
-	usrrdd.ch    \
-	hbcompat.ch
+	tbrowse.ch
 
 API_HEADERS=\
 	error.api    \

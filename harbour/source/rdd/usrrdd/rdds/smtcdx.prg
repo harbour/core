@@ -57,7 +57,7 @@
  */
 
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 #include "dbinfo.ch"
 
 /* Force linking DBFCDX and DBFFPT from which our RDD inherits */

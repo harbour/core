@@ -59,7 +59,7 @@
  */
 
 #include "rddsys.ch"
-#include "usrrdd.ch"
+#include "hbusrrdd.ch"
 
 ANNOUNCE RLCDX
 
