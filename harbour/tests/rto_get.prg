@@ -871,7 +871,7 @@ PROCEDURE LogGETVars( o, desc, xResult )
    FWrite( s_fhnd, "   SubScript     " + XToStr( o:SubScript ) + hb_OSNewLine() )
    FWrite( s_fhnd, "   Type          " + XToStr( o:Type      ) + hb_OSNewLine() )
    FWrite( s_fhnd, "   TypeOut       " + XToStr( o:TypeOut   ) + hb_OSNewLine() )
-#ifndef __HARBOUR
+#ifndef __HARBOUR__
    IF s_lC5xDump
       FWrite( s_fhnd, "   _dump_        " + GetToList( o ) + hb_OSNewLine() )
    ENDIF
@@ -1006,7 +1006,7 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 #ifdef __XPP__
-FUNCTION HB_SToD( cDate )
+FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
@@ -1014,7 +1014,7 @@ FUNCTION HB_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION HB_SToD( cDate )
+FUNCTION hb_SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 

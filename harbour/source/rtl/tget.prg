@@ -139,9 +139,6 @@ CLASS Get
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) /* NOTE: This method is a Harbour extension [vszakats] */
 
    METHOD Assign()
-#ifdef HB_COMPAT_XPP
-   MESSAGE _Assign() METHOD Assign()
-#endif
    METHOD BadDate()
    METHOD Block( bBlock ) SETGET
    METHOD Buffer( cBuffer ) SETGET
@@ -176,18 +173,15 @@ CLASS Get
    METHOD VarPut( xValue, lReFormat ) /* NOTE: lReFormat is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
 
    METHOD End()
-#ifdef HB_COMPAT_XPP
-   MESSAGE _End() METHOD End()
-#endif
    METHOD Home()
-   MESSAGE Left() METHOD _Left()
-   MESSAGE Right() METHOD _Right()
+   METHOD Left()
+   METHOD Right()
    METHOD ToDecPos()
    METHOD WordLeft()
    METHOD WordRight()
 
    METHOD BackSpace( lDisplay ) /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
-   MESSAGE Delete( lDisplay ) METHOD _Delete( lDisplay ) /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
+   METHOD Delete( lDisplay ) /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
    METHOD DelEnd()
    METHOD DelLeft()
    METHOD DelRight()
@@ -196,6 +190,12 @@ CLASS Get
 
    METHOD Insert( cChar )
    METHOD OverStrike( cChar )
+
+#ifdef HB_COMPAT_XPP
+   MESSAGE _End() METHOD End()
+   MESSAGE _Assign() METHOD Assign()
+   MESSAGE _Delete() METHOD Delete()
+#endif
 
    HIDDEN:
 
@@ -219,14 +219,14 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
-   ::nRow           := nRow
-   ::nCol          := nCol
-   ::bBlock        := bVarBlock
-   ::cName         := cVarName
-   ::Picture       := cPicture
-   ::ColorSpec     := cColorSpec
+   ::nRow      := nRow
+   ::nCol      := nCol
+   ::bBlock    := bVarBlock
+   ::cName     := cVarName
+   ::Picture   := cPicture
+   ::ColorSpec := cColorSpec
    if Set( _SET_DELIMITERS )
-      ::cDelimit      := Set( _SET_DELIMCHARS )
+      ::cDelimit  := Set( _SET_DELIMCHARS )
    endif
 
 return Self
@@ -292,9 +292,9 @@ METHOD Display( lForced ) CLASS Get
    if ::nMaxLen == NIL
       ::nMaxLen := Len( cBuffer )
    endif
-   IF ::nDispLen == NIL
+   if ::nDispLen == NIL
       ::nDispLen := ::nMaxLen
-   ENDIF
+   endif
 
    if ::cType == "N" .and. ::HasFocus .and. ! ::lMinusPrinted .and. ;
       ::DecPos != 0 .and. ::lMinus2 .and. ;
@@ -307,7 +307,7 @@ METHOD Display( lForced ) CLASS Get
 
    if ::nDispLen != ::nMaxLen .and. ::nPos != 0 // ; has scroll?
       if ::nDispLen > 8
-         nDispPos := Max( 1, Min( ::nPos - ::nDispLen + 4, ::nMaxLen - ::nDispLen + 1 ) )
+         nDispPos := Max( 1, Min( ::nPos - ::nDispLen + 4       , ::nMaxLen - ::nDispLen + 1 ) )
       else
          nDispPos := Max( 1, Min( ::nPos - Int( ::nDispLen / 2 ), ::nMaxLen - ::nDispLen + 1 ) )
       endif
@@ -797,7 +797,7 @@ return Self
 
 /* ------------------------------------------------------------------------- */
 
-METHOD _Right( lDisplay ) CLASS Get
+METHOD Right( lDisplay ) CLASS Get
 
    local nPos
 
@@ -835,7 +835,7 @@ return Self
 
 /* ------------------------------------------------------------------------- */
 
-METHOD _Left( lDisplay ) CLASS Get
+METHOD Left( lDisplay ) CLASS Get
 
    local nPos
 
@@ -1049,11 +1049,6 @@ METHOD Input( cChar ) CLASS Get
          return ""
       endif
 
-// case !( ::cType == "C" )
-//
-//    ::Rejected := .T.
-//    return ""
-
    endcase
 
    if ! Empty( ::cPicFunc )
@@ -1121,20 +1116,10 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
 
    local cChar
    local cBuffer
-   local cPicFunc
-   local cPicMask
+   local cPicFunc := ::cPicFunc
+   local cPicMask := ::cPicMask
    local nFor
    local nNoEditable := 0
-
-// if ::cType == NIL
-//    // Not initialized yet
-//    ::Original := ::VarGet()
-//    ::cType    := ValType( ::Original )
-//    ::Picture  := ::cPicture
-// endif
-
-   cPicFunc := ::cPicFunc
-   cPicMask := ::cPicMask
 
    DEFAULT xValue TO ::VarGet()
    DEFAULT lEdit  TO ::HasFocus
@@ -1273,7 +1258,7 @@ return Self
 
 /* ------------------------------------------------------------------------- */
 
-METHOD _Delete( lDisplay ) CLASS Get
+METHOD Delete( lDisplay ) CLASS Get
 
    local nMaxLen
    local n
@@ -1718,16 +1703,34 @@ return bBlock
 
 METHOD HitTest( nMRow, nMCol ) CLASS Get
 
-   if ::nRow != nMRow
-      return HTNOWHERE
-   endif
-
-   if nMCol >= ::nCol .and. ;
+   if ::nRow == nMRow .and. ;
+      nMCol >= ::nCol .and. ;
       nMCol <= ::nCol + ::nDispLen + iif( ::cDelimit == NIL, 0, 2 )
+
       return HTCLIENT
    endif
 
-   return HTNOWHERE
+return HTNOWHERE
+
+#endif
+
+/* ------------------------------------------------------------------------- */
+
+#ifdef HB_COMPAT_XPP
+
+/* NOTE: Not tested or compared to XBase++. [vszakats] */
+/* TOFIX: To make it work when @S was used. [vszakats] */
+
+METHOD PosInBuffer( nRow, nCol ) CLASS Get
+
+   if nRow == ::nRow .and. ;
+      nCol >= ::nCol + ::nPos - 1 .and. ;
+      nCol <= ::nCol + ::nDispLen
+
+      return nCol - ::nCol + 1
+   endif
+
+return 0
 
 #endif
 
@@ -1886,25 +1889,6 @@ METHOD Name( cName ) CLASS Get
    endif
 
 return ::cName
-
-/* ------------------------------------------------------------------------- */
-
-#ifdef HB_COMPAT_XPP
-
-/* NOTE: Not tested or compared to XBase++. [vszakats] */
-
-METHOD PosInBuffer( nRow, nCol ) CLASS Get
-
-   if nRow == ::nRow .and. ;
-      nCol >= ::nCol + ::nPos - 1 .and. ;
-      nCol <= ::nCol + ::nMaxLen
-
-      return nCol - ::nCol + 1
-   endif
-
-return 0
-
-#endif
 
 /* ------------------------------------------------------------------------- */
 

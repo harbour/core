@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-24 10:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tget.prg
+   * harbour/source/rtl/tgetint.prg
+   * harbour/tests/rto_get.prg
+     * Minor fixes, cleanups, formatting.
+
 2007-04-23 23:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/diskspac.c
      ! Fixed to return free space instead of disk size under Unix OSes.
@@ -51,6 +57,7 @@
        different RTEs than in CA-Cl*pper due to the more 
        refined oo engine in Harbour.)
      ! ::BadDate changed to be a METHOD.
+     ! ::DecPos fixed.
      ! ::ToDecPos fixes.
      ! ::Row assigment and behaviour fixes.
      ! ::Col assigment and behaviour fixes.
