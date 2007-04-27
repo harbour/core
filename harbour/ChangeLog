@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-27 19:33 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.ch
+   * contrib/adordd/adordd.prg
+      * QUERY support and MS SQL support (thanks to Vikthor!)
+
 07-04-27 14:35 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      * Minor change to header file name
