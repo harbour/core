@@ -426,7 +426,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    ::hCookies[ 'SESSIONID' ] := ::cSID
 
-   RETURN nil
+   RETURN Self
 
 METHOD SessionEncode() CLASS TIpCgi
 

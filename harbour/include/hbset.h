@@ -130,7 +130,8 @@ typedef enum
    HB_SET_HARDCOMMIT    = 106,
    HB_SET_FORCEOPT      = 107,
    HB_SET_DBFLOCKSCHEME = 108,
-   HB_SET_DEFEXTENSIONS = 109
+   HB_SET_DEFEXTENSIONS = 109,
+   HB_SET_EOL           = 110
 
 } HB_set_enum;
 
@@ -198,6 +199,8 @@ typedef struct
    BOOL    HB_SET_HARDCOMMIT;
    BOOL    HB_SET_FORCEOPT;
    BOOL    HB_SET_DEFEXTENSIONS;
+   char *  HB_SET_EOL;
+
 } HB_SET_STRUCT;
 
 #define HB_SET_CASE_MIXED  0

@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-27 13:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/source/rtl/set.c
+  * harbour/include/set.ch
+  * harbour/include/hbset.h
+    * added support for SET EOL <x> as in xHarbour
+  * harbour/source/rtl/mlcount.c
+    * fixed count for softcr
+  * harbour/include/hbcompat.ch
+    * added compatibility for isregex(string) function
+  * harbour/contrib/tip/cgi.prg
+    * changed return of StartSession to Self
+
 2007-04-27 10:53 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    + contrib/adordd/adordd.ch
    + contrib/adordd/adordd.prg

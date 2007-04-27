@@ -881,6 +881,11 @@ HB_FUNC( SET )
          hb_retl( hb_set.HB_SET_DEFEXTENSIONS );
          if( args > 1 ) hb_set.HB_SET_DEFEXTENSIONS = set_logical( pArg2, hb_set.HB_SET_DEFEXTENSIONS );
          break;
+      case HB_SET_EOL :
+         if( hb_set.HB_SET_EOL ) hb_retc( hb_set.HB_SET_EOL );
+         else hb_retc( NULL );
+         if( args > 1 ) hb_set.HB_SET_EOL = set_string( pArg2, hb_set.HB_SET_EOL );
+         break;
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -999,6 +1004,8 @@ void hb_setInitialize( void )
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;
    hb_set.HB_SET_DEFEXTENSIONS = TRUE;
+   hb_set.HB_SET_EOL = ( char * ) hb_xgrab( 3 );
+   memcpy( hb_set.HB_SET_EOL, hb_conNewLine(), 3 );
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;
@@ -1035,6 +1042,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
    if( hb_set.HB_SET_COLOR )      hb_xfree( hb_set.HB_SET_COLOR );
+   if( hb_set.HB_SET_EOL )        hb_xfree( hb_set.HB_SET_EOL );
 
    hb_set.HB_SET_TYPEAHEAD = 0;   hb_inkeyReset(); /* reset keyboard buffer */
 

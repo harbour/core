@@ -85,9 +85,12 @@ HB_FUNC( MLCOUNT )
             break;
 
          case HB_CHAR_LF:
-            ulCurLength = 0;
-            ulLastSpace = 0;
-            ulLines++;
+            if( !( pszString[ ulPos - 1 ] == HB_CHAR_SOFT1 ) )
+            {   
+               ulCurLength = 0;
+               ulLastSpace = 0;
+               ulLines++;
+            }
             break;
 
          case HB_CHAR_CR:

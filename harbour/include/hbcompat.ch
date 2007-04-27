@@ -67,6 +67,8 @@
    #xtranslate hb_gtInfo([<xx,...>])   => gtInfo([<xx>])
    #xtranslate hb_gtVersion([<xx>])    => hb_gt_Version([<xx>])
 
+   #xtranslate isregex([<xx>])         => isregexstring([<xx>])
+
 #else
 
    #xtranslate gtSys                   => hb_gtSys
@@ -79,6 +81,8 @@
    #xtranslate gtProcessMessages()     => nextkey()
    #xtranslate gfxPrimitive([<xx,...>])=> hb_gfxPrimitive([<xx>])
    #xtranslate gfxText([<xx,...>])     => hb_gfxText([<xx>])
+
+   #xtranslate isregexstring([<xx>])   => isregex([<xx>])
 
    /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE

@@ -124,8 +124,9 @@
 #define _SET_FORCEOPT         107 /* Harbour extension */
 #define _SET_DBFLOCKSCHEME    108 /* Harbour extension */
 #define _SET_DEFEXTENSIONS    109 /* Harbour extension */
+#define _SET_EOL              110 /* Harbour extension */
 
 #define HB_SET_BASE           100
-#define HB_SET_COUNT          10
+#define HB_SET_COUNT          11
 
 #endif /* _SET_CH */
