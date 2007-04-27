@@ -56,10 +56,12 @@
 #include "fileio.ch"
 #include "error.ch"
 #include "adordd.ch"
+#include "common.ch"
 
 ANNOUNCE ADORDD
 
 static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword
+static s_cQuery := "SELECT * FROM "
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -127,7 +129,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    do case
        case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
-               oADO:Open( "SELECT * FROM " + s_cTableName,;
+               oADO:Open( s_cQuery + s_cTableName,;
                                   "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ],;
                                   adOpenKeyset, adLockOptimistic )
    
@@ -135,12 +137,23 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
               oAdo:CursorType      = adOpenStatic 
               oAdo:CursorLocation = adUseClient 
               oAdo:LockType         = adLockPessimistic 
-              oAdo:Open( "SELECT * FROM " + s_cTableName,;
+              oAdo:Open( s_cQuery + s_cTableName,;
                                 "DRIVER={MySQL ODBC 3.51 Driver};" + ;
-                                " SERVER=" + s_cServer + ;
-                                ";DATABASE=" + aOpenInfo[ UR_OI_NAME ] + ;
-                                ";UID=" + s_cUserName + ;
-                                ";PWD=" + s_cPassword, adOpenKeyset, adLockOptimistic )
+                                "server=" + s_cServer + ;
+                                ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
+                                ";uid=" + s_cUserName + ;
+                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )
+                                
+       case s_cEngine == "SQL" 
+              oAdo:CursorType      = adOpenStatic 
+              oAdo:CursorLocation = adUseClient 
+              oAdo:LockType         = adLockPessimistic 
+              oAdo:Open( s_cQuery + s_cTableName,; 
+                                "Provider=SQLOLEDB;" + ; 
+                                "server=" + s_cServer + ; 
+                                ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
+                                ";uid=" + s_cUserName + ; 
+                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )                                
        
    endcase                               
    
@@ -590,4 +603,12 @@ function HB_AdoSetPassword( cPassword )
 
    s_cPassword = cPassword
    
-return nil         
+return nil      
+
+function HB_AdoSetQuery( cQuery ) 
+
+   DEFAULT cQuery TO "SELECT * FROM " 
+
+   s_cQuery = cQuery 
+
+return nil

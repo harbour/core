@@ -119,12 +119,14 @@
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] ;
             [ TABLE <cTable> ] ;
-            [ <dbEngine: ACCESS, MYSQL, ORACLE, INFORMIX> ];
+            [ <dbEngine: ACCESS, MYSQL, ORACLE, INFORMIX, SQL> ];
             [ FROM <cServer> ] ;
+            [ QUERY <cQuery> ] ; 
             [ USER <cUser> PASSWORD <cPassword> ]=> ;
          [ HB_AdoSetTable( <cTable> ) ; ] ;
          [ HB_AdoSetEngine( <(dbEngine)> ) ; ] ;
          [ HB_AdoSetServer( <cServer> ) ; ] ;
+         [ HB_AdoSetQuery( <cQuery> ) ; ] ;
          [ HB_AdoSetUser( <cUser> ); HB_AdoSetPassword( <cPassword> ) ; ] ;   
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
                     if(<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.> [, <cp>] ) ;
