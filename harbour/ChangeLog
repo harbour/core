@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-27 10:53 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
+   + contrib/adordd/adordd.ch
+   + contrib/adordd/adordd.prg
+   + contrib/adordd/make_b32.bat
+   + contrib/adordd/makefile.bc
+   + contrib/adordd/access1.prg
+   + contrib/adordd/mysql1.prg
+     * ADORDD header file, source code, makefiles and samples
+
 2007-04-24 10:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tget.prg
    * harbour/source/rtl/tgetint.prg
