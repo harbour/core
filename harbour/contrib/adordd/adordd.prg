@@ -153,7 +153,19 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
                                 "server=" + s_cServer + ; 
                                 ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
                                 ";uid=" + s_cUserName + ; 
-                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )                                
+                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )
+                                
+       case s_cEngine == "ORACLE"
+              oAdo:CursorType      = adOpenStatic
+              oAdo:CursorLocation  = adUseClient
+              oAdo:LockType        = adLockPessimistic
+              oAdo:Open( s_cQuery + s_cTableName,;
+                         "Provider=MSDAORA.1;" + ;
+                         "Persist Security Info=False" + ;
+                         If( s_cServer == NIL .OR. s_cServer == "",; 
+                             "", ";Data source=" + s_cServer ) + ;
+                         ";User ID=" + s_cUserName + ;
+                         + ";Password=" + s_cPassword, adOpenKeyset, adLockOptimistic )                                                                
        
    endcase                               
    
