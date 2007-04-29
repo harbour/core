@@ -434,8 +434,8 @@ STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
 	aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
-    aLockInfo[ UR_LI_RECORD ] := RECNO()
-    aLockInfo[ UR_LI_RESULT ] := .T.
+  aLockInfo[ UR_LI_RECORD ] := RECNO()
+  aLockInfo[ UR_LI_RESULT ] := .T.
   
 RETURN SUCCESS
 
@@ -445,38 +445,70 @@ STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
 
 RETURN SUCCESS
 
+STATIC FUNCTION ADO_SETFILTER( nWA, aInfo )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local cFilter := aInfo[ 2 ]
+     
+  if Left( cFilter, 1 ) == '"' .and. Right( cFilter, 1 ) == '"'
+     cFilter = SubStr( cFilter, 2, Len( cFilter ) - 2 )
+  endif      
+     
+  cFilter = StrTran( cFilter, '""', "" )
+  cFilter = StrTran( cFilter, '"', "'" )
+  cFilter = StrTran( cFilter, "''", "'" )
+  cFilter = StrTran( cFilter, "==", "=" )
+  cFilter = StrTran( cFilter, ".and.", "AND" )
+  cFilter = StrTran( cFilter, ".or.", "OR" )
+  cFilter = StrTran( cFilter, ".AND.", "AND" )
+  cFilter = StrTran( cFilter, ".OR.", "OR" )
+
+	oADO:Filter = cFilter
+
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_CLEARFILTER( nWA )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+     
+	oADO:Filter = ""
+
+RETURN SUCCESS
+
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
-   aMyFunc[ UR_INIT ]        := ( @ADO_INIT() )
-   aMyFunc[ UR_NEW ]        := ( @ADO_NEW() )
-   aMyFunc[ UR_CREATE ]   := ( @ADO_CREATE() )
-   aMyFunc[ UR_OPEN ]       := ( @ADO_OPEN() )
+   aMyFunc[ UR_INIT ]      := ( @ADO_INIT() )
+   aMyFunc[ UR_NEW ]       := ( @ADO_NEW() )
+   aMyFunc[ UR_CREATE ]    := ( @ADO_CREATE() )
+   aMyFunc[ UR_OPEN ]      := ( @ADO_OPEN() )
    aMyFunc[ UR_CLOSE ]     := ( @ADO_CLOSE() )
-   aMyFunc[ UR_BOF  ]        := ( @ADO_BOF() )
-   aMyFunc[ UR_EOF  ]        := ( @ADO_EOF() )
-   aMyFunc[ UR_DELETED ]  := ( @ADO_DELETED() )
-   aMyFunc[ UR_SKIPRAW ] := ( @ADO_SKIPRAW() )
-   aMyFunc[ UR_GOTO ]       := ( @ADO_GOTO() )
+   aMyFunc[ UR_BOF  ]      := ( @ADO_BOF() )
+   aMyFunc[ UR_EOF  ]      := ( @ADO_EOF() )
+   aMyFunc[ UR_DELETED ]   := ( @ADO_DELETED() )
+   aMyFunc[ UR_SKIPRAW ]   := ( @ADO_SKIPRAW() )
+   aMyFunc[ UR_GOTO ]      := ( @ADO_GOTO() )
    aMyFunc[ UR_GOTOID ]    := ( @ADO_GOTOID() )
-   aMyFunc[ UR_GOTOP ]      := ( @ADO_GOTOP() )
-   aMyFunc[ UR_GOBOTTOM ] := ( @ADO_GOBOTTOM() )
-   aMyFunc[ UR_RECID ]       := ( @ADO_RECID() )
-   aMyFunc[ UR_RECCOUNT ] := ( @ADO_RECCOUNT() )
+   aMyFunc[ UR_GOTOP ]     := ( @ADO_GOTOP() )
+   aMyFunc[ UR_GOBOTTOM ]  := ( @ADO_GOBOTTOM() )
+   aMyFunc[ UR_RECID ]     := ( @ADO_RECID() )
+   aMyFunc[ UR_RECCOUNT ]  := ( @ADO_RECCOUNT() )
    aMyFunc[ UR_GETVALUE ]  := ( @ADO_GETVALUE() )
    aMyFunc[ UR_PUTVALUE ]  := ( @ADO_PUTVALUE() )
-   aMyFunc[ UR_DELETE ]  	  := ( @ADO_DELETE() )
-   aMyFunc[ UR_LOCATE ]  	  := ( @ADO_LOCATE() )
-   aMyFunc[ UR_SETLOCATE ]:= ( @ADO_SETLOCATE() )
-   aMyFunc[ UR_APPEND ]     := ( @ADO_APPEND() )
-	 aMyFunc[ UR_FLUSH ]      := ( @ADO_FLUSH() )
-	 aMyFunc[ UR_ORDINFO ]  := ( @ADO_ORDINFO() )
-	 aMyFunc[ UR_PACK ]        := ( @ADO_PACK() )
-	 aMyFunc[ UR_RAWLOCK ] := ( @ADO_RAWLOCK() )
-	 aMyFunc[ UR_LOCK ]        := ( @ADO_LOCK() )
+   aMyFunc[ UR_DELETE ]  	 := ( @ADO_DELETE() )
+   aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
+   aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
+   aMyFunc[ UR_APPEND ]    := ( @ADO_APPEND() )
+	 aMyFunc[ UR_FLUSH ]     := ( @ADO_FLUSH() )
+	 aMyFunc[ UR_ORDINFO ]   := ( @ADO_ORDINFO() )
+	 aMyFunc[ UR_PACK ]      := ( @ADO_PACK() )
+	 aMyFunc[ UR_RAWLOCK ]   := ( @ADO_RAWLOCK() )
+	 aMyFunc[ UR_LOCK ]      := ( @ADO_LOCK() )
 	 aMyFunc[ UR_UNLOCK ]    := ( @ADO_UNLOCK() )
+	 aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
+	 aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
 
 RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
@@ -492,16 +524,16 @@ STATIC FUNCTION ADO_GETFIELDSIZE( nDBFTypeField, nADOFielSize )
    DO CASE
 	
 			CASE nDBFTypeField == HB_FT_STRING
-                    nDBFFieldSize := nADOFielSize
+           nDBFFieldSize := nADOFielSize
 
 			CASE nDBFTypeField == HB_FT_INTEGER
-                    nDBFFieldSize := nADOFielSize
+           nDBFFieldSize := nADOFielSize
 				
 			CASE nDBFTypeField == HB_FT_DATE
-                    nDBFFieldSize := 8
+           nDBFFieldSize := 8
 			
 			CASE nDBFTypeField == HB_FT_LOGICAL
-                    nDBFFieldSize := 1
+           nDBFFieldSize := 1
 			
    ENDCASE
 	
@@ -517,7 +549,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
 		CASE nADOFielfType == adTinyInt 					// 16
 		CASE nADOFielfType == adSmallInt 					// 2
 		CASE nADOFielfType == adInteger 					// 3
-                nDBFTypeField := HB_FT_INTEGER
+         nDBFTypeField := HB_FT_INTEGER
 		
 		CASE nADOFielfType == adBigInt 						// 20
 		CASE nADOFielfType == adUnsignedTinyInt 	    // 17
@@ -530,7 +562,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
 		CASE nADOFielfType == adDecimal 					// 14
 		CASE nADOFielfType == adNumeric 					// 131
 		CASE nADOFielfType == adBoolean 					// 11
-                nDBFTypeField := HB_FT_LOGICAL
+         nDBFTypeField := HB_FT_LOGICAL
 		
 		CASE nADOFielfType == adError 						// 10
 		CASE nADOFielfType == adUserDefined 			    // 132
@@ -539,7 +571,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
 		CASE nADOFielfType == adIUnknown 				// 13
 		CASE nADOFielfType == adGUID 						// 72
 		CASE nADOFielfType == adDate 						// 7
-                nDBFTypeField := HB_FT_DATE
+         nDBFTypeField := HB_FT_DATE
 		
 		CASE nADOFielfType == adDBDate 					// 133
 		CASE nADOFielfType == adDBTime 					// 134
@@ -558,7 +590,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
             // nDBFTypeField := HB_FT_STRING
 
 		CASE nADOFielfType == adVarWChar 				// 202
-                nDBFTypeField := HB_FT_STRING
+         nDBFTypeField := HB_FT_STRING
 
 		CASE nADOFielfType == adLongVarWChar 			// 203
 
