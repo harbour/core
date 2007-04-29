@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-29 12:42 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * SET FILTER TO ... support
+
+   i.e.: SET FILTER TO First = "Homer"
+     
+   To use special SQL expressions, place commas around them, i.e.:
+   SET FILTER TO "City LIKE 'Chi*'"
+
 2007-04-27 19:33 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.ch
    * contrib/adordd/adordd.prg
