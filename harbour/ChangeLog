@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-29 17:34 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * Oracle support, thanks to Srdjan Dragojlovic
+     
+   * contrib/adordd/adordd.ch
+     * formatting
+
 2007-04-29 12:42 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * SET FILTER TO ... support
