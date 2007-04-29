@@ -14,7 +14,7 @@
 
    i.e.: SET FILTER TO First = "Homer"
      
-   To use special SQL expressions, place commas around them, i.e.:
+   To use special SQL expressions, place quotation marks around them, i.e.:
    SET FILTER TO "City LIKE 'Chi*'"
 
 2007-04-27 19:33 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
