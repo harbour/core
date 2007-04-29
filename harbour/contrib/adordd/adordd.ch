@@ -55,65 +55,65 @@
 #define _ADORDD_CH
 
 // Cursor Type
-#define adOpenForwardOnly    0
-#define adOpenKeyset            1
+#define adOpenForwardOnly     0
+#define adOpenKeyset          1
 #define adOpenDynamic         2
-#define adOpenStatic             3
+#define adOpenStatic          3
 
 // Lock Types
-#define adLockReadOnly          1
-#define adLockPessimistic        2
-#define adLockOptimistic         3
+#define adLockReadOnly        1
+#define adLockPessimistic     2
+#define adLockOptimistic      3
 #define adLockBatchOptimistic 4
 
 // Field Types
-#define adEmpty 					      0
-#define adTinyInt 					    16
-#define adSmallInt 						  2
-#define adInteger 						  3
-#define adBigInt 					    20
-#define adUnsignedTinyInt 		17
-#define adUnsignedSmallInt 		18
-#define adUnsignedInt 				19
-#define adUnsignedBigInt 			21
+#define adEmpty 					    0
+#define adTinyInt 					 16
+#define adSmallInt 						2
+#define adInteger 						3
+#define adBigInt 					   20
+#define adUnsignedTinyInt 	 17
+#define adUnsignedSmallInt 	 18
+#define adUnsignedInt 			 19
+#define adUnsignedBigInt 		 21
 #define adSingle 						  4
 #define adDouble 						  5
 #define adCurrency 					  6
-#define adDecimal 						14
-#define adNumeric 					  131
-#define adBoolean 						11
-#define adError 							10
-#define adUserDefined 			  132
-#define adVariant 						12
-#define adIDispatch 					  9
-#define adIUnknown 				    13
+#define adDecimal 					 14
+#define adNumeric 				  131
+#define adBoolean 				   11
+#define adError 						 10
+#define adUserDefined 		  132
+#define adVariant 					 12
+#define adIDispatch 					9
+#define adIUnknown 				   13
 #define adGUID 							 72
-#define adDate 							   7
-#define adDBDate 					   133
-#define adDBTime 					   134
-#define adDBTimeStamp 		   135
-#define adBSTR 							   8
+#define adDate 							  7
+#define adDBDate 					  133
+#define adDBTime 					  134
+#define adDBTimeStamp 		  135
+#define adBSTR 						    8
 #define adChar 							129
-#define adVarChar 						200
-#define adLongVarChar 				201
+#define adVarChar 					200
+#define adLongVarChar 			201
 #define adWChar 						130
 #define adVarWChar 					202
 #define adLongVarWChar 			203
 #define adBinary 						128
-#define adVarBinary 					204
-#define adLongVarBinary 			205
-#define adChapter 						136
-#define adFileTime 						  64
-#define adPropVariant 				138
+#define adVarBinary 				204
+#define adLongVarBinary 		205
+#define adChapter 					136
+#define adFileTime 				   64
+#define adPropVariant 			138
 #define adVarNumeric 				139
 #define adArray 							// &H2000
 
-#define adRecDeleted					   4
+#define adRecDeleted				  4
 
-#define adUseNone 1
-#define adUseServer 2
-#define adUseClient 3
-#define adUseClientBatch 3
+#define adUseNone             1
+#define adUseServer           2
+#define adUseClient           3
+#define adUseClientBatch      3
 
 #command USE <(db)> [VIA <rdd>] [ALIAS <a>] [<nw: NEW>] ;
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
