@@ -427,8 +427,13 @@ RETURN SUCCESS
 STATIC FUNCTION ADO_ORDINFO( nWA, iIndex, aOrderInfo )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+	
+	do case
+	   case iIndex == UR_ORI_TAG
+	        aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Columns( aOrderInfo[ UR_ORI_TAG ] ):Name
+	endcase   
 
-RETURN SUCCESS // aOrderInfo[ iIndex ]
+RETURN SUCCESS
 
 STATIC FUNCTION ADO_PACK( nWA )
 
