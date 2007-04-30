@@ -431,7 +431,7 @@ STATIC FUNCTION ADO_ORDINFO( nWA, iIndex, aOrderInfo )
 	do case
 	   case iIndex == UR_ORI_TAG
 	        if aOrderInfo[ UR_ORI_TAG ] < s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Count
-             aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Item( aOrderInfo[ UR_ORI_TAG ] ):Name
+             aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] - 1 ):Name
           else   
              aOrderInfo[ UR_ORI_RESULT ] = ""
           endif   
