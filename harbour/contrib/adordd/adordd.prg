@@ -62,6 +62,7 @@ ANNOUNCE ADORDD
 
 static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword
 static s_cQuery := "SELECT * FROM "
+static s_aConnections[ 255 ], s_aCatalogs[ 255 ]
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -124,50 +125,45 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       UR_SUPER_ERROR( nWA, oError )
       RETURN FAILURE
    ENDIF
-   
-   oADO := TOleAuto():New( "ADODB.Recordset" )
 
+   s_aConnections[ nWA ] = TOleAuto():New( "ADODB.Connection" )
+   
    do case
        case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
-               oADO:Open( s_cQuery + s_cTableName,;
-                                  "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ],;
-                                  adOpenKeyset, adLockOptimistic )
-   
+            s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
+               
        case s_cEngine == "MYSQL"
-              oAdo:CursorType      = adOpenStatic 
-              oAdo:CursorLocation = adUseClient 
-              oAdo:LockType         = adLockPessimistic 
-              oAdo:Open( s_cQuery + s_cTableName,;
-                                "DRIVER={MySQL ODBC 3.51 Driver};" + ;
-                                "server=" + s_cServer + ;
-                                ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
-                                ";uid=" + s_cUserName + ;
-                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )
+            s_aConnections[ nWA ]:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
+                                        "server=" + s_cServer + ;
+                                        ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
+                                        ";uid=" + s_cUserName + ;
+                                        ";pwd=" + s_cPassword )
                                 
        case s_cEngine == "SQL" 
-              oAdo:CursorType      = adOpenStatic 
-              oAdo:CursorLocation = adUseClient 
-              oAdo:LockType         = adLockPessimistic 
-              oAdo:Open( s_cQuery + s_cTableName,; 
-                                "Provider=SQLOLEDB;" + ; 
-                                "server=" + s_cServer + ; 
-                                ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
-                                ";uid=" + s_cUserName + ; 
-                                ";pwd=" + s_cPassword, adOpenKeyset, adLockOptimistic )
+            s_aConnections[ nWA ]:Open( "Provider=SQLOLEDB;" + ; 
+                                        "server=" + s_cServer + ; 
+                                        ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
+                                        ";uid=" + s_cUserName + ; 
+                                        ";pwd=" + s_cPassword )
                                 
        case s_cEngine == "ORACLE"
-              oAdo:CursorType      = adOpenStatic
-              oAdo:CursorLocation  = adUseClient
-              oAdo:LockType        = adLockPessimistic
-              oAdo:Open( s_cQuery + s_cTableName,;
-                         "Provider=MSDAORA.1;" + ;
-                         "Persist Security Info=False" + ;
-                         If( s_cServer == NIL .OR. s_cServer == "",; 
-                             "", ";Data source=" + s_cServer ) + ;
-                         ";User ID=" + s_cUserName + ;
-                         + ";Password=" + s_cPassword, adOpenKeyset, adLockOptimistic )                                                                
+            s_aConnections[ nWA ]:Open( "Provider=MSDAORA.1;" + ;
+                                        "Persist Security Info=False" + ;
+                                        If( s_cServer == NIL .OR. s_cServer == "",; 
+                                            "", ";Data source=" + s_cServer ) + ;
+                                        ";User ID=" + s_cUserName + ;
+                                        + ";Password=" + s_cPassword )                                                                
        
    endcase                               
+
+   oADO := TOleAuto():New( "ADODB.Recordset" )
+   oAdo:CursorType     = adOpenDynamic
+   oAdo:CursorLocation = adUseClient
+   oAdo:LockType       = adLockPessimistic
+   oAdo:Open( s_cQuery + s_cTableName, s_aConnections[ nWA ] )
+
+   s_aCatalogs[ nWA ] = TOleAuto():New( "ADOX.Catalog" )
+   s_aCatalogs[ nWA ]:ActiveConnection = s_aConnections[ nWA ]
    
    IF oADO == NIL
       oError := ErrorNew()
