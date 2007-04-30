@@ -63,6 +63,7 @@ ANNOUNCE ADORDD
 static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword
 static s_cQuery := "SELECT * FROM "
 static s_aConnections[ 255 ], s_aCatalogs[ 255 ]
+static s_aTableNames[ 255 ]
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -164,6 +165,8 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    s_aCatalogs[ nWA ] = TOleAuto():New( "ADOX.Catalog" )
    s_aCatalogs[ nWA ]:ActiveConnection = s_aConnections[ nWA ]
+   
+   s_aTableNames[ nWA ] = s_cTableName
    
    IF oADO == NIL
       oError := ErrorNew()
@@ -275,7 +278,9 @@ STATIC FUNCTION ADO_GOTOP( nWA )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-   oADO:MoveFirst()
+   if oADO:RecordCount != 0
+      oADO:MoveFirst()
+   endif   
    USRRDD_AREADATA( nWA )[ 2 ] = .f.
    USRRDD_AREADATA( nWA )[ 3 ] = .f.
 
@@ -483,6 +488,16 @@ STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
 RETURN SUCCESS
 
+STATIC FUNCTION ADO_ZAP( nWA )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+     
+  if s_aConnections[ nWA ] != NIL .and. s_aTableNames[ nWA ] != nil
+     s_aConnections[ nWA ]:Execute( "DELETE * FROM " + s_aTableNames[ nWA ] )
+  endif      
+
+RETURN SUCCESS
+
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
@@ -517,6 +532,7 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 	 aMyFunc[ UR_UNLOCK ]    := ( @ADO_UNLOCK() )
 	 aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
 	 aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
+	 aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
 
 RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
