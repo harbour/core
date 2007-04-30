@@ -503,6 +503,7 @@ STATIC FUNCTION ADO_ZAP( nWA )
      
   if s_aConnections[ nWA ] != NIL .and. s_aTableNames[ nWA ] != nil
      s_aConnections[ nWA ]:Execute( "DELETE * FROM " + s_aTableNames[ nWA ] )
+     oADO:Requery()
   endif      
 
 RETURN SUCCESS
