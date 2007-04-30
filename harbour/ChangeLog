@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-04-30 20:58 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * ZAP implemented. GO TOP fixed for empty tables
+
 2007-04-30 10:15 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      * ADO connection objects and ADO catalog objects are automatically created, stored and used by the ADORDD
