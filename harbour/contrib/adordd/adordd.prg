@@ -430,7 +430,11 @@ STATIC FUNCTION ADO_ORDINFO( nWA, iIndex, aOrderInfo )
 	
 	do case
 	   case iIndex == UR_ORI_TAG
-	        aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Columns( aOrderInfo[ UR_ORI_TAG ] ):Name
+	        if aOrderInfo[ UR_ORI_TAG ] < s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Columns:Count
+             aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Columns( aOrderInfo[ UR_ORI_TAG ] ):Name
+          else   
+             aOrderInfo[ UR_ORI_RESULT ] = ""
+          endif   
 	endcase   
 
 RETURN SUCCESS
