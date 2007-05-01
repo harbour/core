@@ -9,7 +9,7 @@
 */
 
 2007-05-01 22:53 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
-   * contrib/adordd/adordd.ch
+   * contrib/adordd/adordd.prg
      * DbCreate() implementation just for Microsoft Access
 
    + contrib/adordd/access2.prg
