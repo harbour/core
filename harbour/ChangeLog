@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-01 08:48 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.ch
+   * contrib/adordd/adordd.prg
+     * LOCATE and CONTINUE support
+     
+   + contrib/adordd/mysql3.prg
+     * MySQL LOCATE and CONTINUE sample  
+
 2007-04-30 21:58 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * IndexKey( n ) support
