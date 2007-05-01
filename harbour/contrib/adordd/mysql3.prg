@@ -1,4 +1,4 @@
-// Testing LOCATE
+// Testing LOCATE and CONTINUE
 
 #include "adordd.ch"
 
