@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-01 22:53 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.ch
+     * DbCreate() implementation just for Microsoft Access
+
+   + contrib/adordd/access2.prg
+     * DbCreate() sample with Microsoft Access
+
 2007-05-01 08:48 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.ch
    * contrib/adordd/adordd.prg
