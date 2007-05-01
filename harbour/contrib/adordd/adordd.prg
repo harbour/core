@@ -57,6 +57,16 @@
 #include "error.ch"
 #include "adordd.ch"
 #include "common.ch"
+#include "dbstruct.ch"
+
+#ifndef __XHARBOUR__
+   #xcommand TRY              => cbErr := errorBlock( {|oErr| break( oErr ) } ) ;;
+                                 BEGIN SEQUENCE
+   #xcommand CATCH [<!oErr!>] => errorBlock( cbErr ) ;;
+                                 RECOVER [USING <oErr>] <-oErr-> ;;
+                                 errorBlock( cbErr )
+   #xcommand FINALLY          => END
+#endif
 
 ANNOUNCE ADORDD
 
@@ -64,6 +74,7 @@ static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword
 static s_cQuery := "SELECT * FROM ", s_cLocateFor
 static s_aConnections[ 255 ], s_aCatalogs[ 255 ]
 static s_aTableNames[ 255 ], s_aScopeInfo[ 255 ]
+static s_aSQLStruct[ 255 ], cbErr
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -84,6 +95,28 @@ RETURN SUCCESS
 
 STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
+   local cDataBase  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 1, ";" )
+   local cTableName := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 2, ";" )
+   local oConnection := TOleAuto():New( "ADODB.Connection" )
+   local oCatalog := TOleAuto():New( "ADOX.Catalog" )
+
+   do case
+      case Upper( Right( cDataBase, 4 ) ) == ".MDB"
+           if ! File( cDataBase )
+              oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" +  + cDataBase )
+           endif   
+           oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
+           
+   endcase        
+
+   TRY
+      oConnection:Execute( "DROP TABLE " + cTableName )
+   CATCH   
+   FINALLY
+
+   oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + s_aSQLStruct[ nWA ] + ")" )
+   oConnection:Close()
+   
 	/*
    LOCAL oError := ErrorNew()
 
@@ -96,7 +129,32 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    UR_SUPER_ERROR( nWA, oError )
    */
    
-RETURN FAILURE
+RETURN SUCCESS
+
+STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
+
+  local n
+
+  s_aSQLStruct[ nWA ] = ""
+
+  for n = 1 to Len( aStruct )
+     if n > 1
+        s_aSQLStruct[ nWA ] += ", "
+     endif   
+     s_aSQLStruct[ nWA ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
+     do case
+        case aStruct[ n ][ DBS_TYPE ] $ "C,Character"
+             s_aSQLStruct[ nWA ] += " VARCHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL" 
+
+        case aStruct[ n ][ DBS_TYPE ] == "N"
+             s_aSQLStruct[ nWA ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
+
+        case aStruct[ n ][ DBS_TYPE ] == "L"
+             s_aSQLStruct[ nWA ] += " LOGICAL"
+     endcase     
+  next      
+
+RETURN SUCCESS
 
 STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
@@ -209,12 +267,10 @@ RETURN nResult
 
 STATIC FUNCTION ADO_CLOSE( nWA )
 
-   LOCAL aRData, oADO := USRRDD_AREADATA( nWA )[ 1 ]
+   LOCAL oADO := USRRDD_AREADATA( nWA )[ 1 ]
 			
-   oADO:Close()   
+   // oADO:Close()   
    
-   aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
-
 RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
@@ -385,8 +441,8 @@ STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
    IF aWData[ 3 ]
        xValue := ""
    ELSE
-		oADO:Fields( nField - 1 ):Value := xValue
-		oADO:Update()			
+      oADO:Fields( nField - 1 ):Value := xValue
+      oADO:Update()			
    ENDIF
 
 RETURN SUCCESS
@@ -396,7 +452,11 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
 	oADO:AddNew()
-	oADO:Update() // keep it here, or there is an ADO error
+	
+	TRY
+	   oADO:Update() // keep it here, or there is an ADO error
+	CATCH
+	FINALLY   
 	
 RETURN SUCCESS
 
@@ -463,7 +523,10 @@ STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
-	oADO:Filter = ""
+  TRY 
+	   oADO:Filter = ""
+	CATCH
+	FINALLY   
 
 RETURN SUCCESS
 
@@ -494,6 +557,12 @@ STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
   
 return SUCCESS
 
+STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+
+return SUCCESS
+
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
@@ -502,6 +571,7 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_INIT ]      := ( @ADO_INIT() )
    aMyFunc[ UR_NEW ]       := ( @ADO_NEW() )
    aMyFunc[ UR_CREATE ]    := ( @ADO_CREATE() )
+   aMyFunc[ UR_CREATEFIELDS ] := ( @ADO_CREATEFIELDS() )
    aMyFunc[ UR_OPEN ]      := ( @ADO_OPEN() )
    aMyFunc[ UR_CLOSE ]     := ( @ADO_CLOSE() )
    aMyFunc[ UR_BOF  ]      := ( @ADO_BOF() )
@@ -529,6 +599,7 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 	 aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
    aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
    aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
+   aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
 
 RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
