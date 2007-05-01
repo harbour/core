@@ -61,9 +61,9 @@
 ANNOUNCE ADORDD
 
 static s_cTableName, s_cEngine, s_cServer, s_cUserName, s_cPassword
-static s_cQuery := "SELECT * FROM "
+static s_cQuery := "SELECT * FROM ", s_cLocateFor
 static s_aConnections[ 255 ], s_aCatalogs[ 255 ]
-static s_aTableNames[ 255 ]
+static s_aTableNames[ 255 ], s_aScopeInfo[ 255 ]
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -391,22 +391,6 @@ STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
 
 RETURN SUCCESS
 
-STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
-
-   local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-
-   // not implemented yet
-
-RETURN SUCCESS
-
-STATIC FUNCTION ADO_SETLOCATE( nWA, aDBScopeInfo )
-
-   local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-
-   // not implemented yet
- 
-RETURN SUCCESS
- 
 STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
@@ -431,7 +415,7 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 	do case
 	   case nIndex == UR_ORI_TAG
 	        if aOrderInfo[ UR_ORI_TAG ] < s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Count
-             aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] - 1 ):Name
+             aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
           else   
              aOrderInfo[ UR_ORI_RESULT ] = ""
           endif   
@@ -467,25 +451,11 @@ STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
 
 RETURN SUCCESS
 
-STATIC FUNCTION ADO_SETFILTER( nWA, aInfo )
+STATIC FUNCTION ADO_SETFILTER( nWA, aFilterInfo )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-  local cFilter := aInfo[ 2 ]
      
-  if Left( cFilter, 1 ) == '"' .and. Right( cFilter, 1 ) == '"'
-     cFilter = SubStr( cFilter, 2, Len( cFilter ) - 2 )
-  endif      
-     
-  cFilter = StrTran( cFilter, '""', "" )
-  cFilter = StrTran( cFilter, '"', "'" )
-  cFilter = StrTran( cFilter, "''", "'" )
-  cFilter = StrTran( cFilter, "==", "=" )
-  cFilter = StrTran( cFilter, ".and.", "AND" )
-  cFilter = StrTran( cFilter, ".or.", "OR" )
-  cFilter = StrTran( cFilter, ".AND.", "AND" )
-  cFilter = StrTran( cFilter, ".OR.", "OR" )
-
-	oADO:Filter = cFilter
+	oADO:Filter = SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
 RETURN SUCCESS
 
@@ -507,6 +477,22 @@ STATIC FUNCTION ADO_ZAP( nWA )
   endif      
 
 RETURN SUCCESS
+
+STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
+
+   aScopeInfo[ UR_SI_CFOR ] = SQLTranslate( s_cLocateFor )
+   
+   s_aScopeInfo[ nWA ] = aScopeInfo
+
+return SUCCESS
+
+STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+
+  oADO:Find( s_aScopeInfo[ nWA ][ UR_SI_CFOR ], If( lContinue, 1, 0 ) )
+  
+return SUCCESS
 
 FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
@@ -531,8 +517,6 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_GETVALUE ]  := ( @ADO_GETVALUE() )
    aMyFunc[ UR_PUTVALUE ]  := ( @ADO_PUTVALUE() )
    aMyFunc[ UR_DELETE ]  	 := ( @ADO_DELETE() )
-   aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
-   aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
    aMyFunc[ UR_APPEND ]    := ( @ADO_APPEND() )
 	 aMyFunc[ UR_FLUSH ]     := ( @ADO_FLUSH() )
 	 aMyFunc[ UR_ORDINFO ]   := ( @ADO_ORDINFO() )
@@ -543,6 +527,8 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 	 aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
 	 aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
 	 aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
+   aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
+   aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
 
 RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
@@ -678,3 +664,26 @@ function HB_AdoSetQuery( cQuery )
    s_cQuery = cQuery 
 
 return nil
+
+function HB_AdoSetLocateFor( cLocateFor )
+
+   s_cLocateFor = cLocateFor
+   
+return nil   
+
+static function SQLTranslate( cExpr )
+
+  if Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
+     cExpr = SubStr( cExpr, 2, Len( cExpr ) - 2 )
+  endif      
+     
+  cExpr = StrTran( cExpr, '""', "" )
+  cExpr = StrTran( cExpr, '"', "'" )
+  cExpr = StrTran( cExpr, "''", "'" )
+  cExpr = StrTran( cExpr, "==", "=" )
+  cExpr = StrTran( cExpr, ".and.", "AND" )
+  cExpr = StrTran( cExpr, ".or.", "OR" )
+  cExpr = StrTran( cExpr, ".AND.", "AND" )
+  cExpr = StrTran( cExpr, ".OR.", "OR" )
+
+return cExpr   

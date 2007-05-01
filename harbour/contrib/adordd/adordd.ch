@@ -132,5 +132,10 @@
                     if(<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
          [; dbSetIndex( <(indexN)> )]
+         
+#command LOCATE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
+                [RECORD <rec>] [<rest:REST>] [ALL] => ;
+         [ HB_AdoSetLocateFor( <(for)> ); ] ;        
+         __dbLocate( <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #endif
