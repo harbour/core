@@ -2963,7 +2963,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
          ++pRddFunction;
          ++pFunction;
       }
-      uiResult = hb_rddInherit( pSelfTable, &funcTable, pSuperTable, ( BYTE * ) szSuperRDD );
+      uiResult = hb_rddInherit( pSelfTable, &funcTable, pSuperTable, szSuperRDD );
       if( uiResult == SUCCESS )
       {
          pSelfTable->whoCares = ( DBENTRYP_SVP ) hb_itemNew( pMethods );
