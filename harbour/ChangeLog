@@ -8,6 +8,67 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-03 16:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/include/hbapirdd.h
+  - harbour/include/hbrddwrk.h
+  * harbour/source/rdd/Makefile
+  + harbour/source/rdd/wacore.c
+  + harbour/source/rdd/wafunc.c
+  * harbour/source/rdd/workarea.c
+    * cleaned RDD code:
+      * the default work area implementation from which each RDD inherits
+        and RDD management is now in workarea.c file - this part will be
+        common for all threads in future MT version
+      * the code to mange workareas and aliases moved to wacore.c - this
+        code uses some static variables which will be moved to HVM stack
+        in MT version
+      * helper RDD functions thread independent moved to wafunc.c
+
+  * harbour/source/rdd/dbcmd.c
+    * removed RDD/WorkArea management code - only independent HB_FUNCs
+      left. IMHO it will be good to divide this file into few ones.
+    * changed dbCreate() and dbUseArea() to return logical value
+
+  * harbour/config/global.cf
+    - removed nulsys from linked library list - it should not be here
+      because it can confuse some linkers and wrong library will be
+      created
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/nulsys/nulsys.c
+    * updated for recent modifications in RDD API
+
+  * harbour/include/hbextern.ch
+    - removed __RDDSETDEFAULT() - this function was necessary with old
+      rdd register code and we not not need it for few years. It's not
+      Clipper function so I do not see any reason to keep it but if you
+      want we can add wrapper to standard RDDSETDEFAULT()
+
+  * harbour/source/rdd/hbsix/sxcompr.c
+    + added workaround for SIX3 bug which I intentionally replicated in
+      [x]Harbour but it may cause data corruption so IMHO it will be better
+      to fix it.
+
+  * harbour/source/rtl/errorsys.prg
+    * added default action for EG_LOCK - it's Clipper compatible behavior
+      but done in differ way. Due to some differences in linker we are
+      using we cannot exactly replicate Clipper behavior because it will
+      not work on some platforms as expected so I decided to add it here.
+      I think it's even more Clear then the trick with source/sys/ntxerr.prg
+      done by Clipper. Many people do not even knows about it.
+
+  * harbour/source/rtl/gtcrs/chrmap.c
+    * changed environment variable name from HB_CHRMAP to HB_CHARMAP to
+      be compatible with description in default map file
+
 2007-05-01 22:53 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * DbCreate() implementation just for Microsoft Access

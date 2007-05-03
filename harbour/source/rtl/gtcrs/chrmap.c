@@ -323,7 +323,7 @@ int hb_gt_crs_chrmapinit( int *piTransTbl, char *pszTerm )
 
     if ( pszTerm != NULL && *pszTerm != '\0' )
     {
-	pszFile = getenv("HB_CHRMAP");
+	pszFile = getenv("HB_CHARMAP");
 	if ( pszFile != NULL && *pszFile != '\0' )
 	    nRet = hb_gt_crs_chrmapread( pszFile, pszTerm, piTransTbl );
 	if ( nRet == -1 )

@@ -69,8 +69,16 @@ STATIC FUNCTION DefError( oError )
    LOCAL n
 
    // By default, division by zero results in zero
-   IF oError:genCode == EG_ZERODIV
+   IF oError:genCode == EG_ZERODIV .AND. ;
+      oError:canSubstitute
       RETURN 0
+   ENDIF
+
+   // By default, retry on RDD lock error failure */
+   IF oError:genCode == EG_LOCK .AND. ;
+      oError:canRetry
+      // oError:tries++
+      RETURN .T.
    ENDIF
 
    // Set NetErr() of there was a database open error
@@ -113,7 +121,7 @@ STATIC FUNCTION DefError( oError )
    nChoice := 0
    WHILE nChoice == 0
 
-      IF Empty( oError:osCode )
+      IF ISNIL( cDOSError )
          nChoice := Alert( cMessage, aOptions )
       ELSE
          nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
@@ -134,7 +142,7 @@ STATIC FUNCTION DefError( oError )
 
    // "Quit" selected
 
-   IF ! Empty( oError:osCode )
+   IF ! ISNIL( cDOSError )
       cMessage += " " + cDOSError
    ENDIF
 

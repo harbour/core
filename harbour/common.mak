@@ -681,6 +681,8 @@ CODEPAGE_LIB_OBJS = \
 RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd.obj    \
     $(OBJ_DIR)\workarea.obj \
+    $(OBJ_DIR)\wacore.obj   \
+    $(OBJ_DIR)\wafunc.obj   \
     $(OBJ_DIR)\dbf1.obj     \
     $(OBJ_DIR)\dbnubs.obj   \
     $(OBJ_DIR)\delim1.obj   \

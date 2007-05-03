@@ -7504,7 +7504,8 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
    return SUCCESS;
 }
 
-static RDDFUNCS ntxTable = { ntxBof,
+static const RDDFUNCS ntxTable = {
+                             ntxBof,
                              ntxEof,
                              ntxFound,
                              ( DBENTRYP_V ) ntxGoBottom,
@@ -7622,11 +7623,11 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
 
       if( uiCount )
          * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBFFPT" );
+      errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBFFPT" );
       if( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBFDBT" );
+         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBFDBT" );
       if( errCode != SUCCESS )
-         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" );
+         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBF" );
       if( errCode == SUCCESS )
       {
          /*

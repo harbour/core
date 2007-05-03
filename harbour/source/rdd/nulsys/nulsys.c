@@ -54,7 +54,7 @@
 #include "hbapi.h"
 #include "hbapirdd.h"
 
-HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
+HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( const char * szName )
 {
    HB_SYMBOL_UNUSED( szName );
 
@@ -112,7 +112,7 @@ HB_EXPORT ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol 
    return FAILURE;
 }
 
-HB_EXPORT ERRCODE hb_rddGetAliasNumber( char * szAlias, int * iArea )
+HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
 {
    HB_SYMBOL_UNUSED( szAlias );
    HB_SYMBOL_UNUSED( iArea );

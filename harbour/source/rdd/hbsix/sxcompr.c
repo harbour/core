@@ -123,6 +123,9 @@
 
 #include "hbsxfunc.h"
 
+#define HB_SX_UNCOMPRESED     0xFFFFFFFFUL
+
+
 /* number of bits for encoded item (position,length) */
 #define ITEMBITS        16
 /* unused DUMMY bits - who does know why SIX has it? */
@@ -677,7 +680,6 @@ HB_FUNC( SX_FDECOMPRESS )
 
 HB_FUNC( _SX_STRCOMPRESS )
 {
-   BOOL fOK = FALSE;
    BYTE * pStr = ( BYTE * ) hb_parc( 1 ), * pBuf;
 
    if( pStr )
@@ -688,13 +690,16 @@ HB_FUNC( _SX_STRCOMPRESS )
       ulBuf = ulLen + 257;
       pBuf = ( BYTE * ) hb_xgrab( ulBuf );
       HB_PUT_LE_UINT32( pBuf, ulLen );
-      fOK = hb_LZSSxCompressMem( pStr, ulLen, pBuf + 4, ulBuf - 4, &ulDst );
-      if( fOK )
-         hb_retclen( ( char * ) pBuf, ulDst + 4 );
+      if( ! hb_LZSSxCompressMem( pStr, ulLen, pBuf + 4, ulBuf - 4, &ulDst ) )
+      {
+         /* It's not six compatible - it's a workaround for wrongly defined SIX behavior */
+         HB_PUT_LE_UINT32( pBuf, HB_SX_UNCOMPRESED );
+         memcpy( pBuf + 4, pStr, ulLen );
+      }
+      hb_retclen( ( char * ) pBuf, ulDst + 4 );
       hb_xfree( pBuf );
    }
-
-   if( !fOK )
+   else
       hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 }
 
@@ -710,20 +715,29 @@ HB_FUNC( _SX_STRDECOMPRESS )
       if( ulLen >= 4 )
       {
          ulBuf = HB_GET_LE_UINT32( pStr );
-         pBuf = ( BYTE * ) hb_xalloc( ulBuf );
-         if( pBuf )
+         if( ulBuf == HB_SX_UNCOMPRESED )
          {
-            fOK = hb_LZSSxDecompressMem( pStr + 4, ulLen - 4, pBuf, ulBuf );
-            if( fOK )
-               hb_retclen( ( char * ) pBuf, ulBuf );
-            hb_xfree( pBuf );
+            hb_retclen( ( char * ) pStr + 4, ulLen - 4 );
+            fOK = TRUE;
          }
          else
          {
-            PHB_ITEM pItem = hb_errRT_SubstParams( "SIXCOMPRESS", EG_MEM, 0, "possible compressed string corruption", "_SX_STRDECOMPRESS" );
-            hb_itemReturn( pItem );
-            hb_itemRelease( pItem );
-            return;
+            pBuf = ( BYTE * ) hb_xalloc( ulBuf + 1 );
+            if( pBuf )
+            {
+               fOK = hb_LZSSxDecompressMem( pStr + 4, ulLen - 4, pBuf, ulBuf );
+               if( fOK )
+                  hb_retclen_buffer( ( char * ) pBuf, ulBuf );
+               else
+                  hb_xfree( pBuf );
+            }
+            else
+            {
+               PHB_ITEM pItem = hb_errRT_SubstParams( "SIXCOMPRESS", EG_MEM, 0, "possible compressed string corruption", "_SX_STRDECOMPRESS" );
+               if( pItem )
+                  hb_itemRelease( hb_itemReturn( pItem ) );
+               return;
+            }
          }
       }
    }

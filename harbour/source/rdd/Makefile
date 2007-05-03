@@ -7,6 +7,8 @@ ROOT = ../../
 C_SOURCES=\
 	dbcmd.c \
 	workarea.c \
+	wacore.c \
+	wafunc.c \
 	dbf1.c \
 	dbnubs.c \
 	dbsql.c \

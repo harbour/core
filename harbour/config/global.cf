@@ -6,7 +6,6 @@ GRANDP = ../../
 HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 HB_DB_DRIVERS=\
-	nulsys \
 	dbfntx \
 	dbfcdx \
 	dbffpt \

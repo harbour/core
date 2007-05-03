@@ -69,7 +69,7 @@
 #endif
 
 static RDDFUNCS dbtSuper;
-static RDDFUNCS dbtTable =
+static const RDDFUNCS dbtTable =
 {
 
    /* Movement and positioning methods */
@@ -805,7 +805,7 @@ HB_FUNC( DBFDBT_GETFUNCTABLE )
    {
       if ( uiCount )
          * uiCount = RDDFUNCSCOUNT;
-      hb_retni( hb_rddInherit( pTable, &dbtTable, &dbtSuper, ( BYTE * ) "DBF" ) );
+      hb_retni( hb_rddInherit( pTable, &dbtTable, &dbtSuper, "DBF" ) );
    }
    else
       hb_retni( FAILURE );

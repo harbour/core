@@ -81,7 +81,7 @@ static USHORT s_uiRddIdBLOB = ( USHORT ) -1;
 static USHORT s_uiRddIdFPT  = ( USHORT ) -1;
 
 static RDDFUNCS fptSuper;
-static RDDFUNCS fptTable =
+static const RDDFUNCS fptTable =
 {
 
    /* Movement and positioning methods */
@@ -4689,7 +4689,7 @@ static void hb_dbffptRegisterRDD( USHORT * pusRddId )
       if ( uiCount )
          * uiCount = RDDFUNCSCOUNT;
 
-      errCode = hb_rddInherit( pTable, &fptTable, &fptSuper, ( BYTE * ) "DBF" );
+      errCode = hb_rddInherit( pTable, &fptTable, &fptSuper, "DBF" );
       if ( errCode == SUCCESS )
          *pusRddId = uiRddId;
       hb_retni( errCode );
