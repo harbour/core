@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-04 11:06 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
+  * source/rdd/wafunc.c
+    * change of the behavior of DbUseArea opening, so that one behaves like made Clipper, when it fails the
+      opening of a table, does not recover the previous area. 
+
 2007-05-04 10:15 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   + contrib/bmdbfcdx/Makefile
   + contrib/bmdbfcdx/bmdbfcdx1.c

@@ -578,7 +578,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    DBOPENINFO pInfo;
    ERRCODE errCode;
-   USHORT uiPrevArea;
+   //USHORT uiPrevArea;
    AREAP pArea;
 
    /* Clipper clears NETERR flag before RT error below */
@@ -600,7 +600,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
       szDriver = hb_rddDefaultDrv( NULL );
    }
 
-   uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+   //uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
    /*
     * 0 means chose first available in hb_rddInsertAreaNode()
@@ -649,12 +649,15 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
       {
          /* Open file */
          errCode = SELF_OPEN( pArea, &pInfo );
-
+         /*-----------------04/05/2007 11:00-----------------
+          * Clipper not restore the old workarea
+          * --------------------------------------------------*/
+         /*
          if( errCode != SUCCESS )
          {
             hb_rddReleaseCurrentArea();
             hb_rddSelectWorkAreaNumber( uiPrevArea );
-         }
+         }*/
       }
    }
 
