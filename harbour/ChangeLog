@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-04 15:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/Makefile
+  * harbour/contrib/bmdbfcdx/Makefile
+  * harbour/source/rdd/Makefile
+    ! fixed GNU make compilation
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/filesys.c
+    + added support for DOS/Windows DENY_* flag emulation in POSIX
+      systems using BSD locks. So far such emulatin was done with
+      standard POSIX locks. The new emulation can be enabled by setting
+      HB_USE_BSDLOCKS and disabled by HB_USE_BSDLOCKS_OFF. By default
+      it's enabled in Linux and BSD* based systems.
+      Please not that it BSD locks work in differ way then POSIX ones.
+      They are bound with file handle and process ID not i-node and PID.
+      It will allow to synchronize even single process but it will not
+      work in NFS and some old BSD and Linux kernels. This synchronization
+      cannot be used also between different platforms. If someone needs
+      such synchronization then he should build Harbour on all platforms
+      with HB_USE_BSDLOCKS_OFF and HB_USE_SHARELOCKS with valid multi
+      platform lock offset
+
+  * harbour/source/rdd/dbcmd.c
+    * removed all explicit NETERR setting - now it can be set only
+      by NETERR() function (executed by default errorsys)
+    * changed ordListAdd()/dbSetIndex() - now they return logical value
+      with information about success
+
+  * harbour/source/rdd/wafunc.c
+    * changed hb_rddOpenTable()/hb_rddCreateTable() to make dbUseArea()/
+      dbCreate() more Clipper compatible - it's not exact Clipper behavior
+      but I intentionally do not want to replicate some strange for me
+      things, f.e. I do not know why Clipper ignores RDDNAME when it has
+      only one character
+
+  + harbour/tests/tstuse.prg
+    + test code for dbUseArea()
+
 2007-05-04 11:06 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * source/rdd/wafunc.c
     * change of the behavior of DbUseArea opening, so that one behaves like made Clipper, when it fails the

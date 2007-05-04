@@ -578,47 +578,57 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    DBOPENINFO pInfo;
    ERRCODE errCode;
-   //USHORT uiPrevArea;
    AREAP pArea;
 
-   /* Clipper clears NETERR flag before RT error below */
+   /* uiArea = 0 in hb_rddInsertAreaNode() means chose first
+    * available free area, otherwise we should close table in
+    * current WA and it should be done before parameter validation
+    * RT errors below. This breaks xHarbour like MT code which
+    * shares WA between threads so dbUseArea() should be covered
+    * by external mutex to make lNewArea MT safe, [druzus]
+    */
+   if( uiArea )
+   {
+      hb_rddSelectWorkAreaNumber( uiArea );
+      hb_rddReleaseCurrentArea();
+   }
+   else
+      hb_rddSelectFirstAvailable();
+
+   /* Clipper clears NETERR flag before parameter validation, [druzus]
+    */
    hb_rddSetNetErr( FALSE );
 
-   if( !szFileName || !szFileName[ 0 ] )
-   {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
-      return FAILURE;
-   }
-
+   /* Now check parameters, first RDD name.
+    * Clipper seems to make sth like:
+    *    if( szDriver && strlen( szDriver ) > 1 )
+    * but I do not think we should replicate it, [druzus]
+    */
    if( szDriver && szDriver[ 0 ] )
    {
       hb_strncpyUpper( szDriverBuffer, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
       szDriver = szDriverBuffer;
    }
    else
-   {
       szDriver = hb_rddDefaultDrv( NULL );
-   }
 
-   //uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
-
-   /*
-    * 0 means chose first available in hb_rddInsertAreaNode()
-    * This hack is necessary to avoid race condition in MT
-    * if we don't want to lock whole RDD subsystem, Druzus
-    */
-   hb_rddSelectWorkAreaNumber( uiArea );
-   if( uiArea )
-   {
-      hb_rddReleaseCurrentArea();
-   }
-
-   /* Create a new WorkArea node */
+   /* First try to create new are node and validate RDD name */
    if( ! hb_rddInsertAreaNode( szDriver ) )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBUSEAREA" );
       return FAILURE;
    }
+
+   /* Then check if valid file name was given - Clipper allows to use empty
+    * ("") file name
+    */
+   if( !szFileName )
+   {
+      hb_rddReleaseCurrentArea();
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
+      return FAILURE;
+   }
+
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    /* Fill pInfo structure */
@@ -631,42 +641,18 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
-   if( pStruct )
-   {
-      errCode = SELF_CREATEFIELDS( pArea, pStruct );
-   }
-   else
-   {
-      errCode = SUCCESS;
-   }
-
+   errCode = pStruct ? SELF_CREATEFIELDS( pArea, pStruct ) : SUCCESS;
    if( errCode == SUCCESS )
    {
       if( pDelim && !HB_IS_NIL( pDelim ) )
          errCode = SELF_INFO( pArea, DBI_SETDELIMITER, pDelim );
-
       if( errCode == SUCCESS )
-      {
          /* Open file */
          errCode = SELF_OPEN( pArea, &pInfo );
-         /*-----------------04/05/2007 11:00-----------------
-          * Clipper not restore the old workarea
-          * --------------------------------------------------*/
-         /*
-         if( errCode != SUCCESS )
-         {
-            hb_rddReleaseCurrentArea();
-            hb_rddSelectWorkAreaNumber( uiPrevArea );
-         }*/
-      }
    }
 
-   /*
-    * Warning: this is not Clipper compatible. NETERR() should be set by
-    * error handler not here
-    */
    if( errCode != SUCCESS )
-      hb_rddSetNetErr( TRUE );
+      hb_rddReleaseCurrentArea();
 
    return errCode;
 }
@@ -683,7 +669,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    USHORT uiPrevArea;
    AREAP pArea;
 
-   if( !szFileName || !szFileName[ 0 ] )
+   if( !szFileName )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, "DBCREATE" );
       return FAILURE;
@@ -695,27 +681,25 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
       szDriver = szDriverBuffer;
    }
    else
-   {
       szDriver = hb_rddDefaultDrv( NULL );
-   }
 
    uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
 
    /*
     * 0 means chose first available in hb_rddInsertAreaNode()
     * This hack is necessary to avoid race condition in MT
-    * if we don't want to lock whole RDD subsystem, Druzus
+    * mode where workareas are shared between threads and
+    * we don't want to lock whole RDD subsystem, [druzus]
     */
    hb_rddSelectWorkAreaNumber( uiArea );
    if( uiArea )
-   {
       hb_rddReleaseCurrentArea();
-   }
 
    /* Create a new WorkArea node */
    if( ! hb_rddInsertAreaNode( szDriver ) )
    {
-      hb_errRT_DBCMD( EG_CREATE, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
+      hb_rddSelectWorkAreaNumber( uiPrevArea );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
       return FAILURE;
    }
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

@@ -2,11 +2,11 @@
 # $Id$
 #
 
-ROOT = ../../../
+ROOT = ../../
 
 C_SOURCES=\
 	bmdbfcdx1.c \
-        bmsixcdx1.c
+	bmsixcdx1.c
 
 LIBNAME=bmdbfcdx
 

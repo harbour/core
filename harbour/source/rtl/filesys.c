@@ -185,6 +185,9 @@
       #define INVALID_SET_FILE_POINTER ((DWORD)-1)
    #endif
 #endif
+#if defined( HB_USE_SHARELOCKS ) && defined( HB_USE_BSDLOCKS )
+   #include <sys/file.h>
+#endif
 
 /* 27/08/2004 - <maurilio.longo@libero.it>
                 HB_FS_GETDRIVE() should return a number in the range 0..25 ('A'..'Z')
@@ -2230,6 +2233,15 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 #if defined( HB_USE_SHARELOCKS )
    if( hFile != FS_ERROR && uiExFlags & FXO_SHARELOCK )
    {
+#if defined( HB_USE_BSDLOCKS )
+      int iLock;
+      if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
+          ( uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0 )
+         iLock = LOCK_SH | LOCK_NB;
+      else
+         iLock = LOCK_EX | LOCK_NB;
+      if( flock( hFile, iLock ) != 0 )
+#else
       USHORT uiLock;
       if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
           ( uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0 )
@@ -2238,6 +2250,7 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
          uiLock = FL_LOCK | FLX_EXCLUSIVE;
 
       if( !hb_fsLockLarge( hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE, uiLock ) )
+#endif
       {
          hb_fsClose( hFile );
          hFile = FS_ERROR;
