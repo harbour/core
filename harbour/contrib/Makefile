@@ -12,6 +12,7 @@ DIRS=\
 	libmisc \
 	libnf \
 	samples \
+        bmdbfcdx \
 
 
 ifeq ($(HB_ARCHITECTURE),w32)
