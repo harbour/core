@@ -14,7 +14,7 @@ if "%1" == "CLEAN" goto CLEAN
 :BUILD_OK
 
    copy ..\..\lib\b32\hboleaut.lib ..\..\lib\*.* > nul
-   if exist ..\..\lib\b32\hboleaut.bak del ..\..\lib\b32\oleaut.bak
+   if exist ..\..\lib\b32\hboleaut.bak del ..\..\lib\b32\hboleaut.bak
    goto EXIT
 
 :BUILD_ERR
