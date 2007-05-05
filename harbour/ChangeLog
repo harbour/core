@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-05 12:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tget.prg
+     ! Fixed a recently introduced crash in Get():ColorDisp().
+       (Thanks to Teo Fonrouge)
+
 2007-05-05 10:28 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Improved formatting and xharbour compatibility

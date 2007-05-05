@@ -339,7 +339,8 @@ return Self
 
 METHOD ColorDisp( cColorSpec ) CLASS Get
 
-   ::ColorSpec( cColorSpec ):Display()
+   ::ColorSpec( cColorSpec )
+   ::Display()
 
 return Self
 
