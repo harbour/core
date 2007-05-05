@@ -181,7 +181,7 @@ return SUCCESS
 static function ADO_OPEN( nWA, aOpenInfo )
 
    local cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
-   local oADO, nTotalFields := 0, i := 1
+   local oADO, nTotalFields, n
 
    // When there is no ALIAS we will create new one using file name
    if aOpenInfo[ UR_OI_ALIAS ] == NIL
@@ -265,16 +265,16 @@ static function ADO_OPEN( nWA, aOpenInfo )
    aWData[ 1 ] := oADO
    aWData[ 2 ] := aWData[ 3 ] := .F.
 
-    nTotalFields := oADO:Fields:Count
+   nTotalFields := oADO:Fields:Count
     
-    UR_SUPER_SETFIELDEXTENT( nWA, oADO:Fields:Count )   
+   UR_SUPER_SETFIELDEXTENT( nWA, oADO:Fields:Count )   
     	 
-    FOR i = 1 TO nTotalFields
+   FOR n = 1 TO nTotalFields
    		aField := ARRAY( UR_FI_SIZE )
-   		aField[ UR_FI_NAME ]    := oADO:Fields( i - 1 ):Name
-   		aField[ UR_FI_TYPE ]    := ADO_GETFIELDTYPE( oADO:Fields( i - 1 ):Type )
+   		aField[ UR_FI_NAME ]    := oADO:Fields( n - 1 ):Name
+   		aField[ UR_FI_TYPE ]    := ADO_GETFIELDTYPE( oADO:Fields( n - 1 ):Type )
    		aField[ UR_FI_TYPEEXT ] := 0
-   		aField[ UR_FI_LEN ]     := ADO_GETFIELDSIZE( aField[ UR_FI_TYPE ], oADO:Fields( i - 1 ):DefinedSize  )// 80   // set any arbitrary length - the real size will be differ
+   		aField[ UR_FI_LEN ]     := ADO_GETFIELDSIZE( aField[ UR_FI_TYPE ], oADO:Fields( n - 1 ):DefinedSize )
    		aField[ UR_FI_DEC ]     := 0
    		UR_SUPER_ADDFIELD( nWA, aField )
     NEXT
