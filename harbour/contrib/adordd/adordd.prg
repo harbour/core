@@ -21,7 +21,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
+ * along with this software; see the file COPYING.  if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  *
@@ -38,21 +38,20 @@
  * the executable file might be covered by the GNU General Public License.
  *
  * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
+ * Project under the name Harbour.  if you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
- * If you write modifications of your own for Harbour, it is your choice
+ * if you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * if you do not wish that, delete this exception notice.
  *
  */
 
 #include "rddsys.ch"
-#include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "error.ch"
 #include "adordd.ch"
@@ -60,12 +59,14 @@
 #include "dbstruct.ch"
 
 #ifndef __XHARBOUR__
+   #include "hbusrrdd.ch"
    #xcommand TRY              => cbErr := errorBlock( {|oErr| break( oErr ) } ) ;;
                                  BEGIN SEQUENCE
    #xcommand CATCH [<!oErr!>] => errorBlock( cbErr ) ;;
                                  RECOVER [USING <oErr>] <-oErr-> ;;
                                  errorBlock( cbErr )
-   #xcommand FINALLY          => END
+#else   
+   #include "usrrdd.ch"
 #endif
 
 ANNOUNCE ADORDD
@@ -76,49 +77,70 @@ static s_aConnections[ 255 ], s_aCatalogs[ 255 ]
 static s_aTableNames[ 255 ], s_aScopeInfo[ 255 ]
 static s_aSQLStruct[ 255 ], cbErr
 
-STATIC FUNCTION ADO_INIT( nRDD )
+#ifdef __XHARBOUR__
 
-   LOCAL aRData := ARRAY( 10 )
+static function HB_TokenGet( cText, nPos, cSep )
+
+   local aTokens := HB_ATokens( cText, cSep )
+
+return If( nPos <= Len( aTokens ), aTokens[ nPos ], "" )
+
+#endif
+
+static function ADO_INIT( nRDD )
+
+   local aRData := ARRAY( 10 )
 
    AFILL( aRData, -1 )
    USRRDD_RDDDATA( nRDD, aRData )
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_NEW( pWA )
+static function ADO_NEW( pWA )
 
-   LOCAL aWData := { -1, .F., .F. } 
+   local aWData := { -1, .F., .F. } 
 
    USRRDD_AREADATA( pWA, aWData )
 	
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
+static function ADO_CREATE( nWA, aOpenInfo )
 
    local cDataBase  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 1, ";" )
    local cTableName := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 2, ";" )
+   local cDbEngine  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 3, ";" )
+   local cServer    := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 4, ";" )
+   local cUserName  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 5, ";" )
+   local cPassword  := HB_TokenGet( aOpenInfo[ UR_OI_NAME ], 6, ";" )
    local oConnection := TOleAuto():New( "ADODB.Connection" )
-   local oCatalog := TOleAuto():New( "ADOX.Catalog" )
+   local oCatalog   := TOleAuto():New( "ADOX.Catalog" )
 
    do case
       case Upper( Right( cDataBase, 4 ) ) == ".MDB"
            if ! File( cDataBase )
-              oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" +  + cDataBase )
+              oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
            endif   
            oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
+           
+      case Upper( cDbEngine ) == "MYSQL"     
+           oConnection:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
+                             "server=" + cServer + ;
+                             ";database=" + cDataBase + ;
+                             ";uid=" + cUserName + ;
+                             ";pwd=" + cPassword )
            
    endcase        
 
    TRY
       oConnection:Execute( "DROP TABLE " + cTableName )
    CATCH   
-   FINALLY
+   END
 
    oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + s_aSQLStruct[ nWA ] + ")" )
    oConnection:Close()
    
 	/*
-   LOCAL oError := ErrorNew()
+   local oError := ErrorNew()
 
    oError:GenCode     := EG_CREATE
    oError:SubCode     := 1004
@@ -129,9 +151,9 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    UR_SUPER_ERROR( nWA, oError )
    */
    
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
+static function ADO_CREATEFIELDS( nWA, aStruct )
 
   local n
 
@@ -154,27 +176,27 @@ STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
      endcase     
   next      
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
+static function ADO_OPEN( nWA, aOpenInfo )
 
-   LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
-   LOCAL oADO, nTotalFields := 0, i := 1
+   local cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
+   local oADO, nTotalFields := 0, i := 1
 
    // When there is no ALIAS we will create new one using file name
-   IF aOpenInfo[ UR_OI_ALIAS ] == NIL
+   if aOpenInfo[ UR_OI_ALIAS ] == NIL
       HB_FNAMESPLIT( aOpenInfo[ UR_OI_NAME ], , @cName )
       aOpenInfo[ UR_OI_ALIAS ] := cName
-   ENDIF
+   endif
    
-   nMode := IIF( aOpenInfo[ UR_OI_SHARED ], FO_SHARED , FO_EXCLUSIVE ) + ;
-            IIF( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
+   nMode := If( aOpenInfo[ UR_OI_SHARED ], FO_SHARED , FO_EXCLUSIVE ) + ;
+            If( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
 
    aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    aWData := USRRDD_AREADATA( nWA )
    nSlot := ASCAN( aRData, -1 )
 
-   IF nSlot == 0
+   if nSlot == 0
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1000
@@ -182,8 +204,8 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
-   ENDIF
+      return FAILURE
+   endif
 
    s_aConnections[ nWA ] = TOleAuto():New( "ADODB.Connection" )
    
@@ -226,7 +248,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
    
    s_aTableNames[ nWA ] = s_cTableName
    
-   IF oADO == NIL
+   if oADO == NIL
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1001
@@ -236,8 +258,8 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       oError:CanDefault  := .T.
 
       UR_SUPER_ERROR( nWA, oError )
-      RETURN FAILURE
-   ENDIF
+      return FAILURE
+   endif
    
    aRData[ nSlot ] := oADO
    aWData[ 1 ] := oADO
@@ -259,42 +281,42 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
 
-   IF nResult == SUCCESS
+   if nResult == SUCCESS
       ADO_GOTOP( nWA )
-   ENDIF
+   endif
 	
-RETURN nResult
+return nResult
 
-STATIC FUNCTION ADO_CLOSE( nWA )
+static function ADO_CLOSE( nWA )
 
-   LOCAL oADO := USRRDD_AREADATA( nWA )[ 1 ]
+   local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 			
    // oADO:Close()   
    
-RETURN UR_SUPER_CLOSE( nWA )
+return UR_SUPER_CLOSE( nWA )
 
-STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
+static function ADO_GETVALUE( nWA, nField, xValue )
 
-   LOCAL aWData := USRRDD_AREADATA( nWA )
-   LOCAL oADO := USRRDD_AREADATA( nWA )[ 1 ]
+   local aWData := USRRDD_AREADATA( nWA )
+   local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-   IF aWData[ 3 ]
+   if aWData[ 3 ]
       xValue := ""
    ELSE
       xValue := oADO:Fields( nField - 1 ):Value
-   ENDIF
+   endif
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_GOTO( nWA, nRecord )
+static function ADO_GOTO( nWA, nRecord )
 
 /*
-   LOCAL aWData := USRRDD_AREADATA( nWA )
-   LOCAL oADO := aWData[ 1 ]
+   local aWData := USRRDD_AREADATA( nWA )
+   local oADO := aWData[ 1 ]
    
-   IF nRecord <= 0
+   if nRecord <= 0
       aWData[ 2 ] := aWData[ 3 ] := .T.
-   ELSEIF nRecord == 1
+   ELSEif nRecord == 1
       oADO:MoveFirst()
       aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
    ELSE
@@ -304,14 +326,14 @@ STATIC FUNCTION ADO_GOTO( nWA, nRecord )
       oADO:Move( nRecord )
       aWData[ 2 ] := HB_FRECNO() == 0
       aWData[ 3 ] := HB_FEOF()
-   ENDIF
+   endif
   */ 
 /*
-   LOCAL aWData := USRRDD_AREADATA( nWA )
+   local aWData := USRRDD_AREADATA( nWA )
    HB_FSELECT( aWData[ 1 ] )
-   IF nRecord <= 0
+   if nRecord <= 0
       aWData[ 2 ] := aWData[ 3 ] := .T.
-   ELSEIF nRecord == 1
+   ELSEif nRecord == 1
       HB_FGOTOP()
       aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
    ELSE
@@ -320,17 +342,17 @@ STATIC FUNCTION ADO_GOTO( nWA, nRecord )
       HB_FGOTO( nRecord )
       aWData[ 2 ] := HB_FRECNO() == 0
       aWData[ 3 ] := HB_FEOF()
-   ENDIF
+   endif
 
 */
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_GOTOID( nWA, nRecord )
+static function ADO_GOTOID( nWA, nRecord )
 
-RETURN SUCCESS // ADO_GOTO( nWA, nRecord )
+return SUCCESS // ADO_GOTO( nWA, nRecord )
 
-STATIC FUNCTION ADO_GOTOP( nWA )
+static function ADO_GOTOP( nWA )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
@@ -340,9 +362,9 @@ STATIC FUNCTION ADO_GOTOP( nWA )
    USRRDD_AREADATA( nWA )[ 2 ] = .f.
    USRRDD_AREADATA( nWA )[ 3 ] = .f.
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_GOBOTTOM( nWA )
+static function ADO_GOBOTTOM( nWA )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
@@ -350,64 +372,64 @@ STATIC FUNCTION ADO_GOBOTTOM( nWA )
    USRRDD_AREADATA( nWA )[ 2 ] = .f.
    USRRDD_AREADATA( nWA )[ 3 ] = .f.
  
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_SKIPRAW( nWA, nRecords )
+static function ADO_SKIPRAW( nWA, nRecords )
 
-   LOCAL aWData, oADO
+   local aWData, oADO
 
-   IF nRecords != 0
+   if nRecords != 0
       aWData := USRRDD_AREADATA( nWA )
       oADO := aWData[ 1 ]
-      IF aWData[ 3 ]
-         IF nRecords > 0
-            RETURN SUCCESS
-         ENDIF
+      if aWData[ 3 ]
+         if nRecords > 0
+            return SUCCESS
+         endif
          ADO_GOBOTTOM( nWA )
          ++nRecords
-       ENDIF
-       IF nRecords < 0 .AND. oADO:AbsolutePosition <= -nRecords
+       endif
+       if nRecords < 0 .AND. oADO:AbsolutePosition <= -nRecords
           oADO:MoveFirst()
           aWData[ 2 ] := .T.
           aWData[ 3 ] := oADO:EOF
-       ELSEIF nRecords != 0
+       ELSEif nRecords != 0
           oADO:Move( nRecords )
           aWData[ 2 ] := .F.
           aWData[ 3 ] := oADO:EOF
-       ENDIF
-   ENDIF
+       endif
+   endif
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_BOF( nWA, lBof )
+static function ADO_BOF( nWA, lBof )
    
-   LOCAL aWData := USRRDD_AREADATA( nWA )
+   local aWData := USRRDD_AREADATA( nWA )
 
    lBof := aWData[ 2 ]
    
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_EOF( nWA, lEof )
+static function ADO_EOF( nWA, lEof )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
    lEof := ( oADO:AbsolutePosition == -3 ) // lEof := aWData[ 3 ]  
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
+static function ADO_DELETED( nWA, lDeleted )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-	IF oADO:Status == adRecDeleted // To be checked, ACCESS does not uses it
+	if oADO:Status == adRecDeleted // To be checked, ACCESS does not uses it
 	   lDeleted := .T.
 	ELSE
 	   lDeleted := .F.
-	ENDIF
+	endif
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_DELETE( nWA )
+static function ADO_DELETE( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
@@ -415,39 +437,39 @@ STATIC FUNCTION ADO_DELETE( nWA )
    
    ADO_SKIPRAW( nWA, 1 )
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_RECID( nWA, nRecNo )
+static function ADO_RECID( nWA, nRecNo )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
 	 nRecno := If( oADO:AbsolutePosition == -3, oAdo:RecordCount + 1, oAdo:AbsolutePosition )
 	 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_RECCOUNT( nWA, nRecords )
+static function ADO_RECCOUNT( nWA, nRecords )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
    nRecords := oADO:RecordCount
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
+static function ADO_PUTVALUE( nWA, nField, xValue )
 
-   LOCAL aWData := USRRDD_AREADATA( nWA )
-   LOCAL oADO := USRRDD_AREADATA( nWA )[ 1 ]
+   local aWData := USRRDD_AREADATA( nWA )
+   local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-   IF aWData[ 3 ]
+   if aWData[ 3 ]
        xValue := ""
    ELSE
       oADO:Fields( nField - 1 ):Value := xValue
       oADO:Update()			
-   ENDIF
+   endif
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
+static function ADO_APPEND( nWA, lUnLockAll )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
@@ -456,19 +478,19 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 	TRY
 	   oADO:Update() // keep it here, or there is an ADO error
 	CATCH
-	FINALLY   
+	END   
 	
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_FLUSH( nWA )
+static function ADO_FLUSH( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
 	oADO:Update()
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
+static function ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
@@ -481,21 +503,21 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
           endif   
 	endcase   
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_PACK( nWA )
-
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-RETURN SUCCESS
-
-STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
+static function ADO_PACK( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
+static function ADO_RAWLOCK( nWA, nAction, nRecNo )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+	
+return SUCCESS
+
+static function ADO_LOCK( nWA, aLockInfo  )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 	
@@ -503,34 +525,34 @@ STATIC FUNCTION ADO_LOCK( nWA, aLockInfo  )
   aLockInfo[ UR_LI_RECORD ] := RECNO()
   aLockInfo[ UR_LI_RESULT ] := .T.
   
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
+static function ADO_UNLOCK( nWA, xRecID )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_SETFILTER( nWA, aFilterInfo )
+static function ADO_SETFILTER( nWA, aFilterInfo )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
 	oADO:Filter = SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_CLEARFILTER( nWA )
+static function ADO_CLEARFILTER( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
   TRY 
 	   oADO:Filter = ""
 	CATCH
-	FINALLY   
+	END   
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_ZAP( nWA )
+static function ADO_ZAP( nWA )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
@@ -539,9 +561,9 @@ STATIC FUNCTION ADO_ZAP( nWA )
      oADO:Requery()
   endif      
 
-RETURN SUCCESS
+return SUCCESS
 
-STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
+static function ADO_SETLOCATE( nWA, aScopeInfo )
 
    aScopeInfo[ UR_SI_CFOR ] = SQLTranslate( s_cLocateFor )
    
@@ -549,7 +571,7 @@ STATIC FUNCTION ADO_SETLOCATE( nWA, aScopeInfo )
 
 return SUCCESS
 
-STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
+static function ADO_LOCATE( nWA, lContinue )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
@@ -557,16 +579,16 @@ STATIC FUNCTION ADO_LOCATE( nWA, lContinue )
   
 return SUCCESS
 
-STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
+static function ADO_SETREL( nWA, aRelInfo )
 
 	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
 return SUCCESS
 
-FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
-   LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
-   LOCAL aMyFunc[ UR_METHODCOUNT ]
+   local cSuperRDD := NIL     /* NO SUPER RDD */
+   local aMyFunc[ UR_METHODCOUNT ]
 
    aMyFunc[ UR_INIT ]      := ( @ADO_INIT() )
    aMyFunc[ UR_NEW ]       := ( @ADO_NEW() )
@@ -601,16 +623,16 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
    aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
 
-RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
+return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
 
 INIT PROC ADORDD_INIT()
    rddRegister( "ADORDD", RDT_FULL )
-RETURN
+return
 
-STATIC FUNCTION ADO_GETFIELDSIZE( nDBFTypeField, nADOFielSize )
+static function ADO_GETFIELDSIZE( nDBFTypeField, nADOFielSize )
 
-	LOCAL nDBFFieldSize := 0
+	local nDBFFieldSize := 0
 	
    DO CASE
 	
@@ -628,11 +650,11 @@ STATIC FUNCTION ADO_GETFIELDSIZE( nDBFTypeField, nADOFielSize )
 			
    ENDCASE
 	
-RETURN nDBFFieldSize
+return nDBFFieldSize
 
-STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
+static function ADO_GETFIELDTYPE( nADOFielfType )
 
-	LOCAL nDBFTypeField := 0
+	local nDBFTypeField := 0
 
 	DO CASE
 
@@ -696,7 +718,7 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFielfType )
 
    ENDCASE
 
-RETURN nDBFTypeField
+return nDBFTypeField
 
 function HB_AdoSetTable( cTableName )
 
