@@ -313,7 +313,7 @@ HB_EXPORT ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    ERRCODE errCode = SUCCESS;
    USHORT uiIndex;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddIterateWorkAreas(%p)", pCallBack));
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo));
 
    for( uiIndex = 1; uiIndex < s_uiWaMax; uiIndex++ )
    {

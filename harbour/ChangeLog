@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-06 20:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/wacore.c
+  * harbour/source/vm/classes.c
+  * harbour/include/hbapirdd.h
+  * harbour/source/compiler/hbmain.c
+    * updated HB_TRACE messages and some minor cleanups
+
+  * harbour/source/rdd/dbcmd.c
+    ! fixed initialisation of DBRELINFO dbSetRelation() - thanks to Antonio
+      for locating the problem
+
+  * harbour/source/rtl/idle.c
+   * increase timeout in nanosleep() from 1 microsecond to 1 millisecond
+   - removed some wrong comment
+
 2007-05-06 16:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     * changed __cls_IncData() to return index to newly allocated instance

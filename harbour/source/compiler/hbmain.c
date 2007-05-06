@@ -4393,12 +4393,13 @@ static void hb_compCompileEnd( HB_COMP_DECL )
 {
    hb_compRTVariableKill( HB_COMP_PARAM );
    
-   if( HB_COMP_PARAM->pMainFileName && HB_COMP_PARAM->pFileName != HB_COMP_PARAM->pMainFileName )
+   if( HB_COMP_PARAM->pMainFileName )
    {
-      /* currently compiled file was autoopened - close also
-       * the main module
-      */
-      hb_xfree( HB_COMP_PARAM->pMainFileName );
+      if( HB_COMP_PARAM->pFileName != HB_COMP_PARAM->pMainFileName )
+         /* currently compiled file was autoopened - close also
+          * the main module
+          */
+         hb_xfree( HB_COMP_PARAM->pMainFileName );
       HB_COMP_PARAM->pMainFileName = NULL;
    }
    if( HB_COMP_PARAM->pFileName )

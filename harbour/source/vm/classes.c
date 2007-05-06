@@ -1228,7 +1228,7 @@ HB_EXPORT USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
  */
 HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p)", pObject));
+   HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p,%s)", pObject, szName));
 
    if( HB_IS_OBJECT( pObject ) )
    {
