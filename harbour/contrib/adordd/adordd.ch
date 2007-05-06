@@ -115,6 +115,8 @@
 #define adUseClient           3
 #define adUseClientBatch      3
 
+#define adKeyForeign	        2
+
 #command USE <(db)> [VIA <rdd>] [ALIAS <a>] [<nw: NEW>] ;
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] ;
