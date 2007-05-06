@@ -122,7 +122,7 @@ HB_FUNC( HB_RANDOMINT )
 
 HB_FUNC( HB_RANDOMSEED )
 {
-   srand( ISNUM( 1 ) ? ( unsigned ) time( NULL ) : ( unsigned ) hb_parni( 1 ) );
+   srand( ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) time( NULL ) );
    s_fInit = TRUE;
 }
       
