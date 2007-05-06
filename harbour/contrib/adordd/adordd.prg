@@ -579,9 +579,28 @@ static function ADO_LOCATE( nWA, lContinue )
   
 return SUCCESS
 
+static function ADO_CLEARREL( nWA )
+
+   local nKeys := s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Count
+   local cKeyName
+
+   if nKeys > 0 
+      cKeyName = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys( nKeys - 1 ):Name
+      if Upper( cKeyName ) != "PRIMARYKEY"
+         s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Delete( cKeyName )
+      endif   
+   endif   
+
+return SUCCESS
+
 static function ADO_SETREL( nWA, aRelInfo )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local cParent := Alias( aRelInfo[ UR_RI_PARENT ] )
+  local cChild := Alias( aRelInfo[ UR_RI_CHILD ] )
+  local cKeyName := cParent + "_" + cChild
+
+	s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Append( cKeyName, adKeyForeign,;
+	                           aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )  
 
 return SUCCESS
 
@@ -621,6 +640,7 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 	 aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
    aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
    aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
+   aMyFunc[ UR_CLEARREL ]  := ( @ADO_CLEARREL() )
    aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
 
 return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
