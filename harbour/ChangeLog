@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-06 16:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    * changed __cls_IncData() to return index to newly allocated instance
+      item and __cls_DecData() to return number of local (not inherited)
+      instance items
+
 2007-05-06 11:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/hbrandom.c
      ! HB_RANDOMSEED() fixed to correctly handle passed parameter.

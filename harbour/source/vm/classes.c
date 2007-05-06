@@ -3235,12 +3235,12 @@ HB_FUNC( __CLS_DECDATA )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
 
-   if( uiClass && uiClass <= s_uiClasses && s_pClasses[ uiClass ].uiDatas )
+   if( uiClass && uiClass <= s_uiClasses &&
+       s_pClasses[ uiClass ].uiDatas > s_pClasses[ uiClass ].uiDataFirst )
    {
-      if( s_pClasses[ uiClass ].fLocked )
-         hb_retni( s_pClasses[ uiClass ].uiDatas );
-      else
-         hb_retni( --s_pClasses[ uiClass ].uiDatas );
+      if( !s_pClasses[ uiClass ].fLocked )
+         s_pClasses[ uiClass ].uiDatas--;
+      hb_retni( s_pClasses[ uiClass ].uiDatas - s_pClasses[ uiClass ].uiDataFirst );
    }
    else
       hb_retni( 0 );
@@ -3248,7 +3248,7 @@ HB_FUNC( __CLS_DECDATA )
 
 /*
  * <nSeq> = __cls_IncData( <hClass> )
- * Increase number of datas and return new value
+ * Increase number of datas and return offset to new value
  */
 HB_FUNC( __CLS_INCDATA )
 {
@@ -3256,10 +3256,9 @@ HB_FUNC( __CLS_INCDATA )
 
    if( uiClass && uiClass <= s_uiClasses )
    {
-      if( s_pClasses[ uiClass ].fLocked )
-         hb_retni( s_pClasses[ uiClass ].uiDatas );
-      else
-         hb_retni( ++s_pClasses[ uiClass ].uiDatas );
+      if( !s_pClasses[ uiClass ].fLocked )
+         s_pClasses[ uiClass ].uiDatas++;
+      hb_retni( s_pClasses[ uiClass ].uiDatas - s_pClasses[ uiClass ].uiDataFirst );
    }
    else
       hb_retni( 0 );
