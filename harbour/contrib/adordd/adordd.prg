@@ -593,6 +593,22 @@ static function ADO_CLEARREL( nWA )
 
 return SUCCESS
 
+static function ADO_RELAREA( nWA, nRelNo, nRelArea )
+
+   if nRelNo <= s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Count() 
+      nRelArea = Select( s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys( nRelNo - 1 ):RelatedTable )
+   endif  
+
+return SUCCESS
+
+static function ADO_RELTEXT( nWA, nRelNo, cExpr )
+
+   if nRelNo <= s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Count() 
+      cExpr = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
+   endif  
+
+return SUCCESS
+
 static function ADO_SETREL( nWA, aRelInfo )
 
   local cParent := Alias( aRelInfo[ UR_RI_PARENT ] )
@@ -678,6 +694,8 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
    aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
    aMyFunc[ UR_CLEARREL ]  := ( @ADO_CLEARREL() )
+   aMyFunc[ UR_RELAREA ]   := ( @ADO_RELAREA() )
+   aMyFunc[ UR_RELTEXT ]   := ( @ADO_RELTEXT() )
    aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
    aMyFunc[ UR_ORDCREATE ] := ( @ADO_ORDCREATE() )
    aMyFunc[ UR_ORDLSTADD ] := ( @ADO_ORDLSTADD() )
