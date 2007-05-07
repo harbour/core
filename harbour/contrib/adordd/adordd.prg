@@ -686,17 +686,17 @@ INIT PROC ADORDD_INIT()
    rddRegister( "ADORDD", RDT_FULL )
 return
 
-static function ADO_GETFIELDSIZE( nDBFTypeField, nADOFielSize )
+static function ADO_GETFIELDSIZE( nDBFTypeField, nADOFieldSize )
 
 	local nDBFFieldSize := 0
 	
    DO CASE
 	
 			CASE nDBFTypeField == HB_FT_STRING
-           nDBFFieldSize := nADOFielSize
+           nDBFFieldSize := nADOFieldSize
 
 			CASE nDBFTypeField == HB_FT_INTEGER
-           nDBFFieldSize := nADOFielSize
+           nDBFFieldSize := nADOFieldSize
 				
 			CASE nDBFTypeField == HB_FT_DATE
            nDBFFieldSize := 8
