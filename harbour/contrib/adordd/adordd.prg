@@ -210,30 +210,40 @@ static function ADO_OPEN( nWA, aOpenInfo )
    s_aConnections[ nWA ] = TOleAuto():New( "ADODB.Connection" )
    
    do case
-       case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
-            s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
+      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
+           if Empty( s_cPassword )
+              s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
+           else
+              s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Jet OLEDB:Database Password=" + AllTrim( s_cPassword ) )
+           endif
+
+      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".xls"
+           s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
+
+      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 3 ) ) == ".db"
+           s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Paradox 3.x';" )
                
-       case s_cEngine == "MYSQL"
-            s_aConnections[ nWA ]:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
-                                        "server=" + s_cServer + ;
+      case s_cEngine == "MYSQL"
+           s_aConnections[ nWA ]:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
+                                       "server=" + s_cServer + ;
                                         ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
                                         ";uid=" + s_cUserName + ;
                                         ";pwd=" + s_cPassword )
                                 
-       case s_cEngine == "SQL" 
-            s_aConnections[ nWA ]:Open( "Provider=SQLOLEDB;" + ; 
-                                        "server=" + s_cServer + ; 
-                                        ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
-                                        ";uid=" + s_cUserName + ; 
-                                        ";pwd=" + s_cPassword )
+      case s_cEngine == "SQL" 
+           s_aConnections[ nWA ]:Open( "Provider=SQLOLEDB;" + ; 
+                                       "server=" + s_cServer + ; 
+                                       ";database=" + aOpenInfo[ UR_OI_NAME ] + ; 
+                                       ";uid=" + s_cUserName + ; 
+                                       ";pwd=" + s_cPassword )
                                 
-       case s_cEngine == "ORACLE"
-            s_aConnections[ nWA ]:Open( "Provider=MSDAORA.1;" + ;
-                                        "Persist Security Info=False" + ;
-                                        If( s_cServer == NIL .OR. s_cServer == "",; 
-                                            "", ";Data source=" + s_cServer ) + ;
-                                        ";User ID=" + s_cUserName + ;
-                                        + ";Password=" + s_cPassword )                                                                
+      case s_cEngine == "ORACLE"
+           s_aConnections[ nWA ]:Open( "Provider=MSDAORA.1;" + ;
+                                       "Persist Security Info=False" + ;
+                                       If( s_cServer == NIL .OR. s_cServer == "",; 
+                                           "", ";Data source=" + s_cServer ) + ;
+                                       ";User ID=" + s_cUserName + ;
+                                       ";Password=" + s_cPassword )                                                                
        
    endcase                               
 
