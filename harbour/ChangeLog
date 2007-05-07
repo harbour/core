@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-07 11:28 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * INDEX ON ... implementation
+     * OrdListClear() and OrdListAdd() implementation
+
 2007-05-07 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * source/rtl/mlctopos.c
     ! Fix bug#1635288 - Make the function MLCTOPOS() more Clipper
