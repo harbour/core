@@ -600,7 +600,44 @@ static function ADO_SETREL( nWA, aRelInfo )
   local cKeyName := cParent + "_" + cChild
 
 	s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Append( cKeyName, adKeyForeign,;
-	                           aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )  
+	                           aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
+
+return SUCCESS
+
+static function ADO_ORDLSTADD( nWA, aOrderInfo )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+	
+  TRY 
+	   oADO:Index = aOrderInfo[ UR_ORI_BAG ]
+	CATCH
+	END   
+	
+return SUCCESS
+
+static function ADO_ORDLSTCLEAR( nWA )
+
+	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+
+  TRY 
+	   oADO:Index = ""
+	CATCH
+	END   
+	
+return SUCCESS
+
+static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
+
+   local oIndex
+   
+   if s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes( aOrderCreateInfo[ UR_ORCR_BAGNAME ] ) == nil
+      oIndex = TOleAuto():New( "ADOX.Index" )
+      oIndex:Name = aOrderCreateInfo[ UR_ORCR_BAGNAME ]
+      oIndex:PrimaryKey = .F.
+      oIndex:Unique = aOrderCreateInfo[ UR_ORCR_UNIQUE ]
+      oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )
+      s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Append( oIndex )
+   endif   
 
 return SUCCESS
 
@@ -642,6 +679,9 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
    aMyFunc[ UR_CLEARREL ]  := ( @ADO_CLEARREL() )
    aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
+   aMyFunc[ UR_ORDCREATE ] := ( @ADO_ORDCREATE() )
+   aMyFunc[ UR_ORDLSTADD ] := ( @ADO_ORDLSTADD() )
+   aMyFunc[ UR_ORDLSTCLEAR ] := ( @ADO_ORDLSTCLEAR() )
 
 return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
                                                     cSuperRDD, aMyFunc )
