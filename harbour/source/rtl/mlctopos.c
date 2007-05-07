@@ -61,9 +61,9 @@ HB_FUNC( MLCTOPOS )
    ULONG  ulTabLength  = ISNUM( 5 ) ? hb_parni( 5 ) : 4;
    ULONG  ulLastSpace  = 0;
    ULONG  ulCurLength  = 0;
-   BOOL   bWordWrap    = ISLOG( 5 ) ? hb_parl( 5 ) : TRUE;
+   BOOL   bWordWrap    = ISLOG( 6 ) ? hb_parl( 6 ) : TRUE;
    ULONG  ulLen        = hb_parclen( 1 );
-   ULONG  ulLines      = 0;
+   ULONG  ulLines      = 1;
    ULONG  ulPos;
    ULONG  ulBegOfLine  = 0;
    ULONG  ulLastLen    = 0;
@@ -124,15 +124,21 @@ HB_FUNC( MLCTOPOS )
 
    if( ulCurLength > 0 )
    {
-      ulLines++;
       ulBegOfLine = ulPos - ulCurLength;
       ulLastLen   = ulCurLength ;
    }
 
    if( ulLine == ulLines )
    {
-      ulLastLen--;   /* Column is zero based */
-      hb_retnl( ulBegOfLine + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen ) );
+      if( ulLastLen )
+         ulLastLen--;   /* Column is zero based */
+      ulPos = ulBegOfLine + 1 + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen );
+
+      /* When wordwrap is active, skip the first space if not on the first line */
+      if( bWordWrap && !ulCol && ulLine > 1 )
+      if( pszString[ ulPos - 1 ] == ' ' || pszString[ ulPos - 1 ] == HB_CHAR_HT )
+         ulPos++;
+      hb_retnl( ulPos );
    }
    else
       hb_retnl( ulLen );

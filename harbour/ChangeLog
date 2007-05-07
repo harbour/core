@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-07 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/mlctopos.c
+    ! Fix bug#1635288 - Make the function MLCTOPOS() more Clipper
+      compatible. Also, the WordWrap value was taken from the wrong
+      parameter.
+
 2007-05-07 02:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbcmd.c
     * initialize lpaParent in DBRELINFO structure to pArea - please
