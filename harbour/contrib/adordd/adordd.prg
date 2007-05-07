@@ -308,49 +308,17 @@ static function ADO_GETVALUE( nWA, nField, xValue )
 
 return SUCCESS
 
-static function ADO_GOTO( nWA, nRecord )
-
-/*
-   local aWData := USRRDD_AREADATA( nWA )
-   local oADO := aWData[ 1 ]
-   
-   if nRecord <= 0
-      aWData[ 2 ] := aWData[ 3 ] := .T.
-   ELSEif nRecord == 1
-      oADO:MoveFirst()
-      aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
-   ELSE
-      //HB_FSKIP(0) // Clear the EOF flag inside HB_F* engin
-                  //   - it's not done automatically in HB_FGOBOTTOM() :-( 
-      //HB_FGOTO( nRecord )
-      oADO:Move( nRecord )
-      aWData[ 2 ] := HB_FRECNO() == 0
-      aWData[ 3 ] := HB_FEOF()
-   endif
-  */ 
-/*
-   local aWData := USRRDD_AREADATA( nWA )
-   HB_FSELECT( aWData[ 1 ] )
-   if nRecord <= 0
-      aWData[ 2 ] := aWData[ 3 ] := .T.
-   ELSEif nRecord == 1
-      HB_FGOTOP()
-      aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
-   ELSE
-      HB_FSKIP(0) // Clear the EOF flag inside HB_F* engin
-                  //   - it's not done automatically in HB_FGOBOTTOM() :-( 
-      HB_FGOTO( nRecord )
-      aWData[ 2 ] := HB_FRECNO() == 0
-      aWData[ 3 ] := HB_FEOF()
-   endif
-
-*/
-
-return SUCCESS
-
 static function ADO_GOTOID( nWA, nRecord )
 
-return SUCCESS // ADO_GOTO( nWA, nRecord )
+   local oADO := USRRDD_AREADATA( nWA )[ 1 ], nRecNo
+
+   if oADO:RecordCount() > 0
+      oADO:MoveFirst()
+      oADO:Move( nRecord - 1, 0 )
+    endif
+    ADO_RECID( nWA, @nRecNo )
+
+RETURN If( nRecord == nRecNo, SUCCESS, FAILURE )
 
 static function ADO_GOTOP( nWA )
 
@@ -672,7 +640,7 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_EOF  ]      := ( @ADO_EOF() )
    aMyFunc[ UR_DELETED ]   := ( @ADO_DELETED() )
    aMyFunc[ UR_SKIPRAW ]   := ( @ADO_SKIPRAW() )
-   aMyFunc[ UR_GOTO ]      := ( @ADO_GOTO() )
+   aMyFunc[ UR_GOTO ]      := ( @ADO_GOTOID() )
    aMyFunc[ UR_GOTOID ]    := ( @ADO_GOTOID() )
    aMyFunc[ UR_GOTOP ]     := ( @ADO_GOTOP() )
    aMyFunc[ UR_GOBOTTOM ]  := ( @ADO_GOBOTTOM() )
