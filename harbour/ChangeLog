@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-07 15:46 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
+   * contrib/adordd/adordd.prg
+    * ADO_GOTOID() borrowed from xHarbour with modifications
+
 2007-05-07 14:06 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
     * DbRSelect() and DbRelation() implemented
