@@ -2154,7 +2154,7 @@ HB_FUNC( DBSETRELATION )
       dbRelations.isScoped = hb_parl( 4 );
       dbRelations.isOptimized = FALSE;
       dbRelations.lpaChild = pChildArea;
-      dbRelations.lpaParent = NULL;
+      dbRelations.lpaParent = pArea;
       dbRelations.lpdbriNext = NULL;
 
       SELF_SETREL( pArea, &dbRelations );
