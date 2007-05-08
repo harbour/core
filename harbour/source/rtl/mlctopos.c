@@ -50,6 +50,12 @@
  *
  */
 
+/*
+   TOFIX: The function is still not compatible, TAB's in the ulLine are not
+          expanded, and there are other problems. HBTest show some of the
+          differences. 2007-05-08 [ckedem]
+ */
+
 #include "hbapi.h"
 
 HB_FUNC( MLCTOPOS )
@@ -66,7 +72,7 @@ HB_FUNC( MLCTOPOS )
    ULONG  ulLines      = 1;
    ULONG  ulPos;
    ULONG  ulBegOfLine  = 0;
-   ULONG  ulLastLen    = 0;
+/* ULONG  ulLastLen    = 0; */
 
    if( ulLineLength < 4 || ulLineLength > 254 )
       ulLineLength = 79;
@@ -85,7 +91,7 @@ HB_FUNC( MLCTOPOS )
 
          case HB_CHAR_LF:
             ulBegOfLine = ulPos - ulCurLength;
-            ulLastLen   = ulCurLength;
+/*          ulLastLen   = ulCurLength; */
             ulCurLength = 0;
             ulLastSpace = 0;
             ulLines++;
@@ -118,26 +124,33 @@ HB_FUNC( MLCTOPOS )
          ulLines++;
          ulLastSpace = 0;
          ulBegOfLine = ulPos - ulCurLength;
-         ulLastLen   = ulCurLength ;
+/*       ulLastLen   = ulCurLength ; */
       }
    }
 
    if( ulCurLength > 0 )
    {
       ulBegOfLine = ulPos - ulCurLength;
-      ulLastLen   = ulCurLength ;
+/*    ulLastLen   = ulCurLength ; */
    }
+
+   ulLen++;
 
    if( ulLine == ulLines )
    {
+#if 0
       if( ulLastLen )
          ulLastLen--;   /* Column is zero based */
       ulPos = ulBegOfLine + 1 + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen );
+#endif
+      ulPos = ulBegOfLine + 1 + ulCol;
 
       /* When wordwrap is active, skip the first space if not on the first line */
       if( bWordWrap && !ulCol && ulLine > 1 )
       if( pszString[ ulPos - 1 ] == ' ' || pszString[ ulPos - 1 ] == HB_CHAR_HT )
          ulPos++;
+      if( ulPos > ulLen )
+         ulPos = ulLen;
       hb_retnl( ulPos );
    }
    else

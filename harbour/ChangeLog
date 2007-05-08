@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-08 16:06 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/mlctopos.c
+    ! Make the function MLCTOPOS() more compatible.
+      TOFIX note added about existing problems.
+
+  * utils/hbtest/rt_misc.prg
+    + Add some tests for MLCTOPOS()
+
 2007-05-07 19:42 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Added some connection strings, borrowed from xharbour
