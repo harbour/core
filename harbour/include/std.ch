@@ -667,6 +667,7 @@
    #command SET DBFLOCKSCHEME TO          => Set( _SET_DBFLOCKSCHEME, 0 )
    #command SET HARDCOMMIT <x:ON,OFF,&>   => Set( _SET_HARDCOMMIT, <(x)> )
    #command SET HARDCOMMIT (<x>)          => Set( _SET_HARDCOMMIT, <x> )
+   #command SET EOL <x>                   => Set( _SET_EOL, <x> )                         
 #endif
 
 #endif /* HB_STD_CH_ */

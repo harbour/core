@@ -67,7 +67,7 @@
    #xtranslate hb_gtInfo([<xx,...>])   => gtInfo([<xx>])
    #xtranslate hb_gtVersion([<xx>])    => hb_gt_Version([<xx>])
 
-   #xtranslate isregex([<xx>])         => isregexstring([<xx>])
+   #xtranslate hb_isregex([<xx>])      => hb_isregexstring([<xx>])
 
 #else
 
@@ -82,7 +82,7 @@
    #xtranslate gfxPrimitive([<xx,...>])=> hb_gfxPrimitive([<xx>])
    #xtranslate gfxText([<xx,...>])     => hb_gfxText([<xx>])
 
-   #xtranslate isregexstring([<xx>])   => isregex([<xx>])
+   #xtranslate hb_isregexstring([<xx>])   => hb_isregex([<xx>])
 
    /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE
@@ -115,6 +115,8 @@
 
    #xtranslate NUMTOHEX(<n>)            => NTOC(<n>, 16)
    #xtranslate HEXTONUM(<c>)            => CTON(<c>, 16)
+
+   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
 
 #endif
 

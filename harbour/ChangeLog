@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-09 10:10 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/config/w32/mingw32.cf
+    * fixed typo
+  * harbour/include/Makefile
+    * removed reference to deleted hbrddwrk.h
+  * harbour/include/std.ch
+    * added SET EOL <x> clause
+  * harbour/include/hbcompat.ch
+    * fixed typos and added TEXT INTO
+  * harbour/contrib/gd/Makefile
+    * fixed install of includes
+  * harbour/contrib/gd/gdwrp.c
+    * fixed warnings
+
 2007-05-08 16:06 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * source/rtl/mlctopos.c
     ! Make the function MLCTOPOS() more compatible.

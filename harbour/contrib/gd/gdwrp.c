@@ -175,26 +175,9 @@ static void SaveImageToFile( char *szFile, void *iptr, int sz )
 
 /* ---------------------------------------------------------------------------*/
 
-static void AddImageToFile( char *szFile, void *iptr, int sz )
-{
-   FHANDLE fhandle;
-
-   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
-   {
-      /* move to end of file */
-      hb_fsSeek(fhandle, 0, FS_END);
-
-      /* Write Image */
-      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
-
-      /* Close file */
-      hb_fsClose( fhandle );
-   }
-}
-
 static void GDImageCreateFrom( int nType )
 {
-   gdImagePtr im;
+   gdImagePtr im = NULL;
    char *szFile;
    int sz;
    void *iptr;
@@ -294,9 +277,9 @@ static void GDImageSaveTo( int nType )
       gdImagePtr im;
       char *szFile;
       int sz;
-      void *iptr;
+      void *iptr = NULL;
       FHANDLE fhandle;
-      int level, fg;
+      int level = 0, fg = 0;
 
       /* Retrieve image pointer */
        im = (gdImagePtr)hb_parptr(1);
@@ -3830,6 +3813,24 @@ HB_FUNC( GDIMAGEINTERLACE ) // void gdImageInterlace(gdImagePtr im, int interlac
 /* ---------------------------------------------------------------------------*/
 
 #if ( GD_VERS >= 2033 )
+
+static void AddImageToFile( char *szFile, void *iptr, int sz )
+{
+   FHANDLE fhandle;
+
+   if ( ( fhandle = hb_fsOpen( ( BYTE * ) szFile, FO_READWRITE ) ) != FS_ERROR )
+   {
+      /* move to end of file */
+      hb_fsSeek(fhandle, 0, FS_END);
+
+      /* Write Image */
+      SaveImageToHandle( fhandle, ( BYTE *) iptr, (ULONG) sz );
+
+      /* Close file */
+      hb_fsClose( fhandle );
+   }
+}
+
 //BGD_DECLARE(void *) gdImageGifAnimBeginPtr(gdImagePtr im, int *size, int GlobalCM, int Loops);
 // implementation: (void *) gdImageGifAnimBegin( gdImagePtr im, cFile | nHandle, int GlobalCM, int Loops);
 HB_FUNC( GDIMAGEGIFANIMBEGIN )
@@ -4007,7 +4008,6 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       }
    }
 }
-
 
 /* ---------------------------------------------------------------------------*/
 #endif // ( GD_VERS >= 2033 )
