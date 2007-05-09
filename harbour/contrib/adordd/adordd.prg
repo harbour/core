@@ -101,7 +101,7 @@ static function ADO_NEW( pWA )
    local aWData := { -1, .F., .F. } 
 
    USRRDD_AREADATA( pWA, aWData )
-	
+  
 return SUCCESS
 
 static function ADO_CREATE( nWA, aOpenInfo )
@@ -139,7 +139,7 @@ static function ADO_CREATE( nWA, aOpenInfo )
    oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + s_aSQLStruct[ nWA ] + ")" )
    oConnection:Close()
    
-	/*
+  /*
    local oError := ErrorNew()
 
    oError:GenCode     := EG_CREATE
@@ -278,15 +278,15 @@ static function ADO_OPEN( nWA, aOpenInfo )
    nTotalFields := oADO:Fields:Count
     
    UR_SUPER_SETFIELDEXTENT( nWA, oADO:Fields:Count )   
-    	 
+       
    FOR n = 1 TO nTotalFields
-   		aField := ARRAY( UR_FI_SIZE )
-   		aField[ UR_FI_NAME ]    := oADO:Fields( n - 1 ):Name
-   		aField[ UR_FI_TYPE ]    := ADO_GETFIELDTYPE( oADO:Fields( n - 1 ):Type )
-   		aField[ UR_FI_TYPEEXT ] := 0
-   		aField[ UR_FI_LEN ]     := ADO_GETFIELDSIZE( aField[ UR_FI_TYPE ], oADO:Fields( n - 1 ):DefinedSize )
-   		aField[ UR_FI_DEC ]     := 0
-   		UR_SUPER_ADDFIELD( nWA, aField )
+      aField := ARRAY( UR_FI_SIZE )
+      aField[ UR_FI_NAME ]    := oADO:Fields( n - 1 ):Name
+      aField[ UR_FI_TYPE ]    := ADO_GETFIELDTYPE( oADO:Fields( n - 1 ):Type )
+      aField[ UR_FI_TYPEEXT ] := 0
+      aField[ UR_FI_LEN ]     := ADO_GETFIELDSIZE( aField[ UR_FI_TYPE ], oADO:Fields( n - 1 ):DefinedSize )
+      aField[ UR_FI_DEC ]     := 0
+      UR_SUPER_ADDFIELD( nWA, aField )
     NEXT
 
    nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
@@ -294,13 +294,13 @@ static function ADO_OPEN( nWA, aOpenInfo )
    if nResult == SUCCESS
       ADO_GOTOP( nWA )
    endif
-	
+  
 return nResult
 
 static function ADO_CLOSE( nWA )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-			
+      
    // oADO:Close()   
    
 return UR_SUPER_CLOSE( nWA )
@@ -397,19 +397,23 @@ return SUCCESS
 
 static function ADO_DELETED( nWA, lDeleted )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
-	if oADO:Status == adRecDeleted // To be checked, ACCESS does not uses it
-	   lDeleted := .T.
-	ELSE
-	   lDeleted := .F.
-	endif
+  TRY   
+     if oADO:Status == adRecDeleted
+        lDeleted := .T.
+     else
+        lDeleted := .F.
+     endif
+  CATCH
+     lDeleted := .f.
+  END   
 
 return SUCCESS
 
 static function ADO_DELETE( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
    oADO:Delete()
    
@@ -420,9 +424,9 @@ return SUCCESS
 static function ADO_RECID( nWA, nRecNo )
 
    local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-	 nRecno := If( oADO:AbsolutePosition == -3, oAdo:RecordCount + 1, oAdo:AbsolutePosition )
-	 
+  
+   nRecno := If( oADO:AbsolutePosition == -3, oAdo:RecordCount + 1, oAdo:AbsolutePosition )
+   
 return SUCCESS
 
 static function ADO_RECCOUNT( nWA, nRecords )
@@ -442,64 +446,64 @@ static function ADO_PUTVALUE( nWA, nField, xValue )
        xValue := ""
    ELSE
       oADO:Fields( nField - 1 ):Value := xValue
-      oADO:Update()			
+      oADO:Update()     
    endif
 
 return SUCCESS
 
 static function ADO_APPEND( nWA, lUnLockAll )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-	oADO:AddNew()
-	
-	TRY
-	   oADO:Update() // keep it here, or there is an ADO error
-	CATCH
-	END   
-	
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
+  oADO:AddNew()
+  
+  TRY
+     oADO:Update() // keep it here, or there is an ADO error
+  CATCH
+  END   
+  
 return SUCCESS
 
 static function ADO_FLUSH( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-	oADO:Update()
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
+  oADO:Update()
 
 return SUCCESS
 
 static function ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-	do case
-	   case nIndex == UR_ORI_TAG
-	        if aOrderInfo[ UR_ORI_TAG ] < s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Count
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
+  do case
+     case nIndex == UR_ORI_TAG
+          if aOrderInfo[ UR_ORI_TAG ] < s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes:Count
              aOrderInfo[ UR_ORI_RESULT ] = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
           else   
              aOrderInfo[ UR_ORI_RESULT ] = ""
           endif   
-	endcase   
+  endcase   
 
 return SUCCESS
 
 static function ADO_PACK( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
 return SUCCESS
 
 static function ADO_RAWLOCK( nWA, nAction, nRecNo )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
 return SUCCESS
 
 static function ADO_LOCK( nWA, aLockInfo  )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
-	aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
+  aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
   aLockInfo[ UR_LI_RECORD ] := RECNO()
   aLockInfo[ UR_LI_RESULT ] := .T.
   
@@ -507,32 +511,32 @@ return SUCCESS
 
 static function ADO_UNLOCK( nWA, xRecID )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
 return SUCCESS
 
 static function ADO_SETFILTER( nWA, aFilterInfo )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
-	oADO:Filter = SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
+  oADO:Filter = SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
 return SUCCESS
 
 static function ADO_CLEARFILTER( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
   TRY 
-	   oADO:Filter = ""
-	CATCH
-	END   
+     oADO:Filter = ""
+  CATCH
+  END   
 
 return SUCCESS
 
 static function ADO_ZAP( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
      
   if s_aConnections[ nWA ] != NIL .and. s_aTableNames[ nWA ] != nil
      s_aConnections[ nWA ]:Execute( "DELETE * FROM " + s_aTableNames[ nWA ] )
@@ -551,7 +555,7 @@ return SUCCESS
 
 static function ADO_LOCATE( nWA, lContinue )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
   oADO:Find( s_aScopeInfo[ nWA ][ UR_SI_CFOR ], If( lContinue, 1, 0 ) )
   
@@ -593,31 +597,31 @@ static function ADO_SETREL( nWA, aRelInfo )
   local cChild := Alias( aRelInfo[ UR_RI_CHILD ] )
   local cKeyName := cParent + "_" + cChild
 
-	s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Append( cKeyName, adKeyForeign,;
-	                           aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
+  s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Append( cKeyName, adKeyForeign,;
+                             aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
 
 return SUCCESS
 
 static function ADO_ORDLSTADD( nWA, aOrderInfo )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
-	
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  
   TRY 
-	   oADO:Index = aOrderInfo[ UR_ORI_BAG ]
-	CATCH
-	END   
-	
+     oADO:Index = aOrderInfo[ UR_ORI_BAG ]
+  CATCH
+  END   
+  
 return SUCCESS
 
 static function ADO_ORDLSTCLEAR( nWA )
 
-	local oADO := USRRDD_AREADATA( nWA )[ 1 ]
+  local oADO := USRRDD_AREADATA( nWA )[ 1 ]
 
   TRY 
-	   oADO:Index = ""
-	CATCH
-	END   
-	
+     oADO:Index = ""
+  CATCH
+  END   
+  
 return SUCCESS
 
 static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
@@ -658,19 +662,19 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_RECCOUNT ]  := ( @ADO_RECCOUNT() )
    aMyFunc[ UR_GETVALUE ]  := ( @ADO_GETVALUE() )
    aMyFunc[ UR_PUTVALUE ]  := ( @ADO_PUTVALUE() )
-   aMyFunc[ UR_DELETE ]  	 := ( @ADO_DELETE() )
+   aMyFunc[ UR_DELETE ]    := ( @ADO_DELETE() )
    aMyFunc[ UR_APPEND ]    := ( @ADO_APPEND() )
-	 aMyFunc[ UR_FLUSH ]     := ( @ADO_FLUSH() )
-	 aMyFunc[ UR_ORDINFO ]   := ( @ADO_ORDINFO() )
-	 aMyFunc[ UR_PACK ]      := ( @ADO_PACK() )
-	 aMyFunc[ UR_RAWLOCK ]   := ( @ADO_RAWLOCK() )
-	 aMyFunc[ UR_LOCK ]      := ( @ADO_LOCK() )
-	 aMyFunc[ UR_UNLOCK ]    := ( @ADO_UNLOCK() )
-	 aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
-	 aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
-	 aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
+   aMyFunc[ UR_FLUSH ]     := ( @ADO_FLUSH() )
+   aMyFunc[ UR_ORDINFO ]   := ( @ADO_ORDINFO() )
+   aMyFunc[ UR_PACK ]      := ( @ADO_PACK() )
+   aMyFunc[ UR_RAWLOCK ]   := ( @ADO_RAWLOCK() )
+   aMyFunc[ UR_LOCK ]      := ( @ADO_LOCK() )
+   aMyFunc[ UR_UNLOCK ]    := ( @ADO_UNLOCK() )
+   aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
+   aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
+   aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
    aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
-   aMyFunc[ UR_LOCATE ]  	 := ( @ADO_LOCATE() )
+   aMyFunc[ UR_LOCATE ]    := ( @ADO_LOCATE() )
    aMyFunc[ UR_CLEARREL ]  := ( @ADO_CLEARREL() )
    aMyFunc[ UR_RELAREA ]   := ( @ADO_RELAREA() )
    aMyFunc[ UR_RELTEXT ]   := ( @ADO_RELTEXT() )
@@ -688,89 +692,89 @@ return
 
 static function ADO_GETFIELDSIZE( nDBFTypeField, nADOFieldSize )
 
-	local nDBFFieldSize := 0
-	
+  local nDBFFieldSize := 0
+  
    DO CASE
-	
-			CASE nDBFTypeField == HB_FT_STRING
+  
+      CASE nDBFTypeField == HB_FT_STRING
            nDBFFieldSize := nADOFieldSize
 
-			CASE nDBFTypeField == HB_FT_INTEGER
+      CASE nDBFTypeField == HB_FT_INTEGER
            nDBFFieldSize := nADOFieldSize
-				
-			CASE nDBFTypeField == HB_FT_DATE
+        
+      CASE nDBFTypeField == HB_FT_DATE
            nDBFFieldSize := 8
-			
-			CASE nDBFTypeField == HB_FT_LOGICAL
+      
+      CASE nDBFTypeField == HB_FT_LOGICAL
            nDBFFieldSize := 1
-			
+      
    ENDCASE
-	
+  
 return nDBFFieldSize
 
 static function ADO_GETFIELDTYPE( nADOFielfType )
 
-	local nDBFTypeField := 0
+  local nDBFTypeField := 0
 
-	DO CASE
+  DO CASE
 
-		CASE nADOFielfType == adEmpty						// 0
-		CASE nADOFielfType == adTinyInt 					// 16
-		CASE nADOFielfType == adSmallInt 					// 2
-		CASE nADOFielfType == adInteger 					// 3
+    CASE nADOFielfType == adEmpty           // 0
+    CASE nADOFielfType == adTinyInt           // 16
+    CASE nADOFielfType == adSmallInt          // 2
+    CASE nADOFielfType == adInteger           // 3
          nDBFTypeField := HB_FT_INTEGER
-		
-		CASE nADOFielfType == adBigInt 						// 20
-		CASE nADOFielfType == adUnsignedTinyInt 	    // 17
-		CASE nADOFielfType == adUnsignedSmallInt 	// 18
-		CASE nADOFielfType == adUnsignedInt 			// 19
-		CASE nADOFielfType == adUnsignedBigInt 		// 21
-		CASE nADOFielfType == adSingle 						// 4
-		CASE nADOFielfType == adDouble 						// 5
-		CASE nADOFielfType == adCurrency 					// 6
-		CASE nADOFielfType == adDecimal 					// 14
-		CASE nADOFielfType == adNumeric 					// 131
-		CASE nADOFielfType == adBoolean 					// 11
+    
+    CASE nADOFielfType == adBigInt            // 20
+    CASE nADOFielfType == adUnsignedTinyInt       // 17
+    CASE nADOFielfType == adUnsignedSmallInt  // 18
+    CASE nADOFielfType == adUnsignedInt       // 19
+    CASE nADOFielfType == adUnsignedBigInt    // 21
+    CASE nADOFielfType == adSingle            // 4
+    CASE nADOFielfType == adDouble            // 5
+    CASE nADOFielfType == adCurrency          // 6
+    CASE nADOFielfType == adDecimal           // 14
+    CASE nADOFielfType == adNumeric           // 131
+    CASE nADOFielfType == adBoolean           // 11
          nDBFTypeField := HB_FT_LOGICAL
-		
-		CASE nADOFielfType == adError 						// 10
-		CASE nADOFielfType == adUserDefined 			    // 132
-		CASE nADOFielfType == adVariant 					// 12
-		CASE nADOFielfType == adIDispatch 				    // 9
-		CASE nADOFielfType == adIUnknown 				// 13
-		CASE nADOFielfType == adGUID 						// 72
-		CASE nADOFielfType == adDate 						// 7
+    
+    CASE nADOFielfType == adError             // 10
+    CASE nADOFielfType == adUserDefined           // 132
+    CASE nADOFielfType == adVariant           // 12
+    CASE nADOFielfType == adIDispatch             // 9
+    CASE nADOFielfType == adIUnknown        // 13
+    CASE nADOFielfType == adGUID            // 72
+    CASE nADOFielfType == adDate            // 7
          nDBFTypeField := HB_FT_DATE
-		
-		CASE nADOFielfType == adDBDate 					// 133
-		CASE nADOFielfType == adDBTime 					// 134
-		CASE nADOFielfType == adDBTimeStamp 			// 135
-		CASE nADOFielfType == adBSTR 						// 8
-		CASE nADOFielfType == adChar 						// 129
-	 	     // nDBFTypeField := HB_FT_STRING
-					
-		CASE nADOFielfType == adVarChar 					// 200
-		     // nDBFTypeField := HB_FT_STRING
+    
+    CASE nADOFielfType == adDBDate          // 133
+    CASE nADOFielfType == adDBTime          // 134
+    CASE nADOFielfType == adDBTimeStamp       // 135
+    CASE nADOFielfType == adBSTR            // 8
+    CASE nADOFielfType == adChar            // 129
+         // nDBFTypeField := HB_FT_STRING
+          
+    CASE nADOFielfType == adVarChar           // 200
+         // nDBFTypeField := HB_FT_STRING
 
-		CASE nADOFielfType == adLongVarChar 			// 201
-	        //	 nDBFTypeField := HB_FT_STRING
+    CASE nADOFielfType == adLongVarChar       // 201
+          //   nDBFTypeField := HB_FT_STRING
 
-		CASE nADOFielfType == adWChar 						// 130
+    CASE nADOFielfType == adWChar             // 130
             // nDBFTypeField := HB_FT_STRING
 
-		CASE nADOFielfType == adVarWChar 				// 202
+    CASE nADOFielfType == adVarWChar        // 202
          nDBFTypeField := HB_FT_STRING
 
-		CASE nADOFielfType == adLongVarWChar 			// 203
+    CASE nADOFielfType == adLongVarWChar      // 203
 
-		CASE nADOFielfType == adBinary 						// 128
-		CASE nADOFielfType == adVarBinary 				// 204
-		CASE nADOFielfType == adLongVarBinary 		    // 205
-		CASE nADOFielfType == adChapter 					// 136
-		CASE nADOFielfType == adFileTime 					// 64
-		CASE nADOFielfType == adPropVariant 			    // 138
-		CASE nADOFielfType == adVarNumeric 				// 139
-		// CASE nADOFielfType == adArray &H2000
+    CASE nADOFielfType == adBinary            // 128
+    CASE nADOFielfType == adVarBinary         // 204
+    CASE nADOFielfType == adLongVarBinary         // 205
+    CASE nADOFielfType == adChapter           // 136
+    CASE nADOFielfType == adFileTime          // 64
+    CASE nADOFielfType == adPropVariant           // 138
+    CASE nADOFielfType == adVarNumeric        // 139
+    // CASE nADOFielfType == adArray &H2000
 
    ENDCASE
 
