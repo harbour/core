@@ -836,3 +836,15 @@ static function SQLTranslate( cExpr )
   cExpr = StrTran( cExpr, ".OR.", "OR" )
 
 return cExpr   
+
+function HB_AdoRddGetConnection( nWA )
+
+   DEFAULT nWA TO Select()
+   
+return s_aConnections[ nWA ]   
+
+function HB_AdoRddGetCatalog( nWA )
+
+   DEFAULT nWA TO Select()
+   
+return s_aCatalogs[ nWA ]   
