@@ -563,8 +563,11 @@ return SUCCESS
 
 static function ADO_CLEARREL( nWA )
 
-   local nKeys := s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Count
-   local cKeyName
+   local nKeys := 0, cKeyName
+   
+   if s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys != nil
+      nKeys = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys:Count
+   endif   
 
    if nKeys > 0 
       cKeyName = s_aCatalogs[ nWA ]:Tables( s_aTableNames[ nWA ] ):Keys( nKeys - 1 ):Name
