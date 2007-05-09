@@ -848,3 +848,9 @@ function HB_AdoRddGetCatalog( nWA )
    DEFAULT nWA TO Select()
    
 return s_aCatalogs[ nWA ]   
+
+function HB_AdoRddGetRecordSet( nWA )
+
+   DEFAULT nWA TO Select()
+   
+return USRRDD_AREADATA( nWA )[ 1 ]
