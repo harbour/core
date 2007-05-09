@@ -851,6 +851,10 @@ return s_aCatalogs[ nWA ]
 
 function HB_AdoRddGetRecordSet( nWA )
 
+   local oAreaData
+
    DEFAULT nWA TO Select()
    
-return USRRDD_AREADATA( nWA )[ 1 ]
+   oAreaData = USRRDD_AREADATA( nWA )
+   
+return If( oAreaData != nil, oAreaData[ 1 ], nil )
