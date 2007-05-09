@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-09 15:28 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * Improved ADO_CLEARREL()
+     
 2007-05-09 15:03 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      + Improved Deleted()
