@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-09 10:55 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     + Added function HB_AdoRddGetRecordSet( [<nWorkArea>] ) --> oAdoRecordset
+     
 2007-05-09 10:41 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      + New functions HB_AdoRddGetConnection( [<nWorkArea>] ) --> oAdoConnection
