@@ -220,6 +220,9 @@ static function ADO_OPEN( nWA, aOpenInfo )
       case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".xls"
            s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
 
+      case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".dbf"
+           s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties=dBASE IV;User ID=Admin;Password=;" )
+
       case Lower( Right( aOpenInfo[ UR_OI_NAME ], 3 ) ) == ".db"
            s_aConnections[ nWA ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Paradox 3.x';" )
                
