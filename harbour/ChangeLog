@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 01:04 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * Reduced used variables and memory
+
 2007-05-10 08:13 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * FoxPro support
