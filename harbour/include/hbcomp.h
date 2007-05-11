@@ -103,17 +103,18 @@ extern void hb_compParserStop( HB_COMP_DECL );
 
 /* return detailed information about a class of variable  */
 extern int hb_compVariableScope( HB_COMP_DECL, char * );
-#define HB_VS_UNDECLARED	0
+#define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */
-#define HB_VS_CBLOCAL_VAR	1	/* local parameter of a codeblock */
-#define HB_VS_LOCAL_VAR		2
-#define HB_VS_LOCAL_MEMVAR	4
-#define HB_VS_LOCAL_FIELD	8
-#define HB_VS_STATIC_VAR	16
+#define HB_VS_CBLOCAL_VAR     1     /* local parameter of a codeblock */
+#define HB_VS_LOCAL_VAR       2
+#define HB_VS_LOCAL_MEMVAR    4
+#define HB_VS_LOCAL_FIELD     8
+#define HB_VS_STATIC_VAR     16
+#define HB_VS_FILEWIDE       32
 /* variables declared outside of a current function/procedure */
-#define HB_VS_GLOBAL_MEMVAR	(32 | HB_VS_LOCAL_MEMVAR)
-#define HB_VS_GLOBAL_FIELD	(32 | HB_VS_LOCAL_FIELD)
-#define HB_VS_GLOBAL_STATIC	(32 | HB_VS_STATIC_VAR)
+#define HB_VS_GLOBAL_MEMVAR   (HB_VS_FILEWIDE | HB_VS_LOCAL_MEMVAR)
+#define HB_VS_GLOBAL_FIELD    (HB_VS_FILEWIDE | HB_VS_LOCAL_FIELD)
+#define HB_VS_GLOBAL_STATIC   (HB_VS_FILEWIDE | HB_VS_STATIC_VAR)
 
 #define VU_NOT_USED    0
 #define VU_INITIALIZED 1
@@ -135,33 +136,26 @@ extern int hb_compVariableScope( HB_COMP_DECL, char * );
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined function */
-extern PINLINE   hb_compInlineFind( HB_COMP_DECL, char * szFunName );
-extern USHORT    hb_compFunctionGetPos( HB_COMP_DECL, char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
-extern PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION );    /* releases all memory allocated by function and returns the next one */
 extern void      hb_compAnnounce( HB_COMP_DECL, char * );
+
 extern PINLINE   hb_compInlineAdd( HB_COMP_DECL, char * szFunName, int iLine );
+extern PINLINE   hb_compInlineFind( HB_COMP_DECL, char * szFunName );
 
 extern PFUNCALL  hb_compFunCallFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined called function */
 extern BOOL      hb_compFunCallCheck( HB_COMP_DECL, char *, int );
 
 extern void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cType ); /* add a new param, local, static variable to a function definition or a public or private */
-extern PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ); /* returns a variable if defined or zero */
-extern PVAR hb_compLocalVariableFind( PFUNCTION pFunc, USHORT wVar );
-extern USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
-extern int hb_compLocalGetPos( HB_COMP_DECL, char * szVarName );   /* returns the order + 1 of a local variable */
-extern char * hb_compStaticGetName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
+extern PVAR hb_compVariableFind( HB_COMP_DECL, char * szVarName, int * piPos, int * piScope );
+extern char * hb_compLocalVariableName( PFUNCTION pFunc, USHORT wVar );   /* returns the name of local variable */
+extern char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   FALSE
 #define HB_SYM_ALIAS    FALSE
 #define HB_SYM_MSGNAME  FALSE
 #define HB_SYM_FUNCNAME TRUE
-extern PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, char *, USHORT *, BOOL );
-extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
-extern PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, char *, USHORT *, BOOL ); /* returns a symbol pointer from the symbol table */
-extern PCOMSYMBOL hb_compSymbolGetPos( HB_COMP_DECL, USHORT );   /* returns a symbol based on its index on the symbol table */
+extern char * hb_compSymbolName( HB_COMP_DECL, USHORT );   /* returns a symbol name based on its index on the symbol table */
 
 extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * );
-extern PCOMDECLARED hb_compDeclaredFind( HB_COMP_DECL, char * );
 
 extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * );
 extern PCOMCLASS hb_compClassFind( HB_COMP_DECL, char * );
@@ -234,8 +228,7 @@ extern int  hb_compFieldsCount( HB_COMP_DECL );
 
 /* Static variables */
 extern void hb_compStaticDefStart( HB_COMP_DECL );
-extern void hb_compStaticDefEnd( HB_COMP_DECL );
-extern void hb_compGenStaticName( char *, HB_COMP_DECL );
+extern void hb_compStaticDefEnd( HB_COMP_DECL, char * );
 
 extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
 
@@ -317,7 +310,6 @@ extern void hb_compPrintModes( void );
 
 
 /* Misc functions defined in harbour.c */
-extern void hb_compFinalizeFunction( HB_COMP_DECL ); /* fixes all last defined function returns jumps offsets */
 extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );
 extern BOOL hb_compIsJump( HB_COMP_DECL, PFUNCTION pFunc, ULONG ulPos );
 

@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbmain.c
+    * changed code used for variable scoping - now it's much more
+      simple (only one function) and allows to use declarations in
+      nested functions/codeblocks with visibility similar to Pascal
+    ! fixed parsing FILED <fields,...> IN <alias>
+      we were accepting code like:
+         FIELD f1, f2 IN db1, f3 IN db2 IN db3
+      and for all fields the last alias (db2 in this example) was used
+    ! fixed calculating number of static variables with -b (debugger)
+      compilation (number of file wide statics were doubled)
+    ! fixed generation of static variable names for debugger when declared
+      with array dimensions, f.e.:
+         static sVar[3]
+
+  * harbour/source/rtl/hbffind.c
+    * minor cleanup *nix version
+
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+    ! fixed casting for C++ compilation
+
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+    * updated for some old API modifications (this library is not used now
+      but if we keep it in CVS then I think it should be updated)
+
 2007-05-11 18:09 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * COMMIT changes

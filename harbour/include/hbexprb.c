@@ -3803,6 +3803,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
    {
       HB_CBVAR_PTR pVar;
 
+      HB_COMP_PARAM->iVarScope = VS_PARAMETER;
       pVar = pSelf->value.asCodeblock.pLocals;
       while( pVar )
       {
@@ -4171,8 +4172,9 @@ static void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 #if defined( HB_MACRO_SUPPORT )
          {
 #else
-         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+         int iVar, iScope;
 
+         hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol, &iVar, &iScope );
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
@@ -4186,15 +4188,14 @@ static void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
                      BYTE buffer[ 5 ];
 
                      if( bOpEq == HB_P_MINUS )
                         iIncrement = -iIncrement;
 
                      buffer[ 0 ] = HB_P_LOCALADDINT;
-                     buffer[ 1 ] = HB_LOBYTE( iLocal );
-                     buffer[ 2 ] = HB_HIBYTE( iLocal );
+                     buffer[ 1 ] = HB_LOBYTE( iVar );
+                     buffer[ 2 ] = HB_HIBYTE( iVar );
                      buffer[ 3 ] = HB_LOBYTE( iIncrement );
                      buffer[ 4 ] = HB_HIBYTE( iIncrement );
                      HB_GEN_FUNC2( PCodeN, buffer, 5 );
@@ -4327,8 +4328,9 @@ static void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 #if defined( HB_MACRO_SUPPORT )
          {
 #else
-         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+         int iVar, iScope;
 
+         hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol, &iVar, &iScope );
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
@@ -4342,15 +4344,14 @@ static void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_COMP_DECL )
 
                   if( bOpEq != HB_P_MINUS || iIncrement >= -INT16_MAX )
                   {
-                     int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol ); 
                      BYTE buffer[ 5 ];
 
                      if( bOpEq == HB_P_MINUS )
                         iIncrement = -iIncrement;
 
                      buffer[ 0 ] = HB_P_LOCALADDINT;
-                     buffer[ 1 ] = HB_LOBYTE( iLocal );
-                     buffer[ 2 ] = HB_HIBYTE( iLocal );
+                     buffer[ 1 ] = HB_LOBYTE( iVar );
+                     buffer[ 2 ] = HB_HIBYTE( iVar );
                      buffer[ 3 ] = HB_LOBYTE( iIncrement );
                      buffer[ 4 ] = HB_HIBYTE( iIncrement );
                      HB_GEN_FUNC2( PCodeN, buffer, 5 );
@@ -4442,21 +4443,21 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 #if !defined( HB_MACRO_SUPPORT )
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+         int iVar, iScope;
 
+         hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol, &iVar, &iScope );
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
             if( iScope == HB_VS_LOCAL_VAR )
             {
-               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
                if( bOper == HB_P_INC )
                {
-                  HB_GEN_FUNC3( PCode3, HB_P_LOCALINCPUSH, HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ) );
+                  HB_GEN_FUNC3( PCode3, HB_P_LOCALINCPUSH, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
                }
                else
                {
-                  HB_GEN_FUNC3( PCode3, HB_P_LOCALDEC, HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ) );
+                  HB_GEN_FUNC3( PCode3, HB_P_LOCALDEC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
                   /* Push current value */
                   HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                }
@@ -4560,19 +4561,18 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 #if !defined( HB_MACRO_SUPPORT )
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+         int iVar, iScope;
 
+         hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol, &iVar, &iScope );
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
             if( iScope == HB_VS_LOCAL_VAR )
             {
-               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
-
                /* Push current value */
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_GEN_FUNC3( PCode3, ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
-                             HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ) );
+                             HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             }
             else
             {
@@ -4664,17 +4664,16 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
 #if !defined( HB_MACRO_SUPPORT )
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         int iScope = hb_compVariableScope( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
+         int iVar, iScope;
 
+         hb_compVariableFind( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol, &iVar, &iScope );
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
             if( iScope == HB_VS_LOCAL_VAR )
             {
-               int iLocal = hb_compLocalGetPos( HB_COMP_PARAM, pSelf->value.asOperator.pLeft->value.asSymbol );
-
                HB_GEN_FUNC3( PCode3, ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
-                             HB_LOBYTE( iLocal ), HB_HIBYTE( iLocal ) );
+                             HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             }
             else
             {

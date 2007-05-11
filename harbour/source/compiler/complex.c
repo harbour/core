@@ -573,12 +573,14 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 
             case BEGINSEQ:
                if( pLex->iState == LOOKUP && pToken->pNext &&
-                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                   pToken->pNext->len >= 4 && pToken->pNext->len <= 8 &&
-                   hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
+                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
                {
-                  hb_pp_tokenGet( pLex->pPP );
-                  break;
+                  if( pToken->pNext->len >= 4 && pToken->pNext->len <= 8 &&
+                      hb_strnicmp( "SEQUENCE", pToken->pNext->value, pToken->pNext->len ) == 0 )
+                  {
+                     hb_pp_tokenGet( pLex->pPP );
+                     break;
+                  }
                }
                iType = IDENTIFIER;
                break;

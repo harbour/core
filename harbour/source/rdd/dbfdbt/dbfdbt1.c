@@ -358,7 +358,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
 
       if( pBuff )
       {
-         memcpy( pBuff, pItem->item.asString.value, ulLen );
+         memcpy( pBuff, hb_itemGetCPtr( pItem ), ulLen );
          pBuff[ ulLen ] = 0x1A;
          hb_cdpnTranslate( ( char * ) pBuff, hb_cdp_page, pArea->cdPage, ulLen );
          hb_fsWriteLarge( pArea->hMemoFile, pBuff, ulLen + 1 );
@@ -366,7 +366,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
       }
       else
       {
-         BYTE pBlock[ DBT_BLOCKSIZE ], *pSrc = ( BYTE * ) pItem->item.asString.value;
+         BYTE pBlock[ DBT_BLOCKSIZE ], *pSrc = ( BYTE * ) hb_itemGetCPtr( pItem );
          ULONG ulWritten = 0, ulRest;
 
          do
@@ -386,7 +386,7 @@ static void hb_dbtWriteMemo( DBTAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
    {
       BYTE pBlock[ DBT_BLOCKSIZE ];
       memset( pBlock, 0x1A, DBT_BLOCKSIZE );
-      hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) pItem->item.asString.value, ulLen );
+      hb_fsWriteLarge( pArea->hMemoFile, ( BYTE * ) hb_itemGetCPtr( pItem ), ulLen );
       hb_fsWrite( pArea->hMemoFile, pBlock, ( DBT_BLOCKSIZE - ( USHORT ) ( ulLen % DBT_BLOCKSIZE ) ) );
    }
    pArea->fMemoFlush = TRUE;
@@ -410,7 +410,7 @@ static BOOL hb_dbtPutMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbtPutMemo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
-   ulLen = pItem->item.asString.length;
+   ulLen = hb_itemGetCLen( pItem );
    if( ulLen > 0 )
    {
       ulBlock = hb_dbfGetMemoBlock( ( DBFAREAP ) pArea, uiIndex );

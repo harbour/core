@@ -361,7 +361,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 #if !defined( HB_MACRO_SUPPORT )
             if( pArg->ExprType == HB_ET_VARIABLE )
             {
-               if( hb_compVariableScope( HB_COMP_PARAM, pArg->value.asSymbol ) > 0 )
+               if( hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol, NULL, NULL ) )
                   pArg = hb_compExprSetGetBlock( pArg, HB_COMP_PARAM );
                else
                {
@@ -566,7 +566,6 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 
    return pExpr;
 }
-
 #endif
 
 /* ************************************************************************* */

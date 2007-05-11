@@ -623,7 +623,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-      char dirname[ 2 * _POSIX_PATH_MAX + 1 ];
+      char dirname[ _POSIX_PATH_MAX + 1 ];
       char string[ _POSIX_PATH_MAX + 1 ];
 
       bFound = FALSE;
@@ -652,8 +652,9 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          else
          {
             hb_strncpy( info->pattern, string, sizeof( info->pattern ) - 1 );
-            hb_strncpy( dirname, ".X", sizeof( dirname ) - 1 );
+            dirname[ 0 ] = '.';
             dirname[ 1 ] = OS_PATH_DELIMITER;
+            dirname[ 2 ] = '\0';
          }
 
          tzset();
@@ -667,7 +668,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
             hb_strncpy( string, info->entry->d_name, sizeof( string ) - 1 );
-      
+
 #if defined( __WATCOMC__ )
             if( hb_strMatchWild( string, info->pattern ) )
 #else
@@ -681,7 +682,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       }
 
       /* Fill Harbour found file info */
-
       if( bFound )
       {
          hb_strncpy( dirname, info->path, sizeof( dirname ) - 1 );
@@ -701,23 +701,25 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             struct stat sStat;
             if( stat( dirname, &sStat ) != 0 )
 #endif
-               printf("\n%s (%i)", dirname, errno );
+            {
+               strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+               ffind->size = sStat.st_size;
 
-            strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
-            ffind->size = sStat.st_size;
+               raw_attr = sStat.st_mode;
 
-            raw_attr = sStat.st_mode;
+               ftime = sStat.st_mtime;
+               ft = localtime( &ftime );
 
-            ftime = sStat.st_mtime;
-            ft = localtime( &ftime );
+               nYear  = ft->tm_year + 1900;
+               nMonth = ft->tm_mon + 1;
+               nDay   = ft->tm_mday;
 
-            nYear  = ft->tm_year + 1900;
-            nMonth = ft->tm_mon + 1;
-            nDay   = ft->tm_mday;
-
-            nHour  = ft->tm_hour;
-            nMin   = ft->tm_min;
-            nSec   = ft->tm_sec;
+               nHour  = ft->tm_hour;
+               nMin   = ft->tm_min;
+               nSec   = ft->tm_sec;
+            }
+            else
+               bFound = FALSE;
          }
       }
 
@@ -752,14 +754,14 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       /* Do the conversions common for all platforms */
       
-      ffind->szName[ _POSIX_PATH_MAX + 1 ] = '\0';
-      
+      ffind->szName[ _POSIX_PATH_MAX ] = '\0';
+
       ffind->attr = hb_fsAttrFromRaw( raw_attr );
-      
+
       ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
       hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
       ffind->szDate[ 8 ] = '\0';
-      
+
       snprintf( ffind->szTime, sizeof( ffind->szTime ), "%02d:%02d:%02d", nHour, nMin, nSec );
    }
 

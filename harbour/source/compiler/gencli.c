@@ -61,10 +61,7 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szVer;
    PFUNCTION    pFunc = HB_COMP_PARAM->functions.pFirst;
    PCOMSYMBOL   pSym = HB_COMP_PARAM->symbols.pFirst;
-   PFUNCALL     pFuncall;
    PINLINE      pInline;
-   PCOMDECLARED pDeclared;
-   PCOMCLASS    pClass;
    FILE * yyc; /* file handle for IL output */
    BOOL bIsPublicFunction ;
    BOOL bIsInitFunction   ;
@@ -176,49 +173,6 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    hb_genNetFunctions( yyc );
 
    fclose( yyc );
-
-   pFunc = HB_COMP_PARAM->functions.pFirst;
-   while( pFunc )
-      pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
-
-   pFuncall = HB_COMP_PARAM->funcalls.pFirst;
-   while( pFuncall )
-   {
-      HB_COMP_PARAM->funcalls.pFirst = pFuncall->pNext;
-      pFuncall = HB_COMP_PARAM->funcalls.pFirst;
-   }
-
-   if ( HB_COMP_PARAM->iWarnings >= 3 )
-   {
-      pDeclared = HB_COMP_PARAM->pReleaseDeclared->pNext;
-      while( pDeclared )
-      {
-         HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
-         hb_xfree( ( void * ) pDeclared );
-         pDeclared = HB_COMP_PARAM->pFirstDeclared;
-      }
-
-      pClass = HB_COMP_PARAM->pReleaseClass->pNext;
-      while( pClass )
-      {
-         HB_COMP_PARAM->pFirstClass = pClass->pNext;
-
-         pDeclared = pClass->pMethod;
-         while ( pDeclared )
-         {
-            HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
-            hb_xfree( ( void * ) pDeclared );
-            pDeclared = HB_COMP_PARAM->pFirstDeclared;
-         }
-
-         hb_xfree( ( void * ) pClass );
-         pClass = HB_COMP_PARAM->pFirstClass;
-      }
-   }
-
-   pSym = HB_COMP_PARAM->symbols.pFirst;
-   while( pSym )
-      pSym = hb_compSymbolKill( pSym );
 
    if( ! HB_COMP_PARAM->fQuiet )
       printf( "Done.\n" );
@@ -1022,15 +976,13 @@ static HB_GENC_FUNC( hb_p_poplocal )
 
       if( cargo->iNestedCodeblock )
       {
-         /* we are accesing variables within a codeblock */
-         /* the names of codeblock variable are lost     */
          if( wVar < 0 )
             fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
          else
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* localvar%i */", wVar );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1151,18 +1103,9 @@ static HB_GENC_FUNC( hb_p_pushblock )
    /* create the table of referenced local variables */
    while( wVar-- )
    {
-      w = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos ] ) );
       fprintf( cargo->yyc, "\t%i, %i,",
                pFunc->pCode[ lPCodePos ],
                pFunc->pCode[ lPCodePos + 1 ] );
-      /* NOTE:
-         * When a codeblock is used to initialize a static variable
-         * the names of local variables cannot be determined
-         * because at the time of C code generation we don't know
-         * in which function was defined this local variable
-         */
-      if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) != ( HB_FS_INIT | HB_FS_EXIT ) )
-         if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, w )->szName );
       fprintf( cargo->yyc, "\n" );
       lPCodePos +=2;
    }
@@ -1247,15 +1190,13 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 
       if( cargo->iNestedCodeblock )
       {
-         /* we are accesing variables within a codeblock */
-         /* the names of codeblock variable are lost     */
          if( wVar < 0 )
             fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
          else
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* localvar%i */", wVar );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1285,15 +1226,13 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
       if( cargo->iNestedCodeblock )
       {
-         /* we are accesing variables within a codeblock */
-         /* the names of codeblock variable are lost     */
          if( wVar < 0 )
             fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
          else
             fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* localvar%i */", wVar );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1502,7 +1441,7 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
       pTemp = pFunCalls;
    }
 
-   pTemp->szName = hb_compSymbolGetPos( cargo->HB_COMP_PARAM, pFunc->pCode[ lPCodePos + 1 ] )->szName;
+   pTemp->szName = hb_compSymbolName( cargo->HB_COMP_PARAM, pFunc->pCode[ lPCodePos + 1 ] );
    pTemp->bFirstParam = TRUE;
    pTemp->pNext  = NULL;
 

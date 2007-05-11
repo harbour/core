@@ -164,7 +164,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 %token PROCREQ
-%token CBSTART DOIDENT
+%token CBSTART BEGINCODE DOIDENT
 %token FOREACH DESCEND
 %token DOSWITCH WITHOBJECT
 %token NUM_DATE
@@ -197,7 +197,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IdentName IDENTIFIER MACROVAR MACROTEXT CompTimeStr
+%type <string>  IdentName IDENTIFIER MACROVAR MACROTEXT CompTimeStr InAlias
 %type <string>  DOIDENT WHILE
 %type <valChar> LITERAL
 %type <valDouble>  NUM_DOUBLE
@@ -313,6 +313,10 @@ Params     : /*no parameters */ { $$ = 0; }
 
 AsType     : /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
            | StrongType
+           ;
+
+AsArrayType: /* not specified */           { HB_COMP_PARAM->cVarType = ' '; }
+           | AsArray
            ;
 
 StrongType : AS_NUMERIC                    { HB_COMP_PARAM->cVarType = 'N'; }
@@ -1084,14 +1088,7 @@ ExtVarDef  : VarDef
                { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $4, HB_COMP_PARAM ) );
                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
                }
-           | MacroVar DimList
-               {
-                  USHORT uCount = (USHORT) hb_compExprListLen( $2 );
-                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
-               }
-           | MacroVar DimList AsArray
+           | MacroVar DimList AsArrayType
                {
                   USHORT uCount = (USHORT) hb_compExprListLen( $2 );
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
@@ -1105,15 +1102,13 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   if( HB_COMP_PARAM->iVarScope == VS_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
-                     hb_compStaticDefEnd( HB_COMP_PARAM );
-                     hb_compGenStaticName( $1, HB_COMP_PARAM );
+                     hb_compStaticDefEnd( HB_COMP_PARAM, $1 );
                   }
                   else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
                   {
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), FALSE );
                   }
                }
-
            | IdentName AsType { $<iNumber>$ = HB_COMP_PARAM->iVarScope;
                                 hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType );
                               }
@@ -1127,8 +1122,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
                      HB_COMP_EXPR_DELETE( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1, HB_COMP_PARAM ), $6, HB_COMP_PARAM ), HB_COMP_PARAM ) );
-                     hb_compStaticDefEnd( HB_COMP_PARAM );
-                     hb_compGenStaticName( $1, HB_COMP_PARAM );
+                     hb_compStaticDefEnd( HB_COMP_PARAM, $1 );
                   }
                   else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
                   {
@@ -1142,8 +1136,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   HB_COMP_PARAM->iVarScope = $<iNumber>3;
                }
 
-           | IdentName DimList          { hb_compVariableDim( $1, $2, HB_COMP_PARAM ); }
-           | IdentName DimList AsArray  { hb_compVariableDim( $1, $2, HB_COMP_PARAM ); }
+           | IdentName DimList AsArrayType   { hb_compVariableDim( $1, $2, HB_COMP_PARAM ); }
            ;
 
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList
@@ -1157,20 +1150,27 @@ DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2, HB_C
            | DimIndex ']' '[' Expression  { $$ = hb_compExprAddListExpr( $1, $4 ); }
            ;
 
-
-FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = VS_FIELD; } FieldList Crlf { HB_COMP_PARAM->cVarType = ' '; }
+FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = VS_FIELD; }
+             FieldList InAlias Crlf
+             {
+               if( $4 ) hb_compFieldSetAlias( HB_COMP_PARAM, $4, $3 );
+               HB_COMP_PARAM->cVarType = ' ';
+             }
            ;
 
-FieldList  : IdentName AsType               { $$=hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
-           | FieldList ',' IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
-           | FieldList IN IdentName { hb_compFieldSetAlias( HB_COMP_PARAM, $3, $<iNumber>1 ); }
+FieldList  : IdentName AsType                { $$=hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+           | FieldList ',' IdentName AsType  { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+           ;
+
+InAlias    : /* no alias */   { $$ = NULL; }
+           | IN IdentName     { $$ = $2; }
            ;
 
 MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = VS_MEMVAR; } MemvarList Crlf { HB_COMP_PARAM->cVarType = ' '; }
            ;
 
-MemvarList : IdentName AsType                     { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
-           | MemvarList ',' IdentName AsType      { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
+MemvarList : IdentName AsType                   { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
+           | MemvarList ',' IdentName AsType    { hb_compVariableAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
            ;
 
 Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB_COMP_PARAM->szDeclaredFun = $2; } DecList ')' AsType Crlf
@@ -2203,7 +2203,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
      hb_compExprGenPop( pVar, HB_COMP_PARAM );
      /* delete all used expressions */
      HB_COMP_EXPR_DELETE( pAssign );
-     hb_compStaticDefEnd( HB_COMP_PARAM );
+     hb_compStaticDefEnd( HB_COMP_PARAM, szName );
   }
   else
   {

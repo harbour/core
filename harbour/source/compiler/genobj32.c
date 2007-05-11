@@ -101,6 +101,21 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
     printf( "Done.\n" );
 }
 
+static USHORT hb_compFunctionGetPos( HB_COMP_DECL, char * szFunctionName ) /* return 0 if not found or order + 1 */
+{
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
+   USHORT wFunction = HB_COMP_PARAM->fStartProc ? 1 : 0;
+
+   while( pFunc )
+   {
+      if( ! strcmp( pFunc->szName, szFunctionName ) && pFunc != HB_COMP_PARAM->functions.pFirst )
+         return wFunction;
+      wFunction++;
+      pFunc = pFunc->pNext;
+   }
+   return 0;
+}
+
 static ULONG GetSymbolsSize( HB_COMP_DECL )
 {
   return HB_COMP_PARAM->symbols.iCount * sizeof( HB_SYMB );
