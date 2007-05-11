@@ -480,7 +480,10 @@ static function ADO_FLUSH( nWA )
 
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
   
-   oRecordSet:Update()
+   TRY
+      oRecordSet:Update()
+   CATCH
+   END   
 
 return SUCCESS
 
