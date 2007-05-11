@@ -82,7 +82,7 @@
 #define WA_QUERY     11
 #define WA_LOCATEFOR 12
 #define WA_SCOPEINFO 13
-#define WA_SQLTRUCT  14
+#define WA_SQLSTRUCT 14
 
 #define WA_SIZE      14
 
@@ -154,7 +154,7 @@ static function ADO_CREATE( nWA, aOpenInfo )
    END
 
    TRY
-      oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLTRUCT ] + ")" )
+      oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
    CATCH
       oError := ErrorNew()
       oError:GenCode     := EG_CREATE
@@ -175,22 +175,22 @@ static function ADO_CREATEFIELDS( nWA, aStruct )
    local aWAData := USRRDD_AREADATA( nWA )
    local n
 
-   aWAData[ WA_SQLTRUCT ] = ""
+   aWAData[ WA_SQLSTRUCT ] = ""
 
   for n = 1 to Len( aStruct )
      if n > 1
-        aWAData[ WA_SQLTRUCT ] += ", "
+        aWAData[ WA_SQLSTRUCT ] += ", "
      endif   
-     aWAData[ WA_SQLTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
+     aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
      do case
         case aStruct[ n ][ DBS_TYPE ] $ "C,Character"
-             aWAData[ WA_SQLTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL" 
+             aWAData[ WA_SQLSTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL" 
 
         case aStruct[ n ][ DBS_TYPE ] == "N"
-             aWAData[ WA_SQLTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
+             aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
 
         case aStruct[ n ][ DBS_TYPE ] == "L"
-             aWAData[ WA_SQLTRUCT ] += " LOGICAL"
+             aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
      endcase     
   next      
 
@@ -553,7 +553,11 @@ static function ADO_ZAP( nWA )
    local oRecordSet := aWAData[ WA_RECORDSET ]
      
    if aWAData[ WA_CONNECTION ] != nil .and. aWAData[ WA_TABLENAME ] != nil
-      aWAData[ WA_CONNECTION ]:Execute( "DELETE * FROM " + aWAData[ WA_TABLENAME ] )
+      TRY
+         aWAData[ WA_CONNECTION ]:Execute( "TRUNCATE TABLE " + aWAData[ WA_TABLENAME ] )
+      CATCH
+         aWAData[ WA_CONNECTION ]:Execute( "DELETE * FROM " + aWAData[ WA_TABLENAME ] )
+      END
       oRecordSet:Requery()
    endif      
 
@@ -728,95 +732,95 @@ init procedure ADORDD_INIT()
    rddRegister( "ADORDD", RDT_FULL )
 return
 
-static function ADO_GETFIELDSIZE( nDBFTypeField, nADOFieldSize )
+static function ADO_GETFIELDSIZE( nDBFFieldType, nADOFieldSize )
 
    local nDBFFieldSize := 0
   
    do case
   
-      case nDBFTypeField == HB_FT_STRING
+      case nDBFFieldType == HB_FT_STRING
            nDBFFieldSize := nADOFieldSize
 
-      case nDBFTypeField == HB_FT_INTEGER
+      case nDBFFieldType == HB_FT_INTEGER
            nDBFFieldSize := nADOFieldSize
         
-      case nDBFTypeField == HB_FT_DATE
+      case nDBFFieldType == HB_FT_DATE
            nDBFFieldSize := 8
       
-      case nDBFTypeField == HB_FT_LOGICAL
+      case nDBFFieldType == HB_FT_LOGICAL
            nDBFFieldSize := 1
       
    endcase
   
 return nDBFFieldSize
 
-static function ADO_GETFIELDTYPE( nADOFielfType )
+static function ADO_GETFIELDTYPE( nADOFieldType )
 
-   local nDBFTypeField := 0
+   local nDBFFieldType := 0
 
    do case
 
-      case nADOFielfType == adEmpty
-      case nADOFielfType == adTinyInt
-      case nADOFielfType == adSmallInt
-      case nADOFielfType == adInteger
-           nDBFTypeField := HB_FT_INTEGER
+      case nADOFieldType == adEmpty
+      case nADOFieldType == adTinyInt
+      case nADOFieldType == adSmallInt
+      case nADOFieldType == adInteger
+           nDBFFieldType := HB_FT_INTEGER
     
-      case nADOFielfType == adBigInt            
-      case nADOFielfType == adUnsignedTinyInt   
-      case nADOFielfType == adUnsignedSmallInt  
-      case nADOFielfType == adUnsignedInt       
-      case nADOFielfType == adUnsignedBigInt    
-      case nADOFielfType == adSingle            
-      case nADOFielfType == adDouble            
-      case nADOFielfType == adCurrency          
-      case nADOFielfType == adDecimal           
-      case nADOFielfType == adNumeric           
-      case nADOFielfType == adBoolean           
-           nDBFTypeField := HB_FT_LOGICAL
+      case nADOFieldType == adBigInt            
+      case nADOFieldType == adUnsignedTinyInt   
+      case nADOFieldType == adUnsignedSmallInt  
+      case nADOFieldType == adUnsignedInt       
+      case nADOFieldType == adUnsignedBigInt    
+      case nADOFieldType == adSingle            
+      case nADOFieldType == adDouble            
+      case nADOFieldType == adCurrency          
+      case nADOFieldType == adDecimal           
+      case nADOFieldType == adNumeric           
+      case nADOFieldType == adBoolean           
+           nDBFFieldType := HB_FT_LOGICAL
     
-      case nADOFielfType == adError             
-      case nADOFielfType == adUserDefined       
-      case nADOFielfType == adVariant           
-      case nADOFielfType == adIDispatch         
-      case nADOFielfType == adIUnknown        
-      case nADOFielfType == adGUID            
-      case nADOFielfType == adDate            
-           nDBFTypeField := HB_FT_DATE
+      case nADOFieldType == adError             
+      case nADOFieldType == adUserDefined       
+      case nADOFieldType == adVariant           
+      case nADOFieldType == adIDispatch         
+      case nADOFieldType == adIUnknown        
+      case nADOFieldType == adGUID            
+      case nADOFieldType == adDate            
+           nDBFFieldType := HB_FT_DATE
     
-      case nADOFielfType == adDBDate          
-      case nADOFielfType == adDBTime          
-      case nADOFielfType == adDBTimeStamp       
-      case nADOFielfType == adBSTR            
-      case nADOFielfType == adChar            
-           // nDBFTypeField := HB_FT_STRING
+      case nADOFieldType == adDBDate          
+      case nADOFieldType == adDBTime          
+      case nADOFieldType == adDBTimeStamp       
+      case nADOFieldType == adBSTR            
+      case nADOFieldType == adChar            
+           // nDBFFieldType := HB_FT_STRING
           
-      case nADOFielfType == adVarChar           
-           // nDBFTypeField := HB_FT_STRING
+      case nADOFieldType == adVarChar           
+           // nDBFFieldType := HB_FT_STRING
 
-      case nADOFielfType == adLongVarChar       
-           //   nDBFTypeField := HB_FT_STRING
+      case nADOFieldType == adLongVarChar       
+           // nDBFFieldType := HB_FT_STRING
 
-      case nADOFielfType == adWChar             
-           // nDBFTypeField := HB_FT_STRING
+      case nADOFieldType == adWChar             
+           // nDBFFieldType := HB_FT_STRING
 
-      case nADOFielfType == adVarWChar        
-           nDBFTypeField := HB_FT_STRING
+      case nADOFieldType == adVarWChar        
+           nDBFFieldType := HB_FT_STRING
 
-      case nADOFielfType == adLongVarWChar      
+      case nADOFieldType == adLongVarWChar      
 
-      case nADOFielfType == adBinary            
-      case nADOFielfType == adVarBinary         
-      case nADOFielfType == adLongVarBinary     
-      case nADOFielfType == adChapter           
-      case nADOFielfType == adFileTime          
-      case nADOFielfType == adPropVariant       
-      case nADOFielfType == adVarNumeric        
-      // case nADOFielfType == adArray 
+      case nADOFieldType == adBinary            
+      case nADOFieldType == adVarBinary         
+      case nADOFieldType == adLongVarBinary     
+      case nADOFieldType == adChapter           
+      case nADOFieldType == adFileTime          
+      case nADOFieldType == adPropVariant       
+      case nADOFieldType == adVarNumeric        
+      // case nADOFieldType == adArray 
 
    endcase
 
-return nDBFTypeField
+return nDBFFieldType
 
 function HB_AdoSetTable( cTableName )
 
