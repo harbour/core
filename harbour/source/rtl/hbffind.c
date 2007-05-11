@@ -655,9 +655,6 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             hb_strncpy( dirname, ".X", sizeof( dirname ) - 1 );
             dirname[ 1 ] = OS_PATH_DELIMITER;
          }
-         
-         if( info->pattern[ 0 ] == '\0' )
-            hb_strncpy( info->pattern, "*", sizeof( info->pattern ) - 1 );
 
          tzset();
 
@@ -665,7 +662,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
       }
 
-      if( info->dir != NULL)
+      if( info->dir != NULL && info->pattern[ 0 ] != '\0' )
       {
          while( ( info->entry = readdir( info->dir ) ) != NULL )
          {
@@ -724,7 +721,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          }
       }
 
-      if( !bFound ) hb_fsSetIOError( bFound, 0 );
+      if( ! bFound )
+         hb_fsSetIOError( bFound, 0 );
    }
 
 #else

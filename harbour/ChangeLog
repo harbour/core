@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/filehb.c
+     * Changed one old TOFIX to a NOTE regarding a minor 
+       incompatibility in FILE() where the filename is RTrim()-ed 
+       in Clipper but not in Harbour. It became a NOTE because 
+       making it compatible would mean losing some portability.
+
+   * harbour/source/rtl/hbffind.c
+     ! Removed code in UNIX branch which would change an empty 
+       file mask to "*" (thus causing FILE("") to return .T. 
+       and DIRECTORY("") to return the whole dir content.)
+     ! Made sure in UNIX branch that an empty file mask won't 
+       return any files regardless of the filename matching 
+       method used.
+
+   * harbour/source/rtl/strmatch.c
+     + Added NOTE about hb_WildMatch() / sx_WildMatch() 
+       incompatibility.
+     ! Guarded WILDMATCH() with HB_COMPAT_XHB.
+     * WILDMATCH() now calls HB_WILDMATCH() internally.
+
 2007-05-11 01:04 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Reduced used variables and memory

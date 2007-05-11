@@ -56,8 +56,9 @@
 /* TODO: Xbase++ has an extension where the second parameter can specify
          the required attribute. */
 
-/* TOFIX: CA-Cl*pper RTrim()s the filename before doing the existance check. 
-          [vszakats] */
+/* NOTE: CA-Cl*pper RTrim()s the filename before doing the existence check.
+         This is not multiplatform friendly, so Harbour doesn't do any 
+         modification on the filename. [vszakats] */
 
 HB_FUNC( FILE )
 {

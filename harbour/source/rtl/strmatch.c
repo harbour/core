@@ -240,14 +240,6 @@ HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern
    return fMatch;
 }
 
-HB_FUNC( WILDMATCH )
-{
-   hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
-            hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
-                           hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
-}
-
-
 /* TODO: Replace it with a code that supports real regular expressions
  *
  */
@@ -264,9 +256,23 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
  * When lExact is TRUE then it will check if whole cValue is covered by
  * cPattern else if will check if cPatern is a prefix of cValue
  */
+
+/* NOTE: This function is compatible with sx_WildMatch(), except when 
+         the pattern is an empty string where hb_WildMatch() returns 
+         .T., while sx_WildMatch() returns .F. [vszakats] */
+
 HB_FUNC( HB_WILDMATCH )
 {
    hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
 }
+
+#ifdef HB_COMPAT_XHB
+
+HB_FUNC( WILDMATCH )
+{
+   HB_FUNC_EXEC( HB_WILDMATCH );
+}
+
+#endif
