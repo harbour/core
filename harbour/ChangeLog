@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 14:27 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
+   * contrib/adordd/adordd.prg
+     * some minor changes
+
 2007-05-11 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/filehb.c
      * Changed one old TOFIX to a NOTE regarding a minor 
