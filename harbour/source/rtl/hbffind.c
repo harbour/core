@@ -696,10 +696,10 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
              * on 32bit machines.
              */
             struct stat64 sStat;
-            if( stat64( dirname, &sStat ) != 0 )
+            if( stat64( dirname, &sStat ) == 0 )
 #else
             struct stat sStat;
-            if( stat( dirname, &sStat ) != 0 )
+            if( stat( dirname, &sStat ) == 0 )
 #endif
             {
                strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
