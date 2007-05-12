@@ -667,20 +667,52 @@ return SUCCESS
 static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
    local aWAData := USRRDD_AREADATA( nWA )
-   local oIndex
+   local oIndex, oError, n, lFound := .f.
    
+   if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
+      for n = 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+          oIndex = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
+          if oIndex:Name == If( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
+             lFound = .T.
+             exit
+          endif
+      next       
+   endif   
+
    TRY
-      if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderCreateInfo[ UR_ORCR_BAGNAME ] ) == nil
+      if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .or. ! lFound
          oIndex = TOleAuto():New( "ADOX.Index" )
-         oIndex:Name = aOrderCreateInfo[ UR_ORCR_BAGNAME ]
+         oIndex:Name = If( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
          oIndex:PrimaryKey = .F.
          oIndex:Unique = aOrderCreateInfo[ UR_ORCR_UNIQUE ]
          oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Append( oIndex )
       endif   
    CATCH
-      // raise error for can't create index
+      oError := ErrorNew()
+      oError:GenCode     := EG_CREATE
+      oError:SubCode     := 1004
+      oError:Description := HB_LANGERRMSG( EG_CREATE ) + " (" + ;
+                            HB_LANGERRMSG( EG_UNSUPPORTED ) + ")"
+      oError:FileName    := aOrderCreateInfo[ UR_ORCR_BAGNAME ]
+      oError:CanDefault  := .T.
+      UR_SUPER_ERROR( nWA, oError )
    END   
+
+return SUCCESS
+
+static function ADO_ORDDESTROY( nWA, aOrderInfo )
+
+   local aWAData := USRRDD_AREADATA( nWA ), n, oIndex
+
+   if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
+      for n = 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+          oIndex = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
+          if oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
+             aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Delete( oIndex:Name )
+          endif
+      next       
+   endif   
 
 return SUCCESS
 
@@ -689,44 +721,45 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    local cSuperRDD   /* NO SUPER RDD */
    local aMyFunc[ UR_METHODCOUNT ]
 
-   aMyFunc[ UR_INIT ]      := ( @ADO_INIT() )
-   aMyFunc[ UR_NEW ]       := ( @ADO_NEW() )
-   aMyFunc[ UR_CREATE ]    := ( @ADO_CREATE() )
+   aMyFunc[ UR_INIT ]         := ( @ADO_INIT() )
+   aMyFunc[ UR_NEW ]          := ( @ADO_NEW() )
+   aMyFunc[ UR_CREATE ]       := ( @ADO_CREATE() )
    aMyFunc[ UR_CREATEFIELDS ] := ( @ADO_CREATEFIELDS() )
-   aMyFunc[ UR_OPEN ]      := ( @ADO_OPEN() )
-   aMyFunc[ UR_CLOSE ]     := ( @ADO_CLOSE() )
-   aMyFunc[ UR_BOF  ]      := ( @ADO_BOF() )
-   aMyFunc[ UR_EOF  ]      := ( @ADO_EOF() )
-   aMyFunc[ UR_DELETED ]   := ( @ADO_DELETED() )
-   aMyFunc[ UR_SKIPRAW ]   := ( @ADO_SKIPRAW() )
-   aMyFunc[ UR_GOTO ]      := ( @ADO_GOTOID() )
-   aMyFunc[ UR_GOTOID ]    := ( @ADO_GOTOID() )
-   aMyFunc[ UR_GOTOP ]     := ( @ADO_GOTOP() )
-   aMyFunc[ UR_GOBOTTOM ]  := ( @ADO_GOBOTTOM() )
-   aMyFunc[ UR_RECID ]     := ( @ADO_RECID() )
-   aMyFunc[ UR_RECCOUNT ]  := ( @ADO_RECCOUNT() )
-   aMyFunc[ UR_GETVALUE ]  := ( @ADO_GETVALUE() )
-   aMyFunc[ UR_PUTVALUE ]  := ( @ADO_PUTVALUE() )
-   aMyFunc[ UR_DELETE ]    := ( @ADO_DELETE() )
-   aMyFunc[ UR_APPEND ]    := ( @ADO_APPEND() )
-   aMyFunc[ UR_FLUSH ]     := ( @ADO_FLUSH() )
-   aMyFunc[ UR_ORDINFO ]   := ( @ADO_ORDINFO() )
-   aMyFunc[ UR_PACK ]      := ( @ADO_PACK() )
-   aMyFunc[ UR_RAWLOCK ]   := ( @ADO_RAWLOCK() )
-   aMyFunc[ UR_LOCK ]      := ( @ADO_LOCK() )
-   aMyFunc[ UR_UNLOCK ]    := ( @ADO_UNLOCK() )
-   aMyFunc[ UR_SETFILTER ] := ( @ADO_SETFILTER() )
-   aMyFunc[ UR_CLEARFILTER ] := ( @ADO_CLEARFILTER() )
-   aMyFunc[ UR_ZAP ]       := ( @ADO_ZAP() )
-   aMyFunc[ UR_SETLOCATE ] := ( @ADO_SETLOCATE() )
-   aMyFunc[ UR_LOCATE ]    := ( @ADO_LOCATE() )
-   aMyFunc[ UR_CLEARREL ]  := ( @ADO_CLEARREL() )
-   aMyFunc[ UR_RELAREA ]   := ( @ADO_RELAREA() )
-   aMyFunc[ UR_RELTEXT ]   := ( @ADO_RELTEXT() )
-   aMyFunc[ UR_SETREL ]    := ( @ADO_SETREL() )
-   aMyFunc[ UR_ORDCREATE ] := ( @ADO_ORDCREATE() )
-   aMyFunc[ UR_ORDLSTADD ] := ( @ADO_ORDLSTADD() )
-   aMyFunc[ UR_ORDLSTCLEAR ] := ( @ADO_ORDLSTCLEAR() )
+   aMyFunc[ UR_OPEN ]         := ( @ADO_OPEN() )
+   aMyFunc[ UR_CLOSE ]        := ( @ADO_CLOSE() )
+   aMyFunc[ UR_BOF  ]         := ( @ADO_BOF() )
+   aMyFunc[ UR_EOF  ]         := ( @ADO_EOF() )
+   aMyFunc[ UR_DELETED ]      := ( @ADO_DELETED() )
+   aMyFunc[ UR_SKIPRAW ]      := ( @ADO_SKIPRAW() )
+   aMyFunc[ UR_GOTO ]         := ( @ADO_GOTOID() )
+   aMyFunc[ UR_GOTOID ]       := ( @ADO_GOTOID() )
+   aMyFunc[ UR_GOTOP ]        := ( @ADO_GOTOP() )
+   aMyFunc[ UR_GOBOTTOM ]     := ( @ADO_GOBOTTOM() )
+   aMyFunc[ UR_RECID ]        := ( @ADO_RECID() )
+   aMyFunc[ UR_RECCOUNT ]     := ( @ADO_RECCOUNT() )
+   aMyFunc[ UR_GETVALUE ]     := ( @ADO_GETVALUE() )
+   aMyFunc[ UR_PUTVALUE ]     := ( @ADO_PUTVALUE() )
+   aMyFunc[ UR_DELETE ]       := ( @ADO_DELETE() )
+   aMyFunc[ UR_APPEND ]       := ( @ADO_APPEND() )
+   aMyFunc[ UR_FLUSH ]        := ( @ADO_FLUSH() )
+   aMyFunc[ UR_ORDINFO ]      := ( @ADO_ORDINFO() )
+   aMyFunc[ UR_PACK ]         := ( @ADO_PACK() )
+   aMyFunc[ UR_RAWLOCK ]      := ( @ADO_RAWLOCK() )
+   aMyFunc[ UR_LOCK ]         := ( @ADO_LOCK() )
+   aMyFunc[ UR_UNLOCK ]       := ( @ADO_UNLOCK() )
+   aMyFunc[ UR_SETFILTER ]    := ( @ADO_SETFILTER() )
+   aMyFunc[ UR_CLEARFILTER ]  := ( @ADO_CLEARFILTER() )
+   aMyFunc[ UR_ZAP ]          := ( @ADO_ZAP() )
+   aMyFunc[ UR_SETLOCATE ]    := ( @ADO_SETLOCATE() )
+   aMyFunc[ UR_LOCATE ]       := ( @ADO_LOCATE() )
+   aMyFunc[ UR_CLEARREL ]     := ( @ADO_CLEARREL() )
+   aMyFunc[ UR_RELAREA ]      := ( @ADO_RELAREA() )
+   aMyFunc[ UR_RELTEXT ]      := ( @ADO_RELTEXT() )
+   aMyFunc[ UR_SETREL ]       := ( @ADO_SETREL() )
+   aMyFunc[ UR_ORDCREATE ]    := ( @ADO_ORDCREATE() )
+   aMyFunc[ UR_ORDDESTROY ]   := ( @ADO_ORDDESTROY() )
+   aMyFunc[ UR_ORDLSTADD ]    := ( @ADO_ORDLSTADD() )
+   aMyFunc[ UR_ORDLSTCLEAR ]  := ( @ADO_ORDLSTCLEAR() )
 
 return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
                             aMyFunc )
