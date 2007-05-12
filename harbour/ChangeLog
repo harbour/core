@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 18:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/compiler/hbmain.c 
+   * harbour/source/compiler/harbour.yyc
+     ! Fixed error message text when unclosed multiline codeblock 
+       was detected (said: <||...> instead of {||...}).
+       (two more places)
+
 2007-05-11 18:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/compiler/harbour.y
      ! Fixed error message text when unclosed multiline codeblock 

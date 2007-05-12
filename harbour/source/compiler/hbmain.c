@@ -3829,7 +3829,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    {
       if( HB_COMP_PARAM->iWarnings >= 1 )
          hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
-                            "<||...>", NULL );
+                            "{||...}", NULL );
       /* finish the codeblock without popping the return value from HVM stack */
       hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
    }
@@ -3951,7 +3951,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       while( pVar )
       {
          if( HB_COMP_PARAM->iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
-            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, "<||...>" );
+            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, "{||...}" );
          pVar = pVar->pNext;
       }
    }
