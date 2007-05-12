@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-11 18:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/compiler/harbour.y
+     ! Fixed error message text when unclosed multiline codeblock 
+       was detected (said: <||...> instead of {||...}).
+     ; TOFIX: In this same case two memory blocks are not released:
+       source\main\harbour.c:329: HB_TR_ERROR Block 1 0098C39C (size 100)
+       source\main\harbour.c:329: HB_TR_ERROR Block 2 0098C200 (size 92)
+
 2007-05-12 17:43 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/tip/cgi.prg
     * support of option encoding in StartHtml

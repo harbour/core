@@ -2653,7 +2653,7 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
    else if( HB_COMP_PARAM->functions.pLast &&
        ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
    {
-      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "<||...>", NULL );
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "{||...}", NULL );
    }
    else
       fUnclosed = FALSE;
