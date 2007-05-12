@@ -485,6 +485,12 @@ void hb_compVariableAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
              HB_COMP_PARAM->iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pMemvars, szVarName );
    }
+   else if( pFunc->bFlags & FUN_EXTBLOCK )
+   {
+      /* variable defined in an extended codeblock */
+      hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pFields, szVarName );
+      hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pStatics, szVarName );
+   }
    else if( HB_COMP_PARAM->iVarScope != VS_PARAMETER )
    {
       fprintf( hb_comp_errFile, "Wrong type of codeblock parameter, is: %d, should be: %d\r\n", HB_COMP_PARAM->iVarScope, VS_PARAMETER );
@@ -843,6 +849,30 @@ PVAR hb_compVariableFind( HB_COMP_DECL, char * szVarName, int * piPos, int * piS
                 * in which the current codeblock is defined
                 */
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OUTER_VAR, szVarName, NULL );
+            }
+         }
+         else if( pFunc->bFlags & FUN_EXTBLOCK )
+         {  /* extended codeblock */
+            /* check static variables */
+            pVar = hb_compVariableGet( pFunc->pStatics, szVarName, piPos );
+            if( pVar )
+            {
+               *piScope = HB_VS_STATIC_VAR;
+               *piPos += pFunc->iStaticsBase;
+            }
+            else
+            {
+               /* check FIELDs */
+               pVar = hb_compVariableGet( pFunc->pFields, szVarName, piPos );
+               if( pVar )
+                  *piScope = HB_VS_LOCAL_FIELD;
+               else
+               {
+                  /* check MEMVARs */
+                  pVar = hb_compVariableGet( pFunc->pMemvars, szVarName, piPos );
+                  if( pVar )
+                     *piScope = HB_VS_LOCAL_MEMVAR;
+               }
             }
          }
       }
@@ -3007,7 +3037,8 @@ void hb_compGenPopVar( char * szVarName, HB_COMP_DECL ) /* generates the pcode t
              * if PARAMETERS statement will be used then it is safe to
              * use 2 bytes for LOCALNEAR
              */
-            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName )
+            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
+                !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, HB_COMP_PARAM );
             else
                hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
@@ -3082,7 +3113,8 @@ void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL )
              * if PARAMETERS statement will be used then it is safe to
              * use 2 bytes for LOCALNEAR
              */
-            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName )
+            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
+                !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, HB_COMP_PARAM );
             else
                hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), HB_COMP_PARAM );
@@ -3790,6 +3822,17 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    PVAR pVar;
 
    pCodeblock = HB_COMP_PARAM->functions.pLast;
+
+   /* Check if the extended codeblock has return statement */
+   if( ( pCodeblock->bFlags & FUN_EXTBLOCK ) &&
+       !( pCodeblock->bFlags & FUN_WITH_RETURN ) )
+   {
+      if( HB_COMP_PARAM->iWarnings >= 1 )
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
+                            "<||...>", NULL );
+      /* finish the codeblock without popping the return value from HVM stack */
+      hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
+   }
 
    hb_compGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM ); /* finish the codeblock */
 

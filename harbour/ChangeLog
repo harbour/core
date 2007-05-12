@@ -8,6 +8,40 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-12 10:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbpp.h
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/pp/ppcore.c
+    + added support for extended multiline codeblocks:
+         { |<params,...>| <EOL>
+            <statement1>
+            ...
+            <statementN>
+            return <val>
+         }
+      Such codeblocks allow nested definitions. They can also have their
+      own variable declarations (local, static, field, memvar, parameters,
+      private, public) and visibility of declared variables is similar to
+      nested function in Pascal but please note that there is one limitation
+      which exists also for normal codeblocks (Clipper compatible behavior):
+      internal codeblock local parameters and local variables cannot be
+      used in nested codeblocks, f.e. such code:
+            eval( { |p| eval( {|| qout( p + 1 ) } ) } )
+      is illegal in Clipper and Harbour. This limitation also can be
+      eliminated but but it will be necessary to make deeper modifications
+      in code for local detaching changing the method of generating
+      codeblocks local variables in nested blocks so unlike the above
+      also some modifications in HVM will be necessary.
+      Please test.
+
 2007-05-11 22:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h

@@ -133,6 +133,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
 #else
    static void hb_compExprCodeblockPush( HB_EXPR_PTR, BOOL, HB_COMP_DECL );
    static void hb_compExprCodeblockEarly( HB_EXPR_PTR, HB_COMP_DECL );
+   static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 #endif
 
 static void hb_compExprPushSendPop( HB_EXPR_PTR pSelf, HB_COMP_DECL );
@@ -409,9 +410,11 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 #if defined(HB_MACRO_SUPPORT)	 
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
-         if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACRO ) &&
-             !( pSelf->value.asCodeblock.flags &
-                ( HB_BLOCK_LATEEVAL | HB_BLOCK_VPARAMS ) ) )
+         if( pSelf->value.asCodeblock.flags & HB_BLOCK_EXT )
+            hb_compExprCodeblockExtPush( pSelf, HB_COMP_PARAM );
+         else if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACRO ) &&
+                 !( pSelf->value.asCodeblock.flags &
+                                 ( HB_BLOCK_LATEEVAL | HB_BLOCK_VPARAMS ) ) )
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
          else
@@ -3874,6 +3877,12 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval, HB_COMP
 /* This generates a push pcode for early evaluation of a macro
 */
 #if !defined(HB_MACRO_SUPPORT) 
+static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   hb_compGenPCodeN( ( BYTE * ) pSelf->value.asCodeblock.string,
+                     pSelf->ulLength, HB_COMP_PARAM );
+}
+
 static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;

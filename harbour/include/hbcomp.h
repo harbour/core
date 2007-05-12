@@ -133,6 +133,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, char * );
 #define FUN_BREAK_CODE        0x08  /* last statement breaks execution flow */
 #define FUN_USES_LOCAL_PARAMS 0x10  /* parameters are declared using () */
 #define FUN_WITH_RETURN       0x20  /* there was RETURN statement in previous line */
+#define FUN_EXTBLOCK          0x40  /* it's extended codeblock */
 
 extern void      hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( HB_COMP_DECL, char * szFunName ); /* locates a previously defined function */

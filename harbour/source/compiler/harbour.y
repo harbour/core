@@ -164,7 +164,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 %token PROCREQ
-%token CBSTART BEGINCODE DOIDENT
+%token CBSTART DOIDENT
 %token FOREACH DESCEND
 %token DOSWITCH WITHOBJECT
 %token NUM_DATE
@@ -211,7 +211,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
 %type <asExpr>  Argument ExtArgument RefArgument ArgList ElemList
-%type <asExpr>  BlockExpList BlockVars BlockVarList
+%type <asExpr>  BlockHead BlockExpList BlockVars BlockVarList
 %type <asExpr>  DoName DoProc DoArgs DoArgument DoArgList
 %type <asExpr>  NumValue NumAlias
 %type <asExpr>  NilValue NilAlias
@@ -408,7 +408,11 @@ Statement  : ExecFlow CrlfStmnt
                         }
                         /* TODO: check if return value agree with declared value */
                         HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
-                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
+                        if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK )
+                           /* extended clodeblock, use HB_P_ENDBLOCK to return value and stop execution */
+                           hb_compGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM );
+                        else
+                           hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
                         if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
@@ -1010,17 +1014,11 @@ ElemList   : ExtArgument               { $$ = hb_compExprNewList( $1, HB_COMP_PA
            | ElemList ',' ExtArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-CodeBlock  : CBSTART { $<asExpr>$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; }
-             BlockVars '|' BlockExpList '}'  { $$ = $<asExpr>2; }
-           ;
+BlockHead   : CBSTART         { $$ = hb_compExprNewCodeBlock( $1.string, $1.length, $1.flags, HB_COMP_PARAM ); $1.string = NULL; }
+              BlockVars '|'   { $$ = $<asExpr>2; }
+            ;
 
-/* NOTE: This uses $-2 then don't use BlockExpList in other context
- */
-BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $1 ); }
-             | BlockExpList ',' Expression   { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-2, $3 ); }
-             ;
-
-/* NOTE: This uses $0 then don't use BlockVars and BlockVarList in other context
+/* NOTE: This uses $0 then don't use BlockVars, BlockVarList and BlockExpList in other context
  */
 BlockVars  : /* empty list */          { $$ = NULL; }
            | EPSILON                   { $$ = NULL; $<asExpr>0->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
@@ -1031,6 +1029,47 @@ BlockVars  : /* empty list */          { $$ = NULL; }
 BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
              | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
              ;
+
+BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>0, $1 ); }
+             | BlockExpList ',' Expression   { $$ = hb_compExprAddCodeblockExpr( $<asExpr>0, $3 ); }
+             ;
+
+CodeBlock   : BlockHead BlockExpList '}'
+            | BlockHead Crlf
+            {  /* 3 */
+               HB_CBVAR_PTR pVar;
+               $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+               hb_compCodeBlockStart( HB_COMP_PARAM, TRUE );
+               HB_COMP_PARAM->functions.pLast->bFlags |= FUN_EXTBLOCK;
+               HB_COMP_PARAM->functions.pLast->fVParams =
+                  ( $1->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;
+
+               $1->value.asCodeblock.flags |= HB_BLOCK_EXT;
+               if( $1->value.asCodeblock.string )
+               {
+                  hb_xfree( $1->value.asCodeblock.string );
+                  $1->value.asCodeblock.string = NULL;
+                  $1->ulLength = 0;
+               }
+
+               HB_COMP_PARAM->iVarScope = VS_PARAMETER;
+               pVar = $1->value.asCodeblock.pLocals;
+               while( pVar )
+               {
+                  hb_compVariableAdd( HB_COMP_PARAM, pVar->szName, pVar->bType );
+                  pVar =pVar->pNext;
+               }
+            }
+            EmptyStats '}'
+            {  /* 6 */
+               hb_compCodeBlockEnd( HB_COMP_PARAM );
+               $$ = hb_compExprSetCodeblockBody( $1,
+                     HB_COMP_PARAM->functions.pLast->pCode + ( ULONG ) $<lNumber>3,
+                     HB_COMP_PARAM->functions.pLast->lPCodePos - $<lNumber>3 );
+               HB_COMP_PARAM->functions.pLast->lPCodePos = $<lNumber>3;
+               HB_COMP_PARAM->lastLinePos = 0;
+            }
+            ;
 
 ExpList     : Expression               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
             | ExpList ',' Expression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
@@ -1108,6 +1147,11 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   {
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), FALSE );
                   }
+                  else if( HB_COMP_PARAM->iVarScope == VS_LOCAL &&
+                           ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+                  {
+                     HB_COMP_EXPR_DELETE( hb_compExprGenPush( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ) );
+                  }
                }
            | IdentName AsType { $<iNumber>$ = HB_COMP_PARAM->iVarScope;
                                 hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType );
@@ -1128,6 +1172,11 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                   {
                      HB_COMP_EXPR_DELETE( hb_compExprGenPush( $6, HB_COMP_PARAM ) );
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), TRUE );
+                  }
+                  else if( HB_COMP_PARAM->iVarScope == VS_LOCAL &&
+                           ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+                  {
+                     HB_COMP_EXPR_DELETE( hb_compExprGenPush( $6, HB_COMP_PARAM ) );
                   }
                   else
                   {
@@ -2212,7 +2261,12 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
      HB_COMP_EXPR_DELETE( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ) );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-     HB_COMP_EXPR_DELETE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+
+     if( HB_COMP_PARAM->iVarScope != VS_LOCAL ||
+         !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+     {
+        HB_COMP_EXPR_DELETE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+     }
   }
 }
 
@@ -2595,6 +2649,11 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "BEGIN SEQUENCE", NULL );
       HB_COMP_PARAM->wSeqCounter = 0;
+   }
+   else if( HB_COMP_PARAM->functions.pLast &&
+       ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+   {
+      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "<||...>", NULL );
    }
    else
       fUnclosed = FALSE;

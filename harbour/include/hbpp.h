@@ -62,6 +62,7 @@ HB_EXTERN_BEGIN
 #define HB_BLOCK_MACRO     1
 #define HB_BLOCK_LATEEVAL  2
 #define HB_BLOCK_VPARAMS   4
+#define HB_BLOCK_EXT       8
 
 /* #pragma {__text,__stream,__cstream}|functionOut|functionEnd|functionStart */
 #define HB_PP_STREAM_OFF      0 /* standard preprocessing */
@@ -599,6 +600,8 @@ typedef struct
    int      iInLineCount;        /* number of hb_inLine() functions */
    int      iInLineState;        /* hb_inLine() state */
    int      iInLineBraces;       /* braces counter for hb_inLine() */
+   int      iNestedBlock;        /* nested extended block counter */
+   int      iBlockState;         /* state of extended block declaration */
 
    PHB_PP_FILE pFile;            /* currently preprocessed file structure */
    int      iFiles;              /* number of open files */

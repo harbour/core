@@ -143,6 +143,7 @@ extern HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE, HB_COMP_DECL );
 extern void hb_compExprCBVarDel( HB_CBVAR_PTR );
 extern HB_EXPR_PTR hb_compExprAddCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
+extern HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, BYTE * pCode, ULONG ulLen );
 extern HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR );
 extern HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR, HB_COMP_DECL );

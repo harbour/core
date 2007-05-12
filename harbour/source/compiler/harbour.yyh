@@ -132,18 +132,17 @@
      AS_OBJECT_ARRAY = 348,
      PROCREQ = 349,
      CBSTART = 350,
-     BEGINCODE = 351,
-     DOIDENT = 352,
-     FOREACH = 353,
-     DESCEND = 354,
-     DOSWITCH = 355,
-     WITHOBJECT = 356,
-     NUM_DATE = 357,
-     EPSILON = 358,
-     HASHOP = 359,
-     POST = 360,
-     UNARY = 361,
-     PRE = 362
+     DOIDENT = 351,
+     FOREACH = 352,
+     DESCEND = 353,
+     DOSWITCH = 354,
+     WITHOBJECT = 355,
+     NUM_DATE = 356,
+     EPSILON = 357,
+     HASHOP = 358,
+     POST = 359,
+     UNARY = 360,
+     PRE = 361
    };
 #endif
 /* Tokens.  */
@@ -240,18 +239,17 @@
 #define AS_OBJECT_ARRAY 348
 #define PROCREQ 349
 #define CBSTART 350
-#define BEGINCODE 351
-#define DOIDENT 352
-#define FOREACH 353
-#define DESCEND 354
-#define DOSWITCH 355
-#define WITHOBJECT 356
-#define NUM_DATE 357
-#define EPSILON 358
-#define HASHOP 359
-#define POST 360
-#define UNARY 361
-#define PRE 362
+#define DOIDENT 351
+#define FOREACH 352
+#define DESCEND 353
+#define DOSWITCH 354
+#define WITHOBJECT 355
+#define NUM_DATE 356
+#define EPSILON 357
+#define HASHOP 358
+#define POST 359
+#define UNARY 360
+#define PRE 361
 
 
 
@@ -301,7 +299,7 @@ typedef union YYSTYPE
    } asMessage;
 }
 /* Line 1533 of yacc.c.  */
-#line 305 "harboury.h"
+#line 303 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

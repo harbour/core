@@ -566,6 +566,18 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 
    return pExpr;
 }
+
+HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, BYTE * pCode, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%lu)", pExpr, pCode, ulLen));
+
+   pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( ulLen + 1 );
+   memcpy( pExpr->value.asCodeblock.string, pCode, ulLen );
+   pExpr->value.asCodeblock.string[ ulLen ] = '\0';
+   pExpr->ulLength = ulLen;
+
+   return pExpr;
+}
 #endif
 
 /* ************************************************************************* */
