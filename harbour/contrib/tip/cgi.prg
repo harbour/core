@@ -304,7 +304,7 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
    
 METHOD StartHtml( hOptions ) CLASS TIpCgi
 
-   ::cHtmlPage += '<?xml version="1.0"?>' + _CRLF + ;
+   ::cHtmlPage += '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
                   '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
                   '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
                   '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
@@ -476,10 +476,12 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
          if empty( lScan )
             hDel( xVal, cKey )
          endif
-         if !empty( cPre ) .and. !empty( cPost ) 
-            cVal := cPre + cKey + cPost + cVal
-         else
-            cVal := cKey + '="' + cVal + '"'
+         cVal := cKey + '="' + cVal + '"'
+         if cPre != nil
+            cVal := cPre + cVal
+         endif
+         if cPost != nil
+            cVal := cVal + cPost
          endif
       endif
    endif
@@ -539,7 +541,7 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
       if ( nPos := hGetPos( xVal, cKey ) ) != 0
          cVal := hGetValueAt( xVal, nPos )
          if valtype( cVal ) == "C"
-            cVal := '<script language="JavaScript" type="text/javascript">' + _CRLF +;
+            cVal := '<script type="text/javascript">' + _CRLF +;
                     '<!--' + _CRLF +;
                     cVal + _CRLF +;
                     '-->' + _CRLF +;
@@ -548,10 +550,10 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
             if ( nPos := hGetPos( cVal, 'src' ) ) != 0
                cVal := hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"            
-                  cVal := '<script language="JavaScript" src="' + cVal + '" type="text/javascript">' + _CRLF
+                  cVal := '<script src="' + cVal + '" type="text/javascript">' + _CRLF
                elseif valtype( cVal ) == "A"
                   cTmp := ''
-                  ascan( cVal, { |cFile| cTmp += '<script language="JavaScript" src="' + cFile + '" type="text/javascript">' + _CRLF } )
+                  ascan( cVal, { |cFile| cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
                   cVal := cTmp
                endif   
             endif
