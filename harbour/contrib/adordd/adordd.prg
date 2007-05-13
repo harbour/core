@@ -453,7 +453,7 @@ static function ADO_PUTVALUE( nWA, nField, xValue )
    local aWAData := USRRDD_AREADATA( nWA )
    local oRecordSet := aWAData[ WA_RECORDSET ]
 
-   if ! aWAData[ WA_EOF ]
+   if ! aWAData[ WA_EOF ] .and. oRecordSet:Fields( nField - 1 ):Value != xValue
       oRecordSet:Fields( nField - 1 ):Value := xValue
       TRY
          oRecordSet:Update()     
