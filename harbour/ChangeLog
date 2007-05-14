@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-14 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbmain.c
+    ! fixed memory leak when error appears during generating codeblock
+
 2007-05-13 09:20 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Improved ADO_PUTVALUE()

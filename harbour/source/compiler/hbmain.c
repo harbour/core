@@ -2426,6 +2426,24 @@ void hb_compExternAdd( HB_COMP_DECL, char * szExternName, HB_SYMBOLSCOPE cScope 
    }
 }
 
+static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
+{
+   while( HB_COMP_PARAM->functions.pLast &&
+       !HB_COMP_PARAM->functions.pLast->szName )
+   {
+      PFUNCTION pBlock = HB_COMP_PARAM->functions.pLast;
+      HB_COMP_PARAM->functions.pLast = pBlock->pOwner;
+      hb_compFunctionKill( pBlock );
+   }
+
+   if( HB_COMP_PARAM->functions.iCount == 0 )
+      HB_COMP_PARAM->functions.pFirst = pFunc;
+   else
+      HB_COMP_PARAM->functions.pLast->pNext = pFunc;
+   HB_COMP_PARAM->functions.pLast = pFunc;
+   HB_COMP_PARAM->functions.iCount++;
+}
+
 /*
  * Stores a Clipper defined function/procedure
  * szFunName - name of a function
@@ -2485,17 +2503,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, char * szFunName, HB_SYMBOLSCOPE cScope, 
    pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, cScope );
    pFunc->bFlags |= iType;
 
-   if( HB_COMP_PARAM->functions.iCount == 0 )
-   {
-      HB_COMP_PARAM->functions.pFirst = pFunc;
-      HB_COMP_PARAM->functions.pLast  = pFunc;
-   }
-   else
-   {
-      HB_COMP_PARAM->functions.pLast->pNext = pFunc;
-      HB_COMP_PARAM->functions.pLast = pFunc;
-   }
-   HB_COMP_PARAM->functions.iCount++;
+   hb_compAddFunc( HB_COMP_PARAM, pFunc );
 
    HB_COMP_PARAM->lastLinePos = 0;  /* optimization of line numbers opcode generation */
    HB_COMP_PARAM->ilastLineErr = 0; /* position of last syntax error (line number) */
@@ -2571,17 +2579,7 @@ void hb_compAnnounce( HB_COMP_DECL, char * szFunName )
       pFunc = hb_compFunctionNew( HB_COMP_PARAM, szFunName, pSym->cScope );
       pFunc->bFlags |= FUN_PROCEDURE;
 
-      if( HB_COMP_PARAM->functions.iCount == 0 )
-      {
-         HB_COMP_PARAM->functions.pFirst = pFunc;
-         HB_COMP_PARAM->functions.pLast  = pFunc;
-      }
-      else
-      {
-         HB_COMP_PARAM->functions.pLast->pNext = pFunc;
-         HB_COMP_PARAM->functions.pLast = pFunc;
-      }
-      HB_COMP_PARAM->functions.iCount++;
+      hb_compAddFunc( HB_COMP_PARAM, pFunc );
       HB_COMP_PARAM->iFunctionCnt++;
 
       /* this function have a very limited functionality
@@ -4132,10 +4130,8 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
    PCOMSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
 
    pSym->cScope |= pFunc->cScope;
-   HB_COMP_PARAM->functions.pLast->pNext = pFunc;
-   HB_COMP_PARAM->functions.pLast = pFunc;
+   hb_compAddFunc( HB_COMP_PARAM, pFunc );
    hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-   ++HB_COMP_PARAM->functions.iCount;
 }
 
 static void hb_compCompileEnd( HB_COMP_DECL )
@@ -4158,6 +4154,14 @@ static void hb_compCompileEnd( HB_COMP_DECL )
    {
       hb_xfree( HB_COMP_PARAM->pFileName );
       HB_COMP_PARAM->pFileName = NULL;
+   }
+
+   while( HB_COMP_PARAM->functions.pLast &&
+          !HB_COMP_PARAM->functions.pLast->szName )
+   {
+      PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+      HB_COMP_PARAM->functions.pLast = pFunc->pOwner;
+      hb_compFunctionKill( pFunc );
    }
 
    if( HB_COMP_PARAM->functions.pFirst )
