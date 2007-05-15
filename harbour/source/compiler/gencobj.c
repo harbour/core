@@ -129,7 +129,8 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( !pszCfgFileName )
    {
-       pszCfgFileName = HB_CFG_FILENAME;
+       pszCfgFileName = ( char * ) hb_xgrab( strlen( HB_CFG_FILENAME ) + 1 );
+       strcpy( pszCfgFileName, HB_CFG_FILENAME );
    }
 
    if( pszEnv && *hb_searchpath( pszCfgFileName, pszEnv, pszTemp ) )
