@@ -323,7 +323,7 @@ DECLARE HBClass ;
 
 /* Operator overloading */
 #xcommand OPERATOR <op> [<arg: ARG, ARGS> <Args,...>] [LOCAL <Locals,...>] INLINE <Code,...> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
-   s_oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| <Code>}, __HB_CLS_SYMBOL_UNUSED(Self), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
+   s_oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| <Code>}, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
 
 #xcommand METHOD <MethodName> [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>) [ AS <type> ];;
