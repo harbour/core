@@ -8,10 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-16 16:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/ChangeLog
+     + Added one missing entry (2007-05-15 15:40 UTC+0300).
+
+   * harbour/include/hblass.ch
+     ! Fix added for misplaced *UNUSED() macro. (Thanks Juan)
+
+   * harbour/include/hbapifs.h
+     ! Added HB_EXPORT for hb_fsFind*() functions.
+
 2007-05-16 11:03 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * /include/hbclass.h
     ! fixed INLINE, incorrect parameters are passed to.
       reported by Juan Galvez.
+
+2007-05-15 15:40 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/gencobj.c
+    ! fixed unrecoverable error "hb_xfree called with an invalid pointer"
+      related to HB_CFG_FILE implementation
 
 2007-05-14 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.y

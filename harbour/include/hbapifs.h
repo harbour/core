@@ -213,9 +213,9 @@ typedef struct
 } HB_FFIND, * PHB_FFIND;
 
 /* File Find API functions */
-extern PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr );
-extern BOOL      hb_fsFindNext( PHB_FFIND ffind );
-extern void      hb_fsFindClose( PHB_FFIND ffind );
+extern HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr );
+extern HB_EXPORT BOOL      hb_fsFindNext( PHB_FFIND ffind );
+extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* Misc helper functions */
 extern USHORT    hb_fsAttrFromRaw( ULONG raw_attr );

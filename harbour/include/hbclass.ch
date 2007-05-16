@@ -323,7 +323,7 @@ DECLARE HBClass ;
 
 /* Operator overloading */
 #xcommand OPERATOR <op> [<arg: ARG, ARGS> <Args,...>] [LOCAL <Locals,...>] INLINE <Code,...> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
-   s_oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| <Code>}, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
+   s_oClass:AddInline( <(op)>, {|Self [,<Args>] [,<Locals>]| __HB_CLS_SYMBOL_UNUSED(Self), <Code>}, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
 
 #xcommand METHOD <MethodName> [ AS <type> ] OPERATOR <op> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>) [ AS <type> ];;
@@ -441,7 +441,7 @@ DECLARE HBClass ;
 
    // Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07
    #xcommand METHOD <MethodName> [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
-             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [<other>]
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code>} [<other>]
 
    #xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
              MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<params>] [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [<other>]
