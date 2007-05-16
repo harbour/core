@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-17 00:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/utils/hbtest/rt_misc.prg
+     ! SET EOLs guarded with __HARBOUR__ to make it compile on 
+       other platforms.
+
 2007-05-17 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/TODO
     * removed some not longer necessary TODO/TOFIX
