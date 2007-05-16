@@ -69,15 +69,11 @@ C_SOURCES=\
 	math.c       \
 	maxrow.c     \
 	memofile.c   \
-	memoline.c   \
 	minmax.c     \
-	mlcount.c    \
-	mlctopos.c   \
-	mlpos.c      \
+	mlcfunc.c    \
 	mod.c        \
 	mouseapi.c   \
 	mousex.c     \
-	mpostolc.c   \
 	mtran.c      \
 	natmsg.c     \
 	net.c        \

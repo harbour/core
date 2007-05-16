@@ -2457,6 +2457,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       }
       else if( pResult != pItem1 )
          hb_itemCopy( pResult, pItem1 );
+      pResult->type &= ~HB_IT_MEMOFLAG;
    }
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
    {
@@ -4222,6 +4223,7 @@ static void hb_vmArrayPop( void )
       PHB_ITEM pDest = hb_hashGetItemPtr( pArray, pIndex );
       if( pDest )
       {
+         pValue->type &= ~HB_IT_MEMOFLAG;
          hb_itemMoveFromRef( pDest, pValue );
          hb_stackPop();
          hb_stackPop();
@@ -4321,9 +4323,11 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
    {
       /* move items from HVM stack to created array */
       for( ulPos = 0; ulPos < ulElements; ulPos++ )
-         hb_itemMove( pArray->item.asArray.value->pItems + ulPos,
-                      hb_stackItemFromTop( ( int ) ( ulPos - ulElements - 1 ) ) );
-
+      {
+         PHB_ITEM pValue = hb_stackItemFromTop( ( int ) ( ulPos - ulElements - 1 ) );
+         pValue->type &= ~HB_IT_MEMOFLAG;
+         hb_itemMove( pArray->item.asArray.value->pItems + ulPos, pValue );
+      }
       /* move the new array to position of first parameter */
       hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - ulElements ) ), pArray );
 
@@ -7434,7 +7438,6 @@ HB_EXPORT BOOL hb_xvmLocalAdd( int iLocal )
    hb_vmPlus( pLocal, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
    hb_stackPop();
    hb_stackPop();
-   pLocal->type &= ~HB_IT_MEMOFLAG;
 
    HB_XVM_RETURN
 }
@@ -7451,7 +7454,6 @@ HB_EXPORT BOOL hb_xvmStaticAdd( USHORT uiStatic )
    hb_vmPlus( pStatic, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
    hb_stackPop();
    hb_stackPop();
-   pStatic->type &= ~HB_IT_MEMOFLAG;
 
    HB_XVM_RETURN
 }
@@ -8751,6 +8753,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
 
       if( pDest )
       {
+         pValue->type &= ~HB_IT_MEMOFLAG;
          hb_itemMoveRef( pDest, pValue );
          hb_stackPop();
          hb_stackPop();

@@ -402,6 +402,11 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 /* Clipper allows only 16 nested includes */
 #define HB_PP_MAX_INCLUDED_FILES    64
 
+#define HB_PP_HASHID(t)       ( ( UCHAR ) HB_PP_UPPER( (t)->value[0] ) )
+#define HB_PP_HASHID_MAX      256
+#define HB_PP_DEFINE          1
+#define HB_PP_TRANSLATE       2
+#define HB_PP_COMMAND         4
 
 /* comparision modes */
 #define HB_PP_CMP_ADDR        0 /* compare token addresses */
@@ -448,7 +453,8 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 #define HB_PP_ISFIRSTIDCHAR(c)   ( ( (c) >= 'A' && (c) <= 'Z' ) || \
                                    ( (c) >= 'a' && (c) <= 'z' ) || (c) == '_' )
 #define HB_PP_ISNEXTIDCHAR(c)    ( HB_PP_ISFIRSTIDCHAR(c) || HB_PP_ISDIGIT(c) )
-
+#define HB_PP_UPPER(c)           ( (c) >= 'a' && (c) <= 'z' ? \
+                                   (c) - ( 'a' - 'A' ) : (c) )
 typedef struct _HB_PP_RESULT
 {
    struct _HB_PP_RESULT * pNext;
@@ -554,6 +560,7 @@ typedef struct
    int            iDefinitions;  /* number of rules in pDefinitions */
    int            iTranslations; /* number of rules in pTranslations */
    int            iCommands;     /* number of rules in pCommands */
+   BYTE           pMap[ HB_PP_HASHID_MAX ]; /* translation map */
 
    PHB_PP_TOKEN   pTokenOut;     /* preprocessed tokens */
    PHB_PP_TOKEN * pNextTokenPtr; /* pointer to the last NULL pointer in token list */

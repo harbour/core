@@ -399,12 +399,8 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\math.obj     \
     $(OBJ_DIR)\maxrow.obj   \
     $(OBJ_DIR)\memofile.obj \
-    $(OBJ_DIR)\memoline.obj \
     $(OBJ_DIR)\minmax.obj   \
-    $(OBJ_DIR)\mlcount.obj  \
-    $(OBJ_DIR)\mlpos.obj    \
-    $(OBJ_DIR)\mlctopos.obj \
-    $(OBJ_DIR)\mpostolc.obj \
+    $(OBJ_DIR)\mlcfunc.obj  \
     $(OBJ_DIR)\mod.obj      \
     $(OBJ_DIR)\mouseapi.obj \
     $(OBJ_DIR)\mousex.obj   \

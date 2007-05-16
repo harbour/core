@@ -59,8 +59,6 @@
 #include "hbpp.h"
 #include "hbdate.h"
 #include <errno.h>
-#include <ctype.h>
-
 
 #define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
 
@@ -693,7 +691,6 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
 static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen, ULONG * pulAt )
 {
    ULONG ul = 0;
-   BOOL fQ1 = FALSE, fQ2 = FALSE;
 
    /*
     * TODO: this is Clipper compatible but it breaks valid code so we may
@@ -704,12 +701,8 @@ static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen, ULONG * pu
       if( pBuffer[ ul ] == ']' )
       {
          * pulAt = ul;
-         return fQuote || fQ1 || fQ2;
+         return fQuote;
       }
-      else if( pBuffer[ ul ] == '\'' )
-         fQ1 = !fQ1;
-      else if( pBuffer[ ul ] == '"' )
-         fQ2 = !fQ2;
       ++ul;
    }
    return FALSE;
@@ -1614,6 +1607,15 @@ static void hb_pp_ruleSetStd( PHB_PP_RULE pRule )
    }
 }
 
+static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_RULE pRule, BYTE id )
+{
+   while( pRule )
+   {
+      pState->pMap[ HB_PP_HASHID( pRule->pMatch ) ] |= id;
+      pRule = pRule->pPrev;
+   }
+}
+
 static PHB_PP_RULE hb_pp_defineFind( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 {
    PHB_PP_RULE pRule = pState->pDefinitions;
@@ -1655,6 +1657,7 @@ static void hb_pp_defineAdd( PHB_PP_STATE pState, USHORT mode,
       pState->pDefinitions = pRule;
       pState->iDefinitions++;
    }
+   pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_DEFINE;
 }
 
 static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
@@ -3113,12 +3116,14 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
                pRule->pPrev = pState->pCommands;
                pState->pCommands = pRule;
                pState->iCommands++;
+               pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_COMMAND;
             }
             else
             {
                pRule->pPrev = pState->pTranslations;
                pState->pTranslations = pRule;
                pState->iTranslations++;
+               pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_TRANSLATE;
             }
             pMatch = pResult = NULL;
          }
@@ -3959,7 +3964,8 @@ static BOOL hb_pp_processDefine( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr )
       fRepeat = FALSE;
       while( !HB_PP_TOKEN_ISEOS( * pFirstPtr ) )
       {
-         if( HB_PP_TOKEN_TYPE( ( * pFirstPtr )->type ) == HB_PP_TOKEN_KEYWORD )
+         if( HB_PP_TOKEN_TYPE( ( * pFirstPtr )->type ) == HB_PP_TOKEN_KEYWORD &&
+             ( pState->pMap[ HB_PP_HASHID( * pFirstPtr ) ] & HB_PP_DEFINE ) )
          {
             PHB_PP_RULE pRule = hb_pp_defineFind( pState, * pFirstPtr );
             if( pRule )
@@ -4003,24 +4009,27 @@ static BOOL hb_pp_processTranslate( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPt
       fRepeat = FALSE;
       while( !HB_PP_TOKEN_ISEOS( * pTokenPtr ) )
       {
-         PHB_PP_RULE pRule = pState->pTranslations;
-         while( pRule )
+         if( pState->pMap[ HB_PP_HASHID( * pTokenPtr ) ] & HB_PP_TRANSLATE )
          {
-            if( hb_pp_patternCmp( pRule, * pTokenPtr, FALSE ) )
+            PHB_PP_RULE pRule = pState->pTranslations;
+            while( pRule )
             {
-               hb_pp_patternReplace( pState, pRule, pTokenPtr, "translate" );
-               fSubst = fRepeat = TRUE;
-               if( ++pState->iCycle > pState->iMaxCycles ||
-                   ++iCycle > HB_PP_MAX_REPATS + pState->iTranslations )
+               if( hb_pp_patternCmp( pRule, * pTokenPtr, FALSE ) )
                {
-                  pState->iCycle = pState->iMaxCycles + 1;
-                  hb_pp_error( pState, 'E', HB_PP_ERR_CYCLIC_TRANSLATE, pRule->pMatch->value );
-                  return TRUE;
+                  hb_pp_patternReplace( pState, pRule, pTokenPtr, "translate" );
+                  fSubst = fRepeat = TRUE;
+                  if( ++pState->iCycle > pState->iMaxCycles ||
+                      ++iCycle > HB_PP_MAX_REPATS + pState->iTranslations )
+                  {
+                     pState->iCycle = pState->iMaxCycles + 1;
+                     hb_pp_error( pState, 'E', HB_PP_ERR_CYCLIC_TRANSLATE, pRule->pMatch->value );
+                     return TRUE;
+                  }
+                  pRule = pState->pTranslations;
+                  continue;
                }
-               pRule = pState->pTranslations;
-               continue;
+               pRule = pRule->pPrev;
             }
-            pRule = pRule->pPrev;
          }
          iCycle = 0;
          pTokenPtr = &( * pTokenPtr )->pNext;
@@ -4037,7 +4046,8 @@ static BOOL hb_pp_processCommand( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr 
    BOOL fSubst = FALSE, fRepeat = TRUE;
    int iCycle = 0;
 
-   while( fRepeat && !HB_PP_TOKEN_ISEOC( * pFirstPtr ) )
+   while( fRepeat && !HB_PP_TOKEN_ISEOC( * pFirstPtr ) &&
+          pState->pMap[ HB_PP_HASHID( * pFirstPtr ) ] & HB_PP_COMMAND )
    {
       fRepeat = FALSE;
       pRule = pState->pCommands;
@@ -4913,6 +4923,10 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
    hb_pp_ruleSetStd( pState->pDefinitions );
    hb_pp_ruleSetStd( pState->pTranslations );
    hb_pp_ruleSetStd( pState->pCommands );
+   memset( pState->pMap, 0, sizeof( pState->pMap ) );
+   hb_pp_ruleSetId( pState, pState->pDefinitions, HB_PP_DEFINE );
+   hb_pp_ruleSetId( pState, pState->pTranslations, HB_PP_TRANSLATE );
+   hb_pp_ruleSetId( pState, pState->pCommands, HB_PP_COMMAND );
 }
 
 /*
@@ -5483,7 +5497,7 @@ void hb_pp_tokenUpper( PHB_PP_TOKEN pToken )
 
    if( pToken->len <= 1 )
    {
-      UCHAR ucVal = ( UCHAR ) ( pToken->len ? toupper( ( UCHAR ) pToken->value[ 0 ] ) : 0 );
+      UCHAR ucVal = ( UCHAR ) HB_PP_UPPER( pToken->value[ 0 ] );
       if( HB_PP_TOKEN_ALLOC( pToken->type ) )
       {
          hb_xfree( pToken->value );

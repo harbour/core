@@ -1004,8 +1004,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;
    hb_set.HB_SET_DEFEXTENSIONS = TRUE;
-   hb_set.HB_SET_EOL = ( char * ) hb_xgrab( 3 );
-   memcpy( hb_set.HB_SET_EOL, hb_conNewLine(), 3 );
+   hb_set.HB_SET_EOL = hb_strdup( hb_conNewLine() );
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;

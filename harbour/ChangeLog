@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-17 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    * removed some not longer necessary TODO/TOFIX
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  - harbour/source/rtl/memoline.c
+  - harbour/source/rtl/mlcount.c
+  - harbour/source/rtl/mlctopos.c
+  - harbour/source/rtl/mlpos.c
+  - harbour/source/rtl/mpostolc.c
+  + harbour/source/rtl/mlcfunc.c
+    * new version of memo line functions:
+         MEMOLINE(), MLCOUNT(), MLPOS(), MLCTOPOS(), MPOSTOLC()
+
+  * harbour/include/hbexpra.c
+    ! fixed in HB_COMPAT_XHB build hb_enumIndex() used inside internal
+      FOR/NEXT loop
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    ! removed some not longer necessary hack
+    % added some speed optimizations - it's not done in the way I want to
+      have in the final version but with some very small modifications it
+      should make people using a lot of #[x]translate (Enrico ;-)) happy.
+
+  * harbour/source/rtl/set.c
+    * minor cleanup in HB_SET_EOL initialization
+
+  * harbour/source/vm/hvm.c
+    * clean MEMO flag in array and hash items created by { MEMOFILED, ... }
+      or { "KEY" => MEMOFILED, ... } and optimized results of PLUS operation
+
+  * harbour/utils/hbtest/rt_misc.prg
+    * SET EOL to CHR(13) + CHR( 10 ) before MLCTOPOS() tests to avoid false
+      alarm on platforms with differ default EOL
+
 2007-05-16 16:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/ChangeLog
      + Added one missing entry (2007-05-15 15:40 UTC+0300).

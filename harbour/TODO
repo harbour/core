@@ -29,13 +29,6 @@ Status...: Is it still true?
 
 ***
 
-Assign to: Ryszard, Przemek
-Detail...: Debugger with basic interface written in C - it's enough to
-           borrow Phil's work from xHarbour.
-Status...: Open.
-
-***
-
 Assign to: <nobody>
 Detail...: Add missing Clipper virtual memory functions.
 Status...: Open.
@@ -86,12 +79,6 @@ Status...: Open.
 
 Assign to: <nobody>
 Detail...: Multithreading support.
-Status...: Open.
-
-***
-
-Assign to: <nobody>
-Detail...: Add support for INET sockets.
 Status...: Open.
 
 ***
@@ -168,12 +155,6 @@ Status...: Open.
 
 Assign to: Ryszard
 Detail...: SQLRDD.
-Status...: Working on it.
-
-***
-
-Assign to: Ryszard
-Detail...: Hash.
 Status...: Working on it.
 
 ***

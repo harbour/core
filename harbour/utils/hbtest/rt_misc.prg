@@ -58,7 +58,7 @@
 #include "rt_vars.ch"
 
 FUNCTION Main_MISC()
-   LOCAL oError
+   LOCAL oError, cEOL
 
    /* Some random error object tests taken from the separate test source */
 
@@ -715,6 +715,7 @@ FUNCTION Main_MISC()
 #endif
 
    /* MLCTOPOS() */
+   cEOL := SET( _SET_EOL, CHR(13) + CHR( 10 ) )
 
    TEST_LINE( MLCTOPOS( 'A message from me', 10, 2, 0 )                                , 11 )
    TEST_LINE( MLCTOPOS( 'A message from me', 5, 2, 0, 4, .F. )                         ,  6 )
@@ -761,6 +762,8 @@ FUNCTION Main_MISC()
    TEST_LINE( MLCTOPOS( 'A message from me', 10, 7, 0 )                                , 18 )
    TEST_LINE( MLCTOPOS( , , ,  )                                                       ,  1 )
    TEST_LINE( MLCTOPOS( , .T., ,  )                                                    ,  1 )
+
+   SET( _SET_EOL, cEOL )
 
    RETURN NIL
 

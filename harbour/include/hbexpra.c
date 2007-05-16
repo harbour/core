@@ -140,18 +140,24 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 #if !defined( HB_MACRO_SUPPORT ) && defined( HB_COMPAT_XHB )
          if( strcmp( "HB_ENUMINDEX", pName->value.asSymbol ) == 0 )
          {
-            HB_ENUMERATOR_PTR pEnumVar;
-            pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
-            if( pEnumVar )
+            HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
+            pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
+            if( pForVar )
             {
-               while( pEnumVar->pNext )
-                  pEnumVar = pEnumVar->pNext;
-
-               HB_COMP_EXPR_DELETE( pParms );
-               HB_COMP_EXPR_DELETE( pName ); 
-               return hb_compExprNewMethodCall( hb_compExprNewSend(
+               while( pForVar )
+               {
+                  if( pForVar->bForEach )
+                     pEnumVar = pForVar;
+                  pForVar = pForVar->pNext;
+               }
+               if( pEnumVar )
+               {
+                  HB_COMP_EXPR_DELETE( pParms );
+                  HB_COMP_EXPR_DELETE( pName ); 
+                  return hb_compExprNewMethodCall( hb_compExprNewSend(
                            hb_compExprNewVar( pEnumVar->szName, HB_COMP_PARAM ),
                                  "__ENUMINDEX", NULL, HB_COMP_PARAM ), NULL );
+               }
             }
          }
 #endif
