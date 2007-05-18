@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-18 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    * changed 'char hb_errFuncName' to 'const char hb_errFuncName'
+
+  * harbour/source/compiler/ppcomp.c
+    * added note about Harbour exception in header
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/fserror.c
+    + added hb_getFError(), hb_setFError()
+
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/philes53.c
+    * use hb_getFError()/hb_setFError() in F*() functions
+
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/fssize.c
+    * fixed setting hb_fsError()
+
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/dirdrive.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/philesx.c
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtstd/gtstd.c
+    * removed code to save/restore hb_fsError()
+
 2007-05-18 07:24 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      * ADO_GETFIELDTYPE() Improved

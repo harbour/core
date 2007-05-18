@@ -61,14 +61,10 @@
 
 HB_FUNC( DIRCHANGE )
 {
-   USHORT uiErrorOld = hb_fsError();
-
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( -1 );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 /* NOTE: Clipper 5.3 NG incorrectly states that the name of this function is
@@ -76,62 +72,42 @@ HB_FUNC( DIRCHANGE )
 
 HB_FUNC( MAKEDIR )
 {
-   USHORT uiErrorOld = hb_fsError();
-
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( -1 );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 HB_FUNC( DIRREMOVE )
 {
-   USHORT uiErrorOld = hb_fsError();
-
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : hb_fsError() );
    else
       hb_retni( -1 );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 /* NOTE: Clipper 5.3 undocumented */
 
 HB_FUNC( ISDISK )
 {
-   USHORT uiErrorOld = hb_fsError();
-
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
             hb_fsIsDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
             FALSE );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 HB_FUNC( DISKCHANGE )
 {
-   USHORT uiErrorOld = hb_fsError();
-
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
             hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
             FALSE );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 HB_FUNC( DISKNAME )
 {
-   USHORT uiErrorOld = hb_fsError();
    char szDrive[ 1 ];
 
    szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
-
    hb_retclen( szDrive, 1 );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 #endif

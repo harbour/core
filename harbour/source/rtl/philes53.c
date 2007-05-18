@@ -59,13 +59,15 @@
 
 HB_FUNC( FSETDEVMOD )
 {
+   /* C53 checks only number of parameters: hb_pcount() == 2 */
    if( ISNUM( 1 ) && ISNUM( 2 ) )
+   {
       hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
-
+      hb_setFError( hb_fsError() );
+   }
    /* NOTE: INCOMPATIBILITY! C53 will return the device flags 
             before applying the new setting, Harbour will 
             always return 0. [vszakats] */
-
    hb_retni( 0 );
 }
 

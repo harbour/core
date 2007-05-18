@@ -59,12 +59,12 @@
 #include "hb_io.h"
 #include <errno.h>
 
+static USHORT s_uiFError = 0;
 static USHORT s_uiErrorLast = 0;
 static USHORT s_uiOsErrorLast = 0;
 
 
 /* Try to translate C errno into DOS error code */
-
 #if !defined(HB_WIN32_IO)
 static int hb_errnoToDosError( int ErrCode )
 {
@@ -174,6 +174,14 @@ static int hb_WinToDosError( ULONG ulError )
 }
 #endif
 
+/* return FERROR() code */
+HB_EXPORT USHORT hb_getFError( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_getFError()"));
+
+   return s_uiFError;
+}
+
 /* return DOS error code of last operation */
 HB_EXPORT USHORT hb_fsError( void )
 {
@@ -188,6 +196,14 @@ HB_EXPORT USHORT hb_fsOsError( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOsError()"));
 
    return s_uiOsErrorLast;
+}
+
+/* set FERROR() code */
+HB_EXPORT void hb_setFError( USHORT uiError )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_setFError(%hu)", uiError));
+
+   s_uiFError = uiError;
 }
 
 /* set DOS error code for last operation */

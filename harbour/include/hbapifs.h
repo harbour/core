@@ -144,6 +144,8 @@ extern HB_EXPORT USHORT   hb_fsWrite      ( FHANDLE hFileHandle, const BYTE * pB
 extern HB_EXPORT ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
 extern HB_EXPORT FHANDLE  hb_fsPOpen( BYTE * pFilename, BYTE * pMode );
 extern HB_EXPORT FHANDLE  hb_fsGetOsHandle( FHANDLE hFileHandle );
+extern HB_EXPORT USHORT   hb_getFError( void ); /* get FERROR() flag */
+extern HB_EXPORT void     hb_setFError( USHORT uiError ); /* set FERROR() flag */
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

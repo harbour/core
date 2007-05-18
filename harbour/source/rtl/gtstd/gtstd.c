@@ -156,9 +156,7 @@ static void hb_gt_std_setKeyTrans( char * pSrcChars, char * pDstChars )
 
 static void hb_gt_std_termOut( BYTE * pStr, ULONG ulLen )
 {
-   USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
    hb_fsWriteLarge( s_hFilenoStdout, pStr, ulLen );
-   hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
 }
 
 static void hb_gt_std_newLine( void )
@@ -296,11 +294,9 @@ static int hb_gt_std_ReadKey( int iEventMask )
    if( !s_bStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {
-      USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
-      hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
    }
 #elif defined( OS_UNIX_COMPATIBLE )
    {
@@ -312,11 +308,9 @@ static int hb_gt_std_ReadKey( int iEventMask )
       FD_SET( s_hFilenoStdin, &rfds);
       if( select( s_hFilenoStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
       {
-         USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
          BYTE bChar;
          if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
             ch = s_keyTransTbl[ bChar ];
-         hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
       }
    }
 #else

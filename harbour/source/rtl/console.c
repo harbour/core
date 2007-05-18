@@ -97,12 +97,12 @@
    static const int  s_iCrLfLen = 2;
 #endif
 
-static BOOL    s_bInit = FALSE;
-static USHORT  s_uiPRow;
-static USHORT  s_uiPCol;
 static FHANDLE s_hFilenoStdin  = 0;
 static FHANDLE s_hFilenoStdout = 1;
 static FHANDLE s_hFilenoStderr = 2;
+
+static USHORT  s_uiPRow;
+static USHORT  s_uiPCol;
 
 void hb_conInit( void )
 {
@@ -140,7 +140,6 @@ void hb_conInit( void )
    hb_fsSetDevMode( s_hFilenoStderr, FD_BINARY );
 
    s_uiPRow = s_uiPCol = 0;
-   s_bInit = TRUE;
 
    hb_gtInit( s_hFilenoStdin, s_hFilenoStdout, s_hFilenoStderr );
    hb_setkeyInit();  /* April White, May 6, 2000 */
@@ -167,8 +166,6 @@ void hb_conRelease( void )
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_TEXT );
    hb_fsSetDevMode( s_hFilenoStderr, FD_TEXT );
-
-   s_bInit = FALSE;
 }
 
 char * hb_conNewLine( void )
@@ -238,25 +235,19 @@ static void hb_conOutAlt( const char * pStr, ULONG ulLen )
    if( hb_set.HB_SET_ALTERNATE && hb_set.hb_set_althan != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_althan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    if( hb_set.hb_set_extrahan != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_extrahan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
       s_uiPCol += ( USHORT ) ulLen;
    }
 }
@@ -269,9 +260,7 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
       s_uiPCol += ( USHORT ) ulLen;
    }
    else
@@ -324,7 +313,6 @@ HB_FUNC( QOUT )
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       BYTE buf[ 80 ];
 
       s_uiPRow++;
@@ -344,7 +332,6 @@ HB_FUNC( QOUT )
             hb_fsWrite( hb_set.hb_set_printhan, buf, s_uiPCol );
          }
       }
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    HB_FUNC_EXEC( QQOUT );
@@ -355,9 +342,7 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       static const BYTE byEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set.hb_set_printhan, byEop, 2 );
-      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    s_uiPRow = s_uiPCol = 0;
@@ -387,7 +372,6 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
       if( s_uiPRow != uiPRow || s_uiPCol != uiPCol )
       {
-         USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
          BYTE buf[ 256 ];
          int iPtr = 0;
 
@@ -437,8 +421,6 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
          if( iPtr )
             hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
-
-         hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
       }
    }
    else

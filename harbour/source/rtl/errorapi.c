@@ -86,7 +86,7 @@
    better shows what is really the problem. [vszakats] */
 #define HB_ERROR_LAUNCH_MAX 8
 
-char hb_errFuncName = 0;
+const char hb_errFuncName = 0;
 
 static HB_ERROR_INFO_PTR s_errorHandler = NULL;
 static HB_ITEM_PTR s_errorBlock;

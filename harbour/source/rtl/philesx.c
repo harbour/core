@@ -62,7 +62,6 @@
 
 HB_FUNC( CURDRIVE )
 {
-   USHORT uiErrorOld = hb_fsError();
    char szDrive[ 1 ];
 
    szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
@@ -78,8 +77,6 @@ HB_FUNC( CURDRIVE )
             break;
       }
    }
-
-   hb_fsSetError( uiErrorOld );
 }
 
 #endif

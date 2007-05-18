@@ -109,13 +109,7 @@ HB_FUNC( DISKSPACE )
       /* Get the default drive */
 
       if( uiDrive == 0 )
-      {
-         USHORT uiErrorOld = hb_fsError();
-
          uiDrive = hb_fsCurDrv() + 1;
-
-         hb_fsSetError( uiErrorOld );
-      }
 
       szPath[ 0 ] = uiDrive + 'A' - 1;
       szPath[ 1 ] = ':';

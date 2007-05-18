@@ -59,19 +59,32 @@
 HB_FUNC( FOPEN )
 {
    if( ISCHAR( 1 ) )
+   {
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
                            ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
+      hb_setFError( hb_fsError() );
+   }
    else
-      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN", HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */
+   {
+      hb_setFError( 0 );
+      /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN", HB_ERR_ARGS_BASEPARAMS );
+   }
 }
 
 HB_FUNC( FCREATE )
 {
    if( ISCHAR( 1 ) )
+   {
       hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
                              ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
+      hb_setFError( hb_fsError() );
+   }
    else
+   {
       hb_retni( FS_ERROR );
+      hb_setFError( 0 );
+   }
 }
 
 #ifdef HB_EXTENSION
@@ -79,11 +92,17 @@ HB_FUNC( FCREATE )
 HB_FUNC( HB_FCREATE )
 {
    if( ISCHAR( 1 ) )
+   {
       hb_retni( hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
                                ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
                                ISNUM( 3 ) ? hb_parni( 3 ) : FO_COMPAT ) );
+      hb_setFError( hb_fsError() );
+   }
    else
+   {
       hb_retni( FS_ERROR );
+      hb_setFError( 0 );
+   }
 }
 
 #endif
@@ -91,6 +110,7 @@ HB_FUNC( HB_FCREATE )
 HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
+   USHORT uiError = 0;
    ULONG ulRead = 0;
 
    if( ISNUM( 1 ) && pBuffer && ISBYREF( 2 ) && ISNUM( 3 ) )
@@ -114,70 +134,101 @@ HB_FUNC( FREAD )
          ulRead = hb_fsReadLarge( hb_parni( 1 ),
                                   ( BYTE * ) hb_itemGetCPtr( pBuffer ),
                                   ulRead );
+         uiError = hb_fsError();
       }
       else
          ulRead = 0;
    }
 
-   hb_retnl( ulRead );
+   hb_retnint( ulRead );
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FWRITE )
 {
+   USHORT uiError = 0;
+
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
+   {
       hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
                                  ( BYTE * ) hb_parc( 2 ),
                                  ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
+      uiError = hb_fsError();
+   }
    else
       hb_retnl( 0 );
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FERROR )
 {
-   hb_retni( hb_fsError() );
+   hb_retni( hb_getFError() );
 }
 
 HB_FUNC( FCLOSE )
 {
-   hb_fsSetError( 0 );
-
+   USHORT uiError = 0;
    if( ISNUM( 1 ) )
    {
       hb_fsClose( hb_parni( 1 ) );
-      hb_retl( hb_fsError() == 0 );
+      uiError = hb_fsError();
+      hb_retl( uiError == 0 );
    }
    else
       hb_retl( FALSE );
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FERASE )
 {
-   hb_fsSetError( 3 );
+   USHORT uiError = 3;
 
-   hb_retni( ( ISCHAR( 1 ) &&
-               hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ) ? 0 : -1 );
+   if( ISCHAR( 1 ) )
+   {
+      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ? 0 : FS_ERROR );
+      uiError = hb_fsError();
+   }
+   else
+      hb_retni( FS_ERROR );
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FRENAME )
 {
-   hb_fsSetError( 2 );
+   USHORT uiError = 2;
 
-   hb_retni( ( ISCHAR( 1 ) && ISCHAR( 2 ) &&
-               hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) ) ? 0 : -1 );
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   {
+      hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ),
+                             ( BYTE * ) hb_parc( 2 ) ) ? 0 : FS_ERROR );
+      uiError = hb_fsError();
+   }
+   else
+      hb_retni( FS_ERROR );
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FSEEK )
 {
+   USHORT uiError = 0;
+
    if( ISNUM( 1 ) && ISNUM( 2 ) )
+   {
       hb_retnint( hb_fsSeekLarge( hb_parni( 1 ),
                                   hb_parnint( 2 ),
                                   ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
+      uiError = hb_fsError();
+   }
    else
       hb_retni( 0 );
+
+   hb_setFError( uiError );
 }
 
 HB_FUNC( FREADSTR )
 {
+   USHORT uiError = 0;
+
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
       ULONG ulToRead = ( ULONG ) hb_parnl( 2 );
@@ -189,10 +240,10 @@ HB_FUNC( FREADSTR )
          ULONG ulRead;
 
          ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
+         uiError = hb_fsError();
          buffer[ ulRead ] = '\0';
 
          /* NOTE: Clipper will not return zero chars from this functions. */
-
          hb_retc_buffer( ( char * ) buffer );
       }
       else
@@ -200,6 +251,7 @@ HB_FUNC( FREADSTR )
    }
    else
       hb_retc( NULL );
+   hb_setFError( uiError );
 }
 
 /* NOTE: This function should not return the leading and trailing */
@@ -210,46 +262,38 @@ HB_FUNC( FREADSTR )
 HB_FUNC( CURDIR )
 {
    BYTE byBuffer[ _POSIX_PATH_MAX + 1 ];
-   USHORT uiErrorOld = hb_fsError();
 
    hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
       ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, byBuffer, _POSIX_PATH_MAX + 1 );
 
    hb_retc( ( char * ) byBuffer );
-
-   hb_fsSetError( uiErrorOld );
 }
 
 #ifdef HB_EXTENSION
 
 HB_FUNC( HB_F_EOF )
 {
+   USHORT uiError = 0;
+
    if( ISNUM( 1 ) )
    {
       hb_retl( hb_fsEof( hb_parni( 1 ) ) );
+      uiError = hb_fsError();
    }
    else
-   {
-      hb_fsSetError( ( USHORT ) FS_ERROR );
       hb_retl( TRUE );
-   }
+   hb_setFError( uiError );
 }
 
 HB_FUNC( HB_OSPATHSEPARATOR )
 {
-   char ret[2];
-   ret[1] = 0;
-   ret[0] = OS_PATH_DELIMITER;
-
+   const char ret[ 2 ] = { OS_PATH_DELIMITER, 0 };
    hb_retc( ret );
 }
 
 HB_FUNC( HB_OSPATHLISTSEPARATOR )
 {
-   char ret[2];
-   ret[1] = 0;
-   ret[0] = OS_PATH_LIST_SEPARATOR;
-
+   const char ret[ 2 ] = { OS_PATH_LIST_SEPARATOR, 0 };
    hb_retc( ret );
 }
 
@@ -257,6 +301,5 @@ HB_FUNC( HB_OSPATHDELIMITERS )
 {
    hb_retc( OS_PATH_DELIMITER_LIST );
 }
-
 
 #endif

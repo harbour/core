@@ -259,10 +259,11 @@ HB_FUNC( HB_DISKSPACE )
 
          if( GetLastError() != 0 )
          {
-            hb_fsSetError( GetLastError() );
+            hb_fsSetIOError( FALSE, 0 );
             dSpace = 0.0;
          }
-
+         else
+            hb_fsSetIOError( TRUE, 0 );
          break;
       }
    }
@@ -304,7 +305,10 @@ HB_FUNC( HB_DISKSPACE )
                             ( double ) fsa.cbSector;
                break;
          }
+         hb_fsSetIOError( TRUE, 0 );
       }
+      else
+         hb_fsSetIOError( FALSE, 0 );
    }
 
 #elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
@@ -312,30 +316,35 @@ HB_FUNC( HB_DISKSPACE )
    {
 #if defined(HB_OS_SUNOS)
       struct statvfs sf;
-      statvfs( szPath, &sf );
+      if( statvfs( szPath, &sf ) == 0 )
 #else
       struct statfs sf;
-      statfs( szPath, &sf );
+      if( statfs( szPath, &sf ) == 0 )
 #endif
-      switch( uiType )
       {
-         case HB_DISK_AVAIL:
-            dSpace = ( double ) sf.f_bavail * ( double ) sf.f_bsize;
-            break;
+         switch( uiType )
+         {
+            case HB_DISK_AVAIL:
+               dSpace = ( double ) sf.f_bavail * ( double ) sf.f_bsize;
+               break;
 
-         case HB_DISK_FREE:
-            dSpace = ( double ) sf.f_bfree * ( double ) sf.f_bsize;
-            break;
+            case HB_DISK_FREE:
+               dSpace = ( double ) sf.f_bfree * ( double ) sf.f_bsize;
+               break;
 
-         case HB_DISK_USED:
-             dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) *
-                      ( double ) sf.f_bsize;
-             break;
+            case HB_DISK_USED:
+                dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) *
+                         ( double ) sf.f_bsize;
+                break;
 
-         case HB_DISK_TOTAL:
-            dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
-            break;
+            case HB_DISK_TOTAL:
+               dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
+               break;
+         }
+         hb_fsSetIOError( TRUE, 0 );
       }
+      else
+         hb_fsSetIOError( FALSE, 0 );
    }
 
 #else

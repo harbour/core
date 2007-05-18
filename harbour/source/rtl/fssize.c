@@ -66,6 +66,7 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {
    if( bUseDirEntry )
    {
+      BOOL fResult;
 #if defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
          /*
           * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -73,16 +74,14 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
           * on 32bit machines.
           */
       struct stat64 statbuf;
-      if( stat64( ( char * ) pszFileName, &statbuf ) == 0 )
+      fResult = stat64( ( char * ) pszFileName, &statbuf ) == 0;
 #else
       struct stat statbuf;
-      if( stat( ( char * ) pszFileName, &statbuf ) == 0 )
+      fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
 #endif
-      {
-         hb_fsSetError( 0 );
+      hb_fsSetIOError( fResult, 0 );
+      if( fResult )
          return ( HB_FOFFSET ) statbuf.st_size;
-      }
-      hb_fsSetError( ( USHORT ) FS_ERROR );
    }
    else
    {
@@ -94,11 +93,9 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 
          ulPos = hb_fsSeekLarge( hFileHandle, 0, SEEK_END );
          hb_fsClose( hFileHandle );
-         hb_fsSetError( 0 );
          return ulPos;
       }
    }
-
    return 0;
 }
 

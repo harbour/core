@@ -682,11 +682,7 @@ static BOOL hb_gt_def_Resume( void )
 
 static void hb_gt_def_OutFile( FHANDLE hFile, BYTE * pbyStr, ULONG ulLen )
 {
-   USHORT uiErrorOld;
-
-   uiErrorOld = hb_fsError();
    hb_fsWriteLarge( hFile, pbyStr, ulLen );
-   hb_fsSetError( uiErrorOld );
 }
 
 static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )

@@ -159,9 +159,7 @@ static void hb_gt_pca_termFlush( void )
 {
    if( s_iOutBufIndex > 0 )
    {
-      USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
       hb_fsWriteLarge( s_hFilenoStdout, s_sOutBuf, s_iOutBufIndex );
-      hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
       s_iOutBufIndex = 0;
    }
 }
@@ -678,19 +676,15 @@ static int hb_gt_pca_ReadKey( int iEventMask )
    if( !s_bStdinConsole ||
        WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {
-      USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
-      hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
    }
 #elif defined( OS_UNIX_COMPATIBLE )
    {
-      USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
-      hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
    }
 #else
 

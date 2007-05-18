@@ -181,9 +181,7 @@ static void close_binary( FHANDLE handle )
    {
       /* Close the file handle without disrupting the current
          user file error value */
-      USHORT user_ferror = hb_fsError();
       hb_fsClose( handle );
-      hb_fsSetError( user_ferror );
    }
 }
 
@@ -195,28 +193,21 @@ static void close_text( FHANDLE handle )
    {
       /* Close the file handle without disrupting the current
          user file error value */
-      USHORT user_ferror = hb_fsError();
       if( hb_set.HB_SET_EOF )
-      {
          hb_fsWrite( handle, ( BYTE * ) "\x1A", 1 );
-      }
       hb_fsClose( handle );
-      hb_fsSetError( user_ferror );
    }
 }
 
 static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
-   USHORT user_ferror;
    FHANDLE handle;
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
    BOOL bPipe = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
 
-   user_ferror = hb_fsError(); /* Save the current user file error code */
    /* Create full filename */
-
 #if defined(OS_UNIX_COMPATIBLE)
    bPipe = set_specifier == HB_SET_PRINTFILE && file_name[ 0 ] == '|';
    if( bPipe )
@@ -307,7 +298,6 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
             break;
       }
    }
-   hb_fsSetError( user_ferror ); /* Restore the current user file error code */
    return handle;
 }
 

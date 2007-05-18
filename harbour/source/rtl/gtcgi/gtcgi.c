@@ -96,9 +96,7 @@ static PHB_CODEPAGE  s_cdpHost;
 
 static void hb_gt_cgi_termOut( BYTE * pStr, ULONG ulLen )
 {
-   USHORT uiErrorOld = hb_fsError();   /* Save current user file error code */
    hb_fsWriteLarge( s_hFilenoStdout, pStr, ulLen );
-   hb_fsSetError( uiErrorOld );        /* Restore last user file error code */
 }
 
 static void hb_gt_cgi_newLine( void )
