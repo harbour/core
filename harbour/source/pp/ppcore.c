@@ -1014,6 +1014,66 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ul = ulLen; /* hb_strRemEscSeq() above could change ul */
             }
          }
+#ifndef HB_C52_STRICT
+         else if( ( ( ch == 'e' || ch == 'E' ) && ulLen > 1 &&
+                    pBuffer[ 1 ] == '"' ) || ( ch == '"' && pState->fEscStr ) )
+         {
+            ULONG ulStrip, u;
+
+            if( ch == 'e' )
+               ++ul;
+            while( ++ul < ulLen && pBuffer[ ul ] != '"' )
+            {
+               if( pBuffer[ ul ] == '\\' )
+               {
+                  if( ++ul == ulLen )
+                     break;
+               }
+            }
+#ifdef HB_PP_MULTILINE_STRING
+            while( ul == ulLen )
+            {
+               u = 1;
+               while( ul > u && pBuffer[ ul - u ] == ' ' ) ++u;
+               if( ul >= u && pBuffer[ ul - u ] == ';' )
+               {
+                  ul -= u;
+                  ulLen -= u;
+                  u = hb_membufLen( pState->pBuffer ) - u;
+                  hb_membufRemove( pState->pBuffer, u );
+                  hb_pp_readLine( pState );
+                  ulLen += hb_membufLen( pState->pBuffer ) - u;
+                  pBuffer = hb_membufPtr( pState->pBuffer ) + u - ul;
+                  --ul;
+                  while( ++ul < ulLen && pBuffer[ ul ] != '"' )
+                  {
+                     if( pBuffer[ ul ] == '\\' )
+                     {
+                        if( ++ul == ulLen )
+                           break;
+                     }
+                  }
+               }
+               else
+                  break;
+            }
+#endif
+            u = ch == 'e' ? 2 : 1;
+            ulStrip = ul - u;
+            hb_strRemEscSeq( pBuffer + u, &ulStrip );
+            hb_pp_tokenAddNext( pState, pBuffer + u, ulStrip,
+                                HB_PP_TOKEN_STRING );
+            if( ul == ulLen )
+            {
+               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
+               hb_membufAddCh( pState->pBuffer, '\0' );
+               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
+               hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer + u - 1 );
+            }
+            else
+               ++ul;
+         }
+#endif
          else if( ch == '"' || ch == '\'' || ch == '`' )
          {
             if( ch == '`' )
@@ -1056,35 +1116,6 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             else
                ++ul;
          }
-#ifndef HB_C52_STRICT
-         else if( ( ch == 'e' || ch == 'E' ) && ulLen > 1 &&
-                  pBuffer[ 1 ] == '"' )
-         {
-            ULONG ulStrip;
-            ++ul;
-            while( ++ul < ulLen && pBuffer[ ul ] != '"' )
-            {
-               if( pBuffer[ ul ] == '\\' )
-               {
-                  if( ++ul == ulLen )
-                     break;
-               }
-            }
-            ulStrip = ul - 2;
-            hb_strRemEscSeq( pBuffer + 2, &ulStrip );
-            hb_pp_tokenAddNext( pState, pBuffer + 2, ulStrip,
-                                HB_PP_TOKEN_STRING );
-            if( ul == ulLen )
-            {
-               ULONG ulSkip = pBuffer - hb_membufPtr( pState->pBuffer );
-               hb_membufAddCh( pState->pBuffer, '\0' );
-               pBuffer = hb_membufPtr( pState->pBuffer ) + ulSkip;
-               hb_pp_error( pState, 'E', HB_PP_ERR_STRING_TERMINATOR, pBuffer + 1 );
-            }
-            else
-               ++ul;
-         }
-#endif
          else if( ch == '[' && !pState->fDirective &&
                   hb_pp_canQuote( pState->fCanNextLine ||
                                   HB_PP_TOKEN_CANQUOTE( pState->iLastType ),
@@ -2147,7 +2178,8 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    {
       if( !pState->iCondCompile )
       {
-         pValue = hb_pp_pragmaGetSwitch( pToken->pNext, &iValue );
+         pToken = pToken->pNext;
+         pValue = hb_pp_pragmaGetSwitch( pToken, &iValue );
          if( pValue )
             fError = hb_pp_setCompilerSwitch( pState, pValue->value, iValue );
          else
@@ -2232,6 +2264,11 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             fError = hb_pp_setCompilerSwitch( pState, "w", fValue ? 1 : 0 );
          else
             fError = TRUE;
+      }
+      else if( hb_pp_tokenValueCmp( pToken, "ESCAPEDSTRINGS", HB_PP_CMP_DBASE ) )
+      {
+         pValue = hb_pp_pragmaGetLogical( pToken->pNext, &pState->fEscStr );
+         fError = pValue == NULL;
       }
       else if( hb_pp_tokenValueCmp( pToken, "EXITSEVERITY", HB_PP_CMP_DBASE ) )
       {

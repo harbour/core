@@ -585,6 +585,7 @@ typedef struct
 
    BOOL     fError;              /* error during preprocessing */
    BOOL     fQuiet;              /* do not show standard information */
+   BOOL     fEscStr;             /* use \ in strings as escape character */
    int      iCondCompile;        /* current conditional compilation flag, when not 0 disable preprocessing and output */
    int      iCondCount;          /* number of nested #if[n]def directive */
    int      iCondStackSize;      /* size of conditional compilation stack */

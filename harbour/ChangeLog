@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-19 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    * formatting
+
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    + added support for:
+         #pragma escapedstrings = on
+         cStr := "some value with internal \" character"
+         #pragma escapedstrings = off
+    + added support for multiline strings in escaped strings
+
+  * harbour/source/compiler/gencobj.c
+    * minor simplification
+
+  * harbour/source/rtl/hbffind.c
+    * always set hb_fsError()
+
+  * harbour/source/rtl/mlcfunc.c
+    ! fixed minor typo
+
 2007-05-18 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapierr.h
   * harbour/source/rtl/errorapi.c

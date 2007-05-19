@@ -194,11 +194,11 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
    if( iEOLs == 0 )
    {
       pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
-      if( hb_set.HB_SET_EOL && strlen( hb_set.HB_SET_EOL ) > 0 )
+      if( hb_set.HB_SET_EOL && hb_set.HB_SET_EOL[ 0 ] )
          pEOLs->szEOL = hb_set.HB_SET_EOL;
       else
          pEOLs->szEOL = hb_conNewLine();
-      pEOLs->ulLen = strlen( hb_set.HB_SET_EOL );
+      pEOLs->ulLen = strlen( pEOLs->szEOL );
       iEOLs = pEOLs->ulLen ? 1 : 0;
    }
 

@@ -471,8 +471,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nSec   = ft->tm_sec;
          }
       }
-
-      if( !bFound ) hb_fsSetIOError( bFound, 0 );
+      hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_OS2)
@@ -534,8 +533,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nSec   = ft->tm_sec;
          }
       }
-
-      if( !bFound ) hb_fsSetIOError( bFound, 0 );
+      hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -614,8 +612,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             }
          }
       }
-
-      if( !bFound ) hb_fsSetIOError( bFound, 0 );
+      hb_fsSetIOError( bFound, 0 );
    }
 
 #elif defined(HB_OS_UNIX)
@@ -722,9 +719,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                bFound = FALSE;
          }
       }
-
-      if( ! bFound )
-         hb_fsSetIOError( bFound, 0 );
+      hb_fsSetIOError( bFound, 0 );
    }
 
 #else

@@ -500,8 +500,8 @@ DECLARE HBClass ;
 #ifdef HB_CLS_VO
 
 #xtranslate  ( <!name!>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
 #xtranslate  , <!name!>{ [<p,...>] }        =>  , <name>():New( <p> )
+#xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
 #xtranslate := <!name!>{ [<p,...>] }        => := <name>():New( <p> )
 
 #xcommand EXPORT <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;

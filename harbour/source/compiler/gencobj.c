@@ -126,12 +126,8 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    /* Begin second pass */
 
    /* Set up things  */
-
    if( !pszCfgFileName )
-   {
-       pszCfgFileName = ( char * ) hb_xgrab( strlen( HB_CFG_FILENAME ) + 1 );
-       strcpy( pszCfgFileName, HB_CFG_FILENAME );
-   }
+      pszCfgFileName = hb_strdup( HB_CFG_FILENAME );
 
    if( pszEnv && *hb_searchpath( pszCfgFileName, pszEnv, pszTemp ) )
    {
