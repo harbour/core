@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-20 13:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/hbffind.c
+     ! Added HB_EXPORT for hb_fsFind*() functions.
+       (missed from prev commit)
+
 2007-05-19 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     * formatting
