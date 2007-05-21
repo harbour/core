@@ -221,6 +221,9 @@ static void hb_sln_setACSCtrans( void )
    unsigned char * p, ch;
    SLsmg_Char_Type chBoard[3], chArrow[4];
 
+   memset( &chArrow, 0, sizeof( chArrow ) );
+   memset( &chBoard, 0, sizeof( chBoard ) );
+
    HB_SLN_BUILD_RAWCHAR( chBoard[ 0 ], 0, 0 );
    HB_SLN_BUILD_RAWCHAR( chBoard[ 1 ], 0, 0 );
    HB_SLN_BUILD_RAWCHAR( chBoard[ 2 ], 0, 0 );

@@ -153,7 +153,7 @@ static char * hb_hrbReadId( char * szBody, ULONG ulBodySize, ULONG * ulBodyOffse
    return hb_strdup( szIdx );
 }
 
-static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
+static ULONG hb_hrbFindSymbol( const char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
 {
    ULONG ulRet;
 
@@ -175,7 +175,7 @@ static void hb_hrbFreeSymbols( PHB_SYMB pSymbols, ULONG ulSymbols )
    for( ul = 0; ul < ulSymbols; ul++ )
    {
       if( pSymbols[ ul ].szName )
-         hb_xfree( pSymbols[ ul ].szName );
+         hb_xfree( ( void * ) pSymbols[ ul ].szName );
    }
    hb_xfree( pSymbols );
 }

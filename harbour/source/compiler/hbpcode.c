@@ -514,7 +514,7 @@ LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )
    return lSize;
 }
 
-void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
    ULONG ulSkip;
@@ -576,7 +576,7 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
    }
 }
 
-void hb_compPCodeTrace( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
    BYTE opcode;

@@ -312,8 +312,8 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, PHB_CYCLIC_REF * pRefPtr, ULONG 
          uiClass = hb_objGetClass( pItem );
          if( uiClass )
          {
-            char * szClass = hb_clsName( uiClass ),
-                 * szFunc = hb_clsFuncName( uiClass );
+            const char * szClass = hb_clsName( uiClass ),
+                       * szFunc = hb_clsFuncName( uiClass );
             if( szClass && szFunc )
                ulSize += strlen( szClass ) + strlen( szFunc ) + 3;
          }
@@ -375,7 +375,7 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
    ULONG ulRef, ulLen, u;
    LONG l;
    double d;
-   char * szVal;
+   const char * szVal;
 
    switch( hb_itemType( pItem ) )
    {
@@ -493,8 +493,8 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
             USHORT uiClass = hb_objGetClass( pItem );
             if( uiClass )
             {
-               char * szClass = hb_clsName( uiClass ),
-                    * szFunc = hb_clsFuncName( uiClass );
+               const char * szClass = hb_clsName( uiClass ),
+                          * szFunc = hb_clsFuncName( uiClass );
                if( szClass && szFunc )
                {
                   pBuffer[ ulOffset++ ] = HB_SERIAL_OBJ;

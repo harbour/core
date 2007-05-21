@@ -344,7 +344,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
    HB_ITEM_PTR pError;
    ERRCODE errCode;
-   char * szName;
+   const char * szName;
    int iArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaSymbol(%p)", pSymAlias));

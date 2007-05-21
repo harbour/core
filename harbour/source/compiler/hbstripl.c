@@ -74,7 +74,7 @@ static HB_STRIP_FUNC( hb_p_line )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static PHB_STRIP_FUNC s_stripLines_table[] =
+static const PHB_STRIP_FUNC s_stripLines_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -263,5 +263,5 @@ void hb_compStripFuncLines( PFUNCTION pFunc )
 {
    assert( HB_P_LAST_PCODE == sizeof( s_stripLines_table ) / sizeof( PHB_STRIP_FUNC ) );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_stripLines_table, NULL );
+   hb_compPCodeEval( pFunc, s_stripLines_table, NULL );
 }

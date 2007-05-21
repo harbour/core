@@ -1145,7 +1145,7 @@ HB_EXPORT USHORT hb_objSetClass( PHB_ITEM pItem, const char * szClass, const cha
 /*
  * Get the class name of an object
  */
-HB_EXPORT char * hb_objGetClsName( PHB_ITEM pObject )
+HB_EXPORT const char * hb_objGetClsName( PHB_ITEM pObject )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetClsName(%p)", pObject));
 
@@ -1188,7 +1188,7 @@ HB_EXPORT char * hb_objGetClsName( PHB_ITEM pObject )
       return "UNKNOWN";
 }
 
-HB_EXPORT char * hb_clsName( USHORT uiClass )
+HB_EXPORT const char * hb_clsName( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
       return s_pClasses[ uiClass ].szName;
@@ -1196,11 +1196,12 @@ HB_EXPORT char * hb_clsName( USHORT uiClass )
       return NULL;
 }
 
-HB_EXPORT char * hb_clsFuncName( USHORT uiClass )
+HB_EXPORT const char * hb_clsFuncName( USHORT uiClass )
 {
    if( uiClass && uiClass <= s_uiClasses )
       return s_pClasses[ uiClass ].pClassFuncSym ?
-             s_pClasses[ uiClass ].pClassFuncSym->szName : ( char * ) "";
+             s_pClasses[ uiClass ].pClassFuncSym->szName :
+             "";
    else
       return NULL;
 }
@@ -1226,7 +1227,7 @@ HB_EXPORT USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
  * Will return the class name from wich the message is inherited in case
  * of inheritance.
  */
-HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
+HB_EXPORT const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetrealClsName(%p,%s)", pObject, szName));
 
@@ -1256,10 +1257,10 @@ HB_EXPORT char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 /*
  * return real function name ignoring aliasing
  */
-char * hb_clsRealMethodName( void )
+const char * hb_clsRealMethodName( void )
 {
    LONG lOffset = hb_stackBaseProcOffset( 1 );
-   char * szName = NULL;
+   const char * szName = NULL;
 
    if( lOffset > 0 )
    {
@@ -1900,7 +1901,7 @@ static PHB_DYNS hb_objGetMsgSym( PHB_ITEM pMessage )
 
    if( pMessage )
    {
-      char * szMsg = NULL;
+      const char * szMsg = NULL;
 
       if( HB_IS_STRING( pMessage ) )
          szMsg = pMessage->item.asString.value;

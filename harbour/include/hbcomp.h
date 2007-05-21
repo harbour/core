@@ -81,8 +81,8 @@ typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
 extern LONG hb_compPCodeSize( PFUNCTION, ULONG );
-extern void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
-extern void hb_compPCodeTrace( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeEval( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeTrace( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
 
 extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );

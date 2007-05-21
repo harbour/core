@@ -216,7 +216,7 @@ static HB_FIX_FUNC( hb_p_localnearaddint )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static HB_FIX_FUNC_PTR s_fixlocals_table[] =
+static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -402,11 +402,12 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
 
 void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )
 {
+   const HB_FIX_FUNC_PTR * pFuncTable = s_fixlocals_table;
    HB_FIX_INFO fix_info;
 
    fix_info.HB_COMP_PARAM = HB_COMP_PARAM;
 
    assert( HB_P_LAST_PCODE == sizeof( s_fixlocals_table ) / sizeof( HB_FIX_FUNC_PTR ) );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_fixlocals_table, ( void * ) &fix_info );
+   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &fix_info );
 }

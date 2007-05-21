@@ -191,32 +191,21 @@ HB_EXPORT PHB_DYNS hb_dynsymGet( const char * szName )  /* finds and creates a s
    /* make a copy as we may get a const string, then turn it to uppercase */
    /* NOTE: This block is optimized for speed [vszakats] */
    {
-      int iLen = strlen( szName );
+      int iLen = HB_SYMBOL_NAME_LEN;
       char * pDest = szUprName;
 
-      if( iLen > HB_SYMBOL_NAME_LEN )
-         iLen = HB_SYMBOL_NAME_LEN;
-
-      pDest[ iLen ] = '\0';
-      while( iLen-- )
+      do
       {
          char cChar = *szName++;
-
-         if( cChar >= 'a' && cChar <= 'z' )
-         {
-            *pDest++ = cChar - ( 'a' - 'A' );
-         }
-         else if( cChar == ' ' || cChar == '\t' )
-         {
-            *pDest = '\0';
+         if( cChar == 0 || cChar == ' ' || cChar == '\t' )
             break;
-         }
+         else if( cChar >= 'a' && cChar <= 'z' )
+            *pDest++ = cChar - ( 'a' - 'A' );
          else
-         {
             *pDest++ = cChar;
-         }
-
       }
+      while( --iLen );
+      *pDest = '\0';
    }
 
    pDynSym = hb_dynsymFind( szUprName );
@@ -235,31 +224,21 @@ HB_EXPORT PHB_DYNS hb_dynsymFindName( const char * szName )  /* finds a symbol *
    /* make a copy as we may get a const string, then turn it to uppercase */
    /* NOTE: This block is optimized for speed [vszakats] */
    {
-      int iLen = strlen( szName );
+      int iLen = HB_SYMBOL_NAME_LEN;
       char * pDest = szUprName;
 
-      if( iLen > HB_SYMBOL_NAME_LEN )
-         iLen = HB_SYMBOL_NAME_LEN;
-
-      pDest[ iLen ] = '\0';
-      while( iLen-- )
+      do
       {
          char cChar = *szName++;
-
-         if( cChar >= 'a' && cChar <= 'z' )
-         {
-            *pDest++ = cChar - ( 'a' - 'A' );
-         }
-         else if( cChar == ' ' || cChar == '\t' )
-         {
-            *pDest = '\0';
+         if( cChar == 0 || cChar == ' ' || cChar == '\t' )
             break;
-         }
+         else if( cChar >= 'a' && cChar <= 'z' )
+            *pDest++ = cChar - ( 'a' - 'A' );
          else
-         {
             *pDest++ = cChar;
-         }
       }
+      while( --iLen );
+      *pDest = '\0';
    }
 
    return hb_dynsymFind( szUprName );
@@ -355,7 +334,7 @@ HB_EXPORT PHB_SYMB hb_dynsymSymbol( PHB_DYNS pDynSym )
    return pDynSym->pSymbol;
 }
 
-HB_EXPORT char * hb_dynsymName( PHB_DYNS pDynSym )
+HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymName(%p)", pDynSym));
 

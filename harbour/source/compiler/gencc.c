@@ -1891,7 +1891,7 @@ static HB_GENC_FUNC( hb_p_pushvparams )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static HB_GENC_FUNC_PTR s_verbose_table[] = {
+static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_and,
    hb_p_arraypush,
    hb_p_arraypop,
@@ -2079,6 +2079,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
 {
+   const HB_GENC_FUNC_PTR * pFuncTable = s_verbose_table;
    HB_LABEL_INFO label_info;
 
    /* Make sure that table is correct */
@@ -2103,7 +2104,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
       fprintf( yyc, "   BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_verbose_table, ( void * ) &label_info );
+   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );
 
    fprintf( yyc, "   } while( 0 );\n" );
    fprintf( yyc, "   hb_xvmExitProc();\n" );

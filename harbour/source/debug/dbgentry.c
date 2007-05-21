@@ -76,13 +76,17 @@ static BOOL hb_clsSetScope( BOOL fScope ) { return fScope; }
 #define STRNDUP( dest, source, len ) ( dest = hb_strndup( (source), (len) ) )
 
 #define ARRAY_ADD( type, array, length ) \
-   ( (type *)( array_add( sizeof( type ), (void **)&array, &length ) ) )
+   ( ( length++ == 0 ) ? array = ( type * ) hb_xgrab( sizeof( type ) ) : \
+      ( ( array = ( type * ) hb_xrealloc( array, sizeof( type ) * length ) ) + \
+            sizeof( type ) * ( length - 1 ) ) )
 
 #define ARRAY_DEL( type, array, length, index ) \
-   if ( !--length ) \
-      FREE( array ); \
-   else \
-      memmove( array + index, array + index + 1, sizeof( type ) * ( length - index ) );
+   do { \
+      if ( !--length ) \
+         hb_xfree( array ); \
+      else if( index < length ) \
+         memmove( array + index, array + index + 1, sizeof( type ) * ( length - index ) ); \
+   } while( 0 )
 
 typedef struct
 {
@@ -213,26 +217,6 @@ static PHB_ITEM
 hb_dbgVarGet( HB_VARINFO *scope );
 static void
 hb_dbgVarSet( HB_VARINFO *scope, PHB_ITEM xNewValue );
-
-
-static void *
-array_add( int size, void **array, int *length )
-{
-   if ( ++*length == 1 )
-   {
-      *array = ALLOC( size );
-   }
-   else
-   {
-      void *new_array = ALLOC( ( *length ) * size );
-
-      memmove( new_array, *array, ( *length - 1 ) * size );
-      FREE( *array );
-      *array = new_array;
-   }
-   return (void *)( (char *)( *array ) + size * ( *length - 1 ) );
-}
-
 
 static void
 hb_dbgActivate( HB_DEBUGINFO *info )

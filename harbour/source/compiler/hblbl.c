@@ -189,7 +189,7 @@ static HB_LABEL_FUNC( hb_p_seqend )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
+static const PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -376,11 +376,12 @@ static PHB_LABEL_FUNC s_GenLabelFuncTable[ HB_P_LAST_PCODE ] =
 
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )
 {
+   const PHB_LABEL_FUNC * pFuncTable = s_GenLabelFuncTable;
    ULONG ulLabel = 0, ul;
 
    assert( HB_P_LAST_PCODE == sizeof( s_GenLabelFuncTable ) / sizeof( PHB_LABEL_FUNC ) );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_GenLabelFuncTable, ( void * ) label_info );
+   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) label_info );
 
    for( ul = 0; ul < pFunc->lPCodePos; ++ul )
    {

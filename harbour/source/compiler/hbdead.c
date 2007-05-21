@@ -353,7 +353,7 @@ static HB_CODETRACE_FUNC( hb_p_endproc )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
+static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
 {
    hb_p_default,               /* HB_P_AND,                  */
    hb_p_default,               /* HB_P_ARRAYPUSH,            */
@@ -540,6 +540,7 @@ static PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
 
 void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
 {
+   const PHB_CODETRACE_FUNC * pFuncTable = s_codeTraceFuncTable;
    HB_CODETRACE_INFO code_info;
 
    if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || pFunc->lPCodePos < 2 )
@@ -557,7 +558,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
    code_info.pCodeMark = ( BYTE * ) hb_xgrab( code_info.ulPCodeSize );
    memset( code_info.pCodeMark, 0, code_info.ulPCodeSize );
 
-   hb_compPCodeTrace( pFunc, ( HB_PCODE_FUNC_PTR * ) s_codeTraceFuncTable, ( void * ) &code_info );
+   hb_compPCodeTrace( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &code_info );
 
    if( code_info.fFinished )
    {

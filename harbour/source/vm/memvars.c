@@ -892,7 +892,7 @@ static HB_DYNS_FUNC( hb_memvarFindPublicByPos )
  * Both pointers points to existing and used data - they shouldn't be
  * deallocated.
  */
-static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName )
+static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char * * pszName )
 {
    HB_ITEM_PTR pValue = NULL;
    *pszName = NULL;
@@ -914,8 +914,8 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
          hb_dynsymEval( hb_memvarFindPublicByPos, ( void * ) &struPub );
          if( struPub.bFound )
          {
-            pValue =s_globalTable[ struPub.pDynSym->hMemvar ].pVarItem;
-            *pszName =struPub.pDynSym->pSymbol->szName;
+            pValue = s_globalTable[ struPub.pDynSym->hMemvar ].pVarItem;
+            *pszName = struPub.pDynSym->pSymbol->szName;
          }
       }
       else
@@ -1087,7 +1087,7 @@ HB_FUNC( __MVDBGINFO )
    else if( iCount >= 2 )     /* request for a value of variable */
    {
       HB_ITEM_PTR pValue;
-      char * szName;
+      const char * szName;
 
       pValue = hb_memvarDebugVariable( hb_parni( 1 ), hb_parni( 2 ), &szName );
 

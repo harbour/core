@@ -109,16 +109,16 @@ extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 #endif
 
 /* class management */
-HB_EXPORT extern char *     hb_clsName( USHORT uiClass );
-HB_EXPORT extern char *     hb_clsFuncName( USHORT uiClass );
+HB_EXPORT extern const char * hb_clsName( USHORT uiClass );
+HB_EXPORT extern const char * hb_clsFuncName( USHORT uiClass );
 HB_EXPORT extern BOOL       hb_clsIsParent( USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 HB_EXPORT extern USHORT     hb_clsFindClass( const char * szClass, const char * szFunc );
 
 /* object management */
 HB_EXPORT extern USHORT     hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
 HB_EXPORT extern USHORT     hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* get object class handle using class name and class function name */
-HB_EXPORT extern char *     hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
-HB_EXPORT extern char *     hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
+HB_EXPORT extern const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
+HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 
 HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );

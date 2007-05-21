@@ -5473,14 +5473,14 @@ HB_EXPORT void hb_vmPushPointer( void * pPointer )
    pItem->item.asPointer.collect = FALSE;
 }
 
-HB_EXPORT void hb_vmPushString( char * szText, ULONG length )
+HB_EXPORT void hb_vmPushString( const char * szText, ULONG length )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushString(%s, %lu)", szText, length));
 
    hb_itemPutCL( hb_stackAllocItem(), szText, length );
 }
 
-HB_EXPORT void hb_vmPushStringPcode( char * szText, ULONG length )
+HB_EXPORT void hb_vmPushStringPcode( const char * szText, ULONG length )
 {
    PHB_ITEM pItem = hb_stackAllocItem();
 
@@ -5489,7 +5489,7 @@ HB_EXPORT void hb_vmPushStringPcode( char * szText, ULONG length )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length    = length;
    pItem->item.asString.allocated = 0;
-   pItem->item.asString.value     = szText;
+   pItem->item.asString.value     = ( char * ) szText;
 }
 
 HB_EXPORT void hb_vmPushSymbol( PHB_SYMB pSym )
@@ -6534,7 +6534,7 @@ static void hb_vmReleaseLocalSymbols( void )
             {
                pSymbol->pDynSym->pSymbol = NULL;
             }
-            hb_xfree( pSymbol->szName );
+            hb_xfree( ( void * ) pSymbol->szName );
          }
          hb_xfree( pDestroy->pModuleSymbols );
       }

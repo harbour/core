@@ -563,7 +563,7 @@ static HB_OPT_FUNC( hb_p_endproc )
 
 /* NOTE: The  order of functions have to match the order of opcodes mnemonics
  */
-static HB_OPT_FUNC_PTR s_opt_table[] =
+static const HB_OPT_FUNC_PTR s_opt_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -749,11 +749,11 @@ static HB_OPT_FUNC_PTR s_opt_table[] =
 
 void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
 {
+   const HB_OPT_FUNC_PTR * pFuncTable = s_opt_table;
    HB_OPT_INFO opt_info;
 
    opt_info.HB_COMP_PARAM = HB_COMP_PARAM;
-
    assert( HB_P_LAST_PCODE == sizeof( s_opt_table ) / sizeof( HB_OPT_FUNC_PTR ) );
 
-   hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) s_opt_table, ( void * ) &opt_info );
+   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &opt_info );
 }

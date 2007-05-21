@@ -158,7 +158,7 @@ struct _HB_SYMB;
 /* symbol support structure */
 typedef struct _HB_SYMB
 {
-   char *         szName;           /* the name of the symbol */
+   const char *   szName;           /* the name of the symbol */
    union
    {
       HB_SYMBOLSCOPE value;         /* the scope of the symbol */
