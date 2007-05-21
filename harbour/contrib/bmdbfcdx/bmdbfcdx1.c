@@ -6852,7 +6852,7 @@ HB_FUNC( BM_DBSEEKWILD )
        if( !ISNIL( 1 ) )
        {
           pKey = hb_param( 1, HB_IT_ANY );
-          bSoftSeek = ISLOG( 2 ) ? hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
+          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
           bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
           bNext     = ISLOG( 4 ) ? hb_parl( 4 ) : FALSE;
           bAll      = ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
