@@ -688,9 +688,10 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
    }
 }
 
-static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen, ULONG * pulAt )
+static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen,
+                            ULONG ul, ULONG * pulAt )
 {
-   ULONG ul = 0;
+   char cQuote = 0;
 
    /*
     * TODO: this is Clipper compatible but it breaks valid code so we may
@@ -700,8 +701,42 @@ static BOOL hb_pp_canQuote( BOOL fQuote, char * pBuffer, ULONG ulLen, ULONG * pu
    {
       if( pBuffer[ ul ] == ']' )
       {
-         * pulAt = ul;
+         if( cQuote && !fQuote )
+         {
+            ULONG u = ul + 1;
+            cQuote = 0;
+            while( u < ulLen )
+            {
+               if( cQuote )
+               {
+                  if( pBuffer[ u ] == cQuote )
+                     cQuote = 0;
+               }
+               else if( pBuffer[ u ] == '`' )
+                  cQuote = '\'';
+               else if( pBuffer[ u ] == '\'' || pBuffer[ u ] == '"' )
+                  cQuote = pBuffer[ u ];
+               else if( pBuffer[ u ] == '[' )
+                  hb_pp_canQuote( TRUE, pBuffer, ulLen, u + 1, &u );
+               ++u;
+            }
+            fQuote = cQuote == 0;
+         }
+         if( fQuote )
+            * pulAt = ul;
          return fQuote;
+      }
+      else if( !fQuote )
+      {
+         if( cQuote )
+         {
+            if( pBuffer[ ul ] == cQuote )
+               cQuote = 0;
+         }
+         else if( pBuffer[ ul ] == '`' )
+            cQuote = '\'';
+         else if( pBuffer[ ul ] == '\'' || pBuffer[ ul ] == '"' )
+            cQuote = pBuffer[ ul ];
       }
       ++ul;
    }
@@ -1020,7 +1055,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          {
             ULONG ulStrip, u;
 
-            if( ch == 'e' )
+            if( ch != '"' )
                ++ul;
             while( ++ul < ulLen && pBuffer[ ul ] != '"' )
             {
@@ -1058,7 +1093,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                   break;
             }
 #endif
-            u = ch == 'e' ? 2 : 1;
+            u = ch != '"' ? 2 : 1;
             ulStrip = ul - u;
             hb_strRemEscSeq( pBuffer + u, &ulStrip );
             hb_pp_tokenAddNext( pState, pBuffer + u, ulStrip,
@@ -1119,10 +1154,10 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          else if( ch == '[' && !pState->fDirective &&
                   hb_pp_canQuote( pState->fCanNextLine ||
                                   HB_PP_TOKEN_CANQUOTE( pState->iLastType ),
-                                  pBuffer + 1, ulLen - 1, &ul ) )
+                                  pBuffer, ulLen, 1, &ul ) )
          {
-            hb_pp_tokenAddNext( pState, pBuffer + 1, ul, HB_PP_TOKEN_STRING );
-            ul += 2;
+            hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1, HB_PP_TOKEN_STRING );
+            ++ul;
          }
          else if( ( ch == '/' || ch == '&' ) && ulLen > 1 && pBuffer[ 1 ] == ch )
          {

@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-21 13:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed E"..."
+    ! added new hack for strings inside []
+
 2007-05-21 13:11 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * contrib/bmdbfcdx/bmdbfcdx1.c
     * minor warning fix on os/2 compile.
