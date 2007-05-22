@@ -381,8 +381,8 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\gttone.obj   \
     $(OBJ_DIR)\gx.obj       \
     $(OBJ_DIR)\hardcr.obj   \
-    $(OBJ_DIR)\hbcrc.c      \
-    $(OBJ_DIR)\hbmd5.c      \
+    $(OBJ_DIR)\hbcrc.obj    \
+    $(OBJ_DIR)\hbmd5.obj    \
     $(OBJ_DIR)\hbffind.obj  \
     $(OBJ_DIR)\hbgtcore.obj \
     $(OBJ_DIR)\hbinet.obj   \
