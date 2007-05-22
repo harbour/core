@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-22 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbfix.c
+    ! fixed local IND/DED when PARAMETERS is used
+    ! fixed local names generated for debugger when PARAMETERS is used
+
+  * harbour/source/debug/dbgentry.c
+    ! fixed very bad typo in my previous commit
+    % minor optimization
+
 2007-05-22 12:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     +  added -lpcreposix to system libraries when C_USR has -DHB_PCRE_REGEX

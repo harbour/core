@@ -76,9 +76,9 @@ static BOOL hb_clsSetScope( BOOL fScope ) { return fScope; }
 #define STRNDUP( dest, source, len ) ( dest = hb_strndup( (source), (len) ) )
 
 #define ARRAY_ADD( type, array, length ) \
-   ( ( length++ == 0 ) ? array = ( type * ) hb_xgrab( sizeof( type ) ) : \
+   ( ( ++length == 1 ) ? ( array = ( type * ) hb_xgrab( sizeof( type ) ) ) : \
       ( ( array = ( type * ) hb_xrealloc( array, sizeof( type ) * length ) ) + \
-            sizeof( type ) * ( length - 1 ) ) )
+          length - 1 ) )
 
 #define ARRAY_DEL( type, array, length, index ) \
    do { \
@@ -640,6 +640,7 @@ hb_dbgAddModule( HB_DEBUGINFO *info, char *szName )
 static void
 hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
 {
+   char szBuff[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_CALLSTACKINFO *top;
    char *szFunction = strrchr( szName, ':' );
    char *tmp;
@@ -651,10 +652,9 @@ hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
    top = ARRAY_ADD( HB_CALLSTACKINFO, info->aCallStack, info->nCallStackLen );
    if ( info->bCodeBlock )
    {
-      char tmp[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ] = "(b)";
-
-      strcpy( tmp + 3, szFunction );
-      top->szFunction = STRDUP( tmp );
+      memcpy( szBuff, "(b)", 3 );
+      hb_strncpy( szBuff + 3, szFunction, sizeof( szBuff ) - 4 );
+      top->szFunction = STRDUP( szBuff );
    }
    else
    {
@@ -665,10 +665,8 @@ hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
       else
       {
          /* We're in an (_INITSTATICSnnnnn) pseudo-function */
-         char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-
-         hb_procinfo( 0, szName, NULL, NULL );
-         top->szFunction = STRDUP( szName );
+         hb_procinfo( 0, szBuff, NULL, NULL );
+         top->szFunction = STRDUP( szBuff );
       }
    }
    tmp = strrchr( szName, '/' );

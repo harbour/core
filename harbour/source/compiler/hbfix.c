@@ -115,7 +115,7 @@ static HB_FIX_FUNC( hb_p_pushblocklarge )
    return HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 }
 
-static HB_FIX_FUNC( hb_p_poplocal )
+static HB_FIX_FUNC( hb_p_localfix )
 {
    BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
    SHORT iVar = HB_PCODE_MKSHORT( pVar );
@@ -126,52 +126,10 @@ static HB_FIX_FUNC( hb_p_poplocal )
    pVar[ 0 ] = HB_LOBYTE( iVar );
    pVar[ 1 ] = HB_HIBYTE( iVar );
 
-   return 3;
+   return 0;
 }
 
-static HB_FIX_FUNC( hb_p_pushlocal )
-{
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
-
-   HB_SYMBOL_UNUSED( cargo );
-
-   iVar += pFunc->wParamCount;
-   pVar[ 0 ] = HB_LOBYTE( iVar );
-   pVar[ 1 ] = HB_HIBYTE( iVar );
-
-   return 3;
-}
-
-static HB_FIX_FUNC( hb_p_pushlocalref )
-{
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
-
-   HB_SYMBOL_UNUSED( cargo );
-
-   iVar += pFunc->wParamCount;
-   pVar[ 0 ] = HB_LOBYTE( iVar );
-   pVar[ 1 ] = HB_HIBYTE( iVar );
-
-   return 3;
-}
-
-static HB_FIX_FUNC( hb_p_localaddint )
-{
-   BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
-   SHORT iVar = HB_PCODE_MKSHORT( pVar );
-
-   HB_SYMBOL_UNUSED( cargo );
-
-   iVar += pFunc->wParamCount;
-   pVar[ 0 ] = HB_LOBYTE( iVar );
-   pVar[ 1 ] = HB_HIBYTE( iVar );
-
-   return 5;
-}
-
-static HB_FIX_FUNC( hb_p_poplocalnear )
+static HB_FIX_FUNC( hb_p_localnearerr )
 {
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
@@ -182,35 +140,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
     */
    hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, "", "" );
 
-   return 2;
-}
-
-static HB_FIX_FUNC( hb_p_pushlocalnear )
-{
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-   /*
-    * this code should never be executed because compiler should
-    * generate only non size optimized HB_P_POPLOCAL pcodes
-    * for function body
-    */
-   hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, "", "" );
-
-   return 2;
-}
-
-static HB_FIX_FUNC( hb_p_localnearaddint )
-{
-   HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
-   /*
-    * this code should never be executed because compiler should
-    * generate only non size optimized HB_P_POPLOCAL pcodes
-    * for function body
-    */
-   hb_compGenError( cargo->HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_OPTIMIZEDLOCAL_OUT_OF_RANGE, "", "" );
-
-   return 4;
+   return 0;
 }
 
 /* NOTE: The  order of functions have to match the order of opcodes
@@ -255,7 +185,7 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_LESSEQUAL,            */
    NULL,                       /* HB_P_LESS,                 */
    NULL,                       /* HB_P_LINE,                 */
-   NULL,                       /* HB_P_LOCALNAME,            */
+   hb_p_localfix,              /* HB_P_LOCALNAME,            */
    NULL,                       /* HB_P_MACROPOP,             */
    NULL,                       /* HB_P_MACROPOPALIASED,      */
    NULL,                       /* HB_P_MACROPUSH,            */
@@ -299,8 +229,8 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_POPALIASEDFIELDNEAR,  */
    NULL,                       /* HB_P_POPALIASEDVAR,        */
    NULL,                       /* HB_P_POPFIELD,             */
-   hb_p_poplocal,              /* HB_P_POPLOCAL,             */
-   hb_p_poplocalnear,          /* HB_P_POPLOCALNEAR,         */
+   hb_p_localfix,              /* HB_P_POPLOCAL,             */
+   hb_p_localnearerr,          /* HB_P_POPLOCALNEAR,         */
    NULL,                       /* HB_P_POPMEMVAR,            */
    NULL,                       /* HB_P_POPSTATIC,            */
    NULL,                       /* HB_P_POPVARIABLE,          */
@@ -314,9 +244,9 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_PUSHFIELD,            */
    NULL,                       /* HB_P_PUSHBYTE,             */
    NULL,                       /* HB_P_PUSHINT,              */
-   hb_p_pushlocal,             /* HB_P_PUSHLOCAL,            */
-   hb_p_pushlocalnear,         /* HB_P_PUSHLOCALNEAR,        */
-   hb_p_pushlocalref,          /* HB_P_PUSHLOCALREF,         */
+   hb_p_localfix,              /* HB_P_PUSHLOCAL,            */
+   hb_p_localnearerr,          /* HB_P_PUSHLOCALNEAR,        */
+   hb_p_localfix,              /* HB_P_PUSHLOCALREF,         */
    NULL,                       /* HB_P_PUSHLONG,             */
    NULL,                       /* HB_P_PUSHMEMVAR,           */
    NULL,                       /* HB_P_PUSHMEMVARREF,        */
@@ -346,7 +276,7 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MACROFUNC,            */
    NULL,                       /* HB_P_MACRODO,              */
    NULL,                       /* HB_P_MPUSHSTR,             */
-   hb_p_localnearaddint,       /* HB_P_LOCALNEARADDINT,      */
+   hb_p_localnearerr,          /* HB_P_LOCALNEARADDINT,      */
    NULL,                       /* HB_P_MACROPUSHREF          */
    NULL,                       /* HB_P_PUSHLONGLONG          */
    NULL,                       /* HB_P_ENUMSTART             */
@@ -373,7 +303,7 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_LARGEFRAME            */
    NULL,                       /* HB_P_LARGEVFRAME           */
    NULL,                       /* HB_P_PUSHSTRHIDDEN         */
-   hb_p_localaddint,           /* HB_P_LOCALADDINT           */
+   hb_p_localfix,              /* HB_P_LOCALADDINT           */
    NULL,                       /* HB_P_MODEQPOP              */
    NULL,                       /* HB_P_EXPEQPOP              */
    NULL,                       /* HB_P_MODEQ                 */
@@ -393,9 +323,9 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_INCEQPOP              */
    NULL,                       /* HB_P_DECEQ                 */
    NULL,                       /* HB_P_INCEQ                 */
-   NULL,                       /* HB_P_LOCALDEC              */
-   NULL,                       /* HB_P_LOCALINC              */
-   NULL,                       /* HB_P_LOCALINCPUSH          */
+   hb_p_localfix,              /* HB_P_LOCALDEC              */
+   hb_p_localfix,              /* HB_P_LOCALINC              */
+   hb_p_localfix,              /* HB_P_LOCALINCPUSH          */
    NULL,                       /* HB_P_PUSHFUNCSYM           */
    NULL                        /* HB_P_HASHGEN               */
 };
