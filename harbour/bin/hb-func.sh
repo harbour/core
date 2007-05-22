@@ -118,6 +118,9 @@ mk_hbtools()
     HB_SYS_LIBS="-lm"
     HB_CRS_LIB=""
     HB_SLN_LIB=""
+    if [ "${C_USR//-DHB_PCRE_REGEX/}" != "${C_USR}" ]; then
+        HB_SYS_LIBS="-lpcreposix -lpcre ${HB_SYS_LIBS}"
+    fi
     if [ "${HB_COMPILER}" = "mingw32" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then

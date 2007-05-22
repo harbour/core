@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-22 12:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    +  added -lpcreposix to system libraries when C_USR has -DHB_PCRE_REGEX
+  * harbour/include/hbregex.h
+    * removed pcre/ path from PCRE header files - if you want to build
+      Harbour with PCRE regex and PCRE header files are not in default\
+      path then set valid path in C_USR, f.e.:
+         export C_USR="${C_USR} -DHB_PCRE_REGEX -I/usr/include/pcre"
+
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/gencc.c
+  * harbour/source/vm/hvm.c
+    * minor optimizatin for -gc3 output
+
 2007-05-22 01:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/include/hbapicls.h

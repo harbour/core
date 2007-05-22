@@ -1128,18 +1128,50 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
-            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-   return 3;
+   switch( pFunc->pCode[ lPCodePos + 3 ] )
+   {
+      case HB_P_POPLOCALNEAR:
+         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
+                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                  ( signed char ) pFunc->pCode[ lPCodePos + 4 ] );
+         return 5;
+
+      case HB_P_POPLOCAL:
+         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
+                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
+         return 6;
+
+      default:
+         fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
+                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+         return 3;
+   }
 }
 
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
-            ( signed char ) pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   switch( pFunc->pCode[ lPCodePos + 2 ] )
+   {
+      case HB_P_POPLOCALNEAR:
+         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
+                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
+                  ( signed char ) pFunc->pCode[ lPCodePos + 3 ] );
+         return 4;
+
+      case HB_P_POPLOCAL:
+         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
+                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
+                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
+         return 5;
+
+      default:
+         fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
+                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ] );
+         return 2;
+   }
 }
 
 static HB_GENC_FUNC( hb_p_pushlocalref )

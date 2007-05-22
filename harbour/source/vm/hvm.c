@@ -7145,6 +7145,42 @@ HB_EXPORT void hb_xvmPopLocal( SHORT iLocal )
    hb_vmPopLocal( iLocal );
 }
 
+HB_EXPORT PHB_ITEM hb_xvmLocalPtr( int iLocal )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmLocalPtr(%d)", iLocal));
+
+   if( iLocal >= 0 )
+   {
+      /* local variable or local parameter */
+      return hb_stackLocalVariable( &iLocal );
+   }
+   else
+   {
+      /* local variable referenced in a codeblock
+       * hb_stackSelfItem() points to a codeblock that is currently evaluated
+       */
+      return hb_codeblockGetRef( hb_stackSelfItem()->item.asBlock.value, ( LONG ) iLocal );
+   }
+}
+
+HB_EXPORT PHB_ITEM hb_xvmStaticPtr( int iStatic )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmStaticPtr(%d)", iStatic));
+
+   return s_aStatics.item.asArray.value->pItems + hb_stackGetStaticsBase() + iStatic - 1;
+}
+
+HB_EXPORT void hb_xvmCopyLocals( int iDest, int iSource )
+{
+   PHB_ITEM pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmCopyLocals(%d,%d)", iDest, iSource));
+
+   pDest = hb_xvmLocalPtr( iDest );
+   hb_itemCopyToRef( hb_xvmLocalPtr( iSource ),
+                     HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest );
+}
+
 HB_EXPORT void hb_xvmPushStatic( USHORT uiStatic )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStatic(%hu)", uiStatic));

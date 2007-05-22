@@ -74,8 +74,8 @@
 #     define HB_PCRE_REGEX
 #  endif
 #elif defined( HB_PCRE_REGEX )
-#  include <pcre/pcre.h>
-#  include <pcre/pcreposix.h>
+#  include <pcre.h>
+#  include <pcreposix.h>
 #elif defined( HB_POSIX_REGEX )
 #  include <regex.h>
 #else

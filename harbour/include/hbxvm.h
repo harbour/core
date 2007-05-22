@@ -252,6 +252,10 @@ extern HB_EXPORT BOOL hb_xvmLocalAdd( int iLocal );
 extern HB_EXPORT BOOL hb_xvmStaticAdd( USHORT uiStatic );
 extern HB_EXPORT BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol );
 
+extern HB_EXPORT PHB_ITEM hb_xvmStaticPtr( int iStatic );
+extern HB_EXPORT PHB_ITEM hb_xvmLocalPtr( int iLocal );
+extern HB_EXPORT void hb_xvmCopyLocals( int iDest, int iSource );
+
 HB_EXTERN_END
 
 #endif /* HB_XVM_H_ */
