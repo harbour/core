@@ -128,16 +128,21 @@ C_SOURCES=\
 	xhelp.c      \
 	xsavescr.c   \
 
+
 PRG_SOURCES=\
 	achoice.prg  \
 	adir.prg     \
-	altd.prg     \
 	alert.prg    \
+	altd.prg     \
+	array.prg    \
+	block.prg    \
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
+	characte.prg \
 	checkbox.prg \
 	color53.prg  \
+	date.prg     \
 	dbedit.prg   \
 	devoutp.prg  \
 	dircmd.prg   \
@@ -147,10 +152,13 @@ PRG_SOURCES=\
 	getsys.prg   \
 	input.prg    \
 	listbox.prg  \
+	logical.prg  \
 	memoedit.prg \
 	memvarbl.prg \
 	menuto.prg   \
 	mssgline.prg \
+	nil.prg      \
+	numeric.prg  \
 	objfunc.prg  \
 	perfuncs.prg \
 	persist.prg  \
@@ -160,6 +168,7 @@ PRG_SOURCES=\
 	radiogrp.prg \
 	readkey.prg  \
 	readvar.prg  \
+	scalar.prg   \
 	scrollbr.prg \
 	setfunc.prg  \
 	setta.prg    \
