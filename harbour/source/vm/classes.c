@@ -1254,34 +1254,6 @@ HB_EXPORT const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szNa
    return hb_objGetClsName( pObject );
 }
 
-/*
- * return real function name ignoring aliasing
- */
-const char * hb_clsRealMethodName( void )
-{
-   LONG lOffset = hb_stackBaseProcOffset( 1 );
-   const char * szName = NULL;
-
-   if( lOffset > 0 )
-   {
-      PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
-
-      if( pStack->uiClass && pStack->uiClass <= s_uiClasses )
-      {
-         PCLASS pClass = &s_pClasses[ pStack->uiClass ];
-
-         if( ( ULONG ) pStack->uiMethod < hb_clsMthNum( pClass ) )
-         {
-            PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
-
-            if( pMethod->pMessage )
-               szName = pMethod->pMessage->pSymbol->szName;
-         }
-      }
-   }
-   return szName;
-}
-
 #if defined( HB_CLASSY_BLOCK_SCOPE )
 static LONG hb_clsSenderOffset( void )
 {
@@ -4029,7 +4001,6 @@ void hb_clsAssociate( USHORT usClassH )
 
 
 #if 1
-
 /*
  * __CLS_PARAM() and __CLS_PAR00() functions are only for backward binary
  * compatibility. They will be removed in the future so please do not use
@@ -4086,4 +4057,34 @@ BOOL hb_objGetpMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    return hb_objHasMessage( pObject, pMessage->pDynSym );
 }
 
+#endif
+
+#if 0
+/*
+ * return real function name ignoring aliasing
+ */
+const char * hb_clsRealMethodName( void )
+{
+   LONG lOffset = hb_stackBaseProcOffset( 1 );
+   const char * szName = NULL;
+
+   if( lOffset > 0 )
+   {
+      PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
+
+      if( pStack->uiClass && pStack->uiClass <= s_uiClasses )
+      {
+         PCLASS pClass = &s_pClasses[ pStack->uiClass ];
+
+         if( ( ULONG ) pStack->uiMethod < hb_clsMthNum( pClass ) )
+         {
+            PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
+
+            if( pMethod->pMessage )
+               szName = pMethod->pMessage->pSymbol->szName;
+         }
+      }
+   }
+   return szName;
+}
 #endif

@@ -10,6 +10,7 @@ C_HEADERS=\
 	hbapi.h      \
 	hbapicdp.h   \
 	hbapicls.h   \
+	hbapidbg.h   \
 	hbapierr.h   \
 	hbapifs.h    \
 	hbapigt.h    \

@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-23 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+    + added hbapidbg.h
+
+  * harbour/source/vm/classes.c
+    - removed one unused debug function
+
+  * harbour/source/vm/debug.c
+    * formatting
+
 2007-05-22 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
     ! fixed typo during copy and past in last modification - changing files
