@@ -202,7 +202,15 @@ HB_EXPORT PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
       }
 
       if( iLocal >= 0 )
+      {
+         PHB_ITEM pBase = hb_stackItem( lBaseOffset - 1 );
+
+         if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt &&
+             iLocal > pBase->item.asSymbol.paramdeclcnt )
+            iLocal += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
+
          pLocal = hb_stackItem( lBaseOffset + iLocal );
+      }
       else
          pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
 
@@ -245,7 +253,15 @@ HB_FUNC( HB_DBG_VMVARLSET )
       }
 
       if( iLocal >= 0 )
+      {
+         PHB_ITEM pBase = hb_stackItem( lBaseOffset - 1 );
+
+         if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt &&
+             iLocal > pBase->item.asSymbol.paramdeclcnt )
+            iLocal += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
+
          pLocal = hb_stackItem( lBaseOffset + iLocal );
+      }
       else
          pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
 
