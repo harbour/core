@@ -200,36 +200,6 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
    }
 }
 
-/* Check if passed string is a valid function or variable name
- */
-BOOL hb_macroIsIdent( char * szString )
-{
-   char * pTmp = szString;
-   BOOL bIsIdent = FALSE;
-
-   /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
-    */
-   if( *pTmp )
-   {
-      if( ! ( pTmp[ 0 ] == '_' && pTmp[ 1 ] == 0 ) )
-      {
-         /* this is not a "_" string
-          */
-         if( *pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') )
-         {
-            ++pTmp;
-            while( *pTmp && (*pTmp == '_' || (*pTmp >= 'A' && *pTmp <= 'Z') || (*pTmp >= 'a' && *pTmp <= 'z') || (*pTmp >= '0' && *pTmp <= '9')) )
-               ++pTmp;
-            /* the name is valid if pTmp is at the end of a string
-            */
-            bIsIdent = (*pTmp ? FALSE : TRUE );
-         }
-      }
-   }
-
-   return bIsIdent;
-}
-
 /* This replaces all '&var' or '&var.' occurences within a given string
  * with the value of variable 'var' if this variable exists and contains
  * a string value. The value of variable is also searched for
@@ -253,7 +223,7 @@ BOOL hb_macroIsIdent( char * szString )
  *    PRIVATE &a&b   //this will cause syntax error '&'
  *
  */
-char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
+static char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
 {
    char * szResult;
    ULONG ulResStrLen;
@@ -264,7 +234,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %li)", szString, *pulStringLen));
 
-   pHead = (char *)memchr( (void *)szString, '&', *pulStringLen );
+   pHead = (char *) memchr( (void *) szString, '&', *pulStringLen );
    if( pHead == NULL )
       return szString;  /* no more processing is required */
 
@@ -290,26 +260,30 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
       * (only _a-zA-Z are allowed)
       */
       ++pHead;    /* skip '&' character */
-      if( *pHead == '_' || (*pHead >= 'A' && *pHead <= 'Z') || (*pHead >= 'a' && *pHead <= 'z') )
+      if( *pHead == '_' ||
+          ( *pHead >= 'A' && *pHead <= 'Z' ) ||
+          ( *pHead >= 'a' && *pHead <= 'z' ) )
       {
          /* extract a variable name */
          /* NOTE: the extracted name can be longer then supported maximal
           * length of identifiers (HB_SYMBOL_NAME_LEN) - only the max allowed
           * are used for name lookup however the whole string is replaced
           */
-         ULONG ulNameLen = 0;
+         ULONG ulNameLen = 1;
          char * pName = pHead;
 
-         while( *pHead && (*pHead == '_' || (*pHead >= 'A' && *pHead <= 'Z') || (*pHead >= 'a' && *pHead <= 'z') || (*pHead >= '0' && *pHead <= '9')) )
+         while( *++pHead && ( *pHead == '_' ||
+                              ( *pHead >= 'A' && *pHead <= 'Z' ) ||
+                              ( *pHead >= 'a' && *pHead <= 'z' ) ||
+                              ( *pHead >= '0' && *pHead <= '9' ) ) )
          {
-            ++pHead;
             ++ulNameLen;
          }
          /* pHead points now at the character that terminated a variable name */
 
          /* NOTE: '_' is invalid variable name
           */
-         if( ! ( *pName == '_' && ulNameLen == 1 ) )
+         if( ulNameLen > 1 || *pName != '_' )
          {
             /* this is not the "&_" string */
             char * szValPtr;
@@ -643,17 +617,80 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags 
  * new string if a valid macro text substitution was found (and sets
  * pbNewString to TRUE)
 */
-char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pbNewString )
+char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pfNewString )
 {
    char *szResultString;
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s)", szString));
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s,%lu,%p)", szString, ulLength, pfNewString));
 
    if( szString )
       szResultString = hb_macroTextSubst( szString, &ulLength );
    else
       szResultString = szString;
-   *pbNewString = ( szString != szResultString );
+   *pfNewString = ( szString != szResultString );
    return szResultString;
+}
+
+char * hb_macroTextSymbol( char *szString, ULONG ulLength, BOOL *pfNewString )
+{
+   char *szResult = NULL;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%lu,%p)", szString, ulLength, pfNewString));
+
+   if( szString )
+   {
+      ULONG ulLen = 0;
+
+      szResult = hb_macroTextSubst( szString, &ulLength );
+
+      while( ulLength && szResult[ ulLength - 1 ] == ' ' )
+         --ulLength;
+
+      /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
+       * "_" is not valid macro string
+       */
+      while( ulLen < ulLength )
+      {
+         char c = szResult[ ulLen ];
+         if( c >= 'a' && c <= 'z' )
+         {
+            if( szResult == szString )
+            {
+               szResult = ( char * ) hb_xgrab( ulLength + 1 );
+               memcpy( szResult, szString, ulLength );
+               szResult[ ulLength ] = '\0';
+            }
+            szResult[ ulLen ] = c - ( 'a' - 'A' );
+         }
+         else if( ! ( c == '_' || ( c >= 'A' && c <= 'Z' ) ||
+                      ( ulLen && ( c >= '0' && c <= '9' ) ) ) )
+         {
+            break;
+         }
+         ++ulLen;
+      }
+      if( ulLen == ulLength && ulLen > ( ULONG ) ( szResult[ 0 ] == '_' ? 1 : 0 ) )
+      {
+         if( ulLen > HB_SYMBOL_NAME_LEN )
+            ulLen = HB_SYMBOL_NAME_LEN;
+         if( szResult[ ulLen ] )
+         {
+            if( szResult == szString )
+            {
+               szResult = ( char * ) hb_xgrab( ulLen + 1 );
+               memcpy( szResult, szString, ulLen );
+            }
+            szResult[ ulLen ] = '\0';
+         }
+      }
+      else if( szResult != szString )
+      {
+         hb_xfree( szResult );
+         szResult = NULL;
+      }
+   }
+   *pfNewString = szResult && szString != szResult;
+   return szResult;
 }
 
 /* compile a string and return a pcode to push a value of expression
@@ -701,15 +738,14 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
    if( hb_macroCheckParam( pItem ) )
    {
       char * szString;
-      BOOL bNewBuffer;
-      ULONG ulLength = pItem->item.asString.length;
+      BOOL fNewBuffer;
 
-      szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
-      bNewBuffer = ( szString != pItem->item.asString.value );
-
-      if( hb_macroIsIdent( szString ) )
+      szString = hb_macroTextSymbol( pItem->item.asString.value,
+                                     pItem->item.asString.length,
+                                     &fNewBuffer );
+      if( szString )
       {
-         HB_DYNS_PTR pDynSym =  hb_dynsymGet( szString );
+         HB_DYNS_PTR pDynSym = hb_dynsymGetCase( szString );
 
          hb_stackPop();    /* remove compiled string */
          /* NOTE: checking for valid function name (valid pointer) is done
@@ -722,8 +758,8 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          hb_stackPop();    /* remove compiled string */
          hb_macroSyntaxError( NULL );
       }
-      if( bNewBuffer )
-         hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
+      if( fNewBuffer )
+         hb_xfree( szString );   /* free space allocated in hb_macroTextSymbol */
    }
 }
 
@@ -1067,13 +1103,13 @@ static void hb_macroMemvarGenPCode( BYTE bPCode, char * szVarName, HB_COMP_DECL 
       if( !pSym )
       {
          HB_MACRO_DATA->status |= HB_MACRO_UNKN_VAR;
-         pSym = hb_dynsymGet( szVarName );
+         pSym = hb_dynsymGetCase( szVarName );
       }
    }
    else
       /* Find the address of passed symbol - create the symbol if doesn't exist
        * (Clipper compatibility). */
-      pSym = hb_dynsymGet( szVarName );
+      pSym = hb_dynsymGetCase( szVarName );
 
    byBuf[ 0 ] = bPCode;
    HB_PUT_PTR( &byBuf[ 1 ], pSym );
@@ -1111,7 +1147,7 @@ void hb_macroGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL )
       }
    }
    else
-      pSym = hb_dynsymGet( szSymbolName );     
+      pSym = hb_dynsymGetCase( szSymbolName );
 
    byBuf[ 0 ] = HB_P_MPUSHSYM;
    HB_PUT_PTR( &byBuf[ 1 ], pSym );
@@ -1170,7 +1206,7 @@ void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 
    /* Find the address of passed symbol - create the symbol if doesn't exist
     */
-   HB_DYNS_PTR pSym = hb_dynsymGet( szMsgName );
+   HB_DYNS_PTR pSym = hb_dynsymGetCase( szMsgName );
 
    byBuf[ 0 ] = HB_P_MMESSAGE;
    HB_PUT_PTR( &byBuf[ 1 ], pSym );
@@ -1183,10 +1219,17 @@ void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 void hb_macroGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL )
 {
    char * szResult;
+   int iLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenMessageData(%s)", szMsg));
 
-   szResult = hb_xstrcpy( NULL, "_", szMsg, NULL );
+   iLen = ( int ) strlen( szMsg );
+   if( iLen > HB_SYMBOL_NAME_LEN - 1 )
+      iLen = HB_SYMBOL_NAME_LEN - 1;
+   szResult = ( char * ) hb_xgrab( iLen + 2 );
+   szResult[ 0 ] = '_';
+   memcpy( szResult + 1, szMsg, iLen );
+   szResult[ iLen + 1 ] = '\0';
    hb_macroGenMessage( szResult, bIsObject, HB_COMP_PARAM );
    hb_xfree( szResult );
 }

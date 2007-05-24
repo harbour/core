@@ -495,6 +495,8 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   if( iParts == 1 )
                   {
                      yylval_ptr->string++;
+                     if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
+                        yylval_ptr->string[ HB_SYMBOL_NAME_LEN ] = '\0';
                      return MACROVAR;
                   }
                   return MACROTEXT;
@@ -569,6 +571,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             }
             else if( HB_LEX_ISFIRSTIDCHAR( ch ) )
             {
+               ULONG ulLen;
                pLex->quote = FALSE;
                yylval_ptr->string = pLex->pDst;
                *pLex->pDst++ = ch - ( ( ch >= 'a' && ch <= 'z' ) ? 'a' - 'A' : 0 );
@@ -596,8 +599,9 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   *pLex->pDst++ = '\0';
                   return MACROTEXT;
                }
+               ulLen = pLex->pDst - yylval_ptr->string;
                *pLex->pDst++ = '\0';
-               if( pLex->pDst - yylval_ptr->string == 2 )
+               if( ulLen == 1 )
                {
                   if( yylval_ptr->string[ 0 ] == 'E' &&
                       pLex->ulLen > pLex->ulSrc &&
@@ -607,13 +611,13 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                      return hb_lexStringExtCopy( yylval_ptr, pMacro, pLex );
                   }
                }
-               else if( pLex->pDst - yylval_ptr->string == 3 )
+               else if( ulLen == 2 )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'F' )
                      return IIF;
                }
-               else if( pLex->pDst - yylval_ptr->string == 4 )
+               else if( ulLen == 3 )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'I' &&
@@ -624,46 +628,49 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                            yylval_ptr->string[ 2 ] == 'L' )
                      return NIL;
                }
-               else if( pLex->pDst - yylval_ptr->string > 4 )
+               else /* ulLen >= 4 */
                {
-                  if( yylval_ptr->string[ 0 ] == '_' )
+                  switch( yylval_ptr->string[ 0 ] )
                   {
-                     if( memcmp( "FIELD", yylval_ptr->string + 1,
-                                 pLex->pDst - yylval_ptr->string - 2 ) == 0 )
-                        return FIELD;
-                  }
-                  else if( yylval_ptr->string[ 0 ] == 'F' )
-                  {
-                     if( memcmp( "IELD", yylval_ptr->string + 1,
-                                 pLex->pDst - yylval_ptr->string - 2 ) == 0 )
-                        return FIELD;
-                  }
-                  else if( pLex->pDst - yylval_ptr->string == 6 &&
-                           yylval_ptr->string[ 0 ] == 'Q' &&
-                           memcmp( "SELF", yylval_ptr->string + 1,
-                                   pLex->pDst - yylval_ptr->string - 2 ) == 0 )
-                  {
-                     while( pLex->ulSrc < pLex->ulLen &&
-                            ( pLex->pString[ pLex->ulSrc ] == ' ' ||
-                              pLex->pString[ pLex->ulSrc ] == '\t' ) )
-                        pLex->ulSrc++;
-                     if( pLex->ulSrc < pLex->ulLen &&
-                         pLex->pString[ pLex->ulSrc ] == '(' )
-                     {
-                        ULONG ul = pLex->ulSrc;
-                        while( ++ul < pLex->ulLen )
+                     case '_':
+                        if( ulLen <= 6 && memcmp( "FIELD", yylval_ptr->string + 1,
+                                                  ulLen - 1 ) == 0 )
+                           return FIELD;
+                        break;
+                     case 'F':
+                        if( ulLen <= 5 && memcmp( "IELD", yylval_ptr->string + 1,
+                                                  ulLen - 1 ) == 0 )
+                           return FIELD;
+                        break;
+                     case 'Q':
+                        if( ulLen == 5 && memcmp( "SELF", yylval_ptr->string + 1,
+                                                  ulLen - 1 ) == 0 )
                         {
-                           if( pLex->pString[ ul ] == ')' )
+                           while( pLex->ulSrc < pLex->ulLen &&
+                                  ( pLex->pString[ pLex->ulSrc ] == ' ' ||
+                                    pLex->pString[ pLex->ulSrc ] == '\t' ) )
+                              pLex->ulSrc++;
+                           if( pLex->ulSrc < pLex->ulLen &&
+                               pLex->pString[ pLex->ulSrc ] == '(' )
                            {
-                              pLex->ulSrc = ul + 1;
-                              return SELF;
+                              ULONG ul = pLex->ulSrc;
+                              while( ++ul < pLex->ulLen )
+                              {
+                                 if( pLex->pString[ ul ] == ')' )
+                                 {
+                                    pLex->ulSrc = ul + 1;
+                                    return SELF;
+                                 }
+                                 else if( pLex->pString[ ul ] != ' ' &&
+                                          pLex->pString[ ul ] != '\t' )
+                                    break;
+                              }
                            }
-                           else if( pLex->pString[ ul ] != ' ' &&
-                                    pLex->pString[ ul ] != '\t' )
-                              break;
                         }
-                     }
+                        break;
                   }
+                  if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
+                     yylval_ptr->string[ HB_SYMBOL_NAME_LEN ] = '\0';
                }
                return IDENTIFIER;
             }

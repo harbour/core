@@ -340,12 +340,12 @@ VarAlias    : IDENTIFIER ALIASOP    { $$ = hb_compExprNewAlias( $1, HB_COMP_PARA
 MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COMP_PARAM );
                                  HB_MACRO_CHECK( $$ );
                               }
-            | MACROTEXT       {  ULONG ulLen = strlen( $1 );
-                                 char * szVarName = hb_macroTextSubst( $1, &ulLen );
-                                 if( szVarName != $1 )
-                                    hb_macroIdentNew( HB_COMP_PARAM, szVarName );
-                                 if( hb_macroIsIdent( szVarName ) )
+            | MACROTEXT       {  BOOL fNewString;
+                                 char * szVarName = hb_macroTextSymbol( $1, strlen( $1 ), &fNewString );
+                                 if( szVarName )
                                  {
+                                    if( fNewString )
+                                       hb_macroIdentNew( HB_COMP_PARAM, szVarName );
                                     $$ = hb_compExprNewVar( szVarName, HB_COMP_PARAM );
                                     HB_MACRO_CHECK( $$ );
                                  }
@@ -440,7 +440,7 @@ FunCall     : IDENTIFIER '(' ArgList ')'  { $$ = hb_macroExprNewFunCall( hb_comp
                                             HB_MACRO_CHECK( $$ );
                                           }
             | MacroVar '(' ArgList ')'    { $$ = hb_macroExprNewFunCall( $1, $3, HB_COMP_PARAM );
-                                             HB_MACRO_CHECK( $$ );
+                                            HB_MACRO_CHECK( $$ );
                                           }
             ;
 

@@ -8,6 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-25 01:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/include/hbexpra.c
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macrolex.c
+  * harbour/source/vm/macro.c
+    - removed hb_macroIsIdent()
+    + added hb_macroTextSymbol()
+    ! fixed old bug (it exists in all [x]Harbour versions) in macrocompiler
+      which caused HVM stack corruption
+    * generate from lexer symbols which are well formatted
+      (uppercase and size <= HB_SYMBOL_NAME_LEN)
+    % use hb_dynsymGetCase() instead of hb_dynsymGet()
+    % some minor speed improvement
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    % use hb_dynsymFind() instead of hb_dynsymFindName()
+
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/wafunc.c
+    * reenabled by default strict clipper compatible behavior for
+      code select(), dbSelectArea() and alias allocating
+
+  * harbour/source/rdd/dbf1.c
+    + added DBI_ISENCRYPTED for tables encrypted by SIX3
+
+  * harbour/source/rtl/hbinet.c
+    ! added missing break (Ron fix from xHarbour)
+
 2007-05-23 12:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/debug.c
     ! fixed access/assign local variables from debugger in functions

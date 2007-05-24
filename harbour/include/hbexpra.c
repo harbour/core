@@ -400,6 +400,14 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(&)"));
    }
+#ifdef HB_MACRO_SUPPORT
+   else if( pName->ExprType == HB_ET_VARIABLE )
+   {
+      /* My&var.1() executed by macro compiler
+       */
+      pName->ExprType = HB_ET_FUNNAME;
+   }
+#endif
 
    if( pExpr == NULL )
    {

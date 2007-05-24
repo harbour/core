@@ -1315,6 +1315,7 @@ static void s_inetSendInternal( int iMode )
       else if( iLen == 0 )
       {
          HB_SOCKET_SET_ERROR2( Socket, -1 , "Timeout" );
+         break;
       }
       else
       {

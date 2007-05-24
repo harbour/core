@@ -689,7 +689,7 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    {
 #ifdef HB_NO_ALLOC_CONSOLE
       /* allocate console only when debugger is linked */
-      if( hb_dynsymFindName( "__DBGENTRY" ) )
+      if( hb_dynsymFind( "__DBGENTRY" ) )
       {
          AllocConsole(); /* It is a Windows app without a console, so we create one */
          s_HInput = GetStdHandle( STD_INPUT_HANDLE );

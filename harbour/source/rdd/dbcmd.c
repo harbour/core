@@ -688,10 +688,13 @@ HB_FUNC( DBSEEK )
 
 HB_FUNC( DBSELECTAREA )
 {
+   char * szAlias = hb_parc( 1 );
 
-   if( ISCHAR( 1 ) )
+   if( szAlias )
    {
-      hb_rddSelectWorkAreaAlias( hb_parc( 1 ) );
+      hb_rddSelectWorkAreaAlias( szAlias );
+      if( hb_rddGetCurrentWorkAreaNumber() == HARBOUR_MAX_RDD_AREA_NUM )
+         hb_rddSelectFirstAvailable();
    }
    else
    {
@@ -1997,7 +2000,7 @@ HB_FUNC( SELECT )
 
       if( szAlias )
       {
-#ifdef HB_C52_STRICT
+#if defined( HB_C52_STRICT ) || 1
          /*
           * I do not like this Clipper behavior, in some constructions
           * programmer may use "<aliasNum>" in some others not. [Druzus]

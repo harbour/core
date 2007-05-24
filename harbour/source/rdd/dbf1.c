@@ -2643,6 +2643,10 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutL( pItem, pArea->fValidBuffer );
          break;
 
+      case DBI_ISENCRYPTED:
+         hb_itemPutL( pItem, pArea->fTableEncrypted );
+         break;
+
       case DBI_LOCKCOUNT:
          hb_itemPutNL( pItem, pArea->ulNumLocksPos );
          break;

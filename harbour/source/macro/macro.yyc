@@ -2200,12 +2200,12 @@ yyreduce:
 
   case 25:
 #line 343 "macro.y"
-    {  ULONG ulLen = strlen( (yyvsp[(1) - (1)].string) );
-                                 char * szVarName = hb_macroTextSubst( (yyvsp[(1) - (1)].string), &ulLen );
-                                 if( szVarName != (yyvsp[(1) - (1)].string) )
-                                    hb_macroIdentNew( HB_COMP_PARAM, szVarName );
-                                 if( hb_macroIsIdent( szVarName ) )
+    {  BOOL fNewString;
+                                 char * szVarName = hb_macroTextSymbol( (yyvsp[(1) - (1)].string), strlen( (yyvsp[(1) - (1)].string) ), &fNewString );
+                                 if( szVarName )
                                  {
+                                    if( fNewString )
+                                       hb_macroIdentNew( HB_COMP_PARAM, szVarName );
                                     (yyval.asExpr) = hb_compExprNewVar( szVarName, HB_COMP_PARAM );
                                     HB_MACRO_CHECK( (yyval.asExpr) );
                                  }
@@ -2424,7 +2424,7 @@ yyreduce:
   case 68:
 #line 442 "macro.y"
     { (yyval.asExpr) = hb_macroExprNewFunCall( (yyvsp[(1) - (4)].asExpr), (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM );
-                                             HB_MACRO_CHECK( (yyval.asExpr) );
+                                            HB_MACRO_CHECK( (yyval.asExpr) );
                                           ;}
     break;
 
