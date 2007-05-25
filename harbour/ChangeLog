@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-25 11:46 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
+  * contrib/bmdbfcdx/bmdbfcdx1.c
+    * removed unnecesary code
+    ! fixed bug on SKIP with SET DELETED ON when skips a deleted recno, OrdKeyNo was wrong.
+
 2007-05-25 01:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/include/hbexpra.c
