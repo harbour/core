@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-26 09:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed bug reported by Lorenzo
+
+  * harbour/contrib/rdd_ads/ads1.c
+    * changed static variable name from iSetListenerHandle to
+      s_iSetListenerHandle to keep common naming convention
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashes.c
+  * harbour/source/vm/hashfunc.c
+  * harbour/source/vm/hvm.c
+    + added new 3-rd parameter to hb_hashGetItemPtr() to control
+      independently hash autoadd behavior in access/assign operation
+
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrddntx.h
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * moved static variables holding RDDI_* settings to RDDNODE data so
+      they can be set separately for each RDD which inherits from DBFNTX
+
+  * harbour/source/vm/classes.c
+    + added disabled code to access hash items using messages
+
+  * harbour/source/vm/garbage.c
+    * comment
+
 2007-05-25 11:46 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * contrib/bmdbfcdx/bmdbfcdx1.c
     * removed unnecesary code

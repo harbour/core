@@ -116,7 +116,7 @@ HB_FUNC( HB_HGET )
 
    if( pHash && pKey )
    {
-      PHB_ITEM pDest = hb_hashGetItemPtr( pHash, pKey );
+      PHB_ITEM pDest = hb_hashGetItemPtr( pHash, pKey, HB_HASH_AUTOADD_ACCESS );
       if( pDest )
          hb_itemReturn( HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest );
       else
@@ -620,17 +620,29 @@ HB_FUNC( HB_HCASEMATCH )
 HB_FUNC( HB_HAUTOADD )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL | HB_IT_NUMERIC );
 
    if( pHash )
    {
-      hb_retl( ( hb_hashGetFlags( pHash ) & HB_HASH_AUTOADD ) != 0 );
+      int iOldFlags = hb_hashGetFlags( pHash ) & HB_HASH_AUTOADD_MASK;
+      hb_retni( iOldFlags );
       if( pValue )
       {
-         if( hb_itemGetL( pValue ) )
-            hb_hashSetFlags( pHash, HB_HASH_AUTOADD );
+         if( HB_IS_LOGICAL( pValue ) )
+         {
+            if( hb_itemGetL( pValue ) )
+               hb_hashSetFlags( pHash, HB_HASH_AUTOADD_ALWAYS );
+            else if( iOldFlags )
+               hb_hashClearFlags( pHash, iOldFlags );
+         }
          else
-            hb_hashClearFlags( pHash, HB_HASH_AUTOADD );
+         {
+            int iNewFlags = hb_itemGetNI( pValue );
+            if( ( iNewFlags | iOldFlags ) != iNewFlags )
+               hb_hashClearFlags( pHash, iOldFlags );
+            if( iNewFlags )
+               hb_hashSetFlags( pHash, iNewFlags );
+         }
       }
    }
    else
@@ -690,7 +702,7 @@ HB_FUNC( HSCAN )              { HB_FUNC_EXEC( HB_HSCAN ); }
 HB_FUNC( HSETCASEMATCH )      { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 HB_FUNC( HGETCASEMATCH )      { HB_FUNC_EXEC( HB_HCASEMATCH ); }
 HB_FUNC( HSETAUTOADD )        { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
-HB_FUNC( HGETAUTOADD )        { HB_FUNC_EXEC( HB_HAUTOADD ); }
+HB_FUNC( HGETAUTOADD )        { HB_FUNC_EXEC( HB_HAUTOADD ); hb_retl( hb_parni( -1 ) == HB_HASH_AUTOADD_ALWAYS ); }
 HB_FUNC( HALLOCATE )          { HB_FUNC_EXEC( HB_HALLOCATE ); }
 HB_FUNC( HDEFAULT )           { HB_FUNC_EXEC( HB_HDEFAULT ); }
 

@@ -69,7 +69,7 @@
 
 #include <ctype.h>
 
-static int iSetListenerHandle = 0;
+static int s_iSetListenerHandle = 0;
 
 static USHORT s_uiRddCount = 0;
 static USHORT s_uiRddIdADS = ( USHORT ) -1;
@@ -4431,10 +4431,10 @@ static ERRCODE adsExit( LPRDDNODE pRDD )
    {
       if( ! --s_uiRddCount )
       {
-         if( iSetListenerHandle )
+         if( s_iSetListenerHandle )
          {
-            hb_setListenerRemove( iSetListenerHandle ) ;
-            iSetListenerHandle = 0;
+            hb_setListenerRemove( s_iSetListenerHandle ) ;
+            s_iSetListenerHandle = 0;
          }
          AdsApplicationExit();
       }
@@ -4620,10 +4620,10 @@ static void adsRegisterRDD( USHORT * pusRddId )
           */
          *pusRddId = uiRddId;
          ++s_uiRddCount;
-         if( !iSetListenerHandle )
+         if( !s_iSetListenerHandle )
          {
             adsSetSend();
-            iSetListenerHandle = hb_setListenerAdd( adsSetListener_callback );
+            s_iSetListenerHandle = hb_setListenerAdd( adsSetListener_callback );
          }
       }
       hb_retni( errCode );

@@ -536,7 +536,7 @@ static ERRCODE ntxCountScope( NTXAREAP pArea, void * pPtr, LONG * plRecNo );
 #define ntxPutValueFile          NULL
 #define ntxReadDBHeader          NULL
 #define ntxWriteDBHeader         NULL
-#define ntxInit                  NULL
+static ERRCODE ntxInit( LPRDDNODE pRDD );
 #define ntxExit                  NULL
 #define ntxDrop                  NULL
 #define ntxExists                NULL

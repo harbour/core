@@ -3283,7 +3283,8 @@ static BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
             pToken = pPrev;
       }
 
-      if( HB_PP_TOKEN_ISEOC( pToken ) && mode != HB_PP_CMP_ADDR )
+      if( HB_PP_TOKEN_ISEOC( pToken ) &&
+          ( mode != HB_PP_CMP_ADDR || pToken == pStop ) )
       {
          if( pfStop )
             * pfStop = TRUE;

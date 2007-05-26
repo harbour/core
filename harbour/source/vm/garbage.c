@@ -447,7 +447,7 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
           */
          pAlloc->used ^= HB_GC_USED_FLAG;
 
-         /* mark also all array elements */
+         /* mark also all hash elements */
          hb_hashRefGrabage( pItem );
       }
    }

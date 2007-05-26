@@ -119,6 +119,12 @@ typedef struct _DBFDATA
    BYTE     bMemoType;        /* DB_MEMO_FPT */
    BYTE     bMemoExtType;     /* DB_MEMOVER_FLEX */
    USHORT   uiMemoBlockSize;  /* 0 */
+
+   BOOL     fSortRecNo;
+   BOOL     fMultiKey;
+   BOOL     fStruct;
+   BOOL     fStrictStruct;
+   BOOL     fMultiTag;
 } DBFDATA;
 
 typedef DBFDATA * LPDBFDATA;

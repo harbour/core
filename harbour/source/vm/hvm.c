@@ -4041,7 +4041,7 @@ static void hb_vmArrayPush( void )
 
    if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
    {
-      PHB_ITEM pValue = hb_hashGetItemPtr( pArray, pIndex );
+      PHB_ITEM pValue = hb_hashGetItemPtr( pArray, pIndex, HB_HASH_AUTOADD_ACCESS );
       if( pValue )
       {
          hb_itemCopy( pIndex, pValue );
@@ -4220,7 +4220,7 @@ static void hb_vmArrayPop( void )
 
    if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
    {
-      PHB_ITEM pDest = hb_hashGetItemPtr( pArray, pIndex );
+      PHB_ITEM pDest = hb_hashGetItemPtr( pArray, pIndex, HB_HASH_AUTOADD_ASSIGN );
       if( pDest )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
@@ -8696,7 +8696,7 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
       PHB_ITEM pValue;
 
       hb_vmPushNumInt( ulIndex );
-      pValue = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ) );
+      pValue = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ), HB_HASH_AUTOADD_ACCESS );
 
       if( pValue )
       {
@@ -8785,7 +8785,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       PHB_ITEM pDest;
 
       hb_vmPushNumInt( ulIndex );
-      pDest = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ) );
+      pDest = hb_hashGetItemPtr( pArray, hb_stackItemFromTop( -1 ), HB_HASH_AUTOADD_ASSIGN );
 
       if( pDest )
       {

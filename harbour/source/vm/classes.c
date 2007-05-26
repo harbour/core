@@ -1587,6 +1587,35 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          hb_itemRelease( hb_itemReturnForward( hb_hashGetValues( pObject ) ) );
          return &s___msgValues;
       }
+#if defined( HB_HASH_MSG_ITEMS )
+      else
+      {
+         if( hb_pcount() == 1 && pMessage->szName[ 0 ] == '_' )
+         {  /* ASSIGN */
+            PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName + 1 );
+            PHB_ITEM pDest = hb_hashGetItemPtr( pObject, pIndex, HB_HASH_AUTOADD_ASSIGN );
+            hb_stackPop();
+            if( pDest )
+            {
+               PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+               hb_itemCopyFromRef( pDest, pValue );
+               hb_itemReturn( pValue );
+               return &s___msgVirtual;
+            }
+         }
+         else if( hb_pcount() == 0 )
+         {  /* ACCESS */
+            PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName );
+            PHB_ITEM pValue = hb_hashGetItemPtr( pObject, pIndex, HB_HASH_AUTOADD_ACCESS );
+            hb_stackPop();
+            if( pValue )
+            {
+               hb_itemReturn( pValue );
+               return &s___msgVirtual;
+            }
+         }
+      }
+#endif
    }
 
    /* Default messages here */
@@ -1657,8 +1686,19 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
 {
    PHB_SYMB pExecSym;
 
-   pExecSym = hb_objGetMethod( pObject, pMessage, pStack );
+#if defined( HB_HASH_MSG_ITEMS )
+   if( HB_IS_HASH( pObject ) )
+   {
+      PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName + 1 );
+      PHB_ITEM pValue = hb_hashGetItemRefPtr( pObject, pIndex );
+      hb_stackPop();
+      if( pValue )
+         hb_itemReturn( pValue );
+      return pValue != NULL;
+   }
+#endif
 
+   pExecSym = hb_objGetMethod( pObject, pMessage, pStack );
    if( pExecSym )
    {
       if( pExecSym->value.pFunPtr == hb___msgSetData )
@@ -3860,7 +3900,6 @@ static HARBOUR hb___msgNull( void )
 {
    ;
 }
-
 
 #ifndef HB_NO_PROFILER
 void hb_mthAddTime( ULONG ulClockTicks )

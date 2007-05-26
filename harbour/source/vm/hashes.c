@@ -319,9 +319,9 @@ HB_EXPORT PHB_ITEM hb_hashNew( PHB_ITEM pItem )
    pBaseHash->ulSize   = 0;
    pBaseHash->ulLen    = 0;
 #ifdef HB_COMPAT_XHB
-   pBaseHash->iFlags   = HB_HASH_AUTOADD;
+   pBaseHash->iFlags   = HB_HASH_AUTOADD_ASSIGN;
 #else
-   pBaseHash->iFlags   = 0;
+   pBaseHash->iFlags   = HB_HASH_AUTOADD_NEVER;
 #endif
    pBaseHash->pDefault = NULL;
 
@@ -347,14 +347,14 @@ HB_EXPORT void hb_hashPreallocate( PHB_ITEM pHash, ULONG ulNewSize )
       hb_hashResize( pHash->item.asHash.value, ulNewSize );
 }
 
-HB_EXPORT PHB_ITEM hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey )
+HB_EXPORT PHB_ITEM hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetItemPtr(%p,%p)", pHash, pKey));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetItemPtr(%p,%p,%d)", pHash, pKey, iFlags));
 
    if( HB_IS_HASH( pHash ) && HB_IS_HASHKEY( pKey ) )
    {
       PHB_ITEM pDest = hb_hashValuePtr( pHash->item.asHash.value, pKey,
-               ( pHash->item.asHash.value->iFlags & HB_HASH_AUTOADD ) != 0 );
+         iFlags && ( pHash->item.asHash.value->iFlags & iFlags ) == iFlags );
       if( pDest )
          return HB_IS_BYREF( pDest ) ? hb_itemUnRef( pDest ) : pDest;
    }
@@ -369,7 +369,8 @@ HB_EXPORT PHB_ITEM hb_hashGetItemRefPtr( PHB_ITEM pHash, PHB_ITEM pKey )
    if( HB_IS_HASH( pHash ) && HB_IS_HASHKEY( pKey ) )
    {
       PHB_ITEM pDest = hb_hashValuePtr( pHash->item.asHash.value, pKey,
-               ( pHash->item.asHash.value->iFlags & HB_HASH_AUTOADD ) != 0 );
+            ( pHash->item.asHash.value->iFlags & HB_HASH_AUTOADD_REFERENCE ) ==
+            HB_HASH_AUTOADD_REFERENCE );
       if( pDest )
       {
          if( !HB_IS_BYREF( pDest ) )

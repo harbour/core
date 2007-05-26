@@ -716,15 +716,21 @@ extern HB_EXPORT void      hb_hashClearFlags( PHB_ITEM pHash, int iFlags );
 extern HB_EXPORT int       hb_hashGetFlags( PHB_ITEM pHash );
 extern HB_EXPORT void *    hb_hashId( PHB_ITEM pHash ); /* retrieves the hash unique ID */
 
-extern HB_EXPORT PHB_ITEM  hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey );
+extern HB_EXPORT PHB_ITEM  hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags );
 extern HB_EXPORT PHB_ITEM  hb_hashGetItemRefPtr( PHB_ITEM pHash, PHB_ITEM pKey );
 extern HB_EXPORT PHB_ITEM  hb_hashGetKeyAt( PHB_ITEM pHash, ULONG ulPos );
 extern HB_EXPORT PHB_ITEM  hb_hashGetValueAt( PHB_ITEM pHash, ULONG ulPos );
 extern HB_EXPORT BOOL      hb_hashDelAt( PHB_ITEM pHash, ULONG ulPos );
 
 /* hash item flags */
-#define HB_HASH_AUTOADD       1
-#define HB_HASH_IGNORECASE    2
+#define HB_HASH_AUTOADD_NEVER       0x00
+#define HB_HASH_AUTOADD_ACCESS      0x01
+#define HB_HASH_AUTOADD_ASSIGN      0x02
+#define HB_HASH_AUTOADD_ALWAYS      ( HB_HASH_AUTOADD_ACCESS | HB_HASH_AUTOADD_ASSIGN )
+#define HB_HASH_AUTOADD_REFERENCE   HB_HASH_AUTOADD_ALWAYS
+#define HB_HASH_AUTOADD_MASK        0x03
+
+#define HB_HASH_IGNORECASE          0x10
 
 #ifdef _HB_API_INTERNAL_
 /* internal hash API not exported */
