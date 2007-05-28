@@ -14,7 +14,6 @@ PRG_SOURCES=\
 	dbgtmitm.prg \
 	dbgtwin.prg  \
 	debugger.prg \
-	dbgaltd.prg  \
 	dbgtarr.prg  \
 	dbgthsh.prg  \
 	dbgtobj.prg  \
