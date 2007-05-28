@@ -105,6 +105,10 @@ endif
 
 endif
 
+ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
+LINKLIBS += -lpcreposix -lpcre
+endif
+
 LINKLIBS += -lm
 
 LDFLAGS = $(LINKPATHS)

@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-28 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/sunos/gcc.cf
+    + added -lpcreposix -lpcre to linked system libraries when
+      C_USR contains -DHB_PCRE_REGEX
+
+  * harbour/source/compiler/hbmain.c
+    * clear HB_COMP_PARAM->functions.pLast in hb_compCompileEnd()
+      to avoid accessing freed memory
+
 2007-05-28 15:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/TODO
     - removed some not longer valid notes

@@ -4137,6 +4137,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
       HB_COMP_PARAM->functions.pLast = pFunc->pOwner;
       hb_compFunctionKill( pFunc );
    }
+   HB_COMP_PARAM->functions.pLast = NULL;
 
    if( HB_COMP_PARAM->functions.pFirst )
    {
