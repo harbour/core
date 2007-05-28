@@ -467,6 +467,8 @@ static function ADO_APPEND( nWA, lUnLockAll )
 
   local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
+  HB_SYMBOL_UNUSED( lUnLockAll )
+
   oRecordSet:AddNew()
 
   TRY
@@ -513,6 +515,9 @@ static function ADO_RAWLOCK( nWA, nAction, nRecNo )
 
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
+  HB_SYMBOL_UNUSED( nAction )
+  HB_SYMBOL_UNUSED( nRecNo )
+
 return SUCCESS
 
 static function ADO_LOCK( nWA, aLockInfo  )
@@ -528,6 +533,8 @@ return SUCCESS
 static function ADO_UNLOCK( nWA, xRecID )
 
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+
+  HB_SYMBOL_UNUSED( xRecID )
 
 return SUCCESS
 

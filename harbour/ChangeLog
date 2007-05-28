@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-28 20:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/Makefile
+  + harbour/contrib/adordd/Makefile
+    + added ADORDD to default windows GNU make builds
+  * harbour/contrib/adordd/makefile.bc
+    + added -w2 to harbour compoiler switches
+  * harbour/contrib/adordd/adordd.prg
+    + added HB_SYMBOL_UNUSED() for some methods
+  + harbour/contrib/ole2/Makefile
+    + added GNU make file
+  * harbour/include/common.ch
+    * changed HB_HASH_AUTOADD_* to HB_HAUTOADD_*
+
 2007-05-28 18:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/bsd/gcc.cf
   * harbour/config/darwin/gcc.cf

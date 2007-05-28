@@ -33,6 +33,7 @@ else
 DIRS +=\
 	ole \
 	odbc \
+	adordd \
 
 endif
 endif
