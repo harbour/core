@@ -16,7 +16,9 @@ LIBNAME=pp
 LIBS=\
 	common \
 
+HB_PPGEN_PATH ?= .
+
 include $(TOP)$(ROOT)config/lib.cf
 
 pptable.c : ppgen$(EXE_EXT)
-	./ppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q
+	$(HB_PPGEN_PATH)/ppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q

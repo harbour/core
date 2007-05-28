@@ -391,6 +391,22 @@ HB_EXPORT BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
       return FALSE;
 }
 
+HB_EXPORT BOOL hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetForward(%p, %lu, %p)", pArray, ulIndex, pItem));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemMove( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
+      return TRUE;
+   }
+   else
+   {
+      hb_itemClear( pItem );
+      return FALSE;
+   }
+}
+
 HB_EXPORT BOOL hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGet(%p, %lu, %p)", pArray, ulIndex, pItem));

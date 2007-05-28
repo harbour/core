@@ -78,33 +78,6 @@ FILE *         hb_comp_errFile = NULL;
 
 /* ************************************************************************* */
 
-static void hb_compMainExit( HB_COMP_DECL )
-{
-   hb_compParserStop( HB_COMP_PARAM );
-   if( HB_COMP_PARAM->iErrorCount != 0 )
-      hb_compExprLstDealloc( HB_COMP_PARAM );
-   hb_compIdentifierClose( HB_COMP_PARAM );
-
-   if( HB_COMP_PARAM->pOutPath )
-      hb_xfree( HB_COMP_PARAM->pOutPath );
-
-   if( HB_COMP_PARAM->pPpoPath )
-      hb_xfree( HB_COMP_PARAM->pPpoPath );
-
-   while( HB_COMP_PARAM->autoopen )
-   {
-      PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
-
-      HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
-      hb_xfree( pAutoOpen );
-   }
-
-   if( HB_COMP_PARAM->pOutBuf )
-      hb_xfree( HB_COMP_PARAM->pOutBuf );
-
-   hb_comp_free( HB_COMP_PARAM );
-}
-
 int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
 {
    HB_COMP_DECL;
@@ -144,14 +117,14 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
       {
          printf( "\n" );
          hb_verBuildInfo();
-         hb_compMainExit( HB_COMP_PARAM );
+         hb_comp_free( HB_COMP_PARAM );
          return iStatus;
       }
 
       if( HB_COMP_PARAM->fCredits )
       {
          hb_compPrintCredits();
-         hb_compMainExit( HB_COMP_PARAM );
+         hb_comp_free( HB_COMP_PARAM );
          return iStatus;
       }
 
@@ -212,7 +185,7 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
       }
    }
 
-   hb_compMainExit( HB_COMP_PARAM );
+   hb_comp_free( HB_COMP_PARAM );
 
    return iStatus;
 }
@@ -4134,7 +4107,7 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
    hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
 }
 
-static void hb_compCompileEnd( HB_COMP_DECL )
+void hb_compCompileEnd( HB_COMP_DECL )
 {
    hb_compRTVariableKill( HB_COMP_PARAM );
    hb_compLoopKill( HB_COMP_PARAM );
@@ -4150,6 +4123,7 @@ static void hb_compCompileEnd( HB_COMP_DECL )
          hb_xfree( HB_COMP_PARAM->pMainFileName );
       HB_COMP_PARAM->pMainFileName = NULL;
    }
+
    if( HB_COMP_PARAM->pFileName )
    {
       hb_xfree( HB_COMP_PARAM->pFileName );

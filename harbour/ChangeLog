@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-28 09:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingw.sh
+  * harbour/source/pp/Makefile
+    * recent xHarbour fixes for MinGW Linux->W32 cross build by Phil Krylow
+      with small modifications
+
+  * harbour/config/rules.cf
+    + added rules for C++ files
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added hb_arraySetForward()
+
+  * harbour/include/hbapi.h
+  * harbour/source/rtl/strmatch.c
+    + added hb_strMatchFile() - compare two strings using platform dependent
+      rules for file matching, respects platform dependent wildcards
+    + added hb_strMatchCaseWildExact() - compare two strings using pattern
+      with wildcard (?*) ignoring the case of the characters - patern have
+      to cover whole string
+    * changed hb_strMatchRegExp() to use real reguar expresions, if build
+      does not support regex then redirected to hb_strMatchWildExact()
+    - removed not longer used hb_strMatchDOS() - in fact it was neither DOS
+      nor classic wildcards (?*) compatible
+
+  * harbour/source/common/hbstr.c
+    ! casting to avoid possible problem on platforms where toupper does not
+      accept negative char value
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbmain.c
+    * minor modifications in cleanup functions
+
+  * harbour/source/rtl/hbffind.c
+    * use hb_strMatchFile()
+
+  * harbour/source/vm/memvars.c
+    * use hb_strMatchCaseWildExact() instead of hb_strMatchRegExp()
+      I still keep the hack which translates any mask starting with '*'
+      to "*" but if you think that we should fully respect wildcards
+      patterns then we should remove it from function hb_memvarGetMask()
+      Opinions?
+
 2007-05-26 09:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     ! fixed bug reported by Lorenzo

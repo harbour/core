@@ -124,7 +124,7 @@ HB_EXPORT char * hb_strupr( char * pszText )
    HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", pszText));
 
    for( pszPos = pszText; *pszPos; pszPos++ )
-      *pszPos = toupper( *pszPos );
+      *pszPos = toupper( ( UCHAR ) *pszPos );
 
    return pszText;
 }

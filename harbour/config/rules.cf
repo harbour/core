@@ -34,6 +34,12 @@ ifeq ($(CC_RULE),)
 CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?F:.c=$(OBJ_EXT))
 endif
 
+# The rule to compile a C++ source file.
+ifeq ($(CPP_RULE),)
+# Use default rule if architecture/compiler specific rule is not defined
+CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?F:.cpp=$(OBJ_EXT))
+endif
+
 
 # Eliminate these rules.
 
@@ -56,6 +62,14 @@ endif
 # Rule to generate an object file from a C source file.
 %$(OBJ_EXT) : %.c
 	$(CC_RULE)
+
+#rules for CPP files
+%$(OBJ_EXT) : $(SOURCE_DIR)%.cpp
+	$(CPP_RULE)
+
+%$(OBJ_EXT) : %.cpp
+	$(CPP_RULE)
+
 
 # Rule to generate an executable file from an object file.
 %$(EXE_EXT) : %$(OBJ_EXT)

@@ -249,6 +249,36 @@ HB_COMP_PTR hb_comp_new( void )
 
 void hb_comp_free( HB_COMP_PTR pComp )
 {
+   hb_compCompileEnd( pComp );
+   hb_compParserStop( pComp );
+
+   /* free allocated expressions only when errors appear - in all
+    * other cases expressions should be always cleanly freed so
+    * executing hb_compExprLstDealloc() may only hides some real
+    * memory leaks
+    */
+   if( pComp->iErrorCount != 0 )
+      hb_compExprLstDealloc( pComp );
+
+   hb_compIdentifierClose( pComp );
+
+   if( pComp->pOutPath )
+      hb_xfree( pComp->pOutPath );
+
+   if( pComp->pPpoPath )
+      hb_xfree( pComp->pPpoPath );
+
+   while( pComp->autoopen )
+   {
+      PAUTOOPEN pAutoOpen = pComp->autoopen;
+
+      pComp->autoopen = pComp->autoopen->pNext;
+      hb_xfree( pAutoOpen );
+   }
+
+   if( pComp->pOutBuf )
+      hb_xfree( pComp->pOutBuf );
+
    if( pComp->pLex )
    {
       if( pComp->pLex->pPP )

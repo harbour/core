@@ -762,12 +762,8 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
        */
       if( pDynVar->hMemvar )
       {
-         if( bInclude )
-         {
-            if( ( szMask[ 0 ] == '*') || hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
-               hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
-         }
-         else if( ! hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
+         BOOL fMatch = hb_strMatchCaseWildExact( pDynVar->pSymbol->szName, szMask );
+         if( bInclude ? fMatch : !fMatch )
             hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
       }
    }
@@ -935,6 +931,14 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char * * 
 
 /* ************************************************************************** */
 
+static char * hb_memvarGetMask( int iParam )
+{
+   char * pszMask = hb_parc( iParam );
+   if( !pszMask || pszMask[ 0 ] == '*' )
+      pszMask = "*";
+   return pszMask;
+}
+
 HB_FUNC( __MVPUBLIC )
 {
    int iCount = hb_pcount();
@@ -1036,23 +1040,15 @@ HB_FUNC( __MVRELEASE )
 {
    int iCount = hb_pcount();
 
-   if( iCount )
+   if( iCount && ISCHAR( 1 ) )
    {
-      PHB_ITEM pMask = hb_param( 1, HB_IT_STRING );
+      BOOL bIncludeVar;
+      char * pszMask;
 
-      if( pMask )
-      {
-         BOOL bIncludeVar;
-
-         if( iCount > 1 )
-            bIncludeVar = hb_parl( 2 );
-         else
-            bIncludeVar = TRUE;
-
-         if( pMask->item.asString.value[ 0 ] == '*' )
-            bIncludeVar = TRUE;   /* delete all memvar variables */
-         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
-      }
+      pszMask = hb_memvarGetMask( 1 );
+      bIncludeVar = ( pszMask[ 0 ] == '*' && !pszMask[ 1 ] ) ||
+                    iCount < 2 || hb_parl( 2 );
+      hb_memvarReleaseWithMask( pszMask, bIncludeVar );
    }
 }
 
@@ -1254,7 +1250,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
 
    if( pDynSymbol->hMemvar )
    {
-      BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynSymbol->pSymbol->szName, pszMask ) );
+      BOOL bMatch = hb_strMatchCaseWildExact( pDynSymbol->pSymbol->szName, pszMask );
 
       PHB_ITEM pItem = s_globalTable[ pDynSymbol->hMemvar ].pVarItem;
 
@@ -1374,7 +1370,7 @@ HB_FUNC( __MVSAVE )
          BYTE buffer[ HB_MEM_REC_LEN ];
          MEMVARSAVE_CARGO msc;
 
-         msc.pszMask      = hb_parc( 2 );
+         msc.pszMask      = hb_memvarGetMask( 2 );
          msc.bIncludeMask = hb_parl( 3 );
          msc.buffer       = buffer;
          msc.fhnd         = fhnd;
@@ -1441,9 +1437,12 @@ HB_FUNC( __MVRESTORE )
 
       if( fhnd != FS_ERROR )
       {
-         char * pszMask = ISCHAR( 3 ) ? hb_parc( 3 ) : ( char * ) "*";
-         BOOL bIncludeMask = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
+         BOOL bIncludeMask;
          BYTE buffer[ HB_MEM_REC_LEN ];
+         char * pszMask;
+
+         pszMask = hb_memvarGetMask( 3 );
+         bIncludeMask = !ISLOG( 4 ) || hb_parl( 4 );
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
          {
@@ -1503,7 +1502,7 @@ HB_FUNC( __MVRESTORE )
 
             if( pItem )
             {
-               BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( szName, pszMask ) );
+               BOOL bMatch = hb_strMatchCaseWildExact( szName, pszMask );
 
                /* Process it if it matches the passed mask */
                if( bIncludeMask ? bMatch : ! bMatch )

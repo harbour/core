@@ -658,6 +658,7 @@ extern HB_EXPORT BOOL      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* del
 extern HB_EXPORT BOOL      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
 extern HB_EXPORT BOOL      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
 extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
+extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
 extern HB_EXPORT BOOL      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern HB_EXPORT BOOL      hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
 /* hb_arrayGetItemPtr() is dangerous */
@@ -765,9 +766,11 @@ extern HB_EXPORT BOOL      hb_valStrnToNum( const char* szNum, ULONG ulLen, HB_L
 extern HB_EXPORT BOOL      hb_strToNum( const char* szNum, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
 extern HB_EXPORT BOOL      hb_strnToNum( const char* szNum, ULONG ulLen, HB_LONG * plVal, double * pdVal ); /* converts string to number, returns TRUE if results is double */
                           
-extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
+extern HB_EXPORT BOOL      hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
+extern HB_EXPORT BOOL      hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */
 extern HB_EXPORT BOOL      hb_strMatchWild(const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
 extern HB_EXPORT BOOL      hb_strMatchWildExact( const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to cover whole string */
+extern HB_EXPORT BOOL      hb_strMatchCaseWildExact( const char *szString, const char *szPattern ); /* compare two strings using pattern with wildcard (?*) ignoring the case of the characters - patern have to cover whole string */
 extern HB_EXPORT BOOL      hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT ULONG     hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */

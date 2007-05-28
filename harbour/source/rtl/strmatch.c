@@ -50,52 +50,12 @@
  *
  */
 
-#include <ctype.h>
-
 #include "hbapi.h"
+#include "hbregex.h"
 
-static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchDOS(%s, %s)", pszString, pszMask));
-
-   while( *pszMask != '\0' && *pszString != '\0' )
-   {
-      if( *pszMask == '*' )
-      {
-         while( *pszMask == '*' )
-            pszMask++;
-
-         if( *pszMask == '\0' )
-            return TRUE;
-         else if( *pszMask == '?' )
-            pszString++;
-         else
-         {
-            while( hb_charUpper( *pszString ) != hb_charUpper( *pszMask ) )
-            {
-               if( *( ++pszString ) == '\0' )
-                  return FALSE;
-            }
-            while( hb_charUpper( *pszString ) == hb_charUpper( *pszMask ) )
-            {
-               if( *( ++pszString ) == '\0' )
-                  break;
-            }
-            pszMask++;
-         }
-      }
-      else if( hb_charUpper( *pszMask ) != hb_charUpper( *pszString ) && *pszMask != '?' )
-         return FALSE;
-      else
-      {
-         pszMask++;
-         pszString++;
-      }
-   }
-
-   return ! ( ( *pszMask != '\0' && *pszString == '\0' && *pszMask != '*') ||
-              ( *pszMask == '\0' && *pszString != '\0' ) );
-}
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+#  include <fnmatch.h>
+#endif
 
 #define HB_MAX_WILDPATTERN     256
 
@@ -240,21 +200,114 @@ HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern
    return fMatch;
 }
 
-/* TODO: Replace it with a code that supports real regular expressions
- *
- */
-BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
+HB_EXPORT BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchRegExp(%s, %s)", szString, szMask));
+   BOOL fMatch = TRUE, fAny = FALSE;
+   ULONG pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
+         ulBufSize = HB_MAX_WILDPATTERN;
+   ULONG * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
+         ulSize, ulLen, ulAny, i, j;
 
-   return hb_strMatchDOS( szString, szMask );
+   i = j = ulAny = 0;
+   ulLen = strlen( szString );
+   ulSize = strlen( szPattern );
+   while ( i < ulSize || ( j < ulLen && !fAny ) )
+   {
+      if ( i < ulSize && szPattern[i] == '*' )
+      {
+         fAny = TRUE;
+         i++;
+      }
+      else if ( j < ulLen && i < ulSize &&
+                ( szPattern[i] == '?' ||
+                  hb_charUpper( szPattern[i] ) == hb_charUpper( szString[j] ) ) )
+      {
+         if ( fAny )
+         {
+            if ( ulAny >= ulBufSize )
+            {
+               if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
+               {
+                  ulAnyPosP = ( ULONG * ) hb_xgrab( ulBufSize * sizeof( ULONG ) );
+                  ulAnyPosV = ( ULONG * ) hb_xgrab( ulBufSize * sizeof( ULONG ) );
+                  memcpy( ulAnyPosP, pulBufPosP, HB_MAX_WILDPATTERN * sizeof( ULONG ) );
+                  memcpy( ulAnyPosV, pulBufPosV, HB_MAX_WILDPATTERN * sizeof( ULONG ) );
+               }
+               else
+               {
+                  ulAnyPosP = ( ULONG * ) hb_xrealloc( ulAnyPosP, ulBufSize * sizeof( ULONG ) );
+                  ulAnyPosV = ( ULONG * ) hb_xrealloc( ulAnyPosV, ulBufSize * sizeof( ULONG ) );
+               }
+            }
+            ulAnyPosP[ulAny] = i;
+            ulAnyPosV[ulAny] = j;
+            ulAny++;
+            fAny = FALSE;
+         }
+         j++;
+         i++;
+      }
+      else if ( fAny && j < ulLen )
+      {
+         j++;
+      }
+      else if ( ulAny > 0 )
+      {
+         ulAny--;
+         i = ulAnyPosP[ulAny];
+         j = ulAnyPosV[ulAny] + 1;
+         fAny = TRUE;
+      }
+      else
+      {
+         fMatch = FALSE;
+         break;
+      }
+   }
+   if( ulBufSize > HB_MAX_WILDPATTERN )
+   {
+      hb_xfree( ulAnyPosP );
+      hb_xfree( ulAnyPosV );
+   }
+   return fMatch;
+}
+
+BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
+{
+   PHB_REGEX pRegEx;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchRegExp(%s, %s)", szString, szPattern));
+
+   pRegEx = hb_regexCompile( szPattern, strlen( szPattern ), HBREG_EXTENDED );
+   if( pRegEx )
+   {
+      BOOL fMatch;
+      fMatch = hb_regexMatch( pRegEx, szString, TRUE );
+      hb_regexFree( pRegEx );
+      return fMatch;
+   }
+   else
+      return hb_strMatchWildExact( szString, szPattern );
+}
+
+HB_EXPORT BOOL hb_strMatchFile( const char * szString, const char * szPattern )
+{
+#if defined( HB_OS_UNIX )
+#  if defined( __WATCOMC__ )
+   return hb_strMatchWildExact( szString, szPattern );
+#  else
+   return fnmatch( szPattern, szString, FNM_PERIOD | FNM_PATHNAME ) == 0;
+#  endif
+#else
+   return hb_strMatchCaseWildExact( szString, szPattern );
+#endif
 }
 
 /*
  * WildMatch( cPattern, cValue [, lExact] ) compares
  * cValue with cPattern, cPattern * may contain wildcard characters (?*)
  * When lExact is TRUE then it will check if whole cValue is covered by
- * cPattern else if will check if cPatern is a prefix of cValue
+ * cPattern else it will check if cPatern is a prefix of cValue
  */
 
 /* NOTE: This function is compatible with sx_WildMatch(), except when 
