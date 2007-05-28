@@ -84,4 +84,11 @@
 /* Please keep it synced with the similar #define in hbclass.ch */
 #define HB_SYMBOL_UNUSED( symbol )  ( symbol := ( symbol ) )
 
+/* HASH autoadd options */
+#define HB_HASH_AUTOADD_NEVER       0x00
+#define HB_HASH_AUTOADD_ACCESS      0x01
+#define HB_HASH_AUTOADD_ASSIGN      0x02
+#define HB_HASH_AUTOADD_ALWAYS      ( HB_HASH_AUTOADD_ACCESS + HB_HASH_AUTOADD_ASSIGN )
+#define HB_HASH_AUTOADD_REFERENCE   HB_HASH_AUTOADD_ALWAYS
+
 #endif /* HB_COMMON_CH_ */

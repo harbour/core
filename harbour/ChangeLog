@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-28 15:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/TODO
+    - removed some not longer valid notes
+  * harbour/common.mak
+    - removed dbgaltd.obj
+  * harbour/include/common.ch
+    + added HB_HASH_AUTOADD_* definitions
+
 2007-05-28 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/Makefile
   - harbour/source/debug/dbgaltd.prg

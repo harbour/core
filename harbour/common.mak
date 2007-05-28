@@ -545,7 +545,6 @@ DEBUG_LIB_OBJS = \
     $(OBJ_DIR)\dbgtarr.obj  \
     $(OBJ_DIR)\dbgtobj.obj  \
     $(OBJ_DIR)\dbgthsh.obj  \
-    $(OBJ_DIR)\dbgaltd.obj  \
     $(OBJ_DIR)\tbrwtext.obj \
     $(OBJ_DIR)\dbgwa.obj    \
 
