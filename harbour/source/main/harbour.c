@@ -131,9 +131,6 @@ void * hb_xgrab( ULONG ulSize )        /* allocates fixed memory, exits on failu
       if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
          s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
       pMem = ( BYTE * ) pMem + HB_MEMINFO_SIZE;
-#ifdef HB_PARANOID_MEM_CHECK
-      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
-#endif
    }
    else
 #else
