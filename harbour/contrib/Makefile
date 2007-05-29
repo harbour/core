@@ -12,8 +12,14 @@ DIRS=\
 	libmisc \
 	libnf \
 	samples \
+
+
+ifneq ($(HB_ARCHITECTURE),dos)
+
+DIRS +=\
 	bmdbfcdx \
 
+endif
 
 ifeq ($(HB_ARCHITECTURE),w32)
 
@@ -31,7 +37,7 @@ ifeq ($(HB_COMPILER),rsxnt)
 else
 
 DIRS +=\
-	ole \
+	ole2 \
 	odbc \
 	adordd \
 

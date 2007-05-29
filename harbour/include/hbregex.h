@@ -61,8 +61,9 @@
 #  if __BORLANDC__ >= 0x550 && !defined( HB_PCRE_REGEX_BCC )
 #     define HB_PCRE_REGEX_BCC
 #  endif
-#elif defined( OS_UNIX_COMPATIBLE ) && !defined( __WATCOMC__ )
-#  if !defined( HB_POSIX_REGEX )
+#elif ( defined( OS_UNIX_COMPATIBLE ) && !defined( __WATCOMC__ ) ) || \
+      defined( __DJGPP__ )
+#  if !defined( HB_POSIX_REGEX ) && !defined( HB_PCRE_REGEX )
 #     define HB_POSIX_REGEX
 #  endif
 #endif
@@ -77,6 +78,7 @@
 #  include <pcre.h>
 #  include <pcreposix.h>
 #elif defined( HB_POSIX_REGEX )
+#  include <sys/types.h>
 #  include <regex.h>
 #else
 #  undef _HB_REGEX_INTERNAL_

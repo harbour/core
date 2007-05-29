@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-29 10:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.vc
+    * synced with BETA branch
+  * harbour/contrib/Makefile
+    * disable BMDBFCDX for DOS builds due to long names which do not
+      pass 8.3 convention
+    * use OLE2 instead of OLE 
+  * harbour/contrib/ole2/w32ole.c
+    * warning fixes
+  * harbour/include/hbregex.h
+    + added REGEX support for DJGPP build
+  * harbour/source/rtl/net.c
+    * warning cleanup
+
 2007-05-28 20:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/Makefile
   + harbour/contrib/adordd/Makefile

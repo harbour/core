@@ -107,80 +107,71 @@
 
 HB_FUNC( NETNAME )
 {
-   BOOL fGetUser = hb_parni( 1 ) == 1;
-
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
+   BOOL fGetUser = hb_parni( 1 ) == 1;
+#  if defined(__WATCOMC__)
+   char * pszValue = hb_getenv( fGetUser ? "USER" : "HOSTNAME" );
+   hb_retc_buffer( pszValue );
+#  else
+   if( fGetUser )
    {
-#if defined(__WATCOMC__)
-      char * pszValue = hb_getenv( fGetUser ? "USER" : "HOSTNAME" );
-      hb_retc_buffer( pszValue );
-#else
-      if( fGetUser )
-      {
-         struct passwd * pwd;
-         pwd = getpwuid( getuid() );
-         if( pwd )
-            hb_retc( pwd->pw_name );
-         else
-            hb_retc_buffer( hb_getenv( "USER" ) );
-      }
+      struct passwd * pwd;
+      pwd = getpwuid( getuid() );
+      if( pwd )
+         hb_retc( pwd->pw_name );
       else
-      {
-         char szValue[ MAXGETHOSTNAME + 1 ];
-         szValue[ 0 ] = '\0';
-         gethostname( szValue, MAXGETHOSTNAME );
-         hb_retc( szValue );
-      }
-#endif
+         hb_retc_buffer( hb_getenv( "USER" ) );
    }
+   else
+   {
+      char szValue[ MAXGETHOSTNAME + 1 ];
+      szValue[ 0 ] = '\0';
+      gethostname( szValue, MAXGETHOSTNAME );
+      hb_retc( szValue );
+   }
+#  endif
 
 #elif defined(HB_OS_DOS)
 
-   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+      char szValue[ MAXGETHOSTNAME + 1 ];
+      szValue[ 0 ] = '\0';
+
+      gethostname( szValue, MAXGETHOSTNAME );
+
+      hb_retc( szValue );
+#  else
+      union REGS regs;
+      char szValue[ 16 ];
+      szValue[ 0 ] = '\0';
+
+      regs.HB_XREGS.ax = 0x5E00;
+
       {
-         char szValue[ MAXGETHOSTNAME + 1 ];
-         szValue[ 0 ] = '\0';
+         struct SREGS sregs;
 
-         gethostname( szValue, MAXGETHOSTNAME );
+         regs.HB_XREGS.dx = FP_OFF( szValue );
+         sregs.ds = FP_SEG( szValue );
 
-         hb_retc( szValue );
+         HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
       }
-   #else
-      {
-         union REGS regs;
-         char szValue[ 16 ];
-         szValue[ 0 ] = '\0';
 
-         regs.HB_XREGS.ax = 0x5E00;
-
-         {
-            struct SREGS sregs;
-
-            regs.HB_XREGS.dx = FP_OFF( szValue );
-            sregs.ds = FP_SEG( szValue );
-
-            HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-         }
-
-         hb_retc( regs.h.ch == 0 ? "" : szValue );
-      }
-   #endif
+      hb_retc( regs.h.ch == 0 ? "" : szValue );
+#  endif
 
 #elif defined(HB_OS_WIN_32)
 
-   {
-      DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-      char szValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
-      szValue[ 0 ] = '\0';
+   BOOL fGetUser = hb_parni( 1 ) == 1;
+   DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
+   char szValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
 
-      if( fGetUser )
-         GetUserName( szValue, &ulLen );
-      else
-         GetComputerName( szValue, &ulLen );
-
-      hb_retc( szValue );
-   }
+   szValue[ 0 ] = '\0';
+   if( fGetUser )
+      GetUserName( szValue, &ulLen );
+   else
+      GetComputerName( szValue, &ulLen );
+   hb_retc( szValue );
 
 #else
 

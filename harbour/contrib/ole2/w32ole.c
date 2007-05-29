@@ -1110,7 +1110,8 @@ HB_FUNC( __HB_OLE_EXIT )
 
            if( pUnk )
            {
-              pUnk->lpVtbl->QueryInterface( pUnk, (REFIID) &IID_IDispatch, (void **) &pDisp );
+              IDispatch ** pDispPtr = &pDisp;
+              pUnk->lpVtbl->QueryInterface( pUnk, (REFIID) &IID_IDispatch, (void **) pDispPtr );
            }
            // Intentionally fall through
 
@@ -1926,7 +1927,7 @@ HB_FUNC( __HB_OLE_EXIT )
      }
      else*/ if( hb_itemGetSymbol( hb_stackBaseItem() )->szName[0] == '_' && hb_itemGetSymbol( hb_stackBaseItem() )->szName[1] && hb_pcount() >= 1 )
      {
-        bstrMessage = hb_oleAnsiToSysString( hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1 );
+        bstrMessage = hb_oleAnsiToSysString( ( LPSTR ) hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1 );
         s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, &DispID );
         SysFreeString( bstrMessage );
         //TraceLog( NULL, "1. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1, DispID, s_nOleError );
@@ -1944,7 +1945,7 @@ HB_FUNC( __HB_OLE_EXIT )
      if( FAILED( s_nOleError ) )
      {
         // Try again without removing the assign prefix (_).
-        bstrMessage = hb_oleAnsiToSysString( hb_itemGetSymbol( hb_stackBaseItem() )->szName );
+        bstrMessage = hb_oleAnsiToSysString( ( LPSTR ) hb_itemGetSymbol( hb_stackBaseItem() )->szName );
         s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, 0, &DispID );
         SysFreeString( bstrMessage );
         //TraceLog( NULL, "2. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName, DispID, s_nOleError );

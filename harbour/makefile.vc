@@ -870,7 +870,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib
+user32.lib winspool.lib wsock32.lib advapi32.lib 
 <<
 #**********************************************************
 #
