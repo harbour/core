@@ -189,12 +189,12 @@ const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseNot,
    hb_compExprUseEqual,        /* relational operators */
    hb_compExprUseEQ,
+   hb_compExprUseNE,
+   hb_compExprUseIN,
    hb_compExprUseLT,
    hb_compExprUseGT,
    hb_compExprUseLE,
    hb_compExprUseGE,
-   hb_compExprUseNE,
-   hb_compExprUseIN,
    hb_compExprUsePlus,      /* addition */
    hb_compExprUseMinus,
    hb_compExprUseMult,      /* multiple */

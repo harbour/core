@@ -185,7 +185,8 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %right  AND
 %right  NOT
 /*relational operators*/
-%right  '=' '<' '>' EQ NE1 NE2 LE GE '$'
+%right '=' EQ NE1 NE2
+%right '<' '>' LE GE '$'
 /*mathematical operators*/
 %right  '+' '-'
 %right  '*' '/' '%'
@@ -195,7 +196,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %right  PRE
 /*special operators*/
 %right  ALIASOP '&' '@'
-%right ','
+%right  ','
 /*the highest precedence*/
 
 %type <string>  IDENTIFIER MACROVAR MACROTEXT

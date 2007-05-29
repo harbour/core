@@ -101,12 +101,12 @@ static const char * s_OperTable[ HB_EXPR_COUNT ] = {
    ".NOT.",
    "=",        /* relational operators */
    "==",
+   "!=",
+   "$",
    "<",
    ">",
    "<=",
    ">=",
-   "!=",
-   "$",
    "+",      /* addition */
    "-",
    "*",      /* multiple */
@@ -165,12 +165,12 @@ static const BYTE s_PrecedTable[ HB_EXPR_COUNT ] = {
    HB_ET_NIL,                 /*   HB_EO_NOT,         */
    HB_EO_EQUAL,               /*   HB_EO_EQUAL,       relational operators */
    HB_EO_EQUAL,               /*   HB_EO_EQ,          */
-   HB_EO_EQUAL,               /*   HB_EO_LT,          */
-   HB_EO_EQUAL,               /*   HB_EO_GT,          */
-   HB_EO_EQUAL,               /*   HB_EO_LE,          */
-   HB_EO_EQUAL,               /*   HB_EO_GE,          */
    HB_EO_EQUAL,               /*   HB_EO_NE,          */
-   HB_EO_EQUAL,               /*   HB_EO_IN,          */
+   HB_EO_LT,                  /*   HB_EO_IN,          */
+   HB_EO_LT,                  /*   HB_EO_LT,          */
+   HB_EO_LT,                  /*   HB_EO_GT,          */
+   HB_EO_LT,                  /*   HB_EO_LE,          */
+   HB_EO_LT,                  /*   HB_EO_GE,          */
    HB_EO_PLUS,                /*   HB_EO_PLUS,        addition */
    HB_EO_PLUS,                /*   HB_EO_MINUS,       */
    HB_EO_MULT,                /*   HB_EO_MULT,        multiple */

@@ -326,12 +326,12 @@ typedef enum
    HB_EO_NOT,
    HB_EO_EQUAL,      /* relational operators */
    HB_EO_EQ,
+   HB_EO_NE,
+   HB_EO_IN,
    HB_EO_LT,
    HB_EO_GT,
    HB_EO_LE,
    HB_EO_GE,
-   HB_EO_NE,
-   HB_EO_IN,
    HB_EO_PLUS,       /* addition */
    HB_EO_MINUS,
    HB_EO_MULT,       /* multiple */

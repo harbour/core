@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-30 01:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+    ! fixed bug in operator precedence - seems that it existed from
+      beginning and partially were fixed in xHarbour. This code exploits
+      the problem:
+            #define EOL chr(13)+chr(10)
+            #command ? [<x,...>] => [outstd( <x> );]outstd(EOL)
+            #command TEST <exp> => BEGIN SEQUENCE     ;
+                                 ;   ? <exp>          ;
+                                 ; RECOVER USING oErr ;
+                                 ;   ? "Error:", oErr:subCode, ;
+                                       oErr:description, oErr:operation ;
+                                 ; END
+            proc main()
+            local oErr, s1:="X", s2:="Y", t:=.T.
+            errorBlock({|oErr|break(oErr)})
+            TEST t != s1 $ s2
+            TEST t == s1 $ s2
+            TEST t =  s1 $ s2
+            TEST t <  s1 $ s2
+            TEST t <= s1 $ s2
+            TEST t >  s1 $ s2
+            TEST t >= s1 $ s2
+            TEST s1 $ s2 != t
+            TEST s1 $ s2 == t
+            TEST s1 $ s2 =  t
+            TEST s1 $ s2 >  t
+            TEST s1 $ s2 <  t
+            TEST s1 $ s2 >= t
+            TEST s1 $ s2 <= t
+            return
+
 2007-05-29 10:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/makefile.vc
     * synced with BETA branch

@@ -173,9 +173,9 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
-%left  POST
+%left   POST
 /*assigment - from right to left*/
-%right INASSIGN
+%right  INASSIGN
 %right  PLUSEQ MINUSEQ
 %right  MULTEQ DIVEQ MODEQ
 %right  EXPEQ
@@ -184,17 +184,18 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 %right  AND
 %right  NOT
 /*relational operators*/
-%right  '=' '<' '>' EQ NE1 NE2 LE GE '$'
+%right '=' EQ NE1 NE2
+%right '<' '>' LE GE '$'
 /*mathematical operators*/
 %right  '+' '-'
 %right  '*' '/' '%'
 %right  POWER
-%right UNARY
+%right  UNARY
 /*preincrement and predecrement*/
 %right  PRE
 /*special operators*/
 %right  ALIASOP '&' '@'
-%right '\n' ';' ','
+%right  '\n' ';' ','
 /*the highest precedence*/
 
 %type <string>  IdentName IDENTIFIER MACROVAR MACROTEXT CompTimeStr InAlias
