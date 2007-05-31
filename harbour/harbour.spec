@@ -539,20 +539,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libcodepage.a
 %{_libdir}/%{name}/libcommon.a
 %{_libdir}/%{name}/libcompiler.a
-%{_libdir}/%{name}/libdb*.a
 %{_libdir}/%{name}/libdebug.a
-%{_libdir}/%{name}/libfm*.a
+%{_libdir}/%{name}/libfm.a
+%{_libdir}/%{name}/libdb*.a
 %{_libdir}/%{name}/libgt*.a
 %{_libdir}/%{name}/liblang.a
 %{_libdir}/%{name}/libmacro*.a
-%{_libdir}/%{name}/libnulsys*.a
-%{_libdir}/%{name}/libpp*.a
-%{_libdir}/%{name}/librdd*.a
-%{_libdir}/%{name}/libhsx*.a
-%{_libdir}/%{name}/libhbsix*.a
-%{_libdir}/%{name}/librtl*.a
+%{_libdir}/%{name}/libhbpcre.a
+%{_libdir}/%{name}/libnulsys.a
+%{_libdir}/%{name}/libpp.a
+%{_libdir}/%{name}/librdd.a
+%{_libdir}/%{name}/libhsx.a
+%{_libdir}/%{name}/libhbsix.a
+%{_libdir}/%{name}/librtl.a
 %{_libdir}/%{name}/libsamples.a
-%{_libdir}/%{name}/libvm*.a
+%{_libdir}/%{name}/libvm.a
 %{_libdir}/%{name}/libusrrdd.a
 
 %files contrib

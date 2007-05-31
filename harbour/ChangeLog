@@ -8,11 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/bin/pack_src.sh
+    + added hbpcre library
+
 2007-05-31 23:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.yyc
     * synced with recent modifications in harbour.y - I missed it.
   * harbour/source/hbpcre/pcrecomp.c
-    * cleaned some waning reported by Lorenzo
+    * cleaned some warnings reported by Lorenzo
 
 2007-05-31 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak

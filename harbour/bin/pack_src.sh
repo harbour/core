@@ -108,6 +108,11 @@ $hb_collect source/macro/Makefile
 $hb_collect source/macro/*.[cylh]
 $hb_collect source/macro/*.yy[ch]
 
+# SOURCE\HBPCRE
+$hb_collect source/hbpcre/Makefile
+$hb_collect source/hbpcre/ChangeLog*
+$hb_collect source/hbpcre/*.[ch]
+
 # SOURCE\RDD
 $hb_collect source/rdd/Makefile
 $hb_collect source/rdd/*.[ch]
