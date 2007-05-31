@@ -142,6 +142,7 @@ MACRO_LIB    = $(LIB_DIR)\macro.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
 LANG_LIB     = $(LIB_DIR)\lang.lib
 CODEPAGE_LIB = $(LIB_DIR)\codepage.lib
+PCRE_LIB     = $(LIB_DIR)\pcre.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
@@ -965,6 +966,7 @@ HB_BUILD_TARGETS = \
     $(DEBUG_LIB)            \
     $(LANG_LIB)             \
     $(CODEPAGE_LIB)         \
+    $(PCRE_LIB)             \
     $(RDD_LIB)              \
     $(NULSYS_LIB)           \
     $(DBFNTX_LIB)           \

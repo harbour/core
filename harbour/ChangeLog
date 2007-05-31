@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-31 17:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    ! added PCRE_LIB
+
+  * harbour/bin/hb-func.sh
+    ! fixed typo in last commit
+
+  * harbour/source/hbpcre/pcredfa.c
+  * harbour/source/hbpcre/pcreexec.c
+  * harbour/source/hbpcre/pcrefind.c
+  * harbour/source/hbpcre/pcreprni.c
+  * harbour/source/hbpcre/pcrestud.c
+  * harbour/source/hbpcre/pcretryf.c
+    * cleaned some warnings
+
 2007-05-31 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/makefile.bc

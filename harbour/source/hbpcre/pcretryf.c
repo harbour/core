@@ -98,7 +98,7 @@ EXPORT real_pcre *
 _pcre_try_flipped(const real_pcre *re, real_pcre *internal_re,
   const pcre_study_data *study, pcre_study_data *internal_study)
 {
-if (byteflip(re->magic_number, sizeof(re->magic_number)) != MAGIC_NUMBER)
+if ((unsigned long) byteflip(re->magic_number, sizeof(re->magic_number)) != MAGIC_NUMBER)
   return NULL;
 
 *internal_re = *re;           /* To copy other fields */

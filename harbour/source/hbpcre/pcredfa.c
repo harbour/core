@@ -1578,12 +1578,6 @@ for (;;)
 
   ptr += clen;    /* Advance to next subject character */
   }               /* Loop to move along the subject string */
-
-/* Control never gets here, but we must keep the compiler happy. */
-
-DPRINTF(("%.*s+++ Unexpected end of internal_dfa_exec %d +++\n"
-  "%.*s---------------------\n\n", rlevel*2-2, SP, rlevel, rlevel*2-2, SP));
-return PCRE_ERROR_NOMATCH;
 }
 
 

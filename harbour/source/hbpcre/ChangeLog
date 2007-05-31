@@ -18,6 +18,15 @@
  *
  */
 
+2007-05-31 17:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbpcre/pcredfa.c
+  * harbour/source/hbpcre/pcreexec.c
+  * harbour/source/hbpcre/pcrefind.c
+  * harbour/source/hbpcre/pcreprni.c
+  * harbour/source/hbpcre/pcrestud.c
+  * harbour/source/hbpcre/pcretryf.c
+    * cleaned some warnings
+
 2007-05-31 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * initial upload to Harbour CVS
   * filenames changed to keep 8.3 DOS format

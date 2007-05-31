@@ -1798,6 +1798,7 @@ for (;;)
       length = 1;
       ecode++;
       GETCHARLEN(fc, ecode, length);
+      ( void ) fc;
       if (length > md->end_subject - eptr) RRETURN(MATCH_NOMATCH);
       while (length-- > 0) if (*ecode++ != *eptr++) RRETURN(MATCH_NOMATCH);
       }
@@ -3209,7 +3210,7 @@ int rc, resetcount, ocount;
 int first_byte = -1;
 int req_byte = -1;
 int req_byte2 = -1;
-unsigned long int ims = 0;
+unsigned long int ims;
 BOOL using_temporary_offsets = FALSE;
 BOOL anchored;
 BOOL startline;

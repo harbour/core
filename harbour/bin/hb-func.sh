@@ -121,7 +121,7 @@ mk_hbtools()
     if [ "${C_USR//-DHB_PCRE_REGEX/}" != "${C_USR}" ]; then
         HB_SYS_LIBS="-lpcre ${HB_SYS_LIBS}"
         hb_libs="${hb_libs//hbpcre/}"
-    elif [ "${C_USR//-DHB_POSIX_REGEX/}" = "${C_USR}" ]; then
+    elif [ "${C_USR//-DHB_POSIX_REGEX/}" != "${C_USR}" ]; then
         hb_libs="${hb_libs//hbpcre/}"
     fi
     if [ "${HB_COMPILER}" = "mingw32" ]; then

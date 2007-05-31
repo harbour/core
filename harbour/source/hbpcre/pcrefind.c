@@ -101,7 +101,6 @@ switch ((*type_ptr = ((node->f0 & f0_typemask) >> f0_typeshift)))
   case ucp_Co:
   case ucp_Cs:
   return ucp_C;
-  break;
 
   case ucp_Ll:
   case ucp_Lu:
@@ -115,19 +114,16 @@ switch ((*type_ptr = ((node->f0 & f0_typemask) >> f0_typeshift)))
   case ucp_Lt:
   *case_ptr = 0;
   return ucp_L;
-  break;
 
   case ucp_Mc:
   case ucp_Me:
   case ucp_Mn:
   return ucp_M;
-  break;
 
   case ucp_Nd:
   case ucp_Nl:
   case ucp_No:
   return ucp_N;
-  break;
 
   case ucp_Pc:
   case ucp_Pd:
@@ -137,24 +133,20 @@ switch ((*type_ptr = ((node->f0 & f0_typemask) >> f0_typeshift)))
   case ucp_Ps:
   case ucp_Po:
   return ucp_P;
-  break;
 
   case ucp_Sc:
   case ucp_Sk:
   case ucp_Sm:
   case ucp_So:
   return ucp_S;
-  break;
 
   case ucp_Zl:
   case ucp_Zp:
   case ucp_Zs:
   return ucp_Z;
-  break;
 
   default:         /* "Should never happen" */
   return -1;
-  break;
   }
 }
 

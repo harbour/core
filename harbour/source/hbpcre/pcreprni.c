@@ -188,7 +188,6 @@ for(;;)
       fprintf(f, "\n");
       continue;
       }
-    break;
 
     case OP_CHARNC:
       {
@@ -202,7 +201,6 @@ for(;;)
       fprintf(f, "\n");
       continue;
       }
-    break;
 
     case OP_KETRMAX:
     case OP_KETRMIN:
