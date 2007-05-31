@@ -282,7 +282,7 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
    if( pRegEx )
    {
       BOOL fMatch;
-      fMatch = hb_regexMatch( pRegEx, szString, TRUE );
+      fMatch = hb_regexMatch( pRegEx, szString, strlen( szString ), TRUE );
       hb_regexFree( pRegEx );
       return fMatch;
    }

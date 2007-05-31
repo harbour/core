@@ -5538,7 +5538,7 @@ static BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
 #else
    HB_SYMBOL_UNUSED( pArea );
 #endif
-   return hb_regexMatch( pRegEx, szKey, FALSE );
+   return hb_regexMatch( pRegEx, szKey, pKey->len, FALSE );
 }
 
 /*

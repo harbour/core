@@ -56,6 +56,7 @@ C_SOURCES=\
 	hbinet.c     \
 	hbrandom.c   \
 	hbregex.c    \
+	hbregexc.c   \
 	hbtoken.c    \
 	idle.c       \
 	inkey.c      \

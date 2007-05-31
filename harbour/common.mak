@@ -388,6 +388,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbinet.obj   \
     $(OBJ_DIR)\hbrandom.obj \
     $(OBJ_DIR)\hbregex.obj  \
+    $(OBJ_DIR)\hbregexc.obj \
     $(OBJ_DIR)\hbtoken.obj  \
     $(OBJ_DIR)\idle.obj     \
     $(OBJ_DIR)\inkey.obj    \
@@ -602,6 +603,29 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgtrwin.obj \
     $(OBJ_DIR)\msgzhb5.obj  \
     $(OBJ_DIR)\msgzhgb.obj  \
+
+#**********************************************************
+PCRE_LIB_OBJS = \
+    $(OBJ_DIR)\chartabs.obj \
+    $(OBJ_DIR)\pcrecomp.obj \
+    $(OBJ_DIR)\pcreconf.obj \
+    $(OBJ_DIR)\pcredfa.obj  \
+    $(OBJ_DIR)\pcreexec.obj \
+    $(OBJ_DIR)\pcrefinf.obj \
+    $(OBJ_DIR)\pcreget.obj  \
+    $(OBJ_DIR)\pcreglob.obj \
+    $(OBJ_DIR)\pcreinfo.obj \
+    $(OBJ_DIR)\pcremktb.obj \
+    $(OBJ_DIR)\pcreoutf.obj \
+    $(OBJ_DIR)\pcreprni.obj \
+    $(OBJ_DIR)\pcrerefc.obj \
+    $(OBJ_DIR)\pcrestud.obj \
+    $(OBJ_DIR)\pcretabs.obj \
+    $(OBJ_DIR)\pcretryf.obj \
+    $(OBJ_DIR)\pcrefind.obj \
+    $(OBJ_DIR)\pcrevutf.obj \
+    $(OBJ_DIR)\pcrever.obj  \
+    $(OBJ_DIR)\pcrexcls.obj \
 
 #**********************************************************
 
@@ -899,6 +923,7 @@ TMP_DLL_OBJS = \
     $(DEBUG_LIB_OBJS)       \
     $(LANG_LIB_OBJS)        \
     $(CODEPAGE_LIB_OBJS)    \
+    $(PCRE_LIB_OBJS)        \
     $(RDD_LIB_OBJS)         \
     $(DBFNTX_LIB_OBJS)      \
     $(DBFCDX_LIB_OBJS)      \

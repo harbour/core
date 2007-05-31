@@ -34,6 +34,7 @@ DIRS=\
 	codepage \
 	lang \
 	rdd \
+	hbpcre \
 	debug \
 
 endif

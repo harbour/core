@@ -64,7 +64,7 @@ mk_hbgetlibs()
 {
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler compiler"
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gtwin gtwvt gtdos gtos2 debug profiler compiler hbpcre"
     else
         echo -n "$@"
     fi
@@ -119,7 +119,10 @@ mk_hbtools()
     HB_CRS_LIB=""
     HB_SLN_LIB=""
     if [ "${C_USR//-DHB_PCRE_REGEX/}" != "${C_USR}" ]; then
-        HB_SYS_LIBS="-lpcreposix -lpcre ${HB_SYS_LIBS}"
+        HB_SYS_LIBS="-lpcre ${HB_SYS_LIBS}"
+        hb_libs="${hb_libs//hbpcre/}"
+    elif [ "${C_USR//-DHB_POSIX_REGEX/}" = "${C_USR}" ]; then
+        hb_libs="${hb_libs//hbpcre/}"
     fi
     if [ "${HB_COMPILER}" = "mingw32" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"

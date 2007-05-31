@@ -4289,7 +4289,7 @@ static BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
 #else
    HB_SYMBOL_UNUSED( pTag );
 #endif
-   return hb_regexMatch( pRegEx, szKey, FALSE );
+   return hb_regexMatch( pRegEx, szKey, pTag->KeyLength, FALSE );
 }
 
 /*

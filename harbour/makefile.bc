@@ -354,6 +354,13 @@ $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
 +)
 !
 #**********************************************************
+$(PCRE_LIB)     : $(PCRE_LIB_OBJS)
+    IF EXIST "$(PCRE_LIB)" $(DEL) "$(PCRE_LIB)" > NUL
+    $(MKLIB) "$(PCRE_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
 $(RDD_LIB)      :: BasicExes
 $(RDD_LIB)      :: $(RDD_LIB_OBJS)
     IF EXIST "$(RDD_LIB)" $(DEL) "$(RDD_LIB)" > NUL

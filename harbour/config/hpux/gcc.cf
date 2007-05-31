@@ -89,7 +89,7 @@ endif
 endif
 
 ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
-LINKLIBS += -lpcreposix -lpcre
+LINKLIBS += -lpcre
 endif
 
 LINKLIBS += -lm -lrt

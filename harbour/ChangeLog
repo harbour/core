@@ -8,6 +8,71 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-31 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/bin/hb-func.sh
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/source/Makefile
+  + harbour/source/hbpcre/ChangeLog
+  + harbour/source/hbpcre/Makefile
+  + harbour/source/hbpcre/chartabs.c
+  + harbour/source/hbpcre/config.h
+  + harbour/source/hbpcre/dftables.c
+  + harbour/source/hbpcre/pcre.h
+  + harbour/source/hbpcre/pcrecomp.c
+  + harbour/source/hbpcre/pcreconf.c
+  + harbour/source/hbpcre/pcredfa.c
+  + harbour/source/hbpcre/pcreexec.c
+  + harbour/source/hbpcre/pcrefind.c
+  + harbour/source/hbpcre/pcrefinf.c
+  + harbour/source/hbpcre/pcreget.c
+  + harbour/source/hbpcre/pcreglob.c
+  + harbour/source/hbpcre/pcreinal.h
+  + harbour/source/hbpcre/pcreinfo.c
+  + harbour/source/hbpcre/pcremktb.c
+  + harbour/source/hbpcre/pcreoutf.c
+  + harbour/source/hbpcre/pcreprni.c
+  + harbour/source/hbpcre/pcrerefc.c
+  + harbour/source/hbpcre/pcrestud.c
+  + harbour/source/hbpcre/pcretabs.c
+  + harbour/source/hbpcre/pcretryf.c
+  + harbour/source/hbpcre/pcrever.c
+  + harbour/source/hbpcre/pcrevutf.c
+  + harbour/source/hbpcre/pcrexcls.c
+  + harbour/source/hbpcre/ucp.h
+  + harbour/source/hbpcre/ucpinter.h
+  + harbour/source/hbpcre/ucptable.c
+    + added HBPCRE library - based on older xHarbour 6.3 version
+      filenames changed to 8.3 DOS format
+
+  * harbour/include/hbregex.h
+  * harbour/source/rtl/Makefile
+  * harbour/source/rtl/hbregex.c
+  + harbour/source/rtl/hbregexc.c
+    * divided harbour regular expression functions into two files
+      Now regular expression low level library is not linked with
+      application until user will not use or REQUEST for one of HB_REGEX*
+      functions. It also means that also DBOI_SKIPREGEX will not work when
+      regex module is not linked.
+    + added support for build-in regular expression library
+    + added ulLen parameter to hb_regexMatch() to support strings with
+      embedded 0
+
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rtl/strmatch.c
+    * use new hb_regexMatch() format
+
+  * harbour/utils/hbrun/Makefile
+    + added hbpcre to linked library list
+
 2007-05-30 01:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/main/harbour.c
     - removed unnecessary code for HB_PARANOID_MEM_CHECK macro
