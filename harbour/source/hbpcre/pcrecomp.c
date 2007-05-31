@@ -572,10 +572,10 @@ int c, i, bot, top;
 const uschar *ptr = *ptrptr;
 char name[4];
 
+*negptr = FALSE;
+
 c = *(++ptr);
 if (c == 0) goto ERROR_RETURN;
-
-*negptr = FALSE;
 
 /* \P or \p can be followed by a one- or two-character name in {}, optionally
 preceded by ^ for negation. */
@@ -3876,6 +3876,7 @@ const uschar *ptr;
 compile_data compile_block;
 int brastack[BRASTACK_SIZE];
 uschar bralenstack[BRASTACK_SIZE];
+int min = 0, max = 0;      /* To please picky compilers */
 
 /* We can't pass back an error message if errorptr is NULL; I guess the best we
 can do is just return NULL, but we can set a code value if there is a code
@@ -3955,7 +3956,6 @@ pattern. We can't be so clever for #-comments. */
 ptr = (const uschar *)(pattern - 1);
 while ((c = *(++ptr)) != 0)
   {
-  int min, max;
   int class_optcount;
   int bracket_length;
   int duplength;
