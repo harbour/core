@@ -26,7 +26,6 @@ LIBS=\
 	pp \
 	compiler \
 	common \
-	hbpcre \
 
 ifeq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
 ifeq ($(findstring -DHB_POSIX_REGEX, $(C_USR)),)

@@ -204,6 +204,9 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 {$(CODEPAGE_DIR)}.c{$(OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(PCRE_DIR)}.c{$(OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(RDD_DIR)}.c{$(OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -307,6 +310,10 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(CODEPAGE_DIR)}.prg{$(OBJ_DIR)}.obj:
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(PCRE_DIR)}.prg{$(OBJ_DIR)}.obj:
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -435,6 +442,9 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 {$(CODEPAGE_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(PCRE_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(RDD_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
@@ -539,6 +549,10 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(LANG_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
+    $(HARBOUR_EXE) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(PCRE_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
     $(HARBOUR_EXE) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************

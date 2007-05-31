@@ -47,6 +47,7 @@ MACRO_DIR    = source\macro
 DEBUG_DIR    = source\debug
 LANG_DIR     = source\lang
 CODEPAGE_DIR = source\codepage
+PCRE_DIR     = source\hbpcre
 RDD_DIR      = source\rdd
 NULSYS_DIR   = source\rdd\nulsys
 DBFNTX_DIR   = source\rdd\dbfntx
@@ -92,6 +93,7 @@ $(MACRO_DIR);\
 $(DEBUG_DIR);\
 $(LANG_DIR);\
 $(CODEPAGE_DIR);\
+$(PCRE_DIR);\
 $(RDD_DIR);\
 $(NULSYS_DIR);\
 $(DBFNTX_DIR);\
@@ -142,7 +144,7 @@ MACRO_LIB    = $(LIB_DIR)\macro.lib
 DEBUG_LIB    = $(LIB_DIR)\debug.lib
 LANG_LIB     = $(LIB_DIR)\lang.lib
 CODEPAGE_LIB = $(LIB_DIR)\codepage.lib
-PCRE_LIB     = $(LIB_DIR)\pcre.lib
+PCRE_LIB     = $(LIB_DIR)\hbpcre.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
@@ -208,6 +210,8 @@ STANDARD_STATIC_HBLIBS = \
     $(RTL_LIB)        \
     $(HB_GT_LIB)      \
     $(LANG_LIB)       \
+    $(CODEPAGE_LIB)   \
+    $(PCRE_LIB)       \
     $(RDD_LIB)        \
     $(MACRO_LIB)      \
     $(DEBUG_LIB)      \

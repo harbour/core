@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-31 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/makefile.vc
+    * added some missing declaration for PCRE library
+
+  * harbour/include/hbregex.h
+    * added PCRE_STATIC - it fixes problem with MinGW build
+
+  * harbour/utils/hbrun/Makefile
+    * removed one redundant hbpcre from library list
+
 2007-05-31 17:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
     ! added PCRE_LIB

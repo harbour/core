@@ -71,6 +71,7 @@
 #  include <regex.h>
 #else
 #  define HB_PCRE_REGEX
+#  define PCRE_STATIC
 #  if defined(__XCC__) || defined(__LCC__)
 #     include "source\hbpcre\pcre.h"
 #  else
