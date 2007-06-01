@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 02:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/bin/bld.sh
+     ! Updated list of libs for linux/gcc.
+
+   * harbour/bin/bld.bat
+     * Minor.
+
 2007-06-01 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/bin/pack_src.sh
