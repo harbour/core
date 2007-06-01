@@ -16,15 +16,16 @@
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib
 # --with gd          - build gd lib
+# --with tip         - build tip lib (needs --withxhb)
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
+# --with xhb         - build with xHarbour compatible extensions
 # --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
-# --without tip      - do not build tip lib
 ######################################################################
 
 test_reqrpm()

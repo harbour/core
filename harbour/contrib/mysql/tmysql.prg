@@ -899,7 +899,7 @@ return nil
 METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    local cUpdateQuery := "UPDATE " + ::cTable + " SET "
-   local i, cField
+   local i
    //DAVID:
    local ni, cWhere := " WHERE "
    default lOldRecord to .F.
@@ -1126,7 +1126,7 @@ return !::lError
 METHOD Append(oRow, lRefresh) CLASS TMySQLTable
 
    local cInsertQuery := "INSERT INTO " + ::cTable + " ("
-   local i, cField
+   local i
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
    default lRefresh to .T.
 
@@ -1280,9 +1280,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
       next
    endif
 
-   return TMySQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
-
-return nil
+return TMySQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
 
 
 METHOD FieldPut(cnField, Value) CLASS TMySQLTable
@@ -1320,7 +1318,7 @@ return nil
 
 METHOD Refresh() CLASS TMySQLTABLE
 
-   local rc, i
+   local rc
 
    // free present result handle
    sqlFreeR(::nResultHandle)
@@ -1707,12 +1705,14 @@ return aList
 /* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct(cTable) CLASS TMySQLServer
 
-   local nRes, aField, aStruct, aSField, i
+   local aStruct := {}
 
-
-   aStruct := {}
+   HB_SYMBOL_UNUSED( cTable )
 
    /* TODO: rewrite for MySQL
+   local nRes, aField, aStruct, aSField, i
+
+   aStruct := {}
    nRes := sqlListF(::nSocket, cTable)
 
    if nRes > 0

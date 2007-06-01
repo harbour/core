@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 19:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/make_rpm.sh
+  * harbour/contrib/Makefile
+    * cleanup and added HB_CONTRIBLIBS to set additional contrib libraries
+    + added -with xhb  switch to build Harbour RPMs with HB_COMPAT_XHB
+      macro
+
+  * harbour/contrib/mysql/Makefile
+    + added -I/usr/include/mysql -I/usr/local/include/mysql to C compiler
+      flags
+  * harbour/contrib/mysql/tmysql.prg
+  * harbour/contrib/mysql/tsqlbrw.prg
+    * cleaned -w2 warnings - in few places I added HB_SYMBOL_UNUSED()
+      which should be replace sin the future by valid code
+
 2007-06-01 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
     * set attributes explicitly to clean some wrong attributes committed

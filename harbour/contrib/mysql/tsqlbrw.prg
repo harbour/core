@@ -160,6 +160,9 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
 
    local i, oCol
 
+   HB_SYMBOL_UNUSED( oServer )
+   HB_SYMBOL_UNUSED( cTable )
+
    super:New(nTop, nLeft, nBottom, nRight)
 
    ::oQuery := oQuery
@@ -246,7 +249,6 @@ METHOD EditField() CLASS TBrowseSQL
    local oCol
    local aGetList
    local nKey
-   local xGetValue
    local cMemoBuff, cMemo
 
    // Get the current column object from the browse
@@ -412,5 +414,6 @@ return Self
 // Empty method to be subclassed
 METHOD KeyboardHook(nKey) CLASS TBrowseSQL
 
+   HB_SYMBOL_UNUSED( nKey )
 
 return Self

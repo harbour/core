@@ -12,6 +12,7 @@ DIRS=\
 	libmisc \
 	libnf \
 	samples \
+	$(HB_CONTRIBLIBS)
 
 
 ifneq ($(HB_ARCHITECTURE),dos)
