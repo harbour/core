@@ -88,6 +88,8 @@ CLASS TIpCgi
    DATA bSavedErrHandler
    DATA cSessionSavePath
    DATA cSID
+   DATA cDumpSavePath
+   DATA lDumpHtml    INIT FALSE
 
    METHOD New()
    METHOD Header( hOptions )
@@ -220,6 +222,16 @@ METHOD Flush() CLASS TIpCgi
 
    lRet := ( Fwrite( CGI_OUT, cStream, nLen ) == nLen )
 
+   if ::lDumpHtml 
+      if empty( ::cDumpSavePath )
+         ::cDumpSavePath := "/tmp/"
+      endif
+      if ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != -1
+         Fwrite( nH, ::cHtmlPage, len( ::cHtmlPage ) )
+      endif
+      fclose( nH )
+   endif
+
    ::cCgiHeader := ''
    ::cHtmlPage := ''
 
@@ -309,7 +321,7 @@ METHOD StartHtml( hOptions ) CLASS TIpCgi
                   '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
                   '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
                   '<head>' + ;
-                  HtmlTag( hOptions, 'title' ) + ;
+                  HtmlTag( hOptions, 'title', 'title' ) + ;
                   HtmlScript( hOptions ) + ; 
                   HtmlStyle( hOptions ) + ;
                   '</head>' + ;
@@ -332,7 +344,7 @@ METHOD StartFrameSet( hOptions ) CLASS TIpCgi
                   '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
                   '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
                   '<head>' + ;
-                  HtmlTag( hOptions, 'title' ) + ;
+                  HtmlTag( hOptions, 'title', 'title' ) + ;
                   HtmlScript( hOptions ) + ; 
                   HtmlStyle( hOptions ) + ;
                   '</head>' + ;
@@ -438,20 +450,27 @@ METHOD SessionDecode( cData ) CLASS TIpCgi
 
    RETURN Valtype( ::hSession ) == "H"
 
-STATIC FUNCTION HtmlTag( xVal, cKey )
+STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    local cVal := ''
 
-   if !empty( xVal )
-      if empty( cKey )   
-         cVal := xVal
-      elseif hHasKey( xVal, cKey )
+   DEFAULT cDefault TO ''
+
+   if !empty( xVal ) .and. !empty( cKey )   
+      if hHasKey( xVal, cKey )
          cVal := hGet( xVal, cKey )
-         cVal := '<' + cKey + '>' + cVal + '</' + cKey + '>' 
          hDel( xVal, cKey )
       endif
    endif
    
+   if cVal == '' 
+      cVal := cDefault
+   endif
+   
+   if '' != cVal
+      cVal := '<' + cKey + '>' + cVal + '</' + cKey + '>' 
+   endif
+
    return cVal
 
 STATIC FUNCTION HtmlAllTag( hTags, cSep )
@@ -460,7 +479,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    DEFAULT cSep TO ' '
 
-   hEval( hTags, { |k,v,p| cVal += HtmlTag( hTags, k, v, p ) + cSep } )
+   hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
 
    return cVal
 
@@ -506,13 +525,15 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
    DEFAULT cDefault TO ''
 
-   if empty( xVal )
+   if !empty( xVal ) .and. !empty( cKey )
+      if hHasKey( xVal, cKey )
+         cVal := hGet( xVal, cKey )
+         hDel( xVal, cKey )
+      endif
+   endif
+
+   if cVal == ''
       cVal := cDefault
-   elseif empty( cKey )
-      cVal := xVal
-   elseif hHasKey( xVal, cKey )
-      cVal := hGet( xVal, cKey )
-      hDel( xVal, cKey )
    endif
 
    return cVal
@@ -540,21 +561,27 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
    if !empty( xVal )
       if ( nPos := hGetPos( xVal, cKey ) ) != 0
          cVal := hGetValueAt( xVal, nPos )
-         if valtype( cVal ) == "C"
-            cVal := '<script type="text/javascript">' + _CRLF +;
-                    '<!--' + _CRLF +;
-                    cVal + _CRLF +;
-                    '-->' + _CRLF +;
-                    '</script>'
-         elseif valtype( cVal ) == "H"
+         if valtype( cVal ) == "H"
             if ( nPos := hGetPos( cVal, 'src' ) ) != 0
                cVal := hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"            
-                  cVal := '<script src="' + cVal + '" type="text/javascript">' + _CRLF
-               elseif valtype( cVal ) == "A"
+                  cVal := { cVal }
+               endif
+               if valtype( cVal ) == "A"
                   cTmp := ''
                   ascan( cVal, { |cFile| cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
                   cVal := cTmp
+               endif   
+            endif
+            if ( nPos := hGetPos( cVal, 'var' ) ) != 0
+               cVal := hGetValueAt( cVal, nPos )
+               if valtype( cVal ) == "C"            
+                  cVal := { cVal }
+               endif
+               if valtype( cVal ) == "A"
+                  cTmp := ''
+                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  cVal := '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
                endif   
             endif
          endif
@@ -575,26 +602,34 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
    if !empty( xVal )
       if ( nPos := hGetPos( xVal, cKey ) ) != 0
          cVal := hGetValueAt( xVal, nPos )
-         if valtype( cVal ) == "C"
-            cVal := '<style type="text/css">' + _CRLF +;
-                    cVal + _CRLF +;
-                    '</style>'
-         elseif valtype( cVal ) == "H"
+         if valtype( cVal ) == "H"
             if ( nPos := hGetPos( cVal, 'src' ) ) != 0
                cVal := hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"            
-                  cVal := '<link rel="StyleSheet" href="' + cVal + '" type="text/css" />'
-               elseif valtype( cVal ) == "A"
+                  cVal := { cVal }
+               endif
+               if valtype( cVal ) == "A"
                   cTmp := ''
                   ascan( cVal, { |cFile| cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
                   cVal := cTmp
+               endif   
+            endif
+            if ( nPos := hGetPos( cVal, 'var' ) ) != 0
+               cVal := hGetValueAt( cVal, nPos )
+               if valtype( cVal ) == "C"            
+                  cVal := { cVal }
+               endif
+               if valtype( cVal ) == "A"
+                  cTmp := ''
+                  ascan( cVal, { |cVar| cTmp += cVar } )
+                  cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
                endif   
             endif
          endif
          hDel( xVal, cKey )
       endif
    endif
- 
+
    return cVal
 
 STATIC FUNCTION GenerateSID( cCRCKey )

@@ -15,14 +15,16 @@
 # --with static      - link all binaries with static libs
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib
-# --with odbc        - build build odbc lib
+# --with gd          - build gd lib
+# --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
-# --without x11      - do not build GTXVT and GTXWC
+# --without x11      - do not build GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
+# --without tip      - do not build tip lib
 ######################################################################
 
 test_reqrpm()
@@ -93,6 +95,10 @@ if test_reqrpm "postgresql-devel"
 then 
     INST_PARAM="${INST_PARAM} --with pgsql"
 fi
+if test_reqrpm "gd-devel"
+then 
+    INST_PARAM="${INST_PARAM} --with gd"
+fi
 if test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel"
 then
     INST_PARAM="${INST_PARAM} --with odbc"
@@ -113,7 +119,9 @@ if ! test_reqrpm "XFree86-devel"
 then
     INST_PARAM="${INST_PARAM} --without X11"
 fi
-
+if [ "${C_USR//-DHB_COMPAT_XHB/}" = "${C_USR}" ]; then
+    INST_PARAM="${INST_PARAM} --without tip"
+fi
 
 TOINST_LST=""
 for i in ${NEED_RPM}

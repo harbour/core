@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 13:00 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/make_gnu.sh
+    * updated msgs
+  * harbour/pach_src.sh
+    * added contrib/gd
+  * harbour/make_rpm.sh
+  * harbour/harbour.spec
+    * added support for --with gd, --with pgsql, --with pgsql4 and --without tip
+  * contrib/tip/cgi.prg
+    * added lDumpHtml to create a dump of the html useful for syntax check
+	 * added support for "var" and "src" in both scripts and styles
+  * contrib/pgsql/tpostgre.prg
+  	 * added ::Read() method to use in forward only loop
+	 * instead of while !::eof() ... ::skip()
+    * several optimizations now in a typical loop it is 30% faster
+	 * !!! now char fields are not sized to len !!!
+
 2007-06-01 02:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/bin/bld.sh
      ! Updated list of libs for linux/gcc.

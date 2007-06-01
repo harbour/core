@@ -168,11 +168,12 @@ if [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
    echo "      - gtwvt (Win32 win console)  (for w32 architecture)"
    echo "      - gtos2 (OS/2 console)       (for os2 architecture)"
    echo "      - gtpca (PC ANSI console)    (for all architectures)"
-   echo "      - gtcrs (Curses console)     (for linux, w32 architectures)"
-   echo "      - gtsln (Slang console)      (for linux, w32 architectures)"
+   echo "      - gtcrs (Curses console)     (for *nixes, w32 architectures)"
+   echo "      - gtsln (Slang console)      (for *nixes, w32 architectures)"
+   echo "      - gtxwc (XWindow console)    (for *nixes architecture)"
    echo
    echo "  - Use these optional envvars to configure the make process"
-   echo "    when using the 'all' command:"
+   echo "    when using the 'all' target:"
    echo
    echo "    PRG_USR - Extra Harbour compiler options"
    echo "    C_USR   - Extra C compiler options"

@@ -331,7 +331,7 @@ $hb_collect contrib/dot/*.txt
 
 # CONTRIB\TIP
 $hb_collect contrib/tip/Makefile
-$hb_collect contrib/tip/Changelog
+$hb_collect contrib/tip/Change[Ll]og*
 $hb_collect contrib/tip/*.[ch]
 $hb_collect contrib/tip/*.prg
 $hb_collect contrib/tip/*.ch
@@ -346,13 +346,24 @@ $hb_collect contrib/odbc/*.txt
 
 # CONTRIB\PGSQL
 $hb_collect contrib/pgsql/[mM]akefile*
-$hb_collect contrib/pgsql/Changelog
+$hb_collect contrib/pgsql/Change[Ll]og*
 $hb_collect contrib/pgsql/README
 $hb_collect contrib/pgsql/*.[ch]
 $hb_collect contrib/pgsql/*.ch
 $hb_collect contrib/pgsql/*.prg
 $hb_collect contrib/pgsql/*.txt
 $hb_collect contrib/pgsql/*.bat
+
+# CONTRIB\GD
+$hb_collect contrib/gd/[mM]akefile*
+$hb_collect contrib/gd/Change[Ll]og*
+$hb_collect contrib/gd/README
+$hb_collect contrib/gd/*.[ch]
+$hb_collect contrib/gd/include/*.[ch]
+$hb_collect contrib/gd/*.ch
+$hb_collect contrib/gd/*.prg
+$hb_collect contrib/gd/*.txt
+$hb_collect contrib/gd/*.bat
 
 # CONTRIB\MYSQL
 $hb_collect contrib/mysql/[mM]akefile*
