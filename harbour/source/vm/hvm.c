@@ -124,6 +124,7 @@ static void    hb_vmGreater( void );         /* checks if the latest - 1 value i
 static void    hb_vmGreaterEqual( void );    /* checks if the latest - 1 value is greater than or equal the latest, removes both and leaves result */
 static void    hb_vmInstring( void );        /* check whether string 1 is contained in string 2 */
 static void    hb_vmForTest( void );         /* test for end condition of for */
+static void    hb_vmSeqBlock( void );        /* set begin sequence WITH codeblock */
 static void    hb_vmWithObjectStart( void ); /* prepare WITH OBJECT block */
 static void    hb_vmEnumStart( BYTE, BYTE ); /* prepare FOR EACH loop */
 static void    hb_vmEnumNext( void );        /* increment FOR EACH loop counter */
@@ -1158,6 +1159,11 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          /* BEGIN SEQUENCE/RECOVER/ALWAYS/END SEQUENCE */
 
+         case HB_P_SEQBLOCK:
+            hb_vmSeqBlock();
+            w++;
+            break;
+
          case HB_P_SEQALWAYS:
          {
             /*
@@ -1248,6 +1254,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
          }
+
          case HB_P_SEQBEGIN:
          {
             /*
@@ -3498,6 +3505,38 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
       hb_vmGreater();
 }
 
+/* Begin Sequence WITH block auto destructor */
+static HB_GARBAGE_FUNC( hb_SeqBlockDestructor )
+{
+   PHB_ITEM * pBlockPtr = ( PHB_ITEM * ) Cargo;
+
+   hb_itemMove( hb_errorBlock(), * pBlockPtr );
+   hb_itemRelease( * pBlockPtr );
+}
+      
+static void hb_vmSeqBlock( void )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmSeqBlock()"));
+
+   pItem = hb_stackItemFromTop( -1 );
+   if( HB_IS_BLOCK( pItem ) )
+   {
+      PHB_ITEM * pBlockPtr, pBlock, pHolder;
+
+      pBlock = hb_errorBlock();
+      pHolder = hb_itemNew( pBlock );
+      hb_itemMove( pBlock, pItem );
+      pBlockPtr = ( PHB_ITEM * ) hb_gcAlloc( sizeof( PHB_ITEM ),
+                                             hb_SeqBlockDestructor );
+      * pBlockPtr = pHolder;
+      pItem->type = HB_IT_POINTER;
+      pItem->item.asPointer.value = pBlockPtr;
+      pItem->item.asPointer.collect = pItem->item.asPointer.single = TRUE;
+   }
+}
+
 /* With object auto destructor */
 static HB_GARBAGE_FUNC( hb_withObjectDestructor )
 {
@@ -3509,9 +3548,9 @@ static void hb_vmWithObjectStart( void )
 {
    LONG * plWithObjectBase;
    PHB_ITEM pItem;
-	 
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
-	    
+
    pItem = hb_stackAllocItem();
    plWithObjectBase = ( LONG * ) hb_gcAlloc( sizeof( LONG ),
                                              hb_withObjectDestructor );
@@ -6995,6 +7034,15 @@ HB_EXPORT BOOL hb_xvmAlwaysEnd( void )
       hb_stackPopReturn();
    else
       hb_stackPop();
+
+   HB_XVM_RETURN
+}
+
+HB_EXPORT BOOL hb_xvmSeqBlock( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmSeqBlock()"));
+
+   hb_vmSeqBlock();
 
    HB_XVM_RETURN
 }

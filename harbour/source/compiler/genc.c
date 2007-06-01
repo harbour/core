@@ -1770,6 +1770,15 @@ static HB_GENC_FUNC( hb_p_pushovarref )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_seqblock )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_SEQBLOCK,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    fprintf( cargo->yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
@@ -2511,7 +2520,8 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localinc,
    hb_p_localincpush,
    hb_p_pushfuncsym,
-   hb_p_hashgen
+   hb_p_hashgen,
+   hb_p_seqblock
 };
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

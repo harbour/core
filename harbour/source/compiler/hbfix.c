@@ -327,7 +327,8 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    hb_p_localfix,              /* HB_P_LOCALINC              */
    hb_p_localfix,              /* HB_P_LOCALINCPUSH          */
    NULL,                       /* HB_P_PUSHFUNCSYM           */
-   NULL                        /* HB_P_HASHGEN               */
+   NULL,                       /* HB_P_HASHGEN               */
+   NULL                        /* HB_P_SEQBLOCK              */
 };
 
 void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )

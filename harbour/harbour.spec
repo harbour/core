@@ -295,6 +295,8 @@ case "`uname -m`" in
         ;;
 esac
 
+[ "%{?_with_odbc:1}" ]     || rm -fR contrib/odbc
+
 make -r
 
 ######################################################################
@@ -326,7 +328,7 @@ mkdir -p $HB_LIB_INSTALL
 make -r -i install
 
 [ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
-[ "%{?_without_tip:1}" ] && rm -f $HB_LIB_INSTALL/libtip.a
+[ "%{?_without_tip:1}" ]   && rm -f $HB_LIB_INSTALL/libtip.a
 [ "%{?_with_odbc:1}" ]     || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 
@@ -514,7 +516,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,755)
-%doc ChangeLog
+%doc ChangeLog*
 %doc doc/*.txt
 %doc doc/%{readme}
 %doc doc/en/
@@ -537,10 +539,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbpp
 %{_bindir}/hbmake
 %dir %{_includedir}/%{name}
-%{_includedir}/%{name}/*
+%attr(644,root,root,755) %{_includedir}/%{name}/*
 
 %files static
-%defattr(-,root,root,755)
+%defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libcodepage.a
 %{_libdir}/%{name}/libcommon.a
@@ -563,7 +565,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libusrrdd.a
 
 %files contrib
-%defattr(-,root,root,755)
+%defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
 %{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{!?_without_nf: %{_libdir}/%{name}/libnf*.a}
@@ -580,7 +582,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libct.a
 
 %files lib
-%defattr(-,root,root,755)
+%defattr(755,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
 %{_libdir}/*.so

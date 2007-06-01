@@ -302,7 +302,8 @@ const BYTE hb_comp_pcode_len[] = {
    3,        /* HB_P_LOCALINC              */
    3,        /* HB_P_LOCALINCPUSH          */
    3,        /* HB_P_PUSHFUNCSYM           */
-   3         /* HB_P_HASHGEN               */
+   3,        /* HB_P_HASHGEN               */
+   1         /* HB_P_SEQBLOCK              */
 };
 
 /*
@@ -491,7 +492,8 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL,                       /* HB_P_LOCALINC              */
    NULL,                       /* HB_P_LOCALINCPUSH          */
    NULL,                       /* HB_P_PUSHFUNCSYM           */
-   NULL                        /* HB_P_HASHGEN               */
+   NULL,                       /* HB_P_HASHGEN               */
+   NULL                        /* HB_P_SEQBLOCK              */
 };
 
 LONG hb_compPCodeSize( PFUNCTION pFunc, ULONG ulOffset )

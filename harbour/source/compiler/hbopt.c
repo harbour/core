@@ -744,7 +744,8 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_LOCALINC              */
    NULL,                       /* HB_P_LOCALINCPUSH          */
    NULL,                       /* HB_P_PUSHFUNCSYM           */
-   NULL                        /* HB_P_HASHGEN               */
+   NULL,                       /* HB_P_HASHGEN               */
+   NULL                        /* HB_P_SEQBLOCK              */
 };
 
 void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )

@@ -8,6 +8,57 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+    * set attributes explicitly to clean some wrong attributes committed
+      to CVS and minor cleanup
+
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    + added hb_errorBlock()
+
+  * harbour/source/macro/macro.yyc
+  * harbour/source/compiler/harbour.yyc
+    * manual hack to pacify BCC warning messages
+
+  * harbour/include/hbpcode.h
+  * harbour/include/hbxvm.h
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbopt.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/source/vm/hvm.c
+    + added support for:
+         BEGIN SEQUENCE WITH <errorBlockExp>
+            [<statements;...>]
+         [ RECOVER [ USING oErr ] ]
+            ...
+         [ ALWAYS ]
+            ...
+         END 
+      It works like normal BEGIN SEQUENCE but sets <errorBlockExp> as
+      ErrorBlock() before executing <statements;...> and restore
+      previous ErrorBlock() at the end or when exception will appear.
+      I hope it will make some xHarbour user happy ;-)
+
+  * harbour/include/hbcompat.ch
+    + added preprocessor directive for TRY / CATCH / FINALLY / END
+      working like in xHarbour - translated to:
+         BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+            ...
+         [ RECOVER [ USING oErr ] ]
+            ...
+         [ ALWAYS ]
+            ...
+         END
+
 2007-06-01 13:00 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/make_gnu.sh
     * updated msgs

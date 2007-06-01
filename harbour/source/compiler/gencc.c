@@ -1443,6 +1443,14 @@ static HB_GENC_FUNC( hb_p_alwaysend )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_seqblock )
+{
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "\tif( hb_xvmSeqBlock() ) break;\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_seqbegin )
 {
    HB_GENC_LABEL();
@@ -2106,7 +2114,8 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_localinc,
    hb_p_localincpush,
    hb_p_pushfuncsym,
-   hb_p_hashgen
+   hb_p_hashgen,
+   hb_p_seqblock
 };
 
 void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )

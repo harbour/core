@@ -84,9 +84,6 @@
 
    #xtranslate hb_isregexstring([<xx>])   => hb_isregex([<xx>])
 
-   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
-   #xcommand DEFAULT => OTHERWISE
-
    #xtranslate HASH([<x,...>])          => HB_HASH([<x>])
    #xtranslate HHASKEY([<x,...>])       => HB_HHASKEY([<x>])
    #xtranslate HGETPOS([<x,...>])       => HB_HPOS([<x>])
@@ -117,6 +114,14 @@
    #xtranslate HEXTONUM(<c>)            => CTON(<c>, 16)
 
    #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+
+   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
+   #xcommand DEFAULT => OTHERWISE
+
+   /* TRY / CATCH / FINALLY / END */
+   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
+   #xcommand FINALLY => ALWAYS
 
 #endif
 

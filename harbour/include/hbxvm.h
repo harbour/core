@@ -82,6 +82,7 @@ extern HB_EXPORT BOOL   hb_xvmSeqRecover( void );
 extern HB_EXPORT void   hb_xvmSeqAlways( void );
 extern HB_EXPORT BOOL   hb_xvmAlwaysBegin( void );
 extern HB_EXPORT BOOL   hb_xvmAlwaysEnd( void );
+extern HB_EXPORT BOOL   hb_xvmSeqBlock( void );
 
 extern HB_EXPORT BOOL   hb_xvmEnumStart( BYTE, BYTE );            /* prepare FOR EACH loop */
 extern HB_EXPORT BOOL   hb_xvmEnumNext( void );                   /* increment FOR EACH loop counter */

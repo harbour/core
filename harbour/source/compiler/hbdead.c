@@ -535,7 +535,8 @@ static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[ HB_P_LAST_PCODE ] =
    hb_p_default,               /* HB_P_LOCALINC              */
    hb_p_default,               /* HB_P_LOCALINCPUSH          */
    hb_p_default,               /* HB_P_PUSHFUNCSYM           */
-   hb_p_default                /* HB_P_HASHGEN               */
+   hb_p_default,               /* HB_P_HASHGEN               */
+   hb_p_default                /* HB_P_SEQBLOCK              */
 };
 
 void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )

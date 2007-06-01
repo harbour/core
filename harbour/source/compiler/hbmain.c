@@ -3617,33 +3617,54 @@ ULONG hb_compSequenceAlways( HB_COMP_DECL )
 void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
                             ULONG ulAlways, BOOL fUsualStmts, BOOL fRecover )
 {
-   --ulStartPos;  /* remove also HB_P_SEQBEGIN */
+   --ulStartPos;  /* HB_P_SEQBEGIN address */
 
-   if( !ulAlways )
+   if( !fUsualStmts && !HB_COMP_PARAM->fDebugInfo )
    {
-      /* remove HB_P_SEQALWAYS */
-      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
-   }
-   else if( !fRecover )
-   {
-      /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
-      hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4 );
-      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4 );
-      if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
+      ulStartPos -= 4;
+      if( ulAlways )
       {
-         /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
-         hb_compGenJumpThere( ulStartPos - 3, ulAlways - 8, HB_COMP_PARAM );
+         /* remove HB_P_ALWAYSEND opcode */
+         HB_COMP_PARAM->functions.pLast->lPCodePos--;
+         /* remove HB_P_SEQALWAYS ... HB_P_ALWAYSBEGIN opcodes */
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
+                             ulAlways - ulStartPos + 4 );
       }
-   }
-
-   if( ! HB_COMP_PARAM->fDebugInfo ) /* only if no debugger info is required */
-   {
-      if( !fUsualStmts && !ulAlways )
+      else
       {
-         HB_COMP_PARAM->lastLinePos = ulStartPos - 3;
          hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
                              HB_COMP_PARAM->functions.pLast->lPCodePos -
                              ulStartPos );
+      }
+      HB_COMP_PARAM->lastLinePos = ulStartPos - 3;
+   }
+   else if( !ulAlways )
+   {
+      /* remove HB_P_SEQALWAYS opcode */
+      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
+   }
+   else
+   {
+      if( !fRecover )
+      {
+         /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
+         hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4 );
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4 );
+         if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
+         {
+            /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
+            ulAlways -= 8;
+            hb_compGenJumpThere( ulStartPos - 3, ulAlways, HB_COMP_PARAM );
+         }
+      }
+      /* empty always block? */
+      if( HB_COMP_PARAM->functions.pLast->lPCodePos - ulAlways == 5 &&
+          !HB_COMP_PARAM->fDebugInfo )
+      {
+         /* remove HB_P_ALWAYSBEGIN and HB_P_ALWAYSEND opcodes */
+         hb_compRemovePCODE( HB_COMP_PARAM, ulAlways, 5 );
+         /* remove HB_P_SEQALWAYS opcode */
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
       }
    }
 }

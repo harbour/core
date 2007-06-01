@@ -2993,6 +2993,7 @@ yyerrlab:
 /*---------------------------------------------------.
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
+#if 0
 yyerrorlab:
 
   /* Pacify compilers like GCC when the user code never invokes
@@ -3010,6 +3011,7 @@ yyerrorlab:
   YY_STACK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
+#endif
 
 
 /*-------------------------------------------------------------.

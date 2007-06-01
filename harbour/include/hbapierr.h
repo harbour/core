@@ -179,8 +179,11 @@ typedef struct HB_ERROR_INFO_
    HB_ITEM_PTR ErrorBlock;
 } HB_ERROR_INFO, * HB_ERROR_INFO_PTR;
 
-/*  set/get current error handler */
+/* set/get current error handler */
 extern HB_EXPORT HB_ERROR_INFO_PTR  hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler );
+
+/* current errorblock item */
+extern HB_EXPORT PHB_ITEM hb_errorBlock( void );
 
 HB_EXTERN_END
 

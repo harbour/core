@@ -154,6 +154,11 @@ HB_FUNC( ERRORBLOCK )
    }
 }
 
+PHB_ITEM hb_errorBlock( void )
+{
+   return s_errorBlock;
+}
+
 /* set new low-level error launcher (C function) and return
  * handler currently active
  */
