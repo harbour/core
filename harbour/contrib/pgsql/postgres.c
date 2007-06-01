@@ -521,22 +521,6 @@ HB_FUNC(PQESCAPEBYTEA) /* deprecated */
 }
 
 
-HB_FUNC(PQESCAPEBYTEACONN) 
-{
-    unsigned const char *from;
-    unsigned char *to;
-    size_t from_length;
-    size_t to_length;
-        
-    from = ( BYTE * ) hb_parc(2);
-    from_length = hb_parclen(2);
-    to_length = from_length * 5 + 1;
-    
-    to = PQescapeByteaConn(( PGconn * ) hb_parptr(1), from, from_length, &to_length);
-    hb_retc( ( char * ) to );
-    PQfreemem(to);
-}
-
 HB_FUNC(PQUNESCAPEBYTEA)
 {
     unsigned char *from;
@@ -824,6 +808,22 @@ HB_FUNC(PQFREECANCEL)
     if (hb_parinfo(1))
         PQfreeCancel( ( PGcancel * ) hb_parptr(1) ) ;
 }        
+
+HB_FUNC(PQESCAPEBYTEACONN) 
+{
+    unsigned const char *from;
+    unsigned char *to;
+    size_t from_length;
+    size_t to_length;
+        
+    from = ( BYTE * ) hb_parc(2);
+    from_length = hb_parclen(2);
+    to_length = from_length * 5 + 1;
+    
+    to = PQescapeByteaConn(( PGconn * ) hb_parptr(1), from, from_length, &to_length);
+    hb_retc( ( char * ) to );
+    PQfreemem(to);
+}
 
 #endif
 

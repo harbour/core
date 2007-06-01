@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-01 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/pgsql/postgres.c
+    * cover PQescapeByteaConn() by #if HB_PGVERSION >= 0x0800
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    ! fixed casting in DBLCLICK checking
+
 2007-06-01 19:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/make_rpm.sh

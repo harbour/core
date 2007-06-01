@@ -2033,8 +2033,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             if( evt->type == ButtonPress )
             {
                Time evtTime = ((XButtonEvent *) evt)->time;
-               if( ( int ) ( evtTime - wnd->mouseButtonsTime[ button ] ) <
-                   hb_mouse_GetDoubleClickSpeed() )
+               if( evtTime - wnd->mouseButtonsTime[ button ] <
+                   ( Time ) hb_mouse_GetDoubleClickSpeed() )
                {
                   key = mouseDblPressKeys[ button ];
                }
