@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-02 12:30 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
+  * harbour/contrib/hbzlib
+     * replaced with the one borrowed from xharbour, source modifications by Przemek
+
+  * harbour/contrib/hbzlib/makefile
+  * harbour/contrib/hbzlib/makefile.bc
+  * harbour/contrib/hbzlib/makefile.vc
+  * harbour/contrib/hbzlib/zip.c
+  * harbour/contrib/hbzlib/include/zipfilemapping.h
+  * harbour/contrib/hbzlib/include/zipautobuffer.h
+  * harbour/contrib/hbzlib/include/hbzip2.h
+    * changed to make contrib/hbzlib working with harbour
+
+  + harbour/contrib/hbzlib/hbcomprs.c
+  + harbour/contrib/hbzlib/include/hbcomprs.h
+    + added to make contrib/hbzlib working with harbour
+
+  + harbour/contrib/hbzlib/doc
+  + harbour/contrib/hbzlib/doc/zipnew.txt
+    + added documentation borrowed from xharbour/doc/en
+
+  - harbour/contrib/hbzlib/BccW32.cfg
+    - removed unuseful file
+
 2007-06-01 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/pgsql/postgres.c
     * cover PQescapeByteaConn() by #if HB_PGVERSION >= 0x0800
