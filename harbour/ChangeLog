@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-03 23:03 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+     * added UPPER("") optimisation. The side effect of this modification 
+       is that Harbour becomes Clipper bug compatible in calculation of 
+       AT(UPPER(""), "test"). Though this optimisation does not introduce 
+       any buggy behaviour itself.
+
 2007-06-02 12:30 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
   * harbour/contrib/hbzlib
      * replaced with the one borrowed from xharbour, source modifications by Przemek
