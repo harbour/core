@@ -1561,11 +1561,11 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
                }
-               else if( strcmp( "CHR", pName->value.asSymbol == 0 ) && usCount )
+               else if( strcmp( "CHR", pName->value.asSymbol ) == 0 && usCount )
                {
                   hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
                }
-               else if( strcmp( "LEN", pName->value.asSymbol == 0 ) && usCount )
+               else if( strcmp( "LEN", pName->value.asSymbol ) == 0 && usCount )
                {
                   if( HB_SUPPORT_HARBOUR )
                      hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
@@ -1584,6 +1584,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                else if( strcmp( "CTOD", pName->value.asSymbol ) == 0 && usCount )
                {
                   hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
+               }
+               else if( strcmp( "UPPER", pName->value.asSymbol ) == 0 && usCount )
+               {
+                  hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
                }
             }
          }

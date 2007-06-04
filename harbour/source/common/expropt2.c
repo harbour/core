@@ -1422,19 +1422,15 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          }
          else
          {
-            pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-            pExpr->value.asString.string[ 0 ] = ( char ) pArg->value.asNum.val.l;
-            pExpr->value.asString.string[ 1 ] = '\0';
-            pExpr->value.asString.dealloc = TRUE;
+            pExpr->value.asString.string = ( char * ) hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ];
+            pExpr->value.asString.dealloc = FALSE;
             pExpr->ulLength = 1;
          }
       }
       else
       {
-         pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
-         pExpr->value.asString.string[ 0 ] = ( char ) ( ( unsigned int ) pArg->value.asNum.val.d & 0xff );
-         pExpr->value.asString.string[ 1 ] = '\0';
-         pExpr->value.asString.dealloc = TRUE;
+         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ];
+         pExpr->value.asString.dealloc = FALSE;
          pExpr->ulLength = 1;
       }
       
@@ -1491,7 +1487,7 @@ BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
    {
       HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
       HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-      
+
       if( pArg->ExprType == HB_ET_STRING && ( pArg->ulLength == 8 || pArg->ulLength == 0 ) )
       {
          HB_EXPR_PTR pExpr = hb_compExprNewDate( pArg->ulLength == 0 ? 0 :
@@ -1508,7 +1504,7 @@ BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
    else
    {
       HB_EXPR_PTR pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
-      
+
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
@@ -1523,7 +1519,7 @@ BOOL hb_compExprReduceCTOD( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-      
+
    if( pArg->ExprType == HB_ET_STRING && pArg->ulLength == 0 )
    {
       HB_EXPR_PTR pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
@@ -1533,6 +1529,89 @@ BOOL hb_compExprReduceCTOD( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       HB_COMP_EXPR_CLEAR( pExpr );
       return TRUE;
+   }
+
+   return FALSE;
+}
+
+BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+      
+   if( pArg->ExprType == HB_ET_STRING )
+   {
+      ULONG ulLen = pArg->ulLength;
+      BOOL fLower = FALSE;
+
+      if( ulLen )
+      {
+         char * szValue = pArg->value.asString.string;
+         do
+         {
+            char c = * szValue++;
+            if( c >= 'a' && c <= 'z' )
+               fLower = TRUE;
+            else if( !( ( c >= 'A' && c <= 'Z' ) ||
+                        ( c >= '0' && c <= '9' ) || c == ' ' ) )
+               break;
+         }
+         while( --ulLen );
+      }
+
+      if( ulLen == 0 )
+      {
+         HB_EXPR_PTR pExpr;
+         char * szValue;
+         BOOL fDealloc;
+
+         if( fLower )
+         {
+            if( pArg->ulLength == 1 )
+            {
+               szValue = ( char * ) hb_szAscii[ toupper( (unsigned char)
+                                          pArg->value.asString.string[ 0 ] ) ];
+               fDealloc = FALSE;
+            }
+            else
+            {
+               if( pArg->value.asString.dealloc )
+               {
+                  szValue = pArg->value.asString.string;
+                  pArg->value.asString.dealloc = FALSE;
+                  fDealloc = TRUE;
+               }
+               else
+               {
+                  szValue = ( char * ) hb_xgrab( pArg->ulLength + 1 );
+                  memcpy( szValue, pArg->value.asString.string, pArg->ulLength + 1 );
+                  fDealloc = TRUE;
+               }
+               do
+                  szValue[ ulLen ] = toupper( (unsigned char) szValue[ ulLen ] );
+               while( ++ulLen < pArg->ulLength );
+            }
+         }
+         else
+         {
+            szValue = pArg->value.asString.string;
+            fDealloc = pArg->value.asString.dealloc;
+            pArg->value.asString.dealloc = FALSE;
+         }
+
+         pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
+         pExpr->ValType = HB_EV_STRING;
+         pExpr->value.asString.string = szValue;
+         pExpr->value.asString.dealloc = fDealloc;
+         pExpr->ulLength = pArg->ulLength;
+
+         HB_COMP_EXPR_FREE( pParms );
+         HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+         memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+         HB_COMP_EXPR_CLEAR( pExpr );
+
+         return TRUE;
+      }
    }
 
    return FALSE;

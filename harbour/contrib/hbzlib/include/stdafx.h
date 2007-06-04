@@ -109,7 +109,7 @@
 
 
 #ifndef TRACE
-	#define TRACE
+	#define TRACE(a,b,c)
 #endif
 
 #if _MSC_VER >= 1300

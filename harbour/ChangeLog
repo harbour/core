@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 22:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbzlib/include/stdafx.h
+  * harbour/contrib/hbzlib/include/ziparchive.h
+    * cleaned some warnings
+
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt2.c
+    * restored Mindaugas code for UPPER optimization and added logic to
+      optimize UPPER for strings with only Latin letters, digit and spaces
+      just like in Clipper. Now code like:
+         ? Upper( chr(65)+chr(66)+chr(67)+"0123 QWE asd " ) + "ZXC"
+      is fully optimized at compile time to single string expression.
+    % optimized hb_compExprReduceCHR() by eliminating memory allocation
+      for new string
+    ! fixed typo in my previous commit
+
 2007-06-04 20:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
   * harbour/include/hbexprop.h

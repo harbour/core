@@ -1290,7 +1290,7 @@ public:
 	{
 		if (m_iFileOpened != nothing)
 		{
-			TRACE(_T("CZipArchive::SetDetectZlibMemoryLeaks: Set it before opening a file in the archive"));
+			TRACE(_T("CZipArchive::SetDetectZlibMemoryLeaks: Set it before opening a file in the archive"),__FILE__,__LINE__);
 			return;
 		}
 		m_bDetectZlibMemoryLeaks = bDetect;
@@ -1314,7 +1314,7 @@ public:
 	{
 		if (!IsClosed())
 		{
-			TRACE(_T("CZipArchive::SetConvertAfterOpen: Set it before opening the archive"));
+			TRACE(_T("CZipArchive::SetConvertAfterOpen: Set it before opening the archive"),__FILE__,__LINE__);
 			return;
 		}
 		m_centralDir.m_bConvertAfterOpen = bConvertAfterOpen;
@@ -1356,7 +1356,7 @@ public:
 	{
 		if (IsClosed())
 		{
-			TRACE(_T("CZipArchive::GetFindFastIndex: ZipArchive not yet opened.\n"));
+			TRACE(_T("CZipArchive::GetFindFastIndex: ZipArchive not yet opened.\n"),__FILE__,__LINE__);
 			return -1;
 		}
 
