@@ -2553,18 +2553,31 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
       ULONG ulLen1 = pItem1->item.asString.length;
       ULONG ulLen2 = pItem2->item.asString.length;
 
-      if( ulLen1 < ULONG_MAX - ulLen2 )
+      if( ulLen1 == 0 )
       {
-         char * szNewString = ( char * ) hb_xgrab( ulLen1 + ulLen2 + 1 );
-         ULONG ulNewLen = ulLen1 + ulLen2;
-
+         hb_itemCopy( pResult, pItem2 );
+         pResult->type &= ~HB_IT_MEMOFLAG;
+      }
+      else if( ulLen2 == 0 )
+      {
+         if( pResult != pItem1 )
+            hb_itemCopy( pResult, pItem1 );
+         pResult->type &= ~HB_IT_MEMOFLAG;
+      }
+      else if( ulLen1 < ULONG_MAX - ulLen2 )
+      {
+         if( pResult != pItem1 )
+         {
+            hb_itemMove( pResult, pItem1 );
+            pItem1 = pResult;
+         }
+         hb_itemReSizeString( pItem1, ulLen1 + ulLen2 );
          while( ulLen1 && pItem1->item.asString.value[ ulLen1 - 1 ] == ' ' )
             ulLen1--;
-
-         hb_xmemcpy( szNewString, pItem1->item.asString.value, ulLen1 );
-         hb_xmemcpy( szNewString + ulLen1, pItem2->item.asString.value, ulLen2 );
-         hb_xmemset( szNewString + ulLen1 + ulLen2, ' ', pItem1->item.asString.length - ulLen1 );
-         hb_itemPutCPtr( pResult, szNewString, ulNewLen );
+         hb_xmemcpy( pItem1->item.asString.value + ulLen1,
+                     pItem2->item.asString.value, ulLen2 );
+         hb_xmemset( pItem1->item.asString.value + ulLen1 + ulLen2, ' ',
+                     pItem1->item.asString.length - ulLen1 - ulLen2 );
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-", 2, pItem1, pItem2 );

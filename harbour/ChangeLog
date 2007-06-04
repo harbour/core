@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 20:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt2.c
+    % added compile time optimization for CTOD("")
+    % added compile time optimization for - used forconstant string values,
+      f.e.:
+         ? "Harbour   " - " Compiler"
+
+  * harbour/source/vm/hvm.c
+    % added optimization for string resizing in cVal1 - cVal2
+
+  * harbour/source/rtl/dateshb.c
+    % minor optimization - removed one not necessary ISCHAR()
+
 2007-06-04 19:11 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c

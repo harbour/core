@@ -1557,29 +1557,33 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 #endif
             {
                /* TODO: EMPTY() (not done by Clipper) */
-               if( ( strcmp( "AT", pName->value.asSymbol ) == 0 ) && usCount == 2 )
+               if( strcmp( "AT", pName->value.asSymbol ) == 0 && usCount == 2 )
                {
                   hb_compExprReduceAT( pSelf, HB_COMP_PARAM );
                }
-               else if( ( strcmp( "CHR", pName->value.asSymbol ) == 0 ) && usCount )
+               else if( strcmp( "CHR", pName->value.asSymbol == 0 ) && usCount )
                {
                   hb_compExprReduceCHR( pSelf, HB_COMP_PARAM );
                }
-               else if( ( strcmp( "LEN", pName->value.asSymbol ) == 0 ) && usCount )
+               else if( strcmp( "LEN", pName->value.asSymbol == 0 ) && usCount )
                {
                   if( HB_SUPPORT_HARBOUR )
                      hb_compExprReduceLEN( pSelf, HB_COMP_PARAM );
                }
-               else if( ( strcmp( "ASC", pName->value.asSymbol ) == 0 ) && usCount )
+               else if( strcmp( "ASC", pName->value.asSymbol ) == 0 && usCount )
                {
                   if( HB_SUPPORT_HARBOUR )
                      hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
                }
-               else if( ( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ) || 
-                          ( strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) ) && usCount < 2 )
+               else if( ( strcmp( "STOD", pName->value.asSymbol ) == 0 || 
+                          strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) && usCount < 2 )
                {
                   if( HB_SUPPORT_HARBOUR )
                      hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
+               }
+               else if( strcmp( "CTOD", pName->value.asSymbol ) == 0 && usCount )
+               {
+                  hb_compExprReduceCTOD( pSelf, HB_COMP_PARAM );
                }
             }
          }
