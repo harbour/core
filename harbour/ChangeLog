@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 12:17 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
+  * harbour/contrib/hbzlib/include/zipexception.h
+    * removed wrong CZipException:: qualificator in CZipException copy constructor
+
+  * harbour/contrib/hbzlib/zip.c
+    + added extern void hb_fsDirectory() declaration
+
+  * harbour/contrib/hbzlib/include/hbzip2.h
+  * harbour/contrib/hbzlib/zipnew.cpp
+    * changed fifth parameter to const char *pbyBuffer in hb_UnzipSel() function
+
 2007-06-03 23:03 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c
@@ -19,7 +30,7 @@
 
 2007-06-02 12:30 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
   * harbour/contrib/hbzlib
-     * replaced with the one borrowed from xharbour, source modifications by Przemek
+    * replaced with the one borrowed from xharbour, source modifications by Przemek
 
   * harbour/contrib/hbzlib/makefile
   * harbour/contrib/hbzlib/makefile.bc
@@ -37,9 +48,6 @@
   + harbour/contrib/hbzlib/doc
   + harbour/contrib/hbzlib/doc/zipnew.txt
     + added documentation borrowed from xharbour/doc/en
-
-  - harbour/contrib/hbzlib/BccW32.cfg
-    - removed unuseful file
 
 2007-06-01 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/pgsql/postgres.c

@@ -119,7 +119,7 @@ extern int      hb___SetCallbackFunc(PHB_ITEM pFunc);
 extern int      hb_CmpTdSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,int iSpanSize ,BOOL bPath ,BOOL bDrive,PHB_ITEM pProgress);
 
 extern int      hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
-extern int      hb_UnzipSel(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pArray,PHB_ITEM pProgress);
+extern int      hb_UnzipSel(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,const char *szPath,PHB_ITEM pArray,PHB_ITEM pProgress);
 extern int      hb_UnzipSelIndex(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pSelArray,PHB_ITEM pProgress);
 extern int      hb_DeleteSel(char *szFile,PHB_ITEM pArray,BOOL bCase);
 extern int      hb_TestForPKS(char *szFile);

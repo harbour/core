@@ -54,7 +54,7 @@ public:
 */
 		CZipException(int iCause = generic, LPCTSTR lpszZipName = NULL);
 
-		CZipException::CZipException(CZipException& e)
+		CZipException(CZipException& e)
 		{
 			m_szFileName = e.m_szFileName;
 			m_iCause = e.m_iCause;

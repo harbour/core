@@ -557,7 +557,7 @@ int hb_DeleteSel( char *szFile, PHB_ITEM pArray, BOOL bCase )
    return ( int ) iReturn;
 }
 
-int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord, char *pbyBuffer, PHB_ITEM pSelArray, PHB_ITEM pProgress )
+int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord, const char *pbyBuffer, PHB_ITEM pSelArray, PHB_ITEM pProgress )
 {
    bool bWithPath = lWithPath?true:false;
    bool iReturn = true;

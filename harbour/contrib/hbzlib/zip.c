@@ -75,6 +75,7 @@ PHB_ITEM ChangeDiskBlock;
 #define FA_NORMAL         128
 
 extern int Wild2RegEx( char *sWild, char* sRegEx, BOOL bMatchCase );
+extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
 #if defined(HB_OS_LINUX)
 
