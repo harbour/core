@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 08:04 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  + harbour/contrib/tip/make_b32.bat
+  + harbour/contrib/tip/makefile.bc
+
 2007-06-04 12:17 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
   * harbour/contrib/hbzlib/include/zipexception.h
     * removed wrong CZipException:: qualificator in CZipException copy constructor
