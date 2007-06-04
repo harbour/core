@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 19:11 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+     - removed UPPER("") optimisation because of ... ?
+
 2007-06-04 15:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gnu.sh
   * harbour/make_tgz.sh

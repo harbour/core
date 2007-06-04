@@ -1437,26 +1437,3 @@ BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
    return FALSE;
 }
 
-BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
-{
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-
-   if( pArg->ExprType == HB_ET_STRING && pArg->ulLength == 0 )
-   {
-      HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
-
-      pExpr->ValType = HB_EV_STRING;
-      pExpr->value.asString.string = "";
-      pExpr->value.asString.dealloc = FALSE;
-      pExpr->ulLength = 0;
-
-      HB_COMP_EXPR_FREE( pParms );
-      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
-      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
-      HB_COMP_EXPR_CLEAR( pExpr );
-      return TRUE;
-   }
-   return FALSE;
-}
-
