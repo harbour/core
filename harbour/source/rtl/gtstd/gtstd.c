@@ -201,7 +201,13 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       memcpy( &act, &old, sizeof( struct sigaction ) );
       act.sa_handler = sig_handler;
       /* do not use SA_RESTART - new Linux kernels will repeat the operation */
+#if defined( SA_ONESHOT )
       act.sa_flags = SA_ONESHOT;
+#elif defined( SA_RESETHAND )
+      act.sa_flags = SA_RESETHAND;
+#else
+      act.sa_flags = 0;
+#endif
       sigaction( SIGTTOU, &act, 0 );
 
       tcgetattr( hFilenoStdin, &s_saved_TIO );

@@ -185,7 +185,9 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   if [ "$HB_ARCHITECTURE" = "bsd" ] || uname|grep "BSD$" &> /dev/null; then
+   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ] || \
+      uname|grep "BSD$" &> /dev/null
+   then
       gmake $*
    else
       make $*

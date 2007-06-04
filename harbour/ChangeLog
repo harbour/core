@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-04 15:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gnu.sh
+  * harbour/make_tgz.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+    * HPUX build cleanup
+
+  * harbour/source/debug/dbgentry.c
+    * cast isalpha() and isdigit() parameters to unsigned char
+
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/gtstd/gtstd.c
+    * HPUX build cleanup
+
 2007-06-04 08:04 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   + harbour/contrib/tip/make_b32.bat
   + harbour/contrib/tip/makefile.bc

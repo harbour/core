@@ -200,13 +200,6 @@
    #define socklen_t int
 #endif
 
-#if defined( HB_OS_HPUX )
-char * hstrerror( int ierr )
-{
-   return( sprintf( "error %i", ierr ) );
-}
-#endif
-
 #ifdef HB_OS_LINUX
 #include <signal.h>
 #define HB_INET_LINUX_INTERRUPT     SIGUSR1+90
@@ -340,7 +333,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 #if defined(HB_OS_WIN_32)
       HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in GetHostByName()" );
       WSASetLastError( 0 );
-#elif defined(HB_OS_OS2)
+#elif defined(HB_OS_OS2) || defined(HB_OS_HPUX)
       HB_SOCKET_SET_ERROR2( Socket, h_errno, "Generic error in GetHostByName()" );
 #else
       HB_SOCKET_SET_ERROR2( Socket, h_errno, (char *) hstrerror( h_errno ) );
@@ -1523,12 +1516,13 @@ HB_FUNC( HB_INETACCEPT )
    HB_SOCKET_T incoming = 0;
    int iError = EAGAIN;
    struct sockaddr_in si_remote;
-
-   #if defined(HB_OS_WIN_32)
-      int Len;
-   #else
-      UINT Len;
-   #endif
+#if defined(_XOPEN_SOURCE_EXTENDED)
+   socklen_t Len;
+#elif defined(HB_OS_WIN_32)
+   int Len;
+#else
+   unsigned int Len;
+#endif
 
    if( Socket == NULL )
    {

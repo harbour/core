@@ -41,7 +41,9 @@ then
     RANLIB=""
     MAKE=make
     AR="${CCPREFIX}ar -cr"
-    if [ "${HB_ARCHITECTURE}" = "bsd" ] || [ `uname` = "FreeBSD" ]; then
+    if [ "${HB_ARCHITECTURE}" = "bsd" ] || \
+       [ "${HB_ARCHITECTURE}" = "hpux" ] || \
+       [ `uname` = "FreeBSD" ]; then
         MAKE=gmake
     elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         # We must build an archive index on Darwin

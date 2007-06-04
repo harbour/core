@@ -1031,8 +1031,8 @@ hb_dbgEvalMacro( char *szExpr, PHB_ITEM pItem )
 }
 
 
-#define IS_IDENT_START( c ) ( isalpha( (c) ) || (c) == '_' )
-#define IS_IDENT_CHAR( c ) ( IS_IDENT_START( (c) ) || isdigit( (c) ) )
+#define IS_IDENT_START( c ) ( isalpha( (UCHAR) (c) ) || (c) == '_' )
+#define IS_IDENT_CHAR( c ) ( IS_IDENT_START( (c) ) || isdigit( (UCHAR) (c) ) )
 
 static PHB_ITEM
 hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )

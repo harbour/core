@@ -129,7 +129,7 @@ case "$HB_ARCHITECTURE" in
         gtar --version >/dev/null 2>&1 && TAR=gtar
         INSTALL="install -c"
         ;;
-    bsd)
+    bsd|hpux)
         MAKE=gmake
         ;;
 esac
@@ -213,8 +213,10 @@ done
 
 # Keep the size of the binaries to a minimim.
 strip $HB_BIN_INSTALL/harbour${hb_exesuf}
-# Keep the size of the libraries to a minimim, but don't try to strip symlinks.
-strip -S `find $HB_LIB_INSTALL -type f`
+if [ "$HB_ARCHITECTURE" != "hpux" ]; then
+    # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
+    strip -S `find $HB_LIB_INSTALL -type f`
+fi
 
 if [ "${hb_sysdir}" = "yes" ]; then
 
@@ -264,6 +266,7 @@ ln -s pp${hb_exesuf} $HB_BIN_INSTALL/pprun${hb_exesuf}
 $INSTALL -m644 rp_dot.ch $HB_INC_INSTALL/
 rm -f pp${hb_exesuf})
 
+chmod 644 $HB_INC_INSTALL/*
 
 CURDIR=$(pwd)
 (cd "${HB_INST_PREF}"; $TAR -czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)

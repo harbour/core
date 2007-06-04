@@ -129,6 +129,9 @@ mk_hbtools()
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
     else
+        if [ "${HB_ARCHITECTURE}" = "linux" ]; then
+            HB_SYS_LIBS="${HB_SYS_LIBS} -ldl"
+        fi
         if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
             HB_CRS_LIB="curses"
@@ -326,7 +329,6 @@ fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -l\${HB_GPM_LIB}"
 
 if [ "\${HB_STATIC}" = "full" ]; then
-    SYSTEM_LIBS="\${SYSTEM_LIBS} -ldl"
     if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
         SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread"
     fi
@@ -391,7 +393,9 @@ fi
 if [ "\${HB_HWGUI}" = "yes" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} -lhwgui -lprocmisc -lhbxml"
 fi
-if [ "\${HB_ARCHITECTURE}" = "darwin" ] || [ "\${HB_ARCHITECTURE}" = "sunos" ]; then
+if [ "\${HB_ARCHITECTURE}" = "darwin" ] || \\
+   [ "\${HB_ARCHITECTURE}" = "sunos" ] || \\
+   [ "\${HB_ARCHITECTURE}" = "hpux" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} \${HARBOUR_LIBS}"
 else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
