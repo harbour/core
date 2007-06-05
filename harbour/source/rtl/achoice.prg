@@ -457,10 +457,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          CASE nUserFunc == AC_GOTO
             // Do nothing.  The next keystroke won't be read and
             // this keystroke will be processed as a goto.
-            nMode := AC_GOTO     
+            nMode := AC_GOTO
          ENDCASE
 
-         IF nPos > 0
+         IF nPos > 0 .AND. nMode != AC_GOTO
 
             nRowsClr := Min( nNumRows, nItems )
             nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
