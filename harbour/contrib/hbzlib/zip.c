@@ -175,7 +175,7 @@ static BOOL ZipTestExclude ( char *szEntry )
    for ( uiEx = 0; uiEx < uiExLen; uiEx ++ )
    {
       char *szExclude = hb_arrayGetC( ExcludeFile, uiEx + 1 );
-      if ( strcmp ( szExclude, hb_strupr( szEntry ) ) == NULL )
+      if ( strcmp ( szExclude, hb_strupr( szEntry ) ) == 0 )
       {
          hb_xfree( szExclude );
          bNotFound = FALSE;
@@ -703,9 +703,6 @@ HB_FUNC( HB_UNZIPFILE )
          {
             int uiZ, uiZLen = hb_arrayLen(pUnzip);
             char *szUnzip;
-            PHB_ITEM Temp;
-
-            
 
             for ( uiZ = 0; uiZ < uiZLen; uiZ ++ )
             {
