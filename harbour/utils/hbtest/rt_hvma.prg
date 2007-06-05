@@ -219,7 +219,9 @@ FUNCTION Main_HVMA()
    TEST_LINE( ( "X" ) $ Chr(0) + "X"          , .T. )
    TEST_LINE( scString $ Chr(0) + scString    , .T. )
 
+   TEST_LINE( scStringE $ scStringE           , .F. )
    TEST_LINE( scStringE $ "bcde"              , .F. )
+   TEST_LINE( "" $ ""                         , .T. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
    TEST_LINE( "" $ "bcde"                     , .T. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
    TEST_LINE( "d" $ "bcde"                    , .T. )
    TEST_LINE( "D" $ "BCDE"                    , .T. )

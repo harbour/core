@@ -5,6 +5,24 @@
                           Linux primer
                           ============
 
+Ubuntu distro
+-------------
+
+Packages needed to cleanly build Harbour:
+(Tested with Ubuntu 7.04 Server)
+
+For GTCRS terminal lib:
+sudo apt-get install libncurses-dev
+
+For GTSLN terminal lib:
+sudo apt-get install libslang2-dev
+
+For GTXWC terminal lib:
+sudo apt-get install libx11-dev
+
+For Contrib/ODBC lib:
+sudo apt-get install unixodbc-dev
+
 DEBIAN distro
 -------------
 

@@ -427,6 +427,7 @@ FUNCTION Main_STR()
    TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT A:2:N:100;C: F:S"   )
    TEST_LINE( At("", "")                      , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
    TEST_LINE( At("", "ABCDEF")                , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   TEST_LINE( At(scStringE, scStringE)        , 0                )
    TEST_LINE( At(scStringE, "ABCDEF")         , 0                )
    TEST_LINE( At("ABCDEF", "")                , 0                )
    TEST_LINE( At("AB", "AB")                  , 1                )

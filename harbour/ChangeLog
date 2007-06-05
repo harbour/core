@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-05 20:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/doc/linux1st.txt
+     + Added info about required Ubuntu packages.
+       (Thanks Przemek)
+
+   * harbour/utils/hbtest/rt_hvma.prg
+   * harbour/utils/hbtest/rt_str.prg
+     + Added two more tests for "" $ "" / At( "", "" ) 
+       combinations.
+
 2007-06-05 10:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   - harbour/contrib/hbzlib/Makefile.mingw
     - removed not necessary file
