@@ -89,8 +89,6 @@
    #define HB_LONG_LONG_OFF
 #endif
 
-static void RetValue( void );
-
 static HRESULT  s_nOleError;
 static HB_ITEM  OleAuto;
 
@@ -108,7 +106,7 @@ static DISPPARAMS s_EmptyDispParams;
 
 static VARIANTARG RetVal, OleVal;
 
-static BOOL bInit = FALSE;
+static BOOL s_bInit = FALSE;
 
 // -----------------------------------------------------------------------
 
@@ -238,6 +236,21 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      return NULL;
   }
 
+   /* This code is executed only once when HVM clears static variables
+    * inside hb_vmQuite() - so it's executed after all EXIT functions
+    * and allow to use OLE in object destructors
+    */
+   static HB_GARBAGE_FUNC( hb_oleRelease )
+   {
+      HB_SYMBOL_UNUSED( Cargo );
+
+      if( s_bInit )
+      {
+         OleUninitialize();
+         s_bInit = FALSE;
+      }
+   }
+
   //---------------------------------------------------------------------------//
 
   HB_FUNC( __HB_OLE_INIT )
@@ -259,23 +272,17 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
          s_EmptyDispParams.rgdispidNamedArgs = 0;
          s_EmptyDispParams.cNamedArgs        = 0;
 
-         if( ! bInit )
+         if( ! s_bInit )
          {
             OleInitialize( NULL );
-            bInit = TRUE;
-         }   	
+            hb_retptrGC( hb_gcAlloc( 1, hb_oleRelease ) );
+            s_bInit = TRUE;
+         }
 
          VariantInit( &RetVal );
          VariantInit( &OleVal );
      }
   }
-
-//---------------------------------------------------------------------------//
-
-HB_FUNC( __HB_OLE_EXIT )
-{
-   OleUninitialize();
-}	
 
 //---------------------------------------------------------------------------//
 
@@ -1362,6 +1369,27 @@ HB_FUNC( __HB_OLE_EXIT )
      VariantClear( &RetVal );
 
      return;
+  }
+
+  HB_FUNC( __OLEENUMNEXT )
+  {
+      IEnumVARIANT *pEnumVariant = ( IEnumVARIANT * ) hb_parptr( 1 );
+      ULONG *pcElementFetched = NULL;
+
+      if( pEnumVariant->lpVtbl->Next( pEnumVariant, 1, &RetVal, pcElementFetched ) == S_OK )
+      {
+         hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
+         VariantClear( &RetVal );
+         hb_storl( TRUE, 2 );
+      }
+      else
+         hb_storl( FALSE, 2 );
+  }
+
+  HB_FUNC( __OLEENUMSTOP )
+  {
+      IEnumVARIANT *pEnumVariant = ( IEnumVARIANT * ) hb_parptr( 1 );
+      pEnumVariant->lpVtbl->Release( pEnumVariant );
   }
 
   //---------------------------------------------------------------------------//

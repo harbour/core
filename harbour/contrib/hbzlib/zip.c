@@ -74,17 +74,15 @@ PHB_ITEM ChangeDiskBlock;
 #define FA_ARCH            32   /* A */
 #define FA_NORMAL         128
 
-extern int Wild2RegEx( char *sWild, char* sRegEx, BOOL bMatchCase );
 extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
 #if defined(HB_OS_LINUX)
-
 extern int GetFileAttributes( char *szEntry );
-extern void SetFileAttributes( char * szEntry,ULONG ulAttr);
+extern void SetFileAttributes( char * szEntry, ULONG ulAttr );
 #endif
 
 
-static void ResetAttribs()
+static void ResetAttribs( void )
 {
    ULONG ulAtt, ulZipLen = hb_arrayLen(FileToZip);
    char *szFile;

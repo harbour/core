@@ -49,19 +49,6 @@
  *
  */
 
-#ifndef __XHARBOUR__
-
-   #define EG_OLEEXECPTION 1001
-
-   #xcommand TRY              => cbErr := errorBlock( {|oErr| break( oErr ) } ) ;;
-                                 BEGIN SEQUENCE
-   #xcommand CATCH [<!oErr!>] => errorBlock( cbErr ) ;;
-                                 RECOVER [USING <oErr>] <-oErr-> ;;
-                                 errorBlock( cbErr )
-   #xcommand FINALLY          => ALWAYS
-
-#endif
-
 #ifndef __PLATFORM__Windows
   Function CreateObject()
   Return NIL
@@ -75,6 +62,26 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "error.ch"
+
+#ifndef __XHARBOUR__
+
+#define EG_OLEEXECPTION 1001
+
+#xcommand TRY              => BEGIN SEQUENCE WITH s_bBreak
+#xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
+#xcommand FINALLY          => ALWAYS
+
+static s_bBreak := { |oErr| break( oErr ) }
+
+STATIC PROCEDURE THROW( oError )
+   LOCAL lError := Eval( ErrorBlock(), oError )
+   IF !HB_ISLOGICAL( lError ) .OR. lError
+       __ErrInHandler()
+   ENDIF
+   Break( oError )
+RETURN
+
+#endif
 
 //----------------------------------------------------------------------------//
 
@@ -92,17 +99,18 @@ RETURN TOleAuto():GetActiveObject( cString )
 
 init PROCEDURE HB_OleInit()
 
-   __HB_OLE_INIT()
+   /* It's important to store value returned by __HB_OLE_INIT() in
+    * STATIC variable. When HVM will clear STATICs on HVM exit
+    * then it will execute destructor bound with this variable which
+    * calls OleUninitialize() - such method causes that OleUninitialize()
+    * will be called very lately after or user EXIT functions, ALWAYS
+    * blocks and .prg object destructors which may also use OLE.
+    */
+   static s_ole
+
+   s_ole := __HB_OLE_INIT()
 
 RETURN
-
-//----------------------------------------------------------------------------//
-
-exit procedure HB_OleExit()
-
-   __HB_OLE_EXIT()
-   
-return   
 
 //----------------------------------------------------------------------------//
 
@@ -127,7 +135,7 @@ RETURN Self
 CLASS VTArrayWrapper FROM VTWrapper
 
    METHOD AsArray( nIndex, xValue ) OPERATOR "[]"
-   METHOD Enumerate( nEnumOp, nIndex ) OPERATOR "FOR EACH"
+   METHOD __enumStart( enum, lDescend )
 
 ENDCLASS
 
@@ -137,29 +145,14 @@ METHOD AsArray( nIndex, xValue ) CLASS VTArrayWrapper
 RETURN IIF( PCount() == 1, ::Value[nIndex], ::Value[nIndex] := xValue )
 
 //----------------------------------------------------------------------------//
-METHOD Enumerate( nEnumOp, nIndex ) CLASS VTarrayWrapper
+METHOD __enumStart( enum, lDescend ) CLASS VTarrayWrapper
 
-   LOCAL oErr
+   HB_SYMBOL_UNUSED( lDescend )
 
-   HB_SYMBOL_UNUSED( nEnumOp )
-   HB_SYMBOL_UNUSED( nIndex )
-   HB_SYMBOL_UNUSED( oErr )
-#ifdef __XHARBOUR__
-   SWITCH nEnumOp
-      CASE FOREACH_BEGIN
-         RETURN ::Value
+   /* set base value for enumerator */
+   (@enum):__enumBase( ::Value )
 
-      CASE FOREACH_ENUMERATE
-         // Can never happen!
-         EXIT
-
-      CASE FOREACH_END
-         // Can never happen!
-         EXIT
-   END
-#endif
-
- RETURN Self
+RETURN !Empty( ::Value )
 
 //----------------------------------------------------------------------------//
 CLASS TOleAuto
@@ -195,7 +188,9 @@ CLASS TOleAuto
    METHOD OleValueExactEqual( xArg )      OPERATOR "=="
    METHOD OleValueNotEqual( xArg )        OPERATOR "!="
 
-   METHOD OleEnumerate( nEnumOp, nIndex ) OPERATOR "FOR EACH"
+   METHOD __enumStart( enum, lDescend )
+   METHOD __enumSkip( enum, lDescend )
+   METHOD __enumStop()
 
    ERROR HANDLER OnError()
 
@@ -351,7 +346,7 @@ RETURN HB_ExecFromArray( Self, cMethod, aDel( HB_aParams(), 1, .T. ) )
 //--------------------------------------------------------------------
 METHOD OleCollection( xIndex, xValue ) CLASS TOleAuto
 
-   LOCAL xRet, cbErr
+   LOCAL xRet
 
    //TraceLog( PCount(), xIndex, xValue )
 
@@ -375,7 +370,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValuePlus( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue + xArg
@@ -400,7 +395,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueMinus( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue - xArg
@@ -425,7 +420,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueMultiply( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue * xArg
@@ -450,7 +445,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueDivide( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue / xArg
@@ -475,7 +470,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueModulus( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue % xArg
@@ -500,7 +495,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueInc() CLASS TOleAuto
 
-   LOCAL oErr, cbErr
+   LOCAL oErr
 
    TRY
       ++::OleValue
@@ -525,7 +520,7 @@ RETURN Self
 //--------------------------------------------------------------------
 METHOD OleValueDec() CLASS TOleAuto
 
-   LOCAL oErr, cbErr
+   LOCAL oErr
 
    TRY
       --::OleValue
@@ -550,7 +545,7 @@ RETURN Self
 //--------------------------------------------------------------------
 METHOD OleValuePower( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue ^ xArg
@@ -575,7 +570,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueEqual( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue = xArg
@@ -600,7 +595,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueExactEqual( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue == xArg
@@ -625,7 +620,7 @@ RETURN xRet
 //--------------------------------------------------------------------
 METHOD OleValueNotEqual( xArg ) CLASS TOleAuto
 
-   LOCAL xRet, oErr, cbErr
+   LOCAL xRet, oErr
 
    TRY
       xRet := ::OleValue != xArg
@@ -648,63 +643,37 @@ METHOD OleValueNotEqual( xArg ) CLASS TOleAuto
 RETURN xRet
 
 //--------------------------------------------------------------------
-METHOD OleEnumerate( nEnumOp, nIndex ) CLASS TOleAuto
 
-   LOCAL xRet
+METHOD __enumStart( enum, lDescend ) CLASS TOleAuto
 
-   HB_SYMBOL_UNUSED( nEnumOp )
-   HB_SYMBOL_UNUSED( nIndex )
-   HB_SYMBOL_UNUSED( xRet )
-#ifdef __XHARBOUR__
-   SWITCH nEnumOp
-      CASE FOREACH_BEGIN
-         ::pOleEnumerator := ::OleNewEnumerator()
-         EXIT
+   /* TODO: add support for descend order */
+   ::pOleEnumerator := ::OleNewEnumerator()
 
-      CASE FOREACH_ENUMERATE
-         //xRet := ::Item( nIndex )
-         //xRet := ::pOleEnumerator:Next()
-         xRet := HB_Inline( ::pOleEnumerator ) ;
-         {
-            IEnumVARIANT *pEnumVariant = (IEnumVARIANT *) hb_parptr(1);
-            ULONG *pcElementFetched = NULL;
+RETURN ::__enumSkip( enum, lDescend )
 
-            if( pEnumVariant->lpVtbl->Next( pEnumVariant, 1, &RetVal, pcElementFetched ) == S_OK )
-            {
-               RetValue();
-            }
-            else
-            {
-               hb_vmRequestBreak( NULL );
-            }
-         }
+//--------------------------------------------------------------------
 
-         RETURN xRet
-         //EXIT
+METHOD __enumSkip( enum, lDescend ) CLASS TOleAuto
 
-      CASE FOREACH_END
-         HB_Inline( ::pOleEnumerator ) ;
-         {
-            IEnumVARIANT *pEnumVariant = (IEnumVARIANT *) hb_parptr(1);
+   LOCAL lContinue, xValue
 
-            pEnumVariant->lpVtbl->Release( pEnumVariant );
-         }
+   /* TODO: add support for descend order */
+   HB_SYMBOL_UNUSED( lDescend )
 
-         ::pOleEnumerator := NIL
-         EXIT
-   END
-#endif
+   xValue := __OLEENUMNEXT( ::pOleEnumerator, @lContinue )
 
-RETURN Self
+   /* set enumerator value */
+   (@enum):__enumValue( xValue )
 
-#ifndef __XHARBOUR__
-STATIC PROCEDURE THROW( oError )
-   LOCAL lError := Eval( ErrorBlock(), oError )
-   IF !HB_ISLOGICAL( lError ) .OR. lError
-       __ErrInHandler()
-   ENDIF
-   Break( oError )
+RETURN lContinue
+
+//--------------------------------------------------------------------
+
+METHOD PROCEDURE __enumStop() CLASS TOleAuto
+
+   __OLEENUMSTOP( ::pOleEnumerator )
+   ::pOleEnumerator := NIL
+
 RETURN
-#endif
 
 #endif

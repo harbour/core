@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-05 03:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbzlib/zip.c
+    * cleaned some warnings
+
+  * harbour/contrib/ole2/w32ole.c
+  * harbour/contrib/ole2/win32ole.prg
+    * changed deinitialization code to allow using OLE in .prg object
+      destructors and user EXIT functions
+    * added support for FOR EACH overloading - not tested please check
+    % use BEGIN SEQUENCE WITH as TRY / CATCH replacement
+
 2007-06-04 22:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbzlib/include/stdafx.h
   * harbour/contrib/hbzlib/include/ziparchive.h
