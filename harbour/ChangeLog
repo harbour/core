@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-05 21:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+    * formatting
+  * harbour/include/hbexpra.c
+    + added comment
+  * harbour/source/common/expropt2.c
+    + added optimization for <constValue> == NIL, <constValue> = NIL,
+      <constValue> != NIL
+    ! disabled in macro compiler buggy Clipper compiler optimization
+      for expressions like: AT( "", "" ), "" $ "", CHR(256), now the
+      folowwing code gives the same results when compiled by Clipper
+      and Harbour:
+            proc main()
+               ? ""$"", &('""$""')
+               ? AT(""," "), &('AT(""," ")')
+               ? LEN(CHR(0)+CHR(256)), &('LEN(CHR(0)+CHR(256))')
+            return
+
 2007-06-05 20:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/doc/linux1st.txt
      + Added info about required Ubuntu packages.

@@ -527,7 +527,7 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 typedef struct HB_MACRO_    /* a macro compiled pcode container */
 {
    /* common to compiler members */
-   int    mode;
+   int    mode;            /* HB_MODE_* */
    ULONG  supported;       /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 
@@ -571,7 +571,7 @@ HB_EXPRLST, * PHB_EXPRLST;
 typedef struct _HB_COMP
 {
    /* common to macro compiler members */
-   int    mode;
+   int    mode;            /* HB_MODE_* */
    ULONG  supported;       /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
 

@@ -653,17 +653,20 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
 HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
-   if( ( pSelf->value.asOperator.pLeft->ExprType == pSelf->value.asOperator.pRight->ExprType ) && pSelf->value.asOperator.pLeft->ExprType == HB_ET_STRING )
+   if( pSelf->value.asOperator.pLeft->ExprType == pSelf->value.asOperator.pRight->ExprType &&
+       pSelf->value.asOperator.pLeft->ExprType == HB_ET_STRING )
    {
       /* Both arguments are literal strings
        */
       BOOL bResult;
 
       /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
-               when an empty string is searched [vszakats] */
-
+       *       when an empty string is searched [vszakats]
+       *       But this bug exists only in compiler optimizer and
+       *       macro compiler does not have optimizer [druzus]
+       */
       if( pSelf->value.asOperator.pLeft->ulLength == 0 )
-         bResult = TRUE;
+         bResult = HB_COMP_PARAM->mode == HB_MODE_COMPILER;
       else
          bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString.string, pSelf->value.asOperator.pLeft->ulLength,
                      pSelf->value.asOperator.pRight->value.asString.string, pSelf->value.asOperator.pRight->ulLength ) != 0 );
@@ -765,6 +768,29 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             pSelf->value.asLogical = FALSE;
             break;
       }
+   }
+   else if( ( pLeft->ExprType == HB_ET_NIL &&
+              ( pRight->ExprType == HB_ET_NUMERIC ||
+                pRight->ExprType == HB_ET_LOGICAL ||
+                pRight->ExprType == HB_ET_DATE ||
+                pRight->ExprType == HB_ET_STRING ||
+                pRight->ExprType == HB_ET_CODEBLOCK ||
+                pRight->ExprType == HB_ET_ARRAY ||
+                pRight->ExprType == HB_ET_FUNREF ) ) ||
+            ( pRight->ExprType == HB_ET_NIL &&
+              ( pLeft->ExprType == HB_ET_NUMERIC ||
+                pLeft->ExprType == HB_ET_LOGICAL ||
+                pLeft->ExprType == HB_ET_DATE ||
+                pLeft->ExprType == HB_ET_STRING ||
+                pLeft->ExprType == HB_ET_CODEBLOCK ||
+                pLeft->ExprType == HB_ET_ARRAY ||
+                pLeft->ExprType == HB_ET_FUNREF ) ) )
+   {
+      HB_COMP_EXPR_FREE( pLeft );
+      HB_COMP_EXPR_FREE( pRight );
+      pSelf->ExprType = HB_ET_LOGICAL;
+      pSelf->ValType  = HB_EV_LOGICAL;
+      pSelf->value.asLogical = TRUE;
    }
    /* TODO: add checking of incompatible types
    else
@@ -1058,7 +1084,7 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             /* NOTE: when not exact comparison (==) is used 
              * the result depends on SET EXACT setting then it
              * cannot be optimized except the case when NULL string are
-             * compared - "" = "" is always FALSE regardless of EXACT
+             * compared - "" = "" is always TRUE regardless of EXACT
              * setting
              */
             if( pSelf->ExprType == HB_EO_EQ ||
@@ -1111,6 +1137,29 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             pSelf->value.asLogical = TRUE;
             break;
       }
+   }
+   else if( ( pLeft->ExprType == HB_ET_NIL &&
+              ( pRight->ExprType == HB_ET_NUMERIC ||
+                pRight->ExprType == HB_ET_LOGICAL ||
+                pRight->ExprType == HB_ET_DATE ||
+                pRight->ExprType == HB_ET_STRING ||
+                pRight->ExprType == HB_ET_CODEBLOCK ||
+                pRight->ExprType == HB_ET_ARRAY ||
+                pRight->ExprType == HB_ET_FUNREF ) ) ||
+            ( pRight->ExprType == HB_ET_NIL &&
+              ( pLeft->ExprType == HB_ET_NUMERIC ||
+                pLeft->ExprType == HB_ET_LOGICAL ||
+                pLeft->ExprType == HB_ET_DATE ||
+                pLeft->ExprType == HB_ET_STRING ||
+                pLeft->ExprType == HB_ET_CODEBLOCK ||
+                pLeft->ExprType == HB_ET_ARRAY ||
+                pLeft->ExprType == HB_ET_FUNREF ) ) )
+   {
+      HB_COMP_EXPR_FREE( pLeft );
+      HB_COMP_EXPR_FREE( pRight );
+      pSelf->ExprType = HB_ET_LOGICAL;
+      pSelf->ValType  = HB_EV_LOGICAL;
+      pSelf->value.asLogical = FALSE;
    }
    /* TODO: add checking of incompatible types
    else
@@ -1372,10 +1421,12 @@ BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
    {
-      /* This is CA-Clipper optimizer behavior */
+      /* This is CA-Clipper compiler optimizer behavior,
+       * macro compiler does not have optimizer [druzus]
+       */
       if( pSub->ulLength == 0 )
       {
-         pReduced = hb_compExprNewLong( 1, HB_COMP_PARAM );
+         pReduced = hb_compExprNewLong( HB_COMP_PARAM->mode == HB_MODE_COMPILER ? 1 : 0, HB_COMP_PARAM );
       }
       else
       {
@@ -1404,16 +1455,20 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    if( pArg->ExprType == HB_ET_NUMERIC )
    {
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
-               CHR() cases where the passed parameter is a constant which
-               can be divided by 256 but it's not zero, in this case it
-               will return an empty string instead of a Chr(0). [vszakats] */
+       *       CHR() cases where the passed parameter is a constant which
+       *       can be divided by 256 but it's not zero, in this case it
+       *       will return an empty string instead of a Chr(0). [vszakats]
+       *       But this bug exist only in compiler and macro compiler does
+       *       not have optimizer [druzus]
+       */
 
       HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
       pExpr->ValType = HB_EV_STRING;
       if( pArg->value.asNum.NumType == HB_ET_LONG )
       {
-         if( ( pArg->value.asNum.val.l & 0xff ) == 0 &&
+         if( HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
+             ( pArg->value.asNum.val.l & 0xff ) == 0 &&
                pArg->value.asNum.val.l != 0 )
          {
             pExpr->value.asString.string = "";
@@ -1538,7 +1593,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-      
+
    if( pArg->ExprType == HB_ET_STRING )
    {
       ULONG ulLen = pArg->ulLength;
