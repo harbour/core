@@ -104,13 +104,22 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
 #if defined( HB_PCRE_REGEX )
-   int iResult;
+   int iResult, i;
+
+   for( i = 0; i < iMatches; i++ )
+      HB_REGMATCH_EO( aMatches, i ) = -1;
 
    iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
                         szString, ulLen, 0 /* startoffset */,
                         pRegEx->iEFlags, aMatches, iMatches + 1 );
    if( iResult == 0 )
-      iResult = iMatches;
+   {
+      for( i = 0; i < iMatches; i++ )
+      {
+         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+            iResult = i + 1;
+      }
+   }
    return iResult;
 #elif defined( HB_POSIX_REGEX )
    char * szBuffer = NULL;
