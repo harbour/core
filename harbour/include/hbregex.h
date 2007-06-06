@@ -94,7 +94,7 @@ typedef HB_REGEX * PHB_REGEX;
 
 #if defined( HB_PCRE_REGEX )
    #define HB_REGMATCH              int
-   #define HB_REGMATCH_SIZE( n )    ( ( n + 1 ) * 3 )
+   #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
 #elif defined( HB_POSIX_REGEX )

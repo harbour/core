@@ -106,12 +106,9 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, ULONG ulLen,
 #if defined( HB_PCRE_REGEX )
    int iResult, i;
 
-   for( i = 0; i < iMatches; i++ )
-      HB_REGMATCH_EO( aMatches, i ) = -1;
-
    iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
                         szString, ulLen, 0 /* startoffset */,
-                        pRegEx->iEFlags, aMatches, iMatches + 1 );
+                        pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
    if( iResult == 0 )
    {
       for( i = 0; i < iMatches; i++ )

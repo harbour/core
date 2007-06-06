@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-06 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbregex.h
+  * harbour/source/rtl/hbregex.c
+    ! fixed GPF and removed two hacks
+
 2007-06-06 14:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbregex.c
     ! added workaround for some wrong hack (to check if both can be
