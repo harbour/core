@@ -102,7 +102,6 @@ extern void       hb_objDestructorCall( PHB_ITEM pObject );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */
-extern BOOL       hb_bProfiler;                 /* profiler activity status */
 extern void       hb_mthAddTime( ULONG );       /* profiler from classes.c */
 #endif
 

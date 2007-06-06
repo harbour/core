@@ -169,8 +169,10 @@ static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
+#ifndef HB_NO_DEBUG
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
+#endif
 
 /* Push */
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
@@ -222,10 +224,15 @@ static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the 
 #ifndef HB_NO_PROFILER
 static ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ];/* array to profile opcodes calls */
 static ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed time */
-BOOL hb_bProfiler = FALSE;                        /* profiler status is off */
+static BOOL  hb_bProfiler = FALSE;                        /* profiler status is off */
 #endif
 
-BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
+#ifdef HB_NO_TRACE
+#  define HB_TRACE_PRG( _TRMSG_ )
+#else
+static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
+#  define HB_TRACE_PRG( _TRMSG_ ) if( hb_bTracePrgCalls ) HB_TRACE( HB_TR_ALWAYS, _TRMSG_ )
+#endif
 
 #ifdef HARBOUR_START_PROCEDURE
    char *s_pszLinkedMain = NULL; /* name of starup function set by linker */
@@ -1075,8 +1082,10 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                      hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo));
 
             hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
+#ifndef HB_NO_DEBUG
             if( s_bDebugging )
                hb_vmDebuggerShowLine( hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo );
+#endif
             w += 3;
             break;
 
@@ -4765,8 +4774,9 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
    PHB_ITEM pSelf;
+#ifndef HB_NO_DEBUG
    BOOL bDebugPrevState;
-
+#endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -4787,8 +4797,10 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
+#ifndef HB_NO_DEBUG
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
+#endif
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
@@ -4799,9 +4811,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
          pExecSym = pExecSym->pDynSym->pSymbol;
       if( pExecSym && pExecSym->value.pFunPtr )
       {
-         if( hb_bTracePrgCalls )
-            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
-
+         HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
          if( pExecSym->scope.value & HB_FS_PCODEFUNC )
             /* Running pCode dynamic function from .HRB */
             hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
@@ -4825,9 +4835,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
          pSym = pSym->pDynSym->pSymbol;
       if( pSym->value.pFunPtr )
       {
-         if( hb_bTracePrgCalls )
-            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
-
+         HB_TRACE_PRG(("Calling: %s", pSym->szName));
 #ifndef HB_NO_PROFILER
          if( bProfiler && pSym->pDynSym )
             pSym->pDynSym->ulRecurse++;
@@ -4853,9 +4861,11 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
          hb_errRT_BASE_SubstR( EG_NOFUNC, 1001, NULL, pSym->szName, HB_ERR_ARGS_BASEPARAMS );
    }
 
+#ifndef HB_NO_DEBUG
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
    s_bDebugging = bDebugPrevState;
+#endif
 
    hb_stackOldFrame( &sStackState );
 }
@@ -4866,7 +4876,9 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    PHB_SYMB pSym;
    PHB_SYMB pExecSym;
    PHB_ITEM pSelf;
+#ifndef HB_NO_DEBUG
    BOOL bDebugPrevState;
+#endif
 #ifndef HB_NO_PROFILER
    ULONG ulClock = 0;
    BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -4887,16 +4899,17 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
+#ifndef HB_NO_DEBUG
    bDebugPrevState = s_bDebugging;
    s_bDebugging = FALSE;
+#endif
 
    pExecSym = hb_objGetMethod( pSelf, pSym, &sStackState );
    if( pExecSym && ( pExecSym->scope.value & HB_FS_DEFERRED ) && pExecSym->pDynSym )
       pExecSym = pExecSym->pDynSym->pSymbol;
    if( pExecSym && pExecSym->value.pFunPtr )
    {
-      if( hb_bTracePrgCalls )
-         HB_TRACE(HB_TR_ALWAYS, ("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
+      HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
       if( pExecSym->scope.value & HB_FS_PCODEFUNC )
          /* Running pCode dynamic function from .HRB */
@@ -4915,9 +4928,11 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 
+#ifndef HB_NO_DEBUG
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
    s_bDebugging = bDebugPrevState;
+#endif
 
    hb_stackOldFrame( &sStackState );
 }
@@ -5195,14 +5210,17 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmModuleName(%s)", szModuleName));
 
+#ifndef HB_NO_DEBUG
    if( s_pFunDbgEntry )
    {
       s_bDebugging = FALSE;
       s_pFunDbgEntry( HB_DBG_MODULENAME, 0, szModuleName, 0, 0 );
       s_bDebugging = TRUE;
    }
+#endif
 }
 
+#ifndef HB_NO_DEBUG
 static void hb_vmDebuggerEndProc( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDebuggerEndProc()"));
@@ -5221,6 +5239,7 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
    s_pFunDbgEntry( HB_DBG_SHOWLINE, uiLine, NULL, 0, 0 );
    s_bDebugging = bDebugging;
 }
+#endif
 
 static void hb_vmFrame( USHORT usLocals, BYTE bParams )
 {
@@ -7099,8 +7118,10 @@ HB_EXPORT void hb_xvmSetLine( USHORT uiLine )
    HB_TRACE(HB_TR_DEBUG, ("hb_xvmSetLine(%hu)", uiLine));
 
    hb_stackBaseItem()->item.asSymbol.stackstate->uiLineNo = uiLine;
+#ifndef HB_NO_DEBUG
    if( s_bDebugging )
       hb_vmDebuggerShowLine( uiLine );
+#endif
 }
 
 HB_EXPORT void hb_xvmFrame( int iLocals, int iParams )
@@ -9354,11 +9375,14 @@ HB_FUNC( __SETPROFILER )
  * $End$ */
 HB_FUNC( __TRACEPRGCALLS )
 {
+#ifdef HB_NO_TRACE
+   hb_retl( FALSE );
+#else
    BOOL bOldValue = hb_bTracePrgCalls;
-
-   hb_bTracePrgCalls = hb_parl( 1 );
-
+   if( ISLOG( 1 ) )
+      hb_bTracePrgCalls = hb_parl( 1 );
    hb_retl( bOldValue );
+#endif
 }
 
 HB_FUNC( __OPCOUNT ) /* it returns the total amount of opcodes */
