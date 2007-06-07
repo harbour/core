@@ -105,9 +105,11 @@ URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       Przemysaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
 BuildPrereq:    gcc binutils bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
-Requires:       gcc binutils bash sh-utils %{name}-lib = %{version}
+Requires:       gcc binutils bash sh-utils %{name}-lib = %{epoch}:%{version}-%{release}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
+
+%define		_noautoreq	'libharbour.*'
 
 %description
 %{dname} is a CA-Clipper compatible compiler for multiple platforms. This
@@ -173,7 +175,7 @@ Summary:        Static runtime libaries for %{dname} compiler
 Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
 Summary(ru):    ����������� ��������%{dname}
 Group:          Development/Languages
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description static
 %{dname} is a Clipper compatible compiler.
@@ -202,7 +204,7 @@ Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
 Summary(ru):    ����� � ��� contrib ��������%{dname}
 Group:          Development/Languages
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description contrib
 %{dname} is a Clipper compatible compiler.
@@ -232,7 +234,7 @@ Summary:        Clipper/Harbour/xBase compatible Pre-Processor, DOT prompt and i
 Summary(pl):    Kompatybilny z Clipper/Harbour/xBase Preprocesor i interpreter
 Summary(ru):    �������Clipper/Harbour/xBase ������ ��������License:        GPL
 Group:          Development/Languages
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description pp
 %{dname} is a Clipper compatible compiler.

@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-07 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+    * some minor cleanups in Requires section and added %{epoch}
+  * harbour/make_rpm.sh
+    * build Harbour GD library only when GD 2.0 or newer is installed
+
 2007-06-06 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbregex.h
   * harbour/source/rtl/hbregex.c

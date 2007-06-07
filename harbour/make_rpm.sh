@@ -98,7 +98,8 @@ then
 fi
 if test_reqrpm "gd-devel"
 then 
-    INST_PARAM="${INST_PARAM} --with gd"
+    v=`rpm -q gd|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
+    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
 if test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel"
 then
