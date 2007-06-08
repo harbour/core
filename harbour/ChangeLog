@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-08 14:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    ! generate valid RT errors in some methods so NETERR() can be
+      properly set
+
 2007-06-08 06:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
     * restored original national characters which were unintentionally
