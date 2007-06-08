@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-08 06:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+    * restored original national characters which were unintentionally
+      damaged on 2006-06-29 08:25 UTC+0200 Tomaz Zupan
+      Toma¾ please do not use editors which will change national characters
+      in the whole file when you will change harbour.spec in the future
+
 2007-06-07 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
     * some minor cleanups in Requires section and added %{epoch}
