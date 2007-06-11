@@ -332,7 +332,30 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    }
    else
    {
-      fprintf( yyc, "/* Empty source file */\n\n" );
+      pInline = HB_COMP_PARAM->inlines.pFirst;
+      while( pInline )
+      {
+         if( pInline->pCode )
+         {
+            if( !bIsInlineFunction )
+            {
+               fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+               if( HB_COMP_PARAM->iGenCOutput != HB_COMPGENC_COMPACT )
+                  fprintf( yyc, "#include \"hbpcode.h\"\n" );
+               fprintf( yyc, "#include \"hbinit.h\"\n" );
+               if( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_REALCODE )
+                  fprintf( yyc, "#include \"hbxvm.h\"\n" );
+               bIsInlineFunction = TRUE;
+            }
+            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
+            if( pInline->szName )
+               fprintf( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName );
+            fprintf( yyc, "%s", pInline->pCode );
+         }
+         pInline = pInline->pNext;
+      }
+      if( !bIsInlineFunction )
+         fprintf( yyc, "\n/* Empty source file */\n" );
    }
 
    fclose( yyc );

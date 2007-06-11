@@ -4309,7 +4309,7 @@ static void hb_vmArrayPop( void )
    if( HB_IS_ARRAY( pArray ) )
    {
       if( HB_IS_OBJECT( pArray ) &&
-          hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, pValue ) )
+          hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pValue, pArray, pIndex, pValue ) )
       {
          hb_stackPop();
          hb_stackPop();
@@ -4358,7 +4358,7 @@ static void hb_vmArrayPop( void )
                         3, pArray, pIndex, pValue );
    }
 /* #endif */
-   else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, pValue ) )
+   else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pValue, pArray, pIndex, pValue ) )
    {
       hb_stackPop();
       hb_stackPop();
@@ -8841,7 +8841,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       if( HB_IS_OBJECT( pArray ) && hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
       {
          hb_vmPushNumInt( ulIndex );
-         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray,
+         hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pValue, pArray,
                              hb_stackItemFromTop( -1 ), pValue );
          hb_stackPop();
          hb_stackPop();
@@ -8914,7 +8914,7 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
    else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
    {
       hb_vmPushNumInt( ulIndex );
-      hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray,
+      hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pValue, pArray,
                           hb_stackItemFromTop( -1 ), pValue );
       hb_stackPop();
       hb_stackPop();

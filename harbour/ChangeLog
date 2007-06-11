@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-11 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/genc.c
+    * allow to use #pragma begindump / enddump in .prg files without
+      any .prg code
+
+  * harbour/source/vm/hvm.c
+    ! fixed assign in overloaded []
+
 2007-06-08 14:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
     ! generate valid RT errors in some methods so NETERR() can be
