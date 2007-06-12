@@ -2778,7 +2778,6 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
        * do not have time to change it so I simply restored this
        * functionality, Druzus.
        */
-      u32RetVal = AE_SUCCESS;
       hTable = pArea->hTable;
       hStatement = pArea->hStatement;
    }

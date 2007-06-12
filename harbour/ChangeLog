@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-12 23:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+    * cleaned BCC warning 
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    + added set of hb_arraySet*() functions - I hope they will help 3-rd
+      party developers to eliminate using C stack level HB_ITEM and
+      reduce usage of potentially danger function like hb_arrayGetItemPtr()
+
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + added hb_itemReturnRelease()
+
+  * harbour/include/hbcompat.ch
+    + added hb_pvalue() <-> pvalue() translations
+
+  * harbour/source/vm/pvalue.c
+    + added support for 2-nd parameter for assugb operation, f.e. now
+         hb_pvalue( 3, "abc" )
+      sets "abc" to 3-rd function parameter
+
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbopt.c
+    ! fixed two buggy optimizations
+
 2007-06-11 16:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/ChangeLog
    + harbour/ChangeLog.018

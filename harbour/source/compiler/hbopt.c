@@ -503,7 +503,8 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
 
    HB_SYMBOL_UNUSED( cargo );
 
-   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR )
+   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPTRUEFAR;
@@ -524,7 +525,8 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
 
    HB_SYMBOL_UNUSED( cargo );
 
-   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR )
+   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPFALSEFAR;

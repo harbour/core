@@ -657,11 +657,9 @@ extern HB_EXPORT BOOL      hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* ins
 extern HB_EXPORT BOOL      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
 extern HB_EXPORT BOOL      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
 extern HB_EXPORT BOOL      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
-extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
-extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
 extern HB_EXPORT BOOL      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern HB_EXPORT BOOL      hb_arrayGetItemRef( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* create a reference to an array element */
-/* hb_arrayGetItemPtr() is dangerous */
+/* hb_arrayGetItemPtr() is dangerous, be sure that base ARRAY value will not be changed (f.e. resized) */
 extern HB_EXPORT PHB_ITEM  hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
 extern HB_EXPORT ULONG     hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
 extern HB_EXPORT char *    hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
@@ -676,6 +674,20 @@ extern HB_EXPORT double    hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* r
 extern HB_EXPORT char *    hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
 extern HB_EXPORT HB_TYPE   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
+extern HB_EXPORT BOOL      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
+extern HB_EXPORT BOOL      hb_arraySetForward( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element by forwarding it's value */
+extern HB_EXPORT BOOL      hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate );
+extern HB_EXPORT BOOL      hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate );
+extern HB_EXPORT BOOL      hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue );
+extern HB_EXPORT BOOL      hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber );
+extern HB_EXPORT BOOL      hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber );
+extern HB_EXPORT BOOL      hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber );
+extern HB_EXPORT BOOL      hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, HB_LONG lNumber );
+extern HB_EXPORT BOOL      hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber );
+extern HB_EXPORT BOOL      hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, char * szText );
+extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL      hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL      hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
 extern HB_EXPORT ULONG     hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern HB_EXPORT ULONG     hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */
@@ -717,6 +729,7 @@ extern HB_EXPORT void      hb_hashClearFlags( PHB_ITEM pHash, int iFlags );
 extern HB_EXPORT int       hb_hashGetFlags( PHB_ITEM pHash );
 extern HB_EXPORT void *    hb_hashId( PHB_ITEM pHash ); /* retrieves the hash unique ID */
 
+/* hb_hashGetItem*() are dangerous, be sure that base HASH value will not be changed */
 extern HB_EXPORT PHB_ITEM  hb_hashGetItemPtr( PHB_ITEM pHash, PHB_ITEM pKey, int iFlags );
 extern HB_EXPORT PHB_ITEM  hb_hashGetItemRefPtr( PHB_ITEM pHash, PHB_ITEM pKey );
 extern HB_EXPORT PHB_ITEM  hb_hashGetKeyAt( PHB_ITEM pHash, ULONG ulPos );

@@ -609,6 +609,164 @@ HB_TYPE hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
+HB_EXPORT BOOL hb_arraySetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetDL( PHB_ITEM pArray, ULONG ulIndex, LONG lDate )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDL(%p, %lu, %ld)", pArray, ulIndex, lDate));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutDL( pArray->item.asArray.value->pItems + ulIndex - 1, lDate );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetL( PHB_ITEM pArray, ULONG ulIndex, BOOL fValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetL(%p, %lu, %d)", pArray, ulIndex, fValue));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutL( pArray->item.asArray.value->pItems + ulIndex - 1, fValue );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetNI( PHB_ITEM pArray, ULONG ulIndex, int iNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNI(%p, %lu, %d)", pArray, ulIndex, iNumber));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutNI( pArray->item.asArray.value->pItems + ulIndex - 1, iNumber );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG lNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNL(%p, %lu, %lu)", pArray, ulIndex, lNumber));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutNL( pArray->item.asArray.value->pItems + ulIndex - 1, lNumber );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+#ifndef HB_LONG_LONG_OFF
+HB_EXPORT BOOL hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNLL(%p, %lu, %" PFLL "d)", pArray, ulIndex, llNumber));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutNLL( pArray->item.asArray.value->pItems + ulIndex - 1, llNumber );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+#endif
+
+HB_EXPORT BOOL hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, HB_LONG lNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNLL(%p, %lu, %" PFHL "d)", pArray, ulIndex, lNumber));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutNInt( pArray->item.asArray.value->pItems + ulIndex - 1, lNumber );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetND(%p, %lu, %lf)", pArray, ulIndex, dNumber));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutND( pArray->item.asArray.value->pItems + ulIndex - 1, dNumber );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p)", pArray, ulIndex, szText));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutC( pArray->item.asArray.value->pItems + ulIndex - 1, szText );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutCL( pArray->item.asArray.value->pItems + ulIndex - 1, szText, ulLen );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetCPtr(%p, %lu)", pArray, ulIndex, szText, ulLen));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutCPtr( pArray->item.asArray.value->pItems + ulIndex - 1, szText, ulLen );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
+HB_EXPORT BOOL hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtr(%p, %lu, %p)", pArray, ulIndex, pValue));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutPtr( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
 BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayLast(%p, %p)", pArray, pResult));

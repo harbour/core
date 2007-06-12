@@ -57,12 +57,14 @@
 
 HB_FUNC( HB_PVALUE )
 {
+   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem;
    USHORT uiParam = hb_parni( 1 );
-   LONG lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem; /* Skip function + self */
-   PHB_ITEM pBase = hb_stackItem( lOffset ); 
 
-   if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt ) /* Valid number */
-      hb_itemReturn( hb_stackItem( lOffset + 1 + uiParam ) );
-   else
-      hb_ret();    /* return NIL */
+   if( uiParam && uiParam <= hb_stackItem( lOffset )->item.asSymbol.paramcnt )
+   {
+      PHB_ITEM pItem = hb_stackItem( lOffset + 1 + uiParam );
+      if( hb_pcount() > 1 )
+         hb_itemCopyToRef( pItem, hb_param( 2, HB_IT_ANY ) );
+      hb_itemReturn( HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );
+   }
 }

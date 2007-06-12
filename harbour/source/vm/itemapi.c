@@ -645,6 +645,17 @@ HB_EXPORT PHB_ITEM hb_itemReturnForward( PHB_ITEM pItem )
    return pItem;
 }
 
+HB_EXPORT void hb_itemReturnRelease( PHB_ITEM pItem )
+{
+   HB_TRACE_STEALTH( HB_TR_DEBUG, ("hb_itemReturnRelease(%p)", pItem ) );
+
+   if( pItem )
+   {
+      hb_itemMove( hb_stackReturnItem(), pItem );
+      hb_itemRelease( pItem );
+   }
+}
+
 
 HB_EXPORT PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, const char * szDate )
 {

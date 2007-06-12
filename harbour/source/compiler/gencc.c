@@ -74,6 +74,12 @@ void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
    fputc( '"', yyc );
 }
 
+static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
+{
+   if( iLocal1 != iLocal2 )
+      fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
+}
+
 static int hb_gencc_checkJumpCondAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos, PHB_LABEL_INFO cargo,
                                         char * szFunc )
 {
@@ -1128,50 +1134,54 @@ static HB_GENC_FUNC( hb_p_pushlocal )
 {
    HB_GENC_LABEL();
 
-   switch( pFunc->pCode[ lPCodePos + 3 ] )
+   if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 )
    {
-      case HB_P_POPLOCALNEAR:
-         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
-                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
-                  ( signed char ) pFunc->pCode[ lPCodePos + 4 ] );
-         return 5;
+      switch( pFunc->pCode[ lPCodePos + 3 ] )
+      {
+         case HB_P_POPLOCALNEAR:
+            hb_gencc_copyLocals( cargo->yyc,
+                        HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                        ( signed char ) pFunc->pCode[ lPCodePos + 4 ] );
+            return 5;
 
-      case HB_P_POPLOCAL:
-         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
-                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
-                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
-         return 6;
-
-      default:
-         fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
-                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-         return 3;
+         case HB_P_POPLOCAL:
+            hb_gencc_copyLocals( cargo->yyc,
+                        HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                        HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
+            return 6;
+      }
    }
+
+   fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
+            HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+   return 3;
 }
 
 static HB_GENC_FUNC( hb_p_pushlocalnear )
 {
    HB_GENC_LABEL();
 
-   switch( pFunc->pCode[ lPCodePos + 2 ] )
+   if( HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 )
    {
-      case HB_P_POPLOCALNEAR:
-         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
-                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
-                  ( signed char ) pFunc->pCode[ lPCodePos + 3 ] );
-         return 4;
+      switch( pFunc->pCode[ lPCodePos + 2 ] )
+      {
+         case HB_P_POPLOCALNEAR:
+            hb_gencc_copyLocals( cargo->yyc,
+                        ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
+                        ( signed char ) pFunc->pCode[ lPCodePos + 3 ] );
+            return 4;
 
-      case HB_P_POPLOCAL:
-         fprintf( cargo->yyc, "\thb_xvmCopyLocals( %d, %d );\n",
-                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
-                  HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
-         return 5;
-
-      default:
-         fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
-                  ( signed char ) pFunc->pCode[ lPCodePos + 1 ] );
-         return 2;
+         case HB_P_POPLOCAL:
+            hb_gencc_copyLocals( cargo->yyc,
+                        ( signed char ) pFunc->pCode[ lPCodePos + 1 ],
+                        HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
+            return 5;
+      }
    }
+
+   fprintf( cargo->yyc, "\thb_xvmPushLocal( %d );\n",
+            ( signed char ) pFunc->pCode[ lPCodePos + 1 ] );
+   return 2;
 }
 
 static HB_GENC_FUNC( hb_p_pushlocalref )
@@ -1336,7 +1346,8 @@ static HB_GENC_FUNC( hb_p_pushsym )
    HB_GENC_LABEL();
 
    if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 &&
-       pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHNIL )
+       pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHNIL &&
+       HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 )
    {
       fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
                HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
@@ -1353,7 +1364,8 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
    HB_GENC_LABEL();
 
    if( HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 &&
-       pFunc->pCode[ lPCodePos + 2 ] == HB_P_PUSHNIL )
+       pFunc->pCode[ lPCodePos + 2 ] == HB_P_PUSHNIL &&
+       HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 )
    {
       fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
                pFunc->pCode[ lPCodePos + 1 ] );

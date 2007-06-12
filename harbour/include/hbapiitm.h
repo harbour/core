@@ -129,6 +129,7 @@ extern HB_EXPORT PHB_ITEM   hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym );
 extern HB_EXPORT BOOL       hb_itemRelease  ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemReturn   ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_itemReturnForward( PHB_ITEM pItem );
+extern HB_EXPORT void       hb_itemReturnRelease( PHB_ITEM pItem );
 extern HB_EXPORT ULONG      hb_itemSize     ( PHB_ITEM pItem );
 extern HB_EXPORT HB_TYPE    hb_itemType     ( PHB_ITEM pItem );
 extern HB_EXPORT char *     hb_itemTypeStr  ( PHB_ITEM pItem );
