@@ -3,6 +3,32 @@
  */
 
 ----------------------------------------------------------------------
+Version 1.1.1 Devel Build (2007-06-14) tag: build48
+
+- added support for writable string enumerators (s:="abc";for each c in @s;...)
+- cleaned the syntax and strange unsupported but accepted by [macro]compiler
+  constructions
+- added BEGIN SEQUENCE [WITH <bErrorBlock>] / RECOVER [USING <oErr>] /
+        ALWAYS / END
+- new debugger code with low level C interface borrowed from xHarbour
+- added hash tables
+- speed improvement
+- added regular expressions
+- added internet sockets
+- added checksum functions
+- added support for execution .prg scripts in hbrun
+- added HB_COMPAT_XHB macro which allows to enable many xHarbour extensions
+- added to default PP tables defines from hbsetup.ch
+- added #ytranslate, #ycommand, #yuntranslate, #yuncommand
+- fixes in BROWSE, GET and some other .prg classes
+- fixed UFT8/UNICODE translations for control characters in GTSLN and GTXWC
+- cleaned many memory leaks in Compiler
+- added separated compiler library which can be linked with VM and RTL
+  libraries
+- cleaned some possible bad side effects in cross references
+- many other fixes, improvements and extensions - see ChangeLog for details
+
+----------------------------------------------------------------------
 Version 0.47 Alpha Build 47 (2007-01-09) tag: build47
 
 The compiler
