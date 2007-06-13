@@ -305,15 +305,20 @@ RETURN oInstance
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
+   LOCAL c
+
    DEFAULT lNoInit TO .F.
    DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
 
    // Default Init for Logical and numeric
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
-      IF Upper( Left( cType, 1 ) ) == "L"
+      c := Upper( Left( cType, 1 ) )
+      IF c == "L"       /* Logical */
          xInit := .F.
-      ELSEIF Upper( Left( cType, 1 ) ) $ "NI"   /* Numeric Int */
+      ELSEIF c $ "NI"   /* Numeric or Integer */
          xInit := 0
+      ELSEIF c == "D"   /* Date */
+         xInit := Ctod("")
       ENDIF
    ENDIF
 
@@ -351,6 +356,8 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
          xInit := .F.
       ELSEIF c $ "NI"   /* Numeric or Integer */
          xInit := 0
+      ELSEIF c == "D"   /* Date */
+         xInit := Ctod("")
       ENDIF
    ENDIF
 

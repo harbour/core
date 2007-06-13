@@ -126,6 +126,10 @@
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 
+   /* EXTENDED CODEBLOCKs */
+   #xtranslate \<|[<x,...>]| => {|<x>|
+   #xcommand > [<*x*>]       => } <x>
+
 #endif
 
 #endif /* __HARBOUR__ */

@@ -549,12 +549,7 @@ NumValue   : NUM_DOUBLE          { $$ = hb_compExprNewDouble( $1.dNumber, $1.bWi
            | NUM_LONG            { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
-DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_PARAM );
-                                    if( $1.lNumber == 0 )
-                                    {
-                                       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, HB_COMP_PARAM->pLex->lasttok, NULL );
-                                    }
-                                 }
+DateValue  : NUM_DATE            { $$ = hb_compExprNewDate( $1.lNumber, HB_COMP_PARAM ); }
            ;
 
 NumAlias   : NUM_LONG    ALIASOP    { $$ = hb_compExprNewLong( $1.lNumber, HB_COMP_PARAM ); }

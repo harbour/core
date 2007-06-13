@@ -1621,22 +1621,59 @@ static HB_GENC_FUNC( hb_p_switch )
 {
    USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
    ULONG ulStart = lPCodePos, ulNewPos;
+   BOOL fNum = FALSE, fStr = FALSE;
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch = hb_stackItemFromTop( -1 );\n"
-                        "\t\tHB_TYPE type = hb_itemType( pSwitch );\n"
-                        "\t\tchar * pszText = (type & HB_IT_STRING) ? hb_itemGetCPtr( pSwitch ) : NULL;\n"
-                        "\t\tlong lVal = (type & HB_IT_NUMINT) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
+   for( us = 0; us < usCases; ++us )
+   {
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_PUSHLONG:
+            fNum = TRUE;
+            lPCodePos += 5;
+            break;
+         case HB_P_PUSHSTRSHORT:
+            fStr = TRUE;
+            lPCodePos += 2 + pFunc->pCode[ lPCodePos + 1 ];
+            break;
+         case HB_P_PUSHNIL:
+            /* default clause */
+            lPCodePos++;
+            break;
+      }
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_JUMPNEAR:
+            ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+            lPCodePos += 2;
+            break;
+         case HB_P_JUMP:
+            ulNewPos = lPCodePos + HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 3;
+            break;
+         /*case HB_P_JUMPFAR:*/
+         default:
+            ulNewPos = lPCodePos + HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+            lPCodePos += 4;
+            break;
+      }
+   }
+
+   lPCodePos = ulStart;
+   if( fStr || fNum )
+   {
+      fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch = hb_stackItemFromTop( -1 );\n"
+                           "\t\tHB_TYPE type = hb_itemType( pSwitch );\n" );
+      if( fStr )
+         fprintf( cargo->yyc, "\t\tchar * pszText = (type & HB_IT_STRING) ? hb_itemGetCPtr( pSwitch ) : NULL;\n" );
+      if( fNum )
+         fprintf( cargo->yyc, "\t\tlong lVal = (type & HB_IT_NUMINT) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
+   }
+
    lPCodePos += 3;
    for( us = 0; us < usCases; ++us )
    {
-#if 0
-      /* only for test function - can be removed */
-      if( lPCodePos >= pFunc->lPCodePos )
-         break;
-#endif
-
       switch( pFunc->pCode[ lPCodePos ] )
       {
          case HB_P_PUSHLONG:

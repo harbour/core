@@ -335,6 +335,13 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          }
          else
             yylval_ptr->valLong.lNumber = 0;
+
+         if( yylval_ptr->valLong.lNumber == 0 &&
+             strcmp( pToken->value + 2, "0" ) != 0 &&
+             strcmp( pToken->value + 2, "00000000" ) != 0 )
+         {
+            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_DATE, pToken->value, NULL );
+         }
          return NUM_DATE;
 
       case HB_PP_TOKEN_STRING:

@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-14 00:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    + added translation rules for extended code blocks
+
+  * harbour/source/compiler/gencc.c
+    * cleaned C compiler warnings in -gc3 output and SWITCH <exp>
+      statement
+
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * allow to use 0d0 and 0d00000000 as empty date value
+
+  * harbour/source/pp/Makefile
+    * workaround for problems with some GNU make  versions,
+      f.e. 3.76.1 on OS2
+
 2007-06-12 23:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
     * cleaned BCC warning 

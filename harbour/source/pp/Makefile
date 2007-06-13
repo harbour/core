@@ -16,7 +16,9 @@ LIBNAME=pp
 LIBS=\
 	common \
 
-HB_PPGEN_PATH ?= .
+ifeq ($(HB_PPGEN_PATH),)
+   HB_PPGEN_PATH=.
+endif
 
 include $(TOP)$(ROOT)config/lib.cf
 
