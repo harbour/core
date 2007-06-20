@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-20 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtchrmap.c
+    * removed 'static const' from s_szDefaultCharMapFile declaration
+      I forgot that it was used by some build scripts I made public
+      few years ago - I'll change these declaration when I'll add
+      alternative method of changing default charmap file.
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    + added support for SetBlink(.f.) working like in GTCRS and GTSLN.
+      We cannot change from the server side the interpretation of BLINK
+      attribute in 99% of terminals (it has to be done on client side)
+      so SetBlink(.f.) simply disables sending BLINK attribute to terminal.
+
 2007-06-20 21:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtinfo.ch
     + added GTI_ADDKEYMAP and GTI_DELKEYMAP

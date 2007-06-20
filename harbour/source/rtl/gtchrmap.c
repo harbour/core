@@ -61,7 +61,7 @@
 #include <string.h>
 
 #define MAX_CHAR_VAL	0xff
-static const char * s_szDefaultCharMapFile = "/etc/harbour/hb-charmap.def";
+char * s_szDefaultCharMapFile = "/etc/harbour/hb-charmap.def";
 
 static void skip_blank( char **buf )
 {

@@ -276,6 +276,7 @@ typedef struct
    int      iLineBufSize;
    BYTE *   pLineBuf;
    int      iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
+   int      iAttrMask;
    int      iCursorStyle;
 
    BOOL     fStdinTTY;
@@ -1942,7 +1943,7 @@ static void hb_gt_trm_AnsiExit( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiExit()"));
 
    /* set default color */
-   s_termState.SetAttributes( 0x07 );
+   s_termState.SetAttributes( 0x07 & s_termState.iAttrMask );
    s_termState.SetCursorStyle( SC_NORMAL );
    s_termState.SetTermMode( 1 );
 }
@@ -1975,7 +1976,7 @@ static void hb_gt_trm_PutStr( int iRow, int iCol, int iAttr, BYTE *pStr, int iLe
    if( s_termState.iOutBufSize )
    {
       s_termState.SetCursorPos( iRow, iCol );
-      s_termState.SetAttributes( iAttr );
+      s_termState.SetAttributes( iAttr & s_termState.iAttrMask );
       hb_gt_trm_termOutTrans( pStr, iLen, iAttr );
    }
 
@@ -2518,6 +2519,7 @@ static void hb_gt_trm_SetTerm( void )
    }
    s_termState.mouse_type = MOUSE_NONE;
    s_termState.esc_delay  = ESC_DELAY;
+   s_termState.iAttrMask  = ~0;
 
    szTerm = getenv("HB_TERM");
    if( szTerm == NULL || *szTerm == '\0' )
@@ -2658,6 +2660,7 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    hb_gt_SetFlag( GTI_COMPATBUFFER, FALSE );
    hb_gt_SetFlag( GTI_STDOUTCON, s_termState.fStdoutTTY );
    hb_gt_SetFlag( GTI_STDERRCON, s_termState.fStderrTTY );
+   hb_gt_SetBlink( TRUE );
 
    s_termState.Init();
    s_termState.SetTermMode( 0 );
@@ -2888,6 +2891,18 @@ static BOOL hb_gt_trm_SetMode( int iRows, int iCols )
    return FALSE;
 }
 
+static void hb_gt_trm_SetBlink( BOOL fBlink )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetBlink(%d)", ( int ) fBlink ) );
+
+   if( fBlink )
+      s_termState.iAttrMask |= 0x0080;
+   else
+      s_termState.iAttrMask &= ~0x0080;
+
+   HB_GTSUPER_SETBLINK( fBlink );
+}
+
 static BOOL hb_gt_trm_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
@@ -3103,6 +3118,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->OutStd                     = hb_gt_trm_OutStd;
    pFuncTable->OutErr                     = hb_gt_trm_OutErr;
    pFuncTable->SetMode                    = hb_gt_trm_SetMode;
+   pFuncTable->SetBlink                   = hb_gt_trm_SetBlink;
    pFuncTable->SetDispCP                  = hb_gt_trm_SetDispCP;
    pFuncTable->SetKeyCP                   = hb_gt_trm_SetKeyCP;
    pFuncTable->Tone                       = hb_gt_trm_Tone;
