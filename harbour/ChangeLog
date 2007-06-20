@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-20 12:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/hbgtmk.sh
+  * harbour/make_drw.sh
+  * harbour/make_rpm.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/bld.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+  * harbour/bin/pack_src.sh
+  * harbour/make_bsd.sh
+  * harbour/make_xmingw.sh
+  * harbour/make_gnu.sh
+  * harbour/make_tgz.sh
+    * set executable attribute
+      small thing but makes happy ;-) - Many thanks Victor!
+
 2007-06-14 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/whatsnew.txt
   * harbour/harbour.spec
