@@ -9,6 +9,7 @@ HB_GT_LIBS=\
 	gtcrs \
 	gtpca \
 	gtstd \
+	gttrm \
 
 ifeq ($(HB_COMMERCE),yes)
    HB_GPM_MOUSE = no

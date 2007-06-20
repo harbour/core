@@ -1889,11 +1889,14 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                /* NOTE: pMacro string is replaced with a symbol.
                 * Symbol is created if it doesn't exist.
                */
-               pSym = pMacro->item.asSymbol.value;
-               /* NOTE: pMacro item of symbol type is replaced with 
-                *  the reference 
-               */
-               hb_memvarGetRefer( pMacro, pSym );
+               if( hb_stackGetActionRequest() == 0 )
+               {
+                  pSym = pMacro->item.asSymbol.value;
+                  /* NOTE: pMacro item of symbol type is replaced with 
+                   *  the reference 
+                  */
+                  hb_memvarGetRefer( pMacro, pSym );
+               }
                w++;
             }
             break;
@@ -9070,7 +9073,8 @@ HB_EXPORT BOOL hb_xvmMacroPushRef( void )
 
    pMacro = hb_stackItemFromTop( -1 );
    hb_macroPushSymbol( pMacro );
-   hb_memvarGetRefer( pMacro, pMacro->item.asSymbol.value );
+   if( hb_stackGetActionRequest() == 0 )
+      hb_memvarGetRefer( pMacro, pMacro->item.asSymbol.value );
 
    HB_XVM_RETURN
 }

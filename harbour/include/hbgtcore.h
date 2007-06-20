@@ -519,10 +519,11 @@ extern HB_EXPORT void hb_gtStartupInit( void );
 
 
 /* low level GT functions common to different GTs supported by RTL */
+extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm );
 #if defined( HB_OS_WIN_32 )
-void hb_gt_w32_Tone( double dFrequency, double dDuration );
-void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen );
-BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
+extern void hb_gt_w32_Tone( double dFrequency, double dDuration );
+extern void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen );
+extern BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
 #endif /* HB_OS_WIN_32 */
 
 

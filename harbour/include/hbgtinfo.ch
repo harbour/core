@@ -122,6 +122,9 @@
 #define GTI_SETWIN            43  /* restore window or screen settings */
 #define GTI_NEWWIN            44  /* create new window */
 
+#define GTI_ADDKEYMAP         45  /* add key escape sequences */
+#define GTI_DELKEYMAP         46  /* del key escape sequences */
+
 /* these are used _by_ MaxRow/Col */
 #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */
 #define GTI_SCREEN         1  /* Maximum screen size ('Screen' in CT terms) */

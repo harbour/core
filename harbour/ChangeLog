@@ -8,6 +8,84 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-20 21:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtinfo.ch
+    + added GTI_ADDKEYMAP and GTI_DELKEYMAP
+
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    + added const to declarations of some function parameters
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/gtcrs/Makefile
+  - harbour/source/rtl/gtcrs/chrmap.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+    * hb_gt_chrmapinit() common function now for different GT drivers
+    * minor cleanup in GTCRS code
+
+  * harbour/include/hbcompat.ch
+    + added some new translation rules
+
+  * harbour/include/hbapi.h
+    * cleanup comment
+
+  * harbour/source/pp/ppcore.c
+    ! fixed line numbering when errors are reported in different order
+      due to preprocessing extended code block
+
+  + harbour/source/rtl/gttrm
+  + harbour/source/rtl/gttrm/Makefile
+  + harbour/source/rtl/gttrm/gttrm.c
+    + added new GT driver - it's terminal driver like GTCRS and GTSLN
+      but it does not use any external library like [N]CURSES or SLANG
+      so it can be compiled in nearly all POSIX systems. It's not such
+      flexible like curses or slang base drivers because instead of
+      using termcap/terminfo databases to extract terminal capabilities
+      it uses some hard coded sequences for few terminals (now Linux, ANSI,
+      XTERM) but it should cover users requests in 95% of cases. Terminals
+      I tested are quite well supported (GTTRM works even better then GTCRS
+      or GTSLN and is much faster in full screen mode - 2-4 times).
+      I noticed that most terminal emulators works much better with GTTRM
+      then with GTCRS or GTSLN due to limited list of used escape sequences
+      so some minor differences in each terminal implementation are not
+      noticeable. GTTRM automatically detects ISO/UTF8 terminal mode and
+      chose valid output what should also help *nix users.
+      Now I would like to ask BSD and MacOSX users to test GTTRM in these
+      systems with pure text console and XWindow terminal emulators. I'm
+      interesting in any problems you may found.
+
+  * harbour/source/vm/hvm.c
+    + added protection for possible GPF caused by wrong .prg code
+
+  * harbour/source/vm/maindllp.c
+    % store function addreses in static variables to improved execution
+      speed
+    + added support for compilers which does not use "_" as function prefix
+    + added support for using with harbour*.dll
+
+  * harbour/source/vm/memvars.c
+    + added new method of detaching enumerators and array item references
+      covered by HB_COMPAT_XHB macro. xHarbour does not work in such way
+      but the final results are similar.
+
+  * harbour/source/vm/dynlibhb.c
+    + added protection against passing wrong pointer items to HB_LIB*()
+      functions
+
+  * harbour/source/common/reserved.c
+    * cleaned warning
+
+  * harbour/bin/hb-func.sh
+  * harbour/config/hpux/global.cf
+  * harbour/config/darwin/global.cf
+  * harbour/config/linux/global.cf
+  * harbour/config/sunos/global.cf
+  * harbour/config/bsd/global.cf
+    + added GTTRM to library list
+
 2007-06-20 12:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
   * harbour/make_drw.sh

@@ -155,6 +155,8 @@ char * hb_compReservedName( char * szName )
 
    if( iCmp == 0 )
       return ( char * ) s_szReservedFun[ uiFirst ];
+#else
+   HB_SYMBOL_UNUSED( szName );
 #endif
 
    return NULL;

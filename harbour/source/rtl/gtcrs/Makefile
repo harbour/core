@@ -6,7 +6,6 @@ ROOT = ../../../
 
 C_SOURCES=\
     gtcrs.c \
-    chrmap.c \
 
 LIBNAME=gtcrs
 

@@ -67,6 +67,22 @@
 #  include <dlfcn.h>
 #endif
 
+/* This releases regex when called from the garbage collector */
+static HB_GARBAGE_FUNC( hb_libRelease )
+{
+   /* do nothing */
+   HB_SYMBOL_UNUSED( Cargo );
+}
+
+#if defined(HB_OS_WIN_32) || ( defined(HB_OS_LINUX) && !defined(__WATCOMC__) )
+static void * hb_parlib( int iParam )
+{
+   void ** pDynLibPtr = ( void ** ) hb_parptrGC( hb_libRelease, iParam );
+
+   return pDynLibPtr ? * pDynLibPtr : NULL;
+}
+#endif
+
 HB_FUNC( HB_LIBLOAD )
 {
    void * hDynLib = NULL;
@@ -123,13 +139,20 @@ HB_FUNC( HB_LIBLOAD )
    }
 #endif
 
-   hb_retptr( hDynLib );
+   if( hDynLib )
+   {
+      void ** pLibPtr = ( void ** ) hb_gcAlloc( sizeof( void * ), hb_libRelease );
+      * pLibPtr = hDynLib;
+      hb_retptrGC( pLibPtr );
+   }
+   else
+      hb_ret();
 }
 
 HB_FUNC( HB_LIBFREE )
 {
 #if defined(HB_OS_WIN_32)
-   void * hDynLib = hb_parptr( 1 );
+   void * hDynLib = hb_parlib( 1 );
 
    if( hDynLib )
    {
@@ -138,7 +161,7 @@ HB_FUNC( HB_LIBFREE )
    }
    else
 #elif defined(HB_OS_LINUX) && !defined(__WATCOMC__)
-   void * hDynLib = hb_parptr( 1 );
+   void * hDynLib = hb_parlib( 1 );
 
    if( hDynLib )
    {

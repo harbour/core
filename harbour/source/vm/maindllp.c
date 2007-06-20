@@ -58,10 +58,45 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbtypes.h"
+#include "hbapierr.h"
 
+#define HB_DLL_NAME  "harbour.dll"
+#if defined( __BORLANDC__ )
+#define HB_DLL_NAME2 "harbour-b32.dll"
+#elif defined( _MSC_VER )
+#define HB_DLL_NAME2 "harbour-vc.dll"
+#endif
 
 #if defined(HB_OS_WIN_32)
 HB_EXTERN_BEGIN
+
+static FARPROC hb_getProcAddress( LPSTR szProcName )
+{
+   static HMODULE s_hModule = NULL;
+   FARPROC pProcAddr = NULL;
+
+   if( s_hModule == NULL )
+   {
+      s_hModule = GetModuleHandle( HB_DLL_NAME );
+#ifdef HB_DLL_NAME2
+      if( s_hModule == NULL )
+         s_hModule = GetModuleHandle( HB_DLL_NAME2 );
+#endif
+      if( s_hModule == NULL )
+         s_hModule = GetModuleHandle( NULL );
+   }
+   if( s_hModule )
+   {
+      pProcAddr = GetProcAddress( s_hModule, szProcName );
+      if( pProcAddr == NULL && szProcName[ 0 ] == '_' )
+         pProcAddr = GetProcAddress( s_hModule, szProcName + 1 );
+   }
+
+   if( pProcAddr == NULL )
+      hb_errInternal( HB_EI_ERRUNRECOV, "Cannot find address of '%s' function", szProcName, NULL );
+
+   return pProcAddr;
+}
 
 HB_EXPORT BOOL WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
@@ -91,11 +126,14 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
     * hb_vmProcessSymbols(), as some special symbols pointers
     * adjustments are required
     */
-   FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
-                                             "_hb_vmProcessDllSymbols" );
-   if( pProcessSymbols )
-      return ( ( VM_PROCESS_DLL_SYMBOLS ) pProcessSymbols ) ( pSymbols,
-                                                              uiSymbols );
+   static FARPROC s_pProcessSymbols = NULL;
+
+   if( !s_pProcessSymbols )
+      s_pProcessSymbols = hb_getProcAddress( "_hb_vmProcessDllSymbols" );
+
+   if( s_pProcessSymbols )
+      return ( ( VM_PROCESS_DLL_SYMBOLS ) s_pProcessSymbols ) ( pSymbols,
+                                                                uiSymbols );
    /* else
     *    may we issue an error ? */
 
@@ -105,10 +143,13 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
 /* module symbols initialization */
 PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ) /* module symbols initialization with extended information */
 {
-   FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
-                                             "_hb_vmProcessSymbolsEx" );
-   if( pProcessSymbols )
-      return ( ( VM_PROCESS_SYMBOLS_EX ) pProcessSymbols )
+   static FARPROC s_pProcessSymbols = NULL;
+
+   if( !s_pProcessSymbols )
+      s_pProcessSymbols = hb_getProcAddress( "_hb_vmProcessSymbolsEx" );
+
+   if( s_pProcessSymbols )
+      return ( ( VM_PROCESS_SYMBOLS_EX ) s_pProcessSymbols )
                   ( pSymbols, uiSymbols, szModuleName, ulID, uiPcodeVer );
    /* else
     *    may we issue an error ? */
@@ -118,14 +159,18 @@ PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szMo
 
 void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
-   FARPROC pExecute = GetProcAddress( GetModuleHandle( NULL ), "_hb_vmExecute" );
+   static FARPROC s_pExecute = NULL;
 
-   if( pExecute )
-      ( ( VM_DLL_EXECUTE ) pExecute ) ( pCode, pSymbols );
+   if( !s_pExecute )
+      s_pExecute = hb_getProcAddress( "_hb_vmExecute" );
+
+   if( s_pExecute )
+      ( ( VM_DLL_EXECUTE ) s_pExecute ) ( pCode, pSymbols );
 
    /* else
     *    may we issue an error ? */
 }
+
 
 /* extend API implementation for pcode DLLs */
 

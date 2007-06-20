@@ -126,8 +126,6 @@
 
 #define MAX_SIGNO	64
 
-extern int hb_gt_crs_chrmapinit( int *piTransTbl, char *pszTerm );
-
 #define BASE_INFD	0
 #define BASE_OUTFD	1
 #define BASE_ERRFD	2

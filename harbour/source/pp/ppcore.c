@@ -844,6 +844,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
    char * pBuffer, ch;
    ULONG ulLen, ul;
    BOOL fDump = FALSE;
+   int iLines = 0;
 
    pInLinePtr = NULL;
    hb_pp_tokenListFree( &pState->pFile->pTokenList );
@@ -1388,8 +1389,9 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
       if( !pState->fCanNextLine &&
           ( pState->iNestedBlock || pState->iBlockState == 5 ) )
       {
-         pState->pFile->iCurrentLine--;
+         iLines++;
          hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+         pState->iSpaces = pState->iSpacesMin = 0;
          pState->pFile->iTokens++;
          pState->fNewStatement = TRUE;
          if( pState->iBlockState )
@@ -1421,6 +1423,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
       hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
       pState->pFile->iTokens++;
    }
+   pState->pFile->iCurrentLine -= iLines;
 }
 
 static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
@@ -4812,12 +4815,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
             break;
          }
          if( !fDirective && pState->pFile->pTokenList )
-         {
-            if( HB_PP_TOKEN_ISEOC( pState->pFile->pTokenList ) )
-               hb_pp_tokenListFreeCmd( &pState->pFile->pTokenList );
-            else
-               hb_pp_genLineTokens( pState );
-         }
+            hb_pp_genLineTokens( pState );
       }
    }
 }

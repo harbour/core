@@ -286,15 +286,34 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachLocal(%p, %d)", pLocal, pLocal->type ));
 
-   if( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) )
+   if( HB_IS_BYREF( pLocal ) )
    {
-      HB_ITEM_PTR pItem = pLocal;
-
       do
       {
+         if( HB_IS_MEMVAR( pLocal ) )
+            break;
+#ifdef HB_COMPAT_XHB
+         else if( HB_IS_ENUM( pLocal ) && !pLocal->item.asEnum.valuePtr )
+         {
+            PHB_ITEM pBase = HB_IS_BYREF( pLocal->item.asEnum.basePtr ) ?
+                            hb_itemUnRef( pLocal->item.asEnum.basePtr ) :
+                                          pLocal->item.asEnum.basePtr;
+            if( HB_IS_ARRAY( pBase ) )
+            {
+               PHB_ITEM pItem = hb_itemNew( NULL );
+               hb_arrayGetItemRef( pBase, pLocal->item.asEnum.offset, pItem );
+               pLocal->item.asEnum.valuePtr = pItem;
+               pLocal = pItem;
+               break;
+            }
+         }
+         else if( pLocal->item.asRefer.value >= 0 &&
+                  pLocal->item.asRefer.offset == 0 )
+            break;
+#endif
          pLocal = hb_itemUnRefOnce( pLocal );
       }
-      while( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) && ( pLocal != pItem ) );
+      while( HB_IS_BYREF( pLocal ) );
    }
 
    /* Change the value only if this variable is not referenced
@@ -485,11 +504,17 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
       if( pDyn->hMemvar )
       {
-         /* value is already created */
-         pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
-         pItem->item.asMemvar.value = pDyn->hMemvar;
-         pItem->item.asMemvar.itemsbase = &s_globalTable;
-         ++s_globalTable[ pDyn->hMemvar ].counter;
+         PHB_ITEM pMemvar = s_globalTable[ pDyn->hMemvar ].pVarItem;
+         if( HB_IS_BYREF( pMemvar ) )
+            hb_itemCopy( pItem, pMemvar );
+         else
+         {
+            /* value is already created */
+            pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
+            pItem->item.asMemvar.value = pDyn->hMemvar;
+            pItem->item.asMemvar.itemsbase = &s_globalTable;
+            ++s_globalTable[ pDyn->hMemvar ].counter;
+         }
       }
       else
       {
@@ -505,11 +530,17 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          {
             if( pDyn->hMemvar )
             {
-               /* value is already created */
-               pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
-               pItem->item.asMemvar.value = pDyn->hMemvar;
-               pItem->item.asMemvar.itemsbase = &s_globalTable;
-               ++s_globalTable[ pDyn->hMemvar ].counter;
+               PHB_ITEM pMemvar = s_globalTable[ pDyn->hMemvar ].pVarItem;
+               if( HB_IS_BYREF( pMemvar ) )
+                  hb_itemCopy( pItem, pMemvar );
+               else
+               {
+                  /* value is already created */
+                  pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
+                  pItem->item.asMemvar.value = pDyn->hMemvar;
+                  pItem->item.asMemvar.itemsbase = &s_globalTable;
+                  ++s_globalTable[ pDyn->hMemvar ].counter;
+               }
                break;
             }
          }
