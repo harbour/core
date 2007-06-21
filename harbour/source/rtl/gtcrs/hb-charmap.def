@@ -78,9 +78,14 @@
     26:         '>'     1
     27:         '<'     1
 
+:screen = screen terminal
+    0-31:       '.'     1
+    127-159:    '.'     1
+ @acsc          # include acsc section
+
 :xterm|xterm-color|rxvt|teraterm = xterm terms
     0-31:       '.'     1
-    127:        '.'     1
+    127-159:    '.'     1
  @acsc          # include acsc section
 
 :acsc = display semigraphics chars as ACSC ones

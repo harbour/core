@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-21 02:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtcrs/hb-charmap.def
+  * harbour/source/rtl/gttrm/gttrm.c
+    + added 'screen' terminal
+
 2007-06-20 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtchrmap.c
     * removed 'static const' from s_szDefaultCharMapFile declaration

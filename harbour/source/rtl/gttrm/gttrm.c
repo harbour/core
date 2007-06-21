@@ -1530,7 +1530,7 @@ static void hb_gt_trm_XtermSetAttributes( int iAttr )
       buff[ 0 ] = 0x1b;
       buff[ 1 ] = '[';
 
-      acsc  = iAttr & HB_GTTRM_ATTR_ACSC ? 1 : 0;
+      acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) && !s_termState.fUTF8 ? 1 : 0;
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
       bold  = iAttr & 0x08 ? 1 : 0;
@@ -1570,20 +1570,15 @@ static void hb_gt_trm_XtermSetAttributes( int iAttr )
       }
       else
       {
-         if( ( s_termState.iBold != bold && !bold ) ||
-             ( s_termState.iBlink != blink && !blink ) )
-         {
-            buff[ i++ ] = 'm';
-            buff[ i++ ] = 0x1b;
-            buff[ i++ ] = '[';
-            s_termState.iBold = s_termState.iBlink =
-            s_termState.iBgColor = s_termState.iFgColor = 0;
-         }
          if( s_termState.iBold != bold )
          {
-            if( !bold )
+            if( bold )
+               buff[ i++ ] = '1';
+            else
+            {
                buff[ i++ ] = '2';
-            buff[ i++ ] = '1';
+               buff[ i++ ] = '2';
+            }
             buff[ i++ ] = ';';
             s_termState.iBold = bold;
          }
@@ -1612,6 +1607,8 @@ static void hb_gt_trm_XtermSetAttributes( int iAttr )
          buff[ i - 1 ] = 'm';
          if( s_termState.iACSC != acsc )
          {
+            if( i <= 2 )
+               i = 0;
             buff[ i++ ] = 0x1b;
             buff[ i++ ] = '(';
             buff[ i++ ] = acsc ? '0' : 'B';
@@ -2199,6 +2196,22 @@ static void init_keys( void )
       addKeyMap( EXKEY_END   |KEY_CTRLMASK, "\033[5F" );
       addKeyMap( EXKEY_HOME  |KEY_CTRLMASK, "\033[5H" );
 
+      addKeyMap( EXKEY_UP    |KEY_ALTMASK, "\033[3A" );
+      addKeyMap( EXKEY_DOWN  |KEY_ALTMASK, "\033[3B" );
+      addKeyMap( EXKEY_RIGHT |KEY_ALTMASK, "\033[3C" );
+      addKeyMap( EXKEY_LEFT  |KEY_ALTMASK, "\033[3D" );
+      addKeyMap( EXKEY_CENTER|KEY_ALTMASK, "\033[3E" );
+      addKeyMap( EXKEY_END   |KEY_ALTMASK, "\033[3F" );
+      addKeyMap( EXKEY_HOME  |KEY_ALTMASK, "\033[3H" );
+
+      addKeyMap( EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[2A" );
+      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2B" );
+      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[2C" );
+      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2D" );
+      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[2E" );
+      addKeyMap( EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2F" );
+      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2H" );
+
       addKeyMap( EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" );
       addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK, "\033[1;5B" );
       addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK, "\033[1;5C" );
@@ -2547,7 +2560,8 @@ static void hb_gt_trm_SetTerm( void )
    }
    else if( strstr( szTerm, "xterm" ) != NULL ||
             strncmp( szTerm, "rxvt", 4 ) == 0 ||
-            strcmp( szTerm, "putty" ) == 0 )
+            strcmp( szTerm, "putty" ) == 0 ||
+            strncmp( szTerm, "screen", 6 ) == 0 )
    {
       s_termState.Init           = hb_gt_trm_AnsiInit;
       s_termState.Exit           = hb_gt_trm_AnsiExit;
