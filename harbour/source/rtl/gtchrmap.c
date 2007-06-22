@@ -61,7 +61,38 @@
 #include <string.h>
 
 #define MAX_CHAR_VAL	0xff
+#define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
+
 char * s_szDefaultCharMapFile = "/etc/harbour/hb-charmap.def";
+
+static void chrmap_init( int *piTransTbl )
+{
+   int i;
+
+   for( i = 0; i < 256; ++i )
+      piTransTbl[i] = HB_CHRMAP( i < 128 ? 1 : 0, i );
+}
+
+static void chrmap_dotctrl( int *piTransTbl )
+{
+   int i;
+
+   for( i = 0; i < 32; ++i )
+      piTransTbl[i] = piTransTbl[i+128] = HB_CHRMAP( 1, '.' );
+}
+
+static void chrmap_ascictrl( int *piTransTbl )
+{
+   piTransTbl[04] = HB_CHRMAP( 1, '#' );
+   piTransTbl[16] = HB_CHRMAP( 1, '>' );
+   piTransTbl[17] = HB_CHRMAP( 1, '<' );
+   piTransTbl[30] = HB_CHRMAP( 1, '^' );
+   piTransTbl[31] = HB_CHRMAP( 1, 'v' );
+   piTransTbl[24] = HB_CHRMAP( 1, '^' );
+   piTransTbl[25] = HB_CHRMAP( 1, 'v' );
+   piTransTbl[26] = HB_CHRMAP( 1, '>' );
+   piTransTbl[27] = HB_CHRMAP( 1, '<' );
+}
 
 static void skip_blank( char **buf )
 {
@@ -180,14 +211,6 @@ static int parse_line( char *buf, int *from, int *to, char *op, int *val, int *m
       }
    }
    return ret;
-}
-
-static void chrmap_init( int *piTransTbl )
-{
-   int i;
-
-   for( i = 0; i < 256; ++i )
-      piTransTbl[i] = (i < 128 ? 1 : 0) << 16 | i;
 }
 
 static int chrmap_parse( FILE *fp, const char *pszTerm, int *nTransTbl, const char *pszFile )
@@ -343,6 +366,12 @@ int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm )
       }
       if( nRet == -1 )
          nRet = hb_gt_chrmapread( s_szDefaultCharMapFile, pszTerm, piTransTbl );
+   }
+
+   if( nRet == -1 )
+   {
+      chrmap_dotctrl( piTransTbl );
+      chrmap_ascictrl( piTransTbl );
    }
 
    return nRet;

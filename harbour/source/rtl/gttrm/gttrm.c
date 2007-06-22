@@ -2873,26 +2873,6 @@ static BOOL hb_gt_trm_Resume( void )
    return TRUE;
 }
 
-static void hb_gt_trm_OutStd( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_OutStd(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_termState.fStdoutTTY )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTSTD( pbyStr, ulLen );
-}
-
-static void hb_gt_trm_OutErr( BYTE * pbyStr, ULONG ulLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_OutErr(%s,%lu)", pbyStr, ulLen ) );
-
-   if( s_termState.fStderrTTY )
-      hb_gt_WriteCon( pbyStr, ulLen );
-   else
-      HB_GTSUPER_OUTERR( pbyStr, ulLen );
-}
-
 static BOOL hb_gt_trm_SetMode( int iRows, int iCols )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetMode(%d, %d)", iRows, iCols ) );
@@ -3108,7 +3088,7 @@ static BOOL hb_gt_trm_Info( int iType, PHB_GT_INFO pInfo )
          iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
          szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
          if( iVal && szVal && *szVal )
-            addKeyMap( iVal, szVal );
+            addKeyMap( SET_CLIPKEY( iVal ), szVal );
          break;
 
       default:
@@ -3129,8 +3109,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_trm_Version;
    pFuncTable->Suspend                    = hb_gt_trm_Suspend;
    pFuncTable->Resume                     = hb_gt_trm_Resume;
-   pFuncTable->OutStd                     = hb_gt_trm_OutStd;
-   pFuncTable->OutErr                     = hb_gt_trm_OutErr;
    pFuncTable->SetMode                    = hb_gt_trm_SetMode;
    pFuncTable->SetBlink                   = hb_gt_trm_SetBlink;
    pFuncTable->SetDispCP                  = hb_gt_trm_SetDispCP;

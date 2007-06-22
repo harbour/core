@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-22 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    + added GTTRM to compressed file list
+
+  * harbour/include/hbgtcore.h
+    + added HB_GT_ATTR_UNDEF
+
+  * harbour/source/rtl/hbgtcore.c
+    * minor cleanup in COLD() method
+
+  * harbour/source/rtl/gtchrmap.c
+    * disable control characters when hb_charmap.def file cannot be found
+      or there is no valid section for current terminal inside
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    - removed OUTERR() and OUTSTD() method - the default one are enough
+    + set CLIPKEY flag in GTI_ADDKEYMAP
+
 2007-06-21 02:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtcrs/hb-charmap.def
   * harbour/source/rtl/gttrm/gttrm.c

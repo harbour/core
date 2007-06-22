@@ -2006,7 +2006,8 @@ static void hb_gt_def_ColdArea( int iTop, int iLeft, int iBottom, int iRight )
             if( hb_gt_CheckPos( iTop, i, &lIndex ) )
             {
                s_curGT->prevBuffer[ lIndex ].uiValue =
-                     s_curGT->screenBuffer[ lIndex ].uiValue;
+                  ( s_curGT->screenBuffer[ lIndex ].uiValue &=
+                                                   ~HB_GT_ATTR_REFRESH );
             }
          }
          ++iTop;

@@ -213,6 +213,10 @@ $hb_collect source/rtl/gtsln/*.[ch]
 $hb_collect source/rtl/gtstd/Makefile
 $hb_collect source/rtl/gtstd/*.[ch]
 
+# SOURCE\RTL\GTTRM
+$hb_collect source/rtl/gttrm/Makefile
+$hb_collect source/rtl/gttrm/*.[ch]
+
 # SOURCE\RTL\GTWIN
 $hb_collect source/rtl/gtwin/Makefile
 $hb_collect source/rtl/gtwin/*.[ch]
