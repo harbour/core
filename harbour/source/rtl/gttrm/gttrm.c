@@ -2016,9 +2016,7 @@ static void hb_gt_trm_SetDispTrans( char * src, char * dst, int box )
    for( i = 0; i < 256; i++ )
    {
       ch = s_termState.charmap[i] & 0xffff;
-      mode = ( s_termState.charmap[i] >> 16 ) & 0xff;
-      if( s_termState.fUTF8 )
-         mode = 0;
+      mode = !s_termState.fUTF8 ? ( s_termState.charmap[i] >> 16 ) & 0xff : 0;
 
       switch( mode )
       {
@@ -2609,7 +2607,7 @@ static void hb_gt_trm_SetTerm( void )
 
    hb_fsSetDevMode( s_termState.hFilenoStdout, FD_BINARY );
 
-   hb_gt_chrmapinit( s_termState.charmap, szTerm );
+   hb_gt_chrmapinit( s_termState.charmap, szTerm, s_termState.terminal_type == TERM_XTERM );
 
 #ifndef HB_CDP_SUPPORT_OFF
    s_termState.cdpHost = s_termState.cdpOut = s_termState.cdpIn = NULL;

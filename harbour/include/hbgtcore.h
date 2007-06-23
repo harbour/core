@@ -520,7 +520,7 @@ extern HB_EXPORT void hb_gtStartupInit( void );
 
 
 /* low level GT functions common to different GTs supported by RTL */
-extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm );
+extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC );
 #if defined( HB_OS_WIN_32 )
 extern void hb_gt_w32_Tone( double dFrequency, double dDuration );
 extern void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen );

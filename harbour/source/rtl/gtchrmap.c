@@ -94,6 +94,71 @@ static void chrmap_ascictrl( int *piTransTbl )
    piTransTbl[27] = HB_CHRMAP( 1, '<' );
 }
 
+static void chrmap_acscbox( int *piTransTbl )
+{
+   piTransTbl[ 04] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[ 16] = HB_CHRMAP( 5, '+' ); /* ACS_RARROW */
+   piTransTbl[ 17] = HB_CHRMAP( 5, ',' ); /* ACS_LARROW */
+   piTransTbl[ 24] = HB_CHRMAP( 5, '-' ); /* ACS_UARROW */
+   piTransTbl[ 25] = HB_CHRMAP( 5, '.' ); /* ACS_DARROW */
+   piTransTbl[ 26] = HB_CHRMAP( 5, '+' ); /* ACS_RARROW */
+   piTransTbl[ 27] = HB_CHRMAP( 5, ',' ); /* ACS_LARROW */
+   piTransTbl[ 30] = HB_CHRMAP( 5, '-' ); /* ACS_UARROW */
+   piTransTbl[ 31] = HB_CHRMAP( 5, '.' ); /* ACS_DARROW */
+
+   piTransTbl[176] = HB_CHRMAP( 5, 'h' ); /* ACS_BOARD */
+   piTransTbl[177] = HB_CHRMAP( 5, 'a' ); /* ACS_CKBOARD */
+   piTransTbl[178] = HB_CHRMAP( 5, '0' ); /* ACS_BLOCK */
+   piTransTbl[179] = HB_CHRMAP( 5, 'x' ); /* ACS_VLINE */
+   piTransTbl[180] = HB_CHRMAP( 5, 'u' ); /* ACS_RTEE */
+   piTransTbl[181] = HB_CHRMAP( 5, 'u' ); /* ACS_RTEE */
+   piTransTbl[182] = HB_CHRMAP( 5, 'u' ); /* ACS_RTEE */
+   piTransTbl[183] = HB_CHRMAP( 5, 'k' ); /* ACS_URCORNER */
+   piTransTbl[184] = HB_CHRMAP( 5, 'k' ); /* ACS_URCORNER */
+   piTransTbl[185] = HB_CHRMAP( 5, 'u' ); /* ACS_RTEE */
+   piTransTbl[186] = HB_CHRMAP( 5, 'x' ); /* ACS_VLINE */
+   piTransTbl[187] = HB_CHRMAP( 5, 'k' ); /* ACS_URCORNER */
+   piTransTbl[188] = HB_CHRMAP( 5, 'j' ); /* ACS_LRCORNER */
+   piTransTbl[189] = HB_CHRMAP( 5, 'j' ); /* ACS_LRCORNER */
+   piTransTbl[190] = HB_CHRMAP( 5, 'j' ); /* ACS_LRCORNER */
+   piTransTbl[191] = HB_CHRMAP( 5, 'k' ); /* ACS_URCORNER */
+   piTransTbl[192] = HB_CHRMAP( 5, 'm' ); /* ACS_LLCORNER */
+   piTransTbl[193] = HB_CHRMAP( 5, 'v' ); /* ACS_BTEE */
+   piTransTbl[194] = HB_CHRMAP( 5, 'w' ); /* ACS_TTEE */
+   piTransTbl[195] = HB_CHRMAP( 5, 't' ); /* ACS_LTEE */
+   piTransTbl[196] = HB_CHRMAP( 5, 'q' ); /* ACS_HLINE */
+   piTransTbl[197] = HB_CHRMAP( 5, 'n' ); /* ACS_PLUS */
+   piTransTbl[198] = HB_CHRMAP( 5, 't' ); /* ACS_LTEE */
+   piTransTbl[199] = HB_CHRMAP( 5, 't' ); /* ACS_LTEE */
+   piTransTbl[200] = HB_CHRMAP( 5, 'm' ); /* ACS_LLCORNER */
+   piTransTbl[201] = HB_CHRMAP( 5, 'l' ); /* ACS_ULCORNER */
+   piTransTbl[202] = HB_CHRMAP( 5, 'v' ); /* ACS_BTEE */
+   piTransTbl[203] = HB_CHRMAP( 5, 'w' ); /* ACS_TTEE */
+   piTransTbl[204] = HB_CHRMAP( 5, 't' ); /* ACS_LTEE */
+   piTransTbl[205] = HB_CHRMAP( 5, 'q' ); /* ACS_HLINE */
+   piTransTbl[206] = HB_CHRMAP( 5, 'n' ); /* ACS_PLUS */
+   piTransTbl[207] = HB_CHRMAP( 5, 'v' ); /* ACS_BTEE */
+   piTransTbl[208] = HB_CHRMAP( 5, 'v' ); /* ACS_BTEE */
+   piTransTbl[209] = HB_CHRMAP( 5, 'w' ); /* ACS_TTEE */
+   piTransTbl[210] = HB_CHRMAP( 5, 'w' ); /* ACS_TTEE */
+   piTransTbl[211] = HB_CHRMAP( 5, 'm' ); /* ACS_LLCORNER */
+   piTransTbl[212] = HB_CHRMAP( 5, 'm' ); /* ACS_LLCORNER */
+   piTransTbl[213] = HB_CHRMAP( 5, 'l' ); /* ACS_ULCORNER */
+   piTransTbl[214] = HB_CHRMAP( 5, 'l' ); /* ACS_ULCORNER */
+   piTransTbl[215] = HB_CHRMAP( 5, 'n' ); /* ACS_PLUS */
+   piTransTbl[216] = HB_CHRMAP( 5, 'n' ); /* ACS_PLUS */
+   piTransTbl[217] = HB_CHRMAP( 5, 'j' ); /* ACS_LRCORNER */
+   piTransTbl[218] = HB_CHRMAP( 5, 'l' ); /* ACS_ULCORNER */
+
+#if 0
+   piTransTbl[219] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[220] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[221] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[222] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[223] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+#endif
+}
+
 static void skip_blank( char **buf )
 {
    while( **buf != '\0' && **buf == ' ' )
@@ -336,7 +401,7 @@ static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTra
    return isTerm;
 }
 
-int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm )
+int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC )
 {
    char *pszFile, szFile[ _POSIX_PATH_MAX + 1 ];
    int nRet = -1;
@@ -371,7 +436,10 @@ int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm )
    if( nRet == -1 )
    {
       chrmap_dotctrl( piTransTbl );
-      chrmap_ascictrl( piTransTbl );
+      if( fSetACSC )
+         chrmap_acscbox( piTransTbl );
+      else
+         chrmap_ascictrl( piTransTbl );
    }
 
    return nRet;

@@ -2009,7 +2009,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    ioBase->acsc = tiGetS( "acsc" );
 
    ioBase->charmap = ( int * ) hb_xgrab( 256 * sizeof( int ) );
-   hb_gt_chrmapinit( ioBase->charmap, term );
+   hb_gt_chrmapinit( ioBase->charmap, term, ioBase->terminal_type == TERM_XTERM );
    setDispTrans( ioBase, NULL, NULL, 0 );
 
    ioBase->attr_mask = ( chtype ) -1;
