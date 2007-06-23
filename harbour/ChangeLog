@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-23 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/gttrm/Makefile
+  * harbour/source/rtl/gttrm/gttrm.c
+    + set Id keyword property
+
+  * harbour/source/common/expropt1.c
+    ! fixed typo in HB_TRACE() parameters
+
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbapirdd.h
+  * harbour/source/rtl/strcase.c
+  * harbour/source/rtl/is.c
+  * harbour/source/rtl/gtxwc/gtxwc.h
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/vm/hvm.c
+    ! fixed compilation with HB_CDP_SUPPORT_OFF - I do not plan to
+      create such builds but now these macro allow to easy locate
+      CDP dependent code
+
+  * harbour/include/hbextern.ch
+  * harbour/source/rtl/cdpapi.c
+    + added two prg functions for translations from/to UTF-8:
+         HB_STRTOUTF8( <cStr> [, <cCPID> ] ) -> <cUTF8Str>
+         HB_UTF8TOSTR( <cUTF8Str> [, <cCPID> ] ) -> <cStr>
+      <cCPID> is Harbour codepage id, f.e.: "EN", "ES", "ESWIN",
+      "PLISO", "PLMAZ", "PL852", "PLWIN", ...
+      When not given then default HVM codepage (set by HB_SETCODEPAGE())
+      is used.
+
 2007-06-22 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/pack_src.sh
     + added GTTRM to compressed file list

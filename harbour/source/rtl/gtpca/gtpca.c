@@ -854,8 +854,10 @@ static void hb_gt_pca_Redraw( int iRow, int iCol, int iSize )
          iColor = bColor;
       else if( iColor != bColor )
       {
+#ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
             hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+#endif
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor, s_sLineBuf, iLen );
          iCol += iLen;
          iLen = 0;
@@ -867,8 +869,10 @@ static void hb_gt_pca_Redraw( int iRow, int iCol, int iSize )
    }
    if( iLen )
    {
+#ifndef HB_CDP_SUPPORT_OFF
       if( s_fDispTrans )
          hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+#endif
       hb_gt_pca_AnsiPutStr( iRow, iCol, iColor, s_sLineBuf, iLen );
    }
 }

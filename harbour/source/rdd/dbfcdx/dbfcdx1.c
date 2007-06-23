@@ -405,6 +405,8 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
          pArea->bCdxSortTab[pbSort[i]] = i;
       hb_xfree( pbSort );
    }
+#else
+   HB_SYMBOL_UNUSED( pArea );
 #endif
 }
 
@@ -654,6 +656,8 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, ULONG ulRec, LP
 #ifndef HB_CDP_SUPPORT_OFF
    if ( fTrans && pTag->uiType == 'C' )
       hb_cdpnTranslate( ( char * ) pKey->val, hb_cdp_page, pTag->pIndex->pArea->cdPage, pKey->len );
+#else
+   HB_SYMBOL_UNUSED( fTrans );
 #endif
    return pKey;
 }
@@ -681,6 +685,8 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
                pItem = hb_itemPutCPtr( pItem, pVal, pKey->len );
             }
             else
+#else
+            HB_SYMBOL_UNUSED( fTrans );
 #endif
             {
                pItem = hb_itemPutCL( pItem, ( char * ) pKey->val, pKey->len );

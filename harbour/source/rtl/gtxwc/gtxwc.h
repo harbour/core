@@ -68,10 +68,7 @@
 #include "hbapierr.h"
 #include "inkey.ch"
 #include "hbgfxdef.ch"
-
-#ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
-#endif
 
 #include <unistd.h>
 #include <signal.h>

@@ -234,6 +234,7 @@ static void hb_gt_cgi_WriteCon( BYTE * pText, ULONG ulLength )
 {
    BYTE * buffer = NULL;
 
+#ifndef HB_CDP_SUPPORT_OFF
    if( s_fDispTrans )
    {
       buffer = ( BYTE * ) hb_xgrab( ulLength );
@@ -241,6 +242,7 @@ static void hb_gt_cgi_WriteCon( BYTE * pText, ULONG ulLength )
       hb_cdpnTranslate( ( char * ) buffer, s_cdpHost, s_cdpTerm, ulLength );
       pText = buffer;
    }
+#endif
 
    hb_gt_cgi_termOut( pText, ulLength );
    while( ulLength-- )
@@ -360,8 +362,10 @@ static void hb_gt_cgi_Redraw( int iRow, int iCol, int iSize )
       }
       if( iLen )
       {
+#ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
             hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+#endif
          hb_gt_cgi_termOut( s_sLineBuf, iLen );
          s_iCol = iCol;
          if( s_iCol > s_iLastCol )

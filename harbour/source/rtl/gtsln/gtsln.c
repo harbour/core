@@ -351,6 +351,7 @@ static void hb_sln_setCharTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, BOO
    HB_SYMBOL_UNUSED( cdpHost );
    HB_SYMBOL_UNUSED( cdpTerm );
    HB_SYMBOL_UNUSED( fBox );
+   HB_SYMBOL_UNUSED( iSrc );
 #endif
 
    /* build a conversion chars table */

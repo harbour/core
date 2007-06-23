@@ -64,10 +64,12 @@ char * hb_strLower( char * szText, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
 
+#ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = (char) hb_cdp_page->s_lower[szText[i]&255];
    else
+#endif
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = tolower( (unsigned char) szText[ i ] );
 
@@ -81,10 +83,12 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
 
+#ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = (char) hb_cdp_page->s_upper[szText[i]&255];
    else
+#endif
       for( i = 0; i < ulLen; i++ )
          szText[ i ] = toupper( (unsigned char) szText[ i ] );
 
@@ -94,18 +98,22 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 /* converts iChar to upper case */
 int hb_charUpper( int iChar )
 {
+#ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       return (unsigned char) hb_cdp_page->s_upper[ (unsigned char) iChar ];
    else
+#endif
       return toupper( (unsigned char) iChar );
 }
 
 /* converts iChar to lower case */
 int hb_charLower( int iChar )
 {
+#ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       return (unsigned char) hb_cdp_page->s_lower[ (unsigned char) iChar ];
    else
+#endif
       return tolower( (unsigned char) iChar );
 }
 

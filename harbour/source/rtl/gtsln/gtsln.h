@@ -62,10 +62,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "inkey.ch"
-
-#ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
-#endif
 
 #if defined(HB_OS_DARWIN) || ( defined(HB_OS_LINUX) && defined(__WATCOMC__) )
 #define REAL_UNIX_SYSTEM /* this is for slang.h to include some defs */
@@ -217,6 +214,8 @@ extern BOOL hb_sln_UnderXterm;
 extern unsigned char hb_sln_inputTab[ 256 ];
 #ifndef HB_CDP_SUPPORT_OFF
 extern PHB_CODEPAGE hb_sln_cdpIN;
+#else
+#  define hb_cdp_page NULL
 #endif
 
 /* delay for waiting on characters after ESC key */

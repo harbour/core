@@ -1040,5 +1040,49 @@ HB_FUNC( HB_CDPLIST )
    }
 }
 
+HB_FUNC( HB_STRTOUTF8 )
+{
+   ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
+   char * szString, * szDest = NULL;
+
+   if( ulLen )
+   {
+      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
+      if( cdp )
+      {
+         szString = hb_parc( 1 );
+         ulDest = hb_cdpStringInUTF8Length( cdp, FALSE, ( BYTE * ) szString, ulLen );
+         szDest = ( char * ) hb_xgrab( ulDest + 1 );
+         hb_cdpStrnToUTF8( cdp, FALSE, ( BYTE * ) szString, ulLen, ( BYTE * ) szDest );
+      }
+   }
+   if( szDest )
+      hb_retclen_buffer( szDest, ulDest );
+   else
+      hb_retc( NULL );
+}
+
+HB_FUNC( HB_UTF8TOSTR )
+{
+   ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
+   char * szString, * szDest = NULL;
+
+   if( ulLen )
+   {
+      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
+      if( cdp )
+      {
+         szString = hb_parc( 1 );
+         ulDest = hb_cdpUTF8StringLength( ( BYTE * ) szString, ulLen );
+         szDest = ( char * ) hb_xgrab( ulDest + 1 );
+         hb_cdpUTF8ToStrn( cdp, FALSE, ( BYTE * ) szString, ulLen, ( BYTE * ) szDest, ulDest );
+      }
+   }
+
+   if( szDest )
+      hb_retclen_buffer( szDest, ulDest );
+   else
+      hb_retc( NULL );
+}
 
 #endif /* HB_CDP_SUPPORT_OFF */

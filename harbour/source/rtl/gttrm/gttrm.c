@@ -285,10 +285,12 @@ typedef struct
 
    BOOL     fPosAnswer;
 
+#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE   cdpHost;
    PHB_CODEPAGE   cdpOut;
    PHB_CODEPAGE   cdpIn;
    PHB_CODEPAGE   cdpEN;
+#endif
    BOOL     fUTF8;
    BOOL     fDispTrans;
    BYTE     keyTransTbl[ 256 ];
@@ -669,6 +671,9 @@ static void hb_gt_trm_termOutTrans( BYTE * pStr, int iLen, int iAttr )
 {
    if( s_termState.iOutBufSize )
    {
+#ifdef HB_CDP_SUPPORT_OFF
+      HB_SYMBOL_UNUSED( iAttr );
+#else
       PHB_CODEPAGE cdp = NULL;
 
       if( s_termState.fUTF8 )
@@ -700,6 +705,7 @@ static void hb_gt_trm_termOutTrans( BYTE * pStr, int iLen, int iAttr )
          }
       }
       else
+#endif
       {
          if( s_termState.fDispTrans )
          {
@@ -1381,6 +1387,7 @@ again:
          s_termState.key_flag = 0;
       }
 
+#ifndef HB_CDP_SUPPORT_OFF
       if( nKey > 0 && nKey <= 255 && s_termState.fUTF8 && s_termState.cdpIn )
       {
          USHORT uc = 0;
@@ -1401,7 +1408,7 @@ again:
             }
          }
       }
-
+#endif
       if( nKey > 0 && nKey <= 255 && s_termState.keyTransTbl[nKey] )
          nKey = s_termState.keyTransTbl[nKey];
 /*
@@ -2604,8 +2611,10 @@ static void hb_gt_trm_SetTerm( void )
 
    hb_gt_chrmapinit( s_termState.charmap, szTerm );
 
+#ifndef HB_CDP_SUPPORT_OFF
    s_termState.cdpHost = s_termState.cdpOut = s_termState.cdpIn = NULL;
    s_termState.cdpEN = hb_cdpFind( "EN" );
+#endif
    s_termState.fDispTrans = FALSE;
 
    add_efds( s_termState.hFilenoStdin, O_RDONLY, NULL, NULL );

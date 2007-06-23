@@ -53,9 +53,10 @@
 #ifndef HB_APICDP_H_
 #define HB_APICDP_H_
 
+#include <ctype.h>
+
 #ifndef HB_CDP_SUPPORT_OFF
 
-#include <ctype.h>
 #include "hbapi.h"
 #include "hbinit.h"
 
@@ -197,7 +198,7 @@ HB_EXTERN_END
 
 #else
 
-typedef PHB_CODEPAGE void *
+typedef void * PHB_CODEPAGE;
 
 #endif /* HB_CDP_SUPPORT_OFF */
 

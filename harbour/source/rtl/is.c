@@ -67,9 +67,12 @@ HB_FUNC( ISALPHA )
    {
       if( isalpha( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( hb_cdp_page->nChars && szString[0] && 
-           ( strchr( hb_cdp_page->CharsUpper,* szString ) || strchr( hb_cdp_page->CharsLower,* szString ) ) )
+#ifndef HB_CDP_SUPPORT_OFF
+      else if( hb_cdp_page->nChars && szString[0] &&
+               ( strchr( hb_cdp_page->CharsUpper,* szString ) ||
+                 strchr( hb_cdp_page->CharsLower,* szString ) ) )
          hb_retl( TRUE );
+#endif
       else
          hb_retl( FALSE );
    }
@@ -99,8 +102,11 @@ HB_FUNC( ISUPPER )
    {
       if( isupper( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( hb_cdp_page->nChars && szString[0] && strchr( hb_cdp_page->CharsUpper,* szString ) )
+#ifndef HB_CDP_SUPPORT_OFF
+      else if( hb_cdp_page->nChars && szString[0] &&
+               strchr( hb_cdp_page->CharsUpper, * szString ) )
          hb_retl( TRUE );
+#endif
       else
          hb_retl( FALSE );
    }
@@ -118,8 +124,11 @@ HB_FUNC( ISLOWER )
    {
       if( islower( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
-      else if( hb_cdp_page->nChars && szString[0] && strchr( hb_cdp_page->CharsLower,* szString ) )
+#ifndef HB_CDP_SUPPORT_OFF
+      else if( hb_cdp_page->nChars && szString[0] &&
+               strchr( hb_cdp_page->CharsLower,* szString ) )
          hb_retl( TRUE );
+#endif
       else
          hb_retl( FALSE );
    }

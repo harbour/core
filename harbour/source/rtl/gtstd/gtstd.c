@@ -610,8 +610,10 @@ static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
 
       if( iLen )
       {
+#ifndef HB_CDP_SUPPORT_OFF
          if( s_fDispTrans )
             hb_cdpnTranslate( ( char * ) s_sLineBuf, s_cdpHost, s_cdpTerm, iLen );
+#endif
          hb_gt_std_termOut( s_sLineBuf, iLen );
       }
       s_iRow = iRow;

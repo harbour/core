@@ -56,15 +56,9 @@
 #include "hbapifs.h"
 #include "dbinfo.ch"   /* Constants for SELF_ORDINFO, SELF_INFO(), SELF_RECINFO() */
 #include "dbstruct.ch" /* Constants for SELF_FIELDINFO() */
-#ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
-#endif
 
 HB_EXTERN_BEGIN
-
-#ifdef HB_CDP_SUPPORT_OFF
-   typedef void * PHB_CODEPAGE
-#endif
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH          32
 
