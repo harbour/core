@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-26 23:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/harbour.spec
+    * added description for -L<path> in hb* scripts
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    * changed hb_objSendMsg() and hb_objSendMessage() to return
+      hb_stackReturnItem() - xHarbour users asked about it. It does
+      not change binary compatibility with existing code.
+
+  * harbour/common.mak
+    * replaced some hard coded values like file extensions with variables
+      for future use on other platforms
+
+  * harbour/contrib/mysql/mysql.c
+    * changed code to not use non standard function filelength()
+      and optimized
+
+  * harbour/source/compiler/cmdcheck.c
+    * recognize --version on platforms where '-' is option separator
+
+  * harbour/source/compiler/hbusage.c
+    * changed syntax description from:
+         Syntax:  harbour <file[s][.prg]> [options]
+      to:
+         Syntax:  harbour <file[s][.prg]|@file> [options]
+
 2007-06-26 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * use separate trnaslation tables for dispout() and dispbox() like

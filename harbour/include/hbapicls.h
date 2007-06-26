@@ -121,8 +121,8 @@ HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char
 
 HB_EXPORT extern BOOL       hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
-HB_EXPORT extern void       hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
-HB_EXPORT extern void       hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
+HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
+HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
 
 /* Harbour equivalent for Clipper internal __mdCreate() */

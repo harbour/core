@@ -361,26 +361,6 @@ HB_FUNC( SQLSRVINFO )
    hb_retc( mysql_get_server_info( (MYSQL *)_parnl(1) ) );
 }
 
-#ifdef __GNUC__
-long filelength( int handle )
-{
-    int nEnd = hb_fsSeek( handle, 0 , 2 );
-    int nStart = hb_fsSeek( handle , 0 , 0 );
-    return nEnd - nStart;
-}
-#endif
-
-char *filetoBuff(char *f,char *s)
-{
-
-   int i;
-   int fh = hb_fsOpen( ( BYTE * ) s , 2 );
-   i = hb_fsReadLarge( fh , ( BYTE * ) f , filelength( fh ) );
-   f[ i ] = '\0';
-   hb_fsClose( fh );
-   return f   ;
-}
-
 HB_FUNC( DATATOSQL )
 {
    const char *from;
@@ -394,24 +374,38 @@ HB_FUNC( DATATOSQL )
    hb_retclen_buffer( (char*)buffer,iSize );
 }
 
+static char * filetoBuff( char * fname, int * size )
+{
+   char * buffer = NULL;
+   int handle = hb_fsOpen( ( BYTE * ) fname, 2 );
+
+   if( handle != FS_ERROR )
+   {
+      * size = ( int ) hb_fsSeek( handle, 0, FS_END );
+      * size -= ( int ) hb_fsSeek( handle, 0, FS_SET );
+      buffer = ( char * ) hb_xgrab( * size + 1 );
+      * size = hb_fsReadLarge( handle, ( BYTE * ) buffer, * size );
+      buffer[ * size ] = '\0';
+      hb_fsClose( handle );
+   }
+   else
+      * size = 0;
+   return buffer;
+}
+
 HB_FUNC( FILETOSQLBINARY )
 {
    char *szFile = hb_parc(1);
-   const char *from;
-   int fh;
-   int iSize;
-   int iLen;
+   char *from;
    char *buffer;
-   char *FromBuffer;
+   int iSize;
 
-   fh = hb_fsOpen( (BYTE*)szFile,2 );
-   iSize = filelength( fh );
-   iLen = ( iSize*2 );
-   FromBuffer = (char*)hb_xgrab( iSize+1 );
-   hb_fsClose( fh );
-   from = (char*)filetoBuff( FromBuffer,szFile );
-   buffer = (char*)hb_xgrab( iLen+1 );
-   iSize = mysql_escape_string( buffer,from,iSize );
-   hb_retclen_buffer( (char*)buffer, iSize );
-   hb_xfree( FromBuffer );
+   from = filetoBuff( szFile, &iSize );
+   if( from )
+   {
+      buffer = ( char * ) hb_xgrab( iSize * 2 + 1 );
+      iSize = mysql_escape_string( buffer, from, iSize );
+      hb_retclen_buffer( buffer, iSize );
+      hb_xfree( from );
+   }
 }

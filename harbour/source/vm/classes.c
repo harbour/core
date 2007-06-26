@@ -1861,7 +1861,7 @@ HB_EXPORT BOOL hb_objHasMsg( PHB_ITEM pObject, const char *szString )
    }
 }
 
-HB_EXPORT void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
+HB_EXPORT PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulArg, ... )
 {
    if( pObject && pMsgSym )
    {
@@ -1886,9 +1886,11 @@ HB_EXPORT void hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG ulAr
    {
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
    }
+
+   return hb_stackReturnItem();
 }
 
-HB_EXPORT void hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
+HB_EXPORT PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, ... )
 {
    hb_vmPushSymbol( hb_dynsymGet( sMsg )->pSymbol );
    hb_vmPush( pObject );
@@ -1905,6 +1907,8 @@ HB_EXPORT void hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, ULONG ulArg, .
       va_end( ap );
    }
    hb_vmSend( (USHORT) ulArg );
+
+   return hb_stackReturnItem();
 }
 
 static PHB_DYNS hb_objGetMsgSym( PHB_ITEM pMessage )

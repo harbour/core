@@ -839,6 +839,23 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char *Args[] )
                         j = strlen( Args[i] );
                         continue;
 
+                     case '-':
+                     {
+                        int l = ++j;
+                        while( Args[i][j] && !HB_ISOPTSEP( Args[i][j] ) )
+                           j++;
+                        if( Args[i][l-1] == '-' && j-l == 7 &&
+                            memcmp( &Args[i][l], "version", 7 ) == 0 )
+                        {
+                           HB_COMP_PARAM->fLogo = TRUE;
+                           HB_COMP_PARAM->fQuiet = TRUE;
+                        }
+                        else
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, &Args[i][l], NULL );
+                        if( Args[i][j] )
+                           ++j;
+                        continue;
+                     }
                      default:
                         Switch[2] = '\0';
                         hb_compChkEnvironVar( HB_COMP_PARAM, ( char * ) Switch );
