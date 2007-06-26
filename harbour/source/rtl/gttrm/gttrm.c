@@ -268,6 +268,7 @@ typedef struct {
 
 typedef struct
 {
+   FHANDLE  hFileno;
    FHANDLE  hFilenoStdin;
    FHANDLE  hFilenoStdout;
    FHANDLE  hFilenoStderr;
@@ -279,6 +280,7 @@ typedef struct
    int      iAttrMask;
    int      iCursorStyle;
 
+   BOOL     fOutTTY;
    BOOL     fStdinTTY;
    BOOL     fStdoutTTY;
    BOOL     fStderrTTY;
@@ -613,11 +615,11 @@ static int hb_gt_trm_getSize( int * piRows, int * piCols )
 {
    *piRows = *piCols = 0;
 
-   if( s_termState.fStdoutTTY )
+   if( s_termState.fOutTTY )
    {
       struct winsize win;
 
-      if( ioctl( s_termState.hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
+      if( ioctl( s_termState.hFileno, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
          *piRows = win.ws_row;
          *piCols = win.ws_col;
@@ -642,7 +644,7 @@ static void hb_gt_trm_termFlush( void )
 {
    if( s_termState.iOutBufIndex > 0 )
    {
-      hb_fsWriteLarge( s_termState.hFilenoStdout, s_termState.pOutBuf, s_termState.iOutBufIndex );
+      hb_fsWriteLarge( s_termState.hFileno, s_termState.pOutBuf, s_termState.iOutBufIndex );
       s_termState.iOutBufIndex = 0;
    }
 }
@@ -1821,9 +1823,13 @@ static void hb_gt_trm_AnsiSetAttributes( int iAttr )
          }
          if( s_termState.iBold != bold )
          {
-            if( !bold )
+            if( bold )
+               buff[ i++ ] = '1';
+            else
+            {
                buff[ i++ ] = '2';
-            buff[ i++ ] = '1';
+               buff[ i++ ] = '2';
+            }
             buff[ i++ ] = ';';
             s_termState.iBold = bold;
          }
@@ -2602,10 +2608,17 @@ static void hb_gt_trm_SetTerm( void )
    s_termState.fStdinTTY      = hb_fsIsDevice( s_termState.hFilenoStdin );
    s_termState.fStdoutTTY     = hb_fsIsDevice( s_termState.hFilenoStdout );
    s_termState.fStderrTTY     = hb_fsIsDevice( s_termState.hFilenoStderr );
-   s_termState.fPosAnswer     = s_termState.fStdinTTY && s_termState.fStdoutTTY;
+   s_termState.hFileno        = s_termState.hFilenoStdout;
+   s_termState.fOutTTY        = s_termState.fStdoutTTY;
+   if( !s_termState.fOutTTY && s_termState.fStdinTTY )
+   {
+      s_termState.hFileno     = s_termState.hFilenoStdin;
+      s_termState.fOutTTY     = TRUE;
+   }
+   s_termState.fPosAnswer     = s_termState.fOutTTY;
    s_termState.fUTF8          = FALSE;
 
-   hb_fsSetDevMode( s_termState.hFilenoStdout, FD_BINARY );
+   hb_fsSetDevMode( s_termState.hFileno, FD_BINARY );
 
    hb_gt_chrmapinit( s_termState.charmap, szTerm, s_termState.terminal_type == TERM_XTERM );
 
