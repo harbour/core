@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-26 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * use separate trnaslation tables for dispout() and dispbox() like
+      in GTCRS
+
 2007-06-26 19:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * use ECMA-48 compatible sequence to disable bold intensity also

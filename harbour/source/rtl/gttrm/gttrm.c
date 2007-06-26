@@ -294,10 +294,7 @@ typedef struct
    PHB_CODEPAGE   cdpEN;
 #endif
    BOOL     fUTF8;
-   BOOL     fDispTrans;
    BYTE     keyTransTbl[ 256 ];
-   BYTE     chrTransTbl[ 256 ];
-/*   BYTE     boxTransTbl[ 256 ]; */
    int      charmap[256];
 
    int      chrattr[256];
@@ -709,17 +706,6 @@ static void hb_gt_trm_termOutTrans( BYTE * pStr, int iLen, int iAttr )
       else
 #endif
       {
-         if( s_termState.fDispTrans )
-         {
-            unsigned char uc;
-            int i;
-            for( i = 0; i < iLen; ++ i )
-            {
-               uc = pStr[ i ];
-               if( s_termState.chrTransTbl[ uc ] )
-                  pStr[ i ] = s_termState.chrTransTbl[ uc ];
-            }
-         }
          hb_gt_trm_termOut( pStr, iLen );
       }
    }
@@ -1394,7 +1380,7 @@ again:
       {
          USHORT uc = 0;
          n = i = 0;
-         if( hb_cdpGetFromUTF8( s_termState.cdpIn, FALSE, ( BYTE ) ch, &n, &uc ) )
+         if( hb_cdpGetFromUTF8( s_termState.cdpIn, FALSE, ( BYTE ) nKey, &n, &uc ) )
          {
             while( n > 0 )
             {
@@ -2015,7 +2001,6 @@ static void hb_gt_trm_SetDispTrans( char * src, char * dst, int box )
    unsigned char c, d;
    int i, ch, mode;
 
-   memset( s_termState.chrTransTbl, 0, sizeof( s_termState.chrTransTbl ) );
    memset( s_termState.chrattr, 0, sizeof( s_termState.chrattr ) );
    memset( s_termState.boxattr, 0, sizeof( s_termState.boxattr ) );
 
@@ -2048,12 +2033,8 @@ static void hb_gt_trm_SetDispTrans( char * src, char * dst, int box )
             s_termState.boxattr[i] = HB_GTTRM_ATTR_ALT;
             break;
       }
-      if( i != ( int ) ( ch & HB_GTTRM_ATTR_CHAR ) &&
-          ( s_termState.chrTransTbl[i] & HB_GTTRM_ATTR_CHAR ) == 0 )
-      {
-         s_termState.chrTransTbl[i] = ch & HB_GTTRM_ATTR_CHAR;
-         s_termState.fDispTrans = TRUE;
-      }
+      s_termState.chrattr[i] |= ch;
+      s_termState.boxattr[i] |= ch;
    }
 
    if( src && dst )
@@ -2061,14 +2042,9 @@ static void hb_gt_trm_SetDispTrans( char * src, char * dst, int box )
       for( i = 0; i < 256 && ( c = ( unsigned char ) src[i] ); i++ )
       {
          d = ( unsigned char ) dst[i];
-         s_termState.chrattr[c] = HB_GTTRM_ATTR_STD;
+         s_termState.chrattr[c] = d | HB_GTTRM_ATTR_STD;
          if( box )
-            s_termState.boxattr[c] = HB_GTTRM_ATTR_STD;
-         if( c != d )
-         {
-            s_termState.chrTransTbl[c] = d;
-            s_termState.fDispTrans = TRUE;
-         }
+            s_termState.boxattr[c] = d | HB_GTTRM_ATTR_STD;
       }
    }
 }
@@ -2626,8 +2602,6 @@ static void hb_gt_trm_SetTerm( void )
    s_termState.cdpHost = s_termState.cdpOut = s_termState.cdpIn = NULL;
    s_termState.cdpEN = hb_cdpFind( "EN" );
 #endif
-   s_termState.fDispTrans = FALSE;
-
    add_efds( s_termState.hFilenoStdin, O_RDONLY, NULL, NULL );
    init_keys();
    mouse_init();
@@ -2931,9 +2905,7 @@ static BOOL hb_gt_trm_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
    {
       s_termState.cdpOut = hb_cdpFind( pszTermCDP );
       s_termState.cdpHost = hb_cdpFind( pszHostCDP );
-      s_termState.fDispTrans = s_termState.cdpOut && s_termState.cdpHost &&
-                               s_termState.cdpOut != s_termState.cdpHost &&
-                               !s_termState.fUTF8;
+
       if( s_termState.cdpOut && s_termState.cdpHost &&
           s_termState.cdpHost->nChars &&
           s_termState.cdpHost->nChars == s_termState.cdpOut->nChars )
@@ -2951,6 +2923,7 @@ static BOOL hb_gt_trm_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 
          hb_xfree( pszHostLetters );
          hb_xfree( pszTermLetters );
+         /* HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox ); */
       }
       return TRUE;
    }
@@ -3023,8 +2996,19 @@ static void hb_gt_trm_Redraw( int iRow, int iCol, int iSize )
       if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
-      iColor = bColor | ( ( bAttr & HB_GT_ATTR_BOX ) ?
-                           s_termState.boxattr[ usChar ] : s_termState.chrattr[ usChar ] );
+      if( bAttr & HB_GT_ATTR_BOX )
+      {
+         iColor = bColor | ( s_termState.boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         if( !s_termState.fUTF8 )
+            usChar = s_termState.boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+      }
+      else
+      {
+         iColor = bColor | ( s_termState.chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
+         if( !s_termState.fUTF8 )
+            usChar = s_termState.chrattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
+      }
+
       if( iLen == 0 )
          iAttribute = iColor;
       else if( iColor != iAttribute )
