@@ -2895,6 +2895,8 @@ static BOOL hb_gt_trm_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
 
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdp_page->id;
@@ -2923,15 +2925,10 @@ static BOOL hb_gt_trm_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 
          hb_xfree( pszHostLetters );
          hb_xfree( pszTermLetters );
-         /* HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox ); */
       }
       return TRUE;
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
-   HB_SYMBOL_UNUSED( fBox );
 
    return FALSE;
 }

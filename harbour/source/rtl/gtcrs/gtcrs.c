@@ -2764,6 +2764,8 @@ static BOOL hb_gt_crs_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
 
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
    {
@@ -2800,10 +2802,6 @@ static BOOL hb_gt_crs_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
             setDispTrans( s_ioBase, "", "", fBox ? 1 : 0 );
       }
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
-   HB_SYMBOL_UNUSED( fBox );
 #endif
 
    return FALSE;

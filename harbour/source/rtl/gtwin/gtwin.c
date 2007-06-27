@@ -1491,7 +1491,7 @@ static BOOL hb_gt_win_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox));
 
-   HB_SYMBOL_UNUSED( fBox );
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
 
    for( i = 0; i < 256; i++ )
       s_charTrans[ i ] = ( BYTE ) i;
@@ -1516,10 +1516,8 @@ static BOOL hb_gt_win_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
          }
       }
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
+
    for( i = 0; i < 256; i++ )
       s_charTransRev[ s_charTrans[ i ] ] = ( BYTE ) i;
 

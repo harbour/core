@@ -63,6 +63,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbapicdp.h"
 
 #include <time.h>
 
@@ -78,6 +79,10 @@ static USHORT        s_uiExtCount = 0;
 static USHORT        s_uiClearChar = ' ';
 static BYTE          s_bClearColor = 0x07;
 static FHANDLE       s_hStdIn = 0, s_hStdOut = 1, s_hStdErr = 2;
+
+static BOOL          s_fDispTrans = FALSE;
+static PHB_CODEPAGE  s_cdpTerm = NULL;
+static PHB_CODEPAGE  s_cdpHost = NULL;
 
 static int           s_iColorIndex;
 static int           s_iColorCount;
@@ -696,7 +701,16 @@ static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )
          else
          {
             hb_gt_PreExt();
-            hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
+            if( s_fDispTrans )
+            {
+               BYTE * pbyStrBuff = ( BYTE * ) hb_xgrab( ulLen );
+               memcpy( pbyStrBuff, pbyStr, ulLen );
+               hb_cdpnTranslate( ( char * ) pbyStrBuff, s_cdpHost, s_cdpTerm, ulLen );
+               hb_gt_def_OutFile( s_hStdOut, pbyStrBuff, ulLen );
+               hb_xfree( pbyStrBuff );
+            }
+            else
+               hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
             hb_gt_PostExt();
          }
       }
@@ -716,7 +730,16 @@ static void hb_gt_def_OutErr( BYTE * pbyStr, ULONG ulLen )
          else
          {
             hb_gt_PreExt();
-            hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
+            if( s_fDispTrans )
+            {
+               BYTE * pbyStrBuff = ( BYTE * ) hb_xgrab( ulLen );
+               memcpy( pbyStrBuff, pbyStr, ulLen );
+               hb_cdpnTranslate( ( char * ) pbyStrBuff, s_cdpHost, s_cdpTerm, ulLen );
+               hb_gt_def_OutFile( s_hStdErr, pbyStrBuff, ulLen );
+               hb_xfree( pbyStrBuff );
+            }
+            else
+               hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
             hb_gt_PostExt();
          }
       }
@@ -1424,8 +1447,23 @@ static void hb_gt_def_VertLine( int iCol, int iTop, int iBottom,
 
 static BOOL hb_gt_def_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
+#ifndef HB_CDP_SUPPORT_OFF
+   if( !pszHostCDP )
+      pszHostCDP = hb_cdp_page->id;
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   if( pszTermCDP && pszHostCDP )
+   {
+      s_cdpTerm = hb_cdpFind( pszTermCDP );
+      s_cdpHost = hb_cdpFind( pszHostCDP );
+      s_fDispTrans = s_cdpTerm && s_cdpHost && s_cdpTerm != s_cdpHost;
+      return TRUE;
+   }
+#else
    HB_SYMBOL_UNUSED( pszTermCDP );
    HB_SYMBOL_UNUSED( pszHostCDP );
+#endif
    HB_SYMBOL_UNUSED( fBox );
 
    return FALSE;

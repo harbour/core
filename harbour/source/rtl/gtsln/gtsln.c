@@ -907,6 +907,8 @@ static BOOL hb_gt_sln_Info( int iType, PHB_GT_INFO pInfo )
 
 static BOOL hb_gt_sln_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
@@ -920,10 +922,6 @@ static BOOL hb_gt_sln_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
       cdpTerm = hb_cdpFind( pszTermCDP );
 
    hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
-   HB_SYMBOL_UNUSED( fBox );
 #endif
    return TRUE;
 }

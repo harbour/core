@@ -3507,7 +3507,9 @@ static int hb_gt_xwc_mouse_CountButton( void )
 
 static BOOL hb_gt_xwc_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
-   HB_SYMBOL_UNUSED( fBox );
+
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+
 #ifndef HB_CDP_SUPPORT_OFF
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
@@ -3531,9 +3533,6 @@ static BOOL hb_gt_xwc_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
             hb_gt_xwc_BuildCharTrans( s_wnd );
       }
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
    return TRUE;
