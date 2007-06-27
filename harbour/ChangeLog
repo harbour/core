@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-27 16:00 UTC+0200 J. Lefebvre Mafact (jfl/at/mafact.com)
+
+  * harbour/makefile.vc
+    * Setting file extensions variables without double quotes for nmake
+      Will overide those in common.mak
+
+
 2007-06-27 10:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
   * harbour/source/rtl/gtdos/gtdos.c
