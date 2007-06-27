@@ -8,12 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2007-06-27 16:00 UTC+0200 J. Lefebvre Mafact (jfl/at/mafact.com)
+2007-06-27 19:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    ! removed double quotas from files extension definitions
+      Neither Borland make nor NMake can accept them, sorry my
+      fault but I used to work with GNU make
+  * harbour/makefile.vc
+    - removed recently added by J. Lefebvre Mafact alternative verion
+      of file extnesions. Thank you for your help but it was my mistake
+      and the default definitions in common.mak should not use quotas
 
+  * harbour/source/rtl/datesx.c
+  * harbour/source/common/hbdate.c
+    * accept date strings longer then 8 characters in STOD() just like
+      in CT3
+    * changed casting in date decoding code to be strict Clipper compatible
+      and cover date string validation by HB_C52_STRICT macro.
+      Now STOD() can give _EXACTLY_ the same results as Clipper for wrong
+      date strings if you disable code covered by #ifndef HB_C52_STRICT
+      in hb_dateStrGet(). It fixes errors reported by hbtest in:
+         stod("19 90905") -> "17490905"
+         stod("199 0905") -> "19740905"
+      but I do not know if you want to have it as default.
+
+  * harbour/source/rtl/gtsln/gtsln.c
+    ! fixed variable declaration to be ANSI C compatible
+
+2007-06-27 16:00 UTC+0200 J. Lefebvre Mafact (jfl/at/mafact.com)
   * harbour/makefile.vc
     * Setting file extensions variables without double quotes for nmake
       Will overide those in common.mak
-
 
 2007-06-27 10:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c

@@ -149,29 +149,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 # Include Common Object list files
 # shared between Msvc and Borland
 
-#
-# binary file suffixes and prefixes for nMake !!!
-#
-!ifndef OBJEXT
-OBJEXT=.obj
-!endif
-
-!ifndef EXEEXT
-EXEEXT=.exe
-!endif
-
-!ifndef DLLEXT
-DLLEXT=.dll
-!endif
-
-!ifndef LIBEXT
-LIBEXT=.lib
-!endif
-
-!ifndef LIBPREF
-LIBPREF=
-!endif
-
 !include common.mak
 
 #**********************************************************

@@ -166,16 +166,26 @@ HB_EXPORT void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, 
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, piYear, piMonth, piDay));
 
-   if( szDate && szDate[ 8 ] == '\0' )
+#if !defined( HB_C52_STRICT )
+   if( szDate[ 0 ] >= '0' && szDate[ 0 ] <= '9' &&
+       szDate[ 1 ] >= '0' && szDate[ 1 ] <= '9' &&
+       szDate[ 2 ] >= '0' && szDate[ 2 ] <= '9' &&
+       szDate[ 3 ] >= '0' && szDate[ 3 ] <= '9' &&
+       szDate[ 4 ] >= '0' && szDate[ 4 ] <= '9' &&
+       szDate[ 5 ] >= '0' && szDate[ 5 ] <= '9' &&
+       szDate[ 6 ] >= '0' && szDate[ 6 ] <= '9' &&
+       szDate[ 7 ] >= '0' && szDate[ 7 ] <= '9' )
+#endif
    {
       /* Date string has correct length, so attempt to convert */
-      *piYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
-                 ( ( USHORT ) ( szDate[ 1 ] - '0' ) * 100 ) +
-                 ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) +
-                   ( USHORT ) ( szDate[ 3 ] - '0' );
+      *piYear  = ( ( int ) ( szDate[ 0 ] - '0' ) * 1000 ) +
+                 ( ( int ) ( szDate[ 1 ] - '0' ) * 100 ) +
+                 ( ( int ) ( szDate[ 2 ] - '0' ) * 10 ) +
+                   ( int ) ( szDate[ 3 ] - '0' );
       *piMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
       *piDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
    }
+#if !defined( HB_C52_STRICT )
    else
    {
       /* Date string missing or bad length, so force an empty date */
@@ -183,6 +193,7 @@ HB_EXPORT void hb_dateStrGet( const char * szDate, int * piYear, int * piMonth, 
       *piMonth =
       *piDay   = 0;
    }
+#endif
 }
 
 /* This function always closes the date with a zero byte, so it needs a

@@ -21,23 +21,23 @@
 # binary file suffixes and prefixes
 #
 !ifndef OBJEXT
-OBJEXT=".obj"
+OBJEXT=.obj
 !endif
 
 !ifndef EXEEXT
-EXEEXT=".exe"
+EXEEXT=.exe
 !endif
 
 !ifndef DLLEXT
-DLLEXT=".dll"
+DLLEXT=.dll
 !endif
 
 !ifndef LIBEXT
-LIBEXT=".lib"
+LIBEXT=.lib
 !endif
 
 !ifndef LIBPREF
-LIBPREF=""
+LIBPREF=
 !endif
 
 #**********************************************************
