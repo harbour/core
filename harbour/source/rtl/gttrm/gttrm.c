@@ -1416,12 +1416,16 @@ again:
 /*
  * LINUX terminal operations
  */
-static void hb_gt_trm_LinuxSetAutoMargin( int iAM )
+static void hb_gt_trm_LinuxSetTermMode( int iAM )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetAutoMargin(%d)", iAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetTermMode(%d)", iAM));
 
    if( iAM != s_termState.iAM )
    {
+      if( iAM == 0 )
+      {
+         hb_gt_trm_termOut( ( BYTE * ) "\x1B[m", 3 );
+      }
       hb_gt_trm_termOut( ( BYTE * ) ( iAM ? "\x1B[?7h" : "\x1B[?7l" ), 5 );
       s_termState.iAM = iAM;
    }
@@ -1623,12 +1627,16 @@ static void hb_gt_trm_XtermSetAttributes( int iAttr )
 /*
  * ANSI terminal operations
  */
-static void hb_gt_trm_AnsiSetAutoMargin( int iAM )
+static void hb_gt_trm_AnsiSetTermMode( int iAM )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetAutoMargin(%d)", iAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetTermMode(%d)", iAM));
 
    if( iAM != s_termState.iAM )
    {
+      if( iAM == 0 )
+      {
+         hb_gt_trm_termOut( ( BYTE * ) "\x1B[0m", 4 );
+      }
       /*
        * disabled until I'll find good PC-ANSI terminal documentation with
        * detail Auto Margin and Auto Line Wrapping description, [druzus]
@@ -2533,7 +2541,7 @@ static void hb_gt_trm_SetTerm( void )
    {
       s_termState.Init           = hb_gt_trm_AnsiInit;
       s_termState.Exit           = hb_gt_trm_AnsiExit;
-      s_termState.SetTermMode    = hb_gt_trm_LinuxSetAutoMargin;
+      s_termState.SetTermMode    = hb_gt_trm_LinuxSetTermMode;
       s_termState.GetCursorPos   = hb_gt_trm_AnsiGetCursorPos;
       s_termState.SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
       s_termState.SetCursorStyle = hb_gt_trm_LinuxSetCursorStyle;
@@ -2552,7 +2560,7 @@ static void hb_gt_trm_SetTerm( void )
    {
       s_termState.Init           = hb_gt_trm_AnsiInit;
       s_termState.Exit           = hb_gt_trm_AnsiExit;
-      s_termState.SetTermMode    = hb_gt_trm_LinuxSetAutoMargin;
+      s_termState.SetTermMode    = hb_gt_trm_LinuxSetTermMode;
       s_termState.GetCursorPos   = hb_gt_trm_AnsiGetCursorPos;
       s_termState.SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
       s_termState.SetCursorStyle = hb_gt_trm_AnsiSetCursorStyle;
@@ -2568,7 +2576,7 @@ static void hb_gt_trm_SetTerm( void )
    {
       s_termState.Init           = hb_gt_trm_AnsiInit;
       s_termState.Exit           = hb_gt_trm_AnsiExit;
-      s_termState.SetTermMode    = hb_gt_trm_AnsiSetAutoMargin;
+      s_termState.SetTermMode    = hb_gt_trm_AnsiSetTermMode;
       s_termState.GetCursorPos   = hb_gt_trm_AnsiGetCursorPos;
       s_termState.SetCursorPos   = hb_gt_trm_AnsiSetCursorPos;
       s_termState.SetCursorStyle = hb_gt_trm_AnsiSetCursorStyle;
@@ -2988,6 +2996,7 @@ static void hb_gt_trm_Redraw( int iRow, int iCol, int iSize )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
 
+   s_termState.SetTermMode( 0 );
    while( iSize-- )
    {
       if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
@@ -3041,8 +3050,6 @@ static void hb_gt_trm_Refresh( void )
       s_termState.pLineBuf = ( BYTE * ) hb_xrealloc( s_termState.pLineBuf, iWidth );
       s_termState.iLineBufSize = iWidth;
    }
-
-   s_termState.SetTermMode( 0 );
 
    HB_GTSUPER_REFRESH();
 

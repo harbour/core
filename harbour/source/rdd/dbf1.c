@@ -924,6 +924,8 @@ static ERRCODE hb_dbfLockData( DBFAREAP pArea,
          break;
 #endif
       default:
+         *ulPos = *ulFlSize = *ulRlSize = 0;
+         *iDir = 0;
          return FAILURE;
    }
    return SUCCESS;
@@ -2656,8 +2658,7 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          HB_FOFFSET ulPos, ulFlSize, ulRlSize;
          int iDir;
 
-         if( hb_dbfLockData( pArea, &ulPos, &ulFlSize, &ulRlSize, &iDir ) == FAILURE )
-            ulPos = 0;
+         hb_dbfLockData( pArea, &ulPos, &ulFlSize, &ulRlSize, &iDir );
          hb_itemPutNInt( pItem, ulPos );
          break;
       }

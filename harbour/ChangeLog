@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-27 21:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * restore default color on exit
+
+  * harbour/source/rdd/dbf1.c
+    * cleaned few warnings
+
+  * harbour/make_tgz.sh
+  * harbour/make_gnu.sh
+    * if HB_WITHOUT_GTSLN not set then check if slang.h exists
+      in one of known locations and set HB_WITHOUT_GTSLN automatically
+
 2007-06-27 19:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
     ! removed double quotas from files extension definitions
