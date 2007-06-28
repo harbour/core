@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-28 16:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    ! fixed possible GPF and some other problems in HB_TRANSLATE()
+
+  * harbour/source/rtl/dateshb.c
+  * harbour/source/rtl/datesx.c
+  * harbour/source/common/hbdate.c
+    * make STOD() exact Clipper compatible
+
 2007-06-27 21:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * restore default color on exit

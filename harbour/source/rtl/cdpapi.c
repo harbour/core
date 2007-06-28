@@ -54,6 +54,7 @@
 
 #ifndef HB_CDP_SUPPORT_OFF
 
+#include "hbapiitm.h"
 #include "hbapicdp.h"
 
 #define NUMBER_OF_CHARS    256
@@ -993,34 +994,33 @@ HB_FUNC( HB_SETCODEPAGE )
 {
    hb_retc( hb_cdp_page->id );
 
-   if( ISCHAR(1) )
+   if( ISCHAR( 1 ) )
       hb_cdpSelectID( hb_parc( 1 ) );
 }
 
 HB_FUNC( HB_TRANSLATE )
 {
-   char *szResult;
-   char *szIn = hb_parc(1);
-   char *szIdIn = hb_parc(2);
-   char *szIdOut = hb_parc(3);
-   int  ilen;
-   PHB_CODEPAGE cdpIn;
-   PHB_CODEPAGE cdpOut;
+   ULONG ulLen = hb_parclen( 1 );
 
-   if( szIn )
+   if( ulLen )
    {
-      ilen = hb_parclen(1);
-      cdpIn  = ( szIdIn )? hb_cdpFind( szIdIn ):hb_cdp_page;
-      cdpOut = ( szIdOut )? hb_cdpFind( szIdOut ):hb_cdp_page;
-      szResult = (char*) hb_xgrab( ilen + 1 );
-      memcpy( szResult, szIn, ilen );
-      szResult[ ilen ] = '\0';
-      hb_cdpTranslate( szResult, cdpIn, cdpOut );
+      char * szIdIn = hb_parc( 2 );
+      char * szIdOut = hb_parc( 3 );
+      PHB_CODEPAGE cdpIn  = szIdIn ? hb_cdpFind( szIdIn ) : hb_cdp_page;
+      PHB_CODEPAGE cdpOut = szIdOut ? hb_cdpFind( szIdOut ) : hb_cdp_page;
 
-      hb_retc_buffer( szResult );
+      if( cdpIn && cdpOut && cdpIn != cdpOut )
+      {
+         char * szResult = ( char * ) hb_xgrab( ulLen + 1 );
+         memcpy( szResult, hb_parc( 1 ), ulLen + 1 );
+         hb_cdpnTranslate( szResult, cdpIn, cdpOut, ulLen );
+         hb_retclen_buffer( szResult, ulLen );
+      }
+      else
+         hb_itemReturn( hb_param( 1, HB_IT_STRING ) );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 HB_FUNC( HB_CDPLIST )
