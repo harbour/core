@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-06-28 21:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * disable ternminal signals at startup
+    * redraw screen after __RUN()
+
 2007-06-28 16:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
     ! fixed possible GPF and some other problems in HB_TRANSLATE()

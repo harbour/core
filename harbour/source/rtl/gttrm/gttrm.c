@@ -2654,10 +2654,16 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       tcgetattr( hFilenoStdin, &s_termState.saved_TIO );
       memcpy( &s_termState.curr_TIO, &s_termState.saved_TIO, sizeof( struct termios ) );
       /* atexit( restore_input_mode ); */
-      s_termState.curr_TIO.c_lflag &= ~( ICANON | ECHO );
-      s_termState.curr_TIO.c_iflag &= ~ICRNL;
-      s_termState.curr_TIO.c_cc[ VMIN ] = 0;
-      s_termState.curr_TIO.c_cc[ VTIME ] = 0;
+      s_termState.curr_TIO.c_lflag &= ~( ECHO | ECHONL | ICANON | ISIG | IEXTEN );
+      s_termState.curr_TIO.c_lflag |= NOFLSH;
+      s_termState.curr_TIO.c_cflag &= ~( CSIZE | PARENB );
+      s_termState.curr_TIO.c_cflag |= CS8 | CREAD;
+      s_termState.curr_TIO.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON );
+      s_termState.curr_TIO.c_oflag &= ~OPOST;
+      /* s_termState.curr_TIO.c_oflag |= ONLCR | OPOST; */
+      memset( s_termState.curr_TIO.c_cc, 0, NCCS );
+      /* s_termState.curr_TIO.c_cc[ VMIN ] = 0; */
+      /* s_termState.curr_TIO.c_cc[ VTIME ] = 0; */
       tcsetattr( hFilenoStdin, TCSAFLUSH, &s_termState.curr_TIO );
       act.sa_handler = SIG_DFL;
 
@@ -2862,6 +2868,8 @@ static BOOL hb_gt_trm_Suspend( void )
 
 static BOOL hb_gt_trm_Resume( void )
 {
+   int iHeight, iWidth;
+
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Resume()" ) );
 
 #if defined( OS_UNIX_COMPATIBLE )
@@ -2871,6 +2879,9 @@ static BOOL hb_gt_trm_Resume( void )
    }
 #endif
    s_termState.Init();
+
+   hb_gt_GetSize( &iHeight, &iWidth );
+   hb_gt_ExposeArea( 0, 0, iHeight, iWidth );
 
    return TRUE;
 }
