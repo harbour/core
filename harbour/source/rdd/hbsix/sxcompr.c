@@ -695,6 +695,7 @@ HB_FUNC( _SX_STRCOMPRESS )
          /* It's not six compatible - it's a workaround for wrongly defined SIX behavior */
          HB_PUT_LE_UINT32( pBuf, HB_SX_UNCOMPRESED );
          memcpy( pBuf + 4, pStr, ulLen );
+         ulDst = ulLen;
       }
       hb_retclen( ( char * ) pBuf, ulDst + 4 );
       hb_xfree( pBuf );
