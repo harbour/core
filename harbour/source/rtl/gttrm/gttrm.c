@@ -266,6 +266,11 @@ typedef struct {
    int shift_key;
 } ClipKeyCode;
 
+typedef struct {
+   int          key;
+   const char * seq;
+} keySeq;
+
 typedef struct
 {
    FHANDLE  hFileno;
@@ -2138,310 +2143,328 @@ static void removeAllKeyMap( keyTab **ptr )
    *ptr = NULL;
 }
 
+static void addKeyTab( const keySeq * keys )
+{
+   while( keys->key )
+   {
+      addKeyMap( keys->key, keys->seq );
+      ++keys;
+   }
+}
+
 static void init_keys( void )
 {
-   /* virual CTRL/ALT sequences */
-   addKeyMap( K_METACTRL, CTRL_SEQ );
-   addKeyMap( K_METAALT,  ALT_SEQ );
-   /* national mode key sequences */
+
+   static const keySeq stdKeySeq[] = {
+      /* virual CTRL/ALT sequences */
+      { K_METACTRL  , CTRL_SEQ   },
+      { K_METAALT   , ALT_SEQ    },
 #ifdef NATION_SEQ
-   addKeyMap( K_NATIONAL, NATION_SEQ );
+      /* national mode key sequences */
+      { K_NATIONAL  , NATION_SEQ },
 #endif
+      { EXKEY_ENTER , "\r"       },
+      /* terminal mouse event */
+      { K_MOUSETERM , "\033[M"   },
+      { 0, NULL } };
 
-   /* some harcoded sequences */
-   /* addKeyMap( K_ESC, "\033\033" ); */
-   addKeyMap( EXKEY_ENTER, "\r" );
-   /* terminal mouse event */
-   addKeyMap( K_MOUSETERM, "\033[M" );
+   static const keySeq xtermKeySeq[] = {
+      { EXKEY_UP    , "\033[A" },
+      { EXKEY_DOWN  , "\033[B" },
+      { EXKEY_RIGHT , "\033[C" },
+      { EXKEY_LEFT  , "\033[D" },
+      { EXKEY_CENTER, "\033[E" },
+      { EXKEY_END   , "\033[F" },
+      { EXKEY_HOME  , "\033[H" },
 
-   if( s_termState.terminal_type == TERM_XTERM )
-   {
-      addKeyMap( EXKEY_UP    , "\033[A" );
-      addKeyMap( EXKEY_DOWN  , "\033[B" );
-      addKeyMap( EXKEY_RIGHT , "\033[C" );
-      addKeyMap( EXKEY_LEFT  , "\033[D" );
-      addKeyMap( EXKEY_CENTER, "\033[E" );
-      addKeyMap( EXKEY_END   , "\033[F" );
-      addKeyMap( EXKEY_HOME  , "\033[H" );
+      { EXKEY_HOME  , "\033[1~" },
+      { EXKEY_END   , "\033[4~" },
+      { EXKEY_BS    , "\177" },
 
-      addKeyMap( EXKEY_HOME  , "\033[1~" );
-      addKeyMap( EXKEY_END   , "\033[4~" );
-      addKeyMap( EXKEY_BS    , "\177" );
+      { EXKEY_INS,    "\033[2~" }, /* kich1 */
+      { EXKEY_DEL,    "\033[3~" }, /* kdch1 */
+      { EXKEY_PGUP,   "\033[5~" }, /* kpp   */
+      { EXKEY_PGDN,   "\033[6~" }, /* knp   */
+      { EXKEY_UP,     "\033OA"  }, /* kcuu1 */
+      { EXKEY_DOWN,   "\033OB"  }, /* kcud1 */
+      { EXKEY_RIGHT,  "\033OC"  }, /* kcuf1 */
+      { EXKEY_LEFT,   "\033OD"  }, /* kcub1 */
+      { EXKEY_CENTER, "\033OE"  }, /* kb2   */
+      { EXKEY_END,    "\033OF"  }, /* kend  */
+      { EXKEY_HOME,   "\033OH"  }, /* khome */
+      { EXKEY_ENTER,  "\033OM"  }, /* kent  */
+      { EXKEY_TAB,    "\011"    }, /* ht    */
+      { EXKEY_BS,     "\010"    }, /* kbs   */
 
-      addKeyMap( EXKEY_INS,    "\033[2~" ); /* kich1 */
-      addKeyMap( EXKEY_DEL,    "\033[3~" ); /* kdch1 */
-      addKeyMap( EXKEY_PGUP,   "\033[5~" ); /* kpp   */
-      addKeyMap( EXKEY_PGDN,   "\033[6~" ); /* knp   */
-      addKeyMap( EXKEY_UP,     "\033OA"  ); /* kcuu1 */
-      addKeyMap( EXKEY_DOWN,   "\033OB"  ); /* kcud1 */
-      addKeyMap( EXKEY_RIGHT,  "\033OC"  ); /* kcuf1 */
-      addKeyMap( EXKEY_LEFT,   "\033OD"  ); /* kcub1 */
-      addKeyMap( EXKEY_CENTER, "\033OE"  ); /* kb2   */
-      addKeyMap( EXKEY_END,    "\033OF"  ); /* kend  */
-      addKeyMap( EXKEY_HOME,   "\033OH"  ); /* khome */
-      addKeyMap( EXKEY_ENTER,  "\033OM"  ); /* kent  */
-      addKeyMap( EXKEY_TAB,    "\011"    ); /* ht    */
-      addKeyMap( EXKEY_BS,     "\010"    ); /* kbs   */
+      { EXKEY_UP    |KEY_CTRLMASK, "\033[5A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[5B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[5C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[5D" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[5E" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033[5F" },
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[5H" },
 
-      addKeyMap( EXKEY_UP    |KEY_CTRLMASK, "\033[5A" );
-      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK, "\033[5B" );
-      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK, "\033[5C" );
-      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK, "\033[5D" );
-      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK, "\033[5E" );
-      addKeyMap( EXKEY_END   |KEY_CTRLMASK, "\033[5F" );
-      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK, "\033[5H" );
+      { EXKEY_UP    |KEY_ALTMASK, "\033[3A" },
+      { EXKEY_DOWN  |KEY_ALTMASK, "\033[3B" },
+      { EXKEY_RIGHT |KEY_ALTMASK, "\033[3C" },
+      { EXKEY_LEFT  |KEY_ALTMASK, "\033[3D" },
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[3E" },
+      { EXKEY_END   |KEY_ALTMASK, "\033[3F" },
+      { EXKEY_HOME  |KEY_ALTMASK, "\033[3H" },
 
-      addKeyMap( EXKEY_UP    |KEY_ALTMASK, "\033[3A" );
-      addKeyMap( EXKEY_DOWN  |KEY_ALTMASK, "\033[3B" );
-      addKeyMap( EXKEY_RIGHT |KEY_ALTMASK, "\033[3C" );
-      addKeyMap( EXKEY_LEFT  |KEY_ALTMASK, "\033[3D" );
-      addKeyMap( EXKEY_CENTER|KEY_ALTMASK, "\033[3E" );
-      addKeyMap( EXKEY_END   |KEY_ALTMASK, "\033[3F" );
-      addKeyMap( EXKEY_HOME  |KEY_ALTMASK, "\033[3H" );
+      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[2A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[2C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2D" },
+      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[2E" },
+      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2F" },
+      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2H" },
 
-      addKeyMap( EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[2A" );
-      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2B" );
-      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[2C" );
-      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2D" );
-      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[2E" );
-      addKeyMap( EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2F" );
-      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2H" );
+      { EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[1;5B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[1;5C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[1;5D" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[1;5E" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033[1;5F" },
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5H" },
 
-      addKeyMap( EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" );
-      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK, "\033[1;5B" );
-      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK, "\033[1;5C" );
-      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK, "\033[1;5D" );
-      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK, "\033[1;5E" );
-      addKeyMap( EXKEY_END   |KEY_CTRLMASK, "\033[1;5F" );
-      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5H" );
+      { EXKEY_INS   |KEY_CTRLMASK, "\033[2;5~" },
+      { EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" },
+      { EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" },
 
-      addKeyMap( EXKEY_INS   |KEY_CTRLMASK, "\033[2;5~" );
-      addKeyMap( EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" );
-      addKeyMap( EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" );
-
-      addKeyMap( EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" ); /* kcbt */
-      addKeyMap( EXKEY_BS    |KEY_CTRLMASK|KEY_ALTMASK, "\033[W" );
+      { EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* kcbt */
+      { EXKEY_BS    |KEY_CTRLMASK|KEY_ALTMASK, "\033[W" },
 
       /* key added for gnome-terminal and teraterm */
-      addKeyMap( EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" ); 
-      addKeyMap( EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" );
-      addKeyMap( EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" );
+      { EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" }, 
+      { EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" },
+      { EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" },
 
-      addKeyMap( EXKEY_UP    |KEY_ALTMASK, "\033[1;3A" );
-      addKeyMap( EXKEY_DOWN  |KEY_ALTMASK, "\033[1;3B" );
-      addKeyMap( EXKEY_RIGHT |KEY_ALTMASK, "\033[1;3C" );
-      addKeyMap( EXKEY_LEFT  |KEY_ALTMASK, "\033[1;3D" );
-      addKeyMap( EXKEY_CENTER|KEY_ALTMASK, "\033[1;3E" );
-      addKeyMap( EXKEY_END   |KEY_ALTMASK, "\033[1;3F" );
-      addKeyMap( EXKEY_HOME  |KEY_ALTMASK, "\033[1;3H" );
+      { EXKEY_UP    |KEY_ALTMASK, "\033[1;3A" },
+      { EXKEY_DOWN  |KEY_ALTMASK, "\033[1;3B" },
+      { EXKEY_RIGHT |KEY_ALTMASK, "\033[1;3C" },
+      { EXKEY_LEFT  |KEY_ALTMASK, "\033[1;3D" },
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[1;3E" },
+      { EXKEY_END   |KEY_ALTMASK, "\033[1;3F" },
+      { EXKEY_HOME  |KEY_ALTMASK, "\033[1;3H" },
 
-      addKeyMap( EXKEY_INS   |KEY_ALTMASK, "\033[2;3~" );
-      addKeyMap( EXKEY_DEL   |KEY_ALTMASK, "\033[3;3~" );
-      addKeyMap( EXKEY_PGUP  |KEY_ALTMASK, "\033[5;3~" );
-      addKeyMap( EXKEY_PGDN  |KEY_ALTMASK, "\033[6;3~" );
+      { EXKEY_INS   |KEY_ALTMASK, "\033[2;3~" },
+      { EXKEY_DEL   |KEY_ALTMASK, "\033[3;3~" },
+      { EXKEY_PGUP  |KEY_ALTMASK, "\033[5;3~" },
+      { EXKEY_PGDN  |KEY_ALTMASK, "\033[6;3~" },
 
-      addKeyMap( EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[6A" );
-      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6B" );
-      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[6C" );
-      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6D" );
-      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[6E" );
-      addKeyMap( EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[6F" );
-      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6H" );
+      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[6A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[6C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6D" },
+      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[6E" },
+      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[6F" },
+      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6H" },
 
-      addKeyMap( EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2A" );
-      addKeyMap( EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2B" );
-      addKeyMap( EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2C" );
-      addKeyMap( EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2D" );
-      addKeyMap( EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2E" );
-      addKeyMap( EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2F" );
-      addKeyMap( EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2H" );
+      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2D" },
+      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2E" },
+      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2F" },
+      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2H" },
 
-      addKeyMap( EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;2~" );
-      addKeyMap( EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;2~" );
-      addKeyMap( EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;2~" );
-      addKeyMap( EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;2~" );
+      { EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;2~" },
+      { EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;2~" },
+      { EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;2~" },
+      { EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;2~" },
 
-      addKeyMap( EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;6~" );
-      addKeyMap( EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;6~" );
-      addKeyMap( EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;6~" );
-      addKeyMap( EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;6~" );
-      addKeyMap( EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033[7;6~" );
+      { EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;6~" },
+      { EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;6~" },
+      { EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;6~" },
+      { EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;6~" },
+      { EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033[7;6~" },
 
       /* function keys */
-      addKeyMap( EXKEY_F1,  "\033OP"   );        /* kf1  */
-      addKeyMap( EXKEY_F2,  "\033OQ"   );        /* kf2  */
-      addKeyMap( EXKEY_F3,  "\033OR"   );        /* kf3  */
-      addKeyMap( EXKEY_F4,  "\033OS"   );        /* kf4  */
+      { EXKEY_F1,  "\033OP"   },        /* kf1  */
+      { EXKEY_F2,  "\033OQ"   },        /* kf2  */
+      { EXKEY_F3,  "\033OR"   },        /* kf3  */
+      { EXKEY_F4,  "\033OS"   },        /* kf4  */
 
-      addKeyMap( EXKEY_F1,  "\033[11~" );        /* kf1  */
-      addKeyMap( EXKEY_F2,  "\033[12~" );        /* kf2  */
-      addKeyMap( EXKEY_F3,  "\033[13~" );        /* kf3  */
-      addKeyMap( EXKEY_F4,  "\033[14~" );        /* kf4  */
+      { EXKEY_F1,  "\033[11~" },        /* kf1  */
+      { EXKEY_F2,  "\033[12~" },        /* kf2  */
+      { EXKEY_F3,  "\033[13~" },        /* kf3  */
+      { EXKEY_F4,  "\033[14~" },        /* kf4  */
 
-      addKeyMap( EXKEY_F5,  "\033[15~" );        /* kf5  */
-      addKeyMap( EXKEY_F6,  "\033[17~" );        /* kf6  */
-      addKeyMap( EXKEY_F7,  "\033[18~" );        /* kf7  */
-      addKeyMap( EXKEY_F8,  "\033[19~" );        /* kf8  */
-      addKeyMap( EXKEY_F9,  "\033[20~" );        /* kf9  */
-      addKeyMap( EXKEY_F10, "\033[21~" );        /* kf10 */
-      addKeyMap( EXKEY_F11, "\033[23~" );        /* kf11 */
-      addKeyMap( EXKEY_F12, "\033[24~" );        /* kf12 */
+      { EXKEY_F5,  "\033[15~" },        /* kf5  */
+      { EXKEY_F6,  "\033[17~" },        /* kf6  */
+      { EXKEY_F7,  "\033[18~" },        /* kf7  */
+      { EXKEY_F8,  "\033[19~" },        /* kf8  */
+      { EXKEY_F9,  "\033[20~" },        /* kf9  */
+      { EXKEY_F10, "\033[21~" },        /* kf10 */
+      { EXKEY_F11, "\033[23~" },        /* kf11 */
+      { EXKEY_F12, "\033[24~" },        /* kf12 */
 
-      addKeyMap( EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2P" );
-      addKeyMap( EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2Q" );
-      addKeyMap( EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2R" );
-      addKeyMap( EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2S" );
-      addKeyMap( EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[15;2~" );
-      addKeyMap( EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[17;2~" );
-      addKeyMap( EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[18;2~" );
-      addKeyMap( EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[19;2~" );
-      addKeyMap( EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[20;2~" );
-      addKeyMap( EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[21;2~" );
-      addKeyMap( EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[23;2~" );
-      addKeyMap( EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[24;2~" );
-   }
+      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2P" },
+      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2Q" },
+      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2R" },
+      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2S" },
+      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[15;2~" },
+      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[17;2~" },
+      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[18;2~" },
+      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[19;2~" },
+      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[20;2~" },
+      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[21;2~" },
+      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[23;2~" },
+      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[24;2~" },
+      { 0, NULL } };
+
+   static const keySeq linuxKeySeq[] = {
+      { EXKEY_F1 , "\033[[A"  },        /* kf1  */
+      { EXKEY_F2 , "\033[[B"  },        /* kf2  */
+      { EXKEY_F3 , "\033[[C"  },        /* kf3  */
+      { EXKEY_F4 , "\033[[D"  },        /* kf4  */
+      { EXKEY_F5 , "\033[[E"  },        /* kf5  */
+      { EXKEY_F6 , "\033[17~" },        /* kf6  */
+      { EXKEY_F7 , "\033[18~" },        /* kf7  */
+      { EXKEY_F8 , "\033[19~" },        /* kf8  */
+      { EXKEY_F9 , "\033[20~" },        /* kf9  */
+      { EXKEY_F10, "\033[21~" },        /* kf10 */
+      { EXKEY_F11, "\033[23~" },        /* kf11 */
+      { EXKEY_F12, "\033[24~" },        /* kf12 */
+
+      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[25~" }, /* kf13 */
+      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[26~" }, /* kf14 */
+      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[28~" }, /* kf15 */
+      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[29~" }, /* kf16 */
+      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[31~" }, /* kf17 */
+      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[32~" }, /* kf18 */
+      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[33~" }, /* kf19 */
+      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[34~" }, /* kf20 */
+      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[35~" }, /* kf21 */
+      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[36~" }, /* kf22 */
+      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[37~" }, /* kf23 */
+      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[38~" }, /* kf24 */
+
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[39~" },        /* kf25 */
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[40~" },        /* kf26 */
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[41~" },        /* kf27 */
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[42~" },        /* kf28 */
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[43~" },        /* kf29 */
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[44~" },        /* kf30 */
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[45~" },        /* kf31 */
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[46~" },        /* kf32 */
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[47~" },        /* kf33 */
+      { EXKEY_F10|KEY_CTRLMASK, "\033[48~" },        /* kf34 */
+      { EXKEY_F11|KEY_CTRLMASK, "\033[49~" },        /* kf35 */
+      { EXKEY_F12|KEY_CTRLMASK, "\033[50~" },        /* kf36 */
+
+      { EXKEY_F1 |KEY_ALTMASK , "\033[51~" },        /* kf37 */
+      { EXKEY_F2 |KEY_ALTMASK , "\033[52~" },        /* kf38 */
+      { EXKEY_F3 |KEY_ALTMASK , "\033[53~" },        /* kf39 */
+      { EXKEY_F4 |KEY_ALTMASK , "\033[54~" },        /* kf40 */
+      { EXKEY_F5 |KEY_ALTMASK , "\033[55~" },        /* kf41 */
+      { EXKEY_F6 |KEY_ALTMASK , "\033[56~" },        /* kf42 */
+      { EXKEY_F7 |KEY_ALTMASK , "\033[57~" },        /* kf43 */
+      { EXKEY_F8 |KEY_ALTMASK , "\033[58~" },        /* kf44 */
+      { EXKEY_F9 |KEY_ALTMASK , "\033[59~" },        /* kf45 */
+      { EXKEY_F10|KEY_ALTMASK , "\033[70~" },        /* kf46 */
+      { EXKEY_F11|KEY_ALTMASK , "\033[71~" },        /* kf47 */
+      { EXKEY_F12|KEY_ALTMASK , "\033[72~" },        /* kf48 */
+
+      /* cursor keys */
+      { EXKEY_HOME,   "\033[1~" }, /* khome */
+      { EXKEY_INS,    "\033[2~" }, /* kich1 */
+      { EXKEY_DEL,    "\033[3~" }, /* kdch1 */
+      { EXKEY_END,    "\033[4~" }, /* kend  */
+      { EXKEY_PGUP,   "\033[5~" }, /* kpp   */
+      { EXKEY_PGDN,   "\033[6~" }, /* knp   */
+      { EXKEY_UP,     "\033[A"  }, /* kcuu1 */
+      { EXKEY_DOWN,   "\033[B"  }, /* kcud1 */
+      { EXKEY_RIGHT,  "\033[C"  }, /* kcuf1 */
+      { EXKEY_LEFT,   "\033[D"  }, /* kcub1 */
+      { EXKEY_CENTER, "\033[G"  }, /* kb2 */
+      { EXKEY_TAB,    "\011"    }, /* ht    */
+      { EXKEY_BS,     "\177"    }, /* kbs   */
+      { EXKEY_TAB | KEY_ALTMASK, "\033[Z" }, /* kcbt */
+      { 0, NULL } };
+
+
+   static const keySeq ansiKeySeq[] = {
+      /* cursor keys */
+      { EXKEY_UP,     "\033[A" }, /* kcuu1 */
+      { EXKEY_DOWN,   "\033[B" }, /* kcud1 */
+      { EXKEY_RIGHT,  "\033[C" }, /* kcuf1 */
+      { EXKEY_LEFT,   "\033[D" }, /* kcub1 */
+      { EXKEY_CENTER, "\033[E" }, /* kb2   */
+      { EXKEY_END,    "\033[F" }, /* kend  */
+      { EXKEY_PGDN,   "\033[G" }, /* knp   */
+      { EXKEY_HOME,   "\033[H" }, /* khome */
+      { EXKEY_PGUP,   "\033[I" }, /* kpp   */
+      { EXKEY_INS,    "\033[L" }, /* kich1 */
+
+      { EXKEY_DEL,    "\177"   }, /* kdch1 */
+      { EXKEY_TAB,    "\011"   }, /* ht    */
+      { EXKEY_BS,     "\010"   }, /* kbs   */
+      { EXKEY_TAB | KEY_ALTMASK, "\033[Z" }, /* kcbt */
+
+      { EXKEY_F1 , "\033[M" }, /* kf1  */
+      { EXKEY_F2 , "\033[N" }, /* kf2  */
+      { EXKEY_F3 , "\033[O" }, /* kf3  */
+      { EXKEY_F4 , "\033[P" }, /* kf4  */
+      { EXKEY_F5 , "\033[Q" }, /* kf5  */
+      { EXKEY_F6 , "\033[R" }, /* kf6  */
+      { EXKEY_F7 , "\033[S" }, /* kf7  */
+      { EXKEY_F8 , "\033[T" }, /* kf8  */
+      { EXKEY_F9 , "\033[U" }, /* kf9  */
+      { EXKEY_F10, "\033[V" }, /* kf10 */
+      { EXKEY_F11, "\033[W" }, /* kf11 */
+      { EXKEY_F12, "\033[X" }, /* kf12 */
+
+      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Y" }, /* kf13 */
+      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* kf14 */
+      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[a" }, /* kf15 */
+      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[b" }, /* kf16 */
+      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[c" }, /* kf17 */
+      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[d" }, /* kf18 */
+      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[e" }, /* kf19 */
+      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[f" }, /* kf20 */
+      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[g" }, /* kf21 */
+      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[h" }, /* kf22 */
+      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" }, /* kf23 */
+      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" }, /* kf24 */
+
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[k" },        /* kf25 */
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[l" },        /* kf26 */
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[m" },        /* kf27 */
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[n" },        /* kf28 */
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[o" },        /* kf29 */
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[p" },        /* kf30 */
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[q" },        /* kf31 */
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[r" },        /* kf32 */
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[s" },        /* kf33 */
+      { EXKEY_F10|KEY_CTRLMASK, "\033[t" },        /* kf34 */
+      { EXKEY_F11|KEY_CTRLMASK, "\033[u" },        /* kf35 */
+      { EXKEY_F12|KEY_CTRLMASK, "\033[v" },        /* kf36 */
+
+      { EXKEY_F1 |KEY_ALTMASK , "\033[w" },        /* kf37 */
+      { EXKEY_F2 |KEY_ALTMASK , "\033[x" },        /* kf38 */
+      { EXKEY_F3 |KEY_ALTMASK , "\033[y" },        /* kf39 */
+      { EXKEY_F4 |KEY_ALTMASK , "\033[z" },        /* kf40 */
+      { EXKEY_F5 |KEY_ALTMASK , "\033[@" },        /* kf41 */
+      { EXKEY_F6 |KEY_ALTMASK , "\033[[" },        /* kf42 */
+      { EXKEY_F7 |KEY_ALTMASK , "\033[\\"},        /* kf43 */
+      { EXKEY_F8 |KEY_ALTMASK , "\033[]" },        /* kf44 */
+      { EXKEY_F9 |KEY_ALTMASK , "\033[^" },        /* kf45 */
+      { EXKEY_F10|KEY_ALTMASK , "\033[_" },        /* kf46 */
+      { EXKEY_F11|KEY_ALTMASK , "\033[`" },        /* kf47 */
+      { EXKEY_F12|KEY_ALTMASK , "\033[{" },        /* kf48 */
+      { 0, NULL } };
+
+
+   addKeyTab( stdKeySeq );
+
+   if( s_termState.terminal_type == TERM_XTERM )
+      addKeyTab( xtermKeySeq );
    else if( s_termState.terminal_type == TERM_LINUX )
-   {
-      addKeyMap( EXKEY_F1 , "\033[[A"  );        /* kf1  */
-      addKeyMap( EXKEY_F2 , "\033[[B"  );        /* kf2  */
-      addKeyMap( EXKEY_F3 , "\033[[C"  );        /* kf3  */
-      addKeyMap( EXKEY_F4 , "\033[[D"  );        /* kf4  */
-      addKeyMap( EXKEY_F5 , "\033[[E"  );        /* kf5  */
-      addKeyMap( EXKEY_F6 , "\033[17~" );        /* kf6  */
-      addKeyMap( EXKEY_F7 , "\033[18~" );        /* kf7  */
-      addKeyMap( EXKEY_F8 , "\033[19~" );        /* kf8  */
-      addKeyMap( EXKEY_F9 , "\033[20~" );        /* kf9  */
-      addKeyMap( EXKEY_F10, "\033[21~" );        /* kf10 */
-      addKeyMap( EXKEY_F11, "\033[23~" );        /* kf11 */
-      addKeyMap( EXKEY_F12, "\033[24~" );        /* kf12 */
-
-      addKeyMap( EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[25~" ); /* kf13 */
-      addKeyMap( EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[26~" ); /* kf14 */
-      addKeyMap( EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[28~" ); /* kf15 */
-      addKeyMap( EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[29~" ); /* kf16 */
-      addKeyMap( EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[31~" ); /* kf17 */
-      addKeyMap( EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[32~" ); /* kf18 */
-      addKeyMap( EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[33~" ); /* kf19 */
-      addKeyMap( EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[34~" ); /* kf20 */
-      addKeyMap( EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[35~" ); /* kf21 */
-      addKeyMap( EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[36~" ); /* kf22 */
-      addKeyMap( EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[37~" ); /* kf23 */
-      addKeyMap( EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[38~" ); /* kf24 */
-
-      addKeyMap( EXKEY_F1 |KEY_CTRLMASK, "\033[39~" );        /* kf25 */
-      addKeyMap( EXKEY_F2 |KEY_CTRLMASK, "\033[40~" );        /* kf26 */
-      addKeyMap( EXKEY_F3 |KEY_CTRLMASK, "\033[41~" );        /* kf27 */
-      addKeyMap( EXKEY_F4 |KEY_CTRLMASK, "\033[42~" );        /* kf28 */
-      addKeyMap( EXKEY_F5 |KEY_CTRLMASK, "\033[43~" );        /* kf29 */
-      addKeyMap( EXKEY_F6 |KEY_CTRLMASK, "\033[44~" );        /* kf30 */
-      addKeyMap( EXKEY_F7 |KEY_CTRLMASK, "\033[45~" );        /* kf31 */
-      addKeyMap( EXKEY_F8 |KEY_CTRLMASK, "\033[46~" );        /* kf32 */
-      addKeyMap( EXKEY_F9 |KEY_CTRLMASK, "\033[47~" );        /* kf33 */
-      addKeyMap( EXKEY_F10|KEY_CTRLMASK, "\033[48~" );        /* kf34 */
-      addKeyMap( EXKEY_F11|KEY_CTRLMASK, "\033[49~" );        /* kf35 */
-      addKeyMap( EXKEY_F12|KEY_CTRLMASK, "\033[50~" );        /* kf36 */
-
-      addKeyMap( EXKEY_F1 |KEY_ALTMASK , "\033[51~" );        /* kf37 */
-      addKeyMap( EXKEY_F2 |KEY_ALTMASK , "\033[52~" );        /* kf38 */
-      addKeyMap( EXKEY_F3 |KEY_ALTMASK , "\033[53~" );        /* kf39 */
-      addKeyMap( EXKEY_F4 |KEY_ALTMASK , "\033[54~" );        /* kf40 */
-      addKeyMap( EXKEY_F5 |KEY_ALTMASK , "\033[55~" );        /* kf41 */
-      addKeyMap( EXKEY_F6 |KEY_ALTMASK , "\033[56~" );        /* kf42 */
-      addKeyMap( EXKEY_F7 |KEY_ALTMASK , "\033[57~" );        /* kf43 */
-      addKeyMap( EXKEY_F8 |KEY_ALTMASK , "\033[58~" );        /* kf44 */
-      addKeyMap( EXKEY_F9 |KEY_ALTMASK , "\033[59~" );        /* kf45 */
-      addKeyMap( EXKEY_F10|KEY_ALTMASK , "\033[70~" );        /* kf46 */
-      addKeyMap( EXKEY_F11|KEY_ALTMASK , "\033[71~" );        /* kf47 */
-      addKeyMap( EXKEY_F12|KEY_ALTMASK , "\033[72~" );        /* kf48 */
-
-      /* cursor keys */
-      addKeyMap( EXKEY_HOME,   "\033[1~" ); /* khome */
-      addKeyMap( EXKEY_INS,    "\033[2~" ); /* kich1 */
-      addKeyMap( EXKEY_DEL,    "\033[3~" ); /* kdch1 */
-      addKeyMap( EXKEY_END,    "\033[4~" ); /* kend  */
-      addKeyMap( EXKEY_PGUP,   "\033[5~" ); /* kpp   */
-      addKeyMap( EXKEY_PGDN,   "\033[6~" ); /* knp   */
-      addKeyMap( EXKEY_UP,     "\033[A"  ); /* kcuu1 */
-      addKeyMap( EXKEY_DOWN,   "\033[B"  ); /* kcud1 */
-      addKeyMap( EXKEY_RIGHT,  "\033[C"  ); /* kcuf1 */
-      addKeyMap( EXKEY_LEFT,   "\033[D"  ); /* kcub1 */
-      addKeyMap( EXKEY_CENTER, "\033[G"  ); /* kb2 */
-      addKeyMap( EXKEY_TAB,    "\011"    ); /* ht    */
-      addKeyMap( EXKEY_BS,     "\177"    ); /* kbs   */
-      addKeyMap( EXKEY_TAB | KEY_ALTMASK, "\033[Z" ); /* kcbt */
-
-   }
+      addKeyTab( linuxKeySeq );
    else if( s_termState.terminal_type == TERM_ANSI )
-   {
-      /* cursor keys */
-      addKeyMap( EXKEY_UP,     "\033[A" ); /* kcuu1 */
-      addKeyMap( EXKEY_DOWN,   "\033[B" ); /* kcud1 */
-      addKeyMap( EXKEY_RIGHT,  "\033[C" ); /* kcuf1 */
-      addKeyMap( EXKEY_LEFT,   "\033[D" ); /* kcub1 */
-      addKeyMap( EXKEY_CENTER, "\033[E" ); /* kb2   */
-      addKeyMap( EXKEY_END,    "\033[F" ); /* kend  */
-      addKeyMap( EXKEY_PGDN,   "\033[G" ); /* knp   */
-      addKeyMap( EXKEY_HOME,   "\033[H" ); /* khome */
-      addKeyMap( EXKEY_PGUP,   "\033[I" ); /* kpp   */
-      addKeyMap( EXKEY_INS,    "\033[L" ); /* kich1 */
-
-      addKeyMap( EXKEY_DEL,    "\177"   ); /* kdch1 */
-      addKeyMap( EXKEY_TAB,    "\011"   ); /* ht    */
-      addKeyMap( EXKEY_BS,     "\010"   ); /* kbs   */
-      addKeyMap( EXKEY_TAB | KEY_ALTMASK, "\033[Z" ); /* kcbt */
-
-      addKeyMap( EXKEY_F1 , "\033[M" ); /* kf1  */
-      addKeyMap( EXKEY_F2 , "\033[N" ); /* kf2  */
-      addKeyMap( EXKEY_F3 , "\033[O" ); /* kf3  */
-      addKeyMap( EXKEY_F4 , "\033[P" ); /* kf4  */
-      addKeyMap( EXKEY_F5 , "\033[Q" ); /* kf5  */
-      addKeyMap( EXKEY_F6 , "\033[R" ); /* kf6  */
-      addKeyMap( EXKEY_F7 , "\033[S" ); /* kf7  */
-      addKeyMap( EXKEY_F8 , "\033[T" ); /* kf8  */
-      addKeyMap( EXKEY_F9 , "\033[U" ); /* kf9  */
-      addKeyMap( EXKEY_F10, "\033[V" ); /* kf10 */
-      addKeyMap( EXKEY_F11, "\033[W" ); /* kf11 */
-      addKeyMap( EXKEY_F12, "\033[X" ); /* kf12 */
-
-      addKeyMap( EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Y" ); /* kf13 */
-      addKeyMap( EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" ); /* kf14 */
-      addKeyMap( EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[a" ); /* kf15 */
-      addKeyMap( EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[b" ); /* kf16 */
-      addKeyMap( EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[c" ); /* kf17 */
-      addKeyMap( EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[d" ); /* kf18 */
-      addKeyMap( EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[e" ); /* kf19 */
-      addKeyMap( EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[f" ); /* kf20 */
-      addKeyMap( EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[g" ); /* kf21 */
-      addKeyMap( EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[h" ); /* kf22 */
-      addKeyMap( EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" ); /* kf23 */
-      addKeyMap( EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" ); /* kf24 */
-
-      addKeyMap( EXKEY_F1 |KEY_CTRLMASK, "\033[k" );        /* kf25 */
-      addKeyMap( EXKEY_F2 |KEY_CTRLMASK, "\033[l" );        /* kf26 */
-      addKeyMap( EXKEY_F3 |KEY_CTRLMASK, "\033[m" );        /* kf27 */
-      addKeyMap( EXKEY_F4 |KEY_CTRLMASK, "\033[n" );        /* kf28 */
-      addKeyMap( EXKEY_F5 |KEY_CTRLMASK, "\033[o" );        /* kf29 */
-      addKeyMap( EXKEY_F6 |KEY_CTRLMASK, "\033[p" );        /* kf30 */
-      addKeyMap( EXKEY_F7 |KEY_CTRLMASK, "\033[q" );        /* kf31 */
-      addKeyMap( EXKEY_F8 |KEY_CTRLMASK, "\033[r" );        /* kf32 */
-      addKeyMap( EXKEY_F9 |KEY_CTRLMASK, "\033[s" );        /* kf33 */
-      addKeyMap( EXKEY_F10|KEY_CTRLMASK, "\033[t" );        /* kf34 */
-      addKeyMap( EXKEY_F11|KEY_CTRLMASK, "\033[u" );        /* kf35 */
-      addKeyMap( EXKEY_F12|KEY_CTRLMASK, "\033[v" );        /* kf36 */
-
-      addKeyMap( EXKEY_F1 |KEY_ALTMASK , "\033[w" );        /* kf37 */
-      addKeyMap( EXKEY_F2 |KEY_ALTMASK , "\033[x" );        /* kf38 */
-      addKeyMap( EXKEY_F3 |KEY_ALTMASK , "\033[y" );        /* kf39 */
-      addKeyMap( EXKEY_F4 |KEY_ALTMASK , "\033[z" );        /* kf40 */
-      addKeyMap( EXKEY_F5 |KEY_ALTMASK , "\033[@" );        /* kf41 */
-      addKeyMap( EXKEY_F6 |KEY_ALTMASK , "\033[[" );        /* kf42 */
-      addKeyMap( EXKEY_F7 |KEY_ALTMASK , "\033[\\");        /* kf43 */
-      addKeyMap( EXKEY_F8 |KEY_ALTMASK , "\033[]" );        /* kf44 */
-      addKeyMap( EXKEY_F9 |KEY_ALTMASK , "\033[^" );        /* kf45 */
-      addKeyMap( EXKEY_F10|KEY_ALTMASK , "\033[_" );        /* kf46 */
-      addKeyMap( EXKEY_F11|KEY_ALTMASK , "\033[`" );        /* kf47 */
-      addKeyMap( EXKEY_F12|KEY_ALTMASK , "\033[{" );        /* kf48 */
-   }
+      addKeyTab( ansiKeySeq );
 
 #if 0
    /* (curses) termcap/terminfo sequences */
