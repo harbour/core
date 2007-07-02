@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-02 18:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macrolex.c
+    ! allow to use 'FIELD' and '_FIELD' as variable/function/field name.
+    * allow to use 'IF' and 'IIF' as variable/field name.
+
 2007-07-02 17:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile

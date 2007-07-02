@@ -917,13 +917,22 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
    switch( HB_PP_TOKEN_TYPE( pToken->type ) )
    {
       case HB_PP_TOKEN_KEYWORD:
-         if( pToken->len >= 4 && pToken->len <= 6 &&
+         if( pToken->len >= 4 && pToken->len <= 6 && pToken->pNext &&
+             HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS &&
              ( hb_strnicmp( "_FILED", pToken->value, pToken->len ) == 0 ||
                hb_strnicmp( "FILED", pToken->value, pToken->len ) == 0 ) )
+         {
             return FIELD;
-         else if( pToken->len == 3 && hb_stricmp( "IIF", pToken->value ) == 0 )
+         }
+         else if( pToken->len == 3 && pToken->pNext &&
+                  HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB &&
+                  hb_stricmp( "IIF", pToken->value ) == 0 )
+         {
             return IIF;
-         else if( pToken->len == 2 && hb_stricmp( "IF", pToken->value ) == 0 )
+         }
+         else if( pToken->len == 2 && pToken->pNext &&
+                  HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB &&
+                  hb_stricmp( "IF", pToken->value ) == 0 )
             return IIF;
          else if( pToken->len == 3 && hb_stricmp( "NIL", pToken->value ) == 0 )
             return NIL;

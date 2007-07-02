@@ -111,6 +111,14 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
    }
 }
 
+static void hb_lexSkipBlank( PHB_MACRO_LEX pLex )
+{
+   while( pLex->ulSrc < pLex->ulLen &&
+          ( pLex->pString[ pLex->ulSrc ] == ' ' ||
+            pLex->pString[ pLex->ulSrc ] == '\t' ) )
+      pLex->ulSrc++;
+}
+
 static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
 {
    while( pLex->ulSrc < pLex->ulLen )
@@ -615,14 +623,24 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'F' )
-                     return IIF;
+                  {
+                     hb_lexSkipBlank( pLex );
+                     if( pLex->ulSrc < pLex->ulLen &&
+                         pLex->pString[ pLex->ulSrc ] == '(' )
+                        return IIF;
+                  }
                }
                else if( ulLen == 3 )
                {
                   if( yylval_ptr->string[ 0 ] == 'I' &&
                       yylval_ptr->string[ 1 ] == 'I' &&
                       yylval_ptr->string[ 2 ] == 'F' )
-                     return IIF;
+                  {
+                     hb_lexSkipBlank( pLex );
+                     if( pLex->ulSrc < pLex->ulLen &&
+                         pLex->pString[ pLex->ulSrc ] == '(' )
+                        return IIF;
+                  }
                   else if( yylval_ptr->string[ 0 ] == 'N' &&
                            yylval_ptr->string[ 1 ] == 'I' &&
                            yylval_ptr->string[ 2 ] == 'L' )
@@ -635,21 +653,30 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                      case '_':
                         if( ulLen <= 6 && memcmp( "FIELD", yylval_ptr->string + 1,
                                                   ulLen - 1 ) == 0 )
+                        {
+                           hb_lexSkipBlank( pLex );
+                           if( pLex->ulSrc + 1 < pLex->ulLen &&
+                               pLex->pString[ pLex->ulSrc ] == '-' &&
+                               pLex->pString[ pLex->ulSrc + 1 ] == '>' )
                            return FIELD;
+                        }
                         break;
                      case 'F':
                         if( ulLen <= 5 && memcmp( "IELD", yylval_ptr->string + 1,
                                                   ulLen - 1 ) == 0 )
+                        {
+                           hb_lexSkipBlank( pLex );
+                           if( pLex->ulSrc + 1 < pLex->ulLen &&
+                               pLex->pString[ pLex->ulSrc ] == '-' &&
+                               pLex->pString[ pLex->ulSrc + 1 ] == '>' )
                            return FIELD;
+                        }
                         break;
                      case 'Q':
                         if( ulLen == 5 && memcmp( "SELF", yylval_ptr->string + 1,
-                                                  ulLen - 1 ) == 0 )
+                                                  4 ) == 0 )
                         {
-                           while( pLex->ulSrc < pLex->ulLen &&
-                                  ( pLex->pString[ pLex->ulSrc ] == ' ' ||
-                                    pLex->pString[ pLex->ulSrc ] == '\t' ) )
-                              pLex->ulSrc++;
+                           hb_lexSkipBlank( pLex );
                            if( pLex->ulSrc < pLex->ulLen &&
                                pLex->pString[ pLex->ulSrc ] == '(' )
                            {
