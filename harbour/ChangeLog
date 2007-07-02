@@ -8,6 +8,53 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-02 14:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    + added hb_CStr() <=> CStr() translations
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbbit.c
+    + added set of hb_bit*() functions for bit manipulations:
+      HB_BITAND( <nVal1>, <nVal2>, [<nVal3,...>] ) => <nResult>
+      HB_BITOR( <nVal1>, <nVal2>, [<nVal3,...>] ) => <nResult>
+      HB_BITXOR( <nVal1>, <nVal2>, [<nVal3,...>] ) => <nResult>
+      HB_BITNOT( <nVal> ) => <nResult>
+      HB_BITTEST( <nVal>, <nBit> ) => <lResult>
+      HB_BITSET( <nVal>, <nBit> ) => <nResult>
+      HB_BITRESET( <nVal>, <nBit> ) => <nResult>
+      HB_BITSHIFT( <nVal>, <nBits> ) => <nResult>
+
+  * harbour/contrib/tip/Makefile
+  * harbour/contrib/tip/utils.c
+  * harbour/contrib/tip/popcln.prg
+  * harbour/contrib/tip/Changelog
+  * harbour/contrib/tip/cgi.prg
+  * harbour/contrib/tip/url.prg
+  * harbour/contrib/tip/httpcln.prg
+  * harbour/contrib/tip/client.prg
+  * harbour/contrib/tip/encoder.prg
+  * harbour/contrib/tip/smtpcln.prg
+  * harbour/contrib/tip/mail.prg
+  * harbour/contrib/tip/ftpcln.prg
+  + harbour/contrib/tip/thtml.prg
+  + harbour/contrib/tip/thtml.ch
+  - harbour/contrib/tip/cstr.prg
+    * synced with recent xHarbour modifications - please test
+
+  * harbour/source/vm/hvm.c
+    * formatting
+
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/sdf1.c
+    % do not copy date value to separate memory buffer but decode dates
+      directly from record buffer
+
+  * harbour/source/compiler/hbopt.c
+    * optimize PCODE generated for:
+         return <somefunc>([<params,...>])
+
 2007-06-29 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/hbsix/sxcompr.c
     ! fixed bug in workaround for SIX3 bug ;-)

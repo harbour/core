@@ -24,7 +24,7 @@ PRG_SOURCES= \
 	httpcln.prg \
 	mail.prg \
 	cgi.prg \
-	cstr.prg \
+	thtml.prg \
 
 LIBNAME=tip
 

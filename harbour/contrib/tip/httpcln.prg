@@ -51,6 +51,7 @@
  *
  */
 
+#include "hbcompat.ch"
 #include "common.ch"
 #include "hbclass.ch"
 #include "tip.ch"
@@ -69,12 +70,12 @@ CLASS tIPClientHTTP FROM tIPClient
    DATA hHeaders     INIT  {=>}
    DATA hCookies     INIT  {=>}
    DATA hFields      INIT  {=>}
-   DATA cUserAgent   INIT  "Mozilla/3.0 (compatible XHarbour-Tip/1.0)"
+   DATA cUserAgent   INIT  "Mozilla/3.0 compatible"
    DATA cAuthMode    INIT ""
    DATA cBoundary
    DATA aAttachments init {}
 
-   METHOD New()
+   METHOD New( oUrl,lTrace, oCredentials)
    METHOD Get( cQuery )
    METHOD Post( cPostData, cQuery )
    METHOD ReadHeaders()
@@ -93,13 +94,13 @@ HIDDEN:
 
 ENDCLASS
 
-METHOD New() CLASS tIPClientHTTP
+METHOD New( oUrl,lTrace, oCredentials) CLASS tIPClientHTTP
+   ::super:new( oUrl, lTrace, oCredentials )
    ::nDefaultPort := 80
    ::nConnTimeout := 5000
-   ::bChunked := .F.
-   ::lTrace := .f.
+   ::bChunked     := .F.
 
-   HSetCaseMatch( ::hHeaders, .F. )
+   hb_hCaseMatch( ::hHeaders, .F. )
 RETURN Self
 
 

@@ -73,6 +73,8 @@
    #xtranslate hb_libLoad([<x,...>])   => libLoad(<x>)
    #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
 
+   #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
+
 #else
 
    #xtranslate gtSys                   => hb_gtSys
@@ -92,6 +94,8 @@
 
    #xtranslate libLoad([<x,...>])      => hb_libLoad(<x>)
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
+
+   #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
    #xtranslate HHASKEY([<x,...>])      => HB_HHASKEY(<x>)

@@ -8,6 +8,120 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-05-20 01:00 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
+    * source\tip\thtml.prg
+
+      Changed code to avoid errors with VC8
+      --> error C2440: 'initializing' : cannot convert from 'void *' to 'char *'
+      --> error C3861: 'tolower': identifier not found
+
+
+2007-05-19 00:15 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
+    * source\tip\thtml.prg
+
+      Changed code to avoid warnings
+      -> Warning W0001  Ambiguous reference
+      -> Warning w0027  Meaningless use of expression
+
+
+2007-05-18 17:45 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
+    * source\tip\thtml.prg
+
+      Changed HTML parser to handle malformed HTML files more graciously.
+      Changed Attribute parser to detect hardcoded empty values ("").
+
+
+2007-05-11 18:30 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
+
+    + tests\tiptest\loadhtml.prg
+    + tests\tiptest\dbtohtml.prg
+
+    + source\tip\thtml.prg
+      New HTML classes
+      + THtmlDocument()
+      + THtmlIterator()
+      + THtmlIteratorScan()
+      + THtmlIteratorRegEx()
+      + THtmlNode()
+
+      New HTML functions
+      + AnsiToHtml()
+      + HtmlToAnsi()
+      + HtmlToOem()
+      + OemToHtml()
+      + THtmlCleanup()
+      + THtmlInit()
+      + THtmlIsValid()
+
+    + include\thtml.ch
+
+    * source\tip\ftpcln.prg
+      + added method :pwd()
+
+    As a short introduction:
+
+    1) THtmlDocument() objects read/write HTML files and streams
+
+    2) THtmlNode() objects know HTML and raise errors upon illegal HTML code
+
+    3) THtmlNode() objects know the "+" and "-" operator for opening/closing an HTML tag
+
+    4) THtmlNode() objects know the ":" operator for querying/creating a HTML node .OR. attribute
+      (sending an unknown message results in a query of lookup tables. If that query is successful,
+      a HTML node .OR. the value of an attribute is returned. Otherwise, a runtime error is raised)
+
+
+
+
+2007-04-23 14:30 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
+
+  * changed TIP classes to comply with OOP rules
+
+    * source\tip\client.prg
+        Adapted all :new() method(s) so that tIPClient becomes the
+        abstract super class for TIpClientFtp, TIpClientHttp, TIpClientPop and TIpClientSmtp
+
+        + Added Method :INetErrorDesc()
+        + Added Method :lastErrorCode()
+        + Added Method :lastErrorMessage()
+
+        - Removed method :data() since it calls an undeclared method :getOk()
+          :data() is used in TIpClientSmtp
+
+        * fixed bugs resulting in corrupted file downloads
+
+    * source\tip\ftpcln.prg
+        Added missing FTP functionalities
+        + Added method :rmd()
+        + Added method :listFiles()
+        + Added method :mput()
+
+        Supports progress bars
+        * Changed method :downloadFile() to enable display of download progress
+        * Changed method :uploadFile() to enable display of upload progress
+
+    * source\tip\encoder.prg
+        + Added FUNCTION TIp_GetEncoder( cModel )
+
+    * source\tip\mail.prg
+        Added "high level" methods to easily (de)compose an eMail (with file attachments)
+
+        + Added method :setHeader()
+        + Added method :attachFile()
+        + Added method :detachFile()
+        + Added method :getFileName()
+        + Added method :isMultiPart()
+        + Added method :getMultiParts()
+
+    * source\tip\popcln.prg
+        New methods for easy eMail retrieval
+        + Added method :countMail()
+        + Added method :retrieveAll()
+
+    * source\tip\smtpcln.prg
+        New method to work with TIpMail objects
+        + Added method :sendMail()
+
 2005-04-29 12:00 Luiz Rafael Culik <culikr@brturbo.com>
   * client.prg
   * smtpcln.prg

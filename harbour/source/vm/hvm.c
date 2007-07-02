@@ -1012,7 +1012,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Object */
 
          case HB_P_MESSAGE:
-            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1594,7 +1594,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSYM:
-            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmPushSymbol( pSymbols + HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1920,7 +1920,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MMESSAGE:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR) HB_GET_PTR( pCode + w + 1 );
+            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + w + 1 );
             hb_vmPushSymbol( pDynSym->pSymbol );
             w += sizeof( HB_DYNS_PTR ) + 1;
             break;

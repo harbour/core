@@ -51,11 +51,13 @@
  *
  */
 
+#include <ctype.h>
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbdate.h"
-#include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbvm.h"
+#include "hbdate.h"
 
 #ifndef HB_OS_WIN_32
    #include <time.h>
@@ -379,7 +381,7 @@ static EXT_MIME_ENTRY s_extMimeTable[EXT_MIME_TABLE_SIZE] =
    /* 13*/ { "hxx", "text/x-c++-header", MIME_FLAG_CASEINSENS },
 
    /* Java */
-   /* 14*/ { "class", "application/java", 0 }, // case sensitive!
+   /* 14*/ { "class", "application/java", 0 }, /* case sensitive! */
    /* 15*/ { "java", "text/java", 0 }
 };
 
@@ -417,13 +419,13 @@ static char *s_findMimeStringInTree( char *cData, int iLen, int iElem )
    int iPos = elem->pos;
    int iDataLen = strlen(  elem->pattern );
 
-   // allow \0 to be used for matches
+   /* allow \0 to be used for matches */
    if ( iDataLen == 0 )
    {
       iDataLen = 1;
    }
 
-   // trim spaces if required
+   /* trim spaces if required */
    while ( iPos < iLen &&
       ( (( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
          cData[iPos] == ' ' || cData[iPos] == '\r' || cData[iPos] == '\n') ) ||
@@ -438,7 +440,7 @@ static char *s_findMimeStringInTree( char *cData, int iLen, int iElem )
       {
          if ( (*elem->pattern == 0 && cData[iPos] == 0) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0)
          {
-            // is this the begin of a match tree?
+            /* is this the begin of a match tree? */
             if ( elem->next != 0 )
             {
                return s_findMimeStringInTree( cData, iLen, iElem + elem->next );
@@ -465,13 +467,13 @@ static char *s_findMimeStringInTree( char *cData, int iLen, int iElem )
       }
    }
 
-   // match failed!
+   /* match failed! */
    if ( elem->alternate != 0 )
    {
       return s_findMimeStringInTree( cData, iLen, iElem + elem->alternate );
    }
 
-   // total giveup
+   /* total giveup */
    return NULL;
 }
 
@@ -492,7 +494,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
          continue;
       }
 
-      // trim spaces if required
+      /* trim spaces if required */
       while ( iPos < iLen &&
          ( (( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
              cData[iPos] == ' ' || cData[iPos] == '\r' || cData[iPos] == '\n') ) ||
@@ -515,7 +517,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
       {
          if ( (*elem->pattern == 0 && cData[iPos] == 0) || hb_strnicmp( cData + iPos, elem->pattern, iDataLen ) == 0)
          {
-            // is this the begin of a match tree?
+            /* is this the begin of a match tree? */
             if ( elem->next != 0 )
             {
                return s_findMimeStringInTree( cData, iLen, iCount + elem->next );
@@ -542,17 +544,17 @@ static char *s_findStringMimeType( char *cData, int iLen )
       }
    }
 
-   // Failure; let's see if it's a text/plain.
+   /* Failure; let's see if it's a text/plain. */
    bFormFeed = FALSE;
    iCount = 0;
    while ( iCount < iLen )
    {
-      // form feed?
+      /* form feed? */
       if ( cData[ iCount ] == '\x0C' )
       {
          bFormFeed = TRUE;
       }
-      // esc sequence?
+      /* esc sequence? */
       else if ( cData[iCount] == '\x1B' )
       {
          bFormFeed = TRUE;
@@ -570,7 +572,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
          (cData[iCount] < 27 && cData[iCount] != '\t' && cData[iCount] != '\n' && cData[iCount] == '\r') ||
             cData[iCount] == '\xFF')
       {
-         // not an ASCII file, we surrender
+         /* not an ASCII file, we surrender */
          return NULL;
       }
 
@@ -579,7 +581,7 @@ static char *s_findStringMimeType( char *cData, int iLen )
 
    if ( bFormFeed )
    {
-      // we have escape sequences, seems a PRN/terminal file
+      /* we have escape sequences, seems a PRN/terminal file */
       return "application/remote-printing";
    }
 
@@ -625,7 +627,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
 
    if ( HB_IS_STRING( pFile ) )
    {
-      // decode the extension
+      /* decode the extension */
       char *fname = hb_itemGetCPtr( pFile );
       int iPos = strlen( fname )-1;
 
@@ -660,7 +662,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
       }
       else
       {
-         hb_retc( "unknown" ); // it's a valid MIME type
+         hb_retc( "unknown" ); /* it's a valid MIME type */
       }
    }
    else
@@ -697,4 +699,132 @@ HB_FUNC( TIP_MIMETYPE )
    {
       hb_retc( magic_type );
    }
+}
+
+/*
+ Case insensitive string comparison to optimize this expression:
+ IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len(<cSubStr>) ) )
+  <cString> must be provided as a pointer to the character string containing a substring
+  <nStart> is the numeric position to start comparison in <cString>
+  <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
+*/
+
+HB_FUNC( PSTRCOMPI )
+{
+   PHB_ITEM pString  = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pStart   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pSubstr  = hb_param( 3, HB_IT_STRING  );
+
+   if( pString && pStart && pSubstr )
+   {
+      char * pcBase = hb_itemGetCPtr( pString ) ;
+      char * pcSub  = hb_itemGetCPtr( pSubstr ) ;
+      ULONG uSublen = hb_itemGetCLen( pSubstr ) ;
+      ULONG uStart  = hb_itemGetNL( pStart ) ;
+
+      hb_retl( hb_strnicmp( pcBase + uStart - 1, pcSub, uSublen ) == 0 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* Case insensitive hb_strAt() function */
+static ULONG HB_EXPORT hb_strAtI( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+
+   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   {
+      ULONG ulPos = 0;
+      ULONG ulSubPos = 0;
+
+      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      {
+         if( tolower( (BYTE) szText[ ulPos ] ) == tolower( (BYTE) szSub[ ulSubPos ] ) )
+         {
+            ulSubPos++;
+            ulPos++;
+         }
+         else if( ulSubPos )
+         {
+            /* Go back to the first character after the first match,
+               or else tests like "22345" $ "012223456789" will fail. */
+            ulPos -= ( ulSubPos - 1 );
+            ulSubPos = 0;
+         }
+         else
+            ulPos++;
+      }
+      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+   }
+   else
+      return 0;
+}
+
+/* Case insensitive At() function */
+HB_FUNC( ATI )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+   PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
+
+   if( pText && pSub )
+   {
+      LONG lLen = hb_itemGetCLen( pText );
+      LONG lStart = pStart ? hb_itemGetNL( pStart ) : 1;
+      LONG lEnd = pEnd ? hb_itemGetNL( pEnd ) : lLen;
+      ULONG ulPos;
+
+      if( lStart < 0 )
+      {
+         lStart += lLen;
+         if( lStart < 0 )
+            lStart = 0;
+      }
+      else if( lStart )
+         lStart--;
+
+      if( lEnd < 0 )
+         lEnd += lLen + 1;
+      if( lEnd > lLen )
+         lEnd = lLen;
+
+      /* Stop searching if starting past beyond end. */
+      if( lStart >= lEnd )
+         hb_retnl( 0 );
+      else
+      {
+         ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                            hb_itemGetCPtr( pText ) + lStart, lEnd - lStart );
+         hb_retnl( ulPos ? ulPos + lStart : 0 );
+      }
+   }
+   else
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
+HB_FUNC( HB_EXEC )
+{
+   if( ISSYMBOL( 1 ) )
+   {
+      BOOL fSend = FALSE;
+      int iParams = hb_pcount() - 1;
+
+      if( iParams >= 1 )
+      {
+         fSend = iParams > 1 && ! HB_IS_NIL( hb_param( 2, HB_IT_ANY ) );
+         iParams--;
+      }
+      else
+         hb_vmPushNil();
+      if( fSend )
+         hb_vmSend( ( USHORT ) iParams );
+      else
+         hb_vmDo( ( USHORT ) iParams );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }

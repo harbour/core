@@ -1470,10 +1470,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          else
          {
-            char szBuffer[ 9 ];
-            memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], 8 );
-            szBuffer[ 8 ] = 0;
-            hb_itemPutDS( pItem, szBuffer );
+            hb_itemPutDS( pItem, pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          }
          break;
 

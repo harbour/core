@@ -51,6 +51,11 @@
  *
  */
 
+/* 2007-04-10, Hannes Ziegler <hz AT knowlexbase.com>
+   Added method :countMail()
+   Added method :retrieveAll()
+*/
+
 #include "hbclass.ch"
 
 /**
@@ -59,32 +64,33 @@
 
 CLASS tIPClientPOP FROM tIPClient
 
-   METHOD New( lTrace )
+   METHOD New( oUrl, lTrace, oCredentials )
    METHOD Open()
    METHOD Close()
    METHOD Read( iLen )
    METHOD Stat()
    METHOD List()
-   METHOD Retreive( nId, nLen )
+   METHOD Retrieve( nId, nLen )
    METHOD Delete()
    METHOD Quit()
    METHOD Noop()                 // Can be called repeatedly to keep-alive the connection
    METHOD Top( nMsgId )          // Get Headers of mail (no body) to be able to quickly handle a message
    METHOD UIDL( nMsgId )         // Returns Unique ID of message n or list of unique IDs of all message inside maildrop
-
    METHOD GetOK()
+   METHOD countMail()
+   METHOD retrieveAll()
 
 ENDCLASS
 
 
-METHOD New( lTrace ) CLASS tIPClientPOP
+METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClientPOP
 
    local cFile :="pop3"
    local n := 0
+   ::super:New( oUrl, lTrace, oCredentials )
 
    ::nDefaultPort := 110
    ::nConnTimeout := 10000
-   ::lTrace:= lTrace
 
    if ::ltrace
       if !file("pop3.log")
@@ -100,8 +106,8 @@ METHOD New( lTrace ) CLASS tIPClientPOP
 RETURN Self
 
 
-METHOD Open() CLASS tIPClientPOP
-   IF .not. ::super:Open()
+METHOD Open( cUrl ) CLASS tIPClientPOP
+   IF .not. ::super:Open( cUrl )
       RETURN .F.
    ENDIF
 
@@ -115,6 +121,7 @@ METHOD Open() CLASS tIPClientPOP
       IF ::GetOK()
          ::InetSendall( ::SocketCon, "PASS " + ::oUrl:cPassword + ::cCRLF )
          IF ::GetOK()
+            ::isOpen := .T.
             RETURN .T.
          ENDIF
       ENDIF
@@ -275,7 +282,7 @@ RETURN cRet
 
 
 
-METHOD Retreive( nId, nLen ) CLASS tIPClientPOP
+METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
 
    LOCAL nPos
    LOCAL cRet, nRetLen, cBuffer, nRead
@@ -339,3 +346,42 @@ METHOD Delete( nId ) CLASS tIPClientPOP
    ::InetSendall( ::SocketCon, "DELE " + AllTrim( Str( nId ) ) +  ::cCRLF )
 RETURN ::GetOk()
 
+
+
+METHOD countMail CLASS TIpClientPop
+   LOCAL aMails
+   IF ::isOpen
+      ::reset()
+      aMails := HB_ATokens( StrTran( ::list(), Chr(13),''), Chr(10) )
+      RETURN Len( aMails ) 
+   ENDIF
+RETURN -1
+
+
+METHOD retrieveAll( lDelete )
+   LOCAL aMails, i, imax, cMail
+
+   IF Valtype( lDelete ) <> "L"
+      lDelete := .F.
+   ENDIF
+
+   IF .NOT. ::isOpen
+      RETURN NIL
+   ENDIF
+
+   imax := ::countMail()
+   aMails := Array( imax )
+
+   FOR i:=1 TO imax
+      ::reset()
+      cMail := ::retrieve( i )
+      aMails[i] := TIpMail():new()
+      aMails[i]:fromString( cMail )
+
+      IF lDelete
+         ::reset()
+         ::delete(i)
+      ENDIF
+   NEXT
+
+RETURN aMails

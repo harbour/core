@@ -414,12 +414,7 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_IT_DATE:
-         {
-            char szBuffer[ 9 ];
-            memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], 8 );
-            szBuffer[ 8 ] = 0;
-            hb_itemPutDS( pItem, szBuffer );
-         }
+         hb_itemPutDS( pItem, pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          break;
 
       case HB_IT_LONG:

@@ -50,6 +50,7 @@ C_SOURCES=\
 	gx.c         \
 	hardcr.c     \
 	hbadler.c    \
+	hbbit.c      \
 	hbcrc.c      \
 	hbmd5.c      \
 	hbffind.c    \

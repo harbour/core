@@ -50,14 +50,53 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-                                                                      /*
+
+/*
  Internet Messaging: http://www.ietf.org/rfc/rfc2045.txt
 
  */
 
+/* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
+   Added Function: TIp_GetEncoder()
+*/
+
+
 #include "hbclass.ch"
 #include "fileio.ch"
 #include "tip.ch"
+
+
+FUNCTION TIp_GetEncoder( cModel )
+   LOCAL oEncoder
+
+   IF Valtype( cModel ) <> "C"
+      cModel := "as-is"
+   ENDIF
+
+   cModel := Lower( cModel )
+
+   DO CASE
+   CASE cModel == "base64"
+      oEncoder := TIPEncoderBase64():New()
+
+   CASE cModel == "quoted-printable"
+      oEncoder := TIPEncoderQP():New()
+
+   CASE cModel == "url" .or. cModel == "urlencoded"
+      oEncoder := TIPEncoderURL():New()
+
+   CASE cModel == "7bit" .or. cModel == "8bit"
+      oEncoder := TIPEncoder():New( cModel )
+      oEncoder:cName := cModel
+
+   OTHERWISE
+      oEncoder := TIPEncoder():New()
+
+   ENDCASE
+
+RETURN oEncoder
+
+
 
 CLASS TIPEncoder
    DATA cName
@@ -69,28 +108,12 @@ ENDCLASS
 
 
 METHOD New( cModel ) class TIPEncoder
-   cModel := Lower( cModel )
-   IF cModel == "base64"
-         RETURN TIPEncoderBase64():New()
-
-   ELSEIF cModel == "quoted-printable"
-      RETURN TIPEncoderQP():New()
-
-   ELSEIF cModel == "url" .or. cModel == "urlencoded"
-      RETURN TIPEncoderURL():New()
-
-   ELSEIF  cModel == "7bit" .or. cModel == "8bit"
-      ::cName := cModel
-      RETURN Self
-
-   ELSEIF cModel == "text" .or. cModel == "plain";
-             .or. cModel == "text/plain" .or. cModel == "as-is";
-             .or. cModel == "7-bit" .or. cModel == "8-bit"
-      ::cName := "as-is"
-      RETURN Self
+   IF Valtype( cModel ) <> "C"
+      cModel := "as-is"
    ENDIF
+   ::cName := cModel
+RETURN self
 
-RETURN NIL
 
 METHOD Encode( cData ) class TIPEncoder
 RETURN cData
