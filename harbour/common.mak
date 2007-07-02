@@ -414,6 +414,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbadler$(OBJEXT)  \
     $(OBJ_DIR)\hbbit$(OBJEXT)    \
     $(OBJ_DIR)\hbcrc$(OBJEXT)    \
+    $(OBJ_DIR)\hbhex$(OBJEXT)    \
     $(OBJ_DIR)\hbmd5$(OBJEXT)    \
     $(OBJ_DIR)\hbffind$(OBJEXT)  \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \

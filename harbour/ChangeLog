@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-02 17:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbhex.c
+    * added HB_HEXTONUM() and HB_NUMTOHEX()
+
+  * harbour/include/hbcompat.ch
+    * added trnaslation rules for expresions in parentheses which use
+      new xHarbour operators: HAS, IN, LIKE, &, |, ^^, >>, <<
+      Please note that only code which uses above operators in parentheses
+      will be translated, f.e. this code will not be translated:
+         if cVal1 IN cVal2
+            nVal := nVal1 | nVal2 | nVal3 | nVal4
+         endif
+      will not be translated but this one will:
+         if ( cVal1 IN cVal2 )
+            nVal := ( nVal1 | nVal2 | nVal3 | nVal4 )
+         endif
+
+  * harbour/contrib/tip/thtml.prg
+  * harbour/contrib/tip/thtml.ch
+    + added $\Id
+  * harbour/source/rtl/hbbit.c
+    + added $\Id
+    ! fixed typo in HB_BITSHIFT()
+
 2007-07-02 14:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompat.ch
     + added hb_CStr() <=> CStr() translations

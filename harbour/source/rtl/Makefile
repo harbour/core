@@ -52,6 +52,7 @@ C_SOURCES=\
 	hbadler.c    \
 	hbbit.c      \
 	hbcrc.c      \
+	hbhex.c      \
 	hbmd5.c      \
 	hbffind.c    \
 	hbgtcore.c   \

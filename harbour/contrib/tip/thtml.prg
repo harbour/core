@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * HTML Classes
  *
@@ -50,13 +54,6 @@
 #include "error.ch"
 #include "hbclass.ch"
 #include "thtml.ch"
-
-#xtranslate ( <exp1> HAS <exp2> )   => HB_REGEXHAS( <exp2>, <exp1> )
-#xtranslate ( <exp1> LIKE <exp2> )  => HB_REGEXLIKE( <exp2>, <exp1> )
-#xtranslate ( <exp1> | <exp2> [ | <exp3> ] ) => HB_BITOR( <exp1>, <exp2>[, <exp3>] )
-#xtranslate ( <exp1> & <exp2> [ & <exp3> ] ) => HB_BITAND( <exp1>, <exp2>[, <exp3>] )
-#xtranslate HB_BITOR( [<expN>,] <exp2> | <exp3> )  => HB_BITOR( [<expN>,] <exp2>, <exp3> )
-#xtranslate HB_BITAND( [<expN>,] <exp2> & <exp3> ) => HB_BITAND( [<expN>,] <exp2>, <exp3> )
 
 // A Html document can have more than 16 nesting levels.
 // The current implementation of FOR EACH is not suitable for the HTML classes

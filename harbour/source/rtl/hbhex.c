@@ -4,7 +4,8 @@
 
 /*
  * Harbour Project source code:
- *    HB_BIT*() functions
+ *    HB_NUMTOHEX()
+ *    HB_HEXTONUM()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -53,108 +54,75 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-static BOOL hb_numParam( int iParam, HB_LONG * plNum )
+HB_FUNC( HB_HEXTONUM )
 {
-   if( ISNUM( iParam ) )
-   {
-      *plNum = hb_parnint( iParam );
-      return TRUE;
-   }
-   hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
-   *plNum = 0;
-   return FALSE;
-}
+   char * szHex = hb_parc( 1 );
 
-HB_FUNC( HB_BITAND )
-{
-   HB_LONG lValue;
-   if( hb_numParam( 1, &lValue ) )
+   if( szHex )
    {
-      int iPCount = hb_pcount() - 1, i = 1;
-      do
+      HB_ULONG ulNum = 0;
+
+      while( *szHex == ' ' ) szHex++;
+      while( *szHex )
       {
-         HB_LONG lNext;
-         if( !hb_numParam( ++i, &lNext ) )
-            return;
-         lValue &= lNext;
+         int iDigit;
+         char c = *szHex++;
+         if ( c >= '0' && c <= '9' )
+            iDigit = c - '0';
+         else if ( c >= 'A' && c <= 'F' )
+            iDigit = c - 'A' + 10;
+         else if ( c >= 'a' && c <= 'f' )
+            iDigit = c - 'a' + 10;
+         else
+         {
+            ulNum = 0;
+            break;
+         }
+         ulNum = ( ulNum << 4 ) + iDigit;
       }
-      while( --iPCount > 0 );
-      hb_retnint( lValue );
+      hb_retnint( ulNum );
    }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_BITOR )
+HB_FUNC( HB_NUMTOHEX )
 {
-   HB_LONG lValue;
-   if( hb_numParam( 1, &lValue ) )
+   HB_ULONG ulNum;
+   int      iLen;
+   BOOL     fDefaultLen;
+   char     ret[ 33 ];
+
+   if( ISNUM( 2 ) )
    {
-      int iPCount = hb_pcount() - 1, i = 1;
-      do
-      {
-         HB_LONG lNext;
-         if( !hb_numParam( ++i, &lNext ) )
-            return;
-         lValue |= lNext;
-      }
-      while( --iPCount > 0 );
-      hb_retnint( lValue );
+      iLen = hb_parni( 2 );
+      iLen = ( iLen < 1 ) ? 1 : ( ( iLen > 32 ) ? 32 : iLen );
+      fDefaultLen = 0;
    }
-}
-
-HB_FUNC( HB_BITXOR )
-{
-   HB_LONG lValue;
-   if( hb_numParam( 1, &lValue ) )
+   else
    {
-      int iPCount = hb_pcount() - 1, i = 1;
-      do
-      {
-         HB_LONG lNext;
-         if( !hb_numParam( ++i, &lNext ) )
-            return;
-         lValue ^= lNext;
-      }
-      while( --iPCount > 0 );
-      hb_retnint( lValue );
+      iLen = 32;
+      fDefaultLen = 1;
    }
-}
-
-HB_FUNC( HB_BITNOT )
-{
-   HB_LONG lValue;
-   if( hb_numParam( 1, &lValue ) )
-      hb_retnint( ~lValue );
-}
-
-HB_FUNC( HB_BITTEST )
-{
-   HB_LONG lValue, lBit;
-   if( hb_numParam( 1, &lValue ) && hb_numParam( 2, &lBit ) )
-      hb_retl( ( lValue & ( ( HB_LONG ) 1 << lBit ) ) != 0 );
-}
-
-HB_FUNC( HB_BITSET )
-{
-   HB_LONG lValue, lBit;
-   if( hb_numParam( 1, &lValue ) && hb_numParam( 2, &lBit ) )
-      hb_retnint( lValue | ( ( HB_LONG ) 1 << lBit ) );
-}
-
-HB_FUNC( HB_BITRESET )
-{
-   HB_LONG lValue, lBit;
-   if( hb_numParam( 1, &lValue ) && hb_numParam( 2, &lBit ) )
-      hb_retnint( lValue & ( ( ~ ( HB_LONG ) 1 ) << lBit ) );
-}
-
-HB_FUNC( HB_BITSHIFT )
-{
-   HB_LONG lValue, lBits;
-   if( hb_numParam( 1, &lValue ) && hb_numParam( 2, &lBits ) )
+                    
+   if( ISNUM( 1 ) )
+      ulNum = hb_parnint( 1 );
+   else if( ISPOINTER( 1 ) )
+      ulNum = (HB_PTRDIFF) hb_parptr( 1 );
+   else
    {
-      if( lBits < 0 )
-         hb_retnint( lValue >> -lBits );
-      else
-         hb_retnint( lValue << lBits );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      return;
    }
+
+   ret[ iLen ] = '\0';
+   do
+   {
+      int iDigit = ( int ) ( ulNum & 0x0F );
+      ret[ --iLen ] = iDigit + ( iDigit < 10 ? '0' : 'A' - 10 ); 
+      ulNum >>= 4;
+   }
+   while( fDefaultLen ? ulNum : iLen );
+
+   hb_retc( &ret[ iLen ] );
 }

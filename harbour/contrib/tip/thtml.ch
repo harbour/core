@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * Directives for HTML Classes
  *
