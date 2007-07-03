@@ -24,7 +24,7 @@ $(LIB_DIR)\tip.lib :      \
    $(OBJ_DIR)\smtpcln.obj \
    $(OBJ_DIR)\mail.obj    \
    $(OBJ_DIR)\cgi.obj     \
-   $(OBJ_DIR)\cstr.obj    \
+   $(OBJ_DIR)\thtml.obj   \
    $(OBJ_DIR)\base64x.obj \
    $(OBJ_DIR)\encmthd.obj \
    $(OBJ_DIR)\hbhex2n.obj \
@@ -66,8 +66,8 @@ $(OBJ_DIR)\mail.obj    : $(OBJ_DIR)\mail.c
 $(OBJ_DIR)\cgi.c       : cgi.prg
 $(OBJ_DIR)\cgi.obj     : $(OBJ_DIR)\cgi.c
 
-$(OBJ_DIR)\cstr.c      : cstr.prg
-$(OBJ_DIR)\cstr.obj    : $(OBJ_DIR)\cstr.c
+$(OBJ_DIR)\thtml.c     : thtml.prg
+$(OBJ_DIR)\thtml.obj   : $(OBJ_DIR)\thtml.c
 
 $(OBJ_DIR)\base64x.obj : base64x.c
 $(OBJ_DIR)\encmthd.obj : encmthd.c
