@@ -1470,7 +1470,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          else
          {
-            hb_itemPutDS( pItem, pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+            hb_itemPutDS( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          }
          break;
 

@@ -150,15 +150,6 @@
    #translate ( <exp1> & <exp2>       => ( HB_BITAND( <exp1>, <exp2> )
    #translate ( <exp1> ^^ <exp2>      => ( HB_BITXOR( <exp1>, <exp2> )
 
-   #translate , <exp1> IN <exp2>      => , <exp1> $ <exp2>
-   #translate , <exp1> HAS <exp2>     => , HB_REGEXHAS( <exp2>, <exp1> )
-   #translate , <exp1> LIKE <exp2>    => , HB_REGEXLIKE( <exp2>, <exp1> )
-   #translate , <exp1> \<\< <exp2>    => , HB_BITSHIFT( <exp1>, <exp2> )
-   #translate , <exp1> >> <exp2>      => , HB_BITSHIFT( <exp1>, -<exp2> )
-   #translate , <exp1> | <exp2>       => , HB_BITOR( <exp1>, <exp2> )
-   #translate , <exp1> & <exp2>       => , HB_BITAND( <exp1>, <exp2> )
-   #translate , <exp1> ^^ <exp2>      => , HB_BITXOR( <exp1>, <exp2> )
-
    #xtranslate HB_BITOR( [<expN>,] <exp2> | <exp3> )  => HB_BITOR( [<expN>,] <exp2>, <exp3> )
    #xtranslate HB_BITAND( [<expN>,] <exp2> & <exp3> ) => HB_BITAND( [<expN>,] <exp2>, <exp3> )
    #xtranslate HB_BITXOR( [<expN>,] <exp2> ^^ <exp3> ) => HB_BITXOR( [<expN>,] <exp2>, <exp3> )

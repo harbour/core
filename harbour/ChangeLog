@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-03 15:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    * removed bit translation rules starting with comma (,)
+
+  * harbour/source/rtl/hbhex.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/sdf1.c
+    ! fixed casting
+
 2007-07-02 18:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/macro/macro.yyc
   * harbour/source/macro/macro.y

@@ -122,7 +122,7 @@ HB_FUNC( HB_NUMTOHEX )
       ret[ --iLen ] = iDigit + ( iDigit < 10 ? '0' : 'A' - 10 ); 
       ulNum >>= 4;
    }
-   while( fDefaultLen ? ulNum : iLen );
+   while( fDefaultLen ? ulNum != 0 : iLen != 0 );
 
    hb_retc( &ret[ iLen ] );
 }
