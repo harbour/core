@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-04 13:52 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
+  * source/rdd/dbfcdx/dbfcdx1.c
+    * removed unnecesary code
+
 2007-07-04 04:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
    * do not allocate self calss casting method when class name cannot
