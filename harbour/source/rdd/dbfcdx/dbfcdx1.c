@@ -6574,7 +6574,7 @@ static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip )
          }
          else if ( ulPos )
          {
-            pTag->logKeyPos += lToSkip - ( ulPos ? 0 : 1 );
+            pTag->logKeyPos += lToSkip;
             pTag->logKeyRec = pArea->ulRecNo;
          }
       }
@@ -6588,7 +6588,7 @@ static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip )
       }
       else if ( ulPos )
       {
-         pTag->logKeyPos += lToSkip + ( ulPos ? 0 : 1 );
+         pTag->logKeyPos += lToSkip;
          pTag->logKeyRec = pArea->ulRecNo;
       }
    }
