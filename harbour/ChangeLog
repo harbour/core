@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-04 18:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbextern.ch
+    + added some other missing functions for which I had no doubt they
+      should be included
+
 2007-07-04 17:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/gencobj.c
     + added support for environment variable substitution in harbour.cfg
