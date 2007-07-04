@@ -625,6 +625,7 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
          if( hb_clsCanClearMethod( &pClass->pMethods[ * puiMsgIdx ], TRUE ) )
          {
             memset( &pClass->pMethods[ * puiMsgIdx ], 0, sizeof( METHOD ) );
+            * puiMsgIdx = 0;
             pClass->uiMethods--;       /* Decrease number of messages */
          }
          return;
@@ -2526,12 +2527,12 @@ HB_FUNC( __CLSADDMSG )
                nType == HB_OO_MSG_CLASSPROPERTY )
       {
          char szAssign[ HB_SYMBOL_NAME_LEN + 1 ];
-         int iLen = ( int ) hb_parclen( 1 );
+         int iLen = ( int ) hb_parclen( 2 );
          if( iLen >= HB_SYMBOL_NAME_LEN )
             iLen = HB_SYMBOL_NAME_LEN - 1;
          szAssign[ 0 ] = '_';
          memcpy( szAssign + 1, szMessage, iLen );
-         szAssign[ iLen ] = '\0';
+         szAssign[ iLen + 1 ] = '\0';
 
          uiScope = ( uiScope | HB_OO_CLSTP_EXPORTED ) &
                   ~( HB_OO_CLSTP_PROTECTED | HB_OO_CLSTP_HIDDEN );

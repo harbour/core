@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-04 04:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+   ! fixed typo in adding messages with HB_OO_MSG_PROPERTY flag
+   ! fixed __clsDelMsg() to be safe with later dictionary resizing
+
 2007-07-03 21:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompat.ch
    ! added closing parentheses in operators translation rules to avoid
