@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-04 17:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/gencobj.c
+    + added support for environment variable substitution in harbour.cfg
+      file, envvar should be given as $(<name>) f.e.: $(HB_INC_INSTALL)
+
 2007-07-04 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
   * harbour/source/compiler/harbour.yyc

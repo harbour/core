@@ -91,6 +91,41 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
    return ( char * ) pszCfg;
 }
 
+static void hb_substenvvar( char * szLine )
+{
+   char szBuf[ HB_CFG_LINE_LEN ], * szVar, * ptr;
+
+   ptr = szLine;
+   while( *ptr )
+   {
+      if( *ptr == '$' && ptr[ 1 ] == '(' )
+      {
+         int i = 2, j;
+         while( ( ptr[ i ] >= 'A' && ptr[ i ] <= 'Z' ) ||
+                ( ptr[ i ] >= 'a' && ptr[ i ] <= 'z' ) ||
+                ( ptr[ i ] >= '0' && ptr[ i ] <= '0' ) || ptr[ i ] == '_' )
+            ++i;
+         if( i > 2 && ptr[ i ] == ')' )
+         {
+            ptr[ 0 ] = 0;
+            ptr[ i ] = 0;
+            hb_strncpy( szBuf, szLine, HB_CFG_LINE_LEN - 1 );
+            szVar = hb_getenv( ptr + 2 );
+            if( szVar )
+            {
+               hb_strncat( szBuf, szVar, HB_CFG_LINE_LEN - 1 );
+               hb_xfree( szVar );
+            }
+            j = strlen( szBuf );
+            hb_strncat( szBuf, &ptr[ i + 1 ], HB_CFG_LINE_LEN - 1 );
+            hb_strncpy( szLine, szBuf, HB_CFG_LINE_LEN - 1 );
+            ptr = szLine + j;
+         }
+      }
+      ++ptr;
+   }
+}
+
 /* Builds platform dependant object module from Harbour C output */
 void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
@@ -137,10 +172,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
          if( pszEnv )
             hb_xfree( ( void * ) pszEnv );
-
-         if( pszCfgFileName )
-            hb_xfree( ( void * ) pszCfgFileName );
-         
+         hb_xfree( ( void * ) pszCfgFileName );
          return;
       }
 
@@ -149,6 +181,8 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
          ULONG ulLen;
          char * szStr = szLine;
          char * szToken;
+
+         hb_substenvvar( szLine );
 
          /* Trim left */
          while( HB_ISSPACE( *szStr ) )
@@ -169,7 +203,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
             if( szToken )
             {
                *szToken++ = '\0';
-               if ( *szToken )
+               if( *szToken )
                {
                   /* Checks compiler name */
                   if( ! hb_stricmp( szStr, "CC" ) )
@@ -213,9 +247,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
       if( pszEnv )
          hb_xfree( ( void * ) pszEnv );
-
-      if( pszCfgFileName )
-         hb_xfree( ( void * ) pszCfgFileName );
+      hb_xfree( ( void * ) pszCfgFileName );
       
       return;
       
@@ -223,9 +255,6 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( pszEnv )
       hb_xfree( ( void * ) pszEnv );
-
-   if( pszCfgFileName )
-      hb_xfree( ( void * ) pszCfgFileName );
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
@@ -266,13 +295,9 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       snprintf( szCommandLine, sizeof( szCommandLine ), "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
       
       if( bVerbose )
-      {
          printf( "Exec: %s\n", szCommandLine ) ;         
-      }
       else
-      {
          hb_strncat( szCommandLine, HB_NULL_STR, sizeof( szCommandLine ) - 1 );
-      }
 
       /* Compile it! */
       iSuccess = ( system( szCommandLine ) != -1 );
@@ -282,12 +307,8 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       if( bDelTmp ) /* && iSuccess ) */
       {
          if( bVerbose )
-         {
             printf( "Deleting: \"%s\"\n", szFileName );            
-         }
-
          remove( ( char * ) szFileName );
-
       }
 
       if( ! HB_COMP_PARAM->fQuiet )
@@ -299,7 +320,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       }
    }
    else
-   {
       printf( "\nError: No compiler defined in %s\n", pszCfgFileName );
-   }
+
+   hb_xfree( ( void * ) pszCfgFileName );
 }
