@@ -2766,19 +2766,21 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
    }
 
    /* add self class casting */
-   pMethod = hb_clsAllocMsg( pNewCls, pNewCls->pClassSym );
-   if( ! pMethod )
-      return 0;
-   if( pMethod->pMessage == NULL )
+   if( hb_stricmp( pNewCls->szName, pNewCls->pClassSym->pSymbol->szName ) == 0 )
    {
-      pNewCls->uiMethods++;
-      pMethod->pMessage = pNewCls->pClassSym;
-      pMethod->uiSprClass = s_uiClasses;
-      pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
-      pMethod->pFuncSym = &s___msgSuper;
-      pMethod->uiOffset = pNewCls->uiDatas;
+      pMethod = hb_clsAllocMsg( pNewCls, pNewCls->pClassSym );
+      if( ! pMethod )
+         return 0;
+      if( pMethod->pMessage == NULL )
+      {
+         pNewCls->uiMethods++;
+         pMethod->pMessage = pNewCls->pClassSym;
+         pMethod->uiSprClass = s_uiClasses;
+         pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
+         pMethod->pFuncSym = &s___msgSuper;
+         pMethod->uiOffset = pNewCls->uiDatas;
+      }
    }
-
    pNewCls->uiDataFirst = pNewCls->uiDatas;
    pNewCls->uiDatas += uiDatas;
 
