@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-04 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    ! fixed using LOOP inside SWITCH/CASE.../END statement
+    ! fixed possible memory leeks when compile time error appear
+      with some unfinished LOOP statements
+    ! do not push unnecessary NIL on HVM stack when SWITCH/CASE.../END
+      statement were used without OTHERWISE clause
+
+  * harbour/source/pp/ppcore.c
+    ! do not calculate last line when it does not contain any character
+    * clear line number counter after preprocessing standard definitions/
+      rules - I hope it will make David happy ;-)
+
 2007-07-04 13:52 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * source/rdd/dbfcdx/dbfcdx1.c
     * removed unnecesary code

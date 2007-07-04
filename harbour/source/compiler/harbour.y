@@ -62,7 +62,7 @@
 #undef YYMALLOC
 #define YYMALLOC hb_xgrab
 
-static void hb_compLoopStart( HB_COMP_DECL );
+static void hb_compLoopStart( HB_COMP_DECL, BOOL );
 static void hb_compLoopEnd( HB_COMP_DECL );
 static void hb_compLoopLoop( HB_COMP_DECL );
 static void hb_compLoopExit( HB_COMP_DECL );
@@ -1513,7 +1513,7 @@ DoWhile    : WhileBegin Expression Crlf
                }
            ;
 
-WhileBegin : WHILE    { $$ = HB_COMP_PARAM->functions.pLast->lPCodePos; hb_compLinePushIfInside( HB_COMP_PARAM ); ++HB_COMP_PARAM->wWhileCounter; hb_compLoopStart( HB_COMP_PARAM ); }
+WhileBegin : WHILE    { $$ = HB_COMP_PARAM->functions.pLast->lPCodePos; hb_compLinePushIfInside( HB_COMP_PARAM ); ++HB_COMP_PARAM->wWhileCounter; hb_compLoopStart( HB_COMP_PARAM, TRUE ); }
            ;
 
 EndWhile   : END   { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
@@ -1534,7 +1534,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                }
              TO Expression StepExpr                   /* 6  7  8 */
                {                                      /* 9 */
-                  hb_compLoopStart( HB_COMP_PARAM );
+                  hb_compLoopStart( HB_COMP_PARAM, TRUE );
                   $<lNumber>$ = hb_compGenJump( 0, HB_COMP_PARAM );
                }
              Crlf                                     /* 10 */
@@ -1545,11 +1545,12 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
                   int iSign, iLine;
 
+                  hb_compLoopHere( HB_COMP_PARAM );
+
                   iLine = HB_COMP_PARAM->currLine;
                   HB_COMP_PARAM->currLine = $<lNumber>1;
                   hb_compLinePush( HB_COMP_PARAM );
                   HB_COMP_PARAM->currLine = iLine;
-                  hb_compLoopHere( HB_COMP_PARAM );
 
                   iSign = $<asExpr>8 ? hb_compExprAsNumSign( $<asExpr>8 ) : 1;
                   if( $<asExpr>8 )
@@ -1629,7 +1630,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
                 */
                 hb_compEnumStart( HB_COMP_PARAM, $2, $4, $6 );
                 
-                hb_compLoopStart( HB_COMP_PARAM );
+                hb_compLoopStart( HB_COMP_PARAM, TRUE );
                 $<lNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
              }
              Crlf                                     /* 8 */
@@ -1657,50 +1658,52 @@ Descend    : /* default up */     { $$ =  1; }
            | DESCEND              { $$ = -1; }
            ;
 
-DoSwitch   : SwitchBegin
-             {
-                hb_compLoopStart( HB_COMP_PARAM );
-                hb_compSwitchStart( HB_COMP_PARAM );
-                hb_compGenJump( 0, HB_COMP_PARAM );
-             }
-             SwitchCases
-             EndSwitch
-             {
-                hb_compSwitchEnd( HB_COMP_PARAM );
-                hb_compLoopEnd( HB_COMP_PARAM );
-             }
+DoSwitch    : SwitchBegin
+               {
+                  hb_compLoopStart( HB_COMP_PARAM, FALSE );
+                  hb_compSwitchStart( HB_COMP_PARAM );
+                  hb_compGenJump( 0, HB_COMP_PARAM );
+               }
+               SwitchCases
+               EndSwitch
+               {
+                  hb_compSwitchEnd( HB_COMP_PARAM );
+                  hb_compLoopEnd( HB_COMP_PARAM );
+               }
 
-           | SwitchBegin
-             EndSwitch
-             {
-                hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
-             }
-           ;
+            | SwitchBegin
+              EndSwitch
+               {
+                  hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
+               }
+            ;
 
-EndSwitch  : END
-             { if( HB_COMP_PARAM->wSwitchCounter )
-                  --HB_COMP_PARAM->wSwitchCounter; 
-                HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
-             }
-           ;
+EndSwitch   : END
+               {
+                  if( HB_COMP_PARAM->wSwitchCounter )
+                     --HB_COMP_PARAM->wSwitchCounter; 
+                  HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+               }
+            ;
 
 SwitchStart : DOSWITCH 
-              { ++HB_COMP_PARAM->wSwitchCounter; 
-                 hb_compLinePushIfInside( HB_COMP_PARAM );
-              } 
+               { ++HB_COMP_PARAM->wSwitchCounter; 
+                  hb_compLinePushIfInside( HB_COMP_PARAM );
+               }
               Expression Crlf
-              {
-                 HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
-              }
+               {
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
+               }
             ;
 
 SwitchBegin : SwitchStart
-            | SwitchStart Statements {
-                        if( $<lNumber>2 > 0 )
-                        {
-                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
-                        }
-                     }
+            | SwitchStart Statements
+               {
+                  if( $<lNumber>2 > 0 )
+                  {
+                     hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
+                  }
+               }
             ;
 
 SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLinePush( HB_COMP_PARAM ); } Crlf
@@ -1915,7 +1918,7 @@ Crlf       : '\n'       { HB_COMP_PARAM->fError = FALSE; }
  * This function stores the position in pcode buffer where the FOR/WHILE
  * loop starts. It will be used to fix any LOOP/EXIT statements
  */
-static void hb_compLoopStart( HB_COMP_DECL )
+static void hb_compLoopStart( HB_COMP_DECL, BOOL fCanLoop )
 {
    HB_LOOPEXIT_PTR pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
 
@@ -1930,11 +1933,12 @@ static void hb_compLoopStart( HB_COMP_DECL )
    else
       HB_COMP_PARAM->pLoops = pLoop;
 
-   pLoop->pNext       = NULL;
+   pLoop->ulOffset    = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->fCanLoop    = fCanLoop;   /* can we use LOOP inside */
+   pLoop->wSeqCounter = HB_COMP_PARAM->wSeqCounter;  /* store current SEQUENCE counter */
    pLoop->pExitList   = NULL;
    pLoop->pLoopList   = NULL;
-   pLoop->ulOffset    = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the start position */
-   pLoop->wSeqCounter = HB_COMP_PARAM->wSeqCounter;  /* store current SEQUENCE counter */
+   pLoop->pNext       = NULL;
 }
 
 /*
@@ -1942,23 +1946,22 @@ static void hb_compLoopStart( HB_COMP_DECL )
  */
 static void hb_compLoopLoop( HB_COMP_DECL )
 {
-   if( ! HB_COMP_PARAM->pLoops )
+   HB_LOOPEXIT_PTR pLast = NULL, pLoop;
+
+   pLoop = HB_COMP_PARAM->pLoops;
+   while( pLoop )
+   {
+      if( pLoop->fCanLoop )
+         pLast = pLoop;
+      pLoop = pLoop->pNext;
+   }
+
+   if( ! pLast )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
    }
    else
    {
-      HB_LOOPEXIT_PTR pLast, pLoop;
-
-      pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
-
-      pLoop->pLoopList = NULL;
-      pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
-
-      pLast = HB_COMP_PARAM->pLoops;
-      while( pLast->pNext )
-         pLast = pLast->pNext;
-
       if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
          /* Attempt to LOOP from BEGIN/END sequence
@@ -1969,6 +1972,11 @@ static void hb_compLoopLoop( HB_COMP_DECL )
       }
       else
       {
+         pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
+
+         pLoop->pLoopList = NULL;
+         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
+
          while( pLast->pLoopList )
             pLast = pLast->pLoopList;
 
@@ -1992,25 +2000,25 @@ static void hb_compLoopExit( HB_COMP_DECL )
    {
       HB_LOOPEXIT_PTR pLast, pLoop;
 
-      pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
-
-      pLoop->pExitList = NULL;
-      pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
-
       pLast = HB_COMP_PARAM->pLoops;
       while( pLast->pNext )
          pLast = pLast->pNext;
 
       if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
-         /* Attempt to LOOP from BEGIN/END sequence
+         /* Attempt to EXIT from BEGIN/END sequence
          * Current SEQUENCE counter is different then at the beginning of loop
-         * Notice that LOOP is allowed in RECOVER code.
+         * Notice that EXIT is allowed in RECOVER code.
          */
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
       }
       else
       {
+         pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
+
+         pLoop->pExitList = NULL;
+         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
+
          while( pLast->pExitList )
             pLast = pLast->pExitList;
 
@@ -2079,17 +2087,22 @@ static void hb_compLoopEnd( HB_COMP_DECL )
 
 void hb_compLoopKill( HB_COMP_DECL )
 {
-   HB_LOOPEXIT_PTR pLoop;
-   HB_LOOPEXIT_PTR pExit;
+   HB_LOOPEXIT_PTR pLoop, pFree;
    
    while( HB_COMP_PARAM->pLoops )   
    {
       pLoop = HB_COMP_PARAM->pLoops;
       while( pLoop->pExitList )
       {
-         pExit = pLoop->pExitList;
-         pLoop->pExitList = pExit->pExitList;
-         hb_xfree( ( void * ) pExit );
+         pFree = pLoop->pExitList;
+         pLoop->pExitList = pFree->pExitList;
+         hb_xfree( ( void * ) pFree );
+      }
+      while( pLoop->pLoopList )
+      {
+         pFree = pLoop->pLoopList;
+         pLoop->pLoopList = pFree->pLoopList;
+         hb_xfree( ( void * ) pFree );
       }
       HB_COMP_PARAM->pLoops = pLoop->pNext;
       hb_xfree( ( void * ) pLoop );
@@ -2500,13 +2513,12 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    HB_SWITCHCASE_PTR pTmp;
    HB_SWITCHCMD_PTR pTmpSw;
    ULONG ulExitPos;
-   ULONG ulDef;
 
    /* skip switch pcode if there was no EXIT in the last CASE
     * or in the DEFAULT case
    */
    ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM ); 
-   
+
    hb_compGenJumpHere( HB_COMP_PARAM->pSwitch->ulOffset + 1, HB_COMP_PARAM );
    hb_compGenPCode3( HB_P_SWITCH, HB_LOBYTE(HB_COMP_PARAM->pSwitch->iCount), HB_HIBYTE(HB_COMP_PARAM->pSwitch->iCount), HB_COMP_PARAM );
    HB_COMP_PARAM->fLongOptimize = FALSE;   
@@ -2515,7 +2527,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    {
       if( pCase->pExpr )
       {
-         if( hb_compExprIsLong(pCase->pExpr) || hb_compExprIsString(pCase->pExpr) )
+         if( hb_compExprIsLong( pCase->pExpr ) || hb_compExprIsString( pCase->pExpr ) )
          {
             HB_COMP_EXPR_DELETE( hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM ) );
             hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ), pCase->ulOffset, HB_COMP_PARAM );
@@ -2527,21 +2539,19 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       }
       pCase = pCase->pNext;
    }
-   hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );    /* end of cases */
-   ulDef = hb_compGenJump( 0, HB_COMP_PARAM );
-   
+
    if( HB_COMP_PARAM->pSwitch->ulDefault )
    {
-      hb_compGenJumpThere( ulDef, HB_COMP_PARAM->pSwitch->ulDefault, HB_COMP_PARAM );
+      hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
+      hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
+                           HB_COMP_PARAM->pSwitch->ulDefault, HB_COMP_PARAM );
    }
-   else
-      hb_compGenJumpHere( ulDef, HB_COMP_PARAM );
 
    HB_COMP_PARAM->fLongOptimize = fLongOptimize;
    HB_COMP_PARAM->fTextSubst = fTextSubst;
 
    hb_compGenJumpHere( ulExitPos, HB_COMP_PARAM );
-   
+
    pCase = HB_COMP_PARAM->pSwitch->pCases;
    while( pCase )
    {

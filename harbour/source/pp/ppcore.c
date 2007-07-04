@@ -642,7 +642,7 @@ static void hb_pp_tokenAddStreamFunc( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
 
 static void hb_pp_readLine( PHB_PP_STATE pState )
 {
-   int ch, iLine;
+   int ch, iLine = 0;
 
    while( TRUE )
    {
@@ -659,13 +659,16 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       }
       else
          ch = fgetc( pState->pFile->file_in );
+
       if( ch == EOF )
       {
          pState->pFile->fEof = TRUE;
          break;
       }
+
+      iLine = 1;
       /* In Clipper ^Z works like \n */
-      else if( ch == '\n' || ch == '\x1a' )
+      if( ch == '\n' || ch == '\x1a' )
       {
          break;
       }
@@ -675,7 +678,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
          hb_membufAddCh( pState->pBuffer, ch );
       }
    }
-   ++pState->iLineTot;
+   pState->iLineTot += iLine;
    iLine = ++pState->pFile->iCurrentLine / 100;
    if( !pState->fQuiet &&
        iLine != pState->pFile->iLastDisp )
@@ -4998,6 +5001,11 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
    hb_pp_ruleSetId( pState, pState->pDefinitions, HB_PP_DEFINE );
    hb_pp_ruleSetId( pState, pState->pTranslations, HB_PP_TRANSLATE );
    hb_pp_ruleSetId( pState, pState->pCommands, HB_PP_COMMAND );
+
+   /* clear total number of preprocessed lines so we will report only
+    * lines in compiled .prg files
+    */
+   pState->iLineTot = 0;
 }
 
 /*
